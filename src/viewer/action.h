@@ -2,7 +2,6 @@
 #define EL__VIEWER_ACTION_H
 
 #include "config/kbdbind.h"
-#include "viewer/text/view.h"
 
 struct session;
 
