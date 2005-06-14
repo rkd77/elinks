@@ -4,14 +4,15 @@
 # Josef 'Jupp' Schugt <jupp@gmx.de>, 2003
 # Karsten 'kuser' Schölzel <kuser@gmx.de>
 # Thomas Fuchs <tfoxYOUKNOWgmx.de>
+# Jens Seidel <jensseidel@users.sf.net>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.9.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-29 12:53+0100\n"
-"PO-Revision-Date: 2004-08-15 17:19+0200\n"
-"Last-Translator: Thomas Fuchs <tfoxYOUKNOWgmx.de>\n"
+"PO-Revision-Date: 2005-06-14 20:52+0200\n"
+"Last-Translator: Jens Seidel <jensseidel@users.sf.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
@@ -1275,7 +1276,7 @@ msgstr ""
 
 #: src/config/cmdline.c:665
 msgid "Name of directory with configuration file"
-msgstr "Name des Verzeichnises mit der Konfigurations-Datei"
+msgstr "Name des Verzeichnisses mit der Konfigurations-Datei"
 
 #: src/config/cmdline.c:667
 #, fuzzy
@@ -1454,7 +1455,7 @@ msgstr ""
 
 #: src/config/cmdline.c:749
 msgid "Run as separate instance"
-msgstr "Starte als seperater Prozess"
+msgstr "Starte als separater Prozess"
 
 #: src/config/cmdline.c:751
 #, fuzzy
@@ -1464,7 +1465,7 @@ msgid ""
 "(bookmarks, history, etc.) are written to the disk when this\n"
 "option is used. See also -touch-files."
 msgstr ""
-"Starte ELinks als seperate Instanz und verbinde nicht zu einer\n"
+"Starte ELinks als separate Instanz und verbinde nicht zu einer\n"
 "laufenden Instanz. Beachte, dass normalerweise keine Statusdateien\n"
 "(Lesezeichen, Verlauf, usw.) geschrieben werden, wenn diese Option\n"
 "benutzt wird. Siehe auch -touch-files."
@@ -2357,11 +2358,11 @@ msgstr ""
 
 #: src/config/options.inc:233
 msgid "Image link prefix"
-msgstr "Prefix von Links zu Bildern"
+msgstr "Präfix von Links zu Bildern"
 
 #: src/config/options.inc:235
 msgid "Prefix string to use to mark image links."
-msgstr "Prefix, um Links zu Bildern zu kennzeichnen."
+msgstr "Präfix, um Links zu Bildern zu kennzeichnen."
 
 #: src/config/options.inc:237
 msgid "Image link suffix"
@@ -2571,7 +2572,7 @@ msgid ""
 "1 means if document.browse.links.numbering = 1\n"
 "2 means always"
 msgstr ""
-"Ziffertasten wählen Links aus und bezeichnen keine Kommandoprefixe.\n"
+"Ziffertasten wählen Links aus und bezeichnen keine Kommandopräfixe.\n"
 "Diese Option hat drei Zustände:\n"
 "0 niemals\n"
 "1 wenn document.browse.links.numbering = 1\n"
@@ -2621,7 +2622,7 @@ msgid ""
 "right is pressed and no prefix was given."
 msgstr ""
 "Anzahl der zu rollenden Zeilen, wenn eine mit scroll-up oder scroll-\n"
-"down verbundene Taste gedrückt und kein Prefix angegeben wurde."
+"down verbundene Taste gedrückt und kein Präfix angegeben wurde."
 
 #: src/config/options.inc:365
 msgid "Extended horizontal scrolling"
@@ -2656,7 +2657,7 @@ msgid ""
 "down is pressed and no prefix was given."
 msgstr ""
 "Anzahl der zu rollenden Zeilen, wenn eine mit scroll-up oder scroll-\n"
-"down verbundene Taste gedrückt und kein Prefix angegeben wurde."
+"down verbundene Taste gedrückt und kein Präfix angegeben wurde."
 
 #: src/config/options.inc:382
 msgid "Searching"
@@ -2668,7 +2669,7 @@ msgstr "Optionen für die Suche."
 
 #: src/config/options.inc:386
 msgid "Case sensitivity"
-msgstr "Groß-/Kleinscreibung beachten"
+msgstr "Groß-/Kleinschreibung beachten"
 
 #: src/config/options.inc:388
 msgid ""
@@ -4588,7 +4589,7 @@ msgstr "Hintergrund"
 #: src/dialogs/download.c:245
 #, fuzzy
 msgid "Background with ~notify"
-msgstr "Im Hintergund mit Benachrichtigung"
+msgstr "Im Hintergrund mit Benachrichtigung"
 
 #: src/dialogs/download.c:252 src/dialogs/download.c:479
 #, fuzzy
@@ -4792,12 +4793,12 @@ msgstr "Linknummer eingeben"
 #: src/dialogs/info.c:238
 #, fuzzy
 msgid "master terminal"
-msgstr "Terminalgrösse ändern"
+msgstr "Terminalgröße ändern"
 
 #: src/dialogs/info.c:240
 #, fuzzy
 msgid "slave terminal"
-msgstr "Terminalgrösse ändern"
+msgstr "Terminalgröße ändern"
 
 #: src/dialogs/info.c:244
 #, fuzzy, c-format
@@ -4956,7 +4957,7 @@ msgstr "~Starte Shell"
 
 #: src/dialogs/menu.c:381
 msgid "Resize t~erminal"
-msgstr "Terminalgrösse ~ändern"
+msgstr "Terminalgröße ~ändern"
 
 #: src/dialogs/menu.c:398
 msgid "Search ~backward"
@@ -5219,7 +5220,7 @@ msgstr "256 Farben"
 
 #: src/dialogs/options.c:284
 msgid "Resize terminal"
-msgstr "Terminalgrösse ändern"
+msgstr "Terminalgröße ändern"
 
 #: src/dialogs/options.c:287
 #, fuzzy
@@ -7634,14 +7635,14 @@ msgid ""
 "arguments to them like search engine keywords."
 msgstr ""
 "Regeln um URIs zu verändern, die im Gehe-zu-Dialog eingegeben werden.\n"
-"Hiermit ist es möglich, Prefixe zu definieren, die bei Eingabe im\n"
-"Gehe-zu-Dialog expandiert werden. Die Prefixe können einfach sein,\n"
+"Hiermit ist es möglich, Präfixe zu definieren, die bei Eingabe im\n"
+"Gehe-zu-Dialog expandiert werden. Die Präfixe können einfach sein,\n"
 "das heißt sie verhalten sich wie URI-Abkürzungen, oder komplex sein,\n"
 "dann können Argumente angegeben werden wie zum Beispiel Suchbegriffe."
 
 #: src/protocol/rewrite/rewrite.c:53
 msgid "Enable dumb prefixes"
-msgstr "Einfache Prefixe aktivieren"
+msgstr "Einfache Präfixe aktivieren"
 
 #: src/protocol/rewrite/rewrite.c:55
 #, fuzzy
@@ -7651,14 +7652,14 @@ msgid ""
 "if you write 'elinks' there, you are directed to\n"
 "http://elinks.cz/."
 msgstr ""
-"Aktiviert einfache Prefixe. Dabei handelt es sich um URI Abkürzungen,\n"
+"Aktiviert einfache Präfixe. Dabei handelt es sich um URI-Abkürzungen,\n"
 "die in den Gehe-Zu-URL-Dialog geschrieben werden anstelle der \n"
 "aktuellen URI. Z.B. kann man dort 'elinks' eingeben und wird auf\n"
 "http://elinks.or.cz/ umgeleitet."
 
 #: src/protocol/rewrite/rewrite.c:60
 msgid "Enable smart prefixes"
-msgstr "Komplexe Prefixe aktivieren"
+msgstr "Komplexe Präfixe aktivieren"
 
 #: src/protocol/rewrite/rewrite.c:62
 msgid ""
@@ -7667,18 +7668,18 @@ msgid ""
 "of arguments from which the actual URI is composed - i.e.\n"
 "'gg:search keywords' or 'gn search keywords for news'."
 msgstr ""
-"Aktiviert komplexe Prefixe. Dabei handelt es sich um Abkürzungen\n"
+"Aktiviert komplexe Präfixe. Dabei handelt es sich um Abkürzungen\n"
 "für URI-Schablonen, die gefolgt von einer Liste von Argumenten\n"
 "in den Gehe-zu-Dialog eingegeben werden und aus denen die Ziel-URL\n"
 "zusammengesetzt wird. Z.B. 'gg Suchwörter' oder 'gn Suchwörter für News'."
 
 #: src/protocol/rewrite/rewrite.c:67
 msgid "Dumb Prefixes"
-msgstr "Einfache Prefixe"
+msgstr "Einfache Präfixe"
 
 #: src/protocol/rewrite/rewrite.c:69
 msgid "Dumb prefixes, see enable-dumb description for details."
-msgstr "Einfach Prefixe, siehe enable-dump-Beschreibung für Details."
+msgstr "Einfach Präfixe, siehe enable-dump-Beschreibung für Details."
 
 #: src/protocol/rewrite/rewrite.c:74
 #, fuzzy, no-c-format
@@ -7687,17 +7688,17 @@ msgid ""
 "%c in the string means the current URL\n"
 "%% in the string means '%'"
 msgstr ""
-"Ersatz-URI für dieses einfache Prefix.\n"
+"Ersatz-URI für dieses einfache Präfix.\n"
 "%c in der Zeichenkette bedeutet die aktuelle URL\n"
 "%% in der Zeichenkette bedeutet '%'"
 
 #: src/protocol/rewrite/rewrite.c:78
 msgid "Smart Prefixes"
-msgstr "Komplexe Prefixe"
+msgstr "Komplexe Präfixe"
 
 #: src/protocol/rewrite/rewrite.c:80
 msgid "Smart prefixes, see enable-smart description for details."
-msgstr "Komplexe Prefixe, siehe enable-smart-Besschreibung für Details."
+msgstr "Komplexe Präfixe, siehe enable-smart-Beschreibung für Details."
 
 #: src/protocol/rewrite/rewrite.c:87
 #, fuzzy, no-c-format
@@ -7708,9 +7709,9 @@ msgid ""
 "%0,%1,...,%9 means argument 0, 1, ..., 9\n"
 "%% in the string means '%'"
 msgstr ""
-"Ersatz-URI für dieses komplexe Prefix.\n"
+"Ersatz-URI für dieses komplexe Präfix.\n"
 "%c in der Zeichenkette bedeutet die aktuelle URL\n"
-"%s in der Zeichenkette bedeutet das gesamte Argument dieses Prefixes\n"
+"%s in der Zeichenkette bedeutet das gesamte Argument dieses Präfixes\n"
 "%0,%1,...,%9 in der Zeichenkette bedeutet Argument 0, 1, ..., 9\n"
 "%% in der Zeichenkette bedeutet '%'"
 
@@ -7972,7 +7973,7 @@ msgid ""
 "for any inconvience caused."
 msgstr ""
 "Der Wert der Option config.saving_style ist de facto veraltet. Die "
-"Algorithmen für das Speichern der Konfiguartion haben sich im Vergleich zu "
+"Algorithmen für das Speichern der Konfiguration haben sich im Vergleich zu "
 "deiner letzten ELinks-Version verändert. Jetzt werden nur noch diejenigen "
 "Optionen gespeichert, die sich geändert haben, anstatt aller Optionen. Dies "
 "vereinfacht unsere Situation, wenn eine Option einen ungültigen Wert hat "
@@ -8422,8 +8423,8 @@ msgstr "Fehler beim Schreiben in Datei"
 #~ "Prefix: Shift, Ctrl, Alt\n"
 #~ "Key: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,..."
 #~ msgstr ""
-#~ "Geben Sie Tastendrücke in dieser Form ein: [Prefix-]Taste\n"
-#~ "Prefix: Shift, Ctrl, Alt\n"
+#~ "Geben Sie Tastendrücke in dieser Form ein: [Präfix-]Taste\n"
+#~ "Präfix: Shift, Ctrl, Alt\n"
 #~ "Taste: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,..."
 
 #, fuzzy
