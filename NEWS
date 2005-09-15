@@ -1,0 +1,140 @@
+See ChangeLog for recent changes, bugfixes and new features.
+
+ELinks now:
+
+* explicit keyboard accelerators were defined for buttons in dialogue boxes
+  and are now highlighted.
+
+ELinks 0.10.2:
+
+* Ruby scripting back-end (experimental)
+* Debian package files (apt-get install devscripts && debuild -uc -us)
+
+ELinks 0.10.0 (Thelma):
+
+* simple CSS
+* simple JavaScript/ECMAScript support by the SpiderMonkey Mozilla JS engine
+* plain-text mark-up (_^Hx to underline, x^Hx to embolden)
+* HTML source high-lighting using DOM implementation
+* multiple URIs on the command line
+* tabs moving (press Alt-'>' or Alt-'<')
+* periodic snapshotting of all tabs in all terminals
+* exmode CLI support (press ':' followed by action and args) (experimental)
+* cursor routing (aka w3m-style navigation)
+* modal text-input form-fields editing (enabled by default)
+* manual cookies creating and editing
+* incremental searching (press '#/')
+* Perl scripting back-end (experimental)
+* build-time configurability and feature documentation through features.conf
+* Mozilla-compatible -remote option (http://www.mozilla.org/unix/remote.html)
+* support for specifying IP family as protocol postfix (i.e. http4 or ftp6)
+* internationalized domain names via libidn (RFC 3490)
+* data URI protocol (RFC 2397)
+* gopher protocol (RFC 1436)
+* NNTP protocol (RFC 977 and 2980) (experimental)
+* build system fine-tuned to use automake conditionals
+* -localhost option to block connections to remote hosts
+* -verbose option to control messages printed at startup
+* -default-keys command line option to ignore user-defined keybindings
+* -confdir option renamed to -config-dir
+* -conffile option renamed to -config-file
+* enhanced documentation
+
+ELinks 0.9.2:
+
+* directional links navigation
+* 'unset' configuration directive, which can be used, e.g.,
+  to delete default MIME type settings or external protocol handlers.
+
+ELinks 0.9.1:
+
+* support <object> tags by displaying a link to the data
+* add beginning-of-buffer and end-of-buffer actions for text fields
+* automatic session saving/restoring support (disabled by default)
+* add-bookmark-tabs (bookmark all tabs) option and menu item
+* fold successive blank lines when displaying a plain-text document
+  (disabled by default; use the option document.plain.compress_empty_lines)
+* 'fresh' color for any tab that has not been selected
+  since its document was loaded
+
+ELinks 0.9.0 (Skyrider):
+
+* used gettext for internationalization
+* support for background document colors
+* tabs support
+* new MIME subsystem adding mimetypes files support
+* local CGI support
+* Guile scripting extensions
+* HTML meta refresh
+* forms history
+* 256 colors support
+* regex searches
+* cookies manager, cache manager and download manager
+* document marks support
+* displaying URIs in plain documents as links
+* SMB protocol support (requires smbclient)
+* builtin user prefixes support (enter 'gg' or 'gg:elinks' to the goto dialog)
+* HTTPS proxy support
+* typeahead link searching (press '#')
+
+ELinks 0.4.0 (Iceberg):
+
+* merged HTTP_AUTH
+* basic proxy auth support
+* cookies parser rewritten
+* support for tabindex,accesskey,title attribute
+* FTP support dramatically improved (bugfixes, interoperability fixes, passive
+  mode support, ...)
+* global history support (+vlink support)
+* make some modules (cookies,bookmarks,globhist,..) optional at compile time
+* secure saving support (see secure_save option desc. if you're doing weird
+  things with your links files like symlinking or nonstandart permissions!!!)
+* support for utf8 i/o
+* mouse wheel support
+* portability enhancements
+* performance enhancements
+* file/http gzip/bzip2 decompression support
+* downloads resuming support
+* mailcap support
+* hierarchic bookmarks support, XBEL bookmarks support
+* source layout was dramatically reorganized
+* relocated ELinks configuration files, changed format (if you are upgrading
+  from Links or older ELinks version, read INSTALL file to see how to convert
+  your old config files!!!)
+* options are now in tree hierarchy and are configurable generically
+* keybindings can be configured from the user interface
+* colorful user interface
+* tiny useless LED-like indicators support
+* GNUTLS support parallel to the OpenSSL support (fixes some license issues)
+* extensive memory debugging support
+
+ELinks 0.3.0:
+
+* unhistory
+* external textarea editor
+* DNS rewrite - we handle multi RR per host correctly
+* IPv6 support
+* rewritten options handling
+* bookmarks filtering (aka bookmarks search)
+* bookmarks resaving (save on the disk after every change)
+* added possibility to change default colors settings
+
+Links 0.96-pb3:
+
+* secured cookies file creation
+* support for title attribute of img tag
+* Catalan translation
+* Romanian translation
+* changing of User-Agent string sent to webserver
+* <listing> tag support
+
+Links 0.96-pb2:
+
+* cookies expiration, saving and resaving
+* do NOT strip everything after ? in form action
+* http referrer, true http referrer
+* limited textarea external editor support
+* partial fix of &#13;
+* enhanced manual page
+* fixed multi-level HTTP moved when using -dump/-source
+* fixed keybindings

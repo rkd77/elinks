@@ -1,0 +1,7 @@
+<!-- Entities that configure should provide. -->
+<!-- $Id: config.ent.in,v 1.5 2003/06/10 23:52:39 jonas Exp $ -->
+
+<!ENTITY elinks-version "@VERSION@">
+<!ENTITY sysconfdir "@sysconfdir@">
+<!ENTITY % use-xml-dtd "@USE_DOCBOOK_XML@">
+<!ENTITY % use-sgml-dtd "@USE_DOCBOOK_SGML@">

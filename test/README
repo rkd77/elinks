@@ -1,0 +1,7 @@
+This directory contains various weird documents for testing whether we're
+parsing and rendering them properly. Frequently, documents are getting added
+here when we implement feature needed for their correct presentation or fix bug
+occuring inside of these documents. No automated testsuite yet, though.
+
+Possible meaningful content of the documents is completely irrelevant and you
+should ignore it. Noone takes any responsibility for it :).

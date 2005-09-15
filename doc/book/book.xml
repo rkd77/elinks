@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: book.xml,v 1.2 2003/06/10 23:45:44 jonas Exp $ -->
+
+<!DOCTYPE book SYSTEM "elinksbook.dtd">
+
+<book id="index" lang="en">
+<?dbhtml filename="index.html"?>
+
+<bookinfo><title> The ELinks Book </title>
+
+<subtitle> Browsing the Web In 2D - Version &version; </subtitle>
+
+<edition> ELinks &elinks-version; (Skyrider) </edition>
+<releaseinfo>Version &version;</releaseinfo>
+<pubdate>$Date: 2003/06/10 23:45:44 $</pubdate>
+<orgname><ulink url="http://elinks.or.cz">ELinks</ulink></orgname>
+
+<copyright>
+	<year>2002</year>
+	<year>2003</year>
+	<holder>Jonas Fonseca &lt;fonseca@diku.dk&gt;</holder>
+</copyright>
+
+<abstract>
+<para>
+
+	This manual has been written to provide a complete user
+	reference manual to ELinks. ELinks is an advanced text mode WWW
+	browser, supporting colors, frame and table rendering,
+	background downloading, full menu driven configuration
+	interface and slim portable code.  Different file formats can
+	be associated with external viewers natively or via mailcap.
+
+</para>
+</abstract>
+<legalnotice>
+<para>
+
+	Permission is granted to copy, distribute and/or modify this
+	document under the terms of the GNU Free Documentation License,
+	Version 1.1 or any later version published by the Free Software
+	Foundation; with no Invariant Section. A copy of the license is
+	included in <xref linkend="fdl" />.
+
+</para>
+</legalnotice>
+
+&info-revision;
+
+</bookinfo>
+
+&info-preface;
+
+&intro-about;
+&intro-installation;
+
+&config-intro;
+&config-mime;
+
+&features-mailcap;
+&features-bookmarks;
+
+<!-- &config-options; Should be autobuild and not in CVS -->
+&info-authors;
+
+</book>

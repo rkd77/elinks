@@ -1,0 +1,7 @@
+?package(elinks):\
+  needs="text"\
+  section="Apps/Net"\
+  title="ELinks"\
+  command="/usr/bin/elinks"\
+  hints="Web browsers"
+  

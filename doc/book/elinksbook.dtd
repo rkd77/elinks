@@ -1,0 +1,67 @@
+<!-- The DTD used for costumization and common entities. -->
+<!-- $Id: elinksbook.dtd,v 1.9 2003/06/11 20:08:12 jonas Exp $ -->
+
+<!ENTITY version	"0.1">
+
+<!-- ================================================================== -->
+<!-- Costumize section							-->
+<!-- ================================================================== -->
+
+<!-- Default is to use system specific entities defined in config.ent. -->
+<!ENTITY % override-config-entities "IGNORE">
+
+<!-- ================================================================== -->
+<!-- Site specific entities						-->
+<!-- ================================================================== -->
+
+<![%override-config-entities;[
+
+<!-- For distributed manpages we want sysconfdir unexpanded. -->
+<!ENTITY sysconfdir "@sysconfdir@">
+
+]]>
+
+<!ENTITY % config-entities SYSTEM "config.ent">
+%config-entities;
+
+<!-- ================================================================== -->
+<!-- DocBook DTD inclusion section					-->
+<!-- ================================================================== -->
+
+<!-- Note: use-xml-dtd and use-sgml-dtd should be controlled by configure
+	   and declared in config.ent. -->
+
+<![%use-xml-dtd;[
+<!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+		"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+%DocBookDTD;
+]]>
+
+<![%use-sgml-dtd;[
+<!ENTITY % DocBookDTD PUBLIC "-//OASIS//DTD DocBook V4.2//EN"
+		"http://www.oasis-open.org/docbook/sgml/4.2/docbook.dtd">
+%DocBookDTD;
+]]>
+
+<!-- ================================================================== -->
+<!-- File entities							-->
+<!-- ================================================================== -->
+
+<!ENTITY config-cmdoptions	SYSTEM "config/cmdoptions.xml">
+<!ENTITY config-envvars		SYSTEM "config/envvars.xml">
+<!ENTITY config-files		SYSTEM "config/files.xml">
+<!ENTITY config-elinks.conf	SYSTEM "config/elinks.conf.xml">
+<!ENTITY config-mime		SYSTEM "config/mime.xml">
+<!ENTITY config-syntax		SYSTEM "config/syntax.xml">
+<!ENTITY features-bookmarks	SYSTEM "features/bookmarks.xml">
+<!ENTITY intro-installation	SYSTEM "intro/installation.xml">
+
+<!-- Files that need to be readded: -->
+
+<!ENTITY info-authors		SYSTEM "info/authors.xml">
+<!ENTITY info-preface		SYSTEM "info/preface.xml">
+<!ENTITY info-revision		SYSTEM "info/revision.xml">
+<!ENTITY intro-about		SYSTEM "intro/about.xml">
+<!ENTITY config-intro		SYSTEM "config/intro.xml">
+<!ENTITY config-options		SYSTEM "config/options.xml">
+<!ENTITY features-mailcap	SYSTEM "features/mailcap.xml">

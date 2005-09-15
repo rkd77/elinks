@@ -1,0 +1,44 @@
+			TODO items for ELinks Documentation
+
+Processing stuff:
+-----------------
+
+* Make saner rules for html in Makefile.doc
+	We should handle also calling tidy and adding css stylesheet links.
+
+* A script for automating config option info
+	This concerns config/cmdoptions.xml and config/options.xml. A ruby
+	script for generating config/options.xml exist, but ...
+
+General manual mangling:
+------------------------
+
+* Find a sane order of the chapters/appendixes.
+
+* Make stylesheet for html processing.
+	This should set options to either not break up (chunk) chapters at all
+	or so that all sections are on separate pages.
+
+Suggestions for sections or chapter:
+------------------------------------
+
+* Overview/introduction to essential managers
+
+* Compile time configuration
+
+* FAQ ?
+
+* Tips/cheats ;)
+
+* Basic introduction to the User Interface
+	Listboxes, menus, editor, mouse (wheel). How to cut and
+	paste.
+
+The larger scope
+----------------
+
+* WRITE MORE DOCS!!
+
+* Move the webpage content to also use doc/book files maybe using website.
+
+$Id: TODO,v 1.5 2003/06/24 20:13:03 jonas Exp $

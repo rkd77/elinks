@@ -1,0 +1,96 @@
+Tips to obtain a very small static elinks binary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Tips to obtain a very small static elinks binary suitable for mini
+distributions
+
+Remove config.cache (previous CC may be cached):
+
+	$ rm config.cache
+
+Use dietlibc (http://www.fefe.de/dietlibc/) or similar stuff (uClibc, ...):
+
+	$ export CC='diet -Os gcc'
+
+Use compilers flags to optimize for size:
+
+	$ export CFLAGS='-s -fno-inline -nostdinc -fomit-frame-pointer'
+
+Note that if you don't use dietlibc, you definitively want to add `-Os` or
+`-O2` to `CFLAGS`; GCC 2.95 does not know `-Os`, and some say `-O2` gives
+smaller executables even for GCC 3.x.
+
+[NOTE]
+.Warning
+===============================================================================
+If you use these `CFLAGS` on Cygwin and you get unresolved symbols (`htons` and
+suite in particular), try removing `-fno-inline` parameter.
+===============================================================================
+
+Disable some compile-time options:
+
+------------------------------------------------------------------------------
+$ ./configure --disable-ipv6 --disable-backtrace --disable-nls \
+  --enable-fastmem --without-zlib --without-bzlib --disable-xbel \
+  --without-lua --without-gnutls --without-openssl --without-x \
+  --enable-small --without-spidermonkey --without-gpm
+------------------------------------------------------------------------------
+
+You can disable bookmarks, globhist and more, too, if you want to.
+
+[NOTE]
+.Notes
+===============================================================================
+ - --disable-backtrace disables internal backtrace code.
+ - --disable-nls disables i18n support.
+ - --enable-fastmem disables internal `malloc()` debugging and use `alloca()`
+   wherever possible.
+ - --enable-small forces to remove some text descriptions in options and
+   keybind stuff (regain 30Kb).
+===============================================================================
+
+Dependencies over external libs must be removed using the related configure
+options:
+`-----------------------`------------------------------------------------------
+Option			Description
+-------------------------------------------------------------------------------
+--without-zlib		removes libz dependency (compression)
+--without-bzlib		removes libbz2 dependency (compression)
+--disable-xbel		removes expat dependency (XBEL bookmarks support)
+--without-lua		removes liblua dependency (Lua scripting)
+--without-gnutls	removes libtls dependency (SSL support)
+--without-openssl	removes libssl dependency (SSL support)
+--without-x 		removes libx11 dependency (restoring terminal title)
+--without-spidermonkey  removes libjs dependency (JavaScript)
+--without-gpm		removes libgpm dependency (mouse/console)
+-------------------------------------------------------------------------------
+
+It seems GCC 2.95.x do not generate as small binaries as GCC 3.2.x with same
+flags.
+
+You can use an executable compressor like UPX
+link:http://upx.sourceforge.net/[].
+
+Here are some results using gcc 2.95.3, dietlibc-0.23, and previous flags:
+
+	me$ ls -l src/elinks
+	-rwxr-xr-x   1 zas      users      495100 Oct 20 15:53 src/elinks
+	me$ upx --best src/elinks
+	me$ ls -l src/elinks
+	-rwxr-xr-x   1 zas      users      217946 Oct 20 15:53 src/elinks
+
+Whow ! Around 200kb :)
+
+[NOTE]
+.Details about the `--enable-small` configure option effects:
+==============================================================================
+- it disables long descriptions of options;
+- it disables textual descriptions of keybinding options;
+- it reduces size of some HTTP errors messages;
+- it disables fastfind feature, reducing performance, but also reducing a lot
+  memory usage, and a bit the executable size.
+==============================================================================
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: small.txt,v 1.12.4.3 2005/09/13 10:12:28 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

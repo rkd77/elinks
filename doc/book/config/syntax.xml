@@ -1,0 +1,10 @@
+<para>
+
+	The syntax of the configuration file is very simple. The elinks.conf file is
+	a free-form ASCII text file. The file may contain extra tabs and
+	newlines for formatting purposes. Keywords in the file are
+	case-sensitive. Comments may be placed anywhere within the file (except
+	within quotes). Comments begin with the # character and end at the end
+	of the line.
+
+</para>

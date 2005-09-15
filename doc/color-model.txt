@@ -1,0 +1,300 @@
+				Color Models
+
+The purpose of this document is to collect thoughts and ideas on how to mix and
+adjust fore- and background colors to improve readability of pages.
+
+Motivation
+----------
+
+ELinks already provides a mean to configure and adjust color combinations to
+maximize readability. We would like to extend this capability to also include
+the newly added 256 color mode.
+
+For 16 colors, the adjustment is done by doing a few lookups in a hard coded
+color table. This is fine when there are only 16 * 8 fore- and background
+combinations but would probably be too painful for 256 * 256 combinations. Also,
+the hard-coded table - although doing a good job - does not leave much up for the
+users preferences. So the second goal is to also make the adjustment more
+configurable so people with color deficiencies can tune the rendering to their
+needs.
+
+Ideas
+-----
+
+Partial sight, aging and congenital color deficits all produce changes in
+perception that reduce the visual effectiveness of certain color combinations.
+Two colors that contrast sharply to someone with normal vision may be far less
+distinguishable to someone with a visual disorder. It is important to appreciate
+that it is the contrast of colors one against another that makes them more or
+less discernible rather than the individual colors themselves.
+
+I.e., the current allow/forbid dark on black colors will be really simple and far
+more universal.  Zas is currently researching about rules to preserve page
+readability by eliminating bad colors combinations (like dark red on dark red
+or even primary red / primary blue, yellow on white, green on grey, ...). One
+cool side effect is that we can adapt a color model to take in account some
+user's visual deficiencies (e.g., rule like "do not use red colors at all", "forbid
+orange on red", ...) Another color model may take in account screen environment:
+"ensure very high lightness contrast".
+
+Algorithms for determining bad color combinations
+-------------------------------------------------
+
+Zas has some ideas about that: there's no "algorithm" to determine bad color
+combos, but many experiences, so we'll use common sense (i.e., low lightness
+contrast, similar colors, white/bright yellow, and more...).
+
+Algorithms for finding the nearest good color combination
+---------------------------------------------------------
+
+This all comes down to applying what ever constraints the user desires:
+
+1. given a back- and foreground color pair of RGB colors,
+2. check if it satisfies all the constraints; if not, make a new couple obtained
+   by successive constraint satisfaction.
+
+In some cases, one or more constraints can't be satisfied. For solving that, we
+just need notions like "hard" / "strong" and "soft" / "weak" constraints.
+
+Example
+-------
+
+hard constraint 1 = "no red"
+hard constraint 2 = "lightness contrast > 50%"
+hard constraint 3 = "saturation < 90%"
+
+soft constraint 1 = "different hues for fg and bg"
+soft constraint 2 = "foreground darker than background"
+soft constraint 3 = "no green foreground on blue background"
+
+Starting with (bg, fg) = (H=red L=70% S=100%; H=blue L=40% S=95%)
+hc1 is not satisfied because fg is red, so we just need to move fg away from
+red.
+
+1. hc2 is satisfied.
+2. hc3 is not satisfied: red and blue are fully saturated.
+3. sc1 is satisfied.
+4. sc2 is not satisfied: fg is lighter than bg; so move fg away
+   from lightness, and move bg away from darkness.
+5. sc3 is satisfied
+
+So we have 2 constraints to satisfy, but while doing this we should not make
+other unsatisfied.
+Let's try:
+Sort constraints related to hue, lightness and saturation:
+hue: hc1, sc1, sc3
+lightness: hc2, sc2
+saturation: hc3
+
+- Hue constraints satisfaction:
+A) Nearest not red hue from fg is either green or blue (simpler for now), let
+   choose randomly one: green.
+   Now hc1 is satisfied, sc1 too, and sc3 is not.
+
+B) Move fg away from green and red: fg is now blue.
+   Now hc1 is satisfied, sc1 is not, and sc3 is.
+
+C) Since we can't satisfy all constraints, reiterate,
+   going back to A). Let move initial fg from red to blue instead of green.
+   Now hc1 is satisfied, sc1 is not, and sc3 too.
+
+D) We cannot satisfy hc1 and sc1. Since sc1 is a soft constraint,
+   just ignore it and continue.
+
+Finally we have (fg, bg) = (H=blue L=70% S=100%; H=blue L=40% S=95%)
+
+- Lightness constraints satisfaction:
+E) hc2 can be satisfied by either increasing lightness of fg or darkness of bg.
+   We choose to change fg (randomly):
+   (fg, bg) = (H=blue L=90% S=100%; H=blue L=40% S=95%)
+
+F) sc2 can be satisfied by swapping fg an bg lightness:
+   (fg, bg) = (H=blue L=40% S=100%; H=blue L=90% S=95%)
+
+- Saturation constraints:
+G) hc3 can be satisfied by decreasing fg and bg saturation values:
+   (fg, bg) = (H=blue L=40% S=89%; H=blue L=90% S=89%)
+
+This last couple satisfies all constraints, so we are done ;)
+
+
+How to cache the result and integrate it with the current color system
+----------------------------------------------------------------------
+
+In the previous example, we supposed we were using a true color palette, but in
+the most cases, we have a limited number of usable colors.
+We need to convert (fg, bg) to the nearest available color _before_ constraints
+satisfaction and at each step of it.
+When a valid transformation has been found we cache the initial (fg, bg) and the
+result, and because we can't cache all combos we need to limit cache size to a
+reasonable value and, sometimes, recalculate.
+
+Maybe if the calculations will be really heavy, we can save/restore the combinations
+to file (~/.elinks/colorhist ;) from session to session.
+
+How to make the configuration easy but still powerful
+-----------------------------------------------------
+
+User should be able to describe what he wants or not, so let's try to have our
+own color-constraint interpreter:
+
+One constraint is either hard or soft; it applies to fg, bg or both, and affects
+either hue, lightness or saturation.
+Hue unit is either a name (e.g., red) or an angle interval (e.g., for red, [0,30])
+Lightness and saturation units are a percentage, 0-100%.
+We'll use only integers values on the user side because it's simpler to handle.
+
+Operators are either ! or no, < or lt, > or gt, = or eq, <= or lte, >= or
+gte, != or ne, >< or hue differences (human sense).
+Referring to hue, lighness and saturation is done by using these names or H, L,
+S.
+Referring to fg or bg is possible by using fg or ^, bg or _.
+Delta is expressed by / or delta
+Conditional is ':'
+
+hard constraint 1 = "no red" => "hue no red" == "H![0,30]"
+hard constraint 2 = "lightness contrast > 50%" => "L delta gt 50"
+hard constraint 3 = "saturation < 90%" => "saturation < 90"
+
+soft constraint 1 = "different hues for fg and bg" => "hue fg >< bg"
+soft constraint 2 = "foreground darker than background" => "L fg < bg"
+soft constraint 3 = "no green foreground on blue background" =>
+		    "H bg eq blue: fg ne green"
+
+Hmmm, not perfect at all, but it's a start.
+
+Maybe the option system can be made to handle it even though it might not be optimal.
+
+	[-]- Color model
+	 |    +-- Enable
+	 |    +-- Cache size
+	 |   [-]- Hard/Strong
+	 |    |   [-]- Hue constraints
+	 |    |    |    +- Red (0 or 1 whether to allow this color)
+	 |    |    |    : (the basic colors of the color wheel)
+	 |    |   [-]- Lightness constraints
+	 |    |    |    +- Minimum contrast
+	 |    |    |    +- Maximum contrast
+	 |    |   [-]- Saturation constraints
+	 |    |         +- Minimum saturation
+	 |    |         +- Maximum saturation
+	 |   [+]- Soft/Weak
+
+Rather hostile but quite usable for testing.
+
+Including text attributes in the color model
+--------------------------------------------
+
+Hmmm, since we use colors to render text attributes, I (zas) think we need to
+integrate them in the process.
+E.g., italics are rendered by color, so let the user tells which color to use.
+
+A (bg, fg, type) triplet can be used for that. In constraint definition, we'll
+have H, S, L and type (T) variables.
+Type is (link|normal) and/or italic and/or bold and/or underline and/or
+(subscript|supscript) etc...
+Note link is not a text attribute (in the terminal sense of it); that's all the
+magic.
+Also note that the attribute enhancement should be fully optional.
+
+In the solution we'll have (bg, fg, attributes), where bg and fg are colors.
+Attributes are the ones supported by displaying device (i.e. normal bold underline
+for now).
+
+So constraints will take the form of:
+link hue != blue : link hue = blue, link attr = bold
+link hue >< italic hue
+fg hue in !red
+fg lightness > bg lightness
+!(fg hue == yellow && bg hue == white)
+fg hue >< bg hue
+fg saturation < 90%
+bg saturation < 90%
+
+Hey, this language is better than the one before ;)
+
+More about hues, or "what is red?":
+
+Defining hues is not as easy it seems; the main problem here is to know what
+we talk about when using the red name.
+
+Where is the start and the end of red? Applying the KISS principle, let's say that in the HLS
+system, S < H < E, where S is the starting hue and E the ending one.
+For each hue we want to express let use a similar non-overlapping interval.
+Take a circle and divide it in 3 parts for the primary hues, RGB:
+Make R starts at 0 (hmm, in HLS it's not exactly the case, but NM).
+Red is [0, 1*360/3[  (no, not a typo, 120 is not red)
+Green is [1*360/3, 2*360/3[
+Blue is [2*360/3, 0[
+
+It will be convenient to have intermediate hues between red and green ;)
+So just let divide by a value greater than 3, and name each part.
+Using 12 subdivisions seems to be sufficient since we want to keep it simple.
+Each subdivision should be equal but it may not reflect reality of human color
+perception; using "uniform" color models instead of HLS may help here.
+
+Implementation
+--------------
+
+There is some sample code for RGB <-> HSL conversion posted to the elinks-dev
+mailing list. It is expected to be merged to CVS when the color model itself
+implementation draws nearer.
+
+Availability
+------------
+
+The color model idea sounds great. However, its usability is probably rather
+limited and most users could live fine without it (that is not to dispute that
+it can prove to be unique and invaluable for others). Thus, it should be fully
+optional both at compile time and runtime.
+
+It should still be possible to use only the original 16 colors fg_color xlat
+table (which is so trivial that its inclusion probably need not be configurable
+at compile time) because its value is indisputably greater by orders of
+magnitude for the whole (or most of the) scale of users - the approximation to
+16 colors is so imprecise that the result is too often far from what the page
+author intended. Pasky believes that the 256 colors already provide much
+preciser transformation of the RGB triplet and thus it is quite unlikely the
+color combinations shown would differ dramatically from the intended look.
+
+Jonas: I agree that the color adjustment should be optional like the current
+one. Especially since the development of this will probably require quite a lot
+of tuning before being really usable. In the future, with some kind of CSS
+implementation, the user will have a further possibility to override any unreadable
+styling. Whether this kind of fix-up will still be necessary only time will show.
+Anyway since even 256 colors are pretty limited
+
+Of course some people want to always force readability over the Web page's
+author color choice (there is some really sick stuff color-wise around the Web,
+and of course there are the "secret" black-on-black or white-on-white texts ;-),
+and people with all sorts of color disabilities (which are quite frequent in the
+population, AFAIK). This would be a killer feature for them and that is the
+reason why Pasky thinks that the compile-time option for including of the color
+models implementation should be by default enabled. Pasky is still not sure
+whether the color models should be by default enabled or disabled at
+runtime; pros and cons welcomed.
+
+Further reading
+---------------
+
+Below are listed links to documents that have inspired this work.
+
+http://citeseer.nj.nec.com/macintyre91constraintbased.html
+
+	Selecting harmonious colors for traditional window systems can be a
+	difficult and frustrating endeavor....
+
+http://130.113.54.154/~monger/hsl-rgb.html
+
+	Conversion algorithms for these color spaces are originally from the
+	book Fundamentals of Interactive Computer Graphics by Foley and van Dam
+	(c 1982, Addison-Wesley).
+
+http://www.lighthouse.org/color_contrast.htm
+
+	Basic introduction to usage of HSL colors.
+
+
+
+$Id: color-model.txt,v 1.13.2.3 2005/09/13 10:12:28 jonas Exp $
+vim: textwidth=80

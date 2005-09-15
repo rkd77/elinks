@@ -1,0 +1,22 @@
+Installation:
+
+You'll need internal-hooks.scm and user-hooks.scm in $HOME/.elinks
+
+I used Guile 1.5.6, in case that matters.
+
+
+Status:
+
+Where Lua hooks would have been called, Guile hooks are now called.
+The rest of the stuff from Links-Lua hasn't been done.
+
+
+Disclaimer:
+
+I didn't read the Guile manual when writing this.  Actually, I don't
+think there is a manual yet.
+
+
+-- Peter Wang, 2002-12-06
+
+$Id: README,v 1.2 2003/11/05 15:09:21 pasky Exp $

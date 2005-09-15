@@ -1,0 +1,13 @@
+				Scripting TODO List
+
+- We should let the event propagation decision to the user-supplied function in
+  fact, we should let user to hook multiple functions to an event so in fact
+  the scripting layers would interface the events subsystem much more
+  transparently.
+
+- More generalization of things currently only part of the Lua backend. The
+  console and (error) dialog stuff should be generalized so all backends can
+  use them. The same goes for the run_lua_func() used to run scripting
+  functions bound to keystrokes.
+
+$Id: TODO,v 1.2 2003/09/26 21:07:37 jonas Exp $

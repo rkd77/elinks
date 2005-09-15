@@ -1,0 +1,76 @@
+<!-- $Id: preface.xml,v 1.2 2003/10/16 13:12:03 zas Exp $ -->
+
+<preface id="foreword"><title> Foreword </title>
+	
+<?dbhtml filename="preface.html"?>
+
+<para>
+
+	ELinks is lacking proper documentation. For a long time the only real
+	documentation available besides the man pages has been the now old
+	<ulink url="http://links.sourceforge.net/docs/manual-0.90-en/"> Links
+	User Reference Manual</ulink> written by Cliff Cunnington
+	(<email>cliff@users.sf.net</email>).  This document an attempt at
+	providing a manual for ELinks users. You will find some of it is
+	derived from the before mentioned Links manual.  Thanks to Cliff for
+	the work he has made available.
+
+</para>
+
+<bridgehead> Status of this document </bridgehead>
+<para>
+
+	This is version &version; of the book. It is a work in progress.
+	Contributions are very welcome. Please consider to contribute if you
+	see something missing. See how to contribute below.
+
+</para>
+
+<bridgehead> Available formats </bridgehead>
+<para>
+
+	The ELinks book is available in the following formats:
+
+</para>
+<variablelist>
+	<varlistentry><term>HTML:</term>
+	<listitem><para>
+
+	<ulink url="http://elinks.or.cz/documentation/manual/elinks-manual.html/"></ulink>
+
+	</para></listitem>
+	</varlistentry>
+</variablelist>
+<para>
+
+	There can exist different versions of the book. But the the newest
+	version will always be available at <ulink
+	url="http://elinks.or.cz/documentation/book">the book's page</ulink>
+	at the ELinks homepage.
+
+</para>
+
+<bridgehead id="how-to-contribute">How to contribute</bridgehead>
+<para>
+
+	This book is written by ELinks users that wants to help other users.
+	If you want to help us make the best ELinks book possible your
+	contribution will be very welcome.
+
+</para>
+<para>
+
+	Any help is useful; from people providing chapters of various features
+	to people fixing bad grammar or typos. If you have suggestions for a
+	new chapter or how to improve an existing one we would be happy to
+	hear from you.
+
+</para>
+<para>
+
+	Further info about how to contribute can be found on the manuals
+	homepage: <ulink url="http://elinks.or.cz/documentation/manual">
+	http://elinks.or.cz/documentation/manual</ulink>.
+
+</para>
+</preface>

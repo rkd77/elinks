@@ -1,0 +1,57 @@
+<variablelist>
+	<varlistentry><term><filename>&sysconfdir;/elinks.conf</filename></term>
+	<listitem><para>
+
+	Site-wide configuration file.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/elinks.conf</filename></term>
+	<listitem><para>
+
+	Per-user configuration file, loaded after site-wide configuration.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/bookmarks</filename></term>
+	<listitem><para>
+
+	Bookmarks file
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/cookies</filename></term>
+	<listitem><para>
+
+	Cookies file
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/gotohist</filename></term>
+	<listitem><para>
+
+	GoTo URL dialog history file
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/globhist</filename></term>
+	<listitem><para>
+
+	History file containing last 4096 URLs visited 
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><filename>~/.elinks/socket</filename></term>
+	<listitem><para>
+
+	Internal ELinks socket for communication between its instances.
+
+	</para></listitem>
+	</varlistentry>
+</variablelist>

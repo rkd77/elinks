@@ -1,0 +1,553 @@
+Unicode2ascii replacement, entity name tables and Gopher code taken from lynx.
+Initial mailcap and mime.types file handling inspired from Mutt.
+FTP directory listing parsing based on GNU Wget code.
+
+
+People who contributed to Links/ELinks, in alphabetical order (if you are
+missing here or some of your contributions is, tell me):
+
+
+Adam Borowski <kilobyte@mimuw.edu.pl>
+	Fixed xterm detection
+
+Adam Golebiowski <adamg@pld-linux.org>
+	Polish translation updates
+	Hints for gettexted strings
+
+Adam Harvey <matlhdam@iinet.net.au>
+	Fixed sometimes badly posted form
+
+Alberto García <berto@gpul.org>
+	Galician translation
+
+Aldy Hernandez <aldyh@cygnus.com>
+	MacOS address resolution fix
+
+Alex Antropoff <alex@tirastel.md>
+	'charset' attribute of META element
+
+Alexander Mai <st002279@hrzpub.tu-darmstadt.de>
+	OS/2 xterm support
+	Fix includes for AIX
+	Updated manpage
+
+Alexey Tourbin <at@turbinal.org>, <at@altlinux.org>
+	Proxy support fixes
+	Gettext plural.y fix
+
+Alejandros Diamandidis <adia@egnatia.ee.auth.gr>
+	Greek codepages & translation
+
+Ami Fischman <usenet@fischman.org>
+	Random fixes, misc minor improvements
+
+Andre Valente <a.valente@netcabo.pt>
+	Download completion notify
+	Portuguese and Brazilian-Portuguese translation updates
+
+Anton Voloshin <vav@isv.ru>
+	Proper encoding of form entries
+
+Arkadiusz Sochala <jojoro@priv2.onet.pl>
+	Polish translation
+
+Armon Red <armon@islandia.is>
+	Icelandic translation
+
+Aurimas Mikalauskas <inner@dammit.lt>
+	Lithuanian translation
+
+Baris Metin <baris@gelecek.com.tr>
+	Turkish translation
+
+beckers <beckers@st-oneline.de>
+	German translation
+
+Ben Sittler <bsittler@iname.com>
+	utf8_io support
+
+Benjamin Michotte <binny@baby-linux.net>
+	User-Agent browser ID string changing support
+
+Bennett Todd <bet@rahul.net>
+	RPM elinks.spec updates
+	Support for HTTP TRACE request
+
+Bunch <kisto@go2.pl>
+	HTML renderer hacking
+
+Carles Sadurní Anguita <isard@ctv.es>
+	Catalan translation
+
+Csaba Raduly <csaba.raduly@sophos.com>
+	Random fixes
+
+Christian Biesinger <cbiesinger@gmx.at>
+	FTP authentication via user interface support
+
+Christian Cornelssen <ccorn@cs.tu-berlin.de>
+	Lua5 support
+
+Christian Häggström <c00chm@cs.umu.se>
+	Fixes in parse_http_date()
+
+Cliff Cunnington <cliff@ccnet.xs4all.nl>
+	Links' website at http://links.sf.net/
+	User's manual at http://links.sf.net/docs/manual-0.82-en/
+	Minor fixes/improvements
+
+Cristiano Guadagnino <cris@geppo.cmb2000.it>, <criguada@libero.it>
+	Updated italian translation
+	OS/2 compilation fixes
+
+Cyril Slobin <slobin@ice.ru>
+	Russian translation updates
+
+Dakshinamurthy Karra <kd@blr.vsnl.net.in>
+	Win NT port
+	Saving goto history
+
+Daniel Macks <dmacks@netscape.org>
+	Minor compilation/weirdness fixes
+
+<darix@irssi.org>
+	RPM elinks.spec updates
+
+David A. Capello <dacap@users.sourceforge.net>
+	Made Document info message box scrollable
+
+David D. Kilzer <ddkilzer@lubricants-oil.com>
+	Part of -no-home support
+	Support for -eval option
+
+David Mediavilla Ezquibela <r96x6a79yki40001@sneakemail.com>
+	Spanish translation
+	Esperanto hacking
+	Example config file with all links-0.96 keybindings
+
+David Weinehall <tao@acc.umu.se>
+	Display radiobuttons differently than checkboxes
+
+Denis Lackovic <delacko@fly.srk.fer.hr>
+	Croatian translation
+
+Dimitar Dimitrov <mitaka_ddd@yahoo.com>
+	Bulgarian translation updates
+
+dinux <dinux@mail.bg>
+	Bulgarian translation updates
+
+Dmitry M. Klimov <dmk@gtrk.kmtn.ru>
+	KOI8-R frames
+	Russian localization
+
+Dmitry Pinchukov <dpinch@mail.ru>
+	Ukrainian translation
+	Referred as Dmitry in ChangeLog etc.
+
+Doug Kearns <djkea2@mugca.its.monash.edu.au>
+	Fixes in linkskeys.5
+
+Edwin Groothuis <edwin@mavetju.org>
+	Dump-width option
+
+Evan Hughes <hughes@lab43.org>
+	Bookmarks
+
+Fabio Bonelli <fabiobonelli@libero.it>
+	Accept-language support
+	Italian translation updates
+	XBEL bookmarks support
+	Random hacking
+	Cleanups
+
+Fabio Junior Beneditto <betatest@catolico.com.br>
+	Brazilian Portuguese translation
+
+Fabrice Haberer-Proust <fric@gmx.li>
+	French translation
+
+Felix von Leitner <felix@convergence.de>
+	Set file date/time when downloading
+	Random fixes
+
+Flemming Frandsen <ff@partyticket.net>
+	Random hacking
+	accesskey,tabindex support
+	Referred as 'ff' or 'FF' in the code
+
+Frédéric L. W. Meunier <0@pervalidus.tk>
+	Minor documentation updates
+
+Fuzzy European King <james@place.org>
+	Fixed lua stack overflow
+
+Gisle Vanem <giva@bgnett.no>
+	Various portability fixes
+	Fix IDN support for HTTP
+
+Grzegorz Adam Hankiewicz <gradha@terra.es>
+	Default lua hooks enhancements
+
+Grzegorz Golawski <grzegol@pld.org.pl>
+	Polish translation updates
+
+Gianluca Montecchi <gianluca@pluto.linux.it>
+	Italian translation
+
+Harold L Hunt II <huntharo@msu.edu>
+	Build system minor fixes
+
+Hugo Haas <hugo@larve.net>
+	Minor random hacking
+	debian/watch file
+
+Ingo Blechschmidt <iblech@web.de>
+	German translation updates
+
+Ionel Mugurel Ciobica <I.M.Ciobica@TUe.nl>
+	Romanian translation
+
+Jacek Fedorynski <jfedor@jfedor.org>
+	Fixed segfault when posting large forms
+
+Jakub Bogusz <qboosh@pld-linux.org>
+	Minor bugfixes
+	Polish translation updates
+
+Jakub Horak <thement@hysteria.sk>
+	Show links list at the footer of the dump output
+
+Jan Bobrowski <jb@mohan.krakow.pl>
+	Small optimization in file listing
+
+Jan Sembera <fis@ji.cz>
+	HTTP-auth support fixes and rewrite
+	Some bits of HTTPS support
+
+Jimenez Martinez Angel Luis <al026635@alumail.uji.es>
+	Spanish translation
+
+Jonas Fonseca <fonseca@diku.dk>
+	Maintainer
+	Danish translation
+	http://elinks.or.cz/
+	Mailcap support
+	Major cleanups
+	BFU and document management hacking
+	Random hacking
+
+John <martian202002@yahoo.com>
+	Tab browsing initial patch
+
+Johannes Zellner <johannes@zellner.org>
+	Minor misc hacking
+
+José Luis González González <jlg80@mi.madritel.es>
+	MIME types documentation
+	Referred as 'Jose'
+
+Josef 'Jupp' Schugt <jupp@gmx.de>
+	German translation updates
+
+Julian Kinraid <jkinraid@clear.net.nz>
+	QNX-related fixes
+
+Kalle Olavi Niemitalo <kon@iki.fi>
+	HTTP Accept-Charset header fix
+	Finnish translation update
+	Fixed unnecessary or possibly skipped calls to bind_textdomain_codeset()
+
+Kaloian Doganov <kaloian@europe.com>
+	Bulgarian translation
+	Bulgarian translation update ;)
+
+Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
+	Czech translation
+	Fixed compile incompatibility
+	One of Links authors; a lot of misc. features & code
+
+Karsten Schölzel <kuser@gmx.de>
+	Event system chief engineer
+	Scripting subsystem hacking
+	Regex searches
+	Random hacking
+
+Karvinen Ilkka <ik@iki.fi>
+	Finnish translation
+
+Kevin Keverets <keverets@users.sourceforge.net>
+	Show actual document's URL in xterm title bar
+
+Kevin B. McCarty <kmccarty@princeton.edu>
+	Fixed hooks file loading for Lua version 5.0
+
+Laurent Monin <zas@norz.org>
+	Updated French translation
+	Bookmarks hacking
+	Misc minor improvements
+	Big amount of bugfixes, tidyups and optimizations
+	Random hacking
+	HTTP Auth fixes
+	Secure file saving
+	Fastfind code
+	Memory debugging and memleaks detection
+	Referred as 'Zas' or 'zas' in the code
+
+Lewis Collard <lewis@lewis.x3fusion.com>
+	Fixed mmap() usage on FreeBSD
+
+Lukasz Dobrek <dobrek@student.ifpan.edu.pl>
+	$CONFIG_DIR for config directory (later changed to $ELINKS_CONFDIR)
+
+Len Lattanzi <Len_Lattanzi@StanfordAlumni.org>
+	Allow reading of special (non-regular) files
+
+M. K. Srikant <srix@vsnl.com>
+	Small fix in forms
+
+Marco Bodrato <bodrato@linuz.sns.it>
+	Twinterm support
+
+Mario Lorenz <ml@vdazone.org>
+	Security OpenSSL fix
+
+Marius Gedminas <marius.gedminas@uosis.mif.vu.lt>
+	Fixed reversed HOME/END on RXVT
+
+Martin Bays <elinks-dev@zugzwang.port5.com>
+	Redirect-to-mailto crash bugfix
+
+Martin Kavalec <martin@penguin.cz>
+	Fixed redundant ':' in host header
+
+Martin Norback <d95mback@dtek.chalmers.se>
+	Swedish translation
+
+Matthew Mueller <donut@azstarnet.com>
+	Random hacking
+
+Michael R. Elkins <me@cs.hmc.edu>
+	Original mailcap code from Mutt
+
+Michail Litvak <mci@owl.openwall.com>
+	Patch configure.in to force error if OpenSSL not found
+
+Michal Maruska <mmc@maruska.dyndns.org>
+	Show actual document's URL in xterm title bar
+
+Michal Politowski <mpol@charybda.icm.edu.pl>
+	Fixed saving of old xterm title in some odd cases
+		(like multi-gnome-terminal)
+
+Miciah Dashiel Butler Masters <miciah@myrealbox.com>
+	Document-specific colors usage switch possibility
+	Global history
+	Unambiguous autocompletion
+	ASCII "markup" support in the plaintext renderer
+	Magnificently elaborate fixes all over the map
+	Truly random hacking
+	The official native English speaker of our team
+
+Mikael Magnusson <mikma@users.sourceforge.net>
+	Fixed crash for IPv6 FTP when EPSV was disabled
+
+Mike Swieton <pyromage@pyromage.net>
+	Fixed bug: Form is not posted when jumping to field by number
+
+Mikolaj Machowski <mikmach@wp.pl>
+	Polish translation updates
+
+Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>
+	Original Links author
+	Maintains and makes Links-0.9x official releases.
+	http://artax.karlin.mff.cuni.cz/~mikulas/vyplody/links/
+	One of Links authors; a lot of misc. features & code
+	SMB support
+
+Morten Bo Johansen <mojo@mbjnet.dk>
+	Danish translation
+
+Muhamad Faizal <faizal@mfaizal.net>
+	Indonesian translation
+
+Nalin Dahyabhai <nalin@redhat.com>
+	Fixed occasional destroying of read buffer on Alpha
+
+Nuno Miguel Rodrigues <nmr@europa.net.dhis.org>
+	UnixWare console fix
+
+Oleg Belousov <strijar@urai.ru>
+	"Ignore charset info sent by server" is saved in config file
+
+Oleg Deribas <older@iname.com>
+	Window title and clipboard support in OS/2
+
+Olexander Kunytsa <kunia@istc.kiev.ua>
+	Ukrainian translation update
+
+Omar Khayam <omark@cyentec.com>
+	URL decode filename when saving
+
+<otte@duke.edu>
+	Fix stdin reading on Mac OS X
+
+Peder Stray <peder@ifi.uio.no>
+	Fix handling of key presses turning up as key prefixes
+
+Peter Gervai <grin@tolna.net>
+	Manpage updates
+	Mailcap to links.cfg convertor
+	Debian package files
+
+Peter Naulls <peter@chocky.org>
+	RISC OS port
+
+Peter Samek <samek@upc.uniba.sk>
+	Slovak translation updates
+
+Peter Wang <tjaden@alphalink.com.au>
+	Rebindable keys
+	Lua scripting support
+	Guile scripting support
+	Original unhistory support
+	Support for changing color defaults
+
+Petr Baudis <pasky@ucw.cz>
+	Original ELinks maintainer
+	Initial cleanups
+	Options system
+	DNS hacking
+	Initial CSS and ECMAScript support
+	Random hacking all over the map
+	Feature of the Day implementation
+	LEDs, exmode, marks and other worthless toys
+	Actually even some documentation!
+	http://elinks.or.cz/ (original cut)
+
+Petr Cech <cech@atrey.karlin.mff.cuni.cz>
+	Allow spaces at the beginning of URL
+
+Petr Kulhavy <brain@artax.karlin.mff.cuni.cz>
+	Czech translation
+	HTTP referer support
+	One of Links authors; a lot of misc. features & code
+
+Pixel <pixel@mandrakesoft.com>
+	Compilation fixes
+
+Radovan Stas <radoone@skmi.science.upjs.sk>
+	Slovak translation
+
+Raúl Núñez de Arenas Coronado <raul@pleyades.net>
+	get_unique_name() fix.
+
+Russ Rowan (Apu) <rrowan@dandy.net>
+	Patch that shorten the alt or title attribute of an image
+	Improved Perl hooks
+
+Sebastian Zagrodzki <s.zagrodzki@sith.mimuw.edu.pl>
+	Shift-G opens dialog with pre-displayed current URL
+
+Serge Winitzki <serge@mendax.phys.cwru.edu>
+	Updated Russian localization
+
+Sergei Borushevsky <b_sp@usa.net>
+	No-proxy-for
+	HTTP auth (discarded later, to be redone)
+	Ctrl-W completion
+	SSL
+
+Sergey E. Galanov <sgsoftware@mail.ru>
+	Lua-support for setting and getting Elinks options
+
+Sergey Karpov <karpov@sai.msu.su>
+	First tab browsing patch for ELinks
+	Ideas !
+
+Sergey Starosek <star@sunbay.com>
+	Optionally use credential file for the SMB protocol
+
+Sergio R. Velasquez Zeballos <svelasqu@thor.uc.edu.ve>
+	Proxy auth (Basic)
+
+Simen Graaten <simeng@slarkware.com>
+	Norwegian translation
+
+Simon Wilkinson <simon@sxw.org.uk>
+	Support for X509 client certificates
+
+Simos Xenitellis <simos@hellug.gr>
+	Greek codepages & translation
+
+Solar Designer <solar@openwall.com>
+	Number of security fixes
+
+Stefan de Groot <stefan@nllinux.nl>
+	Dutch translation
+
+Stepan Roh <stepan@srnet.cz>
+	HTTP Date (Set-Cookie expires attribute) proper parsing bugfixes
+	Random hacking
+
+Stephane Chazelas <stephane.chazelas@free.fr>
+	Cookies fixes
+	HTTP Date parsing rewrite
+	Random hacking
+	Referred as 'sc' or 'SC' in the code
+
+Suveg Gabor <gsuveg@sgmobil2000.hu>
+	Hungarian translation
+
+Sven Wegener <swegener@gentoo.org>
+	Fix stdio checks for remote sessions
+
+Taniel Kirikal <taniel@colleduc.ee>
+	Estonian translation
+
+Timo Lindfors <timo.lindfors@iki.fi>
+	HTTPS proxy support
+
+Tom Lear <tom@trap.mtview.ca.us>
+	Transparency support
+
+Uwe Hermann <uh1763@bingo-ev.de>
+	Manpage
+	Command line switch -version
+	Open link in new xterm
+
+Unai Uribarri <unai@telecable.es>
+	History
+
+Varga Balázs <vinnui@ent.hu>
+	Hungarian translation updates
+
+Wiktor Grebla <greblus@poczta.onet.pl>
+	Keybinding for toggling of document.browse.links.numbering
+
+William Yodlowsky <wyodlows@andromeda.rutgers.edu>
+	OpenSSL fixes
+
+Witold Filipczyk <witekfl@poczta.onet.pl>
+	HTTP code hacking
+	Original decompression (zlib/bzlib) support
+	FTP PASV support
+	Downloads resuming support
+	Local CGI support
+	Polish translation updates
+	Random hacking
+
+Wojtek Bojdo/l <wojboj@lp.net.pl>
+	Updated Polish localization
+
+Yevgeny Gromov <yevgeny@tut.by>
+	Belarusian translation
+
+Yurii Rashkovskii <yrashk@univer.kharkov.ua>
+	Updated Russian localization
+
+<zimon@niksula.hut.fi>
+	RPM spec file in contrib/
+	RedHat compilation fixes
+
+$Id: AUTHORS,v 1.178.2.11 2005/09/14 14:57:58 jonas Exp $

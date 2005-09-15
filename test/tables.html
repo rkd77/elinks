@@ -1,0 +1,38 @@
+<table border="1" bgcolor="blue" width="50%">
+	<caption>The rowspan in the td-tag causes the table border not to be drawn correctly</caption>
+	<tr>
+		<td bgcolor="green" rowspan="2">
+			<table border="1">
+				<tr><td>Stuff</td></tr>
+				<tr><td>Stuff2</td></tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<table border="1" bgcolor="blue" width="50%">
+	<caption>This first one is to show how's it supposed to look</caption>
+	<tr>
+		<td bgcolor="green">
+			<table border="1">
+				<tr><td>Stuff</td></tr>
+				<tr><td>Stuff2</td></tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<p style="white-space: pre">pre	meditated	cleanup</p>
+
+<table border="1" bgcolor="blue" width="50%">
+	<caption>This second one shows that the bad table tag causes the following text to be inside the table. Could be the braindeadness of skip_table()</caption>
+	<tr>
+		<td bgcolor="green">
+			<table border="1">
+				<tr><td>Stuff</td></tr>
+				<table border="1">
+				<tr><td>Stuff2</td></tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<p style="white-space: pre">pre	meditated	cleanup</p>

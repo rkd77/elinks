@@ -1,0 +1,7 @@
+* Remove plural.c from CVS.
+
+* Use our own charset routines instead of iconv.
+
+* Make it possible to include the translations directly in the ELinks binary.
+
+* Maybe some portability fixes...?

@@ -1,0 +1,588 @@
+
+<html>
+<head>
+<title>Premier job search engine on the Internet -  HotJobs.com</title>
+
+<meta name="description" content="Propel your career search onward and upward with HotJobs.com.  We provide direct access to real job vacancies at real companies. Our job search engine can find jobs by location, industry or job title and find the right career opportunity for you.">
+<meta name="keywords" content="job sites, job vacancies, resume tips, hot jobs, job search engines, internet jobs, it jobs, computer jobs, career search, job descriptions, job sites, job vacancies, resume tips, hot jobs, job search engines, internet jobs, it jobs, computer jobs, career search, job descriptions, careers, career search, hotjobs">
+
+<script language="JavaScript" src="/esatisfy/eshtjbs000pop.js" type="text/javascript"></script>
+<script language="javascript" src="/js/lib/popupWindow.js"></script>
+<script language="javascript" src="/js/common/writeBanner.js"></script>
+<script language="javascript" src="/js/common/authUtil.js"></script>
+<script language="javascript">
+
+var		HP_SUFFIX = [ ".gif", "-over.gif" ];
+var		HP_IMAGES_DIR = "/images/homepage/";
+var		HP_NAMES = [ "new_users_start_here", "post_your_resume", "return_user_login" ];
+var		hpImages = new Array();
+var		hpInitialized = null;
+
+for (var i = 0; i < HP_NAMES.length; i++) {
+	hpImages[HP_NAMES[i]] = new Array(2);
+	hpImages[HP_NAMES[i]][0] = new Image;
+	hpImages[HP_NAMES[i]][0].src = HP_IMAGES_DIR + HP_NAMES[i] + HP_SUFFIX[0];
+	hpImages[HP_NAMES[i]][1] = new Image;
+	hpImages[HP_NAMES[i]][1].src = HP_IMAGES_DIR + HP_NAMES[i] + HP_SUFFIX[1];
+}
+
+function hpRoll(nameIndex, mode)
+{
+	var		name = HP_NAMES[nameIndex];
+	
+	if (!document.images)
+		return;
+
+	document[name].src = hpImages[name][mode].src;
+}
+
+function checkQuickSearch(formVar)
+{
+	var		DELIMITER = "|";
+	var		cookieName = "JOB_SEARCH_FORM_DATA";
+	var 		cookieAttributes = "; path=/; domain=.hotjobs.com; ";
+
+	if (formVar.value == "") {
+		alert("Please enter a Keyword.");
+		return false;
+	}
+
+	document.cookie = cookieName + "=" + formVar.name + DELIMITER
+	                  + escape(formVar.value) + DELIMITER 
+			  + "HJAX" + DELIMITER + "3" + DELIMITER
+			  + "SORT" + DELIMITER + "MTIME" + DELIMITER
+			  + "ALL_INDUSTRY_FLAG" + DELIMITER + "1" + DELIMITER
+	                  + "RPPG" + DELIMITER + "20" + DELIMITER + cookieAttributes;
+	return true;
+}
+
+</script>
+<style type="text/css">
+.home-item {
+	font-family: Verdana,"Trebuchet MS",Arial,Helvetica,sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333
+}
+
+A.home-item, A.home-item:visited {
+	text-decoration: none
+}
+
+A.home-item:hover {
+	text-decoration: underline
+}
+
+</style>
+<link rel="stylesheet" type="text/css" href="/css/public/body.css"></link>
+<link rel="stylesheet" type="text/css" href="/css/public/text.css"></link>
+</head>
+
+<body bgcolor="#ffffff" marginwidth="0" marginheight="0" onLoad="setHomepageBranding();">
+
+
+<script language="javascript" src="/js/public/branding.js"></script>
+
+<!--##OUTER TABLE##--><table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+<!--##OUTER TABLE##--><tr>
+<script>
+if ((parseInt(navigator.appVersion) >= 5) && (navigator.appName == "Netscape"))
+	document.write('<td height="95%" valign="top">')
+else
+	document.write('<td height="100%" valign="top">');
+</script>
+<noscript><td height="100%" valign="top"></noscript>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td align="left" valign="bottom" nowrap><img src="/images/blank.gif" width="18" height="59" border="0" alt=""><a href="http://www.hotjobs.com/index.html"><img src="/images/logo_hj_y.gif" width="253" height="50" border="0" vspace="4" alt="HotJobs.com"></a></td>
+<td width="100%" align="right" valign="bottom"><img src="/images/blank.gif" width="250" height="59" alt="" name="brandingTop"></td>
+</tr>
+</table>
+
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td width="100%" align="right" background="/images/branding/homepage/bgstrip.gif" bgcolor="#0066cc"><img src="/images/colors/0066cc.gif" width="480" height="40" border="0" alt="" name="brandingTag"></td></tr>
+</table>
+
+<script language="javascript">
+// if IE or NS6, load the branding images right away...
+if (!document.layers) setHomepageBranding();
+
+// resize handler for ns4
+var nn4 = ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4 ));
+if (nn4){
+        window.captureEvents(Event.RESIZE);
+        window.onresize = function() { setTimeout("setHomepageBranding()", 50); }
+}
+</script>
+
+
+<script language="javascript" src="/js/public/topnav-jobseeker.js"></script>
+<script language="javascript" src="/js/public/topnavFunctions.js"></script>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2" height="1" bgcolor="#003366"><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+<tr>
+<td valign="bottom" background="/images/topnav/bgstrip.gif" nowrap><a href="http://www.hotjobs.com" onMouseover="navRoll('home', 1);" onMouseout="navRoll('home', 0);"><img src="/images/topnav/home-on.gif" width="159" height="19" border="0" alt="Home" name="home"></a><a href="/htdocs/job-search-page.html" onMouseover="navRoll('job_search', 1);" onMouseout="navRoll('job_search', 0);"><img src="/images/topnav/job_search.gif" width="113" height="19" border="0" alt="Job Search" name="job_search"></a><a href="/applicant/" onMouseover="navRoll('myhotjobs', 1);" onMouseout="navRoll('myhotjobs', 0);"><img src="/images/topnav/myhotjobs.gif" width="111" height="19" border="0" alt="myHotJobs" name="myhotjobs"></a><a href="/htdocs/tools/index.html" onMouseover="navRoll('career_tools', 1);" onMouseout="navRoll('career_tools', 0);"><img src="/images/topnav/career_tools.gif" width="125" height="19" border="0" alt="Career Tools" name="career_tools"></a><img src="/images/colors/cccccc.gif" width="1" height="18" alt=""></td>
+<td align="right" background="/images/topnav/bgstrip.gif" nowrap><img src="/images/colors/003366.gif" width="1" height="19" alt=""><a href="javascript:popupWindow('/htdocs/help/index.html', 660, 500, 'tool,resize');" onMouseover="navRoll('help', 1);" onMouseout="navRoll('help', 0);"><img src="/images/topnav/help.gif" width="160" height="19" border="0" alt="Help and FAQs" name="help"></a></td>
+</tr>
+<tr><td colspan="2" height="4" background="/images/topnav/shadow.gif"><img src="/images/blank.gif" width="1" height="4" alt=""></td></tr>
+<tr><td colspan="2" height="10"><img src="/images/blank.gif" width="1" height="10" alt=""></td></tr>
+<tr><td colspan="2" height="1" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+</table>
+
+<script language="javascript">navInit("home");</script>
+
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td rowspan="2" width="160" bgcolor="#ffffcc" valign="top">
+<!-------- left nav -------->
+
+	<table width="160" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+	<td width="5" rowspan="2"><img src="/images/blank.gif" width="5" height="1" alt=""></td>
+	<td width="150"><img src="/images/blank.gif" width="150" height="5" alt=""></td>
+	<td width="5" rowspan="2"><img src="/images/blank.gif" width="5" height="1" alt=""></td>
+	</tr>
+	<td>
+	<a href="/htdocs/splash/newusers" onMouseover="hpRoll(0, 1)" onMouseout="hpRoll(0, 0);"><img src="/images/homepage/new_users_start_here.gif" width="150" height="38" border="0" vspace="0" alt="New Users Start Here" name="new_users_start_here"></a><br>
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+	<a href="/htdocs/applicant-unauthorized.html" onMouseover="hpRoll('1', 1)" onMouseout="hpRoll('1', 0);"><img src="/images/homepage/post_your_resume.gif" width="150" height="38" border="0" vspace="0" alt="Post Your Resume" name="post_your_resume"></a><br>
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+	<a href="/applicant/" onMouseover="hpRoll('2', 1)" onMouseout="hpRoll('2', 0);"><img src="/images/homepage/return_user_login.gif" width="150" height="38" border="0" vspace="0" alt="Return User Login" name="return_user_login"></a><br>
+	<img src="/images/blank.gif" width="1" height="9" alt=""><br>
+
+	</td>
+	</tr>
+	<tr>
+	<td colspan="3" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+	</tr>
+	<tr>
+	<td></td>
+	<td class="content-sm" valign="top">
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+
+	<b>Featured Company:<br></b>
+	Home Depot<br>
+	Explore their HIGH IMPACT MANAGEMENT careers!<br>
+	<!--Find out how you can be an Army of One.<br>-->
+	<a href="http://www.hotjobs.com/cgi-bin/company-job-list?G__GID=574&RPPG=100"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+	
+	<b>Relocation Center</b><br>
+	<!--Ready to relocate? Let HotJobs help you.-->
+	Powered by Moving.com!<br>
+	<a href="/htdocs/rc-mov-index.html"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+
+	<b>HotJobs Communities</b><br>
+	Swap job tips and advice!<br>
+	<a href="/htdocs/client/splash/communities/"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+
+	</td>
+	</tr>
+	</table>
+
+</td>
+
+<td rowspan="2" width="1" valign="top" background="/images/sidenav/divider-bg1.gif"><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+
+<td valign="top">
+<!-------- main content -------->
+
+
+	<table border="0" cellpadding="5" cellspacing="0" width="100%">
+	<noscript>
+	<tr>
+	<td colspan="3">
+	<span class="error">
+	<img border ="0" src="/images/flash.gif">
+	<b>We're sorry! Your browser doesn't support required HotJobs.com technologies. Please upgrade to a more recent version of your web browser. </b>
+	</span><br><br>
+	</td>
+	</tr>
+	</noscript>	
+	<tr>
+	<td valign="top" width="34%">
+	<!-------- "Search for Jobs" box -------->
+	<span class="home-item">Quick Job Search</span><br>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td width="100%" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1"></td></tr>
+</table>
+
+	<img src="/images/blank.gif" width="1" height="3" alt=""><br>
+
+		<table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+		<td class="content-sm">Enter Keyword(s):</td>
+		<td><form action="/cgi-bin/job-search" method="get" onSubmit="return checkQuickSearch(this.KEYWORDS);"></td>
+		</tr>
+		<tr>
+		<td colspan="2">
+		<span class="input"><input type="text" size="15" maxlength="50" name="KEYWORDS" class="input"></span>
+		</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+		<input type="image" src="/images/buttons/search.gif" border="0" vspace="3" hspace="0" alt="Search">		
+		</td>
+		</tr>
+		<tr>
+		<td>
+		<input type="hidden" name="PARSE_NO_NULL" value="1">
+		<input type="hidden" name="HJ_JOBS" value="1">
+		<input type="hidden" name="AX_JOBS" value="1">		
+		</td>
+		<td>
+		</form>
+		</td>
+		</tr>
+		</table>
+
+	<img src="/images/blank.gif" width="1" height="12" alt=""><br>
+	<span class="home-item">More Search Options</span><br>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td width="100%" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1"></td></tr>
+</table>
+
+	<img src="/images/blank.gif" width="1" height="2" alt=""><br>
+		<table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="/htdocs/job-search-page.html" class="nav-label">Advanced Job Search</a></td>
+		</tr>
+		<tr><td><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="/htdocs/company-list/" class="nav-label">By Company</a></td>
+		</tr>
+		<tr><td><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="http://agency.hotjobs.com/hjpublic/htdocs/agency-list/" class="nav-label">By Staffing Firm</a></td>
+		</tr>
+		<tr><td><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="/htdocs/browse/state/" class="nav-label">By US Location</a></td>
+		</tr>
+		<tr><td><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="/htdocs/browse/country/" class="nav-label">By Int'l Location</a></td>
+		</tr>
+		</table>
+
+	<img src="/images/blank.gif" width="1" height="18" alt=""><br>
+
+	<span class="home-item">International Sites</span><br>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td width="100%" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1"></td></tr>
+</table>
+
+	<img src="/images/blank.gif" width="1" height="2" alt=""><br>
+		<table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="http://www.hotjobs.ca" class="nav-label">HotJobs Canada</a></td>
+		</tr>
+		<tr><td><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+		<tr>
+		<td valign="top"><img src="/images/icons/pointer1.gif" width="15" height="14" alt=""></td>
+		<td valign="top"><a href="http://www.hotjobs.com.au" class="nav-label">HotJobs Australia</a></td>
+		</tr>
+		</table>
+		
+
+	<img src="/images/blank.gif" width="1" height="10" alt=""><br>
+	<!-------- end "Search for Jobs" box -------->
+	</td>
+
+	<td valign="top" width="66%">
+	<!-------- "Job Categories" -------->
+
+	<span class="home-item">Search by Job Category</span><br>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td width="100%" bgcolor="#cccccc"><img src="/images/blank.gif" width="1" height="1"></td></tr>
+</table>
+
+	<img src="/images/blank.gif" width="1" height="4" alt=""><br>
+
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<tr>
+	<td width="50%" valign="top" align="left">
+	<a href="/htdocs/channels/accounting/" class="content">Accounting/Finance</a><br>
+	<a href="/htdocs/channels/advertising/" class="content">Advertising/PR</a><br>
+	<a href="/htdocs/channels/arts/" class="content">Arts/Entertainment/<br>Publishing</a><br>
+	<a href="/htdocs/channels/banking/" class="content">Banking/Mortgage</a><br>
+	<a href="/htdocs/channels/clerical/" class="content">Clerical/Administrative</a><br>
+	<a href="/htdocs/channels/college/" class="content">College</a><br>
+	<a href="/htdocs/channels/construction/" class="content">Construction/Facilities</a><br>
+	<a href="/htdocs/channels/customerserv/" class="content">Customer Service</a><br>
+	<a href="/htdocs/channels/education/" class="content">Education/Training</a><br>
+	<a href="/htdocs/channels/engineering/" class="content">Engineering/Architecture</a><br>
+	<a href="/htdocs/channels/startup/"  class="content">Entrepreneurial/Start-up</a><br>
+	<a href="/htdocs/channels/entry/" class="content">Entry Level</a><br>
+	<a href="/htdocs/channels/public/" class="content">Government</a><br>
+	<a href="/htdocs/channels/health/" class="content">Health Care</a><br>
+	<a href="/htdocs/channels/hospitality/" class="content">Hospitality/Travel</a><br>
+	<a href="/htdocs/channels/hr/" class="content">Human Resources</a><br>
+	<a href="/htdocs/channels/insurance/" class="content">Insurance</a><br>
+	</td>
+	<td><img src="/images/blank.gif" width="5" height="10" alt=""></td>
+	<td width="50%" valign="top" align="left" nowrap>
+	<a href="/htdocs/channels/internet/" class="content">Internet/New Media</a><br>
+	<a href="/htdocs/channels/security/" class="content">Law Enforcement/Security</a><br>
+	<a href="/htdocs/channels/legal/" class="content">Legal</a><br>
+	<a href="/htdocs/channels/consulting/" class="content">Management Consulting</a><br>
+	<a href="/htdocs/channels/manufacturing/" class="content">Manufacturing/Operations</a><br>
+	<a href="/htdocs/channels/marketing/" class="content">Marketing</a><br>
+	<a href="/htdocs/channels/nonprofit/" class="content">Non-Profit/Volunteer</a><br>
+	<a href="/htdocs/channels/bio/" class="content">Pharmaceutical/Biotech</a><br>
+	<a href="/htdocs/channels/realestate/" class="content">Real Estate</a><br>
+	<a href="/htdocs/channels/foodservice/" class="content">Restaurant/Food Service</a><br>
+	<a href="/htdocs/channels/retail/" class="content">Retail</a><br>
+	<a href="/htdocs/channels/sales/" class="content">Sales</a><br>
+	<a href="/htdocs/channels/techcontract/" class="content">Tech Contract</a><br>
+	<a href="/htdocs/channels/tech/" class="content">Technology</a><br>
+	<a href="/htdocs/channels/telecom/" class="content">Telecommunications</a><br>
+	<a href="/htdocs/channels/temp/" class="content">Temp Jobs</a><br>
+	<a href="/htdocs/channels/transportation/" class="content">Transportation/Logistics</a><br>
+        <a href="/htdocs/channels/other/" class="content">Other</a><br>
+	</td>
+	</tr>
+	</table>
+
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+	<!-------- end "Job Categories" -------->		
+
+</td>
+</tr>
+</table>
+</td>
+
+
+<td rowspan="2" width="1" valign="top" background="/images/sidenav/divider-bg1.gif"><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+
+<td rowspan="2" width="160" bgcolor="#E5F4FF" valign="top">
+<!-------- right nav -------->
+	<table width="160" border="0" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+	<tr>
+	<td colspan="3" bgcolor="#0066cc"><img src="/images/blank.gif" width="160" height="1" alt=""></td>
+	</tr>
+	<tr>
+	<td bgcolor="#0066cc" width="1"><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+	<td width="158"><a href="javascript:popupWindow('/cgi-bin/parse-file?TEMPLATE=/htdocs/popup/yahoo_pop_index.html', 600, 400, 'tool,resize')"><img src="/images/homepage/hj_yahoo.gif" width="158" height="77" border="0" alt=""></a></td>
+	<td bgcolor="#0066cc" width="1"><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+	</tr>
+	<tr>
+	<td colspan="3" bgcolor="#0066cc"><img src="/images/blank.gif" width="160" height="1" alt=""></td>
+	</tr>
+	</table>
+
+<a href="/htdocs/employer/"><img src="/images/homepage/employers_recruiters.gif" width="160" height="50" border="0" alt="Employers & Recruiters Click Here"></a>
+
+
+	<table width="160" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+	<td width="5" rowspan="2"><img src="/images/blank.gif" width="5" height="1" alt=""></td>
+	<td width="150"><img src="/images/blank.gif" width="150" height="3" alt=""></td>
+	<td width="5" rowspan="2"><img src="/images/blank.gif" width="5" height="1" alt=""></td>
+	</tr>
+	<td class="content-sm">
+
+	<b>Post a Job</b><br>
+	It's fast, easy and cost effective.<br>
+	<a href="/htdocs/employer/postajob/index.html"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+	
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+	
+	<b>Become a Member</b><br>
+	A direct connection to the best candidates.<br>
+	<a href="/htdocs/employer/member-index.html"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+	
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+
+	<b>HotJobs Products</b><br>
+	Specially designed to fit all your recruiting needs.<br>
+	<a href="/htdocs/employer/products-index.html"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+	
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+
+<!--
+	<b>Download a Sales Kit</b><br>
+	View our online Sales Kit and marketing materials.<br>
+	<a href="/htdocs/employer/salesslick.html"><img src="/images/homepage/go-sm.gif" width="19" height="14" border="0" alt="Go"></a><br>
+
+	<img src="/images/blank.gif" width="1" height="5" alt=""><br>
+-->
+	</td>
+	</tr>
+	</table>
+
+<img src="/images/colors/cccccc.gif" width="159" height="1" alt=""><br>
+<img src="/images/homepage/gsa-logo.gif" width="159" height="56" border="0" alt="GSA - Official GSA Contractor">
+</td>
+</tr>
+<tr>
+<!-- netscape 4.7 hack - this row/cell must be here! -->
+<td width="100%"></td>
+</tr>
+</table>
+
+
+<!---------- divider line ---------->
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td bgcolor="#cccccc" width="100%"><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+</table>
+
+
+<!-------- doubleclick banner ads -------->
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td height="10" width="130"><img src="/images/blank.gif" width="130" height="10"></td>
+<td></td>
+<td width="10"><img src="/images/blank.gif" width="10" height="10" alt=""></td>
+<td width="153"><img src="/images/blank.gif" width="1" height="10" alt=""></td>
+</tr>
+<tr>
+<td align="left" valign="middle">
+	<!-- Ext: Newsletter Signup Box -->
+
+	<script language="JavaScript">
+	function checkSubscriberEmail(formVar , redirLoc) 
+	{
+	// checks that email address is not blank or whitespace
+	// and is valid (contains '@' symbol
+		
+		redirLoc.value += '&email=' + formVar.value;
+		
+		if (formVar.value.search(/^ *$/) !== -1) 
+			alert("Please specify an E-mail address.\n");
+		else if (formVar.value.search(/@/) == -1)  
+			alert("The e-mail address you specified is not valid; all e-mail addresses must contain an '@' symbol.\n");
+		else 
+			return true;
+
+		return false;
+	}
+	</script>
+
+	<table border="0" cellpadding="0" cellspacing="0">
+	<tr>
+	<td width="5" rowspan="10"><form action="/cgi-bin/response-form" method="post" name="newsform" onSubmit="return checkSubscriberEmail(this.email , this.REDIR_LOC);"><img src="/images/blank.gif" width="5" height="1" alt=""></td>
+	<td><img src="/images/blank.gif" width="1" height="1" alt=""></td>
+	<td width="4" rowspan="10"><img src="/images/blank.gif" width="4" height="1" alt=""></td>
+	</tr>
+	<tr>
+	<td>
+	<span class="content-sm"><b>Get our Newsletter:</b><br>E-mail address:</span><br>
+	<input type="text" name="email" size="15" maxlength="64">
+	</td>
+	</tr>
+	<tr><td><img src="/images/blank.gif" width="1" height="3" alt=""></td></tr>
+	<tr>
+	<td valign="top" nowrap><input type="image" src="/images/buttons/subscribe.gif" border="0" vspace="0" alt="Subscribe"><a href="/htdocs/newsletter/newsletter-all.html"><img src="/images/sidenav/see_all_newsletters.gif" width="74" height="20" border="0" alt="See All Newsletters"></a></td>
+	</tr>
+	<tr>
+	<td>
+	<input type="hidden" name="worksheet" value=":newsletter">
+	<input type="hidden" name="REDIR_LOC" value="/cgi-bin/parse-file?TEMPLATE=/htdocs/newsletter/newsletter-subscribe-complete.html">
+	<input type="hidden" name="TEMPLATE" value="/htdocs/newsletter/newsletter-signup-multi-hj.ltr">
+	</form>
+	</td>
+	</tr>
+	</table>
+	<!-- EndExt: Newsletter Signup Box -->
+
+</td>
+<td align="right" valign="top"><script language="javascript">writeBanner('468',';home=home1;');</script></td>
+<td></td>
+<td valign="top"><script language="javascript">writeBanner('120',';home=home2;');</script></td>
+</tr>
+</table>
+
+<!--------- bottom spacer -------->
+<img src="/images/blank.gif" width="1" height="20" alt=""><br>
+
+<!--##OUTER TABLE##--></td></tr><tr><td valign="bottom">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr><td width="100%" height="1" bgcolor="#003366"><img src="/images/blank.gif" width="1" height="1" alt=""></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="#0066cc">
+<tr>
+<td width="5" class="footer">&nbsp;</td> <td align="left" class="footer" nowrap>
+<a href="javascript:popupWindow('http://www.hotjobs.com/htdocs/help/index.html', 660, 500, 'tool,resize');" class="footer">Help</a>&nbsp;|
+<a href="http://www.hotjobs.com/htdocs/about/contact-index.html" class="footer">Contact Us</a>&nbsp;|
+<a href="http://www.hotjobs.com/cgi-bin/company-job-list?G__GID=145&TEMPLATE=/htdocs/about/careers-index.html" class="footer">Work at HotJobs</a>&nbsp;|
+<a href="http://www.hotjobs.com/htdocs/about/index.html" class="footer">About HotJobs</a>&nbsp;|
+<a href="http://www.hotjobs.com/hotmedia/index.html" class="footer">Advertise</a>
+</td>
+<td align="right" class="footer">
+<span class="footer">&copy;1997-2002 HotJobs.com</span>&nbsp;|
+<a href="http://www.hotjobs.com/htdocs/legal.html" class="footer">Legal</a>&nbsp;|
+<a href="http://www.hotjobs.com/htdocs/privacy.html" class="footer">Privacy</a>&nbsp;&nbsp;
+</td>
+</tr>
+</table>
+<!--##OUTER TABLE##--></td></tr></table>
+
+
+
+
+
+<script language="javascript">
+// ##################################
+// ###       popup ad stuff       ###
+// ##################################
+
+function setCookie(cookieName, cookieVal, hours) 
+{
+	var expireVal = "";
+	var ExpireDate = new Date();
+	
+	ExpireDate.setTime(ExpireDate.getTime() + (hours * 3600 * 1000)); 
+	
+	if (hours)
+		expireVal = "; expires=" + ExpireDate.toGMTString();
+	
+	
+	document.cookie = cookieName + "=" + escape(cookieVal) + expireVal + "; path=/;";
+} 
+
+if (window.location.href.indexOf('?') == -1) {
+	if (document.cookie.indexOf('AdComPop') != -1) {
+		function AdsComPopup(){};
+	} else { 
+		var bnum = new Number(Math.floor(99999999 * Math.random()) + 1);
+		var site = 64164;
+		var pops = 1;
+		var scriptline = '<script language="JavaScript"  src="http://servedby.advertising.com/site=-xSITEx-/bnum=-xBNUMx-/pops=-xPOPSx-"><\/script>';
+
+		setCookie('AdComPop','yes'); 
+	
+		// Variable Replacements
+		scriptline = scriptline.replace(/-xSITEx-/i, site );
+		scriptline = scriptline.replace(/-xBNUMx-/i, bnum );
+		scriptline = scriptline.replace(/-xPOPSx-/i, pops );
+		document.write( scriptline ); 
+	}	 
+}
+</script>
+
+<script>
+
+if (window.location.href.indexOf('?') == -1) {
+	window.focus();
+	setTimeout("window.focus();", 500);
+}
+
+</script>
+
+</body>
+</html>

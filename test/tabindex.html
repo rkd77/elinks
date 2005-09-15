@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><title>Tabindex &amp; accesskey testing</title></head><body>
+<p><a accesskey="C" href="tabindex.html#hit_none_6">No Tabindex 6 (C)</a></p>
+<p><a href="tabindex.html#hit_none_2">No Tabindex 7</a></p>
+<p><a accesskey="A" href="tabindex.html#hit5" tabindex="5">Tabindex 5 (A)</a></p>
+<p><a accesskey="B" href="tabindex.html#hit4" tabindex="4">Tabindex 4 (B)</a></p>
+<p><a href="tabindex.html#hit_none_8">No Tabindex 8</a></p>
+
+<p>
+<form action="tabindex.html">
+<input accesskey="D" type="text" name="field1" value="tabindex 3 (D)" tabindex=3>
+<select accesskey="F2" name="field3">
+<option value="v1">Value 1 (no tabindex)</option>
+<option value="v2">Value 2</option>
+<option value="v3">Value 3</option>
+</select>
+<input accesskey="F1" type="text" name="field2" value="tabindex 2 (F1)" tabindex=2>
+<input accesskey="E" type="submit" name="submit" value="submit (tabindex 1 (E))" tabindex=1>
+</form>
+</p>
+
+<p><a accesskey="F11" href="http://pasky.ji.cz">No Tabindex 9 (F11)</a></p>
+<p><a accesskey="F10" href="tabindex.html#hit_none_9d">F10</a></p>
+<p><a accesskey="F9" href="tabindex.html#hit_none_9e">F9</a></p>
+<p><a accesskey="F8" href="tabindex.html#hit_none_9o">F8</a></p>
+<p><a accesskey="F7" href="tabindex.html#hit_none_9f">F7</a></p>
+<p><a accesskey="F6" href="tabindex.html#hit_none_9g">F6</a></p>
+<p><a accesskey="F5" href="tabindex.html#hit_none_9h">F5</a></p>
+<p><a accesskey="F4" href="tabindex.html#hit_none_9j">F4</a></p>
+<p><a accesskey="F3" href="tabindex.html#hit_none_9k">F3</a></p>
+<p><a accesskey="F2" href="tabindex.html#hit_none_9l">F2</a></p>
+<p><a accesskey="F1" href="tabindex.html#hit_none_9;">F1</a></p>
+<p><a accesskey="F12" href="tabindex.html#hit_none_'9">F12</a></p>
+<p>
+Note: When tabbing through the links above the order ought to follow
+the numbers, wether the link has a tabindex or not, konqueror gets
+this right.
+</p>
+</body></html>

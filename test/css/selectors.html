@@ -1,0 +1,18 @@
+<style>
+	div	{ color: yellow }
+	div#foo	{ background: red }
+	div.foo { background: blue }
+	div .foo{ background: purple }
+	p,span	{ color: aqua; }
+	div,	{ background: green; }
+	p	{ background: gray }
+	p span	{ color: red; }
+	p>span	{ color: purple; }
+	p * i	{ color: green; background: white; }
+</style>
+
+<div>div <span>span</span> div <span class="foo">spanclass</span> div</div>
+<div id="foo">id</div>
+<div class="foo">class <i>i</i></div>
+<p>p <span>i</span> <b>bold <span>i</span></b></p>
+<p><b>jedi<i> mind </i>tricks</b></p>

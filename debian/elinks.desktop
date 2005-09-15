@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=ELinks
+Categories=Application;Network
+GenericName=Web Browser
+Comment=Browse the World Wide Web in Text-Mode
+Exec=/usr/bin/elinks %u
+Terminal=1
+Type=Application
+Icon=html
+MimeType=text/html
+XClassHintResName=ELinks

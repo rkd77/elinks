@@ -1,0 +1,15 @@
+<script>
+	<!-- hahaha
+	function foo() { document.title += 'hahahaha'; }
+	//-->
+</script>
+<script type="text/javascript">
+	function nice_href() { return 'elinks.or.cz'; }
+	document.title = document.url + ' xyzzy ';
+</script>
+<script type="text/perl">
+	document.title += ' ERROR ERROR ';
+</script>
+<body onLoad=foo()>
+	<p><a href="javascript:nice_href(0);">Quee</a></p>
+</body>

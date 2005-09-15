@@ -1,0 +1,47 @@
+Homepage:
+	http://elinks.or.cz/
+
+DEBs:
+	http://packages.debian.org/testing/web/elinks.html
+	http://packages.debian.org/unstable/web/elinks.html
+	http://www.miernik.ctnet.pl/debian/ (of current unstable CVS)
+
+RPMs:
+	http://rpmfind.net/linux/rpm2html/search.php?query=elinks
+	http://ftp.nest.pld-linux.org/pool/e/elinks/
+	http://ftp.pld-linux.org/pool/e/elinks/
+
+Cygwin binaries:
+	http://www.pervalidus.net/cygwin/links/
+
+CVS root:
+	:pserver:anonymous@cvs.elinks.or.cz:/var/cvs/elinks
+	:pserver:anonymous@cvs.pld.org.pl:/cvsroot
+	:pserver:anoncvs@pasky.or.cz:/home/cvs/elinks (master, DEPRECATED)
+
+Mailing list:
+	http://elinks.or.cz/community.html#mailinglist
+	elinks-users@linuxfromscratch.org (user discussion, announcements)
+	elinks-dev@linuxfromscratch.org (weird development and sorcery talks)
+	listar@linuxfromscratch.org (Subject: subscribe elinks-users)
+
+
+If you want to see the original Links as well, try:
+
+Primary site:
+	http://artax.karlin.mff.cuni.cz/~mikulas/links/
+
+Mirrors:
+	http://links.sourceforge.net/download/
+	ftp://ftp.fu-berlin.de/unix/network/www/links/
+
+DEBs:
+	http://packages.debian.org/stable/web/links.html
+	http://packages.debian.org/unstable/web/links.html
+
+RPMs:
+	http://rpmfind.net/linux/rpm2html/search.php?query=links
+	http://ftp.nest.pld-linux.org/pool/l/links/
+	http://ftp.pld-linux.org/pool/l/links/
+
+$Id: SITES,v 1.20 2004/07/28 16:25:03 jonas Exp $

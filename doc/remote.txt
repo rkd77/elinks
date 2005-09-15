@@ -1,0 +1,88 @@
+Managing remote ELinks instances
+--------------------------------
+
+Some programs provide the ability to pass URIs to external programs.  When
+stumbling upon a reference to a page you want to see, it is sometimes a kludge
+to copy and paste it into ELinks.  This is where -remote can be a nifty
+solution.
+
+When invoking ELinks with the -remote argument, it does not start a new
+instance, but instead connects to an already running ELinks, making it
+possible to control that ELinks instance. The -remote command line switch
+takes a command consisting of the action to invoke and any parameters to the
+action.  Here is an example for opening freshmeat.net in a new tab:
+
+	$ elinks -remote "openURL(http://freshmeat.net/, new-tab)"
+
+When running this command in a terminal, you will see a small delay before
+ELinks returns. If no running instance was found, it will return with the
+error message:
+
+	ELinks: No remote session to connect to.
+
+All URLs passed to the openURL() commands can be URL prefixes, so the command
+above could have simply used ``openURL(fm, new-tab)''.
+
+
+Limitations and outstanding issues
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Remote control is implemented using the intercommunication socket created in
+~/.elinks/, so the command has to be run on the same machine as the instance
+you want to control; or put differently: the two ELinkses need to share a file
+system that supports socket files, which rules out usage of -remote over NFS.
+This also implies that the ELinks instance you want to control should be
+started without passing -no-home nor -no-connect.
+
+The built-in -remote support is to some degree compatible with the one Mozilla
+provides (http://www.mozilla.org/unix/remote.html), but with some homebrew
+extensions added and few unsupported features. All the supported actions are
+documented below.
+
+Under some circumstances, use of the -remote control can cause ELinks to
+become unresponsive. This is cause by the current key press and mouse focus
+being redirected to new tabs or dialogs opened by the -remote action.
+
+
+Remote Actions
+~~~~~~~~~~~~~~
+
+The command syntax is case-insensitive. For readability, we use the casing in
+the listing of supported commands.
+
+.Mozilla `-remote` compatible commands.
+`-------------------------------`----------------------------------------------
+Command				Description
+-------------------------------------------------------------------------------
+ping()				Checks for existence of a remote instance.    \
+				Makes it possible for scripts to query if     \
+				remote controlling is possible.
+openURL()			Prompts for a URL in current tab by opening   \
+				the Goto dialog.
+openURL(URL)			Open the passed URL in current tab.
+openURL(URL, new-tab)		Opens the passed URL in new tab.
+openURL(URL, new-window)	Opens the passed URL in new window.
+xfeDoCommand(openBrowser)	Opens an ELinks instance in a new window.     \
+				This ELinks instance will connect to the      \
+				already running one.
+-------------------------------------------------------------------------------
+
+.ELinks extensions.
+`-------------------------------`----------------------------------------------
+Command				Description
+-------------------------------------------------------------------------------
+addBookmark(URL)		Bookmarks the passed URL.
+-------------------------------------------------------------------------------
+
+`-remote` can also take a list of URLs without an explicit action, in which case
+the URL arguments will be opened in new tabs in the remote instance. For
+example, by running:
+
+	$ elinks -remote slashdot.org fm g:elinks
+
+new tabs containing `slashdot.org`, `freshmeat.net` and a Google search of elinks
+will be opened.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: remote.txt,v 1.4.2.3 2005/09/13 10:12:28 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

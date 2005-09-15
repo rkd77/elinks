@@ -1,0 +1,64 @@
+			README for ELinks Documentation
+
+Introduction:
+-------------
+
+The work to provide better documentation for ELinks has just begun. Here you
+will find mostly documentation that has already been made available in some
+other format but has been moved to DocBook. The long term goal is to gradually
+make the documentation evolve into a complete manual.
+
+- One reason for this relaxed approach is that a lot of things in ELinks is
+  probably going to change during the next major releases so the effort might
+  be of better use if it was put into something else.
+
+- Secondly ELinks is pretty straight forward to use so most users will quickly
+  get the hang of it.
+
+The manual will try to provide info which enlightens the darker sides of
+ELinks. If you have some ideas/tips/info that will help a lost soul or make
+using this great program even better please consider to contribute and make the
+best possible manual for ELinks.
+
+The document type, processing and where to get it:
+--------------------------------------------------
+
+The manual is written using the Simplified DocBook DTD basicly this means all
+documents should validate as DocBook/XML. The SGML and XML versions of the DTD
+are almost identical so this is obviously a Good Thing[TM] and it will ensure
+that as many systems as possible will be able to build the documentation.
+
+The processing can be made using either wrappers like the db2*, docbook2* and
+xmlto or directly calling saxon, xsltproc, jade etc. A tool has been made to
+work with the buildsystem and make processing easy, but it will only search
+your system for a limited amount of possible installed docbook processing
+tools. Validation will hopefully also be made part of the processing script
+mentioned above.
+
+For systems without the necessary tools check the documentation web page for
+further info. (http://elinks.or.cz/documentation)
+
+License:
+--------
+
+The documentation is distributed under the terms of the GNU General Public
+License, Version 2 or any later version published by the Free Software
+Foundation. See the legal notice in manual.sgml for further info. The license
+is available in the COPYING file present in the source root of ELinks.
+
+How to contribute:
+------------------
+
+Contributions are very warmly welcomed. Wether it be fixing of typos or bad
+grammar, rewritings or new material. All info relevant to ELinks usage can be
+included in the manual. Including FAQ material, tips and cheats ;)
+
+There is no strict codingstyle. But please don't limit your use of whitespace
+and take a look at the style used in the current documents to get ideas of what
+is reasonable.
+
+Contributions should be sent to Jonas Fonseca <fonseca@diku.dk>. If your changing
+something in an existing document please read about how to make unified patches
+in the Patches section of the doc/hacking.txt file.
+
+$Id: README,v 1.2 2003/05/09 01:25:48 jonas Exp $

@@ -1,0 +1,720 @@
+/* Sessions task management */
+/* $Id: task.c,v 1.146.2.8 2005/09/14 13:19:10 jonas Exp $ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "elinks.h"
+
+#include "bfu/menu.h"
+#include "bfu/dialog.h"
+#include "cache/cache.h"
+#include "dialogs/status.h"
+#include "document/document.h"
+#include "document/html/parser.h"
+#include "document/refresh.h"
+#include "document/view.h"
+#include "intl/gettext/libintl.h"
+#include "lowlevel/select.h"
+#include "protocol/protocol.h"
+#include "protocol/uri.h"
+#include "terminal/terminal.h"
+#include "terminal/window.h"
+#include "sched/download.h"
+#include "sched/event.h"
+#include "sched/session.h"
+#include "sched/task.h"
+#include "viewer/text/view.h"
+
+
+static void
+free_task(struct session *ses)
+{
+	assertm(ses->task.type, "Session has no task");
+	if_assert_failed return;
+
+	if (ses->loading_uri) {
+		done_uri(ses->loading_uri);
+		ses->loading_uri = NULL;
+	}
+	ses->task.type = TASK_NONE;
+}
+
+void
+abort_preloading(struct session *ses, int interrupt)
+{
+	if (!ses->task.type) return;
+
+	change_connection(&ses->loading, NULL, PRI_CANCEL, interrupt);
+	free_task(ses);
+}
+
+
+struct task {
+	struct session *ses;
+	struct uri *uri;
+	enum cache_mode cache_mode;
+	enum task_type type;
+	unsigned char *target_frame;
+	struct location *target_location;
+};
+
+static void
+post_yes(struct task *task)
+{
+	struct session *ses = task->ses;
+
+	abort_preloading(task->ses, 0);
+
+	ses->loading.callback = (void (*)(struct download *, void *)) loading_callback;
+	ses->loading.data = task->ses;
+	ses->loading_uri = task->uri; /* XXX: Make the session inherit the URI. */
+
+	ses->task.type = task->type;
+	ses->task.target_frame = task->target_frame;
+	ses->task.target_location = task->target_location;
+
+	load_uri(ses->loading_uri, ses->referrer, &ses->loading,
+		 PRI_MAIN, task->cache_mode, -1);
+}
+
+static void
+post_no(struct task *task)
+{
+	reload(task->ses, CACHE_MODE_NORMAL);
+	done_uri(task->uri);
+}
+
+/* Check if the URI is obfuscated (bug 382). The problem is said to occur when
+ * a URI designed to pass access a specific location with a supplied username,
+ * contains misleading chars prior to the @ symbol.
+ *
+ * An attacker can exploit this issue by supplying a malicious URI pointing to
+ * a page designed to mimic that of a trusted site, and tricking a victim who
+ * follows a link into believing they are actually at the trusted location.
+ *
+ * Only the user ID (and not also the password) is checked because only the
+ * user ID is displayed in the status bar. */
+static int
+check_malicious_uri(struct uri *uri)
+{
+	unsigned char *user, *pos;
+	int warn = 0;
+
+	assert(uri->user && uri->userlen);
+
+	user = pos = memacpy(uri->user, uri->userlen);
+	if (!user) return 0;
+
+	decode_uri_for_display(user);
+
+	while (*pos) {
+		int length, trailing_dots;
+
+		for (length = 0; pos[length] != '\0'; length++)
+			if (!(isalnum(pos[length]) || pos[length] == '.'))
+				break;
+
+		/* Wind back so that the TLD part is checked correctly. */
+		for (trailing_dots = 0; trailing_dots < length; trailing_dots++)
+			if (!length || pos[length - trailing_dots - 1] != '.')
+				break;
+
+		/* Not perfect, but I am clueless as how to do better. Besides
+		 * I don't really think it is an issue for ELinks. --jonas */
+		if (end_with_known_tld(pos, length - trailing_dots) != -1) {
+			warn = 1;
+			break;
+		}
+
+		pos += length;
+
+		while (*pos && (!isalnum(*pos) || *pos == '.'))
+			pos++;
+	}
+
+	mem_free(user);
+
+	return warn;
+}
+
+void
+ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
+	 struct location *target_location, enum cache_mode cache_mode,
+	 enum task_type task_type, int redir)
+{
+	struct task *task = NULL;
+	int referrer_incomplete = 0;
+	int malicious_uri = 0;
+	int confirm_submit = uri->form;
+	unsigned char *m1 = NULL, *message = NULL;
+
+	if (ses->doc_view
+	    && ses->doc_view->document
+	    && ses->doc_view->document->refresh) {
+		kill_document_refresh(ses->doc_view->document->refresh);
+	}
+
+	assertm(!ses->loading_uri, "Buggy URI reference counting");
+
+	/* Reset the redirect counter if this is not a redirect. */
+	if (!redir) {
+		ses->redirect_cnt = 0;
+	}
+
+	/* Figure out whether to confirm submit or not */
+
+	/* Only confirm submit if we are posting form data or a misleading URI
+	 * was detected. */
+	/* Note uri->post might be empty here but we are still supposely
+	 * posting form data so this should be more correct. */
+
+	if (uri->user && uri->userlen
+	    && get_opt_bool("document.browse.links.warn_malicious")
+	    && check_malicious_uri(uri)) {
+		malicious_uri = 1;
+		confirm_submit = 1;
+
+	} else if (!uri->form) {
+		confirm_submit = 0;
+
+	} else {
+		struct cache_entry *cached;
+
+		/* First check if the referring URI was incomplete. It
+		 * indicates that the posted form data might be incomplete too.
+		 * See bug 460. */
+		if (ses->referrer) {
+			cached = find_in_cache(ses->referrer);
+			referrer_incomplete = (cached && cached->incomplete);
+		}
+
+		if (!get_opt_bool("document.browse.forms.confirm_submit")
+		    && !referrer_incomplete) {
+			confirm_submit = 0;
+
+		} else if (get_validated_cache_entry(uri, cache_mode)) {
+			confirm_submit = 0;
+		}
+	}
+
+	if (!confirm_submit) {
+		ses->loading.callback = (void (*)(struct download *, void *)) loading_callback;
+		ses->loading.data = ses;
+		ses->loading_uri = get_uri_reference(uri);
+
+		ses->task.type = task_type;
+		ses->task.target_frame = target_frame;
+		ses->task.target_location = target_location;
+
+		load_uri(ses->loading_uri, ses->referrer, &ses->loading,
+			 PRI_MAIN, cache_mode, -1);
+
+		return;
+	}
+
+	task = mem_alloc(sizeof(*task));
+	if (!task) return;
+
+	task->ses = ses;
+	task->uri = get_uri_reference(uri);
+	task->cache_mode = cache_mode;
+	task->type = task_type;
+	task->target_frame = target_frame;
+	task->target_location = target_location;
+
+	if (malicious_uri) {
+		unsigned char *host = memacpy(uri->host, uri->hostlen);
+		unsigned char *user = memacpy(uri->user, uri->userlen);
+		unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
+
+		message = msg_text(ses->tab->term,
+			N_("The URL you are about to follow might be maliciously "
+			"crafted in order to confuse you. By following the URL "
+			"you will be connecting to host \"%s\" as user \"%s\".\n\n"
+			"Do you want to go to URL %s?"), host, user, uristring);
+
+		mem_free_if(host);
+		mem_free_if(user);
+		mem_free_if(uristring);
+
+	} else if (redir) {
+		m1 = N_("Do you want to follow the redirect and post form data "
+			"to URL %s?");
+
+	} else if (referrer_incomplete) {
+		m1 = N_("The form data you are about to post might be incomplete.\n"
+			"Do you want to post to URL %s?");
+
+	} else if (task_type == TASK_FORWARD) {
+		m1 = N_("Do you want to post form data to URL %s?");
+
+	} else {
+		m1 = N_("Do you want to repost form data to URL %s?");
+	}
+
+	if (!message && m1) {
+		unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
+
+		message = msg_text(ses->tab->term, m1, uristring);
+		mem_free_if(uristring);
+	}
+
+	msg_box(ses->tab->term, getml(task, NULL), MSGBOX_FREE_TEXT,
+		N_("Warning"), ALIGN_CENTER,
+		message,
+		task, 2,
+		N_("~Yes"), post_yes, B_ENTER,
+		N_("~No"), post_no, B_ESC);
+}
+
+
+/* If @loaded_in_frame is set, this was called just to indicate a move inside a
+ * frameset, and we basically just reset the appropriate frame's view_state in
+ * that case. When clicking on a link inside a frame, the frame URI is somehow
+ * updated and added to the files-to-load queue, then ses_forward() is called
+ * with @loaded_in_frame unset, duplicating the whole frameset's location, then
+ * later the file-to-load callback calls it for the particular frame with
+ * @loaded_in_frame set. */
+struct view_state *
+ses_forward(struct session *ses, int loaded_in_frame)
+{
+	struct location *loc = NULL;
+	struct view_state *vs;
+
+	if (!loaded_in_frame) {
+		free_files(ses);
+		mem_free_set(&ses->search_word, NULL);
+	}
+
+x:
+	if (!loaded_in_frame) {
+		loc = mem_calloc(1, sizeof(*loc));
+		if (!loc) return NULL;
+		copy_struct(&loc->download, &ses->loading);
+	}
+
+	if (ses->task.target_frame && *ses->task.target_frame) {
+		struct frame *frame;
+
+		assertm(have_location(ses), "no location yet");
+		if_assert_failed return NULL;
+
+		if (!loaded_in_frame) {
+			copy_location(loc, cur_loc(ses));
+			add_to_history(&ses->history, loc);
+		}
+
+		frame = ses_find_frame(ses, ses->task.target_frame);
+		if (!frame) {
+			if (!loaded_in_frame) {
+				del_from_history(&ses->history, loc);
+				destroy_location(loc);
+			}
+			ses->task.target_frame = NULL;
+			goto x;
+		}
+
+		vs = &frame->vs;
+		if (!loaded_in_frame) {
+			destroy_vs(vs, 1);
+			init_vs(vs, ses->loading_uri, vs->plain);
+		} else {
+			done_uri(vs->uri);
+			vs->uri = get_uri_reference(ses->loading_uri);
+			if (vs->doc_view) {
+				/* vs->doc_view itself will get detached in
+				 * render_document_frames(), but that's too
+				 * late for us. */
+				vs->doc_view->vs = NULL;
+				vs->doc_view = NULL;
+			}
+#ifdef CONFIG_ECMASCRIPT
+			vs->ecmascript_fragile = 1;
+#endif
+		}
+
+	} else {
+		assert(loc);
+		if_assert_failed return NULL;
+
+		init_list(loc->frames);
+		vs = &loc->vs;
+		init_vs(vs, ses->loading_uri, vs->plain);
+		add_to_history(&ses->history, loc);
+	}
+
+	ses->status.visited = 0;
+
+	/* This is another "branch" in the browsing, so throw away the current
+	 * unhistory, we are venturing in another direction! */
+	if (ses->task.type == TASK_FORWARD)
+		clean_unhistory(&ses->history);
+	return vs;
+}
+
+static void
+ses_imgmap(struct session *ses)
+{
+	struct cache_entry *cached = find_in_cache(ses->loading_uri);
+	struct document_view *doc_view = current_frame(ses);
+	struct fragment *fragment;
+	struct memory_list *ml;
+	struct menu_item *menu;
+
+	if (!cached) {
+		INTERNAL("can't find cache entry");
+		return;
+	}
+
+	fragment = get_cache_fragment(cached);
+	if (!fragment) return;
+
+	if (!doc_view || !doc_view->document) return;
+	global_doc_opts = &doc_view->document->options;
+
+	if (get_image_map(cached->head, fragment->data,
+			  fragment->data + fragment->length,
+			  &menu, &ml, ses->loading_uri, ses->task.target_frame,
+			  get_opt_codepage_tree(ses->tab->term->spec, "charset"),
+			  get_opt_codepage("document.codepage.assume"),
+			  get_opt_bool("document.codepage.force_assumed")))
+		return;
+
+	add_empty_window(ses->tab->term, (void (*)(void *)) freeml, ml);
+	do_menu(ses->tab->term, menu, ses, 0);
+}
+
+static int
+do_move(struct session *ses, struct download **download_p)
+{
+	struct cache_entry *cached;
+
+	assert(download_p && *download_p);
+	assertm(ses->loading_uri, "no ses->loading_uri");
+	if_assert_failed return 0;
+
+	if (ses->loading_uri->protocol == PROTOCOL_UNKNOWN)
+		return 0;
+
+	/* Handling image map needs to scan the source of the loaded document
+	 * so all of it has to be available. */
+	if (ses->task.type == TASK_IMGMAP && is_in_progress_state((*download_p)->state))
+		return 0;
+
+	cached = (*download_p)->cached;
+	if (!cached) return 0;
+
+	if (cached->redirect && ses->redirect_cnt++ < MAX_REDIRECTS) {
+		enum task_type task = ses->task.type;
+
+		if (task == TASK_HISTORY && !have_location(ses))
+			goto b;
+
+		assertm(compare_uri(cached->uri, ses->loading_uri, URI_BASE),
+			"Redirecting using bad base URI");
+
+		if (cached->redirect->protocol == PROTOCOL_UNKNOWN)
+			return 0;
+
+		abort_loading(ses, 0);
+		if (have_location(ses))
+			*download_p = &cur_loc(ses)->download;
+		else
+			*download_p = NULL;
+
+		set_session_referrer(ses, cached->uri);
+
+		switch (task) {
+		case TASK_NONE:
+			break;
+		case TASK_FORWARD:
+		{
+			protocol_external_handler *fn;
+			struct uri *uri = cached->redirect;
+
+			fn = get_protocol_external_handler(uri->protocol);
+			if (fn) {
+				fn(ses, uri);
+				*download_p = NULL;
+				return 0;
+			}
+		}
+			/* Fall through. */
+		case TASK_IMGMAP:
+			ses_goto(ses, cached->redirect, ses->task.target_frame, NULL,
+				 CACHE_MODE_NORMAL, task, 1);
+			return 2;
+		case TASK_HISTORY:
+			ses_goto(ses, cached->redirect, NULL, ses->task.target_location,
+				 CACHE_MODE_NORMAL, TASK_RELOAD, 1);
+			return 2;
+		case TASK_RELOAD:
+			ses_goto(ses, cached->redirect, NULL, NULL,
+				 ses->reloadlevel, TASK_RELOAD, 1);
+			return 2;
+		}
+	}
+
+b:
+	if (ses->display_timer != -1) {
+		kill_timer(ses->display_timer);
+	       	ses->display_timer = -1;
+	}
+
+	switch (ses->task.type) {
+		case TASK_NONE:
+			break;
+		case TASK_FORWARD:
+			if (ses_chktype(ses, &ses->loading, cached, 0)) {
+				free_task(ses);
+				reload(ses, CACHE_MODE_NORMAL);
+				return 2;
+			}
+			break;
+		case TASK_IMGMAP:
+			ses_imgmap(ses);
+			break;
+		case TASK_HISTORY:
+			ses_history_move(ses);
+			break;
+		case TASK_RELOAD:
+			ses->task.target_location = cur_loc(ses)->prev;
+			ses_history_move(ses);
+			ses_forward(ses, 0);
+			break;
+	}
+
+	if (is_in_progress_state((*download_p)->state)) {
+		if (have_location(ses))
+			*download_p = &cur_loc(ses)->download;
+		change_connection(&ses->loading, *download_p, PRI_MAIN, 0);
+	} else if (have_location(ses)) {
+		cur_loc(ses)->download.state = ses->loading.state;
+	}
+
+	free_task(ses);
+	return 1;
+}
+
+void
+loading_callback(struct download *download, struct session *ses)
+{
+	int d;
+
+	assertm(ses->task.type, "loading_callback: no ses->task");
+	if_assert_failed return;
+
+	d = do_move(ses, &download);
+	if (!download) return;
+	if (d == 2) goto end;
+
+	if (d == 1) {
+		download->callback = (void (*)(struct download *, void *)) doc_loading_callback;
+		display_timer(ses);
+	}
+
+	if (is_in_result_state(download->state)) {
+		if (ses->task.type) free_task(ses);
+		if (d == 1) doc_loading_callback(download, ses);
+	}
+
+	if (is_in_result_state(download->state) && download->state != S_OK) {
+		struct uri *uri = download->conn ? download->conn->uri : NULL;
+		print_error_dialog(ses, download->state, uri, download->pri);
+		if (d == 0) reload(ses, CACHE_MODE_NORMAL);
+	}
+
+end:
+	check_questions_queue(ses);
+	print_screen_status(ses);
+}
+
+
+static void
+do_follow_url(struct session *ses, struct uri *uri, unsigned char *target,
+	      enum task_type task, enum cache_mode cache_mode, int do_referrer)
+{
+	struct uri *referrer = NULL;
+	protocol_external_handler *external_handler;
+
+	if (!uri) {
+		print_error_dialog(ses, S_BAD_URL, uri, PRI_CANCEL);
+		return;
+	}
+
+	external_handler = get_protocol_external_handler(uri->protocol);
+	if (external_handler) {
+		external_handler(ses, uri);
+		return;
+	}
+
+	if (target && !strcmp(target, "_blank")) {
+		int mode = get_opt_int("document.browse.links.target_blank");
+
+		if (mode > 0) {
+			struct session *new_ses;
+
+			new_ses = init_session(ses, ses->tab->term, uri, (mode == 2));
+			if (new_ses) ses = new_ses;
+		}
+	}
+
+	ses->reloadlevel = cache_mode;
+
+	if (ses->task.type == task) {
+		if (compare_uri(ses->loading_uri, uri, 0)) {
+			/* We're already loading the URL. */
+			return;
+		}
+	}
+
+	abort_loading(ses, 0);
+
+	if (do_referrer) {
+		struct document_view *doc_view = current_frame(ses);
+
+		if (doc_view && doc_view->document)
+			referrer = doc_view->document->uri;
+	}
+
+	set_session_referrer(ses, referrer);
+
+	ses_goto(ses, uri, target, NULL, cache_mode, task, 0);
+}
+
+static void
+follow_url(struct session *ses, struct uri *uri, unsigned char *target,
+	   enum task_type task, enum cache_mode cache_mode, int referrer)
+{
+#ifdef CONFIG_SCRIPTING
+	static int follow_url_event_id = EVENT_NONE;
+	unsigned char *uristring = uri ? get_uri_string(uri, URI_BASE | URI_FRAGMENT) : NULL;
+
+	if (!uristring) {
+		do_follow_url(ses, uri, target, task, cache_mode, referrer);
+		return;
+	}
+
+	set_event_id(follow_url_event_id, "follow-url");
+	trigger_event(follow_url_event_id, &uristring, ses);
+
+	if (!uristring || !*uristring) {
+		mem_free_if(uristring);
+		return;
+	}
+
+	/* FIXME: Compare if uristring and struri(uri) are equal */
+	/* FIXME: When uri->post will no longer be an encoded string (but
+	 * hopefully some refcounted object) we will have to assign the post
+	 * data object to the translated URI. */
+	uri = get_translated_uri(uristring, ses->tab->term->cwd);
+	mem_free(uristring);
+#endif
+
+	do_follow_url(ses, uri, target, task, cache_mode, referrer);
+
+#ifdef CONFIG_SCRIPTING
+	if (uri) done_uri(uri);
+#endif
+}
+
+void
+goto_uri(struct session *ses, struct uri *uri)
+{
+	follow_url(ses, uri, NULL, TASK_FORWARD, CACHE_MODE_NORMAL, 0);
+}
+
+void
+goto_uri_frame(struct session *ses, struct uri *uri,
+	       unsigned char *target, enum cache_mode cache_mode)
+{
+	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
+}
+
+/* menu_func */
+void
+map_selected(struct terminal *term, void *ld_, void *ses_)
+{
+	struct link_def *ld = ld_;
+	struct session *ses = ses_;
+	struct uri *uri = get_uri(ld->link, 0);
+
+	goto_uri_frame(ses, uri, ld->target, CACHE_MODE_NORMAL);
+	if (uri) done_uri(uri);
+}
+
+
+void
+goto_url(struct session *ses, unsigned char *url)
+{
+	struct uri *uri = get_uri(url, 0);
+
+	goto_uri(ses, uri);
+	if (uri) done_uri(uri);
+}
+
+struct uri *
+get_hooked_uri(unsigned char *uristring, struct session *ses, unsigned char *cwd)
+{
+	struct uri *uri;
+
+#if defined(CONFIG_SCRIPTING) || defined(CONFIG_URI_REWRITE)
+	static int goto_url_event_id = EVENT_NONE;
+
+	uristring = stracpy(uristring);
+	if (!uristring) return NULL;
+
+	set_event_id(goto_url_event_id, "goto-url");
+	trigger_event(goto_url_event_id, &uristring, ses);
+	if (!uristring) return NULL;
+#endif
+
+	uri = *uristring ? get_translated_uri(uristring, cwd) : NULL;
+
+#if defined(CONFIG_SCRIPTING) || defined(CONFIG_URI_REWRITE)
+	mem_free(uristring);
+#endif
+	return uri;
+}
+
+void
+goto_url_with_hook(struct session *ses, unsigned char *url)
+{
+	unsigned char *cwd = ses->tab->term->cwd;
+	struct uri *uri;
+
+	/* Bail out if passed empty string from goto-url dialog */
+	if (!*url) return;
+
+	uri = get_hooked_uri(url, ses, cwd);
+	goto_uri(ses, uri);
+	if (uri) done_uri(uri);
+}
+
+int
+goto_url_home(struct session *ses)
+{
+	unsigned char *homepage = get_opt_str("ui.sessions.homepage");
+
+	if (!*homepage) homepage = getenv("WWW_HOME");
+	if (!homepage || !*homepage) homepage = WWW_HOME_URL;
+
+	if (!homepage || !*homepage) return 0;
+
+	goto_url_with_hook(ses, homepage);
+	return 1;
+}
+
+/* TODO: Should there be goto_imgmap_reload() ? */
+
+void
+goto_imgmap(struct session *ses, struct uri *uri, unsigned char *target)
+{
+	follow_url(ses, uri, target, TASK_IMGMAP, CACHE_MODE_NORMAL, 1);
+}

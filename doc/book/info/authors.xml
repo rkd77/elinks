@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<appendix id="authors"><title>Authors</title>
+<?dbhtml filename="authors.html"?>
+<para>
+
+	The following people has contributed to this manual:
+
+</para>
+<variablelist>
+
+	<varlistentry><term>Petr "Pasky" Baudis <email>pasky@ucw.cz</email></term>
+	<listitem><para>
+		
+	Maintainer of ELinks. Author of The Ultimate Bookmarks Guide.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term>Cliff Cunnington <email>cliff@users.sf.net</email></term>
+	<listitem><para>
+	
+	Author of the manual for Links from which some excerpts has been taken.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term>Jonas Fonseca <email>fonseca@diku.dk</email></term>
+	<listitem><para>
+	
+	Keeper of this document. Author of Mailcap chapter.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term>José Luis González González	<email>jlg80@mi.madritel.es</email></term>
+	<listitem><para>
+	
+	Author of Basic instructions for MIME configuration.
+
+	</para></listitem>
+	</varlistentry>
+
+</variablelist>
+</appendix>

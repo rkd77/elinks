@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- $Id: faq.html,v 1.1.2.1 2005/04/05 20:23:41 jonas Exp $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>FAQ | ELinks</title>
+	<meta name="description" content="FAQ for the ELinks project" />
+	<meta name="author" content="Petr Baudis, Jonas Fonseca Madsen" />
+	<meta http-equiv="reply-to" content="fonseca@diku.dk" />
+	<meta http-equiv="content-language" content="en" />
+	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+	<link type="text/css" rel="stylesheet" media="screen" href="stylesheets/screen.css" />
+	<link type="text/css" title="Green" rel="alternate stylesheet" media="screen" href="stylesheets/screen-green.css" />
+	<link type="text/css" title="Blue"  rel="stylesheet" media="screen" href="stylesheets/screen-blue.css" />
+	<link type="text/css" title="ELinks Mode"  rel="alternate stylesheet" media="screen" href="stylesheets/elinks-mode.css" />
+</head>
+<body>
+<table border="1" summary="Navigation links" class="header" width="100%"><tr><td>
+	<a id="top" href="index.html">ELinks</a>
+	<span class="hide">:</span>
+	<span class="menu">
+		<a href="about.html">About</a> |
+		<a href="community.html">Community</a> |
+		<a href="documentation/index.html">Documentation</a> |
+		<a href="download.html">Download</a> |
+		<b>FAQ</b> |
+		<a href="feedback.html">Feedback</a> |
+		<a href="news.html">News</a> |
+		<a href="search.html">Search</a>
+
+	</span>
+</td></tr></table>
+
+<h1>Frequently Asked Questions</h1>
+<p>
+
+	This is an attempt to capture some of the questions that appear once in
+	a while on the mailing list.
+
+</p>
+<ul>
+	<li><a href="#instances">I rebuilt/upgraded/reconfigured my ELinks, restarted it, but it looks nothing has changed!</a></li>
+	<li><a href="#referer">Why doesn't the W3.org validater work or sites that require to get the `true' referrer?</a></li>
+	<li><a href="#cutnpaste">How does cutting and pasting work?</a></li>
+	<li><a href="#move">How does the &quot;Move&quot; button on the bookmark manager work?</a></li>
+	<li><a href="#navigation">What's up with the navigation in the various managers?</a></li>
+	<li><a href="#flavours">Why are there so many Links flavors?</a></li>
+	<li><a href="#which-one">Which one to use?</a></li>
+	<li><a href="#kibi-and-mebi">What are the Ki (kibi) and Mi (mebi) units?</a></li>
+	<li><a href="#christmas">Why are stable releases made at Christmas?</a></li>
+	<li><a href="#256-colours">How can I get 256 colours?</a></li>
+	<li><a href="#useragent">What User-Agent header does ELinks send?</a></li>
+</ul>
+
+<h2 id="instances">I rebuilt/upgraded/reconfigured my ELinks, restarted it, but it looks nothing has changed!</h2>
+<p>
+
+	ELinks instances connect together so that they share the cache,
+	bookmarks, cookies, configuration, etc. Only the "master" ELinks
+	instance does any real work and any other ELinkses you run will only
+	connect to this instance. So when you want to restart ELinks, make sure
+	you have no other ELinks instances running at the time.
+
+</p>
+<p>
+	
+	Alternatively, you can use the <kbd>-no-connect</kbd> parameter to make
+	the ELinks always run standalone, or create a parallel group of ELinks
+	instances by the <kbd>-session-ring N</kbd> parameter (where
+	<kbd>N</kbd> is a number larger than zero); however, be aware of the
+	fact that in those cases ELinks won't touch any configuration,
+	bookmark, cookies, etc files - you can force that by the
+	<kbd>-touch-files</kbd> parameter, however beware - this can result in
+	a data loss! (E.g., when two master ELinks instances will try to save
+	their bookmarks and you add a bookmark to each of those, only one of
+	the bookmarks survives.)
+
+</p>
+
+<h2 id="referer">Why doesn't the W3.org validater work or sites that require to get the `true' referrer?</h2>
+<p>
+
+	By default options are set to give as high security and privacy as
+	possible. Since giving away information such as the web page you last
+	visited can be seen as compromising your privacy the default policy for the
+	HTTP referrer is to send the current URL as referrer.
+
+</p>
+
+<h2 id="cutnpaste">How does cutting and pasting work?</h2>
+<p>
+
+	The reason why normal cut and pasting does not work is that ELinks requests
+	to receive any mouse event info even if it is compiled without GPM.
+	Therefore it is necessary to also hold down the Shift key when cutting
+	or pasting text. If you do not need to use the mouse for navigation you
+	can disable mouse support by passing --disable-mouse to configure.
+
+</p>
+
+<h2 id="move">How does the &quot;Move&quot; button on the bookmark manager work?</h2>
+<p>
+
+	First you need to mark all the bookmarks (or even folders) you
+	want to move. This can be done with the Insert key if you're using the
+	default keybindings. Asterisk will appear near of all marked
+	bookmarks. Next move to where you want to have the stuff moved to,
+	and press the "Move" button.
+
+</p>
+
+<h2 id="navigation">What's up with the navigation in the various managers?</h2>
+<p>
+
+	The managers use list boxes. To navigate (assuming you're using a
+	default keybinding configuration) use Space to open and close the folders.
+
+</p>
+
+<h2 id="flavours">Why are there so many Links flavors?</h2>
+<p>
+
+	Please refer to the <a href="history.html">history page</a> to read
+	about the various flavors and the differences between them.
+
+</p>
+
+<h2 id="which-one">Which one to use?</h2>
+<p>
+
+	If you want a fast, stable, and feature-thin text browser, use
+	<a href="http://artax.karlin.mff.cuni.cz/~mikulas/links">Links-0.99</a>.
+	Main drawbacks include: No HTTP-auth support and no persistent cookies (i.e.
+	they die when all instances of Links are closed).
+
+</p>
+<p>
+
+	If you want additional features, including HTTP-auth, persistent
+	cookies, and on-the-fly compression, try
+	<a href="download.html">ELinks</a>. (Note: links-0.9x and ELinks
+	versions &gt; 0.3 do not share executable name or configuration files
+	so you can safely run these on the same machine.)
+
+</p>
+<p>
+
+	If you want the option of graphics mode, use 
+	<a href="http://links.twibright.com">Links2</a>
+	or
+	<a href="http://xray.sai.msu.ru/~karpov/links-hacked/">Hacked Links</a>.
+	Be aware that some people have reported the latter as hard to
+	configure/compile. You cannot run either of these with Links-0.9x on
+	the same system without hacking the compile-time configuration.
+
+</p>
+
+<h2 id="kibi-and-mebi">What are the Ki (kibi) and Mi (mebi) units?</h2>
+<p>
+
+	They are binary units defined by
+	<a href="http://physics.nist.gov/cuu/Units/binary.html">the International System of Units</a>.
+	Examples:
+</p>
+<dl>
+	<dt>One kibibit</dt>
+	<dd>1 Kibit = 2<sup>10</sup> bit = 1024 bit</dd>
+
+	<dt>One mebibyte</dt>
+	<dd>1 MiB = 2<sup>20</sup> B = 1 048 576 B</dd>
+</dl>
+
+<h2 id="christmas">Why are stable releases made at christmas?</h2>
+<p>
+
+	This yearly present has become a tradition suspectedly because
+	pasky worships the christmas spirit. ;-)
+
+</p>
+
+<h2 id="256-colours">How can I get 256 colours?</h2>
+<p>
+
+	First, you must enable it in the <var>feature.conf</var> file before
+	compiling.
+	
+</p>
+<p>
+
+	Second, you must run ELinks on a terminal that supports 256 colours:
+
+</p>
+<ul>
+	<li><a href="http://dickey.his.com/xterm/xterm.html">Thomas Dickey's XTerm</a>, version 179 or later (check which version you have with <kbd>xterm -version</kbd>). <i>(Why version 179? <a href="http://dickey.his.com/xterm/xterm.log.html">XTerm's change log</a> indicates no relevant changes in that revision but rather that initial 256-colour support was added in revision 111. -- <a href="mailto:miciah@myrealbox.com">Miciah</a>)</i> XTerm must be compiled with <var>--enable-256-color</var>.</li>
+	<li>Recent versions of <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</a>. <i>(Is this just a rumour? -- <a href="mailto:miciah@myrealbox.com">Miciah</a>)</i></li>
+</ul>
+<p>
+
+	Third, you must set the <var>TERM</var> environmental variable
+	to <var>xterm-256color</var> before running ELinks.
+	
+</p>
+<p>
+
+	Note that, altho the Linux framebuffer supports 256 (or more) colours,
+	the Linux console driver does not; therefore, console applications
+	are still limited to 16 colours on the Linux console,
+	framebuffer or not.
+
+</p>
+
+<h2 id="useragent">What User-Agent header does ELinks send?</h2>
+<p>
+
+<p>
+	The older ELinks versions (up to 0.4.3) send:
+</p>
+
+<p>
+	<code>ELinks ($version; $osinfo; $textmode_dimensions)</code>
+</p>
+
+<p>
+	The new ELinks versions (from 0.9.0 on) send:
+</p>
+
+<p>
+	<code>ELinks/$version (textmode; $osinfo; $textmode_dimensions)</code>
+</p>
+
+<p>
+	You should therefore check against something like /^ELinks[\/ ]/, since
+	more fields can be added inside the parenthesis in the next versions.
+	Note that users can change their User-Agent through the options system.
+</p>
+
+<hr />
+<div class="footer">
+	<span class="fleft">
+		See the <a href="feedback.html#web">feedback page</a>
+		for information on contacting us.
+	</span>
+	<span class="menu">
+		Copyright &copy; 2002-2005 <a href="http://elinks.or.cz">ELinks</a>;
+		Licensed under <a href="http://www.gnu.org/licenses/gpl.txt">GPL</a>.
+	</span>
+</div>
+<p class="validate">
+	Last Modified: $Date: 2005/04/05 20:23:41 $.
+	Validate:
+	<a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
+	<a href="http://validator.w3.org/check/referer">XHTML</a>.
+</p>
+</body>
+</html>

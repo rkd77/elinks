@@ -1,0 +1,63 @@
+				  The Big View
+
+The whole dependency tree is supposed (in ideal world) to look somewhat like
+the following. Please note that this deals only with the core parts of ELinks,
+not extensions like bookmarks, cookies, globhist, mime etc. Those act like
+modules and are generally self-contained - the main visible difference is that
+they don't have their UI stuff in dialogs/foo.c but in foo/dialogs.c.
+
+Note also that it isn't all that clean-cut as it looks. Some parts of e.g.
+lowlevel/ or osdep/ are omnipresent as well and it's meant to be so (at least
+for now). Also some other exceptions are possible; the exception to this is
+util/, where no exceptions are permitted - it must have no dependencies to the
+rest of the code whatsoever, not even compile-time ones. The other way around,
+the gettext part of intl/ is generally omnipresent but the charset part is
+pretty isolated - it could be probably drawn as connected to document and
+terminal (actually, it is used when encoding forms in viewer too, but that
+stuff should be probably moved to document).
+
+viewer/ contains code concerning that big rectangle between bars at the top
+and bars at the bottom, documents usually being shown inside. Logically, it
+is in fact kind of a BFU widget, but in practice it has little in common
+with the bfu/ widgets, it is special in many ways and deeply woven to the
+fabric of sched/ (e.g. session history is basically a chain of viewer widget
+descriptors).
+
+dialogs/ is special too. It in fact means to say "global and unique BFU
+instances belonging to the ELinks core"/ but that's a rather long and boring
+name, besides the nightmares associated with maintaining files and directories
+containing spaces in CVS. The "global and unique BFU instances" part can be
+represented by exmode, menus and leds (were they there). The "ELinks core"
+part can be represented by options, document and downloads. The reason those
+aren't in their respective directories (while bookmarks or formhist have their
+dialogs.c) is that it's important to keep the dependencies sorted out
+reasonably. Had there been e.g. terminal/dialogs.c, it would mean libterminal
+has to depend on libbfu.a and so. (There are two 'managerial' exceptions
+to this; don't dig into them, please. ;-)
+
+scripting/ (== browser scripting) is also expected to hook all around, perhaps
+it should be better in the omnipresent box.
+
+.---------.
+| util/   | <-- This is omnipresent :)
+| config/ |
+| intl/   |
+`---------'
+
+                   .-------.         .---------.
+                   |  bfu  | ------- | dialogs |
+                   `-------' \       `---------'
+                       |      `---.       |
+                 .----------.      \ .--------.
+                 | terminal | ------ | viewer | ------------------.
+               / `----------'      / `--------'                   |
+           .--'        |          |       |                       |
+.-------. /      .----------.     |  .----------.       .----/ecmascript/----.
+| osdep | ------ | lowlevel |     |  | document | ----- | document scripting |
+`-------'        `----------'     |  `----------'       `--------------------'
+                       |          |       |
+                 .----------.      \ .---------.        .----/scripting/----.
+                 | protocol | ------ |  sched  | ------ | browser scripting |
+                 `----------'        `---------'        `-------------------'
+
+$Id: README,v 1.11.2.1 2005/01/03 22:46:04 jonas Exp $

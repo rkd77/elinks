@@ -1,0 +1,40 @@
+## $Id: Makefile.doc,v 1.9 2003/06/24 20:13:03 jonas Exp $
+
+SUFFIXES = .xml .1 .5
+HTMLDOCTOOL = @HTMLDOCTOOL@
+MANDOCTOOL = @MANDOCTOOL@
+
+objectname = `basename $< .xml`
+docbuilddir = $(top_srcdir)/doc
+docbookdir = $(top_srcdir)/doc/book
+doctoolsdir = $(top_srcdir)/doc/book/tools
+help2doc = $(doctoolsdir)/help2doc
+
+book: book-html
+book-html: generated-docs $(book_HTMLFORMAT)
+
+manpages: manpages-man manpages-html
+manpages-html: $(manpages_HTMLFORMAT)
+manpages-man: $(manpages_MANFORMAT)
+
+generated-docs:
+	test -n "`elinks -long-help`" && \
+	sh $(help2doc) --cmdoptions > $(docbookdir)/config/cmdoptions.xml
+	test -n "`elinks -config-help`" && \
+	sh $(help2doc) --elinksconf > $(docbuilddir)/man/man5/elinks.conf.5
+
+%.html: %.xml
+	$(mkinstalldirs) $(docbuilddir)/html
+	test -n "$(HTMLDOCTOOL)" && $(HTMLDOCTOOL) -o $(docbuilddir)/html/$(objectname) $<
+
+%.1.in: %.1.xml
+	$(mkinstalldirs) $(docbuilddir)/man/man1
+	test -n "$(MANDOCTOOL)" && $(MANDOCTOOL) -o $(docbuilddir)/man/man1 $<
+
+%.1: %.1.xml
+	$(mkinstalldirs) $(docbuilddir)/man/man1
+	test -n "$(MANDOCTOOL)" && $(MANDOCTOOL) -o $(docbuilddir)/man/man1 $<
+
+%.5: %.5.xml
+	$(mkinstalldirs) $(docbuilddir)/man/man5
+	test -n "$(MANDOCTOOL)" && $(MANDOCTOOL) -o $(docbuilddir)/man/man5 $<

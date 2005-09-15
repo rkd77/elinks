@@ -1,0 +1,13 @@
+<screen>
+# Use asynchronous DNS resolver?
+set connection.async_dns = 1
+
+# horizontal text margin.
+set document.browse.margin_width = 3
+
+# Default document codepage.
+set document.codepage.assume = "ISO-8859-1"
+
+# User defined protocol handlers
+set protocol.user.mailto.unix = "mutt %h -s \"%s\""
+</screen>

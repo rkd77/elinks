@@ -1,0 +1,113 @@
+<!-- $Id -->
+
+<chapter id="bookmarks"><title> The Ultimate Bookmarks Guide </title>
+	
+<?dbhtml filename="bookmarks.html"?>
+
+<para>
+
+	Glad to see you again, mortal. Now, we are going to learn about
+	bookmarks - how to use them, how to maintain them, and also something
+	more about the file formats and maybe even about the code structure
+	later. But don't fear, we won't burden you with it, just stop reading
+	when you will know enough already.
+
+</para>
+<para>
+
+	In order to read this, you need some common sense, ability to start
+	ELinks and some idea about what's a web document, URL address and
+	knowledge like that.
+
+</para>
+<para>
+
+	If we will ever mention some keys here, please note that you can rebind
+	almost any action to another key which you like more - then you must
+	obviously imagine your own key in place of that. Below, we will list
+	all actions, options and so on, related to bookmarks. We won't tell you
+	how to rebind the keys, though; this will be described in another
+	section.
+
+</para>
+
+<sect1><title> The Bookmark Manager </title>
+<para>
+
+	Basically, almost everything is going on in so-called bookmark manager.
+	That's special dialog window, which contains listing of all bookmarks
+	you ever told ELinks to remember and it lets you to do with them
+	anything you would ever want to do with them.
+
+</para>
+<para>
+
+	You launch the bookmark manager by pressing the 's' key in standby
+	(standard) mode. You should see a big empty space (bookmarks will
+	slowly appear there as you will add them) and couple of buttons
+	shriveling at the bottom. So, as a start, move with the right (or left,
+	both will do) arrow to the button "Add bookmark" and fill in the input
+	fields it will offer to you. I mean, you can type something like
+	<userinput>ELinks homepage</userinput> to the first field, then move
+	down by ie.  the down arrow and fill
+	<userinput>http://elinks.or.cz/</userinput> to the second field. Then,
+	bravely press enter and watch the bookmark popping up at the top of the
+	vast area reserved for bookmarks.
+
+</para>
+<para>
+
+	Repeat this step few times. Now, you can move between bookmarks by the
+	up and down arrow, jump to the location any of them points to by the
+	Goto button, change it by the Edit button, delete it with the Delete
+	button and so on.. When you'll become bored, press the escape button
+	and you're free again!
+
+</para>
+</sect1>
+
+<sect1><title> The Ancient Forests </title>
+<para>
+
+	It's not very convenient to have all the bookmarks mixed up - soon, you
+	will get lost in them. Thus, in ELinks you can categorize them to
+	various folders, subfolders, subsubfolders and so on, then you can
+	expand and back enfold them and so on.
+
+</para>
+<para>
+
+	In order to create your first folder, use button "Add folder" and fill
+	the first input field. You can safely ignore the URL field, ELinks will
+	do the same. *POOF* and you see it - it has that strange [+] or [-]
+	thing there. If it has [+] near, it's enfolded, while when it has [-]
+	near, it is expanded, while you can change that by pressing the
+	spacebar.
+
+</para>
+<para>
+
+	In order to add a bookmark into a folder, move on the item of the
+	folder (it must be expanded) or onto any bookmark inside of the folder,
+	and simply do the usual "Add bookmark" job. You can also move the
+	bookmarks around, obviously.  You need to first mark all the bookmarks
+	(or even folders) you want to move (using the Insert key, asterisk will
+	appear near of all marked bookmarks), and then move to where you want
+	to have the stuff moved to, and press the "Move" button.
+
+</para>
+</sect1>
+
+<sect1><title> Searching needle in the haycock </title>
+<para>
+
+	Of course, you can search in the bookmarks. Just use the
+	<guibutton>"Find"</guibutton> button - for convenience, you have
+	current document's URL and title pre-filled there, and for convenience
+	only up-up-enter-down-down sequence is enough to have the playground
+	clean. Then, just fill substring of what you are looking for, and the
+	bookmarks will be filtered so that only the matching ones are shown.
+
+</para>
+</sect1>
+</chapter>

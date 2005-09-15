@@ -1,0 +1,2 @@
+text/html; /usr/bin/elinks -force-html %s; needsterminal; description=HTML Text; nametemplate=%s.html; priority=4
+text/html; /usr/bin/elinks -force-html -dump %s; copiousoutput; description=HTML Text; nametemplate=%s.html; priority=3

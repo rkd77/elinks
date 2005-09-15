@@ -1,0 +1,2951 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en"><head><title>ELinks Manual ($Revision: 1.2.2.2 $): ELinks Manual for version 0.10</title>
+<meta http-equiv="Expires" content="Mon, 02 May 2005 12:16:10 +0000">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="ELinks Manual for version 0.10">
+<meta name="generator" content="xml2rfc v1.25 (http://xml.resource.org/)">
+<style type='text/css'>
+<!--
+    body {
+        font-family: verdana, charcoal, helvetica, arial, sans-serif;
+        margin: 2em;
+        font-size: small ; color: #000000 ; background-color: #ffffff ; }
+    .title { color: #990000; font-size: x-large ;
+        font-weight: bold; text-align: right;
+        font-family: helvetica, monaco, "MS Sans Serif", arial, sans-serif;
+        background-color: transparent; }
+    .filename { color: #666666; font-size: 18px; line-height: 28px;
+        font-weight: bold; text-align: right;
+        font-family: helvetica, arial, sans-serif;
+        background-color: transparent; }
+    td.rfcbug { background-color: #000000 ; width: 30px ; height: 30px ; 
+        text-align: justify; vertical-align: middle ; padding-top: 2px ; }
+    td.rfcbug span.RFC { color: #666666; font-weight: bold; text-decoration: none;
+        background-color: #000000 ;
+        font-family: monaco, charcoal, geneva, "MS Sans Serif", helvetica, verdana, sans-serif;
+        font-size: x-small ; }
+    td.rfcbug span.hotText { color: #ffffff; font-weight: normal; text-decoration: none;
+        text-align: center ;
+        font-family: charcoal, monaco, geneva, "MS Sans Serif", helvetica, verdana, sans-serif;
+        font-size: x-small ; background-color: #000000; }
+/* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+    div#counter{margin-top: 100px}
+
+    a.info{
+        position:relative; /*this is the key*/
+        z-index:24;
+        text-decoration:none}
+
+    a.info:hover{z-index:25; background-color:#990000 ; color: #ffffff ;}
+
+    a.info span{display: none}
+
+    a.info:hover span{ /*the span will display just on :hover state*/
+        display:block;
+        position:absolute;
+        font-size: smaller ;
+        top:2em; left:2em; width:15em;
+        padding: 2px ;
+        border:1px solid #333333;
+        background-color:#eeeeee; color:#990000;
+        text-align: left ;}
+
+     A { font-weight: bold; }
+     A:link { color: #990000; background-color: transparent ; }
+     A:visited { color: #333333; background-color: transparent ; }
+     A:active { color: #333333; background-color: transparent ; }
+
+    p { margin-left: 2em; margin-right: 2em; }
+    p.copyright { font-size: x-small ; }
+    p.toc { font-size: small ; font-weight: bold ; margin-left: 3em ;}
+
+    span.emph { font-style: italic; }
+    span.strong { font-weight: bold; }
+    span.verb { font-family: "Courier New", Courier, monospace ; }
+
+    ol.text { margin-left: 2em; margin-right: 2em; }
+    ul.text { margin-left: 2em; margin-right: 2em; }
+    li { margin-left: 3em;  }
+
+    pre { margin-left: 3em; color: #333333;  background-color: transparent;
+        font-family: "Courier New", Courier, monospace ; font-size: small ;
+        }
+
+    h3 { color: #333333; font-size: medium ;
+        font-family: helvetica, arial, sans-serif ;
+        background-color: transparent; }
+    h4 { font-size: small; font-family: helvetica, arial, sans-serif ; }
+
+    table.bug { width: 30px ; height: 15px ; }
+    td.bug { color: #ffffff ; background-color: #990000 ;
+        text-align: center ; width: 30px ; height: 15px ;
+         }
+    td.bug A.link2 { color: #ffffff ; font-weight: bold;
+        text-decoration: none;
+        font-family: monaco, charcoal, geneva, "MS Sans Serif", helvetica, sans-serif;
+        font-size: x-small ; background-color: transparent }
+
+    td.header { color: #ffffff; font-size: x-small ;
+        font-family: arial, helvetica, sans-serif; vertical-align: top;
+        background-color: #666666 ; width: 33% ; }
+    td.author { font-weight: bold; margin-left: 4em; font-size: x-small ; }
+    td.author-text { font-size: x-small; }
+    table.data { vertical-align: top ; border-collapse: collapse ;
+        border-style: solid solid solid solid ;
+        border-color: black black black black ;
+        font-size: small ; text-align: center ; }
+    table.data th { font-weight: bold ;
+        border-style: solid solid solid solid ;
+        border-color: black black black black ; }
+    table.data td {
+        border-style: solid solid solid solid ;
+        border-color: #333333 #333333 #333333 #333333 ; }
+
+    hr { height: 1px }
+-->
+</style>
+</head>
+<body>
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<table summary="layout" width="66%" border="0" cellpadding="0" cellspacing="0"><tr><td><table summary="layout" width="100%" border="0" cellpadding="2" cellspacing="1">
+<tr><td class="header">ELinks Manual ($Revision: 1.2.2.2 $)</td><td class="header">J. Fonseca</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">P. Baudis</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">L. Monin</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">M. Masters</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">J. González</td></tr>
+<tr><td class="header">&nbsp;</td><td class="header">May 2, 2005</td></tr>
+</table></td></tr></table>
+<div align="right"><span class="title"><br />ELinks Manual for version 0.10</span></div>
+
+<h3>Abstract</h3>
+
+<p>
+
+	Welcome! This is the entry point for the current humble ELinks
+	manual.  It is by no way complete, it is not even very
+	homogeneous and it should be eventually superseded by a complete
+	ELinks Book, which you can find in the book/ subdirectory in a
+	very prenatal stage.
+
+
+</p>
+<p>
+
+	There was a complete (or from a large part complete) manual for
+	the Links 0.82 once, you can still find it at:
+
+	<a href="http://links.sourceforge.net/docs/manual-0.82-en/index.html">http://links.sourceforge.net/docs/manual-0.82-en/index.html</a>
+
+	While large parts of it do not apply anymore, you may still find
+	some relevant information there.
+
+
+</p>
+<p>
+
+	You may also refer to the manual page for a very quick
+	reference, however little effort is done to keep it always
+	up-to-date.  On the other hand, the built-in documentation is
+	_always_ up-to-date.  Check the --long-help and --config-help
+	ELinks command-line arguments.
+
+
+</p>
+<p>
+
+	Hold harmless the author, and any lawful use is allowed.
+
+
+</p><a name="toc"></a><br /><hr />
+<h3>Table of Contents</h3>
+<p class="toc">
+<a href="#anchor1">1.</a>&nbsp;
+Introduction to the World of ELinks<br />
+<a href="#anchor2">1.1</a>&nbsp;
+Overview of the User Interface<br />
+<a href="#anchor3">1.2</a>&nbsp;
+The Title, Tab and Status bar<br />
+<a href="#anchor4">1.3</a>&nbsp;
+The Main, Link and Tab Menus<br />
+<a href="#anchor5">1.4</a>&nbsp;
+The Managers<br />
+<a href="#anchor6">1.5</a>&nbsp;
+Navigation<br />
+<a href="#anchor7">1.5.1</a>&nbsp;
+Page-Oriented Navigation<br />
+<a href="#anchor8">1.5.2</a>&nbsp;
+Link-Oriented Navigation<br />
+<a href="#anchor9">1.5.3</a>&nbsp;
+Position-Oriented Navigation<br />
+<a href="#anchor10">1.5.4</a>&nbsp;
+Forms<br />
+<a href="#anchor11">1.6</a>&nbsp;
+Searching<br />
+<a href="#anchor12">1.7</a>&nbsp;
+Hints and Odd Features<br />
+<a href="#anchor13">2.</a>&nbsp;
+The Ultimate Bookmarks Guide<br />
+<a href="#anchor14">2.1</a>&nbsp;
+The Bookmark Manager<br />
+<a href="#anchor15">2.2</a>&nbsp;
+The Ancient Forests<br />
+<a href="#anchor16">2.3</a>&nbsp;
+Searching needle in the haycock<br />
+<a href="#anchor17">2.4</a>&nbsp;
+File formats<br />
+<a href="#anchor18">2.4.1</a>&nbsp;
+Native file format<br />
+<a href="#anchor19">2.4.2</a>&nbsp;
+XBEL file format<br />
+<a href="#anchor20">2.4.3</a>&nbsp;
+Usage hints<br />
+<a href="#anchor21">3.</a>&nbsp;
+The Wonders of Tabbed Browsing<br />
+<a href="#anchor22">3.1</a>&nbsp;
+Introduction to the basic actions involving tabs<br />
+<a href="#anchor23">3.1.1</a>&nbsp;
+The tab bar and the tab menu<br />
+<a href="#anchor24">3.1.2</a>&nbsp;
+Creating new tabs<br />
+<a href="#anchor25">3.1.3</a>&nbsp;
+Switching between tabs<br />
+<a href="#anchor26">3.1.4</a>&nbsp;
+Closing tabs<br />
+<a href="#anchor27">3.2</a>&nbsp;
+Advanced topics involving tabs<br />
+<a href="#anchor28">3.2.1</a>&nbsp;
+Moving tabs<br />
+<a href="#anchor29">3.2.2</a>&nbsp;
+Saving and restoring tabs<br />
+<a href="#anchor30">4.</a>&nbsp;
+Marks (the lite edition)<br />
+<a href="#anchor31">4.1</a>&nbsp;
+What it is?<br />
+<a href="#anchor32">4.2</a>&nbsp;
+Restrictions<br />
+<a href="#anchor33">4.3</a>&nbsp;
+Marks lifespan<br />
+<a href="#anchor34">5.</a>&nbsp;
+URL Shortcuts in ELinks<br />
+<a href="#anchor35">5.1</a>&nbsp;
+What it does<br />
+<a href="#anchor36">5.2</a>&nbsp;
+How it works<br />
+<a href="#anchor37">5.3</a>&nbsp;
+Alternative URI rewriting mechanisms<br />
+<a href="#anchor38">6.</a>&nbsp;
+The Terminal Setup<br />
+<a href="#anchor39">6.1</a>&nbsp;
+Options<br />
+<a href="#anchor40">6.1.1</a>&nbsp;
+Terminal type<br />
+<a href="#anchor41">6.1.2</a>&nbsp;
+Color mode<br />
+<a href="#anchor42">6.1.3</a>&nbsp;
+Switch fonts for line drawing (aka 11m hack)<br />
+<a href="#anchor43">6.1.4</a>&nbsp;
+Restrict frames in cp850/852<br />
+<a href="#anchor44">6.1.5</a>&nbsp;
+Block cursor<br />
+<a href="#anchor45">6.1.6</a>&nbsp;
+Transparency<br />
+<a href="#anchor46">6.1.7</a>&nbsp;
+Text underlining capability<br />
+<a href="#anchor47">6.1.8</a>&nbsp;
+UTF-8 I/O<br />
+<a href="#anchor48">6.1.9</a>&nbsp;
+Character Set<br />
+<a href="#anchor49">6.2</a>&nbsp;
+Terminal Configurations<br />
+<a href="#anchor50">7.</a>&nbsp;
+Introduction to MIME handling<br />
+<a href="#anchor51">7.1</a>&nbsp;
+Handling MIME types, the ELinks way<br />
+<a href="#anchor52">7.1.1</a>&nbsp;
+What are MIME types and why may you want to use them?<br />
+<a href="#anchor53">7.1.2</a>&nbsp;
+Associating files to MIME types<br />
+<a href="#anchor54">7.1.3</a>&nbsp;
+Managing a given MIME type<br />
+<a href="#anchor56">7.1.4</a>&nbsp;
+Specifying the details for a handler<br />
+<a href="#anchor60">7.2</a>&nbsp;
+Setting up elinks.conf<br />
+<a href="#anchor61">7.2.1</a>&nbsp;
+Associating a file extension to a MIME type<br />
+<a href="#anchor62">7.2.2</a>&nbsp;
+Defining a handler<br />
+<a href="#anchor63">7.2.3</a>&nbsp;
+Associating a MIME type to a handler<br />
+<a href="#anchor64">8.</a>&nbsp;
+Managing External Viewers with Mailcap<br />
+<a href="#anchor65">8.1</a>&nbsp;
+A Short Intro to Mailcap<br />
+<a href="#anchor66">8.2</a>&nbsp;
+Parameters to Mailcap Entries<br />
+<a href="#anchor67">8.3</a>&nbsp;
+Reading of Mailcap Files<br />
+<a href="#anchor68">8.4</a>&nbsp;
+Fields<br />
+<a href="#anchor69">8.5</a>&nbsp;
+Mailcap Configuration<br />
+<a href="#anchor70">8.6</a>&nbsp;
+Some Sample Mailcap Entries<br />
+<a href="#anchor71">9.</a>&nbsp;
+The tale of ex-mode<br />
+<a href="#anchor72">9.1</a>&nbsp;
+What it is<br />
+<a href="#anchor73">9.2</a>&nbsp;
+Configuration directives in exmode<br />
+<a href="#anchor74">9.3</a>&nbsp;
+Actions in exmode - or exmode in action?<br />
+<a href="#anchor75">9.4</a>&nbsp;
+How to use it<br />
+<a href="#anchor76">9.5</a>&nbsp;
+The "but"s<br />
+<a href="#anchor77">10.</a>&nbsp;
+Managing remote ELinks instances with -remote<br />
+<a href="#anchor78">10.1</a>&nbsp;
+Limitations and outstanding issues<br />
+<a href="#anchor79">10.2</a>&nbsp;
+Remote Actions<br />
+<a href="#anchor80">11.</a>&nbsp;
+Acknowledgement<br />
+<a href="#rfc.references1">12.</a>&nbsp;
+References<br />
+<a href="#rfc.authors">&#167;</a>&nbsp;
+Authors' Addresses<br />
+</p>
+<br clear="all" />
+
+<a name="anchor1"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.1"></a><h3>1.&nbsp;Introduction to the World of ELinks</h3>
+
+<p>
+
+	The goal of this introduction is to explain the basic concepts
+	in ELinks, give an overview of how to get started and serve as
+	an entry point to many of the (undocumented) features of ELinks.
+	It won't tell you all the details, but should hopefully give you
+	an idea of how things work and make it possible for you to even
+	figure out how to go further.
+
+
+</p>
+<p>
+
+	Allthough ELinks is text-based, the user interface has many of
+	interaction methods normally found in graphical environments.
+	There are menus, dialogs with buttons and hierarchic list boxes
+	with folders. Care has been taken to make the interaction
+	between various dialogs consistent, so the controls will quickly
+	become familiar to new users.
+
+
+</p>
+<p>
+
+	The user interface can be controlled using both mouse and
+	keyboard, but currently it is only possible to configure
+	keybindings. Looking back, the key-controls have been more
+	advanced than the mouse support, but during the 0.10 prereleases
+	the mouse support has been much improved. You will now find find
+	stuff like contextual menus when right-clicking in different
+	document zones.
+
+
+</p>
+<a name="rfc.section.1.1"></a><h4><a name="anchor2">1.1</a>&nbsp;Overview of the User Interface</h4>
+
+<p>
+
+	The main user interface of ELinks consists of the document view
+	and dialog bars displaying the information such as the title of
+	the currently viewed document, all opened tabs and the browsing
+	status. The 3 bars are elaborated further below.
+
+
+</p>
+<p>
+
+	The most important dialogs that you will meet include the Main,
+	Link and Tab menus and the different managers. The menus serve
+	as entry points to the actions available from different
+	contexts, while the managers let you check the state and control
+	the various subsystems, such as loaded cookies and the global
+	history. The utility menus and the manager tools are
+	investigated further below.
+
+
+</p>
+<p>
+
+	The document viewer in ELinks provides a feature-rich set of
+	ways to browse documents. That is, multiple options exist for
+	navigating, searching and displaying documents and you will
+	hopefully figure in time what works best for you. The basic
+	browsing possibilities are presented below.
+
+
+</p>
+<p>
+
+	ELinks is highly configurable, so if there is something that you
+	would like to change, it is most likely possible. The best
+	overview of the many options are given in the elinks.conf(5) man
+	page. Keybindings are discussed in the elinkskeys(5) man page.
+	It is not always up-to-date, so you should also check the
+	keybinding manager and the overview of all the configured
+	keybindings given in the Help -> Keys dialog. The Keys dialogs
+	serves as a good introduction to the most common keybindings.
+
+
+</p>
+<a name="rfc.section.1.2"></a><h4><a name="anchor3">1.2</a>&nbsp;The Title, Tab and Status bar</h4>
+
+<p>
+
+	The title bars main purpose is to display the title of the
+	current document.  Documents bigger than can be displayed with
+	the current screen size are divided into subpages. In this case
+	the current document position is indicated in the far right of
+	the title bar as a suffix to the actual document title.  The
+	syntax is: ( current-subpage / total-subpages ), an example is
+	"(4/9)" that indicates the 4th subpage of 9 subpages.
+
+
+</p>
+<p>
+
+	The tab bar by default is only visible when 2 or more tabs are
+	open. It is divided into slots containing the trimmed title of
+	the tabs' loaded document.  Between each tab is a separator. The
+	current tab is highlighted and all tabs that has not been viewed
+	after being loaded are highlighted as fresh.  Tabs are explained
+	in details in the tabs.txt file.
+
+
+</p>
+<p>
+
+	The status bar has multiple purposes. Most of the time it will
+	contain the URI (and title) of the currently selected link. If a
+	link is followed, connection information is shown in the status
+	bar. When using cursor routing, the status bar will show the
+	coordinates of the cursor when a link is not followed.
+
+
+</p>
+<a name="rfc.section.1.3"></a><h4><a name="anchor4">1.3</a>&nbsp;The Main, Link and Tab Menus</h4>
+
+<p>
+
+	The Main Menu gives you access to many of the features of ELinks
+	via submenus and serves as a good entry point for performing
+	actions on the different objects of interest, such as links,
+	documents and tabs. The Link menu and Tab menus are more
+	specialized and targeted to a specific context, such as link
+	handling or managing the tab bar. Actually, the Link Menu is
+	accessible from the Main Menu as a submenu.
+
+
+</p>
+<p>
+
+	Once you have familiarized yourself with the menus, you will
+	have a good chance at gradually learning the most common
+	keybinding, since all the configured keybindings are shown as
+	right aligned text. Menu entries can also be quickly accessed
+	using hotkeys. Hotkeys appear highlighted in the menu entry
+	text. For example the key-combo "Alt-v i" will open the document
+	info dialog accessible from the View sub menu in the Main menu.
+
+
+</p>
+<a name="rfc.section.1.4"></a><h4><a name="anchor5">1.4</a>&nbsp;The Managers</h4>
+
+<p>
+
+	The managers let you control the state of subsystems, such as
+	cookies and the global history. They are accessible from the
+	Tools or Setup submenu in the Main Menu. The managers consists
+	of an area showing a hierarchic listbox and buttons at the
+	bottom. Below, a view of the cookie manager is shown.
+
+
+</p>
+<p>
+</p><pre>
++------------------------- Cookie manager -------------------------+
+|                                                                  |
+|   [-]- bugzilla.elinks.or.cz                                     |
+|    |    |-- BUGLIST                                              |
+|    |    `-- LASTORDER                                            |
+|   [+]- kerneltrap.org                                            |
+|   [+]-*dictionary.reference.com                                  |
+|   [+]-*bjork.com                                                 |
+|   [-]- www.google.com                                            |
+|         `-- PREF                                                 |
+|                                                                  |
+|                                                                  |
+|                                                                  |
+|                                                                  |
+|   [ Info ]  [ Add ]  [ Edit ]  [ Delete ]  [ Save ]  [ Close ]   |
++------------------------------------------------------------------+</pre>
+
+<p>
+
+	Each item is either a folder or a leaf. A folder is displayed
+	with a "[-]" or "[+]" before the name telling whether the folder
+	is currently open or closed. Nested items are displayed indented
+	compared to the folder they are nested in. In the cookie manager
+	example above "bjork.com" is a folder and "PREF" is a leaf.
+
+
+</p>
+<p>
+
+	Items can be "marked", which makes it possible to select a group
+	of items and perform an action on them, such as deleting all
+	marked items. If any item has been marked the currently selected
+	item is ignored when performing the action.  Marked items are
+	displayed with an asterics ('*') prefixing the name.
+
+
+</p>
+<p>
+
+	The buttons make it possible to perform actions either on
+	selected or marked items or on all items in the manager. Buttons
+	named "Clear" and "Save" are performed on all items; "Clear"
+	will delete all items and "Save" will update the runtime state
+	file associated with the manager in the ~/.elinks/ directory.
+	Most buttons presses will query you before completing the
+	action.
+
+
+</p>
+<p>
+
+	At any time, both the currently selected item and button are
+	highlighted. The same goes for marked items. Most manager
+	dialogs also maintains the state, so that when you reopen the
+	manager later it will have the same items selected and the same
+	folders opened or closed.
+
+
+</p>
+<p>
+	
+	The basic default controls for managers are the following:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">Keys</th>
+<th align="left" width="70%">Action</th>
+</tr>
+<tr>
+<td align="left">Up/Down</td>
+<td align="left">Select the item above/below.</td>
+</tr>
+<tr>
+<td align="left">'*'</td>
+<td align="left">Toggle marking of a item.</td>
+</tr>
+<tr>
+<td align="left">Space</td>
+<td align="left">Open and close folders.</td>
+</tr>
+<tr>
+<td align="left">Left/Right</td>
+<td align="left">Select the button to the left/right.</td>
+</tr>
+<tr>
+<td align="left">Home/End</td>
+<td align="left">Select the first/last item.</td>
+</tr>
+<tr>
+<td align="left">Enter</td>
+<td align="left">Press the currently selected button.</td>
+</tr>
+<tr>
+<td align="left">Esc</td>
+<td align="left">Close the manager dialog.</td>
+</tr>
+</table>
+
+<p>
+</p>
+<p>
+
+	Some managers also supports searching, either by pressing the "[
+	Search ]" button or by pressing '/'. By searching the empty
+	string, all hidden items from the previous search will be shown
+	again.
+
+
+</p>
+<a name="rfc.section.1.5"></a><h4><a name="anchor6">1.5</a>&nbsp;Navigation</h4>
+
+<p>
+
+	ELinks provides various ways to navigate documents. Depending on
+	how documents are structured, it can be a great help to change
+	navigation style. The navigation styles can roughly be divided
+	into page-oriented, link-oriented and screen-oriented. They
+	overlap in many ways, so this separation is mostly used as a
+	mean to present them.
+
+
+</p>
+<a name="rfc.section.1.5.1"></a><h4><a name="anchor7">1.5.1</a>&nbsp;Page-Oriented Navigation</h4>
+
+<p>
+
+	This involves scrolling documents horizontally and vertically.
+	Documents can be scrolled page-wise, where the next or previous
+	subpage will be displayed. It is also possible to scroll documents in
+	steps, either line-wise (vertically) or column-wise (horizontally).
+	The step size can be configured and by default is 2 lines and 8
+	columns. Alternatively, whole documents can be scrolled to the start
+	or the end.
+
+
+</p>
+<p>
+	
+	The basic default controls:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">Keys</th>
+<th align="left" width="70%">Action</th>
+</tr>
+<tr>
+<td align="left">Insert/Delete</td>
+<td align="left">Scroll up/down line-wise. (vertically)</td>
+</tr>
+<tr>
+<td align="left">PageUp/PageDown</td>
+<td align="left">Scroll up/down page-wise.</td>
+</tr>
+<tr>
+<td align="left">'['/']'</td>
+<td align="left">Scroll left/right column-wise. (horizontally)</td>
+</tr>
+<tr>
+<td align="left">Home/End</td>
+<td align="left">Scroll to the start/end of the document.</td>
+</tr>
+</table>
+
+<p>
+</p>
+<a name="rfc.section.1.5.2"></a><h4><a name="anchor8">1.5.2</a>&nbsp;Link-Oriented Navigation</h4>
+
+<p>
+
+	For hypertext documents, access to the links makes it more practical
+	to navigate by jumping between links in the document. There are two
+	ways to do this; either you can move between links relationally or by
+	number. Using relational link navigation it is possible to focus the
+	next/previous link or move in a directional manner to the link in a
+	certain direction such as left/right/up/down.
+
+
+</p>
+<p>
+
+	In order to navigate using link numbers, you have to first toggle link
+	numbering on; this will prefix all links with a number using the
+	notation [number]. "[23]" indicates link number 23. When link
+	numbering is enabled, pressing any number key will pop up a "Go to
+	link"-dialog where the complete link number can be entered. By
+	pressing Enter the entered link number will be focused, but only if it
+	is a valid link number.
+
+
+</p>
+<p>
+
+	Note: it is also possible to jump to links by searching the link text;
+	check the documentation on searching.
+
+
+</p>
+<p>
+	
+	The basic default controls:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">Keys</th>
+<th align="left" width="70%">Action</th>
+</tr>
+<tr>
+<td align="left">Up/Down</td>
+<td align="left">Move to the previous/next link.</td>
+</tr>
+<tr>
+<td align="left">'.'</td>
+<td align="left">Toggle link numbering.</td>
+</tr>
+<tr>
+<td align="left">Enter/Right</td>
+<td align="left">Follow the current focused link.</td>
+</tr>
+</table>
+
+<p>
+
+	No keys are by default configured for directional link
+	navigation.
+
+
+</p>
+<a name="rfc.section.1.5.3"></a><h4><a name="anchor9">1.5.3</a>&nbsp;Position-Oriented Navigation</h4>
+
+<p>
+
+	Positional navigation (sorry, bad word) uses the either the position
+	of the cursor or the mouse click to navigate the document. If you are
+	familiar with the w3m text-browser you will be familiar with cursor
+	routing. Basicly, you move the cursor around -- kind of like a mouse --
+	in the document area of the user interface. When the cursor is over a
+	link, the link is highlighted, and when the cursor moves outside the
+	current document view, it will cause the document view to scroll.
+
+
+</p>
+<p>
+
+	The possibilities when using the mouse to navigate the document depend on
+	what terminal you are using. In some terminals, it is possible to
+	scroll by using the mouse wheel. Scrolling is however also possible by
+	clicking in the edge areas of the document view. Highlighting links
+	can be done by clicking on a link but waiting to release the mouse
+	button until the link is no longer under the mouse pointer.
+
+
+</p>
+<p>
+
+	No keys are by default configured for cursor routing.
+
+
+</p>
+<a name="rfc.section.1.5.4"></a><h4><a name="anchor10">1.5.4</a>&nbsp;Forms</h4>
+
+<p>
+
+	The status bar will indicate the type and name of the field.
+
+
+</p>
+<blockquote class="text"><dl>
+<dt>Input text/Password fields:</dt>
+<dd>
+
+	These will be displayed as "________".
+
+	Note that passwords will be obscured using "*" characters.
+	Status bar will display something like "Text field, name q",
+	or "Password field, name password" for password fields.
+
+
+</dd>
+<dt>Textarea boxes:</dt>
+<dd>
+
+	These will be displayed as multiple lines consisting of "_".
+	Status bar will display something like "Text area, name comment"
+
+
+</dd>
+<dt>Buttons:</dt>
+<dd>
+
+	These will be displayed as "[ Go ]".
+	Status bar will display something like "Submit form to ...",
+	"Post form to ..." for submit buttons.
+
+
+</dd>
+<dt>Checkboxes:</dt>
+<dd>
+
+	These will be displayed as "[ ]" or "[X]".
+	Status bar will display something like "Checkbox, name c, value 1".
+	To set one just press ENTER on it.
+
+
+</dd>
+<dt>Radio buttons:</dt>
+<dd>
+
+	These will be displayed as "( )" or "(X)".
+	Status bar will display something like "Radio button, name radio1".
+	To set one, you may use ENTER.
+
+
+</dd>
+<dt>Select lists:</dt>
+<dd>
+
+	These will be displayed as "[first item____]".
+	Note that if multiple attribute is used, these are displayed as a
+	group of checkboxes instead.
+	Status bar will display something like "Select field, name list"
+	To select one entry, press ENTER, then navigate using UP/DOWN, then
+	press ENTER again.
+
+
+</dd>
+</dl></blockquote>
+<a name="rfc.section.1.6"></a><h4><a name="anchor11">1.6</a>&nbsp;Searching</h4>
+
+<p>
+
+	Searching is by default available by pressing '/'. This will
+	open a search dialog with a input text field for entering the
+	search terms and checkboxes to control how searching is
+	performed. You can indicate whether matching should be case
+	sensitive and whether regular expressions or normal searching
+	should be used.
+
+
+</p>
+<p>
+
+	It is also possible to make an incremental search, also called
+	type-ahead searching. You can search either the whole document
+	text or only link text.  The latter can be useful if you see a
+	link deep inside a page and want to get to it quickly.
+
+
+</p>
+<p>
+
+	Matches of the search term will be high-lighted. After having
+	performed document text search all matches will be high-lighted.
+	To get rid of this high-lighting you have to ``search for the
+	empty string'', that is open a search dialog and just press
+	Enter in the input field.
+
+
+</p>
+<p>
+
+	Previous search words are saved in the search history, so they
+	can easily b found and used later. Browsing the history will
+	replace the current entered search terms.
+
+
+</p>
+<p>
+
+	The basic default controls for searching are the following:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">keys</th>
+<th align="left" width="70%">action</th>
+</tr>
+<tr>
+<td align="left">'/'</td>
+<td align="left">Open search dialog</td>
+</tr>
+<tr>
+<td align="left">'?'</td>
+<td align="left">Open search dialog for backwards searching</td>
+</tr>
+<tr>
+<td align="left">'#'</td>
+<td align="left">Start incremental link text search</td>
+</tr>
+<tr>
+<td align="left">'#/'</td>
+<td align="left">Start incremental document search</td>
+</tr>
+<tr>
+<td align="left">'n'/'N'</td>
+<td align="left">Show next/previous match</td>
+</tr>
+<tr>
+<td align="left">Tab</td>
+<td align="left">Show next match (only for incremental searching)</td>
+</tr>
+<tr>
+<td align="left">Up/Down</td>
+<td align="left">Insert previous/next search word from history
+			(only when the input field is selected)</td>
+</tr>
+</table>
+
+<a name="rfc.section.1.7"></a><h4><a name="anchor12">1.7</a>&nbsp;Hints and Odd Features</h4>
+
+<p>
+
+Note: This is still a work in progress and from here on an below
+everything is marked TODO!
+
+
+</p>
+<ul class="text">
+<li>Numerical action prefixes. Example: 3&lt;Down&gt; jumps down
+		three links.
+</li>
+<li>How to move forward in the document history ('u').
+</li>
+<li>Toggling color modes, plain/html and image link rendering.
+</li>
+<li>Link numbering.
+</li>
+<li>Insert mode in text-input form-fields.
+</li>
+<li>Menu searching.
+</li>
+</ul>
+<a name="anchor13"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.2"></a><h3>2.&nbsp;The Ultimate Bookmarks Guide</h3>
+
+<p>
+
+	Glad to see you again, mortal. Now, we are going to learn about
+	bookmarks - how to use them, how to maintain them, and also something
+	more about the file formats and maybe even about the code structure
+	later. But don't fear, we won't burden you with it, just stop reading
+	when you already know enough.
+
+
+</p>
+<p>
+
+	In order to read this, you need some common sense, the ability to
+	start ELinks and some idea about what's a Web document, a URL address
+	and knowledge like that.
+
+
+</p>
+<p>
+
+	If we ever mention some keys here, please note that you can rebind
+	almost any action to another key which you like more - then you must
+	obviously imagine your own key in place of that. Below, we will list
+	all actions, options and so on related to bookmarks. We won't tell you
+	how to rebind the keys, though; another document will take on that.
+
+
+</p>
+<p>
+
+	Somewhat out-of-order, a very frequent FAQ: In order to move bookmarks
+	around, you need to mark them first - press Insert or '*' (if you use
+	the default keymap) to do that.
+
+
+</p>
+<a name="rfc.section.2.1"></a><h4><a name="anchor14">2.1</a>&nbsp;The Bookmark Manager</h4>
+
+<p>
+
+	Basically, almost everything is going on in the so-called bookmark
+	manager. That's a special dialog window, which contains a listing of
+	all the bookmarks you ever told ELinks to remember and it lets you to
+	do with them anything you would ever want to do with them.
+
+
+</p>
+<p>
+
+	You launch the bookmark manager by pressing the 's' key in standby
+	(standard) mode. You should see a big empty space (bookmarks will
+	slowly appear there as you will add them) and couple of buttons
+	shriveling at the bottom. So, as a start, move with the right (or
+	left; both will do) arrow to the button "Add bookmark" and fill in the
+	input fields it offers to you. I mean, you can type something like
+	"ELinks homepage" to the first field, then move down by e.g.  the down
+	arrow and fill "http://elinks.or.cz/" to the second field. Then,
+	bravely press enter and watch the bookmark popping up at the top of
+	the vast area reserved for bookmarks.
+
+
+</p>
+<p>
+
+	Repeat this step few times. Now, you can move between bookmarks by the
+	up and down arrow, jump to the location any of them points to by the
+	Goto button, change it by the Edit button, delete it with the Delete
+	button and so on. When you'll become bored, press the escape button
+	and you're free again!
+
+
+</p>
+<a name="rfc.section.2.2"></a><h4><a name="anchor15">2.2</a>&nbsp;The Ancient Forests</h4>
+
+<p>
+
+	It's not very convenient to have all the bookmarks mixed up - soon,
+	you will get lost in them. Thus, in ELinks you can categorize them to
+	various folders, subfolders, subsubfolders and so on, then you can
+	expand and back enfold them and so on.
+
+
+</p>
+<p>
+
+	In order to create your first folder, use the button "Add folder" and
+	fill the first input field. You can safely ignore the URL field,
+	ELinks will do the same. *POOF* and you see it - it has that strange
+	[+] or [-] thing there. If it has [+] near, it's enfolded, while when
+	it has [-] near, it is expanded, while you can change that by pressing
+	the spacebar.
+
+
+</p>
+<p>
+
+	In order to add a bookmark into a folder, move on the item of the
+	folder (it must be expanded) or onto any bookmark inside of the folder
+	and simply do the usual "Add bookmark" job. You can also move the
+	bookmarks around, obviously.  You need to first mark all the bookmarks
+	(or even folders) you want to move using the Insert or '*'
+	key--asterisk will appear near of all marked bookmarks--and then move
+	to where you want to have the stuff moved to, and press the "Move"
+	button.
+
+
+</p>
+<p>
+
+	Separators can be inserted as well, using "Add separator" button, or
+	by entering a special bookmark with "-" as title and no url.
+
+
+</p>
+<a name="rfc.section.2.3"></a><h4><a name="anchor16">2.3</a>&nbsp;Searching needle in the haycock</h4>
+
+<p>
+
+	Of course, you can search in the bookmarks. Just use the "Find" button
+	- for convenience, you have the current document's URL and title
+	pre-filled there, and for convenience only up-up-enter-down-down
+	sequence is enough to have the playground clean. Then, just fill a
+	substring of what you are looking for, and the bookmarks will be
+	filtered so that only the matching ones are shown.  (Actually,
+	currently it will not be filtered but the cursor will only jump to the
+	first matching bookmark below the current cursor position - and it
+	will NOT wrap around. The exact behaviour changes time by time and
+	hasn't been stabilized yet.)
+
+
+</p>
+<a name="rfc.section.2.4"></a><h4><a name="anchor17">2.4</a>&nbsp;File formats</h4>
+
+<p>
+
+	ELinks supports two bookmark formats: the native format and a generic
+	bookmark exchange format called XBEL. Each of those formats has its
+	pros and cons, which we shall discuss below. You can switch between
+	then by changing the option bookmarks.file_format.
+
+
+</p>
+<p>
+
+	However, first please note that ELinks CANNOT read Links bookmarks
+	directly.  Importing Links-0.9x (or Links-1.x) bookmarks is easy - it
+	is just matter of changing all the '|' (pipe) characters to tabs.
+	There is a script for that in the contrib/conv/ directory. Importing
+	Links-2.xx bookmarks is not so easy; in fact, the scribe knows of no
+	way of doing that at the time of writing this, so this is up to you to
+	figure out (if you do, please tell us so that we can add it here).
+	Perhaps you might find a way to convert Links2 bookmarks to the XBEL
+	format, which can then be loaded in ELinks.
+
+
+
+</p>
+<a name="rfc.section.2.4.1"></a><h4><a name="anchor18">2.4.1</a>&nbsp;Native file format</h4>
+
+<p>
+
+	This is the preferred bookmarks format, which is also used by default.
+	The bookmarks file is ~/.elinks/bookmarks, in a simple format:
+
+
+</p><pre>
+	&lt;name&gt; '\t' &lt;url&gt; [ '\t' &lt;depth&gt; ['\t' &lt;flags&gt;]] '\n'</pre>
+
+<p>
+
+	'\t' represents a tab character, '\n' represents a newline character.
+	[Square brackets] denote optional parts. The &lt;name&gt; and
+	&lt;url&gt; fields should be obvious.  &lt;depth&gt; contains the
+	depth level of the entry - by that, ELinks can unambiguously figure
+	out the bookmarks hierarchy:
+
+
+</p>
+<p>
+</p><pre>
+	Bookmarks structure:                                Depth:
+	 ,-- The Pasky's C Bestiary                         0
+	[-]- Wonderful things                               0
+	 |    |-- Christmas Carol in l33tsp34k by L.M.      1
+	 |   [-]- Beautiful Potato Camera Shots             1
+	 |   [-]- Gallery of Scary Images of Jonas Fonseca  1
+	 |         |-- Jonas torturing gdb                  2
+	 |        [-]- Urgh                                 2
+	 |         |    `-- Jonas consuming Tofu            3
+	 |         `-- Jonas with crashed ELinks            2
+	 |-- Slides from Witek's hack-patch show            0
+	 `-- Miciah's English Grammar Spellbook             0</pre>
+
+<p>
+
+	&lt;flags&gt; is a string of characters. Currently, two flags are supported:
+
+
+</p>
+<blockquote class="text"><dl>
+<dt>E:</dt>
+<dd>
+
+	This folder is currently expanded. (No effect for non-folders.)
+
+
+</dd>
+<dt>F:</dt>
+<dd>
+
+	This entry is a folder. The &lt;url&gt; part is usually empty.
+
+
+</dd>
+</dl></blockquote>
+<p>
+
+	Separators: these are special bookmarks with "-" as title and no
+	url.
+
+
+</p>
+<p>
+
+	Pros: Naturally, ELinks handles the native format the best,
+	easiest and most reliably.
+
+
+</p>
+<p>
+
+	Cons: It is unlikely that you could use the native format
+	anywhere else than in ELinks.
+
+
+</p>
+<p>
+
+	To use the native format, set bookmarks.file_format = 0.
+
+
+</p>
+<a name="rfc.section.2.4.2"></a><h4><a name="anchor19">2.4.2</a>&nbsp;XBEL file format</h4>
+
+<p>
+
+	The XBEL file format support was added at some point during the
+	0.4 development by Fabio Boneli. It has never been complete and
+	has plenty of troubles, but generally, it works at the basic
+	level. The bookmarks file is ~/.elinks/bookmarks.xbel (thanks to
+	a different filename, you can have both XBEL and native
+	bookmarks saved in your ~/.elinks directory).
+
+
+</p>
+<p>
+
+	We shall not describe the XBEL file format here,
+	
+	<a href="http://pyxml.sourceforge.net/topics/xbel/">http://pyxml.sourceforge.net/topics/xbel/</a>
+
+	is the authoritative resource on that. It also contains list of
+	some of the applications supporting the format.  Basically, you
+	will be probably able to convert from/to the XBEL format to/from
+	most of the other widely used formats, so this way you can
+	import your bookmarks to ELinks from basically anything.
+
+
+</p>
+<p>
+
+	Pros: XBEL is the gateway to the rest of the bookmarks world.
+
+
+</p>
+<p>
+
+	Cons: The support for XBEL is incomplete and there are known
+	bugs. Especially, national character sets are basically not
+	supported, so ELinks will most likely get it wrong if you have
+	any non-ASCII characters in your bookmarks.  Generally, the XBEL
+	support should be considered experimental and you shouldn't rely
+	on it. It *could* trash your XBEL bookmarks file so make regular
+	backups.
+
+
+</p>
+<p>
+
+	To use the XBEL format, set bookmarks.file_format = 1.
+
+
+</p>
+<a name="rfc.section.2.4.3"></a><h4><a name="anchor20">2.4.3</a>&nbsp;Usage hints</h4>
+
+<p>
+
+	As already noted above, probably the best usage pattern is to
+	use XBEL for importing/exporting your bookmarks to/from ELinks
+	and the native format for regular operation. Of course, if you
+	want to synchronize your bookmarks in ELinks and some other
+	XBEL-supporting gadget and you are brave, you can use XBEL as
+	your exclusive bookmark format - the choice is upon you.
+
+
+</p>
+<p>
+
+	Regarding the bookmarks synchronization, there is one important
+	note. ELinks saves your bookmarks each time you added one
+	through the 'a' shortcut (add-bookmark action) or when closing
+	the bookmarks manager if you made any changes or when quitting
+	ELinks. However, ELinks reads your bookmarks only _ONCE_, during
+	the startup. This behaviour may change in the future (tell us if
+	you need a way for ELinks to re-read the bookmarks file), but
+	this is how it is done now.
+
+
+</p>
+<p>
+
+	Actually, you may now ask "So how do I convert bookmarks between
+	the two formats?".  It is quite easy.  ELinks simply follows the
+	current value of bookmarks.file_format whenever loading/saving
+	the bookmarks.
+
+
+</p>
+<p>
+
+	So, e.g. if you normally use the native format but you want the
+	bookmarks to be saved in the XBEL format once, change
+	bookmarks.file_format to 1, then cause the bookmarks to be
+	resaved (e.g. by doing some simple change, like adding a
+	trailing space to some bookmark's title or so), then change the
+	bookmarks.file_format value back to 0.
+
+
+</p>
+<p>
+
+	It is a little more complicated if you normally use the native
+	format but you want to import bookmarks from the XBEL format
+	once. You again change bookmarks.file_format to 1, then cause
+	the bookmarks to be reloaded.  That involves saving the
+	configuration, quitting ELinks _completely_ (that means
+	closing/killing all instances of it you have running), then
+	restarting it and changing bookmarks.file_format to 0. Then save
+	the configuration again and cause ELinks to resave the
+	bookmarks.
+
+
+</p>
+<p>
+
+	Agreed, this all strange dances are quite clumsy, likely some
+	simple wizard-like interface for switching the bookmarks formats
+	will be introduced in the future. So far, we have had no reports
+	from our users that anyone wants to switch their bookmarks
+	format frequently, so this is not too high on our TODO list. So
+	be sure to tell us if you would like this process to be
+	simplified rather sooner than later.
+
+
+</p>
+<a name="anchor21"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.3"></a><h3>3.&nbsp;The Wonders of Tabbed Browsing</h3>
+
+<p>
+
+	In this information age with our stream of consciousness constantly
+	being dispersed by links to different resources on the Net, it is a
+	challenge to keep track of where you are going. The need for being
+	able access several pages in parallel arises. Tabbed browsing gives
+	you an easy way to browse multiple sites in parallel.
+
+
+</p>
+<p>
+
+	If you are not already familiar with the concept of tabbed browsing
+	you can think of a tab as a separate browsing context with its own
+	history and the various other browsing state information, like search
+	word and document loading.  Whenever you stumble upon a link to a
+	document that you want to follow without leaving the current document,
+	you can open it in a new tab. This makes it possible to more easily
+	jump between pages on the Net and removes the need for running more
+	than one ELinks to do that.
+
+
+</p>
+<p>
+
+	Options related to tabs are located under ``User Interface -> Window
+	Tabs'' in the option manager. In the configuration file the naming
+	prefix is ``ui.tabs''.
+
+
+</p>
+<p>
+
+	Tabbed browsing has been supported since version 0.9.0 and is fairly
+	complete. The documentation on tabs is therefore divided into two
+	chapters: a general introduction and an introduction to advanced
+	topics.
+
+
+</p>
+<a name="rfc.section.3.1"></a><h4><a name="anchor22">3.1</a>&nbsp;Introduction to the basic actions involving tabs</h4>
+
+<a name="rfc.section.3.1.1"></a><h4><a name="anchor23">3.1.1</a>&nbsp;The tab bar and the tab menu</h4>
+
+<p>
+
+	The current state of all opened tabs are displayed in the tab bar. The
+	tab bar will by default become visible when more than one tab is open,
+	but this is configurable. For each open tab, the document title will
+	be shown, possibly truncated. The current tab is highlighted. The tab
+	bar will also display a load meter for tabs that are loading
+	documents. Finally, any tab that has not been selected since its
+	document was loaded will be marked as ``fresh'' by using a different
+	coloring scheme.
+
+
+</p>
+<p>
+
+	The tab menu gives access to tab specific actions along with
+	some other useful document specific actions. So even if you
+	haven't configured keybindings for all actions, chances are you
+	will find it in the tab menu. It is by default opened by
+	pressing 'e'.
+
+
+</p>
+<a name="rfc.section.3.1.2"></a><h4><a name="anchor24">3.1.2</a>&nbsp;Creating new tabs</h4>
+
+<p>
+
+	When creating new tabs, it is possible to specify whether to
+	create the tab and make it the current active tab or if the tab
+	is to be created ``in the background''--that is, without it
+	taking over the focus.
+
+
+</p>
+<p>
+
+	Tabs can be created either with or without specifying a desired
+	first document to load. That is, you can open links or submitted
+	forms in a new tab or just open a new tab. Depending on your
+	configuration, the latter will load the configured homepage in
+	the newly created tab or simply leave the tab blank with no
+	loaded document.
+
+
+</p>
+<p>
+
+	By default, 't' will open a new tab and 'T' will open the
+	current link in a new backgrounded tab. You can configure
+	keybindings for opening a new tab in the background and opening
+	the current link as the active tab.
+
+
+</p>
+<a name="rfc.section.3.1.3"></a><h4><a name="anchor25">3.1.3</a>&nbsp;Switching between tabs</h4>
+
+<p>
+
+	By default, it is possible to switch between tabs by using '&lt;'
+	and '&gt;' to select the previous and next tab. When currently
+	positioned at the leftmost tab and switching to the previous tab
+	the switching between tabs will perform a wrap-around so that
+	the rightmost tab will be selected. The wrap-around behaviour is
+	configurable.
+
+
+</p>
+<a name="rfc.section.3.1.4"></a><h4><a name="anchor26">3.1.4</a>&nbsp;Closing tabs</h4>
+
+<p>
+
+	Tabs can by default be closed by pressing 'c'. It is possible to
+	optionally have a confirmation dialog pop up when closing a tab
+	to avoid accidental closing. To complement closing of the
+	current tab, it is also possible to close all tabs but the
+	current one. No key is by default configured for this; the tab
+	menu, however, provides this ability.
+
+
+</p>
+<p>
+
+	Note: downloads initiated from a tab are in no way tied to that
+	tab, so tabs can be closed while the download will be
+	unaffected.
+
+
+</p>
+<a name="rfc.section.3.2"></a><h4><a name="anchor27">3.2</a>&nbsp;Advanced topics involving tabs</h4>
+
+<a name="rfc.section.3.2.1"></a><h4><a name="anchor28">3.2.1</a>&nbsp;Moving tabs</h4>
+
+<p>
+
+	Newly created tabs are always positioned as the rightmost tab,
+	but it is possible to move the current tab either to the left or
+	the right. The default keybindings have them bound to Alt-< and
+	Alt->. Note, however, that there are problems recognizing those
+	kaybindings when using XTerm, so you might want to rebind them.
+
+
+</p>
+<a name="rfc.section.3.2.2"></a><h4><a name="anchor29">3.2.2</a>&nbsp;Saving and restoring tabs</h4>
+
+<p>
+
+	Several features use bookmarks to save tabs; they will create a
+	folder and bookmark therein the currently displayed document of
+	each tab:
+
+
+</p>
+<ul class="text">
+<li>
+
+	You can explicitly command all tabs to be bookmarked. This will
+	ask you for a folder name in which the tabs will be bookmarked.
+
+
+</li>
+<li>
+
+	At startup and shutdown tabs can automatically be bookmarked in
+	order to save and restore the browsing state. Note that when
+	restoring, all history information will be gone. It is possible
+	to configure both tab saving and restoring via options in ``UI
+	-> Sessions''.
+
+
+</li>
+<li>
+
+	As a mean of crash protection, tabs can periodically be saved so
+	that it is later possible to reconstruct opened tabs. In case of
+	a clean shutdown periodically saved tabs will be removed.
+
+
+</li>
+</ul>
+<a name="anchor30"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.4"></a><h3>4.&nbsp;Marks (the lite edition)</h3>
+
+<p>
+
+	So, were you ever reading this huge 300-pages specification
+	heavily cross-referencing itself, jumping around and getting a
+	headache when looking for the place where you stopped reading
+	the last time?
+
+
+</p>
+<p>
+
+	Were you doing something similar in C code, but praising *vi*
+	for document marks?
+
+
+</p>
+<p>
+
+	ELinks can do them, too! For vim non-users:
+
+
+</p>
+<a name="rfc.section.4.1"></a><h4><a name="anchor31">4.1</a>&nbsp;What it is?</h4>
+
+<p>
+
+	When you place a "document mark" (just "mark" from now on), you
+	place an _invisible_ anchor at the current position in the
+	document. You can place several such marks --- each mark is
+	identified by a single character (any reasonable character will
+	do). Then, you can just happily browse around aimlessly (but see
+	below) and when in the same document again, you can return to
+	any of the marks in the file again. That will restore your
+	position in the file at the time of placing the mark.
+
+
+</p>
+<p>
+
+	You can place a mark by the "m" key followed by the mark
+	character. You can go to a mark by the "'" (apostrophe) key
+	followed by the mark character. E.g., you can place a mark named
+	"a" in the file by pressing "ma", then return to it anytime
+	later by typing "'a". You can of course change those shortcuts
+	at any time to anything you wish in the keybindings manager.
+
+
+</p>
+<p>
+
+	Short summary: you can place a mark (e.g. 'z') in a document by
+	pressing "mz" and then go back to it anytime later by pressing
+	"'z".
+
+
+</p>
+<a name="rfc.section.4.2"></a><h4><a name="anchor32">4.2</a>&nbsp;Restrictions</h4>
+
+<p>
+
+	To make a good start, one non-restriction comes first. The
+	document marks are local to the document. That means you can
+	have a mark "x" in one document and another mark "x" in another
+	document and ELinks won't mind and it will get it right each
+	time.
+
+
+</p>
+<p>
+
+	Now for the restrictions. ALL the document marks are always
+	local to the document. I.e. the vim text editor has an extension
+	that makes the capital-letter marks to be global to the whole
+	program and going to such a mark will make it to open the right
+	document. This is not implemented in ELinks _yet_.
+
+
+</p>
+<p>
+
+	Contrary to vim, ELinks doesn't support numbered marks (jumping
+	to the last n documents in history) nor the special "'" mark
+	(jumping to the last mark). Yet.
+
+
+</p>
+<p>
+
+	There is no way to get a listing of all marks set in a document.
+	Yet.
+
+
+</p>
+<a name="rfc.section.4.3"></a><h4><a name="anchor33">4.3</a>&nbsp;Marks lifespan</h4>
+
+<p>
+
+	I already hinted something about another restriction regarding
+	aimless browsing. The lifespan of document marks depends on
+	rather ill-defined and (for an average mortal) mostly
+	non-deterministic technical conditions.
+
+
+</p>
+<p>
+
+	Generally, marks _always_ survive when not moving away from the
+	document or when moving only in the session history (and
+	unhistory). That means, if you go back and the "unback" to the
+	document, you will find your marks safely in place. If you
+	follow a link from the document (or typed an address to the Goto
+	URL dialog) and then go back (by pressing the right arrow or
+	through the File menu), your marks are safe too. These are in
+	fact by far the most common usage cases for the marks, so most
+	of the time it will just work as you expect.  That's a good
+	news.
+
+
+</p>
+<p>
+
+	The bad news is that in all other cases, nothing is guaranteed.
+	It might work if you get back to the document by any other means
+	(by following some link or typing its address to the Goto URL
+	dialog), or it might not. It might be possible to achieve two
+	instances of the document inside a single ELinks, each with its
+	own set of marks. However, again, generally it will work as
+	expected - this paragraph serves only as a disclaimer in cases
+	it doesn't.  Don't rely on it.
+
+
+</p>
+<p>
+
+	Marks never survive over ELinks restarts. If you quit your
+	ELinks completely and run it again, the marks you placed will be
+	no more. No exceptions. Well. In some cases, it *might* appear
+	that they survived, but that just means you did not quit your
+	ELinks _completely_ --- if you run multiple ELinks instances
+	under a single user on a single system, they "join" together and
+	you must quit (or kill) them all to get rid of the damn thing.
+	But that's a different story.
+
+
+</p>
+<a name="anchor34"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.5"></a><h3>5.&nbsp;URL Shortcuts in ELinks</h3>
+
+<p>
+
+	One extremely useful and convenient feature on ELinks which is
+	presumably not very well known is so-called URL rewriting. If
+	you give ELinks a URL (by passing it on the command line,
+	through the -remote magic device or most frequently by typing it
+	to the Goto URL dialog), it can mangle it in certain ways before
+	processing it.  This mangling is called URI rewriting.
+
+
+</p>
+<a name="rfc.section.5.1"></a><h4><a name="anchor35">5.1</a>&nbsp;What it does</h4>
+
+<p>
+
+	The URI rewriting can expand certain URL shortcuts to complete
+	URLs. For example, if you type 'sd' to the Goto URL dialog, it
+	will get rewritten to
+
+
+</p><pre>
+		http://www.slashdot.org/
+</pre>
+
+<p>
+
+	first, then loaded --- /.'s front page will be displayed.
+
+
+</p>
+<p>
+
+	More so, if you type 'g elinks' to the Goto URL dialog, it will
+	be rewritten to
+
+
+</p><pre>
+		http://www.google.com/search?q=elinks&amp;btnG=Google+Search
+</pre>
+
+<p>
+
+	and then loaded --- therefore, a Google search for the 'elinks'
+	keyword will ensue. Note that you can separate the 'g' by either
+	a space or a colon, so 'g:elinks' will do the exact same thing.
+
+
+</p>
+<p>
+
+	A large number of those shortcuts is already predefined. You can
+	browse the Protocols :: URI Rewriting :: Dumb/Smart prefixes in
+	the Options Manager for complete listing of already defined
+	shortcuts (press the [Info] button on a shortcut to see what it
+	gets rewritten to). See below for details on how to
+	enable/disable this rewriting and how to define own shortcuts.
+
+
+</p>
+<a name="rfc.section.5.2"></a><h4><a name="anchor36">5.2</a>&nbsp;How it works</h4>
+
+<p>
+
+	All the URI rewriting can be controlled by options in the
+	'protocol.rewrite' options tree.
+
+
+</p>
+<p>
+
+	In the 'sd' case, URI rewriting mechanism called 'dumb prefix'
+	is used.  If protocol.rewrite.enable-dumb is true, ELinks looks
+	at the contents of protocol.rewrite.dumb tree, and if it finds
+	option protocol.rewrite.dumb.sd, it will use its value as the
+	target URI.
+
+
+</p>
+<p>
+
+	Therefore, in the general way, if ELinks looks at
+	protocol.rewrite.dumb.&lt;typed_string&gt; and if it exists, it
+	replaces the URI with it. These dumb prefixes can be used as
+	kind of alternative bookmarks - if you want to have a fast
+	access to a certain site and you don't want to spend lengthy
+	seconds navigating in the bookmarks manager, you can just fire
+	up the Goto URL dialog, type the shortcut and there you go.
+
+
+</p>
+<p>
+
+	A dumb prefix can contain '%c', which will be replaced by the
+	URI of the current document. This is used, for example, in the
+	'arc' dumb-prefix, which provides a shortcut to the Wayback
+	machine at archive.org.
+
+
+</p>
+<p>
+
+	In the 'g' case, a slightly different URI rewriting mechanism
+	called 'smart prefixes' is used. If
+	protocol.rewrite.enable-smart is true, ELinks looks at the
+	contents of protocol.rewrite.smart tree and if it finds option
+	protocol.rewrite.smart.g, it will use its value as the target
+	URI.
+
+
+</p>
+<p>
+
+	The difference is that the smart prefixes can take arguments and
+	reference them in the target URI. As with dumb prefixes, '%c' in
+	the URI means the current address. Additionally, '%s' will be
+	substituted by the whole string following the prefix ('elinks'
+	in the 'g' example above; '%s' is by far the most frequently
+	used expansion), while you can reference individual
+	space-separated arguments with the codes '%0' thru '%9'.
+	Finally, if you want a plain % to the resulting URI, use '%%'.
+
+
+</p>
+<p>
+
+	Note that the prefix searched in the protocol.rewrite.smart tree
+	is everything in the typed address up to the first space or
+	colon (so 'bug:123' and 'bug 123' make no difference). These
+	prefixes are generally useful for searching anything very fast -
+	be it Google ('g:foo', 'gi:foo', 'gr:foo', ...), ELinks Bugzilla
+	bugs ('bug:1234'), RFC database ('cr:foo'), or Czech-English
+	dictionary ('czen:foo'). But only your imagination is the limit.
+
+
+</p>
+<a name="rfc.section.5.3"></a><h4><a name="anchor37">5.3</a>&nbsp;Alternative URI rewriting mechanisms</h4>
+
+<p>
+
+	In the past before this was implemented, Lua scripting did the
+	job. And you still have complete control over the URI in the
+	internal scripting goto-url hook. The advantages are clear - you
+	get complete control over the URI and you can do much more
+	interesting things with it (e.g., there is some very advanced
+	CVSweb and Debian packages database URIs prefixes support in the
+	sample Lua hooks file). One disadvantage is clear too - you must
+	have Lua scripting enabled in order to make use of this, and
+	many users don't have Lua installed.  Another hidden
+	disadvantage is that the goto-url hook is not triggered all the
+	times when the built-in URI rewriting has its say on the URL.
+	Specifically, the goto-url hook isn't triggered when the URL is
+	passed on the command line.
+
+
+</p>
+<a name="anchor38"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.6"></a><h3>6.&nbsp;The Terminal Setup</h3>
+
+<p>
+
+	ELinks uses neither (n)curses nor termcap/terminfo, so unless
+	you are using a terminal that is known by ELinks and have a
+	built-in configuration (see below for a list), it might be
+	required that you do a little configuring of how your terminal
+	should be handled. The easiest way to do this is using the
+	Terminal Options dialog located in the Setup submenu of the Main
+	menu.
+
+
+</p>
+<p>
+
+	It is possible to have configurations for multiple terminals as
+	long as the TERM environment variable -- used to distinguish
+	terminals from one another -- is set to something different for
+	each terminal. So be sure to set TERM to different values for
+	two terminals that cannot share the same configuration.  For
+	example, always setting TERM to xterm-color can lead to problems
+	if you run ELinks under the Linux console. This is because the
+	Linux console does not support underlining and ELinks will not
+	know that underlined characters will have to be color
+	highlighted so they stand out.
+
+
+</p>
+<p>
+
+	In short, ELinks does not use termcap or terminfo. ELinks uses
+	$TERM, but only to distinguish between terminals in its own
+	configuration. That is, you need only configure your terminal
+	within ELinks: Go to the Setup menu and select Terminal Options.
+	If $TERM is set to 'screen' when you configure ELinks' terminal
+	settings, ELinks will remember to use those settings when $TERM
+	is 'screen'.
+
+
+</p>
+<a name="rfc.section.6.1"></a><h4><a name="anchor39">6.1</a>&nbsp;Options</h4>
+
+<p>
+
+	Apart from the last charset option configurable through the
+	Setup -> Character Set submenu in the Main menu, the rest can be
+	configured using the Terminal Options dialog.
+
+
+</p>
+<a name="rfc.section.6.1.1"></a><h4><a name="anchor40">6.1.1</a>&nbsp;Terminal type</h4>
+
+<p>
+		
+	It maps roughly to the terminal type, such as Linux console,
+	XTerm, VT100 etc. It matters mostly when drawing frames and
+	borders around dialog windows. As already mentioned, it also
+	turns on certain features which try to compensate for
+	``missing'' terminal capabilities when drawing. Special
+	highlighting of underlined text if underlining is not supported
+	is one such thing.
+
+
+</p>
+<p>
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">Type</th>
+<th align="left" width="70%">Notes</th>
+</tr>
+<tr>
+<td align="left">No frames		</td>
+<td align="left">Dumb terminal type / ASCII art</td>
+</tr>
+<tr>
+<td align="left">VT 100 frames	</td>
+<td align="left">Works in most terminals</td>
+</tr>
+<tr>
+<td align="left">Linux or OS/2 frames	</td>
+<td align="left">Linux console / you get double frames and other goodies</td>
+</tr>
+<tr>
+<td align="left">KOI-8		</td>
+<td align="left">&nbsp;</td>
+</tr>
+<tr>
+<td align="left">FreeBSD		</td>
+<td align="left">FreeBSD console</td>
+</tr>
+</table>
+
+<p>
+
+	The default is to assume dumb terminal/ASCII art.
+
+
+</p>
+<a name="rfc.section.6.1.2"></a><h4><a name="anchor41">6.1.2</a>&nbsp;Color mode</h4>
+
+<p>
+
+	The color mode controls what colors are used and how they are
+	output to the terminal. The available color modes are:
+
+
+</p>
+<p>
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="30%">Mode</th>
+<th align="left" width="70%">Color codes</th>
+</tr>
+<tr>
+<td align="left">Mono mode		</td>
+<td align="left">Only 2 colors are used</td>
+</tr>
+<tr>
+<td align="left">16 color mode	</td>
+<td align="left">Uses the common ANSI colors</td>
+</tr>
+<tr>
+<td align="left">256 color mode	</td>
+<td align="left">Uses XTerm RGB codes (if compiled in)</td>
+</tr>
+</table>
+
+<p>
+
+	The default is to use mono mode.
+
+
+</p>
+<a name="rfc.section.6.1.3"></a><h4><a name="anchor42">6.1.3</a>&nbsp;Switch fonts for line drawing (aka 11m hack)</h4>
+
+<p>
+
+	This is related to the drawing of frames and window borders
+	controlled by the option above. It controls whether to switch
+	fonts when drawing lines, enabling both local characters and
+	lines working at the same time.
+
+
+</p>
+<p>
+
+	This boolean option only makes sense with the Linux terminal.  Off
+	off by default.
+
+
+</p>
+<a name="rfc.section.6.1.4"></a><h4><a name="anchor43">6.1.4</a>&nbsp;Restrict frames in cp850/852</h4>
+
+<p>
+
+	This is related to the drawing of frames and window borders
+	controlled by the option above. If enabled, it restricts the
+	characters used when drawing lines.
+
+
+</p>
+<p>
+
+	This boolean option only makes sense with the Linux terminals
+	using the cp850/852 character sets. Off by default.
+
+
+</p>
+<a name="rfc.section.6.1.5"></a><h4><a name="anchor44">6.1.5</a>&nbsp;Block cursor</h4>
+
+<p>
+
+	Move cursor to bottom right corner when done drawing if
+	possible. This is particularly useful when we have a block
+	cursor, so that text colors are displayed correctly. If you are
+	using a screen reader you do not want to enable it since the
+	cursor is strategically positioned near relevant text of
+	selected dialog elements.
+
+
+</p>
+<p>
+
+	This boolean option is off by default.
+
+
+</p>
+<a name="rfc.section.6.1.6"></a><h4><a name="anchor45">6.1.6</a>&nbsp;Transparency</h4>
+
+<p>
+
+	Whether to set the background to black. This is particularly
+	useful when using a terminal (typically in some windowing
+	environment) with a background image or a transparent
+	background. If this option is enabled the background will be
+	visible in ELinks as well.
+
+
+</p>
+<p>
+
+	Note that this boolean option makes sense only when colors are
+	enabled. On by default.
+
+
+</p>
+<a name="rfc.section.6.1.7"></a><h4><a name="anchor46">6.1.7</a>&nbsp;Text underlining capability</h4>
+
+<p>
+
+	This boolean option controls whether to underline text or
+	enhance the color instead.
+
+
+</p>
+<p>
+
+	Note: not all terminals support text underlining, so it is off
+	by default.
+
+
+</p>
+<a name="rfc.section.6.1.8"></a><h4><a name="anchor47">6.1.8</a>&nbsp;UTF-8 I/O</h4>
+
+<p>
+
+	This boolean option controls outputting of I/O in UTF-8 for
+	Unicode terminals.
+
+
+</p>
+<p>
+
+	Note that currently, only the subset of UTF-8 according to the
+	terminal codepage is used. Offff by default.
+
+
+</p>
+<a name="rfc.section.6.1.9"></a><h4><a name="anchor48">6.1.9</a>&nbsp;Character Set</h4>
+
+<p>
+
+	Codepage of the charset used for displaying content on terminal.
+
+
+</p>
+<p>
+
+	The value 'System' (which is the default) will set the charset
+	according to the current locale. The default is to use the
+	charset of the current locale.
+
+
+</p>
+<a name="rfc.section.6.2"></a><h4><a name="anchor49">6.2</a>&nbsp;Terminal Configurations</h4>
+
+<p>
+
+	Built-in configurations exists for the following terminals:
+
+
+</p><pre>
+		linux, vt100, vt110, xterm, xterm-color and xterm-256color
+</pre>
+
+<p>
+
+	The last configuration requires that support for 256 is compiled in.
+
+
+</p>
+<p>
+
+	GNU Screen is VT100-compatible, so select 'VT 100 frames'. GNU
+	Screen also supports colors just fine, so select '16 colors'; or
+	if you are running Screen within a terminal emulator that
+	supports 256 colors and you have compiled both Screen and ELinks
+	to support it, choose '256 colors'.
+
+
+</p>
+<a name="anchor50"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.7"></a><h3>7.&nbsp;Introduction to MIME handling</h3>
+
+<p>
+
+	At some time along the 0.4 prereleases, ELinks replaced the old
+	Links file configuration system with its own one. Now, the
+	configuration is stored in elinks.conf, much more complete and
+	featuring a new syntax. You can set most options from the UI (so
+	usually there is no need to deal with elinks.conf), and that
+	used to be true for setting MIME handlers and extensions as
+	well; but now the associations menu is gone temporarily, forcing
+	you to set the handlers from the configuration file.
+
+
+</p>
+<p>
+
+	The comments provided within elinks.conf for the MIME options
+	are not much helpful, and those options may seem a bit obscure
+	or confusing at first.  This document is a basic introduction to
+	setting of MIME associations for ELinks. If you want to know how
+	to automatically launch a program to view some kind of file
+	(like images), then read on. Some basic knowledge of MIME is
+	recommended.
+
+
+</p>
+<a name="rfc.section.7.1"></a><h4><a name="anchor51">7.1</a>&nbsp;Handling MIME types, the ELinks way</h4>
+
+<a name="rfc.section.7.1.1"></a><h4><a name="anchor52">7.1.1</a>&nbsp;What are MIME types and why may you want to use them?</h4>
+
+<p>
+
+	If, while browsing with ELinks, you need to display files that
+	it can't show (like images or PDF documents), then you will
+	likely want to pass them to other programs that are suitable for
+	this task. While you may do it manually (saving the file to
+	disk, running the auxiliar program to show it and then removing
+	the file when finished), ELinks provides a method to do this
+	automatically using MIME types.
+
+
+</p>
+<p>
+
+	ELinks usually knows what the MIME type is for any file (which
+	is a kind of description of its format), thus you only need to
+	specify how to manage the MIME types for the files you want to
+	open. If you don't tell ELinks how to manage a given MIME type
+	then it will show you on screen the contents of the file (as if
+	it was ASCII text) instead of calling an external program to
+	show them.
+
+
+</p>
+<a name="rfc.section.7.1.2"></a><h4><a name="anchor53">7.1.2</a>&nbsp;Associating files to MIME types</h4>
+
+<p>
+
+	If the file is fetched from a web server then this web server
+	should tell ELinks what its MIME type is, so you should have
+	generally no need to care about it. However, the web server
+	might send an incorrect type, or you may be retrieving it by FTP
+	or from your local filesystem, so sometimes ELinks needs to
+	guess it.
+
+
+</p>
+<p>
+
+	The easiest method to guess a MIME type for a file is to just
+	look at its name trusting it was given the right extension.
+	ELinks supports this, letting you to specify a type for any
+	given extension.
+
+
+</p>
+<a name="rfc.section.7.1.3"></a><h4><a name="anchor54">7.1.3</a>&nbsp;Managing a given MIME type</h4>
+
+<p>
+
+	This usually means specifying programs to open files of this
+	type and the conditions in which those programs may be used. For
+	instance, you may want to use zgv (a popular svgalib image
+	viewer) when you are using the text console, but xli (a image
+	viewer for X) when running the X window system.
+
+
+</p>
+<a name="rfc.section.7.1.3.1"></a><h4><a name="anchor55">7.1.3.1</a>&nbsp;Binding it to a handler</h4>
+
+<p>
+
+	Instead of directly attaching a program to a MIME type, ELinks
+	lets you associate an abstract handler to each type. Then you
+	can specify which programs implement the handler and how are
+	they used.
+
+
+</p>
+<p>
+
+	For instance, you may create an image_viewer handler and assign
+	it to MIME types image/jpeg, image/png and image/gif. Then you
+	would associate to image_viewer the programs you would like to
+	use for viewing images and the details on how to use them. This
+	is less cumbersome than repeating all these details for each
+	MIME type.
+
+
+</p>
+<a name="rfc.section.7.1.4"></a><h4><a name="anchor56">7.1.4</a>&nbsp;Specifying the details for a handler</h4>
+
+<p>
+
+	There are three issues to specify for a handler: the program
+	associated to it, whether you want confirmation before using it
+	and whether you want the terminal to be blocked while it is
+	being used.
+
+
+</p>
+<p>
+
+	When specifying any of these issues, you must tell ELinks the
+	situation in which it gets applied, which is typically either
+	the text console or the X window sytem. So you can specify that
+	you don't want confirmation before running the program when
+	running X, and that you want it otherwise.  Similarly, when you
+	are attaching a program (name it foo) to this handler you must
+	tell if it's for X or not (you can attach a second program for
+	the other choice if you want).
+
+
+</p>
+<a name="rfc.section.7.1.4.1"></a><h4><a name="anchor57">7.1.4.1</a>&nbsp;Attaching a program to it</h4>
+
+<p>
+
+	You must tell ELinks the exact command for running it (with any
+	options you wish). In place of the filename you must enter %.
+
+
+</p>
+<a name="rfc.section.7.1.4.2"></a><h4><a name="anchor58">7.1.4.2</a>&nbsp;Choosing whether you want confirmation before applying it</h4>
+
+<p>
+
+	This is rather simple. If you choose not to do so, then the
+	handler will be automatically called upon when you demand ELinks
+	to show something attached to this handler. Otherwise, if you
+	ask for confirmation, you will be prompted to open it with a
+	external program, with additional choices that include
+	cancelling the operation and viewing it with ELinks. E.g: you
+	may use this option for programs written in C so that you may
+	always choose if you want to read the source with ELinks, or if
+	you want to save it, or if you want to use indent to display it
+	with less.
+
+
+</p>
+<a name="rfc.section.7.1.4.3"></a><h4><a name="anchor59">7.1.4.3</a>&nbsp;Choosing whether to block the terminal</h4>
+
+<p>
+
+	If you don't want to allow going back to ELinks (or any other
+	program from the same terminal) before the external program
+	ends, then you should ask to block the terminal.
+
+
+</p>
+<a name="rfc.section.7.2"></a><h4><a name="anchor60">7.2</a>&nbsp;Setting up elinks.conf</h4>
+
+<p>
+
+	If you have old configuration files from old ELinks versions or
+	from Links, then you may use the conf-links2elinks.pl script
+	(which is placed at contrib/conv/ on the source distribution) to
+	convert them to the new format. If you don't use it you will
+	need to edit the configuration file, and here you will find how.
+
+
+</p>
+<a name="rfc.section.7.2.1"></a><h4><a name="anchor61">7.2.1</a>&nbsp;Associating a file extension to a MIME type</h4>
+
+<p>
+
+	You can still do this with the UI, from the the Setup-&gt;File
+	Extensions submenu.
+
+
+</p>
+<p>
+
+	If you want to do so from the configuration file, enter set
+	mime.extension.ext = "type", replacing ext with the appropiate
+	file extension, and type with its MIME type. E.g. you may want
+	to have set mime.extension.jpg = "image/jpeg".
+
+
+</p>
+<a name="rfc.section.7.2.2"></a><h4><a name="anchor62">7.2.2</a>&nbsp;Defining a handler</h4>
+
+<p>
+
+	For each handler you must define three items, specifying in what
+	context the value of the item should be applied. You must enter
+	set mime.handler.handler-name.item.context = value, replacing
+	handler-name with the name for the handler you are defining,
+	item with the item you are defining for this handler, context
+	with the context this item value is to be applied, and value
+	with the value you want to assign to the item. You must do so
+	for each of the available items: program, ask and block.
+
+
+</p>
+<p>
+
+	The value for program is a string with the exact command you
+	want to be issued to view the file, placing % were you would put
+	the file name. The values for ask and block are either 0 (no) or
+	1 (yes). Available contexts include unix and unix-xwin, which
+	mean UNIX text terminal and X respectively (others can be os2,
+	win32, beos, riscos, ...). The latter does not mean you are
+	running ELinks from X, just that the DISPLAY variable is set so
+	that ELinks may run an X program.
+
+
+</p>
+<p>
+
+	To illustrate it, here is an example. Suppose you want to define
+	the image_viewer handler which should be used to view images.
+	The configuration file may look like this:
+
+
+</p><pre>
+	set mime.handler.image_viewer.unix.ask = 1
+	set mime.handler.image_viewer.unix-xwin.ask = 0
+
+	set mime.handler.image_viewer.unix.block = 1
+	set mime.handler.image_viewer.unix-xwin.block = 0
+
+	set mime.handler.image_viewer.unix.program = "zgv %"
+	set mime.handler.image_viewer.unix-xwin.program = "xli %"
+</pre>
+
+<p>
+
+	In this example the image_viewer handler uses the svgalib image
+	viewer zgv when X is not available, and the X image viewer xli
+	when it is. The terminal would be blocked when X is not
+	available and it would not be when it's available. Finally,
+	ELinks would ask for confirmation before using the handler only
+	with X not available.
+
+
+</p>
+<a name="rfc.section.7.2.3"></a><h4><a name="anchor63">7.2.3</a>&nbsp;Associating a MIME type to a handler</h4>
+
+<p>
+
+	Just enter set mime.type.class.name = "handler", replacing class
+	with the class for the mime type, name with the specific name
+	within that class, and handler with the name for the handler you
+	want to assign to the MIME type. E.g. you may want to have set
+	mime.type.image.jpeg = "image_viewer".
+
+
+</p>
+<a name="anchor64"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.8"></a><h3>8.&nbsp;Managing External Viewers with Mailcap</h3>
+
+<p>
+
+	This document describes the support for Mailcap (RFC 1524) in
+	ELinks. It does not describe the mailcap format. There are
+	plenty of documents on the Web that does this. Google and thou
+	wilt find. ;)
+
+
+</p>
+<a name="rfc.section.8.1"></a><h4><a name="anchor65">8.1</a>&nbsp;A Short Intro to Mailcap</h4>
+
+<p>
+
+	Mailcap is a file format defined in RFC 1524. Its purpose is to
+	inform multiple mail reading user agent (MUA) programs about the
+	locally-installed facilities for handling mail in various
+	formats. It is designed to work with the Multipurpose Internet
+	Mail Extensions, known as MIME.
+
+
+</p>
+<p>
+
+	ELinks allows MIME handlers to be defined using its own
+	configuration system, so why support mailcap? It can be seen as
+	an alternative or simply as a supplement for setting up MIME
+	handlers in ELinks.  Mailcap files are present on most UNIX
+	systems--usually in /etc/mailcap--so this makes it possible for
+	ELinks to know how to handle a great variety of file formats
+	with little configuration. To be able to use mailcap, it has to
+	be compiled into ELinks.  This is the default. If you don't need
+	mailcap support, just configure ELinks with the flag:
+	--disable-mailcap.
+
+
+</p>
+<a name="rfc.section.8.2"></a><h4><a name="anchor66">8.2</a>&nbsp;Parameters to Mailcap Entries</h4>
+
+<p>
+
+	The code has been ported from Mutt and thereby inherits some of
+	its various features and limitation.
+
+
+</p>
+<p>
+
+	The following parameters are supported:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="20%">Parameter</th>
+<th align="left" width="80%">Description</th>
+</tr>
+<tr>
+<td align="left">%s	</td>
+<td align="left">The filename that contains the data.</td>
+</tr>
+<tr>
+<td align="left">%f	</td>
+<td align="left">The content type, like 'text/plain'.</td>
+</tr>
+</table>
+
+<p>
+</p>
+<p>
+
+	The following parameters are not supported, since they do not
+	really make much sense for a non-MUA program:
+
+
+</p><table class="data" align="center" border="1" cellpadding="2" cellspacing="2">
+<tr>
+<th align="left" width="20%">Parameter</th>
+<th align="left" width="80%">Description</th>
+</tr>
+<tr>
+<td align="left">%n		</td>
+<td align="left">The integer number of sub-parts in the multipart</td>
+</tr>
+<tr>
+<td align="left">%F		</td>
+<td align="left">The "content-type filename" repeated for each sub-part</td>
+</tr>
+<tr>
+<td align="left">%{parameter}	</td>
+<td align="left">The "parameter" value from the content-type field</td>
+</tr>
+</table>
+
+<p>
+</p>
+<a name="rfc.section.8.3"></a><h4><a name="anchor67">8.3</a>&nbsp;Reading of Mailcap Files</h4>
+
+<p>
+
+	Mailcap files will be read when starting ELinks. The mailcap
+	files to use will be found from the mailcap path, a colon
+	separated list of files similar to the $PATH environment
+	variable. The mailcap path will be determined in the following
+	way:
+
+
+</p>
+<ol class="text">
+<li>
+
+	From the value of the mime.mailcap.path option in
+	elinks.conf; for example:
+
+<pre>
+	set mime.mailcap.path = "~/.mailcap:/usr/local/etc/mailcap"
+</pre>
+
+</li>
+<li>
+
+	From MAILCAP environment variable.
+
+
+</li>
+<li>
+
+	If non of the above is defined, the mailcap path defaults to
+	"~/.mailcap:/etc/mailcap".
+
+
+</li>
+</ol>
+<a name="rfc.section.8.4"></a><h4><a name="anchor68">8.4</a>&nbsp;Fields</h4>
+
+<p>
+
+	Since mailcap handling is primarily for displaying of resources,
+	all fields like edit, print, compose etc. are ignored.
+
+
+</p>
+<p>
+
+	Note: Test commands are supported, but unfortunately, it's not
+	possible to provide the file when running the test. So any test
+	that requires a file will be considered failed and the handler
+	will not be used.
+
+
+</p>
+<p>
+
+	Unfortunately, there are no 'native' support for the
+	copiousoutput field.  The field basicly mean 'needs pager'. So
+	it is handled by appending a pipe and a pager program to the
+	command. The pager program will be read from the PAGER
+	environment variable. If this fails, test are made for common
+	pager programs (/usr/bin/pager, /usr/bin/less and /usr/bin/more
+	in that order). So if you define png2ascii as your handler for
+	image/png and specify copiousoutput then the executed command
+	will be "png2ascii |/usr/bin/less" if less is your pager or
+	present on your system.
+
+
+</p>
+<a name="rfc.section.8.5"></a><h4><a name="anchor69">8.5</a>&nbsp;Mailcap Configuration</h4>
+
+<p>
+
+	Apart from the mime.mailcap.path option, you can configure if
+	mailca support should be disabled. The default being that it is
+	enabled. To disable it just put:
+
+
+</p><pre>
+	set mime.mailcap.enable = 0
+</pre>
+
+<p>
+
+	in elinks.conf.
+
+
+</p>
+<p>
+
+	It is also possible to control wether ELinks should ask you
+	before opening a file. The option is a boolian and can be set
+	like this:
+
+
+</p><pre>
+	set mime.mailcap.ask = 1
+</pre>
+
+<p>
+
+	if you would like to be asked before opening a file.
+
+
+</p>
+<a name="rfc.section.8.6"></a><h4><a name="anchor70">8.6</a>&nbsp;Some Sample Mailcap Entries</h4>
+
+<p>
+
+	Below are examples of how to specify external viewers:
+
+
+</p><pre>
+	# Use xv if X is running
+	image/*;                xv %s ; test=test -n "$DISPLAY";
+
+	# Convert images to text using the netpbm tools
+	image/*;                (anytopnm %s | pnmscale -xysize 200 150 | \
+				 pnminvert | ppmtopgm | pgmtopbm | \
+				 pbmtoascii -1x2 ) 2&gt;&amp;1 ; copiousoutput
+
+	# Various multimedia files
+	audio/mpeg;             xmms '%s'; test=test -n "$DISPLAY";
+	application/pdf;        xpdf '%s'; test=test -n "$DISPLAY";
+	application/postscript; ps2ascii %s ; copiousoutput
+</pre>
+
+<a name="anchor71"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.9"></a><h3>9.&nbsp;The tale of ex-mode</h3>
+
+<p>
+
+	Are you a vim-controls nerd who wants to see them everywhere?
+	Welcome.
+
+
+</p>
+<p>
+
+	Actually ELinks doesn't shine in this area yet very much. Heck,
+	the famous hjkl foursome is still occupied by some feeble
+	managers in the default keymap (we have that in our monumental
+	TODO lists). Still, if you know what to touch during the
+	compilation (--enable-exmode), you can get at least some
+	familiar reply to the mighty ':' (colon) grip.
+
+
+</p>
+<a name="rfc.section.9.1"></a><h4><a name="anchor72">9.1</a>&nbsp;What it is</h4>
+
+<p>
+
+	Ex-mode gives you some (still very rough and only marginally
+	complete) access to advanced ELinks commands, to be invoked
+	anywhere anytime, straight and fast.
+
+
+</p>
+<p>
+
+	When you activate the ex-mode (named after the equivalent gadget
+	in the vi text editor flavours), a command line appears at the
+	bottom of the screen for you to type the commands.
+
+
+</p>
+<p>
+
+	Only two kinds of commands are supported so far. First,
+	(almost?) anything that can appear in the configuration file can
+	be used in ex-mode. Second, you can invoke (almost) any action
+	from the ex-mode.
+
+
+</p>
+<a name="rfc.section.9.2"></a><h4><a name="anchor73">9.2</a>&nbsp;Configuration directives in exmode</h4>
+
+<p>
+
+	There aren't many of these, so we can skim through them fast.
+
+
+</p>
+<p>
+
+	If you want to flip an option you know by name and refuse to
+	engage with the option manager visuals, you can just drop in to
+	the ex-mode and type 'set the.option = 1234'. See man
+	elinks.conf (5) or the options manager for the list of options;
+	you can also get a complete options tree saved to elinks.conf if
+	you set config.saving_style = 2 (but do NOT keep that setting
+	unless you know what are you doing; if we change a default value
+	of some option in future releases, we (generally) know what are
+	we doing - this change won't propagate to you during an upgrade
+	if you already have the original default value saved in your
+	configuration file, though).
+
+
+</p>
+<p>
+
+	It's the same story with keybindings. You can use 'bind "main"
+	"h" = "move-cursor-left"'. It's not the same story with
+	keybindings documentation.  There is the elinkskeys (5) manual
+	page but it's horribly obsolete, so don't rely on it. You can
+	refer to the keybindings manager for names of actions and even
+	their short descriptions. Also, all the 'bind' commands are
+	saved to the configuration file if you set config.saving_style =
+	2 (but see above).
+
+
+</p>
+<p>
+
+	You can also use 'include my.conf', which will read my.conf as
+	an ELinks configuration file.
+
+
+</p>
+<p>
+
+	Actually, ELinks would eat '#blahblah blah' too, if you see a
+	point in feeding it that kind of stuff.
+
+
+</p>
+<a name="rfc.section.9.3"></a><h4><a name="anchor74">9.3</a>&nbsp;Actions in exmode - or exmode in action?</h4>
+
+<p>
+
+	There is too many of these, so we should better skim through
+	them fast.
+
+
+</p>
+<p>
+
+	Actually, we already talked about them. It's the last argument
+	to the 'bind' command. So, they are those listed in the
+	keybinding manager. So if you enter 'move-cursor-left' command,
+	it will move your cursor left - by a single character, making
+	this a little awkward, but it's useful if you sometimes want to
+	easily invoke an action and you don't want to waste a key for
+	it.
+
+
+</p>
+<p>
+
+	Actually, actions could theoretically take arguments too. This
+	is currently implemented only for the 'goto-url' action, which
+	can take the location it should go at as a parameter (otherwise
+	it opens the standard well-known dialog as if you pressed 'g' in
+	the default keymap).
+
+
+</p>
+<p>
+
+	Regarding the mysterious "(almost)" hinted above, you can never
+	invoke the "quit" action from the exmode - if you type it there,
+	"really-quit" is invoked instead.
+
+
+</p>
+<a name="rfc.section.9.4"></a><h4><a name="anchor75">9.4</a>&nbsp;How to use it</h4>
+
+<p>
+
+	It's simple. You press ':' (without the apostrophes, of course)
+	and type in the command, then you press enter.  E.g., ':set
+	config.saving_style = 3' (this is a good thing), ':quit' (and
+	the game is over). The standard line-editing facility is present
+	(cursor keys and so), and the ex-mode input line has own
+	history.
+
+
+</p>
+<a name="rfc.section.9.5"></a><h4><a name="anchor76">9.5</a>&nbsp;The "but"s</h4>
+
+<p>
+
+	The biggest usability hurdle so far is that there is no
+	tab-completion. This is why the ex-mode support is not enabled
+	by default and part of the reason why its practical usage is
+	somewhat limited yet - if you don't remember exactly what do you
+	want to invoke, tough beans. Someone shall address this issue in
+	the future.
+
+
+</p>
+<p>
+
+	Also, perhaps wider scale of commands should be implemented in
+	ex-mode. The code is extremely flexible and it is very trivial
+	to make another ex-mode command handler, it's just that no one
+	has done it yet ;-). Also, more actions should be able to take
+	arguments.
+
+
+</p>
+<a name="anchor77"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.10"></a><h3>10.&nbsp;Managing remote ELinks instances with -remote</h3>
+
+<p>
+
+	Some programs provide the ability to pass URIs to external
+	programs.  When stumbling upon a reference to a page you want to
+	see, it is sometimes a kludge to copy and paste it into ELinks.
+	This is where -remote can be a nifty solution.
+
+
+</p>
+<p>
+
+	When invoking ELinks with the -remote argument, it does not
+	start a new instance, but instead connects to an already running
+	ELinks, making it possible to control that ELinks instance. The
+	-remote command line switch takes a command consisting of the
+	action to invoke and any parameters to the action.  Here is an
+	example for opening freshmeat.net in a new tab:
+
+
+</p><pre>
+	$ elinks -remote "openURL(http://freshmeat.net/, new-tab)"
+</pre>
+
+<p>
+
+	When running this command in a terminal, you will see a small
+	delay before ELinks returns. If no running instance was found,
+	it will return with the error message:
+
+
+</p><pre>
+	ELinks: No remote session to connect to.
+</pre>
+
+<p>
+
+	All URLs passed to the openURL() commands can be URL prefixes,
+	so the command above could have simply used ``openURL(fm,
+	new-tab)''.
+
+
+</p>
+<a name="rfc.section.10.1"></a><h4><a name="anchor78">10.1</a>&nbsp;Limitations and outstanding issues</h4>
+
+<p>
+
+	Remote control is implemented using the intercommunication
+	socket created in ~/.elinks/, so the command has to be run on
+	the same machine as the instance you want to control; or put
+	differently: the two ELinkses need to share a file system that
+	supports socket files, which rules out usage of -remote over
+	NFS.  This also implies that the ELinks instance you want to
+	control should be started without passing -no-home nor
+	-no-connect.
+
+
+</p>
+<p>
+
+	The built-in -remote support is to some degree compatible with
+	the one Mozilla provides
+	(http://www.mozilla.org/unix/remote.html), but with some
+	homebrew extensions added and few unsupported features. All the
+	supported actions are documented below.
+
+
+</p>
+<p>
+
+	Under some circumstances, use of the -remote control can cause
+	ELinks to become unresponsive. This is cause by the current key
+	press and mouse focus being redirected to new tabs or dialogs
+	opened by the -remote action.
+
+
+</p>
+<a name="rfc.section.10.2"></a><h4><a name="anchor79">10.2</a>&nbsp;Remote Actions</h4>
+
+<p>
+
+	The command syntax is case-insensitive. For readability, we use
+	the casing in the listing of supported commands.
+
+
+</p>
+<p>
+
+	Mozilla -remote compatible commands:
+
+
+</p>
+<blockquote class="text"><dl>
+<dt>ping():</dt>
+<dd>
+
+	Checks for existence of a remote instance. Makes it possible for
+	scripts to query if remote controlling is possible.
+
+
+</dd>
+<dt>openURL():</dt>
+<dd>
+
+	Prompts for a URL in current tab by opening the Goto dialog.
+
+
+</dd>
+<dt>openURL(URL):</dt>
+<dd>
+
+	Open the passed URL in current tab.
+
+
+</dd>
+<dt>openURL(URL, new-tab):</dt>
+<dd>
+
+	Opens the passed URL in new tab.
+
+
+</dd>
+<dt>openURL(URL, new-window):</dt>
+<dd>
+
+	Opens the passed URL in new window.
+
+
+</dd>
+<dt>xfeDoCommand(openBrowser):</dt>
+<dd>
+
+	Opens an ELinks instance in a new window. This ELinks instance
+	will connect to the already running one.
+
+
+</dd>
+</dl></blockquote>
+<p>
+
+	ELinks extensions:
+
+
+</p>
+<blockquote class="text"><dl>
+<dt>addBookmark(URL):</dt>
+<dd>
+
+	Bookmarks the passed URL.
+
+
+</dd>
+</dl></blockquote>
+<p>
+
+	-remote can also take a list of URLs without an explicit action,
+	in which case the URL arguments will be opened in new tabs in
+	the remote instance. For example, by running:
+
+
+</p>
+<p>
+
+	$ elinks -remote slashdot.org fm g:elinks
+
+
+</p>
+<p>
+
+	new tabs containing slashdot.org, freshmeat.net and a Google
+	search of elinks will be opened.
+
+
+</p>
+<a name="anchor80"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<a name="rfc.section.11"></a><h3>11.&nbsp;Acknowledgement</h3>
+
+<a name="rfc.references1"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<h3>12&nbsp;References</h3>
+<table width="99%" border="0">
+</table>
+
+<a name="rfc.authors"></a><br /><hr />
+<table summary="layout" cellpadding="0" cellspacing="2" class="bug" align="right"><tr><td class="bug"><a href="#toc" class="link2">&nbsp;TOC&nbsp;</a></td></tr></table>
+<h3>Authors' Addresses</h3>
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Jonas Fonseca</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:fonseca@diku.dk">fonseca@diku.dk</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Petr Baudis</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:pasky@ucw.cz">pasky@ucw.cz</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Laurent Monin</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:zas@norz.org">zas@norz.org</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">Miciah Dashiel Butler Masters</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:miciah@myrealbox.com">miciah@myrealbox.com</a></td></tr>
+<tr cellpadding="3"><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td class="author-text">&nbsp;</td>
+<td class="author-text">José Luis González González</td></tr>
+<tr><td class="author" align="right">EMail:&nbsp;</td>
+<td class="author-text"><a href="mailto:jlg80@mi.madritel.es">jlg80@mi.madritel.es</a></td></tr>
+</table>
+</body></html>

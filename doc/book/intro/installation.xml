@@ -1,0 +1,234 @@
+<!-- $Id: installation.xml,v 1.4 2003/10/19 22:28:26 jonas Exp $ -->
+
+<chapter id="installation"><title> Getting ELinks up and running </title>
+	
+<?dbhtml filename="installation.html"?>
+
+<para>
+
+	Installing ELinks should be pretty easy on most systems. Below is
+	described the hole process of getting the sources, configuring
+	the compilation and compiling and installing.
+
+</para>
+
+<sect1><title> Getting the source </title>
+<para>
+
+	There are various methods of requiring the source code for ELinks all
+	you have to do is find one that suites your need. Basically there are two
+	flavors:
+
+<variablelist>
+
+	<varlistentry>
+	<term><type>stable</type></term>
+	<listitem><para>
+
+		The hopefully rock solid version of ELinks that is well tested
+		but not fully up to date. This should be considered if you are
+		going to maintain ELinks on systems with lot's of users.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><type>development</type> or <type>unstable</type></term>
+	<listitem><para>
+
+		The bleeding edge version of ELinks for the brave ones. This
+		should be considered if you want to be up to date or need some
+		specific feature.  Also consider this flavor if you want to
+		contribute to ELinks by testing it. (This of course requires
+		you to mail us.
+		See more about this in <xref linkend="bugreporting" />).
+
+	</para></listitem>
+	</varlistentry>
+
+</variablelist>
+
+	Whether you prefer <type>stable</type> or <type>development</type>
+	there are two methods of getting them.
+
+</para>
+
+<sect2><title> Downloading a tarball </title>
+<para>
+
+	Tarballs are good if you do not install/upgrade ELinks very often but
+	rather when important fixes or releases have been made announced.
+	Tarballs are also the installation form that requires least available
+	tools for building the program. More about this in <xref
+	linkend="requirements" />.
+
+</para>
+<para>
+
+	Tarballs of the various flavors are available from the download page
+	at ELinks homepage (see <xref linkend="homepage" />). Besides the various
+	releases you can download daily generated CVS snapshots of both the
+	<type>stable</type> and <type>development</type> branches.
+
+</para>
+</sect2>
+
+<sect2><title> The CVS way </title>
+<para>
+
+	If you regularly upgrade your ELinks (using the <type>development</type>)
+	flavor you will find getting ELinks the CVS way much more easy. Also this
+	way you might save some bandwidth since you wont have to download the
+	full package every time.
+	
+</para>	
+<note><para>
+	Note that when you are installing directly
+	from CVS you will need to have some extra programs installed on your system.
+	See <xref linkend="requirements" /> for needed software.
+	
+</para></note>
+<para>
+
+	To checkout the <type>development</type> flavor do the following:
+
+</para>
+<screen>
+<prompt>%</prompt> <userinput>export CVSROOT=:pserver:anonymous@cvs.elinks.or.cz:/var/cvs/elinks</userinput>
+<prompt>%</prompt> <userinput>cvs login</userinput>
+<userinput>(empty password)</userinput>
+<prompt>%</prompt> <userinput>cvs -z3 co elinks</userinput>
+</screen>
+<para>
+
+	You can also checkout the latest <type>stable</type> ELinks version
+	(note that development in the stable branch is usually more-or-less dead
+	nowadays ;-). Just do this:
+
+</para>
+<screen>
+<prompt>%</prompt> <userinput>export CVSROOT=:pserver:anonymous@cvs.elinks.or.cz:/var/cvs/elinks</userinput>
+<prompt>%</prompt> <userinput>cvs login</userinput>
+<userinput>(empty password)</userinput>
+<prompt>%</prompt> <userinput>cvs -z3 co -rREL_0_4 elinks</userinput>
+</screen>
+<para>
+
+	Later when you want to update your existing tree to the latest CVS
+	version just do:
+	
+</para>
+<screen>
+<prompt>%</prompt> <userinput>cvs -z3 update -dP</userinput>
+</screen>
+</sect2>
+</sect1>
+
+<sect1><title> Building and Installing ELinks </title>
+<para>
+
+	Much of the info in this section can be found in the
+	<filename>INSTALL</filename> file which can be found in the root of the
+	ELinks source directory.
+
+</para>
+<para>
+
+	The quick guide for the impatient. Issue the following commands from
+	the ELinks source directory:
+
+</para>
+<screen>
+<prompt>%</prompt> <userinput>./configure &amp;&amp; make &amp;&amp; make install</userinput>
+</screen>
+<para>
+
+	However you might consider to tweak a few compile time options before
+	building ELinks. Before we seeing how to do this lets take a look at
+	some of the programs and libraries required or recommended that you
+	install.
+
+</para>
+
+<sect2 id="requirements"><title> Requirements </title>
+<para>
+
+	To successfully install ELinks all that is required is <ulink
+	url="http://www.gnu.org/software/make/make.html">GNU make</ulink> and a
+	C compiler. If you want to install directly from CVS it is also
+	required that <command>automake</command> and
+	<command>autoconf</command> is installed on your system.
+
+</para>
+</sect2>
+
+<sect2><title> Recommended Libraries </title>
+<para>
+
+	To make use of many of ELinks features you will need to have some
+	external libraries installed on your system.  It is also recommended to
+	have the following libraries installed:
+	
+</para>
+<variablelist>
+	<varlistentry><term><ulink url="http://www.lua.org">Lua</ulink></term>
+	<listitem><para>
+
+		makes it possible to write plugins using the Elinks - Lua
+		interface.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><ulink url="http://www.gzip.org">GNU zip</ulink></term>
+	<listitem><para>
+
+		for handling compressed documents both locally and sent from
+		server.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><ulink url="http://sources.redhat.com/bzip2">bzip2</ulink></term>
+	<listitem><para>
+
+		for handling local compressed documents.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><ulink url="http://www.openssl.org">OpenSSL</ulink>
+		or <ulink url="http://www.gnu.org/software/gnutls">GNU TLS</ulink>
+	</term>
+	<listitem><para>
+
+		for handling secure http browsing.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><ulink url="ftp://arcana.linux.it/pub/gpm/">GPM (General Purpose Mouse)</ulink></term>
+	<listitem><para>
+
+		for mouse support.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><ulink url="http://www.jclark.com/xml/expat.html">expat (XML Parser Toolkit)</ulink></term>
+	<listitem><para>
+
+		needed for XBEL support.
+
+	</para></listitem>
+	</varlistentry>
+</variablelist>
+<para>
+
+	You are also advised to read the <filename>README</filename> and the
+	<filename>INSTALL</filename> files distributed with ELinks for further
+	up to date info on building and installing.
+
+</para>
+</sect2>
+</sect1>
+</chapter>

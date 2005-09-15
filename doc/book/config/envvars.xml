@@ -1,0 +1,58 @@
+<variablelist>
+	<varlistentry><term><envar> ELINKS_CONFDIR </envar></term>
+	<listitem><para>
+
+	The location of the directory containing configuration files.
+	If not set the default is <filename>~/.elinks/</filename>.
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><envar> WWW_HOME </envar></term>
+	<listitem><para>
+
+	Homepage location (as in <command>lynx(1)</command>)
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><envar> ELINKS_XTERM </envar>,
+			    <envar> LINKS_XTERM </envar></term>
+	<listitem><para>
+
+	The command to run when selecting
+	<guimenu>File</guimenu> -> <guimenuitem>New window</guimenuitem> and if
+	<envar>DISPLAY</envar> is defined (default <command>xterm
+	-e</command>)
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><envar> ELINKS_TWTERM </envar>,
+			    <envar> LINKS_TWTERM </envar></term>
+	<listitem><para>
+
+	The command to run when selecting <guimenu>File</guimenu> ->
+	<guimenuitem>New window</guimenuitem> and if <envar>TWDISPLAY</envar>
+	is defined (default <command>twterm -e</command>)
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><envar> SHELL </envar></term>
+	<listitem><para>
+
+	Used for "<guimenu>File</guimenu>/<guimenuitem>OS Shell</guimenuitem>"
+	menu
+
+	</para></listitem>
+	</varlistentry>
+
+	<varlistentry><term><envar> COMSPEC </envar></term>
+	<listitem><para>
+
+	Used for "File/OS Shell" menu in DOS/Windows
+
+	</para></listitem>
+	</varlistentry>
+</variablelist>

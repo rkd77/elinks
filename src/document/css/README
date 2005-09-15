@@ -1,0 +1,170 @@
+This is a super-simplistic CSS micro-engine.
+
+				    Phases
+
+The CSS handling is divided into:
+
+* The scanner
+
+It takes care of composing tokens from a string containing CSS source. It
+also takes care of eliminating either garbage code that was not recognized
+or things like whitespace and comments. The scanner will not attempt to
+recover from this garbage code but merely signal them to the upper layers.
+
+The scanner only works with strings but is a bit more high level than
+scanners in the sense of flex. The string "10em" will not just generate the
+two tokens <number>, <identifier> but rather combine them into one token.
+This only leads to problems with tokens of the sort #<identifier> that can
+be both a hex color or hash so should not be a problem but rather mean that
+we will do less scanner calls.
+
+The scanner lives in scanner.*
+
+* The parser
+
+It takes a string with CSS code, composes tokens (from the scanner) into
+some meaningful syntax and transforms it to an internal set of structures
+describing the data (let's call it a "rawer"). It currently does no recovery
+when something unexpected shows up but skips to next special control char.
+
+The parser lives in parser.* and value.*
+
+* The applier
+
+It applies style info from a syntax tree (parsed ELinks or document
+stylesheet) or fragment of one (in the case of style="" attributes) to the
+current element.
+
+The applier lives in apply.*
+
+
+			      The current state
+
+Currently we both check the element's 'style' attribute, content of <style>
+tags and imports from either <link> tags in the HTML header or @imports from
+the CSS code. But we lack a proper way to handle the cascading. Now it will
+automatically scan the current element, and if a 'style' attribute is found,
+it is parsed and applied to the current element.  If there is no 'style'
+attribute it will look up any styles retrieved from the document stylesheet
+and last try styles from the default user controlled stylesheet. TODO: We
+should always look up <style> tags and only apply those not found in any
+'style' attribute.
+
+One big problem with the current way of doing things is inheritance, there
+is no way we are telling the HTML engine what is going to be inherited and
+what is not. The other problem is precedence, currently even global
+stylesheet takes precedence over local classic-formatting attributes (we
+just css_apply() like mad on various places to make sure the CSS attributes
+are stuffed through HTML engine's throat). These two problems will be solved
+when the HTML engine is converted to work with stylesheets natively (instead
+of format + par_format).
+
+
+			       The selectors tree
+
+In order to handle any non-trivial selectors, we need them to form a certain
+structure. A hierarchical one was chosen, where we initially focus on a
+the most specific element, then we build the way down through ids, classes
+and pseudo-classes and then back the way up through parent elements.
+
+Assume two statements: "div#foo p a>b i:baz { color: black; }" and
+"div#foo.bar p a>b i:baz { text-decoration: underline; }". The tree we build up
+is:
+
+                element[i]
+                | (pseudo_classes)
+                pseudo_class[baz]
+                | (ancestors)
+                element[b]
+                | (parents)
+                element[a]
+                | (ancestors)
+                element[p]
+                | (ancestors)
+                element[div]
+                | (ids)
+                id[foo] -> (color: black)
+                | (classes)
+                class[bar] -> (text-decoration: underline)
+
+As you can see, the combinators hierarchy is reverse, while the other selectors
+hierarchy is as usual. This is to aid the applier, it goes from the general to
+the specific (that's how it is from the POV of applying stuff to single
+elements, even though the ancestors are more "general" from the POV of the
+document stucture). This approach has its deficiencies as well (it can be
+expensive to match long complex combinators since we need to walk through the
+ancestry each time we match an element, or even more frequently when we
+consider the element with varied specificities ("i", "i#x", "i:baz",
+"i#x:baz")) but it still looks like the best way (because of the varied
+specificities, you can't well go the other way by narrowing down the selectors
+as you descend the elements tree).
+
+Let's close the discourse by adding another two selectors to the stylesheet:
+"b i#x:baz { color: blue; }" and "a>b#foo i:baz { background: white; }".
+
+                element[i] -------------.
+                | (pseudo_classes)      | (ids)
+                pseudo_class[baz]       id[x]
+                | (ancestors)           | (pseudo_classes)
+  .------------ element[b]              pseudo_class[baz]
+  | (ids)       | (parents)             | (ancestors)
+  id[foo]       element[a]              element[b] -> (color: blue)
+  | (parents)   | (ancestors)
+  element[a]    element[p]
+   -> (b: w)    | (ancestors)
+                element[div]
+                | (ids)
+                id[foo] -> (color: black)
+                | (classes)
+                class[bar] -> (text-decoration: underline)
+
+As you can see a tiny alternation of specificity at the top of the tree will
+duplicate the whole path of combinators, but you can't get away without that,
+I think.
+
+You can get probably a much better overview of how it looks by #define
+DEBUG_CSS at the top of src/document/css/stylesheet.h, recompiling and then
+grabbing a dumped stylesheet tree from stderr. Translate the 'type' and 'rel'
+fields from numbers to actual values accordingly to the enums in the
+aforementioned header file.
+
+
+			    The future of selectors
+
+XXX: I keep this here only for a historical reference now. The order matters,
+the connecting lines probably not. --pasky
+
+Specificity
+
+111		a#id.nav
+.		    |
+.		.---'---.
+.		V	|
+101	       a#id	|
+.		|	|
+.		|	|
+.		|	|
+13		|	|		       div p a.nav
+.		|	|			    |
+.		|	|	    .--------------'|
+.		|	|	    V		    |
+12		|	|        p a.nav	    |
+.		|	|	    |		    |
+.		|	`-.---------'		    |
+.		|	  V			    |
+11		|	a.nav			    |
+.		|	  |			    |
+.		|	  |			    |
+.		|	  |			    |
+2		|	  |    p a		    |
+.		|	  |	|		    |
+.		`---------`-.---'---.		    |
+.			    V	    V		    |
+1			    a	    p	   img	   div
+.			    |	      |	    |	    |
+.			    `-------+---+---+-------'
+.					V
+0					* (universal selector)
+
+
+$Id: README,v 1.14 2004/10/13 15:34:46 zas Exp $
