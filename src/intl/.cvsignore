@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-.deps
-language.inc
-lang_defs.h
-stamp-intl
-lng_*.inc
-*.swp
