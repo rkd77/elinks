@@ -2,7 +2,7 @@
 
 OBJS = cache.o dialogs.o
 
-all: libcache.a
+all-l: libcache.a
 libcache.a: $(OBJS)
 
 -include ../../Makefile.lib

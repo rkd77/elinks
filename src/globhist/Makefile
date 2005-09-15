@@ -2,7 +2,7 @@
 
 OBJS = globhist.o dialogs.o
 
-all: libglobhist.a
+all-l: libglobhist.a
 libglobhist.a: $(OBJS)
 
 -include ../../Makefile.lib

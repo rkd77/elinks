@@ -2,7 +2,7 @@
 
 OBJS = formhist.o dialogs.o
 
-all: libformhist.a
+all-l: libformhist.a
 libformhist.a: $(OBJS)
 
 -include ../../Makefile.lib

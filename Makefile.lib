@@ -59,7 +59,7 @@ endif
 	$(call cmd,archive)
 
 ifdef $(OBJS)
-clean:
+clean-l:
 	rm -f $(OBJS) *.a
 endif
 
@@ -73,9 +73,13 @@ all-recursive install-recursive clean-recursive:
 		$(call ncmd,recmake) || exit 1; \
 	done
 
-all: all-recursive
-install: install-recursive
-clean: clean-recursive
+all: all-recursive all-l
+install: install-recursive install-l
+clean: clean-recursive clean-l
+
+all-l:
+install-l:
+clean-l:
 
 
 # vim:syntax=make

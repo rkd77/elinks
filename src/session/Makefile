@@ -2,7 +2,7 @@
 
 OBJS = download.o history.o location.o session.o task.o
 
-all: libsession.a
+all-l: libsession.a
 libsession.a: $(OBJS)
 
 -include ../../Makefile.lib

@@ -8,7 +8,7 @@ path_to_top = ..
 SUBDIRS = doc po src
 
 
-clean:
+clean-l:
 	rm -rf features.log
 
 -include Makefile.lib
