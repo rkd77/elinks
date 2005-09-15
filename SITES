@@ -13,10 +13,9 @@ RPMs:
 Cygwin binaries:
 	http://www.pervalidus.net/cygwin/links/
 
-CVS root:
-	:pserver:anonymous@cvs.elinks.or.cz:/var/cvs/elinks
-	:pserver:anonymous@cvs.pld.org.pl:/cvsroot
-	:pserver:anoncvs@pasky.or.cz:/home/cvs/elinks (master, DEPRECATED)
+GIT root:
+	http://elinks.or.cz/elinks.git
+	git+ssh://pasky.or.cz/srv/git/elinks.git (master, DEPRECATED)
 
 Mailing list:
 	http://elinks.or.cz/community.html#mailinglist
