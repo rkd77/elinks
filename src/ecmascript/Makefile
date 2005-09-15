@@ -1,4 +1,4 @@
--include ../../Makefile.config
+include ../../Makefile.config
 INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
 SUBDIRS = spidermonkey
@@ -9,4 +9,4 @@ OBJS = ecmascript.o spidermonkey.o $(foreach obj,$(SM_OBJS),spidermonkey/$(obj))
 all-l: libecmascript.a
 libecmascript.a: $(OBJS)
 
--include ../../Makefile.lib
+include ../../Makefile.lib
