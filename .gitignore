@@ -8,6 +8,7 @@ config.status
 configure
 Makefile
 Makefile.in
+Makefile.config
 stamp-h
 stamp-h.in
 depcomp
