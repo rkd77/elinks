@@ -361,7 +361,7 @@ make_keystroke(struct string *str, long key, long meta, int escape)
 	if (!key_string) {
 		key_string = key_buffer + 1;
 		*key_string = (unsigned char) key;
-		if (key == '\\' && escape)
+		if (escape && strchr("'\"\\", key))
 			key_string--;
 	}
 
