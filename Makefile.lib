@@ -58,6 +58,11 @@ endif
 %.a:
 	$(call cmd,archive)
 
+ifdef $(OBJS)
+clean:
+	rm -f $(OBJS) *.a
+endif
+
 
 # Recursion:
 
@@ -67,6 +72,10 @@ all-recursive install-recursive clean-recursive:
 	for subdir in $(SUBDIRS); do \
 		$(call ncmd,recmake) || exit 1; \
 	done
+
+all: all-recursive
+install: install-recursive
+clean: clean-recursive
 
 
 # vim:syntax=make

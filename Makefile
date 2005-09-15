@@ -8,11 +8,7 @@ path_to_top = ..
 SUBDIRS = doc po src
 
 
-all: all-recursive
-
-clean: clean-recursive
+clean:
 	rm -rf features.log
-
-install: install-recursive
 
 -include Makefile.lib

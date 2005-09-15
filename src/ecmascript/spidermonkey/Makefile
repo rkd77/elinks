@@ -6,7 +6,4 @@ OBJS = document.o form.o location.o navigator.o unibar.o window.o
 
 all: $(OBJS)
 
-clean:
-	rm -f *.o *.a
-
 -include ../../../Makefile.lib

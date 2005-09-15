@@ -103,3 +103,11 @@ LIBS = @LIBS@
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)/src
 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
+
+
+### This is here because Makefile.config is usually the first thing
+### we get and sometimes the all rule can be implicit, yet we want
+### it always as the default one. So this should make sure it always
+### comes first.
+all:
+
