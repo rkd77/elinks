@@ -1267,10 +1267,6 @@ AC_OUTPUT([ \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
  doc/Makefile \
- doc/man/Makefile \
- doc/man/man1/Makefile \
- doc/man/man1/elinks.1 \
- doc/man/man5/Makefile \
  po/Makefile \
  src/Makefile \
  src/bfu/Makefile \
