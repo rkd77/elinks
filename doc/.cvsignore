@@ -1,9 +1,0 @@
-*.swp
-Makefile
-Makefile.in
-html
-perl.html
-pod2htmd.tmp
-pod2htmi.tmp
-txt
-xml

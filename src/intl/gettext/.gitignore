@@ -1,7 +1,3 @@
-Makefile
-Makefile.in
-.deps
 charset.alias
 ref-add.sed
 ref-del.sed
-*.swp

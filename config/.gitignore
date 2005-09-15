@@ -1,8 +1,4 @@
-Makefile
-Makefile.in
 install-sh
 missing
 mkinstalldirs
 depcomp
-.deps
-*.swp

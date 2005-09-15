@@ -1,5 +1,3 @@
-Makefile
-Makefile.in
+index.bt
 manpage.links
 manpage.refs
-*.swp
