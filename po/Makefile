@@ -1,18 +1,10 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.9 2005/05/16 22:34:41 jonas Exp $
-
-EXTRA_DIST = README $(PACKAGE).pot $(POFILES) $(GMOFILES)
-
-MOSTLYCLEANFILES = $(PACKAGE).po *.new.po
-DISTCLEANFILES = *.mo
-MAINTAINERCLEANFILES = $(GMOFILES)
+-include ../Makefile.config
 
 # Where to install the catalog files.
 localedir = $(datadir)/locale
 
 # These are for some reason not added magically to the Makefile.
 MSGMERGE = msgmerge
-XGETTEXT = @XGETTEXT@
 
 POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
 POTFILES_ABS = $(shell cd $(top_srcdir); find src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
@@ -43,7 +35,7 @@ SUFFIXES = .po .gmo .mo
 #
 # $(CATALOGS) is empty if --disable-nls. Beats using *-(yes|no) targets.
 
-all-local: $(CATALOGS)
+all-l: $(CATALOGS)
 
 
 ### Creating the template po template file
@@ -108,13 +100,13 @@ check-po:
 	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $$lang.po; \
 	done
 
-### (Un)installation and distribution
+### Installation and distribution
 #
-# Use *-local targets to place and remove .gmo files.
+# Use *-l targets to place and remove .gmo files.
 
-install-data-local: install-data-local-@CONFIG_NLS@
-install-data-local-no:
-install-data-local-yes:
+install-l: install-l-$(CONFIG_NLS)
+install-l-no:
+install-l-yes:
 	$(mkinstalldirs) $(DESTDIR)$(localedir)
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
@@ -130,16 +122,11 @@ install-data-local-yes:
 	  fi; \
 	done
 
-# There is no `uninstall-data-local' target. The automake info document says to
-# just use `uninstall-local'.
-uninstall-local:
-	catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE).mo; \
-	done
-
 # Steal the `dist' target so that .po and .gmo files will be properly updated
 # then the dependence on `distdir' will take care of copying.
 dist: update-po distdir
+
+clean:
+	rm -f $(PACKAGE).po *.new.po
+
+-include ../Makefile.lib
