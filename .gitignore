@@ -16,6 +16,5 @@ stamp-h1
 .deps
 elinks
 *.swp
-*.html
 *.patch
 features.log
