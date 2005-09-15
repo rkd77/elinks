@@ -1262,27 +1262,20 @@ dnl Generated files
 dnl ===================================================================
 
 AC_OUTPUT([ \
- Makefile \
- Unicode/Makefile \
- config/Makefile \
- contrib/Makefile \
+ Makefile.config \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
- debian/Makefile \
  doc/Makefile \
  doc/man/Makefile \
  doc/man/man1/Makefile \
  doc/man/man1/elinks.1 \
  doc/man/man5/Makefile \
- intl/Makefile \
  po/Makefile \
  src/Makefile \
  src/bfu/Makefile \
  src/bookmarks/Makefile \
  src/bookmarks/backend/Makefile \
- src/cache/Makefile \
- src/config/Makefile \
  src/cookies/Makefile \
  src/dialogs/Makefile \
  src/document/Makefile \
@@ -1293,11 +1286,7 @@ AC_OUTPUT([ \
  src/document/plain/Makefile \
  src/document/sgml/Makefile \
  src/document/sgml/html/Makefile \
- src/ecmascript/Makefile \
- src/ecmascript/spidermonkey/Makefile \
  src/encoding/Makefile \
- src/formhist/Makefile \
- src/globhist/Makefile \
  src/intl/Makefile \
  src/intl/gettext/Makefile \
  src/intl/gettext/ref-add.sed \
@@ -1335,8 +1324,7 @@ AC_OUTPUT([ \
  src/util/Makefile \
  src/viewer/Makefile \
  src/viewer/dump/Makefile \
- src/viewer/text/Makefile \
- test/Makefile
+ src/viewer/text/Makefile
 ])
 
 
