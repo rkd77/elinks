@@ -15,7 +15,7 @@ Cygwin binaries:
 
 GIT root:
 	http://elinks.or.cz/elinks.git
-	git+ssh://pasky.or.cz/srv/git/elinks.git (master, DEPRECATED)
+	git+ssh://pasky.or.cz/srv/git/elinks.git (only for developers)
 
 Mailing list:
 	http://elinks.or.cz/community.html#mailinglist
