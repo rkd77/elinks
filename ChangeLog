@@ -1,0 +1,6 @@
+The ChangeLog file has been removed. You can get the equivalent
+by doing:
+
+	cg log
+
+in a checked out GIT tree.
