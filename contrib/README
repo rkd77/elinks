@@ -1,0 +1,27 @@
+This directory contains unsorted stuff contributed by other people, which is
+not incorporated to main ELinks distribution, however may be still interesting
+for someone. You will find here i.e. example configuration files or patches,
+which weren't (possibly yet) for some reason applied. Note that this stuff is
+mostly unmaintained and is not guaranteed to work, apply, compile etc. However,
+if you feel like fixing that, no problem.
+
+Files not listed here have description included in their header.
+
+* links_wps.zip - David Mediavilla <davidme@idecnet.com>
+	Scripts for OS/2 to create Links icon and assign Links as viewer of
+	URLs.
+
+* LinksOS2Icon.zip - Alex Taylor <alex@eddie.cis.uoguelph.ca>
+	Links icons for OS/2 in various sizes and color depths
+
+* colws.diff - <ard@waikato.ac.nz>
+	Show two spaces after full stops/periods, especially when HTML It
+	shouldn't adversely affect web pages.  Two spaces will only appear
+	where the HTML contains them.
+
+* elinks[.-]vim* - Jonas Fonseca <fonseca@diku.dk>
+	Syntax file for vim so that elinks.conf is highlighted nicely, and
+	patch for $VIMRUNTIME/filetype.vim so that elinks.conf is properly
+	detected and the elinks syntax is associated to it.
+
+$Id: README,v 1.11 2003/06/21 13:25:02 jonas Exp $

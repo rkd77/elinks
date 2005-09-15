@@ -1,0 +1,29 @@
+I like to see two spaces after full stops/periods, especially when HTML
+authors have put them there.  The following patch to 20020305 achieves
+that.
+
+You might like to do the same for colons.
+
+It shouldn't adversely affect web pages.  Two spaces will only appear
+where the HTML contains them.  I will be using it: you may do with it as
+you wish.
+
+--- elinks/src/document/html/parser.c.~1.25.~	Tue Mar  5 22:42:43 2002
++++ elinks/src/document/html/parser.c	Thu Apr 11 16:13:10 2002
+@@ -1997,7 +1997,7 @@
+ 
+ void parse_html(unsigned char *html, unsigned char *eof, void (*put_chars)(void *, unsigned char *, int), void (*line_break)(void *), void (*init)(void *), void *(*special)(void *, int, ...), void *f, unsigned char *head)
+ {
+-	/*unsigned char *start = html;*/
++	unsigned char *start = html;
+ 	unsigned char *lt;
+ 	putsp = -1;
+ 	line_breax = table_level ? 2 : 1;
+@@ -2048,6 +2048,7 @@
+ 				put_chrs(lt, html - 1 - lt, put_chars, f);
+ 				put_chrs(" ", 1, put_chars, f);
+ 			}
++			if ((html > start+1) && (*(html-2)=='.' || *(html-2)==':')) putsp = 1;
+ 			skip_w:
+ 			while (html < eof && WHITECHAR(*html)) html++;
+ 			/*putsp = -1;*/

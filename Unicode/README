@@ -1,0 +1,3 @@
+This contains charset definitions and convert tables. If you'll change
+anything, run ./gen - it will regenerate the header files and place them inside
+src/intl/.

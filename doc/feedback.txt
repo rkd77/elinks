@@ -1,0 +1,39 @@
+If you have any questions that RTFM (from the poor manual choice we offer you
+;) didn't solve and you are too afraid to do RTSL (Read The Source, Luke), or
+you just can't understand something in the source itself, feel free to ask us!
+
+If you have some weird problems, you can't see what they come from, and you are
+running latest ELinks version, feel free to ask us!
+
+If you encountered some bug, BUGS file don't know about it, if ELinks crashed
+to you and you have latest version, core, backtrace etc., if you have even fixed
+the bug and have a patch, feel free to let us know!
+
+If you have idea about some great feature missing from ELinks, if something in
+ELinks constantly irritates you, if you have even patch for any new feature and
+you think others would appreciate it or even use it, or even we would like to
+include it in the mainstream ELinks, feel free to let us know!
+
+Remember, things probably won't change magically. If you don't like
+something and you won't let us know, then we _won't_ know, then nothing will
+change and then you won't like something and that's not what we desire ;-). So,
+don't fear and go for it!
+
+Now, how to feed us back? Probably the best way is to write a mail and target
+it to the Links/ELinks mailing list - you can find the address at project
+source tree root in file SITES. If your issue is of more confidential character
+(like grave security hole you happened to stumble upon while doing full-scale
+security audit >:), you may want to contact directly the maintainer - his
+address usually converges to <fonseca@diku.dk>.
+
+Obviously, you can feed us back in other ways as well. Except foods (we prefer
+pizza, some close location of yourself recommended), we accept drinks, nice
+books, CDs with interesting things, computer equipment and accessories, PDAs,
+pens + pencils + erasers, and last but not least money. Contact the maintainer,
+he'll split the stuff properly amongst himself and other developers >:).
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: feedback.txt,v 1.7 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

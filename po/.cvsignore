@@ -1,0 +1,6 @@
+Makefile
+Makefile.in
+.deps
+*.gmo
+elinks.pot
+*.swp

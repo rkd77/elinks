@@ -1,0 +1,565 @@
+[[lua-scripting]]
+Scripting ELinks with Lua
+-------------------------
+
+This file documents the Lua scripting interface of the ELinks web browser.
+
+Introduction
+~~~~~~~~~~~~
+
+What is it
+^^^^^^^^^^
+
+Lua scripting capabilities permit users to customize the ELinks behaviour to
+unusual degree - they allow automatic rewriting of HTML code of the received
+documents, rewriting of the URLs entered by user etc. You can even write your
+own bookmarks system with Lua. See also contrib/lua/ for some examples of the
+possibilities of ELinks Lua support.
+
+Please do not confuse Lua scripting with JavaScript, EcmaScript, VBScript and
+similiar. Those are embedded in page, allowing per-document scripting related
+to its presentation and providing some degree of interactivity etc. On the
+contrary, the current Lua support permits scripts to be embedded to the
+browser directly, changing the behaviour of the browser, not the document.
+
+The original Lua support (in the form of Links-Lua fork of original Links) was
+written by Peter Wang and Cliff Cunnington.  There are some rough edges
+remaining, but is suitable for everyday use (I have been using it every day
+for a year).
+
+Where to get it
+^^^^^^^^^^^^^^^
+
+The Lua scripting support comes with the stock ELinks distribution, no
+additional patches and tweaks should be needed.
+
+The web site of the original Links-Lua is at
+link:http://links.sourceforge.net/links-lua/[]. Some older patches against
+regular Links are available at
+link:http://www.sourceforge.net/projects/links/[], but they are not being
+maintained.
+
+Lua can be found at link:http://www.lua.org/[].
+
+What it runs on
+^^^^^^^^^^^^^^^
+
+The Lua support has only been tested under Linux, although it *should*
+work under other platforms that ELinks and Lua support (perhaps with some
+changes to source code?).
+
+Also, note that many of the scripts given here assume a Unix system.
+Your mileage will definitely vary on other platforms.
+
+
+Installing
+~~~~~~~~~~
+
+Installing Lua
+^^^^^^^^^^^^^^
+
+Before you can compile ELinks with Lua support, you must compile and install
+Lua.  The following instructions are for a Linux system.  People on other
+systems should try to enable `popen` support, but this is not necessary
+(you will lose a bit of functionality though).
+
+1. Download and unpack the Lua `tar.gz` or `zip` somewhere.
+2. `cd` into the `lua` directory.
+3. Open `config` in a text editor and uncomment the `POPEN` line.
+4. Optionally, change the `INSTALL_ROOT line.
+5. Run `make; make so; make sobin; make install`.  
+
+On systems without shared object support, simply run `make; make install`
+instead.
+
+
+Installing ELinks
+^^^^^^^^^^^^^^^^^
+
+Follow the instructions for building ELinks (it is the standard
+`./configure; make; make install` procedure).  During the configure
+step make sure that Lua has been detected on your system.
+
+
+Running ELinks with Lua
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Simply start ELinks as you normally would.  To check you have Lua support
+compiled in, open up the "Help | About" dialog box.  It should list "Lua"
+under "Features".  If not, make sure you do not have other copies of ELinks
+running, or start ELinks again with the "-no-connect" option on the
+command-line.
+
+
+Using ELinks with Lua
+~~~~~~~~~~~~~~~~~~~~~
+
+Out of the box, ELinks with Lua will do nothing different from regular ELinks.
+You need to write some scripts.
+
+ELinks Lua additions
+^^^^^^^^^^^^^^^^^^^^
+
+The Lua support is based on the idea of @dfn{hooks}.  A hook is a function that
+gets called at a particular point during the execution of ELinks.  To make
+ELinks do what you want, you can add and edit such hooks.
+
+The Lua support also adds an extra dialog box, which you can open while in
+ELinks with the comma (`,`) key.  Here you can enter Lua expressions for
+evaluation, or override it to do something different.
+
+And finally, you can bind keystrokes to Lua functions.  These keystrokes
+won't let you do any more than is possible with the Lua Console, but
+they're more convenient.
+
+Note that this document assumes you have some knowledge of programming in Lua.
+For that, you should refer to the Lua reference manual
+(link:http://www.lua.org/docs.html[]). In fact, the language is relatively
+trivial, though. You could already do wonders with simply refactoring the
+example scripts.
+
+Config file
+^^^^^^^^^^^
+
+On startup, ELinks reads in two Lua scripts.  Firstly, a system-wide
+configuration file called `/etc/elinks/hooks.lua`, then a file in your home
+directory called `~/.elinks/hooks.lua`.  From these files, you can include
+other Lua files with `dofile`, if necessary.
+
+To see what kind of things you should put in here, look at
+`contrib/lua/hooks.lua`.
+
+Hooks
+^^^^^
+
+The following hooks are available.
+
+goto_url_hook (url, current_url)::
+	This hook is called when the user enters a string into the "Go to URL"
+	dialog box.  It is given the string entered, and the current URL
+	(which may be `nil`).  It should return a string, which is the URL
+	that ELinks should follow, or `nil` to cancel the operation.
+
+follow_url_hook (url)::
+	This hook is passed the URL that Links is about to follow.  It should
+	return a string (the URL modified or unmodified), or `nil` to stop
+	ELinks following the URL
+
+pre_format_html_hook (url, html)::
+	This hook gets called just before the final time an HTML document is
+	formatted, i.e. it only gets called once, after the entire document is
+	downloaded.  It will be passed the URL and HTML text as strings, and
+	should return the modified HTML text, or `nil` if there were no
+	modifications.
+
+lua_console_hook (string)::
+	This hook is passed the string that the user entered into the "Lua
+	Console" dialog box.  It should return two values: the type of action
+	to take (`run`, `eval`, `goto-url` or `nil`), and
+	a second argument, which is the shell command to run or the Lua
+	expression to evaluate. Examples:
+	 - `return "run", "someprogram"` will attempt to run the program
+	   `someprogram`.
+	 - `return "eval", "somefunction(1+2)"` will attempt to call the Lua
+	   function `somefunction` with an argument, 3.
+	 - `return "goto-url", "http://www.bogus.com"` will ask Links to visit
+	   the URL "http://www.bogus.com".
+	 - `return nil` will do nothing.
+
+quit_hook ()::
+	This hook is run just before ELinks quits.  It is useful for cleaning
+	up things, such as temporary files you have created.
+
+
+Functions
+^^^^^^^^^
+
+As well as providing hooks, ELinks provides some functions in addition to the
+standard Lua functions.
+
+enable_systems_functions ()::
+Enable some potentially dangerous functions, as well as some other
+functions which were unfortunate enough to be lumped in the same group.
+
+The functions are: `openfile`, `closefile`, `readfrom`, `writeto`, `appendto`,
+`pipe_read`, `remove`, `rename`, `flush`, `seek`, `tmpname`, `read`, `write`
+`execute`, `exit`, `clock`, `date`, `getenv`, `setlocale`.
+
+Note: `setlocale` is a standard Lua function and will not affect
+the current ELinks locale.
+@end deffn
+
+current_url ()::
+	Returns the URL of the current page being shown (in the ELinks session
+	that invoked the function).
+
+current_link ()::
+	Returns the URL of the currently selected link, or `nil` if none is
+	selected.
+
+current_title ()::
+	Returns the title of the current page, or `nil` if none.
+
+current_document ()::
+	Returns the current document as a string, unformatted.
+
+current_document_formatted ([width])::
+	Returns the current document, formatted for the specified screen
+	width.  If the width is not specified, then the document is formatted
+	for the current screen width (i.e. what you see on screen).  Note that
+	this function does *not* guarantee all lines will be shorter than
+	`width`, just as some lines may be wider than the screen when
+	viewing documents online.
+
+pipe_read (command)::
+	Executes `command` and reads in all the data from stdout, until there
+	is no more.  This is a hack, because for some reason the standard Lua
+	function `read` seems to crash ELinks when used in pipe-reading mode.
+
+execute (string)::
+	Executes shell commands `string` and returns the exit code.  Beware
+	that you must not read or write to stdin and stdout.  And unlike the
+	standard Lua function of the same name, the return value is
+	meaningless.
+
+bind_key (keymap, keystroke, function)::
+	Currently, `keymap` must be the string `"main"`.  Keystroke is a
+	keystroke as you would write it in the ELinks config file
+	`~/.elinks/elinks.conf`.  The function `function` should take no
+	arguments, and should return the same values as `lua_console_hook`.
+
+
+User protocol
+^^^^^^^^^^^^^
+
+There is one more little thing which Links-Lua adds, which will not be
+described in detail here.  It is the fake "user:" protocol, which can be used
+when writing your own addons.  It allows you to generate web pages containing
+links to "user://blahblah", which can be intercepted by the `follow_url_hook`
+(among other things) to perform unusual actions.  For a concrete example, see
+the bookmark addon.
+
+
+Example recipes
+~~~~~~~~~~~~~~~
+
+This chapter contains some example scripts that you can use.  All of them come
+from `contrib/lua/hooks.lua`.  I really recommend you to see it directly
+instead of copying code out of this document.  Also, not everything in there is
+covered here.
+
+If you would like to contribute scripts, that would be great!  Please send
+them to me at mailto:tjaden@@users.sourceforge.net[].  Cliff and I plan to
+start a script repository, provided we get some contributions.  As for script
+ideas, you'll just have to be a little creative :-)
+
+Also take a look at the `contrib/lua/` directory in the ELinks distribution.
+Note that Peter and Cliff don't maintain the Lua support intensively anymore,
+thus it would be probably nice to Cc me (mailto:pasky@@ucw.cz[]) if you want
+to contribute some patch, so that I would be able to add it to the ELinks
+distribution.
+
+
+Go to URL on steroids
+^^^^^^^^^^^^^^^^^^^^^
+
+There are some web sites that I visit often.  Bookmarks are okay, but they are
+separate from the "Go to URL" dialog box, so I keep forgetting to use them.
+Also, when I visit a search engine home page, all I really want to do is enter
+a search term.
+
+The following script allows me to type certain strings into the "Go to URL"
+dialog box, and it will convert them to the URL I actually want to visit.  As
+a bonus, it allows me perform some searches on sites like Google without
+loading up the front page first.
+
+-------------------------------------------------------------------------------
+function match (prefix, url)
+    return strsub (url, 1, strlen (prefix)) == prefix
+end
+
+function strip (str)
+    return gsub (str, "^%s*(.-)%s*$", "%1")
+end
+
+function plusify (str)
+    return gsub (str, "%s", "+")
+end
+
+function goto_url_hook (url, current_url)
+    -- Google search (e.g. ,gg unix browsers).
+    if match (",gg", url) then
+	url = plusify (strip (strsub (url, 4)))
+	return "http://www.google.com/search?q="..url.."&btnG=Google+Search"
+ 
+    -- Freshmeat search.
+    elseif match (",fm", url) then
+	url = plusify (strip (strsub (url, 4)))
+	return "http://www.freshmeat.net/search/?q="..url
+
+    -- Appwatch search (e.g. ,aw lynx).
+    elseif match (",aw", url) then
+	url = plusify (strip (strsub (url, 4)))
+	return "http://www.appwatch.com/Linux/Users/find?q="..url
+    
+    -- Dictionary.com search (e.g. ,dict congenial).
+    elseif match (",dict", url) then
+	url = plusify (strip (strsub (url, 6)))
+	return "http://www.dictionary.com/cgi-bin/dict.pl?db=%2A&term="..url
+
+    -- RPM search (e.g. ,rpm links).
+    elseif match (",rpm", url) then
+	url = plusify (strip (strsub (url, 5)))
+	return "http://www.rpmfind.net/linux/rpm2html/search.php?query="
+		..url.."&submit=Search+..."
+	
+    -- Netcraft.com search (e.g. ,whatis www.google.com).
+    elseif match (",whatis", url) then
+	url = plusify (strip (strsub (url, 8)))
+	return "http://uptime.netcraft.com/up/graph/?host="..url
+
+    -- LinuxToday home page.
+    elseif match (",lt", url) then
+	return "http://linuxtoday.com/"
+
+    -- Weather forecast for Melbourne, Australia.
+    elseif match (",forecast", url) then
+	return "http://www.bom.gov.au/cgi-bin/wrap_fwo.pl?IDF02V00.txt"
+
+    -- Unmatched
+    else
+	return url
+    end
+end
+-------------------------------------------------------------------------------
+
+(Note that this was noticably enhanced and rewritten in the ELinks standart
+hooks.)
+
+
+Expanding ~ (tilde)
+^^^^^^^^^^^^^^^^^^^
+
+By adding an extra snippet of code to the previous example, we can make ELinks
+expand pathnames such as `~/foo/bar`
+and `~user/zappo`, like in the shell
+and other Unix programs.
+
+-------------------------------------------------------------------------------
+-- Home directory: If you do not enable system functions, you will need
+-- to set the following to your home directory.
+
+home_dir = (getenv and getenv ("HOME")) or "/home/MYSELF"
+
+function goto_url_hook (url, current_url)
+		.
+		.
+
+    -- Expand ~ to home directories.
+    elseif match ("~", url) then
+	if strsub(url, 2, 2) == "/" then    -- ~/foo
+	    return home_dir..strsub(url, 2)
+	else                                -- ~foo/bar
+	    return "/home/"..strsub(url, 2)
+	end
+
+		.
+		.
+-------------------------------------------------------------------------------
+
+
+Filtering crap
+^^^^^^^^^^^^^^
+
+Many web pages nowadays have columns to the left and right of the text, which
+are utterly useless.  If you happen to be viewing the page in a 80x25 screen,
+the text you want to read ends up crammed into a tiny space in the centre.  We
+use ELinks Lua support to manipulate the HTML before it reaches the parser.
+
+
+linuxtoday.com
+++++++++++++++
+
+Note: This recipe is out of date.
+
+Linux Today has two problems when viewed in ELinks: the useless columns on the
+left and the right and all the text appears in cyan.  Here is a quick recipe
+to fix that:
+
+-------------------------------------------------------------------------------
+-- Plain strfind (no metacharacters)
+function sstrfind (s, pattern)
+    return strfind (s, pattern, 1, 1)
+end
+
+function pre_format_html_hook (url, html)
+    -- Strip the left and right columns from Linux Today pages
+    -- and change the font colour to white.
+    if sstrfind (url, "linuxtoday.com") then
+	if sstrfind (url, "news_story") then
+	    html = gsub (html, '<TABLE CELLSPACING="0".-</TABLE>', '', 1)
+	    html = gsub (html, '<TR BGCOLOR="#FFF.-</TR></TABLE>', '', 1)
+	else
+	    html = gsub (html, 'WIDTH="120">\n<TR.+</TABLE></TD>', '>', 1)
+	end
+	html = gsub (html, '<A HREF="http://www.internet.com.-</A>', '')
+	html = gsub (html, "<IFRAME.-</IFRAME>", "")
+	-- emphasis in text is lost
+	return gsub (html, 'text="#002244"', 'text="#001133"', 1)
+    end
+
+    return nil
+end
+-------------------------------------------------------------------------------
+
+linuxgames.com
+++++++++++++++
+
+Here is a simpler example, for link:http://www.linuxgames.com/[].
+
+-------------------------------------------------------------------------------
+function pre_format_html_hook (url, html)
+		.
+		.
+
+    elseif strfind (url, "linuxgames.com", 1, 1) then
+	return gsub (html, "<CENTER>.-</center>", "", 1)
+
+		.
+		.
+-------------------------------------------------------------------------------
+
+
+Reading gzipped files
+^^^^^^^^^^^^^^^^^^^^^
+
+Note: ELinks already supports gzipped files natively.
+
+Sometimes documents come gzipped in order to save space, but then you need to
+uncompress them to read them with ELinks.  Here is a recipe to handle gzipped
+files on a Unix system.
+
+-------------------------------------------------------------------------------
+-- This script requires system functions.
+
+function pre_format_html_hook (url, html)
+		.
+		.
+
+    -- Handle gzip'd files within reasonable size.
+    if strfind (url, "%.gz$") and strlen (html) < 65536 then
+	local tmp = tmpname ()
+	writeto (tmp) write (html) writeto ()
+	html = pipe_read ("(gzip -dc "..tmp.." || cat "..tmp..") 2>/dev/null")
+	remove (tmp)
+	return html
+    end
+
+		.
+		.
+-------------------------------------------------------------------------------
+
+
+Printing
+^^^^^^^^
+
+Printing a web page with ELinks usually involves quite a few steps: Save the
+current document onto disk.  Run it through ELinks on the command-line (so it
+fits into 80 columns) to generate a plain text version.  Remove the 80th
+column from the text version, as it will make printers wrap down to the next
+line.  Finally, run the processed file through `lpr', then delete it.
+
+The following functions allow you to print web pages directly from ELinks,
+using `lpr' or `enscript'.  Type `lpr()` or `enscript()` in the Lua Console to
+run them.  (In the `hooks.lua`, I have also made it so you can just type `lpr`
+or `enscript`.)
+
+-------------------------------------------------------------------------------
+-- This script requires system functions.
+
+function catto (output)
+    writeto (output)
+    write (current_document_formatted (79))
+    writeto ()
+end
+
+-- Send the current document to `lpr'.
+function lpr ()
+    -- You must compile Lua with `popen' support for pipes to work.
+    -- See `config' in the Lua distribution.
+    catto ("|lpr")
+end
+
+-- Send the current document to `enscript'.
+function enscript ()
+    catto ("|enscript -fCourier8")
+end
+-------------------------------------------------------------------------------
+
+
+Deferring to Netscape
+^^^^^^^^^^^^^^^^^^^^^
+
+If you come across a brain-dead web page that is totally unreadable with
+ELinks, you'd probably want to open it with a graphical browser.  The
+following function opens the current document in Netscape.
+
+-------------------------------------------------------------------------------
+-- This function requires `execute', a system function.
+
+-- When starting Netscape: Set to `nil' if you do not want
+-- to open a new window for each document.
+netscape_new_window = 1
+
+-- Open current document in Netscape.
+function netscape ()
+    local new = netscape_new_window and ",new_window" or ""
+    execute ("( netscape -remote 'openURL("..current_url ()..new..")'"
+	     .." || netscape '"..current_url ().."' ) 2>/dev/null &")
+end
+-------------------------------------------------------------------------------
+
+
+Alternative bookmark system
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Many people would like to have a bookmark system with categories (note that
+ELinks already supports that, marketing name Hiearchical bookmarks), and also
+to be able to view them and search for them in an HTML page.  I have written
+an alternative bookmark system (for ELinks), which some people may like better
+than the standard bookmark system.  
+
+
+
+More ideas
+^^^^^^^^^^
+
+ - The Lua interface needs to be redesigned to provide more flexible, coherent
+   and usable interface to the scripts.
+
+ - Cliff Cunnington had a neat idea of clipping text that you see in web pages
+   (you enter a regexp that will match the start and end of the text you want
+   to clip), and saving the text to disk, along with the URL and timestamp.
+   This would help if you find that you can't ever remember where you had seen
+   a piece of text, or if you want to keep a piece of information but don't
+   need to save the entire page.
+
+ - People who use download management programs could write a function to send
+   the current link to their favourite downloading program.
+
+ - If you wrote a small C program to put text into the X11 selection
+   clipboard, you could pass the current link or URL to that program, to make
+   it easier to paste URLs into other windows.  It might be possible to do the
+   same with GPM, or the KDE/GNOME equivalents.
+
+ - Send the current page to Babelfish for translation.
+
+ - Look for stupid JavaScript URLs and convert them to something usable.
+
+ - More things are possible, I'm sure.  If you have an idea that requires
+   another hook or function, contact me (Peter Wang) and I'll see what I can
+   do.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: lua-scripting.txt,v 1.5 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

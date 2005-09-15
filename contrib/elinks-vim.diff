@@ -1,0 +1,12 @@
+--- filetype-.vim	Thu Sep 12 19:45:16 2002
++++ filetype.vim	Thu Sep 12 19:45:37 2002
+@@ -318,6 +318,9 @@
+ " Configure scripts
+ au BufNewFile,BufRead configure.in,configure.ac setf config
+ 
++" ELinks config file
++au BufNewFile,BufRead elinks.conf		setf elinks
++
+ " Enlightenment configuration files
+ au BufNewFile,BufRead *enlightenment/*.cfg	setf c
+ 

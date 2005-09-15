@@ -1,0 +1,248 @@
+				Events
+
+This file lists the events currently in use, when they are called, what they
+do and what arguments they expect.
+
+Events are a mechanism for communication between ELinks parts --- any ELinks
+subsystem (module) can register an event, hook at an event or trigger an event.
+Events are designed to allow transition to a completely message-passing model
+internally, with modules talking to each other through the events.
+
+Events are currently used primarily as a generic way to trigger event handlers
+in various scripting backends.
+
+Therefore, so far this reference sheet is useful mainly to scripting backends
+developers and also scripting power users - it looks at the C side but usually
+you get most (if not all) of it passed to the hook functions in your scripts.
+
+
+
+Below is a template showing how to read the event information
+
+Name:		<event name>
+Managed By:	<what part of the code registers and unregister the event>
+Arguments:
+
+ <the order and type of the arguments>
+
+Triggered When:
+
+ <short description of when the event is triggered>
+
+Description:
+
+ <description of the arguments, what the event does etc.>
+
+Please keep in alphabetical order!
+
+
+
+The list of events itself:
+
+-------------------------------------------------------------------------------
+Name:		bookmark-delete
+Managed By:	The bookmarks subsystem
+Triggered When:
+
+ A bookmark is being deleted.
+
+Arguments:
+
+ struct bookmark *bookmark
+
+Description:
+
+ Currently only used by the tab snapshotting code to avoid a dangling pointer
+ should the deleted bookmark be the folder to which it made the last snapshot.
+
+-------------------------------------------------------------------------------
+Name:		bookmark-move
+Managed By:	The bookmarks subsystem
+Triggered When:
+
+ A bookmark is being moved.
+
+Arguments:
+
+ struct bookmark *bookmark
+ struct bookmark *destination
+
+Description:
+
+ The bookmark is moved immediately after the destination bookmark.
+
+ This is currently only used by the tab snapshotting code, which assumes
+ that when a user moves a bookmark, the user does not want the snapshotting
+ code to delete it when it makes the next snapshot.
+
+-------------------------------------------------------------------------------
+Name:		bookmark-update
+Managed By:	The bookmarks subsystem
+Triggered When:
+
+ The user finishes editing a bookmark.
+
+Arguments:
+
+ struct bookmark *bookmark
+ unsigned char *new_title
+ unsigned char *new_url
+
+Description:
+
+ This is triggered before the new title and URL are assigned to the bookmark.
+ Therefore, handlers can get the old title and URL from the bookmark structure
+ and the new title and URL from the event arguments.
+
+ This is currently only used by the tab snapshotting code, which assumes
+ that when a user edits a bookmark, the user does not want the snapshotting
+ code to delete it when it makes the next snapshot.
+
+-------------------------------------------------------------------------------
+Name:		dialog-lua-console
+Managed By:	The Lua scripting subsystem/backend
+Triggered When:
+
+ The user hits a key associated with 'lua-console' action.
+
+Arguments:
+
+ struct session *ses
+
+Description:
+
+ Open Lua console dialog.
+
+-------------------------------------------------------------------------------
+Name:		free-history
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ ELinks exits
+
+Arguments:
+
+ None
+
+Description:
+
+ Allow a subsystem to free its history lists.
+
+-------------------------------------------------------------------------------
+Name:		goto-url
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ The user enters something into the goto URL dialog.
+
+Arguments:
+
+ unsigned char **url, struct session *ses
+
+Description:
+
+ If a URL other than @url should be followed, the old one should be freed
+ and the new one should be assigned to @url. @url must not be assigned
+ NULL and must remain freeable.
+ Valid values for @url are:
+ - unchanged, if the original URL should be followed;
+ - a new, dynamically allocated URL to be followed instead; or
+ - an empty string, if no URL should be followed.
+
+ @ses is usually used for deciding based on the current URI or for reporting
+ potential errors during the hook processing through the UI. With @ses being
+ NULL the hook handler should assume no current URI and no suitable UI set up
+ (i.e., starting up yet or -dump).
+
+-------------------------------------------------------------------------------
+Name:		follow-url
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ The user decides to load some document by following a link, entering an URL
+ in the goto URL dialog, loading frames from a frameset (?) etc.
+
+Arguments:
+
+ unsigned char **url, struct session *ses
+
+Description:
+
+ If another URL than @url should be followed it is passed by setting @url.
+ If @url is changed the event propagation should be ended.
+ Valid values for @url includes:
+ - leaving @url unchanged if the original URL should be followed;
+ - NULL if no URL should be followed; or
+ - a dynamically allocated new URL to be followed instead.
+
+-------------------------------------------------------------------------------
+Name:		get-proxy
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ Determining what proxy, if any, should be used to load a requested URL.
+
+Arguments:
+
+ unsigned char **new_proxy_url, unsigned char *url
+
+Description:
+
+ Possible values for @new_proxy_url includes:
+ - a dynamically allocated string with the format proxy:port;
+ - an empty string (dynamically allocated!) to use no proxy; or
+ - NULL to use the default proxies.
+
+-------------------------------------------------------------------------------
+Name:		periodic-saving
+Managed By:	No maintainer but used by lowlevel/timer.*
+Triggered When:
+
+ The interval timer configured through option goes off.
+
+Arguments:
+
+ none
+
+Description:
+
+ Makes it possible to periodically save files in ~/.elinks to disk.
+
+-------------------------------------------------------------------------------
+Name:		pre-format-html
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ A HTML document has been loaded - before the document rendering begins.
+
+Arguments:
+
+ unsigned char **html, int *html_len, struct session *ses, unsigned char *url
+
+Description:
+
+ Makes it possible to fix up bad HTML code, remove tags etc.  The HTML source
+ is changed by making @html point to the new source.  If @html is changed the
+ event propagation should be ended and @html_len should be updated to the new
+ length of the document content.
+ Possible values for @html includes:
+ - new document content in a dynamically allocated string; or
+ - NULL to keep the content unchanged.
+
+-------------------------------------------------------------------------------
+Name:		quit
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ ELinks quits
+
+Arguments:
+
+ None
+
+Description:
+
+ Allows a subsystem to do whatever clean-up is required when ELinks quits.
+
+-------------------------------------------------------------------------------
+$Id: events.txt,v 1.16 2005/01/03 08:12:57 miciah Exp $

@@ -1,0 +1,101 @@
+Neuromancer > it compiles...
+    fonseca > ... and that concludes the rc2 announcement.
+%
+Miciah+> Add a href and all is goo.
+Miciah+> s/goo/&d/
+Miciah+> Somebody make a joke...
+%
+fonseca+> [22:51:23]fonseca@ask:~ > mutt -Z
+fonseca+> sh: line 1: elinks: command not found
+fonseca+> Press any key to continue...
+fonseca+> :((
+fonseca+> Damn gentoo upgrade.
+%
+You can prefix an action with a number.  For example:
+3<Down> jumps down three links.
+%
+Use 'u' to move forward in the document history.
+%
+Use '*' to toggle the display of image tags with no ALT attribute.
+%
+Use '.' to toggle link numbering.
+%
+Set ESC->Setup->Option manager->Document->Browsing->Forms->Insert mode
+to '1' to prevent text fields from capturing key presses.  When enabled,
+one must explicitly 'enter' a selected text-field to edit it.
+%
+Pressing '|' will display server headers and '=', page information.
+%
+Use '\' to toggle display of the page source.
+%
+Use '%' to switch between using the default colors, using
+document specified colors except for the background, and
+using document specified colors including the background.
+%
+You can use the escape key to dismiss any dialog box.
+%
+To search in the current frame, hit '/', or '?' to search backwards.
+%
+Use 't' to open a new tab and 'T' to open the
+selected link in a new tab in the background.
+%
+If you are having trouble selecting text with the mouse
+for copy and paste, try holding down the shift key.
+%
+Use 'n' to show the next search result and 'N' to show the previous.
+%
+fonseca+> It is DIY season on planet ELinks. ;)
+%
+08:57:49 < Miciah> Cats are not progressive.
+%
+mffpasky > you're mad? :) exposing myself to a CVS version of ELinks?!
+%
+Click on the LEDs to get an information dialog describing their purpose.
+%
+To preload links for later reading, press 'T' on
+each one.  Then, use '>' and '<' to switch between
+tabs, and 'c' to close a tab when you are finished.
+%
+fonseca > pasky: Are we in a funny mood today?
+  pasky >                                                            !!!
+  pasky >                                                           !!:!!
+  pasky >                                                           !:::!
+  pasky >                                                           !:::!
+  pasky >    mmmmmmm    mmmmmmm      ooooooooooo      ooooooooooo   !:::!
+  pasky >  mm:::::::m  m:::::::mm  oo:::::::::::oo  oo:::::::::::oo !:::!
+  pasky > m::::::::::mm::::::::::mo:::::::::::::::oo:::::::::::::::o!:::!
+  pasky > m::::::::::::::::::::::mo:::::ooooo:::::oo:::::ooooo:::::o!:::!
+  pasky > m:::::mmm::::::mmm:::::mo::::o     o::::oo::::o     o::::o!:::!
+  pasky > m::::m   m::::m   m::::mo::::o     o::::oo::::o     o::::o!:::!
+  pasky > m::::m   m::::m   m::::mo::::o     o::::oo::::o     o::::o!!:!!
+  pasky > m::::m   m::::m   m::::mo::::o     o::::oo::::o     o::::o !!!
+  pasky > m::::m   m::::m   m::::mo:::::ooooo:::::oo:::::ooooo:::::o
+  pasky > m::::m   m::::m   m::::mo:::::::::::::::oo:::::::::::::::o !!!
+  pasky > m::::m   m::::m   m::::m oo:::::::::::oo  oo:::::::::::oo !!:!!
+  pasky > mmmmmm   mmmmmm   mmmmmm   ooooooooooo      ooooooooooo    !!!
+fonseca > Alright.
+%
+To move a bookmark, press <insert> or '*' on it, move the cursor
+above where you'd like it to be, and press the 'Move' button.
+%
+hooks.pl: take THAT hooks.lua - *pimp slap*
+%
+Pressing Ctrl-W in most text-input fields will auto-complete the entered
+text from history or display a menu with possible completions.
+%
+To interrupt a connection, press 'z'.  The key bound to 'back' also works.
+%
+Neuromancer> [--J---]
+Neuromancer> You know, maybe it'd save some cycles if that just gets hard coded there instead of the -.
+%
+Neuromancer > Sure, it may not compile, but we have PDF docs.  Sweet.
+%
+[Miciah] Are chr, uchar, LLONG, and LDOUBLE beneficial?
+[fonseca] begone spawn of darkness
+%
+fonseca > I think it'll take no more than 5 hours to release 0.10.6
+ Miciah > Yay!
+fonseca > The other releases has taken 2 hours, to go through the backlog. But this one is a bit harder.
+fonseca > Not all is in the elinks-cvs mailbox.
+arcatan > I'm going to quote that when you have hacked 10 hours
+fonseca > And I'm going to quote that when I've done it in 3 hours. ;)

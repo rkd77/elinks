@@ -1,0 +1,689 @@
+Hacking ELinks
+--------------
+
+Welcome, mere mortal, to the realm of evil unindented code, heaps of one or
+two-letter variables, seas of gotos accompanied with 30-letters labels in Czech
+language with absolutely no meaning, welcome to the realm of ELinks code!
+
+[We're going to extend this file slowly, basing on daily practice ;]
+
+Don't take this file as a law. We may or may not be right in these issues.
+
+Motto: I didn't expect someone to look at the source, so it's unreadable.
+       --Mikulas
+
+
+Language files
+~~~~~~~~~~~~~~
+
+Each UI output should use language files in order to be able to translate the
+messages to a desired language.  Those language files reside in the po/ subdir. If
+you want to update a .po file, please read the gettext manual available at
+<http://www.gnu.org/manual/gettext>. In order to actually use your updates on
+your own system, you have to have the gettext tools installed.
+
+
+ELinks philosophy
+~~~~~~~~~~~~~~~~~
+
+ELinks is based on the philosophy of asynchronism.  That means, you pass a
+callback to each function, and when the requested task finishes sometime in the
+unclear future, the callback will be called in order to notify you that you can
+go on.
+
+When you use multiple elinks instances at once, normally only one of them is a
+'master', and the rest of them are just kinda dumb terminals.  So if you want
+to test some new feature, you have to start elinks with the '-no-connect'
+parameter, otherwise it will just connect to an already running elinks and you
+won't see your great new feature that you just added with such much pain.
+
+There are two basic structures in ELinks.  Connection and session - their names
+should be self-descriptive.  Only note that connections may or may not have
+sessions attached.  I.e. if you type some URL, then start loading it and then
+press ACT_BACK (KEY_LEFT), the connection will lose its session.  So you should
+never pretend that it has one.
+
+The UI plainly needs a rewrite as it's extremely ugly ;-).  Cut'n'paste from
+some existing code and modify appropriately, if you want one :).
+
+Some common used functions (e.g., malloc() or free()) have their own clones
+inside ELinks and you should use them (e.g., mem_alloc() or mem_free()) instead.
+
+If you want to have anything else documented here, write a description and send
+us a patch.
+
+Various parts are described either below or in README* file(s) of appropriate
+directory.
+
+
+HTML parser
+~~~~~~~~~~~
+
+The following was found in the mailing list archive - Mikulas wrote it:
+
+The entry of the parser is parse_html.  This function gets an html source to
+parse (pointers html and eof) and the functions it should call when it wants to
+produce output (put_chars, line_break, init, special).  f is a pointer that is
+passed to that function, head is the HTTP header (for refresh).  The function
+uses a stack (struct list_head html_stack; it is set up by the caller of
+parse_html), places formatting info into it, and calls output functions.
+put_chars to write text, line_break for new line, init (currently unused),
+special (tags, forms, etc...).  These functions read the parameters from the
+stack (struct html_element) and do the actual rendering (some while ago, people
+wanted to use the parser for a graphics browser, so I wrote it so that it could
+produce graphics output by replacing the output functions).
+
+Html renderer is in html_r.c.  html_interpret formats the whole screen.  It
+calls cached_format_html which formats one document (frame) or returns directly
+a formatted document from the cache.  cached_format_html then calls
+format_html, which sets up rendering and calls format_html_part.
+format_html_part is used for formatting the whole document or formatting parts
+of tables. It calls parse_html.
+
+The rendering functions put_chars_conv, line_break, html_special receive struct
+part * from the parser.  They render the text or calculate the size of the text
+(in case of tables).  struct part has a pointer to struct f_data - a structure
+that holds the actual formatted data.  If the pointer is NULL, rendering
+functions only calculate size.
+
+
+Documents management
+~~~~~~~~~~~~~~~~~~~~
+
+Just a few words regarding the document structures. To understand the code, it
+is important to note the difference between rendered documents and document
+views.
+
+A document is rendered (or formatted) one time once it is loaded - then it
+stays formatted in a cache for some time, and whoever opens the document just
+attaches that formatted document. That is, if you open the same document in
+three tabs, they all show contents of the same single underlying struct
+document and family.
+
+However, each of the tabs gets own struct document_view. That structure
+contains information about the currently active link, the position in the document,
+the size of the viewport, search terms currently highlighted etc. This structure
+stays around only when the document is displayed in some session, thus its
+lifespan is always shorter than struct document's. document_view to document
+mapping is many to one.
+
+There is a third structure, struct view_state. This structure contains
+information about the current link and position, contents of forms fields,
+and so. Like struct document_view, it contains information specific to
+a certain view of the document, and the mapping to document is many to one.
+Unlike document_view, though, its lifespan is much longer. When you chain
+those view_states up, you get a session history.
+
+
+Lua support
+~~~~~~~~~~~
+
+Peter Wang wrote this on the mailing list:
+
+The parts of the Links-Lua and ELinks code that related to Lua are mostly
+wrapped inside #ifdef HAVE_LUA ...  #endif conditions, so they're easy to find.
+And also lua.c.
+
+In certain situations, I put some hooks into the C code.  These prepare the C
+code to run some Lua code, run it, then translate the return values to
+something meaningful to the C code.  They are really simple, but I had to put
+in some cruft.
+
+.The code implementing the Go To URL dialog box hook :
+------------------------------------------------------------------------------
+void goto_url_with_hook(struct session *ses, unsigned char *url)
+{
+#ifndef HAVE_LUA
+	goto_url(ses, url);
+#else
+	lua_State *L = lua_state;
+	int err;
+
+	lua_getglobal(L, "goto_url_hook");				   <1>
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+		goto_url(ses, url);
+		return;
+	}	 
+	lua_pushstring(L, url);						   <2>
+	if (list_empty(ses->history)) lua_pushnil(L);
+	else lua_pushstring(L, cur_loc(ses)->vs.url);
+	 
+	if (prepare_lua(ses)) return;					   <3>
+	err = lua_call(L, 2, 1);					   <4>
+	finish_lua();							   <5>
+	if (err) return;
+	 
+	if (lua_isstring(L, -1))					   <6>
+		goto_url(ses, (unsigned char *) lua_tostring(L, -1));
+	else if (!lua_isnil(L, -1))
+		alert_lua_error("goto_url_hook must return a string or nil");
+	lua_pop(L, 1);
+#endif
+}
+------------------------------------------------------------------------------
+
+Quick description of what it does:
+
+<1> Get the value named `goto_url_hook' from the Lua state.  If it doesn't
+    exist, the user hasn't installed a hook so continue the normal way.
+
+<2> Push the arguments onto the Lua stack for the function call.
+    `goto_url_hook' takes two parameters, the new URL and the current URL, so
+    we push them on.
+
+<3> Some stuff to prepare for running Lua.  This is in case, for example, the
+    Lua function contains bugs, we want to trap some of that.  It's supposed to
+    enable a mechanism where ^C will break out of infinite loops and such, but
+    that's not working so good.
+
+<4> Call the Lua function, i.e. goto_url_hook
+
+<5> Disable the error trapping stuff.
+
+<6> Look at the return value of goto_url_hook and do something appropriate.
+
+[ If you want to know the lua_* functions, you're going to have to read the
+  Lua API manual ]
+
+
+That's basically all the Links-Lua stuff is, a bunch of hooks that pass
+arguments to some arbitrary Lua code, then read in return values and interpret
+them.  But it works because Lua is a programming language, and that enables you
+to do what you would from C, as long as you stick to the C<->Lua interface.
+
+The code to allow binding Lua code to a keypress is slightly different then the
+hooks, but not much.  Instead of branching off to some C code when a key is
+pressed, we branch off to some Lua code.
+
+
+Coding style
+~~~~~~~~~~~~
+
+Mikulas once said that 'it was hard to code, so it should be hard to read' -
+and he drove by this when he was writing links.  However, we do NOT drive by
+this rule anymore ;-).  We strongly welcome cleanup patches and you have 99%
+chance that they will be applied, if they are correct.
+
+Variable names should be descriptive.  Well, in worst case we'll accept 'i' for
+index, but if possible don't do even this :).  You should try to declare them
+on the lowest level possible, so their declaration and initialization will be
+near their usage and you will also prevent reuse of one variable for two
+completely different things.  Yes, that's another thing you shouldn't do.  If
+reasonable, initialize variables during their declaration and don't group too
+many variables in one line.  ALWAYS make a blank line after the declaration
+part.
+
+Be sure to prefix all local functions with 'static'.
+
+Indent shift width is 8 characters--that means one tab character.
+
+'{' should be on the same line as conditions near for, if, while, switch etc.,
+but on separate lines near function headers in function definitions.
+
+Please _USE_ one tab instead of 8 spaces!  It makes things easier.
+
+Always place spaces around '=', after ',' and - if reasonable - around other
+operators as well.  You shouldn't make assignments in conditionals:
+
+.Use:
+------------------------------------------------------------------------------
+foo = mem_alloc(1234);
+if (!foo) panic("out of memory");
+------------------------------------------------------------------------------
+
+.Instead of:
+------------------------------------------------------------------------------
+if (!(foo = mem_alloc(1234))) panic("out of memory");
+------------------------------------------------------------------------------
+
+Note that thou shalt ALWAYS test for success on everything - we are supposed
+to die with honor if we are to die!
+
+One good point is regarding what language we actually code in. We use C89
+_exclusively_ (if we don't, we provide a fall-back way for survival in C89
+environment). ELinks is supposed to work on a large number of more or less
+weird and ancient systems and we are already used to C89 anyway. The most
+remarkable implication of no C99 are no C++ (//) comments and declarations
+at the start of block only.
+
+
+Comments
+~~~~~~~~
+
+Use blank lines frequently to separate chunks of code.  And use magic `/\*` and
+`*/` to give others an idea about what it does and about possible pitfalls.
+(Do not use //, as that is not a feature of ANSI C a.k.a. C89.)
+
+Keep in mind that if there's an object and verb in the comment (and it is, in
+most cases), it is a sentence, so it has to start with a capital letter and end
+with a fullstop ;-).  If you want to share your opinion or investigations, you
+should sign yourself; e.g.,
+
+	/* TODO: Move this far away! --pasky */
+
+Comments should be written in _ENGLISH_ only.
+
+All three following styles of comments are acceptable:
+
+------------------------------------------------------------------------------
+/*
+ * Bla bla bla.
+ * blabla?
+ */
+
+/* Bla bla bla.
+ * blabla?
+ */
+
+/* Bla bla bla.
+ * blabla? */
+------------------------------------------------------------------------------
+
+The best one usually depends on the actual context.
+
+If you describe a structure, make either:
+
+------------------------------------------------------------------------------
+char *name; /* name of the tag */
+void (*func)(unsigned char *); /* function hopefully handling the
+                                * content of the tag */
+int linebreak; /* needed for break of a line? */
+------------------------------------------------------------------------------
+
+or
+
+------------------------------------------------------------------------------
+/* Name of the tag */
+char *name;
+/* Function hopefully handling the content of the tag */
+void (*func)(unsigned char *);
+
+/* Do we need to break a line? */
+int linebreak;
+------------------------------------------------------------------------------
+
+Same if you comment the code.  If the comment is
+
+	/* then do it now! */
+
+place it on the same line as the command, if it's
+
+	/* We have to parse this crap now, as it is going to be freed in free_crap() */
+
+place it on the preceding line.
+
+
+3.2, More about style
+~~~~~~~~~~~~~~~~~~~~~
+
+Note: We use short variables names and stupid examples here, do not take that
+      as a guideline for _REAL_ coding.  Always use descriptive variables
+      names and do not write stupid code ;).
+
+General style is:
+^^^^^^^^^^^^^^^^^
+
+------------------------------------------------------------------------------
+[blank line]
+/* This is a comment about that function */
+int
+func(int a, int b)
+{
+	int c;
+
+	c = a * b;
+	if (c) {
+		int d;
+
+		...
+	} else {
+		int e;
+
+		...
+	}
+
+	return (c * d);
+}
+------------------------------------------------------------------------------
+
+You should observe the following rules:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Always have a blank line before a function declaration or comment.
+
+Please add a comment about what the function does.
+
+A function's type must be on first line while the function's name is on the
+second line.
+
+If the parameters list exceeds 80 columns then wrap them after a comma to
+the next line and align them using tabs and/or spaces with the first
+parameter.
+  
+.Use:
+------------------------------------------------------------------------------
+int
+func(int p1, int p2, int p3,
+     struct very_long_name_for_a_structure *s,
+     unsigned long last_parameter)
+{
+	int v;
+
+	...
+}
+------------------------------------------------------------------------------
+
+The start of a function's body should be alone on the first column.
+
+Always have a blank line after declarations.
+
+Always have spaces around operators.
+
+.Use:
+------------------------------------------------------------------------------
+c = a * b - (a + b);
+------------------------------------------------------------------------------
+
+.Instead of:
+------------------------------------------------------------------------------
+c=a*b-(a+b);
+------------------------------------------------------------------------------
+
+- Keep affectation outside of conditional tests.
+
+.Use:
+------------------------------------------------------------------------------
+c = a;
+if (c == b) {...
+------------------------------------------------------------------------------
+
+.Instead of:
+------------------------------------------------------------------------------
+if ((c = a) == b) {...
+------------------------------------------------------------------------------
+
+Never use spaces within ().
+
+.Use:
+------------------------------------------------------------------------------
+if (a) ...
+------------------------------------------------------------------------------
+
+.Instead of:
+------------------------------------------------------------------------------
+if ( a ) ...
+------------------------------------------------------------------------------
+
+Indent.
+
+.Use:
+------------------------------------------------------------------------------
+foreach (a, b)
+	if (a == c)
+		...
+	else
+		...
+------------------------------------------------------------------------------
+
+.Instead of:
+------------------------------------------------------------------------------
+foreach(a, b) if (a == c) ...  else ...
+------------------------------------------------------------------------------
+
+If you have a chain of if () { .. } else if () { .. } else { .. } with longer
+statements, you can insert a blank line before each else line.
+
+Label names should start on the first column and with have a blank line before
+it.
+
+.Use:
+-------------------------------------------------------------------------------
+	some_code(aaa);
+
+label:
+	some_other_code(bbb);
+-------------------------------------------------------------------------------
+.Instead of:
+-------------------------------------------------------------------------------
+	some_code(aaa);
+	label:
+	some_other_code(bbb);
+-------------------------------------------------------------------------------
+
+Wrap conditions on spaces before operators like && or ||.
+
+.Use:
+-------------------------------------------------------------------------------
+if (some_very_long_thing1 == some_very_long_thing2
+    && (test1 == test2
+	|| some_very_long_thing3 == some_very_long_thing4)) {
+	....
+}
+-------------------------------------------------------------------------------
+
+Please remove useless spaces or tabs at the end of lines.  Vim has a syntax
+file called "Whitespace (add)" ...
+
+Please keep includes in alphabetical order unless a specific order is required
+for compilation on weird systems (then please at least make a proper comment
+about that).
+
+Please declare functions without parameters as taking void parameter:
+
+.Use:
+-------------------------------------------------------------------------------
+int
+func(void)
+{
+	some_code();
+}
+-------------------------------------------------------------------------------
+
+.Instead of:
+-------------------------------------------------------------------------------
+int
+func()
+{
+	some_code();
+}
+-------------------------------------------------------------------------------
+
+Please write if (), while (), switch (), for (), .... instead of if(),
+while(), switch(), for()...  Same thing apply for all iterators and tests
+(e.g. foreach, foreachback).
+
+Please write sizeof(something) instead of sizeof something.
+
+Use assert() and assertm() where applicable. It will prevent hidden bugs.
+
+If you see code in ELinks that doesn't follow these rules, fix it or tell us
+about it.
+
+All the .c files MUST start by a short one-line description and a CVS Id tag
+on the next line:
+
+	/* <short one-line description> */
+	/* $Id: hacking.txt,v 1.36 2005/05/24 18:21:45 jonas Exp $ */
+
+All the .h files MUST start by a CVS Id tag and then anti-reinclusion ifdef.
+The macro is
+
+	EL_<path_relative_to_src:s/[\/.]/_/>.
+
+There are obviously exceptions to these rules, but don't make a rule from your
+exception and be prepared to defend your exception at anytime ;).
+
+
+Coding practices
+~~~~~~~~~~~~~~~~
+
+Use bitfields to store boolean values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If speed is not critical and especially if you are messing with some struct
+where size might matter, feel encouraged to use bitfields to store boolean (or
+tristate or tetrastate ;) values (e.g. unsigned int foo:1 for one-bit field).
+HOWEVER please ALWAYS specify signedness of all such fields. It is very easy
+to reach the top bit in these cases, and with int foo:1, foo would be either 0
+or -1, which is probably not what you want.
+
+Wrap hard initializations of structures with macros
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This should be done if the structure's initializers are going to be spread
+widely (so that we can grep for them easily), there are massive typecasts
+needed in most of the initializers, you feel that order of the fields in
+structure is unstable yet and it is likely to change (and you don't want to
+change the initializers everytime you do so), or in similar cases.
+
+.You can do it like:
+-------------------------------------------------------------------------------
+struct example {
+	int a;
+	int b;
+	char *c;
+};
+#define INIT_EXAMPLE(a, b, c) {a, b, c}
+#define NULL_EXAMPLE {0, 0, NULL}
+
+struct example t[] = {
+	INIT_EXAMPLE(1, 2, "abc"),
+	INIT_EXAMPLE(3, 4, "def"),
+	NULL_EXAMPLE
+};
+
+struct example t = NULL_EXAMPLE;
+-------------------------------------------------------------------------------
+
+Please try to keep order of fields
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Please try to keep order of fields from max. to min. of size of each type of
+fields, especially in structures:
+
+.Use:
+-------------------------------------------------------------------------------
+long a;
+int b;
+char c;
+-------------------------------------------------------------------------------
+
+.Instead of:
+-------------------------------------------------------------------------------
+char c;
+int b;
+long b;
+-------------------------------------------------------------------------------
+
+It will help to reduce memory padding on some architectures. Note that this
+applies only if this will not affect logical division of the structure. The
+logical composition always takes precedence over this optimization, modulo
+some very rare critical structures.
+
+Please do not use sizeof(struct item_struct_name)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Instead use sizeof(*item) when possible.
+
+-------------------------------------------------------------------------------
+struct example {
+	int *integers;
+	void **pointers;
+}
+
+struct example *item;
+-------------------------------------------------------------------------------
+
+.Use:
+-------------------------------------------------------------------------------
+item = mem_alloc(sizeof(*item));
+memset(item, 0, sizeof(*item));
+item->integers = mem_calloc(10, sizeof(*item->integers));
+item->pointers = mem_calloc(10, sizeof(*item->pointers));
+-------------------------------------------------------------------------------
+
+.Instead of:
+-------------------------------------------------------------------------------
+item = mem_alloc(sizeof(struct example));
+memset(item, 0, sizeof(struct example));
+item->integers = mem_calloc(10, sizeof(int));
+item->pointers = mem_calloc(10, sizeof(void *));
+-------------------------------------------------------------------------------
+
+The preferred form eases future changes in types, and maintain size vs type
+coherence.
+
+Please postfix defined types with _T
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-------------------------------------------------------------------------------
+typedef int (some_func_T)(void *);
+typedef long long our_long_T;
+-------------------------------------------------------------------------------
+
+
+Patches
+~~~~~~~
+
+Please send unified patches only.
+
+.The recommended way is:
+-------------------------------------------------------------------------------
+cp -a elinks/ elinks+mysuperfeature/
+cd elinks+mysuperfeature/
+*clap clap*
+*clickety clickey*
+make
+./elinks -no-connect
+*goto clap*
+cd ..
+diff -ru elinks/ elinks+mysuperfeature/ >elinks-mysuperfeature.patch
+-------------------------------------------------------------------------------
+
+Please manually remove any bloat like changes in ./configure, whitespace
+changes etc. ;-).
+
+We also accept output from `cvs diff -u` :).  The statement about bloat
+removing above still applies.
+
+Big patches are hard to review so if your feature involves a lot of changes
+please consider splitting it in appropriate bits. Appropriate could mean:
+
+- Keep trivial changes like indenting, renaming, fixing comments separate.
+
+- Keep movements of (bigger) code snippets separate from changes in them.
+
+Note that it makes no sense to separate patches by directories. The
+important thing is to separate big changes to smaller ones and smaller ones,
+breaking it to the "thinnest" possible level where the change is still
+sufficiently self-contained.
+
+
+Advantages of `--enable-debug` configure option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since ELinks 0.4pre11, a memory debugger can be enabled using the
+`--enable-debug` configure script option.  It may help to find memleaks and more
+which is why everybody concerned with ELinks develepment should use it:
+
+In 0.5 versions `--enable-debug` add some fancy things:
+- many data integrity checking (see `lists.h`)
+- hotkey debugging: especially cool for translators, it highlights redundant
+  hotkeys in a menu.
+- more errors messages
+- low bug tolerance: it will core dump on some errors instead of just writing
+  an error description.
+- internal backtrace feature (always enabled if possible)
+- and more...
+
+Before sending a patch, always try to compile and test it with
+`--enable-debug`, then in normal mode, then in `--fast-mem` mode. If it fails
+to compile or execute in one of these modes, then rework it.
+
+
+Happy hacking!
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: hacking.txt,v 1.36 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

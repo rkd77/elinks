@@ -1,0 +1,41 @@
+/* To use these examples, copy this file to ~/.elinks/ and set
+ * document.css.stylesheet to "user.css". If you prefer another directory
+ * or filename, put the appropriate pathname in document.css.stylesheet.
+ * ELinks will assume that the path is relative to the its configuration
+ * directory if it does not begin with a slash. */
+/* $Id: user.css,v 1.2 2005/01/28 14:19:57 jonas Exp $ */
+
+body {
+	/* Don't like the default colours? No problem: */
+	color: #000;
+	background: #666;
+}
+
+blockquote {
+	/* Make block quotations really stand out: */
+	color: blue !important;
+}
+
+p {
+	/* Indent the first line of each paragraph: */
+	/* (ELinks does not yet support this.) */
+	text-indent: 0.5in !important;
+
+	/* Double-spaced lines: */
+	/* (ELinks does not yet support this.) */
+	line-height: 200% !important;
+
+	/* Justify text. */
+	text-align: justify !important;
+}
+
+h1 {
+	/* Don't centre the text: */
+	text-align: left !important;
+
+	/* Underline it instead: */
+	font-style: underline !important;
+
+	/* Further, give it a pretty colour: */
+	color: lightgoldenrod !important;
+}

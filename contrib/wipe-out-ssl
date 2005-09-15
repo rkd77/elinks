@@ -1,0 +1,10 @@
+#!/bin/sh
+for i in src/*/*/*.c src/*/*/*.h src/*/*.c src/*/*.h src/*.c src/*.h configure.in configure; do
+	awk -f wipe-out-ssl.awk <$i >wipe-out-ssl.tmp
+	mv wipe-out-ssl.tmp $i
+done
+sed 's/^\(AM_INIT_AUTOMAKE(.*, .*\))/\1-no-ssl)/' <configure.in | sed 's/-no-ssl-no-ssl/-no-ssl/g' >wipe-out-ssl.tmp
+mv wipe-out-ssl.tmp configure.in
+sed 's/^\(VERSION=.*\)/\1-no-ssl/' <configure | sed 's/-no-ssl-no-ssl/-no-ssl/g' >wipe-out-ssl.tmp
+mv wipe-out-ssl.tmp configure
+chmod +x configure

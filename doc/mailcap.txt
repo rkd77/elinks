@@ -1,0 +1,130 @@
+Managing External Viewers with Mailcap
+--------------------------------------
+
+This document describes the support for Mailcap (RFC 1524) in ELinks. It does
+not describe the mailcap format. There are plenty of documents on the Web that
+does this. Google and thou wilt find. ;)
+
+
+A Short Intro to Mailcap
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Mailcap is a file format defined in RFC 1524. Its purpose is to inform
+multiple mail reading user agent (MUA) programs about the locally-installed
+facilities for handling mail in various formats. It is designed to work with
+the Multipurpose Internet Mail Extensions, known as MIME.
+
+ELinks allows MIME handlers to be defined using its own configuration system,
+so why support mailcap? It can be seen as an alternative or simply as a
+supplement for setting up MIME handlers in ELinks.  Mailcap files are present
+on most UNIX systems--usually in /etc/mailcap--so this makes it possible for
+ELinks to know how to handle a great variety of file formats with little
+configuration. To be able to use mailcap, it has to be compiled into ELinks.
+This is the default. If you don't need mailcap support, just configure ELinks
+with the flag: --disable-mailcap.
+
+
+Parameters to Mailcap Entries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The code has been ported from Mutt and thereby inherits some of its various
+features and limitation.
+
+The following parameters are supported:
+
+`---------------`-------------------------------------------------------------
+Parameter	Description
+------------------------------------------------------------------------------
+%s		The filename that contains the data.
+%f		The content type, like 'text/plain'.
+------------------------------------------------------------------------------
+
+The following parameters are not supported, since they do not really make much
+sense for a non-MUA program:
+
+`---------------`-------------------------------------------------------------
+Parameter	Description
+------------------------------------------------------------------------------
+%n		The integer number of sub-parts in the multipart
+%F		The "content-type filename" repeated for each sub-part
+%{ parameter}	The "parameter" value from the content-type field
+------------------------------------------------------------------------------
+
+
+Reading of Mailcap Files
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Mailcap files will be read when starting ELinks. The mailcap files to use will
+be found from the mailcap path, a colon separated list of files similar to the
+$PATH environment variable. The mailcap path will be determined in the
+following way:
+
+ - From the value of the mime.mailcap.path option in elinks.conf; for example:
+
+	set mime.mailcap.path = "~/.mailcap:/usr/local/etc/mailcap"
+
+ - From MAILCAP environment variable.
+
+ - If non of the above is defined, the mailcap path defaults to
+   `~/.mailcap:/etc/mailcap`.
+
+
+Fields
+~~~~~~
+
+Since mailcap handling is primarily for displaying of resources, all fields
+like edit, print, compose etc. are ignored.
+
+Note: Test commands are supported, but unfortunately, it's not possible to
+provide the file when running the test. So any test that requires a file will
+be considered failed and the handler will not be used.
+
+Unfortunately, there are no 'native' support for the copiousoutput field.  The
+field basically mean 'needs pager'. So it is handled by appending a pipe and a
+pager program to the command. The pager program will be read from the `PAGER`
+environment variable. If this fails, test are made for common pager programs
+(`/usr/bin/pager`, `/usr/bin/less` and `/usr/bin/more` in that order). So if you
+define png2ascii as your handler for image/png and specify copiousoutput then
+the executed command will be "`png2ascii |/usr/bin/less`" if less is your pager
+or present on your system.
+
+
+Mailcap Configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+Apart from the mime.mailcap.path option, you can configure if mailca support
+should be disabled. The default being that it is enabled. To disable it just
+put:
+
+	set mime.mailcap.enable = 0
+
+in elinks.conf.
+
+It is also possible to control wether ELinks should ask you before opening a
+file. The option is a boolian and can be set like this:
+
+	set mime.mailcap.ask = 1
+
+if you would like to be asked before opening a file.
+
+
+Some Sample Mailcap Entries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Below are examples of how to specify external viewers:
+
+-------------------------------------------------------------------------------
+# Use xv if X is running
+image/*;                xv %s ; test=test -n "$DISPLAY";
+
+text/x-csrc;		view %s; needsterminal
+
+# Various multimedia files
+audio/mpeg;             xmms '%s'; test=test -n "$DISPLAY";
+application/pdf;        xpdf '%s'; test=test -n "$DISPLAY";
+application/postscript; ps2ascii %s ; copiousoutput
+-------------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: mailcap.txt,v 1.10 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

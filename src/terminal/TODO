@@ -1,0 +1,22 @@
+This terminal subsystem is attempt to finally reorganize the original
+not-much-touched lowlevel/terminal.* and lowlevel/kbd.* (terminal.c and kbd.c
+in the original Links tree) in a sane manner.
+
+It is still work in progress (design-wise!). It should be stable, but it needs
+structural (not necessarily functional) reorganization. Some process is
+started, but a lot of work remains to be done.
+
+
+Functions need to be renamed to match some uniform pattern.
+
+The existing files need to be further split (at least some of them), many
+symbols need to be moved around to their proper location.
+
+A lot of the symbols don't belong to the terminal subsystem at all.
+
+More object-like structure needs to be deployed.
+
+I'm not yet sure how to support graphics, ncurses etc backends yet. Some of
+this code is universal, some if it is textmode-specific, some of it is direct
+implementation of our I/O. More structure inside of this directory is expected
+to appear later when needed.

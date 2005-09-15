@@ -1,0 +1,184 @@
+Introduction to MIME handling
+-----------------------------
+
+At some time along the 0.4 prereleases, ELinks replaced the old Links file
+configuration system with its own one. Now, the configuration is stored in
+elinks.conf, much more complete and featuring a new syntax. You can set most
+options from the UI (so usually there is no need to deal with elinks.conf),
+and that used to be true for setting MIME handlers and extensions as well; but
+now the associations menu is gone temporarily, forcing you to set the handlers
+from the configuration file.
+
+The comments provided within elinks.conf for the MIME options are not much
+helpful, and those options may seem a bit obscure or confusing at first.  This
+document is a basic introduction to setting of MIME associations for ELinks.
+If you want to know how to automatically launch a program to view some kind of
+file (like images), then read on. Some basic knowledge of MIME is recommended.
+
+
+Handling MIME types, the ELinks way
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What are MIME types and why may you want to use them?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If, while browsing with ELinks, you need to display files that it can't show
+(like images or PDF documents), then you will likely want to pass them to
+other programs that are suitable for this task. While you may do it manually
+(saving the file to disk, running the auxiliary program to show it and then
+removing the file when finished), ELinks provides a method to do this
+automatically using MIME types.
+
+ELinks usually knows what the MIME type is for any file (which is a kind of
+description of its format), thus you only need to specify how to manage the
+MIME types for the files you want to open. If you don't tell ELinks how to
+manage a given MIME type then it will show you on screen the contents of the
+file (as if it was ASCII text) instead of calling an external program to show
+them.
+
+Associating files to MIME types
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If the file is fetched from a web server then this web server should tell
+ELinks what its MIME type is, so you should have generally no need to care
+about it. However, the web server might send an incorrect type, or you may be
+retrieving it by FTP or from your local filesystem, so sometimes ELinks needs
+to guess it.
+
+The easiest method to guess a MIME type for a file is to just look at its name
+trusting it was given the right extension.  ELinks supports this, letting you
+to specify a type for any given extension.
+
+Managing a given MIME type
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This usually means specifying programs to open files of this type and the
+conditions in which those programs may be used. For instance, you may want to
+use zgv (a popular svgalib image viewer) when you are using the text console,
+but xli (a image viewer for X) when running the X window system.
+
+
+Binding it to a handler
++++++++++++++++++++++++
+
+Instead of directly attaching a program to a MIME type, ELinks lets you
+associate an abstract handler to each type. Then you can specify which
+programs implement the handler and how are they used.
+
+For instance, you may create an image_viewer handler and assign it to MIME
+types image/jpeg, image/png and image/gif. Then you would associate to
+image_viewer the programs you would like to use for viewing images and the
+details on how to use them. This is less cumbersome than repeating all these
+details for each MIME type.
+
+
+Specifying the details for a handler
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are three issues to specify for a handler: the program associated to it,
+whether you want confirmation before using it and whether you want the
+terminal to be blocked while it is being used.
+
+When specifying any of these issues, you must tell ELinks the situation in
+which it gets applied, which is typically either the text console or the X
+window system. So you can specify that you don't want confirmation before
+running the program when running X, and that you want it otherwise.
+Similarly, when you are attaching a program (name it foo) to this handler you
+must tell if it's for X or not (you can attach a second program for the other
+choice if you want).
+
+Attaching a program to it::
+
+	You must tell ELinks the exact command for running it (with any
+	options you wish). In place of the filename you must enter %.
+
+Choosing whether you want confirmation before applying it::
+
+	This is rather simple. If you choose not to do so, then the handler
+	will be automatically called upon when you demand ELinks to show
+	something attached to this handler. Otherwise, if you ask for
+	confirmation, you will be prompted to open it with a external program,
+	with additional choices that include cancelling the operation and
+	viewing it with ELinks. E.g: you may use this option for programs
+	written in C so that you may always choose if you want to read the
+	source with ELinks, or if you want to save it, or if you want to use
+	indent to display it with less.
+
+Choosing whether to block the terminal::
+
+	If you don't want to allow going back to ELinks (or any other program
+	from the same terminal) before the external program ends, then you
+	should ask to block the terminal.
+
+
+Setting up elinks.conf
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you have old configuration files from old ELinks versions or from Links,
+then you may use the conf-links2elinks.pl script (which is placed at
+contrib/conv/ on the source distribution) to convert them to the new format.
+If you don't use it you will need to edit the configuration file, and here you
+will find how.
+
+Associating a file extension to a MIME type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can still do this with the UI, from the the Setup-&gt;File Extensions
+submenu.
+
+If you want to do so from the configuration file, enter set mime.extension.ext
+= "type", replacing ext with the appropriate file extension, and type with its
+MIME type. E.g. you may want to have set mime.extension.jpg = "image/jpeg".
+
+
+Defining a handler
+^^^^^^^^^^^^^^^^^^
+
+For each handler you must define three items, specifying in what context the
+value of the item should be applied. You must enter set
+mime.handler.handler-name.item.context = value, replacing handler-name with
+the name for the handler you are defining, item with the item you are defining
+for this handler, context with the context this item value is to be applied,
+and value with the value you want to assign to the item. You must do so for
+each of the available items: program, ask and block.
+
+The value for program is a string with the exact command you want to be issued
+to view the file, placing % were you would put the file name. The values for
+ask and block are either 0 (no) or 1 (yes). Available contexts include unix
+and unix-xwin, which mean UNIX text terminal and X respectively (others can be
+os2, win32, beos, riscos, ...). The latter does not mean you are running
+ELinks from X, just that the DISPLAY variable is set so that ELinks may run an
+X program.
+
+To illustrate it, here is an example. Suppose you want to define the
+image_viewer handler which should be used to view images.  The configuration
+file may look like this:
+
+--------------------------------------------------------------------------------
+set mime.handler.image_viewer.unix.ask = 1
+set mime.handler.image_viewer.unix-xwin.ask = 0
+
+set mime.handler.image_viewer.unix.block = 1
+set mime.handler.image_viewer.unix-xwin.block = 0
+
+set mime.handler.image_viewer.unix.program = "zgv %"
+set mime.handler.image_viewer.unix-xwin.program = "xli %"
+--------------------------------------------------------------------------------
+
+In this example the image_viewer handler uses the svgalib image viewer zgv
+when X is not available, and the X image viewer xli when it is. The terminal
+would be blocked when X is not available and it would not be when it's
+available. Finally, ELinks would ask for confirmation before using the handler
+only with X not available.
+
+Associating a MIME type to a handler
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Just enter set mime.type.class.name = "handler", replacing class with the
+class for the mime type, name with the specific name within that class, and
+handler with the name for the handler you want to assign to the MIME type.
+E.g. you may want to have set mime.type.image.jpeg = "image_viewer".
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: mime.txt,v 1.3 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

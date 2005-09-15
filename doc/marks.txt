@@ -1,0 +1,90 @@
+Marks (the lite edition)
+------------------------
+
+So, were you ever reading this huge 300-pages specification heavily
+cross-referencing itself, jumping around and getting a headache when looking
+for the place where you stopped reading the last time?
+
+Were you doing something similar in C code, but praising *vi* for document
+marks?
+
+ELinks can do them, too! For vim non-users:
+
+
+What it is?
+~~~~~~~~~~~
+
+When you place a "document mark" (just "mark" from now on), you place an
+_invisible_ anchor at the current position in the document. You can place
+several such marks --- each mark is identified by a single character (any
+reasonable character will do). Then, you can just happily browse around
+aimlessly (but see below) and when in the same document again, you can
+return to any of the marks in the file again. That will restore your
+position in the file at the time of placing the mark.
+
+You can place a mark by the "m" key followed by the mark character. You can
+go to a mark by the "'" (apostrophe) key followed by the mark character.
+E.g., you can place a mark named "a" in the file by pressing "ma", then
+return to it anytime later by typing "'a". You can of course change those
+shortcuts at any time to anything you wish in the keybindings manager.
+
+Short summary: you can place a mark (e.g. 'z') in a document by pressing
+"mz" and then go back to it anytime later by pressing "'z".
+
+
+Restrictions
+~~~~~~~~~~~~
+
+Currently, only A-Za-z characters are valid marks.
+
+Only one mark named "a" (or anything else) may exist at a time, so if one
+puts a mark "a" in a first document and set another mark "a" in a second
+document, ELinks will simply replace the former one.
+
+ALL the document marks are always local to the document. I.e. the vim text
+editor has an extension that makes the capital-letter marks to be global to
+the whole program and going to such a mark will make it to open the right
+document. This is not implemented in ELinks _yet_.
+
+Contrary to vim, ELinks doesn't support numbered marks (jumping to the last
+n documents in history) nor the special "'" mark (jumping to the last mark).
+Yet.
+
+There is no way to get a listing of all marks set in a document.  Yet.
+
+
+Marks lifespan
+~~~~~~~~~~~~~~
+
+I already hinted something about another restriction regarding aimless
+browsing. The lifespan of document marks depends on rather ill-defined and
+(for an average mortal) mostly non-deterministic technical conditions.
+
+Generally, marks _always_ survive when not moving away from the document or
+when moving only in the session history (and unhistory). That means, if you
+go back and the "unback" to the document, you will find your marks safely in
+place. If you follow a link from the document (or typed an address to the
+Goto URL dialog) and then go back (by pressing the right arrow or through
+the File menu), your marks are safe too. These are in fact by far the most
+common usage cases for the marks, so most of the time it will just work as
+you expect.  That's a good news.
+
+The bad news is that in all other cases, nothing is guaranteed.  It might
+work if you get back to the document by any other means (by following some
+link or typing its address to the Goto URL dialog), or it might not. It
+might be possible to achieve two instances of the document inside a single
+ELinks, each with its own set of marks. However, again, generally it will
+work as expected - this paragraph serves only as a disclaimer in cases it
+doesn't.  Don't rely on it.
+
+Marks never survive over ELinks restarts. If you quit your ELinks completely
+and run it again, the marks you placed will be no more. No exceptions. Well.
+In some cases, it *might* appear that they survived, but that just means you
+did not quit your ELinks _completely_ --- if you run multiple ELinks
+instances under a single user on a single system, they "join" together and
+you must quit (or kill) them all to get rid of the damn thing.  But that's a
+different story.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: marks.txt,v 1.13 2005/08/23 13:19:58 zas Exp $
+///////////////////////////////////////////////////////////////////////////////

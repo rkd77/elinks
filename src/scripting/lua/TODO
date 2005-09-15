@@ -1,0 +1,18 @@
+Internal lua scripting support still looks a lot like a temporary hack:
+
+* internal scripting support should be independent on actual language (it would
+  be nice to support ie. perl as well, with minimal code duplication)
+* there should be some generic options interface exported by ELinks
+* there should be some better hooking mechanism.. on load-time, it should be
+  possible to register any functions to any hooks, not only having one function
+  per hook (thus making the whole thing much more flexible and making it
+  possible to finally generalize hooks.lua)
+
+Lua scripting is considered as additional feature, so probably anything
+regarding it won't be ever release goal; however, the proper support is still
+very important for ELinks, it only means that reworking it may occur and will
+be accepted at almost any point in ELinks development process; so, if you want
+to help us with ELinks and look for some really separated part where you can
+let your invention do almost anything it want and easily rebuild the interface
+from the scratch (or you can just hack it, it's up to you), this is your place!
+:-)

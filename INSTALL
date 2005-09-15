@@ -1,0 +1,178 @@
+Elinks installation guidelines
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Quick guide for the impatient:
+
+	./configure && make && make install
+
+  Check out the bottom of this file if you're upgrading from Links or an older
+ELinks! And be sure to look at doc/ecmascript.txt if you want ECMAScript
+(that's JavaScript) support.
+
+##########
+
+  In order to check out the latest tree from CVS:
+
+$ export CVSROOT=check_file_SITES_for_value_of_this
+$ cvs login
+(empty password)
+$ cvs -z3 co elinks
+$ cd elinks
+...
+
+  To update your existing tree to the latest CVS version, do:
+
+$ cvs -z3 update -dP
+
+  If you downloaded a nightly snapshot, it already contains CVS/ directories
+etc.  Thus, you should be able to update your tree with the above command as if
+you had previously done a full cvs checkout.
+
+  Note that if you obtained the sources directly from CVS, you NEED to run
+./autogen.sh!  (It should be enough to do it once, automake should be smart
+enough to rerun itself when needed - however, if you have build problems, try
+running this first.)  Also, you obviously need automake and autoconf installed
+on your system (note that autoconf-2.13 a automake-1.4p5 are supported, newer
+ones may cause problems thanks to the auto* developers who don't know how to
+maintain backwards compatibility).  Otherwise, you have to use the nightly CVS
+snapshot - you don't need to do this there.
+
+
+##########
+
+  If you want to compile elinks, first check the directory named contrib/, it
+may contain patches that are of use to you.  If you're interested in any of
+them, try to apply them by doing (for each one):
+
+$ patch -p0 < contrib/that-patch
+
+  They may not apply - I don't update patches in contrib/ regularly - if you
+want, feel free to go ahead and update the patch for the current tree and send
+me the newer version.
+
+  Usually, even after strip, the ELinks binary can grow a lot these days; I plan
+on spawning various external files optionally, containing boring stuff like
+various translations etc; later, even DSO modules may come, etc.  But even
+nowadays, you can reduce the resulting binary size by throwing out stuff you
+don't like.  First, if you want better performance and a smaller binary, don't
+compile it with debug.  It won't hurt if you do, though, and ELinks will tell
+you about any memory leaks, incorrect memory manipulation etc, which may be
+helpful to us if you report it.  Next, disable any optional features you are not
+going to use, they can make the resulting binary smaller (although it'll probably
+have no non-marginal performance impact) - especially go through the
+features.conf file in the project root directory.  Also, you may try to override
+the build system to build a dynamically linked binary, which can be a lot
+smaller as well.  Lastly, you can go to the Unicode/ and intl/ directories, then
+edit index.txt and remove any codepages or translations you don't like;
+especially for translations, it can significantly reduce the resulting binary
+size as well.
+
+  !BEWARE!  If you _distribute_ a binary of ELinks with OpenSSL linked to it,
+and the OpenSSL library is not part of your base system, you are VIOLATING THE
+GPL (although I believe that for this absurd case no ELinks copyright holder
+will sue you, and it's not a problem for the OpenSSL people as well, as they
+have explicitly told me).  So, people who are making ELinks binaries for systems
+with no OpenSSL in the base system and who decided to link OpenSSL against the
+ELinks binary may wish NOT to publish or distribute such a binary, as it's
+breaking GPL 2(b), if they like to have everything legally perfect (like Debian
+people ;).  As a semi-solution to this for those people, GNUTLS support was
+introduced; if you want to distribute ELinks binaries with HTTPS support,
+compile ELinks with the --with-gnutls configure option (assuming that you have
+GNUTLS 0.5.0 or later [tested with 0.5.4] installed).  However, as GNUTLS is not
+yet 100% stable and its support in ELinks is not so well tested yet, it's
+recommended for users to give a strong preference to OpenSSL whenever possible.
+
+  Good luck!
+
+  The basic compilation looks like:
+
+  Unix - just doing:
+
+	 $ ./configure
+	 $ make
+
+	 should be enough.  However, in some FreeBSD 3 distributions you have to
+	 set CFLAGS=-aout before running ./configure.  Also, you may want to
+	 adjust some compile-time options through ./configure - do
+	 ./configure --help and it'll print out a list of them. You can more
+	 finely control what's going to be included in the binary in the
+	 features.conf file, and some really detailed tuning can be performed in
+	 the src/setup.h.
+
+	 Also, a nice idea is to compile ELinks outside of the source tree.
+	 Make another directory and run path_to_source_tree/configure from it.
+	 Typically, it looks like:
+
+	 $ mkdir ../elinks-build
+	 $ cd ../elinks-build
+	 $ ../elinks/configure
+	 $ make
+
+  OS/2 - you can use ./configure.
+
+	 The only supported compiler is EMX, you probably won't be able to
+	 compile it with anything else.
+
+	 Configure under OS/2 needs to know paths to gcc, make and bash.
+	 Set (for example):
+
+	 SET HOSTTYPE=i586
+	 SET MACHTYPE=i586-pc-os2
+	 SET CONFIG_SHELL=d:/prg/gnu/bin/bash.exe
+	 SET CC=d:/prg/emx/bin/gcc.exe
+	 SET MAKE=d:/prg/emx/bin/make.exe
+	 SET EMXOPT=-h100
+
+  Dos, Windows - port it by yourself.
+
+
+##########
+
+  Ok, now let's install it:
+
+  Unix - # make install
+
+  OS/2 -
+	Copy file links.exe somewhere to your path or create CMD file that runs
+	links.
+
+	 WARNING: EMX has a nasty limit on open files.  Links will work badly or
+	 won't work with the default settings.  Set the variable EMXOPT=-h100
+	 before you run links.
+
+  Now, check the contrib/ directory again.  There may be some useful config
+file examples there, along with a few support tools and some Lua scripts - you
+probably want them ;) so just copy the hooks.lua to ~/.elinks, and edit the
+configuration part - it adds various functionality to ELinks, like
+decompression of gzipped files or user-defined protocols.
+
+
+##########
+
+  If you're upgrading from Links or older ELinks (0.4pre7 or older), you will
+notice that several things have changed.  First, the binary name is elinks, not
+links, now; however, the basic usage is almost the same and it still looks like
+the old (E)Links, so you probably want to make a links symlink pointing to
+elinks.
+
+  Then, note that configuration files were moved from /etc to /etc/elinks and
+from ~/.links to ~/.elinks, because the name and format of parts of them were
+changed:
+
+  links.cfg became elinks.conf and you need to convert it with
+contrib/conv/conf-links2elinks.pl; html.cfg was merged into elinks.conf
+
+  bookmarks are still bookmarks, but you need to convert it with
+old_to_new_bookmarks.sh.
+
+  links.his became gotohist and the format is the same.
+
+  history became globhist and the format is the same.
+
+  cookies are still cookies, but you need to convert it with tr " " "\t"
+
+
+##########
+
+$Id: INSTALL,v 1.29 2004/09/22 16:17:23 pasky Exp $
+vim: textwidth=80

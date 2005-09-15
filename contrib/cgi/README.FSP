@@ -1,0 +1,8 @@
+To use this cgi script:
+
+Build fspcgi, copy executable to your cgi directory.
+Usage:
+file:///"path_to_fspcgi"?host:port/path_to_file_or_directory
+
+
+More info about FSP protocol you find on http://fsp.sourceforge.net/.

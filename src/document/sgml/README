@@ -1,0 +1,62 @@
+			SGML DOM tree loader
+
+TODO items:
+
+ - Check if the (HTML) DOM tree has a <base href="<base-uri>"> element that
+   should be honoured.
+
+ - Handle optional end tags.
+
+ - The parser and scanner needs to know about the various data concepts of SGML
+   like CDATA. It could be the start of DOCTYPE definitions. A generic way to
+   create SGML parsers. One obvious place where CDATA would be useful is needed
+   is for <script>#text</script> skipping which currently will generate elements
+   for [ '<' <ident> ] sequences.
+
+[Excepts from a mail from Apr 18 15:11 2004 to Witold Filipczyk]
+-------------------------------------------------------------------------------
+> AFAIK when <p> is not closed current code doesn't handle such situation. I'm
+> thinking about function "close_tag" which automagically "closes" tags.
+
+The problem with closing tags is to figure out if the end tag is optional. This
+information is already available in the sgml_node_info structure via the
+SGML_ELEMENT_END_OPTIONAL flag and the sgml_node_info is then part of the
+sgml_parser_state structure that is available in the dom_navigator_state's data
+member.
+
+When initializating the dom navigator it get's passed an object size which it
+uses for allocating this kind of private data.
+
+If you look at add_sgml_element() you will see that it does:
+
+        struct dom_navigator_state *state;
+        struct sgml_parser_state *pstate;
+
+        state = get_dom_navigator_top(navigator);
+        assert(node == state->node && state->data);
+
+        pstate = state->data;
+        pstate->info = get_sgml_node_info(parser->info->elements, node);
+        node->data.element.type = pstate->info->type;
+
+Meaning it sets up the sgml_parser state.
+
+Only problem is that I haven't had time to write patches so that the parser
+actually uses the state info. It is available as:
+
+	struct sgml_parser_state *pstate = get_dom_navigator_top(navigator)->data;
+
+and then when another element should be generated we just have to check if the
+top requires an end tag meaning
+
+	if (pstate->info->flags & SGML_ELEMENT_END_OPTIONAL)
+
+in which case we need to pop_dom_node(navigator) ..
+
+It sounds easy dunno if I have forgotten something. Atleast that is a start and
+we could maybe do more clever things. But my goal is to make the parser handle
+fairly clean tag soup well. Later we can maybe put in some hooks to improve
+really bad tag soup.
+-------------------------------------------------------------------------------
+
+$Id: README,v 1.1 2004/09/26 11:00:03 jonas Exp $

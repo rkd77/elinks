@@ -1,0 +1,8 @@
+<ul>
+<li><a href="http://www.microsoft.com&item%3dq209354@212.254.206.213/1338825GHU_98.asp">Link from bug 382</a>
+<li><a href="http://www.microsoft.com%01%09%31%09%09%09%09%09@www.malware.com">Unprintable chars get substituted by '*'</a>
+<li><a href="http://www.microsoft.com%00%09%09%09%09%09%09%09@www.malware.com">Link with %00 that won't get substituted by '*'</a>
+<li><a href="http://www.evilempire.com%2Fdefault.asp%3Fredir%3Duser@www.malware.com">Link with stuff that will be decoded as '/', '?' and '='</a>
+<li><a href="http://www.evilempire.com.%2Fdefault.asp%3Fredir%3Duser@www.malware.com">The trailing dot is trimmed before checking the TLD</a>
+<li><a href="http://www.evilempire.com........%2Fdefault.asp%3Fredir%3Duser@www.malware.com">Trailing dots are trimmed before checking the TLD</a>
+</ul>

@@ -1,0 +1,93 @@
+URL Shortcuts in ELinks
+-----------------------
+
+One extremely useful and convenient feature in ELinks, which may not be very
+well known, is so-called URL rewriting.  If you give ELinks a URL (by passing it
+on the command line, through the -remote magic device or, most frequently, by
+typing it to the Goto URL dialog), it has the ability to mangle it in certain
+ways before processing it.  This mangling is called URI rewriting.
+
+
+What it does
+~~~~~~~~~~~~
+
+The URI rewriting can expand certain URL shortcuts to complete URLs.  For
+example, if you type 'sd' to the Goto URL dialog, it will be rewritten to:
+
+	http://www.slashdot.org/
+
+first, and then loaded.  /.'s front page will be displayed.
+
+Further, if you type 'g elinks' to the Goto URL dialog, it will be rewritten to:
+
+	http://www.google.com/search?q=elinks&amp;btnG=Google+Search
+
+and then loaded, therefore, a Google search for the keyword 'elinks' will be
+performed.  Note that you can separate the 'g' by either a space or a colon, so
+'g:elinks' will do the exact same thing.
+
+A large number of those shortcuts are already defined for you.  You can browse
+Protocols :: URI Rewriting :: Dumb/Smart prefixes in the Options Manager for
+a complete listing of already defined shortcuts (press the [Info] button on
+a shortcut to see what it will be rewritten to).  See below for details on how
+to enable or disable this rewriting and how to define your own shortcuts.
+
+
+How it works
+~~~~~~~~~~~~
+
+All the URI rewriting can be controlled by options in the 'protocol.rewrite'
+option tree.
+
+In the case of 'sd', a URI rewriting mechanism called 'dumb prefixes' is used.
+If protocol.rewrite.enable-dumb is true, ELinks looks at the contents of the
+protocol.rewrite.dumb.* tree, and if it finds option protocol.rewrite.dumb.sd,
+it will use its value as the target URI.
+
+Therefore, more generally speaking, if ELinks looks at
+protocol.rewrite.dumb.<typed_string>, and if it exists, will replace the
+entered URI with it.  These dumb prefixes can be used as a kind of alternative
+bookmark systen - if you want to have fast access to a certain site and you
+don't want to spend a while navigating the bookmarks manager, you can just fire
+up the Goto URL dialog, type the shortcut and there you go.
+
+A dumb prefix can contain '%c', which will be replaced by the URI of the current
+document.  This is used, for example, in the 'arc' dumb-prefix, which provides
+a shortcut to the Wayback machine at archive.org.
+
+In the case of 'g', a slightly different URI rewriting mechanism called 'smart
+prefixes' is used.  If protocol.rewrite.enable-smart is true, ELinks looks at
+the contents of the protocol.rewrite.smart tree and, if it finds option
+protocol.rewrite.smart.g, it will use its value as the target URI.
+
+The difference is that the smart prefixes can take arguments and reference them
+in the target URI.  As with dumb prefixes, '%c' in the URI means the current
+address.  Additionally, '%s' will be substituted by the whole string following
+the prefix ('elinks' in the 'g' example above; '%s' is by far the most
+frequently used expansion), while you can reference individual space-separated
+arguments with the codes '%0' thru '%9'.  Finally, if you want a plain % to the
+resulting URI, use '%%'.
+
+Note that the prefix searched in the protocol.rewrite.smart tree is everything
+in the typed address up to the first space or colon (so 'bug:123' and 'bug 123'
+are identical).  These prefixes are generally useful for searching anything very
+fast - be it Google ('g:foo', 'gi:foo', 'gr:foo', ...), ELinks Bugzilla bugs
+('bug:1234'), the RFC database ('cr:foo'), or the Czech-English dictionary
+('czen:foo').  The only limit is your imagination.
+
+
+Alternative URI rewriting mechanisms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the past, before this was implemented, Lua scripting did the job.  And you
+still have complete control over the URI in the internal scripting goto-url
+hook.  The advantages are clear - you get complete control over the URI and you
+can do many more interesting things with it.  For example, there are some very
+advanced CVSweb and Debian package database URI prefixes implemented in the
+sample Lua hooks file.  The one disadvantage to this is that you must have Lua
+scripting enabled in order to make use of it, and many users don't have Lua
+installed.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: urlshortcuts.txt,v 1.5 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

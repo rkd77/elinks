@@ -1,0 +1,80 @@
+Getting ELinks up and running
+-----------------------------
+
+Installing ELinks should be pretty easy on most systems. Below is described
+the whole process of configuring the compilation, compiling and installing.
+
+Building and Installing ELinks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The quick guide for the impatient. Issue the following commands from the
+ELinks source directory:
+
+	$ ./configure && make && make install
+
+However you might consider to tweek a few compile time options before building
+ELinks. You might also want to take a look at what libraries and programs are
+required or recommended that you install.
+
+Requirements
+~~~~~~~~~~~~
+
+To succesfully install ELinks all that is required is GNU make and a C
+compiler. If you want to install directly from CVS it is also required that
+automake and autoconf is installed on your system.
+
+Recommended Libraries and Programs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To make use of many of ELinks features you will need to have some external
+libraries and utility programs installed on your system. It is recommended to
+have the following libraries and programs installed:
+
+`-----------------------`----------------------------------------------------
+Dependency		Description
+-----------------------------------------------------------------------------
+Lua or Guile		Makes it possible to write scripting plugins.	    \
+			See <<lua-scripting,the Elinks - Lua interface>>    \
+			for more info.
+GNU zip			For handling compressed documents both locally and  \
+			sent from server.
+bzip2			For handling local compressed documents.
+OpenSSL or GNU TLS	For handling secure HTTP browsing.
+GPM			'General Purpose Mouse' for mouse support.
+expat			'XML Parser Toolkit' needed for XBEL support.
+smbclient		Program needed for smb:// protocol support.
+rxvt-unicode		For terminal emulator which supports 88 colors.
+xterm with 256 colors	Program atleast patch level  179 or rxvt program    \
+			from version 2.7.9 for support of 256 colors.	    \
+			Newer PuTTY also has 256 color support.
+libidn			For internationalized domain names.
+SpiderMonkey		Mozilla's JavaScript engine for getting	
+			JavaScript/ECMAScript support in ELinks.	    \
+			See also <<ecmascript,notes on ECMAScript support>>.
+-----------------------------------------------------------------------------
+
+When compiling, you also need the header files for the libraries. Most OS
+distributors put a given library's headers in a package separate from the
+library itself; this package usually has `-dev` or similar appended to its
+name.
+
+Further reading
+~~~~~~~~~~~~~~~
+
+This installation guide is far from being complete. You are also advised to
+read the `README` and the `INSTALL` files distributed with ELinks for further
+up to date info on building and installing.
+
+ifndef::installation-webpage[]
+
+include::small.txt[]
+
+include::ecmascript.txt[]
+
+include::txt/import-features.conf.txt[]
+
+endif::installation-webpage[]
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: installation.txt,v 1.12 2005/06/15 20:08:14 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

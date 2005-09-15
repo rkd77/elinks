@@ -1,0 +1,23 @@
+foo
+     2	foo
+     3	ffoo
+     4	f_oo	frink
+     5	_foo	foo
+     6	_ffoo	bar
+     7	f_foo	baz
+     8	foobar	quux
+     9	ffoooo__bbaarr	ichi
+    10	_fo_o___bbaarr	ni
+    11	http://ffoo.com/
+    12	http://foo.com//
+    13	http://foo.com/
+    14	http://bar.com/http://www.baz.com/
+    15	hhttp://foo.com/
+    16	_http://foo.com/
+    17	h_ttp://foo.com/
+    18	xx	x	x					xxx
+f
+__
+_
+xyx
+foo

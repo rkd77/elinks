@@ -1,0 +1,64 @@
+This file contains description of our my_timegm() function in date.c. It was
+posted as a mail to links-list by Stephane Chazelas, and I thought it may be
+interesting for someone, so I decided to include it in the ELinks distribution.
+
+
+
+
+Un explanation for it as one (me to start with) may wonder why
+this works.
+
+We first change of calendar. To make things easy, let's say
+that 0/0/0 0:0:0 in our new calendar is the Marsh 1st 1968, so
+just after a february 29th as 1968 was a leap year.
+
+if y/m/d h:min:s is time in our calendar
+and
+   Y/M/D h:min:s in the new calendar
+
+M = m - 1 - 2 (+ 12 if m < 3)
+Y = y - 68 (-1 if m < 3)
+D = d - 1
+
+at Y/0/0 0:0:0, there has been Y / 4 leap years in the past, so
+(int) 365 * Y + Y / 4 days have past.
+
+at Y/M/0 0:0:0, lets find how many days have past since Y/0/0:
+
+                   |Mar                                        Feb
+                  M| 0   1   2   3   4   5   6   7   8   9  10  11
+-------------------+-----------------------------------------------
+ days in that month|31  30  31  30  31  31  30  31  30  31  31  28 or 29
+-------------------+-----------------------------------------------
+  x = days at Y/M/0| 0  31  61  92 122 153 184 214 245 275 306 337
+-------------------+-----------------------------------------------
+first approximation|
+         y = 30 * M| 0  30  60  90 120 150 180 210 240 270 300 330
+-------------------+-----------------------------------------------
+              x - y| 0   1   1   2   2   3   4   4   5   5   6   7
+-------------------+-----------------------------------------------
+(M + 4) * 3 / 5 - 2| 0   1   1   2   2   3   4   4   5   5   6   7
+-------------------+-----------------------------------------------
+
+x - y = (M + 4) * 3 / 5 - 2
+
+x = 30 * M + (M + 4) * 3 / 5 - 2
+
+x = (153 * M + 2) / 5
+
+So at Y/M/D 0:0:0,
+
+Y * 1461 / 4 + (153 * M + 2) / 5 + D days have past since
+the 1st of March of 1968
+
+1st of March of 1968 was 671 days before 1970 Jan 1st (year 0
+for unix time())
+
+So
+t = s + 60 * (min + 60 * (h + 24 * (Y * 1461 / 4 + (153 * M + 2) / 5 + D - 671)))
+t = s + 60 * (min + 60 * (h + 24 * (Y * 1461 / 4 + (153 * M + 2) / 5 + d - 672)))
+
+This shouldn't work past 2100/02/28 23:59:59 as 2100 is not a leap year.
+
+--
+Stéphane

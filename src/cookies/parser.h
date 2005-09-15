@@ -1,0 +1,13 @@
+/* $Id: parser.h,v 1.2 2004/06/26 14:36:57 jonas Exp $ */
+
+#ifndef EL__COOKIES_PARSER_H
+#define EL__COOKIES_PARSER_H
+
+struct cookie_str {
+	unsigned char *str;
+	unsigned char *nam_end, *val_start, *val_end;
+};
+
+struct cookie_str *parse_cookie_str(struct cookie_str *cstr, unsigned char *str);
+
+#endif

@@ -1,0 +1,32 @@
+<html>
+<title>JavaScript History tests</title>
+
+<body>
+
+History go<br>
+<a href="javascript:history.go(-1)">go(-1)</a><br>
+<a href="javascript:history.go(1)">go(1)</a><br>
+<a href="javascript:history.go(0)">go(0)</a><br>
+<hr>
+
+History forward and back<br>
+<a href="javascript:history.back()">back</a><br>
+<a href="javascript:history.forward()">forward</a><br>
+<hr>
+
+buttons + history go<br>
+<form>
+<input type="button" value="go(-1)" onClick="history.go(-1)">
+<input type="button" value="go(1)" onClick="history.go(1)">
+<input type="button" value="go(0)" onClick="history.go(0)">
+</form>
+<hr>
+
+buttons + history forward and back<br>
+<form>
+<input type="button" value="back" onClick="history.back()">
+<input type="button" value="forward" onCLick="history.forward()">
+</form>
+
+</body>
+</html>

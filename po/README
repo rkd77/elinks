@@ -1,0 +1,353 @@
+			Guide for Translators
+
+1. Adding a new language:
+=========================
+
+Assuming you have downloaded the distributed source tarball, unpacked it and
+changed directory to the root directory of the unpacked source tarball first
+make the po template file:
+
+	$ cd po/
+	$ make elinks.pot
+
+Use the elinks.pot template file as the basis for you translation:
+
+	$ cp elinks.pot <your language code>.po
+
+Modify .po file header that should look like this:
+
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2005-03-03 11:22+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+Once done don't forget to remove '#, fuzzy' line.
+Then follow the instructions in the 'Updating .po files' section below.
+
+1.1 Integrating a new language file:
+------------------------------------
+
+When you are done editing the .po file you need to integrate it as part of
+ELinks. If you don't feel comfortable editing the ELinks C-language source code
+don't hesitate to get a developer to do it for you.
+
+First change directory to the root directory of the unpacked source tarball:
+
+	$ cd ../
+
+Add your language code to the ALL_LINGUAS string in configure.in (keep the
+alphabetic order ;). To make the change take effect you have to rebuild all
+Makefiles:
+
+	$ ./autogen.sh
+	$ ./configure
+
+The language file will now be compiled when you run make and you can check the
+translation file for errors and fix any warnings you get.
+
+Next thing is to add it to the Setup->Language menu. This is done by adding an
+entry in the language array in src/intl/gettext/libintl.c, and should not
+require any C coding skills, just copy an already existing entry and edit the
+name of your language (in English) so you end up with something like:
+
+	struct language languages[] = {
+		{"System", "system"},
+		{"English", "en"},
+
+		... other entries ...
+		{"<name for your language in English>", "<your language code>"},
+		... other entries ...
+
+	        {NULL, NULL},
+	};
+
+1.2 Making the new language file part of ELinks:
+------------------------------------------------
+
+Finally to make it part of the ELinks distribution send it to one of the
+mailinglists or file it as a bug at <http://bugzilla.elinks.or.cz>.
+
+
+2. Updating .po files:
+======================
+
+2.1 Tools needed:
+-----------------
+
+There are a great deal of tools for editing and working with .po files most are
+described in the gettext manual availabe at <http://www.gnu.org/manual/gettext>
+or by typing `info gettext` on some systems. Some editors have special .po modes
+to help spot errors etc. but nothing fancy is required to update only some
+reasonable editor.
+
+In order to compile, get warnings and actually use your updated language file
+you will however need the gettext tools. If you don't have any of these tools
+please don't hesitate to still do the update and send it to the mailinglist or
+bugzilla so it can be added to CVS. By next release or nightly generated tarball
+you can then make use of your updates.
+
+2.2 The basics of updating:
+---------------------------
+
+2.2.1 Singular forms, general rules:
+------------------------------------
+
+Each string that needs to be translated will look like this:
+
+	#: src/dialogs/info.c:184
+	#, fuzzy, c-format
+	msgid "Cache content: %s"
+	msgstr "Cacheindhold: %s"
+
+Lines starting with '#' are comments or control hints for the po compiler.  The
+text following '#:' is a listing of each place (filename and line number) in the
+code where the string is used. Text following '#,' are a comma separated list of
+control hints:
+
+	'fuzzy'
+
+		means that the string was changed in the code and the translator
+		needs to check if the translation is still ok. When it has been
+		checked or updated it is safe to remove 'fuzzy' and the
+		following comma.
+
+	'c-format'
+
+		is a hint to the compiler, checker and translator that the
+		string uses printf format.
+
+The string following 'msgid' are the original untranslated string. It is used to
+get the translated one so: DO NEVER CHANGE IT. If you spot an error in it change
+it in the code instead and resync your .po files using make update-po.
+
+The string following 'msgstr' is the translated string.
+TODO: write about the meaning of % fragments.
+
+Some strings contain '~' (tilde) chars. They are used to mark hotkeys in text
+for menu entries. The char following the '~' is the hotkey char. So in the
+string "Global ~history" the hotkey will become 'h'. You should try and keep
+hotkeys unique. If you configure ELinks with --enable-debug conflicting hotkeys
+will be visible.
+
+Some translations may become obsolete due to code modifications, these will be
+marked by #~ prefix, and moved at end of file. Keeping them may be a good thing
+since a modification can be reversed later and then gettext tools will reuse
+these special lines at resync time. If, at some time, you think some of these
+lines will never be reused, feel free to delete them to reduce file size.
+
+A special msgid ("") contains .po file headers, you may update them as
+well, especially Last-Translator and PO-Revision-Date fields.
+
+2.2.2 Plurals forms:
+--------------------
+
+First set Plural-Forms: header (msgid "" at top of .po file) to some correct
+value, depending on language.
+
+To help you in this, here is an excerpt from GNU gettext documentation:
+
+Only one form:
+	Some languages only require one single form. There is no distinction
+	between the singular and plural form. An appropriate header entry
+	would look like this:
+
+	Plural-Forms: nplurals=1; plural=0;
+
+	Languages with this property include:
+
+	Finno-Ugric family
+		Hungarian
+	Asian family
+		Japanese, Korean
+	Turkic/Altaic family
+		Turkish
+
+Two forms, singular used for one only:
+	This is the form used in most existing programs since it is what English
+	is using. A header entry would look like this:
+
+	Plural-Forms: nplurals=2; plural=n != 1;
+
+	(Note: this uses the feature of C expressions that boolean expressions
+	 have to value zero or one.)
+
+	Languages with this property include:
+
+	Germanic family
+		Danish, Dutch, English, German, Norwegian, Swedish
+	Finno-Ugric family
+		Estonian, Finnish
+	Latin/Greek family
+		Greek
+	Semitic family
+		Hebrew
+	Romanic family
+		Italian, Portuguese, Spanish
+	Artificial
+		Esperanto
+
+Two forms, singular used for zero and one:
+	Exceptional case in the language family. The header entry would be:
+
+	Plural-Forms: nplurals=2; plural=n>1;
+
+	Languages with this property include:
+
+	Romanic family
+		French, Brazilian Portuguese
+
+Three forms, special case for zero:
+	The header entry would be:
+
+	Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;
+
+	Languages with this property include:
+
+	Baltic family
+		Latvian
+
+Three forms, special cases for one and two:
+	The header entry would be:
+
+	Plural-Forms: nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2;
+
+	Languages with this property include:
+
+	Celtic
+		Gaeilge (Irish)
+
+Three forms, special case for numbers ending in 1[2-9]:
+	The header entry would look like this:
+
+	Plural-Forms: nplurals=3; \
+		plural=n%10==1 && n%100!=11 ? 0 : \
+		n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2;
+
+	Languages with this property include:
+
+	Baltic family
+		Lithuanian
+
+Three forms, special cases for numbers ending in 1 and 2, 3, 4,
+except those ending in 1[1-4]:
+	The header entry would look like this:
+
+	Plural-Forms: nplurals=3; \
+		plural=n%10==1 && n%100!=11 ? 0 : \
+		n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;
+
+	Languages with this property include:
+
+	Slavic family
+		Croatian, Czech, Russian, Slovak, Ukrainian
+
+Three forms, special case for one and some numbers ending in 2, 3, or 4:
+	The header entry would look like this:
+
+	Plural-Forms: nplurals=3; \
+		plural=n==1 ? 0 : \
+		n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;
+
+	Languages with this property include:
+
+	Slavic family
+		Polish
+
+Four forms, special case for one and all numbers ending in 02, 03, or 04:
+	The header entry would look like this:
+
+	Plural-Forms: nplurals=4; \
+		plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;
+
+	Languages with this property include:
+
+	Slavic family
+		Slovenian
+
+
+More info at http://www.gnu.org/software/gettext
+
+
+Plural forms will appear like this in .po file:
+
+#: src/dialogs/info.c:259
+#, c-format
+msgid "%d session"
+msgid_plural "%d sessions"
+msgstr[0] "%d session"
+msgstr[1] "%d sessions"
+
+msgid and msgid_plural should not be changed, each msgstr[n] line contains
+translation for each plural form.
+
+
+2.3 Synchronizing .po files with the code
+-----------------------------------------
+
+IMPORTANT: if you changed strings in the code, or if you're using a cvs version
+of ELinks, take care of synchronization between code and po files.  Before any
+change to a po file, you must synchronize it with code.
+
+To update only one file you may use:
+
+	cd po/ ; make update-po PO=<lang>.po
+
+or
+
+	cd po/ ; make update-po PO=<lang>
+
+where <lang> has to be replaced by ie. fr, de, da, cs...
+
+If this fails or you want to update all .po files, use:
+
+	cd po/ ; make update-po
+
+2.4 Checking updated .po files
+------------------------------
+
+After updating a .po file you should always check it for errors in the c-format
+fragments, etc. You can do this by running:
+
+	cd po/ ; make check-po PO=<lang>.po
+
+or
+
+	cd po/ ; make check-po PO=<lang>
+
+It can potentially report some false positives if the .po file contains fuzzy
+message strings.
+
+2.5 Making the updates part of ELinks:
+--------------------------------------
+
+If the language file is already added finally run make to compile and check the
+language file for errors and fix any warnings you get. Then patch your changes
+and send it to one of the mailinglists or file it as a bug at
+<http://bugzilla.elinks.or.cz>.
+
+
+3. Statistics:
+==============
+
+Some people (like Zas but other mortals as well ;) like to know how much of the
+language file is up-to-date. This can be accomplished by running the
+gen_translations_stats.sh script from the po/ directory. It will list the
+current status of each language file. Be proud if your language file rank higher
+or the same as the French one.
+
+
+$Id: README,v 1.9 2005/03/03 10:48:00 zas Exp $
+vim: textwidth=80

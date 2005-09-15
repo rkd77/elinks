@@ -1,0 +1,4 @@
+GNU gettext library from gettext-0.10.39
+
+Note that it is being heavily hacked in order to adapt it to ELinks. So you
+should rather report bugs to ELinks development team than to gettext people.

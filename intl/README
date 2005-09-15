@@ -1,0 +1,7 @@
+Ok, OK!
+
+Thanks to automake continuous stupidity and braindeadness, this directory must
+exist, otherwise automake will just give up. The translations now live in the
+po/ directory while the gettext engine lives in src/intl/gettext/.
+
+Go away now.

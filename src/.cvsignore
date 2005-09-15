@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+.deps
+elinks
+*.swp
+*.html
+*.patch

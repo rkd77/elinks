@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>ELinks</TITLE>
+</HEAD>
+<BODY>
+<A HREF="data:,A%20brief%20note">data:,A%20brief%20note</A><BR>
+<A HREF="data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7">Embedded base64 encoded gif image</A><BR>
+<HR>
+<A HREF="mailto:some@address.net">mailto:some@address.net</A><BR>
+<A HREF="mailto:">mailto:</A><BR>
+<A HREF="mailto:nobody">mailto:nobody</A><BR>
+<A HREF="mailto:nobody;sleep 10">mailto:nobody;sleep 10</A><BR>
+<A HREF="mailto:nobody?subject=Hello">mailto:nobody?subject=Hello</A><BR>
+<A HREF="mailto:nobody?stuff=foo&subject=Hello&bar=jerkybeef">mailto:nobody?stuff=foo&subject=Hello&bar=jerkybeef</A><BR>
+<A HREF="mailto:nobody&subject=crashme ?">mailto:nobody&subject=crashme ?</A><BR>
+<A HREF="mailto:a@b.c,d@e.f?subject=Re:%20ports/79199:%20%5BPATCH%5D%20www%2Flinks%3A%20update%20to%20%32.%31.p%31%37">mailto:a@b.c,d@e.f?subject=Re:%20ports/79199:%20%5BPATCH%5D%20www%2Flinks%3A%20update%20to%20%32.%31.p%31%37</A><BR>
+<a href="mailto:git&#64;vger.kernel.org?Subject=Re:%20[PATCH]%20cg-pull:%20summarize%20the%20number%20of%20pulled%20objects">Non working mailto: URL as of (2005-06-04). It gets translated as a local file.</a><br>
+<HR>
+<A HREF="telnet:127.0.0.1">telnet:127.0.0.1</A><BR>
+<A HREF="telnet:127.0.0.1:25">telnet:127.0.0.1:25</A><BR>
+<A HREF="telnet:">telnet:</A><BR>
+<A HREF="telnet:*">telnet:*</A><BR>
+<A HREF="telnet:127.0.0.1;sleep 10">telnet:127.0.0.1;sleep 10</A><BR>
+<HR>
+<A HREF="file:">file:</A><BR>
+<A HREF="file:/">file:/</A><BR>
+<A HREF="file://">file://</A><BR>
+<A HREF="file:///">file:///</A><BR>
+<A HREF="file:///#">file:///#</A><BR>
+<A HREF="file://localhost/">file://localhost/</A><BR>
+<A HREF="file:///etc/passwd">file:///etc/passwd</A><BR>
+<A HREF="file:///etc/../etc/passwd">file:///etc/../etc/passwd</A><BR>
+<HR>
+<A HREF="http:">http:</A><BR>
+<A HREF="http:/">http:/</A><BR>
+<A HREF="http://">http://</A><BR>
+<A HREF="http://pasky.ji.cz">http://pasky.ji.cz</A><BR>
+<A HREF="http://pasky.ji.cz/">http://pasky.ji.cz/</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky">http://pasky.ji.cz/~pasky</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky////">http://pasky.ji.cz/~pasky////</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky/..">http://pasky.ji.cz/~pasky/..</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky/../">http://pasky.ji.cz/~pasky/../</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky///..">http://pasky.ji.cz/~pasky///..</A><BR>
+<A HREF="http://pasky.ji.cz/~pasky///../">http://pasky.ji.cz/~pasky///../</A><BR>
+<A HREF="http://pasky.ji.cz:80">http://pasky.ji.cz:80</A><BR>
+<A HREF="http://pasky.ji.cz:80/">http://pasky.ji.cz:80/</A><BR>
+<A HREF="http://pasky.ji.cz:/">http://pasky.ji.cz:/</A><BR>
+<HR>
+<A HREF="ftp://ftp.lip6.fr">ftp://ftp.lip6.fr</A><BR>
+<A HREF="ftp://ftp.lip6.fr/">ftp://ftp.lip6.fr/</A><BR>
+<A HREF="ftp://ftp.lip6.fr:21">ftp://ftp.lip6.fr:21</A><BR>
+<A HREF="ftp://ftp.lip6.fr:21/">ftp://ftp.lip6.fr:21/</A><BR>
+<A HREF="ftp://ftp.lip6.fr/pub///..">ftp://ftp.lip6.fr/pub///..</A><BR>
+<A HREF="ftp://ftp.lip6.fr/pub///..">ftp://ftp.lip6.fr/pub///..</A><BR>
+<A HREF="ftp://ftp.lip6.fr/pub///../">ftp://ftp.lip6.fr/pub///../</A><BR>
+<A HREF="ftp://anonymous:some.email@some.domain@ftp.lip6.fr">ftp://anonymous:some.email@some.domain@ftp.lip6.fr</A><BR>
+<A HREF="ftp://anonymous:some.pass@ftp.lip6.fr">ftp://anonymous:some.pass@ftp.lip6.fr</A><BR>
+<HR>
+<A HREF="gopher://moo.ca/">gopher://moo.ca/</A><BR>
+<A HREF="gopher://quux.org/">gopher://quux.org/</A><BR>
+<HR>
+<A HREF="nntp://news.gmane.org/">nntp://news.gmane.org/</A><BR>
+<A HREF="nntp://news.gmane.org/gmane.comp.web.elinks.user">nntp://news.gmane.org/gmane.comp.web.elinks.user</A><BR>
+<A HREF="nntp://news.gmane.org/gmane.comp.web.elinks.user/">nntp://news.gmane.org/gmane.comp.web.elinks.user/</A><BR>
+<A HREF="nntp://news.gmane.org/gmane.comp.web.elinks.user/29">nntp://news.gmane.org/gmane.comp.web.elinks.user/29</A><BR>
+<A HREF="nntp://news.gmane.org/gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz">nntp://news.gmane.org/gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz</A><BR>
+<A HREF="nntp://news.gmane.org/20040628231226.GK4166@pasky.ji.cz">nntp://news.gmane.org/20040628231226.GK4166@pasky.ji.cz</A><BR>
+<HR>
+<A HREF="news:">news:</A><BR>
+<A HREF="news:gmane.comp.web.elinks.user">news:gmane.comp.web.elinks.user</A><BR>
+<A HREF="news:gmane.comp.web.elinks.user/">news:gmane.comp.web.elinks.user/</A><BR>
+<A HREF="news:gmane.comp.web.elinks.user/29">news:gmane.comp.web.elinks.user/29</A><BR>
+<A HREF="news:gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz">news:gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz</A><BR>
+<A HREF="news:gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz">news:gmane.comp.web.elinks.user/20040628231226.GK4166@pasky.ji.cz</A><BR>
+<A HREF="news:20040628231226.GK4166@pasky.ji.cz">news:20040628231226.GK4166@pasky.ji.cz</A><BR>
+
+</BODY>
+</HTML>

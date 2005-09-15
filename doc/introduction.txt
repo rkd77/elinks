@@ -1,0 +1,366 @@
+Introduction to the World of ELinks
+-----------------------------------
+
+The goal of this introduction is to explain the basic concepts in ELinks,
+give an overview of how to get started and serve as an entry point to many
+of the (undocumented) features of ELinks. It won't tell you all the
+details, but should hopefully give you an idea of how things work and make
+it possible for you to even figure out how to go further.
+
+Although ELinks is text-based, the user interface has many of interaction
+methods normally found in graphical environments. There are menus, dialogs
+with buttons and hierarchic list boxes with folders. Care has been taken to
+make the interaction between various dialogs consistent, so the controls
+will quickly become familiar to new users.
+
+The user interface can be controlled using both mouse and keyboard, but
+currently it is only possible to configure keybindings. Looking back, the
+key-controls have been more advanced than the mouse support, but during the
+0.10 prereleases the mouse support has been much improved. You will now find
+find stuff like contextual menus when right-clicking in different document
+zones.
+
+Overview of the User Interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The main user interface of ELinks consists of the document view and dialog
+bars displaying the information such as the title of the currently viewed
+document, all opened tabs and the browsing status. The 3 bars are elaborated
+further below.
+
+The most important dialogs that you will meet include the Main, Link and Tab
+menus and the different managers. The menus serve as entry points to the
+actions available from different contexts, while the managers let you check
+the state and control the various subsystems, such as loaded cookies and the
+global history. The utility menus and the manager tools are investigated
+further below.
+
+The document viewer in ELinks provides a feature-rich set of ways to browse
+documents. That is, multiple options exist for navigating, searching and
+displaying documents and you will hopefully figure in time what works best
+for you. The basic browsing possibilities are presented below.
+
+ELinks is highly configurable, so if there is something that you would like
+to change, it is most likely possible. The best overview of the many options
+are given in the `elinks.conf(5)` man page.  Keybindings are discussed in the
+`elinkskeys(5)` man page.  It is not always up-to-date, so you should also
+check the keybinding manager and the overview of all the configured
+keybindings given in the Help -> Keys dialog. The Keys dialogs serves as a
+good introduction to the most common keybindings.
+
+The Title, Tab and Status bar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The title bars main purpose is to display the title of the current document.
+Documents bigger than can be displayed with the current screen size are
+divided into subpages. In this case the current document position is
+indicated in the far right of the title bar as a suffix to the actual
+document title.  The syntax is: ( current-subpage / total-subpages ), an
+example is `(4/9)` that indicates the 4th subpage of 9 subpages.
+
+The tab bar by default is only visible when 2 or more tabs are open. It is
+divided into slots containing the trimmed title of the tabs' loaded
+document. Between each tab is a separator. The current tab is highlighted
+and all tabs that has not been viewed after being loaded are highlighted as
+fresh. Tabs are explained in details in the tabs.txt file.
+
+The status bar has multiple purposes. Most of the time it will contain the
+URI (and title) of the currently selected link. If a link is followed,
+connection information is shown in the status bar. When using cursor
+routing, the status bar will show the coordinates of the cursor when a link
+is not followed.
+
+The Main, Link and Tab Menus
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Main Menu gives you access to many of the features of ELinks via
+submenus and serves as a good entry point for performing actions on the
+different objects of interest, such as links, documents and tabs. The Link
+menu and Tab menus are more specialized and targeted to a specific context,
+such as link handling or managing the tab bar. Actually, the Link Menu is
+accessible from the Main Menu as a submenu.
+
+Once you have familiarized yourself with the menus, you will have a good
+chance at gradually learning the most common keybinding, since all the
+configured keybindings are shown as right aligned text. Menu entries can
+also be quickly accessed using hotkeys. Hotkeys appear highlighted in the
+menu entry text. For example the key-combo "Alt-v i" will open the document
+info dialog accessible from the View sub menu in the Main menu.
+
+The Managers
+~~~~~~~~~~~~
+
+The managers let you control the state of subsystems, such as cookies and
+the global history. They are accessible from the Tools or Setup submenu in
+the Main Menu. The managers consists of an area showing a hierarchic listbox
+and buttons at the bottom. Below, a view of the cookie manager is shown.
+
+	+------------------------- Cookie manager -------------------------+
+	|                                                                  |
+	|   [-]- bugzilla.elinks.or.cz                                     |
+	|    |    |-- BUGLIST                                              |
+	|    |    `-- LASTORDER                                            |
+	|   [+]- kerneltrap.org                                            |
+	|   [+]-*dictionary.reference.com                                  |
+	|   [+]-*bjork.com                                                 |
+	|   [-]- www.google.com                                            |
+	|         `-- PREF                                                 |
+	|                                                                  |
+	|                                                                  |
+	|                                                                  |
+	|                                                                  |
+	|   [ Info ]  [ Add ]  [ Edit ]  [ Delete ]  [ Save ]  [ Close ]   |
+	+------------------------------------------------------------------+
+
+Each item is either a folder or a leaf. A folder is displayed with a `[-]`
+or `[+]` before the name telling whether the folder is currently open or
+closed. Nested items are displayed indented compared to the folder they are
+nested in. In the cookie manager example above "bjork.com" is a folder and
+"PREF" is a leaf.
+
+Items can be "marked", which makes it possible to select a group of items
+and perform an action on them, such as deleting all marked items. If any
+item has been marked the currently selected item is ignored when performing
+the action.  Marked items are displayed with an asterisk ('*') prefixing the
+name.
+
+The buttons make it possible to perform actions either on selected or marked
+items or on all items in the manager. Buttons named 'Clear' and 'Save' are
+performed on all items; 'Clear' will delete all items and 'Save' will update
+the runtime state file associated with the manager in the `~/.elinks/`
+directory.  Most buttons presses will query you before completing the
+action.
+
+At any time, both the currently selected item and button are highlighted.
+The same goes for marked items. Most manager dialogs also maintains the
+state, so that when you reopen the manager later it will have the same items
+selected and the same folders opened or closed.
+
+The basic default controls for managers are the following:
+
+`--------------`--------------------------------------------------------------
+Keys		Action
+------------------------------------------------------------------------------
+Up/Down		Select the item above/below.
+'*'		Toggle marking of a item.
+Space		Open and close folders.
+Left/Right	Select the button to the left/right.
+Home/End	Select the first/last item.
+Enter		Press the currently selected button.
+Esc		Close the manager dialog.
+------------------------------------------------------------------------------
+
+Some managers also supports searching, either by pressing the 'Search'
+button or by pressing '/'. By searching the empty string, all hidden items
+from the previous search will be shown again.
+
+LED status indicators
+~~~~~~~~~~~~~~~~~~~~~
+
+As an optional feature it is possible to have tiny LED-like status
+indicators shown at the bottom-right of the screen. They are used for
+displaying an overview of the current browsing state, ie.  whether you are
+currently talking through a SSL-secured connection, what is the current
+input mode (normal or insert), JavaScript errors etc. 
+
+An example display may look like: `[SIJP--]`. Each position in the LED
+display is associated with the following state:
+
+`--------------`--------------------------------------------------------------
+Symbol		Description
+------------------------------------------------------------------------------
+'S'		Whether an SSL connection was used.
+'i'/'I'		The state of insert mode for text-input form-fields: 'i'     \
+		means modeless, 'I' means insert mode is on.
+'J'		A JavaScript error has occured.
+'P'		A JavaScript pop-up window was blocked.
+-		Unused.
+-		Unused.
+------------------------------------------------------------------------------
+
+`-` generally indicates that the LED is off.
+
+The above information is also available in the LED dialog available by
+either clicking on the LED display or via the Help menu.
+
+Navigation
+~~~~~~~~~~
+
+ELinks provides various ways to navigate documents. Depending on how
+documents are structured, it can be a great help to change navigation style.
+The navigation styles can roughly be divided into page-oriented,
+link-oriented and screen-oriented. They overlap in many ways, so this
+separation is mostly used as a mean to present them.
+
+Page-Oriented Navigation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+This involves scrolling documents horizontally and vertically.  Documents
+can be scrolled page-wise, where the next or previous subpage will be
+displayed. It is also possible to scroll documents in steps, either
+line-wise (vertically) or column-wise (horizontally). The step size can be
+configured and by default is 2 lines and 8 columns. Alternatively, whole
+documents can be scrolled to the start or the end.
+
+The basic default controls:
+
+`--------------`--------------------------------------------------------------
+Keys		Action
+------------------------------------------------------------------------------
+Insert/Delete	Scroll up/down line-wise. (vertically)
+PageUp/PageDown	Scroll up/down page-wise.
+'['/']'		Scroll left/right column-wise. (horizontally)
+Home/End	Scroll to the start/end of the document.
+------------------------------------------------------------------------------
+
+Link-Oriented Navigation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+For hypertext documents, access to the links makes it more practical to
+navigate by jumping between links in the document. There are two ways to do
+this; either you can move between links relationally or by number. Using
+relational link navigation it is possible to focus the next/previous link or
+move in a directional manner to the link in a certain direction such as
+left/right/up/down.
+
+In order to navigate using link numbers, you have to first toggle link
+numbering on; this will prefix all links with a number using the notation
+[number]. `[23]` indicates link number 23. When link numbering is enabled,
+pressing any number key will pop up a "Go to link"-dialog where the complete
+link number can be entered. By pressing Enter the entered link number will
+be focused, but only if it is a valid link number.
+
+Note: it is also possible to jump to links by searching the link text; check
+the documentation on searching.
+
+The basic default controls:
+
+`--------------`--------------------------------------------------------------
+Keys		Action
+------------------------------------------------------------------------------
+Up/Down		Move to the previous/next link.
+'.'		Toggle link numbering.
+Enter/Right	Follow the current focused link.
+------------------------------------------------------------------------------
+
+No keys are by default configured for directional link navigation.
+
+Position-Oriented Navigation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Positional navigation (sorry, bad word) uses the either the position of the
+cursor or the mouse click to navigate the document. If you are familiar with
+the w3m text-browser you will be familiar with cursor routing. Basically,
+you move the cursor around -- kind of like a mouse -- in the document area
+of the user interface. When the cursor is over a link, the link is
+highlighted, and when the cursor moves outside the current document view, it
+will cause the document view to scroll.
+
+The possibilities when using the mouse to navigate the document depend on
+what terminal you are using. In some terminals, it is possible to scroll by
+using the mouse wheel. Scrolling is however also possible by clicking in the
+edge areas of the document view. Highlighting links can be done by clicking
+on a link but waiting to release the mouse button until the link is no
+longer under the mouse pointer.
+
+No keys are by default configured for cursor routing.
+
+Forms
+^^^^^
+
+The status bar will indicate the type and name of the field.
+
+Input text/Password fields::
+	These will be displayed as `________`.
+	Note that passwords will be obscured using `*` characters.
+	Status bar will display something like "Text field, name q",
+	or "Password field, name password" for password fields.
+
+Textarea boxes::
+	These will be displayed as multiple lines consisting of `_`.
+	Status bar will display something like "Text area, name comment"
+
+Buttons::
+	These will be displayed as `[ Go ]`.
+	Status bar will display something like "Submit form to ...",
+	"Post form to ..." for submit buttons.
+
+Checkboxes::
+	These will be displayed as `[ ]` or `[X]`.
+	Status bar will display something like "Checkbox, name c, value 1".
+	To set one just press ENTER on it.
+
+Radio buttons::
+	These will be displayed as `( )` or `(X)`.
+	Status bar will display something like "Radio button, name radio1".
+	To set one, you may use ENTER.
+
+Select lists::
+	These will be displayed as `[first item____]`.
+	Note that if multiple attribute is used, these are displayed as a
+	group of checkboxes instead.
+	Status bar will display something like "Select field, name list"
+	To select one entry, press ENTER, then navigate using UP/DOWN, then
+	press ENTER again.
+
+
+Searching
+~~~~~~~~~
+
+Searching is by default available by pressing '/'. This will open a search
+dialog with a input text field for entering the search terms and checkboxes
+to control how searching is performed. You can indicate whether matching
+should be case sensitive and whether regular expressions or normal searching
+should be used.
+
+It is also possible to make an incremental search, also called type-ahead
+searching. You can search either the whole document text or only link text.
+The latter can be useful if you see a link deep inside a page and want to
+get to it quickly.
+
+Matches of the search term will be high-lighted. After having performed
+document text search all matches will be high-lighted.  To get rid of this
+high-lighting you have to ``search for the empty string'', that is open a
+search dialog and just press Enter in the input field.
+
+Previous search words are saved in the search history, so they can easily b
+found and used later. Browsing the history will replace the current entered
+search terms.
+
+The basic default controls for searching are the following:
+
+`--------------`--------------------------------------------------------------
+Keys		Action
+------------------------------------------------------------------------------
+'/'		Open search dialog
+'?'		Open search dialog for backwards searching
+'#'		Start incremental link text search
+'#/'		Start incremental document search
+'n'/'N'		Show next/previous match
+Tab		Show next match (only for incremental searching)
+Up/Down		Insert previous/next search word from history (only when the \
+		input field is selected)
+------------------------------------------------------------------------------
+
+Hints and Odd Features
+~~~~~~~~~~~~~~~~~~~~~~
+
+Note: This is still a work in progress and from here on an below
+everything is marked TODO!
+
+- Numerical action prefixes. Example: 3<Down> jumps down three links.
+
+- How to move forward in the document history ('u').
+
+- Toggling color modes, plain/html and image link rendering.
+
+- Link numbering.
+
+- Insert mode in text-input form-fields.
+
+- Menu searching.
+
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: introduction.txt,v 1.24 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

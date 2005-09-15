@@ -1,0 +1,7 @@
+#!/bin/sh
+# $Id: gen,v 1.3 2005/03/05 21:49:29 zas Exp $
+
+export LC_ALL=C
+./gen-cp
+./gen-7b
+./gen-ent

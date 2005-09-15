@@ -1,0 +1,126 @@
+[[ecmascript]]
+ECMAScript support?!
+~~~~~~~~~~~~~~~~~~~~
+
+Yes, there is some ECMAScript support in ELinks. There isn't anything we could
+call complete, but some bits could help with the most common ECMAScript usage
+cases - help you (and then us ;) get into your banking account, pass through
+those ignorant page redirects done by JavaScript code snippets and so.
+
+ELinks does not have own ECMAScript parser and compiler; instead it reuses
+other people's work (this may eventually change, see the bottom of this file).
+First we aimed at the NJS engine, which is easy to install, small and compact;
+has nice naming scheme, horrible calling conventions and very lacking
+documentation; is not actively developed; and generally looks broken and
+extremely clumsy to work with. So we instead went the way of the SpiderMonkey
+(SM) engine (property of Mozilla), which is hard to install, bigger (mind you,
+it comes from Mozilla ;), has ugly naming scheme but nice calling conventions,
+acceptable documentation, is actively developed and ought to work.
+
+
+Ok, so how to get the ECMAScript support working?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some systems come with either the SpiderMonkey installed or as an option. It
+would be good to test if you can take the easy path and let the system take
+care of installation through a package system. Below are listed instructions
+on what package you need to install on various systems (please help improve
+the list). If all goes well you can proceed to rebuilding ELinks.
+
+On Debian testing or unstable, install the packages 'libsmjs1' and
+'libsmjs-dev' by running:
+
+	$ apt-get install libsmjs1 libsmjs-dev
+
+So, you need to get (and install) SpiderMonkey and then recompile your ELinks
+(if you installed SM properly, ELinks should autodetect it during the
+configure phase) and you are ready to fly.
+
+Note that this procedure enables you to install SpiderMonkey, but in such a
+way that it might not work with anything else but ELinks. It is unlikely that
+anything else is ever going to use SpiderMonkey on your system, but if you
+want to take the safe way, get SM and follow the instructions in
+`src/README.html` instead. You will probably need to do some checkouting of
+bits of the Mozilla CVS tree and so, have fun.
+
+To get SpiderMonkey source, go at
+link:ftp://ftp.mozilla.org/pub/mozilla.org/js/[] and fetch the newest `js-`
+tarball there (`js-1.5-rc6a.tar.gz` at the time of writing this; you may try
+the RPMs, but we didn't test them).
+
+	$ cd elinks
+	$ wget ftp://ftp.mozilla.org/pub/mozilla.org/js/js-1.5-rc6a.tar.gz
+	$ tar xvzf js-1.5-rc6a.tar.gz
+
+Next, you need to patch it so that you will have any chance to install it as
+you fetched it. Grab it in ELinks at `contrib/js-1.5-rc6a+elinks.patch` (if
+you have a different version, still try to go ahead, you might have some
+success), then go to the SpiderMonkey directory (called js) and apply it as
+
+	$ cd js
+	$ patch -p1 <../contrib/js-1.5-rc6a+elinks.patch
+	$ cd src
+
+Now, edit config.mk and adjust the `$PREFIX` variable - you probably won't
+like the default value - ELinks will find it there, but your dynamic linker
+likely won't.
+
+E.g., for /usr/local installation:
+
+	$ sed 's#^PREFIX = /opt/spidermonkey#PREFIX = /usr/local#' < config.mk > config.mk.t
+	$ mv -f config.mk.t config.mk
+
+Now you can finally go for it:
+
+	$ make -f Makefile.ref
+	$ make -f Makefile.ref export
+
+Now install it:
+
+	$ su -c 'make -f Makefile.ref install && (ldconfig -v | grep libjs)'
+
+Check for:
+
+	libjs.so -> libjs.so
+
+If all went well, you can proceed to rebuild ELinks now. If something broke,
+see you on #elinks @ FreeNode or in the mailing list.
+You may add your options to `./configure` as usual; SpiderMonkey should be
+autodetected.
+
+	$ cd ../..
+	$ ./configure
+
+Check for "`Ecmascript .................... SpiderMonkey`" in Feature summary.
+
+	$ make
+	$ su -c 'make install'
+
+Enjoy.
+
+
+The ECMAScript support is buggy! Shall I blame Mozilla people?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Likely not. The ECMAScript engine provides only the language compiler and some
+basic built-in objects, and it's more than likely that the problem is on our
+side in the implementation of some of the HTML/DOM objects (perhaps we just
+haven't bothered to implement it at all yet). So better tell us first, and if
+we think it's not our fault we will tell you to go complain to Mozilla (better
+yet if it does not work in the Mozilla browsers neither ;-).
+
+
+Now, I would still like NJS or a new JS engine from scratch...
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+...and you don't fear some coding? That's fine then! ELinks is in no way tied
+to SpiderMonkey, in fact the ECMAScript support was carefully implemented so
+that there are no SpiderMonkey references outside of
+`src/ecmascript/spidermonkey.*`. If you want to implement an alternative
+ECMAScript backend, go ahead - you will just need to write an autoconf
+detection for it and tie it to `src/ecmascript/ecmascript.c`, which should be
+easy. We await your patches eagerly.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: ecmascript.txt,v 1.16 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

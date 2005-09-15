@@ -1,0 +1,58 @@
+The ELinks Manual
+=================
+:Revision:	$Revision: 1.18 $
+:Date:		$Date: 2005/05/18 18:55:14 $
+
+Preface
+-------
+
+Welcome!  This is the entry point for the humble ELinks manual.  It is by no
+means complete, it is not even very homogeneous and it should eventually be
+superseded by a complete ELinks Book.
+
+There was a complete (or, for the most part complete) manual for Links 0.82 at
+one time, and you can still find it at:
+
+	http://links.sourceforge.net/docs/manual-0.82-en/index.html
+
+While large parts of it do not apply anymore, you may still find some relevant
+information there.
+
+Authors:
+
+- Jonas Fonseca <fonseca@diku.dk>
+- Jose Luis Gonzalez Gonzalez <jlg80@mi.madritel.es>
+- Laurent Monin <zas@norz.org>
+- Miciah Dashiel Butler Masters <miciah@myrealbox.com>
+- Petr Baudis <pasky@ucw.cz>
+- Peter Wang
+
+and others.
+
+Hold blameless the authors.  Any lawful use is allowed.
+
+include::installation.txt[]
+
+include::faq.txt[]
+
+include::introduction.txt[]
+
+include::bookmarks.txt[]
+
+include::tabs.txt[]
+
+include::marks.txt[]
+
+include::urlshortcuts.txt[]
+
+include::terminals.txt[]
+
+include::mime.txt[]
+
+include::mailcap.txt[]
+
+include::remote.txt[]
+
+include::exmode.txt[]
+
+include::lua-scripting.txt[]

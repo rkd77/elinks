@@ -1,0 +1,575 @@
+-- Example hooks.lua file, put in ~/.elinks/ as hooks.lua.
+-- $Id: hooks.lua.in,v 1.82 2005/08/23 00:18:45 miciah Exp $
+
+-- TODO: Bookmarks stuff should be completely moved to bm.lua. --pasky
+
+-- Take care about @SOMETHING@, we're processed with autoconf!
+
+----------------------------------------------------------------------
+--  Compatibility routines for Lua 4 code.
+--  Taken from Lua's compat.lua.
+----------------------------------------------------------------------
+
+_INPUT = io.stdin
+_OUTPUT = io.stdout
+
+function writeto (name)
+  if name == nil then
+    local f, err, cod = io.close(_OUTPUT)
+    _OUTPUT = io.stdout
+    return f, err, cod
+  else
+    local f, err, cod = io.open(name, "w")
+    _OUTPUT = f or _OUTPUT
+    return f, err, cod
+  end
+end
+
+function write (...)
+  local f = _OUTPUT
+  if type(arg[1]) == 'userdata' then
+    f = table.remove(arg, 1)
+  end
+  return f:write(unpack(arg))
+end
+
+function read (...)
+  local f = _INPUT
+  if type(arg[1]) == 'userdata' then
+    f = table.remove(arg, 1)
+  end
+  return f:read(unpack(arg))
+end
+
+function do_ (f, err)
+  if not f then _ALERT(err); return end
+  local a,b = pcall(f)
+  if not a then _ALERT(b); return nil
+  else return b or true
+  end
+end
+
+function dostring(s) return do_(loadstring(s)) end
+function dofile(s) return do_(loadfile(s)) end
+
+----------------------------------------------------------------------
+--  Load configuration
+----------------------------------------------------------------------
+
+function file_exists(filename)
+    local f = io.open(filename, "r")
+    if f then
+	io.close(f)
+	return 1
+    end
+    return nil
+end
+
+function dofile_if_fileexists(filename)
+    if file_exists(filename) then dofile(filename) end
+end
+
+dofile_if_fileexists ("@sysconfdir@/config.lua")
+home_dir = (os.getenv ("HOME") or "/home/"..os.getenv("USER")) or "."
+hooks_file = elinks_home.."/hooks.lua" -- for reload()
+dofile_if_fileexists (elinks_home.."/config.lua")
+
+----------------------------------------------------------------------
+-- hooks
+----------------------------------------------------------------------
+
+pre_format_html_hooks = {n=0}
+function pre_format_html_hook (url, html)
+    local changed = nil
+
+    table.foreachi(pre_format_html_hooks,
+                   function (i, fn)
+                       local new,stop = fn(url,html)
+
+                       if new then html=new changed=1 end
+                       return stop
+                   end)
+
+   return changed and html
+end
+
+goto_url_hooks = {n=0}
+function goto_url_hook (url, current_url)
+    table.foreachi(goto_url_hooks,
+                   function (i, fn)
+                       local new,stop = fn(url, current_url)
+
+                       url = new
+
+                       return stop
+                   end)
+
+   return url
+end
+
+follow_url_hooks = {n=0}
+function follow_url_hook (url)
+    table.foreachi(follow_url_hooks,
+                   function (i, fn)
+                       local new,stop = fn(url)
+
+                       url = new
+
+                       return stop
+                   end)
+
+   return url
+end
+
+quit_hooks = {n=0}
+function quit_hook (url, html)
+    table.foreachi(quit_hooks, function (i, fn) return fn() end)
+end
+
+----------------------------------------------------------------------
+--  case-insensitive string.gsub
+----------------------------------------------------------------------
+
+-- Please note that this is not completely correct yet.
+-- It will not handle pattern classes like %a properly.
+-- FIXME: Handle pattern classes.
+
+function gisub (s, pat, repl, n)
+    pat = string.gsub (pat, '(%a)',
+	        function (v) return '['..string.upper(v)..string.lower(v)..']' end)
+    if n then
+	return string.gsub (s, pat, repl, n)
+    else
+	return string.gsub (s, pat, repl)
+    end
+end
+
+
+----------------------------------------------------------------------
+--  goto_url_hook
+----------------------------------------------------------------------
+
+function match (prefix, url)
+    return string.sub (url, 1, string.len (prefix)) == prefix
+end
+
+function hx (c)
+    return string.char((c >= 10 and (c - 10) + string.byte ('A')) or c + string.byte ('0'))
+end
+
+function char2hex (c)
+    return '%'..hx (string.byte (c) / 16)..hx (math.mod(string.byte (c), 16))
+end
+
+function escape (str)
+    return string.gsub (str, "(%W)", char2hex)
+end
+
+-- You can write smt like "gg" to goto URL dialog and it'll go to google.com.
+
+-- Note that this is obsoleted by the URI rewrite plugin.
+
+dumbprefixes = {
+    arc = "http://web.archive.org/web/*/%c",
+    b = "http://babelfish.altavista.com/babelfish/tr",
+    bz = "http://bugzilla.elinks.or.cz",
+    bug = "http://bugzilla.elinks.or.cz",
+    d = "http://www.dict.org",
+    g  = "http://www.google.com/",
+    gg = "http://www.google.com/",
+    go = "http://www.google.com/",
+    fm = "http://www.freshmeat.net/",
+    sf = "http://www.sourceforge.net/",
+    dbug = "http://bugs.debian.org/",
+    dpkg = "http://packages.debian.org/",
+    -- Hm, is this Debian-centric? -- Miciah
+    lua = "file:///usr/share/doc/lua40-doc/manual/idx.html",
+    pycur = "http://www.python.org/doc/current/",
+    pydev = "http://www.python.org/dev/doc/devel/",
+    pyhelp = "http://starship.python.net/crew/theller/pyhelp.cgi",
+    pyvault = "http://www.vex.net/parnassus/",
+    e2 = "http://www.everything2.org/",
+    sd = "http://www.slashdot.org/",
+    vhtml = "http://validator.w3.org/check?uri=%c",
+    vcss = "http://jigsaw.w3.org/css-validator/validator?uri=%c",
+}
+
+function debian_package (url, t)
+	url = string.gsub(url, '(%w+):(%w+)', function (key, val) t[key] = val end)
+
+	return 'http://packages.debian.org/cgi-bin/search_contents.pl?word='
+	..escape(string.gsub(url, '%s*([^%s]+)%s*', '%1'))
+	..'&searchmode='..(t.searchmode or 'searchfilesanddirs')
+	..'&case='..(t.case or 'insensitive')
+	..'&version='..(t.version or pipe_read('test -r /etc/debian_version && cut -d/ -f1 /etc/debian_version | tr -d \\\\n || echo stable') or 'stable')
+	..'&arch='..(t.arch or pipe_read('test -x /usr/bin/dpkg-architecture && dpkg-architecture -qDEB_HOST_ARCH | tr -d \\\\n || echo i386'))
+end
+
+function debian_contents (url)
+	return debian_package (url, { searchmode = "filelist" })
+end
+
+function debian_file (url)
+	return debian_package (url, { searchmode = "searchfilesanddirs" })
+end
+
+function cvsweb (base, project, url)
+	local t = {n=0}
+	local file, old, new
+	local replacements
+
+	-- allow <file>:<revision>[-><revision>]
+	url,replacements = string.gsub(url, "^(.*):(.*)->(.*)$", "%1 %2 %3")
+	if replacements == 0 then url = string.gsub(url, "^(.*):(.*)$", "%1 %2") end
+
+	-- split into words
+	string.gsub(url, "([^%s]+)", function (w) table.insert(t, w) end)
+	file, old, new = t[1], t[2], t[3]
+
+	if t[4] then error('this smartprefix takes only two to three arguments') return nil end
+	if not file then error('no file given') return nil end
+
+	if     new then return base..project.."/"..file..".diff?r1="..old.."&r2="..new.."&f=u"
+	elseif old then return base.."~checkout~/"..project.."/"..file..(old ~= "latest" and "?rev="..old or "")
+	else            return base..project.."/"..file
+	end
+end
+
+function gmane (url)
+	local group, words
+
+	_,_,group,words = string.find(url, "([^%s]+)%s%s*(.*)$")
+
+	if not words then return nil end
+
+	return "http://search.gmane.org/search.php?query="..words.."&group="..group
+end
+
+-- You can write "gg:foo" or "gg foo" to goto URL dialog and it'll ask google
+-- for it automagically.
+
+-- Note that this is _mostly_ obsoleted by the URI rewrite plugin. (It can't do the
+-- metas, though.)
+
+function bugzilla (base_url, arguments)
+	if not arguments or arguments == '' then return base_url end
+
+	if string.find(arguments, '^[%d]+$') then
+		return base_url..'show_bug.cgi?id='..arguments
+	end
+
+	return base_url..'buglist.cgi?short_desc_type=allwordssubstr'
+               ..'&short_desc='..escape(arguments)
+end
+
+smartprefixes = {
+    arc = "http://web.archive.org/web/*/%s",
+    bug = function (url) return bugzilla('http://bugzilla.elinks.or.cz/', url) end,
+    cambridge = "http://dictionary.cambridge.org/results.asp?searchword=%s",
+    cliki = "http://www.cliki.net/admin/search?words=%s",
+    -- If you want to add a smartprefix for another project's CVSweb,
+    -- just create a lambda like this. Aren't high-level languages fun?
+    cvs = function (x) return cvsweb ("http://cvsweb.elinks.or.cz/cvsweb.cgi/", "elinks", x) end,
+    d = "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query",
+    debcontents = debian_contents,
+    debfile = debian_file,
+    dmoz = "http://search.dmoz.org/cgi-bin/search?search=%s",
+    foldoc = "http://wombat.doc.ic.ac.uk/foldoc/foldoc.cgi?%s",
+    g  = "http://www.google.com/search?q=%s&btnG=Google+Search",
+    gd = "http://www.google.com/search?q=%s&cat=gwd/Top",
+    gg = "http://www.google.com/search?q=%s&btnG=Google+Search",
+    -- Whose idea was it to use 'gg' for websearches? -- Miciah
+    --gg = "http://groups.google.com/groups?q=%s",
+    gi = "http://images.google.com/images?q=%s",
+    gmane = gmane,
+    gn = "http://news.google.com/news?q=%s",
+    go = "http://www.google.com/search?q=%s&btnG=Google+Search",
+    gwho = "http://www.googlism.com/?ism=%s&name=1",
+    gwhat = "http://www.googlism.com/?ism=%s&name=2",
+    gwhere = "http://www.googlism.com/?ism=%s&name=3",
+    gwhen = "http://www.googlism.com/?ism=%s&name=4",
+    fm = "http://www.freshmeat.net/search/?q=%s",
+    savannah = "http://savannah.nongnu.org/search/?words=%s&type_of_search=soft&exact=1",
+    sf = "http://sourceforge.net/search/?q=%s",
+    sfp = "http://sourceforge.net/projects/%s",
+    sd = "http://www.slashdot.org/search.pl?query=%s",
+    sdc = "http://www.slashdot.org/search.pl?query=%s&op=comments",
+    sdu = "http://www.slashdot.org/search.pl?query=%s&op=users",
+    sdp = "http://www.slashdot.org/search.pl?query=%s&op=polls",
+    sdj = "http://www.slashdot.org/search.pl?query=%s&op=journals",
+    dbug = "http://bugs.debian.org/%s",
+    dpkg = "http://packages.debian.org/%s",
+    emacs = "http://www.emacswiki.org/cgi-bin/wiki.pl?search=%s",
+    lyrics = "http://music.lycos.com/lyrics/results.asp?QT=L&QW=%s",
+    lxr = "http://lxr.linux.no/ident?i=%s",
+    leo = "http://dict.leo.org/?search=%s",
+    onelook = "http://onelook.com/?w=%s&ls=a",
+    py = "http://starship.python.net/crew/theller/pyhelp.cgi?keyword=%s&version=current",
+    pydev = "http://starship.python.net/crew/theller/pyhelp.cgi?keyword=%s&version=devel",
+    pyvault = "http://py.vaults.ca/apyllo.py?find=%s",
+    e2 = "http://www.everything2.org/?node=%s",
+    encz = "http://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=0&ecd_lines=15&ecd_hptxt=0",
+    czen = "http://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=1&ecd_lines=15&ecd_hptxt=0",
+    dict = "http://dictionary.reference.com/search?q=%s",
+    thes = "http://thesaurus.reference.com/search?q=%s",
+    a = "http://acronymfinder.com/af-query.asp?String=exact&Acronym=%s",
+    imdb = "http://imdb.com/Find?%s",
+    mw = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=%s",
+    mwt = "http://www.m-w.com/cgi-bin/thesaurus?book=Thesaurus&va=%s",
+    whatis = "http://uptime.netcraft.com/up/graph/?host=%s",
+    wiki = "http://www.wikipedia.org/w/wiki.phtml?search=%s",
+    wn = "http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=%s",
+    -- rfc by number
+    rfc = "http://www.rfc-editor.org/rfc/rfc%s.txt",
+    -- rfc search
+    rfcs = "http://www.rfc-editor.org/cgi-bin/rfcsearch.pl?searchwords=%s&format=http&abstract=abson&keywords=keyon&num=25",
+    cr   = "http://www.rfc-editor.org/cgi-bin/rfcsearch.pl?searchwords=%s&format=http&abstract=abson&keywords=keyon&num=25",
+    -- Internet Draft search
+    rfcid = "http://www.rfc-editor.org/cgi-bin/idsearch.pl?searchwords=%s&format=http&abstract=abson&keywords=keyon&num=25",
+    urbandict = "http://www.urbandictionary.com/define.php?term=%s",
+    id    = "http://www.rfc-editor.org/cgi-bin/idsearch.pl?searchwords=%s&format=http&abstract=abson&keywords=keyon&num=25",
+    draft = "http://www.rfc-editor.org/cgi-bin/idsearch.pl?searchwords=%s&format=http&abstract=abson&keywords=keyon&num=25",
+}
+
+-- Expand ~ to home directories.
+function expand_tilde (url, current_url)
+    if not match ("~", url) then return url,nil end
+
+    if string.sub(url, 2, 2) == "/" or string.len(url) == 1 then    -- ~/foo
+	return home_dir..string.sub(url, 2),true
+    else                                -- ~foo/bar
+	return "/home/"..string.sub(url, 2),true
+    end
+end
+table.insert(goto_url_hooks, expand_tilde)
+
+
+-- Don't take localhost as directory name
+function expand_localhost (url)
+    if not match("localhost", url) then return url,nil end
+
+    return "http://"..url,nil
+end
+table.insert(goto_url_hooks, expand_localhost)
+
+
+function complete_uri_prefix (url, current_url)
+    if dumbprefixes[url] then
+	return string.gsub(dumbprefixes[url], "%%c", current_url or ""),true
+    end
+
+    if string.find(url,'%s') or string.find(url, ':') then
+        local _,_,nick,val = string.find(url, "^([^%s:]+)[:%s]%s*(.-)%s*$")
+        if nick and smartprefixes[nick] then
+            if type(smartprefixes[nick]) == 'function' then
+                return smartprefixes[nick](val),true
+            elseif type(smartprefixes[nick]) == 'string' then
+                return string.format(smartprefixes[nick], escape(val)),true
+            else
+                error('smartprefix "'..nick..'" has unsupported type "'
+                      ..type(smartprefixes[nick])..'".')
+                return url,nil
+            end
+        end
+    end
+
+    -- Unmatched.
+    return url,nil
+end
+table.insert(goto_url_hooks, complete_uri_prefix)
+
+
+----------------------------------------------------------------------
+--  pre_format_html_hook
+----------------------------------------------------------------------
+
+-- Plain string.find (no metacharacters).
+function sstrfind (s, pattern)
+    return string.find (s, pattern, 1, 1)
+end
+
+-- Mangle ALT="" in IMG tags.
+function mangle_blank_alt (url, html)
+    local n
+
+    if not mangle_blank_alt then return nil,nil end
+
+    html, n = gisub (html, '(<img[^>]-) alt=""', '%1 alt="&nbsp;"')
+
+    return ((n > 0) and html), nil
+end
+table.insert(pre_format_html_hooks, mangle_blank_alt)
+
+
+-- Fix unclosed INPUT tags.
+function mangle_unclosed_input_tags (url, html)
+    local n
+
+    html, n = gisub (html, '(<input[^>]-[^=]")<', '%1><')
+
+    return ((n > 0) and html), nil
+end
+table.insert(pre_format_html_hooks, mangle_unclosed_input_tags)
+
+
+-- Fix unclosed A tags.
+function mangle_unclosed_a_tags (url, html)
+    local n
+
+    html, n = gisub (html, '(<a[^>]-[^=]")<', '%1><')
+
+    return ((n > 0) and html), nil
+end
+table.insert(pre_format_html_hooks, mangle_unclosed_a_tags)
+
+
+function mangle_linuxtoday (url, html)
+    if not sstrfind (url, "linuxtoday.com") then return nil,nil end
+
+    if sstrfind (url, "news_story") then
+	html = string.gsub (html, '<TABLE CELLSPACING="0".-</TABLE>', '', 1)
+	html = string.gsub (html, '<TR BGCOLOR="#FFF.-</TR></TABLE>', '', 1)
+    else
+	html = string.gsub (html, 'WIDTH="120">\n<TR.+</TABLE></TD>', '>', 1)
+    end
+    html = string.gsub (html, '<A HREF="http://www.internet.com.-</A>', '')
+    html = string.gsub (html, "<IFRAME.-</IFRAME>", "")
+    -- emphasis in text is lost
+    html = string.gsub (html, 'text="#002244"', 'text="#001133"', 1)
+
+    return html,true
+end
+table.insert(pre_format_html_hooks, mangle_linuxtoday)
+
+
+function mangle_dictionary_dot_com (url, html)
+    local t = { t = "" }
+    local n
+
+    if not sstrfind (url, "dictionary.com/cgi-bin/dict.pl") then return nil,nil end
+
+    _,n = string.gsub (html, "resultItemStart %-%-%>(.-)%<%!%-%- resultItemEnd",
+		       function (x) t.t = t.t.."<tr><td>"..x.."</td></tr>" end)
+    if n == 0 then
+	-- we've already mangled this page before
+	return nil,true
+    end
+
+    html = "<html><head><title>Dictionary.com lookup</title></head>"..
+	   "<body><table border=0 cellpadding=5>"..t.t.."</table>"..
+	   "</body></html>"
+
+    return html,true
+end
+table.insert(pre_format_html_hooks, mangle_dictionary_dot_com)
+
+
+function mangle_allmusic_dot_com (url, html)
+    if not sstrfind (url, "allmusic.com") then return nil,nil end
+
+    html = string.gsub(html, "javascript:z%('(.-)'%)", "/cg/amg.dll?p=amg&sql=%1")
+
+    return html,true
+end
+table.insert(pre_format_html_hooks, mangle_allmusic_dot_com)
+
+
+-- Handle gzip'd files within reasonable size.
+-- Note that this is not needed anymore since we have a support for this
+-- in core ELinks. I still keep it here for a reference (as an example),
+-- though. If you will add something similiar using pipe_read(), feel free
+-- to remove this. --pasky
+function decompress_html (url, html)
+    local tmp
+
+    if not string.find (url, "%.gz$") or string.len (html) >= 65536 then
+	return nil,nil
+    end
+
+    tmp = tmpname ()
+    writeto (tmp) write (html) writeto ()
+    html = pipe_read ("(gzip -dc "..tmp.." || cat "..tmp..") 2>/dev/null")
+    os.remove (tmp)
+
+    return html,nil
+end
+--table.insert(pre_format_html_hooks, decompress_html)
+
+----------------------------------------------------------------------
+--  Miscellaneous functions, accessed with the Lua Console.
+----------------------------------------------------------------------
+
+-- Reload this file (hooks.lua) from within Links.
+function reload ()
+    dofile (hooks_file)
+end
+
+-- Helper function.
+function catto (output)
+    local doc = current_document_formatted (79)
+    if doc then writeto (output) write (doc) writeto () end
+end
+
+-- Email the current document, using Mutt (http://www.mutt.org).
+-- This only works when called from lua_console_hook, below.
+function mutt ()
+    local tmp = tmpname ()
+    writeto (tmp) write (current_document ()) writeto ()
+    table.insert (tmp_files, tmp)
+    return "run", "mutt -a "..tmp
+end
+
+-- Table of expressions which are recognised by our lua_console_hook.
+console_hook_functions = {
+    reload	= "reload ()",
+    mutt	= mutt,
+}
+
+function lua_console_hook (expr)
+    local x = console_hook_functions[expr]
+    if type (x) == "function" then
+	return x ()
+    else
+	return "eval", x or expr
+    end
+end
+
+
+----------------------------------------------------------------------
+--  quit_hook
+----------------------------------------------------------------------
+
+-- We need to delete the temporary files that we create.
+if not tmp_files then
+    tmp_files = {}
+end
+
+function delete_tmp_files ()
+    if tmp_files and os.remove then
+        tmp_files.n = nil
+        for i,v in tmp_files do os.remove (v) end
+    end
+end
+table.insert(quit_hooks, delete_tmp_files)
+
+
+----------------------------------------------------------------------
+--  Examples of keybinding
+----------------------------------------------------------------------
+
+-- Bind Ctrl-H to a "Home" page.
+
+--    bind_key ("main", "Ctrl-H",
+--	      function () return "goto_url", "http://www.google.com/" end)
+
+-- Bind Alt-p to print.
+
+--    bind_key ("main", "Alt-p", lpr)
+
+-- Bind Alt-m to toggle ALT="" mangling.
+
+    bind_key ("main", "Alt-m",
+	      function () mangle_blank_alt = not mangle_blank_alt end)
+
+
+-- vim: shiftwidth=4 softtabstop=4

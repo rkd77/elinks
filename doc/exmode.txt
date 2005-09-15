@@ -1,0 +1,105 @@
+The tale of ex-mode
+-------------------
+
+Are you a vim-controls nerd who wants to see them everywhere?  Welcome.
+
+Actually ELinks doesn't shine in this area yet very much. Heck, the famous
+hjkl foursome is still occupied by some feeble managers in the default keymap
+(we have that in our monumental TODO lists). Still, if you know what to touch
+during the compilation (`--enable-exmode`), you can get at least some familiar
+reply to the mighty ``:'' (colon) grip.
+
+
+What it is
+~~~~~~~~~~
+
+Ex-mode gives you some (still very rough and only marginally complete) access
+to advanced ELinks commands, to be invoked anywhere anytime, straight and
+fast.
+
+When you activate the ex-mode (named after the equivalent gadget in the vi
+text editor flavours), a command line appears at the bottom of the screen for
+you to type the commands.
+
+Only two kinds of commands are supported so far. First, (almost?) anything
+that can appear in the configuration file can be used in ex-mode. Second, you
+can invoke (almost) any action from the ex-mode.
+
+
+Configuration directives in exmode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There aren't many of these, so we can skim through them fast.
+
+If you want to flip an option you know by name and refuse to engage with the
+option manager visuals, you can just drop in to the ex-mode and type 'set
+the.option = 1234'. See man elinks.conf (5) or the options manager for the
+list of options; you can also get a complete options tree saved to elinks.conf
+if you set 'config.saving_style' = 2 (but do *NOT* keep that setting unless
+you know what are you doing; if we change a default value of some option in
+future releases, we (generally) know what are we doing - this change won't
+propagate to you during an upgrade if you already have the original default
+value saved in your configuration file, though).
+
+It's the same story with keybindings. You can use 'bind "main" "h" =
+"move-cursor-left"'. It's not the same story with keybindings documentation.
+There is the elinkskeys (5) manual page but it's horribly obsolete, so don't
+rely on it. You can refer to the keybindings manager for names of actions and
+even their short descriptions. Also, all the 'bind' commands are saved to the
+configuration file if you set config.saving_style = 2 (but see above).
+
+You can also use 'include my.conf', which will read my.conf as an ELinks
+configuration file.
+
+Actually, ELinks would eat '#blahblah blah' too, if you see a point in feeding
+it that kind of stuff.
+
+
+Actions in exmode - or exmode in action?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is too many of these, so we should better skim through them fast.
+
+Actually, we already talked about them. It's the last argument to the 'bind'
+command. So, they are those listed in the keybinding manager. So if you enter
+'move-cursor-left' command, it will move your cursor left - by a single
+character, making this a little awkward, but it's useful if you sometimes want
+to easily invoke an action and you don't want to waste a key for it.
+
+Actually, actions could theoretically take arguments too. This is currently
+implemented only for the 'goto-url' action, which can take the location it
+should go at as a parameter (otherwise it opens the standard well-known dialog
+as if you pressed 'g' in the default keymap).
+
+Regarding the mysterious "(almost)" hinted above, you can never invoke the
+"quit" action from the exmode - if you type it there, "really-quit" is invoked
+instead.
+
+
+How to use it
+~~~~~~~~~~~~~
+
+It's simple. You press ':' (without the apostrophes, of course) and type in
+the command, then you press enter.  E.g., ':set config.saving_style = 3' (this
+is a good thing), ':quit' (and the game is over). The standard line-editing
+facility is present (cursor keys and so), and the ex-mode input line has own
+history.
+
+
+The "but"s
+~~~~~~~~~~
+
+The biggest usability hurdle so far is that there is no tab-completion. This
+is why the ex-mode support is not enabled by default and part of the reason
+why its practical usage is somewhat limited yet - if you don't remember
+exactly what do you want to invoke, tough beans. Someone shall address this
+issue in the future.
+
+Also, perhaps wider scale of commands should be implemented in ex-mode. The
+code is extremely flexible and it is very trivial to make another ex-mode
+command handler, it's just that no one has done it yet ;-). Also, more actions
+should be able to take arguments.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: exmode.txt,v 1.11 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,372 @@
+elinks (0.11-0.0upstream) unstable; urgency=low
+
+  * NMU
+  * Really fix endless refreshing of documents (#293298)
+
+ -- Jonas Fonseca <fonseca@diku.dk>  Tue,  3 May 2005 19:44:01 +0200
+
+elinks (0.10.4-3) unstable; urgency=low
+
+  * _Really_ add the missing build-dep (Closes: #304803, #306246)
+
+ -- Peter Gervai <grin@tolna.net>  Wed, 27 Apr 2005 02:38:31 +0200
+
+elinks (0.10.4-2) unstable; urgency=low
+
+  * Disabled check to refuse run when root on the request of
+    the upstream. (Closes: #305739, #304876)
+  * Added missing build-dep (Closes: #304803, #306246)
+  * Fixed default config (Closes: #305017, #305628, #305004)
+
+ -- Peter Gervai <grin@tolna.net>  Sun, 24 Apr 2005 19:14:16 +0200
+
+elinks (0.10.4-1) unstable; urgency=low
+
+  * New Upstream release
+  * Disable SpiderMonkey because it is not useful right now (closes: #302505)
+  * Only read from /dev/stdin if no URL was given on the command line and
+    automatically allow special files to be read (closes: #296976, #297510)
+  * Fix repeatedly and endless refreshing of documents that triggers a
+    download (like sourceforge's download pages) (closes: #293298)
+  * Add watch file, thanks Hugo Haas
+  * Scrolling was heavily reworked during the 0.10 development phase and now
+    uses the correct width / height when scrolling (closes: #256533)
+  * Fix warning on 64-bit architectures (closes: #285684)
+  * Change verbose level to show warnings (closes: #303083)
+  * Include FAQ from http://elinks.or.cz/ (closes: #301861)
+  * Change FTP directory listing parser to Wget-based one due to licensing
+    issues (closes: #300889)
+  * Be more tolerant when handling values from the no_proxy environment
+    variable (closes: #218451)
+  * Explicitly define keyboard accelerators for buttons so that they
+    do not clash (closes: #270205)
+
+ -- Peter Gervai <grin@tolna.net>  Tue, 12 Apr 2005 23:46:12 +0200
+
+elinks (0.10.2-3) unstable; urgency=low
+
+  * Enable ECMAScript/JS engine SpiderMonkey
+  * Enable experimental Perl scripting
+  * Enable experimental NNTP handling
+  * Enable 256 color terminal handling
+  * Enable status blinkenlights ("leds")
+  * Refuse to run under root uid
+
+ -- Peter Gervai <grin@tolna.net>  Fri, 25 Feb 2005 12:47:10 +0100
+
+elinks (0.10.2-2) unstable; urgency=low
+
+  * Fixed bookmark problem (Closes: #296679)
+
+ -- Peter Gervai <grin@tolna.net>  Fri, 25 Feb 2005 11:48:03 +0100
+
+elinks (0.10.2-1) unstable; urgency=low
+
+  * New upstream version v0.10.2
+  * Cleanups by Jonas Fonseca <fonseca@diku.dk>, debian dir
+    installed into upstream CVS:
+  * Only remove CVS files from packaging directory so the package can
+    be built from checked out sources
+  * Install elinks.conf from contrib/
+  * Install documentation files about using ELinks from doc/
+  * Remove more unrelevant files from contrib/
+  * List docs in elinks.docs file
+  * Support for DEB_BUILD_OPTIONS
+  * Update and cleanup debian/rules
+  * Pass -force-html in the debian/mime mailcap entries so problems with
+    viewing files without an extension are fixed
+  * Enhance desktop file and install it in /usr/share/applications/ which
+    seems to be the new standard
+  * Many problems related to mangleme tools fixed (closes: #277283)
+  * Documentation updates (closes: #215619)
+  * Fix IPv6 URI parsing (closes: #173378)
+  * Send the previous URL as referer by default (closes: #198684)
+  * Bump up the dependency on dephelper (closes: #247280)
+  * Force dumping to stdout when ELinks connects to a pipe instead of a
+    terminal, even if the boolean argument to -dump is zero (closes: #231663)
+  * Suggest filename based on Content-Disposition (closes: #171571)
+  * Update the manpage and add -stdin command line option for compatibility
+    even though reads from stdin are autodetected (closes: #281010)
+  * Add support for recognizing mixed-case URI schemes (closes: #242140)
+  * Fix xterm detection code, thanks Adam Borowski (closes: #228977)
+  * Fix handling of id names in preformatted content (closes: #219331)
+  * Fix assertion failure when searching in empty documents (closes: #238281)
+  * Remove www-browser alternative, thanks Andreas Metzler (closes: #247495)
+  * Fix uncompressing of .gz files on download (closes: #221207)
+
+ -- Peter Gervai <grin@tolna.net>  Mon, 21 Feb 2005 15:21:55 +0100
+
+elinks (0.9.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Peter Gervai <grin@tolna.net>  Sun, 21 Nov 2004 14:08:25 +0100
+
+elinks (0.9.1+0.9.2rc4-2) unstable; urgency=low
+
+  * Fix naming (it's rc [release candidate] and not pre[release])
+  * Fix rules to use /etc/elinks for configure (closes: #267962)
+
+ -- Peter Gervai <grin@tolna.net>  Wed, 11 Aug 2004 15:57:53 +0200
+
+elinks (0.9.1+0.9.2pre4-1) unstable; urgency=low
+
+  * New upstream version 0.9.2pre4
+  * Remove kderemove from menu (closes: #264402)
+  * Recompiled with gnutls11 (closes: #263633)
+  * FTBFS on GNU/Hurd (and GNU/k*BSD) (closes: #262350)
+
+ -- Peter Gervai <grin@tolna.net>  Sun,  8 Aug 2004 23:48:47 +0200
+
+elinks (0.9.1+0.9.2pre3-1) unstable; urgency=low
+
+  * New upstream pre-release 0.9.2pre3. (closes: #262306)
+  * Don't read nonexistant hooks.lua (closes: #231760)
+  * README.Debian updated by "I forgot to read the docs" 
+    questions (closes: #209046, #234589)
+  * Fix accept-charset problem (closes: #242524)
+  * Updated build-deps based on buildd's hints, removed xlib-dev
+    (closes: #231646)
+  * Changed 'make prefix=' to 'make DESTDIR=' in rules (closes: #234991)
+  * Removed outdated example dir (now included upstream)
+  * Removed debconf warning about cookies (closes: #235816)
+
+ -- Peter Gervai <grin@tolna.net>  Fri, 30 Jul 2004 23:38:42 +0200
+
+elinks (0.9.1-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #226941)
+  * Features: Standard, IPv6, gzip, bzip2, SSL (GnuTLS), MIME (Option
+    system, Mailcap, Mimetypes files), Bookmarks, Cookies, Forms History, 
+    Global History, URI rewrite, Scripting (Lua)
+  * Droppend dep on xlibs (no xterm title restore) (Partially fixing
+    #218453)
+  * Depends on newer gnutls10 and liblua50
+
+ -- Peter Gervai <grin@tolna.net>  Wed, 21 Jan 2004 22:13:45 +0100
+
+elinks (0.4.2.99-1) unstable; urgency=low
+
+  * New upstream release 0.4.3rc2
+  * Manpage fixed (Closes: #210305, #212491)
+  * No segfault when deleting bookmarks (Closes: #193119)
+  * Install www-browser alternative (Closes: #184981)
+  * ~user handled better (Closes: #181731)
+  * Overwrite truncates file first (Closes: #186052)
+  * Links/elinks selection now handled automagically (Closes: #168692)
+  * Elinks starts with the "goto URL" dialog, not a blank 
+    screen (Closes: #206932)
+  * Remove CVS entries from package
+  * Numerous upstream bugfixes.
+
+ -- Peter Gervai <grin@tolna.net>  Thu,  9 Oct 2003 00:24:41 +0200
+
+elinks (0.4.2-1) unstable; urgency=low
+
+  * New upstream release 0.4.2.
+  * New style config UI (Closes: #167928, #169908)
+  * Includes spanish debconf template (Closes: #158576)
+  * Fixes linking problem with some renegade lib (Closes: #176401)
+  * Fixes 'bad url syntax' problem (Closes: #177335)
+  * Defines as /usr/bin/links alternative (Closes: #164058, #168692)
+
+ -- Peter Gervai <grin@tolna.net>  Thu, 30 Jan 2003 01:09:34 +0100
+
+elinks (0.3.20021004-1) unstable; urgency=low
+
+  * New upstream release 0.4pre17
+  * Config moved into /etc/elinks/ (closes: #158666)
+
+ -- Peter Gervai <grin@tolna.net>  Fri,  4 Oct 2002 15:58:19 +0200
+
+elinks (0.3.20020825-2) unstable; urgency=low
+
+  * Spanish debconf translation (closes: #158576)
+
+ -- Peter Gervai <grin@tolna.net>  Wed, 28 Aug 2002 12:04:19 +0200
+
+elinks (0.3.20020825-1) unstable; urgency=low
+
+  * New upstream version 0.4pre14
+  * Fixed a bug when elinks falls into infinite waiting loops
+  * Compiled against new gnutls package (patched upstream to
+    use gnutls/*.h... it used to work...)
+
+ -- Peter Gervai <grin@tolna.net>  Sun, 25 Aug 2002 12:07:21 +0200
+
+elinks (0.3.20020808-1) unstable; urgency=low
+
+  * New upstream version 0.4pre12
+  * Fixed lots of bugs, including stopping in the middle of a long 
+    transfer ("slashdot problem", closes: #154938), cookie expiration
+    (closes: #154664), self referer problem (closes: #154778).
+  * Removed duplicate contrib/ dirs (bug in upstream's cvs, Closes: #154860)
+
+ -- Peter Gervai <grin@tolna.net>  Thu,  8 Aug 2002 12:24:39 +0200
+
+elinks (0.3.20020711-2) unstable; urgency=low
+
+  * Disabled default cookie saving to disk due Bug#154664, because
+    ELinks does not expire cookies all the time, and it causes 
+    problems with remembered logins which should have been forgotten.
+    You have to change ~/.elinks/elinks.conf though.
+
+ -- Peter Gervai <grin@tolna.net>  Mon, 29 Jul 2002 22:21:02 +0200
+
+elinks (0.3.20020711-1) unstable; urgency=low
+
+  * Version 0.4pre12 upstream.
+  * Package separated from links. This package is _preferred_ to
+    the package 'links', because this contains plenty of useful
+    features, including cookies (save too), referer handling,
+    advanced configuration, LUA script language, and so on.
+  * Before reporting bugs please check against the bugs of
+    'links' and 'links-ssl'.  Thank you.
+
+ -- Peter Gervai <grin@tolna.net>  Thu, 11 Jul 2002 17:38:09 +0200
+
+links-ssl (0.96.20020711-1) unstable; urgency=low
+
+  * New upstream release (v0.7pre12)
+  * Fixes DNS bug (closes: ...)
+  * Fix some crashes
+
+ -- Peter Gervai <grin@tolna.net>  Thu, 11 Jul 2002 12:28:17 +0200
+
+links-ssl (0.96.20020607-1) unstable; urgency=low
+
+  * New upstream release (v0.4pre7)
+
+ -- Peter Gervai <grin@tolna.net>  Fri,  7 Jun 2002 17:28:18 +0000
+
+links-ssl (0.96.20020409-2) unstable; urgency=low
+
+  * Using new lua libraries (liblua40 / liblualib40) (closes: #141327)
+  * Updated Readme (closes: #141542)
+
+ -- Peter Gervai <grin@Tolna.net>  Mon, 15 Apr 2002 18:42:32 +0200
+
+links-ssl (0.96.20020409-1) unstable; urgency=low
+
+  * New upstream version (eLinks 04.pre5)
+  * Again, plenty of bugs fixed and some features added (including,
+    but not limited to history search and selection). 
+  * Now handles spaces in filenames (closes: #92079)
+  * Fixes stacked FTP commands (closes: #100861), but please reopen
+    bug if it doesn't work correctly (I can't test it)!
+
+ -- Peter Gervai <grin@Tolna.net>  Tue,  9 Apr 2002 20:17:02 +0200
+
+links-ssl (0.96.20020319-2) unstable; urgency=low
+
+  * I try to catch up with Lua packages, fixed build-deps (twice)
+    (Now Lua should work on non i386 too)
+
+ -- Peter Gervai <grin@tolna.net>  Wed, 20 Mar 2002 02:08:55 +0100
+
+links-ssl (0.96.20020319-1) unstable; urgency=low
+
+  * New upstream version (eLinks 0.4pre2)
+  * Plenty of patches included now in eLinks, most of them
+    provide new features, some fixes bugs (some creates them :-))
+    (many features hidden unless you check the docs)
+  * HTTP authentication (password) support (closes: #107480)
+  * Nonexistant frame segfault fix (closes: #128877)
+  * Included Links-lua docs
+  * Fixed rules (closes: #127206), description (closes: #127203)
+
+ -- Peter Gervai <grin@Tolna.net>  Tue, 19 Mar 2002 00:29:44 +0100
+
+links-ssl (0.96.20011222-1.1) unstable; urgency=low
+
+  * Non-maintainer upload
+  * Fixes Build-Dependancy for lua-dev -> liblua4-dev (closes: #126290)
+    
+ -- Joel Baker <lucifer@lightbearer.com>  Sun, 17 Feb 2002 13:46:36 -0700
+
+links-ssl (0.96.20011225-1) unstable; urgency=low
+
+  * New upstream version (eLinks 0.2).
+  * Minor bugfixes, mostly cosmetics.
+
+ -- Peter Gervai <grin@Tolna.net>  Tue, 25 Dec 2001 02:29:05 +0100
+
+links-ssl (0.96.20011222-1) unstable; urgency=low
+
+  * Changed to packaging the actively developed branch of Links,
+    which includes Lua patches and other goodies. Unless it breaks
+    or behaves unacceptable I try to keep this packaged, as the original
+    release does not get its bugs fixed no matter what....
+  * Lots of bugfixes, see Changelog
+  * Fixed config file example of gif to use mime-type (closes: #125661)
+  
+ -- Peter Gervai <grin@Tolna.net>  Sat, 22 Dec 2001 01:22:51 +0100
+
+links-ssl (0.96-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Peter Gervai <grin@Tolna.net>  Wed,  4 Jul 2001 00:49:37 +0200
+
+links-ssl (0.95.1-3) unstable; urgency=low
+
+  * Changed links.desktop to links-ssl.desktop
+  * links-ssl now provides links (closes: #102600)
+
+ -- Peter Gervai <grin@Tolna.net>  Wed, 27 Jun 2001 21:10:41 +0200
+
+links-ssl (0.95.1-2) unstable; urgency=high
+
+  * Now everyone see I never tried KDE :) desktop file fixed 
+    (closes: #101964)
+
+ -- Peter Gervai <grin@Tolna.net>  Sat, 23 Jun 2001 12:17:50 +0200
+
+links-ssl (0.95.1-1) unstable; urgency=low
+
+  * New upstream version 0.96pre7
+  * Build depends libgpmg1-dev [!hurd-i386] (closes: #99961, #95977)
+  * Install KDE menu (closes: #96494)
+
+ -- Peter Gervai <grin@Tolna.net>  Fri,  8 Jun 2001 00:25:45 +0200
+
+links-ssl (0.95-3) unstable; urgency=low
+
+  * fixes SIGSEGV due ssl libs
+
+ -- Peter Gervai <grin@tolna.net>  Mon,  5 Mar 2001 14:28:17 +0100
+
+links-ssl (0.95-2) unstable; urgency=low
+
+  * Rebuilt using libssl096 (closes: #82079)
+  * Fixed build dependency on libssl096-dev and 
+    libgpmg1-dev (closes: #82080)
+  * Hopefully not killing the Bugfree(tm) katie install
+    mechanism by using consistent maintaner address. ;-)
+
+ -- Peter Gervai <grin@tolna.net>  Tue, 16 Jan 2001 19:58:19 +0100
+
+links-ssl (0.95-1) unstable; urgency=low
+
+  * New upstream version.
+  * build depends on debhelper (closes: #81231)
+
+ -- Peter Gervai <grin@Yikes.Tolna.net>  Thu,  4 Jan 2001 03:15:52 +0100
+
+links-ssl (0.94-0pre9) unstable; urgency=low
+
+  * New upstream version.
+  * Changelog split from links (-plain)
+  * Removed "unofficial" patches to match upstream version, as
+    the author seems to be working again and including submitted
+    patches to mainstream. (closes: #80005, #79853)
+  * Enter key now submits again (closes: #75225)
+  * Pathless URL's aren't cut (closes: #75546)
+  * Different xterm detection (closes: #79687)
+  * Updated manpage
+
+ -- Peter Gervai <grin@tolna.net>  Wed,  3 Jan 2001 19:00:58 +0100
+
+Local variables:
+mode: debian-changelog
+End:

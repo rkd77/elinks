@@ -1,0 +1,169 @@
+The Terminal Setup
+------------------
+
+ELinks uses neither (n)curses nor termcap/terminfo, so unless you are using
+a terminal that is known by ELinks and have a built-in configuration (see below
+for a list), it might be required that you do a little configuring of how your
+terminal should be handled.  The easiest way to do this is by using the Terminal
+Options dialog located in the Setup submenu of the Main menu.
+
+It is possible to have configurations for multiple terminals as long as the TERM
+environment variable -- used to distinguish terminals from one another -- is set
+to something different for each terminal.  So be sure to set TERM to different
+values for two terminals that cannot share the same configuration.  For example,
+always setting TERM to xterm-color can lead to problems if you run ELinks under
+the Linux console.  This is because the Linux console does not support
+underlining and ELinks will not know that underlined characters will have to be
+color highlighted so they stand out.
+
+In short, ELinks does not use termcap or terminfo.  ELinks uses $TERM, but only
+to distinguish between terminals in its own configuration.  That is, you need
+only configure your terminal within ELinks: Go to the Setup menu and select
+Terminal Options.  If $TERM is set to 'screen' when you configure ELinks'
+terminal settings, ELinks will remember to use those settings when $TERM is
+'screen'.
+
+
+Options
+~~~~~~~
+
+Apart from the last charset option configurable through the Setup -> Character
+Set submenu in the Main menu, the rest can be configured using the Terminal
+Options dialog.
+
+
+Terminal type
+^^^^^^^^^^^^^
+		
+It maps roughly to the terminal type, such as Linux console, XTerm, VT100 etc.
+It matters mostly when drawing frames and borders around dialog windows.  As
+already mentioned, it also turns on certain features which try to compensate for
+``missing'' terminal capabilities when drawing.  Special highlighting of
+underlined text if underlining is not supported is one such thing.
+
+`-----------------------`-----------------------------------------------------
+Type			Notes
+------------------------------------------------------------------------------
+No frames		Dumb terminal type / ASCII art
+VT 100 frames		Works in most terminals
+Linux or OS/2 frames	Linux console / you get double frames and other goodies
+KOI-8
+FreeBSD			FreeBSD console
+------------------------------------------------------------------------------
+
+The default is to assume dumb terminal/ASCII art.
+
+
+Color mode
+^^^^^^^^^^
+
+The color mode controls what colors are used and how they are output to the
+terminal.  The available color modes are:
+
+`-----------------------`-----------------------------------------------------
+Mode			Color codes
+------------------------------------------------------------------------------
+Mono mode		Only 2 colors are used
+16 color mode		Uses the common ANSI colors
+88 color mode		Uses XTerm RGB codes (if compiled in)
+256 color mode		Uses XTerm RGB codes (if compiled in)
+------------------------------------------------------------------------------
+
+The default is to use mono mode.
+
+
+Switch fonts for line drawing (aka 11m hack)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is related to the drawing of frames and window borders controlled by the
+option above.  It controls whether to switch fonts when drawing lines, enabling
+both local characters and lines working at the same time.
+
+This boolean option only makes sense with the Linux console.  Off by default.
+
+
+Restrict frames in cp850/852
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is related to the drawing of frames and window borders controlled by the
+option above.  If enabled, it restricts the characters used when drawing lines.
+
+This boolean option only makes sense with the Linux console using the cp850/852
+character sets.  Off by default.
+
+
+Block cursor
+^^^^^^^^^^^^
+
+Move cursor to the bottom right corner when done drawing, if possible.  This is
+particularly useful when we have a block cursor, so that text colors are
+displayed correctly.  If you are using a screen reader you do not want to enable
+this since the cursor is strategically positioned near relevant text of selected
+dialog elements.
+
+This boolean option is off by default.
+
+
+Transparency
+^^^^^^^^^^^^
+
+Determines whether or not to set the background to black.  This is particularly
+useful when using a terminal (typically in some windowing environment) with
+a background image or a transparent background.  If this option is enabled the
+background will be visible in ELinks as well.
+
+Note that this boolean option makes sense only when colors are enabled.  On by
+default.
+
+
+Text underlining capability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This boolean option controls whether to underline text or instead, enhance the
+color.
+
+Note: not all terminals support text underlining, so it is off by default.
+
+
+UTF-8 I/O
+^^^^^^^^^
+
+This boolean option controls outputting of I/O in UTF-8 for Unicode terminals.
+
+Note that currently, only a subset of UTF-8 according to the terminal
+codepage is used.  This is off by default.
+
+
+Character Set
+^^^^^^^^^^^^^
+
+Codepage of the charset used for displaying content on terminal.
+
+The value 'System' (which is the default) will set the charset according to the
+current locale.  The default is to use the charset of the current locale.
+
+
+Terminal Configurations
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Built-in configurations exists for the following terminals:
+
+ - linux
+ - vt100
+ - vt110
+ - xterm
+ - xterm-color
+ - xterm-88color
+ - xterm-256color
+
+The last two configurations requires that support for either 88 or 256 colors
+is compiled in to xterm.
+
+GNU Screen is VT100-compatible, so select 'VT 100 frames'.  GNU Screen also
+supports colors just fine, so select '16 colors', or, if you are running Screen
+within a terminal emulator that supports 256 colors and you have compiled both
+Screen and ELinks to support it, choose '256 colors'.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: terminals.txt,v 1.6 2005/06/15 20:08:14 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

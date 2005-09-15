@@ -1,0 +1,7441 @@
+# Swedish ELinks translation.
+# Copyright (C) Free Software Foundation, Inc.
+# Martin Norback <d95mback@dtek.chalmers.se>, 2000 - 2001
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ELinks 0.5pre0.CVS\n"
+"POT-Creation-Date: 2005-03-24 08:55+0100\n"
+"PO-Revision-Date: 2003-01-03 03:41+0100\n"
+"Last-Translator: Martin Norback <d95mback@dtek.chalmers.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+
+#: src/bfu/hierbox.c:348
+msgid "Close"
+msgstr "Stäng"
+
+#. | MSGBOX_SCROLLABLE
+#: src/bfu/hierbox.c:443 src/bfu/hierbox.c:452 src/dialogs/document.c:44
+#: src/dialogs/document.c:220
+msgid "Info"
+msgstr "Info"
+
+#: src/bfu/hierbox.c:444
+msgid "Press space to expand this folder."
+msgstr ""
+
+#: src/bfu/hierbox.c:455 src/bfu/inpfield.c:245 src/bfu/msgbox.c:175
+#: src/bfu/msgbox.c:192 src/config/dialogs.c:56 src/config/dialogs.c:404
+#: src/cookies/dialogs.c:356 src/dialogs/edit.c:98 src/dialogs/info.c:133
+#: src/dialogs/options.c:209 src/dialogs/options.c:289 src/mime/dialogs.c:130
+#: src/protocol/auth/dialogs.c:108 src/protocol/protocol.c:227
+#: src/sched/session.c:737 src/scripting/lua/core.c:395
+#: src/scripting/lua/core.c:476 src/viewer/text/search.c:1562
+#, fuzzy
+msgid "~OK"
+msgstr "Ok"
+
+#: src/bfu/hierbox.c:566
+#, c-format
+msgid "Sorry, but the item \"%s\" cannot be deleted."
+msgstr ""
+
+#: src/bfu/hierbox.c:567
+#, c-format
+msgid "Sorry, but the item \"%s\" is being used by something else."
+msgstr ""
+
+#. cant_delete_folder
+#: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:124
+#, c-format
+msgid "Sorry, but the folder \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_folder
+#: src/bfu/hierbox.c:571 src/bookmarks/dialogs.c:126
+#, c-format
+msgid "Sorry, but the folder \"%s\" is being used by something else."
+msgstr ""
+
+#: src/bfu/hierbox.c:636
+#, fuzzy
+msgid "Delete error"
+msgstr "Ta bort bokmärke"
+
+#: src/bfu/hierbox.c:730
+#, fuzzy
+msgid "Delete marked items"
+msgstr "Valfält"
+
+#: src/bfu/hierbox.c:731
+#, fuzzy
+msgid "Delete marked items?"
+msgstr "Valfält"
+
+#: src/bfu/hierbox.c:744 src/bfu/hierbox.c:780 src/bfu/hierbox.c:801
+#: src/bfu/hierbox.c:872 src/config/dialogs.c:817 src/dialogs/menu.c:126
+#: src/formhist/formhist.c:457 src/mime/dialogs.c:70 src/sched/task.c:267
+#: src/terminal/tab.c:191 src/terminal/tab.c:227
+#, fuzzy
+msgid "~Yes"
+msgstr "Ja"
+
+#: src/bfu/hierbox.c:745 src/bfu/hierbox.c:781 src/bfu/hierbox.c:802
+#: src/bfu/hierbox.c:873 src/config/dialogs.c:818 src/dialogs/menu.c:127
+#: src/formhist/formhist.c:458 src/mime/dialogs.c:71 src/sched/task.c:268
+#: src/terminal/tab.c:192 src/terminal/tab.c:228
+#, fuzzy
+msgid "~No"
+msgstr "Nej"
+
+#. delete_folder_title
+#: src/bfu/hierbox.c:765 src/bookmarks/dialogs.c:132
+#, fuzzy
+msgid "Delete folder"
+msgstr "Ta bort bokmärke"
+
+#: src/bfu/hierbox.c:766
+#, fuzzy, c-format
+msgid "Delete the folder \"%s\" and its content?"
+msgstr "Ta bort ändelse"
+
+#: src/bfu/hierbox.c:783
+#, fuzzy
+msgid "Delete item"
+msgstr "Ta bort"
+
+#: src/bfu/hierbox.c:784
+#, fuzzy, c-format
+msgid ""
+"Delete \"%s\"?\n"
+"\n"
+"%s"
+msgstr "Ta bort bokmärke"
+
+#: src/bfu/hierbox.c:841
+msgid "Clear all items"
+msgstr ""
+
+#: src/bfu/hierbox.c:842
+#, fuzzy
+msgid "Do you really want to remove all items?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:984
+#: src/viewer/text/search.c:992 src/viewer/text/search.c:1008
+#: src/viewer/text/search.c:1581
+msgid "Search"
+msgstr "Sök"
+
+#: src/bfu/hierbox.c:941 src/viewer/text/search.c:985
+#, fuzzy, c-format
+msgid "Search string '%s' not found"
+msgstr "Söksträng ej hittad"
+
+#: src/bfu/hierbox.c:970 src/config/dialogs.c:167 src/config/dialogs.c:370
+#: src/config/dialogs.c:486 src/cookies/dialogs.c:35 src/cookies/dialogs.c:350
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:391
+#: src/scripting/lua/core.c:392 src/scripting/lua/core.c:473
+msgid "Name"
+msgstr "Namn"
+
+#: src/bfu/inpfield.c:64 src/bfu/inpfield.c:71
+msgid "Bad number"
+msgstr "Felaktigt nummer"
+
+#: src/bfu/inpfield.c:65
+msgid "Number expected in field"
+msgstr "Väntade mig nummer i fältet"
+
+#: src/bfu/inpfield.c:73
+#, c-format
+msgid "Number should be in the range from %d to %d."
+msgstr ""
+
+#: src/bfu/inpfield.c:91
+msgid "Bad string"
+msgstr "Felaktig sträng"
+
+#: src/bfu/inpfield.c:92
+msgid "Empty string not allowed"
+msgstr "Tom sträng ej tillåten"
+
+#: src/bfu/inpfield.c:245 src/config/dialogs.c:405 src/cookies/dialogs.c:357
+#: src/dialogs/edit.c:102 src/dialogs/edit.c:105 src/dialogs/options.c:212
+#: src/dialogs/options.c:290 src/mime/dialogs.c:131
+#: src/protocol/auth/dialogs.c:109 src/sched/download.c:539
+#: src/sched/download.c:1122 src/scripting/lua/core.c:396
+#: src/scripting/lua/core.c:477 src/viewer/text/search.c:1563
+#, fuzzy
+msgid "~Cancel"
+msgstr "Avbryt"
+
+#: src/bfu/leds.c:73
+#, fuzzy
+msgid "Clock"
+msgstr "låst"
+
+#: src/bfu/leds.c:74
+msgid "Digital clock in the status bar."
+msgstr ""
+
+#: src/bfu/leds.c:76 src/bfu/leds.c:93 src/config/options.inc:1090
+#: src/config/options.inc:1097 src/ecmascript/ecmascript.c:41
+#: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:94
+#: src/mime/backend/mimetypes.c:53 src/ssl/ssl.c:81
+#, fuzzy
+msgid "Enable"
+msgstr "Namn"
+
+#: src/bfu/leds.c:78
+msgid "Whether to display a digital clock in the status bar."
+msgstr ""
+
+#: src/bfu/leds.c:80
+#, fuzzy
+msgid "Format"
+msgstr "Filsändning"
+
+#: src/bfu/leds.c:82
+msgid ""
+"Format string for the digital clock. See the strftime(3)\n"
+"manpage for details."
+msgstr ""
+
+#: src/bfu/leds.c:89
+msgid "LEDs"
+msgstr ""
+
+#: src/bfu/leds.c:91
+msgid "LEDs (visual indicators) options."
+msgstr ""
+
+#: src/bfu/leds.c:95
+msgid ""
+"Enable LEDs.\n"
+"These visual indicators will inform you about various states."
+msgstr ""
+
+#. name:
+#: src/bfu/leds.c:263 src/bfu/leds.c:302
+msgid "LED indicators"
+msgstr ""
+
+#: src/bfu/leds.c:264
+msgid ""
+"What the different LEDs indicate:\n"
+"\n"
+"[SIJP--]\n"
+" |||||`- Unused\n"
+" ||||`-- Unused\n"
+" |||`--- A JavaScript pop-up window was blocked\n"
+" ||`---- A JavaScript error has occured\n"
+" |`----- The state of insert mode for text-input form-fields\n"
+" |       'i' means modeless, 'I' means insert mode is on\n"
+" `------ Whether an SSL connection was used\n"
+"\n"
+"'-' generally indicates that the LED is off."
+msgstr ""
+
+#: src/bfu/menu.c:746
+#, fuzzy
+msgid "Search menu/"
+msgstr "Sök"
+
+#: src/bookmarks/backend/xbel.c:98
+msgid "read_bookmarks_xbel(): Error in XML_ParserCreate()"
+msgstr ""
+
+#: src/bookmarks/backend/xbel.c:109
+#, c-format
+msgid "read_bookmarks_xbel(): Error reading %s"
+msgstr ""
+
+#: src/bookmarks/backend/xbel.c:117
+#, c-format
+msgid ""
+"Parse error while processing XBEL bookmarks in %s at line %d column %d:\n"
+"%s"
+msgstr ""
+
+#: src/bookmarks/backend/xbel.c:391 src/bookmarks/backend/xbel.c:412
+msgid "No title"
+msgstr ""
+
+#: src/bookmarks/backend/xbel.c:397
+#, fuzzy
+msgid "No URL"
+msgstr "Gå till URL"
+
+#. name:
+#: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:187
+#, fuzzy
+msgid "Bookmarks"
+msgstr "Bokmärken"
+
+#: src/bookmarks/bookmarks.c:50
+#, fuzzy
+msgid "Bookmark options."
+msgstr "Bokmärken"
+
+#: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:59
+#, fuzzy
+msgid "File format"
+msgstr "Filsändning"
+
+#: src/bookmarks/bookmarks.c:55
+msgid ""
+"File format for bookmarks (affects both reading and saving):\n"
+"0 is the default native ELinks format\n"
+"1 is XBEL universal XML bookmarks format (NO NATIONAL CHARS SUPPORT!)"
+msgstr ""
+
+#: src/bookmarks/bookmarks.c:61
+msgid ""
+"File format for bookmarks (affects both reading and saving):\n"
+"0 is the default native ELinks format\n"
+"1 is XBEL universal XML bookmarks format (NO NATIONAL CHARS SUPPORT!)  "
+"(DISABLED)"
+msgstr ""
+
+#: src/bookmarks/bookmarks.c:67
+#, fuzzy
+msgid "Save folder state"
+msgstr "Skriv in länknummer"
+
+#: src/bookmarks/bookmarks.c:69
+msgid ""
+"When saving bookmarks also store whether folders are\n"
+"expanded or not, so the look of the bookmark dialog is\n"
+"kept across ELinks sessions. If disabled all folders will\n"
+"appear unexpanded next time ELinks is run."
+msgstr ""
+
+#: src/bookmarks/bookmarks.c:74
+msgid "Periodic snapshotting"
+msgstr ""
+
+#: src/bookmarks/bookmarks.c:76
+msgid ""
+"Automatically save a snapshot of all tabs periodically.\n"
+"This will periodically bookmark the tabs of each terminal in a separate "
+"folder\n"
+"for recovery after a crash.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+
+#: src/bookmarks/dialogs.c:75 src/config/options.inc:942
+#: src/dialogs/document.c:78 src/globhist/dialogs.c:66
+msgid "Title"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:76 src/cache/dialogs.c:65 src/dialogs/document.c:69
+#: src/dialogs/edit.c:96 src/formhist/dialogs.c:63 src/globhist/dialogs.c:67
+#: src/protocol/auth/dialogs.c:156 src/scripting/lua/core.c:393
+msgid "URL"
+msgstr "URL"
+
+#. cant_delete_item
+#: src/bookmarks/dialogs.c:120
+#, c-format
+msgid "Sorry, but the bookmark \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/bookmarks/dialogs.c:122
+#, c-format
+msgid "Sorry, but the bookmark \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/bookmarks/dialogs.c:128
+#, fuzzy
+msgid "Delete marked bookmarks"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/bookmarks/dialogs.c:130
+#, fuzzy
+msgid "Delete marked bookmarks?"
+msgstr "Valfält"
+
+#. delete_folder
+#: src/bookmarks/dialogs.c:134
+#, fuzzy, c-format
+msgid "Delete the folder \"%s\" and all bookmarks in it?"
+msgstr "Ta bort ändelse"
+
+#. delete_item_title
+#: src/bookmarks/dialogs.c:136
+#, fuzzy
+msgid "Delete bookmark"
+msgstr "Redigera bokmärke"
+
+#. delete_item
+#: src/bookmarks/dialogs.c:138
+msgid "Delete this bookmark?"
+msgstr ""
+
+#. clear_all_items_title
+#: src/bookmarks/dialogs.c:140
+#, fuzzy
+msgid "Clear all bookmarks"
+msgstr "Bokmärken"
+
+#. clear_all_items_title
+#: src/bookmarks/dialogs.c:142
+#, fuzzy
+msgid "Do you really want to remove all bookmarks?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/bookmarks/dialogs.c:275
+msgid "Add folder"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:275
+msgid "Folder name"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:331 src/scripting/lua/core.c:387
+msgid "Edit bookmark"
+msgstr "Redigera bokmärke"
+
+#: src/bookmarks/dialogs.c:467 src/cache/dialogs.c:220
+#: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:253
+#, fuzzy
+msgid "~Goto"
+msgstr "Gå till"
+
+#: src/bookmarks/dialogs.c:468 src/config/dialogs.c:509
+#: src/cookies/dialogs.c:423
+#, fuzzy
+msgid "~Edit"
+msgstr "Redigera"
+
+#: src/bookmarks/dialogs.c:469 src/cache/dialogs.c:221
+#: src/config/dialogs.c:511 src/config/dialogs.c:932 src/cookies/dialogs.c:424
+#: src/dialogs/menu.c:446 src/formhist/dialogs.c:211
+#: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:255
+msgid "~Delete"
+msgstr "Ta bort"
+
+#: src/bookmarks/dialogs.c:470 src/config/dialogs.c:510
+#: src/config/dialogs.c:931 src/cookies/dialogs.c:422 src/dialogs/menu.c:444
+msgid "~Add"
+msgstr "Lägg till"
+
+#: src/bookmarks/dialogs.c:471
+msgid "Add se~parator"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:472
+msgid "Add ~folder"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:473
+msgid "~Move"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:474 src/cache/dialogs.c:222
+#: src/config/dialogs.c:512 src/config/dialogs.c:934 src/dialogs/menu.c:397
+#: src/globhist/dialogs.c:230
+msgid "~Search"
+msgstr "~Sök"
+
+#. This one is too dangerous, so just let user delete
+#. * the bookmarks file if needed. --Zas
+#: src/bookmarks/dialogs.c:478
+msgid "Clear"
+msgstr ""
+
+#. TODO: Would this be useful? --jonas
+#: src/bookmarks/dialogs.c:481 src/globhist/dialogs.c:235
+msgid "Save"
+msgstr "Spara"
+
+#: src/bookmarks/dialogs.c:487
+msgid "Bookmark manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/bookmarks/dialogs.c:605
+msgid "Search bookmarks"
+msgstr ""
+
+#: src/bookmarks/dialogs.c:619
+msgid "Add bookmark"
+msgstr "Lägg till bokmärke"
+
+#: src/bookmarks/dialogs.c:650
+#, fuzzy
+msgid "Saved session"
+msgstr "~Spara alternativ"
+
+#: src/bookmarks/dialogs.c:658
+#, fuzzy
+msgid "Bookmark tabs"
+msgstr "Bokmärken"
+
+#: src/bookmarks/dialogs.c:658
+#, fuzzy
+msgid "Enter folder name"
+msgstr "Skriv in länknummer"
+
+#: src/cache/dialogs.c:72
+#, fuzzy
+msgid "Proxy URL"
+msgstr "Gå till URL"
+
+#: src/cache/dialogs.c:77
+msgid "Redirect"
+msgstr ""
+
+#: src/cache/dialogs.c:85 src/config/options.inc:496 src/dialogs/document.c:89
+msgid "Size"
+msgstr "Storlek"
+
+#: src/cache/dialogs.c:86
+msgid "Loaded size"
+msgstr ""
+
+#: src/cache/dialogs.c:89
+#, fuzzy
+msgid "Content type"
+msgstr "Innehållstyp är"
+
+#: src/cache/dialogs.c:93 src/dialogs/document.c:134
+msgid "Last modified"
+msgstr "Senast ändrad"
+
+#: src/cache/dialogs.c:101 src/dialogs/document.c:116
+msgid "SSL Cipher"
+msgstr ""
+
+#: src/cache/dialogs.c:105 src/dialogs/document.c:121
+msgid "Encoding"
+msgstr ""
+
+#: src/cache/dialogs.c:111
+msgid "Flags"
+msgstr ""
+
+#: src/cache/dialogs.c:114 src/dialogs/document.c:92
+msgid "incomplete"
+msgstr "ej komplett"
+
+#: src/cache/dialogs.c:117 src/protocol/auth/dialogs.c:175
+msgid "invalid"
+msgstr ""
+
+#: src/cache/dialogs.c:122
+msgid "ID"
+msgstr ""
+
+#: src/cache/dialogs.c:125 src/config/options.inc:615
+#, fuzzy
+msgid "Header"
+msgstr "Huvudinfo"
+
+#. cant_delete_item
+#: src/cache/dialogs.c:178
+#, c-format
+msgid "Sorry, but cache entry \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/cache/dialogs.c:180
+#, c-format
+msgid "Sorry, but cache entry \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/cache/dialogs.c:186
+#, fuzzy
+msgid "Delete marked cache entries"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/cache/dialogs.c:188
+#, fuzzy
+msgid "Delete marked cache entries?"
+msgstr "Valfält"
+
+#. delete_item_title
+#: src/cache/dialogs.c:194
+#, fuzzy
+msgid "Delete cache entry"
+msgstr "Ta bort bokmärke"
+
+#. delete_item
+#: src/cache/dialogs.c:196
+msgid "Delete this cache entry?"
+msgstr ""
+
+#: src/cache/dialogs.c:219 src/config/dialogs.c:508 src/cookies/dialogs.c:421
+#: src/dialogs/download.c:472 src/formhist/dialogs.c:210
+#: src/globhist/dialogs.c:225 src/protocol/auth/dialogs.c:254
+#, fuzzy
+msgid "~Info"
+msgstr "Info"
+
+#: src/cache/dialogs.c:227
+#, fuzzy
+msgid "Cache manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/cmdline.c:92
+#, fuzzy, c-format
+msgid "Cannot parse option %s: %s"
+msgstr "Fel vid skrivning till socket"
+
+#: src/config/cmdline.c:110
+#, fuzzy, c-format
+msgid "Unknown option %s"
+msgstr "uppkopplingar"
+
+#: src/config/cmdline.c:128 src/config/cmdline.c:152 src/config/cmdline.c:218
+#: src/config/opttypes.c:39
+msgid "Parameter expected"
+msgstr ""
+
+#: src/config/cmdline.c:153
+msgid "Too many parameters"
+msgstr ""
+
+#: src/config/cmdline.c:158
+#, fuzzy
+msgid "error"
+msgstr "Fel"
+
+#: src/config/cmdline.c:160 src/sched/error.c:47
+msgid "Host not found"
+msgstr "Värden hittades inte"
+
+#: src/config/cmdline.c:174
+#, fuzzy
+msgid "Resolver error"
+msgstr "Sparfel"
+
+#: src/config/cmdline.c:306
+msgid "Remote method not supported"
+msgstr ""
+
+#: src/config/cmdline.c:358
+msgid "Template option folder"
+msgstr ""
+
+#: src/config/cmdline.c:381
+#, c-format
+msgid "(default: %ld)"
+msgstr ""
+
+#: src/config/cmdline.c:388 src/config/cmdline.c:417
+#, c-format
+msgid "(default: \"%s\")"
+msgstr ""
+
+#: src/config/cmdline.c:393
+#, c-format
+msgid "(alias for %s)"
+msgstr ""
+
+#: src/config/cmdline.c:398 src/config/cmdline.c:407
+#, c-format
+msgid "(default: %s)"
+msgstr ""
+
+#: src/config/cmdline.c:541
+#, fuzzy
+msgid "Configuration options"
+msgstr "uppkopplingar"
+
+#: src/config/cmdline.c:545
+msgid "Usage: elinks [OPTION]... [URL]"
+msgstr ""
+
+#: src/config/cmdline.c:546
+#, fuzzy
+msgid "Options"
+msgstr "~Spara alternativ"
+
+#: src/config/cmdline.c:588
+#, fuzzy
+msgid "Internal consistency error"
+msgstr "Internt fel"
+
+#: src/config/cmdline.c:605
+msgid "Restrict to anonymous mode"
+msgstr ""
+
+#: src/config/cmdline.c:607
+msgid ""
+"Restricts ELinks so it can run on an anonymous account.\n"
+"Local file browsing, downloads, and modification of options\n"
+"will be disabled. Execution of viewers is allowed, but entries\n"
+"in the association table can't be added or modified."
+msgstr ""
+
+#: src/config/cmdline.c:612
+#, fuzzy
+msgid "Autosubmit first form"
+msgstr "~Skicka formulär"
+
+#: src/config/cmdline.c:614
+msgid "Automatically submit the first form in the given URLs."
+msgstr ""
+
+#: src/config/cmdline.c:616
+msgid "Clone internal session with given ID"
+msgstr ""
+
+#: src/config/cmdline.c:618
+msgid ""
+"Used internally when opening ELinks instances in new windows.\n"
+"The ID maps to information that will be used when creating the\n"
+"new instance. You don't want to use it."
+msgstr ""
+
+#: src/config/cmdline.c:624
+msgid "Name of directory with configuration file"
+msgstr ""
+
+#: src/config/cmdline.c:626
+msgid ""
+"Path of the directory ELinks will read and write its\n"
+"config and runtime state files to instead of ~/.elinks.\n"
+"If the path does not begin with a '/' it is assumed to be\n"
+"relative to your HOME directory."
+msgstr ""
+
+#: src/config/cmdline.c:633
+msgid "Name of configuration file"
+msgstr ""
+
+#: src/config/cmdline.c:635
+msgid ""
+"Name of the configuration file that all configuration\n"
+"options will be read from and written to. It should be\n"
+"relative to config-dir."
+msgstr ""
+
+#: src/config/cmdline.c:639
+msgid "Print help for configuration options"
+msgstr ""
+
+#: src/config/cmdline.c:641
+msgid "Print help for configuration options and exit."
+msgstr ""
+
+#: src/config/cmdline.c:643
+msgid "MIME type assumed for unknown document types"
+msgstr ""
+
+#: src/config/cmdline.c:645
+msgid "The default MIME type used for documents of unknown type."
+msgstr ""
+
+#: src/config/cmdline.c:647
+msgid "Ignore user-defined keybindings"
+msgstr ""
+
+#: src/config/cmdline.c:649
+msgid ""
+"When set, all keybindings from configuration files will be\n"
+"ignored. It forces use of default keybindings and will reset\n"
+"user-defined ones on save."
+msgstr ""
+
+#: src/config/cmdline.c:653
+msgid "Print formatted versions of given URLs to stdout"
+msgstr ""
+
+#: src/config/cmdline.c:655
+msgid "Print formatted plain-text versions of given URLs to stdout."
+msgstr ""
+
+#: src/config/cmdline.c:657
+msgid "Codepage to use with -dump"
+msgstr ""
+
+#: src/config/cmdline.c:659
+msgid "Codepage used when formatting dump output."
+msgstr ""
+
+#: src/config/cmdline.c:661
+msgid "Width of document formatted with -dump"
+msgstr ""
+
+#: src/config/cmdline.c:663
+msgid "Width of the dump output."
+msgstr ""
+
+#: src/config/cmdline.c:665
+msgid "Evaluate configuration file directive"
+msgstr ""
+
+#: src/config/cmdline.c:667
+msgid ""
+"Specify configuration file directives on the command-line\n"
+"which will be evaluated after all configuration files has been\n"
+"read. Example usage:\n"
+"\t-eval 'set protocol.file.allow_special_files = 1'"
+msgstr ""
+
+#. lynx compatibility
+#: src/config/cmdline.c:673
+msgid "Interpret documents of unknown types as HTML"
+msgstr ""
+
+#: src/config/cmdline.c:675
+msgid ""
+"Makes ELinks assume documents of unknown types are HTML.\n"
+"Useful when using ELinks as an external viewer from MUAs.\n"
+"This is equivalent to -default-mime-type text/html."
+msgstr ""
+
+#: src/config/cmdline.c:685
+msgid "Print usage help and exit"
+msgstr ""
+
+#: src/config/cmdline.c:687
+msgid "Print usage help and exit."
+msgstr ""
+
+#: src/config/cmdline.c:689
+msgid "Only permit local connections"
+msgstr ""
+
+#: src/config/cmdline.c:691
+msgid ""
+"Restricts ELinks to work offline and only connect to servers\n"
+"with local addresses (ie. 127.0.0.1). No connections to remote\n"
+"servers will be permitted."
+msgstr ""
+
+#: src/config/cmdline.c:695
+msgid "Print detailed usage help and exit"
+msgstr ""
+
+#: src/config/cmdline.c:697
+msgid "Print detailed usage help and exit."
+msgstr ""
+
+#: src/config/cmdline.c:699
+#, fuzzy
+msgid "Look up specified host"
+msgstr "Inget program angett för"
+
+#: src/config/cmdline.c:701
+msgid "Look up specified host and print all DNS resolved IP addresses."
+msgstr ""
+
+#: src/config/cmdline.c:703
+msgid "Run as separate instance"
+msgstr ""
+
+#: src/config/cmdline.c:705
+msgid ""
+"Run ELinks as a separate instance instead of connecting to an\n"
+"existing instance. Note that normally no runtime state files\n"
+"(bookmarks, history, etc.) are written to the disk when this\n"
+"option is used. See also -touch-files."
+msgstr ""
+
+#: src/config/cmdline.c:710
+msgid "Disable use of files in ~/.elinks"
+msgstr ""
+
+#: src/config/cmdline.c:712
+msgid ""
+"Disables creation and use of files in the user specific home\n"
+"configuration directory (~/.elinks). It forces default configuration\n"
+"values to be used and disables saving of runtime state files."
+msgstr ""
+
+#: src/config/cmdline.c:716
+msgid "Disable link numbering in dump output"
+msgstr ""
+
+#: src/config/cmdline.c:718
+msgid ""
+"Prevents printing of link number in dump output.\n"
+"Note that this really affects only -dump, nothing else."
+msgstr ""
+
+#: src/config/cmdline.c:721
+msgid "Disable printing of link references in dump output"
+msgstr ""
+
+#: src/config/cmdline.c:723
+msgid ""
+"Prevents printing of references (URIs) of document links\n"
+"in dump output.\n"
+"Note that this really affects only -dump, nothing else."
+msgstr ""
+
+#: src/config/cmdline.c:727
+msgid "Control an already running ELinks"
+msgstr ""
+
+#: src/config/cmdline.c:729
+msgid ""
+"Control a remote ELinks instance by passing commands to it.\n"
+"The option takes an additional argument containing the method\n"
+"which should be invoked and any parameters that should be passed\n"
+"to it. For ease of use, the additional method argument can be\n"
+"omitted in which case any URL arguments will be opened in new\n"
+"tabs in the remote instance.\n"
+"Following is a list of the supported methods:\n"
+"\tping()                    : look for a remote instance\n"
+"\topenURL()                 : prompt URL in current tab\n"
+"\topenURL(URL)              : open URL in current tab\n"
+"\topenURL(URL, new-tab)     : open URL in new tab\n"
+"\topenURL(URL, new-window)  : open URL in new window\n"
+"\taddBookmark(URL)          : bookmark URL\n"
+"\txfeDoCommand(openBrowser) : open new window"
+msgstr ""
+
+#: src/config/cmdline.c:744
+msgid "Connect to session ring with given ID"
+msgstr ""
+
+#: src/config/cmdline.c:746
+msgid ""
+"ID of session ring this ELinks session should connect to. ELinks\n"
+"works in so-called session rings, whereby all instances of ELinks\n"
+"are interconnected and share state (cache, bookmarks, cookies,\n"
+"and so on). By default, all ELinks instances connect to session\n"
+"ring 0. You can change that behaviour with this switch and form as\n"
+"many session rings as you want. Obviously, if the session-ring with\n"
+"this number doesn't exist yet, it's created and this ELinks instance\n"
+"will become the master instance (that usually doesn't matter for you\n"
+"as a user much). Note that you usually don't want to use this unless\n"
+"you're a developer and you want to do some testing - if you want the\n"
+"ELinks instances each running standalone, rather use the -no-connect\n"
+"command-line option. Also note that normally no runtime state files\n"
+"are written to the disk when this option is used. See also\n"
+"-touch-files."
+msgstr ""
+
+#: src/config/cmdline.c:761
+msgid "Print the source of given URLs to stdout"
+msgstr ""
+
+#: src/config/cmdline.c:763
+msgid "Print given URLs in source form to stdout."
+msgstr ""
+
+#: src/config/cmdline.c:767
+msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
+msgstr ""
+
+#: src/config/cmdline.c:769
+msgid ""
+"When enabled, runtime state files (bookmarks, history, etc.) are\n"
+"written to disk, even when -no-connect or -session-ring is used.\n"
+"The option has no effect if not used in conjunction with any of\n"
+"these options."
+msgstr ""
+
+#: src/config/cmdline.c:774
+msgid "Verbose level"
+msgstr ""
+
+#: src/config/cmdline.c:776
+msgid ""
+"The verbose level controls what messages are shown at\n"
+"start up and while running:\n"
+"\t0 means only show serious errors\n"
+"\t1 means show serious errors and warnings\n"
+"\t2 means show all messages"
+msgstr ""
+
+#: src/config/cmdline.c:782
+msgid "Print version information and exit"
+msgstr ""
+
+#: src/config/cmdline.c:784
+msgid "Print ELinks version information and exit."
+msgstr ""
+
+#: src/config/conf.c:699
+msgid ""
+"## This is ELinks configuration file. You can edit it manually,\n"
+"## if you wish so; this file is edited by ELinks when you save\n"
+"## options through UI, however only option values will be altered\n"
+"## and all your formatting, own comments etc will be kept as-is.\n"
+msgstr ""
+
+#: src/config/conf.c:707
+msgid ""
+"## This is ELinks configuration file. You can edit it manually,\n"
+"## if you wish so; this file is edited by ELinks when you save\n"
+"## options through UI, however only option values will be altered\n"
+"## and missing options will be added at the end of file; if option\n"
+"## is not written in this file, but in some file included from it,\n"
+"## it is NOT counted as missing. Note that all your formatting,\n"
+"## own comments and so on will be kept as-is.\n"
+msgstr ""
+
+#: src/config/conf.c:717
+msgid ""
+"## This is ELinks configuration file. You can edit it manually,\n"
+"## if you wish so, but keep in mind that this file is overwritten\n"
+"## by ELinks when you save options through UI and you are out of\n"
+"## luck with your formatting and own comments then, so beware.\n"
+msgstr ""
+
+#: src/config/conf.c:728
+msgid ""
+"## Obviously, if you don't like what ELinks is going to do with\n"
+"## this file, you can change it by altering the config.saving_style\n"
+"## option. Come on, aren't we friendly guys after all?\n"
+msgstr ""
+
+#: src/config/conf.c:741
+msgid "Automatically saved options\n"
+msgstr ""
+
+#: src/config/conf.c:753
+msgid "Automatically saved keybindings\n"
+msgstr ""
+
+#: src/config/dialogs.c:52
+msgid "Write config success"
+msgstr ""
+
+#: src/config/dialogs.c:53
+#, c-format
+msgid "Options were saved successfully to config file %s."
+msgstr ""
+
+#: src/config/dialogs.c:57
+msgid "~Do not show anymore"
+msgstr ""
+
+#: src/config/dialogs.c:63
+#, fuzzy
+msgid "Cannot read the file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/config/dialogs.c:66
+#, fuzzy
+msgid "Cannot get file status"
+msgstr "Kan inte se sockettillstånd"
+
+#: src/config/dialogs.c:69
+#, fuzzy
+msgid "Cannot access the file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/config/dialogs.c:72
+#, fuzzy
+msgid "Cannot create temp file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/config/dialogs.c:75
+#, fuzzy
+msgid "Cannot rename the file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/config/dialogs.c:78
+msgid "File saving disabled by option"
+msgstr ""
+
+#: src/config/dialogs.c:81 src/sched/error.c:46
+msgid "Out of memory"
+msgstr "Slut på minne"
+
+#: src/config/dialogs.c:84
+#, fuzzy
+msgid "Cannot write the file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/config/dialogs.c:89
+#, fuzzy
+msgid "Secure file saving error"
+msgstr "FTP filfel"
+
+#: src/config/dialogs.c:97
+#, fuzzy
+msgid "Write config error"
+msgstr "Konfigurationsfel"
+
+#: src/config/dialogs.c:98
+#, fuzzy, c-format
+msgid ""
+"Unable to write to config file %s.\n"
+"%s"
+msgstr "Kan inte skriva till konfigurationsfilen"
+
+#: src/config/dialogs.c:153
+#, fuzzy
+msgid "modified"
+msgstr "Data modifierad"
+
+#: src/config/dialogs.c:172
+msgid "(expand by pressing space)"
+msgstr ""
+
+#: src/config/dialogs.c:175 src/config/dialogs.c:371
+#: src/config/options.inc:751
+msgid "Type"
+msgstr ""
+
+#: src/config/dialogs.c:200 src/config/dialogs.c:400 src/cookies/dialogs.c:36
+#: src/cookies/dialogs.c:351
+#, fuzzy
+msgid "Value"
+msgstr "Värde"
+
+#: src/config/dialogs.c:204
+msgid ""
+"\n"
+"\n"
+"This value has been changed since you last saved your configuration."
+msgstr ""
+
+#: src/config/dialogs.c:210 src/config/dialogs.c:375
+msgid "N/A"
+msgstr ""
+
+#: src/config/dialogs.c:212 src/config/dialogs.c:373
+msgid "Description"
+msgstr ""
+
+#: src/config/dialogs.c:333 src/protocol/protocol.c:221
+#: src/sched/session.c:235 src/viewer/text/textarea.c:362
+#: src/viewer/text/textarea.c:369
+msgid "Error"
+msgstr "Fel"
+
+#: src/config/dialogs.c:334
+msgid "Bad option value."
+msgstr ""
+
+#: src/config/dialogs.c:361 src/config/dialogs.c:429 src/cookies/dialogs.c:323
+msgid "Edit"
+msgstr "Redigera"
+
+#: src/config/dialogs.c:430
+msgid ""
+"This option cannot be edited. This means that this is some special option "
+"like a folder - try to press a space in order to see its contents."
+msgstr ""
+
+#: src/config/dialogs.c:466 src/config/dialogs.c:486
+msgid "Add option"
+msgstr ""
+
+#: src/config/dialogs.c:467
+msgid "Cannot add an option here."
+msgstr ""
+
+#: src/config/dialogs.c:513 src/config/dialogs.c:935 src/cookies/dialogs.c:426
+#: src/dialogs/options.c:211 src/formhist/dialogs.c:214
+#: src/sched/download.c:1106
+#, fuzzy
+msgid "Sa~ve"
+msgstr "Spara"
+
+#: src/config/dialogs.c:518
+#, fuzzy
+msgid "Option manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/dialogs.c:684
+msgid "Keystroke"
+msgstr ""
+
+#: src/config/dialogs.c:686 src/config/options.inc:1110
+msgid "Action"
+msgstr ""
+
+#: src/config/dialogs.c:687
+msgid "Keymap"
+msgstr ""
+
+#: src/config/dialogs.c:811
+msgid "Keystroke already used"
+msgstr ""
+
+#: src/config/dialogs.c:812
+#, c-format
+msgid ""
+"The keystroke \"%s\" is currently used for \"%s\".\n"
+"Are you sure you want to replace it?"
+msgstr ""
+
+#: src/config/dialogs.c:835 src/config/dialogs.c:852 src/config/dialogs.c:896
+msgid "Add keybinding"
+msgstr ""
+
+#: src/config/dialogs.c:836
+msgid "Invalid keystroke."
+msgstr ""
+
+#: src/config/dialogs.c:853
+msgid "Need to select a keymap."
+msgstr ""
+
+#: src/config/dialogs.c:933 src/dialogs/info.c:134 src/globhist/dialogs.c:231
+#, fuzzy
+msgid "~Toggle display"
+msgstr "Växla ~HTML/text"
+
+#: src/config/dialogs.c:940
+msgid "Keybinding manager"
+msgstr ""
+
+#: src/config/kbdbind.c:257
+msgid "Main mapping"
+msgstr ""
+
+#: src/config/kbdbind.c:258
+msgid "Edit mapping"
+msgstr ""
+
+#: src/config/kbdbind.c:259
+msgid "Menu mapping"
+msgstr ""
+
+#: src/config/kbdbind.c:430 src/config/kbdbind.c:550 src/config/kbdbind.c:581
+#, fuzzy
+msgid "Do nothing"
+msgstr "Hämta"
+
+#. internal use only
+#: src/config/kbdbind.c:432
+#, fuzzy
+msgid "Abort connection"
+msgstr "uppkopplingar"
+
+#: src/config/kbdbind.c:433
+#, fuzzy
+msgid "Add a new bookmark"
+msgstr "Lägg till bokmärke"
+
+#: src/config/kbdbind.c:434
+msgid "Add a new bookmark using current link"
+msgstr ""
+
+#: src/config/kbdbind.c:435
+#, fuzzy
+msgid "Bookmark all open tabs"
+msgstr "Bokmärken"
+
+#: src/config/kbdbind.c:436
+#, fuzzy
+msgid "Open authentication manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/kbdbind.c:437
+#, fuzzy
+msgid "Open bookmark manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/kbdbind.c:438
+#, fuzzy
+msgid "Open cache manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/kbdbind.c:439
+msgid "Free unused cache entries"
+msgstr ""
+
+#: src/config/kbdbind.c:440
+#, fuzzy
+msgid "Open cookie manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/config/kbdbind.c:441
+msgid "Reload cookies file"
+msgstr ""
+
+#: src/config/kbdbind.c:442 src/config/kbdbind.c:557
+msgid "Copy text to clipboard"
+msgstr ""
+
+#: src/config/kbdbind.c:443
+#, fuzzy
+msgid "Show information about the current page"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:444
+#, fuzzy
+msgid "Open download manager"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:445
+msgid "Enter ex-mode (command line)"
+msgstr ""
+
+#: src/config/kbdbind.c:446
+msgid "Open the File menu"
+msgstr ""
+
+#: src/config/kbdbind.c:447
+msgid "Find the next occurrence of the current search text"
+msgstr ""
+
+#: src/config/kbdbind.c:448
+msgid "Find the previous occurrence of the current search text"
+msgstr ""
+
+#: src/config/kbdbind.c:449
+msgid "Forget authentication credentials"
+msgstr ""
+
+#: src/config/kbdbind.c:450
+#, fuzzy
+msgid "Open form history manager"
+msgstr "Slut på minne"
+
+#: src/config/kbdbind.c:451
+msgid "Pass URI of current frame to external command"
+msgstr ""
+
+#: src/config/kbdbind.c:452
+msgid "Maximize the current frame"
+msgstr ""
+
+#: src/config/kbdbind.c:453
+msgid "Move to the next frame"
+msgstr ""
+
+#: src/config/kbdbind.c:454
+msgid "Move to the previous frame"
+msgstr ""
+
+#: src/config/kbdbind.c:455
+msgid "Open \"Go to URL\" dialog box"
+msgstr ""
+
+#: src/config/kbdbind.c:456
+msgid "Open \"Go to URL\" dialog box containing the current URL"
+msgstr ""
+
+#: src/config/kbdbind.c:457
+msgid "Open \"Go to URL\" dialog box containing the current link URL"
+msgstr ""
+
+#: src/config/kbdbind.c:458
+msgid "Go to the homepage"
+msgstr ""
+
+#: src/config/kbdbind.c:459
+#, fuzzy
+msgid "Show information about the current page protocol headers"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:460
+msgid "Open history manager"
+msgstr ""
+
+#: src/config/kbdbind.c:461
+msgid "Return to the previous document in history"
+msgstr ""
+
+#: src/config/kbdbind.c:462
+#, fuzzy
+msgid "Go forward in history"
+msgstr "Ingen historik"
+
+#: src/config/kbdbind.c:463
+#, fuzzy
+msgid "Jump to link"
+msgstr "Gå till länk"
+
+#: src/config/kbdbind.c:464
+msgid "Open keybinding manager"
+msgstr ""
+
+#: src/config/kbdbind.c:465
+#, fuzzy
+msgid "Kill all backgrounded connections"
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/kbdbind.c:466
+#, fuzzy
+msgid "Download the current link"
+msgstr "Hämta länk"
+
+#: src/config/kbdbind.c:467
+#, fuzzy
+msgid "Download the current image"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:468
+msgid "Attempt to resume download of the current link"
+msgstr ""
+
+#: src/config/kbdbind.c:469
+msgid "Pass URI of current link to external command"
+msgstr ""
+
+#: src/config/kbdbind.c:470 src/config/kbdbind.c:563 src/config/kbdbind.c:587
+#, fuzzy
+msgid "Follow the current link"
+msgstr "~Följ länk"
+
+#: src/config/kbdbind.c:471
+msgid "Follow the current link, forcing reload of the target"
+msgstr ""
+
+#: src/config/kbdbind.c:472
+msgid "Open the link context menu"
+msgstr ""
+
+#: src/config/kbdbind.c:474
+msgid "Open a Lua console"
+msgstr ""
+
+#: src/config/kbdbind.c:476
+msgid "Open a Lua console (DISABLED)"
+msgstr ""
+
+#: src/config/kbdbind.c:478
+msgid "Go at a specified mark"
+msgstr ""
+
+#: src/config/kbdbind.c:479
+msgid "Set a mark"
+msgstr ""
+
+#: src/config/kbdbind.c:480
+msgid "Activate the menu"
+msgstr ""
+
+#: src/config/kbdbind.c:481
+#, fuzzy
+msgid "Move cursor down"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:482
+#, fuzzy
+msgid "Move cursor left"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:483
+#, fuzzy
+msgid "Move cursor right"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:484
+#, fuzzy
+msgid "Move cursor up"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:485
+#, fuzzy
+msgid "Move to the end of the document"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:486
+#, fuzzy
+msgid "Move to the start of the document"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:487
+#, fuzzy
+msgid "Move one link down"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:488
+#, fuzzy
+msgid "Move one link left"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:489
+#, fuzzy
+msgid "Move to the next link"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:490
+#, fuzzy
+msgid "Move to the previous link"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:491
+#, fuzzy
+msgid "Move one link right"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:492
+#, fuzzy
+msgid "Move one link up"
+msgstr "Gå till länk"
+
+#: src/config/kbdbind.c:493 src/config/kbdbind.c:593
+msgid "Move downwards by a page"
+msgstr ""
+
+#: src/config/kbdbind.c:494 src/config/kbdbind.c:594
+msgid "Move upwards by a page"
+msgstr ""
+
+#: src/config/kbdbind.c:495
+#, fuzzy
+msgid "Open the current link in a new tab"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:496
+#, fuzzy
+msgid "Open the current link a new tab in background"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:497
+#, fuzzy
+msgid "Open the current link in a new window"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:498
+#, fuzzy
+msgid "Open a new tab"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:499
+#, fuzzy
+msgid "Open a new tab in background"
+msgstr "Bakgrund"
+
+#: src/config/kbdbind.c:500
+#, fuzzy
+msgid "Open a new window"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:501
+#, fuzzy
+msgid "Open an OS shell"
+msgstr "Kommandot~olk"
+
+#: src/config/kbdbind.c:502
+msgid "Open options manager"
+msgstr ""
+
+#: src/config/kbdbind.c:503
+msgid "Open a quit confirmation dialog box"
+msgstr ""
+
+#: src/config/kbdbind.c:504
+#, fuzzy
+msgid "Quit without confirmation"
+msgstr "Väntar på bekräftelse av omdirigering"
+
+#: src/config/kbdbind.c:505 src/config/kbdbind.c:572 src/config/kbdbind.c:596
+#, fuzzy
+msgid "Redraw the terminal"
+msgstr "Ändra storlek på ~terminal"
+
+#: src/config/kbdbind.c:506
+msgid "Reload the current page"
+msgstr ""
+
+#: src/config/kbdbind.c:507
+#, fuzzy
+msgid "Re-render the current page"
+msgstr "V~isa bild"
+
+#: src/config/kbdbind.c:508
+msgid "Reset form items to their initial values"
+msgstr ""
+
+#: src/config/kbdbind.c:509
+#, fuzzy
+msgid "Show information about the currently used resources"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:510
+msgid "Save the current document in source form"
+msgstr ""
+
+#: src/config/kbdbind.c:511
+msgid "Save the current document in formatted form"
+msgstr ""
+
+#: src/config/kbdbind.c:512
+#, fuzzy
+msgid "Save options"
+msgstr "~Spara alternativ"
+
+#: src/config/kbdbind.c:513
+#, fuzzy
+msgid "Save URL as"
+msgstr "Spara ~URL som"
+
+#: src/config/kbdbind.c:514
+msgid "Scroll down"
+msgstr ""
+
+#: src/config/kbdbind.c:515
+msgid "Scroll left"
+msgstr ""
+
+#: src/config/kbdbind.c:516
+msgid "Scroll right"
+msgstr ""
+
+#: src/config/kbdbind.c:517
+msgid "Scroll up"
+msgstr ""
+
+#: src/config/kbdbind.c:518 src/config/kbdbind.c:598
+#, fuzzy
+msgid "Search for a text pattern"
+msgstr "Sök efter text"
+
+#: src/config/kbdbind.c:519
+#, fuzzy
+msgid "Search backwards for a text pattern"
+msgstr "Sök efter text"
+
+#: src/config/kbdbind.c:520 src/config/kbdbind.c:521
+msgid "Search link text by typing ahead"
+msgstr ""
+
+#: src/config/kbdbind.c:522
+msgid "Search document text by typing ahead"
+msgstr ""
+
+#: src/config/kbdbind.c:523
+msgid "Search document text backwards by typing ahead"
+msgstr ""
+
+#: src/config/kbdbind.c:524
+#, fuzzy
+msgid "Show terminal options dialog"
+msgstr "Terminalalternativ"
+
+#: src/config/kbdbind.c:525
+#, fuzzy
+msgid "Submit form"
+msgstr "~Skicka formulär"
+
+#: src/config/kbdbind.c:526
+#, fuzzy
+msgid "Submit form and reload"
+msgstr "Skicka formulär och hämta"
+
+#: src/config/kbdbind.c:527 src/terminal/tab.c:188 src/terminal/tab.c:224
+#, fuzzy
+msgid "Close tab"
+msgstr "Stäng"
+
+#: src/config/kbdbind.c:528
+#, fuzzy
+msgid "Close all tabs but the current one"
+msgstr "Hämta bild"
+
+#: src/config/kbdbind.c:529
+msgid "Pass URI of current tab to external command"
+msgstr ""
+
+#: src/config/kbdbind.c:530
+#, fuzzy
+msgid "Open the tab menu"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:531
+#, fuzzy
+msgid "Move the current tab to the left"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:532
+#, fuzzy
+msgid "Move the current tab to the right"
+msgstr "Öppna i nytt fönster"
+
+#: src/config/kbdbind.c:533
+msgid "Next tab"
+msgstr ""
+
+#: src/config/kbdbind.c:534
+#, fuzzy
+msgid "Previous tab"
+msgstr "Ingen tidigare sökning"
+
+#: src/config/kbdbind.c:535
+#, fuzzy
+msgid "Open the terminal resize dialog"
+msgstr "Terminalalternativ"
+
+#: src/config/kbdbind.c:536
+msgid "Toggle rendering of page using CSS"
+msgstr ""
+
+#: src/config/kbdbind.c:537
+msgid "Toggle displaying of links to images"
+msgstr ""
+
+#: src/config/kbdbind.c:538
+msgid "Toggle rendering of tables"
+msgstr ""
+
+#: src/config/kbdbind.c:539
+msgid "Toggle usage of document specific colors"
+msgstr ""
+
+#: src/config/kbdbind.c:540
+msgid "Toggle rendering page as HTML / plain text"
+msgstr ""
+
+#: src/config/kbdbind.c:541
+msgid "Toggle displaying of links numbers"
+msgstr ""
+
+#: src/config/kbdbind.c:542
+msgid "Toggle plain renderer compression of empty lines"
+msgstr ""
+
+#: src/config/kbdbind.c:543
+#, fuzzy
+msgid "Toggle wrapping of text"
+msgstr "Växla ~HTML/text"
+
+#: src/config/kbdbind.c:544
+#, fuzzy
+msgid "View the current image"
+msgstr "V~isa bild"
+
+#. internal use only
+#: src/config/kbdbind.c:552
+msgid "Attempt to auto-complete the input"
+msgstr ""
+
+#: src/config/kbdbind.c:553
+msgid "Attempt to unambiguously auto-complete the input"
+msgstr ""
+
+#: src/config/kbdbind.c:554
+msgid "Delete character in front of the cursor"
+msgstr ""
+
+#: src/config/kbdbind.c:555
+msgid "Go to the first line of the buffer"
+msgstr ""
+
+#. internal use only
+#: src/config/kbdbind.c:556 src/config/kbdbind.c:583
+#, fuzzy
+msgid "Cancel current state"
+msgstr "Kan inte se sockettillstånd"
+
+#: src/config/kbdbind.c:558
+msgid "Delete text from clipboard"
+msgstr ""
+
+#: src/config/kbdbind.c:559 src/config/kbdbind.c:584
+msgid "Delete character under cursor"
+msgstr ""
+
+#: src/config/kbdbind.c:560 src/config/kbdbind.c:585
+msgid "Move cursor downwards"
+msgstr ""
+
+#: src/config/kbdbind.c:561 src/config/kbdbind.c:586
+msgid "Go to the end of the page/line"
+msgstr ""
+
+#: src/config/kbdbind.c:562
+msgid "Go to the last line of the buffer"
+msgstr ""
+
+#: src/config/kbdbind.c:564 src/config/kbdbind.c:589
+msgid "Go to the start of the page/line"
+msgstr ""
+
+#: src/config/kbdbind.c:565
+#, fuzzy
+msgid "Delete to beginning of line"
+msgstr "Ta bort ändelse"
+
+#: src/config/kbdbind.c:566
+#, fuzzy
+msgid "Delete to end of line"
+msgstr "Ta bort ändelse"
+
+#: src/config/kbdbind.c:567 src/config/kbdbind.c:590
+#, fuzzy
+msgid "Move the cursor left"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:568 src/config/kbdbind.c:592
+msgid "Move to the next item"
+msgstr ""
+
+#: src/config/kbdbind.c:569
+msgid "Open in external editor"
+msgstr ""
+
+#: src/config/kbdbind.c:570
+msgid "Paste text from the clipboard"
+msgstr ""
+
+#: src/config/kbdbind.c:571 src/config/kbdbind.c:595
+#, fuzzy
+msgid "Move to the previous item"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:573 src/config/kbdbind.c:597
+#, fuzzy
+msgid "Move the cursor right"
+msgstr "Fylld markör"
+
+#: src/config/kbdbind.c:574
+msgid "Toggle regex matching (type-ahead searching)"
+msgstr ""
+
+#: src/config/kbdbind.c:575 src/config/kbdbind.c:601
+msgid "Move cursor upwards"
+msgstr ""
+
+#: src/config/kbdbind.c:588
+#, fuzzy
+msgid "Expand item"
+msgstr "Namn"
+
+#: src/config/kbdbind.c:591
+#, fuzzy
+msgid "Mark item"
+msgstr "Valfält"
+
+#: src/config/kbdbind.c:599
+msgid "Select current highlighted item"
+msgstr ""
+
+#: src/config/kbdbind.c:600
+#, fuzzy
+msgid "Collapse item"
+msgstr "Använd tid"
+
+#: src/config/kbdbind.c:667
+msgid "Unrecognised keymap"
+msgstr ""
+
+#: src/config/kbdbind.c:669
+#, fuzzy
+msgid "Error parsing keystroke"
+msgstr "Fel vid skrivning till socket"
+
+#: src/config/kbdbind.c:671
+msgid "Unrecognised action (internal error)"
+msgstr ""
+
+#: src/config/options.inc:19
+msgid "Configuration system"
+msgstr ""
+
+#: src/config/options.inc:21
+msgid "Configuration handling options."
+msgstr ""
+
+#: src/config/options.inc:23
+#, fuzzy
+msgid "Comments"
+msgstr "dokument"
+
+#: src/config/options.inc:25
+msgid ""
+"Amount of comments automatically written to the config file:\n"
+"0 is no comments are written\n"
+"1 is only the \"blurb\" (name+type) is written\n"
+"2 is only the description is written\n"
+"3 is full comments are written"
+msgstr ""
+
+#: src/config/options.inc:31
+msgid "Indentation"
+msgstr ""
+
+#: src/config/options.inc:33
+msgid ""
+"Shift width of one indentation level in the configuration\n"
+"file. Zero means that no indentation is performed at all\n"
+"when saving the configuration."
+msgstr ""
+
+#: src/config/options.inc:37
+msgid "Saving style"
+msgstr ""
+
+#: src/config/options.inc:39
+msgid ""
+"Determines what happens when you tell ELinks to save options:\n"
+"0 is only values of current options are altered\n"
+"1 is values of current options are altered and missing options\n"
+"     are added at the end of the file\n"
+"2 is the configuration file is rewritten from scratch\n"
+"3 is values of current options are altered and missing options\n"
+"     CHANGED during this ELinks session are added at the end of\n"
+"     the file"
+msgstr ""
+
+#: src/config/options.inc:48
+msgid "Comments localization"
+msgstr ""
+
+#: src/config/options.inc:50
+msgid ""
+"If set to 1, comments in the configuration file will be\n"
+"translated to the language used by UI. Note that if you have\n"
+"different language set in different terminals, the language\n"
+"used in the configuration file MAY be the same as on the\n"
+"terminal where you saved the file, but it should be generally\n"
+"considered unpredictable."
+msgstr ""
+
+#: src/config/options.inc:58
+msgid "Saving style warnings"
+msgstr ""
+
+#: src/config/options.inc:60
+msgid ""
+"This is internal option used when displaying a warning about\n"
+"obsolete config.saving_style. You shouldn't touch it."
+msgstr ""
+
+#: src/config/options.inc:63
+msgid "Show template"
+msgstr ""
+
+#: src/config/options.inc:65
+msgid ""
+"Show template options in autocreated trees in the options\n"
+"manager and save them to the configuration file."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:71 src/dialogs/info.c:180
+msgid "Connections"
+msgstr "uppkopplingar"
+
+#: src/config/options.inc:73
+#, fuzzy
+msgid "Connection options."
+msgstr "uppkopplingar"
+
+#: src/config/options.inc:76
+msgid "Asynchronous DNS"
+msgstr ""
+
+#: src/config/options.inc:78
+msgid "Whether to use asynchronous DNS resolving."
+msgstr ""
+
+#: src/config/options.inc:80
+#, fuzzy
+msgid "Maximum connections"
+msgstr "Kopplar upp"
+
+#: src/config/options.inc:82
+msgid "Maximum number of concurrent connections."
+msgstr ""
+
+#: src/config/options.inc:84
+#, fuzzy
+msgid "Maximum connections per host"
+msgstr "Kopplar upp"
+
+#: src/config/options.inc:86
+msgid "Maximum number of concurrent connections to a given host."
+msgstr ""
+
+#: src/config/options.inc:88
+#, fuzzy
+msgid "Connection retries"
+msgstr "uppkopplingar"
+
+#: src/config/options.inc:90
+msgid ""
+"Number of tries to establish a connection.\n"
+"Zero means try forever."
+msgstr ""
+
+#: src/config/options.inc:93 src/sched/error.c:52
+msgid "Receive timeout"
+msgstr "För lång väntan vid hämtning"
+
+#: src/config/options.inc:95
+#, fuzzy
+msgid "Receive timeout (in seconds)."
+msgstr "För lång väntan vid hämtning"
+
+#: src/config/options.inc:98 src/config/options.inc:108
+msgid "Try IPv4 when connecting"
+msgstr ""
+
+#: src/config/options.inc:100
+msgid ""
+"Whether to try to connect to a host over IPv4.\n"
+"Note that if connection.try_ipv6 is enabled too,\n"
+"it takes precedence. And better do not touch this\n"
+"at all unless you are sure what are you doing.\n"
+"Note that you can also force a given protocol\n"
+"to be used on a per-connection basis by using an URL\n"
+"in the style of i.e. http4://elinks.or.cz/."
+msgstr ""
+
+#: src/config/options.inc:110
+msgid ""
+"Whether to try to connect to a host over IPv4.\n"
+"Do not touch this option.\n"
+"Note that you can also force a given protocol\n"
+"to be used on a per-connection basis by using an URL\n"
+"in the style of i.e. http4://elinks.or.cz/."
+msgstr ""
+
+#: src/config/options.inc:118
+msgid "Try IPv6 when connecting"
+msgstr ""
+
+#: src/config/options.inc:120
+msgid ""
+"Whether to try to connect to a host over IPv6.\n"
+"Note that you can also force a given protocol\n"
+"to be used on a per-connection basis by using an URL\n"
+"in the style of i.e. http6://elinks.or.cz/."
+msgstr ""
+
+#: src/config/options.inc:126
+msgid "Timeout for non-restartable connections"
+msgstr ""
+
+#: src/config/options.inc:128
+msgid "Timeout for non-restartable connections (in seconds)."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:134
+#, fuzzy
+msgid "Document"
+msgstr "dokument"
+
+#: src/config/options.inc:136
+#, fuzzy
+msgid "Document options."
+msgstr "Dokument~information"
+
+#: src/config/options.inc:138
+msgid "Browsing"
+msgstr ""
+
+#: src/config/options.inc:140
+msgid "Document browsing options (mainly interactivity)."
+msgstr ""
+
+#: src/config/options.inc:143
+msgid "Access keys"
+msgstr ""
+
+#: src/config/options.inc:145
+msgid ""
+"Options for handling of link access keys.\n"
+"An HTML document can use the ACCESSKEY attribute to assign\n"
+"an access key to an element. When an access key is pressed,\n"
+"the corresponding element will be given focus."
+msgstr ""
+
+#: src/config/options.inc:150
+msgid "Automatic links following"
+msgstr ""
+
+#: src/config/options.inc:152
+msgid ""
+"Automatically follow a link or submit a form if appropriate\n"
+"accesskey is pressed - this is the standard behaviour, but it's\n"
+"considered dangerous."
+msgstr ""
+
+#: src/config/options.inc:156
+msgid "Display access key in link info"
+msgstr ""
+
+#: src/config/options.inc:158
+msgid "Display access key in link info."
+msgstr ""
+
+#: src/config/options.inc:160
+msgid "Accesskey priority"
+msgstr ""
+
+#: src/config/options.inc:162
+msgid ""
+"Priority of 'accesskey' HTML attribute:\n"
+"0 is first try all normal bindings; if it fails, check accesskey\n"
+"1 is first try only frame bindings; if it fails, check accesskey\n"
+"2 is first check accesskey (this can be dangerous)"
+msgstr ""
+
+#: src/config/options.inc:168
+msgid "Forms"
+msgstr ""
+
+#: src/config/options.inc:170
+msgid "Options for handling of the forms interaction."
+msgstr ""
+
+#: src/config/options.inc:172
+#, fuzzy
+msgid "Submit form automatically"
+msgstr "Skicka formulär till"
+
+#: src/config/options.inc:174
+msgid ""
+"Automagically submit a form when enter is pressed with a text\n"
+"field selected."
+msgstr ""
+
+#: src/config/options.inc:177
+msgid "Confirm submission"
+msgstr ""
+
+#: src/config/options.inc:179
+msgid "Ask for confirmation when submitting a form."
+msgstr ""
+
+#: src/config/options.inc:181
+msgid "Default form input size"
+msgstr ""
+
+#: src/config/options.inc:183
+msgid "Default form input size if none is specified."
+msgstr ""
+
+#: src/config/options.inc:185
+msgid "Insert mode"
+msgstr ""
+
+#: src/config/options.inc:187
+msgid ""
+"The setting for this option affects how key presses are handled\n"
+"when one selects a text-input form-field. When enabled, one must\n"
+"explicitly 'enter' a selected text-field to edit it; this prevents\n"
+"a text field from capturing key presses, such as presses of a scroll key,\n"
+"when it is inadvertently selected. When disabled, key presses are always\n"
+"inserted into a selected text field."
+msgstr ""
+
+#: src/config/options.inc:195
+#, fuzzy
+msgid "Images"
+msgstr "Bild"
+
+#: src/config/options.inc:197
+msgid "Options for handling of images."
+msgstr ""
+
+#: src/config/options.inc:199
+#, fuzzy
+msgid "Display style for image tags"
+msgstr "Visa"
+
+#: src/config/options.inc:201
+msgid ""
+"Display style for image tags when displayed:\n"
+"0     means always display IMG\n"
+"1     means always display filename\n"
+"2     means display alt/title attribute if possible, IMG if not\n"
+"3     means display alt/title attribute if possible, filename if not"
+msgstr ""
+
+#: src/config/options.inc:207
+msgid "Maximum length for image filename"
+msgstr ""
+
+#: src/config/options.inc:209
+msgid ""
+"Maximum length of image filename when displayed:\n"
+"0     means always display full filename\n"
+"1-500 means display filename with this maximal length;\n"
+"      if it is longer, the middle is substituted by an asterisk"
+msgstr ""
+
+#: src/config/options.inc:219
+msgid "Image links tagging"
+msgstr ""
+
+#: src/config/options.inc:221
+msgid ""
+"When to enclose image links:\n"
+"0 means never\n"
+"1 means never if alt or title are provided (old behavior)\n"
+"2 means always"
+msgstr ""
+
+#: src/config/options.inc:226
+msgid "Image link prefix"
+msgstr ""
+
+#: src/config/options.inc:228
+msgid "Prefix string to use to mark image links."
+msgstr ""
+
+#: src/config/options.inc:230
+msgid "Image link suffix"
+msgstr ""
+
+#: src/config/options.inc:232
+msgid "Suffix string to use to mark image links."
+msgstr ""
+
+#: src/config/options.inc:234
+msgid "Maximum length for image label"
+msgstr ""
+
+#: src/config/options.inc:236
+msgid ""
+"Maximum length of image label (alt/title):\n"
+"0     means always display full label\n"
+"1-500 means display label with this maximal length;\n"
+"      if it is longer, the middle is substituted by an asterisk"
+msgstr ""
+
+#: src/config/options.inc:241
+msgid "Display links to images w/o alt"
+msgstr ""
+
+#: src/config/options.inc:243
+msgid ""
+"Display links to images without an alt attribute. If this option\n"
+"is off, these images are completely invisible."
+msgstr ""
+
+#: src/config/options.inc:246
+#, fuzzy
+msgid "Display links to images"
+msgstr "Visa"
+
+#: src/config/options.inc:248
+msgid ""
+"Display links to any images in the document, regardless of them\n"
+"having an alt attribute or not. If this option is off, the alt\n"
+"attribute contents is shown, but as normal text, not selectable\n"
+"as a link."
+msgstr ""
+
+#: src/config/options.inc:254
+#, fuzzy
+msgid "Links"
+msgstr "~Länk"
+
+#: src/config/options.inc:256
+msgid "Options for handling of links to other documents."
+msgstr ""
+
+#: src/config/options.inc:258
+msgid "Active link"
+msgstr ""
+
+#: src/config/options.inc:260
+msgid "Options for the active link."
+msgstr ""
+
+#: src/config/options.inc:262
+#, fuzzy
+msgid "Colors"
+msgstr "Färg"
+
+#: src/config/options.inc:264
+#, fuzzy
+msgid "Active link colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:266 src/config/options.inc:526
+#: src/config/options.inc:836
+#, fuzzy
+msgid "Background color"
+msgstr "Bakgrund"
+
+#: src/config/options.inc:268 src/config/options.inc:528
+#: src/config/options.inc:837
+#, fuzzy
+msgid "Default background color."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#. ==========================================================
+#. ============= BORING PART (colors) START =================
+#. ==========================================================
+#. XXX: All bfu colors needs to have both 'text' and 'background'
+#. *	options even if it is not used. get_bfu_color() depends
+#. *	on it.
+#. The colors and mono tree should be similar but with different default
+#. * values of course so always use the macros below.
+#: src/config/options.inc:270 src/config/options.inc:522
+#: src/config/options.inc:834
+#, fuzzy
+msgid "Text color"
+msgstr "Textarea"
+
+#: src/config/options.inc:272 src/config/options.inc:524
+#: src/config/options.inc:835
+msgid "Default text color."
+msgstr ""
+
+#: src/config/options.inc:274
+#, fuzzy
+msgid "Enable color"
+msgstr "Namn"
+
+#: src/config/options.inc:276
+msgid ""
+"Enable use of the active link background and text color\n"
+"settings instead of the link colors from the document."
+msgstr ""
+
+#: src/config/options.inc:279
+msgid "Bold"
+msgstr ""
+
+#: src/config/options.inc:281
+msgid "Make the active link text bold."
+msgstr ""
+
+#: src/config/options.inc:283
+#, fuzzy
+msgid "Invert colors"
+msgstr "Textarea"
+
+#: src/config/options.inc:285
+msgid "Invert the fore- and background color so the link stands out."
+msgstr ""
+
+#: src/config/options.inc:288 src/config/options.inc:799
+#: src/dialogs/options.c:206
+msgid "Underline"
+msgstr ""
+
+#: src/config/options.inc:290
+msgid "Underline the active link."
+msgstr ""
+
+#: src/config/options.inc:293
+msgid "Directory highlighting"
+msgstr ""
+
+#: src/config/options.inc:295
+msgid "Highlight links to directories in FTP and local directory listing."
+msgstr ""
+
+#: src/config/options.inc:297
+msgid "Number links"
+msgstr ""
+
+#: src/config/options.inc:299
+msgid "Display numbers next to the links."
+msgstr ""
+
+#: src/config/options.inc:301
+msgid "Handling of target=_blank"
+msgstr ""
+
+#: src/config/options.inc:303
+msgid ""
+"Define how to handle links having target=_blank set:\n"
+"0 means open link in current tab\n"
+"1 means open link in new tab in foreground\n"
+"2 means open link in new tab in background"
+msgstr ""
+
+#: src/config/options.inc:315
+msgid "Use tabindex"
+msgstr ""
+
+#: src/config/options.inc:317
+msgid ""
+"Whether to navigate links using tabindex specified ordering.\n"
+"The TABINDEX attribute in HTML elements specifies the order\n"
+"in which links should receive focus when using the keyboard\n"
+"to navigating the document."
+msgstr ""
+
+#: src/config/options.inc:322
+msgid "Number keys select links"
+msgstr ""
+
+#: src/config/options.inc:324
+msgid ""
+"Number keys select links rather than specify command prefixes. This\n"
+"is a tristate:\n"
+"0 means never\n"
+"1 means if document.browse.links.numbering = 1\n"
+"2 means always"
+msgstr ""
+
+#: src/config/options.inc:330
+msgid "Warn about maliciously crafted URIs"
+msgstr ""
+
+#: src/config/options.inc:332
+msgid ""
+"When following a link the user ID part of the URI is\n"
+"checked and if a maliciously crafted URI is detected a\n"
+"warning dialog will ask before following the link."
+msgstr ""
+
+#. TODO - this is somehow implemented by ff, but disabled
+#. * for now as it doesn't work.
+#: src/config/options.inc:338
+msgid "Wrap-around links cycling"
+msgstr ""
+
+#. 0
+#: src/config/options.inc:340
+msgid ""
+"When pressing 'down' on the last link, jump at the first one, and\n"
+"vice versa."
+msgstr ""
+
+#: src/config/options.inc:344
+msgid "Scrolling"
+msgstr ""
+
+#: src/config/options.inc:346
+#, fuzzy
+msgid "Scrolling options."
+msgstr "Terminalalternativ"
+
+#: src/config/options.inc:348
+msgid "Horizontal step"
+msgstr ""
+
+#: src/config/options.inc:350
+msgid ""
+"Number of columns to scroll when a key bound to scroll-left or scroll-\n"
+"right is pressed and no prefix was given."
+msgstr ""
+
+#: src/config/options.inc:353
+msgid "Extended horizontal scrolling"
+msgstr ""
+
+#: src/config/options.inc:355
+msgid ""
+"Whether to allow horizontal scrolling when the document\n"
+"does not extend off the screen. Useful for copy/paste\n"
+"operations."
+msgstr ""
+
+#: src/config/options.inc:359
+#, fuzzy
+msgid "Margin"
+msgstr "Varning"
+
+#: src/config/options.inc:361
+msgid ""
+"Size of the virtual margin - when you click inside of that margin,\n"
+"document scrolls in that direction."
+msgstr ""
+
+#: src/config/options.inc:364
+msgid "Vertical step"
+msgstr ""
+
+#: src/config/options.inc:366
+msgid ""
+"Number of lines to scroll when a key bound to scroll-up or scroll-\n"
+"down is pressed and no prefix was given."
+msgstr ""
+
+#: src/config/options.inc:370
+#, fuzzy
+msgid "Searching"
+msgstr "Sök"
+
+#: src/config/options.inc:372
+msgid "Options for searching."
+msgstr ""
+
+#: src/config/options.inc:374
+msgid "Case sensitivity"
+msgstr ""
+
+#: src/config/options.inc:376
+msgid ""
+"Whether the search should match the document text while maintaining\n"
+"case sensitivity."
+msgstr ""
+
+#: src/config/options.inc:380
+msgid "Regular expressions"
+msgstr ""
+
+#: src/config/options.inc:382
+msgid ""
+"Enable searching with regular expressions:\n"
+"0 for plain text searching\n"
+"1 for basic regular expression searches\n"
+"2 for extended regular expression searches"
+msgstr ""
+
+#: src/config/options.inc:388
+msgid "Show search hit top or bottom dialogs"
+msgstr ""
+
+#: src/config/options.inc:390
+msgid ""
+"Whether to show a dialog when the search hits top or bottom of the\n"
+"document."
+msgstr ""
+
+#: src/config/options.inc:393
+#, fuzzy
+msgid "Wraparound"
+msgstr "Bakgrund"
+
+#: src/config/options.inc:395
+msgid "Wrap around when searching. Currently only used for typeahead."
+msgstr ""
+
+#: src/config/options.inc:397
+#, fuzzy
+msgid "Show not found"
+msgstr "Värden hittades inte"
+
+#: src/config/options.inc:399
+msgid ""
+"How to inform the user when nothing is matched:\n"
+"0 means do nothing\n"
+"1 means beep the terminal\n"
+"2 means pop up message box"
+msgstr ""
+
+#: src/config/options.inc:404
+#, fuzzy
+msgid "Typeahead searching"
+msgstr "Felaktig sträng"
+
+#: src/config/options.inc:406
+msgid ""
+"Start typeahead searching when an unbound key is pressed without\n"
+"any modifiers. Note that most keys have default bindings, so this\n"
+"feature will not be useful unless you unbind them.\n"
+"\n"
+"0 disables this feature; typeahead searching will only be used\n"
+"  when you press a key bound to search-typeahead or similar\n"
+"1 automatically starts typeahead searching thru link text\n"
+"2 automatically starts typeahead searching thru all document text"
+msgstr ""
+
+#: src/config/options.inc:415
+msgid "Horizontal text margin"
+msgstr ""
+
+#: src/config/options.inc:417
+msgid "Horizontal text margin."
+msgstr ""
+
+#: src/config/options.inc:419
+msgid "Document meta refresh"
+msgstr ""
+
+#: src/config/options.inc:421
+msgid ""
+"Automatically follow document-specified refresh directives ('<meta>\n"
+"refresh' tags). Web-page authors use these to instruct the browser\n"
+"to reload a document at a given interval or to load another page.\n"
+"Regardless of the value the refresh URI is accessible as a link.\n"
+"Use the document.browse.minimum_refresh_time to control the minimum\n"
+"number of seconds a refresh will wait."
+msgstr ""
+
+#: src/config/options.inc:428
+msgid "Document meta refresh minimum time"
+msgstr ""
+
+#: src/config/options.inc:430
+msgid ""
+"The minimum number of milliseconds that should pass before\n"
+"refreshing. If set to zero the document refresh time is used\n"
+"unchanged. It can fix going back in history for some sites that\n"
+"use refreshing with zero values."
+msgstr ""
+
+#: src/config/options.inc:435
+msgid "Tables navigation order"
+msgstr ""
+
+#: src/config/options.inc:437
+msgid "Move by columns in table, instead of rows."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:443
+#, fuzzy
+msgid "Cache"
+msgstr "Avbryt"
+
+#: src/config/options.inc:445
+#, fuzzy
+msgid "Cache options."
+msgstr "~Spara alternativ"
+
+#: src/config/options.inc:447
+msgid "Cache information about redirects"
+msgstr ""
+
+#: src/config/options.inc:449
+msgid ""
+"Cache even redirects sent by server (usually thru HTTP by a 302\n"
+"HTTP code and a Location header). This was the original behaviour\n"
+"for a quite some time, but it causes problems in a situation very\n"
+"common to various web login systems - frequently, when accessing\n"
+"certain location, they will redirect you to a login page if they\n"
+"don't receive an auth cookie, the login page then gives you the\n"
+"cookie and redirects you back to the original page, but there you\n"
+"have already cached redirect back to the login page! If this\n"
+"option has value of 0, this malfunction is fixed, but occasionally\n"
+"you may get superfluous (depends on how you take it ;-) requests to\n"
+"the server. If this option has value of 1, experienced users can\n"
+"still workaround it by clever combination of usage of reload,\n"
+"jumping around in session history and hitting ctrl+enter.\n"
+"Note that this option is checked when retrieving the information\n"
+"from cache, not when saving it to cache - thus if you will enable\n"
+"it, even previous redirects will be taken from cache instead of\n"
+"asking the server."
+msgstr ""
+
+#: src/config/options.inc:467
+msgid "Ignore cache-control info from server"
+msgstr ""
+
+#: src/config/options.inc:469
+msgid ""
+"Ignore Cache-Control and Pragma server headers.\n"
+"When set, the document is cached even with 'Cache-Control: no-cache'."
+msgstr ""
+
+#: src/config/options.inc:472
+#, fuzzy
+msgid "Formatted documents"
+msgstr "Formatterad dokumentcache"
+
+#: src/config/options.inc:474
+msgid "Format cache options."
+msgstr ""
+
+#: src/config/options.inc:476
+#, fuzzy
+msgid "Number"
+msgstr "Felaktigt nummer"
+
+#: src/config/options.inc:478
+msgid ""
+"Number of cached formatted pages. Do not get too generous\n"
+"here, 'formatted' means that all the accompanying structures\n"
+"are kept in memory so that you get the cached document\n"
+"immediatelly, but these structures may take a lot - 2x the\n"
+"size of the HTML source is probably not unusual, but it can\n"
+"be even more if the document consists of a lot of short lines\n"
+"(padded right, if possible) and links and not much other markup.\n"
+"So if you set this to 256 and then you don't like your ELinks\n"
+"eating 90M, don't come complaining to us. ;-)\n"
+"Also note that the format cache itself is not counted to the\n"
+"memory cache size, but the HTML source of the formatted documents\n"
+"is always cached, even if it is over the memory cache size\n"
+"threshold. (Then of course no other documents can be cached.)"
+msgstr ""
+
+#: src/config/options.inc:492 src/dialogs/info.c:199
+msgid "Memory cache"
+msgstr "Minnescache"
+
+#: src/config/options.inc:494
+#, fuzzy
+msgid "Memory cache options."
+msgstr "Minnescache"
+
+#: src/config/options.inc:498
+#, fuzzy
+msgid "Memory cache size (in bytes)."
+msgstr "Minnescache"
+
+#: src/config/options.inc:502
+#, fuzzy
+msgid "Charset"
+msgstr "Teckenuppsättning"
+
+#: src/config/options.inc:504
+#, fuzzy
+msgid "Charset options."
+msgstr "~Spara alternativ"
+
+#: src/config/options.inc:506
+msgid "Default codepage"
+msgstr ""
+
+#: src/config/options.inc:508
+msgid ""
+"Default document codepage. 'System' stands for\n"
+"a codepage determined by a selected locale."
+msgstr ""
+
+#: src/config/options.inc:511
+msgid "Ignore charset info from server"
+msgstr ""
+
+#: src/config/options.inc:513
+msgid "Ignore charset info sent by server."
+msgstr ""
+
+#: src/config/options.inc:517
+msgid "Default color settings"
+msgstr ""
+
+#: src/config/options.inc:519
+msgid "Default document color settings."
+msgstr ""
+
+#: src/config/options.inc:530
+msgid "Link color"
+msgstr ""
+
+#: src/config/options.inc:532
+msgid "Default link color."
+msgstr ""
+
+#: src/config/options.inc:534
+msgid "Visited-link color"
+msgstr ""
+
+#: src/config/options.inc:536
+msgid "Default visited link color."
+msgstr ""
+
+#: src/config/options.inc:538
+#, fuzzy
+msgid "Image-link color"
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:540
+#, fuzzy
+msgid "Default image link color."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:542
+msgid "Bookmarked-link color"
+msgstr ""
+
+#: src/config/options.inc:544
+#, fuzzy
+msgid "Default bookmarked link color."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:546
+msgid "Directory color"
+msgstr ""
+
+#: src/config/options.inc:548
+msgid ""
+"Default directory color.\n"
+"See document.browse.links.color_dirs option."
+msgstr ""
+
+#: src/config/options.inc:551
+msgid "Allow dark colors on black background"
+msgstr ""
+
+#: src/config/options.inc:553
+msgid "Allow dark colors on black background."
+msgstr ""
+
+#: src/config/options.inc:555
+msgid "Ensure contrast"
+msgstr ""
+
+#: src/config/options.inc:557
+msgid "Makes sure that the back- and foreground color are never equal."
+msgstr ""
+
+#. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
+#. * handling.
+#: src/config/options.inc:562
+msgid "Use document-specified colors"
+msgstr ""
+
+#: src/config/options.inc:564
+msgid ""
+"Use colors specified in document:\n"
+"0 is use always the default settings\n"
+"1 is use document colors if available, except background\n"
+"2 is use document colors, including background. This can\n"
+"  mostly look very impressive, but some sites will appear\n"
+"  really ugly. Note, that obviously if the background is\n"
+"  not black, it will break the behaviour of transparency."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:577
+#, fuzzy
+msgid "Downloading"
+msgstr "Hämta"
+
+#: src/config/options.inc:579
+msgid "Options regarding files downloading and handling."
+msgstr ""
+
+#: src/config/options.inc:581
+#, fuzzy
+msgid "Default download directory"
+msgstr "Hämtningsfel"
+
+#: src/config/options.inc:583
+msgid "Default download directory."
+msgstr ""
+
+#: src/config/options.inc:585
+msgid "Set original time"
+msgstr ""
+
+#: src/config/options.inc:587
+msgid ""
+"Set the timestamp of each downloaded file to the timestamp\n"
+"stored on the server."
+msgstr ""
+
+#. Does automatic resuming make sense as an option?
+#: src/config/options.inc:591
+msgid "Prevent overwriting"
+msgstr ""
+
+#: src/config/options.inc:593
+msgid ""
+"Prevent overwriting the local files:\n"
+"0 is files will silently be overwritten\n"
+"1 is add a suffix .{number} (for example '.1') to the name\n"
+"2 is ask the user"
+msgstr ""
+
+#: src/config/options.inc:598
+msgid "Notify download completion by bell"
+msgstr ""
+
+#: src/config/options.inc:600
+msgid ""
+"Audio notification when download is completed:\n"
+"0 is never\n"
+"1 is when background notification is active\n"
+"2 is always"
+msgstr ""
+
+#: src/config/options.inc:606
+msgid "Dump output"
+msgstr ""
+
+#: src/config/options.inc:608
+msgid "Dump output options."
+msgstr ""
+
+#: src/config/options.inc:610 src/config/options.inc:803
+#: src/config/opttypes.c:364 src/dialogs/document.c:96
+msgid "Codepage"
+msgstr "teckenuppsättning"
+
+#: src/config/options.inc:612
+msgid ""
+"Codepage used in dump output. 'System' stands for\n"
+"a codepage determined by a selected locale."
+msgstr ""
+
+#: src/config/options.inc:617
+#, c-format
+msgid "Header string used in dumps. %u is substituted by URL."
+msgstr ""
+
+#: src/config/options.inc:619
+msgid "Footer"
+msgstr ""
+
+#: src/config/options.inc:621
+#, c-format
+msgid "Footer string used in dumps. %u is substituted by URL."
+msgstr ""
+
+#: src/config/options.inc:623
+msgid "Separator"
+msgstr ""
+
+#: src/config/options.inc:625
+msgid "String which separates two dumps."
+msgstr ""
+
+#: src/config/options.inc:627
+msgid "Width"
+msgstr ""
+
+#: src/config/options.inc:629
+msgid "Width of screen in characters when dumping documents."
+msgstr ""
+
+#: src/config/options.inc:633
+#, fuzzy
+msgid "History"
+msgstr "~Historik"
+
+#: src/config/options.inc:635
+msgid "History options."
+msgstr ""
+
+#: src/config/options.inc:637
+#, fuzzy
+msgid "Keep unhistory"
+msgstr "Ingen historik"
+
+#: src/config/options.inc:639
+#, fuzzy
+msgid "Keep unhistory (\"forward history\")."
+msgstr "Ingen historik"
+
+#: src/config/options.inc:642
+#, fuzzy
+msgid "HTML rendering"
+msgstr "Skickar"
+
+#: src/config/options.inc:644
+msgid "Options concerning the display of HTML pages."
+msgstr ""
+
+#: src/config/options.inc:646
+#, fuzzy
+msgid "Display frames"
+msgstr "Visa"
+
+#: src/config/options.inc:648
+#, fuzzy
+msgid "Display frames."
+msgstr "Visa"
+
+#: src/config/options.inc:650
+#, fuzzy
+msgid "Display tables"
+msgstr "Visa"
+
+#: src/config/options.inc:652
+#, fuzzy
+msgid "Display tables."
+msgstr "Visa"
+
+#: src/config/options.inc:654
+#, fuzzy
+msgid "Display subscripts"
+msgstr "Visa ~usemap"
+
+#: src/config/options.inc:656
+msgid "Display subscripts (as [thing])."
+msgstr ""
+
+#: src/config/options.inc:658
+#, fuzzy
+msgid "Display superscripts"
+msgstr "Visa ~usemap"
+
+#: src/config/options.inc:660
+msgid "Display superscripts (as ^thing)."
+msgstr ""
+
+#: src/config/options.inc:662
+msgid "Rendering of html link element"
+msgstr ""
+
+#: src/config/options.inc:664
+msgid ""
+"How to render <link> tags from the HTML header:\n"
+"0 is nothing\n"
+"1 is title\n"
+"2 is name in addition\n"
+"3 is hreflang in addition\n"
+"4 is type in addition\n"
+"5 is everything"
+msgstr ""
+
+#: src/config/options.inc:672
+msgid "Underline links"
+msgstr ""
+
+#: src/config/options.inc:674
+msgid "Underline links."
+msgstr ""
+
+#: src/config/options.inc:676
+msgid "Wrap non breaking space"
+msgstr ""
+
+#: src/config/options.inc:678
+msgid ""
+"If set do not honour non breaking space (the nbsp entity)\n"
+"but allow to wrap the text. This can help keeping the width\n"
+"of documents down so no horizontal scrolling is needed."
+msgstr ""
+
+#: src/config/options.inc:683
+#, fuzzy
+msgid "Plain rendering"
+msgstr "Skickar"
+
+#: src/config/options.inc:685
+msgid "Options concerning the display of plain text pages."
+msgstr ""
+
+#: src/config/options.inc:687
+#, fuzzy
+msgid "Display URIs"
+msgstr "Visa"
+
+#: src/config/options.inc:689
+msgid "Display URIs in the document as links."
+msgstr ""
+
+#: src/config/options.inc:691
+msgid "Compress empty lines"
+msgstr ""
+
+#: src/config/options.inc:693
+msgid "Compress successive empty lines to only one in displayed text."
+msgstr ""
+
+#: src/config/options.inc:696
+msgid "URI passing"
+msgstr ""
+
+#: src/config/options.inc:698
+msgid "Rules for passing URIs to external commands."
+msgstr ""
+
+#: src/config/options.inc:702
+msgid ""
+"A rule for passing URI to an external command.\n"
+"The format is:\n"
+"%c in the string means the current URL\n"
+"%% in the string means '%'\n"
+"\n"
+"Do _not_ put single- or double-quotes around %c."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:712
+msgid "Information files"
+msgstr ""
+
+#: src/config/options.inc:714
+msgid "Options for information files in ~/.elinks."
+msgstr ""
+
+#: src/config/options.inc:716
+#, fuzzy
+msgid "Save interval"
+msgstr "Sparfel"
+
+#: src/config/options.inc:718
+msgid ""
+"Interval at which to trigger information files in ~/.elinks\n"
+"to be saved to disk if they has changed (seconds; 0 to disable)"
+msgstr ""
+
+#: src/config/options.inc:721
+msgid "Use secure file saving"
+msgstr ""
+
+#: src/config/options.inc:723
+msgid ""
+"First write data to unique temporary file, then rename this file\n"
+"upon successfully finishing this. Note that this relates only to\n"
+"config files, not downloaded files. You may want to disable\n"
+"it if you are using some exotic permissions for concerned files.\n"
+"Secure file saving is automagically disabled if file is symlink.\n"
+"Warning: some systems (ie. OS/2, Win32) require that destination\n"
+"file doesn't exist when rename(3) is called, breaking atomicity,\n"
+"and reducing reliability of this feature."
+msgstr ""
+
+#: src/config/options.inc:732
+msgid "Use fsync(3) with secure file saving"
+msgstr ""
+
+#: src/config/options.inc:734
+msgid ""
+"When using secure file saving, call fsync(3), if the OS\n"
+"supports it, to force the OS immediately to write the data\n"
+"to permanent storage. This is optional for those who wish\n"
+"to avoid excessive disk I/O."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:743
+#, fuzzy
+msgid "Terminals"
+msgstr "Terminalalternativ"
+
+#: src/config/options.inc:745
+#, fuzzy
+msgid "Terminal options."
+msgstr "Terminalalternativ"
+
+#: src/config/options.inc:749
+msgid "Options specific to this terminal type (according to $TERM value)."
+msgstr ""
+
+#: src/config/options.inc:753
+msgid ""
+"Terminal type; matters mostly only when drawing frames and\n"
+"dialog box borders:\n"
+"0 is dumb terminal type, ASCII art\n"
+"1 is VT100, simple but portable\n"
+"2 is Linux, you get double frames and other goodies\n"
+"3 is KOI-8\n"
+"4 is FreeBSD"
+msgstr ""
+
+#: src/config/options.inc:761 src/dialogs/options.c:202
+msgid "Switch fonts for line drawing"
+msgstr ""
+
+#: src/config/options.inc:763
+msgid ""
+"Switch fonts when drawing lines, enabling both local characters\n"
+"and lines working at the same time. Makes sense only with linux\n"
+"terminal."
+msgstr ""
+
+#: src/config/options.inc:767 src/dialogs/options.c:207
+msgid "UTF-8 I/O"
+msgstr ""
+
+#: src/config/options.inc:769
+msgid ""
+"Enable I/O in UTF8 for Unicode terminals. Note that currently,\n"
+"only the subset of UTF8 according to terminal codepage is used."
+msgstr ""
+
+#: src/config/options.inc:772 src/dialogs/options.c:203
+msgid "Restrict frames in cp850/852"
+msgstr "Begränsa ramar i cp850/852"
+
+#: src/config/options.inc:774
+msgid ""
+"Restrict the characters used when drawing lines. Makes sense\n"
+"only with linux terminals using the cp850/852 character sets."
+msgstr ""
+
+#: src/config/options.inc:777 src/dialogs/options.c:204
+#, fuzzy
+msgid "Block cursor"
+msgstr "Fylld markör"
+
+#: src/config/options.inc:779
+msgid ""
+"Move cursor to bottom right corner when done drawing.\n"
+"This is particularly useful when we have a block cursor,\n"
+"so that inversed text is displayed correctly."
+msgstr ""
+
+#: src/config/options.inc:783
+#, fuzzy
+msgid "Color mode"
+msgstr "Färg"
+
+#: src/config/options.inc:785
+msgid ""
+"The color mode controls what colors are used and how they are\n"
+"output to the terminal. The color modes are:\n"
+"0 is mono mode, only 2 colors are used\n"
+"1 is 16 color mode, uses the common ANSI colors\n"
+"2 is 256 color mode, uses XTerm RGB codes"
+msgstr ""
+
+#: src/config/options.inc:791 src/dialogs/options.c:205
+msgid "Transparency"
+msgstr ""
+
+#: src/config/options.inc:793
+msgid ""
+"If we should not set the background to black. This is particularly\n"
+"useful when we have a terminal (typically in some windowing\n"
+"environment) with a background image or a transparent background -\n"
+"it will be visible in ELinks as well. Note that this option makes\n"
+"sense only when colors are enabled."
+msgstr ""
+
+#: src/config/options.inc:801
+msgid "If we should use underline or enhance the color instead."
+msgstr ""
+
+#: src/config/options.inc:805
+msgid ""
+"Codepage of charset used for displaying content on terminal.\n"
+"'System' stands for a codepage determined by a selected locale."
+msgstr ""
+
+#. Keep options in alphabetical order.
+#: src/config/options.inc:812
+msgid "User interface"
+msgstr ""
+
+#: src/config/options.inc:814
+#, fuzzy
+msgid "User interface options."
+msgstr "Terminalalternativ"
+
+#: src/config/options.inc:818
+msgid "Color settings"
+msgstr ""
+
+#: src/config/options.inc:820
+msgid "Default user interface color settings."
+msgstr ""
+
+#: src/config/options.inc:847
+#, fuzzy
+msgid "Color terminals"
+msgstr "~BeOS-terminal"
+
+#: src/config/options.inc:849
+msgid "Color settings for color terminal."
+msgstr ""
+
+#: src/config/options.inc:851
+msgid "Non-color terminals"
+msgstr ""
+
+#: src/config/options.inc:853
+msgid "Color settings for non-color terminal."
+msgstr ""
+
+#. FIXME: obsolete, how to alias them correctly ? --Zas
+#: src/config/options.inc:856
+msgid "Main menu bar"
+msgstr ""
+
+#: src/config/options.inc:858
+msgid "Main menu bar colors."
+msgstr ""
+
+#: src/config/options.inc:860
+msgid "Unselected main menu bar item"
+msgstr ""
+
+#: src/config/options.inc:862
+msgid "Unselected main menu bar item colors."
+msgstr ""
+
+#: src/config/options.inc:864
+msgid "Selected main menu bar item"
+msgstr ""
+
+#: src/config/options.inc:866
+msgid "Selected main menu bar item colors."
+msgstr ""
+
+#: src/config/options.inc:868 src/config/options.inc:897
+msgid "Hotkey"
+msgstr ""
+
+#: src/config/options.inc:870
+msgid "Main menu hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:872 src/config/options.inc:901
+msgid "Unselected hotkey"
+msgstr ""
+
+#: src/config/options.inc:874
+msgid "Main menu unselected hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:876 src/config/options.inc:905
+#, fuzzy
+msgid "Selected hotkey"
+msgstr "Valfält"
+
+#: src/config/options.inc:878
+msgid "Main menu selected hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:881
+msgid "Menu bar"
+msgstr ""
+
+#: src/config/options.inc:883
+msgid "Menu bar colors."
+msgstr ""
+
+#: src/config/options.inc:885
+msgid "Unselected menu item"
+msgstr ""
+
+#: src/config/options.inc:887
+msgid "Unselected menu item colors."
+msgstr ""
+
+#: src/config/options.inc:889
+#, fuzzy
+msgid "Selected menu item"
+msgstr "Valfält"
+
+#: src/config/options.inc:891
+msgid "Selected menu item colors."
+msgstr ""
+
+#: src/config/options.inc:893
+#, fuzzy
+msgid "Marked menu item"
+msgstr "Valfält"
+
+#: src/config/options.inc:895
+msgid "Marked menu item colors."
+msgstr ""
+
+#: src/config/options.inc:899
+msgid "Menu item hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:903
+msgid "Menu item unselected hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:907
+msgid "Menu item selected hotkey colors."
+msgstr ""
+
+#: src/config/options.inc:909
+#, fuzzy
+msgid "Menu frame"
+msgstr "Inga ramar"
+
+#: src/config/options.inc:911
+msgid "Menu frame colors."
+msgstr ""
+
+#: src/config/options.inc:914
+msgid "Dialog"
+msgstr ""
+
+#: src/config/options.inc:916
+msgid "Dialog colors."
+msgstr ""
+
+#: src/config/options.inc:926
+msgid "Generic"
+msgstr ""
+
+#: src/config/options.inc:928
+#, fuzzy
+msgid "Generic dialog colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:930
+#, fuzzy
+msgid "Frame"
+msgstr "Namn"
+
+#: src/config/options.inc:932
+msgid "Dialog frame colors."
+msgstr ""
+
+#: src/config/options.inc:934
+msgid "Scrollbar"
+msgstr ""
+
+#: src/config/options.inc:936
+msgid "Scrollbar colors."
+msgstr ""
+
+#: src/config/options.inc:938
+#, fuzzy
+msgid "Selected scrollbar"
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:940
+#, fuzzy
+msgid "Scrollbar selected colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:944
+msgid "Dialog title colors."
+msgstr ""
+
+#: src/config/options.inc:946
+#, fuzzy
+msgid "Text"
+msgstr "Textarea"
+
+#: src/config/options.inc:948
+msgid "Dialog text colors."
+msgstr ""
+
+#: src/config/options.inc:950 src/viewer/text/form.c:1436
+msgid "Checkbox"
+msgstr "Kryssruta"
+
+#: src/config/options.inc:952
+msgid "Dialog checkbox colors."
+msgstr ""
+
+#: src/config/options.inc:954
+#, fuzzy
+msgid "Selected checkbox"
+msgstr "Valfält"
+
+#: src/config/options.inc:956
+#, fuzzy
+msgid "Dialog selected checkbox colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:958
+#, fuzzy
+msgid "Checkbox label"
+msgstr "Kryssruta"
+
+#: src/config/options.inc:960
+msgid "Dialog checkbox label colors."
+msgstr ""
+
+#: src/config/options.inc:962
+msgid "Button"
+msgstr ""
+
+#: src/config/options.inc:964 src/config/options.inc:972
+msgid "Dialog button colors."
+msgstr ""
+
+#: src/config/options.inc:966
+msgid "Selected button"
+msgstr ""
+
+#: src/config/options.inc:968 src/config/options.inc:976
+msgid "Dialog selected button colors."
+msgstr ""
+
+#: src/config/options.inc:970
+msgid "Button shortcut"
+msgstr ""
+
+#: src/config/options.inc:974
+#, fuzzy
+msgid "Selected button shortcut"
+msgstr "Valfält"
+
+#: src/config/options.inc:978 src/viewer/text/form.c:1440
+msgid "Text field"
+msgstr "Textfält"
+
+#: src/config/options.inc:980
+msgid "Dialog text field colors."
+msgstr ""
+
+#: src/config/options.inc:982
+#, fuzzy
+msgid "Text field text"
+msgstr "Textfält"
+
+#: src/config/options.inc:984
+msgid "Dialog field text colors."
+msgstr ""
+
+#: src/config/options.inc:986
+msgid "Meter"
+msgstr ""
+
+#: src/config/options.inc:988
+msgid "Dialog meter colors."
+msgstr ""
+
+#: src/config/options.inc:990
+msgid "Shadow"
+msgstr ""
+
+#: src/config/options.inc:992
+msgid "Dialog shadow colors (see ui.shadows option)."
+msgstr ""
+
+#: src/config/options.inc:994
+msgid "Title bar"
+msgstr ""
+
+#: src/config/options.inc:996
+msgid "Title bar colors."
+msgstr ""
+
+#: src/config/options.inc:998
+msgid "Generic title bar"
+msgstr ""
+
+#: src/config/options.inc:1000
+msgid "Generic title bar colors."
+msgstr ""
+
+#: src/config/options.inc:1002
+msgid "Title bar text"
+msgstr ""
+
+#: src/config/options.inc:1004
+msgid "Title bar text colors."
+msgstr ""
+
+#: src/config/options.inc:1007
+msgid "Status bar"
+msgstr ""
+
+#: src/config/options.inc:1009
+msgid "Status bar colors."
+msgstr ""
+
+#: src/config/options.inc:1011
+msgid "Generic status bar"
+msgstr ""
+
+#: src/config/options.inc:1013
+msgid "Generic status bar colors."
+msgstr ""
+
+#: src/config/options.inc:1015
+#, fuzzy
+msgid "Status bar text"
+msgstr "Sök efter text"
+
+#: src/config/options.inc:1017
+msgid "Status bar text colors."
+msgstr ""
+
+#: src/config/options.inc:1020
+msgid "Tabs bar"
+msgstr ""
+
+#: src/config/options.inc:1022
+msgid "Tabs bar colors."
+msgstr ""
+
+#: src/config/options.inc:1024
+#, fuzzy
+msgid "Unvisited tab"
+msgstr "Valfält"
+
+#: src/config/options.inc:1026
+msgid ""
+"Tab colors for tabs that have not been\n"
+"selected since they completed loading."
+msgstr ""
+
+#: src/config/options.inc:1029
+#, fuzzy
+msgid "Unselected tab"
+msgstr "Valfält"
+
+#: src/config/options.inc:1031
+#, fuzzy
+msgid "Unselected tab colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:1033
+#, fuzzy
+msgid "Loading tab"
+msgstr "laddar"
+
+#: src/config/options.inc:1035
+msgid "Tab colors for tabs that are loading in the background."
+msgstr ""
+
+#: src/config/options.inc:1037
+#, fuzzy
+msgid "Selected tab"
+msgstr "Valfält"
+
+#: src/config/options.inc:1039
+#, fuzzy
+msgid "Selected tab colors."
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/config/options.inc:1041
+msgid "Tab separator"
+msgstr ""
+
+#: src/config/options.inc:1043
+msgid "Tab separator colors."
+msgstr ""
+
+#: src/config/options.inc:1046
+#, fuzzy
+msgid "Searched strings"
+msgstr "Felaktig sträng"
+
+#: src/config/options.inc:1048
+#, fuzzy
+msgid "Searched string highlight colors."
+msgstr "Söksträng ej hittad"
+
+#. ==========================================================
+#. ============= BORING PART (colors) END ===================
+#. ==========================================================
+#. Keep options in alphabetical order.
+#: src/config/options.inc:1057
+msgid "Dialog settings"
+msgstr ""
+
+#: src/config/options.inc:1059
+msgid "Dialogs-specific appearance and behaviour settings."
+msgstr ""
+
+#: src/config/options.inc:1062
+msgid "Minimal height of listbox widget"
+msgstr ""
+
+#: src/config/options.inc:1064
+msgid ""
+"Minimal height of the listbox widget (used e.g. for bookmarks\n"
+"or global history)."
+msgstr ""
+
+#: src/config/options.inc:1067
+msgid "Drop shadows"
+msgstr ""
+
+#: src/config/options.inc:1069
+msgid ""
+"Make dialogs drop shadows (the shadows are solid, you can\n"
+"adjust their color by ui.colors.*.dialog.shadow). You may\n"
+"also want to eliminate the wide borders by adjusting setup.h."
+msgstr ""
+
+#: src/config/options.inc:1073
+#, fuzzy
+msgid "Underline menu hotkeys"
+msgstr "Valfält"
+
+#: src/config/options.inc:1075
+msgid ""
+"Whether to underline hotkeys in menus to make them more\n"
+"visible. Requires the underlining is enabled for the terminal."
+msgstr ""
+
+#: src/config/options.inc:1078
+#, fuzzy
+msgid "Underline button shortcuts"
+msgstr "Valfält"
+
+#: src/config/options.inc:1080
+msgid ""
+"Whether to underline button shortcuts to make them more\n"
+"visible. Requires the underlining is enabled for the terminal."
+msgstr ""
+
+#: src/config/options.inc:1084
+#, fuzzy
+msgid "Timer options"
+msgstr "Terminalalternativ"
+
+#: src/config/options.inc:1086
+msgid ""
+"Timed action after certain interval of user inactivity. Someone can\n"
+"even find this useful, although you may not believe that."
+msgstr ""
+
+#: src/config/options.inc:1092
+msgid ""
+"Whether to enable the timer or not:\n"
+"0 is don't count down anything\n"
+"1 is count down, but don't show the timer\n"
+"2 is count down and show the timer near LEDs"
+msgstr ""
+
+#: src/config/options.inc:1099
+msgid ""
+"Whether to enable the timer or not:\n"
+"0 is don't count down anything\n"
+"1 is count down, but don't show the timer\n"
+"2 is count down and show the timer near LEDs (DISABLED)"
+msgstr ""
+
+#: src/config/options.inc:1105
+msgid "Duration"
+msgstr ""
+
+#: src/config/options.inc:1107
+msgid ""
+"Inactivity timeout in seconds. The maximum of one day\n"
+"should be enough for just everyone (TM)."
+msgstr ""
+
+#: src/config/options.inc:1112
+msgid "Keybinding action to be triggered when timer reaches zero."
+msgstr ""
+
+#: src/config/options.inc:1115
+#, fuzzy
+msgid "Window tabs"
+msgstr "Fönster"
+
+#: src/config/options.inc:1117
+msgid "Window tabs settings."
+msgstr ""
+
+#: src/config/options.inc:1119
+#, fuzzy
+msgid "Display tabs bar"
+msgstr "Visa ~usemap"
+
+#: src/config/options.inc:1121
+msgid ""
+"Show tabs bar on the screen:\n"
+"0 means never\n"
+"1 means only if two or more tabs are open\n"
+"2 means always"
+msgstr ""
+
+#: src/config/options.inc:1126
+msgid "Wrap-around tabs cycling"
+msgstr ""
+
+#: src/config/options.inc:1128
+msgid ""
+"When moving right from the last tab, jump at the first one, and\n"
+"vice versa."
+msgstr ""
+
+#: src/config/options.inc:1131
+msgid "Confirm tab closing"
+msgstr ""
+
+#: src/config/options.inc:1133
+msgid "When closing a tab show confirmation dialog."
+msgstr ""
+
+#: src/config/options.inc:1137 src/config/opttypes.c:365
+msgid "Language"
+msgstr ""
+
+#: src/config/options.inc:1139
+msgid ""
+"Language of user interface. 'System' means that the language will\n"
+"be extracted from the environment dynamically."
+msgstr ""
+
+#: src/config/options.inc:1142
+#, fuzzy
+msgid "Display status bar"
+msgstr "Visa ~usemap"
+
+#: src/config/options.inc:1144
+msgid "Show status bar on the screen."
+msgstr ""
+
+#: src/config/options.inc:1146
+#, fuzzy
+msgid "Display title bar"
+msgstr "Visa ~usemap"
+
+#: src/config/options.inc:1148
+msgid "Show title bar on the screen."
+msgstr ""
+
+#: src/config/options.inc:1150
+msgid "Display goto dialog in new tabs"
+msgstr ""
+
+#: src/config/options.inc:1152
+msgid ""
+"Pop up goto dialog in newly created tabs when there's no homepage\n"
+"set. This means also showing goto dialog on startup."
+msgstr ""
+
+#: src/config/options.inc:1155
+msgid "Show a message box when file is saved successfully"
+msgstr ""
+
+#: src/config/options.inc:1157
+msgid ""
+"When you pressed a [ Save ] button in some manager, this option\n"
+"will make sure that a box confirming success of the operation will\n"
+"pop up."
+msgstr ""
+
+#: src/config/options.inc:1162
+#, fuzzy
+msgid "Sessions"
+msgstr "Ändelse(r)"
+
+#: src/config/options.inc:1164
+msgid "Sessions settings."
+msgstr ""
+
+#: src/config/options.inc:1166
+msgid "Auto save session"
+msgstr ""
+
+#: src/config/options.inc:1168
+msgid ""
+"Automatically save the session when quitting.\n"
+"This feature requires bookmark support."
+msgstr ""
+
+#: src/config/options.inc:1171
+msgid "Auto restore session"
+msgstr ""
+
+#: src/config/options.inc:1173
+msgid ""
+"Automatically restore the session at start.\n"
+"This feature requires bookmark support."
+msgstr ""
+
+#: src/config/options.inc:1176
+msgid "Auto save and restore session folder name"
+msgstr ""
+
+#: src/config/options.inc:1178
+msgid ""
+"Name of the bookmarks folder used for auto saving and restoring session.\n"
+"The name has to be unique. Any folders with the same name will be deleted.\n"
+"This only makes sense with bookmark support."
+msgstr ""
+
+#: src/config/options.inc:1182
+#, fuzzy
+msgid "Homepage URI"
+msgstr "teckenuppsättning"
+
+#: src/config/options.inc:1184
+msgid ""
+"The URI to load either at startup time when no URI was given\n"
+"on the command line or when requested by the goto-url-home action.\n"
+"Set to \"\" if the environment variable WWW_HOME should be used\n"
+"as homepage URI instead."
+msgstr ""
+
+#: src/config/options.inc:1190
+#, fuzzy
+msgid "Date format"
+msgstr "Filsändning"
+
+#: src/config/options.inc:1192
+msgid "Date format to use in dialogs. See strftime(3)."
+msgstr ""
+
+#: src/config/options.inc:1195
+msgid "Set window title"
+msgstr ""
+
+#: src/config/options.inc:1197
+msgid ""
+"Set the window title when running in a windowing environment\n"
+"in an xterm-like terminal. This way the document's title is\n"
+"shown on the window titlebar."
+msgstr ""
+
+#: src/config/opttypes.c:55
+#, fuzzy
+msgid "Read error"
+msgstr "Sparfel"
+
+#: src/config/opttypes.c:359
+msgid "Boolean"
+msgstr ""
+
+#: src/config/opttypes.c:359
+msgid "[0|1]"
+msgstr ""
+
+#: src/config/opttypes.c:360
+msgid "Integer"
+msgstr ""
+
+#: src/config/opttypes.c:360 src/config/opttypes.c:361
+msgid "<num>"
+msgstr ""
+
+#: src/config/opttypes.c:361
+msgid "Longint"
+msgstr ""
+
+#: src/config/opttypes.c:362
+msgid "String"
+msgstr ""
+
+#: src/config/opttypes.c:362
+msgid "<str>"
+msgstr ""
+
+#: src/config/opttypes.c:364
+#, fuzzy
+msgid "<codepage>"
+msgstr "teckenuppsättning"
+
+#: src/config/opttypes.c:365
+#, fuzzy
+msgid "<language>"
+msgstr "Språk"
+
+#: src/config/opttypes.c:366
+msgid "Color"
+msgstr "Färg"
+
+#: src/config/opttypes.c:366
+msgid "<color|#rrggbb>"
+msgstr ""
+
+#: src/config/opttypes.c:368
+msgid "Special"
+msgstr ""
+
+#: src/config/opttypes.c:370
+msgid "Alias"
+msgstr ""
+
+#. tree
+#: src/config/opttypes.c:373
+msgid "Folder"
+msgstr ""
+
+#. name:
+#: src/cookies/cookies.c:81 src/cookies/cookies.c:826
+msgid "Cookies"
+msgstr ""
+
+#: src/cookies/cookies.c:83
+#, fuzzy
+msgid "Cookies options."
+msgstr "~Spara alternativ"
+
+#: src/cookies/cookies.c:85
+msgid "Accept policy"
+msgstr ""
+
+#: src/cookies/cookies.c:88
+msgid ""
+"Cookies accepting policy:\n"
+"0 is accept no cookies\n"
+"1 is ask for confirmation before accepting cookie\n"
+"2 is accept all cookies"
+msgstr ""
+
+#: src/cookies/cookies.c:93
+#, fuzzy
+msgid "Maximum age"
+msgstr "Kopplar upp"
+
+#: src/cookies/cookies.c:95
+msgid ""
+"Cookie maximum age (in days):\n"
+"-1 is use cookie's expiration date if any\n"
+"0  is force expiration at the end of session, ignoring cookie's\n"
+"   expiration date\n"
+"1+ is use cookie's expiration date, but limit age to the given\n"
+"   number of days"
+msgstr ""
+
+#: src/cookies/cookies.c:102
+msgid "Paranoid security"
+msgstr ""
+
+#: src/cookies/cookies.c:104
+msgid ""
+"When enabled, we'll require three dots in cookies domain for all\n"
+"non-international domains (instead of just two dots). Some countries\n"
+"have generic second level domains (eg. .com.pl, .co.uk) and allowing\n"
+"sites to set cookies for these generic domains could potentially be\n"
+"very bad. Note, it is off by default as it breaks a lot of sites."
+msgstr ""
+
+#: src/cookies/cookies.c:110
+#, fuzzy
+msgid "Saving"
+msgstr "medel"
+
+#: src/cookies/cookies.c:112
+msgid "Whether cookies should be loaded from and save to disk."
+msgstr ""
+
+#: src/cookies/cookies.c:114
+msgid "Resaving"
+msgstr ""
+
+#: src/cookies/cookies.c:116
+msgid ""
+"Save cookies after each change in cookies list? No effect when\n"
+"cookie saving (cookies.save) is off."
+msgstr ""
+
+#: src/cookies/dialogs.c:37 src/cookies/dialogs.c:352
+#, fuzzy
+msgid "Domain"
+msgstr "Dokument~information"
+
+#: src/cookies/dialogs.c:38 src/mime/backend/mailcap.c:98
+#: src/mime/backend/mimetypes.c:57 src/protocol/file/file.c:47
+msgid "Path"
+msgstr ""
+
+#: src/cookies/dialogs.c:41 src/cookies/dialogs.c:45 src/cookies/dialogs.c:353
+msgid "Expires"
+msgstr ""
+
+#: src/cookies/dialogs.c:42
+#, fuzzy
+msgid "at quit time"
+msgstr "uppskattad tid"
+
+#: src/cookies/dialogs.c:50 src/cookies/dialogs.c:354
+#, fuzzy
+msgid "Secure"
+msgstr "nuvarande"
+
+#: src/cookies/dialogs.c:51
+#, fuzzy
+msgid "yes"
+msgstr "byte"
+
+#: src/cookies/dialogs.c:51
+#, fuzzy
+msgid "no"
+msgstr "Info"
+
+#: src/cookies/dialogs.c:70
+#, fuzzy, c-format
+msgid "Do you want to accept a cookie from %s?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/cookies/dialogs.c:78
+msgid "Accept cookie?"
+msgstr ""
+
+#: src/cookies/dialogs.c:81
+msgid "~Accept"
+msgstr ""
+
+#: src/cookies/dialogs.c:82
+msgid "~Reject"
+msgstr ""
+
+#: src/cookies/dialogs.c:149 src/cookies/dialogs.c:342
+#: src/dialogs/document.c:110
+msgid "Server"
+msgstr "Server"
+
+#. cant_delete_item
+#: src/cookies/dialogs.c:202
+#, c-format
+msgid "Sorry, but cookie \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/cookies/dialogs.c:204
+#, c-format
+msgid "Sorry, but cookie \"%s\" is being used by something else."
+msgstr ""
+
+#. cant_delete_folder
+#: src/cookies/dialogs.c:206
+#, c-format
+msgid "Sorry, but cookie domain \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_folder
+#: src/cookies/dialogs.c:208
+#, c-format
+msgid "Sorry, but cookie domain \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/cookies/dialogs.c:210
+#, fuzzy
+msgid "Delete marked cookies"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/cookies/dialogs.c:212
+#, fuzzy
+msgid "Delete marked cookies?"
+msgstr "Valfält"
+
+#. delete_folder_title
+#: src/cookies/dialogs.c:214
+#, fuzzy
+msgid "Delete domain's cookies"
+msgstr "Valfält"
+
+#. delete_folder
+#: src/cookies/dialogs.c:216
+#, c-format
+msgid "Delete all cookies from domain \"%s\"?"
+msgstr ""
+
+#. delete_item_title
+#: src/cookies/dialogs.c:218
+#, fuzzy
+msgid "Delete cookie"
+msgstr "Ta bort"
+
+#. delete_item
+#: src/cookies/dialogs.c:220
+#, fuzzy
+msgid "Delete this cookie?"
+msgstr "Ta bort ändelse"
+
+#. clear_all_items_title
+#: src/cookies/dialogs.c:222
+msgid "Clear all cookies"
+msgstr ""
+
+#. clear_all_items_title
+#: src/cookies/dialogs.c:224
+#, fuzzy
+msgid "Do you really want to remove all cookies?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/cookies/dialogs.c:425
+#, fuzzy
+msgid "~Clear"
+msgstr "Stäng"
+
+#: src/cookies/dialogs.c:431
+#, fuzzy
+msgid "Cookie manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/dialogs/document.c:47
+msgid "You are nowhere!"
+msgstr "Du är ingenstans!"
+
+#: src/dialogs/document.c:100
+msgid "assumed"
+msgstr "antagen"
+
+#: src/dialogs/document.c:103
+msgid "ignoring server setting"
+msgstr "Ignorerar serverinställning"
+
+#: src/dialogs/document.c:128
+msgid "Date"
+msgstr "Datum"
+
+#: src/dialogs/document.c:146 src/globhist/dialogs.c:68
+msgid "Last visit time"
+msgstr ""
+
+#: src/dialogs/document.c:165
+msgid "Unknown"
+msgstr ""
+
+#: src/dialogs/document.c:176
+#, fuzzy
+msgid "Link"
+msgstr "~Länk"
+
+#: src/dialogs/document.c:183
+msgid "Link title"
+msgstr ""
+
+#: src/dialogs/document.c:205
+msgid "Link last visit time"
+msgstr ""
+
+#: src/dialogs/document.c:211
+msgid "Link title (from history)"
+msgstr ""
+
+#: src/dialogs/document.c:227 src/dialogs/document.c:296
+msgid "Header info"
+msgstr "Huvudinfo"
+
+#: src/dialogs/document.c:240
+#, fuzzy
+msgid "Internal header info"
+msgstr "Huvudinfo"
+
+#: src/dialogs/document.c:281
+msgid "No header info."
+msgstr ""
+
+#: src/dialogs/download.c:250 src/dialogs/menu.c:573 src/sched/download.c:357
+msgid "Download"
+msgstr "Hämta"
+
+#: src/dialogs/download.c:257
+#, fuzzy
+msgid "~Background"
+msgstr "Bakgrund"
+
+#: src/dialogs/download.c:258
+#, fuzzy
+msgid "Background with ~notify"
+msgstr "Bakgrund"
+
+#: src/dialogs/download.c:259 src/dialogs/download.c:473
+#, fuzzy
+msgid "~Abort"
+msgstr "Avbryt"
+
+#: src/dialogs/download.c:264
+#, fuzzy
+msgid "Abort and ~delete file"
+msgstr "Fel vid skrivning till fil"
+
+#. cant_delete_item
+#: src/dialogs/download.c:404
+#, c-format
+msgid "Sorry, but download \"%s\" cannot be interrupted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/dialogs/download.c:406
+#, c-format
+msgid "Sorry, but download \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/dialogs/download.c:412
+msgid "Interrupt marked downloads"
+msgstr ""
+
+#. delete_marked_items
+#: src/dialogs/download.c:414
+msgid "Interrupt marked downloads?"
+msgstr ""
+
+#. delete_item_title
+#: src/dialogs/download.c:420
+#, fuzzy
+msgid "Interrupt download"
+msgstr "Avbruten"
+
+#. delete_item
+#: src/dialogs/download.c:422
+msgid "Interrupt this download?"
+msgstr ""
+
+#. clear_all_items_title
+#: src/dialogs/download.c:424
+msgid "Interrupt all downloads"
+msgstr ""
+
+#. clear_all_items_title
+#: src/dialogs/download.c:426
+#, fuzzy
+msgid "Do you really want to interrupt all downloads?"
+msgstr "Vill du verkligen avsluta links och avbryta alla pågående hämtningar?"
+
+#. This requires more work to make locking work and query the user
+#: src/dialogs/download.c:476
+#, fuzzy
+msgid "Abort and delete file"
+msgstr "Fel vid skrivning till fil"
+
+#: src/dialogs/download.c:478 src/dialogs/edit.c:99 src/globhist/dialogs.c:232
+#: src/protocol/auth/dialogs.c:256
+#, fuzzy
+msgid "C~lear"
+msgstr "~Sök"
+
+#: src/dialogs/download.c:483
+#, fuzzy
+msgid "Download manager"
+msgstr "Hämta bild"
+
+#: src/dialogs/info.c:41
+msgid "About"
+msgstr "Om"
+
+#: src/dialogs/info.c:130
+msgid "Keys"
+msgstr "Tangenter"
+
+#: src/dialogs/info.c:141
+msgid "Copying"
+msgstr "Licens"
+
+#: src/dialogs/info.c:142
+#, fuzzy, c-format
+msgid ""
+"ELinks %s\n"
+"\n"
+"(C) 1999 - 2002 Mikulas Patocka\n"
+"(C) 2001 - 2004 Petr Baudis\n"
+"(C) 2002 - 2005 Jonas Fonseca\n"
+"and others\n"
+"\n"
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation, specifically version 2 of the License."
+msgstr ""
+"\n"
+"\n"
+"© 1999-2002 Mikulas Patocka\n"
+"(C) 2001-2003 Petr Baudis\n"
+"Svensk översättning © 2000-2001 Free Software Foundation och Martin Norbäck\n"
+"\n"
+"Detta program är fri programvara. Du kan distribuera det och/eller modifiera "
+"det under villkoren i GNU General Public License, publicerad av Free "
+"Software Foundation, antingen version 2 eller (om du så vill) någon senare "
+"version."
+
+#: src/dialogs/info.c:169 src/dialogs/info.c:273
+msgid "Resources"
+msgstr "Resurser"
+
+#: src/dialogs/info.c:173
+#, fuzzy, c-format
+msgid "%d handle"
+msgid_plural "%d handles"
+msgstr[0] "handtag"
+msgstr[1] "handtag"
+
+#: src/dialogs/info.c:177
+#, fuzzy, c-format
+msgid "%d timer"
+msgid_plural "%d timers"
+msgstr[0] "tidtagare"
+msgstr[1] "tidtagare"
+
+#: src/dialogs/info.c:184
+#, fuzzy, c-format
+msgid "%d connection"
+msgid_plural "%d connections"
+msgstr[0] "uppkopplingar"
+msgstr[1] "uppkopplingar"
+
+#: src/dialogs/info.c:188
+#, fuzzy, c-format
+msgid "%d connecting"
+msgid_plural "%d connecting"
+msgstr[0] "kopplar upp"
+msgstr[1] "kopplar upp"
+
+#: src/dialogs/info.c:192
+#, fuzzy, c-format
+msgid "%d transferring"
+msgid_plural "%d transferring"
+msgstr[0] "för över"
+msgstr[1] "för över"
+
+#: src/dialogs/info.c:196
+#, fuzzy, c-format
+msgid "%d keepalive"
+msgid_plural "%d keepalive"
+msgstr[0] "håll vid liv"
+msgstr[1] "håll vid liv"
+
+#: src/dialogs/info.c:203 src/dialogs/info.c:255
+#, c-format
+msgid "%d byte"
+msgid_plural "%d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/dialogs/info.c:207
+#, fuzzy, c-format
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] "filer"
+msgstr[1] "filer"
+
+#: src/dialogs/info.c:211 src/dialogs/info.c:226
+#, c-format
+msgid "%d locked"
+msgid_plural "%d locked"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/dialogs/info.c:215
+#, fuzzy, c-format
+msgid "%d loading"
+msgid_plural "%d loading"
+msgstr[0] "Hämta"
+msgstr[1] "Hämta"
+
+#: src/dialogs/info.c:218
+#, fuzzy
+msgid "Document cache"
+msgstr "dokument"
+
+#: src/dialogs/info.c:222
+#, fuzzy, c-format
+msgid "%d formatted"
+msgid_plural "%d formatted"
+msgstr[0] "Filsändning"
+msgstr[1] "Filsändning"
+
+#: src/dialogs/info.c:230
+#, c-format
+msgid "%d refreshing"
+msgid_plural "%d refreshing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/dialogs/info.c:233
+#, fuzzy
+msgid "Interlinking"
+msgstr "Skriv in länknummer"
+
+#: src/dialogs/info.c:236
+#, fuzzy
+msgid "master terminal"
+msgstr "Ändra storlek på ~terminal"
+
+#: src/dialogs/info.c:238
+#, fuzzy
+msgid "slave terminal"
+msgstr "Ändra storlek på ~terminal"
+
+#: src/dialogs/info.c:242
+#, fuzzy, c-format
+msgid "%d terminal"
+msgid_plural "%d terminals"
+msgstr[0] "~BeOS-terminal"
+msgstr[1] "~BeOS-terminal"
+
+#: src/dialogs/info.c:246
+#, fuzzy, c-format
+msgid "%d session"
+msgid_plural "%d sessions"
+msgstr[0] "~Spara alternativ"
+msgstr[1] "~Spara alternativ"
+
+#: src/dialogs/info.c:251
+#, fuzzy
+msgid "Memory allocated"
+msgstr "Minnescache"
+
+#: src/dialogs/info.c:259
+#, c-format
+msgid "%d byte overhead"
+msgid_plural "%d bytes overhead"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/dialogs/menu.c:96
+msgid "Save URL"
+msgstr "Spara URL"
+
+#: src/dialogs/menu.c:96 src/dialogs/menu.c:522
+msgid "Enter URL"
+msgstr "Ange URL"
+
+#: src/dialogs/menu.c:120
+msgid "Exit ELinks"
+msgstr "Avsluta links"
+
+#: src/dialogs/menu.c:122
+msgid "Do you really want to exit ELinks (and terminate all downloads)?"
+msgstr "Vill du verkligen avsluta links och avbryta alla pågående hämtningar?"
+
+#: src/dialogs/menu.c:124
+msgid "Do you really want to exit ELinks?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/dialogs/menu.c:160
+msgid "No history"
+msgstr "Ingen historik"
+
+#: src/dialogs/menu.c:231 src/dialogs/menu.c:303
+msgid "Go ~back"
+msgstr "Gå tillbaka"
+
+#: src/dialogs/menu.c:232
+msgid "Go for~ward"
+msgstr ""
+
+#: src/dialogs/menu.c:239 src/dialogs/menu.c:315
+#, fuzzy
+msgid "Bookm~ark document"
+msgstr "dokument"
+
+#: src/dialogs/menu.c:243 src/dialogs/menu.c:403
+msgid "Toggle ~html/plain"
+msgstr "Växla ~HTML/text"
+
+#: src/dialogs/menu.c:244
+msgid "~Reload"
+msgstr "Ladda om"
+
+#: src/dialogs/menu.c:247 src/dialogs/menu.c:413
+msgid "Frame at ~full-screen"
+msgstr "Ram i ~fullskärmsläge"
+
+#: src/dialogs/menu.c:256 src/dialogs/menu.c:415
+msgid "Nex~t tab"
+msgstr ""
+
+#: src/dialogs/menu.c:257 src/dialogs/menu.c:416
+#, fuzzy
+msgid "Pre~v tab"
+msgstr "Ingen tidigare sökning"
+
+#: src/dialogs/menu.c:260 src/dialogs/menu.c:417
+#, fuzzy
+msgid "~Close tab"
+msgstr "Stäng"
+
+#: src/dialogs/menu.c:263
+msgid "C~lose all tabs but the current"
+msgstr ""
+
+#: src/dialogs/menu.c:267
+#, fuzzy
+msgid "B~ookmark all tabs"
+msgstr "Bokmärken"
+
+#: src/dialogs/menu.c:300
+#, fuzzy
+msgid "Open new ~tab"
+msgstr "Öppna i nytt fönster"
+
+#: src/dialogs/menu.c:301
+#, fuzzy
+msgid "Open new tab in backgroun~d"
+msgstr "Bakgrund"
+
+#: src/dialogs/menu.c:302
+msgid "~Go to URL"
+msgstr "~Gå till URL"
+
+#: src/dialogs/menu.c:304
+msgid "Go ~forward"
+msgstr ""
+
+#: src/dialogs/menu.c:305
+msgid "~History"
+msgstr "~Historik"
+
+#: src/dialogs/menu.c:306
+#, fuzzy
+msgid "~Unhistory"
+msgstr "~Historik"
+
+#: src/dialogs/menu.c:311
+#, fuzzy
+msgid "~Save as"
+msgstr "Spara som"
+
+#: src/dialogs/menu.c:312
+#, fuzzy
+msgid "Save UR~L as"
+msgstr "Spara ~URL som"
+
+#: src/dialogs/menu.c:313
+#, fuzzy
+msgid "Sa~ve formatted document"
+msgstr "Spara formatterat ~dokument"
+
+#: src/dialogs/menu.c:321
+#, fuzzy
+msgid "~Kill background connections"
+msgstr "Döda bakgrundsupp~kopplingar"
+
+#: src/dialogs/menu.c:322
+#, fuzzy
+msgid "Flush all ~caches"
+msgstr "Töm alla cachar"
+
+#: src/dialogs/menu.c:323
+#, fuzzy
+msgid "Resource ~info"
+msgstr "Resurs~information"
+
+#: src/dialogs/menu.c:329
+msgid "E~xit"
+msgstr "Avsluta"
+
+#: src/dialogs/menu.c:355
+#, fuzzy
+msgid "Open ~new window"
+msgstr "Öppna i nytt fönster"
+
+#: src/dialogs/menu.c:374
+msgid "~OS shell"
+msgstr "Kommandot~olk"
+
+#: src/dialogs/menu.c:381
+#, fuzzy
+msgid "Resize t~erminal"
+msgstr "Ändra storlek på ~terminal"
+
+#: src/dialogs/menu.c:398
+msgid "Search ~backward"
+msgstr "Sök ~bakåt"
+
+#: src/dialogs/menu.c:399
+msgid "Find ~next"
+msgstr "Sök ~nästa"
+
+#: src/dialogs/menu.c:400
+msgid "Find ~previous"
+msgstr "Sök föregående"
+
+#: src/dialogs/menu.c:401
+msgid "T~ypeahead search"
+msgstr ""
+
+#: src/dialogs/menu.c:404
+#, fuzzy
+msgid "Toggle i~mages"
+msgstr "Växla ~HTML/text"
+
+#: src/dialogs/menu.c:405
+#, fuzzy
+msgid "Toggle ~link numbering"
+msgstr "Skriv in länknummer"
+
+#: src/dialogs/menu.c:406
+msgid "Toggle ~document colors"
+msgstr ""
+
+#: src/dialogs/menu.c:407
+msgid "~Wrap text on/off"
+msgstr ""
+
+#: src/dialogs/menu.c:409
+msgid "Document ~info"
+msgstr "Dokument~information"
+
+#: src/dialogs/menu.c:410
+msgid "H~eader info"
+msgstr "Huvudinfo"
+
+#: src/dialogs/menu.c:411
+#, fuzzy
+msgid "Rel~oad document"
+msgstr "dokument"
+
+#: src/dialogs/menu.c:412
+#, fuzzy
+msgid "~Rerender document"
+msgstr "Spara formatterat ~dokument"
+
+#: src/dialogs/menu.c:423
+msgid "~ELinks homepage"
+msgstr ""
+
+#: src/dialogs/menu.c:424
+#, fuzzy
+msgid "~Documentation"
+msgstr "Dokument~information"
+
+#: src/dialogs/menu.c:425
+msgid "~Keys"
+msgstr "Tangenter"
+
+#: src/dialogs/menu.c:427
+msgid "LED ~indicators"
+msgstr ""
+
+#: src/dialogs/menu.c:430
+msgid "~Bugs information"
+msgstr ""
+
+#: src/dialogs/menu.c:432
+msgid "ELinks C~vsWeb"
+msgstr ""
+
+#: src/dialogs/menu.c:433
+msgid "ELinks Cvs ~History"
+msgstr ""
+
+#: src/dialogs/menu.c:434
+#, fuzzy
+msgid "ELinks ~LXR"
+msgstr "~Länk"
+
+#: src/dialogs/menu.c:437
+msgid "~Copying"
+msgstr "Li~cens"
+
+#: src/dialogs/menu.c:438
+msgid "~About"
+msgstr "Om"
+
+#: src/dialogs/menu.c:445
+msgid "~Modify"
+msgstr "Ändra"
+
+#: src/dialogs/menu.c:452 src/dialogs/menu.c:465
+msgid "~Language"
+msgstr "Språk"
+
+#: src/dialogs/menu.c:454 src/dialogs/menu.c:466
+msgid "C~haracter set"
+msgstr "Teckenuppsättning"
+
+#: src/dialogs/menu.c:455 src/dialogs/menu.c:467
+msgid "~Terminal options"
+msgstr "~Terminalalternativ"
+
+#: src/dialogs/menu.c:456
+msgid "File ~extensions"
+msgstr "Filänd~elser"
+
+#: src/dialogs/menu.c:458
+msgid "~Options manager"
+msgstr ""
+
+#: src/dialogs/menu.c:459
+msgid "~Keybinding manager"
+msgstr ""
+
+#: src/dialogs/menu.c:460
+msgid "~Save options"
+msgstr "~Spara alternativ"
+
+#: src/dialogs/menu.c:473
+#, fuzzy
+msgid "Global ~history"
+msgstr "Ingen historik"
+
+#: src/dialogs/menu.c:476
+#, fuzzy
+msgid "~Bookmarks"
+msgstr "Bokmärken"
+
+#: src/dialogs/menu.c:478
+#, fuzzy
+msgid "~Cache"
+msgstr "Avbryt"
+
+#: src/dialogs/menu.c:479
+msgid "~Downloads"
+msgstr "~Hämtningar"
+
+#: src/dialogs/menu.c:481
+msgid "Coo~kies"
+msgstr ""
+
+#: src/dialogs/menu.c:484
+#, fuzzy
+msgid "~Form history"
+msgstr "Slut på minne"
+
+#: src/dialogs/menu.c:486
+#, fuzzy
+msgid "~Authentication"
+msgstr "Dokument~information"
+
+#: src/dialogs/menu.c:502
+msgid "~File"
+msgstr "~Arkiv"
+
+#: src/dialogs/menu.c:503
+msgid "~View"
+msgstr "~Visa"
+
+#: src/dialogs/menu.c:504
+msgid "~Link"
+msgstr "~Länk"
+
+#: src/dialogs/menu.c:505
+msgid "~Tools"
+msgstr ""
+
+#: src/dialogs/menu.c:506
+msgid "~Setup"
+msgstr "~Inställningar"
+
+#: src/dialogs/menu.c:507
+msgid "~Help"
+msgstr "H~jälp"
+
+#: src/dialogs/menu.c:522
+msgid "Go to URL"
+msgstr "Gå till URL"
+
+#: src/dialogs/menu.c:573
+msgid "Save to file"
+msgstr "Spara till fil"
+
+#: src/dialogs/menu.c:870
+msgid "~Pass frame URI to external command"
+msgstr ""
+
+#: src/dialogs/menu.c:875
+msgid "Pass link URI to e~xternal command"
+msgstr ""
+
+#: src/dialogs/menu.c:881
+msgid "Pass tab URI to e~xternal command"
+msgstr ""
+
+#: src/dialogs/menu.c:906
+msgid "Empty directory"
+msgstr ""
+
+#: src/dialogs/menu.c:950
+msgid "Directories:"
+msgstr ""
+
+#: src/dialogs/menu.c:963
+#, fuzzy
+msgid "Files:"
+msgstr "~Arkiv"
+
+#. 2 '\n' + 1 '\0'
+#: src/dialogs/options.c:153
+#, c-format
+msgid ""
+"The environmental variable TERM is set to '%s'.\n"
+"\n"
+"ELinks maintains separate sets of values for these options\n"
+"and chooses the appropriate set based on the value of TERM.\n"
+"This allows you to configure the settings appropriately for\n"
+"each terminal in which you run ELinks."
+msgstr ""
+
+#: src/dialogs/options.c:179
+msgid "Terminal options"
+msgstr "Terminalalternativ"
+
+#: src/dialogs/options.c:188
+msgid "Frame handling:"
+msgstr ""
+
+#: src/dialogs/options.c:189
+msgid "No frames"
+msgstr "Inga ramar"
+
+#: src/dialogs/options.c:190
+msgid "VT 100 frames"
+msgstr "VT100-ramar"
+
+#: src/dialogs/options.c:191
+msgid "Linux or OS/2 frames"
+msgstr "Linux eller OS/2-ramar"
+
+#: src/dialogs/options.c:192
+#, fuzzy
+msgid "FreeBSD frames"
+msgstr "Inga ramar"
+
+#: src/dialogs/options.c:193
+msgid "KOI8-R frames"
+msgstr "KOI8-R-ramar"
+
+#: src/dialogs/options.c:195
+#, fuzzy
+msgid "Color mode:"
+msgstr "Färg"
+
+#: src/dialogs/options.c:196
+msgid "No colors (mono)"
+msgstr ""
+
+#: src/dialogs/options.c:197
+#, fuzzy
+msgid "16 colors"
+msgstr "Textarea"
+
+#: src/dialogs/options.c:199
+#, fuzzy
+msgid "256 colors"
+msgstr "Textarea"
+
+#: src/dialogs/options.c:283
+#, fuzzy
+msgid "Resize terminal"
+msgstr "Ändra storlek på ~terminal"
+
+#: src/dialogs/options.c:286
+msgid "Width="
+msgstr ""
+
+#: src/dialogs/options.c:287
+msgid "Height="
+msgstr ""
+
+#. FIXME: The following is a PITA from the l10n standpoint. A *big*
+#. * one, _("of")-like pearls are a nightmare. Format strings need to
+#. * be introduced to this fuggy corner of code as well. --pasky
+#: src/dialogs/status.c:70
+msgid "Received"
+msgstr "Hämtat"
+
+#: src/dialogs/status.c:75
+msgid "of"
+msgstr "av"
+
+#: src/dialogs/status.c:84
+msgid "Average speed"
+msgstr "Medelhastighet"
+
+#: src/dialogs/status.c:85
+#, fuzzy
+msgid "average speed"
+msgstr "Medelhastighet"
+
+#: src/dialogs/status.c:86
+msgid "avg"
+msgstr "medel"
+
+#: src/dialogs/status.c:89
+msgid "Speed"
+msgstr "Hastighet"
+
+#: src/dialogs/status.c:89
+#, fuzzy
+msgid "speed"
+msgstr "Hastighet"
+
+#: src/dialogs/status.c:100
+msgid "current speed"
+msgstr "nuvarande hastighet"
+
+#: src/dialogs/status.c:100
+msgid "cur"
+msgstr "nuvarande"
+
+#: src/dialogs/status.c:111
+msgid "Elapsed time"
+msgstr "Använd tid"
+
+#: src/dialogs/status.c:112
+#, fuzzy
+msgid "elapsed time"
+msgstr "Använd tid"
+
+#: src/dialogs/status.c:113
+msgid "ETT"
+msgstr ""
+
+#: src/dialogs/status.c:121
+msgid "estimated time"
+msgstr "uppskattad tid"
+
+#: src/dialogs/status.c:122
+msgid "ETA"
+msgstr ""
+
+#: src/dialogs/status.c:247
+msgid "Enter a mark to set"
+msgstr ""
+
+#: src/dialogs/status.c:251
+msgid "Enter a mark to which to jump"
+msgstr ""
+
+#: src/dialogs/status.c:258
+#, c-format
+msgid "Keyboard prefix: %d"
+msgstr ""
+
+#: src/dialogs/status.c:282
+#, c-format
+msgid "Cursor position: %dx%d"
+msgstr ""
+
+#: src/dialogs/status.c:383
+msgid "Untitled"
+msgstr ""
+
+#: src/dialogs/status.c:385
+#, fuzzy
+msgid "No document"
+msgstr "dokument"
+
+#. name:
+#: src/document/css/css.c:29 src/document/css/css.c:156
+msgid "Cascading Style Sheets"
+msgstr ""
+
+#: src/document/css/css.c:31
+msgid "Options concerning how to use CSS for styling documents."
+msgstr ""
+
+#: src/document/css/css.c:33
+#, fuzzy
+msgid "Enable CSS"
+msgstr "Namn"
+
+#: src/document/css/css.c:35
+msgid "Enable adding of CSS style info to documents."
+msgstr ""
+
+#: src/document/css/css.c:37
+msgid "Import external style sheets"
+msgstr ""
+
+#: src/document/css/css.c:39
+msgid ""
+"When enabled any external style sheets that are imported from\n"
+"either CSS itself using the @import keyword or from the HTML using\n"
+"<link> tags in the document header will also be downloaded."
+msgstr ""
+
+#: src/document/css/css.c:43
+msgid "Default style sheet"
+msgstr ""
+
+#: src/document/css/css.c:45
+msgid ""
+"The path to the file containing the default user defined\n"
+"Cascading Style Sheet. It can be used to control the basic\n"
+"layout of HTML documents. The path is assumed to be relative\n"
+"to ELinks' home directory.\n"
+"Leave as \"\" to use built-in document styling."
+msgstr ""
+
+#. name:
+#: src/ecmascript/ecmascript.c:37 src/ecmascript/ecmascript.c:197
+msgid "ECMAScript"
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:39
+#, fuzzy
+msgid "ECMAScript options."
+msgstr "Terminalalternativ"
+
+#: src/ecmascript/ecmascript.c:43
+msgid "Whether to run those scripts inside of documents."
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:45
+msgid "Script error reporting"
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:47
+msgid "Open a message box when a script reports an error."
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:49
+#, fuzzy
+msgid "Maximum execution time"
+msgstr "Kopplar upp"
+
+#: src/ecmascript/ecmascript.c:51
+msgid "Maximum execution time in seconds for a script."
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:53
+msgid "Pop-up window blocking"
+msgstr ""
+
+#: src/ecmascript/ecmascript.c:55
+msgid "Whether to disallow scripts to open new windows or tabs."
+msgstr ""
+
+#: src/ecmascript/spidermonkey.c:370
+msgid "JavaScript Alert"
+msgstr ""
+
+#: src/ecmascript/spidermonkey.c:1969
+#, c-format
+msgid "A script embedded in the current document raised the following%s%s%s%s"
+msgstr ""
+
+#: src/ecmascript/spidermonkey.c:1985
+msgid "JavaScript Error"
+msgstr ""
+
+#: src/ecmascript/spidermonkey.c:2004
+msgid "JavaScript Emergency"
+msgstr ""
+
+#: src/ecmascript/spidermonkey.c:2006
+#, c-format
+msgid ""
+"A script embedded in the current document was running\n"
+"for more than %d seconds. This probably means there is\n"
+"a bug in the script and it could have halted the whole\n"
+"ELinks, so the script execution was interrupted."
+msgstr ""
+
+#: src/formhist/dialogs.c:67
+msgid "Forms are never saved for this URL."
+msgstr ""
+
+#: src/formhist/dialogs.c:69
+msgid "Forms are saved for this URL."
+msgstr ""
+
+#. cant_delete_item
+#: src/formhist/dialogs.c:121
+#, c-format
+msgid "Sorry, but form \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/formhist/dialogs.c:123
+#, c-format
+msgid "Sorry, but form \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/formhist/dialogs.c:129
+#, fuzzy
+msgid "Delete marked forms"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/formhist/dialogs.c:131
+#, fuzzy
+msgid "Delete marked forms?"
+msgstr "Valfält"
+
+#. delete_item_title
+#: src/formhist/dialogs.c:137
+#, fuzzy
+msgid "Delete form"
+msgstr "Ta bort bokmärke"
+
+#. delete_item
+#: src/formhist/dialogs.c:139
+#, fuzzy
+msgid "Delete this form?"
+msgstr "Ta bort bokmärke"
+
+#. clear_all_items_title
+#: src/formhist/dialogs.c:141
+msgid "Clear all forms"
+msgstr ""
+
+#. clear_all_items_title
+#: src/formhist/dialogs.c:143
+#, fuzzy
+msgid "Do you really want to remove all forms?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/formhist/dialogs.c:174
+msgid "Form not saved"
+msgstr ""
+
+#: src/formhist/dialogs.c:175
+msgid ""
+"No saved information for this URL.\n"
+"If you want to save passwords for this URL, enable it by pressing the "
+"\"Toggle saving\" button."
+msgstr ""
+
+#: src/formhist/dialogs.c:209
+#, fuzzy
+msgid "~Login"
+msgstr "Användar-ID"
+
+#: src/formhist/dialogs.c:212
+#, fuzzy
+msgid "~Toggle saving"
+msgstr "Växla ~HTML/text"
+
+#: src/formhist/dialogs.c:213
+msgid "Clea~r"
+msgstr ""
+
+#: src/formhist/dialogs.c:219
+#, fuzzy
+msgid "Form history manager"
+msgstr "Slut på minne"
+
+#. TODO: Remember multiple login for the same form.
+#. * TODO: Password manager GUI (here?) (in dialogs.c, of course --pasky).
+#: src/formhist/formhist.c:37
+#, fuzzy
+msgid "Show form history dialog"
+msgstr "Terminalalternativ"
+
+#: src/formhist/formhist.c:39
+msgid ""
+"Ask if a login form should be saved to file or not.\n"
+"This option only disables the dialog, already saved login\n"
+"forms are unaffected."
+msgstr ""
+
+#: src/formhist/formhist.c:451
+#, fuzzy
+msgid "Form history"
+msgstr "Slut på minne"
+
+#: src/formhist/formhist.c:452
+msgid ""
+"Should this login be remembered?\n"
+"\n"
+"Please note that the password will be stored obscured (but unencrypted) in a "
+"file on your disk.\n"
+"\n"
+"If you are using a valuable password, answer NO."
+msgstr ""
+
+#: src/formhist/formhist.c:459
+msgid "Ne~ver for this site"
+msgstr ""
+
+#. name:
+#: src/formhist/formhist.c:484
+#, fuzzy
+msgid "Form History"
+msgstr "Slut på minne"
+
+#. cant_delete_item
+#: src/globhist/dialogs.c:106
+#, c-format
+msgid "Sorry, but history entry \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/globhist/dialogs.c:108
+#, c-format
+msgid "Sorry, but history entry \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/globhist/dialogs.c:114
+#, fuzzy
+msgid "Delete marked history entries"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/globhist/dialogs.c:116
+#, fuzzy
+msgid "Delete marked history entries?"
+msgstr "Valfält"
+
+#. delete_item_title
+#: src/globhist/dialogs.c:122
+#, fuzzy
+msgid "Delete history entry"
+msgstr "Ta bort"
+
+#. delete_item
+#: src/globhist/dialogs.c:124
+msgid "Delete this history entry?"
+msgstr ""
+
+#. clear_all_items_title
+#: src/globhist/dialogs.c:126
+msgid "Clear all history entries"
+msgstr ""
+
+#. clear_all_items_title
+#: src/globhist/dialogs.c:128
+#, fuzzy
+msgid "Do you really want to remove all history entries?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/globhist/dialogs.c:170
+msgid "Search history"
+msgstr ""
+
+#: src/globhist/dialogs.c:227
+#, fuzzy
+msgid "~Bookmark"
+msgstr "Bokmärken"
+
+#: src/globhist/dialogs.c:241
+#, fuzzy
+msgid "Global history manager"
+msgstr "Ingen historik"
+
+#: src/globhist/globhist.c:60
+msgid "Global history"
+msgstr ""
+
+#: src/globhist/globhist.c:62
+msgid "Global history options."
+msgstr ""
+
+#: src/globhist/globhist.c:66
+msgid "Enable global history (\"history of all pages visited\")."
+msgstr ""
+
+#: src/globhist/globhist.c:68
+msgid "Maximum number of entries"
+msgstr ""
+
+#: src/globhist/globhist.c:70
+msgid "Maximum number of entries in the global history."
+msgstr ""
+
+#: src/globhist/globhist.c:72
+#, fuzzy
+msgid "Display style"
+msgstr "Visa ~usemap"
+
+#: src/globhist/globhist.c:74
+msgid ""
+"What to display in global history dialog:\n"
+"0 is URLs\n"
+"1 is page titles"
+msgstr ""
+
+#. name:
+#: src/globhist/globhist.c:422
+#, fuzzy
+msgid "Global History"
+msgstr "Ingen historik"
+
+#: src/intl/gettext/libintl.c:28
+#, fuzzy
+msgid "System"
+msgstr "Namn"
+
+#: src/intl/gettext/libintl.c:29
+msgid "English"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:31
+msgid "Belarusian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:32
+msgid "Brazilian Portuguese"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:33
+msgid "Bulgarian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:34
+msgid "Catalan"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:35
+msgid "Croatian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:36
+#, fuzzy
+msgid "Czech"
+msgstr "Avbryt"
+
+#: src/intl/gettext/libintl.c:37
+msgid "Danish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:38
+msgid "Dutch"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:39
+msgid "Estonian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:40
+msgid "Finnish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:41
+msgid "French"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:42
+msgid "Galician"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:43
+msgid "German"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:44
+msgid "Greek"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:45
+msgid "Hungarian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:46
+msgid "Icelandic"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:47
+msgid "Indonesian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:48
+msgid "Italian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:49
+msgid "Lithuanian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:50
+msgid "Norwegian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:51
+msgid "Polish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:52
+msgid "Portuguese"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:53
+#, fuzzy
+msgid "Romanian"
+msgstr "Dokument~information"
+
+#: src/intl/gettext/libintl.c:54
+msgid "Russian"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:55
+msgid "Slovak"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:56
+msgid "Spanish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:57
+msgid "Swedish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:58
+msgid "Turkish"
+msgstr ""
+
+#: src/intl/gettext/libintl.c:59
+msgid "Ukrainian"
+msgstr ""
+
+#: src/lowlevel/home.c:122
+#, c-format
+msgid ""
+"Commandline options -config-dir set to %s, but could not create directory %s."
+msgstr ""
+
+#: src/lowlevel/home.c:127
+#, c-format
+msgid "ELINKS_CONFDIR set to %s, but could not create directory %s."
+msgstr ""
+
+#: src/lowlevel/home.c:150
+msgid ""
+"Unable to find or create ELinks config directory. Please check if you have "
+"$HOME variable set correctly and if you have write permission to your home "
+"directory."
+msgstr ""
+
+#: src/lowlevel/interlink.c:327 src/lowlevel/select.c:258
+#, c-format
+msgid "The call to %s failed: %d (%s)"
+msgstr ""
+
+#. Infinite loop prevention.
+#: src/lowlevel/select.c:261
+#, c-format
+msgid "%d select() failures."
+msgstr ""
+
+#: src/main.c:142
+msgid "Cannot create a pipe for internal communication."
+msgstr ""
+
+#: src/main.c:202
+#, c-format
+msgid "URL expected after -%s"
+msgstr ""
+
+#: src/main.c:210
+msgid "No running ELinks found."
+msgstr ""
+
+#. The remote session(s) can not be created
+#: src/main.c:217
+msgid "No remote session to connect to."
+msgstr ""
+
+#: src/main.c:226
+msgid "Unable to encode session info."
+msgstr ""
+
+#: src/main.c:243
+msgid "Unable to attach_terminal()."
+msgstr ""
+
+#: src/mime/backend/default.c:26
+msgid "MIME type associations"
+msgstr ""
+
+#: src/mime/backend/default.c:28
+msgid ""
+"Handler <-> MIME type association. The first sub-tree is the MIME\n"
+"class while the second sub-tree is the MIME type (ie. image/gif\n"
+"handler will reside at mime.type.image.gif). Each MIME type option\n"
+"should contain (case-sensitive) name of the MIME handler (its\n"
+"properties are stored at mime.handler.<name>)."
+msgstr ""
+
+#: src/mime/backend/default.c:36
+msgid ""
+"Handler matching this MIME-type class ('*' is used here in place\n"
+"of '.')."
+msgstr ""
+
+#: src/mime/backend/default.c:41
+msgid ""
+"Handler matching this MIME-type name ('*' is used here in place\n"
+"of '.')."
+msgstr ""
+
+#: src/mime/backend/default.c:45
+msgid "File type handlers"
+msgstr ""
+
+#: src/mime/backend/default.c:47
+msgid ""
+"A file type handler is a set of information about how to use\n"
+"an external program to view a file. It is possible to refer to it\n"
+"for several MIME types -- e.g., you can define an 'image' handler\n"
+"to which mime.type.image.png, mime.type.image.jpeg, and so on will\n"
+"refer; or one might define a handler for a more specific type of file\n"
+"-- e.g., PDF files.\n"
+"Note you must define both a MIME handler and a MIME type association\n"
+"for it to work."
+msgstr ""
+
+#: src/mime/backend/default.c:58
+msgid "Description of this handler."
+msgstr ""
+
+#: src/mime/backend/default.c:62
+msgid "System-specific handler description (ie. unix, unix-xwin, ...)."
+msgstr ""
+
+#: src/mime/backend/default.c:64 src/mime/backend/mailcap.c:103
+msgid "Ask before opening"
+msgstr ""
+
+#: src/mime/backend/default.c:66
+msgid "Ask before opening."
+msgstr ""
+
+#: src/mime/backend/default.c:68
+#, fuzzy
+msgid "Block terminal"
+msgstr "~BeOS-terminal"
+
+#: src/mime/backend/default.c:70
+msgid "Block the terminal when the handler is running."
+msgstr ""
+
+#: src/mime/backend/default.c:72
+#, fuzzy
+msgid "Program"
+msgstr "Inget program"
+
+#: src/mime/backend/default.c:75
+#, no-c-format
+msgid ""
+"External viewer for this file type. '%' in this string will be\n"
+"substituted by a file name."
+msgstr ""
+
+#: src/mime/backend/default.c:79
+#, fuzzy
+msgid "File extension associations"
+msgstr "Filänd~elser"
+
+#: src/mime/backend/default.c:81
+msgid "Extension <-> MIME type association."
+msgstr ""
+
+#: src/mime/backend/default.c:85
+msgid ""
+"MIME-type matching this file extension ('*' is used here in place\n"
+"of '.')."
+msgstr ""
+
+#. name:
+#: src/mime/backend/default.c:220
+msgid "Option system"
+msgstr ""
+
+#. name:
+#: src/mime/backend/mailcap.c:90 src/mime/backend/mailcap.c:669
+msgid "Mailcap"
+msgstr ""
+
+#: src/mime/backend/mailcap.c:92
+msgid "Options for mailcap support."
+msgstr ""
+
+#: src/mime/backend/mailcap.c:96
+msgid "Enable mailcap support."
+msgstr ""
+
+#: src/mime/backend/mailcap.c:100
+msgid ""
+"Mailcap search path. Colon-separated list of files.\n"
+"Leave as \"\" to use MAILCAP environment variable instead."
+msgstr ""
+
+#: src/mime/backend/mailcap.c:105
+msgid "Ask before using the handlers defined by mailcap."
+msgstr ""
+
+#: src/mime/backend/mailcap.c:107
+msgid "Type query string"
+msgstr ""
+
+#: src/mime/backend/mailcap.c:109
+msgid ""
+"Type of description to show in \"what to do with this file\"\n"
+"query dialog:\n"
+"0 is show \"mailcap\"\n"
+"1 is show program to be run\n"
+"2 is show mailcap description field if any; \"mailcap\" otherwise"
+msgstr ""
+
+#: src/mime/backend/mailcap.c:115
+msgid "Prioritize entries by file"
+msgstr ""
+
+#: src/mime/backend/mailcap.c:117
+msgid ""
+"Prioritize entries by the order of the files in the mailcap\n"
+"path. This means that wildcard entries (like: image/*) will\n"
+"also be checked before deciding the handler."
+msgstr ""
+
+#: src/mime/backend/mailcap.c:352
+#, c-format
+msgid "Badly formated mailcap entry for type %s in \"%s\" line %d"
+msgstr ""
+
+#. name:
+#: src/mime/backend/mimetypes.c:47 src/mime/backend/mimetypes.c:286
+msgid "Mimetypes files"
+msgstr ""
+
+#: src/mime/backend/mimetypes.c:49
+msgid ""
+"Options for the support of mime.types files. These files\n"
+"can be used to find the content type of an URL by looking at\n"
+"the extension of the file name."
+msgstr ""
+
+#: src/mime/backend/mimetypes.c:55
+msgid "Enable mime.types support."
+msgstr ""
+
+#: src/mime/backend/mimetypes.c:59
+msgid "The search path for mime.types files. Colon-separated list of files."
+msgstr ""
+
+#: src/mime/dialogs.c:66
+msgid "Delete extension"
+msgstr "Ta bort ändelse"
+
+#: src/mime/dialogs.c:67
+#, fuzzy, c-format
+msgid "Delete extension %s -> %s?"
+msgstr "Ta bort ändelse"
+
+#: src/mime/dialogs.c:124
+msgid "Extension"
+msgstr "Ändelse"
+
+#: src/mime/dialogs.c:127
+msgid "Extension(s)"
+msgstr "Ändelse(r)"
+
+#: src/mime/dialogs.c:128
+msgid "Content-Type"
+msgstr "Innehållstyp"
+
+#: src/mime/dialogs.c:140
+msgid "No extensions"
+msgstr "Inga ändelser"
+
+#. name:
+#: src/mime/mime.c:35 src/mime/mime.c:306
+msgid "MIME"
+msgstr ""
+
+#: src/mime/mime.c:37
+msgid "MIME-related options (handlers of various MIME types)."
+msgstr ""
+
+#: src/mime/mime.c:39
+msgid "Default MIME-type"
+msgstr ""
+
+#: src/mime/mime.c:41
+msgid ""
+"Document MIME-type to assume by default (when we are unable to\n"
+"guess it properly from known information about the document)."
+msgstr ""
+
+#: src/modules/version.c:80
+#, c-format
+msgid "Built on %s %s"
+msgstr ""
+
+#: src/modules/version.c:83
+msgid "Text WWW browser"
+msgstr "Lynx-liknande bläddrare för WWW"
+
+#: src/modules/version.c:85
+#, c-format
+msgid " (built on %s %s)"
+msgstr ""
+
+#: src/modules/version.c:91
+msgid "Features:"
+msgstr ""
+
+#: src/modules/version.c:93
+msgid "Standard"
+msgstr ""
+
+#: src/modules/version.c:95
+msgid "Debug"
+msgstr ""
+
+#: src/modules/version.c:98
+#, fuzzy
+msgid "Fastmem"
+msgstr "Namn"
+
+#: src/modules/version.c:101
+msgid "Own Libc Routines"
+msgstr ""
+
+#: src/modules/version.c:104
+#, fuzzy
+msgid "No Backtrace"
+msgstr "Gå tillbaka"
+
+#: src/modules/version.c:116
+#, fuzzy
+msgid "No mouse"
+msgstr "dokument"
+
+#: src/osdep/newwin.c:22
+msgid "~Xterm"
+msgstr "~Xterm"
+
+#: src/osdep/newwin.c:23
+#, fuzzy
+msgid "T~wterm"
+msgstr "~Xterm"
+
+#: src/osdep/newwin.c:24
+msgid "~Screen"
+msgstr "~Skärm"
+
+#: src/osdep/newwin.c:26 src/osdep/newwin.c:30
+msgid "~Window"
+msgstr "Fönster"
+
+#: src/osdep/newwin.c:27
+msgid "~Full screen"
+msgstr "~Fullskärm"
+
+#: src/osdep/newwin.c:33
+msgid "~BeOS terminal"
+msgstr "~BeOS-terminal"
+
+#: src/protocol/auth/dialogs.c:85
+#, fuzzy, c-format
+msgid "Authentication required for %s at %s"
+msgstr "Ange användarnamn för "
+
+#: src/protocol/auth/dialogs.c:95
+msgid "HTTP Authentication"
+msgstr ""
+
+#: src/protocol/auth/dialogs.c:105
+msgid "Login"
+msgstr "Användar-ID"
+
+#: src/protocol/auth/dialogs.c:106 src/protocol/http/http.c:103
+msgid "Password"
+msgstr "Lösenord"
+
+#: src/protocol/auth/dialogs.c:159
+msgid "Realm"
+msgstr ""
+
+#: src/protocol/auth/dialogs.c:171
+#, fuzzy
+msgid "none"
+msgstr "Info"
+
+#: src/protocol/auth/dialogs.c:174
+#, fuzzy
+msgid "State"
+msgstr "Datum"
+
+#: src/protocol/auth/dialogs.c:175
+#, fuzzy
+msgid "valid"
+msgstr "Värde"
+
+#. cant_delete_item
+#: src/protocol/auth/dialogs.c:212
+#, c-format
+msgid "Sorry, but auth entry \"%s\" cannot be deleted."
+msgstr ""
+
+#. cant_delete_used_item
+#: src/protocol/auth/dialogs.c:214
+#, c-format
+msgid "Sorry, but auth entry \"%s\" is being used by something else."
+msgstr ""
+
+#. delete_marked_items_title
+#: src/protocol/auth/dialogs.c:220
+#, fuzzy
+msgid "Delete marked auth entries"
+msgstr "Valfält"
+
+#. delete_marked_items
+#: src/protocol/auth/dialogs.c:222
+#, fuzzy
+msgid "Delete marked auth entries?"
+msgstr "Valfält"
+
+#. delete_item_title
+#: src/protocol/auth/dialogs.c:228
+#, fuzzy
+msgid "Delete auth entry"
+msgstr "Ta bort"
+
+#. delete_item
+#: src/protocol/auth/dialogs.c:230
+msgid "Delete this auth entry?"
+msgstr ""
+
+#. clear_all_items_title
+#: src/protocol/auth/dialogs.c:232
+#, fuzzy
+msgid "Clear all auth entries"
+msgstr "Hämta bild"
+
+#. clear_all_items_title
+#: src/protocol/auth/dialogs.c:234
+#, fuzzy
+msgid "Do you really want to remove all auth entries?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/protocol/auth/dialogs.c:261
+#, fuzzy
+msgid "Authentication manager"
+msgstr "Bokmärkeshanterare"
+
+#: src/protocol/file/file.c:38
+#, fuzzy
+msgid "Local files"
+msgstr "filer"
+
+#: src/protocol/file/file.c:40
+msgid "Options specific to local browsing."
+msgstr ""
+
+#: src/protocol/file/file.c:43
+#, fuzzy
+msgid "Local CGI"
+msgstr "filer"
+
+#: src/protocol/file/file.c:45
+#, fuzzy
+msgid "Local CGI specific options."
+msgstr "Inget program angett för"
+
+#: src/protocol/file/file.c:49
+msgid "Colon separated list of directories, where CGI scripts are stored."
+msgstr ""
+
+#: src/protocol/file/file.c:51
+msgid "Allow local CGI"
+msgstr ""
+
+#: src/protocol/file/file.c:53
+msgid "Whether to execute local CGI scripts."
+msgstr ""
+
+#: src/protocol/file/file.c:56
+msgid "Allow reading special files"
+msgstr ""
+
+#: src/protocol/file/file.c:58
+msgid ""
+"Whether to allow reading from non-regular files.\n"
+"Note this can be dangerous; reading /dev/urandom or\n"
+"/dev/zero can ruin your day!"
+msgstr ""
+
+#: src/protocol/file/file.c:62
+msgid "Show hidden files in directory listing"
+msgstr ""
+
+#: src/protocol/file/file.c:64
+msgid ""
+"When set to false, files with name starting with a dot will be\n"
+"hidden in local directories listing."
+msgstr ""
+
+#: src/protocol/file/file.c:67
+#, fuzzy
+msgid "Try encoding extensions"
+msgstr "Inga ändelser"
+
+#: src/protocol/file/file.c:69
+msgid ""
+"When set, if we can't open a file named 'filename', we'll try\n"
+"to open 'filename' with some encoding extension appended\n"
+"(ie. 'filename.gz'); it depends on the supported encodings."
+msgstr ""
+
+#. name:
+#: src/protocol/file/file.c:77
+#, fuzzy
+msgid "File"
+msgstr "~Arkiv"
+
+#. name:
+#: src/protocol/finger/finger.c:22
+msgid "Finger"
+msgstr ""
+
+#. name:
+#: src/protocol/ftp/ftp.c:53 src/protocol/ftp/ftp.c:83
+msgid "FTP"
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:55
+msgid "FTP specific options."
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:57 src/protocol/http/http.c:90
+#: src/protocol/http/http.c:172
+msgid "Proxy configuration"
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:59
+msgid "FTP proxy configuration."
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:61 src/protocol/http/http.c:94
+#: src/protocol/http/http.c:176
+#, fuzzy
+msgid "Host and port-number"
+msgstr "Felaktigt nummer"
+
+#: src/protocol/ftp/ftp.c:63
+msgid ""
+"Host and port-number (host:port) of the FTP proxy, or blank.\n"
+"If it's blank, FTP_PROXY environment variable is checked as well."
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:66
+msgid "Anonymous password"
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:68
+msgid "FTP anonymous password to be sent."
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:70
+msgid "Use passive mode (IPv4)"
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:72
+msgid "Use PASV instead of PORT (passive vs active mode, IPv4 only)."
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:74
+msgid "Use passive mode (IPv6)"
+msgstr ""
+
+#: src/protocol/ftp/ftp.c:76
+msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
+msgstr ""
+
+#. name:
+#: src/protocol/gopher/gopher.c:47
+msgid "Gopher"
+msgstr ""
+
+#: src/protocol/http/codes.c:107
+#, c-format
+msgid "HTTP error %03d"
+msgstr ""
+
+#: src/protocol/http/codes.c:130
+msgid ""
+"  An error occurred on the server while fetching the document you\n"
+"  requested. However, the server did not send back any explanation of what\n"
+"  happenned, so it is unknown what went wrong. Please contact the web\n"
+"  server administrator about this, if you believe that this error should\n"
+"  not occur since it is not a nice behaviour from the web server at all\n"
+"  and indicates that there is some much deeper problem with the web server\n"
+"  software.\n"
+msgstr ""
+
+#. name:
+#: src/protocol/http/http.c:58 src/protocol/http/http.c:186
+msgid "HTTP"
+msgstr ""
+
+#: src/protocol/http/http.c:60
+msgid "HTTP-specific options."
+msgstr ""
+
+#: src/protocol/http/http.c:63
+msgid "Server bug workarounds"
+msgstr ""
+
+#: src/protocol/http/http.c:65
+msgid "Server-side HTTP bugs workarounds."
+msgstr ""
+
+#: src/protocol/http/http.c:67
+msgid "Do not send Accept-Charset"
+msgstr ""
+
+#: src/protocol/http/http.c:69
+msgid ""
+"The Accept-Charset header is quite long and sending it can trigger\n"
+"bugs in some rarely found servers."
+msgstr ""
+
+#: src/protocol/http/http.c:72
+msgid "Allow blacklisting"
+msgstr ""
+
+#: src/protocol/http/http.c:74
+msgid "Allow blacklisting of buggy servers."
+msgstr ""
+
+#: src/protocol/http/http.c:76
+msgid "Broken 302 redirects"
+msgstr ""
+
+#: src/protocol/http/http.c:78
+msgid ""
+"Broken 302 redirect (violates RFC but compatible with Netscape).\n"
+"This is a problem for a lot of web discussion boards and the like.\n"
+"If they will do strange things to you, try to play with this."
+msgstr ""
+
+#: src/protocol/http/http.c:82
+msgid "No keepalive after POST requests"
+msgstr ""
+
+#: src/protocol/http/http.c:84
+msgid "Disable keepalive connection after POST request."
+msgstr ""
+
+#: src/protocol/http/http.c:86
+msgid "Use HTTP/1.0"
+msgstr ""
+
+#: src/protocol/http/http.c:88
+msgid "Use HTTP/1.0 protocol instead of HTTP/1.1."
+msgstr ""
+
+#: src/protocol/http/http.c:92
+msgid "HTTP proxy configuration."
+msgstr ""
+
+#: src/protocol/http/http.c:96
+msgid ""
+"Host and port-number (host:port) of the HTTP proxy, or blank.\n"
+"If it's blank, HTTP_PROXY environment variable is checked as well."
+msgstr ""
+
+#: src/protocol/http/http.c:99
+#, fuzzy
+msgid "Username"
+msgstr "Namn"
+
+#: src/protocol/http/http.c:101
+msgid "Proxy authentication username."
+msgstr ""
+
+#: src/protocol/http/http.c:105
+msgid "Proxy authentication password."
+msgstr ""
+
+#: src/protocol/http/http.c:108
+msgid "Referer sending"
+msgstr ""
+
+#: src/protocol/http/http.c:110
+msgid ""
+"HTTP referer sending options. HTTP referer is a special header\n"
+"sent in the HTTP requests, which is supposed to contain the previous\n"
+"page visited by the browser. This way, the server can know what link\n"
+"did you follow when accessing that page. However, this behaviour\n"
+"can unfortunately considerably affect privacy and can lead even to a\n"
+"security problem on some badly designed web pages."
+msgstr ""
+
+#: src/protocol/http/http.c:117
+msgid "Policy"
+msgstr ""
+
+#: src/protocol/http/http.c:120
+msgid ""
+"Mode of sending HTTP referer:\n"
+"0 is send no referer\n"
+"1 is send current URL as referer\n"
+"2 is send fixed fake referer\n"
+"3 is send previous URL as referer (correct, but insecure)"
+msgstr ""
+
+#: src/protocol/http/http.c:126
+msgid "Fake referer URL"
+msgstr ""
+
+#: src/protocol/http/http.c:128
+msgid "Fake referer to be sent when policy is 2."
+msgstr ""
+
+#: src/protocol/http/http.c:131
+msgid "Send Accept-Language header"
+msgstr ""
+
+#: src/protocol/http/http.c:133
+msgid "Send Accept-Language header."
+msgstr ""
+
+#: src/protocol/http/http.c:135
+msgid "Use UI language as Accept-Language"
+msgstr ""
+
+#: src/protocol/http/http.c:137
+msgid ""
+"Request localised versions of documents from web-servers (using the\n"
+"Accept-Language header) using the language you have configured for\n"
+"ELinks' user-interface (this also affects navigator.language ECMAScript\n"
+"value available to scripts). Note that some see this as a potential\n"
+"security risk because it tells web-masters and the FBI sniffers about\n"
+"your language preference."
+msgstr ""
+
+#: src/protocol/http/http.c:144
+msgid "Activate HTTP TRACE debugging"
+msgstr ""
+
+#: src/protocol/http/http.c:146
+msgid ""
+"If active, all HTTP requests are sent with TRACE as their method\n"
+"rather than GET or POST. This is useful for debugging of both ELinks\n"
+"and various server-side scripts --- the server only returns the client's\n"
+"request back to the client verbatim. Note that this type of request may\n"
+"not be enabled on all servers."
+msgstr ""
+
+#. OSNews.com is supposed to be relying on the textmode token, at least.
+#: src/protocol/http/http.c:153
+msgid "User-agent identification"
+msgstr ""
+
+#: src/protocol/http/http.c:155
+msgid ""
+"Change the User Agent ID. That means identification string, which\n"
+"is sent to HTTP server when a document is requested. The 'textmode'\n"
+"token in the first field is our silent attempt to establish this as\n"
+"a standard for new textmode user agents, so that the webmasters can\n"
+"have just a single uniform test for these if they are ie. pushing\n"
+"some lite version to them automagically.\n"
+"%v in the string means ELinks version\n"
+"%s in the string means system identification\n"
+"%t in the string means size of the terminal\n"
+"%b in the string means number of bars displayed by ELinks\n"
+"Use \" \" if you don't want any User-Agent header to be sent at all."
+msgstr ""
+
+#: src/protocol/http/http.c:168
+msgid "HTTPS"
+msgstr ""
+
+#: src/protocol/http/http.c:170
+#, fuzzy
+msgid "HTTPS-specific options."
+msgstr "Inget program angett för"
+
+#: src/protocol/http/http.c:174
+msgid "HTTPS proxy configuration."
+msgstr ""
+
+#: src/protocol/http/http.c:178
+msgid ""
+"Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank.\n"
+"If it's blank, HTTPS_PROXY environment variable is checked as well."
+msgstr ""
+
+#: src/protocol/nntp/codes.c:124
+#, fuzzy
+msgid "NNTP error"
+msgstr "Fel"
+
+#: src/protocol/nntp/codes.c:126
+#, c-format
+msgid ""
+"An error occurred while fetching the document you\n"
+"requested from %s.\n"
+"\n"
+"The error message is: %s"
+msgstr ""
+
+#. name:
+#: src/protocol/nntp/nntp.c:33 src/protocol/nntp/nntp.c:66
+msgid "NNTP"
+msgstr ""
+
+#: src/protocol/nntp/nntp.c:35
+#, fuzzy
+msgid "NNTP and news specific options."
+msgstr "Inget program angett för"
+
+#: src/protocol/nntp/nntp.c:37
+msgid "Default news server"
+msgstr ""
+
+#: src/protocol/nntp/nntp.c:39
+msgid ""
+"Used when resolving news: URIs. If set to the empty string\n"
+"the value of the NNTPSERVER environment variable will be used."
+msgstr ""
+
+#: src/protocol/nntp/nntp.c:42
+msgid "Message header entries"
+msgstr ""
+
+#: src/protocol/nntp/nntp.c:44
+msgid ""
+"Comma separated list of which entries in the article header\n"
+"to show. E.g. 'Subject' and 'From'.\n"
+"All header entries can be read in the header info dialog."
+msgstr ""
+
+#: src/protocol/protocol.c:223
+#, fuzzy, c-format
+msgid "This version of ELinks does not contain %s protocol support"
+msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+
+#: src/protocol/protocol.c:251
+msgid "Protocols"
+msgstr ""
+
+#: src/protocol/protocol.c:253
+msgid "Protocol specific options."
+msgstr ""
+
+#: src/protocol/protocol.c:255
+msgid "No-proxy domains"
+msgstr ""
+
+#: src/protocol/protocol.c:257
+msgid ""
+"Comma separated list of domains for which the proxy (HTTP/FTP)\n"
+"should be disabled. Optionally, a port can be specified for some\n"
+"domains as well. If it's blank, NO_PROXY environment variable is\n"
+"checked as well."
+msgstr ""
+
+#. name:
+#: src/protocol/protocol.c:290
+msgid "Protocol"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:45
+msgid "URI rewriting"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:47
+msgid ""
+"Rules for rewriting URIs entered in the goto dialog.\n"
+"It makes it possible to define a set of prefixes that will\n"
+"be expanded if they match a string entered in the goto dialog.\n"
+"The prefixes can be dumb, meaning that they work only like\n"
+"URI abbreviations, or smart ones, making it possible to pass\n"
+"arguments to them like search engine keywords."
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:54
+msgid "Enable dumb prefixes"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:56
+msgid ""
+"Enable dumb prefixes - simple URI abbreviations which can\n"
+"be written to the Goto URL dialog instead of actual URIs - i.e.\n"
+"if you write 'elinks' there, you are directed to\n"
+"http://elinks.or.cz/."
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:61
+msgid "Enable smart prefixes"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:63
+msgid ""
+"Enable smart prefixes - URI templates triggered by writing\n"
+"given abbreviation to the Goto URL dialog followed by a list\n"
+"of arguments from which the actual URI is composed - i.e.\n"
+"'gg:search keywords' or 'gn search keywords for news'."
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:68
+msgid "Dumb Prefixes"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:70
+msgid "Dumb prefixes, see enable-dumb description for details."
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:75
+#, no-c-format
+msgid ""
+"Replacement URI for this dumbprefix:\n"
+"%c in the string means the current URL\n"
+"%% in the string means '%'"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:79
+msgid "Smart Prefixes"
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:81
+msgid "Smart prefixes, see enable-smart description for details."
+msgstr ""
+
+#: src/protocol/rewrite/rewrite.c:88
+#, no-c-format
+msgid ""
+"Replacement URI for this smartprefix:\n"
+"%c in the string means the current URL\n"
+"%s in the string means the whole argument to smartprefix\n"
+"%0,%1,...,%9 means argument 0, 1, ..., 9\n"
+"%% in the string means '%'"
+msgstr ""
+
+#. name:
+#: src/protocol/rewrite/rewrite.c:358
+msgid "URI rewrite"
+msgstr ""
+
+#. name:
+#: src/protocol/smb/smb.c:73 src/protocol/smb/smb.c:85
+msgid "SMB"
+msgstr ""
+
+#: src/protocol/smb/smb.c:75
+#, fuzzy
+msgid "SAMBA specific options."
+msgstr "Inget program angett för"
+
+#: src/protocol/smb/smb.c:77
+msgid "Credentials"
+msgstr ""
+
+#: src/protocol/smb/smb.c:79
+msgid "Credentials file passed to smbclient via -A option."
+msgstr ""
+
+#. name:
+#: src/protocol/user.c:35 src/protocol/user.c:85
+msgid "User protocols"
+msgstr ""
+
+#: src/protocol/user.c:37
+msgid ""
+"User protocols. Options in this tree specify external\n"
+"handlers for the appropriate protocols. Ie.\n"
+"protocol.user.mailto.unix."
+msgstr ""
+
+#: src/protocol/user.c:48
+msgid ""
+"Handler (external program) for this protocol. Name the\n"
+"options in this tree after your system (ie. unix, unix-xwin)."
+msgstr ""
+
+#: src/protocol/user.c:53
+msgid ""
+"Handler (external program) for this protocol and system.\n"
+"%f in the string means file name to include form data from\n"
+"%h in the string means hostname (or email address)\n"
+"%p in the string means port\n"
+"%d in the string means path (everything after the port)\n"
+"%s in the string means subject (?subject=<this>)\n"
+"%u in the string means the whole URL"
+msgstr ""
+
+#: src/protocol/user.c:263
+msgid "No program"
+msgstr "Inget program"
+
+#: src/protocol/user.c:265
+#, fuzzy, c-format
+msgid "No program specified for protocol %s."
+msgstr "Inget program angett för"
+
+#: src/sched/download.c:225 src/sched/download.c:319 src/sched/download.c:493
+#: src/sched/download.c:585
+msgid "Download error"
+msgstr "Hämtningsfel"
+
+#: src/sched/download.c:226 src/sched/download.c:586
+#, fuzzy, c-format
+msgid ""
+"Could not create file '%s':\n"
+"%s"
+msgstr "Kunde inte skriva till fil"
+
+#: src/sched/download.c:320
+#, fuzzy, c-format
+msgid ""
+"Error downloading %s:\n"
+"\n"
+"%s"
+msgstr "Fel vid hämtning av"
+
+#: src/sched/download.c:358
+#, fuzzy, c-format
+msgid ""
+"Download complete:\n"
+"%s"
+msgstr "Hämta bild"
+
+#: src/sched/download.c:494
+#, c-format
+msgid "'%s' is a directory."
+msgstr ""
+
+#: src/sched/download.c:528
+#, fuzzy
+msgid "File exists"
+msgstr "Filänd~elser"
+
+#: src/sched/download.c:529
+#, c-format
+msgid ""
+"This file already exists:\n"
+"%s\n"
+"\n"
+"The alternative filename is:\n"
+"%s"
+msgstr ""
+
+#: src/sched/download.c:536
+msgid "Sa~ve under the alternative name"
+msgstr ""
+
+#: src/sched/download.c:537
+msgid "~Overwrite the original file"
+msgstr ""
+
+#: src/sched/download.c:538
+msgid "~Resume download of the original file"
+msgstr ""
+
+#: src/sched/download.c:1025
+msgid "What to do?"
+msgstr "Vad skall jag göra?"
+
+#: src/sched/download.c:1028
+msgid "Unknown type"
+msgstr "Okänd typ"
+
+#: src/sched/download.c:1045
+#, c-format
+msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
+msgstr ""
+
+#: src/sched/download.c:1075
+#, no-c-format
+msgid "Program ('%' will be replaced by the filename)"
+msgstr ""
+
+#: src/sched/download.c:1082
+#, c-format
+msgid "The file will be opened with the program '%s'."
+msgstr ""
+
+#: src/sched/download.c:1099
+#, fuzzy
+msgid "~Open"
+msgstr "Öppna"
+
+#: src/sched/download.c:1112
+#, fuzzy
+msgid "~Display"
+msgstr "Visa"
+
+#: src/sched/download.c:1116
+msgid "Show ~header"
+msgstr ""
+
+#: src/sched/error.c:31
+msgid "Waiting in queue"
+msgstr "Väntar i kö"
+
+#: src/sched/error.c:32
+msgid "Looking up host"
+msgstr "Letar upp värd"
+
+#: src/sched/error.c:33
+msgid "Making connection"
+msgstr "Kopplar upp"
+
+#: src/sched/error.c:34
+#, fuzzy
+msgid "SSL negotiation"
+msgstr "~Spara alternativ"
+
+#: src/sched/error.c:35
+msgid "Request sent"
+msgstr "Förfrågan skickad"
+
+#: src/sched/error.c:36
+#, fuzzy
+msgid "Logging in"
+msgstr "Användar-ID"
+
+#: src/sched/error.c:37
+msgid "Getting headers"
+msgstr "Hämtar rubriker"
+
+#: src/sched/error.c:38
+msgid "Server is processing request"
+msgstr "Servern bearbetar förfrågan"
+
+#: src/sched/error.c:39
+msgid "Transferring"
+msgstr "Skickar"
+
+#: src/sched/error.c:41
+msgid "Waiting for redirect confirmation"
+msgstr "Väntar på bekräftelse av omdirigering"
+
+#: src/sched/error.c:42
+msgid "OK"
+msgstr "Ok"
+
+#: src/sched/error.c:43
+msgid "Interrupted"
+msgstr "Avbruten"
+
+#: src/sched/error.c:44
+msgid "Socket exception"
+msgstr "Socketfel"
+
+#: src/sched/error.c:45
+msgid "Internal error"
+msgstr "Internt fel"
+
+#: src/sched/error.c:48
+msgid "Error writing to socket"
+msgstr "Fel vid skrivning till socket"
+
+#: src/sched/error.c:49
+msgid "Error reading from socket"
+msgstr "Fel vid läsning från socket"
+
+#: src/sched/error.c:50
+msgid "Data modified"
+msgstr "Data modifierad"
+
+#: src/sched/error.c:51
+msgid "Bad URL syntax"
+msgstr "Felaktig URL-syntax"
+
+#: src/sched/error.c:53
+msgid "Request must be restarted"
+msgstr "Förfrågan måste startas om"
+
+#: src/sched/error.c:54
+msgid "Can't get socket state"
+msgstr "Kan inte se sockettillstånd"
+
+#: src/sched/error.c:55
+msgid "Only local connections are permitted"
+msgstr ""
+
+#: src/sched/error.c:57
+msgid ""
+"Error while decoding file. This might be caused\n"
+"by the encoded file being corrupt."
+msgstr ""
+
+#: src/sched/error.c:60
+msgid ""
+"This URL contains a protocol not yet known by ELinks.\n"
+"You can configure an external handler for it through\n"
+"the options system."
+msgstr ""
+
+#: src/sched/error.c:64
+msgid ""
+"This URL contains a protocol that is not natively known\n"
+"by ELinks which means that ELinks relies on external\n"
+"programs for handling it. Downloading URLs using external\n"
+"programs is not supported."
+msgstr ""
+
+#: src/sched/error.c:69
+msgid "Bad HTTP response"
+msgstr "Felaktigt HTTP-svar"
+
+#: src/sched/error.c:70
+msgid "HTTP 100 (???)"
+msgstr ""
+
+#: src/sched/error.c:71
+msgid "No content"
+msgstr "Inget innehåll"
+
+#: src/sched/error.c:73
+msgid "Unknown file type"
+msgstr "Okänd filtyp"
+
+#: src/sched/error.c:74
+msgid "Error opening file"
+msgstr "Fel vid öppnande av fil"
+
+#: src/sched/error.c:75
+msgid "CGI script not in CGI path"
+msgstr ""
+
+#: src/sched/error.c:78
+msgid "Bad FTP response"
+msgstr "Felaktigt FTP-svar"
+
+#: src/sched/error.c:79
+msgid "FTP service unavailable"
+msgstr "FTP-tjänsten ej tillgänglig"
+
+#: src/sched/error.c:80
+msgid "Bad FTP login"
+msgstr "Felaktig FTP-inloggning"
+
+#: src/sched/error.c:81
+msgid "FTP PORT command failed"
+msgstr "FTP PORT-kommando misslyckades"
+
+#: src/sched/error.c:82
+msgid "File not found"
+msgstr "Filen ej funnen"
+
+#: src/sched/error.c:83
+msgid "FTP file error"
+msgstr "FTP filfel"
+
+#: src/sched/error.c:87
+msgid "SSL error"
+msgstr "SSL-fel"
+
+#: src/sched/error.c:89
+#, fuzzy
+msgid "This version of ELinks does not contain SSL/TLS support"
+msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+
+#: src/sched/error.c:92
+msgid "JavaScript support is not enabled."
+msgstr ""
+
+#: src/sched/error.c:95
+#, fuzzy
+msgid "Bad NNTP response"
+msgstr "Felaktigt FTP-svar"
+
+#: src/sched/error.c:96
+msgid ""
+"Unable to handle news: URI because no news server has been\n"
+"been configured. Either set the option protocol.nntp.server\n"
+"or set the NNTPSERVER environment variable."
+msgstr ""
+
+#: src/sched/error.c:102
+msgid "The CSO phone-book protocol is not supported."
+msgstr ""
+
+#: src/sched/error.c:105
+msgid ""
+"Configuration of the proxy server failed.\n"
+"This might be caused by an incorrect proxy\n"
+"setting specified by an environment variable\n"
+"or returned by a scripting proxy hook.\n"
+"\n"
+"The correct syntax for proxy settings are\n"
+"a host name optionally followed by a colon\n"
+"and a port number. Example: 'localhost:8080'."
+msgstr ""
+
+#: src/sched/error.c:135
+msgid "Unknown error"
+msgstr "Okänt fel"
+
+#: src/sched/session.c:688 src/sched/session.c:706 src/sched/task.c:264
+msgid "Warning"
+msgstr "Varning"
+
+#: src/sched/session.c:689
+msgid ""
+"You have empty string in protocol.http.user_agent - this was a default value "
+"in the past, substituted by default ELinks User-Agent string. However, "
+"currently this means that NO User-Agent HEADER WILL BE SENT AT ALL - if this "
+"is really what you want, set its value to \" \", otherwise please delete "
+"line with this settings from your configuration file (if you have no idea "
+"what I'm talking about, just do this), so that correct default setting will "
+"be used. Apologies for any inconvience caused."
+msgstr ""
+
+#: src/sched/session.c:707
+msgid ""
+"You have option config.saving_style set to a de facto obsolete value. The "
+"configuration saving algorithms of ELinks were changed from the last time "
+"you upgraded ELinks. Now, only those options which you actually changed are "
+"saved to the configuration file, instead of just all the options. This "
+"simplifies our situation greatly when we see that some option has "
+"inappropriate default value or we need to change semantic of some option in "
+"a subtle way. Thus, we recommend you to change the value of config."
+"saving_style option to 3 in order to get the \"right\" behaviour. Apologies "
+"for any inconvience caused."
+msgstr ""
+
+#: src/sched/session.c:732
+msgid "Welcome"
+msgstr "Välkommen"
+
+#: src/sched/session.c:733
+#, fuzzy
+msgid ""
+"Welcome to ELinks!\n"
+"\n"
+"Press ESC for menu. Documentation is available in Help menu."
+msgstr "Tryck ESC för meny. Välj Hjälp->Bruksanvisning för bruksanvisning"
+
+#: src/sched/task.c:232
+#, c-format
+msgid ""
+"The URL you are about to follow might be maliciously crafted in order to "
+"confuse you. By following the URL you will be connecting to host \"%s\" as "
+"user \"%s\".\n"
+"\n"
+"Do you want to go to URL %s?"
+msgstr ""
+
+#: src/sched/task.c:242
+#, fuzzy, c-format
+msgid "Do you want to follow the redirect and post form data to URL %s?"
+msgstr "Vill du följa omdirigering och skicka formulärdata till URL"
+
+#: src/sched/task.c:246
+#, c-format
+msgid ""
+"The form data you are about to post might be incomplete.\n"
+"Do you want to post to URL %s?"
+msgstr ""
+
+#: src/sched/task.c:250
+#, fuzzy, c-format
+msgid "Do you want to post form data to URL %s?"
+msgstr "Vill du skicka formulärdata till URL"
+
+#: src/sched/task.c:253
+#, fuzzy, c-format
+msgid "Do you want to repost form data to URL %s?"
+msgstr "Vill du skicka formulärdata igen till URL"
+
+#: src/scripting/lua/core.c:468
+msgid "User dialog"
+msgstr ""
+
+#: src/scripting/lua/core.c:591
+msgid "Lua Error"
+msgstr ""
+
+#: src/scripting/lua/core.c:715
+msgid "Lua Console"
+msgstr ""
+
+#: src/scripting/lua/core.c:715
+msgid "Enter expression"
+msgstr ""
+
+#: src/scripting/ruby/core.c:60
+#, fuzzy
+msgid "Ruby Error"
+msgstr "Fel"
+
+#: src/scripting/ruby/core.c:153 src/scripting/ruby/core.c:206
+msgid "Ruby Message"
+msgstr ""
+
+#. name:
+#: src/scripting/scripting.c:40
+msgid "Scripting"
+msgstr ""
+
+#: src/ssl/ssl.c:72 src/ssl/ssl.c:157
+msgid "Verify certificates"
+msgstr ""
+
+#: src/ssl/ssl.c:74
+msgid ""
+"Verify the peer's SSL certificate. Note that this\n"
+"needs extensive configuration of OpenSSL by the user."
+msgstr ""
+
+#: src/ssl/ssl.c:77
+msgid "Client Certificates"
+msgstr ""
+
+#: src/ssl/ssl.c:79
+#, fuzzy
+msgid "X509 client certificate options."
+msgstr "Terminalalternativ"
+
+#: src/ssl/ssl.c:83
+msgid ""
+"Enable or not the sending of X509 client certificates\n"
+"to servers which request them."
+msgstr ""
+
+#: src/ssl/ssl.c:86
+#, fuzzy
+msgid "Certificate File"
+msgstr "uppskattad tid"
+
+#: src/ssl/ssl.c:88
+msgid ""
+"The location of a file containing the client certificate\n"
+"and unencrypted private key in PEM format. If unset, the\n"
+"file pointed to by the X509_CLIENT_CERT variable is used\n"
+"instead."
+msgstr ""
+
+#: src/ssl/ssl.c:159
+msgid ""
+"Verify the peer's SSL certificate. Note that this\n"
+"probably doesn't work properly at all with GnuTLS."
+msgstr ""
+
+#. name:
+#: src/ssl/ssl.c:178 src/ssl/ssl.c:195
+msgid "SSL"
+msgstr ""
+
+#: src/ssl/ssl.c:180
+#, fuzzy
+msgid "SSL options."
+msgstr "~Spara alternativ"
+
+#: src/terminal/event.c:71
+#, c-format
+msgid "Bad terminal size: %d, %d"
+msgstr ""
+
+#: src/terminal/event.c:154
+msgid "Warning: terminal name contains illicit chars."
+msgstr ""
+
+#: src/terminal/event.c:226
+msgid "Failed to create session."
+msgstr ""
+
+#: src/terminal/event.c:316
+#, c-format
+msgid "Bad event %d"
+msgstr ""
+
+#: src/terminal/event.c:356
+#, fuzzy, c-format
+msgid "Could not read event: %d (%s)"
+msgstr "Kunde inte skriva till fil"
+
+#: src/terminal/kbd.c:997
+msgid "Too many bytes read from the itrm!"
+msgstr ""
+
+#: src/terminal/tab.c:189
+#, fuzzy
+msgid "Do you really want to close the current tab?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/terminal/tab.c:225
+#, fuzzy
+msgid "Do you really want to close all except the current tab?"
+msgstr "Vill du verkligen avsluta links?"
+
+#: src/viewer/dump/dump.c:79
+#, fuzzy, c-format
+msgid "Can't write to stdout: %s"
+msgstr "Fel vid skrivning till socket"
+
+#: src/viewer/dump/dump.c:82
+#, fuzzy
+msgid "Can't write to stdout."
+msgstr "Fel vid skrivning till socket"
+
+#: src/viewer/dump/dump.c:256
+#, c-format
+msgid "URL protocol not supported (%s)."
+msgstr ""
+
+#: src/viewer/text/draw.c:62
+#, fuzzy
+msgid "Missing fragment"
+msgstr "Inga ramar"
+
+#: src/viewer/text/draw.c:63
+#, c-format
+msgid "The requested fragment \"#%s\" doesn't exist."
+msgstr ""
+
+#: src/viewer/text/form.c:853
+msgid "Error while posting form"
+msgstr "Fel vid skickande av formulär"
+
+#: src/viewer/text/form.c:854
+#, fuzzy, c-format
+msgid "Could not load file %s: %s"
+msgstr "Kunde inte hämta fil"
+
+#: src/viewer/text/form.c:1421
+#, fuzzy
+msgid "Reset form"
+msgstr "Töm fo~rmulär"
+
+#: src/viewer/text/form.c:1423
+msgid "Harmless button"
+msgstr ""
+
+#: src/viewer/text/form.c:1431
+msgid "Submit form to"
+msgstr "Skicka formulär till"
+
+#: src/viewer/text/form.c:1432
+msgid "Post form to"
+msgstr "Skicka formulär till"
+
+#: src/viewer/text/form.c:1434
+msgid "Radio button"
+msgstr "Radioknapp"
+
+#: src/viewer/text/form.c:1438
+msgid "Select field"
+msgstr "Valfält"
+
+#: src/viewer/text/form.c:1442
+msgid "Text area"
+msgstr "Textarea"
+
+#: src/viewer/text/form.c:1444
+msgid "File upload"
+msgstr "Filsändning"
+
+#: src/viewer/text/form.c:1446
+msgid "Password field"
+msgstr "Lösenordsfält"
+
+#: src/viewer/text/form.c:1484
+msgid "name"
+msgstr "Namn"
+
+#: src/viewer/text/form.c:1496
+msgid "value"
+msgstr "Värde"
+
+#: src/viewer/text/form.c:1509
+msgid "read only"
+msgstr ""
+
+#: src/viewer/text/form.c:1520
+#, c-format
+msgid "press %s to navigate"
+msgstr ""
+
+#: src/viewer/text/form.c:1522
+#, c-format
+msgid "press %s to edit"
+msgstr ""
+
+#: src/viewer/text/form.c:1558
+#, fuzzy, c-format
+msgid "press %s to submit to %s"
+msgstr "skicka till"
+
+#: src/viewer/text/form.c:1560
+#, fuzzy, c-format
+msgid "press %s to post to %s"
+msgstr "skicka till"
+
+#: src/viewer/text/link.c:1152
+msgid "Display ~usemap"
+msgstr "Visa ~usemap"
+
+#: src/viewer/text/link.c:1155
+msgid "~Follow link"
+msgstr "~Följ länk"
+
+#: src/viewer/text/link.c:1157
+msgid "Follow link and r~eload"
+msgstr ""
+
+#: src/viewer/text/link.c:1161
+msgid "Open in new ~window"
+msgstr "Öppna i nytt fönster"
+
+#: src/viewer/text/link.c:1163
+#, fuzzy
+msgid "Open in new ~tab"
+msgstr "Öppna i nytt fönster"
+
+#: src/viewer/text/link.c:1165
+#, fuzzy
+msgid "Open in new tab in ~background"
+msgstr "Bakgrund"
+
+#: src/viewer/text/link.c:1170
+msgid "~Download link"
+msgstr "Hämta länk"
+
+#: src/viewer/text/link.c:1173
+msgid "~Add link to bookmarks"
+msgstr ""
+
+#: src/viewer/text/link.c:1185 src/viewer/text/link.c:1220
+msgid "~Reset form"
+msgstr "Töm fo~rmulär"
+
+#: src/viewer/text/link.c:1197
+msgid "Open in ~external editor"
+msgstr ""
+
+#: src/viewer/text/link.c:1203
+msgid "~Submit form"
+msgstr "~Skicka formulär"
+
+#: src/viewer/text/link.c:1204
+msgid "Submit form and rel~oad"
+msgstr ""
+
+#: src/viewer/text/link.c:1208
+msgid "Submit form and open in new ~window"
+msgstr "Skicka formulär och öppna i nytt fönster"
+
+#: src/viewer/text/link.c:1210
+#, fuzzy
+msgid "Submit form and open in new ~tab"
+msgstr "Skicka formulär och öppna i nytt fönster"
+
+#: src/viewer/text/link.c:1213
+#, fuzzy
+msgid "Submit form and open in new tab in ~background"
+msgstr "Skicka formulär och öppna i nytt fönster"
+
+#: src/viewer/text/link.c:1218
+msgid "Submit form and ~download"
+msgstr "Skicka formulär och hämta"
+
+#: src/viewer/text/link.c:1225
+msgid "V~iew image"
+msgstr "V~isa bild"
+
+#: src/viewer/text/link.c:1227
+msgid "Download ima~ge"
+msgstr "Hämta bild"
+
+#: src/viewer/text/link.c:1235
+msgid "No link selected"
+msgstr "Ingen länk vald"
+
+#: src/viewer/text/link.c:1287
+msgid "Image"
+msgstr "Bild"
+
+#: src/viewer/text/link.c:1292
+msgid "Usemap"
+msgstr "Usemap"
+
+#: src/viewer/text/search.c:977
+msgid "Search hit top, continuing at bottom."
+msgstr ""
+
+#: src/viewer/text/search.c:978
+msgid "Search hit bottom, continuing at top."
+msgstr ""
+
+#: src/viewer/text/search.c:981
+msgid "No previous search"
+msgstr "Ingen tidigare sökning"
+
+#: src/viewer/text/search.c:993
+#, c-format
+msgid "Could not compile regular expression '%s'"
+msgstr ""
+
+#: src/viewer/text/search.c:1036
+#, c-format
+msgid "No further matches for '%s'."
+msgstr ""
+
+#: src/viewer/text/search.c:1038
+#, c-format
+msgid "Could not find a link with the text '%s'."
+msgstr ""
+
+#: src/viewer/text/search.c:1040 src/viewer/text/search.c:1449
+msgid "Typeahead"
+msgstr ""
+
+#: src/viewer/text/search.c:1451
+msgid "No links in current document"
+msgstr ""
+
+#: src/viewer/text/search.c:1527
+msgid "Search for text"
+msgstr "Sök efter text"
+
+#: src/viewer/text/search.c:1556
+#, fuzzy
+msgid "Normal search"
+msgstr "Ingen tidigare sökning"
+
+#: src/viewer/text/search.c:1557
+msgid "Regexp search"
+msgstr ""
+
+#: src/viewer/text/search.c:1558
+msgid "Extended regexp search"
+msgstr ""
+
+#: src/viewer/text/search.c:1559
+msgid "Case sensitive"
+msgstr ""
+
+#: src/viewer/text/search.c:1560
+msgid "Case insensitive"
+msgstr ""
+
+#: src/viewer/text/search.c:1584
+msgid "Search backward"
+msgstr "Sök bakåt"
+
+#: src/viewer/text/textarea.c:363
+msgid "You cannot launch an external editor in the anonymous mode."
+msgstr ""
+
+#: src/viewer/text/textarea.c:370
+msgid "You can do this only on the master terminal"
+msgstr ""
+
+#: src/viewer/text/view.c:729
+msgid "Go to link"
+msgstr "Gå till länk"
+
+#: src/viewer/text/view.c:729
+msgid "Enter link number"
+msgstr "Skriv in länknummer"
+
+#: src/viewer/text/view.c:1307
+msgid "Save error"
+msgstr "Sparfel"
+
+#: src/viewer/text/view.c:1308
+msgid "Error writing to file"
+msgstr "Fel vid skrivning till fil"
+
+#~ msgid "Delete"
+#~ msgstr "Ta bort"
+
+#~ msgid "Add"
+#~ msgstr "Lägg till"
+
+#, fuzzy
+#~ msgid "master"
+#~ msgstr "Namn"
+
+#, fuzzy
+#~ msgid "slave"
+#~ msgstr "Spara"
+
+#, fuzzy
+#~ msgid "Bookmark"
+#~ msgstr "Bokmärken"
+
+#, fuzzy
+#~ msgid "Cannot stat the file"
+#~ msgstr "Fel vid skrivning till fil"
+
+#, fuzzy
+#~ msgid "Scrollbar selected"
+#~ msgstr "Ingen länk vald"
+
+#~ msgid "~New window"
+#~ msgstr "~Nytt fönster"
+
+#, fuzzy
+#~ msgid "Look up specified host."
+#~ msgstr "Inget program angett för"
+
+#~ msgid "Use ^[[11m"
+#~ msgstr "Använd ^[[11m"
+
+#~ msgid "Block the cursor"
+#~ msgstr "Fylld markör"
+
+#, fuzzy
+#~ msgid "Forms memory"
+#~ msgstr "Slut på minne"
+
+#, fuzzy
+#~ msgid "Local CGI specific options. (DISABLED)"
+#~ msgstr "Inget program angett för"
+
+#, fuzzy
+#~ msgid "User"
+#~ msgstr "Namn"
+
+#, fuzzy
+#~ msgid "Could not create file %s: %s"
+#~ msgstr "Kunde inte skriva till fil"
+
+#, fuzzy
+#~ msgid "Leet"
+#~ msgstr "Ta bort"
+
+#, fuzzy
+#~ msgid "Expand table columns"
+#~ msgstr "Namn"
+
+#~ msgid "Memory info"
+#~ msgstr "Minnesinformation"
+
+#~ msgid "~Memory info"
+#~ msgstr "~Minnesinformation"
+
+#, fuzzy
+#~ msgid "Is the current link bookmarked"
+#~ msgstr "V~isa bild"
+
+#, fuzzy
+#~ msgid "Is the current location bookmarked"
+#~ msgstr "V~isa bild"
+
+#, fuzzy
+#~ msgid "Is the current link is the history"
+#~ msgstr "Öppna i nytt fönster"
+
+#, fuzzy
+#~ msgid "Delete bookmark's folder"
+#~ msgstr "Ta bort bokmärke"
+
+#, fuzzy
+#~ msgid "Save as"
+#~ msgstr "Spara som"
+
+#, fuzzy
+#~ msgid "Save formatted document"
+#~ msgstr "Spara formatterat ~dokument"
+
+#, fuzzy
+#~ msgid "This version of ELinks does not contain finger protocol support"
+#~ msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+
+#~ msgid "Number out of range"
+#~ msgstr "Nummer i felaktigt intervall"
+
+#, fuzzy
+#~ msgid "Move the current tab one step back"
+#~ msgstr "Öppna i nytt fönster"
+
+#, fuzzy
+#~ msgid "Default document codepage."
+#~ msgstr "Formatterad dokumentcache"
+
+#, fuzzy
+#~ msgid "%ld bytes of memory allocated."
+#~ msgstr "byte minne allokerat"
+
+#, fuzzy
+#~ msgid "Could not get terminal size"
+#~ msgstr "Kunde inte hämta fil"
+
+#~ msgid "hit ENTER to"
+#~ msgstr "tryck Enter för att"
+
+#~ msgid "post to"
+#~ msgstr "skicka till"
+
+#, fuzzy
+#~ msgid "Main menu unselected hotkey default background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "Main menu selected hotkey default background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "Menu item unselected hotkey default background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "Menu item selected hotkey background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "Menu unselected hotkey default background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "Menu selected hotkey default background color."
+#~ msgstr "Döda bakgrundsupp~kopplingar"
+
+#, fuzzy
+#~ msgid "unknown"
+#~ msgstr "Okänd typ"
+
+#~ msgid "Save formatted ~document"
+#~ msgstr "Spara formatterat ~dokument"
+
+#, fuzzy
+#~ msgid "Stop"
+#~ msgstr "~Inställningar"
+
+#, fuzzy
+#~ msgid "Bad signal number: %d"
+#~ msgstr "Felaktigt nummer"
+
+#, fuzzy
+#~ msgid "Deleting used item"
+#~ msgstr "Valfält"
+
+#, fuzzy
+#~ msgid "Cannot delete \"%s\""
+#~ msgstr "Fel vid skrivning till fil"
+
+#, fuzzy
+#~ msgid "LEDs options."
+#~ msgstr "~Spara alternativ"
+
+#, fuzzy
+#~ msgid "Enable LEDs."
+#~ msgstr "Namn"
+
+#~ msgid "No downloads"
+#~ msgstr "Inga hämtningar"
+
+#~ msgid "Bookmark~s"
+#~ msgstr "Bokmärken"
+
+#, fuzzy
+#~ msgid "Really delete the option \"%s\"?"
+#~ msgstr "Ta bort ändelse"
+
+#, fuzzy
+#~ msgid ""
+#~ "Delete history item \"%s\"?\n"
+#~ "\n"
+#~ "URL: \"%s\""
+#~ msgstr "Ta bort bokmärke"
+
+#, fuzzy
+#~ msgid "No entry."
+#~ msgstr "Inget innehåll"
+
+#~ msgid "Cache info"
+#~ msgstr "Cacheinformation"
+
+#, fuzzy
+#~ msgid "Cache content: %s"
+#~ msgstr "Cacheinnehåll"
+
+#~ msgid "~Cache info"
+#~ msgstr "~Cacheinformation"
+
+#, fuzzy
+#~ msgid ""
+#~ "ESC      display menu\n"
+#~ "^C, q    quit\n"
+#~ "^P, ^N   scroll up, down\n"
+#~ "[, ]     scroll left, right\n"
+#~ "up, down select link\n"
+#~ "->       follow link\n"
+#~ "<-       go back\n"
+#~ "g        go to URL\n"
+#~ "G        go to URL based on current URL\n"
+#~ "/        search\n"
+#~ "?        search back\n"
+#~ "n        find next\n"
+#~ "N        find previous\n"
+#~ "=        document info\n"
+#~ "|        header info\n"
+#~ "\\        document source\n"
+#~ "d        download"
+#~ msgstr ""
+#~ "ESC      visa meny\n"
+#~ "^C, q    avsluta\n"
+#~ "^P, ^N   bläddra upp/ner\n"
+#~ "[, ]     bläddra vänster/höger\n"
+#~ "upp,ner  välj länk\n"
+#~ "->       följ länk\n"
+#~ "<-       gå tillbaka\n"
+#~ "g        gå till URL\n"
+#~ "G        gå till URL baserat på nuvarande URL\n"
+#~ "/        sök\n"
+#~ "?        sök bakåt\n"
+#~ "n        sök nästa\n"
+#~ "N        sök föregående\n"
+#~ "=        dokumentinformation\n"
+#~ "\\        dokumentkällkod\n"
+#~ "d        hämta"
+
+#, fuzzy
+#~ msgid "Secure open failed"
+#~ msgstr "Fel vid öppnande av fil"
+
+#, fuzzy
+#~ msgid "Unknown event."
+#~ msgstr "Okänd typ"
+
+#~ msgid "Columns"
+#~ msgstr "Kolumner"
+
+#~ msgid "Rows"
+#~ msgstr "Rader"
+
+#~ msgid "Resize ~terminal"
+#~ msgstr "Ändra storlek på ~terminal"
+
+#, fuzzy
+#~ msgid "Form memory"
+#~ msgstr "Slut på minne"
+
+#, fuzzy
+#~ msgid ""
+#~ "Content type is %s.\n"
+#~ "Do you want to save or display this file?"
+#~ msgstr "Vill du spara eller visa filen?"
+
+#, fuzzy
+#~ msgid ""
+#~ "Content type is %s.\n"
+#~ "Do you want to display this file?"
+#~ msgstr "Vill du spara eller visa filen?"
+
+#, fuzzy
+#~ msgid "error: host not found"
+#~ msgstr "Värden hittades inte"
+
+#~ msgid " at "
+#~ msgstr " på "
+
+#~ msgid "Formatted document cache"
+#~ msgstr "Formatterad dokumentcache"
+
+#~ msgid "Do you want to open file with"
+#~ msgstr "Vill du öppna filen med"
+
+#~ msgid "save it or display it?"
+#~ msgstr "spara den, eller visa den?"
+
+#, fuzzy
+#~ msgid "or display it?"
+#~ msgstr "spara den, eller visa den?"
+
+#~ msgid "Welcome to ELinks!"
+#~ msgstr "Välkommen till links!"
+
+#~ msgid "User's ~manual"
+#~ msgstr "Bruksanvisning"
+
+#, fuzzy
+#~ msgid "Cache redirect information"
+#~ msgstr "Väntar på bekräftelse av omdirigering"

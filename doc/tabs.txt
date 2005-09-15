@@ -1,0 +1,116 @@
+The Wonders of Tabbed Browsing
+------------------------------
+
+In this information age with our stream of consciousness constantly being
+dispersed by links to different resources on the Net, it is a challenge to keep
+track of where you are going.  The need for being able to access several pages
+in parallel arises.  Tabbed browsing gives you an easy way to browse multiple
+sites in parallel.
+
+If you are not already familiar with the concept of tabbed browsing you can
+think of a tab as a separate browsing context with its own history and various
+other browsing state information, such as search word and document loading.
+Whenever you stumble upon a link to a document that you want to follow without
+leaving the current document, you can open it in a new tab.  This makes it
+possible to more easily jump between pages on the Net and removes the need for
+running more than one ELinks for that purpose.
+
+Options related to tabs are located under ``User Interface -> Window Tabs'' in
+the option manager.  In the configuration file the naming prefix is ``ui.tabs''.
+
+Tabbed browsing has been supported since version 0.9.0 and is fairly complete.
+The documentation on tabs is therefore divided into two chapters: a general
+introduction and an introduction to advanced topics.
+
+
+Introduction to the basic actions involving tabs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The tab bar and the tab menu
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The current state of all opened tabs are displayed in the tab bar.  The tab bar
+will, by default, become visible when more than one tab is open, but this is
+configurable.  For each open tab, the document title will be shown, possibly
+truncated.  The current tab is highlighted.  The tab bar will also display
+a load meter for tabs that are loading documents.  Finally, any tab that has not
+been selected since its document was loaded will be marked as ``fresh'' by using
+a different coloring scheme.
+
+The tab menu gives access to tab specific actions along with some other useful
+document specific actions.  So even if you haven't configured keybindings for
+all actions, chances are you will find it in the tab menu.  By default, it is
+opened by pressing 'e'.
+
+Creating new tabs
+^^^^^^^^^^^^^^^^^
+
+When creating new tabs, it is possible to specify whether to create the tab and
+make it the current active tab or if the tab is to be created ``in the
+background'' -- that is, without it taking over the focus.
+
+Tabs can be created either with or without specifying a desired first document
+to load.  That is, you can open links or submitted forms in a new tab or just
+open a new tab.  Depending on your configuration, the latter will load the
+configured homepage in the newly created tab or simply leave the tab blank with
+no loaded document.
+
+By default, 't' will open a new tab and 'T' will open the current link in a new
+backgrounded tab.  You can configure keybindings for opening a new tab in the
+background and opening the current link as the active tab.
+
+Switching between tabs
+^^^^^^^^^^^^^^^^^^^^^^
+
+By default, it is possible to switch between tabs by using '<' and '>' to select
+the previous and next tab, respectively.  When positioned at the leftmost tab,
+and switching to the previous tab, the tab switching will perform a wrap-around
+so that the rightmost tab will be selected.  The wrap-around behaviour is
+configurable.
+
+Closing tabs
+^^^^^^^^^^^^
+
+Tabs can by default be closed by pressing 'c'.  It is possible to optionally
+have a confirmation dialog pop up when closing a tab to avoid accidental
+closing.  To complement closing of the current tab, it is also possible to close
+all tabs but the current one.  No key is by default configured for this; the tab
+menu, however, provides this ability.
+
+Note: downloads initiated from a tab are in no way tied to that tab, so tabs can
+be closed and the download will not be affected.
+
+
+Advanced topics involving tabs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Moving tabs
+^^^^^^^^^^^
+
+Newly created tabs are always positioned as the rightmost tab, but it is
+possible to move the current tab either to the left or the right.  The default
+keybindings have them bound to Alt-< and Alt->. Note, however, that there are
+problems recognizing those keybindings when using XTerm, so you might want to
+rebind them.
+
+Saving and restoring tabs
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Several features use bookmarks to save tabs; they will create a folder and
+bookmark therein the currently displayed document of each tab:
+
+- You can explicitly command all tabs to be bookmarked.  This will ask you for
+  a folder name in which the tabs will be bookmarked.
+
+- At startup and shutdown tabs can automatically be bookmarked in order to save
+  and restore the browsing state.  Note that when restoring, all history
+  information will be gone.  It is possible to configure both tab saving and
+  restoring via options in ``UI -> Sessions''.
+
+- As a mean of crash protection, tabs can periodically be saved so that it is
+  later possible to reconstruct opened tabs.  In case of a clean shutdown
+  periodically saved tabs will be removed.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: tabs.txt,v 1.9 2005/05/24 18:21:45 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////

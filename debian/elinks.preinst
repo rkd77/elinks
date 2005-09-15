@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# elinks preinst file
+#
+
+# check whether we have the config in the old place and not in the new place
+#
+
+
+if [ -f /etc/elinks.conf -a ! -f /etc/elinks/elinks.conf ]; then
+	# move the file into the new location
+	#
+	mkdir -p /etc/elinks/
+	mv /etc/elinks.conf /etc/elinks/elinks.conf
+	echo "Your /etc/elinks.conf moved into /etc/elinks/."
+fi
+
+#DEBCONF#
+#DEBHELPER#

@@ -1,0 +1,349 @@
+Introduction to ELinks Developing
+---------------------------------
+
+This is an introduction to how some of the internals of ELinks work. It
+focuses on covering the basic low level subsystems and data structures and
+give an overview of how things are glued together. Some additional information
+about ELinks internals are available in ELinks Hacking. Consult the README
+file\cite{6} in the source directory to get an overview of how the different
+parts of ELinks depend on each other.
+
+
+Memory Management
+~~~~~~~~~~~~~~~~~
+
+ELinks wraps access to `alloc()`, `calloc()` and `free()` in a memory
+management layer which provides,  among other things, leak debugging, and
+checking for out of boundary access. It is defined in `src/util/memory.h`. The
+wrappers are `mem_alloc()`, `mem_calloc()` and `mem_free()`. Additionally,
+it also provides wrappers for `mmap()` and `munmap()` as `mem_mmap_alloc()`
+and `mem_mmap_free()`.
+
+
+Configuration Options
+~~~~~~~~~~~~~~~~~~~~~
+
+All options known by ELinks are accessible using a common interface.
+Options can have different types, such as string, boolean, int and option
+tree. The latter makes it possible to nest options in a hierarchy. Options
+are statically declared using the `INIT_OPTION_<type>()` macros.
+An example of an option declaration is:
+
+	INIT_OPT_INT("protocol.bittorrent.ports", N_("Minimum port"),
+		"min", 0, LOWEST_PORT, HIGHEST_PORT, 6881,
+		N_("The minimum port to try and listen on.")),
+
+Once an option has been declared it can be accessed using the
+`get_opt_<type>()` functions. To get the value of the option
+declared above use:
+
+	int min_port = get_opt_int("protocol.bittorrent.ports.min");
+
+
+Data Structures and Utilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The C language does not natively support essential data structures and
+utilities such as lists and strings. ELinks provides interfaces for both of
+these as described in the following section.
+
+Lists
+^^^^^
+
+In `src/util/lists.h` ELinks defines a fairly complete interface for
+handling double-linked lists. A list item is declared by using the
+`LIST_HEAD()` macro to put `next` and `prev` members
+in a `struct` like this:
+
+------------------------------------------------------------------------------
+	struct bittorrent_data_structure {
+		LIST_HEAD(struct bittorrent_data_structure);
+
+		/* ... */
+	};
+------------------------------------------------------------------------------
+
+A list of type `struct list_head` can then be declared by using
+the `INIT_LIST_HEAD()` macro if it is statically allocated:
+
+	INIT_LIST_HEAD(bittorrent_list);
+
+or initialised in an allocated data structure using the following:
+
+	init_list(bittorrent_data_structure->list);
+
+When iterating a list, there are two looping macros: 
+
+foreach (list-item, list-head})::
+
+	Iterates through all items in the list.
+
+foreachsafe (list-item, next-list-item, list-head)::
+
+	Which is similar to the `foreach` iterator, but makes it possible
+	to delete items from the list without causing trouble.
+
+For both of the above iterators there exists inverse iterators called
+`foreachback()` and `foreachbacksafe()`, respectively.
+
+Strings
+^^^^^^^
+
+The strings library add functionality for appending character to strings
+from various sources. Strings are maintained using the `string`
+`struct`, and defined in `src/util/string.h` and `util/conv.h`.
+Some of the most important functions are shown below:
+
+init_string(string)::
+
+	Creates string.
+
+done_string(string)::
+
+	Deallocates string.
+
+add_to_string(string, char-array)::
+
+	Adds a `NULL`-terminated array of type `unsigned char`
+	to string.
+
+add_bytes_to_string(string, char-array, char-array-length)::
+
+	Adds char-array-length bytes from an array of type
+	`unsigned char` to string.
+
+
+Bitfields
+^^^^^^^^^
+
+To handle bitfields we have made a small bitfield library available in
+`src/util/bitfield.h`. The most important functions and macros are
+explained below:
+
+init_bitfield(size)::
+
+	Allocates a bitfield with the given number of bits. The bitfield
+	is deallocated by using `mem_free()`.
+
+set_bitfield_bit(bitfield, bit)::
+
+	Sets bit in bitfield. There is also a complementary function
+	`clear_bitfield_bit()`.
+
+test_bitfield_bit(bitfield, bit)::
+
+	Tests whether the given bit is set in the bitfield.
+
+
+Subsystems
+~~~~~~~~~~
+
+In the following sections various important subsystems are presented. An
+overview of the subsystems is given in the figure below.
+
+.Overview of the hierarchy of the various subsystems. At the bottom are \
+ subsystems that provide functionality used by the upper layers.
+------------------------------------------------------------------------------
+	+-----------------------------+ +-----------------------------+
+	|    Document Type Handling   | |       URI Downloading       |
+	+-----------------------------+ +-----------------------------+
+
+	+-------------------------------------------------------------+
+	|                 Protocol Implementation                     |
+	+-------------------------------------------------------------+
+
+	+-------------------------------------------------------------+
+	|                       Socket API                            |
+	+-------------------------------------------------------------+
+
+	+-------------+ +--------+ +---------------+ +----------------+
+	| Select loop | | Timers | | Bottom halves | | Simple threads |
+	+-------------+ +--------+ +---------------+ +----------------+
+------------------------------------------------------------------------------
+
+
+The `select()` loop
+^^^^^^^^^^^^^^^^^^^
+
+
+At the heart of ELinks is the `select()` loop which is entered after all
+module have been initialised. It runs until ELinks is shutdown.  The
+`select()` loop handles detecting status changes to registered file
+descriptors, and calls the registered handlers. It is part of the lowest layer
+in shown in the figure, and is defined in `src/main/select.h`.  It provides
+two functions:
+
+
+set_handlers(file-descriptor, read-handler, write-handler, error-handler, data)::
+
+	This function registers the read, write and error handlers for the
+	given file descriptor. The handlers will be called with data as the
+	only argument if the status of the file descriptor changes. Any of the
+	passed handlers maybe be `NULL` if no handling is required for the
+	specific status change.
+
+clear_handlers(file-descriptor)::
+
+	Unregister all handlers for the given file descriptor.
+
+
+Timers
+^^^^^^
+
+The `select()` loop regularly causes timer expiration to be checked. The
+interface is defined in `src/main/timer.h` and can be used to schedule work to
+be performed some time in the future.
+
+install_timer(timer-id, time-in-milliseconds, expiration-callback}, data)::
+
+	Starts a one shot timer bound to the given timer ID that will expire
+	after the given time in milliseconds. When the timer expires the
+	expiration callback will be called with data as the only argument.
+
+kill_timer(timer-id)::
+
+	Stops the timer associated with the given timer ID.
+
+
+Bottom Halves
+^^^^^^^^^^^^^
+
+Work can be prosponed and scheduled for completion in the nearest future by
+using bottom halves. This is especially useful when nested deeply in some call
+tree and one needs to cleanup some data structure but cannot do so immidately.
+The interface is defined in `src/main/select.h`
+
+register_bottom_half(work-function, data})::
+
+	Schedules postponed work to be run and completed in the nearest
+	future. Note that although this helps to improve the response time it
+	requires more focus on concurrency, such as ensuring that the data
+	passed to the bottom half won't disappear while being handled.
+
+
+Simple Threads
+^^^^^^^^^^^^^^
+
+ELinks also supports a simple threading architecture. It is possible to start
+a thread\footnote{(on UNIX systems this will end up using the `fork()`
+system call} so that communication between it and the ELinks program is
+handled via a pipe. This pipe can then be used to pass to the
+`set_handlers()` function so that communcation is done asynchronously.
+
+start_thread(thread-function, thread-data, thread-data-length)::
+
+	Starts a new thread which will run the given thread function. The
+	thread function is passed the given thread data as its first argument
+	and a pipe descriptor it can use for communication with the ELinks
+	program as its second argument. This function returns the pipe
+	descriptor for the other end of the pipe to the calling ELinks
+	program.
+
+
+Socket API
+^^^^^^^^^^
+
+This layer provides a high-level interface for socket communication
+appropriate for protocol implementations. When initialising a socket, a
+`struct` containing a set of callbacks is passed along with some private
+connection data which will be associated with the socket and passed to the
+callbacks. Among the callbacks are `set_state()` which is called when the
+socket state changes, for instance after a successful DNS look-up. Another
+function is  `set_timeout()` that will be called when progress is done, such
+as during writing or reading . Finally, there is `retry()` and `done()` both
+of which are called when an error occurs: the former is used for errors that
+might be possible to resolve; the latter is used for fatal errors.
+
+The interface is defined in `src/network/socket.h` and the most notable
+functions are:
+
+make_connection(socket, uri, connect-callback, no-dns-cache)::
+
+	This function handles connecting to the host and port given in the uri
+	argument. If the internal DNS cache is not to be used the
+	no-dns-cache} argument should be non-zero.  Upon successful connection
+	establishment the connect callback is called.
+
+read_from_socket(socket, read-buffer, connection-state, read-callback)::
+
+	Reads data from socket into the given read buffer. Each time new data
+	is received the read callback is called. Changes the connection state
+	to connection-state} immediately  after it has been called.
+
+write_to_socket(socket, data, datalen, connection-state, write-callback)::
+
+	Writes datalen bytes from the data to the given socket. Upon
+	completion the write callback is called. Changes the connection state
+	to connection state immediately after being called.
+
+
+The buffer interface used for reading is as follows:
+
+alloc_read_buffer(socket)::
+
+	Allocates a new read buffer which can be passed to
+	`read_from_socket()`.
+
+kill_buffer_data(read-buffer, number-of-bytes)::
+
+	Removes the requested number of bytes from the start of the given read
+	buffer.
+
+
+Protocol Layer and URI Loading
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The protocol layer multiplexes over different protocol back-ends. The protocol
+multiplexing decides what protocol back-end to use by looking at the protocol
+string in the connection URI, i.e. `http` part of `http://127.0.0.1/` will
+cause the HTTP protocol back-end to be selected.  Each protocol back-end
+exports a protocol handler taking a `connection` `struct` as its only
+argument.  The `connection` struct contains information such as the URI being
+loaded and status about how much has been downloaded and the current
+connection state. How the protocol back-end chooses to handle the connection
+and load the URI it points to is entirely up to the back-end.  The interface
+is defined in `src/protocol/protocol.h` and `src/network/connection.h`.
+
+A connection can have multiple downloads attached to it. Each download struct}
+contains information about the connection state and the connection with which
+it is attached. Additionally, the `download struct` specifies callback data,
+and a callback which is called each time the download progresses.  The
+interface for downloads is defined in `src/session/download.h` and the most
+important functions it provides are:
+
+load_uri(uri, referrer, download, priority, cache-mode, offset)::
+	
+	Attaches the given download to a connection which will try to load the
+	given URI. If a connection is already in progress the download is
+	simply attached to that one.
+
+change_connection(old-download, new-download, new-priority, interrupt)::
+
+	Removes the old download from the connection it is attached to and add
+	the new download instead. If the new download argument is `NULL`, the
+	old download is simply stopped.
+
+All data loaded by a connection is put into ELinks' cache. Cache entries can
+then used for passing data to download handler, etc. The connection will
+create a cache entry once it starts receiving data. Each time it adds data a
+new fragment is added to the cache entry, this means that the cache entry
+needs to be defragmented before data in it can be processed.  From time to
+time the cache will be shrunk and unlocked cache entries will be removed.
+
+
+Document Type Handling
+^^^^^^^^^^^^^^^^^^^^^^
+
+When a user asks ELinks to load a URI, ELinks  will eventually have to try and
+figure out the document type of the URI in order to handle it properly, either
+by using an internal renderer or by passing the document to an external
+handler. This is done in the following function:
+
+setup_download_handler(session, download, cache-entry, frame)::
+
+	Tries to resolve the document type of the given cache entry by first
+	looking at the protocol header it contains. If no content type is
+	found it will try to resolve the document type by looking at the file
+	extension in the loading URI. Based on the content type, either an
+	internal or an external handler is selected. The user will be queried
+	before using an external handler.

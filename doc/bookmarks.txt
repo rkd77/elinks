@@ -1,0 +1,226 @@
+The Ultimate Bookmarks Guide
+----------------------------
+
+Glad to see you again, mortal. Now, we are going to learn about bookmarks -
+how to use them, how to maintain them, and also something more about the file
+formats and maybe even about the code structure later. But don't fear, we
+won't burden you with it, just stop reading when you already know enough.
+
+In order to read this, you need some common sense, the ability to start ELinks
+and some idea about what's a Web document, a URL address and knowledge like
+that.
+
+If we ever mention some keys here, please note that you can rebind almost any
+action to another key which you like more - then you must obviously imagine
+your own key in place of that. Below, we will list all actions, options and so
+on related to bookmarks. We won't tell you how to rebind the keys, though;
+another document will take on that.
+
+Somewhat out-of-order, a very frequent FAQ: In order to move bookmarks around,
+you need to mark them first - press 'Insert' or '*' (if you use the default
+keymap) to do that.
+
+
+The Bookmark Manager
+~~~~~~~~~~~~~~~~~~~~
+
+Basically, almost everything is going on in the so-called bookmark manager.
+That's a special dialog window, which contains a listing of all the bookmarks
+you ever told ELinks to remember and it lets you to do with them anything you
+would ever want to do with them.
+
+You launch the bookmark manager by pressing the 's' key in standby (standard)
+mode. You should see a big empty space (bookmarks will slowly appear there as
+you will add them) and couple of buttons shriveling at the bottom. So, as a
+start, move with the right (or left; both will do) arrow to the button *Add
+bookmark* and fill in the input fields it offers to you. I mean, you can type
+something like "ELinks homepage" to the first field, then move down by e.g.
+the down arrow and fill "http://elinks.or.cz/" to the second field. Then,
+bravely press enter and watch the bookmark popping up at the top of the vast
+area reserved for bookmarks.
+
+Repeat this step few times. Now, you can move between bookmarks by the up and
+down arrow, jump to the location any of them points to by the Goto button,
+change it by the Edit button, delete it with the Delete button and so on. When
+you'll become bored, press the escape button and you're free again!
+
+
+The Ancient Forests
+~~~~~~~~~~~~~~~~~~~
+
+It's not very convenient to have all the bookmarks mixed up - soon, you will
+get lost in them. Thus, in ELinks you can categorize them to various folders,
+subfolders, subsubfolders and so on, then you can expand and back enfold them
+and so on.
+
+In order to create your first folder, use the button *Add folder* and fill the
+first input field. You can safely ignore the URL field, ELinks will do the
+same. *POOF* and you see it - it has that strange `[+]` or `[-]` thing there.
+If it has `[+]` near, it's enfolded, while when it has `[-]` near, it is
+expanded, while you can change that by pressing the spacebar.
+
+In order to add a bookmark into a folder, move on the item of the folder (it
+must be expanded) or onto any bookmark inside of the folder and simply do the
+usual *Add bookmark* job. You can also move the bookmarks around, obviously.
+Before pressing the *Move* button, you need to first mark all the bookmarks
+(or even folders) you want to move using the 'Insert' or '*' key--asterisk
+will appear near of all marked bookmarks--and then move to where you want to
+have the stuff moved to.
+
+Separators can be inserted as well, using *Add separator* button, or by
+entering a special bookmark with "-" as title and no url.
+
+
+Searching for a needle in the haystack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course, you can search in the bookmarks. Just use the *Find* button	- for
+convenience, you have the current document's URL and title pre-filled there,
+and for convenience only up-up-enter-down-down sequence is enough to have the
+playground clean. Then, just fill a substring of what you are looking for, and
+the bookmarks will be filtered so that only the matching ones are shown.
+(Actually, currently it will not be filtered but the cursor will only jump to
+the first matching bookmark below the current cursor position - and it will
+*NOT* wrap around. The exact behaviour changes time by time and hasn't been
+stabilized yet.)
+
+File formats
+~~~~~~~~~~~~
+
+ELinks supports two bookmark formats: the native format and a generic bookmark
+exchange format called XBEL. Each of those formats has its pros and cons,
+which we shall discuss below. You can switch between then by changing the
+option 'bookmarks.file_format'.
+
+However, first please note that ELinks 'CANNOT' read Links bookmarks directly.
+Importing Links-0.9x (or Links-1.x) bookmarks is easy - it is just matter of
+changing all the '|' (pipe) characters to tabs.  There is a script for that in
+the contrib/conv/ directory. Importing Links-2.xx bookmarks is not so easy; in
+fact, the scribe knows of no way of doing that at the time of writing this, so
+this is up to you to figure out (if you do, please tell us so that we can add
+it here).  Perhaps you might find a way to convert Links2 bookmarks to the
+XBEL format, which can then be loaded in ELinks.
+
+Native file format
+^^^^^^^^^^^^^^^^^^
+
+This is the preferred bookmarks format, which is also used by default.  The
+bookmarks file is `~/.elinks/bookmarks`, in a simple format:
+
+	<name> '\t' <url> [ '\t' <depth> ['\t' <flags>] ] '\n'
+
+'\t' represents a tab character, '\n' represents a newline character.  [Square
+brackets] denote optional parts. The '<name>' and '<url>' fields should be
+obvious.  '<depth>' contains the depth level of the entry - by that, ELinks
+can unambiguously figure out the bookmarks hierarchy:
+
+	Bookmarks structure:                                Depth:
+	 ,-- The Pasky's C Bestiary                         0
+	[-]- Wonderful things                               0
+	 |    |-- Christmas Carol in l33tsp34k by L.M.      1
+	 |   [-]- Beautiful Potato Camera Shots             1
+	 |   [-]- Gallery of Scary Images of Jonas Fonseca  1
+	 |         |-- Jonas torturing gdb                  2
+	 |        [-]- Urgh                                 2
+	 |         |    `-- Jonas consuming Tofu            3
+	 |         `-- Jonas with crashed ELinks            2
+	 |-- Slides from Witek's hack-patch show            0
+	 `-- Miciah's English Grammar Spellbook             0
+
+'<flags>' is a string of characters. Currently, two flags are supported:
+
+`-------`---------------------------------------------------------------------
+Flag	Description
+------------------------------------------------------------------------------
+E	This folder is currently expanded. (No effect for non-folders.)
+F	This entry is a folder. The <url> part is usually empty.
+------------------------------------------------------------------------------
+
+Separators: these are special bookmarks with "-" as title and no url.
+
+Pros::
+	Naturally, ELinks handles the native format the best, easiest and most
+	reliably.
+
+Cons::
+	It is unlikely that you could use the native format anywhere else than
+	in ELinks.
+
+To use the native format, set 'bookmarks.file_format' = 0.
+
+XBEL file format
+^^^^^^^^^^^^^^^^
+
+The XBEL file format support was added at some point during the 0.4
+development by Fabio Boneli. It has never been complete and has plenty of
+troubles, but generally, it works at the basic level. The bookmarks file is
+`~/.elinks/bookmarks.xbel` (thanks to a different filename, you can have both
+XBEL and native bookmarks saved in your `~/.elinks` directory).
+
+We shall not describe the XBEL file format here,
+	
+	http://pyxml.sourceforge.net/topics/xbel/
+
+is the authoritative resource on that. It also contains list of some of the
+applications supporting the format.  Basically, you will be probably able to
+convert from/to the XBEL format to/from most of the other widely used formats,
+so this way you can import your bookmarks to ELinks from basically anything.
+
+Pros::
+	XBEL is the gateway to the rest of the bookmarks world.
+
+Cons::
+	The support for XBEL is incomplete and there are known bugs.
+	Especially, national character sets are basically not supported, so
+	ELinks will most likely get it wrong if you have any non-ASCII
+	characters in your bookmarks.  Generally, the XBEL support should be
+	considered experimental and you shouldn't rely on it. It *could* trash
+	your XBEL bookmarks file so make regular backups.
+
+To use the XBEL format, set 'bookmarks.file_format' to 1.
+
+Usage hints
+^^^^^^^^^^^
+
+As already noted above, probably the best usage pattern is to use XBEL for
+importing/exporting your bookmarks to/from ELinks and the native format for
+regular operation. Of course, if you want to synchronize your bookmarks in
+ELinks and some other XBEL-supporting gadget and you are brave, you can use
+XBEL as your exclusive bookmark format - the choice is upon you.
+
+Regarding the bookmarks synchronization, there is one important note. ELinks
+saves your bookmarks each time you added one through the 'a' shortcut
+(add-bookmark action) or when closing the bookmarks manager if you made any
+changes or when quitting ELinks. However, ELinks reads your bookmarks only
+*ONCE*, during the startup. This behaviour may change in the future (tell us
+if you need a way for ELinks to re-read the bookmarks file), but this is how
+it is done now.
+
+Actually, you may now ask "So how do I convert bookmarks between the two
+formats?".  It is quite easy.  ELinks simply follows the current value of
+'bookmarks.file_format' whenever loading/saving the bookmarks.
+
+So, e.g. if you normally use the native format but you want the bookmarks to
+be saved in the XBEL format once, change 'bookmarks.file_format' to 1, then
+cause the bookmarks to be resaved (e.g. by doing some simple change, like
+adding a trailing space to some bookmark's title or so), then change the
+'bookmarks.file_format' value back to 0.
+
+It is a little more complicated if you normally use the native format but you
+want to import bookmarks from the XBEL format once. You again change
+'bookmarks.file_format' to 1, then cause the bookmarks to be reloaded.  That
+involves saving the configuration, quitting ELinks _completely_ (that means
+closing/killing all instances of it you have running), then restarting it and
+changing 'bookmarks.file_format' to 0. Then save the configuration again and
+cause ELinks to resave the bookmarks.
+
+Agreed, this all strange dances are quite clumsy, likely some simple
+wizard-like interface for switching the bookmarks formats will be introduced
+in the future. So far, we have had no reports from our users that anyone wants
+to switch their bookmarks format frequently, so this is not too high on our
+TODO list. So be sure to tell us if you would like this process to be
+simplified rather sooner than later.
+
+///////////////////////////////////////////////////////////////////////////////
+$Id: bookmarks.txt,v 1.21 2005/09/15 11:24:54 jonas Exp $
+///////////////////////////////////////////////////////////////////////////////
