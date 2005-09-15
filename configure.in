@@ -1267,7 +1267,6 @@ AC_OUTPUT([ \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
  doc/Makefile \
- po/Makefile \
  src/Makefile \
  src/bfu/Makefile \
  src/bookmarks/Makefile \
