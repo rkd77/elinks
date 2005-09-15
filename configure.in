@@ -1315,7 +1315,6 @@ AC_OUTPUT([ \
  src/scripting/perl/Makefile \
  src/scripting/python/Makefile \
  src/scripting/ruby/Makefile \
- src/session/Makefile \
  src/terminal/Makefile \
  src/util/Makefile \
  src/viewer/Makefile \
