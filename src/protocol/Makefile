@@ -1,15 +1,13 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.48 2005/07/11 10:59:04 jonas Exp $
-
-include $(top_srcdir)/Makefile.base
+path_to_top=../..
+include $(path_to_top)/Makefile.config
 
 authobj = auth/auth.o auth/dialogs.o auth/digest.o
 
-if CONFIG_CGI
+ifeq ($(CONFIG_CGI),yes)
 cgiobj = file/cgi.o
 endif
 
-if CONFIG_BITTORRENT
+ifeq ($(CONFIG_BITTORRENT),yes)
 bittorrentdir = bittorrent
 bittorrentobj = \
  $(bittorrentdir)/bencoding.o \
@@ -23,40 +21,40 @@ bittorrentobj = \
  $(bittorrentdir)/tracker.o
 endif
 
-if CONFIG_DATA
+ifeq ($(CONFIG_DATA),yes)
 dataobj = data.o
 endif
 
 fileobj = file/file.o
 
-if CONFIG_FINGER
+ifeq ($(CONFIG_FINGER),yes)
 fingerdir = finger
 fingerobj = $(fingerdir)/finger.o
 endif
 
-if CONFIG_FTP
+ifeq ($(CONFIG_FTP),yes)
 ftpdir = ftp
 ftpobj = $(ftpdir)/ftp.o $(ftpdir)/parse.o 
 endif
 
-if CONFIG_GOPHER
+ifeq ($(CONFIG_GOPHER),yes)
 gopherdir = gopher
 gopherobj = $(gopherdir)/gopher.o
 endif
 
 httpobj = http/blacklist.o http/codes.o http/http.o
 
-if CONFIG_NNTP
+ifeq ($(CONFIG_NNTP),yes)
 nntpdir = nntp
 nntpobj = $(nntpdir)/connection.o $(nntpdir)/nntp.o $(nntpdir)/response.o
 endif
 
-if CONFIG_SMB
+ifeq ($(CONFIG_SMB),yes)
 smbdir = smb
 smbobj = $(smbdir)/smb.o
 endif
 
-if CONFIG_URI_REWRITE
+ifeq ($(CONFIG_URI_REWRITE),yes)
 rewritedir = rewrite
 rewriteobj = $(rewritedir)/rewrite.o
 endif
@@ -73,10 +71,7 @@ SUBDIRS = \
  $(rewritedir) \
  $(smbdir)
 
-noinst_LIBRARIES = libprotocol.a
-
-EXTRA_libprotocol_a_SOURCES = data.c data.h
-libprotocol_a_LIBADD = \
+SUB_OBJS = \
  $(authobj) \
  $(bittorrentobj) \
  $(dataobj) \
@@ -89,19 +84,9 @@ libprotocol_a_LIBADD = \
  $(nntpobj) \
  $(rewriteobj) \
  $(smbobj)
+OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o $(SUB_OBJS)
 
-libprotocol_a_SOURCES = \
- about.c \
- about.h \
- date.c \
- date.h \
- header.c \
- header.h \
- protocol.c \
- protocol.h \
- proxy.c \
- proxy.h \
- uri.c \
- uri.h \
- user.c \
- user.h
+all-l: libprotocol.a
+libprotocol.a: $(OBJS)
+
+include $(path_to_top)/Makefile.lib
