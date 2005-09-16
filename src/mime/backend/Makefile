@@ -9,7 +9,7 @@ ifeq ($(CONFIG_MIMETYPES),yes)
 mimetypesobj = mimetypes.o
 endif
 
-OBJS = common.o default.o $(mailcapobj) $(mimetypeobj)
+OBJS = common.o default.o $(mailcapobj) $(mimetypesobj)
 
 # Do not forget to also add the .o to ../Makefile. Yes, it sucks.
 all-l: $(OBJS)

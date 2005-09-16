@@ -43,7 +43,7 @@ DEP_FILES = $(DEP_FILES_1:%.o=%.P)
 
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
-ifdef $(OBJS)
+ifdef OBJS
 -include $(DEP_FILES)
 endif
 
@@ -58,7 +58,7 @@ endif
 %.a:
 	$(call cmd,archive)
 
-ifdef $(OBJS)
+ifdef OBJS
 clean-l:
 	rm -f $(OBJS) *.a
 endif
