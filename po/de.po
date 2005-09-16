@@ -4054,7 +4054,7 @@ msgid ""
 msgstr ""
 "Die URI, die geladen werden soll, wenn beim Start in der Kommandozeile\n"
 "keine URI angegeben ist oder wenn goto-url-home aktiviert wurde.\n"
-"Der Wert \\\"\\\" gibt an, dass der Wert der Umgebungsvariable WWW_HOME als\n"
+"Der Wert \"\" gibt an, dass der Wert der Umgebungsvariable WWW_HOME als\n"
 "URI benutzt werden soll."
 
 #: src/config/options.inc:1207
@@ -4312,7 +4312,7 @@ msgstr "Alle Cookies von dieser Domain löschen"
 #: src/cookies/dialogs.c:216
 #, c-format
 msgid "Delete all cookies from domain \"%s\"?"
-msgstr "Alle Cookies von Domain \\\"%s\\\" löschen?"
+msgstr "Alle Cookies von Domain \"%s\" löschen?"
 
 #. delete_item_title
 #: src/cookies/dialogs.c:218
@@ -5074,7 +5074,7 @@ msgstr ""
 "Damit kann das grundsätzliche Layout von HTML-Dokumenten\n"
 "kontrolliert werden. Es wird angenommen, dass der Pfad relativ\n"
 "zu dem ELinks-Verzeichnis angegeben ist.\n"
-"Der Wert \\\"\\\" gibt an, dass die dokument-eigenen Stile benutzt\n"
+"Der Wert \"\" gibt an, dass die dokument-eigenen Stile benutzt\n"
 "werden sollen."
 
 #. name:
@@ -7169,7 +7169,7 @@ msgstr "Fehlendes Fragment"
 #: src/viewer/text/draw.c:64
 #, c-format
 msgid "The requested fragment \"#%s\" doesn't exist."
-msgstr "Das angeforderte Fragment \\\"#%s\\\" existiert nicht."
+msgstr "Das angeforderte Fragment \"#%s\" existiert nicht."
 
 #: src/viewer/text/form.c:853
 msgid "Error while posting form"
