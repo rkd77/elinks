@@ -1,5 +1,4 @@
 # Example ~/.elinks/hooks.pl
-# $Id: hooks.pl,v 1.135 2005/09/03 20:56:58 rrowan Exp $
 #
 # Copyleft by Russ Rowan (See the file "COPYING" for details.)
 #
