@@ -1,5 +1,4 @@
 # Configuration file for hooks.pl - salt to taste and place in ~/.elinks
-# $Id: config.pl,v 1.5 2005/08/07 21:14:04 rrowan Exp $
 
 bork:       nah                   # BORKify Google?
 collapse:   nope                  # Collapse all XBEL bookmark folders on exit?
