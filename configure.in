@@ -1329,9 +1329,7 @@ AC_OUTPUT([ \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed \
  src/mime/Makefile \
- src/mime/backend/Makefile \
- src/viewer/Makefile \
- src/viewer/text/Makefile
+ src/mime/backend/Makefile
 ])
 
 
