@@ -1,47 +1,36 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.12 2005/06/02 18:01:34 witekfl Exp $
+path_to_top=../..
+include $(path_to_top)/Makefile.config
 
-include $(top_srcdir)/Makefile.base
-
-if CONFIG_GUILE
+ifeq ($(CONFIG_GUILE),yes)
 guiledir = guile
 guileobj = $(guiledir)/core.o $(guiledir)/guile.o $(guiledir)/hooks.o
 endif
 
-if CONFIG_LUA
+ifeq ($(CONFIG_LUA),yes)
 luadir = lua
 luaobj = $(luadir)/core.o $(luadir)/hooks.o $(luadir)/lua.o
 endif
 
-if CONFIG_PERL
+ifeq ($(CONFIG_PERL),yes)
 perldir = perl
 perlobj = $(perldir)/core.o $(perldir)/hooks.o $(perldir)/perl.o
 endif
 
-if CONFIG_PYTHON
+ifeq ($(CONFIG_PYTHON),yes)
 pythondir = python
 pythonobj = $(pythondir)/core.o $(pythondir)/hooks.o $(pythondir)/python.o
 endif
 
-if CONFIG_RUBY
+ifeq ($(CONFIG_RUBY),yes)
 rubydir = ruby
 rubyobj = $(rubydir)/core.o $(rubydir)/hooks.o $(rubydir)/ruby.o
 endif
 
 SUBDIRS = $(guiledir) $(luadir) $(perldir) $(pythondir) $(rubydir)
 
-EXTRA_DIST = TODO
+OBJS = scripting.o $(guileobj) $(luaobj) $(perlobj) $(pythonobj) $(rubyobj)
 
-noinst_LIBRARIES = libscripting.a
+all-l: libscripting.a
+libscripting.a: $(OBJS)
 
-libscripting_a_LIBADD = \
- $(guileobj) \
- $(luaobj) \
- $(perlobj) \
- $(pythonobj) \
- $(rubyobj)
-
-libscripting_a_SOURCES = \
- scripting.c \
- scripting.h
-
+include $(path_to_top)/Makefile.lib
