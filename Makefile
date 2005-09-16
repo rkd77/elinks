@@ -1,7 +1,5 @@
-include Makefile.config
-# This should be _really_ ., but only after we have src/Makefile.
-# Otherwise, it wouldn't be set right in the submakefiles.
-path_to_top = ..
+path_to_top = .
+include $(path_to_top)/Makefile.config
 
 # TODO: Automagically rerun autoconf.
 
@@ -11,4 +9,4 @@ SUBDIRS = doc po src
 clean-l:
 	rm -rf features.log
 
-include Makefile.lib
+include $(path_to_top)/Makefile.lib

@@ -1,4 +1,5 @@
-include ../Makefile.config
+path_to_top=..
+include $(path_to_top)/Makefile.config
 
 # Where to install the catalog files.
 localedir = $(datadir)/locale
@@ -129,4 +130,4 @@ dist: update-po distdir
 clean:
 	rm -f $(PACKAGE).po *.new.po
 
-include ../Makefile.lib
+include $(path_to_top)/Makefile.lib

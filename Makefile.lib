@@ -32,7 +32,7 @@ quiet_cmd_archive = '[AR]   $@'
 
 # Recursive make
 quiet_cmd_recmake = "[MAKE $$target]   $$subdir"
-      cmd_recmake = $(MAKE) -C $$subdir $$target path_to_top="$(path_to_top)/.."
+      cmd_recmake = $(MAKE) -C $$subdir $$target
 
 
 
