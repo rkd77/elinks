@@ -1325,15 +1325,7 @@ AC_OUTPUT([ \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
- doc/Makefile \
  src/Makefile \
- src/bfu/Makefile \
- src/bookmarks/Makefile \
- src/bookmarks/backend/Makefile \
- src/cookies/Makefile \
- src/dialogs/Makefile \
- src/document/Makefile \
- src/encoding/Makefile \
  src/intl/Makefile \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed \
@@ -1342,8 +1334,6 @@ AC_OUTPUT([ \
  src/mime/backend/Makefile \
  src/network/Makefile \
  src/osdep/Makefile \
- src/protocol/Makefile \
- src/protocol/file/Makefile \
  src/scripting/Makefile \
  src/terminal/Makefile \
  src/util/Makefile \
