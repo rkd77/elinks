@@ -28,7 +28,7 @@ quiet_cmd_archive = '[AR]   $@'
       cmd_archive = $(AR) r $@ $^
 
    quiet_cmd_link = '[LINK] $@'
-         cmd_link = $(CC) $(LDFLAGS) -o $@ $^
+         cmd_link = $(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
 quiet_cmd_recmake = "[MAKE $$target]   $$subdir"
