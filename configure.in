@@ -1331,7 +1331,6 @@ AC_OUTPUT([ \
  src/mime/Makefile \
  src/mime/backend/Makefile \
  src/scripting/Makefile \
- src/util/Makefile \
  src/viewer/Makefile \
  src/viewer/text/Makefile
 ])
