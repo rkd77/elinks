@@ -11,7 +11,7 @@ endif
 
 OBJS = encoding.o bzip2.o gzip.o
 
-all-l: libencoding.o
+all-l: libencoding.a
 libencoding.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib
