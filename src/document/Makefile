@@ -1,9 +1,7 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.49 2005/07/15 04:37:55 miciah Exp $
+path_to_top=../..
+include $(path_to_top)/Makefile.config
 
-include $(top_srcdir)/Makefile.base
-
-if CONFIG_CSS
+ifeq ($(CONFIG_CSS),yes)
 cssdir = css
 cssobj = \
  css/apply.o \
@@ -15,7 +13,7 @@ cssobj = \
  css/value.o
 endif
 
-if CONFIG_DOM
+ifeq ($(CONFIG_DOM),yes)
 domdir = dom
 domobj = \
  $(domdir)/navigator.o \
@@ -32,9 +30,7 @@ endif
 
 SUBDIRS = $(cssdir) $(domdir) html plain $(sgmldir)
 
-noinst_LIBRARIES = libdocument.a
-
-libdocument_a_LIBADD = \
+SUB_OBJS = \
  $(cssobj) \
  $(domobj) \
  html/parser/forms.o \
@@ -50,18 +46,9 @@ libdocument_a_LIBADD = \
  plain/renderer.o \
  $(sgmlobj)
 
-libdocument_a_SOURCES = \
- docdata.c \
- docdata.h \
- document.c \
- document.h \
- forms.c \
- forms.h \
- options.c \
- options.h \
- refresh.c \
- refresh.h \
- renderer.c \
- renderer.h \
- view.h
+OBJS = docdata.o document.o forms.o options.o refresh.o renderer.o $(SUB_OBJS)
 
+all-l: libdocument.a
+libdocument.a: $(OBJS)
+
+include $(path_to_top)/Makefile.lib
