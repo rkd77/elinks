@@ -339,17 +339,15 @@ unblock_itrm(int fd)
 void
 block_itrm(int fd)
 {
-	struct itrm *itrm = ditrm;
+	if (!ditrm) return;
 
-	if (!itrm) return;
-
-	itrm->blocked = 1;
+	ditrm->blocked = 1;
 	block_stdin();
-	unhandle_terminal_resize(itrm->in.ctl);
-	send_done_sequence(itrm->out.std, itrm->altscreen);
-	tcsetattr(itrm->in.ctl, TCSANOW, &itrm->t);
-	unhandle_itrm_stdin(itrm);
-	suspend_mouse(itrm->mouse_h);
+	unhandle_terminal_resize(ditrm->in.ctl);
+	send_done_sequence(ditrm->out.std, ditrm->altscreen);
+	tcsetattr(ditrm->in.ctl, TCSANOW, &ditrm->t);
+	unhandle_itrm_stdin(ditrm);
+	suspend_mouse(ditrm->mouse_h);
 }
 
 
