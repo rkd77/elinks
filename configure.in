@@ -1276,7 +1276,6 @@ AC_OUTPUT([ \
  src/document/Makefile \
  src/encoding/Makefile \
  src/intl/Makefile \
- src/intl/gettext/Makefile \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed \
  src/main/Makefile \
