@@ -1325,7 +1325,6 @@ AC_OUTPUT([ \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
- src/Makefile \
  src/intl/Makefile \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed \
