@@ -1,5 +1,5 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.75 2005/08/09 17:44:23 jonas Exp $
+path_to_top=..
+include $(path_to_top)/Makefile.config
 
 SUBDIRS = man
 
@@ -41,21 +41,6 @@ MANUAL_FILES = \
  terminals.txt \
  urlshortcuts.txt
 
-EXTRA_DIST = \
- README \
- $(MANUAL_FILES) \
- color-model.txt \
- events.txt \
- feedback.txt \
- get-cvs-docs \
- hacking.txt \
- dev-intro.txt \
- index.txt \
- perl.pod \
- tools/help2doc \
- tools/make-elinks-manpage \
- tools/make-elinkskeys-manpage
-
 ### Script Dependencies
 #
 
@@ -71,7 +56,7 @@ IMPORT_FEATURES_CONF	= $(top_srcdir)/doc/tools/import-features.conf
 MAKE_ELINKS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinks-manpage
 MAKE_ELINKSKEYS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinkskeys-manpage
 
-if CONFIG_ASCIIDOC
+ifeq ($(CONFIG_ASCIIDOC),yes)
 HTML_DOCS_WITH_ASCIIDOC = \
  $(HTML_DIR)/elinks.1.html \
  $(HTML_DIR)/elinkskeys.5.html \
@@ -81,22 +66,22 @@ endif
 
 
 # Only jw is used for generating PDF.
-if CONFIG_XMLTO
+ifeq ($(CONFIG_XMLTO),yes)
 HTML_DOCS_WITH_XMLTO = \
  $(HTML_DIR)/manual.html-chunked
 
 MAN_DOCS_WITH_XMLTO = \
  $(MAN_DIR)/man1/elinks.1.in \
  $(MAN_DIR)/man5/elinkskeys.5
-
 endif
+
 # Only jw is used for generating PDF.
-if CONFIG_JW
+ifeq ($(CONFIG_JW),yes)
 PDF_DOCS_WITH_JW = \
  $(PDF_DIR)/manual.pdf
 endif
 
-if CONFIG_POD2HTML
+ifeq ($(CONFIG_POD2HTML),yes)
 HTML_DOCS_WITH_POD2HTML = \
  $(HTML_DIR)/perl.html \
  $(HTML_DIR)/perl-hooks.html
@@ -131,9 +116,9 @@ man-xmlto-no:
 pdf-jw-yes: doc-dirs $(PDF_DOCS_WITH_JW)
 pdf-jw-no:
 
-man-docs: man-xmlto-@CONFIG_XMLTO@ $(MAN_DOCS_WITH_SHELL)
-html-docs: html-asciidoc-@CONFIG_ASCIIDOC@ html-xmlto-@CONFIG_XMLTO@ html-pod2html-@CONFIG_POD2HTML@
-pdf-docs: pdf-jw-@CONFIG_JW@
+man-docs: man-xmlto-$(CONFIG_XMLTO) $(MAN_DOCS_WITH_SHELL)
+html-docs: html-asciidoc-$(CONFIG_ASCIIDOC) html-xmlto-$(CONFIG_XMLTO) html-pod2html-$(CONFIG_POD2HTML)
+pdf-docs: pdf-jw-$(CONFIG_JW)
 
 all-docs: man-docs html-docs pdf-docs
 
@@ -212,3 +197,5 @@ $(HTML_DIR)/perl.html: $(top_srcdir)/doc/perl.pod doc-dirs
 
 $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl doc-dirs
 	$(POD2HTML) --outfile=$@ < $<
+
+include $(path_to_top)/Makefile.lib
