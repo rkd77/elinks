@@ -60,7 +60,6 @@ SUBDIRS = \
 # mysteriously unresolved symbols.
 ELINKSLIBS = \
  main/libmain.a \
- $(INTLLIBS) \
  $(cookieslib) \
  viewer/libviewer.a \
  cache/libcache.a \
@@ -81,6 +80,7 @@ ELINKSLIBS = \
  mime/libmime.a \
  bfu/libbfu.a \
  encoding/libencoding.a \
+ $(INTLLIBS) \
  util/libutil.a
 
 OBJS = vernum.o

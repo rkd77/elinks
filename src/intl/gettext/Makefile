@@ -24,8 +24,8 @@ OBJS = \
  plural.o \
  textdomain.o
 
-# Do not forget to also add the .o to ../Makefile. Yes, it sucks.
-all-l: $(OBJS)
+all-l: libintl.a
+libintl.a: $(OBJS)
 
 
 $(builddir)/charset.alias: $(srcdir)/config.charset
