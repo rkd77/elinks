@@ -12,6 +12,7 @@ POTFILES_ABS = $(shell cd $(top_srcdir); find src/ -name '*.[ch]' -o -name optio
 
 
 SUFFIXES = .po .gmo .mo
+.SUFFIXES: .gmo .mo .po
 
 .po.mo:
 	$(MSGFMT) -o $@ $<
