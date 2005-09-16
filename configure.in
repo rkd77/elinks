@@ -1274,13 +1274,6 @@ AC_OUTPUT([ \
  src/cookies/Makefile \
  src/dialogs/Makefile \
  src/document/Makefile \
- src/document/css/Makefile \
- src/document/dom/Makefile \
- src/document/html/Makefile \
- src/document/html/parser/Makefile \
- src/document/plain/Makefile \
- src/document/sgml/Makefile \
- src/document/sgml/html/Makefile \
  src/encoding/Makefile \
  src/intl/Makefile \
  src/intl/gettext/Makefile \
@@ -1290,34 +1283,13 @@ AC_OUTPUT([ \
  src/mime/Makefile \
  src/mime/backend/Makefile \
  src/network/Makefile \
- src/network/ssl/Makefile \
  src/osdep/Makefile \
- src/osdep/beos/Makefile \
- src/osdep/os2/Makefile \
- src/osdep/riscos/Makefile \
- src/osdep/unix/Makefile \
- src/osdep/win32/Makefile \
  src/protocol/Makefile \
- src/protocol/auth/Makefile \
- src/protocol/bittorrent/Makefile \
  src/protocol/file/Makefile \
- src/protocol/finger/Makefile \
- src/protocol/ftp/Makefile \
- src/protocol/gopher/Makefile \
- src/protocol/http/Makefile \
- src/protocol/nntp/Makefile \
- src/protocol/rewrite/Makefile \
- src/protocol/smb/Makefile \
  src/scripting/Makefile \
- src/scripting/guile/Makefile \
- src/scripting/lua/Makefile \
- src/scripting/perl/Makefile \
- src/scripting/python/Makefile \
- src/scripting/ruby/Makefile \
  src/terminal/Makefile \
  src/util/Makefile \
  src/viewer/Makefile \
- src/viewer/dump/Makefile \
  src/viewer/text/Makefile
 ])
 
