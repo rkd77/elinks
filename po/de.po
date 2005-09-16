@@ -1018,9 +1018,9 @@ msgid ""
 msgstr ""
 "Der Papper-Pegel bestimmt, welche Meldungen beim Start und später\n"
 "angezeigt werden sollen:\n"
-"\\t0 nur ernste Fehler\n"
-"\\t1 ernste Fehler und Warnungen\n"
-"\\t2 alle Meldungen\n"
+"\t0 nur ernste Fehler\n"
+"\t1 ernste Fehler und Warnungen\n"
+"\t2 alle Meldungen"
 
 #: src/config/cmdline.c:819
 msgid "Print version information and exit"
@@ -2288,6 +2288,7 @@ msgid ""
 "0     means always display full label\n"
 "1-500 means display label with this maximal length;\n"
 "      if it is longer, the middle is substituted by an asterisk"
+msgstr ""
 
 #: src/config/options.inc:249
 msgid "Display links to images w/o alt"
@@ -6507,7 +6508,7 @@ msgstr ""
 "0 keinen Bezug senden\n"
 "1 die aktuelle URL als Bezug senden\n"
 "2 einen festen gefälschten Bezug senden\n"
-"3 die vorhergehende URL als Bezug senden (korrekt, aber unsicher)\n"
+"3 die vorhergehende URL als Bezug senden (korrekt, aber unsicher)"
 
 #: src/protocol/http/http.c:127
 msgid "Fake referer URL"
