@@ -6,8 +6,6 @@ config.h.in
 config.log
 config.status
 configure
-Makefile
-Makefile.in
 Makefile.config
 stamp-h
 stamp-h.in

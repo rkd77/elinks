@@ -10,9 +10,6 @@ aclocal
 echo autoheader...
 autoheader
 
-echo automake...
-automake -a -c
-
 echo autoconf...
 autoconf
 
