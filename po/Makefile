@@ -1,4 +1,5 @@
-include ../Makefile.config
+path_to_top=..
+include $(path_to_top)/Makefile.config
 
 # Where to install the catalog files.
 localedir = $(datadir)/locale
@@ -11,6 +12,7 @@ POTFILES_ABS = $(shell cd $(top_srcdir); find src/ -name '*.[ch]' -o -name optio
 
 
 SUFFIXES = .po .gmo .mo
+.SUFFIXES: .gmo .mo .po
 
 .po.mo:
 	$(MSGFMT) -o $@ $<
@@ -129,4 +131,4 @@ dist: update-po distdir
 clean:
 	rm -f $(PACKAGE).po *.new.po
 
-include ../Makefile.lib
+include $(path_to_top)/Makefile.lib

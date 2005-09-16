@@ -6,6 +6,7 @@
 SHELL = @SHELL@
 
 top_srcdir = $(path_to_top)/@top_srcdir@
+srcdir = $(top_srcdir)/$(shell pwd | sed 's!.*/\($(shell echo $(path_to_top) | sed 's!\.\.![^/]*!')\)$$!\1!')
 top_builddir = $(path_to_top)
 prefix = @prefix@
 exec_prefix = @exec_prefix@

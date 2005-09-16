@@ -1,8 +1,9 @@
-include ../../Makefile.config
+path_to_top=../..
+include $(path_to_top)/Makefile.config
 
 OBJS = cache.o dialogs.o
 
 all-l: libcache.a
 libcache.a: $(OBJS)
 
-include ../../Makefile.lib
+include $(path_to_top)/Makefile.lib
