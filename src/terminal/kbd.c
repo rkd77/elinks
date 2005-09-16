@@ -320,18 +320,16 @@ unblock_itrm_x(void *h)
 int
 unblock_itrm(int fd)
 {
-	struct itrm *itrm = ditrm;
+	if (!ditrm) return -1;
 
-	if (!itrm) return -1;
+	if (ditrm->in.ctl >= 0 && setraw(ditrm->in.ctl, NULL)) return -1;
+	ditrm->blocked = 0;
+	send_init_sequence(ditrm->out.std, ditrm->altscreen);
 
-	if (itrm->in.ctl >= 0 && setraw(itrm->in.ctl, NULL)) return -1;
-	itrm->blocked = 0;
-	send_init_sequence(itrm->out.std, itrm->altscreen);
+	handle_itrm_stdin(ditrm);
+	resume_mouse(ditrm->mouse_h);
 
-	handle_itrm_stdin(itrm);
-	resume_mouse(itrm->mouse_h);
-
-	handle_terminal_resize(itrm->in.ctl, resize_terminal);
+	handle_terminal_resize(ditrm->in.ctl, resize_terminal);
 	unblock_stdin();
 
 	return 0;
