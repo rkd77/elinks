@@ -1,36 +1,32 @@
-## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.87 2005/06/14 12:25:19 jonas Exp $
+path_to_top=..
+include $(path_to_top)/Makefile.config
 
-include $(top_srcdir)/Makefile.base
-
-EXTRA_DIST = README
-
-if CONFIG_BOOKMARKS
+ifeq ($(CONFIG_BOOKMARKS),yes)
 bookmarksdir = bookmarks
 bookmarkslib = $(bookmarksdir)/libbookmarks.a
 endif
 
-if CONFIG_COOKIES
+ifeq ($(CONFIG_COOKIES),yes)
 cookiesdir = cookies
 cookieslib = $(cookiesdir)/libcookies.a
 endif
 
-if CONFIG_FORMHIST
+ifeq ($(CONFIG_FORMHIST),yes)
 formhistdir = formhist
 formhistlib = $(formhistdir)/libformhist.a
 endif
 
-if CONFIG_GLOBHIST
+ifeq ($(CONFIG_GLOBHIST),yes)
 globhistdir = globhist
 globhistlib = $(globhistdir)/libglobhist.a
 endif
 
-if CONFIG_ECMASCRIPT
+ifeq ($(CONFIG_ECMASCRIPT),yes)
 ecmascriptdir = ecmascript
 ecmascriptlib = $(ecmascriptdir)/libecmascript.a
 endif
 
-if CONFIG_SCRIPTING
+ifeq ($(CONFIG_SCRIPTING),yes)
 scriptingdir = scripting
 scriptinglib = $(scriptingdir)/libscripting.a
 endif
@@ -59,23 +55,12 @@ SUBDIRS = \
  util \
  viewer
 
-bin_PROGRAMS = elinks
-elinks_SOURCES = \
- elinks.h \
- setup.h \
- vernum.c \
- vernum.h
-
-vernum.o: FORCE
-
-FORCE:
-
 # Order of this is purely magic and random, so that ld doesn't fail for some
 # strange reason. Try to swap randomly when ld will start to complain about
 # mysteriously unresolved symbols.
-elinks_DEPENDENCIES = \
+ELINKSLIBS = \
  main/libmain.a \
- @INTLLIBS@ \
+ $(INTLLIBS) \
  $(cookieslib) \
  viewer/libviewer.a \
  cache/libcache.a \
@@ -98,4 +83,12 @@ elinks_DEPENDENCIES = \
  encoding/libencoding.a \
  util/libutil.a
 
-elinks_LDADD = $(elinks_DEPENDENCIES)
+OBJS = vernum.o
+vernum.o: FORCE
+FORCE:
+
+all-l: elinks
+elinks: $(OBJS) $(ELINKSLIBS)
+	$(call cmd,link)
+
+include $(path_to_top)/Makefile.lib
