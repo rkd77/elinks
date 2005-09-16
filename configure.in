@@ -79,9 +79,13 @@ if test "$CONFIG_ASCIIDOC" = yes &&
 	EL_CONFIG_DEPENDS(CONFIG_MANUAL, [MAN_ASCIIDOC MAN_XMLTO], [Man Page Formats])
 fi
 
+AC_SUBST(CONFIG_ASCIIDOC)
 AM_CONDITIONAL(CONFIG_ASCIIDOC, test "$CONFIG_ASCIIDOC" = yes)
+AC_SUBST(CONFIG_POD2HTML)
 AM_CONDITIONAL(CONFIG_POD2HTML, test "$CONFIG_POD2HTML" = yes)
+AC_SUBST(CONFIG_XMLTO)
 AM_CONDITIONAL(CONFIG_XMLTO, test "$CONFIG_XMLTO" = yes)
+AC_SUBST(CONFIG_JW)
 AM_CONDITIONAL(CONFIG_JW, test "$CONFIG_JW" = yes)
 
 dnl gcc specific options (to be continued at the bottom of configure)
@@ -115,15 +119,19 @@ kill me!
 ])
 
 EL_CHECK_COMPILER_MACROS(CONFIG_BEOS, [BEOS], [__BEOS__])
+AC_SUBST(CONFIG_BEOS)
 AM_CONDITIONAL(CONFIG_BEOS, test "$CONFIG_BEOS" = yes)
 
 EL_CHECK_COMPILER_MACROS(CONFIG_RISCOS, [RISCOS], [__riscos__])
+AC_SUBST(CONFIG_RISCOS)
 AM_CONDITIONAL(CONFIG_RISCOS, test "$CONFIG_RISCOS" = yes)
 
 EL_CHECK_COMPILER_MACROS(CONFIG_WIN32, [WIN32], [_WIN32 __WIN32__])
+AC_SUBST(CONFIG_WIN32)
 AM_CONDITIONAL(CONFIG_WIN32, test "$CONFIG_WIN32" = yes)
 
 EL_CHECK_COMPILER_MACROS(CONFIG_OS2, [EMX], [__EMX__])
+AC_SUBST(CONFIG_OS2)
 AM_CONDITIONAL(CONFIG_OS2, test "$CONFIG_OS2" = yes)
 test "$CONFIG_OS2" = yes && LDFLAGS=`echo "$LDFLAGS" | sed "s/-Zexe//g"`
 
@@ -138,6 +146,7 @@ else
 	CONFIG_UNIX=no
 fi
 AC_MSG_RESULT($CONFIG_UNIX)
+AC_SUBST(CONFIG_UNIX)
 AM_CONDITIONAL(CONFIG_UNIX, test "$CONFIG_UNIX" = yes)
 
 dnl ===================================================================
@@ -173,6 +182,7 @@ AC_CHECK_HEADERS(sys/un.h,
 	[CONFIG_INTERLINK=yes
 	 EL_CONFIG([CONFIG_INTERLINK], [interlinking])],
 	[CONFIG_INTERLINK=no])
+AC_SUBST(CONFIG_INTERLINK)
 AM_CONDITIONAL(CONFIG_INTERLINK, test "$CONFIG_INTERLINK" = yes)
 
 dnl ===================================================================
@@ -406,10 +416,12 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzdopen,
 	[  --without-zlib          disable zlib support])
+AC_SUBST(CONFIG_GZIP)
 AM_CONDITIONAL(CONFIG_GZIP, test "$CONFIG_GZIP" = yes)
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
+AC_SUBST(CONFIG_BZIP2)
 AM_CONDITIONAL(CONFIG_BZIP2, test "$CONFIG_BZIP2" = yes)
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
@@ -423,6 +435,7 @@ EL_SAVE_FLAGS
 
 EL_ARG_ENABLE(CONFIG_BOOKMARKS, bookmarks, [Bookmarks],
 	      [  --disable-bookmarks     disable bookmark support])
+AC_SUBST(CONFIG_BOOKMARKS)
 AM_CONDITIONAL(CONFIG_BOOKMARKS, test "$CONFIG_BOOKMARKS" = yes)
 
 # Check whether --enable-xbel or --disable-xbel was given.
@@ -442,6 +455,7 @@ EL_ARG_DEPEND(CONFIG_XBEL_BOOKMARKS, xbel, [CONFIG_BOOKMARKS:yes HAVE_LIBEXPAT:y
 	      [XBEL bookmarks],
 	      [  --disable-xbel          disable XBEL bookmark support (requires expat)])
 
+AC_SUBST(CONFIG_XBEL_BOOKMARKS)
 AM_CONDITIONAL(CONFIG_XBEL_BOOKMARKS, test "$CONFIG_XBEL_BOOKMARKS" = yes)
 
 if test "$CONFIG_XBEL_BOOKMARKS" != yes; then
@@ -706,11 +720,17 @@ dnl Setup global scripting
 dnl ===================================================================
 
 EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY], [Scripting])
+AC_SUBST(CONFIG_GUILE)
 AM_CONDITIONAL(CONFIG_GUILE, test "$CONFIG_GUILE" = yes)
+AC_SUBST(CONFIG_LUA)
 AM_CONDITIONAL(CONFIG_LUA, test "$CONFIG_LUA" = yes)
+AC_SUBST(CONFIG_PERL)
 AM_CONDITIONAL(CONFIG_PERL, test "$CONFIG_PERL" = yes)
+AC_SUBST(CONFIG_PYTHON)
 AM_CONDITIONAL(CONFIG_PYTHON, test "$CONFIG_PYTHON" = yes)
+AC_SUBST(CONFIG_RUBY)
 AM_CONDITIONAL(CONFIG_RUBY, test "$CONFIG_RUBY" = yes)
+AC_SUBST(CONFIG_SCRIPTING)
 AM_CONDITIONAL(CONFIG_SCRIPTING, test "$CONFIG_SCRIPTING" = yes)
 
 
@@ -766,9 +786,11 @@ else
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 fi
 
+AC_SUBST(CONFIG_SPIDERMONKEY)
 AM_CONDITIONAL(CONFIG_SPIDERMONKEY, test "$CONFIG_SPIDERMONKEY" = yes)
 
 EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SPIDERMONKEY], [ECMAScript (JavaScript)])
+AC_SUBST(CONFIG_ECMASCRIPT)
 AM_CONDITIONAL(CONFIG_ECMASCRIPT, test "$CONFIG_ECMASCRIPT" = yes)
 
 
@@ -922,8 +944,11 @@ AC_MSG_RESULT($cf_result)
 dnl Final SSL setup
 
 EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS], [SSL])
+AC_SUBST(CONFIG_OPENSSL)
 AM_CONDITIONAL(CONFIG_OPENSSL, test "$CONFIG_OPENSSL" = yes)
+AC_SUBST(CONFIG_GNUTLS)
 AM_CONDITIONAL(CONFIG_GNUTLS, test "$CONFIG_GNUTLS" = yes)
+AC_SUBST(CONFIG_SSL)
 AM_CONDITIONAL(CONFIG_SSL, test "$CONFIG_SSL" = yes)
 
 #endif
@@ -1002,23 +1027,28 @@ dnl ===================================================================
 
 EL_ARG_ENABLE(CONFIG_COOKIES, cookies, [Cookies],
 	      [  --disable-cookies       disable cookie support])
+AC_SUBST(CONFIG_COOKIES)
 AM_CONDITIONAL(CONFIG_COOKIES, test "$CONFIG_COOKIES" = yes)
 
 EL_ARG_ENABLE(CONFIG_FORMHIST, formhist, [Form history],
 	      [  --disable-formhist      disable form history support])
+AC_SUBST(CONFIG_FORMHIST)
 AM_CONDITIONAL(CONFIG_FORMHIST, test "$CONFIG_FORMHIST" = yes)
 
 EL_ARG_ENABLE(CONFIG_GLOBHIST, globhist, [Global history],
 	      [  --disable-globhist      disable global history support])
+AC_SUBST(CONFIG_GLOBHIST)
 AM_CONDITIONAL(CONFIG_GLOBHIST, test "$CONFIG_GLOBHIST" = yes)
 
 
 EL_ARG_ENABLE(CONFIG_MAILCAP, mailcap, [Mailcap],
 	      [  --disable-mailcap       disable mailcap support])
+AC_SUBST(CONFIG_MAILCAP)
 AM_CONDITIONAL(CONFIG_MAILCAP, test "$CONFIG_MAILCAP" = yes)
 
 EL_ARG_ENABLE(CONFIG_MIMETYPES, mimetypes, [Mimetypes files],
 	      [  --disable-mimetypes     disable mimetypes files support])
+AC_SUBST(CONFIG_MIMETYPES)
 AM_CONDITIONAL(CONFIG_MIMETYPES, test "$CONFIG_MIMETYPES" = yes)
 
 
@@ -1026,47 +1056,58 @@ EL_ARG_DEPEND(CONFIG_IPV6, ipv6,
 	      [HAVE_SA_STORAGE:yes HAVE_SA_IN6:yes HAVE_ADDRINFO:yes HAVE_GETADDRINFO:yes],
 	      [IPv6],
 	      [  --disable-ipv6          disable IPv6 support])
+AC_SUBST(CONFIG_IPV6)
 AM_CONDITIONAL(CONFIG_IPV6, test "$CONFIG_IPV6" = yes)
 
 EL_ARG_ENABLE(CONFIG_BITTORRENT, bittorrent, [BitTorrent protocol],
 	      [  --enable-bittorrent     enable BitTorrent protocol support])
+AC_SUBST(CONFIG_BITTORRENT)
 AM_CONDITIONAL(CONFIG_BITTORRENT, test "$CONFIG_BITTORRENT" = yes)
 
 EL_ARG_ENABLE(CONFIG_DATA, data, [Data protocol],
 	      [  --disable-data          disable data protocol support])
+AC_SUBST(CONFIG_DATA)
 AM_CONDITIONAL(CONFIG_DATA, test "$CONFIG_DATA" = yes)
 
 EL_ARG_ENABLE(CONFIG_URI_REWRITE, uri-rewrite, [URI rewriting],
 	      [  --disable-uri-rewrite   disable URI rewrite support])
+AC_SUBST(CONFIG_URI_REWRITE)
 AM_CONDITIONAL(CONFIG_URI_REWRITE, test "$CONFIG_URI_REWRITE" = yes)
 
 EL_ARG_DEPEND(CONFIG_CGI, cgi, [HAVE_SETENV_OR_PUTENV:yes], [Local CGI],
 	      [  --enable-cgi            enable local CGI support])
+AC_SUBST(CONFIG_CGI)
 AM_CONDITIONAL(CONFIG_CGI, test "$CONFIG_CGI" = yes)
 
 EL_ARG_ENABLE(CONFIG_FINGER, finger, [Finger protocol],
 	      [  --enable-finger         enable finger protocol support])
+AC_SUBST(CONFIG_FINGER)
 AM_CONDITIONAL(CONFIG_FINGER, test "$CONFIG_FINGER" = yes)
 
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
+AC_SUBST(CONFIG_FTP)
 AM_CONDITIONAL(CONFIG_FTP, test "$CONFIG_FTP" = yes)
 
 EL_ARG_ENABLE(CONFIG_GOPHER, gopher, [Gopher protocol],
 	      [  --enable-gopher         enable gopher protocol support])
+AC_SUBST(CONFIG_GOPHER)
 AM_CONDITIONAL(CONFIG_GOPHER, test "$CONFIG_GOPHER" = yes)
 
 EL_ARG_ENABLE(CONFIG_NNTP, nntp, [NNTP protocol],
 	      [  --enable-nntp           enable nntp protocol support])
+AC_SUBST(CONFIG_NNTP)
 AM_CONDITIONAL(CONFIG_NNTP, test "$CONFIG_NNTP" = yes)
 
 EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
 	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
+AC_SUBST(CONFIG_SMB)
 AM_CONDITIONAL(CONFIG_SMB, test "$CONFIG_SMB" = yes)
 
 
 EL_ARG_ENABLE(CONFIG_MOUSE, mouse, [Mouse handling],
 	      [  --disable-mouse         disable mouse support])
+AC_SUBST(CONFIG_MOUSE)
 AM_CONDITIONAL(CONFIG_MOUSE, test "$CONFIG_MOUSE" = yes)
 
 # GPM mouse is Linux specific, so ...
@@ -1075,66 +1116,81 @@ EL_ARG_DEPEND(CONFIG_SYSMOUSE, sysmouse,
 	      [CONFIG_MOUSE:yes CONFIG_GPM:no HAVE_SYSMOUSE_HEADER:yes],
 	      [BSD sysmouse],
 	      [  --disable-sysmouse      disable BSD sysmouse support])
+AC_SUBST(CONFIG_SYSMOUSE)
 AM_CONDITIONAL(CONFIG_SYSMOUSE, test "$CONFIG_SYSMOUSE" = yes)
 
 EL_ARG_ENABLE(CONFIG_88_COLORS, 88-colors, [88 colors],
 	      [  --enable-88-colors     enable 88 color support])
+AC_SUBST(CONFIG_256_COLORS)
 AM_CONDITIONAL(CONFIG_256_COLORS, test "$CONFIG_256_COLORS" = yes)
 
 EL_ARG_ENABLE(CONFIG_256_COLORS, 256-colors, [256 colors],
 	      [  --enable-256-colors     enable 256 color support])
+AC_SUBST(CONFIG_256_COLORS)
 AM_CONDITIONAL(CONFIG_256_COLORS, test "$CONFIG_256_COLORS" = yes)
 
 
 EL_ARG_ENABLE(CONFIG_EXMODE, exmode, [Exmode interface],
 	      [  --enable-exmode         enable exmode (CLI) interface])
+AC_SUBST(CONFIG_EXMODE)
 AM_CONDITIONAL(CONFIG_EXMODE, test "$CONFIG_EXMODE" = yes)
 
 EL_ARG_ENABLE(CONFIG_LEDS, leds, [LEDs],
 	      [  --disable-leds          disable LEDs support])
+AC_SUBST(CONFIG_LEDS)
 AM_CONDITIONAL(CONFIG_LEDS, test "$CONFIG_LEDS" = yes)
 
 EL_ARG_ENABLE(CONFIG_MARKS, marks, [Marks],
 	      [  --disable-marks         disable document marks support])
+AC_SUBST(CONFIG_MARKS)
 AM_CONDITIONAL(CONFIG_MARKS, test "$CONFIG_MARKS" = yes)
 
 
 EL_ARG_ENABLE(CONFIG_CSS, css, [Cascading Style Sheets],
 	      [  --disable-css           disable Cascading Style Sheet support])
+AC_SUBST(CONFIG_CSS)
 AM_CONDITIONAL(CONFIG_CSS, test "$CONFIG_CSS" = yes)
 
 EL_ARG_DEPEND(CONFIG_HTML_HIGHLIGHT, html-highlight, [CONFIG_CSS:yes], [HTML highlighting],
 	      [  --enable-html-highlight HTML highlighting using DOM engine])
+AC_SUBST(CONFIG_HTML_HIGHLIGHT)
 AM_CONDITIONAL(CONFIG_HTML_HIGHLIGHT, test "$CONFIG_HTML_HIGHLIGHT" = yes)
 
 dnl Everything in the tree already uses CONFIG_DOM
 dnl so resolve CONFIG_HTML_HIGHLIGHT to CONFIG_DOM
 EL_CONFIG_DEPENDS(CONFIG_DOM, [CONFIG_HTML_HIGHLIGHT], [DOM engine])
+AC_SUBST(CONFIG_DOM)
 AM_CONDITIONAL(CONFIG_DOM, test "$CONFIG_DOM" = yes)
 
 EL_ARG_DEPEND(CONFIG_BACKTRACE, backtrace, [HAVE_EXECINFO:yes], [Backtrace],
 	      [  --disable-backtrace     disable backtrace support])
+AC_SUBST(CONFIG_BACKTRACE)
 AM_CONDITIONAL(CONFIG_BACKTRACE, test "$CONFIG_BACKTRACE" = yes)
 
 EL_ARG_DEPEND(CONFIG_NO_ROOT_EXEC, no-root, [HAVE_GETUID:yes HAVE_GETEUID:yes], [No root exec],
 	      [  --enable-no-root        enable prevention of usage by root])
+AC_SUBST(CONFIG_NO_ROOT_EXEC)
 AM_CONDITIONAL(CONFIG_NO_ROOT_EXEC, test "$CONFIG_NO_ROOT_EXEC" = yes)
 
 
 EL_ARG_ENABLE(CONFIG_DEBUG, debug, [Debug mode],
 	      [  --enable-debug          enable leak debug and internal error checking])
+AC_SUBST(CONFIG_DEBUG)
 AM_CONDITIONAL(CONFIG_DEBUG, test "$CONFIG_DEBUG" = yes)
 
 EL_ARG_DEPEND(CONFIG_FASTMEM, fastmem, [CONFIG_DEBUG:no], [Fast mode],
               [  --enable-fastmem        enable direct use of system allocation functions, not usable with --enable-debug])
+AC_SUBST(CONFIG_FASTMEM)
 AM_CONDITIONAL(CONFIG_FASTMEM, test "$CONFIG_FASTMEM" = yes)
 
 EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
               [  --enable-own-libc       force use of internal functions instead of those of system libc])
+AC_SUBST(CONFIG_OWN_LIBC)
 AM_CONDITIONAL(CONFIG_OWN_LIBC, test "$CONFIG_OWN_LIBC" = yes)
 
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
+AC_SUBST(CONFIG_SMALL)
 AM_CONDITIONAL(CONFIG_SMALL, test "$CONFIG_SMALL" = yes)
 
 if test "$CONFIG_OPENSSL" != yes &&
@@ -1146,6 +1202,7 @@ then
 	EL_CONFIG(CONFIG_MD5, [Built-in MD5])
 fi
 
+AC_SUBST(CONFIG_MD5)
 AM_CONDITIONAL(CONFIG_MD5, test "$CONFIG_MD5" = yes)
 
 if test "$CONFIG_BITTORRENT" = yes; then
@@ -1158,12 +1215,14 @@ if test "$CONFIG_BITTORRENT" = yes; then
 	fi
 fi
 
+AC_SUBST(CONFIG_SHA1)
 AM_CONDITIONAL(CONFIG_SHA1, test "$CONFIG_SHA1" = yes)
 
 if test "$CONFIG_CSS" = yes || test "$CONFIG_DOM" = yes;
 then
 	EL_CONFIG(CONFIG_SCANNER, [Built-in scanner])
 fi
+AC_SUBST(CONFIG_SCANNER)
 AM_CONDITIONAL(CONFIG_SCANNER, test "$CONFIG_SCANNER" = yes)
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,
