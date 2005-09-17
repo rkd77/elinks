@@ -18,7 +18,9 @@
 #include "util/error.h"
 
 /* Define it to have data written to stderr */
-/* #define DEBUG_HARDIO */
+#if 0
+#define DEBUG_HARDIO
+#endif
 
 #undef debug_open
 #undef debug_flush
@@ -82,11 +84,14 @@ hw_debug_write(unsigned char *data, int w)
 #define debug_open(n, fd, data, datalen) hw_debug_open(n, fd, data, datalen)
 #define debug_flush()			 hw_debug_flush()
 #define debug_write(data, datalen)	 hw_debug_write(data, datalen)
-#else
+
+#else /* DEBUG_HARDIO */
+
 #define debug_open(n, fd, data, datalen)
 #define debug_flush()
 #define debug_write(data, datalen)
-#endif
+
+#endif /* DEBUG_HARDIO */
 
 
 ssize_t
