@@ -159,12 +159,14 @@ static void
 really_close_tab(struct session *ses)
 {
 	struct terminal *term = ses->tab->term;
-	int num_tabs = number_of_tabs(term);
 	struct window *current_tab = get_current_tab(term);
 
-	if (ses->tab == current_tab)
-		switch_to_tab(term, term->current_tab - 1, num_tabs - 1);
+	if (ses->tab == current_tab) {
+		int num_tabs = number_of_tabs(term);
 
+		switch_to_tab(term, term->current_tab - 1, num_tabs - 1);
+	}
+	
 	delete_window(ses->tab);
 }
 
