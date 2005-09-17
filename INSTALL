@@ -120,20 +120,28 @@ decompression of gzipped files or HTML code rewriting for ELinks-unfriendly
 websites.
 
 
-  !BEWARE!  If you _distribute_ a binary of ELinks with OpenSSL linked to it,
-and the OpenSSL library is not part of your base system, you are VIOLATING THE
-GPL (although I believe that for this absurd case no ELinks copyright holder
-will sue you, and it's not a problem for the OpenSSL people as well, as they
-have explicitly told me).  So, people who are making ELinks binaries for systems
-with no OpenSSL in the base system and who decided to link OpenSSL against the
-ELinks binary may wish NOT to publish or distribute such a binary, as it's
-breaking GPL 2(b), if they like to have everything legally perfect (like Debian
-people ;).  As a semi-solution to this for those people, GNUTLS support was
-introduced; if you want to distribute ELinks binaries with HTTPS support,
-compile ELinks with the --with-gnutls configure option (assuming that you have
-GNUTLS 0.5.0 or later [tested with 0.5.4] installed).  However, as GNUTLS is not
-yet 100% stable and its support in ELinks is not so well tested yet, it's
-recommended for users to give a strong preference to OpenSSL whenever possible.
+  !BEWARE!  If you _distribute_ an ELinks executable linked with OpenSSL and
+the OpenSSL library is not part of your base system, you are VIOLATING THE GPL.
+I honestly believe that for this absurd case no ELinks copyright holder will
+sue you, and it's not a problem for the OpenSSL people as well, as they have
+explicitly told me, but you might stay on the safe side.
+
+  So, people who are making ELinks binaries for systems with no OpenSSL in the
+base system and who decided to link OpenSSL against the ELinks binary may wish
+NOT to publish or distribute such an executable, as it's breaking GPL 2(b), if
+they like to have everything legally perfect (like the Debian people ;-).
+
+  As a semi-solution to this problem, GNUTLS support was introduced; if you want
+to distribute ELinks executables with HTTPS support, compile ELinks with the
+--with-gnutls configure option (assuming that you have GNUTLS 1.2.0 installed;
+we can't say about later versions since GNUTLS people seem to have strange taste
+wrt. backwards compatibility).
+
+  HOWEVER, beware that GNUTLS support in ELinks is not so well tested as
+OpenSSL, and shall be probably still considered experimental. Therfore, it's
+recommended to the users to give OpenSSL strong preference whenever possible.
+(Just to show the GNU ideologists how silly can they sometimes be, if not
+anything else. ;-)
 
 
 ##########
