@@ -50,22 +50,11 @@ $ patch -p0 < contrib/that-patch
 you want, feel free to go ahead and update the patch for the current tree and
 submit the newer version.
 
-  Usually, even after strip, the ELinks binary can grow a lot these days; I plan
-on spawning various external files optionally, containing boring stuff like
-various translations etc; later, even DSO modules may come, etc.  But even
-nowadays, you can reduce the resulting binary size by throwing out stuff you
-don't like.  First, if you want better performance and a smaller binary, don't
-compile it with debug.  It won't hurt if you do, though, and ELinks will tell
-you about any memory leaks, incorrect memory manipulation etc, which may be
-helpful to us if you report it.  Next, disable any optional features you are not
-going to use, they can make the resulting binary smaller (although it'll probably
-have no non-marginal performance impact) - especially go through the
-features.conf file in the project root directory.  Also, you may try to override
-the build system to build a dynamically linked binary, which can be a lot
-smaller as well.  Lastly, you can go to the Unicode/ and intl/ directories, then
-edit index.txt and remove any codepages or translations you don't like;
-especially for translations, it can significantly reduce the resulting binary
-size as well.
+  Usually, even after strip, the ELinks binary can measure a lot, but you can
+radically reduce the resulting binary size by throwing out stuff you don't like.
+Detailed discussion of reducing the executable size can be found in
+
+	doc/small.txt
 
   !BEWARE!  If you _distribute_ a binary of ELinks with OpenSSL linked to it,
 and the OpenSSL library is not part of your base system, you are VIOLATING THE
