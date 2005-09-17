@@ -13,9 +13,13 @@ RPMs:
 Cygwin binaries:
 	http://www.pervalidus.net/cygwin/links/
 
+RISC OS binaries:
+	http://www.riscos.info/unix/indexes/browser.html
+
+
 GIT root:
 	http://elinks.cz/elinks.git
-	git+ssh://pasky.or.cz/srv/git/elinks.git (master, DEPRECATED)
+	git+ssh://pasky.or.cz/srv/git/elinks.git (only for developers)
 
 Mailing list:
 	http://elinks.cz/community.html#mailinglist

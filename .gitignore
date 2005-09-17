@@ -6,8 +6,7 @@ config.h.in
 config.log
 config.status
 configure
-Makefile
-Makefile.in
+Makefile.config
 stamp-h
 stamp-h.in
 depcomp
@@ -16,6 +15,5 @@ stamp-h1
 .deps
 elinks
 *.swp
-*.html
 *.patch
 features.log

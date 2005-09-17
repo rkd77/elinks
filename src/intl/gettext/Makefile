@@ -1,0 +1,76 @@
+path_to_top=../../..
+include $(path_to_top)/Makefile.config
+
+localedir = $(datadir)/locale
+builddir = $(top_builddir)/src/intl/gettext
+
+OBJS = \
+ bindtextdom.o \
+ dcgettext.o \
+ dcigettext.o \
+ dcngettext.o \
+ dgettext.o \
+ dngettext.o \
+ explodename.o \
+ finddomain.o \
+ gettext.o \
+ intl-compat.o \
+ l10nflist.o \
+ libintl.o \
+ loadmsgcat.o \
+ localcharset.o \
+ localealias.o \
+ ngettext.o \
+ plural.o \
+ textdomain.o
+
+all-l: libintl.a
+libintl.a: $(OBJS)
+
+
+$(builddir)/charset.alias: $(srcdir)/config.charset
+	$(SHELL) $(srcdir)/config.charset '@host@' > $@.new
+
+# FIXME: Building plural.c from plural.y on the fly doesn't work
+
+YACC = $(INTLBISON) -y -d
+YFLAGS = --name-prefix=gettext__
+plural.c: plural.y
+.SUFFIXES: .y .c
+.y.c:
+	$(YACC) $(YFLAGS) --output $@ $<
+	rm -f $*.h
+
+install-l: $(builddir)/charset.alias all
+	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	  temp=$(DESTDIR)$(libdir)/t-charset.alias; \
+	  dest=$(DESTDIR)$(libdir)/charset.alias; \
+	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
+	    orig=$(DESTDIR)$(libdir)/charset.alias; \
+	    sed -f ref-add.sed $$orig > $$temp; \
+	    $(INSTALL_DATA) $$temp $$dest; \
+	    rm -f $$temp; \
+	  else \
+	    if test @GLIBC21@ = no; then \
+	      $(mkinstalldirs) $(DESTDIR)$(libdir); \
+	      orig=charset.alias; \
+	      sed -f ref-add.sed $$orig > $$temp; \
+	      $(INSTALL_DATA) $$temp $$dest; \
+	      rm -f $$temp; \
+	    fi; \
+	  fi; \
+	  $(mkinstalldirs) $(DESTDIR)$(localedir); \
+	  test -f $(DESTDIR)$(localedir)/locale.alias \
+	    && orig=$(DESTDIR)$(localedir)/locale.alias \
+	    || orig=$(srcdir)/locale.alias; \
+	  temp=$(DESTDIR)$(localedir)/t-locale.alias; \
+	  dest=$(DESTDIR)$(localedir)/locale.alias; \
+	  sed -f ref-add.sed $$orig > $$temp; \
+	  $(INSTALL_DATA) $$temp $$dest; \
+	  rm -f $$temp; \
+	else \
+	  : ; \
+	fi
+	mv $@.new $@
+
+include $(path_to_top)/Makefile.lib

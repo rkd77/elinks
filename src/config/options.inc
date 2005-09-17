@@ -568,7 +568,7 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_BOOL("document.colors", N_("Increase contrast"),
 	        "increase_contrast", 0, 1,
 	        N_("Increase the contrast between the foreground and background colors\n"
-	           "to ensure readability. For example it disallows dark colors on a black\n"
+	           "to ensure readability. For example it disallows dark colors on a\n"
 	           "black background. Note, this is different from ensuring the contrast\n"
 	           "with the ensure_contrast option.")),
 

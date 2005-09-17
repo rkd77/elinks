@@ -786,7 +786,7 @@ struct option_info cmdline_options_info[] = {
 		"\topenURL(URL, new-tab)     : open URL in new tab\n"
 		"\topenURL(URL, new-window)  : open URL in new window\n"
 		"\taddBookmark(URL)          : bookmark URL\n"
-		"\tpopUp(text)               : show text in a message box\n"
+		"\tinfoBox(text)             : show text in a message box\n"
 		"\txfeDoCommand(openBrowser) : open new window")),
 
 	INIT_OPT_INT("", N_("Connect to session ring with given ID"),
