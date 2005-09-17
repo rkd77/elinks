@@ -83,6 +83,11 @@ ELINKSLIBS = \
  $(INTLLIBS) \
  util/libutil.a
 
+# Get the GIT HEAD ID if possible
+ifdef COMMIT_ID
+INCLUDES += -DBUILD_ID="\"$$($(COMMIT_ID) 2> /dev/null)\""
+endif
+
 OBJS = vernum.o
 vernum.o: FORCE
 FORCE:
