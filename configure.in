@@ -35,6 +35,9 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
   CFLAGS="$CFLAGS -Wall"
 fi
 
+AC_PATH_PROGS(COMMIT_ID, "commit-id")
+AM_CONDITIONAL(COMMIT_ID, test "x$COMMIT_ID" != "x")
+
 dnl ===================================================================
 dnl Checks for special OSes.
 dnl ===================================================================

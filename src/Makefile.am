@@ -74,6 +74,10 @@ elinks_SOURCES = \
  vernum.c \
  vernum.h
 
+if COMMIT_ID
+INCLUDES += -DBUILD_ID="\"$$($(COMMIT_ID) 2> /dev/null)\""
+endif
+
 vernum.o: FORCE
 
 FORCE:

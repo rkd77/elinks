@@ -75,6 +75,8 @@ get_dyn_full_version(struct terminal *term, int more)
 	if (!init_string(&string)) return NULL;
 
 	add_format_to_string(&string, "ELinks %s", VERSION_STRING);
+	if (*build_id)
+		add_format_to_string(&string, " (%s)", build_id);
 	if (more) {
 		add_to_string(&string, "\n");
 		add_format_to_string(&string, _("Built on %s %s", term),
