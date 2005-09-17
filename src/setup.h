@@ -11,12 +11,10 @@
  * startup_goto_dialog. */
 #define WWW_HOME_URL			""
 
-#define ELINKS_HOMEPAGE			"http://elinks.or.cz/"
-#define ELINKS_DOC_URL			"http://elinks.or.cz/documentation"
-#define ELINKS_BUGS_URL			"http://bugzilla.elinks.or.cz/"
-#define ELINKS_CVSWEB_URL		"http://cvsweb.elinks.or.cz/"
-#define ELINKS_CVSHIST_URL		"http://cvsweb.elinks.or.cz/cvshistory.cgi"
-#define ELINKS_LXR_URL			"http://lxr.elinks.or.cz/"
+#define ELINKS_HOMEPAGE			"http://elinks.cz/"
+#define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
+#define ELINKS_BUGS_URL			"http://bugzilla.elinks.cz/"
+#define ELINKS_GITWEB_URL		"http://pasky.or.cz/gitweb.cgi"
 
 #define ELINKS_SOCK_NAME		"socket"
 #define ELINKS_PORT			23456

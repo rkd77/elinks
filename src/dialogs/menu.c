@@ -429,9 +429,7 @@ static struct menu_item help_menu[] = {
 	BAR_MENU_ITEM,
 	INIT_MENU_ITEM(N_("~Bugs information"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_BUGS_URL, 0),
 #ifdef CONFIG_DEBUG
-	INIT_MENU_ITEM(N_("ELinks C~vsWeb"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_CVSWEB_URL, 0),
-	INIT_MENU_ITEM(N_("ELinks Cvs ~History"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_CVSHIST_URL, 0),
-	INIT_MENU_ITEM(N_("ELinks ~LXR"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_LXR_URL, 0),
+	INIT_MENU_ITEM(N_("ELinks ~GITWeb"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_GITWEB_URL, 0),
 #endif
 	BAR_MENU_ITEM,
 	INIT_MENU_ITEM(N_("~Copying"), NULL, ACT_MAIN_NONE, menu_copying, NULL, 0),
