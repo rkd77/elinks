@@ -2,8 +2,16 @@ See ChangeLog for recent changes, bugfixes and new features.
 
 ELinks now:
 
+* move from CVS to GIT
+
+ELinks 0.10.6:
+
+* external editor is configurable at run-time
+
+ELinks 0.10.4:
+
 * explicit keyboard accelerators were defined for buttons in dialogue boxes
-  and are now highlighted.
+  and are now highlighted
 
 ELinks 0.10.2:
 
