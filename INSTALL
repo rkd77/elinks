@@ -6,8 +6,8 @@ Elinks installation guidelines
 	./configure && make && make install
 
   Check out the bottom of this file if you're upgrading from Links or an older
-ELinks! And be sure to look at doc/ecmascript.txt if you want ECMAScript
-(that's JavaScript) support.
+ELinks! And be sure to look at doc/ecmascript.txt if you want (experimental)
+ECMAScript (that's JavaScript) support.
 
 ##########
 
@@ -40,15 +40,15 @@ snapshot - you don't need to do this there.
 
 ##########
 
-  If you want to compile elinks, first check the directory named contrib/, it
+  If you want to compile ELinks, first check the directory named contrib/, it
 may contain patches that are of use to you.  If you're interested in any of
 them, try to apply them by doing (for each one):
 
 $ patch -p0 < contrib/that-patch
 
-  They may not apply - I don't update patches in contrib/ regularly - if you
-want, feel free to go ahead and update the patch for the current tree and send
-me the newer version.
+  They may not apply, since I don't update patches in contrib/ regularly - if
+you want, feel free to go ahead and update the patch for the current tree and
+submit the newer version.
 
   Usually, even after strip, the ELinks binary can grow a lot these days; I plan
 on spawning various external files optionally, containing boring stuff like
@@ -84,7 +84,7 @@ recommended for users to give a strong preference to OpenSSL whenever possible.
 
   Good luck!
 
-  The basic compilation looks like:
+  The compilation itself looks like:
 
   Unix - just doing:
 
@@ -93,15 +93,15 @@ recommended for users to give a strong preference to OpenSSL whenever possible.
 
 	 should be enough.  However, in some FreeBSD 3 distributions you have to
 	 set CFLAGS=-aout before running ./configure.  Also, you may want to
-	 adjust some compile-time options through ./configure - do
-	 ./configure --help and it'll print out a list of them. You can more
-	 finely control what's going to be included in the binary in the
-	 features.conf file, and some really detailed tuning can be performed in
-	 the src/setup.h.
+	 adjust some (well, plenty of) compile-time options through ./configure
+	 - do ./configure --help and it'll print out a list of them. You can
+	 finetune what's going to be included in the binary in the features.conf
+	 file, and some really detailed tuning can be performed in src/setup.h.
 
-	 Also, a nice idea is to compile ELinks outside of the source tree.
-	 Make another directory and run path_to_source_tree/configure from it.
-	 Typically, it looks like:
+	 Also, a nice idea is to compile ELinks outside of the source tree (note
+	 that this might not quite work right now, but we're working on fixing
+	 it). Make another directory and run path_to_source_tree/configure from
+	 it. Typically, it looks like:
 
 	 $ mkdir ../elinks-build
 	 $ cd ../elinks-build
@@ -123,7 +123,7 @@ recommended for users to give a strong preference to OpenSSL whenever possible.
 	 SET MAKE=d:/prg/emx/bin/make.exe
 	 SET EMXOPT=-h100
 
-  Dos, Windows - port it by yourself.
+  DOS, Windows - port it by yourself.
 
 
 ##########
@@ -141,10 +141,11 @@ recommended for users to give a strong preference to OpenSSL whenever possible.
 	 before you run links.
 
   Now, check the contrib/ directory again.  There may be some useful config
-file examples there, along with a few support tools and some Lua scripts - you
-probably want them ;) so just copy the hooks.lua to ~/.elinks, and edit the
+file examples there, along with few support tools and some Lua scripts - you
+probably want them ;) so just copy hooks.lua to ~/.elinks, and edit the
 configuration part - it adds various functionality to ELinks, like
-decompression of gzipped files or user-defined protocols.
+decompression of gzipped files or HTML code rewriting for ELinks-unfriendly
+websites.
 
 
 ##########
@@ -156,11 +157,11 @@ the old (E)Links, so you probably want to make a links symlink pointing to
 elinks.
 
   Then, note that configuration files were moved from /etc to /etc/elinks and
-from ~/.links to ~/.elinks, because the name and format of parts of them were
+from ~/.links to ~/.elinks, because the name and format of some of them was
 changed:
 
   links.cfg became elinks.conf and you need to convert it with
-contrib/conv/conf-links2elinks.pl; html.cfg was merged into elinks.conf
+contrib/conv/conf-links2elinks.pl; html.cfg was merged into elinks.conf.
 
   bookmarks are still bookmarks, but you need to convert it with
 old_to_new_bookmarks.sh.
@@ -169,7 +170,7 @@ old_to_new_bookmarks.sh.
 
   history became globhist and the format is the same.
 
-  cookies are still cookies, but you need to convert it with tr " " "\t"
+  cookies are still cookies, but you need to convert it with tr " " "\t".
 
 
 ##########
