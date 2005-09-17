@@ -85,8 +85,9 @@ ELINKSLIBS = \
 
 # Get the GIT HEAD ID if possible
 ifdef COMMIT_ID
-INCLUDES += -DBUILD_ID="\"$$($(COMMIT_ID) 2> /dev/null)\""
+BUILD_ID=$(shell $(COMMIT_ID) 2> /dev/null)
 endif
+INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
 OBJS = vernum.o
 vernum.o: FORCE
