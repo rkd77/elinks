@@ -791,9 +791,9 @@ disable_openssl=""
 disable_gnutls=""
 enable_gnutls=""
 
-AC_ARG_WITH(gnutls, [  --without-gnutls        disable GNUTLS (1.2+) SSL support],
+AC_ARG_WITH(gnutls, [  --without-gnutls        disable GNUTLS SSL support],
 	    [if test "$with_gnutls" = no;  then disable_gnutls=yes; fi])
-AC_ARG_WITH(gnutls, [  --with-gnutls[=DIR]     enable GNUTLS (1.2+) SSL support],
+AC_ARG_WITH(gnutls, [  --with-gnutls[=DIR]     enable GNUTLS SSL support],
 	    [if test "$with_gnutls" != no;  then enable_gnutls=yes; fi])
 gnutls_withval="$withval"
 

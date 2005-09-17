@@ -3,6 +3,7 @@ in the gitweb interface. See the ChangeLog file for details.
 
 ELinks now:
 
+* SSL support via GNUTLS now requires 1.2 or higher
 * support for Lua 4.x was dropped, we only support Lua 5.x now
 * Python scripting back-end (experimental)
 * 88 colors support
