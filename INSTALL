@@ -50,29 +50,6 @@ $ patch -p0 < contrib/that-patch
 you want, feel free to go ahead and update the patch for the current tree and
 submit the newer version.
 
-  Usually, even after strip, the ELinks binary can measure a lot, but you can
-radically reduce the resulting binary size by throwing out stuff you don't like.
-Detailed discussion of reducing the executable size can be found in
-
-	doc/small.txt
-
-  !BEWARE!  If you _distribute_ a binary of ELinks with OpenSSL linked to it,
-and the OpenSSL library is not part of your base system, you are VIOLATING THE
-GPL (although I believe that for this absurd case no ELinks copyright holder
-will sue you, and it's not a problem for the OpenSSL people as well, as they
-have explicitly told me).  So, people who are making ELinks binaries for systems
-with no OpenSSL in the base system and who decided to link OpenSSL against the
-ELinks binary may wish NOT to publish or distribute such a binary, as it's
-breaking GPL 2(b), if they like to have everything legally perfect (like Debian
-people ;).  As a semi-solution to this for those people, GNUTLS support was
-introduced; if you want to distribute ELinks binaries with HTTPS support,
-compile ELinks with the --with-gnutls configure option (assuming that you have
-GNUTLS 0.5.0 or later [tested with 0.5.4] installed).  However, as GNUTLS is not
-yet 100% stable and its support in ELinks is not so well tested yet, it's
-recommended for users to give a strong preference to OpenSSL whenever possible.
-
-  Good luck!
-
   The compilation itself looks like:
 
   Unix - just doing:
@@ -114,6 +91,12 @@ recommended for users to give a strong preference to OpenSSL whenever possible.
 
   DOS, Windows - port it by yourself.
 
+  Usually, even after strip, the ELinks binary can measure a lot, but you can
+radically reduce the resulting binary size by throwing out stuff you don't like.
+Detailed discussion of reducing the executable size can be found in
+
+	doc/small.txt
+
 
 ##########
 
@@ -135,6 +118,22 @@ probably want them ;) so just copy hooks.lua to ~/.elinks, and edit the
 configuration part - it adds various functionality to ELinks, like
 decompression of gzipped files or HTML code rewriting for ELinks-unfriendly
 websites.
+
+
+  !BEWARE!  If you _distribute_ a binary of ELinks with OpenSSL linked to it,
+and the OpenSSL library is not part of your base system, you are VIOLATING THE
+GPL (although I believe that for this absurd case no ELinks copyright holder
+will sue you, and it's not a problem for the OpenSSL people as well, as they
+have explicitly told me).  So, people who are making ELinks binaries for systems
+with no OpenSSL in the base system and who decided to link OpenSSL against the
+ELinks binary may wish NOT to publish or distribute such a binary, as it's
+breaking GPL 2(b), if they like to have everything legally perfect (like Debian
+people ;).  As a semi-solution to this for those people, GNUTLS support was
+introduced; if you want to distribute ELinks binaries with HTTPS support,
+compile ELinks with the --with-gnutls configure option (assuming that you have
+GNUTLS 0.5.0 or later [tested with 0.5.4] installed).  However, as GNUTLS is not
+yet 100% stable and its support in ELinks is not so well tested yet, it's
+recommended for users to give a strong preference to OpenSSL whenever possible.
 
 
 ##########
