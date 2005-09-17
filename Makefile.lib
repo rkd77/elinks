@@ -20,14 +20,14 @@ ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
-quiet_cmd_compile = '[CC]   $<'
+quiet_cmd_compile = '      [CC]   $<'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
-quiet_cmd_archive = '[AR]   $@'
+quiet_cmd_archive = '      [AR]   $@'
       cmd_archive = $(AR) r $@ $^
 
-   quiet_cmd_link = '[LINK] $@'
+   quiet_cmd_link = '    [LINK]   $@'
          cmd_link = $(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
