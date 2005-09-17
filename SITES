@@ -1,5 +1,5 @@
 Homepage:
-	http://elinks.or.cz/
+	http://elinks.cz/
 
 DEBs:
 	http://packages.debian.org/testing/web/elinks.html
@@ -18,11 +18,11 @@ RISC OS binaries:
 
 
 GIT root:
-	http://elinks.or.cz/elinks.git
+	http://elinks.cz/elinks.git
 	git+ssh://pasky.or.cz/srv/git/elinks.git (only for developers)
 
 Mailing list:
-	http://elinks.or.cz/community.html#mailinglist
+	http://elinks.cz/community.html#mailinglist
 	elinks-users@linuxfromscratch.org (user discussion, announcements)
 	elinks-dev@linuxfromscratch.org (weird development and sorcery talks)
 	listar@linuxfromscratch.org (Subject: subscribe elinks-users)

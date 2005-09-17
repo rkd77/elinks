@@ -1,14 +1,15 @@
-See ChangeLog for recent changes, bugfixes and new features.
+You can see the complete list of recent changes, bugfixes and new features
+in the gitweb interface. See the ChangeLog file for details.
 
 ELinks now:
 
-* support for Lua 4.x was dropped, we only support Lua 5.x now.
+* support for Lua 4.x was dropped, we only support Lua 5.x now
 * Python scripting back-end (experimental)
 * 88 colors support
 * external editor is configurable at run-time
-* Default URI-rewrite rule, used when no other rules match but the string
+* default URI-rewrite rule, used when no other rules match but the string
   that was entered in the Go to URL box does not resemble a URI
-* Support prefixes for add-bookmark-link, document-info, goto-url-current-link,
+* support prefixes for add-bookmark-link, document-info, goto-url-current-link,
   history-move-back, and history-move-forward
 * BitTorrent protocol (experimental)
 * FSP protocol via a CGI script (see contrib/cgi/README.FSP) (experimental)
@@ -17,7 +18,7 @@ ELinks now:
 ELinks 0.10.4:
 
 * explicit keyboard accelerators were defined for buttons in dialogue boxes
-  and are now highlighted.
+  and are now highlighted
 
 ELinks 0.10.2:
 

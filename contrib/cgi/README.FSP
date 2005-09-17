@@ -1,8 +1,8 @@
-To use this cgi script:
+To use this CGI script you need to build fspcgi and copy the executable
+to your cgi directory.  In ELinks, you can then use this URL:
 
-Build fspcgi, copy executable to your cgi directory.
-Usage:
-file:///"path_to_fspcgi"?host:port/path_to_file_or_directory
+	file:///"path_to_fspcgi"?host:port/path_to_file_or_directory
 
+You can find more info about the FSP protocol at
 
-More info about FSP protocol you find on http://fsp.sourceforge.net/.
+	http://fsp.sourceforge.net/

@@ -1,6 +1,15 @@
 Note that the only valid version of the GPL as far as ELinks is
 concerned is _this_ particular version of the license (ie v2, not v2.2
-or v3.x or whatever), unless explicitly otherwise stated.
+or v3.x or whatever), unless explicitly stated otherwise. That is at
+least the policy for all pasky's contributions and the default - if you
+want different policy for your patches, the best way to state it is by
+a patch for your AUTHORS entry.
+
+If pasky likes GPLv3, he might relicence his contributions for GPLv3
+as well. The default policy should probably be that you trust pasky,
+Jonas, or the current maintainer of the day to do the right thing (much
+like it is in the Linux kernel). But this needs to be yet worked out
+and agreed upon.
 
 -----------------------------------------------------------------------
 
