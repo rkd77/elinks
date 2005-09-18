@@ -7,7 +7,6 @@ ELinks now:
 * support for Lua 4.x was dropped, we only support Lua 5.x now
 * Python scripting back-end (experimental)
 * 88 colors support
-* external editor is configurable at run-time
 * default URI-rewrite rule, used when no other rules match but the string
   that was entered in the Go to URL box does not resemble a URI
 * support prefixes for add-bookmark-link, document-info, goto-url-current-link,
@@ -15,6 +14,11 @@ ELinks now:
 * BitTorrent protocol (experimental)
 * FSP protocol via a CGI script (see contrib/cgi/README.FSP) (experimental)
 * sysmouse support on the BSD console
+* move from CVS to GIT
+
+ELinks 0.10.6:
+
+* external editor is configurable at run-time
 
 ELinks 0.10.4:
 
