@@ -1,5 +1,5 @@
 path_to_top=..
--include $(path_to_top)/Makefile.config
+include $(path_to_top)/Makefile.config
 
 # Where to install the catalog files.
 localedir = $(datadir)/locale
