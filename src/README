@@ -26,7 +26,7 @@ descriptors).
 dialogs/ is special too. It in fact means to say "global and unique BFU
 instances belonging to the ELinks core"/ but that's a rather long and boring
 name, besides the nightmares associated with maintaining files and directories
-containing spaces in CVS. The "global and unique BFU instances" part can be
+containing spaces in GIT. The "global and unique BFU instances" part can be
 represented by exmode, menus and leds (were they there). The "ELinks core"
 part can be represented by options, document and downloads. The reason those
 aren't in their respective directories (while bookmarks or formhist have their

@@ -1,4 +1,4 @@
-* Remove plural.c from CVS.
+* Remove plural.c from GIT.
 
 * Use our own charset routines instead of iconv.
 

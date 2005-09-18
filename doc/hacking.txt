@@ -500,11 +500,9 @@ Use assert() and assertm() where applicable. It will prevent hidden bugs.
 If you see code in ELinks that doesn't follow these rules, fix it or tell us
 about it.
 
-All the .c files MUST start by a short one-line description and a CVS Id tag
-on the next line:
+All the .c files MUST start by a short one-line description:
 
 	/* <short one-line description> */
-	/* $Id: hacking.txt,v 1.36 2005/05/24 18:21:45 jonas Exp $ */
 
 All the .h files MUST start by a CVS Id tag and then anti-reinclusion ifdef.
 The macro is

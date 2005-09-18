@@ -20,7 +20,7 @@ Requirements
 ~~~~~~~~~~~~
 
 To succesfully install ELinks all that is required is GNU make and a C
-compiler. If you want to install directly from CVS it is also required that
+compiler. If you want to install directly from GIT it is also required that
 automake and autoconf is installed on your system.
 
 Recommended Libraries and Programs

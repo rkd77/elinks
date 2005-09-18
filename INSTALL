@@ -11,30 +11,28 @@ ECMAScript (that's JavaScript) support.
 
 ##########
 
-  In order to check out the latest tree from CVS:
+  In order to check out the latest tree from GIT (using Cogito):
 
-$ export CVSROOT=check_file_SITES_for_value_of_this
-$ cvs login
-(empty password)
-$ cvs -z3 co elinks
-$ cd elinks
-...
+	$ cg clone check_file_SITES_for_value_of_this
+	$ cd elinks
 
-  To update your existing tree to the latest CVS version, do:
+  To update your existing tree to the latest GIT version, do:
 
-$ cvs -z3 update -dP
+	$ cg update
 
-  If you downloaded a nightly snapshot, it already contains CVS/ directories
-etc.  Thus, you should be able to update your tree with the above command as if
-you had previously done a full cvs checkout.
+  If you downloaded a nightly snapshot, and want to check out the latest tree
+from GIT in it, use the command:
 
-  Note that if you obtained the sources directly from CVS, you NEED to run
-./autogen.sh!  (It should be enough to do it once, automake should be smart
-enough to rerun itself when needed - however, if you have build problems, try
-running this first.)  Also, you obviously need automake and autoconf installed
-on your system (note that autoconf-2.13 a automake-1.4p5 are supported, newer
-ones may cause problems thanks to the auto* developers who don't know how to
-maintain backwards compatibility).  Otherwise, you have to use the nightly CVS
+	$ cg clone -s check_file_SITES_for_value_of_this
+
+  Note that if you obtained the sources directly from GIT, you NEED to run
+
+./autogen.sh!  (It should be enough to do it once - however, if you have build
+
+problems, try running this first.) Also, you obviously need GNU make and
+autoconf installed on your system (note that autoconf-2.13 is supported, newer
+ones may cause problems thanks to the autoconf developers who don't know how to
+maintain backwards compatibility).  Otherwise, you have to use the nightly GIT
 snapshot - you don't need to do this there.
 
 
@@ -44,7 +42,7 @@ snapshot - you don't need to do this there.
 may contain patches that are of use to you.  If you're interested in any of
 them, try to apply them by doing (for each one):
 
-$ patch -p0 < contrib/that-patch
+	$ patch -p0 < contrib/that-patch
 
   They may not apply, since I don't update patches in contrib/ regularly - if
 you want, feel free to go ahead and update the patch for the current tree and
