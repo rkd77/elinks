@@ -131,6 +131,8 @@ struct html_element {
 	unsigned char *name;
 	int namelen;
 	unsigned char *options;
+	/* See document/html/parser/parse.c's element_info.linebreak
+	 * description. */
 	int linebreak;
 	struct frameset_desc *frameset;
 

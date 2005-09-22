@@ -404,10 +404,16 @@ struct element_info {
 	 * in start_element() (which is also where we call these handlers). */
 	element_handler_T *func;
 
-	/* Basically something like how many line-breaks to put before
-	 * (and sometimes after) an element. Also, for various element closing
-	 * precedence heuristics, a value of zero signifies an inline element
-	 * and a non-zero value indicates a block element. */
+	/* How many line-breaks to ensure we have before and after an element.
+	 * Value of 1 means the element will be on a line on its own, value
+	 * of 2 means that it will also have empty lines before and after.
+	 * Note that this does not add up - it just ensures that there is
+	 * at least so many linebreaks, but does not add more if that is the
+	 * case. Therefore, something like e.g. </pre></p> will add only two
+	 * linebreaks, not four. */
+	/* In some stack killing logic, we use some weird heuristic based on
+	 * whether an element is block or inline. That is determined from
+	 * whether this attribute is zero on non-zero. */
 	int linebreak;
 
 	enum element_type type;
