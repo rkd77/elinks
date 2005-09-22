@@ -26,9 +26,10 @@ includedir = @includedir@
 DESTDIR =
 
 
+# Unset for now; keep for future support for rebuilding configure and
+# Makefile.config
 ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
-AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
