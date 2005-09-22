@@ -97,7 +97,7 @@ all-l: elinks
 elinks: $(OBJS) $(ELINKSLIBS)
 	$(call cmd,link)
 
-install-local:
+install:
 	$(INSTALL_PROGRAM) elinks $(DESTDIR)$(bindir)
 
 include $(path_to_top)/Makefile.lib
