@@ -140,6 +140,8 @@ struct html_element {
 		ELEMENT_VISITED = 2,
 	} pseudo_class;
 };
+#define is_inline_element(e) (e->linebreak == 0)
+#define is_block_element(e) (e->linebreak > 0)
 
 enum html_special_type {
 	SP_TAG,

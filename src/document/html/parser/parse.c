@@ -812,10 +812,10 @@ start_element(struct element_info *ei,
 		if (ei->type == ELEMENT_TYPE_NON_NESTABLE) {
 			foreach (e, html_context->stack) {
 				if (e->type < ELEMENT_KILLABLE) break;
-				if (e->linebreak || !ei->linebreak) break;
+				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
 		} else foreach (e, html_context->stack) {
-			if (e->linebreak && !ei->linebreak) break;
+			if (is_block_element(e) && is_inline_element(ei)) break;
 			if (e->type < ELEMENT_KILLABLE) break;
 			if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
 		}
@@ -930,7 +930,7 @@ end_element(struct element_info *ei,
 
 	/* dump_html_stack(html_context); */
 	foreach (e, html_context->stack) {
-		if (e->linebreak && !ei->linebreak) kill = 1;
+		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (e->type < ELEMENT_KILLABLE)
 				break;
