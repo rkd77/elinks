@@ -753,21 +753,20 @@ start_element(struct element_info *ei,
               unsigned char *eof, unsigned char *attr,
               struct html_context *html_context)
 {
+#define ELEMENT_RENDER_PROLOGUE \
+	ln_break(html_context, ei->linebreak); \
+	a = get_attr_val(attr, "id", html_context->options); \
+	if (a) { \
+		html_context->special_f(html_context, SP_TAG, a); \
+		mem_free(a); \
+	}
+
 	unsigned char *a;
 	struct par_attrib old_format;
 	int restore_format;
 #ifdef CONFIG_CSS
 	struct css_selector *selector = NULL;
 #endif
-
-
-	ln_break(html_context, ei->linebreak);
-
-	a = get_attr_val(attr, "id", html_context->options);
-	if (a) {
-		html_context->special_f(html_context, SP_TAG, a);
-		mem_free(a);
-	}
 
 	if (html_top.type == ELEMENT_WEAK) {
 		kill_html_stack_item(html_context, &html_top);
@@ -777,6 +776,7 @@ start_element(struct element_info *ei,
 	 * one. */
 	if (html_top.invisible
 	    && (ei->func != html_script || html_top.invisible < 2)) {
+		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
 
@@ -785,15 +785,18 @@ start_element(struct element_info *ei,
 
 	if (ei->func == html_table && html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
+		ELEMENT_RENDER_PROLOGUE
 		format_table(attr, html, eof, &html, html_context);
 		ln_break(html_context, 2);
 		return html;
 	}
 	if (ei->func == html_select) {
+		ELEMENT_RENDER_PROLOGUE
 		if (!do_html_select(attr, html, eof, &html, html_context))
 			return html;
 	}
 	if (ei->func == html_textarea) {
+		ELEMENT_RENDER_PROLOGUE
 		do_html_textarea(attr, html, eof, &html, html_context);
 		return html;
 	}
@@ -860,6 +863,7 @@ start_element(struct element_info *ei,
 	/* We need to have own element in the stack, that's why we waited for
 	 * so long. */
 	if (ei->func == html_script) {
+		ELEMENT_RENDER_PROLOGUE
 		if (!do_html_script(html_context, attr, html, eof, &html))
 			return html;
 	}
@@ -887,7 +891,11 @@ start_element(struct element_info *ei,
 			done_css_selector(selector);
 		}
 	}
+	/* Now this was the reason for this whole funny ELEMENT_RENDER_PROLOGUE
+	 * bussiness. Only now we have the definitive linebreak value, since
+	 * that's what the display: property plays with. */
 #endif
+	ELEMENT_RENDER_PROLOGUE
 	if (ei->func) ei->func(html_context, attr);
 #ifdef CONFIG_CSS
 	if (selector && html_top.options) {
@@ -908,6 +916,7 @@ start_element(struct element_info *ei,
 	if (restore_format) par_format = old_format;
 
 	return html;
+#undef ELEMENT_RENDER_PROLOGUE
 }
 
 static unsigned char *

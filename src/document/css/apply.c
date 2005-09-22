@@ -62,6 +62,28 @@ css_apply_background_color(struct html_context *html_context,
 }
 
 static void
+css_apply_display(struct html_context *html_context, struct html_element *element,
+		  struct css_property *prop)
+{
+	assert(prop->value_type == CSS_VT_DISPLAY);
+
+	switch (prop->value.display) {
+		case CSS_DISP_INLINE:
+			element->linebreak = 0;
+			break;
+		case CSS_DISP_BLOCK:
+			/* 1 or 2, that is the question. I went for 2 since it
+			 * gives a more "blocky" feel and it's more common.
+			 * YMMV. */
+			element->linebreak = 2;
+			break;
+		default:
+			INTERNAL("Bad prop->value.display %d", prop->value.display);
+			break;
+	}
+}
+
+static void
 css_apply_font_attribute(struct html_context *html_context,
 			 struct html_element *element, struct css_property *prop)
 {
@@ -86,6 +108,7 @@ static css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_BACKGROUND */		css_apply_background_color,
 	/* CSS_PT_BACKGROUND_COLOR */	css_apply_background_color,
 	/* CSS_PT_COLOR */		css_apply_color,
+	/* CSS_PT_DISPLAY */		css_apply_display,
 	/* CSS_PT_FONT_STYLE */		css_apply_font_attribute,
 	/* CSS_PT_FONT_WEIGHT */	css_apply_font_attribute,
 	/* CSS_PT_TEXT_ALIGN */		css_apply_text_align,

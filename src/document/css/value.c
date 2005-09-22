@@ -283,6 +283,32 @@ css_parse_white_space_value(struct css_property_info *propinfo,
 	return 1;
 }
 
+int
+css_parse_display_value(struct css_property_info *propinfo,
+			union css_property_value *value,
+			struct scanner *scanner)
+{
+	struct scanner_token *token = get_scanner_token(scanner);
+
+	assert(propinfo->value_type == CSS_VT_DISPLAY);
+
+	if (token->type != CSS_TOKEN_IDENT) return 0;
+
+	/* FIXME: This is _very_ simplistic */
+	if (scanner_token_contains(token, "inline")) {
+		value->display = CSS_DISP_INLINE;
+	} else if (scanner_token_contains(token, "inline-block")) {
+		value->display = CSS_DISP_INLINE; /* XXX */
+	} else if (scanner_token_contains(token, "block")) {
+		value->display = CSS_DISP_BLOCK;
+	} else {
+		return 0;
+	}
+
+	skip_css_tokens(scanner, CSS_TOKEN_IDENT);
+	return 1;
+}
+
 
 int
 css_parse_value(struct css_property_info *propinfo,
