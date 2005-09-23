@@ -4,6 +4,9 @@ include $(path_to_top)/Makefile.config
 localedir = $(datadir)/locale
 builddir = $(top_builddir)/src/intl/gettext
 
+# FIXME: Makefile.config gets this wrong
+srcdir = $(top_srcdir)/src/intl/gettext
+
 OBJS = \
  bindtextdom.o \
  dcgettext.o \
@@ -28,8 +31,10 @@ all-l: libintl.a
 libintl.a: $(OBJS)
 
 
+# $(builddir)/charset.alias: $(srcdir)/config.charset
 $(builddir)/charset.alias: $(srcdir)/config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@.new
+	mv $@.new $@
 
 # FIXME: Building plural.c from plural.y on the fly doesn't work
 
@@ -71,6 +76,33 @@ install-l: $(builddir)/charset.alias all
 	else \
 	  : ; \
 	fi
-	mv $@.new $@
+
+uninstall-l:
+	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
+	    temp=$(DESTDIR)$(libdir)/t-charset.alias; \
+	    dest=$(DESTDIR)$(libdir)/charset.alias; \
+	    sed -f ref-del.sed $$dest > $$temp; \
+	    if grep '^# Packages using this file: $$' $$temp > /dev/null; then \
+	      rm -f $$dest; \
+	    else \
+	      $(INSTALL_DATA) $$temp $$dest; \
+	    fi; \
+	    rm -f $$temp; \
+	  fi; \
+	  if test -f $(DESTDIR)$(localedir)/locale.alias; then \
+	    temp=$(DESTDIR)$(localedir)/t-locale.alias; \
+	    dest=$(DESTDIR)$(localedir)/locale.alias; \
+	    sed -f ref-del.sed $$dest > $$temp; \
+	    if grep '^# Packages using this file: $$' $$temp > /dev/null; then \
+	      rm -f $$dest; \
+	    else \
+	      $(INSTALL_DATA) $$temp $$dest; \
+	    fi; \
+	    rm -f $$temp; \
+	  fi; \
+	else \
+	  : ; \
+	fi
 
 include $(path_to_top)/Makefile.lib
