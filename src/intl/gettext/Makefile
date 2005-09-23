@@ -52,14 +52,14 @@ install-l: $(builddir)/charset.alias all
 	    rm -f $$temp; \
 	  else \
 	    if test @GLIBC21@ = no; then \
-	      $(mkinstalldirs) $(DESTDIR)$(libdir); \
+	      $(MKINSTALLDIRS) $(DESTDIR)$(libdir); \
 	      orig=charset.alias; \
 	      sed -f ref-add.sed $$orig > $$temp; \
 	      $(INSTALL_DATA) $$temp $$dest; \
 	      rm -f $$temp; \
 	    fi; \
 	  fi; \
-	  $(mkinstalldirs) $(DESTDIR)$(localedir); \
+	  $(MKINSTALLDIRS) $(DESTDIR)$(localedir); \
 	  test -f $(DESTDIR)$(localedir)/locale.alias \
 	    && orig=$(DESTDIR)$(localedir)/locale.alias \
 	    || orig=$(srcdir)/locale.alias; \
