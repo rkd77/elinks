@@ -19,6 +19,7 @@ struct css_property_info css_property_info[CSS_PT_LAST] = {
 	{ "background",		CSS_PT_BACKGROUND,	 CSS_VT_COLOR,		css_parse_background_value },
 	{ "background-color",	CSS_PT_BACKGROUND_COLOR, CSS_VT_COLOR,		css_parse_color_value },
 	{ "color",		CSS_PT_COLOR,		 CSS_VT_COLOR,		css_parse_color_value },
+	{ "display",		CSS_PT_DISPLAY,		 CSS_VT_DISPLAY,	css_parse_display_value },
 	{ "font-style",		CSS_PT_FONT_STYLE,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_font_style_value },
 	{ "font-weight",	CSS_PT_FONT_WEIGHT,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_font_weight_value },
 	{ "text-align",		CSS_PT_TEXT_ALIGN,	 CSS_VT_TEXT_ALIGN,	css_parse_text_align_value },

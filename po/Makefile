@@ -109,13 +109,13 @@ check-po:
 install-l: install-l-$(CONFIG_NLS)
 install-l-no:
 install-l-yes:
-	$(mkinstalldirs) $(DESTDIR)$(localedir)
+	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
 	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
-	  $(mkinstalldirs) $(DESTDIR)$$dir; \
+	  $(MKINSTALLDIRS) $(DESTDIR)$$dir; \
 	  if test -r $(srcdir)/$$cat; then \
 	    $(INSTALL_DATA) $(srcdir)/$$cat $(DESTDIR)$$dir/$(PACKAGE).mo; \
 	    echo "installing $$cat as $(DESTDIR)$$dir/$(PACKAGE).mo"; \

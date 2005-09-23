@@ -404,10 +404,16 @@ struct element_info {
 	 * in start_element() (which is also where we call these handlers). */
 	element_handler_T *func;
 
-	/* Basically something like how many line-breaks to put before
-	 * (and sometimes after) an element. Also, for various element closing
-	 * precedence heuristics, a value of zero signifies an inline element
-	 * and a non-zero value indicates a block element. */
+	/* How many line-breaks to ensure we have before and after an element.
+	 * Value of 1 means the element will be on a line on its own, value
+	 * of 2 means that it will also have empty lines before and after.
+	 * Note that this does not add up - it just ensures that there is
+	 * at least so many linebreaks, but does not add more if that is the
+	 * case. Therefore, something like e.g. </pre></p> will add only two
+	 * linebreaks, not four. */
+	/* In some stack killing logic, we use some weird heuristic based on
+	 * whether an element is block or inline. That is determined from
+	 * whether this attribute is zero on non-zero. */
 	int linebreak;
 
 	enum element_type type;
@@ -747,21 +753,20 @@ start_element(struct element_info *ei,
               unsigned char *eof, unsigned char *attr,
               struct html_context *html_context)
 {
+#define ELEMENT_RENDER_PROLOGUE \
+	ln_break(html_context, ei->linebreak); \
+	a = get_attr_val(attr, "id", html_context->options); \
+	if (a) { \
+		html_context->special_f(html_context, SP_TAG, a); \
+		mem_free(a); \
+	}
+
 	unsigned char *a;
 	struct par_attrib old_format;
 	int restore_format;
 #ifdef CONFIG_CSS
 	struct css_selector *selector = NULL;
 #endif
-
-
-	ln_break(html_context, ei->linebreak);
-
-	a = get_attr_val(attr, "id", html_context->options);
-	if (a) {
-		html_context->special_f(html_context, SP_TAG, a);
-		mem_free(a);
-	}
 
 	if (html_top.type == ELEMENT_WEAK) {
 		kill_html_stack_item(html_context, &html_top);
@@ -771,6 +776,7 @@ start_element(struct element_info *ei,
 	 * one. */
 	if (html_top.invisible
 	    && (ei->func != html_script || html_top.invisible < 2)) {
+		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
 
@@ -779,15 +785,18 @@ start_element(struct element_info *ei,
 
 	if (ei->func == html_table && html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
+		ELEMENT_RENDER_PROLOGUE
 		format_table(attr, html, eof, &html, html_context);
 		ln_break(html_context, 2);
 		return html;
 	}
 	if (ei->func == html_select) {
+		ELEMENT_RENDER_PROLOGUE
 		if (!do_html_select(attr, html, eof, &html, html_context))
 			return html;
 	}
 	if (ei->func == html_textarea) {
+		ELEMENT_RENDER_PROLOGUE
 		do_html_textarea(attr, html, eof, &html, html_context);
 		return html;
 	}
@@ -812,10 +821,10 @@ start_element(struct element_info *ei,
 		if (ei->type == ELEMENT_TYPE_NON_NESTABLE) {
 			foreach (e, html_context->stack) {
 				if (e->type < ELEMENT_KILLABLE) break;
-				if (e->linebreak || !ei->linebreak) break;
+				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
 		} else foreach (e, html_context->stack) {
-			if (e->linebreak && !ei->linebreak) break;
+			if (is_block_element(e) && is_inline_element(ei)) break;
 			if (e->type < ELEMENT_KILLABLE) break;
 			if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
 		}
@@ -854,6 +863,7 @@ start_element(struct element_info *ei,
 	/* We need to have own element in the stack, that's why we waited for
 	 * so long. */
 	if (ei->func == html_script) {
+		ELEMENT_RENDER_PROLOGUE
 		if (!do_html_script(html_context, attr, html, eof, &html))
 			return html;
 	}
@@ -881,7 +891,11 @@ start_element(struct element_info *ei,
 			done_css_selector(selector);
 		}
 	}
+	/* Now this was the reason for this whole funny ELEMENT_RENDER_PROLOGUE
+	 * bussiness. Only now we have the definitive linebreak value, since
+	 * that's what the display: property plays with. */
 #endif
+	ELEMENT_RENDER_PROLOGUE
 	if (ei->func) ei->func(html_context, attr);
 #ifdef CONFIG_CSS
 	if (selector && html_top.options) {
@@ -902,6 +916,7 @@ start_element(struct element_info *ei,
 	if (restore_format) par_format = old_format;
 
 	return html;
+#undef ELEMENT_RENDER_PROLOGUE
 }
 
 static unsigned char *
@@ -930,7 +945,7 @@ end_element(struct element_info *ei,
 
 	/* dump_html_stack(html_context); */
 	foreach (e, html_context->stack) {
-		if (e->linebreak && !ei->linebreak) kill = 1;
+		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (e->type < ELEMENT_KILLABLE)
 				break;
