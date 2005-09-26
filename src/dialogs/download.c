@@ -131,6 +131,10 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	unsigned char *msg = get_download_msg(download, term, 1, 1, "\n");
 	int show_meter = (download_is_progressing(download)
 			  && download->progress->size >= 0);
+#if CONFIG_BITTORRENT
+	int bittorrent = (file_download->uri->protocol == PROTOCOL_BITTORRENT
+			  && (show_meter || download->state == S_RESUME));
+#endif
 
 	redraw_below_window(dlg_data->win);
 	file_download->dlg_data = dlg_data;
@@ -156,9 +160,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	if (show_meter) y += 2;
 
 #if CONFIG_BITTORRENT
-	if (file_download->uri->protocol == PROTOCOL_BITTORRENT
-	    && (show_meter || download->state == S_RESUME))
-		y += 2;
+	if (bittorrent) y += 2;
 #endif
 	dlg_format_text_do(NULL, msg, 0, &y, w, &rw,
 			dialog_text_color, ALIGN_LEFT);
@@ -194,8 +196,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	}
 
 #if CONFIG_BITTORRENT
-	if (file_download->uri->protocol == PROTOCOL_BITTORRENT
-	    && (show_meter || download->state == S_RESUME)) {
+	if (bittorrent) {
 		y++;
 		draw_bittorrent_piece_progress(download, term, x, y, w, NULL, NULL);
 		y++;

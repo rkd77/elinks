@@ -84,8 +84,8 @@ ELINKSLIBS = \
  util/libutil.a
 
 # Get the GIT HEAD ID if possible
-ifdef COMMIT_ID
-BUILD_ID=$(shell $(COMMIT_ID) 2> /dev/null)
+ifdef CG_COMMIT_ID
+BUILD_ID=$(shell $(CG_COMMIT_ID) 2> /dev/null)
 endif
 INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
@@ -97,7 +97,7 @@ all-l: elinks
 elinks: $(OBJS) $(ELINKSLIBS)
 	$(call cmd,link)
 
-install-local:
-	$(INSTALL_PROGRAM) $(srcdir)/elinks $(DESTDIR)$(bindir)
+install:
+	$(INSTALL_PROGRAM) elinks $(DESTDIR)$(bindir)
 
 include $(path_to_top)/Makefile.lib

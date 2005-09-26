@@ -7,60 +7,60 @@ while on the mailing list.
 
 
 [[instances]]
-I rebuilt/upgraded/reconfigured my ELinks, restarted it, but it looks nothing has changed!
+I rebuilt/upgraded/reconfigured ELinks and restarted it, but it looks like nothing has changed!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ELinks instances connect together so that they share the cache, bookmarks,
-cookies, configuration, etc. Only the "master" ELinks instance does any real
-work and any other ELinkses you run will only connect to this instance. So
-when you want to restart ELinks, make sure you have no other ELinks instances
-running at the time.
+cookies, configuration, etc.  Only the "master" ELinks instance does any real
+work and any other ELinkses you run will only connect to this instance.  So when
+you want to restart ELinks, make sure you have no other ELinks instances
+running.
 
-Alternatively, you can use the `-no-connect` parameter to make the ELinks
-always run standalone, or create a parallel group of ELinks instances by the
-`-session-ring N` parameter (where `N` is a number larger than zero); however,
-be aware of the fact that in those cases ELinks won't touch any configuration,
-bookmark, cookies, etc files - you can force that by the `-touch-files`
-parameter, however beware - this can result in a data loss! (E.g., when two
-master ELinks instances will try to save their bookmarks and you add a
-bookmark to each of those, only one of the bookmarks survives.)
+Alternatively, you can use the `-no-connect` parameter to make ELinks always run
+standalone, or create a parallel group of ELinks instances with the
+`-session-ring N` parameter (where `N` is a number larger than zero).  Be aware
+of that in those cases ELinks won't touch any configuration, bookmark, cookies,
+etc. files.  You can force that with the `-touch-files` parameter, but beware
+that this can result in data loss!  (For example, when two master ELinks
+instances try to save the bookmarks, and you add a bookmark to each of those,
+only one of the bookmarks survives.)
 
 
 [[cutnpaste]]
 How does cutting and pasting work?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The reason why normal cut and pasting does not work is that ELinks requests to
-receive any mouse event info even if it is compiled without GPM. Therefore it
-is necessary to also hold down the Shift key when cutting or pasting text. If
-you do not need to use the mouse for navigation you can disable mouse support
-by passing `--disable-mouse` to configure.
+The reason why normal cut and paste does not work is that ELinks requests all
+mouse event info even if it is compiled without GPM.  Therefore it is necessary
+to hold down the Shift key when cutting or pasting text.  If you do not need to
+use the mouse for navigation you can disable mouse support by passing
+`--disable-mouse` to configure.
 
 
 [[move]]
 How does the "Move" button on the bookmark manager work?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First you need to mark all the bookmarks (or even folders) you want to move.
-This can be done with the Insert key if you're using the default keybindings.
-Asterisk will appear near of all marked bookmarks. Next move to where you want
-to have the stuff moved to, and press the "Move" button.
+First you need to mark all the bookmarks (or folders) you want to move.  This
+can be done with the Insert key if you're using the default key-bindings.  An
+asterisk will appear near all marked bookmarks.  Now move to where you want to
+have the stuff moved to, and press the "Move" button.
 
 
 [[navigation]]
 What's up with the navigation in the various managers?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The managers use list boxes. To navigate (assuming you're using a default
-keybinding configuration) use Space to open and close the folders.
+The managers use list boxes.  To navigate (assuming you're using a default
+key-binding configuration) use Space to open and close the folders.
 
 
-[[flavours]]
+[[flavors]]
 Why are there so many Links flavors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please refer to the link:http://elinks.or.cz/history.html[history page] to
-read about the various flavors and the differences between them.
+Please refer to the link:http://elinks.or.cz/history.html[history page] to read
+about the various flavors and the differences between them.
 
 
 [[which-one]]
@@ -68,9 +68,9 @@ Which one to use?
 ~~~~~~~~~~~~~~~~~
 
 If you want a fast, stable, and feature-thin text browser, use
-link:http://artax.karlin.mff.cuni.cz/~mikulas/links[Links-0.99].  Main
-drawbacks include: No HTTP-auth support and no persistent cookies (i.e.  they
-die when all instances of Links are closed).
+link:http://artax.karlin.mff.cuni.cz/~mikulas/links[Links-0.99].  Main drawbacks
+include: No HTTP-auth support and no persistent cookies (i.e. they die when all
+instances of Links are closed).
 
 If you want additional features, including HTTP-auth, persistent cookies, and
 on-the-fly compression, try ELinks.  (Note: links-0.9x and ELinks versions >
@@ -79,10 +79,10 @@ these on the same machine.)
 
 If you want the option of graphics mode, use
 link:http://links.twibright.com[Links2] or
-link:http://xray.sai.msu.ru/~karpov/links-hacked/[Hacked Links].  Be aware
-that some people have reported the latter as hard to configure/compile. You
-cannot run either of these with Links-0.9x on the same system without hacking
-the compile-time configuration.
+link:http://xray.sai.msu.ru/~karpov/links-hacked/[Hacked Links].  Be aware that
+some people have reported the latter as hard to configure/compile.  You cannot
+run either of these with Links-0.9x on the same system without hacking the
+compile-time configuration.
 
 
 [[kibi-and-mebi]]
@@ -101,16 +101,16 @@ One mebibyte	1 MiB = 2^20 B = 1 048 576 B
 -------------------------------------------------------------------------------
 
 
-[[christmas]]
-Why are stable releases made at christmas?
+[[Christmas]]
+Why are stable releases made at Christmas?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This yearly present has become a tradition suspectedly because pasky worships
-the christmas spirit. ;-)
+It is suspected that this yearly present has become a tradition because pasky
+worships the Christmas spirit. ;-)
 
 
 [[get-256-colours]]
-How can I get 256 colours?
+How can I get 256 colors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, you must enable it in the `feature.conf` file before compiling.
@@ -129,9 +129,9 @@ before running ELinks.
 [NOTE]
 .Only 16 colors on The Linux console
 ===============================================================================
-Altho the Linux framebuffer supports 256 (or more) colours, the Linux console
+Although the Linux frame-buffer supports 256 (or more) colors, the Linux console
 driver does not; therefore, console applications are still limited to 16
-colours on the Linux console, framebuffer or not.
+colors on the Linux console, frame-buffer or not.
 ===============================================================================
 
 
@@ -148,7 +148,7 @@ The new ELinks versions (from 0.9.0 on) send:
 	ELinks/$version (textmode; $osinfo; $textmode_dimensions)
 
 You should therefore check against something like /^ELinks[\/ ]/, since more
-fields can be added inside the parenthesis in the next versions.  Note that
+fields can be added inside the parenthesis in subsequent versions.  Note that
 users can change their User-Agent through the options system.
 
 

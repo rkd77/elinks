@@ -52,6 +52,7 @@ struct language languages[] = {
 	{N_("Portuguese"), "pt"},
 	{N_("Romanian"), "ro"},
 	{N_("Russian"), "ru"},
+	{N_("Serbian"), "sr"},
 	{N_("Slovak"), "sk"},
 	{N_("Spanish"), "es"},
 	{N_("Swedish"), "sv"},

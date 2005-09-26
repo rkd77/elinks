@@ -22,6 +22,7 @@ struct css_property {
 		CSS_PT_BACKGROUND,
 		CSS_PT_BACKGROUND_COLOR,
 		CSS_PT_COLOR,
+		CSS_PT_DISPLAY,
 		CSS_PT_FONT_STYLE,
 		CSS_PT_FONT_WEIGHT,
 		CSS_PT_TEXT_ALIGN,
@@ -36,6 +37,7 @@ struct css_property {
 	enum css_property_value_type {
 		CSS_VT_NONE,
 		CSS_VT_COLOR,
+		CSS_VT_DISPLAY,
 		CSS_VT_FONT_ATTRIBUTE,
 		CSS_VT_TEXT_ALIGN,
 		CSS_VT_LAST,
@@ -43,6 +45,10 @@ struct css_property {
 	union css_property_value {
 		void *none;
 		color_T color;
+		enum css_display {
+			CSS_DISP_INLINE,
+			CSS_DISP_BLOCK,
+		} display;
 		struct {
 			enum format_attr add, rem;
 		} font_attribute;
