@@ -70,10 +70,12 @@ endif
 
 .PHONY: all-recursive install-recursive clean-recursive
 all-recursive install-recursive clean-recursive:
+ifdef SUBDIRS
 	@target=`echo $@ | sed s/-recursive//`; \
 	for subdir in $(SUBDIRS); do \
 		$(call ncmd,recmake) || exit 1; \
 	done
+endif
 
 all: all-recursive all-l
 install: install-recursive install-l
