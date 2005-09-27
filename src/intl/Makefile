@@ -1,11 +1,7 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_NLS),yes)
-gettextdir = gettext
-endif
-
-SUBDIRS = $(gettextdir)
+SUBDIRS-$(CONFIG_NLS)	+= gettext
 
 OBJS = charsets.o
 

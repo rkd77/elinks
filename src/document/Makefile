@@ -1,16 +1,10 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_CSS),yes)
-cssdir = css
-endif
+SUBDIRS-$(CONFIG_CSS)	+= css
+SUBDIRS-$(CONFIG_DOM)	+= dom sgml
 
-ifeq ($(CONFIG_DOM),yes)
-domdir = dom
-sgmldir = sgml
-endif
-
-SUBDIRS = $(cssdir) $(domdir) html plain $(sgmldir)
+SUBDIRS = html plain
 
 OBJS = docdata.o document.o forms.o options.o refresh.o renderer.o
 

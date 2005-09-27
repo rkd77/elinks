@@ -56,10 +56,18 @@ endif
 			>> .deps/$(*F).P; \
 		rm .deps/$(*F).pp
 
+ifdef SUBDIRS-yes
+SUBDIRS += $(SUBDIRS-yes)
+endif
+
+ifdef OBJS-yes
+OBJS += $(OBJS-yes)
+endif
+
 ifdef SUBDIRS
 # Apparently wildcard won't expand *.o files so check if there are any *.c
 # files and use that to magically add the lib.o file of the subdirectory.
-subobjs := $(strip $(foreach subdir,$(SUBDIRS),$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
+subobjs := $(strip $(foreach subdir,$(sort $(SUBDIRS)),$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
 endif
 ifneq ($(subobjs),)
 OBJS += $(subobjs)
@@ -71,7 +79,7 @@ CLEAN += $(OBJS)
 clean-local:
 	$(RM) lib.o $(CLEAN)
 
-lib.o: $(OBJS)
+lib.o: $(sort $(OBJS))
 	$(call cmd,ld_objs)
 
 all-local: lib.o
@@ -84,7 +92,7 @@ endif
 all-recursive install-recursive clean-recursive:
 ifdef SUBDIRS
 	@target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $(SUBDIRS); do \
+	for subdir in $(sort $(SUBDIRS)); do \
 		$(call ncmd,recmake) || exit 1; \
 	done
 endif

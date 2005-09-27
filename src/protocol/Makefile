@@ -1,49 +1,17 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_BITTORRENT),yes)
-bittorrentdir = bittorrent
-endif
+SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
+SUBDIRS-$(CONFIG_FINGER)	+= finger
+SUBDIRS-$(CONFIG_FTP)		+= ftp
+SUBDIRS-$(CONFIG_GOPHER)	+= gopher
+SUBDIRS-$(CONFIG_NNTP)		+= nntp
+SUBDIRS-$(CONFIG_SMB)		+= smb
+SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 
-ifeq ($(CONFIG_DATA),yes)
-dataobj = data.o
-endif
+OBJS-$(CONFIG_DATA)		+= data.o
 
-ifeq ($(CONFIG_FINGER),yes)
-fingerdir = finger
-endif
-
-ifeq ($(CONFIG_FTP),yes)
-ftpdir = ftp
-endif
-
-ifeq ($(CONFIG_GOPHER),yes)
-gopherdir = gopher
-endif
-
-ifeq ($(CONFIG_NNTP),yes)
-nntpdir = nntp
-endif
-
-ifeq ($(CONFIG_SMB),yes)
-smbdir = smb
-endif
-
-ifeq ($(CONFIG_URI_REWRITE),yes)
-rewritedir = rewrite
-endif
-
-SUBDIRS = \
- auth \
- $(bittorrentdir) \
- file \
- $(fingerdir) \
- $(ftpdir) \
- $(gopherdir) \
- http \
- $(nntpdir) \
- $(rewritedir) \
- $(smbdir)
+SUBDIRS = auth file http
 
 OBJS = about.o $(dataobj) date.o header.o protocol.o proxy.o uri.o user.o
 

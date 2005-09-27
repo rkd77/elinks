@@ -1,49 +1,26 @@
 path_to_top=..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_BOOKMARKS),yes)
-bookmarksdir = bookmarks
-endif
-
-ifeq ($(CONFIG_COOKIES),yes)
-cookiesdir = cookies
-endif
-
-ifeq ($(CONFIG_FORMHIST),yes)
-formhistdir = formhist
-endif
-
-ifeq ($(CONFIG_GLOBHIST),yes)
-globhistdir = globhist
-endif
-
-ifeq ($(CONFIG_ECMASCRIPT),yes)
-ecmascriptdir = ecmascript
-endif
-
-ifeq ($(CONFIG_SCRIPTING),yes)
-scriptingdir = scripting
-endif
+SUBDIRS-$(CONFIG_BOOKMARKS)	+= bookmarks
+SUBDIRS-$(CONFIG_COOKIES)	+= cookies
+SUBDIRS-$(CONFIG_FORMHIST)	+= formhist
+SUBDIRS-$(CONFIG_GLOBHIST)	+= globhist
+SUBDIRS-$(CONFIG_ECMASCRIPT)	+= ecmascript
+SUBDIRS-$(CONFIG_SCRIPTING)	+= scripting
 
 SUBDIRS = \
  bfu \
- $(bookmarksdir) \
  cache \
  config \
- $(cookiesdir) \
  dialogs \
  document \
- $(ecmascriptdir) \
  encoding \
- $(formhistdir) \
- $(globhistdir) \
  intl \
  main \
  mime \
  network \
  osdep \
  protocol \
- $(scriptingdir) \
  session \
  terminal \
  util \
