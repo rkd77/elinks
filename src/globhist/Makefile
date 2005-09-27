@@ -3,7 +3,7 @@ include $(path_to_top)/Makefile.config
 
 OBJS = globhist.o dialogs.o
 
-all-l: libglobhist.a
+all-local: libglobhist.a
 libglobhist.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

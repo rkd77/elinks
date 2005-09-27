@@ -3,7 +3,7 @@ include $(path_to_top)/Makefile.config
 
 OBJS = cookies.o dialogs.o parser.o
 
-all-l: libcookies.a
+all-local: libcookies.a
 libcookies.a: $(OBJS)
 
 parsetst: parser.o parsetst.o

@@ -12,6 +12,6 @@ endif
 OBJS = common.o default.o $(mailcapobj) $(mimetypesobj)
 
 # Do not forget to also add the .o to ../Makefile. Yes, it sucks.
-all-l: $(OBJS)
+all-local: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

@@ -37,7 +37,7 @@ SUFFIXES = .po .gmo .mo
 #
 # $(CATALOGS) is empty if --disable-nls. Beats using *-(yes|no) targets.
 
-all-l: $(CATALOGS)
+all-local: $(CATALOGS)
 
 
 ### Creating the template po template file
@@ -104,11 +104,11 @@ check-po:
 
 ### Installation and distribution
 #
-# Use *-l targets to place and remove .gmo files.
+# Use *-local targets to place and remove .gmo files.
 
-install-l: install-l-$(CONFIG_NLS)
-install-l-no:
-install-l-yes:
+install-local: install-local-$(CONFIG_NLS)
+install-local-no:
+install-local-yes:
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \

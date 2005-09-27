@@ -27,7 +27,7 @@ OBJS = \
  plural.o \
  textdomain.o
 
-all-l: libintl.a
+all-local: libintl.a
 libintl.a: $(OBJS)
 
 
@@ -46,7 +46,7 @@ plural.c: plural.y
 	$(YACC) $(YFLAGS) --output $@ $<
 	rm -f $*.h
 
-install-l: $(builddir)/charset.alias all
+install-local: $(builddir)/charset.alias all
 	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
 	  temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	  dest=$(DESTDIR)$(libdir)/charset.alias; \
@@ -77,7 +77,7 @@ install-l: $(builddir)/charset.alias all
 	  : ; \
 	fi
 
-uninstall-l:
+uninstall-local:
 	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
 	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
 	    temp=$(DESTDIR)$(libdir)/t-charset.alias; \

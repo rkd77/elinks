@@ -48,7 +48,7 @@ SUB_OBJS = \
 
 OBJS = docdata.o document.o forms.o options.o refresh.o renderer.o $(SUB_OBJS)
 
-all-l: libdocument.a
+all-local: libdocument.a
 libdocument.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

@@ -3,7 +3,7 @@ include $(path_to_top)/Makefile.config
 
 OBJS = cache.o dialogs.o
 
-all-l: libcache.a
+all-local: libcache.a
 libcache.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

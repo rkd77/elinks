@@ -9,7 +9,7 @@ SUBDIRS = $(gettextdir)
 
 OBJS = charsets.o
 
-all-l: libintl.a
+all-local: libintl.a
 libintl.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

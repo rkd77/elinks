@@ -61,7 +61,7 @@ endif
 ifdef OBJS
 CLEAN += $(OBJS)
 
-clean-l:
+clean-local:
 	$(RM) $(CLEAN) *.a
 endif
 
@@ -77,12 +77,12 @@ ifdef SUBDIRS
 	done
 endif
 
-all: all-recursive all-l
-install: install-recursive install-l
-clean: clean-recursive clean-l
+all: all-recursive all-local
+install: install-recursive install-local
+clean: clean-recursive clean-local
 
-all-l:
-install-l:
-clean-l:
+all-local:
+install-local:
+clean-local:
 
 # vim:syntax=make

@@ -19,7 +19,7 @@ OBJS = \
  $(mailcapobj) \
  $(mimetypesobj)
 
-all-l: libmime.a
+all-local: libmime.a
 libmime.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

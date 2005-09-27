@@ -46,7 +46,7 @@ OBJS = \
  $(scannerobj) \
  $(sha1obj)
 
-all-l: libutil.a
+all-local: libutil.a
 libutil.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

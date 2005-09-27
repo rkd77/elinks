@@ -20,7 +20,7 @@ OBJS = \
  text/view.o \
  text/vs.o
 
-all-l: libviewer.a
+all-local: libviewer.a
 libviewer.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

@@ -7,7 +7,7 @@ endif
 
 OBJS = event.o $(interlinkobj) main.o module.o select.o timer.o version.o
 
-all-l: libmain.a
+all-local: libmain.a
 libmain.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

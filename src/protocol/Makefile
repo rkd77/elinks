@@ -86,7 +86,7 @@ SUB_OBJS = \
  $(smbobj)
 OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o $(SUB_OBJS)
 
-all-l: libprotocol.a
+all-local: libprotocol.a
 libprotocol.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

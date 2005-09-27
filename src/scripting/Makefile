@@ -30,7 +30,7 @@ SUBDIRS = $(guiledir) $(luadir) $(perldir) $(pythondir) $(rubydir)
 
 OBJS = scripting.o $(guileobj) $(luaobj) $(perlobj) $(pythonobj) $(rubyobj)
 
-all-l: libscripting.a
+all-local: libscripting.a
 libscripting.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

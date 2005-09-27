@@ -17,7 +17,7 @@ OBJS = \
  terminal.o \
  window.o
 
-all-l: libterminal.a
+all-local: libterminal.a
 libterminal.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib

@@ -93,7 +93,7 @@ OBJS = vernum.o
 vernum.o: FORCE
 FORCE:
 
-all-l: elinks
+all-local: elinks
 elinks: $(OBJS) $(ELINKSLIBS)
 	$(call cmd,link)
 

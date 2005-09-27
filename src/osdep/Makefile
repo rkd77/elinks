@@ -42,7 +42,7 @@ OBJS = \
  $(unixobj) \
  $(win32obj)
 
-all-l: libosdep.a
+all-local: libosdep.a
 libosdep.a: $(OBJS)
 
 include $(path_to_top)/Makefile.lib
