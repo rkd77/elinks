@@ -59,8 +59,10 @@ endif
 	$(call cmd,archive)
 
 ifdef OBJS
+CLEAN += $(OBJS)
+
 clean-l:
-	rm -f $(OBJS) *.a
+	$(RM) $(CLEAN) *.a
 endif
 
 
@@ -80,6 +82,5 @@ clean: clean-recursive clean-l
 all-l:
 install-l:
 clean-l:
-
 
 # vim:syntax=make

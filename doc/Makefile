@@ -129,7 +129,7 @@ doc-dirs:
 	$(INSTALL) -d $(DOC_DIRS)
 
 # $(MAN_DIR) intentionally left out
-clean-local:
+clean-l:
 	$(RM) -r $(HTML_DIR) $(XML_DIR) $(TXT_DIR) $(PDF_DIR) *.tmp
 
 
