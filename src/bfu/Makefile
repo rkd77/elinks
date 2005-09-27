@@ -23,7 +23,4 @@ OBJS = \
  text.o \
  widget.o
 
-all-local: libbfu.a
-libbfu.a: $(OBJS)
-
 include $(path_to_top)/Makefile.lib

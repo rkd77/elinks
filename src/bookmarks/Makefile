@@ -10,7 +10,4 @@ endif
 BACK_OBJS = common.o default.o $(xbelobj)
 OBJS = bookmarks.o dialogs.o $(foreach obj,$(BACK_OBJS),backend/$(obj))
 
-all-local: libbookmarks.a
-libbookmarks.a: $(OBJS)
-
 include $(path_to_top)/Makefile.lib

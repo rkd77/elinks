@@ -1,62 +1,49 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-authobj = auth/auth.o auth/dialogs.o auth/digest.o
-
-ifeq ($(CONFIG_CGI),yes)
-cgiobj = file/cgi.o
-endif
+authobj = auth/lib.o
 
 ifeq ($(CONFIG_BITTORRENT),yes)
 bittorrentdir = bittorrent
-bittorrentobj = \
- $(bittorrentdir)/bencoding.o \
- $(bittorrentdir)/bittorrent.o \
- $(bittorrentdir)/common.o \
- $(bittorrentdir)/connection.o \
- $(bittorrentdir)/dialogs.o \
- $(bittorrentdir)/peerconnect.o \
- $(bittorrentdir)/peerwire.o \
- $(bittorrentdir)/piececache.o \
- $(bittorrentdir)/tracker.o
+bittorrentobj = $(bittorrentdir)/lib.o
 endif
 
 ifeq ($(CONFIG_DATA),yes)
 dataobj = data.o
 endif
 
-fileobj = file/file.o
+fileobj = file/lib.o
 
 ifeq ($(CONFIG_FINGER),yes)
 fingerdir = finger
-fingerobj = $(fingerdir)/finger.o
+fingerobj = $(fingerdir)/lib.o
 endif
 
 ifeq ($(CONFIG_FTP),yes)
 ftpdir = ftp
-ftpobj = $(ftpdir)/ftp.o $(ftpdir)/parse.o 
+ftpobj = $(ftpdir)/lib.o
 endif
 
 ifeq ($(CONFIG_GOPHER),yes)
 gopherdir = gopher
-gopherobj = $(gopherdir)/gopher.o
+gopherobj = $(gopherdir)/lib.o
 endif
 
-httpobj = http/blacklist.o http/codes.o http/http.o
+httpobj = http/lib.o
 
 ifeq ($(CONFIG_NNTP),yes)
 nntpdir = nntp
-nntpobj = $(nntpdir)/connection.o $(nntpdir)/nntp.o $(nntpdir)/response.o
+nntpobj = $(nntpdir)/lib.o
 endif
 
 ifeq ($(CONFIG_SMB),yes)
 smbdir = smb
-smbobj = $(smbdir)/smb.o
+smbobj = $(smbdir)/lib.o
 endif
 
 ifeq ($(CONFIG_URI_REWRITE),yes)
 rewritedir = rewrite
-rewriteobj = $(rewritedir)/rewrite.o
+rewriteobj = $(rewritedir)/lib.o
 endif
 
 SUBDIRS = \
@@ -84,9 +71,7 @@ SUB_OBJS = \
  $(nntpobj) \
  $(rewriteobj) \
  $(smbobj)
-OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o $(SUB_OBJS)
 
-all-local: libprotocol.a
-libprotocol.a: $(OBJS)
+OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o $(SUB_OBJS)
 
 include $(path_to_top)/Makefile.lib

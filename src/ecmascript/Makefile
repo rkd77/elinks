@@ -5,9 +5,6 @@ INCLUDES += $(SPIDERMONKEY_CFLAGS)
 SUBDIRS = spidermonkey
 
 SM_OBJS = document.o form.o location.o navigator.o unibar.o window.o
-OBJS = ecmascript.o spidermonkey.o $(foreach obj,$(SM_OBJS),spidermonkey/$(obj))
-
-all-local: libecmascript.a
-libecmascript.a: $(OBJS)
+OBJS = ecmascript.o spidermonkey.o spidermonkey/lib.o
 
 include $(path_to_top)/Makefile.lib

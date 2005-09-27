@@ -3,7 +3,4 @@ include $(path_to_top)/Makefile.config
 
 OBJS = forms.o general.o link.o parse.o stack.o table.o
 
-# Do not forget to also add the .o to ../Makefile. Yes, it sucks.
-all-local: $(OBJS)
-
 include $(path_to_top)/Makefile.lib

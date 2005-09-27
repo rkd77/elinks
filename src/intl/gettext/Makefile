@@ -27,9 +27,6 @@ OBJS = \
  plural.o \
  textdomain.o
 
-all-local: libintl.a
-libintl.a: $(OBJS)
-
 
 # $(builddir)/charset.alias: $(srcdir)/config.charset
 $(builddir)/charset.alias: $(srcdir)/config.charset

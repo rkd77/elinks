@@ -24,9 +24,10 @@ quiet_cmd_compile = '      [CC]   $<'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
-quiet_cmd_archive = '      [AR]   $@'
-      cmd_archive = $(AR) r $@ $^
-
+# Rule to compile a set of .o files into one .o file
+quiet_cmd_ld_objs = "      [LD]   $@"
+      cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^)
+ 
    quiet_cmd_link = '    [LINK]   $@'
          cmd_link = $(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
@@ -55,14 +56,16 @@ endif
 			>> .deps/$(*F).P; \
 		rm .deps/$(*F).pp
 
-%.a:
-	$(call cmd,archive)
-
 ifdef OBJS
 CLEAN += $(OBJS)
 
 clean-local:
-	$(RM) $(CLEAN) *.a
+	$(RM) lib.o $(CLEAN)
+
+lib.o: $(OBJS)
+	$(call cmd,ld_objs)
+
+all-local: lib.o
 endif
 
 
