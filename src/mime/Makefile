@@ -5,7 +5,6 @@ SUBDIRS = backend
 
 OBJS = \
  dialogs.o \
- mime.o \
- backend/lib.o \
+ mime.o
 
 include $(path_to_top)/Makefile.lib

@@ -56,6 +56,15 @@ endif
 			>> .deps/$(*F).P; \
 		rm .deps/$(*F).pp
 
+ifdef SUBDIRS
+# Apparently wildcard won't expand *.o files so check if there are any *.c
+# files and use that to magically add the lib.o file of the subdirectory.
+subobjs := $(strip $(foreach subdir,$(SUBDIRS),$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
+endif
+ifneq ($(subobjs),)
+OBJS += $(subobjs)
+endif
+
 ifdef OBJS
 CLEAN += $(OBJS)
 

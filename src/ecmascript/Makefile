@@ -4,7 +4,6 @@ INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
 SUBDIRS = spidermonkey
 
-SM_OBJS = document.o form.o location.o navigator.o unibar.o window.o
-OBJS = ecmascript.o spidermonkey.o spidermonkey/lib.o
+OBJS = ecmascript.o spidermonkey.o
 
 include $(path_to_top)/Makefile.lib

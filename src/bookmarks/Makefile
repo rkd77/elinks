@@ -3,11 +3,6 @@ include $(path_to_top)/Makefile.config
 
 SUBDIRS = backend
 
-ifeq ($(CONFIG_XBEL_BOOKMARKS),yes)
-xbelobj = xbel.o
-endif
-
-BACK_OBJS = common.o default.o $(xbelobj)
-OBJS = bookmarks.o dialogs.o $(foreach obj,$(BACK_OBJS),backend/$(obj))
+OBJS = bookmarks.o dialogs.o
 
 include $(path_to_top)/Makefile.lib

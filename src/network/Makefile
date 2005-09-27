@@ -3,11 +3,10 @@ include $(path_to_top)/Makefile.config
 
 ifeq ($(CONFIG_SSL),yes)
 ssldir = ssl
-sslobj = $(ssldir)/lib.o
 endif
 
 SUBDIRS = $(ssldir)
 
-OBJS = connection.o dns.o progress.o socket.o state.o $(sslobj)
+OBJS = connection.o dns.o progress.o socket.o state.o
 
 include $(path_to_top)/Makefile.lib
