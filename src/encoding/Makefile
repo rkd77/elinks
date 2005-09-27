@@ -9,7 +9,7 @@ ifeq ($(CONFIG_GZIP),yes)
 gzipobj		= gzip.o
 endif
 
-OBJS = encoding.o bzip2.o gzip.o
+OBJS = encoding.o $(bzip2obj) $(gzipobj)
 
 all-l: libencoding.a
 libencoding.a: $(OBJS)
