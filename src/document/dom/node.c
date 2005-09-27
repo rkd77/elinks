@@ -134,12 +134,11 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 	{
 		int length = int_min(key->length, node->length);
 		int string_diff = strncasecmp(key->string, node->string, length);
-		int length_diff = key->length - node->length;
 
 		/* If the lengths or strings don't match strncasecmp() does the
 		 * job else return which ever is bigger. */
 
-		return string_diff ? string_diff : length_diff;
+		return string_diff ? string_diff : key->length - node->length;
 	}
 }
 
