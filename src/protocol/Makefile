@@ -9,10 +9,10 @@ SUBDIRS-$(CONFIG_NNTP)		+= nntp
 SUBDIRS-$(CONFIG_SMB)		+= smb
 SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 
-OBJS-$(CONFIG_DATA)		+= data.o
-
 SUBDIRS = auth file http
 
-OBJS = about.o $(dataobj) date.o header.o protocol.o proxy.o uri.o user.o
+OBJS-$(CONFIG_DATA)		+= data.o
+
+OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o
 
 include $(path_to_top)/Makefile.lib

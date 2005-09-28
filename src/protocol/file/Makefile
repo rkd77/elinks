@@ -1,10 +1,8 @@
 path_to_top=../../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_CGI),yes)
-cgiobj = cgi.o
-endif
+OBJS-$(CONFIG_CGI) += cgi.o
 
-OBJS = file.o $(cgiobj)
+OBJS = file.o
 
 include $(path_to_top)/Makefile.lib

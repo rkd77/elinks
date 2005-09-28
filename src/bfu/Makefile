@@ -1,9 +1,7 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_LEDS),yes)
-ledsobj = leds.o
-endif
+OBJS-$(CONFIG_LEDS) += leds.o
 
 OBJS = \
  button.o \
@@ -14,7 +12,6 @@ OBJS = \
  hotkey.o \
  inpfield.o \
  inphist.o \
- $(ledsobj) \
  listbox.o \
  listmenu.o \
  menu.o \

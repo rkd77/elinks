@@ -1,9 +1,7 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_MOUSE),yes)
-mouseobj = mouse.o
-endif
+OBJS-$(CONFIG_MOUSE) += mouse.o
 
 OBJS = \
  color.o \
@@ -11,7 +9,6 @@ OBJS = \
  event.o \
  hardio.o \
  kbd.o \
- $(mouseobj) \
  screen.o \
  tab.o \
  terminal.o \

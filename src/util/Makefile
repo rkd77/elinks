@@ -1,30 +1,15 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_DEBUG),yes)
-debugobj = memdebug.o
-endif
+# Reverse a CONFIG_* string
+# Usage $(call not,$(CONFIG_FOO))
+not = $(if $(findstring yes,$(1)),no,yes)
 
-ifeq ($(CONFIG_MD5),yes)
-md5obj = md5.o
-endif
-
-ifeq ($(CONFIG_SCANNER),yes)
-scannerobj = scanner.o
-endif
-
-ifeq ($(CONFIG_SHA1),yes)
-sha1obj = sha1.o
-endif
-
-ifeq ($(CONFIG_SMALL),yes)
-else
-fastfindobj = fastfind.o
-endif
-
-ifeq ($(CONFIG_MOUSE),yes)
-mouseobj = mouse.o
-endif
+OBJS-$(CONFIG_DEBUG)		 += memdebug.o
+OBJS-$(CONFIG_MD5)		 += md5.o
+OBJS-$(CONFIG_SCANNER)		 += scanner.o
+OBJS-$(CONFIG_SHA1)		 += sha1.o
+OBJS-$(call not,$(CONFIG_SMALL)) += fastfind.o
 
 OBJS = \
  base64.o \
@@ -39,11 +24,6 @@ OBJS = \
  secsave.o \
  snprintf.o \
  string.o \
- time.o \
- $(debugobj) \
- $(fastfindobj) \
- $(md5obj) \
- $(scannerobj) \
- $(sha1obj)
+ time.o
 
 include $(path_to_top)/Makefile.lib

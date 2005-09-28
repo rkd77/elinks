@@ -1,10 +1,8 @@
 path_to_top=../..
 include $(path_to_top)/Makefile.config
 
-ifeq ($(CONFIG_INTERLINK),yes)
-interlinkobj = interlink.o
-endif
+OBJS-$(CONFIG_INTERLINK) += interlink.o
 
-OBJS = event.o $(interlinkobj) main.o module.o select.o timer.o version.o
+OBJS = event.o main.o module.o select.o timer.o version.o
 
 include $(path_to_top)/Makefile.lib
