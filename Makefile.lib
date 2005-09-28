@@ -17,6 +17,7 @@ endif
 CURPATH = $(shell pwd)
 TOPPATH = $(shell cd $(path_to_top) && pwd)
 RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,')
+RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z]\)$$,\1/,')
 
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
@@ -24,19 +25,19 @@ ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
-quiet_cmd_compile = '      [CC]   $(RELPATH)/$<'
+quiet_cmd_compile = '      [CC]   $(RELPATH)$<'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
 # Rule to compile a set of .o files into one .o file
-quiet_cmd_ld_objs = "      [LD]   $(RELPATH)/$@"
+quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^)
  
-   quiet_cmd_link = '    [LINK]   $(RELPATH)/$@'
+   quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
          cmd_link = $(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
-quiet_cmd_recmake = "[MAKE $$target]   $(RELPATH)/$$subdir"
+quiet_cmd_recmake = "[MAKE $$target]   $(RELPATH)$$subdir"
       cmd_recmake = $(MAKE) -C $$subdir $$target
 
 
