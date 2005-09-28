@@ -41,6 +41,7 @@ elinks: lib.o
 	$(call cmd,link)
 
 install-local:
+	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
 	$(INSTALL_PROGRAM) elinks $(DESTDIR)$(bindir)
 
 include $(path_to_top)/Makefile.lib
