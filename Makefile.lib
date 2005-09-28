@@ -16,7 +16,6 @@ endif
 
 CURPATH = $(shell pwd)
 TOPPATH = $(shell cd $(path_to_top) && pwd)
-RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,')
 RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z]\)$$,\1/,')
 
 # Show the command (quiet or non-quiet version based on the assignment
