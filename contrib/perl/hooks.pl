@@ -336,7 +336,15 @@ second parameter.  It returns the mapped target URL.
 			}
 			$url =~ s/!bork!/$bork/;
 		}
-		$url .= $search if $search;
+		if ($search)
+		{
+			$search =~ s/%/%25/g;
+			$search =~ s/&/%26/g;
+			$search =~ s/\s/%20/g;
+			$search =~ s/\+/%2b/g;
+			$search =~ s/#/%23/g;
+			$url .= $search;
+		}
 		return $url;
 	}
 
