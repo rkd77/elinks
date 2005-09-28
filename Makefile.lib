@@ -67,7 +67,8 @@ endif
 ifdef SUBDIRS
 # Apparently wildcard won't expand *.o files so check if there are any *.c
 # files and use that to magically add the lib.o file of the subdirectory.
-subobjs := $(strip $(foreach subdir,$(sort $(SUBDIRS)),$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
+subobjs := $(strip $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
+		$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
 endif
 ifneq ($(subobjs),)
 OBJS += $(subobjs)
