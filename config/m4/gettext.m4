@@ -183,36 +183,34 @@ strdup strtoul tsearch __argz_count __argz_stringify __argz_next])
    AM_LC_MESSAGES
    AM_WITH_NLS([$1],[$2],[$3])
 
-   if test "x$CATOBJEXT" != "x"; then
-     if test "x$ALL_LINGUAS" = "x"; then
-       LINGUAS=
-     else
-       AC_MSG_CHECKING(for catalogs to be installed)
-       NEW_LINGUAS=
-       for presentlang in $ALL_LINGUAS; do
-         useit=no
-         for desiredlang in ${LINGUAS-$ALL_LINGUAS}; do
-           # Use the presentlang catalog if desiredlang is
-           #   a. equal to presentlang, or
-           #   b. a variant of presentlang (because in this case,
-           #      presentlang can be used as a fallback for messages
-           #      which are not translated in the desiredlang catalog).
-           case "$desiredlang" in
-             "$presentlang"*) useit=yes;;
-           esac
-         done
-         if test $useit = yes; then
-           NEW_LINGUAS="$NEW_LINGUAS $presentlang"
-         fi
+   if test "x$ALL_LINGUAS" = "x"; then
+     LINGUAS=
+   else
+     AC_MSG_CHECKING(for catalogs to be installed)
+     NEW_LINGUAS=
+     for presentlang in $ALL_LINGUAS; do
+       useit=no
+       for desiredlang in ${LINGUAS-$ALL_LINGUAS}; do
+         # Use the presentlang catalog if desiredlang is
+         #   a. equal to presentlang, or
+         #   b. a variant of presentlang (because in this case,
+         #      presentlang can be used as a fallback for messages
+         #      which are not translated in the desiredlang catalog).
+         case "$desiredlang" in
+           "$presentlang"*) useit=yes;;
+         esac
        done
-       LINGUAS=$NEW_LINGUAS
-       AC_MSG_RESULT($LINGUAS)
-     fi
+       if test $useit = yes; then
+         NEW_LINGUAS="$NEW_LINGUAS $presentlang"
+       fi
+     done
+     LINGUAS=$NEW_LINGUAS
+     AC_MSG_RESULT($LINGUAS)
+   fi
 
-     dnl Construct list of names of catalog files to be constructed.
-     if test -n "$LINGUAS"; then
-       for lang in $LINGUAS; do CATALOGS="$CATALOGS $lang$CATOBJEXT"; done
-     fi
+   dnl Construct list of names of catalog files to be constructed.
+   if test -n "$LINGUAS"; then
+     for lang in $LINGUAS; do CATALOGS="$CATALOGS $lang.gmo"; done
    fi
 
    dnl If the AC_CONFIG_AUX_DIR macro for autoconf is used we possibly
