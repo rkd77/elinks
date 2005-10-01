@@ -52,10 +52,6 @@ AC_DEFUN([AM_WITH_NLS],
     AC_MSG_RESULT($CONFIG_NLS)
     AC_SUBST(CONFIG_NLS)
 
-    BUILD_INCLUDED_LIBINTL=no
-    USE_INCLUDED_LIBINTL=no
-    INTLLIBS=
-
     AM_CONDITIONAL(CONFIG_NLS, test "$CONFIG_NLS" = "yes")
 
     dnl If we use NLS figure out what method
@@ -74,17 +70,12 @@ dnl      AC_MSG_RESULT($nls_cv_force_use_gnu_gettext)
       nls_cv_use_gnu_gettext=yes
 
       dnl Mark actions used to generate GNU NLS library.
-      INTLOBJS="\$(GETTOBJS)"
       AM_PATH_PROG_WITH_TEST(MSGFMT, msgfmt,
 	[$ac_dir/$ac_word --statistics /dev/null >/dev/null 2>&1], :)
       AC_PATH_PROG(GMSGFMT, gmsgfmt, $MSGFMT)
       AM_PATH_PROG_WITH_TEST(XGETTEXT, xgettext,
 	[$ac_dir/$ac_word --omit-header /dev/null >/dev/null 2>&1], :)
       AC_SUBST(MSGFMT)
-      BUILD_INCLUDED_LIBINTL=yes
-      USE_INCLUDED_LIBINTL=yes
-      CATOBJEXT=.gmo
-      INTLLIBS="ifelse([$3],[],\$(top_builddir)/src/intl/gettext,[$3])/libintl.ifelse([$1], use-libtool, [l], [])a"
       LIBS=`echo " $LIBS " | sed -e 's/ -lintl / /' -e 's/^ //' -e 's/ $//'`
       LIBS="$LIBS $LIBICONV"
 
@@ -115,17 +106,8 @@ dnl      AC_MSG_RESULT($nls_cv_force_use_gnu_gettext)
 	  XGETTEXT=":"
 	fi
       fi
-
-      dnl We need to process the po/ directory.
-      POSUB=po
     fi
 
-
-    dnl If this is used in GNU gettext we have to set BUILD_INCLUDED_LIBINTL
-    dnl to 'yes' because some of the testsuite requires it.
-    if test "$PACKAGE" = gettext; then
-      BUILD_INCLUDED_LIBINTL=yes
-    fi
 
     dnl intl/plural.c is generated from intl/plural.y. It requires bison,
     dnl because plural.y uses bison specific features. It requires at least
@@ -163,35 +145,15 @@ changequote([,])dnl
     dnl in configure.in.
     for lang in $ALL_LINGUAS; do
       GMOFILES="$GMOFILES $lang.gmo"
-      POFILES="$POFILES $lang.po"
     done
 
     dnl Make all variables we use known to autoconf.
-    AC_SUBST(BUILD_INCLUDED_LIBINTL)
-    AC_SUBST(USE_INCLUDED_LIBINTL)
     AC_SUBST(CATALOGS)
-    AC_SUBST(CATOBJEXT)
     AC_SUBST(GMOFILES)
-    AC_SUBST(INTLLIBS)
-    AC_SUBST(INTLOBJS)
-    AC_SUBST(POFILES)
-    AC_SUBST(POSUB)
 
     dnl For backward compatibility. Some configure.ins may be using this.
     nls_cv_header_intl=
     nls_cv_header_libgt=
-
-    dnl For backward compatibility. Some Makefiles may be using this.
-    DATADIRNAME=share
-    AC_SUBST(DATADIRNAME)
-
-    dnl For backward compatibility. Some Makefiles may be using this.
-    INSTOBJEXT=.mo
-    AC_SUBST(INSTOBJEXT)
-
-    dnl For backward compatibility. Some Makefiles may be using this.
-    GENCAT=gencat
-    AC_SUBST(GENCAT)
   ])
 
 dnl Usage: Just like AM_WITH_NLS, which see.
