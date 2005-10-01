@@ -117,8 +117,9 @@ install-local-yes:
 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
 	  $(MKINSTALLDIRS) $(DESTDIR)$$dir; \
 	  if test -r $(srcdir)/$$cat; then \
-	    $(INSTALL_DATA) $(srcdir)/$$cat $(DESTDIR)$$dir/$(PACKAGE).mo; \
-	    echo "installing $$cat as $(DESTDIR)$$dir/$(PACKAGE).mo"; \
+	    podir=./$(srcdir); \
+	    if test "$$(cd $$podir && pwd)" = "$$(pwd)"; then podir=; fi; \
+	    $(call ncmd,installdata,$$podir$$cat,$(DESTDIR)$$dir/$(PACKAGE).mo); \
 	  else \
 	    echo "Error: Cannot find $$cat"; \
 	  fi; \

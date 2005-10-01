@@ -1,9 +1,6 @@
 path_to_top=../../..
 include $(path_to_top)/Makefile.config
 
-install-local:
-	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	$(INSTALL_DATA) elinks.conf.5 $(DESTDIR)$(mandir)/man5
-	$(INSTALL_DATA) elinkskeys.5 $(DESTDIR)$(mandir)/man5
+MAN5 = elinks.conf.5 elinkskeys.5
 
 include $(path_to_top)/Makefile.lib
