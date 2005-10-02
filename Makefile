@@ -1,10 +1,44 @@
 path_to_top = .
 -include $(path_to_top)/Makefile.config
 
-# TODO: Automagically rerun autoconf.
-
 SUBDIRS = doc po src
 CLEAN	= features.log
+
+all-recursive: config.h
+
+# Automagically rerun autotools
+config.status: $(top_srcdir)/configure
+	$(SHELL) ./config.status --recheck
+
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+$(ACLOCAL_M4): configure.in acinclude.m4
+	cd $(top_srcdir) && $(ACLOCAL)
+
+$(top_srcdir)/configure: $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && $(AUTOCONF)
+
+config.h: stamp-h
+	@if test ! -f $@; then \
+		rm -f stamp-h; \
+		$(MAKE) stamp-h; \
+	else :; fi
+
+stamp-h: $(top_srcdir)/config.h.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
+	     $(SHELL) ./config.status
+	@echo timestamp > stamp-h 2> /dev/null
+
+$(top_srcdir)/config.h.in: $(top_srcdir)/stamp-h.in
+	@if test ! -f $@; then \
+		rm -f $(top_srcdir)/stamp-h.in; \
+		$(MAKE) $(top_srcdir)/stamp-h.in; \
+	else :; fi
+
+$(top_srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOHEADER)
+	@echo timestamp > $(top_srcdir)/stamp-h.in 2> /dev/null
+
 
 ifeq ($(wildcard Makefile.config),)
 # Catch all
