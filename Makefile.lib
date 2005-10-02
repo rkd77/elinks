@@ -85,18 +85,21 @@ OBJS += $(subobjs)
 endif
 
 ifdef OBJS
-CLEAN += $(OBJS)
-
-clean-local:
-	$(RM) lib.o $(CLEAN)
-
 lib.o: $(sort $(OBJS))
 	$(call cmd,ld_objs)
 
-all-local: lib.o
+LIB_O = lib.o
+CLEAN += $(OBJS) $(LIB_O)
 endif
 
-install-local:
+CLEAN += $(PROG)
+
+all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
+
+clean-default:
+	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
+
+install-default: all-default
 ifdef PROGS
 	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
 	@for file in $(PROGS); do \
@@ -127,9 +130,9 @@ ifdef SUBDIRS
 	done
 endif
 
-all: all-recursive all-local
-install: install-recursive install-local
-clean: clean-recursive clean-local
+all: all-recursive all-default all-local
+install: install-recursive install-default install-local
+clean: clean-recursive clean-default clean-local
 
 all-local:
 install-local:
