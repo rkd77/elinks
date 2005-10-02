@@ -158,6 +158,9 @@ Control a remote \fIELinks\fR instance by passing commands to it\&. The option t
  addBookmark(URL): bookmark URL
 .TP
 \(bu
+ infoBox(text): show text in a message box
+.TP
+\(bu
  xfeDoCommand(openBrowser): open new window
 .LP
 .RE
