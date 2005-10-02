@@ -44,7 +44,7 @@ CONFIG_JW="no"
 
 if test "x$CONFIG_DOC" != xno; then
 	AC_PATH_PROGS(ASCIIDOC, "asciidoc")
-      	if test "x$ASCIIDOC" != "x"; then
+	if test "x$ASCIIDOC" != "x"; then
 		EL_CONFIG(CONFIG_ASCIIDOC, [AsciiDoc])
 		EL_CONFIG(MANUAL_ASCIIDOC, [HTML (one file)])
 		EL_CONFIG(MAN_ASCIIDOC, [HTML])
@@ -414,11 +414,9 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzdopen,
 	[  --without-zlib          disable zlib support])
-AC_SUBST(CONFIG_GZIP)
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
-AC_SUBST(CONFIG_BZIP2)
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
@@ -431,7 +429,6 @@ EL_SAVE_FLAGS
 
 EL_ARG_ENABLE(CONFIG_BOOKMARKS, bookmarks, [Bookmarks],
 	      [  --disable-bookmarks     disable bookmark support])
-AC_SUBST(CONFIG_BOOKMARKS)
 
 # Check whether --enable-xbel or --disable-xbel was given.
 if test "x${enable_xbel}" != xno; then
@@ -449,8 +446,6 @@ fi
 EL_ARG_DEPEND(CONFIG_XBEL_BOOKMARKS, xbel, [CONFIG_BOOKMARKS:yes HAVE_LIBEXPAT:yes],
 	      [XBEL bookmarks],
 	      [  --disable-xbel          disable XBEL bookmark support (requires expat)])
-
-AC_SUBST(CONFIG_XBEL_BOOKMARKS)
 
 if test "$CONFIG_XBEL_BOOKMARKS" != yes; then
 	EL_RESTORE_FLAGS
@@ -777,7 +772,6 @@ fi
 AC_SUBST(CONFIG_SPIDERMONKEY)
 
 EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SPIDERMONKEY], [ECMAScript (JavaScript)])
-AC_SUBST(CONFIG_ECMASCRIPT)
 
 
 dnl ===================================================================
@@ -932,7 +926,6 @@ dnl Final SSL setup
 EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS], [SSL])
 AC_SUBST(CONFIG_OPENSSL)
 AC_SUBST(CONFIG_GNUTLS)
-AC_SUBST(CONFIG_SSL)
 
 #endif
 
@@ -1010,72 +1003,56 @@ dnl ===================================================================
 
 EL_ARG_ENABLE(CONFIG_COOKIES, cookies, [Cookies],
 	      [  --disable-cookies       disable cookie support])
-AC_SUBST(CONFIG_COOKIES)
 
 EL_ARG_ENABLE(CONFIG_FORMHIST, formhist, [Form history],
 	      [  --disable-formhist      disable form history support])
-AC_SUBST(CONFIG_FORMHIST)
 
 EL_ARG_ENABLE(CONFIG_GLOBHIST, globhist, [Global history],
 	      [  --disable-globhist      disable global history support])
-AC_SUBST(CONFIG_GLOBHIST)
 
 
 EL_ARG_ENABLE(CONFIG_MAILCAP, mailcap, [Mailcap],
 	      [  --disable-mailcap       disable mailcap support])
-AC_SUBST(CONFIG_MAILCAP)
 
 EL_ARG_ENABLE(CONFIG_MIMETYPES, mimetypes, [Mimetypes files],
 	      [  --disable-mimetypes     disable mimetypes files support])
-AC_SUBST(CONFIG_MIMETYPES)
 
 
 EL_ARG_DEPEND(CONFIG_IPV6, ipv6,
 	      [HAVE_SA_STORAGE:yes HAVE_SA_IN6:yes HAVE_ADDRINFO:yes HAVE_GETADDRINFO:yes],
 	      [IPv6],
 	      [  --disable-ipv6          disable IPv6 support])
-AC_SUBST(CONFIG_IPV6)
 
 EL_ARG_ENABLE(CONFIG_BITTORRENT, bittorrent, [BitTorrent protocol],
 	      [  --enable-bittorrent     enable BitTorrent protocol support])
-AC_SUBST(CONFIG_BITTORRENT)
 
 EL_ARG_ENABLE(CONFIG_DATA, data, [Data protocol],
 	      [  --disable-data          disable data protocol support])
-AC_SUBST(CONFIG_DATA)
 
 EL_ARG_ENABLE(CONFIG_URI_REWRITE, uri-rewrite, [URI rewriting],
 	      [  --disable-uri-rewrite   disable URI rewrite support])
-AC_SUBST(CONFIG_URI_REWRITE)
 
 EL_ARG_DEPEND(CONFIG_CGI, cgi, [HAVE_SETENV_OR_PUTENV:yes], [Local CGI],
 	      [  --enable-cgi            enable local CGI support])
-AC_SUBST(CONFIG_CGI)
 
 EL_ARG_ENABLE(CONFIG_FINGER, finger, [Finger protocol],
 	      [  --enable-finger         enable finger protocol support])
-AC_SUBST(CONFIG_FINGER)
 
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
-AC_SUBST(CONFIG_FTP)
 
 EL_ARG_ENABLE(CONFIG_GOPHER, gopher, [Gopher protocol],
 	      [  --enable-gopher         enable gopher protocol support])
-AC_SUBST(CONFIG_GOPHER)
 
 EL_ARG_ENABLE(CONFIG_NNTP, nntp, [NNTP protocol],
 	      [  --enable-nntp           enable nntp protocol support])
-AC_SUBST(CONFIG_NNTP)
 
 EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
 	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
-AC_SUBST(CONFIG_SMB)
 
 
 EL_ARG_ENABLE(CONFIG_MOUSE, mouse, [Mouse handling],
 	      [  --disable-mouse         disable mouse support])
-AC_SUBST(CONFIG_MOUSE)
 
 # GPM mouse is Linux specific, so ...
 CONFIG_SYSMOUSE=yes
@@ -1083,67 +1060,52 @@ EL_ARG_DEPEND(CONFIG_SYSMOUSE, sysmouse,
 	      [CONFIG_MOUSE:yes CONFIG_GPM:no HAVE_SYSMOUSE_HEADER:yes],
 	      [BSD sysmouse],
 	      [  --disable-sysmouse      disable BSD sysmouse support])
-AC_SUBST(CONFIG_SYSMOUSE)
 
 EL_ARG_ENABLE(CONFIG_88_COLORS, 88-colors, [88 colors],
 	      [  --enable-88-colors     enable 88 color support])
-AC_SUBST(CONFIG_256_COLORS)
 
 EL_ARG_ENABLE(CONFIG_256_COLORS, 256-colors, [256 colors],
 	      [  --enable-256-colors     enable 256 color support])
-AC_SUBST(CONFIG_256_COLORS)
 
 
 EL_ARG_ENABLE(CONFIG_EXMODE, exmode, [Exmode interface],
 	      [  --enable-exmode         enable exmode (CLI) interface])
-AC_SUBST(CONFIG_EXMODE)
 
 EL_ARG_ENABLE(CONFIG_LEDS, leds, [LEDs],
 	      [  --disable-leds          disable LEDs support])
-AC_SUBST(CONFIG_LEDS)
 
 EL_ARG_ENABLE(CONFIG_MARKS, marks, [Marks],
 	      [  --disable-marks         disable document marks support])
-AC_SUBST(CONFIG_MARKS)
 
 
 EL_ARG_ENABLE(CONFIG_CSS, css, [Cascading Style Sheets],
 	      [  --disable-css           disable Cascading Style Sheet support])
-AC_SUBST(CONFIG_CSS)
 
 EL_ARG_DEPEND(CONFIG_HTML_HIGHLIGHT, html-highlight, [CONFIG_CSS:yes], [HTML highlighting],
 	      [  --enable-html-highlight HTML highlighting using DOM engine])
-AC_SUBST(CONFIG_HTML_HIGHLIGHT)
 
 dnl Everything in the tree already uses CONFIG_DOM
 dnl so resolve CONFIG_HTML_HIGHLIGHT to CONFIG_DOM
 EL_CONFIG_DEPENDS(CONFIG_DOM, [CONFIG_HTML_HIGHLIGHT], [DOM engine])
-AC_SUBST(CONFIG_DOM)
 
 EL_ARG_DEPEND(CONFIG_BACKTRACE, backtrace, [HAVE_EXECINFO:yes], [Backtrace],
 	      [  --disable-backtrace     disable backtrace support])
-AC_SUBST(CONFIG_BACKTRACE)
 
 EL_ARG_DEPEND(CONFIG_NO_ROOT_EXEC, no-root, [HAVE_GETUID:yes HAVE_GETEUID:yes], [No root exec],
 	      [  --enable-no-root        enable prevention of usage by root])
-AC_SUBST(CONFIG_NO_ROOT_EXEC)
 
 
 EL_ARG_ENABLE(CONFIG_DEBUG, debug, [Debug mode],
 	      [  --enable-debug          enable leak debug and internal error checking])
-AC_SUBST(CONFIG_DEBUG)
 
 EL_ARG_DEPEND(CONFIG_FASTMEM, fastmem, [CONFIG_DEBUG:no], [Fast mode],
               [  --enable-fastmem        enable direct use of system allocation functions, not usable with --enable-debug])
-AC_SUBST(CONFIG_FASTMEM)
 
 EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
               [  --enable-own-libc       force use of internal functions instead of those of system libc])
-AC_SUBST(CONFIG_OWN_LIBC)
 
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
-AC_SUBST(CONFIG_SMALL)
 
 if test "$CONFIG_OPENSSL" != yes &&
    test "$CONFIG_GNUTLS_OPENSSL_COMPAT" != yes ||

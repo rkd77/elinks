@@ -33,6 +33,7 @@ AC_DEFUN([EL_LOG_CONFIG],
 	fi
 
 	echo "$about $dots $value" >> features.log
+	AC_SUBST([$1])
 ])
 
 dnl EL_CONFIG_DEPENDS(define, CONFIG_* dependencies, what)
