@@ -36,7 +36,6 @@ OBJS = vernum.o
 vernum.o: FORCE
 FORCE:
 
-all-local: elinks
 elinks: lib.o
 	$(call cmd,link)
 
