@@ -129,7 +129,7 @@ install-local-yes:
 # then the dependence on `distdir' will take care of copying.
 dist: update-po distdir
 
-clean:
+clean-local:
 	rm -f $(PACKAGE).po *.new.po
 
 include $(path_to_top)/Makefile.lib
