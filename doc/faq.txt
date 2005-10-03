@@ -8,7 +8,7 @@ while on the mailing list.
 
 [[instances]]
 I rebuilt/upgraded/reconfigured ELinks and restarted it, but it looks like nothing has changed!
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ELinks instances connect together so that they share the cache, bookmarks,
 cookies, configuration, etc.  Only the "master" ELinks instance does any real
