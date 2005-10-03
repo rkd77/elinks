@@ -55,4 +55,6 @@ include::remote.txt[]
 
 include::exmode.txt[]
 
+include::bittorrent.txt[]
+
 include::lua-scripting.txt[]

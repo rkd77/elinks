@@ -1,0 +1,120 @@
+ELinks BitTorrent Client
+------------------------
+
+This chapter provides a small manual for using the implemented
+BitTorrent client. The BitTorrent client is provided as an optional
+add-on for ELinks, and needs to be enabled at compile time.  To build
+ELinks with BitTorrent support be sure to either pass
+`--enable-bittorrent` to `./configure` or change the value of
+`CONFIG_BITTORRENT` to `yes` in `features.conf`.
+
+Using the BitTorrent Client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To start the client, first go to a site which offers metainfo files. In
+the following, we will use the site link:http://www.legaltorrents.com/[].
+Direct ELinks to this site by issuing the command:
+
+	$ elinks http://www.legaltorrents.com/
+
+Use the arrow keys to move between links on the page. Find a link,
+which points to a metainfo file (a file having the extension
+`.torrent`). This is indicated in the status bar in the bottom line.
+Once a metainfo file has been located, press the Return key. This
+should present you with the following dialog, querying whether the
+client should start to download the torrent:
+
+	+--------------------------- What to do? ----------------------------+
+	|                                                                    |
+	|  What would you like to do with the file 'go-open-vol-2.torrent'?  |
+	|  Information about the torrent:                                    |
+	|  Size: 739 MiB (2959 * 262144 + 161542)                            |
+	|  Info hash: d85ef7b05288dc49203a7de97545e6c132834011               |
+	|  Announce URI: http://www.legaltorrents.com:7070/announce          |
+	|  Creation date: Jun 26 08:04                                       |
+	|  Directory: go-open-vol-2                                          |
+	|                                                                    |
+	|  [X] 105 MiB go-open-episode-07.mp4                                |
+	|  [X] 105 MiB go-open-episode-08.mp4                                |
+	|  [X] 105 MiB go-open-episode-09.mp4                                |
+	|  [X] 104 MiB go-open-episode-10.mp4                                |
+	|  [X] 105 MiB go-open-episode-11.mp4                                |
+	|  [X] 107 MiB go-open-episode-12.mp4                                |
+	|  [X] 106 MiB go-open-episode-13.mp4                                |
+	|  [X]  22 KiB go-open-vol-2.txt                                     |
+	|                                                                    |
+	|  [ Download ]  [ Save ]  [ Display ]  [ Show header ]  [ Cancel ]  |
+	+--------------------------------------------------------------------+
+
+Press the `[ Download ]` button to open the download dialog and start
+downloading.
+
+Downloaded files can be found in the directory specified by the option
+`document.download.directory`.  There is currently no way to change
+that.
+
+The Resume Dialog
+~~~~~~~~~~~~~~~~~
+
+If you start downloading a torrent which was previously active, the
+client will first try to resume downloaded data from the disk. The
+resume progress is shown in the resume dialog, depicted below:
+
+	+----------------------------------------- Download -------------------------------------+
+	|                                                                                        |
+	| bittorrent:http://www.legaltorrents.com/bit/blue-a-short-film.torrent                  |
+	|                                                                                        |
+	| [||||||||||||||||||||||||||               26%                                        ] |
+	|                                                                                        |
+	| Resuming                                                                               |
+	|                                                                                        |
+	| [ Background ] [ Background with notify ] [ Info ] [ Abort ] [ Abort and delete file ] |
+	+----------------------------------------------------------------------------------------+
+
+Wait until the resume completes. It will automatically launch the
+download dialog.
+
+The Download Dialog
+~~~~~~~~~~~~~~~~~~~
+
+The download dialog gives an overview of the state of the download,
+such as progress, and a summary of which places in the torrent pieces
+have been downloaded from. A view of the download dialog along with
+highlights of the most important parts of the dialog is given below:
+
+	+---------------------------------------------- Download --------------------------------+
+	|                                                                                        |
+	|  bittorrent:http://www.legaltorrents.com/bit/best-of-webbed-hand-vol-1.torrent         |
+	|                                                                                        |
+	|  [|||||||||                                9%                                       ]  |
+	|                                                                                        |
+	|  [| |||||||||||||||||||  |  |                                                    |  ]  |
+	|                                                                                        |
+	|  Received 65 MiB of 681 MiB                                                            |
+	|  Average speed 269 KiB/s, current speed 291 KiB/s                                      |
+	|  Elapsed time 4:08, estimated time 38:58                                               |
+	|                                                                                        |
+	|  Status: downloading (rarest first)                                                    |
+	|  Peers: 7 connections, 5 seeders, 0 available                                          |
+	|  Upload: 816 KiB, 3.2 KiB/s, 3.2 KiB/s average, 1:1 in 5:36:06                         |
+	|  Sharing: 0.012 (816 KiB uploaded / 65 MiB downloaded)                                 |
+	|  Pieces: 242 completed, 22 in progress, 2485 remaining                                 |
+	|  Statistics: 9 in memory                                                               |
+	|                                                                                        |
+	| [ Background ] [ Background with notify ] [ Info ] [ Abort ] [ Abort and delete file ] |
+	+----------------------------------------------------------------------------------------+
+
+The first bar shows the overall progress of the download along with a
+percentage of how much data has been downloaded. The second bar
+provides an overview of the piece completion progress, such as where
+in the torrent pieces has been downloaded from.
+
+Below the information about download speed and time estimations,
+several lines about the internal state of the client and its view of
+the swarm is displayed. For example the `Status` line shows which
+connection mode the client has entered along with the piece selection
+strategy if any. Here you will also find information about upload
+speed and sharing rates. Finally, the `Pieces` and `Statistics` lines
+display information from the piece cache. This includes the number of
+pieces which are currently held in memory, and the number of pieces
+currently being downloaded.
