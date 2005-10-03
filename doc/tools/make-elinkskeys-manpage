@@ -52,6 +52,15 @@ print_keymap_actions()
 {
 	keymap=$1
 
+	case "$DOCTYPE" in
+	html)
+		#     open-link-in-new-tab-in-background
+		echo '`----------------------------------`----------------------------------------------------------------------------'
+		echo 'Action                             Description'
+		echo '----------------------------------------------------------------------------------------------------------------'
+		;;
+	esac
+
 	grep ACTION_ "$CONFIGDIR/actions-$keymap.inc" \
 	| while read entry;
 	do
@@ -61,16 +70,38 @@ print_keymap_actions()
 		[ "$action" = "none" ] && continue
 		[ "$action" = " *scripting-function*" ] && continue
 
-		echo
-		echo "$action::"
-		echo "	$caption."
+		case "$DOCTYPE" in
+		man)
+			echo
+			echo "$action::"
+			echo "	$caption."
+			;;
+		html)
+			printf "%-34s %s\n" "$action" "$caption"
+			;;
+		esac
 	done
+
+	case "$DOCTYPE" in
+	html)
+		echo '---------------------------------------------------------------------------------------------------------------'
+		;;
+	esac
 }
 
 print_keymap_defaults()
 {
 	keymap="$1"
 	KEYMAP=$(echo $1 | tr '[a-z]' '[A-Z]')
+
+	case "$DOCTYPE" in
+	html)
+		#     Ctrl-Insert
+		echo '`-----------`-------------------------------------------------------------------------------'
+		echo 'Key         Description (Action)'
+		echo '--------------------------------------------------------------------------------------------'
+		;;
+	esac
 
 	grep ACT_$KEYMAP $KBDBIND | grep '^[[:space:]]{' | grep -v '{ "' \
 	| while read entry
@@ -103,10 +134,23 @@ print_keymap_defaults()
 		*)	modifier=""	 ;;
 		esac
 
-		echo
-		echo "'$modifier$key'::"
-		echo "	$action"
+		case "$DOCTYPE" in
+		man)
+			echo
+			echo "'$modifier$key'::"
+			echo "	$action"
+			;;
+		html)
+			printf "%-11s %s\n" "$modifier$key" "$action"
+			;;
+		esac
 	done
+
+	case "$DOCTYPE" in
+	html)
+		echo '--------------------------------------------------------------------------------------------'
+		;;
+	esac
 }
 
 cat << __END__
