@@ -33,7 +33,7 @@ quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^)
  
    quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
-         cmd_link = $(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
+         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
 quiet_cmd_recmake = "[MAKE $$target]   $(RELPATH)$$subdir"
