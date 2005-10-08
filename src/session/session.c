@@ -821,8 +821,16 @@ setup_first_session(struct session *ses, struct uri *uri)
 static void
 setup_session(struct session *ses, struct uri *uri, struct session *base)
 {
-	if (base && have_location(base))
+	if (base && have_location(base)) {
 		goto_uri(ses, cur_loc(base)->vs.uri);
+		if (ses->doc_view && ses->doc_view->vs
+		    && base->doc_view && base->doc_view->vs) {
+			struct view_state *vs = ses->doc_view->vs;
+
+			destroy_vs(vs, 1);
+			copy_vs(vs, base->doc_view->vs);
+		}
+	}
 
 	if (uri) {
 		goto_uri(ses, uri);
