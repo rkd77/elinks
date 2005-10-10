@@ -15,6 +15,7 @@
 #include "elinks.h"
 
 #include "bookmarks/bookmarks.h"
+#include "config/options.h"
 #include "intl/gettext/libintl.h"
 #include "main/main.h"
 #include "main/object.h"
@@ -161,7 +162,8 @@ destroy_all_terminals(void)
 static void
 check_if_no_terminal(void)
 {
-	program.terminate = list_empty(terminals);
+	program.terminate = list_empty(terminals)
+			    && !get_opt_bool("ui.sessions.keep_session_active");
 }
 
 void

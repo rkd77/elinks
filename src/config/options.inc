@@ -1192,6 +1192,10 @@ static struct option_info config_options_info[] = {
 		"sessions", OPT_SORT,
 		N_("Sessions settings.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
+		"keep_session_active", 0, 0,
+		N_("Keep the session active even if the last terminal exits.")),
+
 	INIT_OPT_BOOL("ui.sessions", N_("Auto save session"),
 		"auto_save", 0, 0,
 		N_("Automatically save the session when quitting.\n"
