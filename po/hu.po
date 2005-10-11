@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-05-01 20:48+0000\n"
-"PO-Revision-Date: 2005-05-01 22:57+0000\n"
+"PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -331,6 +331,11 @@ msgid ""
 "kept across ELinks sessions. If disabled all folders will\n"
 "appear unexpanded next time ELinks is run."
 msgstr ""
+"A könyvjelzõk mentésekor azt az állapotot is tárolja el, hogy\n"
+"a könyvjelzõkben lévõ mappák nyitott vagy összezárt állapotúak\n"
+"voltak, ezzel megmarad a könyvjelzõ ablak kinézete. Ha ez az\n"
+"opció ki van kapcsolva, az összes mappa be lesz zárva az ELinks\n"
+"következõ indításakor."
 
 #: src/bookmarks/bookmarks.c:74
 msgid "Periodic snapshotting"
@@ -708,6 +713,9 @@ msgid ""
 "The ID maps to information that will be used when creating the\n"
 "new instance. You don't want to use it."
 msgstr ""
+"Az ELinks új ablakban való megnyitásához használható. A megadott\n"
+"ID-vel rendelkezõ példány adatait használja fel az új példány létrehozásához.\n"
+"Ritkán használt opció."
 
 #: src/config/cmdline.c:642
 msgid "Name of directory with configuration file"
@@ -1733,7 +1741,7 @@ msgstr "A linkek sorszámozásának váltogatása"
 
 #: src/config/kbdbind.c:542
 msgid "Toggle plain renderer compression of empty lines"
-msgstr ""
+msgstr "Az üres sorok összevonásának váltogatása"
 
 #: src/config/kbdbind.c:543
 msgid "Toggle wrapping of text"
@@ -2455,6 +2463,10 @@ msgid ""
 "in which links should receive focus when using the keyboard\n"
 "to navigating the document."
 msgstr ""
+"Navigáció a tabindex által megadott sorrend szerint.\n"
+"A HTML elemek TABINDEX attribútuma meghatározza hogy\n"
+"a billentyûzettel történõ navigáció során melyik elem milyen\n"
+"sorrendben következzen egymás után."
 
 #: src/config/options.inc:322
 msgid "Number keys select links"
