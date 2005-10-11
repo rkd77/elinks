@@ -40,16 +40,15 @@ get_char(struct terminal *term, int x, int y)
 	return &term->screen->image[x + term->width * y];
 }
 
-/* TODO: Clearify this piece of magic code. --jonas */
 void
 draw_border_cross(struct terminal *term, int x, int y,
 		  enum border_cross_direction dir, struct color_pair *color)
 {
 	static unsigned char border_trans[2][4] = {
 		/* Used for BORDER_X_{RIGHT,LEFT}: */
-		{ BORDER_SVLINE, BORDER_SRTEE, BORDER_SLTEE, BORDER_SCROSS },
+		{ BORDER_SVLINE, BORDER_SRTEE, BORDER_SLTEE },
 		/* Used for BORDER_X_{DOWN,UP}: */
-		{ BORDER_SHLINE, BORDER_SDTEE, BORDER_SUTEE, BORDER_SCROSS },
+		{ BORDER_SHLINE, BORDER_SDTEE, BORDER_SUTEE },
 	};
 	struct screen_char *screen_char = get_char(term, x, y);
 	unsigned int d;
@@ -57,12 +56,19 @@ draw_border_cross(struct terminal *term, int x, int y,
 	if (!screen_char) return;
 	if (!(screen_char->attr & SCREEN_ATTR_FRAME)) return;
 
+	/* First check if there is already a horizontal/vertical line, so that
+	 * we will have to replace with a T char. Example: if there is a '|'
+	 * and the direction is right, replace with a '|-' T char.
+	 *
+	 * If this is not the case check if there is a T char and we are adding
+	 * the direction so that we end up with a cross. Example : if there is
+	 * a '|-' and the direction is left, replace with a '+' (cross) char. */
 	d = dir>>1;
 	if (screen_char->data == border_trans[d][0]) {
 		screen_char->data = border_trans[d][1 + (dir & 1)];
 
 	} else if (screen_char->data == border_trans[d][2 - (dir & 1)]) {
-		screen_char->data = border_trans[d][3];
+		screen_char->data = BORDER_SCROSS;
 	}
 
 	set_term_color(screen_char, color, 0,
