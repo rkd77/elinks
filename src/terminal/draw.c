@@ -46,8 +46,10 @@ draw_border_cross(struct terminal *term, int x, int y,
 		  enum border_cross_direction dir, struct color_pair *color)
 {
 	static unsigned char border_trans[2][4] = {
+		/* Used for BORDER_X_{RIGHT,LEFT}: */
 		{ BORDER_SVLINE, BORDER_SRTEE, BORDER_SLTEE, BORDER_SCROSS },
-		{ BORDER_SHLINE, /* ? */ 0xc2, /* ? */ 0xc1, BORDER_SCROSS },
+		/* Used for BORDER_X_{DOWN,UP}: */
+		{ BORDER_SHLINE, BORDER_SDTEE, BORDER_SUTEE, BORDER_SCROSS },
 	};
 	struct screen_char *screen_char = get_char(term, x, y);
 	unsigned int d;
