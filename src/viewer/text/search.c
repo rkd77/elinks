@@ -1330,7 +1330,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 
 			opt->value.number = (opt->value.number + 1)
 					    % (opt->max + 1);
-			opt->flags |= OPT_TOUCHED;
+			option_changed(ses, opt, opt);
 		}
 		/* Fall thru */
 
