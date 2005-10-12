@@ -1009,6 +1009,14 @@ call_change_hooks(struct session *ses, struct option *current, struct option *op
 	}
 }
 
+void
+option_changed(struct session *ses, struct option *current, struct option *option)
+{
+	option->flags |= OPT_TOUCHED;
+	/* Notify everyone out there! */
+	call_change_hooks(ses, current, option);
+}
+
 int
 commit_option_values(struct option_resolver *resolvers,
 		     struct option *root, union option_value *values, int size)
