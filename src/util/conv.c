@@ -176,12 +176,12 @@ add_xnum_to_string(struct string *string, off_t xnum)
 	/* Mebi (Mi), 2^20 */
 	if (xnum >= 1024 * 1024) {
 		suff[0] = 'M';
-		d = (xnum / (int) ((int) (1024 * 1024) / (int) 10)) % 10;
+		d = (xnum * (int) 10 / (int) ((int) (1024 * 1024))) % 10;
 		xnum /= 1024*1024;
 	/* Kibi (Ki), 2^10 */
 	} else if (xnum >= 1024) {
 		suff[0] = 'K';
-		d = (xnum / (int) ((int) 1024 / (int) 10)) % 10;
+		d = (xnum * (int) 10 / (int) 1024) % 10;
 		xnum /= 1024;
 	}
 
