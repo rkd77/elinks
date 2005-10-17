@@ -52,6 +52,8 @@ enum border_char {
 	BORDER_SDRCORNER = 217,
 	BORDER_SLTEE	 = 180, /* => the tee points to the left => -| */
 	BORDER_SRTEE	 = 195,
+	BORDER_SDTEE	 = 194,
+	BORDER_SUTEE	 = 193,
 	BORDER_SVLINE	 = 179,
 	BORDER_SHLINE	 = 196,
 	BORDER_SCROSS	 = 197, /* + */

@@ -760,8 +760,9 @@ setup_first_session(struct session *ses, struct uri *uri)
 	}
 
 	if (!get_opt_bool("config.saving_style_w")) {
-		get_opt_bool("config.saving_style_w") = 1;
-		get_opt_rec(config_options, "config.saving_style_w")->flags |= OPT_TOUCHED;
+		struct option *opt = get_opt_rec(config_options, "config.saving_style_w");
+		opt->value.number = 1;
+		option_changed(ses, opt, opt);
 		if (get_opt_int("config.saving_style") != 3) {
 			info_box(term, 0,
 				 N_("Warning"), ALIGN_CENTER,

@@ -956,6 +956,7 @@ toggle_option(struct session *ses, struct option *option)
 
 	/* TODO: call change hooks. --jonas */
 	option->value.number = (number <= option->max) ? number : option->min;
+	option_changed(ses, option, option);
 }
 
 static int
@@ -1007,6 +1008,14 @@ call_change_hooks(struct session *ses, struct option *current, struct option *op
 
 		current = current->root;
 	}
+}
+
+void
+option_changed(struct session *ses, struct option *current, struct option *option)
+{
+	option->flags |= OPT_TOUCHED;
+	/* Notify everyone out there! */
+	call_change_hooks(ses, current, option);
 }
 
 int
