@@ -102,21 +102,18 @@ clean-default:
 install-default: all-default
 ifdef PROGS
 	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	@for file in $(PROGS); do \
-		$(call ncmd,installprog,$$file,$(DESTDIR)$(bindir)); \
-	done
+	$(foreach file,$(PROGS), \
+		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
 endif
 ifdef MAN1
 	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	@for file in $(MAN1); do \
-		$(call ncmd,installdata,$$file,$(DESTDIR)$(mandir)/man1); \
-	done
+	$(foreach file,$(MAN1), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
 endif
 ifdef MAN5
 	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	@for file in $(MAN5); do \
-		$(call ncmd,installdata,$$file,$(DESTDIR)$(mandir)/man5); \
-	done
+	$(foreach file,$(MAN5), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
 # Recursion:
