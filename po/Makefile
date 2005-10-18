@@ -110,20 +110,10 @@ install-local: install-local-$(CONFIG_NLS)
 install-local-no:
 install-local-yes:
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
-	@catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  dir=$(localedir)/$$lang/LC_MESSAGES; \
-	  $(MKINSTALLDIRS) $(DESTDIR)$$dir; \
-	  if test -r $(srcdir)/$$cat; then \
-	    podir=./$(srcdir); \
-	    if test "$$(cd $$podir && pwd)" = "$$(pwd)"; then podir=; fi; \
-	    $(call ncmd,installdata,$$podir$$cat,$(DESTDIR)$$dir/$(PACKAGE).mo); \
-	  else \
-	    echo "Error: Cannot find $$cat"; \
-	  fi; \
-	done
+	@$(foreach C,$(basename $(CATALOGS)), \
+		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(C)/LC_MESSAGES; \
+		$(call ncmd,installdata,$(C).gmo,$(DESTDIR)$(localedir)/$(C)/LC_MESSAGES/$(PACKAGE).mo); \
+	)
 
 # Steal the `dist' target so that .po and .gmo files will be properly updated
 # then the dependence on `distdir' will take care of copying.
