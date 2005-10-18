@@ -64,13 +64,13 @@ $(srcdir)/$(PACKAGE).pot: $(POTFILES_REL)
 
 update-po: Makefile $(srcdir)/$(PACKAGE).pot
 	@cd $(srcdir)
-	@$(foreach C,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
-	  echo -n "$(C): "; \
-	  if $(MSGMERGE) $(C).po $(PACKAGE).pot -o $(C).new.po; then \
-	    mv -f $(C).new.po $(C).po; \
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(lang): "; \
+	  if $(MSGMERGE) $(lang).po $(PACKAGE).pot -o $(lang).new.po; then \
+	    mv -f $(lang).new.po $(lang).po; \
 	  else \
 	    echo "msgmerge failed!"; \
-	    rm -f $(C).new.po; \
+	    rm -f $(lang).new.po; \
 	  fi; \
 	)
 	$(MAKE) update-gmo
@@ -83,9 +83,9 @@ update-gmo: Makefile $(GMOFILES)
 #
 
 check-po:
-	@$(foreach C,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
-	  echo -n "$(C): "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(C).po; \
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(lang): "; \
+	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(lang).po; \
 	)
 
 ### Installation and distribution
@@ -96,9 +96,9 @@ install-local: install-local-$(CONFIG_NLS)
 install-local-no:
 install-local-yes:
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
-	@$(foreach C,$(basename $(CATALOGS)), \
-		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(C)/LC_MESSAGES; \
-		$(call ncmd,installdata,$(C).gmo,$(DESTDIR)$(localedir)/$(C)/LC_MESSAGES/$(PACKAGE).mo); \
+	@$(foreach lang,$(basename $(CATALOGS)), \
+		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES; \
+		$(call ncmd,installdata,$(lang).gmo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES/$(PACKAGE).mo); \
 	)
 
 # Steal the `dist' target so that .po and .gmo files will be properly updated
