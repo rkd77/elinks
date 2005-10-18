@@ -96,7 +96,7 @@ install-local: install-local-$(CONFIG_NLS)
 install-local-no:
 install-local-yes:
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
-	@$(foreach lang,$(basename $(CATALOGS)), \
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(CATALOGS))), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES; \
 		$(call ncmd,installdata,$(lang).gmo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES/$(PACKAGE).mo); \
 	)
