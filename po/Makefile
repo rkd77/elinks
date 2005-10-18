@@ -63,23 +63,16 @@ $(srcdir)/$(PACKAGE).pot: $(POTFILES_REL)
 # either <lang> or <lang>.po when calling make. Example: make update-po PO=is
 
 update-po: Makefile $(srcdir)/$(PACKAGE).pot
-	@cd $(srcdir); \
-	if test -n "$(PO)"; then \
-	  lang=`echo $(PO) | sed 's/\.po//'`; \
-	  catalogs=$$lang.gmo; \
-	fi; \
-	if test -z "$$catalogs"; then catalogs='$(GMOFILES)'; fi; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  echo -n "$$lang: "; \
-	  if $(MSGMERGE) $$lang.po $(PACKAGE).pot -o $$lang.new.po; then \
-	    mv -f $$lang.new.po $$lang.po; \
+	@cd $(srcdir)
+	@$(foreach C,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(C): "; \
+	  if $(MSGMERGE) $(C).po $(PACKAGE).pot -o $(C).new.po; then \
+	    mv -f $(C).new.po $(C).po; \
 	  else \
-	    echo "msgmerge for $$cat failed!"; \
-	    rm -f $$lang.new.po; \
+	    echo "msgmerge failed!"; \
+	    rm -f $(C).new.po; \
 	  fi; \
-	done
+	)
 	$(MAKE) update-gmo
 
 update-gmo: Makefile $(GMOFILES)
