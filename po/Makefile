@@ -90,17 +90,10 @@ update-gmo: Makefile $(GMOFILES)
 #
 
 check-po:
-	@if test -n "$(PO)"; then \
-	  lang=`echo $(PO) | sed 's/\.po//'`; \
-	  catalogs=$$lang.gmo; \
-	fi; \
-	if test -z "$$catalogs"; then catalogs='$(GMOFILES)'; fi; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  echo -n "$$lang: "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $$lang.po; \
-	done
+	@$(foreach C,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(C): "; \
+	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(C).po; \
+	)
 
 ### Installation and distribution
 #
