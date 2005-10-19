@@ -7,8 +7,9 @@ localedir = $(datadir)/locale
 # These are for some reason not added magically to the Makefile.
 MSGMERGE = msgmerge
 
-POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
-POTFILES_ABS = $(shell cd $(top_srcdir); find src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+# Name of the file containing the list of files to translate (used by
+# xgettext) 
+POTFILES_ABS_LIST = potfiles.list
 
 
 SUFFIXES = .po .gmo .mo
@@ -43,16 +44,20 @@ all-local: $(CATALOGS)
 ### Creating the template po template file
 #
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
-# not been added to the cvs repo. Beware of junk entries!
+# not been added to the git repo. Beware of junk entries!
 
-$(srcdir)/$(PACKAGE).pot: $(POTFILES_REL)
+$(srcdir)/$(POTFILES_ABS_LIST):
+	@( cd $(top_srcdir); \
+	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
+	 > $(srcdir)/$(POTFILES_ABS_LIST)
+
+$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST)
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
-		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ $(POTFILES_ABS) \
-	&& test ! -f $(PACKAGE).po \
-	   || ( rm -f $(srcdir)/$(PACKAGE).pot \
-		&& mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot )
+		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)/$(POTFILES_ABS_LIST) \
+	&& test -f $(PACKAGE).po \
+	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot 
 
 
 ### Updating po and gmo files
@@ -106,6 +111,6 @@ install-local-yes:
 dist: update-po distdir
 
 clean-local:
-	rm -f $(PACKAGE).po *.new.po
+	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
 include $(path_to_top)/Makefile.lib
