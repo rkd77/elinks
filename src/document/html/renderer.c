@@ -108,18 +108,17 @@ struct renderer_context {
 
 	struct link_state_info link_state_info;
 
-	int nobreak;
-	int nosearchable;
-	int nowrap; /* Activated/deactivated by SP_NOWRAP. */
-
 	struct conv_table *convert_table;
 
 	/* Used for setting cache info from HTTP-EQUIV meta tags. */
 	struct cache_entry *cached;
 
 	int g_ctrl_num;
-	int empty_format;
-
+	
+	unsigned int empty_format:1;
+	unsigned int nobreak:1;
+	unsigned int nosearchable:1;
+	unsigned int nowrap:1; /* Activated/deactivated by SP_NOWRAP. */
 	unsigned int did_subscript:1;
 	unsigned int did_superscript:1;
 };
@@ -1363,7 +1362,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 			if (!x) break;
 			if (part->document)
 				align_line(html_context, part->cy - 1, 0);
-			renderer_context.nobreak = x - 1;
+			renderer_context.nobreak = !!(x - 1);
 		}
 	}
 
@@ -1693,7 +1692,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		}
 			break;
 		case SP_NOWRAP:
-			renderer_context.nowrap = va_arg(l, int);
+			renderer_context.nowrap = !!va_arg(l, int);
 			va_end(l);
 			break;
 		case SP_REFRESH:
