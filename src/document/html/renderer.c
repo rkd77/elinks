@@ -119,7 +119,9 @@ struct renderer_context {
 
 	int g_ctrl_num;
 	int empty_format;
-	int did_subscript;
+
+	unsigned int did_subscript:1;
+	unsigned int did_superscript:1;
 };
 
 static struct renderer_context renderer_context;
@@ -378,16 +380,14 @@ get_format_screen_char(struct html_context *html_context,
 		}
 
 		if (html_context->options->display_sups) {
-			static int super = 0;
-
 			if (format.style.attr & AT_SUPERSCRIPT) {
-				if (!super) {
-					super = 1;
+				if (!renderer_context.did_superscript) {
+					renderer_context.did_superscript = 1;
 					put_chars(html_context, "^", 1);
 				}
 			} else {
-				if (super) {
-					super = 0;
+				if (renderer_context.did_superscript) {
+					renderer_context.did_superscript = 0;
 				}
 			}
 		}
