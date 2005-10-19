@@ -3,4 +3,4 @@ include $(path_to_top)/Makefile.config
 
 OBJS = navigator.o node.o renderer.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

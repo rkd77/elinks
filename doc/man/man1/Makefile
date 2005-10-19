@@ -7,4 +7,4 @@ elinks.1: elinks.1.in $(path_to_top)/configure.in
 
 MAN1 = elinks.1
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

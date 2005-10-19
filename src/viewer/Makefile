@@ -4,4 +4,4 @@ include $(path_to_top)/Makefile.config
 SUBDIRS = dump text
 OBJS	= action.o timer.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

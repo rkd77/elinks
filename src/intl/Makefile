@@ -5,4 +5,4 @@ SUBDIRS-$(CONFIG_NLS) += gettext
 
 OBJS = charsets.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

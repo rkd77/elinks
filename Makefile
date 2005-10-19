@@ -45,5 +45,5 @@ ifeq ($(wildcard Makefile.config),)
 $(MAKECMDGOALS) default:
 	@echo "You need to first run ./configure"
 else
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib
 endif

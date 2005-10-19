@@ -8,4 +8,4 @@ SUBDIRS = html plain
 
 OBJS = docdata.o document.o forms.o options.o refresh.o renderer.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

@@ -6,4 +6,4 @@ OBJS-$(CONFIG_GZIP)	+= gzip.o
 
 OBJS = encoding.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

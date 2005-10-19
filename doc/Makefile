@@ -198,4 +198,4 @@ $(HTML_DIR)/perl.html: $(top_srcdir)/doc/perl.pod doc-dirs
 $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl doc-dirs
 	$(POD2HTML) --outfile=$@ < $<
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

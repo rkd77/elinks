@@ -6,4 +6,4 @@ OBJS = cookies.o dialogs.o parser.o
 parsetst: parser.o parsetst.o
 	$(call cmd,link) -L../util/libutil.a
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

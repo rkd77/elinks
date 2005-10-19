@@ -5,4 +5,4 @@ SUBDIRS-$(CONFIG_SSL) += ssl
 
 OBJS = connection.o dns.o progress.o socket.o state.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

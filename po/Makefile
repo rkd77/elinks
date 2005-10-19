@@ -113,4 +113,4 @@ dist: update-po distdir
 clean-local:
 	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

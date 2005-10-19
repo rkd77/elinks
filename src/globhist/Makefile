@@ -3,4 +3,4 @@ include $(path_to_top)/Makefile.config
 
 OBJS = globhist.o dialogs.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

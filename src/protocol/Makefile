@@ -15,4 +15,4 @@ OBJS-$(CONFIG_DATA)		+= data.o
 
 OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

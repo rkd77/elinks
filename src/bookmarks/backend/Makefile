@@ -4,4 +4,4 @@ include $(path_to_top)/Makefile.config
 OBJS-$(CONFIG_XBEL_BOOKMARKS) += xbel.o
 OBJS = common.o default.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

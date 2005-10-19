@@ -3,4 +3,4 @@ include $(path_to_top)/Makefile.config
 
 SUBDIRS = man1 man5
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

@@ -6,4 +6,4 @@ INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)
 
 OBJS = auth.o dialogs.o digest.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

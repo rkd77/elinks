@@ -6,4 +6,4 @@ OBJS-$(CONFIG_MIMETYPES)	+= mimetypes.o
 
 OBJS = common.o default.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

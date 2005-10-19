@@ -4,4 +4,4 @@ INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
 OBJS = document.o form.o location.o navigator.o unibar.o window.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib
