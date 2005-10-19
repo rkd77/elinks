@@ -114,13 +114,13 @@ struct renderer_context {
 	struct cache_entry *cached;
 
 	int g_ctrl_num;
-	
+	int subscript;	/* Count stacked subscripts */
+	int supscript;	/* Count stacked supscripts */
+
 	unsigned int empty_format:1;
 	unsigned int nobreak:1;
 	unsigned int nosearchable:1;
 	unsigned int nowrap:1; /* Activated/deactivated by SP_NOWRAP. */
-	unsigned int did_subscript:1;
-	unsigned int did_superscript:1;
 };
 
 static struct renderer_context renderer_context;
@@ -330,15 +330,10 @@ get_format_screen_char(struct html_context *html_context,
 	static struct screen_char schar_cache;
 
 	if (memcmp(&ta_cache, &format.style, sizeof(ta_cache))) {
-		struct color_pair colors = INIT_COLOR_PAIR(format.style.bg, format.style.fg);
-		static enum color_mode color_mode;
-		static enum color_flags color_flags;
-
-		color_mode = html_context->options->color_mode;
-		color_flags = html_context->options->color_flags;
+		copy_struct(&ta_cache, &format.style);
 
 		schar_cache.attr = 0;
-		if (format.style.attr) {
+		if (format.style.attr & ~(AT_UPDATE_SUB|AT_UPDATE_SUP)) {
 			if (format.style.attr & AT_UNDERLINE) {
 				schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 			}
@@ -361,33 +356,40 @@ get_format_screen_char(struct html_context *html_context,
 			schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 		}
 
-		copy_struct(&ta_cache, &format.style);
-		set_term_color(&schar_cache, &colors, color_flags, color_mode);
-
+		{
+			struct color_pair colors = INIT_COLOR_PAIR(format.style.bg,
+								   format.style.fg);
+		
+			set_term_color(&schar_cache, &colors,
+				       html_context->options->color_flags,
+				       html_context->options->color_mode);
+		}
+		
 		if (html_context->options->display_subs) {
 			if (format.style.attr & AT_SUBSCRIPT) {
-				if (!renderer_context.did_subscript) {
-					renderer_context.did_subscript = 1;
+				if (format.style.attr & AT_UPDATE_SUB) {
+					renderer_context.subscript++;
+					format.style.attr &= ~AT_UPDATE_SUB;
 					put_chars(html_context, "[", 1);
 				}
 			} else {
-				if (renderer_context.did_subscript) {
+				while (renderer_context.subscript) {
+					renderer_context.subscript--;
 					put_chars(html_context, "]", 1);
-					renderer_context.did_subscript = 0;
 				}
 			}
 		}
 
 		if (html_context->options->display_sups) {
 			if (format.style.attr & AT_SUPERSCRIPT) {
-				if (!renderer_context.did_superscript) {
-					renderer_context.did_superscript = 1;
+				if (format.style.attr & AT_UPDATE_SUP) {
+					renderer_context.supscript++;
+					format.style.attr &= ~AT_UPDATE_SUP;
 					put_chars(html_context, "^", 1);
 				}
 			} else {
-				if (renderer_context.did_superscript) {
-					renderer_context.did_superscript = 0;
-				}
+				while (renderer_context.supscript)
+					renderer_context.supscript--;
 			}
 		}
 	}
@@ -1270,7 +1272,7 @@ void
 put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 {
 	enum link_state link_state;
-	int update_after_subscript = renderer_context.did_subscript;
+	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
 
 	assert(html_context);
@@ -1340,7 +1342,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		 * will ``update'' the @link_state. */
 		if (link_state == LINK_STATE_NEW
 		    && (is_drawing_subs_or_sups()
-			|| update_after_subscript != renderer_context.did_subscript)) {
+			|| update_after_subscript != renderer_context.subscript)) {
 			link_state = get_link_state(html_context);
 		}
 

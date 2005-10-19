@@ -33,6 +33,8 @@ enum format_attr {
 	AT_SUBSCRIPT = 32,
 	AT_SUPERSCRIPT = 64,
 	AT_PREFORMATTED = 128,
+	AT_UPDATE_SUB = 256,
+	AT_UPDATE_SUP = 512,
 };
 
 struct text_attrib_style {

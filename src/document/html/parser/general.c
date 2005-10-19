@@ -73,13 +73,13 @@ html_fixed(struct html_context *html_context, unsigned char *a)
 void
 html_subscript(struct html_context *html_context, unsigned char *a)
 {
-	format.style.attr |= AT_SUBSCRIPT;
+	format.style.attr |= AT_SUBSCRIPT | AT_UPDATE_SUB;
 }
 
 void
 html_superscript(struct html_context *html_context, unsigned char *a)
 {
-	format.style.attr |= AT_SUPERSCRIPT;
+	format.style.attr |= AT_SUPERSCRIPT | AT_UPDATE_SUP;
 }
 
 void
