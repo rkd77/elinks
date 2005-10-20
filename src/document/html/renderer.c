@@ -916,6 +916,38 @@ align_line(struct html_context *html_context, int y, int last)
 		shift_chars(html_context, y, shift);
 }
 
+static inline void
+init_link_event_hooks(struct html_context *html_context, struct link *link)
+{
+	link->event_hooks = mem_calloc(1, sizeof(*link->event_hooks));
+	if (!link->event_hooks) return;
+
+#define add_evhook(list_, type_, src_)						\
+	do {									\
+		struct script_event_hook *evhook;				\
+										\
+		if (!src_) break;						\
+										\
+		evhook = mem_calloc(1, sizeof(*evhook));			\
+		if (!evhook) break;						\
+										\
+		evhook->type = type_;						\
+		evhook->src  = stracpy(src_);					\
+		add_to_list(*(list_), evhook);					\
+	} while (0)
+
+	init_list(*link->event_hooks);
+	add_evhook(link->event_hooks, SEVHOOK_ONCLICK, format.onclick);
+	add_evhook(link->event_hooks, SEVHOOK_ONDBLCLICK, format.ondblclick);
+	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOVER, format.onmouseover);
+	add_evhook(link->event_hooks, SEVHOOK_ONHOVER, format.onhover);
+	add_evhook(link->event_hooks, SEVHOOK_ONFOCUS, format.onfocus);
+	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, format.onmouseout);
+	add_evhook(link->event_hooks, SEVHOOK_ONBLUR, format.onblur);
+
+#undef add_evhook
+}
+
 static struct link *
 new_link(struct html_context *html_context, unsigned char *name, int namelen)
 {
@@ -1009,28 +1041,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 	link->color.foreground = link_is_textinput(link)
 				? format.style.fg : format.clink;
 
-	link->event_hooks = mem_calloc(1, sizeof(*link->event_hooks));
-	if (link->event_hooks) {
-		init_list(*link->event_hooks);
-#define add_evhook(list_, type_, src_) \
-do { \
-	struct script_event_hook *evhook = mem_calloc(1, sizeof(*evhook)); \
-	\
-	if (evhook) { \
-		evhook->type = type_; \
-		evhook->src = stracpy(src_); \
-		add_to_list(*list_, evhook); \
-	} \
-} while (0)
-		if (format.onclick) add_evhook(link->event_hooks, SEVHOOK_ONCLICK, format.onclick);
-		if (format.ondblclick) add_evhook(link->event_hooks, SEVHOOK_ONDBLCLICK, format.ondblclick);
-		if (format.onmouseover) add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOVER, format.onmouseover);
-		if (format.onhover) add_evhook(link->event_hooks, SEVHOOK_ONHOVER, format.onhover);
-		if (format.onfocus) add_evhook(link->event_hooks, SEVHOOK_ONFOCUS, format.onfocus);
-		if (format.onmouseout) add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, format.onmouseout);
-		if (format.onblur) add_evhook(link->event_hooks, SEVHOOK_ONBLUR, format.onblur);
-#undef add_evhook
-	}
+	init_link_event_hooks(html_context, link);
 
 	return link;
 }
@@ -1048,7 +1059,7 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 	/* One byte is reserved for name in struct tag. */
 	tag = mem_alloc(sizeof(*tag) + tag_len);
 	if (!tag) return;
-	
+
 	tag->x = x;
 	tag->y = y;
 	memcpy(tag->name, t, tag_len + 1);
