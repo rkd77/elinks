@@ -1066,7 +1066,7 @@ EL_ARG_DEPEND(CONFIG_SYSMOUSE, sysmouse,
 	      [  --disable-sysmouse      disable BSD sysmouse support])
 
 EL_ARG_ENABLE(CONFIG_88_COLORS, 88-colors, [88 colors],
-	      [  --enable-88-colors     enable 88 color support])
+	      [  --enable-88-colors      enable 88 color support])
 
 EL_ARG_ENABLE(CONFIG_256_COLORS, 256-colors, [256 colors],
 	      [  --enable-256-colors     enable 256 color support])
