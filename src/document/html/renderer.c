@@ -1047,14 +1047,14 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 	tag_len = strlen(t);
 	/* One byte is reserved for name in struct tag. */
 	tag = mem_alloc(sizeof(*tag) + tag_len);
-	if (tag) {
-		tag->x = x;
-		tag->y = y;
-		memcpy(tag->name, t, tag_len + 1);
-		add_to_list(document->tags, tag);
-		if (renderer_context.last_tag_for_newline == (struct tag *) &document->tags)
-			renderer_context.last_tag_for_newline = tag;
-	}
+	if (!tag) return;
+	
+	tag->x = x;
+	tag->y = y;
+	memcpy(tag->name, t, tag_len + 1);
+	add_to_list(document->tags, tag);
+	if (renderer_context.last_tag_for_newline == (struct tag *) &document->tags)
+		renderer_context.last_tag_for_newline = tag;
 }
 
 
