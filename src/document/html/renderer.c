@@ -147,7 +147,7 @@ set_screen_char_color(struct screen_char *schar,
 
 	set_term_color(schar, &colors, color_flags, color_mode);
 }
-	
+
 static int
 realloc_line(struct html_context *html_context, struct document *document,
              int y, int length)
@@ -365,7 +365,7 @@ get_format_screen_char(struct html_context *html_context,
 		set_screen_char_color(&schar_cache, format.style.bg, format.style.fg,
 				      html_context->options->color_flags,
 				      html_context->options->color_mode);
-		
+
 		if (html_context->options->display_subs) {
 			if (format.style.attr & AT_SUBSCRIPT) {
 				if (format.style.attr & AT_UPDATE_SUB) {

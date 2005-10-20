@@ -166,7 +166,7 @@ really_close_tab(struct session *ses)
 
 		switch_to_tab(term, term->current_tab - 1, num_tabs - 1);
 	}
-	
+
 	delete_window(ses->tab);
 }
 
