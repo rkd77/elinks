@@ -1918,8 +1918,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 {
 	struct html_context *html_context;
 	struct part *part;
-	unsigned char *start = NULL;
-	unsigned char *end = NULL;
+	unsigned char *start;
+	unsigned char *end;
 	struct string title;
 	struct string head;
 	int i;
