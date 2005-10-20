@@ -1052,7 +1052,7 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 		tag->y = y;
 		memcpy(tag->name, t, tag_len + 1);
 		add_to_list(document->tags, tag);
-		if ((void *) renderer_context.last_tag_for_newline == &document->tags)
+		if (renderer_context.last_tag_for_newline == (struct tag *) &document->tags)
 			renderer_context.last_tag_for_newline = tag;
 	}
 }
@@ -1310,7 +1310,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	 * non-whitespace content. */
 	if (html_is_preformatted()
 	    || html_has_non_space_chars(chars, charslen)) {
-		renderer_context.last_tag_for_newline = (void *) &part->document->tags;
+		renderer_context.last_tag_for_newline = (struct tag *) &part->document->tags;
 	}
 
 	int_lower_bound(&part->box.height, part->cy + 1);
@@ -1418,7 +1418,7 @@ line_break(struct html_context *html_context)
 	if (part->cx > 0) align_line(html_context, part->cy, 1);
 
 	for (tag = renderer_context.last_tag_for_newline;
-	     tag && (void *) tag != &part->document->tags;
+	     tag && tag != (struct tag *) &part->document->tags;
 	     tag = tag->prev) {
 		tag->x = X(0);
 		tag->y = Y(part->cy + 1);
@@ -1818,12 +1818,12 @@ format_html_part(struct html_context *html_context,
 		}
 
 		renderer_context.last_link_to_move = document->nlinks;
-		renderer_context.last_tag_to_move = (void *) &document->tags;
-		renderer_context.last_tag_for_newline = (void *) &document->tags;
+		renderer_context.last_tag_to_move = (struct tag *) &document->tags;
+		renderer_context.last_tag_for_newline = (struct tag *) &document->tags;
 	} else {
 		renderer_context.last_link_to_move = 0;
-		renderer_context.last_tag_to_move = NULL;
-		renderer_context.last_tag_for_newline = NULL;
+		renderer_context.last_tag_to_move = (struct tag *) NULL;
+		renderer_context.last_tag_for_newline = (struct tag *) NULL;
 	}
 
 	html_context->margin = margin;
