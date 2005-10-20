@@ -14,10 +14,6 @@ else
 	mquiet = quiet_
 endif
 
-CURPATH = $(shell pwd)
-TOPPATH = $(shell cd $(path_to_top) && pwd)
-RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z0-9]\)$$,\1/,')
-
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
 ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
