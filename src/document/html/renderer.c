@@ -1777,10 +1777,9 @@ format_html_part(struct html_context *html_context,
 	struct html_element *html_state;
 	int llm = renderer_context.last_link_to_move;
 	struct tag *ltm = renderer_context.last_tag_to_move;
-	/*struct tag *ltn = last_tag_for_newline;*/
-	int lm = html_context->margin;
 	int ef = renderer_context.empty_format;
-	
+	int lm = html_context->margin;
+
 	/* Hash creation if needed. */
 	if (!table_cache) {
 		table_cache = init_hash(8, &strhash);
@@ -1874,9 +1873,9 @@ format_html_part(struct html_context *html_context,
 ret:
 	renderer_context.last_link_to_move = llm;
 	renderer_context.last_tag_to_move = ltm;
-	/* renderer_context.last_tag_for_newline = ltn; */
-	html_context->margin = lm;
 	renderer_context.empty_format = ef;
+
+	html_context->margin = lm;
 
 	if (html_context->table_level > 1 && !document
 	    && table_cache
