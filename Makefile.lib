@@ -73,7 +73,7 @@ OBJS += $(OBJS-yes)
 endif
 
 ifdef OBJS
-lib.o: $(sort $(OBJS))
+lib.o: $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/lib.o))
 	$(call cmd,ld_objs)
 
 LIB_O = lib.o
