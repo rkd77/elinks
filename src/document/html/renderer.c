@@ -90,11 +90,11 @@ struct table_cache_entry {
 #define MAX_TABLE_CACHE_ENTRIES 16384
 
 /* Global variables */
+static int table_cache_entries;
+static struct hash *table_cache;
+
 
 struct renderer_context {
-	int table_cache_entries;
-	struct hash *table_cache;
-
 	int last_link_to_move;
 	struct tag *last_tag_to_move;
 	/* All tags between document->tags and this tag (inclusive) should
@@ -1750,20 +1750,20 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 void
 free_table_cache(void)
 {
-	if (renderer_context.table_cache) {
+	if (table_cache) {
 		struct hash_item *item;
 		int i;
 
 		/* We do not free key here. */
-		foreach_hash_item (item, *renderer_context.table_cache, i) {
+		foreach_hash_item (item, *table_cache, i) {
 			mem_free_if(item->value);
 		}
 
-		free_hash(renderer_context.table_cache);
+		free_hash(table_cache);
 	}
 
-	renderer_context.table_cache = NULL;
-	renderer_context.table_cache_entries = 0;
+	table_cache = NULL;
+	table_cache_entries = 0;
 }
 
 struct part *
@@ -1783,8 +1783,8 @@ format_html_part(struct html_context *html_context,
 	struct table_cache_entry *tce;
 
 	/* Hash creation if needed. */
-	if (!renderer_context.table_cache) {
-		renderer_context.table_cache = init_hash(8, &strhash);
+	if (!table_cache) {
+		table_cache = init_hash(8, &strhash);
 	} else if (!document) {
 		/* Search for cached entry. */
 		struct table_cache_entry_key key;
@@ -1802,7 +1802,7 @@ format_html_part(struct html_context *html_context,
 		key.x = x;
 		key.link_num = link_num;
 
-		item = get_hash_item(renderer_context.table_cache,
+		item = get_hash_item(table_cache,
 				     (unsigned char *) &key,
 				     sizeof(key));
 		if (item) { /* We found it in cache, so just copy and return. */
@@ -1880,8 +1880,8 @@ ret:
 	renderer_context.empty_format = ef;
 
 	if (html_context->table_level > 1 && !document
-	    && renderer_context.table_cache
-	    && renderer_context.table_cache_entries < MAX_TABLE_CACHE_ENTRIES) {
+	    && table_cache
+	    && table_cache_entries < MAX_TABLE_CACHE_ENTRIES) {
 		/* Create a new entry. */
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
@@ -1899,12 +1899,12 @@ ret:
 		tce->key.link_num = link_num;
 		copy_struct(&tce->part, part);
 
-		if (!add_hash_item(renderer_context.table_cache,
+		if (!add_hash_item(table_cache,
 				   (unsigned char *) &tce->key,
 				   sizeof(tce->key), tce)) {
 			mem_free(tce);
 		} else {
-			renderer_context.table_cache_entries++;
+			table_cache_entries++;
 		}
 	}
 
