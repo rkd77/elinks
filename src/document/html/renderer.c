@@ -615,14 +615,14 @@ shift_chars(struct html_context *html_context, int y, int shift)
 
 	len = LEN(y);
 
-	a = mem_alloc(len * sizeof(*a));
+	a = fmem_alloc(len * sizeof(*a));
 	if (!a) return;
 
 	copy_screen_chars(a, &POS(0, y), len);
 
 	clear_hchars(html_context, 0, y, shift);
 	copy_chars(html_context, shift, y, len, a);
-	mem_free(a);
+	fmem_free(a);
 
 	move_links(html_context, 0, y, shift, y);
 }
