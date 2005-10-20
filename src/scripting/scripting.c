@@ -19,6 +19,7 @@
 #include "scripting/perl/perl.h"
 #include "scripting/python/python.h"
 #include "scripting/ruby/ruby.h"
+#include "scripting/see/see.h"
 
 
 static struct module *scripting_modules[] = {
@@ -36,6 +37,9 @@ static struct module *scripting_modules[] = {
 #endif
 #ifdef CONFIG_RUBY
 	&ruby_scripting_module,
+#endif
+#ifdef CONFIG_SEE
+	&see_scripting_module,
 #endif
 	NULL,
 };

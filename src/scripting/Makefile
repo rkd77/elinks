@@ -6,6 +6,7 @@ SUBDIRS-$(CONFIG_LUA)		+= lua
 SUBDIRS-$(CONFIG_PERL)		+= perl
 SUBDIRS-$(CONFIG_PYTHON)	+= python
 SUBDIRS-$(CONFIG_RUBY)		+= ruby
+SUBDIRS-$(CONFIG_SEE)		+= see
 
 OBJS = scripting.o
 

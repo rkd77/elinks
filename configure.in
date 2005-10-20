@@ -709,15 +709,22 @@ dnl ===================================================================
 EL_CONFIG_RUBY
 
 dnl ===================================================================
+dnl Check for SEE, optional even if installed.
+dnl ===================================================================
+
+EL_CONFIG_SEE
+
+dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY], [Scripting])
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SEE], [Scripting])
 AC_SUBST(CONFIG_GUILE)
 AC_SUBST(CONFIG_LUA)
 AC_SUBST(CONFIG_PERL)
 AC_SUBST(CONFIG_PYTHON)
 AC_SUBST(CONFIG_RUBY)
+AC_SUBST(CONFIG_SEE)
 AC_SUBST(CONFIG_SCRIPTING)
 
 
