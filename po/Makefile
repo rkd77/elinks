@@ -15,10 +15,7 @@ POTFILES_ABS_LIST = potfiles.list
 SUFFIXES = .po .gmo .mo
 .SUFFIXES: .gmo .mo .po
 
-.po.mo:
-	$(MSGFMT) -o $@ $<
-
-.po.gmo:
+%.gmo: %.po
 	@file=`echo $* | sed 's,.*/,,'`.gmo \
 	  && rm -f $$file && echo -n $*": " \
 	  && $(GMSGFMT) --statistics -o $$file $<
@@ -99,7 +96,7 @@ check-po:
 
 install-local: install-local-$(CONFIG_NLS)
 install-local-no:
-install-local-yes:
+install-local-yes: all-local
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(CATALOGS))), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES; \
