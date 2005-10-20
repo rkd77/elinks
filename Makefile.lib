@@ -56,7 +56,7 @@ ifdef OBJS
 -include $(DEP_FILES)
 endif
 
-%.o: %.c
+%.o: $(srcdir)%.c
 	$(call mcmd,compile)
 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
 		tr ' ' '\012' < .deps/$(*F).pp \
@@ -84,6 +84,9 @@ CLEAN += $(PROG)
 
 all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
 
+list-default:
+	@echo '$(RELPATH)Makefile'
+
 clean-default:
 	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
 
@@ -106,8 +109,8 @@ endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive
-all-recursive install-recursive clean-recursive:
+.PHONY: all-recursive install-recursive clean-recursive list-recursive
+all-recursive install-recursive clean-recursive list-recursive:
 ifdef SUBDIRS
 	@target=`echo $@ | sed s/-recursive//`; \
 	for subdir in $(sort $(SUBDIRS)); do \
@@ -118,6 +121,7 @@ endif
 all: all-recursive all-default all-local
 install: install-recursive install-default install-local
 clean: clean-recursive clean-default clean-local
+list: list-recursive list-default
 
 all-local:
 install-local:

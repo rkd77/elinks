@@ -4,9 +4,6 @@ include $(path_to_top)/Makefile.config
 localedir = $(datadir)/locale
 builddir = $(top_builddir)/src/intl/gettext
 
-# FIXME: Makefile.config gets this wrong
-srcdir = $(top_srcdir)/src/intl/gettext
-
 OBJS = \
  bindtextdom.o \
  dcgettext.o \
