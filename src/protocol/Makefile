@@ -1,5 +1,5 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
 SUBDIRS-$(CONFIG_FINGER)	+= finger

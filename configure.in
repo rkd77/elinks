@@ -1249,10 +1249,10 @@ srcdir2="$(cd "$srcdir" && pwd)"
 if test "$srcdir2" != "$builddir"; then
 	for i in $(make -C "$srcdir" list | grep Makefile); do
 		$MKINSTALLDIRS "$builddir/$(dirname $i)"
-		grep path_to_top= "$srcdir/$i" > "$builddir/$i"
+		grep top_builddir= "$srcdir/$i" > "$builddir/$i"
 		case "$srcdir" in
 		/*)	echo "include $srcdir/$i" >> "$builddir/$i" ;;
-		*)	echo "include \$(path_to_top)/$srcdir/$i" >> "$builddir/$i" ;;
+		*)	echo "include \$(top_builddir)/$srcdir/$i" >> "$builddir/$i" ;;
 		esac
 		echo "creating $builddir/$i"
 	done

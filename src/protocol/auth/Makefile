@@ -1,5 +1,5 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 
 # Needed for the digest MD5 sum calculation.
 INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)

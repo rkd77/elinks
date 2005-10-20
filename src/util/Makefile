@@ -1,5 +1,5 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 # Reverse a CONFIG_* string
 # Usage $(call not,$(CONFIG_FOO))

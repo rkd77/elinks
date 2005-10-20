@@ -6,15 +6,14 @@
 SHELL = @SHELL@
 
 CURPATH = $(shell pwd)
-TOPPATH = $(shell cd $(path_to_top) && pwd)
+TOPPATH = $(shell cd $(top_builddir) && pwd)
 RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z0-9]\)$$,\1/,')
 
-PATHSCRIPT = case '@top_srcdir@' in /*) ;; *) echo $(path_to_top)/;; esac
+PATHSCRIPT = case '@top_srcdir@' in /*) ;; *) echo $(top_builddir)/;; esac
 PATHPREFIX = $(shell $(PATHSCRIPT))
 
 top_srcdir = $(PATHPREFIX)@top_srcdir@
 srcdir = $(top_srcdir)/$(RELPATH)
-top_builddir = $(path_to_top)
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 
