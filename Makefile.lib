@@ -24,7 +24,7 @@ ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
-quiet_cmd_compile = '      [CC]   $(RELPATH)$<'
+quiet_cmd_compile = '      [CC]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
