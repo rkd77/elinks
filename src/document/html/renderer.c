@@ -1780,8 +1780,7 @@ format_html_part(struct html_context *html_context,
 	/*struct tag *ltn = last_tag_for_newline;*/
 	int lm = html_context->margin;
 	int ef = renderer_context.empty_format;
-	struct table_cache_entry *tce;
-
+	
 	/* Hash creation if needed. */
 	if (!table_cache) {
 		table_cache = init_hash(8, &strhash);
@@ -1885,7 +1884,7 @@ ret:
 		/* Create a new entry. */
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
-		tce = mem_calloc(1, sizeof(*tce));
+		struct table_cache_entry *tce = mem_calloc(1, sizeof(*tce));
 		/* A goto is used here to prevent a test or code
 		 * redundancy. */
 		if (!tce) goto end;
