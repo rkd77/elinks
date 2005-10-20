@@ -1929,13 +1929,10 @@ render_html_document(struct cache_entry *cached, struct document *document,
 
 	if (!init_string(&head)) return;
 
-	renderer_context.g_ctrl_num = 0;
-	renderer_context.cached = cached;
+	if (cached->head) add_to_string(&head, cached->head);
 
 	start = buffer->source;
 	end = buffer->source + buffer->length;
-
-	if (cached->head) add_to_string(&head, cached->head);
 
 	html_context = init_html_parser(cached->uri, &document->options,
 	                                start, end, &head, &title,
@@ -1943,6 +1940,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                html_special);
 	if (!html_context) return;
 
+	renderer_context.g_ctrl_num = 0;
+	renderer_context.cached = cached;
 	renderer_context.convert_table = get_convert_table(head.source,
 							   document->options.cp,
 							   document->options.assume_cp,
