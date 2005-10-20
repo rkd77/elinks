@@ -1,4 +1,4 @@
-path_to_top = .
+path_to_top=.
 -include $(path_to_top)/Makefile.config
 
 SUBDIRS = doc po src
