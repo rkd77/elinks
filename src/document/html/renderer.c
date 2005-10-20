@@ -137,11 +137,21 @@ void put_chars(struct html_context *, unsigned char *, int);
 
 #define ALIGN_SPACES(x, o, n) mem_align_alloc(x, o, n, unsigned char, SPACES_GRANULARITY)
 
+static inline void
+set_screen_char_color(struct screen_char *schar,
+		      color_T bgcolor, color_T fgcolor,
+		      enum color_flags color_flags,
+		      enum color_mode color_mode)
+{
+	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
+
+	set_term_color(schar, &colors, color_flags, color_mode);
+}
+	
 static int
 realloc_line(struct html_context *html_context, struct document *document,
              int y, int length)
 {
-	struct color_pair colors = INIT_COLOR_PAIR(par_format.bgcolor, 0x0);
 	struct screen_char *pos, *end;
 	struct line *line;
 
@@ -162,7 +172,8 @@ realloc_line(struct html_context *html_context, struct document *document,
 	end = &line->chars[length];
 	end->data = ' ';
 	end->attr = 0;
-	set_term_color(end, &colors, 0, document->options.color_mode);
+	set_screen_char_color(end, par_format.bgcolor, 0x0,
+			      0, document->options.color_mode);
 
 	for (pos = &line->chars[line->length]; pos < end; pos++) {
 		copy_screen_chars(pos, end, 1);
@@ -219,7 +230,6 @@ static inline void
 clear_hchars(struct html_context *html_context, int x, int y, int width)
 {
 	struct part *part;
-	struct color_pair colors = INIT_COLOR_PAIR(par_format.bgcolor, 0x0);
 	struct screen_char *pos, *end;
 
 	assert(html_context);
@@ -240,7 +250,8 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end = pos + width - 1;
 	end->data = ' ';
 	end->attr = 0;
-	set_term_color(end, &colors, 0, part->document->options.color_mode);
+	set_screen_char_color(end, par_format.bgcolor, 0x0,
+			      0, part->document->options.color_mode);
 
 	while (pos < end)
 		copy_screen_chars(pos++, end, 1);
@@ -254,10 +265,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	       int x, int y, unsigned char data,
                color_T bgcolor, color_T fgcolor)
 {
-	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
 	struct screen_char *template;
-	static enum color_flags color_flags;
-	static enum color_mode color_mode;
 
 	assert(html_context);
 	if_assert_failed return NULL;
@@ -274,11 +282,9 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	template = &POS(x, y);
 	template->data = data;
 	template->attr = SCREEN_ATTR_FRAME;
-
-	color_mode = part->document->options.color_mode;
-	color_flags = part->document->options.color_flags;
-
-	set_term_color(template, &colors, color_flags, color_mode);
+	set_screen_char_color(template, bgcolor, fgcolor,
+			      part->document->options.color_flags,
+			      part->document->options.color_mode);
 
 	return template;
 }
@@ -356,14 +362,9 @@ get_format_screen_char(struct html_context *html_context,
 			schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 		}
 
-		{
-			struct color_pair colors = INIT_COLOR_PAIR(format.style.bg,
-								   format.style.fg);
-		
-			set_term_color(&schar_cache, &colors,
-				       html_context->options->color_flags,
-				       html_context->options->color_mode);
-		}
+		set_screen_char_color(&schar_cache, format.style.bg, format.style.fg,
+				      html_context->options->color_flags,
+				      html_context->options->color_mode);
 		
 		if (html_context->options->display_subs) {
 			if (format.style.attr & AT_SUBSCRIPT) {
