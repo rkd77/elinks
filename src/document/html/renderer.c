@@ -1263,10 +1263,6 @@ get_link_state(struct html_context *html_context)
 	return state;
 }
 
-#define is_drawing_subs_or_sups() \
-	((format.style.attr & AT_SUBSCRIPT && html_context->options->display_subs) \
-	 || (format.style.attr & AT_SUPERSCRIPT && html_context->options->display_sups))
-
 static inline int
 html_has_non_space_chars(unsigned char *chars, int charslen)
 {
@@ -1347,6 +1343,13 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	set_hline(html_context, chars, charslen, link_state);
 
 	if (link_state != LINK_STATE_NONE) {
+
+#define is_drawing_subs_or_sups() \
+		((format.style.attr & AT_SUBSCRIPT \
+		  && html_context->options->display_subs) \
+		 || (format.style.attr & AT_SUPERSCRIPT \
+		     && html_context->options->display_sups))
+
 		/* We need to update the current @link_state because <sub> and
 		 * <sup> tags will output to the canvas using an inner
 		 * put_chars() call which results in their process_link() call
@@ -1356,6 +1359,8 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 			|| update_after_subscript != renderer_context.subscript)) {
 			link_state = get_link_state(html_context);
 		}
+
+#undef is_drawing_subs_or_sups
 
 		process_link(html_context, link_state, chars, charslen);
 	}
