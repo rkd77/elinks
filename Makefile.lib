@@ -29,13 +29,13 @@ quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^) \
       		    $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
 			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
- 
+
    quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
-quiet_cmd_recmake = "[MAKE $$target]   $(RELPATH)$$subdir"
-      cmd_recmake = $(MAKE) -C $$subdir $$target
+quiet_cmd_recmake = "[MAKE $(3)]   $(RELPATH)$(2)"
+      cmd_recmake = $(MAKE) -C $(2) $(3)
 
 quiet_cmd_installdata = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
       cmd_installdata = $(INSTALL_DATA) $(2) $(3)
@@ -110,12 +110,11 @@ endif
 # Recursion:
 
 .PHONY: all-recursive install-recursive clean-recursive list-recursive
+
 all-recursive install-recursive clean-recursive list-recursive:
 ifdef SUBDIRS
-	@target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $(sort $(SUBDIRS)); do \
-		$(call ncmd,recmake) || exit 1; \
-	done
+	@$(foreach subdir,$(sort $(SUBDIRS)), \
+		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
 endif
 
 all: all-recursive all-default all-local
