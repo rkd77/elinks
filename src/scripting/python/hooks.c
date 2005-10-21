@@ -1,5 +1,4 @@
 /* Python scripting hooks */
-/* $Id: hooks.c,v 1.10 2005/06/30 15:10:04 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

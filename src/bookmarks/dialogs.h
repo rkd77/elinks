@@ -1,4 +1,3 @@
-/* $Id: dialogs.h,v 1.17 2005/06/14 12:25:19 jonas Exp $ */
 
 #ifndef EL__BOOKMARKS_DIALOGS_H
 #define EL__BOOKMARKS_DIALOGS_H

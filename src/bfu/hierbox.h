@@ -1,4 +1,3 @@
-/* $Id: hierbox.h,v 1.71 2005/07/31 00:14:18 miciah Exp $ */
 
 #ifndef EL__BFU_HIERBOX_H
 #define EL__BFU_HIERBOX_H

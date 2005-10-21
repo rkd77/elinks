@@ -1,5 +1,4 @@
 /* SHA1 implementation */
-/* $Id: sha1.c,v 1.1 2005/07/11 10:59:05 jonas Exp $ */
 
 /* The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file

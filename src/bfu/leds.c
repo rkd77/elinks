@@ -1,5 +1,4 @@
 /* These cute LightEmittingDiode-like indicators. */
-/* $Id: leds.c,v 1.88 2005/08/25 15:08:00 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

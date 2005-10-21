@@ -1,5 +1,4 @@
 /* CSS token scanner utilities */
-/* $Id: scanner.c,v 1.133 2005/05/14 22:48:24 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

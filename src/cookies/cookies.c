@@ -1,5 +1,4 @@
 /* Internal cookies implementation */
-/* $Id: cookies.c,v 1.207 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

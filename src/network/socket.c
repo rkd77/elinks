@@ -1,5 +1,4 @@
 /* Sockets-o-matic */
-/* $Id: socket.c,v 1.245 2005/06/24 12:15:56 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

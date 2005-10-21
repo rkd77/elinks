@@ -1,4 +1,3 @@
-/* $Id: draw.h,v 1.50 2005/06/15 18:45:00 jonas Exp $ */
 
 #ifndef EL__TERMINAL_DRAW_H
 #define EL__TERMINAL_DRAW_H

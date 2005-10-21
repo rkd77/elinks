@@ -1,4 +1,3 @@
-/* $Id: history.h,v 1.30 2005/07/16 21:57:26 miciah Exp $ */
 
 #ifndef EL__SESSION_HISTORY_H
 #define EL__SESSION_HISTORY_H

@@ -1,4 +1,3 @@
-/* $Id: main.h,v 1.24 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__MAIN_MAIN_H
 #define EL__MAIN_MAIN_H

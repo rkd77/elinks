@@ -1,5 +1,4 @@
 /* OS/2 support fo ELinks. It has pretty different life than rest of ELinks. */
-/* $Id: os2.c,v 1.38 2005/06/14 12:56:09 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

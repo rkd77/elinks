@@ -1,4 +1,3 @@
-/* $Id: style.h,v 1.7 2004/11/19 17:46:05 zas Exp $ */
 
 #ifndef EL__BFU_STYLE_H
 #define EL__BFU_STYLE_H

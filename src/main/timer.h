@@ -1,4 +1,3 @@
-/* $Id: timer.h,v 1.21 2005/08/25 15:08:00 zas Exp $ */
 
 #ifndef EL__MAIN_TIMER_H
 #define EL__MAIN_TIMER_H

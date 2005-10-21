@@ -1,5 +1,4 @@
 /* Connection and data transport handling */
-/* $Id: connection.c,v 1.29 2005/08/18 02:40:51 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -1,5 +1,4 @@
 /* Options dialogs */
-/* $Id: options.c,v 1.180 2005/06/26 09:36:25 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

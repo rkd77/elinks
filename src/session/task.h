@@ -1,4 +1,3 @@
-/* $Id: task.h,v 1.19 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifndef EL__SESSION_TASK_H
 #define EL__SESSION_TASK_H

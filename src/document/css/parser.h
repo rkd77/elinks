@@ -1,4 +1,3 @@
-/* $Id: parser.h,v 1.15 2004/09/21 17:34:02 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_PARSER_H
 #define EL__DOCUMENT_CSS_PARSER_H

@@ -1,5 +1,4 @@
 /* Cookie-related dialogs */
-/* $Id: dialogs.c,v 1.88 2005/09/06 13:38:45 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

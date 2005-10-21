@@ -1,5 +1,4 @@
 /* Internal MIME types implementation dialogs */
-/* $Id: dialogs.c,v 1.107 2005/03/23 15:43:41 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

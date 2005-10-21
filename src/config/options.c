@@ -1,5 +1,4 @@
 /* Options variables manipulation core */
-/* $Id: options.c,v 1.495 2005/07/31 00:14:18 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

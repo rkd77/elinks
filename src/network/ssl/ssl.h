@@ -1,4 +1,3 @@
-/* $Id: ssl.h,v 1.26 2005/09/13 16:44:10 pasky Exp $ */
 
 #ifndef EL__NETWORK_SSL_SSL_H
 #define EL__NETWORK_SSL_SSL_H

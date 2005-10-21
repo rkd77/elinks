@@ -1,4 +1,3 @@
-/* $Id: property.h,v 1.20 2005/03/05 21:34:30 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_PROPERTY_H
 #define EL__DOCUMENT_CSS_PROPERTY_H

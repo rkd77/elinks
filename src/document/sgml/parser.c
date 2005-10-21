@@ -1,5 +1,4 @@
 /* SGML node handling */
-/* $Id: parser.c,v 1.8 2005/02/28 11:21:14 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Widget group implementation. */
-/* $Id: group.c,v 1.72 2005/03/24 11:44:42 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

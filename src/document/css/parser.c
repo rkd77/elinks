@@ -1,5 +1,4 @@
 /* CSS main parser */
-/* $Id: parser.c,v 1.141 2005/02/28 11:16:25 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

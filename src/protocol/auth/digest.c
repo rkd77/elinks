@@ -1,5 +1,4 @@
 /* Digest MD5 */
-/* $Id: digest.c,v 1.34 2005/06/13 03:04:25 jonas Exp $ */
 
 #if HAVE_CONFIG_H
 #include "config.h"

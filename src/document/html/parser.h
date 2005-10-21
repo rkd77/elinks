@@ -1,4 +1,3 @@
-/* $Id: parser.h,v 1.104 2005/07/15 04:37:55 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_H
 #define EL__DOCUMENT_HTML_PARSER_H

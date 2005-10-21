@@ -1,4 +1,3 @@
-/* $Id: sysinfo.h,v 1.8 2004/08/14 23:53:30 jonas Exp $ */
 
 #ifndef EL__OSDEP_OS2_SYSINFO_H
 #define EL__OSDEP_OS2_SYSINFO_H

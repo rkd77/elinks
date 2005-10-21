@@ -1,4 +1,3 @@
-/* $Id: msgbox.h,v 1.28 2005/03/23 11:18:08 zas Exp $ */
 
 #ifndef EL__BFU_MSGBOX_H
 #define EL__BFU_MSGBOX_H

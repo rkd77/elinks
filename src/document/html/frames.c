@@ -1,5 +1,4 @@
 /* HTML frames parser */
-/* $Id: frames.c,v 1.94 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Internal "mailto", "telnet", "tn3270" and misc. protocol implementation */
-/* $Id: user.c,v 1.81 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

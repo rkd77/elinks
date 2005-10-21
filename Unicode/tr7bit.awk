@@ -1,5 +1,4 @@
 #!/bin/awk -f
-# $Id: tr7bit.awk,v 1.4 2005/03/05 21:49:29 zas Exp $
 
 function join(array, start, sep, end, result, i)
 {

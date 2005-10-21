@@ -1,4 +1,3 @@
-/* $Id: getifaddrs.h,v 1.2 2004/04/13 10:15:40 zas Exp $ */
 
 #ifndef EL__OSDEP_GETIFADDRS_H
 #define EL__OSDEP_GETIFADDRS_H

@@ -1,5 +1,4 @@
 /* Periodic saving module */
-/* $Id: timer.c,v 1.5 2005/09/08 14:04:09 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

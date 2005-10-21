@@ -1,4 +1,3 @@
-/* $Id: connection.h,v 1.134 2005/09/14 15:23:15 zas Exp $ */
 
 #ifndef EL__NETWORK_CONNECTION_H
 #define EL__NETWORK_CONNECTION_H

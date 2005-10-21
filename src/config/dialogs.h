@@ -1,4 +1,3 @@
-/* $Id: dialogs.h,v 1.29 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifndef EL__CONFIG_DIALOGS_H
 #define EL__CONFIG_DIALOGS_H

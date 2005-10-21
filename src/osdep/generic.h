@@ -1,4 +1,3 @@
-/* $Id: generic.h,v 1.34 2005/06/13 07:35:56 jonas Exp $ */
 
 /* This is... er, the OS-independent part of osdep/ ;-). */
 

@@ -1,4 +1,3 @@
-/* $Id: mimetypes.h,v 1.5 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__MIME_BACKEND_MIMETYPES_H
 #define EL__MIME_BACKEND_MIMETYPES_H

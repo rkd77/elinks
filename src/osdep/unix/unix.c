@@ -1,5 +1,4 @@
 /* UNIX system-specific routines. */
-/* $Id: unix.c,v 1.27 2005/07/15 13:48:03 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: download.h,v 1.59 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__SESSION_DOWNLOAD_H
 #define EL__SESSION_DOWNLOAD_H

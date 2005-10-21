@@ -1,4 +1,3 @@
-/* $Id: dialogs.h,v 1.8 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifndef EL__GLOBHIST_DIALOGS_H
 #define EL__GLOBHIST_DIALOGS_H

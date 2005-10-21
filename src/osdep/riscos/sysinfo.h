@@ -1,4 +1,3 @@
-/* $Id: sysinfo.h,v 1.5 2004/08/14 23:48:40 jonas Exp $ */
 
 #ifndef EL__OSDEP_RISCOS_SYSINFO_H
 #define EL__OSDEP_RISCOS_SYSINFO_H

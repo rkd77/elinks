@@ -1,5 +1,4 @@
 -- Bookmark system for Links-Lua.
--- $Id: bm.lua,v 1.7 2005/03/27 22:59:41 miciah Exp $
 
 -----------------------------------------------------------------------
 --  User options

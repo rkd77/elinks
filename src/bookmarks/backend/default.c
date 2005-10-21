@@ -1,5 +1,4 @@
 /* Internal bookmarks support - default file format backend */
-/* $Id: default.c,v 1.21 2005/03/20 10:40:54 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

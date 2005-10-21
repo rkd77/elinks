@@ -1,5 +1,4 @@
 /* Conversion functions */
-/* $Id: conv.c,v 1.78 2005/06/26 18:16:39 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

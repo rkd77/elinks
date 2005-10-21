@@ -1,4 +1,3 @@
-/* $Id: core.h,v 1.3 2005/04/01 17:20:59 zas Exp $ */
 
 #ifndef EL__SCRIPTING_SEE_CORE_H
 #define EL__SCRIPTING_SEE_CORE_H

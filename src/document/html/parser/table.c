@@ -1,5 +1,4 @@
 /* HTML tables parser */
-/* $Id: table.c,v 1.51 2005/07/15 19:53:40 miciah Exp $ */
 
 /* Note that this does *not* fit to the HTML parser infrastructure yet, it has
  * some special custom calling conventions and is managed from

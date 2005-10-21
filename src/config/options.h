@@ -1,4 +1,3 @@
-/* $Id: options.h,v 1.120 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifndef EL__CONFIG_OPTIONS_H
 #define EL__CONFIG_OPTIONS_H

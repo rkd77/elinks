@@ -1,4 +1,3 @@
-/* $Id: menu.h,v 1.57 2005/07/21 14:32:59 jonas Exp $ */
 
 #ifndef EL__DIALOGS_MENU_H
 #define EL__DIALOGS_MENU_H

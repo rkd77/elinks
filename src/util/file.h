@@ -1,4 +1,3 @@
-/* $Id: file.h,v 1.15 2004/07/18 02:20:08 jonas Exp $ */
 
 #ifndef EL__UTIL_FILE_H
 #define EL__UTIL_FILE_H

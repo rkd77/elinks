@@ -1,5 +1,4 @@
 /* Text widget implementation. */
-/* $Id: text.c,v 1.120 2005/03/24 16:03:40 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

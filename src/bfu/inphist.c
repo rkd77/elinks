@@ -1,5 +1,4 @@
 /* Input history for input fields. */
-/* $Id: inphist.c,v 1.96 2005/08/03 23:02:59 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

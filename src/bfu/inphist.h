@@ -1,4 +1,3 @@
-/* $Id: inphist.h,v 1.19 2005/08/03 23:02:59 jonas Exp $ */
 
 #ifndef EL__BFU_INPHIST_H
 #define EL__BFU_INPHIST_H

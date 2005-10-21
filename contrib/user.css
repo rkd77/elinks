@@ -3,7 +3,6 @@
  * or filename, put the appropriate pathname in document.css.stylesheet.
  * ELinks will assume that the path is relative to the its configuration
  * directory if it does not begin with a slash. */
-/* $Id: user.css,v 1.2 2005/01/28 14:19:57 jonas Exp $ */
 
 body {
 	/* Don't like the default colours? No problem: */

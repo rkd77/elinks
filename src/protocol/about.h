@@ -1,4 +1,3 @@
-/* $Id: about.h,v 1.2 2005/03/05 21:04:49 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_ABOUT_H
 #define EL__PROTOCOL_ABOUT_H

@@ -1,4 +1,3 @@
-/* $Id: parser.h,v 1.2 2004/06/26 14:36:57 jonas Exp $ */
 
 #ifndef EL__COOKIES_PARSER_H
 #define EL__COOKIES_PARSER_H

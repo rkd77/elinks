@@ -1,5 +1,4 @@
 /* Open in new window handling */
-/* $Id: newwin.c,v 1.23 2005/05/09 11:52:53 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

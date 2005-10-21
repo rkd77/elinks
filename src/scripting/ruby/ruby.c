@@ -1,5 +1,4 @@
 /* Ruby module */
-/* $Id: ruby.c,v 1.2 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: table.h,v 1.16 2005/07/09 20:12:50 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_TABLE_H
 #define EL__DOCUMENT_HTML_PARSER_TABLE_H

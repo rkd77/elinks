@@ -1,4 +1,3 @@
-/* $Id: overrides.c,v 1.5 2005/08/18 02:40:50 miciah Exp $ */
 
 /* Elinks overrides for Win32 (MSVC + MingW)
  * Loosely based on osdep/beos/overrides.c by Mikulas Patocka.

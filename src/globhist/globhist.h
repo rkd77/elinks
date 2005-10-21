@@ -1,4 +1,3 @@
-/* $Id: globhist.h,v 1.26 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__GLOBHIST_GLOBHIST_H
 #define EL__GLOBHIST_GLOBHIST_H

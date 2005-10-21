@@ -1,4 +1,3 @@
-/* $Id: nntp.h,v 1.2 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_NNTP_NNTP_H
 #define EL__PROTOCOL_NNTP_NNTP_H

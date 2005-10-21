@@ -1,4 +1,3 @@
-/* $Id: draw.h,v 1.3 2004/07/13 15:09:17 jonas Exp $ */
 
 #ifndef EL__VIEWER_TEXT_DRAW_H
 #define EL__VIEWER_TEXT_DRAW_H

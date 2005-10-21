@@ -1,5 +1,4 @@
 /* Memory allocation manager */
-/* $Id: memory.c,v 1.25 2004/10/19 14:38:00 zas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* MREMAP_MAYMOVE */

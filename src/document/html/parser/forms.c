@@ -1,5 +1,4 @@
 /* HTML forms parser */
-/* $Id: forms.c,v 1.93 2005/07/15 20:17:25 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

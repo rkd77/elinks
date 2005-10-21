@@ -1,5 +1,4 @@
 /* Parsing of FTP `ls' directory output. */
-/* $Id: parse.c,v 1.47 2005/05/14 12:24:07 pasky Exp $ */
 
 /* Parts of this file was part of GNU Wget
  * Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc. */

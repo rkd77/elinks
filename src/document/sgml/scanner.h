@@ -1,4 +1,3 @@
-/* $Id: scanner.h,v 1.3 2004/09/25 23:51:04 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_SGML_SCANNER_H
 #define EL__DOCUMENT_SGML_SCANNER_H

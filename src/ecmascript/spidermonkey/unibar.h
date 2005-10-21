@@ -1,4 +1,3 @@
-/* $Id: unibar.h,v 1.1 2005/09/14 22:56:54 pasky Exp $ */
 
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_UNIBAR_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_UNIBAR_H

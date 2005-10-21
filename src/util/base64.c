@@ -1,5 +1,4 @@
 /* Base64 encode/decode implementation. */
-/* $Id: base64.c,v 1.17 2004/06/25 10:52:31 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

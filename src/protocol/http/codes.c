@@ -1,5 +1,4 @@
 /* HTTP response codes */
-/* $Id: codes.c,v 1.42 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* Needed for asprintf() */

@@ -1,5 +1,4 @@
 /* General element handlers */
-/* $Id: general.c,v 1.19 2005/09/06 13:46:22 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

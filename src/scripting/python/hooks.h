@@ -1,4 +1,3 @@
-/* $Id: hooks.h,v 1.1 2005/06/02 18:01:34 witekfl Exp $ */
 
 #ifndef EL__SCRIPTING_PYTHON_HOOKS_H
 #define EL__SCRIPTING_PYTHON_HOOKS_H

@@ -1,4 +1,3 @@
-/* $Id: marks.h,v 1.2 2004/06/07 16:36:07 jonas Exp $ */
 
 #ifndef EL__VIEWER_TEXT_MARKS_H
 #define EL__VIEWER_TEXT_MARKS_H

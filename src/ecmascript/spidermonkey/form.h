@@ -1,4 +1,3 @@
-/* $Id: form.h,v 1.1 2005/09/13 22:12:48 pasky Exp $ */
 
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_FORM_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_FORM_H

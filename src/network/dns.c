@@ -1,5 +1,4 @@
 /* Domain Name System Resolver Department */
-/* $Id: dns.c,v 1.126 2005/07/04 14:52:56 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

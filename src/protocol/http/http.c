@@ -1,5 +1,4 @@
 /* Internal "http" protocol implementation */
-/* $Id: http.c,v 1.449 2005/09/14 15:23:15 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

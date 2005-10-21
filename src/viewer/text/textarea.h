@@ -1,4 +1,3 @@
-/* $Id: textarea.h,v 1.29 2005/06/14 16:44:52 jonas Exp $ */
 
 #ifndef EL__VIEWER_TEXT_TEXTAREA_H
 #define EL__VIEWER_TEXT_TEXTAREA_H

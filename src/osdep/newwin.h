@@ -1,4 +1,3 @@
-/* $Id: newwin.h,v 1.9 2004/07/28 02:20:01 jonas Exp $ */
 
 #ifndef EL__OSDEP_NEWWIN_H
 #define EL__OSDEP_NEWWIN_H

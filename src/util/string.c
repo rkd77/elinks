@@ -1,5 +1,4 @@
 /* String handling functions */
-/* $Id: string.c,v 1.114 2005/08/10 16:54:03 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

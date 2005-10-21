@@ -1,4 +1,3 @@
-/* $Id: connection.h,v 1.3 2005/03/05 21:04:49 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_NNTP_CONNECTION_H
 #define EL__PROTOCOL_NNTP_CONNECTION_H

@@ -1,4 +1,3 @@
-/* $Id: mouse.h,v 1.6 2005/09/14 12:32:49 zas Exp $ */
 
 #ifndef EL__TERMINAL_MOUSE_H
 #define EL__TERMINAL_MOUSE_H

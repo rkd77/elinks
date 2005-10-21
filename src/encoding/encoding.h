@@ -1,4 +1,3 @@
-/* $Id: encoding.h,v 1.18 2005/06/12 01:53:49 jonas Exp $ */
 
 #ifndef EL__ENCODING_ENCODING_H
 #define EL__ENCODING_ENCODING_H

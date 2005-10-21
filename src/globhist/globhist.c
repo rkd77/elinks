@@ -1,5 +1,4 @@
 /* Global history */
-/* $Id: globhist.c,v 1.110 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

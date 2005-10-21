@@ -1,5 +1,4 @@
 /* Secure file saving handling */
-/* $Id: secsave.h,v 1.8 2004/07/28 02:20:01 jonas Exp $ */
 
 #ifndef EL__UTIL_SECSAVE_H
 #define EL__UTIL_SECSAVE_H

@@ -1,5 +1,4 @@
 /* Terminal windows stuff. */
-/* $Id: window.c,v 1.34 2005/09/13 14:50:47 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: smb.h,v 1.8 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_SMB_SMB_H
 #define EL__PROTOCOL_SMB_SMB_H

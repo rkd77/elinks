@@ -1,4 +1,3 @@
-/* $Id: kbd.h,v 1.14 2005/09/14 12:32:49 zas Exp $ */
 
 #ifndef EL__TERMINAL_KBD_H
 #define EL__TERMINAL_KBD_H

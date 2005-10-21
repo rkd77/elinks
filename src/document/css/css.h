@@ -1,4 +1,3 @@
-/* $Id: css.h,v 1.11 2004/05/26 16:22:08 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_CSS_H
 #define EL__DOCUMENT_CSS_CSS_H

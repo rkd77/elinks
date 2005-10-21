@@ -1,5 +1,4 @@
 /* Downloads managment */
-/* $Id: download.c,v 1.383 2005/09/08 15:45:41 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

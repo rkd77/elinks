@@ -1,5 +1,4 @@
 /* Terminal screen drawing routines. */
-/* $Id: screen.c,v 1.163 2005/06/15 18:45:00 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

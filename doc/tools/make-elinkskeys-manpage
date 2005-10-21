@@ -3,7 +3,6 @@
 # Generate the elinkskeys(5) manpage.
 # Copyright (c) Jonas Fonseca <fonseca@diku.dk>, 2005
 #
-# $Id: make-elinkskeys-manpage,v 1.8 2005/06/13 20:41:48 jonas Exp $
 
 # FIXME:
 #

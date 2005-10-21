@@ -1,5 +1,4 @@
 /* Tab-style (those containing real documents) windows infrastructure. */
-/* $Id: tab.c,v 1.86 2005/09/08 13:42:13 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

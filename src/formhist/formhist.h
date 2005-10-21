@@ -1,4 +1,3 @@
-/* $Id: formhist.h,v 1.37 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__FORMHIST_FORMHIST_H
 #define EL__FORMHIST_FORMHIST_H

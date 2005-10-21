@@ -1,4 +1,3 @@
-/* $Id: kbdbind.h,v 1.188 2005/08/15 01:37:15 miciah Exp $ */
 
 #ifndef EL__CONFIG_KBDBIND_H
 #define EL__CONFIG_KBDBIND_H

@@ -1,5 +1,4 @@
 /* Downloads progression stuff. */
-/* $Id: progress.c,v 1.35 2005/09/09 07:27:48 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

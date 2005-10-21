@@ -1,4 +1,3 @@
-/* $Id: button.h,v 1.40 2005/03/23 10:57:56 zas Exp $ */
 
 #ifndef EL__BFU_BUTTON_H
 #define EL__BFU_BUTTON_H

@@ -1,4 +1,3 @@
-/* $Id: math.h,v 1.5 2004/12/29 14:24:57 jonas Exp $ */
 
 #ifndef EL__UTIL_MATH_H
 #define EL__UTIL_MATH_H

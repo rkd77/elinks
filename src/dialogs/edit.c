@@ -1,5 +1,4 @@
 /* Generic support for edit/search historyitem/bookmark dialog */
-/* $Id: edit.c,v 1.87 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

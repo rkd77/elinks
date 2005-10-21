@@ -1,5 +1,4 @@
 /* Gopher access protocol (RFC 1436) */
-/* $Id: gopher.c,v 1.58 2005/06/13 00:43:29 jonas Exp $ */
 
 /* Based on version of HTGopher.c in the lynx tree.
  *

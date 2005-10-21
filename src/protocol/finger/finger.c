@@ -1,5 +1,4 @@
 /* Internal "finger" protocol implementation */
-/* $Id: finger.c,v 1.29 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

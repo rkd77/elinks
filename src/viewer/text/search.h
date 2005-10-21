@@ -1,4 +1,3 @@
-/* $Id: search.h,v 1.25 2005/06/14 16:44:52 jonas Exp $ */
 
 #ifndef EL__VIEWER_TEXT_SEARCH_H
 #define EL__VIEWER_TEXT_SEARCH_H

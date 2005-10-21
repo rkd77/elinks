@@ -1,4 +1,3 @@
-/* $Id: dialog.h,v 1.57 2005/06/13 00:43:26 jonas Exp $ */
 
 #ifndef EL__BFU_DIALOG_H
 #define EL__BFU_DIALOG_H

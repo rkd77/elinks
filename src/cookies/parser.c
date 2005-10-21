@@ -1,5 +1,4 @@
 /* Cookies name-value pairs parser  */
-/* $Id: parser.c,v 1.17 2005/02/28 10:25:21 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

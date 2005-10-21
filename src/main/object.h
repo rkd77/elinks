@@ -1,4 +1,3 @@
-/* $Id: object.h,v 1.11 2005/07/27 23:42:14 jonas Exp $ */
 
 #ifndef EL__MAIN_OBJECT_H
 #define EL__MAIN_OBJECT_H

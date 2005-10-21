@@ -1,4 +1,3 @@
-/* $Id: edit.h,v 1.12 2005/06/14 12:25:20 jonas Exp $ */
 
 #ifndef EL__DIALOGS_EDIT_H
 #define EL__DIALOGS_EDIT_H

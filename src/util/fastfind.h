@@ -1,4 +1,3 @@
-/* $Id: fastfind.h,v 1.18 2004/10/27 22:35:05 zas Exp $ */
 
 #ifndef EL__UTIL_FASTFIND_H
 #define EL__UTIL_FASTFIND_H

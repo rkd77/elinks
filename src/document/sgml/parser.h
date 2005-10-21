@@ -1,4 +1,3 @@
-/* $Id: parser.h,v 1.4 2004/09/24 02:11:44 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_SGML_PARSER_H
 #define EL__DOCUMENT_SGML_PARSER_H

@@ -1,4 +1,3 @@
-/* $Id: dialogs.h,v 1.1 2005/07/11 10:59:04 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_BITTORRENT_DIALOG_H
 #define EL__PROTOCOL_BITTORRENT_DIALOG_H

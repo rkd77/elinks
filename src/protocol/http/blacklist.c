@@ -1,5 +1,4 @@
 /* Blacklist manager */
-/* $Id: blacklist.c,v 1.29 2005/02/28 14:18:26 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

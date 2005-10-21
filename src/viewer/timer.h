@@ -1,4 +1,3 @@
-/* $Id: timer.h,v 1.7 2005/06/12 18:42:40 jonas Exp $ */
 
 #ifndef EL__VIEWER_TIMER_H
 #define EL__VIEWER_TIMER_H

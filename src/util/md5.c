@@ -1,5 +1,4 @@
 /* MD5 implementation (RFC 1321) */
-/* $Id: md5.c,v 1.1 2004/11/27 17:53:35 jonas Exp $ */
 
 /* This code implements the MD5 message-digest algorithm. The algorithm is due
  * to Ron Rivest.

@@ -1,5 +1,4 @@
 /* Listbox widget implementation. */
-/* $Id: listbox.c,v 1.212 2005/08/02 01:20:45 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

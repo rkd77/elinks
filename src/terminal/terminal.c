@@ -1,5 +1,4 @@
 /* Terminal interface - low-level displaying implementation. */
-/* $Id: terminal.c,v 1.89 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Options dialogs */
-/* $Id: dialogs.c,v 1.255 2005/08/01 20:00:11 miciah Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

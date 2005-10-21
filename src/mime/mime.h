@@ -1,4 +1,3 @@
-/* $Id: mime.h,v 1.19 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__MIME_MIME_H
 #define EL__MIME_MIME_H

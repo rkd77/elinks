@@ -1,5 +1,4 @@
 /* Dialog box implementation. */
-/* $Id: dialog.c,v 1.206 2005/06/13 00:43:26 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

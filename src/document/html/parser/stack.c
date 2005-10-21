@@ -1,5 +1,4 @@
 /* HTML elements stack */
-/* $Id: stack.c,v 1.48 2005/07/15 19:53:40 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

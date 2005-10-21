@@ -1,4 +1,3 @@
-/* $Id: listbox.h,v 1.83 2005/05/12 22:19:53 miciah Exp $ */
 
 #ifndef EL__BFU_LISTBOX_H
 #define EL__BFU_LISTBOX_H

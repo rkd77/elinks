@@ -1,5 +1,4 @@
 /* CSS property info */
-/* $Id: property.c,v 1.11 2004/06/30 05:51:10 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

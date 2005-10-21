@@ -1,4 +1,3 @@
-/* $Id: charsets.h,v 1.26 2005/07/15 20:17:25 miciah Exp $ */
 
 #ifndef EL__INTL_CHARSETS_H
 #define EL__INTL_CHARSETS_H

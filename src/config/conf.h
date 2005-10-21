@@ -1,4 +1,3 @@
-/* $Id: conf.h,v 1.16 2005/07/17 07:35:25 miciah Exp $ */
 
 #ifndef EL__CONFIG_CONF_H
 #define EL__CONFIG_CONF_H

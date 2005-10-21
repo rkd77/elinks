@@ -1,6 +1,5 @@
 /* Network news transport protocol implementation (RFC 977 and 2980) */
 
-/* $Id: nntp.c,v 1.3 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

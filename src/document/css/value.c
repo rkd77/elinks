@@ -1,5 +1,4 @@
 /* CSS property value parser */
-/* $Id: value.c,v 1.55 2004/06/30 06:00:11 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

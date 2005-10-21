@@ -1,4 +1,3 @@
-/* $Id: dump.h,v 1.14 2004/06/20 15:25:07 pasky Exp $ */
 
 #ifndef EL__VIEWER_DUMP_DUMP_H
 #define EL__VIEWER_DUMP_DUMP_H

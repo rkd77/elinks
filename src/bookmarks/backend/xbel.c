@@ -1,5 +1,4 @@
 /* Internal bookmarks XBEL bookmarks basic support */
-/* $Id: xbel.c,v 1.53 2005/04/29 07:40:51 zas Exp $ */
 
 /*
  * TODO: Decent XML output.

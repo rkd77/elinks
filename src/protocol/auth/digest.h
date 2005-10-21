@@ -1,4 +1,3 @@
-/* $Id: digest.h,v 1.6 2004/11/19 23:46:43 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_AUTH_DIGEST_H
 #define EL__PROTOCOL_AUTH_DIGEST_H

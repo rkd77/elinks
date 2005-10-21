@@ -1,4 +1,3 @@
-/* $Id: view.h,v 1.26 2004/12/17 04:40:51 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_VIEW_H
 #define EL__DOCUMENT_VIEW_H

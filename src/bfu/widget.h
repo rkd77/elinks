@@ -1,4 +1,3 @@
-/* $Id: widget.h,v 1.96 2005/03/22 14:56:23 zas Exp $ */
 
 #ifndef EL__BFU_WIDGET_H
 #define EL__BFU_WIDGET_H

@@ -1,5 +1,4 @@
 /* HTML viewer (and much more) */
-/* $Id: view.c,v 1.705 2005/09/08 13:42:13 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

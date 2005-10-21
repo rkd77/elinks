@@ -1,4 +1,3 @@
-/* $Id: time.h,v 1.49 2005/09/02 09:52:41 zas Exp $ */
 
 #ifndef EL__UTIL_TIME_H
 #define EL__UTIL_TIME_H

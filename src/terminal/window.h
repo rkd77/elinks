@@ -1,4 +1,3 @@
-/* $Id: window.h,v 1.12 2005/03/05 21:21:27 zas Exp $ */
 
 #ifndef EL__TERMINAL_WINDOW_H
 #define EL__TERMINAL_WINDOW_H

@@ -1,4 +1,3 @@
-/* $Id: response.h,v 1.2 2005/04/17 23:03:14 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_NNTP_RESPONSE_H
 #define EL__PROTOCOL_NNTP_RESPONSE_H

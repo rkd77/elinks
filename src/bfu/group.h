@@ -1,4 +1,3 @@
-/* $Id: group.h,v 1.15 2003/12/01 15:19:53 pasky Exp $ */
 
 #ifndef EL__BFU_GROUP_H
 #define EL__BFU_GROUP_H

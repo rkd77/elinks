@@ -1,4 +1,3 @@
-/* $Id: common.h,v 1.20 2004/06/22 21:43:54 jonas Exp $ */
 
 #ifndef EL__MIME_BACKEND_COMMON_H
 #define EL__MIME_BACKEND_COMMON_H

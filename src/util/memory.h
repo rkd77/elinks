@@ -1,4 +1,3 @@
-/* $Id: memory.h,v 1.33 2005/09/08 09:20:33 zas Exp $ */
 
 #ifndef EL__UTIL_MEMORY_H
 #define EL__UTIL_MEMORY_H

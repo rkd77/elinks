@@ -1,4 +1,3 @@
-/* $Id: lists.h,v 1.52 2005/07/25 20:18:05 pasky Exp $ */
 
 #ifndef EL__UTIL_LISTS_H
 #define EL__UTIL_LISTS_H

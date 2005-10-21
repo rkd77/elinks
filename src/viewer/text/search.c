@@ -1,5 +1,4 @@
 /* Searching in the HTML document */
-/* $Id: search.c,v 1.360 2005/09/08 14:04:09 zas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

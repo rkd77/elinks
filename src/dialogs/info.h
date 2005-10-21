@@ -1,4 +1,3 @@
-/* $Id: info.h,v 1.9 2004/11/22 13:27:41 zas Exp $ */
 
 #ifndef EL__DIALOGS_INFO_H
 #define EL__DIALOGS_INFO_H

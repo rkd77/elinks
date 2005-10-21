@@ -1,4 +1,3 @@
-/* $Id: bookmarks.h,v 1.40 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifndef EL__BOOKMARKS_BOOKMARKS_H
 #define EL__BOOKMARKS_BOOKMARKS_H

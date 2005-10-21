@@ -1,4 +1,3 @@
-/* $Id: progress.h,v 1.5 2005/04/18 17:41:09 jonas Exp $ */
 
 #ifndef EL__DIALOGS_PROGRESS_H
 #define EL__DIALOGS_PROGRESS_H

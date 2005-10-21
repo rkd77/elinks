@@ -1,4 +1,3 @@
-/* $Id: memdebug.h,v 1.5 2004/10/13 15:34:47 zas Exp $ */
 
 #ifndef EL__UTIL_MEMDEBUG_H
 #define EL__UTIL_MEMDEBUG_H

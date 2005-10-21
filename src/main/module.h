@@ -1,4 +1,3 @@
-/* $Id: module.h,v 1.17 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__MAIN_MODULE_H
 #define EL__MAIN_MODULE_H

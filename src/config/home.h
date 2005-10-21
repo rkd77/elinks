@@ -1,4 +1,3 @@
-/* $Id: home.h,v 1.6 2005/06/14 17:39:38 jonas Exp $ */
 
 #ifndef EL__CONFIG_HOME_H
 #define EL__CONFIG_HOME_H

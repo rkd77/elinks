@@ -1,4 +1,3 @@
-/* $Id: setup.h,v 1.55 2005/09/08 16:00:19 zas Exp $ */
 
 #ifndef EL__SETUP_H
 #define EL__SETUP_H

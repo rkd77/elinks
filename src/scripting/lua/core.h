@@ -1,4 +1,3 @@
-/* $Id: core.h,v 1.19 2005/04/14 22:40:42 miciah Exp $ */
 
 #ifndef EL__SCRIPTING_LUA_CORE_H
 #define EL__SCRIPTING_LUA_CORE_H

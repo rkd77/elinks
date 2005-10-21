@@ -1,4 +1,3 @@
-/* $Id: forms.h,v 1.9 2005/07/09 19:18:04 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_FORMS_H
 #define EL__DOCUMENT_HTML_PARSER_FORMS_H

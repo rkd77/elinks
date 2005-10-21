@@ -1,5 +1,4 @@
 /* Global history dialogs */
-/* $Id: dialogs.c,v 1.129 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

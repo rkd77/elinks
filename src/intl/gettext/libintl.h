@@ -1,4 +1,3 @@
-/* $Id: libintl.h,v 1.33 2005/08/18 02:40:50 miciah Exp $ */
 
 #ifndef EL__INTL_GETTEXT_LIBINTL_H
 #define EL__INTL_GETTEXT_LIBINTL_H

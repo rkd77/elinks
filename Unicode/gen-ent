@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id: gen-ent,v 1.10 2005/03/05 21:49:29 zas Exp $
 
 echo
 echo Generating entity table.

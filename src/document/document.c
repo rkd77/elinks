@@ -1,5 +1,4 @@
 /* The document base functionality */
-/* $Id: document.c,v 1.104 2005/09/07 23:18:04 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

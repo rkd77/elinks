@@ -1,4 +1,3 @@
-/* $Id: blacklist.h,v 1.9 2004/07/15 16:13:49 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_HTTP_BLACKLIST_H
 #define EL__PROTOCOL_HTTP_BLACKLIST_H

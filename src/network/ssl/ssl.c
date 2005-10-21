@@ -1,5 +1,4 @@
 /* SSL support - wrappers for SSL routines */
-/* $Id: ssl.c,v 1.61 2005/09/13 16:44:10 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

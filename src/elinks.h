@@ -1,5 +1,4 @@
 /* Global include with common functions and definitions for ELinks */
-/* $Id: elinks.h,v 1.39 2005/06/14 13:05:26 jonas Exp $ */
 
 #ifndef EL__ELINKS_H
 #define EL__ELINKS_H

@@ -1,5 +1,4 @@
 /* Sessions status management */
-/* $Id: status.c,v 1.125 2005/07/11 10:59:04 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

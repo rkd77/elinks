@@ -1,5 +1,4 @@
 /* Sessions managment - you'll find things here which you wouldn't expect */
-/* $Id: session.c,v 1.641 2005/09/08 16:00:19 zas Exp $ */
 
 /* stpcpy */
 #ifndef _GNU_SOURCE

@@ -1,4 +1,3 @@
-/* $Id: general.h,v 1.6 2005/08/10 14:01:17 witekfl Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_GENERAL_H
 #define EL__DOCUMENT_HTML_PARSER_GENERAL_H

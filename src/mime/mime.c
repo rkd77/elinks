@@ -1,5 +1,4 @@
 /* Functionality for handling mime types */
-/* $Id: mime.c,v 1.72 2005/06/28 19:38:51 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

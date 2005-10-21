@@ -1,4 +1,3 @@
-/* $Id: event.h,v 1.24 2005/05/17 15:21:47 zas Exp $ */
 
 #ifndef EL__TERMINAL_EVENT_H
 #define EL__TERMINAL_EVENT_H

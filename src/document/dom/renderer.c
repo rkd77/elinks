@@ -1,5 +1,4 @@
 /* DOM document renderer */
-/* $Id: renderer.c,v 1.27 2005/07/28 14:04:21 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

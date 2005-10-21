@@ -1,5 +1,4 @@
 /* Command line processing */
-/* $Id: cmdline.c,v 1.131 2005/08/04 12:53:09 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

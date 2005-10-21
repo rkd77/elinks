@@ -1,4 +1,3 @@
-/* $Id: tracker.h,v 1.1 2005/07/11 10:59:05 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_BITTORRENT_TRACKER_H
 #define EL__PROTOCOL_BITTORRENT_TRACKER_H

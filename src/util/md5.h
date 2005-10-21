@@ -1,4 +1,3 @@
-/* $Id: md5.h,v 1.6 2005/06/14 13:04:31 jonas Exp $ */
 
 #ifndef EL__UTIL_MD5_H
 #define EL__UTIL_MD5_H

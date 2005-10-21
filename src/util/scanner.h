@@ -1,4 +1,3 @@
-/* $Id: scanner.h,v 1.17 2005/05/14 21:00:24 miciah Exp $ */
 
 #ifndef EL__UTIL_SCANNER_H
 #define EL__UTIL_SCANNER_H

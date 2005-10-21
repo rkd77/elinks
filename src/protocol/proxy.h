@@ -1,4 +1,3 @@
-/* $Id: proxy.h,v 1.6 2005/02/02 17:33:15 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_PROXY_H
 #define EL__PROTOCOL_PROXY_H

@@ -1,4 +1,3 @@
-/* $Id: session.h,v 1.179 2005/09/08 13:42:13 zas Exp $ */
 
 #ifndef EL__SESSION_SESSION_H
 #define EL__SESSION_SESSION_H

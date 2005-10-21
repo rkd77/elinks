@@ -1,4 +1,3 @@
-/* $Id: download.h,v 1.8 2005/04/17 16:34:28 zas Exp $ */
 
 #ifndef EL__DIALOGS_DOWNLOAD_H
 #define EL__DIALOGS_DOWNLOAD_H

@@ -1,5 +1,4 @@
 /* Option definitions. */
-/* $Id: options.inc,v 1.203 2005/09/14 15:48:54 miciah Exp $ */
 
 /* TODO: Autogenerate this file from something more human readable. --jonas */
 /* TODO: Make #ifdef FEATURE more consistent. */

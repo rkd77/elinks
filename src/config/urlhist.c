@@ -1,5 +1,4 @@
 /* Manipulation with file containing URL history */
-/* $Id: urlhist.c,v 1.42 2005/09/08 14:04:09 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

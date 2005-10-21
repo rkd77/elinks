@@ -1,4 +1,3 @@
-/* $Id: options.h,v 1.63 2005/09/07 23:18:04 zas Exp $ */
 
 #ifndef EL__DOCUMENT_OPTIONS_H
 #define EL__DOCUMENT_OPTIONS_H

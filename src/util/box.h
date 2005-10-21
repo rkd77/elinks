@@ -1,4 +1,3 @@
-/* $Id: box.h,v 1.2 2004/12/29 15:04:21 zas Exp $ */
 
 #ifndef EL__UTIL_BOX_H
 #define EL__UTIL_BOX_H

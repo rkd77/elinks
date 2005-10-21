@@ -296,5 +296,4 @@ http://www.lighthouse.org/color_contrast.htm
 
 
 
-$Id: color-model.txt,v 1.18 2005/01/03 21:51:40 pasky Exp $
 vim: textwidth=80

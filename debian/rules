@@ -3,7 +3,6 @@
 # ELinks debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
 #
-# $Id: rules,v 1.17 2005/05/09 11:17:08 jonas Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1

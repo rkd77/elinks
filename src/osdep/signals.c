@@ -1,5 +1,4 @@
 /* Signals handling. */
-/* $Id: signals.c,v 1.35 2005/07/04 01:37:36 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

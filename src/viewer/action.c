@@ -1,5 +1,4 @@
 /* Sessions action management */
-/* $Id: action.c,v 1.162 2005/09/14 12:36:05 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

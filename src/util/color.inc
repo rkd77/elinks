@@ -3,7 +3,6 @@
  * is not defined; otherwise, only color_s.inc is included.
  * This list is mostly from X11 rgb.txt with some additions from various
  * sources and from original ELinks color.c file. */
-/* $Id: color.inc,v 1.6 2004/10/13 15:18:25 zas Exp $ */
 
 	{ "alice blue",			0xF0F8FF },
 	{ "antique white",		0xFAEBD7 },

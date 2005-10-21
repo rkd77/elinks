@@ -1,7 +1,6 @@
 /* Short list of color names and their rgb values, used by UI, and html stuff.
  * This is always included by src/util/color.c. If CONFIG_SMALL is not defined,
  * color.inc is also included. */
-/* $Id: color_s.inc,v 1.4 2004/10/13 15:18:25 zas Exp $ */
 
 	{"aliceblue",		0xF0F8FF},
 	{"antiquewhite",	0xFAEBD7},

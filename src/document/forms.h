@@ -1,4 +1,3 @@
-/* $Id: forms.h,v 1.8 2005/05/22 02:21:03 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_FORMS_H
 #define EL__DOCUMENT_FORMS_H
