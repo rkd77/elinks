@@ -1622,13 +1622,10 @@ static void *
 html_special(struct html_context *html_context, enum html_special_type c, ...)
 {
 	va_list l;
-	unsigned char *t;
 	struct part *part;
 	struct document *document;
-	unsigned long seconds;
-	struct form *form;
-	struct form_control *fc;
-
+	void *ret_val = NULL;
+	
 	assert(html_context);
 	if_assert_failed return NULL;
 
@@ -1642,34 +1639,38 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 	va_start(l, c);
 	switch (c) {
 		case SP_TAG:
-			t = va_arg(l, unsigned char *);
-			if (document)
+			if (document) {
+				unsigned char *t = va_arg(l, unsigned char *);
+
 				html_special_tag(document, t, X(part->cx), Y(part->cy));
-			va_end(l);
+			}
 			break;
 		case SP_FORM:
-			form = va_arg(l, struct form *);
+		{
+			struct form *form = va_arg(l, struct form *);
+			
 			html_special_form(part, form);
-			va_end(l);
 			break;
+		}
 		case SP_CONTROL:
-			fc = va_arg(l, struct form_control *);
+		{
+			struct form_control *fc = va_arg(l, struct form_control *);
+			
 			html_special_form_control(part, fc);
-			va_end(l);
 			break;
+		}
 		case SP_TABLE:
-			va_end(l);
-			return renderer_context.convert_table;
+			ret_val = renderer_context.convert_table;
+			break;
 		case SP_USED:
-			va_end(l);
-			return (void *) (long) !!document;
+			ret_val = (void *) (long) !!document;
+			break;
 		case SP_CACHE_CONTROL:
 		{
 			struct cache_entry *cached = renderer_context.cached;
 
 			cached->cache_mode = CACHE_MODE_NEVER;
 			cached->expire = 0;
-			va_end(l);
 			break;
 		}
 		case SP_CACHE_EXPIRES:
@@ -1677,7 +1678,6 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			time_t expires = va_arg(l, time_t);
 			struct cache_entry *cached = renderer_context.cached;
 
-			va_end(l);
 			if (!expires || cached->cache_mode == CACHE_MODE_NEVER)
 				break;
 
@@ -1690,13 +1690,15 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			struct frameset_param *fsp = va_arg(l, struct frameset_param *);
 			struct frameset_desc *frameset_desc;
 
-			va_end(l);
-			if (!fsp->parent && document->frame_desc) return NULL;
+			if (!fsp->parent && document->frame_desc)
+				break;
 
 			frameset_desc = create_frameset(fsp);
 			if (!fsp->parent && !document->frame_desc)
 				document->frame_desc = frameset_desc;
-			return frameset_desc;
+			
+			ret_val = frameset_desc;
+			break;
 		}
 		case SP_FRAME:
 		{
@@ -1704,51 +1706,47 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			unsigned char *name = va_arg(l, unsigned char *);
 			unsigned char *url = va_arg(l, unsigned char *);
 
-			va_end(l);
-
 			add_frameset_entry(parent, NULL, name, url);
-		}
 			break;
+		}
 		case SP_NOWRAP:
 			renderer_context.nowrap = !!va_arg(l, int);
-			va_end(l);
 			break;
 		case SP_REFRESH:
-			seconds = va_arg(l, unsigned long);
-			t = va_arg(l, unsigned char *);
-			va_end(l);
+		{
+			unsigned long seconds = va_arg(l, unsigned long);
+			unsigned char *t = va_arg(l, unsigned char *);
+			
 			document->refresh = init_document_refresh(t, seconds);
 			break;
+		}
 		case SP_COLOR_LINK_LINES:
-			va_end(l);
 			if (document && use_document_bg_colors(&document->options))
 				color_link_lines(html_context);
 			break;
 		case SP_STYLESHEET:
-		{
 #ifdef CONFIG_CSS
-			struct uri *uri = va_arg(l, struct uri *);
+			if (document) {
+				struct uri *uri = va_arg(l, struct uri *);
 
-			if (document)
 				add_to_uri_list(&document->css_imports, uri);
+			}
 #endif
-			va_end(l);
 			break;
-		}
 		case SP_SCRIPT:
-		{
 #ifdef CONFIG_ECMASCRIPT
-			struct uri *uri = va_arg(l, struct uri *);
+			if (document) {
+				struct uri *uri = va_arg(l, struct uri *);
 
-			if (document)
 				add_to_uri_list(&document->ecmascript_imports, uri);
+			}
 #endif
-			va_end(l);
 			break;
-		}
 	}
 
-	return NULL;
+	va_end(l);
+	
+	return ret_val;
 }
 
 void
