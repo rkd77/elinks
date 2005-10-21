@@ -13,10 +13,9 @@
 #include "config/home.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "scripting/scripting.h"
 #include "scripting/see/core.h"
-#include "session/session.h"
-#include "terminal/terminal.h"
-#include "terminal/window.h"
+#include "scripting/see/see.h"
 #include "util/error.h"
 #include "util/file.h"
 #include "util/string.h"
@@ -62,25 +61,7 @@ convert_see_string(struct string *string, struct SEE_string *source)
 void
 alert_see_error(struct session *ses, unsigned char *msg)
 {
-	struct terminal *term;
-
-	if (!ses) {
-		if (list_empty(terminals)) {
-			usrerror("[SEE script] %s", msg);
-			return;
-		}
-
-		term = terminals.next;
-
-	} else {
-		term = ses->tab->term;
-	}
-
-	msg = stracpy(msg);
-	if (!msg) return;
-
-	info_box(term, MSGBOX_NO_TEXT_INTL | MSGBOX_FREE_TEXT,
-		 N_("SEE error"), ALIGN_LEFT, msg);
+	report_scripting_error(&see_scripting_module, ses, msg);
 }
 
 
