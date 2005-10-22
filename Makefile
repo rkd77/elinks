@@ -7,8 +7,8 @@ CLEAN	= features.log
 all-recursive: config.h
 
 # Automagically rerun autotools
-config.status: $(top_srcdir)/configure
-	$(SHELL) ./config.status --recheck
+$(top_builddir)/config.status: $(top_srcdir)/configure
+	cd $(top_builddir) && $(SHELL) ./config.status --recheck
 
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 $(ACLOCAL_M4): $(top_srcdir)/configure.in $(top_srcdir)/acinclude.m4
@@ -17,13 +17,14 @@ $(ACLOCAL_M4): $(top_srcdir)/configure.in $(top_srcdir)/acinclude.m4
 $(top_srcdir)/configure: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOCONF)
 
-config.h: stamp-h
-	@if test ! -f $@; then \
+$(top_builddir)/config.h: $(top_builddir)/stamp-h
+	@cd $(top_builddir) && \
+	if test ! -f $@; then \
 		rm -f stamp-h; \
 		$(MAKE) stamp-h; \
 	else :; fi
 
-stamp-h: $(top_srcdir)/config.h.in $(top_builddir)/config.status
+$(top_builddir)/stamp-h: $(top_srcdir)/config.h.in $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
 	     $(SHELL) ./config.status
