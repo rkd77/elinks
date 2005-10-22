@@ -72,6 +72,18 @@ ifdef OBJS-yes
 OBJS += $(OBJS-yes)
 endif
 
+ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
+
+ifdef SUBDIRS-no
+SUBDIRS += $(SUBDIRS-no)
+endif
+ifdef OBJS-no
+OBJS += $(OBJS-no)
+endif
+
+endif
+
+
 ifdef OBJS
 lib.o: $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/lib.o))
 	$(call cmd,ld_objs)
@@ -89,6 +101,8 @@ list-default:
 
 clean-default:
 	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
+
+cleanall-default: clean-default
 
 install-default: all-default
 ifdef PROGS
@@ -109,9 +123,9 @@ endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive list-recursive
+.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive list-recursive
 
-all-recursive install-recursive clean-recursive list-recursive:
+all-recursive install-recursive clean-recursive cleanall-recursive list-recursive:
 ifdef SUBDIRS
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
@@ -120,6 +134,8 @@ endif
 all: all-recursive all-default all-local
 install: install-recursive install-default install-local
 clean: clean-recursive clean-default clean-local
+
+cleanall: cleanall-recursive cleanall-default
 list: list-recursive list-default
 
 all-local:

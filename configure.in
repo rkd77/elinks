@@ -18,6 +18,19 @@ AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
 
 AC_PROG_MAKE_SET
 
+MAKE=
+
+for make in gnumake gmake make false; do
+	if test "x$MAKE" = x; then
+		AC_PATH_PROGS(MAKE, "$make")
+	fi
+done
+
+# Cleanup if we are configuring with a previous build in the tree
+if test -e Makefile.config; then
+	"$MAKE" -C "$builddir" cleanall  >/dev/null 2>/dev/null
+fi
+
 builddir="`pwd`"
 
 dnl ===================================================================
@@ -1254,7 +1267,9 @@ AC_OUTPUT([ \
 
 srcdir2="$(cd "$srcdir" && pwd)"
 if test "$srcdir2" != "$builddir"; then
-	for i in $(make -C "$srcdir" list | grep Makefile); do
+	MAKEFILES=$("$MAKE" -C "$srcdir" list | grep Makefile)
+
+	for i in $MAKEFILES; do
 		$MKINSTALLDIRS "$builddir/$(dirname $i)"
 		grep top_builddir= "$srcdir/$i" > "$builddir/$i"
 		case "$srcdir" in
@@ -1264,7 +1279,7 @@ if test "$srcdir2" != "$builddir"; then
 		echo "creating $builddir/$i"
 	done
 fi
- 
+
 
 dnl ===================================================================
 dnl Configuration summary
