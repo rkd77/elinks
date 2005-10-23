@@ -27,6 +27,8 @@ call_see_hook(struct SEE_interpreter *see, unsigned char *name,
 {
 	struct SEE_string *hook_name = SEE_string_sprintf(see, name);
 	struct SEE_value hook;
+	SEE_try_context_t try_context;
+	struct SEE_value *exception;
 
 	SEE_OBJECT_GET(see, see->Global, hook_name, &hook);
 
@@ -34,13 +36,33 @@ call_see_hook(struct SEE_interpreter *see, unsigned char *name,
 	    || !SEE_OBJECT_HAS_CALL(hook.u.object))
 		return NULL;
 
-	SEE_OBJECT_CALL(see, hook.u.object, NULL, argc, args, result);
-#if 0
-	if (error) {
-		erb_report_error(NULL, error);
-		return EVENT_HOOK_STATUS_NEXT;
+	SEE_TRY(see, try_context) {
+		SEE_OBJECT_CALL(see, hook.u.object, NULL, argc, args, result);
 	}
-#endif
+
+	exception = SEE_CAUGHT(try_context);
+	if (exception) {
+		SEE_try_context_t try_context2;
+		struct SEE_value value;
+
+		SEE_TRY(see, try_context2) {
+			struct string error_msg;
+
+			SEE_ToString(see, exception, &value);
+
+			if (init_string(&error_msg)) {
+				convert_see_string(&error_msg, value.u.string);
+				alert_see_error(NULL, error_msg.source);
+				done_string(&error_msg);
+			}
+		}
+
+		if (SEE_CAUGHT(try_context2)) {
+			WDBG("exception thrown while printing exception");
+		}
+
+		return NULL;
+	}
 
 	return result;
 }

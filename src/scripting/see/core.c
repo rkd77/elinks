@@ -23,21 +23,7 @@
 #define SEE_HOOKS_FILENAME	"hooks.js"
 
 struct SEE_interpreter see_interpreter;
-struct SEE_object *see_browser_object;
 
-#if 0
-/* SEE strings */
-
-static struct SEE_string[] = {
-	{ 'E', 'L', 'i', 'n', 'k', 's' },
-	{ "goto-url",        0, script_hook_goto_url,        NULL },
-	{ "follow-url",      0, script_hook_follow_url,      NULL },
-	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
-	{ "get-proxy",       0, script_hook_get_proxy,       NULL },
-	{ "quit",            0, script_hook_quit,            NULL },
-	{ 0 },
-};
-#endif
 
 struct string *
 convert_see_string(struct string *string, struct SEE_string *source)
@@ -83,7 +69,7 @@ elinks_see_write(struct SEE_interpreter *see, struct SEE_object *self,
 		return;
 
 	if (list_empty(terminals)) {
-		usrerror("[SEE] ", string.source);
+		usrerror("[SEE] %s", string.source);
 		done_string(&string);
 		return;
 	}
@@ -92,19 +78,21 @@ elinks_see_write(struct SEE_interpreter *see, struct SEE_object *self,
 		 N_("SEE Message"), ALIGN_LEFT, string.source);
 }
 
-#if 0
+#if DATADRIVEN	
+_IDEA
 struct object_info browser_object[] = {
-	"ELinks",
+	"ELinks", SEE_ATTR_READONLY,
 	{ /* Properties: */
-		{ "version", SEE_STRING, VERSION, SEE_READONLY },
-		{ "home", ... },
-		{ NULL }
+		{ "version",	SEE_STRING,	VERSION,	SEE_ATTR_READONLY },
+		{ "home",	SEE_STRING,	NULL,		SEE_ATTR_READONLY },
 	},
 	{ /* Methods: (as name, handler, args) */
-		{ "write", elinks_see_write, 1 }, 
+		{ "write",	elinks_see_write, SEE_ATTR_READONLY }, 
 		{ NULL }
 	},
 };
+
+struct object_info *see_
 #endif
 
 static void
@@ -123,7 +111,7 @@ init_see_environment(struct SEE_interpreter *see)
 	elinks = SEE_Object_new(see);
 	SEE_SET_OBJECT(&value, elinks);
 	name = SEE_string_sprintf(see, "ELinks");
-	SEE_OBJECT_PUT(see, see->Global, name, &value, 0);
+	SEE_OBJECT_PUT(see, see->Global, name, &value, SEE_ATTR_READONLY);
 
 	/* Create a string and attach as 'ELinks.version' */
 	SEE_SET_STRING(&value, SEE_string_sprintf(see, VERSION));
@@ -146,7 +134,8 @@ init_see_environment(struct SEE_interpreter *see)
 static void
 see_abort_handler(struct SEE_interpreter *see, const char *msg)
 {
-	alert_see_error(NULL, (unsigned char *) msg);
+	ERROR((unsigned char *) msg);
+	/* TODO: reload scripts! */
 }
 
 static void
@@ -186,6 +175,7 @@ init_see(struct module *module)
 		struct SEE_input *input;
 		SEE_try_context_t try_context;
 		struct SEE_value *exception;
+		struct string error_msg;
 
 		/* Load ~/.elinks/hooks.js into the interpreter. */
 		input = SEE_input_file(see, file, path, NULL);
@@ -196,31 +186,31 @@ init_see(struct module *module)
 		SEE_INPUT_CLOSE(input);
 
 		exception = SEE_CAUGHT(try_context);
-		if (exception) {
+		if (exception && init_string(&error_msg)) {
 			SEE_try_context_t try_context2;
 			struct SEE_value value;
 
-			fprintf(stderr, "errors encountered while reading %s:", path);
 			SEE_TRY(see, try_context2) {
 				SEE_ToString(see, exception, &value);
-				SEE_string_fputs(value.u.string, stderr);
+				convert_see_string(&error_msg, value.u.string);
 #if 0
 				if (ctxt.throw_file)
 					fprintf(stderr, "  (thrown from %s:%d)\n", 
 						ctxt.throw_file, ctxt.throw_line);
 #endif
-				SEE_PrintTraceback(see, stderr);
 			}
 
+			WDBG("errors encountered while reading %s:\n%s", path, error_msg.source);
+			done_string(&error_msg);
+
 			if (SEE_CAUGHT(try_context2)) {
-				fprintf(stderr, "exception thrown while "
+				WDBG("exception thrown while "
 					"printing exception");
 #if 0
 				if (ctxt2.throw_file)
 					fprintf(stderr, " at %s:%d",
 						ctxt2.throw_file, ctxt2.throw_line);
 #endif
-				fprintf(stderr, "\n");
 			}
 		}
 	}
