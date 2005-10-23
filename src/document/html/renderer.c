@@ -840,14 +840,14 @@ justify_line(struct html_context *html_context, int y)
 	/* Realign line */
 
 	if (spaces > 1) {
-		int insert = overlap(par_format) - len;
+		int diff = overlap(par_format) - len;
 		int prev_end = 0;
 		int word;
 
 		clear_hchars(html_context, 0, y, overlap(par_format));
 
 		for (word = 0; word < spaces; word++) {
-			/* We have to increase line length by 'insert' num. of
+			/* We have to increase line length by 'diff' num. of
 			 * characters, so we move 'word'th word 'word_shift'
 			 * characters right. */
 			int word_start = space_list[word] + 1;
@@ -860,7 +860,7 @@ justify_line(struct html_context *html_context, int y)
 			if_assert_failed continue;
 			if (!word_len) continue;
 
-			word_shift = (word * insert) / (spaces - 1);
+			word_shift = (word * diff) / (spaces - 1);
 			new_start = word_start + word_shift;
 
 			copy_chars(html_context, new_start, y, word_len,
