@@ -46,6 +46,11 @@ static struct option_info ecmascript_options[] = {
 		"error_reporting", 0, 0,
 		N_("Open a message box when a script reports an error.")),
 
+	INIT_OPT_BOOL("ecmascript", N_("Ignore <noscript> content"),
+		"ignore_noscript", 0, 0,
+		N_("Whether to ignore content enclosed by the <noscript> tag\n"
+                   " when ECMAScript is enabled.")),
+
 	INIT_OPT_INT("ecmascript", N_("Maximum execution time"),
 		"max_exec_time", 0, 1, 3600, 5,
 		N_("Maximum execution time in seconds for a script.")),

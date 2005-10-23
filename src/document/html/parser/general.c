@@ -805,9 +805,9 @@ html_noscript(struct html_context *html_context, unsigned char *a)
 {
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */
-#if 0
-// #ifdef CONFIG_ECMASCRIPT
-	if (get_opt_bool("ecmascript.enable"))
+#ifdef CONFIG_ECMASCRIPT
+	if (get_opt_bool("ecmascript.enable")
+            && get_opt_bool("ecmascript.ignore_noscript"))
 		html_skip(html_context, a);
 #endif
 }
