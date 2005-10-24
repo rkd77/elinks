@@ -69,7 +69,7 @@ var dumbprefixes = {
 function expand_dumbprefix(context, current_url)
 {
 	if (dumbprefixes[context.url]) {
-		context.url = dumbprefixes[context.url].replace(/%c/, context.current_url)
+		context.url = dumbprefixes[context.url].replace(/%c/, current_url)
 		return true
 	}
 
@@ -78,7 +78,7 @@ function expand_dumbprefix(context, current_url)
 
 goto_url_hooks.push(expand_dumbprefix)
 
-function gmane (url)
+function gmane(url)
 {
 	var match = url.match(/([^\s]+)\s+(.*)$/)
 	var group = match[1]
@@ -89,11 +89,23 @@ function gmane (url)
 	return "http://search.gmane.org/search.php?query=" + words + "&group=" + group
 }
 
-// You can write "gg:foo" or "gg foo" to goto URL dialog and it'll ask google
-// for it automagically.
+function gitweb(base_url)
+{
+	return function (arguments) {
+		var url = base_url
+		var match = arguments.match(/^(search|summary|shortlog|log|commit|commitdiff|tree)(\s(.*))?/)
 
-// Note that this is _mostly_ obsoleted by the URI rewrite plugin. (It can't do the
-// metas, though.)
+		if (match[1])
+			url += ';a=' + match[1]
+		else
+			url += ';a=summary'
+
+		if (match[1] == 'search' && match[3])
+			url += ';s=' + escape(match[3])
+
+		return url
+	}
+}
 
 function bugzilla (base_url)
 {
@@ -124,6 +136,7 @@ var smartprefixes = {
 	// Whose idea was it to use 'gg' for websearches? -- Miciah
 	//gg = "http://groups.google.com/groups?q=%s",
 	gi:		"http://images.google.com/images?q=%s",
+	gitweb:		gitweb("http://pasky.or.cz/gitweb.cgi?p=elinks.git"),
 	gmane:		gmane,
 	gn:		"http://news.google.com/news?q=%s",
 	go:		"http://www.google.com/search?q=%s&btnG=Google+Search",
