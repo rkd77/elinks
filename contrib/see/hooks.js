@@ -78,9 +78,41 @@ function expand_dumbprefix(context, current_url)
 
 goto_url_hooks.push(expand_dumbprefix)
 
+function gmane (url)
+{
+	var match = url.match(/([^\s]+)\s+(.*)$/)
+	var group = match[1]
+	var words = match[2]
+
+	if (!words) return null
+
+	return "http://search.gmane.org/search.php?query=" + words + "&group=" + group
+}
+
+// You can write "gg:foo" or "gg foo" to goto URL dialog and it'll ask google
+// for it automagically.
+
+// Note that this is _mostly_ obsoleted by the URI rewrite plugin. (It can't do the
+// metas, though.)
+
+function bugzilla (base_url)
+{
+	return function (arguments) {
+		if (!arguments || arguments == '')
+			return base_url
+
+		if (arguments.match(/^[\d]+$/))
+			return base_url + 'show_bug.cgi?id=' + arguments
+
+		return base_url + 'buglist.cgi?short_desc_type=allwordssubstr'
+			+ '&short_desc=' + escape(arguments)
+	}
+}
+
 
 var smartprefixes = {
 	arc:		"http://web.archive.org/web/*/%s",
+	bug:		bugzilla('http://bugzilla.elinks.or.cz/'),
 	cambridge:	"http://dictionary.cambridge.org/results.asp?searchword=%s",
 	cliki:		"http://www.cliki.net/admin/search?words:	%s",
 	d:		"http://www.dict.org/bin/Dict?Query:	%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query",
@@ -92,6 +124,7 @@ var smartprefixes = {
 	// Whose idea was it to use 'gg' for websearches? -- Miciah
 	//gg = "http://groups.google.com/groups?q=%s",
 	gi:		"http://images.google.com/images?q=%s",
+	gmane:		gmane,
 	gn:		"http://news.google.com/news?q=%s",
 	go:		"http://www.google.com/search?q=%s&btnG=Google+Search",
 	gwho:		"http://www.googlism.com/?ism=%s&name=1",
@@ -155,8 +188,7 @@ function expand_smartprefix(context, current_url)
 				context.url = smartprefixes[nick].replace(/%s/, escape(val))
 				return true
 
-			} else if (typeof smartprefixes[nick] == 'object'
-			    && smartprefixes[nick].constructor == Function) {
+			} else if (typeof smartprefixes[nick] == 'function') {
 				context.url = smartprefixes[nick](val)
 				return true
 
