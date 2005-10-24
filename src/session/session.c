@@ -1,5 +1,4 @@
 /* Sessions managment - you'll find things here which you wouldn't expect */
-/* $Id: session.c,v 1.641 2005/09/08 16:00:19 zas Exp $ */
 
 /* stpcpy */
 #ifndef _GNU_SOURCE
@@ -760,8 +759,9 @@ setup_first_session(struct session *ses, struct uri *uri)
 	}
 
 	if (!get_opt_bool("config.saving_style_w")) {
-		get_opt_bool("config.saving_style_w") = 1;
-		get_opt_rec(config_options, "config.saving_style_w")->flags |= OPT_TOUCHED;
+		struct option *opt = get_opt_rec(config_options, "config.saving_style_w");
+		opt->value.number = 1;
+		option_changed(ses, opt, opt);
 		if (get_opt_int("config.saving_style") != 3) {
 			info_box(term, 0,
 				 N_("Warning"), ALIGN_CENTER,

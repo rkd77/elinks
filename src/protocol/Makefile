@@ -1,5 +1,5 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
 SUBDIRS-$(CONFIG_FINGER)	+= finger
@@ -15,4 +15,4 @@ OBJS-$(CONFIG_DATA)		+= data.o
 
 OBJS = about.o date.o header.o protocol.o proxy.o uri.o user.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

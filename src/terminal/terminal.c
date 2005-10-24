@@ -1,5 +1,4 @@
 /* Terminal interface - low-level displaying implementation. */
-/* $Id: terminal.c,v 1.89 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -15,6 +14,7 @@
 #include "elinks.h"
 
 #include "bookmarks/bookmarks.h"
+#include "config/options.h"
 #include "intl/gettext/libintl.h"
 #include "main/main.h"
 #include "main/object.h"
@@ -161,7 +161,8 @@ destroy_all_terminals(void)
 static void
 check_if_no_terminal(void)
 {
-	program.terminate = list_empty(terminals);
+	program.terminate = list_empty(terminals)
+			    && !get_opt_bool("ui.sessions.keep_session_active");
 }
 
 void

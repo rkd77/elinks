@@ -1,5 +1,4 @@
 -- Source-code highlighting hook
--- $Id: highlight.lua,v 1.5 2005/03/25 19:02:48 miciah Exp $
 
 highlight_file_types = {
     patch = "%.patch$",

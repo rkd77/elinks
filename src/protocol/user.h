@@ -1,4 +1,3 @@
-/* $Id: user.h,v 1.11 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_USER_H
 #define EL__PROTOCOL_USER_H

@@ -1,5 +1,4 @@
 /* Signals handling. */
-/* $Id: signals.h,v 1.8 2005/06/12 01:13:58 jonas Exp $ */
 
 #ifndef EL__OSDEP_SIGNALS_H
 #define EL__OSDEP_SIGNALS_H

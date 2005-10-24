@@ -1,5 +1,4 @@
 /* Lua scripting hooks */
-/* $Id: hooks.c,v 1.67 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

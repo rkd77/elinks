@@ -1,5 +1,4 @@
 /* Pseudo about: protocol implementation */
-/* $Id: about.c,v 1.15 2005/06/12 01:47:54 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

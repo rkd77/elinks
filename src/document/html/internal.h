@@ -1,4 +1,3 @@
-/* $Id: internal.h,v 1.66 2005/08/24 08:38:59 zas Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_INTERNAL_H
 #define EL__DOCUMENT_HTML_INTERNAL_H

@@ -1,10 +1,10 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 
-elinks.1: elinks.1.in $(path_to_top)/configure.in
-	cd $(path_to_top) && \
+elinks.1: $(srcdir)/elinks.1.in $(top_srcdir)/configure.in
+	cd $(top_srcdir) && \
 	CONFIG_FILES="$(RELPATH)$@" CONFIG_HEADERS= $(SHELL) ./config.status
 
 MAN1 = elinks.1
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

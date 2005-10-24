@@ -1,5 +1,4 @@
 /* Internal bookmarks support */
-/* $Id: bookmarks.c,v 1.171 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

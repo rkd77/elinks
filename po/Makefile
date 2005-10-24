@@ -1,5 +1,5 @@
-path_to_top=..
-include $(path_to_top)/Makefile.config
+top_builddir=..
+include $(top_builddir)/Makefile.config
 
 # Where to install the catalog files.
 localedir = $(datadir)/locale
@@ -7,17 +7,15 @@ localedir = $(datadir)/locale
 # These are for some reason not added magically to the Makefile.
 MSGMERGE = msgmerge
 
-POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
-POTFILES_ABS = $(shell cd $(top_srcdir); find src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+# Name of the file containing the list of files to translate (used by
+# xgettext) 
+POTFILES_ABS_LIST = potfiles.list
 
 
 SUFFIXES = .po .gmo .mo
 .SUFFIXES: .gmo .mo .po
 
-.po.mo:
-	$(MSGFMT) -o $@ $<
-
-.po.gmo:
+%.gmo: $(srcdir)/%.po
 	@file=`echo $* | sed 's,.*/,,'`.gmo \
 	  && rm -f $$file && echo -n $*": " \
 	  && $(GMSGFMT) --statistics -o $$file $<
@@ -43,16 +41,20 @@ all-local: $(CATALOGS)
 ### Creating the template po template file
 #
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
-# not been added to the cvs repo. Beware of junk entries!
+# not been added to the git repo. Beware of junk entries!
 
-$(srcdir)/$(PACKAGE).pot: $(POTFILES_REL)
+$(srcdir)/$(POTFILES_ABS_LIST):
+	@( cd $(top_srcdir); \
+	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
+	 > $(srcdir)/$(POTFILES_ABS_LIST)
+
+$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST)
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
-		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ $(POTFILES_ABS) \
-	&& test ! -f $(PACKAGE).po \
-	   || ( rm -f $(srcdir)/$(PACKAGE).pot \
-		&& mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot )
+		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)/$(POTFILES_ABS_LIST) \
+	&& test -f $(PACKAGE).po \
+	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot 
 
 
 ### Updating po and gmo files
@@ -63,23 +65,16 @@ $(srcdir)/$(PACKAGE).pot: $(POTFILES_REL)
 # either <lang> or <lang>.po when calling make. Example: make update-po PO=is
 
 update-po: Makefile $(srcdir)/$(PACKAGE).pot
-	@cd $(srcdir); \
-	if test -n "$(PO)"; then \
-	  lang=`echo $(PO) | sed 's/\.po//'`; \
-	  catalogs=$$lang.gmo; \
-	fi; \
-	if test -z "$$catalogs"; then catalogs='$(GMOFILES)'; fi; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  echo -n "$$lang: "; \
-	  if $(MSGMERGE) $$lang.po $(PACKAGE).pot -o $$lang.new.po; then \
-	    mv -f $$lang.new.po $$lang.po; \
+	@cd $(srcdir)
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(lang): "; \
+	  if $(MSGMERGE) $(lang).po $(PACKAGE).pot -o $(lang).new.po; then \
+	    mv -f $(lang).new.po $(lang).po; \
 	  else \
-	    echo "msgmerge for $$cat failed!"; \
-	    rm -f $$lang.new.po; \
+	    echo "msgmerge failed!"; \
+	    rm -f $(lang).new.po; \
 	  fi; \
-	done
+	)
 	$(MAKE) update-gmo
 
 update-gmo: Makefile $(GMOFILES)
@@ -90,17 +85,10 @@ update-gmo: Makefile $(GMOFILES)
 #
 
 check-po:
-	@if test -n "$(PO)"; then \
-	  lang=`echo $(PO) | sed 's/\.po//'`; \
-	  catalogs=$$lang.gmo; \
-	fi; \
-	if test -z "$$catalogs"; then catalogs='$(GMOFILES)'; fi; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  echo -n "$$lang: "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $$lang.po; \
-	done
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	  echo -n "$(lang): "; \
+	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(lang).po; \
+	)
 
 ### Installation and distribution
 #
@@ -108,28 +96,18 @@ check-po:
 
 install-local: install-local-$(CONFIG_NLS)
 install-local-no:
-install-local-yes:
+install-local-yes: all-local
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
-	@catalogs='$(CATALOGS)'; \
-	for cat in $$catalogs; do \
-	  cat=`basename $$cat`; \
-	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  dir=$(localedir)/$$lang/LC_MESSAGES; \
-	  $(MKINSTALLDIRS) $(DESTDIR)$$dir; \
-	  if test -r $(srcdir)/$$cat; then \
-	    podir=./$(srcdir); \
-	    if test "$$(cd $$podir && pwd)" = "$$(pwd)"; then podir=; fi; \
-	    $(call ncmd,installdata,$$podir$$cat,$(DESTDIR)$$dir/$(PACKAGE).mo); \
-	  else \
-	    echo "Error: Cannot find $$cat"; \
-	  fi; \
-	done
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(CATALOGS))), \
+		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES; \
+		$(call ncmd,installdata,$(lang).gmo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES/$(PACKAGE).mo); \
+	)
 
 # Steal the `dist' target so that .po and .gmo files will be properly updated
 # then the dependence on `distdir' will take care of copying.
 dist: update-po distdir
 
 clean-local:
-	rm -f $(PACKAGE).po *.new.po
+	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

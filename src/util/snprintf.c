@@ -1,5 +1,4 @@
 /* Own portable snprintf() implementation */
-/* $Id: snprintf.c,v 1.30 2005/04/29 15:54:55 zas Exp $ */
 
 /* These sources aren't the officially distributed version, they are modified
  * by us (ELinks coders) and some other third-party hackers. See ELinks

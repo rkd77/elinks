@@ -1,7 +1,7 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 SUBDIRS = backend
 OBJS	= dialogs.o mime.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

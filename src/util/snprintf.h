@@ -1,4 +1,3 @@
-/* $Id: snprintf.h,v 1.15 2005/05/10 03:30:25 jonas Exp $ */
 
 #ifndef EL__UTIL_SNPRINTF_H
 #define EL__UTIL_SNPRINTF_H

@@ -1,5 +1,4 @@
 /* Color parser */
-/* $Id: color.c,v 1.25 2005/03/05 21:34:30 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

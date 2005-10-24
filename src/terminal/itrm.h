@@ -1,4 +1,3 @@
-/* $Id: itrm.h,v 1.1 2005/09/14 10:04:54 zas Exp $ */
 
 #ifndef EL__TERMINAL_ITRM_H
 #define EL__TERMINAL_ITRM_H

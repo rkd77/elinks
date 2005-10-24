@@ -1,4 +1,3 @@
-/* $Id: progress.h,v 1.29 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__NETWORK_PROGRESS_H
 #define EL__NETWORK_PROGRESS_H

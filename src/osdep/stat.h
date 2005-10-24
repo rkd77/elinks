@@ -1,5 +1,4 @@
 /* Stat-related compatibility stuff. */
-/* $Id: stat.h,v 1.2 2005/09/14 15:43:01 jonas Exp $ */
 
 #ifndef EL__OSDEP_STAT_H
 #define EL__OSDEP_STAT_H

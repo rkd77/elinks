@@ -1,5 +1,4 @@
 /* Options dialogs */
-/* $Id: options.c,v 1.180 2005/06/26 09:36:25 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -38,6 +37,8 @@ display_codepage(struct terminal *term, void *name_, void *xxx)
 
 	if (opt->value.number != index) {
 		opt->value.number = index;
+		/* TODO: option_changed() (we need to review the hooks
+		 * to handle NULL ses or properly document that stuff). */
 		opt->flags |= OPT_TOUCHED;
 	}
 

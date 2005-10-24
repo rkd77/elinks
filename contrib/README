@@ -24,4 +24,3 @@ Files not listed here have description included in their header.
 	patch for $VIMRUNTIME/filetype.vim so that elinks.conf is properly
 	detected and the elinks syntax is associated to it.
 
-$Id: README,v 1.11 2003/06/21 13:25:02 jonas Exp $

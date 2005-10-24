@@ -1,5 +1,4 @@
 /* BitTorrent bencoding scanner and parser */
-/* $Id: bencoding.c,v 1.1 2005/07/11 10:59:04 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

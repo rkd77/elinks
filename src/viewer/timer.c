@@ -1,5 +1,4 @@
 /* Internal inactivity timer. */
-/* $Id: timer.c,v 1.32 2005/08/25 15:08:00 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

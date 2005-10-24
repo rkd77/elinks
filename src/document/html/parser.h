@@ -1,4 +1,3 @@
-/* $Id: parser.h,v 1.104 2005/07/15 04:37:55 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_H
 #define EL__DOCUMENT_HTML_PARSER_H
@@ -33,6 +32,8 @@ enum format_attr {
 	AT_SUBSCRIPT = 32,
 	AT_SUPERSCRIPT = 64,
 	AT_PREFORMATTED = 128,
+	AT_UPDATE_SUB = 256,
+	AT_UPDATE_SUP = 512,
 };
 
 struct text_attrib_style {

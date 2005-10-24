@@ -1,4 +1,3 @@
-/* $Id: stub.h,v 1.12 2005/02/05 05:22:07 jonas Exp $ */
 
 #ifndef EL__OSDEP_STUB_H
 #define EL__OSDEP_STUB_H

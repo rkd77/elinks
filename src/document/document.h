@@ -1,4 +1,3 @@
-/* $Id: document.h,v 1.89 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_DOCUMENT_H
 #define EL__DOCUMENT_DOCUMENT_H

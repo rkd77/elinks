@@ -1,6 +1,5 @@
 -- Check MD5 sums of download files automagically (it expects them in
 -- downloadedfile.txt).
--- $Id: md5check.lua,v 1.5 2005/04/15 15:03:48 miciah Exp $
 
 ----------------------------------------------------------------------
 -- Installation

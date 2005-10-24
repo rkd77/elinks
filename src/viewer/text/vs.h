@@ -1,4 +1,3 @@
-/* $Id: vs.h,v 1.27 2004/12/19 00:17:55 pasky Exp $ */
 
 #ifndef EL__VIEWER_TEXT_VS_H
 #define EL__VIEWER_TEXT_VS_H

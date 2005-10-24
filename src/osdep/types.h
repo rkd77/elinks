@@ -1,4 +1,3 @@
-/* $Id: types.h,v 1.13 2005/06/14 18:02:25 jonas Exp $ */
 
 #ifndef EL__OSDEP_TYPES_H
 #define EL__OSDEP_TYPES_H

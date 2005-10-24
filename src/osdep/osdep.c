@@ -1,5 +1,4 @@
 /* Features which vary with the OS */
-/* $Id: osdep.c,v 1.172 2005/07/20 15:41:33 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

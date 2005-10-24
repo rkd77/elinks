@@ -1,5 +1,4 @@
 /* HTML attributes */
-/* $Id: attribute.inc,v 1.2 2004/09/24 00:44:59 jonas Exp $ */
 /* This list is made from http://www.w3.org/TR/REC-html40/index/attributes.html
  * unless otherwise noted. */
 

@@ -1,5 +1,4 @@
 /* Option definitions. */
-/* $Id: options.inc,v 1.203 2005/09/14 15:48:54 miciah Exp $ */
 
 /* TODO: Autogenerate this file from something more human readable. --jonas */
 /* TODO: Make #ifdef FEATURE more consistent. */
@@ -1191,6 +1190,10 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_TREE("ui", N_("Sessions"),
 		"sessions", OPT_SORT,
 		N_("Sessions settings.")),
+
+	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
+		"keep_session_active", 0, 0,
+		N_("Keep the session active even if the last terminal exits.")),
 
 	INIT_OPT_BOOL("ui.sessions", N_("Auto save session"),
 		"auto_save", 0, 0,

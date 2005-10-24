@@ -1,4 +1,3 @@
-/* $Id: uri.h,v 1.158 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_URI_H
 #define EL__PROTOCOL_URI_H

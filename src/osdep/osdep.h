@@ -1,4 +1,3 @@
-/* $Id: osdep.h,v 1.45 2005/06/14 12:56:09 jonas Exp $ */
 
 #ifndef EL__OSDEP_OSDEP_H
 #define EL__OSDEP_OSDEP_H

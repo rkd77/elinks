@@ -1,5 +1,4 @@
 /* Hotkeys handling. */
-/* $Id: hotkey.c,v 1.31 2005/01/05 14:37:44 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

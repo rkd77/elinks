@@ -1,4 +1,3 @@
-/* $Id: renderer.h,v 1.3 2004/09/24 02:08:14 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_DOM_RENDERER_H
 #define EL__DOCUMENT_DOM_RENDERER_H

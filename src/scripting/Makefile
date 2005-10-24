@@ -1,12 +1,13 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_GUILE)		+= guile
 SUBDIRS-$(CONFIG_LUA)		+= lua
 SUBDIRS-$(CONFIG_PERL)		+= perl
 SUBDIRS-$(CONFIG_PYTHON)	+= python
 SUBDIRS-$(CONFIG_RUBY)		+= ruby
+SUBDIRS-$(CONFIG_SEE)		+= see
 
 OBJS = scripting.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

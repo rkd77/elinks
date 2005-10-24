@@ -1,5 +1,4 @@
 /* MIME handling backends multiplexing */
-/* $Id: common.c,v 1.23 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

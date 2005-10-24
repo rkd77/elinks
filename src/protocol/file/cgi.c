@@ -1,5 +1,4 @@
 /* Internal "cgi" protocol implementation */
-/* $Id: cgi.c,v 1.113 2005/06/29 09:46:01 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

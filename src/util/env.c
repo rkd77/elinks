@@ -1,5 +1,4 @@
 /* Environment variables handling */
-/* $Id: env.c,v 1.2 2005/06/30 09:52:50 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

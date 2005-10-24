@@ -1,5 +1,4 @@
 /* Internal "bittorrent" protocol implementation */
-/* $Id: bittorrent.c,v 1.7 2005/07/22 08:05:58 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

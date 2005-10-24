@@ -1,5 +1,4 @@
 /* SGML node handling */
-/* $Id: html.c,v 1.3 2004/12/20 00:08:07 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

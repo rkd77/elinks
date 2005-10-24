@@ -1,5 +1,4 @@
 /* Low-level terminal-suitable I/O routines */
-/* $Id: hardio.c,v 1.21 2005/04/29 18:13:59 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

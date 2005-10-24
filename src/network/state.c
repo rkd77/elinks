@@ -1,5 +1,4 @@
 /* Status/error messages managment */
-/* $Id: state.c,v 1.47 2005/08/03 21:42:34 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: stylesheet.h,v 1.43 2005/07/09 18:41:52 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_STYLESHEET_H
 #define EL__DOCUMENT_CSS_STYLESHEET_H

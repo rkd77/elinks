@@ -1,5 +1,4 @@
 /* BSD mouse system-specific routines. */
-/* $Id: bsd.c,v 1.8 2005/08/24 08:39:00 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

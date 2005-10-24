@@ -1,4 +1,3 @@
-/* $Id: menu.h,v 1.70 2005/06/10 04:47:02 miciah Exp $ */
 
 #ifndef EL__BFU_MENU_H
 #define EL__BFU_MENU_H

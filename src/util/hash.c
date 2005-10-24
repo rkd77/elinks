@@ -1,5 +1,4 @@
 /* Hashing infrastructure */
-/* $Id: hash.c,v 1.31 2005/03/30 15:25:09 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

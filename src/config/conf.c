@@ -1,5 +1,4 @@
 /* Config file manipulation */
-/* $Id: conf.c,v 1.160 2005/07/17 07:35:25 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

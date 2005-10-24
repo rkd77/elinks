@@ -1,5 +1,4 @@
 /* HTML renderer */
-/* $Id: renderer.c,v 1.154 2005/08/18 02:40:50 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

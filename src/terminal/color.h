@@ -1,4 +1,3 @@
-/* $Id: color.h,v 1.34 2005/06/15 18:45:00 jonas Exp $ */
 
 #ifndef EL__TERMINAL_COLOR_H
 #define EL__TERMINAL_COLOR_H

@@ -1,5 +1,4 @@
 /* Bzip2 encoding (ENCODING_BZIP2) backend */
-/* $Id: bzip2.c,v 1.6 2005/02/28 13:10:03 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

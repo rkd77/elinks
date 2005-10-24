@@ -1,5 +1,4 @@
 /* The SpiderMonkey location and history objects implementation. */
-/* $Id: navigator.c,v 1.1 2005/09/14 22:57:17 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

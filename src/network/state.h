@@ -1,4 +1,3 @@
-/* $Id: state.h,v 1.6 2005/08/03 21:42:34 jonas Exp $ */
 
 #ifndef EL__NETWORK_STATE_H
 #define EL__NETWORK_STATE_H

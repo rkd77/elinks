@@ -1,4 +1,3 @@
-/* $Id: common.h,v 1.4 2003/05/08 21:42:57 zas Exp $ */
 
 #ifndef EL__BOOKMARKS_BACKEND_COMMON_H
 #define EL__BOOKMARKS_BACKEND_COMMON_H

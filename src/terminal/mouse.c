@@ -1,5 +1,4 @@
 /* Support for mouse interface */
-/* $Id: mouse.c,v 1.1 2005/09/14 12:32:49 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

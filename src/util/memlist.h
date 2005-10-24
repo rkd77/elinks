@@ -1,4 +1,3 @@
-/* $Id: memlist.h,v 1.6 2004/03/09 12:24:38 jonas Exp $ */
 
 #ifndef EL__UTIL_MEMLIST_H
 #define EL__UTIL_MEMLIST_H

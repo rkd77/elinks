@@ -1,5 +1,4 @@
 /* Libc stub functions */
-/* $Id: stub.c,v 1.20 2005/02/11 19:07:55 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* The DOM tree navigation interface */
-/* $Id: navigator.c,v 1.9 2005/03/30 20:57:28 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

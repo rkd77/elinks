@@ -1,5 +1,4 @@
 /* Memory debugging (leaks, overflows & co) */
-/* $Id: memdebug.c,v 1.33 2005/08/18 02:40:51 miciah Exp $ */
 
 /* Wrappers for libc memory managment providing protection against common
  * pointers manipulation mistakes - bad realloc()/free() pointers, double

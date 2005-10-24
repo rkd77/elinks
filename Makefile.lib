@@ -14,30 +14,28 @@ else
 	mquiet = quiet_
 endif
 
-CURPATH = $(shell pwd)
-TOPPATH = $(shell cd $(path_to_top) && pwd)
-RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z0-9]\)$$,\1/,')
-
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
 ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
-quiet_cmd_compile = '      [CC]   $(RELPATH)$<'
+quiet_cmd_compile = '      [CC]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
 # Rule to compile a set of .o files into one .o file
 quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
-      cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^)
- 
+      cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^) \
+      		    $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
+			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
+
    quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Recursive make
-quiet_cmd_recmake = "[MAKE $$target]   $(RELPATH)$$subdir"
-      cmd_recmake = $(MAKE) -C $$subdir $$target
+quiet_cmd_recmake = "[MAKE $(3)]   $(RELPATH)$(2)"
+      cmd_recmake = $(MAKE) -C $(2) $(3)
 
 quiet_cmd_installdata = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
       cmd_installdata = $(INSTALL_DATA) $(2) $(3)
@@ -58,7 +56,7 @@ ifdef OBJS
 -include $(DEP_FILES)
 endif
 
-%.o: %.c
+%.o: $(srcdir)%.c
 	$(call mcmd,compile)
 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
 		tr ' ' '\012' < .deps/$(*F).pp \
@@ -74,18 +72,20 @@ ifdef OBJS-yes
 OBJS += $(OBJS-yes)
 endif
 
-ifdef SUBDIRS
-# Apparently wildcard won't expand *.o files so check if there are any *.c
-# files and use that to magically add the lib.o file of the subdirectory.
-subobjs := $(strip $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
-		$(if $(wildcard $(subdir)/*.c),$(subdir)/lib.o)))
+ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
+
+ifdef SUBDIRS-no
+SUBDIRS += $(SUBDIRS-no)
 endif
-ifneq ($(subobjs),)
-OBJS += $(subobjs)
+ifdef OBJS-no
+OBJS += $(OBJS-no)
 endif
 
+endif
+
+
 ifdef OBJS
-lib.o: $(sort $(OBJS))
+lib.o: $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/lib.o))
 	$(call cmd,ld_objs)
 
 LIB_O = lib.o
@@ -96,43 +96,47 @@ CLEAN += $(PROG)
 
 all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
 
+list-default:
+	@echo '$(RELPATH)Makefile'
+
 clean-default:
 	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
+
+cleanall-default: clean-default
 
 install-default: all-default
 ifdef PROGS
 	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	@for file in $(PROGS); do \
-		$(call ncmd,installprog,$$file,$(DESTDIR)$(bindir)); \
-	done
+	$(foreach file,$(PROGS), \
+		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
 endif
 ifdef MAN1
 	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	@for file in $(MAN1); do \
-		$(call ncmd,installdata,$$file,$(DESTDIR)$(mandir)/man1); \
-	done
+	$(foreach file,$(MAN1), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
 endif
 ifdef MAN5
 	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	@for file in $(MAN5); do \
-		$(call ncmd,installdata,$$file,$(DESTDIR)$(mandir)/man5); \
-	done
+	$(foreach file,$(MAN5), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive
-all-recursive install-recursive clean-recursive:
+.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive list-recursive
+
+all-recursive install-recursive clean-recursive cleanall-recursive list-recursive:
 ifdef SUBDIRS
-	@target=`echo $@ | sed s/-recursive//`; \
-	for subdir in $(sort $(SUBDIRS)); do \
-		$(call ncmd,recmake) || exit 1; \
-	done
+	@$(foreach subdir,$(sort $(SUBDIRS)), \
+		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
 endif
 
 all: all-recursive all-default all-local
 install: install-recursive install-default install-local
 clean: clean-recursive clean-default clean-local
+
+cleanall: cleanall-recursive cleanall-default
+list: list-recursive list-default
 
 all-local:
 install-local:

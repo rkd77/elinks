@@ -1,5 +1,4 @@
 /* Implementation of a login manager for HTML forms */
-/* $Id: formhist.c,v 1.119 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

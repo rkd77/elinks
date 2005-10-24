@@ -1,4 +1,3 @@
-/* $Id: link.h,v 1.4 2005/07/09 19:18:04 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_LINK_H
 #define EL__DOCUMENT_HTML_PARSER_LINK_H

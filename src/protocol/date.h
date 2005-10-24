@@ -1,4 +1,3 @@
-/* $Id: date.h,v 1.12 2005/04/23 15:58:54 zas Exp $ */
 
 #ifndef EL__PROTOCOL_DATE_H
 #define EL__PROTOCOL_DATE_H

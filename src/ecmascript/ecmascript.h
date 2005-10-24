@@ -1,4 +1,3 @@
-/* $Id: ecmascript.h,v 1.12 2005/06/13 00:43:27 jonas Exp $ */
 
 #ifndef EL__ECMASCRIPT_ECMASCRIPT_H
 #define EL__ECMASCRIPT_ECMASCRIPT_H

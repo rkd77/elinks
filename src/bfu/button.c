@@ -1,5 +1,4 @@
 /* Button widget handlers. */
-/* $Id: button.c,v 1.94 2005/03/24 14:56:31 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

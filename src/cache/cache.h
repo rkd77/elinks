@@ -1,4 +1,3 @@
-/* $Id: cache.h,v 1.105 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifndef EL__CACHE_CACHE_H
 #define EL__CACHE_CACHE_H

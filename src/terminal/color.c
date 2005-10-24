@@ -1,5 +1,4 @@
 /* Terminal color composing. */
-/* $Id: color.c,v 1.88 2005/09/13 23:20:00 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

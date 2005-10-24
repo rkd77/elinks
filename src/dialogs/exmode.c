@@ -1,5 +1,4 @@
 /* Ex-mode-like commandline support */
-/* $Id: exmode.c,v 1.62 2005/09/08 14:04:09 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

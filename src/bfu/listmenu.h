@@ -1,4 +1,3 @@
-/* $Id: listmenu.h,v 1.4 2004/11/22 13:27:41 zas Exp $ */
 
 #ifndef EL__BFU_LISTMENU_H
 #define EL__BFU_LISTMENU_H

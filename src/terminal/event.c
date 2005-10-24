@@ -1,5 +1,4 @@
 /* Event system support routines. */
-/* $Id: event.c,v 1.91 2005/09/13 14:50:47 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

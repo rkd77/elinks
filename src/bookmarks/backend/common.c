@@ -1,5 +1,4 @@
 /* Internal bookmarks support - file format backends multiplexing */
-/* $Id: common.c,v 1.23 2005/06/12 00:42:30 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

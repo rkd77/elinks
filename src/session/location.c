@@ -1,5 +1,4 @@
 /* Locations handling */
-/* $Id: location.c,v 1.15 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Input field widget implementation. */
-/* $Id: inpfield.c,v 1.216 2005/08/03 23:02:59 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

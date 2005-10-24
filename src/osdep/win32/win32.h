@@ -1,4 +1,3 @@
-/* $Id: win32.h,v 1.6 2005/02/05 05:26:40 jonas Exp $ */
 
 #ifndef EL__OSDEP_WIN32_WIN32_H
 #define EL__OSDEP_WIN32_WIN32_H

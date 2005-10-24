@@ -1,5 +1,4 @@
 /* Library of common BitTorrent code */
-/* $Id: common.c,v 1.2 2005/07/11 12:37:03 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

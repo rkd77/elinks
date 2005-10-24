@@ -1,5 +1,4 @@
 /* Common widget functions. */
-/* $Id: widget.c,v 1.36 2004/11/22 07:28:49 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

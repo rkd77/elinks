@@ -1,4 +1,3 @@
-/* $Id: profile.h,v 1.2 2004/03/09 12:24:38 jonas Exp $ */
 
 #ifndef EL__UTIL_PROFILE_H
 #define EL__UTIL_PROFILE_H

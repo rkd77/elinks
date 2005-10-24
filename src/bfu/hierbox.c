@@ -1,5 +1,4 @@
 /* Hiearchic listboxes browser dialog commons */
-/* $Id: hierbox.c,v 1.221 2005/07/31 00:14:18 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

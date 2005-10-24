@@ -1,4 +1,3 @@
-/* $Id: gopher.h,v 1.4 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_GOPHER_GOPHER_H
 #define EL__PROTOCOL_GOPHER_GOPHER_H

@@ -1,4 +1,3 @@
-/* $Id: ftp.h,v 1.10 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_FTP_FTP_H
 #define EL__PROTOCOL_FTP_FTP_H

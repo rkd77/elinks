@@ -1,5 +1,4 @@
 /* The "data" URI protocol implementation (RFC 2397) */
-/* $Id: data.c,v 1.12 2005/06/12 01:47:54 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

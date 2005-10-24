@@ -1,4 +1,3 @@
-/* $Id: html.h,v 1.2 2004/09/24 00:44:59 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_SGML_HTML_HTML_H
 #define EL__DOCUMENT_SGML_HTML_HTML_H

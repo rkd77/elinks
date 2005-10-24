@@ -1,5 +1,5 @@
-path_to_top=..
-include $(path_to_top)/Makefile.config
+top_builddir=..
+include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BOOKMARKS)	+= bookmarks
 SUBDIRS-$(CONFIG_COOKIES)	+= cookies
@@ -41,5 +41,4 @@ elinks: lib.o
 
 PROGS = elinks
 
-include $(path_to_top)/Makefile.lib
-
+include $(top_srcdir)/Makefile.lib

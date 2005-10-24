@@ -1,5 +1,4 @@
 /* CSS module management */
-/* $Id: css.c,v 1.56 2005/06/13 00:43:27 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

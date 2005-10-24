@@ -19,4 +19,3 @@ done | sort -b -k1,1nr -k2,2 | sed 's/^ *[0-9]*//'
 
 echo
 
-# $Id: gen_translations_stats.sh,v 1.6 2003/10/18 17:38:26 jonas Exp $ #

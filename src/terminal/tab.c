@@ -1,5 +1,4 @@
 /* Tab-style (those containing real documents) windows infrastructure. */
-/* $Id: tab.c,v 1.86 2005/09/08 13:42:13 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -166,7 +165,7 @@ really_close_tab(struct session *ses)
 
 		switch_to_tab(term, term->current_tab - 1, num_tabs - 1);
 	}
-	
+
 	delete_window(ses->tab);
 }
 

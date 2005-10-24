@@ -1,4 +1,3 @@
-/* $Id: scanner.h,v 1.66 2004/02/01 16:43:43 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_SCANNER_H
 #define EL__DOCUMENT_CSS_SCANNER_H

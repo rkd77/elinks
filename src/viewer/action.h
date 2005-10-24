@@ -1,4 +1,3 @@
-/* $Id: action.h,v 1.13 2005/06/14 16:44:52 jonas Exp $ */
 
 #ifndef EL__VIEWER_ACTION_H
 #define EL__VIEWER_ACTION_H

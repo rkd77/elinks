@@ -1,5 +1,5 @@
-path_to_top = .
--include $(path_to_top)/Makefile.config
+top_builddir=.
+-include $(top_builddir)/Makefile.config
 
 SUBDIRS = doc po src
 CLEAN	= features.log
@@ -7,23 +7,24 @@ CLEAN	= features.log
 all-recursive: config.h
 
 # Automagically rerun autotools
-config.status: $(top_srcdir)/configure
-	$(SHELL) ./config.status --recheck
+$(top_builddir)/config.status: $(top_srcdir)/configure
+	cd $(top_builddir) && $(SHELL) ./config.status --recheck
 
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-$(ACLOCAL_M4): configure.in acinclude.m4
+$(ACLOCAL_M4): $(top_srcdir)/configure.in $(top_srcdir)/acinclude.m4
 	cd $(top_srcdir) && $(ACLOCAL)
 
 $(top_srcdir)/configure: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOCONF)
 
-config.h: stamp-h
-	@if test ! -f $@; then \
+$(top_builddir)/config.h: $(top_builddir)/stamp-h
+	@cd $(top_builddir) && \
+	if test ! -f $@; then \
 		rm -f stamp-h; \
 		$(MAKE) stamp-h; \
 	else :; fi
 
-stamp-h: $(top_srcdir)/config.h.in $(top_builddir)/config.status
+$(top_builddir)/stamp-h: $(top_srcdir)/config.h.in $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
 	     $(SHELL) ./config.status
@@ -45,5 +46,5 @@ ifeq ($(wildcard Makefile.config),)
 $(MAKECMDGOALS) default:
 	@echo "You need to first run ./configure"
 else
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib
 endif

@@ -1,4 +1,3 @@
-/* $Id: codes.h,v 1.2 2005/04/21 02:36:41 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_NNTP_CODES_H
 #define	EL__PROTOCOL_NNTP_CODES_H

@@ -1,5 +1,4 @@
 -- ELinks-side part of elinks-remote
--- $Id: remote.lua,v 1.3 2005/03/27 22:59:41 miciah Exp $
 
 -- See script elinks-remote for explanation what's this about.
 

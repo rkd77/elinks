@@ -1,5 +1,4 @@
 /* Menu system implementation. */
-/* $Id: menu.c,v 1.302 2005/09/13 09:22:58 zas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

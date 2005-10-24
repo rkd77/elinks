@@ -1,5 +1,4 @@
 /* Text mode drawing functions */
-/* $Id: draw.c,v 1.27 2005/08/24 08:36:20 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

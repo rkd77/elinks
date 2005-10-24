@@ -1,5 +1,4 @@
 /* SGML token scanner utilities */
-/* $Id: scanner.c,v 1.11 2004/11/08 19:27:22 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Very fast search_keyword_in_list. */
-/* $Id: fastfind.c,v 1.74 2005/08/18 02:40:51 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

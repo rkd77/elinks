@@ -1,4 +1,3 @@
-/* $Id: docdata.h,v 1.6 2004/06/12 17:28:43 zas Exp $ */
 
 #ifndef EL__DOCUMENT_DOCDATA_H
 #define EL__DOCUMENT_DOCDATA_H

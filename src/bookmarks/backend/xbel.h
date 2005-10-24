@@ -1,4 +1,3 @@
-/* $Id: xbel.h,v 1.1 2002/12/10 22:52:16 pasky Exp $ */
 #ifndef EL__BOOKMARKS_BACKEND_XBEL_H
 #define EL__BOOKMARKS_BACKEND_XBEL_H
 

@@ -1,5 +1,4 @@
 /* Stream reading and decoding (mostly decompression) */
-/* $Id: encoding.c,v 1.47 2005/09/14 15:37:08 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

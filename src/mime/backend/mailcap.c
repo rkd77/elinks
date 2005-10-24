@@ -1,5 +1,4 @@
 /* RFC1524 (mailcap file) implementation */
-/* $Id: mailcap.c,v 1.93 2005/06/14 12:25:20 jonas Exp $ */
 
 /* This file contains various functions for implementing a fair subset of
  * rfc1524.

@@ -1,4 +1,3 @@
-/* $Id: os2.h,v 1.8 2004/08/14 23:19:00 jonas Exp $ */
 
 #ifndef EL__OSDEP_OS2_OS2_H
 #define EL__OSDEP_OS2_OS2_H

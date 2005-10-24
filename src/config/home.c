@@ -1,5 +1,4 @@
 /* Get home directory */
-/* $Id: home.c,v 1.58 2005/06/14 17:39:38 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

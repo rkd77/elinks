@@ -1,5 +1,4 @@
 /* BFU display helpers. */
-/* $Id: style.c,v 1.15 2005/03/05 21:34:30 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

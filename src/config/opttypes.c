@@ -1,5 +1,4 @@
 /* Option variables types handlers */
-/* $Id: opttypes.c,v 1.94 2005/05/31 18:32:05 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

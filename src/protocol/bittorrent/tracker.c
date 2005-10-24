@@ -1,5 +1,4 @@
 /* BitTorrent tracker HTTP protocol implementation */
-/* $Id: tracker.c,v 1.4 2005/08/26 08:23:47 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

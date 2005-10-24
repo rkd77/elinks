@@ -1,4 +1,3 @@
-/* $Id: sgml.h,v 1.2 2004/09/24 00:44:59 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_SGML_SGML_H
 #define EL__DOCUMENT_SGML_SGML_H

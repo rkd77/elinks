@@ -1,5 +1,4 @@
 /* HTML renderer */
-/* $Id: renderer.c,v 1.586 2005/07/19 15:44:52 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -90,11 +89,11 @@ struct table_cache_entry {
 #define MAX_TABLE_CACHE_ENTRIES 16384
 
 /* Global variables */
+static int table_cache_entries;
+static struct hash *table_cache;
+
 
 struct renderer_context {
-	int table_cache_entries;
-	struct hash *table_cache;
-
 	int last_link_to_move;
 	struct tag *last_tag_to_move;
 	/* All tags between document->tags and this tag (inclusive) should
@@ -108,18 +107,19 @@ struct renderer_context {
 
 	struct link_state_info link_state_info;
 
-	int nobreak;
-	int nosearchable;
-	int nowrap; /* Activated/deactivated by SP_NOWRAP. */
-
 	struct conv_table *convert_table;
 
 	/* Used for setting cache info from HTTP-EQUIV meta tags. */
 	struct cache_entry *cached;
 
 	int g_ctrl_num;
-	int empty_format;
-	int did_subscript;
+	int subscript;	/* Count stacked subscripts */
+	int supscript;	/* Count stacked supscripts */
+
+	unsigned int empty_format:1;
+	unsigned int nobreak:1;
+	unsigned int nosearchable:1;
+	unsigned int nowrap:1; /* Activated/deactivated by SP_NOWRAP. */
 };
 
 static struct renderer_context renderer_context;
@@ -136,11 +136,21 @@ void put_chars(struct html_context *, unsigned char *, int);
 
 #define ALIGN_SPACES(x, o, n) mem_align_alloc(x, o, n, unsigned char, SPACES_GRANULARITY)
 
+static inline void
+set_screen_char_color(struct screen_char *schar,
+		      color_T bgcolor, color_T fgcolor,
+		      enum color_flags color_flags,
+		      enum color_mode color_mode)
+{
+	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
+
+	set_term_color(schar, &colors, color_flags, color_mode);
+}
+
 static int
 realloc_line(struct html_context *html_context, struct document *document,
              int y, int length)
 {
-	struct color_pair colors = INIT_COLOR_PAIR(par_format.bgcolor, 0x0);
 	struct screen_char *pos, *end;
 	struct line *line;
 
@@ -161,7 +171,8 @@ realloc_line(struct html_context *html_context, struct document *document,
 	end = &line->chars[length];
 	end->data = ' ';
 	end->attr = 0;
-	set_term_color(end, &colors, 0, document->options.color_mode);
+	set_screen_char_color(end, par_format.bgcolor, 0x0,
+			      0, document->options.color_mode);
 
 	for (pos = &line->chars[line->length]; pos < end; pos++) {
 		copy_screen_chars(pos, end, 1);
@@ -218,7 +229,6 @@ static inline void
 clear_hchars(struct html_context *html_context, int x, int y, int width)
 {
 	struct part *part;
-	struct color_pair colors = INIT_COLOR_PAIR(par_format.bgcolor, 0x0);
 	struct screen_char *pos, *end;
 
 	assert(html_context);
@@ -239,7 +249,8 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end = pos + width - 1;
 	end->data = ' ';
 	end->attr = 0;
-	set_term_color(end, &colors, 0, part->document->options.color_mode);
+	set_screen_char_color(end, par_format.bgcolor, 0x0,
+			      0, part->document->options.color_mode);
 
 	while (pos < end)
 		copy_screen_chars(pos++, end, 1);
@@ -253,10 +264,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	       int x, int y, unsigned char data,
                color_T bgcolor, color_T fgcolor)
 {
-	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
 	struct screen_char *template;
-	static enum color_flags color_flags;
-	static enum color_mode color_mode;
 
 	assert(html_context);
 	if_assert_failed return NULL;
@@ -273,11 +281,9 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	template = &POS(x, y);
 	template->data = data;
 	template->attr = SCREEN_ATTR_FRAME;
-
-	color_mode = part->document->options.color_mode;
-	color_flags = part->document->options.color_flags;
-
-	set_term_color(template, &colors, color_flags, color_mode);
+	set_screen_char_color(template, bgcolor, fgcolor,
+			      part->document->options.color_flags,
+			      part->document->options.color_mode);
 
 	return template;
 }
@@ -329,15 +335,10 @@ get_format_screen_char(struct html_context *html_context,
 	static struct screen_char schar_cache;
 
 	if (memcmp(&ta_cache, &format.style, sizeof(ta_cache))) {
-		struct color_pair colors = INIT_COLOR_PAIR(format.style.bg, format.style.fg);
-		static enum color_mode color_mode;
-		static enum color_flags color_flags;
-
-		color_mode = html_context->options->color_mode;
-		color_flags = html_context->options->color_flags;
+		copy_struct(&ta_cache, &format.style);
 
 		schar_cache.attr = 0;
-		if (format.style.attr) {
+		if (format.style.attr & ~(AT_UPDATE_SUB|AT_UPDATE_SUP)) {
 			if (format.style.attr & AT_UNDERLINE) {
 				schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 			}
@@ -360,35 +361,35 @@ get_format_screen_char(struct html_context *html_context,
 			schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 		}
 
-		copy_struct(&ta_cache, &format.style);
-		set_term_color(&schar_cache, &colors, color_flags, color_mode);
+		set_screen_char_color(&schar_cache, format.style.bg, format.style.fg,
+				      html_context->options->color_flags,
+				      html_context->options->color_mode);
 
 		if (html_context->options->display_subs) {
 			if (format.style.attr & AT_SUBSCRIPT) {
-				if (!renderer_context.did_subscript) {
-					renderer_context.did_subscript = 1;
+				if (format.style.attr & AT_UPDATE_SUB) {
+					renderer_context.subscript++;
+					format.style.attr &= ~AT_UPDATE_SUB;
 					put_chars(html_context, "[", 1);
 				}
 			} else {
-				if (renderer_context.did_subscript) {
+				while (renderer_context.subscript) {
+					renderer_context.subscript--;
 					put_chars(html_context, "]", 1);
-					renderer_context.did_subscript = 0;
 				}
 			}
 		}
 
 		if (html_context->options->display_sups) {
-			static int super = 0;
-
 			if (format.style.attr & AT_SUPERSCRIPT) {
-				if (!super) {
-					super = 1;
+				if (format.style.attr & AT_UPDATE_SUP) {
+					renderer_context.supscript++;
+					format.style.attr &= ~AT_UPDATE_SUP;
 					put_chars(html_context, "^", 1);
 				}
 			} else {
-				if (super) {
-					super = 0;
-				}
+				while (renderer_context.supscript)
+					renderer_context.supscript--;
 			}
 		}
 	}
@@ -613,14 +614,14 @@ shift_chars(struct html_context *html_context, int y, int shift)
 
 	len = LEN(y);
 
-	a = mem_alloc(len * sizeof(*a));
+	a = fmem_alloc(len * sizeof(*a));
 	if (!a) return;
 
 	copy_screen_chars(a, &POS(0, y), len);
 
 	clear_hchars(html_context, 0, y, shift);
 	copy_chars(html_context, shift, y, len, a);
-	mem_free(a);
+	fmem_free(a);
 
 	move_links(html_context, 0, y, shift, y);
 }
@@ -921,6 +922,38 @@ align_line(struct html_context *html_context, int y, int last)
 		shift_chars(html_context, y, shift);
 }
 
+static inline void
+init_link_event_hooks(struct html_context *html_context, struct link *link)
+{
+	link->event_hooks = mem_calloc(1, sizeof(*link->event_hooks));
+	if (!link->event_hooks) return;
+
+#define add_evhook(list_, type_, src_)						\
+	do {									\
+		struct script_event_hook *evhook;				\
+										\
+		if (!src_) break;						\
+										\
+		evhook = mem_calloc(1, sizeof(*evhook));			\
+		if (!evhook) break;						\
+										\
+		evhook->type = type_;						\
+		evhook->src  = stracpy(src_);					\
+		add_to_list(*(list_), evhook);					\
+	} while (0)
+
+	init_list(*link->event_hooks);
+	add_evhook(link->event_hooks, SEVHOOK_ONCLICK, format.onclick);
+	add_evhook(link->event_hooks, SEVHOOK_ONDBLCLICK, format.ondblclick);
+	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOVER, format.onmouseover);
+	add_evhook(link->event_hooks, SEVHOOK_ONHOVER, format.onhover);
+	add_evhook(link->event_hooks, SEVHOOK_ONFOCUS, format.onfocus);
+	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, format.onmouseout);
+	add_evhook(link->event_hooks, SEVHOOK_ONBLUR, format.onblur);
+
+#undef add_evhook
+}
+
 static struct link *
 new_link(struct html_context *html_context, unsigned char *name, int namelen)
 {
@@ -1014,28 +1047,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 	link->color.foreground = link_is_textinput(link)
 				? format.style.fg : format.clink;
 
-	link->event_hooks = mem_calloc(1, sizeof(*link->event_hooks));
-	if (link->event_hooks) {
-		init_list(*link->event_hooks);
-#define add_evhook(list_, type_, src_) \
-do { \
-	struct script_event_hook *evhook = mem_calloc(1, sizeof(*evhook)); \
-	\
-	if (evhook) { \
-		evhook->type = type_; \
-		evhook->src = stracpy(src_); \
-		add_to_list(*list_, evhook); \
-	} \
-} while (0)
-		if (format.onclick) add_evhook(link->event_hooks, SEVHOOK_ONCLICK, format.onclick);
-		if (format.ondblclick) add_evhook(link->event_hooks, SEVHOOK_ONDBLCLICK, format.ondblclick);
-		if (format.onmouseover) add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOVER, format.onmouseover);
-		if (format.onhover) add_evhook(link->event_hooks, SEVHOOK_ONHOVER, format.onhover);
-		if (format.onfocus) add_evhook(link->event_hooks, SEVHOOK_ONFOCUS, format.onfocus);
-		if (format.onmouseout) add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, format.onmouseout);
-		if (format.onblur) add_evhook(link->event_hooks, SEVHOOK_ONBLUR, format.onblur);
-#undef add_evhook
-	}
+	init_link_event_hooks(html_context, link);
 
 	return link;
 }
@@ -1052,14 +1064,14 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 	tag_len = strlen(t);
 	/* One byte is reserved for name in struct tag. */
 	tag = mem_alloc(sizeof(*tag) + tag_len);
-	if (tag) {
-		tag->x = x;
-		tag->y = y;
-		memcpy(tag->name, t, tag_len + 1);
-		add_to_list(document->tags, tag);
-		if ((void *) renderer_context.last_tag_for_newline == &document->tags)
-			renderer_context.last_tag_for_newline = tag;
-	}
+	if (!tag) return;
+
+	tag->x = x;
+	tag->y = y;
+	memcpy(tag->name, t, tag_len + 1);
+	add_to_list(document->tags, tag);
+	if (renderer_context.last_tag_for_newline == (struct tag *) &document->tags)
+		renderer_context.last_tag_for_newline = tag;
 }
 
 
@@ -1258,10 +1270,6 @@ get_link_state(struct html_context *html_context)
 	return state;
 }
 
-#define is_drawing_subs_or_sups() \
-	((format.style.attr & AT_SUBSCRIPT && html_context->options->display_subs) \
-	 || (format.style.attr & AT_SUPERSCRIPT && html_context->options->display_sups))
-
 static inline int
 html_has_non_space_chars(unsigned char *chars, int charslen)
 {
@@ -1278,7 +1286,7 @@ void
 put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 {
 	enum link_state link_state;
-	int update_after_subscript = renderer_context.did_subscript;
+	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
 
 	assert(html_context);
@@ -1315,7 +1323,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	 * non-whitespace content. */
 	if (html_is_preformatted()
 	    || html_has_non_space_chars(chars, charslen)) {
-		renderer_context.last_tag_for_newline = (void *) &part->document->tags;
+		renderer_context.last_tag_for_newline = (struct tag *) &part->document->tags;
 	}
 
 	int_lower_bound(&part->box.height, part->cy + 1);
@@ -1342,15 +1350,24 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	set_hline(html_context, chars, charslen, link_state);
 
 	if (link_state != LINK_STATE_NONE) {
+
+#define is_drawing_subs_or_sups() \
+		((format.style.attr & AT_SUBSCRIPT \
+		  && html_context->options->display_subs) \
+		 || (format.style.attr & AT_SUPERSCRIPT \
+		     && html_context->options->display_sups))
+
 		/* We need to update the current @link_state because <sub> and
 		 * <sup> tags will output to the canvas using an inner
 		 * put_chars() call which results in their process_link() call
 		 * will ``update'' the @link_state. */
 		if (link_state == LINK_STATE_NEW
 		    && (is_drawing_subs_or_sups()
-			|| update_after_subscript != renderer_context.did_subscript)) {
+			|| update_after_subscript != renderer_context.subscript)) {
 			link_state = get_link_state(html_context);
 		}
+
+#undef is_drawing_subs_or_sups
 
 		process_link(html_context, link_state, chars, charslen);
 	}
@@ -1370,7 +1387,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 			if (!x) break;
 			if (part->document)
 				align_line(html_context, part->cy - 1, 0);
-			renderer_context.nobreak = x - 1;
+			renderer_context.nobreak = !!(x - 1);
 		}
 	}
 
@@ -1423,7 +1440,7 @@ line_break(struct html_context *html_context)
 	if (part->cx > 0) align_line(html_context, part->cy, 1);
 
 	for (tag = renderer_context.last_tag_for_newline;
-	     tag && (void *) tag != &part->document->tags;
+	     tag && tag != (struct tag *) &part->document->tags;
 	     tag = tag->prev) {
 		tag->x = X(0);
 		tag->y = Y(part->cy + 1);
@@ -1612,13 +1629,10 @@ static void *
 html_special(struct html_context *html_context, enum html_special_type c, ...)
 {
 	va_list l;
-	unsigned char *t;
 	struct part *part;
 	struct document *document;
-	unsigned long seconds;
-	struct form *form;
-	struct form_control *fc;
-
+	void *ret_val = NULL;
+	
 	assert(html_context);
 	if_assert_failed return NULL;
 
@@ -1632,34 +1646,38 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 	va_start(l, c);
 	switch (c) {
 		case SP_TAG:
-			t = va_arg(l, unsigned char *);
-			if (document)
+			if (document) {
+				unsigned char *t = va_arg(l, unsigned char *);
+
 				html_special_tag(document, t, X(part->cx), Y(part->cy));
-			va_end(l);
+			}
 			break;
 		case SP_FORM:
-			form = va_arg(l, struct form *);
+		{
+			struct form *form = va_arg(l, struct form *);
+			
 			html_special_form(part, form);
-			va_end(l);
 			break;
+		}
 		case SP_CONTROL:
-			fc = va_arg(l, struct form_control *);
+		{
+			struct form_control *fc = va_arg(l, struct form_control *);
+			
 			html_special_form_control(part, fc);
-			va_end(l);
 			break;
+		}
 		case SP_TABLE:
-			va_end(l);
-			return renderer_context.convert_table;
+			ret_val = renderer_context.convert_table;
+			break;
 		case SP_USED:
-			va_end(l);
-			return (void *) (long) !!document;
+			ret_val = (void *) (long) !!document;
+			break;
 		case SP_CACHE_CONTROL:
 		{
 			struct cache_entry *cached = renderer_context.cached;
 
 			cached->cache_mode = CACHE_MODE_NEVER;
 			cached->expire = 0;
-			va_end(l);
 			break;
 		}
 		case SP_CACHE_EXPIRES:
@@ -1667,7 +1685,6 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			time_t expires = va_arg(l, time_t);
 			struct cache_entry *cached = renderer_context.cached;
 
-			va_end(l);
 			if (!expires || cached->cache_mode == CACHE_MODE_NEVER)
 				break;
 
@@ -1680,13 +1697,15 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			struct frameset_param *fsp = va_arg(l, struct frameset_param *);
 			struct frameset_desc *frameset_desc;
 
-			va_end(l);
-			if (!fsp->parent && document->frame_desc) return NULL;
+			if (!fsp->parent && document->frame_desc)
+				break;
 
 			frameset_desc = create_frameset(fsp);
 			if (!fsp->parent && !document->frame_desc)
 				document->frame_desc = frameset_desc;
-			return frameset_desc;
+			
+			ret_val = frameset_desc;
+			break;
 		}
 		case SP_FRAME:
 		{
@@ -1694,70 +1713,66 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			unsigned char *name = va_arg(l, unsigned char *);
 			unsigned char *url = va_arg(l, unsigned char *);
 
-			va_end(l);
-
 			add_frameset_entry(parent, NULL, name, url);
-		}
 			break;
+		}
 		case SP_NOWRAP:
-			renderer_context.nowrap = va_arg(l, int);
-			va_end(l);
+			renderer_context.nowrap = !!va_arg(l, int);
 			break;
 		case SP_REFRESH:
-			seconds = va_arg(l, unsigned long);
-			t = va_arg(l, unsigned char *);
-			va_end(l);
+		{
+			unsigned long seconds = va_arg(l, unsigned long);
+			unsigned char *t = va_arg(l, unsigned char *);
+			
 			document->refresh = init_document_refresh(t, seconds);
 			break;
+		}
 		case SP_COLOR_LINK_LINES:
-			va_end(l);
 			if (document && use_document_bg_colors(&document->options))
 				color_link_lines(html_context);
 			break;
 		case SP_STYLESHEET:
-		{
 #ifdef CONFIG_CSS
-			struct uri *uri = va_arg(l, struct uri *);
+			if (document) {
+				struct uri *uri = va_arg(l, struct uri *);
 
-			if (document)
 				add_to_uri_list(&document->css_imports, uri);
+			}
 #endif
-			va_end(l);
 			break;
-		}
 		case SP_SCRIPT:
-		{
 #ifdef CONFIG_ECMASCRIPT
-			struct uri *uri = va_arg(l, struct uri *);
+			if (document) {
+				struct uri *uri = va_arg(l, struct uri *);
 
-			if (document)
 				add_to_uri_list(&document->ecmascript_imports, uri);
+			}
 #endif
-			va_end(l);
 			break;
-		}
 	}
 
-	return NULL;
+	va_end(l);
+	
+	return ret_val;
 }
 
 void
 free_table_cache(void)
 {
-	if (renderer_context.table_cache) {
+	if (table_cache) {
 		struct hash_item *item;
 		int i;
 
 		/* We do not free key here. */
-		foreach_hash_item (item, *renderer_context.table_cache, i) {
+		foreach_hash_item (item, *table_cache, i) {
 			mem_free_if(item->value);
 		}
 
-		free_hash(renderer_context.table_cache);
+		free_hash(table_cache);
 	}
 
-	renderer_context.table_cache = NULL;
-	renderer_context.table_cache_entries = 0;
+	table_cache = NULL;
+	table_cache_entries = 0;
 }
 
 struct part *
@@ -1771,14 +1786,12 @@ format_html_part(struct html_context *html_context,
 	struct html_element *html_state;
 	int llm = renderer_context.last_link_to_move;
 	struct tag *ltm = renderer_context.last_tag_to_move;
-	/*struct tag *ltn = last_tag_for_newline;*/
-	int lm = html_context->margin;
 	int ef = renderer_context.empty_format;
-	struct table_cache_entry *tce;
+	int lm = html_context->margin;
 
 	/* Hash creation if needed. */
-	if (!renderer_context.table_cache) {
-		renderer_context.table_cache = init_hash(8, &strhash);
+	if (!table_cache) {
+		table_cache = init_hash(8, &strhash);
 	} else if (!document) {
 		/* Search for cached entry. */
 		struct table_cache_entry_key key;
@@ -1796,7 +1809,7 @@ format_html_part(struct html_context *html_context,
 		key.x = x;
 		key.link_num = link_num;
 
-		item = get_hash_item(renderer_context.table_cache,
+		item = get_hash_item(table_cache,
 				     (unsigned char *) &key,
 				     sizeof(key));
 		if (item) { /* We found it in cache, so just copy and return. */
@@ -1823,12 +1836,12 @@ format_html_part(struct html_context *html_context,
 		}
 
 		renderer_context.last_link_to_move = document->nlinks;
-		renderer_context.last_tag_to_move = (void *) &document->tags;
-		renderer_context.last_tag_for_newline = (void *) &document->tags;
+		renderer_context.last_tag_to_move = (struct tag *) &document->tags;
+		renderer_context.last_tag_for_newline = (struct tag *) &document->tags;
 	} else {
 		renderer_context.last_link_to_move = 0;
-		renderer_context.last_tag_to_move = NULL;
-		renderer_context.last_tag_for_newline = NULL;
+		renderer_context.last_tag_to_move = (struct tag *) NULL;
+		renderer_context.last_tag_for_newline = (struct tag *) NULL;
 	}
 
 	html_context->margin = margin;
@@ -1869,17 +1882,17 @@ format_html_part(struct html_context *html_context,
 ret:
 	renderer_context.last_link_to_move = llm;
 	renderer_context.last_tag_to_move = ltm;
-	/* renderer_context.last_tag_for_newline = ltn; */
-	html_context->margin = lm;
 	renderer_context.empty_format = ef;
 
+	html_context->margin = lm;
+
 	if (html_context->table_level > 1 && !document
-	    && renderer_context.table_cache
-	    && renderer_context.table_cache_entries < MAX_TABLE_CACHE_ENTRIES) {
+	    && table_cache
+	    && table_cache_entries < MAX_TABLE_CACHE_ENTRIES) {
 		/* Create a new entry. */
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
-		tce = mem_calloc(1, sizeof(*tce));
+		struct table_cache_entry *tce = mem_calloc(1, sizeof(*tce));
 		/* A goto is used here to prevent a test or code
 		 * redundancy. */
 		if (!tce) goto end;
@@ -1893,12 +1906,12 @@ ret:
 		tce->key.link_num = link_num;
 		copy_struct(&tce->part, part);
 
-		if (!add_hash_item(renderer_context.table_cache,
+		if (!add_hash_item(table_cache,
 				   (unsigned char *) &tce->key,
 				   sizeof(tce->key), tce)) {
 			mem_free(tce);
 		} else {
-			renderer_context.table_cache_entries++;
+			table_cache_entries++;
 		}
 	}
 
@@ -1913,8 +1926,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 {
 	struct html_context *html_context;
 	struct part *part;
-	unsigned char *start = NULL;
-	unsigned char *end = NULL;
+	unsigned char *start;
+	unsigned char *end;
 	struct string title;
 	struct string head;
 	int i;
@@ -1924,13 +1937,10 @@ render_html_document(struct cache_entry *cached, struct document *document,
 
 	if (!init_string(&head)) return;
 
-	renderer_context.g_ctrl_num = 0;
-	renderer_context.cached = cached;
+	if (cached->head) add_to_string(&head, cached->head);
 
 	start = buffer->source;
 	end = buffer->source + buffer->length;
-
-	if (cached->head) add_to_string(&head, cached->head);
 
 	html_context = init_html_parser(cached->uri, &document->options,
 	                                start, end, &head, &title,
@@ -1938,6 +1948,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                html_special);
 	if (!html_context) return;
 
+	renderer_context.g_ctrl_num = 0;
+	renderer_context.cached = cached;
 	renderer_context.convert_table = get_convert_table(head.source,
 							   document->options.cp,
 							   document->options.assume_cp,

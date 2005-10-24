@@ -1,5 +1,4 @@
 /* Gzip encoding (ENCODING_GZIP) backend */
-/* $Id: gzip.c,v 1.11 2005/04/13 15:29:23 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

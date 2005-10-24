@@ -1,5 +1,4 @@
 /* Terminal color palettes. */
-/* $Id: palette.inc,v 1.5 2005/06/15 18:45:00 jonas Exp $ */
 /* TODO: We should probably autogenerate this using xterm's perl script. */
 
 /* The 16 ANSI colors. */

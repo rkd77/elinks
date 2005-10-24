@@ -28,7 +28,6 @@
 #
 # Spec file format from < http://www.rpm.org/RPM-HOWTO/build.html >
 #
-# $Id: elinks.spec.in,v 1.19 2005/06/14 13:34:04 witekfl Exp $
 
 Summary:	Enhanced version of Links (Lynx-like text WWW browser)
 Name:		elinks

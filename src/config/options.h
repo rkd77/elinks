@@ -1,4 +1,3 @@
-/* $Id: options.h,v 1.120 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifndef EL__CONFIG_OPTIONS_H
 #define EL__CONFIG_OPTIONS_H
@@ -179,6 +178,11 @@ void toggle_option(struct session *ses, struct option *option);
 /* Call the change-hooks for the given option and recur on its parent. */
 void call_change_hooks(struct session *ses, struct option *current,
                        struct option *option);
+
+/* Do proper bookkeeping after an option has changed - call this every time
+ * you change an option value. */
+void option_changed(struct session *ses, struct option *current,
+                    struct option *option);
 
 extern int commit_option_values(struct option_resolver *resolvers,
 				struct option *root,

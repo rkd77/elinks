@@ -1,5 +1,4 @@
 /* Form history related dialogs */
-/* $Id: dialogs.c,v 1.49 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

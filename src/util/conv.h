@@ -1,4 +1,3 @@
-/* $Id: conv.h,v 1.48 2005/06/26 18:16:39 jonas Exp $ */
 
 #ifndef EL__UTIL_CONV_H
 #define EL__UTIL_CONV_H

@@ -1,11 +1,8 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 
 localedir = $(datadir)/locale
 builddir = $(top_builddir)/src/intl/gettext
-
-# FIXME: Makefile.config gets this wrong
-srcdir = $(top_srcdir)/src/intl/gettext
 
 OBJS = \
  bindtextdom.o \
@@ -102,4 +99,4 @@ uninstall-local:
 	  : ; \
 	fi
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

@@ -1,5 +1,4 @@
 /* Cache-related dialogs */
-/* $Id: dialogs.c,v 1.85 2005/08/18 02:40:50 miciah Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

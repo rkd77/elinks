@@ -1,4 +1,3 @@
-/* $Id: tab.h,v 1.37 2005/03/05 21:21:27 zas Exp $ */
 
 #ifndef EL__TERMINAL_TAB_H
 #define EL__TERMINAL_TAB_H

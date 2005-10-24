@@ -1,4 +1,3 @@
-/* $Id: checkbox.h,v 1.39 2005/03/01 16:30:05 zas Exp $ */
 
 #ifndef EL__BFU_CHECKBOX_H
 #define EL__BFU_CHECKBOX_H

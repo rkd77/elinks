@@ -1,4 +1,3 @@
-/* $Id: frames.h,v 1.41 2004/09/28 20:08:41 pasky Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_FRAMES_H
 #define EL__DOCUMENT_HTML_FRAMES_H

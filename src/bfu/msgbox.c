@@ -1,5 +1,4 @@
 /* Prefabricated message box implementation. */
-/* $Id: msgbox.c,v 1.102 2005/06/22 14:00:44 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Perl scripting engine */
-/* $Id: core.c,v 1.16 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

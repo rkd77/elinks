@@ -1,6 +1,6 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 
-MAN5 = elinks.conf.5 elinkskeys.5
+MAN5 = $(srcdir)/elinks.conf.5 $(srcdir)/elinkskeys.5
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

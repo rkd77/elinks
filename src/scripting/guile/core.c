@@ -1,5 +1,4 @@
 /* Guile interface (scripting engine) */
-/* $Id: core.c,v 1.21 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

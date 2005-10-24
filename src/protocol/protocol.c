@@ -1,5 +1,4 @@
 /* Protocol implementation manager. */
-/* $Id: protocol.c,v 1.100 2005/09/06 14:16:48 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

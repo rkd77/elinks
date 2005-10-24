@@ -1,4 +1,3 @@
-/* $Id: key.inc,v 1.3 2005/05/19 09:31:23 zas Exp $ */
 /* 0 */
 { KBD_UNDEF,		KBD_MOD_NONE },
 { KBD_UNDEF,		KBD_MOD_NONE },

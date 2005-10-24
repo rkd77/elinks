@@ -1,5 +1,4 @@
 /* Keybinding implementation */
-/* $Id: kbdbind.c,v 1.353 2005/09/15 11:51:45 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

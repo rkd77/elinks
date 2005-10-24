@@ -1,5 +1,4 @@
 /* Support for keyboard interface */
-/* $Id: kbd.c,v 1.176 2005/09/15 12:34:59 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

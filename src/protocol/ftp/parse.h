@@ -1,5 +1,4 @@
 /* FTP directory parsing */
-/* $Id: parse.h,v 1.5 2005/05/10 09:30:51 zas Exp $ */
 
 #ifndef EL__PROTOCOL_FTP_PARSE_H
 #define EL__PROTOCOL_FTP_PARSE_H

@@ -1,5 +1,4 @@
 /* Secure file saving handling */
-/* $Id: secsave.c,v 1.45 2005/04/19 23:06:47 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

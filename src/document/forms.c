@@ -1,5 +1,4 @@
 /* The document base functionality */
-/* $Id: forms.c,v 1.13 2005/05/22 02:21:03 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

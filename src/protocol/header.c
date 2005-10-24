@@ -1,5 +1,4 @@
 /* Parser of HTTP headers */
-/* $Id: header.c,v 1.14 2005/04/01 23:11:05 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: stack.h,v 1.14 2005/07/10 23:09:38 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_HTML_PARSER_STACK_H
 #define EL__DOCUMENT_HTML_PARSER_STACK_H

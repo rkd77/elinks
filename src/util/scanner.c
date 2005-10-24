@@ -1,5 +1,4 @@
 /* A pretty generic scanner */
-/* $Id: scanner.c,v 1.12 2005/04/04 12:28:27 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

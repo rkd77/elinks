@@ -1,4 +1,3 @@
-/* $Id: error.h,v 1.46 2005/06/13 22:03:49 jonas Exp $ */
 
 #ifndef EL__UTIL_ERROR_H
 #define EL__UTIL_ERROR_H

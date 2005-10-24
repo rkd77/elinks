@@ -1,4 +1,3 @@
-/* $Id: navigator.h,v 1.4 2004/11/04 17:17:25 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_DOM_NAVIGATOR_H
 #define EL__DOCUMENT_DOM_NAVIGATOR_H

@@ -1,5 +1,4 @@
 /* Proxy handling */
-/* $Id: proxy.c,v 1.53 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

@@ -1,8 +1,8 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 
 INCLUDES += $(PERL_CFLAGS)
 
 OBJS = perl.o hooks.o core.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

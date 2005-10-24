@@ -1,5 +1,4 @@
 /* Textarea form item handlers */
-/* $Id: textarea.c,v 1.152 2005/06/22 20:04:34 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

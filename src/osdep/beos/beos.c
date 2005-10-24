@@ -1,5 +1,4 @@
 /* BeOS system-specific routines. */
-/* $Id: beos.c,v 1.20 2005/02/28 14:03:28 zas Exp $ */
 
 /* Note that this file is currently unmaintained and basically dead. Noone
  * cares about BeOS support, apparently. This file may yet survive for some

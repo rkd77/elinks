@@ -1,4 +1,3 @@
-/* $Id: protocol.h,v 1.42 2005/09/06 14:16:48 witekfl Exp $ */
 
 #ifndef EL__PROTOCOL_PROTOCOL_H
 #define EL__PROTOCOL_PROTOCOL_H

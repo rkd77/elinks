@@ -1,5 +1,4 @@
 /* Error handling and debugging stuff */
-/* $Id: error.c,v 1.90 2005/06/13 22:06:59 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* Needed for vasprintf() */

@@ -1,5 +1,4 @@
 /* List menus functions */
-/* $Id: listmenu.c,v 1.38 2005/06/14 12:25:19 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

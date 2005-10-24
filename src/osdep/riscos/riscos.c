@@ -1,5 +1,4 @@
 /* RISC OS system-specific routines. */
-/* $Id: riscos.c,v 1.5 2004/08/14 23:00:08 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* The document->data tools */
-/* $Id: docdata.c,v 1.1 2003/11/18 22:18:12 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

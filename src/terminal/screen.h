@@ -1,4 +1,3 @@
-/* $Id: screen.h,v 1.22 2004/04/23 20:44:30 pasky Exp $ */
 
 #ifndef EL__TERMINAL_SCREEN_H
 #define EL__TERMINAL_SCREEN_H

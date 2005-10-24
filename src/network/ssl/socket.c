@@ -1,5 +1,4 @@
 /* SSL socket workshop */
-/* $Id: socket.c,v 1.128 2005/09/13 16:44:10 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

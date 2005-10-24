@@ -1,5 +1,4 @@
 /* Time operations */
-/* $Id: time.c,v 1.49 2005/09/02 09:52:41 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

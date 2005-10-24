@@ -1,4 +1,3 @@
-/* $Id: inpfield.h,v 1.54 2005/06/10 04:47:02 miciah Exp $ */
 
 #ifndef EL__BFU_INPFIELD_H
 #define EL__BFU_INPFIELD_H

@@ -1,4 +1,3 @@
-/* $Id: urlhist.h,v 1.9 2005/04/07 11:23:18 jonas Exp $ */
 
 #ifndef EL__CONFIG_URLHIST_H
 #define EL__CONFIG_URLHIST_H

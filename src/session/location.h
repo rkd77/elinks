@@ -1,4 +1,3 @@
-/* $Id: location.h,v 1.17 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifndef EL__SESSION_LOCATION_H
 #define EL__SESSION_LOCATION_H

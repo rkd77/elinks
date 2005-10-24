@@ -1,5 +1,5 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 # Reverse a CONFIG_* string
 # Usage $(call not,$(CONFIG_FOO))
@@ -26,4 +26,4 @@ OBJS = \
  string.o \
  time.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

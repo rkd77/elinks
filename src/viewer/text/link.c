@@ -1,5 +1,4 @@
 /* Links viewing/manipulation handling */
-/* $Id: link.c,v 1.330 2005/09/07 23:18:04 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

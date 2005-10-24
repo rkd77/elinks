@@ -10,4 +10,3 @@
   use them. The same goes for the run_lua_func() used to run scripting
   functions bound to keystrokes.
 
-$Id: TODO,v 1.2 2003/09/26 21:07:37 jonas Exp $

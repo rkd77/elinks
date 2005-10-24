@@ -1,4 +1,3 @@
-/* $Id: status.h,v 1.13 2005/04/18 17:19:37 zas Exp $ */
 
 #ifndef EL__DIALOGS_STATUS_H
 #define EL__DIALOGS_STATUS_H

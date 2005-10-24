@@ -1,4 +1,3 @@
-/* $Id: string.h,v 1.92 2005/01/03 07:41:01 miciah Exp $ */
 
 #ifndef EL__UTIL_STRING_H
 #define EL__UTIL_STRING_H

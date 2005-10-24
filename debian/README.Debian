@@ -1,6 +1,5 @@
 ELinks for Debian
 ----------------------
-$Id: README.Debian,v 1.1 2005/01/11 00:02:17 jonas Exp $
 
 ELinks is a code fork of Links, the original character mode browser of
 Mikulas Patocka. ELinks provides lots of new features over the original 

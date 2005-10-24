@@ -1,5 +1,4 @@
 /* The SpiderMonkey location and history objects implementation. */
-/* $Id: unibar.c,v 1.1 2005/09/14 22:56:54 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

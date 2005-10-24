@@ -1,4 +1,3 @@
-/* $Id: sha1.h,v 1.1 2005/07/11 10:59:05 jonas Exp $ */
 
 #ifndef EL__UTIL_SHA1_H
 #define EL__UTIL_SHA1_H

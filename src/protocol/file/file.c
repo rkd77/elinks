@@ -1,5 +1,4 @@
 /* Internal "file" protocol implementation */
-/* $Id: file.c,v 1.197 2005/08/03 21:42:38 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

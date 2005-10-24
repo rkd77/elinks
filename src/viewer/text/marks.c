@@ -1,5 +1,4 @@
 /* Marks registry */
-/* $Id: marks.c,v 1.15 2005/04/07 22:17:41 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

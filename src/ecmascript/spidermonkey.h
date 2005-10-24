@@ -1,4 +1,3 @@
-/* $Id: spidermonkey.h,v 1.4 2004/12/19 14:49:26 pasky Exp $ */
 
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_H

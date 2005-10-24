@@ -1,5 +1,4 @@
 /* Document options/setup workshop */
-/* $Id: options.c,v 1.72 2005/09/07 23:18:04 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

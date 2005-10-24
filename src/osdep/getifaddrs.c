@@ -1,5 +1,4 @@
 /* Provide stub function getifaddrs(). */
-/* $Id: getifaddrs.c,v 1.11 2005/02/28 14:04:50 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

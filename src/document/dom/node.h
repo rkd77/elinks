@@ -1,4 +1,3 @@
-/* $Id: node.h,v 1.7 2005/07/12 15:46:34 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_DOM_NODE_H
 #define EL__DOCUMENT_DOM_NODE_H

@@ -1,5 +1,4 @@
 /* The SpiderMonkey location and history objects implementation. */
-/* $Id: location.c,v 1.2 2005/09/14 12:48:02 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

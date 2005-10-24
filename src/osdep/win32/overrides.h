@@ -1,4 +1,3 @@
-/* $Id: overrides.h,v 1.2 2005/02/05 17:43:33 jonas Exp $ */
 
 #ifndef EL__OSDEP_WIN32_OVERRIDES_H
 #define EL__OSDEP_WIN32_OVERRIDES_H

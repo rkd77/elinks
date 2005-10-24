@@ -1,5 +1,4 @@
 /* Searching in the HTML document */
-/* $Id: search.c,v 1.360 2005/09/08 14:04:09 zas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
@@ -1330,7 +1329,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 
 			opt->value.number = (opt->value.number + 1)
 					    % (opt->max + 1);
-			opt->flags |= OPT_TOUCHED;
+			option_changed(ses, opt, opt);
 		}
 		/* Fall thru */
 

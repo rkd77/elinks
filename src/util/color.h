@@ -1,4 +1,3 @@
-/* $Id: color.h,v 1.11 2005/06/26 23:01:50 zas Exp $ */
 
 #ifndef EL__UTIL_COLOR_H
 #define EL__UTIL_COLOR_H

@@ -1,5 +1,4 @@
 /* CSS stylesheet handling */
-/* $Id: stylesheet.c,v 1.50 2005/07/09 18:41:52 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

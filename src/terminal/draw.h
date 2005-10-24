@@ -1,4 +1,3 @@
-/* $Id: draw.h,v 1.50 2005/06/15 18:45:00 jonas Exp $ */
 
 #ifndef EL__TERMINAL_DRAW_H
 #define EL__TERMINAL_DRAW_H
@@ -52,6 +51,8 @@ enum border_char {
 	BORDER_SDRCORNER = 217,
 	BORDER_SLTEE	 = 180, /* => the tee points to the left => -| */
 	BORDER_SRTEE	 = 195,
+	BORDER_SDTEE	 = 194,
+	BORDER_SUTEE	 = 193,
 	BORDER_SVLINE	 = 179,
 	BORDER_SHLINE	 = 196,
 	BORDER_SCROSS	 = 197, /* + */

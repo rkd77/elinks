@@ -1,5 +1,4 @@
 /* Visited URL history managment - NOT goto_url_dialog history! */
-/* $Id: history.c,v 1.89 2005/08/23 13:02:15 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -18,6 +18,19 @@ AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
 
 AC_PROG_MAKE_SET
 
+MAKE=
+
+for make in gnumake gmake make false; do
+	if test "x$MAKE" = x; then
+		AC_PATH_PROGS(MAKE, "$make")
+	fi
+done
+
+# Cleanup if we are configuring with a previous build in the tree
+if test -e Makefile.config; then
+	"$MAKE" -C "$builddir" cleanall  >/dev/null 2>/dev/null
+fi
+
 builddir="`pwd`"
 
 dnl ===================================================================
@@ -709,15 +722,22 @@ dnl ===================================================================
 EL_CONFIG_RUBY
 
 dnl ===================================================================
+dnl Check for SEE, optional even if installed.
+dnl ===================================================================
+
+EL_CONFIG_SEE
+
+dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY], [Scripting])
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SEE], [Scripting])
 AC_SUBST(CONFIG_GUILE)
 AC_SUBST(CONFIG_LUA)
 AC_SUBST(CONFIG_PERL)
 AC_SUBST(CONFIG_PYTHON)
 AC_SUBST(CONFIG_RUBY)
+AC_SUBST(CONFIG_SEE)
 AC_SUBST(CONFIG_SCRIPTING)
 
 
@@ -1066,7 +1086,7 @@ EL_ARG_DEPEND(CONFIG_SYSMOUSE, sysmouse,
 	      [  --disable-sysmouse      disable BSD sysmouse support])
 
 EL_ARG_ENABLE(CONFIG_88_COLORS, 88-colors, [88 colors],
-	      [  --enable-88-colors     enable 88 color support])
+	      [  --enable-88-colors      enable 88 color support])
 
 EL_ARG_ENABLE(CONFIG_256_COLORS, 256-colors, [256 colors],
 	      [  --enable-256-colors     enable 256 color support])
@@ -1244,6 +1264,21 @@ AC_OUTPUT([ \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed
 ])
+
+srcdir2="$(cd "$srcdir" && pwd)"
+if test "$srcdir2" != "$builddir"; then
+	MAKEFILES=$("$MAKE" -C "$srcdir" list | grep Makefile)
+
+	for i in $MAKEFILES; do
+		$MKINSTALLDIRS "$builddir/$(dirname $i)"
+		grep top_builddir= "$srcdir/$i" > "$builddir/$i"
+		case "$srcdir" in
+		/*)	echo "include $srcdir/$i" >> "$builddir/$i" ;;
+		*)	echo "include \$(top_builddir)/$srcdir/$i" >> "$builddir/$i" ;;
+		esac
+		echo "creating $builddir/$i"
+	done
+fi
 
 
 dnl ===================================================================

@@ -1,5 +1,4 @@
 /* Options dialogs */
-/* $Id: dialogs.c,v 1.255 2005/08/01 20:00:11 miciah Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
@@ -35,6 +34,7 @@
 static void
 toggle_success_msgbox(void *dummy)
 {
+	/* TODO: option_changed() */
 	get_opt_bool("ui.success_msgbox") = !get_opt_bool("ui.success_msgbox");
 	get_opt_rec(config_options, "ui.success_msgbox")->flags |= OPT_TOUCHED;
 }
@@ -306,10 +306,7 @@ check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data
 		    option_types[option->type].set(option, chinon)) {
 			struct option *current = option;
 
-			option->flags |= OPT_TOUCHED;
-
-			/* Notify everyone out there! */
-			call_change_hooks(ses, current, option);
+			option_changed(ses, current, option);
 
 			commandline = 0;
 			mem_free(chinon);

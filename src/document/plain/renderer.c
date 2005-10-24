@@ -1,5 +1,4 @@
 /* Plain text document renderer */
-/* $Id: renderer.c,v 1.181 2005/08/03 13:59:01 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

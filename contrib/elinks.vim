@@ -4,7 +4,6 @@
 " Last Change:	Dec 12th 2002
 " Description:	This file covers elinks version 0.4pre15
 
-" $Id: elinks.vim,v 1.8 2003/12/22 00:10:42 jonas Exp $
 
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded

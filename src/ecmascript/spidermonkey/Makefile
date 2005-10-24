@@ -1,7 +1,7 @@
-path_to_top=../../..
-include $(path_to_top)/Makefile.config
+top_builddir=../../..
+include $(top_builddir)/Makefile.config
 INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
 OBJS = document.o form.o location.o navigator.o unibar.o window.o
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

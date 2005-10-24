@@ -5,9 +5,15 @@
 
 SHELL = @SHELL@
 
-top_srcdir = $(path_to_top)/@top_srcdir@
-srcdir = $(top_srcdir)/$(shell pwd | sed 's!.*/\($(shell echo $(path_to_top) | sed 's!\.\.![^/]*!')\)$$!\1!')
-top_builddir = $(path_to_top)
+CURPATH = $(shell pwd)
+TOPPATH = $(shell cd $(top_builddir) && pwd)
+RELPATH = $(shell echo '$(CURPATH)' | sed 's,$(TOPPATH),,;s,^/,,;s,\([a-z0-9]\)$$,\1/,')
+
+PATHSCRIPT = case '@top_srcdir@' in /*) ;; *) echo $(top_builddir)/;; esac
+PATHPREFIX = $(shell $(PATHSCRIPT))
+
+top_srcdir = $(PATHPREFIX)@top_srcdir@
+srcdir = $(top_srcdir)/$(RELPATH)
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 
@@ -56,7 +62,7 @@ LIBDIR = @LIBDIR@
 LOCALEDIR = @LOCALEDIR@
 LUA_CFLAGS = @LUA_CFLAGS@
 LUA_LIBS = @LUA_LIBS@
-MKINSTALLDIRS = $(top_srcdir)/@MKINSTALLDIRS@
+MKINSTALLDIRS = $(PATHPREFIX)@MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 OPENSSL_CFLAGS = @OPENSSL_CFLAGS@
 PACKAGE = @PACKAGE@
@@ -68,6 +74,7 @@ PYTHON_LIBS = @PYTHON_LIBS@
 RANLIB = @RANLIB@
 RUBY_CFLAGS = @RUBY_CFLAGS@
 RUBY_LIBS = @RUBY_LIBS@
+SEE_CFLAGS = @SEE_CFLAGS@
 SPIDERMONKEY_CFLAGS = @SPIDERMONKEY_CFLAGS@
 SPIDERMONKEY_LIBS = @SPIDERMONKEY_LIBS@
 VERSION = @VERSION@
@@ -124,6 +131,7 @@ CONFIG_RISCOS = @CONFIG_RISCOS@
 CONFIG_RUBY = @CONFIG_RUBY@
 CONFIG_SCANNER = @CONFIG_SCANNER@
 CONFIG_SCRIPTING = @CONFIG_SCRIPTING@
+CONFIG_SEE = @CONFIG_SEE@
 CONFIG_SHA1 = @CONFIG_SHA1@
 CONFIG_SMALL = @CONFIG_SMALL@
 CONFIG_SMB = @CONFIG_SMB@

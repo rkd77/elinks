@@ -1,5 +1,4 @@
 /* Internal SMB protocol implementation */
-/* $Id: smb.c,v 1.78 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* Needed for asprintf() */

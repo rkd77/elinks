@@ -1,5 +1,4 @@
 /* Internal "ftp" protocol implementation */
-/* $Id: ftp.c,v 1.259 2005/06/14 13:26:34 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

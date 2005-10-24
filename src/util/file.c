@@ -1,5 +1,4 @@
 /* File utilities */
-/* $Id: file.c,v 1.45 2005/08/04 14:15:22 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

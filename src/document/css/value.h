@@ -1,4 +1,3 @@
-/* $Id: value.h,v 1.14 2004/06/30 05:51:10 jonas Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_VALUE_H
 #define EL__DOCUMENT_CSS_VALUE_H

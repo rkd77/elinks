@@ -1,4 +1,3 @@
-/* $Id: hash.h,v 1.10 2005/03/05 21:16:06 zas Exp $ */
 
 #ifndef EL__UTIL_HASH_H
 #define EL__UTIL_HASH_H

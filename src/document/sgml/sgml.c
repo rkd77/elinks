@@ -1,5 +1,4 @@
 /* SGML generics */
-/* $Id: sgml.c,v 1.2 2004/09/24 00:44:59 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

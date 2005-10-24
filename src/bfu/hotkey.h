@@ -1,5 +1,4 @@
 /* Hotkeys handling. */
-/* $Id: hotkey.h,v 1.9 2005/01/05 14:37:44 jonas Exp $ */
 
 #ifndef EL__BFU_HOTKEY_H
 #define EL__BFU_HOTKEY_H

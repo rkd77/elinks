@@ -1,4 +1,3 @@
-/* $Id: version.h,v 1.7 2005/06/13 00:43:28 jonas Exp $ */
 
 #ifndef EL__MAIN_VERSION_H
 #define EL__MAIN_VERSION_H

@@ -1,4 +1,3 @@
-/* $Id: common.h,v 1.8 2005/03/05 20:50:34 zas Exp $ */
 
 #ifndef EL__BFU_COMMON_H
 #define EL__BFU_COMMON_H

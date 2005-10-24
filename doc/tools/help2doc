@@ -1,6 +1,5 @@
 #!/bin/sh
 #
-# $Id: help2doc,v 1.19 2005/05/17 16:30:55 jonas Exp $
 #
 # Script used to generate doc/book/config/cmdoptions.xml
 # and hopefully other in the future.

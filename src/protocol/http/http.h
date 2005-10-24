@@ -1,4 +1,3 @@
-/* $Id: http.h,v 1.23 2005/06/13 00:43:29 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_HTTP_HTTP_H
 #define EL__PROTOCOL_HTTP_HTTP_H

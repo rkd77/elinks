@@ -1,4 +1,3 @@
-/* $Id: cookies.h,v 1.34 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__COOKIES_COOKIES_H
 #define EL__COOKIES_COOKIES_H

@@ -1,5 +1,4 @@
 /* Information about current document and current link */
-/* $Id: document.c,v 1.124 2005/08/27 04:22:35 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* The SpiderMonkey ECMAScript backend. */
-/* $Id: spidermonkey.c,v 1.227 2005/09/14 22:57:16 pasky Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

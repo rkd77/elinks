@@ -1,4 +1,3 @@
-/* $Id: apply.h,v 1.13 2005/07/15 19:11:10 miciah Exp $ */
 
 #ifndef EL__DOCUMENT_CSS_APPLY_H
 #define EL__DOCUMENT_CSS_APPLY_H

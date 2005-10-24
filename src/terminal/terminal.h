@@ -1,4 +1,3 @@
-/* $Id: terminal.h,v 1.49 2005/09/13 14:50:47 zas Exp $ */
 
 #ifndef EL__TERMINAL_TERMINAL_H
 #define EL__TERMINAL_TERMINAL_H

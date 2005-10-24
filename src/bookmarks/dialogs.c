@@ -1,5 +1,4 @@
 /* Bookmarks dialogs */
-/* $Id: dialogs.c,v 1.223 2005/07/27 23:38:32 jonas Exp $ */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */

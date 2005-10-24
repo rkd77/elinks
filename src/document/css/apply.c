@@ -1,5 +1,4 @@
 /* CSS style applier */
-/* $Id: apply.c,v 1.97 2005/07/15 19:53:40 miciah Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

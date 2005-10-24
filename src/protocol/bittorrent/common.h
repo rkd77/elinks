@@ -1,4 +1,3 @@
-/* $Id: common.h,v 1.2 2005/07/11 12:37:03 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_BITTORRENT_COMMON_H
 #define EL__PROTOCOL_BITTORRENT_COMMON_H

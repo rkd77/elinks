@@ -1,5 +1,4 @@
 /* Some ELinks' auxiliary routines (ELinks<->gettext support) */
-/* $Id: libintl.c,v 1.18 2004/12/27 10:51:19 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,3 @@
-/* $Id: piececache.h,v 1.3 2005/07/19 15:44:53 zas Exp $ */
 
 #ifndef EL__PROTOCOL_BITTORRENT_PIECECACHE_H
 #define EL__PROTOCOL_BITTORRENT_PIECECACHE_H

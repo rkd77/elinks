@@ -1,5 +1,4 @@
 /* Ruby interface (scripting engine) */
-/* $Id: core.c,v 1.14 2005/06/14 12:25:21 jonas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -15,10 +14,9 @@
 #include "config/home.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "scripting/scripting.h"
 #include "scripting/ruby/core.h"
-#include "session/session.h"
-#include "terminal/terminal.h"
-#include "terminal/window.h"
+#include "scripting/ruby/ruby.h"
 #include "util/error.h"
 #include "util/file.h"
 #include "util/string.h"
@@ -36,25 +34,7 @@ VALUE erb_module;
 void
 alert_ruby_error(struct session *ses, unsigned char *msg)
 {
-	struct terminal *term;
-
-	if (!ses) {
-		if (list_empty(terminals)) {
-			usrerror("[Ruby] %s", msg);
-			return;
-		}
-
-		term = terminals.next;
-
-	} else {
-		term = ses->tab->term;
-	}
-
-	msg = stracpy(msg);
-	if (!msg) return;
-
-	info_box(term, MSGBOX_NO_TEXT_INTL | MSGBOX_FREE_TEXT,
-		 N_("Ruby Error"), ALIGN_LEFT, msg);
+	report_scripting_error(&ruby_scripting_module, ses, msg);
 }
 
 /* Another Vim treat. */

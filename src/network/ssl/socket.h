@@ -1,4 +1,3 @@
-/* $Id: socket.h,v 1.22 2005/06/12 02:26:49 jonas Exp $ */
 
 #ifndef EL__NETWORK_SSL_SOCKET_H
 #define EL__NETWORK_SSL_SOCKET_H

@@ -1,4 +1,3 @@
-/* $Id: text.h,v 1.27 2004/11/19 17:46:05 zas Exp $ */
 
 #ifndef EL__BFU_TEXT_H
 #define EL__BFU_TEXT_H

@@ -1,4 +1,3 @@
-/* $Id: leds.h,v 1.23 2005/06/13 00:43:27 jonas Exp $ */
 
 #ifndef EL__BFU_LEDS_H
 #define EL__BFU_LEDS_H

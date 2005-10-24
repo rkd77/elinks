@@ -1,5 +1,4 @@
 /* BitTorrent peer-wire protocol implementation */
-/* $Id: peerwire.c,v 1.3 2005/07/19 15:44:53 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

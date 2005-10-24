@@ -1,4 +1,3 @@
-/* $Id: util.h,v 1.2 2005/09/13 21:52:38 pasky Exp $ */
 
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H

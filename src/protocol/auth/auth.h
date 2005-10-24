@@ -1,4 +1,3 @@
-/* $Id: auth.h,v 1.32 2005/07/27 23:38:33 jonas Exp $ */
 
 #ifndef EL__PROTOCOL_AUTH_AUTH_H
 #define EL__PROTOCOL_AUTH_AUTH_H

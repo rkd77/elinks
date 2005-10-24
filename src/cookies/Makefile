@@ -1,9 +1,9 @@
-path_to_top=../..
-include $(path_to_top)/Makefile.config
+top_builddir=../..
+include $(top_builddir)/Makefile.config
 
 OBJS = cookies.o dialogs.o parser.o
 
 parsetst: parser.o parsetst.o
 	$(call cmd,link) -L../util/libutil.a
 
-include $(path_to_top)/Makefile.lib
+include $(top_srcdir)/Makefile.lib

@@ -1,5 +1,4 @@
 /* BitTorrent peer-wire connection management */
-/* $Id: peerconnect.c,v 1.5 2005/08/26 08:23:47 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

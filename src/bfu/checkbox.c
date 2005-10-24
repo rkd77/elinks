@@ -1,5 +1,4 @@
 /* Checkbox widget handlers. */
-/* $Id: checkbox.c,v 1.99 2005/03/24 15:10:11 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Python scripting engine */
-/* $Id: core.c,v 1.11 2005/06/29 09:46:02 zas Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,5 +1,4 @@
 /* Menu system */
-/* $Id: menu.c,v 1.407 2005/09/06 14:16:48 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

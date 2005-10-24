@@ -1,5 +1,4 @@
 /* HTML core parser routines */
-/* $Id: parse.c,v 1.188 2005/09/06 17:59:51 witekfl Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
