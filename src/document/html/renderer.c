@@ -790,6 +790,7 @@ justify_line(struct html_context *html_context, int y)
 	int pos;
 	int *space_list;
 	int spaces;
+	int diff;
 
 	assert(html_context);
 	if_assert_failed return;
@@ -839,8 +840,14 @@ justify_line(struct html_context *html_context, int y)
 
 	/* Realign line */
 
-	if (spaces > 1) {
-		int diff = overlap(par_format) - len;
+	/* Diff is the difference between the width of the paragraph
+	 * and the current length of the line. */
+	diff = overlap(par_format) - len;
+
+	/* We check diff > 0 because diff can be negative (i.e., we have
+	 * an unbroken line of length > overlap(par_format))
+	 * even when spaces > 1 if the line has only non-breaking spaces. */
+	if (spaces > 1 && diff > 0) {
 		int prev_end = 0;
 		int word;
 

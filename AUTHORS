@@ -48,6 +48,9 @@ Andre Valente <a.valente@netcabo.pt>
 	Download completion notify
 	Portuguese and Brazilian-Portuguese translation updates
 
+Andrzej Zaborowski <balrog@zabor.org>
+	Fix for a memory-corruption bug in the line justification algorithm.
+
 Anton Voloshin <vav@isv.ru>
 	Proper encoding of form entries
 
