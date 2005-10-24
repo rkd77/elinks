@@ -106,18 +106,18 @@ cleanall-default: clean-default
 
 install-default: all-default
 ifdef PROGS
-	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	$(foreach file,$(PROGS), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+	@$(foreach file,$(PROGS), \
 		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
 endif
 ifdef MAN1
-	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	$(foreach file,$(MAN1), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
+	@$(foreach file,$(MAN1), \
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
 endif
 ifdef MAN5
-	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	$(foreach file,$(MAN5), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
+	@$(foreach file,$(MAN5), \
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
