@@ -1265,18 +1265,15 @@ AC_OUTPUT([ \
  src/intl/gettext/ref-del.sed
 ])
 
-srcdir2="$(cd "$srcdir" && pwd)"
-if test "$srcdir2" != "$builddir"; then
-	MAKEFILES=$("$MAKE" -C "$srcdir" list | grep Makefile)
+abs_srcdir="$(cd "$srcdir" && pwd)"
+# builddir is always absolute!
+if test "$abs_srcdir" != "$builddir"; then
+	MAKEFILES=$("$MAKE" -C "$abs_srcdir" list | grep Makefile)
 
 	for i in $MAKEFILES; do
-		$MKINSTALLDIRS "$builddir/$(dirname $i)"
-		grep top_builddir= "$srcdir/$i" > "$builddir/$i"
-		case "$srcdir" in
-		/*)	echo "include $srcdir/$i" >> "$builddir/$i" ;;
-		*)	echo "include \$(top_builddir)/$srcdir/$i" >> "$builddir/$i" ;;
-		esac
-		echo "creating $builddir/$i"
+		echo "creating $i"
+		$MKINSTALLDIRS "$builddir/$(dirname $i)" >/dev/null
+		echo "include $abs_srcdir/$i" > "$builddir/$i"
 	done
 fi
 
