@@ -73,7 +73,14 @@ OBJS += $(OBJS-yes)
 endif
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
+INCLUDE_ALL=1
+endif
 
+ifneq ($(findstring list,$(MAKECMDGOALS)),)
+INCLUDE_ALL=1
+endif
+
+ifdef INCLUDE_ALL
 ifdef SUBDIRS-no
 SUBDIRS += $(SUBDIRS-no)
 endif
