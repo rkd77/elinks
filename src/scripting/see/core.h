@@ -9,6 +9,7 @@ struct session;
 struct string;
 
 extern struct SEE_interpreter see_interpreter;
+extern struct session *see_ses;
 
 struct string *convert_see_string(struct string *string, struct SEE_string *source);
 void alert_see_error(struct session *ses, unsigned char *msg);
