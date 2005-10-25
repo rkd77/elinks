@@ -1268,13 +1268,8 @@ AC_OUTPUT([ \
 abs_srcdir="$(cd "$srcdir" && pwd)"
 # builddir is always absolute!
 if test "$abs_srcdir" != "$builddir"; then
-	MAKEFILES=$("$MAKE" -C "$abs_srcdir" list | grep Makefile)
-
-	for i in $MAKEFILES; do
-		echo "creating $i"
-		$MKINSTALLDIRS "$builddir/$(dirname $i)" >/dev/null
-		echo "include $abs_srcdir/$i" > "$builddir/$i"
-	done
+	echo "include $abs_srcdir/Makefile" > "$builddir/Makefile"
+	"$MAKE" "SRC=$abs_srcdir" init
 fi
 
 
