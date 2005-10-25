@@ -53,7 +53,7 @@ alert_see_error(struct session *ses, unsigned char *msg)
 /* The ELinks module: */
 
 static void
-elinks_see_write(struct SEE_interpreter *see, struct SEE_object *self,
+navigator_alert(struct SEE_interpreter *see, struct SEE_object *self,
 		 struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 		 struct SEE_value *res)
 {
@@ -99,7 +99,7 @@ static void
 init_see_environment(struct SEE_interpreter *see)
 {
 	unsigned char *home;
-	struct SEE_object *obj, *elinks;
+	struct SEE_object *obj, *navigator;
 	struct SEE_value value;
 	struct SEE_string *name;
 
@@ -107,28 +107,29 @@ init_see_environment(struct SEE_interpreter *see)
 	SEE_intern_global(s_print = &S_print);
 	 * */
 
-	/* Create the elinks browser object. Add it to the global space */
-	elinks = SEE_Object_new(see);
-	SEE_SET_OBJECT(&value, elinks);
-	name = SEE_string_sprintf(see, "ELinks");
+	/* Create the navigator browser object. Add it to the global space */
+	navigator = SEE_Object_new(see);
+	SEE_SET_OBJECT(&value, navigator);
+	name = SEE_string_sprintf(see, "navigator");
 	SEE_OBJECT_PUT(see, see->Global, name, &value, SEE_ATTR_READONLY);
 
 	/* Create a string and attach as 'ELinks.version' */
 	SEE_SET_STRING(&value, SEE_string_sprintf(see, VERSION));
-	name = SEE_string_sprintf(see, "version");
-	SEE_OBJECT_PUT(see, elinks, name, &value, SEE_ATTR_READONLY);
+	name = SEE_string_sprintf(see, "appVersion");
+	SEE_OBJECT_PUT(see, navigator, name, &value, SEE_ATTR_READONLY);
 
 	/* Create a string and attach as 'ELinks.home' */
 	home = elinks_home ? elinks_home : (unsigned char *) CONFDIR;
 	SEE_SET_STRING(&value, SEE_string_sprintf(see, home));
-	name = SEE_string_sprintf(see, "home");
-	SEE_OBJECT_PUT(see, elinks, name, &value, SEE_ATTR_READONLY);
+	name = SEE_string_sprintf(see, "appHome");
+	SEE_OBJECT_PUT(see, navigator, name, &value, SEE_ATTR_READONLY);
 
 	/* Create a 'write' method and attach to the browser object. */
-	name = SEE_string_sprintf(see, "write");
-	obj = SEE_cfunction_make(see, elinks_see_write, name, 1);
+	name = SEE_string_sprintf(see, "alert");
+	obj = SEE_cfunction_make(see, navigator_alert, name, 1);
 	SEE_SET_OBJECT(&value, obj);
-	SEE_OBJECT_PUT(see, elinks, name, &value, 0);
+	SEE_OBJECT_PUT(see, navigator, name, &value, 0);
+	SEE_OBJECT_PUT(see, see->Global, name, &value, 0);
 }
 
 static void
