@@ -875,12 +875,8 @@ change_hook_connection(struct session *ses, struct option *current, struct optio
 static int
 change_hook_html(struct session *ses, struct option *current, struct option *changed)
 {
-	if (ses) {
-		draw_formatted(ses, 1);
-		load_frames(ses, ses->doc_view);
-		process_file_requests(ses);
-		print_screen_status(ses);
-	}
+	foreach (ses, sessions) ses->tab->resize = 1;
+
 	return 0;
 }
 
