@@ -73,7 +73,16 @@ OBJS += $(OBJS-yes)
 endif
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
+INCLUDE_ALL=1
+endif
 
+ifneq ($(findstring init,$(MAKECMDGOALS)),)
+# FIXME: Detect when $(subdir)/Makefile is $(srcdir)/$(subdir)/Makefile
+# and error out so the user won't overwrite the 'master' Makefiles.
+INCLUDE_ALL=1
+endif
+
+ifdef INCLUDE_ALL
 ifdef SUBDIRS-no
 SUBDIRS += $(SUBDIRS-no)
 endif
@@ -96,8 +105,10 @@ CLEAN += $(PROG)
 
 all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
 
-list-default:
-	@echo '$(RELPATH)Makefile'
+init-default:
+	@$(foreach subdir,$(sort $(SUBDIRS)), \
+		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
+		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
 clean-default:
 	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
@@ -106,26 +117,26 @@ cleanall-default: clean-default
 
 install-default: all-default
 ifdef PROGS
-	$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	$(foreach file,$(PROGS), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+	@$(foreach file,$(PROGS), \
 		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
 endif
 ifdef MAN1
-	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	$(foreach file,$(MAN1), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
+	@$(foreach file,$(MAN1), \
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
 endif
 ifdef MAN5
-	$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	$(foreach file,$(MAN5), \
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
+	@$(foreach file,$(MAN5), \
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive list-recursive
+.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive
 
-all-recursive install-recursive clean-recursive cleanall-recursive list-recursive:
+all-recursive install-recursive clean-recursive cleanall-recursive init-recursive:
 ifdef SUBDIRS
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
@@ -136,7 +147,7 @@ install: install-recursive install-default install-local
 clean: clean-recursive clean-default clean-local
 
 cleanall: cleanall-recursive cleanall-default
-list: list-recursive list-default
+init: init-default init-recursive
 
 all-local:
 install-local:

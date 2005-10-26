@@ -282,7 +282,7 @@ get_opt_(
 	case OPT_LONG:
 		if (opt->value.number < opt->min
 		    || opt->value.number > opt->max)
-			elinks_internal("Option %s has invalid value!", name);
+			elinks_internal("Option %s has invalid value %d!", name, opt->value.number);
 		break;
 	case OPT_COMMAND:
 		if (!opt->value.command)

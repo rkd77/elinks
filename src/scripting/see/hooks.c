@@ -21,7 +21,8 @@
  * to do is explained in doc/events.txt */
 
 static struct SEE_value *
-call_see_hook(struct SEE_interpreter *see, unsigned char *name,
+call_see_hook(struct SEE_interpreter *see, struct session *ses,
+	      unsigned char *name,
 	      struct SEE_value *args[], int argc,
 	      struct SEE_value *result)
 {
@@ -35,6 +36,8 @@ call_see_hook(struct SEE_interpreter *see, unsigned char *name,
 	if (SEE_VALUE_GET_TYPE(&hook) != SEE_OBJECT
 	    || !SEE_OBJECT_HAS_CALL(hook.u.object))
 		return NULL;
+
+	see_ses = ses;
 
 	SEE_TRY(see, try_context) {
 		SEE_OBJECT_CALL(see, hook.u.object, NULL, argc, args, result);
@@ -52,18 +55,20 @@ call_see_hook(struct SEE_interpreter *see, unsigned char *name,
 
 			if (init_string(&error_msg)) {
 				convert_see_string(&error_msg, value.u.string);
-				alert_see_error(NULL, error_msg.source);
+				alert_see_error(ses, error_msg.source);
 				done_string(&error_msg);
 			}
 		}
 
 		if (SEE_CAUGHT(try_context2)) {
-			WDBG("exception thrown while printing exception");
+			alert_see_error(ses, "exception thrown while printing exception");
 		}
 
+		see_ses = NULL;
 		return NULL;
 	}
 
+	see_ses = NULL;
 	return result;
 }
 
@@ -80,6 +85,7 @@ script_hook_goto_url(va_list ap, void *data)
 	if (*url == NULL)
 		return EVENT_HOOK_STATUS_NEXT;
 
+	see_ses = ses;
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", *url));
 
 	if (!ses || !have_location(ses)) {
@@ -89,7 +95,7 @@ script_hook_goto_url(va_list ap, void *data)
 			       SEE_string_sprintf(see, "%s", struri(cur_loc(ses)->vs.uri)));
 	}
 
-	if (!call_see_hook(see, "goto_url", args, sizeof_array(args), &result))
+	if (!call_see_hook(see, ses, "goto_url", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
 
 	switch (SEE_VALUE_GET_TYPE(&result)) {
@@ -120,14 +126,12 @@ script_hook_follow_url(va_list ap, void *data)
 	struct SEE_value args_[1], *args[1] = { &args_[0] };
 	struct SEE_value result;
 
-	evhook_use_params(url && ses);
-
 	if (*url == NULL)
 		return EVENT_HOOK_STATUS_NEXT;
 
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", *url));
 
-	if (!call_see_hook(see, "follow_url", args, sizeof_array(args), &result))
+	if (!call_see_hook(see, ses, "follow_url", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
 
 	switch (SEE_VALUE_GET_TYPE(&result)) {
@@ -168,7 +172,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", url));
 	SEE_SET_STRING(args[1], SEE_string_sprintf(see, "%s", *html));
 
-	if (!call_see_hook(see, "pre_format_html", args, sizeof_array(args), &result))
+	if (!call_see_hook(see, ses, "pre_format_html", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
 
 	switch (SEE_VALUE_GET_TYPE(&result)) {
@@ -209,7 +213,7 @@ script_hook_get_proxy(va_list ap, void *data)
 
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", url));
 
-	if (!call_see_hook(see, "get_proxy", args, sizeof_array(args), &result))
+	if (!call_see_hook(see, NULL, "get_proxy", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
 
 	switch (SEE_VALUE_GET_TYPE(&result)) {
@@ -237,7 +241,7 @@ script_hook_quit(va_list ap, void *data)
 	struct SEE_interpreter *see = &see_interpreter;
 	struct SEE_value result;
 
-	call_see_hook(see, "quit", NULL, 0, &result);
+	call_see_hook(see, NULL, "quit", NULL, 0, &result);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }

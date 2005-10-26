@@ -3,8 +3,9 @@
  * Copyright (c) Jonas Fonseca, 2005
  */
 
-function quit() {
-	// ELinks.write("quiting ... " + ELinks.version);
+function quit()
+{
+	// alert("quiting ... " + navigator.appVersion);
 }
 
 /*********************************************************************
@@ -206,7 +207,7 @@ function expand_smartprefix(context, current_url)
 				return true
 
 			} else {
-				ELinks.write('smartprefix "' + nick + '" has unsupported type "' + typeof smartprefixes[nick] + '".')
+				alert('smartprefix "' + nick + '" has unsupported type "' + typeof smartprefixes[nick] + '".')
 				return false
 			}
 		}
