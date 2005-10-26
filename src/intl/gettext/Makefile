@@ -50,7 +50,7 @@ install-local: $(builddir)/charset.alias all
 	    $(INSTALL_DATA) $$temp $$dest; \
 	    rm -f $$temp; \
 	  else \
-	    if test @GLIBC21@ = no; then \
+	    if test $(GLIBC21) = no; then \
 	      $(MKINSTALLDIRS) $(DESTDIR)$(libdir); \
 	      orig=charset.alias; \
 	      sed -f ref-add.sed $$orig > $$temp; \
@@ -72,7 +72,7 @@ install-local: $(builddir)/charset.alias all
 	fi
 
 uninstall-local:
-	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	@if test '$(CONFIG_NLS)' = yes; then \
 	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
 	    temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	    dest=$(DESTDIR)$(libdir)/charset.alias; \
