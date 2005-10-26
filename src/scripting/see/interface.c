@@ -23,6 +23,7 @@
 #include "util/file.h"
 #include "util/string.h"
 
+
 static void
 navigator_preference(struct SEE_interpreter *see, struct SEE_object *self,
 		     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
@@ -169,10 +170,6 @@ init_see_interface(struct SEE_interpreter *see)
 	struct SEE_object *obj, *navigator;
 	struct SEE_value value;
 	struct SEE_string *name;
-
-	/* TODO: Initialize strings.
-	SEE_intern_global(s_print = &S_print);
-	 * */
 
 	/* Create the navigator browser object. Add it to the global space */
 	navigator = SEE_Object_new(see);
