@@ -27,7 +27,7 @@ OBJS = \
 
 # $(builddir)/charset.alias: $(srcdir)/config.charset
 $(builddir)/charset.alias: $(srcdir)/config.charset
-	$(SHELL) $(srcdir)/config.charset '@host@' > $@.new
+	$(SHELL) $(srcdir)/config.charset '$(host)' > $@.new
 	mv $@.new $@
 
 # FIXME: Building plural.c from plural.y on the fly doesn't work
