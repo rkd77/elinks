@@ -41,7 +41,7 @@ plural.c: plural.y
 	rm -f $*.h
 
 install-local: $(builddir)/charset.alias all
-	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	@if test '$(CONFIG_NLS)' = yes; then \
 	  temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	  dest=$(DESTDIR)$(libdir)/charset.alias; \
 	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
