@@ -177,6 +177,7 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_DOC_TITLE:
 		mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
+		print_screen_status(doc_view->session);
 		break;
 	case JSP_DOC_URL:
 		/* According to the specs this should be readonly but some
