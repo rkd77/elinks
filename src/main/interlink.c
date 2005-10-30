@@ -392,7 +392,8 @@ bind_to_af_unix(void)
 		if (errno != EADDRINUSE)
 			report_af_unix_error("bind()", errno);
 
-		if (++attempts > MAX_BIND_TRIES)
+		++attempts;
+		if (attempts > MAX_BIND_TRIES)
 			goto free_and_error;
 
 		elinks_usleep(BIND_TRIES_DELAY * attempts);
