@@ -393,6 +393,10 @@ bind_to_af_unix(void)
 			report_af_unix_error("bind()", errno);
 
 		++attempts;
+
+		if (attempts == MAX_BIND_TRIES)
+			unlink_unix(s_info_listen.addr);
+
 		if (attempts > MAX_BIND_TRIES)
 			goto free_and_error;
 
