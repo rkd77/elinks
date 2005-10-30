@@ -377,7 +377,7 @@ bind_to_af_unix(void)
 
 	if (af == -1) goto free_and_error;
 
-again:
+	while (1) {
 	s_info_listen.fd = socket(af, SOCK_STREAM, 0);
 	if (s_info_listen.fd == -1) {
 		report_af_unix_error("socket()", errno);
@@ -394,10 +394,12 @@ again:
 			elinks_usleep(BIND_TRIES_DELAY * attempts);
 			close(s_info_listen.fd);
 
-			goto again;
+		} else {
+			goto free_and_error;
 		}
-
-		goto free_and_error;
+	} else {
+		break;
+	}
 	}
 
 	/* Listen and accept. */
