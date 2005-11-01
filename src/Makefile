@@ -28,7 +28,7 @@ SUBDIRS = \
 
 # Get the GIT HEAD ID if possible
 ifdef CG_COMMIT_ID
-BUILD_ID=$(shell $(CG_COMMIT_ID) 2> /dev/null)
+BUILD_ID=$(shell GIT_DIR=$(top_srcdir)/.git $(CG_COMMIT_ID) 2> /dev/null)
 endif
 INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
