@@ -27,7 +27,7 @@ OBJS = \
 
 # $(builddir)/charset.alias: $(srcdir)/config.charset
 $(builddir)/charset.alias: $(srcdir)/config.charset
-	$(SHELL) $(srcdir)/config.charset '@host@' > $@.new
+	$(SHELL) $(srcdir)/config.charset '$(host)' > $@.new
 	mv $@.new $@
 
 # FIXME: Building plural.c from plural.y on the fly doesn't work
@@ -41,7 +41,7 @@ plural.c: plural.y
 	rm -f $*.h
 
 install-local: $(builddir)/charset.alias all
-	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	@if test '$(CONFIG_NLS)' = yes; then \
 	  temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	  dest=$(DESTDIR)$(libdir)/charset.alias; \
 	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
@@ -50,7 +50,7 @@ install-local: $(builddir)/charset.alias all
 	    $(INSTALL_DATA) $$temp $$dest; \
 	    rm -f $$temp; \
 	  else \
-	    if test @GLIBC21@ = no; then \
+	    if test $(GLIBC21) = no; then \
 	      $(MKINSTALLDIRS) $(DESTDIR)$(libdir); \
 	      orig=charset.alias; \
 	      sed -f ref-add.sed $$orig > $$temp; \
@@ -72,7 +72,7 @@ install-local: $(builddir)/charset.alias all
 	fi
 
 uninstall-local:
-	@if test '@USE_INCLUDED_LIBINTL@' = yes; then \
+	@if test '$(CONFIG_NLS)' = yes; then \
 	  if test -f $(DESTDIR)$(libdir)/charset.alias; then \
 	    temp=$(DESTDIR)$(libdir)/t-charset.alias; \
 	    dest=$(DESTDIR)$(libdir)/charset.alias; \

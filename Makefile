@@ -1,7 +1,8 @@
 top_builddir=.
 -include $(top_builddir)/Makefile.config
 
-SUBDIRS = doc po src
+SUBDIRS = doc src
+SUBDIRS-$(CONFIG_NLS) += po
 CLEAN	= features.log
 
 all-recursive: config.h

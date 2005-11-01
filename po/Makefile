@@ -94,9 +94,7 @@ check-po:
 #
 # Use *-local targets to place and remove .gmo files.
 
-install-local: install-local-$(CONFIG_NLS)
-install-local-no:
-install-local-yes: all-local
+install-local: all-local
 	$(MKINSTALLDIRS) $(DESTDIR)$(localedir)
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(CATALOGS))), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES; \
