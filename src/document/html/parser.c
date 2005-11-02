@@ -290,41 +290,56 @@ do_html_script(struct html_context *html_context, unsigned char *a, unsigned cha
 	 * one. That's why's all the fuzz. */
 	/* Ref:
 	 * http://www.ietf.org/internet-drafts/draft-hoehrmann-script-types-03.txt
-	 * FIXME: optimize ! */
+	 */
 	type = get_attr_val(a, "type", html_context->options);
-	if (type
-	    && strcasecmp(type, "application/javascript")
-	    && strcasecmp(type, "application/ecmascript")
-	    && strcasecmp(type, "text/javascript")
-	    && strcasecmp(type, "text/ecmascript")
-	    && strcasecmp(type, "text/jscript")
-	    && strcasecmp(type, "text/livescript")
-	    && strcasecmp(type, "application/x-javascript")
-	    && strcasecmp(type, "application/x-ecmascript")
-	    && strcasecmp(type, "text/javascript1.0")
-	    && strcasecmp(type, "text/javascript1.1")
-	    && strcasecmp(type, "text/javascript1.2")
-	    && strcasecmp(type, "text/javascript1.3")
-	    && strcasecmp(type, "text/javascript1.4")
-	    && strcasecmp(type, "text/javascript1.5")) {
-		mem_free(type);
+	if (type) {
+		unsigned char *pos = type;
+
+		if (!strncasecmp(type, "text/", 5)) {
+			pos += 5;
+
+		} else if (!strncasecmp(type, "application/", 12)) {
+			pos += 12;
+
+		} else {
+			mem_free(type);
 not_processed:
-		/* Permit nested scripts and retreat. */
-		html_top.invisible++;
-		return 1;
+			/* Permit nested scripts and retreat. */
+			html_top.invisible++;
+			return 1;
+		}
+
+		if (!strncasecmp(pos, "javascript", 10)) {
+			int len = strlen(pos);
+
+			if (len > 10 && !isdigit(pos[10])) {
+				mem_free(type);
+				goto not_processed;
+			}
+
+		} else if (strcasecmp(pos, "ecmascript")
+		    && strcasecmp(pos, "jscript")
+		    && strcasecmp(pos, "livescript")
+		    && strcasecmp(pos, "x-javascript")
+		    && strcasecmp(pos, "x-ecmascript")) {
+			mem_free(type);
+			goto not_processed;
+		}
+
+		mem_free(type);
 	}
-	if (type) mem_free(type);
 
 	/* Check that the script content is ecmascript. The value of the
 	 * language attribute can be JavaScript with optional version digits
-	 * postfixed (like: ``JavaScript1.1''). */
+	 * postfixed (like: ``JavaScript1.1'').
+	 * That attribute is deprecated in favor of type by HTML 4.01 */
 	language = get_attr_val(a, "language", html_context->options);
 	if (language) {
 		int languagelen = strlen(language);
 
 		if (languagelen < 10
 		    || (languagelen > 10 && !isdigit(language[10]))
-		    || strncasecmp(language, "javascript", 10)) {	/* FIXME: sufficient ? */
+		    || strncasecmp(language, "javascript", 10)) {
 			mem_free(language);
 			goto not_processed;
 		}
