@@ -288,8 +288,25 @@ do_html_script(struct html_context *html_context, unsigned char *a, unsigned cha
 
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. That's why's all the fuzz. */
+	/* Ref:
+	 * http://www.ietf.org/internet-drafts/draft-hoehrmann-script-types-03.txt
+	 * FIXME: optimize ! */
 	type = get_attr_val(a, "type", html_context->options);
-	if (type && strcasecmp(type, "text/javascript")) {
+	if (type
+	    && strcasecmp(type, "application/javascript")
+	    && strcasecmp(type, "application/ecmascript")
+	    && strcasecmp(type, "text/javascript")
+	    && strcasecmp(type, "text/ecmascript")
+	    && strcasecmp(type, "text/jscript")
+	    && strcasecmp(type, "text/livescript")
+	    && strcasecmp(type, "application/x-javascript")
+	    && strcasecmp(type, "application/x-ecmascript")
+	    && strcasecmp(type, "text/javascript1.0")
+	    && strcasecmp(type, "text/javascript1.1")
+	    && strcasecmp(type, "text/javascript1.2")
+	    && strcasecmp(type, "text/javascript1.3")
+	    && strcasecmp(type, "text/javascript1.4")
+	    && strcasecmp(type, "text/javascript1.5")) {
 		mem_free(type);
 not_processed:
 		/* Permit nested scripts and retreat. */
@@ -307,7 +324,7 @@ not_processed:
 
 		if (languagelen < 10
 		    || (languagelen > 10 && !isdigit(language[10]))
-		    || strncasecmp(language, "javascript", 10)) {
+		    || strncasecmp(language, "javascript", 10)) {	/* FIXME: sufficient ? */
 			mem_free(language);
 			goto not_processed;
 		}
