@@ -590,6 +590,7 @@ the mapped target URL.
 	$locator_prefixes{'^(book|read)(| .*)$'}             = 'book';        # Google Library / Project Gutenberg
 	$locator_prefixes{'^ipl(| .*)$'}                     = 'ipl';         # Internet Public Library
 	$locator_prefixes{'^(urbandict|ud)(| .*)$'}          = 'urbandict';   # Urban Dictionary
+	$locator_prefixes{'^ubs(| .*)$'}                     = 'ubs';         # Usenet binary search
 
 	my %weather_locators =
 	(
@@ -647,6 +648,9 @@ the mapped target URL.
 			'urbandict'   => {
 				home      => 'http://urbandictionary.com/random.php',
 				search    => 'http://urbandictionary.com/define.php?term='},
+			'ubs'         => {
+				home      => 'http://binsearch.info',
+				search    => 'http://binsearch.info/?q='},
 		);
 
 		my ($server, $search, $current_url) = @_;
