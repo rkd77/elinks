@@ -246,25 +246,13 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 		format.tabindex = (tabindex & 0x7fff) << 16;
 	}
 
-	mem_free_if(format.onclick);
-	format.onclick = get_attr_val(a, "onclick", options);
-
-	mem_free_if(format.ondblclick);
-	format.ondblclick = get_attr_val(a, "ondblclick", options);
-
-	mem_free_if(format.onmouseover);
-	format.onmouseover = get_attr_val(a, "onmouseover", options);
-	mem_free_if(format.onhover);
-	format.onhover = get_attr_val(a, "onhover", options);
-
-	mem_free_if(format.onfocus);
-	format.onfocus = get_attr_val(a, "onfocus", options);
-
-	mem_free_if(format.onmouseout);
-	format.onmouseout = get_attr_val(a, "onmouseout", options);
-
-	mem_free_if(format.onblur);
-	format.onblur = get_attr_val(a, "onblur", options);
+	mem_free_set(&format.onclick, get_attr_val(a, "onclick", options));
+	mem_free_set(&format.ondblclick, get_attr_val(a, "ondblclick", options));
+	mem_free_set(&format.onmouseover, get_attr_val(a, "onmouseover", options));
+	mem_free_set(&format.onhover, get_attr_val(a, "onhover", options));
+	mem_free_set(&format.onfocus, get_attr_val(a, "onfocus", options));
+	mem_free_set(&format.onmouseout, get_attr_val(a, "onmouseout", options));
+	mem_free_set(&format.onblur, get_attr_val(a, "onblur", options));
 }
 
 void
