@@ -224,6 +224,7 @@ import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 void
 html_focusable(struct html_context *html_context, unsigned char *a)
 {
+	struct document_options *options;
 	unsigned char *accesskey;
 	int tabindex;
 
@@ -232,39 +233,38 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 
 	if (!a) return;
 
-	accesskey = get_attr_val(a, "accesskey", html_context->options);
+	options = html_context->options;
+
+	accesskey = get_attr_val(a, "accesskey", options);
 	if (accesskey) {
 		format.accesskey = accesskey_string_to_unicode(accesskey);
 		mem_free(accesskey);
 	}
 
-	tabindex = get_num(a, "tabindex", html_context->options);
+	tabindex = get_num(a, "tabindex", options);
 	if (0 < tabindex && tabindex < 32767) {
 		format.tabindex = (tabindex & 0x7fff) << 16;
 	}
 
 	mem_free_if(format.onclick);
-	format.onclick = get_attr_val(a, "onclick", html_context->options);
+	format.onclick = get_attr_val(a, "onclick", options);
 
 	mem_free_if(format.ondblclick);
-	format.ondblclick = get_attr_val(a, "ondblclick",
-	                                 html_context->options);
+	format.ondblclick = get_attr_val(a, "ondblclick", options);
 
 	mem_free_if(format.onmouseover);
-	format.onmouseover = get_attr_val(a, "onmouseover",
-	                                  html_context->options);
+	format.onmouseover = get_attr_val(a, "onmouseover", options);
 	mem_free_if(format.onhover);
-	format.onhover = get_attr_val(a, "onhover", html_context->options);
+	format.onhover = get_attr_val(a, "onhover", options);
 
 	mem_free_if(format.onfocus);
-	format.onfocus = get_attr_val(a, "onfocus", html_context->options);
+	format.onfocus = get_attr_val(a, "onfocus", options);
 
 	mem_free_if(format.onmouseout);
-	format.onmouseout = get_attr_val(a, "onmouseout",
-	                                 html_context->options);
+	format.onmouseout = get_attr_val(a, "onmouseout", options);
 
 	mem_free_if(format.onblur);
-	format.onblur = get_attr_val(a, "onblur", html_context->options);
+	format.onblur = get_attr_val(a, "onblur", options);
 }
 
 void
