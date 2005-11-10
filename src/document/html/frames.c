@@ -41,7 +41,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 	 * There may exist a true fix for this... --Zas */
 	/* May the one truly fixing this notify'n'close bug 237 in the
 	 * Bugzilla... --pasky */
-	if (frameset_desc->box.y >= frameset_desc-> box.height)
+	if (frameset_desc->box.y >= frameset_desc->box.height)
 		return;
 
 	offset = frameset_desc->box.x
@@ -49,7 +49,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 	frame_desc = &frameset_desc->frame_desc[offset];
 	frame_desc->subframe = subframe;
 	frame_desc->name = null_or_stracpy(name);
-	frame_desc->uri = url && *url ? get_uri(url, 0) : NULL;
+	frame_desc->uri = (url && *url) ? get_uri(url, 0) : NULL;
 	if (!frame_desc->uri)
 		frame_desc->uri = get_uri("about:blank", 0);
 
@@ -167,26 +167,29 @@ static struct document_view *
 format_frame(struct session *ses, struct frame_desc *frame_desc,
 	     struct document_options *o, int depth)
 {
-	struct cache_entry *cached;
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct frame *frame;
 	int plain;
 
 	assert(ses && frame_desc && o);
 	if_assert_failed return NULL;
 
-repeat:
-	frame = ses_find_frame(ses, frame_desc->name);
-	if (!frame) return NULL;
+	while (1) {
+		struct cache_entry *cached;
+		struct frame *frame = ses_find_frame(ses, frame_desc->name);
 
-	vs = &frame->vs;
-	cached = find_in_cache(vs->uri);
-	if (!cached) return NULL;
-	plain = o->plain;
-	if (vs->plain != -1) o->plain = vs->plain;
+		if (!frame) return NULL;
 
-	if (cached->redirect && frame->redirect_cnt < MAX_REDIRECTS) {
+		vs = &frame->vs;
+		cached = find_in_cache(vs->uri);
+		if (!cached) return NULL;
+
+		plain = o->plain;
+		if (vs->plain != -1) o->plain = vs->plain;
+
+		if (!cached->redirect || frame->redirect_cnt >= MAX_REDIRECTS)
+			break;
+
 		frame->redirect_cnt++;
 		done_uri(vs->uri);
 		vs->uri = get_uri_reference(cached->redirect);
@@ -194,7 +197,6 @@ repeat:
 		vs->ecmascript_fragile = 1;
 #endif
 		o->plain = plain;
-		goto repeat;
 	}
 
 	doc_view = find_fd(ses, frame_desc->name, depth, o->box.x, o->box.y);
