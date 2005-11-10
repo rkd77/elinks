@@ -264,7 +264,8 @@ html_skip(struct html_context *html_context, unsigned char *a)
 
 #ifdef CONFIG_ECMASCRIPT
 int
-do_html_script(struct html_context *html_context, unsigned char *a, unsigned char *html, unsigned char *eof, unsigned char **end)
+do_html_script(struct html_context *html_context, unsigned char *a,
+	       unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	/* TODO: <noscript> processing. Well, same considerations apply as to
 	 * CSS property display: none processing. */
