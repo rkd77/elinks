@@ -74,7 +74,7 @@ static void free_options_tree(struct list_head *, int recursive);
 /* Detect ending '.' (and some others) in options captions.
  * It will emit a message in debug mode only. --Zas */
 
-#define bad_punct(c) (c != ')' && c!= '>' && !isquote(c) && ispunct(c))
+#define bad_punct(c) (c != ')' && c != '>' && !isquote(c) && ispunct(c))
 
 static void
 check_caption(unsigned char *caption)
