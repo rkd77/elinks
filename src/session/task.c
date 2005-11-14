@@ -193,12 +193,12 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 		confirm_submit = 1;
 
 	} else if (uri->form) {
-		struct cache_entry *cached;
-
 		/* First check if the referring URI was incomplete. It
 		 * indicates that the posted form data might be incomplete too.
 		 * See bug 460. */
 		if (ses->referrer) {
+			struct cache_entry *cached;
+
 			cached = find_in_cache(ses->referrer);
 			referrer_incomplete = (cached && cached->incomplete);
 		}
