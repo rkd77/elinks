@@ -180,10 +180,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 		malicious_uri = 1;
 		confirm_submit = 1;
 
-	} else if (!uri->form) {
-		confirm_submit = 0;
-
-	} else {
+	} else if (uri->form) {
 		struct cache_entry *cached;
 
 		/* First check if the referring URI was incomplete. It
