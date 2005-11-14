@@ -87,17 +87,12 @@ ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
 static void
 post_yes(struct task *task)
 {
-	struct session *ses = task->ses;
-
 	abort_preloading(task->ses, 0);
 
-	ses->loading.callback = (download_callback_T *) loading_callback;
-	ses->loading.data = task->ses;
-	ses->loading_uri = task->uri; /* XXX: Make the session inherit the URI. */
-	memcpy(&ses->task, &task->session_task, sizeof(ses->task));
-
-	load_uri(ses->loading_uri, ses->referrer, &ses->loading,
-		 PRI_MAIN, task->cache_mode, -1);
+	/* XXX: Make the session inherit the URI. */
+	ses_load(task->ses, task->uri, task->session_task.target.frame,
+	         task->session_task.target.location, task->cache_mode,
+	         task->session_task.type);
 }
 
 static void
