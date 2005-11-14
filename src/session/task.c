@@ -163,7 +163,8 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	struct task *task;
 	int referrer_incomplete = 0;
 	int malicious_uri = 0;
-	int confirm_submit = uri->form;
+	int confirm_submit = uri->form && get_opt_bool("document.browse.forms"
+	                                               ".confirm_submit");
 	unsigned char *m1 = NULL, *message = NULL;
 
 	if (ses->doc_view
@@ -203,9 +204,8 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 			referrer_incomplete = (cached && cached->incomplete);
 		}
 
-		if (!get_opt_bool("document.browse.forms.confirm_submit")
-		    && !referrer_incomplete) {
-			confirm_submit = 0;
+		if (referrer_incompleted) {
+			confirm_submit = 1;
 
 		} else if (get_validated_cache_entry(uri, cache_mode)) {
 			confirm_submit = 0;
