@@ -68,6 +68,23 @@ struct task {
 };
 
 static void
+ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
+	 struct location *target_location, enum cache_mode cache_mode,
+	 enum task_type task_type)
+{
+	ses->loading.callback = (download_callback_T *) loading_callback;
+	ses->loading.data = ses;
+	ses->loading_uri = uri;
+
+	ses->task.type = task_type;
+	ses->task.target.frame = target_frame;
+	ses->task.target.location = target_location;
+
+	load_uri(ses->loading_uri, ses->referrer, &ses->loading,
+		 PRI_MAIN, cache_mode, -1);
+}
+
+static void
 post_yes(struct task *task)
 {
 	struct session *ses = task->ses;
@@ -201,17 +218,8 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	}
 
 	if (!confirm_submit) {
-		ses->loading.callback = (download_callback_T *) loading_callback;
-		ses->loading.data = ses;
-		ses->loading_uri = get_uri_reference(uri);
-
-		ses->task.type = task_type;
-		ses->task.target.frame = target_frame;
-		ses->task.target.location = target_location;
-
-		load_uri(ses->loading_uri, ses->referrer, &ses->loading,
-			 PRI_MAIN, cache_mode, -1);
-
+		ses_load(ses, get_uri_reference(uri), target_frame,
+		         target_location, cache_mode, task_type);
 		return;
 	}
 
