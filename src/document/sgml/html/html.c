@@ -9,8 +9,8 @@
 
 #include "elinks.h"
 
-#include "document/dom/navigator.h"
 #include "document/dom/node.h"
+#include "document/dom/stack.h"
 #include "document/sgml/html/html.h"
 #include "document/sgml/parser.h"
 #include "document/sgml/scanner.h"
@@ -38,20 +38,20 @@ static struct sgml_node_info html_elements[HTML_ELEMENTS] = {
 
 
 static struct dom_node *
-add_html_element_end_node(struct dom_navigator *navigator, struct dom_node *node, void *data)
+add_html_element_end_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = navigator->data;
+	struct sgml_parser *parser = stack->data;
 	struct dom_node *parent;
 	struct scanner_token *token;
 
-	assert(navigator && parser && node);
-	assert(dom_navigator_has_parents(navigator));
+	assert(stack && parser && node);
+	assert(dom_stack_has_parents(stack));
 
 	/* Are we the actual node being popped? */
-	if (node != get_dom_navigator_top(navigator)->node)
+	if (node != get_dom_stack_top(stack)->node)
 		return NULL;
 
-	parent = get_dom_navigator_parent(navigator)->node;
+	parent = get_dom_stack_parent(stack)->node;
 	token  = get_scanner_token(&parser->scanner);
 
 	assertm(token, "No token found in callback");
@@ -65,17 +65,17 @@ add_html_element_end_node(struct dom_navigator *navigator, struct dom_node *node
 /* TODO: We need to handle ascending of <br> and "<p>text1<p>text2" using data
  * from sgml_node_info. */
 static struct dom_node *
-add_html_element_node(struct dom_navigator *navigator, struct dom_node *node, void *data)
+add_html_element_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = navigator->data;
+	struct sgml_parser *parser = stack->data;
 
-	assert(navigator && node);
-	assert(dom_navigator_has_parents(navigator));
+	assert(stack && node);
+	assert(dom_stack_has_parents(stack));
 
 	/* TODO: Move to SGML parser main loop and disguise these element ends
 	 * in some internal processing instruction. */
 	if (parser->flags & SGML_PARSER_ADD_ELEMENT_ENDS)
-		get_dom_navigator_top(navigator)->callback = add_html_element_end_node;
+		get_dom_stack_top(stack)->callback = add_html_element_end_node;
 
 	return node;
 }

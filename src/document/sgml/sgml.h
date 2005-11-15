@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 
-#include "document/dom/navigator.h"
+#include "document/dom/stack.h"
 
 /* The flags stored in the attribute sgml node info data */
 /* TODO: Other potential flags (there can be only 16)
@@ -76,7 +76,7 @@ get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 struct sgml_info {
 	struct sgml_node_info *attributes;
 	struct sgml_node_info *elements;
-	dom_navigator_callback_T callbacks[DOM_NODES];
+	dom_stack_callback_T callbacks[DOM_NODES];
 };
 
 #endif

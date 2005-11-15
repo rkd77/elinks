@@ -16,9 +16,9 @@
 #include "document/css/stylesheet.h"
 #include "document/docdata.h"
 #include "document/document.h"
-#include "document/dom/navigator.h"
 #include "document/dom/node.h"
 #include "document/dom/renderer.h"
+#include "document/dom/stack.h"
 #include "document/renderer.h"
 #include "document/sgml/parser.h"
 #include "intl/charsets.h"
@@ -389,9 +389,9 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 
 #ifdef DOM_TREE_RENDERER
 static struct dom_node *
-render_dom_tree(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
 
@@ -409,9 +409,9 @@ render_dom_tree(struct dom_navigator *navigator, struct dom_node *node, void *da
 }
 
 static struct dom_node *
-render_dom_tree_id_leaf(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value, *id;
@@ -422,7 +422,7 @@ render_dom_tree_id_leaf(struct dom_navigator *navigator, struct dom_node *node, 
 	value	= get_dom_node_value(node, document->options.cp);
 	id	= get_dom_node_type_name(node->type);
 
-	renderer->canvas_x += navigator->depth;
+	renderer->canvas_x += stack->depth;
 	render_dom_printf(renderer, template, "%-16s: %s -> %s\n", id, name, value);
 
 	mem_free_if(name);
@@ -432,9 +432,9 @@ render_dom_tree_id_leaf(struct dom_navigator *navigator, struct dom_node *node, 
 }
 
 static struct dom_node *
-render_dom_tree_leaf(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
@@ -444,7 +444,7 @@ render_dom_tree_leaf(struct dom_navigator *navigator, struct dom_node *node, voi
 	name	= get_dom_node_name(node);
 	value	= get_dom_node_value(node, document->options.cp);
 
-	renderer->canvas_x += navigator->depth;
+	renderer->canvas_x += stack->depth;
 	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
 
 	mem_free_if(name);
@@ -454,9 +454,9 @@ render_dom_tree_leaf(struct dom_navigator *navigator, struct dom_node *node, voi
 }
 
 static struct dom_node *
-render_dom_tree_branch(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *id;
@@ -466,7 +466,7 @@ render_dom_tree_branch(struct dom_navigator *navigator, struct dom_node *node, v
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	renderer->canvas_x += navigator->depth;
+	renderer->canvas_x += stack->depth;
 	render_dom_printf(renderer, template, "%-16s: %s\n", id, name);
 
 	mem_free_if(name);
@@ -474,7 +474,7 @@ render_dom_tree_branch(struct dom_navigator *navigator, struct dom_node *node, v
 	return node;
 }
 
-static dom_navigator_callback_T dom_tree_renderer_callbacks[DOM_NODES] = {
+static dom_stack_callback_T dom_tree_renderer_callbacks[DOM_NODES] = {
 	/*				*/ NULL,
 	/* DOM_NODE_ELEMENT		*/ render_dom_tree_branch,
 	/* DOM_NODE_ATTRIBUTE		*/ render_dom_tree_id_leaf,
@@ -538,9 +538,9 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 }
 
 static struct dom_node *
-render_dom_node_source(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -552,9 +552,9 @@ render_dom_node_source(struct dom_navigator *navigator, struct dom_node *node, v
 }
 
 static struct dom_node *
-render_dom_proc_instr_source(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 	unsigned char *value;
 	int valuelen;
 
@@ -579,9 +579,9 @@ render_dom_proc_instr_source(struct dom_navigator *navigator, struct dom_node *n
 }
 
 static struct dom_node *
-render_dom_element_source(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_renderer *renderer = stack->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -591,10 +591,10 @@ render_dom_element_source(struct dom_navigator *navigator, struct dom_node *node
 }
 
 static struct dom_node *
-render_dom_attribute_source(struct dom_navigator *navigator, struct dom_node *node, void *data)
+render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_navigator_state *state = get_dom_navigator_parent(navigator);
-	struct dom_renderer *renderer = navigator->data;
+	struct dom_stack_state *state = get_dom_stack_parent(stack);
+	struct dom_renderer *renderer = stack->data;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_node *attribute = NULL;
 	int i;
@@ -672,7 +672,7 @@ render_dom_attribute_source(struct dom_navigator *navigator, struct dom_node *no
 	return node;
 }
 
-static dom_navigator_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
+static dom_stack_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
 	/*				*/ NULL,
 	/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
 	/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
@@ -698,8 +698,8 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_node *root = parse_sgml(cached, document, buffer);
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
-	dom_navigator_callback_T *callbacks = dom_source_renderer_callbacks;
-	struct dom_navigator navigator;
+	dom_stack_callback_T *callbacks = dom_source_renderer_callbacks;
+	struct dom_stack stack;
 
 	assert(document->options.plain);
 	if (!root) return;
@@ -711,11 +711,11 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  document->options.hard_assume);
 
 	init_dom_renderer(&renderer, document, buffer, root, convert_table);
-	init_dom_navigator(&navigator, &renderer, callbacks, 0);
+	init_dom_stack(&stack, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
 
-	walk_dom_nodes(&navigator, root);
+	walk_dom_nodes(&stack, root);
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including
 	 * the '>' of the last element tag if it has one. (bug 519) */
@@ -724,5 +724,5 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	}
 
 	done_dom_node(root);
-	done_dom_navigator(&navigator);
+	done_dom_stack(&stack);
 }

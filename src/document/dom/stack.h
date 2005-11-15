@@ -1,13 +1,13 @@
 
-#ifndef EL__DOCUMENT_DOM_NAVIGATOR_H
-#define EL__DOCUMENT_DOM_NAVIGATOR_H
+#ifndef EL__DOCUMENT_DOM_STACK_H
+#define EL__DOCUMENT_DOM_STACK_H
 
 #include "document/document.h"
 #include "document/dom/node.h"
 #include "util/error.h"
 #include "util/hash.h"
 
-struct dom_navigator;
+struct dom_stack;
 
 enum dom_exception_code {
 	DOM_ERR_NONE				=  0,
@@ -31,26 +31,26 @@ enum dom_exception_code {
 };
 
 typedef struct dom_node *
-	(*dom_navigator_callback_T)(struct dom_navigator *, struct dom_node *, void *);
+	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
-#define DOM_NAVIGATOR_MAX_DEPTH	4096
+#define DOM_STACK_MAX_DEPTH	4096
 
-struct dom_navigator_state {
+struct dom_stack_state {
 	struct dom_node *node;
 
 	struct dom_node_list *list;
 	size_t index;
 
-	dom_navigator_callback_T callback;
+	dom_stack_callback_T callback;
 	void *data;
 };
 
-/* The DOM navigator is a convenient way to traverse DOM trees. Also it
+/* The DOM stack is a convenient way to traverse DOM trees. Also it
  * maintains needed state info and is therefore also a holder of the current
- * context since the navigator is used to when the DOM tree is manipulated. */
-struct dom_navigator {
+ * context since the stack is used to when the DOM tree is manipulated. */
+struct dom_stack {
 	/* The stack of nodes */
-	struct dom_navigator_state *states;
+	struct dom_stack_state *states;
 	size_t depth;
 
 	unsigned char *state_objects;
@@ -60,23 +60,23 @@ struct dom_navigator {
 	enum dom_exception_code exception;
 
 	/* Parser and document specific stuff */
-	dom_navigator_callback_T callbacks[DOM_NODES];
+	dom_stack_callback_T callbacks[DOM_NODES];
 	void *data;
 };
 
-#define dom_navigator_has_parents(nav) \
+#define dom_stack_has_parents(nav) \
 	((nav)->states && (nav)->depth > 0)
 
-static inline struct dom_navigator_state *
-get_dom_navigator_state(struct dom_navigator *navigator, int top_offset)
+static inline struct dom_stack_state *
+get_dom_stack_state(struct dom_stack *stack, int top_offset)
 {
-	assertm(navigator->depth - 1 - top_offset >= 0,
+	assertm(stack->depth - 1 - top_offset >= 0,
 		"Attempting to access invalid state");
-	return &navigator->states[navigator->depth - 1 - top_offset];
+	return &stack->states[stack->depth - 1 - top_offset];
 }
 
-#define get_dom_navigator_parent(nav)	get_dom_navigator_state(nav, 1)
-#define get_dom_navigator_top(nav)	get_dom_navigator_state(nav, 0)
+#define get_dom_stack_parent(nav)	get_dom_stack_state(nav, 1)
+#define get_dom_stack_top(nav)		get_dom_stack_state(nav, 0)
 
 /* The state iterators do not include the bottom state */
 
@@ -88,15 +88,15 @@ get_dom_navigator_state(struct dom_navigator *navigator, int top_offset)
 	for ((pos) = (nav)->depth - 1; (pos) > 0; (pos)--)	\
 		if (((item) = &(nav)->states[(pos)]))
 
-/* Dive through the navigator states in search for the specified match. */
-static inline struct dom_navigator_state *
-search_dom_navigator(struct dom_navigator *navigator, enum dom_node_type type,
-		     unsigned char *string, uint16_t length)
+/* Dive through the stack states in search for the specified match. */
+static inline struct dom_stack_state *
+search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
+		 unsigned char *string, uint16_t length)
 {
-	struct dom_navigator_state *state;
+	struct dom_stack_state *state;
 	int pos;
 
-	foreachback_dom_state (navigator, state, pos) {
+	foreachback_dom_state (stack, state, pos) {
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type
@@ -111,24 +111,26 @@ search_dom_navigator(struct dom_navigator *navigator, enum dom_node_type type,
 
 /* Life cycle functions. */
 
-/* The @object_size arg tells whether the navigator should allocate objects for each
+/* The @object_size arg tells whether the stack should allocate objects for each
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
-void init_dom_navigator(struct dom_navigator *navigator, void *data, dom_navigator_callback_T callbacks[DOM_NODES], size_t object_size);
-void done_dom_navigator(struct dom_navigator *navigator);
+void init_dom_stack(struct dom_stack *stack, void *data,
+		    dom_stack_callback_T callbacks[DOM_NODES],
+		    size_t object_size);
+void done_dom_stack(struct dom_stack *stack);
 
 /* Decends down to the given node making it the current parent */
 /* If an error occurs the node is free()d and NULL is returned */
-struct dom_node *push_dom_node(struct dom_navigator *navigator, struct dom_node *node);
+struct dom_node *push_dom_node(struct dom_stack *stack, struct dom_node *node);
 
-/* Ascends the navigator to the current parent */
-void pop_dom_node(struct dom_navigator *navigator);
+/* Ascends the stack to the current parent */
+void pop_dom_node(struct dom_stack *stack);
 
-/* Ascends the navigator looking for specific parent */
-void pop_dom_nodes(struct dom_navigator *navigator, enum dom_node_type type,
+/* Ascends the stack looking for specific parent */
+void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 		   unsigned char *string, uint16_t length);
 
 /* Visit each node in the tree rooted at @root pre-order */
-void walk_dom_nodes(struct dom_navigator *navigator, struct dom_node *root);
+void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);
 
 #endif

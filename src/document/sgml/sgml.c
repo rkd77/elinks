@@ -9,7 +9,6 @@
 
 #include "elinks.h"
 
-#include "document/dom/navigator.h"
 #include "document/dom/node.h"
 #include "document/sgml/sgml.h"
 #include "util/error.h"

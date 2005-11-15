@@ -2,7 +2,7 @@
 #ifndef EL__DOCUMENT_SGML_HTML_HTML_H
 #define EL__DOCUMENT_SGML_HTML_HTML_H
 
-#include "document/dom/navigator.h"
+#include "document/dom/stack.h"
 #include "document/sgml/sgml.h"
 
 extern struct sgml_info sgml_html_info;
