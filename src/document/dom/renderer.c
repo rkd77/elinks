@@ -38,8 +38,6 @@ struct dom_renderer {
 	struct conv_table *convert_table;
 	enum convert_string_mode convert_mode;
 
-	struct dom_node *root;
-
 	unsigned char *source;
 	unsigned char *end;
 
@@ -78,8 +76,7 @@ get_css_property(struct list_head *list, enum css_property_type type)
 /* Checks the user CSS for properties for each DOM node type name */
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
-		  struct string *buffer, struct dom_node *root,
-		  struct conv_table *convert_table)
+		  struct string *buffer, struct conv_table *convert_table)
 {
 	enum dom_node_type type;
 	struct css_stylesheet *css = &default_stylesheet;
@@ -89,7 +86,6 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->document	= document;
 	renderer->convert_table = convert_table;
 	renderer->convert_mode	= document->options.plain ? CSM_NONE : CSM_DEFAULT;
-	renderer->root		= root;
 	renderer->source	= buffer->source;
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
@@ -710,7 +706,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  &document->cp_status,
 					  document->options.hard_assume);
 
-	init_dom_renderer(&renderer, document, buffer, root, convert_table);
+	init_dom_renderer(&renderer, document, buffer, convert_table);
 	init_dom_stack(&stack, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
