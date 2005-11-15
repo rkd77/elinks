@@ -17,10 +17,20 @@ typedef struct dom_node *
 struct dom_stack_state {
 	struct dom_node *node;
 
+	/* Used for recording which node list are currently being 'decended'
+	 * into. E.g. whether we are iterating all child elements or attributes
+	 * of an element. */ 
 	struct dom_node_list *list;
+	/* The index (in the list above) which are currently being handled. */
 	size_t index;
 
+	/* A callback registered to be called when the node is popped. Used for
+	 * correctly highlighting ending elements (e.g. </a>). */
 	dom_stack_callback_T callback;
+
+	/* Parser specific data. For the SGML parser this holds DTD-oriented
+	 * info about the node (recorded in struct sgml_node_info). E.g.
+	 * whether an element node is optional. */
 	void *data;
 };
 
@@ -32,6 +42,8 @@ struct dom_stack {
 	struct dom_stack_state *states;
 	size_t depth;
 
+	/* This is one big array of parser specific objects which will be
+	 * assigned to the data member of the individual dom_stack_states. */
 	unsigned char *state_objects;
 	size_t object_size;
 
