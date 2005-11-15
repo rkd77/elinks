@@ -1030,7 +1030,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			*new_len = 0;
 			break; /* Loop prevention (bug 517), is this correct ? --Zas */
 		}
-	} while (!(!len && did_read != to_read));
+	} while (len || did_read == BIG_READ);
 
 	shutdown_connection_stream(conn);
 	return output;
