@@ -1,4 +1,3 @@
-
 #ifndef EL__GLOBHIST_DIALOGS_H
 #define EL__GLOBHIST_DIALOGS_H
 

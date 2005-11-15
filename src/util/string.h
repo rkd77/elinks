@@ -1,4 +1,3 @@
-
 #ifndef EL__UTIL_STRING_H
 #define EL__UTIL_STRING_H
 

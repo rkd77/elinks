@@ -1,4 +1,3 @@
-
 #ifndef EL__ENCODING_BZIP2_H
 #define EL__ENCODING_BZIP2_H
 

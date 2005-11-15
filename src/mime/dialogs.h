@@ -1,4 +1,3 @@
-
 #ifndef EL__MIME_DIALOGS_H
 #define EL__MIME_DIALOGS_H
 

@@ -1,4 +1,3 @@
-
 #ifndef EL__BFU_HIERBOX_H
 #define EL__BFU_HIERBOX_H
 

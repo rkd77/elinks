@@ -1,4 +1,3 @@
-
 #ifndef EL__OSDEP_NEWWIN_H
 #define EL__OSDEP_NEWWIN_H
 

@@ -1,4 +1,3 @@
-
 #ifndef EL__TERMINAL_EVENT_H
 #define EL__TERMINAL_EVENT_H
 

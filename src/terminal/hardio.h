@@ -1,4 +1,3 @@
-
 #ifndef EL__TERMINAL_HARDIO_H
 #define EL__TERMINAL_HARDIO_H
 

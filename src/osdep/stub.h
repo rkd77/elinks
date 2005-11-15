@@ -1,4 +1,3 @@
-
 #ifndef EL__OSDEP_STUB_H
 #define EL__OSDEP_STUB_H
 

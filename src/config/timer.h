@@ -1,4 +1,3 @@
-
 #ifndef EL__CONFIG_TIMER_H
 #define EL__CONFIG_TIMER_H
 

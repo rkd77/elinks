@@ -1,4 +1,3 @@
-
 #ifndef EL__UTIL_SCANNER_H
 #define EL__UTIL_SCANNER_H
 

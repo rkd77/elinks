@@ -1,4 +1,3 @@
-
 #ifndef EL__DOCUMENT_REFRESH_H
 #define EL__DOCUMENT_REFRESH_H
 

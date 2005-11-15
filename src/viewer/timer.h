@@ -1,4 +1,3 @@
-
 #ifndef EL__VIEWER_TIMER_H
 #define EL__VIEWER_TIMER_H
 

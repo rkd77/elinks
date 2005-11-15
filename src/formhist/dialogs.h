@@ -1,4 +1,3 @@
-
 #ifndef EL__FORMHIST_DIALOGS_H
 #define EL__FORMHIST_DIALOGS_H
 

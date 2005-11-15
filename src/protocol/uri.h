@@ -1,4 +1,3 @@
-
 #ifndef EL__PROTOCOL_URI_H
 #define EL__PROTOCOL_URI_H
 

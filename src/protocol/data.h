@@ -1,4 +1,3 @@
-
 #ifndef EL__PROTOCOL_DATA_H
 #define EL__PROTOCOL_DATA_H
 

@@ -1,4 +1,3 @@
-
 #ifndef EL__NETWORK_CONNECTION_H
 #define EL__NETWORK_CONNECTION_H
 

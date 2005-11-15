@@ -1,4 +1,3 @@
-
 #ifndef EL__DIALOGS_DOCUMENT_H
 #define EL__DIALOGS_DOCUMENT_H
 

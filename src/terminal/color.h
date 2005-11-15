@@ -1,4 +1,3 @@
-
 #ifndef EL__TERMINAL_COLOR_H
 #define EL__TERMINAL_COLOR_H
 

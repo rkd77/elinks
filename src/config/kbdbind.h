@@ -1,15 +1,13 @@
-
 #ifndef EL__CONFIG_KBDBIND_H
 #define EL__CONFIG_KBDBIND_H
-
-/* #include "bfu/listbox.h" */
-struct listbox_item;
 
 #include "config/options.h"
 #include "main/event.h"
 #include "main/object.h"
 #include "terminal/terminal.h"
 #include "util/string.h"
+
+struct listbox_item;
 
 /* Used for holding enum <keymap>_action values. */
 typedef long action_id_T;

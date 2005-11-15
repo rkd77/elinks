@@ -1,4 +1,3 @@
-
 #ifndef EL__BFU_COMMON_H
 #define EL__BFU_COMMON_H
 

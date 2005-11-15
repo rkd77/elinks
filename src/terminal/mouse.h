@@ -1,4 +1,3 @@
-
 #ifndef EL__TERMINAL_MOUSE_H
 #define EL__TERMINAL_MOUSE_H
 

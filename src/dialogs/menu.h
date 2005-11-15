@@ -1,4 +1,3 @@
-
 #ifndef EL__DIALOGS_MENU_H
 #define EL__DIALOGS_MENU_H
 

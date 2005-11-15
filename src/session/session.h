@@ -1,4 +1,3 @@
-
 #ifndef EL__SESSION_SESSION_H
 #define EL__SESSION_SESSION_H
 

@@ -1,4 +1,3 @@
-
 #ifndef EL__DIALOGS_PROGRESS_H
 #define EL__DIALOGS_PROGRESS_H
 

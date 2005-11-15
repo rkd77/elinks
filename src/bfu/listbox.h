@@ -1,11 +1,8 @@
-
 #ifndef EL__BFU_LISTBOX_H
 #define EL__BFU_LISTBOX_H
 
-
 #include "util/align.h"
 #include "util/lists.h"
-
 
 struct dialog;
 struct listbox_data;

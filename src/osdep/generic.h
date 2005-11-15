@@ -1,4 +1,3 @@
-
 /* This is... er, the OS-independent part of osdep/ ;-). */
 
 #ifndef EL__OSDEP_GENERIC_H

@@ -1,4 +1,3 @@
-
 #ifndef EL__SESSION_HISTORY_H
 #define EL__SESSION_HISTORY_H
 

@@ -1,4 +1,3 @@
-
 #ifndef EL__DOCUMENT_VIEW_H
 #define EL__DOCUMENT_VIEW_H
 

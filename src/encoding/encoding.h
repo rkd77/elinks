@@ -1,4 +1,3 @@
-
 #ifndef EL__ENCODING_ENCODING_H
 #define EL__ENCODING_ENCODING_H
 
