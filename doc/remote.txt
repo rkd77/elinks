@@ -72,6 +72,7 @@ xfeDoCommand(openBrowser)	Opens an ELinks instance in a new window.     \
 Command				Description
 -------------------------------------------------------------------------------
 addBookmark(URL)		Bookmarks the passed URL.
+infoBox(text)			Show text in a message box.
 -------------------------------------------------------------------------------
 
 `-remote` can also take a list of URLs without an explicit action, in which case
