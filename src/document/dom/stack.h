@@ -9,27 +9,6 @@
 
 struct dom_stack;
 
-enum dom_exception_code {
-	DOM_ERR_NONE				=  0,
-	DOM_ERR_INDEX_SIZE			=  1,
-	DOM_ERR_STRING_SIZE			=  2,
-	DOM_ERR_HIERARCHY_REQUEST		=  3,
-	DOM_ERR_WRONG_DOCUMENT			=  4,
-	DOM_ERR_INVALID_CHARACTER		=  5,
-	DOM_ERR_NO_DATA_ALLOWED			=  6,
-	DOM_ERR_NO_MODIFICATION_ALLOWED		=  7,
-	DOM_ERR_NOT_FOUND			=  8,
-	DOM_ERR_NOT_SUPPORTED			=  9,
-	DOM_ERR_INUSE_ATTRIBUTE			= 10,
-
-	/* Introduced in DOM Level 2: */
-	DOM_ERR_INVALID_STATE			= 11,
-	DOM_ERR_SYNTAX				= 12,
-	DOM_ERR_INVALID_MODIFICATION		= 13,
-	DOM_ERR_NAMESPACE			= 14,
-	DOM_ERR_INVALID_ACCESS			= 15,
-};
-
 typedef struct dom_node *
 	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
@@ -55,9 +34,6 @@ struct dom_stack {
 
 	unsigned char *state_objects;
 	size_t object_size;
-
-	/* If some operation failed this member will signal the error code */
-	enum dom_exception_code exception;
 
 	/* Parser and document specific stuff */
 	dom_stack_callback_T callbacks[DOM_NODES];
