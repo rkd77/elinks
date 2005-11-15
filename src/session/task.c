@@ -204,7 +204,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 			referrer_incomplete = (cached && cached->incomplete);
 		}
 
-		if (referrer_incompleted) {
+		if (referrer_incomplete) {
 			confirm_submit = 1;
 
 		} else if (get_validated_cache_entry(uri, cache_mode)) {
