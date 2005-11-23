@@ -1064,7 +1064,7 @@ using the search engine defined by the 'search' configuration option if
 			return $url if $url eq $file;
 		}
 		return $url if $url =~ /^(\/|~)/;
-		return $url if $url =~ /^([0-9]{1,3}\.){3}[0-9]{1,3}($|\/|\?|:[0-9]{1,5})/;
+		return $url if $url =~ /([0-9]{1,3}\.){3}[0-9]{1,3}($|\/|\?|:[0-9]{1,5})/;
 		return $url if $url =~ /^((::|)[[:xdigit:]]{1,4}(:|::|)){1,8}($|\/|\?|:[0-9]{1,5})/ and $url =~ /:/;
 		if (     $url =~ /^(([a-zA-Z]{3,}(|4|6):\/\/|(www|ftp)\.)|)[a-zA-Z0-9]+/
 			and ($url =~ /[a-zA-Z0-9-]+\.(com|org|net|edu|gov|int|mil)($|\/|\?|:[0-9]{1,5})/
