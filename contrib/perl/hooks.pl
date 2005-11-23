@@ -1056,25 +1056,7 @@ using the search engine defined by the 'search' configuration option if
 	# Anything not otherwise useful is a search
 	if ($current_url and loadrc("gotosearch") eq "yes")
 	{
-		opendir(DIR, '.');
-		my @files = readdir(DIR);
-		closedir(DIR);
-		foreach my $file (@files)
-		{
-			return $url if $url eq $file;
-		}
-		return $url if $url =~ /^(\/|~)/;
-		return $url if $url =~ /([0-9]{1,3}\.){3}[0-9]{1,3}($|\/|\?|:[0-9]{1,5})/;
-		return $url if $url =~ /^((::|)[[:xdigit:]]{1,4}(:|::|)){1,8}($|\/|\?|:[0-9]{1,5})/ and $url =~ /:/;
-		if (     $url =~ /^(([a-zA-Z]{3,}(|4|6):\/\/|(www|ftp)\.)|)[a-zA-Z0-9]+/
-			and ($url =~ /[a-zA-Z0-9-]+\.(com|org|net|edu|gov|int|mil)($|\/|\?|:[0-9]{1,5})/
-			or   $url =~ /[a-zA-Z0-9-]+\.(biz|info|name|pro|aero|coop|museum)($|\/|\?|:[0-9]{1,5})/
-			or   $url =~ /[a-zA-Z0-9-]+\.[a-zA-Z]{2}($|\/|\?|:[0-9]{1,5})/))
-		{
-			return $url;
-		}
-		return $url if $url =~ /^about:/;
-		return search(loadrc("search"), $url);
+		return search(loadrc("search"), $url) if isurl($url) =~ 'false';
 	}
 
 
@@ -1390,6 +1372,33 @@ elinks(1), perl(1)
 Russ Rowan, Petr Baudis
 
 =cut
+
+
+
+sub isurl
+{
+	my ($url) = @_;
+	opendir(DIR, '.');
+	my @files = readdir(DIR);
+	closedir(DIR);
+	foreach my $file (@files)
+	{
+		return 'true' if $url eq $file;
+	}
+	return 'true' if $url =~ /^(\/|~)/;
+	return 'true' if $url =~ /([0-9]{1,3}\.){3}[0-9]{1,3}($|\/|\?|:[0-9]{1,5})/;
+	return 'true' if $url =~ /^((::|)[[:xdigit:]]{1,4}(:|::|)){1,8}($|\/|\?|:[0-9]{1,5})/ and $url =~ /:/;
+	if (     $url =~ /^(([a-zA-Z]{3,}(|4|6):\/\/|(www|ftp)\.)|)[a-zA-Z0-9]+/
+		and ($url =~ /[a-zA-Z0-9-]+\.(com|org|net|edu|gov|int|mil)($|\/|\?|:[0-9]{1,5})/
+		or   $url =~ /[a-zA-Z0-9-]+\.(biz|info|name|pro|aero|coop|museum)($|\/|\?|:[0-9]{1,5})/
+		or   $url =~ /[a-zA-Z0-9-]+\.[a-zA-Z]{2}($|\/|\?|:[0-9]{1,5})/))
+	{
+		return 'true';
+	}
+	return 'true' if $url =~ /^about:/;
+
+	return 'false';
+}
 
 
 
