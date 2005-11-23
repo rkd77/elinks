@@ -1032,7 +1032,12 @@ given, use the current one.
 	# Google site search
 	if ($url =~ '^ss(| .*)$')
 	{
-		my ($site, $search) = $url =~ /^ss\s(.*)\s(.*)/;
+		my ($site, $search) = $url =~ /^ss\s(\S+)\s(.*)/;
+		if (isurl($site) =~ 'false')
+		{
+			$search = $site . $search if $site;
+			$site = undef;
+		}
 		unless ($site and $search)
 		{
 			($search) = $url =~ /^ss\s(.*)/;
@@ -1378,6 +1383,7 @@ Russ Rowan, Petr Baudis
 sub isurl
 {
 	my ($url) = @_;
+	return 'false' if not $url;
 	opendir(DIR, '.');
 	my @files = readdir(DIR);
 	closedir(DIR);
