@@ -71,8 +71,7 @@ enum connection_state {
 	S_NO_FORCED_DNS		= -100019,
 
 	S_HTTP_ERROR		= -100100,
-	S_HTTP_100		= -100101,
-	S_HTTP_204		= -100102,
+	S_HTTP_204		= -100101,
 
 	S_FILE_TYPE		= -100200,
 	S_FILE_ERROR		= -100201,

@@ -684,7 +684,7 @@ get_output_handle(void)
 }
 
 int
-get_ctl_handle()
+get_ctl_handle(void)
 {
 	static int fd = -1;
 

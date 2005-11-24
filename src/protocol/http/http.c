@@ -228,7 +228,7 @@ struct module http_protocol_module = struct_module(
 
 
 static void
-done_http()
+done_http(void)
 {
 	mem_free_if(proxy_auth.realm);
 	mem_free_if(proxy_auth.nonce);
@@ -241,7 +241,7 @@ done_http()
 }
 
 static void
-init_accept_charset()
+init_accept_charset(void)
 {
 	struct string ac;
 	unsigned char *cs;

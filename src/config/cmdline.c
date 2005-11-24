@@ -491,7 +491,7 @@ print_full_help(struct option *tree, unsigned char *path)
 }
 
 static void
-print_short_help()
+print_short_help(void)
 {
 #define ALIGN_WIDTH 20
 	struct option *option;

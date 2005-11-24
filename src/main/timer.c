@@ -25,7 +25,7 @@ struct timer {
 static INIT_LIST_HEAD(timers);
 
 int
-get_timers_count()
+get_timers_count(void)
 {
 	return list_size(&timers);
 

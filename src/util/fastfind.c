@@ -481,7 +481,7 @@ fastfind_index(struct fastfind_index *index, enum fastfind_flags flags)
 		info->count++;
 	}
 
-	if (!info->count) return 0;
+	if (!info->count) return NULL;
 
 	init_idxtab(info);
 

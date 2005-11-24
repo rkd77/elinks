@@ -594,7 +594,7 @@ open_bookmark_folder(struct session *ses, unsigned char *foldername)
 		    || !*bookmark->url)
 			continue;
 
-		uri = get_translated_uri(bookmark->url, 0);
+		uri = get_translated_uri(bookmark->url, NULL);
 		if (!uri) continue;
 
 		/* Save the first bookmark for the current tab */

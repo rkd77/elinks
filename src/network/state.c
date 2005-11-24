@@ -68,7 +68,6 @@ struct s_msg_dsc {
 				   "programs is not supported.")},
 
 	{S_HTTP_ERROR,		N_("Bad HTTP response")},
-	{S_HTTP_100,		N_("HTTP 100 (\?\?\?)")},
 	{S_HTTP_204,		N_("No content")},
 
 	{S_FILE_TYPE,		N_("Unknown file type")},

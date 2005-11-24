@@ -79,7 +79,7 @@ get_bookmark_uri(struct listbox_item *item)
 	struct bookmark *bookmark = item->udata;
 
 	return bookmark->url && *bookmark->url
-		? get_translated_uri(bookmark->url, 0) : NULL;
+		? get_translated_uri(bookmark->url, NULL) : NULL;
 }
 
 static struct listbox_item *

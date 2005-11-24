@@ -452,7 +452,19 @@ done_connection(struct connection *conn)
 	check_queue_bugs();
 }
 
-static inline void add_to_queue(struct connection *conn);
+static inline void
+add_to_queue(struct connection *conn)
+{
+	struct connection *c;
+	enum connection_priority priority = get_priority(conn);
+
+	foreach (c, connection_queue)
+		if (get_priority(c) > priority)
+			break;
+
+	add_at_pos(c->prev, conn);
+}
+
 
 /* Returns zero if no callback was done and the keepalive connection should be
  * deleted or non-zero if the keepalive connection should not be deleted. */
@@ -646,19 +658,6 @@ abort_all_keepalive_connections(void)
 	check_keepalive_connections();
 }
 
-
-static inline void
-add_to_queue(struct connection *conn)
-{
-	struct connection *c;
-	enum connection_priority priority = get_priority(conn);
-
-	foreach (c, connection_queue)
-		if (get_priority(c) > priority)
-			break;
-
-	add_at_pos(c->prev, conn);
-}
 
 static void
 sort_queue(void)
