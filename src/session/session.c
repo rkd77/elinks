@@ -707,7 +707,7 @@ void
 process_file_requests(struct session *ses)
 {
 	struct file_to_load *ftl;
-	struct document_view *doc_view = current_frame(ses);
+	struct document_view *doc_view = NULL;
 	int more;
 
 	if (ses->status.processing_file_requests) return;
@@ -721,6 +721,7 @@ process_file_requests(struct session *ses)
 
 			ftl->req_sent = 1;
 
+			doc_view = current_frame(ses);
 			load_additional_file(ftl, doc_view, CACHE_MODE_NORMAL);
 			more = 1;
 		}
