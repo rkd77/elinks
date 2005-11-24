@@ -33,7 +33,7 @@ quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
    quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
- quiet_cmd_sparse = '  [SPARSE]   $(RELPATH)$(2)'
+ quiet_cmd_sparse = '    [SPARSE]   $(RELPATH)$(2)'
        cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
 
 # Recursive make
