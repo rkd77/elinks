@@ -33,6 +33,9 @@ quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
    quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
+ quiet_cmd_sparse = '  [SPARSE]   $(RELPATH)$(2)'
+       cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
+
 # Recursive make
 quiet_cmd_recmake = "[MAKE $(3)]   $(RELPATH)$(2)"
       cmd_recmake = $(MAKE) -C $(2) $(3)
@@ -42,7 +45,6 @@ quiet_cmd_installdata = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
 
 quiet_cmd_installprog = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
-
 
 
 ### Internal build rules
@@ -115,6 +117,15 @@ clean-default:
 
 cleanall-default: clean-default
 
+check-default:
+ifneq ($(SPARSE),)
+	@$(foreach file, $(wildcard *.c), \
+		$(call ncmd,sparse,$(file));)
+endif
+
+# sparse is architecture-neutral, which means that we need to tell it
+# explicitly what architecture to check for. Fix this up for yours..
+SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 install-default: all-default
 ifdef PROGS
 	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
@@ -134,9 +145,9 @@ endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive
+.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive
 
-all-recursive install-recursive clean-recursive cleanall-recursive init-recursive:
+all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive:
 ifdef SUBDIRS
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
@@ -144,6 +155,7 @@ endif
 
 all: all-recursive all-default all-local
 install: install-recursive install-default install-local
+check: check-recursive check-default check-local
 clean: clean-recursive clean-default clean-local
 
 cleanall: cleanall-recursive cleanall-default
@@ -152,6 +164,7 @@ init: init-default init-recursive
 all-local:
 install-local:
 clean-local:
+check-local:
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
