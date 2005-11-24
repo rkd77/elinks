@@ -3,8 +3,6 @@
 
 struct itrm;
 
-struct itrm *ditrm;
-
 struct term_event_keyboard {
 	int key;
 	int modifier;
