@@ -20,8 +20,8 @@
 #include "util/string.h"
 
 
-#define HTML_NODE_INFO(node, name, id)		SGML_NODE_INFO(HTML, node, name, id)
-#define HTML_NODE_INF2(node, name, str, id)	SGML_NODE_INF2(HTML, node, name, str, id)
+#define HTML_(node, name, id)		SGML_NODE_INFO(HTML, node, name, id)
+#define HTM2_(node, name, str, id)	SGML_NODE_INF2(HTML, node, name, str, id)
 #undef VERSION
 
 static struct sgml_node_info html_attributes[HTML_ATTRIBUTES] = {
@@ -40,7 +40,7 @@ static struct sgml_node_info html_elements[HTML_ELEMENTS] = {
 static struct dom_node *
 add_html_element_end_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 	struct dom_node *parent;
 	struct scanner_token *token;
 
@@ -67,7 +67,7 @@ add_html_element_end_node(struct dom_stack *stack, struct dom_node *node, void *
 static struct dom_node *
 add_html_element_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 
 	assert(stack && node);
 	assert(dom_stack_has_parents(stack));

@@ -8,8 +8,8 @@
 extern struct sgml_info sgml_html_info;
 
 #undef VERSION
-#define HTML_NODE_INFO(node, name, flags)	SGML_NODE_INFO_TYPE(HTML, node, name)
-#define HTML_NODE_INF2(node, name, str, flags)	SGML_NODE_INFO_TYPE(HTML, node, name)
+#define HTML_(node, name, flags)	SGML_NODE_INFO_TYPE(HTML, node, name)
+#define HTM2_(node, name, str, flags)	SGML_NODE_INFO_TYPE(HTML, node, name)
 
 enum html_element_type {
 	HTML_ELEMENT_UNKNOWN,
@@ -27,7 +27,7 @@ enum html_attribute_type {
 	HTML_ATTRIBUTES,
 };
 
-#undef	HTML_NODE_INFO
-#undef	HTML_NODE_INF2
+#undef	HTML_
+#undef	HTM2_
 
 #endif
