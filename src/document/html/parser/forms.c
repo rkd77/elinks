@@ -78,7 +78,7 @@ html_form(struct html_context *html_context, unsigned char *a)
 	 * Mozilla handles action="" as action="<current-URI>" which seems
 	 * reasonable. (bug 615) */
 	if (al && *al) {
-		form->action = join_urls(html_context->base_href, trim_chars(al, ' ', 0));
+		form->action = join_urls(html_context->base_href, trim_chars(al, ' ', NULL));
 		mem_free(al);
 
 	} else {
