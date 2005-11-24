@@ -40,7 +40,7 @@ static struct sgml_node_info html_elements[HTML_ELEMENTS] = {
 static struct dom_node *
 add_html_element_end_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->parser;
+	struct sgml_parser *parser = stack->data;
 	struct dom_node *parent;
 	struct scanner_token *token;
 
@@ -67,7 +67,7 @@ add_html_element_end_node(struct dom_stack *stack, struct dom_node *node, void *
 static struct dom_node *
 add_html_element_node(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->parser;
+	struct sgml_parser *parser = stack->data;
 
 	assert(stack && node);
 	assert(dom_stack_has_parents(stack));
