@@ -540,7 +540,7 @@ bookmark_auto_save_tabs(struct terminal *term)
 }
 
 static void
-bookmark_snapshot()
+bookmark_snapshot(void)
 {
 	struct string folderstring;
 	struct bookmark *folder;
