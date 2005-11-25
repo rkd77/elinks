@@ -38,7 +38,6 @@
 void
 html_form(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
-
 {
 	unsigned char *al;
 	struct form *form;
