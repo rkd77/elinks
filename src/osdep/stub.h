@@ -3,6 +3,7 @@
 
 #include <ctype.h>
 #include <string.h>
+
 #if 0
 #ifdef CONFIG_DEBUG
 #define CONFIG_OWN_LIBC
@@ -142,6 +143,20 @@ int elinks_raise(int signal);
 #undef inet_ntop
 #define inet_ntop(af, src, dst, size) elinks_inet_ntop(af, src, dst, size)
 const char *elinks_inet_ntop(int af, const void *src, char *dst, size_t size);
+#endif
+
+/* Silence various sparse warnings. */
+
+#ifndef __builtin_stpcpy
+extern char *__builtin_stpcpy(char *dest, const char *src);
+#endif
+
+#ifndef __builtin_mempcpy
+extern void *__builtin_mempcpy(void *dest, const void *src, size_t n);
+#endif
+
+#ifndef __builtin_va_copy
+#define __builtin_va_copy(dest, src) do { dest = src; } while (0)
 #endif
 
 #endif
