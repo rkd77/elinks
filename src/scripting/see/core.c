@@ -115,7 +115,7 @@ init_see(struct module *module)
 				convert_see_string(&error_msg, value.u.string);
 #if 0
 				if (ctxt.throw_file)
-					fprintf(stderr, "  (thrown from %s:%d)\n", 
+					fprintf(stderr, "  (thrown from %s:%d)\n",
 						ctxt.throw_file, ctxt.throw_line);
 #endif
 			}

@@ -38,7 +38,7 @@
 void
 html_form(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
-          
+
 {
 	unsigned char *al;
 	struct form *form;
@@ -304,7 +304,7 @@ html_select(struct html_context *html_context, unsigned char *a,
             unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	unsigned char *al;
-	
+
 	if (!do_html_select(a, html, eof, end, html_context))
 		return;
 

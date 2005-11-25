@@ -1632,7 +1632,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 	struct part *part;
 	struct document *document;
 	void *ret_val = NULL;
-	
+
 	assert(html_context);
 	if_assert_failed return NULL;
 
@@ -1655,14 +1655,14 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		case SP_FORM:
 		{
 			struct form *form = va_arg(l, struct form *);
-			
+
 			html_special_form(part, form);
 			break;
 		}
 		case SP_CONTROL:
 		{
 			struct form_control *fc = va_arg(l, struct form_control *);
-			
+
 			html_special_form_control(part, fc);
 			break;
 		}
@@ -1703,7 +1703,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			frameset_desc = create_frameset(fsp);
 			if (!fsp->parent && !document->frame_desc)
 				document->frame_desc = frameset_desc;
-			
+
 			ret_val = frameset_desc;
 			break;
 		}
@@ -1723,7 +1723,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		{
 			unsigned long seconds = va_arg(l, unsigned long);
 			unsigned char *t = va_arg(l, unsigned char *);
-			
+
 			document->refresh = init_document_refresh(t, seconds);
 			break;
 		}
@@ -1752,7 +1752,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 	}
 
 	va_end(l);
-	
+
 	return ret_val;
 }
 
