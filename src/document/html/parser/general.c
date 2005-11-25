@@ -41,48 +41,56 @@
 
 
 void
-html_span(struct html_context *html_context, unsigned char *a)
+html_span(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 }
 
 void
-html_bold(struct html_context *html_context, unsigned char *a)
+html_bold(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_BOLD;
 }
 
 void
-html_italic(struct html_context *html_context, unsigned char *a)
+html_italic(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_ITALIC;
 }
 
 void
-html_underline(struct html_context *html_context, unsigned char *a)
+html_underline(struct html_context *html_context, unsigned char *a,
+               unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_UNDERLINE;
 }
 
 void
-html_fixed(struct html_context *html_context, unsigned char *a)
+html_fixed(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_FIXED;
 }
 
 void
-html_subscript(struct html_context *html_context, unsigned char *a)
+html_subscript(struct html_context *html_context, unsigned char *a,
+               unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_SUBSCRIPT | AT_UPDATE_SUB;
 }
 
 void
-html_superscript(struct html_context *html_context, unsigned char *a)
+html_superscript(struct html_context *html_context, unsigned char *a,
+                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_SUPERSCRIPT | AT_UPDATE_SUP;
 }
 
 void
-html_font(struct html_context *html_context, unsigned char *a)
+html_font(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al = get_attr_val(a, "size", html_context->options);
 
@@ -110,7 +118,8 @@ html_font(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_body(struct html_context *html_context, unsigned char *a)
+html_body(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	get_color(html_context, a, "text", &format.style.fg);
 	get_color(html_context, a, "link", &format.clink);
@@ -151,7 +160,8 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 }
 
 void
-html_script(struct html_context *html_context, unsigned char *a)
+html_script(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 #ifdef CONFIG_ECMASCRIPT
 	/* We did everything (even possibly html_skip()) in do_html_script(). */
@@ -161,13 +171,15 @@ html_script(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_style(struct html_context *html_context, unsigned char *a)
+html_style(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	html_skip(html_context, a);
 }
 
 void
-html_html(struct html_context *html_context, unsigned char *a)
+html_html(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* This is here just to get CSS stuff applied. */
 
@@ -180,14 +192,16 @@ html_html(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_head(struct html_context *html_context, unsigned char *a)
+html_head(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* This makes sure it gets to the stack and helps tame down unclosed
 	 * <title>. */
 }
 
 void
-html_meta(struct html_context *html_context, unsigned char *a)
+html_meta(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* html_handle_body_meta() does all the work. */
 }
@@ -207,14 +221,16 @@ html_handle_body_meta(struct html_context *html_context, unsigned char *meta,
 }
 
 void
-html_title(struct html_context *html_context, unsigned char *a)
+html_title(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	html_top.invisible = 1;
 	html_top.type = ELEMENT_WEAK;
 }
 
 void
-html_center(struct html_context *html_context, unsigned char *a)
+html_center(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	par_format.align = ALIGN_CENTER;
 	if (!html_context->table_level)
@@ -222,7 +238,8 @@ html_center(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_linebrk(struct html_context *html_context, unsigned char *a)
+html_linebrk(struct html_context *html_context, unsigned char *a,
+             unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al = get_attr_val(a, "align", html_context->options);
 
@@ -239,9 +256,10 @@ html_linebrk(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_br(struct html_context *html_context, unsigned char *a)
+html_br(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 	if (html_context->was_br)
 		ln_break(html_context, 2);
 	else
@@ -249,23 +267,26 @@ html_br(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_p(struct html_context *html_context, unsigned char *a)
+html_p(struct html_context *html_context, unsigned char *a,
+       unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	int_lower_bound(&par_format.leftmargin, html_context->margin);
 	int_lower_bound(&par_format.rightmargin, html_context->margin);
 	/*par_format.align = ALIGN_LEFT;*/
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 }
 
 void
-html_address(struct html_context *html_context, unsigned char *a)
+html_address(struct html_context *html_context, unsigned char *a,
+             unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	par_format.leftmargin++;
 	par_format.align = ALIGN_LEFT;
 }
 
 void
-html_blockquote(struct html_context *html_context, unsigned char *a)
+html_blockquote(struct html_context *html_context, unsigned char *a,
+                unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	par_format.leftmargin += 2;
 	par_format.align = ALIGN_LEFT;
@@ -273,10 +294,11 @@ html_blockquote(struct html_context *html_context, unsigned char *a)
 
 void
 html_h(int h, unsigned char *a,
-       enum format_align default_align, struct html_context *html_context)
+       enum format_align default_align, struct html_context *html_context,
+       unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	if (!par_format.align) par_format.align = default_align;
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 
 	h -= 2;
 	if (h < 0) h = 0;
@@ -300,44 +322,51 @@ html_h(int h, unsigned char *a,
 }
 
 void
-html_h1(struct html_context *html_context, unsigned char *a)
+html_h1(struct html_context *html_context, unsigned char *a,
+	unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	format.style.attr |= AT_BOLD;
-	html_h(1, a, ALIGN_CENTER, html_context);
+	html_h(1, a, ALIGN_CENTER, html_context, html, eof, end);
 }
 
 void
-html_h2(struct html_context *html_context, unsigned char *a)
+html_h2(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_h(2, a, ALIGN_LEFT, html_context);
+	html_h(2, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
 void
-html_h3(struct html_context *html_context, unsigned char *a)
+html_h3(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_h(3, a, ALIGN_LEFT, html_context);
+	html_h(3, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
 void
-html_h4(struct html_context *html_context, unsigned char *a)
+html_h4(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_h(4, a, ALIGN_LEFT, html_context);
+	html_h(4, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
 void
-html_h5(struct html_context *html_context, unsigned char *a)
+html_h5(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_h(5, a, ALIGN_LEFT, html_context);
+	html_h(5, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
 void
-html_h6(struct html_context *html_context, unsigned char *a)
+html_h6(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_h(6, a, ALIGN_LEFT, html_context);
+	html_h(6, a, ALIGN_LEFT, html_context, html, eof, end);
 }
 
 void
-html_pre(struct html_context *html_context, unsigned char *a)
+html_pre(struct html_context *html_context, unsigned char *a,
+         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	format.style.attr |= AT_PREFORMATTED;
 	par_format.leftmargin = (par_format.leftmargin > 1);
@@ -345,14 +374,16 @@ html_pre(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_xmp(struct html_context *html_context, unsigned char *a)
+html_xmp(struct html_context *html_context, unsigned char *a,
+         unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	html_context->was_xmp = 1;
-	html_pre(html_context, a);
+	html_pre(html_context, a, html, eof, end);
 }
 
 void
-html_hr(struct html_context *html_context, unsigned char *a)
+html_hr(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	int i/* = par_format.width - 10*/;
 	unsigned char r = (unsigned char) BORDER_DHLINE;
@@ -363,7 +394,7 @@ html_hr(struct html_context *html_context, unsigned char *a)
 	par_format.align = ALIGN_CENTER;
 	mem_free_set(&format.link, NULL);
 	format.form = NULL;
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 	if (par_format.align == ALIGN_JUSTIFY) par_format.align = ALIGN_CENTER;
 	par_format.leftmargin = par_format.rightmargin = html_context->margin;
 
@@ -380,29 +411,33 @@ html_hr(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_table(struct html_context *html_context, unsigned char *a)
+html_table(struct html_context *html_context, unsigned char *a,
+           unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	par_format.leftmargin = par_format.rightmargin = html_context->margin;
 	par_format.align = ALIGN_LEFT;
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 	format.style.attr = 0;
 }
 
 void
-html_tt(struct html_context *html_context, unsigned char *a)
+html_tt(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 }
 
 void
-html_tr(struct html_context *html_context, unsigned char *a)
+html_tr(struct html_context *html_context, unsigned char *a,
+        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_linebrk(html_context, a);
+	html_linebrk(html_context, a, html, eof, end);
 }
 
 void
-html_th(struct html_context *html_context, unsigned char *a)
+html_th(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	/*html_linebrk(html_context, a);*/
+	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
 	format.style.attr |= AT_BOLD;
@@ -410,9 +445,10 @@ html_th(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_td(struct html_context *html_context, unsigned char *a)
+html_td(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	/*html_linebrk(html_context, a);*/
+	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
 	format.style.attr &= ~AT_BOLD;
@@ -420,7 +456,8 @@ html_td(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_base(struct html_context *html_context, unsigned char *a)
+html_base(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
 
@@ -443,7 +480,8 @@ html_base(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_ul(struct html_context *html_context, unsigned char *a)
+html_ul(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
 
@@ -469,7 +507,8 @@ html_ul(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_ol(struct html_context *html_context, unsigned char *a)
+html_ol(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
 	int st;
@@ -555,7 +594,8 @@ roman(unsigned char *p, unsigned n)
 }
 
 void
-html_li(struct html_context *html_context, unsigned char *a)
+html_li(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* When handling the code <li><li> @was_li will be 1 and it means we
 	 * have to insert a line break since no list item content has done it
@@ -635,7 +675,8 @@ html_li(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_dl(struct html_context *html_context, unsigned char *a)
+html_dl(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	par_format.flags &= ~P_COMPACT;
 	if (has_attr(a, "compact", html_context->options))
@@ -653,7 +694,8 @@ html_dl(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_dt(struct html_context *html_context, unsigned char *a)
+html_dt(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 	par_format.align = ALIGN_LEFT;
@@ -664,7 +706,8 @@ html_dt(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_dd(struct html_context *html_context, unsigned char *a)
+html_dd(struct html_context *html_context, unsigned char *a,
+        unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 
@@ -680,7 +723,8 @@ html_dd(struct html_context *html_context, unsigned char *a)
 
 
 void
-html_noframes(struct html_context *html_context, unsigned char *a)
+html_noframes(struct html_context *html_context, unsigned char *a,
+              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_element *element;
 
@@ -693,7 +737,8 @@ html_noframes(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_frame(struct html_context *html_context, unsigned char *a)
+html_frame(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *name, *src, *url;
 
@@ -732,7 +777,8 @@ html_frame(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_frameset(struct html_context *html_context, unsigned char *a)
+html_frameset(struct html_context *html_context, unsigned char *a,
+              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct frameset_param fp;
 	unsigned char *cols, *rows;
@@ -800,7 +846,8 @@ free_and_return:
 }
 
 void
-html_noscript(struct html_context *html_context, unsigned char *a)
+html_noscript(struct html_context *html_context, unsigned char *a,
+              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */

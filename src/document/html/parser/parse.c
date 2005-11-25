@@ -895,7 +895,7 @@ start_element(struct element_info *ei,
 	 * that's what the display: property plays with. */
 #endif
 	ELEMENT_RENDER_PROLOGUE
-	if (ei->func) ei->func(html_context, attr);
+	if (ei->func) ei->func(html_context, attr, html, eof, &html);
 #ifdef CONFIG_CSS
 	if (selector && html_top.options) {
 		/* Call it now to override default colors of the elements. */

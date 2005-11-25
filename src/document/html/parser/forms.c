@@ -36,7 +36,9 @@
 
 
 void
-html_form(struct html_context *html_context, unsigned char *a)
+html_form(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+          
 {
 	unsigned char *al;
 	struct form *form;
@@ -138,7 +140,8 @@ init_form_control(enum form_type type, unsigned char *attr,
 }
 
 void
-html_button(struct html_context *html_context, unsigned char *a)
+html_button(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
 	struct form_control *fc;
@@ -179,7 +182,8 @@ no_type_attr:
 }
 
 void
-html_input(struct html_context *html_context, unsigned char *a)
+html_input(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	int i;
 	unsigned char *al;
@@ -296,7 +300,8 @@ hid:
 }
 
 void
-html_select(struct html_context *html_context, unsigned char *a)
+html_select(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	/* Note I haven't seen this code in use, do_html_select() seems to take
 	 * care of bussiness. --FF */
@@ -314,7 +319,8 @@ html_select(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_option(struct html_context *html_context, unsigned char *a)
+html_option(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct form_control *fc;
 	unsigned char *val;
@@ -562,7 +568,8 @@ end_parse:
 }
 
 void
-html_textarea(struct html_context *html_context, unsigned char *a)
+html_textarea(struct html_context *html_context, unsigned char *a,
+              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	INTERNAL("This should be never called");
 }

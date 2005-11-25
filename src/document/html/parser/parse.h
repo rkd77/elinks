@@ -47,7 +47,9 @@ void parse_html(unsigned char *html, unsigned char *eof, struct part *part, unsi
 
 
 /* Interface for element handlers */
-typedef void (element_handler_T)(struct html_context *, unsigned char *);
+typedef void (element_handler_T)(struct html_context *, unsigned char *attr,
+                                 unsigned char *html, unsigned char *eof,
+                                 unsigned char **end);
 
 /* Interface for the table handling */
 

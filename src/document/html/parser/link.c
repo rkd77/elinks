@@ -40,7 +40,8 @@
 
 
 void
-html_a(struct html_context *html_context, unsigned char *a)
+html_a(struct html_context *html_context, unsigned char *a,
+       unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *href;
 
@@ -344,7 +345,8 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 }
 
 void
-html_img(struct html_context *html_context, unsigned char *a)
+html_img(struct html_context *html_context, unsigned char *a,
+         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	html_img_do(a, NULL, html_context);
 }
@@ -372,7 +374,8 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 
 
 void
-html_applet(struct html_context *html_context, unsigned char *a)
+html_applet(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *code, *alt;
 
@@ -428,13 +431,15 @@ html_iframe_do(unsigned char *a, unsigned char *object_src,
 }
 
 void
-html_iframe(struct html_context *html_context, unsigned char *a)
+html_iframe(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	html_iframe_do(a, NULL, html_context);
 }
 
 void
-html_object(struct html_context *html_context, unsigned char *a)
+html_object(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *type, *url;
 
@@ -483,7 +488,8 @@ html_object(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_embed(struct html_context *html_context, unsigned char *a)
+html_embed(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *type, *extension;
 	unsigned char *object_src;
@@ -769,7 +775,8 @@ html_link_parse(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_link(struct html_context *html_context, unsigned char *a)
+html_link(struct html_context *html_context, unsigned char *a,
+          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	int link_display = html_context->options->meta_link_display;
 	unsigned char *name;
