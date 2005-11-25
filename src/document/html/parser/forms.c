@@ -303,12 +303,14 @@ void
 html_select(struct html_context *html_context, unsigned char *a,
             unsigned char *html, unsigned char *eof, unsigned char **end)
 {
+	unsigned char *al;
+	
 	if (!do_html_select(a, html, eof, end, html_context))
 		return;
 
-	unsigned char *al = get_attr_val(a, "name", html_context->options);
-
+	al = get_attr_val(a, "name", html_context->options);
 	if (!al) return;
+
 	html_focusable(html_context, a);
 	html_top.type = ELEMENT_DONT_KILL;
 	mem_free_set(&format.select, al);
