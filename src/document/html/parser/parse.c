@@ -789,16 +789,6 @@ start_element(struct element_info *ei,
 		ln_break(html_context, 2);
 		return html;
 	}
-	if (ei->func == html_select) {
-		ELEMENT_RENDER_PROLOGUE
-		if (!do_html_select(attr, html, eof, &html, html_context))
-			return html;
-	}
-	if (ei->func == html_textarea) {
-		ELEMENT_RENDER_PROLOGUE
-		do_html_textarea(attr, html, eof, &html, html_context);
-		return html;
-	}
 
 	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
 	if (ei->func == html_meta && html_context->was_body) {
@@ -857,16 +847,6 @@ start_element(struct element_info *ei,
 		}
 #endif
 	}
-
-#ifdef CONFIG_ECMASCRIPT
-	/* We need to have own element in the stack, that's why we waited for
-	 * so long. */
-	if (ei->func == html_script) {
-		ELEMENT_RENDER_PROLOGUE
-		if (!do_html_script(html_context, attr, html, eof, &html))
-			return html;
-	}
-#endif
 
 #ifdef CONFIG_CSS
 	if (html_top.options && html_context->options->css_enable) {

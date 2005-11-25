@@ -161,10 +161,10 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 
 void
 html_script(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+            unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 #ifdef CONFIG_ECMASCRIPT
-	/* We did everything (even possibly html_skip()) in do_html_script(). */
+	do_html_script(html_context, a, html, eof, end);
 #else
 	html_skip(html_context, a);
 #endif

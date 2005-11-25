@@ -301,11 +301,10 @@ hid:
 
 void
 html_select(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+            unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	/* Note I haven't seen this code in use, do_html_select() seems to take
-	 * care of bussiness. --FF */
-	/* It gets called when the "multiple" attribute is set. --jonas */
+	if (!do_html_select(a, html, eof, end, html_context))
+		return;
 
 	unsigned char *al = get_attr_val(a, "name", html_context->options);
 
@@ -569,9 +568,9 @@ end_parse:
 
 void
 html_textarea(struct html_context *html_context, unsigned char *a,
-              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+              unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	INTERNAL("This should be never called");
+	do_html_textarea(a, html, eof, end, html_context);
 }
 
 void
