@@ -571,15 +571,8 @@ end_parse:
 }
 
 void
-html_textarea(struct html_context *html_context, unsigned char *a,
+html_textarea(struct html_context *html_context, unsigned char *attr,
               unsigned char *html, unsigned char *eof, unsigned char **end)
-{
-	do_html_textarea(a, html, eof, end, html_context);
-}
-
-void
-do_html_textarea(unsigned char *attr, unsigned char *html, unsigned char *eof,
-		 unsigned char **end, struct html_context *html_context)
 {
 	struct form_control *fc;
 	unsigned char *p, *t_name, *wrap_attr;
