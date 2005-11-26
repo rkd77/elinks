@@ -299,9 +299,9 @@ hid:
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
-static int do_html_select(unsigned char *attr, unsigned char *html,
-                          unsigned char *eof, unsigned char **end,
-                          struct html_context *html_context);
+static void do_html_select(unsigned char *attr, unsigned char *html,
+                           unsigned char *eof, unsigned char **end,
+                           struct html_context *html_context);
 
 static void
 do_html_select_multiple(struct html_context *html_context, unsigned char *a,
@@ -408,7 +408,7 @@ end_parse:
 
 static struct list_menu lnk_menu;
 
-static int
+static void
 do_html_select(unsigned char *attr, unsigned char *html,
 	       unsigned char *eof, unsigned char **end,
 	       struct html_context *html_context)
@@ -451,7 +451,7 @@ abort:
 		}
 		destroy_menu(&lnk_menu);
 		*end = en;
-		return 0;
+		return;
 	}
 
 	if (lbl.source) {
@@ -574,8 +574,6 @@ end_parse:
 	kill_html_stack_item(html_context, &html_top);
 	put_chrs(html_context, "]", 1);
 	html_context->special_f(html_context, SP_CONTROL, fc);
-
-	return 0;
 }
 
 void
