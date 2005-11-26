@@ -299,6 +299,10 @@ hid:
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
+static int do_html_select(unsigned char *attr, unsigned char *html,
+                          unsigned char *eof, unsigned char **end,
+                          struct html_context *html_context);
+
 void
 html_select(struct html_context *html_context, unsigned char *a,
             unsigned char *html, unsigned char *eof, unsigned char **end)
@@ -395,7 +399,7 @@ end_parse:
 
 static struct list_menu lnk_menu;
 
-int
+static int
 do_html_select(unsigned char *attr, unsigned char *html,
 	       unsigned char *eof, unsigned char **end,
 	       struct html_context *html_context)
