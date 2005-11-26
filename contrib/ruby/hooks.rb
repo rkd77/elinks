@@ -66,6 +66,9 @@ end
 # Arguments:
 # @url		the URL of the document being loaded.
 # @html		the source of the document being loaded.
+#
+# Returns the preformatted source of the document. Return nil to leave the
+# document source untouched.
 
 def ELinks::pre_format_html_hook(url, html)
     if url.grep("fvwm.lair.be\/(index|viewforum)*.\.php")
