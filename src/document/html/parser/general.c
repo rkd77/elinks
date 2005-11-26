@@ -589,12 +589,12 @@ html_hr(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_table(struct html_context *html_context, unsigned char *a,
+html_table(struct html_context *html_context, unsigned char *attr,
            unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	par_format.leftmargin = par_format.rightmargin = html_context->margin;
 	par_format.align = ALIGN_LEFT;
-	html_linebrk(html_context, a, html, eof, end);
+	html_linebrk(html_context, attr, html, eof, end);
 	format.style.attr = 0;
 }
 
