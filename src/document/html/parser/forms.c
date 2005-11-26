@@ -323,10 +323,11 @@ void
 html_select(struct html_context *html_context, unsigned char *a,
             unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	if (!do_html_select(a, html, eof, end, html_context))
-		return;
+	if (has_attr(a, "multiple", html_context->options))
+		do_html_select_multiple(html_context, a, html, eof, end);
+	else
+		do_html_select(a, html, eof, end, html_context);
 
-	do_html_select_multiple(html_context, a, html, eof, end);
 }
 
 void
@@ -425,7 +426,6 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	int group = 0;
 	int i, max_width;
 
-	if (has_attr(attr, "multiple", html_context->options)) return 1;
 	html_focusable(html_context, attr);
 	init_menu(&lnk_menu);
 
