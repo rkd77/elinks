@@ -23,6 +23,7 @@
 #include "document/html/parser/stack.h"
 #include "document/html/parser/parse.h"
 #include "document/html/parser.h"
+#include "document/html/renderer.h"
 #include "document/options.h"
 #include "intl/charsets.h"
 #include "protocol/uri.h"
@@ -164,9 +165,186 @@ html_script(struct html_context *html_context, unsigned char *a,
             unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 #ifdef CONFIG_ECMASCRIPT
-	do_html_script(html_context, a, html, eof, end);
-#else
+	/* TODO: <noscript> processing. Well, same considerations apply as to
+	 * CSS property display: none processing. */
+	/* TODO: Charsets for external scripts. */
+	unsigned char *type, *language, *src;
+	int in_comment = 0;
+#endif
+
 	html_skip(html_context, a);
+
+#ifdef CONFIG_ECMASCRIPT
+	/* We try to process nested <script> if we didn't process the parent
+	 * one. That's why's all the fuzz. */
+	/* Ref:
+	 * http://www.ietf.org/internet-drafts/draft-hoehrmann-script-types-03.txt
+	 */
+	type = get_attr_val(a, "type", html_context->options);
+	if (type) {
+		unsigned char *pos = type;
+
+		if (!strncasecmp(type, "text/", 5)) {
+			pos += 5;
+
+		} else if (!strncasecmp(type, "application/", 12)) {
+			pos += 12;
+
+		} else {
+			mem_free(type);
+not_processed:
+			/* Permit nested scripts and retreat. */
+			html_top.invisible++;
+			return;
+		}
+
+		if (!strncasecmp(pos, "javascript", 10)) {
+			int len = strlen(pos);
+
+			if (len > 10 && !isdigit(pos[10])) {
+				mem_free(type);
+				goto not_processed;
+			}
+
+		} else if (strcasecmp(pos, "ecmascript")
+		    && strcasecmp(pos, "jscript")
+		    && strcasecmp(pos, "livescript")
+		    && strcasecmp(pos, "x-javascript")
+		    && strcasecmp(pos, "x-ecmascript")) {
+			mem_free(type);
+			goto not_processed;
+		}
+
+		mem_free(type);
+	}
+
+	/* Check that the script content is ecmascript. The value of the
+	 * language attribute can be JavaScript with optional version digits
+	 * postfixed (like: ``JavaScript1.1'').
+	 * That attribute is deprecated in favor of type by HTML 4.01 */
+	language = get_attr_val(a, "language", html_context->options);
+	if (language) {
+		int languagelen = strlen(language);
+
+		if (languagelen < 10
+		    || (languagelen > 10 && !isdigit(language[10]))
+		    || strncasecmp(language, "javascript", 10)) {
+			mem_free(language);
+			goto not_processed;
+		}
+
+		mem_free(language);
+	}
+
+	if (html_context->part->document
+	    && (src = get_attr_val(a, "src", html_context->options))) {
+		/* External reference. */
+
+		unsigned char *import_url;
+		struct uri *uri;
+
+		if (!get_opt_bool("ecmascript.enable")) {
+			mem_free(src);
+			goto not_processed;
+		}
+
+		/* HTML <head> urls should already be fine but we can.t detect them. */
+		import_url = join_urls(html_context->base_href, src);
+		mem_free(src);
+		if (!import_url) goto imported;
+
+		uri = get_uri(import_url, URI_BASE);
+		if (!uri) goto imported;
+
+		/* Request the imported script as part of the document ... */
+		html_context->special_f(html_context, SP_SCRIPT, uri);
+		done_uri(uri);
+
+		/* Create URL reference onload snippet. */
+		insert_in_string(&import_url, 0, "^", 1);
+		add_to_string_list(&html_context->part->document->onload_snippets,
+		                   import_url, -1);
+
+imported:
+		/* Retreat. Do not permit nested scripts, tho'. */
+		if (import_url) mem_free(import_url);
+		return;
+	}
+
+	/* Positive, grab the rest and interpret it. */
+
+	/* First position to the real script start. */
+	while (html < eof && *html <= ' ') html++;
+	if (eof - html > 4 && !strncmp(html, "<!--", 4)) {
+		in_comment = 1;
+		/* We either skip to the end of line or to -->. */
+		for (; *html != '\n' && *html != '\r' && eof - html >= 3; html++) {
+			if (!strncmp(html, "-->", 3)) {
+				/* This means the document is probably broken.
+				 * We will now try to process the rest of
+				 * <script> contents, which is however likely
+				 * to be empty. Should we try to process the
+				 * comment too? Currently it seems safer but
+				 * less tolerant to broken pages, if there are
+				 * any like this. */
+				html += 3;
+				in_comment = 0;
+				break;
+			}
+		}
+	}
+
+	*end = html;
+
+	/* Now look ahead for the script end. The <script> contents is raw
+	 * CDATA, so we just look for the ending tag and need not care for
+	 * any quote marks counting etc - YET, we are more tolerant and permit
+	 * </script> stuff inside of the script if the whole <script> element
+	 * contents is wrapped in a comment. See i.e. Mozilla bug 26857 for fun
+	 * reading regarding this. */
+	for (; *end < eof; (*end)++) {
+		unsigned char *name;
+		int namelen;
+
+		if (in_comment) {
+			/* TODO: If we ever get some standards-quirk mode
+			 * distinction, this should be disabled in the
+			 * standards mode (and we should just look for CDATA
+			 * end, which is "</"). --pasky */
+			if (eof - *end >= 3 && !strncmp(*end, "-->", 3)) {
+				/* Next iteration will jump passed the ending '>' */
+				(*end) += 2;
+				in_comment = 0;
+			}
+			continue;
+			/* XXX: Scan for another comment? That's admittelly
+			 * already stretching things a little bit to an
+			 * extreme ;-). */
+		}
+
+		if (**end != '<')
+			continue;
+		/* We want to land before the closing element, that's why we
+		 * don't pass @end also as the appropriate parse_element()
+		 * argument. */
+		if (parse_element(*end, eof, &name, &namelen, NULL, NULL))
+			continue;
+		if (strlcasecmp(name, namelen, "/script", 7))
+			continue;
+		/* We have won! */
+		break;
+	}
+	if (*end >= eof) {
+		/* Either the document is not completely loaded yet or it's
+		 * broken. At any rate, run away screaming. */
+		*end = eof; /* Just for sanity. */
+		return;
+	}
+
+	if (html_context->part->document && *html != '^') {
+		add_to_string_list(&html_context->part->document->onload_snippets,
+		                   html, *end - html);
+	}
 #endif
 }
 
