@@ -24,6 +24,7 @@
 #include "document/html/parser/parse.h"
 #include "document/html/parser.h"
 #include "document/html/renderer.h"
+#include "document/html/tables.h"
 #include "document/options.h"
 #include "intl/charsets.h"
 #include "protocol/uri.h"
@@ -592,6 +593,14 @@ void
 html_table(struct html_context *html_context, unsigned char *attr,
            unsigned char *html, unsigned char *eof, unsigned char **end)
 {
+	if (html_context->options->tables
+	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
+		format_table(attr, html, eof, end, html_context);
+		ln_break(html_context, 2);
+
+		return;
+	}
+
 	par_format.leftmargin = par_format.rightmargin = html_context->margin;
 	par_format.align = ALIGN_LEFT;
 	html_linebrk(html_context, attr, html, eof, end);

@@ -20,7 +20,6 @@
 #include "document/html/parser/parse.h"
 #include "document/html/parser/stack.h"
 #include "document/html/parser.h"
-#include "document/html/tables.h"
 #include "document/options.h"
 #include "intl/charsets.h"
 #include "util/conv.h"
@@ -781,14 +780,6 @@ start_element(struct element_info *ei,
 
 	restore_format = html_is_preformatted();
 	old_format = par_format;
-
-	if (ei->func == html_table && html_context->options->tables
-	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
-		ELEMENT_RENDER_PROLOGUE
-		format_table(attr, html, eof, &html, html_context);
-		ln_break(html_context, 2);
-		return html;
-	}
 
 	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
 	if (ei->func == html_meta && html_context->was_body) {
