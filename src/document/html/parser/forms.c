@@ -303,13 +303,11 @@ static int do_html_select(unsigned char *attr, unsigned char *html,
                           unsigned char *eof, unsigned char **end,
                           struct html_context *html_context);
 
-void
-html_select(struct html_context *html_context, unsigned char *a,
-            unsigned char *html, unsigned char *eof, unsigned char **end)
+static void
+do_html_select_multiple(struct html_context *html_context, unsigned char *a,
+                        unsigned char *html, unsigned char *eof,
+                        unsigned char **end)
 {
-	if (!do_html_select(a, html, eof, end, html_context))
-		return;
-
 	unsigned char *al = get_attr_val(a, "name", html_context->options);
 
 	if (!al) return;
@@ -319,6 +317,16 @@ html_select(struct html_context *html_context, unsigned char *a,
 	format.select_disabled = has_attr(a, "disabled", html_context->options)
 	                         ? FORM_MODE_DISABLED
 	                         : FORM_MODE_NORMAL;
+}
+
+void
+html_select(struct html_context *html_context, unsigned char *a,
+            unsigned char *html, unsigned char *eof, unsigned char **end)
+{
+	if (!do_html_select(a, html, eof, end, html_context))
+		return;
+
+	do_html_select_multiple(html_context, a, html, eof, end);
 }
 
 void
