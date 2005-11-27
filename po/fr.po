@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-10-30 17:19+0100\n"
-"PO-Revision-Date: 2005-10-30 17:20+0200\n"
+"POT-Creation-Date: 2005-11-27 19:21+0100\n"
+"PO-Revision-Date: 2005-11-27 19:22+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
 #: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:798 src/viewer/text/search.c:1593
+#: src/session/session.c:799 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
 
@@ -1784,7 +1784,7 @@ msgstr "Description"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:960 src/viewer/text/textarea.c:362
+#: src/session/session.c:961 src/viewer/text/textarea.c:362
 #: src/viewer/text/textarea.c:369
 msgid "Error"
 msgstr "Erreur"
@@ -5380,7 +5380,7 @@ msgstr "Ignorer le contenu de <noscript>"
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 "Ignorer ou non le contenu du tag <noscript> quand ECMAScript\n"
 "est actif."
@@ -6309,70 +6309,66 @@ msgid "Bad HTTP response"
 msgstr "Réponse HTTP incorrecte"
 
 #: src/network/state.c:71
-msgid "HTTP 100 (???)"
-msgstr "HTTP 100 (???)"
-
-#: src/network/state.c:72
 msgid "No content"
 msgstr "Aucun contenu"
 
-#: src/network/state.c:74
+#: src/network/state.c:73
 msgid "Unknown file type"
 msgstr "Type de fichier inconnu"
 
-#: src/network/state.c:75
+#: src/network/state.c:74
 msgid "Error opening file"
 msgstr "Erreur lors de l'ouverture du fichier"
 
-#: src/network/state.c:76
+#: src/network/state.c:75
 msgid "CGI script not in CGI path"
 msgstr "Script CGI absent du chemin des CGIs"
 
-#: src/network/state.c:77
+#: src/network/state.c:76
 msgid "Local file access is not allowed in anonymous mode"
 msgstr "L'accès aux fichiers locaux n'est pas autorisé en mode anonyme"
 
-#: src/network/state.c:80
+#: src/network/state.c:79
 msgid "Bad FTP response"
 msgstr "Réponse FTP incorrecte"
 
-#: src/network/state.c:81
+#: src/network/state.c:80
 msgid "FTP service unavailable"
 msgstr "Service FTP indisponible"
 
-#: src/network/state.c:82
+#: src/network/state.c:81
 msgid "Bad FTP login"
 msgstr "Échec de l'authentification FTP"
 
-#: src/network/state.c:83
+#: src/network/state.c:82
 msgid "FTP PORT command failed"
 msgstr "Échec de la commande FTP PORT"
 
-#: src/network/state.c:84
+#: src/network/state.c:83
 msgid "File not found"
 msgstr "Fichier introuvable"
 
-#: src/network/state.c:85
+#: src/network/state.c:84
 msgid "FTP file error"
 msgstr "Erreur de fichier FTP"
 
-#: src/network/state.c:89
+#: src/network/state.c:88
 msgid "SSL error"
 msgstr "Erreur SSL"
 
-#: src/network/state.c:91
+#: src/network/state.c:90
 msgid "This version of ELinks does not contain SSL/TLS support"
 msgstr "Cette version de ELinks ne supporte ni SSL ni TLS"
 
-#: src/network/state.c:94
+#: src/network/state.c:93
 msgid "JavaScript support is not enabled"
 msgstr "Le support du Javascript n'est pas activé"
 
-#: src/network/state.c:97
+#: src/network/state.c:96
 msgid "Bad NNTP response"
 msgstr "Réponse NNTP incorrecte"
 
-#: src/network/state.c:98
+#: src/network/state.c:97
 msgid ""
 "Unable to handle news: URI because no news server has been\n"
 "been configured. Either set the option protocol.nntp.server\n"
@@ -6382,35 +6378,35 @@ msgstr ""
 "n'a été configuré. Configurez l'option protocol.nntp.server\n"
 "ou la variable d'environnement NNTPSERVER."
 
-#: src/network/state.c:101
+#: src/network/state.c:100
 msgid "Server hang up for some reason"
 msgstr "Le serveur est bloqué pour une raison inconnue"
 
-#: src/network/state.c:102
+#: src/network/state.c:101
 msgid "No such newsgroup"
 msgstr "Groupe de nouvelles introuvable"
 
-#: src/network/state.c:103
+#: src/network/state.c:102
 msgid "No such article"
 msgstr "Article introuvable"
 
-#: src/network/state.c:104
+#: src/network/state.c:103
 msgid "Transfer failed"
 msgstr "Echec de transfert"
 
-#: src/network/state.c:105
+#: src/network/state.c:104
 msgid "Authorization required"
 msgstr "Authentication requise"
 
-#: src/network/state.c:106
+#: src/network/state.c:105
 msgid "Access to server denied"
 msgstr "Accès au serveur refusé"
 
-#: src/network/state.c:110
+#: src/network/state.c:109
 msgid "The CSO phone-book protocol is not supported."
 msgstr "Le protocole de carnet d'adresse CSO n'est pas supporté."
 
-#: src/network/state.c:113
+#: src/network/state.c:112
 msgid ""
 "Configuration of the proxy server failed.\n"
 "This might be caused by an incorrect proxy\n"
@@ -6429,19 +6425,19 @@ msgstr ""
 "le nom d'hôte éventuellement suivi de deux points et\n"
 "du numéro de port. Par exemple: 'localhost:8080'."
 
-#: src/network/state.c:123
+#: src/network/state.c:122
 msgid "BitTorrent error"
 msgstr "Erreur de BitTorrent"
 
-#: src/network/state.c:124
+#: src/network/state.c:123
 msgid "The BitTorrent metainfo file contained errors"
 msgstr "Le fichier metainfo de BitTorrent contenait des erreurs"
 
-#: src/network/state.c:125
+#: src/network/state.c:124
 msgid "The tracker requesting failed"
 msgstr "L'interrogation du serveur a échouée"
 
-#: src/network/state.c:149
+#: src/network/state.c:148
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -7908,11 +7904,11 @@ msgstr "Le fichier sera ouvert avec le programme '%s'."
 msgid "~Open"
 msgstr "~Ouvrir"
 
-#: src/session/session.c:748 src/session/session.c:767 src/session/task.c:269
+#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:749
+#: src/session/session.c:750
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7931,7 +7927,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:768
+#: src/session/session.c:769
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7952,11 +7948,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:793
+#: src/session/session.c:794
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:794
+#: src/session/session.c:795
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
