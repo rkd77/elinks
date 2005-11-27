@@ -691,13 +691,20 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
 	unsigned char *head = empty_string_or_(cached->head);
-	struct dom_node *root = parse_sgml(cached, document, buffer);
+	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	dom_stack_callback_T *callbacks = dom_source_renderer_callbacks;
+	struct sgml_parser *parser;
 	struct dom_stack stack;
 
 	assert(document->options.plain);
+
+	parser = init_sgml_parser(cached, document);
+	if (!parser) return;
+
+	root = parse_sgml(parser, buffer);
+	done_sgml_parser(parser);
 	if (!root) return;
 
 	convert_table = get_convert_table(head, document->options.cp,

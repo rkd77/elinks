@@ -292,43 +292,49 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 }
 
 
-static inline void
-init_sgml_parser(struct sgml_parser *parser, struct document *document,
-		 struct cache_entry *cache_entry, struct sgml_info *info,
-		 struct string *buffer)
+struct sgml_parser *
+init_sgml_parser(struct cache_entry *cached, struct document *document)
+{
+	size_t obj_size = sizeof(struct sgml_parser_state);
+	struct sgml_parser *parser;
+
+	parser = mem_calloc(1, sizeof(*parser));
+	if (!parser) return NULL;
+
+	parser->document    = document;
+	parser->cache_entry = cached;
+	parser->info	    = &sgml_html_info;
+
+	init_dom_stack(&parser->stack, parser, parser->info->callbacks, obj_size);
+
+	if (document->options.plain)
+		parser->flags |= SGML_PARSER_ADD_ELEMENT_ENDS;
+
+	return parser;
+}
+
+void
+done_sgml_parser(struct sgml_parser *parser)
+{
+	done_dom_stack(&parser->stack);
+	mem_free(parser);
+}
+
+/* FIXME: Make it possible to push variable number of strings (even nested
+ * while parsing another string) so that we can feed back output of stuff
+ * like ECMAScripts document.write(). */
+struct dom_node *
+parse_sgml(struct sgml_parser *parser, struct string *buffer)
 {
 	unsigned char *source = buffer->source;
 	unsigned char *end = source + buffer->length;
 
-	memset(parser, 0, sizeof(*parser));
-
 	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
 
-	parser->document    = document;
-	parser->cache_entry = cache_entry;
-	parser->info	    = info;
-
-	if (document->options.plain)
-		parser->flags |= SGML_PARSER_ADD_ELEMENT_ENDS;
-}
-
-struct dom_node *
-parse_sgml(struct cache_entry *cached, struct document *document,
-	   struct string *buffer)
-{
-	struct dom_stack stack;
-	struct sgml_parser parser;
-	size_t obj_size = sizeof(struct sgml_parser_state);
-
-	init_sgml_parser(&parser, document, cached, &sgml_html_info, buffer);
-	init_dom_stack(&stack, &parser, parser.info->callbacks, obj_size);
-
-	parser.root = add_sgml_document(&stack, document->uri);
-	if (parser.root) {
-		parse_sgml_document(&stack, &parser.scanner);
+	parser->root = add_sgml_document(&parser->stack, parser->document->uri);
+	if (parser->root) {
+		parse_sgml_document(&parser->stack, &parser->scanner);
 	}
 
-	done_dom_stack(&stack);
-
-	return parser.root;
+	return parser->root;
 }

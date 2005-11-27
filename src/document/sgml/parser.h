@@ -3,6 +3,7 @@
 #define EL__DOCUMENT_SGML_PARSER_H
 
 #include "document/dom/node.h"
+#include "document/dom/stack.h"
 #include "document/sgml/sgml.h"
 #include "util/scanner.h"
 
@@ -24,13 +25,18 @@ struct sgml_parser {
 	struct dom_node *root;
 
 	struct scanner scanner;
+	struct dom_stack stack;
 };
 
 struct sgml_parser_state {
 	struct sgml_node_info *info;
 };
 
-struct dom_node *
-parse_sgml(struct cache_entry *cached, struct document *document, struct string *buffer);
+struct sgml_parser *
+init_sgml_parser(struct cache_entry *cached, struct document *document);
+
+void done_sgml_parser(struct sgml_parser *parser);
+
+struct dom_node *parse_sgml(struct sgml_parser *parser, struct string *buffer);
 
 #endif
