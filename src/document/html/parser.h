@@ -207,8 +207,4 @@ void ln_break(struct html_context *html_context, int n);
 
 int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
 
-#ifdef CONFIG_ECMASCRIPT
-int do_html_script(struct html_context *html_context, unsigned char *attr, unsigned char *html, unsigned char *eof, unsigned char **end);
-#endif
-
 #endif

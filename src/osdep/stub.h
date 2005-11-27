@@ -155,8 +155,10 @@ extern char *__builtin_stpcpy(char *dest, const char *src);
 extern void *__builtin_mempcpy(void *dest, const void *src, size_t n);
 #endif
 
+#if 0
 #ifndef __builtin_va_copy
 #define __builtin_va_copy(dest, src) do { dest = src; } while (0)
+#endif
 #endif
 
 #endif

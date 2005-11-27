@@ -13,7 +13,4 @@ element_handler_T html_select;
 element_handler_T html_option;
 element_handler_T html_textarea;
 
-int do_html_select(unsigned char *attr, unsigned char *html, unsigned char *eof, unsigned char **end, struct html_context *html_context);
-void do_html_textarea(unsigned char *attr, unsigned char *html, unsigned char *eof, unsigned char **end, struct html_context *html_context);
-
 #endif
