@@ -14,9 +14,7 @@ struct html_context;
 struct memory_list;
 struct menu_item;
 struct part;
-struct session;
 struct string;
-struct terminal;
 struct uri;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML

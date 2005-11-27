@@ -107,4 +107,15 @@ typedef unsigned long long uint32_t;
 #define longlong long
 #endif
 
+/* These are mostly for shutting up sparse warnings. */
+#ifndef __INT_MAX__
+#define __INT_MAX__ 0x7fffffff
+#endif
+#ifndef __LONG_MAX__
+#define __LONG_MAX__ 0x7fffffff
+#endif
+#ifndef __SHRT_MAX__
+#define __SHRT_MAX__ 0x7fff
+#endif
+
 #endif

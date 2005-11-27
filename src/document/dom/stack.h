@@ -19,7 +19,7 @@ struct dom_stack_state {
 
 	/* Used for recording which node list are currently being 'decended'
 	 * into. E.g. whether we are iterating all child elements or attributes
-	 * of an element. */ 
+	 * of an element. */
 	struct dom_node_list *list;
 	/* The index (in the list above) which are currently being handled. */
 	size_t index;

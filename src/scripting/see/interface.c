@@ -146,7 +146,7 @@ navigator_alert(struct SEE_interpreter *see, struct SEE_object *self,
 		 N_("SEE Message"), ALIGN_LEFT, string.source);
 }
 
-#if DATADRIVEN	
+#if DATADRIVEN
 _IDEA
 struct object_info browser_object[] = {
 	"ELinks", SEE_ATTR_READONLY,
@@ -155,7 +155,7 @@ struct object_info browser_object[] = {
 		{ "home",	SEE_STRING,	NULL,		SEE_ATTR_READONLY },
 	},
 	{ /* Methods: (as name, handler, args) */
-		{ "write",	elinks_see_write, SEE_ATTR_READONLY }, 
+		{ "write",	elinks_see_write, SEE_ATTR_READONLY },
 		{ NULL }
 	},
 };
