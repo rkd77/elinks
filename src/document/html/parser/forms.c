@@ -298,105 +298,9 @@ hid:
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
-void
-html_select(struct html_context *html_context, unsigned char *a,
-            unsigned char *html, unsigned char *eof, unsigned char **end)
-{
-	unsigned char *al;
-
-	if (!do_html_select(a, html, eof, end, html_context))
-		return;
-
-	al = get_attr_val(a, "name", html_context->options);
-	if (!al) return;
-
-	html_focusable(html_context, a);
-	html_top.type = ELEMENT_DONT_KILL;
-	mem_free_set(&format.select, al);
-	format.select_disabled = has_attr(a, "disabled", html_context->options)
-	                         ? FORM_MODE_DISABLED
-	                         : FORM_MODE_NORMAL;
-}
-
-void
-html_option(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
-{
-	struct form_control *fc;
-	unsigned char *val;
-
-	if (!format.select) return;
-
-	val = get_attr_val(a, "value", html_context->options);
-	if (!val) {
-		struct string str;
-		unsigned char *p, *r;
-		unsigned char *name;
-		int namelen;
-
-		for (p = a - 1; *p != '<'; p--);
-
-		if (!init_string(&str)) goto end_parse;
-		if (parse_element(p, html_context->eoff, NULL, NULL, NULL, &p)) {
-			INTERNAL("parse element failed");
-			val = str.source;
-			goto end_parse;
-		}
-
-se:
-		while (p < html_context->eoff && isspace(*p)) p++;
-		while (p < html_context->eoff && !isspace(*p) && *p != '<') {
-
-sp:
-			add_char_to_string(&str, *p ? *p : ' '), p++;
-		}
-
-		r = p;
-		val = str.source; /* Has to be before the possible 'goto end_parse' */
-
-		while (r < html_context->eoff && isspace(*r)) r++;
-		if (r >= html_context->eoff) goto end_parse;
-		if (r - 2 <= html_context->eoff && (r[1] == '!' || r[1] == '?')) {
-			p = skip_comment(r, html_context->eoff);
-			goto se;
-		}
-		if (parse_element(r, html_context->eoff, &name, &namelen, NULL, &p)) goto sp;
-		if (strlcasecmp(name, namelen, "OPTION", 6)
-		    && strlcasecmp(name, namelen, "/OPTION", 7)
-		    && strlcasecmp(name, namelen, "SELECT", 6)
-		    && strlcasecmp(name, namelen, "/SELECT", 7)
-		    && strlcasecmp(name, namelen, "OPTGROUP", 8)
-		    && strlcasecmp(name, namelen, "/OPTGROUP", 9))
-			goto se;
-	}
-
-end_parse:
-	fc = init_form_control(FC_CHECKBOX, a, html_context);
-	if (!fc) {
-		mem_free_if(val);
-		return;
-	}
-
-	fc->name = null_or_stracpy(format.select);
-	fc->default_value = val;
-	fc->default_state = has_attr(a, "selected", html_context->options);
-	fc->mode = has_attr(a, "disabled", html_context->options)
-	           ? FORM_MODE_DISABLED
-	           : format.select_disabled;
-
-	put_chrs(html_context, " ", 1);
-	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	format.form = fc;
-	format.style.attr |= AT_BOLD;
-	put_chrs(html_context, "[ ]", 3);
-	kill_html_stack_item(html_context, &html_top);
-	put_chrs(html_context, " ", 1);
-	html_context->special_f(html_context, SP_CONTROL, fc);
-}
-
 static struct list_menu lnk_menu;
 
-int
+static void
 do_html_select(unsigned char *attr, unsigned char *html,
 	       unsigned char *eof, unsigned char **end,
 	       struct html_context *html_context)
@@ -414,7 +318,6 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	int group = 0;
 	int i, max_width;
 
-	if (has_attr(attr, "multiple", html_context->options)) return 1;
 	html_focusable(html_context, attr);
 	init_menu(&lnk_menu);
 
@@ -440,7 +343,7 @@ abort:
 		}
 		destroy_menu(&lnk_menu);
 		*end = en;
-		return 0;
+		return;
 	}
 
 	if (lbl.source) {
@@ -563,20 +466,115 @@ end_parse:
 	kill_html_stack_item(html_context, &html_top);
 	put_chrs(html_context, "]", 1);
 	html_context->special_f(html_context, SP_CONTROL, fc);
-
-	return 0;
 }
 
-void
-html_textarea(struct html_context *html_context, unsigned char *a,
-              unsigned char *html, unsigned char *eof, unsigned char **end)
+
+static void
+do_html_select_multiple(struct html_context *html_context, unsigned char *a,
+                        unsigned char *html, unsigned char *eof,
+                        unsigned char **end)
 {
-	do_html_textarea(a, html, eof, end, html_context);
+	unsigned char *al = get_attr_val(a, "name", html_context->options);
+
+	if (!al) return;
+	html_focusable(html_context, a);
+	html_top.type = ELEMENT_DONT_KILL;
+	mem_free_set(&format.select, al);
+	format.select_disabled = has_attr(a, "disabled", html_context->options)
+	                         ? FORM_MODE_DISABLED
+	                         : FORM_MODE_NORMAL;
 }
 
 void
-do_html_textarea(unsigned char *attr, unsigned char *html, unsigned char *eof,
-		 unsigned char **end, struct html_context *html_context)
+html_select(struct html_context *html_context, unsigned char *a,
+            unsigned char *html, unsigned char *eof, unsigned char **end)
+{
+	if (has_attr(a, "multiple", html_context->options))
+		do_html_select_multiple(html_context, a, html, eof, end);
+	else
+		do_html_select(a, html, eof, end, html_context);
+
+}
+
+void
+html_option(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	struct form_control *fc;
+	unsigned char *val;
+
+	if (!format.select) return;
+
+	val = get_attr_val(a, "value", html_context->options);
+	if (!val) {
+		struct string str;
+		unsigned char *p, *r;
+		unsigned char *name;
+		int namelen;
+
+		for (p = a - 1; *p != '<'; p--);
+
+		if (!init_string(&str)) goto end_parse;
+		if (parse_element(p, html_context->eoff, NULL, NULL, NULL, &p)) {
+			INTERNAL("parse element failed");
+			val = str.source;
+			goto end_parse;
+		}
+
+se:
+		while (p < html_context->eoff && isspace(*p)) p++;
+		while (p < html_context->eoff && !isspace(*p) && *p != '<') {
+
+sp:
+			add_char_to_string(&str, *p ? *p : ' '), p++;
+		}
+
+		r = p;
+		val = str.source; /* Has to be before the possible 'goto end_parse' */
+
+		while (r < html_context->eoff && isspace(*r)) r++;
+		if (r >= html_context->eoff) goto end_parse;
+		if (r - 2 <= html_context->eoff && (r[1] == '!' || r[1] == '?')) {
+			p = skip_comment(r, html_context->eoff);
+			goto se;
+		}
+		if (parse_element(r, html_context->eoff, &name, &namelen, NULL, &p)) goto sp;
+		if (strlcasecmp(name, namelen, "OPTION", 6)
+		    && strlcasecmp(name, namelen, "/OPTION", 7)
+		    && strlcasecmp(name, namelen, "SELECT", 6)
+		    && strlcasecmp(name, namelen, "/SELECT", 7)
+		    && strlcasecmp(name, namelen, "OPTGROUP", 8)
+		    && strlcasecmp(name, namelen, "/OPTGROUP", 9))
+			goto se;
+	}
+
+end_parse:
+	fc = init_form_control(FC_CHECKBOX, a, html_context);
+	if (!fc) {
+		mem_free_if(val);
+		return;
+	}
+
+	fc->name = null_or_stracpy(format.select);
+	fc->default_value = val;
+	fc->default_state = has_attr(a, "selected", html_context->options);
+	fc->mode = has_attr(a, "disabled", html_context->options)
+	           ? FORM_MODE_DISABLED
+	           : format.select_disabled;
+
+	put_chrs(html_context, " ", 1);
+	html_stack_dup(html_context, ELEMENT_KILLABLE);
+	format.form = fc;
+	format.style.attr |= AT_BOLD;
+	put_chrs(html_context, "[ ]", 3);
+	kill_html_stack_item(html_context, &html_top);
+	put_chrs(html_context, " ", 1);
+	html_context->special_f(html_context, SP_CONTROL, fc);
+}
+
+void
+html_textarea(struct html_context *html_context, unsigned char *attr,
+              unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct form_control *fc;
 	unsigned char *p, *t_name, *wrap_attr;
