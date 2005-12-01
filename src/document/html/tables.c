@@ -1229,13 +1229,14 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 static void
 distribute_table_widths(struct table *table)
 {
-	/* DBG("%d %d %d", t->min_width, t->max_width, table->width); */
-	if (table->min_width >= table->width)
-		distribute_widths(table, table->min_width);
-	else if (table->max_width < table->width && table->full_width)
-		distribute_widths(table, table->max_width);
-	else
-		distribute_widths(table, table->width);
+	int width = table->width;
+
+	if (table->min_width >= width)
+		width = table->min_width;
+	else if (table->max_width < width && table->full_width)
+		width = table->max_width;
+
+	distribute_widths(table, width);
 }
 
 void
