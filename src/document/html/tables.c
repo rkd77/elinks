@@ -1194,12 +1194,12 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 		0, table->real_width, table->part->document, x, y,
 		NULL, table->link_num);
 
-	if (part) {
-		table->part->cy += part->box.height;
-		table->part->cx = -1;
-		table->part->link_num = part->link_num;
-		mem_free(part);
-	}
+	if (!part) return;
+	
+	table->part->cy += part->box.height;
+	table->part->cx = -1;
+	table->part->link_num = part->link_num;
+	mem_free(part);
 }
 
 /* This renders tag soup elements that the parser detected while chewing it's
