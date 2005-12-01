@@ -1195,7 +1195,7 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 		NULL, table->link_num);
 
 	if (!part) return;
-	
+
 	table->part->cy += part->box.height;
 	table->part->cx = -1;
 	table->part->link_num = part->link_num;
@@ -1224,6 +1224,18 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 
 		parse_html(start, end, table->part, NULL, html_context);
 	}
+}
+
+static void
+distribute_table_widths(struct table *table)
+{
+	/* DBG("%d %d %d", t->min_width, t->max_width, table->width); */
+	if (table->min_width >= table->width)
+		distribute_widths(table, table->min_width);
+	else if (table->max_width < table->width && table->full_width)
+		distribute_widths(table, table->max_width);
+	else
+		distribute_widths(table, table->width);
 }
 
 void
@@ -1256,13 +1268,7 @@ format_table(unsigned char *attr, unsigned char *html, unsigned char *eof,
 	margins = par_format.leftmargin + par_format.rightmargin;
 	if (get_table_cellpadding(html_context, table)) goto ret2;
 
-	/* DBG("%d %d %d", t->min_width, t->max_width, table->width); */
-	if (table->min_width >= table->width)
-		distribute_widths(table, table->min_width);
-	else if (table->max_width < table->width && table->full_width)
-		distribute_widths(table, table->max_width);
-	else
-		distribute_widths(table, table->width);
+	distribute_table_widths(table);
 
 	if (!part->document && part->box.x == 1) {
 		int total_width = table->real_width + margins;
