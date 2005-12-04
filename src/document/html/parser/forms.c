@@ -69,6 +69,7 @@ html_form(struct html_context *html_context, unsigned char *a,
 		}
 		mem_free(al);
 	}
+
 	al = get_attr_val(a, "name", html_context->options);
 	if (al) form->name = al;
 
@@ -168,10 +169,14 @@ no_type_attr:
 
 	fc->name = get_attr_val(a, "name", html_context->options);
 	fc->default_value = get_attr_val(a, "value", html_context->options);
-	if (!fc->default_value && fc->type == FC_SUBMIT) fc->default_value = stracpy("Submit");
-	if (!fc->default_value && fc->type == FC_RESET) fc->default_value = stracpy("Reset");
-	if (!fc->default_value && fc->type == FC_BUTTON) fc->default_value = stracpy("Button");
-	if (!fc->default_value) fc->default_value = stracpy("");
+	if (!fc->default_value && fc->type == FC_SUBMIT)
+		fc->default_value = stracpy("Submit");
+	if (!fc->default_value && fc->type == FC_RESET)
+		fc->default_value = stracpy("Reset");
+	if (!fc->default_value && fc->type == FC_BUTTON)
+		fc->default_value = stracpy("Button");
+	if (!fc->default_value)
+		fc->default_value = stracpy("");
 
 	/* XXX: Does this make sense here? Where do we get FC_IMAGE? */
 	if (fc->type == FC_IMAGE) fc->alt = get_attr_val(a, "alt", html_context->options);
@@ -213,11 +218,16 @@ no_type_attr:
 	if (fc->type != FC_FILE)
 		fc->default_value = get_attr_val(a, "value",
 		                                 html_context->options);
-	if (!fc->default_value && fc->type == FC_CHECKBOX) fc->default_value = stracpy("on");
-	if (!fc->default_value && fc->type == FC_SUBMIT) fc->default_value = stracpy("Submit");
-	if (!fc->default_value && fc->type == FC_RESET) fc->default_value = stracpy("Reset");
-	if (!fc->default_value && fc->type == FC_BUTTON) fc->default_value = stracpy("Button");
-	if (!fc->default_value) fc->default_value = stracpy("");
+	if (!fc->default_value && fc->type == FC_CHECKBOX)
+		fc->default_value = stracpy("on");
+	if (!fc->default_value && fc->type == FC_SUBMIT)
+		fc->default_value = stracpy("Submit");
+	if (!fc->default_value && fc->type == FC_RESET)
+		fc->default_value = stracpy("Reset");
+	if (!fc->default_value && fc->type == FC_BUTTON)
+		fc->default_value = stracpy("Button");
+	if (!fc->default_value)
+		fc->default_value = stracpy("");
 
 	fc->size = get_num(a, "size", html_context->options);
 	if (fc->size == -1)
