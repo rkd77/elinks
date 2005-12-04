@@ -187,11 +187,83 @@ no_type_attr:
 	format.style.attr |= AT_BOLD;
 }
 
+static void
+html_input_format(struct html_context *html_context, unsigned char *a,
+	   	  struct form_control *fc)
+{
+	put_chrs(html_context, " ", 1);
+	html_stack_dup(html_context, ELEMENT_KILLABLE);
+	html_focusable(html_context, a);
+	format.form = fc;
+	if (format.title) mem_free(format.title);
+	format.title = get_attr_val(a, "title", html_context->options);
+	switch (fc->type) {
+		case FC_TEXT:
+		case FC_PASSWORD:
+		case FC_FILE:
+		{
+			int i;
+
+			format.style.attr |= AT_BOLD;
+			for (i = 0; i < fc->size; i++)
+				put_chrs(html_context, "_", 1);
+			break;
+		}
+		case FC_CHECKBOX:
+			format.style.attr |= AT_BOLD;
+			put_chrs(html_context, "[&nbsp;]", 8);
+			break;
+		case FC_RADIO:
+			format.style.attr |= AT_BOLD;
+			put_chrs(html_context, "(&nbsp;)", 8);
+			break;
+		case FC_IMAGE:
+		{
+			unsigned char *al;
+
+			mem_free_set(&format.image, NULL);
+			al = get_url_val(a, "src", html_context->options);
+			if (!al)
+				al = get_url_val(a, "dynsrc",
+				                 html_context->options);
+			if (al) {
+				format.image = join_urls(html_context->base_href, al);
+				mem_free(al);
+			}
+			format.style.attr |= AT_BOLD;
+			put_chrs(html_context, "[&nbsp;", 7);
+			if (fc->alt)
+				put_chrs(html_context, fc->alt, strlen(fc->alt));
+			else if (fc->name)
+				put_chrs(html_context, fc->name, strlen(fc->name));
+			else
+				put_chrs(html_context, "Submit", 6);
+
+			put_chrs(html_context, "&nbsp;]", 7);
+			break;
+		}
+		case FC_SUBMIT:
+		case FC_RESET:
+		case FC_BUTTON:
+			format.style.attr |= AT_BOLD;
+			put_chrs(html_context, "[&nbsp;", 7);
+			if (fc->default_value)
+				put_chrs(html_context, fc->default_value, strlen(fc->default_value));
+			put_chrs(html_context, "&nbsp;]", 7);
+			break;
+		case FC_TEXTAREA:
+		case FC_SELECT:
+		case FC_HIDDEN:
+			INTERNAL("bad control type");
+	}
+	kill_html_stack_item(html_context, &html_top);
+	put_chrs(html_context, " ", 1);
+}
+
 void
 html_input(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	int i;
 	unsigned char *al;
 	struct form_control *fc;
 
@@ -245,69 +317,11 @@ html_input(struct html_context *html_context, unsigned char *a,
 		                             html_context->options);
 	if (fc->type == FC_IMAGE)
 		fc->alt = get_attr_val(a, "alt", html_context->options);
-	if (fc->type == FC_HIDDEN) goto hid;
 
-	put_chrs(html_context, " ", 1);
-	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	html_focusable(html_context, a);
-	format.form = fc;
-	if (format.title) mem_free(format.title);
-	format.title = get_attr_val(a, "title", html_context->options);
-	switch (fc->type) {
-		case FC_TEXT:
-		case FC_PASSWORD:
-		case FC_FILE:
-			format.style.attr |= AT_BOLD;
-			for (i = 0; i < fc->size; i++)
-				put_chrs(html_context, "_", 1);
-			break;
-		case FC_CHECKBOX:
-			format.style.attr |= AT_BOLD;
-			put_chrs(html_context, "[&nbsp;]", 8);
-			break;
-		case FC_RADIO:
-			format.style.attr |= AT_BOLD;
-			put_chrs(html_context, "(&nbsp;)", 8);
-			break;
-		case FC_IMAGE:
-			mem_free_set(&format.image, NULL);
-			al = get_url_val(a, "src", html_context->options);
-			if (!al)
-				al = get_url_val(a, "dynsrc",
-				                 html_context->options);
-			if (al) {
-				format.image = join_urls(html_context->base_href, al);
-				mem_free(al);
-			}
-			format.style.attr |= AT_BOLD;
-			put_chrs(html_context, "[&nbsp;", 7);
-			if (fc->alt)
-				put_chrs(html_context, fc->alt, strlen(fc->alt));
-			else if (fc->name)
-				put_chrs(html_context, fc->name, strlen(fc->name));
-			else
-				put_chrs(html_context, "Submit", 6);
-
-			put_chrs(html_context, "&nbsp;]", 7);
-			break;
-		case FC_SUBMIT:
-		case FC_RESET:
-		case FC_BUTTON:
-			format.style.attr |= AT_BOLD;
-			put_chrs(html_context, "[&nbsp;", 7);
-			if (fc->default_value)
-				put_chrs(html_context, fc->default_value, strlen(fc->default_value));
-			put_chrs(html_context, "&nbsp;]", 7);
-			break;
-		case FC_TEXTAREA:
-		case FC_SELECT:
-		case FC_HIDDEN:
-			INTERNAL("bad control type");
+	if (fc->type != FC_HIDDEN) {
+		html_input_format(html_context, a, fc);
 	}
-	kill_html_stack_item(html_context, &html_top);
-	put_chrs(html_context, " ", 1);
 
-hid:
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
