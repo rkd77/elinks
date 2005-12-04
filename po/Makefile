@@ -101,10 +101,6 @@ install-local: all-local
 		$(call ncmd,installdata,$(lang).gmo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES/$(PACKAGE).mo); \
 	)
 
-# Steal the `dist' target so that .po and .gmo files will be properly updated
-# then the dependence on `distdir' will take care of copying.
-dist: update-po distdir
-
 clean-local:
 	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
