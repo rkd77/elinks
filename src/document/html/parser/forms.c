@@ -169,12 +169,14 @@ no_type_attr:
 
 	fc->name = get_attr_val(a, "name", html_context->options);
 	fc->default_value = get_attr_val(a, "value", html_context->options);
-	if (!fc->default_value && fc->type == FC_SUBMIT)
-		fc->default_value = stracpy("Submit");
-	if (!fc->default_value && fc->type == FC_RESET)
-		fc->default_value = stracpy("Reset");
-	if (!fc->default_value && fc->type == FC_BUTTON)
-		fc->default_value = stracpy("Button");
+	if (!fc->default_value) {
+		if (fc->type == FC_SUBMIT)
+			fc->default_value = stracpy("Submit");
+		else if (fc->type == FC_RESET)
+			fc->default_value = stracpy("Reset");
+		else if (fc->type == FC_BUTTON)
+			fc->default_value = stracpy("Button");
+	}
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
 
