@@ -62,7 +62,7 @@ html_form(struct html_context *html_context, unsigned char *a,
 			if (enctype) {
 				if (!strcasecmp(enctype, "multipart/form-data"))
 					form->method = FORM_METHOD_POST_MP;
-				if (!strcasecmp(enctype, "text/plain"))
+				else if (!strcasecmp(enctype, "text/plain"))
 					form->method = FORM_METHOD_POST_TEXT_PLAIN;
 				mem_free(enctype);
 			}
