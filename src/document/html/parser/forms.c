@@ -199,14 +199,14 @@ html_input(struct html_context *html_context, unsigned char *a,
 	al = get_attr_val(a, "type", html_context->options);
 	if (al) {
 		if (!strcasecmp(al, "text")) type = FC_TEXT;
-		else if (!strcasecmp(al, "password")) type = FC_PASSWORD;
+		else if (!strcasecmp(al, "hidden")) type = FC_HIDDEN;
+		else if (!strcasecmp(al, "button")) type = FC_BUTTON;
 		else if (!strcasecmp(al, "checkbox")) type = FC_CHECKBOX;
 		else if (!strcasecmp(al, "radio")) type = FC_RADIO;
+		else if (!strcasecmp(al, "password")) type = FC_PASSWORD;
 		else if (!strcasecmp(al, "submit")) type = FC_SUBMIT;
 		else if (!strcasecmp(al, "reset")) type = FC_RESET;
-		else if (!strcasecmp(al, "button")) type = FC_BUTTON;
 		else if (!strcasecmp(al, "file")) type = FC_FILE;
-		else if (!strcasecmp(al, "hidden")) type = FC_HIDDEN;
 		else if (!strcasecmp(al, "image")) type = FC_IMAGE;
 		/* else unknown type, let it default to FC_TEXT. */
 		mem_free(al);
