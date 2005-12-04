@@ -214,7 +214,6 @@ html_input(struct html_context *html_context, unsigned char *a,
 		mem_free(al);
 	}
 
-	fc->name = get_attr_val(a, "name", html_context->options);
 	if (fc->type != FC_FILE)
 		fc->default_value = get_attr_val(a, "value",
 		                                 html_context->options);
@@ -230,6 +229,8 @@ html_input(struct html_context *html_context, unsigned char *a,
 	}
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
+
+	fc->name = get_attr_val(a, "name", html_context->options);
 
 	fc->size = get_num(a, "size", html_context->options);
 	if (fc->size == -1)
