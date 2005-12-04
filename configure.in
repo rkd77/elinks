@@ -918,9 +918,12 @@ else
 			CFLAGS="$CFLAGS_X $GNUTLS_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $GNUTLS_CFLAGS"
 
-			# Verify if it's really usable
+			# Verify if it's really usable.  gnutls_session was
+			# renamed to gnutls_session_t before GNU TLS 1.2.0
+			# (on 2004-06-13); ELinks now requires this.
 			AC_TRY_LINK([#include <gnutls/gnutls.h>],
-				    [gnutls_check_version(NULL)],
+				    [gnutls_session_t dummy;
+				     gnutls_check_version(NULL)],
 				    cf_result=yes, cf_result=no)
 		fi
 
@@ -938,14 +941,14 @@ else
 						  MD5_Init)
 		else
 			if test -n "$gnutls_withval" && test "x$gnutls_withval" != xno; then
-				AC_MSG_ERROR([GNUTLS not found])
+				AC_MSG_ERROR([GNUTLS (1.2 or later) not found.  ELinks no longer supports GNUTLS 1.1.])
 			fi
 			EL_RESTORE_FLAGS
 		fi
 	fi
 fi
 
-AC_MSG_CHECKING([for GNU TLS])
+AC_MSG_CHECKING([for GNU TLS (1.2 or later)])
 AC_MSG_RESULT($cf_result)
 
 dnl Final SSL setup
