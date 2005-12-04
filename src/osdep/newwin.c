@@ -23,18 +23,26 @@
 #endif
 
 const struct open_in_new open_in_new[] = {
+	/* [gettext_accelerator_context(open_in_new.os2, open_in_new.win32, open_in_new.beos)] */
 	{ ENV_XWIN,	XTERM_CMD,		    N_("~Xterm") },
 	{ ENV_TWIN,	DEFAULT_TWTERM_CMD,	    N_("T~wterm") },
 	{ ENV_SCREEN,	DEFAULT_SCREEN_CMD,	    N_("~Screen") },
+	/* [gettext_accelerator_context()] */
 #ifdef CONFIG_OS2
+	/* [gettext_accelerator_context(open_in_new.os2)] */
 	{ ENV_OS2VIO,	DEFAULT_OS2_WINDOW_CMD,	    N_("~Window") },
 	{ ENV_OS2VIO,	DEFAULT_OS2_FULLSCREEN_CMD, N_("~Full screen") },
+	/* [gettext_accelerator_context()] */
 #endif
 #ifdef CONFIG_WIN32
+	/* [gettext_accelerator_context(open_in_new.win32)] */
 	{ ENV_WIN32,	"",			    N_("~Window") },
+	/* [gettext_accelerator_context()] */
 #endif
 #ifdef CONFIG_BEOS
+	/* [gettext_accelerator_context(open_in_new.beos)] */
 	{ ENV_BE,	DEFAULT_BEOS_TERM_CMD,	    N_("~BeOS terminal") },
+	/* [gettext_accelerator_context()] */
 #endif
 	{ 0, NULL, NULL }
 };

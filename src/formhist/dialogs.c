@@ -205,6 +205,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 }
 
 static struct hierbox_browser_button formhist_buttons[] = {
+	/* [gettext_accelerator_context(.formhist_buttons)] */
 	{ N_("~Login"),         push_login_button,           1 },
 	{ N_("~Info"),          push_hierbox_info_button,    1 },
 	{ N_("~Delete"),        push_hierbox_delete_button,  1 },

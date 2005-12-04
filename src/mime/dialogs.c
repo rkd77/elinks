@@ -50,6 +50,7 @@ really_del_ext(void *fcp)
 void
 menu_del_ext(struct terminal *term, void *fcp, void *xxx2)
 {
+	/* [gettext_accelerator_context(menu_del_ext)] */
 	struct option *opt = NULL;
 	unsigned char *extension = fcp;
 
@@ -96,6 +97,7 @@ add_mime_extension(void *data)
 void
 menu_add_ext(struct terminal *term, void *fcp, void *xxx2)
 {
+	/* [gettext_accelerator_context(menu_add_ext)] */
 	struct extension *new;
 	struct dialog *dlg;
 

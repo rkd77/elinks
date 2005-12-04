@@ -15,6 +15,7 @@
  * 5. Love thy option system! :) */
 
 static struct option_info config_options_info[] = {
+	/* [gettext_accelerator_context(IGNORE)] */
 	INIT_OPT_TREE("", N_("Configuration system"),
 		"config", 0,
 		N_("Configuration handling options.")),

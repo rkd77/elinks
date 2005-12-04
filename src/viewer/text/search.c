@@ -1551,6 +1551,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	      struct input_history *history,
 	      void (*fn)(void *, unsigned char *))
 {
+	/* [gettext_accelerator_context(.search_dlg_do)] */
 	struct dialog *dlg;
 	unsigned char *field;
 	struct search_dlg_hop *hop;

@@ -43,6 +43,7 @@ void
 write_config_dialog(struct terminal *term, unsigned char *config_file,
 		    int secsave_error, int stdio_error)
 {
+	/* [gettext_accelerator_context(write_config_dialog)] */
 	unsigned char *errmsg = NULL;
 	unsigned char *strerr;
 
@@ -327,6 +328,7 @@ static void
 build_edit_dialog(struct terminal *term, struct session *ses,
 		  struct option *option)
 {
+	/* [gettext_accelerator_context(.build_edit_dialog)] */
 #define EDIT_WIDGETS_COUNT 5
 	struct dialog *dlg;
 	unsigned char *value, *name, *desc, *range;
@@ -523,6 +525,7 @@ push_save_button(struct dialog_data *dlg_data,
 
 
 static struct hierbox_browser_button option_buttons[] = {
+	/* [gettext_accelerator_context(.option_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Edit"),   push_edit_button,           0 },
 	{ N_("~Add"),    push_add_button,            0 },
@@ -809,6 +812,7 @@ really_really_add_keybinding(void *data)
 static void
 really_add_keybinding(void *data, unsigned char *keystroke)
 {
+	/* [gettext_accelerator_context(.really_add_keybinding.yn)] */
 	struct kbdbind_add_hop *hop = data;
 	action_id_T action_id;
 
@@ -936,6 +940,7 @@ push_kbdbind_save_button(struct dialog_data *dlg_data,
 static INIT_LIST_HEAD(keybinding_dialog_list);
 
 static struct hierbox_browser_button keybinding_buttons[] = {
+	/* [gettext_accelerator_context(.keybinding_buttons)] */
 	{ N_("~Add"),            push_kbdbind_add_button,            0 },
 	{ N_("~Delete"),         push_hierbox_delete_button,         0 },
 	{ N_("~Toggle display"), push_kbdbind_toggle_display_button, 1 },

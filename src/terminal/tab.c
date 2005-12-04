@@ -172,6 +172,7 @@ really_close_tab(struct session *ses)
 void
 close_tab(struct terminal *term, struct session *ses)
 {
+	/* [gettext_accelerator_context(close_tab)] */
 	int num_tabs = number_of_tabs(term);
 
 	if (num_tabs < 2) {
@@ -212,6 +213,7 @@ really_close_tabs(struct session *ses)
 void
 close_all_tabs_but_current(struct session *ses)
 {
+	/* [gettext_accelerator_context(close_all_tabs_but_current)] */
 	assert(ses);
 	if_assert_failed return;
 

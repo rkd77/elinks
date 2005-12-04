@@ -684,6 +684,7 @@ static void
 bittorrent_query_callback(void *data, enum connection_state state,
 			    struct string *response)
 {
+	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
 	struct type_query *type_query = data;
 	struct string filename;
 	unsigned char *text;

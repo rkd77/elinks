@@ -48,6 +48,7 @@ do_edit_dialog(struct terminal *term, int intl, unsigned char *title,
 	       void *done_data,
 	       enum edit_dialog_type dialog_type)
 {
+	/* [gettext_accelerator_context(do_edit_dialog)] */
 	unsigned char *name, *url;
 	struct dialog *dlg;
 

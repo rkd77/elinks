@@ -742,6 +742,7 @@ dialog_goto_url_open(void *data)
 static int
 setup_first_session(struct session *ses, struct uri *uri)
 {
+	/* [gettext_accelerator_context(setup_first_session)] */
 	struct terminal *term = ses->tab->term;
 
 	if (!*get_opt_str("protocol.http.user_agent")) {

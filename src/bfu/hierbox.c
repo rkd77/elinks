@@ -405,6 +405,7 @@ done_listbox_context(void *context_)
 widget_handler_status_T
 push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	/* [gettext_accelerator_context(push_hierbox_info_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
@@ -692,6 +693,7 @@ widget_handler_status_T
 push_hierbox_delete_button(struct dialog_data *dlg_data,
 			   struct widget_data *button)
 {
+	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct listbox_context *context;
@@ -816,6 +818,7 @@ widget_handler_status_T
 push_hierbox_clear_button(struct dialog_data *dlg_data,
 			  struct widget_data *button)
 {
+	/* [gettext_accelerator_context(push_hierbox_clear_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;

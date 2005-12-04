@@ -376,6 +376,7 @@ void
 memorize_form(struct session *ses, struct list_head *submit,
 	      struct form *forminfo)
 {
+	/* [gettext_accelerator_context(memorize_form)] */
 	struct formhist_data *form;
 	struct submitted_value *sv;
 	int save = 0;

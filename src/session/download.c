@@ -469,6 +469,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 		   void (*callback)(struct terminal *, unsigned char *, void *, int),
 		   void *data)
 {
+	/* [gettext_accelerator_context(.lookup_unique_name)] */
 	struct lun_hop *lun_hop;
 	unsigned char *file;
 	int overwrite;
@@ -989,6 +990,7 @@ tp_open(struct type_query *type_query)
 static void
 do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_handler *handler)
 {
+	/* [gettext_accelerator_context(.do_type_query)] */
 	struct string filename;
 	unsigned char *description;
 	unsigned char *desc_sep;

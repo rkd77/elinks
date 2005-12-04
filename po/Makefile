@@ -49,13 +49,14 @@ $(srcdir)/$(POTFILES_ABS_LIST):
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(srcdir)/$(POTFILES_ABS_LIST)
 
-$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST)
+$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST) $(srcdir)/gather-accelerator-contexts.pl
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
 		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)/$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
-	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot 
+	&& $(srcdir)/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
+	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot
 
 
 ### Updating po and gmo files
@@ -89,6 +90,7 @@ check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
+	  $(srcdir)/check-accelerator-contexts.pl $(srcdir)/$(lang).po \
 	)
 
 ### Installation and distribution

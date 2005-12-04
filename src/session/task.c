@@ -160,6 +160,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	 struct location *target_location, enum cache_mode cache_mode,
 	 enum task_type task_type, int redir)
 {
+	/* [gettext_accelerator_context(ses_goto)] */
 	struct task *task;
 	int referrer_incomplete = 0;
 	int malicious_uri = 0;

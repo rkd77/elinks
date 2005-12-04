@@ -54,6 +54,7 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 void
 accept_cookie_dialog(struct session *ses, void *data)
 {
+	/* [gettext_accelerator_context(accept_cookie_dialog)] */
 	struct cookie *cookie = cookie_queries.next;
 	struct string string;
 
@@ -310,6 +311,7 @@ static void
 build_edit_dialog(struct terminal *term, struct cookie *cookie)
 {
 #define EDIT_WIDGETS_COUNT 8
+	/* [gettext_accelerator_context(.build_edit_dialog)] */
 	struct dialog *dlg;
 	unsigned char *name, *value, *domain, *expires, *secure;
 	unsigned char *dlg_server;
@@ -416,6 +418,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 }
 
 static struct hierbox_browser_button cookie_buttons[] = {
+	/* [gettext_accelerator_context(.cookie_buttons)] */
 	{ N_("~Info"),		push_hierbox_info_button,	1 },
 	{ N_("~Add"),		push_add_button,		1 },
 	{ N_("~Edit"),		push_edit_button,		1 },

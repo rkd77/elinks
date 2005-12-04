@@ -135,6 +135,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 void
 terminal_options(struct terminal *term, void *xxx, struct session *ses)
 {
+	/* [gettext_accelerator_context(terminal_options)] */
 	struct dialog *dlg;
 	union option_value *values;
 	int anonymous = get_cmd_opt_bool("anonymous");
@@ -267,6 +268,7 @@ push_resize_button(void *data)
 void
 resize_terminal_dialog(struct terminal *term)
 {
+	/* [gettext_accelerator_context(resize_terminal_dialog)] */
 	struct dialog *dlg;
 	int width = int_min(term->width, 999);
 	int height = int_min(term->height, 999);

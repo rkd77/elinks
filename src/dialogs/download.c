@@ -218,6 +218,7 @@ void
 display_download(struct terminal *term, struct file_download *file_download,
 		 struct session *ses)
 {
+	/* [gettext_accelerator_context(display_download)] */
 	struct dialog *dlg;
 
 	if (!is_in_downloads_list(file_download))
@@ -475,6 +476,7 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
  * - Toggle notify button
  */
 static struct hierbox_browser_button download_buttons[] = {
+	/* [gettext_accelerator_context(.download_buttons)] */
 	{ N_("~Info"),                  push_info_button           },
 	{ N_("~Abort"),                 push_hierbox_delete_button },
 #if 0

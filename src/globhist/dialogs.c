@@ -220,6 +220,7 @@ push_bookmark_button(struct dialog_data *dlg_data,
 /* The global history manager: */
 
 static struct hierbox_browser_button globhist_buttons[] = {
+	/* [gettext_accelerator_context(.globhist_buttons)] */
 	{ N_("~Goto"),           push_hierbox_goto_button,   1 },
 	{ N_("~Info"),           push_hierbox_info_button,   1 },
 #ifdef CONFIG_BOOKMARKS

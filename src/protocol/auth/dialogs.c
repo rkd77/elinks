@@ -70,6 +70,7 @@ auth_cancel(void *data)
 void
 do_auth_dialog(struct session *ses, void *data)
 {
+	/* [gettext_accelerator_context(do_auth_dialog)] */
 	struct dialog *dlg;
 	struct dialog_data *dlg_data;
 	struct terminal *term = ses->tab->term;
@@ -252,6 +253,7 @@ static struct listbox_ops auth_listbox_ops = {
 };
 
 static struct hierbox_browser_button auth_buttons[] = {
+	/* [gettext_accelerator_context(.auth_buttons)] */
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Delete"), push_hierbox_delete_button, 1 },

@@ -58,6 +58,7 @@ push_toggle_keys_display_button(void *data)
 void
 menu_keys(struct terminal *term, void *d_, void *xxx)
 {
+	/* [gettext_accelerator_context(menu_keys)] */
 	int d = (long) d_;
 
 	/* We scale by main mapping because it has the most actions */

@@ -1145,9 +1145,12 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 
 	if (link->where && !link_is_form(link)) {
 		if (link->type == LINK_MAP) {
+			/* [gettext_accelerator_context(link_menu.map)] */
 			add_to_menu(&mi, N_("Display ~usemap"), NULL, ACT_MAIN_LINK_FOLLOW,
 				    NULL, NULL, SUBMENU);
+			/* [gettext_accelerator_context()] */
 		} else {
+			/* [gettext_accelerator_context(link_menu.std)] */
 			add_menu_action(&mi, N_("~Follow link"), ACT_MAIN_LINK_FOLLOW);
 
 			add_menu_action(&mi, N_("Follow link and r~eload"), ACT_MAIN_LINK_FOLLOW_RELOAD);
@@ -1171,6 +1174,7 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 #endif
 				add_uri_command_to_menu(&mi, PASS_URI_LINK);
 			}
+			/* [gettext_accelerator_context()] */
 		}
 	}
 
@@ -1178,10 +1182,13 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 	if (fc) {
 		switch (fc->type) {
 		case FC_RESET:
+			/* [gettext_accelerator_context(link_menu.reset)] */
 			add_menu_action(&mi, N_("~Reset form"), ACT_MAIN_RESET_FORM);
+			/* [gettext_accelerator_context()] */
 			break;
 
 		case FC_TEXTAREA:
+			/* [gettext_accelerator_context(link_menu.textarea)] */
 			if (!form_field_is_readonly(fc)) {
 				struct string keystroke;
 
@@ -1195,8 +1202,10 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 					    keystroke.source, ACT_MAIN_NONE,
 					    menu_textarea_edit, NULL, FREE_RTEXT);
 			}
+			/* [gettext_accelerator_context()] */
 			/* Fall through */
 		default:
+			/* [gettext_accelerator_context(link_menu.textarea, link_menu.form)] */
 			add_menu_action(&mi, N_("~Submit form"), ACT_MAIN_SUBMIT_FORM);
 			add_menu_action(&mi, N_("Submit form and rel~oad"), ACT_MAIN_SUBMIT_FORM_RELOAD);
 
@@ -1215,13 +1224,16 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 				add_menu_action(&mi, N_("Submit form and ~download"), ACT_MAIN_LINK_DOWNLOAD);
 
 			add_menu_action(&mi, N_("~Reset form"), ACT_MAIN_RESET_FORM);
+			/* [gettext_accelerator_context()] */
 		}
 	}
 
 	if (link->where_img) {
+		/* [gettext_accelerator_context(link_menu.map, link_menu.std, link_menu.form)] */
 		add_menu_action(&mi, N_("V~iew image"), ACT_MAIN_VIEW_IMAGE);
 		if (!get_cmd_opt_bool("anonymous"))
 			add_menu_action(&mi, N_("Download ima~ge"), ACT_MAIN_LINK_DOWNLOAD_IMAGE);
+		/* [gettext_accelerator_context()] */
 	}
 
 	/* TODO: Make it possible to trigger any script event hooks associated

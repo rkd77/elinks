@@ -198,6 +198,7 @@ get_protocol_handler(enum protocol protocol)
 static void
 generic_external_protocol_handler(struct session *ses, struct uri *uri)
 {
+	/* [gettext_accelerator_context(generic_external_protocol_handler)] */
 	enum connection_state state;
 
 	switch (uri->protocol) {

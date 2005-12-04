@@ -459,6 +459,7 @@ push_move_button(struct dialog_data *dlg_data,
 /**** MANAGEMENT *****************************************************/
 
 static struct hierbox_browser_button bookmark_buttons[] = {
+	/* [gettext_accelerator_context(.bookmark_buttons)] */
 	{ N_("~Goto"),		push_hierbox_goto_button,	1 },
 	{ N_("~Edit"),		push_edit_button,		0 },
 	{ N_("~Delete"),	push_hierbox_delete_button,	0 },

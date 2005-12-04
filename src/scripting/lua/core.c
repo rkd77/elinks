@@ -341,6 +341,7 @@ dialog_run_lua(void *data_)
 static int
 l_edit_bookmark_dialog(LS)
 {
+	/* [gettext_accelerator_context(.l_edit_bookmark_dialog)] */
 	struct terminal *term = lua_ses->tab->term;
 	struct dialog *dlg;
 	struct lua_dlg_data *data;
@@ -415,6 +416,7 @@ xdialog_run_lua(void *data_)
 static int
 l_xdialog(LS)
 {
+	/* [gettext_accelerator_context(.l_xdialog)] */
 	struct terminal *term;
 	struct dialog *dlg;
 	struct lua_xdialog_data *data;
