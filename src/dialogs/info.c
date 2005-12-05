@@ -202,7 +202,7 @@ get_resource_info(struct terminal *term, void *data)
 
 	/* What about just using Kibi/Mebi representation here? --jonas */
 	bigval = get_cache_size();
-	val_add(n_("%ld byte", "%ld bytes", bigval, term));
+	add_format_to_string(&info, n_("%ld byte", "%ld bytes", bigval, term), bigval);
 	add_to_string(&info, ", ");
 
 	val = get_cache_entry_count();
