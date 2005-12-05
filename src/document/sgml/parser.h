@@ -38,6 +38,9 @@ struct sgml_parser {
 
 struct sgml_parser_state {
 	struct sgml_node_info *info;
+	/* This is used by the DOM source renderer for highlighting the
+	 * end-tag of an element. */
+	struct scanner_token end_token;
 };
 
 struct sgml_parser *
