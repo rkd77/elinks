@@ -589,25 +589,34 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static struct dom_node *
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_stack_state *state = get_dom_stack_parent(stack);
 	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
-	struct dom_node *attribute = NULL;
-	int i;
 
 	assert(node && renderer->document);
-	assert(state && state->list);
 
-	/* The attributes are sorted but we want them in the original order */
-	foreach_dom_node(i, node, state->list) {
-		if (node->string >= renderer->position
-		    && (!attribute || node->string < attribute->string))
-			attribute = node;
+#if 0
+	/* Disabled since the DOM source highlighter uses the stream parser and
+	 * therefore the attributes is pushed to it in order. However, if/when
+	 * we will support rendering (read saving) of loaded DOM trees this one
+	 * small hack is needed to get the attributes in the original order. */
+	{
+		struct dom_stack_state *state = get_dom_stack_parent(stack);
+		struct dom_node *attribute = NULL;
+		int i;
+
+		assert(state && state->list);
+
+		/* The attributes are sorted but we want them in the original order */
+		foreach_dom_node(i, node, state->list) {
+			if (node->string >= renderer->position
+				&& (!attribute || node->string < attribute->string))
+				attribute = node;
+		}
+
+		assert(attribute);
+		node = attribute;
 	}
-
-	assert(attribute);
-	node = attribute;
-
+#endif
 	render_dom_node_text(renderer, template, node);
 
 	if (node->data.attribute.value) {
@@ -696,7 +705,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct conv_table *convert_table;
 	dom_stack_callback_T *callbacks = dom_source_renderer_callbacks;
 	struct sgml_parser *parser;
-	struct dom_stack stack;
 
 	assert(document->options.plain);
 
@@ -707,24 +715,17 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  document->options.hard_assume);
 
 	init_dom_renderer(&renderer, document, buffer, convert_table);
-	init_dom_stack(&stack, NULL, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, cached, document);
-	if (!parser) {
-		done_dom_stack(&stack);
-		return;
-	}
+	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached,
+				  document, callbacks);
+	if (!parser) return;
 
 	root = parse_sgml(parser, buffer);
 	done_sgml_parser(parser);
-	if (!root) {
-		done_dom_stack(&stack);
-		return;
-	}
+	if (!root) return;
 
-	walk_dom_nodes(&stack, root);
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including
 	 * the '>' of the last element tag if it has one. (bug 519) */
@@ -733,5 +734,4 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	}
 
 	done_dom_node(root);
-	done_dom_stack(&stack);
 }

@@ -297,8 +297,9 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(enum sgml_parser_type type, struct cache_entry *cached,
-		 struct document *document)
+init_sgml_parser(enum sgml_parser_type type, void *renderer,
+		 struct cache_entry *cached, struct document *document,
+		 dom_stack_callback_T callbacks[DOM_NODES])
 {
 	size_t obj_size = sizeof(struct sgml_parser_state);
 	struct sgml_parser *parser;
@@ -311,7 +312,7 @@ init_sgml_parser(enum sgml_parser_type type, struct cache_entry *cached,
 	parser->cache_entry = cached;
 	parser->info	    = &sgml_html_info;
 
-	init_dom_stack(&parser->stack, parser, NULL, NULL, obj_size);
+	init_dom_stack(&parser->stack, parser, renderer, callbacks, obj_size);
 
 	return parser;
 }
