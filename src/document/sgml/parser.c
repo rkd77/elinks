@@ -297,7 +297,8 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(struct cache_entry *cached, struct document *document)
+init_sgml_parser(enum sgml_parser_type type, struct cache_entry *cached,
+		 struct document *document)
 {
 	size_t obj_size = sizeof(struct sgml_parser_state);
 	struct sgml_parser *parser;
@@ -305,6 +306,7 @@ init_sgml_parser(struct cache_entry *cached, struct document *document)
 	parser = mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
 
+	parser->type	    = type;
 	parser->document    = document;
 	parser->cache_entry = cached;
 	parser->info	    = &sgml_html_info;

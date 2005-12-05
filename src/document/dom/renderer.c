@@ -700,7 +700,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	assert(document->options.plain);
 
-	parser = init_sgml_parser(cached, document);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, cached, document);
 	if (!parser) return;
 
 	root = parse_sgml(parser, buffer);
