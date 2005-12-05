@@ -46,18 +46,22 @@ add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
 	struct dom_node *node;
+	struct sgml_node_info *node_info;
 
 	node = add_dom_element(parent, token->string, token->length);
+	if (!node) return NULL;
 
-	if (!node || !push_dom_node(stack, node))
+	node_info = get_sgml_node_info(parser->info->elements, node);
+	node->data.element.type = node_info->type;
+
+	if (!push_dom_node(stack, node))
 		return NULL;
 
 	state = get_dom_stack_top(stack);
 	assert(node == state->node && state->data);
 
 	pstate = state->data;
-	pstate->info = get_sgml_node_info(parser->info->elements, node);
-	node->data.element.type = pstate->info->type;
+	pstate->info = node_info;
 
 	return node;
 }
@@ -77,9 +81,6 @@ add_sgml_attribute(struct dom_stack *stack,
 	node = add_dom_attribute(parent, token->string, token->length,
 				 value, valuelen);
 
-	if (!node || !push_dom_node(stack, node))
-		return;
-
 	info = get_sgml_node_info(parser->info->attributes, node);
 
 	node->data.attribute.type      = info->type;
@@ -88,6 +89,9 @@ add_sgml_attribute(struct dom_stack *stack,
 
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
 		node->data.attribute.quoted = 1;
+
+	if (!node || !push_dom_node(stack, node))
+		return;
 
 	pop_dom_node(stack);
 }
