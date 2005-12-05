@@ -255,12 +255,10 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 					struct sgml_parser_state *pstate;
 
 					pstate = get_dom_stack_state_data(stack, state);
-
 					copy_struct(&pstate->end_token, token);
-				}
 
-				pop_dom_nodes(stack, DOM_NODE_ELEMENT,
-					      token->string, token->length);
+					pop_dom_state(stack, DOM_NODE_ELEMENT, state);
+				}
 			}
 			skip_scanner_token(scanner);
 			break;

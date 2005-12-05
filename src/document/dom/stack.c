@@ -175,16 +175,28 @@ void
 pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 	      unsigned char *string, uint16_t length)
 {
-	struct dom_stack_state *state, *parent;
-	unsigned int pos;
+	struct dom_stack_state *state;
 
 	if (!dom_stack_has_parents(stack)) return;
 
-	parent = search_dom_stack(stack, type, string, length);
-	if (!parent) return;
+	state = search_dom_stack(stack, type, string, length);
+	if (state)
+		pop_dom_state(stack, type, state);
+}
+
+void
+pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
+	      struct dom_stack_state *target)
+{
+	struct dom_stack_state *state;
+	unsigned int pos;
+
+	if (!target) return;
+
+	if (!dom_stack_has_parents(stack)) return;
 
 	foreachback_dom_state (stack, state, pos) {
-		if (do_pop_dom_node(stack, parent))
+		if (do_pop_dom_node(stack, target))
 			break;;
 	}
 }
