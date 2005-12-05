@@ -45,19 +45,23 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, void *data,
-	       dom_stack_callback_T callbacks[DOM_NODES],
+init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
+	       dom_stack_callback_T push_callbacks[DOM_NODES],
+	       dom_stack_callback_T pop_callbacks[DOM_NODES],
 	       size_t object_size)
 {
 	assert(stack);
 
 	memset(stack, 0, sizeof(*stack));
 
-	stack->data        = data;
+	stack->parser      = parser;
+	stack->renderer    = renderer;
 	stack->object_size = object_size;
 
-	if (callbacks)
-		memcpy(stack->callbacks, callbacks, DOM_STACK_CALLBACKS_SIZE);
+	if (push_callbacks)
+		memcpy(stack->push_callbacks, push_callbacks, DOM_STACK_CALLBACKS_SIZE);
+	if (pop_callbacks)
+		memcpy(stack->pop_callbacks, pop_callbacks, DOM_STACK_CALLBACKS_SIZE);
 }
 
 void
@@ -94,7 +98,6 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 
 	if (stack->object_size) {
 		unsigned char *state_objects;
-		size_t offset = stack->depth * stack->object_size;
 
 		state_objects = realloc_dom_stack_state_objects(stack);
 		if (!state_objects) {
@@ -102,7 +105,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 			return NULL;
 		}
 
-		state->data = (void *) &state_objects[offset];
+		state->depth = stack->depth;
 	}
 
 	state->node = node;
@@ -111,9 +114,11 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	 * in the callbacks */
 	stack->depth++;
 
-	callback = stack->callbacks[node->type];
+	callback = stack->push_callbacks[node->type];
 	if (callback) {
-		node = callback(stack, node, state->data);
+		void *state_data = get_dom_stack_state_data(stack, state);
+
+		node = callback(stack, node, state_data);
 
 		/* If the callback returned NULL pop the state immediately */
 		if (!node) {
@@ -130,26 +135,26 @@ static int
 do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 {
 	struct dom_stack_state *state;
+	dom_stack_callback_T callback;
 
 	assert(stack);
 	if (!dom_stack_has_parents(stack)) return 0;
 
 	state = get_dom_stack_top(stack);
-	if (state->callback) {
-		/* Pass the node we are popping to and _not_ the state->node */
-		state->callback(stack, parent->node, state->data);
+	callback = stack->pop_callbacks[state->node->type];
+	if (callback) {
+		void *state_data = get_dom_stack_state_data(stack, state);
+
+		callback(stack, state->node, state_data);
 	}
 
 	stack->depth--;
 	assert(stack->depth >= 0);
 
-	if (stack->object_size && state->data) {
-		size_t offset = stack->depth * stack->object_size;
+	if (stack->object_size) {
+		void *state_data = get_dom_stack_state_data(stack, state);
 
-		/* I tried to use item->data here but it caused a memory
-		 * corruption bug on fm. This is also less trustworthy in that
-		 * the state->data pointer could have been mangled. --jonas */
-		memset(&stack->state_objects[offset], 0, stack->object_size);
+		memset(state_data, 0, stack->object_size);
 	}
 
 	memset(state, 0, sizeof(*state));
@@ -170,16 +175,28 @@ void
 pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 	      unsigned char *string, uint16_t length)
 {
-	struct dom_stack_state *state, *parent;
-	unsigned int pos;
+	struct dom_stack_state *state;
 
 	if (!dom_stack_has_parents(stack)) return;
 
-	parent = search_dom_stack(stack, type, string, length);
-	if (!parent) return;
+	state = search_dom_stack(stack, type, string, length);
+	if (state)
+		pop_dom_state(stack, type, state);
+}
+
+void
+pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
+	      struct dom_stack_state *target)
+{
+	struct dom_stack_state *state;
+	unsigned int pos;
+
+	if (!target) return;
+
+	if (!dom_stack_has_parents(stack)) return;
 
 	foreachback_dom_state (stack, state, pos) {
-		if (do_pop_dom_node(stack, parent))
+		if (do_pop_dom_node(stack, target))
 			break;;
 	}
 }

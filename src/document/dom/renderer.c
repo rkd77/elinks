@@ -28,6 +28,7 @@
 #include "util/box.h"
 #include "util/error.h"
 #include "util/memory.h"
+#include "util/scanner.h"
 #include "util/snprintf.h"
 #include "util/string.h"
 
@@ -387,7 +388,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 static struct dom_node *
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
 
@@ -407,7 +408,7 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 static struct dom_node *
 render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value, *id;
@@ -430,7 +431,7 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 static struct dom_node *
 render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
@@ -452,7 +453,7 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 static struct dom_node *
 render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *id;
@@ -536,7 +537,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static struct dom_node *
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 
 	assert(node && renderer && renderer->document);
 
@@ -550,7 +551,7 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 static struct dom_node *
 render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	unsigned char *value;
 	int valuelen;
 
@@ -577,7 +578,7 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 static struct dom_node *
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 
 	assert(node && renderer && renderer->document);
 
@@ -587,27 +588,61 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 }
 
 static struct dom_node *
-render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
+render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_stack_state *state = get_dom_stack_parent(stack);
-	struct dom_renderer *renderer = stack->data;
-	struct screen_char *template = &renderer->styles[node->type];
-	struct dom_node *attribute = NULL;
-	int i;
+	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser_state *pstate = data;
+	struct scanner_token *token = &pstate->end_token;
+	unsigned char *string = token->string;
+	int length = token->length;
 
-	assert(node && renderer->document);
-	assert(state && state->list);
+	assert(node && renderer && renderer->document);
 
-	/* The attributes are sorted but we want them in the original order */
-	foreach_dom_node(i, node, state->list) {
-		if (node->string >= renderer->position
-		    && (!attribute || node->string < attribute->string))
-			attribute = node;
+	if (!string || !length)
+		return node;
+
+	if (check_dom_node_source(renderer, string, length)) {
+		render_dom_flush(renderer, string);
+		renderer->position = string + length;
+		assert_source(renderer, renderer->position, 0);
 	}
 
-	assert(attribute);
-	node = attribute;
+	render_dom_text(renderer, &renderer->styles[node->type], string, length);
 
+	return node;
+}
+
+static struct dom_node *
+render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->renderer;
+	struct screen_char *template = &renderer->styles[node->type];
+
+	assert(node && renderer->document);
+
+#if 0
+	/* Disabled since the DOM source highlighter uses the stream parser and
+	 * therefore the attributes is pushed to it in order. However, if/when
+	 * we will support rendering (read saving) of loaded DOM trees this one
+	 * small hack is needed to get the attributes in the original order. */
+	{
+		struct dom_stack_state *state = get_dom_stack_parent(stack);
+		struct dom_node *attribute = NULL;
+		int i;
+
+		assert(state && state->list);
+
+		/* The attributes are sorted but we want them in the original order */
+		foreach_dom_node(i, node, state->list) {
+			if (node->string >= renderer->position
+				&& (!attribute || node->string < attribute->string))
+				attribute = node;
+		}
+
+		assert(attribute);
+		node = attribute;
+	}
+#endif
 	render_dom_node_text(renderer, template, node);
 
 	if (node->data.attribute.value) {
@@ -668,7 +703,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	return node;
 }
 
-static dom_stack_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
+static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
 	/*				*/ NULL,
 	/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
 	/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
@@ -684,6 +719,22 @@ static dom_stack_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
 	/* DOM_NODE_NOTATION		*/ render_dom_node_source,
 };
 
+static dom_stack_callback_T dom_source_renderer_pop_callbacks[DOM_NODES] = {
+	/*				*/ NULL,
+	/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
+	/* DOM_NODE_ATTRIBUTE		*/ NULL,
+	/* DOM_NODE_TEXT		*/ NULL,
+	/* DOM_NODE_CDATA_SECTION	*/ NULL,
+	/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+	/* DOM_NODE_ENTITY		*/ NULL,
+	/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+	/* DOM_NODE_COMMENT		*/ NULL,
+	/* DOM_NODE_DOCUMENT		*/ NULL,
+	/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+	/* DOM_NODE_NOTATION		*/ NULL,
+};
+
 
 /* Shared multiplexor between renderers */
 void
@@ -694,18 +745,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
-	dom_stack_callback_T *callbacks = dom_source_renderer_callbacks;
 	struct sgml_parser *parser;
-	struct dom_stack stack;
 
 	assert(document->options.plain);
-
-	parser = init_sgml_parser(cached, document);
-	if (!parser) return;
-
-	root = parse_sgml(parser, buffer);
-	done_sgml_parser(parser);
-	if (!root) return;
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,
@@ -714,11 +756,19 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  document->options.hard_assume);
 
 	init_dom_renderer(&renderer, document, buffer, convert_table);
-	init_dom_stack(&stack, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
 
-	walk_dom_nodes(&stack, root);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached,
+				  document,
+				  dom_source_renderer_push_callbacks,
+				  dom_source_renderer_pop_callbacks);
+	if (!parser) return;
+
+	root = parse_sgml(parser, buffer);
+	done_sgml_parser(parser);
+	if (!root) return;
+
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including
 	 * the '>' of the last element tag if it has one. (bug 519) */
@@ -727,5 +777,4 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	}
 
 	done_dom_node(root);
-	done_dom_stack(&stack);
 }

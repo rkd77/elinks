@@ -41,23 +41,27 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
 	struct dom_node *node;
+	struct sgml_node_info *node_info;
 
 	node = add_dom_element(parent, token->string, token->length);
+	if (!node) return NULL;
 
-	if (!node || !push_dom_node(stack, node))
+	node_info = get_sgml_node_info(parser->info->elements, node);
+	node->data.element.type = node_info->type;
+
+	if (!push_dom_node(stack, node))
 		return NULL;
 
 	state = get_dom_stack_top(stack);
-	assert(node == state->node && state->data);
+	assert(node == state->node);
 
-	pstate = state->data;
-	pstate->info = get_sgml_node_info(parser->info->elements, node);
-	node->data.element.type = pstate->info->type;
+	pstate = get_dom_stack_state_data(stack, state);
+	pstate->info = node_info;
 
 	return node;
 }
@@ -67,7 +71,7 @@ static inline void
 add_sgml_attribute(struct dom_stack *stack,
 		  struct scanner_token *token, struct scanner_token *valtoken)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	unsigned char *value = valtoken ? valtoken->string : NULL;
 	uint16_t valuelen = valtoken ? valtoken->length : 0;
@@ -77,9 +81,6 @@ add_sgml_attribute(struct dom_stack *stack,
 	node = add_dom_attribute(parent, token->string, token->length,
 				 value, valuelen);
 
-	if (!node || !push_dom_node(stack, node))
-		return;
-
 	info = get_sgml_node_info(parser->info->attributes, node);
 
 	node->data.attribute.type      = info->type;
@@ -88,6 +89,9 @@ add_sgml_attribute(struct dom_stack *stack,
 
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
 		node->data.attribute.quoted = 1;
+
+	if (!node || !push_dom_node(stack, node))
+		return;
 
 	pop_dom_node(stack);
 }
@@ -243,8 +247,18 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 			if (!token->length) {
 				pop_dom_node(stack);
 			} else {
-				pop_dom_nodes(stack, DOM_NODE_ELEMENT,
-					      token->string, token->length);
+				struct dom_stack_state *state;
+
+				state = search_dom_stack(stack, DOM_NODE_ELEMENT,
+							 token->string, token->length);
+				if (state) {
+					struct sgml_parser_state *pstate;
+
+					pstate = get_dom_stack_state_data(stack, state);
+					copy_struct(&pstate->end_token, token);
+
+					pop_dom_state(stack, DOM_NODE_ELEMENT, state);
+				}
 			}
 			skip_scanner_token(scanner);
 			break;
@@ -293,7 +307,10 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(struct cache_entry *cached, struct document *document)
+init_sgml_parser(enum sgml_parser_type type, void *renderer,
+		 struct cache_entry *cached, struct document *document,
+		 dom_stack_callback_T push_callbacks[DOM_NODES],
+		 dom_stack_callback_T pop_callbacks[DOM_NODES])
 {
 	size_t obj_size = sizeof(struct sgml_parser_state);
 	struct sgml_parser *parser;
@@ -301,14 +318,13 @@ init_sgml_parser(struct cache_entry *cached, struct document *document)
 	parser = mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
 
+	parser->type	    = type;
 	parser->document    = document;
 	parser->cache_entry = cached;
 	parser->info	    = &sgml_html_info;
 
-	init_dom_stack(&parser->stack, parser, parser->info->callbacks, obj_size);
-
-	if (document->options.plain)
-		parser->flags |= SGML_PARSER_ADD_ELEMENT_ENDS;
+	init_dom_stack(&parser->stack, parser, renderer,
+		       push_callbacks, pop_callbacks, obj_size);
 
 	return parser;
 }

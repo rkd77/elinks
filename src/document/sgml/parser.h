@@ -11,13 +11,21 @@ struct cache_entry;
 struct document;
 struct string;
 
-enum sgml_parser_flags {
-	SGML_PARSER_ADD_ELEMENT_ENDS = 1,
+enum sgml_parser_type {
+	/* The first one is a DOM tree builder. */
+	SGML_PARSER_TREE,
+	/* The second one will simply push nodes on the stack, not building a
+	 * DOM tree. This interface is similar to that of SAX (Simple API for
+	 * XML) where events are fired when nodes are entered and exited. It is
+	 * useful when you are not actually interested in the DOM tree, but can
+	 * do all processing in a stream-like manner, such as when highlighting
+	 * HTML code. */
+	SGML_PARSER_STREAM,
 };
 
 struct sgml_parser {
-	/* The parser flags controls what gets added to the DOM tree */
-	enum sgml_parser_flags flags;
+	enum sgml_parser_type type;
+
 	struct sgml_info *info;
 
 	struct document *document;
@@ -30,10 +38,16 @@ struct sgml_parser {
 
 struct sgml_parser_state {
 	struct sgml_node_info *info;
+	/* This is used by the DOM source renderer for highlighting the
+	 * end-tag of an element. */
+	struct scanner_token end_token;
 };
 
 struct sgml_parser *
-init_sgml_parser(struct cache_entry *cached, struct document *document);
+init_sgml_parser(enum sgml_parser_type type, void *renderer,
+		 struct cache_entry *cached, struct document *document,
+		 dom_stack_callback_T push_callbacks[DOM_NODES],
+		 dom_stack_callback_T pop_callbacks[DOM_NODES]);
 
 void done_sgml_parser(struct sgml_parser *parser);
 

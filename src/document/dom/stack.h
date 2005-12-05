@@ -24,14 +24,9 @@ struct dom_stack_state {
 	/* The index (in the list above) which are currently being handled. */
 	size_t index;
 
-	/* A callback registered to be called when the node is popped. Used for
-	 * correctly highlighting ending elements (e.g. </a>). */
-	dom_stack_callback_T callback;
-
-	/* Parser specific data. For the SGML parser this holds DTD-oriented
-	 * info about the node (recorded in struct sgml_node_info). E.g.
-	 * whether an element node is optional. */
-	void *data;
+	/* The depth of the state in the stack. This is amongst other things
+	 * used to get the state object data. */
+	unsigned int depth;
 };
 
 /* The DOM stack is a convenient way to traverse DOM trees. Also it
@@ -42,14 +37,20 @@ struct dom_stack {
 	struct dom_stack_state *states;
 	size_t depth;
 
-	/* This is one big array of parser specific objects which will be
-	 * assigned to the data member of the individual dom_stack_states. */
+	/* This is one big array of parser specific objects. */
+	/* The objects hold parser specific data. For the SGML parser this
+	 * holds DTD-oriented info about the node (recorded in struct
+	 * sgml_node_info). E.g.  whether an element node is optional. */
 	unsigned char *state_objects;
 	size_t object_size;
 
-	/* Parser and document specific stuff */
-	dom_stack_callback_T callbacks[DOM_NODES];
-	void *data;
+	/* Renderer specific callbacks for the streaming parser mode. */
+	dom_stack_callback_T push_callbacks[DOM_NODES];
+	dom_stack_callback_T pop_callbacks[DOM_NODES];
+
+	/* Data specific to the parser and renderer. */
+	void *renderer;
+	void *parser;
 };
 
 #define dom_stack_has_parents(nav) \
@@ -65,6 +66,9 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 
 #define get_dom_stack_parent(nav)	get_dom_stack_state(nav, 1)
 #define get_dom_stack_top(nav)		get_dom_stack_state(nav, 0)
+
+#define get_dom_stack_state_data(stack, state) \
+	((void *) &(stack)->state_objects[(state)->depth * (stack)->object_size])
 
 /* The state iterators do not include the bottom state */
 
@@ -84,6 +88,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 	struct dom_stack_state *state;
 	int pos;
 
+	/* FIXME: Take node subtype and compare if non-zero or something. */
 	foreachback_dom_state (stack, state, pos) {
 		struct dom_node *parent = state->node;
 
@@ -102,8 +107,9 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 /* The @object_size arg tells whether the stack should allocate objects for each
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
-void init_dom_stack(struct dom_stack *stack, void *data,
-		    dom_stack_callback_T callbacks[DOM_NODES],
+void init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
+		    dom_stack_callback_T push_callbacks[DOM_NODES],
+		    dom_stack_callback_T pop_callbacks[DOM_NODES],
 		    size_t object_size);
 void done_dom_stack(struct dom_stack *stack);
 
@@ -117,6 +123,11 @@ void pop_dom_node(struct dom_stack *stack);
 /* Ascends the stack looking for specific parent */
 void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 		   unsigned char *string, uint16_t length);
+
+/* Pop all stack states until a specific state is reached. */
+void
+pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
+	      struct dom_stack_state *target);
 
 /* Visit each node in the tree rooted at @root pre-order */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);

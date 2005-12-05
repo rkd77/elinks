@@ -76,7 +76,6 @@ get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 struct sgml_info {
 	struct sgml_node_info *attributes;
 	struct sgml_node_info *elements;
-	dom_stack_callback_T callbacks[DOM_NODES];
 };
 
 #endif
