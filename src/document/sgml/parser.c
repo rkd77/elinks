@@ -311,10 +311,7 @@ init_sgml_parser(enum sgml_parser_type type, struct cache_entry *cached,
 	parser->cache_entry = cached;
 	parser->info	    = &sgml_html_info;
 
-	init_dom_stack(&parser->stack, parser, NULL, parser->info->callbacks, obj_size);
-
-	if (document->options.plain)
-		parser->flags |= SGML_PARSER_ADD_ELEMENT_ENDS;
+	init_dom_stack(&parser->stack, parser, NULL, NULL, obj_size);
 
 	return parser;
 }

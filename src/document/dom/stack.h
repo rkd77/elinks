@@ -24,10 +24,6 @@ struct dom_stack_state {
 	/* The index (in the list above) which are currently being handled. */
 	size_t index;
 
-	/* A callback registered to be called when the node is popped. Used for
-	 * correctly highlighting ending elements (e.g. </a>). */
-	dom_stack_callback_T callback;
-
 	/* The depth of the state in the stack. This is amongst other things
 	 * used to get the state object data. */
 	unsigned int depth;

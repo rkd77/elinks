@@ -23,14 +23,9 @@ enum sgml_parser_type {
 	SGML_PARSER_STREAM,
 };
 
-enum sgml_parser_flags {
-	SGML_PARSER_ADD_ELEMENT_ENDS = 1,
-};
-
 struct sgml_parser {
 	enum sgml_parser_type type;
-	/* The parser flags controls what gets added to the DOM tree */
-	enum sgml_parser_flags flags;
+
 	struct sgml_info *info;
 
 	struct document *document;

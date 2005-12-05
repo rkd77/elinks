@@ -137,12 +137,6 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	if (!dom_stack_has_parents(stack)) return 0;
 
 	state = get_dom_stack_top(stack);
-	if (state->callback) {
-		void *state_data = get_dom_stack_state_data(stack, state);
-
-		/* Pass the node we are popping to and _not_ the state->node */
-		state->callback(stack, parent->node, state_data);
-	}
 
 	stack->depth--;
 	assert(stack->depth >= 0);
