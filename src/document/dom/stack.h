@@ -28,10 +28,9 @@ struct dom_stack_state {
 	 * correctly highlighting ending elements (e.g. </a>). */
 	dom_stack_callback_T callback;
 
-	/* Parser specific data. For the SGML parser this holds DTD-oriented
-	 * info about the node (recorded in struct sgml_node_info). E.g.
-	 * whether an element node is optional. */
-	void *data;
+	/* The depth of the state in the stack. This is amongst other things
+	 * used to get the state object data. */
+	unsigned int depth;
 };
 
 /* The DOM stack is a convenient way to traverse DOM trees. Also it
@@ -42,8 +41,10 @@ struct dom_stack {
 	struct dom_stack_state *states;
 	size_t depth;
 
-	/* This is one big array of parser specific objects which will be
-	 * assigned to the data member of the individual dom_stack_states. */
+	/* This is one big array of parser specific objects. */
+	/* The objects hold parser specific data. For the SGML parser this
+	 * holds DTD-oriented info about the node (recorded in struct
+	 * sgml_node_info). E.g.  whether an element node is optional. */
 	unsigned char *state_objects;
 	size_t object_size;
 
@@ -65,6 +66,9 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 
 #define get_dom_stack_parent(nav)	get_dom_stack_state(nav, 1)
 #define get_dom_stack_top(nav)		get_dom_stack_state(nav, 0)
+
+#define get_dom_stack_state_data(stack, state) \
+	((void *) &(stack)->state_objects[(state)->depth * (stack)->object_size])
 
 /* The state iterators do not include the bottom state */
 

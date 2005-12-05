@@ -58,9 +58,9 @@ add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 		return NULL;
 
 	state = get_dom_stack_top(stack);
-	assert(node == state->node && state->data);
+	assert(node == state->node);
 
-	pstate = state->data;
+	pstate = get_dom_stack_state_data(stack, state);
 	pstate->info = node_info;
 
 	return node;

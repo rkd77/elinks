@@ -94,7 +94,6 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 
 	if (stack->object_size) {
 		unsigned char *state_objects;
-		size_t offset = stack->depth * stack->object_size;
 
 		state_objects = realloc_dom_stack_state_objects(stack);
 		if (!state_objects) {
@@ -102,7 +101,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 			return NULL;
 		}
 
-		state->data = (void *) &state_objects[offset];
+		state->depth = stack->depth;
 	}
 
 	state->node = node;
@@ -113,7 +112,9 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 
 	callback = stack->callbacks[node->type];
 	if (callback) {
-		node = callback(stack, node, state->data);
+		void *state_data = get_dom_stack_state_data(stack, state);
+
+		node = callback(stack, node, state_data);
 
 		/* If the callback returned NULL pop the state immediately */
 		if (!node) {
@@ -136,20 +137,19 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 
 	state = get_dom_stack_top(stack);
 	if (state->callback) {
+		void *state_data = get_dom_stack_state_data(stack, state);
+
 		/* Pass the node we are popping to and _not_ the state->node */
-		state->callback(stack, parent->node, state->data);
+		state->callback(stack, parent->node, state_data);
 	}
 
 	stack->depth--;
 	assert(stack->depth >= 0);
 
-	if (stack->object_size && state->data) {
-		size_t offset = stack->depth * stack->object_size;
+	if (stack->object_size) {
+		void *state_data = get_dom_stack_state_data(stack, state);
 
-		/* I tried to use item->data here but it caused a memory
-		 * corruption bug on fm. This is also less trustworthy in that
-		 * the state->data pointer could have been mangled. --jonas */
-		memset(&stack->state_objects[offset], 0, stack->object_size);
+		memset(state_data, 0, stack->object_size);
 	}
 
 	memset(state, 0, sizeof(*state));
