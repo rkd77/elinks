@@ -45,7 +45,8 @@ struct dom_stack {
 	size_t object_size;
 
 	/* Renderer specific callbacks for the streaming parser mode. */
-	dom_stack_callback_T callbacks[DOM_NODES];
+	dom_stack_callback_T push_callbacks[DOM_NODES];
+	dom_stack_callback_T pop_callbacks[DOM_NODES];
 
 	/* Data specific to the parser and renderer. */
 	void *renderer;
@@ -107,7 +108,8 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
 void init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
-		    dom_stack_callback_T callbacks[DOM_NODES],
+		    dom_stack_callback_T push_callbacks[DOM_NODES],
+		    dom_stack_callback_T pop_callbacks[DOM_NODES],
 		    size_t object_size);
 void done_dom_stack(struct dom_stack *stack);
 

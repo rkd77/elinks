@@ -46,7 +46,8 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 
 void
 init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
-	       dom_stack_callback_T callbacks[DOM_NODES],
+	       dom_stack_callback_T push_callbacks[DOM_NODES],
+	       dom_stack_callback_T pop_callbacks[DOM_NODES],
 	       size_t object_size)
 {
 	assert(stack);
@@ -57,8 +58,10 @@ init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 	stack->renderer    = renderer;
 	stack->object_size = object_size;
 
-	if (callbacks)
-		memcpy(stack->callbacks, callbacks, DOM_STACK_CALLBACKS_SIZE);
+	if (push_callbacks)
+		memcpy(stack->push_callbacks, push_callbacks, DOM_STACK_CALLBACKS_SIZE);
+	if (pop_callbacks)
+		memcpy(stack->pop_callbacks, pop_callbacks, DOM_STACK_CALLBACKS_SIZE);
 }
 
 void
@@ -111,7 +114,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	 * in the callbacks */
 	stack->depth++;
 
-	callback = stack->callbacks[node->type];
+	callback = stack->push_callbacks[node->type];
 	if (callback) {
 		void *state_data = get_dom_stack_state_data(stack, state);
 
@@ -132,11 +135,18 @@ static int
 do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 {
 	struct dom_stack_state *state;
+	dom_stack_callback_T callback;
 
 	assert(stack);
 	if (!dom_stack_has_parents(stack)) return 0;
 
 	state = get_dom_stack_top(stack);
+	callback = stack->pop_callbacks[state->node->type];
+	if (callback) {
+		void *state_data = get_dom_stack_state_data(stack, state);
+
+		callback(stack, state->node, state_data);
+	}
 
 	stack->depth--;
 	assert(stack->depth >= 0);

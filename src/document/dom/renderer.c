@@ -677,7 +677,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	return node;
 }
 
-static dom_stack_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
+static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
 	/*				*/ NULL,
 	/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
 	/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
@@ -693,6 +693,22 @@ static dom_stack_callback_T dom_source_renderer_callbacks[DOM_NODES] = {
 	/* DOM_NODE_NOTATION		*/ render_dom_node_source,
 };
 
+static dom_stack_callback_T dom_source_renderer_pop_callbacks[DOM_NODES] = {
+	/*				*/ NULL,
+	/* DOM_NODE_ELEMENT		*/ NULL,
+	/* DOM_NODE_ATTRIBUTE		*/ NULL,
+	/* DOM_NODE_TEXT		*/ NULL,
+	/* DOM_NODE_CDATA_SECTION	*/ NULL,
+	/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+	/* DOM_NODE_ENTITY		*/ NULL,
+	/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+	/* DOM_NODE_COMMENT		*/ NULL,
+	/* DOM_NODE_DOCUMENT		*/ NULL,
+	/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+	/* DOM_NODE_NOTATION		*/ NULL,
+};
+
 
 /* Shared multiplexor between renderers */
 void
@@ -703,7 +719,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
-	dom_stack_callback_T *callbacks = dom_source_renderer_callbacks;
 	struct sgml_parser *parser;
 
 	assert(document->options.plain);
@@ -719,7 +734,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	document->bgcolor = document->options.default_bg;
 
 	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached,
-				  document, callbacks);
+				  document,
+				  dom_source_renderer_push_callbacks,
+				  dom_source_renderer_pop_callbacks);
 	if (!parser) return;
 
 	root = parse_sgml(parser, buffer);
