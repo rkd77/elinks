@@ -41,7 +41,7 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
@@ -71,7 +71,7 @@ static inline void
 add_sgml_attribute(struct dom_stack *stack,
 		  struct scanner_token *token, struct scanner_token *valtoken)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = stack->parser;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	unsigned char *value = valtoken ? valtoken->string : NULL;
 	uint16_t valuelen = valtoken ? valtoken->length : 0;
@@ -309,7 +309,7 @@ init_sgml_parser(struct cache_entry *cached, struct document *document)
 	parser->cache_entry = cached;
 	parser->info	    = &sgml_html_info;
 
-	init_dom_stack(&parser->stack, parser, parser->info->callbacks, obj_size);
+	init_dom_stack(&parser->stack, parser, NULL, parser->info->callbacks, obj_size);
 
 	if (document->options.plain)
 		parser->flags |= SGML_PARSER_ADD_ELEMENT_ENDS;

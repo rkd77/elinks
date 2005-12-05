@@ -50,7 +50,9 @@ struct dom_stack {
 
 	/* Parser and document specific stuff */
 	dom_stack_callback_T callbacks[DOM_NODES];
-	void *data;
+	void *renderer;
+
+	void *parser;
 };
 
 #define dom_stack_has_parents(nav) \
@@ -107,7 +109,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 /* The @object_size arg tells whether the stack should allocate objects for each
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
-void init_dom_stack(struct dom_stack *stack, void *data,
+void init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 		    dom_stack_callback_T callbacks[DOM_NODES],
 		    size_t object_size);
 void done_dom_stack(struct dom_stack *stack);

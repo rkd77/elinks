@@ -387,7 +387,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 static struct dom_node *
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
 
@@ -407,7 +407,7 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 static struct dom_node *
 render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value, *id;
@@ -430,7 +430,7 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 static struct dom_node *
 render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *value;
@@ -452,7 +452,7 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 static struct dom_node *
 render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	unsigned char *name, *id;
@@ -536,7 +536,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static struct dom_node *
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 
 	assert(node && renderer && renderer->document);
 
@@ -550,7 +550,7 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 static struct dom_node *
 render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	unsigned char *value;
 	int valuelen;
 
@@ -577,7 +577,7 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 static struct dom_node *
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 
 	assert(node && renderer && renderer->document);
 
@@ -590,7 +590,7 @@ static struct dom_node *
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_stack_state *state = get_dom_stack_parent(stack);
-	struct dom_renderer *renderer = stack->data;
+	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_node *attribute = NULL;
 	int i;
@@ -714,7 +714,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  document->options.hard_assume);
 
 	init_dom_renderer(&renderer, document, buffer, convert_table);
-	init_dom_stack(&stack, &renderer, callbacks, 0);
+	init_dom_stack(&stack, NULL, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
 
