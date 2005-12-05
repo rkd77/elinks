@@ -28,6 +28,7 @@
 #include "util/box.h"
 #include "util/error.h"
 #include "util/memory.h"
+#include "util/scanner.h"
 #include "util/snprintf.h"
 #include "util/string.h"
 
@@ -587,6 +588,31 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 }
 
 static struct dom_node *
+render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser_state *pstate = data;
+	struct scanner_token *token = &pstate->end_token;
+	unsigned char *string = token->string;
+	int length = token->length;
+
+	assert(node && renderer && renderer->document);
+
+	if (!string || !length)
+		return node;
+
+	if (check_dom_node_source(renderer, string, length)) {
+		render_dom_flush(renderer, string);
+		renderer->position = string + length;
+		assert_source(renderer, renderer->position, 0);
+	}
+
+	render_dom_text(renderer, &renderer->styles[node->type], string, length);
+
+	return node;
+}
+
+static struct dom_node *
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
@@ -695,7 +721,7 @@ static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
 
 static dom_stack_callback_T dom_source_renderer_pop_callbacks[DOM_NODES] = {
 	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ NULL,
+	/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
 	/* DOM_NODE_ATTRIBUTE		*/ NULL,
 	/* DOM_NODE_TEXT		*/ NULL,
 	/* DOM_NODE_CDATA_SECTION	*/ NULL,
