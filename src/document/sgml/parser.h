@@ -8,8 +8,8 @@
 #include "util/scanner.h"
 
 struct cache_entry;
-struct document;
 struct string;
+struct uri;
 
 enum sgml_parser_type {
 	/* The first one is a DOM tree builder. */
@@ -28,7 +28,6 @@ struct sgml_parser {
 
 	struct sgml_info *info;
 
-	struct document *document;
 	struct cache_entry *cache_entry;
 	struct dom_node *root;
 
@@ -45,7 +44,7 @@ struct sgml_parser_state {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, void *renderer,
-		 struct cache_entry *cached, struct document *document,
+		 struct cache_entry *cached,
 		 dom_stack_callback_T push_callbacks[DOM_NODES],
 		 dom_stack_callback_T pop_callbacks[DOM_NODES]);
 
