@@ -88,6 +88,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 	struct dom_stack_state *state;
 	int pos;
 
+	/* FIXME: Take node subtype and compare if non-zero or something. */
 	foreachback_dom_state (stack, state, pos) {
 		struct dom_node *parent = state->node;
 
