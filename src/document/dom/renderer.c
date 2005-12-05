@@ -700,13 +700,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	assert(document->options.plain);
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, cached, document);
-	if (!parser) return;
-
-	root = parse_sgml(parser, buffer);
-	done_sgml_parser(parser);
-	if (!root) return;
-
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,
 					  &document->cp,
@@ -717,6 +710,19 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	init_dom_stack(&stack, NULL, &renderer, callbacks, 0);
 
 	document->bgcolor = document->options.default_bg;
+
+	parser = init_sgml_parser(SGML_PARSER_STREAM, cached, document);
+	if (!parser) {
+		done_dom_stack(&stack);
+		return;
+	}
+
+	root = parse_sgml(parser, buffer);
+	done_sgml_parser(parser);
+	if (!root) {
+		done_dom_stack(&stack);
+		return;
+	}
 
 	walk_dom_nodes(&stack, root);
 	/* If there are no non-element nodes after the last element node make
