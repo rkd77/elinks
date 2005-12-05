@@ -759,7 +759,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached,
+	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached->uri,
 				  dom_source_renderer_push_callbacks,
 				  dom_source_renderer_pop_callbacks);
 	if (!parser) return;

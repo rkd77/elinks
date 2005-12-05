@@ -9,16 +9,12 @@
 
 #include "elinks.h"
 
-#include "cache/cache.h"
-#include "document/document.h"
 #include "document/dom/node.h"
 #include "document/dom/stack.h"
-#include "document/html/renderer.h" /* TODO: Move get_convert_table() */
 #include "document/sgml/html/html.h"
 #include "document/sgml/parser.h"
 #include "document/sgml/scanner.h"
 #include "document/sgml/sgml.h"
-#include "intl/charsets.h"
 #include "protocol/uri.h"
 #include "util/error.h"
 #include "util/lists.h"
@@ -307,8 +303,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(enum sgml_parser_type type, void *renderer,
-		 struct cache_entry *cached,
+init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
 		 dom_stack_callback_T push_callbacks[DOM_NODES],
 		 dom_stack_callback_T pop_callbacks[DOM_NODES])
 {
@@ -318,9 +313,9 @@ init_sgml_parser(enum sgml_parser_type type, void *renderer,
 	parser = mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
 
-	parser->type	    = type;
-	parser->cache_entry = cached;
-	parser->info	    = &sgml_html_info;
+	parser->type = type;
+	parser->uri  = get_uri_reference(uri);
+	parser->info = &sgml_html_info;
 
 	init_dom_stack(&parser->stack, parser, renderer,
 		       push_callbacks, pop_callbacks, obj_size);
@@ -332,6 +327,7 @@ void
 done_sgml_parser(struct sgml_parser *parser)
 {
 	done_dom_stack(&parser->stack);
+	done_uri(parser->uri);
 	mem_free(parser);
 }
 
@@ -346,7 +342,7 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 
 	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
 
-	parser->root = add_sgml_document(&parser->stack, parser->cache_entry->uri);
+	parser->root = add_sgml_document(&parser->stack, parser->uri);
 	if (parser->root) {
 		parse_sgml_document(&parser->stack, &parser->scanner);
 	}
