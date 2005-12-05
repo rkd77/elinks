@@ -49,7 +49,7 @@ do { \
 	struct fragment *frag; \
         int count = 0;	\
  \
-	DBG("%s: url=%s, cache_size=%li", comment, entry->url, cache_size); \
+	DBG("%s: url=%s, cache_size=%li", comment, struri(entry->uri), cache_size); \
 	foreach (frag, entry->frag) \
 		dump_frag(frag, ++count); \
 } while (0)
