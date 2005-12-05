@@ -48,10 +48,11 @@ struct dom_stack {
 	unsigned char *state_objects;
 	size_t object_size;
 
-	/* Parser and document specific stuff */
+	/* Renderer specific callbacks for the streaming parser mode. */
 	dom_stack_callback_T callbacks[DOM_NODES];
-	void *renderer;
 
+	/* Data specific to the parser and renderer. */
+	void *renderer;
 	void *parser;
 };
 
