@@ -180,8 +180,6 @@ no_type_attr:
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
 
-	/* XXX: Does this make sense here? Where do we get FC_IMAGE? */
-	if (fc->type == FC_IMAGE) fc->alt = get_attr_val(a, "alt", html_context->options);
 	html_context->special_f(html_context, SP_CONTROL, fc);
 	format.form = fc;
 	format.style.attr |= AT_BOLD;
