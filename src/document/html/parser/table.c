@@ -533,10 +533,10 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 {
 	struct table *table;
 	struct table_cell *cell;
-	unsigned char *t_name, *t_attr, *en, *name;
+	unsigned char *t_attr, *en, *name;
 	unsigned char *l_fragment_id = NULL;
 	color_T last_bgcolor;
-	int t_namelen, namelen;
+	int namelen;
 	int in_cell = 0;
 	int l_al = ALIGN_LEFT;
 	int l_val = VALIGN_MIDDLE;
@@ -579,13 +579,11 @@ see:
 		goto se;
 	}
 
-	if (parse_element(html, eof, &t_name, &t_namelen, &t_attr, &en)) {
+	if (parse_element(html, eof, &name, &namelen, &t_attr, &en)) {
 		html++;
 		goto se;
 	}
 
-	name = t_name;
-	namelen = t_namelen;
 	if (name[0] == '/') {
 		name++; namelen--;
 	       	closing_tag = 1;
@@ -691,7 +689,7 @@ see:
 	}
 
 	/* TR */
-	if (t_namelen == 2 && toupper(t_name[1]) == 'R') {
+	if (!closing_tag && namelen == 2 && toupper(name[1]) == 'R') {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		if (in_cell) {
@@ -716,10 +714,10 @@ see:
 	}
 
 	/* THEAD TBODY TFOOT */
-	if (t_namelen == 5
-	    && ((!strncasecmp(&t_name[1], "HEAD", 4)) ||
-		(!strncasecmp(&t_name[1], "BODY", 4)) ||
-		(!strncasecmp(&t_name[1], "FOOT", 4)))) {
+	if (!closing_tag && namelen == 5
+	    && ((!strncasecmp(&name[1], "HEAD", 4)) ||
+		(!strncasecmp(&name[1], "BODY", 4)) ||
+		(!strncasecmp(&name[1], "FOOT", 4)))) {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		add_table_bad_html_end(table, html);
@@ -728,9 +726,11 @@ see:
 	}
 
 	/* TD TH */
-	if (t_namelen != 2
-	    || (toupper(t_name[1]) != 'D'
-		&& toupper(t_name[1]) != 'H'))
+	if (closing_tag) goto see;
+	if (namelen != 2) goto see;
+
+	if (toupper(name[1]) != 'D'
+	    && toupper(name[1]) != 'H')
 		goto see;
 
 	if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
@@ -770,7 +770,7 @@ see:
 		l_fragment_id = NULL;
 	}
 
-	cell->is_header = (toupper(t_name[1]) == 'H');
+	cell->is_header = (toupper(name[1]) == 'H');
 	if (cell->is_header) cell->align = ALIGN_CENTER;
 
 	if (group == 1) cell->is_group = 1;
