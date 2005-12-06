@@ -320,6 +320,12 @@ init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
 	init_dom_stack(&parser->stack, parser, renderer,
 		       push_callbacks, pop_callbacks, obj_size);
 
+	parser->root = add_sgml_document(&parser->stack, parser->uri);
+	if (!parser->root) {
+		mem_free(parser);
+		return NULL;
+	}
+
 	return parser;
 }
 
@@ -342,10 +348,8 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 
 	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
 
-	parser->root = add_sgml_document(&parser->stack, parser->uri);
-	if (parser->root) {
-		parse_sgml_document(&parser->stack, &parser->scanner);
-	}
+	/* FIXME: Make parse_sgml_document() return an error code. */
+	parse_sgml_document(&parser->stack, &parser->scanner);
 
 	return parser->root;
 }
