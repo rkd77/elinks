@@ -5393,7 +5393,7 @@ msgid ""
 " when ECMAScript is enabled."
 msgstr ""
 "Om indhold fra <noscript>-elementer skal ignoreres når\n"
-"ECMAScript er aktiveret." 
+"ECMAScript er aktiveret."
 
 #: src/ecmascript/ecmascript.c:53
 msgid "Maximum execution time"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 20:37+0100\n"
+"POT-Creation-Date: 2005-11-27 07:21+0100\n"
 "PO-Revision-Date: 2005-11-27 21:17+0100\n"
 "Last-Translator: YOUR NAME <E-MAIL@ADDRESS>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -2583,7 +2583,9 @@ msgstr "Zg³aszanie brakuj±cych fragmentów"
 
 #: src/config/options.inc:332
 msgid "Open a message box when document has no tag with given id."
-msgstr "Czy otwieraæ okienko dialogowe z raportem, je¶li dokument nie posiada zniacznika z podanym id."
+msgstr ""
+"Czy otwieraæ okienko dialogowe z raportem, je¶li dokument nie posiada "
+"zniacznika z podanym id."
 
 #: src/config/options.inc:334
 msgid "Number keys select links"
@@ -5491,7 +5493,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-"when ECMAScript is enabled."
+" when ECMAScript is enabled."
 msgstr ""
 
 #: src/ecmascript/ecmascript.c:53
@@ -6757,7 +6759,8 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:78
 msgid "Minimum peers to skip rerequesting"
-msgstr "Minimalna liczba peerów przy której ma nast±piæ zakoñczenie odpytywania"
+msgstr ""
+"Minimalna liczba peerów przy której ma nast±piæ zakoñczenie odpytywania"
 
 #: src/protocol/bittorrent/bittorrent.c:80
 msgid ""
@@ -7878,6 +7881,11 @@ msgstr "Nie okre¶lono programu"
 msgid "No program specified for protocol %s."
 msgstr "Nie okre¶lono programu do obs³ugi protoko³u %s."
 
+#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
+#, fuzzy
+msgid "SEE Message"
+msgstr "Wiadomo¶æ Ruby'ego"
+
 #: src/scripting/lua/core.c:300
 msgid "Error registering event hook"
 msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
@@ -7915,11 +7923,6 @@ msgstr ""
 #: src/scripting/scripting.c:87
 msgid "Scripting"
 msgstr "Skryptowanie"
-
-#: src/scripting/see/interface.c:146
-#, fuzzy
-msgid "SEE Message"
-msgstr "Wiadomo¶æ Ruby'ego"
 
 #: src/session/download.c:234 src/session/download.c:331
 #: src/session/download.c:498 src/session/download.c:590

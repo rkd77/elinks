@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-04 18:35+0200\n"
+"POT-Creation-Date: 2005-11-27 07:21+0100\n"
 "PO-Revision-Date: 2005-12-04 17:33+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -1720,7 +1720,10 @@ msgid ""
 "\n"
 "\n"
 "This value has been changed since you last saved your configuration."
-msgstr "\n\nTätä arvoa on muutettu sen jälkeen, kun viimeksi tallensit asetukset."
+msgstr ""
+"\n"
+"\n"
+"Tätä arvoa on muutettu sen jälkeen, kun viimeksi tallensit asetukset."
 
 #: src/config/dialogs.c:211 src/config/dialogs.c:362
 msgid "N/A"
@@ -5085,7 +5088,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-"when ECMAScript is enabled."
+" when ECMAScript is enabled."
 msgstr ""
 
 #: src/ecmascript/ecmascript.c:53
@@ -7279,6 +7282,10 @@ msgstr "Ei ohjelmaa"
 msgid "No program specified for protocol %s."
 msgstr "Ei ohjelmaa osoitettu"
 
+#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
+msgid "SEE Message"
+msgstr ""
+
 #: src/scripting/lua/core.c:300
 #, fuzzy
 msgid "Error registering event hook"
@@ -7316,10 +7323,6 @@ msgstr ""
 #. name:
 #: src/scripting/scripting.c:87
 msgid "Scripting"
-msgstr ""
-
-#: src/scripting/see/interface.c:146
-msgid "SEE Message"
 msgstr ""
 
 #: src/session/download.c:234 src/session/download.c:331
