@@ -615,43 +615,39 @@ see:
 			add_table_bad_html_end(table, html);
 			if (!table->caption.start)
 				table->caption.start = html;
-			goto see;
 
 		} else {
 			if (table->caption.start && !table->caption.end)
 				table->caption.end = html;
-			goto see;
 		}
+
+		goto see;
 	}
 
 	if (!strlcasecmp(name, namelen, "COLGROUP", 8)) {
+		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
+
+		add_table_bad_html_end(table, html);
+
+		c_al = ALIGN_TR;
+		c_val = VALIGN_TR;
+		c_width = WIDTH_AUTO;
+
 		if (!closing_tag) {
-			if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
-
-			add_table_bad_html_end(table, html);
-
-			c_al = ALIGN_TR;
-			c_val = VALIGN_TR;
-			c_width = WIDTH_AUTO;
 			get_align(html_context, t_attr, &c_al);
 			get_valign(html_context, t_attr, &c_val);
 			get_column_width(t_attr, &c_width, sh, html_context);
 			c_span = get_num(t_attr, "span", html_context->options);
-			if (c_span == -1) c_span = 1;
-			else if (c_span > HTML_MAX_COLSPAN) c_span = HTML_MAX_COLSPAN;
-			goto see;
+			if (c_span == -1)
+				c_span = 1;
+			else if (c_span > HTML_MAX_COLSPAN)
+				c_span = HTML_MAX_COLSPAN;
 
 		} else {
-			if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
-
-			add_table_bad_html_end(table, html);
-
 			c_span = 0;
-			c_al = ALIGN_TR;
-			c_val = VALIGN_TR;
-			c_width = WIDTH_AUTO;
-			goto see;
 		}
+
+		goto see;
 	}
 
 	if (!closing_tag && !strlcasecmp(name, namelen, "COL", 3)) {
