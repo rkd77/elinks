@@ -685,6 +685,7 @@ see:
 			}
 
 			add_table_bad_html_end(table, html);
+			goto see;
 		}
 	}
 
@@ -726,6 +727,7 @@ see:
 		add_table_bad_html_end(table, html);
 
 		group = 2;
+		goto see;
 	}
 
 	/* TD TH */
