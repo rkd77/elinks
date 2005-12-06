@@ -715,9 +715,9 @@ see:
 
 	/* THEAD TBODY TFOOT */
 	if (!closing_tag && namelen == 5
-	    && ((!strncasecmp(&name[1], "HEAD", 4)) ||
-		(!strncasecmp(&name[1], "BODY", 4)) ||
-		(!strncasecmp(&name[1], "FOOT", 4)))) {
+	    && ((!strlcasecmp(&name[1], namelen - 1, "HEAD", 4)) ||
+		(!strlcasecmp(&name[1], namelen - 1, "BODY", 4)) ||
+		(!strlcasecmp(&name[1], namelen - 1, "FOOT", 4)))) {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		add_table_bad_html_end(table, html);
