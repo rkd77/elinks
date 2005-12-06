@@ -533,10 +533,10 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 {
 	struct table *table;
 	struct table_cell *cell;
-	unsigned char *t_name, *t_attr, *en;
+	unsigned char *t_name, *t_attr, *en, *name;
 	unsigned char *l_fragment_id = NULL;
 	color_T last_bgcolor;
-	int t_namelen;
+	int t_namelen, namelen;
 	int in_cell = 0;
 	int l_al = ALIGN_LEFT;
 	int l_val = VALIGN_MIDDLE;
@@ -547,6 +547,7 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 	int cols, rows;
 	int col = 0, row = -1;
 	int maxj;
+	int closing_tag;
 
 	*end = html;
 
@@ -583,63 +584,77 @@ see:
 		goto se;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "TABLE", 5)) {
-		en = skip_table(en, eof);
-		goto see;
+	name = t_name;
+	namelen = t_namelen;
+	if (name[0] == '/') {
+		name++; namelen--;
+	       	closing_tag = 1;
+
+	} else {
+		closing_tag = 0;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "/TABLE", 6)) {
-		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
-		if (in_cell) CELL(table, col, row)->end = html;
 
-		add_table_bad_html_end(table, html);
+	if (!strlcasecmp(name, namelen, "TABLE", 5)) {
+		if (!closing_tag) {
+			en = skip_table(en, eof);
+			goto see;
 
-		goto scan_done;
+		} else {
+			if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
+			if (in_cell) CELL(table, col, row)->end = html;
+
+			add_table_bad_html_end(table, html);
+
+			goto scan_done;
+		}
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "CAPTION", 7)) {
-		add_table_bad_html_end(table, html);
-		if (!table->caption.start)
-			table->caption.start = html;
-		goto see;
+	if (!strlcasecmp(name, namelen, "CAPTION", 7)) {
+		if (!closing_tag) {
+			add_table_bad_html_end(table, html);
+			if (!table->caption.start)
+				table->caption.start = html;
+			goto see;
+
+		} else {
+			if (table->caption.start && !table->caption.end)
+				table->caption.end = html;
+			goto see;
+		}
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "/CAPTION", 8)) {
-		if (table->caption.start && !table->caption.end)
-			table->caption.end = html;
-		goto see;
+	if (!strlcasecmp(name, namelen, "COLGROUP", 8)) {
+		if (!closing_tag) {
+			if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
+
+			add_table_bad_html_end(table, html);
+
+			c_al = ALIGN_TR;
+			c_val = VALIGN_TR;
+			c_width = WIDTH_AUTO;
+			get_align(html_context, t_attr, &c_al);
+			get_valign(html_context, t_attr, &c_val);
+			get_column_width(t_attr, &c_width, sh, html_context);
+			c_span = get_num(t_attr, "span", html_context->options);
+			if (c_span == -1) c_span = 1;
+			else if (c_span > HTML_MAX_COLSPAN) c_span = HTML_MAX_COLSPAN;
+			goto see;
+
+		} else {
+			if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
+
+			add_table_bad_html_end(table, html);
+
+			c_span = 0;
+			c_al = ALIGN_TR;
+			c_val = VALIGN_TR;
+			c_width = WIDTH_AUTO;
+			goto see;
+		}
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "COLGROUP", 8)) {
-		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
-
-		add_table_bad_html_end(table, html);
-
-		c_al = ALIGN_TR;
-		c_val = VALIGN_TR;
-		c_width = WIDTH_AUTO;
-		get_align(html_context, t_attr, &c_al);
-		get_valign(html_context, t_attr, &c_val);
-		get_column_width(t_attr, &c_width, sh, html_context);
-		c_span = get_num(t_attr, "span", html_context->options);
-		if (c_span == -1) c_span = 1;
-		else if (c_span > HTML_MAX_COLSPAN) c_span = HTML_MAX_COLSPAN;
-		goto see;
-	}
-
-	if (!strlcasecmp(t_name, t_namelen, "/COLGROUP", 9)) {
-		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
-
-		add_table_bad_html_end(table, html);
-
-		c_span = 0;
-		c_al = ALIGN_TR;
-		c_val = VALIGN_TR;
-		c_width = WIDTH_AUTO;
-		goto see;
-	}
-
-	if (!strlcasecmp(t_name, t_namelen, "COL", 3)) {
+	if (!closing_tag && !strlcasecmp(name, namelen, "COL", 3)) {
 		int sp, width, al, val;
 
 		add_table_bad_html_end(table, html);
@@ -660,10 +675,9 @@ see:
 	}
 
 	/* /TR /TD /TH */
-	if (t_namelen == 3
-	    && t_name[0] == '/'
-	    && toupper(t_name[1]) == 'T') {
-		unsigned char c = toupper(t_name[2]);
+	if (closing_tag && namelen == 2
+	    && toupper(name[0]) == 'T') {
+		unsigned char c = toupper(name[1]);
 
 		if (c == 'R' || c == 'D' || c == 'H') {
 			if (c_span)
