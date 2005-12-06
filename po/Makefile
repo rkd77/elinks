@@ -12,9 +12,6 @@ MSGMERGE = msgmerge
 POTFILES_ABS_LIST = potfiles.list
 
 
-SUFFIXES = .po .gmo .mo
-.SUFFIXES: .gmo .mo .po
-
 %.gmo: $(srcdir)/%.po
 	@file=`echo $* | sed 's,.*/,,'`.gmo \
 	  && rm -f $$file && echo -n $*": " \
