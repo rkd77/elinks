@@ -688,8 +688,11 @@ see:
 		}
 	}
 
+	/* Beyond that point, opening tags only. */
+	if (closing_tag) goto see;
+
 	/* TR */
-	if (!closing_tag && namelen == 2 && toupper(name[1]) == 'R') {
+	if (namelen == 2 && toupper(name[1]) == 'R') {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		if (in_cell) {
@@ -714,7 +717,7 @@ see:
 	}
 
 	/* THEAD TBODY TFOOT */
-	if (!closing_tag && namelen == 5
+	if (namelen == 5
 	    && ((!strlcasecmp(&name[1], namelen - 1, "HEAD", 4)) ||
 		(!strlcasecmp(&name[1], namelen - 1, "BODY", 4)) ||
 		(!strlcasecmp(&name[1], namelen - 1, "FOOT", 4)))) {
@@ -726,7 +729,6 @@ see:
 	}
 
 	/* TD TH */
-	if (closing_tag) goto see;
 	if (namelen != 2) goto see;
 
 	if (toupper(name[1]) != 'D'
