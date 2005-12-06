@@ -547,7 +547,7 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 	int cols, rows;
 	int col = 0, row = -1;
 	int maxj;
-	int closing_tag;
+	int closing_tag, is_header;
 
 	*end = html;
 
@@ -734,8 +734,9 @@ see:
 	}
 
 	/* TD TH */
-	if (toupper(name[1]) != 'D'
-	    && toupper(name[1]) != 'H')
+	is_header = (toupper(name[1]) == 'H');
+
+	if (!is_header && toupper(name[1]) != 'D')
 		goto see;
 
 	if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
@@ -775,7 +776,7 @@ see:
 		l_fragment_id = NULL;
 	}
 
-	cell->is_header = (toupper(name[1]) == 'H');
+	cell->is_header = is_header;
 	if (cell->is_header) cell->align = ALIGN_CENTER;
 
 	if (group == 1) cell->is_group = 1;
