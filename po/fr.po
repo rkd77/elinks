@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 07:21+0100\n"
-"PO-Revision-Date: 2005-11-27 19:22+0200\n"
+"POT-Creation-Date: 2005-12-06 22:02+0100\n"
+"PO-Revision-Date: 2005-12-06 22:03+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -5378,10 +5378,9 @@ msgid "Ignore <noscript> content"
 msgstr "Ignorer le contenu de <noscript>"
 
 #: src/ecmascript/ecmascript.c:50
-#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 "Ignorer ou non le contenu du tag <noscript> quand ECMAScript\n"
 "est actif."
@@ -7775,10 +7774,6 @@ msgstr "Aucun programme"
 msgid "No program specified for protocol %s."
 msgstr "Aucun programme spécifié pour le protocole %s."
 
-#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
-msgid "SEE Message"
-msgstr "Message SEE"
-
 #: src/scripting/lua/core.c:300
 msgid "Error registering event hook"
 msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
@@ -7816,6 +7811,10 @@ msgstr "Erreur de script"
 #: src/scripting/scripting.c:87
 msgid "Scripting"
 msgstr "Scripting"
+
+#: src/scripting/see/interface.c:146
+msgid "SEE Message"
+msgstr "Message SEE"
 
 #: src/session/download.c:234 src/session/download.c:331
 #: src/session/download.c:498 src/session/download.c:590
