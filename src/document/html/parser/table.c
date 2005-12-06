@@ -670,9 +670,11 @@ see:
 		goto see;
 	}
 
+	/* All following tags have T as first letter. */
+	if (toupper(name[0]) != 'T') goto see;
+
 	/* /TR /TD /TH */
-	if (closing_tag && namelen == 2
-	    && toupper(name[0]) == 'T') {
+	if (closing_tag && namelen == 2) {
 		unsigned char c = toupper(name[1]);
 
 		if (c == 'R' || c == 'D' || c == 'H') {
@@ -687,9 +689,6 @@ see:
 			add_table_bad_html_end(table, html);
 		}
 	}
-
-	/* All following tags have T as first letter. */
-	if (toupper(t_name[0]) != 'T') goto see;
 
 	/* TR */
 	if (t_namelen == 2 && toupper(t_name[1]) == 'R') {
