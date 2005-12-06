@@ -18,6 +18,13 @@ $(ACLOCAL_M4): $(top_srcdir)/configure.in $(top_srcdir)/acinclude.m4
 $(top_srcdir)/configure: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOCONF)
 
+# Makefile.config doesn't need a separate timestamp file because
+# touching it doesn't directly cause other files to be rebuilt.
+$(top_builddir)/Makefile.config: $(top_srcdir)/Makefile.config.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=Makefile.config CONFIG_HEADERS= \
+	     $(SHELL) ./config.status
+
 $(top_builddir)/config.h: $(top_builddir)/stamp-h
 	@cd $(top_builddir) && \
 	if test ! -f $@; then \
