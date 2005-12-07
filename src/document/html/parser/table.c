@@ -508,7 +508,7 @@ skip_table(unsigned char *html, unsigned char *eof)
 
 	while (1) {
 		unsigned char *name;
-		int namelen;
+		int namelen, closing_tag = 0;
 
 		while (html < eof
 		       && (*html != '<'
@@ -518,11 +518,18 @@ skip_table(unsigned char *html, unsigned char *eof)
 
 		if (html >= eof) return eof;
 
+		if (*name == '/') {
+			closing_tag = 1;
+			name++; namelen--;
+		}
+
 		if (!strlcasecmp(name, namelen, "TABLE", 5)) {
-			level++;
-		} else if (!strlcasecmp(name, namelen, "/TABLE", 6)) {
-			level--;
-			if (!level) return html;
+			if (!closing_tag) {
+				level++;
+			} else {
+				level--;
+				if (!level) return html;
+			}
 		}
 	}
 }
