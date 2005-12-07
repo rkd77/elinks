@@ -671,9 +671,12 @@ see:
 	/* All following tags have T as first letter. */
 	if (toupper(name[0]) != 'T') goto see;
 
+	name++; namelen--;
+	if (namelen == 0) goto see;
+
 	/* /TR /TD /TH */
-	if (closing_tag && namelen == 2) {
-		unsigned char c = toupper(name[1]);
+	if (closing_tag && namelen == 1) {
+		unsigned char c = toupper(name[0]);
 
 		if (c == 'R' || c == 'D' || c == 'H') {
 			if (c_span)
@@ -693,10 +696,10 @@ see:
 	if (closing_tag) goto see;
 
 	/* THEAD TBODY TFOOT */
-	if (namelen == 5
-	    && ((!strlcasecmp(&name[1], namelen - 1, "HEAD", 4)) ||
-		(!strlcasecmp(&name[1], namelen - 1, "BODY", 4)) ||
-		(!strlcasecmp(&name[1], namelen - 1, "FOOT", 4)))) {
+	if (namelen == 4
+	    && ((!strlcasecmp(name, namelen, "HEAD", 4)) ||
+		(!strlcasecmp(name, namelen, "BODY", 4)) ||
+		(!strlcasecmp(name, namelen, "FOOT", 4)))) {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		add_table_bad_html_end(table, html);
@@ -706,10 +709,10 @@ see:
 	}
 
 	/* Beyond this point, only two letters tags. */
-	if (namelen != 2) goto see;
+	if (namelen != 1) goto see;
 
 	/* TR */
-	if (toupper(name[1]) == 'R') {
+	if (toupper(name[0]) == 'R') {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		if (in_cell) {
@@ -734,9 +737,9 @@ see:
 	}
 
 	/* TD TH */
-	is_header = (toupper(name[1]) == 'H');
+	is_header = (toupper(name[0]) == 'H');
 
-	if (!is_header && toupper(name[1]) != 'D')
+	if (!is_header && toupper(name[0]) != 'D')
 		goto see;
 
 	if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
