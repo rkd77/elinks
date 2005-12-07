@@ -548,6 +548,7 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 	int col = 0, row = -1;
 	int maxj;
 	int closing_tag, is_header;
+	unsigned char c;
 
 	*end = html;
 
@@ -674,10 +675,10 @@ see:
 	name++; namelen--;
 	if (namelen == 0) goto see;
 
+	c = toupper(name[0]);
+
 	/* /TR /TD /TH */
 	if (closing_tag && namelen == 1) {
-		unsigned char c = toupper(name[0]);
-
 		if (c == 'R' || c == 'D' || c == 'H') {
 			if (c_span)
 				new_columns(table, c_span, c_width, c_al, c_val, 1);
@@ -712,7 +713,7 @@ see:
 	if (namelen != 1) goto see;
 
 	/* TR */
-	if (toupper(name[0]) == 'R') {
+	if (c == 'R') {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		if (in_cell) {
@@ -737,9 +738,9 @@ see:
 	}
 
 	/* TD TH */
-	is_header = (toupper(name[0]) == 'H');
+	is_header = (c == 'H');
 
-	if (!is_header && toupper(name[0]) != 'D')
+	if (!is_header && c != 'D')
 		goto see;
 
 	if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
