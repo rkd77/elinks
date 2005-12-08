@@ -318,7 +318,8 @@ init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
 	parser->info = &sgml_html_info;
 
 	init_dom_stack(&parser->stack, parser, renderer,
-		       push_callbacks, pop_callbacks, obj_size);
+		       push_callbacks, pop_callbacks, obj_size,
+		       type != SGML_PARSER_STREAM);
 
 	parser->root = add_sgml_document(&parser->stack, parser->uri);
 	if (!parser->root) {
