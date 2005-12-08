@@ -179,6 +179,26 @@ struct dom_proc_instruction_node {
 	struct dom_node_list *map;
 };
 
+union dom_node_data {
+	struct dom_document_node	 document;
+	struct dom_document_type_node	 document_type;
+	struct dom_element_node		 element;
+	struct dom_attribute_node	 attribute;
+	struct dom_text_node		 text;
+	struct dom_id			 notation;
+	/* For entities string/length hold the notation name */
+	struct dom_id			 entity;
+	struct dom_proc_instruction_node proc_instruction;
+
+	/* Node types without a union member yet
+	 *
+	 * DOM_NODE_CDATA_SECTION,
+	 * DOM_NODE_COMMENT,
+	 * DOM_NODE_DOCUMENT_FRAGMENT,
+	 * DOM_NODE_ENTITY_REFERENCE,
+	 */
+};
+
 /* This structure is size critical so keep ordering to make it easier to pack
  * and avoid unneeded members. */
 struct dom_node {
@@ -193,25 +213,7 @@ struct dom_node {
 	struct dom_node *parent;
 
 	/* Various info depending on the type of the node. */
-	union dom_node_data {
-		struct dom_document_node	 document;
-		struct dom_document_type_node	 document_type;
-		struct dom_element_node		 element;
-		struct dom_attribute_node	 attribute;
-		struct dom_text_node		 text;
-		struct dom_id			 notation;
-		/* For entities string/length hold the notation name */
-		struct dom_id			 entity;
-		struct dom_proc_instruction_node proc_instruction;
-
-		/* Node types without a union member yet
-		 *
-		 * DOM_NODE_CDATA_SECTION,
-		 * DOM_NODE_COMMENT,
-		 * DOM_NODE_DOCUMENT_FRAGMENT,
-		 * DOM_NODE_ENTITY_REFERENCE,
-		 */
-	} data;
+	union dom_node_data data;
 };
 
 /* A node list can be used for storing indexed nodes */
