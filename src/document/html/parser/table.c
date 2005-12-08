@@ -517,16 +517,16 @@ skip_table(unsigned char *html, unsigned char *eof)
 			html++;
 
 		if (html >= eof) return eof;
-		
+
 		if (!namelen) continue;
-		
+
 		if (*name == '/') {
 			closing_tag = 1;
 			name++; namelen--;
 			if (!namelen) continue;
 		}
 
-		
+
 		if (!strlcasecmp(name, namelen, "TABLE", 5)) {
 			if (!closing_tag) {
 				level++;
@@ -597,11 +597,12 @@ see:
 	}
 
 	if (!namelen) goto see;
-	
+
 	if (name[0] == '/') {
-		name++; namelen--;
+		namelen--;
 		if (!namelen) goto see;
-	       	closing_tag = 1;
+	       	name++;
+		closing_tag = 1;
 
 	} else {
 		closing_tag = 0;
