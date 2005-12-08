@@ -412,10 +412,9 @@ abort:
 	}
 
 	if (!strlcasecmp(name, namelen, "OPTION", 6)) {
-		if (closing_tag) {
-			add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
-			goto see;
-		} else {
+		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
+
+		if (!closing_tag) {
 			unsigned char *value, *label;
 
 			add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
@@ -438,8 +437,9 @@ abort:
 				init_string(&orig_lbl);
 				nnmi = !!label;
 			}
-			goto see;
 		}
+		
+		goto see;
 	}
 
 	if (!strlcasecmp(name, namelen, "OPTGROUP", 8)) {
