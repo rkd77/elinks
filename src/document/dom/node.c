@@ -246,44 +246,42 @@ done_dom_node(struct dom_node *node)
 	data = &node->data;
 
 	switch (node->type) {
-		case DOM_NODE_ATTRIBUTE:
-			if (data->attribute.allocated)
-				mem_free(node->string);
-			break;
+	case DOM_NODE_ATTRIBUTE:
+		if (data->attribute.allocated)
+			mem_free(node->string);
+		break;
 
-		case DOM_NODE_DOCUMENT:
-			if (data->document.element_ids)
-				free_hash(data->document.element_ids);
+	case DOM_NODE_DOCUMENT:
+		if (data->document.element_ids)
+			free_hash(data->document.element_ids);
 
-			if (data->document.meta_nodes)
-				done_dom_node_list(data->document.meta_nodes);
+		if (data->document.meta_nodes)
+			done_dom_node_list(data->document.meta_nodes);
 
-			if (data->document.children)
-				done_dom_node_list(data->document.children);
+		if (data->document.children)
+			done_dom_node_list(data->document.children);
+		break;
 
-			break;
+	case DOM_NODE_ELEMENT:
+		if (data->element.children)
+			done_dom_node_list(data->element.children);
 
-		case DOM_NODE_ELEMENT:
-			if (data->element.children)
-				done_dom_node_list(data->element.children);
+		if (data->element.map)
+			done_dom_node_list(data->element.map);
+		break;
 
-			if (data->element.map)
-				done_dom_node_list(data->element.map);
+	case DOM_NODE_TEXT:
+		if (data->text.allocated)
+			mem_free(node->string);
+		break;
 
-			break;
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		if (data->proc_instruction.map)
+			done_dom_node_list(data->proc_instruction.map);
+		break;
 
-		case DOM_NODE_TEXT:
-			if (data->text.allocated)
-				mem_free(node->string);
-			break;
-
-		case DOM_NODE_PROCESSING_INSTRUCTION:
-			if (data->proc_instruction.map)
-				done_dom_node_list(data->proc_instruction.map);
-
-			break;
-		default:
-			break;
+	default:
+		break;
 	}
 
 	mem_free(node);
