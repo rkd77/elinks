@@ -342,7 +342,8 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	int preselect = -1;
 	int group = 0;
 	int i, max_width;
-
+	int closing_tag;
+	
 	html_focusable(html_context, attr);
 	init_menu(&lnk_menu);
 
@@ -394,6 +395,13 @@ abort:
 		goto se;
 	}
 
+	if (!namelen) goto see;
+	if (name[0] == '/') {
+		closing_tag = 1;
+	} else {
+		closing_tag = 0;
+	}
+	
 	if (!strlcasecmp(name, namelen, "/SELECT", 7)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 		goto end_parse;
