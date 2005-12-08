@@ -335,8 +335,8 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	struct string lbl = NULL_STRING, orig_lbl = NULL_STRING;
 	unsigned char **values = NULL;
 	unsigned char **labels;
-	unsigned char *t_name, *t_attr, *en;
-	int t_namelen;
+	unsigned char *name, *t_attr, *en;
+	int namelen;
 	int nnmi = 0;
 	int order = 0;
 	int preselect = -1;
@@ -389,22 +389,22 @@ abort:
 		goto se;
 	}
 
-	if (parse_element(html, eof, &t_name, &t_namelen, &t_attr, &en)) {
+	if (parse_element(html, eof, &name, &namelen, &t_attr, &en)) {
 		html++;
 		goto se;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "/SELECT", 7)) {
+	if (!strlcasecmp(name, namelen, "/SELECT", 7)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 		goto end_parse;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "/OPTION", 7)) {
+	if (!strlcasecmp(name, namelen, "/OPTION", 7)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 		goto see;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "OPTION", 6)) {
+	if (!strlcasecmp(name, namelen, "OPTION", 6)) {
 		unsigned char *value, *label;
 
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
@@ -430,14 +430,14 @@ abort:
 		goto see;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "OPTGROUP", 8)
-	    || !strlcasecmp(t_name, t_namelen, "/OPTGROUP", 9)) {
+	if (!strlcasecmp(name, namelen, "OPTGROUP", 8)
+	    || !strlcasecmp(name, namelen, "/OPTGROUP", 9)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
 		if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 	}
 
-	if (!strlcasecmp(t_name, t_namelen, "OPTGROUP", 8)) {
+	if (!strlcasecmp(name, namelen, "OPTGROUP", 8)) {
 		unsigned char *label;
 
 		label = get_attr_val(t_attr, "label", html_context->options);
