@@ -596,11 +596,11 @@ see:
 		goto se;
 	}
 
-	if (!namelen) goto se;
+	if (!namelen) goto see;
 	
 	if (name[0] == '/') {
 		name++; namelen--;
-		if (!namelen) goto se;
+		if (!namelen) goto see;
 	       	closing_tag = 1;
 
 	} else {
