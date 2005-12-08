@@ -220,13 +220,13 @@ struct dom_node_list {
 	struct dom_node *entries[1];
 };
 
-#define foreach_dom_node(iterator, node, list)		\
-	for (i = 0; i < (list)->size; i++)		\
-		if (((node) = (list)->entries[i]))
+#define foreach_dom_node(i, node, list)			\
+	for ((i) = 0; (i) < (list)->size; (i)++)	\
+		if (((node) = (list)->entries[(i)]))
 
-#define foreachback_dom_node(iterator, node, list)	\
-	for (i = (list)->size - 1; i > 0; i--)		\
-		if (((node) = (list)->entries[i]))
+#define foreachback_dom_node(i, node, list)		\
+	for ((i) = (list)->size - 1; (i) > 0; (i)--)	\
+		if (((node) = (list)->entries[(i)]))
 
 #define is_dom_node_list_member(list, member)		\
 	((list) && 0 <= (member) && (member) < (list)->size)
