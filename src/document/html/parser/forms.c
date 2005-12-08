@@ -411,56 +411,56 @@ abort:
 		goto end_parse;
 	}
 
-	if (closing_tag && !strlcasecmp(name, namelen, "OPTION", 6)) {
-		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
-		goto see;
-	}
-
-	if (!closing_tag && !strlcasecmp(name, namelen, "OPTION", 6)) {
-		unsigned char *value, *label;
-
-		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
-
-		if (has_attr(t_attr, "disabled", html_context->options))
+	if (!strlcasecmp(name, namelen, "OPTION", 6)) {
+		if (closing_tag) {
+			add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 			goto see;
-		if (preselect == -1
-		    && has_attr(t_attr, "selected", html_context->options))
-			preselect = order;
-		value = get_attr_val(t_attr, "value", html_context->options);
+		} else {
+			unsigned char *value, *label;
 
-		if (!mem_align_alloc(&values, order, order + 1, unsigned char *, 0xFF))
-			goto abort;
+			add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
-		values[order++] = value;
-		label = get_attr_val(t_attr, "label", html_context->options);
-		if (label) new_menu_item(&lnk_menu, label, order - 1, 0);
-		if (!value || !label) {
-			init_string(&lbl);
-			init_string(&orig_lbl);
-			nnmi = !!label;
+			if (has_attr(t_attr, "disabled", html_context->options))
+				goto see;
+			if (preselect == -1
+			    && has_attr(t_attr, "selected", html_context->options))
+				preselect = order;
+			value = get_attr_val(t_attr, "value", html_context->options);
+	
+			if (!mem_align_alloc(&values, order, order + 1, unsigned char *, 0xFF))
+				goto abort;
+
+			values[order++] = value;
+			label = get_attr_val(t_attr, "label", html_context->options);
+			if (label) new_menu_item(&lnk_menu, label, order - 1, 0);
+			if (!value || !label) {
+				init_string(&lbl);
+				init_string(&orig_lbl);
+				nnmi = !!label;
+			}
+			goto see;
 		}
-		goto see;
 	}
 
-	if ((!closing_tag && !strlcasecmp(name, namelen, "OPTGROUP", 8))
-	    || (closing_tag && !strlcasecmp(name, namelen, "/OPTGROUP", 9))) {
+	if (!strlcasecmp(name, namelen, "OPTGROUP", 8)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
 		if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
-	}
 
-	if (!closing_tag && !strlcasecmp(name, namelen, "OPTGROUP", 8)) {
-		unsigned char *label;
+		if (!closing_tag) {
+			unsigned char *label;
 
-		label = get_attr_val(t_attr, "label", html_context->options);
+			label = get_attr_val(t_attr, "label", html_context->options);
 
-		if (!label) {
-			label = stracpy("");
-			if (!label) goto see;
+			if (!label) {
+				label = stracpy("");
+				if (!label) goto see;
+			}
+			new_menu_item(&lnk_menu, label, -1, 0);
+			group = 1;
 		}
-		new_menu_item(&lnk_menu, label, -1, 0);
-		group = 1;
 	}
+
 	goto see;
 
 
