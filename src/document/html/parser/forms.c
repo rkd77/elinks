@@ -343,7 +343,7 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	int group = 0;
 	int i, max_width;
 	int closing_tag;
-	
+
 	html_focusable(html_context, attr);
 	init_menu(&lnk_menu);
 
@@ -405,7 +405,7 @@ abort:
 	} else {
 		closing_tag = 0;
 	}
-	
+
 	if (closing_tag && !strlcasecmp(name, namelen, "SELECT", 6)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 		goto end_parse;
@@ -425,7 +425,7 @@ abort:
 			    && has_attr(t_attr, "selected", html_context->options))
 				preselect = order;
 			value = get_attr_val(t_attr, "value", html_context->options);
-	
+
 			if (!mem_align_alloc(&values, order, order + 1, unsigned char *, 0xFF))
 				goto abort;
 
@@ -438,7 +438,7 @@ abort:
 				nnmi = !!label;
 			}
 		}
-		
+
 		goto see;
 	}
 
