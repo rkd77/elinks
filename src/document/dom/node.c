@@ -18,6 +18,8 @@
 #include "util/string.h"
 
 
+static void done_dom_node_data(struct dom_node *node);
+
 /* Node lists */
 
 #define DOM_NODE_LIST_GRANULARITY 0x7
@@ -84,6 +86,27 @@ add_to_dom_node_list(struct dom_node_list **list_ptr,
 	return list;
 }
 
+static void
+del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node)
+{
+	struct dom_node *entry;
+	size_t i;
+
+	if (!list) return;
+
+	foreach_dom_node(i, entry, list) {
+		size_t successors;
+
+		if (entry != node) continue;
+
+		successors = list->size - (i + 1);
+		if (successors)
+			memmove(&list->entries[i], &list->entries[i+1],
+				sizeof(*list->entries) * successors);
+		list->size--;
+	}
+}
+
 void
 done_dom_node_list(struct dom_node_list *list)
 {
@@ -93,7 +116,8 @@ done_dom_node_list(struct dom_node_list *list)
 	assert(list);
 
 	foreach_dom_node (i, node, list) {
-		done_dom_node(node);
+		/* Avoid that the node start messing with the node list. */
+		done_dom_node_data(node);
 	}
 
 	mem_free(list);
@@ -237,7 +261,7 @@ init_dom_node_(unsigned char *file, int line,
 }
 
 void
-done_dom_node(struct dom_node *node)
+done_dom_node_data(struct dom_node *node)
 {
 	union dom_node_data *data;
 
@@ -285,6 +309,38 @@ done_dom_node(struct dom_node *node)
 	}
 
 	mem_free(node);
+}
+
+void
+done_dom_node(struct dom_node *node)
+{
+	assert(node);
+
+	if (node->parent) {
+		struct dom_node *parent = node->parent;
+		union dom_node_data *data = &parent->data;
+
+		switch (parent->type) {
+		case DOM_NODE_DOCUMENT:
+			del_from_dom_node_list(data->document.meta_nodes, node);
+			del_from_dom_node_list(data->document.children, node);
+			break;
+
+		case DOM_NODE_ELEMENT:
+			del_from_dom_node_list(data->element.children, node);
+			del_from_dom_node_list(data->element.map, node);
+			break;
+
+		case DOM_NODE_PROCESSING_INSTRUCTION:
+			del_from_dom_node_list(data->proc_instruction.map, node);
+			break;
+
+ 		default:
+ 			break;
+		}
+ 	}
+ 
+	done_dom_node_data(node);
 }
 
 #define set_node_name(name, namelen, str)	\
