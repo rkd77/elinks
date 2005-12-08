@@ -37,6 +37,9 @@ struct dom_stack {
 	struct dom_stack_state *states;
 	size_t depth;
 
+	/* Keep nodes when popping them or call done_dom_node() on them. */
+	unsigned int keep_nodes:1;
+
 	/* This is one big array of parser specific objects. */
 	/* The objects hold parser specific data. For the SGML parser this
 	 * holds DTD-oriented info about the node (recorded in struct
@@ -110,7 +113,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 void init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 		    dom_stack_callback_T push_callbacks[DOM_NODES],
 		    dom_stack_callback_T pop_callbacks[DOM_NODES],
-		    size_t object_size);
+		    size_t object_size, int keep_nodes);
 void done_dom_stack(struct dom_stack *stack);
 
 /* Decends down to the given node making it the current parent */

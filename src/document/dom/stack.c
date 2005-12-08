@@ -48,7 +48,7 @@ void
 init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 	       dom_stack_callback_T push_callbacks[DOM_NODES],
 	       dom_stack_callback_T pop_callbacks[DOM_NODES],
-	       size_t object_size)
+	       size_t object_size, int keep_nodes)
 {
 	assert(stack);
 
@@ -57,6 +57,7 @@ init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 	stack->parser      = parser;
 	stack->renderer    = renderer;
 	stack->object_size = object_size;
+	stack->keep_nodes  = !!keep_nodes;
 
 	if (push_callbacks)
 		memcpy(stack->push_callbacks, push_callbacks, DOM_STACK_CALLBACKS_SIZE);
@@ -147,6 +148,9 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 
 		callback(stack, state->node, state_data);
 	}
+
+	if (!stack->keep_nodes)
+		done_dom_node(state->node);
 
 	stack->depth--;
 	assert(stack->depth >= 0);
