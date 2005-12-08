@@ -213,6 +213,7 @@ init_dom_node_(unsigned char *file, int line,
 	node->type   = type;
 	node->string = string;
 	node->length = length;
+	node->parent = parent;
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);

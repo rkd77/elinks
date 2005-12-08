@@ -190,6 +190,8 @@ struct dom_node {
 	uint16_t length;
 	unsigned char *string;
 
+	struct dom_node *parent;
+
 	/* Various info depending on the type of the node. */
 	union dom_node_data {
 		struct dom_document_node	 document;
