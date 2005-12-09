@@ -1,14 +1,69 @@
-A short TODO list for the BT implementation:
+The ELinks BitTorrent Client
+============================
 
-	Torrents should be added to the global history.
+The BitTorrent client is fully usable and has been tested on multiple sites, it
+does however still lack certain core functionally and is therefore marked
+experimental. Below, various known problems and limitations are listed:
 
-	Peer IDs should be restorable from ~/.elinks/downloadhist.
+ - Torrents should be added to the global history.
 
-	It needs to give up on unreachable peers.
+ - Peer IDs should be restorable from ~/.elinks/downloadhist.
 
-	It should be possible to specify the download location.
+ - It needs to give up on unreachable peers.
 
-	When the file is removed from under it (in the shell), either give
-	a warning and stop downloading, or start over.
+ - It should be possible to specify the download location.
 
-	Addition of a blacklist, either temporary (session) or persistant.
+ - When the file is removed from under it (in the shell), either give a warning
+   and stop downloading, or start over.
+
+ - Addition of a blacklist, either temporary (session) or persistant.
+
+ - Unsupported Tracker Protocol Error: When connecting to some trackers we get
+   a returned failure reason reading:
+	
+	unsupported tracker protocol, please upgrade your client
+	
+   often this is due to the compact peer format is not enabled. We should maybe
+   try to reconnect when this occurs. 
+
+ - Multiple Trackers: The metainfo file can contain a list of tracker URIs so
+   that the client can handle tracker request errors more gracefully by
+   attempting to connect to a new tracker.  Although this functionality should
+   be simple to add to the client we have chosen not to implement this.
+
+ - Access to Disk: Currently, the are a couple of assertions in respect to disk
+   access. Once pieces are completed they can never become incomplete again if
+   something was to remove them from under the client.  This is a valid
+   assertion for most systems and usage.  Furthermore, when writing and reading
+   pieces, it is asserted that pieces are transferred correctly so that a read
+   following a write will return the valid piece.
+
+ - All access to disk uses blocking I/O. With the many consecutive reads and
+   write the client uses, this can potential become a problem that can end up
+   stalling all execution if the piece length is very big. For this reason, the
+   ideas outlined in regard to a more fine grained solution using
+   block-oriented disk access is even more relevant.
+
+ - No download or upload rate limiting: All transferring happens
+   unconditionally; in other words there are no means to limit the rate data is
+   transferred. This can potential deny other services from running.
+
+ - Badly configured web servers: We have experienced that many web servers
+   providing metainfo files are badly configured in that they do not correctly
+   set the content type. We have therefore found it necessary to also allow
+   application/x-torrent in addition to application/x-bittorrent. However, some
+   servers set the content type to text/plain which, due to the way ELinks
+   prioritises content types provided in the protocol header sent by the
+   server, means that loading many metainfo files will not cause the BitTorrent
+   download to be queried. As a workaround, the internal BitTorrent URI scheme
+   can be used. This, however, will not open the download dialog, but keep the
+   download progress entirely in the status bar of the browser.
+
+ - IPv6: Although certain informal extensions to the BitTorrent protocol, such
+   as the compact peer information format returned by the tracker, are
+   optimised for IPv4, the protocol works for IPv6.  We have only tested the
+   client under IPv4.
+
+ - Multiple Resumes: By default ELinks does three connection attempts.  This
+   can cause the resuming to happen multiple times if the initial tracker
+   connection causes the main BitTorrent connection to timeout.
