@@ -1,0 +1,14 @@
+A short TODO list for the BT implementation:
+
+	Torrents should be added to the global history.
+
+	Peer IDs should be restorable from ~/.elinks/downloadhist.
+
+	It needs to give up on unreachable peers.
+
+	It should be possible to specify the download location.
+
+	When the file is removed from under it (in the shell), either give
+	a warning and stop downloading, or start over.
+
+	Addition of a blacklist, either temporary (session) or persistant.
