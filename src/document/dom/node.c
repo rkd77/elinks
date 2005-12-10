@@ -427,8 +427,8 @@ get_dom_node_value(struct dom_node *node, int codepage)
 			break;
 
 		case DOM_NODE_PROCESSING_INSTRUCTION:
-			value	 = node->data.proc_instruction.instruction;
-			valuelen = node->data.proc_instruction.instructionlen;
+			value	 = node->data.proc_instruction.instruction.string;
+			valuelen = node->data.proc_instruction.instruction.length;
 			break;
 
 		case DOM_NODE_CDATA_SECTION:

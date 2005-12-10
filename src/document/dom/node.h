@@ -160,8 +160,7 @@ struct dom_proc_instruction_node {
 	/* The target of the processing instruction (xml for '<?xml ...  ?>')
 	 * is in the @string / @length members. */
 	/* This holds the value to be processed */
-	unsigned char *instruction;
-	uint16_t instructionlen;
+	struct dom_string instruction;
 
 	/* For fast checking of the target type */
 	uint16_t type; /* enum dom_proc_instruction_type */
@@ -276,8 +275,7 @@ add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int len
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string, length);
 
 	if (node && instruction) {
-		node->data.proc_instruction.instruction    = instruction;
-		node->data.proc_instruction.instructionlen = instructionlen;
+		set_dom_string(&node->data.proc_instruction.instruction, instruction, instructionlen);
 	}
 
 	return node;

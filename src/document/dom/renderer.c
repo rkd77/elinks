@@ -559,8 +559,8 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	value	 = node->data.proc_instruction.instruction;
-	valuelen = node->data.proc_instruction.instructionlen;
+	value	 = node->data.proc_instruction.instruction.string;
+	valuelen = node->data.proc_instruction.instruction.length;
 
 	if (!value || node->data.proc_instruction.map)
 		return node;
