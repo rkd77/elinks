@@ -243,10 +243,12 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 			if (!token->length) {
 				pop_dom_node(stack);
 			} else {
+				struct dom_string string;
 				struct dom_stack_state *state;
 
+				set_dom_string(&string, token->string, token->length);
 				state = search_dom_stack(stack, DOM_NODE_ELEMENT,
-							 token->string, token->length);
+							 &string);
 				if (state) {
 					struct sgml_parser_state *pstate;
 

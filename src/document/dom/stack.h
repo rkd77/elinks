@@ -86,7 +86,7 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 /* Dive through the stack states in search for the specified match. */
 static inline struct dom_stack_state *
 search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
-		 unsigned char *string, uint16_t length)
+		 struct dom_string *string)
 {
 	struct dom_stack_state *state;
 	int pos;
@@ -96,8 +96,8 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type
-		    && parent->string.length == length
-		    && !strncasecmp(parent->string.string, string, length))
+		    && parent->string.length == string->length
+		    && !strncasecmp(parent->string.string, string->string, string->length))
 			return state;
 	}
 
@@ -125,7 +125,7 @@ void pop_dom_node(struct dom_stack *stack);
 
 /* Ascends the stack looking for specific parent */
 void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
-		   unsigned char *string, uint16_t length);
+		   struct dom_string *string);
 
 /* Pop all stack states until a specific state is reached. */
 void

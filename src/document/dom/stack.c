@@ -177,13 +177,13 @@ pop_dom_node(struct dom_stack *stack)
 
 void
 pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
-	      unsigned char *string, uint16_t length)
+	      struct dom_string *string)
 {
 	struct dom_stack_state *state;
 
 	if (!dom_stack_has_parents(stack)) return;
 
-	state = search_dom_stack(stack, type, string, length);
+	state = search_dom_stack(stack, type, string);
 	if (state)
 		pop_dom_state(stack, type, state);
 }
