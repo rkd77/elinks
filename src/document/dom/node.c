@@ -155,13 +155,13 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 		}
 	}
 	{
-		int length = int_min(key->length, node->length);
-		int string_diff = strncasecmp(key->string, node->string, length);
+		int length = int_min(key->string.length, node->string.length);
+		int string_diff = strncasecmp(key->string.string, node->string.string, length);
 
 		/* If the lengths or strings don't match strncasecmp() does the
 		 * job else return which ever is bigger. */
 
-		return string_diff ? string_diff : key->length - node->length;
+		return string_diff ? string_diff : key->string.length - node->string.length;
 	}
 }
 
@@ -213,7 +213,7 @@ struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 		       uint16_t subtype, unsigned char *name, int namelen)
 {
-	struct dom_node node = { type, namelen, name };
+	struct dom_node node = { type, INIT_DOM_STRING(name, namelen) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, subtype, list);
 
 	return dom_node_list_bsearch(&search, list);
@@ -235,9 +235,8 @@ init_dom_node_(unsigned char *file, int line,
 	if (!node) return NULL;
 
 	node->type   = type;
-	node->string = string;
-	node->length = length;
 	node->parent = parent;
+	set_dom_string(&node->string, string, length);
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
@@ -272,7 +271,7 @@ done_dom_node_data(struct dom_node *node)
 	switch (node->type) {
 	case DOM_NODE_ATTRIBUTE:
 		if (data->attribute.allocated)
-			mem_free(node->string);
+			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_DOCUMENT:
@@ -296,7 +295,7 @@ done_dom_node_data(struct dom_node *node)
 
 	case DOM_NODE_TEXT:
 		if (data->text.allocated)
-			mem_free(node->string);
+			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_PROCESSING_INSTRUCTION:
@@ -383,8 +382,8 @@ get_dom_node_name(struct dom_node *node)
 		case DOM_NODE_NOTATION:
 		case DOM_NODE_PROCESSING_INSTRUCTION:
 		default:
-			name	= node->string;
-			namelen	= node->length;
+			name	= node->string.string;
+			namelen	= node->string.length;
 	}
 
 	return memacpy(name, namelen);
@@ -435,12 +434,13 @@ get_dom_node_value(struct dom_node *node, int codepage)
 		case DOM_NODE_CDATA_SECTION:
 		case DOM_NODE_COMMENT:
 		case DOM_NODE_TEXT:
-			value	 = node->string;
-			valuelen = node->length;
+			value	 = node->string.string;
+			valuelen = node->string.length;
 			break;
 
 		case DOM_NODE_ENTITY_REFERENCE:
-			value = get_entity_string(node->string, node->length,
+			value = get_entity_string(node->string.string,
+						  node->string.length,
 						  codepage);
 			valuelen = value ? strlen(value) : 0;
 			break;

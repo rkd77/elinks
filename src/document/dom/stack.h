@@ -96,8 +96,8 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type
-		    && parent->length == length
-		    && !strncasecmp(parent->string, string, length))
+		    && parent->string.length == length
+		    && !strncasecmp(parent->string.string, string, length))
 			return state;
 	}
 

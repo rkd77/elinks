@@ -517,8 +517,8 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template,
 		     struct dom_node *node)
 {
-	unsigned char *string = node->string;
-	int length = node->length;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
 
 	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
 		string -= 1;
@@ -565,7 +565,7 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 	if (!value || node->data.proc_instruction.map)
 		return node;
 
-	if (check_dom_node_source(renderer, node->string, node->length)) {
+	if (check_dom_node_source(renderer, node->string.string, node->string.length)) {
 		render_dom_flush(renderer, value);
 		renderer->position = value + valuelen;
 	}

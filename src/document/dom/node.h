@@ -2,6 +2,7 @@
 #ifndef EL__DOCUMENT_DOM_NODE_H
 #define EL__DOCUMENT_DOM_NODE_H
 
+#include "document/dom/string.h"
 #include "util/hash.h"
 
 struct dom_node_list;
@@ -207,8 +208,7 @@ struct dom_node {
 
 	/* Can contain either stuff like element name or for attributes the
 	 * attribute name. */
-	uint16_t length;
-	unsigned char *string;
+	struct dom_string string;
 
 	struct dom_node *parent;
 
