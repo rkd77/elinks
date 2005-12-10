@@ -248,7 +248,7 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, uint16_t length);
+		unsigned char *string, size_t length);
 #define init_dom_node(type, string, length) init_dom_node_(__FILE__, __LINE__, NULL, type, string, length)
 #define add_dom_node(parent, type, string, length) init_dom_node_(__FILE__, __LINE__, parent, type, string, length)
 
@@ -257,7 +257,7 @@ init_dom_node_(unsigned char *file, int line,
 
 static inline struct dom_node *
 add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
-		  unsigned char *value, uint16_t valuelen)
+		  unsigned char *value, size_t valuelen)
 {
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, string, length);
 
@@ -270,7 +270,7 @@ add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
 
 static inline struct dom_node *
 add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int length,
-			 unsigned char *instruction, uint16_t instructionlen)
+			 unsigned char *instruction, size_t instructionlen)
 {
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string, length);
 

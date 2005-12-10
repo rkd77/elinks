@@ -217,7 +217,7 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, uint16_t length)
+		unsigned char *string, size_t length)
 {
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
