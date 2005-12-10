@@ -286,6 +286,8 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 	}
 }
 
+/*#define DOM_TREE_RENDERER*/
+
 #ifdef DOM_TREE_RENDERER
 static void
 render_dom_printf(struct dom_renderer *renderer, struct screen_char *template,
@@ -390,17 +392,17 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value;
+	struct dom_string *value = &node->string;
+	unsigned char *name;
 
 	assert(node && renderer);
 
 	name  = get_dom_node_name(node);
-	value = memacpy(node->string, node->length);
 
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
+	render_dom_printf(renderer, template, "%-16s: %.*s\n", name,
+			  value->length, value->string);
 
 	mem_free_if(name);
-	mem_free_if(value);
 
 	return node;
 }
@@ -411,7 +413,8 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value, *id;
+	unsigned char *name, *value;
+	struct dom_string *id;
 
 	assert(node && document);
 
@@ -420,7 +423,10 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	id	= get_dom_node_type_name(node->type);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s -> %s\n", id, name, value);
+	if (id->length < 16)
+		render_dom_text(renderer, template, "                ", 16 - id->length);
+	render_dom_printf(renderer, template, "%.*s: %s -> %s\n",
+			  id->length, id->string, name, value);
 
 	mem_free_if(name);
 	mem_free_if(value);
@@ -456,7 +462,8 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *id;
+	unsigned char *name;
+	struct dom_string *id;
 
 	assert(node && document);
 
@@ -464,7 +471,10 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 	id	= get_dom_node_type_name(node->type);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", id, name);
+	if (id->length < 16)
+		render_dom_text(renderer, template, "                ", 16 - id->length);
+	render_dom_printf(renderer, template, "%.*s: %s\n",
+			  id->length, id->string, name);
 
 	mem_free_if(name);
 
