@@ -16,6 +16,8 @@ set_dom_string(struct dom_string *string, unsigned char *value, uint16_t length)
 	string->length = length;
 }
 
+#define is_dom_string_set(str) ((str)->string && (str)->length)
+
 #define done_dom_string(str) mem_free((str)->string);
 
 #endif

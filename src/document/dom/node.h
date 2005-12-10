@@ -107,8 +107,7 @@ struct dom_attribute_node {
 	/* The string that hold the attribute value. The @string / @length
 	 * members of {struct dom_node} holds the name that identifies the node
 	 * in the map. */
-	unsigned char *value;
-	uint16_t valuelen;
+	struct dom_string value;
 
 	/* For xml:lang="en" attributes this holds the offset of 'lang' */
 	uint16_t namespace_offset;
@@ -272,8 +271,7 @@ add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, string, length);
 
 	if (node && value) {
-		node->data.attribute.value    = value;
-		node->data.attribute.valuelen = valuelen;
+		set_dom_string(&node->data.attribute.value, value, valuelen);
 	}
 
 	return node;

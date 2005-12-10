@@ -422,8 +422,8 @@ get_dom_node_value(struct dom_node *node, int codepage)
 
 	switch (node->type) {
 		case DOM_NODE_ATTRIBUTE:
-			value	 = node->data.attribute.value;
-			valuelen = node->data.attribute.valuelen;
+			value	 = node->data.attribute.value.string;
+			valuelen = node->data.attribute.value.length;
 			break;
 
 		case DOM_NODE_PROCESSING_INSTRUCTION:

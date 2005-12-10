@@ -645,10 +645,10 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 #endif
 	render_dom_node_text(renderer, template, node);
 
-	if (node->data.attribute.value) {
+	if (is_dom_string_set(&node->data.attribute.value)) {
 		int quoted = node->data.attribute.quoted == 1;
-		unsigned char *value = node->data.attribute.value - quoted;
-		int valuelen = node->data.attribute.valuelen + quoted * 2;
+		unsigned char *value = node->data.attribute.value.string - quoted;
+		int valuelen = node->data.attribute.value.length + quoted * 2;
 
 		if (check_dom_node_source(renderer, value, 0)) {
 			render_dom_flush(renderer, value);
