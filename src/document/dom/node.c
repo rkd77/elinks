@@ -357,30 +357,30 @@ get_dom_node_name(struct dom_node *node)
 	assert(node);
 
 	switch (node->type) {
-		case DOM_NODE_CDATA_SECTION:
-			return &cdata_section_str;
+	case DOM_NODE_CDATA_SECTION:
+		return &cdata_section_str;
 
-		case DOM_NODE_COMMENT:
-			return &comment_str;
+	case DOM_NODE_COMMENT:
+		return &comment_str;
 
-		case DOM_NODE_DOCUMENT:
-			return &document_str;
+	case DOM_NODE_DOCUMENT:
+		return &document_str;
 
-		case DOM_NODE_DOCUMENT_FRAGMENT:
-			return &document_fragment_str;
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+		return &document_fragment_str;
 
-		case DOM_NODE_TEXT:
-			return &text_str;
+	case DOM_NODE_TEXT:
+		return &text_str;
 
-		case DOM_NODE_ATTRIBUTE:
-		case DOM_NODE_DOCUMENT_TYPE:
-		case DOM_NODE_ELEMENT:
-		case DOM_NODE_ENTITY:
-		case DOM_NODE_ENTITY_REFERENCE:
-		case DOM_NODE_NOTATION:
-		case DOM_NODE_PROCESSING_INSTRUCTION:
-		default:
-			return &node->string;
+	case DOM_NODE_ATTRIBUTE:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+	default:
+		return &node->string;
 	}
 }
 
