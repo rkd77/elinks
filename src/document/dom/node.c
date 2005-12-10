@@ -154,15 +154,8 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 			break;
 		}
 	}
-	{
-		int length = int_min(key->string.length, node->string.length);
-		int string_diff = strncasecmp(key->string.string, node->string.string, length);
 
-		/* If the lengths or strings don't match strncasecmp() does the
-		 * job else return which ever is bigger. */
-
-		return string_diff ? string_diff : key->string.length - node->string.length;
-	}
+	return dom_string_casecmp(&key->string, &node->string);
 }
 
 static inline int
