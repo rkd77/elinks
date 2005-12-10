@@ -383,26 +383,26 @@ get_dom_node_value(struct dom_node *node)
 	assert(node);
 
 	switch (node->type) {
-		case DOM_NODE_ATTRIBUTE:
-			return &node->data.attribute.value;
+	case DOM_NODE_ATTRIBUTE:
+		return &node->data.attribute.value;
 
-		case DOM_NODE_PROCESSING_INSTRUCTION:
-			return &node->data.proc_instruction.instruction;
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		return &node->data.proc_instruction.instruction;
 
-		case DOM_NODE_CDATA_SECTION:
-		case DOM_NODE_COMMENT:
-		case DOM_NODE_TEXT:
-			return &node->string;
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_COMMENT:
+	case DOM_NODE_TEXT:
+		return &node->string;
 
-		case DOM_NODE_ENTITY_REFERENCE:
-		case DOM_NODE_NOTATION:
-		case DOM_NODE_DOCUMENT:
-		case DOM_NODE_DOCUMENT_FRAGMENT:
-		case DOM_NODE_DOCUMENT_TYPE:
-		case DOM_NODE_ELEMENT:
-		case DOM_NODE_ENTITY:
-		default:
-			return NULL;
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	case DOM_NODE_DOCUMENT:
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	default:
+		return NULL;
 	}
 }
 
