@@ -5,8 +5,6 @@ The BitTorrent client is fully usable and has been tested on multiple sites, it
 does however still lack certain core functionally and is therefore marked
 experimental. Below, various known problems and limitations are listed:
 
- - Torrents should be added to the global history.
-
  - Peer IDs should be restorable from ~/.elinks/downloadhist.
 
  - It needs to give up on unreachable peers.
@@ -20,11 +18,11 @@ experimental. Below, various known problems and limitations are listed:
 
  - Unsupported Tracker Protocol Error: When connecting to some trackers we get
    a returned failure reason reading:
-	
+
 	unsupported tracker protocol, please upgrade your client
-	
+
    often this is due to the compact peer format is not enabled. We should maybe
-   try to reconnect when this occurs. 
+   try to reconnect when this occurs.
 
  - Multiple Trackers: The metainfo file can contain a list of tracker URIs so
    that the client can handle tracker request errors more gracefully by
