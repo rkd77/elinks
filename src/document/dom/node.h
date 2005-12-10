@@ -285,7 +285,7 @@ add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int len
 void done_dom_node(struct dom_node *node);
 
 /* Returns the name of the node in an allocated string. */
-unsigned char *get_dom_node_name(struct dom_node *node);
+struct dom_string *get_dom_node_name(struct dom_node *node);
 
 /* Returns the value of the node in an allocated string.
  * @codepage denotes how entity strings should be decoded. */

@@ -345,34 +345,32 @@ done_dom_node(struct dom_node *node)
 #define set_node_name(name, namelen, str)	\
 	do { (name) = (str); (namelen) = sizeof(str) - 1; } while (0)
 
-unsigned char *
+struct dom_string *
 get_dom_node_name(struct dom_node *node)
 {
-	unsigned char *name;
-	uint16_t namelen;
+	static struct dom_string cdata_section_str = INIT_DOM_STRING("#cdata-section", -1);
+	static struct dom_string comment_str = INIT_DOM_STRING("#comment", -1);
+	static struct dom_string document_str = INIT_DOM_STRING("#document", -1);
+	static struct dom_string document_fragment_str = INIT_DOM_STRING("#document-fragment", -1);
+	static struct dom_string text_str = INIT_DOM_STRING("#text", -1);
 
 	assert(node);
 
 	switch (node->type) {
 		case DOM_NODE_CDATA_SECTION:
-			set_node_name(name, namelen, "#cdata-section");
-			break;
+			return &cdata_section_str;
 
 		case DOM_NODE_COMMENT:
-			set_node_name(name, namelen, "#comment");
-			break;
+			return &comment_str;
 
 		case DOM_NODE_DOCUMENT:
-			set_node_name(name, namelen, "#document");
-			break;
+			return &document_str;
 
 		case DOM_NODE_DOCUMENT_FRAGMENT:
-			set_node_name(name, namelen, "#document-fragment");
-			break;
+			return &document_fragment_str;
 
 		case DOM_NODE_TEXT:
-			set_node_name(name, namelen, "#text");
-			break;
+			return &text_str;
 
 		case DOM_NODE_ATTRIBUTE:
 		case DOM_NODE_DOCUMENT_TYPE:
@@ -382,11 +380,8 @@ get_dom_node_name(struct dom_node *node)
 		case DOM_NODE_NOTATION:
 		case DOM_NODE_PROCESSING_INSTRUCTION:
 		default:
-			name	= node->string.string;
-			namelen	= node->string.length;
+			return &node->string;
 	}
-
-	return memacpy(name, namelen);
 }
 
 static inline unsigned char *
