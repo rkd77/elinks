@@ -211,9 +211,9 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 
 struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
-		       uint16_t subtype, unsigned char *name, int namelen)
+		       uint16_t subtype, struct dom_string *name)
 {
-	struct dom_node node = { type, INIT_DOM_STRING(name, namelen) };
+	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, subtype, list);
 
 	return dom_node_list_bsearch(&search, list);

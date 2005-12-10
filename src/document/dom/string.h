@@ -2,7 +2,7 @@
 #define EL__DOCUMENT_DOM_STRING_H
 
 struct dom_string {
-	uint16_t length;
+	size_t length;
 	unsigned char *string;
 };
 

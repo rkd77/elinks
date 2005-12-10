@@ -243,7 +243,7 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *node_map,
 		       enum dom_node_type type, uint16_t subtype,
-		       unsigned char *name, int namelen);
+		       struct dom_string *name);
 
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
