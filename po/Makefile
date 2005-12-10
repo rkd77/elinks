@@ -17,9 +17,8 @@ POTFILES_ABS_LIST = potfiles.list
 # However, if srcdir != builddir, then this Makefile ignores the *.gmo
 # files in the srcdir and builds new ones in the builddir.
 %.gmo: $(srcdir)/%.po
-	@file=`echo $* | sed 's,.*/,,'`.gmo \
-	  && rm -f $$file && echo -n $*": " \
-	  && $(GMSGFMT) --statistics -o $$file $<
+	@rm -f -- "$@" && printf "%s: " "$*" \
+	  && $(GMSGFMT) --statistics -o "$@" -- "$<"
 
 
 ### The default rule
@@ -88,7 +87,7 @@ update-gmo: Makefile $(GMOFILES)
 check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
+	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
 	)
 
 ### Installation and distribution
