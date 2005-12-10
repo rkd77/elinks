@@ -460,26 +460,26 @@ get_dom_node_value(struct dom_node *node, int codepage)
 	return compress_string(value, valuelen);
 }
 
-unsigned char *
+struct dom_string *
 get_dom_node_type_name(enum dom_node_type type)
 {
-	static unsigned char *dom_node_type_names[DOM_NODES] = {
-		NULL,
-		/* DOM_NODE_ELEMENT */			"element",
-		/* DOM_NODE_ATTRIBUTE */		"attribute",
-		/* DOM_NODE_TEXT */			"text",
-		/* DOM_NODE_CDATA_SECTION */		"cdata-section",
-		/* DOM_NODE_ENTITY_REFERENCE */		"entity-reference",
-		/* DOM_NODE_ENTITY */			"entity",
-		/* DOM_NODE_PROCESSING_INSTRUCTION */	"proc-instruction",
-		/* DOM_NODE_COMMENT */			"comment",
-		/* DOM_NODE_DOCUMENT */			"document",
-		/* DOM_NODE_DOCUMENT_TYPE */		"document-type",
-		/* DOM_NODE_DOCUMENT_FRAGMENT */	"document-fragment",
-		/* DOM_NODE_NOTATION */			"notation",
+	static struct dom_string dom_node_type_names[DOM_NODES] = {
+		INIT_DOM_STRING(NULL, 0),
+		/* DOM_NODE_ELEMENT */			INIT_DOM_STRING("element", -1),
+		/* DOM_NODE_ATTRIBUTE */		INIT_DOM_STRING("attribute", -1),
+		/* DOM_NODE_TEXT */			INIT_DOM_STRING("text", -1),
+		/* DOM_NODE_CDATA_SECTION */		INIT_DOM_STRING("cdata-section", -1),
+		/* DOM_NODE_ENTITY_REFERENCE */		INIT_DOM_STRING("entity-reference", -1),
+		/* DOM_NODE_ENTITY */			INIT_DOM_STRING("entity", -1),
+		/* DOM_NODE_PROCESSING_INSTRUCTION */	INIT_DOM_STRING("proc-instruction", -1),
+		/* DOM_NODE_COMMENT */			INIT_DOM_STRING("comment", -1),
+		/* DOM_NODE_DOCUMENT */			INIT_DOM_STRING("document", -1),
+		/* DOM_NODE_DOCUMENT_TYPE */		INIT_DOM_STRING("document-type", -1),
+		/* DOM_NODE_DOCUMENT_FRAGMENT */	INIT_DOM_STRING("document-fragment", -1),
+		/* DOM_NODE_NOTATION */			INIT_DOM_STRING("notation", -1),
 	};
 
 	assert(type < DOM_NODES);
 
-	return dom_node_type_names[type];
+	return &dom_node_type_names[type];
 }

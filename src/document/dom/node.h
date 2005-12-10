@@ -292,7 +292,7 @@ unsigned char *get_dom_node_name(struct dom_node *node);
 unsigned char *get_dom_node_value(struct dom_node *node, int codepage);
 
 /* Returns the name used for identifying the node type. */
-unsigned char *get_dom_node_type_name(enum dom_node_type type);
+struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
 /* Returns a pointer to a node list containing attributes. */
 #define get_dom_node_attributes(node)					\

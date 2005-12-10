@@ -97,8 +97,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		color_T foreground = document->options.default_fg;
 		static int i_want_struct_module_for_dom;
 
-		unsigned char *name = get_dom_node_type_name(type);
-		int namelen = name ? strlen(name) : 0;
+		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
 		if (!i_want_struct_module_for_dom) {
@@ -119,9 +118,10 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		}
 
 		if (name)
+		if (is_dom_string_set(name))
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
-						     name, namelen);
+						     name->string, name->length);
 
 		if (selector) {
 			struct list_head *properties = &selector->properties;
