@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "document/dom/stack.h"
+#include "document/dom/string.h"
 
 /* The flags stored in the attribute sgml node info data */
 /* TODO: Other potential flags (there can be only 16)
@@ -43,20 +44,21 @@ enum sgml_element_flags {
 };
 
 struct sgml_node_info {
-	unsigned char *string;
-	int length;
+	struct dom_string string;
 	uint16_t type;
 	uint16_t flags;
 };
 
+/* The header node is special. It is used for storing the number of nodes and
+ * for returning the default 'unknown' node. */
 #define SGML_NODE_HEAD(doctype, nodetype) \
-	{ NULL, doctype##_##nodetype##S - 1, doctype##_##nodetype##_UNKNOWN }
+	{ INIT_DOM_STRING(NULL, doctype##_##nodetype##S - 1), doctype##_##nodetype##_UNKNOWN }
 
 #define SGML_NODE_INFO(doctype, nodetype, name, data) \
-	{ #name, sizeof(#name) - 1, doctype##_##nodetype##_##name, data }
+	{ INIT_DOM_STRING(#name, sizeof(#name) - 1), doctype##_##nodetype##_##name, data }
 
 #define SGML_NODE_INF2(doctype, nodetype, name, ident, data) \
-	{ ident, sizeof(ident) - 1, doctype##_##nodetype##_##name, data }
+	{ INIT_DOM_STRING(ident, sizeof(ident) - 1), doctype##_##nodetype##_##name, data }
 
 #define SGML_NODE_INFO_TYPE(doctype, nodetype, name) doctype##_##nodetype##_##name
 
@@ -66,7 +68,7 @@ static inline struct sgml_node_info *
 get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 {
 	struct sgml_node_info *map = &list[1];
-	size_t map_size = list->length;
+	size_t map_size = list->string.length;
 	size_t obj_size = sizeof(struct sgml_node_info);
 	void *match = bsearch(node, map, map_size, obj_size, sgml_info_strcmp);
 
