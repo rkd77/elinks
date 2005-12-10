@@ -287,9 +287,9 @@ void done_dom_node(struct dom_node *node);
 /* Returns the name of the node in an allocated string. */
 struct dom_string *get_dom_node_name(struct dom_node *node);
 
-/* Returns the value of the node in an allocated string.
- * @codepage denotes how entity strings should be decoded. */
-unsigned char *get_dom_node_value(struct dom_node *node, int codepage);
+/* Returns the value of the node or NULL if no value is defined for the node
+ * type. */
+struct dom_string *get_dom_node_value(struct dom_node *node);
 
 /* Returns the name used for identifying the node type. */
 struct dom_string *get_dom_node_type_name(enum dom_node_type type);

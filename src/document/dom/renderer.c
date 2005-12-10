@@ -387,6 +387,58 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 /* DOM Tree Renderer */
 
 #ifdef DOM_TREE_RENDERER
+static inline unsigned char *
+compress_string(unsigned char *string, unsigned int length)
+{
+	struct string buffer;
+	unsigned char escape[2] = "\\";
+
+	if (!init_string(&buffer)) return NULL;
+
+	for (; length > 0; string++, length--) {
+		unsigned char *bytes = string;
+
+		if (*string == '\n' || *string == '\r' || *string == '\t') {
+			bytes	  = escape;
+			escape[1] = *string == '\n' ? 'n'
+				  : (*string == '\r' ? 'r' : 't');
+		}
+
+		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
+	}
+
+	return buffer.source;
+}
+
+/* @codepage denotes how entity strings should be decoded. */
+static void
+set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
+			    int codepage)
+{
+	struct dom_string *value;
+
+	assert(node);
+
+	switch (node->type) {
+	case DOM_NODE_ENTITY_REFERENCE:
+		string->string = get_entity_string(node->string.string,
+						  node->string.length,
+						  codepage);
+		break;
+
+	default:
+		value = get_dom_node_value(node);
+		if (!value) {
+			set_dom_string(string, NULL, 0);
+			return;
+		}
+
+		string->string = compress_string(value->string, value->length);
+	}
+
+	string->length = string->string ? strlen(string->string) : 0;
+}
+
 static struct dom_node *
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -410,22 +462,23 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *value;
+	struct dom_string value;
 	struct dom_string *name;
 	struct dom_string *id;
 
 	assert(node && document);
 
 	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
 	id	= get_dom_node_type_name(node->type);
+	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%.*s: %.*s -> %s\n",
+	render_dom_printf(renderer, template, "%.*s: %.*s -> %.*s\n",
 			  id->length, id->string, name->length, name->string,
-			  value);
+			  value.length, value.string);
 
-	mem_free_if(value);
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
 
 	return node;
 }
@@ -437,18 +490,20 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *name;
-	unsigned char *value;
+	struct dom_string value;
 
 	assert(node && document);
 
 	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
+	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
+	render_dom_printf(renderer, template, "%.*s: %.*s\n",
+			  name->length, name->string,
+			  value.length, value.string);
 
-	mem_free_if(name);
-	mem_free_if(value);
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
 
 	return node;
 }

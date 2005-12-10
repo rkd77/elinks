@@ -384,62 +384,24 @@ get_dom_node_name(struct dom_node *node)
 	}
 }
 
-static inline unsigned char *
-compress_string(unsigned char *string, unsigned int length)
+struct dom_string *
+get_dom_node_value(struct dom_node *node)
 {
-	struct string buffer;
-	unsigned char escape[2] = "\\";
-
-	if (!init_string(&buffer)) return NULL;
-
-	for (; length > 0; string++, length--) {
-		unsigned char *bytes = string;
-
-		if (*string == '\n' || *string == '\r' || *string == '\t') {
-			bytes	  = escape;
-			escape[1] = *string == '\n' ? 'n'
-				  : (*string == '\r' ? 'r' : 't');
-		}
-
-		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
-	}
-
-	return buffer.source;
-}
-
-unsigned char *
-get_dom_node_value(struct dom_node *node, int codepage)
-{
-	unsigned char *value;
-	uint16_t valuelen;
-
 	assert(node);
 
 	switch (node->type) {
 		case DOM_NODE_ATTRIBUTE:
-			value	 = node->data.attribute.value.string;
-			valuelen = node->data.attribute.value.length;
-			break;
+			return &node->data.attribute.value;
 
 		case DOM_NODE_PROCESSING_INSTRUCTION:
-			value	 = node->data.proc_instruction.instruction.string;
-			valuelen = node->data.proc_instruction.instruction.length;
-			break;
+			return &node->data.proc_instruction.instruction;
 
 		case DOM_NODE_CDATA_SECTION:
 		case DOM_NODE_COMMENT:
 		case DOM_NODE_TEXT:
-			value	 = node->string.string;
-			valuelen = node->string.length;
-			break;
+			return &node->string;
 
 		case DOM_NODE_ENTITY_REFERENCE:
-			value = get_entity_string(node->string.string,
-						  node->string.length,
-						  codepage);
-			valuelen = value ? strlen(value) : 0;
-			break;
-
 		case DOM_NODE_NOTATION:
 		case DOM_NODE_DOCUMENT:
 		case DOM_NODE_DOCUMENT_FRAGMENT:
@@ -449,10 +411,6 @@ get_dom_node_value(struct dom_node *node, int codepage)
 		default:
 			return NULL;
 	}
-
-	if (!value) value = "";
-
-	return compress_string(value, valuelen);
 }
 
 struct dom_string *
