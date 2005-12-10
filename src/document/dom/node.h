@@ -31,11 +31,6 @@ struct dom_node_id_item {
 	/* The attibute node containing the id value */
 	struct dom_node *id_attribute;
 
-	/* The path to the node. This can be passed to the DOM navigator to
-	 * locate the node. The path should not contain the id node itself.
-	 * E.g. for <a id="..."> element "html/body/p/span". */
-	unsigned char *path;
-
 	/* The node with the @id attribute */
 	struct dom_node *node;
 };
@@ -55,15 +50,12 @@ struct dom_document_node {
 };
 
 struct dom_id {
-	unsigned char *public_id;
-	uint16_t pid_length;
-	uint16_t sid_length;
-	unsigned char *system_id;
+	struct dom_string public_id;
+	struct dom_string system_id;
 };
 
 struct dom_doctype_subset_info {
-	uint16_t internallen;
-	unsigned char *internal;
+	struct dom_string internal;
 	struct dom_id external;
 };
 
