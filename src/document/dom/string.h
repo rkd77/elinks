@@ -10,10 +10,10 @@ struct dom_string {
 	{ (strlength) == -1 ? sizeof(strvalue) - 1 : (strlength), (strvalue) }
 
 static inline void
-set_dom_string(struct dom_string *string, unsigned char *value, uint16_t length)
+set_dom_string(struct dom_string *string, unsigned char *value, size_t length)
 {
 	string->string = value;
-	string->length = length;
+	string->length = length == -1 ? strlen(value) : length;
 }
 
 static inline int
