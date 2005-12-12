@@ -910,6 +910,7 @@ activate_link(struct session *ses, struct document_view *doc_view,
 
 	if (link->type == LINK_CHECKBOX) {
 		struct form_state *fs;
+		struct form *form;
 
 		fs = find_form_state(doc_view, link_fc);
 		if (!fs) return FRAME_EVENT_OK;
@@ -917,27 +918,26 @@ activate_link(struct session *ses, struct document_view *doc_view,
 		if (link_fc->type == FC_CHECKBOX) {
 			fs->state = !fs->state;
 
-		} else {
-			struct form *form;
+			return FRAME_EVENT_REFRESH;
+		}
 
-			foreach (form, doc_view->document->forms) {
-				struct form_control *fc;
+		foreach (form, doc_view->document->forms) {
+			struct form_control *fc;
 
-				if (form != link_fc->form)
-					continue;
+			if (form != link_fc->form)
+				continue;
 
-				foreach (fc, form->items) {
-					if (fc->type == FC_RADIO
-				            && !xstrcmp(fc->name, link_fc->name)) {
-						struct form_state *frm_st;
+			foreach (fc, form->items) {
+				if (fc->type == FC_RADIO
+				    && !xstrcmp(fc->name, link_fc->name)) {
+					struct form_state *frm_st;
 
-						frm_st = find_form_state(doc_view, fc);
-						if (frm_st) frm_st->state = 0;
-					}
+					frm_st = find_form_state(doc_view, fc);
+					if (frm_st) frm_st->state = 0;
 				}
 			}
-			fs->state = 1;
 		}
+		fs->state = 1;
 
 	} else if (link->type == LINK_SELECT) {
 		object_lock(doc_view->document);
