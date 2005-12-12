@@ -1269,11 +1269,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 
 	/* TODO: Provide info about script event hooks too. --pasky */
 
-	if (link_is_form(link)) {
-		if (!get_link_form_control(link)) return NULL;
-
-		return get_form_info(ses, doc_view);
-	} else {
+	if (!link_is_form(link)) {
 		struct terminal *term = ses->tab->term;
 		struct string str;
 		unsigned char *uristring = link->where;
@@ -1302,4 +1298,8 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 		decode_uri_string_for_display(&str);
 		return str.source;
 	}
+
+	if (!get_link_form_control(link)) return NULL;
+
+	return get_form_info(ses, doc_view);
 }
