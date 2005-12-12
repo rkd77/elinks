@@ -45,7 +45,7 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
+init_dom_stack(struct dom_stack *stack, void *data,
 	       dom_stack_callback_T push_callbacks[DOM_NODES],
 	       dom_stack_callback_T pop_callbacks[DOM_NODES],
 	       size_t object_size, int keep_nodes)
@@ -54,8 +54,7 @@ init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
 
 	memset(stack, 0, sizeof(*stack));
 
-	stack->parser      = parser;
-	stack->renderer    = renderer;
+	stack->data        = data;
 	stack->object_size = object_size;
 	stack->keep_nodes  = !!keep_nodes;
 

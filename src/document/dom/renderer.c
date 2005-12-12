@@ -597,7 +597,8 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static struct dom_node *
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -611,7 +612,8 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 static struct dom_node *
 render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	unsigned char *value;
 	int valuelen;
 
@@ -638,7 +640,8 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 static struct dom_node *
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -650,7 +653,8 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static struct dom_node *
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	struct sgml_parser_state *pstate = data;
 	struct scanner_token *token = &pstate->end_token;
 	unsigned char *string = token->string;
@@ -675,7 +679,8 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 static struct dom_node *
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	struct screen_char *template = &renderer->styles[node->type];
 
 	assert(node && renderer->document);

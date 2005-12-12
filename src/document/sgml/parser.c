@@ -37,7 +37,7 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 {
-	struct sgml_parser *parser = stack->parser;
+	struct sgml_parser *parser = stack->data;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
@@ -67,7 +67,7 @@ static inline void
 add_sgml_attribute(struct dom_stack *stack,
 		  struct scanner_token *token, struct scanner_token *valtoken)
 {
-	struct sgml_parser *parser = stack->parser;
+	struct sgml_parser *parser = stack->data;
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	unsigned char *value = valtoken ? valtoken->string : NULL;
 	size_t valuelen = valtoken ? valtoken->length : 0;
@@ -305,7 +305,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
+init_sgml_parser(enum sgml_parser_type type, void *data, struct uri *uri,
 		 dom_stack_callback_T push_callbacks[DOM_NODES],
 		 dom_stack_callback_T pop_callbacks[DOM_NODES])
 {
@@ -318,8 +318,9 @@ init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
 	parser->type = type;
 	parser->uri  = get_uri_reference(uri);
 	parser->info = &sgml_html_info;
+	parser->data = data;
 
-	init_dom_stack(&parser->stack, parser, renderer,
+	init_dom_stack(&parser->stack, parser,
 		       push_callbacks, pop_callbacks, obj_size,
 		       type != SGML_PARSER_STREAM);
 
