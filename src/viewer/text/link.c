@@ -888,24 +888,15 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	return link;
 }
 
-enum frame_event_status
-enter(struct session *ses, struct document_view *doc_view, int do_reload)
+static enum frame_event_status
+activate_link(struct session *ses, struct document_view *doc_view,
+              struct link *link, int do_reload)
 {
 	struct form_control *link_fc;
-	struct link *link;
-
-	assert(ses && doc_view && doc_view->vs && doc_view->document);
-	if_assert_failed return FRAME_EVENT_REFRESH;
-
-	link = get_current_link(doc_view);
-	if (!link) return FRAME_EVENT_REFRESH;
 
 	if (!link_is_form(link)
 	    || link_is_textinput(link)
 	    || link->type == LINK_BUTTON) {
-		if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
-			return FRAME_EVENT_REFRESH;
-
 		if (goto_current_link(ses, doc_view, do_reload))
 			return FRAME_EVENT_OK;
 
@@ -959,10 +950,27 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 		INTERNAL("bad link type %d", link->type);
 	}
 
-	if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
-		return FRAME_EVENT_REFRESH;
-
 	return FRAME_EVENT_REFRESH;
+}
+
+enum frame_event_status
+enter(struct session *ses, struct document_view *doc_view, int do_reload)
+{
+	enum frame_event_status ret;
+	struct link *link;
+
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_REFRESH;
+
+	link = get_current_link(doc_view);
+	if (!link) return FRAME_EVENT_REFRESH;
+
+	ret = activate_link(ses, doc_view, link, do_reload);
+	if (ret != FRAME_EVENT_IGNORED)
+		if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
+			return FRAME_EVENT_REFRESH;
+
+	return ret;
 }
 
 struct link *
