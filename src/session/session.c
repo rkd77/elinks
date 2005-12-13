@@ -288,11 +288,10 @@ print_error_dialog(struct session *ses, enum connection_state state,
 static void
 abort_files_load(struct session *ses, int interrupt)
 {
-	struct file_to_load *ftl;
-	int more;
+	while (1) {
+		struct file_to_load *ftl;
+		int more = 0;
 
-	do {
-		more = 0;
 		foreach (ftl, ses->more_files) {
 			if (!file_to_load_is_active(ftl))
 				continue;
@@ -300,7 +299,9 @@ abort_files_load(struct session *ses, int interrupt)
 			more = 1;
 			change_connection(&ftl->download, NULL, PRI_CANCEL, interrupt);
 		}
-	} while (more);
+
+		if (!more) break;
+	};
 }
 
 void
