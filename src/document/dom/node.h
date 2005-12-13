@@ -8,6 +8,8 @@
 struct dom_node_list;
 
 enum dom_node_type {
+	DOM_NODE_UNKNOWN		=  0, /* for internal purpose only */
+
 	DOM_NODE_ELEMENT		=  1,
 	DOM_NODE_ATTRIBUTE		=  2,
 	DOM_NODE_TEXT			=  3,
