@@ -518,29 +518,32 @@ add_submitted_value_to_list(struct form_control *fc,
 static void
 sort_submitted_values(struct list_head *list)
 {
-	int changed;
+	while (1) {
+		struct submitted_value *sub;
+		int changed = 0;
 
-	do {
-		struct submitted_value *sub, *next;
-
-		changed = 0;
 		foreach (sub, *list) if (list_has_next(*list, sub))
 			if (sub->next->position < sub->position) {
-				next = sub->next;
+				struct submitted_value *next = sub->next;
+
 				del_from_list(sub);
 				add_at_pos(next, sub);
 				sub = next;
 				changed = 1;
 			}
+
 		foreachback (sub, *list) if (list_has_next(*list, sub))
 			if (sub->next->position < sub->position) {
-				next = sub->next;
+				struct submitted_value *next = sub->next;
+
 				del_from_list(sub);
 				add_at_pos(next, sub);
 				sub = next;
 				changed = 1;
 			}
-	} while (changed);
+
+		if (!changed) break;
+	};
 }
 
 static void
