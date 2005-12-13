@@ -1183,8 +1183,9 @@ setup_download_handler(struct session *ses, struct download *loading,
 	if (type_query) {
 		ret = 1;
 #ifdef CONFIG_BITTORRENT
-		if (!handler
-		    && (!strcasecmp(ctype, "application/x-bittorrent")
+		/* A terrible waste of a good MIME handler here, but we want
+		 * to use the type_query this is easier. */
+		if ((!strcasecmp(ctype, "application/x-bittorrent")
 			|| !strcasecmp(ctype, "application/x-torrent"))
 		    && !get_cmd_opt_bool("anonymous"))
 			query_bittorrent_dialog(type_query);

@@ -236,7 +236,7 @@ init_dom_node_(unsigned char *file, int line,
 		int sort = (type == DOM_NODE_ATTRIBUTE);
 		int index;
 
-		assertm(list, "Adding %s to bad parent %s",
+		assertm(list, "Adding node to bad parent",
 			get_dom_node_type_name(node->type),
 			get_dom_node_type_name(parent->type));
 

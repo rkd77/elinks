@@ -54,13 +54,12 @@ static void
 sort_bittorrent_peer_connections(struct bittorrent_connection *bittorrent)
 {
 	struct bittorrent_peer_connection *peer, *prev;
-	int resort = 0;
 
-	do {
+	while (1) {
 		struct bittorrent_peer_connection *next;
+		int resort = 0;
 
 		prev = NULL;
-		resort = 0;
 
 		foreachsafe (peer, next, bittorrent->peers) {
 			if (prev && prev->stats.download_rate < peer->stats.download_rate) {
@@ -72,7 +71,8 @@ sort_bittorrent_peer_connections(struct bittorrent_connection *bittorrent)
 			prev = peer;
 		}
 
-	} while (resort);
+		if (!resort) break;
+	};
 
 #ifdef CONFIG_DEBUG
 	prev = NULL;

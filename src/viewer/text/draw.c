@@ -291,7 +291,7 @@ draw_frames(struct session *ses)
 {
 	struct document_view *doc_view, *current_doc_view;
 	int *l;
-	int n, d, more;
+	int n, d;
 
 	assert(ses && ses->doc_view && ses->doc_view->document);
 	if_assert_failed return;
@@ -308,16 +308,19 @@ draw_frames(struct session *ses)
 
 	current_doc_view = current_frame(ses);
 	d = 0;
-	do {
-		more = 0;
+	while (1) {
+		int more = 0;
+
 		foreach (doc_view, ses->scrn_frames) {
 			if (doc_view->depth == d)
 				draw_doc(ses, doc_view, doc_view == current_doc_view);
 			else if (doc_view->depth > d)
 				more = 1;
 		}
+
+		if (!more) break;
 		d++;
-	} while (more);
+	};
 }
 
 /* @rerender is ridiciously wound-up. */

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-06 22:02+0100\n"
-"PO-Revision-Date: 2005-12-06 22:03+0100\n"
+"POT-Creation-Date: 2005-12-13 17:20+0100\n"
+"PO-Revision-Date: 2005-12-13 17:21+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
 #: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:799 src/viewer/text/search.c:1593
+#: src/session/session.c:802 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
 
@@ -1784,7 +1784,7 @@ msgstr "Description"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:961 src/viewer/text/textarea.c:362
+#: src/session/session.c:964 src/viewer/text/textarea.c:362
 #: src/viewer/text/textarea.c:369
 msgid "Error"
 msgstr "Erreur"
@@ -3738,7 +3738,7 @@ msgstr "Texte"
 msgid "Dialog text colors."
 msgstr "Couleurs du texte des dialogues."
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1451
+#: src/config/options.inc:978 src/viewer/text/form.c:1460
 msgid "Checkbox"
 msgstr "Case à cocher"
 
@@ -3786,7 +3786,7 @@ msgstr "Raccourci du bouton"
 msgid "Selected button shortcut"
 msgstr "Raccourci du bouton sélectionné"
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1455
+#: src/config/options.inc:1006 src/viewer/text/form.c:1464
 msgid "Text field"
 msgstr "Champ texte"
 
@@ -4302,7 +4302,7 @@ msgid "Goto URL History"
 msgstr "Historique Aller à"
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:824
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
 msgid "Cookies"
 msgstr "Cookies"
 
@@ -6547,7 +6547,7 @@ msgstr "Gestionnaire d'authentification"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
-#: src/protocol/bittorrent/bittorrent.c:327
+#: src/protocol/bittorrent/bittorrent.c:335
 msgid "BitTorrent"
 msgstr "BitTorrent"
 
@@ -6636,10 +6636,28 @@ msgstr ""
 "l'adresse appropriée."
 
 #: src/protocol/bittorrent/bittorrent.c:73
+msgid "User identification string"
+msgstr "Identification de l'utilisateur"
+
+#: src/protocol/bittorrent/bittorrent.c:75
+msgid ""
+"An additional identification that is not shared with any users.\n"
+"It is intended to allow a client to prove their identity should\n"
+"their IP address change. It is an optional parameter, but some\n"
+"trackers require this parameter. If set to \"\" no user key will\n"
+"be sent to the tracker."
+msgstr ""
+"Une clé d'identification additionnelle qui n'est pas partagée avec\n"
+"d'autres utilisateurs. L'objectif est de permette l'identification\n"
+"d'un client même après un changement d'IP. Ce paramètre est optionnel,\n"
+"mais certains trackers le demandent. Si mis à \"\" aucune clé ne sera\n"
+"envoyée."
+
+#: src/protocol/bittorrent/bittorrent.c:81
 msgid "Maximum number of peers to request"
 msgstr "Nombre maximum de postes à demander"
 
-#: src/protocol/bittorrent/bittorrent.c:75
+#: src/protocol/bittorrent/bittorrent.c:83
 msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
@@ -6647,11 +6665,11 @@ msgstr ""
 "Nombre maximum de postes à demander au serveur.\n"
 "Mettre à 0 pour utiliser la valeur par défaut du serveur."
 
-#: src/protocol/bittorrent/bittorrent.c:78
+#: src/protocol/bittorrent/bittorrent.c:86
 msgid "Minimum peers to skip rerequesting"
 msgstr "Nombre minimal de postes avant abandon de requêtes"
 
-#: src/protocol/bittorrent/bittorrent.c:80
+#: src/protocol/bittorrent/bittorrent.c:88
 msgid ""
 "The minimum number of peers to have in the current peer info\n"
 "pool before skipping requesting of more peers. I.e. setting\n"
@@ -6665,19 +6683,19 @@ msgstr ""
 #. ******************************************************************
 #. Lowlevel peer-wire options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:90
+#: src/protocol/bittorrent/bittorrent.c:98
 msgid "Peer-wire"
 msgstr "Liens postes"
 
-#: src/protocol/bittorrent/bittorrent.c:92
+#: src/protocol/bittorrent/bittorrent.c:100
 msgid "Lowlevel peer-wire options."
 msgstr "Options de bas niveau pour les liens postes."
 
-#: src/protocol/bittorrent/bittorrent.c:94
+#: src/protocol/bittorrent/bittorrent.c:102
 msgid "Maximum number of peer connections"
 msgstr "Nombre maximum de connexions aux postes"
 
-#: src/protocol/bittorrent/bittorrent.c:96
+#: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
 "The maximum number of allowed connections to both active and\n"
 "non-active peers. By increasing the number of allowed connections,\n"
@@ -6691,11 +6709,11 @@ msgstr ""
 "Toutefois, trop de connexions peuvent conduire à une congestion TCP.\n"
 "Si le maximum est atteint, toutes les nouvelles connexions seront fermées."
 
-#: src/protocol/bittorrent/bittorrent.c:102
+#: src/protocol/bittorrent/bittorrent.c:110
 msgid "Maximum peer message length"
 msgstr "Longueur maximale des messages"
 
-#: src/protocol/bittorrent/bittorrent.c:104
+#: src/protocol/bittorrent/bittorrent.c:112
 msgid ""
 "The maximum length of messages to accept over the wire.\n"
 "Larger values will cause the connection to be dropped."
@@ -6703,11 +6721,11 @@ msgstr ""
 "Longueur maximale des messages à accepter sur le lien.\n"
 "De plus grande valeurs causeront une déconnexion."
 
-#: src/protocol/bittorrent/bittorrent.c:107
+#: src/protocol/bittorrent/bittorrent.c:115
 msgid "Maximum allowed request length"
 msgstr "Longueur maximale de requête autorisée"
 
-#: src/protocol/bittorrent/bittorrent.c:109
+#: src/protocol/bittorrent/bittorrent.c:117
 msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
@@ -6715,11 +6733,11 @@ msgstr ""
 "Longueur maximale autorisée pour les requêtes entrantes.\n"
 "De plus grande valeurs causeront une déconnexion."
 
-#: src/protocol/bittorrent/bittorrent.c:112
+#: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
 msgstr "Longueur des requêtes"
 
-#: src/protocol/bittorrent/bittorrent.c:114
+#: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
 "How many bytes to query for per request. This is complementary\n"
 "to the max_request_length option. If the configured length is\n"
@@ -6729,11 +6747,11 @@ msgstr ""
 "l'option  max_request_length. Si la valeur configurée est plus\n"
 "grande que la longueur des morceaux celle-ci sera tronquée."
 
-#: src/protocol/bittorrent/bittorrent.c:118
+#: src/protocol/bittorrent/bittorrent.c:126
 msgid "Peer inactivity timeout"
 msgstr "Délai d'inactivité pour un poste"
 
-#: src/protocol/bittorrent/bittorrent.c:120
+#: src/protocol/bittorrent/bittorrent.c:128
 msgid ""
 "The number of seconds to wait before closing a socket on\n"
 "which nothing has been received or sent."
@@ -6741,11 +6759,11 @@ msgstr ""
 "Le nombre de secondes à attendre avant de fermer une\n"
 "connexion sur laquelle rien n'a circulé."
 
-#: src/protocol/bittorrent/bittorrent.c:123
+#: src/protocol/bittorrent/bittorrent.c:131
 msgid "Maximum peer pool size"
 msgstr "Taille maximale du groupe de postes"
 
-#: src/protocol/bittorrent/bittorrent.c:125
+#: src/protocol/bittorrent/bittorrent.c:133
 msgid ""
 "Maximum number of items in the peer pool. The peer pool\n"
 "contains information used for establishing connections to\n"
@@ -6760,11 +6778,11 @@ msgstr ""
 #. ******************************************************************
 #. Piece management options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:135
+#: src/protocol/bittorrent/bittorrent.c:143
 msgid "Maximum piece cache size"
 msgstr "Taille maximale du cache de morceaux"
 
-#: src/protocol/bittorrent/bittorrent.c:137
+#: src/protocol/bittorrent/bittorrent.c:145
 msgid ""
 "The maximum amount of memory used to hold recently\n"
 "downloaded pieces.\n"
@@ -6774,11 +6792,11 @@ msgstr ""
 "les morceaux récemment téléchargés.\n"
 "Mettre à 0 pour une taille illimitée."
 
-#: src/protocol/bittorrent/bittorrent.c:146
+#: src/protocol/bittorrent/bittorrent.c:154
 msgid "Sharing rate"
 msgstr "Ratio de partage"
 
-#: src/protocol/bittorrent/bittorrent.c:148
+#: src/protocol/bittorrent/bittorrent.c:156
 msgid ""
 "The minimum sharing rate to achieve before stop seeding.\n"
 "The sharing rate is computed as the number of uploaded bytes\n"
@@ -6794,22 +6812,22 @@ msgstr ""
 "Mettre à 1.0 pour uploader une copie complète des données et\n"
 "à 0.0 pour avoir un ratio de partage sans limite."
 
-#: src/protocol/bittorrent/bittorrent.c:155
+#: src/protocol/bittorrent/bittorrent.c:163
 msgid "Maximum number of uploads"
 msgstr "Nombre maximal de téléchargements montants"
 
-#: src/protocol/bittorrent/bittorrent.c:157
+#: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
 msgstr ""
 "Nombre maximal de téléchargements montants autorisés\n"
 "à un instant."
 
 #. The number of uploads to fill out to with extra optimistic unchokes
-#: src/protocol/bittorrent/bittorrent.c:160
+#: src/protocol/bittorrent/bittorrent.c:168
 msgid "Minimum number of uploads"
 msgstr "Nombre minimal de téléchargements montants"
 
-#: src/protocol/bittorrent/bittorrent.c:162
+#: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
@@ -6817,11 +6835,11 @@ msgstr ""
 "Le nombre minimal de téléchargements montants qui devraient\n"
 "être utilisés pour les nouvelles connexions."
 
-#: src/protocol/bittorrent/bittorrent.c:166
+#: src/protocol/bittorrent/bittorrent.c:174
 msgid "Keepalive interval"
 msgstr "Intervalle pour le maintien en vie des connexions"
 
-#: src/protocol/bittorrent/bittorrent.c:168
+#: src/protocol/bittorrent/bittorrent.c:176
 msgid ""
 "The number of seconds to pause between sending keepalive\n"
 "messages."
@@ -6829,11 +6847,11 @@ msgstr ""
 "Nombre de secondes entre chaque envoi de messages de maintien\n"
 "en vie."
 
-#: src/protocol/bittorrent/bittorrent.c:171
+#: src/protocol/bittorrent/bittorrent.c:179
 msgid "Number of pending requests"
 msgstr "Nombre de requêtes en attente"
 
-#: src/protocol/bittorrent/bittorrent.c:173
+#: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
 "How many piece requests to continuously keep in queue. Pipelining\n"
 "of requests is essential to saturate connections and get a good\n"
@@ -6850,11 +6868,11 @@ msgstr ""
 "demandés à de multiples postes."
 
 #. Bram uses 30 seconds here.
-#: src/protocol/bittorrent/bittorrent.c:182
+#: src/protocol/bittorrent/bittorrent.c:190
 msgid "Peer snubbing interval"
 msgstr "Intervalle de subbing pour les postes"
 
-#: src/protocol/bittorrent/bittorrent.c:184
+#: src/protocol/bittorrent/bittorrent.c:192
 msgid ""
 "The number of seconds to wait for file data before assuming\n"
 "the peer has been snubbed."
@@ -6862,11 +6880,11 @@ msgstr ""
 "Nombre de secondes à attendre les données avant de supposer\n"
 "qu'un poste a été snubbé."
 
-#: src/protocol/bittorrent/bittorrent.c:187
+#: src/protocol/bittorrent/bittorrent.c:195
 msgid "Peer choke interval"
 msgstr "Intervalle de choke pour les postes"
 
-#: src/protocol/bittorrent/bittorrent.c:189
+#: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of seconds between updating the connection state\n"
 "and most importantly choke and unchoke peer connections. The\n"
@@ -6880,11 +6898,11 @@ msgstr ""
 "connexions unchokées démarrent mais assez petite pour ne pas permettre\n"
 "à certains d'utiliser trop de bande passante."
 
-#: src/protocol/bittorrent/bittorrent.c:195
+#: src/protocol/bittorrent/bittorrent.c:203
 msgid "Rarest first piece selection cutoff"
 msgstr "Limite pour la sélection des morceaux par rareté"
 
-#: src/protocol/bittorrent/bittorrent.c:197
+#: src/protocol/bittorrent/bittorrent.c:205
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
@@ -6892,11 +6910,11 @@ msgstr ""
 "Nombre de morceaux à obtenir avant de modifier la stratégie\n"
 "de sélection de morceaux du mode hasard au mode rareté."
 
-#: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr "Autoriser la mise en liste noire"
 
-#: src/protocol/bittorrent/bittorrent.c:202
+#: src/protocol/bittorrent/bittorrent.c:210
 msgid "Allow blacklisting of buggy peers."
 msgstr "Autoriser la mise en liste noire des postes bogués."
 
@@ -7904,11 +7922,11 @@ msgstr "Le fichier sera ouvert avec le programme '%s'."
 msgid "~Open"
 msgstr "~Ouvrir"
 
-#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
+#: src/session/session.c:752 src/session/session.c:771 src/session/task.c:269
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:750
+#: src/session/session.c:753
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7927,7 +7945,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:769
+#: src/session/session.c:772
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7948,11 +7966,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:794
+#: src/session/session.c:797
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:795
+#: src/session/session.c:798
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8063,164 +8081,164 @@ msgstr "Ancre manquante"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "L'ancre recherchée \"#%s\" n'existe pas."
 
-#: src/viewer/text/form.c:855
+#: src/viewer/text/form.c:864
 msgid "Error while posting form"
 msgstr "Erreur lors de l'envoi du formulaire"
 
-#: src/viewer/text/form.c:856
+#: src/viewer/text/form.c:865
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Impossible de charger le fichier %s: %s"
 
-#: src/viewer/text/form.c:1436
+#: src/viewer/text/form.c:1445
 msgid "Reset form"
 msgstr "Réinitialiser le formulaire"
 
-#: src/viewer/text/form.c:1438
+#: src/viewer/text/form.c:1447
 msgid "Harmless button"
 msgstr "Bouton sans impact"
 
-#: src/viewer/text/form.c:1446
+#: src/viewer/text/form.c:1455
 msgid "Submit form to"
 msgstr "Envoi du formulaire à"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1456
 msgid "Post form to"
 msgstr "Transfert du formulaire à"
 
-#: src/viewer/text/form.c:1449
+#: src/viewer/text/form.c:1458
 msgid "Radio button"
 msgstr "Bouton radio"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1462
 msgid "Select field"
 msgstr "Liste"
 
-#: src/viewer/text/form.c:1457
+#: src/viewer/text/form.c:1466
 msgid "Text area"
 msgstr "Champ texte multiligne"
 
-#: src/viewer/text/form.c:1459
+#: src/viewer/text/form.c:1468
 msgid "File upload"
 msgstr "Envoi de fichier"
 
-#: src/viewer/text/form.c:1461
+#: src/viewer/text/form.c:1470
 msgid "Password field"
 msgstr "Champ mot de passe"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1508
 msgid "name"
 msgstr "Nom"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1520
 msgid "value"
 msgstr "Valeur"
 
-#: src/viewer/text/form.c:1524
+#: src/viewer/text/form.c:1533
 msgid "read only"
 msgstr "lecture seule"
 
-#: src/viewer/text/form.c:1535
+#: src/viewer/text/form.c:1544
 #, c-format
 msgid "press %s to navigate"
 msgstr "pressez %s pour naviguer"
 
-#: src/viewer/text/form.c:1537
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to edit"
 msgstr "pressez %s pour éditer"
 
-#: src/viewer/text/form.c:1573
+#: src/viewer/text/form.c:1582
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "pressez %s pour soumettre à %s"
 
-#: src/viewer/text/form.c:1575
+#: src/viewer/text/form.c:1584
 #, c-format
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/link.c:1145
+#: src/viewer/text/link.c:1148
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1151
 msgid "~Follow link"
 msgstr "~Suivre le lien"
 
-#: src/viewer/text/link.c:1150
+#: src/viewer/text/link.c:1153
 msgid "Follow link and r~eload"
 msgstr "Suivre le lien et ~recharger"
 
-#: src/viewer/text/link.c:1154
+#: src/viewer/text/link.c:1157
 msgid "Open in new ~window"
 msgstr "Ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1156
+#: src/viewer/text/link.c:1159
 msgid "Open in new ~tab"
 msgstr "Ouvrir dans un nouvel ongle~t"
 
-#: src/viewer/text/link.c:1158
+#: src/viewer/text/link.c:1161
 msgid "Open in new tab in ~background"
 msgstr "Ouvrir dans un nouvel onglet en arrière-~plan"
 
-#: src/viewer/text/link.c:1163
+#: src/viewer/text/link.c:1166
 msgid "~Download link"
 msgstr "~Enregistrer le lien"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1169
 msgid "~Add link to bookmarks"
 msgstr "~Ajouter ce lien aux signets"
 
-#: src/viewer/text/link.c:1178 src/viewer/text/link.c:1214
+#: src/viewer/text/link.c:1181 src/viewer/text/link.c:1217
 msgid "~Reset form"
 msgstr "Remettre à ~zéro le formulaire"
 
-#: src/viewer/text/link.c:1191
+#: src/viewer/text/link.c:1194
 msgid "Open in ~external editor"
 msgstr "Ouvrir dans un ~éditeur externe"
 
-#: src/viewer/text/link.c:1197
+#: src/viewer/text/link.c:1200
 msgid "~Submit form"
 msgstr "~Envoyer le formulaire"
 
-#: src/viewer/text/link.c:1198
+#: src/viewer/text/link.c:1201
 msgid "Submit form and rel~oad"
 msgstr "Envoyer le formulaire et ~recharger"
 
-#: src/viewer/text/link.c:1202
+#: src/viewer/text/link.c:1205
 msgid "Submit form and open in new ~window"
 msgstr "Envoyer le formulaire et ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1204
+#: src/viewer/text/link.c:1207
 msgid "Submit form and open in new ~tab"
 msgstr "Envoyer le formulaire et ouvrir un ~onglet"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1210
 msgid "Submit form and open in new tab in ~background"
 msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1215
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1222
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
-#: src/viewer/text/link.c:1221
+#: src/viewer/text/link.c:1224
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1229
+#: src/viewer/text/link.c:1232
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1280
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1285
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8308,10 +8326,10 @@ msgstr "Aller au lien"
 msgid "Enter link number"
 msgstr "Entrez un numéro de lien"
 
-#: src/viewer/text/view.c:1287
+#: src/viewer/text/view.c:1288
 msgid "Save error"
 msgstr "Erreur lors de la sauvegarde"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Erreur lors de l'écriture du fichier"

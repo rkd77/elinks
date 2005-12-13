@@ -288,11 +288,10 @@ print_error_dialog(struct session *ses, enum connection_state state,
 static void
 abort_files_load(struct session *ses, int interrupt)
 {
-	struct file_to_load *ftl;
-	int more;
+	while (1) {
+		struct file_to_load *ftl;
+		int more = 0;
 
-	do {
-		more = 0;
 		foreach (ftl, ses->more_files) {
 			if (!file_to_load_is_active(ftl))
 				continue;
@@ -300,7 +299,9 @@ abort_files_load(struct session *ses, int interrupt)
 			more = 1;
 			change_connection(&ftl->download, NULL, PRI_CANCEL, interrupt);
 		}
-	} while (more);
+
+		if (!more) break;
+	};
 }
 
 void
@@ -706,16 +707,16 @@ load_additional_file(struct file_to_load *ftl, struct document_view *doc_view,
 void
 process_file_requests(struct session *ses)
 {
-	struct file_to_load *ftl;
-	struct document_view *doc_view = NULL;
-	int more;
-
 	if (ses->status.processing_file_requests) return;
 	ses->status.processing_file_requests = 1;
 
-	do {
-		more = 0;
+	while (1) {
+		struct file_to_load *ftl;
+		int more = 0;
+
 		foreach (ftl, ses->more_files) {
+			struct document_view *doc_view;
+
 			if (ftl->req_sent)
 				continue;
 
@@ -725,7 +726,9 @@ process_file_requests(struct session *ses)
 			load_additional_file(ftl, doc_view, CACHE_MODE_NORMAL);
 			more = 1;
 		}
-	} while (more);
+
+		if (!more) break;
+	};
 
 	ses->status.processing_file_requests = 0;
 }
