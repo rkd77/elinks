@@ -195,7 +195,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 
 	key = get_opt_str("protocol.bittorrent.tracker.key");
 	if (*key) {
-		add_to_string(&request, "&key=", key);
+		add_to_string(&request, "&key=");
 		encode_uri_string(&request, key, strlen(key), 1);
 	}
 
