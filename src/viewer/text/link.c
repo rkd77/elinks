@@ -893,24 +893,25 @@ activate_link(struct session *ses, struct document_view *doc_view,
               struct link *link, int do_reload)
 {
 	struct form_control *link_fc;
+	struct form_state *fs;
+	struct form *form;
 
-	if (!link_is_form(link)
-	    || link_is_textinput(link)
-	    || link->type == LINK_BUTTON) {
+	switch (link->type) {
+	case LINK_HYPERTEXT:
+	case LINK_MAP:
+	case LINK_FIELD:
+	case LINK_AREA:
+	case LINK_BUTTON:
 		if (goto_current_link(ses, doc_view, do_reload))
 			return FRAME_EVENT_OK;
 
-		return FRAME_EVENT_REFRESH;
-	}
+		break;
 
-	link_fc = get_link_form_control(link);
+	case LINK_CHECKBOX:
+		link_fc = get_link_form_control(link);
 
-	if (form_field_is_readonly(link_fc))
-		return FRAME_EVENT_OK;
-
-	if (link->type == LINK_CHECKBOX) {
-		struct form_state *fs;
-		struct form *form;
+		if (form_field_is_readonly(link_fc))
+			return FRAME_EVENT_OK;
 
 		fs = find_form_state(doc_view, link_fc);
 		if (!fs) return FRAME_EVENT_OK;
@@ -939,14 +940,23 @@ activate_link(struct session *ses, struct document_view *doc_view,
 		}
 		fs->state = 1;
 
-	} else if (link->type == LINK_SELECT) {
+		break;
+
+	case LINK_SELECT:
+		link_fc = get_link_form_control(link);
+
+		if (form_field_is_readonly(link_fc))
+			return FRAME_EVENT_OK;
+
 		object_lock(doc_view->document);
 		add_empty_window(ses->tab->term,
 				 (void (*)(void *)) release_document,
 				 doc_view->document);
 		do_select_submenu(ses->tab->term, link_fc->menu, ses);
 
-	} else {
+		break;
+
+	default:
 		INTERNAL("bad link type %d", link->type);
 	}
 
