@@ -784,7 +784,6 @@ encode_multipart(struct session *ses, struct list_head *l, struct string *data,
 
 			if (*sv->value) {
 				unsigned char *filename;
-				ssize_t rd;
 
 				if (get_cmd_opt_bool("anonymous")) {
 					errno = EPERM;
@@ -800,14 +799,21 @@ encode_multipart(struct session *ses, struct list_head *l, struct string *data,
 
 				if (fh == -1) goto encode_error;
 				set_bin(fh);
-				do {
-					rd = safe_read(fh, buffer, F_BUFLEN);
-					if (rd == -1) {
-						close(fh);
-						goto encode_error;
+				while (1) {
+					ssize_t rd = safe_read(fh, buffer, F_BUFLEN);
+
+					if (rd) {
+						if (rd == -1) {
+							close(fh);
+							goto encode_error;
+						}
+
+						add_bytes_to_string(data, buffer, rd);
+
+					} else {
+						break;
 					}
-					if (rd) add_bytes_to_string(data, buffer, rd);
-				} while (rd);
+				};
 				close(fh);
 			}
 #undef F_BUFLEN
