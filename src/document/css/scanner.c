@@ -48,7 +48,7 @@ static const struct scan_table_info css_scan_table_info[] = {
 	SCAN_TABLE_STRING("\\_",	 CSS_CHAR_IDENT | CSS_CHAR_IDENT_START),
 	/* This should contain mostly used char tokens like ':' and maybe a few
 	 * garbage chars that people might put in their CSS code */
-	SCAN_TABLE_STRING("[({})];:,.>",	 CSS_CHAR_TOKEN),
+	SCAN_TABLE_STRING("[({})];:,.>+~",	 CSS_CHAR_TOKEN),
 	SCAN_TABLE_STRING("<![CDATA]->", CSS_CHAR_SGML_MARKUP),
 
 	SCAN_TABLE_END,
