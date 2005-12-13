@@ -43,12 +43,12 @@ static const struct scan_table_info css_scan_table_info[] = {
 	SCAN_TABLE_STRING(" \f\n\r\t\v\000", CSS_CHAR_WHITESPACE),
 	SCAN_TABLE_STRING("\f\n\r",	 CSS_CHAR_NEWLINE),
 	SCAN_TABLE_STRING("-",		 CSS_CHAR_IDENT),
-	SCAN_TABLE_STRING(".#@!\"'<-/",	 CSS_CHAR_TOKEN_START),
+	SCAN_TABLE_STRING(".#@!\"'<-/|^$*",	 CSS_CHAR_TOKEN_START),
 	/* Unicode escape (that we do not handle yet) + other special chars */
-	SCAN_TABLE_STRING("\\_*",	 CSS_CHAR_IDENT | CSS_CHAR_IDENT_START),
+	SCAN_TABLE_STRING("\\_",	 CSS_CHAR_IDENT | CSS_CHAR_IDENT_START),
 	/* This should contain mostly used char tokens like ':' and maybe a few
 	 * garbage chars that people might put in their CSS code */
-	SCAN_TABLE_STRING("({});:,.>",	 CSS_CHAR_TOKEN),
+	SCAN_TABLE_STRING("[({})];:,.>",	 CSS_CHAR_TOKEN),
 	SCAN_TABLE_STRING("<![CDATA]->", CSS_CHAR_SGML_MARKUP),
 
 	SCAN_TABLE_END,
@@ -257,6 +257,32 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 			scan_css(scanner, string, CSS_CHAR_IDENT);
 			type = map_scanner_string(scanner, ident, string,
 						  CSS_TOKEN_AT_KEYWORD);
+		}
+
+	} else if (first_char == '*') {
+		if (*string == '=') {
+			type = CSS_TOKEN_SELECT_CONTAINS;
+			string++;
+		} else {
+			type = CSS_TOKEN_IDENT;
+		}
+
+	} else if (first_char == '^') {
+		if (*string == '=') {
+			type = CSS_TOKEN_SELECT_BEGIN;
+			string++;
+		}
+
+	} else if (first_char == '$') {
+		if (*string == '=') {
+			type = CSS_TOKEN_SELECT_END;
+			string++;
+		}
+
+	} else if (first_char == '|') {
+		if (*string == '=') {
+			type = CSS_TOKEN_SELECT_HYPHEN_LIST;
+			string++;
 		}
 
 	} else if (first_char == '!') {
