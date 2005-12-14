@@ -70,6 +70,14 @@ static struct option_info bittorrent_protocol_options[] = {
 		"no IP address will be sent and the tracker will automatically\n"
 		"determine an appropriate IP address.")),
 
+	INIT_OPT_STRING("protocol.bittorrent.tracker", N_("User identification string"),
+		"key", 0, "",
+		N_("An additional identification that is not shared with any users.\n"
+		"It is intended to allow a client to prove their identity should\n"
+		"their IP address change. It is an optional parameter, but some\n"
+		"trackers require this parameter. If set to \"\" no user key will\n"
+		"be sent to the tracker.")),
+
 	INIT_OPT_INT("protocol.bittorrent.tracker", N_("Maximum number of peers to request"),
 		"numwant", 0, 0, INT_MAX, 50,
 		N_("The maximum number of peers to request from the tracker.\n"

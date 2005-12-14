@@ -2,11 +2,14 @@
 #ifndef EL__DOCUMENT_DOM_NODE_H
 #define EL__DOCUMENT_DOM_NODE_H
 
+#include "document/dom/string.h"
 #include "util/hash.h"
 
 struct dom_node_list;
 
 enum dom_node_type {
+	DOM_NODE_UNKNOWN		=  0, /* for internal purpose only */
+
 	DOM_NODE_ELEMENT		=  1,
 	DOM_NODE_ATTRIBUTE		=  2,
 	DOM_NODE_TEXT			=  3,
@@ -30,11 +33,6 @@ struct dom_node_id_item {
 	/* The attibute node containing the id value */
 	struct dom_node *id_attribute;
 
-	/* The path to the node. This can be passed to the DOM navigator to
-	 * locate the node. The path should not contain the id node itself.
-	 * E.g. for <a id="..."> element "html/body/p/span". */
-	unsigned char *path;
-
 	/* The node with the @id attribute */
 	struct dom_node *node;
 };
@@ -54,15 +52,12 @@ struct dom_document_node {
 };
 
 struct dom_id {
-	unsigned char *public_id;
-	uint16_t pid_length;
-	uint16_t sid_length;
-	unsigned char *system_id;
+	struct dom_string public_id;
+	struct dom_string system_id;
 };
 
 struct dom_doctype_subset_info {
-	uint16_t internallen;
-	unsigned char *internal;
+	struct dom_string internal;
 	struct dom_id external;
 };
 
@@ -106,8 +101,7 @@ struct dom_attribute_node {
 	/* The string that hold the attribute value. The @string / @length
 	 * members of {struct dom_node} holds the name that identifies the node
 	 * in the map. */
-	unsigned char *value;
-	uint16_t valuelen;
+	struct dom_string value;
 
 	/* For xml:lang="en" attributes this holds the offset of 'lang' */
 	uint16_t namespace_offset;
@@ -168,8 +162,7 @@ struct dom_proc_instruction_node {
 	/* The target of the processing instruction (xml for '<?xml ...  ?>')
 	 * is in the @string / @length members. */
 	/* This holds the value to be processed */
-	unsigned char *instruction;
-	uint16_t instructionlen;
+	struct dom_string instruction;
 
 	/* For fast checking of the target type */
 	uint16_t type; /* enum dom_proc_instruction_type */
@@ -207,8 +200,7 @@ struct dom_node {
 
 	/* Can contain either stuff like element name or for attributes the
 	 * attribute name. */
-	uint16_t length;
-	unsigned char *string;
+	struct dom_string string;
 
 	struct dom_node *parent;
 
@@ -253,12 +245,12 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *node_map,
 		       enum dom_node_type type, uint16_t subtype,
-		       unsigned char *name, int namelen);
+		       struct dom_string *name);
 
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, uint16_t length);
+		unsigned char *string, size_t length);
 #define init_dom_node(type, string, length) init_dom_node_(__FILE__, __LINE__, NULL, type, string, length)
 #define add_dom_node(parent, type, string, length) init_dom_node_(__FILE__, __LINE__, parent, type, string, length)
 
@@ -267,13 +259,12 @@ init_dom_node_(unsigned char *file, int line,
 
 static inline struct dom_node *
 add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
-		  unsigned char *value, uint16_t valuelen)
+		  unsigned char *value, size_t valuelen)
 {
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, string, length);
 
 	if (node && value) {
-		node->data.attribute.value    = value;
-		node->data.attribute.valuelen = valuelen;
+		set_dom_string(&node->data.attribute.value, value, valuelen);
 	}
 
 	return node;
@@ -281,13 +272,12 @@ add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
 
 static inline struct dom_node *
 add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int length,
-			 unsigned char *instruction, uint16_t instructionlen)
+			 unsigned char *instruction, size_t instructionlen)
 {
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string, length);
 
 	if (node && instruction) {
-		node->data.proc_instruction.instruction    = instruction;
-		node->data.proc_instruction.instructionlen = instructionlen;
+		set_dom_string(&node->data.proc_instruction.instruction, instruction, instructionlen);
 	}
 
 	return node;
@@ -297,14 +287,14 @@ add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int len
 void done_dom_node(struct dom_node *node);
 
 /* Returns the name of the node in an allocated string. */
-unsigned char *get_dom_node_name(struct dom_node *node);
+struct dom_string *get_dom_node_name(struct dom_node *node);
 
-/* Returns the value of the node in an allocated string.
- * @codepage denotes how entity strings should be decoded. */
-unsigned char *get_dom_node_value(struct dom_node *node, int codepage);
+/* Returns the value of the node or NULL if no value is defined for the node
+ * type. */
+struct dom_string *get_dom_node_value(struct dom_node *node);
 
 /* Returns the name used for identifying the node type. */
-unsigned char *get_dom_node_type_name(enum dom_node_type type);
+struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
 /* Returns a pointer to a node list containing attributes. */
 #define get_dom_node_attributes(node)					\

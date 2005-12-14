@@ -602,9 +602,6 @@ is_path_prefix(unsigned char *d, unsigned char *s)
 }
 
 
-#define is_expired(t) ((t) && (t) <= time(NULL))
-#define is_dead(t) (!(t) || (t) <= time(NULL))
-
 struct string *
 send_cookies(struct uri *uri)
 {
@@ -612,6 +609,7 @@ send_cookies(struct uri *uri)
 	struct cookie *c, *next;
 	unsigned char *path = NULL;
 	static struct string header;
+	time_t now;
 
 	if (!uri->host || !uri->data)
 		return NULL;
@@ -626,12 +624,13 @@ send_cookies(struct uri *uri)
 
 	init_string(&header);
 
+	now = time(NULL);
 	foreachsafe (c, next, cookies) {
 		if (!is_in_domain(c->domain, uri->host, uri->hostlen)
 		    || !is_path_prefix(c->path, path))
 			continue;
 
-		if (is_expired(c->expires)) {
+		if (c->expires && c->expires <= now) {
 #ifdef DEBUG_COOKIES
 			DBG("Cookie %s=%s (exp %d) expired.",
 			    c->name, c->value, c->expires);
@@ -681,6 +680,7 @@ load_cookies(void) {
 	unsigned char in_buffer[6 * MAX_STR_LEN];
 	unsigned char *cookfile = COOKIES_FILENAME;
 	FILE *fp;
+	time_t now;
 
 	if (elinks_home) {
 		cookfile = straconcat(elinks_home, cookfile, NULL);
@@ -701,6 +701,7 @@ load_cookies(void) {
 	 * periodically to our death. */
 	cookies_nosave = 1;
 
+	now = time(NULL);
 	while (fgets(in_buffer, 6 * MAX_STR_LEN, fp)) {
 		struct cookie *cookie;
 		unsigned char *p, *q = in_buffer;
@@ -728,7 +729,7 @@ load_cookies(void) {
 
 		/* Skip expired cookies if any. */
 		expires = str_to_time_t(members[EXPIRES].pos);
-		if (is_dead(expires)) {
+		if (!expires || expires <= now) {
 			cookies_dirty = 1;
 			continue;
 		}
@@ -765,6 +766,7 @@ save_cookies(void) {
 	struct cookie *c;
 	unsigned char *cookfile;
 	struct secure_save_info *ssi;
+	time_t now;
 
 	if (cookies_nosave || !elinks_home || !cookies_dirty
 	    || get_cmd_opt_bool("anonymous"))
@@ -777,8 +779,9 @@ save_cookies(void) {
 	mem_free(cookfile);
 	if (!ssi) return;
 
+	now = time(NULL);
 	foreach (c, cookies) {
-		if (is_dead(c->expires)) continue;
+		if (!c->expires || c->expires <= now) continue;
 		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%ld\t%d\n",
 				   c->name, c->value,
 				   c->server->host,

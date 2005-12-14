@@ -154,15 +154,8 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 			break;
 		}
 	}
-	{
-		int length = int_min(key->length, node->length);
-		int string_diff = strncasecmp(key->string, node->string, length);
 
-		/* If the lengths or strings don't match strncasecmp() does the
-		 * job else return which ever is bigger. */
-
-		return string_diff ? string_diff : key->length - node->length;
-	}
+	return dom_string_casecmp(&key->string, &node->string);
 }
 
 static inline int
@@ -211,9 +204,9 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 
 struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
-		       uint16_t subtype, unsigned char *name, int namelen)
+		       uint16_t subtype, struct dom_string *name)
 {
-	struct dom_node node = { type, namelen, name };
+	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, subtype, list);
 
 	return dom_node_list_bsearch(&search, list);
@@ -224,7 +217,7 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, uint16_t length)
+		unsigned char *string, size_t length)
 {
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
@@ -235,18 +228,16 @@ init_dom_node_(unsigned char *file, int line,
 	if (!node) return NULL;
 
 	node->type   = type;
-	node->string = string;
-	node->length = length;
 	node->parent = parent;
+	set_dom_string(&node->string, string, length);
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
 		int sort = (type == DOM_NODE_ATTRIBUTE);
 		int index;
 
-		assertm(list, "Adding %s to bad parent %s",
-			get_dom_node_type_name(node->type),
-			get_dom_node_type_name(parent->type));
+		assertm(list, "Adding node %d to bad parent %d",
+			node->type, parent->type);
 
 		index = *list && (*list)->size > 0 && sort
 		      ? get_dom_node_map_index(*list, node) : -1;
@@ -272,7 +263,7 @@ done_dom_node_data(struct dom_node *node)
 	switch (node->type) {
 	case DOM_NODE_ATTRIBUTE:
 		if (data->attribute.allocated)
-			mem_free(node->string);
+			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_DOCUMENT:
@@ -296,7 +287,7 @@ done_dom_node_data(struct dom_node *node)
 
 	case DOM_NODE_TEXT:
 		if (data->text.allocated)
-			mem_free(node->string);
+			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_PROCESSING_INSTRUCTION:
@@ -346,140 +337,94 @@ done_dom_node(struct dom_node *node)
 #define set_node_name(name, namelen, str)	\
 	do { (name) = (str); (namelen) = sizeof(str) - 1; } while (0)
 
-unsigned char *
+struct dom_string *
 get_dom_node_name(struct dom_node *node)
 {
-	unsigned char *name;
-	uint16_t namelen;
+	static struct dom_string cdata_section_str = INIT_DOM_STRING("#cdata-section", -1);
+	static struct dom_string comment_str = INIT_DOM_STRING("#comment", -1);
+	static struct dom_string document_str = INIT_DOM_STRING("#document", -1);
+	static struct dom_string document_fragment_str = INIT_DOM_STRING("#document-fragment", -1);
+	static struct dom_string text_str = INIT_DOM_STRING("#text", -1);
 
 	assert(node);
 
 	switch (node->type) {
-		case DOM_NODE_CDATA_SECTION:
-			set_node_name(name, namelen, "#cdata-section");
-			break;
+	case DOM_NODE_CDATA_SECTION:
+		return &cdata_section_str;
 
-		case DOM_NODE_COMMENT:
-			set_node_name(name, namelen, "#comment");
-			break;
+	case DOM_NODE_COMMENT:
+		return &comment_str;
 
-		case DOM_NODE_DOCUMENT:
-			set_node_name(name, namelen, "#document");
-			break;
+	case DOM_NODE_DOCUMENT:
+		return &document_str;
 
-		case DOM_NODE_DOCUMENT_FRAGMENT:
-			set_node_name(name, namelen, "#document-fragment");
-			break;
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+		return &document_fragment_str;
 
-		case DOM_NODE_TEXT:
-			set_node_name(name, namelen, "#text");
-			break;
+	case DOM_NODE_TEXT:
+		return &text_str;
 
-		case DOM_NODE_ATTRIBUTE:
-		case DOM_NODE_DOCUMENT_TYPE:
-		case DOM_NODE_ELEMENT:
-		case DOM_NODE_ENTITY:
-		case DOM_NODE_ENTITY_REFERENCE:
-		case DOM_NODE_NOTATION:
-		case DOM_NODE_PROCESSING_INSTRUCTION:
-		default:
-			name	= node->string;
-			namelen	= node->length;
+	case DOM_NODE_ATTRIBUTE:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+	default:
+		return &node->string;
 	}
-
-	return memacpy(name, namelen);
 }
 
-static inline unsigned char *
-compress_string(unsigned char *string, unsigned int length)
+struct dom_string *
+get_dom_node_value(struct dom_node *node)
 {
-	struct string buffer;
-	unsigned char escape[2] = "\\";
-
-	if (!init_string(&buffer)) return NULL;
-
-	for (; length > 0; string++, length--) {
-		unsigned char *bytes = string;
-
-		if (*string == '\n' || *string == '\r' || *string == '\t') {
-			bytes	  = escape;
-			escape[1] = *string == '\n' ? 'n'
-				  : (*string == '\r' ? 'r' : 't');
-		}
-
-		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
-	}
-
-	return buffer.source;
-}
-
-unsigned char *
-get_dom_node_value(struct dom_node *node, int codepage)
-{
-	unsigned char *value;
-	uint16_t valuelen;
-
 	assert(node);
 
 	switch (node->type) {
-		case DOM_NODE_ATTRIBUTE:
-			value	 = node->data.attribute.value;
-			valuelen = node->data.attribute.valuelen;
-			break;
+	case DOM_NODE_ATTRIBUTE:
+		return &node->data.attribute.value;
 
-		case DOM_NODE_PROCESSING_INSTRUCTION:
-			value	 = node->data.proc_instruction.instruction;
-			valuelen = node->data.proc_instruction.instructionlen;
-			break;
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		return &node->data.proc_instruction.instruction;
 
-		case DOM_NODE_CDATA_SECTION:
-		case DOM_NODE_COMMENT:
-		case DOM_NODE_TEXT:
-			value	 = node->string;
-			valuelen = node->length;
-			break;
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_COMMENT:
+	case DOM_NODE_TEXT:
+		return &node->string;
 
-		case DOM_NODE_ENTITY_REFERENCE:
-			value = get_entity_string(node->string, node->length,
-						  codepage);
-			valuelen = value ? strlen(value) : 0;
-			break;
-
-		case DOM_NODE_NOTATION:
-		case DOM_NODE_DOCUMENT:
-		case DOM_NODE_DOCUMENT_FRAGMENT:
-		case DOM_NODE_DOCUMENT_TYPE:
-		case DOM_NODE_ELEMENT:
-		case DOM_NODE_ENTITY:
-		default:
-			return NULL;
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	case DOM_NODE_DOCUMENT:
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	default:
+		return NULL;
 	}
-
-	if (!value) value = "";
-
-	return compress_string(value, valuelen);
 }
 
-unsigned char *
+struct dom_string *
 get_dom_node_type_name(enum dom_node_type type)
 {
-	static unsigned char *dom_node_type_names[DOM_NODES] = {
-		NULL,
-		/* DOM_NODE_ELEMENT */			"element",
-		/* DOM_NODE_ATTRIBUTE */		"attribute",
-		/* DOM_NODE_TEXT */			"text",
-		/* DOM_NODE_CDATA_SECTION */		"cdata-section",
-		/* DOM_NODE_ENTITY_REFERENCE */		"entity-reference",
-		/* DOM_NODE_ENTITY */			"entity",
-		/* DOM_NODE_PROCESSING_INSTRUCTION */	"proc-instruction",
-		/* DOM_NODE_COMMENT */			"comment",
-		/* DOM_NODE_DOCUMENT */			"document",
-		/* DOM_NODE_DOCUMENT_TYPE */		"document-type",
-		/* DOM_NODE_DOCUMENT_FRAGMENT */	"document-fragment",
-		/* DOM_NODE_NOTATION */			"notation",
+	static struct dom_string dom_node_type_names[DOM_NODES] = {
+		INIT_DOM_STRING(NULL, 0),
+		/* DOM_NODE_ELEMENT */			INIT_DOM_STRING("element", -1),
+		/* DOM_NODE_ATTRIBUTE */		INIT_DOM_STRING("attribute", -1),
+		/* DOM_NODE_TEXT */			INIT_DOM_STRING("text", -1),
+		/* DOM_NODE_CDATA_SECTION */		INIT_DOM_STRING("cdata-section", -1),
+		/* DOM_NODE_ENTITY_REFERENCE */		INIT_DOM_STRING("entity-reference", -1),
+		/* DOM_NODE_ENTITY */			INIT_DOM_STRING("entity", -1),
+		/* DOM_NODE_PROCESSING_INSTRUCTION */	INIT_DOM_STRING("proc-instruction", -1),
+		/* DOM_NODE_COMMENT */			INIT_DOM_STRING("comment", -1),
+		/* DOM_NODE_DOCUMENT */			INIT_DOM_STRING("document", -1),
+		/* DOM_NODE_DOCUMENT_TYPE */		INIT_DOM_STRING("document-type", -1),
+		/* DOM_NODE_DOCUMENT_FRAGMENT */	INIT_DOM_STRING("document-fragment", -1),
+		/* DOM_NODE_NOTATION */			INIT_DOM_STRING("notation", -1),
 	};
 
 	assert(type < DOM_NODES);
 
-	return dom_node_type_names[type];
+	return &dom_node_type_names[type];
 }

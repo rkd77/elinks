@@ -1185,22 +1185,23 @@ quit:
 void
 send_event(struct session *ses, struct term_event *ev)
 {
-	struct document_view *doc_view;
-
 	assert(ses && ev);
 	if_assert_failed return;
-	doc_view = current_frame(ses);
 
 	if (ev->ev == EVENT_KBD) {
+		struct document_view *doc_view = current_frame(ses);
+
 		ses = send_kbd_event(ses, doc_view, ev);
 	}
 #ifdef CONFIG_MOUSE
-	if (ev->ev == EVENT_MOUSE) {
+	else if (ev->ev == EVENT_MOUSE) {
+		struct document_view *doc_view = current_frame(ses);
+
 		ses = send_mouse_event(ses, doc_view, ev);
 	}
 #endif /* CONFIG_MOUSE */
 
-	/* ses may disappear ie. in close_tab() */
+	/* @ses may disappear ie. in close_tab() */
 	if (ses) ses->kbdprefix.repeat_count = 0;
 }
 

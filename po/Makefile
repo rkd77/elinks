@@ -12,10 +12,13 @@ MSGMERGE = msgmerge
 POTFILES_ABS_LIST = potfiles.list
 
 
+# Distributed elinks-*.tar.gz packages include po/*.gmo files, so that
+# users can install ELinks even if they don't have a msgfmt program.
+# However, if srcdir != builddir, then this Makefile ignores the *.gmo
+# files in the srcdir and builds new ones in the builddir.
 %.gmo: $(srcdir)/%.po
-	@file=`echo $* | sed 's,.*/,,'`.gmo \
-	  && rm -f $$file && echo -n $*": " \
-	  && $(GMSGFMT) --statistics -o $$file $<
+	@rm -f -- "$@" && printf "%s: " "$*" \
+	  && $(GMSGFMT) --statistics -o "$@" -- "$<"
 
 
 ### The default rule
@@ -65,8 +68,8 @@ update-po: Makefile $(srcdir)/$(PACKAGE).pot
 	@cd $(srcdir)
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  if $(MSGMERGE) $(lang).po $(PACKAGE).pot -o $(lang).new.po; then \
-	    mv -f $(lang).new.po $(lang).po; \
+	  if $(MSGMERGE) $(srcdir)/$(lang).po $(srcdir)/$(PACKAGE).pot -o $(lang).new.po; then \
+	    mv -f $(lang).new.po $(srcdir)/$(lang).po; \
 	  else \
 	    echo "msgmerge failed!"; \
 	    rm -f $(lang).new.po; \
@@ -84,7 +87,7 @@ update-gmo: Makefile $(GMOFILES)
 check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(lang).po; \
+	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
 	)
 
 ### Installation and distribution

@@ -97,8 +97,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		color_T foreground = document->options.default_fg;
 		static int i_want_struct_module_for_dom;
 
-		unsigned char *name = get_dom_node_type_name(type);
-		int namelen = name ? strlen(name) : 0;
+		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
 		if (!i_want_struct_module_for_dom) {
@@ -119,9 +118,10 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		}
 
 		if (name)
+		if (is_dom_string_set(name))
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
-						     name, namelen);
+						     name->string, name->length);
 
 		if (selector) {
 			struct list_head *properties = &selector->properties;
@@ -286,6 +286,8 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 	}
 }
 
+/*#define DOM_TREE_RENDERER*/
+
 #ifdef DOM_TREE_RENDERER
 static void
 render_dom_printf(struct dom_renderer *renderer, struct screen_char *template,
@@ -385,22 +387,71 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 /* DOM Tree Renderer */
 
 #ifdef DOM_TREE_RENDERER
+static inline unsigned char *
+compress_string(unsigned char *string, unsigned int length)
+{
+	struct string buffer;
+	unsigned char escape[2] = "\\";
+
+	if (!init_string(&buffer)) return NULL;
+
+	for (; length > 0; string++, length--) {
+		unsigned char *bytes = string;
+
+		if (*string == '\n' || *string == '\r' || *string == '\t') {
+			bytes	  = escape;
+			escape[1] = *string == '\n' ? 'n'
+				  : (*string == '\r' ? 'r' : 't');
+		}
+
+		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
+	}
+
+	return buffer.source;
+}
+
+/* @codepage denotes how entity strings should be decoded. */
+static void
+set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
+			    int codepage)
+{
+	struct dom_string *value;
+
+	assert(node);
+
+	switch (node->type) {
+	case DOM_NODE_ENTITY_REFERENCE:
+		string->string = get_entity_string(node->string.string,
+						  node->string.length,
+						  codepage);
+		break;
+
+	default:
+		value = get_dom_node_value(node);
+		if (!value) {
+			set_dom_string(string, NULL, 0);
+			return;
+		}
+
+		string->string = compress_string(value->string, value->length);
+	}
+
+	string->length = string->string ? strlen(string->string) : 0;
+}
+
 static struct dom_node *
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value;
+	struct dom_string *value = &node->string;
+	struct dom_string *name = get_dom_node_name(node);
 
-	assert(node && renderer);
-
-	name  = get_dom_node_name(node);
-	value = memacpy(node->string, node->length);
-
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
+	render_dom_printf(renderer, template, "%.*s: %.*s\n",
+			  name->length, name->string,
+			  value->length, value->string);
 
 	mem_free_if(name);
-	mem_free_if(value);
 
 	return node;
 }
@@ -411,19 +462,23 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value, *id;
+	struct dom_string value;
+	struct dom_string *name;
+	struct dom_string *id;
 
 	assert(node && document);
 
 	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
 	id	= get_dom_node_type_name(node->type);
+	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s -> %s\n", id, name, value);
+	render_dom_printf(renderer, template, "%.*s: %.*s -> %.*s\n",
+			  id->length, id->string, name->length, name->string,
+			  value.length, value.string);
 
-	mem_free_if(name);
-	mem_free_if(value);
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
 
 	return node;
 }
@@ -434,18 +489,21 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value;
+	struct dom_string *name;
+	struct dom_string value;
 
 	assert(node && document);
 
 	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
+	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
+	render_dom_printf(renderer, template, "%.*s: %.*s\n",
+			  name->length, name->string,
+			  value.length, value.string);
 
-	mem_free_if(name);
-	mem_free_if(value);
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
 
 	return node;
 }
@@ -456,7 +514,8 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 	struct dom_renderer *renderer = stack->renderer;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *id;
+	struct dom_string *name;
+	struct dom_string *id;
 
 	assert(node && document);
 
@@ -464,7 +523,8 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 	id	= get_dom_node_type_name(node->type);
 
 	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", id, name);
+	render_dom_printf(renderer, template, "%.*s: %.*s\n",
+			  id->length, id->string, name->length, name->string);
 
 	mem_free_if(name);
 
@@ -517,8 +577,8 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template,
 		     struct dom_node *node)
 {
-	unsigned char *string = node->string;
-	int length = node->length;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
 
 	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
 		string -= 1;
@@ -537,7 +597,8 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static struct dom_node *
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -551,7 +612,8 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 static struct dom_node *
 render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	unsigned char *value;
 	int valuelen;
 
@@ -559,13 +621,13 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	value	 = node->data.proc_instruction.instruction;
-	valuelen = node->data.proc_instruction.instructionlen;
+	value	 = node->data.proc_instruction.instruction.string;
+	valuelen = node->data.proc_instruction.instruction.length;
 
 	if (!value || node->data.proc_instruction.map)
 		return node;
 
-	if (check_dom_node_source(renderer, node->string, node->length)) {
+	if (check_dom_node_source(renderer, node->string.string, node->string.length)) {
 		render_dom_flush(renderer, value);
 		renderer->position = value + valuelen;
 	}
@@ -578,7 +640,8 @@ render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, voi
 static struct dom_node *
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -590,7 +653,8 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static struct dom_node *
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	struct sgml_parser_state *pstate = data;
 	struct scanner_token *token = &pstate->end_token;
 	unsigned char *string = token->string;
@@ -615,7 +679,8 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 static struct dom_node *
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct sgml_parser *parser = stack->data;
+	struct dom_renderer *renderer = parser->data;
 	struct screen_char *template = &renderer->styles[node->type];
 
 	assert(node && renderer->document);
@@ -645,10 +710,10 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 #endif
 	render_dom_node_text(renderer, template, node);
 
-	if (node->data.attribute.value) {
+	if (is_dom_string_set(&node->data.attribute.value)) {
 		int quoted = node->data.attribute.quoted == 1;
-		unsigned char *value = node->data.attribute.value - quoted;
-		int valuelen = node->data.attribute.valuelen + quoted * 2;
+		unsigned char *value = node->data.attribute.value.string - quoted;
+		int valuelen = node->data.attribute.value.length + quoted * 2;
 
 		if (check_dom_node_source(renderer, value, 0)) {
 			render_dom_flush(renderer, value);

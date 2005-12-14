@@ -52,8 +52,7 @@ struct dom_stack {
 	dom_stack_callback_T pop_callbacks[DOM_NODES];
 
 	/* Data specific to the parser and renderer. */
-	void *renderer;
-	void *parser;
+	void *data;
 };
 
 #define dom_stack_has_parents(nav) \
@@ -86,7 +85,7 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 /* Dive through the stack states in search for the specified match. */
 static inline struct dom_stack_state *
 search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
-		 unsigned char *string, uint16_t length)
+		 struct dom_string *string)
 {
 	struct dom_stack_state *state;
 	int pos;
@@ -96,8 +95,8 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type
-		    && parent->length == length
-		    && !strncasecmp(parent->string, string, length))
+		    && parent->string.length == string->length
+		    && !strncasecmp(parent->string.string, string->string, string->length))
 			return state;
 	}
 
@@ -110,7 +109,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 /* The @object_size arg tells whether the stack should allocate objects for each
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
-void init_dom_stack(struct dom_stack *stack, void *parser, void *renderer,
+void init_dom_stack(struct dom_stack *stack, void *data,
 		    dom_stack_callback_T push_callbacks[DOM_NODES],
 		    dom_stack_callback_T pop_callbacks[DOM_NODES],
 		    size_t object_size, int keep_nodes);
@@ -125,7 +124,7 @@ void pop_dom_node(struct dom_stack *stack);
 
 /* Ascends the stack looking for specific parent */
 void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
-		   unsigned char *string, uint16_t length);
+		   struct dom_string *string);
 
 /* Pop all stack states until a specific state is reached. */
 void

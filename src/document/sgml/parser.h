@@ -29,6 +29,7 @@ struct sgml_parser {
 
 	struct uri *uri;
 	struct dom_node *root;
+	void *data;
 
 	struct scanner scanner;
 	struct dom_stack stack;
@@ -42,7 +43,7 @@ struct sgml_parser_state {
 };
 
 struct sgml_parser *
-init_sgml_parser(enum sgml_parser_type type, void *renderer, struct uri *uri,
+init_sgml_parser(enum sgml_parser_type type, void *data, struct uri *uri,
 		 dom_stack_callback_T push_callbacks[DOM_NODES],
 		 dom_stack_callback_T pop_callbacks[DOM_NODES]);
 

@@ -888,10 +888,85 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	return link;
 }
 
+static enum frame_event_status
+activate_link(struct session *ses, struct document_view *doc_view,
+              struct link *link, int do_reload)
+{
+	struct form_control *link_fc;
+	struct form_state *fs;
+	struct form *form;
+
+	switch (link->type) {
+	case LINK_HYPERTEXT:
+	case LINK_MAP:
+	case LINK_FIELD:
+	case LINK_AREA:
+	case LINK_BUTTON:
+		if (goto_current_link(ses, doc_view, do_reload))
+			return FRAME_EVENT_OK;
+
+		break;
+
+	case LINK_CHECKBOX:
+		link_fc = get_link_form_control(link);
+
+		if (form_field_is_readonly(link_fc))
+			return FRAME_EVENT_OK;
+
+		fs = find_form_state(doc_view, link_fc);
+		if (!fs) return FRAME_EVENT_OK;
+
+		if (link_fc->type == FC_CHECKBOX) {
+			fs->state = !fs->state;
+
+			return FRAME_EVENT_REFRESH;
+		}
+
+		foreach (form, doc_view->document->forms) {
+			struct form_control *fc;
+
+			if (form != link_fc->form)
+				continue;
+
+			foreach (fc, form->items) {
+				if (fc->type == FC_RADIO
+				    && !xstrcmp(fc->name, link_fc->name)) {
+					struct form_state *frm_st;
+
+					frm_st = find_form_state(doc_view, fc);
+					if (frm_st) frm_st->state = 0;
+				}
+			}
+		}
+		fs->state = 1;
+
+		break;
+
+	case LINK_SELECT:
+		link_fc = get_link_form_control(link);
+
+		if (form_field_is_readonly(link_fc))
+			return FRAME_EVENT_OK;
+
+		object_lock(doc_view->document);
+		add_empty_window(ses->tab->term,
+				 (void (*)(void *)) release_document,
+				 doc_view->document);
+		do_select_submenu(ses->tab->term, link_fc->menu, ses);
+
+		break;
+
+	default:
+		INTERNAL("bad link type %d", link->type);
+	}
+
+	return FRAME_EVENT_REFRESH;
+}
+
 enum frame_event_status
 enter(struct session *ses, struct document_view *doc_view, int do_reload)
 {
-	struct form_control *link_fc;
+	enum frame_event_status ret;
 	struct link *link;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -900,69 +975,12 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 	link = get_current_link(doc_view);
 	if (!link) return FRAME_EVENT_REFRESH;
 
-	if (!link_is_form(link)
-	    || link_is_textinput(link)
-	    || link->type == LINK_BUTTON) {
+	ret = activate_link(ses, doc_view, link, do_reload);
+	if (ret != FRAME_EVENT_IGNORED)
 		if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
 			return FRAME_EVENT_REFRESH;
 
-		if (goto_current_link(ses, doc_view, do_reload))
-			return FRAME_EVENT_OK;
-
-		return FRAME_EVENT_REFRESH;
-	}
-
-	link_fc = get_link_form_control(link);
-
-	if (form_field_is_readonly(link_fc))
-		return FRAME_EVENT_OK;
-
-	if (link->type == LINK_CHECKBOX) {
-		struct form_state *fs;
-
-		fs = find_form_state(doc_view, link_fc);
-		if (!fs) return FRAME_EVENT_OK;
-
-		if (link_fc->type == FC_CHECKBOX) {
-			fs->state = !fs->state;
-
-		} else {
-			struct form *form;
-
-			foreach (form, doc_view->document->forms) {
-				struct form_control *fc;
-
-				if (form != link_fc->form)
-					continue;
-
-				foreach (fc, form->items) {
-					if (fc->type == FC_RADIO
-				            && !xstrcmp(fc->name, link_fc->name)) {
-						struct form_state *frm_st;
-
-						frm_st = find_form_state(doc_view, fc);
-						if (frm_st) frm_st->state = 0;
-					}
-				}
-			}
-			fs->state = 1;
-		}
-
-	} else if (link->type == LINK_SELECT) {
-		object_lock(doc_view->document);
-		add_empty_window(ses->tab->term,
-				 (void (*)(void *)) release_document,
-				 doc_view->document);
-		do_select_submenu(ses->tab->term, link_fc->menu, ses);
-
-	} else {
-		INTERNAL("bad link type %d", link->type);
-	}
-
-	if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
-		return FRAME_EVENT_REFRESH;
-
-	return FRAME_EVENT_REFRESH;
+	return ret;
 }
 
 struct link *
@@ -1269,11 +1287,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 
 	/* TODO: Provide info about script event hooks too. --pasky */
 
-	if (link_is_form(link)) {
-		if (!get_link_form_control(link)) return NULL;
-
-		return get_form_info(ses, doc_view);
-	} else {
+	if (!link_is_form(link)) {
 		struct terminal *term = ses->tab->term;
 		struct string str;
 		unsigned char *uristring = link->where;
@@ -1302,4 +1316,8 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 		decode_uri_string_for_display(&str);
 		return str.source;
 	}
+
+	if (!get_link_form_control(link)) return NULL;
+
+	return get_form_info(ses, doc_view);
 }
