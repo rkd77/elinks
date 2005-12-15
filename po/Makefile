@@ -102,6 +102,6 @@ install-local: all-local
 	)
 
 clean-local:
-	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
+	@rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
 include $(top_srcdir)/Makefile.lib
