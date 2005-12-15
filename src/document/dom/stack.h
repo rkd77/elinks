@@ -127,9 +127,7 @@ void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 		   struct dom_string *string);
 
 /* Pop all stack states until a specific state is reached. */
-void
-pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
-	      struct dom_stack_state *target);
+void pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target);
 
 /* Visit each node in the tree rooted at @root pre-order */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);

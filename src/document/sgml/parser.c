@@ -255,7 +255,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 					pstate = get_dom_stack_state_data(stack, state);
 					copy_struct(&pstate->end_token, token);
 
-					pop_dom_state(stack, DOM_NODE_ELEMENT, state);
+					pop_dom_state(stack, state);
 				}
 			}
 			skip_scanner_token(scanner);
