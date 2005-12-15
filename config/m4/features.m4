@@ -32,7 +32,16 @@ AC_DEFUN([EL_LOG_CONFIG],
 		value="[$]$1"
 	fi
 
-	echo "$about $dots $value" >> features.log
+	if test $(`which tput` colors) -ge 4; then
+		if test "$value" = "no"; then
+			color="\033@<:@0;31m"
+		else
+			color="\033@<:@0;36m"
+		fi
+		end_color="\033@<:@0;0m"
+	fi
+
+	echo -e "$about $dots $color$value$end_color" >> features.log
 	AC_SUBST([$1])
 ])
 
