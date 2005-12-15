@@ -158,6 +158,8 @@ INCLUDES = -I$(top_builddir) -I$(top_srcdir)/src
 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
 
+MAKE_COLOR = @MAKE_COLOR@
+
 
 ### This is here because Makefile.config is usually the first thing
 ### we get and sometimes the all rule can be implicit, yet we want

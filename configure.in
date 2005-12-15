@@ -1258,6 +1258,15 @@ EL_LOG_CONFIG(ALL_CFLAGS, [Compiler options (CFLAGS)], [])
 EL_LOG_CONFIG(LIBS, [Linker options (LIBS)], [])
 
 dnl ===================================================================
+dnl Colored make output
+dnl ===================================================================
+
+if test $(`which tput` colors) -ge 4; then
+	MAKE_COLOR=1
+	AC_SUBST(MAKE_COLOR)
+fi
+
+dnl ===================================================================
 dnl Generated files
 dnl ===================================================================
 
