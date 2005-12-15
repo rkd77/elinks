@@ -145,10 +145,14 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 
 		switch (key->type) {
 		case DOM_NODE_ELEMENT:
-			return search->subtype - node->data.element.type;
+			if (node->data.element.type)
+				return search->subtype - node->data.element.type;
+			break;
 
 		case DOM_NODE_ATTRIBUTE:
-			return search->subtype - node->data.attribute.type;
+			if (node->data.attribute.type)
+				return search->subtype - node->data.attribute.type;
+			break;
 
 		default:
 			break;
