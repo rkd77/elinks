@@ -123,13 +123,11 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 			continue;
 
 		if (!match) {
-			cur_len = strlen(entry->data);
-			longest_common_match = cur_len;
-			match = entry->data;
+			longest_common_match = strlen(entry->data);
 		} else if (cur_len < longest_common_match) {
 			longest_common_match = cur_len;
-			match = entry->data;
 		}
+		match = entry->data;
 	}
 
 	if (!match) return;
