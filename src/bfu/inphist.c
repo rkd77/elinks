@@ -125,8 +125,6 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 		if (!match) {
 			cur_len = strlen(entry->data);
 		} else if (cur_len >= longest_common_match) {
-			/* By now, @cur_len oscillates between @base_len and
-			 * @longest_common_match. */
 			continue;
 		}
 
