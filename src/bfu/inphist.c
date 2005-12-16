@@ -86,6 +86,19 @@ do_tab_compl(struct dialog_data *dlg_data, struct list_head *history)
 	}
 }
 
+/* Return the length of the common substring from the starts
+ * of the two strings a and b. */
+static inline int
+strcommonlen(unsigned char *a, unsigned char *b)
+{
+	unsigned char *start = a;
+
+	while (*a && *a == *b)
+		++a, ++b;
+
+	return a - start;
+}
+
 /* Complete to the last unambiguous character. Eg., I've been to google.com,
  * google.com/search?q=foo, and google.com/search?q=bar.  This function then
  * completes `go' to `google.com' and `google.com/' to `google.com/search?q='.
@@ -104,18 +117,8 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 
 	foreach (entry, *history) {
 		unsigned char *cur = entry->data;
-		unsigned char *matchpos = match ? match : widget_data->cdata;
-		int cur_len = 0;
-
-		for (; *cur && *cur == *matchpos; ++cur, ++matchpos) {
-			++cur_len;
-
-			/* XXX: I think that unifying the two cases of this
-			 * test could seriously hurt readability. --pasky */
-			if (longest_common_match
-			    && cur_len >= longest_common_match)
-				break;
-		}
+		int cur_len = strcommonlen(cur, match ? match
+		                                      : widget_data->cdata);
 
 		if (cur_len < base_len)
 			continue;
