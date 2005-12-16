@@ -109,8 +109,7 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int base_len = strlen(widget_data->cdata);
 	/* Maximum number of characters in a match. Characters after this
-	 * position are varying in other matches. Zero means that no max has
-	 * been set yet. */
+	 * position are varying in other matches. */
 	int longest_common_match = 0;
 	unsigned char *match = NULL;
 	struct input_history_entry *entry;
@@ -123,13 +122,13 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 		if (cur_len < base_len)
 			continue;
 
-		if (!match) cur_len = strlen(entry->data);
-
-		/* By now, @cur_len oscillates between @base_len and
-		 * @longest_common_match. */
-		if (longest_common_match
-		    && cur_len >= longest_common_match)
+		if (!match) {
+			cur_len = strlen(entry->data);
+		} else if (cur_len >= longest_common_match) {
+			/* By now, @cur_len oscillates between @base_len and
+			 * @longest_common_match. */
 			continue;
+		}
 
 		/* We found the next shortest common match. */
 		longest_common_match = cur_len;
