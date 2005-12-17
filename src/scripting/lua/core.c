@@ -60,7 +60,7 @@ static sigjmp_buf errjmp;
 
 static void handle_standard_lua_returns(unsigned char *from);
 static void handle_ref(LS, struct session *ses, int func_ref,
-                       unsigned char *from, int num_args);
+                       unsigned char *from, int num_args, int unref);
 
 
 /*
@@ -262,7 +262,7 @@ run_lua_func(va_list ap, void *data)
 		return EVENT_HOOK_STATUS_NEXT;
 	}
 
-	handle_ref(L, ses, func_ref, "keyboard function", 0);
+	handle_ref(L, ses, func_ref, "keyboard function", 0, 1);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
@@ -335,7 +335,7 @@ dialog_run_lua(void *data_)
 	lua_pushstring(s, data->cat);
 	lua_pushstring(s, data->name);
 	lua_pushstring(s, data->url);
-	handle_ref(s, lua_ses, data->func_ref, "post dialog function", 3);
+	handle_ref(s, lua_ses, data->func_ref, "post dialog function", 3, 1);
 }
 
 static int
@@ -409,7 +409,7 @@ xdialog_run_lua(void *data_)
 
 	for (i = 0; i < data->nfields; i++) lua_pushstring(s, data->fields[i]);
 	handle_ref(s, lua_ses, data->func_ref, "post xdialog function",
-	           data->nfields);
+	           data->nfields, 1);
 }
 
 static int
@@ -826,7 +826,7 @@ handle_ref_on_stack(LS, struct session *ses, unsigned char *from, int num_args)
 
 static void
 handle_ref(LS, struct session *ses, int func_ref, unsigned char *from,
-           int num_args)
+           int num_args, int unref)
 {
 	lua_rawgeti(S, LUA_REGISTRYINDEX, func_ref);
 
@@ -835,7 +835,8 @@ handle_ref(LS, struct session *ses, int func_ref, unsigned char *from,
 
 	handle_ref_on_stack(S, ses, from, num_args);
 
-	luaL_unref(S, LUA_REGISTRYINDEX, func_ref);
+	if (unref)
+		luaL_unref(S, LUA_REGISTRYINDEX, func_ref);
 }
 
 
