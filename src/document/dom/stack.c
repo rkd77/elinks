@@ -184,12 +184,11 @@ pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 
 	state = search_dom_stack(stack, type, string);
 	if (state)
-		pop_dom_state(stack, type, state);
+		pop_dom_state(stack, state);
 }
 
 void
-pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
-	      struct dom_stack_state *target)
+pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target)
 {
 	struct dom_stack_state *state;
 	unsigned int pos;

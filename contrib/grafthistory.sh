@@ -9,15 +9,22 @@ if [ -z "`which wget 2>/dev/null`" ]; then
   exit 1
 fi
 
-[ -d .git ] && cd .git
+[ "$GIT_DIR" ] || GIT_DIR=.git
+if ! [ -d "$GIT_DIR" ]; then
+  echo "Error: You must run this from the project root (or set GIT_DIR to your .git directory)." >&2
+  exit 1
+fi
+cd "$GIT_DIR"
 
 echo "[grafthistory] Downloading the history"
+mkdir -p objects/pack
 cd objects/pack
 wget -c http://elinks.or.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
 wget -c http://elinks.or.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
 
 echo "[grafthistory] Setting up the grafts"
 cd ../..
+mkdir -p info
 # master
 echo 0f6d4310ad37550be3323fab80456e4953698bf0 06135dc2b8bb7ed2e441305bdaa82048396de633 >>info/grafts
 # REL_0_10

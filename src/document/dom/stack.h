@@ -55,8 +55,8 @@ struct dom_stack {
 	void *data;
 };
 
-#define dom_stack_has_parents(nav) \
-	((nav)->states && (nav)->depth > 0)
+#define dom_stack_has_parents(stack) \
+	((stack)->states && (stack)->depth > 0)
 
 static inline struct dom_stack_state *
 get_dom_stack_state(struct dom_stack *stack, int top_offset)
@@ -66,21 +66,21 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 	return &stack->states[stack->depth - 1 - top_offset];
 }
 
-#define get_dom_stack_parent(nav)	get_dom_stack_state(nav, 1)
-#define get_dom_stack_top(nav)		get_dom_stack_state(nav, 0)
+#define get_dom_stack_parent(stack)	get_dom_stack_state(stack, 1)
+#define get_dom_stack_top(stack)	get_dom_stack_state(stack, 0)
 
 #define get_dom_stack_state_data(stack, state) \
 	((void *) &(stack)->state_objects[(state)->depth * (stack)->object_size])
 
 /* The state iterators do not include the bottom state */
 
-#define foreach_dom_state(nav, item, pos)			\
-	for ((pos) = 1; (pos) < (nav)->depth; (pos)++)		\
-		if (((item) = &(nav)->states[(pos)]))
+#define foreach_dom_state(stack, item, pos)			\
+	for ((pos) = 1; (pos) < (stack)->depth; (pos)++)		\
+		if (((item) = &(stack)->states[(pos)]))
 
-#define foreachback_dom_state(nav, item, pos)			\
-	for ((pos) = (nav)->depth - 1; (pos) > 0; (pos)--)	\
-		if (((item) = &(nav)->states[(pos)]))
+#define foreachback_dom_state(stack, item, pos)			\
+	for ((pos) = (stack)->depth - 1; (pos) > 0; (pos)--)	\
+		if (((item) = &(stack)->states[(pos)]))
 
 /* Dive through the stack states in search for the specified match. */
 static inline struct dom_stack_state *
@@ -127,9 +127,7 @@ void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 		   struct dom_string *string);
 
 /* Pop all stack states until a specific state is reached. */
-void
-pop_dom_state(struct dom_stack *stack, enum dom_node_type type,
-	      struct dom_stack_state *target);
+void pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target);
 
 /* Visit each node in the tree rooted at @root pre-order */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);
