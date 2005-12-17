@@ -107,8 +107,9 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 	PyObject *pFunc = PyDict_GetItemString(pDict, "pre_format_html_hook");
 
 	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, "ss", url,
-		                                         fragment->data);
+		PyObject *pValue = PyObject_CallFunction(pFunc, "ss#", url,
+		                                         fragment->data,
+		                                         fragment->length);
 
 		if (pValue && (pValue != Py_None)) {
 			const unsigned char *str = PyString_AsString(pValue);

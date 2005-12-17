@@ -160,7 +160,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	args[0] = rb_str_new2(url);
 	/* FIXME: Use html_len */
-	args[1] = rb_str_new2(fragment->data);
+	args[1] = rb_str_new(fragment->data, fragment->length);
 
 	result = erb_protected_method_call("pre_format_html_hook", 2, args, &error);
 	if (error) {
