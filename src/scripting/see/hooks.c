@@ -8,6 +8,7 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/see/core.h"
@@ -156,21 +157,21 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
 	struct SEE_interpreter *see = &see_interpreter;
 	struct SEE_value args_[2], *args[2] = { &args_[0], &args_[1] };
 	struct SEE_value result;
 
-	evhook_use_params(url && ses);
+	evhook_use_params(ses, cached);
 
-	if (*html == NULL || *html_len == 0)
+	if (!cached->length || !*fragment->data)
 		return EVENT_HOOK_STATUS_NEXT;
 
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", url));
-	SEE_SET_STRING(args[1], SEE_string_sprintf(see, "%s", *html));
+	SEE_SET_STRING(args[1], SEE_string_sprintf(see, "%s", fragment->data));
 
 	if (!call_see_hook(see, ses, "pre_format_html", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
@@ -181,8 +182,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 		struct string new_html;
 
 		if (convert_see_string(&new_html, result.u.string)) {
-			mem_free_set(html, new_html.source);
-			*html_len = new_html.length;
+			add_fragment(cached, 0, new_html.source, new_html.length);
+			normalize_cache_entry(cached, new_html.length);
 		}
 		break;
 	}

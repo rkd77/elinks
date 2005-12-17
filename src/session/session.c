@@ -500,8 +500,6 @@ static void
 maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 {
 	struct fragment *fragment;
-	unsigned char *src;
-	int len;
 	static int pre_format_html_event = EVENT_NONE;
 
 	if (!cached || cached->preformatted)
@@ -513,19 +511,11 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	/* We cannot do anything if the data are fragmented. */
 	if (!list_is_singleton(cached->frag)) return;
 
-	src = fragment->data;
-	len = fragment->length;
-
 	set_event_id(pre_format_html_event, "pre-format-html");
-	trigger_event(pre_format_html_event, &src, &len, ses, struri(cached->uri));
+	trigger_event(pre_format_html_event, ses, cached);
 
-	if (src && src != fragment->data) {
-		add_fragment(cached, 0, src, len);
-		normalize_cache_entry(cached, len);
-		mem_free(src);
-	}
-
-	/* XXX: Keep after normalize_cache_entry()! */
+	/* XXX: Keep this after the trigger_event, because hooks might call
+	 * normalize_cache_entry()! */
 	cached->preformatted = 1;
 }
 #endif

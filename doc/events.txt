@@ -217,17 +217,16 @@ Triggered When:
 
 Arguments:
 
- unsigned char **html, int *html_len, struct session *ses, unsigned char *url
+ struct cache_entry *cached
 
 Description:
 
- Makes it possible to fix up bad HTML code, remove tags etc.  The HTML source
- is changed by making @html point to the new source.  If @html is changed the
- event propagation should be ended and @html_len should be updated to the new
- length of the document content.
- Possible values for @html includes:
- - new document content in a dynamically allocated string; or
- - NULL to keep the content unchanged.
+ Makes it possible to fix up bad HTML code, remove tags etc. The parameter
+ cached is guaranteed to have a single fragment. The HTML source is changed
+ by replacing this fragment:
+
+	add_fragment(cached, 0, new_string, new_len);
+	normalize_cache_entry(cached, new_len);
 
 -------------------------------------------------------------------------------
 Name:		quit

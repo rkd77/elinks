@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/perl/core.h"
@@ -118,8 +119,8 @@ script_hook_follow_url(va_list ap, void *data)
 }
 
 static inline void
-do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
-			       int *html_len)
+do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
+			       struct fragment *fragment)
 {
 	int count;
 	dSP;	/* Keep in variables declaration block. */
@@ -129,7 +130,7 @@ do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
 
 	PUSHMARK(SP);
 	my_XPUSHs(url, strlen(url));
-	my_XPUSHs(*html, *html_len);
+	my_XPUSHs(fragment->data, fragment->length);
 	PUTBACK;
 
 	count = call_pv("pre_format_html_hook", G_EVAL | G_SCALAR);
@@ -140,8 +141,10 @@ do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
 		unsigned char *new_html = POPpx;
 
 		if (new_html) {
-			*html_len = n_a;
-			*html = memacpy(new_html, *html_len);
+			int len = n_a;
+
+			add_fragment(cached, 0, new_html, len);
+			normalize_cache_entry(cached, len);
 		}
 	}
 
@@ -153,13 +156,13 @@ do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
 
-	if (my_perl && ses && url && *html && *html_len)
-		do_script_hook_pre_format_html(url, html, html_len);
+	if (my_perl && ses && url && cached->length && *fragment->data)
+		do_script_hook_pre_format_html(url, cached, fragment);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
