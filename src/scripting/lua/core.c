@@ -493,6 +493,14 @@ l_set_option(LS)
 	/* Set option */
 	switch (opt->type) {
 	case OPT_BOOL:
+	{
+		int value;
+
+		value = lua_toboolean(S, 2);
+		option_types[opt->type].set(opt, (unsigned char *) (&value));
+		break;
+	}
+
 	case OPT_INT:
 	case OPT_LONG:
 	{
