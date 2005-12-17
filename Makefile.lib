@@ -16,12 +16,12 @@ endif
 
 # Colorize the build.
 ifdef MAKE_COLOR
-	INFO_COLOR    = \033[0;35m
-	CC_COLOR      = \033[0;36m
-	LD_COLOR      = \033[0;32m
-	LINK_COLOR    = \033[1;34m
-	INSTALL_COLOR = \033[0;33m
-	END_COLOR     = \033[0;0m
+	INFO_COLOR    = $(shell tput setaf 5)
+	CC_COLOR      = $(shell tput setaf 6)
+	LD_COLOR      = $(shell tput setaf 2)
+	LINK_COLOR    = $(shell tput bold;tput setaf 4)
+	INSTALL_COLOR = $(shell tput setaf 3)
+	END_COLOR     = $(shell tput sgr0)
 endif
 
 # Show the command (quiet or non-quiet version based on the assignment
