@@ -26,9 +26,9 @@ endif
 
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
-ncmd = $(if $($(quiet)cmd_$(1)),echo -e $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
-cmd = @$(if $($(quiet)cmd_$(1)),echo -e $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
-mcmd = @$(if $($(mquiet)cmd_$(1)),echo -e $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
+ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
+cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
+mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -c $<
