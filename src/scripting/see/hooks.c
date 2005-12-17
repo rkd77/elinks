@@ -171,8 +171,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 		return EVENT_HOOK_STATUS_NEXT;
 
 	SEE_SET_STRING(args[0], SEE_string_sprintf(see, "%s", url));
-	SEE_SET_STRING(args[1], SEE_string_sprintf(see, "%.*s", fragment->data,
-	                                           fragment->length));
+	SEE_SET_STRING(args[1], SEE_string_sprintf(see, "%.*s", fragment->length,
+	                                           fragment->data));
 
 	if (!call_see_hook(see, ses, "pre_format_html", args, sizeof_array(args), &result))
 		return EVENT_HOOK_STATUS_NEXT;
