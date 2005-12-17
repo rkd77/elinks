@@ -165,7 +165,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct SEE_value args_[2], *args[2] = { &args_[0], &args_[1] };
 	struct SEE_value result;
 
-	evhook_use_params(ses, cached);
+	evhook_use_params(ses && cached);
 
 	if (!cached->length || !*fragment->data)
 		return EVENT_HOOK_STATUS_NEXT;
