@@ -119,13 +119,20 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 		int cur_len = strcommonlen(cur, match ? match
 		                                      : widget_data->cdata);
 
+		/* Throw away it away if it isn't even as long as what the user
+		 * entered. */
 		if (cur_len < base_len)
 			continue;
 
 		if (!match) {
+			/* This is the first match, so its length is the maximum
+			 * for any future matches. */
 			longest_common_match = strlen(entry->data);
 			match = entry->data;
 		} else if (cur_len < longest_common_match) {
+			/* The current match has a shorter substring in common
+			 * with the previous candidates, so the common substring
+			 * shrinks. */
 			longest_common_match = cur_len;
 		}
 	}
