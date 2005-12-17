@@ -262,7 +262,7 @@ run_lua_func(va_list ap, void *data)
 		return EVENT_HOOK_STATUS_NEXT;
 	}
 
-	handle_ref(L, ses, func_ref, "keyboard function", 0, 1);
+	handle_ref(L, ses, func_ref, "keyboard function", 0, 0);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
