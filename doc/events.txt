@@ -217,6 +217,7 @@ Triggered When:
 
 Arguments:
 
+ struct session *ses
  struct cache_entry *cached
 
 Description:
