@@ -381,12 +381,22 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		}
 
 		if (file.length > fc_maxlength) {
-			done_string(&file);
-			textarea_editor = 0;
-			goto free_and_return;
+			file.source[fc_maxlength] = '\0';
+			info_box(term, MSGBOX_FREE_TEXT, N_("Warning"),
+			         ALIGN_CENTER,
+			         msg_text(term,
+				          N_("You have exceeded the textarea's"
+				             " size limit: your input is %d"
+					     " bytes, but the maximum is %u"
+					     " bytes.\n\n"
+					     "Your input has been truncated,"
+					     " but you can still recover the"
+					     " text that you entered from"
+					     " this file: %s"), file.length,
+				             fc_maxlength, fn));
+		} else {
+			unlink(fn);
 		}
-
-		unlink(fn);
 
 		mem_free(fs->value);
 		fs->value = file.source;
