@@ -7,7 +7,7 @@ SUBDIRS-$(CONFIG_PERL)		+= perl
 SUBDIRS-$(CONFIG_PYTHON)	+= python
 SUBDIRS-$(CONFIG_RUBY)		+= ruby
 SUBDIRS-$(CONFIG_SEE)		+= see
-SUBDIRS-$(CONFIG_ECMASCRIPT)	+= smjs
+SUBDIRS-$(CONFIG_SPIDERMONKEY)	+= smjs
 
 OBJS = scripting.o
 
