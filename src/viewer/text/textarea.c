@@ -314,32 +314,17 @@ save_textarea_file(unsigned char *value)
 static unsigned char *
 load_textarea_file(unsigned char *filename, size_t maxlength)
 {
-	unsigned char *value = NULL;
-	FILE *file = fopen(filename, "rb+");
-	off_t filelen = -1;
+	struct string file;
 
-	if (!file) return NULL;
+	if (!init_string(&file)
+	     || !add_file_to_string(&file, filename))
+		return NULL;
 
-	if (!fseeko(file, 0, SEEK_END)) {
-		filelen = ftello(file);
-		if (filelen != -1 && fseeko(file, 0, SEEK_SET))
-			filelen = -1;
-	}
-
-	if (filelen >= 0 && filelen <= maxlength) {
-		value = mem_alloc((size_t) (filelen + 1));
-		if (value) {
-			size_t bread;
-
-			bread = fread(value, 1, (size_t) filelen, file);
-			value[bread] = 0;
-		}
-	}
-
-	fclose(file);
 	unlink(filename);
 
-	return value;
+	if (file.length > maxlength) { done_string(&file); return NULL; }
+
+	return file.source;
 }
 
 void
