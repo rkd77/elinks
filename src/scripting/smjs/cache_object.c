@@ -8,6 +8,7 @@
 
 #include "cache/cache.h"
 #include "ecmascript/spidermonkey/util.h"
+#include "scripting/smjs/cache_object.h"
 #include "scripting/smjs/core.h"
 #include "util/error.h"
 #include "util/memory.h"
