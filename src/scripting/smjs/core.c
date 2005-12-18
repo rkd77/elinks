@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "config/home.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "main/module.h"
 #include "scripting/scripting.h"
@@ -67,6 +68,34 @@ reported:
 static JSRuntime *smjs_rt;
 
 void
+smjs_load_hooks(void)
+{
+	jsval rval;
+	struct string *string;
+	struct string script;
+	unsigned char *path;
+
+	if (!init_string(&script)) return;
+
+	if (elinks_home) {
+		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME, NULL);
+	} else {
+		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
+	}
+
+	string = add_file_to_string(&script, path);
+	mem_free(path);
+	if (!string) return;
+
+	if (JS_FALSE == JS_EvaluateScript(smjs_ctx,
+				JS_GetGlobalObject(smjs_ctx),
+				script.source, script.length, path, 1, &rval))
+		alert_smjs_error("error loading default script file");
+
+	done_string(&script);
+}
+
+void
 init_smjs(struct module *module)
 {
 	const JSClass global_class = {
@@ -92,6 +121,8 @@ init_smjs(struct module *module)
 	JS_InitStandardClasses(smjs_ctx, global_object);
 
 	smjs_elinks_object = smjs_get_elinks_object(global_object);
+
+	smjs_load_hooks();
 }
 
 void
