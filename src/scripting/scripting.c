@@ -36,7 +36,7 @@ report_scripting_error(struct module *module, struct session *ses,
 
 	if (!ses) {
 		if (list_empty(terminals)) {
-			usrerror("%s error] %s", module->name, msg);
+			usrerror("[%s error] %s", module->name, msg);
 			return;
 		}
 
