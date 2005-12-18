@@ -380,13 +380,13 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			goto free_and_return;
 		}
 
-		unlink(fn);
-
 		if (file.length > fc_maxlength) {
 			done_string(&file);
 			textarea_editor = 0;
 			goto free_and_return;
 		}
+
+		unlink(fn);
 
 		mem_free(fs->value);
 		fs->value = file.source;
