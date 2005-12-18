@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-13 17:20+0100\n"
+"POT-Creation-Date: 2005-12-18 20:48+0100\n"
 "PO-Revision-Date: 2005-12-13 17:21+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
@@ -35,7 +35,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
 #: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:802 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
 
@@ -1784,8 +1784,8 @@ msgstr "Description"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:964 src/viewer/text/textarea.c:362
-#: src/viewer/text/textarea.c:369
+#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Erreur"
 
@@ -7800,15 +7800,15 @@ msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:716
+#: src/scripting/lua/core.c:724
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
@@ -7816,17 +7816,17 @@ msgstr "Entrez une expression"
 msgid "Ruby Message"
 msgstr "Message Ruby"
 
-#: src/scripting/scripting.c:53
+#: src/scripting/scripting.c:54
 #, c-format
 msgid "An error occurred while running a %s script"
 msgstr "Une erreur s'est produite lors de l'exécution d'un script %s"
 
-#: src/scripting/scripting.c:59
+#: src/scripting/scripting.c:60
 msgid "Browser scripting error"
 msgstr "Erreur de script"
 
 #. name:
-#: src/scripting/scripting.c:87
+#: src/scripting/scripting.c:91
 msgid "Scripting"
 msgstr "Scripting"
 
@@ -7922,11 +7922,12 @@ msgstr "Le fichier sera ouvert avec le programme '%s'."
 msgid "~Open"
 msgstr "~Ouvrir"
 
-#: src/session/session.c:752 src/session/session.c:771 src/session/task.c:269
+#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/viewer/text/textarea.c:385
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:753
+#: src/session/session.c:743
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7945,7 +7946,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:772
+#: src/session/session.c:762
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7966,11 +7967,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:797
+#: src/session/session.c:787
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:798
+#: src/session/session.c:788
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8158,87 +8159,87 @@ msgstr "pressez %s pour soumettre à %s"
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
 
-#: src/viewer/text/link.c:1151
+#: src/viewer/text/link.c:1169
 msgid "~Follow link"
 msgstr "~Suivre le lien"
 
-#: src/viewer/text/link.c:1153
+#: src/viewer/text/link.c:1171
 msgid "Follow link and r~eload"
 msgstr "Suivre le lien et ~recharger"
 
-#: src/viewer/text/link.c:1157
+#: src/viewer/text/link.c:1175
 msgid "Open in new ~window"
 msgstr "Ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1159
+#: src/viewer/text/link.c:1177
 msgid "Open in new ~tab"
 msgstr "Ouvrir dans un nouvel ongle~t"
 
-#: src/viewer/text/link.c:1161
+#: src/viewer/text/link.c:1179
 msgid "Open in new tab in ~background"
 msgstr "Ouvrir dans un nouvel onglet en arrière-~plan"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1184
 msgid "~Download link"
 msgstr "~Enregistrer le lien"
 
-#: src/viewer/text/link.c:1169
+#: src/viewer/text/link.c:1187
 msgid "~Add link to bookmarks"
 msgstr "~Ajouter ce lien aux signets"
 
-#: src/viewer/text/link.c:1181 src/viewer/text/link.c:1217
+#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
 msgid "~Reset form"
 msgstr "Remettre à ~zéro le formulaire"
 
-#: src/viewer/text/link.c:1194
+#: src/viewer/text/link.c:1212
 msgid "Open in ~external editor"
 msgstr "Ouvrir dans un ~éditeur externe"
 
-#: src/viewer/text/link.c:1200
+#: src/viewer/text/link.c:1218
 msgid "~Submit form"
 msgstr "~Envoyer le formulaire"
 
-#: src/viewer/text/link.c:1201
+#: src/viewer/text/link.c:1219
 msgid "Submit form and rel~oad"
 msgstr "Envoyer le formulaire et ~recharger"
 
-#: src/viewer/text/link.c:1205
+#: src/viewer/text/link.c:1223
 msgid "Submit form and open in new ~window"
 msgstr "Envoyer le formulaire et ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1225
 msgid "Submit form and open in new ~tab"
 msgstr "Envoyer le formulaire et ouvrir un ~onglet"
 
-#: src/viewer/text/link.c:1210
+#: src/viewer/text/link.c:1228
 msgid "Submit form and open in new tab in ~background"
 msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 
-#: src/viewer/text/link.c:1215
+#: src/viewer/text/link.c:1233
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
-#: src/viewer/text/link.c:1222
+#: src/viewer/text/link.c:1240
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
-#: src/viewer/text/link.c:1224
+#: src/viewer/text/link.c:1242
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1232
+#: src/viewer/text/link.c:1250
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1280
+#: src/viewer/text/link.c:1298
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1303
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8310,13 +8311,28 @@ msgstr "Chercher en arrière"
 msgid "Search History"
 msgstr "Historique des recherches"
 
-#: src/viewer/text/textarea.c:363
+#: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Vous ne pouvez utiliser un éditeur externe en mode anonyme."
 
-#: src/viewer/text/textarea.c:370
+#: src/viewer/text/textarea.c:339
 msgid "You can do this only on the master terminal"
 msgstr "Vous ne pouvez faire ça que dans le terminal maître"
+
+#: src/viewer/text/textarea.c:388
+#, c-format
+msgid ""
+"You have exceeded the textarea's size limit: your input is %d bytes, but the "
+"maximum is %u bytes.\n"
+"\n"
+"Your input has been truncated, but you can still recover the text that you "
+"entered from this file: %s"
+msgstr ""
+"Vous avez dépassé la longueur maximale de l'aire de texte:\n"
+"votre entrée fait %u caractères, mais le maximum est de %u caractères.\n"
+"\n"
+"Votre entrée a été tronquée, mais vous pouvez toujours récupérer le texte "
+"que vous avez entré dans le fichier suivant: %s"
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
