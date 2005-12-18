@@ -8,6 +8,7 @@ struct session;
 struct string;
 
 extern JSContext *smjs_ctx;
+JSObject *smjs_elinks_object;
 struct session *smjs_ses;
 
 void alert_smjs_error(unsigned char *msg);

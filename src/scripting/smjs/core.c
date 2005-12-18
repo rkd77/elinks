@@ -10,6 +10,7 @@
 #include "main/module.h"
 #include "scripting/scripting.h"
 #include "scripting/smjs/core.h"
+#include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/smjs.h"
 #include "util/string.h"
 
@@ -17,6 +18,7 @@
 #define SMJS_HOOKS_FILENAME "hooks.js"
 
 JSContext *smjs_ctx;
+JSObject *smjs_elinks_object;
 struct session *smjs_ses;
 
 
@@ -88,6 +90,8 @@ init_smjs(struct module *module)
 	if (!global_object) return;
 
 	JS_InitStandardClasses(smjs_ctx, global_object);
+
+	smjs_elinks_object = smjs_get_elinks_object(global_object);
 }
 
 void
