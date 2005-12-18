@@ -311,22 +311,6 @@ save_textarea_file(unsigned char *value)
 	return filename;
 }
 
-static unsigned char *
-load_textarea_file(unsigned char *filename, size_t maxlength)
-{
-	struct string file;
-
-	if (!init_string(&file)
-	     || !add_file_to_string(&file, filename))
-		return NULL;
-
-	unlink(filename);
-
-	if (file.length > maxlength) { done_string(&file); return NULL; }
-
-	return file.source;
-}
-
 void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
@@ -388,16 +372,28 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		textarea_editor = 1;
 
 	} else if (op == 1 && fs) {
-		unsigned char *value = load_textarea_file(fn, fc_maxlength);
+		struct string file;
 
-		if (value) {
-			mem_free(fs->value);
-			fs->value = value;
-			fs->state = strlen(value);
-
-			if (doc_view && link)
-				draw_form_entry(term, doc_view, link);
+		if (!init_string(&file)
+		     || !add_file_to_string(&file, fn)) {
+			textarea_editor = 0;
+			goto free_and_return;
 		}
+
+		unlink(fn);
+
+		if (file.length > fc_maxlength) {
+			done_string(&file);
+			textarea_editor = 0;
+			goto free_and_return;
+		}
+
+		mem_free(fs->value);
+		fs->value = file.source;
+		fs->state = file.length;
+
+		if (doc_view && link)
+			draw_form_entry(term, doc_view, link);
 
 		textarea_editor = 0;
 		goto free_and_return;
