@@ -22,11 +22,12 @@
 #include "scripting/python/python.h"
 #include "scripting/ruby/ruby.h"
 #include "scripting/see/see.h"
+#include "scripting/smjs/smjs.h"
 
 
 /* Error reporting. */
 
-#if defined(CONFIG_RUBY) || defined(CONFIG_SEE)
+#if defined(CONFIG_RUBY) || defined(CONFIG_SEE) || defined(CONFIG_ECMASCRIPT)
 void
 report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)
@@ -79,6 +80,9 @@ static struct module *scripting_modules[] = {
 #endif
 #ifdef CONFIG_SEE
 	&see_scripting_module,
+#endif
+#ifdef CONFIG_ECMASCRIPT
+	&smjs_scripting_module,
 #endif
 	NULL,
 };
