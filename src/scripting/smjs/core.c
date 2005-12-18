@@ -67,6 +67,14 @@ static JSRuntime *smjs_rt;
 void
 init_smjs(struct module *module)
 {
+	const JSClass global_class = {
+		"global", 0,
+		JS_PropertyStub, JS_PropertyStub,
+		JS_PropertyStub, JS_PropertyStub,
+		JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	};
+	JSObject *global_object;
+
 	smjs_rt = JS_NewRuntime(1L * 1024L * 1024L);
 	if (!smjs_rt) return;
 
@@ -74,6 +82,12 @@ init_smjs(struct module *module)
 	if (!smjs_ctx) return;
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
+
+	global_object = JS_NewObject(smjs_ctx, (JSClass *) &global_class,
+	                             NULL, NULL);
+	if (!global_object) return;
+
+	JS_InitStandardClasses(smjs_ctx, global_object);
 }
 
 void
