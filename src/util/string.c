@@ -4,8 +4,13 @@
 #include "config.h"
 #endif
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* XXX: fseeko, ftello */
+#endif
+
 #include <ctype.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -323,6 +328,46 @@ add_string_to_string(struct string *string, struct string *from)
 	if (!*from->source) return NULL;
 
 	return add_bytes_to_string(string, from->source, from->length);
+}
+
+struct string *
+add_file_to_string(struct string *string, unsigned char *filename)
+{
+	FILE *file;
+	off_t filelen;
+	int newlength;
+
+	assertm(string && filename, "[add_file_to_string]");
+	if_assert_failed { return NULL; }
+
+	check_string_magic(string);
+
+	file = fopen(filename, "rb");
+	if (!file) return NULL;
+
+	if (fseeko(file, 0, SEEK_END)) goto err;
+
+	filelen = ftello(file);
+	if (filelen == -1) goto err;
+
+	if (fseeko(file, 0, SEEK_SET)) goto err;
+
+	newlength = string->length + filelen;
+	if (!realloc_string(string, newlength)) goto err;
+
+	string->length += fread(string->source + string->length, 1,
+	                        (size_t) filelen, file);
+	string->source[string->length] = 0;
+	fclose(file);
+
+	if (string->length != newlength) goto err;
+
+	return string;
+
+err:
+	fclose(file);
+
+	return NULL;
 }
 
 struct string *

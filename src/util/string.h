@@ -157,6 +157,7 @@ struct string *add_to_string(struct string *string,
 			     const unsigned char *source);
 struct string *add_char_to_string(struct string *string, unsigned char character);
 struct string *add_string_to_string(struct string *to, struct string *from);
+struct string *add_file_to_string(struct string *string, unsigned char *filename);
 struct string *add_crlf_to_string(struct string *string);
 
 /* Adds each C string to @string until a terminating NULL is met. */
