@@ -270,7 +270,7 @@ no_item:
 
 	start = pos = menu->selected;
 
-	if (!steps) steps = 1;
+	if (!steps) steps = 1, --pos;
 
 	while (steps) {
 		pos += s, steps -= s;
