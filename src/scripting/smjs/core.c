@@ -74,6 +74,8 @@ smjs_load_hooks(void)
 	struct string script;
 	unsigned char *path;
 
+	assert(smjs_ctx);
+
 	if (!init_string(&script)) return;
 
 	if (elinks_home) {

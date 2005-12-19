@@ -24,6 +24,11 @@ call_script_hook(unsigned char *hook, jsval argv[], int argc, jsval *rval)
 {
 	JSFunction *func;
 
+	assert(smjs_ctx);
+	assert(smjs_elinks_object);
+	assert(rval);
+	assert(argv);
+
 	if (JS_FALSE == JS_GetProperty(smjs_ctx, smjs_elinks_object,
 	                               hook, rval))
 		return JS_FALSE;
