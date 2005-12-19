@@ -9,15 +9,8 @@
 
 #include "elinks.h"
 
-#include "document/dom/node.h"
-#include "document/dom/stack.h"
 #include "document/sgml/html/html.h"
-#include "document/sgml/parser.h"
-#include "document/sgml/scanner.h"
 #include "document/sgml/sgml.h"
-#include "util/error.h"
-#include "util/memory.h"
-#include "util/string.h"
 
 
 #define HTML_(node, name, id)		SGML_NODE_INFO(HTML, node, name, id)
