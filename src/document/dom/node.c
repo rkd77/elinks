@@ -94,7 +94,7 @@ del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node)
 
 	if (!list) return;
 
-	foreach_dom_node(i, entry, list) {
+	foreach_dom_node (list, entry, i) {
 		size_t successors;
 
 		if (entry != node) continue;
@@ -115,7 +115,7 @@ done_dom_node_list(struct dom_node_list *list)
 
 	assert(list);
 
-	foreach_dom_node (i, node, list) {
+	foreach_dom_node (list, node, i) {
 		/* Avoid that the node start messing with the node list. */
 		done_dom_node_data(node);
 	}

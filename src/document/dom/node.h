@@ -214,11 +214,11 @@ struct dom_node_list {
 	struct dom_node *entries[1];
 };
 
-#define foreach_dom_node(i, node, list)			\
+#define foreach_dom_node(list, node, i)			\
 	for ((i) = 0; (i) < (list)->size; (i)++)	\
 		if (((node) = (list)->entries[(i)]))
 
-#define foreachback_dom_node(i, node, list)		\
+#define foreachback_dom_node(list, node, i)		\
 	for ((i) = (list)->size - 1; (i) > 0; (i)--)	\
 		if (((node) = (list)->entries[(i)]))
 
