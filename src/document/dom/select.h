@@ -46,7 +46,7 @@ enum dom_select_element_match {
 
 /* The special CSS .bar class attribute syntax is represented as
  * E[class="bar"]. The ID flag will match against any attribute with it's
- * boolean id member set. XXX: These flags are ATM mutual exclusive. */
+ * boolean id member set. XXX: These flags are ATM mutually exclusive. */
 enum dom_select_attribute_match {
 	/* Matches any set value:			E[foo] */
 	DOM_SELECT_ATTRIBUTE_ANY = 1,
@@ -104,7 +104,7 @@ struct dom_select_nth_match {
  * for holding data for attribute matching and element text matching. */
 struct dom_select_node {
 	/* This holds the DOM node which has data about the node being matched.
-	 * It can be either an element, attribute, and a text node. */
+	 * It can be either an element, attribute, or a text node. */
 	/* XXX: Keep at the top. This is used for translating dom_node
 	 * reference to dom_select_node. */
 	struct dom_node node;

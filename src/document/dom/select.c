@@ -284,7 +284,8 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 		token = get_next_scanner_token(scanner);
 	} while (token && token->type == ':');
 
-	if (!token) return DOM_ERR_SYNTAX;
+	if (!token || token->type != CSS_TOKEN_IDENT)
+		return DOM_ERR_SYNTAX;
 
 	pseudo = get_dom_select_pseudo(token);
 	switch (pseudo) {
@@ -492,21 +493,7 @@ parse_dom_select(struct dom_select *select, unsigned char *string, int length)
 	if (select->selector)
 		return DOM_ERR_NONE;
 
-	WDBG("All has failed ...");
-
 	return DOM_ERR_INVALID_STATE;
-}
-
-void
-print_dom_select(struct dom_select *select)
-{
-	if (select->selector) {
-		struct dom_node *node = (struct dom_node *) select->selector;
-
-		done_dom_node(node);
-	}
-
-	mem_free(select);
 }
 
 struct dom_select *
