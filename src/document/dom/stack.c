@@ -140,6 +140,9 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	assert(stack && !dom_stack_is_empty(stack));
 
 	state = get_dom_stack_top(stack);
+	if (state->immutable)
+		return 1;
+
 	callback = stack->pop_callbacks[state->node->type];
 	if (callback) {
 		void *state_data = get_dom_stack_state_data(stack, state);

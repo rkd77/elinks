@@ -27,6 +27,9 @@ struct dom_stack_state {
 	/* The depth of the state in the stack. This is amongst other things
 	 * used to get the state object data. */
 	unsigned int depth;
+
+	/* Wether this stack state can be popped with pop_dom_*() family. */
+	unsigned int immutable:1;
 };
 
 /* The DOM stack is a convenient way to traverse DOM trees. Also it
