@@ -254,80 +254,57 @@ count_menu_size(struct terminal *term, struct menu *menu)
 	int_bounds(&menu->box.y, 0, height - my);
 }
 
-static int
-search_selectable(struct menu *menu, int pos, int dir)
-{
-	assert(pos >= 0 && pos < menu->size && (dir == 1 || dir == -1));
-	if_assert_failed return -1;
-
-	while (!mi_is_selectable(&menu->items[pos])) {
-		if (dir > 0 && pos == menu->size - 1)
-			return -1;
-		else if (dir < 0 && pos == 0)
-			return -1;
-
-		pos += dir;
-	}
-
-	return pos;
-}
-
 static void
 scroll_menu(struct menu *menu, int steps, int wrap)
 {
-	int height, scr_i, pos;
+	int height, scr_i, pos, start;
 	int s = steps ? steps/abs(steps) : 1; /* Selectable item search direction. */
 
 	if (menu->size <= 0) {
+no_item:
 		/* Menu is empty. */
 		menu->selected = -1;
 		menu->first = 0;
 		return;
 	}
 
-	/* Move by required steps and handle wraparound if needed.
-	 * A step of zero can be used, indicating we want to select
-	 * item corresponding to |menu->selected| value rather than
-	 * moving by to a position relative to this value.
-	 * We override search direction for selectable items if we encounter
-	 * a limit, since it depends in which conditions this limit is
-	 * attained. */
-	menu->selected += steps;
-	if (menu->selected >= menu->size) {
-		if (wrap) {
-			menu->selected = 0;
-			s = 1;
-		} else {
-			menu->selected = int_max(0, menu->size - 1);
-			s = -1;
+	start = pos = menu->selected;
+
+	if (!steps) steps = 1;
+
+	while (steps) {
+		pos += s, steps -= s;
+
+		while (1) {
+			if (start == pos) {
+				goto select_item;
+			} else if (pos >= menu->size && s == 1) {
+				if (wrap) {
+					pos = 0;
+				} else {
+					pos = menu->size - 1;
+					goto select_item;
+				}
+			} else if (pos < 0 && s == -1) {
+				if (wrap) {
+					pos = menu->size - 1;
+				} else {
+					pos = 0;
+					goto select_item;
+				}
+			} else if (!mi_is_selectable(&menu->items[pos])) {
+				pos += s;
+			} else {
+				break;
+			}
+
+			if (start == -1) start = 0;
 		}
-	} else if (menu->selected < 0) {
-		if (wrap) {
-			menu->selected = int_max(0, menu->size - 1);
-			s = -1;
-		} else {
-			menu->selected = 0;
-			s = 1;
-		}
 	}
 
-	/* Current selected item may be an unselectable item, so we need to
-	 * find first selectable item near to it.
-	 * @s = 1 : ascending search.
-	 * @s = -1: descending search. */
-
-	/* Search first selectable item in one direction. */
-	pos = search_selectable(menu, menu->selected, s);
-	if (pos == -1) {
-		/* If not found, invert the search direction and try again. */
-		pos = search_selectable(menu, menu->selected, -s);
-	}
-
-	/* No selectable item found, just return. */
-	if (pos == -1) {
-		menu->selected = -1;
-		menu->first = 0;
-	}
+select_item:
+	if (!mi_is_selectable(&menu->items[pos]))
+		goto no_item;
 
 	menu->selected = pos;
 
