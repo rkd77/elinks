@@ -77,13 +77,13 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 
 /* The state iterators do not include the bottom state */
 
-#define foreach_dom_state(stack, item, pos)			\
-	for ((pos) = 1; (pos) < (stack)->depth; (pos)++)		\
-		if (((item) = &(stack)->states[(pos)]))
+#define foreach_dom_stack_state(stack, state, pos)			\
+	for ((pos) = 0; (pos) < (stack)->depth; (pos)++)		\
+		if (((state) = &(stack)->states[(pos)]))
 
-#define foreachback_dom_state(stack, item, pos)			\
-	for ((pos) = (stack)->depth - 1; (pos) > 0; (pos)--)	\
-		if (((item) = &(stack)->states[(pos)]))
+#define foreachback_dom_stack_state(stack, state, pos)			\
+	for ((pos) = (stack)->depth - 1; (pos) >= 0; (pos)--)		\
+		if (((state) = &(stack)->states[(pos)]))
 
 /* Dive through the stack states in search for the specified match. */
 static inline struct dom_stack_state *
@@ -94,7 +94,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 	int pos;
 
 	/* FIXME: Take node subtype and compare if non-zero or something. */
-	foreachback_dom_state (stack, state, pos) {
+	foreachback_dom_stack_state (stack, state, pos) {
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type

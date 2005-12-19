@@ -204,7 +204,7 @@ pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target)
 
 	if (dom_stack_is_empty(stack)) return;
 
-	foreachback_dom_state (stack, state, pos) {
+	foreachback_dom_stack_state (stack, state, pos) {
 		if (do_pop_dom_node(stack, target))
 			break;;
 	}
