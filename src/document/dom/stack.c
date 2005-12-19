@@ -137,8 +137,7 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	struct dom_stack_state *state;
 	dom_stack_callback_T callback;
 
-	assert(stack);
-	if (!dom_stack_has_parents(stack)) return 0;
+	assert(stack && dom_stack_has_parents(stack));
 
 	state = get_dom_stack_top(stack);
 	callback = stack->pop_callbacks[state->node->type];
