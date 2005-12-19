@@ -127,6 +127,8 @@ init_smjs(struct module *module)
 void
 cleanup_smjs(struct module *module)
 {
+	if (!smjs_ctx) return;
+
 	JS_DestroyContext(smjs_ctx);
 	JS_DestroyRuntime(smjs_rt);
 }
