@@ -611,6 +611,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ID)) {
 			size_t idindex;
 
+			attr = NULL;
 			foreach_dom_node (attrs, attr, idindex) {
 				if (attr->data.attribute.id)
 					break;
