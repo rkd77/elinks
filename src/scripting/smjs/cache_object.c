@@ -8,6 +8,7 @@
 
 #include "cache/cache.h"
 #include "ecmascript/spidermonkey/util.h"
+#include "scripting/smjs/cache_object.h"
 #include "scripting/smjs/core.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -31,7 +32,7 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached = JS_GetPrivate(ctx, obj);
 
-	if (!cached) return JS_FALSE;
+	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
 	undef_to_jsval(ctx, vp);
 
@@ -77,7 +78,7 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached = JS_GetPrivate(ctx, obj);
 
-	if (!cached) return JS_FALSE;
+	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
 	if (!JSVAL_IS_INT(id))
 		return JS_FALSE;

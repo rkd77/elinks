@@ -330,6 +330,8 @@ init_sgml_parser(enum sgml_parser_type type, void *data, struct uri *uri,
 		return NULL;
 	}
 
+	get_dom_stack_top(&parser->stack)->immutable = 1;
+
 	return parser;
 }
 
