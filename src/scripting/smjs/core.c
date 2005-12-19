@@ -71,7 +71,6 @@ void
 smjs_load_hooks(void)
 {
 	jsval rval;
-	struct string *string;
 	struct string script;
 	unsigned char *path;
 
@@ -83,15 +82,13 @@ smjs_load_hooks(void)
 		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
 	}
 
-	string = add_file_to_string(&script, path);
-	mem_free(path);
-	if (!string) return;
-
-	if (JS_FALSE == JS_EvaluateScript(smjs_ctx,
+	if (add_file_to_string(&script, path)
+	     && JS_FALSE == JS_EvaluateScript(smjs_ctx,
 				JS_GetGlobalObject(smjs_ctx),
 				script.source, script.length, path, 1, &rval))
 		alert_smjs_error("error loading default script file");
 
+	mem_free(path);
 	done_string(&script);
 }
 
