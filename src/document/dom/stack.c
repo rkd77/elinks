@@ -137,7 +137,7 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	struct dom_stack_state *state;
 	dom_stack_callback_T callback;
 
-	assert(stack && dom_stack_has_parents(stack));
+	assert(stack && !dom_stack_is_empty(stack));
 
 	state = get_dom_stack_top(stack);
 	callback = stack->pop_callbacks[state->node->type];
@@ -168,7 +168,8 @@ void
 pop_dom_node(struct dom_stack *stack)
 {
 	assert(stack);
-	if (!dom_stack_has_parents(stack)) return;
+
+	if (dom_stack_is_empty(stack)) return;
 
 	do_pop_dom_node(stack, get_dom_stack_parent(stack));
 }
@@ -179,7 +180,9 @@ pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 {
 	struct dom_stack_state *state;
 
-	if (!dom_stack_has_parents(stack)) return;
+	assert(stack);
+
+	if (dom_stack_is_empty(stack)) return;
 
 	state = search_dom_stack(stack, type, string);
 	if (state)
@@ -192,9 +195,11 @@ pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target)
 	struct dom_stack_state *state;
 	unsigned int pos;
 
+	assert(stack);
+
 	if (!target) return;
 
-	if (!dom_stack_has_parents(stack)) return;
+	if (dom_stack_is_empty(stack)) return;
 
 	foreachback_dom_state (stack, state, pos) {
 		if (do_pop_dom_node(stack, target))
@@ -209,7 +214,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 
 	push_dom_node(stack, root);
 
-	while (dom_stack_has_parents(stack)) {
+	while (!dom_stack_is_empty(stack)) {
 		struct dom_stack_state *state = get_dom_stack_top(stack);
 		struct dom_node_list *list = state->list;
 		struct dom_node *node = state->node;

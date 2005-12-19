@@ -55,8 +55,8 @@ struct dom_stack {
 	void *data;
 };
 
-#define dom_stack_has_parents(stack) \
-	((stack)->states && (stack)->depth > 0)
+#define dom_stack_is_empty(stack) \
+	(!(stack)->states || (stack)->depth == 0)
 
 static inline struct dom_stack_state *
 get_dom_stack_state(struct dom_stack *stack, int top_offset)
