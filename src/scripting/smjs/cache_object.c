@@ -138,6 +138,8 @@ get_cache_entry_object(struct cache_entry *cached)
 {
 	JSObject *cache_entry_object;
 		
+	assert(smjs_ctx);
+
 	cache_entry_object = JS_NewObject(smjs_ctx,
 	                                  (JSClass *) &cache_entry_class,
 	                                  NULL, NULL);
