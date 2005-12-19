@@ -109,7 +109,11 @@ init_smjs(struct module *module)
 	if (!smjs_rt) return;
 
 	smjs_ctx = JS_NewContext(smjs_rt, 8192);
-	if (!smjs_ctx) return;
+	if (!smjs_ctx) {
+		JS_DestroyRuntime(smjs_rt);
+		smjs_rt = NULL;
+		return;
+	}
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
