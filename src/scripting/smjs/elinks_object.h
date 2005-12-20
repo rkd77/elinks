@@ -4,5 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 JSObject *smjs_get_elinks_object(JSObject *global_object);
+JSBool smjs_invoke_elinks_object_method(unsigned char *method,
+                                        jsval argv[], int argc, jsval *rval);
 
 #endif

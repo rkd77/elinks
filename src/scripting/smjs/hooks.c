@@ -17,33 +17,6 @@
 #include "session/session.h"
 
 
-/* If elinks.<method> is defined, call it with the given arguments,
- * store the return value in rval, and return JS_TRUE. Else return JS_FALSE. */
-static JSBool
-smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
-                                 jsval *rval)
-{
-	JSFunction *func;
-
-	assert(smjs_ctx);
-	assert(smjs_elinks_object);
-	assert(rval);
-	assert(argv);
-
-	if (JS_FALSE == JS_GetProperty(smjs_ctx, smjs_elinks_object,
-	                               method, rval))
-		return JS_FALSE;
-
-	if (JSVAL_VOID == *rval)
-		return JS_FALSE;
-
-	func = JS_ValueToFunction(smjs_ctx, *rval);
-	assert(func);
-
-	return JS_CallFunction(smjs_ctx, smjs_elinks_object,
-		               func, argc, argv, rval);
-}
-
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
@@ -64,7 +37,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
 
-	if (JS_TRUE == call_script_hook("preformat_html", args, 1, &rval))
+	if (JS_TRUE == smjs_invoke_elinks_object_method("preformat_html",
+	                                                args, 1, &rval))
 		if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
 			ret = EVENT_HOOK_STATUS_LAST;
 

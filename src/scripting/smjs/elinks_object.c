@@ -54,3 +54,30 @@ smjs_get_elinks_object(JSObject *global_object)
 	                    (JSClass *) &elinks_class, NULL, 0, NULL,
 	                    (JSFunctionSpec *) elinks_funcs, NULL, NULL);
 }
+
+/* If elinks.<method> is defined, call it with the given arguments,
+ * store the return value in rval, and return JS_TRUE. Else return JS_FALSE. */
+JSBool
+smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
+                                 jsval *rval)
+{
+	JSFunction *func;
+
+	assert(smjs_ctx);
+	assert(smjs_elinks_object);
+	assert(rval);
+	assert(argv);
+
+	if (JS_FALSE == JS_GetProperty(smjs_ctx, smjs_elinks_object,
+	                               method, rval))
+		return JS_FALSE;
+
+	if (JSVAL_VOID == *rval)
+		return JS_FALSE;
+
+	func = JS_ValueToFunction(smjs_ctx, *rval);
+	assert(func);
+
+	return JS_CallFunction(smjs_ctx, smjs_elinks_object,
+		               func, argc, argv, rval);
+}
