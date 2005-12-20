@@ -1221,7 +1221,7 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
     CFLAGS="$CFLAGS -Werror"
   fi
 
-  case "`gcc -dumpversion`" in
+  case "`$CC -dumpversion`" in
     3.0|3.1|3.2)
       # These should be ok using -Werror
       ;;
