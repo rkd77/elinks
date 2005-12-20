@@ -70,10 +70,34 @@ done_dom_stack(struct dom_stack *stack)
 	memset(stack, 0, sizeof(*stack));
 }
 
+enum dom_stack_action {
+	DOM_STACK_PUSH,
+	DOM_STACK_POP,
+};
+
+static void
+call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
+			 enum dom_stack_action action)
+{
+	dom_stack_callback_T callback;
+
+	if (!stack->callbacks)
+		callback = NULL;
+	else if (action == DOM_STACK_PUSH)
+		callback = stack->callbacks->push[state->node->type];
+	else
+		callback = stack->callbacks->pop[state->node->type];
+
+	if (callback) {
+		void *state_data = get_dom_stack_state_data(stack, state);
+
+		callback(stack, state->node, state_data);
+	}
+}
+
 struct dom_node *
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
-	dom_stack_callback_T callback;
 	struct dom_stack_state *state;
 
 	assert(stack && node);
@@ -108,13 +132,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	/* Grow the state array to the new depth so the state accessors work
 	 * in the callbacks */
 	stack->depth++;
-
-	callback = stack->callbacks ? stack->callbacks->push[node->type] : NULL;
-	if (callback) {
-		void *state_data = get_dom_stack_state_data(stack, state);
-
-		callback(stack, node, state_data);
-	}
+	call_dom_stack_callbacks(stack, state, DOM_STACK_PUSH);
 
 	return node;
 }
@@ -123,7 +141,6 @@ static int
 do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 {
 	struct dom_stack_state *state;
-	dom_stack_callback_T callback;
 
 	assert(stack && !dom_stack_is_empty(stack));
 
@@ -131,12 +148,7 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	if (state->immutable)
 		return 1;
 
-	callback = stack->callbacks ? stack->callbacks->pop[state->node->type] : NULL;
-	if (callback) {
-		void *state_data = get_dom_stack_state_data(stack, state);
-
-		callback(stack, state->node, state_data);
-	}
+	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
 
 	if (!stack->keep_nodes)
 		done_dom_node(state->node);
