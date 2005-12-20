@@ -553,15 +553,14 @@ get_child_dom_select_node(struct dom_select_node *selector,
 			  enum dom_node_type type)
 {
 	struct dom_node_list *children = selector->node.data.element.children;
-	size_t index;
+	struct dom_node *node;
+	int index;
 
 	if (!children)
 		return NULL;
 
-	for (index = 0; is_dom_node_list_member(children, index); index++) {
-		struct dom_node *node = children->entries[index];
-
-		if (node && node->type == type)
+	foreach_dom_node (children, node, index) {
+		if (node->type == type)
 			return (struct dom_select_node *) node;
 	}
 
