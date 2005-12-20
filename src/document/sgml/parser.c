@@ -322,7 +322,6 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		       type != SGML_PARSER_STREAM);
 	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,
 	 * and feed document.write() data back to the parser. */
-	add_dom_stack_callbacks(&parser->stack, callbacks);
 
 	return parser;
 }
