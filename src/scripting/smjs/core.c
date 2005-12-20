@@ -97,7 +97,7 @@ smjs_load_hooks(void)
 void
 init_smjs(struct module *module)
 {
-	const JSClass global_class = {
+	static const JSClass global_class = {
 		"global", 0,
 		JS_PropertyStub, JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
