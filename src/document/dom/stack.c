@@ -113,14 +113,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	if (callback) {
 		void *state_data = get_dom_stack_state_data(stack, state);
 
-		node = callback(stack, node, state_data);
-
-		/* If the callback returned NULL pop the state immediately */
-		if (!node) {
-			memset(state, 0, sizeof(*state));
-			stack->depth--;
-			assert(stack->depth >= 0);
-		}
+		callback(stack, node, state_data);
 	}
 
 	return node;

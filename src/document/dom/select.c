@@ -655,7 +655,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 #define has_element_match(selector, name) \
 	((selector)->match.element & (name))
 
-static struct dom_node *
+static void
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = stack->data;
@@ -723,11 +723,9 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 		if (selector)
 			push_dom_node(&select_data->stack, &selector->node);
 	}
-
-	return node;
 }
 
-static struct dom_node *
+static void
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = stack->data;
@@ -758,11 +756,9 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 			break;
 		}
 	}
-
-	return node;
 }
 
-static struct dom_node *
+static void
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = stack->data;
@@ -774,7 +770,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	WDBG("Text node: %d chars", node->string.length);
 
 	if (!text_sel)
-		return node;
+		return;
 
 	text = &text_sel->node.string;
 
@@ -786,8 +782,6 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	default:
 		ERROR("Unhandled type");
 	}
-
-	return node;
 }
 
 static struct dom_stack_callbacks dom_select_callbacks = {

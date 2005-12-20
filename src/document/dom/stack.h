@@ -8,8 +8,7 @@
 
 struct dom_stack;
 
-typedef struct dom_node *
-	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
+typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
 struct dom_stack_callbacks {
 	dom_stack_callback_T push[DOM_NODES];

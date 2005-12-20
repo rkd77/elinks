@@ -439,7 +439,7 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
 	string->length = string->string ? strlen(string->string) : 0;
 }
 
-static struct dom_node *
+static void
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
@@ -456,7 +456,7 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
@@ -483,7 +483,7 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
@@ -508,7 +508,7 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->renderer;
@@ -594,7 +594,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 	render_dom_text(renderer, template, string, length);
 }
 
-static struct dom_node *
+static void
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->data;
@@ -605,12 +605,10 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 	/* TODO: For (atleast) text, CDATA section and comment nodes check
 	 * for URIs ala document->options.plain_display_links */
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	return node;
 }
 
 /* This callback is also used for rendering processing instruction nodes.  */
-static struct dom_node *
+static void
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->data;
@@ -619,11 +617,9 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 	assert(node && renderer && renderer->document);
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->data;
@@ -636,7 +632,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	assert(node && renderer && renderer->document);
 
 	if (!string || !length)
-		return node;
+		return;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -645,11 +641,9 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	}
 
 	render_dom_text(renderer, &renderer->styles[node->type], string, length);
-
-	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->data;
@@ -737,8 +731,6 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			render_dom_text(renderer, template, value, valuelen);
 		}
 	}
-
-	return node;
 }
 
 static struct dom_stack_callbacks dom_source_renderer_callbacks = {
