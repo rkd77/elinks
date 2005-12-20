@@ -17,10 +17,11 @@
 #include "session/session.h"
 
 
-/* If elinks.<hook> is defined, call it with the given arguments,
+/* If elinks.<method> is defined, call it with the given arguments,
  * store the return value in rval, and return JS_TRUE. Else return JS_FALSE. */
 static JSBool
-call_script_hook(unsigned char *hook, jsval argv[], int argc, jsval *rval)
+smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
+                                 jsval *rval)
 {
 	JSFunction *func;
 
@@ -30,7 +31,7 @@ call_script_hook(unsigned char *hook, jsval argv[], int argc, jsval *rval)
 	assert(argv);
 
 	if (JS_FALSE == JS_GetProperty(smjs_ctx, smjs_elinks_object,
-	                               hook, rval))
+	                               method, rval))
 		return JS_FALSE;
 
 	if (JSVAL_VOID == *rval)
