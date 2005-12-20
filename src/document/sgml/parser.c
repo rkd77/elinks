@@ -30,7 +30,7 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 	size_t length = strlen(string);
 	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string, length);
 
-	return node ? push_dom_node(stack, node) : node;
+	return node ? push_dom_node(stack, node) : NULL;
 }
 
 static inline struct dom_node *
@@ -325,14 +325,6 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	 * and feed document.write() data back to the parser. */
 	add_dom_stack_callbacks(&parser->stack, callbacks);
 
-	parser->root = add_sgml_document(&parser->stack, parser->uri);
-	if (!parser->root) {
-		mem_free(parser);
-		return NULL;
-	}
-
-	get_dom_stack_top(&parser->stack)->immutable = 1;
-
 	return parser;
 }
 
@@ -353,10 +345,19 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 	unsigned char *source = buffer->source;
 	unsigned char *end = source + buffer->length;
 
+	if (!parser->root) {
+		parser->root = add_sgml_document(&parser->stack, parser->uri);
+		if (!parser->root)
+			return NULL;
+
+		get_dom_stack_top(&parser->stack)->immutable = 1;
+	}
+
 	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
 
 	/* FIXME: Make parse_sgml_document() return an error code. */
 	parse_sgml_document(&parser->stack, &parser->scanner);
 
+	/* FIXME: Return the 'bottom' node that was added by the parser. */
 	return parser->root;
 }
