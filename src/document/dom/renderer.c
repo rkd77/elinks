@@ -609,34 +609,7 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 	return node;
 }
 
-static struct dom_node *
-render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct sgml_parser *parser = stack->data;
-	struct dom_renderer *renderer = parser->data;
-	unsigned char *value;
-	int valuelen;
-
-	assert(node && renderer && renderer->document);
-
-	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	value	 = node->data.proc_instruction.instruction.string;
-	valuelen = node->data.proc_instruction.instruction.length;
-
-	if (!value || node->data.proc_instruction.map)
-		return node;
-
-	if (check_dom_node_source(renderer, node->string.string, node->string.length)) {
-		render_dom_flush(renderer, value);
-		renderer->position = value + valuelen;
-	}
-
-	render_dom_text(renderer, &renderer->styles[DOM_NODE_ATTRIBUTE], value, valuelen);
-
-	return node;
-}
-
+/* This callback is also used for rendering processing instruction nodes.  */
 static struct dom_node *
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -776,7 +749,7 @@ static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
 	/* DOM_NODE_CDATA_SECTION	*/ render_dom_node_source,
 	/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
 	/* DOM_NODE_ENTITY		*/ render_dom_node_source,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_proc_instr_source,
+	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
 	/* DOM_NODE_COMMENT		*/ render_dom_node_source,
 	/* DOM_NODE_DOCUMENT		*/ NULL,
 	/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
