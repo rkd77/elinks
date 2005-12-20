@@ -14,6 +14,10 @@
 #include "util/error.h"
 #include "util/string.h"
 
+/* Backend includes: */
+
+#include "document/sgml/html/html.h"
+
 
 int
 sgml_info_strcmp(const void *key_, const void *node_)
@@ -22,4 +26,14 @@ sgml_info_strcmp(const void *key_, const void *node_)
 	struct sgml_node_info *node = (struct sgml_node_info *) node_;
 
 	return dom_string_casecmp(&key->string, &node->string);
+}
+
+struct sgml_info *sgml_info[SGML_DOCTYPES] = {
+	&sgml_html_info,
+};
+
+struct sgml_info *
+get_sgml_info(enum sgml_document_type doctype)
+{
+	return doctype < SGML_DOCTYPES ? sgml_info[doctype] : NULL;
 }

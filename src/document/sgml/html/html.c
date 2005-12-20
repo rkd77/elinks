@@ -31,6 +31,7 @@ static struct sgml_node_info html_elements[HTML_ELEMENTS] = {
 
 
 struct sgml_info sgml_html_info = {
+	SGML_DOCTYPE_HTML,
 	html_attributes,
 	html_elements,
 };

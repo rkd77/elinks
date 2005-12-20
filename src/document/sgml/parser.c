@@ -11,7 +11,6 @@
 
 #include "document/dom/node.h"
 #include "document/dom/stack.h"
-#include "document/sgml/html/html.h"
 #include "document/sgml/parser.h"
 #include "document/sgml/scanner.h"
 #include "document/sgml/sgml.h"
@@ -305,7 +304,8 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 
 struct sgml_parser *
-init_sgml_parser(enum sgml_parser_type type, void *data, struct uri *uri,
+init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
+		 void *data, struct uri *uri,
 		 dom_stack_callback_T push_callbacks[DOM_NODES],
 		 dom_stack_callback_T pop_callbacks[DOM_NODES])
 {
@@ -317,7 +317,7 @@ init_sgml_parser(enum sgml_parser_type type, void *data, struct uri *uri,
 
 	parser->type = type;
 	parser->uri  = get_uri_reference(uri);
-	parser->info = &sgml_html_info;
+	parser->info = get_sgml_info(doctype);
 	parser->data = data;
 
 	init_dom_stack(&parser->stack, parser,

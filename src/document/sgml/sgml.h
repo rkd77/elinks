@@ -75,9 +75,18 @@ get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 	return match ? match : list;
 }
 
+enum sgml_document_type {
+	SGML_DOCTYPE_HTML,
+
+	SGML_DOCTYPES,
+};
+
 struct sgml_info {
+	enum sgml_document_type doctype;
 	struct sgml_node_info *attributes;
 	struct sgml_node_info *elements;
 };
+
+struct sgml_info *get_sgml_info(enum sgml_document_type doctype);
 
 #endif
