@@ -156,119 +156,124 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
  *   1n+0 / n+0 / n	
  *   0n+0		
  */
-static enum dom_exception_code
-parse_dom_select_nth_numeric(struct dom_select_nth_match *nth,
-			     struct scanner_token *arg)
+
+static size_t
+get_scanner_token_number(struct scanner_token *token)
 {
-	size_t sign = 1;
-	size_t number;
+	size_t number = 0;
 
-	/* Parse negated value: -0n+1 */
-	if (arg->string[0] == '-') {
-		arg->string++, arg->length--;
-		sign = -1;
-		if (arg->length == 0)
-			return DOM_ERR_SYNTAX;
-	}
-
-	/* Parse -n or n */
-	if (arg->string[0] == 'n') {
-		nth->step = sign;
-		arg->string++, arg->length--;
-
-	} else if (isdigit(arg->string[0])) {
-		number = 0;
-		do {
-			size_t old_number = number;
-
-			number *= 10;
-			if (old_number > number)
-				return DOM_ERR_NOT_SUPPORTED;
-
-			number += arg->string[0] - '0';
-			arg->string++, arg->length--;
-
-		} while (arg->length > 0 && isdigit(arg->string[0]));
-
-		if (arg->length > 0 && arg->string[0] == 'n') {
-			nth->step = number * sign;
-			arg->string++, arg->length--;
-
-		} else {
-			nth->step  = 0;
-			nth->index = number * sign;
-			return DOM_ERR_NONE;
-		}
-	}
-
-	/* Parse the +... part of n+2 */ 
-
-	if (arg->length <= 1 || arg->string[0] != '+')
-		return DOM_ERR_NONE;
-
-	arg->string++, arg->length--;
-
-	/* Accept 2n+ */
-	if (!isdigit(arg->string[0]))
-		return DOM_ERR_NONE;
-
-	number = 0;
-	do {
+	while (token->length > 0 && isdigit(token->string[0])) {
 		size_t old_number = number;
 
 		number *= 10;
+
+		/* -E2BIG */
 		if (old_number > number)
-			return DOM_ERR_NOT_SUPPORTED;
+			return -1;
 
-		number += arg->string[0] - '0';
-		arg->string++, arg->length--;
+		number += token->string[0] - '0';
+		token->string++, token->length--;
+	}
 
-	} while (arg->length > 0 && isdigit(arg->string[0]));
-
-	nth->index = number * sign;
-
-	return DOM_ERR_NONE;
+	return number;
 }
 
 static enum dom_exception_code
 parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scanner)
 {
 	struct scanner_token *token = get_next_scanner_token(scanner);
-	struct scanner_token arg;
+	int sign = 1;
+	int number = -1;
 
 	if (!token || token->type != '(')
 		return DOM_ERR_SYNTAX;
 
 	token = get_next_scanner_token(scanner);
-	if (!token || token->type == ')')
+	if (!token)
 		return DOM_ERR_SYNTAX;
 
-	copy_struct(&arg, token);
+	switch (token->type) {
+	case CSS_TOKEN_IDENT:
+		if (scanner_token_contains(token, "even")) {
+			nth->step = 2;
+			nth->index = 0;
 
-	do {
-		/* Combine all the arg material to one token. */
-		arg.length = (token->string + token->length) - arg.string;
+		} else if (scanner_token_contains(token, "odd")) {
+			nth->step = 2;
+			nth->index = 1;
+
+		} else {
+			/* Check for 'n' ident below. */
+			break;
+		}
+
+		if (skip_css_tokens(scanner, ')'))
+			return DOM_ERR_NONE;
+
+		return DOM_ERR_SYNTAX;
+
+	case '-':
+		sign = -1;
 
 		token = get_next_scanner_token(scanner);
 		if (!token) return DOM_ERR_SYNTAX;
 
-	} while (token->type != ')');
+		if (token->type != CSS_TOKEN_IDENT)
+			break;
 
-	if (scanner_token_contains(&arg, "even")) {
-		nth->step = 2;
-		nth->index = 0;
+		if (token->type != CSS_TOKEN_NUMBER)
+			return DOM_ERR_SYNTAX;
+		/* Fall-through */
 
-	} else if (scanner_token_contains(&arg, "odd")) {
-		nth->step = 2;
-		nth->index = 1;
+	case CSS_TOKEN_NUMBER:
+		number = get_scanner_token_number(token);
+		if (number < 0)
+			return DOM_ERR_INVALID_STATE;
 
-	} else if (arg.length > 0) {
-		return parse_dom_select_nth_numeric(nth, &arg);
+		token = get_next_scanner_token(scanner);
+		if (!token) return DOM_ERR_SYNTAX;
+		break;
 
-		return DOM_ERR_NONE;
+	default:
+		return DOM_ERR_SYNTAX;
 	}
 
-	return DOM_ERR_NONE;
+	/* The rest can contain n+ part */
+	switch (token->type) {
+	case CSS_TOKEN_IDENT:
+		if (!scanner_token_contains(token, "n"))
+			return DOM_ERR_SYNTAX;
+
+		nth->step = sign * number;
+
+		token = get_next_scanner_token(scanner);
+		if (!token) return DOM_ERR_SYNTAX;
+
+		if (token->type != '+')
+			break;
+
+		token = get_next_scanner_token(scanner);
+		if (!token) return DOM_ERR_SYNTAX;
+
+		if (token->type != CSS_TOKEN_NUMBER)
+			break;
+
+		number = get_scanner_token_number(token);
+		if (number < 0)
+			return DOM_ERR_INVALID_STATE;
+
+		nth->index = sign * number;
+		break;
+
+	default:
+		nth->step  = 0;
+		nth->index = sign * number;
+	}
+
+	if (skip_css_tokens(scanner, ')'))
+		return DOM_ERR_NONE;
+
+	return DOM_ERR_SYNTAX;
 }
 
 static enum dom_exception_code
