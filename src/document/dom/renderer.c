@@ -800,9 +800,10 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		doctype = SGML_DOCTYPE_HTML;
 
 	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype,
-				  &renderer, cached->uri,
-				  &dom_source_renderer_callbacks);
+				  &renderer, cached->uri);
 	if (!parser) return;
+
+	add_dom_stack_callbacks(&parser->stack, &dom_source_renderer_callbacks);
 
 	root = parse_sgml(parser, buffer);
 	done_sgml_parser(parser);

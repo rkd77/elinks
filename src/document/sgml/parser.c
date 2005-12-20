@@ -305,8 +305,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 void *data, struct uri *uri,
-		 struct dom_stack_callbacks *callbacks)
+		 void *data, struct uri *uri)
 {
 	size_t obj_size = sizeof(struct sgml_parser_state);
 	struct sgml_parser *parser;
