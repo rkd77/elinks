@@ -10,7 +10,7 @@ struct dom_stack;
 
 typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
-struct dom_stack_callbacks {
+struct dom_stack_context_info {
 	dom_stack_callback_T push[DOM_NODES];
 	dom_stack_callback_T pop[DOM_NODES];
 };
@@ -54,7 +54,7 @@ struct dom_stack {
 	size_t object_size;
 
 	/* Callbacks which should be called for the pushed and popped nodes. */
-	struct dom_stack_callbacks **callbacks;
+	struct dom_stack_context_info **callbacks;
 	size_t callbacks_size;
 
 	/* Data specific to the parser and renderer. */
@@ -121,7 +121,7 @@ void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */
 void add_dom_stack_callbacks(struct dom_stack *stack,
-			     struct dom_stack_callbacks *callbacks);
+			     struct dom_stack_context_info *context_info);
 
 /* Decends down to the given node making it the current parent */
 /* If an error occurs the node is free()d and NULL is returned */

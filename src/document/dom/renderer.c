@@ -733,7 +733,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	}
 }
 
-static struct dom_stack_callbacks dom_source_renderer_callbacks = {
+static struct dom_stack_context_info dom_source_renderer_context_info = {
 	/* Push: */
 	{
 		/*				*/ NULL,
@@ -803,7 +803,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 				  &renderer, cached->uri);
 	if (!parser) return;
 
-	add_dom_stack_callbacks(&parser->stack, &dom_source_renderer_callbacks);
+	add_dom_stack_callbacks(&parser->stack, &dom_source_renderer_context_info);
 
 	root = parse_sgml(parser, buffer);
 	done_sgml_parser(parser);

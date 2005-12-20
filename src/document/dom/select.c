@@ -784,7 +784,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	}
 }
 
-static struct dom_stack_callbacks dom_select_callbacks = {
+static struct dom_stack_context_info dom_select_context_info = {
 	/* Push: */
 	{
 		/*				*/ NULL,
@@ -831,7 +831,7 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 	select_data.select = select;;
 
 	init_dom_stack(&stack, &select_data, 0, 1);
-	add_dom_stack_callbacks(&stack, &dom_select_callbacks);
+	add_dom_stack_callbacks(&stack, &dom_select_context_info);
 
 	init_dom_stack(&select_data.stack, &select_data, obj_size, 1);
 

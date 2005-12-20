@@ -71,15 +71,15 @@ done_dom_stack(struct dom_stack *stack)
 
 void
 add_dom_stack_callbacks(struct dom_stack *stack,
-			struct dom_stack_callbacks *callbacks)
+			struct dom_stack_context_info *context_info)
 {
-	struct dom_stack_callbacks **list;
+	struct dom_stack_context_info **list;
 
 	list = mem_realloc(stack->callbacks, sizeof(*list) * (stack->callbacks_size + 1));
 	if (!list) return;
 
 	stack->callbacks = list;
-	stack->callbacks[stack->callbacks_size++] = callbacks;
+	stack->callbacks[stack->callbacks_size++] = context_info;
 }
 
 enum dom_stack_action {
