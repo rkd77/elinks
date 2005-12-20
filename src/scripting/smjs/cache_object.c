@@ -25,6 +25,7 @@ static const JSPropertySpec cache_entry_props[] = {
 	{ "type",    CACHE_ENTRY_TYPE,    JSPROP_ENUMERATE },
 	{ "length",  CACHE_ENTRY_LENGTH,  JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "head",    CACHE_ENTRY_HEAD,    JSPROP_ENUMERATE },
+	{ NULL }
 };
 
 static JSBool
