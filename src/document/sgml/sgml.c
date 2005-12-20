@@ -17,6 +17,7 @@
 /* Backend includes: */
 
 #include "document/sgml/html/html.h"
+#include "document/sgml/rss/rss.h"
 
 
 int
@@ -30,6 +31,7 @@ sgml_info_strcmp(const void *key_, const void *node_)
 
 struct sgml_info *sgml_info[SGML_DOCTYPES] = {
 	&sgml_html_info,
+	&sgml_rss_info,
 };
 
 struct sgml_info *

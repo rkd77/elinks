@@ -19,6 +19,7 @@
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
+#include "document/rss/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "encoding/encoding.h"
@@ -241,7 +242,8 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	if (document->options.plain) {
 #ifdef CONFIG_DOM
 		if (cached->content_type
-		    && !strlcasecmp("text/html", 9, cached->content_type, -1))
+		    && (!strlcasecmp("text/html", 9, cached->content_type, -1)
+		        || !strlcasecmp("application/rss+xml", 19, cached->content_type, -1)))
 			render_dom_document(cached, document, &buffer);
 		else
 #endif

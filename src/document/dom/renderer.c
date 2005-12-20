@@ -811,6 +811,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
+	enum sgml_document_type doctype;
 
 	assert(document->options.plain);
 
@@ -824,7 +825,13 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML,
+	if (cached->content_type
+	    && !strlcasecmp("application/rss+xml", 19, cached->content_type, -1))
+		doctype = SGML_DOCTYPE_RSS;
+	else
+		doctype = SGML_DOCTYPE_HTML;
+
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype,
 				  &renderer, cached->uri,
 				  dom_source_renderer_push_callbacks,
 				  dom_source_renderer_pop_callbacks);

@@ -1146,6 +1146,7 @@ struct {
 } static known_types[] = {
 	{ "text/html",			0 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
+	{ "application/rss+xml",	0 },
 	{ "text/plain",			1 },
 	{ NULL,				1 },
 };
