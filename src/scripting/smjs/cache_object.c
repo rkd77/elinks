@@ -146,9 +146,10 @@ get_cache_entry_object(struct cache_entry *cached)
 
 	if (!cache_entry_object) return NULL;
 
-	JS_SetPrivate(smjs_ctx, cache_entry_object, cached);
-	JS_DefineProperties(smjs_ctx, cache_entry_object,
-	                    (JSPropertySpec *) cache_entry_props);
+	if (JS_FALSE != JS_SetPrivate(smjs_ctx, cache_entry_object, cached)
+	    && JS_FALSE != JS_DefineProperties(smjs_ctx, cache_entry_object,
+	                                 (JSPropertySpec *) cache_entry_props))
+	    return cache_entry_object;
 
-	return cache_entry_object;
+	return NULL;
 }
