@@ -376,7 +376,7 @@ parse_dom_select(struct dom_select *select, unsigned char *string, int length)
 	struct dom_select_node sel;
 
 	init_scanner(&scanner, &css_scanner_info, string, string + length);
-	init_dom_stack(&stack, select, NULL, 0, 1);
+	init_dom_stack(&stack, select, 0, 1);
 
 	memset(&sel, 0, sizeof(sel));
 
@@ -830,8 +830,10 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 
 	select_data.select = select;;
 
-	init_dom_stack(&stack, &select_data, &dom_select_callbacks, 0, 1);
-	init_dom_stack(&select_data.stack, &select_data, NULL, obj_size, 1);
+	init_dom_stack(&stack, &select_data, 0, 1);
+	add_dom_stack_callbacks(&stack, &dom_select_callbacks);
+
+	init_dom_stack(&select_data.stack, &select_data, obj_size, 1);
 
 	if (push_dom_node(&select_data.stack, &select->selector->node)) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;

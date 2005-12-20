@@ -46,7 +46,6 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 
 void
 init_dom_stack(struct dom_stack *stack, void *data,
-	       struct dom_stack_callbacks *callbacks,
 	       size_t object_size, int keep_nodes)
 {
 	assert(stack);
@@ -56,7 +55,6 @@ init_dom_stack(struct dom_stack *stack, void *data,
 	stack->data        = data;
 	stack->object_size = object_size;
 	stack->keep_nodes  = !!keep_nodes;
-	stack->callbacks   = callbacks;
 }
 
 void
@@ -64,10 +62,24 @@ done_dom_stack(struct dom_stack *stack)
 {
 	assert(stack);
 
+	mem_free_if(stack->callbacks);
 	mem_free_if(stack->states);
 	mem_free_if(stack->state_objects);
 
 	memset(stack, 0, sizeof(*stack));
+}
+
+void
+add_dom_stack_callbacks(struct dom_stack *stack,
+			struct dom_stack_callbacks *callbacks)
+{
+	struct dom_stack_callbacks **list;
+
+	list = mem_realloc(stack->callbacks, sizeof(*list) * (stack->callbacks_size + 1));
+	if (!list) return;
+
+	stack->callbacks = list;
+	stack->callbacks[stack->callbacks_size++] = callbacks;
 }
 
 enum dom_stack_action {
@@ -79,19 +91,21 @@ static void
 call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			 enum dom_stack_action action)
 {
-	dom_stack_callback_T callback;
+	/* FIME: Variable stack data, so the parse/selector/renderer/etc. can
+	 * really work in parallel. */
+	void *state_data = get_dom_stack_state_data(stack, state);
+	int i;
 
-	if (!stack->callbacks)
-		callback = NULL;
-	else if (action == DOM_STACK_PUSH)
-		callback = stack->callbacks->push[state->node->type];
-	else
-		callback = stack->callbacks->pop[state->node->type];
+	for (i = 0; i < stack->callbacks_size; i++) {
+		dom_stack_callback_T callback;
 
-	if (callback) {
-		void *state_data = get_dom_stack_state_data(stack, state);
+		if (action == DOM_STACK_PUSH)
+			callback = stack->callbacks[i]->push[state->node->type];
+		else
+			callback = stack->callbacks[i]->pop[state->node->type];
 
-		callback(stack, state->node, state_data);
+		if (callback)
+			callback(stack, state->node, state_data);
 	}
 }
 

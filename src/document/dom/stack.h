@@ -54,7 +54,8 @@ struct dom_stack {
 	size_t object_size;
 
 	/* Callbacks which should be called for the pushed and popped nodes. */
-	struct dom_stack_callbacks *callbacks;
+	struct dom_stack_callbacks **callbacks;
+	size_t callbacks_size;
 
 	/* Data specific to the parser and renderer. */
 	void *data;
@@ -115,9 +116,12 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
 void init_dom_stack(struct dom_stack *stack, void *data,
-		    struct dom_stack_callbacks *callbacks,
 		    size_t object_size, int keep_nodes);
 void done_dom_stack(struct dom_stack *stack);
+
+/* Add a callback collection to the stack. */
+void add_dom_stack_callbacks(struct dom_stack *stack,
+			     struct dom_stack_callbacks *callbacks);
 
 /* Decends down to the given node making it the current parent */
 /* If an error occurs the node is free()d and NULL is returned */

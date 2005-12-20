@@ -319,8 +319,11 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->info = get_sgml_info(doctype);
 	parser->data = data;
 
-	init_dom_stack(&parser->stack, parser, callbacks, obj_size,
+	init_dom_stack(&parser->stack, parser, obj_size,
 		       type != SGML_PARSER_STREAM);
+	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,
+	 * and feed document.write() data back to the parser. */
+	add_dom_stack_callbacks(&parser->stack, callbacks);
 
 	parser->root = add_sgml_document(&parser->stack, parser->uri);
 	if (!parser->root) {
