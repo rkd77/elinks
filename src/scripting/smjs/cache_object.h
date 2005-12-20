@@ -3,7 +3,7 @@
 
 struct cache_entry;
 
-JSObject *get_cache_entry_object(struct cache_entry *cached);
+JSObject *smjs_get_cache_entry_object(struct cache_entry *cached);
 
 #endif
 

@@ -135,7 +135,7 @@ static const JSClass cache_entry_class = {
 };
 
 JSObject *
-get_cache_entry_object(struct cache_entry *cached)
+smjs_get_cache_entry_object(struct cache_entry *cached)
 {
 	JSObject *cache_entry_object;
 		

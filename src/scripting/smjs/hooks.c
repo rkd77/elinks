@@ -32,7 +32,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	smjs_ses = ses;
 
-	cache_entry_object = get_cache_entry_object(cached);
+	cache_entry_object = smjs_get_cache_entry_object(cached);
 	if (!cache_entry_object) goto end;
 
 	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
