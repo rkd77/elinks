@@ -19,7 +19,6 @@
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
-#include "document/rss/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "encoding/encoding.h"
