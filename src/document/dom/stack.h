@@ -1,4 +1,3 @@
-
 #ifndef EL__DOCUMENT_DOM_STACK_H
 #define EL__DOCUMENT_DOM_STACK_H
 
@@ -11,6 +10,11 @@ struct dom_stack;
 
 typedef struct dom_node *
 	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
+
+struct dom_stack_callbacks {
+	dom_stack_callback_T push[DOM_NODES];
+	dom_stack_callback_T pop[DOM_NODES];
+};
 
 #define DOM_STACK_MAX_DEPTH	4096
 
@@ -50,9 +54,8 @@ struct dom_stack {
 	unsigned char *state_objects;
 	size_t object_size;
 
-	/* Renderer specific callbacks for the streaming parser mode. */
-	dom_stack_callback_T push_callbacks[DOM_NODES];
-	dom_stack_callback_T pop_callbacks[DOM_NODES];
+	/* Callbacks which should be called for the pushed and popped nodes. */
+	struct dom_stack_callbacks *callbacks;
 
 	/* Data specific to the parser and renderer. */
 	void *data;
@@ -113,8 +116,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
 void init_dom_stack(struct dom_stack *stack, void *data,
-		    dom_stack_callback_T push_callbacks[DOM_NODES],
-		    dom_stack_callback_T pop_callbacks[DOM_NODES],
+		    struct dom_stack_callbacks *callbacks,
 		    size_t object_size, int keep_nodes);
 void done_dom_stack(struct dom_stack *stack);
 

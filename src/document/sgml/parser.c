@@ -306,8 +306,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 void *data, struct uri *uri,
-		 dom_stack_callback_T push_callbacks[DOM_NODES],
-		 dom_stack_callback_T pop_callbacks[DOM_NODES])
+		 struct dom_stack_callbacks *callbacks)
 {
 	size_t obj_size = sizeof(struct sgml_parser_state);
 	struct sgml_parser *parser;
@@ -320,8 +319,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->info = get_sgml_info(doctype);
 	parser->data = data;
 
-	init_dom_stack(&parser->stack, parser,
-		       push_callbacks, pop_callbacks, obj_size,
+	init_dom_stack(&parser->stack, parser, callbacks, obj_size,
 		       type != SGML_PARSER_STREAM);
 
 	parser->root = add_sgml_document(&parser->stack, parser->uri);

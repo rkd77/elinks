@@ -46,8 +46,7 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 
 void
 init_dom_stack(struct dom_stack *stack, void *data,
-	       dom_stack_callback_T push_callbacks[DOM_NODES],
-	       dom_stack_callback_T pop_callbacks[DOM_NODES],
+	       struct dom_stack_callbacks *callbacks,
 	       size_t object_size, int keep_nodes)
 {
 	assert(stack);
@@ -57,11 +56,7 @@ init_dom_stack(struct dom_stack *stack, void *data,
 	stack->data        = data;
 	stack->object_size = object_size;
 	stack->keep_nodes  = !!keep_nodes;
-
-	if (push_callbacks)
-		memcpy(stack->push_callbacks, push_callbacks, DOM_STACK_CALLBACKS_SIZE);
-	if (pop_callbacks)
-		memcpy(stack->pop_callbacks, pop_callbacks, DOM_STACK_CALLBACKS_SIZE);
+	stack->callbacks   = callbacks;
 }
 
 void
@@ -114,7 +109,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	 * in the callbacks */
 	stack->depth++;
 
-	callback = stack->push_callbacks[node->type];
+	callback = stack->callbacks ? stack->callbacks->push[node->type] : NULL;
 	if (callback) {
 		void *state_data = get_dom_stack_state_data(stack, state);
 
@@ -143,7 +138,7 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	if (state->immutable)
 		return 1;
 
-	callback = stack->pop_callbacks[state->node->type];
+	callback = stack->callbacks ? stack->callbacks->pop[state->node->type] : NULL;
 	if (callback) {
 		void *state_data = get_dom_stack_state_data(stack, state);
 

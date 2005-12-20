@@ -741,36 +741,39 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	return node;
 }
 
-static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
-	/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
-	/* DOM_NODE_TEXT		*/ render_dom_node_source,
-	/* DOM_NODE_CDATA_SECTION	*/ render_dom_node_source,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
-	/* DOM_NODE_ENTITY		*/ render_dom_node_source,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
-	/* DOM_NODE_COMMENT		*/ render_dom_node_source,
-	/* DOM_NODE_DOCUMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_node_source,
-	/* DOM_NODE_NOTATION		*/ render_dom_node_source,
-};
-
-static dom_stack_callback_T dom_source_renderer_pop_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
-	/* DOM_NODE_ATTRIBUTE		*/ NULL,
-	/* DOM_NODE_TEXT		*/ NULL,
-	/* DOM_NODE_CDATA_SECTION	*/ NULL,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
-	/* DOM_NODE_ENTITY		*/ NULL,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
-	/* DOM_NODE_COMMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
-	/* DOM_NODE_NOTATION		*/ NULL,
+static struct dom_stack_callbacks dom_source_renderer_callbacks = {
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
+		/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
+		/* DOM_NODE_TEXT		*/ render_dom_node_source,
+		/* DOM_NODE_CDATA_SECTION	*/ render_dom_node_source,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
+		/* DOM_NODE_ENTITY		*/ render_dom_node_source,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
+		/* DOM_NODE_COMMENT		*/ render_dom_node_source,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_node_source,
+		/* DOM_NODE_NOTATION		*/ render_dom_node_source,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
 };
 
 
@@ -806,8 +809,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype,
 				  &renderer, cached->uri,
-				  dom_source_renderer_push_callbacks,
-				  dom_source_renderer_pop_callbacks);
+				  &dom_source_renderer_callbacks);
 	if (!parser) return;
 
 	root = parse_sgml(parser, buffer);

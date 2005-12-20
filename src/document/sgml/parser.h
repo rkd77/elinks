@@ -45,8 +45,7 @@ struct sgml_parser_state {
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 void *data, struct uri *uri,
-		 dom_stack_callback_T push_callbacks[DOM_NODES],
-		 dom_stack_callback_T pop_callbacks[DOM_NODES]);
+		 struct dom_stack_callbacks *callbacks);
 
 void done_sgml_parser(struct sgml_parser *parser);
 
