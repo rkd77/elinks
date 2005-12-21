@@ -803,7 +803,8 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 				  &renderer, cached->uri);
 	if (!parser) return;
 
-	add_dom_stack_context(&parser->stack, &dom_source_renderer_context_info);
+	add_dom_stack_context(&parser->stack, &renderer,
+			      &dom_source_renderer_context_info);
 
 	root = parse_sgml(parser, buffer);
 	done_sgml_parser(parser);

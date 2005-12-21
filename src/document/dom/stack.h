@@ -16,6 +16,10 @@ struct dom_stack_context_info {
 };
 
 struct dom_stack_context {
+	/* Data specific to the parser and renderer. */
+	void *data;
+
+	/* Info about node callbacks and such. */
 	struct dom_stack_context_info *info;
 };
 
@@ -124,7 +128,7 @@ void init_dom_stack(struct dom_stack *stack, void *data,
 void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */
-void add_dom_stack_context(struct dom_stack *stack,
+void add_dom_stack_context(struct dom_stack *stack, void *data,
 			   struct dom_stack_context_info *context_info);
 
 /* Decends down to the given node making it the current parent */

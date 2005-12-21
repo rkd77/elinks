@@ -78,13 +78,17 @@ done_dom_stack(struct dom_stack *stack)
 }
 
 void
-add_dom_stack_context(struct dom_stack *stack,
+add_dom_stack_context(struct dom_stack *stack, void *data,
 		      struct dom_stack_context_info *context_info)
 {
+	struct dom_stack_context *context;
+
 	if (!realloc_dom_stack_context(&stack->contexts, stack->contexts_size))
 		return;
 
-	stack->contexts[stack->contexts_size++].info = context_info;
+	context = &stack->contexts[stack->contexts_size++];
+	context->info = context_info;
+	context->data = data;
 }
 
 enum dom_stack_action {
