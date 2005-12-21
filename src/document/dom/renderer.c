@@ -597,8 +597,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static void
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
-	struct dom_renderer *renderer = parser->data;
+	struct dom_renderer *renderer = stack->current->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -611,8 +610,7 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 static void
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
-	struct dom_renderer *renderer = parser->data;
+	struct dom_renderer *renderer = stack->current->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -622,8 +620,7 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static void
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
-	struct dom_renderer *renderer = parser->data;
+	struct dom_renderer *renderer = stack->current->data;
 	struct sgml_parser_state *pstate = data;
 	struct scanner_token *token = &pstate->end_token;
 	unsigned char *string = token->string;
@@ -646,8 +643,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 static void
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = stack->data;
-	struct dom_renderer *renderer = parser->data;
+	struct dom_renderer *renderer = stack->current->data;
 	struct screen_char *template = &renderer->styles[node->type];
 
 	assert(node && renderer->document);
@@ -799,8 +795,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	else
 		doctype = SGML_DOCTYPE_HTML;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype,
-				  &renderer, cached->uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, cached->uri);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,
