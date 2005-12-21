@@ -35,12 +35,14 @@ struct dom_stack_context_info {
 	 * objects for each state to be assigned to the state's @data member.
 	 * Zero means no state data should be allocated. */
 	size_t object_size;
+
+	/* Callbacks to be called when pushing and popping nodes. */
 	dom_stack_callback_T push[DOM_NODES];
 	dom_stack_callback_T pop[DOM_NODES];
 };
 
 struct dom_stack_context {
-	/* Data specific to the parser and renderer. */
+	/* Data specific to the context. */
 	void *data;
 
 	/* This is one big array of context specific objects. */
@@ -72,8 +74,8 @@ struct dom_stack {
 	struct dom_stack_context *contexts;
 	size_t contexts_size;
 
-	/* The current context. XXX: Only meaningful within
-	 * dom_stack_callback_T functions. */
+	/* The current context. */
+	/* XXX: Only meaningful within dom_stack_callback_T functions. */
 	struct dom_stack_context *current;
 };
 
@@ -131,7 +133,9 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 void init_dom_stack(struct dom_stack *stack, enum dom_stack_flag flags);
 void done_dom_stack(struct dom_stack *stack);
 
-/* Add a callback collection to the stack. */
+/* Add a context to the stack. This is needed if either you want to have the
+ * stack allocated objects for created states and/or if you want to install
+ * callbacks for pushing or popping. . */
 void add_dom_stack_context(struct dom_stack *stack, void *data,
 			   struct dom_stack_context_info *context_info);
 
