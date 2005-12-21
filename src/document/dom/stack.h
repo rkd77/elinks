@@ -93,8 +93,18 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 #define get_dom_stack_parent(stack)	get_dom_stack_state(stack, 1)
 #define get_dom_stack_top(stack)	get_dom_stack_state(stack, 0)
 
-#define get_dom_stack_state_data(context, state) \
-	((void *) &(context)->state_objects[(state)->depth * (context)->info->object_size])
+static inline void *
+get_dom_stack_state_data(struct dom_stack_context *context,
+			 struct dom_stack_state *state)
+{
+	size_t object_size = context->info->object_size;
+
+	if (!object_size) return NULL;
+
+	assertm(context->state_objects);
+
+	return (void *) &context->state_objects[state->depth * object_size];
+}
 
 /* The state iterators do not include the bottom state */
 
