@@ -21,7 +21,11 @@
 #include "util/string.h"
 
 
-#define get_sgml_parser(stack) ((stack)->data)
+/* When getting the sgml_parser struct it is _always_ assumed that the parser
+ * is the first to add it's context, which it is since it initializes the
+ * stack. */
+
+#define get_sgml_parser(stack) ((stack)->contexts->data)
 
 #define get_sgml_parser_state(stack, state) \
 	get_dom_stack_state_data(stack, state)
@@ -308,6 +312,41 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 }
 
 
+static struct dom_stack_context_info sgml_parser_context_info = {
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct uri *uri)
@@ -322,10 +361,11 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->uri  = get_uri_reference(uri);
 	parser->info = get_sgml_info(doctype);
 
-	init_dom_stack(&parser->stack, parser, obj_size,
+	init_dom_stack(&parser->stack, NULL, obj_size,
 		       type != SGML_PARSER_STREAM);
 	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,
 	 * and feed document.write() data back to the parser. */
+	add_dom_stack_context(&parser->stack, parser, &sgml_parser_context_info);
 
 	return parser;
 }
