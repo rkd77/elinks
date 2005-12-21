@@ -286,35 +286,6 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 	}
 }
 
-/*#define DOM_TREE_RENDERER*/
-
-#ifdef DOM_TREE_RENDERER
-static void
-render_dom_printf(struct dom_renderer *renderer, struct screen_char *template,
-		  unsigned char *format, ...)
-{
-	unsigned char *text;
-	int textlen;
-	va_list ap, ap2;
-
-	va_start(ap, format);
-	VA_COPY(ap2, ap);
-
-	textlen = vsnprintf(NULL, 0, format, ap2);
-
-	text = mem_alloc(textlen + 1);
-	if (!text) goto free_va_args;
-
-	if (vsnprintf((char *) text, textlen + 1, format, ap) == textlen)
-		render_dom_text(renderer, template, text, textlen);
-
-	mem_free(text);
-
-free_va_args:
-	va_end(ap);
-}
-#endif /* DOM_TREE_RENDERER */
-
 #define realloc_document_links(doc, size) \
 	ALIGN_LINK(&(doc)->links, (doc)->nlinks, size)
 
@@ -384,7 +355,12 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 }
 
 
-/* DOM Tree Renderer */
+/* DOM Tree Debug Renderer */
+
+/* Define to have debug info about the nodes added printed to the log.
+ * Run as: ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect <url>
+ * to have the debug dumped into a file. */
+/*#define DOM_TREE_RENDERER*/
 
 #ifdef DOM_TREE_RENDERER
 static inline unsigned char *
@@ -419,11 +395,14 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
 
 	assert(node);
 
+	memset(string, 0, sizeof(*string));
+
 	switch (node->type) {
 	case DOM_NODE_ENTITY_REFERENCE:
 		string->string = get_entity_string(node->string.string,
 						  node->string.length,
 						  codepage);
+		string->string = null_or_stracpy(string->string);
 		break;
 
 	default:
@@ -439,19 +418,21 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
 	string->length = string->string ? strlen(string->string) : 0;
 }
 
+static unsigned char indent_string[MAX_STR_LEN];
+
+#define get_indent_offset(stack) \
+	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
+
 static void
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
-	render_dom_printf(renderer, template, "%.*s: %.*s\n",
-			  name->length, name->string,
-			  value->length, value->string);
-
-	mem_free_if(name);
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		name->length, name->string,
+		value->length, value->string);
 }
 
 static void
@@ -459,7 +440,6 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string value;
 	struct dom_string *name;
 	struct dom_string *id;
@@ -470,10 +450,10 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	id	= get_dom_node_type_name(node->type);
 	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%.*s: %.*s -> %.*s\n",
-			  id->length, id->string, name->length, name->string,
-			  value.length, value.string);
+	LOG_INFO("%.*s %.*s: %.*s -> %.*s",
+		get_indent_offset(stack), indent_string,
+		id->length, id->string, name->length, name->string,
+		value.length, value.string);
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
@@ -484,7 +464,6 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *name;
 	struct dom_string value;
 
@@ -493,10 +472,10 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 	name	= get_dom_node_name(node);
 	set_enhanced_dom_node_value(&value, node, document->options.cp);
 
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%.*s: %.*s\n",
-			  name->length, name->string,
-			  value.length, value.string);
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		name->length, name->string,
+		value.length, value.string);
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
@@ -505,22 +484,17 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 static void
 render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *name;
 	struct dom_string *id;
 
-	assert(node && document);
+	assert(node);
 
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%.*s: %.*s\n",
-			  id->length, id->string, name->length, name->string);
-
-	mem_free_if(name);
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		id->length, id->string, name->length, name->string);
 }
 
 static struct dom_stack_context_info dom_tree_renderer_context_info = {
@@ -815,6 +789,12 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
+
+#ifdef DOM_TREE_RENDERER
+	memset(indent_string, ' ', sizeof(indent_string));
+	add_dom_stack_context(&parser->stack, &renderer,
+			      &dom_tree_renderer_context_info);
+#endif
 
 	root = parse_sgml(parser, buffer);
 	done_sgml_parser(parser);
