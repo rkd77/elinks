@@ -28,6 +28,14 @@ realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
+static inline struct dom_stack_state *
+realloc_dom_stack_context(struct dom_stack_context **contexts, size_t size)
+{
+	return mem_align_alloc(contexts, size, size + 1,
+			       struct dom_stack_context,
+			       DOM_STACK_STATE_GRANULARITY);
+}
+
 static inline unsigned char *
 realloc_dom_stack_state_objects(struct dom_stack *stack)
 {
@@ -62,7 +70,7 @@ done_dom_stack(struct dom_stack *stack)
 {
 	assert(stack);
 
-	mem_free_if(stack->callbacks);
+	mem_free_if(stack->contexts);
 	mem_free_if(stack->states);
 	mem_free_if(stack->state_objects);
 
@@ -73,13 +81,10 @@ void
 add_dom_stack_context(struct dom_stack *stack,
 		      struct dom_stack_context_info *context_info)
 {
-	struct dom_stack_context_info **list;
+	if (!realloc_dom_stack_context(&stack->contexts, stack->contexts_size))
+		return;
 
-	list = mem_realloc(stack->callbacks, sizeof(*list) * (stack->callbacks_size + 1));
-	if (!list) return;
-
-	stack->callbacks = list;
-	stack->callbacks[stack->callbacks_size++] = context_info;
+	stack->contexts[stack->contexts_size++].info = context_info;
 }
 
 enum dom_stack_action {
@@ -96,13 +101,13 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 	void *state_data = get_dom_stack_state_data(stack, state);
 	int i;
 
-	for (i = 0; i < stack->callbacks_size; i++) {
+	for (i = 0; i < stack->contexts_size; i++) {
 		dom_stack_callback_T callback;
 
 		if (action == DOM_STACK_PUSH)
-			callback = stack->callbacks[i]->push[state->node->type];
+			callback = stack->contexts[i].info->push[state->node->type];
 		else
-			callback = stack->callbacks[i]->pop[state->node->type];
+			callback = stack->contexts[i].info->pop[state->node->type];
 
 		if (callback)
 			callback(stack, state->node, state_data);

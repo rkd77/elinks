@@ -15,6 +15,10 @@ struct dom_stack_context_info {
 	dom_stack_callback_T pop[DOM_NODES];
 };
 
+struct dom_stack_context {
+	struct dom_stack_context_info *info;
+};
+
 #define DOM_STACK_MAX_DEPTH	4096
 
 struct dom_stack_state {
@@ -54,8 +58,8 @@ struct dom_stack {
 	size_t object_size;
 
 	/* Callbacks which should be called for the pushed and popped nodes. */
-	struct dom_stack_context_info **callbacks;
-	size_t callbacks_size;
+	struct dom_stack_context *contexts;
+	size_t contexts_size;
 
 	/* Data specific to the parser and renderer. */
 	void *data;
