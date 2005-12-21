@@ -21,6 +21,11 @@
 #include "util/string.h"
 
 
+#define get_sgml_parser(stack) ((stack)->data)
+
+#define get_sgml_parser_state(stack, state) \
+	get_dom_stack_state_data(stack, state)
+
 /* Functions for adding new nodes to the DOM tree */
 
 static inline struct dom_node *
@@ -36,7 +41,7 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
@@ -55,7 +60,7 @@ add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 	state = get_dom_stack_top(stack);
 	assert(node == state->node);
 
-	pstate = get_dom_stack_state_data(stack, state);
+	pstate = get_sgml_parser_state(stack, state);
 	pstate->info = node_info;
 
 	return node;
@@ -66,7 +71,7 @@ static inline void
 add_sgml_attribute(struct dom_stack *stack,
 		  struct scanner_token *token, struct scanner_token *valtoken)
 {
-	struct sgml_parser *parser = stack->data;
+	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	unsigned char *value = valtoken ? valtoken->string : NULL;
 	size_t valuelen = valtoken ? valtoken->length : 0;
@@ -251,7 +256,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 				if (state) {
 					struct sgml_parser_state *pstate;
 
-					pstate = get_dom_stack_state_data(stack, state);
+					pstate = get_sgml_parser_state(stack, state);
 					copy_struct(&pstate->end_token, token);
 
 					pop_dom_state(stack, state);
