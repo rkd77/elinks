@@ -369,14 +369,13 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	((sel)->match.element & DOM_SELECT_RELATION_FLAGS)
 
 static enum dom_exception_code
-parse_dom_select(struct dom_select *select, unsigned char *string, int length)
+parse_dom_select(struct dom_select *select, struct dom_stack *stack,
+		 unsigned char *string, int length)
 {
-	struct dom_stack stack;
 	struct scanner scanner;
 	struct dom_select_node sel;
 
 	init_scanner(&scanner, &css_scanner_info, string, string + length);
-	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
 
 	memset(&sel, 0, sizeof(sel));
 
@@ -506,9 +505,14 @@ init_dom_select(enum dom_select_syntax syntax,
 		unsigned char *string, int length)
 {
 	struct dom_select *select = mem_calloc(1, sizeof(select));
+	struct dom_stack stack;
 	enum dom_exception_code code;
 
-	code = parse_dom_select(select, string, length);
+	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+
+	code = parse_dom_select(select, &stack, string, length);
+	done_dom_stack(&stack);
+
 	if (code == DOM_ERR_NONE)
 		return select;
 
@@ -655,8 +659,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 #define has_element_match(selector, name) \
 	((selector)->match.element & (name))
 
-/* XXX: Assume it is the first context added. */
-#define get_dom_select_data(stack) ((stack)->contexts->data)
+#define get_dom_select_data(stack) ((stack)->current->data)
 
 static void
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
@@ -742,14 +745,15 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 		struct dom_select_node *selector = (void *) state->node;
 		struct dom_select_state *select_state;
 
-		select_state = get_dom_stack_state_data(stack->current, state);
+		/* XXX: Assume that it is the first stack context! */
+		select_state = get_dom_stack_state_data(stack->contexts, state);
 		if (select_state->node == node) {
 			pop_dom_state(stack, state);
 			WDBG("Remove element.");
 			continue;
 		}
 
-		/* Pop states that no longer lives up to a relation. */
+		/* FIXME: Pop states that no longer lives up to a relation. */
 		switch (get_element_relation(selector)) {
 		case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
 		case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
@@ -874,9 +878,8 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 			      &dom_select_context_info);
 
 	init_dom_stack(&select_data.stack, DOM_STACK_KEEP_NODES);
-	add_dom_stack_context(&stack, &select_data,
+	add_dom_stack_context(&select_data.stack, &select_data,
 			      &dom_select_data_context_info);
-
 
 	if (push_dom_node(&select_data.stack, &select->selector->node)) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;
