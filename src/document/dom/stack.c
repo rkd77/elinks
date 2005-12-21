@@ -106,15 +106,19 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 	int i;
 
 	for (i = 0; i < stack->contexts_size; i++) {
+		struct dom_stack_context *context = &stack->contexts[i];
 		dom_stack_callback_T callback;
 
 		if (action == DOM_STACK_PUSH)
-			callback = stack->contexts[i].info->push[state->node->type];
+			callback = context->info->push[state->node->type];
 		else
-			callback = stack->contexts[i].info->pop[state->node->type];
+			callback = context->info->pop[state->node->type];
 
-		if (callback)
+		if (callback) {
+			stack->current = context;
 			callback(stack, state->node, state_data);
+			stack->current = NULL;
+		}
 	}
 }
 

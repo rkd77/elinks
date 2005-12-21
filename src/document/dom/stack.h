@@ -64,6 +64,7 @@ struct dom_stack {
 	/* Callbacks which should be called for the pushed and popped nodes. */
 	struct dom_stack_context *contexts;
 	size_t contexts_size;
+	struct dom_stack_context *current;
 
 	/* Data specific to the parser and renderer. */
 	void *data;
