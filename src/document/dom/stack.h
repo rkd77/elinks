@@ -106,27 +106,6 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 	for ((pos) = (stack)->depth - 1; (pos) >= 0; (pos)--)		\
 		if (((state) = &(stack)->states[(pos)]))
 
-/* Dive through the stack states in search for the specified match. */
-static inline struct dom_stack_state *
-search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
-		 struct dom_string *string)
-{
-	struct dom_stack_state *state;
-	int pos;
-
-	/* FIXME: Take node subtype and compare if non-zero or something. */
-	foreachback_dom_stack_state (stack, state, pos) {
-		struct dom_node *parent = state->node;
-
-		if (parent->type == type
-		    && parent->string.length == string->length
-		    && !strncasecmp(parent->string.string, string->string, string->length))
-			return state;
-	}
-
-	return NULL;
-}
-
 
 /* Life cycle functions. */
 
@@ -152,6 +131,11 @@ void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 
 /* Pop all stack states until a specific state is reached. */
 void pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target);
+
+/* Dive through the stack states in search for the specified match. */
+struct dom_stack_state *
+search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
+		 struct dom_string *string);
 
 /* Visit each node in the tree rooted at @root pre-order */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);
