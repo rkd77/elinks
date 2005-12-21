@@ -70,8 +70,8 @@ done_dom_stack(struct dom_stack *stack)
 }
 
 void
-add_dom_stack_callbacks(struct dom_stack *stack,
-			struct dom_stack_context_info *context_info)
+add_dom_stack_context(struct dom_stack *stack,
+		      struct dom_stack_context_info *context_info)
 {
 	struct dom_stack_context_info **list;
 

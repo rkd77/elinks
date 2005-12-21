@@ -120,8 +120,8 @@ void init_dom_stack(struct dom_stack *stack, void *data,
 void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */
-void add_dom_stack_callbacks(struct dom_stack *stack,
-			     struct dom_stack_context_info *context_info);
+void add_dom_stack_context(struct dom_stack *stack,
+			   struct dom_stack_context_info *context_info);
 
 /* Decends down to the given node making it the current parent */
 /* If an error occurs the node is free()d and NULL is returned */

@@ -831,7 +831,7 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 	select_data.select = select;;
 
 	init_dom_stack(&stack, &select_data, 0, 1);
-	add_dom_stack_callbacks(&stack, &dom_select_context_info);
+	add_dom_stack_context(&stack, &dom_select_context_info);
 
 	init_dom_stack(&select_data.stack, &select_data, obj_size, 1);
 
