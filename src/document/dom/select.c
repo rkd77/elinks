@@ -655,10 +655,13 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 #define has_element_match(selector, name) \
 	((selector)->match.element & (name))
 
+/* XXX: Assume it is the first context added. */
+#define get_dom_select_data(stack) ((stack)->contexts->data)
+
 static void
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = stack->data;
+	struct dom_select_data *select_data = get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int pos;
 
@@ -728,7 +731,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 static void
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = stack->data;
+	struct dom_select_data *select_data = get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int index;
 
@@ -761,7 +764,7 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 static void
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = stack->data;
+	struct dom_select_data *select_data = get_dom_select_data(stack);
 	struct dom_stack_state *state = get_dom_stack_top(&select_data->stack);
 	struct dom_select_node *selector = (void *) state->node;
 	struct dom_select_node *text_sel = get_child_dom_select_node(selector, DOM_NODE_TEXT);
@@ -819,6 +822,41 @@ static struct dom_stack_context_info dom_select_context_info = {
 	}
 };
 
+static struct dom_stack_context_info dom_select_data_context_info = {
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
 struct dom_node_list *
 select_dom_nodes(struct dom_select *select, struct dom_node *root)
 {
@@ -835,6 +873,9 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 			      &dom_select_context_info);
 
 	init_dom_stack(&select_data.stack, &select_data, obj_size, 1);
+	add_dom_stack_context(&stack, &select_data,
+			      &dom_select_data_context_info);
+
 
 	if (push_dom_node(&select_data.stack, &select->selector->node)) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;
