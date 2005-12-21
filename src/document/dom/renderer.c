@@ -357,11 +357,6 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 
 /* DOM Tree Debug Renderer */
 
-/* Define to have debug info about the nodes added printed to the log.
- * Run as: ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect <url>
- * to have the debug dumped into a file. */
-/*#define DOM_TREE_RENDERER*/
-
 #ifdef DOM_TREE_RENDERER
 static inline unsigned char *
 compress_string(unsigned char *string, unsigned int length)
@@ -388,8 +383,7 @@ compress_string(unsigned char *string, unsigned int length)
 
 /* @codepage denotes how entity strings should be decoded. */
 static void
-set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
-			    int codepage)
+set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
 {
 	struct dom_string *value;
 
@@ -399,9 +393,11 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
 
 	switch (node->type) {
 	case DOM_NODE_ENTITY_REFERENCE:
+		/* XXX: The ASCII codepage is hardcoded here since we do not
+		 * want to depend on anything and this is really just for
+		 * debugging. */
 		string->string = get_entity_string(node->string.string,
-						  node->string.length,
-						  codepage);
+						   node->string.length, 0);
 		string->string = null_or_stracpy(string->string);
 		break;
 
@@ -438,17 +434,15 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 static void
 render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct document *document = renderer->document;
 	struct dom_string value;
 	struct dom_string *name;
 	struct dom_string *id;
 
-	assert(node && document);
+	assert(node);
 
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
-	set_enhanced_dom_node_value(&value, node, document->options.cp);
+	set_enhanced_dom_node_value(&value, node);
 
 	LOG_INFO("%.*s %.*s: %.*s -> %.*s",
 		get_indent_offset(stack), indent_string,
@@ -462,15 +456,13 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 static void
 render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct document *document = renderer->document;
 	struct dom_string *name;
 	struct dom_string value;
 
-	assert(node && document);
+	assert(node);
 
 	name	= get_dom_node_name(node);
-	set_enhanced_dom_node_value(&value, node, document->options.cp);
+	set_enhanced_dom_node_value(&value, node);
 
 	LOG_INFO("%.*s %.*s: %.*s",
 		get_indent_offset(stack), indent_string,
@@ -497,7 +489,7 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 		id->length, id->string, name->length, name->string);
 }
 
-static struct dom_stack_context_info dom_tree_renderer_context_info = {
+struct dom_stack_context_info dom_tree_renderer_context_info = {
 	/* Object size: */			0,
 	/* Push: */
 	{
