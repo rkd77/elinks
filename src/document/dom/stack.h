@@ -53,6 +53,11 @@ struct dom_stack_state {
 	unsigned int immutable:1;
 };
 
+enum dom_stack_flag {
+	/* Keep nodes when popping them or call done_dom_node() on them. */
+	DOM_STACK_KEEP_NODES = 1,
+};
+
 /* The DOM stack is a convenient way to traverse DOM trees. Also it
  * maintains needed state info and is therefore also a holder of the current
  * context since the stack is used to when the DOM tree is manipulated. */
@@ -61,8 +66,7 @@ struct dom_stack {
 	struct dom_stack_state *states;
 	size_t depth;
 
-	/* Keep nodes when popping them or call done_dom_node() on them. */
-	unsigned int keep_nodes:1;
+	enum dom_stack_flag flags;
 
 	/* Callbacks which should be called for the pushed and popped nodes. */
 	struct dom_stack_context *contexts;
@@ -121,7 +125,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 
 /* Life cycle functions. */
 
-void init_dom_stack(struct dom_stack *stack, int keep_nodes);
+void init_dom_stack(struct dom_stack *stack, enum dom_stack_flag flags);
 void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */

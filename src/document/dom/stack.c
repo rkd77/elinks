@@ -53,13 +53,13 @@ realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, int keep_nodes)
+init_dom_stack(struct dom_stack *stack, enum dom_stack_flag flags)
 {
 	assert(stack);
 
 	memset(stack, 0, sizeof(*stack));
 
-	stack->keep_nodes  = !!keep_nodes;
+	stack->flags = flags;
 }
 
 void
@@ -178,7 +178,7 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 
 	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
 
-	if (!stack->keep_nodes)
+	if (!(stack->flags & DOM_STACK_KEEP_NODES))
 		done_dom_node(state->node);
 
 	stack->depth--;

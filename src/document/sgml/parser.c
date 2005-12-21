@@ -353,6 +353,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct uri *uri)
 {
 	struct sgml_parser *parser;
+	enum dom_stack_flag flags = 0;
 
 	parser = mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
@@ -361,7 +362,10 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->uri  = get_uri_reference(uri);
 	parser->info = get_sgml_info(doctype);
 
-	init_dom_stack(&parser->stack, type != SGML_PARSER_STREAM);
+	if (type == SGML_PARSER_TREE)
+		flags |= DOM_STACK_KEEP_NODES;
+
+	init_dom_stack(&parser->stack, flags);
 	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,
 	 * and feed document.write() data back to the parser. */
 	add_dom_stack_context(&parser->stack, parser, &sgml_parser_context_info);
