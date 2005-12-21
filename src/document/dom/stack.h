@@ -65,9 +65,6 @@ struct dom_stack {
 	struct dom_stack_context *contexts;
 	size_t contexts_size;
 	struct dom_stack_context *current;
-
-	/* Data specific to the parser and renderer. */
-	void *data;
 };
 
 #define dom_stack_is_empty(stack) \
@@ -124,8 +121,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 /* The @object_size arg tells whether the stack should allocate objects for each
  * state to be assigned to the state's @data member. Zero means no state data should
  * be allocated. */
-void init_dom_stack(struct dom_stack *stack, void *data,
-		    size_t object_size, int keep_nodes);
+void init_dom_stack(struct dom_stack *stack, size_t object_size, int keep_nodes);
 void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */

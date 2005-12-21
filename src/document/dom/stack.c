@@ -53,14 +53,12 @@ realloc_dom_stack_state_objects(struct dom_stack *stack)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, void *data,
-	       size_t object_size, int keep_nodes)
+init_dom_stack(struct dom_stack *stack, size_t object_size, int keep_nodes)
 {
 	assert(stack);
 
 	memset(stack, 0, sizeof(*stack));
 
-	stack->data        = data;
 	stack->object_size = object_size;
 	stack->keep_nodes  = !!keep_nodes;
 }
