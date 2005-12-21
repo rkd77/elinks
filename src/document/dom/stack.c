@@ -53,7 +53,7 @@ realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, size_t object_size, int keep_nodes)
+init_dom_stack(struct dom_stack *stack, int keep_nodes)
 {
 	assert(stack);
 

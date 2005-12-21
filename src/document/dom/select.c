@@ -376,7 +376,7 @@ parse_dom_select(struct dom_select *select, unsigned char *string, int length)
 	struct dom_select_node sel;
 
 	init_scanner(&scanner, &css_scanner_info, string, string + length);
-	init_dom_stack(&stack, 0, 1);
+	init_dom_stack(&stack, 1);
 
 	memset(&sel, 0, sizeof(sel));
 
@@ -869,11 +869,11 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 
 	select_data.select = select;;
 
-	init_dom_stack(&stack, 0, 1);
+	init_dom_stack(&stack, 1);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_context_info);
 
-	init_dom_stack(&select_data.stack, 0, 1);
+	init_dom_stack(&select_data.stack, 1);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_data_context_info);
 

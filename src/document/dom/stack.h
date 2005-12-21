@@ -11,6 +11,9 @@ struct dom_stack;
 typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
 struct dom_stack_context_info {
+	/* The @object_size member tells whether the stack should allocate
+	 * objects for each state to be assigned to the state's @data member.
+	 * Zero means no state data should be allocated. */
 	size_t object_size;
 	dom_stack_callback_T push[DOM_NODES];
 	dom_stack_callback_T pop[DOM_NODES];
@@ -118,10 +121,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 
 /* Life cycle functions. */
 
-/* The @object_size arg tells whether the stack should allocate objects for each
- * state to be assigned to the state's @data member. Zero means no state data should
- * be allocated. */
-void init_dom_stack(struct dom_stack *stack, size_t object_size, int keep_nodes);
+void init_dom_stack(struct dom_stack *stack, int keep_nodes);
 void done_dom_stack(struct dom_stack *stack);
 
 /* Add a callback collection to the stack. */
