@@ -742,7 +742,7 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 		struct dom_select_node *selector = (void *) state->node;
 		struct dom_select_state *select_state;
 
-		select_state = get_dom_stack_state_data(stack, state);
+		select_state = get_dom_stack_state_data(stack->current, state);
 		if (select_state->node == node) {
 			pop_dom_state(stack, state);
 			WDBG("Remove element.");
@@ -788,6 +788,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 }
 
 static struct dom_stack_context_info dom_select_context_info = {
+	/* Object size: */			0,
 	/* Push: */
 	{
 		/*				*/ NULL,
@@ -823,6 +824,7 @@ static struct dom_stack_context_info dom_select_context_info = {
 };
 
 static struct dom_stack_context_info dom_select_data_context_info = {
+	/* Object size: */			sizeof(struct dom_select_state),
 	/* Push: */
 	{
 		/*				*/ NULL,
@@ -862,7 +864,6 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 {
 	struct dom_select_data select_data;
 	struct dom_stack stack;
-	size_t obj_size = sizeof(struct dom_select_state);
 
 	memset(&select_data, 0, sizeof(select_data));
 
@@ -872,7 +873,7 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_context_info);
 
-	init_dom_stack(&select_data.stack, obj_size, 1);
+	init_dom_stack(&select_data.stack, 0, 1);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_data_context_info);
 

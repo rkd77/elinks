@@ -37,17 +37,17 @@ realloc_dom_stack_context(struct dom_stack_context **contexts, size_t size)
 }
 
 static inline unsigned char *
-realloc_dom_stack_state_objects(struct dom_stack *stack)
+realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 {
 #ifdef DEBUG_MEMLEAK
-	return mem_align_alloc__(__FILE__, __LINE__, (void **) &stack->state_objects,
-			       stack->depth, stack->depth + 1,
-			       stack->object_size,
+	return mem_align_alloc__(__FILE__, __LINE__, (void **) &context->state_objects,
+			       depth, depth + 1,
+			       context->info->object_size,
 			       DOM_STACK_STATE_GRANULARITY);
 #else
-	return mem_align_alloc__((void **) &stack->state_objects,
-			       stack->depth, stack->depth + 1,
-			       stack->object_size,
+	return mem_align_alloc__((void **) &context->state_objects,
+			       depth, depth + 1,
+			       context->info->object_size,
 			       DOM_STACK_STATE_GRANULARITY);
 #endif
 }
@@ -59,18 +59,22 @@ init_dom_stack(struct dom_stack *stack, size_t object_size, int keep_nodes)
 
 	memset(stack, 0, sizeof(*stack));
 
-	stack->object_size = object_size;
 	stack->keep_nodes  = !!keep_nodes;
 }
 
 void
 done_dom_stack(struct dom_stack *stack)
 {
+	int i;
+
 	assert(stack);
+
+	for (i = 0; i < stack->contexts_size; i++) {
+		mem_free_if(stack->contexts[i].state_objects);
+	}
 
 	mem_free_if(stack->contexts);
 	mem_free_if(stack->states);
-	mem_free_if(stack->state_objects);
 
 	memset(stack, 0, sizeof(*stack));
 }
@@ -98,13 +102,11 @@ static void
 call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			 enum dom_stack_action action)
 {
-	/* FIME: Variable stack data, so the parse/selector/renderer/etc. can
-	 * really work in parallel. */
-	void *state_data = get_dom_stack_state_data(stack, state);
 	int i;
 
 	for (i = 0; i < stack->contexts_size; i++) {
 		struct dom_stack_context *context = &stack->contexts[i];
+		void *state_data = get_dom_stack_state_data(context, state);
 		dom_stack_callback_T callback;
 
 		if (action == DOM_STACK_PUSH)
@@ -124,6 +126,7 @@ struct dom_node *
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
 	struct dom_stack_state *state;
+	int i;
 
 	assert(stack && node);
 	assert(0 < node->type && node->type < DOM_NODES);
@@ -140,18 +143,17 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 
 	state += stack->depth;
 
-	if (stack->object_size) {
-		unsigned char *state_objects;
+	for (i = 0; i < stack->contexts_size; i++) {
+		struct dom_stack_context *context = &stack->contexts[i];
 
-		state_objects = realloc_dom_stack_state_objects(stack);
-		if (!state_objects) {
+		if (context->info->object_size
+		    && !realloc_dom_stack_state_objects(context, stack->depth)) {
 			done_dom_node(node);
 			return NULL;
 		}
-
-		state->depth = stack->depth;
 	}
 
+	state->depth = stack->depth;
 	state->node = node;
 
 	/* Grow the state array to the new depth so the state accessors work
@@ -166,6 +168,7 @@ static int
 do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 {
 	struct dom_stack_state *state;
+	int i;
 
 	assert(stack && !dom_stack_is_empty(stack));
 
@@ -181,10 +184,14 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	stack->depth--;
 	assert(stack->depth >= 0);
 
-	if (stack->object_size) {
-		void *state_data = get_dom_stack_state_data(stack, state);
+	for (i = 0; i < stack->contexts_size; i++) {
+		struct dom_stack_context *context = &stack->contexts[i];
 
-		memset(state_data, 0, stack->object_size);
+		if (context->info->object_size) {
+			void *state_data = get_dom_stack_state_data(context, state);
+
+			memset(state_data, 0, context->info->object_size);
+		}
 	}
 
 	memset(state, 0, sizeof(*state));

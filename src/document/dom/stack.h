@@ -11,6 +11,7 @@ struct dom_stack;
 typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
 struct dom_stack_context_info {
+	size_t object_size;
 	dom_stack_callback_T push[DOM_NODES];
 	dom_stack_callback_T pop[DOM_NODES];
 };
@@ -18,6 +19,12 @@ struct dom_stack_context_info {
 struct dom_stack_context {
 	/* Data specific to the parser and renderer. */
 	void *data;
+
+	/* This is one big array of context specific objects. */
+	/* For the SGML parser this holds DTD-oriented info about the node
+	 * (recorded in struct sgml_node_info). E.g.  whether an element node
+	 * is optional. */
+	unsigned char *state_objects;
 
 	/* Info about node callbacks and such. */
 	struct dom_stack_context_info *info;
@@ -54,13 +61,6 @@ struct dom_stack {
 	/* Keep nodes when popping them or call done_dom_node() on them. */
 	unsigned int keep_nodes:1;
 
-	/* This is one big array of parser specific objects. */
-	/* The objects hold parser specific data. For the SGML parser this
-	 * holds DTD-oriented info about the node (recorded in struct
-	 * sgml_node_info). E.g.  whether an element node is optional. */
-	unsigned char *state_objects;
-	size_t object_size;
-
 	/* Callbacks which should be called for the pushed and popped nodes. */
 	struct dom_stack_context *contexts;
 	size_t contexts_size;
@@ -81,8 +81,8 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 #define get_dom_stack_parent(stack)	get_dom_stack_state(stack, 1)
 #define get_dom_stack_top(stack)	get_dom_stack_state(stack, 0)
 
-#define get_dom_stack_state_data(stack, state) \
-	((void *) &(stack)->state_objects[(state)->depth * (stack)->object_size])
+#define get_dom_stack_state_data(context, state) \
+	((void *) &(context)->state_objects[(state)->depth * (context)->info->object_size])
 
 /* The state iterators do not include the bottom state */
 
