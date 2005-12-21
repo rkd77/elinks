@@ -442,7 +442,7 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node,
 static void
 render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
@@ -452,14 +452,12 @@ render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 			  value->length, value->string);
 
 	mem_free_if(name);
-
-	return node;
 }
 
 static void
 render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string value;
@@ -479,14 +477,12 @@ render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
-
-	return node;
 }
 
 static void
 render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *name;
@@ -504,14 +500,12 @@ render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
-
-	return node;
 }
 
 static void
 render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
 	struct screen_char *template = &renderer->styles[node->type];
 	struct dom_string *name;
@@ -527,25 +521,44 @@ render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 			  id->length, id->string, name->length, name->string);
 
 	mem_free_if(name);
-
-	return node;
 }
 
-static dom_stack_callback_T dom_tree_renderer_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_tree_branch,
-	/* DOM_NODE_ATTRIBUTE		*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_TEXT		*/ render_dom_tree_leaf,
-	/* DOM_NODE_CDATA_SECTION	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_ENTITY		*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_COMMENT		*/ render_dom_tree_leaf,
-	/* DOM_NODE_DOCUMENT		*/ render_dom_tree,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_NOTATION		*/ render_dom_tree_id_leaf,
+static struct dom_stack_context_info dom_tree_renderer_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ render_dom_tree_branch,
+		/* DOM_NODE_ATTRIBUTE		*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_TEXT		*/ render_dom_tree_leaf,
+		/* DOM_NODE_CDATA_SECTION	*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_ENTITY		*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_COMMENT		*/ render_dom_tree_leaf,
+		/* DOM_NODE_DOCUMENT		*/ render_dom_tree,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_tree_id_leaf,
+		/* DOM_NODE_NOTATION		*/ render_dom_tree_id_leaf,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
 };
+
 #endif /* DOM_TREE_RENDERER */
 
 /* DOM Source Renderer */
