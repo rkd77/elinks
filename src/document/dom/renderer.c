@@ -414,7 +414,8 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
 	string->length = string->string ? strlen(string->string) : 0;
 }
 
-static unsigned char indent_string[MAX_STR_LEN];
+static unsigned char indent_string[] =
+	"                                                                    ";
 
 #define get_indent_offset(stack) \
 	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
@@ -783,7 +784,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 			      &dom_source_renderer_context_info);
 
 #ifdef DOM_TREE_RENDERER
-	memset(indent_string, ' ', sizeof(indent_string));
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_tree_renderer_context_info);
 #endif
