@@ -128,30 +128,27 @@ done_dom_node_list(struct dom_node_list *list)
 
 struct dom_node_search {
 	struct dom_node *key;
-	int subtype;
 	unsigned int from, pos, to;
 };
 
-#define INIT_DOM_NODE_SEARCH(key, subtype, list) \
-	{ (key), (subtype), -1, 0, (list)->size, }
+#define INIT_DOM_NODE_SEARCH(key, list) \
+	{ (key), -1, 0, (list)->size, }
 
 static inline int
 dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 {
 	struct dom_node *key = search->key;
 
-	if (search->subtype) {
-		assert(key->type == node->type);
-
+	if (key->type == node->type) {
 		switch (key->type) {
 		case DOM_NODE_ELEMENT:
-			if (node->data.element.type)
-				return search->subtype - node->data.element.type;
+			if (node->data.element.type && key->data.element.type)
+				return key->data.element.type - node->data.element.type;
 			break;
 
 		case DOM_NODE_ATTRIBUTE:
-			if (node->data.attribute.type)
-				return search->subtype - node->data.attribute.type;
+			if (node->data.attribute.type && key->data.attribute.type)
+				return key->data.attribute.type - node->data.attribute.type;
 			break;
 
 		default:
@@ -200,7 +197,7 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 
 int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 {
-	struct dom_node_search search = INIT_DOM_NODE_SEARCH(node, 0, list);
+	struct dom_node_search search = INIT_DOM_NODE_SEARCH(node, list);
 	struct dom_node *match = dom_node_list_bsearch(&search, list);
 
 	return match ? search.pos : search.to;
@@ -211,7 +208,24 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 		       uint16_t subtype, struct dom_string *name)
 {
 	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
-	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, subtype, list);
+	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, list);
+
+	if (subtype) {
+		/* Set the subtype */
+		switch (type) {
+		case DOM_NODE_ELEMENT:
+			node.data.element.type = subtype;
+			break;
+		case DOM_NODE_ATTRIBUTE:
+			node.data.attribute.type = subtype;
+			break;
+		case DOM_NODE_PROCESSING_INSTRUCTION:
+			node.data.proc_instruction.type = subtype;
+			break;
+		default:
+			break;
+		}
+	}
 
 	return dom_node_list_bsearch(&search, list);
 }
