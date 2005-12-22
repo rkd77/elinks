@@ -537,6 +537,19 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	}
 }
 
+static void
+render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+
+	/* If there are no non-element nodes after the last element node make
+	 * sure that we flush to the end of the cache entry source including
+	 * the '>' of the last element tag if it has one. (bug 519) */
+	if (check_dom_node_source(renderer, renderer->position, 0)) {
+		render_dom_flush(renderer, renderer->end);
+	}
+}
+
 static struct dom_stack_context_info dom_source_renderer_context_info = {
 	/* Object size: */			0,
 	/* Push: */
@@ -566,7 +579,7 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 		/* DOM_NODE_ENTITY		*/ NULL,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
 		/* DOM_NODE_COMMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ render_dom_document_end,
 		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
 		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
 		/* DOM_NODE_NOTATION		*/ NULL,
@@ -612,15 +625,14 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	add_dom_stack_tracer(&parser->stack);
 
 	root = parse_sgml(parser, buffer);
-	done_sgml_parser(parser);
-	if (!root) return;
+	if (root) {
+		assert(parser->stack.depth == 1);
 
-	/* If there are no non-element nodes after the last element node make
-	 * sure that we flush to the end of the cache entry source including
-	 * the '>' of the last element tag if it has one. (bug 519) */
-	if (check_dom_node_source(&renderer, renderer.position, 0)) {
-		render_dom_flush(&renderer, renderer.end);
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		/* For SGML_PARSER_STREAM this will free the DOM
+		 * root node. */
+		pop_dom_node(&parser->stack);
 	}
 
-	done_dom_node(root);
+	done_sgml_parser(parser);
 }
