@@ -580,20 +580,6 @@ struct dom_select_state {
 	struct dom_node *node;
 };
 
-/* FIXME: This really does not belong here and should probably go to
- * document/dom/node.[ch] or something. */
-static int
-compare_element_type(struct dom_node *node1, struct dom_node *node2)
-{
-	/* Assuming the same document type */
-	if (node1->data.element.type
-	    && node2->data.element.type
-	    && node1->data.element.type == node2->data.element.type)
-		return 0;
-
-	return dom_string_casecmp(&node1->string, &node2->string);
-}
-
 /* Get a child node of a given type. By design, a selector node can
  * only have one child per type of node. */
 static struct dom_select_node *
@@ -733,7 +719,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 
 		/* Match the node. */
 		if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
-		    && compare_element_type(&selector->node, node))
+		    && dom_node_casecmp(&selector->node, node))
 			continue;
 
 		switch (get_element_relation(selector)) {
