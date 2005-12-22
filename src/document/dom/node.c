@@ -135,20 +135,18 @@ struct dom_node_search {
 	{ (key), -1, 0, (list)->size, }
 
 static inline int
-dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
+dom_node_cmp(struct dom_node *node1, struct dom_node *node2)
 {
-	struct dom_node *key = search->key;
-
-	if (key->type == node->type) {
-		switch (key->type) {
+	if (node1->type == node2->type) {
+		switch (node1->type) {
 		case DOM_NODE_ELEMENT:
-			if (node->data.element.type && key->data.element.type)
-				return key->data.element.type - node->data.element.type;
+			if (node1->data.element.type && node2->data.element.type)
+				return node1->data.element.type - node2->data.element.type;
 			break;
 
 		case DOM_NODE_ATTRIBUTE:
-			if (node->data.attribute.type && key->data.attribute.type)
-				return key->data.attribute.type - node->data.attribute.type;
+			if (node1->data.attribute.type && node2->data.attribute.type)
+				return node1->data.attribute.type - node2->data.attribute.type;
 			break;
 
 		default:
@@ -156,7 +154,7 @@ dom_node_cmp(struct dom_node_search *search, struct dom_node *node)
 		}
 	}
 
-	return dom_string_casecmp(&key->string, &node->string);
+	return dom_string_casecmp(&node1->string, &node2->string);
 }
 
 static inline int
@@ -178,7 +176,7 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 	do {
 		int pos = get_bsearch_position(list, search->from, search->to);
 		struct dom_node *node = list->entries[pos];
-		int difference = dom_node_cmp(search, node);
+		int difference = dom_node_cmp(search->key, node);
 
 		search->pos = pos;
 
