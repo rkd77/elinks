@@ -341,6 +341,9 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 /* DOM Stack Tracing: */
 
 #ifdef DOM_STACK_TRACE
+
+/* Compress a string to a single line with newlines etc. replaced with "\\n"
+ * sequence. */
 static inline unsigned char *
 compress_string(unsigned char *string, unsigned int length)
 {
@@ -364,7 +367,8 @@ compress_string(unsigned char *string, unsigned int length)
 	return buffer.source;
 }
 
-/* @codepage denotes how entity strings should be decoded. */
+/* Set @string to the value of the given @node, however, with strings
+ * compressed and entity references 'expanded'. */
 static void
 set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
 {
