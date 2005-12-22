@@ -389,6 +389,7 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 {
 	unsigned char *source = buffer->source;
 	unsigned char *end = source + buffer->length;
+	size_t depth;
 
 	if (!parser->root) {
 		parser->root = add_sgml_document(&parser->stack, parser->uri);
@@ -401,7 +402,17 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
 
 	/* FIXME: Make parse_sgml_document() return an error code. */
+	depth = parser->stack.depth;
 	parse_sgml_document(&parser->stack, &parser->scanner);
+
+	/* Pop the stack back to the state it was in. This includes cleaning
+	 * away even immutable states left on the stack. */
+	while (depth < parser->stack.depth) {
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		pop_dom_node(&parser->stack);
+	}
+
+	assert(depth == parser->stack.depth);
 
 	/* FIXME: Return the 'bottom' node that was added by the parser. */
 	return parser->root;
