@@ -286,6 +286,9 @@ add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int len
 /* Removes the node and all its children and free()s itself */
 void done_dom_node(struct dom_node *node);
 
+/* Compare two nodes returning non-zero if they differ. */
+int dom_node_casecmp(struct dom_node *node1, struct dom_node *node2);
+
 /* Returns the name of the node in an allocated string. */
 struct dom_string *get_dom_node_name(struct dom_node *node);
 

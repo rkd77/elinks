@@ -134,8 +134,8 @@ struct dom_node_search {
 #define INIT_DOM_NODE_SEARCH(key, list) \
 	{ (key), -1, 0, (list)->size, }
 
-static inline int
-dom_node_cmp(struct dom_node *node1, struct dom_node *node2)
+int
+dom_node_casecmp(struct dom_node *node1, struct dom_node *node2)
 {
 	if (node1->type == node2->type) {
 		switch (node1->type) {
@@ -176,7 +176,7 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 	do {
 		int pos = get_bsearch_position(list, search->from, search->to);
 		struct dom_node *node = list->entries[pos];
-		int difference = dom_node_cmp(search->key, node);
+		int difference = dom_node_casecmp(search->key, node);
 
 		search->pos = pos;
 
