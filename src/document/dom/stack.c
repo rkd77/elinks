@@ -254,8 +254,7 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		struct dom_node *parent = state->node;
 
 		if (parent->type == type
-		    && parent->string.length == string->length
-		    && !strncasecmp(parent->string.string, string->string, string->length))
+		    && !dom_string_casecmp(&parent->string, string))
 			return state;
 	}
 
