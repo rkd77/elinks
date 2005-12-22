@@ -16,6 +16,8 @@
 #include "util/string.h"
 
 
+/* Selector parsing: */
+
 /* Maps the content of a scanner token to a pseudo-class or -element ID. */
 static enum dom_select_pseudo
 get_dom_select_pseudo(struct scanner_token *token)
@@ -555,6 +557,8 @@ done_dom_select(struct dom_select *select)
 }
 
 
+/* DOM node selection: */
+
 /* This struct stores data related to the 'application' of a DOM selector
  * on a DOM tree or stream. */
 struct dom_select_data {
@@ -605,6 +609,47 @@ get_child_dom_select_node(struct dom_select_node *selector,
 #define has_attribute_match(selector, name) \
 	((selector)->match.attribute & (name))
 
+static int
+match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
+{
+	struct dom_string *selvalue = &selector->node.data.attribute.value;
+	struct dom_string *value = &attr->data.attribute.value;
+
+	/* The attribute selector value should atleast be contained in the
+	 * attribute value. */
+	if (value->length < selvalue->length)
+		return 0;
+
+	/* FIXME: Combine the 3 following to use an offset to specify where in
+	 * value, selvalue should match. */
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
+	    && dom_string_casecmp(value, selvalue))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
+		return 0;
+
+	/* FIXME: Combine the 3 following to simply strstr()-search the value
+	 * and based on a char group check if it is separated either by
+	 * begining, end or the values in the char group: '-' for
+	 * DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS))
+		return 0;
+
+	return 1;
+}
+
 /* Match the attribute of an element @node against attribute selector nodes
  * of a given @base. */
 static int
@@ -629,8 +674,6 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 	foreach_dom_node (selnodes, selnode, index) {
 		struct dom_select_node *selector = (void *) selnode;
 		struct dom_node *attr;
-		struct dom_string *value;
-		struct dom_string *selvalue;
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ID)) {
 			size_t idindex;
@@ -656,39 +699,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ANY))
 			continue;
 
-		value	 = &attr->data.attribute.value;
-		selvalue = &selnode->data.attribute.value;
-
-		/* The attribute selector value should atleast be contained in
-		 * the attribute value. */
-		if (value->length < selvalue->length)
-			return 0;
-
-		/* FIXME: Combine the 3 following to use an offset to specify
-		 * where in value, selvalue should match. */
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
-		    && dom_string_casecmp(value, selvalue))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
-			return 0;
-
-		/* FIXME: Combine the 3 following to simply strstr()-search the
-		 * value and based on a char group check if it is separated
-		 * either by begining, end or the values in the char group:
-		 * '-' for DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS))
+		if (!match_attribute_value(selector, attr))
 			return 0;
 	}
 
