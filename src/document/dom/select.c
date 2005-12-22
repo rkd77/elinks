@@ -738,10 +738,14 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 		break;
 	}
 
-	/* Root node are rooted at the don't have parent nodes. */
+	/* Root nodes either have no parents or are the single child of the
+	 * document node. */
 	if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
-	    && node->parent)
-		return 0;
+	    && node->parent) {
+		if (node->parent->type != DOM_NODE_DOCUMENT
+		    || node->parent->children->size > 1)
+			return 0;
+	}
 
 	if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
 	    && node->data.element.map->size > 0)
