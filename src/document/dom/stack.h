@@ -106,6 +106,19 @@ get_dom_stack_state_data(struct dom_stack_context *context,
 	return (void *) &context->state_objects[state->depth * object_size];
 }
 
+/* Define to have debug info about the nodes added printed to the log.
+ * Run as: ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect <url>
+ * to have the debug dumped into a file. */
+/*#define DOM_STACK_TRACE*/
+
+#ifdef DOM_STACK_TRACE
+extern struct dom_stack_context_info dom_stack_trace_context_info;
+#define add_dom_stack_tracer(stack) \
+	add_dom_stack_context(stack, NULL, &dom_stack_trace_context_info)
+#else
+#define add_dom_stack_tracer(stack) /* Nada */
+#endif
+
 /* The state iterators do not include the bottom state */
 
 #define foreach_dom_stack_state(stack, state, pos)			\

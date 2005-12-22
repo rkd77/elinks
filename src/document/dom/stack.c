@@ -336,3 +336,177 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 		pop_dom_node(stack);
 	}
 }
+
+
+/* DOM Stack Tracing: */
+
+#ifdef DOM_STACK_TRACE
+static inline unsigned char *
+compress_string(unsigned char *string, unsigned int length)
+{
+	struct string buffer;
+	unsigned char escape[2] = "\\";
+
+	if (!init_string(&buffer)) return NULL;
+
+	for (; length > 0; string++, length--) {
+		unsigned char *bytes = string;
+
+		if (*string == '\n' || *string == '\r' || *string == '\t') {
+			bytes	  = escape;
+			escape[1] = *string == '\n' ? 'n'
+				  : (*string == '\r' ? 'r' : 't');
+		}
+
+		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
+	}
+
+	return buffer.source;
+}
+
+/* @codepage denotes how entity strings should be decoded. */
+static void
+set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
+{
+	struct dom_string *value;
+
+	assert(node);
+
+	memset(string, 0, sizeof(*string));
+
+	switch (node->type) {
+	case DOM_NODE_ENTITY_REFERENCE:
+		/* XXX: The ASCII codepage is hardcoded here since we do not
+		 * want to depend on anything and this is really just for
+		 * debugging. */
+		string->string = get_entity_string(node->string.string,
+						   node->string.length, 0);
+		string->string = null_or_stracpy(string->string);
+		break;
+
+	default:
+		value = get_dom_node_value(node);
+		if (!value) {
+			set_dom_string(string, NULL, 0);
+			return;
+		}
+
+		string->string = compress_string(value->string, value->length);
+	}
+
+	string->length = string->string ? strlen(string->string) : 0;
+}
+
+static unsigned char indent_string[] =
+	"                                                                    ";
+
+#define get_indent_offset(stack) \
+	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
+
+static void
+dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_string *value = &node->string;
+	struct dom_string *name = get_dom_node_name(node);
+
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		name->length, name->string,
+		value->length, value->string);
+}
+
+static void
+dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_string value;
+	struct dom_string *name;
+	struct dom_string *id;
+
+	assert(node);
+
+	name	= get_dom_node_name(node);
+	id	= get_dom_node_type_name(node->type);
+	set_enhanced_dom_node_value(&value, node);
+
+	LOG_INFO("%.*s %.*s: %.*s -> %.*s",
+		get_indent_offset(stack), indent_string,
+		id->length, id->string, name->length, name->string,
+		value.length, value.string);
+
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
+}
+
+static void
+dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_string *name;
+	struct dom_string value;
+
+	assert(node);
+
+	name	= get_dom_node_name(node);
+	set_enhanced_dom_node_value(&value, node);
+
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		name->length, name->string,
+		value.length, value.string);
+
+	if (is_dom_string_set(&value))
+		done_dom_string(&value);
+}
+
+static void
+dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_string *name;
+	struct dom_string *id;
+
+	assert(node);
+
+	name	= get_dom_node_name(node);
+	id	= get_dom_node_type_name(node->type);
+
+	LOG_INFO("%.*s %.*s: %.*s",
+		get_indent_offset(stack), indent_string,
+		id->length, id->string, name->length, name->string);
+}
+
+struct dom_stack_context_info dom_stack_trace_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ dom_stack_trace_branch,
+		/* DOM_NODE_ATTRIBUTE		*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_TEXT		*/ dom_stack_trace_leaf,
+		/* DOM_NODE_CDATA_SECTION	*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_ENTITY		*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_COMMENT		*/ dom_stack_trace_leaf,
+		/* DOM_NODE_DOCUMENT		*/ dom_stack_trace,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ dom_stack_trace_id_leaf,
+		/* DOM_NODE_NOTATION		*/ dom_stack_trace_id_leaf,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
+#endif /* DOM_STACK_TRACE */
