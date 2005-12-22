@@ -613,7 +613,7 @@ static int
 match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 {
 	struct dom_string *selvalue = &selector->node.data.attribute.value;
-	struct dom_string *value = &attr->data.attribute.value;
+	struct dom_string *value = &node->data.attribute.value;
 
 	/* The attribute selector value should atleast be contained in the
 	 * attribute value. */
