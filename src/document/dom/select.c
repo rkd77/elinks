@@ -711,6 +711,61 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 
 #define get_dom_select_data(stack) ((stack)->current->data)
 
+static int
+match_element_selector(struct dom_select_node *selector, struct dom_node *node)
+{
+	/* Match the node. */
+	if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
+	    && dom_node_casecmp(&selector->node, node))
+		return 0;
+
+	switch (get_element_relation(selector)) {
+	case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
+		/* node->parent */
+		/* Check all states to see if node->parent is there
+		 * and for the right reasons. */
+		break;
+
+	case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
+		/* Get preceding node to see if it is on the stack. */
+		break;
+
+	case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
+		/* Check all states with same depth? */
+		break;
+
+	case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
+	default:
+		break;
+	}
+
+	/* Root node are rooted at the don't have parent nodes. */
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
+	    && node->parent)
+		return 0;
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
+	    && node->data.element.map->size > 0)
+		return 0;
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_CHILD)) {
+		/* FIXME */
+		return 0;
+	}
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_TYPE)) {
+		/* FIXME */
+		return 0;
+	}
+
+	/* Check attribute selectors. */
+	if (selector->node.data.element.map
+	    && !match_attribute_selectors(selector, node))
+		return 0;
+
+	return 1;
+}
+
 /* Matches an element node being visited against the current selector stack. */
 static void
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
@@ -728,53 +783,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 		 * on the select_data->stack, cache what select nodes was
 		 * matches so that it is only checked once. */
 
-		/* Match the node. */
-		if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
-		    && dom_node_casecmp(&selector->node, node))
-			continue;
-
-		switch (get_element_relation(selector)) {
-		case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
-			/* node->parent */
-			/* Check all states to see if node->parent is there
-			 * and for the right reasons. */
-			break;
-
-		case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
-			/* Get preceding node to see if it is on the stack. */
-			break;
-
-		case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
-			/* Check all states with same depth? */
-			break;
-
-		case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
-		default:
-			break;
-		}
-
-		/* Roots don't have parent nodes. */
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
-		    && node->parent)
-			continue;
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
-		    && node->data.element.map->size > 0)
-			continue;
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_CHILD)) {
-			/* FIXME */
-			continue;
-		}
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_TYPE)) {
-			/* FIXME */
-			continue;
-		}
-
-		/* Check attribute selectors. */
-		if (selector->node.data.element.map
-		    && !match_attribute_selectors(selector, node))
+		if (!match_element_selector(selector, node))
 			continue;
 
 		WDBG("Matched element: %.*s.", node->string.length, node->string.string);
