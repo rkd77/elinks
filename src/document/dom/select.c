@@ -16,6 +16,7 @@
 #include "util/string.h"
 
 
+/* Maps the content of a scanner token to a pseudo-class or -element ID. */
 static enum dom_select_pseudo
 get_dom_select_pseudo(struct scanner_token *token)
 {
@@ -79,20 +80,26 @@ get_dom_select_pseudo(struct scanner_token *token)
 	return DOM_SELECT_PSEUDO_UNKNOWN;
 }
 
-
+/* Parses attribute selector. For example '[foo="bar"]' or '[foo|="boo"]'. */
 static enum dom_exception_code
 parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
 
+	/* Get '['. */
+
 	if (token->type != '[')
 		return DOM_ERR_INVALID_STATE;
+
+	/* Get the attribute name. */
 
 	token = get_next_scanner_token(scanner);
 	if (!token || token->type != CSS_TOKEN_IDENT)
 		return DOM_ERR_SYNTAX;
 
 	set_dom_string(&sel->node.string, token->string, token->length);
+
+	/* Get the optional '=' combo or ending ']'. */
 
 	token = get_next_scanner_token(scanner);
 	if (!token) return DOM_ERR_SYNTAX;
@@ -126,6 +133,8 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 		return DOM_ERR_SYNTAX;
 	}
 
+	/* Get the required value. */
+
 	token = get_next_scanner_token(scanner);
 	if (!token) return DOM_ERR_SYNTAX;
 
@@ -138,6 +147,8 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 	default:
 		return DOM_ERR_SYNTAX;
 	}
+
+	/* Get the ending ']'. */
 
 	token = get_next_scanner_token(scanner);
 	if (token && token->type == ']')
@@ -157,6 +168,7 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
  *   0n+0		
  */
 
+/* FIXME: Move somewhere else? util/scanner.h? */
 static size_t
 get_scanner_token_number(struct scanner_token *token)
 {
@@ -178,6 +190,7 @@ get_scanner_token_number(struct scanner_token *token)
 	return number;
 }
 
+/* Parses the '(...)' part of ':nth-of-type(...)' and ':nth-child(...)'. */
 static enum dom_exception_code
 parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scanner)
 {
@@ -276,6 +289,7 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scann
 	return DOM_ERR_SYNTAX;
 }
 
+/* Parse a pseudo-class or -element with the syntax: ':<ident>'. */
 static enum dom_exception_code
 parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 			struct scanner *scanner)
@@ -284,7 +298,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	enum dom_select_pseudo pseudo;
 	enum dom_exception_code code;
 
-	/* Skip double :'s in front of some pseudo's */
+	/* Skip double :'s in front of some pseudo's (::first-line, etc.) */
 	do {
 		token = get_next_scanner_token(scanner);
 	} while (token && token->type == ':');
@@ -365,9 +379,12 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	return DOM_ERR_NONE;
 }
 
+/* The element relation flags are mutual exclusive. This macro can be used
+ * for checking if anyflag is set. */
 #define get_element_relation(sel) \
 	((sel)->match.element & DOM_SELECT_RELATION_FLAGS)
 
+/* Parse a CSS3 selector and add selector nodes to the @select struct. */
 static enum dom_exception_code
 parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		 unsigned char *string, int length)
@@ -463,7 +480,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			continue;
 
 		WDBG("Adding %s: %.*s", (sel.node.type == DOM_NODE_ELEMENT) ? "element" : "attr", sel.node.string.length, sel.node.string.string);
-		/* FIXME */
+		/* FIXME: Use the stack to push added nodes and to get the
+		 * parent node. */
 		select_node = mem_calloc(1, sizeof(*select_node));
 		copy_struct(select_node, &sel);
 
@@ -500,6 +518,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 	return DOM_ERR_INVALID_STATE;
 }
 
+/* Basically this is just a wrapper for parse_dom_select() to ease error
+ * handling. */
 struct dom_select *
 init_dom_select(enum dom_select_syntax syntax,
 		unsigned char *string, int length)
@@ -527,6 +547,7 @@ done_dom_select(struct dom_select *select)
 	if (select->selector) {
 		struct dom_node *node = (struct dom_node *) select->selector;
 
+		/* This will recursively free all children select nodes. */
 		done_dom_node(node);
 	}
 
@@ -534,17 +555,33 @@ done_dom_select(struct dom_select *select)
 }
 
 
+/* This struct stores data related to the 'application' of a DOM selector
+ * on a DOM tree or stream. */
 struct dom_select_data {
+	/* The selector matching stack. The various selector nodes are pushed
+	 * onto this stack as they are matched (and later popped when they are
+	 * no longer 'reachable', that is, has been popped from the DOM tree or
+	 * stream. This way the selector can match each selector node multiple
+	 * times and the selection is a simple matter of matching the current
+	 * node against each state on this stack. */
 	struct dom_stack stack;
+
+	/* Reference to the selector. */
 	struct dom_select *select;
+
+	/* The list of nodes who have been matched / selected. */
 	struct dom_node_list *list;
 };
 
+/* This state struct is used for the select data stack and holds info about the
+ * node that was matched. */
 struct dom_select_state {
+	/* The matched node. This is always an element node. */
 	struct dom_node *node;
 };
 
-
+/* FIXME: This really does not belong here and should probably go to
+ * document/dom/node.[ch] or something. */
 static int
 compare_element_type(struct dom_node *node1, struct dom_node *node2)
 {
@@ -557,6 +594,8 @@ compare_element_type(struct dom_node *node1, struct dom_node *node2)
 	return dom_string_casecmp(&node1->string, &node2->string);
 }
 
+/* Get a child node of a given type. By design, a selector node can
+ * only have one child per type of node. */
 static struct dom_select_node *
 get_child_dom_select_node(struct dom_select_node *selector,
 			  enum dom_node_type type)
@@ -580,6 +619,8 @@ get_child_dom_select_node(struct dom_select_node *selector,
 #define has_attribute_match(selector, name) \
 	((selector)->match.attribute & (name))
 
+/* Match the attribute of an element @node against attribute selector nodes
+ * of a given @base. */
 static int
 match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 {
@@ -591,9 +632,11 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 	assert(base->node.type == DOM_NODE_ELEMENT
 	       && node->type == DOM_NODE_ELEMENT);
 
+	/* If there are no attribute selectors that is a clean match ... */
 	if (!selnodes)
 		return 1;
 
+	/* ... the opposite goes if there are no attributes to match. */
 	if (!attrs)
 		return 0;
 
@@ -630,8 +673,13 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 		value	 = &attr->data.attribute.value;
 		selvalue = &selnode->data.attribute.value;
 
+		/* The attribute selector value should atleast be contained in
+		 * the attribute value. */
 		if (value->length < selvalue->length)
 			return 0;
+
+		/* FIXME: Combine the 3 following to use an offset to specify
+		 * where in value, selvalue should match. */
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
 		    && dom_string_casecmp(value, selvalue))
@@ -642,6 +690,11 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
 			return 0;
+
+		/* FIXME: Combine the 3 following to simply strstr()-search the
+		 * value and based on a char group check if it is separated
+		 * either by begining, end or the values in the char group:
+		 * '-' for DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
 			return 0;
@@ -661,6 +714,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 
 #define get_dom_select_data(stack) ((stack)->current->data)
 
+/* Matches an element node being visited against the current selector stack. */
 static void
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -672,6 +726,10 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 
 	foreach_dom_stack_state(&select_data->stack, state, pos) {
 		struct dom_select_node *selector = (void *) state->node;
+
+		/* FIXME: Since the same dom_select_node can be multiple times
+		 * on the select_data->stack, cache what select nodes was
+		 * matches so that it is only checked once. */
 
 		/* Match the node. */
 		if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
@@ -731,6 +789,8 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 	}
 }
 
+/* Ensures that nodes, no longer 'reachable' on the stack do not have any
+ * states associated with them on the select data stack. */
 static void
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -765,6 +825,9 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 	}
 }
 
+/* For now this is only for matching the ':contains(<string>)' pseudo-class.
+ * Any node which can contain text and thus characters from the given <string>
+ * are handled in this common callback. */
 static void
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -791,6 +854,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	}
 }
 
+/* Context info for interacting with the DOM tree or stream stack. */
 static struct dom_stack_context_info dom_select_context_info = {
 	/* Object size: */			0,
 	/* Push: */
@@ -827,6 +891,7 @@ static struct dom_stack_context_info dom_select_context_info = {
 	}
 };
 
+/* Context info related to the private select data stack of matched nodes. */
 static struct dom_stack_context_info dom_select_data_context_info = {
 	/* Object size: */			sizeof(struct dom_select_state),
 	/* Push: */
