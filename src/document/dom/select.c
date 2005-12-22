@@ -714,7 +714,6 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 static int
 match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 {
-	/* Match the node. */
 	if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
 	    && dom_node_casecmp(&selector->node, node))
 		return 0;
@@ -765,6 +764,7 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 
 	return 1;
 }
+
 
 /* Matches an element node being visited against the current selector stack. */
 static void
@@ -933,6 +933,7 @@ static struct dom_stack_context_info dom_select_data_context_info = {
 		/* DOM_NODE_NOTATION		*/ NULL,
 	}
 };
+
 
 struct dom_node_list *
 select_dom_nodes(struct dom_select *select, struct dom_node *root)
