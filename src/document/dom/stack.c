@@ -262,6 +262,8 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 	return NULL;
 }
 
+/* FIXME: Instead of walking all nodes in the tree only visit those which are
+ * of actual interest to the contexts on the stack. */
 void
 walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 {
