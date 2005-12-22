@@ -299,11 +299,8 @@ struct dom_string *get_dom_node_value(struct dom_node *node);
 /* Returns the name used for identifying the node type. */
 struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
-/* Returns a pointer to a node list containing attributes. */
-#define get_dom_node_attributes(node)					\
-	((node)->type == DOM_NODE_ELEMENT ? &(node)->data.element.map	\
-					  : NULL)
-
+/* Based on the type of the parent and the node return a proper list
+ * or NULL. This is useful when adding a node to a parent node. */
 static inline struct dom_node_list **
 get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 {
