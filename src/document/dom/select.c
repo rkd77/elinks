@@ -714,6 +714,8 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 static int
 match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 {
+	assert(node && node->type == DOM_NODE_ELEMENT);
+
 	if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
 	    && dom_node_casecmp(&selector->node, node))
 		return 0;
@@ -748,7 +750,8 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 	}
 
 	if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
-	    && node->data.element.map->size > 0)
+	    && node->data.element.children
+	    && node->data.element.children->size > 0)
 		return 0;
 
 	if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_CHILD)) {
