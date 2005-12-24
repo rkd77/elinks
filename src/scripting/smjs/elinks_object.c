@@ -10,6 +10,7 @@
 #include "scripting/scripting.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
+#include "scripting/smjs/global_object.h"
 
 
 static JSBool
@@ -45,12 +46,12 @@ static const JSFunctionSpec elinks_funcs[] = {
 };
 
 JSObject *
-smjs_get_elinks_object(JSObject *global_object)
+smjs_get_elinks_object(void)
 {
 	assert(smjs_ctx);
-	assert(global_object);
+	assert(smjs_global_object);
 
-	return JS_InitClass(smjs_ctx, global_object, NULL,
+	return JS_InitClass(smjs_ctx, smjs_global_object, NULL,
 	                    (JSClass *) &elinks_class, NULL, 0, NULL,
 	                    (JSFunctionSpec *) elinks_funcs, NULL, NULL);
 }
