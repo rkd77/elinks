@@ -45,7 +45,7 @@ static const JSFunctionSpec elinks_funcs[] = {
 	{ NULL }
 };
 
-JSObject *
+static JSObject *
 smjs_get_elinks_object(void)
 {
 	assert(smjs_ctx);
@@ -54,6 +54,12 @@ smjs_get_elinks_object(void)
 	return JS_InitClass(smjs_ctx, smjs_global_object, NULL,
 	                    (JSClass *) &elinks_class, NULL, 0, NULL,
 	                    (JSFunctionSpec *) elinks_funcs, NULL, NULL);
+}
+
+void
+smjs_init_elinks_object(void)
+{
+	smjs_elinks_object = smjs_get_elinks_object();
 }
 
 /* If elinks.<method> is defined, call it with the given arguments,

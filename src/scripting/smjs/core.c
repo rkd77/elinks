@@ -112,7 +112,7 @@ init_smjs(struct module *module)
 
 	smjs_init_global_object();
 
-	smjs_elinks_object = smjs_get_elinks_object();
+	smjs_init_elinks_object();
 
 	smjs_load_hooks();
 }
