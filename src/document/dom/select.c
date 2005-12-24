@@ -16,6 +16,8 @@
 #include "util/string.h"
 
 
+/* Selector parsing: */
+
 /* Maps the content of a scanner token to a pseudo-class or -element ID. */
 static enum dom_select_pseudo
 get_dom_select_pseudo(struct scanner_token *token)
@@ -555,6 +557,8 @@ done_dom_select(struct dom_select *select)
 }
 
 
+/* DOM node selection: */
+
 /* This struct stores data related to the 'application' of a DOM selector
  * on a DOM tree or stream. */
 struct dom_select_data {
@@ -605,6 +609,47 @@ get_child_dom_select_node(struct dom_select_node *selector,
 #define has_attribute_match(selector, name) \
 	((selector)->match.attribute & (name))
 
+static int
+match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
+{
+	struct dom_string *selvalue = &selector->node.data.attribute.value;
+	struct dom_string *value = &node->data.attribute.value;
+
+	/* The attribute selector value should atleast be contained in the
+	 * attribute value. */
+	if (value->length < selvalue->length)
+		return 0;
+
+	/* FIXME: Combine the 3 following to use an offset to specify where in
+	 * value, selvalue should match. */
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
+	    && dom_string_casecmp(value, selvalue))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
+		return 0;
+
+	/* FIXME: Combine the 3 following to simply strstr()-search the value
+	 * and based on a char group check if it is separated either by
+	 * begining, end or the values in the char group: '-' for
+	 * DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST))
+		return 0;
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS))
+		return 0;
+
+	return 1;
+}
+
 /* Match the attribute of an element @node against attribute selector nodes
  * of a given @base. */
 static int
@@ -629,8 +674,6 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 	foreach_dom_node (selnodes, selnode, index) {
 		struct dom_select_node *selector = (void *) selnode;
 		struct dom_node *attr;
-		struct dom_string *value;
-		struct dom_string *selvalue;
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ID)) {
 			size_t idindex;
@@ -656,39 +699,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ANY))
 			continue;
 
-		value	 = &attr->data.attribute.value;
-		selvalue = &selnode->data.attribute.value;
-
-		/* The attribute selector value should atleast be contained in
-		 * the attribute value. */
-		if (value->length < selvalue->length)
-			return 0;
-
-		/* FIXME: Combine the 3 following to use an offset to specify
-		 * where in value, selvalue should match. */
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
-		    && dom_string_casecmp(value, selvalue))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
-			return 0;
-
-		/* FIXME: Combine the 3 following to simply strstr()-search the
-		 * value and based on a char group check if it is separated
-		 * either by begining, end or the values in the char group:
-		 * '-' for DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST))
-			return 0;
-
-		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS))
+		if (!match_attribute_value(selector, attr))
 			return 0;
 	}
 
@@ -699,6 +710,68 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 	((selector)->match.element & (name))
 
 #define get_dom_select_data(stack) ((stack)->current->data)
+
+static int
+match_element_selector(struct dom_select_node *selector, struct dom_node *node)
+{
+	assert(node && node->type == DOM_NODE_ELEMENT);
+
+	if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
+	    && dom_node_casecmp(&selector->node, node))
+		return 0;
+
+	switch (get_element_relation(selector)) {
+	case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
+		/* node->parent */
+		/* Check all states to see if node->parent is there
+		 * and for the right reasons. */
+		break;
+
+	case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
+		/* Get preceding node to see if it is on the stack. */
+		break;
+
+	case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
+		/* Check all states with same depth? */
+		break;
+
+	case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
+	default:
+		break;
+	}
+
+	/* Root nodes either have no parents or are the single child of the
+	 * document node. */
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
+	    && node->parent) {
+		if (node->parent->type != DOM_NODE_DOCUMENT
+		    || node->parent->children->size > 1)
+			return 0;
+	}
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
+	    && node->data.element.children
+	    && node->data.element.children->size > 0)
+		return 0;
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_CHILD)) {
+		/* FIXME */
+		return 0;
+	}
+
+	if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_TYPE)) {
+		/* FIXME */
+		return 0;
+	}
+
+	/* Check attribute selectors. */
+	if (selector->node.data.element.map
+	    && !match_attribute_selectors(selector, node))
+		return 0;
+
+	return 1;
+}
+
 
 /* Matches an element node being visited against the current selector stack. */
 static void
@@ -717,53 +790,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 		 * on the select_data->stack, cache what select nodes was
 		 * matches so that it is only checked once. */
 
-		/* Match the node. */
-		if (!has_element_match(selector, DOM_SELECT_ELEMENT_UNIVERSAL)
-		    && dom_node_casecmp(&selector->node, node))
-			continue;
-
-		switch (get_element_relation(selector)) {
-		case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
-			/* node->parent */
-			/* Check all states to see if node->parent is there
-			 * and for the right reasons. */
-			break;
-
-		case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
-			/* Get preceding node to see if it is on the stack. */
-			break;
-
-		case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
-			/* Check all states with same depth? */
-			break;
-
-		case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
-		default:
-			break;
-		}
-
-		/* Roots don't have parent nodes. */
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
-		    && node->parent)
-			continue;
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_EMPTY)
-		    && node->data.element.map->size > 0)
-			continue;
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_CHILD)) {
-			/* FIXME */
-			continue;
-		}
-
-		if (has_element_match(selector, DOM_SELECT_ELEMENT_NTH_TYPE)) {
-			/* FIXME */
-			continue;
-		}
-
-		/* Check attribute selectors. */
-		if (selector->node.data.element.map
-		    && !match_attribute_selectors(selector, node))
+		if (!match_element_selector(selector, node))
 			continue;
 
 		WDBG("Matched element: %.*s.", node->string.length, node->string.string);
@@ -913,6 +940,7 @@ static struct dom_stack_context_info dom_select_data_context_info = {
 		/* DOM_NODE_NOTATION		*/ NULL,
 	}
 };
+
 
 struct dom_node_list *
 select_dom_nodes(struct dom_select *select, struct dom_node *root)
