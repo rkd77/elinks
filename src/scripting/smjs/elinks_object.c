@@ -40,24 +40,19 @@ elinks_goto_url(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 {
 	unsigned char *url;
 
-	if (argc != 1)
-		goto ret_false;
+	if (argc != 1 || !smjs_ses) {
+		*rval = JSVAL_FALSE;
+
+		return JS_TRUE;
+	}
 
 	url = jsval_to_string(ctx, &argv[0]);
 	if (!*url)
 		return JS_FALSE;
 
-	if (!smjs_ses)
-		goto ret_false;
-
 	goto_url(smjs_ses, url);
 
 	*rval = JSVAL_TRUE;
-
-	return JS_TRUE;
-
-ret_false:
-	*rval = JSVAL_FALSE;
 
 	return JS_TRUE;
 }
