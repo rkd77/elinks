@@ -745,7 +745,7 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 	if (has_element_match(selector, DOM_SELECT_ELEMENT_ROOT)
 	    && node->parent) {
 		if (node->parent->type != DOM_NODE_DOCUMENT
-		    || node->parent->children->size > 1)
+		    || node->parent->data.document.children->size > 1)
 			return 0;
 	}
 
