@@ -12,6 +12,7 @@
 #include "scripting/scripting.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
+#include "scripting/smjs/global_object.h"
 #include "scripting/smjs/smjs.h"
 #include "util/string.h"
 
@@ -97,12 +98,6 @@ smjs_load_hooks(void)
 void
 init_smjs(struct module *module)
 {
-	static const JSClass global_class = {
-		"global", 0,
-		JS_PropertyStub, JS_PropertyStub,
-		JS_PropertyStub, JS_PropertyStub,
-		JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
-	};
 	JSObject *global_object;
 
 	smjs_rt = JS_NewRuntime(1L * 1024L * 1024L);
@@ -117,11 +112,7 @@ init_smjs(struct module *module)
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
-	global_object = JS_NewObject(smjs_ctx, (JSClass *) &global_class,
-	                             NULL, NULL);
-	if (!global_object) return;
-
-	JS_InitStandardClasses(smjs_ctx, global_object);
+	global_object = smjs_get_global_object();
 
 	smjs_elinks_object = smjs_get_elinks_object(global_object);
 
