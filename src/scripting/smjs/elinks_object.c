@@ -11,6 +11,7 @@
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/global_object.h"
+#include "scripting/smjs/keybinding.h"
 
 
 static JSBool
@@ -60,6 +61,8 @@ void
 smjs_init_elinks_object(void)
 {
 	smjs_elinks_object = smjs_get_elinks_object();
+
+	smjs_init_keybinding_interface();
 }
 
 /* If elinks.<method> is defined, call it with the given arguments,

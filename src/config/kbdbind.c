@@ -227,6 +227,26 @@ static struct keymap keymap_table[] = {
  * Config file helpers.
  */
 
+static struct action *
+get_action_from_keystroke(enum keymap_id keymap_id,
+                          unsigned char *keystroke_str)
+{
+	struct keybinding *keybinding = kbd_stroke_lookup(keymap_id,
+	                                                  keystroke_str);
+
+	return keybinding ? get_action(keymap_id, keybinding->action_id) : NULL;
+}
+
+unsigned char *
+get_action_name_from_keystroke(enum keymap_id keymap_id,
+                               unsigned char *keystroke_str)
+{
+	struct action *action = get_action_from_keystroke(keymap_id,
+	                                                  keystroke_str);
+
+	return action ? action->str : NULL;
+}
+
 action_id_T
 get_action_from_string(enum keymap_id keymap_id, unsigned char *str)
 {
