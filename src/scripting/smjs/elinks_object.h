@@ -3,6 +3,8 @@
 
 #include "ecmascript/spidermonkey/util.h"
 
+/* This is the all-powerful elinks object through which all client scripts
+ * will interface with ELinks. */
 extern JSObject *smjs_elinks_object;
 
 /* Initialise elinks_object. */
