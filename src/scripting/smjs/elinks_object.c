@@ -12,6 +12,7 @@
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/global_object.h"
 #include "scripting/smjs/keybinding.h"
+#include "session/task.h"
 
 
 static JSBool
@@ -33,6 +34,34 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
+static JSBool
+elinks_goto_url(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
+                jsval *rval)
+{
+	unsigned char *url;
+
+	if (argc != 1)
+		goto ret_false;
+
+	url = jsval_to_string(ctx, &argv[0]);
+	if (!*url)
+		return JS_FALSE;
+
+	if (!smjs_ses)
+		goto ret_false;
+
+	goto_url(smjs_ses, url);
+
+	*rval = JSVAL_TRUE;
+
+	return JS_TRUE;
+
+ret_false:
+	*rval = JSVAL_FALSE;
+
+	return JS_TRUE;
+}
+
 static const JSClass elinks_class = {
 	"elinks",
 	0,
@@ -43,6 +72,7 @@ static const JSClass elinks_class = {
 
 static const JSFunctionSpec elinks_funcs[] = {
 	{ "alert",	elinks_alert,		1 },
+	{ "goto_url",   elinks_goto_url,        1 },
 	{ NULL }
 };
 
