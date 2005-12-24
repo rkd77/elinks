@@ -3,6 +3,8 @@
 
 #include "ecmascript/spidermonkey/util.h"
 
+extern JSObject *smjs_elinks_object;
+
 /* Initialise elinks_object. */
 void smjs_init_elinks_object(void);
 
