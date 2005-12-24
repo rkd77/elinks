@@ -22,7 +22,7 @@ static const JSClass global_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-JSObject *
+static JSObject *
 smjs_get_global_object(void)
 {
 	JSObject *jsobj;
@@ -36,4 +36,10 @@ smjs_get_global_object(void)
 	JS_InitStandardClasses(smjs_ctx, jsobj);
 
 	return jsobj;
+}
+
+void
+smjs_init_global_object(void)
+{
+	smjs_global_object = smjs_get_global_object();
 }

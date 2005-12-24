@@ -98,8 +98,6 @@ smjs_load_hooks(void)
 void
 init_smjs(struct module *module)
 {
-	JSObject *global_object;
-
 	smjs_rt = JS_NewRuntime(1L * 1024L * 1024L);
 	if (!smjs_rt) return;
 
@@ -112,9 +110,9 @@ init_smjs(struct module *module)
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
-	global_object = smjs_get_global_object();
+	smjs_init_global_object();
 
-	smjs_elinks_object = smjs_get_elinks_object(global_object);
+	smjs_elinks_object = smjs_get_elinks_object(smjs_global_object);
 
 	smjs_load_hooks();
 }
