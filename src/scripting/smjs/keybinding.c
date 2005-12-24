@@ -48,7 +48,11 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 	assert(func);
 
+	smjs_ses = ses;
+
 	JS_CallFunction(smjs_ctx, NULL, func, 0, NULL, &rval);
+
+	smjs_ses = NULL;
 
 	return EVENT_HOOK_STATUS_LAST;
 }
