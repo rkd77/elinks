@@ -204,6 +204,17 @@ kbd_nm_lookup(enum keymap_id keymap_id, unsigned char *name)
 	return kbd_act_lookup(keymap_id, action_id);
 }
 
+static struct keybinding *
+kbd_stroke_lookup(enum keymap_id keymap_id, unsigned char *keystroke_str)
+{
+	struct term_event_keyboard kbd;
+
+	if (parse_keystroke(keystroke_str, &kbd) < 0)
+		return NULL;
+
+	return kbd_ev_lookup(keymap_id, &kbd, NULL);
+}
+
 
 static struct keymap keymap_table[] = {
 	{ "main", KEYMAP_MAIN, N_("Main mapping") },
@@ -854,7 +865,6 @@ unsigned char *
 bind_act(unsigned char *keymap_str, unsigned char *keystroke_str)
 {
 	enum keymap_id keymap_id;
-	struct term_event_keyboard kbd;
 	unsigned char *action;
 	struct keybinding *keybinding;
 
@@ -862,10 +872,7 @@ bind_act(unsigned char *keymap_str, unsigned char *keystroke_str)
 	if (keymap_id < 0)
 		return NULL;
 
-	if (parse_keystroke(keystroke_str, &kbd) < 0)
-		return NULL;
-
-	keybinding = kbd_ev_lookup(keymap_id, &kbd, NULL);
+	keybinding = kbd_stroke_lookup(keymap_id, keystroke_str);
 	if (!keybinding) return NULL;
 
 	action = get_action_name(keymap_id, keybinding->action_id);
