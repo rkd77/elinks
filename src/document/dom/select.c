@@ -940,22 +940,11 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 		struct dom_select_node *selector = (void *) state->node;
 		struct dom_select_state *select_state;
 
-		/* XXX: Assume that it is the first stack context! */
-		select_state = get_dom_stack_state_data(stack->contexts, state);
+		select_state = get_dom_select_state(stack, state);
 		if (select_state->node == node) {
 			pop_dom_state(stack, state);
 			WDBG("Remove element.");
 			continue;
-		}
-
-		/* FIXME: Pop states that no longer lives up to a relation. */
-		switch (get_element_relation(selector)) {
-		case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
-		case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
-		case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
-		case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
-		default:
-			break;
 		}
 	}
 }
