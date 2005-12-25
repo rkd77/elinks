@@ -455,19 +455,19 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			break;
 
 		case '>':
-			if (get_element_relation(&sel))
+			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
 				return DOM_ERR_SYNTAX;
 			sel.match.element |= DOM_SELECT_RELATION_DIRECT_CHILD;
 			break;
 
 		case '+':
-			if (get_element_relation(&sel))
+			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
 				return DOM_ERR_SYNTAX;
 			sel.match.element |= DOM_SELECT_RELATION_DIRECT_ADJACENT;
 			break;
 
 		case '~':
-			if (get_element_relation(&sel))
+			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
 				return DOM_ERR_SYNTAX;
 			sel.match.element |= DOM_SELECT_RELATION_INDIRECT_ADJACENT;
 			break;
@@ -706,11 +706,87 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 	return 1;
 }
 
+/* XXX: Assume the first context is the one! */
+#define get_dom_select_state(stack, state) \
+	((struct dom_select_state *) get_dom_stack_state_data((stack)->contexts, state))
+
+static int
+match_element_relation(struct dom_select_node *selector, struct dom_node *node,
+		       struct dom_stack *stack)
+{
+	struct dom_stack_state *state;
+	enum dom_select_element_match relation = get_element_relation(selector);
+	int i, index;
+
+	assert(relation);
+
+	/* When matching any relation there must be a parent, either so that
+	 * the node is a descendant or it is possible to check for siblings. */
+	if (!node->parent)
+		return 0;
+
+	if (relation != DOM_SELECT_RELATION_DIRECT_CHILD) {
+		/* When looking for preceeding siblings of the current node,
+		 * the current node cannot be first or not in the list (-1). */
+		index = get_dom_node_list_index(node->parent, node);
+		if (index < 1)
+			return 0;
+	} else {
+		index = -1;
+	}
+
+	/* Find states which hold the parent of the current selector
+	 * and check if the parent selector's node is the parent of the
+	 * current node. */
+	foreachback_dom_stack_state(stack, state, i) {
+		struct dom_node *selnode;
+
+		/* We are only interested in states which hold the parent of
+		 * the current selector. */
+		if (state->node != selector->node.parent)
+			continue;
+
+		selnode = get_dom_select_state(stack, state)->node;
+
+		if (relation == DOM_SELECT_RELATION_DIRECT_CHILD) {
+			/* Check if the parent selector's node is the parent of
+			 * the current node. */
+			if (selnode == node->parent)
+				return 1;
+
+		} else {
+			int sibindex;
+
+			/* Check if they are siblings. */
+			if (selnode->parent != node->parent)
+				continue;
+
+			sibindex = get_dom_node_list_index(node->parent, selnode);
+
+			if (relation == DOM_SELECT_RELATION_DIRECT_ADJACENT) {
+				/* Check if the sibling node immediately
+				 * preceeds the current node. */
+				if (sibindex + 1 == index)
+					return 1;
+
+			} else { /* DOM_SELECT_RELATION_INDIRECT_ADJACENT */
+				/* Check if the sibling node preceeds the
+				 * current node. */
+				if (sibindex < index)
+					return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
 #define has_element_match(selector, name) \
 	((selector)->match.element & (name))
 
 static int
-match_element_selector(struct dom_select_node *selector, struct dom_node *node)
+match_element_selector(struct dom_select_node *selector, struct dom_node *node,
+		       struct dom_stack *stack)
 {
 	assert(node && node->type == DOM_NODE_ELEMENT);
 
@@ -718,25 +794,9 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 	    && dom_node_casecmp(&selector->node, node))
 		return 0;
 
-	switch (get_element_relation(selector)) {
-	case DOM_SELECT_RELATION_DIRECT_CHILD:		/* E > F */
-		/* node->parent */
-		/* Check all states to see if node->parent is there
-		 * and for the right reasons. */
-		break;
-
-	case DOM_SELECT_RELATION_DIRECT_ADJACENT:	/* E + F */
-		/* Get preceding node to see if it is on the stack. */
-		break;
-
-	case DOM_SELECT_RELATION_INDIRECT_ADJACENT:	/* E ~ F */
-		/* Check all states with same depth? */
-		break;
-
-	case DOM_SELECT_RELATION_DESCENDANT:		/* E   F */
-	default:
-		break;
-	}
+	if (get_element_relation(selector) != DOM_SELECT_RELATION_DESCENDANT
+	    && !match_element_relation(selector, node, stack))
+		return 0;
 
 	/* Root nodes either have no parents or are the single child of the
 	 * document node. */
@@ -790,7 +850,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 		 * on the select_data->stack, cache what select nodes was
 		 * matches so that it is only checked once. */
 
-		if (!match_element_selector(selector, node))
+		if (!match_element_selector(selector, node, &select_data->stack))
 			continue;
 
 		WDBG("Matched element: %.*s.", node->string.length, node->string.string);
