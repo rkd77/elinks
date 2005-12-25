@@ -228,6 +228,23 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 	return dom_node_list_bsearch(&search, list);
 }
 
+int
+get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
+{
+	struct dom_node_list **list = get_dom_node_list(parent, node);
+	struct dom_node *entry;
+	int i;
+
+	if (!list) return -1;
+
+	foreach_dom_node (*list, entry, i) {
+		if (entry == node)
+			return i;
+	}
+
+	return -1;
+}
+
 /* Nodes */
 
 struct dom_node *

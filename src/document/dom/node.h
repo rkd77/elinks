@@ -233,6 +233,11 @@ add_to_dom_node_list(struct dom_node_list **list_ptr,
 
 void done_dom_node_list(struct dom_node_list *list);
 
+/* Returns the position or index where the @node has been inserted into the
+ * 'default' list of the @parent node. (Default means use get_dom_node_list()
+ * to acquire the list to search in. Returns -1, if the node is not found. */
+int get_dom_node_list_index(struct dom_node *parent, struct dom_node *node);
+
 /* Returns the position or index where the @node should be inserted into the
  * node @list in order to the list to be alphabetically sorted.  Assumes that
  * @list is already sorted properly. */
