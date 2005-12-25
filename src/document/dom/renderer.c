@@ -430,12 +430,17 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 	unsigned char *string = node->string.string;
 	int length = node->string.length;
 	struct screen_char *template = &renderer->styles[node->type];
+	unsigned char *alloc_string;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
 		renderer->position = string + length;
 		assert_source(renderer, renderer->position, 0);
 	}
+
+	alloc_string = memacpy(string, length);
+	if (alloc_string)
+		string = alloc_string;
 
 	while (length > 0 && !regexec(regex, string, 1, &regmatch, 0)) {
 		int matchlen = regmatch.rm_eo - regmatch.rm_so;
@@ -458,6 +463,8 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 
 	if (length > 0)
 		render_dom_text(renderer, template, string, length);
+
+	mem_free_if(alloc_string);
 }
 #endif
 
