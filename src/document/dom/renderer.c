@@ -56,7 +56,7 @@ struct dom_renderer {
 	struct screen_char styles[DOM_NODES];
 };
 
-#define URL_REGEX "(ftp|http)://[[:alnum:]]+([-_\\.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(\\/{1}[-_~&=;\\?\\.a-z0-9]*)*"
+#define URL_REGEX "((f|ht|nt)tp(s)?|smb|file)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
 #define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
 
 static void
