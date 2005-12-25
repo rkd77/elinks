@@ -88,7 +88,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 		return FRAME_EVENT_OK;
 
 	if (action_requires_link(KEYMAP_MAIN, action_id)
-	    && (!doc_view || !doc_view->vs || doc_view->vs->current_link == -1))
+	    && !link)
 		goto ignore_action;
 
 	if (!action_is_anonymous_safe(KEYMAP_MAIN, action_id)
