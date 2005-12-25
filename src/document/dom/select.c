@@ -709,8 +709,6 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 #define has_element_match(selector, name) \
 	((selector)->match.element & (name))
 
-#define get_dom_select_data(stack) ((stack)->current->data)
-
 static int
 match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 {
@@ -772,6 +770,8 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node)
 	return 1;
 }
 
+
+#define get_dom_select_data(stack) ((stack)->current->data)
 
 /* Matches an element node being visited against the current selector stack. */
 static void
