@@ -311,6 +311,34 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 	}
 }
 
+static void
+sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct sgml_parser *parser = get_sgml_parser(stack);
+	struct sgml_parsing_state *parsing = data;
+	unsigned char *source = node->string.string;
+	unsigned char *end = source + node->string.length;
+
+	parsing->depth = parser->stack.depth;
+	get_dom_stack_top(&parser->stack)->immutable = 1;
+	init_scanner(&parsing->scanner, &sgml_scanner_info, source, end);
+}
+
+static void
+sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct sgml_parser *parser = get_sgml_parser(stack);
+	struct sgml_parsing_state *parsing = data;
+
+	/* Pop the stack back to the state it was in. This includes cleaning
+	 * away even immutable states left on the stack. */
+	while (parsing->depth < parser->stack.depth) {
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		pop_dom_node(&parser->stack);
+	}
+
+	assert(parsing->depth == parser->stack.depth);
+}
 
 static struct dom_stack_context_info sgml_parser_context_info = {
 	/* Object size: */			sizeof(struct sgml_parser_state),
@@ -348,6 +376,42 @@ static struct dom_stack_context_info sgml_parser_context_info = {
 	}
 };
 
+static struct dom_stack_context_info sgml_parsing_context_info = {
+	/* Object size: */			sizeof(struct sgml_parsing_state),
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ sgml_parsing_push,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ sgml_parsing_pop,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct uri *uri)
@@ -370,6 +434,10 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	 * and feed document.write() data back to the parser. */
 	add_dom_stack_context(&parser->stack, parser, &sgml_parser_context_info);
 
+	/* Don't keep the 'fake' text nodes that holds the parsing data. */
+	init_dom_stack(&parser->parsing, 0);
+	add_dom_stack_context(&parser->parsing, parser, &sgml_parsing_context_info);
+
 	return parser;
 }
 
@@ -377,43 +445,45 @@ void
 done_sgml_parser(struct sgml_parser *parser)
 {
 	done_dom_stack(&parser->stack);
+	done_dom_stack(&parser->parsing);
 	done_uri(parser->uri);
 	mem_free(parser);
 }
 
-/* FIXME: Make it possible to push variable number of strings (even nested
- * while parsing another string) so that we can feed back output of stuff
- * like ECMAScripts document.write(). */
+static struct sgml_parsing_state *
+init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer)
+{
+	struct dom_stack_state *state;
+	struct dom_node *node;
+
+	node = init_dom_node(DOM_NODE_TEXT, buffer->source, buffer->length);
+	if (!node || !push_dom_node(&parser->parsing, node))
+		return NULL;
+
+	state = get_dom_stack_top(&parser->parsing);
+
+	return get_dom_stack_state_data(parser->parsing.contexts, state);
+}
+
 struct dom_node *
 parse_sgml(struct sgml_parser *parser, struct string *buffer)
 {
-	unsigned char *source = buffer->source;
-	unsigned char *end = source + buffer->length;
-	size_t depth;
+	struct sgml_parsing_state *parsing;
 
 	if (!parser->root) {
 		parser->root = add_sgml_document(&parser->stack, parser->uri);
 		if (!parser->root)
 			return NULL;
-
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
-	init_scanner(&parser->scanner, &sgml_scanner_info, source, end);
+	parsing = init_sgml_parsing_state(parser, buffer);
+	if (!parsing) return NULL;
 
 	/* FIXME: Make parse_sgml_document() return an error code. */
-	depth = parser->stack.depth;
-	parse_sgml_document(&parser->stack, &parser->scanner);
+	parse_sgml_document(&parser->stack, &parsing->scanner);
 
-	/* Pop the stack back to the state it was in. This includes cleaning
-	 * away even immutable states left on the stack. */
-	while (depth < parser->stack.depth) {
-		get_dom_stack_top(&parser->stack)->immutable = 0;
-		pop_dom_node(&parser->stack);
-	}
+	pop_dom_node(&parser->parsing);
 
-	assert(depth == parser->stack.depth);
-
-	/* FIXME: Return the 'bottom' node that was added by the parser. */
 	return parser->root;
 }
