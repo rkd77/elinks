@@ -98,8 +98,14 @@ ifdef INCLUDE_ALL
 ifdef SUBDIRS-no
 SUBDIRS += $(SUBDIRS-no)
 endif
+ifdef SUBDIRS-
+SUBDIRS += $(SUBDIRS-)
+endif
 ifdef OBJS-no
 OBJS += $(OBJS-no)
+endif
+ifdef OBJS-
+OBJS += $(OBJS-)
 endif
 
 endif
