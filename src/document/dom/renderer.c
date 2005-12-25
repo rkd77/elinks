@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#include <sys/types.h> /* FreeBSD needs this before regex.h */
+#ifdef HAVE_REGEX_H
+#include <regex.h>
+#endif
 #include <string.h>
 
 #include "elinks.h"
@@ -45,9 +49,15 @@ struct dom_renderer {
 	unsigned char *position;
 	int canvas_x, canvas_y;
 
+#ifdef HAVE_REGEX_H
+	regex_t url_regex;
+	unsigned int find_url:1;
+#endif
 	struct screen_char styles[DOM_NODES];
 };
 
+#define URL_REGEX "(ftp|http)://[[:alnum:]]+([-_\\.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(\\/{1}[-_~&=;\\?\\.a-z0-9]*)*"
+#define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
@@ -90,6 +100,16 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->source	= buffer->source;
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
+
+#ifdef HAVE_REGEX_H
+	if (renderer->document->options.plain_display_links) {
+		if (regcomp(&renderer->url_regex, URL_REGEX, URL_REGFLAGS)) {
+			regfree(&renderer->url_regex);
+		} else {
+			renderer->find_url = 1;
+		}
+	}
+#endif
 
 	for (type = 0; type < DOM_NODES; type++) {
 		struct screen_char *template = &renderer->styles[type];
@@ -401,6 +421,46 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 	render_dom_text(renderer, template, string, length);
 }
 
+#ifdef HAVE_REGEX_H
+static inline void
+render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *node)
+{
+	regex_t *regex = &renderer->url_regex;
+	regmatch_t regmatch;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
+	struct screen_char *template = &renderer->styles[node->type];
+
+	if (check_dom_node_source(renderer, string, length)) {
+		render_dom_flush(renderer, string);
+		renderer->position = string + length;
+		assert_source(renderer, renderer->position, 0);
+	}
+
+	while (length > 0 && !regexec(regex, string, 1, &regmatch, 0)) {
+		int matchlen = regmatch.rm_eo - regmatch.rm_so;
+		int offset = regmatch.rm_so;
+
+		if (!matchlen || offset < 0 || regmatch.rm_eo > length)
+			break;
+
+		if (offset > 0)
+			render_dom_text(renderer, template, string, offset);
+
+		string += offset;
+		length -= offset;
+
+		add_dom_link(renderer, string, matchlen);
+
+		length -= matchlen;
+		string += matchlen;
+	}
+
+	if (length > 0)
+		render_dom_text(renderer, template, string, length);
+}
+#endif
+
 static void
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -408,8 +468,16 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 
 	assert(node && renderer && renderer->document);
 
-	/* TODO: For (atleast) text, CDATA section and comment nodes check
-	 * for URIs ala document->options.plain_display_links */
+#ifdef HAVE_REGEX_H
+	if (renderer->find_url
+	    && (node->type == DOM_NODE_TEXT
+		|| node->type == DOM_NODE_CDATA_SECTION
+		|| node->type == DOM_NODE_COMMENT)) {
+		render_dom_node_enhanced_text(renderer, node);
+		return;
+	}
+#endif
+
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 }
 
@@ -634,5 +702,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		pop_dom_node(&parser->stack);
 	}
 
+#ifdef HAVE_REGEX_H
+	if (renderer.find_url)
+		regfree(&renderer.url_regex);
+#endif
 	done_sgml_parser(parser);
 }
