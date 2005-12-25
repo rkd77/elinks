@@ -937,7 +937,6 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 	stack = &select_data->stack;
 
 	foreachback_dom_stack_state (stack, state, index) {
-		struct dom_select_node *selector = (void *) state->node;
 		struct dom_select_state *select_state;
 
 		select_state = get_dom_select_state(stack, state);
