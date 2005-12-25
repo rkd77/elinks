@@ -612,42 +612,104 @@ get_child_dom_select_node(struct dom_select_node *selector,
 static int
 match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 {
+	struct dom_string str;
 	struct dom_string *selvalue = &selector->node.data.attribute.value;
 	struct dom_string *value = &node->data.attribute.value;
+	unsigned char separator;
+	int do_compare;
+
+	assert(selvalue->length);
 
 	/* The attribute selector value should atleast be contained in the
 	 * attribute value. */
 	if (value->length < selvalue->length)
 		return 0;
 
-	/* FIXME: Combine the 3 following to use an offset to specify where in
-	 * value, selvalue should match. */
+	/* The following three matching methods requires the selector value to
+	 * match a substring at a well-defined offset. */
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)
-	    && dom_string_casecmp(value, selvalue))
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_EXACT)) {
+		return !dom_string_casecmp(value, selvalue);
+	}
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN)) {
+		set_dom_string(&str, value->string, selvalue->length);
+
+		return !dom_string_casecmp(&str, selvalue);
+	}
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END)) {
+		size_t offset = value->length - selvalue->length;
+
+		set_dom_string(&str, value->string + offset, selvalue->length);
+
+		return !dom_string_casecmp(&str, selvalue);
+	}
+
+	/* The 3 following matching methods requires the selector value to be a
+	 * substring of the value enclosed in a specific separator (with the
+	 * begining and ending of the attribute value both being valid
+	 * separators). */
+
+	set_dom_string(&str, value->string, value->length);
+
+	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST)) {
+		separator = '-';
+
+	} else if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS)) {
+		separator = '\0';
+
+	} if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST)) {
+		separator = ' ';
+
+	} else {
+		INTERNAL("No attribute selector matching method defined");
 		return 0;
+	}
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_BEGIN))
-		return 0;
+	do_compare = 1;
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_END))
-		return 0;
+	do {
+		if (do_compare
+		    && !dom_string_ncasecmp(&str, selvalue, selvalue->length)) {
+			/* "Contains" matches no matter what comes after. */
+			if (str.length == selvalue->length)
+				return 1;
 
-	/* FIXME: Combine the 3 following to simply strstr()-search the value
-	 * and based on a char group check if it is separated either by
-	 * begining, end or the values in the char group: '-' for
-	 * DOM_SELECT_ATTRIBUTE_HYPHEN_LIST, etc. */
+			switch (separator) {
+			case '\0':
+				/* "Contains" matches no matter what comes after. */
+				return 1;
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_SPACE_LIST))
-		return 0;
+			case '-':
+				if (str.string[str.length] == separator)
+					return 1;
+				break;
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_HYPHEN_LIST))
-		return 0;
+			default:
+				if (isspace(str.string[str.length]))
+					return 1;
+			}
+		}
 
-	if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_CONTAINS))
-		return 0;
+		switch (separator) {
+		case '\0':
+			do_compare = 1;
+			break;
 
-	return 1;
+		case '-':
+			do_compare = (str.string[0] == '-');
+			break;
+
+		default:
+			do_compare = isspace(str.string[0]);
+		}
+
+		str.length--, str.string++;
+
+	} while (str.length >= selvalue->length);
+
+	return 0;
 }
 
 /* Match the attribute of an element @node against attribute selector nodes

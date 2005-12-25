@@ -27,6 +27,12 @@ dom_string_casecmp(struct dom_string *string1, struct dom_string *string2)
 	return string_diff ? string_diff : string1->length - string2->length;
 }
 
+static inline int
+dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size_t length)
+{
+	return strncasecmp(string1->string, string2->string, length);
+}
+
 #define is_dom_string_set(str) ((str)->string && (str)->length)
 
 #define done_dom_string(str) mem_free((str)->string);
