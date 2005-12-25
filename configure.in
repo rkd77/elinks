@@ -497,6 +497,63 @@ if test "$CONFIG_WIN32" = yes; then
 fi
 
 dnl ===================================================================
+dnl Check for SpiderMonkey, optional even if installed.
+dnl ===================================================================
+
+AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
+            [if test "$withval" = no; then disable_spidermonkey=yes; fi])
+AC_MSG_CHECKING([for SpiderMonkey])
+
+EL_SAVE_FLAGS
+cf_result=no
+
+if test -z "$disable_spidermonkey"; then
+	if test ! -d "$withval"; then
+		withval="";
+	fi
+	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
+		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs"; do
+			for spidermonkeylib in js smjs; do
+				if test "$cf_result" = no; then
+					SPIDERMONKEY_LIBS="-l$spidermonkeylib"
+
+					if test ! -z "$spidermonkeydir"; then
+						SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib $SPIDERMONKEY_LIBS"
+						SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
+					fi
+
+					LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
+					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
+					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+
+					AC_TRY_LINK([#define XP_UNIX
+						     #include <jsapi.h>],
+						     [JS_GetImplementationVersion()],
+						     cf_result=yes, cf_result=no)
+				fi
+			done
+		done
+	done
+fi
+
+AC_MSG_RESULT($cf_result)
+
+if test "$cf_result" != yes; then
+	EL_RESTORE_FLAGS
+else
+	EL_CONFIG(CONFIG_SPIDERMONKEY, [SpiderMonkey])
+
+	CFLAGS="$CFLAGS_X"
+	AC_SUBST(SPIDERMONKEY_LIBS)
+	AC_SUBST(SPIDERMONKEY_CFLAGS)
+fi
+
+AC_SUBST(CONFIG_SPIDERMONKEY)
+
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SPIDERMONKEY], [ECMAScript (JavaScript)])
+
+
+dnl ===================================================================
 dnl Check for Guile, optional even if installed.
 dnl ===================================================================
 
@@ -725,74 +782,33 @@ dnl ===================================================================
 EL_CONFIG_RUBY
 
 dnl ===================================================================
+dnl Optional Spidermonkey-based ECMAScript browser scripting
+dnl ===================================================================
+
+AC_ARG_ENABLE(sm-scripting,
+	      [  --disable-sm-scripting  ECMAScript browser scripting (requires Spidermonkey)],
+	      [if test "$enableval" != no; then enableval="yes"; fi
+	       CONFIG_SM_SCRIPTING="$enableval";])
+
+if test "x$CONFIG_SPIDERMONKEY" = xyes &&
+   test "x$CONFIG_SM_SCRIPTING" = xyes; then
+	EL_CONFIG(CONFIG_SM_SCRIPTING, [SpiderMonkey])
+else
+	CONFIG_SM_SCRIPTING=no
+fi
+
+dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SEE], [Scripting])
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
 AC_SUBST(CONFIG_GUILE)
 AC_SUBST(CONFIG_LUA)
 AC_SUBST(CONFIG_PERL)
 AC_SUBST(CONFIG_PYTHON)
 AC_SUBST(CONFIG_RUBY)
-AC_SUBST(CONFIG_SEE)
+AC_SUBST(CONFIG_SM_SCRIPTING)
 AC_SUBST(CONFIG_SCRIPTING)
-
-
-dnl ===================================================================
-dnl Check for SpiderMonkey, optional even if installed.
-dnl ===================================================================
-
-AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
-            [if test "$withval" = no; then disable_spidermonkey=yes; fi])
-AC_MSG_CHECKING([for SpiderMonkey])
-
-EL_SAVE_FLAGS
-cf_result=no
-
-if test -z "$disable_spidermonkey"; then
-	if test ! -d "$withval"; then
-		withval="";
-	fi
-	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
-		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs"; do
-			for spidermonkeylib in js smjs; do
-				if test "$cf_result" = no; then
-					SPIDERMONKEY_LIBS="-l$spidermonkeylib"
-
-					if test ! -z "$spidermonkeydir"; then
-						SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib $SPIDERMONKEY_LIBS"
-						SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
-					fi
-
-					LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
-					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
-
-					AC_TRY_LINK([#define XP_UNIX
-						     #include <jsapi.h>],
-						     [JS_GetImplementationVersion()],
-						     cf_result=yes, cf_result=no)
-				fi
-			done
-		done
-	done
-fi
-
-AC_MSG_RESULT($cf_result)
-
-if test "$cf_result" != yes; then
-	EL_RESTORE_FLAGS
-else
-	EL_CONFIG(CONFIG_SPIDERMONKEY, [SpiderMonkey])
-
-	CFLAGS="$CFLAGS_X"
-	AC_SUBST(SPIDERMONKEY_LIBS)
-	AC_SUBST(SPIDERMONKEY_CFLAGS)
-fi
-
-AC_SUBST(CONFIG_SPIDERMONKEY)
-
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SPIDERMONKEY], [ECMAScript (JavaScript)])
 
 
 dnl ===================================================================
