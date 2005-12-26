@@ -194,6 +194,23 @@ skip_comment(struct scanner *scanner, unsigned char **string)
 	return length;
 }
 
+static inline int
+skip_cdata_section(struct scanner *scanner, unsigned char **string)
+{
+	unsigned char *pos = *string;
+	int length = 0;
+
+	for (; pos < scanner->end - 3; pos++)
+		if (pos[0] == ']' && pos[1] == ']' && pos[2] == '>') {
+			length = pos - *string;
+			pos += 3;
+			break;
+		}
+
+	*string = pos;
+	return length;
+}
+
 #define scan_sgml_attribute(scanner, str)				\
 	while ((str) < (scanner)->end && is_sgml_attribute(*(str)))	\
 	       (str)++;
@@ -249,6 +266,16 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 				token->string = string;
 				real_length = skip_comment(scanner, &string);
 				assert(real_length >= 0);
+
+			} else if (string + 6 < scanner->end
+				   && !memcmp(string, "[CDATA[", 7)) {
+
+				string += 7;
+				type = SGML_TOKEN_CDATA_SECTION;
+				token->string = string;
+				real_length = skip_cdata_section(scanner, &string);
+				assert(real_length >= 0);
+
 			} else {
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
 				type = map_scanner_string(scanner, ident, string, base);

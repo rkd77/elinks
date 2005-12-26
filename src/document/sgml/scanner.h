@@ -25,6 +25,8 @@ enum sgml_token_type {
 	SGML_TOKEN_NOTATION_ENTITY,	/* <!ENTITY  until > */
 	SGML_TOKEN_NOTATION_ATTLIST,	/* <!ATTLIST until > */
 
+	SGML_TOKEN_CDATA_SECTION,	/* <![CDATA[ until ]]> */
+
 	SGML_TOKEN_PROCESS,		/* <?{ident} until ?> */
 	SGML_TOKEN_PROCESS_XML,		/* <?xml until */
 

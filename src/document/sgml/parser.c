@@ -282,6 +282,11 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 			skip_scanner_token(scanner);
 			break;
 
+		case SGML_TOKEN_CDATA_SECTION:
+			add_sgml_node(stack, DOM_NODE_CDATA_SECTION, token);
+			skip_scanner_token(scanner);
+			break;
+
 		case SGML_TOKEN_PROCESS_XML:
 			if (!add_sgml_proc_instruction(stack, token)) {
 				skip_sgml_tokens(scanner, SGML_TOKEN_TAG_END);
