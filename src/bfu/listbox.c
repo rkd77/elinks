@@ -361,11 +361,12 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 	int x, y;
 
 	tree_color = get_bfu_color(data->term, "menu.normal");
-	if (item == data->box->sel || item->marked) {
-		unsigned char *name = (item == data->box->sel)
-				    ? "menu.selected" : "menu.marked";
+	if (item == data->box->sel) {
+		text_color = get_bfu_color(data->term, "menu.selected");
 
-		text_color = get_bfu_color(data->term, name);
+	} else if (item->marked) {
+		text_color = get_bfu_color(data->term, "menu.marked");
+
 	} else {
 		text_color = tree_color;
 	}
