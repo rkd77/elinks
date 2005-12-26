@@ -127,7 +127,8 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 				"entity-reference { color: red } "
 				"proc-instruction { color: red } "
 				"attribute	{ color: magenta } "
-				"comment	{ color: aqua } ";
+				"comment	{ color: aqua } "
+				"cdata-section	{ color: orange2 } ";
 			unsigned char *styles = (unsigned char *) default_colors;
 
 			i_want_struct_module_for_dom = 1;

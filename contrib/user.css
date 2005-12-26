@@ -46,3 +46,4 @@ entity-reference { color: red }
 proc-instruction { color: red }
 attribute	 { color: magenta }
 comment		 { color: aqua }
+cdata-section	 { color: orange2 }
