@@ -153,10 +153,6 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct scanner_t
 		pop_dom_node(stack);
 }
 
-#define add_sgml_entityref(stack, t)	add_sgml_node(stack, DOM_NODE_ENTITY_REFERENCE, t)
-#define add_sgml_text(stack, t)		add_sgml_node(stack, DOM_NODE_TEXT, t)
-#define add_sgml_comment(stack, t)	add_sgml_node(stack, DOM_NODE_COMMENT, t)
-
 static inline void
 parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 {
@@ -270,7 +266,7 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 			break;
 
 		case SGML_TOKEN_NOTATION_COMMENT:
-			add_sgml_comment(stack, token);
+			add_sgml_node(stack, DOM_NODE_COMMENT, token);
 			skip_scanner_token(scanner);
 			break;
 
@@ -303,14 +299,14 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 			break;
 
 		case SGML_TOKEN_ENTITY:
-			add_sgml_entityref(stack, token);
+			add_sgml_node(stack, DOM_NODE_ENTITY_REFERENCE, token);
 			skip_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_SPACE:
 		case SGML_TOKEN_TEXT:
 		default:
-			add_sgml_text(stack, token);
+			add_sgml_node(stack, DOM_NODE_TEXT, token);
 			skip_scanner_token(scanner);
 		}
 	}
