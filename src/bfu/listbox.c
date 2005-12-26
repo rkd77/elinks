@@ -622,22 +622,21 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case EVENT_KBD:
 			action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 
-			/* Moving the box */
-			if (action_id == ACT_MENU_DOWN) {
+			switch (action_id) {
+			case ACT_MENU_DOWN:
 				listbox_sel_move(dlg_item, 1);
 				display_widget(dlg_data, dlg_item);
 
 				return EVENT_PROCESSED;
-			}
 
-			if (action_id == ACT_MENU_UP) {
+			case ACT_MENU_UP:
 				listbox_sel_move(dlg_item, -1);
 				display_widget(dlg_data, dlg_item);
 
 				return EVENT_PROCESSED;
-			}
 
-			if (action_id == ACT_MENU_PAGE_DOWN) {
+			case ACT_MENU_PAGE_DOWN:
+			{
 				struct listbox_data *box;
 
 				box = get_listbox_widget_data(dlg_item);
@@ -651,7 +650,8 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				return EVENT_PROCESSED;
 			}
 
-			if (action_id == ACT_MENU_PAGE_UP) {
+			case ACT_MENU_PAGE_UP:
+			{
 				struct listbox_data *box;
 
 				box = get_listbox_widget_data(dlg_item);
@@ -665,21 +665,20 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				return EVENT_PROCESSED;
 			}
 
-			if (action_id == ACT_MENU_HOME) {
+			case ACT_MENU_HOME:
 				listbox_sel_move(dlg_item, -INT_MAX);
 				display_widget(dlg_data, dlg_item);
 
 				return EVENT_PROCESSED;
-			}
 
-			if (action_id == ACT_MENU_END) {
+			case ACT_MENU_END:
 				listbox_sel_move(dlg_item, INT_MAX);
 				display_widget(dlg_data, dlg_item);
 
 				return EVENT_PROCESSED;
-			}
 
-			if (action_id == ACT_MENU_MARK_ITEM) {
+			case ACT_MENU_MARK_ITEM:
+			{
 				struct listbox_data *box;
 
 				box = get_listbox_widget_data(dlg_item);
@@ -692,7 +691,8 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				return EVENT_PROCESSED;
 			}
 
-			if (action_id == ACT_MENU_DELETE) {
+			case ACT_MENU_DELETE:
+			{
 				struct listbox_data *box;
 
 				box = get_listbox_widget_data(dlg_item);
@@ -703,6 +703,10 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 								   widget_data);
 
 				return EVENT_PROCESSED;
+			}
+
+			default:
+				return EVENT_NOT_PROCESSED;
 			}
 
 			/* Selecting a button; most probably ;). */
