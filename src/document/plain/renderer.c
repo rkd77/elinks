@@ -304,8 +304,6 @@ add_document_line(struct plain_renderer *renderer,
 		} else if (line_char == ASCII_BS) {
 			if (!(expanded + line_pos)) {
 				/* We've backspaced to the start of the line */
-				if (expanded > 0)
-					expanded--; /* Don't count it */
 				continue;
 			}
 
