@@ -32,7 +32,7 @@ AC_DEFUN([EL_LOG_CONFIG],
 		value="[$]$1"
 	fi
 
-	echo -e "$about $dots $value" >> features.log
+	echo "$about $dots $value" >> features.log
 	AC_SUBST([$1])
 ])
 
