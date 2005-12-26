@@ -1622,7 +1622,9 @@ link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 {
 	struct session *ses = ses_;
 	struct document_view *doc_view;
-	int link_number = (int) link_number_;
+	int link_number = *(int *) link_number_;
+
+	mem_free(link_number_);
 
 	assert(term && ses);
 	if_assert_failed return;
@@ -1702,7 +1704,8 @@ link_form_menu(struct terminal *term, void *xxx, void *ses_)
 		if (!rtext) rtext = fc->alt;
 
 		add_to_menu(&mi, str.source, rtext, ACT_MAIN_NONE,
-			    link_form_menu_func, (void *) link_number, 0);
+		            link_form_menu_func, intdup(link_number),
+		            FREE_DATA);
 	}
 
 	do_menu(term, mi, ses, 1);
