@@ -614,6 +614,25 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 }
 
 static void
+render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	unsigned char *string = node->string.string;
+
+	assert(node && renderer && renderer->document);
+
+	/* Highlight the 'CDATA' part of <![CDATA[ if it is there. */
+	if (check_dom_node_source(renderer, string - 6, 6)) {
+		render_dom_flush(renderer, string - 6);
+		render_dom_text(renderer, &renderer->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
+		renderer->position = string - 1;
+		assert_source(renderer, renderer->position, 0);
+	}
+
+	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+}
+
+static void
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -634,7 +653,7 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 		/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
 		/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
 		/* DOM_NODE_TEXT		*/ render_dom_node_source,
-		/* DOM_NODE_CDATA_SECTION	*/ render_dom_node_source,
+		/* DOM_NODE_CDATA_SECTION	*/ render_dom_cdata_source,
 		/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
 		/* DOM_NODE_ENTITY		*/ render_dom_node_source,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
