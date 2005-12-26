@@ -164,10 +164,24 @@ mem_align_alloc__(
 
 /* This is out of place, but there is no better place. */
 
+#ifdef DEBUG_MEMLEAK
+#define intdup(i) intdup__(__FILE__, __LINE__, i)
+#else
+#define intdup(i) intdup__(i)
+#endif
+
 static inline int *
-intdup(int i)
+intdup__(
+#ifdef DEBUG_MEMLEAK
+         unsigned char *file, int line,
+#endif
+         int i)
 {
+#ifdef DEBUG_MEMLEAK
+	int *p = debug_mem_alloc(file, line, sizeof(*p));
+#else
 	int *p = mem_alloc(sizeof(*p));
+#endif
 
 	if (p) *p = i;
 
