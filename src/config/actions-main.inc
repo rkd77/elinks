@@ -46,7 +46,7 @@ ACTION_(MAIN, "link-external-command", LINK_EXTERNAL_COMMAND, N__("Pass URI of c
 ACTION_(MAIN, "link-follow", LINK_FOLLOW, N__("Follow the current link"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "link-follow-reload", LINK_FOLLOW_RELOAD, N__("Follow the current link, forcing reload of the target"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "link-menu", LINK_MENU, N__("Open the link context menu"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
-ACTION_(MAIN, "link-form-menu", LINK_FORM_MENU, N__("Open the form fields menu"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
+ACTION_(MAIN, "link-form-menu", LINK_FORM_MENU, N__("Open the form fields menu"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK | ACTION_REQUIRE_FORM),
 ACTION_(MAIN, "lua-console", LUA_CONSOLE, N__("Open a Lua console"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "mark-goto", MARK_GOTO, N__("Go at a specified mark"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "mark-set", MARK_SET, N__("Set a mark"), ACTION_REQUIRE_VIEW_STATE),

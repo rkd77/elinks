@@ -91,6 +91,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 	    && !link)
 		goto ignore_action;
 
+	if (action_requires_form(KEYMAP_MAIN, action_id)
+	    && (!link || !link_is_form(link)))
+		goto ignore_action;
+
 	if (!action_is_anonymous_safe(KEYMAP_MAIN, action_id)
 	    && get_cmd_opt_bool("anonymous"))
 		goto ignore_action;

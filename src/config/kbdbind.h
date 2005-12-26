@@ -43,6 +43,7 @@ enum action_flags {
 	ACTION_REQUIRE_LOCATION		=    (1 << 18),
 	ACTION_JUMP_TO_LINK		=    (1 << 19),
 	ACTION_REQUIRE_LINK		=    (1 << 20),
+	ACTION_REQUIRE_FORM		=    (1 << 21),
 	ACTION_FLAGS_MASK		= (0xFF << 16),
 };
 
@@ -164,6 +165,14 @@ action_requires_link(enum keymap_id keymap_id, action_id_T action_id)
 	struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_REQUIRE_LINK);
+}
+
+static inline unsigned int
+action_requires_form(enum keymap_id keymap_id, action_id_T action_id)
+{
+	struct action *action = get_action(keymap_id, action_id);
+
+	return action && (action->flags & ACTION_REQUIRE_FORM);
 }
 
 long read_key(unsigned char *);
