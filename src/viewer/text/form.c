@@ -1636,6 +1636,7 @@ link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 	if_assert_failed return;
 
 	jump_to_link_number(ses, doc_view, link_number);
+	refresh_view(ses, doc_view, 0);
 }
 
 void
