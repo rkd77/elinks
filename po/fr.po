@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-18 20:48+0100\n"
-"PO-Revision-Date: 2005-12-18 20:50+0100\n"
+"POT-Creation-Date: 2005-12-26 10:21+0100\n"
+"PO-Revision-Date: 2005-12-16 10:25+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -249,7 +249,7 @@ msgstr ""
 "\n"
 "'-' indique généralement que la LED est inactive."
 
-#: src/bfu/menu.c:753
+#: src/bfu/menu.c:730
 msgid "Search menu/"
 msgstr "Chercher menu/"
 
@@ -693,7 +693,7 @@ msgstr "Coller le texte du tampon"
 msgid "Move to the previous item"
 msgstr "Se déplacer à l'item précédent"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:77
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Redessiner le terminal"
@@ -867,271 +867,275 @@ msgid "Open the link context menu"
 msgstr "Ouvrir le menu contextuel du lien"
 
 #: src/config/actions-main.inc:49
+msgid "Open the form fields menu"
+msgstr "Ouvrir le menu Champs de formulaire"
+
+#: src/config/actions-main.inc:50
 msgid "Open a Lua console"
 msgstr "Ouvrir la console Lua"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Go at a specified mark"
 msgstr "Aller à la marque spécifiée"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Set a mark"
 msgstr "Insérer une marque"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Activate the menu"
 msgstr "Activer le menu"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Move cursor down"
 msgstr "Déplacer le curseur vers le bas"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 msgid "Move cursor left"
 msgstr "Déplacer le curseur vers la gauche"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Move cursor right"
 msgstr "Déplacer le curseur vers la droite"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Move cursor up"
 msgstr "Déplacer le curseur vers le haut"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 msgid "Move to the end of the document"
 msgstr "Aller à la fin du document"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move to the start of the document"
 msgstr "Aller au début du document"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move one link down"
 msgstr "Se déplacer d'un lien vers le bas"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move one link left"
 msgstr "Se déplacer d'un lien vers la gauche"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move to the next link"
 msgstr "Se déplacer au lien suivant"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move to the previous link"
 msgstr "Se déplacer au lien précédent"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move one link right"
 msgstr "Se déplacer d'un lien vers la droite"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move one link up"
 msgstr "Se déplacer d'un lien vers le haut"
 
-#: src/config/actions-main.inc:65 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Descendre d'une page"
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Monter d'une page"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Open the current link in a new tab"
 msgstr "Ouvrir le lien courant dans un nouvel onglet"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Open the current link in a new tab in the background"
 msgstr "Ouvrir le lien courant dans un nouvel onglet en arrière-plan"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Open the current link in a new window"
 msgstr "Ouvrir le lien courant dans une nouvelle fenêtre"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Open a new tab"
 msgstr "Ouvrir un nouvel onglet"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Open a new tab in the background"
 msgstr "Ouvrir un nouvel onglet en arrière-plan"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Open a new window"
 msgstr "Ouvrir une nouvelle fenêtre"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Open an OS shell"
 msgstr "Ouvrir une ligne de commandes (shell)"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Open options manager"
 msgstr "Ouvrir le gestionnaire d'options"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open a quit confirmation dialog box"
 msgstr "Ouvrir le dialogue de confirmation pour quitter"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Quit without confirmation"
 msgstr "Quitter sans confirmation"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 msgid "Reload the current page"
 msgstr "Recharger la page courante"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Re-render the current page"
 msgstr "Redessiner la page courante"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Reset form items to their initial values"
 msgstr "Réinitialiser les champs de formulaire"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Show information about the currently used resources"
 msgstr "Informations à propos des ressources utilisées"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Save the current document in source form"
 msgstr "Sauver le document courant sous la forme source"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in formatted form"
 msgstr "Sauver le document courant sous la forme formatée"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Save options"
 msgstr "Enregistrer les options"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 msgid "Save URL as"
 msgstr "Enregistrer l'URL sous"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Scroll down"
 msgstr "Défiler vers le bas"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll left"
 msgstr "Défiler vers la gauche"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll right"
 msgstr "Défiler vers la droite"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll up"
 msgstr "Défiler vers le haut"
 
-#: src/config/actions-main.inc:90 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Recherche de texte"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 msgid "Search backwards for a text pattern"
 msgstr "Recherche de texte (en arrière)"
 
-#: src/config/actions-main.inc:92 src/config/actions-main.inc:93
+#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
 msgid "Search link text by typing ahead"
 msgstr "Rechercher un lien par préfrappe"
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Search document text by typing ahead"
 msgstr "Rechercher du texte par préfrappe"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text backwards by typing ahead"
 msgstr "Rechercher en arrière du texte par préfrappe"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Show terminal options dialog"
 msgstr "Montrer les options du terminal"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Submit form"
 msgstr "Envoyer le formulaire"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Submit form and reload"
 msgstr "Envoyer le formulaire et recharger"
 
-#: src/config/actions-main.inc:99 src/terminal/tab.c:188
+#: src/config/actions-main.inc:100 src/terminal/tab.c:188
 #: src/terminal/tab.c:224
 msgid "Close tab"
 msgstr "Fermer l'onglet"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 msgid "Close all tabs but the current one"
 msgstr "Fermer les autres onglets"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Pass URI of current tab to external command"
 msgstr "Passer l'URI de l'onglet courant à une commande externe"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 msgid "Open the tab menu"
 msgstr "Ouvrir le menu des onglets"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Move the current tab to the left"
 msgstr "Déplacer l'onglet courant vers la gauche"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Move the current tab to the right"
 msgstr "Déplacer l'onglet courant vers la droite"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Next tab"
 msgstr "Onglet suivant"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Previous tab"
 msgstr "Onglet précédent"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Open the terminal resize dialog"
 msgstr "Ouvrir le dialogue de redimensionnement du terminal"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Toggle rendering of page using CSS"
 msgstr "Commuter le rendu avec CSS"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle displaying of links to images"
 msgstr "Commuter l'affichage des liens vers les images."
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle rendering of tables"
 msgstr "Commuter le rendu des tableaux"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle usage of document specific colors"
 msgstr "Commuter l'utilisation des couleurs spécifiques au document"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Commuter le rendu de la page en HTML/texte plein"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 msgid "Toggle mouse handling"
 msgstr "Bascule support souris"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle displaying of links numbers"
 msgstr "Commuter l'affichage des numéros de liens"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Commuter la compression des lignes vides dans le rendu plein texte"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Toggle wrapping of text"
 msgstr "Commuter la césure auto du texte (wrapping)"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "View the current image"
 msgstr "Voir l'image courante"
 
@@ -1900,31 +1904,31 @@ msgstr ""
 "Merci de vérifier si vous avez la variable $HOME correctement configurée et "
 "si vous avez le droit d'écrire dans votre répertoire personnel."
 
-#: src/config/kbdbind.c:209
+#: src/config/kbdbind.c:220
 msgid "Main mapping"
 msgstr "Principal"
 
-#: src/config/kbdbind.c:210
+#: src/config/kbdbind.c:221
 msgid "Edit mapping"
 msgstr "Edition"
 
-#: src/config/kbdbind.c:211
+#: src/config/kbdbind.c:222
 msgid "Menu mapping"
 msgstr "Menu"
 
-#: src/config/kbdbind.c:524
+#: src/config/kbdbind.c:555
 msgid "Unrecognised keymap"
 msgstr "Table d'associations de touches non reconnue"
 
-#: src/config/kbdbind.c:527
+#: src/config/kbdbind.c:558
 msgid "Error parsing keystroke"
 msgstr "Erreur d'interprétation de touche"
 
-#: src/config/kbdbind.c:531
+#: src/config/kbdbind.c:562
 msgid "Unrecognised action (internal error)"
 msgstr "Action non reconnue (erreur interne)"
 
-#: src/config/kbdbind.c:547
+#: src/config/kbdbind.c:578
 msgid "Error registering event"
 msgstr "Erreur d'enregistrement d'événement"
 
@@ -5974,7 +5978,7 @@ msgstr ""
 "ici à la place de '.')."
 
 #. name:
-#: src/mime/backend/default.c:223
+#: src/mime/backend/default.c:226
 msgid "Option system"
 msgstr "Système de configuration"
 
@@ -7816,23 +7820,19 @@ msgstr "Entrez une expression"
 msgid "Ruby Message"
 msgstr "Message Ruby"
 
-#: src/scripting/scripting.c:54
+#: src/scripting/scripting.c:53
 #, c-format
 msgid "An error occurred while running a %s script"
 msgstr "Une erreur s'est produite lors de l'exécution d'un script %s"
 
-#: src/scripting/scripting.c:60
+#: src/scripting/scripting.c:59
 msgid "Browser scripting error"
 msgstr "Erreur de script"
 
 #. name:
-#: src/scripting/scripting.c:91
+#: src/scripting/scripting.c:87
 msgid "Scripting"
 msgstr "Scripting"
-
-#: src/scripting/see/interface.c:146
-msgid "SEE Message"
-msgstr "Message SEE"
 
 #: src/session/download.c:234 src/session/download.c:331
 #: src/session/download.c:498 src/session/download.c:590
@@ -8159,6 +8159,14 @@ msgstr "pressez %s pour soumettre à %s"
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
+#: src/viewer/text/form.c:1684
+msgid "Useless button"
+msgstr "Bouton inutile"
+
+#: src/viewer/text/form.c:1686
+msgid "Submit button"
+msgstr "Bouton Soumettre"
+
 #: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
@@ -8223,23 +8231,27 @@ msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
-#: src/viewer/text/link.c:1240
+#: src/viewer/text/link.c:1238
+msgid "Form f~ields"
+msgstr "Champs de formula~ire"
+
+#: src/viewer/text/link.c:1243
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
-#: src/viewer/text/link.c:1242
+#: src/viewer/text/link.c:1245
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1250
+#: src/viewer/text/link.c:1253
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1298
+#: src/viewer/text/link.c:1301
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1306
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8349,3 +8361,6 @@ msgstr "Erreur lors de la sauvegarde"
 #: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Erreur lors de l'écriture du fichier"
+
+#~ msgid "SEE Message"
+#~ msgstr "Message SEE"
