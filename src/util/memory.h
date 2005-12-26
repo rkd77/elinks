@@ -161,4 +161,17 @@ mem_align_alloc__(
 #define mem_free_if(x) mem_free_set(&x, NULL)
 #endif
 
+
+/* This is out of place, but there is no better place. */
+
+static inline int *
+intdup(int i)
+{
+	int *p = mem_alloc(sizeof(*p));
+
+	if (p) *p = i;
+
+	return p;
+}
+
 #endif

@@ -11,6 +11,7 @@
 #include "main/event.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
+#include "util/memory.h"
 
 static JSBool
 keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -155,10 +156,8 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 
 	if (!keymap_object) return NULL;
 
-	data = mem_alloc(sizeof(*data));
+	data = intdup(keymap_id);
 	if (!data) return NULL;
-
-	*data = keymap_id;
 
 	if (JS_FALSE != JS_SetPrivate(smjs_ctx, keymap_object, data))
 		return keymap_object;
