@@ -608,110 +608,117 @@ mouse_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 static widget_handler_status_T
-kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
+do_kbd_listbox_action(enum menu_action action_id, struct dialog_data *dlg_data,
+		      struct widget_data *widget_data)
 {
 	struct widget_data *dlg_item = dlg_data->widgets_data;
+
+	switch (action_id) {
+		case ACT_MENU_DOWN:
+			listbox_sel_move(dlg_item, 1);
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+
+		case ACT_MENU_UP:
+			listbox_sel_move(dlg_item, -1);
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+
+		case ACT_MENU_PAGE_DOWN:
+		{
+			struct listbox_data *box;
+
+			box = get_listbox_widget_data(dlg_item);
+
+			listbox_sel_move(dlg_item,
+			                 2 * dlg_item->box.height
+			                   - box->sel_offset - 1);
+
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+		}
+
+		case ACT_MENU_PAGE_UP:
+		{
+			struct listbox_data *box;
+
+			box = get_listbox_widget_data(dlg_item);
+
+			listbox_sel_move(dlg_item,
+			                 -dlg_item->box.height
+			                  - box->sel_offset);
+
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+		}
+
+		case ACT_MENU_HOME:
+			listbox_sel_move(dlg_item, -INT_MAX);
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+
+		case ACT_MENU_END:
+			listbox_sel_move(dlg_item, INT_MAX);
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+
+		case ACT_MENU_MARK_ITEM:
+		{
+			struct listbox_data *box;
+
+			box = get_listbox_widget_data(dlg_item);
+			if (box->sel) {
+				box->sel->marked = !box->sel->marked;
+				listbox_sel_move(dlg_item, 1);
+			}
+			display_widget(dlg_data, dlg_item);
+
+			return EVENT_PROCESSED;
+		}
+
+		case ACT_MENU_DELETE:
+		{
+			struct listbox_data *box;
+
+			box = get_listbox_widget_data(dlg_item);
+			if (box->ops
+			    && box->ops->delete
+			    && box->ops->can_delete)
+				push_hierbox_delete_button(dlg_data,
+							   widget_data);
+
+			return EVENT_PROCESSED;
+		}
+
+		default:
+			break;
+	}
+
+	return EVENT_NOT_PROCESSED;
+}
+
+static widget_handler_status_T
+kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
+{
 	struct term_event *ev = dlg_data->term_event;
 
 	/* Not a pure listbox, but you're not supposed to use this outside of
 	 * the listbox browser anyway, so what.. */
 
 	switch (ev->ev) {
-		enum menu_action action_id;
-
 		case EVENT_KBD:
+		{
+			enum menu_action action_id;
+
 			action_id = kbd_action(KEYMAP_MENU, ev, NULL);
-
-			switch (action_id) {
-			case ACT_MENU_DOWN:
-				listbox_sel_move(dlg_item, 1);
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-
-			case ACT_MENU_UP:
-				listbox_sel_move(dlg_item, -1);
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-
-			case ACT_MENU_PAGE_DOWN:
-			{
-				struct listbox_data *box;
-
-				box = get_listbox_widget_data(dlg_item);
-
-				listbox_sel_move(dlg_item,
-				                 2 * dlg_item->box.height
-				                   - box->sel_offset - 1);
-
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-			}
-
-			case ACT_MENU_PAGE_UP:
-			{
-				struct listbox_data *box;
-
-				box = get_listbox_widget_data(dlg_item);
-
-				listbox_sel_move(dlg_item,
-				                 -dlg_item->box.height
-				                  - box->sel_offset);
-
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-			}
-
-			case ACT_MENU_HOME:
-				listbox_sel_move(dlg_item, -INT_MAX);
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-
-			case ACT_MENU_END:
-				listbox_sel_move(dlg_item, INT_MAX);
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-
-			case ACT_MENU_MARK_ITEM:
-			{
-				struct listbox_data *box;
-
-				box = get_listbox_widget_data(dlg_item);
-				if (box->sel) {
-					box->sel->marked = !box->sel->marked;
-					listbox_sel_move(dlg_item, 1);
-				}
-				display_widget(dlg_data, dlg_item);
-
-				return EVENT_PROCESSED;
-			}
-
-			case ACT_MENU_DELETE:
-			{
-				struct listbox_data *box;
-
-				box = get_listbox_widget_data(dlg_item);
-				if (box->ops
-				    && box->ops->delete
-				    && box->ops->can_delete)
-					push_hierbox_delete_button(dlg_data,
-								   widget_data);
-
-				return EVENT_PROCESSED;
-			}
-
-			default:
-				return EVENT_NOT_PROCESSED;
-			}
-
-			/* Selecting a button; most probably ;). */
-			break;
-
+			return do_kbd_listbox_action(action_id, dlg_data, widget_data);
+		}
 		case EVENT_INIT:
 		case EVENT_RESIZE:
 		case EVENT_REDRAW:
