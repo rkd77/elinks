@@ -284,6 +284,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			link_menu(term, NULL, ses);
 			break;
 
+		case ACT_MAIN_LINK_FORM_MENU:
+			link_form_menu(term, NULL, ses);
+			break;
+
 		case ACT_MAIN_LUA_CONSOLE:
 #ifdef CONFIG_LUA
 			trigger_event_name("dialog-lua-console", ses);

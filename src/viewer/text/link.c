@@ -1234,6 +1234,9 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 
 			add_menu_action(&mi, N_("~Reset form"), ACT_MAIN_RESET_FORM);
 		}
+
+		add_to_menu(&mi, N_("Form f~ields"), NULL, ACT_MAIN_LINK_FORM_MENU,
+			    NULL, NULL, SUBMENU);
 	}
 
 	if (link->where_img) {

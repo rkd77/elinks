@@ -1616,3 +1616,94 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 
 	return str.source;
 }
+
+static void
+link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
+{
+	struct session *ses = ses_;
+	struct document_view *doc_view;
+	int link_number = (int) link_number_;
+
+	assert(term && ses);
+	if_assert_failed return;
+
+	doc_view = current_frame(ses);
+	if (!doc_view) return;
+
+	assert(doc_view->vs && doc_view->document);
+	if_assert_failed return;
+
+	jump_to_link_number(ses, doc_view, link_number);
+}
+
+void
+link_form_menu(struct terminal *term, void *xxx, void *ses_)
+{
+	struct session *ses = ses_;
+	struct document_view *doc_view;
+	struct link *link;
+	struct menu_item *mi;
+	struct form_control *fc;
+	struct form *form;
+
+	assert(term && ses);
+	if_assert_failed return;
+
+	doc_view = current_frame(ses);
+	if (!doc_view) return;
+
+	assert(doc_view->vs && doc_view->document);
+	if_assert_failed return;
+
+	link = get_current_link(doc_view);
+	if (!link) return;
+
+	assert(link_is_form(link));
+
+	fc = get_link_form_control(link);
+	if (!fc) return;
+
+	form = fc->form;
+
+	mi = new_menu(FREE_LIST | FREE_TEXT | NO_INTL);
+	if (!mi) return;
+
+	foreach (fc, form->items) {
+		unsigned char *text;
+		unsigned char *rtext;
+		int link_number;
+		struct string str;
+
+		switch (fc->type) {
+		case FC_HIDDEN:
+			continue;
+
+		case FC_SUBMIT:
+		case FC_IMAGE:
+			if (!form->action)
+				text = N_("Useless button");
+			else
+				text = N_("Submit button");
+			break;
+
+		default:
+			text = get_form_label(fc);
+		}
+
+		link_number = get_form_control_link(doc_view->document, fc);
+		if (link_number < 0
+		    || !init_string(&str))
+			continue;
+
+		assert(text);
+		add_to_string(&str, _(text, term));
+
+		rtext = fc->name;
+		if (!rtext) rtext = fc->alt;
+
+		add_to_menu(&mi, str.source, rtext, ACT_MAIN_NONE,
+			    link_form_menu_func, (void *) link_number, 0);
+	}
+
+	do_menu(term, mi, ses, 1);
+}
