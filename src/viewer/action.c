@@ -289,7 +289,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			break;
 
 		case ACT_MAIN_LINK_FORM_MENU:
-			link_form_menu(term, NULL, ses);
+			link_form_menu(ses);
 			break;
 
 		case ACT_MAIN_LUA_CONSOLE:

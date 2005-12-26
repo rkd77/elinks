@@ -92,6 +92,6 @@ void submit_given_form(struct session *ses, struct document_view *doc_view, stru
 void auto_submit_form(struct session *ses);
 void do_reset_form(struct document_view *doc_view, struct form *form);
 
-void link_form_menu(struct terminal *term, void *xxx, void *ses_);
+void link_form_menu(struct session *ses);
 
 #endif

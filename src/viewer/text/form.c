@@ -1640,16 +1640,15 @@ link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 }
 
 void
-link_form_menu(struct terminal *term, void *xxx, void *ses_)
+link_form_menu(struct session *ses)
 {
-	struct session *ses = ses_;
 	struct document_view *doc_view;
 	struct link *link;
 	struct menu_item *mi;
 	struct form_control *fc;
 	struct form *form;
 
-	assert(term && ses);
+	assert(ses);
 	if_assert_failed return;
 
 	doc_view = current_frame(ses);
@@ -1699,7 +1698,7 @@ link_form_menu(struct terminal *term, void *xxx, void *ses_)
 			continue;
 
 		assert(text);
-		add_to_string(&str, _(text, term));
+		add_to_string(&str, _(text, ses->tab->term));
 
 		rtext = fc->name;
 		if (!rtext) rtext = fc->alt;
@@ -1709,5 +1708,5 @@ link_form_menu(struct terminal *term, void *xxx, void *ses_)
 		            FREE_DATA);
 	}
 
-	do_menu(term, mi, ses, 1);
+	do_menu(ses->tab->term, mi, ses, 1);
 }
