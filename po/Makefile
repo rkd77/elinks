@@ -11,14 +11,16 @@ MSGMERGE = msgmerge
 # xgettext) 
 POTFILES_ABS_LIST = potfiles.list
 
+quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
+      cmd_gmsgfmt = rm -f -- "$@" && $(GMSGFMT) --statistics -o "$@" -- "$<"
+
 
 # Distributed elinks-*.tar.gz packages include po/*.gmo files, so that
 # users can install ELinks even if they don't have a msgfmt program.
 # However, if srcdir != builddir, then this Makefile ignores the *.gmo
 # files in the srcdir and builds new ones in the builddir.
-%.gmo: $(srcdir)/%.po
-	@rm -f -- "$@" && printf "%s: " "$*" \
-	  && $(GMSGFMT) --statistics -o "$@" -- "$<"
+%.gmo: $(srcdir)%.po
+	$(call ecmd,gmsgfmt)
 
 
 ### The default rule

@@ -19,6 +19,7 @@ ifdef MAKE_COLOR
 	INFO_COLOR    = $(shell tput setaf 5)
 	CC_COLOR      = $(shell tput setaf 6)
 	LD_COLOR      = $(shell tput setaf 2)
+	PO_COLOR      = $(shell tput setaf 6)
 	LINK_COLOR    = $(shell tput bold;tput setaf 4)
 	INSTALL_COLOR = $(shell tput setaf 3)
 	END_COLOR     = $(shell tput sgr0)
@@ -29,6 +30,7 @@ endif
 ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
+ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -c $<
