@@ -325,7 +325,7 @@ add_document_line(struct plain_renderer *renderer,
 				continue;
 			}
 
-			if (expanded - 2 >= 0) {
+			if ((expanded + line_pos) - 2 >= 0) {
 				/* Don't count the backspace character or the
 				 * deleted character when returning the line's
 				 * width or when expanding tabs. */
