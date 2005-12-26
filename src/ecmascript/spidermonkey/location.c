@@ -206,7 +206,8 @@ delayed_goto(void *data)
 	struct delayed_goto *deg = data;
 
 	assert(deg);
-	if (deg->vs->doc_view) {
+	if (deg->vs->doc_view
+	    && deg->vs->doc_view == deg->vs->doc_view->session->doc_view) {
 		goto_uri_frame(deg->vs->doc_view->session, deg->uri,
 		               deg->vs->doc_view->name,
 			       CACHE_MODE_NORMAL);
