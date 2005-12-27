@@ -1,7 +1,6 @@
 #ifndef EL__DOCUMENT_DOM_STACK_H
 #define EL__DOCUMENT_DOM_STACK_H
 
-#include "document/document.h"
 #include "document/dom/node.h"
 #include "util/error.h"
 #include "util/hash.h"

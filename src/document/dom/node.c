@@ -10,7 +10,6 @@
 #include "elinks.h"
 
 #include "document/dom/node.h"
-#include "document/options.h"
 #include "intl/charsets.h"
 #include "util/hash.h"
 #include "util/lists.h"
