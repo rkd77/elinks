@@ -223,7 +223,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 }
 
 static void
-parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
+parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
 {
 	while (scanner_has_tokens(scanner)) {
 		struct scanner_token *token = get_scanner_token(scanner);
@@ -338,8 +338,9 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 	parsing = init_sgml_parsing_state(parser, buffer);
 	if (!parsing) return NULL;
 
-	/* FIXME: Make parse_sgml_document() return an error code. */
-	parse_sgml_document(&parser->stack, &parsing->scanner);
+	/* FIXME: Make parse_sgml_plain() return something (error code or if
+	 * can be guarenteed a root node). */
+	parse_sgml_plain(&parser->stack, &parsing->scanner);
 
 	pop_dom_node(&parser->parsing);
 
