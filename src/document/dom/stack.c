@@ -289,18 +289,71 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 	return NULL;
 }
 
+
+struct dom_stack_walk_state {
+	/* Used for recording which node list are currently being 'decended'
+	 * into. E.g. whether we are iterating all child elements or attributes
+	 * of an element. */
+	struct dom_node_list *list;
+	/* The index (in the list above) which are currently being handled. */
+	size_t index;
+};
+
+static struct dom_stack_context_info dom_stack_walk_context_info = {
+	/* Object size: */			sizeof(struct dom_stack_walk_state),
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
 /* FIXME: Instead of walking all nodes in the tree only visit those which are
  * of actual interest to the contexts on the stack. */
 void
 walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 {
+	struct dom_stack_context *context;
+
 	assert(root && stack);
+
+	context = add_dom_stack_context(stack, NULL, &dom_stack_walk_context_info);
+	if (!context)
+		return;
 
 	push_dom_node(stack, root);
 
 	while (!dom_stack_is_empty(stack)) {
 		struct dom_stack_state *state = get_dom_stack_top(stack);
-		struct dom_node_list *list = state->list;
+		struct dom_stack_walk_state *wstate = get_dom_stack_state_data(context, state);
+		struct dom_node_list *list = wstate->list;
 		struct dom_node *node = state->node;
 
 		switch (node->type) {
@@ -312,7 +365,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 			if (!list) list = node->data.element.map;
 
 			if (list == node->data.element.children) break;
-			if (is_dom_node_list_member(list, state->index)
+			if (is_dom_node_list_member(list, wstate->index)
 			    && list == node->data.element.map)
 				break;
 
@@ -327,7 +380,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 			if (!list) list = node->data.document_type.entities;
 
 			if (list == node->data.document_type.notations) break;
-			if (is_dom_node_list_member(list, state->index)
+			if (is_dom_node_list_member(list, wstate->index)
 			    && list == node->data.document_type.entities)
 				break;
 
@@ -347,14 +400,14 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 		}
 
 		/* Reset list state if it is a new list */
-		if (list != state->list) {
-			state->list  = list;
-			state->index = 0;
+		if (list != wstate->list) {
+			wstate->list  = list;
+			wstate->index = 0;
 		}
 
 		/* If we have next child node */
-		if (is_dom_node_list_member(list, state->index)) {
-			struct dom_node *child = list->entries[state->index++];
+		if (is_dom_node_list_member(list, wstate->index)) {
+			struct dom_node *child = list->entries[wstate->index++];
 
 			if (push_dom_node(stack, child))
 				continue;
@@ -362,6 +415,8 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 
 		pop_dom_node(stack);
 	}
+
+	done_dom_stack_context(stack, context);
 }
 
 

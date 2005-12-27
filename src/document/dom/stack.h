@@ -14,13 +14,6 @@ typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void
 struct dom_stack_state {
 	struct dom_node *node;
 
-	/* Used for recording which node list are currently being 'decended'
-	 * into. E.g. whether we are iterating all child elements or attributes
-	 * of an element. */
-	struct dom_node_list *list;
-	/* The index (in the list above) which are currently being handled. */
-	size_t index;
-
 	/* The depth of the state in the stack. This is amongst other things
 	 * used to get the state object data. */
 	unsigned int depth;
