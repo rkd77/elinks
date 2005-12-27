@@ -89,7 +89,6 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 	return &stack->states[stack->depth - 1 - top_offset];
 }
 
-#define get_dom_stack_parent(stack)	get_dom_stack_state(stack, 1)
 #define get_dom_stack_top(stack)	get_dom_stack_state(stack, 0)
 
 static inline void *
