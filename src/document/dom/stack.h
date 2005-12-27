@@ -70,7 +70,7 @@ struct dom_stack {
 	enum dom_stack_flag flags;
 
 	/* Contexts for the pushed and popped nodes. */
-	struct dom_stack_context *contexts;
+	struct dom_stack_context **contexts;
 	size_t contexts_size;
 
 	/* The current context. */
@@ -136,8 +136,14 @@ void done_dom_stack(struct dom_stack *stack);
 /* Add a context to the stack. This is needed if either you want to have the
  * stack allocated objects for created states and/or if you want to install
  * callbacks for pushing or popping. . */
-void add_dom_stack_context(struct dom_stack *stack, void *data,
-			   struct dom_stack_context_info *context_info);
+struct dom_stack_context *
+add_dom_stack_context(struct dom_stack *stack, void *data,
+		      struct dom_stack_context_info *context_info);
+
+/* Unregister a stack @context. This should be done especially for temporary
+ * stack contexts (without any callbacks) so that they do not increasing the
+ * memory usage. */
+void done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *context);
 
 /* Decends down to the given node making it the current parent */
 /* If an error occurs the node is free()d and NULL is returned */

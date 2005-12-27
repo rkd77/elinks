@@ -29,10 +29,10 @@ realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 }
 
 static inline struct dom_stack_state *
-realloc_dom_stack_context(struct dom_stack_context **contexts, size_t size)
+realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 {
 	return mem_align_alloc(contexts, size, size + 1,
-			       struct dom_stack_context,
+			       struct dom_stack_context *,
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
@@ -70,7 +70,8 @@ done_dom_stack(struct dom_stack *stack)
 	assert(stack);
 
 	for (i = 0; i < stack->contexts_size; i++) {
-		mem_free_if(stack->contexts[i].state_objects);
+		mem_free_if(stack->contexts[i]->state_objects);
+		mem_free(stack->contexts[i]);
 	}
 
 	mem_free_if(stack->contexts);
@@ -79,18 +80,48 @@ done_dom_stack(struct dom_stack *stack)
 	memset(stack, 0, sizeof(*stack));
 }
 
-void
+struct dom_stack_context *
 add_dom_stack_context(struct dom_stack *stack, void *data,
 		      struct dom_stack_context_info *context_info)
 {
 	struct dom_stack_context *context;
 
 	if (!realloc_dom_stack_context(&stack->contexts, stack->contexts_size))
-		return;
+		return NULL;
 
-	context = &stack->contexts[stack->contexts_size++];
+	context = mem_calloc(1, sizeof(*context));
+	if (!context)
+		return NULL;
+
+	stack->contexts[stack->contexts_size++] = context;
 	context->info = context_info;
 	context->data = data;
+
+	return context;
+}
+
+void
+done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *context)
+{
+	size_t i;
+
+	mem_free_if(context->state_objects);
+	mem_free(context);
+
+	/* Handle the trivial case of temporary contexts optimally by iteration last added first. */
+	for (i = stack->contexts_size - 1; i >= 0; i--) {
+		if (stack->contexts[i] != context)
+			continue;
+
+		stack->contexts_size--;
+		if (i < stack->contexts_size) {
+			struct dom_stack_context **pos = &stack->contexts[i];
+			size_t size = stack->contexts_size - i;
+
+			memmove(pos, pos + 1, size * sizeof(*pos));
+		}
+		break;
+	}
 }
 
 enum dom_stack_action {
@@ -105,7 +136,7 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 	int i;
 
 	for (i = 0; i < stack->contexts_size; i++) {
-		struct dom_stack_context *context = &stack->contexts[i];
+		struct dom_stack_context *context = stack->contexts[i];
 		void *state_data = get_dom_stack_state_data(context, state);
 		dom_stack_callback_T callback;
 
@@ -144,7 +175,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	state += stack->depth;
 
 	for (i = 0; i < stack->contexts_size; i++) {
-		struct dom_stack_context *context = &stack->contexts[i];
+		struct dom_stack_context *context = stack->contexts[i];
 
 		if (context->info->object_size
 		    && !realloc_dom_stack_state_objects(context, stack->depth)) {
@@ -188,7 +219,7 @@ pop_dom_node(struct dom_stack *stack)
 	assert(stack->depth >= 0);
 
 	for (i = 0; i < stack->contexts_size; i++) {
-		struct dom_stack_context *context = &stack->contexts[i];
+		struct dom_stack_context *context = stack->contexts[i];
 
 		if (context->info->object_size) {
 			void *state_data = get_dom_stack_state_data(context, state);

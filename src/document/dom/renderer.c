@@ -505,7 +505,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
-	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts, state);
+	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
 	struct scanner_token *token = &pstate->end_token;
 	unsigned char *string = token->string;
 	int length = token->length;

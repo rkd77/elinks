@@ -770,7 +770,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 
 /* XXX: Assume the first context is the one! */
 #define get_dom_select_state(stack, state) \
-	((struct dom_select_state *) get_dom_stack_state_data((stack)->contexts, state))
+	((struct dom_select_state *) get_dom_stack_state_data((stack)->contexts[0], state))
 
 static int
 match_element_relation(struct dom_select_node *selector, struct dom_node *node,

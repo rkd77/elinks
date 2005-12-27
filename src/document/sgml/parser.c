@@ -29,10 +29,10 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer);
  * is the first to add it's context, which it is since it initializes the
  * stack. */
 
-#define get_sgml_parser(stack) ((stack)->contexts->data)
+#define get_sgml_parser(stack) ((stack)->contexts[0]->data)
 
 #define get_sgml_parser_state(stack, state) \
-	get_dom_stack_state_data(stack->contexts, state)
+	get_dom_stack_state_data(stack->contexts[0], state)
 
 
 /* Functions for adding new nodes to the DOM tree: */
@@ -432,7 +432,7 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer)
 
 	state = get_dom_stack_top(&parser->parsing);
 
-	return get_dom_stack_state_data(parser->parsing.contexts, state);
+	return get_dom_stack_state_data(parser->parsing.contexts[0], state);
 }
 
 
