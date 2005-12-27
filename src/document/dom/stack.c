@@ -164,17 +164,20 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	return node;
 }
 
-static int
-do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
+void
+pop_dom_node(struct dom_stack *stack)
 {
 	struct dom_stack_state *state;
 	int i;
 
-	assert(stack && !dom_stack_is_empty(stack));
+	assert(stack);
+
+	if (dom_stack_is_empty(stack))
+		return;
 
 	state = get_dom_stack_top(stack);
 	if (state->immutable)
-		return 1;
+		return;
 
 	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
 
@@ -195,18 +198,6 @@ do_pop_dom_node(struct dom_stack *stack, struct dom_stack_state *parent)
 	}
 
 	memset(state, 0, sizeof(*state));
-
-	return state == parent;
-}
-
-void
-pop_dom_node(struct dom_stack *stack)
-{
-	assert(stack);
-
-	if (dom_stack_is_empty(stack)) return;
-
-	do_pop_dom_node(stack, get_dom_stack_parent(stack));
 }
 
 void
@@ -237,8 +228,14 @@ pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target)
 	if (dom_stack_is_empty(stack)) return;
 
 	foreachback_dom_stack_state (stack, state, pos) {
-		if (do_pop_dom_node(stack, target))
-			break;;
+		/* Don't pop past states marked immutable. */
+		if (state->immutable)
+			break;
+
+		/* Pop until the target state is reached. */
+		pop_dom_node(stack);
+		if (state == target)
+			break;
 	}
 }
 
