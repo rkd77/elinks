@@ -532,29 +532,6 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 
 	assert(node && renderer->document);
 
-#if 0
-	/* Disabled since the DOM source highlighter uses the stream parser and
-	 * therefore the attributes is pushed to it in order. However, if/when
-	 * we will support rendering (read saving) of loaded DOM trees this one
-	 * small hack is needed to get the attributes in the original order. */
-	{
-		struct dom_stack_state *state = get_dom_stack_parent(stack);
-		struct dom_node *attribute = NULL;
-		int i;
-
-		assert(state && state->list);
-
-		/* The attributes are sorted but we want them in the original order */
-		foreach_dom_node(i, node, state->list) {
-			if (node->string >= renderer->position
-				&& (!attribute || node->string < attribute->string))
-				attribute = node;
-		}
-
-		assert(attribute);
-		node = attribute;
-	}
-#endif
 	render_dom_node_text(renderer, template, node);
 
 	if (is_dom_string_set(&node->data.attribute.value)) {
