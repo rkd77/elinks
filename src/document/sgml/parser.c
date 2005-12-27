@@ -21,6 +21,10 @@
 #include "util/string.h"
 
 
+static struct sgml_parsing_state *
+init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer);
+
+
 /* When getting the sgml_parser struct it is _always_ assumed that the parser
  * is the first to add it's context, which it is since it initializes the
  * stack. */
@@ -30,7 +34,11 @@
 #define get_sgml_parser_state(stack, state) \
 	get_dom_stack_state_data(stack->contexts, state)
 
-/* Functions for adding new nodes to the DOM tree */
+
+/* Functions for adding new nodes to the DOM tree: */
+
+/* They wrap init_dom_node() and add_dom_*() and set up of additional
+ * information like node subtypes and SGML parser state information. */
 
 static inline struct dom_node *
 add_sgml_document(struct dom_stack *stack, struct uri *uri)
@@ -153,6 +161,9 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct scanner_t
 		pop_dom_node(stack);
 }
 
+
+/* SGML parser main handling: */
+
 static inline void
 parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 {
@@ -211,7 +222,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 	}
 }
 
-void
+static void
 parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 {
 	while (scanner_has_tokens(scanner)) {
@@ -312,6 +323,37 @@ parse_sgml_document(struct dom_stack *stack, struct scanner *scanner)
 	}
 }
 
+struct dom_node *
+parse_sgml(struct sgml_parser *parser, struct string *buffer)
+{
+	struct sgml_parsing_state *parsing;
+
+	if (!parser->root) {
+		parser->root = add_sgml_document(&parser->stack, parser->uri);
+		if (!parser->root)
+			return NULL;
+		get_dom_stack_top(&parser->stack)->immutable = 1;
+	}
+
+	parsing = init_sgml_parsing_state(parser, buffer);
+	if (!parsing) return NULL;
+
+	/* FIXME: Make parse_sgml_document() return an error code. */
+	parse_sgml_document(&parser->stack, &parsing->scanner);
+
+	pop_dom_node(&parser->parsing);
+
+	return parser->root;
+}
+
+
+/* Parsing state management: */
+
+/* The SGML parser can handle nested calls to parse_sgml(). This can be used to
+ * handle output of external processing of data in the document tree. For
+ * example this can allows output of the document.write() from DOM scripting
+ * interface to be parsed. */
+
 static void
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -341,42 +383,6 @@ sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 	assert(parsing->depth == parser->stack.depth);
 }
 
-static struct dom_stack_context_info sgml_parser_context_info = {
-	/* Object size: */			sizeof(struct sgml_parser_state),
-	/* Push: */
-	{
-		/*				*/ NULL,
-		/* DOM_NODE_ELEMENT		*/ NULL,
-		/* DOM_NODE_ATTRIBUTE		*/ NULL,
-		/* DOM_NODE_TEXT		*/ NULL,
-		/* DOM_NODE_CDATA_SECTION	*/ NULL,
-		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
-		/* DOM_NODE_ENTITY		*/ NULL,
-		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
-		/* DOM_NODE_COMMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
-		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
-		/* DOM_NODE_NOTATION		*/ NULL,
-	},
-	/* Pop: */
-	{
-		/*				*/ NULL,
-		/* DOM_NODE_ELEMENT		*/ NULL,
-		/* DOM_NODE_ATTRIBUTE		*/ NULL,
-		/* DOM_NODE_TEXT		*/ NULL,
-		/* DOM_NODE_CDATA_SECTION	*/ NULL,
-		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
-		/* DOM_NODE_ENTITY		*/ NULL,
-		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
-		/* DOM_NODE_COMMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
-		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
-		/* DOM_NODE_NOTATION		*/ NULL,
-	}
-};
-
 static struct dom_stack_context_info sgml_parsing_context_info = {
 	/* Object size: */			sizeof(struct sgml_parsing_state),
 	/* Push: */
@@ -401,6 +407,63 @@ static struct dom_stack_context_info sgml_parsing_context_info = {
 		/* DOM_NODE_ELEMENT		*/ NULL,
 		/* DOM_NODE_ATTRIBUTE		*/ NULL,
 		/* DOM_NODE_TEXT		*/ sgml_parsing_pop,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
+/* Create a new parsing state by pushing a new text node containing the*/
+static struct sgml_parsing_state *
+init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer)
+{
+	struct dom_stack_state *state;
+	struct dom_node *node;
+
+	node = init_dom_node(DOM_NODE_TEXT, buffer->source, buffer->length);
+	if (!node || !push_dom_node(&parser->parsing, node))
+		return NULL;
+
+	state = get_dom_stack_top(&parser->parsing);
+
+	return get_dom_stack_state_data(parser->parsing.contexts, state);
+}
+
+
+/* Parser creation and destruction: */
+
+/* FIXME: For now the main SGML parser context doesn't do much other than
+ * declaring the sgml_parser_state object. */
+static struct dom_stack_context_info sgml_parser_context_info = {
+	/* Object size: */			sizeof(struct sgml_parser_state),
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
 		/* DOM_NODE_CDATA_SECTION	*/ NULL,
 		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
 		/* DOM_NODE_ENTITY		*/ NULL,
@@ -449,42 +512,4 @@ done_sgml_parser(struct sgml_parser *parser)
 	done_dom_stack(&parser->parsing);
 	done_uri(parser->uri);
 	mem_free(parser);
-}
-
-static struct sgml_parsing_state *
-init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer)
-{
-	struct dom_stack_state *state;
-	struct dom_node *node;
-
-	node = init_dom_node(DOM_NODE_TEXT, buffer->source, buffer->length);
-	if (!node || !push_dom_node(&parser->parsing, node))
-		return NULL;
-
-	state = get_dom_stack_top(&parser->parsing);
-
-	return get_dom_stack_state_data(parser->parsing.contexts, state);
-}
-
-struct dom_node *
-parse_sgml(struct sgml_parser *parser, struct string *buffer)
-{
-	struct sgml_parsing_state *parsing;
-
-	if (!parser->root) {
-		parser->root = add_sgml_document(&parser->stack, parser->uri);
-		if (!parser->root)
-			return NULL;
-		get_dom_stack_top(&parser->stack)->immutable = 1;
-	}
-
-	parsing = init_sgml_parsing_state(parser, buffer);
-	if (!parsing) return NULL;
-
-	/* FIXME: Make parse_sgml_document() return an error code. */
-	parse_sgml_document(&parser->stack, &parsing->scanner);
-
-	pop_dom_node(&parser->parsing);
-
-	return parser->root;
 }
