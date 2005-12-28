@@ -551,7 +551,8 @@ set_mem_comment(void *ptr, unsigned char *str, int len)
 
 	ah->comment = malloc(len + 1);
 	if (ah->comment) {
-		safe_strncpy(ah->comment, str, len + 1);
+		memcpy(ah->comment, str, len);
+		ah->comment[len] = 0;
 		mem_stats.true_amount += len + 1;
 	}
 }
