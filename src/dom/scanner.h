@@ -27,17 +27,10 @@ struct dom_scanner_token {
 #define skip_dom_scanner_token_char(token) \
 	do { (token)->string.string++; (token)->string.length--; } while (0)
 
-/* The naming of these two macros is a bit odd .. we compare often with
- * "static" strings (I don't have a better word) so the macro name should
- * be short. --jonas */
-
-/* Compare the string of @token with @string */
-#define dom_scanner_token_strlcasecmp(token, str, len) \
-	((token) && !strlcasecmp((token)->string.string, (token)->string.length, str, len))
-
-/* Also compares the token string but using a "static" string */
+/* Compare the string of @token with the "static" string in @str. */
 #define dom_scanner_token_contains(token, str) \
-	dom_scanner_token_strlcasecmp(token, str, sizeof(str) - 1)
+	((token)->string.length == (sizeof(str) - 1) \
+	 && !strncasecmp((token)->string.string, str, sizeof(str) - 1))
 
 
 struct dom_scan_table_info {
