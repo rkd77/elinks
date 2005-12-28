@@ -463,11 +463,7 @@ set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
 
 	switch (node->type) {
 	case DOM_NODE_ENTITY_REFERENCE:
-		/* XXX: The ASCII codepage is hardcoded here since we do not
-		 * want to depend on anything and this is really just for
-		 * debugging. */
-		string->string = get_entity_string(node->string.string,
-						   node->string.length, 0);
+		/* FIXME: Set to the entity value. */
 		string->string = null_or_stracpy(string->string);
 		break;
 
@@ -573,7 +569,7 @@ struct dom_stack_context_info dom_stack_trace_context_info = {
 		/* DOM_NODE_ENTITY		*/ dom_stack_trace_id_leaf,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ dom_stack_trace_id_leaf,
 		/* DOM_NODE_COMMENT		*/ dom_stack_trace_leaf,
-		/* DOM_NODE_DOCUMENT		*/ dom_stack_trace,
+		/* DOM_NODE_DOCUMENT		*/ dom_stack_trace_tree,
 		/* DOM_NODE_DOCUMENT_TYPE	*/ dom_stack_trace_id_leaf,
 		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ dom_stack_trace_id_leaf,
 		/* DOM_NODE_NOTATION		*/ dom_stack_trace_id_leaf,
