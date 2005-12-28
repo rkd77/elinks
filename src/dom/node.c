@@ -10,9 +10,9 @@
 #include "elinks.h"
 
 #include "dom/node.h"
+#include "dom/string.h"
 #include "util/hash.h"
 #include "util/memory.h"
-#include "util/string.h"
 
 
 static void done_dom_node_data(struct dom_node *node);

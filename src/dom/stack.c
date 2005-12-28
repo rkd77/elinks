@@ -11,8 +11,8 @@
 
 #include "dom/node.h"
 #include "dom/stack.h"
+#include "dom/string.h"
 #include "util/memory.h"
-#include "util/string.h"
 
 
 /* Navigator states */

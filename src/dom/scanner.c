@@ -10,8 +10,8 @@
 #include "elinks.h"
 
 #include "dom/scanner.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/string.h"
 
 
 int

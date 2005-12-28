@@ -11,8 +11,8 @@
 
 #include "dom/css/scanner.h"
 #include "dom/scanner.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/string.h"
 
 
 /* Bitmap entries for the CSS character groups used in the scanner table */

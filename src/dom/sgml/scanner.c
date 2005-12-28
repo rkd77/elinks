@@ -9,10 +9,10 @@
 
 #include "elinks.h"
 
-#include "dom/sgml/scanner.h"
-#include "util/error.h"
 #include "dom/scanner.h"
-#include "util/string.h"
+#include "dom/sgml/scanner.h"
+#include "dom/string.h"
+#include "util/error.h"
 
 
 /* Bitmap entries for the SGML character groups used in the scanner table */
