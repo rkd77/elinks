@@ -1,6 +1,7 @@
 #ifndef EL_DOM_SCANNER_H
 #define EL_DOM_SCANNER_H
 
+#include "dom/string.h"
 #include "util/error.h"
 
 /* Define if you want a talking scanner */
@@ -39,17 +40,14 @@ struct dom_scanner_token {
 
 struct dom_scan_table_info {
 	enum { DOM_SCAN_RANGE, DOM_SCAN_STRING, DOM_SCAN_END } type;
-	union scan_table_data {
-		struct { unsigned char *source; long length; } string;
-		struct { unsigned char *start; long end; } range;
-	} data;
+	struct dom_string data;
 	int bits;
 };
 
 #define	DOM_SCAN_TABLE_SIZE	256
 
 #define DOM_SCAN_TABLE_INFO(type, data1, data2, bits) \
-	{ (type), { { (data1), (data2) } }, (bits) }
+	{ (type), INIT_DOM_STRING((data1), (data2)), (bits) }
 
 #define DOM_SCAN_TABLE_RANGE(from, to, bits)	\
 	DOM_SCAN_TABLE_INFO(DOM_SCAN_RANGE, from, to, bits)
@@ -58,7 +56,7 @@ struct dom_scan_table_info {
 	DOM_SCAN_TABLE_INFO(DOM_SCAN_STRING, str, sizeof(str) - 1, bits)
 
 #define DOM_SCAN_TABLE_END			\
-	DOM_SCAN_TABLE_INFO(DOM_SCAN_END, 0, 0, 0)
+	DOM_SCAN_TABLE_INFO(DOM_SCAN_END, NULL, 0, 0)
 
 struct dom_scanner_string_mapping {
 	unsigned char *name;

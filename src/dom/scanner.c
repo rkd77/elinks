@@ -128,21 +128,21 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 	if (!info) return;
 
 	for (i = 0; info[i].type != DOM_SCAN_END; i++) {
-		const union scan_table_data *data = &info[i].data;
+		const struct dom_string *data = &info[i].data;
 
 		if (info[i].type == DOM_SCAN_RANGE) {
-			int index = *data->range.start;
+			int index = *data->string;
 
 			assert(index > 0);
-			assert(data->range.end < DOM_SCAN_TABLE_SIZE);
-			assert(index <= data->range.end);
+			assert(data->length < DOM_SCAN_TABLE_SIZE);
+			assert(index <= data->length);
 
-			for (; index <= data->range.end; index++)
+			for (; index <= data->length; index++)
 				scan_table[index] |= info[i].bits;
 
 		} else {
-			unsigned char *string = info[i].data.string.source;
-			int pos = info[i].data.string.length - 1;
+			unsigned char *string = info[i].data.string;
+			int pos = info[i].data.length - 1;
 
 			assert(info[i].type == DOM_SCAN_STRING && pos >= 0);
 
