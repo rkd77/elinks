@@ -34,9 +34,9 @@ script_hook_goto_url(va_list ap, void *data)
 
 	if (JS_TRUE == smjs_invoke_elinks_object_method("goto_url_hook",
 	                                                args, 1, &rval)) {
-		if (JSVAL_IS_BOOLEAN(rval)
-		    && JS_FALSE == JSVAL_TO_BOOLEAN(rval)) {
-			ret = EVENT_HOOK_STATUS_LAST;
+		if (JSVAL_IS_BOOLEAN(rval)) {
+			if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
 			JSString *jsstr = JS_ValueToString(smjs_ctx, rval);
 			unsigned char *str = JS_GetStringBytes(jsstr);
@@ -66,9 +66,9 @@ script_hook_follow_url(va_list ap, void *data)
 
 	if (JS_TRUE == smjs_invoke_elinks_object_method("follow_url_hook",
 	                                                args, 1, &rval)) {
-		if (JSVAL_IS_BOOLEAN(rval)
-		    && JS_FALSE == JSVAL_TO_BOOLEAN(rval)) {
-			ret = EVENT_HOOK_STATUS_LAST;
+		if (JSVAL_IS_BOOLEAN(rval)) {
+			if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
 			JSString *jsstr = JS_ValueToString(smjs_ctx, rval);
 			unsigned char *str = JS_GetStringBytes(jsstr);
