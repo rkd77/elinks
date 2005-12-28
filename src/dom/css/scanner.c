@@ -11,8 +11,8 @@
 
 #include "dom/css/scanner.h"
 #include "dom/scanner.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/string.h"
 
 
 /* Bitmap entries for the CSS character groups used in the scanner table */
@@ -54,33 +54,36 @@ static const struct dom_scan_table_info css_scan_table_info[] = {
 	DOM_SCAN_TABLE_END,
 };
 
+#define CSS_STRING_MAP(str, type, family) \
+	{ INIT_DOM_STRING(str, -1), CSS_TOKEN_##type, CSS_TOKEN_##family }
+
 static const struct dom_scanner_string_mapping css_string_mappings[] = {
-	{ "Hz",		CSS_TOKEN_FREQUENCY,	CSS_TOKEN_DIMENSION },
-	{ "cm",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "deg",	CSS_TOKEN_ANGLE,	CSS_TOKEN_DIMENSION },
-	{ "em",		CSS_TOKEN_EM,		CSS_TOKEN_DIMENSION },
-	{ "ex",		CSS_TOKEN_EX,		CSS_TOKEN_DIMENSION },
-	{ "grad",	CSS_TOKEN_ANGLE,	CSS_TOKEN_DIMENSION },
-	{ "in",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "kHz",	CSS_TOKEN_FREQUENCY,	CSS_TOKEN_DIMENSION },
-	{ "mm",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "ms",		CSS_TOKEN_TIME,		CSS_TOKEN_DIMENSION },
-	{ "pc",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "pt",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "px",		CSS_TOKEN_LENGTH,	CSS_TOKEN_DIMENSION },
-	{ "rad",	CSS_TOKEN_ANGLE,	CSS_TOKEN_DIMENSION },
-	{ "s",		CSS_TOKEN_TIME,		CSS_TOKEN_DIMENSION },
+	CSS_STRING_MAP("Hz",		FREQUENCY,	DIMENSION),
+	CSS_STRING_MAP("cm",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("deg",		ANGLE,		DIMENSION),
+	CSS_STRING_MAP("em",		EM,		DIMENSION),
+	CSS_STRING_MAP("ex",		EX,		DIMENSION),
+	CSS_STRING_MAP("grad",		ANGLE,		DIMENSION),
+	CSS_STRING_MAP("in",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("kHz",		FREQUENCY,	DIMENSION),
+	CSS_STRING_MAP("mm",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("ms",		TIME,		DIMENSION),
+	CSS_STRING_MAP("pc",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("pt",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("px",		LENGTH,		DIMENSION),
+	CSS_STRING_MAP("rad",		ANGLE,		DIMENSION),
+	CSS_STRING_MAP("s",		TIME,		DIMENSION),
 
-	{ "rgb",	CSS_TOKEN_RGB,		CSS_TOKEN_FUNCTION },
-	{ "url",	CSS_TOKEN_URL,		CSS_TOKEN_FUNCTION },
+	CSS_STRING_MAP("rgb",		RGB,		FUNCTION),
+	CSS_STRING_MAP("url",		URL,		FUNCTION),
 
-	{ "charset",	CSS_TOKEN_AT_CHARSET,	CSS_TOKEN_AT_KEYWORD },
-	{ "font-face",	CSS_TOKEN_AT_FONT_FACE,	CSS_TOKEN_AT_KEYWORD },
-	{ "import",	CSS_TOKEN_AT_IMPORT,	CSS_TOKEN_AT_KEYWORD },
-	{ "media",	CSS_TOKEN_AT_MEDIA,	CSS_TOKEN_AT_KEYWORD },
-	{ "page",	CSS_TOKEN_AT_PAGE,	CSS_TOKEN_AT_KEYWORD },
+	CSS_STRING_MAP("charset",	AT_CHARSET,	AT_KEYWORD),
+	CSS_STRING_MAP("font-face",	AT_FONT_FACE,	AT_KEYWORD),
+	CSS_STRING_MAP("import",	AT_IMPORT,	AT_KEYWORD),
+	CSS_STRING_MAP("media",		AT_MEDIA,	AT_KEYWORD),
+	CSS_STRING_MAP("page",		AT_PAGE,	AT_KEYWORD),
 
-	{ NULL, CSS_TOKEN_NONE, CSS_TOKEN_NONE },
+	DOM_STRING_MAP_END,
 };
 
 static struct dom_scanner_token *scan_css_tokens(struct dom_scanner *scanner);

@@ -12,8 +12,8 @@
 #include "dom/scanner.h"
 #include "dom/select.h"
 #include "dom/stack.h"
+#include "dom/string.h"
 #include "util/memory.h"
-#include "util/string.h"
 
 
 /* Selector parsing: */

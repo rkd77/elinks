@@ -11,8 +11,8 @@
 
 #include "dom/node.h"
 #include "dom/sgml/sgml.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/string.h"
 
 /* Backend includes: */
 

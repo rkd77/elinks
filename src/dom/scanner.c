@@ -10,8 +10,8 @@
 #include "elinks.h"
 
 #include "dom/scanner.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/string.h"
 
 
 int
@@ -19,11 +19,11 @@ map_dom_scanner_string(struct dom_scanner *scanner,
 		   unsigned char *ident, unsigned char *end, int base_type)
 {
 	const struct dom_scanner_string_mapping *mappings = scanner->info->mappings;
-	int length = end - ident;
+	struct dom_string name = INIT_DOM_STRING(ident, end - ident);
 
-	for (; mappings->name; mappings++) {
+	for (; is_dom_string_set(&mappings->name); mappings++) {
 		if (mappings->base_type == base_type
-		    && !strlcasecmp(mappings->name, -1, ident, length))
+		    && !dom_string_casecmp(&mappings->name, &name))
 			return mappings->type;
 	}
 

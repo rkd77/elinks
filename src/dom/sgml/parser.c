@@ -10,13 +10,13 @@
 #include "elinks.h"
 
 #include "dom/node.h"
-#include "dom/stack.h"
 #include "dom/sgml/parser.h"
 #include "dom/sgml/scanner.h"
 #include "dom/sgml/sgml.h"
+#include "dom/stack.h"
+#include "dom/string.h"
 #include "util/error.h"
 #include "util/memory.h"
-#include "util/string.h"
 
 
 static struct sgml_parsing_state *
