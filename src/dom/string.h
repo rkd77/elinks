@@ -42,7 +42,11 @@ static inline struct dom_string *
 init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 {
 	string->string = memacpy(str, len);
-	return string->string ? string : NULL;
+	if (!string->string)
+		return NULL;
+
+	string->length = len;
+	return string;
 }
 
 #define is_dom_string_set(str) ((str)->string && (str)->length)
