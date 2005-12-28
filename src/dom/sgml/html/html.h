@@ -1,8 +1,8 @@
 
-#ifndef EL__DOCUMENT_SGML_HTML_HTML_H
-#define EL__DOCUMENT_SGML_HTML_HTML_H
+#ifndef EL_DOM_SGML_HTML_HTML_H
+#define EL_DOM_SGML_HTML_HTML_H
 
-#include "document/sgml/sgml.h"
+#include "dom/sgml/sgml.h"
 
 extern struct sgml_info sgml_html_info;
 
@@ -13,7 +13,7 @@ extern struct sgml_info sgml_html_info;
 enum html_element_type {
 	HTML_ELEMENT_UNKNOWN,
 
-#include "document/sgml/html/element.inc"
+#include "dom/sgml/html/element.inc"
 
 	HTML_ELEMENTS,
 };
@@ -21,7 +21,7 @@ enum html_element_type {
 enum html_attribute_type {
 	HTML_ATTRIBUTE_UNKNOWN,
 
-#include "document/sgml/html/attribute.inc"
+#include "dom/sgml/html/attribute.inc"
 
 	HTML_ATTRIBUTES,
 };

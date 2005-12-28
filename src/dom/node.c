@@ -9,8 +9,7 @@
 
 #include "elinks.h"
 
-#include "document/dom/node.h"
-#include "intl/charsets.h"
+#include "dom/node.h"
 #include "util/hash.h"
 #include "util/lists.h"
 #include "util/memory.h"

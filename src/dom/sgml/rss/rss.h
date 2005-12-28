@@ -1,7 +1,7 @@
-#ifndef EL__DOCUMENT_SGML_RSS_RSS_H
-#define EL__DOCUMENT_SGML_RSS_RSS_H
+#ifndef EL_DOM_SGML_RSS_RSS_H
+#define EL_DOM_SGML_RSS_RSS_H
 
-#include "document/sgml/sgml.h"
+#include "dom/sgml/sgml.h"
 
 extern struct sgml_info sgml_rss_info;
 
@@ -10,7 +10,7 @@ extern struct sgml_info sgml_rss_info;
 enum rss_element_type {
 	RSS_ELEMENT_UNKNOWN,
 
-#include "document/sgml/rss/element.inc"
+#include "dom/sgml/rss/element.inc"
 
 	RSS_ELEMENTS,
 };
@@ -18,7 +18,7 @@ enum rss_element_type {
 enum rss_attribute_type {
 	RSS_ATTRIBUTE_UNKNOWN,
 
-#include "document/sgml/rss/attribute.inc"
+#include "dom/sgml/rss/attribute.inc"
 
 	RSS_ATTRIBUTES,
 };

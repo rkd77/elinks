@@ -9,8 +9,8 @@
 
 #include "elinks.h"
 
-#include "document/dom/node.h"
-#include "document/dom/stack.h"
+#include "dom/node.h"
+#include "dom/stack.h"
 #include "util/memory.h"
 #include "util/string.h"
 

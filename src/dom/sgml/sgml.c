@@ -9,15 +9,15 @@
 
 #include "elinks.h"
 
-#include "document/dom/node.h"
-#include "document/sgml/sgml.h"
+#include "dom/node.h"
+#include "dom/sgml/sgml.h"
 #include "util/error.h"
 #include "util/string.h"
 
 /* Backend includes: */
 
-#include "document/sgml/html/html.h"
-#include "document/sgml/rss/rss.h"
+#include "dom/sgml/html/html.h"
+#include "dom/sgml/rss/rss.h"
 
 
 int

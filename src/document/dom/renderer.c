@@ -20,11 +20,12 @@
 #include "document/css/stylesheet.h"
 #include "document/docdata.h"
 #include "document/document.h"
-#include "document/dom/node.h"
 #include "document/dom/renderer.h"
-#include "document/dom/stack.h"
 #include "document/renderer.h"
-#include "document/sgml/parser.h"
+#include "dom/scanner.h"
+#include "dom/sgml/parser.h"
+#include "dom/node.h"
+#include "dom/stack.h"
 #include "intl/charsets.h"
 #include "globhist/globhist.h"		/* get_global_history_item() */
 #include "protocol/uri.h"
@@ -32,7 +33,6 @@
 #include "util/box.h"
 #include "util/error.h"
 #include "util/memory.h"
-#include "util/scanner.h"
 #include "util/snprintf.h"
 #include "util/string.h"
 
@@ -506,7 +506,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	struct dom_renderer *renderer = stack->current->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
 	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
-	struct scanner_token *token = &pstate->end_token;
+	struct dom_scanner_token *token = &pstate->end_token;
 	unsigned char *string = token->string;
 	int length = token->length;
 

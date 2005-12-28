@@ -1,11 +1,11 @@
 
-#ifndef EL__DOCUMENT_SGML_SGML_H
-#define EL__DOCUMENT_SGML_SGML_H
+#ifndef EL_DOM_SGML_SGML_H
+#define EL_DOM_SGML_SGML_H
 
 #include <stdlib.h>
 
-#include "document/dom/stack.h"
-#include "document/dom/string.h"
+#include "dom/stack.h"
+#include "dom/string.h"
 
 /* The flags stored in the attribute sgml node info data */
 /* TODO: Other potential flags (there can be only 16)

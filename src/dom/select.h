@@ -1,7 +1,7 @@
-#ifndef EL__DOCUMENT_DOM_SELECT_H
-#define EL__DOCUMENT_DOM_SELECT_H
+#ifndef EL_DOM_SELECT_H
+#define EL_DOM_SELECT_H
 
-#include "document/dom/node.h"
+#include "dom/node.h"
 
 
 /* FIXME: Namespaces; *|E */

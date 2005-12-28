@@ -1,7 +1,7 @@
-#ifndef EL__DOCUMENT_DOM_STACK_H
-#define EL__DOCUMENT_DOM_STACK_H
+#ifndef EL_DOM_STACK_H
+#define EL_DOM_STACK_H
 
-#include "document/dom/node.h"
+#include "dom/node.h"
 #include "util/error.h"
 #include "util/hash.h"
 

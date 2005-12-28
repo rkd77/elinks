@@ -1,5 +1,5 @@
-#ifndef EL__DOCUMENT_DOM_STRING_H
-#define EL__DOCUMENT_DOM_STRING_H
+#ifndef EL_DOM_STRING_H
+#define EL_DOM_STRING_H
 
 struct dom_string {
 	size_t length;

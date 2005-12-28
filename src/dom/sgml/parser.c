@@ -9,11 +9,11 @@
 
 #include "elinks.h"
 
-#include "document/dom/node.h"
-#include "document/dom/stack.h"
-#include "document/sgml/parser.h"
-#include "document/sgml/scanner.h"
-#include "document/sgml/sgml.h"
+#include "dom/node.h"
+#include "dom/stack.h"
+#include "dom/sgml/parser.h"
+#include "dom/sgml/scanner.h"
+#include "dom/sgml/sgml.h"
 #include "protocol/uri.h"
 #include "util/error.h"
 #include "util/lists.h"
@@ -51,7 +51,7 @@ add_sgml_document(struct dom_stack *stack, struct uri *uri)
 }
 
 static inline struct dom_node *
-add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
+add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
@@ -81,7 +81,7 @@ add_sgml_element(struct dom_stack *stack, struct scanner_token *token)
 
 static inline void
 add_sgml_attribute(struct dom_stack *stack,
-		  struct scanner_token *token, struct scanner_token *valtoken)
+		   struct dom_scanner_token *token, struct dom_scanner_token *valtoken)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
@@ -109,7 +109,7 @@ add_sgml_attribute(struct dom_stack *stack,
 }
 
 static inline struct dom_node *
-add_sgml_proc_instruction(struct dom_stack *stack, struct scanner_token *token)
+add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *token)
 {
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_node *node;
@@ -147,7 +147,7 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct scanner_token *token)
 }
 
 static inline void
-add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct scanner_token *token)
+add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scanner_token *token)
 {
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_node *node = add_dom_node(parent, type, token->string, token->length);
@@ -165,24 +165,24 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct scanner_t
 /* SGML parser main handling: */
 
 static inline void
-parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
+parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
-	struct scanner_token name;
+	struct dom_scanner_token name;
 
-	assert(scanner_has_tokens(scanner)
-	       && (get_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN
-	       	   || get_scanner_token(scanner)->type == SGML_TOKEN_PROCESS_XML));
+	assert(dom_scanner_has_tokens(scanner)
+	       && (get_dom_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN
+	       	   || get_dom_scanner_token(scanner)->type == SGML_TOKEN_PROCESS_XML));
 
-	skip_scanner_token(scanner);
+	skip_dom_scanner_token(scanner);
 
-	while (scanner_has_tokens(scanner)) {
-		struct scanner_token *token = get_scanner_token(scanner);
+	while (dom_scanner_has_tokens(scanner)) {
+		struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
 		assert(token);
 
 		switch (token->type) {
 		case SGML_TOKEN_TAG_END:
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			/* and return */
 		case SGML_TOKEN_ELEMENT:
 		case SGML_TOKEN_ELEMENT_BEGIN:
@@ -194,11 +194,11 @@ parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 			copy_struct(&name, token);
 
 			/* Skip the attribute name token */
-			token = get_next_scanner_token(scanner);
+			token = get_next_dom_scanner_token(scanner);
 			if (token && token->type == '=') {
 				/* If the token is not a valid value token
 				 * ignore it. */
-				token = get_next_scanner_token(scanner);
+				token = get_next_dom_scanner_token(scanner);
 				if (token
 				    && token->type != SGML_TOKEN_IDENT
 				    && token->type != SGML_TOKEN_ATTRIBUTE
@@ -212,28 +212,28 @@ parse_sgml_attributes(struct dom_stack *stack, struct scanner *scanner)
 
 			/* Skip the value token */
 			if (token)
-				skip_scanner_token(scanner);
+				skip_dom_scanner_token(scanner);
 			break;
 
 		default:
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 
 		}
 	}
 }
 
 static void
-parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
+parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
-	while (scanner_has_tokens(scanner)) {
-		struct scanner_token *token = get_scanner_token(scanner);
+	while (dom_scanner_has_tokens(scanner)) {
+		struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
 		switch (token->type) {
 		case SGML_TOKEN_ELEMENT:
 		case SGML_TOKEN_ELEMENT_BEGIN:
 			if (!add_sgml_element(stack, token)) {
 				if (token->type == SGML_TOKEN_ELEMENT) {
-					skip_scanner_token(scanner);
+					skip_dom_scanner_token(scanner);
 					break;
 				}
 
@@ -244,14 +244,14 @@ parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
 			if (token->type == SGML_TOKEN_ELEMENT_BEGIN) {
 				parse_sgml_attributes(stack, scanner);
 			} else {
-				skip_scanner_token(scanner);
+				skip_dom_scanner_token(scanner);
 			}
 
 			break;
 
 		case SGML_TOKEN_ELEMENT_EMPTY_END:
 			pop_dom_node(stack);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_ELEMENT_END:
@@ -273,12 +273,12 @@ parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
 					pop_dom_state(stack, state);
 				}
 			}
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_NOTATION_COMMENT:
 			add_sgml_node(stack, DOM_NODE_COMMENT, token);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_NOTATION_ATTLIST:
@@ -286,12 +286,12 @@ parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
 		case SGML_TOKEN_NOTATION_ELEMENT:
 		case SGML_TOKEN_NOTATION_ENTITY:
 		case SGML_TOKEN_NOTATION:
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_CDATA_SECTION:
 			add_sgml_node(stack, DOM_NODE_CDATA_SECTION, token);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_PROCESS_XML:
@@ -306,19 +306,19 @@ parse_sgml_plain(struct dom_stack *stack, struct scanner *scanner)
 
 		case SGML_TOKEN_PROCESS:
 			add_sgml_proc_instruction(stack, token);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_ENTITY:
 			add_sgml_node(stack, DOM_NODE_ENTITY_REFERENCE, token);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 			break;
 
 		case SGML_TOKEN_SPACE:
 		case SGML_TOKEN_TEXT:
 		default:
 			add_sgml_node(stack, DOM_NODE_TEXT, token);
-			skip_scanner_token(scanner);
+			skip_dom_scanner_token(scanner);
 		}
 	}
 }
@@ -365,7 +365,7 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
-	init_scanner(&parsing->scanner, &sgml_scanner_info, source, end);
+	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, source, end);
 }
 
 static void

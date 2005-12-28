@@ -1,8 +1,8 @@
 
-#ifndef EL__DOCUMENT_DOM_NODE_H
-#define EL__DOCUMENT_DOM_NODE_H
+#ifndef EL_DOM_NODE_H
+#define EL_DOM_NODE_H
 
-#include "document/dom/string.h"
+#include "dom/string.h"
 #include "util/hash.h"
 
 struct dom_node_list;
