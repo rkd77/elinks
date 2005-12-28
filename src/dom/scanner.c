@@ -154,7 +154,7 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 
 void
 init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-	     unsigned char *string, unsigned char *end)
+		 struct dom_string *string)
 {
 	if (!scanner_info->initialized) {
 		init_dom_scanner_info(scanner_info);
@@ -163,9 +163,9 @@ init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_i
 
 	memset(scanner, 0, sizeof(*scanner));
 
-	scanner->string = string;
-	scanner->position = string;
-	scanner->end = end ? end : string + strlen(string);
+	scanner->string = string->string;
+	scanner->position = string->string;
+	scanner->end = string->string + string->length;
 	scanner->current = scanner->table;
 	scanner->info = scanner_info;
 	scanner->info->scan(scanner);

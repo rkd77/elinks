@@ -356,12 +356,10 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = data;
-	unsigned char *source = node->string.string;
-	unsigned char *end = source + node->string.length;
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
-	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, source, end);
+	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string);
 }
 
 static void

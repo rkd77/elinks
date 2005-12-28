@@ -91,7 +91,7 @@ struct dom_scanner_info {
 
 /* Initializes the scanner. */
 void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-		      unsigned char *string, unsigned char *end);
+		      struct dom_string *string);
 
 /* The number of tokens in the scanners token table:
  * At best it should be big enough to contain properties with space separated
