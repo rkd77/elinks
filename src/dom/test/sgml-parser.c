@@ -15,59 +15,54 @@
 #include "dom/stack.h"
 
 
-/* Compress a string to a single line with newlines etc. replaced with "\\n"
- * sequence. */
-static inline unsigned char *
-compress_string(unsigned char *string, unsigned int length)
+/* Print the string in a compressed form: a single line with newlines etc.
+ * replaced with "\\n" sequence. */
+static void
+print_compressed_string(struct dom_string *string)
 {
-	struct string buffer;
 	unsigned char escape[2] = "\\";
+	size_t pos;
 
-	if (!init_string(&buffer)) return NULL;
+	for (pos = 0; pos < string->length; pos++) {
+		unsigned char data = string->string[pos];
 
-	for (; length > 0; string++, length--) {
-		unsigned char *bytes = string;
-
-		if (*string == '\n' || *string == '\r' || *string == '\t') {
-			bytes	  = escape;
-			escape[1] = *string == '\n' ? 'n'
-				  : (*string == '\r' ? 'r' : 't');
+		switch (data) {
+		case '\n': escape[1] = 'n'; break;
+		case '\r': escape[1] = 'r'; break;
+		case '\t': escape[1] = 't'; break;
+		default:
+			putchar(data);
+			continue;
 		}
 
-		add_bytes_to_string(&buffer, bytes, bytes == escape ? 2 : 1);
+		printf("%s", escape);
 	}
-
-	return buffer.source;
 }
 
 /* Set @string to the value of the given @node, however, with strings
  * compressed and entity references 'expanded'. */
 static void
-set_enhanced_dom_node_value(struct dom_string *string, struct dom_node *node)
+print_dom_node_value(struct dom_node *node)
 {
 	struct dom_string *value;
 
 	assert(node);
 
-	memset(string, 0, sizeof(*string));
-
 	switch (node->type) {
 	case DOM_NODE_ENTITY_REFERENCE:
 		/* FIXME: Set to the entity value. */
-		string->string = null_or_stracpy(string->string);
+		printf("%.*s", node->string.length, node->string.string);
 		break;
 
 	default:
 		value = get_dom_node_value(node);
 		if (!value) {
-			set_dom_string(string, NULL, 0);
+			printf("(no value)");
 			return;
 		}
 
-		string->string = compress_string(value->string, value->length);
+		print_compressed_string(value);
 	}
-
-	string->length = string->string ? strlen(string->string) : 0;
 }
 
 static unsigned char indent_string[] =
@@ -91,7 +86,6 @@ sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data
 static void
 sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_string value;
 	struct dom_string *name;
 	struct dom_string *id;
 
@@ -99,35 +93,28 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
-	set_enhanced_dom_node_value(&value, node);
 
-	printf("%.*s %.*s: %.*s -> %.*s\n",
+	printf("%.*s %.*s: %.*s -> ",
 		get_indent_offset(stack), indent_string,
-		id->length, id->string, name->length, name->string,
-		value.length, value.string);
-
-	if (is_dom_string_set(&value))
-		done_dom_string(&value);
+		id->length, id->string, name->length, name->string);
+	print_dom_node_value(node);
+	printf("\n");
 }
 
 static void
 sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
-	struct dom_string value;
 
 	assert(node);
 
 	name	= get_dom_node_name(node);
-	set_enhanced_dom_node_value(&value, node);
 
-	printf("%.*s %.*s: %.*s\n",
+	printf("%.*s %.*s: ",
 		get_indent_offset(stack), indent_string,
-		name->length, name->string,
-		value.length, value.string);
-
-	if (is_dom_string_set(&value))
-		done_dom_string(&value);
+		name->length, name->string);
+	print_dom_node_value(node);
+	printf("\n");
 }
 
 static void
