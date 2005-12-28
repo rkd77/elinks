@@ -8,6 +8,7 @@
 
 #include "cache/cache.h"
 #include "ecmascript/spidermonkey/util.h"
+#include "protocol/uri.h"
 #include "scripting/smjs/cache_object.h"
 #include "scripting/smjs/core.h"
 #include "util/error.h"
@@ -18,6 +19,7 @@ enum cache_entry_prop {
 	CACHE_ENTRY_TYPE,
 	CACHE_ENTRY_LENGTH,
 	CACHE_ENTRY_HEAD,
+	CACHE_ENTRY_URI,
 };
 
 static const JSPropertySpec cache_entry_props[] = {
@@ -25,6 +27,7 @@ static const JSPropertySpec cache_entry_props[] = {
 	{ "type",    CACHE_ENTRY_TYPE,    JSPROP_ENUMERATE },
 	{ "length",  CACHE_ENTRY_LENGTH,  JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "head",    CACHE_ENTRY_HEAD,    JSPROP_ENUMERATE },
+	{ "uri",     CACHE_ENTRY_URI,     JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 
@@ -64,6 +67,11 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	case CACHE_ENTRY_LENGTH:
 		*vp = INT_TO_JSVAL(cached->length);
+
+		return JS_TRUE;
+	case CACHE_ENTRY_URI:
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		                                        struri(cached->uri)));
 
 		return JS_TRUE;
 	default:
