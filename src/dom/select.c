@@ -389,13 +389,12 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 /* Parse a CSS3 selector and add selector nodes to the @select struct. */
 static enum dom_exception_code
 parse_dom_select(struct dom_select *select, struct dom_stack *stack,
-		 unsigned char *string, int length)
+		 struct dom_string *string)
 {
 	struct dom_scanner scanner;
 	struct dom_select_node sel;
-	struct dom_string source = INIT_DOM_STRING(string, length);
 
-	init_dom_scanner(&scanner, &dom_css_scanner_info, &source);
+	init_dom_scanner(&scanner, &dom_css_scanner_info, string);
 
 	memset(&sel, 0, sizeof(sel));
 
@@ -524,8 +523,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 /* Basically this is just a wrapper for parse_dom_select() to ease error
  * handling. */
 struct dom_select *
-init_dom_select(enum dom_select_syntax syntax,
-		unsigned char *string, int length)
+init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 {
 	struct dom_select *select = mem_calloc(1, sizeof(select));
 	struct dom_stack stack;
@@ -533,7 +531,7 @@ init_dom_select(enum dom_select_syntax syntax,
 
 	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
 
-	code = parse_dom_select(select, &stack, string, length);
+	code = parse_dom_select(select, &stack, string);
 	done_dom_stack(&stack);
 
 	if (code == DOM_ERR_NONE)
