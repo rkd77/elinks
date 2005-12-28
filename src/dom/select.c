@@ -183,7 +183,7 @@ get_scanner_token_number(struct dom_scanner_token *token)
 			return -1;
 
 		number += token->string.string[0] - '0';
-		token->string.string++, token->string.length--;
+		skip_dom_scanner_token_char(token);
 	}
 
 	return number;
@@ -414,7 +414,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		case CSS_TOKEN_IDENT:
 			sel.node.type = DOM_NODE_ELEMENT;
 			copy_dom_string(&sel.node.string, &token->string);
-			if (token->string.length == 1 && token->string.string[0] == '*')
+			if (dom_scanner_token_contains(token, "*"))
 				sel.match.element |= DOM_SELECT_ELEMENT_UNIVERSAL;
 			break;
 
@@ -424,7 +424,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_ID;
 			/* Skip the leading '#'. */
-			token->string.string++, token->string.length--;
+			skip_dom_scanner_token_char(token);
 			break;
 
 		case '[':

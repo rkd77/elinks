@@ -24,6 +24,9 @@ struct dom_scanner_token {
 	struct dom_string string;
 };
 
+#define skip_dom_scanner_token_char(token) \
+	do { (token)->string.string++; (token)->string.length--; } while (0)
+
 /* The naming of these two macros is a bit odd .. we compare often with
  * "static" strings (I don't have a better word) so the macro name should
  * be short. --jonas */
