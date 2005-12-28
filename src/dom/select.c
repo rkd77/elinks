@@ -6,13 +6,13 @@
 
 #include "elinks.h"
 
-#include "document/css/scanner.h"
-#include "document/dom/dom.h"
-#include "document/dom/node.h"
-#include "document/dom/select.h"
-#include "document/dom/stack.h"
+#include "dom/css/scanner.h"
+#include "dom/dom.h"
+#include "dom/node.h"
+#include "dom/scanner.h"
+#include "dom/select.h"
+#include "dom/stack.h"
 #include "util/memory.h"
-#include "util/scanner.h"
 #include "util/string.h"
 
 
@@ -20,7 +20,7 @@
 
 /* Maps the content of a scanner token to a pseudo-class or -element ID. */
 static enum dom_select_pseudo
-get_dom_select_pseudo(struct scanner_token *token)
+get_dom_select_pseudo(struct dom_scanner_token *token)
 {
 	static struct {
 		struct dom_string string;
@@ -70,13 +70,10 @@ get_dom_select_pseudo(struct scanner_token *token)
 #undef INIT_DOM_SELECT_PSEUDO_STRING
 
 	};
-	struct dom_string string;
 	int i;
 
-	set_dom_string(&string, token->string, token->length);
-
 	for (i = 0; i < sizeof_array(pseudo_info); i++)
-		if (!dom_string_casecmp(&pseudo_info[i].string, &string))
+		if (!dom_string_casecmp(&pseudo_info[i].string, &token->string))
 			return pseudo_info[i].pseudo;
 
 	return DOM_SELECT_PSEUDO_UNKNOWN;
@@ -84,9 +81,9 @@ get_dom_select_pseudo(struct scanner_token *token)
 
 /* Parses attribute selector. For example '[foo="bar"]' or '[foo|="boo"]'. */
 static enum dom_exception_code
-parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
+parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scanner)
 {
-	struct scanner_token *token = get_scanner_token(scanner);
+	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
 	/* Get '['. */
 
@@ -95,15 +92,15 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 
 	/* Get the attribute name. */
 
-	token = get_next_scanner_token(scanner);
+	token = get_next_dom_scanner_token(scanner);
 	if (!token || token->type != CSS_TOKEN_IDENT)
 		return DOM_ERR_SYNTAX;
 
-	set_dom_string(&sel->node.string, token->string, token->length);
+	copy_dom_string(&sel->node.string, &token->string);
 
 	/* Get the optional '=' combo or ending ']'. */
 
-	token = get_next_scanner_token(scanner);
+	token = get_next_dom_scanner_token(scanner);
 	if (!token) return DOM_ERR_SYNTAX;
 
 	switch (token->type) {
@@ -137,13 +134,13 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 
 	/* Get the required value. */
 
-	token = get_next_scanner_token(scanner);
+	token = get_next_dom_scanner_token(scanner);
 	if (!token) return DOM_ERR_SYNTAX;
 
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
 	case CSS_TOKEN_STRING:
-		set_dom_string(&sel->node.data.attribute.value, token->string, token->length);
+		copy_dom_string(&sel->node.data.attribute.value, &token->string);
 		break;
 
 	default:
@@ -152,7 +149,7 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
 
 	/* Get the ending ']'. */
 
-	token = get_next_scanner_token(scanner);
+	token = get_next_dom_scanner_token(scanner);
 	if (token && token->type == ']')
 		return DOM_ERR_NONE;
 
@@ -170,13 +167,13 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct scanner *scanner)
  *   0n+0		
  */
 
-/* FIXME: Move somewhere else? util/scanner.h? */
+/* FIXME: Move somewhere else? dom/scanner.h? */
 static size_t
-get_scanner_token_number(struct scanner_token *token)
+get_scanner_token_number(struct dom_scanner_token *token)
 {
 	size_t number = 0;
 
-	while (token->length > 0 && isdigit(token->string[0])) {
+	while (token->string.length > 0 && isdigit(token->string.string[0])) {
 		size_t old_number = number;
 
 		number *= 10;
@@ -185,8 +182,8 @@ get_scanner_token_number(struct scanner_token *token)
 		if (old_number > number)
 			return -1;
 
-		number += token->string[0] - '0';
-		token->string++, token->length--;
+		number += token->string.string[0] - '0';
+		skip_dom_scanner_token_char(token);
 	}
 
 	return number;
@@ -194,26 +191,26 @@ get_scanner_token_number(struct scanner_token *token)
 
 /* Parses the '(...)' part of ':nth-of-type(...)' and ':nth-child(...)'. */
 static enum dom_exception_code
-parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scanner)
+parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *scanner)
 {
-	struct scanner_token *token = get_next_scanner_token(scanner);
+	struct dom_scanner_token *token = get_next_dom_scanner_token(scanner);
 	int sign = 1;
 	int number = -1;
 
 	if (!token || token->type != '(')
 		return DOM_ERR_SYNTAX;
 
-	token = get_next_scanner_token(scanner);
+	token = get_next_dom_scanner_token(scanner);
 	if (!token)
 		return DOM_ERR_SYNTAX;
 
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
-		if (scanner_token_contains(token, "even")) {
+		if (dom_scanner_token_contains(token, "even")) {
 			nth->step = 2;
 			nth->index = 0;
 
-		} else if (scanner_token_contains(token, "odd")) {
+		} else if (dom_scanner_token_contains(token, "odd")) {
 			nth->step = 2;
 			nth->index = 1;
 
@@ -230,7 +227,7 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scann
 	case '-':
 		sign = -1;
 
-		token = get_next_scanner_token(scanner);
+		token = get_next_dom_scanner_token(scanner);
 		if (!token) return DOM_ERR_SYNTAX;
 
 		if (token->type != CSS_TOKEN_IDENT)
@@ -245,7 +242,7 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scann
 		if (number < 0)
 			return DOM_ERR_INVALID_STATE;
 
-		token = get_next_scanner_token(scanner);
+		token = get_next_dom_scanner_token(scanner);
 		if (!token) return DOM_ERR_SYNTAX;
 		break;
 
@@ -256,18 +253,18 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scann
 	/* The rest can contain n+ part */
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
-		if (!scanner_token_contains(token, "n"))
+		if (!dom_scanner_token_contains(token, "n"))
 			return DOM_ERR_SYNTAX;
 
 		nth->step = sign * number;
 
-		token = get_next_scanner_token(scanner);
+		token = get_next_dom_scanner_token(scanner);
 		if (!token) return DOM_ERR_SYNTAX;
 
 		if (token->type != '+')
 			break;
 
-		token = get_next_scanner_token(scanner);
+		token = get_next_dom_scanner_token(scanner);
 		if (!token) return DOM_ERR_SYNTAX;
 
 		if (token->type != CSS_TOKEN_NUMBER)
@@ -294,15 +291,15 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct scanner *scann
 /* Parse a pseudo-class or -element with the syntax: ':<ident>'. */
 static enum dom_exception_code
 parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
-			struct scanner *scanner)
+			struct dom_scanner *scanner)
 {
-	struct scanner_token *token = get_scanner_token(scanner);
+	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 	enum dom_select_pseudo pseudo;
 	enum dom_exception_code code;
 
 	/* Skip double :'s in front of some pseudo's (::first-line, etc.) */
 	do {
-		token = get_next_scanner_token(scanner);
+		token = get_next_dom_scanner_token(scanner);
 	} while (token && token->type == ':');
 
 	if (!token || token->type != CSS_TOKEN_IDENT)
@@ -389,17 +386,17 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 /* Parse a CSS3 selector and add selector nodes to the @select struct. */
 static enum dom_exception_code
 parse_dom_select(struct dom_select *select, struct dom_stack *stack,
-		 unsigned char *string, int length)
+		 struct dom_string *string)
 {
-	struct scanner scanner;
+	struct dom_scanner scanner;
 	struct dom_select_node sel;
 
-	init_scanner(&scanner, &css_scanner_info, string, string + length);
+	init_dom_scanner(&scanner, &dom_css_scanner_info, string);
 
 	memset(&sel, 0, sizeof(sel));
 
-	while (scanner_has_tokens(&scanner)) {
-		struct scanner_token *token = get_scanner_token(&scanner);
+	while (dom_scanner_has_tokens(&scanner)) {
+		struct dom_scanner_token *token = get_dom_scanner_token(&scanner);
 		enum dom_exception_code code;
 		struct dom_select_node *select_node;
 
@@ -416,8 +413,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		switch (token->type) {
 		case CSS_TOKEN_IDENT:
 			sel.node.type = DOM_NODE_ELEMENT;
-			set_dom_string(&sel.node.string, token->string, token->length);
-			if (token->length == 1 && token->string[0] == '*')
+			copy_dom_string(&sel.node.string, &token->string);
+			if (dom_scanner_token_contains(token, "*"))
 				sel.match.element |= DOM_SELECT_ELEMENT_UNIVERSAL;
 			break;
 
@@ -427,7 +424,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_ID;
 			/* Skip the leading '#'. */
-			token->string++, token->length--;
+			skip_dom_scanner_token_char(token);
 			break;
 
 		case '[':
@@ -438,14 +435,14 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			break;
 
 		case '.':
-			token = get_next_scanner_token(&scanner);
+			token = get_next_dom_scanner_token(&scanner);
 			if (!token || token->type != CSS_TOKEN_IDENT)
 				return DOM_ERR_SYNTAX;
 
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
 			set_dom_string(&sel.node.string, "class", -1); 
-			set_dom_string(&sel.node.data.attribute.value, token->string, token->length); 
+			copy_dom_string(&sel.node.data.attribute.value, &token->string); 
 			break;
 
 		case ':':
@@ -476,7 +473,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			return DOM_ERR_SYNTAX;
 		}
 
-		skip_scanner_token(&scanner);
+		skip_dom_scanner_token(&scanner);
 
 		if (sel.node.type == DOM_NODE_UNKNOWN)
 			continue;
@@ -523,8 +520,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 /* Basically this is just a wrapper for parse_dom_select() to ease error
  * handling. */
 struct dom_select *
-init_dom_select(enum dom_select_syntax syntax,
-		unsigned char *string, int length)
+init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 {
 	struct dom_select *select = mem_calloc(1, sizeof(select));
 	struct dom_stack stack;
@@ -532,7 +528,7 @@ init_dom_select(enum dom_select_syntax syntax,
 
 	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
 
-	code = parse_dom_select(select, &stack, string, length);
+	code = parse_dom_select(select, &stack, string);
 	done_dom_stack(&stack);
 
 	if (code == DOM_ERR_NONE)

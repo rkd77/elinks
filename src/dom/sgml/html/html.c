@@ -9,8 +9,8 @@
 
 #include "elinks.h"
 
-#include "document/sgml/html/html.h"
-#include "document/sgml/sgml.h"
+#include "dom/sgml/html/html.h"
+#include "dom/sgml/sgml.h"
 
 
 #define HTML_(node, name, id)		SGML_NODE_INFO(HTML, node, name, id)
@@ -20,13 +20,13 @@
 static struct sgml_node_info html_attributes[HTML_ATTRIBUTES] = {
 	SGML_NODE_HEAD(HTML, ATTRIBUTE),
 
-#include "document/sgml/html/attribute.inc"
+#include "dom/sgml/html/attribute.inc"
 };
 
 static struct sgml_node_info html_elements[HTML_ELEMENTS] = {
 	SGML_NODE_HEAD(HTML, ELEMENT),
 
-#include "document/sgml/html/element.inc"
+#include "dom/sgml/html/element.inc"
 };
 
 

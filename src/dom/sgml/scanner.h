@@ -1,8 +1,8 @@
 
-#ifndef EL__DOCUMENT_SGML_SCANNER_H
-#define EL__DOCUMENT_SGML_SCANNER_H
+#ifndef EL_DOM_SGML_SCANNER_H
+#define EL_DOM_SGML_SCANNER_H
 
-#include "util/scanner.h"
+#include "dom/scanner.h"
 
 enum sgml_token_type {
 	/* Char tokens: */
@@ -56,7 +56,7 @@ enum sgml_token_type {
 	SGML_TOKEN_NONE = 0,
 };
 
-extern struct scanner_info sgml_scanner_info;
+extern struct dom_scanner_info sgml_scanner_info;
 
 /* Treat '<' as more valuable then '>' so that scanning of '<a<b>' using
  * skipping to next '>' will stop at the second '<'. */
@@ -65,6 +65,6 @@ extern struct scanner_info sgml_scanner_info;
 	 (token_type) == '>' ? (1 << 10) : 0)
 
 #define skip_sgml_tokens(scanner, type) \
-	skip_scanner_tokens(scanner, type, get_sgml_precedence(type))
+	skip_dom_scanner_tokens(scanner, type, get_sgml_precedence(type))
 
 #endif

@@ -20,11 +20,12 @@
 #include "document/css/stylesheet.h"
 #include "document/docdata.h"
 #include "document/document.h"
-#include "document/dom/node.h"
 #include "document/dom/renderer.h"
-#include "document/dom/stack.h"
 #include "document/renderer.h"
-#include "document/sgml/parser.h"
+#include "dom/scanner.h"
+#include "dom/sgml/parser.h"
+#include "dom/node.h"
+#include "dom/stack.h"
 #include "intl/charsets.h"
 #include "globhist/globhist.h"		/* get_global_history_item() */
 #include "protocol/uri.h"
@@ -32,7 +33,6 @@
 #include "util/box.h"
 #include "util/error.h"
 #include "util/memory.h"
-#include "util/scanner.h"
 #include "util/snprintf.h"
 #include "util/string.h"
 
@@ -506,9 +506,9 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	struct dom_renderer *renderer = stack->current->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
 	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
-	struct scanner_token *token = &pstate->end_token;
-	unsigned char *string = token->string;
-	int length = token->length;
+	struct dom_scanner_token *token = &pstate->end_token;
+	unsigned char *string = token->string.string;
+	int length = token->string.length;
 
 	assert(node && renderer && renderer->document);
 
@@ -670,6 +670,10 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype;
+	unsigned char *string = struri(cached->uri);
+	size_t length = strlen(string);
+	struct dom_string uri = INIT_DOM_STRING(string, length);
+	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
 
 	assert(document->options.plain);
 
@@ -689,14 +693,14 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	else
 		doctype = SGML_DOCTYPE_HTML;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, cached->uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
 	add_dom_stack_tracer(&parser->stack);
 
-	root = parse_sgml(parser, buffer);
+	root = parse_sgml(parser, &source);
 	if (root) {
 		assert(parser->stack.depth == 1);
 
