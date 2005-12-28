@@ -11,7 +11,6 @@
 
 #include "dom/node.h"
 #include "util/hash.h"
-#include "util/lists.h"
 #include "util/memory.h"
 #include "util/string.h"
 

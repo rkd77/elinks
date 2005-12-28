@@ -15,7 +15,6 @@
 #include "dom/sgml/scanner.h"
 #include "dom/sgml/sgml.h"
 #include "util/error.h"
-#include "util/lists.h"
 #include "util/memory.h"
 #include "util/string.h"
 
