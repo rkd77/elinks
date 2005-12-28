@@ -21,7 +21,7 @@
 
 
 static struct sgml_parsing_state *
-init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer);
+init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer);
 
 
 /* When getting the sgml_parser struct it is _always_ assumed that the parser
@@ -321,7 +321,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 }
 
 struct dom_node *
-parse_sgml(struct sgml_parser *parser, struct string *buffer)
+parse_sgml(struct sgml_parser *parser, struct dom_string *buffer)
 {
 	struct sgml_parsing_state *parsing;
 
@@ -419,12 +419,12 @@ static struct dom_stack_context_info sgml_parsing_context_info = {
 
 /* Create a new parsing state by pushing a new text node containing the*/
 static struct sgml_parsing_state *
-init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer)
+init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer)
 {
 	struct dom_stack_state *state;
 	struct dom_node *node;
 
-	node = init_dom_node(DOM_NODE_TEXT, buffer->source, buffer->length);
+	node = init_dom_node(DOM_NODE_TEXT, buffer->string, buffer->length);
 	if (!node || !push_dom_node(&parser->parsing, node))
 		return NULL;
 

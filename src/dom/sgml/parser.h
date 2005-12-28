@@ -57,6 +57,6 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 
 void done_sgml_parser(struct sgml_parser *parser);
 
-struct dom_node *parse_sgml(struct sgml_parser *parser, struct string *buffer);
+struct dom_node *parse_sgml(struct sgml_parser *parser, struct dom_string *buffer);
 
 #endif

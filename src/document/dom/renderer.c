@@ -673,6 +673,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
+	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
 
 	assert(document->options.plain);
 
@@ -699,7 +700,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 			      &dom_source_renderer_context_info);
 	add_dom_stack_tracer(&parser->stack);
 
-	root = parse_sgml(parser, buffer);
+	root = parse_sgml(parser, &source);
 	if (root) {
 		assert(parser->stack.depth == 1);
 
