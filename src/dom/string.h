@@ -1,6 +1,8 @@
 #ifndef EL_DOM_STRING_H
 #define EL_DOM_STRING_H
 
+#include "util/string.h"
+
 struct dom_string {
 	size_t length;
 	unsigned char *string;
@@ -31,6 +33,13 @@ static inline int
 dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size_t length)
 {
 	return strncasecmp(string1->string, string2->string, length);
+}
+
+static inline struct dom_string *
+init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
+{
+	string->string = memacpy(str, len);
+	return string->string ? string : NULL;
 }
 
 #define is_dom_string_set(str) ((str)->string && (str)->length)

@@ -14,7 +14,6 @@
 #include "dom/sgml/parser.h"
 #include "dom/sgml/scanner.h"
 #include "dom/sgml/sgml.h"
-#include "protocol/uri.h"
 #include "util/error.h"
 #include "util/lists.h"
 #include "util/memory.h"
@@ -41,11 +40,9 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct string *buffer);
  * information like node subtypes and SGML parser state information. */
 
 static inline struct dom_node *
-add_sgml_document(struct dom_stack *stack, struct uri *uri)
+add_sgml_document(struct dom_stack *stack, struct dom_string *string)
 {
-	unsigned char *string = struri(uri);
-	size_t length = strlen(string);
-	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string, length);
+	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string->string, string->length);
 
 	return node ? push_dom_node(stack, node) : NULL;
 }
@@ -329,7 +326,7 @@ parse_sgml(struct sgml_parser *parser, struct string *buffer)
 	struct sgml_parsing_state *parsing;
 
 	if (!parser->root) {
-		parser->root = add_sgml_document(&parser->stack, parser->uri);
+		parser->root = add_sgml_document(&parser->stack, &parser->uri);
 		if (!parser->root)
 			return NULL;
 		get_dom_stack_top(&parser->stack)->immutable = 1;
@@ -479,7 +476,7 @@ static struct dom_stack_context_info sgml_parser_context_info = {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct uri *uri)
+		 struct dom_string *uri)
 {
 	struct sgml_parser *parser;
 	enum dom_stack_flag flags = 0;
@@ -487,8 +484,12 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser = mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
 
+	if (!init_dom_string(&parser->uri, uri->string, uri->length)) {
+		mem_free(parser);
+		return NULL;
+	}
+
 	parser->type = type;
-	parser->uri  = get_uri_reference(uri);
 	parser->info = get_sgml_info(doctype);
 
 	if (type == SGML_PARSER_TREE)
@@ -511,6 +512,6 @@ done_sgml_parser(struct sgml_parser *parser)
 {
 	done_dom_stack(&parser->stack);
 	done_dom_stack(&parser->parsing);
-	done_uri(parser->uri);
+	done_dom_string(&parser->uri);
 	mem_free(parser);
 }

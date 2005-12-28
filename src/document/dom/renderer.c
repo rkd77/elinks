@@ -670,6 +670,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype;
+	unsigned char *string = struri(cached->uri);
+	size_t length = strlen(string);
+	struct dom_string uri = INIT_DOM_STRING(string, length);
 
 	assert(document->options.plain);
 
@@ -689,7 +692,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	else
 		doctype = SGML_DOCTYPE_HTML;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, cached->uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,

@@ -37,7 +37,7 @@ struct sgml_parser {
 
 	struct sgml_info *info;		/* Backend dependent info */
 
-	struct uri *uri;		/* The URI of the DOM document */
+	struct dom_string uri;		/* The URI of the DOM document */
 	struct dom_node *root;		/* The document root node */
 
 	struct dom_stack stack;		/* A stack for tracking parsed nodes */
@@ -53,7 +53,7 @@ struct sgml_parser_state {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct uri *uri);
+		 struct dom_string *uri);
 
 void done_sgml_parser(struct sgml_parser *parser);
 
