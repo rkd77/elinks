@@ -1,7 +1,7 @@
 #ifndef EL_DOM_STRING_H
 #define EL_DOM_STRING_H
 
-#include "util/string.h"
+#include "util/memory.h"
 
 struct dom_string {
 	size_t length;
@@ -19,7 +19,7 @@ set_dom_string(struct dom_string *string, unsigned char *value, size_t length)
 }
 
 static inline int
-dom_string_casecmp(struct dom_string *string1, struct dom_string *string2)
+dom_string_casecmp(const struct dom_string *string1, const struct dom_string *string2)
 {
 	size_t length = int_min(string1->length, string2->length);
 	size_t string_diff = strncasecmp(string1->string, string2->string, length);
@@ -41,10 +41,12 @@ dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size
 static inline struct dom_string *
 init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 {
-	string->string = memacpy(str, len);
+	string->string = mem_alloc(len + 1);
 	if (!string->string)
 		return NULL;
 
+	memcpy(string->string, str, len);
+	string->string[len] = 0;
 	string->length = len;
 	return string;
 }
@@ -52,5 +54,7 @@ init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 #define is_dom_string_set(str) ((str)->string && (str)->length)
 
 #define done_dom_string(str) mem_free((str)->string);
+
+#define isquote(c)	((c) == '"' || (c) == '\'')
 
 #endif
