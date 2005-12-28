@@ -101,14 +101,14 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 	/* In scan_sgml_tokens() we check that first_char != '<' */
 	assert(first_char != '<' && scanner->state == SGML_STATE_TEXT);
 
-	token->string = string++;
+	token->string.string = string++;
 
 	if (first_char == '&') {
 		if (is_sgml_entity(*string)) {
 			scan_sgml(scanner, string, SGML_CHAR_ENTITY);
 			type = SGML_TOKEN_ENTITY;
-			token->string++;
-			real_length = string - token->string;
+			token->string.string++;
+			real_length = string - token->string.string;
 		}
 
 		foreach_sgml_cdata (scanner, string) {
@@ -133,7 +133,7 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 	}
 
 	token->type = type;
-	token->length = real_length >= 0 ? real_length : string - token->string;
+	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
 	scanner->position = string;
 }
@@ -223,7 +223,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 
-	token->string = string++;
+	token->string.string = string++;
 
 	if (first_char == '<') {
 		scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
@@ -237,10 +237,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			scanner->state = SGML_STATE_TEXT;
 
 		} else if (is_sgml_ident(*string)) {
-			token->string = string;
+			token->string.string = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
 
-			real_length = string - token->string;
+			real_length = string - token->string.string;
 
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
 			if (*string == '>') {
@@ -257,13 +257,13 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			string++;
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
-			token->string = ident = string;
+			token->string.string = ident = string;
 
 			if (string + 1 < scanner->end
 			    && string[0] == '-' && string[1] == '-') {
 				string += 2;
 				type = SGML_TOKEN_NOTATION_COMMENT;
-				token->string = string;
+				token->string.string = string;
 				real_length = skip_comment(scanner, &string);
 				assert(real_length >= 0);
 
@@ -272,7 +272,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 				string += 7;
 				type = SGML_TOKEN_CDATA_SECTION;
-				token->string = string;
+				token->string.string = string;
 				real_length = skip_cdata_section(scanner, &string);
 				assert(real_length >= 0);
 
@@ -288,7 +288,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			string++;
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
-			token->string = pos = string;
+			token->string.string = pos = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
 
 			type = map_dom_scanner_string(scanner, pos, string, base);
@@ -299,7 +299,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 				/* Set length until '?' char and move position
 				 * beyond '>'. */
-				real_length = pos - token->string - 2;
+				real_length = pos - token->string.string - 2;
 				break;
 			}
 
@@ -320,9 +320,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
 
 			if (is_sgml_ident(*string)) {
-				token->string = string;
+				token->string.string = string;
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
-				real_length = string - token->string;
+				real_length = string - token->string.string;
 
 				type = SGML_TOKEN_ELEMENT_END;
 				skip_sgml(scanner, &string, '>', 1);
@@ -371,12 +371,12 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
-			token->string++;
-			real_length = string_end - token->string;
+			token->string.string++;
+			real_length = string_end - token->string.string;
 			string = string_end + 1;
 			type = SGML_TOKEN_STRING;
 		} else if (is_sgml_attribute(*string)) {
-			token->string++;
+			token->string.string++;
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
 		}
@@ -394,7 +394,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	}
 
 	token->type = type;
-	token->length = real_length >= 0 ? real_length : string - token->string;
+	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
 	scanner->position = string;
 }

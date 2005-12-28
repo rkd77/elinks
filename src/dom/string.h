@@ -35,6 +35,9 @@ dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size
 	return strncasecmp(string1->string, string2->string, length);
 }
 
+#define copy_dom_string(string1, string2) \
+	set_dom_string(string1, (string2)->string, (string2)->length)
+
 static inline struct dom_string *
 init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 {

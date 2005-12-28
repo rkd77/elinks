@@ -70,13 +70,10 @@ get_dom_select_pseudo(struct dom_scanner_token *token)
 #undef INIT_DOM_SELECT_PSEUDO_STRING
 
 	};
-	struct dom_string string;
 	int i;
 
-	set_dom_string(&string, token->string, token->length);
-
 	for (i = 0; i < sizeof_array(pseudo_info); i++)
-		if (!dom_string_casecmp(&pseudo_info[i].string, &string))
+		if (!dom_string_casecmp(&pseudo_info[i].string, &token->string))
 			return pseudo_info[i].pseudo;
 
 	return DOM_SELECT_PSEUDO_UNKNOWN;
@@ -99,7 +96,7 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 	if (!token || token->type != CSS_TOKEN_IDENT)
 		return DOM_ERR_SYNTAX;
 
-	set_dom_string(&sel->node.string, token->string, token->length);
+	copy_dom_string(&sel->node.string, &token->string);
 
 	/* Get the optional '=' combo or ending ']'. */
 
@@ -143,7 +140,7 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
 	case CSS_TOKEN_STRING:
-		set_dom_string(&sel->node.data.attribute.value, token->string, token->length);
+		copy_dom_string(&sel->node.data.attribute.value, &token->string);
 		break;
 
 	default:
@@ -176,7 +173,7 @@ get_scanner_token_number(struct dom_scanner_token *token)
 {
 	size_t number = 0;
 
-	while (token->length > 0 && isdigit(token->string[0])) {
+	while (token->string.length > 0 && isdigit(token->string.string[0])) {
 		size_t old_number = number;
 
 		number *= 10;
@@ -185,8 +182,8 @@ get_scanner_token_number(struct dom_scanner_token *token)
 		if (old_number > number)
 			return -1;
 
-		number += token->string[0] - '0';
-		token->string++, token->length--;
+		number += token->string.string[0] - '0';
+		token->string.string++, token->string.length--;
 	}
 
 	return number;
@@ -416,8 +413,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		switch (token->type) {
 		case CSS_TOKEN_IDENT:
 			sel.node.type = DOM_NODE_ELEMENT;
-			set_dom_string(&sel.node.string, token->string, token->length);
-			if (token->length == 1 && token->string[0] == '*')
+			copy_dom_string(&sel.node.string, &token->string);
+			if (token->string.length == 1 && token->string.string[0] == '*')
 				sel.match.element |= DOM_SELECT_ELEMENT_UNIVERSAL;
 			break;
 
@@ -427,7 +424,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_ID;
 			/* Skip the leading '#'. */
-			token->string++, token->length--;
+			token->string.string++, token->string.length--;
 			break;
 
 		case '[':
@@ -445,7 +442,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
 			set_dom_string(&sel.node.string, "class", -1); 
-			set_dom_string(&sel.node.data.attribute.value, token->string, token->length); 
+			copy_dom_string(&sel.node.data.attribute.value, &token->string); 
 			break;
 
 		case ':':

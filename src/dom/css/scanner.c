@@ -130,7 +130,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 	int real_length = -1;
 
 	assert(first_char);
-	token->string = string++;
+	token->string.string = string++;
 
 	if (is_css_char_token(first_char)) {
 		type = first_char;
@@ -174,7 +174,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 			/* Make sure that we have an ending ')' */
 			skip_css(scanner, function_end, ')');
 			if (*function_end == ')') {
-				type = map_dom_scanner_string(scanner, token->string,
+				type = map_dom_scanner_string(scanner, token->string.string,
 						string, CSS_TOKEN_FUNCTION);
 
 				/* If it is not a known function just skip the
@@ -202,7 +202,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 					if (isquote(*from)) from++;
 					if (isquote(*to)) to--;
 
-					token->string = from;
+					token->string.string = from;
 					real_length = to - from + 1;
 					assert(real_length >= 0);
 					string = function_end;
@@ -233,7 +233,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 			/* Check that the hexdigit sequence is either 3 or 6
 			 * chars and it isn't just start of some non-hex ident
 			 * string. */
-			hexdigits = string - token->string - 1;
+			hexdigits = string - token->string.string - 1;
 			if ((hexdigits == 3 || hexdigits == 6)
 			    && !is_css_ident(*string)) {
 				type = CSS_TOKEN_HEX_COLOR;
@@ -299,8 +299,8 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
-			token->string++;
-			real_length = string_end - token->string;
+			token->string.string++;
+			real_length = string_end - token->string.string;
 			string = string_end + 1;
 			type = CSS_TOKEN_STRING;
 		}
@@ -345,7 +345,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 	}
 
 	token->type = type;
-	token->length = real_length > 0 ? real_length : string - token->string;
+	token->string.length = real_length > 0 ? real_length : string - token->string.string;
 	token->precedence = get_css_precedence(type);
 	scanner->position = string;
 }

@@ -21,8 +21,7 @@ struct dom_scanner_token {
 	int precedence;
 
 	/* The start of the token string and the token length */
-	unsigned char *string;
-	int length;
+	struct dom_string string;
 };
 
 /* The naming of these two macros is a bit odd .. we compare often with
@@ -31,7 +30,7 @@ struct dom_scanner_token {
 
 /* Compare the string of @token with @string */
 #define dom_scanner_token_strlcasecmp(token, str, len) \
-	((token) && !strlcasecmp((token)->string, (token)->length, str, len))
+	((token) && !strlcasecmp((token)->string.string, (token)->string.length, str, len))
 
 /* Also compares the token string but using a "static" string */
 #define dom_scanner_token_contains(token, str) \
