@@ -41,7 +41,7 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer);
 static inline struct dom_node *
 add_sgml_document(struct dom_stack *stack, struct dom_string *string)
 {
-	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string->string, string->length);
+	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string);
 
 	return node ? push_dom_node(stack, node) : NULL;
 }
@@ -56,7 +56,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 	struct dom_node *node;
 	struct sgml_node_info *node_info;
 
-	node = add_dom_element(parent, token->string.string, token->string.length);
+	node = add_dom_element(parent, &token->string);
 	if (!node) return NULL;
 
 	node_info = get_sgml_node_info(parser->info->elements, node);
@@ -81,13 +81,11 @@ add_sgml_attribute(struct dom_stack *stack,
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
-	unsigned char *value = valtoken ? valtoken->string.string : NULL;
-	size_t valuelen = valtoken ? valtoken->string.length : 0;
+	struct dom_string *value = valtoken ? &valtoken->string : NULL;
 	struct sgml_node_info *info;
 	struct dom_node *node;
 
-	node = add_dom_attribute(parent, token->string.string, token->string.length,
-				 value, valuelen);
+	node = add_dom_attribute(parent, &token->string, value);
 
 	info = get_sgml_node_info(parser->info->attributes, node);
 
@@ -113,14 +111,15 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tok
 	unsigned char *separator = memchr(token->string.string, ' ', token->string.length);
 
 	/* Anything before the separator becomes the target name ... */
-	unsigned char *name = token->string.string;
 	size_t namelen = separator ? separator - token->string.string : token->string.length;
+	struct dom_string name = INIT_DOM_STRING(token->string.string, namelen);
 
 	/* ... and everything after the instruction value. */
-	unsigned char *value = separator ? separator + 1 : NULL;
-	size_t valuelen = value ? token->string.length - namelen - 1 : 0;
+	unsigned char *valuestr = separator ? separator + 1 : NULL;
+	size_t valuelen = valuestr ? token->string.length - namelen - 1 : 0;
+	struct dom_string value = INIT_DOM_STRING(valuestr, valuelen);
 
-	node = add_dom_proc_instruction(parent, name, namelen, value, valuelen);
+	node = add_dom_proc_instruction(parent, &name, &value);
 	if (!node) return NULL;
 
 	switch (token->type) {
@@ -146,7 +145,7 @@ static inline void
 add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scanner_token *token)
 {
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
-	struct dom_node *node = add_dom_node(parent, type, token->string.string, token->string.length);
+	struct dom_node *node = add_dom_node(parent, type, &token->string);
 
 	if (!node) return;
 
@@ -421,7 +420,7 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer)
 	struct dom_stack_state *state;
 	struct dom_node *node;
 
-	node = init_dom_node(DOM_NODE_TEXT, buffer->string, buffer->length);
+	node = init_dom_node(DOM_NODE_TEXT, buffer);
 	if (!node || !push_dom_node(&parser->parsing, node))
 		return NULL;
 

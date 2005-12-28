@@ -255,34 +255,34 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, size_t length);
-#define init_dom_node(type, string, length) init_dom_node_(__FILE__, __LINE__, NULL, type, string, length)
-#define add_dom_node(parent, type, string, length) init_dom_node_(__FILE__, __LINE__, parent, type, string, length)
+		struct dom_string *string);
+#define init_dom_node(type, string) init_dom_node_(__FILE__, __LINE__, NULL, type, string)
+#define add_dom_node(parent, type, string) init_dom_node_(__FILE__, __LINE__, parent, type, string)
 
-#define add_dom_element(parent, string, length) \
-	add_dom_node(parent, DOM_NODE_ELEMENT, string, length)
+#define add_dom_element(parent, string) \
+	add_dom_node(parent, DOM_NODE_ELEMENT, string)
 
 static inline struct dom_node *
-add_dom_attribute(struct dom_node *parent, unsigned char *string, int length,
-		  unsigned char *value, size_t valuelen)
+add_dom_attribute(struct dom_node *parent, struct dom_string *name,
+		  struct dom_string *value)
 {
-	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, string, length);
+	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, name);
 
 	if (node && value) {
-		set_dom_string(&node->data.attribute.value, value, valuelen);
+		copy_dom_string(&node->data.attribute.value, value);
 	}
 
 	return node;
 }
 
 static inline struct dom_node *
-add_dom_proc_instruction(struct dom_node *parent, unsigned char *string, int length,
-			 unsigned char *instruction, size_t instructionlen)
+add_dom_proc_instruction(struct dom_node *parent, struct dom_string *string,
+			 struct dom_string *instruction)
 {
-	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string, length);
+	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string);
 
 	if (node && instruction) {
-		set_dom_string(&node->data.proc_instruction.instruction, instruction, instructionlen);
+		copy_dom_string(&node->data.proc_instruction.instruction, instruction);
 	}
 
 	return node;

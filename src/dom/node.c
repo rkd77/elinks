@@ -247,7 +247,7 @@ get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		unsigned char *string, size_t length)
+		struct dom_string *string)
 {
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
@@ -259,7 +259,7 @@ init_dom_node_(unsigned char *file, int line,
 
 	node->type   = type;
 	node->parent = parent;
-	set_dom_string(&node->string, string, length);
+	copy_dom_string(&node->string, string);
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
