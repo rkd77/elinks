@@ -61,10 +61,16 @@ struct dom_scan_table_info {
 	DOM_SCAN_TABLE_INFO(DOM_SCAN_END, NULL, 0, 0)
 
 struct dom_scanner_string_mapping {
-	unsigned char *name;
+	struct dom_string name;
 	int type;
 	int base_type;
 };
+
+#define DOM_STRING_MAP(str, type, family) \
+	{ INIT_DOM_STRING(str, -1), (type), (family) }
+
+#define DOM_STRING_MAP_END \
+	{ INIT_DOM_STRING(NULL, 0), 0, 0 }
 
 struct dom_scanner;
 
