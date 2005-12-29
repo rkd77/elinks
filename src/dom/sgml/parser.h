@@ -1,11 +1,11 @@
 
-#ifndef EL__DOCUMENT_SGML_PARSER_H
-#define EL__DOCUMENT_SGML_PARSER_H
+#ifndef EL_DOM_SGML_PARSER_H
+#define EL_DOM_SGML_PARSER_H
 
-#include "document/dom/node.h"
-#include "document/dom/stack.h"
-#include "document/sgml/sgml.h"
-#include "util/scanner.h"
+#include "dom/node.h"
+#include "dom/stack.h"
+#include "dom/sgml/sgml.h"
+#include "dom/scanner.h"
 
 struct string;
 struct uri;
@@ -27,7 +27,7 @@ enum sgml_parser_type {
  * used to feed output of stuff like ECMAScripts document.write() from
  * <script>-elements back to the SGML parser. */
 struct sgml_parsing_state {
-	struct scanner scanner;
+	struct dom_scanner scanner;
 	struct dom_node *node;
 	size_t depth;
 };
@@ -37,7 +37,7 @@ struct sgml_parser {
 
 	struct sgml_info *info;		/* Backend dependent info */
 
-	struct uri *uri;		/* The URI of the DOM document */
+	struct dom_string uri;		/* The URI of the DOM document */
 	struct dom_node *root;		/* The document root node */
 
 	struct dom_stack stack;		/* A stack for tracking parsed nodes */
@@ -48,15 +48,15 @@ struct sgml_parser_state {
 	struct sgml_node_info *info;
 	/* This is used by the DOM source renderer for highlighting the
 	 * end-tag of an element. */
-	struct scanner_token end_token;
+	struct dom_scanner_token end_token;
 };
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct uri *uri);
+		 struct dom_string *uri);
 
 void done_sgml_parser(struct sgml_parser *parser);
 
-struct dom_node *parse_sgml(struct sgml_parser *parser, struct string *buffer);
+struct dom_node *parse_sgml(struct sgml_parser *parser, struct dom_string *buffer);
 
 #endif

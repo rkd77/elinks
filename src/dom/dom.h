@@ -1,5 +1,5 @@
-#ifndef EL__DOCUMENT_DOM_DOM_H
-#define EL__DOCUMENT_DOM_DOM_H
+#ifndef EL_DOM_DOM_H
+#define EL_DOM_DOM_H
 
 enum dom_exception_code {
 	DOM_ERR_NONE				=  0,

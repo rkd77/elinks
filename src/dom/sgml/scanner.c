@@ -9,10 +9,10 @@
 
 #include "elinks.h"
 
-#include "document/sgml/scanner.h"
+#include "dom/scanner.h"
+#include "dom/sgml/scanner.h"
+#include "dom/string.h"
 #include "util/error.h"
-#include "util/scanner.h"
-#include "util/string.h"
 
 
 /* Bitmap entries for the SGML character groups used in the scanner table */
@@ -34,38 +34,41 @@ enum sgml_char_group {
 	SGML_CHAR_NOT_ATTRIBUTE	= (1 << 6),
 };
 
-static struct scan_table_info sgml_scan_table_info[] = {
-	SCAN_TABLE_RANGE("0", '9', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
-	SCAN_TABLE_RANGE("A", 'Z', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
-	SCAN_TABLE_RANGE("a", 'z', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
+static struct dom_scan_table_info sgml_scan_table_info[] = {
+	DOM_SCAN_TABLE_RANGE("0", '9', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
+	DOM_SCAN_TABLE_RANGE("A", 'Z', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
+	DOM_SCAN_TABLE_RANGE("a", 'z', SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
 	/* For the octal number impared (me including) \241 is 161 --jonas */
-	SCAN_TABLE_RANGE("\241", 255, SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
+	DOM_SCAN_TABLE_RANGE("\241", 255, SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
 
-	SCAN_TABLE_STRING("-_:.",	 SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
-	SCAN_TABLE_STRING("#",		 SGML_CHAR_ENTITY),
-	SCAN_TABLE_STRING(" \f\n\r\t\v", SGML_CHAR_WHITESPACE),
-	SCAN_TABLE_STRING("\f\n\r",	 SGML_CHAR_NEWLINE),
-	SCAN_TABLE_STRING("<&",		 SGML_CHAR_NOT_TEXT),
-	SCAN_TABLE_STRING("<=>",	 SGML_CHAR_NOT_ATTRIBUTE),
+	DOM_SCAN_TABLE_STRING("-_:.",	 SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
+	DOM_SCAN_TABLE_STRING("#",	 SGML_CHAR_ENTITY),
+	DOM_SCAN_TABLE_STRING(" \f\n\r\t\v", SGML_CHAR_WHITESPACE),
+	DOM_SCAN_TABLE_STRING("\f\n\r",	 SGML_CHAR_NEWLINE),
+	DOM_SCAN_TABLE_STRING("<&",	 SGML_CHAR_NOT_TEXT),
+	DOM_SCAN_TABLE_STRING("<=>",	 SGML_CHAR_NOT_ATTRIBUTE),
 
-	SCAN_TABLE_END,
+	DOM_SCAN_TABLE_END,
 };
 
-static struct scanner_string_mapping sgml_string_mappings[] = {
-	{ "--",		SGML_TOKEN_NOTATION_COMMENT,	SGML_TOKEN_NOTATION },
-	{ "ATTLIST",	SGML_TOKEN_NOTATION_ATTLIST,	SGML_TOKEN_NOTATION },
-	{ "DOCTYPE",	SGML_TOKEN_NOTATION_DOCTYPE,	SGML_TOKEN_NOTATION },
-	{ "ELEMENT",	SGML_TOKEN_NOTATION_ELEMENT,	SGML_TOKEN_NOTATION },
-	{ "ENTITY",	SGML_TOKEN_NOTATION_ENTITY,	SGML_TOKEN_NOTATION },
+#define SGML_STRING_MAP(str, type, family) \
+	{ INIT_DOM_STRING(str, -1), SGML_TOKEN_##type, SGML_TOKEN_##family }
 
-	{ "xml",	SGML_TOKEN_PROCESS_XML,		SGML_TOKEN_PROCESS },
+static struct dom_scanner_string_mapping sgml_string_mappings[] = {
+	SGML_STRING_MAP("--",		NOTATION_COMMENT,	NOTATION),
+	SGML_STRING_MAP("ATTLIST",	NOTATION_ATTLIST,	NOTATION),
+	SGML_STRING_MAP("DOCTYPE",	NOTATION_DOCTYPE,	NOTATION),
+	SGML_STRING_MAP("ELEMENT",	NOTATION_ELEMENT,	NOTATION),
+	SGML_STRING_MAP("ENTITY",	NOTATION_ENTITY,	NOTATION),
 
-	{ NULL, SGML_TOKEN_NONE, SGML_TOKEN_NONE },
+	SGML_STRING_MAP("xml",		PROCESS_XML,		PROCESS),
+
+	DOM_STRING_MAP_END,
 };
 
-static struct scanner_token *scan_sgml_tokens(struct scanner *scanner);
+static struct dom_scanner_token *scan_sgml_tokens(struct dom_scanner *scanner);
 
-struct scanner_info sgml_scanner_info = {
+struct dom_scanner_info sgml_scanner_info = {
 	sgml_string_mappings,
 	sgml_scan_table_info,
 	scan_sgml_tokens,
@@ -91,7 +94,7 @@ struct scanner_info sgml_scanner_info = {
 	for (; ((str) < (scanner)->end && *(str) != '<' && *(str) != '&'); (str)++)
 
 static inline void
-scan_sgml_text_token(struct scanner *scanner, struct scanner_token *token)
+scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	unsigned char *string = scanner->position;
 	unsigned char first_char = *string;
@@ -101,14 +104,14 @@ scan_sgml_text_token(struct scanner *scanner, struct scanner_token *token)
 	/* In scan_sgml_tokens() we check that first_char != '<' */
 	assert(first_char != '<' && scanner->state == SGML_STATE_TEXT);
 
-	token->string = string++;
+	token->string.string = string++;
 
 	if (first_char == '&') {
 		if (is_sgml_entity(*string)) {
 			scan_sgml(scanner, string, SGML_CHAR_ENTITY);
 			type = SGML_TOKEN_ENTITY;
-			token->string++;
-			real_length = string - token->string;
+			token->string.string++;
+			real_length = string - token->string.string;
 		}
 
 		foreach_sgml_cdata (scanner, string) {
@@ -133,7 +136,7 @@ scan_sgml_text_token(struct scanner *scanner, struct scanner_token *token)
 	}
 
 	token->type = type;
-	token->length = real_length >= 0 ? real_length : string - token->string;
+	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
 	scanner->position = string;
 }
@@ -151,7 +154,7 @@ check_sgml_precedence(int type, int skipto)
 /* XXX: Only element or ``in tag'' precedence is handled correctly however
  * using this function for CDATA or text would be overkill. */
 static inline unsigned char *
-skip_sgml(struct scanner *scanner, unsigned char **string, unsigned char skipto,
+skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char skipto,
 	  int check_quoting)
 {
 	unsigned char *pos = *string;
@@ -178,7 +181,7 @@ skip_sgml(struct scanner *scanner, unsigned char **string, unsigned char skipto,
 }
 
 static inline int
-skip_comment(struct scanner *scanner, unsigned char **string)
+skip_comment(struct dom_scanner *scanner, unsigned char **string)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -195,7 +198,7 @@ skip_comment(struct scanner *scanner, unsigned char **string)
 }
 
 static inline int
-skip_cdata_section(struct scanner *scanner, unsigned char **string)
+skip_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -216,14 +219,14 @@ skip_cdata_section(struct scanner *scanner, unsigned char **string)
 	       (str)++;
 
 static inline void
-scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
+scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	unsigned char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 
-	token->string = string++;
+	token->string.string = string++;
 
 	if (first_char == '<') {
 		scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
@@ -237,10 +240,10 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 			scanner->state = SGML_STATE_TEXT;
 
 		} else if (is_sgml_ident(*string)) {
-			token->string = string;
+			token->string.string = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
 
-			real_length = string - token->string;
+			real_length = string - token->string.string;
 
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
 			if (*string == '>') {
@@ -257,13 +260,13 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 			string++;
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
-			token->string = ident = string;
+			token->string.string = ident = string;
 
 			if (string + 1 < scanner->end
 			    && string[0] == '-' && string[1] == '-') {
 				string += 2;
 				type = SGML_TOKEN_NOTATION_COMMENT;
-				token->string = string;
+				token->string.string = string;
 				real_length = skip_comment(scanner, &string);
 				assert(real_length >= 0);
 
@@ -272,13 +275,13 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 				string += 7;
 				type = SGML_TOKEN_CDATA_SECTION;
-				token->string = string;
+				token->string.string = string;
 				real_length = skip_cdata_section(scanner, &string);
 				assert(real_length >= 0);
 
 			} else {
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
-				type = map_scanner_string(scanner, ident, string, base);
+				type = map_dom_scanner_string(scanner, ident, string, base);
 				skip_sgml(scanner, &string, '>', 0);
 			}
 
@@ -288,10 +291,10 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 			string++;
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
-			token->string = pos = string;
+			token->string.string = pos = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
 
-			type = map_scanner_string(scanner, pos, string, base);
+			type = map_dom_scanner_string(scanner, pos, string, base);
 
 			/* Figure out where the processing instruction ends */
 			for (pos = string; skip_sgml(scanner, &pos, '>', 0); ) {
@@ -299,7 +302,7 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 				/* Set length until '?' char and move position
 				 * beyond '>'. */
-				real_length = pos - token->string - 2;
+				real_length = pos - token->string.string - 2;
 				break;
 			}
 
@@ -320,9 +323,9 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
 
 			if (is_sgml_ident(*string)) {
-				token->string = string;
+				token->string.string = string;
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
-				real_length = string - token->string;
+				real_length = string - token->string.string;
 
 				type = SGML_TOKEN_ELEMENT_END;
 				skip_sgml(scanner, &string, '>', 1);
@@ -371,12 +374,12 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
-			token->string++;
-			real_length = string_end - token->string;
+			token->string.string++;
+			real_length = string_end - token->string.string;
 			string = string_end + 1;
 			type = SGML_TOKEN_STRING;
 		} else if (is_sgml_attribute(*string)) {
-			token->string++;
+			token->string.string++;
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
 		}
@@ -394,7 +397,7 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 	}
 
 	token->type = type;
-	token->length = real_length >= 0 ? real_length : string - token->string;
+	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
 	scanner->position = string;
 }
@@ -402,14 +405,14 @@ scan_sgml_element_token(struct scanner *scanner, struct scanner_token *token)
 
 /* Scanner multiplexor */
 
-static struct scanner_token *
-scan_sgml_tokens(struct scanner *scanner)
+static struct dom_scanner_token *
+scan_sgml_tokens(struct dom_scanner *scanner)
 {
-	struct scanner_token *table_end = scanner->table + SCANNER_TOKENS;
-	struct scanner_token *current;
+	struct dom_scanner_token *table_end = scanner->table + DOM_SCANNER_TOKENS;
+	struct dom_scanner_token *current;
 
-	if (!begin_token_scanning(scanner))
-		return get_scanner_token(scanner);
+	if (!begin_dom_token_scanning(scanner))
+		return get_dom_scanner_token(scanner);
 
 	/* Scan tokens until we fill the table */
 	for (current = scanner->table + scanner->tokens;
@@ -431,5 +434,5 @@ scan_sgml_tokens(struct scanner *scanner)
 		}
 	}
 
-	return end_token_scanning(scanner, current);
+	return end_dom_token_scanning(scanner, current);
 }

@@ -1,7 +1,7 @@
-#ifndef EL__DOCUMENT_DOM_SELECT_H
-#define EL__DOCUMENT_DOM_SELECT_H
+#ifndef EL_DOM_SELECT_H
+#define EL_DOM_SELECT_H
 
-#include "document/dom/node.h"
+#include "dom/node.h"
 
 
 /* FIXME: Namespaces; *|E */
@@ -193,7 +193,7 @@ enum dom_select_syntax {
 };
 
 struct dom_select *init_dom_select(enum dom_select_syntax syntax,
-				   unsigned char *string, int length);
+				   struct dom_string *string);
 
 void done_dom_select(struct dom_select *select);
 
