@@ -32,7 +32,7 @@ different config format, I work on this.]
 You can find the snapshot Debian packages at
  ftp://yikes.tolna.net/pub/linux/release/debian/
 
-Homepage is http://elinks.or.cz/
+Homepage is http://elinks.cz/
 
 
  -- Peter Gervai <grin@tolna.net>, Thu,  9 Oct 2003 01:17:26 +0200
@@ -46,7 +46,7 @@ A: Please check the menus. Download manager is under Tools>Download, proxy
          (with contribution by Jonas Fonseca)
 
 Q: The "move" doesn't work in the bookmark manager.
-A: Read <http://elinks.or.cz/documentation/bookmarks.txt>                                              
+A: Read <http://elinks.cz/documentation/bookmarks.txt>                                              
    to learn how to use this unintuitive feature. 
          (contributed by Miciah Dashiel Butler Masters)
 

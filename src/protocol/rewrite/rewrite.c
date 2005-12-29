@@ -55,7 +55,7 @@ static struct option_info uri_rewrite_options[] = {
 		N_("Enable dumb prefixes - simple URI abbreviations which can\n"
 		"be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 		"if you write 'elinks' there, you are directed to\n"
-		"http://elinks.or.cz/.")),
+		"http://elinks.cz/.")),
 
 	INIT_OPT_BOOL("protocol.rewrite", N_("Enable smart prefixes"),
 		"enable-smart", 0, 1,

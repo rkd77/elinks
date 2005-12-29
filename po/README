@@ -78,7 +78,7 @@ name of your language (in English) so you end up with something like:
 ------------------------------------------------
 
 Finally to make it part of the ELinks distribution send it to one of the
-mailinglists or file it as a bug at <http://bugzilla.elinks.or.cz>.
+mailinglists or file it as a bug at <http://bugzilla.elinks.cz>.
 
 
 2. Updating .po files:
