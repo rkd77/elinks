@@ -21,7 +21,7 @@
 static void
 print_compressed_string(struct dom_string *string)
 {
-	unsigned char escape[2] = "\\";
+	unsigned char escape[3] = { '\\', '?', 0 };
 	size_t pos;
 
 	for (pos = 0; pos < string->length; pos++) {
@@ -142,8 +142,8 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 		/* DOM_NODE_ELEMENT		*/ sgml_parser_test_branch,
 		/* DOM_NODE_ATTRIBUTE		*/ sgml_parser_test_id_leaf,
 		/* DOM_NODE_TEXT		*/ sgml_parser_test_leaf,
-		/* DOM_NODE_CDATA_SECTION	*/ sgml_parser_test_id_leaf,
-		/* DOM_NODE_ENTITY_REFERENCE	*/ sgml_parser_test_id_leaf,
+		/* DOM_NODE_CDATA_SECTION	*/ sgml_parser_test_leaf,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ sgml_parser_test_branch,
 		/* DOM_NODE_ENTITY		*/ sgml_parser_test_id_leaf,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ sgml_parser_test_id_leaf,
 		/* DOM_NODE_COMMENT		*/ sgml_parser_test_leaf,
