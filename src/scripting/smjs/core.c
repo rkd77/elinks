@@ -68,7 +68,7 @@ reported:
 
 static JSRuntime *smjs_rt;
 
-void
+static void
 smjs_load_hooks(void)
 {
 	jsval rval;
