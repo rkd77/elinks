@@ -81,7 +81,7 @@ smjs_do_file(unsigned char *path)
 	     || JS_FALSE == JS_EvaluateScript(smjs_ctx,
 				JS_GetGlobalObject(smjs_ctx),
 				script.source, script.length, path, 1, &rval)) {
-		alert_smjs_error("error loading default script file");
+		alert_smjs_error("error loading script file");
 		ret = 0;
 	}
 
