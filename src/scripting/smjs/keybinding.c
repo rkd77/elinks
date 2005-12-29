@@ -171,7 +171,7 @@ static const JSClass keymaps_hash_class = {
 	"keymaps_hash",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	NULL, NULL,
+	JS_PropertyStub, JS_PropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
 };
 

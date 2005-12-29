@@ -184,7 +184,7 @@ static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	bookmark_folder_get_property, NULL,
+	bookmark_folder_get_property, JS_PropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
 };
 
