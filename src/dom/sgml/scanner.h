@@ -27,8 +27,9 @@ enum sgml_token_type {
 
 	SGML_TOKEN_CDATA_SECTION,	/* <![CDATA[ until ]]> */
 
-	SGML_TOKEN_PROCESS,		/* <?{ident} until ?> */
-	SGML_TOKEN_PROCESS_XML,		/* <?xml until */
+	SGML_TOKEN_PROCESS,		/* <?{ident} */
+	SGML_TOKEN_PROCESS_XML,		/* <?xml */
+	SGML_TOKEN_PROCESS_DATA,	/* data after <?{ident} until ?> */
 
 	SGML_TOKEN_ELEMENT,		/* <{ident}> */
 	SGML_TOKEN_ELEMENT_BEGIN,	/* <{ident} */
@@ -54,6 +55,17 @@ enum sgml_token_type {
 	 * scanner table as invalid or when scanning to signal that the
 	 * scanning should end. */
 	SGML_TOKEN_NONE = 0,
+};
+
+/* The SGML tokenizer maintains a state (in the scanner->state member) that can
+ * be either text, element, or processing instruction state. The state has only
+ * meaning while doing the actual scanning and should not be used at the
+ * parsing time. It can however be used to initialize the scanner to a specific
+ * state. */
+enum sgml_scanner_state {
+	SGML_STATE_TEXT,
+	SGML_STATE_ELEMENT,
+	SGML_STATE_PROC_INST,
 };
 
 extern struct dom_scanner_info sgml_scanner_info;

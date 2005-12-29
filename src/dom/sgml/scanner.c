@@ -17,14 +17,6 @@
 
 /* Bitmap entries for the SGML character groups used in the scanner table */
 
-/* The SGML tokenizer maintains a state that can be either text or element
- * state. The state has only meaning while doing the actual scanning and is not
- * accessible at the parsing time. */
-enum sgml_scanner_state {
-	SGML_STATE_TEXT,
-	SGML_STATE_ELEMENT,
-};
-
 enum sgml_char_group {
 	SGML_CHAR_ENTITY	= (1 << 1),
 	SGML_CHAR_IDENT		= (1 << 2),
@@ -186,7 +178,7 @@ skip_comment(struct dom_scanner *scanner, unsigned char **string)
 	unsigned char *pos = *string;
 	int length = 0;
 
-	for (; pos < scanner->end - 3; pos++)
+	for (; pos < scanner->end - 2; pos++)
 		if (pos[0] == '-' && pos[1] == '-' && pos[2] == '>') {
 			length = pos - *string;
 			pos += 3;
@@ -296,27 +288,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			type = map_dom_scanner_string(scanner, pos, string, base);
 
-			/* Figure out where the processing instruction ends */
-			for (pos = string; skip_sgml(scanner, &pos, '>', 0); ) {
-				if (pos[-2] != '?') continue;
-
-				/* Set length until '?' char and move position
-				 * beyond '>'. */
-				real_length = pos - token->string.string - 2;
-				break;
-			}
-
-			switch (type) {
-			case SGML_TOKEN_PROCESS_XML:
-				/* We want to parse the attributes */
-				assert(scanner->state != SGML_STATE_ELEMENT);
-				scanner->state = SGML_STATE_ELEMENT;
-				break;
-
-			default:
-				/* Just skip the whole thing */
-				string = pos;
-			}
+			scanner->state = SGML_STATE_PROC_INST;
 
 		} else if (*string == '/') {
 			string++;
@@ -366,6 +338,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		} else if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
+			if (string[-1] == '/' && string[0] == '>')
+				string--;
 		}
 
 	} else if (isquote(first_char)) {
@@ -393,6 +367,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
+			if (string[-1] == '/' && string[0] == '>')
+				string--;
 		}
 	}
 
@@ -400,6 +376,38 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
 	scanner->position = string;
+}
+
+
+/* Processing instruction data scanning */
+
+static inline void
+scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
+{
+	unsigned char *string = scanner->position;
+	size_t size;
+
+	token->string.string = string;
+
+	/* Figure out where the processing instruction ends. This doesn't use
+	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
+	 * the data part to be skipped correctly. */
+	for (size = scanner->end - string;
+	     size > 0 && (string = memchr(string, '>', size));
+	     string++) {
+		if (string[-1] == '?') {
+			string++;
+			break;
+		}
+	}
+
+	if (!string) string = scanner->end;
+
+	token->type = SGML_TOKEN_PROCESS_DATA;
+	token->string.length = string - token->string.string - 2;
+	token->precedence = get_sgml_precedence(token->type);
+	scanner->position = string;
+	scanner->state = SGML_STATE_TEXT;
 }
 
 
@@ -419,7 +427,8 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 	     current < table_end && scanner->position < scanner->end;
 	     current++) {
 		if (scanner->state == SGML_STATE_ELEMENT
-		    || *scanner->position == '<') {
+		    || (*scanner->position == '<'
+			&& scanner->state != SGML_STATE_PROC_INST)) {
 			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
 			if (scanner->position >= scanner->end) break;
 
@@ -429,8 +438,13 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 			if (current->type == SGML_TOKEN_SKIP) {
 				current--;
 			}
-		} else {
+
+		} else if (scanner->state == SGML_STATE_TEXT) {
 			scan_sgml_text_token(scanner, current);
+
+		} else {
+			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
+			scan_sgml_proc_inst_token(scanner, current);
 		}
 	}
 

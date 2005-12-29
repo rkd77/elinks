@@ -153,8 +153,8 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 }
 
 void
-init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-		 struct dom_string *string)
+init_dom_scanner_state(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
+		       struct dom_string *string, int state)
 {
 	if (!scanner_info->initialized) {
 		init_dom_scanner_info(scanner_info);
@@ -168,5 +168,6 @@ init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_i
 	scanner->end = string->string + string->length;
 	scanner->current = scanner->table;
 	scanner->info = scanner_info;
+	scanner->state = state;
 	scanner->info->scan(scanner);
 }
