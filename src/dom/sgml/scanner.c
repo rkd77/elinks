@@ -385,13 +385,23 @@ static inline void
 scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	unsigned char *string = scanner->position;
+	size_t size;
 
-	token->string.string = string++;
+	token->string.string = string;
 
-	/* Figure out where the processing instruction ends */
-	while (skip_sgml(scanner, &string, '>', 0))
-		if (string[-2] == '?')
+	/* Figure out where the processing instruction ends. This doesn't use
+	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
+	 * the data part to be skipped correctly. */
+	for (size = scanner->end - string;
+	     size > 0 && (string = memchr(string, '>', size));
+	     string++) {
+		if (string[-1] == '?') {
+			string++;
 			break;
+		}
+	}
+
+	if (!string) string = scanner->end;
 
 	token->type = SGML_TOKEN_PROCESS_DATA;
 	token->string.length = string - token->string.string - 2;
@@ -417,7 +427,8 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 	     current < table_end && scanner->position < scanner->end;
 	     current++) {
 		if (scanner->state == SGML_STATE_ELEMENT
-		    || *scanner->position == '<') {
+		    || (*scanner->position == '<'
+			&& scanner->state != SGML_STATE_PROC_INST)) {
 			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
 			if (scanner->position >= scanner->end) break;
 

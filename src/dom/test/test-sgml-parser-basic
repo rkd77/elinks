@@ -136,6 +136,34 @@ proc-instruction: xml -> encoding="UTF8"
 proc-instruction: ecmascript -> var val=2;\n'
 
 test_output_equals \
+'Parse exotic processing instructions.' \
+'<?xml ?+>+?>-?>-<?js?>-<??>-' \
+'
+proc-instruction: xml -> ?+>+
+#text: -?>-
+proc-instruction: js -> 
+#text: -
+proc-instruction:  -> 
+#text: -'
+
+test_output_equals \
+'Parse incorrect processing instructions.' \
+'<?js<?>-<?<??>-<?xml <=";&?>-<?' \
+'
+proc-instruction: js -> <
+#text: -
+proc-instruction:  -> <?
+#text: -
+proc-instruction: xml -> <=";&
+#text: -'
+
+test_output_equals \
+'Parse incorrect processing instructions (II).' \
+'<?><?' \
+'
+proc-instruction:  -> ><?'
+
+test_output_equals \
 'Skip spaces not inside text.' \
 '<
 root
