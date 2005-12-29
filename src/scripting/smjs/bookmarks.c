@@ -179,7 +179,6 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	object_lock(bookmark);
 	*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
 
 	return JS_TRUE;
