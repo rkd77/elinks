@@ -139,10 +139,10 @@ init_smjs(struct module *module)
 
 	smjs_init_elinks_object();
 
-	smjs_load_hooks();
-
 	JS_DefineFunction(smjs_ctx, smjs_global_object, "do_file",
 	                  &smjs_do_file_wrapper, 1, 0);
+
+	smjs_load_hooks();
 }
 
 void
