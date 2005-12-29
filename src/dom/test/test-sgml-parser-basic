@@ -3,7 +3,7 @@
 # Copyright (c) 2005 Jonas Fonseca
 #
 
-test_description='Test the very basics parsing of SGML documents.
+test_description='Test the very basic parsing of SGML documents.
 
 This test runs very basic features, like checking that nodes are placed
 correctly in the DOM tree.
