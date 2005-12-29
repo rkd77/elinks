@@ -70,7 +70,7 @@ static unsigned char indent_string[] =
 	"                                                                    ";
 
 #define get_indent_offset(stack) \
-	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
+	(((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string)) - 2)
 
 static void
 sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data)
@@ -78,7 +78,7 @@ sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
-	printf("%.*s %.*s: %.*s\n",
+	printf("%.*s%.*s: %.*s\n",
 		get_indent_offset(stack), indent_string,
 		name->length, name->string,
 		value->length, value->string);
@@ -95,7 +95,7 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	printf("%.*s %.*s: %.*s -> ",
+	printf("%.*s%.*s: %.*s -> ",
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
 	print_dom_node_value(node);
@@ -111,7 +111,7 @@ sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data
 
 	name	= get_dom_node_name(node);
 
-	printf("%.*s %.*s: ",
+	printf("%.*s%.*s: ",
 		get_indent_offset(stack), indent_string,
 		name->length, name->string);
 	print_dom_node_value(node);
@@ -129,7 +129,7 @@ sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *da
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	printf("%.*s %.*s: %.*s\n",
+	printf("%.*s%.*s: %.*s\n",
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
 }
