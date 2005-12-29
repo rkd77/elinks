@@ -159,7 +159,7 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 	data = intdup(keymap_id);
 	if (!data) return NULL;
 
-	if (JS_FALSE != JS_SetPrivate(smjs_ctx, keymap_object, data))
+	if (JS_TRUE == JS_SetPrivate(smjs_ctx, keymap_object, data))
 		return keymap_object;
 
 	mem_free(data);
