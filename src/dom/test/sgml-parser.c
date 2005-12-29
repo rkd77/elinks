@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -169,6 +170,21 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 	}
 };
 
+
+void die(const char *msg, ...)
+{
+	va_list args;
+
+	if (msg) {
+		va_start(args, msg);
+		vfprintf(stderr, msg, args);
+		fputs("\n", stderr);
+		va_end(args);
+	}
+
+	exit(!!NULL);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -176,14 +192,55 @@ main(int argc, char *argv[])
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
 	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
-	struct dom_string buffer = INIT_DOM_STRING("<html><body><p>Hello World!</p></body></html>", -1);
+	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
+	int i;
+
+	for (i = 1; i < argc; i++) {
+		char *arg = argv[i];
+
+		if (strncmp(arg, "--", 2))
+			break;
+
+		arg += 2;
+
+		if (!strncmp(arg, "uri", 3)) {
+			arg += 3;
+			if (*arg == '=') {
+				arg++;
+				set_dom_string(&uri, arg, strlen(arg));
+			} else {
+				i++;
+				if (i >= argc)
+					die("--uri expects a URI");
+				set_dom_string(&uri, argv[i], strlen(argv[i]));
+			}
+
+		} else if (!strncmp(arg, "src", 3)) {
+			arg += 3;
+			if (*arg == '=') {
+				arg++;
+				set_dom_string(&source, arg, strlen(arg));
+			} else {
+				i++;
+				if (i >= argc)
+					die("--src expects a string");
+				set_dom_string(&source, argv[i], strlen(argv[i]));
+			}
+
+		} else if (!strcmp(arg, "help")) {
+			die(NULL);
+
+		} else {
+			die("Unknown argument '%s'", arg - 2);
+		}
+	}
 
 	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
 	if (!parser) return 1;
 
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	root = parse_sgml(parser, &buffer);
+	root = parse_sgml(parser, &source);
 	if (root) {
 		assert(parser->stack.depth == 1);
 
