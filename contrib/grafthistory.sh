@@ -19,8 +19,8 @@ cd "$GIT_DIR"
 echo "[grafthistory] Downloading the history"
 mkdir -p objects/pack
 cd objects/pack
-wget -c http://elinks.or.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
-wget -c http://elinks.or.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
+wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
+wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
 
 echo "[grafthistory] Setting up the grafts"
 cd ../..

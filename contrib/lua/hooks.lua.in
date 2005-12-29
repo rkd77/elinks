@@ -171,8 +171,8 @@ end
 dumbprefixes = {
     arc = "http://web.archive.org/web/*/%c",
     b = "http://babelfish.altavista.com/babelfish/tr",
-    bz = "http://bugzilla.elinks.or.cz",
-    bug = "http://bugzilla.elinks.or.cz",
+    bz = "http://bugzilla.elinks.cz",
+    bug = "http://bugzilla.elinks.cz",
     d = "http://www.dict.org",
     g  = "http://www.google.com/",
     gg = "http://www.google.com/",
@@ -263,12 +263,12 @@ end
 
 smartprefixes = {
     arc = "http://web.archive.org/web/*/%s",
-    bug = function (url) return bugzilla('http://bugzilla.elinks.or.cz/', url) end,
+    bug = function (url) return bugzilla('http://bugzilla.elinks.cz/', url) end,
     cambridge = "http://dictionary.cambridge.org/results.asp?searchword=%s",
     cliki = "http://www.cliki.net/admin/search?words=%s",
     -- If you want to add a smartprefix for another project's CVSweb,
     -- just create a lambda like this. Aren't high-level languages fun?
-    cvs = function (x) return cvsweb ("http://cvsweb.elinks.or.cz/cvsweb.cgi/", "elinks", x) end,
+    cvs = function (x) return cvsweb ("http://cvsweb.elinks.cz/cvsweb.cgi/", "elinks", x) end,
     d = "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query",
     debcontents = debian_contents,
     debfile = debian_file,

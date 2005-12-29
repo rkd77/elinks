@@ -37,8 +37,8 @@ License:	GPL
 Vendor:		ELinks project <elinks-users@linuxfromscratch.org>
 Packager:	Petr Baudis <pasky@ucw.cz>
 Group:		Applications/Internet
-Source:		http://elinks.or.cz/download/%{name}-%{version}.tar.bz2
-URL:		http://elinks.or.cz/
+Source:		http://elinks.cz/download/%{name}-%{version}.tar.bz2
+URL:		http://elinks.cz/
 BuildRequires:	bzip2-devel
 BuildRequires:	expat-devel
 BuildRequires:	gpm-devel
@@ -133,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 
 # date +"%a %b %d %Y"
 %changelog
+* Thu Dec 29 2005 Miciah Dashiel Butler Masters <mdm0304@ecu.edu>
+- elinks.or.cz -> elinks.cz
+
 *Tue Jun 14 2005 Witold Filipczyk <witekfl@pld-linux.org>
 - removed unused texi2html dependency
 - removed unused libdir directory
