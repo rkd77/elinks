@@ -225,7 +225,7 @@ function cvsweb (base, project, url)
 	string.gsub(url, "([^%s]+)", function (w) table.insert(t, w) end)
 	file, old, new = t[1], t[2], t[3]
 
-	if t[4] then error('this smartprefix takes only two to three arguments') return nil end
+	if t[4] then error('this smartprefix takes only one to three arguments') return nil end
 	if not file then error('no file given') return nil end
 
 	if     new then return base..project.."/"..file..".diff?r1="..old.."&r2="..new.."&f=u"
