@@ -338,6 +338,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		} else if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
+			if (string[-1] == '/' && string[0] == '>')
+				string--;
 		}
 
 	} else if (isquote(first_char)) {
@@ -365,6 +367,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
+			if (string[-1] == '/' && string[0] == '>')
+				string--;
 		}
 	}
 

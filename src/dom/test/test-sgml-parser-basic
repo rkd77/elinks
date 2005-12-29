@@ -90,6 +90,15 @@ element: root
   attribute: k -> ' 
 
 test_output_equals \
+'Parse attribute with non-quoted values.' \
+'<root color=#abc path=/to/%61-&\one";files/>...' \
+'
+element: root
+  attribute: color -> #abc
+  attribute: path -> /to/%61-&\one";files
+#text: ...'
+
+test_output_equals \
 'Parse entity references.' \
 '&amp;-&#42;' \
 '
