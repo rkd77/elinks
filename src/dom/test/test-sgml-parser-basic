@@ -45,6 +45,17 @@ element: html
       #text: Hello World!'
 
 test_output_equals \
+'Parse elements.' \
+'<root><child attr="value" /><child2></><child3 >a</></root>' \
+'
+element: root
+  element: child
+    attribute: attr -> value
+  element: child2
+  element: child3
+    #text: a'
+
+test_output_equals \
 'Parse an enclosed comment.' \
 '<root><!-- Hello World! --></root>' \
 '
@@ -68,26 +79,45 @@ element: root
   attribute: name -> value with &foo; <stuff'
 
 test_output_equals \
-'Parse entity references.' \
-'<root>&amp;...&#42;...&...copy;...&;...&#;' \
+'Parse attributes with garbage.' \
+"<root a=b c='d' e'f' g= h i = j k =></root>" \
 '
 element: root
-  entity-reference: amp
-  #text: ...
-  entity-reference: #42
-  #text: ...
-  entity-reference: ...copy
-  #text: ...
-  #text: &;
-  #text: ...
-  entity-reference: #'
+  attribute: a -> b
+  attribute: c -> d
+  attribute: g -> h
+  attribute: i -> j
+  attribute: k -> ' 
+
+test_output_equals \
+'Parse entity references.' \
+'&amp;-&#42;' \
+'
+entity-reference: amp
+#text: -
+entity-reference: #42'
+
+# Just how these should be gracefully handled is not clear to me.
+test_output_equals \
+'Parse badly formatted entity references.' \
+'& m33p;-&.:-copy;-&;-&#;-&#xx;' \
+'
+#text: & m33p;
+#text: -
+entity-reference: .:-copy
+#text: -
+#text: &;
+#text: -
+entity-reference: #
+#text: -
+entity-reference: #xx'
 
 # Test <?>
 test_output_equals \
 'Parse processing instructions.' \
 '<?xml encoding="UTF8"?>
 ...
-<?ecmascript 
+<?ecmascript
 var val=2;
 ?>' \
 '
@@ -95,5 +125,20 @@ proc-instruction: xml -> encoding="UTF8"
   attribute: encoding -> UTF8
 #text: \n...\n
 proc-instruction: ecmascript -> var val=2;\n'
+
+test_output_equals \
+'Skip spaces not inside text.' \
+'<
+root
+ns:attr                      
+=
+"value"
+><?	
+	target	
+ data?><	/	root	>' \
+'
+element: root
+  attribute: ns:attr -> value
+  proc-instruction: target -> data'
 
 test_done
