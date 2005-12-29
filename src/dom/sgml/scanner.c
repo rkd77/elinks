@@ -178,7 +178,7 @@ skip_comment(struct dom_scanner *scanner, unsigned char **string)
 	unsigned char *pos = *string;
 	int length = 0;
 
-	for (; pos < scanner->end - 3; pos++)
+	for (; pos < scanner->end - 2; pos++)
 		if (pos[0] == '-' && pos[1] == '-' && pos[2] == '>') {
 			length = pos - *string;
 			pos += 3;

@@ -63,6 +63,20 @@ element: root
   #comment:  Hello World! '
 
 test_output_equals \
+'Parse comment combinations.' \
+'<root><!-- <!-- -- > --><!----></root>' \
+'
+element: root
+  #comment:  <!-- -- > 
+  #comment: '
+
+test_output_equals \
+'Parse comment combinations.' \
+'<!--foo-->' \
+'
+#comment: foo'
+
+test_output_equals \
 'Parse an enclosed CDATA section.' \
 '<root><![CDATA[...] ]>...]]></root>' \
 '
@@ -134,6 +148,14 @@ proc-instruction: xml -> encoding="UTF8"
   attribute: encoding -> UTF8
 #text: \n...\n
 proc-instruction: ecmascript -> var val=2;\n'
+
+test_output_equals \
+'Parse XML processing instructions.' \
+'<?xml version="1.0" />?><?xml />-' \
+'
+proc-instruction: xml -> version="1.0" />
+  attribute: version -> 1.0
+proc-instruction: xml -> /'
 
 test_output_equals \
 'Parse exotic processing instructions.' \
