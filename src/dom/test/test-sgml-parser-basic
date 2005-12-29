@@ -94,6 +94,6 @@ var val=2;
 proc-instruction: xml -> encoding="UTF8"
   attribute: encoding -> UTF8
 #text: \n...\n
-proc-instruction: ecmascript -> \nvar -> val=2;\n'
+proc-instruction: ecmascript -> var val=2;\n'
 
 test_done
