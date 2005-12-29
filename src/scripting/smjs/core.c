@@ -68,21 +68,39 @@ reported:
 
 static JSRuntime *smjs_rt;
 
-static void
+static int
 smjs_do_file(unsigned char *path)
 {
+	int ret = 1;
 	jsval rval;
 	struct string script;
 
-	if (!init_string(&script)) return;
+	if (!init_string(&script)) return 0;
 
-	if (add_file_to_string(&script, path)
-	     && JS_FALSE == JS_EvaluateScript(smjs_ctx,
+	if (!add_file_to_string(&script, path)
+	     || JS_FALSE == JS_EvaluateScript(smjs_ctx,
 				JS_GetGlobalObject(smjs_ctx),
-				script.source, script.length, path, 1, &rval))
+				script.source, script.length, path, 1, &rval)) {
 		alert_smjs_error("error loading default script file");
+		ret = 0;
+	}
 
 	done_string(&script);
+
+	return ret;
+}
+
+static JSBool
+smjs_do_file_wrapper(JSContext *ctx, JSObject *obj, uintN argc,
+                     jsval *argv, jsval *rval)
+{
+	JSString *jsstr = JS_ValueToString(smjs_ctx, *argv);
+	unsigned char *path = JS_GetStringBytes(jsstr);
+
+	if (smjs_do_file(path))
+		return JS_TRUE;
+
+	return JS_FALSE;
 }
 
 static void
@@ -122,6 +140,9 @@ init_smjs(struct module *module)
 	smjs_init_elinks_object();
 
 	smjs_load_hooks();
+
+	JS_DefineFunction(smjs_ctx, smjs_global_object, "do_file",
+	                  &smjs_do_file_wrapper, 1, 0);
 }
 
 void
