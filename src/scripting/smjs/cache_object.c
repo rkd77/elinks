@@ -119,11 +119,6 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 		return JS_TRUE;
 	}
-	case CACHE_ENTRY_LENGTH:
-
-		INTERNAL("attempted to assign to cache_entry's length");
-
-		return JS_FALSE;
 	default:
 		INTERNAL("Invalid ID %d in cache_entry_get_property().",
 		         JSVAL_TO_INT(id));
