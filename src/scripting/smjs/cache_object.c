@@ -120,7 +120,7 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 	default:
-		INTERNAL("Invalid ID %d in cache_entry_get_property().",
+		INTERNAL("Invalid ID %d in cache_entry_set_property().",
 		         JSVAL_TO_INT(id));
 	}
 
