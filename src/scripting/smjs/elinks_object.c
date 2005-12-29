@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "config/home.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
@@ -18,6 +19,14 @@
 #include "session/session.h"
 #include "session/task.h"
 
+
+static JSBool
+elinks_get_home(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+{
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+
+	return JS_TRUE;
+}
 
 static JSBool
 elinks_get_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -101,6 +110,12 @@ smjs_get_elinks_object(void)
 	JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
 	                  elinks_get_location, elinks_set_location,
 	                  JSPROP_ENUMERATE | JSPROP_PERMANENT);
+
+	JS_DefineProperty(smjs_ctx, jsobj, "home", JSVAL_NULL,
+	                  elinks_get_home, JS_PropertyStub,
+	                  JSPROP_ENUMERATE
+	                   | JSPROP_PERMANENT
+	                   | JSPROP_READONLY);
 
 	return jsobj;
 }
