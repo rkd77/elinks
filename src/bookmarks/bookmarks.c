@@ -443,6 +443,22 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 	return 1;
 }
 
+/* Search for a bookmark with the given title. Search in the given folder
+ * or in the root if folder is NULL. */
+struct bookmark *
+get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
+{
+	struct bookmark *bookmark;
+	struct list_head *lh;
+
+	lh = folder ? &folder->child : &bookmarks;
+
+	foreach (bookmark, *lh)
+		if (!strcmp(bookmark->title, title)) return bookmark;
+
+	return NULL;
+}
+
 /* Search bookmark cache for item matching url. */
 struct bookmark *
 get_bookmark(unsigned char *url)
