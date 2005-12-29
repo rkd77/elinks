@@ -11,24 +11,89 @@ correctly in the DOM tree.
 
 . ./libtest
 
+test_output_equals () {
+	desc="$1"
+	src="$2"
+	out="$3"
+
+	URI="test:$(echo "$desc" | sed '
+		s/^[ \t]*\[[^]]*\][ \t]*//;
+		s/[:., \t][:., \t]*/-/g;
+		s/_/-/g;
+		# *cough*
+		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+		s/[^a-zA-Z0-9-]//g;')"
+
+	sgml-parser --uri "$URI" --src "$src" | sed 's/^  //' > output
+	echo "#document: $URI" > expected
+	echo "$out" | sed -n '2,$p' >> expected
+
+	test_expect_success "$desc" 'cmp -b output expected' 
+}
+
+
 ################################################################
-# init-db has been done in an empty repository.
-# make sure it is empty.
+# Parse various SGML node types.
 
-sgml-parser --uri "test:hello-world" \
-	    --src "<html><body><p>Hello World!</p></body></html>" \
-	    > output
+test_output_equals \
+'Parse a small document.' \
+'<html><body><p>Hello World!</p></body></html>' \
+'
+element: html
+  element: body
+    element: p
+      #text: Hello World!'
 
-cat > expected <<EOF
-#document: test:hello-world
-  element: html
-    element: body
-      element: p
-        #text: Hello World!
-EOF
+test_output_equals \
+'Parse an enclosed comment.' \
+'<root><!-- Hello World! --></root>' \
+'
+element: root
+  #comment:  Hello World! '
 
-test_expect_success \
-	'Test a small document.' \
-	'cmp output expected' 
+test_output_equals \
+'Parse an enclosed CDATA section.' \
+'<root><![CDATA[...] ]>...]]></root>' \
+'
+element: root
+  #cdata-section: ...] ]>...'
+
+test_output_equals \
+'Parse attributes.' \
+'<root lang="fr" attr name="value with &foo; <stuff"></root>' \
+'
+element: root
+  attribute: lang -> fr
+  attribute: attr -> 
+  attribute: name -> value with &foo; <stuff'
+
+test_output_equals \
+'Parse entity references.' \
+'<root>&amp;...&#42;...&...copy;...&;...&#;' \
+'
+element: root
+  entity-reference: amp
+  #text: ...
+  entity-reference: #42
+  #text: ...
+  entity-reference: ...copy
+  #text: ...
+  #text: &;
+  #text: ...
+  entity-reference: #'
+
+# Test <?>
+test_output_equals \
+'Parse processing instructions.' \
+'<?xml encoding="UTF8"?>
+...
+<?ecmascript 
+var val=2;
+?>' \
+'
+proc-instruction: xml -> encoding="UTF8"
+  attribute: encoding -> UTF8
+#text: \n...\n
+proc-instruction: ecmascript -> \nvar -> val=2;\n'
 
 test_done
