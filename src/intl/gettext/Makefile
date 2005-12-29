@@ -26,7 +26,7 @@ OBJS = \
 
 
 # $(builddir)/charset.alias: $(srcdir)/config.charset
-$(builddir)/charset.alias: $(srcdir)/config.charset
+$(builddir)/charset.alias: $(srcdir)config.charset
 	$(SHELL) $(srcdir)/config.charset '$(host)' > $@.new
 	mv $@.new $@
 

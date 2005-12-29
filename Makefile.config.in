@@ -13,7 +13,13 @@ PATHSCRIPT = case '@top_srcdir@' in /*) ;; *) echo $(top_builddir)/;; esac
 PATHPREFIX = $(shell $(PATHSCRIPT))
 
 top_srcdir = $(PATHPREFIX)@top_srcdir@
+
+SRCPATH = $(shell cd $(top_srcdir)/$(RELPATH) && pwd)
+ifeq ($(SRCPATH),$(CURPATH))
+srcdir = 
+else
 srcdir = $(top_srcdir)/$(RELPATH)
+endif
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 
