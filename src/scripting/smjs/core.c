@@ -69,21 +69,12 @@ reported:
 static JSRuntime *smjs_rt;
 
 static void
-smjs_load_hooks(void)
+smjs_do_file(unsigned char *path)
 {
 	jsval rval;
 	struct string script;
-	unsigned char *path;
-
-	assert(smjs_ctx);
 
 	if (!init_string(&script)) return;
-
-	if (elinks_home) {
-		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME, NULL);
-	} else {
-		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
-	}
 
 	if (add_file_to_string(&script, path)
 	     && JS_FALSE == JS_EvaluateScript(smjs_ctx,
@@ -91,8 +82,24 @@ smjs_load_hooks(void)
 				script.source, script.length, path, 1, &rval))
 		alert_smjs_error("error loading default script file");
 
-	mem_free(path);
 	done_string(&script);
+}
+
+static void
+smjs_load_hooks(void)
+{
+	unsigned char *path;
+
+	assert(smjs_ctx);
+
+	if (elinks_home) {
+		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME, NULL);
+	} else {
+		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
+	}
+
+	smjs_do_file(path);
+	mem_free(path);
 }
 
 void
