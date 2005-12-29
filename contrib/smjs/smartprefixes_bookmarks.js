@@ -15,7 +15,7 @@ if (!loaded_smartprefixes_common_code) {
  * starts with "javascript:", and go to the resulting URI.
  */
 function rewrite_uri(uri) {
-	if (!elinks.bookmarks.smartprefixes) return true;
+	if (!elinks.bookmarks.smartprefixes) return uri;
 
 	var parts = uri.split(" ");
 	var prefix = parts[0];
