@@ -20,7 +20,7 @@ elinks.goto_url_hooks = new Array();
 elinks.goto_url_hook = function (url) {
 	for (var i in elinks.goto_url_hooks){ 
 		url = elinks.goto_url_hooks[i](url);
-		if (typeof(url) == 'boolean' && !url) return false;
+		if (false === url) return false;
 	}
 
 	return url;
@@ -30,7 +30,7 @@ elinks.follow_url_hooks = new Array();
 elinks.follow_url_hook = function (url) {
 	for (var i in elinks.follow_url_hooks) {
 		url = elinks.follow_url_hooks[i](url);
-		if (typeof(url) == 'boolean' && !url) return false;
+		if (false === url) return false;
 	}
 
 	return url;
