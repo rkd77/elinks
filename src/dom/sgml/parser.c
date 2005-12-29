@@ -103,26 +103,17 @@ add_sgml_attribute(struct dom_stack *stack,
 }
 
 static inline struct dom_node *
-add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *token)
+add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *target,
+			  struct dom_scanner_token *data)
 {
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
+	struct dom_string *data_str = data ? &data->string : NULL;
 	struct dom_node *node;
-	/* Split the token in two if we can find a first space separator. */
-	unsigned char *separator = memchr(token->string.string, ' ', token->string.length);
 
-	/* Anything before the separator becomes the target name ... */
-	size_t namelen = separator ? separator - token->string.string : token->string.length;
-	struct dom_string name = INIT_DOM_STRING(token->string.string, namelen);
-
-	/* ... and everything after the instruction value. */
-	unsigned char *valuestr = separator ? separator + 1 : NULL;
-	size_t valuelen = valuestr ? token->string.length - namelen - 1 : 0;
-	struct dom_string value = INIT_DOM_STRING(valuestr, valuelen);
-
-	node = add_dom_proc_instruction(parent, &name, &value);
+	node = add_dom_proc_instruction(parent, &target->string, data_str);
 	if (!node) return NULL;
 
-	switch (token->type) {
+	switch (target->type) {
 	case SGML_TOKEN_PROCESS_XML:
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION_XML;
 		break;
@@ -132,13 +123,7 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tok
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION;
 	}
 
-	if (!push_dom_node(stack, node))
-		return NULL;
-
-	if (token->type != SGML_TOKEN_PROCESS_XML)
-		pop_dom_node(stack);
-
-	return node;
+	return push_dom_node(stack, node);
 }
 
 static inline void
@@ -166,9 +151,12 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 
 	assert(dom_scanner_has_tokens(scanner)
 	       && (get_dom_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN
-	       	   || get_dom_scanner_token(scanner)->type == SGML_TOKEN_PROCESS_XML));
+	           || (get_dom_stack_top(stack)->node->type == DOM_NODE_PROCESSING_INSTRUCTION
+	       	       && get_dom_stack_top(stack)->node->data.proc_instruction.type
+		          == DOM_PROC_INSTRUCTION_XML)));
 
-	skip_dom_scanner_token(scanner);
+	if (get_dom_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN)
+		skip_dom_scanner_token(scanner);
 
 	while (dom_scanner_has_tokens(scanner)) {
 		struct dom_scanner_token *token = get_dom_scanner_token(scanner);
@@ -220,6 +208,8 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 static void
 parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
+	struct dom_scanner_token target;
+
 	while (dom_scanner_has_tokens(scanner)) {
 		struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 
@@ -290,17 +280,31 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			break;
 
 		case SGML_TOKEN_PROCESS_XML:
-			if (!add_sgml_proc_instruction(stack, token)) {
-				skip_sgml_tokens(scanner, SGML_TOKEN_TAG_END);
-				break;
+		case SGML_TOKEN_PROCESS:
+			copy_struct(&target, token);
+
+			/* Skip the target token */
+			token = get_next_dom_scanner_token(scanner);
+			if (!token) break;
+
+			assert(token->type == SGML_TOKEN_PROCESS_DATA);
+
+			if (add_sgml_proc_instruction(stack, &target, token)
+			    && target.type == SGML_TOKEN_PROCESS_XML
+			    && token->string.length > 0) {
+				/* Parse the <?xml data="attributes"?>. */
+				struct dom_scanner attr_scanner;
+
+				init_dom_scanner_state(&attr_scanner,
+						       &sgml_scanner_info,
+						       &token->string,
+						       SGML_STATE_ELEMENT);
+
+				if (dom_scanner_has_tokens(&attr_scanner))
+					parse_sgml_attributes(stack, &attr_scanner);
 			}
 
-			parse_sgml_attributes(stack, scanner);
 			pop_dom_node(stack);
-			break;
-
-		case SGML_TOKEN_PROCESS:
-			add_sgml_proc_instruction(stack, token);
 			skip_dom_scanner_token(scanner);
 			break;
 

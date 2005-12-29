@@ -17,14 +17,6 @@
 
 /* Bitmap entries for the SGML character groups used in the scanner table */
 
-/* The SGML tokenizer maintains a state that can be either text or element
- * state. The state has only meaning while doing the actual scanning and is not
- * accessible at the parsing time. */
-enum sgml_scanner_state {
-	SGML_STATE_TEXT,
-	SGML_STATE_ELEMENT,
-};
-
 enum sgml_char_group {
 	SGML_CHAR_ENTITY	= (1 << 1),
 	SGML_CHAR_IDENT		= (1 << 2),
@@ -296,27 +288,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			type = map_dom_scanner_string(scanner, pos, string, base);
 
-			/* Figure out where the processing instruction ends */
-			for (pos = string; skip_sgml(scanner, &pos, '>', 0); ) {
-				if (pos[-2] != '?') continue;
-
-				/* Set length until '?' char and move position
-				 * beyond '>'. */
-				real_length = pos - token->string.string - 2;
-				break;
-			}
-
-			switch (type) {
-			case SGML_TOKEN_PROCESS_XML:
-				/* We want to parse the attributes */
-				assert(scanner->state != SGML_STATE_ELEMENT);
-				scanner->state = SGML_STATE_ELEMENT;
-				break;
-
-			default:
-				/* Just skip the whole thing */
-				string = pos;
-			}
+			scanner->state = SGML_STATE_PROC_INST;
 
 		} else if (*string == '/') {
 			string++;
@@ -403,6 +375,28 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 }
 
 
+/* Processing instruction data scanning */
+
+static inline void
+scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
+{
+	unsigned char *string = scanner->position;
+
+	token->string.string = string++;
+
+	/* Figure out where the processing instruction ends */
+	while (skip_sgml(scanner, &string, '>', 0))
+		if (string[-2] == '?')
+			break;
+
+	token->type = SGML_TOKEN_PROCESS_DATA;
+	token->string.length = string - token->string.string - 2;
+	token->precedence = get_sgml_precedence(token->type);
+	scanner->position = string;
+	scanner->state = SGML_STATE_TEXT;
+}
+
+
 /* Scanner multiplexor */
 
 static struct dom_scanner_token *
@@ -429,8 +423,13 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 			if (current->type == SGML_TOKEN_SKIP) {
 				current--;
 			}
-		} else {
+
+		} else if (scanner->state == SGML_STATE_TEXT) {
 			scan_sgml_text_token(scanner, current);
+
+		} else {
+			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
+			scan_sgml_proc_inst_token(scanner, current);
 		}
 	}
 
