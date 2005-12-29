@@ -896,7 +896,7 @@ There's no place like home...
 		my ($bug) = $url =~ /^.* (.*)/;
 		if ($url =~ '^b')
 		{
-			my $bugzilla = 'http://bugzilla.elinks.or.cz';
+			my $bugzilla = 'http://bugzilla.elinks.cz';
 			if (not $bug)
 			{
 				if (loadrc("email"))
@@ -922,7 +922,7 @@ There's no place like home...
 			$doc = '/documentation' if $url =~ '^doc';
 			$doc = '/faq.html' if $url =~ '^(faq|help)$';
 			$doc = '/documentation/html/manual.html' if $url =~ '^manual$';
-			return 'http://elinks.or.cz' . $doc;
+			return 'http://elinks.cz' . $doc;
 		}
 	}
 

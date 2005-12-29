@@ -8,7 +8,7 @@ on a variety of platforms.
 
 The ELinks official website is available at
 
-	http://elinks.or.cz/
+	http://elinks.cz/
 
 Please see the SITES file for mirrors or other recommended sites.  If you
 want to install ELinks on your computer, see the INSTALL file for further
@@ -18,8 +18,8 @@ A good start point is documentation files available in doc/, especially the
 file named index.txt.
 
 If you want to request features or report bugs, see community information at
-http://elinks.or.cz/community.html and feedback information available at
-http://elinks.or.cz/feedback.html.
+http://elinks.cz/community.html and feedback information available at
+http://elinks.cz/feedback.html.
 
 If you want to write some patches, please first read the doc/hacking.txt
 document.
@@ -55,7 +55,7 @@ separation of add-on modules (like cookies, bookmarks, ssl, scripting etc).
 
 For more details about ELinks history, please see
 
-	http://elinks.or.cz/history.html
+	http://elinks.cz/history.html
 
 If you are more interested in the history and various Links clones and versions,
 you can examine the website at
