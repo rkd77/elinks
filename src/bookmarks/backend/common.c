@@ -39,6 +39,8 @@ static struct bookmarks_backend *bookmarks_backends[] = {
 };
 
 
+static int loaded_backend_num = -1;
+
 /* Loads the bookmarks from file */
 void
 bookmarks_read(void)
@@ -67,6 +69,7 @@ bookmarks_read(void)
 
 	fclose(f);
 	bookmarks_unset_dirty();
+	loaded_backend_num = backend_num;
 }
 
 void
@@ -77,7 +80,7 @@ bookmarks_write(struct list_head *bookmarks_list)
 	struct secure_save_info *ssi;
 	unsigned char *file_name;
 
-	if (!bookmarks_are_dirty()) return;
+	if (!bookmarks_are_dirty() && backend_num == loaded_backend_num) return;
 	if (!backend
 	    || !backend->write
 	    || !elinks_home
