@@ -478,22 +478,18 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		if (sel.node.type == DOM_NODE_UNKNOWN)
 			continue;
 
-		WDBG("Adding %s: %.*s", (sel.node.type == DOM_NODE_ELEMENT) ? "element" : "attr", sel.node.string.length, sel.node.string.string);
-		/* FIXME: Use the stack to push added nodes and to get the
-		 * parent node. */
 		select_node = mem_calloc(1, sizeof(*select_node));
 		copy_struct(select_node, &sel);
 
-		if (select_node->node.parent) {
+		if (!dom_stack_is_empty(stack)) {
 			struct dom_node *node = &select_node->node;
-			struct dom_node *parent = node->parent;
+			struct dom_node *parent = get_dom_stack_top(stack)->node;
 			struct dom_node_list **list = get_dom_node_list(parent, node);
 			int sort = (node->type == DOM_NODE_ATTRIBUTE);
 			int index;
 
-			assertm(list, "Adding node to bad parent",
-				get_dom_node_type_name(node->type),
-				get_dom_node_type_name(parent->type));
+			assertm(list, "Adding node to bad parent [%d -> %d]",
+				node->type, parent->type);
 
 			index = *list && (*list)->size > 0 && sort
 				? get_dom_node_map_index(*list, node) : -1;
@@ -502,13 +498,21 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 				done_dom_node(node);
 				return DOM_ERR_INVALID_STATE;
 			}
+
+			node->parent = parent;
+
 		} else {
 			assert(!select->selector);
 			select->selector = select_node;
 		}
 
+		if (!push_dom_node(stack, &select_node->node))
+			return DOM_ERR_INVALID_STATE;
+
+		if (select_node->node.type != DOM_NODE_ELEMENT)
+			pop_dom_node(stack);
+
 		memset(&sel, 0, sizeof(sel));
-		sel.node.parent = &select_node->node;
 	}
 
 	if (select->selector)
