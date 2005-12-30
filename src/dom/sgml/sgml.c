@@ -18,6 +18,7 @@
 
 #include "dom/sgml/html/html.h"
 #include "dom/sgml/rss/rss.h"
+#include "dom/sgml/xbel/xbel.h"
 
 
 int
@@ -32,6 +33,7 @@ sgml_info_strcmp(const void *key_, const void *node_)
 struct sgml_info *sgml_info[SGML_DOCTYPES] = {
 	&sgml_html_info,
 	&sgml_rss_info,
+	&sgml_xbel_info,
 };
 
 struct sgml_info *
