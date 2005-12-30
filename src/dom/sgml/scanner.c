@@ -143,6 +143,21 @@ check_sgml_precedence(int type, int skipto)
 	return get_sgml_precedence(type) <= get_sgml_precedence(skipto);
 }
 
+/* Skip until @skipto is found, without taking precedence into account. */
+static inline unsigned char *
+skip_sgml_chars(struct dom_scanner *scanner, unsigned char *string,
+		unsigned char skipto)
+{
+	assert(string >= scanner->position && string <= scanner->end);
+
+	for (; string < scanner->end; string++) {
+		if (*string == skipto)
+			return string;
+	}
+
+	return NULL;
+}
+
 /* XXX: Only element or ``in tag'' precedence is handled correctly however
  * using this function for CDATA or text would be overkill. */
 static inline unsigned char *
@@ -161,9 +176,9 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 			break;
 
 		if (check_quoting && isquote(*pos)) {
-			int length = scanner->end - pos;
-			unsigned char *end = memchr(pos + 1, *pos, length);
+			unsigned char *end;
 
+			end = skip_sgml_chars(scanner, pos + 1, *pos);
 			if (end) pos = end;
 		}
 	}
@@ -343,8 +358,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 
 	} else if (isquote(first_char)) {
-		int size = scanner->end - string;
-		unsigned char *string_end = memchr(string, first_char, size);
+		unsigned char *string_end = skip_sgml_chars(scanner, string, first_char);
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
@@ -393,7 +407,7 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
 	 * the data part to be skipped correctly. */
 	for (size = scanner->end - string;
-	     size > 0 && (string = memchr(string, '>', size));
+	     size > 0 && (string = skip_sgml_chars(scanner, string, '>'));
 	     string++) {
 		if (string[-1] == '?') {
 			string++;
