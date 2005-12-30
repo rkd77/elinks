@@ -1147,7 +1147,7 @@ struct {
 	{ "text/html",			0 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
 #if CONFIG_DOM
-	{ "application/rss+xml",	0 },
+	{ "application/rss+xml",	1 },
 #endif
 	{ "text/plain",			1 },
 	{ NULL,				1 },
