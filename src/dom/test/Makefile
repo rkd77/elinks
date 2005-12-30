@@ -1,7 +1,8 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
-PROG = sgml-parser
+TEST_PROGS = \
+ sgml-parser
 
 TESTDEPS = \
  $(top_builddir)/src/dom/lib.o \
@@ -11,20 +12,20 @@ TESTDEPS = \
  $(top_builddir)/src/util/memdebug.o \
  $(top_builddir)/src/util/memory.o
 
-sgml-parser: $(TESTDEPS) sgml-parser.o
+$(TEST_PROGS): $(TESTDEPS) $$@.o
 	$(call cmd,link)
 
 TESTS = $(wildcard test-*)
 
-$(TESTS):
+$(TESTS): $(TEST_PROGS)
 	@echo "*** $@ ***"; $(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
 test: sgml-parser $(TESTS)
 
 clean-local:
-	rm -fr trash
+	@rm -fr trash
 
-CLEAN += sgml-parser.o
+CLEAN += $(TEST_PROGS) $(patsubst %,%.o,$(TEST_PROGS))
 
 .PHONY: $(TESTS)
 .NOPARALLEL:
@@ -37,4 +38,3 @@ include $(top_srcdir)/Makefile.lib
 shq = $(subst ','\'',$(1))
 # This has surrounding ''
 shellquote = '$(call shq,$(1))'
-
