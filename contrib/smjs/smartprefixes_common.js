@@ -55,6 +55,28 @@ function cvsweb (base, project, url)
 	return base + project + "/" + file
 }
 
+/* javascript:gitweb("http://pasky.or.cz/gitweb.cgi", "elinks.git", "%s"); */
+function gitweb(base, project, url)
+{
+	var parts = url.match(/^(search|summary|shortlog|log|commit|commitdiff|tree)(\s(.*))?/);
+	var query = '?p=' + project;
+
+	if (parts) {
+		query += ';a=' + parts[1];
+
+		/* If the extra arg is not for searching assume it is an ID. */
+		if (parts[1] == 'search' && parts[3])
+			query += ';s=' + escape(parts[3]);
+		else if (parts[3])
+			query += ';h=' + escape(parts[3]);
+
+	} else {
+		query += ';a=summary';
+	}
+
+	return base + query;
+}
+
 /* javascript:gmane("%s") */
 function gmane (url)
 {
