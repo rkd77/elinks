@@ -425,6 +425,8 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 
 #ifdef DOM_STACK_TRACE
 
+#include "util/string.h"
+
 /* Compress a string to a single line with newlines etc. replaced with "\\n"
  * sequence. */
 static inline unsigned char *
@@ -492,7 +494,8 @@ dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
-	LOG_INFO("%.*s %.*s: %.*s",
+	LOG_INFO("%s%.*s %.*s: %.*s",
+		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		name->length, name->string,
 		value->length, value->string);
@@ -511,7 +514,8 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 	id	= get_dom_node_type_name(node->type);
 	set_enhanced_dom_node_value(&value, node);
 
-	LOG_INFO("%.*s %.*s: %.*s -> %.*s",
+	LOG_INFO("%s%.*s %.*s: %.*s -> %.*s",
+		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string,
 		value.length, value.string);
@@ -531,7 +535,8 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 	name	= get_dom_node_name(node);
 	set_enhanced_dom_node_value(&value, node);
 
-	LOG_INFO("%.*s %.*s: %.*s",
+	LOG_INFO("%s%.*s %.*s: %.*s",
+		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		name->length, name->string,
 		value.length, value.string);
@@ -551,7 +556,8 @@ dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	LOG_INFO("%.*s %.*s: %.*s",
+	LOG_INFO("%s%.*s %.*s: %.*s",
+		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
 }
