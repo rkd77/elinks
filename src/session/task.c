@@ -718,8 +718,11 @@ goto_url_with_hook(struct session *ses, unsigned char *url)
 	if (!*url) return;
 
 	uri = get_hooked_uri(url, ses, cwd);
+	if (!uri) return;
+
 	goto_uri(ses, uri);
-	if (uri) done_uri(uri);
+
+	done_uri(uri);
 }
 
 int
