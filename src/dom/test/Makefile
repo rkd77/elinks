@@ -2,6 +2,7 @@ top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
 TEST_PROGS = \
+ dom-select \
  sgml-parser
 
 TESTDEPS = \
@@ -10,6 +11,7 @@ TESTDEPS = \
  $(top_builddir)/src/osdep/stub.o \
  $(top_builddir)/src/util/hash.o \
  $(top_builddir)/src/util/memdebug.o \
+ $(top_builddir)/src/util/string.o \
  $(top_builddir)/src/util/memory.o
 
 $(TEST_PROGS): $(TESTDEPS) $$@.o
