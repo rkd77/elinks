@@ -1,8 +1,9 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
+# Disabled since it requires DOM_STACK_TRACE to be defined
+#	dom-select
 TEST_PROGS = \
- dom-select \
  sgml-parser
 
 TESTDEPS = \
@@ -22,7 +23,7 @@ TESTS = $(wildcard test-*)
 $(TESTS): $(TEST_PROGS)
 	@echo "*** $@ ***"; $(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
-test: sgml-parser $(TESTS)
+test: $(TESTS)
 
 clean-local:
 	@rm -fr trash
