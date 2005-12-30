@@ -698,7 +698,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
-	add_dom_stack_tracer(&parser->stack);
 
 	root = parse_sgml(parser, &source);
 	if (root) {
