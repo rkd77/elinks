@@ -2,6 +2,8 @@
 /* This list is made from http://www.w3.org/TR/REC-html40/index/attributes.html
  * unless otherwise noted. */
 
+#undef VERSION
+
 HTML_(ATTRIBUTE, ABBR,			0),
 HTML_(ATTRIBUTE, ACCEPT,		0),
 HTM2_(ATTRIBUTE, ACCEPT_CHARSET, "ACCEPT-CHARSET", 0),
@@ -119,8 +121,7 @@ HTML_(ATTRIBUTE, USEMAP,		SGML_ATTRIBUTE_REFERENCE),
 HTML_(ATTRIBUTE, VALIGN,		0),
 HTML_(ATTRIBUTE, VALUE,			0),
 HTML_(ATTRIBUTE, VALUETYPE,		0),
-/* XXX: Apparently #VERSION doesn.t work .. some predefined VERSION macro? */
-HTM2_(ATTRIBUTE, VERSION, "VERSION",	0),
+HTML_(ATTRIBUTE, VERSION, 		0),
 HTML_(ATTRIBUTE, VISIBILITY,		0),
 HTML_(ATTRIBUTE, VLINK,			0),
 HTML_(ATTRIBUTE, VSPACE,		0),
