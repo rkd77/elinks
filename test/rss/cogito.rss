@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<channel>
+<title>cogito/cogito.git</title>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=summary</link>
+<description>cogito/cogito.git log</description>
+<language>en</language>
+<item>
+<title>18 Dec 18:56 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Sun, 18 Dec 2005 18:56:59 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=6d0b0790e812618e694798f741f76ccb202c9cab</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=6d0b0790e812618e694798f741f76ccb202c9cab</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+cg-push<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>18 Dec 18:55 - Make it possible to push out new branches</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Sun, 18 Dec 2005 18:55:45 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=7118989a8365b22b02e170b234046baa1bbf1dbe</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=7118989a8365b22b02e170b234046baa1bbf1dbe</link>
+<description>Make it possible to push out new branches</description>
+<content:encoded><![CDATA[
+Make it possible to push out new branches<br/>
+<br/>
+cg-push<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>18 Dec 18:52 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Sun, 18 Dec 2005 18:52:31 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=e2967cc388f77947735b7506e68d1b011891ef11</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=e2967cc388f77947735b7506e68d1b011891ef11</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+cg-push<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>18 Dec 18:51 - Fix cg-push not always defaulting to &#39;master&#39; remotely</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Sun, 18 Dec 2005 18:51:38 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=ad24938669c851cc297b9fe073db8cdc71928f28</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=ad24938669c851cc297b9fe073db8cdc71928f28</link>
+<description>Fix cg-push not always defaulting to &#39;master&#39; remotely</description>
+<content:encoded><![CDATA[
+Fix cg-push not always defaulting to 'master' remotely<br/>
+<br/>
+cg-push from non-master branch wouldn't default to master remote branch,<br/>
+but to the same-named remote branch - that was a bug. Actually, we<br/>
+would still default to master when doing local same-repo push anyway,<br/>
+making everything even more confusing. Now it's consistent and correct.<br/>
+<br/>
+cg-push<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>14 Dec 23:51 - Whitespaces safety fixes</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Wed, 14 Dec 2005 23:51:39 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=e5ca051c1d3900f7fbc1592d018ab3aab6a9573a</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=e5ca051c1d3900f7fbc1592d018ab3aab6a9573a</link>
+<description>Whitespaces safety fixes</description>
+<content:encoded><![CDATA[
+Whitespaces safety fixes<br/>
+<br/>
+Fix hopefully all the possible whitespace and metacharacters related<br/>
+problems by carefully quoting everything.  Even most of the things clearly<br/>
+unneeded, because it doesn't harm and I want to cultivate a reflex to panic<br/>
+and closely investigate if anything unquoted passes by, so that we _stay_<br/>
+safe in the future as well.<br/>
+<br/>
+Such a large patch is bound to introduce some (probably mostly trivial) bugs,<br/>
+so please test this carefully.<br/>
+<br/>
+cg-Xlib<br/>
+cg-add<br/>
+cg-admin-ls<br/>
+cg-admin-lsobj<br/>
+cg-admin-uncommit<br/>
+cg-branch-add<br/>
+cg-branch-chg<br/>
+cg-branch-ls<br/>
+cg-clean<br/>
+cg-clone<br/>
+cg-commit<br/>
+cg-diff<br/>
+cg-export<br/>
+cg-fetch<br/>
+cg-help<br/>
+cg-init<br/>
+cg-log<br/>
+cg-merge<br/>
+cg-mkpatch<br/>
+cg-object-id<br/>
+cg-patch<br/>
+cg-push<br/>
+cg-reset<br/>
+cg-rm<br/>
+cg-seek<br/>
+cg-status<br/>
+cg-tag<br/>
+cg-tag-ls<br/>
+cg-update<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>14 Dec 23:12 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Wed, 14 Dec 2005 23:12:40 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=b2b025fba1c88c3f325115a308c49f7a4543746f</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=b2b025fba1c88c3f325115a308c49f7a4543746f</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>14 Dec 22:52 - cogito-0.16.2</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Wed, 14 Dec 2005 22:52:48 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=1fa82133722bb10228a2fc6de63cab98c8968b72</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=1fa82133722bb10228a2fc6de63cab98c8968b72</link>
+<description>cogito-0.16.2</description>
+<content:encoded><![CDATA[
+cogito-0.16.2<br/>
+<br/>
+VERSION<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>14 Dec 00:31 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Wed, 14 Dec 2005 00:31:07 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=52aece5ec235bc3fefdd831d94c5d47d601d5050</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=52aece5ec235bc3fefdd831d94c5d47d601d5050</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+cg-admin-setuprepo<br/>
+cg-commit<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 16:55 - In the cg-commit text, give the user hint on how to abort</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 16:55:08 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=8ef7fb1a5a71ae64716e8ee39f3d57b3149b3b80</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=8ef7fb1a5a71ae64716e8ee39f3d57b3149b3b80</link>
+<description>In the cg-commit text, give the user hint on how to abort</description>
+<content:encoded><![CDATA[
+In the cg-commit text, give the user hint on how to abort<br/>
+<br/>
+Idea by Paul Dickson.<br/>
+<br/>
+cg-commit<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 01:14 - Improve cg-admin-setuprepo documentation</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 01:14:54 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=0e0c038877b454d4991433891cfbf5ceb062a4fa</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=0e0c038877b454d4991433891cfbf5ceb062a4fa</link>
+<description>Improve cg-admin-setuprepo documentation</description>
+<content:encoded><![CDATA[
+Improve cg-admin-setuprepo documentation<br/>
+<br/>
+Clarify the workflow and that the directory must not exist before,<br/>
+based on Paul Dickson's suggestions.<br/>
+<br/>
+Also various minor grammar fixes and clarifications.<br/>
+<br/>
+cg-admin-setuprepo<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 00:41 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 00:41:15 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=eb71a243a45392f1712b32732e9d1473ee89c152</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=eb71a243a45392f1712b32732e9d1473ee89c152</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+cg-status<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 00:40 - Fix cg-status reporting every merge as a squash-merge</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 00:40:56 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=d7855bbf9cd8aa48611c500d33a10a95ebbd0d00</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=d7855bbf9cd8aa48611c500d33a10a95ebbd0d00</link>
+<description>Fix cg-status reporting every merge as a squash-merge</description>
+<content:encoded><![CDATA[
+Fix cg-status reporting every merge as a squash-merge<br/>
+<br/>
+cg-status<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 00:39 - Merge with v0.16</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 00:39:42 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=a30c3176402e4fc2097a30cfd3c45f9d8c3c2953</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=a30c3176402e4fc2097a30cfd3c45f9d8c3c2953</link>
+<description>Merge with v0.16</description>
+<content:encoded><![CDATA[
+Merge with v0.16<br/>
+<br/>
+cg-clean<br/>
+cg-log<br/>
+t/t9400-clean.sh<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 00:38 - [PATCH] cg-clean: be safer by running everything from relpath</title>
+<author>Pavel Roskin &lt;proski@gnu.org&gt;</author>
+<pubDate>Tue, 13 Dec 2005 00:38:33 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=79e53d92d08f3ca5268d723af18e7813859363a5</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=79e53d92d08f3ca5268d723af18e7813859363a5</link>
+<description>[PATCH] cg-clean: be safer by running everything from relpath</description>
+<content:encoded><![CDATA[
+[PATCH] cg-clean: be safer by running everything from relpath<br/>
+<br/>
+cg-clean is broken by commit 3cddede46dcd24bd7c36827ca564de23b2bb3517 -<br/>
+it removes all subdirectories when run in the top level directory.<br/>
+<br/>
+Although it's easy to make a one-line fix, I'd prefer a solution that<br/>
+makes cg-clean potentially safer.  Since git-ls-files runs in<br/>
+subdirectories now, it's no longer needed to run anything in the top<br/>
+level directory and filter out the results.  cg-clean now changes to<br/>
+$_git_relpath on startup and never uses $_git_relpath again.<br/>
+<br/>
+Signed-off-by: Pavel Roskin <proski@gnu.org><br/>
+Signed-off-by: Petr Baudis <pasky@suse.cz><br/>
+<br/>
+cg-clean<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>13 Dec 00:32 - Fixed cg-clean removing ALL subdirs when invoked from root</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Tue, 13 Dec 2005 00:32:56 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=184d1e3769bd6e4386c14dca8fee324aac887c3c</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=184d1e3769bd6e4386c14dca8fee324aac887c3c</link>
+<description>Fixed cg-clean removing ALL subdirs when invoked from root</description>
+<content:encoded><![CDATA[
+Fixed cg-clean removing ALL subdirs when invoked from root<br/>
+<br/>
+Reported by Pavel Roskin.<br/>
+<br/>
+cg-clean<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>12 Dec 22:55 - cg-clean testcase: Clarify description</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Mon, 12 Dec 2005 22:55:58 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=a0589281110aff4bcccb546ec7370ffc021534e0</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=a0589281110aff4bcccb546ec7370ffc021534e0</link>
+<description>cg-clean testcase: Clarify description</description>
+<content:encoded><![CDATA[
+cg-clean testcase: Clarify description<br/>
+<br/>
+t/t9400-clean.sh<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>12 Dec 22:47 - cg-clean testcase: Minor tidyup</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Mon, 12 Dec 2005 22:47:37 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=7c7fd97171cfc617988774af6ddf2a26a1794257</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=7c7fd97171cfc617988774af6ddf2a26a1794257</link>
+<description>cg-clean testcase: Minor tidyup</description>
+<content:encoded><![CDATA[
+cg-clean testcase: Minor tidyup<br/>
+<br/>
+t/t9400-clean.sh<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>12 Dec 22:45 - [PATCH] cg-clean test</title>
+<author>Pavel Roskin &lt;proski@gnu.org&gt;</author>
+<pubDate>Mon, 12 Dec 2005 22:45:29 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=c8f3f9b853b86cd1708bd3975be2ffc240f9ed01</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=c8f3f9b853b86cd1708bd3975be2ffc240f9ed01</link>
+<description>[PATCH] cg-clean test</description>
+<content:encoded><![CDATA[
+[PATCH] cg-clean test<br/>
+<br/>
+This is a test for cg-clean functionality.<br/>
+<br/>
+Signed-off-by: Pavel Roskin <proski@gnu.org><br/>
+Signed-off-by: Petr Baudis <pasky@suse.cz><br/>
+<br/>
+t/t9400-clean.sh<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>12 Dec 00:54 - cogito-0.16.1</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Mon, 12 Dec 2005 00:54:55 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=8d619286815cd314bfebd969217c93ebf0b93c6e</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=8d619286815cd314bfebd969217c93ebf0b93c6e</link>
+<description>cogito-0.16.1</description>
+<content:encoded><![CDATA[
+cogito-0.16.1<br/>
+<br/>
+VERSION<br/>
+]]>
+</content:encoded>
+</item>
+<item>
+<title>11 Dec 21:06 - Remove forgotten debugging print</title>
+<author>Petr Baudis &lt;pasky@suse.cz&gt;</author>
+<pubDate>Sun, 11 Dec 2005 21:06:01 +0000</pubDate>
+<guid isPermaLink="true">http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=425dc061b4a492c49993d39d981ecaaf7c0e6aed</guid>
+<link>http://kernel.org/git/?p=cogito/cogito.git;a=commit;h=425dc061b4a492c49993d39d981ecaaf7c0e6aed</link>
+<description>Remove forgotten debugging print</description>
+<content:encoded><![CDATA[
+Remove forgotten debugging print<br/>
+<br/>
+Spotted by Jonas.<br/>
+<br/>
+cg-log<br/>
+]]>
+</content:encoded>
+</item>
+</channel></rss>
