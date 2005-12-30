@@ -531,6 +531,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 	enum dom_exception_code code;
 
 	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+	add_dom_stack_tracer(&stack);
 
 	code = parse_dom_select(select, &stack, string);
 	done_dom_stack(&stack);
@@ -903,8 +904,6 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 	struct dom_stack_state *state;
 	int pos;
 
-	WDBG("Push element %.*s.", node->string.length, node->string.string);
-
 	foreach_dom_stack_state(&select_data->stack, state, pos) {
 		struct dom_select_node *selector = (void *) state->node;
 
@@ -933,7 +932,6 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 	struct dom_stack_state *state;
 	int index;
 
-	WDBG("Pop element: %.*s", node->string.length, node->string.string);
 	stack = &select_data->stack;
 
 	foreachback_dom_stack_state (stack, state, index) {
@@ -1065,10 +1063,12 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_context_info);
+	add_dom_stack_tracer(&stack);
 
 	init_dom_stack(&select_data.stack, DOM_STACK_KEEP_NODES);
 	add_dom_stack_context(&select_data.stack, &select_data,
 			      &dom_select_data_context_info);
+	add_dom_stack_tracer(&select_data.stack);
 
 	if (push_dom_node(&select_data.stack, &select->selector->node)) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;
