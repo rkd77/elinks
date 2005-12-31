@@ -22,6 +22,16 @@ enum sgml_parser_type {
 	SGML_PARSER_STREAM,
 };
 
+struct sgml_parser_state {
+	/* Info about the properties of the node contained by state.
+	 * This is only meaningful to element and attribute nodes. For
+	 * unknown nodes it points to the common 'unknown node' info. */
+	struct sgml_node_info *info;
+	/* This is used by the DOM source renderer for highlighting the
+	 * end-tag of an element. */
+	struct dom_scanner_token end_token;
+};
+
 struct sgml_parser {
 	enum sgml_parser_type type;	/* Stream or tree */
 
@@ -32,13 +42,6 @@ struct sgml_parser {
 
 	struct dom_stack stack;		/* A stack for tracking parsed nodes */
 	struct dom_stack parsing;	/* Used for tracking parsing states */
-};
-
-struct sgml_parser_state {
-	struct sgml_node_info *info;
-	/* This is used by the DOM source renderer for highlighting the
-	 * end-tag of an element. */
-	struct dom_scanner_token end_token;
 };
 
 struct sgml_parser *
