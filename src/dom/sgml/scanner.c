@@ -193,12 +193,19 @@ skip_comment(struct dom_scanner *scanner, unsigned char **string)
 	unsigned char *pos = *string;
 	int length = 0;
 
-	for (; pos < scanner->end - 2; pos++)
-		if (pos[0] == '-' && pos[1] == '-' && pos[2] == '>') {
-			length = pos - *string;
-			pos += 3;
+	for ( ; (pos = skip_sgml_chars(scanner, pos, '>')); pos++) {
+		/* It is always safe to access index -2 and -1 here since we
+		 * are supposed to have '<!--' before this is called. We do
+		 * however need to check that the '-->' are not overlapping any
+		 * preceeding '-'. */
+		if (pos[-2] == '-' && pos[-1] == '-' && &pos[-2] >= *string) {
+			length = pos - *string - 2;
+			pos++;
 			break;
 		}
+	}
+
+	if (!pos) pos = scanner->end;
 
 	*string = pos;
 	return length;
@@ -210,12 +217,17 @@ skip_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 	unsigned char *pos = *string;
 	int length = 0;
 
-	for (; pos < scanner->end - 2; pos++)
-		if (pos[0] == ']' && pos[1] == ']' && pos[2] == '>') {
-			length = pos - *string;
-			pos += 3;
+	for ( ; (pos = skip_sgml_chars(scanner, pos, '>')); pos++) {
+		/* It is always safe to access index -2 and -1 here since we
+		 * are supposed to have '<![CDATA[' before this is called. */
+		if (pos[-2] == ']' && pos[-1] == ']') {
+			length = pos - *string - 2;
+			pos++;
 			break;
 		}
+	}
+
+	if (!pos) pos = scanner->end;
 
 	*string = pos;
 	return length;
