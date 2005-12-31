@@ -32,8 +32,6 @@ struct cookie {
 	time_t expires;			/* Expiration time. Zero means undefined */
 	int secure;			/* Did it have 'secure' attribute */
 
-	/* This is indeed maintained by cookies.c, not dialogs.c; much easier
-	 * and simpler. */
 	struct listbox_item *box_item;
 };
 
