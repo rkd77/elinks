@@ -399,16 +399,13 @@ static inline void
 scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	unsigned char *string = scanner->position;
-	size_t size;
 
 	token->string.string = string;
 
 	/* Figure out where the processing instruction ends. This doesn't use
 	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
 	 * the data part to be skipped correctly. */
-	for (size = scanner->end - string;
-	     size > 0 && (string = skip_sgml_chars(scanner, string, '>'));
-	     string++) {
+	for ( ; (string = skip_sgml_chars(scanner, string, '>')); string++) {
 		if (string[-1] == '?') {
 			string++;
 			break;
