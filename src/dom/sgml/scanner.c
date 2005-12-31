@@ -78,6 +78,15 @@ struct dom_scanner_info sgml_scanner_info = {
 #define	is_sgml_token_start(c)	check_sgml_table(c, SGML_CHAR_TOKEN_START)
 #define	is_sgml_attribute(c)	!check_sgml_table(c, SGML_CHAR_NOT_ATTRIBUTE | SGML_CHAR_WHITESPACE)
 
+static inline void
+skip_sgml_space(struct dom_scanner *scanner, unsigned char **string)
+{
+	unsigned char *pos = *string;
+
+	scan_sgml(scanner, pos, SGML_CHAR_WHITESPACE);
+	*string = pos;
+}
+
 
 /* Text token scanning */
 
@@ -115,7 +124,7 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 
 	} else {
 		if (is_sgml_space(first_char)) {
-			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &string);
 			type = string < scanner->end && is_sgml_text(*string)
 			     ? SGML_TOKEN_TEXT : SGML_TOKEN_SPACE;
 		} else {
@@ -254,7 +263,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	token->string.string = string++;
 
 	if (first_char == '<') {
-		scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+		skip_sgml_space(scanner, &string);
 
 		if (scanner->state == SGML_STATE_ELEMENT) {
 			/* Already inside an element so insert a tag end token
@@ -270,7 +279,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			real_length = string - token->string.string;
 
-			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &string);
 			if (*string == '>') {
 				type = SGML_TOKEN_ELEMENT;
 				string++;
@@ -284,7 +293,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			enum sgml_token_type base = SGML_TOKEN_NOTATION;
 
 			string++;
-			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &string);
 			token->string.string = ident = string;
 
 			if (string + 1 < scanner->end
@@ -305,7 +314,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				assert(real_length >= 0);
 
 			} else {
-				scan_sgml(scanner, string, SGML_CHAR_IDENT);
+				skip_sgml_space(scanner, &string);
 				type = map_dom_scanner_string(scanner, ident, string, base);
 				skip_sgml(scanner, &string, '>', 0);
 			}
@@ -315,7 +324,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			enum sgml_token_type base = SGML_TOKEN_PROCESS;
 
 			string++;
-			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &string);
 			token->string.string = pos = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
 
@@ -325,7 +334,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		} else if (*string == '/') {
 			string++;
-			scan_sgml(scanner, string, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &string);
 
 			if (is_sgml_ident(*string)) {
 				token->string.string = string;
@@ -458,7 +467,7 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 		if (scanner->state == SGML_STATE_ELEMENT
 		    || (*scanner->position == '<'
 			&& scanner->state != SGML_STATE_PROC_INST)) {
-			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &scanner->position);
 			if (scanner->position >= scanner->end) break;
 
 			scan_sgml_element_token(scanner, current);
@@ -472,7 +481,7 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 			scan_sgml_text_token(scanner, current);
 
 		} else {
-			scan_sgml(scanner, scanner->position, SGML_CHAR_WHITESPACE);
+			skip_sgml_space(scanner, &scanner->position);
 			scan_sgml_proc_inst_token(scanner, current);
 		}
 	}
