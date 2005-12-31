@@ -197,7 +197,7 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 }
 
 static inline int
-skip_comment(struct dom_scanner *scanner, unsigned char **string)
+skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -224,7 +224,7 @@ skip_comment(struct dom_scanner *scanner, unsigned char **string)
 }
 
 static inline int
-skip_cdata_section(struct dom_scanner *scanner, unsigned char **string)
+skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -301,7 +301,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				string += 2;
 				type = SGML_TOKEN_NOTATION_COMMENT;
 				token->string.string = string;
-				real_length = skip_comment(scanner, &string);
+				real_length = skip_sgml_comment(scanner, &string);
 				assert(real_length >= 0);
 
 			} else if (string + 6 < scanner->end
@@ -310,7 +310,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				string += 7;
 				type = SGML_TOKEN_CDATA_SECTION;
 				token->string.string = string;
-				real_length = skip_cdata_section(scanner, &string);
+				real_length = skip_sgml_cdata_section(scanner, &string);
 				assert(real_length >= 0);
 
 			} else {
