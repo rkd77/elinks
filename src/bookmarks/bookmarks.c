@@ -366,7 +366,6 @@ add_bookmark(struct bookmark *root, int place, unsigned char *title,
 		type = BI_FOLDER;
 	}
 
-	/* Setup box_item */
 	bm->box_item = add_listbox_item(&bookmark_browser,
 					root ? root->box_item : NULL,
 					type,
