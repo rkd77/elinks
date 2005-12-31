@@ -36,7 +36,7 @@ static struct dom_scan_table_info sgml_scan_table_info[] = {
 	DOM_SCAN_TABLE_STRING("-_:.",	 SGML_CHAR_IDENT | SGML_CHAR_ENTITY),
 	DOM_SCAN_TABLE_STRING("#",	 SGML_CHAR_ENTITY),
 	DOM_SCAN_TABLE_STRING(" \f\n\r\t\v", SGML_CHAR_WHITESPACE),
-	DOM_SCAN_TABLE_STRING("\f\n\r",	 SGML_CHAR_NEWLINE),
+	DOM_SCAN_TABLE_STRING("\f\n",	 SGML_CHAR_NEWLINE),
 	DOM_SCAN_TABLE_STRING("<&",	 SGML_CHAR_NOT_TEXT),
 	DOM_SCAN_TABLE_STRING("<=>",	 SGML_CHAR_NOT_ATTRIBUTE),
 
@@ -74,6 +74,7 @@ struct dom_scanner_info sgml_scanner_info = {
 #define	is_sgml_ident(c)	check_sgml_table(c, SGML_CHAR_IDENT)
 #define	is_sgml_entity(c)	check_sgml_table(c, SGML_CHAR_ENTITY)
 #define	is_sgml_space(c)	check_sgml_table(c, SGML_CHAR_WHITESPACE)
+#define	is_sgml_newline(c)	check_sgml_table(c, SGML_CHAR_NEWLINE)
 #define	is_sgml_text(c)		!check_sgml_table(c, SGML_CHAR_NOT_TEXT)
 #define	is_sgml_token_start(c)	check_sgml_table(c, SGML_CHAR_TOKEN_START)
 #define	is_sgml_attribute(c)	!check_sgml_table(c, SGML_CHAR_NOT_ATTRIBUTE | SGML_CHAR_WHITESPACE)
@@ -83,7 +84,16 @@ skip_sgml_space(struct dom_scanner *scanner, unsigned char **string)
 {
 	unsigned char *pos = *string;
 
-	scan_sgml(scanner, pos, SGML_CHAR_WHITESPACE);
+	if (!scanner->count_lines) {
+		scan_sgml(scanner, pos, SGML_CHAR_WHITESPACE);
+	} else {
+		while (pos < scanner->end && is_sgml_space(*pos)) {
+			if (is_sgml_newline(*pos))
+				scanner->lineno++;
+			pos++;
+		}
+	}
+
 	*string = pos;
 }
 
@@ -157,11 +167,26 @@ static inline unsigned char *
 skip_sgml_chars(struct dom_scanner *scanner, unsigned char *string,
 		unsigned char skipto)
 {
+	int newlines;
+
 	assert(string >= scanner->position && string <= scanner->end);
 
-	for (; string < scanner->end; string++) {
-		if (*string == skipto)
+	if (!scanner->count_lines) {
+		size_t length = scanner->end - string;
+
+		return memchr(string, skipto, length);
+	}
+
+	for (newlines = 0; string < scanner->end; string++) {
+		if (is_sgml_newline(*string))
+			newlines++;
+		if (*string == skipto) {
+			/* Only count newlines if we actually find the
+			 * requested char. Else callers are assumed to discard
+			 * the scanning. */
+			scanner->lineno += newlines;
 			return string;
+		}
 	}
 
 	return NULL;
@@ -189,6 +214,9 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 
 			end = skip_sgml_chars(scanner, pos + 1, *pos);
 			if (end) pos = end;
+
+		} else if (scanner->count_lines && is_sgml_newline(*pos)) {
+			scanner->lineno++;
 		}
 	}
 
