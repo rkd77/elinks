@@ -22,16 +22,6 @@ enum sgml_parser_type {
 	SGML_PARSER_STREAM,
 };
 
-/* This holds info about a chunk of text being parsed. The SGML parser uses
- * these to keep track of possible nested calls to parse_sgml(). This can be
- * used to feed output of stuff like ECMAScripts document.write() from
- * <script>-elements back to the SGML parser. */
-struct sgml_parsing_state {
-	struct dom_scanner scanner;
-	struct dom_node *node;
-	size_t depth;
-};
-
 struct sgml_parser {
 	enum sgml_parser_type type;	/* Stream or tree */
 

@@ -19,6 +19,16 @@
 #include "util/memory.h"
 
 
+/* This holds info about a chunk of text being parsed. The SGML parser uses
+ * these to keep track of possible nested calls to parse_sgml(). This can be
+ * used to feed output of stuff like ECMAScripts document.write() from
+ * <script>-elements back to the SGML parser. */
+struct sgml_parsing_state {
+	struct dom_scanner scanner;
+	struct dom_node *node;
+	size_t depth;
+};
+
 static struct sgml_parsing_state *
 init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer);
 
