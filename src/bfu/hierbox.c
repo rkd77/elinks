@@ -92,33 +92,33 @@ replace_listbox_item(struct listbox_item *item, struct listbox_data *data)
 }
 
 void
-done_listbox_item(struct hierbox_browser *browser, struct listbox_item *box_item)
+done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item)
 {
 	struct listbox_data *box_data;
 
-	assert(box_item && list_empty(box_item->child));
+	assert(item && list_empty(item->child));
 
 	/* The option dialog needs this test */
-	if (box_item->next) {
+	if (item->next) {
 		/* If we are removing the top or the selected box
 		 * we have to figure out a replacement. */
 
 		foreach (box_data, browser->boxes) {
-			if (box_data->sel == box_item)
-				box_data->sel = replace_listbox_item(box_item,
+			if (box_data->sel == item)
+				box_data->sel = replace_listbox_item(item,
 				                                     box_data);
 
-			if (box_data->top == box_item)
-				box_data->top = replace_listbox_item(box_item,
+			if (box_data->top == item)
+				box_data->top = replace_listbox_item(item,
 				                                     box_data);
 		}
 
-		del_from_list(box_item);
+		del_from_list(item);
 
 		update_hierbox_browser(browser);
 	}
 
-	mem_free(box_item);
+	mem_free(item);
 }
 
 
