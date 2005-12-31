@@ -151,9 +151,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 
 	assert(dom_scanner_has_tokens(scanner)
 	       && (get_dom_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN
-	           || (get_dom_stack_top(stack)->node->type == DOM_NODE_PROCESSING_INSTRUCTION
-	       	       && get_dom_stack_top(stack)->node->data.proc_instruction.type
-		          == DOM_PROC_INSTRUCTION_XML)));
+	           || (get_dom_stack_top(stack)->node->type == DOM_NODE_PROCESSING_INSTRUCTION)));
 
 	if (get_dom_scanner_token(scanner)->type == SGML_TOKEN_ELEMENT_BEGIN)
 		skip_dom_scanner_token(scanner);
@@ -279,6 +277,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			skip_dom_scanner_token(scanner);
 			break;
 
+		case SGML_TOKEN_PROCESS_XML_STYLESHEET:
 		case SGML_TOKEN_PROCESS_XML:
 		case SGML_TOKEN_PROCESS:
 			copy_struct(&target, token);
@@ -290,7 +289,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			assert(token->type == SGML_TOKEN_PROCESS_DATA);
 
 			if (add_sgml_proc_instruction(stack, &target, token)
-			    && target.type == SGML_TOKEN_PROCESS_XML
+			    && (target.type == SGML_TOKEN_PROCESS_XML
+			        || target.type == SGML_TOKEN_PROCESS_XML_STYLESHEET)
 			    && token->string.length > 0) {
 				/* Parse the <?xml data="attributes"?>. */
 				struct dom_scanner attr_scanner;

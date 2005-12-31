@@ -148,7 +148,6 @@ entity-reference: #
 #text: -
 entity-reference: #xx'
 
-# Test <?>
 test_output_equals \
 'Parse processing instructions.' \
 '<?xml encoding="UTF8"?>
@@ -169,6 +168,14 @@ test_output_equals \
 proc-instruction: xml -> version="1.0" />
   attribute: version -> 1.0
 proc-instruction: xml -> /'
+
+test_output_equals \
+'Parse XML stylesheet processing instructions.' \
+'<?xml-stylesheet type="text/xsl" href="url"?>' \
+'
+proc-instruction: xml-stylesheet -> type="text/xsl" href="url"
+  attribute: type -> text/xsl
+  attribute: href -> url'
 
 test_output_equals \
 'Parse exotic processing instructions.' \

@@ -29,6 +29,7 @@ enum sgml_token_type {
 
 	SGML_TOKEN_PROCESS,		/* <?{ident} */
 	SGML_TOKEN_PROCESS_XML,		/* <?xml */
+	SGML_TOKEN_PROCESS_XML_STYLESHEET,/* <?xml-stylesheet */
 	SGML_TOKEN_PROCESS_DATA,	/* data after <?{ident} until ?> */
 
 	SGML_TOKEN_ELEMENT,		/* <{ident}> */
