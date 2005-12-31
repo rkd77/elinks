@@ -205,7 +205,10 @@ skip_comment(struct dom_scanner *scanner, unsigned char **string)
 		}
 	}
 
-	if (!pos) pos = scanner->end;
+	if (!pos) {
+		pos = scanner->end;
+		length = pos - *string;
+	}
 
 	*string = pos;
 	return length;
@@ -227,7 +230,10 @@ skip_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 		}
 	}
 
-	if (!pos) pos = scanner->end;
+	if (!pos) {
+		pos = scanner->end;
+		length = pos - *string;
+	}
 
 	*string = pos;
 	return length;

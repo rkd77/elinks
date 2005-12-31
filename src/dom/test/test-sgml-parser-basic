@@ -64,17 +64,18 @@ element: root
 
 test_output_equals \
 'Parse comment combinations.' \
-'<root><!-- <!-- -- > --><!----></root>' \
+'<root><!-- <!-- -- > --><!--foo--><!----></root>' \
 '
 element: root
   #comment:  <!-- -- > 
+  #comment: foo
   #comment: '
 
 test_output_equals \
-'Parse comment combinations.' \
-'<!--foo-->' \
+'Parse bad comment.' \
+'<!--->s' \
 '
-#comment: foo'
+#comment: ->s'
 
 test_output_equals \
 'Parse an enclosed CDATA section.' \
@@ -82,6 +83,18 @@ test_output_equals \
 '
 element: root
   #cdata-section: ...] ]>...'
+
+test_output_equals \
+'Parse non-enclosed CDATA section.' \
+'<![CDATA[...]]>' \
+'
+#cdata-section: ...'
+
+test_output_equals \
+'Parse a bad CDATA section.' \
+'<![CDATA[...' \
+'
+#cdata-section: ...'
 
 test_output_equals \
 'Parse attributes.' \
