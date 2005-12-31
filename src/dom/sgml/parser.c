@@ -295,10 +295,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* Parse the <?xml data="attributes"?>. */
 				struct dom_scanner attr_scanner;
 
-				init_dom_scanner_state(&attr_scanner,
-						       &sgml_scanner_info,
-						       &token->string,
-						       SGML_STATE_ELEMENT);
+				init_dom_scanner(&attr_scanner, &sgml_scanner_info,
+						 &token->string, SGML_STATE_ELEMENT);
 
 				if (dom_scanner_has_tokens(&attr_scanner))
 					parse_sgml_attributes(stack, &attr_scanner);
@@ -362,7 +360,8 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
-	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string);
+	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
+			 SGML_STATE_TEXT);
 }
 
 static void

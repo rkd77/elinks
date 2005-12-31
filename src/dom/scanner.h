@@ -91,11 +91,8 @@ struct dom_scanner_info {
 
 
 /* Initializes the scanner. */
-void init_dom_scanner_state(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-			    struct dom_string *string, int state);
-
-#define init_dom_scanner(scanner, info, string) \
-	init_dom_scanner_state(scanner, info, string, 0)
+void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
+		      struct dom_string *string, int state);
 
 /* The number of tokens in the scanners token table:
  * At best it should be big enough to contain properties with space separated
