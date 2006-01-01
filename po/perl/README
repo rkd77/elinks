@@ -1,0 +1,11 @@
+The following statement applies to Locale/PO.pm:
+
+    Copyright (c) 2000-2004 Alan Schwartz <alansz@pennmush.org>.
+    All rights reserved.  This program is free software; you can
+    redistribute it and/or modify it under the same terms as Perl itself.
+
+Locale/PO.pm was imported from the Locale-PO-0.16 module available
+from CPAN.  It will be modified to better suit the Perl scripts in
+this directory, and the changes will be sent back to ALANSZ.  The
+build system, documentation, and test cases of Locale-PO were not
+imported, because it isn't obvious where they should be placed.

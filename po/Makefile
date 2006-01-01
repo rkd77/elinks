@@ -6,6 +6,7 @@ localedir = $(datadir)/locale
 
 # These are for some reason not added magically to the Makefile.
 MSGMERGE = msgmerge
+PERL = perl
 
 # Name of the file containing the list of files to translate (used by
 # xgettext) 
@@ -50,13 +51,13 @@ $(srcdir)/$(POTFILES_ABS_LIST):
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(srcdir)/$(POTFILES_ABS_LIST)
 
-$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST) $(srcdir)/gather-accelerator-contexts.pl
+$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST) $(srcdir)/perl/gather-accelerator-contexts.pl
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
 		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)/$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
-	&& $(srcdir)/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
+	&& $(PERL) -I"$(srcdir)/perl" $(srcdir)/perl/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
 	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot
 
 
@@ -91,7 +92,7 @@ check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
-	  $(srcdir)/check-accelerator-contexts.pl $(srcdir)/$(lang).po \
+	  $(PERL) -I"$(srcdir)/perl" $(srcdir)/perl/check-accelerator-contexts.pl $(srcdir)/$(lang).po \
 	)
 
 ### Installation and distribution
