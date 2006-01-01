@@ -406,21 +406,22 @@ widget_handler_status_T
 push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_item *item = box->sel;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 	unsigned char *msg;
 
-	if (!box->sel) return EVENT_PROCESSED;
+	if (!item) return EVENT_PROCESSED;
 
 	assert(box->ops);
 
-	context = init_listbox_context(box, term, box->sel, NULL);
+	context = init_listbox_context(box, term, item, NULL);
 	if (!context) return EVENT_PROCESSED;
 
 	msg = box->ops->get_info(context->item, term);
 	if (!msg) {
 		mem_free(context);
-		if (box->sel->type == BI_FOLDER) {
+		if (item->type == BI_FOLDER) {
 			info_box(term, 0, N_("Info"), ALIGN_CENTER,
 				 N_("Press space to expand this folder."));
 		}
@@ -494,14 +495,15 @@ push_hierbox_goto_button(struct dialog_data *dlg_data,
 			 struct widget_data *button)
 {
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_item *item = box->sel;
 	struct session *ses = dlg_data->dlg->udata;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 
 	/* Do nothing with a folder */
-	if (!box->sel) return EVENT_PROCESSED;
+	if (!item) return EVENT_PROCESSED;
 
-	context = init_listbox_context(box, term, box->sel, scan_for_marks);
+	context = init_listbox_context(box, term, item, scan_for_marks);
 	if (!context) return EVENT_PROCESSED;
 
 	if (!context->item) {
@@ -510,11 +512,11 @@ push_hierbox_goto_button(struct dialog_data *dlg_data,
 					    context->box, 0, 0,
 					    goto_marked, context);
 
-	} else if (box->sel->type == BI_FOLDER) {
-		recursively_goto_each_listbox(ses, box->sel, box);
+	} else if (item->type == BI_FOLDER) {
+		recursively_goto_each_listbox(ses, item, box);
 
-	} else if (box->sel->type == BI_LEAF) {
-		struct uri *uri = box->ops->get_uri(box->sel);
+	} else if (item->type == BI_LEAF) {
+		struct uri *uri = box->ops->get_uri(item);
 
 		if (uri) {
 			goto_uri(ses, uri);
@@ -694,15 +696,16 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 {
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_item *item = box->sel;
 	struct listbox_context *context;
 	unsigned char *text;
 	enum delete_error delete;
 
-	if (!box->sel) return EVENT_PROCESSED;
+	if (!item) return EVENT_PROCESSED;
 
 	assert(box->ops && box->ops->can_delete && box->ops->delete);
 
-	context = init_listbox_context(box, term, box->sel, scan_for_marks);
+	context = init_listbox_context(box, term, item, scan_for_marks);
 	if (!context) return EVENT_PROCESSED;
 
 	context->widget_data = dlg_data->widgets_data;
