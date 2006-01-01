@@ -772,9 +772,8 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	} else {
 		unsigned char *title = listbox_message(delete_item_title);
 		unsigned char *message = listbox_message(delete_item);
-		unsigned char *msg;
+		unsigned char *msg = ops->get_info(context->item, term);
 
-		msg = ops->get_info(context->item, term);
 		ops->lock(context->item);
 
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
