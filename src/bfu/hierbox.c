@@ -557,28 +557,28 @@ struct listbox_ops_messages default_listbox_ops_messages = {
 	N_("Sorry, but the folder \"%s\" is being used by something else."),
 
 	/* delete_marked_items_title */
-	NULL,
+	N_("Delete marked items"),
 
 	/* delete_marked_items */
-	NULL,
+	N_("Delete marked items?"),
 
 	/* delete_folder_title */
-	NULL,
+	N_("Delete folder"),
 
 	/* delete_folder */
-	NULL,
+	N_("Delete the folder \"%s\" and its content?"),
 
 	/* delete_item_title */
-	NULL,
+	N_("Delete item"),
 
 	/* delete_item */
-	NULL,
+	N_("Delete \"%s\"?\n\n%s"),
 
 	/* clear_all_items_title */
-	NULL,
+	N_("Clear all items"),
 
 	/* clear_all_items */
-	NULL,
+	N_("Do you really want to remove all items?"),
 };
 
 #define listbox_message(msg) \
@@ -638,8 +638,6 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 	info_box(term, MSGBOX_FREE_TEXT, N_("Delete error"), ALIGN_LEFT,
 		 msg.source);
 }
-
-#undef listbox_message
 
 static void
 do_delete_item(struct listbox_item *item, struct listbox_context *info,
@@ -733,15 +731,8 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	context->widget_data = dlg_data->widgets_data;
 
 	if (!context->item) {
-		unsigned char *title = N_("Delete marked items");
-		unsigned char *message = N_("Delete marked items?");
-
-		if (ops->messages) {
-			if (ops->messages->delete_marked_items)
-				message = ops->messages->delete_marked_items;
-			if (ops->messages->delete_marked_items_title)
-				title = ops->messages->delete_marked_items_title;
-		}
+		unsigned char *title = listbox_message(delete_marked_items_title);
+		unsigned char *message = listbox_message(delete_marked_items);
 
 		msg_box(term, getml(context, NULL), 0,
 			title, ALIGN_CENTER,
@@ -768,15 +759,8 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	}
 
 	if (context->item->type == BI_FOLDER) {
-		unsigned char *title = N_("Delete folder");
-		unsigned char *message = N_("Delete the folder \"%s\" and its content?");
-
-		if (ops->messages) {
-			if (ops->messages->delete_folder)
-				message = ops->messages->delete_folder;
-			if (ops->messages->delete_folder_title)
-				title = ops->messages->delete_folder_title;
-		}
+		unsigned char *title = listbox_message(delete_folder_title);
+		unsigned char *message = listbox_message(delete_folder);
 
 		ops->lock(context->item);
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
@@ -786,16 +770,9 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 			N_("~Yes"), push_ok_delete_button, B_ENTER,
 			N_("~No"), done_listbox_context, B_ESC);
 	} else {
-		unsigned char *title = N_("Delete item");
-		unsigned char *message = N_("Delete \"%s\"?\n\n%s");
+		unsigned char *title = listbox_message(delete_item_title);
+		unsigned char *message = listbox_message(delete_item);
 		unsigned char *msg;
-
-		if (ops->messages) {
-			if (ops->messages->delete_item)
-				message = ops->messages->delete_item;
-			if (ops->messages->delete_item_title)
-				title = ops->messages->delete_item_title;
-		}
 
 		msg = ops->get_info(context->item, term);
 		ops->lock(context->item);
@@ -845,8 +822,8 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 	struct listbox_ops *ops = box->ops;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
-	unsigned char *title = N_("Clear all items");
-	unsigned char *message = N_("Do you really want to remove all items?");
+	unsigned char *title = listbox_message(clear_all_items_title);
+	unsigned char *message = listbox_message(clear_all_items);
 
 	if (!box->sel) return EVENT_PROCESSED;
 
@@ -865,13 +842,6 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	if (ops->messages) {
-		if (ops->messages->clear_all_items)
-			message = ops->messages->clear_all_items;
-		if (ops->messages->clear_all_items_title)
-			title = ops->messages->clear_all_items_title;
-	}
-
 	msg_box(term, getml(context, NULL), 0,
 		title, ALIGN_CENTER,
 		message,
@@ -881,6 +851,8 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 
 	return EVENT_PROCESSED;
 }
+
+#undef listbox_message
 
 
 /* Search action */
