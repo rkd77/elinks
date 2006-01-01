@@ -186,10 +186,10 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 	} else if (action_id == ACT_MENU_EXPAND) {
 		/* Recursively expand all folders */
 
-		if (!selected || box->sel->type != BI_FOLDER)
+		if (!selected || selected->type != BI_FOLDER)
 			return EVENT_PROCESSED;
 
-		recursively_set_expanded(box->sel, 1);
+		recursively_set_expanded(selected, 1);
 
 	} else if (action_id == ACT_MENU_SEARCH) {
 		if (!box->ops->match)
