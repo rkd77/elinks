@@ -368,11 +368,12 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = data;
+	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
 	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
-			 SGML_STATE_TEXT, 0);
+			 SGML_STATE_TEXT, count_lines);
 }
 
 static void
@@ -486,7 +487,7 @@ static struct dom_stack_context_info sgml_parser_context_info = {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct dom_string *uri)
+		 struct dom_string *uri, enum sgml_parser_flag flags)
 {
 	struct sgml_parser *parser;
 	enum dom_stack_flag stack_flags = 0;
@@ -499,8 +500,9 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		return NULL;
 	}
 
-	parser->type = type;
-	parser->info = get_sgml_info(doctype);
+	parser->type  = type;
+	parser->flags = type;
+	parser->info  = get_sgml_info(doctype);
 
 	if (type == SGML_PARSER_TREE)
 		stack_flags |= DOM_STACK_KEEP_NODES;

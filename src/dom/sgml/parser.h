@@ -22,6 +22,10 @@ enum sgml_parser_type {
 	SGML_PARSER_STREAM,
 };
 
+enum sgml_parser_flag {
+	SGML_PARSER_COUNT_LINES	= 1,
+};
+
 struct sgml_parser_state {
 	/* Info about the properties of the node contained by state.
 	 * This is only meaningful to element and attribute nodes. For
@@ -34,6 +38,7 @@ struct sgml_parser_state {
 
 struct sgml_parser {
 	enum sgml_parser_type type;	/* Stream or tree */
+	enum sgml_parser_flag flags;	/* Flags that control the behaviour */
 
 	struct sgml_info *info;		/* Backend dependent info */
 
@@ -46,7 +51,7 @@ struct sgml_parser {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct dom_string *uri);
+		 struct dom_string *uri, enum sgml_parser_flag flags);
 
 void done_sgml_parser(struct sgml_parser *parser);
 
