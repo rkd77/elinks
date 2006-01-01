@@ -500,7 +500,6 @@ push_hierbox_goto_button(struct dialog_data *dlg_data,
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 
-	/* Do nothing with a folder */
 	if (!item) return EVENT_PROCESSED;
 
 	context = init_listbox_context(box, term, item, scan_for_marks);
