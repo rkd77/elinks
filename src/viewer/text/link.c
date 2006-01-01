@@ -1245,8 +1245,10 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 			/* [gettext_accelerator_context()] */
 		}
 
+		/* [gettext_accelerator_context(link_menu.reset, link_menu.textarea, link_menu.form)] */
 		add_to_menu(&mi, N_("Form f~ields"), NULL, ACT_MAIN_LINK_FORM_MENU,
 			    NULL, NULL, SUBMENU);
+		/* [gettext_accelerator_context()] */
 	}
 
 	if (link->where_img) {
