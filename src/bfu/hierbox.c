@@ -449,18 +449,18 @@ static void
 recursively_goto_listbox(struct session *ses, struct listbox_item *item,
 			 struct listbox_data *box)
 {
-		if (item->type == BI_FOLDER) {
-			recursively_goto_each_listbox(ses, item, box);
-			return;
+	if (item->type == BI_FOLDER) {
+		recursively_goto_each_listbox(ses, item, box);
+		return;
 
-		} else if (item->type == BI_LEAF) {
-			struct uri *uri = box->ops->get_uri(item);
+	} else if (item->type == BI_LEAF) {
+		struct uri *uri = box->ops->get_uri(item);
 
-			if (!uri) return;
+		if (!uri) return;
 
-			open_uri_in_new_tab(ses, uri, 1, 0);
-			done_uri(uri);
-		}
+		open_uri_in_new_tab(ses, uri, 1, 0);
+		done_uri(uri);
+	}
 }
 
 static void
