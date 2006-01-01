@@ -76,6 +76,7 @@ get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 }
 
 enum sgml_document_type {
+	SGML_DOCTYPE_DOCBOOK,
 	SGML_DOCTYPE_HTML,
 	SGML_DOCTYPE_RSS,
 	SGML_DOCTYPE_XBEL,

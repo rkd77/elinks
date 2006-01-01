@@ -687,11 +687,25 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
-	if (cached->content_type
-	    && !strlcasecmp("application/rss+xml", 19, cached->content_type, -1))
+	/* FIXME: Refactor the doctype lookup. */
+	if (!strcasecmp("application/rss+xml", cached->content_type)) {
 		doctype = SGML_DOCTYPE_RSS;
-	else
+
+	} else if (!strcasecmp("application/docbook+xml", cached->content_type)) {
+		doctype = SGML_DOCTYPE_DOCBOOK;
+
+	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
+		   || !strcasecmp("application/x-xbel", cached->content_type)
+		   || !strcasecmp("application/xbel", cached->content_type)) {
+		doctype = SGML_DOCTYPE_XBEL;
+
+	} else {
+		assertm(!strcasecmp("text/html", cached->content_type)
+			|| !strcasecmp("application/xhtml+xml", cached->content_type),
+			"Couldn't resolve doctype '%s'", cached->content_type);
+
 		doctype = SGML_DOCTYPE_HTML;
+	}
 
 	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
 	if (!parser) return;
