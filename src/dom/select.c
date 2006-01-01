@@ -158,13 +158,13 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 
 /* Parse:
  *
- *   0n+1 / 1		
- *   2n+0 / 2n	
- *   2n+1 	
- *  -0n+2		
- *  -0n+1 / -1		
- *   1n+0 / n+0 / n	
- *   0n+0		
+ *   0n+1 / 1
+ *   2n+0 / 2n
+ *   2n+1
+ *  -0n+2
+ *  -0n+1 / -1
+ *   1n+0 / n+0 / n
+ *   0n+0
  */
 
 /* FIXME: Move somewhere else? dom/scanner.h? */
@@ -441,8 +441,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
-			set_dom_string(&sel.node.string, "class", -1); 
-			copy_dom_string(&sel.node.data.attribute.value, &token->string); 
+			set_dom_string(&sel.node.string, "class", -1);
+			copy_dom_string(&sel.node.data.attribute.value, &token->string);
 			break;
 
 		case ':':
