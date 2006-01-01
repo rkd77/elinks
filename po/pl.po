@@ -4,7 +4,7 @@
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2004
 # Wojtek Bojdo/l <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
-# Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2005
+# Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
 # Miko³aj Machowski <mikmach@wp.pl>, 2003
 #
 msgid ""
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-27 07:21+0100\n"
-"PO-Revision-Date: 2005-11-27 21:17+0100\n"
-"Last-Translator: YOUR NAME <E-MAIL@ADDRESS>\n"
+"PO-Revision-Date: 2006-01-01 22:53+0100\n"
+"Last-Translator: Adam Golebiowski <adamg@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
@@ -1231,7 +1231,7 @@ msgstr "Ustawienia"
 
 #: src/config/cmdline.c:568
 msgid "Usage: elinks [OPTION]... [URL]..."
-msgstr "U¿ycie: elinks [OPCJA]... [URL]..."
+msgstr "Sk³adnia: elinks [OPCJA]... [URL]..."
 
 #: src/config/cmdline.c:569
 msgid "Options"
@@ -5488,13 +5488,15 @@ msgstr "Czy otwieraæ okienko dialogowe z raportem o b³êdzie skryptu."
 
 #: src/ecmascript/ecmascript.c:48
 msgid "Ignore <noscript> content"
-msgstr ""
+msgstr "Ignoruj zawarto¶æ <noscript>"
 
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 " when ECMAScript is enabled."
 msgstr ""
+"Czy ignorowaæ kod zawarty w znaczniku <noscript> w przypadku, gdy\n"
+"ECMAScript jest w³±czony"
 
 #: src/ecmascript/ecmascript.c:53
 msgid "Maximum execution time"
@@ -6444,7 +6446,7 @@ msgstr "Skrypt CGI nie znajduje siê na ¶cie¿ce CGI"
 
 #: src/network/state.c:76
 msgid "Local file access is not allowed in anonymous mode"
-msgstr ""
+msgstr "Dostêp do lokalnych plików nie jest mo¿liwy w trybie anonimowym"
 
 #: src/network/state.c:79
 msgid "Bad FTP response"
@@ -6550,7 +6552,7 @@ msgstr "B³±d BitTorrenta"
 
 #: src/network/state.c:123
 msgid "The BitTorrent metainfo file contained errors"
-msgstr ""
+msgstr "Plik metainformacji BitTorrent zawiera b³êdy"
 
 #: src/network/state.c:124
 msgid "The tracker requesting failed"
@@ -6969,7 +6971,7 @@ msgstr "Pozwól na \"czarn± listê\" zapluskwionym serwerom."
 
 #: src/protocol/bittorrent/dialogs.c:122
 msgid "Warning: potential malicious path detected"
-msgstr ""
+msgstr "Uwaga: wykryto potencjalnie niebezpieczn± ¶cie¿kê"
 
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
@@ -6983,23 +6985,20 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:151
 #, fuzzy
 msgid "Creation date"
-msgstr "System konfiguracyjny"
+msgstr "Data utworzenia"
 
 #: src/protocol/bittorrent/dialogs.c:160
-#, fuzzy
 msgid "Directory"
-msgstr "Katalogi:"
+msgstr "Katalog"
 
 #: src/protocol/bittorrent/dialogs.c:170
-#, fuzzy
 msgid "Files"
-msgstr "Pliki:"
+msgstr "Pliki"
 
 #
 #: src/protocol/bittorrent/dialogs.c:183
-#, fuzzy
 msgid "Comment"
-msgstr "Komentarze"
+msgstr "Komentarz"
 
 #: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:363
 #, c-format
@@ -7044,7 +7043,7 @@ msgstr "Pasek statusu"
 
 #: src/protocol/bittorrent/dialogs.c:311
 msgid "partial"
-msgstr ""
+msgstr "czê¶ciowy"
 
 #. Peers:
 #: src/protocol/bittorrent/dialogs.c:315
@@ -7053,7 +7052,7 @@ msgid "Peers"
 msgstr "Licznik"
 
 #: src/protocol/bittorrent/dialogs.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
 msgstr[0] "%d po³±czenie"
