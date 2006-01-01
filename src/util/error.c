@@ -216,7 +216,7 @@ elinks_log(unsigned char *msg, unsigned char *file, int line,
 		log_files = getenv("ELINKS_FILES");
 		log_msg	  = getenv("ELINKS_MSG");
 		log_name  = getenv("ELINKS_LOG");
-		log_file  = log_name ? fopen(log_name, "a") : stderr;
+		log_file  = log_name ? fopen(log_name, "ab") : stderr;
 
 		if (!log_file) return;
 
