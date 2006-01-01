@@ -25,9 +25,9 @@ OBJS = \
  textdomain.o
 
 
-# $(builddir)/charset.alias: $(srcdir)/config.charset
+# $(builddir)/charset.alias: $(srcdir)config.charset
 $(builddir)/charset.alias: $(srcdir)config.charset
-	$(SHELL) $(srcdir)/config.charset '$(host)' > $@.new
+	$(SHELL) $(srcdir)config.charset '$(host)' > $@.new
 	mv $@.new $@
 
 # FIXME: Building plural.c from plural.y on the fly doesn't work
@@ -61,7 +61,7 @@ install-local: $(builddir)/charset.alias all
 	  $(MKINSTALLDIRS) $(DESTDIR)$(localedir); \
 	  test -f $(DESTDIR)$(localedir)/locale.alias \
 	    && orig=$(DESTDIR)$(localedir)/locale.alias \
-	    || orig=$(srcdir)/locale.alias; \
+	    || orig=$(srcdir)locale.alias; \
 	  temp=$(DESTDIR)$(localedir)/t-locale.alias; \
 	  dest=$(DESTDIR)$(localedir)/locale.alias; \
 	  sed -f ref-add.sed $$orig > $$temp; \
