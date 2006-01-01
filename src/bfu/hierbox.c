@@ -442,14 +442,14 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 /* Goto action */
 
 static void
-recursively_goto_listbox(struct session *ses, struct listbox_item *root,
+recursively_goto_each_listbox(struct session *ses, struct listbox_item *root,
 			 struct listbox_data *box)
 {
 	struct listbox_item *item;
 
 	foreach (item, root->child) {
 		if (item->type == BI_FOLDER) {
-			recursively_goto_listbox(ses, item, box);
+			recursively_goto_each_listbox(ses, item, box);
 			continue;
 
 		} else if (item->type == BI_LEAF) {
@@ -473,7 +473,7 @@ goto_marked(struct listbox_item *item, void *data_, int *offset)
 		struct listbox_data *box = context->box;
 
 		if (item->type == BI_FOLDER) {
-			recursively_goto_listbox(ses, item, box);
+			recursively_goto_each_listbox(ses, item, box);
 			return 0;
 
 		} else if (item->type == BI_LEAF) {
@@ -511,7 +511,7 @@ push_hierbox_goto_button(struct dialog_data *dlg_data,
 					    goto_marked, context);
 
 	} else if (box->sel->type == BI_FOLDER) {
-		recursively_goto_listbox(ses, box->sel, box);
+		recursively_goto_each_listbox(ses, box->sel, box);
 
 	} else if (box->sel->type == BI_LEAF) {
 		struct uri *uri = box->ops->get_uri(box->sel);
