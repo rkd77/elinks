@@ -441,6 +441,28 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 
 /* Goto action */
 
+static void recursively_goto_each_listbox(struct session *ses,
+                                          struct listbox_item *root,
+                                          struct listbox_data *box);
+
+static void
+recursively_goto_listbox(struct session *ses, struct listbox_item *item,
+			 struct listbox_data *box)
+{
+		if (item->type == BI_FOLDER) {
+			recursively_goto_each_listbox(ses, item, box);
+			return;
+
+		} else if (item->type == BI_LEAF) {
+			struct uri *uri = box->ops->get_uri(item);
+
+			if (!uri) return;
+
+			open_uri_in_new_tab(ses, uri, 1, 0);
+			done_uri(uri);
+		}
+}
+
 static void
 recursively_goto_each_listbox(struct session *ses, struct listbox_item *root,
 			 struct listbox_data *box)
@@ -448,18 +470,7 @@ recursively_goto_each_listbox(struct session *ses, struct listbox_item *root,
 	struct listbox_item *item;
 
 	foreach (item, root->child) {
-		if (item->type == BI_FOLDER) {
-			recursively_goto_each_listbox(ses, item, box);
-			continue;
-
-		} else if (item->type == BI_LEAF) {
-			struct uri *uri = box->ops->get_uri(item);
-
-			if (!uri) continue;
-
-			open_uri_in_new_tab(ses, uri, 1, 0);
-			done_uri(uri);
-		}
+		recursively_goto_listbox(ses, item, box);
 	}
 }
 
@@ -472,18 +483,7 @@ goto_marked(struct listbox_item *item, void *data_, int *offset)
 		struct session *ses = context->dlg_data->dlg->udata;
 		struct listbox_data *box = context->box;
 
-		if (item->type == BI_FOLDER) {
-			recursively_goto_each_listbox(ses, item, box);
-			return 0;
-
-		} else if (item->type == BI_LEAF) {
-			struct uri *uri = box->ops->get_uri(item);
-
-			if (!uri) return 0;
-
-			open_uri_in_new_tab(ses, uri, 1, 0);
-			done_uri(uri);
-		}
+		recursively_goto_listbox(ses, item, box);
 	}
 
 	return 0;
