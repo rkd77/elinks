@@ -581,6 +581,11 @@ struct listbox_ops_messages default_listbox_ops_messages = {
 	NULL,
 };
 
+#define listbox_message(msg) \
+	ops->messages && ops->messages->msg \
+	 ? ops->messages->msg \
+	 : default_listbox_ops_messages.msg
+
 static void
 print_delete_error(struct listbox_item *item, struct terminal *term,
 		   struct listbox_ops *ops, enum delete_error err)
@@ -592,29 +597,17 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 	switch (err) {
 	case DELETE_IMPOSSIBLE:
 		if (item->type == BI_FOLDER) {
-			if (ops->messages && ops->messages->cant_delete_folder)
-				errmsg = ops->messages->cant_delete_folder;
-			else
-				errmsg = default_listbox_ops_messages.cant_delete_folder;
+			errmsg = listbox_message(cant_delete_folder);
 		} else {
-			if (ops->messages && ops->messages->cant_delete_item)
-				errmsg = ops->messages->cant_delete_item;
-			else
-				errmsg = default_listbox_ops_messages.cant_delete_item;
+			errmsg = listbox_message(cant_delete_item);
 		}
 		break;
 
 	case DELETE_LOCKED:
 		if (item->type == BI_FOLDER) {
-			if (ops->messages && ops->messages->cant_delete_used_folder)
-				errmsg = ops->messages->cant_delete_used_folder;
-			else
-				errmsg = default_listbox_ops_messages.cant_delete_used_folder;
+			errmsg = listbox_message(cant_delete_used_folder);
 		} else {
-			if (ops->messages && ops->messages->cant_delete_used_item)
-				errmsg = ops->messages->cant_delete_used_item;
-			else
-				errmsg = default_listbox_ops_messages.cant_delete_used_item;
+			errmsg = listbox_message(cant_delete_used_item);
 		}
 		break;
 
@@ -645,6 +638,8 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 	info_box(term, MSGBOX_FREE_TEXT, N_("Delete error"), ALIGN_LEFT,
 		 msg.source);
 }
+
+#undef listbox_message
 
 static void
 do_delete_item(struct listbox_item *item, struct listbox_context *info,
