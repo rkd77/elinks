@@ -26,7 +26,7 @@ quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
 
 ### The default rule
 #
-# Note: Target `all-local' must not depend on target '$(srcdir)/$(PACKAGE).pot',
+# Note: Target `all-local' must not depend on target '$(srcdir)$(PACKAGE).pot',
 # otherwise packages like GCC can not be built if only parts of the source have
 # been downloaded.
 #
@@ -46,19 +46,19 @@ all-local: $(CATALOGS)
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
 # not been added to the git repo. Beware of junk entries!
 
-$(srcdir)/$(POTFILES_ABS_LIST):
+$(srcdir)$(POTFILES_ABS_LIST):
 	@( cd $(top_srcdir); \
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
-	 > $(srcdir)/$(POTFILES_ABS_LIST)
+	 > $(srcdir)$(POTFILES_ABS_LIST)
 
-$(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST) $(srcdir)/perl/gather-accelerator-contexts.pl
+$(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-accelerator-contexts.pl
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
-		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)/$(POTFILES_ABS_LIST) \
+		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
-	&& $(PERL) -I"$(srcdir)/perl" $(srcdir)/perl/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
-	&& mv -f $(PACKAGE).po $(srcdir)/$(PACKAGE).pot
+	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
+	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
 
 
 ### Updating po and gmo files
@@ -68,12 +68,12 @@ $(srcdir)/$(PACKAGE).pot: $(srcdir)/$(POTFILES_ABS_LIST) $(srcdir)/perl/gather-a
 # It is possible to update only a single .po file by setting the PO variable to
 # either <lang> or <lang>.po when calling make. Example: make update-po PO=is
 
-update-po: Makefile $(srcdir)/$(PACKAGE).pot
+update-po: Makefile $(srcdir)$(PACKAGE).pot
 	@cd $(srcdir)
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  if $(MSGMERGE) $(srcdir)/$(lang).po $(srcdir)/$(PACKAGE).pot -o $(lang).new.po; then \
-	    mv -f $(lang).new.po $(srcdir)/$(lang).po; \
+	  if $(MSGMERGE) $(srcdir)$(lang).po $(srcdir)$(PACKAGE).pot -o $(lang).new.po; then \
+	    mv -f $(lang).new.po $(srcdir)$(lang).po; \
 	  else \
 	    echo "msgmerge failed!"; \
 	    rm -f $(lang).new.po; \
@@ -91,8 +91,8 @@ update-gmo: Makefile $(GMOFILES)
 check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
-	  $(PERL) -I"$(srcdir)/perl" $(srcdir)/perl/check-accelerator-contexts.pl $(srcdir)/$(lang).po \
+	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)$(lang).po; \
+	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/check-accelerator-contexts.pl $(srcdir)$(lang).po \
 	)
 
 ### Installation and distribution
@@ -107,6 +107,6 @@ install-local: all-local
 	)
 
 clean-local:
-	@rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
+	@rm -f $(PACKAGE).po *.new.po $(srcdir)$(POTFILES_ABS_LIST)
 
 include $(top_srcdir)/Makefile.lib
