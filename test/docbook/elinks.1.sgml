@@ -1,0 +1,150 @@
+<!-- $Id: elinks.1.xml,v 1.9 2003/06/11 01:40:20 jonas Exp $ -->
+
+<!DOCTYPE refentry SYSTEM "../elinksbook.dtd">
+
+<refentry id="elinks.1">
+
+<refmeta>
+	<refentrytitle>elinks</refentrytitle>
+	<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+	<refname>elinks</refname>
+	<refpurpose>lynx-like alternative character mode WWW browser</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+	<cmdsynopsis>
+		<command>elinks</command>
+		<arg choice="opt">options</arg>
+		<arg choice="req">url</arg>
+	</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1><title> DESCRIPTION </title>
+<para>
+
+	ELinks is a text mode WWW browser, supporting colors,
+	table rendering, background downloading, menu driven
+	configuration interface, tabbed browsing and slim code. 
+
+</para>
+<para>
+
+	Frames are supported. You can have different file formats associated
+	with external viewers. mailto: and telnet: are supported via external
+	clients. 
+
+</para>
+<para>
+
+	ELinks can handle local (<varname>file://</varname>) or remote
+	(<varname>http://,</varname> <varname>ftp://</varname> or
+	<varname>https://</varname> if there's compiled-in SSL support) URLs.
+	It has also basic support for <varname>finger:</varname>. 
+
+</para>
+</refsect1>
+
+<refsect1><title> OPTIONS </title>
+<para>
+
+	Most options can be set in the user interface or config file, so
+	usually you do not need to care about them. Note that this list is by
+	no means complete and it is not kept up-to-date. To get complete list
+	of commandline options, start ELinks with parameter
+	<parameter>--help</parameter>.
+
+</para>
+&config-cmdoptions;
+</refsect1>
+
+<refsect1><title> ENVIRONMENT VARIABLES </title>
+&config-envvars;
+</refsect1>
+
+<refsect1><title> FILES </title>
+&config-files;
+</refsect1>
+
+<refsect1><title> PLATFORMS </title>
+<para>
+
+	ELinks is known to work on Linux, FreeBSD, OpenBSD, Solaris, IRIX,
+	HPUX, Digital Unix, AIX, OS/2, BeOS and RISC OS. Port for Win32 is in
+	state of beta testing.
+
+</para>
+</refsect1>
+
+<refsect1><title> BUGS </title>
+<para>
+
+	See the <filename>BUGS</filename> file coming with ELinks distribution
+	tarball for list of known bugs. 
+
+</para>
+<para>
+
+	Please report any other bugs you find to the ELinks mailing list
+	<ulink url="http://elinks.or.cz/community.html">
+	elinks-users@linuxfromscratch.org</ulink> or
+	<ulink url="http://bugzilla.elinks.or.cz/">the bug system</ulink>.
+
+</para>
+</refsect1>
+
+<refsect1><title> LICENSE </title>
+<para>
+
+	ELinks is free software; you can redistribute it and/or modify it under
+	the terms of the GNU General Public License as published by the Free
+	Software Foundation; either version 2 of the License, or (at your
+	option) any later version.
+
+</para>
+</refsect1>
+
+<refsect1><title> AUTHORS </title>
+<para>
+
+	<command>Links</command> was written by Mikulas Patocka
+	<email>mikulas@artax.karlin.mff.cuni.cz</email>. ELinks - which is
+	based on Links - was written by Petr Baudis
+	<email>pasky@ucw.cz</email>. See file <filename>AUTHORS</filename> in
+	the source tree for a list of people contributing to this project. 
+
+</para>
+<para>
+
+	The homepage of ELinks can be found at <ulink
+	url="http://elinks.or.cz">http://elinks.or.cz/</ulink> 
+
+</para>
+<para>
+
+	This manual page was written by Peter Gervai
+	<email>grin@tolna.net</email>, using excerpts from a (yet?) unknown
+	Links fan for the Debian GNU/Linux system (but may be used by others).
+	Contributions from Francis A. Holop. Extended, clarified and made more
+	up-to-date by Petr Baudis <email>pasky@ucw.cz</email>. Updated by Zas
+	<email>zas@norz.org</email>. The conversion to DocBook for ELinks 0.5
+	and trimming was done by Jonas Fonseca <email>fonseca@diku.dk</email>.
+
+</para>
+</refsect1>
+
+<refsect1><title> SEE ALSO </title>
+<para>
+
+	<command>elinkskeys(5)</command>,
+	<command>elinks.conf(5)</command>,
+	<command>links(1)</command>,
+	<command>lynx(1)</command>,
+	<command>w3m(1)</command>,
+	<command>wget(1)</command>
+
+</para>
+</refsect1>
+</refentry>
