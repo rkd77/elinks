@@ -38,3 +38,12 @@ h1 {
 	/* Further, give it a pretty colour: */
 	color: lightgoldenrod !important;
 }
+
+/* The following specifies colors used in the HTML highligting. */
+document	 { color: yellow }
+element		 { color: lightgreen }
+entity-reference { color: red }
+proc-instruction { color: red }
+attribute	 { color: magenta }
+comment		 { color: aqua }
+cdata-section	 { color: orange2 }

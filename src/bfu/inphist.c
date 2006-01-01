@@ -86,6 +86,19 @@ do_tab_compl(struct dialog_data *dlg_data, struct list_head *history)
 	}
 }
 
+/* Return the length of the common substring from the starts
+ * of the two strings a and b. */
+static inline int
+strcommonlen(unsigned char *a, unsigned char *b)
+{
+	unsigned char *start = a;
+
+	while (*a && *a == *b)
+		++a, ++b;
+
+	return a - start;
+}
+
 /* Complete to the last unambiguous character. Eg., I've been to google.com,
  * google.com/search?q=foo, and google.com/search?q=bar.  This function then
  * completes `go' to `google.com' and `google.com/' to `google.com/search?q='.
@@ -96,41 +109,32 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int base_len = strlen(widget_data->cdata);
 	/* Maximum number of characters in a match. Characters after this
-	 * position are varying in other matches. Zero means that no max has
-	 * been set yet. */
+	 * position are varying in other matches. */
 	int longest_common_match = 0;
 	unsigned char *match = NULL;
 	struct input_history_entry *entry;
 
 	foreach (entry, *history) {
 		unsigned char *cur = entry->data;
-		unsigned char *matchpos = match ? match : widget_data->cdata;
-		int cur_len = 0;
+		int cur_len = strcommonlen(cur, match ? match
+		                                      : widget_data->cdata);
 
-		for (; *cur && *cur == *matchpos; ++cur, ++matchpos) {
-			++cur_len;
-
-			/* XXX: I think that unifying the two cases of this
-			 * test could seriously hurt readability. --pasky */
-			if (longest_common_match
-			    && cur_len >= longest_common_match)
-				break;
-		}
-
+		/* Throw away it away if it isn't even as long as what the user
+		 * entered. */
 		if (cur_len < base_len)
 			continue;
 
-		if (!match) cur_len = strlen(entry->data);
-
-		/* By now, @cur_len oscillates between @base_len and
-		 * @longest_common_match. */
-		if (longest_common_match
-		    && cur_len >= longest_common_match)
-			continue;
-
-		/* We found the next shortest common match. */
-		longest_common_match = cur_len;
-		match = entry->data;
+		if (!match) {
+			/* This is the first match, so its length is the maximum
+			 * for any future matches. */
+			longest_common_match = strlen(entry->data);
+			match = entry->data;
+		} else if (cur_len < longest_common_match) {
+			/* The current match has a shorter substring in common
+			 * with the previous candidates, so the common substring
+			 * shrinks. */
+			longest_common_match = cur_len;
+		}
 	}
 
 	if (!match) return;

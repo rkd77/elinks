@@ -205,7 +205,6 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 {
 	struct uri *uri = cached->uri;
 	enum stream_encoding encoding = ENCODING_NONE;
-	unsigned char *extension;
 	struct fragment *fragment = get_cache_fragment(cached);
 	struct string buffer = INIT_STRING("", 0);
 
@@ -216,30 +215,37 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		buffer.length = fragment->length;
 	}
 
-	extension = get_extension_from_uri(uri);
-	if (extension) {
-		encoding = guess_encoding(extension);
-		mem_free(extension);
-	}
+	if (uri->protocol != PROTOCOL_FILE) {
+		unsigned char *extension = get_extension_from_uri(uri);
 
-	if (encoding != ENCODING_NONE) {
-		int length = 0;
-		unsigned char *source;
+		if (extension) {
+			encoding = guess_encoding(extension);
+			mem_free(extension);
+		}
 
-		source = decode_encoded_buffer(encoding, buffer.source,
+		if (encoding != ENCODING_NONE) {
+			int length = 0;
+			unsigned char *source;
+
+			source = decode_encoded_buffer(encoding, buffer.source,
 					       buffer.length, &length);
-		if (source) {
-			buffer.source = source;
-			buffer.length = length;
-		} else {
-			encoding = ENCODING_NONE;
+			if (source) {
+				buffer.source = source;
+				buffer.length = length;
+			} else {
+				encoding = ENCODING_NONE;
+			}
 		}
 	}
 
 	if (document->options.plain) {
 #ifdef CONFIG_DOM
 		if (cached->content_type
-		    && !strlcasecmp("text/html", 9, cached->content_type, -1))
+		    && (!strlcasecmp("text/html", 9, cached->content_type, -1)
+		        || !strlcasecmp("application/rss+xml", 19, cached->content_type, -1)
+		        || !strlcasecmp("application/xbel+xml", 20, cached->content_type, -1)
+		        || !strlcasecmp("application/x-xbel", 18, cached->content_type, -1)
+		        || !strlcasecmp("application/xbel", 16, cached->content_type, -1)))
 			render_dom_document(cached, document, &buffer);
 		else
 #endif

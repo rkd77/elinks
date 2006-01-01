@@ -14,36 +14,48 @@ else
 	mquiet = quiet_
 endif
 
+# Colorize the build.
+ifdef MAKE_COLOR
+	INFO_COLOR    = $(shell tput setaf 5)
+	CC_COLOR      = $(shell tput setaf 6)
+	LD_COLOR      = $(shell tput setaf 2)
+	PO_COLOR      = $(shell tput setaf 6)
+	LINK_COLOR    = $(shell tput bold;tput setaf 4)
+	INSTALL_COLOR = $(shell tput setaf 3)
+	END_COLOR     = $(shell tput sgr0)
+endif
+
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
 ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
 mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
+ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
-quiet_cmd_compile = '      [CC]   $(RELPATH)$@'
+quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -c $<
       cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 
 # Rule to compile a set of .o files into one .o file
-quiet_cmd_ld_objs = "      [LD]   $(RELPATH)$@"
+quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^) \
       		    $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
 			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
 
-   quiet_cmd_link = '    [LINK]   $(RELPATH)$@'
+   quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
  quiet_cmd_sparse = '    [SPARSE]   $(RELPATH)$(2)'
        cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
 
 # Recursive make
-quiet_cmd_recmake = "[MAKE $(3)]   $(RELPATH)$(2)"
+quiet_cmd_recmake = "[$(INFO_COLOR)MAKE $(3)$(END_COLOR)]   $(RELPATH)$(2)"
       cmd_recmake = $(MAKE) -C $(2) $(3)
 
-quiet_cmd_installdata = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
+quiet_cmd_installdata = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installdata = $(INSTALL_DATA) $(2) $(3)
 
-quiet_cmd_installprog = "     [INSTALL]   $(RELPATH)$(2) -> $(3)"
+quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
 
@@ -88,8 +100,14 @@ ifdef INCLUDE_ALL
 ifdef SUBDIRS-no
 SUBDIRS += $(SUBDIRS-no)
 endif
+ifdef SUBDIRS-
+SUBDIRS += $(SUBDIRS-)
+endif
 ifdef OBJS-no
 OBJS += $(OBJS-no)
+endif
+ifdef OBJS-
+OBJS += $(OBJS-)
 endif
 
 endif
@@ -113,7 +131,7 @@ init-default:
 		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
 clean-default:
-	-test -z "$(CLEAN)" || $(RM) $(CLEAN)
+	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
 
 cleanall-default: clean-default
 

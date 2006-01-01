@@ -417,8 +417,6 @@ abort:
 		if (!closing_tag) {
 			unsigned char *value, *label;
 
-			add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
-
 			if (has_attr(t_attr, "disabled", html_context->options))
 				goto see;
 			if (preselect == -1

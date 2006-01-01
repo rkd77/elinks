@@ -88,7 +88,11 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 		return FRAME_EVENT_OK;
 
 	if (action_requires_link(KEYMAP_MAIN, action_id)
-	    && (!doc_view || !doc_view->vs || doc_view->vs->current_link == -1))
+	    && !link)
+		goto ignore_action;
+
+	if (action_requires_form(KEYMAP_MAIN, action_id)
+	    && (!link || !link_is_form(link)))
 		goto ignore_action;
 
 	if (!action_is_anonymous_safe(KEYMAP_MAIN, action_id)
@@ -282,6 +286,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_LINK_MENU:
 			link_menu(term, NULL, ses);
+			break;
+
+		case ACT_MAIN_LINK_FORM_MENU:
+			link_form_menu(ses);
 			break;
 
 		case ACT_MAIN_LUA_CONSOLE:

@@ -21,12 +21,12 @@
 #include "scripting/perl/perl.h"
 #include "scripting/python/python.h"
 #include "scripting/ruby/ruby.h"
-#include "scripting/see/see.h"
+#include "scripting/smjs/smjs.h"
 
 
 /* Error reporting. */
 
-#if defined(CONFIG_RUBY) || defined(CONFIG_SEE)
+#if defined(CONFIG_RUBY) || defined(CONFIG_SEE) || defined(CONFIG_ECMASCRIPT)
 void
 report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)
@@ -36,7 +36,7 @@ report_scripting_error(struct module *module, struct session *ses,
 
 	if (!ses) {
 		if (list_empty(terminals)) {
-			usrerror("%s error] %s", module->name, msg);
+			usrerror("[%s error] %s", module->name, msg);
 			return;
 		}
 
@@ -77,8 +77,8 @@ static struct module *scripting_modules[] = {
 #ifdef CONFIG_RUBY
 	&ruby_scripting_module,
 #endif
-#ifdef CONFIG_SEE
-	&see_scripting_module,
+#ifdef CONFIG_ECMASCRIPT
+	&smjs_scripting_module,
 #endif
 	NULL,
 };

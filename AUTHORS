@@ -241,7 +241,7 @@ Jimenez Martinez Angel Luis <al026635@alumail.uji.es>
 Jonas Fonseca <fonseca@diku.dk>
 	Maintainer
 	Danish translation
-	http://elinks.or.cz/
+	http://elinks.cz/
 	Mailcap support
 	Major cleanups
 	BFU and document management hacking
@@ -442,7 +442,7 @@ Petr Baudis <pasky@ucw.cz>
 	Feature of the Day implementation
 	LEDs, exmode, marks and other worthless toys
 	Actually even some documentation!
-	http://elinks.or.cz/ (original cut)
+	http://elinks.cz/ (original cut)
 
 Petr Cech <cech@atrey.karlin.mff.cuni.cz>
 	Allow spaces at the beginning of URL

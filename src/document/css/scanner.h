@@ -69,7 +69,12 @@ enum css_token_type {
 
 	CSS_TOKEN_IMPORTANT,	/* !<whitespace>important */
 
-	/* TODO: Selector stuff like "|=" and "~=" */
+	/* TODO: Selector stuff: */
+	CSS_TOKEN_SELECT_SPACE_LIST,	/* ~= */
+	CSS_TOKEN_SELECT_HYPHEN_LIST,	/* |= */
+	CSS_TOKEN_SELECT_BEGIN,		/* ^= */
+	CSS_TOKEN_SELECT_END,		/* $= */
+	CSS_TOKEN_SELECT_CONTAINS,	/* *= */
 
 	/* Special tokens: */
 

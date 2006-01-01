@@ -11,6 +11,7 @@ ELinks now:
 * SSL support via GNUTLS now requires 1.2 or higher
 * support for Lua 4.x was dropped, we only support Lua 5.x now
 * Python scripting back-end (experimental)
+* Spidermonkey based ECMAScript scripting back-end (experimental)
 * 88 colors support
 * default URI-rewrite rule, used when no other rules match but the string that
   was entered in the Go to URL box does not resemble a URI

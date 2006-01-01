@@ -304,8 +304,6 @@ add_document_line(struct plain_renderer *renderer,
 		} else if (line_char == ASCII_BS) {
 			if (!(expanded + line_pos)) {
 				/* We've backspaced to the start of the line */
-				if (expanded > 0)
-					expanded--; /* Don't count it */
 				continue;
 			}
 
@@ -327,7 +325,7 @@ add_document_line(struct plain_renderer *renderer,
 				continue;
 			}
 
-			if (expanded - 2 >= 0) {
+			if ((expanded + line_pos) - 2 >= 0) {
 				/* Don't count the backspace character or the
 				 * deleted character when returning the line's
 				 * width or when expanding tabs. */

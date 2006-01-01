@@ -1,6 +1,6 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
-OBJS = node.o renderer.o stack.o
+OBJS = renderer.o
 
 include $(top_srcdir)/Makefile.lib

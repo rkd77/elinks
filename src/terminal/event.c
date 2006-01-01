@@ -131,7 +131,7 @@ term_send_ucs(struct terminal *term, struct term_event *ev, unicode_val_T u)
 {
 	unsigned char *recoded;
 
-	recoded = u2cp_no_nbsp(u, get_opt_int_tree(term->spec, "charset"));
+	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset"));
 	if (!recoded) recoded = "*";
 	while (*recoded) {
 		ev->info.keyboard.key = *recoded;

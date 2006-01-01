@@ -8,6 +8,7 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/ruby/core.h"
@@ -144,22 +145,22 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
 	int error;
 	VALUE args[2];
 	VALUE result;
 
-	evhook_use_params(url && ses);
+	evhook_use_params(ses && cached);
 
-	if (*html == NULL || *html_len == 0)
+	if (!cached->length || !*fragment->data)
 		return EVENT_HOOK_STATUS_NEXT;
 
 	args[0] = rb_str_new2(url);
 	/* FIXME: Use html_len */
-	args[1] = rb_str_new2(*html);
+	args[1] = rb_str_new(fragment->data, fragment->length);
 
 	result = erb_protected_method_call("pre_format_html_hook", 2, args, &error);
 	if (error) {
@@ -170,13 +171,11 @@ script_hook_pre_format_html(va_list ap, void *data)
 	switch (rb_type(result)) {
 	case T_STRING:
 	{
-		unsigned char *new_html;
+		int len = RSTRING(result)->len;
 
-		new_html = memacpy(RSTRING(result)->ptr, RSTRING(result)->len);
-		if (new_html) {
-			*html_len = RSTRING(result)->len;
-			*html = new_html;
-		}
+		add_fragment(cached, 0, RSTRING(result)->ptr, len);
+		normalize_cache_entry(cached, len);
+
 		break;
 	}
 	case T_NIL:

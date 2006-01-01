@@ -1,6 +1,7 @@
 #ifndef EL__BFU_MSGBOX_H
 #define EL__BFU_MSGBOX_H
 
+#include "util/align.h"
 #include "util/memlist.h"
 
 struct terminal;

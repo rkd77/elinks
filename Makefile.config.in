@@ -13,7 +13,13 @@ PATHSCRIPT = case '@top_srcdir@' in /*) ;; *) echo $(top_builddir)/;; esac
 PATHPREFIX = $(shell $(PATHSCRIPT))
 
 top_srcdir = $(PATHPREFIX)@top_srcdir@
+
+SRCPATH = $(shell cd $(top_srcdir)/$(RELPATH) && pwd)
+ifeq ($(SRCPATH),$(CURPATH))
+srcdir = 
+else
 srcdir = $(top_srcdir)/$(RELPATH)
+endif
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 
@@ -76,7 +82,6 @@ PYTHON_LIBS = @PYTHON_LIBS@
 RANLIB = @RANLIB@
 RUBY_CFLAGS = @RUBY_CFLAGS@
 RUBY_LIBS = @RUBY_LIBS@
-SEE_CFLAGS = @SEE_CFLAGS@
 SPARSE = @SPARSE@
 SPIDERMONKEY_CFLAGS = @SPIDERMONKEY_CFLAGS@
 SPIDERMONKEY_LIBS = @SPIDERMONKEY_LIBS@
@@ -134,10 +139,10 @@ CONFIG_RISCOS = @CONFIG_RISCOS@
 CONFIG_RUBY = @CONFIG_RUBY@
 CONFIG_SCANNER = @CONFIG_SCANNER@
 CONFIG_SCRIPTING = @CONFIG_SCRIPTING@
-CONFIG_SEE = @CONFIG_SEE@
 CONFIG_SHA1 = @CONFIG_SHA1@
 CONFIG_SMALL = @CONFIG_SMALL@
 CONFIG_SMB = @CONFIG_SMB@
+CONFIG_SM_SCRIPTING = @CONFIG_SM_SCRIPTING@
 CONFIG_SPIDERMONKEY = @CONFIG_SPIDERMONKEY@
 CONFIG_SSL = @CONFIG_SSL@
 CONFIG_SYSMOUSE = @CONFIG_SYSMOUSE@
@@ -157,6 +162,8 @@ LIBS = @LIBS@
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)/src
 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
+
+MAKE_COLOR = @MAKE_COLOR@
 
 
 ### This is here because Makefile.config is usually the first thing

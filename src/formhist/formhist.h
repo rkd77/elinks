@@ -13,8 +13,6 @@ struct formhist_data {
 	/* List of submitted_values for this form */
 	struct list_head *submit;
 
-	/* This is indeed maintained by formhist.c, not dialogs.c; much easier
-	 * and simpler. */
 	struct listbox_item *box_item;
 
 	/* Whether to save this form or not. */

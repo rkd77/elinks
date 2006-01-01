@@ -662,12 +662,10 @@ abort_all_keepalive_connections(void)
 static void
 sort_queue(void)
 {
-	int swp;
-
-	do {
+	while (1) {
 		struct connection *conn;
+		int swp = 0;
 
-		swp = 0;
 		foreach (conn, connection_queue) {
 			if (!list_has_next(connection_queue, conn)) break;
 
@@ -679,7 +677,9 @@ sort_queue(void)
 				swp = 1;
 			}
 		}
-	} while (swp);
+
+		if (!swp) break;
+	};
 }
 
 static void

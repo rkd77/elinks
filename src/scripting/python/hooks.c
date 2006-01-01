@@ -8,6 +8,7 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/python/hooks.h"
@@ -100,22 +101,24 @@ script_hook_follow_url(va_list ap, void *data)
 }
 
 static void
-do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
-			       int *html_len)
+do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
+			       struct fragment *fragment)
 {
 	PyObject *pFunc = PyDict_GetItemString(pDict, "pre_format_html_hook");
 
 	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, "ss", url, *html);
+		PyObject *pValue = PyObject_CallFunction(pFunc, "ss#", url,
+		                                         fragment->data,
+		                                         fragment->length);
 
 		if (pValue && (pValue != Py_None)) {
 			const unsigned char *str = PyString_AsString(pValue);
 
 			if (str) {
-				*html_len = PyString_Size(pValue); /* strlen(str); */
-				*html = memacpy((unsigned char *)str, *html_len);
-				/* Isn't a memleak here? --witekfl */
-				if (!*html) *html_len = 0;
+				int len = PyString_Size(pValue); /* strlen(str); */
+
+				add_fragment(cached, 0, (unsigned char *) str, len);
+				normalize_cache_entry(cached, len);
 			}
 			Py_DECREF(pValue);
 		} else {
@@ -130,13 +133,13 @@ do_script_hook_pre_format_html(unsigned char *url, unsigned char **html,
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
 
-	if (pDict && ses && url && *html && *html_len)
-		do_script_hook_pre_format_html(url, html, html_len);
+	if (pDict && ses && url && cached->length && *fragment->data)
+		do_script_hook_pre_format_html(url, cached, fragment);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }

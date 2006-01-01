@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO8859-1" ?>
+<?xml-stylesheet type="text/xsl" href="op_my_favorites.xsl"?>
+<!DOCTYPE xbel PUBLIC
+  "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML"
+  "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd"
+[
+<!ENTITY % local.url.att "favicon CDATA '01.png' target CDATA '_blank'">
+]>
+<xbel version="1.0">
+<title>Administrator Favorieten</title>
+<info><metadata owner="Administrator"/></info>
+<desc>Administrator favorite bookmarks</desc>
+
+<folder id="f0">
+  <title>top</title>
+  <folder id="f3">
+    <title>Inside Netscape</title>
+    <bookmark href="http://home.netscape.com/bookmark/4_79/bbrowser.html" favicon="01.png" target="_self">
+      <title>Browser Central</title>
+    </bookmark>
+    <bookmark href="http://home.netscape.com/bookmark/4_79/bwebmail.html" favicon="01.png" target="_self">
+      <title>Free E-mail</title>
+    </bookmark>
+    <bookmark href="http://groups.google.com/groups?hl=en&amp;ie=UTF-8&amp;oe=UTF-8&amp;q=ACM_PLAY&amp;sa=N&amp;tab=wg" favicon="06.png" target="_self">
+      <title>Google Search ACM_PLAY</title>
+    </bookmark>
+    <bookmark href="http://home.netscape.com/bookmark/4_79/bnetscapechannel.html" favicon="01.png" target="_self">
+      <title>Netscape Information</title>
+    </bookmark>
+    <bookmark href="http://www.redhat.com/" favicon="07.png" target="_self">
+      <title>Red Hat -- Linux, Embedded Linux and Open Sou...</title>
+    </bookmark>
+    <bookmark href="http://home.netscape.com/bookmark/4_79/bshopnetscape.html" favicon="01.png" target="_self">
+      <title>Shop@Netscape</title>
+    </bookmark>
+ </folder>
+  <folder id="f21">
+    <title>XML</title>
+    <bookmark href="http://www.15seconds.com/Issue/010921.htm" favicon="01.png" target="_self">
+      <title>15 Seconds  Advanced UI Design Using XML and ...</title>
+    </bookmark>
+    <bookmark href="http://www.bioml.com/BIOML/b_chpt4.htm" favicon="15.png" target="_self">
+      <title>BIOML - Chapter 4 Extending BIOML</title>
+    </bookmark>
+    <bookmark href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JavaWSTutorialTOC.html" favicon="16.png" target="_self">
+      <title>JavaWSTutorialTOC.html</title>
+    </bookmark>
+    <folder id="f25">
+      <title>namespaces</title>
+      <bookmark href="http://mail.python.org/pipermail/xml-sig/1998-October/000429.html" favicon="01.png" target="_self">
+        <title>[XML-SIG] XBEL documentation, draft</title>
+      </bookmark>
+      <bookmark href="http://www.w3.org/TR/REC-xml-names/" favicon="01.png" target="_self">
+        <title>Namespaces in XML</title>
+      </bookmark>
+    </folder>
+    <bookmark href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/xmlsdk/htm/xpath_hdi_2_2d9v.asp" favicon="01.png" target="_self">
+      <title>Navigating Along the ancestor Axis</title>
+    </bookmark>
+    <bookmark href="http://www.cogsci.ed.ac.uk/~dmck/xmlperl/xslt-tutorial.html" favicon="01.png" target="_self">
+      <title>Producing HTML tables with XSLT</title>
+    </bookmark>
+    <bookmark href="http://www.stg.brown.edu/service/xmlvalid/" favicon="17.png" target="_self">
+      <title>STG XML Validation Form</title>
+    </bookmark>
+    <bookmark href="http://www.xefer.com/rebel/uris.html" favicon="18.png" target="_self">
+      <title>URIs and Ids</title>
+    </bookmark>
+    <bookmark href="http://www-106.ibm.com/developerworks/xml/library/x-xslrecur/?dwzone=xml" favicon="01.png" target="_self">
+      <title>Use recursion effectively in XSL</title>
+    </bookmark>
+    <bookmark href="http://icg.harvard.edu/~cscie12/xbel/" favicon="19.png" target="_self">
+      <title>XML Bookmark Exchange Language (XBEL) Informa...</title>
+    </bookmark>
+    <bookmark href="http://www.w3schools.com/dom/dom_validate.asp" favicon="20.png" target="_self">
+      <title>XML DOM - Validate XML</title>
+    </bookmark>
+    <bookmark href="http://www.xmlspy.com/features_convert.html" favicon="01.png" target="_self">
+      <title>XML Spy - Import, Export, and Convert XML dat...</title>
+    </bookmark>
+    <bookmark href="http://www.bluewell.nl/en/bwm/0110/ennl011026.htm" favicon="01.png" target="_self">
+      <title>XML The Language of B2B E-commerce</title>
+    </bookmark>
+    <bookmark href="http://www.w3schools.com/xsl/xsl_languages.asp" favicon="20.png" target="_self">
+      <title>XSL Languages</title>
+    </bookmark>
+    <bookmark href="http://xmlfiles.com/xsl/xsl_transformation.asp" favicon="21.png" target="_self">
+      <title>XSL Transformation</title>
+    </bookmark>
+ </folder>
+  <folder id="f10">
+    <title>JavaScript</title>
+    <bookmark href="http://www.ibm.com/us/" favicon="08.png" target="_self">
+      <title>IBM United States</title>
+    </bookmark>
+    <bookmark href="http://sourceforge.net/" favicon="09.png" target="_self">
+      <title>SourceForge.net Welcome</title>
+    </bookmark>
+    <folder id="f13">
+      <title>subfolder</title>
+      <bookmark href="http://www.microsoft.com/" favicon="01.png" target="_self">
+        <title>Microsoft Corporation</title>
+      </bookmark>
+      <folder id="f15">
+        <title>subsubfolder</title>
+        <bookmark href="http://www.mysql.com/" favicon="10.png" target="_self">
+          <title>MySQL The World&apos;s Most Popular Open Source Da...</title>
+        </bookmark>
+      </folder>
+      <bookmark href="http://www.warpgear.com/" favicon="11.png" target="_self">
+        <title>WarpGear Software</title>
+      </bookmark>
+    </folder>
+    <bookmark href="http://www.sun.com/" favicon="12.png" target="_self">
+      <title>Sun Microsystems</title>
+    </bookmark>
+ </folder>
+ <bookmark href="http://www.amazon.co.uk/exec/obidos/ASIN/B00006IIP1/ref=/t/026-3473547-1760408" favicon="04.png" target="_self">
+   <title>Amazon.co.uk At a glance IBM ViaVoice 10.0 Pr...</title>
+ </bookmark>
+ <bookmark href="http://www.experts-exchange.com/Programming/Programming_Languages/Delphi/Q_20249274.html#1" favicon="05.png" target="_self">
+   <title>Delphi Programming Hide taskbar</title>
+ </bookmark>
+ <bookmark href="http://tronche.com/technotes/mpeg/#sequence-header" favicon="13.png" target="_self">
+   <title>MPEG-1 File Format Specification</title>
+ </bookmark>
+ <bookmark href="http://home.netscape.com/bookmark/4_79/ptyellow.html" favicon="01.png" target="_self">
+   <title>Yellow Pages</title>
+ </bookmark>
+ <bookmark href="http://www.nodedb.com/wiki/index.php?Nokia-C110" favicon="14.png" target="_self">
+   <title>NodeDB.com Wiki - Nokia-C110</title>
+ </bookmark>
+</folder>
+</xbel>

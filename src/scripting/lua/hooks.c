@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/lua/core.h"
@@ -114,13 +115,13 @@ static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
 	lua_State *L = lua_state;
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
 	int err;
 
-	if (*html == NULL || *html_len == 0) return EVENT_HOOK_STATUS_NEXT;
+	if (!cached->length || !*fragment->data) return EVENT_HOOK_STATUS_NEXT;
 
 	lua_getglobal(L, "pre_format_html_hook");
 	if (lua_isnil(L, -1)) {
@@ -130,7 +131,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	}
 
 	lua_pushstring(L, url);
-	lua_pushlstring(L, *html, *html_len);
+	lua_pushlstring(L, fragment->data, fragment->length);
 
 	if (prepare_lua(ses)) return EVENT_HOOK_STATUS_NEXT;
 
@@ -139,8 +140,10 @@ script_hook_pre_format_html(va_list ap, void *data)
 	if (err) return EVENT_HOOK_STATUS_NEXT;
 
 	if (lua_isstring(L, -1)) {
-		*html_len = lua_strlen(L, -1);
-		*html = memacpy((unsigned char *) lua_tostring(L, -1), *html_len);
+		int len = lua_strlen(L, -1);
+
+		add_fragment(cached, 0, (unsigned char *) lua_tostring(L, -1), len);
+		normalize_cache_entry(cached, len);
 	} else if (!lua_isnil(L, -1)) {
 		alert_lua_error("pre_format_html_hook must return a string or nil");
 	}

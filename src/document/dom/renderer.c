@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#include <sys/types.h> /* FreeBSD needs this before regex.h */
+#ifdef HAVE_REGEX_H
+#include <regex.h>
+#endif
 #include <string.h>
 
 #include "elinks.h"
@@ -16,11 +20,12 @@
 #include "document/css/stylesheet.h"
 #include "document/docdata.h"
 #include "document/document.h"
-#include "document/dom/node.h"
 #include "document/dom/renderer.h"
-#include "document/dom/stack.h"
 #include "document/renderer.h"
-#include "document/sgml/parser.h"
+#include "dom/scanner.h"
+#include "dom/sgml/parser.h"
+#include "dom/node.h"
+#include "dom/stack.h"
 #include "intl/charsets.h"
 #include "globhist/globhist.h"		/* get_global_history_item() */
 #include "protocol/uri.h"
@@ -28,7 +33,6 @@
 #include "util/box.h"
 #include "util/error.h"
 #include "util/memory.h"
-#include "util/scanner.h"
 #include "util/snprintf.h"
 #include "util/string.h"
 
@@ -45,9 +49,15 @@ struct dom_renderer {
 	unsigned char *position;
 	int canvas_x, canvas_y;
 
+#ifdef HAVE_REGEX_H
+	regex_t url_regex;
+	unsigned int find_url:1;
+#endif
 	struct screen_char styles[DOM_NODES];
 };
 
+#define URL_REGEX "(file://|((f|ht|nt)tp(s)?|smb)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?)(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
+#define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
@@ -91,14 +101,23 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
 
+#ifdef HAVE_REGEX_H
+	if (renderer->document->options.plain_display_links) {
+		if (regcomp(&renderer->url_regex, URL_REGEX, URL_REGFLAGS)) {
+			regfree(&renderer->url_regex);
+		} else {
+			renderer->find_url = 1;
+		}
+	}
+#endif
+
 	for (type = 0; type < DOM_NODES; type++) {
 		struct screen_char *template = &renderer->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
 		static int i_want_struct_module_for_dom;
 
-		unsigned char *name = get_dom_node_type_name(type);
-		int namelen = name ? strlen(name) : 0;
+		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
 		if (!i_want_struct_module_for_dom) {
@@ -108,7 +127,8 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 				"entity-reference { color: red } "
 				"proc-instruction { color: red } "
 				"attribute	{ color: magenta } "
-				"comment	{ color: aqua } ";
+				"comment	{ color: aqua } "
+				"cdata-section	{ color: orange2 } ";
 			unsigned char *styles = (unsigned char *) default_colors;
 
 			i_want_struct_module_for_dom = 1;
@@ -119,9 +139,10 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		}
 
 		if (name)
+		if (is_dom_string_set(name))
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
-						     name, namelen);
+						     name->string, name->length);
 
 		if (selector) {
 			struct list_head *properties = &selector->properties;
@@ -286,33 +307,6 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 	}
 }
 
-#ifdef DOM_TREE_RENDERER
-static void
-render_dom_printf(struct dom_renderer *renderer, struct screen_char *template,
-		  unsigned char *format, ...)
-{
-	unsigned char *text;
-	int textlen;
-	va_list ap, ap2;
-
-	va_start(ap, format);
-	VA_COPY(ap2, ap);
-
-	textlen = vsnprintf(NULL, 0, format, ap2);
-
-	text = mem_alloc(textlen + 1);
-	if (!text) goto free_va_args;
-
-	if (vsnprintf((char *) text, textlen + 1, format, ap) == textlen)
-		render_dom_text(renderer, template, text, textlen);
-
-	mem_free(text);
-
-free_va_args:
-	va_end(ap);
-}
-#endif /* DOM_TREE_RENDERER */
-
 #define realloc_document_links(doc, size) \
 	ALIGN_LINK(&(doc)->links, (doc)->nlinks, size)
 
@@ -382,112 +376,6 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 }
 
 
-/* DOM Tree Renderer */
-
-#ifdef DOM_TREE_RENDERER
-static struct dom_node *
-render_dom_tree(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->renderer;
-	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value;
-
-	assert(node && renderer);
-
-	name  = get_dom_node_name(node);
-	value = memacpy(node->string, node->length);
-
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
-
-	mem_free_if(name);
-	mem_free_if(value);
-
-	return node;
-}
-
-static struct dom_node *
-render_dom_tree_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->renderer;
-	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value, *id;
-
-	assert(node && document);
-
-	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
-	id	= get_dom_node_type_name(node->type);
-
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s -> %s\n", id, name, value);
-
-	mem_free_if(name);
-	mem_free_if(value);
-
-	return node;
-}
-
-static struct dom_node *
-render_dom_tree_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->renderer;
-	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *value;
-
-	assert(node && document);
-
-	name	= get_dom_node_name(node);
-	value	= get_dom_node_value(node, document->options.cp);
-
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", name, value);
-
-	mem_free_if(name);
-	mem_free_if(value);
-
-	return node;
-}
-
-static struct dom_node *
-render_dom_tree_branch(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->renderer;
-	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->styles[node->type];
-	unsigned char *name, *id;
-
-	assert(node && document);
-
-	name	= get_dom_node_name(node);
-	id	= get_dom_node_type_name(node->type);
-
-	renderer->canvas_x += stack->depth;
-	render_dom_printf(renderer, template, "%-16s: %s\n", id, name);
-
-	mem_free_if(name);
-
-	return node;
-}
-
-static dom_stack_callback_T dom_tree_renderer_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_tree_branch,
-	/* DOM_NODE_ATTRIBUTE		*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_TEXT		*/ render_dom_tree_leaf,
-	/* DOM_NODE_CDATA_SECTION	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_ENTITY		*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_COMMENT		*/ render_dom_tree_leaf,
-	/* DOM_NODE_DOCUMENT		*/ render_dom_tree,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_tree_id_leaf,
-	/* DOM_NODE_NOTATION		*/ render_dom_tree_id_leaf,
-};
-#endif /* DOM_TREE_RENDERER */
-
 /* DOM Source Renderer */
 
 #define check_dom_node_source(renderer, str, len)	\
@@ -517,8 +405,8 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template,
 		     struct dom_node *node)
 {
-	unsigned char *string = node->string;
-	int length = node->length;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
 
 	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
 		string -= 1;
@@ -534,72 +422,98 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 	render_dom_text(renderer, template, string, length);
 }
 
-static struct dom_node *
-render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
+#ifdef HAVE_REGEX_H
+static inline void
+render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *node)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	regex_t *regex = &renderer->url_regex;
+	regmatch_t regmatch;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
+	struct screen_char *template = &renderer->styles[node->type];
+	unsigned char *alloc_string;
 
-	assert(node && renderer && renderer->document);
-
-	/* TODO: For (atleast) text, CDATA section and comment nodes check
-	 * for URIs ala document->options.plain_display_links */
-	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	return node;
-}
-
-static struct dom_node *
-render_dom_proc_instr_source(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->renderer;
-	unsigned char *value;
-	int valuelen;
-
-	assert(node && renderer && renderer->document);
-
-	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	value	 = node->data.proc_instruction.instruction;
-	valuelen = node->data.proc_instruction.instructionlen;
-
-	if (!value || node->data.proc_instruction.map)
-		return node;
-
-	if (check_dom_node_source(renderer, node->string, node->length)) {
-		render_dom_flush(renderer, value);
-		renderer->position = value + valuelen;
+	if (check_dom_node_source(renderer, string, length)) {
+		render_dom_flush(renderer, string);
+		renderer->position = string + length;
+		assert_source(renderer, renderer->position, 0);
 	}
 
-	render_dom_text(renderer, &renderer->styles[DOM_NODE_ATTRIBUTE], value, valuelen);
+	alloc_string = memacpy(string, length);
+	if (alloc_string)
+		string = alloc_string;
 
-	return node;
+	while (length > 0 && !regexec(regex, string, 1, &regmatch, 0)) {
+		int matchlen = regmatch.rm_eo - regmatch.rm_so;
+		int offset = regmatch.rm_so;
+
+		if (!matchlen || offset < 0 || regmatch.rm_eo > length)
+			break;
+
+		if (offset > 0)
+			render_dom_text(renderer, template, string, offset);
+
+		string += offset;
+		length -= offset;
+
+		add_dom_link(renderer, string, matchlen);
+
+		length -= matchlen;
+		string += matchlen;
+	}
+
+	if (length > 0)
+		render_dom_text(renderer, template, string, length);
+
+	mem_free_if(alloc_string);
+}
+#endif
+
+static void
+render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+
+	assert(node && renderer && renderer->document);
+
+#ifdef HAVE_REGEX_H
+	if (renderer->find_url
+	    && (node->type == DOM_NODE_TEXT
+		|| node->type == DOM_NODE_CDATA_SECTION
+		|| node->type == DOM_NODE_COMMENT)) {
+		render_dom_node_enhanced_text(renderer, node);
+		return;
+	}
+#endif
+
+	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 }
 
-static struct dom_node *
+/* This callback is also used for rendering processing instruction nodes.  */
+static void
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 
 	assert(node && renderer && renderer->document);
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
-
-	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
-	struct sgml_parser_state *pstate = data;
-	struct scanner_token *token = &pstate->end_token;
-	unsigned char *string = token->string;
-	int length = token->length;
+	struct dom_renderer *renderer = stack->current->data;
+	struct dom_stack_state *state = get_dom_stack_top(stack);
+	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
+	struct dom_scanner_token *token = &pstate->end_token;
+	unsigned char *string = token->string.string;
+	int length = token->string.length;
 
 	assert(node && renderer && renderer->document);
 
 	if (!string || !length)
-		return node;
+		return;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -608,47 +522,22 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	}
 
 	render_dom_text(renderer, &renderer->styles[node->type], string, length);
-
-	return node;
 }
 
-static struct dom_node *
+static void
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_renderer *renderer = stack->renderer;
+	struct dom_renderer *renderer = stack->current->data;
 	struct screen_char *template = &renderer->styles[node->type];
 
 	assert(node && renderer->document);
 
-#if 0
-	/* Disabled since the DOM source highlighter uses the stream parser and
-	 * therefore the attributes is pushed to it in order. However, if/when
-	 * we will support rendering (read saving) of loaded DOM trees this one
-	 * small hack is needed to get the attributes in the original order. */
-	{
-		struct dom_stack_state *state = get_dom_stack_parent(stack);
-		struct dom_node *attribute = NULL;
-		int i;
-
-		assert(state && state->list);
-
-		/* The attributes are sorted but we want them in the original order */
-		foreach_dom_node(i, node, state->list) {
-			if (node->string >= renderer->position
-				&& (!attribute || node->string < attribute->string))
-				attribute = node;
-		}
-
-		assert(attribute);
-		node = attribute;
-	}
-#endif
 	render_dom_node_text(renderer, template, node);
 
-	if (node->data.attribute.value) {
+	if (is_dom_string_set(&node->data.attribute.value)) {
 		int quoted = node->data.attribute.quoted == 1;
-		unsigned char *value = node->data.attribute.value - quoted;
-		int valuelen = node->data.attribute.valuelen + quoted * 2;
+		unsigned char *value = node->data.attribute.value.string - quoted;
+		int valuelen = node->data.attribute.value.length + quoted * 2;
 
 		if (check_dom_node_source(renderer, value, 0)) {
 			render_dom_flush(renderer, value);
@@ -699,40 +588,74 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			render_dom_text(renderer, template, value, valuelen);
 		}
 	}
-
-	return node;
 }
 
-static dom_stack_callback_T dom_source_renderer_push_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
-	/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
-	/* DOM_NODE_TEXT		*/ render_dom_node_source,
-	/* DOM_NODE_CDATA_SECTION	*/ render_dom_node_source,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
-	/* DOM_NODE_ENTITY		*/ render_dom_node_source,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_proc_instr_source,
-	/* DOM_NODE_COMMENT		*/ render_dom_node_source,
-	/* DOM_NODE_DOCUMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_node_source,
-	/* DOM_NODE_NOTATION		*/ render_dom_node_source,
-};
+static void
+render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	unsigned char *string = node->string.string;
 
-static dom_stack_callback_T dom_source_renderer_pop_callbacks[DOM_NODES] = {
-	/*				*/ NULL,
-	/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
-	/* DOM_NODE_ATTRIBUTE		*/ NULL,
-	/* DOM_NODE_TEXT		*/ NULL,
-	/* DOM_NODE_CDATA_SECTION	*/ NULL,
-	/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
-	/* DOM_NODE_ENTITY		*/ NULL,
-	/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
-	/* DOM_NODE_COMMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT		*/ NULL,
-	/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
-	/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
-	/* DOM_NODE_NOTATION		*/ NULL,
+	assert(node && renderer && renderer->document);
+
+	/* Highlight the 'CDATA' part of <![CDATA[ if it is there. */
+	if (check_dom_node_source(renderer, string - 6, 6)) {
+		render_dom_flush(renderer, string - 6);
+		render_dom_text(renderer, &renderer->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
+		renderer->position = string - 1;
+		assert_source(renderer, renderer->position, 0);
+	}
+
+	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+}
+
+static void
+render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+
+	/* If there are no non-element nodes after the last element node make
+	 * sure that we flush to the end of the cache entry source including
+	 * the '>' of the last element tag if it has one. (bug 519) */
+	if (check_dom_node_source(renderer, renderer->position, 0)) {
+		render_dom_flush(renderer, renderer->end);
+	}
+}
+
+static struct dom_stack_context_info dom_source_renderer_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ render_dom_element_source,
+		/* DOM_NODE_ATTRIBUTE		*/ render_dom_attribute_source,
+		/* DOM_NODE_TEXT		*/ render_dom_node_source,
+		/* DOM_NODE_CDATA_SECTION	*/ render_dom_cdata_source,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ render_dom_node_source,
+		/* DOM_NODE_ENTITY		*/ render_dom_node_source,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
+		/* DOM_NODE_COMMENT		*/ render_dom_node_source,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_node_source,
+		/* DOM_NODE_NOTATION		*/ render_dom_node_source,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ render_dom_element_end_source,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ render_dom_document_end,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
 };
 
 
@@ -746,6 +669,11 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
+	enum sgml_document_type doctype;
+	unsigned char *string = struri(cached->uri);
+	size_t length = strlen(string);
+	struct dom_string uri = INIT_DOM_STRING(string, length);
+	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
 
 	assert(document->options.plain);
 
@@ -759,21 +687,31 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, &renderer, cached->uri,
-				  dom_source_renderer_push_callbacks,
-				  dom_source_renderer_pop_callbacks);
+	if (cached->content_type
+	    && !strlcasecmp("application/rss+xml", 19, cached->content_type, -1))
+		doctype = SGML_DOCTYPE_RSS;
+	else
+		doctype = SGML_DOCTYPE_HTML;
+
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
 	if (!parser) return;
 
-	root = parse_sgml(parser, buffer);
-	done_sgml_parser(parser);
-	if (!root) return;
+	add_dom_stack_context(&parser->stack, &renderer,
+			      &dom_source_renderer_context_info);
 
-	/* If there are no non-element nodes after the last element node make
-	 * sure that we flush to the end of the cache entry source including
-	 * the '>' of the last element tag if it has one. (bug 519) */
-	if (check_dom_node_source(&renderer, renderer.position, 0)) {
-		render_dom_flush(&renderer, renderer.end);
+	root = parse_sgml(parser, &source);
+	if (root) {
+		assert(parser->stack.depth == 1);
+
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		/* For SGML_PARSER_STREAM this will free the DOM
+		 * root node. */
+		pop_dom_node(&parser->stack);
 	}
 
-	done_dom_node(root);
+#ifdef HAVE_REGEX_H
+	if (renderer.find_url)
+		regfree(&renderer.url_regex);
+#endif
+	done_sgml_parser(parser);
 }

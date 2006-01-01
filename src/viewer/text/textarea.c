@@ -311,37 +311,6 @@ save_textarea_file(unsigned char *value)
 	return filename;
 }
 
-static unsigned char *
-load_textarea_file(unsigned char *filename, size_t maxlength)
-{
-	unsigned char *value = NULL;
-	FILE *file = fopen(filename, "rb+");
-	off_t filelen = -1;
-
-	if (!file) return NULL;
-
-	if (!fseeko(file, 0, SEEK_END)) {
-		filelen = ftello(file);
-		if (filelen != -1 && fseeko(file, 0, SEEK_SET))
-			filelen = -1;
-	}
-
-	if (filelen >= 0 && filelen <= maxlength) {
-		value = mem_alloc((size_t) (filelen + 1));
-		if (value) {
-			size_t bread;
-
-			bread = fread(value, 1, (size_t) filelen, file);
-			value[bread] = 0;
-		}
-	}
-
-	fclose(file);
-	unlink(filename);
-
-	return value;
-}
-
 void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
@@ -403,16 +372,38 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		textarea_editor = 1;
 
 	} else if (op == 1 && fs) {
-		unsigned char *value = load_textarea_file(fn, fc_maxlength);
+		struct string file;
 
-		if (value) {
-			mem_free(fs->value);
-			fs->value = value;
-			fs->state = strlen(value);
-
-			if (doc_view && link)
-				draw_form_entry(term, doc_view, link);
+		if (!init_string(&file)
+		     || !add_file_to_string(&file, fn)) {
+			textarea_editor = 0;
+			goto free_and_return;
 		}
+
+		if (file.length > fc_maxlength) {
+			file.source[fc_maxlength] = '\0';
+			info_box(term, MSGBOX_FREE_TEXT, N_("Warning"),
+			         ALIGN_CENTER,
+			         msg_text(term,
+				          N_("You have exceeded the textarea's"
+				             " size limit: your input is %d"
+					     " bytes, but the maximum is %u"
+					     " bytes.\n\n"
+					     "Your input has been truncated,"
+					     " but you can still recover the"
+					     " text that you entered from"
+					     " this file: %s"), file.length,
+				             fc_maxlength, fn));
+		} else {
+			unlink(fn);
+		}
+
+		mem_free(fs->value);
+		fs->value = file.source;
+		fs->state = file.length;
+
+		if (doc_view && link)
+			draw_form_entry(term, doc_view, link);
 
 		textarea_editor = 0;
 		goto free_and_return;

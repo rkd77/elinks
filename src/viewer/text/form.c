@@ -518,29 +518,32 @@ add_submitted_value_to_list(struct form_control *fc,
 static void
 sort_submitted_values(struct list_head *list)
 {
-	int changed;
+	while (1) {
+		struct submitted_value *sub;
+		int changed = 0;
 
-	do {
-		struct submitted_value *sub, *next;
-
-		changed = 0;
 		foreach (sub, *list) if (list_has_next(*list, sub))
 			if (sub->next->position < sub->position) {
-				next = sub->next;
+				struct submitted_value *next = sub->next;
+
 				del_from_list(sub);
 				add_at_pos(next, sub);
 				sub = next;
 				changed = 1;
 			}
+
 		foreachback (sub, *list) if (list_has_next(*list, sub))
 			if (sub->next->position < sub->position) {
-				next = sub->next;
+				struct submitted_value *next = sub->next;
+
 				del_from_list(sub);
 				add_at_pos(next, sub);
 				sub = next;
 				changed = 1;
 			}
-	} while (changed);
+
+		if (!changed) break;
+	};
 }
 
 static void
@@ -781,7 +784,6 @@ encode_multipart(struct session *ses, struct list_head *l, struct string *data,
 
 			if (*sv->value) {
 				unsigned char *filename;
-				ssize_t rd;
 
 				if (get_cmd_opt_bool("anonymous")) {
 					errno = EPERM;
@@ -797,14 +799,21 @@ encode_multipart(struct session *ses, struct list_head *l, struct string *data,
 
 				if (fh == -1) goto encode_error;
 				set_bin(fh);
-				do {
-					rd = safe_read(fh, buffer, F_BUFLEN);
-					if (rd == -1) {
-						close(fh);
-						goto encode_error;
+				while (1) {
+					ssize_t rd = safe_read(fh, buffer, F_BUFLEN);
+
+					if (rd) {
+						if (rd == -1) {
+							close(fh);
+							goto encode_error;
+						}
+
+						add_bytes_to_string(data, buffer, rd);
+
+					} else {
+						break;
 					}
-					if (rd) add_bytes_to_string(data, buffer, rd);
-				} while (rd);
+				};
 				close(fh);
 			}
 #undef F_BUFLEN
@@ -1606,4 +1615,98 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	}
 
 	return str.source;
+}
+
+static void
+link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
+{
+	struct session *ses = ses_;
+	struct document_view *doc_view;
+	int link_number = *(int *) link_number_;
+
+	mem_free(link_number_);
+
+	assert(term && ses);
+	if_assert_failed return;
+
+	doc_view = current_frame(ses);
+	if (!doc_view) return;
+
+	assert(doc_view->vs && doc_view->document);
+	if_assert_failed return;
+
+	jump_to_link_number(ses, doc_view, link_number);
+	refresh_view(ses, doc_view, 0);
+}
+
+void
+link_form_menu(struct session *ses)
+{
+	struct document_view *doc_view;
+	struct link *link;
+	struct menu_item *mi;
+	struct form_control *fc;
+	struct form *form;
+
+	assert(ses);
+	if_assert_failed return;
+
+	doc_view = current_frame(ses);
+	if (!doc_view) return;
+
+	assert(doc_view->vs && doc_view->document);
+	if_assert_failed return;
+
+	link = get_current_link(doc_view);
+	if (!link) return;
+
+	assert(link_is_form(link));
+
+	fc = get_link_form_control(link);
+	if (!fc) return;
+
+	form = fc->form;
+
+	mi = new_menu(FREE_LIST | FREE_TEXT | NO_INTL);
+	if (!mi) return;
+
+	foreach (fc, form->items) {
+		unsigned char *text;
+		unsigned char *rtext;
+		int link_number;
+		struct string str;
+
+		switch (fc->type) {
+		case FC_HIDDEN:
+			continue;
+
+		case FC_SUBMIT:
+		case FC_IMAGE:
+			if (!form->action)
+				text = N_("Useless button");
+			else
+				text = N_("Submit button");
+			break;
+
+		default:
+			text = get_form_label(fc);
+		}
+
+		link_number = get_form_control_link(doc_view->document, fc);
+		if (link_number < 0
+		    || !init_string(&str))
+			continue;
+
+		assert(text);
+		add_to_string(&str, _(text, ses->tab->term));
+
+		rtext = fc->name;
+		if (!rtext) rtext = fc->alt;
+
+		add_to_menu(&mi, str.source, rtext, ACT_MAIN_NONE,
+		            link_form_menu_func, intdup(link_number),
+		            FREE_DATA);
+	}
+
+	do_menu(ses->tab->term, mi, ses, 1);
 }

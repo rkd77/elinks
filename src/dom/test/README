@@ -1,0 +1,168 @@
+Core GIT Tests
+==============
+
+This directory holdstest scripts for the DOM implementation. The first part of
+this short document describes how to run the tests and read their output.
+
+When fixing the tools or adding enhancements, you are strongly encouraged to
+add tests in this directory to cover what you are trying to fix or enhance.
+The later part of this short document describes how your test scripts should be
+organized.
+
+
+Running Tests
+-------------
+
+The easiest way to run tests is to say "make test". This runs all the tests.
+
+    *** test-sgml-parser-basic ***
+    *   ok 1: parse a small document.
+    ...
+    *   ok 23: parse a CDATA section.
+    * passed all 23 test(s)
+    *** test-dom-select-basic ***
+    *   ok 1: match the root node.
+    *   ok 2: match universal element.
+    ...
+
+Or you can run each test individually from command line, like this:
+
+    $ sh ./test-sgml-parser-basic
+    *   ok 1: parse a small document.
+    ...
+    *   ok 23: parse a CDATA section.
+    * passed all 23 test(s)
+
+You can pass --verbose (or -v), --debug (or -d), and --immediate (or -i)
+command line argument to the test.
+
+--verbose::
+	This makes the test more verbose.  Specifically, the
+	command being run and their output if any are also
+	output.
+
+--debug::
+	This may help the person who is developing a new test.
+	It causes the command defined with test_debug to run.
+
+--immediate::
+	This causes the test to immediately exit upon the first
+	failed test.
+
+
+Naming Tests
+------------
+
+The test files should be named so that it is clear what part of the DOM
+implementation it is aimed for. The name MUST start with "test-" and have four
+hyphen separated words which name first the module, then the feature and last
+what the purpose of the test is (such as basic stuff or a specific use case).
+In short use the following as a template:
+
+	test-<module>-<feature>-<purpose>
+
+For example test-sgml-parser-basic.
+
+If you create files under test/ directory (i.e. here) that is not the top-level
+test script, never name the file to match the above pattern.  The Makefile here
+considers all such files as the top-level test script and tries to run all of
+them. A care is especially needed if you are creating a common test library
+file, similar to libtest, because such a library file may not be suitable for
+standalone execution.
+
+
+Writing Tests
+-------------
+
+The test script is written as a shell script. It should start with the standard
+"#!/bin/sh" with copyright notices, and an assignment to variable
+'test_description', like this:
+
+	#!/bin/sh
+	#
+	# Copyright (c) 2005 Junio C Hamano
+	#
+
+	test_description='Test the very basic feature of module foo.
+
+	This test runs very basic features, like checking that bar is correctly
+	bazzed.
+	'
+
+
+Source 'libtest'
+--------------------
+
+After assigning test_description, the test script should source test-lib.sh
+like this:
+
+	. ./libtest
+
+This test harness library does the following things:
+
+ - If the script is invoked with command line argument --help (or -h), it shows
+   the test_description and exits.
+
+ - Creates an empty test directory. This directory is 'test/trash' if you must
+   know, but I do not think you care.
+
+ - Defines standard test helper functions for your scripts to use.  These
+   functions are designed to make all scripts behave consistently when command
+   line arguments --verbose (or -v), --debug (or -d), and --immediate (or -i)
+   is given.
+
+
+End with test_done
+------------------
+
+Your script will be a sequence of tests, using helper functions from the test
+harness library.  At the end of the script, call 'test_done'.
+
+
+Test harness library
+--------------------
+
+There are a handful helper functions defined in the test harness library for
+your script to use.
+
+ - test_expect_success <message> <script>
+
+   This takes two strings as parameter, and evaluates the <script>. If it
+   yields success, test is considered successful. <message> should state what
+   it is testing.
+
+   Example:
+
+	test_expect_success \
+	    'git-write-tree should be able to write an empty tree.' \
+	    'tree=$(git-write-tree)'
+
+ - test_expect_failure <message> <script>
+
+   This is the opposite of test_expect_success. If <script> yields success,
+   test is considered a failure.
+
+   Example:
+
+	test_expect_failure \
+	    'git-update-index without --add should fail adding.' \
+	    'git-update-index should-be-empty'
+
+ - test_debug <script>
+
+   This takes a single argument, <script>, and evaluates it only when the test
+   script is started with --debug command line argument. This is primarily
+   meant for use during the development of a new test script.
+
+ - test_done
+
+   Your test script must have test_done at the end. Its purpose is to summarize
+   successes and failures in the test script and exit with an appropriate error
+   code.
+
+
+Tips for Writing Tests
+----------------------
+
+As with any programming projects, existing programs are the best source of the
+information. So look at some of the basic test scripts for examples.

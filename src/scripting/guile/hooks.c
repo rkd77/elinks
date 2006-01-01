@@ -8,7 +8,9 @@
 
 #include "elinks.h"
 
+#include "cache/cache.h"
 #include "main/event.h"
+#include "protocol/uri.h"
 #include "scripting/guile/hooks.h"
 #include "session/session.h"
 #include "util/string.h"
@@ -116,27 +118,29 @@ script_hook_follow_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
 {
-	unsigned char **html = va_arg(ap, unsigned char **);
-	int *html_len = va_arg(ap, int *);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
+	struct fragment *fragment = get_cache_fragment(cached);
+	unsigned char *url = struri(cached->uri);
+	int len;
 	SCM proc;
 	SCM x;
 
-	evhook_use_params(html && html_len && ses && url);
+	evhook_use_params(ses && cached);
 
-	if (*html == NULL || *html_len == 0) return EVENT_HOOK_STATUS_NEXT;
+	if (!cached->length || !*fragment->data) return EVENT_HOOK_STATUS_NEXT;
 
 	proc = get_guile_hook("%pre-format-html-hook");
 	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	x = scm_call_2(SCM_VARIABLE_REF(proc), scm_makfrom0str(url),
-		       scm_mem2string(*html, *html_len));
+		       scm_mem2string(fragment->data, fragment->length));
 
 	if (!SCM_STRINGP(x)) return EVENT_HOOK_STATUS_NEXT;
 
-	*html_len = SCM_STRING_LENGTH(x);
-	*html = memacpy(SCM_STRING_UCHARS(x), *html_len);
+	len = SCM_STRING_LENGTH(x);
+	add_fragment(cached, 0, SCM_STRING_UCHARS(x), len);
+	normalize_cache_entry(cached, len);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }

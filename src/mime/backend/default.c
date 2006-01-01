@@ -97,6 +97,10 @@ static struct option_info default_mime_options[] = {
 #ifdef CONFIG_BITTORRENT
 	INIT_OPT_MIME_EXTENSION("torrent",	"application/x-bittorrent"),
 #endif
+#ifdef CONFIG_DOM
+	INIT_OPT_MIME_EXTENSION("rss",		"application/rss+xml"),
+	INIT_OPT_MIME_EXTENSION("xbel",		"application/xbel+xml"),
+#endif
 
 	NULL_OPTION_INFO,
 };

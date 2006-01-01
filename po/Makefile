@@ -11,15 +11,16 @@ MSGMERGE = msgmerge
 # xgettext) 
 POTFILES_ABS_LIST = potfiles.list
 
+quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
+      cmd_gmsgfmt = rm -f -- "$@" && $(GMSGFMT) --statistics -o "$@" -- "$<"
+
 
 # Distributed elinks-*.tar.gz packages include po/*.gmo files, so that
 # users can install ELinks even if they don't have a msgfmt program.
 # However, if srcdir != builddir, then this Makefile ignores the *.gmo
 # files in the srcdir and builds new ones in the builddir.
-%.gmo: $(srcdir)/%.po
-	@file=`echo $* | sed 's,.*/,,'`.gmo \
-	  && rm -f $$file && echo -n $*": " \
-	  && $(GMSGFMT) --statistics -o $$file $<
+%.gmo: $(srcdir)%.po
+	$(call ecmd,gmsgfmt)
 
 
 ### The default rule
@@ -89,7 +90,7 @@ update-gmo: Makefile $(GMOFILES)
 check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
-	  $(GMSGFMT) --check --check-accelerators=~ --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
+	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)/$(lang).po; \
 	  $(srcdir)/check-accelerator-contexts.pl $(srcdir)/$(lang).po \
 	)
 
@@ -105,6 +106,6 @@ install-local: all-local
 	)
 
 clean-local:
-	rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
+	@rm -f $(PACKAGE).po *.new.po $(srcdir)/$(POTFILES_ABS_LIST)
 
 include $(top_srcdir)/Makefile.lib

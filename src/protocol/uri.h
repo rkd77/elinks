@@ -291,8 +291,8 @@ unsigned char *get_extension_from_uri(struct uri *uri);
 
 
 /* Resolves a @relative URI to absolute form using @base URI.
- * Example: if @base is http://elinks.or.cz/ and @relative is #news
- *	    the outcome would be http://elinks.or.cz/#news */
+ * Example: if @base is http://elinks.cz/ and @relative is #news
+ *	    the outcome would be http://elinks.cz/#news */
 unsigned char *join_urls(struct uri *base, unsigned char *relative);
 
 /* Return position if end of string @s matches a known tld or -1 if not.

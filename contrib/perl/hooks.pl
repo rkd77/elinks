@@ -135,41 +135,42 @@ B<bugmenot> or B<bn>
 	{
 		($current_url) = $current_url =~ /^.*:\/\/(.*)/;
 		my $bugmenot = 'http://bugmenot.com/view.php?url=' . $current_url;
-		my $tempfile = $ENV{'HOME'} . '/.elinks/elinks';
-		my $matrix = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-		for (0..int(rand(7) + 9))
-		{
-			$tempfile = $tempfile . substr($matrix, (length($matrix) - 1) - rand(length($matrix) + 1), 1);
-		}
-		my ($message, $login, $password);
-		system('elinks -no-home -source "' . $bugmenot . '" >' . $tempfile . ' 2>/dev/null');
-		open FILE, "<$tempfile" or return $bugmenot;
-		$message = <FILE>;
-		while (<FILE>)
-		{
-			next unless (m/^<dd>(.*)<br \/>(.*)<\/dd><\/dl>$/);
-			$login    = $1;
-			$password = $2;
-		}
-			$login    =~ s/(^\s*|\n|\s*$)//g if $login;
-			$password =~ s/(^\s*|\n|\s*$)//g if $password;
-		close FILE;
-		unlink $tempfile;
-		return $bugmenot unless $message =~ /[a-z]+/ and $message !~ /404/;
-		unless ($message =~ s/.*(No accounts found\.).*/${1}/)
-		{
-			if ($login and $password)
-			{
-				$message = "Login: " . $login . "\nPassword: " . $password;
-			}
-			else
-			{
-				$message = 'No accounts found';
-			}
-		}
-		system('elinks -remote "infoBox\(' . $message . ')" >/dev/null 2>&1 &');
-		return $current_url; #FIXME
-#		return;
+		#my $tempfile = $ENV{'HOME'} . '/.elinks/elinks';
+		#my $matrix = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		#for (0..int(rand(7) + 9))
+		#{
+			#$tempfile = $tempfile . substr($matrix, (length($matrix) - 1) - rand(length($matrix) + 1), 1);
+		#}
+		#my ($message, $login, $password);
+		#system('elinks -no-home -source "' . $bugmenot . '" >' . $tempfile . ' 2>/dev/null');
+		#open FILE, "<$tempfile" or return $bugmenot;
+		#$message = <FILE>;
+		#while (<FILE>)
+		#{
+			#next unless (m/^<dd>(.*)<br \/>(.*)<\/dd><\/dl>$/);
+			#$login    = $1;
+			#$password = $2;
+		#}
+			#$login    =~ s/(^\s*|\n|\s*$)//g if $login;
+			#$password =~ s/(^\s*|\n|\s*$)//g if $password;
+		#close FILE;
+		#unlink $tempfile;
+		#return $bugmenot unless $message =~ /[a-z]+/ and $message !~ /404/;
+		#unless ($message =~ s/.*(No accounts found\.).*/${1}/)
+		#{
+			#if ($login and $password)
+			#{
+				#$message = "Login: " . $login . "\nPassword: " . $password;
+			#}
+			#else
+			#{
+				#$message = 'No accounts found';
+			#}
+		#}
+		#system('elinks -remote "infoBox\(' . $message . ')" >/dev/null 2>&1 &');
+		#return $current_url; #FIXME
+		##return;
+		return $bugmenot . $current_url;
 	}
 
 
@@ -896,7 +897,7 @@ There's no place like home...
 		my ($bug) = $url =~ /^.* (.*)/;
 		if ($url =~ '^b')
 		{
-			my $bugzilla = 'http://bugzilla.elinks.or.cz';
+			my $bugzilla = 'http://bugzilla.elinks.cz';
 			if (not $bug)
 			{
 				if (loadrc("email"))
@@ -922,7 +923,7 @@ There's no place like home...
 			$doc = '/documentation' if $url =~ '^doc';
 			$doc = '/faq.html' if $url =~ '^(faq|help)$';
 			$doc = '/documentation/html/manual.html' if $url =~ '^manual$';
-			return 'http://elinks.or.cz' . $doc;
+			return 'http://elinks.cz' . $doc;
 		}
 	}
 

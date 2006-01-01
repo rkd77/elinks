@@ -50,7 +50,7 @@ struct hierbox_browser {
 		ops,							\
 	}
 
-void done_listbox_item(struct hierbox_browser *browser, struct listbox_item *box_item);
+void done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item);
 void update_hierbox_browser(struct hierbox_browser *browser);
 
 struct listbox_item *
