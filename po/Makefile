@@ -92,7 +92,7 @@ check-po:
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)$(lang).po; \
-	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/check-accelerator-contexts.pl $(srcdir)$(lang).po \
+	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/check-accelerator-contexts.pl $(srcdir)$(lang).po; \
 	)
 
 ### Installation and distribution
