@@ -717,6 +717,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 {
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	struct listbox_context *context;
 	unsigned char *text;
@@ -724,7 +725,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 
 	if (!item) return EVENT_PROCESSED;
 
-	assert(box->ops && box->ops->can_delete && box->ops->delete);
+	assert(ops && ops->can_delete && ops->delete);
 
 	context = init_listbox_context(box, term, item, scan_for_marks);
 	if (!context) return EVENT_PROCESSED;
@@ -735,11 +736,11 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		unsigned char *title = N_("Delete marked items");
 		unsigned char *message = N_("Delete marked items?");
 
-		if (box->ops->messages) {
-			if (box->ops->messages->delete_marked_items)
-				message = box->ops->messages->delete_marked_items;
-			if (box->ops->messages->delete_marked_items_title)
-				title = box->ops->messages->delete_marked_items_title;
+		if (ops->messages) {
+			if (ops->messages->delete_marked_items)
+				message = ops->messages->delete_marked_items;
+			if (ops->messages->delete_marked_items_title)
+				title = ops->messages->delete_marked_items_title;
 		}
 
 		msg_box(term, getml(context, NULL), 0,
@@ -751,16 +752,16 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	delete = box->ops->can_delete(context->item)
+	delete = ops->can_delete(context->item)
 		 ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
 
-	if (delete == DELETE_IMPOSSIBLE || box->ops->is_used(context->item)) {
-		print_delete_error(context->item, term, box->ops, delete);
+	if (delete == DELETE_IMPOSSIBLE || ops->is_used(context->item)) {
+		print_delete_error(context->item, term, ops, delete);
 		mem_free(context);
 		return EVENT_PROCESSED;
 	}
 
-	text = box->ops->get_text(context->item, term);
+	text = ops->get_text(context->item, term);
 	if (!text) {
 		mem_free(context);
 		return EVENT_PROCESSED;
@@ -770,14 +771,14 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		unsigned char *title = N_("Delete folder");
 		unsigned char *message = N_("Delete the folder \"%s\" and its content?");
 
-		if (box->ops->messages) {
-			if (box->ops->messages->delete_folder)
-				message = box->ops->messages->delete_folder;
-			if (box->ops->messages->delete_folder_title)
-				title = box->ops->messages->delete_folder_title;
+		if (ops->messages) {
+			if (ops->messages->delete_folder)
+				message = ops->messages->delete_folder;
+			if (ops->messages->delete_folder_title)
+				title = ops->messages->delete_folder_title;
 		}
 
-		box->ops->lock(context->item);
+		ops->lock(context->item);
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
 			title, ALIGN_CENTER,
 			msg_text(term, message, text),
@@ -789,15 +790,15 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		unsigned char *message = N_("Delete \"%s\"?\n\n%s");
 		unsigned char *msg;
 
-		if (box->ops->messages) {
-			if (box->ops->messages->delete_item)
-				message = box->ops->messages->delete_item;
-			if (box->ops->messages->delete_item_title)
-				title = box->ops->messages->delete_item_title;
+		if (ops->messages) {
+			if (ops->messages->delete_item)
+				message = ops->messages->delete_item;
+			if (ops->messages->delete_item_title)
+				title = ops->messages->delete_item_title;
 		}
 
-		msg = box->ops->get_info(context->item, term);
-		box->ops->lock(context->item);
+		msg = ops->get_info(context->item, term);
+		ops->lock(context->item);
 
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
 			title, ALIGN_LEFT,
@@ -841,6 +842,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 			  struct widget_data *button)
 {
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_ops *ops = box->ops;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 	unsigned char *title = N_("Clear all items");
@@ -848,7 +850,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 
 	if (!box->sel) return EVENT_PROCESSED;
 
-	assert(box->ops);
+	assert(ops);
 
 	context = init_listbox_context(box, term, NULL, scan_for_used);
 	if (!context) return EVENT_PROCESSED;
@@ -858,16 +860,16 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 		 * not all items can be deleted scan_for_used() should also can
 		 * for undeletable and we should be able to pass either delete
 		 * error types. */
-		print_delete_error(context->item, term, box->ops, DELETE_LOCKED);
+		print_delete_error(context->item, term, ops, DELETE_LOCKED);
 		mem_free(context);
 		return EVENT_PROCESSED;
 	}
 
-	if (box->ops->messages) {
-		if (box->ops->messages->clear_all_items)
-			message = box->ops->messages->clear_all_items;
-		if (box->ops->messages->clear_all_items_title)
-			title = box->ops->messages->clear_all_items_title;
+	if (ops->messages) {
+		if (ops->messages->clear_all_items)
+			message = ops->messages->clear_all_items;
+		if (ops->messages->clear_all_items_title)
+			title = ops->messages->clear_all_items_title;
 	}
 
 	msg_box(term, getml(context, NULL), 0,
