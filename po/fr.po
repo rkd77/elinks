@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-26 10:21+0100\n"
-"PO-Revision-Date: 2005-12-16 10:25+0100\n"
+"POT-Creation-Date: 2006-01-01 17:49+0100\n"
+"PO-Revision-Date: 2006-01-01 17:50+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,16 +20,16 @@ msgid "Close"
 msgstr "Fermer"
 
 #. | MSGBOX_SCROLLABLE
-#: src/bfu/hierbox.c:424 src/bfu/hierbox.c:433 src/dialogs/document.c:43
+#: src/bfu/hierbox.c:425 src/bfu/hierbox.c:434 src/dialogs/document.c:43
 #: src/dialogs/document.c:240
 msgid "Info"
 msgstr "Info"
 
-#: src/bfu/hierbox.c:425
+#: src/bfu/hierbox.c:426
 msgid "Press space to expand this folder."
 msgstr "Pressez espace pour déployer le dossier."
 
-#: src/bfu/hierbox.c:436 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
+#: src/bfu/hierbox.c:437 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
@@ -39,69 +39,58 @@ msgstr "Pressez espace pour déployer le dossier."
 msgid "~OK"
 msgstr "~OK"
 
-#: src/bfu/hierbox.c:547
+#. cant_delete_item
+#: src/bfu/hierbox.c:548
 #, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
 msgstr "Désolé, mais l'item \"%s\" ne peut être supprimé."
 
-#: src/bfu/hierbox.c:548
+#. cant_delete_used_item
+#: src/bfu/hierbox.c:551
 #, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
 msgstr "Désolé, mais l'item \"%s\" est actuellement utilisé ailleurs."
 
 #. cant_delete_folder
-#: src/bfu/hierbox.c:551 src/bookmarks/dialogs.c:119
+#: src/bfu/hierbox.c:554 src/bookmarks/dialogs.c:119
 #, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
 msgstr "Désolé, mais le dossier \"%s\" ne peut être supprimé."
 
 #. cant_delete_used_folder
-#: src/bfu/hierbox.c:552 src/bookmarks/dialogs.c:121
+#: src/bfu/hierbox.c:557 src/bookmarks/dialogs.c:121
 #, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
 msgstr "Désolé, mais le dossier \"%s\" est actuellement utilisé ailleurs."
 
-#: src/bfu/hierbox.c:617
-msgid "Delete error"
-msgstr "Erreur de suppression"
-
-#: src/bfu/hierbox.c:711
+#. delete_marked_items_title
+#: src/bfu/hierbox.c:560
 msgid "Delete marked items"
 msgstr "Supprimer les items marqués"
 
-#: src/bfu/hierbox.c:712
+#. delete_marked_items
+#: src/bfu/hierbox.c:563
 msgid "Delete marked items?"
 msgstr "Supprimer les items marqués ?"
 
-#: src/bfu/hierbox.c:725 src/bfu/hierbox.c:761 src/bfu/hierbox.c:782
-#: src/bfu/hierbox.c:853 src/config/dialogs.c:832 src/dialogs/menu.c:126
-#: src/formhist/formhist.c:418 src/mime/dialogs.c:69 src/session/task.c:272
-#: src/terminal/tab.c:191 src/terminal/tab.c:227
-msgid "~Yes"
-msgstr "~Oui"
-
-#: src/bfu/hierbox.c:726 src/bfu/hierbox.c:762 src/bfu/hierbox.c:783
-#: src/bfu/hierbox.c:854 src/config/dialogs.c:833 src/dialogs/menu.c:127
-#: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:192 src/terminal/tab.c:228
-msgid "~No"
-msgstr "~Non"
-
 #. delete_folder_title
-#: src/bfu/hierbox.c:746 src/bookmarks/dialogs.c:127
+#: src/bfu/hierbox.c:566 src/bookmarks/dialogs.c:127
 msgid "Delete folder"
 msgstr "Supprimer un dossier"
 
-#: src/bfu/hierbox.c:747
+#. delete_folder
+#: src/bfu/hierbox.c:569
 #, c-format
 msgid "Delete the folder \"%s\" and its content?"
 msgstr "Supprimer le dossier \"%s\" et son contenu ?"
 
-#: src/bfu/hierbox.c:764
+#. delete_item_title
+#: src/bfu/hierbox.c:572
 msgid "Delete item"
 msgstr "Supprimer un item"
 
-#: src/bfu/hierbox.c:765
+#. delete_item
+#: src/bfu/hierbox.c:575
 #, c-format
 msgid ""
 "Delete \"%s\"?\n"
@@ -112,26 +101,46 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/bfu/hierbox.c:822
+#. clear_all_items_title
+#: src/bfu/hierbox.c:578
 msgid "Clear all items"
 msgstr "Effacer tous les items"
 
-#: src/bfu/hierbox.c:823
+#. clear_all_items
+#: src/bfu/hierbox.c:581
 msgid "Do you really want to remove all items?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les items ?"
 
-#: src/bfu/hierbox.c:920 src/bfu/hierbox.c:951 src/viewer/text/search.c:1013
+#: src/bfu/hierbox.c:638
+msgid "Delete error"
+msgstr "Erreur de suppression"
+
+#: src/bfu/hierbox.c:741 src/bfu/hierbox.c:770 src/bfu/hierbox.c:783
+#: src/bfu/hierbox.c:848 src/config/dialogs.c:832 src/dialogs/menu.c:126
+#: src/formhist/formhist.c:418 src/mime/dialogs.c:69 src/session/task.c:272
+#: src/terminal/tab.c:191 src/terminal/tab.c:227
+msgid "~Yes"
+msgstr "~Oui"
+
+#: src/bfu/hierbox.c:742 src/bfu/hierbox.c:771 src/bfu/hierbox.c:784
+#: src/bfu/hierbox.c:849 src/config/dialogs.c:833 src/dialogs/menu.c:127
+#: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
+#: src/terminal/tab.c:192 src/terminal/tab.c:228
+msgid "~No"
+msgstr "~Non"
+
+#: src/bfu/hierbox.c:917 src/bfu/hierbox.c:948 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
 #: src/viewer/text/search.c:1612
 msgid "Search"
 msgstr "Chercher"
 
-#: src/bfu/hierbox.c:922 src/viewer/text/search.c:1014
+#: src/bfu/hierbox.c:919 src/viewer/text/search.c:1014
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
 
-#: src/bfu/hierbox.c:951 src/config/dialogs.c:168 src/config/dialogs.c:357
+#: src/bfu/hierbox.c:948 src/config/dialogs.c:168 src/config/dialogs.c:357
 #: src/config/dialogs.c:504 src/cookies/dialogs.c:34 src/cookies/dialogs.c:348
 #: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:373
 #: src/scripting/lua/core.c:374 src/scripting/lua/core.c:454
@@ -4503,8 +4512,9 @@ msgstr "Effacer tous les cookies"
 msgid "Do you really want to remove all cookies?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les cookies ?"
 
-#: src/cookies/dialogs.c:423
-msgid "~Clear"
+#: src/cookies/dialogs.c:423 src/dialogs/download.c:484 src/dialogs/edit.c:98
+#: src/globhist/dialogs.c:231 src/protocol/auth/dialogs.c:258
+msgid "C~lear"
 msgstr "~Effacer"
 
 #: src/cookies/dialogs.c:429
@@ -4635,11 +4645,6 @@ msgstr "Interrompre tous les téléchargements en cours ?"
 #: src/dialogs/download.c:482
 msgid "Abort and delete file"
 msgstr "Arrêter et supprimer fichier"
-
-#: src/dialogs/download.c:484 src/dialogs/edit.c:98 src/globhist/dialogs.c:231
-#: src/protocol/auth/dialogs.c:258
-msgid "C~lear"
-msgstr "~Effacer"
 
 #: src/dialogs/download.c:489
 msgid "Download manager"
@@ -5978,7 +5983,7 @@ msgstr ""
 "ici à la place de '.')."
 
 #. name:
-#: src/mime/backend/default.c:226
+#: src/mime/backend/default.c:227
 msgid "Option system"
 msgstr "Système de configuration"
 
@@ -7637,12 +7642,12 @@ msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 "if you write 'elinks' there, you are directed to\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 msgstr ""
-"Active les préfixes simples. Il s'agit d'abbréviations d'URI qui\n"
-"peuvent être utilisées dans le dialogue 'Atteindre l'URL'.\n"
-"Par exemple, si vous entrez 'elinks', vous serez dirigé vers\n"
-"http://elinks.or.cz/."
+"Active les préfixes simples - abbréviations d'URI qui peuvent\n"
+"être utilisées dans le dialogue 'Atteindre l'URL' à la place de\n"
+"véritables URIs - par exemple, si vous entrez 'elinks', vous\n"
+"serez dirigé vers http://elinks.cz/."
 
 #: src/protocol/rewrite/rewrite.c:60
 msgid "Enable smart prefixes"
@@ -8159,11 +8164,11 @@ msgstr "pressez %s pour soumettre à %s"
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/form.c:1684
+#: src/viewer/text/form.c:1686
 msgid "Useless button"
 msgstr "Bouton inutile"
 
-#: src/viewer/text/form.c:1686
+#: src/viewer/text/form.c:1688
 msgid "Submit button"
 msgstr "Bouton Soumettre"
 
@@ -8361,6 +8366,3 @@ msgstr "Erreur lors de la sauvegarde"
 #: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Erreur lors de l'écriture du fichier"
-
-#~ msgid "SEE Message"
-#~ msgstr "Message SEE"
