@@ -418,7 +418,7 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 	context = init_listbox_context(box, term, item, NULL);
 	if (!context) return EVENT_PROCESSED;
 
-	msg = box->ops->get_info(context->item, term);
+	msg = box->ops->get_info(item, term);
 	if (!msg) {
 		mem_free(context);
 		if (item->type == BI_FOLDER) {
@@ -428,7 +428,7 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 		return EVENT_PROCESSED;
 	}
 
-	box->ops->lock(context->item);
+	box->ops->lock(item);
 
 	msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT /* | MSGBOX_SCROLLABLE */,
 		N_("Info"), ALIGN_LEFT,
