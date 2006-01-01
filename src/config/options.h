@@ -77,10 +77,9 @@ enum option_type {
 	OPT_TREE,
 };
 
-/* Defined in bfu/listbox.h, later and session/session.h */
-struct listbox_item;
-struct option;
-struct session;
+struct listbox_item; /* bfu/listbox.h */
+struct option; /* defined later in this file */
+struct session; /* session/session.h */
 
 union option_value {
 	/* XXX: Keep first to make @options_root initialization possible. */
