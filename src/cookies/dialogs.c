@@ -420,7 +420,7 @@ static struct hierbox_browser_button cookie_buttons[] = {
 	{ N_("~Add"),		push_add_button,		1 },
 	{ N_("~Edit"),		push_edit_button,		1 },
 	{ N_("~Delete"),	push_hierbox_delete_button,	1 },
-	{ N_("~Clear"),		push_hierbox_clear_button,	1 },
+	{ N_("C~lear"),		push_hierbox_clear_button,	1 },
 	{ N_("Sa~ve"),		push_save_button,		0 },
 };
 
