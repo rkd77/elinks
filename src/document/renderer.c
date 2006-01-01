@@ -243,6 +243,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		if (cached->content_type
 		    && (!strcasecmp("text/html", cached->content_type)
 			|| !strcasecmp("application/xhtml+xml", cached->content_type)
+		        || !strcasecmp("application/docbook+xml", cached->content_type)
 		        || !strcasecmp("application/rss+xml", cached->content_type)
 		        || !strcasecmp("application/xbel+xml", cached->content_type)
 		        || !strcasecmp("application/x-xbel", cached->content_type)

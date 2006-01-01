@@ -687,8 +687,12 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
+	/* FIXME: Refactor the doctype lookup. */
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
 		doctype = SGML_DOCTYPE_RSS;
+
+	} else if (!strcasecmp("application/docbook+xml", cached->content_type)) {
+		doctype = SGML_DOCTYPE_DOCBOOK;
 
 	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
 		   || !strcasecmp("application/x-xbel", cached->content_type)

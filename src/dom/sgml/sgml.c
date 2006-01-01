@@ -16,6 +16,7 @@
 
 /* Backend includes: */
 
+#include "dom/sgml/docbook/docbook.h"
 #include "dom/sgml/html/html.h"
 #include "dom/sgml/rss/rss.h"
 #include "dom/sgml/xbel/xbel.h"
@@ -31,6 +32,7 @@ sgml_info_strcmp(const void *key_, const void *node_)
 }
 
 struct sgml_info *sgml_info[SGML_DOCTYPES] = {
+	&sgml_docbook_info,
 	&sgml_html_info,
 	&sgml_rss_info,
 	&sgml_xbel_info,
