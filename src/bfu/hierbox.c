@@ -543,15 +543,42 @@ enum delete_error {
 	DELETE_ERRORS,
 };
 
-unsigned char *delete_messages[2][DELETE_ERRORS] = {
-	{
-		N_("Sorry, but the item \"%s\" cannot be deleted."),
-		N_("Sorry, but the item \"%s\" is being used by something else."),
-	},
-	{
-		N_("Sorry, but the folder \"%s\" cannot be deleted."),
-		N_("Sorry, but the folder \"%s\" is being used by something else."),
-	},
+struct listbox_ops_messages default_listbox_ops_messages = {
+	/* cant_delete_item */
+	N_("Sorry, but the item \"%s\" cannot be deleted."),
+
+	/* cant_delete_used_item */
+	N_("Sorry, but the item \"%s\" is being used by something else."),
+
+	/* cant_delete_folder */
+	N_("Sorry, but the folder \"%s\" cannot be deleted."),
+
+	/* cant_delete_used_folder */
+	N_("Sorry, but the folder \"%s\" is being used by something else."),
+
+	/* delete_marked_items_title */
+	NULL,
+
+	/* delete_marked_items */
+	NULL,
+
+	/* delete_folder_title */
+	NULL,
+
+	/* delete_folder */
+	NULL,
+
+	/* delete_item_title */
+	NULL,
+
+	/* delete_item */
+	NULL,
+
+	/* clear_all_items_title */
+	NULL,
+
+	/* clear_all_items */
+	NULL,
 };
 
 static void
@@ -568,12 +595,12 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 			if (ops->messages && ops->messages->cant_delete_folder)
 				errmsg = ops->messages->cant_delete_folder;
 			else
-				errmsg = delete_messages[1][DELETE_IMPOSSIBLE];
+				errmsg = default_listbox_ops_messages.cant_delete_folder;
 		} else {
 			if (ops->messages && ops->messages->cant_delete_item)
 				errmsg = ops->messages->cant_delete_item;
 			else
-				errmsg = delete_messages[0][DELETE_IMPOSSIBLE];
+				errmsg = default_listbox_ops_messages.cant_delete_item;
 		}
 		break;
 
@@ -582,12 +609,12 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 			if (ops->messages && ops->messages->cant_delete_used_folder)
 				errmsg = ops->messages->cant_delete_used_folder;
 			else
-				errmsg = delete_messages[1][DELETE_LOCKED];
+				errmsg = default_listbox_ops_messages.cant_delete_used_folder;
 		} else {
 			if (ops->messages && ops->messages->cant_delete_used_item)
 				errmsg = ops->messages->cant_delete_used_item;
 			else
-				errmsg = delete_messages[0][DELETE_LOCKED];
+				errmsg = default_listbox_ops_messages.cant_delete_used_item;
 		}
 		break;
 
