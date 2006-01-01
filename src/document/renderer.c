@@ -242,6 +242,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 #ifdef CONFIG_DOM
 		if (cached->content_type
 		    && (!strlcasecmp("text/html", 9, cached->content_type, -1)
+			|| !strlcasecmp("application/xhtml+xml", 21, cached->content_type, -1)
 		        || !strlcasecmp("application/rss+xml", 19, cached->content_type, -1)
 		        || !strlcasecmp("application/xbel+xml", 20, cached->content_type, -1)
 		        || !strlcasecmp("application/x-xbel", 18, cached->content_type, -1)
