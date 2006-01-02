@@ -56,6 +56,16 @@ element: root
     #text: a'
 
 test_output_equals \
+'Check tag soup elements.' \
+'<parent attr="value" <child:1></><child:2</>a</parent>' \
+'
+element: parent
+  attribute: attr -> value
+  element: child:1
+  element: child:2
+  #text: a'
+
+test_output_equals \
 'Parse an enclosed comment.' \
 '<root><!-- Hello World! --></root>' \
 '
