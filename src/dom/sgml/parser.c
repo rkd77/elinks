@@ -308,7 +308,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* The attribute souce is complete. */
 				init_dom_scanner(&attr_scanner, &sgml_scanner_info,
 						 &token->string, SGML_STATE_ELEMENT,
-						 scanner->count_lines, 0);
+						 scanner->count_lines, 1);
 
 				if (dom_scanner_has_tokens(&attr_scanner))
 					parse_sgml_attributes(stack, &attr_scanner);
