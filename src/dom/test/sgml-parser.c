@@ -236,10 +236,10 @@ void die(const char *msg, ...)
 int
 main(int argc, char *argv[])
 {
-	struct dom_node *root;
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
 	enum sgml_parser_flag flags = 0;
+	enum sgml_parser_code code = 0;
 	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
 	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
 	int i;
@@ -292,8 +292,8 @@ main(int argc, char *argv[])
 
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	root = parse_sgml(parser, &source, 1);
-	if (root) {
+	code = parse_sgml(parser, &source, 1);
+	if (parser->root) {
 		assert(parser->stack.depth == 1);
 
 		get_dom_stack_top(&parser->stack)->immutable = 0;
@@ -304,5 +304,5 @@ main(int argc, char *argv[])
 
 	done_sgml_parser(parser);
 
-	return 0;
+	return code;
 }

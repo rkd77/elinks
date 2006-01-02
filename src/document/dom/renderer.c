@@ -665,7 +665,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
 	unsigned char *head = empty_string_or_(cached->head);
-	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
@@ -674,6 +673,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
 	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
+	enum sgml_parser_code code;
 
 	assert(document->options.plain);
 
@@ -713,8 +713,12 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
 
-	root = parse_sgml(parser, &source, 1);
-	if (root) {
+	/* FIXME: When rendering this way we don't really care about the code.
+	 * However, it will be useful when we will be able to also
+	 * incrementally parse new data. This will require the parser to live
+	 * during the fetching of data. */
+	code = parse_sgml(parser, &source, 1);
+	if (parser->root) {
 		assert(parser->stack.depth == 1);
 
 		get_dom_stack_top(&parser->stack)->immutable = 0;

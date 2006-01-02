@@ -154,15 +154,6 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 
 /* SGML parser main handling: */
 
-enum sgml_parser_code {
-	SGML_PARSER_CODE_OK,		/* The parsing was successful */
-	SGML_PARSER_CODE_INCOMPLETE,	/* The parsing could not be completed */
-
-	/* FIXME: For when we will add support for requiring stricter parsing
-	 * or even a validator. */
-	SGML_PARSER_CODE_ERROR,
-};
-
 static inline enum sgml_parser_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
@@ -361,7 +352,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 	return SGML_PARSER_CODE_OK;
 }
 
-struct dom_node *
+enum sgml_parser_code
 parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 {
 	struct sgml_parsing_state *parsing;
@@ -373,18 +364,18 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 	if (!parser->root) {
 		parser->root = add_sgml_document(&parser->stack, &parser->uri);
 		if (!parser->root)
-			return NULL;
+			return SGML_PARSER_CODE_MEM_ALLOC;
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
 	parsing = init_sgml_parsing_state(parser, buffer);
-	if (!parsing) return NULL;
+	if (!parsing) return SGML_PARSER_CODE_MEM_ALLOC;
 
 	code = parse_sgml_plain(&parser->stack, &parsing->scanner);
 
 	pop_dom_node(&parser->parsing);
 
-	return parser->root;
+	return code;
 }
 
 
