@@ -72,7 +72,7 @@ element: root
     #text: a'
 
 test_output_equals \
-'Check tag soup elements.' \
+'Parse tag soup elements.' \
 '<parent attr="value" <child:1></><child:2</>a</parent>' \
 '
 element: parent
