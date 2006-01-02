@@ -24,7 +24,7 @@ update_number_of_lines(struct dom_stack *stack)
 	struct sgml_parser *parser = stack->contexts[0]->data;
 	int lines;
 
-	if (parser->flags ^ SGML_PARSER_COUNT_LINES)
+	if (!(parser->flags & SGML_PARSER_COUNT_LINES))
 		return 0;
 
 	lines = get_sgml_parser_line_number(parser);
@@ -292,7 +292,7 @@ main(int argc, char *argv[])
 
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	root = parse_sgml(parser, &source);
+	root = parse_sgml(parser, &source, 1);
 	if (root) {
 		assert(parser->stack.depth == 1);
 
