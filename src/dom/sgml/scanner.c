@@ -135,8 +135,10 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 
 	} else {
 		if (is_sgml_space(first_char)) {
-			if (scanner->count_lines)
-				string--;
+			if (scanner->count_lines
+			    && is_sgml_newline(first_char))
+				scanner->lineno++;
+
 			skip_sgml_space(scanner, &string);
 			type = string < scanner->end && is_sgml_text(*string)
 			     ? SGML_TOKEN_TEXT : SGML_TOKEN_SPACE;
