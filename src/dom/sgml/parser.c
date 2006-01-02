@@ -444,6 +444,25 @@ init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer)
 	return get_dom_stack_state_data(parser->parsing.contexts[0], state);
 }
 
+unsigned int
+get_sgml_parser_line_number(struct sgml_parser *parser)
+{
+	struct dom_stack_state *state;
+	struct sgml_parsing_state *pstate;
+
+	assert(parser->flags & SGML_PARSER_COUNT_LINES);
+
+	if (dom_stack_is_empty(&parser->parsing))
+		return 0;
+
+	state = get_dom_stack_top(&parser->parsing);
+	pstate = get_dom_stack_state_data(parser->parsing.contexts[0], state);
+
+	assert(pstate->scanner.count_lines && pstate->scanner.lineno);
+
+	return pstate->scanner.lineno;
+}
+
 
 /* Parser creation and destruction: */
 
@@ -501,7 +520,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	}
 
 	parser->type  = type;
-	parser->flags = type;
+	parser->flags = flags;
 	parser->info  = get_sgml_info(doctype);
 
 	if (type == SGML_PARSER_TREE)

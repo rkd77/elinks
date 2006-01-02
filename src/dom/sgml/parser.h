@@ -57,4 +57,6 @@ void done_sgml_parser(struct sgml_parser *parser);
 
 struct dom_node *parse_sgml(struct sgml_parser *parser, struct dom_string *buffer);
 
+unsigned int get_sgml_parser_line_number(struct sgml_parser *parser);
+
 #endif
