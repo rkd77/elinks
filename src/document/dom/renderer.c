@@ -707,13 +707,13 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri, 0);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
 
-	root = parse_sgml(parser, &source);
+	root = parse_sgml(parser, &source, 1);
 	if (root) {
 		assert(parser->stack.depth == 1);
 

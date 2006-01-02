@@ -154,7 +154,7 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 
 void
 init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-		 struct dom_string *string, int state, int count_lines)
+		 struct dom_string *string, int state, int count_lines, int complete)
 {
 	if (!scanner_info->initialized) {
 		init_dom_scanner_info(scanner_info);

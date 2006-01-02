@@ -92,7 +92,7 @@ struct dom_scanner_info {
 
 /* Initializes the scanner. */
 void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-		      struct dom_string *string, int state, int count_lines);
+		      struct dom_string *string, int state, int count_lines, int complete);
 
 /* The number of tokens in the scanners token table:
  * At best it should be big enough to contain properties with space separated
@@ -123,8 +123,9 @@ struct dom_scanner {
 	int line;
 #endif
 
-	unsigned int count_lines:1;
-	unsigned int lineno;
+	unsigned int incomplete:1;	/* The scanned string is incomplete */
+	unsigned int count_lines:1;	/* Is line counting enbaled? */
+	unsigned int lineno;		/* Line # of the last scanned token */
 
 	/* Some state indicator only meaningful to the scanner internals */
 	int state;

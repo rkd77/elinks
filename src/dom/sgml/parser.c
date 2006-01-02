@@ -305,9 +305,10 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* Parse the <?xml data="attributes"?>. */
 				struct dom_scanner attr_scanner;
 
+				/* The attribute souce is complete. */
 				init_dom_scanner(&attr_scanner, &sgml_scanner_info,
 						 &token->string, SGML_STATE_ELEMENT,
-						 scanner->count_lines);
+						 scanner->count_lines, 0);
 
 				if (dom_scanner_has_tokens(&attr_scanner))
 					parse_sgml_attributes(stack, &attr_scanner);
@@ -332,9 +333,12 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 }
 
 struct dom_node *
-parse_sgml(struct sgml_parser *parser, struct dom_string *buffer)
+parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 {
 	struct sgml_parsing_state *parsing;
+
+	if (complete)
+		parser->flags |= SGML_PARSER_COMPLETE;
 
 	if (!parser->root) {
 		parser->root = add_sgml_document(&parser->stack, &parser->uri);
@@ -369,11 +373,12 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = data;
 	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
+	int complete = !!(parser->flags & SGML_PARSER_COMPLETE);
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
 	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
-			 SGML_STATE_TEXT, count_lines);
+			 SGML_STATE_TEXT, count_lines, complete);
 }
 
 static void

@@ -24,6 +24,7 @@ enum sgml_parser_type {
 
 enum sgml_parser_flag {
 	SGML_PARSER_COUNT_LINES	= 1,
+	SGML_PARSER_COMPLETE = 2,
 };
 
 struct sgml_parser_state {
@@ -55,7 +56,8 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 
 void done_sgml_parser(struct sgml_parser *parser);
 
-struct dom_node *parse_sgml(struct sgml_parser *parser, struct dom_string *buffer);
+struct dom_node *
+parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
 
 unsigned int get_sgml_parser_line_number(struct sgml_parser *parser);
 
