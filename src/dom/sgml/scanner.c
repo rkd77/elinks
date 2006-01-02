@@ -582,6 +582,8 @@ static inline void
 scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	unsigned char *string = scanner->position;
+	/* The length can be empty for '<??>'. */
+	size_t length = -1;
 
 	token->string.string = string;
 
@@ -591,21 +593,23 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 	for ( ; (string = skip_sgml_chars(scanner, string, '>')); string++) {
 		if (string[-1] == '?') {
 			string++;
+			length = string - token->string.string - 2;
 			break;
 		}
 	}
 
 	if (!string) {
+		/* Makes the next succeed when checking for incompletion. */
+		string = scanner->end;
+
 		if (check_sgml_incomplete(scanner, string)) {
 			set_sgml_incomplete(scanner, token);
 			return;
 		}
-
-		string = scanner->end;
 	}
 
 	token->type = SGML_TOKEN_PROCESS_DATA;
-	token->string.length = string - token->string.string - 2;
+	token->string.length = length >= 0 ? length : string - token->string.string;
 	token->precedence = get_sgml_precedence(token->type);
 	scanner->position = string;
 	scanner->state = SGML_STATE_TEXT;

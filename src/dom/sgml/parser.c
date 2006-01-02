@@ -186,15 +186,23 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 
 			/* Skip the attribute name token */
 			token = get_next_dom_scanner_token(scanner);
+
 			if (token && token->type == '=') {
 				/* If the token is not a valid value token
 				 * ignore it. */
 				token = get_next_dom_scanner_token(scanner);
+				if (token && token->type == SGML_TOKEN_INCOMPLETE)
+					return SGML_PARSER_CODE_INCOMPLETE;
+
 				if (token
 				    && token->type != SGML_TOKEN_IDENT
 				    && token->type != SGML_TOKEN_ATTRIBUTE
 				    && token->type != SGML_TOKEN_STRING)
 					token = NULL;
+
+			} else if (token && token->type == SGML_TOKEN_INCOMPLETE) {
+				return SGML_PARSER_CODE_INCOMPLETE;
+
 			} else {
 				token = NULL;
 			}
@@ -303,7 +311,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 
 			/* Skip the target token */
 			token = get_next_dom_scanner_token(scanner);
-			if (!token) break;
+			if (!token || token->type == SGML_TOKEN_INCOMPLETE)
+				return SGML_PARSER_CODE_INCOMPLETE;
 
 			assert(token->type == SGML_TOKEN_PROCESS_DATA);
 
