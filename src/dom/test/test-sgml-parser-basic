@@ -31,6 +31,22 @@ test_output_equals () {
 	test_expect_success "$desc" 'cmp -b output expected' 
 }
 
+test_expect_incomplete () {
+	desc="$1"; shift
+	src="$1"; shift
+
+	URI="test:$(echo "$desc" | sed '
+		s/^[ \t]*\[[^]]*\][ \t]*//;
+		s/[:., \t][:., \t]*/-/g;
+		s/_/-/g;
+		# *cough*
+		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+		s/[^a-zA-Z0-9-]//g;')"
+
+	test_expect_code 1 "$desc" \
+		"sgml-parser --uri '$URI' --src '$src' --incomplete"
+}
+
 
 ################################################################
 # Parse various SGML node types.
@@ -177,7 +193,7 @@ test_output_equals \
 '
 proc-instruction: xml -> version="1.0" />
   attribute: version -> 1.0
-proc-instruction: xml -> /'
+proc-instruction: xml -> />-'
 
 test_output_equals \
 'Parse XML stylesheet processing instructions.' \
@@ -267,5 +283,68 @@ test_output_equals \
 8' \
 --print-lines
  
+test_expect_incomplete \
+'Check incomplete comment.' \
+'<!-- ... '
+
+test_expect_incomplete \
+'Check incomplete cdata section. (I)' \
+'<![CDATA[ ... '
+
+test_expect_incomplete \
+'Check incomplete cdata section. (II)' \
+'<![CDAT'
+
+test_expect_incomplete \
+'Check incomplete element. (I)' \
+'<elem...'
+
+test_expect_incomplete \
+'Check incomplete element. (II)' \
+'<'
+
+test_expect_incomplete \
+'Check incomplete element end. (I)' \
+'<a></a'
+
+test_expect_incomplete \
+'Check incomplete element end. (II)' \
+'<a></'
+
+test_expect_incomplete \
+'Check incomplete attribute.' \
+'<element attr...'
+
+test_expect_incomplete \
+'Check incomplete attribute value.' \
+'<element attr=...'
+
+test_expect_incomplete \
+'Check incomplete attribute quoted value. (I)' \
+'<element attr="...'
+
+test_expect_incomplete \
+'Check incomplete attribute quoted value. (II)' \
+'<element attr='\''...'
+
+test_expect_incomplete \
+'Check incomplete processing instruction. (I)' \
+'<?xml'
+
+test_expect_incomplete \
+'Check incomplete processing instruction. (II)' \
+'<?xml attr...'
+
+test_expect_incomplete \
+'Check incomplete notation.' \
+'<!DOCTYPE html PUBLIC ...'
+
+test_expect_incomplete \
+'Check incomplete reference. (I)' \
+'&#123456789'
+
+test_expect_incomplete \
+'Check incomplete reference. (II)' \
+'&amp'
 
 test_done

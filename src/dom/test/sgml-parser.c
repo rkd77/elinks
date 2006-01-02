@@ -240,6 +240,7 @@ main(int argc, char *argv[])
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
 	enum sgml_parser_flag flags = 0;
 	enum sgml_parser_code code = 0;
+	int complete = 1;
 	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
 	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
 	int i;
@@ -277,7 +278,11 @@ main(int argc, char *argv[])
 			}
 
 		} else if (!strcmp(arg, "print-lines")) {
-			flags |= SGML_PARSER_COUNT_LINES;;
+			flags |= SGML_PARSER_COUNT_LINES;
+
+		} else if (!strcmp(arg, "incomplete")) {
+			flags |= SGML_PARSER_INCREMENTAL;
+			complete = 0;
 
 		} else if (!strcmp(arg, "help")) {
 			die(NULL);
@@ -292,14 +297,18 @@ main(int argc, char *argv[])
 
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	code = parse_sgml(parser, &source, 1);
+	code = parse_sgml(parser, &source, complete);
 	if (parser->root) {
-		assert(parser->stack.depth == 1);
+		size_t root_offset = parser->stack.depth - 1;
 
-		get_dom_stack_top(&parser->stack)->immutable = 0;
+		assert(!complete || root_offset == 0);
+
+		get_dom_stack_state(&parser->stack, root_offset)->immutable = 0;
+
 		/* For SGML_PARSER_STREAM this will free the DOM
 		 * root node. */
-		pop_dom_node(&parser->stack);
+		while (!dom_stack_is_empty(&parser->stack))
+			pop_dom_node(&parser->stack);
 	}
 
 	done_sgml_parser(parser);
