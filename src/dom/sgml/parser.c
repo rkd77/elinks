@@ -154,7 +154,16 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 
 /* SGML parser main handling: */
 
-static inline void
+enum sgml_parser_code {
+	SGML_PARSER_CODE_OK,		/* The parsing was successful */
+	SGML_PARSER_CODE_INCOMPLETE,	/* The parsing could not be completed */
+
+	/* FIXME: For when we will add support for requiring stricter parsing
+	 * or even a validator. */
+	SGML_PARSER_CODE_ERROR,
+};
+
+static inline enum sgml_parser_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token name;
@@ -179,7 +188,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 		case SGML_TOKEN_ELEMENT_BEGIN:
 		case SGML_TOKEN_ELEMENT_END:
 		case SGML_TOKEN_ELEMENT_EMPTY_END:
-			return;
+			return SGML_PARSER_CODE_OK;
 
 		case SGML_TOKEN_IDENT:
 			copy_struct(&name, token);
@@ -208,12 +217,13 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 
 		default:
 			skip_dom_scanner_token(scanner);
-
 		}
 	}
+
+	return SGML_PARSER_CODE_OK;
 }
 
-static void
+static enum sgml_parser_code 
 parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token target;
@@ -235,7 +245,12 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			}
 
 			if (token->type == SGML_TOKEN_ELEMENT_BEGIN) {
-				parse_sgml_attributes(stack, scanner);
+				enum sgml_parser_code code;
+
+				code = parse_sgml_attributes(stack, scanner);
+				if (code != SGML_PARSER_CODE_OK)
+					return code;
+
 			} else {
 				skip_dom_scanner_token(scanner);
 			}
@@ -310,8 +325,14 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 						 &token->string, SGML_STATE_ELEMENT,
 						 scanner->count_lines, 1);
 
-				if (dom_scanner_has_tokens(&attr_scanner))
+				if (dom_scanner_has_tokens(&attr_scanner)) {
+					/* Ignore parser codes from this
+					 * enhanced parsing of attributes. It
+					 * is really just a simple way to try
+					 * and support xml and xml-stylesheet
+					 * instructions. */
 					parse_sgml_attributes(stack, &attr_scanner);
+				}
 			}
 
 			pop_dom_node(stack);
@@ -330,12 +351,15 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			skip_dom_scanner_token(scanner);
 		}
 	}
+
+	return SGML_PARSER_CODE_OK;
 }
 
 struct dom_node *
 parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 {
 	struct sgml_parsing_state *parsing;
+	enum sgml_parser_code code;
 
 	if (complete)
 		parser->flags |= SGML_PARSER_COMPLETE;
@@ -350,9 +374,7 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 	parsing = init_sgml_parsing_state(parser, buffer);
 	if (!parsing) return NULL;
 
-	/* FIXME: Make parse_sgml_plain() return something (error code or if
-	 * can be guarenteed a root node). */
-	parse_sgml_plain(&parser->stack, &parsing->scanner);
+	code = parse_sgml_plain(&parser->stack, &parsing->scanner);
 
 	pop_dom_node(&parser->parsing);
 
