@@ -372,6 +372,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			scanner->state = SGML_STATE_PROC_INST;
 
+			real_length = string - token->string.string;
+			skip_sgml_space(scanner, &string);
+
 		} else if (*string == '/') {
 			string++;
 			skip_sgml_space(scanner, &string);
@@ -521,7 +524,6 @@ scan_sgml_tokens(struct dom_scanner *scanner)
 			scan_sgml_text_token(scanner, current);
 
 		} else {
-			skip_sgml_space(scanner, &scanner->position);
 			scan_sgml_proc_inst_token(scanner, current);
 		}
 	}
