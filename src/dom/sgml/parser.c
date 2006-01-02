@@ -215,6 +215,9 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 				skip_dom_scanner_token(scanner);
 			break;
 
+		case SGML_TOKEN_INCOMPLETE:
+			return SGML_PARSER_CODE_INCOMPLETE;
+
 		default:
 			skip_dom_scanner_token(scanner);
 		}
@@ -343,6 +346,9 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			add_sgml_node(stack, DOM_NODE_ENTITY_REFERENCE, token);
 			skip_dom_scanner_token(scanner);
 			break;
+
+		case SGML_TOKEN_INCOMPLETE:
+			return SGML_PARSER_CODE_INCOMPLETE;
 
 		case SGML_TOKEN_SPACE:
 		case SGML_TOKEN_TEXT:
