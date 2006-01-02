@@ -9,7 +9,7 @@ This test runs very basic features, like checking that nodes are placed
 correctly in the DOM tree.
 '
 
-. ./libtest
+. "$TEST_LIB"
 
 test_output_equals () {
 	desc="$1"
