@@ -391,7 +391,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 	struct dom_scanner scanner;
 	struct dom_select_node sel;
 
-	init_dom_scanner(&scanner, &dom_css_scanner_info, string, 0, 0, 1);
+	init_dom_scanner(&scanner, &dom_css_scanner_info, string, 0, 0, 1, 0);
 
 	memset(&sel, 0, sizeof(sel));
 

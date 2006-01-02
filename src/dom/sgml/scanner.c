@@ -98,6 +98,24 @@ skip_sgml_space(struct dom_scanner *scanner, unsigned char **string)
 	*string = pos;
 }
 
+#define check_sgml_incomplete(scanner, string) \
+	((scanner)->check_complete \
+	 && (scanner)->incomplete \
+	 && (string) == (scanner)->end)
+
+static void
+set_sgml_incomplete(struct dom_scanner *scanner, struct dom_scanner_token *token)
+{
+	size_t left = scanner->end - scanner->position;
+
+	assert(left > 0);
+
+	token->type = SGML_TOKEN_INCOMPLETE;
+	set_dom_string(&token->string, scanner->position, left);
+
+	/* Stop the scanning. */
+	scanner->position = scanner->end;
+}
 
 /* Text token scanning */
 
@@ -119,6 +137,8 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 	token->string.string = string++;
 
 	if (first_char == '&') {
+		int complete = 0;
+
 		if (is_sgml_entity(*string)) {
 			scan_sgml(scanner, string, SGML_CHAR_ENTITY);
 			type = SGML_TOKEN_ENTITY;
@@ -128,9 +148,16 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 
 		foreach_sgml_cdata (scanner, string) {
 			if (*string == ';') {
+				complete = 1;
 				string++;
 				break;
 			}
+		}
+
+		/* We want the biggest possible text token. */
+		if (check_sgml_incomplete(scanner, string) && !complete) {
+			set_sgml_incomplete(scanner, token);
+			return;
 		}
 
 	} else {
@@ -155,6 +182,12 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 			foreach_sgml_cdata (scanner, string) {
 				/* m33p */;
 			}
+		}
+
+		/* We want the biggest possible text token. */
+		if (check_sgml_incomplete(scanner, string)) {
+			set_sgml_incomplete(scanner, token);
+			return;
 		}
 	}
 
@@ -237,7 +270,8 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 }
 
 static inline int
-skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string)
+skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string,
+		  int *possibly_incomplete)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -249,6 +283,7 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string)
 		 * preceeding '-'. */
 		if (pos[-2] == '-' && pos[-1] == '-' && &pos[-2] >= *string) {
 			length = pos - *string - 2;
+			*possibly_incomplete = 0;
 			pos++;
 			break;
 		}
@@ -256,6 +291,9 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string)
 
 	if (!pos) {
 		pos = scanner->end;
+		/* The token is incomplete but set the length to handle tag
+		 * tag soup graciously. */
+		*possibly_incomplete = 1;
 		length = pos - *string;
 	}
 
@@ -264,7 +302,8 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string)
 }
 
 static inline int
-skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string)
+skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string,
+		  	int *possibly_incomplete)
 {
 	unsigned char *pos = *string;
 	int length = 0;
@@ -274,6 +313,7 @@ skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 		 * are supposed to have '<![CDATA[' before this is called. */
 		if (pos[-2] == ']' && pos[-1] == ']') {
 			length = pos - *string - 2;
+			*possibly_incomplete = 0;
 			pos++;
 			break;
 		}
@@ -281,6 +321,9 @@ skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string)
 
 	if (!pos) {
 		pos = scanner->end;
+		/* The token is incomplete but set the length to handle tag
+		 * soup graciously. */
+		*possibly_incomplete = 1;
 		length = pos - *string;
 	}
 
@@ -299,6 +342,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	unsigned char first_char = *string;
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
+	int possibly_incomplete = 1;
 
 	token->string.string = string++;
 
@@ -313,6 +357,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			type = SGML_TOKEN_TAG_END;
 			scanner->state = SGML_STATE_TEXT;
 
+			/* We are creating a 'virtual' that has no source. */
+			possibly_incomplete = 0;
+
 		} else if (is_sgml_ident(*string)) {
 			token->string.string = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
@@ -323,7 +370,16 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			if (*string == '>') {
 				type = SGML_TOKEN_ELEMENT;
 				string++;
+
+				/* We found the end. */
+				possibly_incomplete = 0;
+
 			} else {
+				/* Was any space skipped? */
+				if (is_sgml_space(string[-1])) {
+					/* We found the end. */
+					possibly_incomplete = 0;
+				}
 				scanner->state = SGML_STATE_ELEMENT;
 				type = SGML_TOKEN_ELEMENT_BEGIN;
 			}
@@ -341,7 +397,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				string += 2;
 				type = SGML_TOKEN_NOTATION_COMMENT;
 				token->string.string = string;
-				real_length = skip_sgml_comment(scanner, &string);
+				real_length = skip_sgml_comment(scanner, &string,
+								&possibly_incomplete);
 				assert(real_length >= 0);
 
 			} else if (string + 6 < scanner->end
@@ -350,13 +407,17 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				string += 7;
 				type = SGML_TOKEN_CDATA_SECTION;
 				token->string.string = string;
-				real_length = skip_sgml_cdata_section(scanner, &string);
+				real_length = skip_sgml_cdata_section(scanner, &string,
+								      &possibly_incomplete);
 				assert(real_length >= 0);
 
 			} else {
 				skip_sgml_space(scanner, &string);
 				type = map_dom_scanner_string(scanner, ident, string, base);
-				skip_sgml(scanner, &string, '>', 0);
+				if (skip_sgml(scanner, &string, '>', 0)) {
+					/* We found the end. */
+					possibly_incomplete = 0;
+				}
 			}
 
 		} else if (*string == '?') {
@@ -375,6 +436,11 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string - token->string.string;
 			skip_sgml_space(scanner, &string);
 
+			if (is_sgml_space(string[-1])) {
+				/* We found the end. */
+				possibly_incomplete = 0;
+			}
+
 		} else if (*string == '/') {
 			string++;
 			skip_sgml_space(scanner, &string);
@@ -385,12 +451,18 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				real_length = string - token->string.string;
 
 				type = SGML_TOKEN_ELEMENT_END;
-				skip_sgml(scanner, &string, '>', 1);
+				if (skip_sgml(scanner, &string, '>', 1)) {
+					/* We found the end. */
+					possibly_incomplete = 0;
+				}
 
 			} else if (*string == '>') {
 				string++;
 				real_length = 0;
 				type = SGML_TOKEN_ELEMENT_END;
+
+				/* We found the end. */
+				possibly_incomplete = 0;
 			}
 
 			if (type != SGML_TOKEN_GARBAGE)
@@ -398,15 +470,28 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		} else {
 			/* Alien < > stuff so ignore it */
-			skip_sgml(scanner, &string, '>', 0);
+			if (skip_sgml(scanner, &string, '>', 0)) {
+				/* We found the end. */
+				possibly_incomplete = 0;
+			}
 		}
 
 	} else if (first_char == '=') {
 		type = '=';
+		/* We found the end. */
+		possibly_incomplete = 0;
 
 	} else if (first_char == '?' || first_char == '>') {
 		if (first_char == '?') {
-			skip_sgml(scanner, &string, '>', 0);
+			if (skip_sgml(scanner, &string, '>', 0)) {
+				/* We found the end. */
+				possibly_incomplete = 0;
+			}
+		} else {
+			assert(first_char == '>');
+
+			/* We found the end. */
+			possibly_incomplete = 0;
 		}
 
 		type = SGML_TOKEN_TAG_END;
@@ -414,17 +499,33 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		scanner->state = SGML_STATE_TEXT;
 
 	} else if (first_char == '/') {
+		/* We allow '/' inside elements and only consider it as an end
+		 * tag if immediately preceeds the '>' char. This is to allow
+		 *
+		 *	'<form action=/ >'	where '/' is part of a path and
+		 *	'<form action=a />'	where '/>' is truely a tag end
+		 *
+		 * For stricter parsing we should always require attribute
+		 * values to be quoted.
+		 */
 		if (*string == '>') {
 			string++;
 			real_length = 0;
 			type = SGML_TOKEN_ELEMENT_EMPTY_END;
 			assert(scanner->state == SGML_STATE_ELEMENT);
 			scanner->state = SGML_STATE_TEXT;
+
+			/* We found the end. */
+			possibly_incomplete = 0;
+
 		} else if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
-			if (string[-1] == '/' && string[0] == '>')
+			if (string[-1] == '/' && string[0] == '>') {
 				string--;
+				/* We found the end. */
+				possibly_incomplete = 0;
+			}
 		}
 
 	} else if (isquote(first_char)) {
@@ -436,6 +537,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string_end - token->string.string;
 			string = string_end + 1;
 			type = SGML_TOKEN_STRING;
+
+			/* We found the end. */
+			possibly_incomplete = 0;
+
 		} else if (is_sgml_attribute(*string)) {
 			token->string.string++;
 			scan_sgml_attribute(scanner, string);
@@ -451,9 +556,17 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
-			if (string[-1] == '/' && string[0] == '>')
+			if (string[-1] == '/' && string[0] == '>') {
+				/* We found the end. */
+				possibly_incomplete = 0;
 				string--;
+			}
 		}
+	}
+
+	if (possibly_incomplete && check_sgml_incomplete(scanner, string)) {
+		set_sgml_incomplete(scanner, token);
+		return;
 	}
 
 	token->type = type;
@@ -482,7 +595,14 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 		}
 	}
 
-	if (!string) string = scanner->end;
+	if (!string) {
+		if (check_sgml_incomplete(scanner, string)) {
+			set_sgml_incomplete(scanner, token);
+			return;
+		}
+
+		string = scanner->end;
+	}
 
 	token->type = SGML_TOKEN_PROCESS_DATA;
 	token->string.length = string - token->string.string - 2;

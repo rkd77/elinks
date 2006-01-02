@@ -317,7 +317,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* The attribute souce is complete. */
 				init_dom_scanner(&attr_scanner, &sgml_scanner_info,
 						 &token->string, SGML_STATE_ELEMENT,
-						 scanner->count_lines, 1);
+						 scanner->count_lines, 1, 0);
 
 				if (dom_scanner_has_tokens(&attr_scanner)) {
 					/* Ignore parser codes from this
@@ -393,11 +393,12 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct sgml_parsing_state *parsing = data;
 	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
 	int complete = !!(parser->flags & SGML_PARSER_COMPLETE);
+	int incremental = !!(parser->flags & SGML_PARSER_INCREMENTAL);
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
 	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
-			 SGML_STATE_TEXT, count_lines, complete);
+			 SGML_STATE_TEXT, count_lines, complete, incremental);
 }
 
 static void
