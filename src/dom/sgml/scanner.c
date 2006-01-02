@@ -135,6 +135,8 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 
 	} else {
 		if (is_sgml_space(first_char)) {
+			if (scanner->count_lines)
+				string--;
 			skip_sgml_space(scanner, &string);
 			type = string < scanner->end && is_sgml_text(*string)
 			     ? SGML_TOKEN_TEXT : SGML_TOKEN_SPACE;
@@ -142,8 +144,15 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 			type = SGML_TOKEN_TEXT;
 		}
 
-		foreach_sgml_cdata (scanner, string) {
-			/* m33p */;
+		if (scanner->count_lines) {
+			foreach_sgml_cdata (scanner, string) {
+				if (is_sgml_newline(*string))
+					scanner->lineno++;
+			}
+		} else {
+			foreach_sgml_cdata (scanner, string) {
+				/* m33p */;
+			}
 		}
 	}
 
