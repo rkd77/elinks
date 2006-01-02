@@ -283,7 +283,7 @@ parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
 		if (!field) break;
 
 		if (!strncasecmp(field, "needsterminal", 13)) {
-				entry->needsterminal = 1;
+			entry->needsterminal = 1;
 
 		} else if (!strncasecmp(field, "copiousoutput", 13)) {
 			entry->copiousoutput = 1;
