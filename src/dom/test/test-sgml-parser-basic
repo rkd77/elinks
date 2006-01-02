@@ -347,4 +347,8 @@ test_expect_incomplete \
 'Check incomplete reference. (II)' \
 '&amp'
 
+test_expect_incomplete \
+'Check incomplete text.' \
+'plain text is always incomplete (if incomplete)'
+
 test_done
