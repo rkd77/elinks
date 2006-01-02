@@ -12,9 +12,9 @@ correctly in the DOM tree.
 . ./libtest
 
 test_output_equals () {
-	desc="$1"
-	src="$2"
-	out="$3"
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
 
 	URI="test:$(echo "$desc" | sed '
 		s/^[ \t]*\[[^]]*\][ \t]*//;
@@ -24,7 +24,7 @@ test_output_equals () {
 		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
 		s/[^a-zA-Z0-9-]//g;')"
 
-	sgml-parser --uri "$URI" --src "$src" | sed 's/^  //' > output
+	sgml-parser --uri "$URI" --src "$src" $@ | sed 's/^  //' > output
 	echo "#document: $URI" > expected
 	echo "$out" | sed -n '2,$p' >> expected
 
@@ -219,5 +219,43 @@ ns:attr
 element: root
   attribute: ns:attr -> value
   proc-instruction: target -> data'
+
+test_output_equals \
+'Check line numbers. (I)' \
+'<!-- line --> number <one />' \
+'
+1' \
+--print-lines
+ 
+test_output_equals \
+'Check line numbers. (II)' \
+'<
+line:2
+line:3                      
+=
+"line:5"
+><?xml	
+	line:7="..."
+ line:8
+ =
+ '\''...'\''></line:10>' \
+'
+10' \
+--print-lines
+ 
+test_output_equals \
+'Check line numbers. (III)' \
+'1
+2
+3
+4
+5
+6
+7
+8' \
+'
+8' \
+--print-lines
+ 
 
 test_done
