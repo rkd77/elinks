@@ -130,7 +130,7 @@ init-default:
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
 		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
-clean-default:
+clean-default: clean-test
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
 
 cleanall-default: clean-default
@@ -140,6 +140,33 @@ ifneq ($(SPARSE),)
 	@$(foreach file, $(wildcard *.c), \
 		$(call ncmd,sparse,$(file));)
 endif
+
+##############################################################################
+#
+# Auto-testing infrastructure
+#
+
+clean-test:
+
+ifdef TEST_PROGS
+$(TEST_PROGS): $(TESTDEPS) $$@.o
+	$(call cmd,link)
+
+TESTS = $(wildcard test-*)
+
+$(TESTS): $(TEST_PROGS)
+	@echo "*** $@ ***"; $(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
+
+test: $(TESTS)
+
+clean-test:
+	@rm -fr trash
+
+CLEAN += $(TEST_PROGS) $(patsubst %,%.o,$(TEST_PROGS))
+endif
+
+.PHONY: $(TESTS)
+.NOPARALLEL:
 
 # sparse is architecture-neutral, which means that we need to tell it
 # explicitly what architecture to check for. Fix this up for yours..
@@ -187,5 +214,12 @@ check-local:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
+# Shell quote;
+# Result of this needs to be placed inside ''
+# XXX: Placed here because Vim cannot highlight things right afterwards
+shq = $(subst ','\'',$(1))
+# This has surrounding ''
+shellquote = '$(call shq,$(1))'
 
 # vim:syntax=make
