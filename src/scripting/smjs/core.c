@@ -14,6 +14,7 @@
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/global_object.h"
 #include "scripting/smjs/smjs.h"
+#include "util/file.h"
 #include "util/string.h"
 
 
@@ -116,7 +117,8 @@ smjs_load_hooks(void)
 		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
 	}
 
-	smjs_do_file(path);
+	if (file_exists(path))
+		smjs_do_file(path);
 	mem_free(path);
 }
 
