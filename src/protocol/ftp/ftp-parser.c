@@ -62,6 +62,9 @@ main(int argc, char *argv[])
 		}
 	}
 
+	if (!responselen)
+		die("Usage: %s --response \"string\"", argv[0]);
+
 	if (parse_ftp_file_info(&ftp_info, response, responselen))
 		return 0;
 
