@@ -557,8 +557,8 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->flags = flags;
 	parser->info  = get_sgml_info(doctype);
 
-	if (type == SGML_PARSER_TREE)
-		stack_flags |= DOM_STACK_KEEP_NODES;
+	if (type == SGML_PARSER_STREAM)
+		stack_flags |= DOM_STACK_FLAG_FREE_NODES;
 
 	init_dom_stack(&parser->stack, stack_flags);
 	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,

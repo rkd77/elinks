@@ -213,7 +213,7 @@ pop_dom_node(struct dom_stack *stack)
 
 	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
 
-	if (!(stack->flags & DOM_STACK_KEEP_NODES))
+	if (stack->flags & DOM_STACK_FLAG_FREE_NODES)
 		done_dom_node(state->node);
 
 	stack->depth--;
