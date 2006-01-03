@@ -31,8 +31,3 @@ pizza, some close location of yourself recommended), we accept drinks, nice
 books, CDs with interesting things, computer equipment and accessories, PDAs,
 pens + pencils + erasers, and last but not least money. Contact the maintainer,
 he'll split the stuff properly amongst himself and other developers >:).
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

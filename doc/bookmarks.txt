@@ -220,6 +220,3 @@ in the future. So far, we have had no reports from our users that anyone wants
 to switch their bookmarks format frequently, so this is not too high on our
 TODO list. So be sure to tell us if you would like this process to be
 simplified rather sooner than later.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

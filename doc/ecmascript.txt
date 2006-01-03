@@ -120,6 +120,3 @@ that there are no SpiderMonkey references outside of
 ECMAScript backend, go ahead - you will just need to write an autoconf
 detection for it and tie it to `src/ecmascript/ecmascript.c`, which should be
 easy. We await your patches eagerly.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

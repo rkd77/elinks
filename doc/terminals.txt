@@ -163,6 +163,3 @@ GNU Screen is VT100-compatible, so select 'VT 100 frames'.  GNU Screen also
 supports colors just fine, so select '16 colors', or, if you are running Screen
 within a terminal emulator that supports 256 colors and you have compiled both
 Screen and ELinks to support it, choose '256 colors'.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
