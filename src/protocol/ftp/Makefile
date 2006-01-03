@@ -12,9 +12,10 @@ TESTDEPS = \
  $(top_builddir)/src/util/conv.o \
  $(top_builddir)/src/util/error.o \
  $(top_builddir)/src/util/hash.o \
- $(top_builddir)/src/util/memdebug.o \
  $(top_builddir)/src/util/memory.o \
  $(top_builddir)/src/util/string.o \
  $(top_builddir)/src/util/time.o
+
+TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 
 include $(top_srcdir)/Makefile.lib
