@@ -19,7 +19,7 @@ test_ftp_response_expect_success () {
 	response="$(echo "$response" | sed -n '2,$p')"
 
 	test_expect_success "$desc" \
-		"ftp-parser --response '$response'"
+		"ftp-parser --response \"$response\""
 }
 
 test_ftp_response_expect_failure () {
@@ -29,7 +29,7 @@ test_ftp_response_expect_failure () {
 	response="$(echo "$response" | sed -n '2,$p')"
 
 	test_expect_failure "$desc" \
-		"ftp-parser --response '$response'"
+		"ftp-parser --response \"$response\""
 }
 
 #############################################################################
@@ -73,6 +73,18 @@ test_ftp_response_expect_success \
 -------r--         326  1391972  1392298 Nov 22  1995 MegaPhone.sit\r\n
 drwxrwxr-x               folder        2 May 10  1996 network\r\n"
 
+
+#############################################################################
+#
+# EPLF response
+#
+
+test_ftp_response_expect_success \
+'EPLF responses' \
+$'
++i8388621.48594,m825718503,r,s280,\tdjb.html\r\n
++i8388621.50690,m824255907,/,\t514\r\n
++i8388621.48598,m824253270,r,s612,\t514.html\r\n'
 
 #############################################################################
 #

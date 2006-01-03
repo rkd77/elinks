@@ -62,16 +62,7 @@ parse_ftp_number(unsigned char **src, unsigned char *end, long from, long to)
 /* Parser for the EPLF format (see http://pobox.com/~djb/proto/eplf.txt).
  *
  * Lines end with \r\n (CR-LF), but that is handled elsewhere.
- *
- * Some example EPLF response, with the filename separator (tab) displayed as a
- * space:
  */
-#ifdef DEBUG_FTP_PARSER
-static unsigned char ftp_eplf_responses[] =
- "+i8388621.48594,m825718503,r,s280,\tdjb.html\r\n"
- "+i8388621.50690,m824255907,/,\t514\r\n"
- "+i8388621.48598,m824253270,r,s612,\t514.html\r\n";
-#endif
 
 enum ftp_eplf {
 	FTP_EPLF_FILENAME	= ASCII_TAB,	/* Filename follows */
