@@ -1140,24 +1140,9 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    int *tries, int colorize_dir, unsigned char *dircolor)
 {
 	int ret = 0;
-#ifdef DEBUG_FTP_PARSER
- 	static int debug_ftp_parser = 1;
-	int buflen_orig = buflen;
-	unsigned char *response_orig = NULL;
 
-	if (debug_ftp_parser) {
-		buffer = get_ftp_debug_parse_responses(buffer, buflen);
-		buflen = strlen(buffer);
-		response_orig = buffer;
-		debug_ftp_parser = 0;
-	}
-
-#define	end_ftp_dirlist_processing()	do { mem_free_if(response_orig); } while (0)
-#define get_ftp_dirlist_offset(retval)	int_min(retval, buflen_orig)
-#else
 #define	end_ftp_dirlist_processing()	/* Nothing to free */
 #define	get_ftp_dirlist_offset(retval)	(retval)
-#endif
 
 	while (1) {
 		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
