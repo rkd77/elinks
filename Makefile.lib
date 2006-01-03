@@ -166,7 +166,7 @@ test-default: $(TESTS)
 clean-test:
 	@rm -fr trash
 
-CLEAN += $(TEST_PROGS) $(patsubst %,%.o,$(TEST_PROGS))
+CLEAN += $(TEST_PROGS) $(addsuffix .o,$(TEST_PROGS))
 endif
 
 .PHONY: $(TESTS)
