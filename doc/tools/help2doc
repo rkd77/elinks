@@ -27,6 +27,7 @@ END_OF_USAGE
 # Option handling {{{1
 
 command=
+filter=cat
 prev_option=
 
 for option
@@ -41,10 +42,12 @@ do
 	case "$option" in
 		--cmdoptions)
 			command="$elinks -long-help"
+			filter="sed 0,/^Options:/d"
 			backend="cmdoptions"
 		;;
 		--elinksconf)
 			command="$elinks -config-help"
+			filter="sed 0,/^Configuration/d"
 			backend="elinksconf"
 		;;
 		-)
@@ -285,7 +288,7 @@ use_log=
 
 $print_header
 
-$command | while read line
+$command | $filter | while read line
 do
 	if test -n "$parse_description"
 	then
@@ -323,7 +326,7 @@ do
 	case "$line" in
 		Features:*)
 		;;
-		[A-Z]*:*[a-z]*)
+		[A-Z]*:" ("*[a-z]*)
 			parse_description=1
 			title="`echo $line | sed -e 's/\([A-Z]*\):.*/\1/'`"
 			path="`echo $line | sed -e 's/.*: (\([a-z_].*\))/\1/'`"
