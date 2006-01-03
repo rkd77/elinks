@@ -61,11 +61,11 @@ struct dom_renderer {
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
-	      color_T background, color_T foreground)
+	      color_T background, color_T foreground, enum screen_char_attr attr) 
 {
 	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
 
-	template->attr = 0;
+	template->attr = attr;
 	template->data = ' ';
 	set_term_color(template, &colors,
 		       options->color_flags, options->color_mode);
@@ -115,6 +115,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		struct screen_char *template = &renderer->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
+		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
 		struct dom_string *name = get_dom_node_type_name(type);
@@ -157,9 +158,31 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 
 			property = get_css_property(properties, CSS_PT_COLOR);
 			if (property) foreground = property->value.color;
+
+			property = get_css_property(properties, CSS_PT_FONT_WEIGHT);
+			if (property) {
+				if (property->value.font_attribute.add & AT_BOLD)
+					attr |= SCREEN_ATTR_BOLD;
+			}
+
+			property = get_css_property(properties, CSS_PT_FONT_STYLE);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+
+				if (property->value.font_attribute.add & AT_ITALIC)
+					attr |= SCREEN_ATTR_ITALIC;
+
+			}
+
+			property = get_css_property(properties, CSS_PT_TEXT_DECORATION);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+			}
 		}
 
-		init_template(template, &document->options, background, foreground);
+		init_template(template, &document->options, background, foreground, attr);
 	}
 }
 
@@ -361,7 +384,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 	link->number = document->nlinks;
 
 	init_template(&template, &document->options,
-		      link->color.background, link->color.foreground);
+		      link->color.background, link->color.foreground, 0);
 
 	render_dom_text(renderer, &template, string, length);
 
