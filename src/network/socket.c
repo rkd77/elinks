@@ -303,7 +303,7 @@ sock_error:
 
 	/* Get a passive socket */
 
-	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sock < 0)
 		goto sock_error;
 
@@ -504,6 +504,7 @@ connect_socket(struct socket *csocket, enum connection_state state)
 #else
 		struct sockaddr_in addr = *((struct sockaddr_in *) &connect_info->addr[i]);
 #endif
+		int pf;
 		int family;
 		int force_family = connect_info->ip_family;
 
@@ -532,18 +533,30 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		}
 
 #ifdef CONFIG_IPV6
-		if (family == AF_INET6 && (!get_opt_bool("connection.try_ipv6") || (force_family && force_family != 6))) {
-			silent_fail = 1;
-			continue;
+		if (family == AF_INET6) {
+			pf = PF_INET6;
+			if (!get_opt_bool("connection.try_ipv6")
+			    || (force_family && force_family != 6)) {
+				silent_fail = 1;
+				continue;
+			}
+
 		} else
 #endif
-		if (family == AF_INET && (!get_opt_bool("connection.try_ipv4") || (force_family && force_family != 4))) {
-			silent_fail = 1;
+		if (family == AF_INET) {
+			pf = PF_INET;
+			if (!get_opt_bool("connection.try_ipv4")
+			    || (force_family && force_family != 4)) {
+				silent_fail = 1;
+				continue;
+			}
+
+		} else {
 			continue;
 		}
 		silent_fail = 0;
 
-		sock = socket(family, SOCK_STREAM, IPPROTO_TCP);
+		sock = socket(pf, SOCK_STREAM, IPPROTO_TCP);
 		if (sock == -1) {
 			if (errno && !saved_errno) saved_errno = errno;
 			continue;

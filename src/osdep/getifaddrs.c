@@ -82,13 +82,13 @@
 #include "osdep/getifaddrs.h"
 
 
-#if (defined(AF_INET6)    && defined(SIOCGIF6CONF) && defined(SIOCGIF6FLAGS)) \
- || (defined(AF_INET)     && defined(SIOCGIFCONF)  && defined(SIOCGIFFLAGS)) \
+#if (defined(PF_INET6)    && defined(SIOCGIF6CONF) && defined(SIOCGIF6FLAGS)) \
+ || (defined(PF_INET)     && defined(SIOCGIFCONF)  && defined(SIOCGIFFLAGS)) \
  || (defined(CONFIG_IPV6) && defined(SIOCGIFCONF))
 
 static int
 getifaddrs2(struct ifaddrs **ifap,
-	    int af, int siocgifconf, int siocgifflags, size_t ifreq_sz)
+	    int pf, int siocgifconf, int siocgifflags, size_t ifreq_sz)
 {
 	struct sockaddr sa_zero;
 	struct ifreq *ifr;
@@ -104,7 +104,7 @@ getifaddrs2(struct ifaddrs **ifap,
 	int num, j = 0;
 
 	memset(&sa_zero, 0, sizeof(sa_zero));
-	fd = socket(af, SOCK_DGRAM, 0);
+	fd = socket(pf, SOCK_DGRAM, 0);
 	if (fd < 0)
 		return -1;
 
@@ -240,19 +240,19 @@ getifaddrs(struct ifaddrs **ifap)
 
 	errno = ENXIO;
 
-#if defined(AF_INET6) && defined(SIOCGIF6CONF) && defined(SIOCGIF6FLAGS)
+#if defined(PF_INET6) && defined(SIOCGIF6CONF) && defined(SIOCGIF6FLAGS)
 	if (ret)
-		ret = getifaddrs2(ifap, AF_INET6, SIOCGIF6CONF, SIOCGIF6FLAGS,
+		ret = getifaddrs2(ifap, PF_INET6, SIOCGIF6CONF, SIOCGIF6FLAGS,
 				  sizeof(struct in6_ifreq));
 #endif
 #if defined(CONFIG_IPV6) && defined(SIOCGIFCONF)
 	if (ret)
-		ret = getifaddrs2(ifap, AF_INET6, SIOCGIFCONF, SIOCGIFFLAGS,
+		ret = getifaddrs2(ifap, PF_INET6, SIOCGIFCONF, SIOCGIFFLAGS,
 				  sizeof(struct ifreq));
 #endif
-#if defined(AF_INET) && defined(SIOCGIFCONF) && defined(SIOCGIFFLAGS)
+#if defined(PF_INET) && defined(SIOCGIFCONF) && defined(SIOCGIFFLAGS)
 	if (ret)
-		ret = getifaddrs2(ifap, AF_INET, SIOCGIFCONF, SIOCGIFFLAGS,
+		ret = getifaddrs2(ifap, PF_INET, SIOCGIFCONF, SIOCGIFFLAGS,
 				  sizeof(struct ifreq));
 #endif
 
@@ -322,7 +322,7 @@ main()
 {
 	struct ifaddrs *a = NULL, *b;
 
-	getifaddrs2(&a, AF_INET, SIOCGIFCONF, SIOCGIFFLAGS,
+	getifaddrs2(&a, PF_INET, SIOCGIFCONF, SIOCGIFFLAGS,
 		    sizeof(struct ifreq));
 	print_ifaddrs(a);
 	printf("---\n");
