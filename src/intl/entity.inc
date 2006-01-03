@@ -651,7 +651,7 @@ struct entity { char *s; unicode_val_T c; } entities [1002] = {
 	{ "models",    0x22A7 }, /* MODELS                                         */
 	{ "mu",        0x03BC }, /* GREEK SMALL LETTER MU                          */
 	{ "mumap",     0x22B8 }, /* MULTIMAP                                       */
-	{ "nVDash",    0x22AF }, /* NEGATED DOUBLE VERTICAL BAR DOUBLE RIGHT       */
+	{ "nVDash",    0x22AF }, /* NEGATED DOUBLE VERTICAL BAR DOUBLE RIGHT TURNS */
 	{ "nVdash",    0x22AE }, /* DOES NOT FORCE                                 */
 	{ "nabla",     0x2207 }, /* NABLA                                          */
 	{ "nacute",    0x0144 }, /* LATIN SMALL LETTER N WITH ACUTE                */
@@ -1005,4 +1005,4 @@ struct entity { char *s; unicode_val_T c; } entities [1002] = {
 	{ NULL, 0 }
 };
 
-#define N_ENTITIES 1001
+#define N_ENTITIES     1001
