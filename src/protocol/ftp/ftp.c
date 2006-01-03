@@ -1141,9 +1141,6 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 {
 	int ret = 0;
 
-#define	end_ftp_dirlist_processing()	/* Nothing to free */
-#define	get_ftp_dirlist_offset(retval)	(retval)
-
 	while (1) {
 		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
 		unsigned char *buf = buffer + ret;
@@ -1165,8 +1162,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			if (bufp && buf[bufp - 1] == ASCII_CR) bufp--;
 		} else {
 			if (!bufp || (!last && bufl < FTP_BUF_SIZE)) {
-				end_ftp_dirlist_processing();
-				return get_ftp_dirlist_offset(ret);
+				return ret;
 			}
 
 			ret += bufp;
@@ -1185,8 +1181,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			retv = display_dir_entry(cached, pos, tries, colorize_dir,
 						dircolor, &ftp_info);
 			if (retv < 0) {
-				end_ftp_dirlist_processing();
-				return get_ftp_dirlist_offset(ret);
+				return ret;
 			}
 		}
 #ifdef DEBUG_FTP_PARSER
