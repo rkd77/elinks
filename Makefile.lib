@@ -147,6 +147,7 @@ endif
 #
 
 clean-test:
+test-default:
 
 ifdef TEST_PROGS
 $(TEST_PROGS): $(TESTDEPS) $$@.o
@@ -157,7 +158,7 @@ TESTS = $(wildcard test-*)
 $(TESTS): $(TEST_PROGS)
 	@echo "*** $@ ***"; $(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
-test: $(TESTS)
+test-default: $(TESTS)
 
 clean-test:
 	@rm -fr trash
@@ -190,9 +191,9 @@ endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive
+.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive test-recursive
 
-all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive:
+all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive test-recursive:
 ifdef SUBDIRS
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
@@ -202,6 +203,7 @@ all: all-recursive all-default all-local
 install: install-recursive install-default install-local
 check: check-recursive check-default check-local
 clean: clean-recursive clean-default clean-local
+test: test-recursive test-default test-local
 
 cleanall: cleanall-recursive cleanall-default
 init: init-default init-recursive
@@ -210,6 +212,7 @@ all-local:
 install-local:
 clean-local:
 check-local:
+test-local:
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
