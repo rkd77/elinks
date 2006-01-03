@@ -193,7 +193,7 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_STRING("document.browse.forms", N_("External editor"),
 		"editor", 0, "",
 		N_("Path to the executable that ELinks should launch when the user\n"
-		"requests to edit a textarea with an external editor.\n\n"
+		"requests to edit a textarea with an external editor.\n"
 		"If this is blank, ELinks will use the value of the environmental\n"
 		"variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 		"default to \"vi\".")),
@@ -730,7 +730,7 @@ static struct option_info config_options_info[] = {
 		N_("A rule for passing URI to an external command.\n"
 		"The format is:\n"
 		"%c in the string means the current URL\n"
-		"%% in the string means '%'\n\n"
+		"%% in the string means '%'\n"
 		"Do _not_ put single- or double-quotes around %c.")),
 
 	/* Keep options in alphabetical order. */
