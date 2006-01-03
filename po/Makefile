@@ -11,6 +11,8 @@ MSGMERGE = msgmerge
 # xgettext) 
 POTFILES_ABS_LIST = potfiles.list
 
+POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+
 quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
       cmd_gmsgfmt = rm -f -- "$@" && $(GMSGFMT) --statistics -o "$@" -- "$<"
 
@@ -45,7 +47,7 @@ all-local: $(CATALOGS)
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
 # not been added to the git repo. Beware of junk entries!
 
-$(srcdir)$(POTFILES_ABS_LIST):
+$(srcdir)$(POTFILES_ABS_LIST): $(POTFILES_REL)
 	@( cd $(top_srcdir); \
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(srcdir)$(POTFILES_ABS_LIST)
