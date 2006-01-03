@@ -23,7 +23,19 @@
 # The contents of this table are drawn from various sources, and
 # are in the public domain.
 #
-########################
+#############################################################################
+#
+# It was downloaded from:
+#	http://www.unicode.org/Public/MAPPINGS/VENDORS/MISC/SGML.TXT
+#
+# and currently have the following differences:
+#
+# - entities not in the unicode database from 1997:
+#	Scomma, Tcomma, euro, scomma, tcomma
+#
+# - obsolete entities kept for compatibility:
+#	emdash, endash, hibar
+# 
 AElig	ISOlat1	0x00C6	# LATIN CAPITAL LETTER AE
 Aacgr	ISOgrk2	0x0386	# GREEK CAPITAL LETTER ALPHA WITH TONOS
 Aacute	ISOlat1	0x00C1	# LATIN CAPITAL LETTER A WITH ACUTE
