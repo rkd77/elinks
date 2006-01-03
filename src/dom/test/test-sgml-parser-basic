@@ -28,7 +28,7 @@ test_output_equals () {
 	echo "#document: $URI" > expected
 	echo "$out" | sed -n '2,$p' >> expected
 
-	test_expect_success "$desc" 'cmp -b output expected' 
+	test_expect_success "$desc" 'cmp output expected' 
 }
 
 test_expect_incomplete () {
