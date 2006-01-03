@@ -150,13 +150,16 @@ clean-test:
 test-default:
 
 ifdef TEST_PROGS
+TESTDEPS += $(TESTDEPS-yes)
+
 $(TEST_PROGS): $(TESTDEPS) $$@.o
 	$(call cmd,link)
 
-TESTS = $(wildcard test-*)
+TESTS = $(wildcard $(srcdir)test-*)
 
 $(TESTS): $(TEST_PROGS)
-	@echo "*** $@ ***"; $(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
+	@echo "*** $(notdir $@) ***"; \
+	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
 test-default: $(TESTS)
 
