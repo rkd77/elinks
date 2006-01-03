@@ -836,10 +836,10 @@ next:
 }
 
 static int
-ftp_data_connect(struct connection *conn, int family, struct sockaddr_storage *sa,
+ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 		 int size_of_sockaddr)
 {
-	int fd = socket(family, SOCK_STREAM, 0);
+	int fd = socket(pf, SOCK_STREAM, 0);
 
 	if (fd < 0 || set_nonblocking_fd(fd) < 0) {
 		abort_connection(conn, S_FTP_ERROR);

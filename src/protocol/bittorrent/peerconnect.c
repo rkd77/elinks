@@ -369,7 +369,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 	if (bittorrent_socket != -1)
 		close(bittorrent_socket);
 
-	bittorrent_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	bittorrent_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (bittorrent_socket < 0)
 		return -errno;
 
