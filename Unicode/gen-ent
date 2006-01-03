@@ -7,6 +7,7 @@ sed -n '/^[^#]/,$p' < entities.txt | while read line; do \
 		name=$(echo "$line" | cut -f 1); \
 		code=$(echo "$line" | cut -f 3); \
 		desc=$(echo "$line" | cut -f 4 | sed 's/# //'); \
+		test "$code" = "0x????" && continue
 		printf "\t{ %-12s %s }, /* %-46s */\n" \
 			"\"$name\"," "$code" "$desc"; \
 	done | LC_ALL=C sort > tmp
