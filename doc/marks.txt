@@ -84,6 +84,3 @@ did not quit your ELinks _completely_ --- if you run multiple ELinks
 instances under a single user on a single system, they "join" together and
 you must quit (or kill) them all to get rid of the damn thing.  But that's a
 different story.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

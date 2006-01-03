@@ -178,6 +178,3 @@ Just enter set mime.type.class.name = "handler", replacing class with the
 class for the mime type, name with the specific name within that class, and
 handler with the name for the handler you want to assign to the MIME type.
 E.g. you may want to have set mime.type.image.jpeg = "image_viewer".
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
