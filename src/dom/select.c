@@ -530,7 +530,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 	struct dom_stack stack;
 	enum dom_exception_code code;
 
-	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_tracer(&stack, "init-select: ");
 
 	code = parse_dom_select(select, &stack, string);
@@ -1060,12 +1060,12 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 
 	select_data.select = select;;
 
-	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_context_info);
 	add_dom_stack_tracer(&stack, "select-tree: ");
 
-	init_dom_stack(&select_data.stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&select_data.stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_context(&select_data.stack, &select_data,
 			      &dom_select_data_context_info);
 	add_dom_stack_tracer(&select_data.stack, "select-match: ");

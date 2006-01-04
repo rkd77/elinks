@@ -267,7 +267,7 @@ get_address(struct socket_info *info, enum addr_type type)
 	info->addr = (struct sockaddr *) sin;
 	info->size = sizeof(*sin);
 
-	return AF_INET;
+	return PF_INET;
 }
 
 static int
@@ -373,12 +373,12 @@ bind_to_af_unix(void)
 {
 	mode_t saved_mask = umask(0177);
 	int attempts = 0;
-	int af = get_address(&s_info_listen, ADDR_IP_SERVER);
+	int pf = get_address(&s_info_listen, ADDR_IP_SERVER);
 
-	if (af == -1) goto free_and_error;
+	if (pf == -1) goto free_and_error;
 
 	while (1) {
-		s_info_listen.fd = socket(af, SOCK_STREAM, 0);
+		s_info_listen.fd = socket(pf, SOCK_STREAM, 0);
 		if (s_info_listen.fd == -1) {
 			report_af_unix_error("socket()", errno);
 			goto free_and_error;
@@ -435,12 +435,12 @@ static int
 connect_to_af_unix(void)
 {
 	int attempts = 0;
-	int af = get_address(&s_info_connect, ADDR_IP_CLIENT);
+	int pf = get_address(&s_info_connect, ADDR_IP_CLIENT);
 
-	while (af != -1 && attempts++ < MAX_CONNECT_TRIES) {
+	while (pf != -1 && attempts++ < MAX_CONNECT_TRIES) {
 		int saved_errno;
 
-		s_info_connect.fd = socket(af, SOCK_STREAM, 0);
+		s_info_connect.fd = socket(pf, SOCK_STREAM, 0);
 		if (s_info_connect.fd == -1) {
 			report_af_unix_error("socket()", errno);
 			break;

@@ -48,8 +48,10 @@ struct dom_stack_context {
 };
 
 enum dom_stack_flag {
-	/* Keep nodes when popping them or call done_dom_node() on them. */
-	DOM_STACK_KEEP_NODES = 1,
+	DOM_STACK_FLAG_NONE = 0,
+
+	/* Free nodes when popping them by calling done_dom_node(). */
+	DOM_STACK_FLAG_FREE_NODES = 1,
 };
 
 /* The DOM stack is a convenient way to traverse DOM trees. Also it

@@ -557,8 +557,8 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	parser->flags = flags;
 	parser->info  = get_sgml_info(doctype);
 
-	if (type == SGML_PARSER_TREE)
-		stack_flags |= DOM_STACK_KEEP_NODES;
+	if (type == SGML_PARSER_STREAM)
+		stack_flags |= DOM_STACK_FLAG_FREE_NODES;
 
 	init_dom_stack(&parser->stack, stack_flags);
 	/* FIXME: Some sgml backend specific callbacks? Handle HTML script tags,
@@ -566,7 +566,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	add_dom_stack_context(&parser->stack, parser, &sgml_parser_context_info);
 
 	/* Don't keep the 'fake' text nodes that holds the parsing data. */
-	init_dom_stack(&parser->parsing, 0);
+	init_dom_stack(&parser->parsing, DOM_STACK_FLAG_FREE_NODES);
 	add_dom_stack_context(&parser->parsing, parser, &sgml_parsing_context_info);
 
 	return parser;

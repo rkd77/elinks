@@ -51,9 +51,9 @@ be_close(int s)
 }
 
 int
-be_socket(int af, int sock, int prot)
+be_socket(int pf, int sock, int prot)
 {
-	int h = socket(af, sock, prot);
+	int h = socket(pf, sock, prot);
 
 	if (h < 0) return h;
 	return h + SHS;
@@ -122,13 +122,13 @@ be_pipe(int *fd)
 	int retry_count = 0;
 
 again:
-	s1 = be_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	s1 = be_socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (s1 < 0) {
 		/*perror("socket1");*/
 		goto fatal_retry;
 	}
 
-	s2 = be_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	s2 = be_socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (s2 < 0) {
 		/*perror("socket2");*/
 		be_close(s1);
