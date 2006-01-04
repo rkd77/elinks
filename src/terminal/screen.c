@@ -205,7 +205,7 @@ update_screen_driver(struct screen_driver *driver, struct option *term_spec)
 	}
 
 	if (utf8_io) {
-		driver->charsets[0] = get_opt_int_tree(term_spec, "charset");
+		driver->charsets[0] = get_opt_codepage_tree(term_spec, "charset");
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->frame = frame_restrict;
