@@ -580,3 +580,83 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 
 	return entries;
 }
+
+/* Create DIRECTORY.
+ * If some of the pathname components of DIRECTORY
+ * are missing, create them first.  In case any mkdir() call fails,
+ * return its error status.  Returns 0 on successful completion.
+ *
+ * The behaviour of this function should be identical to the behaviour
+ * of `mkdir -p' on systems where mkdir supports the `-p' option. */
+static int
+make_directory(const unsigned char *directory)
+{
+	int i, len, ret, quit = 0;
+	unsigned char *dir;
+
+	/* Make a copy of dir, to be able to write to it.  Otherwise, the
+	 * function is unsafe if called with a read-only char *argument.  */
+	len = strlen(directory) + 1;
+	dir = fmem_alloc(len);
+	if (!dir) return -1;
+	memcpy(dir, directory, len);
+
+	/* If the first character of dir is '/', skip it (and thus enable
+	 * creation of absolute-pathname directories.  */
+	for (i = dir_sep(*dir); 1; ++i) {
+		unsigned char sep;
+
+		for (; dir[i] && !dir_sep(dir[i]); i++);
+		if (!dir[i]) quit = 1;
+
+		sep = dir[i];
+		dir[i] = '\0';
+		/* Check whether the directory already exists.  Allow creation of
+		 * intermediate directories to fail, as the initial path components
+		 * are not necessarily directories!  */
+		if (!file_exists(dir))
+			ret = mkdir(dir, 0777);
+		else
+			ret = 0;
+		if (quit) break;
+
+		dir[i] = sep;
+	}
+
+	fmem_free(dir);
+
+	return ret;
+}
+
+/* Create all the necessary directories for PATH (a file).
+ * Calls make_directory() internally. */
+int
+mkalldirs(const unsigned char *path)
+{
+	const unsigned char *p;
+	unsigned char *dir;
+	int ret, len;
+
+	p = path + strlen (path);
+	for (; !dir_sep(*p) && p != path; p--);
+
+	/* Don't create if it's just a file. */
+	if (p == path && !dir_sep(*p))
+		return 0;
+
+	len = p - path;
+	dir = fmem_alloc(len + 1);
+	if (!dir) return -1;
+	memcpy(dir, path, len);
+	dir[len] = '\0';
+
+	if (file_is_dir(dir)) {
+		ret = 0;
+	} else {
+		ret = make_directory(dir);
+	}
+
+	fmem_free(dir);
+
+	return ret;
+}

@@ -51,4 +51,7 @@ unsigned char *file_read_line(unsigned char *line, size_t *linesize,
  * restore previous umask(). */
 int safe_mkstemp(unsigned char *template);
 
+/* Create all the necessary directories for PATH (a file). */
+int mkalldirs(const unsigned char *path);
+
 #endif
