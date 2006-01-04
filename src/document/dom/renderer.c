@@ -61,7 +61,7 @@ struct dom_renderer {
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
-	      color_T background, color_T foreground, enum screen_char_attr attr) 
+	      color_T background, color_T foreground, enum screen_char_attr attr)
 {
 	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
 

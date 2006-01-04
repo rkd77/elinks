@@ -225,7 +225,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 	return SGML_PARSER_CODE_OK;
 }
 
-static enum sgml_parser_code 
+static enum sgml_parser_code
 parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token target;
