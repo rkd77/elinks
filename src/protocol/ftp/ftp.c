@@ -592,7 +592,7 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
 #ifdef CONFIG_IPV6
 	ftp->use_epsv = get_opt_bool("protocol.ftp.use_epsv");
 
-	if (conn->socket->protocol_family == 1) {
+	if (conn->socket->protocol_family == EL_PF_INET6) {
 		if (ftp->use_epsv) {
 			add_to_string(command, "EPSV");
 
@@ -1201,9 +1201,9 @@ ftp_data_accept(struct connection *conn)
 	set_connection_timeout(conn);
 	clear_handlers(conn->data_socket->fd);
 
-	if ((conn->socket->protocol_family != 1 && ftp->use_pasv)
+	if ((conn->socket->protocol_family != EL_PF_INET6 && ftp->use_pasv)
 #ifdef CONFIG_IPV6
-	    || (conn->socket->protocol_family == 1 && ftp->use_epsv)
+	    || (conn->socket->protocol_family == EL_PF_INET6 && ftp->use_epsv)
 #endif
 	   ) {
 		newsock = conn->data_socket->fd;

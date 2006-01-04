@@ -279,7 +279,7 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 #ifdef CONFIG_IPV6
 	struct sockaddr_in6 bind_addr6;
 
-	if (ctrl_socket->protocol_family == 1) {
+	if (ctrl_socket->protocol_family == EL_PF_INET6) {
 		bind_addr = (struct sockaddr *) &bind_addr6;
 		addrlen   = sizeof(bind_addr6);
 	} else
@@ -316,7 +316,7 @@ sock_error:
 
 	memcpy(bind_addr, pasv_addr, addrlen);
 #ifdef CONFIG_IPV6
-	if (ctrl_socket->protocol_family == 1)
+	if (ctrl_socket->protocol_family == EL_PF_INET6)
 		bind_addr6.sin6_port = 0;
 	else
 #endif
@@ -585,7 +585,7 @@ connect_socket(struct socket *csocket, enum connection_state state)
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in6)) == 0) {
 				/* Success */
-				csocket->protocol_family = 1;
+				csocket->protocol_family = EL_PF_INET6;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}
@@ -595,7 +595,7 @@ connect_socket(struct socket *csocket, enum connection_state state)
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in)) == 0) {
 				/* Success */
-				csocket->protocol_family = 0;
+				csocket->protocol_family = EL_PF_INET;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}
