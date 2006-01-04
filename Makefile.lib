@@ -43,7 +43,7 @@ quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
 			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
 
    quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
-         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(2) $(LIBS)
 
  quiet_cmd_sparse = '    [SPARSE]   $(RELPATH)$(2)'
        cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
@@ -155,12 +155,14 @@ test-default:
 ifdef TEST_PROGS
 TESTDEPS += $(TESTDEPS-yes)
 
-$(TEST_PROGS): $(TESTDEPS) $$@.o
-	$(call cmd,link)
-
 TESTS = $(wildcard $(srcdir)test-*)
 
-$(TESTS): $(TEST_PROGS)
+$(TEST_PROGS): $(TESTDEPS)
+	$(call cmd,link,$@.o)
+
+# We cannot use $$@.o in the rule above so ensure that all test programs are
+# built before linking.
+$(TESTS): $(addsuffix .o,$(TEST_PROGS)) $(TEST_PROGS)
 	@echo "*** $(notdir $@) ***"; \
 	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
@@ -211,7 +213,14 @@ endif
 
 # Setup the default sub commands dependency. First decend subdirs then do all
 # the default stuff and finally do any local hooks.
-$(RULES): $$@-recursive $$@-default $$@-local
+recdeps = $1-recursive $1-default $1-local
+all: $(call recdeps,all)
+check: $(call recdeps,check)
+cleanall: $(call recdeps,cleanall)
+clean: $(call recdeps,clean)
+init: $(call recdeps,init)
+install: $(call recdeps,install)
+test: $(call recdeps,test)
 
 # Dummy rules for local hooks
 $(addsuffix -local,$(RULES)):
