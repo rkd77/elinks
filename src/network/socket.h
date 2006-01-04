@@ -94,12 +94,14 @@ struct socket {
 	 * lot of compilation time. --pasky */
 	void *ssl;
 
-	unsigned int protocol_family:1; /* 0 == PF_INET, 1 == PF_INET6 */
+	unsigned int protocol_family:1; /* EL_PF_INET, EL_PF_INET6 */
 	unsigned int need_ssl:1;	/* If the socket needs SSL support */
 	unsigned int no_tls:1;		/* Internal SSL flag. */
 	unsigned int duplex:1;		/* Allow simultaneous reads & writes. */
 };
 
+#define EL_PF_INET	0
+#define EL_PF_INET6	1
 
 /* Socket management: */
 
