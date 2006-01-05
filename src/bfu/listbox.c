@@ -24,14 +24,12 @@
 #define VERTICAL_LISTBOX_MARGIN 3
 
 void
-add_dlg_listbox(struct dialog *dlg, int height, void *box_data)
+add_dlg_listbox(struct dialog *dlg, void *box_data)
 {
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
 	widget->type = WIDGET_LISTBOX;
 	widget->data = box_data;
-
-	widget->info.listbox.height = height;
 }
 
 struct listbox_data *

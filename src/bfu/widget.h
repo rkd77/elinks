@@ -42,7 +42,6 @@ struct widget {
 	union {
 		struct widget_info_checkbox checkbox;
 		struct widget_info_field field;
-		struct widget_info_listbox listbox;
 		struct widget_info_button button;
 		struct widget_info_text text;
 	} info;

@@ -317,7 +317,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	dlg->udata = ses;
 	dlg->udata2 = browser;
 
-	add_dlg_listbox(dlg, 12, listbox_data);
+	add_dlg_listbox(dlg, listbox_data);
 
 	for (button = 0; button < browser->buttons_size; button++) {
 		struct hierbox_browser_button *but = &browser->buttons[button];
