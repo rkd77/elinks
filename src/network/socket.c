@@ -484,6 +484,10 @@ connect_socket(struct socket *csocket, enum connection_state state)
 	int only_local = get_cmd_opt_bool("localhost");
 	int saved_errno = 0;
 	int at_least_one_remote_ip = 0;
+#ifdef CONFIG_IPV6
+	int try_ipv6 = get_opt_bool("connection.try_ipv6");
+#endif
+	int try_ipv4 = get_opt_bool("connection.try_ipv4");
 	/* We tried something but we failed in such a way that we would rather
 	 * prefer the connection to retain the information about previous
 	 * failures.  That is, we i.e. decided we are forbidden to even think
@@ -535,18 +539,17 @@ connect_socket(struct socket *csocket, enum connection_state state)
 #ifdef CONFIG_IPV6
 		if (family == AF_INET6) {
 			pf = PF_INET6;
-			if (!get_opt_bool("connection.try_ipv6")
-			    || (force_family && force_family != 6)) {
+			if (!try_ipv6 || (force_family && force_family != 6)) {
 				silent_fail = 1;
 				continue;
 			}
+			pf = PF_INET6;
 
 		} else
 #endif
 		if (family == AF_INET) {
 			pf = PF_INET;
-			if (!get_opt_bool("connection.try_ipv4")
-			    || (force_family && force_family != 4)) {
+			if (!try_ipv4 || (force_family && force_family != 4)) {
 				silent_fail = 1;
 				continue;
 			}
