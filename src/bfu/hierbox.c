@@ -235,7 +235,9 @@ hierbox_ev_init(struct dialog_data *dlg_data)
 		litem->visible = 1;
 	}
 
-	return EVENT_PROCESSED;
+	/* Return this so that the generic dialog code will run and initialise
+	 * the widgets and stuff. */
+	return EVENT_NOT_PROCESSED;
 }
 
 static widget_handler_status_T
@@ -259,7 +261,9 @@ hierbox_ev_abort(struct dialog_data *dlg_data)
 		}
 	}
 
-	return EVENT_PROCESSED;
+	/* Return this so that the generic dialog code will run and initialise
+	 * the widgets and stuff. */
+	return EVENT_NOT_PROCESSED;
 }
 
 
