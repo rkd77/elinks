@@ -585,28 +585,9 @@ remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 static enum bittorrent_state
 create_bittorrent_path(unsigned char *path)
 {
-	int pos;
+	int ret = mkalldirs(path);
 
-	if (!*path) return BITTORRENT_STATE_ERROR;
-
-	for (pos = 1; path[pos]; pos++) {
-		unsigned char separator = path[pos];
-		int ret;
-
-		if (!dir_sep(separator))
-			continue;
-
-		path[pos] = 0;
-
-		ret = mkdir(path, S_IREAD | S_IWRITE | S_IEXEC);
-
-		path[pos] = separator;
-
-		if (ret < 0 && errno != EEXIST)
-			return BITTORRENT_STATE_ERROR;
-	}
-
-	return BITTORRENT_STATE_OK;
+	return (ret ? BITTORRENT_STATE_ERROR : BITTORRENT_STATE_OK);
 }
 
 /* Complementary to the above rmdir()s each directory in the path. */

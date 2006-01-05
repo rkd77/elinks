@@ -5,6 +5,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -581,82 +582,39 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 	return entries;
 }
 
-/* Create DIRECTORY.
- * If some of the pathname components of DIRECTORY
- * are missing, create them first.  In case any mkdir() call fails,
- * return its error status.  Returns 0 on successful completion.
- *
- * The behaviour of this function should be identical to the behaviour
- * of `mkdir -p' on systems where mkdir supports the `-p' option. */
-static int
-make_directory(const unsigned char *directory)
-{
-	int i, len, ret, quit = 0;
-	unsigned char *dir;
-
-	/* Make a copy of dir, to be able to write to it.  Otherwise, the
-	 * function is unsafe if called with a read-only char *argument.  */
-	len = strlen(directory) + 1;
-	dir = fmem_alloc(len);
-	if (!dir) return -1;
-	memcpy(dir, directory, len);
-
-	/* If the first character of dir is '/', skip it (and thus enable
-	 * creation of absolute-pathname directories.  */
-	for (i = dir_sep(*dir); 1; ++i) {
-		unsigned char sep;
-
-		for (; dir[i] && !dir_sep(dir[i]); i++);
-		if (!dir[i]) quit = 1;
-
-		sep = dir[i];
-		dir[i] = '\0';
-		/* Check whether the directory already exists.  Allow creation of
-		 * intermediate directories to fail, as the initial path components
-		 * are not necessarily directories!  */
-		if (!file_exists(dir))
-			ret = mkdir(dir, 0777);
-		else
-			ret = 0;
-		if (quit) break;
-
-		dir[i] = sep;
-	}
-
-	fmem_free(dir);
-
-	return ret;
-}
-
-/* Create all the necessary directories for PATH (a file).
- * Calls make_directory() internally. */
+/* Recursively create directories in a path. The last element in the path is
+ * taken to be a filename, and simply ignored */
 int
 mkalldirs(const unsigned char *path)
 {
-	const unsigned char *p;
-	unsigned char *dir;
-	int ret, len;
+	int pos, len, ret = 0;
+	unsigned char *p;
 
-	p = path + strlen (path);
-	for (; !dir_sep(*p) && p != path; p--);
+	if (!*path) return -1;
 
-	/* Don't create if it's just a file. */
-	if (p == path && !dir_sep(*p))
-		return 0;
+	/* Make a copy of path, to be able to write to it.  Otherwise, the
+	 * function is unsafe if called with a read-only char *argument.  */
+	len = strlen(path) + 1;
+	p = fmem_alloc(len);
+	if (!p) return -1;
+	memcpy(p, path, len);
 
-	len = p - path;
-	dir = fmem_alloc(len + 1);
-	if (!dir) return -1;
-	memcpy(dir, path, len);
-	dir[len] = '\0';
+	for (pos = 1; p[pos]; pos++) {
+		unsigned char separator = p[pos];
 
-	if (file_is_dir(dir)) {
-		ret = 0;
-	} else {
-		ret = make_directory(dir);
+		if (!dir_sep(separator))
+			continue;
+
+		p[pos] = 0;
+
+		ret = mkdir(p, S_IREAD | S_IWRITE | S_IEXEC);
+
+		p[pos] = separator;
+
+		if (ret < 0 && errno != EEXIST)
+			break;
 	}
 
-	fmem_free(dir);
-
+	fmem_free(p);
 	return ret;
 }
