@@ -505,25 +505,20 @@ connect_socket(struct socket *csocket, enum connection_state state)
 	for (i = connect_info->triedno + 1; i < connect_info->addrno; i++) {
 #ifdef CONFIG_IPV6
 		struct sockaddr_in6 addr = *((struct sockaddr_in6 *) &connect_info->addr[i]);
+		int family = addr.sin6_family;
 #else
 		struct sockaddr_in addr = *((struct sockaddr_in *) &connect_info->addr[i]);
+		int family = addr.sin_family;
 #endif
 		int pf;
-		int family;
 		int force_family = connect_info->ip_family;
-
-#ifdef CONFIG_IPV6
-		family = addr.sin6_family;
-#else
-		family = addr.sin_family;
-#endif
 
 		connect_info->triedno++;
 
 		if (only_local) {
 			int local = 0;
 #ifdef CONFIG_IPV6
-			if (addr.sin6_family == AF_INET6)
+			if (family == AF_INET6)
 				local = check_if_local_address6((struct sockaddr_in6 *) &addr);
 			else
 #endif
@@ -583,7 +578,7 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		 * something else ;-). --pasky */
 
 #ifdef CONFIG_IPV6
-		if (addr.sin6_family == AF_INET6) {
+		if (family == AF_INET6) {
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in6)) == 0) {
 				/* Success */
