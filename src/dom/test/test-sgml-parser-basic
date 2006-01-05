@@ -89,7 +89,7 @@ element: root
   #comment:  Hello World! '
 
 test_output_equals \
-'Parse comment combinations.' \
+'Parse comment combinations. (I)' \
 '<root><!-- <!-- -- > --><!--foo--><!----></root>' \
 '
 element: root
@@ -98,10 +98,27 @@ element: root
   #comment: '
 
 test_output_equals \
+'Parse comment combinations. (II).' \
+'<! -- comment -->s<!-->-->t<!----->u' \
+'
+#comment:  comment 
+#text: s
+#comment: >
+#text: t
+#comment: -
+#text: u'
+
+test_output_equals \
 'Parse bad comment.' \
 '<!--->s' \
 '
 #comment: ->s'
+
+test_output_equals \
+'Parse empty notation.' \
+'<!>s' \
+'
+#text: s'
 
 test_output_equals \
 'Parse an enclosed CDATA section.' \
@@ -284,8 +301,20 @@ test_output_equals \
 --print-lines
  
 test_expect_incomplete \
-'Check incomplete comment.' \
+'Check incomplete comment. (I)' \
+'<!-'
+
+test_expect_incomplete \
+'Check incomplete comment. (II)' \
 '<!-- ... '
+
+test_expect_incomplete \
+'Check incomplete notation. (I)' \
+'<!'
+
+test_expect_incomplete \
+'Check incomplete notation. (II)' \
+'<!D'
 
 test_expect_incomplete \
 'Check incomplete cdata section. (I)' \
