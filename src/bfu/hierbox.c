@@ -235,7 +235,7 @@ hierbox_ev_init(struct dialog_data *dlg_data)
 		litem->visible = 1;
 	}
 
-	return EVENT_NOT_PROCESSED;	/* FIXME: is this correct ? --Zas */
+	return EVENT_PROCESSED;
 }
 
 static widget_handler_status_T
@@ -259,7 +259,7 @@ hierbox_ev_abort(struct dialog_data *dlg_data)
 		}
 	}
 
-	return EVENT_NOT_PROCESSED; /* FIXME: is this correct ? --Zas */
+	return EVENT_PROCESSED;
 }
 
 
