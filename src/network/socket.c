@@ -538,7 +538,6 @@ connect_socket(struct socket *csocket, enum connection_state state)
 
 #ifdef CONFIG_IPV6
 		if (family == AF_INET6) {
-			pf = PF_INET6;
 			if (!try_ipv6 || (force_family && force_family != 6)) {
 				silent_fail = 1;
 				continue;
@@ -548,11 +547,11 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		} else
 #endif
 		if (family == AF_INET) {
-			pf = PF_INET;
 			if (!try_ipv4 || (force_family && force_family != 4)) {
 				silent_fail = 1;
 				continue;
 			}
+			pf = PF_INET;
 
 		} else {
 			continue;
