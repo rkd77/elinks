@@ -162,4 +162,4 @@ test_done () {
 test=trash
 rm -fr "$test"
 mkdir "$test"
-cd "$test"
+cd "$test" || error "Cannot setup test environment"
