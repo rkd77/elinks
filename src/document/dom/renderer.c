@@ -61,11 +61,11 @@ struct dom_renderer {
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
-	      color_T background, color_T foreground)
+	      color_T background, color_T foreground, enum screen_char_attr attr)
 {
 	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
 
-	template->attr = 0;
+	template->attr = attr;
 	template->data = ' ';
 	set_term_color(template, &colors,
 		       options->color_flags, options->color_mode);
@@ -115,6 +115,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		struct screen_char *template = &renderer->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
+		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
 		struct dom_string *name = get_dom_node_type_name(type);
@@ -157,9 +158,31 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 
 			property = get_css_property(properties, CSS_PT_COLOR);
 			if (property) foreground = property->value.color;
+
+			property = get_css_property(properties, CSS_PT_FONT_WEIGHT);
+			if (property) {
+				if (property->value.font_attribute.add & AT_BOLD)
+					attr |= SCREEN_ATTR_BOLD;
+			}
+
+			property = get_css_property(properties, CSS_PT_FONT_STYLE);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+
+				if (property->value.font_attribute.add & AT_ITALIC)
+					attr |= SCREEN_ATTR_ITALIC;
+
+			}
+
+			property = get_css_property(properties, CSS_PT_TEXT_DECORATION);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+			}
 		}
 
-		init_template(template, &document->options, background, foreground);
+		init_template(template, &document->options, background, foreground, attr);
 	}
 }
 
@@ -361,7 +384,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 	link->number = document->nlinks;
 
 	init_template(&template, &document->options,
-		      link->color.background, link->color.foreground);
+		      link->color.background, link->color.foreground, 0);
 
 	render_dom_text(renderer, &template, string, length);
 
@@ -665,7 +688,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
 	unsigned char *head = empty_string_or_(cached->head);
-	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
@@ -674,6 +696,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
 	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
+	enum sgml_parser_code code;
 
 	assert(document->options.plain);
 
@@ -707,14 +730,18 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri, 0);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,
 			      &dom_source_renderer_context_info);
 
-	root = parse_sgml(parser, &source);
-	if (root) {
+	/* FIXME: When rendering this way we don't really care about the code.
+	 * However, it will be useful when we will be able to also
+	 * incrementally parse new data. This will require the parser to live
+	 * during the fetching of data. */
+	code = parse_sgml(parser, &source, 1);
+	if (parser->root) {
 		assert(parser->stack.depth == 1);
 
 		get_dom_stack_top(&parser->stack)->immutable = 0;

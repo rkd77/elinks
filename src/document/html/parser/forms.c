@@ -574,10 +574,10 @@ sp:
 			goto se;
 		}
 		if (parse_element(r, html_context->eoff, &name, &namelen, NULL, &p)) goto sp;
-		
+
 		if (namelen < 6) goto se;
 		if (name[0] == '/') name++, namelen--;
-		
+
 		if (strlcasecmp(name, namelen, "OPTION", 6)
 		    && strlcasecmp(name, namelen, "SELECT", 6)
 		    && strlcasecmp(name, namelen, "OPTGROUP", 8))

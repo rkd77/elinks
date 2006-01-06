@@ -51,4 +51,8 @@ unsigned char *file_read_line(unsigned char *line, size_t *linesize,
  * restore previous umask(). */
 int safe_mkstemp(unsigned char *template);
 
+/* Recursively create directories in a path. The last element in the path is
+ * taken to be a filename, and simply ignored */
+int mkalldirs(const unsigned char *path);
+
 #endif

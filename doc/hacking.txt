@@ -5,8 +5,6 @@ Welcome, mere mortal, to the realm of evil unindented code, heaps of one or
 two-letter variables, seas of gotos accompanied with 30-letters labels in Czech
 language with absolutely no meaning, welcome to the realm of ELinks code!
 
-[We're going to extend this file slowly, basing on daily practice ;]
-
 Don't take this file as a law. We may or may not be right in these issues.
 
 Motto: I didn't expect someone to look at the source, so it's unreadable.
@@ -681,6 +679,3 @@ to compile or execute in one of these modes, then rework it.
 
 
 Happy hacking!
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

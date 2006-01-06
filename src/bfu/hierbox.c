@@ -157,13 +157,15 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 	selected = box->sel;
 	action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 
-	if (action_id == ACT_MENU_SELECT) {
+	switch (action_id) {
+	case ACT_MENU_SELECT:
 		if (!selected) return EVENT_PROCESSED;
 		if (selected->type != BI_FOLDER)
 			return EVENT_NOT_PROCESSED;
 		selected->expanded = !selected->expanded;
+		break;
 
-	} else if (action_id == ACT_MENU_UNEXPAND) {
+	case ACT_MENU_UNEXPAND:
 		/* Recursively unexpand all folders */
 		if (!selected) return EVENT_PROCESSED;
 
@@ -173,8 +175,9 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 		 * whole parent folder will be closed. */
 		if (list_empty(selected->child)
 		    || !selected->expanded) {
-			struct listbox_item *root = box->ops->get_root(selected);
+			struct listbox_item *root;
 
+			root = box->ops->get_root(selected);
 			if (root) {
 				listbox_sel(widget_data, root);
 			}
@@ -182,23 +185,25 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 		} else if (selected->type == BI_FOLDER) {
 			recursively_set_expanded(selected, 0);
 		}
+		break;
 
-	} else if (action_id == ACT_MENU_EXPAND) {
+	case ACT_MENU_EXPAND:
 		/* Recursively expand all folders */
 
 		if (!selected || selected->type != BI_FOLDER)
 			return EVENT_PROCESSED;
 
 		recursively_set_expanded(selected, 1);
+		break;
 
-	} else if (action_id == ACT_MENU_SEARCH) {
+	case ACT_MENU_SEARCH:
 		if (!box->ops->match)
 			return EVENT_NOT_PROCESSED;
 
 		push_hierbox_search_button(dlg_data, NULL);
 		return EVENT_PROCESSED;
 
-	} else {
+	default:
 		return EVENT_NOT_PROCESSED;
 
 	}
@@ -230,7 +235,9 @@ hierbox_ev_init(struct dialog_data *dlg_data)
 		litem->visible = 1;
 	}
 
-	return EVENT_NOT_PROCESSED;	/* FIXME: is this correct ? --Zas */
+	/* Return this so that the generic dialog code will run and initialise
+	 * the widgets and stuff. */
+	return EVENT_NOT_PROCESSED;
 }
 
 static widget_handler_status_T
@@ -254,7 +261,9 @@ hierbox_ev_abort(struct dialog_data *dlg_data)
 		}
 	}
 
-	return EVENT_NOT_PROCESSED; /* FIXME: is this correct ? --Zas */
+	/* Return this so that the generic dialog code will run and initialise
+	 * the widgets and stuff. */
+	return EVENT_NOT_PROCESSED;
 }
 
 
@@ -312,7 +321,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	dlg->udata = ses;
 	dlg->udata2 = browser;
 
-	add_dlg_listbox(dlg, 12, listbox_data);
+	add_dlg_listbox(dlg, listbox_data);
 
 	for (button = 0; button < browser->buttons_size; button++) {
 		struct hierbox_browser_button *but = &browser->buttons[button];

@@ -150,7 +150,3 @@ The new ELinks versions (from 0.9.0 on) send:
 You should therefore check against something like /^ELinks[\/ ]/, since more
 fields can be added inside the parenthesis in subsequent versions.  Note that
 users can change their User-Agent through the options system.
-
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

@@ -48,6 +48,10 @@ enum sgml_token_type {
 	/* A special token for unrecognized strings */
 	SGML_TOKEN_GARBAGE,
 
+	/* A special token for marking that it is assummed that the token is
+	 * not complete. Only meaningful if scanner->complete is incomplete. */
+	SGML_TOKEN_INCOMPLETE,
+
 	/* Token type used internally when scanning to signal that the token
 	 * should not be recorded in the scanners token table. */
 	SGML_TOKEN_SKIP,

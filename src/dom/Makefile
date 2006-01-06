@@ -6,7 +6,4 @@ OBJS = node.o select.o stack.o scanner.o
 
 SUBDIRS-$(CONFIG_DEBUG) += test
 
-test: all
-	make test -C test
-
 include $(top_srcdir)/Makefile.lib

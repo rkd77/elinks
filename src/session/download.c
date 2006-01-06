@@ -573,6 +573,9 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 	wd = get_cwd();
 	set_cwd(term->cwd);
 
+	/* Create parent directories if needed. */
+	mkalldirs(file);
+
 	/* O_APPEND means repositioning at the end of file before each write(),
 	 * thus ignoring seek()s and that can hide mysterious bugs. IMHO.
 	 * --pasky */

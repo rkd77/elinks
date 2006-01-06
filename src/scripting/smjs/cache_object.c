@@ -138,7 +138,7 @@ cache_entry_finalize(JSContext *ctx, JSObject *obj)
 
 	object_unlock(cached);
 }
-	
+
 static const JSClass cache_entry_class = {
 	"cache_entry",
 	JSCLASS_HAS_PRIVATE,
@@ -151,7 +151,7 @@ JSObject *
 smjs_get_cache_entry_object(struct cache_entry *cached)
 {
 	JSObject *cache_entry_object;
-		
+
 	assert(smjs_ctx);
 
 	cache_entry_object = JS_NewObject(smjs_ctx,

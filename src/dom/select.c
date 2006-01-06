@@ -158,13 +158,13 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 
 /* Parse:
  *
- *   0n+1 / 1		
- *   2n+0 / 2n	
- *   2n+1 	
- *  -0n+2		
- *  -0n+1 / -1		
- *   1n+0 / n+0 / n	
- *   0n+0		
+ *   0n+1 / 1
+ *   2n+0 / 2n
+ *   2n+1
+ *  -0n+2
+ *  -0n+1 / -1
+ *   1n+0 / n+0 / n
+ *   0n+0
  */
 
 /* FIXME: Move somewhere else? dom/scanner.h? */
@@ -391,7 +391,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 	struct dom_scanner scanner;
 	struct dom_select_node sel;
 
-	init_dom_scanner(&scanner, &dom_css_scanner_info, string, 0, 0);
+	init_dom_scanner(&scanner, &dom_css_scanner_info, string, 0, 0, 1, 0);
 
 	memset(&sel, 0, sizeof(sel));
 
@@ -441,8 +441,8 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
-			set_dom_string(&sel.node.string, "class", -1); 
-			copy_dom_string(&sel.node.data.attribute.value, &token->string); 
+			set_dom_string(&sel.node.string, "class", -1);
+			copy_dom_string(&sel.node.data.attribute.value, &token->string);
 			break;
 
 		case ':':
@@ -530,7 +530,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 	struct dom_stack stack;
 	enum dom_exception_code code;
 
-	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_tracer(&stack, "init-select: ");
 
 	code = parse_dom_select(select, &stack, string);
@@ -1060,12 +1060,12 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 
 	select_data.select = select;;
 
-	init_dom_stack(&stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_context(&stack, &select_data,
 			      &dom_select_context_info);
 	add_dom_stack_tracer(&stack, "select-tree: ");
 
-	init_dom_stack(&select_data.stack, DOM_STACK_KEEP_NODES);
+	init_dom_stack(&select_data.stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_context(&select_data.stack, &select_data,
 			      &dom_select_data_context_info);
 	add_dom_stack_tracer(&select_data.stack, "select-match: ");

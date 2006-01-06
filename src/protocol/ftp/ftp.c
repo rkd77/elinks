@@ -592,7 +592,7 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
 #ifdef CONFIG_IPV6
 	ftp->use_epsv = get_opt_bool("protocol.ftp.use_epsv");
 
-	if (conn->socket->protocol_family == 1) {
+	if (conn->socket->protocol_family == EL_PF_INET6) {
 		if (ftp->use_epsv) {
 			add_to_string(command, "EPSV");
 
@@ -836,10 +836,10 @@ next:
 }
 
 static int
-ftp_data_connect(struct connection *conn, int family, struct sockaddr_storage *sa,
+ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 		 int size_of_sockaddr)
 {
-	int fd = socket(family, SOCK_STREAM, 0);
+	int fd = socket(pf, SOCK_STREAM, 0);
 
 	if (fd < 0 || set_nonblocking_fd(fd) < 0) {
 		abort_connection(conn, S_FTP_ERROR);
@@ -1140,24 +1140,6 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    int *tries, int colorize_dir, unsigned char *dircolor)
 {
 	int ret = 0;
-#ifdef DEBUG_FTP_PARSER
- 	static int debug_ftp_parser = 1;
-	int buflen_orig = buflen;
-	unsigned char *response_orig = NULL;
-
-	if (debug_ftp_parser) {
-		buffer = get_ftp_debug_parse_responses(buffer, buflen);
-		buflen = strlen(buffer);
-		response_orig = buffer;
-		debug_ftp_parser = 0;
-	}
-
-#define	end_ftp_dirlist_processing()	do { mem_free_if(response_orig); } while (0)
-#define get_ftp_dirlist_offset(retval)	int_min(retval, buflen_orig)
-#else
-#define	end_ftp_dirlist_processing()	/* Nothing to free */
-#define	get_ftp_dirlist_offset(retval)	(retval)
-#endif
 
 	while (1) {
 		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
@@ -1180,8 +1162,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			if (bufp && buf[bufp - 1] == ASCII_CR) bufp--;
 		} else {
 			if (!bufp || (!last && bufl < FTP_BUF_SIZE)) {
-				end_ftp_dirlist_processing();
-				return get_ftp_dirlist_offset(ret);
+				return ret;
 			}
 
 			ret += bufp;
@@ -1200,8 +1181,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			retv = display_dir_entry(cached, pos, tries, colorize_dir,
 						dircolor, &ftp_info);
 			if (retv < 0) {
-				end_ftp_dirlist_processing();
-				return get_ftp_dirlist_offset(ret);
+				return ret;
 			}
 		}
 #ifdef DEBUG_FTP_PARSER
@@ -1221,9 +1201,9 @@ ftp_data_accept(struct connection *conn)
 	set_connection_timeout(conn);
 	clear_handlers(conn->data_socket->fd);
 
-	if ((conn->socket->protocol_family != 1 && ftp->use_pasv)
+	if ((conn->socket->protocol_family != EL_PF_INET6 && ftp->use_pasv)
 #ifdef CONFIG_IPV6
-	    || (conn->socket->protocol_family == 1 && ftp->use_epsv)
+	    || (conn->socket->protocol_family == EL_PF_INET6 && ftp->use_epsv)
 #endif
 	   ) {
 		newsock = conn->data_socket->fd;

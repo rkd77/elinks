@@ -12,6 +12,8 @@ PERL = perl
 # xgettext) 
 POTFILES_ABS_LIST = potfiles.list
 
+POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+
 quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
       cmd_gmsgfmt = rm -f -- "$@" && $(GMSGFMT) --statistics -o "$@" -- "$<"
 
@@ -46,7 +48,7 @@ all-local: $(CATALOGS)
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
 # not been added to the git repo. Beware of junk entries!
 
-$(srcdir)$(POTFILES_ABS_LIST):
+$(srcdir)$(POTFILES_ABS_LIST): $(POTFILES_REL)
 	@( cd $(top_srcdir); \
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(srcdir)$(POTFILES_ABS_LIST)
@@ -69,7 +71,7 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-acce
 # either <lang> or <lang>.po when calling make. Example: make update-po PO=is
 
 update-po: Makefile $(srcdir)$(PACKAGE).pot
-	@test -n "$(srcdir)" && cd $(srcdir)
+	@test -z "$(srcdir)" || cd $(srcdir)
 	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  if $(MSGMERGE) $(srcdir)$(lang).po $(srcdir)$(PACKAGE).pot -o $(lang).new.po; then \

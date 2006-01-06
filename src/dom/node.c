@@ -360,7 +360,7 @@ done_dom_node(struct dom_node *node)
  			break;
 		}
  	}
- 
+
 	done_dom_node_data(node);
 }
 

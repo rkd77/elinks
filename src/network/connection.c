@@ -49,7 +49,7 @@ struct keepalive_connection {
 	timeval_T timeout;
 	timeval_T creation_time;
 
-	unsigned int protocol_family:1; /* 0 == PF_INET, 1 == PF_INET6 */
+	unsigned int protocol_family:1; /* see network/socket.h, EL_PF_INET, EL_PF_INET6 */
 	int socket;
 };
 

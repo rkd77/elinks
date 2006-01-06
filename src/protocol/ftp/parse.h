@@ -38,14 +38,4 @@ struct ftp_file_info {
 struct ftp_file_info *
 parse_ftp_file_info(struct ftp_file_info *info, unsigned char *src, int len);
 
-/* Define to feed debug FTP responses into the parser. Then point ELinks to an
- * FTP server to run the tests. */
-#if 0
-#define DEBUG_FTP_PARSER
-#endif
-
-#ifdef DEBUG_FTP_PARSER
-unsigned char *get_ftp_debug_parse_responses(unsigned char *buffer, int buflen);
-#endif
-
 #endif

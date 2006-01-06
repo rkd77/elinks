@@ -347,9 +347,9 @@ win32_ioctl(int fd, long option, int *flag)
 }
 
 int
-win32_socket(int family, int type, int protocol)
+win32_socket(int pf, int type, int protocol)
 {
-	SOCKET s = socket(family, type, protocol);
+	SOCKET s = socket(pf, type, protocol);
 	int    rc;
 
 	if (s == INVALID_SOCKET) {
@@ -359,7 +359,7 @@ win32_socket(int family, int type, int protocol)
 		rc = s + SOCK_SHIFT;
 	}
 
-	TRACE("family %d, type %d, proto %d -> rc %d", family, type, protocol, rc);
+	TRACE("family %d, type %d, proto %d -> rc %d", pf, type, protocol, rc);
 
 	return rc;
 }

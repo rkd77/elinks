@@ -154,7 +154,8 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 
 void
 init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
-		 struct dom_string *string, int state, int count_lines)
+		 struct dom_string *string, int state, int count_lines, int complete,
+		 int check_complete)
 {
 	if (!scanner_info->initialized) {
 		init_dom_scanner_info(scanner_info);
@@ -170,6 +171,8 @@ init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_i
 	scanner->info = scanner_info;
 	scanner->state = state;
 	scanner->count_lines = !!count_lines;
+	scanner->incomplete = !complete;
+	scanner->check_complete = !!check_complete;
 	scanner->lineno = scanner->count_lines;
 	scanner->info->scan(scanner);
 }

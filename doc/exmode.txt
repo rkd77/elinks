@@ -99,6 +99,3 @@ Also, perhaps wider scale of commands should be implemented in ex-mode. The
 code is extremely flexible and it is very trivial to make another ex-mode
 command handler, it's just that no one has done it yet ;-). Also, more actions
 should be able to take arguments.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
