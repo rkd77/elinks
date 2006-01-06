@@ -1,3 +1,6 @@
+# This file has been changed from the "Standard Version" Locale-PO-0.16.
+# The copyright, license, and change log are in the POD at the bottom.
+
 use strict;
 use warnings;
 
@@ -13,7 +16,7 @@ use Carp;
 
 #@ISA     = qw(Exporter AutoLoader);
 #@EXPORT  = qw();
-our $VERSION = '0.16';
+our $VERSION = '0.16.kon';
 
 # Preloaded methods go here.
 
@@ -459,7 +462,7 @@ Set or get the translated string from the object.
 
 =item msgstr_n
 
-Get or set the translations if there are purals involved. Takes and
+Get or set the translations if there are plurals involved. Takes and
 returns a hashref where the keys are the 'N' case and the values are
 the strings. eg:
 
@@ -540,6 +543,28 @@ are sorted alphabetically by untranslated string.
 =head1 AUTHOR
 
 Alan Schwartz, alansz@pennmush.org
+
+=head1 DIFFERENCES FROM Locale-PO-0.16
+
+List of changes in this file, as stipulated in section 3. of the
+L<"Artistic License"|perlartistic> and subsection 2. a) of L<GNU
+General Public License version 2|perlgpl>:
+
+=over 4
+
+=item Z<>2006-01-06  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+Appended ".kon" to $VERSION.
+Added the copyright notice (from README) and this history.
+Corrected a typo in the documentation.
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2000-2004 Alan Schwartz <alansz@pennmush.org>.
+All rights reserved.  This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 BUGS
 
