@@ -452,13 +452,22 @@ msgid, like this:
 
 Set or get the untranslated string from the object.
 
+This method expects the new string in unquoted form
+but returns the current string in quoted form.
+
 =item msgid_plural
 
 Set or get the untranslated plural string from the object.
 
+This method expects the new string in unquoted form
+but returns the current string in quoted form.
+
 =item msgstr
 
 Set or get the translated string from the object.
+
+This method expects the new string in unquoted form
+but returns the current string in quoted form.
 
 =item msgstr_n
 
@@ -473,19 +482,37 @@ the strings. eg:
         }
     );
 
+This method expects the new strings in unquoted form
+but returns the current strings in quoted form.
+
 =item comment
 
 Set or get translator comments from the object.
+
+If there are no such comments, then the value is undef.  Otherwise,
+the value is a string that contains the comment lines delimited with
+"\n".  The string includes neither the S<"# "> at the beginning of
+each comment line nor the newline at the end of the last comment line.
 
 =item automatic
 
 Set or get automatic comments from the object (inserted by 
 emacs po-mode or xgettext).
 
+If there are no such comments, then the value is undef.  Otherwise,
+the value is a string that contains the comment lines delimited with
+"\n".  The string includes neither the S<"#. "> at the beginning of
+each comment line nor the newline at the end of the last comment line.
+
 =item reference
 
 Set or get reference marking comments from the object (inserted
 by emacs po-mode or gettext).
+
+If there are no such comments, then the value is undef.  Otherwise,
+the value is a string that contains the comment lines delimited with
+"\n".  The string includes neither the S<"#: "> at the beginning of
+each comment line nor the newline at the end of the last comment line.
 
 =item fuzzy
 
@@ -557,6 +584,8 @@ General Public License version 2|perlgpl>:
 Appended ".kon" to $VERSION.
 Added the copyright notice (from README) and this history.
 Corrected a typo in the documentation.
+Documented quoting in the C<msgid>, C<msgid_plural>, C<msgstr>, and C<msgstr_n> methods.
+Documented newlines in the C<comment>, C<automatic>, and C<reference> methods.
 
 =back
 
