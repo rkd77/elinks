@@ -7,6 +7,9 @@ use warnings;
 package Locale::PO;
 
 use Carp;
+use fields qw(msgid msgid_plural msgstr msgstr_n
+              comment automatic reference
+              fuzzy c_format php_format);
 
 #use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 #use locale;
@@ -23,9 +26,7 @@ our $VERSION = '0.16.kon';
 sub new {
     my $this    = shift;
     my %options = @_;
-    my $class   = ref($this) || $this;
-    my $self    = {};
-    bless $self, $class;
+    my Locale::PO $self = ref($this) ? $this : fields::new($this);
     $self->msgid( $options{'-msgid'} ) if defined( $options{'-msgid'} );
     $self->msgid_plural( $options{'-msgid_plural'} )
       if defined( $options{'-msgid_plural'} );
@@ -46,12 +47,12 @@ sub new {
 }
 
 sub msgid {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'msgid'} = $self->quote(shift) : $self->{'msgid'};
 }
 
 sub msgid_plural {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_
       ? $self->{'msgid_plural'} =
         $self->quote(shift)
@@ -59,12 +60,12 @@ sub msgid_plural {
 }
 
 sub msgstr {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'msgstr'} = $self->quote(shift) : $self->{'msgstr'};
 }
 
 sub msgstr_n {
-    my $self = shift;
+    my Locale::PO $self = shift;
     if (@_) {
         my $hashref = shift;
 
@@ -87,37 +88,37 @@ sub msgstr_n {
 }
 
 sub comment {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'comment'} = shift: $self->{'comment'};
 }
 
 sub automatic {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'automatic'} = shift: $self->{'automatic'};
 }
 
 sub reference {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'reference'} = shift: $self->{'reference'};
 }
 
 sub fuzzy {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'fuzzy'} = shift: $self->{'fuzzy'};
 }
 
 sub c_format {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'c_format'} = shift: $self->{'c_format'};
 }
 
 sub php_format {
-    my $self = shift;
+    my Locale::PO $self = shift;
     @_ ? $self->{'php_format'} = shift: $self->{'php_format'};
 }
 
 sub normalize_str {
-    my $self     = shift;
+    my $self     = shift;       # can be called as a class method
     my $string   = shift;
     my $dequoted = $self->dequote($string);
 
@@ -144,7 +145,7 @@ sub normalize_str {
 }
 
 sub dump {
-    my $self = shift;
+    my Locale::PO $self = shift;
     my $dump;
     $dump = $self->dump_multi_comment( $self->comment, "# " )
       if ( $self->comment );
@@ -180,7 +181,7 @@ sub dump {
 }
 
 sub dump_multi_comment {
-    my $self    = shift;
+    my $self    = shift;        # can be called as a class method
     my $comment = shift;
     my $leader  = shift;
     my $chopped = $leader;
@@ -194,14 +195,14 @@ sub dump_multi_comment {
 
 # Quote a string properly
 sub quote {
-    my $self   = shift;
+    my $self   = shift;         # can be called as a class method
     my $string = shift;
     $string =~ s/"/\\"/g;
     return "\"$string\"";
 }
 
 sub dequote {
-    my $self   = shift;
+    my $self   = shift;         # can be called as a class method
     my $string = shift;
     $string =~ s/^"(.*)"/$1/;
     $string =~ s/\\"/"/g;
@@ -209,17 +210,17 @@ sub dequote {
 }
 
 sub save_file_fromarray {
-    my $self = shift;
+    my $self = shift;           # normally called as a class method
     $self->save_file( @_, 0 );
 }
 
 sub save_file_fromhash {
-    my $self = shift;
+    my $self = shift;           # normally called as a class method
     $self->save_file( @_, 1 );
 }
 
 sub save_file {
-    my $self    = shift;
+    my $self    = shift;        # normally called as a class method
     my $file    = shift;
     my $entries = shift;
     my $ashash  = shift;
@@ -238,17 +239,17 @@ sub save_file {
 }
 
 sub load_file_asarray {
-    my $self = shift;
+    my $self = shift;           # normally called as a class method
     $self->load_file( $_[0], 0 );
 }
 
 sub load_file_ashash {
-    my $self = shift;
+    my $self = shift;           # normally called as a class method
     $self->load_file( $_[0], 1 );
 }
 
 sub load_file {
-    my $self   = shift;
+    my $self   = shift;         # normally called as a class method
     my $file   = shift;
     my $ashash = shift;
     my ( @entries, %entries );
@@ -586,6 +587,7 @@ Added the copyright notice (from README) and this history.
 Corrected a typo in the documentation.
 Documented quoting in the C<msgid>, C<msgid_plural>, C<msgstr>, and C<msgstr_n> methods.
 Documented newlines in the C<comment>, C<automatic>, and C<reference> methods.
+Use fields, and "my Locale::PO" where applicable.
 
 =back
 
