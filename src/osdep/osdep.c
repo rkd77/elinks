@@ -353,14 +353,14 @@ get_clipboard_text(void)
 	if (is_gnuscreen()) {
 		struct string str;
 
-		if (!init_string(&str)) return;
+		if (!init_string(&str)) return NULL;
 
 		add_to_string(&str, "screen -X paste .");
 		if (str.length) exe(str.source);
 		if (str.source) done_string(&str);
 	}
 
-	return stracpy(clipboard ? clipboard : "");
+	return stracpy(empty_string_or_(clipboard));
 }
 
 void
