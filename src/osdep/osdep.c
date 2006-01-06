@@ -344,11 +344,11 @@ exe(unsigned char *path)
 
 #endif
 
-unsigned char *
-get_clipboard_text(void)	/* !!! FIXME */
-{
-	unsigned char *ret;
+static unsigned char *clipboard;
 
+unsigned char *
+get_clipboard_text(void)
+{
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
 		struct string str;
@@ -360,9 +360,7 @@ get_clipboard_text(void)	/* !!! FIXME */
 		if (str.source) done_string(&str);
 	}
 
-	ret = mem_alloc(1);
-	if (ret) ret[0] = 0;
-	return ret;
+	return stracpy(clipboard ? clipboard : "");
 }
 
 void
@@ -381,7 +379,8 @@ set_clipboard_text(unsigned char *data)
 		if (str.source) done_string(&str);
 	}
 
-	/* TODO: internal clipboard */
+	if (clipboard) mem_free(clipboard);
+	clipboard = stracpy(data);
 }
 
 /* Set xterm-like term window's title. */
