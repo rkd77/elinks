@@ -138,7 +138,7 @@ check_hotkeys_common(struct menu *menu, unsigned char hotkey, struct terminal *t
 	do {
 		struct menu_item *item;
 		unsigned char *text;
-		int res;
+		int found;
 
 		if (++i == menu->size) i = 0;
 
@@ -158,15 +158,15 @@ check_hotkeys_common(struct menu *menu, unsigned char hotkey, struct terminal *t
 #ifdef CONFIG_DEBUG
 			if (key_pos < 0) key_pos = -key_pos;
 #endif
-			res = (key_pos && (toupper(text[key_pos]) == key));
+			found = (key_pos && (toupper(text[key_pos]) == key));
 
 		} else {
 			/* Does the key (upcased) matches first letter
 			 * of menu item left text ? */
-			res = (toupper(*text) == key);
+			found = (toupper(*text) == key);
 		}
 
-		if (res) {
+		if (found) {
 			menu->selected = i;
 			return 1;
 		}
