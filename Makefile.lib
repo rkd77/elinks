@@ -153,6 +153,7 @@ clean-test:
 test-default:
 
 ifdef TEST_PROGS
+TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 TESTDEPS += $(TESTDEPS-yes)
 
 TESTS = $(wildcard $(srcdir)test-*)
