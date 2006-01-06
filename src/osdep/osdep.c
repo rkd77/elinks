@@ -347,10 +347,21 @@ exe(unsigned char *path)
 unsigned char *
 get_clipboard_text(void)	/* !!! FIXME */
 {
-	unsigned char *ret = mem_alloc(1);
+	unsigned char *ret;
 
+	/* GNU Screen's clipboard */
+	if (is_gnuscreen()) {
+		struct string str;
+
+		if (!init_string(&str)) return;
+
+		add_to_string(&str, "screen -X paste .");
+		if (str.length) exe(str.source);
+		if (str.source) done_string(&str);
+	}
+
+	ret = mem_alloc(1);
 	if (ret) ret[0] = 0;
-
 	return ret;
 }
 
