@@ -379,8 +379,9 @@ set_clipboard_text(unsigned char *data)
 		if (str.source) done_string(&str);
 	}
 
-	if (clipboard) mem_free(clipboard);
-	clipboard = stracpy(data);
+	/* Shouldn't complain about leaks. */
+	if (clipboard) free(clipboard);
+	clipboard = strdup(data);
 }
 
 /* Set xterm-like term window's title. */
