@@ -62,7 +62,7 @@ test_expect_success \
 	'cmp output expected' \
 
 ################################################################
-# Parse a two simple mailcap file; first one with tests
+# Parse a two simple mailcap files; first one with tests
 
 touch DISPLAY
 
@@ -89,7 +89,7 @@ program: gv %
 EOF
 
 test_expect_success \
-	'Parse two simple mailcap file; first one with tests.' \
+	'Parse two simple mailcap files; first one with tests.' \
 	'cmp output expected' \
 
 test_done
