@@ -208,11 +208,6 @@ exec_on_master_terminal(struct terminal *term,
 	unsigned char *param;
 	int param_size;
 
-	if (is_blocked() && fg) {
-		unlink(delete);
-		return;
-	}
-
 	param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
 	param = fmem_alloc(param_size);
 	if (!param) return;
@@ -284,6 +279,11 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 	if (term->master) {
 		if (!*path) {
 			dispatch_special(delete);
+			return;
+		}
+
+		if (fg && is_blocked()) {
+			unlink(delete);
 			return;
 		}
 
