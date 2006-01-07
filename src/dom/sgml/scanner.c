@@ -599,7 +599,8 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 	}
 
 	if (!string) {
-		/* Makes the next succeed when checking for incompletion. */
+		/* Makes the next succeed when checking for incompletion, and
+		 * puts the rest of the text within the token. */
 		string = scanner->end;
 
 		if (check_sgml_incomplete(scanner, string)) {
