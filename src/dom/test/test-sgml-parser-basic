@@ -43,8 +43,9 @@ test_expect_incomplete () {
 		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
 		s/[^a-zA-Z0-9-]//g;')"
 
-	test_expect_code 1 "$desc" \
-		"sgml-parser --uri '$URI' --src '$src' --incomplete"
+	sgml-parser --uri "$URI" --src "$src" --incomplete
+	test_expect_success "$desc" \
+		"test $? = 1"
 }
 
 
@@ -354,7 +355,7 @@ test_expect_incomplete \
 
 test_expect_incomplete \
 'Check incomplete attribute quoted value. (II)' \
-'<element attr='\''...'
+"<element attr='..."
 
 test_expect_incomplete \
 'Check incomplete processing instruction. (I)' \
