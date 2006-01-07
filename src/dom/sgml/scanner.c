@@ -129,6 +129,48 @@ check_sgml_error(struct dom_scanner *scanner)
 	return scanner->detect_errors && !found_error;
 }
 
+static unsigned char *
+get_sgml_error_end(struct dom_scanner *scanner, enum sgml_token_type type,
+		   unsigned char *end)
+{
+	switch (type) {
+	case SGML_TOKEN_CDATA_SECTION:
+	case SGML_TOKEN_NOTATION_ATTLIST:
+	case SGML_TOKEN_NOTATION_DOCTYPE:
+	case SGML_TOKEN_NOTATION_ELEMENT:
+		if (scanner->position + 9 < end)
+			end = scanner->position + 9;
+		break;
+
+	case SGML_TOKEN_NOTATION_COMMENT:
+		/* Just include the '<!--' part. */
+		if (scanner->position + 4 < end)
+			end = scanner->position + 4;
+		break;
+
+	case SGML_TOKEN_NOTATION_ENTITY:
+		if (scanner->position + 6 < end)
+			end = scanner->position + 6;
+		break;
+
+	case SGML_TOKEN_PROCESS_XML:
+		if (scanner->position + 5 < end)
+			end = scanner->position + 5;
+		break;
+
+	case SGML_TOKEN_PROCESS_XML_STYLESHEET:
+		if (scanner->position + 16 < end)
+			end = scanner->position + 16;
+		break;
+
+	default:
+		break;
+	}
+
+	return end;
+}
+
+
 static struct dom_scanner_token *
 set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
 {
@@ -619,42 +661,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 
 		if (check_sgml_error(scanner) && string == scanner->end) {
-			unsigned char *end = string;
+			unsigned char *end;
 
-			switch (type) {
-			case SGML_TOKEN_CDATA_SECTION:
-			case SGML_TOKEN_NOTATION_ATTLIST:
-			case SGML_TOKEN_NOTATION_DOCTYPE:
-			case SGML_TOKEN_NOTATION_ELEMENT:
-				if (scanner->position + 9 < end)
-					end = scanner->position + 9;
-				break;
-
-			case SGML_TOKEN_NOTATION_COMMENT:
-				/* Just include the '<!--' part. */
-				if (scanner->position + 4 < end)
-					end = scanner->position + 4;
-				break;
-
-			case SGML_TOKEN_NOTATION_ENTITY:
-				if (scanner->position + 6 < end)
-					end = scanner->position + 6;
-				break;
-
-			case SGML_TOKEN_PROCESS_XML:
-				if (scanner->position + 5 < end)
-					end = scanner->position + 5;
-				break;
-
-			case SGML_TOKEN_PROCESS_XML_STYLESHEET:
-				if (scanner->position + 16 < end)
-					end = scanner->position + 16;
-				break;
-
-			default:
-				break;
-			}
-
+			end = get_sgml_error_end(scanner, type, string);
 			token = set_sgml_error(scanner, end);
 			if (!token)
 				return;
