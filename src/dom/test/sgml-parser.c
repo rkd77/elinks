@@ -178,7 +178,8 @@ sgml_parser_test_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->contexts[0]->data;
 
-	if (parser->flags & SGML_PARSER_COUNT_LINES) {
+	if ((parser->flags & SGML_PARSER_COUNT_LINES)
+	    && !(parser->flags & SGML_PARSER_DETECT_ERRORS)) {
 		printf("%d\n", number_of_lines);
 	}
 }
@@ -219,6 +220,15 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 	}
 };
 
+static enum sgml_parser_code
+sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
+		    unsigned int line_number)
+{
+	printf("error on line %d: %.*s\n",
+	       line_number, string->length, string->string);
+
+	return SGML_PARSER_CODE_OK;
+}
 
 void die(const char *msg, ...)
 {
@@ -285,6 +295,9 @@ main(int argc, char *argv[])
 			flags |= SGML_PARSER_INCREMENTAL;
 			complete = 0;
 
+		} else if (!strcmp(arg, "error")) {
+			flags |= SGML_PARSER_DETECT_ERRORS;
+
 		} else if (!strcmp(arg, "help")) {
 			die(NULL);
 
@@ -296,6 +309,7 @@ main(int argc, char *argv[])
 	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri, flags);
 	if (!parser) return 1;
 
+	parser->error_func = sgml_error_function;
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
 	code = parse_sgml(parser, &source, complete);
