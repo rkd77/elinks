@@ -214,7 +214,7 @@ exec_on_master_terminal(struct terminal *term,
 	}
 
 	param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
-	param = mem_alloc(param_size);
+	param = fmem_alloc(param_size);
 	if (!param) return;
 
 	param[0] = fg;
@@ -225,13 +225,12 @@ exec_on_master_terminal(struct terminal *term,
 
 	blockh = start_thread((void (*)(void *, int)) exec_thread,
 			      param, param_size);
+	fmem_free(param);
 	if (blockh == -1) {
 		if (fg == 1) unblock_itrm(term->fdin);
-		mem_free(param);
 		return;
 	}
 
-	mem_free(param);
 	if (fg == 1) {
 		term->blocked = blockh;
 		set_handlers(blockh,
