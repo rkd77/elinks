@@ -169,7 +169,7 @@ check_uri_file(unsigned char *name)
 static void
 encode_file_uri_string(struct string *string, unsigned char *uristring)
 {
-	int filenamelen = check_uri_file(uristring);
+	int filenamelen = check_whether_file_exists(uristring);
 
 	encode_uri_string(string, uristring, filenamelen, 0);
 }
