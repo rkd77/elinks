@@ -38,6 +38,16 @@ struct sgml_parser_state {
 	struct dom_scanner_token end_token;
 };
 
+enum sgml_parser_code {
+	SGML_PARSER_CODE_OK,		/* The parsing was successful */
+	SGML_PARSER_CODE_INCOMPLETE,	/* The parsing could not be completed */
+	SGML_PARSER_CODE_MEM_ALLOC,	/* Failed to allocate memory */
+
+	/* FIXME: For when we will add support for requiring stricter parsing
+	 * or even a validator. */
+	SGML_PARSER_CODE_ERROR,
+};
+
 struct sgml_parser {
 	enum sgml_parser_type type;	/* Stream or tree */
 	enum sgml_parser_flag flags;	/* Flags that control the behaviour */
@@ -56,16 +66,6 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct dom_string *uri, enum sgml_parser_flag flags);
 
 void done_sgml_parser(struct sgml_parser *parser);
-
-enum sgml_parser_code {
-	SGML_PARSER_CODE_OK,		/* The parsing was successful */
-	SGML_PARSER_CODE_INCOMPLETE,	/* The parsing could not be completed */
-	SGML_PARSER_CODE_MEM_ALLOC,	/* Failed to allocate memory */
-
-	/* FIXME: For when we will add support for requiring stricter parsing
-	 * or even a validator. */
-	SGML_PARSER_CODE_ERROR,
-};
 
 enum sgml_parser_code
 parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
