@@ -336,8 +336,13 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			if (!token || token->type == SGML_TOKEN_INCOMPLETE)
 				return SGML_PARSER_CODE_INCOMPLETE;
 
-			assert(token->type == SGML_TOKEN_PROCESS_DATA);
+			if (token->type == SGML_TOKEN_ERROR)
+				break;
 
+			assert(token->type == SGML_TOKEN_PROCESS_DATA);
+			/* Fall-through */
+
+		case SGML_TOKEN_PROCESS_DATA:
 			if (add_sgml_proc_instruction(stack, &target, token)
 			    && (target.type == SGML_TOKEN_PROCESS_XML
 			        || target.type == SGML_TOKEN_PROCESS_XML_STYLESHEET)

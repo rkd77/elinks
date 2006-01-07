@@ -449,7 +449,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				assert(real_length >= 0);
 
 			} else {
-				skip_sgml_space(scanner, &string);
+				scan_sgml(scanner, string, SGML_CHAR_IDENT);
 				type = map_dom_scanner_string(scanner, ident, string, base);
 				if (skip_sgml(scanner, &string, '>', 0)) {
 					/* We found the end. */
@@ -473,7 +473,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string - token->string.string;
 			skip_sgml_space(scanner, &string);
 
-			if (is_sgml_space(string[-1])) {
+			/* Make '<?xml ' cause the right kind of error. */
+			if (is_sgml_space(string[-1])
+			    && string < scanner->end) {
 				/* We found the end. */
 				possibly_incomplete = 0;
 			}
@@ -610,7 +612,6 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (check_sgml_error(scanner)) {
 			unsigned char *end = string;
 
-			DBG("%d %d", type, SGML_TOKEN_NOTATION_DOCTYPE);
 			switch (type) {
 			case SGML_TOKEN_CDATA_SECTION:
 			case SGML_TOKEN_NOTATION_ATTLIST:
@@ -629,6 +630,16 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			case SGML_TOKEN_NOTATION_ENTITY:
 				if (scanner->position + 6 < end)
 					end = scanner->position + 6;
+				break;
+
+			case SGML_TOKEN_PROCESS_XML:
+				if (scanner->position + 5 < end)
+					end = scanner->position + 5;
+				break;
+
+			case SGML_TOKEN_PROCESS_XML_STYLESHEET:
+				if (scanner->position + 16 < end)
+					end = scanner->position + 16;
 				break;
 
 			default:
@@ -681,7 +692,7 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 		}
 
 		if (check_sgml_error(scanner)) {
-			token = set_sgml_error(scanner, scanner->position + 2);
+			token = set_sgml_error(scanner, string);
 			if (!token)
 				return;
 		}
