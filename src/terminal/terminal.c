@@ -201,17 +201,17 @@ void
 exec_on_terminal(struct terminal *term, unsigned char *path,
 		 unsigned char *delete, int fg)
 {
-	int plen;
-	int dlen = strlen(delete);
+	int plen, dlen;
 
-	if (path && !*path) return;
-	if (!path) {
-		path = "";
-		plen = 0;
+	if (path) {
+		if (!*path) return;
 	} else {
-		plen = strlen(path);
+		path = "";
 	}
-
+	
+	plen = strlen(path);
+	dlen = strlen(delete);
+		
 #ifdef NO_FG_EXEC
 	fg = 0;
 #endif
