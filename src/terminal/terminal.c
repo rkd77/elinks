@@ -256,16 +256,16 @@ exec_on_slave_terminal( struct terminal *term,
 			int fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
-	unsigned char *data = mem_alloc(data_size);
+	unsigned char *data = fmem_alloc(data_size);
 
-	if (data) {
-		data[0] = 0;
-		data[1] = fg;
-		memcpy(data + 2, path, plen + 1);
-		memcpy(data + 2 + plen + 1, delete, dlen + 1);
-		hard_write(term->fdout, data, data_size);
-		mem_free(data);
-	}
+	if (!data) return;
+	
+	data[0] = 0;
+	data[1] = fg;
+	memcpy(data + 2, path, plen + 1);
+	memcpy(data + 2 + plen + 1, delete, dlen + 1);
+	hard_write(term->fdout, data, data_size);
+	fmem_free(data);
 }
 
 void
