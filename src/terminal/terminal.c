@@ -236,7 +236,7 @@ exec_on_master_terminal(struct terminal *term,
 		set_handlers(term->fdin, NULL, NULL,
 			     (select_handler_T) destroy_terminal,
 			     term);
-		/* block_itrm(term->fdin); */
+
 	} else {
 		set_handlers(blockh, close_handle, NULL,
 			     close_handle, (void *) (long) blockh);
