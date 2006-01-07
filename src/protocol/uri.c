@@ -130,13 +130,13 @@ check_whether_file_exists(unsigned char *name)
 	for (i = 0; i < sizeof(chars) - 1; i++) {
 		unsigned char *pos = memchr(name, chars[i], namelen);
 		int exists;
-		
+
 		if (!pos) continue;
 
 		*pos = 0;
 		exists = file_exists(name);
 		*pos = chars[i];
-		
+
 		if (exists) {
 			return pos - name;
 		}
@@ -155,7 +155,7 @@ check_uri_file(unsigned char *name)
 
 	for (i = 0; i < sizeof(chars) - 1; i++) {
 		unsigned char *pos = memchr(name, chars[i], namelen);
-	
+
 		if (!pos) continue;
 
 		return pos - name;
