@@ -205,11 +205,9 @@ exec_on_master_terminal(struct terminal *term,
 			int fg)
 {
 	int blockh;
-	unsigned char *param;
-	int param_size;
+	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
+	unsigned char *param = fmem_alloc(param_size);
 
-	param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
-	param = fmem_alloc(param_size);
 	if (!param) return;
 
 	param[0] = fg;
@@ -253,7 +251,7 @@ exec_on_slave_terminal( struct terminal *term,
 	unsigned char *data = fmem_alloc(data_size);
 
 	if (!data) return;
-	
+
 	data[0] = 0;
 	data[1] = fg;
 	memcpy(data + 2, path, plen + 1);
