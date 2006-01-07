@@ -15,15 +15,7 @@ test_expect_incomplete () {
 	desc="$1"; shift
 	src="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
-
-	sgml-parser --uri "$URI" --src "$src" --incomplete >/dev/null
+	sgml-parser --src "$src" --incomplete >/dev/null
 	test_expect_success "$desc" \
 		"test $? = 1"
 }

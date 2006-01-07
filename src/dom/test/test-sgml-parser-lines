@@ -16,15 +16,7 @@ test_output_line_numbers () {
 	src="$1"; shift
 	expected_lines="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
-
-	lines=$(sgml-parser --uri "$URI" --src "$src" --print-lines)
+	lines=$(sgml-parser --src "$src" --print-lines)
 
 	test_expect_success "$desc" "test $lines = $expected_lines"
 }
