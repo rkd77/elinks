@@ -104,7 +104,8 @@ sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data
 	struct dom_string *name = get_dom_node_name(node);
 
 	/* Always print the URI for identification. */
-	update_number_of_lines(stack);
+	if (update_number_of_lines(stack))
+		return;
 
 	print_indent(stack);
 	printf("%.*s: %.*s\n",

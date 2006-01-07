@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test the SGML parsers counting of lines
+
+Checks that the SGML parser correctly reports how many lines the
+source has.
+'
+
+. "$TEST_LIB"
+
+test_output_line_numbers () {
+	desc="$1"; shift
+	src="$1"; shift
+	expected_lines="$1"; shift
+
+	URI="test:$(echo "$desc" | sed '
+		s/^[ \t]*\[[^]]*\][ \t]*//;
+		s/[:., \t][:., \t]*/-/g;
+		s/_/-/g;
+		# *cough*
+		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+		s/[^a-zA-Z0-9-]//g;')"
+
+	lines=$(sgml-parser --uri "$URI" --src "$src" --print-lines)
+
+	test_expect_success "$desc" "test $lines = $expected_lines"
+}
+
+
+################################################################
+# Check line numbers
+
+test_output_line_numbers \
+'Check line numbers. (I)' \
+'<!-- line --> number <one />' \
+1
+ 
+test_output_line_numbers \
+'Check line numbers. (II)' \
+'<
+line:2
+line:3                      
+=
+"line:5"
+><?xml	
+	line:7="..."
+ line:8
+ =
+ '\''...'\''></line:10>' \
+10
+ 
+test_output_line_numbers \
+'Check line numbers. (III)' \
+'1
+2
+3
+4
+5
+6
+7
+8' \
+8
+
+test_done
