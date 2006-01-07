@@ -526,6 +526,12 @@ Set or get the c-format or no-c-format flag on the object.
 This can take 3 values: 1 implies c-format, 0 implies no-c-format,
 and blank or undefined implies neither.
 
+=item php_format
+
+Set or get the php-format or no-php-format flag on the object.
+This can take 3 values: 1 implies php-format, 0 implies no-php-format,
+and blank or undefined implies neither.
+
 =item dump
 
 Returns the entry as a string, suitable for output to a po file.
@@ -588,6 +594,10 @@ Corrected a typo in the documentation.
 Documented quoting in the C<msgid>, C<msgid_plural>, C<msgstr>, and C<msgstr_n> methods.
 Documented newlines in the C<comment>, C<automatic>, and C<reference> methods.
 Use fields, and "my Locale::PO" where applicable.
+
+=item Z<>2006-01-07  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+Documented the C<php_format> method.
 
 =back
 
