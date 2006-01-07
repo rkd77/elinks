@@ -197,91 +197,106 @@ unblock_terminal(struct terminal *term)
 		textarea_edit(1, NULL, NULL, NULL, NULL);
 }
 
+
+static void
+exec_on_master_terminal(struct terminal *term,
+			unsigned char *path, int plen,
+		 	unsigned char *delete, int dlen,
+			int fg)
+{
+	int blockh;
+	unsigned char *param;
+	int param_size;
+
+	if (is_blocked() && fg) {
+		unlink(delete);
+		return;
+	}
+
+	param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
+	param = mem_alloc(param_size);
+	if (!param) return;
+
+	param[0] = fg;
+	memcpy(param + 1, path, plen + 1);
+	memcpy(param + 1 + plen + 1, delete, dlen + 1);
+
+	if (fg == 1) block_itrm(term->fdin);
+
+	blockh = start_thread((void (*)(void *, int)) exec_thread,
+			      param, param_size);
+	if (blockh == -1) {
+		if (fg == 1) unblock_itrm(term->fdin);
+		mem_free(param);
+		return;
+	}
+
+	mem_free(param);
+	if (fg == 1) {
+		term->blocked = blockh;
+		set_handlers(blockh,
+			     (select_handler_T) unblock_terminal,
+			     NULL,
+			     (select_handler_T) unblock_terminal,
+			     term);
+		set_handlers(term->fdin, NULL, NULL,
+			     (select_handler_T) destroy_terminal,
+			     term);
+		/* block_itrm(term->fdin); */
+	} else {
+		set_handlers(blockh, close_handle, NULL,
+			     close_handle, (void *) (long) blockh);
+	}
+}
+
+static void
+exec_on_slave_terminal( struct terminal *term,
+		 	unsigned char *path, int plen,
+		 	unsigned char *delete, int dlen,
+			int fg)
+{
+	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
+	unsigned char *data = mem_alloc(data_size);
+
+	if (data) {
+		data[0] = 0;
+		data[1] = fg;
+		memcpy(data + 2, path, plen + 1);
+		memcpy(data + 2 + plen + 1, delete, dlen + 1);
+		hard_write(term->fdout, data, data_size);
+		mem_free(data);
+	}
+}
+
 void
 exec_on_terminal(struct terminal *term, unsigned char *path,
 		 unsigned char *delete, int fg)
 {
-	int plen, dlen;
-
 	if (path) {
 		if (!*path) return;
 	} else {
 		path = "";
 	}
-	
-	plen = strlen(path);
-	dlen = strlen(delete);
-		
+
 #ifdef NO_FG_EXEC
 	fg = 0;
 #endif
+
 	if (term->master) {
-		if (!*path) dispatch_special(delete);
-		else {
-			int blockh;
-			unsigned char *param;
-			int param_size;
-
-			if (is_blocked() && fg) {
-				unlink(delete);
-				return;
-			}
-
-			param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
-			param = mem_alloc(param_size);
-			if (!param) return;
-
-			param[0] = fg;
-			memcpy(param + 1, path, plen + 1);
-			memcpy(param + 1 + plen + 1, delete, dlen + 1);
-
-			if (fg == 1) block_itrm(term->fdin);
-
-			blockh = start_thread((void (*)(void *, int)) exec_thread,
-					      param, param_size);
-			if (blockh == -1) {
-				if (fg == 1) unblock_itrm(term->fdin);
-				mem_free(param);
-				return;
-			}
-
-			mem_free(param);
-			if (fg == 1) {
-				term->blocked = blockh;
-				set_handlers(blockh,
-					     (select_handler_T) unblock_terminal,
-					     NULL,
-					     (select_handler_T) unblock_terminal,
-					     term);
-				set_handlers(term->fdin, NULL, NULL,
-					     (select_handler_T) destroy_terminal,
-					     term);
-				/* block_itrm(term->fdin); */
-			} else {
-				set_handlers(blockh, close_handle, NULL,
-					     close_handle, (void *) (long) blockh);
-			}
+		if (!*path) {
+			dispatch_special(delete);
+			return;
 		}
+
+		exec_on_master_terminal(term,
+					path, strlen(path),
+		 			delete, strlen(delete),
+					fg);
 	} else {
-		int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
-		unsigned char *data = mem_alloc(data_size);
-
-		if (data) {
-			data[0] = 0;
-			data[1] = fg;
-			memcpy(data + 2, path, plen + 1);
-			memcpy(data + 2 + plen + 1, delete, dlen + 1);
-			hard_write(term->fdout, data, data_size);
-			mem_free(data);
-		}
-#if 0
-		char x = 0;
-		hard_write(term->fdout, &x, 1);
-		x = fg;
-		hard_write(term->fdout, &x, 1);
-		hard_write(term->fdout, path, strlen(path) + 1);
-		hard_write(term->fdout, delete, strlen(delete) + 1);
-#endif
+		exec_on_slave_terminal( term,
+					path, strlen(path),
+		 			delete, strlen(delete),
+					fg);
 	}
 }
 
