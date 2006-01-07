@@ -154,6 +154,17 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 
 /* SGML parser main handling: */
 
+static enum sgml_parser_code
+call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *token)
+{
+	struct sgml_parser *parser = get_sgml_parser(stack);
+	unsigned int line = get_sgml_parser_line_number(parser);
+
+	assert(parser->error_func);
+
+	return parser->error_func(parser, &token->string, line);
+}
+
 static inline enum sgml_parser_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
@@ -217,6 +228,17 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 		case SGML_TOKEN_INCOMPLETE:
 			return SGML_PARSER_CODE_INCOMPLETE;
 
+		case SGML_TOKEN_ERROR:
+		{
+			enum sgml_parser_code code;
+
+			code = call_sgml_error_function(stack, token);
+			if (code != SGML_PARSER_CODE_OK)
+				return code;
+
+			skip_dom_scanner_token(scanner);
+			break;
+		}
 		default:
 			skip_dom_scanner_token(scanner);
 		}
@@ -326,7 +348,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* The attribute souce is complete. */
 				init_dom_scanner(&attr_scanner, &sgml_scanner_info,
 						 &token->string, SGML_STATE_ELEMENT,
-						 scanner->count_lines, 1, 0);
+						 scanner->count_lines, 1, 0, 0);
 
 				if (dom_scanner_has_tokens(&attr_scanner)) {
 					/* Ignore parser codes from this
@@ -350,6 +372,17 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 		case SGML_TOKEN_INCOMPLETE:
 			return SGML_PARSER_CODE_INCOMPLETE;
 
+		case SGML_TOKEN_ERROR:
+		{
+			enum sgml_parser_code code;
+
+			code = call_sgml_error_function(stack, token);
+			if (code != SGML_PARSER_CODE_OK)
+				return code;
+
+			skip_dom_scanner_token(scanner);
+			break;
+		}
 		case SGML_TOKEN_SPACE:
 		case SGML_TOKEN_TEXT:
 		default:
@@ -403,11 +436,13 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
 	int complete = !!(parser->flags & SGML_PARSER_COMPLETE);
 	int incremental = !!(parser->flags & SGML_PARSER_INCREMENTAL);
+	int detect_errors = !!(parser->flags & SGML_PARSER_DETECT_ERRORS);
 
 	parsing->depth = parser->stack.depth;
 	get_dom_stack_top(&parser->stack)->immutable = 1;
 	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
-			 SGML_STATE_TEXT, count_lines, complete, incremental);
+			 SGML_STATE_TEXT, count_lines, complete, incremental,
+			 detect_errors);
 }
 
 static void
@@ -494,6 +529,11 @@ get_sgml_parser_line_number(struct sgml_parser *parser)
 
 	assert(pstate->scanner.count_lines && pstate->scanner.lineno);
 
+	if (pstate->scanner.current
+	    && pstate->scanner.current < pstate->scanner.table + DOM_SCANNER_TOKENS
+	    && pstate->scanner.current->type == SGML_TOKEN_ERROR)
+		return pstate->scanner.current->lineno;
+
 	return pstate->scanner.lineno;
 }
 
@@ -552,6 +592,9 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		mem_free(parser);
 		return NULL;
 	}
+
+	if (flags & SGML_PARSER_DETECT_ERRORS)
+		flags |= SGML_PARSER_COUNT_LINES;
 
 	parser->type  = type;
 	parser->flags = flags;

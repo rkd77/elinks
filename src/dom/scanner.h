@@ -20,6 +20,9 @@ struct dom_scanner_token {
 	/* Some precedence value */
 	int precedence;
 
+	/* The line number; used for error tokens */
+	unsigned int lineno;
+
 	/* The start of the token string and the token length */
 	struct dom_string string;
 };
@@ -93,7 +96,7 @@ struct dom_scanner_info {
 /* Initializes the scanner. */
 void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
 		      struct dom_string *string, int state, int count_lines, int complete,
-		      int check_complete);
+		      int check_complete, int detect_error);
 
 /* The number of tokens in the scanners token table:
  * At best it should be big enough to contain properties with space separated
@@ -129,6 +132,9 @@ struct dom_scanner {
 	 * generated. */
 	unsigned int check_complete:1;	/* Only generate complete tokens */
 	unsigned int incomplete:1;	/* The scanned string is incomplete */
+
+	unsigned int detect_errors:1;	/* Check for markup errors */
+	unsigned int found_error;	/* Did we already report this error? */
 
 	unsigned int count_lines:1;	/* Is line counting enbaled? */
 	unsigned int lineno;		/* Line # of the last scanned token */

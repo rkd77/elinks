@@ -52,6 +52,10 @@ enum sgml_token_type {
 	 * not complete. Only meaningful if scanner->complete is incomplete. */
 	SGML_TOKEN_INCOMPLETE,
 
+	/* A special token for reporting that an error in the markup was found.
+	 * Only in effect when error checking has been requested. */
+	SGML_TOKEN_ERROR,
+
 	/* Token type used internally when scanning to signal that the token
 	 * should not be recorded in the scanners token table. */
 	SGML_TOKEN_SKIP,

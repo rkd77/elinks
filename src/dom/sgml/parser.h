@@ -7,6 +7,7 @@
 #include "dom/sgml/sgml.h"
 #include "dom/scanner.h"
 
+struct sgml_parser;
 struct string;
 struct uri;
 
@@ -26,6 +27,7 @@ enum sgml_parser_flag {
 	SGML_PARSER_COUNT_LINES	= 1,
 	SGML_PARSER_COMPLETE = 2,
 	SGML_PARSER_INCREMENTAL = 4,
+	SGML_PARSER_DETECT_ERRORS = 8,
 };
 
 struct sgml_parser_state {
@@ -48,6 +50,11 @@ enum sgml_parser_code {
 	SGML_PARSER_CODE_ERROR,
 };
 
+/* If the return code is not SGML_PARSER_CODE_OK the parsing will be ended and
+ * that code will be returned. */
+typedef enum sgml_parser_code
+(*sgml_error_T)(struct sgml_parser *, struct dom_string *, unsigned int);
+
 struct sgml_parser {
 	enum sgml_parser_type type;	/* Stream or tree */
 	enum sgml_parser_flag flags;	/* Flags that control the behaviour */
@@ -56,6 +63,8 @@ struct sgml_parser {
 
 	struct dom_string uri;		/* The URI of the DOM document */
 	struct dom_node *root;		/* The document root node */
+
+	sgml_error_T error_func;
 
 	struct dom_stack stack;		/* A stack for tracking parsed nodes */
 	struct dom_stack parsing;	/* Used for tracking parsing states */
