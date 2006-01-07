@@ -143,7 +143,6 @@ test_output_error \
 '
 error on line 1: attr...'
 
-cat >/dev/null <<FIXME
 test_output_error \
 'Check incomplete attribute value.' \
 '<element attr=...' \
@@ -161,6 +160,5 @@ test_output_error \
 "<element attr='..." \
 "
 error on line 1: '..."
-FIXME
 
 test_done

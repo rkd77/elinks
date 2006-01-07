@@ -133,16 +133,25 @@ static struct dom_scanner_token *
 set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
 {
 	struct dom_scanner_token *token = scanner->current;
+	struct dom_scanner_token *next;
 
 	assert(!scanner->found_error);
 
-	scanner->found_error = 1;
+	if (scanner->current >= scanner->table + DOM_SCANNER_TOKENS) {
+		scanner->found_error = 1;
+		next = NULL;
+
+	} else {
+		scanner->current++;
+		next = scanner->current;
+		copy_struct(next, token);
+	}
 
 	token->type = SGML_TOKEN_ERROR;
 	token->lineno = scanner->lineno;
 	set_dom_string(&token->string, scanner->position, end - scanner->position);
 
-	return scanner->found_error ? NULL : scanner->current;
+	return next;
 }
 
 
@@ -609,7 +618,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			return;
 		}
 
-		if (check_sgml_error(scanner)) {
+		if (check_sgml_error(scanner) && string == scanner->end) {
 			unsigned char *end = string;
 
 			switch (type) {
