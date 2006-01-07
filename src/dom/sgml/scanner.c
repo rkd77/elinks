@@ -622,35 +622,34 @@ static struct dom_scanner_token *
 scan_sgml_tokens(struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *table_end = scanner->table + DOM_SCANNER_TOKENS;
-	struct dom_scanner_token *current;
 
 	if (!begin_dom_token_scanning(scanner))
 		return get_dom_scanner_token(scanner);
 
 	/* Scan tokens until we fill the table */
-	for (current = scanner->table + scanner->tokens;
-	     current < table_end && scanner->position < scanner->end;
-	     current++) {
+	for (scanner->current = scanner->table + scanner->tokens;
+	     scanner->current < table_end && scanner->position < scanner->end;
+	     scanner->current++) {
 		if (scanner->state == SGML_STATE_ELEMENT
 		    || (*scanner->position == '<'
 			&& scanner->state != SGML_STATE_PROC_INST)) {
 			skip_sgml_space(scanner, &scanner->position);
 			if (scanner->position >= scanner->end) break;
 
-			scan_sgml_element_token(scanner, current);
+			scan_sgml_element_token(scanner, scanner->current);
 
 			/* Shall we scratch this token? */
-			if (current->type == SGML_TOKEN_SKIP) {
-				current--;
+			if (scanner->current->type == SGML_TOKEN_SKIP) {
+				scanner->current--;
 			}
 
 		} else if (scanner->state == SGML_STATE_TEXT) {
-			scan_sgml_text_token(scanner, current);
+			scan_sgml_text_token(scanner, scanner->current);
 
 		} else {
-			scan_sgml_proc_inst_token(scanner, current);
+			scan_sgml_proc_inst_token(scanner, scanner->current);
 		}
 	}
 
-	return end_dom_token_scanning(scanner, current);
+	return end_dom_token_scanning(scanner, scanner->current);
 }
