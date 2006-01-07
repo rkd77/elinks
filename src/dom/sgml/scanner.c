@@ -117,6 +117,35 @@ set_sgml_incomplete(struct dom_scanner *scanner, struct dom_scanner_token *token
 	scanner->position = scanner->end;
 }
 
+
+static inline int
+check_sgml_error(struct dom_scanner *scanner)
+{
+	unsigned int found_error = scanner->found_error;
+
+	/* Toggle if we found an error previously. */
+	scanner->found_error = 0;
+
+	return scanner->detect_errors && !found_error;
+}
+
+static struct dom_scanner_token *
+set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
+{
+	struct dom_scanner_token *token = scanner->current;
+
+	assert(!scanner->found_error);
+
+	scanner->found_error = 1;
+
+	token->type = SGML_TOKEN_ERROR;
+	token->lineno = scanner->lineno;
+	set_dom_string(&token->string, scanner->position, end - scanner->position);
+
+	return scanner->found_error ? NULL : scanner->current;
+}
+
+
 /* Text token scanning */
 
 /* I think it is faster to not check the table here --jonas */
@@ -155,9 +184,17 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 		}
 
 		/* We want the biggest possible text token. */
-		if (check_sgml_incomplete(scanner, string) && !complete) {
-			set_sgml_incomplete(scanner, token);
-			return;
+		if (!complete) {
+			if (check_sgml_incomplete(scanner, string)) {
+				set_sgml_incomplete(scanner, token);
+				return;
+			}
+
+			if (check_sgml_error(scanner)) {
+				token = set_sgml_error(scanner, string);
+				if (!token)
+					return;
+			}
 		}
 
 	} else {
@@ -564,9 +601,44 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 	}
 
-	if (possibly_incomplete && check_sgml_incomplete(scanner, string)) {
-		set_sgml_incomplete(scanner, token);
-		return;
+	if (possibly_incomplete) {
+		if (check_sgml_incomplete(scanner, string)) {
+			set_sgml_incomplete(scanner, token);
+			return;
+		}
+
+		if (check_sgml_error(scanner)) {
+			unsigned char *end = string;
+
+			DBG("%d %d", type, SGML_TOKEN_NOTATION_DOCTYPE);
+			switch (type) {
+			case SGML_TOKEN_CDATA_SECTION:
+			case SGML_TOKEN_NOTATION_ATTLIST:
+			case SGML_TOKEN_NOTATION_DOCTYPE:
+			case SGML_TOKEN_NOTATION_ELEMENT:
+				if (scanner->position + 9 < end)
+					end = scanner->position + 9;
+				break;
+
+			case SGML_TOKEN_NOTATION_COMMENT:
+				/* Just include the '<!--' part. */
+				if (scanner->position + 4 < end)
+					end = scanner->position + 4;
+				break;
+
+			case SGML_TOKEN_NOTATION_ENTITY:
+				if (scanner->position + 6 < end)
+					end = scanner->position + 6;
+				break;
+
+			default:
+				break;
+			}
+
+			token = set_sgml_error(scanner, end);
+			if (!token)
+				return;
+		}
 	}
 
 	token->type = type;
@@ -606,6 +678,12 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 		if (check_sgml_incomplete(scanner, string)) {
 			set_sgml_incomplete(scanner, token);
 			return;
+		}
+
+		if (check_sgml_error(scanner)) {
+			token = set_sgml_error(scanner, scanner->position + 2);
+			if (!token)
+				return;
 		}
 	}
 
