@@ -43,7 +43,7 @@ test_expect_incomplete () {
 		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
 		s/[^a-zA-Z0-9-]//g;')"
 
-	sgml-parser --uri "$URI" --src "$src" --incomplete
+	sgml-parser --uri "$URI" --src "$src" --incomplete >/dev/null
 	test_expect_success "$desc" \
 		"test $? = 1"
 }
