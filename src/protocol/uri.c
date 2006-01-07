@@ -151,21 +151,17 @@ check_uri_file(unsigned char *name)
 	/* Check POST_CHAR etc ... */
 	static const unsigned char chars[] = POST_CHAR_S "#?";
 	int i;
+	int namelen = strlen(name);
 
 	for (i = 0; i < sizeof(chars) - 1; i++) {
-		unsigned char *pos = strchr(name, chars[i]);
-		int namelen;
-
+		unsigned char *pos = memchr(name, chars[i], namelen);
+	
 		if (!pos) continue;
 
-		*pos = 0;
-		namelen = strlen(name);
-		*pos = chars[i];
-
-		return namelen;
+		return pos - name;
 	}
 
-	return strlen(name);
+	return namelen;
 }
 
 /* Encodes URIs without encoding stuff like fragments and query separators. */
