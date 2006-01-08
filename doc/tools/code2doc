@@ -7,9 +7,10 @@ print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to stdout.\n"
 	and exit if not @ARGV;
 
 my ($input)  = @ARGV;
-my ($found, $start, $first, $gotone);
+my ($found, $start, $first, $gotone, $idpath);
 print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
 open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
+$idpath = '';
 while (<FILEIN>)
 {
 	if ($found)
@@ -24,6 +25,7 @@ while (<FILEIN>)
 		$_ = $1; $first = 1;
 		print STDOUT "\n\n" if $start;
 		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
+		if ($_ =~ /struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
 		if ($_ =~ /::/) { $_ = "$_\n\n"; }
 		else
 		{
@@ -31,10 +33,10 @@ while (<FILEIN>)
 			$_ = "$_\n$dash\n\n";
 		}
 	}
-	elsif ($_ =~ /\s*([A-Z0-9_]+)(\s+=\s+[0-9]+)?,\s*\/\*::\s*(.*)\s+\*\/$/)
+	elsif ($_ =~ /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
 	{
 		print STDOUT "\n" if $gotone;
-		$_ =~ s/\s*([A-Z0-9_]+)(\s+=\s+[0-9]+|),\s*\/\*::\s*(.*)\s+\*\/$/id:[$1]::\n\t$3/;
+		$_ = "\nid:[$idpath$2]::\n\t$4\n";
 		$found = 'sorta'; $gotone = $.;
 	}
 	print STDOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
