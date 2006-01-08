@@ -8,7 +8,7 @@ print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to [FILE].out.\n"
 
 my ($input)  = @ARGV;
 my ($output) = $input . '.out';
-my ($found, $start);
+my ($found, $start, $first);
 print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
 open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
 open FILEOUT, ">$output" or print "Cannot open $output for writing.\n" and exit;
@@ -17,10 +17,11 @@ while (<FILEIN>)
 {
 	if ($found)
 	{
-		next if $_ =~ /^\s+\*\s$/;
+		if ($_ =~ /^\s+\*\s$/) { next if $first; $_ =~ s/\*// if not $first; }
 		if ($_ =~ /^\s\*+\/$/ or $_ !~ /^\s/) { $found = undef; next; }
 		$_ =~ s/^(\s*)\s\*\s/$1/;
 		$found = 'sorta' if $_ =~ s/\s*\*\/$//;
+		$first = undef;
 	}
 	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
 	{
@@ -29,6 +30,7 @@ while (<FILEIN>)
 		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
 		my $dash;  for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
 		$_ = "$_\n$dash\n";
+		$first = 1;
 	}
 	elsif ($_ =~ /\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s*\*\/$/)
 	{
