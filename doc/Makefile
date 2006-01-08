@@ -14,6 +14,7 @@ TXT_DIR	 = $(top_srcdir)/doc/txt
 
 DOC_DIRS = \
  $(HTML_DIR) \
+ $(HTML_DIR)/api \
  $(MAN_DIR)/man1 \
  $(MAN_DIR)/man5 \
  $(TXT_DIR) \
@@ -51,12 +52,14 @@ FEATURES = $(top_srcdir)/features.conf
 ### Scripts
 #
 
+CODE2DOC		= $(top_srcdir)/doc/tools/code2doc
 HELP2DOC		= $(top_srcdir)/doc/tools/help2doc
 IMPORT_FEATURES_CONF	= $(top_srcdir)/doc/tools/import-features.conf
 MAKE_ELINKS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinks-manpage
 MAKE_ELINKSKEYS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinkskeys-manpage
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
+ api/dom-sgml-parser.html \
  elinks.1.html \
  elinkskeys.5.html \
  hacking.html \
@@ -164,5 +167,11 @@ $(HTML_DIR)/perl.html: $(top_srcdir)/doc/perl.pod
 
 $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl
 	$(POD2HTML) --outfile=$@ < $<
+
+## API Docs
+#
+
+$(HTML_DIR)/api/dom-sgml-parser.html: $(top_srcdir)/src/dom/sgml/parser.h
+	$(CODE2DOC) $< | $(ASCIIDOC) -f code2doc.conf -b xhtml11 -d book -o $@ -n -
 
 include $(top_srcdir)/Makefile.lib
