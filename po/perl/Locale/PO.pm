@@ -643,6 +643,15 @@ in GNU Gettext.
 Locale::PO requires blank lines between entries, but Uniforum style PO
 files don't have any.
 
+The C<quote> and C<dequote> methods assume Perl knows the encoding
+of the string.  If it doesn't, they'll treat each 0x5C byte as a
+backslash even if it's actually part of a multibyte character.
+Therefore, Locale::PO should parse the charset parameter from the
+header entry, and decode the strings with that.  It is unclear whether
+the charset must be decoded even before the newlines and quotes are
+parsed; this would mainly be a requirement with UTF-16, which GNU
+Gettext doesn't support.
+
 =head2 Almost Bugs
 
 Locale::PO does not save the line numbers at which entries begin or
