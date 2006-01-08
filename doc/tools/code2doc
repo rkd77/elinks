@@ -3,16 +3,13 @@ use strict;
 use warnings;
 use diagnostics;
 
-print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to [FILE].out.\n"
+print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to stdout.\n"
 	and exit if not @ARGV;
 
 my ($input)  = @ARGV;
-my ($output) = $input . '.out';
 my ($found, $start, $first, $gotone);
 print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
 open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
-open FILEOUT, ">$output" or print "Cannot open $output for writing.\n" and exit;
-print "Processing $input...\n";
 while (<FILEIN>)
 {
 	if ($found)
@@ -25,7 +22,7 @@ while (<FILEIN>)
 	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
 	{
 		$_ = $1; $first = 1;
-		print FILEOUT "\n\n" if $start;
+		print STDOUT "\n\n" if $start;
 		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
 		if ($_ =~ /::/) { $_ = "$_\n\n"; }
 		else
@@ -36,14 +33,12 @@ while (<FILEIN>)
 	}
 	elsif ($_ =~ /\s*([A-Z0-9_]+)(\s+=\s+[0-9]+)?,\s*\/\*::\s*(.*)\s+\*\/$/)
 	{
-		print FILEOUT "\n" if $gotone;
+		print STDOUT "\n" if $gotone;
 		$_ =~ s/\s*([A-Z0-9_]+)(\s+=\s+[0-9]+|),\s*\/\*::\s*(.*)\s+\*\/$/id[$1]::\n  $3/;
 		$found = 'sorta'; $gotone = $.;
 	}
-	print FILEOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
+	print STDOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
 	next if not $found;  $found = undef if $found eq 'sorta';
-	print FILEOUT $_ and $start = 1;
+	print STDOUT $_ and $start = 1;
 }
-close FILEOUT;
 close FILEIN;
-print "$output completed.\n";
