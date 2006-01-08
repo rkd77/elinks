@@ -8,7 +8,7 @@ print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to [FILE].out.\n"
 
 my ($input)  = @ARGV;
 my ($output) = $input . '.out';
-my ($found, $start, $first);
+my ($found, $start, $first, $gotone);
 print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
 open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
 open FILEOUT, ">$output" or print "Cannot open $output for writing.\n" and exit;
@@ -25,7 +25,7 @@ while (<FILEIN>)
 	}
 	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
 	{
-		print FILEOUT "\n\n" if $start;
+		print FILEOUT "\n\n\n" if $start;
 		$_ = $1;
 		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
 		if ($_ =~ /::/) { $_ = "$_\n\n"; }
@@ -38,9 +38,11 @@ while (<FILEIN>)
 	}
 	elsif ($_ =~ /\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/)
 	{
+		print FILEOUT "\n" if $gotone;
 		$_ =~ s/\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/id[$1]::\n  $2/;
-		$found = 'sorta';
+		$found = 'sorta'; $gotone = 1;
 	}
+	else { $gotone = undef; }
 	next if not $found;  $found = undef if $found eq 'sorta';
 	print FILEOUT $_ and $start = 1;
 }
