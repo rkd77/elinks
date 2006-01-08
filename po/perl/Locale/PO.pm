@@ -588,16 +588,25 @@ General Public License version 2|perlgpl>:
 
 =item Z<>2006-01-06  Kalle Olavi Niemitalo  <kon@iki.fi>
 
-Appended ".kon" to $VERSION.
-Added the copyright notice (from README) and this history.
+Appended ".kon" to C<$VERSION>.
+Use C<fields>, and C<my Locale::PO> where applicable.
+
+POD changes:
+Added the copyright notice (from F<README>) and this history.
 Corrected a typo in the documentation.
 Documented quoting in the C<msgid>, C<msgid_plural>, C<msgstr>, and C<msgstr_n> methods.
 Documented newlines in the C<comment>, C<automatic>, and C<reference> methods.
-Use fields, and "my Locale::PO" where applicable.
 
 =item Z<>2006-01-07  Kalle Olavi Niemitalo  <kon@iki.fi>
 
+POD changes:
 Documented the C<php_format> method.
+
+=item Z<>2006-01-08  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+POD changes:
+Greatly expanded the L</BUGS> section.
+Reformatted this list of changes.
 
 =back
 
@@ -611,6 +620,41 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 If you load_file then save_file, the output file may have slight
 cosmetic differences from the input file (an extra blank line here or there).
+
+Locale::PO does not understand obsolete entries that msgmerge comments
+out with "#~", and it warns about every such line.  The warnings can
+be silenced via C<$SIG{__WARN__}>, but that isn't very clean.
+
+Document the situations in which C<msgstr> et al can return C<undef>.
+
+The C<c_format> and C<php_format> methods are documented: "1 implies
+c-format, 0 implies no-c-format, and blank or undefined implies
+neither."  However, the implementation seems to treat empty strings
+the same as 0.
+
+Locale::PO either discards or corrupts the "#," flags it does not
+recognize: "objc-format" becomes "c-format", and "no-php-format"
+becomes "php-format".  Unrecognized flags should be preserved;
+perhaps the order of flags should also be preserved.
+
+Names of flags are case-insensitive in Locale::PO but case-sensitive
+in GNU Gettext.
+
+Locale::PO requires blank lines between entries, but Uniforum style PO
+files don't have any.
+
+=head2 Almost Bugs
+
+Locale::PO does not save the line numbers at which entries begin or
+end in the PO file.  These would be useful in error messages.
+
+The C<msgid> and C<msgstr> methods return quoted strings, but they
+expect unquoted strings as input.  It would be better to have both
+quoted or both unquoted; or perhaps C<< $po->msgid(-quoted => 1) >>.
+
+Locale::PO discards all types of comments it does not recognize.
+The B<msgmerge> program of GNU gettext-tools 0.14.3 does the same,
+so perhaps it's not a problem.
 
 =head1 SEE ALSO
 
