@@ -1,0 +1,43 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+use diagnostics;
+
+print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to [FILE].out.\n"
+	and exit if not @ARGV;
+
+my ($input)  = @ARGV;
+my ($output) = $input . '.out';
+my ($found, $start);
+print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
+open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
+open FILEOUT, ">$output" or print "Cannot open $output for writing.\n" and exit;
+print "Processing $input...\n";
+while (<FILEIN>)
+{
+	if ($found)
+	{
+		next if $_ =~ /^\s+\*\s$/;
+		if ($_ =~ /^\s\*+\/$/ or $_ !~ /^\s/) { $found = undef; next; }
+		$_ =~ s/^(\s*)\s\*\s/$1/;
+		$found = 'sorta' if $_ =~ s/\s*\*\/$//;
+	}
+	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
+	{
+		print FILEOUT "\n\n" if $start;
+		$_ = $1;
+		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
+		my $dash;  for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
+		$_ = "$_\n$dash\n";
+	}
+	elsif ($_ =~ /\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s*\*\/$/)
+	{
+		$_ =~ s/\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s*\*\/$/id[$1]::\n  $2/;
+		$found = 'sorta';
+	}
+	next if not $found;  $found = undef if $found eq 'sorta';
+	print FILEOUT $_ and $start = 1;
+}
+close FILEOUT;
+close FILEIN;
+print "$output completed.\n";
