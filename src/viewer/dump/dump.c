@@ -335,8 +335,9 @@ add_document_to_string(struct string *string, struct document *document)
 			if (!isscreensafe(data)) {
 				white++;
 				continue;
-			} else if (frame && data >= 176 && data < 224) {
-				data = frame_dumb[data - 176];
+			} else {
+				if (frame && data >= 176 && data < 224)
+					data = frame_dumb[data - 176];
 
 				if (data <= ' ') {
 					/* Count spaces. */
