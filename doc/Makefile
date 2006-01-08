@@ -83,16 +83,14 @@ MAN_DOCS  += $(MAN_DOCS-yes)
 HTML_DOCS += $(HTML_DOCS-yes)
 PDF_DOCS  += $(PDF_DOCS-yes)
 
-man-docs:  $(addprefix $(MAN_DIR)/,$(MAN_DOCS))
-html-docs: $(addprefix $(HTML_DIR)/,$(HTML_DOCS))
-pdf-docs:  $(addprefix $(PDF_DIR)/,$(PDF_DOCS))
+man-docs:  doc-dirs $(addprefix $(MAN_DIR)/,$(MAN_DOCS))
+html-docs: doc-dirs $(addprefix $(HTML_DIR)/,$(HTML_DOCS))
+pdf-docs:  doc-dirs $(addprefix $(PDF_DIR)/,$(PDF_DOCS))
 
 all-docs: man-docs html-docs pdf-docs
 
 ### Build Rules
 #
-
-$(MAKECMDGOALS): doc-dirs
 
 doc-dirs:
 	$(INSTALL) -d $(DOC_DIRS)
