@@ -57,51 +57,35 @@ MAKE_ELINKS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinks-manpage
 MAKE_ELINKSKEYS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinkskeys-manpage
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
- $(HTML_DIR)/elinks.1.html \
- $(HTML_DIR)/elinkskeys.5.html \
- $(HTML_DIR)/hacking.html \
- $(HTML_DIR)/manual.html
+ elinks.1.html \
+ elinkskeys.5.html \
+ hacking.html \
+ manual.html
 
-# Only jw is used for generating PDF.
 HTML_DOCS-$(CONFIG_XMLTO) += \
- $(HTML_DIR)/manual.html-chunked
+ manual.html-chunked
+
+HTML_DOCS-$(CONFIG_POD2HTML) += \
+ perl.html \
+ perl-hooks.html
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
- $(MAN_DIR)/man1/elinks.1.in \
- $(MAN_DIR)/man5/elinkskeys.5
+ man1/elinks.1.in \
+ man5/elinkskeys.5
 
 # Only jw is used for generating PDF.
 PDF_DOCS-$(CONFIG_JW) += \
- $(PDF_DIR)/manual.pdf
+ manual.pdf
 
-HTML_DOCS-$(CONFIG_POD2HTML) += \
- $(HTML_DIR)/perl.html \
- $(HTML_DIR)/perl-hooks.html
-
-MAN_DOCS += $(MAN_DIR)/man5/elinks.conf.5
+MAN_DOCS += man5/elinks.conf.5
 
 MAN_DOCS  += $(MAN_DOCS-yes)
 HTML_DOCS += $(HTML_DOCS-yes)
 PDF_DOCS  += $(PDF_DOCS-yes)
 
-html-asciidoc-yes: doc-dirs $(HTML_DOCS_WITH_ASCIIDOC)
-html-asciidoc-no:
-
-html-pod2html-yes: doc-dirs $(HTML_DOCS_WITH_POD2HTML)
-html-pod2html-no:
-
-html-xmlto-yes: doc-dirs $(HTML_DOCS_WITH_XMLTO)
-html-xmlto-no:
-
-man-xmlto-yes: doc-dirs $(MAN_DOCS_WITH_XMLTO)
-man-xmlto-no:
-
-pdf-jw-yes: doc-dirs $(PDF_DOCS_WITH_JW)
-pdf-jw-no:
-
-man-docs: $(MAN_DOCS)
-html-docs: $(HTML_DOCS)
-pdf-docs: $(PDF_DOCS)
+man-docs:  $(addprefix $(MAN_DIR)/,$(MAN_DOCS))
+html-docs: $(addprefix $(HTML_DIR)/,$(HTML_DOCS))
+pdf-docs:  $(addprefix $(PDF_DIR)/,$(PDF_DOCS))
 
 all-docs: man-docs html-docs pdf-docs
 
