@@ -29,7 +29,7 @@ while (<FILEIN>)
 		$_ = $1;
 		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
 		my $dash;  for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
-		$_ = "$_\n$dash\n";
+		$_ = "$_\n$dash\n\n";
 		$first = 1;
 	}
 	elsif ($_ =~ /\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/)
