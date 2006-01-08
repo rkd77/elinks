@@ -37,7 +37,7 @@ while (<FILEIN>)
 	elsif ($_ =~ /\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/)
 	{
 		print FILEOUT "\n" if $gotone;
-		$_ =~ s/\s*([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/id[$1]::\n  $2/;
+		$_ =~ s/(\s*)([A-Z0-9_]+),\s*\/\*::\s*(.*)\s+\*\/$/$1id[$2]::\n$1  $3/;
 		$found = 'sorta'; $gotone = $.;
 	}
 	$gotone = undef if $gotone and $gotone < $.;
