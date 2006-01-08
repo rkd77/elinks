@@ -1171,7 +1171,7 @@ struct {
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
 #if CONFIG_DOM
 	{ "application/docbook+xml",	1 },
-	{ "application/rss+xml",	1 },
+	{ "application/rss+xml",	0 },
 	{ "application/xbel+xml",	1 },
 	{ "application/xbel",		1 },
 	{ "application/x-xbel",		1 },
