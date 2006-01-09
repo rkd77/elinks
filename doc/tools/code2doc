@@ -17,8 +17,8 @@ getopts("hv") or usage($HELP);
 $opt_v and usage("Copyleft (c) 2006, Russ Rowan (See `COPYING')");
 usage($HELP) if $opt_h or @ARGV < 1;
 
-my ($found, $first, $idpath);
-$idpath = '';
+my ($found, $indent, $idpath);
+$idpath = ''; $indent = '';
 while (<>)
 {
 	# Match:
@@ -33,21 +33,25 @@ while (<>)
 
 	if ($found)
 	{
-		if (/^\s+\*\s$/) { next if $first; $_ =~ s/\s\*// if not $first; }
-		if (/^\s\*+\/$/ or $_ !~ /^\s/) { $found = undef; next; }
-		$_ =~ s/^(\s*)\s\*\s/$1/;
-		$found = 'sorta' if s/\s*\*\/$/\n/; $first = undef;
+		$found = 'sorta' if s/\s*\*+\//\n/;
+		s/^(\s|\*)*/$indent/;
+		s/^$indent$/\n/;
 	}
 	elsif (/^\s*\/\*\*\s(.*)/)
 	{
-		$_ = $1; $first = 1;
+		$_ = $1;
 		if (/\s*\*\/$/) { $found = 'sorta'; } else { $found = $.; }
 		if (/struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
-		if (/::/) { $_ = "\n$_\n\n"; }
+		if (/::/)
+		{
+			$_ = "\n$_\n\n";
+			$indent = "\t";
+		}
 		else
 		{
 			my $dash; for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
-			$_ = "\n$_\n$dash\n\n";
+			$_ = "\n$_\n$dash\n";
+			$indent = "";
 		}
 	}
 	next if not $found;  $found = undef if $found eq 'sorta';
