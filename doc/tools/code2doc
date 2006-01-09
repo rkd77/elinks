@@ -21,11 +21,13 @@ my ($found, $indent, $idpath);
 $idpath = ''; $indent = '';
 while (<>)
 {
+	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
+
 	# Match:
 	#	IDENT,         /*:: ... */
 	#	IDENT = value, /*:: ... */
 	#	type ident;    /*:: ... */
-	if (/^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
+	if ($end and /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)/)
 	{
 		print "\nid:[$idpath$2]::\n\t$4\n";
 		next;
@@ -33,14 +35,12 @@ while (<>)
 
 	if ($found)
 	{
-		$found = 'sorta' if s/\s*\*+\//\n/;
 		s/^(\s|\*)*/$indent/;
 		s/^$indent$/\n/;
 	}
 	elsif (/^\s*\/\*\*\s(.*)/)
 	{
 		$_ = $1;
-		if (/\s*\*\/$/) { $found = 'sorta'; } else { $found = $.; }
 		if (/struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
 		if (/::/)
 		{
@@ -53,7 +53,9 @@ while (<>)
 			$_ = "\n$_\n$dash\n";
 			$indent = "";
 		}
+		$found = 'jep';
 	}
-	next if not $found;  $found = undef if $found eq 'sorta';
+	next if not $found;
+	$found = undef if $end;
 	print STDOUT $_;
 }
