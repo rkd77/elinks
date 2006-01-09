@@ -1,0 +1,95 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test mailcap parsing and querying
+
+This tests the parsing of various mailcap files, if they are
+"prioritised" correctly, if the test are run correctly and
+if querying returns the expected mailcap entry.
+'
+
+. "$TEST_LIB"
+
+# Set PAGER to something recognisable since it gets appended as
+# "|copiousoutput_handler" to entries with copiousoutput.
+export PAGER=copiousoutput_handler
+
+################################################################
+# Parse a simple mailcap file
+
+cat > mailcap-basic <<EOF
+# Mimetype		Handler
+text/html;		elinks --force-html %s; needsterminal
+text/enriched;		richtext ; copiousoutput
+text/*;			view %s; needsterminal
+application/postscript;	ps2ascii %s ; copiousoutput
+
+# Convert images to text using the netpbm tools
+image/*;		(anytopnm %s | pnmscale -xysize 200 150 | \
+                         pnminvert | ppmtopgm | pgmtopbm | \
+			 pbmtoascii -1x2 ) 2>&1 ; copiousoutput
+EOF
+
+mailcap-cache \
+	--path "mailcap-basic" \
+	--format "block,program" \
+	--get "text/html" \
+	--get "text/x-csh" \
+	--get "application/postscript" \
+	--get "application/foo" \
+	> output
+
+cat > expected <<EOF
+type: text/html
+block: 1
+program: elinks --force-html %
+
+type: text/x-csh
+block: 1
+program: view %
+
+type: application/postscript
+block: 1
+program: ps2ascii %|copiousoutput_handler
+
+type: application/foo
+EOF
+
+test_expect_success \
+	'Parse simple mailcap file.' \
+	'cmp output expected' \
+
+################################################################
+# Parse a two simple mailcap files; first one with tests
+
+touch DISPLAY
+
+cat > mailcap-simple-with-test <<EOF
+application/postscript;	gv %s ; test=test -e "DISPLAY" ;
+image/*;		xzgv %s ; test=test -e "DISPLAY";
+EOF
+
+mailcap-cache \
+	--path "mailcap-simple-with-test:mailcap-simple" \
+	--format "block,program" \
+	--get "image/jpeg" \
+	--get "application/postscript" \
+	> output
+
+cat > expected <<EOF
+type: image/jpeg
+block: 0
+program: xzgv %
+
+type: application/postscript
+block: 0
+program: gv %
+EOF
+
+test_expect_success \
+	'Parse two simple mailcap files; first one with tests.' \
+	'cmp output expected' \
+
+test_done

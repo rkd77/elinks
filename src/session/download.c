@@ -986,6 +986,25 @@ tp_open(struct type_query *type_query)
 		return;
 	}
 
+	if (type_query->uri->protocol == PROTOCOL_FILE) {
+		unsigned char *file = get_uri_string(type_query->uri, URI_PATH);
+		unsigned char *handler = NULL;
+
+		if (file) {
+			handler = subst_file(type_query->external_handler, file);
+			mem_free(file);
+		}
+
+		if (handler) {
+			exec_on_terminal(type_query->ses->tab->term,
+					 handler, "", !!type_query->block);
+			mem_free(handler);
+		}
+
+		done_type_query(type_query);
+		return;
+	}
+
 	continue_download(type_query, "");
 }
 
@@ -1154,7 +1173,7 @@ struct {
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
 #if CONFIG_DOM
 	{ "application/docbook+xml",	1 },
-	{ "application/rss+xml",	1 },
+	{ "application/rss+xml",	0 },
 	{ "application/xbel+xml",	1 },
 	{ "application/xbel",		1 },
 	{ "application/x-xbel",		1 },

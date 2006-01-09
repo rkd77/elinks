@@ -324,19 +324,20 @@ add_document_to_string(struct string *string, struct document *document)
 	if_assert_failed return NULL;
 
 	for (y = 0; y < document->height; y++) {
-		struct screen_char *pos = document->data[y].chars;
 		int white = 0;
 		int x;
 
 		for (x = 0; x < document->data[y].length; x++) {
+			struct screen_char *pos = &document->data[y].chars[x];
 			unsigned char data = pos->data;
 			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
 
 			if (!isscreensafe(data)) {
 				white++;
 				continue;
-			} else if (frame && data >= 176 && data < 224) {
-				data = frame_dumb[data - 176];
+			} else {
+				if (frame && data >= 176 && data < 224)
+					data = frame_dumb[data - 176];
 
 				if (data <= ' ') {
 					/* Count spaces. */

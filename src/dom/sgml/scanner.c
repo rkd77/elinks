@@ -117,6 +117,86 @@ set_sgml_incomplete(struct dom_scanner *scanner, struct dom_scanner_token *token
 	scanner->position = scanner->end;
 }
 
+
+static inline int
+check_sgml_error(struct dom_scanner *scanner)
+{
+	unsigned int found_error = scanner->found_error;
+
+	/* Toggle if we found an error previously. */
+	scanner->found_error = 0;
+
+	return scanner->detect_errors && !found_error;
+}
+
+static unsigned char *
+get_sgml_error_end(struct dom_scanner *scanner, enum sgml_token_type type,
+		   unsigned char *end)
+{
+	switch (type) {
+	case SGML_TOKEN_CDATA_SECTION:
+	case SGML_TOKEN_NOTATION_ATTLIST:
+	case SGML_TOKEN_NOTATION_DOCTYPE:
+	case SGML_TOKEN_NOTATION_ELEMENT:
+		if (scanner->position + 9 < end)
+			end = scanner->position + 9;
+		break;
+
+	case SGML_TOKEN_NOTATION_COMMENT:
+		/* Just include the '<!--' part. */
+		if (scanner->position + 4 < end)
+			end = scanner->position + 4;
+		break;
+
+	case SGML_TOKEN_NOTATION_ENTITY:
+		if (scanner->position + 6 < end)
+			end = scanner->position + 6;
+		break;
+
+	case SGML_TOKEN_PROCESS_XML:
+		if (scanner->position + 5 < end)
+			end = scanner->position + 5;
+		break;
+
+	case SGML_TOKEN_PROCESS_XML_STYLESHEET:
+		if (scanner->position + 16 < end)
+			end = scanner->position + 16;
+		break;
+
+	default:
+		break;
+	}
+
+	return end;
+}
+
+
+static struct dom_scanner_token *
+set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
+{
+	struct dom_scanner_token *token = scanner->current;
+	struct dom_scanner_token *next;
+
+	assert(!scanner->found_error);
+
+	if (scanner->current >= scanner->table + DOM_SCANNER_TOKENS) {
+		scanner->found_error = 1;
+		next = NULL;
+
+	} else {
+		scanner->current++;
+		next = scanner->current;
+		copy_struct(next, token);
+	}
+
+	token->type = SGML_TOKEN_ERROR;
+	token->lineno = scanner->lineno;
+	set_dom_string(&token->string, scanner->position, end - scanner->position);
+
+	return next;
+}
+
+
 /* Text token scanning */
 
 /* I think it is faster to not check the table here --jonas */
@@ -155,9 +235,17 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 		}
 
 		/* We want the biggest possible text token. */
-		if (check_sgml_incomplete(scanner, string) && !complete) {
-			set_sgml_incomplete(scanner, token);
-			return;
+		if (!complete) {
+			if (check_sgml_incomplete(scanner, string)) {
+				set_sgml_incomplete(scanner, token);
+				return;
+			}
+
+			if (check_sgml_error(scanner)) {
+				token = set_sgml_error(scanner, string);
+				if (!token)
+					return;
+			}
 		}
 
 	} else {
@@ -412,7 +500,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				assert(real_length >= 0);
 
 			} else {
-				skip_sgml_space(scanner, &string);
+				scan_sgml(scanner, string, SGML_CHAR_IDENT);
 				type = map_dom_scanner_string(scanner, ident, string, base);
 				if (skip_sgml(scanner, &string, '>', 0)) {
 					/* We found the end. */
@@ -436,7 +524,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string - token->string.string;
 			skip_sgml_space(scanner, &string);
 
-			if (is_sgml_space(string[-1])) {
+			/* Make '<?xml ' cause the right kind of error. */
+			if (is_sgml_space(string[-1])
+			    && string < scanner->end) {
 				/* We found the end. */
 				possibly_incomplete = 0;
 			}
@@ -564,9 +654,20 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 	}
 
-	if (possibly_incomplete && check_sgml_incomplete(scanner, string)) {
-		set_sgml_incomplete(scanner, token);
-		return;
+	if (possibly_incomplete) {
+		if (check_sgml_incomplete(scanner, string)) {
+			set_sgml_incomplete(scanner, token);
+			return;
+		}
+
+		if (check_sgml_error(scanner) && string == scanner->end) {
+			unsigned char *end;
+
+			end = get_sgml_error_end(scanner, type, string);
+			token = set_sgml_error(scanner, end);
+			if (!token)
+				return;
+		}
 	}
 
 	token->type = type;
@@ -599,12 +700,19 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 	}
 
 	if (!string) {
-		/* Makes the next succeed when checking for incompletion. */
+		/* Makes the next succeed when checking for incompletion, and
+		 * puts the rest of the text within the token. */
 		string = scanner->end;
 
 		if (check_sgml_incomplete(scanner, string)) {
 			set_sgml_incomplete(scanner, token);
 			return;
+		}
+
+		if (check_sgml_error(scanner)) {
+			token = set_sgml_error(scanner, string);
+			if (!token)
+				return;
 		}
 	}
 
@@ -622,35 +730,34 @@ static struct dom_scanner_token *
 scan_sgml_tokens(struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *table_end = scanner->table + DOM_SCANNER_TOKENS;
-	struct dom_scanner_token *current;
 
 	if (!begin_dom_token_scanning(scanner))
 		return get_dom_scanner_token(scanner);
 
 	/* Scan tokens until we fill the table */
-	for (current = scanner->table + scanner->tokens;
-	     current < table_end && scanner->position < scanner->end;
-	     current++) {
+	for (scanner->current = scanner->table + scanner->tokens;
+	     scanner->current < table_end && scanner->position < scanner->end;
+	     scanner->current++) {
 		if (scanner->state == SGML_STATE_ELEMENT
 		    || (*scanner->position == '<'
 			&& scanner->state != SGML_STATE_PROC_INST)) {
 			skip_sgml_space(scanner, &scanner->position);
 			if (scanner->position >= scanner->end) break;
 
-			scan_sgml_element_token(scanner, current);
+			scan_sgml_element_token(scanner, scanner->current);
 
 			/* Shall we scratch this token? */
-			if (current->type == SGML_TOKEN_SKIP) {
-				current--;
+			if (scanner->current->type == SGML_TOKEN_SKIP) {
+				scanner->current--;
 			}
 
 		} else if (scanner->state == SGML_STATE_TEXT) {
-			scan_sgml_text_token(scanner, current);
+			scan_sgml_text_token(scanner, scanner->current);
 
 		} else {
-			scan_sgml_proc_inst_token(scanner, current);
+			scan_sgml_proc_inst_token(scanner, scanner->current);
 		}
 	}
 
-	return end_dom_token_scanning(scanner, current);
+	return end_dom_token_scanning(scanner, scanner->current);
 }

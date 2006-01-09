@@ -443,6 +443,8 @@ done_mailcap(struct module *module)
 	mailcap_map_size = 0;
 }
 
+#ifndef TEST_MAILCAP
+
 static int
 change_hook_mailcap(struct session *ses, struct option *current, struct option *changed)
 {
@@ -468,6 +470,10 @@ init_mailcap(struct module *module)
 	if (get_cmd_opt_bool("anonymous"))
 		get_mailcap_enable() = 0;
 }
+
+#else
+#define init_mailcap NULL
+#endif /* TEST_MAILCAP */
 
 /* The command semantics include the following:
  *
@@ -673,3 +679,108 @@ struct module mailcap_mime_module = struct_module(
 	/* init: */		init_mailcap,
 	/* done: */		done_mailcap
 );
+
+#ifdef TEST_MAILCAP
+/* Some ugly shortcuts for getting defined symbols to work. */
+int default_mime_backend,
+    install_signal_handler,
+    mimetypes_mime_backend;
+struct list_head terminals;
+
+void die(const char *msg, ...)
+{
+	va_list args;
+
+	if (msg) {
+		va_start(args, msg);
+		vfprintf(stderr, msg, args);
+		fputs("\n", stderr);
+		va_end(args);
+	}
+
+	exit(1);
+}
+
+int
+main(int argc, char *argv[])
+{
+	unsigned char *format = "description,ask,block,program";
+	int has_gotten = 0;
+	int i;
+
+	for (i = 1; i < argc; i++) {
+		char *arg = argv[i];
+
+		if (strncmp(arg, "--", 2))
+			break;
+
+		arg += 2;
+
+		if (!strncmp(arg, "path", 4)) {
+			arg += 4;
+			if (*arg == '=') {
+				arg++;
+				get_mailcap_path() = arg;
+			} else {
+				i++;
+				if (i >= argc)
+					die("--path expects a parameter");
+				get_mailcap_path() = argv[i];
+			}
+			done_mailcap(NULL);
+
+		} else if (!strncmp(arg, "format", 6)) {
+			arg += 6;
+			if (*arg == '=') {
+				arg++;
+				format = arg;
+			} else {
+				i++;
+				if (i >= argc)
+					die("--format expects a parameter");
+				format = argv[i];
+			}
+
+		} else if (!strncmp(arg, "get", 3)) {
+			struct mime_handler *handler;
+
+			arg += 3;
+			if (*arg == '=') {
+				arg++;
+			} else {
+				i++;
+				if (i >= argc)
+					die("--get expects a parameter");
+				arg = argv[i];
+			}
+
+			if (has_gotten)
+				printf("\n");
+			has_gotten = 1;
+			printf("type: %s\n", arg);
+			handler = get_mime_handler_mailcap(arg, 0);
+			if (!handler) continue;
+
+			if (strstr(format, "description"))
+				printf("description: %s\n", handler->description);
+
+			if (strstr(format, "ask"))
+				printf("ask: %d\n", handler->ask);
+
+			if (strstr(format, "block"))
+				printf("block: %d\n", handler->block);
+
+			if (strstr(format, "program"))
+				printf("program: %s\n", handler->program);
+
+		} else {
+			die("Unknown argument '%s'", arg - 2);
+		}
+	}
+
+	done_mailcap(NULL);
+
+	return 0;
+}
+
+#endif /* TEST_MAILCAP */

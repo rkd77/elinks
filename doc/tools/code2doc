@@ -1,0 +1,46 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+use diagnostics;
+
+print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to stdout.\n"
+	and exit if not @ARGV;
+
+my ($input)  = @ARGV;
+my ($found, $start, $first, $gotone, $idpath);
+print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
+open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
+$idpath = '';
+while (<FILEIN>)
+{
+	if ($found)
+	{
+		if ($_ =~ /^\s+\*\s$/) { next if $first; $_ =~ s/\s\*// if not $first; }
+		if ($_ =~ /^\s\*+\/$/ or $_ !~ /^\s/) { $found = undef; next; }
+		$_ =~ s/^(\s*)\s\*\s/$1/;
+		$found = 'sorta' if $_ =~ s/\s*\*\/$/\n/; $first = undef;
+	}
+	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
+	{
+		$_ = $1; $first = 1;
+		print STDOUT "\n\n" if $start;
+		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
+		if ($_ =~ /struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
+		if ($_ =~ /::/) { $_ = "$_\n\n"; }
+		else
+		{
+			my $dash; for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
+			$_ = "$_\n$dash\n\n";
+		}
+	}
+	elsif ($_ =~ /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
+	{
+		print STDOUT "\n" if $gotone;
+		$_ = "\nid:[$idpath$2]::\n\t$4\n";
+		$found = 'sorta'; $gotone = $.;
+	}
+	print STDOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
+	next if not $found;  $found = undef if $found eq 'sorta';
+	print STDOUT $_ and $start = 1;
+}
+close FILEIN;

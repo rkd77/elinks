@@ -344,14 +344,23 @@ exe(unsigned char *path)
 
 #endif
 
+static unsigned char *clipboard;
+
 unsigned char *
-get_clipboard_text(void)	/* !!! FIXME */
+get_clipboard_text(void)
 {
-	unsigned char *ret = mem_alloc(1);
+	/* GNU Screen's clipboard */
+	if (is_gnuscreen()) {
+		struct string str;
 
-	if (ret) ret[0] = 0;
+		if (!init_string(&str)) return NULL;
 
-	return ret;
+		add_to_string(&str, "screen -X paste .");
+		if (str.length) exe(str.source);
+		if (str.source) done_string(&str);
+	}
+
+	return stracpy(empty_string_or_(clipboard));
 }
 
 void
@@ -370,7 +379,9 @@ set_clipboard_text(unsigned char *data)
 		if (str.source) done_string(&str);
 	}
 
-	/* TODO: internal clipboard */
+	/* Shouldn't complain about leaks. */
+	if (clipboard) free(clipboard);
+	clipboard = strdup(data);
 }
 
 /* Set xterm-like term window's title. */

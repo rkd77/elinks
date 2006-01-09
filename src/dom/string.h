@@ -39,21 +39,28 @@ dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size
 	set_dom_string(string1, (string2)->string, (string2)->length)
 
 static inline struct dom_string *
-init_dom_string(struct dom_string *string, unsigned char *str, size_t len)
+add_to_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 {
-	string->string = mem_alloc(len + 1);
-	if (!string->string)
+	unsigned char *newstring;
+
+	newstring = mem_realloc(string->string, string->length + len + 1);
+	if (!newstring)
 		return NULL;
 
-	memcpy(string->string, str, len);
-	string->string[len] = 0;
-	string->length = len;
+	string->string = newstring;
+	memcpy(string->string + string->length, str, len);
+	string->length += len;
+	string->string[string->length] = 0;
+
 	return string;
 }
 
+#define init_dom_string(string, str, len) add_to_dom_string(string, str, len)
+
 #define is_dom_string_set(str) ((str)->string && (str)->length)
 
-#define done_dom_string(str) mem_free((str)->string);
+#define done_dom_string(str) \
+	do { mem_free_set(&(str)->string, NULL); (str)->length = 0; } while (0)
 
 #define isquote(c)	((c) == '"' || (c) == '\'')
 
