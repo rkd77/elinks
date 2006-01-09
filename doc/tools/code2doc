@@ -73,12 +73,15 @@ while (<>)
 			$title = "enum:$1" . "[$title]";
 			$idpath = "";
 
-		} elsif (/#define\s+(\w+)\s*{/) {
+		} elsif (/#define\s+(\w+)[(]/) {
+			$title = "func:$1" . "[$title]";
+			$idpath = "";
+
+		} elsif (/#define\s+(\w+)/) {
 			$title = "macro:$1" . "[$title]";
 			$idpath = "";
 
 		} else {
-
 			if (/typedef/) {
 				if (/.*\(\*(\w+)\)\(/) {
 					$title = "typedef:$1" . "[$title]";
@@ -90,6 +93,10 @@ while (<>)
 				if (/.*[\s*](\w+)\(/) {
 					$title = "func:$1" . "[$title]";
 					$idpath = "";
+				} elsif (/.*\(\*(\w+)\)\(/) {
+					$body = "#newline#" . $title if not $body;
+					$title = "id:[$idpath$1]::";
+					$indent = "\t";
 				} elsif (/[^=]*[\s*](\w+)[\[\s,:;]/) {
 					$body = "#newline#" . $title if not $body;
 					$title = "id:[$idpath$1]::";

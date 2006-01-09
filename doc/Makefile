@@ -172,6 +172,7 @@ $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl
 #
 
 DOM_API = \
+ $(top_srcdir)/src/dom/scanner.h \
  $(top_srcdir)/src/dom/stack.h \
  $(top_srcdir)/src/dom/sgml/parser.h
 
