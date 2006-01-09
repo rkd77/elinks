@@ -4,7 +4,7 @@ use warnings;
 use diagnostics;
 use Getopt::Std;
 
-my $HELP = "Usage: $0 [FILE]
+my $HELP = "Usage: $0 [FILE]...
 	Parses [FILE], outputing the result to stdout.";
 
 sub usage {
@@ -12,40 +12,84 @@ sub usage {
 	exit;
 }
 
-our($opt_h, $opt_v);
+our($opt_h, $opt_v, $title, $body, $indent, $idpath, $inblock);
+
 getopts("hv") or usage($HELP);
 $opt_v and usage("Copyleft (c) 2006, Russ Rowan (See `COPYING')");
 usage($HELP) if $opt_h or @ARGV < 1;
 
-my ($header, $indent, $idpath);
-$idpath = ''; $indent = '';
+sub put_section {
+	if ($title) {
+		print "\n$title\n";
+		$_ = $title;
+		s/[^-]/-/g;
+		print "$_\n" if not $indent;
+	}
+	if ($body) {
+		$_ = $body;
+		s/#newline#/$indent/g;
+		print "$_\n";
+	}
+	$title = $body = undef;
+}
+
+$idpath = $title = $body = "";
 while (<>)
 {
 	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
 
-	if ($end and /[^=]*[\s*](\w+)[\s,;].*\/\*::\s*(.*)/) {
+	if ($end and /[^=]*[\s*](\w+)[\s,;].*\/\*:\s*(.*)/) {
 		# Implicit id for enum values and struct members.
-		$_ = "\nid:[$idpath$1]::\n\t$2\n";
+		print "\nid:[$idpath$1]::\n\t$2\n";
 
-	} elsif ($header) {
+	} elsif ($inblock) {
 		# Redo the indentation, preserve empty lines.
-		s/^(\s|\*)*/$indent/;
-		s/^$indent$/\n/;
+		s/^(\s|\*)*//;
+		s/^$/\n/;
+		$body .= "#newline#" . $_;
 
-	} elsif (s/^\s*\/\*\*\s(.*)$/$1/) {
-		# Found magic header; record idpath and underline title.
-		$header = "$1";
-		$idpath = /struct:[[]([^\]]+)[\]]/ ? "$1." : "";
-		$indent = /::/ ? "\t" : "";
-
-		$_ = '' if $indent;
-		s/[^-]/-/g; chop;
-		$_ = "\n$header\n$_\n";
+	} elsif (s/^\s*\/\*\*\s*(.*)$/$1/) {
+		# Found magic header; flush, record title and set indentation.
+		put_section;
+		$title   = "$1";
+		$indent  = /::/ ? "\t" : "";
 
 	} else {
+		next if not ($title or $body);
+
+		if (/^struct\s+(\w+)\s*{/) {
+			$title = "struct:$1" . "[$title]";
+			$idpath = "$1.";
+
+		} elsif (/^enum\s+(\w+)\s*{/) {
+			$title = "enum:$1" . "[$title]";
+			$idpath = "";
+
+		} else {
+			while (not /[^=]*[\s*](\w+).*[,;]/) {
+				$_ .= <>;
+			}
+
+			if (/typedef/) {
+				if (/.*\(\*(\w+)\)\(/) {
+					$title = "typedef:$1" . "[$title]";
+				} elsif (/typedef.*\s(\w+);/) {
+					$title = "typedef:$1" . "[$title]";
+				}
+				$idpath = "";
+			} else {
+				if (/.*[\s*](\w+)\(/) {
+					$title = "func:$1" . "[$title]";
+					$idpath = "";
+				} elsif (/[^=]*[\s*](\w+)[\s,;]/) {
+					$title = "id:[$idpath$1]::";
+					$indent = "\t";
+				}
+			}
+		}
+		put_section;
 		next;
 	}
 
-	$header = undef if $end;
-	print STDOUT $_;
+	$inblock = $end ? undef : 'yes';
 }
