@@ -38,7 +38,7 @@ while (<>)
 {
 	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
 
-	if ($end and /[^=]*[\s*](\w+)[\s,;].*\/\*:\s*(.*)/) {
+	if ($end and /[^=]*[\s*](\w+)[\s:,;].*\/\*:\s*(.*)/) {
 		# Implicit id for enum values and struct members.
 		print "\nid:[$idpath$1]::\n\t$2\n";
 
@@ -48,27 +48,36 @@ while (<>)
 		s/^$/\n/;
 		$body .= "#newline#" . $_;
 
-	} elsif (s/^\s*\/\*\*\s*(.*)$/$1/) {
+	} elsif (s/\s*\/\*\*+\s*(.*)/$1/) {
 		# Found magic header; flush, record title and set indentation.
 		put_section;
 		$title   = "$1";
 		$indent  = /::/ ? "\t" : "";
 
 	} else {
-		next if not ($title or $body);
+		next if not ($title or $body) or /^\s$/;
 
-		if (/^struct\s+(\w+)\s*{/) {
+		my $orig_title = $title;
+
+		if (not /^#define\s/) {
+			while (not /(struct|enum|typedef|[^=])*[\s*](\w+).*[\[:,;{]/) {
+				$_ .= <>;
+			}
+		}
+
+		if (/struct\s+(\w+)\s*{/) {
 			$title = "struct:$1" . "[$title]";
 			$idpath = "$1.";
 
-		} elsif (/^enum\s+(\w+)\s*{/) {
+		} elsif (/enum\s+(\w+)\s*{/) {
 			$title = "enum:$1" . "[$title]";
 			$idpath = "";
 
+		} elsif (/#define\s+(\w+)\s*{/) {
+			$title = "macro:$1" . "[$title]";
+			$idpath = "";
+
 		} else {
-			while (not /[^=]*[\s*](\w+).*[,;]/) {
-				$_ .= <>;
-			}
 
 			if (/typedef/) {
 				if (/.*\(\*(\w+)\)\(/) {
@@ -81,13 +90,14 @@ while (<>)
 				if (/.*[\s*](\w+)\(/) {
 					$title = "func:$1" . "[$title]";
 					$idpath = "";
-				} elsif (/[^=]*[\s*](\w+)[\s,;]/) {
+				} elsif (/[^=]*[\s*](\w+)[\[\s,:;]/) {
+					$body = "#newline#" . $title if not $body;
 					$title = "id:[$idpath$1]::";
 					$indent = "\t";
 				}
 			}
 		}
-		put_section;
+		put_section if $orig_title ne $title;
 		next;
 	}
 
