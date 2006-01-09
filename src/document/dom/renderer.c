@@ -855,6 +855,9 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
 
 	if (title && is_dom_string_set(title)) {
+		if (item == renderer->channel)
+			renderer->document->title = memacpy(title->string,
+							    title->length);
 		render_dom_text(renderer, &renderer->styles[DOM_NODE_ELEMENT],
 				title->string, title->length);
 	}
