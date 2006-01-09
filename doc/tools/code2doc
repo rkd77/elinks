@@ -17,45 +17,35 @@ getopts("hv") or usage($HELP);
 $opt_v and usage("Copyleft (c) 2006, Russ Rowan (See `COPYING')");
 usage($HELP) if $opt_h or @ARGV < 1;
 
-my ($found, $indent, $idpath);
+my ($header, $indent, $idpath);
 $idpath = ''; $indent = '';
 while (<>)
 {
 	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
 
-	# Match:
-	#	IDENT,         /*:: ... */
-	#	IDENT = value, /*:: ... */
-	#	type ident;    /*:: ... */
-	if ($end and /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)/)
-	{
-		print "\nid:[$idpath$2]::\n\t$4\n";
+	if ($end and /[^=]*[\s*](\w+)[\s,;].*\/\*::\s*(.*)/) {
+		# Implicit id for enum values and struct members.
+		$_ = "\nid:[$idpath$1]::\n\t$2\n";
+
+	} elsif ($header) {
+		# Redo the indentation, preserve empty lines.
+		s/^(\s|\*)*/$indent/;
+		s/^$indent$/\n/;
+
+	} elsif (s/^\s*\/\*\*\s(.*)$/$1/) {
+		# Found magic header; record idpath and underline title.
+		$header = "$1";
+		$idpath = /struct:[[]([^\]]+)[\]]/ ? "$1." : "";
+		$indent = /::/ ? "\t" : "";
+
+		$_ = '' if $indent;
+		s/[^-]/-/g; chop;
+		$_ = "\n$header\n$_\n";
+
+	} else {
 		next;
 	}
 
-	if ($found)
-	{
-		s/^(\s|\*)*/$indent/;
-		s/^$indent$/\n/;
-	}
-	elsif (/^\s*\/\*\*\s(.*)/)
-	{
-		$_ = $1;
-		if (/struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
-		if (/::/)
-		{
-			$_ = "\n$_\n\n";
-			$indent = "\t";
-		}
-		else
-		{
-			my $dash; for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
-			$_ = "\n$_\n$dash\n";
-			$indent = "";
-		}
-		$found = 'jep';
-	}
-	next if not $found;
-	$found = undef if $end;
+	$header = undef if $end;
 	print STDOUT $_;
 }
