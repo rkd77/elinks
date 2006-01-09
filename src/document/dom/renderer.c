@@ -855,9 +855,16 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
 
 	if (title && is_dom_string_set(title)) {
-		if (item == renderer->channel)
-			renderer->document->title = memacpy(title->string,
-							    title->length);
+		if (item == renderer->channel) {
+			unsigned char *str;
+
+			str = convert_string(renderer->convert_table,
+					     title->string, title->length,
+					     renderer->document->options.cp,
+					     CSM_DEFAULT, NULL, NULL, NULL);
+			if (str)
+				renderer->document->title = str;
+		}
 		render_dom_text(renderer, &renderer->styles[DOM_NODE_ELEMENT],
 				title->string, title->length);
 	}
