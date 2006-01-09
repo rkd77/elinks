@@ -663,10 +663,7 @@ init_html_parser_state(struct html_context *html_context,
                        enum html_element_type type,
                        int align, int margin, int width)
 {
-	struct html_element *element;
-
 	html_stack_dup(html_context, type);
-	element = html_top;
 
 	par_format.align = align;
 
@@ -680,7 +677,7 @@ init_html_parser_state(struct html_context *html_context,
 		html_top->namelen = 0;
 	}
 
-	return element;
+	return html_top;
 }
 
 
