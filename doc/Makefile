@@ -59,7 +59,7 @@ MAKE_ELINKS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinks-manpage
 MAKE_ELINKSKEYS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinkskeys-manpage
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
- api/dom-sgml-parser.html \
+ api/dom.html \
  elinks.1.html \
  elinkskeys.5.html \
  hacking.html \
