@@ -141,7 +141,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 	/* If there are any CSS twaks regarding bgcolor, make sure we will get
 	 * it _and_ prefer it over bgcolor attribute. */
 	if (html_context->options->css_enable)
-		css_apply(html_context, &html_top, &html_context->css_styles,
+		css_apply(html_context, html_top, &html_context->css_styles,
 		          &html_context->stack);
 #endif
 
@@ -195,7 +195,7 @@ html_script(struct html_context *html_context, unsigned char *a,
 			mem_free(type);
 not_processed:
 			/* Permit nested scripts and retreat. */
-			html_top.invisible++;
+			html_top->invisible++;
 			return;
 		}
 
@@ -403,8 +403,8 @@ void
 html_title(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	html_top.invisible = 1;
-	html_top.type = ELEMENT_WEAK;
+	html_top->invisible = 1;
+	html_top->type = ELEMENT_WEAK;
 }
 
 void
@@ -586,7 +586,7 @@ html_hr(struct html_context *html_context, unsigned char *a,
 	}
 	html_context->special_f(html_context, SP_NOWRAP, 0);
 	ln_break(html_context, 2);
-	kill_html_stack_item(html_context, &html_top);
+	kill_html_stack_item(html_context, html_top);
 }
 
 void
@@ -690,7 +690,7 @@ html_ul(struct html_context *html_context, unsigned char *a,
 		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
 
 	par_format.align = ALIGN_LEFT;
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->type = ELEMENT_DONT_KILL;
 }
 
 void
@@ -725,7 +725,7 @@ html_ol(struct html_context *html_context, unsigned char *a,
 		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
 
 	par_format.align = ALIGN_LEFT;
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->type = ELEMENT_DONT_KILL;
 }
 
 static struct {
@@ -873,10 +873,10 @@ html_dl(struct html_context *html_context, unsigned char *a,
 	par_format.list_number = 0;
 	par_format.align = ALIGN_LEFT;
 	par_format.dd_margin = par_format.leftmargin;
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->type = ELEMENT_DONT_KILL;
 	if (!(par_format.flags & P_COMPACT)) {
 		ln_break(html_context, 2);
-		html_top.linebreak = 2;
+		html_top->linebreak = 2;
 	}
 }
 
@@ -948,14 +948,14 @@ html_frame(struct html_context *html_context, unsigned char *a,
 	}
 	if (!name) return;
 
-	if (!html_context->options->frames || !html_top.frameset) {
+	if (!html_context->options->frames || !html_top->frameset) {
 		html_focusable(html_context, a);
 		put_link_line("Frame: ", name, url, "", html_context);
 
 	} else {
 		if (html_context->special_f(html_context, SP_USED, NULL)) {
 			html_context->special_f(html_context, SP_FRAME,
-					       html_top.frameset, name, url);
+					       html_top->frameset, name, url);
 		}
 	}
 
@@ -997,12 +997,12 @@ html_frameset(struct html_context *html_context, unsigned char *a,
 		}
 	}
 
-	if (!html_top.frameset) {
+	if (!html_top->frameset) {
 		width = html_context->options->box.width;
 		height = html_context->options->box.height;
 		html_context->options->needs_height = 1;
 	} else {
-		struct frameset_desc *frameset_desc = html_top.frameset;
+		struct frameset_desc *frameset_desc = html_top->frameset;
 		int offset;
 
 		if (frameset_desc->box.y >= frameset_desc->box.height)
@@ -1020,9 +1020,9 @@ html_frameset(struct html_context *html_context, unsigned char *a,
 	parse_frame_widths(rows, height, HTML_FRAME_CHAR_HEIGHT,
 			   &fp.height, &fp.y);
 
-	fp.parent = html_top.frameset;
+	fp.parent = html_top->frameset;
 	if (fp.x && fp.y) {
-		html_top.frameset = html_context->special_f(html_context, SP_FRAMESET, &fp);
+		html_top->frameset = html_context->special_f(html_context, SP_FRAMESET, &fp);
 	}
 	mem_free_if(fp.width);
 	mem_free_if(fp.height);

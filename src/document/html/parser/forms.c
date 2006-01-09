@@ -254,7 +254,7 @@ html_input_format(struct html_context *html_context, unsigned char *a,
 		case FC_HIDDEN:
 			INTERNAL("bad control type");
 	}
-	kill_html_stack_item(html_context, &html_top);
+	kill_html_stack_item(html_context, html_top);
 	put_chrs(html_context, " ", 1);
 }
 
@@ -498,7 +498,7 @@ end_parse:
 	for (i = 0; i < max_width; i++)
 		put_chrs(html_context, "_", 1);
 
-	kill_html_stack_item(html_context, &html_top);
+	kill_html_stack_item(html_context, html_top);
 	put_chrs(html_context, "]", 1);
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
@@ -513,7 +513,7 @@ do_html_select_multiple(struct html_context *html_context, unsigned char *a,
 
 	if (!al) return;
 	html_focusable(html_context, a);
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->type = ELEMENT_DONT_KILL;
 	mem_free_set(&format.select, al);
 	format.select_disabled = has_attr(a, "disabled", html_context->options)
 	                         ? FORM_MODE_DISABLED
@@ -603,7 +603,7 @@ end_parse:
 	format.form = fc;
 	format.style.attr |= AT_BOLD;
 	put_chrs(html_context, "[ ]", 3);
-	kill_html_stack_item(html_context, &html_top);
+	kill_html_stack_item(html_context, html_top);
 	put_chrs(html_context, " ", 1);
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
@@ -709,7 +709,7 @@ pp:
 			ln_break(html_context, 1);
 	}
 
-	kill_html_stack_item(html_context, &html_top);
+	kill_html_stack_item(html_context, html_top);
 	if (rows > 1)
 		ln_break(html_context, 1);
 	else
