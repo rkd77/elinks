@@ -803,11 +803,14 @@ start_element(struct element_info *ei,
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
-		} else foreach (e, html_context->stack) {
-			if (is_block_element(e) && is_inline_element(ei)) break;
-			if (e->type < ELEMENT_KILLABLE) break;
-			if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+		} else {
+			foreach (e, html_context->stack) {
+				if (is_block_element(e) && is_inline_element(ei)) break;
+				if (e->type < ELEMENT_KILLABLE) break;
+				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+			}
 		}
+
 		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
 			while (e->prev != (void *) &html_context->stack)
 				kill_html_stack_item(html_context, e->prev);
