@@ -7,30 +7,32 @@
 /* Define if you want a talking scanner */
 /* #define DEBUG_DOM_SCANNER */
 
-/* The {struct dom_scanner_token} describes one scanner state. There are two
- * kinds of tokens: char and non-char tokens. Char tokens contains only one
- * char and simply have their char value as type. They are tokens having
- * special control meaning in the code, like ':', ';', '{', '}' and '*'. Non
- * char tokens has one or more chars and contain stuff like number or
- * indentifier strings.  */
+/** DOM scanner token
+ *
+ * This struct describes one scanner state. There are two kinds of tokens: char
+ * and non-char tokens. Char tokens contains only one char and simply have
+ * their char value as type. They are tokens having special control meaning in
+ * the code, like ':', ';', '{', '}' and '*'. Non-char tokens have one or more
+ * chars and contain stuff like number or indentifier strings.  */
 struct dom_scanner_token {
-	/* The type the token */
+	/** The type the token. */
 	int type;
 
-	/* Some precedence value */
+	/** Some precedence value. */
 	int precedence;
 
-	/* The line number; used for error tokens */
+	/** The line number; used for error tokens. */
 	unsigned int lineno;
 
-	/* The start of the token string and the token length */
+	/** The start of the token string and the token length. */
 	struct dom_string string;
 };
 
+/** Skip the first charector of a token */
 #define skip_dom_scanner_token_char(token) \
 	do { (token)->string.string++; (token)->string.length--; } while (0)
 
-/* Compare the string of @token with the "static" string in @str. */
+/** Compare the token string to a "static" string */
 #define dom_scanner_token_contains(token, str) \
 	((token)->string.length == (sizeof(str) - 1) \
 	 && !strncasecmp((token)->string.string, str, sizeof(str) - 1))
@@ -70,55 +72,72 @@ struct dom_scanner_string_mapping {
 
 struct dom_scanner;
 
+/** DOM scanner info
+ *
+ * Backend-specific information used during the actual scanning and
+ * by the front end to fill the token table on-demand, etc.
+ */
 struct dom_scanner_info {
-	/* Table containing how to map strings to token types */
+	/** Table containing how to map strings to token types */
 	const struct dom_scanner_string_mapping *mappings;
 
-	/* Information for how to initialize the scanner table */
+	/** Information for how to initialize the scanner table */
 	const struct dom_scan_table_info *scan_table_info;
 
-	/* Fills the scanner with tokens. Already scanned tokens which have not
+	/**
+	 * Fills the scanner with tokens. Already scanned tokens which have not
 	 * been requested remain and are moved to the start of the scanners
-	 * token table. */
-	/* Returns the current token or NULL if there are none. */
+	 * token table. Returns the current token or NULL if there are none. */
 	struct dom_scanner_token *(*scan)(struct dom_scanner *scanner);
 
-	/* The scanner table */
-	/* Contains bitmaps for the various characters groups.
-	 * Idea sync'ed from mozilla browser. */
+	/**
+	 * The scanner table. Contains bitmaps for the various characters
+	 * groups. Idea sync'ed from mozilla browser. */
 	int scan_table[DOM_SCAN_TABLE_SIZE];
 
-	/* Has the scanner info been initialized? */
+	/** Has the scanner info been initialized? */
 	unsigned int initialized:1;
 };
 
 
-/* Initializes the scanner. */
+/** Initializes a DOM scanner
+ *
+ * See struct ref:[dom_scanner] for a description of the `int` flags. */
 void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
 		      struct dom_string *string, int state, int count_lines, int complete,
 		      int check_complete, int detect_error);
 
-/* The number of tokens in the scanners token table:
+/** The number of tokens in the scanners token table
+ *
  * At best it should be big enough to contain properties with space separated
  * values and function calls with up to 3 variables like rgb(). At worst it
  * should be no less than 2 in order to be able to peek at the next token in
  * the scanner. */
 #define DOM_SCANNER_TOKENS 10
 
-/* The {struct dom_scanner} describes the current state of the scanner. */
+/** DOM scanner
+ *
+ * Holds the current state of the scanner. */
 struct dom_scanner {
-	/* The very start of the scanned string, the position in the string
-	 * where to scan next and the end of the string. If position is NULL it
-	 * means that no more tokens can be retrieved from the string. */
-	unsigned char *string, *position, *end;
+	/** The start of the scanned string. */
+	unsigned char *string;
+	/** The end of the scanned string. */
+	unsigned char *end;
+	/**
+	 * The position in the string where to scan next and the end of the
+	 * string. If position is NULL it means that no more tokens can be
+	 * retrieved from the string. */
+	unsigned char *position;
 
-	/* The current token and number of scanned tokens in the table.
-	 * If the number of scanned tokens is less than DOM_SCANNER_TOKENS it
-	 * is because there are no more tokens in the string. */
+	/**
+	 * The current token. If the number of scanned tokens is less than
+	 * ref:[DOM_SCANNER_TOKENS] it is because there are no more tokens in
+	 * the string. */
 	struct dom_scanner_token *current;
+	/** The number of scanned tokens left in the table. */
 	int tokens;
 
-	/* The 'meta' scanner information */
+	/** The 'meta' scanner information */
 	struct dom_scanner_info *info;
 
 #ifdef DEBUG_SCANNER
@@ -130,25 +149,27 @@ struct dom_scanner {
 	/* The following two flags are used when parsing is incremental and
 	 * the scanner must ensure that only tokens that are complete are
 	 * generated. */
-	unsigned int check_complete:1;	/* Only generate complete tokens */
-	unsigned int incomplete:1;	/* The scanned string is incomplete */
+	unsigned int check_complete:1;	/*: Only generate complete tokens */
+	unsigned int incomplete:1;	/*: The scanned string is incomplete */
 
-	unsigned int detect_errors:1;	/* Check for markup errors */
-	unsigned int found_error;	/* Did we already report this error? */
+	unsigned int detect_errors:1;	/*: Check for markup errors */
+	unsigned int found_error;	/*: Did we already report this error? */
 
-	unsigned int count_lines:1;	/* Is line counting enbaled? */
-	unsigned int lineno;		/* Line # of the last scanned token */
+	unsigned int count_lines:1;	/*: Is line counting enbaled? */
+	unsigned int lineno;		/*: Line # of the last scanned token */
 
-	/* Some state indicator only meaningful to the scanner internals */
+	/** Some state indicator only meaningful to the scanner internals */
 	int state;
 
-	/* The table contain already scanned tokens. It is maintained in
+	/**
+	 * The table contain already scanned tokens. It is maintained in
 	 * order to optimize the scanning a bit and make it possible to look
 	 * ahead at the next token. You should always use the accessors
 	 * (defined below) for getting tokens from the scanner. */
 	struct dom_scanner_token table[DOM_SCANNER_TOKENS];
 };
 
+/** Check if there are more tokens */
 #define dom_scanner_has_tokens(scanner) \
 	((scanner)->tokens > 0 && (scanner)->current < (scanner)->table + (scanner)->tokens)
 
@@ -162,22 +183,24 @@ struct dom_scanner {
 
 /* Scanner table accessors and mutators */
 
-/* Checks the type of the next token */
+/** Check the type of the next token */
 #define check_next_dom_scanner_token(scanner, token_type)			\
 	(scanner_has_tokens(scanner)						\
 	 && ((scanner)->current + 1 < (scanner)->table + (scanner)->tokens)	\
 	 && (scanner)->current[1].type == (token_type))
 
-/* Access current and next token. Getting the next token might cause
- * a rescan so any token pointers that has been stored in a local variable
- * might not be valid after the call. */
+/** Get the current token */
 static inline struct dom_scanner_token *
 get_dom_scanner_token(struct dom_scanner *scanner)
 {
 	return dom_scanner_has_tokens(scanner) ? scanner->current : NULL;
 }
 
-/* Do a scanning if we do not have also have access to next token. */
+/** Get the next token
+ *
+ * Getting the next token might cause a rescan so any token pointers that has
+ * been stored in a local variable might not be valid after the call. */
+/* Do a scanning if we do not also have access to next token. */
 static inline struct dom_scanner_token *
 get_next_dom_scanner_token(struct dom_scanner *scanner)
 {
@@ -186,16 +209,20 @@ get_next_dom_scanner_token(struct dom_scanner *scanner)
 		? scanner->info->scan(scanner) : get_dom_scanner_token(scanner));
 }
 
-/* This should just make the code more understandable .. hopefully */
+/** Skip the current token */
 #define skip_dom_scanner_token(scanner) get_next_dom_scanner_token(scanner)
 
-/* Removes tokens from the scanner until it meets a token of the given type.
+/** Conditionally skip tokens
+ *
+ * Removes tokens from the scanner until it meets a token of the given type.
  * This token will then also be skipped. */
 struct dom_scanner_token *
 skip_dom_scanner_tokens(struct dom_scanner *scanner, int skipto, int precedence);
 
-/* Looks up the string from @ident to @end to in the scanners string mapping
- * table */
+/** Map a string to internal ID
+ *
+ * Looks up the string from @ident to @end to in the scanners string mapping
+ * table. */
 int
 map_dom_scanner_string(struct dom_scanner *scanner,
 		       unsigned char *ident, unsigned char *end, int base_type);
