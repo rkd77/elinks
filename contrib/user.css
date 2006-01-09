@@ -39,7 +39,7 @@ h1 {
 	color: lightgoldenrod !important;
 }
 
-/* The following specifies colors used in the HTML highligting. */
+/* The following specifies colors used in the HTML highlighting. */
 document	 { color: yellow }
 element		 { color: lightgreen }
 entity-reference { color: red }
