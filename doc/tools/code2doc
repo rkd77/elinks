@@ -21,6 +21,16 @@ my ($found, $start, $first, $gotone, $idpath);
 $idpath = '';
 while (<>)
 {
+	# Match:
+	#	IDENT,         /*:: ... */
+	#	IDENT = value, /*:: ... */
+	#	type ident;    /*:: ... */
+	if ($_ =~ /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
+	{
+		print "\nid:[$idpath$2]::\n\t$4\n";
+		next;
+	}
+
 	if ($found)
 	{
 		if ($_ =~ /^\s+\*\s$/) { next if $first; $_ =~ s/\s\*// if not $first; }
@@ -40,12 +50,6 @@ while (<>)
 			my $dash; for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
 			$_ = "$_\n$dash\n\n";
 		}
-	}
-	elsif ($_ =~ /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
-	{
-		print STDOUT "\n" if $gotone;
-		$_ = "\nid:[$idpath$2]::\n\t$4\n";
-		$found = 'sorta'; $gotone = $.;
 	}
 	print STDOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
 	next if not $found;  $found = undef if $found eq 'sorta';
