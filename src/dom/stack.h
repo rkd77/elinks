@@ -177,12 +177,12 @@ extern struct dom_stack_context_info dom_stack_trace_context_info;
 /** Iterate the stack from bottom to top. */
 #define foreach_dom_stack_state(stack, state, pos)			\
 	for ((pos) = 0; (pos) < (stack)->depth; (pos)++)		\
-		if (((state) = &(stack)->states[(pos)]) && !(state)->invisible)
+		if (((state) = &(stack)->states[(pos)]))
 
 /** Iterate the stack from top to bottom. */
 #define foreachback_dom_stack_state(stack, state, pos)			\
 	for ((pos) = (stack)->depth - 1; (pos) >= 0; (pos)--)		\
-		if (((state) = &(stack)->states[(pos)]) && !(state)->invisible)
+		if (((state) = &(stack)->states[(pos)]))
 
 
 /* Life cycle functions. */
