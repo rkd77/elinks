@@ -2,16 +2,24 @@
 use strict;
 use warnings;
 use diagnostics;
+use Getopt::Std;
 
-print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to stdout.\n"
-	and exit if not @ARGV;
+my $HELP = "Usage: $0 [FILE]
+	Parses [FILE], outputing the result to stdout.";
 
-my ($input)  = @ARGV;
+sub usage {
+	print "@_\n";
+	exit;
+}
+
+our($opt_h, $opt_v);
+getopts("hv") or usage($HELP);
+$opt_v and usage("Copyleft (c) 2006, Russ Rowan (See `COPYING')");
+usage($HELP) if $opt_h or @ARGV < 1;
+
 my ($found, $start, $first, $gotone, $idpath);
-print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
-open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
 $idpath = '';
-while (<FILEIN>)
+while (<>)
 {
 	if ($found)
 	{
@@ -43,4 +51,3 @@ while (<FILEIN>)
 	next if not $found;  $found = undef if $found eq 'sorta';
 	print STDOUT $_ and $start = 1;
 }
-close FILEIN;
