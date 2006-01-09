@@ -14,7 +14,7 @@ void html_stack_dup(struct html_context *html_context,
 
 void kill_html_stack_item(struct html_context *html_context,
                           struct html_element *e);
-#define kill_html_stack_top(html_context) \
+#define pop_html_element(html_context) \
 	kill_html_stack_item(html_context, html_top)
 void kill_html_stack_until(struct html_context *html_context, int ls, ...);
 

@@ -767,7 +767,7 @@ start_element(struct element_info *ei,
 #endif
 
 	if (html_top->type == ELEMENT_WEAK) {
-		kill_html_stack_top(html_context);
+		pop_html_element(html_context);
 	}
 
 	/* We try to process nested <script> if we didn't process the parent

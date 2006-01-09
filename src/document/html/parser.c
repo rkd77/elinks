@@ -692,7 +692,7 @@ done_html_parser_state(struct html_context *html_context,
 	html_context->line_breax = 1;
 
 	while (html_top != element) {
-		kill_html_stack_item(html_context, html_top);
+		pop_html_element(html_context);
 #if 0
 		/* I've preserved this bit to show an example of the Old Code
 		 * of the Mikulas days (I _HOPE_ it's by Mikulas, at least ;-).
@@ -704,7 +704,7 @@ done_html_parser_state(struct html_context *html_context,
 	}
 
 	html_top->type = ELEMENT_KILLABLE;
-	kill_html_stack_item(html_context, html_top);
+	pop_html_element(html_context);
 
 }
 

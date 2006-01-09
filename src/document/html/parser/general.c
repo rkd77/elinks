@@ -586,7 +586,7 @@ html_hr(struct html_context *html_context, unsigned char *a,
 	}
 	html_context->special_f(html_context, SP_NOWRAP, 0);
 	ln_break(html_context, 2);
-	kill_html_stack_top(html_context);
+	pop_html_element(html_context);
 }
 
 void
