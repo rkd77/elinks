@@ -48,6 +48,11 @@ ELINKS	 = $(top_builddir)/src/elinks
 KBDBIND	 = $(top_srcdir)/src/config/kbdbind.c
 FEATURES = $(top_srcdir)/features.conf
 
+### Locale env vars to override system one to ensure commands
+# using elinks binary will generate texts in english
+#
+LOCALES = LC_ALL=C LANGUAGE=en
+
 ### Scripts
 #
 
@@ -106,10 +111,10 @@ $(TXT_DIR)/import-features.conf.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
 	$(IMPORT_FEATURES_CONF) > $@
 
 $(TXT_DIR)/elinks.1.%.txt: $(MAKE_ELINKS_MANPAGE) $(ELINKS)
-	$(MAKE_ELINKS_MANPAGE) $@ $(ELINKS) $(HELP2DOC) > $@
+	$(LOCALES) $(MAKE_ELINKS_MANPAGE) $@ $(ELINKS) $(HELP2DOC) > $@
 
 $(TXT_DIR)/elinkskeys.5.%.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
-	$(MAKE_ELINKSKEYS_MANPAGE) $@ $(KBDBIND) > $@
+	$(LOCALES) $(MAKE_ELINKSKEYS_MANPAGE) $@ $(KBDBIND) > $@
 
 
 # Man Pages
@@ -127,7 +132,7 @@ $(MAN_DIR)/man5/elinkskeys.5: $(XML_DIR)/elinkskeys.5.man.xml
 	mv $@.tmp $@
 
 $(MAN_DIR)/man5/elinks.conf.5: $(ELINKS)
-	$(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
+	$(LOCALES) $(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
 
 # XHTML/CSS Man Pages
 
