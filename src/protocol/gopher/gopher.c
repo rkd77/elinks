@@ -140,7 +140,7 @@ get_gopher_entity_info(enum gopher_entity type)
 {
 	int entry;
 
-	for (entry = 0; entry < sizeof(gopher_entity_info) - 1; entry++)
+	for (entry = 0; entry < sizeof_array(gopher_entity_info) - 1; entry++)
 		if (gopher_entity_info[entry].type == type)
 			return &gopher_entity_info[entry];
 
@@ -282,7 +282,7 @@ init_gopher_connection_info(struct connection *conn)
 
 	/* Get entity type, and selector string. */
 	/* Pick up gopher_entity */
-	if (selectorlen > 0) {
+	if (selectorlen > 1 && selector[1] == '/') {
 		entity = *selector++;
 		selectorlen--;
 	}
@@ -296,7 +296,7 @@ init_gopher_connection_info(struct connection *conn)
 	 * _after_ the Gopher entity. If the <entity-char> '/' combo is not
 	 * found assume that the whole URI data part is the selector. */
 	entity_info = get_gopher_entity_info(entity);
-	if (entity_info->type == GOPHER_UNKNOWN) {
+	if (entity_info->type == GOPHER_UNKNOWN && entity != GOPHER_UNKNOWN) {
 		selector--;
 		selectorlen++;
 	}
@@ -518,7 +518,8 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 	default:
 	{
 		struct string address;
-		unsigned char *format = *selector ? "%s://%s@%s/" : "%s://%s%s/";
+		unsigned char *format = selector && *selector
+				      ? "%s://%s@%s/" : "%s://%s%s/";
 
 		/* If port is defined it means that both @selector and @host
 		 * was correctly parsed. */
