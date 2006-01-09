@@ -104,3 +104,168 @@ foreach my $po (@$pos) {
     $po->automatic($automatic);
 }
 Locale::PO->save_file_fromarray($pofile, $pos) or die "$pofile: $!";
+
+__END__
+
+=head1 NAME
+
+gather-accelerator-contexts.pl - Augment a PO file with information
+for detecting accelerator conflicts.
+
+=head1 SYNOPSIS
+
+B<gather-accelerator-contexts.pl> I<top_srcdir> F<I<program>.pot>
+
+=head1 DESCRIPTION
+
+B<gather-accelerator-contexts.pl> is part of a framework that detects
+conflicting accelerator keys in Gettext PO files.  A conflict is when
+two items in the same menu or two buttons in the same dialog box use
+the same accelerator key.
+
+The PO file format does not normally include any information on which
+strings will be used in the same menu or dialog box.
+B<gather-accelerator-contexts.pl> adds this information in the form of
+"accelerator_context" comments, which B<check-accelerator-contexts.pl>
+then parses in order to detect the conflicts.
+
+B<gather-accelerator-contexts.pl> first reads the F<I<program>.pot>
+file named on the command line.  This file must include "#:" comments
+that point to the source files from which B<xgettext> extracted each
+msgid.  B<gather-accelerator-contexts.pl> then scans those source
+files for context information and rewrites F<I<program>.pot> to
+include the "accelerator_context" comments.  Finally, the standard
+tool B<msgmerge> can be used to copy the added comments to all the
+F<I<language>.po> files.
+
+It is best to run B<gather-accelerator-contexts.pl> immediately after
+B<xgettext> so that the source references will be up to date.
+
+=head2 Contexts
+
+Whenever a source file refers to an C<msgid> that includes an
+accelerator key, it must assign one or more named B<contexts> to it.
+The C<msgstr>s in the PO files inherit these contexts.  If multiple
+C<msgstr>s use the same accelerator (case insensitive) in the same
+context, that's a conflict and can be detected automatically.
+
+If the same C<msgid> is used in multiple places in the source code,
+and those places assign different contexts to it, then all of those
+contexts will apply.
+
+The names of contexts consist of C identifiers delimited with periods.
+The identifier is typically the name of a function that sets up a
+dialog, or the name of an array where the items of a menu are listed.
+There is a special feature for file-local identifiers (C<static> in C):
+if the name begins with a period, then the period will be replaced
+with the name of the source file and a colon.  The name "IGNORE" is
+reserved.
+
+If a menu is programmatically generated from multiple parts, of which
+some are never used together, so that it is safe to use the same
+accelerators in them, then it is necessary to define multiple contexts
+for the same menu.
+
+=head2 How to define contexts in source files
+
+The contexts are defined with "gettext_accelerator_context" comments
+in source files.  These comments delimit regions where all C<msgid>s
+containing tildes are given the same contexts.  There must be one
+special comment at the top of the region; it lists the contexts
+assigned to that region.  The region automatically ends at the end of
+the function (found with regexp C</^\}/>), but it can also be closed
+explicitly with another special comment.  The comments are formatted
+like this:
+
+  /* [gettext_accelerator_context(foo, bar, baz)]
+       begins a region that uses the contexts "foo", "bar", and "baz".
+       The comma is the delimiter; whitespace is optional.
+
+     [gettext_accelerator_context()]
+       ends the region.  */
+
+B<gather-accelerator-contexts.pl> removes from F<I<program>.pot> any
+"gettext_accelerator_context" comments that B<xgettext --add-comments>
+may have copied there.  
+
+If B<gather-accelerator-contexts.pl> does not find any contexts for
+some use of an C<msgid> that seems to contain an accelerator (because
+it contains a tilde), it warns.  If the tilde does not actually mark
+an accelerator (e.g. in "~/.bashrc"), the warning can be silenced by
+specifying the special context "IGNORE", which
+B<gather-accelerator-contexts.pl> otherwise ignores.
+
+=head1 ARGUMENTS
+
+=over
+
+=item I<top_srcdir>
+
+The directory to which the source references in "#:" lines are
+relative.
+
+=item F<I<program>.pot>
+
+The file to augment with context information.
+B<gather-accelerator-contexts.pl> first reads this file and then
+overwrites it.
+
+Although this documentation keeps referring to F<I<program>.pot>,
+you can also use B<gather-accelerator-contexts.pl> on an already
+translated F<I<language>.po>.  However, that will only work correctly
+if the source references in the "#:" lines are still up to date.
+
+=back
+
+=head1 BUGS
+
+B<gather-accelerator-contexts.pl> assumes that accelerator keys in
+translatable strings are marked with the tilde (~) character.  This
+should be configurable, as in B<msgfmt --check-accelerators="~">.
+
+B<gather-accelerator-contexts.pl> assumes that source files are in
+the C programming language: specifically, that a closing brace at
+the beginning of a line marks the end of a function.
+
+B<gather-accelerator-contexts.pl> doesn't check whether the
+"gettext_accelerator_context" comments actually are comments.
+
+There should be a way to specify a source path, rather than just a
+single I<top_srcdir> directory.
+
+=head1 AUTHOR
+
+Kalle Olavi Niemitalo <kon@iki.fi>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2005-2006 Kalle Olavi Niemitalo.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.  In addition:
+
+=over
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+=back
+
+=head1 SEE ALSO
+
+L<check-accelerator-contexts.pl>, C<xgettext(1)>, C<msgmerge(1)>

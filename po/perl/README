@@ -1,11 +1,67 @@
-The following statement applies to Locale/PO.pm:
+PURPOSE
+=======
 
-    Copyright (c) 2000-2004 Alan Schwartz <alansz@pennmush.org>.
-    All rights reserved.  This program is free software; you can
-    redistribute it and/or modify it under the same terms as Perl itself.
+The scripts in this directory scan the PO files and search for
+translations that assign the same accelerator to for multiple buttons
+in a dialog box or to multiple items in a menu.
 
-Locale/PO.pm was imported from the Locale-PO-0.16 module available
-from CPAN.  It will be modified to better suit the Perl scripts in
-this directory, and the changes will be sent back to ALANSZ.  The
-build system, documentation, and test cases of Locale-PO were not
-imported, because it isn't obvious where they should be placed.
+In addition to this static checking, ELinks can also detect
+conflicting accelerators at run time, if CONFIG_DEBUG is defined.
+However, that requires the translator to run ELinks and manually scan
+through all menus and dialogs, so some conflicts can be left
+unnoticed.  The static checker will also detect conflicts that can
+only occur on operating systems or configurations that the translator
+is not currently using.
+
+
+USAGE
+=====
+
+When a programmer adds a translatable string to the C source code of
+ELinks, and the string contains an accelerator, he should also add a
+special "gettext_accelerator_context" comment that names the menu or
+dialog box in which the string will be used.  See the documentation of
+gather-accelerator-contexts.pl for the details.
+
+When a programmer or translator runs "make update-po" in the
+elinks/po directory, gather-accelerator-contexts.pl reads the
+"gettext_accelerator_context" comments in the source files and
+generates "accelerator_context" comments in elinks.pot.  Then,
+msgmerge copies them from elinks.pot to *.po.
+
+When a translator edits a *.po file, she does not alter the
+"accelerator_context" comments.
+
+When a translator runs "make check-po" in the elinks/po directory,
+check-accelerator-contexts.pl reads the "accelerator_context" comments
+in the *.po file, checks the accelerators in the translations, and
+displays any conflicts it finds.
+
+
+FILES
+=====
+
+See each file for copying conditions.
+
+gather-accelerator-contexts.pl reads elinks.pot and the source files
+to which it refers, and writes a new elinks.pot with information from
+"gettext_accelerator_context" comments.
+
+check-accelerator-contexts.pl reads just one *.po file and scans it
+for conflicts.  It does not access the C source files.
+
+Locale/PO.pm was originally imported from Locale-PO-0.16 on CPAN, and
+has since been patched to make it more suitable for these scripts.
+(The build system, documentation, and test cases of Locale-PO were
+not imported, because it isn't obvious where they should be placed.)
+All changes should be sent back to the author for possible inclusion
+in the standard version.   
+
+
+TO DO
+=====
+
+Make sure that po/Makefile won't fail just because it can't find Perl.
+This may already be the case, but check it.
+
+Fix the issues documented in the BUGS section of each file.
