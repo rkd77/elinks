@@ -148,7 +148,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 	if (par_format.bgcolor != format.style.bg) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
-		struct html_element *e = html_context->stack.prev;
+		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
 		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
@@ -364,7 +364,7 @@ html_html(struct html_context *html_context, unsigned char *a,
 
 	/* Modify the root HTML element - format_html_part() will take
 	 * this from there. */
-	struct html_element *e = html_context->stack.prev;
+	struct html_element *e = html_bottom;
 
 	if (par_format.bgcolor != format.style.bg)
 		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
