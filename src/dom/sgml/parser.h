@@ -89,7 +89,8 @@ typedef enum sgml_parser_code
  *
  * This struct hold info used while parsing SGML data.
  *
- * NOTE: The only variable the user should set is ref:[error_func]. */
+ * NOTE: The only variable the user should set is ref:[sgml_parser.error_func].
+ */
 struct sgml_parser {
 	enum sgml_parser_type type;	/*:: Stream or tree */
 	enum sgml_parser_flag flags;	/*:: Flags that control the behaviour */
@@ -149,7 +150,7 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
  * Returns what line number the parser is currently at or zero if there has
  * been no parsing yet.
  *
- * NOTE: Line numbers are recoderded in the scanner tokens.
+ * NOTE: Line numbers are recorded in the scanner tokens.
  */
 unsigned int get_sgml_parser_line_number(struct sgml_parser *parser);
 
