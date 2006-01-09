@@ -171,7 +171,11 @@ $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl
 ## API Docs
 #
 
-$(HTML_DIR)/api/dom-sgml-parser.html: $(top_srcdir)/src/dom/sgml/parser.h
-	$(CODE2DOC) $< | $(ASCIIDOC) -f code2doc.conf -b xhtml11 -d book -o $@ -n -
+DOM_API = \
+ $(top_srcdir)/src/dom/stack.h \
+ $(top_srcdir)/src/dom/sgml/parser.h
+
+$(HTML_DIR)/api/dom.html: $(DOM_API)
+	$(CODE2DOC) $(DOM_API) | $(ASCIIDOC) -f code2doc.conf -b xhtml11 -d book -o $@ -n -
 
 include $(top_srcdir)/Makefile.lib
