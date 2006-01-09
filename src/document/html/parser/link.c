@@ -89,7 +89,7 @@ html_a(struct html_context *html_context, unsigned char *a,
 		html_focusable(html_context, a);
 
 	} else {
-		kill_html_stack_item(html_context, html_top);
+		kill_html_stack_top(html_context);
 	}
 
 	set_fragment_identifier(html_context, a, "name");
@@ -269,7 +269,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 		 * If not, just exit now. */
 		if (!options->images && !format.link) {
 			mem_free_if(src);
-			if (usemap) kill_html_stack_item(html_context, html_top);
+			if (usemap) kill_html_stack_top(html_context);
 			return;
 		}
 
@@ -332,7 +332,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 			put_image_label(a, label, html_context);
 
-			if (ismap) kill_html_stack_item(html_context, html_top);
+			if (ismap) kill_html_stack_top(html_context);
 			mem_free_set(&format.image, NULL);
 			mem_free_set(&format.title, NULL);
 		}
@@ -341,7 +341,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 	}
 
 	mem_free_if(src);
-	if (usemap) kill_html_stack_item(html_context, html_top);
+	if (usemap) kill_html_stack_top(html_context);
 }
 
 void
@@ -369,7 +369,7 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	format.style.fg = format.clink;
 	put_chrs(html_context, linkname, strlen(linkname));
 	ln_break(html_context, 1);
-	kill_html_stack_item(html_context, html_top);
+	kill_html_stack_top(html_context);
 }
 
 
