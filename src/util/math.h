@@ -10,10 +10,6 @@
  * Ie. MIN(a+b, c+d) will do 3 additions...
  * Please prefer to use int_min() and int_max() if possible. */
 
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>	/* MIN/MAX may be defined in this header. */
-#endif
-
 /* FreeBSD needs this. */
 #ifdef MIN
 #undef MIN
