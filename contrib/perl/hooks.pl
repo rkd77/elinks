@@ -934,8 +934,6 @@ B<dia> <I<dialect>> <I<URL>> (or current url)
 
 Dialects: I<redneck>, I<jive>, I<cockney>, I<fudd>, I<bork>, I<moron>, I<piglatin>, or I<hacker>
 
-=back
-
 =cut
 	############################################################################
 	# the Dialectizer (dia <dialect> <url>)
@@ -1070,6 +1068,8 @@ using the search engine defined by the 'search' configuration option if
 }
 
 
+=back
+
 
 =head1 FOLLOW URL HOOK
 
@@ -1080,8 +1080,6 @@ These hooks effect a URL before ELinks has a chance to load it.
 I<Developer's usage>: The function I<follow_url_hook> is called when the hook
 is triggered, taking the target URL as its only argument.  It returns the final
 target URL.
-
-=back
 
 =cut
 ################################################################################
@@ -1133,6 +1131,8 @@ Translates any I<nntp:> or I<news:> URLs to Google Groups HTTP URLs.
 }
 
 
+=back
+
 
 =head1 PRE FORMAT HTML HOOK
 
@@ -1150,8 +1150,6 @@ available.
 I<Developer's usage>: The function I<pre_format_html_hook> is called when the
 hook is triggered, taking the document's URL and the HTML source as its two
 arguments.  It returns the rewritten HTML code.
-
-=back
 
 =cut
 ################################################################################
@@ -1242,6 +1240,8 @@ content-type:text/html.
 }
 
 
+=back
+
 
 =head1 PROXY FOR HOOK
 
@@ -1255,8 +1255,6 @@ you want to use some anonymizer for access to certain sites.
 I<Developer's usage>: The function I<proxy_for_hook> is called when the hook is
 triggered, taking the target URL as its only argument.  It returns the proxy
 URL, empty string to use no proxy or I<undef> to use the default proxy URL.
-
-=back
 
 =cut
 ################################################################################
@@ -1281,6 +1279,8 @@ Prevents proxy usage for local files and C<http://localhost>.
 }
 
 
+=back
+
 
 =head1 QUIT HOOK
 
@@ -1293,8 +1293,6 @@ stuff.
 I<Developer's usage>: The function I<quit_hook> is called when the hook is
 triggered, taking no arguments nor returning anything.  ('cause, you know, what
 would be the point?)
-
-=back
 
 =cut
 ################################################################################
@@ -1366,6 +1364,8 @@ A few words of wisdom from ELinks the Sage.
 	print "\n", $fortune;
 }
 
+
+=back
 
 
 =head1 SEE ALSO
