@@ -60,7 +60,7 @@ search_html_stack(struct html_context *html_context, unsigned char *name)
 #endif
 
 	foreach (element, html_context->stack) {
-		if (element == &html_top)
+		if (element == html_top)
 			continue; /* skip the top element */
 		if (strlcasecmp(element->name, element->namelen, name, namelen))
 			continue;
@@ -189,7 +189,7 @@ kill_element(struct html_context *html_context, int ls, struct html_element *e)
 void
 kill_html_stack_until(struct html_context *html_context, int ls, ...)
 {
-	struct html_element *e = &html_top;
+	struct html_element *e = html_top;
 
 	if (ls) e = e->next;
 

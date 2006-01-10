@@ -93,7 +93,7 @@ get_target(struct document_options *options, unsigned char *a)
 void
 ln_break(struct html_context *html_context, int n)
 {
-	if (!n || html_top.invisible) return;
+	if (!n || html_top->invisible) return;
 	while (n > html_context->line_breax) {
 		html_context->line_breax++;
 		html_context->line_break_f(html_context);
@@ -108,7 +108,7 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 	if (html_is_preformatted())
 		html_context->putsp = HTML_SPACE_NORMAL;
 
-	if (!len || html_top.invisible)
+	if (!len || html_top->invisible)
 		return;
 
 	switch (html_context->putsp) {
@@ -258,8 +258,8 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 void
 html_skip(struct html_context *html_context, unsigned char *a)
 {
-	html_top.invisible = 1;
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->invisible = 1;
+	html_top->type = ELEMENT_DONT_KILL;
 }
 
 void
@@ -663,10 +663,7 @@ init_html_parser_state(struct html_context *html_context,
                        enum html_element_type type,
                        int align, int margin, int width)
 {
-	struct html_element *element;
-
 	html_stack_dup(html_context, type);
-	element = &html_top;
 
 	par_format.align = align;
 
@@ -677,10 +674,10 @@ init_html_parser_state(struct html_context *html_context,
 		par_format.list_level = 0;
 		par_format.list_number = 0;
 		par_format.dd_margin = 0;
-		html_top.namelen = 0;
+		html_top->namelen = 0;
 	}
 
-	return element;
+	return html_top;
 }
 
 
@@ -691,20 +688,20 @@ done_html_parser_state(struct html_context *html_context,
 {
 	html_context->line_breax = 1;
 
-	while (&html_top != element) {
-		kill_html_stack_item(html_context, &html_top);
+	while (html_top != element) {
+		pop_html_element(html_context);
 #if 0
 		/* I've preserved this bit to show an example of the Old Code
 		 * of the Mikulas days (I _HOPE_ it's by Mikulas, at least ;-).
 		 * I think this assert() can never fail, for one. --pasky */
-		assertm(&html_top && (void *) &html_top != (void *) &html_stack,
+		assertm(html_top && (void *) html_top != (void *) &html_stack,
 			"html stack trashed");
 		if_assert_failed break;
 #endif
 	}
 
-	html_top.type = ELEMENT_KILLABLE;
-	kill_html_stack_item(html_context, &html_top);
+	html_top->type = ELEMENT_KILLABLE;
+	pop_html_element(html_context);
 
 }
 
@@ -777,12 +774,12 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	par_format.bgcolor = options->default_bg;
 
-	html_top.invisible = 0;
-	html_top.name = NULL;
-   	html_top.namelen = 0;
-	html_top.options = NULL;
-	html_top.linebreak = 1;
-	html_top.type = ELEMENT_DONT_KILL;
+	html_top->invisible = 0;
+	html_top->name = NULL;
+   	html_top->namelen = 0;
+	html_top->options = NULL;
+	html_top->linebreak = 1;
+	html_top->type = ELEMENT_DONT_KILL;
 
 	html_context->has_link_lines = 0;
 	html_context->table_level = 0;

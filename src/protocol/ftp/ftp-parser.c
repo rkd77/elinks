@@ -1,0 +1,72 @@
+/* Tool for testing the FTP parser */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "elinks.h"
+
+#include "protocol/ftp/parse.h"
+
+
+void die(const char *msg, ...)
+{
+	va_list args;
+
+	if (msg) {
+		va_start(args, msg);
+		vfprintf(stderr, msg, args);
+		fputs("\n", stderr);
+		va_end(args);
+	}
+
+	exit(!!NULL);
+}
+
+int
+main(int argc, char *argv[])
+{
+	struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
+	unsigned char *response = "";
+	int responselen = 0;
+	int i;
+
+	for (i = 1; i < argc; i++) {
+		char *arg = argv[i];
+
+		if (strncmp(arg, "--", 2))
+			break;
+
+		arg += 2;
+
+		if (!strncmp(arg, "response", 8)) {
+			arg += 8;
+			if (*arg == '=') {
+				arg++;
+				response = arg;
+			} else {
+				i++;
+				if (i >= argc)
+					die("--response expects a string");
+				response = argv[i];
+			}
+			responselen = strlen(response);
+
+		} else {
+			die("Unknown argument '%s'", arg - 2);
+		}
+	}
+
+	if (!responselen)
+		die("Usage: %s --response \"string\"", argv[0]);
+
+	if (parse_ftp_file_info(&ftp_info, response, responselen))
+		return 0;
+
+	return 1;
+}

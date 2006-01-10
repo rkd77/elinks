@@ -9,12 +9,12 @@ This test runs very basic features, like checking that nodes are placed
 correctly in the DOM tree.
 '
 
-. ./libtest
+. "$TEST_LIB"
 
 test_output_equals () {
-	desc="$1"
-	src="$2"
-	out="$3"
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
 
 	URI="test:$(echo "$desc" | sed '
 		s/^[ \t]*\[[^]]*\][ \t]*//;
@@ -28,7 +28,7 @@ test_output_equals () {
 	echo "#document: $URI" > expected
 	echo "$out" | sed -n '2,$p' >> expected
 
-	test_expect_success "$desc" 'cmp -b output expected' 
+	test_expect_success "$desc" 'cmp output expected' 
 }
 
 
@@ -56,6 +56,16 @@ element: root
     #text: a'
 
 test_output_equals \
+'Parse tag soup elements.' \
+'<parent attr="value" <child:1></><child:2</>a</parent>' \
+'
+element: parent
+  attribute: attr -> value
+  element: child:1
+  element: child:2
+  #text: a'
+
+test_output_equals \
 'Parse an enclosed comment.' \
 '<root><!-- Hello World! --></root>' \
 '
@@ -63,7 +73,7 @@ element: root
   #comment:  Hello World! '
 
 test_output_equals \
-'Parse comment combinations.' \
+'Parse comment combinations. (I)' \
 '<root><!-- <!-- -- > --><!--foo--><!----></root>' \
 '
 element: root
@@ -72,10 +82,27 @@ element: root
   #comment: '
 
 test_output_equals \
+'Parse comment combinations. (II).' \
+'<! -- comment -->s<!-->-->t<!----->u' \
+'
+#comment:  comment 
+#text: s
+#comment: >
+#text: t
+#comment: -
+#text: u'
+
+test_output_equals \
 'Parse bad comment.' \
 '<!--->s' \
 '
 #comment: ->s'
+
+test_output_equals \
+'Parse empty notation.' \
+'<!>s' \
+'
+#text: s'
 
 test_output_equals \
 'Parse an enclosed CDATA section.' \
@@ -167,7 +194,7 @@ test_output_equals \
 '
 proc-instruction: xml -> version="1.0" />
   attribute: version -> 1.0
-proc-instruction: xml -> /'
+proc-instruction: xml -> />-'
 
 test_output_equals \
 'Parse XML stylesheet processing instructions.' \

@@ -32,6 +32,9 @@
 #include "util/time.h"
 
 
+/* Examples of what the FTP parser is supposed to handle (and not handle) can
+ * be found in the test-ftp-parser file. */
+
 #define skip_space_end(src, end) \
 	do { while ((src) < (end) && *(src) == ' ') (src)++; } while (0)
 
@@ -59,16 +62,7 @@ parse_ftp_number(unsigned char **src, unsigned char *end, long from, long to)
 /* Parser for the EPLF format (see http://pobox.com/~djb/proto/eplf.txt).
  *
  * Lines end with \r\n (CR-LF), but that is handled elsewhere.
- *
- * Some example EPLF response, with the filename separator (tab) displayed as a
- * space:
  */
-#ifdef DEBUG_FTP_PARSER
-static unsigned char ftp_eplf_responses[] =
- "+i8388621.48594,m825718503,r,s280,\tdjb.html\r\n"
- "+i8388621.50690,m824255907,/,\t514\r\n"
- "+i8388621.48598,m824253270,r,s612,\t514.html\r\n";
-#endif
 
 enum ftp_eplf {
 	FTP_EPLF_FILENAME	= ASCII_TAB,	/* Filename follows */
@@ -128,27 +122,6 @@ parse_ftp_eplf_response(struct ftp_file_info *info, unsigned char *src, int len)
 
 
 /* Parser for UNIX-style listing: */
-#ifdef DEBUG_FTP_PARSER
-static unsigned char ftp_unix_responses[] =
- /* ftp.freebsd.org response */
- "drwxrwxr-x    3 0        0             512 Apr 17  2003 pub\r\n"
-  /* UNIX-style listing, without inum and without blocks: */
- "-rw-r--r--   1 root     other        531 Jan 29 03:26 README\r\n"
- "dr-xr-xr-x   2 root     other        512 Apr  8  1994 etc\r\n"
- "dr-xr-xr-x   2 root     512 Apr  8  1994 etc\r\n"
- "lrwxrwxrwx   1 root     other          7 Jan 25 00:17 bin -> usr/bin\r\n"
- /* Also produced by Microsoft's FTP servers for Windows: */
- "----------   1 owner    group         1803128 Jul 10 10:18 ls-lR.Z\r\n"
- "d---------   1 owner    group               0 May  9 19:45 Softlib\r\n"
- /* Also WFTPD for MSDOS: */
- "-rwxrwxrwx   1 noone    nogroup      322 Aug 19  1996 message.ftp\r\n"
- /* Also NetWare: */
- "d [R----F--] supervisor            512       Jan 16 18:53    login\r\n"
- "- [R----F--] rhesus             214059       Oct 20 15:27    cx.exe\r\n"
- /* Also NetPresenz for the Mac: */
- "-------r--         326  1391972  1392298 Nov 22  1995 MegaPhone.sit\r\n"
- "drwxrwxr-x               folder        2 May 10  1996 network\r\n";
-#endif
 
 enum ftp_unix {
 	FTP_UNIX_PERMISSIONS,
@@ -165,7 +138,7 @@ enum ftp_unix {
 static int
 parse_ftp_unix_permissions(const unsigned char *src, int len)
 {
-	int perms = 0;
+	mode_t perms = 0;
 
 	if (len != 9
 	    && !(len == 10 && src[9] == '+'))   /* ACL tag */
@@ -429,15 +402,6 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 
 
 /* Parser for VMS-style MultiNet (some spaces removed from examples): */
-#ifdef DEBUG_FTP_PARSER
-static unsigned char ftp_vms_responses[] =
- "00README.TXT;1      2 30-DEC-1996 17:44 [SYSTEM] (RWED,RWED,RE,RE)\r\n"
- "CORE.DIR;1          1  8-SEP-1996 16:09 [SYSTEM] (RWE,RWE,RE,RE)\r\n"
- /* And non-MutliNet VMS: */
- "CII-MANUAL.TEX;1  213/216  29-JAN-1996 03:33:12  [ANONYMOU,ANONYMOUS]   (RWED,RWED,,)\r\n"
- /* A garbage line which should fail: */
- "EA95_0PS.GZ;1      No privilege for attempted operation\r\n";
-#endif
 
 /* Converts VMS symbolic permissions to number-style ones, e.g. string
  * RWED,RWE,RE to 755. "D" (delete) is taken to be equal to "W" (write).
@@ -554,12 +518,6 @@ parse_ftp_vms_response(struct ftp_file_info *info, unsigned char *src, int len)
 
 
 /* Parser for the MSDOS-style format: */
-#ifdef DEBUG_FTP_PARSER
-static unsigned char ftp_winnt_responses[] =
- "04-27-00  09:09PM       <DIR>          licensed\r\n"
- "07-18-00  10:16AM       <DIR>          pub\r\n"
- "04-14-00  03:47PM                  589 readme.htm\r\n";
-#endif
 
 struct ftp_file_info *
 parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len)
@@ -625,12 +583,12 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 	if (*src == '<') {
 		info->type = FTP_FILE_DIRECTORY;
-		info->permissions = 0755;
+		info->permissions = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
 
 	} else if (isdigit(*src)) {
 		info->type = FTP_FILE_PLAINFILE;
 		info->size = parse_ftp_number(&src, end, 0, LONG_MAX);
-		info->permissions = 0644;
+		info->permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
 	} else {
 		info->type = FTP_FILE_UNKNOWN;
@@ -638,26 +596,6 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 	return info;
 }
-
-#ifdef DEBUG_FTP_PARSER
-unsigned char *
-get_ftp_debug_parse_responses(unsigned char *buffer, int buflen)
-{
-	struct string response;
-
-	if (!init_string(&response))
-		return NULL;
-
-	add_to_string(&response, ftp_eplf_responses);
-	add_to_string(&response, ftp_unix_responses);
-	add_to_string(&response, ftp_vms_responses);
-	add_to_string(&response, ftp_winnt_responses);
-
-	add_bytes_to_string(&response, buffer, buflen);
-
-	return response.source;
-}
-#endif
 
 
 struct ftp_file_info *

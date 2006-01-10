@@ -20,7 +20,7 @@ static JSObject *
 smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 {
 	JSObject *jsobj;
-	
+
 	jsobj = JS_NewObject(smjs_ctx, clasp, NULL, NULL);
 	if (!jsobj) return NULL;
 

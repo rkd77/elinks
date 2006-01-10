@@ -87,6 +87,3 @@ advanced CVSweb and Debian package database URI prefixes implemented in the
 sample Lua hooks file.  The one disadvantage to this is that you must have Lua
 scripting enabled in order to make use of it, and many users don't have Lua
 installed.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

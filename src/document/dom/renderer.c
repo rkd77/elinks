@@ -24,6 +24,7 @@
 #include "document/renderer.h"
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
+#include "dom/sgml/rss/rss.h"
 #include "dom/node.h"
 #include "dom/stack.h"
 #include "intl/charsets.h"
@@ -54,6 +55,13 @@ struct dom_renderer {
 	unsigned int find_url:1;
 #endif
 	struct screen_char styles[DOM_NODES];
+
+	/* RSS renderer variables */
+	struct dom_node *channel;
+	struct dom_node_list *items;
+	struct dom_node *item;
+	struct dom_node *node;
+	struct dom_string text;
 };
 
 #define URL_REGEX "(file://|((f|ht|nt)tp(s)?|smb)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?)(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
@@ -61,11 +69,11 @@ struct dom_renderer {
 
 static void
 init_template(struct screen_char *template, struct document_options *options,
-	      color_T background, color_T foreground)
+	      color_T background, color_T foreground, enum screen_char_attr attr)
 {
 	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
 
-	template->attr = 0;
+	template->attr = attr;
 	template->data = ' ';
 	set_term_color(template, &colors,
 		       options->color_flags, options->color_mode);
@@ -115,6 +123,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		struct screen_char *template = &renderer->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
+		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
 		struct dom_string *name = get_dom_node_type_name(type);
@@ -157,9 +166,31 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 
 			property = get_css_property(properties, CSS_PT_COLOR);
 			if (property) foreground = property->value.color;
+
+			property = get_css_property(properties, CSS_PT_FONT_WEIGHT);
+			if (property) {
+				if (property->value.font_attribute.add & AT_BOLD)
+					attr |= SCREEN_ATTR_BOLD;
+			}
+
+			property = get_css_property(properties, CSS_PT_FONT_STYLE);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+
+				if (property->value.font_attribute.add & AT_ITALIC)
+					attr |= SCREEN_ATTR_ITALIC;
+
+			}
+
+			property = get_css_property(properties, CSS_PT_TEXT_DECORATION);
+			if (property) {
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+			}
 		}
 
-		init_template(template, &document->options, background, foreground);
+		init_template(template, &document->options, background, foreground, attr);
 	}
 }
 
@@ -311,7 +342,8 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 	ALIGN_LINK(&(doc)->links, (doc)->nlinks, size)
 
 static inline struct link *
-add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
+add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
+	     unsigned char *uristring, int urilength)
 {
 	struct document *document = renderer->document;
 	int x = renderer->canvas_x;
@@ -320,7 +352,6 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 	struct link *link;
 	struct point *point;
 	struct screen_char template;
-	unsigned char *uristring;
 	color_T fgcolor;
 
 	if (!realloc_document_links(document, document->nlinks + 1))
@@ -332,7 +363,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 		return NULL;
 
 	uristring = convert_string(renderer->convert_table,
-				   string, length, document->options.cp,
+				   uristring, urilength, document->options.cp,
 	                           CSM_DEFAULT, NULL, NULL, NULL);
 	if (!uristring) return NULL;
 
@@ -361,7 +392,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 	link->number = document->nlinks;
 
 	init_template(&template, &document->options,
-		      link->color.background, link->color.foreground);
+		      link->color.background, link->color.foreground, 0);
 
 	render_dom_text(renderer, &template, string, length);
 
@@ -456,7 +487,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 		string += offset;
 		length -= offset;
 
-		add_dom_link(renderer, string, matchlen);
+		add_dom_link(renderer, string, matchlen, string, matchlen);
 
 		length -= matchlen;
 		string += matchlen;
@@ -578,7 +609,8 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 				break;
 			}
 
-			add_dom_link(renderer, value, valuelen - skips);
+			add_dom_link(renderer, value, valuelen - skips,
+				     value, valuelen - skips);
 
 			if (skips > 0) {
 				value += valuelen - skips;
@@ -659,23 +691,298 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 };
 
 
+/* DOM RSS Renderer */
+
+static void
+dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+
+	assert(node && renderer && renderer->document);
+
+	switch (node->data.element.type) {
+	case RSS_ELEMENT_CHANNEL:
+		/* The stack should have: #document * channel */
+		if (stack->depth != 3)
+			break;
+
+		if (!renderer->channel) {
+			renderer->channel = node;
+		}
+		break;
+
+	case RSS_ELEMENT_ITEM:
+		/* The stack should have: #document * channel item */
+#if 0
+		/* Don't be so strict ... */
+		if (stack->depth != 4)
+			break;
+#endif
+		/* ... but be exclusive. */
+		if (renderer->item)
+			break;
+		add_to_dom_node_list(&renderer->items, node, -1);
+		renderer->item = node;
+		break;
+
+	case RSS_ELEMENT_LINK:
+	case RSS_ELEMENT_DESCRIPTION:
+	case RSS_ELEMENT_TITLE:
+	case RSS_ELEMENT_AUTHOR:
+	case RSS_ELEMENT_PUBDATE:
+		if (!node->parent || renderer->node != node->parent)
+			break;
+
+		renderer->node = node;
+	}
+}
+
+static void
+dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	struct dom_node_list **list;
+
+	assert(node && renderer && renderer->document);
+
+	switch (node->data.element.type) {
+	case RSS_ELEMENT_ITEM:
+		if (is_dom_string_set(&renderer->text))
+			done_dom_string(&renderer->text);
+		renderer->item = NULL;
+		break;
+
+	case RSS_ELEMENT_LINK:
+	case RSS_ELEMENT_DESCRIPTION:
+	case RSS_ELEMENT_TITLE:
+	case RSS_ELEMENT_AUTHOR:
+	case RSS_ELEMENT_PUBDATE:
+		if (!is_dom_string_set(&renderer->text)
+		    || !node->parent
+		    || renderer->item != node->parent
+		    || renderer->node != node)
+			break;
+
+		/* Replace any child nodes with the normalized text node. */
+		list = get_dom_node_list(node->parent, node);
+		done_dom_node_list(*list);
+		if (is_dom_string_set(&renderer->text)) {
+			if (!add_dom_node(node, DOM_NODE_TEXT, &renderer->text))
+				done_dom_string(&renderer->text);
+		}
+		renderer->node = NULL;
+		break;
+
+	default:
+		break;
+	}
+}
+
+static void
+dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	unsigned char *string = node->string.string;
+	int length = node->string.length;
+
+	assert(node && renderer && renderer->document);
+
+	if (!renderer->node)
+		return;
+
+	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
+		string -= 1;
+		length += 2;
+	}
+
+	if (!is_dom_string_set(&renderer->text)) {
+		init_dom_string(&renderer->text, string, length);
+	} else {
+		add_to_dom_string(&renderer->text, string, length);
+	}
+}
+
+static struct dom_string *
+get_rss_node_text(struct dom_node *node)
+{
+	struct dom_node *child;
+	int index;
+
+	if (!node->data.element.children)
+		return NULL;
+
+	foreach_dom_node (node->data.element.children, child, index) {
+		if (child->type == DOM_NODE_TEXT)
+			return &child->string;
+	}
+
+	return NULL;
+}
+
+static struct dom_node *
+get_rss_child(struct dom_node *parent, enum rss_element_type type)
+{
+	struct dom_node *node;
+	int index;
+
+	if (!parent->data.element.children)
+		return NULL;
+
+	foreach_dom_node (parent->data.element.children, node, index) {
+		if (node->type == DOM_NODE_ELEMENT
+		    && type == node->data.element.type)
+			return node;
+	}
+
+	return NULL;
+}
+
+
+static struct dom_string *
+get_rss_text(struct dom_node *node, enum rss_element_type type)
+{
+	node = get_rss_child(node, type);
+
+	return node ? get_rss_node_text(node) : NULL;
+}
+
+static void
+render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
+{
+	struct dom_string *title  = get_rss_text(item, RSS_ELEMENT_TITLE);
+	struct dom_string *link   = get_rss_text(item, RSS_ELEMENT_LINK);
+	struct dom_string *author = get_rss_text(item, RSS_ELEMENT_AUTHOR);
+	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
+
+	if (title && is_dom_string_set(title)) {
+		if (item == renderer->channel) {
+			unsigned char *str;
+
+			str = convert_string(renderer->convert_table,
+					     title->string, title->length,
+					     renderer->document->options.cp,
+					     CSM_DEFAULT, NULL, NULL, NULL);
+			if (str)
+				renderer->document->title = str;
+		}
+		render_dom_text(renderer, &renderer->styles[DOM_NODE_ELEMENT],
+				title->string, title->length);
+	}
+
+	if (link && is_dom_string_set(link)) {
+		X(renderer)++;
+		add_dom_link(renderer, "[link]", 6, link->string, link->length);
+	}
+
+	/* New line, and indent */
+	Y(renderer)++;
+	X(renderer) = 0;
+
+	if (author && is_dom_string_set(author)) {
+		render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+				author->string, author->length);
+	}
+
+	if (date && is_dom_string_set(date)) {
+		if (author && is_dom_string_set(author)) {
+			render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+					" - ", 3);
+		}
+
+		render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+				date->string, date->length);
+	}
+
+	if ((author && is_dom_string_set(author))
+	    || (date && is_dom_string_set(date))) {
+		/* New line, and indent */
+		Y(renderer)++;
+		X(renderer) = 0;
+	}
+}
+
+static void
+dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+
+	if (!renderer->channel)
+		return;
+
+	render_rss_item(renderer, renderer->channel);
+
+	if (renderer->items) {
+		struct dom_node *node;
+		int index;
+
+		foreach_dom_node (renderer->items, node, index) {
+			Y(renderer)++;
+			X(renderer) = 0;
+			render_rss_item(renderer, node);
+		}
+	}
+
+	if (is_dom_string_set(&renderer->text))
+		done_dom_string(&renderer->text);
+	mem_free_if(renderer->items);
+
+	done_dom_node(root);
+}
+
+
+static struct dom_stack_context_info dom_rss_renderer_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ dom_rss_push_element,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ dom_rss_push_content,
+		/* DOM_NODE_CDATA_SECTION	*/ dom_rss_push_content,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ dom_rss_push_content,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ dom_rss_pop_element,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ dom_rss_pop_document,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
+
 /* Shared multiplexor between renderers */
 void
 render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
 	unsigned char *head = empty_string_or_(cached->head);
-	struct dom_node *root;
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype;
+ 	enum sgml_parser_type parser_type;
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
 	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
-
-	assert(document->options.plain);
+	enum sgml_parser_code code;
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,
@@ -686,6 +993,11 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	init_dom_renderer(&renderer, document, buffer, convert_table);
 
 	document->bgcolor = document->options.default_bg;
+
+	if (document->options.plain)
+		parser_type = SGML_PARSER_STREAM;
+	else
+		parser_type = SGML_PARSER_TREE;
 
 	/* FIXME: Refactor the doctype lookup. */
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
@@ -707,14 +1019,24 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
-	if (!parser) return;
+	parser = init_sgml_parser(parser_type, doctype, &uri, 0);
+  	if (!parser) return;
+  
+	if (document->options.plain) {
+		add_dom_stack_context(&parser->stack, &renderer,
+				      &dom_source_renderer_context_info);
 
-	add_dom_stack_context(&parser->stack, &renderer,
-			      &dom_source_renderer_context_info);
+	} else if (doctype == SGML_DOCTYPE_RSS) {
+		add_dom_stack_context(&parser->stack, &renderer,
+				      &dom_rss_renderer_context_info);
+	}
 
-	root = parse_sgml(parser, &source);
-	if (root) {
+	/* FIXME: When rendering this way we don't really care about the code.
+	 * However, it will be useful when we will be able to also
+	 * incrementally parse new data. This will require the parser to live
+	 * during the fetching of data. */
+	code = parse_sgml(parser, &source, 1);
+	if (parser->root) {
 		assert(parser->stack.depth == 1);
 
 		get_dom_stack_top(&parser->stack)->immutable = 0;

@@ -1,13 +1,13 @@
 # French ELinks translation.
 # Fabrice Haberer-Proust <fric@gmx.li>
-# Laurent Monin <zas@norz.org>, 2001 - 2005
+# Laurent Monin <zas@norz.org>, 2001 - 2006
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ELinks 0.11.GIT\n"
+"Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-01 17:49+0100\n"
-"PO-Revision-Date: 2006-01-01 17:50+0100\n"
+"POT-Creation-Date: 2006-01-10 23:00+0100\n"
+"PO-Revision-Date: 2006-01-10 23:01+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,21 +15,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
-#: src/bfu/hierbox.c:329
+#: src/bfu/hierbox.c:338
 msgid "Close"
 msgstr "Fermer"
 
 #. | MSGBOX_SCROLLABLE
-#: src/bfu/hierbox.c:425 src/bfu/hierbox.c:434 src/dialogs/document.c:43
+#: src/bfu/hierbox.c:434 src/bfu/hierbox.c:443 src/dialogs/document.c:43
 #: src/dialogs/document.c:240
 msgid "Info"
 msgstr "Info"
 
-#: src/bfu/hierbox.c:426
+#: src/bfu/hierbox.c:435
 msgid "Press space to expand this folder."
 msgstr "Pressez espace pour déployer le dossier."
 
-#: src/bfu/hierbox.c:437 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
+#: src/bfu/hierbox.c:446 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
@@ -40,57 +40,57 @@ msgid "~OK"
 msgstr "~OK"
 
 #. cant_delete_item
-#: src/bfu/hierbox.c:548
+#: src/bfu/hierbox.c:557
 #, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
 msgstr "Désolé, mais l'item \"%s\" ne peut être supprimé."
 
 #. cant_delete_used_item
-#: src/bfu/hierbox.c:551
+#: src/bfu/hierbox.c:560
 #, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
 msgstr "Désolé, mais l'item \"%s\" est actuellement utilisé ailleurs."
 
 #. cant_delete_folder
-#: src/bfu/hierbox.c:554 src/bookmarks/dialogs.c:119
+#: src/bfu/hierbox.c:563 src/bookmarks/dialogs.c:119
 #, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
 msgstr "Désolé, mais le dossier \"%s\" ne peut être supprimé."
 
 #. cant_delete_used_folder
-#: src/bfu/hierbox.c:557 src/bookmarks/dialogs.c:121
+#: src/bfu/hierbox.c:566 src/bookmarks/dialogs.c:121
 #, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
 msgstr "Désolé, mais le dossier \"%s\" est actuellement utilisé ailleurs."
 
 #. delete_marked_items_title
-#: src/bfu/hierbox.c:560
+#: src/bfu/hierbox.c:569
 msgid "Delete marked items"
 msgstr "Supprimer les items marqués"
 
 #. delete_marked_items
-#: src/bfu/hierbox.c:563
+#: src/bfu/hierbox.c:572
 msgid "Delete marked items?"
 msgstr "Supprimer les items marqués ?"
 
 #. delete_folder_title
-#: src/bfu/hierbox.c:566 src/bookmarks/dialogs.c:127
+#: src/bfu/hierbox.c:575 src/bookmarks/dialogs.c:127
 msgid "Delete folder"
 msgstr "Supprimer un dossier"
 
 #. delete_folder
-#: src/bfu/hierbox.c:569
+#: src/bfu/hierbox.c:578
 #, c-format
 msgid "Delete the folder \"%s\" and its content?"
 msgstr "Supprimer le dossier \"%s\" et son contenu ?"
 
 #. delete_item_title
-#: src/bfu/hierbox.c:572
+#: src/bfu/hierbox.c:581
 msgid "Delete item"
 msgstr "Supprimer un item"
 
 #. delete_item
-#: src/bfu/hierbox.c:575
+#: src/bfu/hierbox.c:584
 #, c-format
 msgid ""
 "Delete \"%s\"?\n"
@@ -102,45 +102,45 @@ msgstr ""
 "%s"
 
 #. clear_all_items_title
-#: src/bfu/hierbox.c:578
+#: src/bfu/hierbox.c:587
 msgid "Clear all items"
 msgstr "Effacer tous les items"
 
 #. clear_all_items
-#: src/bfu/hierbox.c:581
+#: src/bfu/hierbox.c:590
 msgid "Do you really want to remove all items?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les items ?"
 
-#: src/bfu/hierbox.c:638
+#: src/bfu/hierbox.c:647
 msgid "Delete error"
 msgstr "Erreur de suppression"
 
-#: src/bfu/hierbox.c:741 src/bfu/hierbox.c:770 src/bfu/hierbox.c:783
-#: src/bfu/hierbox.c:848 src/config/dialogs.c:832 src/dialogs/menu.c:126
+#: src/bfu/hierbox.c:750 src/bfu/hierbox.c:779 src/bfu/hierbox.c:792
+#: src/bfu/hierbox.c:857 src/config/dialogs.c:832 src/dialogs/menu.c:126
 #: src/formhist/formhist.c:418 src/mime/dialogs.c:69 src/session/task.c:272
 #: src/terminal/tab.c:191 src/terminal/tab.c:227
 msgid "~Yes"
 msgstr "~Oui"
 
-#: src/bfu/hierbox.c:742 src/bfu/hierbox.c:771 src/bfu/hierbox.c:784
-#: src/bfu/hierbox.c:849 src/config/dialogs.c:833 src/dialogs/menu.c:127
+#: src/bfu/hierbox.c:751 src/bfu/hierbox.c:780 src/bfu/hierbox.c:793
+#: src/bfu/hierbox.c:858 src/config/dialogs.c:833 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
 #: src/terminal/tab.c:192 src/terminal/tab.c:228
 msgid "~No"
 msgstr "~Non"
 
-#: src/bfu/hierbox.c:917 src/bfu/hierbox.c:948 src/viewer/text/search.c:1013
+#: src/bfu/hierbox.c:926 src/bfu/hierbox.c:957 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
 #: src/viewer/text/search.c:1612
 msgid "Search"
 msgstr "Chercher"
 
-#: src/bfu/hierbox.c:919 src/viewer/text/search.c:1014
+#: src/bfu/hierbox.c:928 src/viewer/text/search.c:1014
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
 
-#: src/bfu/hierbox.c:948 src/config/dialogs.c:168 src/config/dialogs.c:357
+#: src/bfu/hierbox.c:957 src/config/dialogs.c:168 src/config/dialogs.c:357
 #: src/config/dialogs.c:504 src/cookies/dialogs.c:34 src/cookies/dialogs.c:348
 #: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:373
 #: src/scripting/lua/core.c:374 src/scripting/lua/core.c:454
@@ -173,7 +173,7 @@ msgstr "Chaîne vide non autorisée"
 #: src/dialogs/options.c:291 src/mime/dialogs.c:130
 #: src/protocol/auth/dialogs.c:111 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:378 src/scripting/lua/core.c:458
-#: src/session/download.c:544 src/session/download.c:1121
+#: src/session/download.c:544 src/session/download.c:1143
 #: src/viewer/text/search.c:1594
 msgid "~Cancel"
 msgstr "~Annuler"
@@ -187,7 +187,7 @@ msgid "Digital clock in the status bar."
 msgstr "Horloge digitale dans la barre de status."
 
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1118
-#: src/config/options.inc:1125 src/ecmascript/ecmascript.c:40
+#: src/config/options.inc:1125 src/ecmascript/ecmascript.c:39
 #: src/globhist/globhist.c:63 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
 msgid "Enable"
@@ -1837,7 +1837,7 @@ msgstr "Impossible d'ajouter une option ici."
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:424
 #: src/dialogs/options.c:212 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1105
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1127
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
 
@@ -2305,14 +2305,12 @@ msgstr "Editeur externe"
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
-"\n"
 "If this is blank, ELinks will use the value of the environmental\n"
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
 msgstr ""
 "Chemin du programme qu'ELinks doit lancer quand l'utilisateur\n"
 "demande à éditer un champ de texte avec un éditeur externe.\n"
-"\n"
 "Si vide, ELinks utilisera la valeur de la variable d'environnement\n"
 "$EDITOR. Si $EDITOR est vide ou non configurée, ELinks utilisera\n"
 "\"vi\" par défaut."
@@ -3357,15 +3355,13 @@ msgid ""
 "The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
-"\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
 "Règle de passage d'URI à une commande externe.\n"
 "Le format est:\n"
 "%c dans la chaîne signifie URL courante\n"
 "%% dans la chaîne signifie '%'\n"
-"\n"
-"Ne mettez pas de simples ou doubles quotes autour de %c."
+"Ne mettez pas de simples ou doubles guillemets autour de %c."
 
 #. Keep options in alphabetical order.
 #: src/config/options.inc:740
@@ -4674,7 +4670,7 @@ msgid ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -4685,7 +4681,7 @@ msgstr ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "et d'autres\n"
 "\n"
 "Ce programme est un logiciel libre; vous pouvez le redistribuer et/ou le "
@@ -5362,31 +5358,31 @@ msgstr ""
 "Laisser à \"\" pour utiliser le style initial du document."
 
 #. name:
-#: src/ecmascript/ecmascript.c:36 src/ecmascript/ecmascript.c:201
+#: src/ecmascript/ecmascript.c:35 src/ecmascript/ecmascript.c:137
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
-#: src/ecmascript/ecmascript.c:38
+#: src/ecmascript/ecmascript.c:37
 msgid "ECMAScript options."
 msgstr "Options d'ECMAScript."
 
-#: src/ecmascript/ecmascript.c:42
+#: src/ecmascript/ecmascript.c:41
 msgid "Whether to run those scripts inside of documents."
 msgstr "Exécuter ou non ces scripts présents dans les documents."
 
-#: src/ecmascript/ecmascript.c:44
+#: src/ecmascript/ecmascript.c:43
 msgid "Script error reporting"
 msgstr "Rapport d'erreur de script"
 
-#: src/ecmascript/ecmascript.c:46
+#: src/ecmascript/ecmascript.c:45
 msgid "Open a message box when a script reports an error."
 msgstr "Ouvrir une boîte de message quand un script produit une erreur."
 
-#: src/ecmascript/ecmascript.c:48
+#: src/ecmascript/ecmascript.c:47
 msgid "Ignore <noscript> content"
 msgstr "Ignorer le contenu de <noscript>"
 
-#: src/ecmascript/ecmascript.c:50
+#: src/ecmascript/ecmascript.c:49
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -5394,38 +5390,29 @@ msgstr ""
 "Ignorer ou non le contenu du tag <noscript> quand ECMAScript\n"
 "est actif."
 
-#: src/ecmascript/ecmascript.c:53
+#: src/ecmascript/ecmascript.c:52
 msgid "Maximum execution time"
 msgstr "Temps maximal d'exécution"
 
-#: src/ecmascript/ecmascript.c:55
+#: src/ecmascript/ecmascript.c:54
 msgid "Maximum execution time in seconds for a script."
 msgstr "Temps maximal pour l'exécution d'un script, en secondes."
 
-#: src/ecmascript/ecmascript.c:57
+#: src/ecmascript/ecmascript.c:56
 msgid "Pop-up window blocking"
 msgstr "Blocage des fenêtres Javascript (popups)"
 
-#: src/ecmascript/ecmascript.c:59
+#: src/ecmascript/ecmascript.c:58
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 "Interdire ou non l'ouverture de fenêtres ou d'onglets\n"
 "par les scripts."
 
-#: src/ecmascript/spidermonkey.c:92
-#, c-format
-msgid "A script embedded in the current document raised the following%s%s%s%s"
-msgstr "Un script contenu dans le document courant a provoqué%s%s%s%s"
-
-#: src/ecmascript/spidermonkey.c:108
-msgid "JavaScript Error"
-msgstr "Erreur Javascript"
-
-#: src/ecmascript/spidermonkey.c:127
+#: src/ecmascript/ecmascript.c:126
 msgid "JavaScript Emergency"
 msgstr "Alerte JavaScript"
 
-#: src/ecmascript/spidermonkey.c:129
+#: src/ecmascript/ecmascript.c:128
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5438,9 +5425,18 @@ msgstr ""
 "qu'il y a un bogue dans ce script et que cela aurait pû\n"
 "bloquer ELinks, l'exécution du script a donc été interrompue."
 
-#: src/ecmascript/spidermonkey/window.c:286
+#: src/ecmascript/see/window.c:242 src/ecmascript/spidermonkey/window.c:286
 msgid "JavaScript Alert"
 msgstr "Alerte JavaScript"
+
+#: src/ecmascript/spidermonkey.c:162
+#, c-format
+msgid "A script embedded in the current document raised the following%s%s%s%s"
+msgstr "Un script contenu dans le document courant a provoqué%s%s%s%s"
+
+#: src/ecmascript/spidermonkey.c:178
+msgid "JavaScript Error"
+msgstr "Erreur Javascript"
 
 #: src/formhist/dialogs.c:67
 msgid "Forms are never saved for this URL."
@@ -5983,12 +5979,12 @@ msgstr ""
 "ici à la place de '.')."
 
 #. name:
-#: src/mime/backend/default.c:227
+#: src/mime/backend/default.c:228
 msgid "Option system"
 msgstr "Système de configuration"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:668
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -7128,7 +7124,7 @@ msgstr "Que voulez-vous faire avec le fichier '%s' ?"
 msgid "Information about the torrent"
 msgstr "Informations sur le torrent"
 
-#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1017
+#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1039
 msgid "What to do?"
 msgstr "Que faire ?"
 
@@ -7136,11 +7132,11 @@ msgstr "Que faire ?"
 msgid "Down~load"
 msgstr "Té~lécharger"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1111
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1133
 msgid "~Display"
 msgstr "A~fficher"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1115
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1137
 msgid "Show ~header"
 msgstr "~Montrer les en-têtes"
 
@@ -7840,11 +7836,11 @@ msgid "Scripting"
 msgstr "Scripting"
 
 #: src/session/download.c:234 src/session/download.c:331
-#: src/session/download.c:498 src/session/download.c:590
+#: src/session/download.c:498 src/session/download.c:593
 msgid "Download error"
 msgstr "Erreur de téléchargement"
 
-#: src/session/download.c:235 src/session/download.c:591
+#: src/session/download.c:235 src/session/download.c:594
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -7900,30 +7896,30 @@ msgstr "Ecraser le fichier ~original"
 msgid "~Resume download of the original file"
 msgstr "~Reprendre le téléchargement du fichier original"
 
-#: src/session/download.c:1020
+#: src/session/download.c:1042
 msgid "Unknown type"
 msgstr "Type inconnu"
 
-#: src/session/download.c:1037
+#: src/session/download.c:1059
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Que voulez-vous faire avec le fichier '%s' (type: %s%s%s) ?"
 
-#: src/session/download.c:1067
+#: src/session/download.c:1089
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Programme ('%' sera remplacé par le nom du fichier)"
 
-#: src/session/download.c:1071
+#: src/session/download.c:1093
 msgid "Block the terminal"
 msgstr "Bloquer le terminal"
 
-#: src/session/download.c:1077
+#: src/session/download.c:1099
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Le fichier sera ouvert avec le programme '%s'."
 
-#: src/session/download.c:1098
+#: src/session/download.c:1120
 msgid "~Open"
 msgstr "~Ouvrir"
 

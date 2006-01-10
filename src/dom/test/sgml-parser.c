@@ -16,6 +16,24 @@
 #include "dom/stack.h"
 
 
+unsigned int number_of_lines = 0;
+
+static int
+update_number_of_lines(struct dom_stack *stack)
+{
+	struct sgml_parser *parser = stack->contexts[0]->data;
+	int lines;
+
+	if (!(parser->flags & SGML_PARSER_COUNT_LINES))
+		return 0;
+
+	lines = get_sgml_parser_line_number(parser);
+	if (number_of_lines < lines)
+		number_of_lines = lines;
+
+	return 1;
+}
+
 /* Print the string in a compressed form: a single line with newlines etc.
  * replaced with "\\n" sequence. */
 static void
@@ -72,14 +90,25 @@ static unsigned char indent_string[] =
 #define get_indent_offset(stack) \
 	(((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string)) - 2)
 
+
+static void
+print_indent(struct dom_stack *stack)
+{
+	printf("%.*s", get_indent_offset(stack), indent_string);
+}
+
 static void
 sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *value = &node->string;
 	struct dom_string *name = get_dom_node_name(node);
 
-	printf("%.*s%.*s: %.*s\n",
-		get_indent_offset(stack), indent_string,
+	/* Always print the URI for identification. */
+	if (update_number_of_lines(stack))
+		return;
+
+	print_indent(stack);
+	printf("%.*s: %.*s\n",
 		name->length, name->string,
 		value->length, value->string);
 }
@@ -92,12 +121,16 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 
 	assert(node);
 
+	if (update_number_of_lines(stack))
+		return;
+
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	printf("%.*s%.*s: %.*s -> ",
-		get_indent_offset(stack), indent_string,
-		id->length, id->string, name->length, name->string);
+	print_indent(stack);
+	printf("%.*s: %.*s -> ",
+		id->length, id->string,
+		name->length, name->string);
 	print_dom_node_value(node);
 	printf("\n");
 }
@@ -109,10 +142,13 @@ sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data
 
 	assert(node);
 
+	if (update_number_of_lines(stack))
+		return;
+
 	name	= get_dom_node_name(node);
 
-	printf("%.*s%.*s: ",
-		get_indent_offset(stack), indent_string,
+	print_indent(stack);
+	printf("%.*s: ",
 		name->length, name->string);
 	print_dom_node_value(node);
 	printf("\n");
@@ -126,12 +162,26 @@ sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *da
 
 	assert(node);
 
+	if (update_number_of_lines(stack))
+		return;
+
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
 
-	printf("%.*s%.*s: %.*s\n",
-		get_indent_offset(stack), indent_string,
+	print_indent(stack);
+	printf("%.*s: %.*s\n",
 		id->length, id->string, name->length, name->string);
+}
+
+static void
+sgml_parser_test_end(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct sgml_parser *parser = stack->contexts[0]->data;
+
+	if ((parser->flags & SGML_PARSER_COUNT_LINES)
+	    && !(parser->flags & SGML_PARSER_DETECT_ERRORS)) {
+		printf("%d\n", number_of_lines);
+	}
 }
 
 struct dom_stack_context_info sgml_parser_test_context_info = {
@@ -163,13 +213,22 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 		/* DOM_NODE_ENTITY		*/ NULL,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
 		/* DOM_NODE_COMMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ sgml_parser_test_end,
 		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
 		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
 		/* DOM_NODE_NOTATION		*/ NULL,
 	}
 };
 
+static enum sgml_parser_code
+sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
+		    unsigned int line_number)
+{
+	printf("error on line %d: %.*s\n",
+	       line_number, string->length, string->string);
+
+	return SGML_PARSER_CODE_OK;
+}
 
 void die(const char *msg, ...)
 {
@@ -188,9 +247,11 @@ void die(const char *msg, ...)
 int
 main(int argc, char *argv[])
 {
-	struct dom_node *root;
 	struct sgml_parser *parser;
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
+	enum sgml_parser_flag flags = 0;
+	enum sgml_parser_code code = 0;
+	int complete = 1;
 	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
 	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
 	int i;
@@ -227,6 +288,16 @@ main(int argc, char *argv[])
 				set_dom_string(&source, argv[i], strlen(argv[i]));
 			}
 
+		} else if (!strcmp(arg, "print-lines")) {
+			flags |= SGML_PARSER_COUNT_LINES;
+
+		} else if (!strcmp(arg, "incomplete")) {
+			flags |= SGML_PARSER_INCREMENTAL;
+			complete = 0;
+
+		} else if (!strcmp(arg, "error")) {
+			flags |= SGML_PARSER_DETECT_ERRORS;
+
 		} else if (!strcmp(arg, "help")) {
 			die(NULL);
 
@@ -235,22 +306,27 @@ main(int argc, char *argv[])
 		}
 	}
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri, flags);
 	if (!parser) return 1;
 
+	parser->error_func = sgml_error_function;
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	root = parse_sgml(parser, &source);
-	if (root) {
-		assert(parser->stack.depth == 1);
+	code = parse_sgml(parser, &source, complete);
+	if (parser->root) {
+		size_t root_offset = parser->stack.depth - 1;
 
-		get_dom_stack_top(&parser->stack)->immutable = 0;
+		assert(!complete || root_offset == 0);
+
+		get_dom_stack_state(&parser->stack, root_offset)->immutable = 0;
+
 		/* For SGML_PARSER_STREAM this will free the DOM
 		 * root node. */
-		pop_dom_node(&parser->stack);
+		while (!dom_stack_is_empty(&parser->stack))
+			pop_dom_node(&parser->stack);
 	}
 
 	done_sgml_parser(parser);
 
-	return 0;
+	return code;
 }

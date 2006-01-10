@@ -110,6 +110,3 @@ bookmark therein the currently displayed document of each tab:
 - As a mean of crash protection, tabs can periodically be saved so that it is
   later possible to reconstruct opened tabs.  In case of a clean shutdown
   periodically saved tabs will be removed.
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

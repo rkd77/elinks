@@ -1,0 +1,107 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test that incompleteness is correctly detected
+
+This test checks that the SGML parser correctly finds and reports
+when a part of the source is incomplete.
+'
+
+. "$TEST_LIB"
+
+test_expect_incomplete () {
+	desc="$1"; shift
+	src="$1"; shift
+
+	sgml-parser --src "$src" --incomplete >/dev/null
+	test_expect_success "$desc" \
+		"test $? = 1"
+}
+
+
+################################################################
+# Check for incompleteness
+
+test_expect_incomplete \
+'Check incomplete comment. (I)' \
+'<!-'
+
+test_expect_incomplete \
+'Check incomplete comment. (II)' \
+'<!-- ... '
+
+test_expect_incomplete \
+'Check incomplete notation. (I)' \
+'<!'
+
+test_expect_incomplete \
+'Check incomplete notation. (II)' \
+'<!D'
+
+test_expect_incomplete \
+'Check incomplete cdata section. (I)' \
+'<![CDATA[ ... '
+
+test_expect_incomplete \
+'Check incomplete cdata section. (II)' \
+'<![CDAT'
+
+test_expect_incomplete \
+'Check incomplete element. (I)' \
+'<elem...'
+
+test_expect_incomplete \
+'Check incomplete element. (II)' \
+'<'
+
+test_expect_incomplete \
+'Check incomplete element end. (I)' \
+'<a></a'
+
+test_expect_incomplete \
+'Check incomplete element end. (II)' \
+'<a></'
+
+test_expect_incomplete \
+'Check incomplete attribute.' \
+'<element attr...'
+
+test_expect_incomplete \
+'Check incomplete attribute value.' \
+'<element attr=...'
+
+test_expect_incomplete \
+'Check incomplete attribute quoted value. (I)' \
+'<element attr="...'
+
+test_expect_incomplete \
+'Check incomplete attribute quoted value. (II)' \
+"<element attr='..."
+
+test_expect_incomplete \
+'Check incomplete processing instruction. (I)' \
+'<?xml'
+
+test_expect_incomplete \
+'Check incomplete processing instruction. (II)' \
+'<?xml attr...'
+
+test_expect_incomplete \
+'Check incomplete notation.' \
+'<!DOCTYPE html PUBLIC ...'
+
+test_expect_incomplete \
+'Check incomplete reference. (I)' \
+'&#123456789'
+
+test_expect_incomplete \
+'Check incomplete reference. (II)' \
+'&amp'
+
+test_expect_incomplete \
+'Check incomplete text.' \
+'plain text is always incomplete (if incomplete)'
+
+test_done

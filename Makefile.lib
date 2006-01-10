@@ -33,8 +33,8 @@ mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
- masq_cmd_compile = $(COMPILE) -c $<
-      cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+ masq_cmd_compile = $(COMPILE) -o $(@) -c $< $(2)
+      cmd_compile = $(COMPILE) -o $(@) -Wp,-MD,.deps/$(*F).pp -c $< $(2)
 
 # Rule to compile a set of .o files into one .o file
 quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
@@ -43,7 +43,7 @@ quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
 			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
 
    quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
-         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(2) $(LIBS)
 
  quiet_cmd_sparse = '    [SPARSE]   $(RELPATH)$(2)'
        cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
@@ -125,12 +125,15 @@ CLEAN += $(PROG)
 
 all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
 
+# Ensure that Makefiles in subdirs are created before we recursive into them
+init-recursive: init-default
+
 init-default:
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
 		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
-clean-default:
+clean-default: clean-test
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
 
 cleanall-default: clean-default
@@ -140,6 +143,40 @@ ifneq ($(SPARSE),)
 	@$(foreach file, $(wildcard *.c), \
 		$(call ncmd,sparse,$(file));)
 endif
+
+##############################################################################
+#
+# Auto-testing infrastructure
+#
+
+clean-test:
+test-default:
+
+ifdef TEST_PROGS
+TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
+TESTDEPS += $(TESTDEPS-yes)
+
+TESTS = $(wildcard $(srcdir)test-*)
+
+$(TEST_PROGS): $(TESTDEPS)
+	$(call cmd,link,$@.o)
+
+# We cannot use $$@.o in the rule above so ensure that all test programs are
+# built before linking.
+$(TESTS): $(addsuffix .o,$(TEST_PROGS)) $(TEST_PROGS)
+	@echo "*** $(notdir $@) ***"; \
+	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
+
+test-default: $(TESTS)
+
+clean-test:
+	@rm -fr trash
+
+CLEAN += $(TEST_PROGS) $(addsuffix .o,$(TEST_PROGS))
+endif
+
+.PHONY: $(TESTS)
+.NOPARALLEL:
 
 # sparse is architecture-neutral, which means that we need to tell it
 # explicitly what architecture to check for. Fix this up for yours..
@@ -163,29 +200,41 @@ endif
 
 # Recursion:
 
-.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive
+RULES	 = all install clean cleanall init check test
+RECRULES = $(addsuffix -recursive,$(RULES))
 
-all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive:
+.PHONY: $(RECRULES)
+
+# The -recursive rules decend all subdirs.
+$(RECRULES):
 ifdef SUBDIRS
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
 endif
 
-all: all-recursive all-default all-local
-install: install-recursive install-default install-local
-check: check-recursive check-default check-local
-clean: clean-recursive clean-default clean-local
+# Setup the default sub commands dependency. First decend subdirs then do all
+# the default stuff and finally do any local hooks.
+recdeps = $1-recursive $1-default $1-local
+all: $(call recdeps,all)
+check: $(call recdeps,check)
+cleanall: $(call recdeps,cleanall)
+clean: $(call recdeps,clean)
+init: $(call recdeps,init)
+install: $(call recdeps,install)
+test: $(call recdeps,test)
 
-cleanall: cleanall-recursive cleanall-default
-init: init-default init-recursive
-
-all-local:
-install-local:
-clean-local:
-check-local:
+# Dummy rules for local hooks
+$(addsuffix -local,$(RULES)):
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
+# Shell quote;
+# Result of this needs to be placed inside ''
+# XXX: Placed here because Vim cannot highlight things right afterwards
+shq = $(subst ','\'',$(1))
+# This has surrounding ''
+shellquote = '$(call shq,$(1))'
 
 # vim:syntax=make

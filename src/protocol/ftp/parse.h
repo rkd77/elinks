@@ -22,7 +22,7 @@ struct ftp_file_info {
 	long size;			/* File size. -1 if unknown. */
 	time_t mtime;			/* Modification time */
 	unsigned int local_time_zone:1;	/* What format the mtime is in */
-	int permissions;		/* File permissions */
+	mode_t permissions;		/* File permissions */
 };
 
 #define FTP_SIZE_UNKNOWN -1
@@ -30,22 +30,12 @@ struct ftp_file_info {
 /* File info initializers: */
 
 #define INIT_FTP_FILE_INFO \
-	{ FTP_FILE_UNKNOWN, INIT_STRING("", 0), INIT_STRING("", 0), FTP_SIZE_UNKNOWN, 0, 0, 0644 }
+	{ FTP_FILE_UNKNOWN, INIT_STRING("", 0), INIT_STRING("", 0), FTP_SIZE_UNKNOWN, 0, 0, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH }
 
 #define INIT_FTP_FILE_INFO_ROOT \
-	{ FTP_FILE_DIRECTORY, INIT_STRING("..", 2), INIT_STRING("", 0), FTP_SIZE_UNKNOWN, 0, 0, 0755 }
+	{ FTP_FILE_DIRECTORY, INIT_STRING("..", 2), INIT_STRING("", 0), FTP_SIZE_UNKNOWN, 0, 0, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH }
 
 struct ftp_file_info *
 parse_ftp_file_info(struct ftp_file_info *info, unsigned char *src, int len);
-
-/* Define to feed debug FTP responses into the parser. Then point ELinks to an
- * FTP server to run the tests. */
-#if 0
-#define DEBUG_FTP_PARSER
-#endif
-
-#ifdef DEBUG_FTP_PARSER
-unsigned char *get_ftp_debug_parse_responses(unsigned char *buffer, int buflen);
-#endif
 
 #endif

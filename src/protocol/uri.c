@@ -115,28 +115,31 @@ end_with_known_tld(unsigned char *s, int slen)
 	return -1;
 }
 
+/* XXX: this function writes to @name. */
 static int
 check_whether_file_exists(unsigned char *name)
 {
 	/* Check POST_CHAR etc ... */
 	static const unsigned char chars[] = POST_CHAR_S "#?";
 	int i;
+	int namelen = strlen(name);
 
 	if (file_exists(name))
-		return strlen(name);
+		return namelen;
 
 	for (i = 0; i < sizeof(chars) - 1; i++) {
-		unsigned char *pos = strchr(name, chars[i]);
-		int namelen = -1;
+		unsigned char *pos = memchr(name, chars[i], namelen);
+		int exists;
 
 		if (!pos) continue;
 
 		*pos = 0;
-		if (file_exists(name))
-			namelen = strlen(name);
+		exists = file_exists(name);
 		*pos = chars[i];
 
-		if (namelen >= 0) return namelen;
+		if (exists) {
+			return pos - name;
+		}
 	}
 
 	return -1;
@@ -147,29 +150,15 @@ check_uri_file(unsigned char *name)
 {
 	/* Check POST_CHAR etc ... */
 	static const unsigned char chars[] = POST_CHAR_S "#?";
-	int i;
 
-	for (i = 0; i < sizeof(chars) - 1; i++) {
-		unsigned char *pos = strchr(name, chars[i]);
-		int namelen;
-
-		if (!pos) continue;
-
-		*pos = 0;
-		namelen = strlen(name);
-		*pos = chars[i];
-
-		return namelen;
-	}
-
-	return strlen(name);
+	return strcspn(name, chars);
 }
 
 /* Encodes URIs without encoding stuff like fragments and query separators. */
 static void
 encode_file_uri_string(struct string *string, unsigned char *uristring)
 {
-	int filenamelen = check_uri_file(uristring);
+	int filenamelen = check_whether_file_exists(uristring);
 
 	encode_uri_string(string, uristring, filenamelen, 0);
 }

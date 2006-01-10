@@ -5,8 +5,6 @@ Welcome, mere mortal, to the realm of evil unindented code, heaps of one or
 two-letter variables, seas of gotos accompanied with 30-letters labels in Czech
 language with absolutely no meaning, welcome to the realm of ELinks code!
 
-[We're going to extend this file slowly, basing on daily practice ;]
-
 Don't take this file as a law. We may or may not be right in these issues.
 
 Motto: I didn't expect someone to look at the source, so it's unreadable.
@@ -620,6 +618,22 @@ typedef int (some_func_T)(void *);
 typedef long long our_long_T;
 -------------------------------------------------------------------------------
 
+Please use mode_t and S_I???? macros instead of numeric modes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.Use:
+-------------------------------------------------------------------------------
+mode_t mode = S_IRWXU | S_IRGRP | S_IROTH;
+-------------------------------------------------------------------------------
+
+.Instead of:
+-------------------------------------------------------------------------------
+int mode = 0744;
+-------------------------------------------------------------------------------
+
+Note that S_IREAD, S_IWRITE and S_IEXEC are obsolete, you should use S_IRUSR,
+S_IWUSR, S_IXUSR instead.
+
 
 Patches
 ~~~~~~~
@@ -681,6 +695,3 @@ to compile or execute in one of these modes, then rework it.
 
 
 Happy hacking!
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////

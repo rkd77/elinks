@@ -1,0 +1,164 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test SGML parser error reporting
+
+This test checks that the SGML parser will report errors in the source
+given to it.
+'
+
+. "$TEST_LIB"
+
+test_output_error () {
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	sgml-parser --src "$src" --error > output
+	echo "$out" | sed -n '2,$p' > expected
+
+	test_expect_success "$desc" 'cmp output expected' 
+}
+
+
+################################################################
+# Check parsing errors
+
+test_output_error \
+'Check an element error.' \
+'<html' \
+'
+error on line 1: <html'
+
+test_output_error \
+'Check an entity reference error.' \
+'a
+b
+&c' \
+'
+error on line 3: &c'
+
+test_output_error \
+'Check multiple entity reference errors.' \
+'a
+&b&amp;
+c
+&d' \
+'
+error on line 2: &b
+error on line 4: &d'
+
+test_output_error \
+'Check incomplete comment. (I)' \
+'<!-' \
+'
+error on line 1: <!-'
+
+test_output_error \
+'Check incomplete comment. (II)' \
+'<!-- ... ' \
+"
+error on line 1: <!--"
+
+test_output_error \
+'Check incomplete notation. (I)' \
+'<!' \
+'
+error on line 1: <!'
+
+test_output_error \
+'Check incomplete notation. (II)' \
+'<!DOCTYPE ...' \
+'
+error on line 1: <!DOCTYPE'
+
+
+test_output_error \
+'Check incomplete cdata section. (I)' \
+'<![CDATA[ ... ' \
+'
+error on line 1: <![CDATA['
+
+
+test_output_error \
+'Check incomplete cdata section. (II)' \
+'<![CDAT' \
+'
+error on line 1: <![CDAT'
+
+test_output_error \
+'Check incomplete processing instruction. (I)' \
+'<?xml ' \
+'
+error on line 1: <?xml'
+
+test_output_error \
+'Check incomplete processing instruction. (II)' \
+'<?xml-stylesheet attr...' \
+'
+error on line 1: attr...'
+
+test_output_error \
+'Check incomplete reference. (I)' \
+'&#123456789' \
+'
+error on line 1: &#123456789'
+
+test_output_error \
+'Check incomplete reference. (II)' \
+'&amp' \
+'
+error on line 1: &amp'
+
+test_output_error \
+'Check incomplete element. (I)' \
+'<elem...' \
+'
+error on line 1: <elem...'
+
+
+test_output_error \
+'Check incomplete element. (II)' \
+'<' \
+'
+error on line 1: <'
+
+test_output_error \
+'Check incomplete element end. (I)' \
+'<a></a' \
+'
+error on line 1: </a'
+
+test_output_error \
+'Check incomplete element end. (II)' \
+'<a></' \
+'
+error on line 1: </'
+
+test_output_error \
+'Check incomplete attribute.' \
+'<element attr...' \
+'
+error on line 1: attr...'
+
+test_output_error \
+'Check incomplete attribute value.' \
+'<element attr=...' \
+'
+error on line 1: ...'
+
+test_output_error \
+'Check incomplete attribute quoted value. (I)' \
+'<element attr="...' \
+'
+error on line 1: "...' 
+
+test_output_error \
+'Check incomplete attribute quoted value. (II)' \
+"<element attr='..." \
+"
+error on line 1: '..."
+
+test_done

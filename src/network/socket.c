@@ -279,7 +279,7 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 #ifdef CONFIG_IPV6
 	struct sockaddr_in6 bind_addr6;
 
-	if (ctrl_socket->protocol_family == 1) {
+	if (ctrl_socket->protocol_family == EL_PF_INET6) {
 		bind_addr = (struct sockaddr *) &bind_addr6;
 		addrlen   = sizeof(bind_addr6);
 	} else
@@ -303,7 +303,7 @@ sock_error:
 
 	/* Get a passive socket */
 
-	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sock < 0)
 		goto sock_error;
 
@@ -316,7 +316,7 @@ sock_error:
 
 	memcpy(bind_addr, pasv_addr, addrlen);
 #ifdef CONFIG_IPV6
-	if (ctrl_socket->protocol_family == 1)
+	if (ctrl_socket->protocol_family == EL_PF_INET6)
 		bind_addr6.sin6_port = 0;
 	else
 #endif
@@ -484,6 +484,10 @@ connect_socket(struct socket *csocket, enum connection_state state)
 	int only_local = get_cmd_opt_bool("localhost");
 	int saved_errno = 0;
 	int at_least_one_remote_ip = 0;
+#ifdef CONFIG_IPV6
+	int try_ipv6 = get_opt_bool("connection.try_ipv6");
+#endif
+	int try_ipv4 = get_opt_bool("connection.try_ipv4");
 	/* We tried something but we failed in such a way that we would rather
 	 * prefer the connection to retain the information about previous
 	 * failures.  That is, we i.e. decided we are forbidden to even think
@@ -501,24 +505,20 @@ connect_socket(struct socket *csocket, enum connection_state state)
 	for (i = connect_info->triedno + 1; i < connect_info->addrno; i++) {
 #ifdef CONFIG_IPV6
 		struct sockaddr_in6 addr = *((struct sockaddr_in6 *) &connect_info->addr[i]);
+		int family = addr.sin6_family;
 #else
 		struct sockaddr_in addr = *((struct sockaddr_in *) &connect_info->addr[i]);
+		int family = addr.sin_family;
 #endif
-		int family;
+		int pf;
 		int force_family = connect_info->ip_family;
-
-#ifdef CONFIG_IPV6
-		family = addr.sin6_family;
-#else
-		family = addr.sin_family;
-#endif
 
 		connect_info->triedno++;
 
 		if (only_local) {
 			int local = 0;
 #ifdef CONFIG_IPV6
-			if (addr.sin6_family == AF_INET6)
+			if (family == AF_INET6)
 				local = check_if_local_address6((struct sockaddr_in6 *) &addr);
 			else
 #endif
@@ -532,18 +532,28 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		}
 
 #ifdef CONFIG_IPV6
-		if (family == AF_INET6 && (!get_opt_bool("connection.try_ipv6") || (force_family && force_family != 6))) {
-			silent_fail = 1;
-			continue;
+		if (family == AF_INET6) {
+			if (!try_ipv6 || (force_family && force_family != 6)) {
+				silent_fail = 1;
+				continue;
+			}
+			pf = PF_INET6;
+
 		} else
 #endif
-		if (family == AF_INET && (!get_opt_bool("connection.try_ipv4") || (force_family && force_family != 4))) {
-			silent_fail = 1;
+		if (family == AF_INET) {
+			if (!try_ipv4 || (force_family && force_family != 4)) {
+				silent_fail = 1;
+				continue;
+			}
+			pf = PF_INET;
+
+		} else {
 			continue;
 		}
 		silent_fail = 0;
 
-		sock = socket(family, SOCK_STREAM, IPPROTO_TCP);
+		sock = socket(pf, SOCK_STREAM, IPPROTO_TCP);
 		if (sock == -1) {
 			if (errno && !saved_errno) saved_errno = errno;
 			continue;
@@ -568,11 +578,11 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		 * something else ;-). --pasky */
 
 #ifdef CONFIG_IPV6
-		if (addr.sin6_family == AF_INET6) {
+		if (family == AF_INET6) {
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in6)) == 0) {
 				/* Success */
-				csocket->protocol_family = 1;
+				csocket->protocol_family = EL_PF_INET6;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}
@@ -582,7 +592,7 @@ connect_socket(struct socket *csocket, enum connection_state state)
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in)) == 0) {
 				/* Success */
-				csocket->protocol_family = 0;
+				csocket->protocol_family = EL_PF_INET;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}

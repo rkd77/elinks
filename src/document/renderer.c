@@ -254,7 +254,13 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_plain_document(cached, document, &buffer);
 
 	} else {
-		render_html_document(cached, document, &buffer);
+#ifdef CONFIG_DOM
+		if (cached->content_type
+		    && (!strlcasecmp("application/rss+xml", 19, cached->content_type, -1)))
+			render_dom_document(cached, document, &buffer);
+		else
+#endif
+			render_html_document(cached, document, &buffer);
 	}
 
 	if (encoding != ENCODING_NONE) {

@@ -1,7 +1,7 @@
-Core GIT Tests
-==============
+ELinks testing infrastructure
+=============================
 
-This directory holdstest scripts for the DOM implementation. The first part of
+This directory holds test scripts for the DOM implementation. The first part of
 this short document describes how to run the tests and read their output.
 
 When fixing the tools or adding enhancements, you are strongly encouraged to
@@ -27,7 +27,7 @@ The easiest way to run tests is to say "make test". This runs all the tests.
 
 Or you can run each test individually from command line, like this:
 
-    $ sh ./test-sgml-parser-basic
+    $ TEST_LIB=${path_to_top_srcdir}/test/libtest.sh sh ./test-sgml-parser-basic
     *   ok 1: parse a small document.
     ...
     *   ok 23: parse a CDATA section.
@@ -49,6 +49,10 @@ command line argument to the test.
 	This causes the test to immediately exit upon the first
 	failed test.
 
+Note, these options can be passed indirectly to all tests when running test using
+make by setting TEST_OPTS, like this:
+
+	make test TEST_OPTS=--immediate
 
 Naming Tests
 ------------
@@ -91,20 +95,23 @@ The test script is written as a shell script. It should start with the standard
 
 
 Source 'libtest'
---------------------
+----------------
 
-After assigning test_description, the test script should source test-lib.sh
-like this:
+After assigning test_description, the test script should source the shell test
+library like this:
 
-	. ./libtest
+	. "$TEST_LIB"
+
+This assumes that the TEST_LIB environment variable has been set and is needed
+for test to run from out of tree builds.
 
 This test harness library does the following things:
 
  - If the script is invoked with command line argument --help (or -h), it shows
    the test_description and exits.
 
- - Creates an empty test directory. This directory is 'test/trash' if you must
-   know, but I do not think you care.
+ - Creates an empty test directory. This directory is 'trash' if you must know,
+   but I do not think you care.
 
  - Defines standard test helper functions for your scripts to use.  These
    functions are designed to make all scripts behave consistently when command

@@ -369,7 +369,7 @@ write_global_history(void)
 	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME, NULL);
 	if (!file_name) return;
 
-	ssi = secure_open(file_name, 0177); /* rw for user only */
+	ssi = secure_open(file_name);
 	mem_free(file_name);
 	if (!ssi) return;
 

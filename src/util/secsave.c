@@ -68,8 +68,8 @@ enum secsave_errno secsave_errno = SS_ERR_NONE;
 
 /* Open a file for writing in a secure way. It returns a pointer to a structure
  * secure_save_info on success, or NULL on failure. */
-struct secure_save_info *
-secure_open(unsigned char *file_name, mode_t mask)
+static struct secure_save_info *
+secure_open_umask(unsigned char *file_name, mode_t mask)
 {
 	mode_t saved_mask;
 	struct stat st;
@@ -203,6 +203,11 @@ end:
 	return NULL;
 }
 
+struct secure_save_info *
+secure_open(unsigned char *file_name)
+{
+	return secure_open_umask(file_name, S_IXUSR | S_IRWXG | S_IRWXO);
+}
 
 /* Close a file opened with secure_open, and return 0 on success, errno
  * or -1 on failure. */

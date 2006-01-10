@@ -11,12 +11,8 @@ struct terminal;
 struct uri;
 struct widget_data;
 
-struct widget_info_listbox {
-	int height;
-};
 
-
-void add_dlg_listbox(struct dialog *dlg, int height, void *box_data);
+void add_dlg_listbox(struct dialog *dlg, void *box_data);
 
 enum listbox_match {
 	LISTBOX_MATCH_OK,

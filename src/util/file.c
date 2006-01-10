@@ -5,6 +5,7 @@
 #endif
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,7 +47,7 @@
 #include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
-#include "protocol/uri.h"
+
 
 /* Not that these two would be so useful for portability (they are ANSI C) but
  * they encapsulate the lowlevel stuff (need for <unistd.h>) nicely. */
@@ -54,29 +55,12 @@
 int
 file_exists(const unsigned char *filename)
 {
-	int result;
-	unsigned char *decoded_filename;
 #ifdef HAVE_ACCESS
-
-	result = access(filename, F_OK);
-	if (result >= 0) return 1;
-	decoded_filename = stracpy((unsigned char *)filename);
-	if (!decoded_filename) return 0;
-	decode_uri(decoded_filename);
-	result = access(decoded_filename, F_OK);
-	mem_free(decoded_filename);
-	return result >= 0;
+	return access(filename, F_OK) >= 0;
 #else
 	struct stat buf;
 
-	result = stat(filename, &buf);
-	if (result >= 0) return 1;
-	decoded_filename = stracpy((unsigned char *)filename);
-	if (!decoded_filename) return 0;
-	decode_uri(decoded_filename);
-	result = stat(decoded_filename, &buf);
-	mem_free(decoded_filename);
-	return result >= 0;
+	return stat(filename, &buf) >= 0;
 #endif
 }
 
@@ -288,7 +272,7 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
 int
 safe_mkstemp(unsigned char *template)
 {
-	mode_t saved_mask = umask(0177);
+	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
 	int fd = mkstemp(template);
 
 	umask(saved_mask);
@@ -337,12 +321,12 @@ stat_mode(struct string *string, struct stat *stp)
 	unsigned char rwx[10] = "---------";
 
 	if (stp) {
-		int mode = stp->st_mode;
-		int shift;
+		mode_t mode = stp->st_mode;
+		unsigned int shift;
 
 		/* Set permissions attributes for user, group and other */
 		for (shift = 0; shift <= 6; shift += 3) {
-			int m = mode << shift;
+			mode_t m = mode << shift;
 
 			if (m & S_IRUSR) rwx[shift + 0] = 'r';
 			if (m & S_IWUSR) rwx[shift + 1] = 'w';
@@ -596,4 +580,41 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 	memset(&entries[size], 0, sizeof(*entries));
 
 	return entries;
+}
+
+/* Recursively create directories in a path. The last element in the path is
+ * taken to be a filename, and simply ignored */
+int
+mkalldirs(const unsigned char *path)
+{
+	int pos, len, ret = 0;
+	unsigned char *p;
+
+	if (!*path) return -1;
+
+	/* Make a copy of path, to be able to write to it.  Otherwise, the
+	 * function is unsafe if called with a read-only char *argument.  */
+	len = strlen(path) + 1;
+	p = fmem_alloc(len);
+	if (!p) return -1;
+	memcpy(p, path, len);
+
+	for (pos = 1; p[pos]; pos++) {
+		unsigned char separator = p[pos];
+
+		if (!dir_sep(separator))
+			continue;
+
+		p[pos] = 0;
+
+		ret = mkdir(p, S_IRWXU);
+
+		p[pos] = separator;
+
+		if (ret < 0 && errno != EEXIST)
+			break;
+	}
+
+	fmem_free(p);
+	return ret;
 }

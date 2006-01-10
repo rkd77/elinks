@@ -12,7 +12,7 @@
 int win32_write(int fd, const void *buf, unsigned len);
 int win32_read(int fd, void *buf, unsigned len);
 int win32_pipe(int *fds);
-int win32_socket(int af, int type, int proto);
+int win32_socket(int pf, int type, int proto);
 int win32_connect(int fd, struct sockaddr *addr, int addr_len);
 int win32_getpeername(int fd, struct sockaddr *addr, int *addr_len);
 int win32_getsockname(int fd, struct sockaddr *addr, int *addr_len);
@@ -33,7 +33,7 @@ char *win32_strerror(int err);
 #define write				win32_write
 #define close				win32_close
 #define pipe				win32_pipe
-#define socket(af, type, prot)		win32_socket(af, type, prot)
+#define socket(pf, type, prot)		win32_socket(pf, type, prot)
 #define connect(fd, a, al)		win32_connect(fd, a, al)
 #define getpeername(fd, a, al)		win32_getpeername(fd, a, al)
 #define getsockname(fd, a, al)		win32_getsockname(fd, a, al)

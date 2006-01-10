@@ -585,28 +585,9 @@ remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 static enum bittorrent_state
 create_bittorrent_path(unsigned char *path)
 {
-	int pos;
+	int ret = mkalldirs(path);
 
-	if (!*path) return BITTORRENT_STATE_ERROR;
-
-	for (pos = 1; path[pos]; pos++) {
-		unsigned char separator = path[pos];
-		int ret;
-
-		if (!dir_sep(separator))
-			continue;
-
-		path[pos] = 0;
-
-		ret = mkdir(path, S_IREAD | S_IWRITE | S_IEXEC);
-
-		path[pos] = separator;
-
-		if (ret < 0 && errno != EEXIST)
-			return BITTORRENT_STATE_ERROR;
-	}
-
-	return BITTORRENT_STATE_OK;
+	return (ret ? BITTORRENT_STATE_ERROR : BITTORRENT_STATE_OK);
 }
 
 /* Complementary to the above rmdir()s each directory in the path. */
@@ -676,14 +657,14 @@ open_bittorrent_file(struct bittorrent_meta *meta, struct bittorrent_file *file,
 
 	if (!name) return -1;
 
-	fd = open(name, flags, S_IREAD | S_IWRITE);
+	fd = open(name, flags, S_IRUSR | S_IWUSR);
 	if (fd == -1) {
 		/* 99% of the time the file will already exist so special case
 		 * the directory and file creation. */
 		if (errno == ENOENT
 		    && trans == BITTORRENT_WRITE
 		    && create_bittorrent_path(name) == BITTORRENT_STATE_OK)
-			fd = open(name, flags | O_CREAT, S_IREAD | S_IWRITE);
+			fd = open(name, flags | O_CREAT, S_IRUSR | S_IWUSR);
 	}
 
 	mem_free(name);

@@ -110,7 +110,8 @@ init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 	MD5_Init(&MD5Ctx);
 	MD5_Update(&MD5Ctx, ha1, sizeof(ha1));
 	MD5_Update(&MD5Ctx, ":", 1);
-	MD5_Update(&MD5Ctx, entry->nonce, strlen(entry->nonce));
+	if (entry->nonce)
+		MD5_Update(&MD5Ctx, entry->nonce, strlen(entry->nonce));
 	MD5_Update(&MD5Ctx, ":", 1);
 	MD5_Update(&MD5Ctx, "00000001", 8);
 	MD5_Update(&MD5Ctx, ":", 1);
@@ -142,10 +143,12 @@ get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 	add_to_string(&string, entry->user);
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "realm=\"");
-	add_to_string(&string, entry->realm);
+	if (entry->realm)
+		add_to_string(&string, entry->realm);
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "nonce=\"");
-	add_to_string(&string, entry->nonce);
+	if (entry->nonce)
+		add_to_string(&string, entry->nonce);
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "uri=\"/");
 	add_bytes_to_string(&string, uri->data, uri->datalen);
