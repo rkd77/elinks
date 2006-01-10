@@ -127,12 +127,16 @@ $(XML_DIR)/%.man.xml: $(TXT_DIR)/%.man.txt
 
 $(MAN_DIR)/man1/elinks.1.in: $(XML_DIR)/elinks.1.man.xml
 	$(XMLTO) -o $(MAN_DIR)/man1 man $<
-	mv $(MAN_DIR)/man1/elinks.1 $@
+	sed 's/^\.TH "ELINKS" 1 .*/.TH "ELINKS" 1 "The ELinks text-browser" "$(shell date -I)" "The ELinks text-browser"/' \
+		< $(MAN_DIR)/man1/elinks.1 > $@
+	rm $(MAN_DIR)/man1/elinks.1
 
 $(MAN_DIR)/man5/elinkskeys.5: $(XML_DIR)/elinkskeys.5.man.xml
 	$(XMLTO) -o $(MAN_DIR)/man5 man $<
 	sed -e 's/\\fI\\fR'\''/\\fI\\'\''\\fR/' < $@ > $@.tmp
-	mv $@.tmp $@
+	sed 's/^\.TH "ELINKSKEYS" 5 .*/.TH "ELINKSKEYS" 5 "ELinks keybindings" "$(shell date -I)" "ELinks keybindings"/' \
+		< $@.tmp > $@
+	rm $@.tmp
 
 $(MAN_DIR)/man5/elinks.conf.5: $(ELINKS)
 	$(LOCALES) $(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
