@@ -138,7 +138,7 @@ $(MAN_DIR)/man5/elinkskeys.5: $(XML_DIR)/elinkskeys.5.man.xml
 		< $@.tmp > $@
 	rm $@.tmp
 
-$(MAN_DIR)/man5/elinks.conf.5: $(ELINKS)
+$(MAN_DIR)/man5/elinks.conf.5: $(ELINKS) $(HELP2DOC) Makefile
 	$(LOCALES) $(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
 
 # XHTML/CSS Man Pages
