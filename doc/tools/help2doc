@@ -230,7 +230,6 @@ print_elinksconf_footer()
 	echo "$dist_info"
 	echo ".SH \"SEE ALSO\""
 	echo ".BR elinks (1),"
-	echo ".BR elinksmanual (1),"
 	echo ".BR elinkskeys (5)"
 }
 
