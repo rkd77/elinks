@@ -1,7 +1,7 @@
 # Polish ELinks translation.
 # Arkadiusz Sochala <jojoro@priv2.onet.pl>
 # Grzegorz Golawski <grzegol@pld.org.pl>
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2004
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2006
 # Wojtek Bojdo/l <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
 # Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-27 07:21+0100\n"
-"PO-Revision-Date: 2006-01-01 22:53+0100\n"
+"PO-Revision-Date: 2006-01-11 00:40+0100\n"
 "Last-Translator: Adam Golebiowski <adamg@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
 #: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:799 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
 
@@ -256,7 +256,7 @@ msgstr ""
 "\n"
 "'-' - oznacza i¿ dany wska¼nik jest wy³±czony."
 
-#: src/bfu/menu.c:753
+#: src/bfu/menu.c:730
 msgid "Search menu/"
 msgstr "Menu wyszukiwania/"
 
@@ -702,7 +702,7 @@ msgstr "Wstaw tekst ze schowka"
 msgid "Move to the previous item"
 msgstr "Przesuñ do poprzedniej pozycji"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:77
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Odrysuj terminal"
@@ -878,271 +878,275 @@ msgid "Open the link context menu"
 msgstr "Otwórz menu kontekstowe dla odno¶nika"
 
 #: src/config/actions-main.inc:49
+msgid "Open the form fields menu"
+msgstr "Otwórz menu pól formularzy"
+
+#: src/config/actions-main.inc:50
 msgid "Open a Lua console"
 msgstr "Otwórz konsolê Lua"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Go at a specified mark"
 msgstr "Przejd¼ do podanego znacznika"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Set a mark"
 msgstr "Ustaw znacznik"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Activate the menu"
 msgstr "Uaktywnij menu"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Move cursor down"
 msgstr "Przesuñ kursor w dó³"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 msgid "Move cursor left"
 msgstr "Przesuñ kursor w lewo"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Move cursor right"
 msgstr "Przesuñ kursor w prawo"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Move cursor up"
 msgstr "Przesuñ kursor w górê"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 msgid "Move to the end of the document"
 msgstr "Przejd¼ na koniec dokumentu"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move to the start of the document"
 msgstr "Przejd¼ do pocz±tku dokumentu"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move one link down"
 msgstr "Przejd¼ w dó³ o jeden odno¶nik"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move one link left"
 msgstr "Przejd¼ w górê o jeden odno¶nik"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move to the next link"
 msgstr "Przejd¼ do kolejnego odno¶nika"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move to the previous link"
 msgstr "Przejd¼ do poprzedniego odno¶nika"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move one link right"
 msgstr "Przejd¼ w prawo o jeden odno¶nik"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move one link up"
 msgstr "Przejd¼ w górê o jeden odno¶nik"
 
-#: src/config/actions-main.inc:65 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Przesuñ w dó³ o stronê"
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Przesuñ w górê o stronê"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Open the current link in a new tab"
 msgstr "Otwórz bie¿±cy odno¶nik w nowej karcie"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Open the current link in a new tab in the background"
 msgstr "Otwórz bie¿±cy odno¶nik w nowej karcie w tle"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Open the current link in a new window"
 msgstr "Otwórz bie¿±cy odno¶nik w nowym oknie"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Open a new tab"
 msgstr "Otwórz now± kartê"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Open a new tab in the background"
 msgstr "Otwórz now± kartê w tle"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Open a new window"
 msgstr "Otwórz nowe okno"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Open an OS shell"
 msgstr "Otwórz pow³okê systemow±"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Open options manager"
 msgstr "Otwórz menad¿er ustawieñ"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open a quit confirmation dialog box"
 msgstr "Otwórz okno dialogowe potwierdzania zakoñczenia dzia³ania"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Quit without confirmation"
 msgstr "Zakoñcz bez potwierdzenia"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 msgid "Reload the current page"
 msgstr "Prze³aduj bie¿±c± stronê"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Re-render the current page"
 msgstr "Przeformatuj bie¿±c± stronê"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Reset form items to their initial values"
 msgstr "Ustaw elementy formularza na ich pocz±tkowe warto¶ci"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Show information about the currently used resources"
 msgstr "Poka¿ informacje na temat obecnie u¿ywanych zasobów"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Save the current document in source form"
 msgstr "Zapisz bie¿±cy dokument w formie ¼ród³owej"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in formatted form"
 msgstr "Zapisz bie¿±cy dokument jako tekst"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Save options"
 msgstr "Zapisz ustawienia"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 msgid "Save URL as"
 msgstr "Zapisz URL jako"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Scroll down"
 msgstr "Przewiñ w dó³"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll left"
 msgstr "Przewiñ w lewo"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll right"
 msgstr "Przewiñ w prawo"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll up"
 msgstr "Przewiñ w górê"
 
-#: src/config/actions-main.inc:90 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Szukaj tekstu"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 msgid "Search backwards for a text pattern"
 msgstr "Szukaj tekstu wstecz"
 
-#: src/config/actions-main.inc:92 src/config/actions-main.inc:93
+#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
 msgid "Search link text by typing ahead"
 msgstr "Szukaj odno¶nika wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Search document text by typing ahead"
 msgstr "Przeszukuj dokument wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text backwards by typing ahead"
 msgstr "Przeszukuj dokument wstecz wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Show terminal options dialog"
 msgstr "Poka¿ okienko dialogowe ustawieñ terminala"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Submit form"
 msgstr "Prze¶lij formularz"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
-#: src/config/actions-main.inc:99 src/terminal/tab.c:188
+#: src/config/actions-main.inc:100 src/terminal/tab.c:188
 #: src/terminal/tab.c:224
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 msgid "Close all tabs but the current one"
 msgstr "Zamknij wszystkie karty za wyj±tkiem bie¿±cej"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Pass URI of current tab to external command"
 msgstr "Prze¶lij URI bie¿±cej karty do zewnêtrznego polecenia"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 msgid "Open the tab menu"
 msgstr "Otwórz menu kart"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Move the current tab to the left"
 msgstr "Przesuñ bie¿±c± kartê w lewo"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Move the current tab to the right"
 msgstr "Przesuñ bie¿±c± kartê w prawo"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Next tab"
 msgstr "Nastêpna karta"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Previous tab"
 msgstr "Poprzednia karta"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Open the terminal resize dialog"
 msgstr "Poka¿ okienko dialogowe zmiany rozmiarów terminala"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Toggle rendering of page using CSS"
 msgstr "Zmieñ formatowanie strony u¿ywaj±c CSS"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle displaying of links to images"
 msgstr "Zmieñ sposób wy¶wietlania odno¶ników do obrazków"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle rendering of tables"
 msgstr "Zmieñ sposób wy¶wietlania tabel"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle usage of document specific colors"
 msgstr "Prze³±cz sposób u¿ycia kolorów podanych w dokumencie"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Prze³±cz wy¶wietlanie strony jako HTML / zwyk³y tekst"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 msgid "Toggle mouse handling"
 msgstr "Prze³±cz obs³ugê myszy"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle displaying of links numbers"
 msgstr "Prze³±cz sposób wy¶wietlania numerów odno¶ników"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Prze³±cz sposób kompresji pustych linii przez renderer zwyk³ego tekstu"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Toggle wrapping of text"
 msgstr "Zmieñ sposób zawijania tekstu"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "View the current image"
 msgstr "Poka¿ bie¿±cy obrazek"
 
@@ -1786,8 +1790,8 @@ msgstr "Opis"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:961 src/viewer/text/textarea.c:362
-#: src/viewer/text/textarea.c:369
+#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "B³±d"
 
@@ -1812,6 +1816,8 @@ msgid ""
 "Option names may only contain alpha-numeric characters\n"
 "in addition to '_' and '-'."
 msgstr ""
+"Nazwy opcji mog± zawieraæ tylko znaki alfanumeryczne\n"
+"oraz '_' i '-'."
 
 #: src/config/dialogs.c:479 src/config/dialogs.c:504
 msgid "Add option"
@@ -1899,31 +1905,31 @@ msgstr ""
 "czy zmienna $HOME jest ustawiona poprawnie i czy masz prawo zapisu do "
 "katalogu domowego."
 
-#: src/config/kbdbind.c:209
+#: src/config/kbdbind.c:220
 msgid "Main mapping"
 msgstr "G³ówna mapa klawiszy"
 
-#: src/config/kbdbind.c:210
+#: src/config/kbdbind.c:221
 msgid "Edit mapping"
 msgstr "Mapa klawiszy edycji"
 
-#: src/config/kbdbind.c:211
+#: src/config/kbdbind.c:222
 msgid "Menu mapping"
 msgstr "Mapa klawiszy menu"
 
-#: src/config/kbdbind.c:524
+#: src/config/kbdbind.c:555
 msgid "Unrecognised keymap"
 msgstr "Nierozpoznana mapa klawiszy"
 
-#: src/config/kbdbind.c:527
+#: src/config/kbdbind.c:558
 msgid "Error parsing keystroke"
 msgstr "B³±d przy odczytywaniu kombinacji klawiszy"
 
-#: src/config/kbdbind.c:531
+#: src/config/kbdbind.c:562
 msgid "Unrecognised action (internal error)"
 msgstr "Nierozpoznana akcja (b³±d wewnêtrzny)"
 
-#: src/config/kbdbind.c:547
+#: src/config/kbdbind.c:578
 msgid "Error registering event"
 msgstr "B³±d przy rejestrowaniu zdarzenia"
 
@@ -3064,17 +3070,16 @@ msgid "Increase contrast"
 msgstr "Zwiêkszenie kontrastu"
 
 #: src/config/options.inc:569
-#, fuzzy
 msgid ""
 "Increase the contrast between the foreground and background colors\n"
 "to ensure readability. For example it disallows dark colors on a\n"
 "black background. Note, this is different from ensuring the contrast\n"
 "with the ensure_contrast option."
 msgstr ""
-"Ustawienie tej opcji na 0 zwiêkszy kontrakst pomiêdzy\n"
-"t³em a pierwszym planem w celu zapewienia wyrazisto¶ci.\n"
-"Przyk³adowo nie pozwoli na ciemne kolory przy czarnym tle.\n"
-"Uwaga, ta opcja ró¿ni siê od opcji ensure_contrast."
+"Zwiêkszenie kontrastu miêdzy kolorami pierwszego planu a t³em w celu\n"
+"zapewnienia czytelno¶ci. Przyk³adowo opcja ta nie pozwoli na ciemne\n"
+"kolory na czarnym tle. Uwaga, ta opcja ró¿ni siê od zapewnienia\n"
+"kontrastu opcj± ensure_contrast."
 
 #: src/config/options.inc:574
 msgid "Ensure contrast"
@@ -3802,7 +3807,7 @@ msgstr "Tekst"
 msgid "Dialog text colors."
 msgstr "Kolory tekstu w oknie dialogowym."
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1451
+#: src/config/options.inc:978 src/viewer/text/form.c:1460
 msgid "Checkbox"
 msgstr "Przycisk wyboru"
 
@@ -3854,7 +3859,7 @@ msgstr "Klawisz skrótu przycisku"
 msgid "Selected button shortcut"
 msgstr "Klawisz skrótu wybranego przycisku"
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1455
+#: src/config/options.inc:1006 src/viewer/text/form.c:1464
 msgid "Text field"
 msgstr "Pole tekstowe"
 
@@ -4386,7 +4391,7 @@ msgid "Goto URL History"
 msgstr "Historia globalna"
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:824
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
 msgid "Cookies"
 msgstr "Ciasteczka"
 
@@ -4732,7 +4737,7 @@ msgstr "Menad¿er pobierania"
 #. name:
 #: src/dialogs/exmode.c:149
 msgid "Exmode"
-msgstr ""
+msgstr "Tryb ex"
 
 #: src/dialogs/info.c:41
 msgid "About"
@@ -4780,49 +4785,49 @@ msgstr "Zasoby"
 #, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "%d uchwyt"
-msgstr[1] "%d uchwyty"
-msgstr[2] "%d uchwytów"
+msgstr[0] "%ld uchwyt"
+msgstr[1] "%ld uchwyty"
+msgstr[2] "%ld uchwytów"
 
 #: src/dialogs/info.c:178
 #, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "%d zegar"
-msgstr[1] "%d zegary"
-msgstr[2] "%d zegarów"
+msgstr[0] "%ld zegar"
+msgstr[1] "%ld zegary"
+msgstr[2] "%ld zegarów"
 
 #: src/dialogs/info.c:185
 #, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "%d po³±czenie"
-msgstr[1] "%d po³±czenia"
-msgstr[2] "%d po³±czeñ"
+msgstr[0] "%ld po³±czenie"
+msgstr[1] "%ld po³±czenia"
+msgstr[2] "%ld po³±czeñ"
 
 #: src/dialogs/info.c:189
 #, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
-msgstr[0] "%d ³±cz±ce siê"
-msgstr[1] "%d ³±cz±ce siê"
-msgstr[2] "%d ³±cz±cych siê"
+msgstr[0] "%ld ³±cz±ce siê"
+msgstr[1] "%ld ³±cz±ce siê"
+msgstr[2] "%ld ³±cz±cych siê"
 
 #: src/dialogs/info.c:193
 #, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "%d przesy³aj±ce"
-msgstr[1] "%d przesy³aj±ce"
-msgstr[2] "%d przysy³aj±cych"
+msgstr[0] "%ld przesy³aj±ce"
+msgstr[1] "%ld przesy³aj±ce"
+msgstr[2] "%ld przysy³aj±cych"
 
 #: src/dialogs/info.c:197
 #, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "%d trwa³e"
-msgstr[1] "%d trwa³e"
-msgstr[2] "%d trwa³ych"
+msgstr[0] "%ld trwa³e"
+msgstr[1] "%ld trwa³e"
+msgstr[2] "%ld trwa³ych"
 
 #: src/dialogs/info.c:205 src/dialogs/info.c:257
 #, c-format
@@ -4836,26 +4841,26 @@ msgstr[2] "%ld bajtów"
 #, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
-msgstr[0] "%d plik"
-msgstr[1] "%d pliki"
-msgstr[2] "%d plików"
+msgstr[0] "%ld plik"
+msgstr[1] "%ld pliki"
+msgstr[2] "%ld plików"
 
 #: src/dialogs/info.c:213 src/dialogs/info.c:228
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
-msgstr[0] "%d u¿ywany"
-msgstr[1] "%d u¿ywane"
-msgstr[2] "%d u¿ywanych"
+msgstr[0] "%ld u¿ywany"
+msgstr[1] "%ld u¿ywane"
+msgstr[2] "%ld u¿ywanych"
 
 #
 #: src/dialogs/info.c:217
 #, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "%d pobierany"
-msgstr[1] "%d pobierane"
-msgstr[2] "%d pobieranych"
+msgstr[0] "%ld pobierany"
+msgstr[1] "%ld pobierane"
+msgstr[2] "%ld pobieranych"
 
 #
 #: src/dialogs/info.c:220
@@ -4867,17 +4872,17 @@ msgstr "Dokumenty w pamiêci podrêcznej"
 #, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "%d sformatowany"
-msgstr[1] "%d sformatowane"
-msgstr[2] "%d sformatowanych"
+msgstr[0] "%ld sformatowany"
+msgstr[1] "%ld sformatowane"
+msgstr[2] "%ld sformatowanych"
 
 #: src/dialogs/info.c:232
 #, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "%d z od¶wie¿aniem"
-msgstr[1] "%d z od¶wie¿aniem"
-msgstr[2] "%d z od¶wie¿aniem"
+msgstr[0] "%ld z od¶wie¿aniem"
+msgstr[1] "%ld z od¶wie¿aniem"
+msgstr[2] "%ld z od¶wie¿aniem"
 
 #: src/dialogs/info.c:235
 msgid "Interlinking"
@@ -4895,17 +4900,17 @@ msgstr "terminal podrzêdny"
 #, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
-msgstr[0] "%d terminal"
-msgstr[1] "%d terminale"
-msgstr[2] "%d terminali"
+msgstr[0] "%ld terminal"
+msgstr[1] "%ld terminale"
+msgstr[2] "%ld terminali"
 
 #: src/dialogs/info.c:248
 #, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "%d sesja"
-msgstr[1] "%d sesje"
-msgstr[2] "%d sesji"
+msgstr[0] "%ld sesja"
+msgstr[1] "%ld sesje"
+msgstr[2] "%ld sesji"
 
 #: src/dialogs/info.c:253
 msgid "Memory allocated"
@@ -4915,9 +4920,9 @@ msgstr "Pamiêæ zaalokowana"
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
-msgstr[0] "%d bajt na stercie"
-msgstr[1] "%d bajty na stercie"
-msgstr[2] "%d bajtów na stercie"
+msgstr[0] "%ld bajt na stercie"
+msgstr[1] "%ld bajty na stercie"
+msgstr[2] "%ld bajtów na stercie"
 
 #: src/dialogs/menu.c:96
 msgid "Save URL"
@@ -5495,8 +5500,8 @@ msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 " when ECMAScript is enabled."
 msgstr ""
-"Czy ignorowaæ kod zawarty w znaczniku <noscript> w przypadku, gdy\n"
-"ECMAScript jest w³±czony"
+"Czy ignorowaæ tre¶æ zawart± w znaczniku <noscript> w przypadku, gdy\n"
+"ECMAScript jest w³±czony."
 
 #: src/ecmascript/ecmascript.c:53
 msgid "Maximum execution time"
@@ -5737,11 +5742,11 @@ msgstr "W³±cz globaln± historiê (\"historiê wszystkich odwiedzanych stron\")."
 
 #: src/globhist/globhist.c:67
 msgid "Maximum number of entries"
-msgstr "Maksymalna ilo¶æ pozycji"
+msgstr "Maksymalna liczba pozycji"
 
 #: src/globhist/globhist.c:69
 msgid "Maximum number of entries in the global history."
-msgstr "Maksymalna ilo¶æ pozycji w globalnej historii."
+msgstr "Maksymalna liczba pozycji w globalnej historii."
 
 #
 #: src/globhist/globhist.c:71
@@ -6093,7 +6098,7 @@ msgstr ""
 "u¿ywana tutaj zamiast '.')."
 
 #. name:
-#: src/mime/backend/default.c:223
+#: src/mime/backend/default.c:227
 msgid "Option system"
 msgstr "System konfiguracyjny"
 
@@ -6333,9 +6338,8 @@ msgstr "Wznawianie"
 
 #
 #: src/network/state.c:37
-#, fuzzy
 msgid "Connecting to peers"
-msgstr "Próby po³±czenia"
+msgstr "£±czenie z partnerami"
 
 #
 #: src/network/state.c:38
@@ -6556,7 +6560,7 @@ msgstr "Plik metainformacji BitTorrent zawiera b³êdy"
 
 #: src/network/state.c:124
 msgid "The tracker requesting failed"
-msgstr ""
+msgstr "¯±danie ¶ledzenia nie powiod³o siê"
 
 #: src/network/state.c:148
 msgid "Unknown error"
@@ -6668,7 +6672,7 @@ msgstr "Zarz±dca autentykacji"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
-#: src/protocol/bittorrent/bittorrent.c:327
+#: src/protocol/bittorrent/bittorrent.c:335
 msgid "BitTorrent"
 msgstr "BitTorrent"
 
@@ -6709,7 +6713,7 @@ msgstr "Maksymalny numer portu do nas³ychiwania."
 #. ******************************************************************
 #: src/protocol/bittorrent/bittorrent.c:51
 msgid "Tracker"
-msgstr "Tacker"
+msgstr "Tracker"
 
 #
 #: src/protocol/bittorrent/bittorrent.c:53
@@ -6726,6 +6730,8 @@ msgid ""
 "in compact format. Note, the compact format only supports\n"
 "IPv4 addresses."
 msgstr ""
+"Czy ¿±daæ zwrócenia informacji o partnerze w krótkim formacie.\n"
+"Uwaga, krótki format obs³uguje tylko adresy IPv4."
 
 #: src/protocol/bittorrent/bittorrent.c:61
 msgid "Tracker announce interval"
@@ -6737,6 +6743,10 @@ msgid ""
 "the tracker for announcing progress and requesting more peers.\n"
 "Set to zero to use the interval requested by the tracker."
 msgstr ""
+"Liczba sekund do odczekania pomiêdzy regularnym kontaktowaniem\n"
+"siê z trackerem w celu uzyskania informacji o postêpach i ¿±dania\n"
+"wiêkszej liczby partnerów. Ustawienie zera oznacza u¿ycie\n"
+"czêstotliwo¶ci ¿±danej przez trackera."
 
 #: src/protocol/bittorrent/bittorrent.c:67
 msgid "IP-address to announce"
@@ -6748,46 +6758,73 @@ msgid ""
 "no IP address will be sent and the tracker will automatically\n"
 "determine an appropriate IP address."
 msgstr ""
+"Który adres IP zg³aszaæ trackerowi. W przypadku ustawienia na \"\"\n"
+"¿aden adres IP nie bêdzie wysy³any i tracker automatycznie okre¶li\n"
+"odpowiedni adres IP."
 
 #: src/protocol/bittorrent/bittorrent.c:73
-msgid "Maximum number of peers to request"
-msgstr "Maksymalna liczba peerów do odpytania"
+msgid "User identification string"
+msgstr "£añcuch identyfikuj±cy u¿ytkownika"
 
 #: src/protocol/bittorrent/bittorrent.c:75
+msgid ""
+"An additional identification that is not shared with any users.\n"
+"It is intended to allow a client to prove their identity should\n"
+"their IP address change. It is an optional parameter, but some\n"
+"trackers require this parameter. If set to \"\" no user key will\n"
+"be sent to the tracker."
+msgstr ""
+"Dodatkowa identyfikacja nie wspó³dzielona z ¿adnymi u¿ytkownikami.\n"
+"Ma s³u¿yæ aby umo¿liwiæ klientom udowodnienie swojej to¿samo¶ci po\n"
+"zmianie adresu IP. Jest to parametr opcjonalny, ale niektóre trackery\n"
+"wymagaj± tego parametru. W przypadku ustawienia na \"\" ¿aden klucz\n"
+"u¿ytkownika nie bêdzie wysy³any do trackera"
+
+#: src/protocol/bittorrent/bittorrent.c:81
+msgid "Maximum number of peers to request"
+msgstr "Maksymalna liczba partnerów do odpytania"
+
+#: src/protocol/bittorrent/bittorrent.c:83
 msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
 msgstr ""
+"Maksymalna liczba partnerów do za¿±dania od trackera.\n"
+"0 oznacza u¿ycie warto¶ci domy¶lnej dla serwera."
 
-#: src/protocol/bittorrent/bittorrent.c:78
+#: src/protocol/bittorrent/bittorrent.c:86
 msgid "Minimum peers to skip rerequesting"
 msgstr ""
-"Minimalna liczba peerów przy której ma nast±piæ zakoñczenie odpytywania"
+"Minimalna liczba partnerów przy której ma nast±piæ zakoñczenie odpytywania"
 
-#: src/protocol/bittorrent/bittorrent.c:80
+#: src/protocol/bittorrent/bittorrent.c:88
 msgid ""
 "The minimum number of peers to have in the current peer info\n"
 "pool before skipping requesting of more peers. I.e. setting\n"
 "numwant to zero.\n"
 "Set to 0 to not have any limit."
 msgstr ""
+"Minimalna liczba partnerów do trzymania w puli bie¿±cych partnerów\n"
+"przed pominiêciem pytania o wiêksz± liczbê. Czyli ustawieniem numwant\n"
+"na zero.\n"
+"Ustawienie 0 tutaj oznacza brak limitu."
 
 #. ******************************************************************
 #. Lowlevel peer-wire options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:90
+#: src/protocol/bittorrent/bittorrent.c:98
 msgid "Peer-wire"
-msgstr ""
+msgstr "Peer-wire"
 
-#: src/protocol/bittorrent/bittorrent.c:92
+#: src/protocol/bittorrent/bittorrent.c:100
 msgid "Lowlevel peer-wire options."
-msgstr ""
+msgstr "Niskopoziomowe opcje peer-wire."
 
-#: src/protocol/bittorrent/bittorrent.c:94
+#: src/protocol/bittorrent/bittorrent.c:102
 msgid "Maximum number of peer connections"
-msgstr "Maksymalna liczba po³±czeñ z peerami."
+msgstr "Maksymalna liczba po³±czeñ z partnerami."
 
-#: src/protocol/bittorrent/bittorrent.c:96
+#: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
 "The maximum number of allowed connections to both active and\n"
 "non-active peers. By increasing the number of allowed connections,\n"
@@ -6795,80 +6832,101 @@ msgid ""
 "However, too many connections can lead to TCP congestion. If the\n"
 "maximum is reached all new incoming connections will be closed."
 msgstr ""
+"Maksymalna liczba dozwolonych po³±czeñ zarówno z aktywnymi jak\n"
+"i nieaktywnymi partnerami. Zwiêkszaj±c tê liczbê zwiêksza siê\n"
+"szansê znalezienia dobrych partnerów do pobierania.\n"
+"Jednak zbyt wiele po³±czeñ mo¿e prowadziæ do przytkanai TCP.\n"
+"Po osi±gniêciu maksimum wszystkie nowe przychodz±ce po³±czenia\n"
+"bêd± zamykane."
 
-#: src/protocol/bittorrent/bittorrent.c:102
+#: src/protocol/bittorrent/bittorrent.c:110
 msgid "Maximum peer message length"
-msgstr "Maksymalna d³ugo¶æ wiadomo¶ci do peerów"
+msgstr "Maksymalna d³ugo¶æ wiadomo¶ci do partnerów"
 
-#: src/protocol/bittorrent/bittorrent.c:104
+#: src/protocol/bittorrent/bittorrent.c:112
 msgid ""
 "The maximum length of messages to accept over the wire.\n"
 "Larger values will cause the connection to be dropped."
 msgstr ""
+"Maksymalna d³ugo¶æ wiadomo¶ci do przyjmowania.\n"
+"Wiêksze warto¶ci spowoduj± porzucenie po³±czenia."
 
-#: src/protocol/bittorrent/bittorrent.c:107
+#: src/protocol/bittorrent/bittorrent.c:115
 msgid "Maximum allowed request length"
 msgstr "Maksymalna dozwolona d³ugo¶æ zapytania"
 
-#: src/protocol/bittorrent/bittorrent.c:109
+#: src/protocol/bittorrent/bittorrent.c:117
 msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
 msgstr ""
+"Maksymalna d³ugo¶æ dozwolonych ¿±dañ przychodz±cych.\n"
+"Wiêksze ¿±dania spowoduj± porzucenie po³±czenia."
 
-#: src/protocol/bittorrent/bittorrent.c:112
+#: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
-msgstr ""
+msgstr "D³ugo¶æ ¿adañ"
 
-#: src/protocol/bittorrent/bittorrent.c:114
+#: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
 "How many bytes to query for per request. This is complementary\n"
 "to the max_request_length option. If the configured length is\n"
 "bigger than the piece length it will be truncated."
 msgstr ""
+"O ile bajtów pytaæ dla ka¿dego ¿±dania. Jest to opcja komplementarna\n"
+"do max_request_length. Je¶li skonfigurowana d³ugo¶æ jest wiêksza\n"
+"ni¿ d³ugo¶æ kawa³ka, bêdzie on obciêty."
 
-#: src/protocol/bittorrent/bittorrent.c:118
+#: src/protocol/bittorrent/bittorrent.c:126
 msgid "Peer inactivity timeout"
-msgstr "Limit czasu nieaktywno¶ci peerów"
+msgstr "Limit czasu nieaktywno¶ci partnerów"
 
-#: src/protocol/bittorrent/bittorrent.c:120
+#: src/protocol/bittorrent/bittorrent.c:128
 msgid ""
 "The number of seconds to wait before closing a socket on\n"
 "which nothing has been received or sent."
 msgstr ""
+"Liczba sekund do odczekania przed zamkniêciem gniazda przez\n"
+"które nic nie odebrano ani nie wys³ano."
 
-#: src/protocol/bittorrent/bittorrent.c:123
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:131
 msgid "Maximum peer pool size"
-msgstr "Maksymalna ilo¶æ pozycji"
+msgstr "Maksymalny rozmiar puli partnerów"
 
-#: src/protocol/bittorrent/bittorrent.c:125
+#: src/protocol/bittorrent/bittorrent.c:133
 msgid ""
 "Maximum number of items in the peer pool. The peer pool\n"
 "contains information used for establishing connections to\n"
 "new peers.\n"
 "Set to 0 to have unlimited size."
 msgstr ""
+"Maksymalna liczba elementów w puli partnerów. Pula partnerów\n"
+"zawiera informacje u¿ywane przy nawi±zywaniu po³±czeñ z nowymi\n"
+"partnerami.\n"
+"Ustawienie 0 oznacza nieograniczony rozmiar."
 
 #. ******************************************************************
 #. Piece management options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:135
+#: src/protocol/bittorrent/bittorrent.c:143
 msgid "Maximum piece cache size"
 msgstr "Maksymalny rozmiar pamiêci podrêcznej dla czê¶ci"
 
-#: src/protocol/bittorrent/bittorrent.c:137
+#: src/protocol/bittorrent/bittorrent.c:145
 msgid ""
 "The maximum amount of memory used to hold recently\n"
 "downloaded pieces.\n"
 "Set to 0 to have unlimited size."
 msgstr ""
+"Maksymalna ilo¶æ pamiêci u¿ywana do przechowywania ¶wie¿o\n"
+"¶ci±gniêtych kawa³ków.\n"
+"Ustawienie 0 oznacza nieograniczony rozmiar."
 
-#: src/protocol/bittorrent/bittorrent.c:146
+#: src/protocol/bittorrent/bittorrent.c:154
 msgid "Sharing rate"
 msgstr "Ratio"
 
-#: src/protocol/bittorrent/bittorrent.c:148
+#: src/protocol/bittorrent/bittorrent.c:156
 msgid ""
 "The minimum sharing rate to achieve before stop seeding.\n"
 "The sharing rate is computed as the number of uploaded bytes\n"
@@ -6877,45 +6935,51 @@ msgid ""
 "Set to 1.0 to atleast upload a complete copy of all data and\n"
 "set to 0.0 to have unlimited sharing rate."
 msgstr ""
+"Maksymalny wspó³czynnik dzielenia do osi±gniêcia przed zakoñczeniem\n"
+"karmienia. Wspó³czynnik dzielenia jest obliczany jako liczba bajtów\n"
+"wys³anych podzielona przez liczbê bajtów pobranych. Warto¶æ powinna\n"
+"byæ warto¶ci± double pomiêdzy 0.0 a 1.0 w³±cznie.\n"
+"Nale¿y ustawiæ na 1.0 aby przynajmniej wys³aæ pe³n± kopiê wszystkich\n"
+"danych, a na 0.0 aby mieæ nieograniczony wspó³czynnik dzielenia."
 
-#: src/protocol/bittorrent/bittorrent.c:155
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:163
 msgid "Maximum number of uploads"
-msgstr "Maksymalna ilo¶æ pozycji"
+msgstr "Maksymalna liczba ¶ci±ganych plików"
 
-#: src/protocol/bittorrent/bittorrent.c:157
+#: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
-msgstr ""
+msgstr "Maksymalna liczba dozwolonych plików do wysy³ania jednocze¶nie."
 
 #. The number of uploads to fill out to with extra optimistic unchokes
-#: src/protocol/bittorrent/bittorrent.c:160
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:168
 msgid "Minimum number of uploads"
-msgstr "Maksymalna ilo¶æ pozycji"
+msgstr "Maksymalna liczba wysy³anych plików"
 
-#: src/protocol/bittorrent/bittorrent.c:162
+#: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
 msgstr ""
+"Maksymalna liczba wysy³anych plików, które powinny przynajmniej\n"
+"byæ u¿ywane dla nowych po³±czeñ."
 
-#: src/protocol/bittorrent/bittorrent.c:166
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:174
 msgid "Keepalive interval"
-msgstr "Przedzia³ czasu pomiêdzy automatycznymi zapisami"
+msgstr "Przedzia³ czasu dla podtrzymania"
 
-#: src/protocol/bittorrent/bittorrent.c:168
+#: src/protocol/bittorrent/bittorrent.c:176
 msgid ""
 "The number of seconds to pause between sending keepalive\n"
 "messages."
 msgstr ""
+"Liczba sekund do odczekania pomiêdzy wysy³anymi komunikatami\n"
+"podtrzymuj±cymi po³±czenie."
 
-#: src/protocol/bittorrent/bittorrent.c:171
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:179
 msgid "Number of pending requests"
-msgstr "Serwer przetwarza ¿±danie"
+msgstr "Liczba oczekuj±cych ¿±dañ"
 
-#: src/protocol/bittorrent/bittorrent.c:173
+#: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
 "How many piece requests to continuously keep in queue. Pipelining\n"
 "of requests is essential to saturate connections and get a good\n"
@@ -6924,24 +6988,30 @@ msgid ""
 "of the connection since remaining piece blocks will be requested\n"
 "from multiple peers."
 msgstr ""
+"Liczba ¿±dañ do ci±g³ego trzymania w kolejce. Ci±g³o¶æ ¿±dañ jest\n"
+"podstawowa dla wysycenia po³±czeñ i otrzymania dobrej wydajno¶ci\n"
+"po³±czenia, a tym samym szybszego pobrania. Jednak bardzo du¿y\n"
+"rozmiar kolejki mo¿e prowadziæ do tracenia pasma przy koñcu\n"
+"po³±czenia poniewa¿ pozosta³e bloki bêd± ¿±dane od wielu partnerów."
 
 #. Bram uses 30 seconds here.
-#: src/protocol/bittorrent/bittorrent.c:182
+#: src/protocol/bittorrent/bittorrent.c:190
 msgid "Peer snubbing interval"
-msgstr ""
+msgstr "Odstêp miêdzy upokarzaniem partnerów"
 
-#: src/protocol/bittorrent/bittorrent.c:184
+#: src/protocol/bittorrent/bittorrent.c:192
 msgid ""
 "The number of seconds to wait for file data before assuming\n"
 "the peer has been snubbed."
 msgstr ""
+"Liczba sekund do odczekania na dane plików przed uznaniem,\n"
+"¿e partner zosta³ upokorzony."
 
-#: src/protocol/bittorrent/bittorrent.c:187
-#, fuzzy
+#: src/protocol/bittorrent/bittorrent.c:195
 msgid "Peer choke interval"
-msgstr "Przedzia³ czasu pomiêdzy automatycznymi zapisami"
+msgstr "Przedzia³ czasu pomiêdzy t³umieniem partnerów"
 
-#: src/protocol/bittorrent/bittorrent.c:189
+#: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of seconds between updating the connection state\n"
 "and most importantly choke and unchoke peer connections. The\n"
@@ -6949,41 +7019,45 @@ msgid ""
 "to get started but small enough to not allow freeriders too much\n"
 "room for stealing bandwidth."
 msgstr ""
+"Liczba sekund miêdzy uaktualnieniami stanu po³±czenia i, co bardziej\n"
+"istotne, przyt³umaniem lub odt³umianiem po³±czeñ z partnerami.\n"
+"Okres ten powinien byæ wystarczaj±co du¿y dla nowo odt³umionych\n"
+"po³±czeñ, aby siê zaczê³y, ale wystarczaj±co ma³y, aby nie pozwoliæ\n"
+"wolnym je¼d¼com wykra¶æ zbyt du¿o pasma."
 
 #: src/protocol/bittorrent/bittorrent.c:195
 msgid "Rarest first piece selection cutoff"
-msgstr ""
+msgstr "Ile ¶ci±gaæ przed wybieraniem najrzadszych kawa³ków"
 
 #: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
 msgstr ""
+"Liczba kawa³ków do uzyskania przed prze³±czeniem strategii\n"
+"wyboru kawa³ka z losowej na wybieranie najpierw najrzadszych."
 
 #: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr "Zezwolenie na \"czarn± listê\""
 
 #: src/protocol/bittorrent/bittorrent.c:202
-#, fuzzy
 msgid "Allow blacklisting of buggy peers."
-msgstr "Pozwól na \"czarn± listê\" zapluskwionym serwerom."
+msgstr "W³±czenie \"czarnej listy\" b³êdnych partnerów."
 
 #: src/protocol/bittorrent/dialogs.c:122
 msgid "Warning: potential malicious path detected"
 msgstr "Uwaga: wykryto potencjalnie niebezpieczn± ¶cie¿kê"
 
 #: src/protocol/bittorrent/dialogs.c:141
-#, fuzzy
 msgid "Info hash"
-msgstr "Informacja"
+msgstr "Hasz informacji"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
-msgstr ""
+msgstr "Og³oszone URI"
 
 #: src/protocol/bittorrent/dialogs.c:151
-#, fuzzy
 msgid "Creation date"
 msgstr "Data utworzenia"
 
@@ -7011,35 +7085,30 @@ msgstr ""
 
 #
 #: src/protocol/bittorrent/dialogs.c:256
-#, fuzzy
 msgid "Download info"
-msgstr "Pobieranie"
+msgstr "Informacje o pobieraniu"
 
 #
 #: src/protocol/bittorrent/dialogs.c:276
-#, fuzzy
 msgid "downloading (random)"
-msgstr "Pobieranie"
+msgstr "pobieranie (losowo)"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
-msgstr ""
+msgstr "pobieranie (najpierw najrzadsze)"
 
 #
 #: src/protocol/bittorrent/dialogs.c:278
-#, fuzzy
 msgid "downloading (end game)"
-msgstr "Pobieranie"
+msgstr "Pobieranie (gra koñcowa)"
 
 #: src/protocol/bittorrent/dialogs.c:279
-#, fuzzy
 msgid "seeding"
-msgstr "prêdko¶æ"
+msgstr "karmienie"
 
 #: src/protocol/bittorrent/dialogs.c:307
-#, fuzzy
 msgid "Status"
-msgstr "Pasek statusu"
+msgstr "Status"
 
 #: src/protocol/bittorrent/dialogs.c:311
 msgid "partial"
@@ -7047,9 +7116,8 @@ msgstr "czê¶ciowy"
 
 #. Peers:
 #: src/protocol/bittorrent/dialogs.c:315
-#, fuzzy
 msgid "Peers"
-msgstr "Licznik"
+msgstr "Partnerzy"
 
 #: src/protocol/bittorrent/dialogs.c:319
 #, c-format
@@ -7063,127 +7131,122 @@ msgstr[2] "%d po³±czeñ"
 #, c-format
 msgid "%u seeder"
 msgid_plural "%u seeders"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%u karmi±cy"
+msgstr[1] "%u karmi±cych"
+msgstr[2] "%u karmi±cych"
 
 #: src/protocol/bittorrent/dialogs.c:335
-#, fuzzy, c-format
+#, c-format
 msgid "%u available"
 msgid_plural "%u available"
-msgstr[0] "%d plik"
-msgstr[1] "%d pliki"
-msgstr[2] "%d plików"
+msgstr[0] "%d dostêpny"
+msgstr[1] "%d dostêpne"
+msgstr[2] "%d dostêpnych"
 
 #: src/protocol/bittorrent/dialogs.c:340
-#, fuzzy
 msgid "Swarm info"
-msgstr "Informacje o nag³ówku"
+msgstr "Informacje o t³oczeniu"
 
 #: src/protocol/bittorrent/dialogs.c:353
-#, fuzzy, c-format
+#, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "B³±d pobierania"
-msgstr[1] "B³±d pobierania"
-msgstr[2] "B³±d pobierania"
+msgstr[0] "%u pobieraj±cy"
+msgstr[1] "%u pobieraj±cych"
+msgstr[2] "%u pobieraj±cych"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
-#, fuzzy
 msgid "Upload"
-msgstr "P~rze³aduj"
+msgstr "Przesy³anie"
 
 #: src/protocol/bittorrent/dialogs.c:367
-#, fuzzy
 msgid "average"
-msgstr "¶rednia prêdko¶æ"
+msgstr "¶rednia"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
-msgstr ""
+msgstr "1:1 w"
 
 #. Sharing:
 #: src/protocol/bittorrent/dialogs.c:378
-#, fuzzy
 msgid "Sharing"
-msgstr "Napis"
+msgstr "Dzielenie"
 
 #: src/protocol/bittorrent/dialogs.c:387
-#, fuzzy
 msgid "uploaded"
-msgstr "£adowanie pliku"
+msgstr "przes³ano"
 
 #: src/protocol/bittorrent/dialogs.c:389
-#, fuzzy
 msgid "downloaded"
-msgstr "Pobieranie"
+msgstr "pobrano"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
 msgid "Pieces"
-msgstr ""
+msgstr "Kawa³ki"
 
 #: src/protocol/bittorrent/dialogs.c:397
-#, fuzzy, c-format
+#, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "niekompletne"
-msgstr[1] "niekompletne"
-msgstr[2] "niekompletne"
+msgstr[0] "%u zakoñczony"
+msgstr[1] "%u zakoñczone"
+msgstr[2] "%u zakoñczonych"
 
 #: src/protocol/bittorrent/dialogs.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "%u in progress"
 msgid_plural "%u in progress"
-msgstr[0] "%d u¿ywany"
-msgstr[1] "%d u¿ywane"
-msgstr[2] "%d u¿ywanych"
+msgstr[0] "%u w trakcie"
+msgstr[1] "%u w trakcie"
+msgstr[2] "%u w trakcie"
 
 #: src/protocol/bittorrent/dialogs.c:414
-#, fuzzy, c-format
+#, c-format
 msgid "%u remaining"
 msgid_plural "%u remaining"
-msgstr[0] "%d przesy³aj±ce"
-msgstr[1] "%d przesy³aj±ce"
-msgstr[2] "%d przysy³aj±cych"
+msgstr[0] "%u pozosta³y"
+msgstr[1] "%u pozosta³e"
+msgstr[2] "%u pozosta³ych"
 
 #. Statistics:
 #: src/protocol/bittorrent/dialogs.c:419
 msgid "Statistics"
-msgstr ""
+msgstr "Statystyki"
 
 #: src/protocol/bittorrent/dialogs.c:423
-#, fuzzy, c-format
+#, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "%d zegar"
-msgstr[1] "%d zegary"
-msgstr[2] "%d zegarów"
+msgstr[0] "%u w pamiêci"
+msgstr[1] "%u w pamiêci"
+msgstr[2] "%u w pamiêci"
 
 #: src/protocol/bittorrent/dialogs.c:429
-#, fuzzy, c-format
+#, c-format
 msgid "%u locked"
 msgid_plural "%u locked"
-msgstr[0] "%d zablokowany"
-msgstr[1] "%d zablokowanych"
+msgstr[0] "%u zablokowany"
+msgstr[1] "%u zablokowane"
+msgstr[2] "%u zablokowanych"
 
 #
 #: src/protocol/bittorrent/dialogs.c:436
-#, fuzzy, c-format
+#, c-format
 msgid "%u rejected"
 msgid_plural "%u rejected"
-msgstr[0] "%d sformatowany"
-msgstr[1] "%d sformatowane"
-msgstr[2] "%d sformatowanych"
+msgstr[0] "%u odrzucony"
+msgstr[1] "%u odrzucone"
+msgstr[2] "%u odrzuconych"
 
 #: src/protocol/bittorrent/dialogs.c:443
-#, fuzzy, c-format
+#, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "Us³uga FTP jest niedostêpna"
-msgstr[1] "Us³uga FTP jest niedostêpna"
-msgstr[2] "Us³uga FTP jest niedostêpna"
+msgstr[0] "%u niedostêpny"
+msgstr[1] "%u niedostêpne"
+msgstr[2] "%u niedostêpnych"
 
 #: src/protocol/bittorrent/dialogs.c:579 src/session/session.c:273
 #, c-format
@@ -7191,23 +7254,21 @@ msgid "Unable to retrieve %s"
 msgstr "Nie mo¿na odebraæ %s"
 
 #: src/protocol/bittorrent/dialogs.c:725
-#, fuzzy, c-format
+#, c-format
 msgid "What would you like to do with the file '%s'?"
-msgstr "Co chcesz zrobiæ z plikiem '%s' (typu %s%s%s)?"
+msgstr "Co chcesz zrobiæ z plikiem '%s'?"
 
 #: src/protocol/bittorrent/dialogs.c:741
-#, fuzzy
 msgid "Information about the torrent"
-msgstr "Poka¿ informacje na temat bie¿±cej strony"
+msgstr "Informacje o potoku"
 
 #: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1017
 msgid "What to do?"
 msgstr "Co mam zrobiæ?"
 
 #: src/protocol/bittorrent/dialogs.c:785
-#, fuzzy
 msgid "Down~load"
-msgstr "Pobieranie"
+msgstr "~Pobierz"
 
 #: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1111
 msgid "~Display"
@@ -7719,12 +7780,12 @@ msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 "if you write 'elinks' there, you are directed to\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 msgstr ""
 "W³±cza proste przedrostki - skróty URI, które mog± byæ\n"
 "wpisane w okienku dialogowym 'Goto URL' zamiast\n"
 "standardowych URI - np. je¶li wpiszesz tam 'elinks' nast±pi\n"
-"przekierowanie do http://elinks.or.cz/."
+"przekierowanie do http://elinks.cz/."
 
 #: src/protocol/rewrite/rewrite.c:60
 msgid "Enable smart prefixes"
@@ -7880,11 +7941,6 @@ msgstr "Nie okre¶lono programu"
 msgid "No program specified for protocol %s."
 msgstr "Nie okre¶lono programu do obs³ugi protoko³u %s."
 
-#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
-#, fuzzy
-msgid "SEE Message"
-msgstr "Wiadomo¶æ Ruby'ego"
-
 #: src/scripting/lua/core.c:300
 msgid "Error registering event hook"
 msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
@@ -7893,15 +7949,15 @@ msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
 msgid "User dialog"
 msgstr "Okno dialogowe u¿ytkownika"
 
-#: src/scripting/lua/core.c:716
+#: src/scripting/lua/core.c:724
 msgid "Lua Error"
 msgstr "B³±d Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Lua Console"
 msgstr "Konsola Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Enter expression"
 msgstr "Wprowad¼ wyra¿enie"
 
@@ -7912,11 +7968,11 @@ msgstr "Wiadomo¶æ Ruby'ego"
 #: src/scripting/scripting.c:53
 #, c-format
 msgid "An error occurred while running a %s script"
-msgstr ""
+msgstr "Wyst±pi³ b³±d przy uruchamianiu skryptu %s"
 
 #: src/scripting/scripting.c:59
 msgid "Browser scripting error"
-msgstr ""
+msgstr "B³±d skryptów przegl±darki"
 
 #. name:
 #: src/scripting/scripting.c:87
@@ -8013,11 +8069,12 @@ msgstr "Plik zostanie otwarty przy u¿yciu programu '%s'."
 msgid "~Open"
 msgstr "~Otwórz"
 
-#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
+#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/viewer/text/textarea.c:385
 msgid "Warning"
 msgstr "Ostrze¿enie"
 
-#: src/session/session.c:750
+#: src/session/session.c:743
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -8035,7 +8092,7 @@ msgstr ""
 "co mi chodzi, po prostu to zrób), tak ¿e domy¶lne ustawienie bêdzie u¿ywane. "
 "Przepraszamy za wszelkie niedogodno¶ci."
 
-#: src/session/session.c:769
+#: src/session/session.c:762
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8057,11 +8114,11 @@ msgstr ""
 "saving_style na 3, by uzyskaæ \"w³a¶ciwe\" zachowanie. Przepraszamy za "
 "wszelkie niedogodno¶ci."
 
-#: src/session/session.c:794
+#: src/session/session.c:787
 msgid "Welcome"
 msgstr "Powitanie"
 
-#: src/session/session.c:795
+#: src/session/session.c:788
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8170,165 +8227,178 @@ msgstr "Brakuj±cy fragment"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "¯±dany fragment \"#%s\" nie istnieje."
 
-#: src/viewer/text/form.c:855
+#: src/viewer/text/form.c:864
 msgid "Error while posting form"
 msgstr "Wyst±pi³ b³±d podczas wysy³ania formularza"
 
-#: src/viewer/text/form.c:856
+#: src/viewer/text/form.c:865
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Nie mo¿na wczytaæ pliku %s: %s"
 
-#: src/viewer/text/form.c:1436
+#: src/viewer/text/form.c:1445
 msgid "Reset form"
 msgstr "Wyczy¶æ formularz"
 
 #
-#: src/viewer/text/form.c:1438
+#: src/viewer/text/form.c:1447
 msgid "Harmless button"
 msgstr "Nieszkodliwy przycisk"
 
-#: src/viewer/text/form.c:1446
+#: src/viewer/text/form.c:1455
 msgid "Submit form to"
 msgstr "Prze¶lij formularz do"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1456
 msgid "Post form to"
 msgstr "Wy¶lij formularz do"
 
-#: src/viewer/text/form.c:1449
+#: src/viewer/text/form.c:1458
 msgid "Radio button"
 msgstr "Okr±g³y przycisk"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1462
 msgid "Select field"
 msgstr "Pole wyboru"
 
-#: src/viewer/text/form.c:1457
+#: src/viewer/text/form.c:1466
 msgid "Text area"
 msgstr "Pole tekstowe"
 
-#: src/viewer/text/form.c:1459
+#: src/viewer/text/form.c:1468
 msgid "File upload"
 msgstr "£adowanie pliku"
 
-#: src/viewer/text/form.c:1461
+#: src/viewer/text/form.c:1470
 msgid "Password field"
 msgstr "Pole has³a"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1508
 msgid "name"
 msgstr "nazwa"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1520
 msgid "value"
 msgstr "warto¶æ"
 
-#: src/viewer/text/form.c:1524
+#: src/viewer/text/form.c:1533
 msgid "read only"
 msgstr "tylko do odczytu"
 
-#: src/viewer/text/form.c:1535
+#: src/viewer/text/form.c:1544
 #, c-format
 msgid "press %s to navigate"
 msgstr "wci¶nij %s aby nawigowaæ"
 
-#: src/viewer/text/form.c:1537
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to edit"
 msgstr "wci¶nij %s aby edytowaæ"
 
-#: src/viewer/text/form.c:1573
+#: src/viewer/text/form.c:1582
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
-#: src/viewer/text/form.c:1575
+#: src/viewer/text/form.c:1584
 #, c-format
 msgid "press %s to post to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
-#: src/viewer/text/link.c:1145
+#
+#: src/viewer/text/form.c:1686
+msgid "Useless button"
+msgstr "Bezu¿yteczny przycisk"
+
+#: src/viewer/text/form.c:1688
+msgid "Submit button"
+msgstr "Przycisk wys³ania formularza"
+
+#: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1169
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
-#: src/viewer/text/link.c:1150
+#: src/viewer/text/link.c:1171
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
-#: src/viewer/text/link.c:1154
+#: src/viewer/text/link.c:1175
 msgid "Open in new ~window"
 msgstr "~Otwórz w nowym oknie"
 
-#: src/viewer/text/link.c:1156
+#: src/viewer/text/link.c:1177
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
-#: src/viewer/text/link.c:1158
+#: src/viewer/text/link.c:1179
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
-#: src/viewer/text/link.c:1163
+#: src/viewer/text/link.c:1184
 msgid "~Download link"
 msgstr "~Pobierz"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1187
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
-#: src/viewer/text/link.c:1178 src/viewer/text/link.c:1214
+#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
-#: src/viewer/text/link.c:1191
+#: src/viewer/text/link.c:1212
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
-#: src/viewer/text/link.c:1197
+#: src/viewer/text/link.c:1218
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
-#: src/viewer/text/link.c:1198
+#: src/viewer/text/link.c:1219
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij f~ormularz i prze³aduj"
 
-#: src/viewer/text/link.c:1202
+#: src/viewer/text/link.c:1223
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
-#: src/viewer/text/link.c:1204
+#: src/viewer/text/link.c:1225
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1228
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1233
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1238
+msgid "Form f~ields"
+msgstr "Pola form~ularza"
+
+#: src/viewer/text/link.c:1243
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
-#: src/viewer/text/link.c:1221
+#: src/viewer/text/link.c:1245
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1229
+#: src/viewer/text/link.c:1253
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1301
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1306
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8397,17 +8467,29 @@ msgstr "Szukaj wstecz"
 
 #. name:
 #: src/viewer/text/search.c:1654
-#, fuzzy
 msgid "Search History"
 msgstr "Przeszukaj historiê"
 
-#: src/viewer/text/textarea.c:363
+#: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Nie mo¿esz uruchomiæ zewnêtrznego edytora w trybie anonimowym."
 
-#: src/viewer/text/textarea.c:370
+#: src/viewer/text/textarea.c:339
 msgid "You can do this only on the master terminal"
 msgstr "Mo¿esz zrobiæ to jedynie na g³ównym terminalu"
+
+#: src/viewer/text/textarea.c:388
+#, c-format
+msgid ""
+"You have exceeded the textarea's size limit: your input is %d bytes, but the "
+"maximum is %u bytes.\n"
+"\n"
+"Your input has been truncated, but you can still recover the text that you "
+"entered from this file: %s"
+msgstr ""
+"Przekroczono limit rozmiaru textarea: wprowadzono %d bajtów, ale maksimum to %u bajtów.\n"
+"\n"
+"Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego pliku: %s"
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
@@ -8417,34 +8499,10 @@ msgstr "Przejd¼ do odno¶nika"
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1287
+#: src/viewer/text/view.c:1288
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
-
-#~ msgid "%d byte"
-#~ msgid_plural "%d bytes"
-#~ msgstr[0] "%d bajt"
-#~ msgstr[1] "%d bajty"
-#~ msgstr[2] "%d bajtów"
-
-#~ msgid "ELinks Cvs ~History"
-#~ msgstr "~Historia CVS-u ELinksa"
-
-#~ msgid "ELinks ~LXR"
-#~ msgstr "ELinks ~LXR"
-
-#~ msgid "HTTP 100 (???)"
-#~ msgstr "HTTP 100 (???)"
-
-#~ msgid "Ruby Error"
-#~ msgstr "B³±d Ruby'ego"
-
-#~ msgid "Open a Lua console (DISABLED)"
-#~ msgstr "Otwórz konsolê Lua (ZABLOKOWANE)"
-
-#~ msgid "Allow dark colors on black background"
-#~ msgstr "Zezwolenie na ciemne kolory na czarnym tle"
