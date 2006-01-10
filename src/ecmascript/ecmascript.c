@@ -12,7 +12,6 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "protocol/uri.h"
@@ -61,49 +60,6 @@ static struct option_info ecmascript_options[] = {
 	NULL_OPTION_INFO,
 };
 
-#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable")
-
-
-static void
-ecmascript_init(struct module *module)
-{
-	spidermonkey_init();
-}
-
-static void
-ecmascript_done(struct module *module)
-{
-	spidermonkey_done();
-}
-
-
-struct ecmascript_interpreter *
-ecmascript_get_interpreter(struct view_state *vs)
-{
-	struct ecmascript_interpreter *interpreter;
-
-	assert(vs);
-
-	interpreter = mem_calloc(1, sizeof(*interpreter));
-	if (!interpreter)
-		return NULL;
-
-	interpreter->vs = vs;
-	init_list(interpreter->onload_snippets);
-	spidermonkey_get_interpreter(interpreter);
-
-	return interpreter;
-}
-
-void
-ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
-{
-	assert(interpreter);
-	spidermonkey_put_interpreter(interpreter);
-	free_string_list(&interpreter->onload_snippets);
-	mem_free(interpreter);
-}
-
 void
 ecmascript_reset_state(struct view_state *vs)
 {
@@ -123,40 +79,6 @@ ecmascript_reset_state(struct view_state *vs)
 	if (!vs->ecmascript)
 		vs->ecmascript_fragile = 1;
 }
-
-
-void
-ecmascript_eval(struct ecmascript_interpreter *interpreter,
-                struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return;
-	assert(interpreter);
-	spidermonkey_eval(interpreter, code);
-}
-
-
-unsigned char *
-ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
-			   struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return NULL;
-	assert(interpreter);
-	return spidermonkey_eval_stringback(interpreter, code);
-}
-
-
-int
-ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
-			 struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return -1;
-	assert(interpreter);
-	return spidermonkey_eval_boolback(interpreter, code);
-}
-
 
 void
 ecmascript_protocol_handler(struct session *ses, struct uri *uri)
@@ -196,6 +118,20 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 	done_uri(redirect_uri);
 }
 
+
+void
+ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
+{
+	info_box(term, MSGBOX_FREE_TEXT,
+		 N_("JavaScript Emergency"), ALIGN_LEFT,
+		 msg_text(term,
+		  N_("A script embedded in the current document was running\n"
+		  "for more than %d seconds. This probably means there is\n"
+		  "a bug in the script and it could have halted the whole\n"
+		  "ELinks, so the script execution was interrupted."),
+		  max_exec_time));
+
+}
 
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),

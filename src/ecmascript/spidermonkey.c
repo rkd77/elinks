@@ -61,6 +61,76 @@
 
 static JSRuntime *jsrt;
 
+void
+ecmascript_init(struct module *module)
+{
+	spidermonkey_init();
+}
+
+void
+ecmascript_done(struct module *module)
+{
+	spidermonkey_done();
+}
+
+struct ecmascript_interpreter *
+ecmascript_get_interpreter(struct view_state *vs)
+{
+	struct ecmascript_interpreter *interpreter;
+
+	assert(vs);
+
+	interpreter = mem_calloc(1, sizeof(*interpreter));
+	if (!interpreter)
+		return NULL;
+
+	interpreter->vs = vs;
+	init_list(interpreter->onload_snippets);
+	spidermonkey_get_interpreter(interpreter);
+
+	return interpreter;
+}
+
+void
+ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
+{
+	assert(interpreter);
+	spidermonkey_put_interpreter(interpreter);
+	free_string_list(&interpreter->onload_snippets);
+	mem_free(interpreter);
+}
+
+void
+ecmascript_eval(struct ecmascript_interpreter *interpreter,
+                struct string *code)
+{
+	if (!get_ecmascript_enable())
+		return;
+	assert(interpreter);
+	spidermonkey_eval(interpreter, code);
+}
+
+unsigned char *
+ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
+			   struct string *code)
+{
+	if (!get_ecmascript_enable())
+		return NULL;
+	assert(interpreter);
+	return spidermonkey_eval_stringback(interpreter, code);
+}
+
+int
+ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
+			 struct string *code)
+{
+	if (!get_ecmascript_enable())
+		return -1;
+	assert(interpreter);
+	return spidermonkey_eval_boolback(interpreter, code);
+}
+
+
 static void
 error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
@@ -123,14 +193,7 @@ safeguard(JSContext *ctx, JSScript *script)
 		struct terminal *term = interpreter->vs->doc_view->session->tab->term;
 
 		/* A killer script! Alert! */
-		info_box(term, MSGBOX_FREE_TEXT,
-			 N_("JavaScript Emergency"), ALIGN_LEFT,
-			 msg_text(term,
-				  N_("A script embedded in the current document was running\n"
-				  "for more than %d seconds. This probably means there is\n"
-				  "a bug in the script and it could have halted the whole\n"
-				  "ELinks, so the script execution was interrupted."),
-				  max_exec_time));
+		ecmascript_timeout_dialog(term, max_exec_time);
 		return JS_FALSE;
 	}
 	return JS_TRUE;
