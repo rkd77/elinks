@@ -272,7 +272,7 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
 int
 safe_mkstemp(unsigned char *template)
 {
-	mode_t saved_mask = umask(0177);
+	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
 	int fd = mkstemp(template);
 
 	umask(saved_mask);
@@ -321,12 +321,12 @@ stat_mode(struct string *string, struct stat *stp)
 	unsigned char rwx[10] = "---------";
 
 	if (stp) {
-		int mode = stp->st_mode;
-		int shift;
+		mode_t mode = stp->st_mode;
+		unsigned int shift;
 
 		/* Set permissions attributes for user, group and other */
 		for (shift = 0; shift <= 6; shift += 3) {
-			int m = mode << shift;
+			mode_t m = mode << shift;
 
 			if (m & S_IRUSR) rwx[shift + 0] = 'r';
 			if (m & S_IWUSR) rwx[shift + 1] = 'w';
