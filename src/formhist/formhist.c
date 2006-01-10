@@ -225,7 +225,7 @@ save_formhist_to_file(void)
 	file = straconcat(elinks_home, FORMS_HISTORY_FILENAME, NULL);
 	if (!file) return 0;
 
-	ssi = secure_open(file, S_IXUSR | S_IRWXG | S_IRWXO);
+	ssi = secure_open(file);
 	mem_free(file);
 	if (!ssi) return 0;
 

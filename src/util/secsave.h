@@ -31,7 +31,8 @@ struct secure_save_info {
 	int secure_save; /* use secure save for this file */
 };
 
-struct secure_save_info *secure_open(unsigned char *, mode_t);
+struct secure_save_info *secure_open(unsigned char *);
+
 int secure_close(struct secure_save_info *);
 
 int secure_fputs(struct secure_save_info *, const char *);

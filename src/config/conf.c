@@ -805,7 +805,7 @@ write_config_file(unsigned char *prefix, unsigned char *name,
 	config_file = straconcat(prefix, slash, name, NULL);
 	if (!config_file) goto free_cfg_str;
 
-	ssi = secure_open(config_file, S_IXUSR | S_IRWXG | S_IRWXO);
+	ssi = secure_open(config_file);
 	if (ssi) {
 		secure_fputs(ssi, cfg_str);
 		ret = secure_close(ssi);

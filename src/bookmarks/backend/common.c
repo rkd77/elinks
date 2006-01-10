@@ -94,7 +94,7 @@ bookmarks_write(struct list_head *bookmarks_list)
 	file_name = straconcat(elinks_home, file_name, NULL);
 	if (!file_name) return;
 
-	ssi = secure_open(file_name, S_IXUSR | S_IRWXG | S_IRWXO);
+	ssi = secure_open(file_name);
 	mem_free(file_name);
 	if (!ssi) return;
 
