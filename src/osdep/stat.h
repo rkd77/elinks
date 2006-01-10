@@ -10,6 +10,15 @@
 #endif
 
 /* File permission flags not available on win32 systems. */
+#ifndef S_IRUSR
+#define S_IRUSR 0000400                 /* R for user */
+#endif
+#ifndef S_IWUSR
+#define S_IWUSR 0000200                 /* W for user */
+#endif
+#ifndef S_IXUSR
+#define S_IXUSR 0000100                 /* X for user */
+#endif
 #ifndef S_ISUID
 #define S_ISUID 0004000                 /* set user id on execution */
 #endif
@@ -38,4 +47,14 @@
 #define S_ISVTX  0001000                /* save swapped text even after use */
 #endif
 
+#ifndef S_IRWXU
+#define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
 #endif
+#ifndef S_IRWXG
+#define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
+#endif
+#ifndef S_IRWXO
+#define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
+#endif
+
+#endif /* EL__OSDEP_STAT_H */
