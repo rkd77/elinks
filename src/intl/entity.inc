@@ -1005,4 +1005,4 @@ struct entity { char *s; unicode_val_T c; } entities [1002] = {
   {NULL,	0}
 };
 
-#define N_ENTITIES 1001
+#define N_ENTITIES     1001
