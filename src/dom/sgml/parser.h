@@ -11,12 +11,12 @@ struct sgml_parser;
 struct string;
 struct uri;
 
-/** enum:[sgml_parser_type]: SGML parser type
+/** SGML parser type
  *
  * There are two kinds of parser types: One that optimises one-time access to
  * the DOM tree and one that creates a persistent DOM tree. */
 enum sgml_parser_type {
-	/** id:[SGML_PARSER_STREAM]::
+	/**
 	 * The first one will simply push nodes on the stack, not building a
 	 * DOM tree. This interface is similar to that of SAX (Simple API for
 	 * XML) where events are fired when nodes are entered and exited. It is
@@ -24,7 +24,7 @@ enum sgml_parser_type {
 	 * do all processing in a stream-like manner, such as when highlighting
 	 * HTML code. */
 	SGML_PARSER_STREAM,
-	/** id:[SGML_PARSER_TREE]::
+	/**
 	 * The second one is a DOM tree builder, that builds a persistent DOM
 	 * tree. When using this type, it is possible to do even more
 	 * (pre)processing than for parser streams. For example you can sort
@@ -33,49 +33,48 @@ enum sgml_parser_type {
 	SGML_PARSER_TREE,
 };
 
-/** enum:[sgml_parser_flag]: SGML parser flags
+/** SGML parser flags
  *
  * These flags control how the parser behaves.
  */
 enum sgml_parser_flag {
-	SGML_PARSER_COUNT_LINES	= 1,	/*:: Make line numbers available. */
-	SGML_PARSER_COMPLETE = 2,	/*:: Used internally when incremental. */
-	SGML_PARSER_INCREMENTAL = 4,	/*:: Parse chunks of input. */
-	SGML_PARSER_DETECT_ERRORS = 8,	/*:: Report errors. */
+	SGML_PARSER_COUNT_LINES	= 1,	/*: Make line numbers available. */
+	SGML_PARSER_COMPLETE = 2,	/*: Used internally when incremental. */
+	SGML_PARSER_INCREMENTAL = 4,	/*: Parse chunks of input. */
+	SGML_PARSER_DETECT_ERRORS = 8,	/*: Report errors. */
 };
 
-/** struct:[sgml_parser_state]: SGML parser state
+/** SGML parser state
  *
  * The SGML parser has only little state.
  */
 struct sgml_parser_state {
-	/** id:[sgml_parser_state.info]::
+	/**
 	 * Info about the properties of the node contained by state.
 	 * This is only meaningful to element and attribute nodes. For
 	 * unknown nodes it points to the common 'unknown node' info. */
 	struct sgml_node_info *info;
-	/** id:[sgml_parser_state.end_token]::
+	/**
 	 * This is used by the DOM source renderer for highlighting the
 	 * end-tag of an element. */
 	struct dom_scanner_token end_token;
 };
 
-/** enum:[sgml_parser_code]: (Error) codes for the SGML parser
+/** (Error) codes for the SGML parser
  *
  * These enum values are used for return codes.
  */
 enum sgml_parser_code {
-	SGML_PARSER_CODE_OK,		/*:: The parsing was successful */
-	SGML_PARSER_CODE_INCOMPLETE,	/*:: The parsing could not be completed */
-	SGML_PARSER_CODE_MEM_ALLOC,	/*:: Failed to allocate memory */
-
-	/** id:[SGML_PARSER_CODE_ERROR]::
+	SGML_PARSER_CODE_OK,		/*: The parsing was successful */
+	SGML_PARSER_CODE_INCOMPLETE,	/*: The parsing could not be completed */
+	SGML_PARSER_CODE_MEM_ALLOC,	/*: Failed to allocate memory */
+	/**
 	 * FIXME: For when we will add support for requiring stricter parsing
 	 * or even a validator. */
 	SGML_PARSER_CODE_ERROR,
 };
 
-/** callback:[sgml_error_T]: SGML error callback
+/** SGML error callback
  *
  * Called by the SGML parser when a parsing error has occurred.
  *
@@ -85,28 +84,29 @@ typedef enum sgml_parser_code
 (*sgml_error_T)(struct sgml_parser *, struct dom_string *, unsigned int);
 
 
-/** struct:[sgml_parser]: The SGML parser
+/** The SGML parser
  *
  * This struct hold info used while parsing SGML data.
  *
- * NOTE: The only variable the user should set is ref:[error_func]. */
+ * NOTE: The only variable the user should set is ref:[sgml_parser.error_func].
+ */
 struct sgml_parser {
-	enum sgml_parser_type type;	/*:: Stream or tree */
-	enum sgml_parser_flag flags;	/*:: Flags that control the behaviour */
+	enum sgml_parser_type type;	/*: Stream or tree */
+	enum sgml_parser_flag flags;	/*: Flags that control the behaviour */
 
-	struct sgml_info *info;		/*:: Backend dependent info */
+	struct sgml_info *info;		/*: Backend dependent info */
 
-	struct dom_string uri;		/*:: The URI of the DOM document */
-	struct dom_node *root;		/*:: The document root node */
+	struct dom_string uri;		/*: The URI of the DOM document */
+	struct dom_node *root;		/*: The document root node */
 
-	sgml_error_T error_func;	/*:: Called for detected errors */
+	sgml_error_T error_func;	/*: Called for detected errors */
 
-	struct dom_stack stack;		/*:: A stack for tracking parsed nodes */
-	struct dom_stack parsing;	/*:: Used for tracking parsing states */
+	struct dom_stack stack;		/*: A stack for tracking parsed nodes */
+	struct dom_stack parsing;	/*: Used for tracking parsing states */
 };
 
 
-/** func:[init_sgml_parser]: Initialise an SGML parser
+/** Initialise an SGML parser
  *
  * Initialise an SGML parser with the given properties.
  * 
@@ -121,7 +121,7 @@ struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 		 struct dom_string *uri, enum sgml_parser_flag flags);
 
-/** func:[done_sgml_parser]: Release an SGML parser
+/** Release an SGML parser
  *
  * Deallocates all resources, _expect_ the root node.
  *
@@ -129,7 +129,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
  */
 void done_sgml_parser(struct sgml_parser *parser);
 
-/** func:[parse_sgml]: Parse a chunk of SGML source
+/** Parse a chunk of SGML source
  *
  * Parses the given `buffer`. For incremental rendering the last buffer can be
  * signals through the `complete` parameter.
@@ -144,12 +144,12 @@ void done_sgml_parser(struct sgml_parser *parser);
 enum sgml_parser_code
 parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
 
-/** func:[get_sgml_parser_line_number]: Get the line position in the source
+/** Get the line position in the source
  *
  * Returns what line number the parser is currently at or zero if there has
  * been no parsing yet.
  *
- * NOTE: Line numbers are recoderded in the scanner tokens.
+ * NOTE: Line numbers are recorded in the scanner tokens.
  */
 unsigned int get_sgml_parser_line_number(struct sgml_parser *parser);
 

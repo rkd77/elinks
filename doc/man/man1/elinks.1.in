@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "" "" ""
+.TH "ELINKS" 1 "The ELinks text-browser" "2006-01-10" "The ELinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"

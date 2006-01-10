@@ -714,7 +714,7 @@ next_break:
 
 element:
 		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
-		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top.invisible)
+		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
 			put_chrs(html_context, " ", 1);
 		put_chrs(html_context, base_pos, html - base_pos);
 		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
@@ -766,14 +766,14 @@ start_element(struct element_info *ei,
 	struct css_selector *selector = NULL;
 #endif
 
-	if (html_top.type == ELEMENT_WEAK) {
-		kill_html_stack_item(html_context, &html_top);
+	if (html_top->type == ELEMENT_WEAK) {
+		pop_html_element(html_context);
 	}
 
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. */
-	if (html_top.invisible
-	    && (ei->func != html_script || html_top.invisible < 2)) {
+	if (html_top->invisible
+	    && (ei->func != html_script || html_top->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
@@ -803,11 +803,14 @@ start_element(struct element_info *ei,
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
-		} else foreach (e, html_context->stack) {
-			if (is_block_element(e) && is_inline_element(ei)) break;
-			if (e->type < ELEMENT_KILLABLE) break;
-			if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+		} else {
+			foreach (e, html_context->stack) {
+				if (is_block_element(e) && is_inline_element(ei)) break;
+				if (e->type < ELEMENT_KILLABLE) break;
+				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+			}
 		}
+
 		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
 			while (e->prev != (void *) &html_context->stack)
 				kill_html_stack_item(html_context, e->prev);
@@ -819,10 +822,10 @@ start_element(struct element_info *ei,
 
 	if (ei->type != ELEMENT_TYPE_NON_PAIRABLE) {
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
-		html_top.name = name;
-		html_top.namelen = namelen;
-		html_top.options = attr;
-		html_top.linebreak = ei->linebreak;
+		html_top->name = name;
+		html_top->namelen = namelen;
+		html_top->options = attr;
+		html_top->linebreak = ei->linebreak;
 
 #ifdef CONFIG_ECMASCRIPT
 		if (has_attr(attr, "onClick", html_context->options)) {
@@ -830,7 +833,7 @@ start_element(struct element_info *ei,
 			mem_free_set(&format.link, stracpy("javascript:void(0);"));
 			mem_free_set(&format.target, stracpy(html_context->base_target));
 			format.style.fg = format.clink;
-			html_top.pseudo_class = ELEMENT_LINK;
+			html_top->pseudo_class = ELEMENT_LINK;
 			mem_free_set(&format.title, stracpy("onClick placeholder"));
 			/* Er. I know. Well, double html_focusable()s shouldn't
 			 * really hurt. */
@@ -840,7 +843,7 @@ start_element(struct element_info *ei,
 	}
 
 #ifdef CONFIG_CSS
-	if (html_top.options && html_context->options->css_enable) {
+	if (html_top->options && html_context->options->css_enable) {
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
 		 * Probably just applying CSS from more places, since we
@@ -852,12 +855,12 @@ start_element(struct element_info *ei,
 		/* FIXME: The caching of the CSS selector is broken, since t can
 		 * lead to wrong styles being applied to following elements, so
 		 * disabled for now. */
-		selector = get_css_selector_for_element(html_context, &html_top,
+		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
 							&html_context->stack);
 
 		if (selector) {
-			apply_css_selector_style(html_context, &html_top, selector);
+			apply_css_selector_style(html_context, html_top, selector);
 			done_css_selector(selector);
 		}
 	}
@@ -868,14 +871,14 @@ start_element(struct element_info *ei,
 	ELEMENT_RENDER_PROLOGUE
 	if (ei->func) ei->func(html_context, attr, html, eof, &html);
 #ifdef CONFIG_CSS
-	if (selector && html_top.options) {
+	if (selector && html_top->options) {
 		/* Call it now to override default colors of the elements. */
-		selector = get_css_selector_for_element(html_context, &html_top,
+		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
 							&html_context->stack);
 
 		if (selector) {
-			apply_css_selector_style(html_context, &html_top, selector);
+			apply_css_selector_style(html_context, html_top, selector);
 			done_css_selector(selector);
 		}
 	}
@@ -909,7 +912,7 @@ end_element(struct element_info *ei,
 
 	/* Apply background color from the <HTML> element. (bug 696) */
 	if (ei->func == html_html
-	    && html_top.type >= ELEMENT_KILLABLE
+	    && html_top->type >= ELEMENT_KILLABLE
 	    && !html_context->was_body_background)
 		html_apply_canvas_bgcolor(html_context);
 

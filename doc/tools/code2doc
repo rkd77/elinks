@@ -2,45 +2,111 @@
 use strict;
 use warnings;
 use diagnostics;
+use Getopt::Std;
 
-print "Usage: $0 [FILE]\n\tParses [FILE], outputing the result to stdout.\n"
-	and exit if not @ARGV;
+my $HELP = "Usage: $0 [FILE]...
+	Parses [FILE], outputing the result to stdout.";
 
-my ($input)  = @ARGV;
-my ($found, $start, $first, $gotone, $idpath);
-print "Copyleft© 2006, Russ Rowan (See `COPYING')\n" and exit if $input eq '-v';
-open FILEIN,  "<$input"  or print "File `$input' was not found.\n"     and exit;
-$idpath = '';
-while (<FILEIN>)
-{
-	if ($found)
-	{
-		if ($_ =~ /^\s+\*\s$/) { next if $first; $_ =~ s/\s\*// if not $first; }
-		if ($_ =~ /^\s\*+\/$/ or $_ !~ /^\s/) { $found = undef; next; }
-		$_ =~ s/^(\s*)\s\*\s/$1/;
-		$found = 'sorta' if $_ =~ s/\s*\*\/$/\n/; $first = undef;
-	}
-	elsif ($_ =~ /^\s*\/\*\*\s(.*)/)
-	{
-		$_ = $1; $first = 1;
-		print STDOUT "\n\n" if $start;
-		if ($_ =~ s/\s*\*\/$//) { $found = 'sorta'; } else { $found = $.; }
-		if ($_ =~ /struct:[[]([^\]]+)[\]]/) { $idpath = "$1."; } else { $idpath = ''; }
-		if ($_ =~ /::/) { $_ = "$_\n\n"; }
-		else
-		{
-			my $dash; for (my $x = 0; $x < length($_); $x++) { $dash .= '-'; }
-			$_ = "$_\n$dash\n\n";
-		}
-	}
-	elsif ($_ =~ /^(\s|[^\s=]+)*[\s*]([A-Za-z0-9_]+)(\s+=\s+[^,;]+)?[,;]\s*\/\*::\s*(.*)\s+\*\/$/)
-	{
-		print STDOUT "\n" if $gotone;
-		$_ = "\nid:[$idpath$2]::\n\t$4\n";
-		$found = 'sorta'; $gotone = $.;
-	}
-	print STDOUT "\n" and $gotone = undef if $gotone and $gotone < $.;
-	next if not $found;  $found = undef if $found eq 'sorta';
-	print STDOUT $_ and $start = 1;
+sub usage {
+	print "@_\n";
+	exit;
 }
-close FILEIN;
+
+our($opt_h, $opt_v, $title, $body, $indent, $idpath, $inblock);
+
+getopts("hv") or usage($HELP);
+$opt_v and usage("Copyleft (c) 2006, Russ Rowan (See `COPYING')");
+usage($HELP) if $opt_h or @ARGV < 1;
+
+sub put_section {
+	if ($title) {
+		print "\n$title\n";
+		$_ = $title;
+		s/[^-]/-/g;
+		print "$_\n" if not $indent;
+	}
+	if ($body) {
+		$_ = $body;
+		s/#newline#/$indent/g;
+		print "$_\n";
+	}
+	$title = $body = undef;
+}
+
+$idpath = $title = $body = "";
+while (<>)
+{
+	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
+
+	if ($end and /[^=]*[\s*](\w+)[\s:,;].*\/\*:\s*(.*)/) {
+		# Implicit id for enum values and struct members.
+		print "\nid:[$idpath$1]::\n\t$2\n";
+
+	} elsif ($inblock) {
+		# Redo the indentation, preserve empty lines.
+		s/^(\s|\*)*//;
+		s/^$/\n/;
+		$body .= "#newline#" . $_;
+
+	} elsif (s/\s*\/\*\*+\s*(.*)/$1/) {
+		# Found magic header; flush, record title and set indentation.
+		put_section;
+		$title   = "$1";
+		$indent  = /::/ ? "\t" : "";
+
+	} else {
+		next if not ($title or $body) or /^\s$/;
+
+		my $orig_title = $title;
+
+		if (not /^#define\s/) {
+			while (not /(struct|enum|typedef|[^=])*[\s*](\w+).*[\[:,;{]/) {
+				$_ .= <>;
+			}
+		}
+
+		if (/struct\s+(\w+)\s*{/) {
+			$title = "struct:$1" . "[$title]";
+			$idpath = "$1.";
+
+		} elsif (/enum\s+(\w+)\s*{/) {
+			$title = "enum:$1" . "[$title]";
+			$idpath = "";
+
+		} elsif (/#define\s+(\w+)[(]/) {
+			$title = "func:$1" . "[$title]";
+			$idpath = "";
+
+		} elsif (/#define\s+(\w+)/) {
+			$title = "macro:$1" . "[$title]";
+			$idpath = "";
+
+		} else {
+			if (/typedef/) {
+				if (/.*\(\*(\w+)\)\(/) {
+					$title = "typedef:$1" . "[$title]";
+				} elsif (/typedef.*\s(\w+);/) {
+					$title = "typedef:$1" . "[$title]";
+				}
+				$idpath = "";
+			} else {
+				if (/.*[\s*](\w+)\(/) {
+					$title = "func:$1" . "[$title]";
+					$idpath = "";
+				} elsif (/.*\(\*(\w+)\)\(/) {
+					$body = "#newline#" . $title if not $body;
+					$title = "id:[$idpath$1]::";
+					$indent = "\t";
+				} elsif (/[^=]*[\s*](\w+)[\[\s,:;]/) {
+					$body = "#newline#" . $title if not $body;
+					$title = "id:[$idpath$1]::";
+					$indent = "\t";
+				}
+			}
+		}
+		put_section if $orig_title ne $title;
+		next;
+	}
+
+	$inblock = $end ? undef : 'yes';
+}

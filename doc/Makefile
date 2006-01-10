@@ -49,6 +49,11 @@ ELINKS	 = $(top_builddir)/src/elinks
 KBDBIND	 = $(top_srcdir)/src/config/kbdbind.c
 FEATURES = $(top_srcdir)/features.conf
 
+### Locale env vars to override system one to ensure commands
+# using elinks binary will generate texts in english
+#
+LOCALES = LC_ALL=C LANGUAGE=en
+
 ### Scripts
 #
 
@@ -59,7 +64,7 @@ MAKE_ELINKS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinks-manpage
 MAKE_ELINKSKEYS_MANPAGE	= $(top_srcdir)/doc/tools/make-elinkskeys-manpage
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
- api/dom-sgml-parser.html \
+ api/dom.html \
  elinks.1.html \
  elinkskeys.5.html \
  hacking.html \
@@ -109,10 +114,10 @@ $(TXT_DIR)/import-features.conf.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
 	$(IMPORT_FEATURES_CONF) > $@
 
 $(TXT_DIR)/elinks.1.%.txt: $(MAKE_ELINKS_MANPAGE) $(ELINKS)
-	$(MAKE_ELINKS_MANPAGE) $@ $(ELINKS) $(HELP2DOC) > $@
+	$(LOCALES) $(MAKE_ELINKS_MANPAGE) $@ $(ELINKS) $(HELP2DOC) > $@
 
 $(TXT_DIR)/elinkskeys.5.%.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
-	$(MAKE_ELINKSKEYS_MANPAGE) $@ $(KBDBIND) > $@
+	$(LOCALES) $(MAKE_ELINKSKEYS_MANPAGE) $@ $(KBDBIND) > $@
 
 
 # Man Pages
@@ -122,15 +127,19 @@ $(XML_DIR)/%.man.xml: $(TXT_DIR)/%.man.txt
 
 $(MAN_DIR)/man1/elinks.1.in: $(XML_DIR)/elinks.1.man.xml
 	$(XMLTO) -o $(MAN_DIR)/man1 man $<
-	mv $(MAN_DIR)/man1/elinks.1 $@
+	sed 's/^\.TH "ELINKS" 1 .*/.TH "ELINKS" 1 "The ELinks text-browser" "$(shell date -I)" "The ELinks text-browser"/' \
+		< $(MAN_DIR)/man1/elinks.1 > $@
+	rm $(MAN_DIR)/man1/elinks.1
 
 $(MAN_DIR)/man5/elinkskeys.5: $(XML_DIR)/elinkskeys.5.man.xml
 	$(XMLTO) -o $(MAN_DIR)/man5 man $<
 	sed -e 's/\\fI\\fR'\''/\\fI\\'\''\\fR/' < $@ > $@.tmp
-	mv $@.tmp $@
+	sed 's/^\.TH "ELINKSKEYS" 5 .*/.TH "ELINKSKEYS" 5 "ELinks keybindings" "$(shell date -I)" "ELinks keybindings"/' \
+		< $@.tmp > $@
+	rm $@.tmp
 
 $(MAN_DIR)/man5/elinks.conf.5: $(ELINKS)
-	$(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
+	$(LOCALES) $(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
 
 # XHTML/CSS Man Pages
 
@@ -171,7 +180,12 @@ $(HTML_DIR)/perl-hooks.html: $(top_srcdir)/contrib/perl/hooks.pl
 ## API Docs
 #
 
-$(HTML_DIR)/api/dom-sgml-parser.html: $(top_srcdir)/src/dom/sgml/parser.h
-	$(CODE2DOC) $< | $(ASCIIDOC) -f code2doc.conf -b xhtml11 -d book -o $@ -n -
+DOM_API = \
+ $(top_srcdir)/src/dom/scanner.h \
+ $(top_srcdir)/src/dom/stack.h \
+ $(top_srcdir)/src/dom/sgml/parser.h
+
+$(HTML_DIR)/api/dom.html: $(DOM_API)
+	$(CODE2DOC) $(DOM_API) | $(ASCIIDOC) -f code2doc.conf -b xhtml11 -d book -o $@ -n -
 
 include $(top_srcdir)/Makefile.lib

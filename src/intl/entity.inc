@@ -259,7 +259,7 @@ struct entity { char *s; unicode_val_T c; } entities [1002] = {
 	{ "b.alpha",   0x03B1 }, /* GREEK SMALL LETTER ALPHA                       */
 	{ "b.beta",    0x03B2 }, /* GREEK SMALL LETTER BETA                        */
 	{ "b.chi",     0x03C7 }, /* GREEK SMALL LETTER CHI                         */
-	{ "b.delta",   0x03B3 }, /* GREEK SMALL LETTER GAMMA                       */
+	{ "b.delta",   0x03B4 }, /* GREEK SMALL LETTER DELTA                       */
 	{ "b.epsi",    0x03B5 }, /* GREEK SMALL LETTER EPSILON                     */
 	{ "b.epsis",   0x03B5 }, /* GREEK SMALL LETTER EPSILON                     */
 	{ "b.epsiv",   0x03B5 }, /* GREEK SMALL LETTER EPSILON                     */
@@ -1005,4 +1005,4 @@ struct entity { char *s; unicode_val_T c; } entities [1002] = {
 	{ NULL, 0 }
 };
 
-#define N_ENTITIES     1001
+#define N_ENTITIES 1001

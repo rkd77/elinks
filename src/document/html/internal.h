@@ -114,9 +114,10 @@ struct html_context {
 	void *(*special_f)(struct html_context *, enum html_special_type, ...);
 };
 
-#define format (((struct html_element *) html_context->stack.next)->attr)
-#define par_format (((struct html_element *) html_context->stack.next)->parattr)
-#define html_top (*(struct html_element *) html_context->stack.next)
+#define html_top	((struct html_element *) html_context->stack.next)
+#define html_bottom	((struct html_element *) html_context->stack.prev)
+#define format		(html_top->attr)
+#define par_format	(html_top->parattr)
 
 #define html_is_preformatted() (format.style.attr & AT_PREFORMATTED)
 

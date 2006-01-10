@@ -67,20 +67,20 @@ html_a(struct html_context *html_context, unsigned char *a,
 #ifdef CONFIG_GLOBHIST
 		} else if (get_global_history_item(format.link)) {
 			format.style.fg = format.vlink;
-			html_top.pseudo_class &= ~ELEMENT_LINK;
-			html_top.pseudo_class |= ELEMENT_VISITED;
+			html_top->pseudo_class &= ~ELEMENT_LINK;
+			html_top->pseudo_class |= ELEMENT_VISITED;
 #endif
 #ifdef CONFIG_BOOKMARKS
 		} else if (get_bookmark(format.link)) {
 			format.style.fg = format.bookmark_link;
-			html_top.pseudo_class &= ~ELEMENT_VISITED;
+			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			/* XXX: Really set ELEMENT_LINK? --pasky */
-			html_top.pseudo_class |= ELEMENT_LINK;
+			html_top->pseudo_class |= ELEMENT_LINK;
 #endif
 		} else {
 			format.style.fg = format.clink;
-			html_top.pseudo_class &= ~ELEMENT_VISITED;
-			html_top.pseudo_class |= ELEMENT_LINK;
+			html_top->pseudo_class &= ~ELEMENT_VISITED;
+			html_top->pseudo_class |= ELEMENT_LINK;
 		}
 
 		mem_free_set(&format.title,
@@ -89,7 +89,7 @@ html_a(struct html_context *html_context, unsigned char *a,
 		html_focusable(html_context, a);
 
 	} else {
-		kill_html_stack_item(html_context, &html_top);
+		pop_html_element(html_context);
 	}
 
 	set_fragment_identifier(html_context, a, "name");
@@ -269,7 +269,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 		 * If not, just exit now. */
 		if (!options->images && !format.link) {
 			mem_free_if(src);
-			if (usemap) kill_html_stack_item(html_context, &html_top);
+			if (usemap) pop_html_element(html_context);
 			return;
 		}
 
@@ -332,7 +332,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 			put_image_label(a, label, html_context);
 
-			if (ismap) kill_html_stack_item(html_context, &html_top);
+			if (ismap) pop_html_element(html_context);
 			mem_free_set(&format.image, NULL);
 			mem_free_set(&format.title, NULL);
 		}
@@ -341,7 +341,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 	}
 
 	mem_free_if(src);
-	if (usemap) kill_html_stack_item(html_context, &html_top);
+	if (usemap) pop_html_element(html_context);
 }
 
 void
@@ -369,7 +369,7 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	format.style.fg = format.clink;
 	put_chrs(html_context, linkname, strlen(linkname));
 	ln_break(html_context, 1);
-	kill_html_stack_item(html_context, &html_top);
+	pop_html_element(html_context);
 }
 
 
