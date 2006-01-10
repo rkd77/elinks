@@ -775,7 +775,7 @@ save_cookies(void) {
 	cookfile = straconcat(elinks_home, COOKIES_FILENAME, NULL);
 	if (!cookfile) return;
 
-	ssi = secure_open(cookfile, S_IXUSR | S_IRWXG | S_IRWXO);
+	ssi = secure_open(cookfile);
 	mem_free(cookfile);
 	if (!ssi) return;
 

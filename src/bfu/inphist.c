@@ -321,7 +321,7 @@ save_input_history(struct input_history *history, unsigned char *filename)
 	history_file = straconcat(elinks_home, filename, NULL);
 	if (!history_file) return -1;
 
-	ssi = secure_open(history_file, S_IXUSR | S_IRWXG | S_IRWXO);
+	ssi = secure_open(history_file);
 	mem_free(history_file);
 	if (!ssi) return -1;
 
