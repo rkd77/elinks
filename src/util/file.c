@@ -607,7 +607,7 @@ mkalldirs(const unsigned char *path)
 
 		p[pos] = 0;
 
-		ret = mkdir(p, S_IREAD | S_IWRITE | S_IEXEC);
+		ret = mkdir(p, S_IRWXU);
 
 		p[pos] = separator;
 
