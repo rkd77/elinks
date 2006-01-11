@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_WIN32_OVERRIDES_H
 #define EL__OSDEP_WIN32_OVERRIDES_H
 
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 
 #ifdef HAVE_WINDOWS_H
 #include <windows.h>

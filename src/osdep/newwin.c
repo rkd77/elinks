@@ -30,7 +30,7 @@ const struct open_in_new open_in_new[] = {
 	{ ENV_OS2VIO,	DEFAULT_OS2_WINDOW_CMD,	    N_("~Window") },
 	{ ENV_OS2VIO,	DEFAULT_OS2_FULLSCREEN_CMD, N_("~Full screen") },
 #endif
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 	{ ENV_WIN32,	"",			    N_("~Window") },
 #endif
 #ifdef CONFIG_BEOS

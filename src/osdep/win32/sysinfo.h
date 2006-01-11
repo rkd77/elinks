@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_WIN32_SYSINFO_H
 #define EL__OSDEP_WIN32_SYSINFO_H
 
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 
 #define SYSTEM_NAME	"Win32"
 #define SYSTEM_STR	"win32"

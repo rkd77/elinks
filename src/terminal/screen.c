@@ -714,7 +714,7 @@ erase_screen(struct terminal *term)
 void
 beep_terminal(struct terminal *term)
 {
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 	MessageBeep(MB_ICONEXCLAMATION);
 #else
 	hard_write(term->fdout, "\a", 1);

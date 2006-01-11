@@ -11,7 +11,7 @@
 #error Out of luck, buddy!
 #elif CONFIG_OS_UNIX
 #define XP_UNIX
-#elif CONFIG_WIN32
+#elif CONFIG_OS_WIN32
 #define XP_WIN
 #endif
 

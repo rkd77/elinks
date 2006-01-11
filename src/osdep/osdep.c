@@ -185,7 +185,7 @@ get_shell(void)
 
 /* Terminal size */
 
-#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_OS_WIN32)
 
 static void
 sigwinch(void *s)
@@ -245,7 +245,7 @@ c_pipe(int *fd)
 	return pipe(fd);
 }
 
-#elif defined(CONFIG_OS_OS2) || defined(CONFIG_WIN32)
+#elif defined(CONFIG_OS_OS2) || defined(CONFIG_OS_WIN32)
 
 void
 set_bin(int fd)
@@ -291,7 +291,7 @@ is_gnuscreen(void)
 }
 
 
-#if defined(CONFIG_OS_UNIX) || defined(CONFIG_WIN32)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_WIN32)
 
 int
 is_xterm(void)
@@ -334,7 +334,7 @@ unsigned int resize_count = 0;
 
 #ifndef CONFIG_OS_OS2
 
-#if !(defined(CONFIG_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_WIN32)
+#if !(defined(CONFIG_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
 
 int
 exe(unsigned char *path)
@@ -687,7 +687,7 @@ done_draw(void)
 #endif
 
 
-#if !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_WIN32)
 int
 get_output_handle(void)
 {
@@ -707,7 +707,7 @@ get_ctl_handle(void)
 
 
 #if !defined(CONFIG_BEOS) && !(defined(HAVE_BEGINTHREAD) && defined(HAVE_READ_KBD)) \
-	&& !defined(CONFIG_WIN32)
+	&& !defined(CONFIG_OS_WIN32)
 
 int
 get_input_handle(void)
@@ -717,7 +717,7 @@ get_input_handle(void)
 
 #endif
 
-#ifndef CONFIG_WIN32
+#ifndef CONFIG_OS_WIN32
 
 void
 init_osdep(void)
@@ -798,7 +798,7 @@ resume_mouse(void *data)
 
 #endif
 
-#ifndef CONFIG_WIN32
+#ifndef CONFIG_OS_WIN32
 /* Create a bitmask consisting from system-independent envirnoment modifiers.
  * This is then complemented by system-specific modifiers in an appropriate
  * get_system_env() routine. */

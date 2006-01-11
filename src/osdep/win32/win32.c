@@ -30,7 +30,7 @@
 void
 init_osdep(void)
 {
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 	WSADATA ws;
 	WORD ver = MAKEWORD(1,1);
 #ifdef CONFIG_IPV6

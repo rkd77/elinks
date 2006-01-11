@@ -148,8 +148,8 @@ AC_SUBST(CONFIG_BEOS)
 EL_CHECK_COMPILER_MACROS(CONFIG_OS_RISCOS, [RISCOS], [__riscos__])
 AC_SUBST(CONFIG_OS_RISCOS)
 
-EL_CHECK_COMPILER_MACROS(CONFIG_WIN32, [WIN32], [_WIN32 __WIN32__])
-AC_SUBST(CONFIG_WIN32)
+EL_CHECK_COMPILER_MACROS(CONFIG_OS_WIN32, [WIN32], [_WIN32 __WIN32__])
+AC_SUBST(CONFIG_OS_WIN32)
 
 EL_CHECK_COMPILER_MACROS(CONFIG_OS_OS2, [EMX], [__EMX__])
 AC_SUBST(CONFIG_OS_OS2)
@@ -159,7 +159,7 @@ AC_MSG_CHECKING([for UNIX])
 dnl FIXME: some depend kind of mechanism
 if test "$CONFIG_BEOS" = no && \
    test "$CONFIG_OS_RISCOS" = no && \
-   test "$CONFIG_WIN32" = no && \
+   test "$CONFIG_OS_WIN32" = no && \
    test "$CONFIG_OS_OS2" = no; then
 	EL_CONFIG(CONFIG_OS_UNIX, [UNIX])
 else
@@ -492,8 +492,8 @@ dnl ===================================================================
 dnl Checks for Win32
 dnl ===================================================================
 
-if test "$CONFIG_WIN32" = yes; then
-	EL_CONFIG_WIN32
+if test "$CONFIG_OS_WIN32" = yes; then
+	EL_CONFIG_OS_WIN32
 fi
 
 dnl ===================================================================
