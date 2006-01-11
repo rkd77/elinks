@@ -849,18 +849,18 @@ dnl ===================================================================
 dnl Check for Ruby, optional even if installed.
 dnl ===================================================================
 
-EL_CONFIG_RUBY
+EL_CONFIG_SCRIPTING_RUBY
 
 dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_PYTHON CONFIG_SCRIPTING_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
 AC_SUBST(CONFIG_SCRIPTING_GUILE)
 AC_SUBST(CONFIG_SCRIPTING_LUA)
 AC_SUBST(CONFIG_SCRIPTING_PERL)
 AC_SUBST(CONFIG_PYTHON)
-AC_SUBST(CONFIG_RUBY)
+AC_SUBST(CONFIG_SCRIPTING_RUBY)
 AC_SUBST(CONFIG_SM_SCRIPTING)
 AC_SUBST(CONFIG_SCRIPTING)
 
