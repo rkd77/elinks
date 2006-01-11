@@ -26,7 +26,7 @@
 
 /* Error reporting. */
 
-#if defined(CONFIG_RUBY) || defined(CONFIG_SEE) || defined(CONFIG_ECMASCRIPT)
+#if defined(CONFIG_RUBY) || defined(CONFIG_SEE) || defined(CONFIG_SM_SCRIPTING)
 void
 report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)
@@ -77,7 +77,7 @@ static struct module *scripting_modules[] = {
 #ifdef CONFIG_RUBY
 	&ruby_scripting_module,
 #endif
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_SM_SCRIPTING
 	&smjs_scripting_module,
 #endif
 	NULL,
