@@ -1,5 +1,5 @@
 
-AC_DEFUN([EL_CONFIG_OS2],
+AC_DEFUN([EL_CONFIG_OS_OS2],
 [
 	AC_MSG_CHECKING([for OS/2 threads])
 

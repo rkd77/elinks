@@ -3,15 +3,15 @@
 #define EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H
 
 /* For wild SpiderMonkey installations. */
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 #define XP_BEOS
-#elif CONFIG_OS2
+#elif CONFIG_OS_OS2
 #define XP_OS2
-#elif CONFIG_RISCOS
+#elif CONFIG_OS_RISCOS
 #error Out of luck, buddy!
-#elif CONFIG_UNIX
+#elif CONFIG_OS_UNIX
 #define XP_UNIX
-#elif CONFIG_WIN32
+#elif CONFIG_OS_WIN32
 #define XP_WIN
 #endif
 

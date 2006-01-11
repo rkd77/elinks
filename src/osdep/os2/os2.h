@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_OS2_OS2_H
 #define EL__OSDEP_OS2_OS2_H
 
-#ifdef CONFIG_OS2
+#ifdef CONFIG_OS_OS2
 
 struct terminal;
 

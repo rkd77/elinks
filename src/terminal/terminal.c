@@ -170,7 +170,7 @@ exec_thread(unsigned char *path, int p)
 {
 	int plen = strlen(path + 1) + 2;
 
-#if defined(HAVE_SETPGID) && !defined(CONFIG_BEOS) && !defined(HAVE_BEGINTHREAD)
+#if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
 	if (path[0] == 2) setpgid(0, 0);
 #endif
 	exe(path + 1);

@@ -26,14 +26,14 @@ const struct open_in_new open_in_new[] = {
 	{ ENV_XWIN,	XTERM_CMD,		    N_("~Xterm") },
 	{ ENV_TWIN,	DEFAULT_TWTERM_CMD,	    N_("T~wterm") },
 	{ ENV_SCREEN,	DEFAULT_SCREEN_CMD,	    N_("~Screen") },
-#ifdef CONFIG_OS2
+#ifdef CONFIG_OS_OS2
 	{ ENV_OS2VIO,	DEFAULT_OS2_WINDOW_CMD,	    N_("~Window") },
 	{ ENV_OS2VIO,	DEFAULT_OS2_FULLSCREEN_CMD, N_("~Full screen") },
 #endif
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 	{ ENV_WIN32,	"",			    N_("~Window") },
 #endif
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 	{ ENV_BE,	DEFAULT_BEOS_TERM_CMD,	    N_("~BeOS terminal") },
 #endif
 	{ 0, NULL, NULL }

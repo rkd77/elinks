@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_UNIX_SYSINFO_H
 #define EL__OSDEP_UNIX_SYSINFO_H
 
-#ifdef CONFIG_UNIX
+#ifdef CONFIG_OS_UNIX
 
 #define SYSTEM_NAME	"Unix"
 #define SYSTEM_STR	"unix"
