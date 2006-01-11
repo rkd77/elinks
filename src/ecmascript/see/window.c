@@ -138,7 +138,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_BOOLEAN(res, 0);
 	} else if (p == s_self) {
 		SEE_SET_OBJECT(res, o);
-	} else if (p == s_top || p == s_parent) {
+	} else if (p == s_parent || p == s_top) {
 		struct document_view *doc_view = vs->doc_view;
 		struct document_view *top_view = doc_view->session->doc_view;
 		struct js_window_object *newjsframe;
@@ -167,6 +167,8 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, win->alert);
 	} else if (p == s_open) {
 		SEE_SET_OBJECT(res, win->open);
+	} else if (p == s_location) {
+		SEE_OBJECT_GET(interp, interp->Global, s_location, res);
 	} else {
 		unsigned char *frame = SEE_string_to_unsigned_char(p);
 		struct document_view *doc_view = vs->doc_view;
@@ -225,7 +227,8 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
-	struct js_window_object *win = (struct js_window_object *)thisobj;
+	struct global_object *g = (struct global_object *)interp;
+	struct js_window_object *win = g->win;
 	struct view_state *vs = win->vs;
 	unsigned char *string;
 
@@ -249,11 +252,12 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
-	struct js_window_object *win = (struct js_window_object*)thisobj;
+	struct global_object *g = (struct global_object *)interp;
+	struct js_window_object *win = g->win;
 	struct view_state *vs = win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
-	unsigned char *target = "";
+	unsigned char *target = NULL;
 	unsigned char *url, *url2;
 	struct uri *uri;
 #if 0
@@ -261,7 +265,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	static int ratelimit_count;
 #endif
 	checktime(interp);
-	SEE_SET_UNDEFINED(res);
+	SEE_SET_OBJECT(res, (struct SEE_object *)win);
 	if (get_opt_bool("ecmascript.block_window_opening")) {
 #ifdef CONFIG_LEDS
 		set_led_value(ses->status.popup_led, 'P');
@@ -312,6 +316,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 		}
 	}
 
+	mem_free_if(target);
 	if (!get_cmd_opt_bool("no-connect")
 	    && !get_cmd_opt_bool("no-home")
 	    && !get_cmd_opt_bool("anonymous")
@@ -355,6 +360,17 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 
 	g->win->alert = SEE_cfunction_make(interp, js_window_alert, s_alert, 1);
 	g->win->open = SEE_cfunction_make(interp, js_window_open, s_open, 3);
+
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_top, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_top, &v, 0);
+
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_self, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_self, &v, 0);
+
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_alert, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_alert, &v, 0);
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_open, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_open, &v, 0);
 }
 
 void
