@@ -247,6 +247,14 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_value) {
 		str = string_to_SEE_string(interp, fs->value);
 		SEE_SET_STRING(res, str);
+	} else if (p == s_blur) {
+		SEE_SET_OBJECT(res, input->blur);
+	}  else if (p == s_click) {
+		SEE_SET_OBJECT(res, input->click);
+	} else if (p == s_focus) {
+		SEE_SET_OBJECT(res, input->focus);
+	} else if (p == s_select) {
+		SEE_SET_OBJECT(res, input->select);
 	}
 }
 
@@ -581,6 +589,10 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	if (p == s_length) {
 		SEE_number_t length = list_size(&form->items);
 		SEE_SET_NUMBER(res, length);
+	} else if (p == s_item) {
+		SEE_SET_OBJECT(res, jsfe->item);
+	} else if (p == s_namedItem) {
+		SEE_SET_OBJECT(res, jsfe->namedItem);
 	} else {
 		unsigned char *string = SEE_string_to_unsigned_char(p);
 		struct SEE_value argv;
@@ -691,11 +703,16 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
+	struct js_forms_object *fo = (struct js_forms_object *)o;
 
 	checktime(interp);
 	if (p == s_length) {
 		SEE_number_t length = list_size(&document->forms);
 		SEE_SET_NUMBER(res, length);
+	} else if (p == s_item) {
+		SEE_SET_OBJECT(res, fo->item);
+	} else if (p == s_namedItem) {
+		SEE_SET_OBJECT(res, fo->namedItem);
 	} else {
 		unsigned char *string = SEE_string_to_unsigned_char(p);
 		struct SEE_value argv;
