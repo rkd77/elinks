@@ -260,6 +260,8 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *target = NULL;
 	unsigned char *url, *url2;
 	struct uri *uri;
+	struct SEE_value url_value, target_value;
+	static struct SEE_string *url_string = NULL, *target_string = NULL;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -288,7 +290,18 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 			return;
 	}
 #endif
-	url = SEE_value_to_unsigned_char(interp, argv[0]);
+	SEE_ToString(interp, argv[0], &url_value);
+	if (argc > 1) {
+		SEE_ToString(interp, argv[1], &target_value);
+		if (url_string && target_string &&
+		 !SEE_string_cmp(url_value.u.string, url_string)
+		 && !SEE_string_cmp(target_value.u.string, target_string)) {
+		 	return;
+		}
+		url_string = url_value.u.string;
+		target_string = target_value.u.string;
+	}
+	url = SEE_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
 
 	/* TODO: Support for window naming and perhaps some window features? */
@@ -301,8 +314,9 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	mem_free(url2);
 	if (!uri) return;
 
-	if (argc > 1)
-		target = SEE_value_to_unsigned_char(interp, argv[1]);
+	if (argc > 1) {
+		target = SEE_string_to_unsigned_char(target_value.u.string);
+	}
 
 	if (target && *target && strcasecmp(target, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
