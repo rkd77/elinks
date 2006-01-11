@@ -299,7 +299,7 @@ execute_cgi(struct connection *conn)
 	scriptlen = strlen(script);
 
 	if (stat(script, &buf) || !(S_ISREG(buf.st_mode))
-		|| !(buf.st_mode & S_IEXEC)) {
+		|| !(buf.st_mode & S_IXUSR)) {
 		mem_free(script);
 		return 1;
 	}
