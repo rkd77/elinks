@@ -62,7 +62,7 @@ report_scripting_error(struct module *module, struct session *ses,
 
 
 static struct module *scripting_modules[] = {
-#ifdef CONFIG_LUA
+#ifdef CONFIG_SCRIPTING_LUA
 	&lua_scripting_module,
 #endif
 #ifdef CONFIG_GUILE
