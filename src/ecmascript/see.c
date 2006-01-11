@@ -177,7 +177,6 @@ see_eval(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = SEE_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
-	struct SEE_value v;
 
 	g->exec_start = time(NULL);
 	SEE_TRY(interp, try_ctxt) {

@@ -6,6 +6,9 @@
 
 #include <see/see.h>
 #include <string.h>
+
+#include "elinks.h"
+
 #include "ecmascript/see/input.h"
 #include "util/memory.h"
 
