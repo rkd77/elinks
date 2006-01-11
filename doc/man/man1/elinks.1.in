@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "The ELinks text-browser" "2006-01-10" "The ELinks text-browser"
+.TH "ELINKS" 1 "The ELinks text-browser" "2006-01-11" "The ELinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
@@ -236,7 +236,7 @@ The path to the users home directory\&. Used when expanding ~/\&.
 
 .TP
 WWW_HOME
-Homepage location (as in lynx(1))
+Homepage location (as in lynx(1))\&.
 
 .SH "FILES"
 
@@ -297,7 +297,7 @@ Please report any other bugs you find to the either the ELinks mailing list at <
 The \fILinks\fR browser \- on which \fIELinks\fR is based \- was written by Mikulas Patocka <mikulas@artax\&.karlin\&.mff\&.cuni\&.cz>\&. \fIELinks\fR was written by Petr Baudis <pasky@ucw\&.cz>\&. See file AUTHORS in the source tree for a list of people contributing to this project\&.
 
 
-The homepage of \fIELinks\fR can be found at <http://elinks\&.or\&.cz/>\&.
+The homepage of \fIELinks\fR can be found at <http://elinks\&.cz/>\&.
 
 
 This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts from a (yet?) unknown \fILinks\fR fan for the \fIDebian GNU/Linux system\fR (but may be used by others)\&. Contributions from Francis A\&. Holop\&. Extended, clarified and made more up\-to\-date by Petr Baudis <pasky@ucw\&.cz>\&. Updated by Zas <zas@norz\&.org>\&. The conversion to Asciidoc and trimming was done by Jonas Fonseca <fonseca@diku\&.dk>\&.
