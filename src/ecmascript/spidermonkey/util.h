@@ -7,7 +7,7 @@
 #define XP_BEOS
 #elif CONFIG_OS_OS2
 #define XP_OS2
-#elif CONFIG_RISCOS
+#elif CONFIG_OS_RISCOS
 #error Out of luck, buddy!
 #elif CONFIG_UNIX
 #define XP_UNIX
