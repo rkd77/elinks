@@ -1,7 +1,7 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
 
-SUBDIRS-$(CONFIG_GUILE)		+= guile
+SUBDIRS-$(CONFIG_SCRIPTING_GUILE)		+= guile
 SUBDIRS-$(CONFIG_SCRIPTING_LUA)		+= lua
 SUBDIRS-$(CONFIG_SCRIPTING_PERL)		+= perl
 SUBDIRS-$(CONFIG_PYTHON)	+= python

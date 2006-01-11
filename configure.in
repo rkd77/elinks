@@ -659,7 +659,7 @@ if test "$enable_guile" = "yes"; then
 		GUILE_CFLAGS="`guile-config compile`"
 		LIBS="$GUILE_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $GUILE_CFLAGS"
-		EL_CONFIG(CONFIG_GUILE, [Guile])
+		EL_CONFIG(CONFIG_SCRIPTING_GUILE, [Guile])
 		AC_SUBST(GUILE_CFLAGS)
 		cat <<EOF
 ***********************************************************************
@@ -855,8 +855,8 @@ dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
-AC_SUBST(CONFIG_GUILE)
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
+AC_SUBST(CONFIG_SCRIPTING_GUILE)
 AC_SUBST(CONFIG_SCRIPTING_LUA)
 AC_SUBST(CONFIG_SCRIPTING_PERL)
 AC_SUBST(CONFIG_PYTHON)
