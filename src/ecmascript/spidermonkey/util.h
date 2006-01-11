@@ -5,7 +5,7 @@
 /* For wild SpiderMonkey installations. */
 #ifdef CONFIG_BEOS
 #define XP_BEOS
-#elif CONFIG_OS2
+#elif CONFIG_OS_OS2
 #define XP_OS2
 #elif CONFIG_RISCOS
 #error Out of luck, buddy!

@@ -2,7 +2,7 @@
 #define EL__OSDEP_SYSTEM_H
 
 #if !defined(CONFIG_BEOS) \
-     && !defined(CONFIG_OS2) \
+     && !defined(CONFIG_OS_OS2) \
      && !defined(CONFIG_RISCOS) \
      && !defined(CONFIG_UNIX) \
      && !defined(CONFIG_WIN32)

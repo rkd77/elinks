@@ -185,7 +185,7 @@ get_shell(void)
 
 /* Terminal size */
 
-#if !defined(CONFIG_OS2) && !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_WIN32)
 
 static void
 sigwinch(void *s)
@@ -245,7 +245,7 @@ c_pipe(int *fd)
 	return pipe(fd);
 }
 
-#elif defined(CONFIG_OS2) || defined(CONFIG_WIN32)
+#elif defined(CONFIG_OS_OS2) || defined(CONFIG_WIN32)
 
 void
 set_bin(int fd)
@@ -332,7 +332,7 @@ is_xterm(void)
 
 unsigned int resize_count = 0;
 
-#ifndef CONFIG_OS2
+#ifndef CONFIG_OS_OS2
 
 #if !(defined(CONFIG_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_WIN32)
 
@@ -729,7 +729,7 @@ init_osdep(void)
 
 #endif
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_OS2) || defined(CONFIG_RISCOS)
+#if defined(CONFIG_UNIX) || defined(CONFIG_OS_OS2) || defined(CONFIG_RISCOS)
 
 void
 terminate_osdep(void)
@@ -838,7 +838,7 @@ can_resize_window(int environment)
 	return !!(environment & (ENV_OS2VIO | ENV_XWIN));
 }
 
-#ifndef CONFIG_OS2
+#ifndef CONFIG_OS_OS2
 int
 can_open_os_shell(int environment)
 {
