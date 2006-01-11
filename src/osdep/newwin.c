@@ -33,7 +33,7 @@ const struct open_in_new open_in_new[] = {
 #ifdef CONFIG_OS_WIN32
 	{ ENV_WIN32,	"",			    N_("~Window") },
 #endif
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 	{ ENV_BE,	DEFAULT_BEOS_TERM_CMD,	    N_("~BeOS terminal") },
 #endif
 	{ 0, NULL, NULL }

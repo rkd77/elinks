@@ -142,8 +142,8 @@ kill me!
 	AC_MSG_RESULT([$]$1)
 ])
 
-EL_CHECK_COMPILER_MACROS(CONFIG_BEOS, [BEOS], [__BEOS__])
-AC_SUBST(CONFIG_BEOS)
+EL_CHECK_COMPILER_MACROS(CONFIG_OS_BEOS, [BEOS], [__BEOS__])
+AC_SUBST(CONFIG_OS_BEOS)
 
 EL_CHECK_COMPILER_MACROS(CONFIG_OS_RISCOS, [RISCOS], [__riscos__])
 AC_SUBST(CONFIG_OS_RISCOS)
@@ -157,7 +157,7 @@ test "$CONFIG_OS_OS2" = yes && LDFLAGS=`echo "$LDFLAGS" | sed "s/-Zexe//g"`
 
 AC_MSG_CHECKING([for UNIX])
 dnl FIXME: some depend kind of mechanism
-if test "$CONFIG_BEOS" = no && \
+if test "$CONFIG_OS_BEOS" = no && \
    test "$CONFIG_OS_RISCOS" = no && \
    test "$CONFIG_OS_WIN32" = no && \
    test "$CONFIG_OS_OS2" = no; then

@@ -232,7 +232,7 @@ get_terminal_size(int fd, int *x, int *y)
 
 /* Pipe */
 
-#if defined(CONFIG_OS_UNIX) || defined(CONFIG_BEOS) || defined(CONFIG_OS_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_BEOS) || defined(CONFIG_OS_RISCOS)
 
 void
 set_bin(int fd)
@@ -334,7 +334,7 @@ unsigned int resize_count = 0;
 
 #ifndef CONFIG_OS_OS2
 
-#if !(defined(CONFIG_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
+#if !(defined(CONFIG_OS_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
 
 int
 exe(unsigned char *path)
@@ -605,7 +605,7 @@ resize_window(int width, int height, int old_width, int old_height)
 
 /* Threads */
 
-#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_BEOS)
+#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_OS_BEOS)
 
 struct tdata {
 	void (*fn)(void *, int);
@@ -706,7 +706,7 @@ get_ctl_handle(void)
 #endif
 
 
-#if !defined(CONFIG_BEOS) && !(defined(HAVE_BEGINTHREAD) && defined(HAVE_READ_KBD)) \
+#if !defined(CONFIG_OS_BEOS) && !(defined(HAVE_BEGINTHREAD) && defined(HAVE_READ_KBD)) \
 	&& !defined(CONFIG_OS_WIN32)
 
 int
@@ -738,7 +738,7 @@ terminate_osdep(void)
 
 #endif
 
-#ifndef CONFIG_BEOS
+#ifndef CONFIG_OS_BEOS
 
 void
 block_stdin(void)

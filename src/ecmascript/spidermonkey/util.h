@@ -3,7 +3,7 @@
 #define EL__ECMASCRIPT_SPIDERMONKEY_UTIL_H
 
 /* For wild SpiderMonkey installations. */
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 #define XP_BEOS
 #elif CONFIG_OS_OS2
 #define XP_OS2
