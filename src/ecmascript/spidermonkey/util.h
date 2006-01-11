@@ -9,7 +9,7 @@
 #define XP_OS2
 #elif CONFIG_OS_RISCOS
 #error Out of luck, buddy!
-#elif CONFIG_UNIX
+#elif CONFIG_OS_UNIX
 #define XP_UNIX
 #elif CONFIG_WIN32
 #define XP_WIN

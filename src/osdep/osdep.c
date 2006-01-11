@@ -232,7 +232,7 @@ get_terminal_size(int fd, int *x, int *y)
 
 /* Pipe */
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_BEOS) || defined(CONFIG_OS_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_BEOS) || defined(CONFIG_OS_RISCOS)
 
 void
 set_bin(int fd)
@@ -291,7 +291,7 @@ is_gnuscreen(void)
 }
 
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_WIN32)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_WIN32)
 
 int
 is_xterm(void)
@@ -729,7 +729,7 @@ init_osdep(void)
 
 #endif
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_OS_OS2) || defined(CONFIG_OS_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_OS2) || defined(CONFIG_OS_RISCOS)
 
 void
 terminate_osdep(void)
@@ -823,7 +823,7 @@ get_common_env(void)
 }
 #endif
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_OS_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_RISCOS)
 int
 get_system_env(void)
 {

@@ -161,12 +161,12 @@ if test "$CONFIG_BEOS" = no && \
    test "$CONFIG_OS_RISCOS" = no && \
    test "$CONFIG_WIN32" = no && \
    test "$CONFIG_OS_OS2" = no; then
-	EL_CONFIG(CONFIG_UNIX, [UNIX])
+	EL_CONFIG(CONFIG_OS_UNIX, [UNIX])
 else
-	CONFIG_UNIX=no
+	CONFIG_OS_UNIX=no
 fi
-AC_MSG_RESULT($CONFIG_UNIX)
-AC_SUBST(CONFIG_UNIX)
+AC_MSG_RESULT($CONFIG_OS_UNIX)
+AC_SUBST(CONFIG_OS_UNIX)
 
 dnl ===================================================================
 dnl Checks for header files.
