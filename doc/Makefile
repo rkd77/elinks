@@ -161,27 +161,27 @@ quiet_cmd_pod2html = ' [$(LINK_COLOR)POD2HTML$(END_COLOR)]   $(RELPATH)$@'
 doctype = $(if $(findstring .1.,$(1)),manpage,$(if $(findstring .5.,$(1)),manpage,book))
 
 %.html: %.txt asciidoc.conf
-	$(call mcmd,asciidoc,xhtml11)
+	$(call cmd,asciidoc,xhtml11)
 
 %.xml: %.txt asciidoc.conf
-	$(call mcmd,asciidoc,docbook)
+	$(call cmd,asciidoc,docbook)
 
 %.1: %.1.xml
-	$(call mcmd,xmlto,man)
+	$(call cmd,xmlto,man)
 
 %.5: %.5.xml
-	$(call mcmd,xmlto,man)
+	$(call cmd,xmlto,man)
 
 %.html-chunked: %.xml
-	$(call mcmd,xmlto,html,-o $@)
+	$(call cmd,xmlto,html,-o $@)
 
 %.pdf: %.xml
-	$(call mcmd,jw,pdf)
+	$(call cmd,jw,pdf)
 
 %.html: %.pod
-	$(call mcmd,pod2html)
+	$(call cmd,pod2html)
 
 perl-%.html: %.pl
-	$(call mcmd,pod2html)
+	$(call cmd,pod2html)
 
 include $(top_srcdir)/Makefile.lib
