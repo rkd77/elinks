@@ -11,6 +11,8 @@ struct sgml_parser;
 struct string;
 struct uri;
 
+/* API Doc :: dom-sgml-parser */
+
 /** SGML parser type
  *
  * There are two kinds of parser types: One that optimises one-time access to
