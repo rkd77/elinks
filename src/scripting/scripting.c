@@ -68,7 +68,7 @@ static struct module *scripting_modules[] = {
 #ifdef CONFIG_GUILE
 	&guile_scripting_module,
 #endif
-#ifdef CONFIG_PERL
+#ifdef CONFIG_SCRIPTING_PERL
 	&perl_scripting_module,
 #endif
 #ifdef CONFIG_PYTHON
