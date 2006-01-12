@@ -1,4 +1,4 @@
-ELINKS.CONF(5)
+elinks.conf(5)
 ==============
 :Description:	ELinks configuration file
 

@@ -1,4 +1,4 @@
-ELINKS(1)
+elinks(1)
 =========
 :Description:	The Elinks text-browser
 
