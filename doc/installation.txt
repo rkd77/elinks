@@ -19,7 +19,7 @@ required or recommended that you install.
 Requirements
 ~~~~~~~~~~~~
 
-To succesfully install ELinks all that is required is GNU make and a C
+To successfully install ELinks all that is required is GNU make and a C
 compiler. If you want to install directly from GIT it is also required that
 automake and autoconf is installed on your system.
 
@@ -48,7 +48,7 @@ xterm with 256 colors	Program atleast patch level  179 or rxvt program    \
 			from version 2.7.9 for support of 256 colors.	    \
 			Newer PuTTY also has 256 color support.
 libidn			For internationalized domain names.
-SpiderMonkey		Mozilla's JavaScript engine for getting	
+SpiderMonkey		Mozilla's JavaScript engine for getting		    \	
 			JavaScript/ECMAScript support in ELinks.	    \
 			See also <<ecmascript,notes on ECMAScript support>>.
 -----------------------------------------------------------------------------
