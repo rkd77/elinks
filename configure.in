@@ -529,9 +529,9 @@ if test "$enable_see" = "yes"; then
 		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
 		LIBS="$SEE_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $SEE_CFLAGS"
-		EL_CONFIG(CONFIG_SEE, [SEE])
+		EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
 		AC_SUBST(SEE_CFLAGS)
-		AC_SUBST(CONFIG_SEE)
+		AC_SUBST(CONFIG_ECMASCRIPT_SEE)
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
 			AC_MSG_ERROR([SEE not found])
@@ -596,14 +596,14 @@ else
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 fi
 
-if test "$CONFIG_SEE" != yes; then
+if test "$CONFIG_ECMASCRIPT_SEE" != yes; then
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 fi
 
 AC_SUBST(CONFIG_SPIDERMONKEY)
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
 
 
 dnl ===================================================================
