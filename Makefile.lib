@@ -201,30 +201,25 @@ endif
 # Recursion:
 
 RULES	 = all install clean cleanall init check test
-RECRULES = $(addsuffix -recursive,$(RULES))
 
-.PHONY: $(RECRULES)
+# Setup the basic dependencies.
+define basic_dependency
+.PHONY: $(1) $(1)-recursive
+
+# First decend subdirs, then do all the default stuff and finally do any local
+# hooks which can then depend on the default hook making things.
+$(1): $(1)-recursive $(1)-default $(1)-local
 
 # The -recursive rules decend all subdirs.
-$(RECRULES):
-ifdef SUBDIRS
+$(1)-recursive:
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
-		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
-endif
-
-# Setup the default sub commands dependency. First decend subdirs then do all
-# the default stuff and finally do any local hooks.
-recdeps = $1-recursive $1-default $1-local
-all: $(call recdeps,all)
-check: $(call recdeps,check)
-cleanall: $(call recdeps,cleanall)
-clean: $(call recdeps,clean)
-init: $(call recdeps,init)
-install: $(call recdeps,install)
-test: $(call recdeps,test)
+		$(call ncmd,recmake,$(subdir),$(1)) || exit 1;)
 
 # Dummy rules for local hooks
-$(addsuffix -local,$(RULES)):
+$(1)-local:
+endef
+
+$(foreach rule,$(RULES),$(eval $(call basic_dependency,$(rule))))
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
