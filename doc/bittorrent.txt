@@ -60,7 +60,7 @@ If you start downloading a torrent which was previously active, the
 client will first try to resume downloaded data from the disk. The
 resume progress is shown in the resume dialog, depicted below:
 
-	+----------------------------------------- Download -------------------------------------+
+	+--------------------------------------- Download ---------------------------------------+
 	|                                                                                        |
 	| bittorrent:http://www.legaltorrents.com/bit/blue-a-short-film.torrent                  |
 	|                                                                                        |
@@ -82,7 +82,7 @@ such as progress, and a summary of which places in the torrent pieces
 have been downloaded from. A view of the download dialog along with
 highlights of the most important parts of the dialog is given below:
 
-	+---------------------------------------------- Download --------------------------------+
+	+--------------------------------------- Download ---------------------------------------+
 	|                                                                                        |
 	|  bittorrent:http://www.legaltorrents.com/bit/best-of-webbed-hand-vol-1.torrent         |
 	|                                                                                        |
