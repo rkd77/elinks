@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "The ELinks text-browser" "2006-01-11" "The ELinks text-browser"
+.TH "ELINKS" 1 "The Elinks text-browser" "2006-01-12" "The Elinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
@@ -200,6 +200,9 @@ The verbose level controls what messages are shown at start up and while running
 \-version
 Print \fIELinks\fR version information and exit\&.
 
+
+Generated using output from ELinks version 0\&.12\&.GIT\&.
+
 .SH "ENVIRONMENT VARIABLES"
 
 .TP
@@ -305,5 +308,5 @@ This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts 
 .SH "SEE ALSO"
 
 
-elinkskeys(5), elinks\&.conf(5), links(1), lynx(1), w3m(1), wget(1)
+\fBelinkskeys\fR(5), \fBelinks\&.conf\fR(5), links(1), lynx(1), w3m(1), wget(1)
 
