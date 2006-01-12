@@ -1,0 +1,62 @@
+elinks.conf(5)
+==============
+
+NAME
+----
+elinks.conf - ELinks configuration file
+
+SYNOPSIS
+--------
+[verse]
+set     "<option>" = <value>
+unset   "<option>" = <value>
+bind    "<keymap>" "<key>" = "<action>"
+include "<file>"
+
+DESCRIPTION
+-----------
+
+The `elinks.conf` file contains configuration information for ELinks.  It can
+be used to configure the behaviour of ELinks in a wide variety of ways:
+protocol behaviour, keybindings, colors used for rendering and for the user
+interface.
+
+It is read at startup and saved only when requested. All options described in
+this document can be fully configured from within ELinks so no editing of
+elinks.conf is needed.
+
+Note that MIME-related options used for specifying handlers of various MIME
+types are NOT described in this document. Documentation for these options can
+be found at the ELinks homepage. Keybindings can also be specified in
+elinks.conf.  This is described in the elinkskeys(5) man page.
+
+SYNTAX
+------
+
+The syntax of the configuration file is very simple. The elinks.conf file is a
+free-form ASCII text file. The file may contain extra tabs and newlines for
+formatting purposes. Keywords in the file are case-sensitive. Comments may be
+placed anywhere within the file (except within quotes). Comments begin with
+the # character and end at the end of the line.
+
+EXAMPLES
+--------
+
+Some sample settings:
+
+	# Use asynchronous DNS resolver?
+	set connection.async_dns = 1
+	# horizontal text margin.
+	set document.browse.margin_width = 3
+	# Default document codepage.
+	set document.codepage.assume = "ISO-8859-1"
+	# User defined protocol handlers
+	set protocol.user.mailto.unix = "mutt %h -s \e\*(lq%s\e\*(rq"
+
+OPTIONS
+-------
+include::option-config.txt[]
+
+SEE ALSO
+--------
+man:elinks[1], man:elinkskeys[5]

@@ -50,8 +50,9 @@ TXT_DOCS = \
  urlshortcuts.txt
 
 GEN_TXT_DOCS = \
- command-options.txt \
  import-features.conf.txt \
+ option-command.txt \
+ option-config.txt \
  keymap-defaults.txt \
  keymap-actions.txt
 
@@ -59,6 +60,7 @@ TXT_DOCS += $(GEN_TXT_DOCS)
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
  elinks.1.html \
+ elinks.conf.5.html \
  elinkskeys.5.html \
  hacking.html \
  manual.html
@@ -72,18 +74,20 @@ HTML_DOCS-$(CONFIG_POD2HTML) += \
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.1 \
+ elinks.conf.5 \
  elinkskeys.5
+
 
 # Only jw is used for generating PDF.
 PDF_DOCS-$(CONFIG_JW) += \
  manual.pdf
 
-MAN_DOCS += elinks.conf.5
-
 ## API Docs
 #
 
+ifneq ($(findstring api,$(MAKECMDGOALS)),)
 API = $(shell find $(top_srcdir)/src/ -name '*.h' -exec grep -q 'API Doc' \{\} \; -printf "%p " | sort)
+endif
 
 define api_doc
 api/$(2).txt: $(1)
@@ -137,11 +141,8 @@ import-features.conf.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
 keymap-defaults.txt keymap-actions.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
 	$(LOCALES) $(srcdir)tools/make-elinkskeys-manpage $(KBDBIND)
 
-command-options.txt: $(ELINKS) $(HELP2DOC)
-	$(LOCALES) $(HELP2DOC) --cmdoptions --elinks=$(ELINKS) > $@
-
-elinks.conf.5: $(ELINKS) $(HELP2DOC)
-	$(LOCALES) $(HELP2DOC) --elinksconf --elinks=$(ELINKS) > $@
+option-%.txt: $(ELINKS) $(HELP2DOC)
+	$(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
 
 ## Default build rules
 #

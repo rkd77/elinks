@@ -32,7 +32,7 @@ do not need to care about them. Note that this list is by no means complete
 and it is not kept up-to-date. To get complete list of commandline options,
 start 'ELinks' with parameter `--help`.
 
-include::command-options.txt[]
+include::option-command.txt[]
 
 ENVIRONMENT VARIABLES
 ---------------------
@@ -150,7 +150,7 @@ was done by Jonas Fonseca mailto:fonseca@diku.dk[].
 SEE ALSO
 --------
 
-man:elinkskeys[5], elinks.conf(5), links(1), lynx(1), w3m(1), wget(1)
+man:elinkskeys[5], man:elinks.conf[5], links(1), lynx(1), w3m(1), wget(1)
 
 ////////////////////////////////////////////////////////////////////////////
 # vim: tabstop=4 shiftwidth=4 textwidth=76

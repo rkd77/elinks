@@ -103,4 +103,4 @@ to asciidoc format and cleaned up by Jonas Fonseca.
 SEE ALSO
 --------
 
-man:elinks[1], elinks.conf(5)
+man:elinks[1], man:elinks.conf[5]
