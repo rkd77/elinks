@@ -396,7 +396,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
-	if (linknum < 0) 
+	if (linknum < 0)
 	 	return;
 
 	jump_to_link_number(ses, doc_view, linknum);
@@ -604,7 +604,7 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_STRING(&argv, p);
 		if (string[0] >= '0' && string[1] <= '9') {
 			js_form_elems_item(interp, o, o, 1,
-			 (struct SEE_value **)&argv, res); 
+			 (struct SEE_value **)&argv, res);
 		} else {
 			js_form_elems_namedItem(interp, o, o, 1,
 			 (struct SEE_value **)&argv, res);
@@ -689,7 +689,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 
 			SEE_SET_OBJECT(res, (struct SEE_object *)obj);
 			break;
-			
+
 		}
 	}
 	mem_free(string);
@@ -875,7 +875,7 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		mem_free_set(&form->name, string);
 	} else if (p == s_target) {
 		mem_free_set(&form->target, string);
-	}		
+	}
 }
 
 static int
@@ -953,7 +953,7 @@ struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 	js_form->reset = SEE_cfunction_make(interp, js_form_reset, s_reset, 0);
 	js_form->submit = SEE_cfunction_make(interp, js_form_submit, s_submit, 0);
 	js_form->fv = fv;
-		
+
 	fv->ecmascript_obj = js_form;
 	return js_form;
 }

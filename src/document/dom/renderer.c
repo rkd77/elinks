@@ -1021,7 +1021,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	parser = init_sgml_parser(parser_type, doctype, &uri, 0);
   	if (!parser) return;
-  
+
 	if (document->options.plain) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_source_renderer_context_info);

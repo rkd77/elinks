@@ -111,7 +111,7 @@ struct sgml_parser {
 /** Initialise an SGML parser
  *
  * Initialise an SGML parser with the given properties.
- * 
+ *
  * type::	Stream or tree; one-time or persistant.
  * doctype::	The document type, this affects what sub type nodes are given.
  * uri::	The URI of the document root.

@@ -94,7 +94,7 @@ unibar_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct session_status *status = &doc_view->session->status;
 	struct js_unibar_object *obj = (struct js_unibar_object *)o;
 	unsigned char bar = obj->bar;
-	
+
 	checktime(interp);
 	if (p == s_visible) {
 #define unibar_fetch(bar) \
