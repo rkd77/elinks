@@ -1,5 +1,6 @@
-elinkskeys(5)
+ELINKSKEYS(5)
 =============
+:Description:	ELinks keybindings
 
 NAME
 ----

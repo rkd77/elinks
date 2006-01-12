@@ -1,5 +1,6 @@
-elinks.conf(5)
+ELINKS.CONF(5)
 ==============
+:Description:	ELinks configuration file
 
 NAME
 ----

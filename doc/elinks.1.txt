@@ -1,5 +1,6 @@
-elinks(1)
+ELINKS(1)
 =========
+:Description:	The Elinks text-browser
 
 NAME
 ----
