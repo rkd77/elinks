@@ -19,7 +19,7 @@ Where to start
 This sections tries to give a quick overview of important files you will find
 in this directory or it's children.
 
- - Man pages (*):
+ - Man pages:
 
 	elinks(1) ................................... man/man1/elinks.1
 	elinks.conf(5) .............................. man/man5/elinks.conf.5
