@@ -86,8 +86,8 @@ print_keymap_defaults()
 			key="Space"
 			;;
 		*)
-			key=$(echo "$key" | sed "s/^'\(.*\)'/\1/" \
-					  | sed "s/'/\\\\'/")
+			key=$(echo "$key" | sed "s/^'\(.*\)'$/\1/" \
+			    | sed "s/'/{squote}/")
 			;;
 		esac
 

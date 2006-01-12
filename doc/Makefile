@@ -111,21 +111,15 @@ api-dir:
 txt:  $(addprefix $(srcdir),$(TXT_DOCS))
 html: txt $(HTML_DOCS)
 pdf:  txt $(PDF_DOCS)
-man:  txt $(MAN_DOCS) man-update
+man:  txt $(MAN_DOCS)
 api:  api-dir $(API_DOCS)
 
 all-docs: man html pdf
 
-man-update: $(MAN_DOCS)
-	@test "$(CONFIG_XMLTO)" = yes && \
-	sed 's/^\.TH "ELINKS" 1 .*/.TH "ELINKS" 1 "The ELinks text-browser" "$(shell date -I)" "The ELinks text-browser"/' \
-		< elinks.1 > $(srcdir)man/man1/elinks.1.in && \
-	$(RM) $(MAN_DIR)/man1/elinks.1
-	@test "$(CONFIG_XMLTO)" = yes && \
-	sed -e 's/\\fI\\fR'\''/\\fI\\'\''\\fR/' < elinkskeys.5 | \
-	sed 's/^\.TH "ELINKSKEYS" 5 .*/.TH "ELINKSKEYS" 5 "ELinks keybindings" "$(shell date -I)" "ELinks keybindings"/' \
-		> $(srcdir)man/man5/elinkskeys.5
-	@$(INSTALL) elinks.conf.5 $(srcdir)man/man5
+update-man: man
+	$(call cmd,installdata,$(srcdir)elinks.1,man/man1/elinks.1.in)
+	$(call cmd,installdata,$(srcdir)elinkskeys.5,man/man5/)
+	$(call cmd,installdata,$(srcdir)elinks.conf.5,man/man5/)
 
 clean-local:
 	@$(RM) -r api $(GEN_TXT_DOCS) $(MAN_DOCS) $(HTML_DOCS) $(PDF_DOCS) *.tmp
@@ -134,6 +128,9 @@ clean-local:
 
 # FIXME: Keep generated .txt files relative to the source directory and files
 # they are included in.
+quiet_cmd_help2doc = ' [$(LINK_COLOR)HELP2DOC$(END_COLOR)]   $(RELPATH)$@'
+      cmd_help2doc = $(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
+
 
 import-features.conf.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
 	$(IMPORT_FEATURES_CONF) > $@
@@ -142,7 +139,7 @@ keymap-defaults.txt keymap-actions.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
 	$(LOCALES) $(srcdir)tools/make-elinkskeys-manpage $(KBDBIND)
 
 option-%.txt: $(ELINKS) $(HELP2DOC)
-	$(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
+	$(call cmd,help2doc)
 
 ## Default build rules
 #
@@ -161,6 +158,11 @@ quiet_cmd_pod2html = ' [$(LINK_COLOR)POD2HTML$(END_COLOR)]   $(RELPATH)$@'
 
 doctype = $(if $(findstring .1.,$(1)),manpage,$(if $(findstring .5.,$(1)),manpage,book))
 
+MAN_DATE = $(shell date -I)
+man_desc = `sed -n 's/:Description:\s*\(.*\)/\1/p' < $(subst .xml,.txt,$<)`
+man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\" \"$(1)\"/" < $@ | \
+	   sed "s/@squote@/\\\\'/g" > $@.tmp && mv $@.tmp $@
+
 %.html: %.txt asciidoc.conf
 	$(call cmd,asciidoc,xhtml11)
 
@@ -169,9 +171,11 @@ doctype = $(if $(findstring .1.,$(1)),manpage,$(if $(findstring .5.,$(1)),manpag
 
 %.1: %.1.xml
 	$(call cmd,xmlto,man)
+	$(call man_hack,$(call man_desc))
 
 %.5: %.5.xml
 	$(call cmd,xmlto,man)
+	$(call man_hack,$(call man_desc))
 
 %.html-chunked: %.xml
 	$(call cmd,xmlto,html,-o $@)

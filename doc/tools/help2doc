@@ -98,6 +98,7 @@ do
 		# the desciption is over.
 		if test -z "$line"
 		then
+			echo
 			parse_description=
 			parse_int_option=
 			continue

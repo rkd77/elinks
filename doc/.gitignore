@@ -1,4 +1,5 @@
 api
+web
 *.tmp
 *.html
 *.pdf
