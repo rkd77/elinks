@@ -40,7 +40,9 @@ print_keymap_actions()
 		[ "$action" = " *scripting-function*" ] && continue
 
 		echo 'ifdef::backend-docbook[]'
-		echo "$action::	$caption."
+		echo "$action::"
+		echo "	$caption."
+		echo
 		echo 'endif::backend-docbook[]'
 		echo 'ifdef::backend-xhtml11[]'
 		printf "%-34s %s\n" "$action" "$caption"
@@ -95,19 +97,10 @@ print_keymap_defaults()
 		*)	modifier=""	 ;;
 		esac
 
-		case "$DOCTYPE" in
-		man)
-			echo
-			echo "'$modifier$key'::"
-			echo "	$action"
-			;;
-		html)
-			printf "%-11s %s\n" "$modifier$key" "$action"
-			;;
-		esac
-
 		echo 'ifdef::backend-docbook[]'
-		echo "'$modifier$key'::	$action"                      		
+		echo "'$modifier$key'::"
+		echo "	$action"
+		echo
 		echo 'endif::backend-docbook[]'
 		echo 'ifdef::backend-xhtml11[]'
 		printf "%-11s %s\n" "$modifier$key" "$action"
@@ -115,7 +108,6 @@ print_keymap_defaults()
 	done
 
 	echo 'ifdef::backend-xhtml11[]'
-
 	echo '--------------------------------------------------------------------------------------------'
 	echo 'endif::backend-xhtml11[]'
 
