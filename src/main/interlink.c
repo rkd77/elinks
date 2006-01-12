@@ -70,8 +70,12 @@
  * 	feature may disappear soon if none is interested in. Please report
  * 	issues/comments/ideas/bugs on #elinks.
  */
+
+/* Set to 1 to make ELinks use a tcp socket bound to loopback address with
+ * port defined by ELINKS_PORT (setup.h) for internal communications
+ * instead of a socket file, which is the preferred way. */
 #if 0
-#undef CONFIG_TCP_INTERLINK
+#define CONFIG_TCP_INTERLINK
 #endif
 
 /* Common to both AF_UNIX and AF_INET stuff. */
