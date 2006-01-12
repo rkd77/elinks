@@ -7,7 +7,7 @@ TEST_PROGS = \
  sgml-parser
 
 TESTDEPS = \
- $(top_builddir)/src/dom/lib.o \
+ $(top_builddir)/src/dom/$(LIB_O_NAME) \
  $(top_builddir)/src/util/error.o \
  $(top_builddir)/src/osdep/stub.o \
  $(top_builddir)/src/util/hash.o \

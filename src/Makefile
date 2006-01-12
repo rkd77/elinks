@@ -37,7 +37,7 @@ OBJS = vernum.o
 vernum.o: FORCE
 FORCE:
 
-elinks: lib.o
+elinks: $(LIB_O_NAME)
 	$(call cmd,link)
 
 PROGS = elinks

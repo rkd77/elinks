@@ -168,6 +168,7 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
 
 MAKE_COLOR = @MAKE_COLOR@
 
+LIB_O_NAME = lib.o
 
 ### This is here because Makefile.config is usually the first thing
 ### we get and sometimes the all rule can be implicit, yet we want
