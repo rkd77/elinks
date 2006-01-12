@@ -239,7 +239,7 @@ The path to the users home directory\&. Used when expanding ~/\&.
 
 .TP
 WWW_HOME
-Homepage location (as in lynx(1))\&.
+Homepage location (as in \fBlynx\fR(1))\&.
 
 .SH "FILES"
 
@@ -308,5 +308,5 @@ This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts 
 .SH "SEE ALSO"
 
 
-\fBelinkskeys\fR(5), \fBelinks\&.conf\fR(5), links(1), lynx(1), w3m(1), wget(1)
+\fBelinkskeys\fR(5), \fBelinks\&.conf\fR(5), \fBlinks\fR(1), \fBlynx\fR(1), \fBw3m\fR(1), \fBwget\fR(1)
 
