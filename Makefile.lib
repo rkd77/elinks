@@ -40,7 +40,7 @@ quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
 quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^) \
       		    $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
-			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
+			    `test -e $(subdir)/$(LIB_O_NAME) && echo $(subdir)/$(LIB_O_NAME)`)
 
    quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(2) $(LIBS)
@@ -114,10 +114,10 @@ endif
 
 
 ifdef OBJS
-lib.o: $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/lib.o))
+$(LIB_O_NAME): $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/$(LIB_O_NAME)))
 	$(call cmd,ld_objs)
 
-LIB_O = lib.o
+LIB_O = $(LIB_O_NAME)
 CLEAN += $(OBJS) $(LIB_O)
 endif
 
