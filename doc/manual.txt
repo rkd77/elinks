@@ -1,14 +1,15 @@
 The ELinks Manual
 =================
-:Revision:	$Revision: 1.18 $
-:Date:		$Date: 2005/05/18 18:55:14 $
 
 Preface
 -------
 
 Welcome!  This is the entry point for the humble ELinks manual.  It is by no
 means complete, it is not even very homogeneous and it should eventually be
-superseded by a complete ELinks Book.
+superseded by a complete ELinks Book. Until this happens you may also find it
+necessary to refer to the manual page for a very quick reference, or the
+built-in documentation available via the --long-help and --config-help ELinks
+command-line arguments. The built-in documentation is sure to be up-to-date.
 
 There was a complete (or, for the most part complete) manual for Links 0.82 at
 one time, and you can still find it at:
