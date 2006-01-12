@@ -11,6 +11,7 @@
 
 #include "elinks.h"
 
+#include "osdep/stat.h"
 #include "protocol/ftp/parse.h"
 
 
