@@ -130,10 +130,8 @@ init-default:
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
 		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
-clean-default: clean-test
+clean-default cleanall-default:
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
-
-cleanall-default: clean-default
 
 check-default:
 ifneq ($(SPARSE),)
@@ -146,7 +144,6 @@ endif
 # Auto-testing infrastructure
 #
 
-clean-test:
 test-default:
 
 ifdef TEST_PROGS
