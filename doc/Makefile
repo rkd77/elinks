@@ -6,6 +6,12 @@ SUBDIRS = man
 # A little trick to simplify some of the rules.
 VPATH = $(builddir):$(srcdir):$(top_srcdir)/contrib/perl
 
+docdir = $(datadir)/doc
+
+# Used by install-doc
+HTML_DIR = $(DESTDIR)$(docdir)/$(PACKAGE)/html
+PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
+
 #############################################################################
 # Build files
 
@@ -53,6 +59,19 @@ pdf:  txt $(PDF_DOCS)
 man:  txt $(MAN_DOCS)
 
 all-docs: man html pdf
+
+install-doc: all-docs install
+	$(foreach doc,$(HTML_DOCS), \
+		if test -d $(doc); then \
+			$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/html/$(doc); \
+			$(call ncmd,installdata,$(doc)/*,$(HTML_DIR)/$(doc)); \
+		else \
+			$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/html; \
+			$(call ncmd,installdata,$(doc),$(HTML_DIR)); \
+		fi;)
+	$(foreach doc,$(PDF_DOCS), \
+		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/pdf; \
+		$(call ncmd,installdata,$(doc),$(PDF_DIR);))
 
 update-man: man
 	$(call cmd,installdata,elinks.1,man/man1/elinks.1.in)
