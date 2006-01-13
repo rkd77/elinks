@@ -60,7 +60,7 @@ man:  txt $(MAN_DOCS)
 
 all-docs: man html pdf
 
-install-doc: all-docs install
+install-doc: all-docs update-man install
 	$(foreach doc,$(HTML_DOCS), \
 		if test -d $(doc); then \
 			$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/html/$(doc); \
@@ -74,9 +74,10 @@ install-doc: all-docs install
 		$(call ncmd,installdata,$(doc),$(PDF_DIR);))
 
 update-man: man
-	$(call cmd,installdata,elinks.1,man/man1/elinks.1.in)
-	$(call cmd,installdata,elinkskeys.5,man/man5/)
-	$(call cmd,installdata,elinks.conf.5,man/man5/)
+	$(if $(MAN_DOCS), \
+		$(call ncmd,installdata,elinks.1,man/man1/elinks.1.in); \
+		$(call ncmd,installdata,elinkskeys.5,man/man5/); \
+		$(call ncmd,installdata,elinks.conf.5,man/man5/))
 
 clean-local:
 	@$(RM) -r api $(TXT_DOCS) $(MAN_DOCS) $(HTML_DOCS) $(PDF_DOCS) *.tmp *.xml
