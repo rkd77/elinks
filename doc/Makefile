@@ -95,7 +95,8 @@ api/$(2).txt: $(1)
 API_TXT += api/$(2).txt
 endef
 
-$(foreach api,$(API),$(eval $(call api_doc,$(api),$(shell sed -n 's/.*API Doc\s*::\s*\([^ 	]*\).*/\1/p' < $(api)),)))
+api_name = $(shell sed -n 's/.*API Doc\s*::\s*\([^ 	]*\).*/\1/p' < $(1))
+$(foreach api,$(API),$(eval $(call api_doc,$(api),$(call api_name,$(api)))))
 
 
 ## Se the default doc rules
@@ -167,11 +168,11 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 
 %.html: %.txt asciidoc.conf
 	$(call cmd,asciidoc,xhtml11)
-	@-sed -n 's/include::\(.*\)\[.*/$@: \1/p' < $< > .deps/$@
+	@-sed -n 's#include::\(.*\)\[.*#$@: \1#p' < $< > .deps/$(@F)
 
 %.xml: %.txt asciidoc.conf
 	$(call cmd,asciidoc,docbook)
-	@-sed -n 's/include::\(.*\)\[.*/$@: \1/p' < $< > .deps/$@
+	@-sed -n 's#include::\(.*\)\[.*#$@: \1#p' < $< > .deps/$(@F)
 
 %.1: %.1.xml
 	$(call cmd,xmlto,man)
