@@ -99,6 +99,10 @@ Note: You do not need to build manpages. They are shipped with ELinks.
 Note: You must first build the ELinks binary for "make all-docs" to work
 successfully. The binary is used for getting option documentation.
 
+The documentation can be installed with:
+
+	$ make install-doc
+
 
 Contributing
 ------------
