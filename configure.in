@@ -596,7 +596,8 @@ else
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 fi
 
-if test "$CONFIG_ECMASCRIPT_SEE" != yes; then
+if test "$CONFIG_SPIDERMONKEY" = yes &&
+   test "$CONFIG_ECMASCRIPT_SEE" != yes; then
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 fi
 
