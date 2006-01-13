@@ -38,9 +38,9 @@ while (<>)
 {
 	my $end = s/\s*\*+\//\n/ ? 'yes' : undef;
 
-	if ($end and /[^=]*[\s*](\w+)[\s:,;].*\/\*:\s*(.*)/) {
+	if ($end and /[^=]*[\s*](\w+)[\s:,;].*\/\*:\s*(.*)([.]\s*)?$/) {
 		# Implicit id for enum values and struct members.
-		print "\nid:[$idpath$1]::\n\t$2\n";
+		print "\nid:[$idpath$1]::\n\t$2.\n";
 
 	} elsif ($inblock) {
 		# Redo the indentation, preserve empty lines.
@@ -65,7 +65,7 @@ while (<>)
 		while (not /(struct|enum|typedef|[^=])*[\s*](\w+).*[\[:,;{]/) {
 			my $line = $_;
 			$_ .= <>;
-			last if $_ eq $line
+			last if $_ eq $line;
 		}
 
 		if (/struct\s+(\w+)\s*{/) {
