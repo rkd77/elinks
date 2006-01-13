@@ -1,39 +1,71 @@
 #! /usr/bin/perl
+# The copyright notice and license are in the POD at the bottom.
+
 use strict;
 use warnings;
 use Locale::PO qw();
+use Getopt::Long qw(GetOptions);
+use autouse 'Pod::Usage' => qw(pod2usage);
 
-my %contexts;
-my($pofile) = @ARGV;
-my $pos = do {
-    # Locale::PO 0.16 doesn't understand "#~" obsolete lines and spews warnings.
-    local $SIG{__WARN__} = sub {};
-    Locale::PO->load_file_asarray($pofile) or die "$pofile: $!";
-};
-foreach my $po (@$pos) {
-    next if $po->fuzzy();
-    my $msgstr = $po->msgstr()
-	or next;
-    my($accelerator) = ($msgstr =~ /~(.)/)
-	or next;
-    $accelerator = uc($accelerator);
-    my $automatic = $po->automatic()
-	or next;
-    my($contexts) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
-	or next;
-    foreach my $context (split(/\s*,\s*/, $contexts)) {
-	my $prev = $contexts{$context}{$accelerator};
-	if (defined($prev)) {
-	    warn "$pofile: Accelerator conflict for \"$accelerator\" in \"$context\":\n";
-	    warn "$pofile:  1st msgid " . $prev->msgid() . "\n";
-	    warn "$pofile:  1st msgstr " . $prev->msgstr() . "\n";
-	    warn "$pofile:  2nd msgid " . $po->msgid() . "\n";
-	    warn "$pofile:  2nd msgstr " . $po->msgstr() . "\n";
-	} else {
-	    $contexts{$context}{$accelerator} = $po;
+my $VERSION = "1.0";
+
+sub check_po_file
+{
+    my($po_file_name) = @_;
+    my %contexts;
+    my $warnings = 0;
+    my $pos = do {
+	# Locale::PO 0.16 doesn't understand "#~" obsolete lines and
+	# spews warnings.
+	local $SIG{__WARN__} = sub {};
+	Locale::PO->load_file_asarray($po_file_name)
+	    or warn "$po_file_name: $!\n", return 2;
+    };
+    foreach my $po (@$pos) {
+	next if $po->fuzzy();
+	my $msgstr = $po->msgstr()
+	    or next;
+	my($accelerator) = ($msgstr =~ /~(.)/)
+	    or next;
+	$accelerator = uc($accelerator);
+	my $automatic = $po->automatic()
+	    or next;
+	my($contexts) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
+	    or next;
+	foreach my $context (split(/\s*,\s*/, $contexts)) {
+	    my $prev = $contexts{$context}{$accelerator};
+	    if (defined($prev)) {
+		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in \"$context\":\n";
+		warn "$po_file_name:  1st msgid " . $prev->msgid() . "\n";
+		warn "$po_file_name:  1st msgstr " . $prev->msgstr() . "\n";
+		warn "$po_file_name:  2nd msgid " . $po->msgid() . "\n";
+		warn "$po_file_name:  2nd msgstr " . $po->msgstr() . "\n";
+		$warnings++;
+	    } else {
+		$contexts{$context}{$accelerator} = $po;
+	    }
 	}
     }
+    return $warnings ? 1 : 0;
 }
+
+sub show_version
+{
+    print "check-accelerator-contexts.pl $VERSION\n";
+    pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
+	       -exitval => 0});
+}
+
+GetOptions("help" => sub { pod2usage(-verbose => 1, -exitval => 0) },
+	   "version" => \&show_version)
+    or exit 2;
+print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
+my $max_error = 0;
+foreach my $po_file_name (@ARGV) {
+    my $error = check_po_file($po_file_name);
+    $max_error = $error if $error > $max_error;
+}
+exit $max_error;
 
 __END__
 
@@ -44,7 +76,19 @@ accelerator keys.
 
 =head1 SYNOPSIS
 
-B<check-accelerator-contexts.pl> F<I<language>.pot>
+B<check-accelerator-contexts.pl> F<I<language>.po> [...]
+
+=head1 ARGUMENTS
+
+=over
+
+=item F<I<language>.po> [...]
+
+The PO files to be scanned for conflicts.  These files must include the
+"accelerator_context" comments added by B<gather-accelerator-contexts.pl>.
+If the special comments are missing, no conflicts will be found.
+
+=back
 
 =head1 DESCRIPTION
 
@@ -66,17 +110,13 @@ B<check-accelerator-contexts.pl> does not access the source files to
 which F<I<language>.po> refers.  Thus, it does not matter if the line
 numbers in "#:" lines are out of date.
 
-=head1 ARGUMENTS
+=head1 EXIT CODE
 
-=over
+0 if no conflicts were found.
 
-=item F<I<language>.po>
+1 if some conflicts were found.
 
-The PO file to be scanned for conflicts.  This file must include the
-"accelerator_context" comments added by B<gather-accelerator-contexts.pl>.
-If the special comments are missing, no conflicts will be found.
-
-=back
+2 if the command line is invalid or a file cannot be read.
 
 =head1 BUGS
 
