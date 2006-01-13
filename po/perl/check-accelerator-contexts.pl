@@ -56,7 +56,7 @@ sub show_version
 	       -exitval => 0});
 }
 
-GetOptions("help" => sub { pod2usage(-verbose => 1, -exitval => 0) },
+GetOptions("help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
 	   "version" => \&show_version)
     or exit 2;
 print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
