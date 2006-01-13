@@ -90,13 +90,13 @@ install-local:
 # Generated asciidoc files
 
 # Scripts and Dependencies
-CODE2DOC		= $(srcdir)tools/code2doc
-HELP2DOC		= $(srcdir)tools/help2doc
-IMPORT_FEATURES_CONF	= $(srcdir)tools/import-features.conf
-MAKE_ELINKSKEYS_MANPAGE = $(srcdir)tools/make-elinkskeys-manpage
-ELINKS			= $(top_builddir)/src/elinks
-FEATURES		= $(top_srcdir)/features.conf
-KBDBIND			= $(top_srcdir)/src/config/kbdbind.c
+CODE2DOC = $(srcdir)tools/code2doc
+HELP2DOC = $(srcdir)tools/help2doc
+CONF2DOC = $(srcdir)tools/conf2doc
+KEYS2DOC = $(srcdir)tools/make-elinkskeys-manpage
+ELINKS	 = $(top_builddir)/src/elinks
+FEATURES = $(top_srcdir)/features.conf
+KBDBIND	 = $(top_srcdir)/src/config/kbdbind.c
 
 # Locale env vars to override system one to ensure commands
 # using elinks binary will generate texts in english
@@ -108,15 +108,15 @@ quiet_cmd_help2doc = ' [$(LINK_COLOR)HELP2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_help2doc = $(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
 
 quiet_cmd_conf2doc = ' [$(LINK_COLOR)CONF2DOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_conf2doc = $(IMPORT_FEATURES_CONF) > $@
+      cmd_conf2doc = $(LOCALES) $(CONF2DOC) > $@
 
 quiet_cmd_keys2doc = ' [$(LINK_COLOR)KEYS2DOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_keys2doc = $(LOCALES) $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND) $@ > $@
+      cmd_keys2doc = $(LOCALES) $(KEYS2DOC) $(KBDBIND) $@ > $@
 
-features.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
+features.txt: $(FEATURES) $(CONF2DOC)
 	$(call cmd,conf2doc)
 
-keymap-%.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
+keymap-%.txt: $(KBDBIND) $(KEYS2DOC)
 	$(call cmd,keys2doc)
 
 option-%.txt: $(ELINKS) $(HELP2DOC)
