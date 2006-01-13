@@ -16,12 +16,22 @@
 
 KBDBIND=$1
 CONFIGDIR=$(dirname "$KBDBIND")
+OUTPUT=$2
 
 test -d "$CONFIGDIR" || exit
 
+print_title()
+{
+	echo "$1" | tr 'a-z' 'A-Z'
+	echo "$1" | sed 's/[^~]/~/g'
+	echo
+}
+
 print_keymap_actions()
 {
-	keymap=$1
+	keymap="$1"
+
+	print_title "$keymap ACTIONS"
 
 	echo 'ifdef::backend-xhtml11[]'
 	echo '`----------------------------------`----------------------------------------------------------------------------'
@@ -58,6 +68,8 @@ print_keymap_defaults()
 {
 	keymap="$1"
 	KEYMAP=$(echo $1 | tr '[a-z]' '[A-Z]')
+
+	print_title "$keymap KEYS"
 
 	echo 'ifdef::backend-xhtml11[]'
 	echo '`-----------`-------------------------------------------------------------------------------'
@@ -113,36 +125,13 @@ print_keymap_defaults()
 
 }
 
-cat > keymap-actions.txt << __END__
-MAIN ACTIONS
-~~~~~~~~~~~~
+print_keymap_doc=
 
-$(print_keymap_actions main)
+case "$OUTPUT" in
+	*default*) print_keymap_doc="print_keymap_defaults" ;;
+	*action*)  print_keymap_doc="print_keymap_actions" ;;
+esac
 
-EDIT ACTIONS
-~~~~~~~~~~~~
-
-$(print_keymap_actions edit)
-
-MENU ACTIONS
-~~~~~~~~~~~~
-
-$(print_keymap_actions menu)
-__END__
-
-cat > keymap-defaults.txt << __END__
-MAIN KEYS
-~~~~~~~~~
-
-$(print_keymap_defaults main)
-
-EDIT KEYS
-~~~~~~~~~
-
-$(print_keymap_defaults edit)
-
-MENU KEYS
-~~~~~~~~~
-
-$(print_keymap_defaults menu)
-__END__
+$print_keymap_doc main
+$print_keymap_doc edit
+$print_keymap_doc menu
