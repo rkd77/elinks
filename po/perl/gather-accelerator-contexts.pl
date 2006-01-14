@@ -8,7 +8,7 @@ use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 use autouse 'File::Spec::Functions' => qw(catfile);
 
-my $VERSION = "1.0";
+my $VERSION = "1.1";
 
 sub show_version
 {
@@ -30,6 +30,7 @@ sub show_version
 }
 
 my @Srcpath;
+my $Accelerator_tag;
 
 # Each key is a file name.
 # Each value is a reference to an array of references to Contextline
@@ -119,7 +120,7 @@ sub gather_accelerator_contexts ($$)
 	$automatic =~ s/^\[gettext_accelerator_context\(.*(?:\n|\z)//mg
 	    if defined($automatic);
 
-	if ($po->msgid() =~ /\~/) {
+	if ($po->msgid() =~ /\Q$Accelerator_tag/s) {
 	    my @po_contexts = ();
 	    foreach my $ref (split(' ', $po->reference())) {
 		my @parts = split(/\:/, $ref);
@@ -143,9 +144,18 @@ sub gather_accelerator_contexts ($$)
 }
 
 GetOptions("srcdir|source-directory|S=s" => \@Srcpath,
+	   "accelerator-tag=s" => sub {
+	       my($option, $value) = @_;
+	       die "Cannot use multiple --accelerator-tag options\n"
+		   if defined($Accelerator_tag);
+	       die "--accelerator-tag requires a single-character argument\n"
+		   if length($value) != 1;
+	       $Accelerator_tag = $value;
+	   },
 	   "help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
 	   "version" => \&show_version)
     or exit 2;
+$Accelerator_tag = "~" unless defined $Accelerator_tag;
 print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
 print(STDERR "$0: too many operands\n"), exit 2 if @ARGV > 1;
 
@@ -163,7 +173,7 @@ for detecting accelerator conflicts.
 
 =head1 SYNOPSIS
 
-B<gather-accelerator-contexts.pl> [B<-S>F<I<srcdir>>]... F<I<program>.pot>
+B<gather-accelerator-contexts.pl> [I<option> ...] F<I<program>.pot>
 
 =head1 DESCRIPTION
 
@@ -178,10 +188,16 @@ B<gather-accelerator-contexts.pl> adds this information in the form of
 "accelerator_context" comments, which B<check-accelerator-conflicts.pl>
 then parses in order to detect the conflicts.
 
+The PO file format also does not directly support definitions of
+accelerator keys.  Typically, the keys are encoded in C<msgstr>
+strings, by placing a tilde in front of the character that should be
+used as the accelerator key.  That is also the syntax supported by
+this framework and by B<msgfmt --check-accelerators> of GNU Gettext.
+
 B<gather-accelerator-contexts.pl> first reads the F<I<program>.pot>
 file named on the command line.  This file must include "#:" comments
 that point to the source files from which B<xgettext> extracted each
-msgid.  B<gather-accelerator-contexts.pl> then scans those source
+C<msgid>.  B<gather-accelerator-contexts.pl> then scans those source
 files for context information and rewrites F<I<program>.pot> to
 include the "accelerator_context" comments.  Finally, the standard
 tool B<msgmerge> can be used to copy the added comments to all the
@@ -219,12 +235,12 @@ for the same menu.
 
 The contexts are defined with "gettext_accelerator_context" comments
 in source files.  These comments delimit regions where all C<msgid>s
-containing tildes are given the same contexts.  There must be one
-special comment at the top of the region; it lists the contexts
-assigned to that region.  The region automatically ends at the end of
-the function (found with regexp C</^\}/>), but it can also be closed
-explicitly with another special comment.  The comments are formatted
-like this:
+that seem to contain accelerators are given the same contexts.  There
+must be one special comment at the top of the region; it lists the
+contexts assigned to that region.  The region automatically ends at
+the end of the function (found with regexp C</^\}/>), but it can also
+be closed explicitly with another special comment.  The comments are
+formatted like this:
 
   /* [gettext_accelerator_context(foo, bar, baz)]
        begins a region that uses the contexts "foo", "bar", and "baz".
@@ -237,24 +253,37 @@ B<gather-accelerator-contexts.pl> removes from F<I<program>.pot> any
 "gettext_accelerator_context" comments that B<xgettext --add-comments>
 may have copied there.  
 
-If B<gather-accelerator-contexts.pl> does not find any contexts for
-some use of an C<msgid> that seems to contain an accelerator (because
-it contains a tilde), it warns.  If the tilde does not actually mark
-an accelerator (e.g. in "~/.bashrc"), the warning can be silenced by
-specifying the special context "IGNORE", which
-B<gather-accelerator-contexts.pl> otherwise ignores.
+B<gather-accelerator-contexts.pl> warns if it does not find any
+contexts for some use of an C<msgid> that contains the character
+specified with the B<--accelerator-tag> option.  If the character does
+not actually indicate an accelerator in that C<msgid> (e.g. "~" in
+"~/.bashrc"), the warning can be silenced by specifying the special
+context "IGNORE", which B<gather-accelerator-contexts.pl> otherwise
+ignores.
 
 =head1 OPTIONS
 
 =over
 
-=item B<-S>F<I<srcdir>>
+=item B<-S>F<I<srcdir>>, B<--srcdir=>F<I<srcdir>>,
+B<--source-directory=>F<I<srcdir>>
 
 The directory to which the source references in "#:" lines are
 relative.  Each use of this option adds one directory to the search
 path.  If you do not specify this option,
 B<gather-accelerator-contexts.pl> implicitly searches the current
 directory.
+
+=item B<--accelerator-tag=>I<character>
+
+Specify the character that marks accelerators in C<msgid> strings.
+B<gather-accelerator-contexts.pl> looks up accelerator contexts for
+any C<msgid> that contains this character.
+
+Omitting the B<--accelerator-tag> option implies
+B<--accelerator-tag="~">.  The option must be given to each program
+separately because there is no standard way to save this information
+in the PO file.
 
 =back
 
@@ -276,10 +305,6 @@ if the source references in the "#:" lines are still up to date.
 =back
 
 =head1 BUGS
-
-B<gather-accelerator-contexts.pl> assumes that accelerator keys in
-translatable strings are marked with the tilde (~) character.  This
-should be configurable, as in B<msgfmt --check-accelerators="~">.
 
 B<gather-accelerator-contexts.pl> assumes that source files are in
 the C programming language: specifically, that a closing brace at

@@ -7,7 +7,7 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.0";
+my $VERSION = "1.1";
 
 sub show_version
 {
@@ -16,7 +16,9 @@ sub show_version
 	       -exitval => 0});
 }
 
-sub check_po_file
+my $Accelerator_tag;
+
+sub check_po_file ($)
 {
     my($po_file_name) = @_;
     my %contexts;
@@ -32,7 +34,7 @@ sub check_po_file
 	next if $po->fuzzy();
 	my $msgstr = $po->msgstr()
 	    or next;
-	my($accelerator) = ($msgstr =~ /~(.)/)
+	my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)
 	    or next;
 	$accelerator = uc($accelerator);
 	my $automatic = $po->automatic()
@@ -56,10 +58,20 @@ sub check_po_file
     return $warnings ? 1 : 0;
 }
 
-GetOptions("help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
+GetOptions("accelerator-tag=s" => sub {
+	       my($option, $value) = @_;
+	       die "Cannot use multiple --accelerator-tag options\n"
+		   if defined($Accelerator_tag);
+	       die "--accelerator-tag requires a single-character argument\n"
+		   if length($value) != 1;
+	       $Accelerator_tag = $value;
+	   },
+	   "help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
 	   "version" => \&show_version)
     or exit 2;
+$Accelerator_tag = "~" unless defined $Accelerator_tag;
 print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
+
 my $max_error = 0;
 foreach my $po_file_name (@ARGV) {
     my $error = check_po_file($po_file_name);
@@ -76,19 +88,7 @@ accelerator keys.
 
 =head1 SYNOPSIS
 
-B<check-accelerator-conflicts.pl> F<I<language>.po> [...]
-
-=head1 ARGUMENTS
-
-=over
-
-=item F<I<language>.po> [...]
-
-The PO files to be scanned for conflicts.  These files must include the
-"accelerator_context" comments added by B<gather-accelerator-contexts.pl>.
-If the special comments are missing, no conflicts will be found.
-
-=back
+B<check-accelerator-conflicts.pl> [I<option> ...] F<I<language>.po> [...]
 
 =head1 DESCRIPTION
 
@@ -109,6 +109,37 @@ named on the command line and reports any conflicts to standard error.
 B<check-accelerator-conflicts.pl> does not access the source files to
 which F<I<language>.po> refers.  Thus, it does not matter if the line
 numbers in "#:" lines are out of date.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--accelerator-tag=>I<character>
+
+Specify the character that marks accelerators in C<msgstr> strings.
+Whenever this character occurs in a C<msgstr>,
+B<check-accelerator-conflicts.pl> treats the next character as an
+accelerator and checks that it is unique in each of the contexts in
+which the C<msgstr> is used.
+
+Omitting the B<--accelerator-tag> option implies
+B<--accelerator-tag="~">.  The option must be given to each program
+separately because there is no standard way to save this information
+in the PO file.
+
+=back
+
+=head1 ARGUMENTS
+
+=over
+
+=item F<I<language>.po> [...]
+
+The PO files to be scanned for conflicts.  These files must include the
+"accelerator_context" comments added by B<gather-accelerator-contexts.pl>.
+If the special comments are missing, no conflicts will be found.
+
+=back
 
 =head1 EXIT CODE
 
