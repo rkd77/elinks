@@ -52,7 +52,7 @@ init_guile(struct module *module)
 	/* Remember the current module. */
 	user_module = scm_current_module();
 
-	path = straconcat(elinks_home, "internal-hooks.scm", NULL);
+	path = straconcat(elinks_home, "hooks.scm", NULL);
 	if (!path) return;
 
 	if (file_can_read(path)) {
