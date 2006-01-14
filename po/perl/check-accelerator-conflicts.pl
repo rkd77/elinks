@@ -11,7 +11,7 @@ my $VERSION = "1.0";
 
 sub show_version
 {
-    print "check-accelerator-contexts.pl $VERSION\n";
+    print "check-accelerator-conflicts.pl $VERSION\n";
     pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
 	       -exitval => 0});
 }
@@ -71,12 +71,12 @@ __END__
 
 =head1 NAME
 
-check-accelerator-contexts.pl - Scan a PO file for conflicting
+check-accelerator-conflicts.pl - Scan a PO file for conflicting
 accelerator keys.
 
 =head1 SYNOPSIS
 
-B<check-accelerator-contexts.pl> F<I<language>.po> [...]
+B<check-accelerator-conflicts.pl> F<I<language>.po> [...]
 
 =head1 ARGUMENTS
 
@@ -92,21 +92,21 @@ If the special comments are missing, no conflicts will be found.
 
 =head1 DESCRIPTION
 
-B<check-accelerator-contexts.pl> is part of a framework that detects
+B<check-accelerator-conflicts.pl> is part of a framework that detects
 conflicting accelerator keys in Gettext PO files.  A conflict is when
 two items in the same menu or two buttons in the same dialog box use
 the same accelerator key.
 
 The PO file format does not normally include any information on which
 strings will be used in the same menu or dialog box.
-B<check-accelerator-contexts.pl> can only be used on PO files to which
+B<check-accelerator-conflicts.pl> can only be used on PO files to which
 this information has been added with B<gather-accelerator-contexts.pl>
 or merged with B<msgmerge>.
 
-B<check-accelerator-contexts.pl> reads the F<I<language>.po> file
+B<check-accelerator-conflicts.pl> reads the F<I<language>.po> file
 named on the command line and reports any conflicts to standard error.
 
-B<check-accelerator-contexts.pl> does not access the source files to
+B<check-accelerator-conflicts.pl> does not access the source files to
 which F<I<language>.po> refers.  Thus, it does not matter if the line
 numbers in "#:" lines are out of date.
 
@@ -120,7 +120,7 @@ numbers in "#:" lines are out of date.
 
 =head1 BUGS
 
-B<check-accelerator-contexts.pl> reports the same conflict multiple
+B<check-accelerator-conflicts.pl> reports the same conflict multiple
 times if it occurs in multiple contexts.
 
 Jonas Fonseca suggested the script could propose accelerators that are
@@ -135,7 +135,7 @@ The warning messages should include line numbers, so that users of
 Emacs could conveniently edit the conflicting part of the PO file.
 This is not feasible with the current version of Locale::PO.
 
-When B<check-accelerator-contexts.pl> includes C<msgstr> strings in
+When B<check-accelerator-conflicts.pl> includes C<msgstr> strings in
 warnings, it should transcode them from the charset of the PO file to
 the one specified by the user's locale.
 

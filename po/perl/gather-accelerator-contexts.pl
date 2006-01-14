@@ -175,7 +175,7 @@ the same accelerator key.
 The PO file format does not normally include any information on which
 strings will be used in the same menu or dialog box.
 B<gather-accelerator-contexts.pl> adds this information in the form of
-"accelerator_context" comments, which B<check-accelerator-contexts.pl>
+"accelerator_context" comments, which B<check-accelerator-conflicts.pl>
 then parses in order to detect the conflicts.
 
 B<gather-accelerator-contexts.pl> first reads the F<I<program>.pot>
@@ -323,4 +323,4 @@ DEALINGS IN THE SOFTWARE.
 
 =head1 SEE ALSO
 
-L<check-accelerator-contexts.pl>, C<xgettext(1)>, C<msgmerge(1)>
+L<check-accelerator-conflicts.pl>, C<xgettext(1)>, C<msgmerge(1)>

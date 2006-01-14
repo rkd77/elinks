@@ -33,9 +33,9 @@ When a translator edits a *.po file, she does not alter the
 "accelerator_context" comments.
 
 When a translator runs "make check-po" in the elinks/po directory,
-check-accelerator-contexts.pl reads the "accelerator_context" comments
-in the *.po file, checks the accelerators in the translations, and
-displays any conflicts it finds.
+check-accelerator-conflicts.pl reads the "accelerator_context"
+comments in the *.po file, checks the accelerators in the
+translations, and displays any conflicts it finds.
 
 
 FILES
@@ -47,7 +47,7 @@ gather-accelerator-contexts.pl reads elinks.pot and the source files
 to which it refers, and writes a new elinks.pot with information from
 "gettext_accelerator_context" comments.
 
-check-accelerator-contexts.pl reads just one *.po file and scans it
+check-accelerator-conflicts.pl reads just one *.po file and scans it
 for conflicts.  It does not access the C source files.
 
 Locale/PO.pm was originally imported from Locale-PO-0.16 on CPAN, and
