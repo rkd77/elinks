@@ -14,6 +14,7 @@ test -d "$CONFIGDIR" || exit
 
 print_title()
 {
+	echo
 	echo "$1" | tr 'a-z' 'A-Z'
 	echo "$1" | sed 's/[^~]/~/g'
 	echo
