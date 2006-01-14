@@ -15,6 +15,7 @@ endif
 # explicitly what architecture to check for. Fix this up for yours..
 SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 
+
 #############################################################################
 # Build recipies
 
@@ -69,13 +70,11 @@ quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
 #############################################################################
 # Special handling of conditional variables
 
-ifdef SUBDIRS-yes
 SUBDIRS += $(SUBDIRS-yes)
-endif
+OBJS	+= $(OBJS-yes)
 
-ifdef OBJS-yes
-OBJS += $(OBJS-yes)
-endif
+ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-)
+ALTOBJS  = $(OBJS-no) $(OBJS-)
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
 INCLUDE_ALL=1
@@ -88,31 +87,29 @@ INCLUDE_ALL=1
 endif
 
 ifdef INCLUDE_ALL
-ifdef SUBDIRS-no
-SUBDIRS += $(SUBDIRS-no)
-endif
-ifdef SUBDIRS-
-SUBDIRS += $(SUBDIRS-)
-endif
-ifdef OBJS-no
-OBJS += $(OBJS-no)
-endif
-ifdef OBJS-
-OBJS += $(OBJS-)
-endif
+SUBDIRS += $(ALTDIRS)
+OBJS	+= $(ALTOBJS)
 endif
 
 
 #############################################################################
 # Internal build rules
 
+# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o
+LIB_O_DEPS = \
+ $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
+ $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))
+
+$(LIB_O_NAME): $(LIB_O_DEPS)
+	$(call cmd,ld_objs)
+
 DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
 DEP_FILES = $(DEP_FILES_1:%.o=%.P)
-
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
-ifdef OBJS
+ifneq ($(OBJS),)
 -include $(DEP_FILES)
+OBJS += $(LIB_O_NAME)
 endif
 
 %.o: $(srcdir)%.c
@@ -123,22 +120,13 @@ endif
 			>> .deps/$(*F).P; \
 		rm .deps/$(*F).pp
 
-
-ifdef OBJS
-$(LIB_O_NAME): $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/$(LIB_O_NAME)))
-	$(call cmd,ld_objs)
-
-LIB_O = $(LIB_O_NAME)
-CLEAN += $(OBJS) $(LIB_O)
-endif
-
-CLEAN += $(PROG)
+CLEAN += $(PROG) $(OBJS)
 
 
 #############################################################################
 # The main default rules
 
-all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
+all-default: $(OBJS) $(PROGS) $(MAN1) $(MAN5)
 
 # Ensure that Makefiles in subdirs are created before we recursive into them
 init-recursive: init-default
