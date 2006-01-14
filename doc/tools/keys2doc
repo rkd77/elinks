@@ -6,14 +6,6 @@
 # Copyright (c) Jonas Fonseca <fonseca@diku.dk>, 2005-2006
 #
 
-# FIXME:
-#
-# - You may prefix each of these keys with a number, telling its repeat count
-# (how many times to do it). You can also re-bind keys, see elinkskeys(5) for
-# documentation and a more complete list of keys  bound by default. 
-#
-# - The following keys can be used while editing a line/jumping to a URL
-
 KBDBIND=$1
 CONFIGDIR=$(dirname "$KBDBIND")
 OUTPUT=$2

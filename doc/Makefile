@@ -93,7 +93,7 @@ install-local:
 CODE2DOC = $(srcdir)tools/code2doc
 HELP2DOC = $(srcdir)tools/help2doc
 CONF2DOC = $(srcdir)tools/conf2doc
-KEYS2DOC = $(srcdir)tools/make-elinkskeys-manpage
+KEYS2DOC = $(srcdir)tools/keys2doc
 ELINKS	 = $(top_builddir)/src/elinks
 FEATURES = $(top_srcdir)/features.conf
 KBDBIND	 = $(top_srcdir)/src/config/kbdbind.c
