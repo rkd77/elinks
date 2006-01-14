@@ -137,14 +137,15 @@ void done_sgml_parser(struct sgml_parser *parser);
  * signals through the `complete` parameter.
  *
  * parser::	A parser created with ref:[init_sgml_parser].
- * buffer::	A string containing the chunk to parse.
+ * buf::	A buffer containing the chunk to parse.
+ * bufsize::	The size of the buffer given in the buf parameter.
  * complete::	Whether this is the last chunk to parse.
  *
  * The returned code is ref:[SGML_PARSER_CODE_OK] if the buffer was
  * successfully parserd, else a code hinting at the error.
  */
 enum sgml_parser_code
-parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
+parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize, int complete);
 
 /** Get the line position in the source
  *

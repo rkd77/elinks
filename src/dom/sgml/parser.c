@@ -400,8 +400,10 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 }
 
 enum sgml_parser_code
-parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
+parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
+	   int complete)
 {
+	struct dom_string source = INIT_DOM_STRING(buf, bufsize);
 	struct sgml_parsing_state *parsing;
 	enum sgml_parser_code code;
 
@@ -415,7 +417,7 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
-	parsing = init_sgml_parsing_state(parser, buffer);
+	parsing = init_sgml_parsing_state(parser, &source);
 	if (!parsing) return SGML_PARSER_CODE_MEM_ALLOC;
 
 	code = parse_sgml_plain(&parser->stack, &parsing->scanner);
