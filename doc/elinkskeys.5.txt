@@ -80,6 +80,16 @@ Some keys will need to be quoted or escaped. For example, space can be written
 as  `" "` (quote space quote), and the quote itself as `\"` (backslash quote).
 Backslash can be written as `\\` (double backslash).
 
+/////////////////////////////////////////////////////////////////////////////
+FIXME:
+
+ - You may prefix each of these keys with a number, telling its repeat count
+  (how many times to do it). You can also re-bind keys, see elinkskeys(5) for
+  documentation and a more complete list of keys  bound by default. 
+
+ - The following keys can be used while editing a line/jumping to a URL
+/////////////////////////////////////////////////////////////////////////////
+
 KEYMAP ACTIONS
 --------------
 

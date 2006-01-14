@@ -111,11 +111,13 @@ endif
 
 %.o: $(srcdir)%.c
 	$(call mcmd,compile)
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	@-if test -e .deps/$(*F).pp; then \
+		cp .deps/$(*F).pp .deps/$(*F).P; \
 		tr ' ' '\012' < .deps/$(*F).pp \
 			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
 			>> .deps/$(*F).P; \
-		rm .deps/$(*F).pp
+		rm .deps/$(*F).pp; \
+	fi
 
 CLEAN += $(PROG) $(OBJS)
 
