@@ -26,7 +26,7 @@
 
 /* Error reporting. */
 
-#if defined(CONFIG_SCRIPTING_RUBY) || defined(CONFIG_SEE) || defined(CONFIG_SCRIPTING_SPIDERMONKEY)
+#if defined(CONFIG_SCRIPTING_RUBY) || defined(CONFIG_SCRIPTING_SPIDERMONKEY)
 void
 report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)

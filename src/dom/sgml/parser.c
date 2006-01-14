@@ -19,20 +19,6 @@
 #include "util/memory.h"
 
 
-/* This holds info about a chunk of text being parsed. The SGML parser uses
- * these to keep track of possible nested calls to parse_sgml(). This can be
- * used to feed output of stuff like ECMAScripts document.write() from
- * <script>-elements back to the SGML parser. */
-struct sgml_parsing_state {
-	struct dom_scanner scanner;
-	struct dom_node *node;
-	size_t depth;
-};
-
-static struct sgml_parsing_state *
-init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer);
-
-
 /* When getting the sgml_parser struct it is _always_ assumed that the parser
  * is the first to add it's context, which it is since it initializes the
  * stack. */
@@ -400,10 +386,11 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 }
 
 enum sgml_parser_code
-parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
+parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
+	   int complete)
 {
-	struct sgml_parsing_state *parsing;
-	enum sgml_parser_code code;
+	struct dom_string source = INIT_DOM_STRING(buf, bufsize);
+	struct dom_node *node;
 
 	if (complete)
 		parser->flags |= SGML_PARSER_COMPLETE;
@@ -415,14 +402,13 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
-	parsing = init_sgml_parsing_state(parser, buffer);
-	if (!parsing) return SGML_PARSER_CODE_MEM_ALLOC;
-
-	code = parse_sgml_plain(&parser->stack, &parsing->scanner);
+	node = init_dom_node(DOM_NODE_TEXT, &source);
+	if (!node || !push_dom_node(&parser->parsing, node))
+		return SGML_PARSER_CODE_MEM_ALLOC;
 
 	pop_dom_node(&parser->parsing);
 
-	return code;
+	return parser->code;
 }
 
 
@@ -432,6 +418,13 @@ parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete)
  * handle output of external processing of data in the document tree. For
  * example this can allows output of the document.write() from DOM scripting
  * interface to be parsed. */
+
+/* This holds info about a chunk of text being parsed. */
+struct sgml_parsing_state {
+	struct dom_scanner scanner;
+	struct dom_node *node;
+	size_t depth;
+};
 
 static void
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
@@ -448,6 +441,7 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
 			 SGML_STATE_TEXT, count_lines, complete, incremental,
 			 detect_errors);
+	parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
 }
 
 static void
@@ -501,22 +495,6 @@ static struct dom_stack_context_info sgml_parsing_context_info = {
 		/* DOM_NODE_NOTATION		*/ NULL,
 	}
 };
-
-/* Create a new parsing state by pushing a new text node containing the*/
-static struct sgml_parsing_state *
-init_sgml_parsing_state(struct sgml_parser *parser, struct dom_string *buffer)
-{
-	struct dom_stack_state *state;
-	struct dom_node *node;
-
-	node = init_dom_node(DOM_NODE_TEXT, buffer);
-	if (!node || !push_dom_node(&parser->parsing, node))
-		return NULL;
-
-	state = get_dom_stack_top(&parser->parsing);
-
-	return get_dom_stack_state_data(parser->parsing.contexts[0], state);
-}
 
 unsigned int
 get_sgml_parser_line_number(struct sgml_parser *parser)

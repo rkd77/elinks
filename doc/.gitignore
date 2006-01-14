@@ -1,12 +1,14 @@
-api
 *.tmp
 *.html
 *.pdf
 *.xml
 *.1
 *.5
-command-options.txt
-import-features.conf.txt
+api
+web
+features.txt
 keymap-actions.txt
 keymap-defaults.txt
 manual.html-chunked
+option-command.txt
+option-config.txt

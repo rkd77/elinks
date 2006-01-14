@@ -101,6 +101,7 @@ struct sgml_parser {
 	struct dom_string uri;		/*: The URI of the DOM document */
 	struct dom_node *root;		/*: The document root node */
 
+	enum sgml_parser_code code;	/*: The latest (error) code */
 	sgml_error_T error_func;	/*: Called for detected errors */
 
 	struct dom_stack stack;		/*: A stack for tracking parsed nodes */
@@ -111,7 +112,7 @@ struct sgml_parser {
 /** Initialise an SGML parser
  *
  * Initialise an SGML parser with the given properties.
- * 
+ *
  * type::	Stream or tree; one-time or persistant.
  * doctype::	The document type, this affects what sub type nodes are given.
  * uri::	The URI of the document root.
@@ -137,14 +138,15 @@ void done_sgml_parser(struct sgml_parser *parser);
  * signals through the `complete` parameter.
  *
  * parser::	A parser created with ref:[init_sgml_parser].
- * buffer::	A string containing the chunk to parse.
+ * buf::	A buffer containing the chunk to parse.
+ * bufsize::	The size of the buffer given in the buf parameter.
  * complete::	Whether this is the last chunk to parse.
  *
  * The returned code is ref:[SGML_PARSER_CODE_OK] if the buffer was
  * successfully parserd, else a code hinting at the error.
  */
 enum sgml_parser_code
-parse_sgml(struct sgml_parser *parser, struct dom_string *buffer, int complete);
+parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize, int complete);
 
 /** Get the line position in the source
  *

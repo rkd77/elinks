@@ -16,8 +16,6 @@ AC_CHECK_PROG(ACLOCAL,[aclocal],[aclocal],[config/missing aclocal])
 AC_CHECK_PROG(AUTOCONF,[autoconf],[autoconf],[config/missing autoconf])
 AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
 
-AC_PROG_MAKE_SET
-
 MAKE=
 
 for make in gnumake gmake make false; do
@@ -26,12 +24,14 @@ for make in gnumake gmake make false; do
 	fi
 done
 
+builddir="`pwd`"
+
 # Cleanup if we are configuring with a previous build in the tree
 if test -e Makefile.config; then
-	"$MAKE" -C "$builddir" cleanall  >/dev/null 2>/dev/null
+	AC_MSG_CHECKING([for previous build to clean])
+	"$MAKE" -C "$builddir/src" cleanall >/dev/null 2>/dev/null
+	AC_MSG_RESULT(done)
 fi
-
-builddir="`pwd`"
 
 dnl ===================================================================
 dnl Load feature configuration file and start logging features.
@@ -53,9 +53,7 @@ AC_PROG_RANLIB
 AC_PROG_INSTALL
 
 AC_PATH_PROGS(CG_COMMIT_ID, "cg-commit-id")
-
 AC_PATH_PROGS(SPARSE, "sparse")
-AC_SUBST(SPARSE)
 
 CONFIG_ASCIIDOC="no"
 CONFIG_POD2HTML="no"
@@ -529,9 +527,9 @@ if test "$enable_see" = "yes"; then
 		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
 		LIBS="$SEE_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $SEE_CFLAGS"
-		EL_CONFIG(CONFIG_SEE, [SEE])
+		EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
 		AC_SUBST(SEE_CFLAGS)
-		AC_SUBST(CONFIG_SEE)
+		AC_SUBST(CONFIG_ECMASCRIPT_SEE)
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
 			AC_MSG_ERROR([SEE not found])
@@ -596,14 +594,15 @@ else
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 fi
 
-if test "$CONFIG_SEE" != yes; then
+if test "$CONFIG_SPIDERMONKEY" = yes &&
+   test "$CONFIG_ECMASCRIPT_SEE" != yes; then
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 fi
 
 AC_SUBST(CONFIG_SPIDERMONKEY)
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
 
 
 dnl ===================================================================
@@ -1018,6 +1017,7 @@ AC_MSG_RESULT($cf_result)
 dnl Final SSL setup
 
 EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS], [SSL])
+AC_SUBST(CONFIG_GNUTLS_OPENSSL_COMPAT)
 AC_SUBST(CONFIG_OPENSSL)
 AC_SUBST(CONFIG_GNUTLS)
 

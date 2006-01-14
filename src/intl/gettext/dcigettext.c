@@ -240,7 +240,8 @@ struct block_list {
   do {									      \
     while (list != NULL) {						      \
       struct block_list *old = list;					      \
-      list = list->next;						      \
+      list = list->next;			      			\
+      free (old->address); 						\
       free (old);							      \
     }									      \
   } while (0)

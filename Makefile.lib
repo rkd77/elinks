@@ -1,19 +1,5 @@
 ### The build commands and verbosity
 
-# If we are verbose, we will show commands prefixed by $(Q) (which acts as
-# @ in the non-verbose mode), and we will show the "real" cmds instead of
-# their quiet versions (which are used in the non-verbose mode).
-# Inspired by the Linux kernel build system.
-ifdef V
-	Q =
-	quiet =
-	mquiet = masq_
-else
-	Q = @
-	quiet = quiet_
-	mquiet = quiet_
-endif
-
 # Colorize the build.
 ifdef MAKE_COLOR
 	INFO_COLOR    = $(shell tput setaf 5)
@@ -23,6 +9,25 @@ ifdef MAKE_COLOR
 	LINK_COLOR    = $(shell tput bold;tput setaf 4)
 	INSTALL_COLOR = $(shell tput setaf 3)
 	END_COLOR     = $(shell tput sgr0)
+endif
+
+# sparse is architecture-neutral, which means that we need to tell it
+# explicitly what architecture to check for. Fix this up for yours..
+SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
+
+
+#############################################################################
+# Build recipies
+
+# If we are verbose, we will show the "real" cmds instead of
+# their quiet versions (which are used in the non-verbose mode).
+# Inspired by the Linux kernel build system.
+ifdef V
+	quiet =
+	mquiet = masq_
+else
+	quiet = quiet_
+	mquiet = quiet_
 endif
 
 # Show the command (quiet or non-quiet version based on the assignment
@@ -40,7 +45,7 @@ quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
 quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
       cmd_ld_objs = $(LD) -r -o $@ $(filter $(OBJS), $^) \
       		    $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), \
-			    `test -e $(subdir)/lib.o && echo $(subdir)/lib.o`)
+			    `test -e $(subdir)/$(LIB_O_NAME) && echo $(subdir)/$(LIB_O_NAME)`)
 
    quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
          cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(2) $(LIBS)
@@ -59,32 +64,14 @@ quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
 
-### Internal build rules
+#############################################################################
+# Special handling of conditional variables
 
-DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
-DEP_FILES = $(DEP_FILES_1:%.o=%.P)
-
-DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
-
-ifdef OBJS
--include $(DEP_FILES)
-endif
-
-%.o: $(srcdir)%.c
-	$(call mcmd,compile)
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
-		tr ' ' '\012' < .deps/$(*F).pp \
-			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-			>> .deps/$(*F).P; \
-		rm .deps/$(*F).pp
-
-ifdef SUBDIRS-yes
 SUBDIRS += $(SUBDIRS-yes)
-endif
+OBJS	+= $(OBJS-yes)
 
-ifdef OBJS-yes
-OBJS += $(OBJS-yes)
-endif
+ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-)
+ALTOBJS  = $(OBJS-no) $(OBJS-)
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
 INCLUDE_ALL=1
@@ -97,33 +84,46 @@ INCLUDE_ALL=1
 endif
 
 ifdef INCLUDE_ALL
-ifdef SUBDIRS-no
-SUBDIRS += $(SUBDIRS-no)
-endif
-ifdef SUBDIRS-
-SUBDIRS += $(SUBDIRS-)
-endif
-ifdef OBJS-no
-OBJS += $(OBJS-no)
-endif
-ifdef OBJS-
-OBJS += $(OBJS-)
-endif
-
+SUBDIRS += $(ALTDIRS)
+OBJS	+= $(ALTOBJS)
 endif
 
 
-ifdef OBJS
-lib.o: $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/lib.o))
+#############################################################################
+# Internal build rules
+
+# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o
+LIB_O_DEPS = \
+ $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
+ $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))
+
+$(LIB_O_NAME): $(LIB_O_DEPS)
 	$(call cmd,ld_objs)
 
-LIB_O = lib.o
-CLEAN += $(OBJS) $(LIB_O)
+DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
+DEP_FILES = $(DEP_FILES_1:%.o=%.P)
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+ifneq ($(strip $(OBJS)),)
+-include $(DEP_FILES)
+OBJS += $(LIB_O_NAME)
 endif
 
-CLEAN += $(PROG)
+%.o: $(srcdir)%.c
+	$(call mcmd,compile)
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+		tr ' ' '\012' < .deps/$(*F).pp \
+			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+			>> .deps/$(*F).P; \
+		rm .deps/$(*F).pp
 
-all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
+CLEAN += $(PROG) $(OBJS)
+
+
+#############################################################################
+# The main default rules
+
+all-default: $(OBJS) $(PROGS) $(MAN1) $(MAN5)
 
 # Ensure that Makefiles in subdirs are created before we recursive into them
 init-recursive: init-default
@@ -133,10 +133,8 @@ init-default:
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
 		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
-clean-default: clean-test
+clean-default cleanall-default:
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
-
-cleanall-default: clean-default
 
 check-default:
 ifneq ($(SPARSE),)
@@ -144,12 +142,27 @@ ifneq ($(SPARSE),)
 		$(call ncmd,sparse,$(file));)
 endif
 
-##############################################################################
-#
-# Auto-testing infrastructure
-#
+install-default: all-default
+ifdef PROGS
+	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+	@$(foreach file,$(PROGS), \
+		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
+endif
+ifdef MAN1
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
+	@$(foreach file,$(MAN1), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
+endif
+ifdef MAN5
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
+	@$(foreach file,$(MAN5), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
+endif
 
-clean-test:
+
+##############################################################################
+# Auto-testing infrastructure
+
 test-default:
 
 ifdef TEST_PROGS
@@ -173,58 +186,43 @@ clean-test:
 	@rm -fr trash
 
 CLEAN += $(TEST_PROGS) $(addsuffix .o,$(TEST_PROGS))
+clean-default: clean-test
 endif
 
 .PHONY: $(TESTS)
 .NOPARALLEL:
 
-# sparse is architecture-neutral, which means that we need to tell it
-# explicitly what architecture to check for. Fix this up for yours..
-SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
-install-default: all-default
-ifdef PROGS
-	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	@$(foreach file,$(PROGS), \
-		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
-endif
-ifdef MAN1
-	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	@$(foreach file,$(MAN1), \
-		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
-endif
-ifdef MAN5
-	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	@$(foreach file,$(MAN5), \
-		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
-endif
 
-# Recursion:
+#############################################################################
+# Basic recursion and dependencies setup
 
 RULES	 = all install clean cleanall init check test
-RECRULES = $(addsuffix -recursive,$(RULES))
 
-.PHONY: $(RECRULES)
+RULES_LOCAL = $(addsuffix -local,$(RULES))
+RULES_REC   = $(addsuffix -recursive,$(RULES))
+
+.PHONY: $(RULES) $(RULES_LOCAL) $(RULES_REC) $(addsuffix -default,$(RULES))
 
 # The -recursive rules decend all subdirs.
-$(RECRULES):
-ifdef SUBDIRS
+$(RULES_REC):
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
-endif
 
-# Setup the default sub commands dependency. First decend subdirs then do all
-# the default stuff and finally do any local hooks.
-recdeps = $1-recursive $1-default $1-local
-all: $(call recdeps,all)
-check: $(call recdeps,check)
-cleanall: $(call recdeps,cleanall)
-clean: $(call recdeps,clean)
-init: $(call recdeps,init)
-install: $(call recdeps,install)
-test: $(call recdeps,test)
+# Dummy -local rules
+$(RULES_LOCAL):
 
-# Dummy rules for local hooks
-$(addsuffix -local,$(RULES)):
+# Default deps
+rule_deps = $(1)-recursive $(1)-default $(1)-local
+all:	  $(call rule_deps,all)
+install:  $(call rule_deps,install)
+clean:	  $(call rule_deps,clean)
+cleanall: $(call rule_deps,cleanall)
+init:	  $(call rule_deps,init)
+check:	  $(call rule_deps,check)
+test:	  $(call rule_deps,test)
+
+#############################################################################
+# Misc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

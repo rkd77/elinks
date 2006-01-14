@@ -160,9 +160,9 @@ extern struct dom_stack_context_info dom_stack_trace_context_info;
  *
  * Define `DOM_STACK_TRACE` to have debug info about the nodes added printed to
  * the log. It will define add_dom_stack_tracer() to not be a no-op.
- * 
+ *
  * Run as:
- * 
+ *
  *	ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect <url>
  *
  * to have the debug dumped into a file. */

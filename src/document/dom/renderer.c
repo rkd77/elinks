@@ -981,7 +981,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
-	struct dom_string source = INIT_DOM_STRING(buffer->source, buffer->length);
 	enum sgml_parser_code code;
 
 	convert_table = get_convert_table(head, document->options.cp,
@@ -1021,7 +1020,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	parser = init_sgml_parser(parser_type, doctype, &uri, 0);
   	if (!parser) return;
-  
+
 	if (document->options.plain) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_source_renderer_context_info);
@@ -1035,7 +1034,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	 * However, it will be useful when we will be able to also
 	 * incrementally parse new data. This will require the parser to live
 	 * during the fetching of data. */
-	code = parse_sgml(parser, &source, 1);
+	code = parse_sgml(parser, buffer->source, buffer->length, 1);
 	if (parser->root) {
 		assert(parser->stack.depth == 1);
 

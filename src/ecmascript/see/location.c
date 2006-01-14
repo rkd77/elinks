@@ -258,7 +258,7 @@ js_location_toString(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *string = get_uri_string(vs->uri, URI_ORIGINAL);
 	struct SEE_string *str = string_to_SEE_string(interp, string);
 
-	mem_free_if(string);	
+	mem_free_if(string);
 	checktime(interp);
 
 	SEE_SET_STRING(res, str);

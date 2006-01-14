@@ -3,11 +3,11 @@ include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BOOKMARKS)	+= bookmarks
 SUBDIRS-$(CONFIG_COOKIES)	+= cookies
+SUBDIRS-$(CONFIG_DOM)		+= dom
+SUBDIRS-$(CONFIG_ECMASCRIPT)	+= ecmascript
 SUBDIRS-$(CONFIG_FORMHIST)	+= formhist
 SUBDIRS-$(CONFIG_GLOBHIST)	+= globhist
-SUBDIRS-$(CONFIG_ECMASCRIPT)	+= ecmascript
 SUBDIRS-$(CONFIG_SCRIPTING)	+= scripting
-SUBDIRS-$(CONFIG_DOM)		+= dom
 
 SUBDIRS = \
  bfu \
@@ -37,7 +37,7 @@ OBJS = vernum.o
 vernum.o: FORCE
 FORCE:
 
-elinks: lib.o
+elinks: $(LIB_O_NAME)
 	$(call cmd,link)
 
 PROGS = elinks
