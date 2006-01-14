@@ -19,16 +19,13 @@ SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 #############################################################################
 # Build recipies
 
-# If we are verbose, we will show commands prefixed by $(Q) (which acts as
-# @ in the non-verbose mode), and we will show the "real" cmds instead of
+# If we are verbose, we will show the "real" cmds instead of
 # their quiet versions (which are used in the non-verbose mode).
 # Inspired by the Linux kernel build system.
 ifdef V
-	Q =
 	quiet =
 	mquiet = masq_
 else
-	Q = @
 	quiet = quiet_
 	mquiet = quiet_
 endif
