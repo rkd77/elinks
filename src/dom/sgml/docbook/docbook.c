@@ -1,12 +1,8 @@
-/* SGML node handling */
-/* $Id: docbook.c,v 1.1.2.24 2004/02/29 02:47:30 jonas Exp $ */
+/* DocBook SGML info */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#include <stdlib.h>
-#include <string.h>
 
 #include "elinks.h"
 
