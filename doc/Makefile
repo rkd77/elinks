@@ -34,7 +34,7 @@ HTML_DOCS-$(CONFIG_XMLTO) += \
 
 HTML_DOCS-$(CONFIG_POD2HTML) += \
  perl.html \
- perl-hooks.html \
+ perl-hooks.html
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.1 \
