@@ -104,7 +104,7 @@ DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
 DEP_FILES = $(DEP_FILES_1:%.o=%.P)
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
-ifneq ($(OBJS),)
+ifneq ($(strip $(OBJS)),)
 -include $(DEP_FILES)
 OBJS += $(LIB_O_NAME)
 endif
