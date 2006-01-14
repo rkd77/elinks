@@ -105,6 +105,7 @@ do
 		fi
 
 		line=`echo "$line" | sed -e "s/[ ]*(DISABLED)//"`
+		line=`echo "$line" | sed 's/\([{}]\)/\\\\\1/g'`
 		number=
 		if test -n "$parse_int_option";
 		then
