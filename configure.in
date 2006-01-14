@@ -16,8 +16,6 @@ AC_CHECK_PROG(ACLOCAL,[aclocal],[aclocal],[config/missing aclocal])
 AC_CHECK_PROG(AUTOCONF,[autoconf],[autoconf],[config/missing autoconf])
 AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
 
-AC_PROG_MAKE_SET
-
 MAKE=
 
 for make in gnumake gmake make false; do
@@ -26,12 +24,14 @@ for make in gnumake gmake make false; do
 	fi
 done
 
+builddir="`pwd`"
+
 # Cleanup if we are configuring with a previous build in the tree
 if test -e Makefile.config; then
-	"$MAKE" -C "$builddir" cleanall  >/dev/null 2>/dev/null
+	AC_MSG_CHECKING([for previous build to clean])
+	"$MAKE" -C "$builddir/src" cleanall >/dev/null 2>/dev/null
+	AC_MSG_RESULT(done)
 fi
-
-builddir="`pwd`"
 
 dnl ===================================================================
 dnl Load feature configuration file and start logging features.
@@ -53,9 +53,7 @@ AC_PROG_RANLIB
 AC_PROG_INSTALL
 
 AC_PATH_PROGS(CG_COMMIT_ID, "cg-commit-id")
-
 AC_PATH_PROGS(SPARSE, "sparse")
-AC_SUBST(SPARSE)
 
 CONFIG_ASCIIDOC="no"
 CONFIG_POD2HTML="no"
