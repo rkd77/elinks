@@ -19,16 +19,6 @@
 #include "util/memory.h"
 
 
-/* This holds info about a chunk of text being parsed. The SGML parser uses
- * these to keep track of possible nested calls to parse_sgml(). This can be
- * used to feed output of stuff like ECMAScripts document.write() from
- * <script>-elements back to the SGML parser. */
-struct sgml_parsing_state {
-	struct dom_scanner scanner;
-	struct dom_node *node;
-	size_t depth;
-};
-
 /* When getting the sgml_parser struct it is _always_ assumed that the parser
  * is the first to add it's context, which it is since it initializes the
  * stack. */
@@ -428,6 +418,13 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
  * handle output of external processing of data in the document tree. For
  * example this can allows output of the document.write() from DOM scripting
  * interface to be parsed. */
+
+/* This holds info about a chunk of text being parsed. */
+struct sgml_parsing_state {
+	struct dom_scanner scanner;
+	struct dom_node *node;
+	size_t depth;
+};
 
 static void
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
