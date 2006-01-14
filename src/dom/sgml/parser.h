@@ -101,6 +101,7 @@ struct sgml_parser {
 	struct dom_string uri;		/*: The URI of the DOM document */
 	struct dom_node *root;		/*: The document root node */
 
+	enum sgml_parser_code code;	/*: The latest (error) code */
 	sgml_error_T error_func;	/*: Called for detected errors */
 
 	struct dom_stack stack;		/*: A stack for tracking parsed nodes */
