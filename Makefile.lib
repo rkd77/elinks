@@ -1,5 +1,23 @@
 ### The build commands and verbosity
 
+# Colorize the build.
+ifdef MAKE_COLOR
+	INFO_COLOR    = $(shell tput setaf 5)
+	CC_COLOR      = $(shell tput setaf 6)
+	LD_COLOR      = $(shell tput setaf 2)
+	PO_COLOR      = $(shell tput setaf 6)
+	LINK_COLOR    = $(shell tput bold;tput setaf 4)
+	INSTALL_COLOR = $(shell tput setaf 3)
+	END_COLOR     = $(shell tput sgr0)
+endif
+
+# sparse is architecture-neutral, which means that we need to tell it
+# explicitly what architecture to check for. Fix this up for yours..
+SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
+
+#############################################################################
+# Build recipies
+
 # If we are verbose, we will show commands prefixed by $(Q) (which acts as
 # @ in the non-verbose mode), and we will show the "real" cmds instead of
 # their quiet versions (which are used in the non-verbose mode).
@@ -12,17 +30,6 @@ else
 	Q = @
 	quiet = quiet_
 	mquiet = quiet_
-endif
-
-# Colorize the build.
-ifdef MAKE_COLOR
-	INFO_COLOR    = $(shell tput setaf 5)
-	CC_COLOR      = $(shell tput setaf 6)
-	LD_COLOR      = $(shell tput setaf 2)
-	PO_COLOR      = $(shell tput setaf 6)
-	LINK_COLOR    = $(shell tput bold;tput setaf 4)
-	INSTALL_COLOR = $(shell tput setaf 3)
-	END_COLOR     = $(shell tput sgr0)
 endif
 
 # Show the command (quiet or non-quiet version based on the assignment
@@ -59,24 +66,8 @@ quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
 
-### Internal build rules
-
-DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
-DEP_FILES = $(DEP_FILES_1:%.o=%.P)
-
-DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
-
-ifdef OBJS
--include $(DEP_FILES)
-endif
-
-%.o: $(srcdir)%.c
-	$(call mcmd,compile)
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
-		tr ' ' '\012' < .deps/$(*F).pp \
-			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-			>> .deps/$(*F).P; \
-		rm .deps/$(*F).pp
+#############################################################################
+# Special handling of conditional variables
 
 ifdef SUBDIRS-yes
 SUBDIRS += $(SUBDIRS-yes)
@@ -109,8 +100,28 @@ endif
 ifdef OBJS-
 OBJS += $(OBJS-)
 endif
-
 endif
+
+
+#############################################################################
+# Internal build rules
+
+DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
+DEP_FILES = $(DEP_FILES_1:%.o=%.P)
+
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+ifdef OBJS
+-include $(DEP_FILES)
+endif
+
+%.o: $(srcdir)%.c
+	$(call mcmd,compile)
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+		tr ' ' '\012' < .deps/$(*F).pp \
+			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+			>> .deps/$(*F).P; \
+		rm .deps/$(*F).pp
 
 
 ifdef OBJS
@@ -122,6 +133,10 @@ CLEAN += $(OBJS) $(LIB_O)
 endif
 
 CLEAN += $(PROG)
+
+
+#############################################################################
+# The main default rules
 
 all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
 
@@ -142,10 +157,26 @@ ifneq ($(SPARSE),)
 		$(call ncmd,sparse,$(file));)
 endif
 
+install-default: all-default
+ifdef PROGS
+	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
+	@$(foreach file,$(PROGS), \
+		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
+endif
+ifdef MAN1
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
+	@$(foreach file,$(MAN1), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
+endif
+ifdef MAN5
+	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
+	@$(foreach file,$(MAN5), \
+		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
+endif
+
+
 ##############################################################################
-#
 # Auto-testing infrastructure
-#
 
 test-default:
 
@@ -176,27 +207,9 @@ endif
 .PHONY: $(TESTS)
 .NOPARALLEL:
 
-# sparse is architecture-neutral, which means that we need to tell it
-# explicitly what architecture to check for. Fix this up for yours..
-SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
-install-default: all-default
-ifdef PROGS
-	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
-	@$(foreach file,$(PROGS), \
-		$(call ncmd,installprog,$(file),$(DESTDIR)$(bindir));)
-endif
-ifdef MAN1
-	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man1
-	@$(foreach file,$(MAN1), \
-		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man1);)
-endif
-ifdef MAN5
-	@$(MKINSTALLDIRS) $(DESTDIR)$(mandir)/man5
-	@$(foreach file,$(MAN5), \
-		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
-endif
 
-# Recursion:
+#############################################################################
+# Basic recursion and dependencies setup
 
 RULES	 = all install clean cleanall init check test
 
@@ -218,6 +231,10 @@ $(1)-local:
 endef
 
 $(foreach rule,$(RULES),$(eval $(call basic_dependency,$(rule))))
+
+
+#############################################################################
+# Misc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
