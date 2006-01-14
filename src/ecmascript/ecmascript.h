@@ -9,8 +9,11 @@
 #include "util/time.h"
 
 struct string;
+struct terminal;
 struct uri;
 struct view_state;
+
+#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable")
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -62,6 +65,11 @@ int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct 
 /* Takes line with the syntax javascript:<ecmascript code>. Activated when user
  * follows a link with this synstax. */
 void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
+
+void ecmascript_init(struct module *);
+void ecmascript_done(struct module *);
+void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
+
 
 extern struct module ecmascript_module;
 
