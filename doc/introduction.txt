@@ -323,7 +323,7 @@ document text search all matches will be high-lighted.  To get rid of this
 high-lighting you have to ``search for the empty string'', that is open a
 search dialog and just press Enter in the input field.
 
-Previous search words are saved in the search history, so they can easily b
+Previous search words are saved in the search history, so they can easily be
 found and used later. Browsing the history will replace the current entered
 search terms.
 

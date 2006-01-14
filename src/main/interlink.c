@@ -371,7 +371,7 @@ elinks_usleep(unsigned long useconds)
 static int
 bind_to_af_unix(void)
 {
-	mode_t saved_mask = umask(0177);
+	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
 	int attempts = 0;
 	int pf = get_address(&s_info_listen, ADDR_IP_SERVER);
 

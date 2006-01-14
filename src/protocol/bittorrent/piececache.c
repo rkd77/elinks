@@ -657,14 +657,14 @@ open_bittorrent_file(struct bittorrent_meta *meta, struct bittorrent_file *file,
 
 	if (!name) return -1;
 
-	fd = open(name, flags, S_IREAD | S_IWRITE);
+	fd = open(name, flags, S_IRUSR | S_IWUSR);
 	if (fd == -1) {
 		/* 99% of the time the file will already exist so special case
 		 * the directory and file creation. */
 		if (errno == ENOENT
 		    && trans == BITTORRENT_WRITE
 		    && create_bittorrent_path(name) == BITTORRENT_STATE_OK)
-			fd = open(name, flags | O_CREAT, S_IREAD | S_IWRITE);
+			fd = open(name, flags | O_CREAT, S_IRUSR | S_IWUSR);
 	}
 
 	mem_free(name);

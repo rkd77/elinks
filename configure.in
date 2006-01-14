@@ -532,7 +532,6 @@ if test "$enable_see" = "yes"; then
 		EL_CONFIG(CONFIG_SEE, [SEE])
 		AC_SUBST(SEE_CFLAGS)
 		AC_SUBST(CONFIG_SEE)
-		disable_spidermonkey=yes
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
 			AC_MSG_ERROR([SEE not found])
@@ -597,9 +596,31 @@ else
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 fi
 
-AC_SUBST(CONFIG_SPIDERMONKEY)
+if test "$CONFIG_SEE" != yes; then
+	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
+fi
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SEE CONFIG_SPIDERMONKEY], [ECMAScript (JavaScript)])
+AC_SUBST(CONFIG_SPIDERMONKEY)
+AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
+
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
+
+
+dnl ===================================================================
+dnl Optional Spidermonkey-based ECMAScript browser scripting
+dnl ===================================================================
+
+AC_ARG_ENABLE(sm-scripting,
+	      [  --disable-sm-scripting  ECMAScript browser scripting (requires Spidermonkey)],
+	      [if test "$enableval" != no; then enableval="yes"; fi
+	       CONFIG_SM_SCRIPTING="$enableval";])
+
+if test "x$CONFIG_SPIDERMONKEY" = xyes &&
+   test "x$CONFIG_SM_SCRIPTING" = xyes; then
+	EL_CONFIG(CONFIG_SM_SCRIPTING, [SpiderMonkey])
+else
+	CONFIG_SM_SCRIPTING=no
+fi
 
 
 dnl ===================================================================
@@ -829,22 +850,6 @@ dnl Check for Ruby, optional even if installed.
 dnl ===================================================================
 
 EL_CONFIG_RUBY
-
-dnl ===================================================================
-dnl Optional Spidermonkey-based ECMAScript browser scripting
-dnl ===================================================================
-
-AC_ARG_ENABLE(sm-scripting,
-	      [  --disable-sm-scripting  ECMAScript browser scripting (requires Spidermonkey)],
-	      [if test "$enableval" != no; then enableval="yes"; fi
-	       CONFIG_SM_SCRIPTING="$enableval";])
-
-if test "x$CONFIG_SPIDERMONKEY" = xyes &&
-   test "x$CONFIG_SM_SCRIPTING" = xyes; then
-	EL_CONFIG(CONFIG_SM_SCRIPTING, [SpiderMonkey])
-else
-	CONFIG_SM_SCRIPTING=no
-fi
 
 dnl ===================================================================
 dnl Setup global scripting

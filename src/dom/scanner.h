@@ -4,6 +4,8 @@
 #include "dom/string.h"
 #include "util/error.h"
 
+/* API Doc :: dom-scanner */
+
 /* Define if you want a talking scanner */
 /* #define DEBUG_DOM_SCANNER */
 

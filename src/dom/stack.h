@@ -7,6 +7,8 @@
 
 struct dom_stack;
 
+/* API Doc :: dom-stack */
+
 /** DOM stack callback
  *
  * Used by contexts, for 'hooking' into the node traversing. */

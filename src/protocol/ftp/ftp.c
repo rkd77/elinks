@@ -1034,7 +1034,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 	add_char_to_string(&string, ftp_info->type);
 
 	if (ftp_info->permissions) {
-		int p = ftp_info->permissions;
+		mode_t p = ftp_info->permissions;
 
 #define FTP_PERM(perms, buffer, flag, index, id) \
 	if ((perms) & (flag)) (buffer)[(index)] = (id);

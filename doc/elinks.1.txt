@@ -1,0 +1,157 @@
+elinks(1)
+=========
+
+NAME
+----
+elinks - lynx-like alternative character mode WWW browser
+
+SYNOPSIS
+--------
+'elinks' [OPTION]... [URL]...
+
+DESCRIPTION
+-----------
+
+'ELinks' is a text mode WWW browser, supporting colors, table rendering,
+background downloading, menu driven configuration interface, tabbed browsing
+and slim code. 
+
+Frames are supported. You can have different file formats associated with
+external viewers. `mailto:` and `telnet:` are supported via external clients.
+
+ELinks  can handle both local files and remote URLs. The main supported remote
+URL protocols are 'HTTP', 'HTTPS' (with SSL support compiled in) and 'FTP'.
+Additional  protocol  support  exists for 'finger', 'Gopher', 'SMB' and
+'NNTP'.
+
+OPTIONS
+-------
+
+Most options can be set in the user interface or config file, so usually you
+do not need to care about them. Note that this list is by no means complete
+and it is not kept up-to-date. To get complete list of commandline options,
+start 'ELinks' with parameter `--help`.
+
+include::command-options.txt[]
+
+ENVIRONMENT VARIABLES
+---------------------
+
+COMSPEC, SHELL::
+
+	The shell used for File -> OS Shell on DOS/Windows and UNIX,
+	respectively.
+
+EDITOR::
+
+	The program to use for external editor (when editing textareas).
+
+ELINKS_CONFDIR::
+
+	The location of the directory containing configuration files.  If not
+	set the default is `~/.elinks/`.
+
+ELINKS_TWTERM, LINKS_TWTERM::
+
+	The command to run when selecting File -> New window and if
+	`TWDISPLAY` is defined (default `twterm -e`)
+
+ELINKS_XTERM, LINKS_XTERM::
+
+	The command to run when selecting File -> New window and if `DISPLAY`
+	is defined (default `xterm -e`)
+
+FTP_PROXY, HTTP_PROXY, HTTPS_PROXY::
+
+	The host to proxy the various protocol traffic through.
+
+NO_PROXY::
+
+	A comma separated list of URLs which should not be proxied.
+
+HOME::
+
+	The path to the users home directory. Used when expanding `~/`.
+
+WWW_HOME::
+
+	Homepage location (as in lynx(1)).
+
+FILES
+-----
+
+@sysconfdir@/elinks.conf::
+	Site-wide configuration file.
+
+~/.elinks/elinks.conf::
+	Per-user config file, loaded after site-wide configuration.
+
+~/.elinks/bookmarks::
+	Bookmarks file.
+
+~/.elinks/cookies::
+	Cookies file.
+
+~/.elinks/formhist::
+	Form history file.
+
+~/.elinks/gotohist::
+	GoTo URL dialog history file.
+
+~/.elinks/globhist::
+	History file containing most recently visited URLs.
+
+~/.elinks/searchhist::
+	Search history file.
+
+~/.elinks/socket::
+	Internal 'ELinks' socket for communication between its instances.
+
+PLATFORMS
+---------
+
+'ELinks' is known to work on 'Linux', 'FreeBSD', 'OpenBSD', 'Solaris', 'IRIX',
+'HPUX', 'Digital Unix', 'AIX', 'OS/2', 'BeOS' and 'RISC OS'. Port for 'Win32'
+is in state of beta testing.
+
+BUGS
+----
+
+Please report any other bugs you find to the either the ELinks mailing list at
+mailto:elinks-users@linuxfromscratch.org[] or if you prefer enter them into
+http://bugzilla.elinks.or.cz/[the bug tracking system]. More information about
+how to get in contact with developers and getting help can be found on
+http://elinks.or.cz/community.html[the community page].
+
+LICENSE
+-------
+
+'ELinks' is free software; you can redistribute it and/or modify it under the
+terms of http://www.gnu.org/copyleft/gpl.html[the GNU General Public License]
+as published by the Free Software Foundation; version 2 of the License.
+
+AUTHORS
+-------
+
+The 'Links' browser - on which 'ELinks' is based - was written by Mikulas
+Patocka mailto:mikulas@artax.karlin.mff.cuni.cz[]. 'ELinks' was written by
+Petr Baudis mailto:pasky@ucw.cz[]. See file `AUTHORS` in the source tree for a
+list of people contributing to this project. 
+
+The homepage of 'ELinks' can be found at http://elinks.cz/[].
+
+This manual page was written by Peter Gervai mailto:grin@tolna.net[], using
+excerpts from a (yet?) unknown 'Links' fan for the 'Debian GNU/Linux system'
+(but may be used by others). Contributions from Francis A. Holop. Extended,
+clarified and made more up-to-date by Petr Baudis mailto:pasky@ucw.cz[].
+Updated by Zas mailto:zas@norz.org[]. The conversion to Asciidoc and trimming
+was done by Jonas Fonseca mailto:fonseca@diku.dk[].
+
+SEE ALSO
+--------
+
+man:elinkskeys[5], elinks.conf(5), links(1), lynx(1), w3m(1), wget(1)
+
+////////////////////////////////////////////////////////////////////////////
+# vim: tabstop=4 shiftwidth=4 textwidth=76
+////////////////////////////////////////////////////////////////////////////

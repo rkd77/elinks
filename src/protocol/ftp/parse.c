@@ -138,7 +138,7 @@ enum ftp_unix {
 static int
 parse_ftp_unix_permissions(const unsigned char *src, int len)
 {
-	int perms = 0;
+	mode_t perms = 0;
 
 	if (len != 9
 	    && !(len == 10 && src[9] == '+'))   /* ACL tag */
@@ -583,12 +583,12 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 	if (*src == '<') {
 		info->type = FTP_FILE_DIRECTORY;
-		info->permissions = 0755;
+		info->permissions = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
 
 	} else if (isdigit(*src)) {
 		info->type = FTP_FILE_PLAINFILE;
 		info->size = parse_ftp_number(&src, end, 0, LONG_MAX);
-		info->permissions = 0644;
+		info->permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
 	} else {
 		info->type = FTP_FILE_UNKNOWN;

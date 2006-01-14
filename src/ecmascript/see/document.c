@@ -138,6 +138,8 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 	} else if (p == s_forms) {
 		SEE_SET_OBJECT(res, doc->forms);
+	} else if (p == s_write) {
+		SEE_SET_OBJECT(res, doc->write);
 	} else {
 		struct form *form;
 		unsigned char *string = SEE_string_to_unsigned_char(p);
