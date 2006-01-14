@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_BEOS_SYSINFO_H
 #define EL__OSDEP_BEOS_SYSINFO_H
 
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 
 #define SYSTEM_NAME	"BeOS"
 #define SYSTEM_STR	"beos"

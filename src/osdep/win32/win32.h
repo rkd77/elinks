@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_WIN32_WIN32_H
 #define EL__OSDEP_WIN32_WIN32_H
 
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 
 struct terminal;
 
@@ -59,5 +59,5 @@ int tcgetattr(int fd, struct termios *termios_p);
 int tcsetattr(int fd, int optional_actions, const struct termios *termios_p);
 #endif /* __CYGWIN__ */
 
-#endif /* CONFIG_WIN32 */
+#endif /* CONFIG_OS_WIN32 */
 #endif

@@ -1,5 +1,5 @@
 
-AC_DEFUN([EL_CONFIG_WIN32],
+AC_DEFUN([EL_CONFIG_OS_WIN32],
 [
 	AC_MSG_CHECKING([for win32 threads])
 

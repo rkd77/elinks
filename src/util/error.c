@@ -40,7 +40,7 @@ static void
 er(int bell, int shall_sleep, unsigned char *fmt, va_list params)
 {
 	if (bell)
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 		MessageBeep(MB_ICONEXCLAMATION);
 #else
 		fputc(7, stderr); /* load and annoying on Windows */

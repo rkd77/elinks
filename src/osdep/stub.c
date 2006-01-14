@@ -239,7 +239,7 @@ elinks_raise(int signal)
 #define	INT16SZ		 2
 
 /* TODO: Move and populate. --jonas */
-#ifdef CONFIG_WIN32
+#ifdef CONFIG_OS_WIN32
 #define SET_ERRNO(e)    WSASetLastError(errno = (e))
 #else
 #define SET_ERRNO(e)    errno = e

@@ -185,7 +185,7 @@ get_shell(void)
 
 /* Terminal size */
 
-#if !defined(CONFIG_OS2) && !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_OS_WIN32)
 
 static void
 sigwinch(void *s)
@@ -232,7 +232,7 @@ get_terminal_size(int fd, int *x, int *y)
 
 /* Pipe */
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_BEOS) || defined(CONFIG_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_BEOS) || defined(CONFIG_OS_RISCOS)
 
 void
 set_bin(int fd)
@@ -245,7 +245,7 @@ c_pipe(int *fd)
 	return pipe(fd);
 }
 
-#elif defined(CONFIG_OS2) || defined(CONFIG_WIN32)
+#elif defined(CONFIG_OS_OS2) || defined(CONFIG_OS_WIN32)
 
 void
 set_bin(int fd)
@@ -291,7 +291,7 @@ is_gnuscreen(void)
 }
 
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_WIN32)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_WIN32)
 
 int
 is_xterm(void)
@@ -332,9 +332,9 @@ is_xterm(void)
 
 unsigned int resize_count = 0;
 
-#ifndef CONFIG_OS2
+#ifndef CONFIG_OS_OS2
 
-#if !(defined(CONFIG_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_WIN32)
+#if !(defined(CONFIG_OS_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
 
 int
 exe(unsigned char *path)
@@ -605,7 +605,7 @@ resize_window(int width, int height, int old_width, int old_height)
 
 /* Threads */
 
-#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_BEOS)
+#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_OS_BEOS)
 
 struct tdata {
 	void (*fn)(void *, int);
@@ -687,7 +687,7 @@ done_draw(void)
 #endif
 
 
-#if !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_WIN32)
 int
 get_output_handle(void)
 {
@@ -706,8 +706,8 @@ get_ctl_handle(void)
 #endif
 
 
-#if !defined(CONFIG_BEOS) && !(defined(HAVE_BEGINTHREAD) && defined(HAVE_READ_KBD)) \
-	&& !defined(CONFIG_WIN32)
+#if !defined(CONFIG_OS_BEOS) && !(defined(HAVE_BEGINTHREAD) && defined(HAVE_READ_KBD)) \
+	&& !defined(CONFIG_OS_WIN32)
 
 int
 get_input_handle(void)
@@ -717,7 +717,7 @@ get_input_handle(void)
 
 #endif
 
-#ifndef CONFIG_WIN32
+#ifndef CONFIG_OS_WIN32
 
 void
 init_osdep(void)
@@ -729,7 +729,7 @@ init_osdep(void)
 
 #endif
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_OS2) || defined(CONFIG_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_OS2) || defined(CONFIG_OS_RISCOS)
 
 void
 terminate_osdep(void)
@@ -738,7 +738,7 @@ terminate_osdep(void)
 
 #endif
 
-#ifndef CONFIG_BEOS
+#ifndef CONFIG_OS_BEOS
 
 void
 block_stdin(void)
@@ -798,7 +798,7 @@ resume_mouse(void *data)
 
 #endif
 
-#ifndef CONFIG_WIN32
+#ifndef CONFIG_OS_WIN32
 /* Create a bitmask consisting from system-independent envirnoment modifiers.
  * This is then complemented by system-specific modifiers in an appropriate
  * get_system_env() routine. */
@@ -823,7 +823,7 @@ get_common_env(void)
 }
 #endif
 
-#if defined(CONFIG_UNIX) || defined(CONFIG_RISCOS)
+#if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_RISCOS)
 int
 get_system_env(void)
 {
@@ -838,7 +838,7 @@ can_resize_window(int environment)
 	return !!(environment & (ENV_OS2VIO | ENV_XWIN));
 }
 
-#ifndef CONFIG_OS2
+#ifndef CONFIG_OS_OS2
 int
 can_open_os_shell(int environment)
 {

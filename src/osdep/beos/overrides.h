@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_BEOS_OVERRIDES_H
 #define EL__OSDEP_BEOS_OVERRIDES_H
 
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 
 #include <sys/time.h>
 #include <sys/types.h>

@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_BEOS_BEOS_H
 #define EL__OSDEP_BEOS_BEOS_H
 
-#ifdef CONFIG_BEOS
+#ifdef CONFIG_OS_BEOS
 
 struct terminal;
 

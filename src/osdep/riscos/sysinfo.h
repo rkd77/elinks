@@ -2,7 +2,7 @@
 #ifndef EL__OSDEP_RISCOS_SYSINFO_H
 #define EL__OSDEP_RISCOS_SYSINFO_H
 
-#ifdef CONFIG_RISCOS
+#ifdef CONFIG_OS_RISCOS
 
 #define SYSTEM_NAME	"RISC OS"
 #define SYSTEM_STR	"riscos"

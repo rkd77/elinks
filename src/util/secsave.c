@@ -261,7 +261,7 @@ secure_close(struct secure_save_info *ssi)
 	}
 
 	if (ssi->secure_save && ssi->file_name && ssi->tmp_file_name) {
-#ifdef CONFIG_OS2
+#ifdef CONFIG_OS_OS2
 		/* OS/2 needs this, however it breaks atomicity on
 		 * UN*X. */
 		unlink(ssi->file_name);
