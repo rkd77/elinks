@@ -312,7 +312,7 @@ main(int argc, char *argv[])
 	parser->error_func = sgml_error_function;
 	add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	code = parse_sgml(parser, &source, complete);
+	code = parse_sgml(parser, source.string, source.length, complete);
 	if (parser->root) {
 		size_t root_offset = parser->stack.depth - 1;
 
