@@ -61,7 +61,7 @@ man:  txt $(MAN_DOCS)
 all-docs: man html pdf
 
 install-doc: all-docs update-man install
-	$(foreach doc,$(HTML_DOCS), \
+	@$(foreach doc,$(HTML_DOCS), \
 		if test -d $(doc); then \
 			$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/html/$(doc); \
 			$(call ncmd,installdata,$(doc)/*,$(HTML_DIR)/$(doc)); \
@@ -69,12 +69,12 @@ install-doc: all-docs update-man install
 			$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/html; \
 			$(call ncmd,installdata,$(doc),$(HTML_DIR)); \
 		fi;)
-	$(foreach doc,$(PDF_DOCS), \
+	@$(foreach doc,$(PDF_DOCS), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/pdf; \
 		$(call ncmd,installdata,$(doc),$(PDF_DIR);))
 
 update-man: man
-	$(if $(MAN_DOCS), \
+	@$(if $(MAN_DOCS), \
 		$(call ncmd,installdata,elinks.1,man/man1/elinks.1.in); \
 		$(call ncmd,installdata,elinkskeys.5,man/man5/); \
 		$(call ncmd,installdata,elinks.conf.5,man/man5/))
@@ -177,19 +177,19 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 
 %.html: %.txt asciidoc.conf
 	$(call cmd,asciidoc,xhtml11)
-	$(call asciidoc_dep)
+	@-$(call asciidoc_dep)
 
 %.xml: %.txt asciidoc.conf
 	$(call cmd,asciidoc,docbook)
-	$(call asciidoc_dep)
+	@-$(call asciidoc_dep)
 
 %.1: %.1.xml
 	$(call cmd,xmlto,man)
-	$(call man_hack,$(call man_desc))
+	@$(call man_hack,$(call man_desc))
 
 %.5: %.5.xml
 	$(call cmd,xmlto,man)
-	$(call man_hack,$(call man_desc))
+	@$(call man_hack,$(call man_desc))
 
 %.html-chunked: %.xml
 	$(call cmd,xmlto,html,-o $@)
