@@ -19,7 +19,7 @@ enum screen_char_attr {
 /* One position in the terminal screen's image. */
 struct screen_char {
 	/* Contains either character value or frame data. */
-	unsigned char data;
+	uint16_t data;
 
 	/* Attributes are screen_char_attr bits. */
 	unsigned char attr;
@@ -202,7 +202,7 @@ void draw_char_color(struct terminal *term, int x, int y,
 		     struct color_pair *color);
 
 /* Sets the data of a screen position. */
-void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
+void draw_char_data(struct terminal *term, int x, int y, uint16_t data);
 
 /* Sets the data to @border and of a screen position. */
 void draw_border_char(struct terminal *term, int x, int y,
@@ -214,7 +214,7 @@ void draw_border_cross(struct terminal *, int x, int y,
 
 /* Draws a char. */
 void draw_char(struct terminal *term, int x, int y,
-	       unsigned char data, enum screen_char_attr attr,
+	       uint16_t data, enum screen_char_attr attr,
 	       struct color_pair *color);
 
 /* Draws area defined by @box using the same colors and attributes. */

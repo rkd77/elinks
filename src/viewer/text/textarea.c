@@ -138,7 +138,7 @@ get_textarea_line_number(struct line_info *line, int cursor_position)
 /* Fixes up the vpos and vypos members of the form_state. Returns the
  * logical position in the textarea view. */
 int
-area_cursor(struct form_control *fc, struct form_state *fs)
+area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 {
 	struct line_info *line;
 	int x, y;
@@ -155,7 +155,15 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 		return 0;
 	}
 
-	x = fs->state - line[y].start;
+	if (utf8) {
+		unsigned char *text = fs->value + line[y].start;
+		unsigned char tmp = fs->value[fs->state];
+
+		fs->value[fs->state] = '\0';
+		x = strlen_utf8(&text);
+		fs->value[fs->state] = tmp;
+	} else
+		x = fs->state - line[y].start;
 
 	mem_free(line);
 
@@ -170,8 +178,8 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 	return y * fc->cols + x;
 }
 
-void
-draw_textarea(struct terminal *term, struct form_state *fs,
+static void
+draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	      struct document_view *doc_view, struct link *link)
 {
 	struct line_info *line, *linex;
@@ -192,7 +200,91 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	vy = doc_view->vs->y;
 
 	if (!link->npoints) return;
-	area_cursor(fc, fs);
+	area_cursor(fc, fs, 1);
+	linex = format_text(fs->value, fc->cols, fc->wrap, 0);
+	if (!linex) return;
+	line = linex;
+	sl = fs->vypos;
+	while (line->start != -1 && sl) sl--, line++;
+
+	x = link->points[0].x + box->x - vx;
+	y = link->points[0].y + box->y - vy;
+	ye = y + fc->rows;
+
+	for (; line->start != -1 && y < ye; line++, y++) {
+		int i;
+		unsigned char *text, *end;
+
+		text = fs->value + line->start;
+		end = fs->value + line->end;
+
+		for (i = 0; i < fs->vpos; i++)
+			utf_8_to_unicode(&text, end);
+
+		if (!row_is_in_box(box, y)) continue;
+
+		for (i = 0; i < fc->cols; i++) {
+			uint16_t data;
+			int xi = x + i;
+
+			if (!col_is_in_box(box, xi))
+				continue;
+
+			if (i >= -fs->vpos
+			    && text < end)
+				data = utf_8_to_unicode(&text, end);
+			else
+				data = '_';
+
+			draw_char_data(term, xi, y, data);
+		}
+	}
+
+	for (; y < ye; y++) {
+		int i;
+
+		if (!row_is_in_box(box, y)) continue;
+
+		for (i = 0; i < fc->cols; i++) {
+			int xi = x + i;
+
+			if (col_is_in_box(box, xi))
+				draw_char_data(term, xi, y, '_');
+		}
+	}
+
+	mem_free(linex);
+}
+
+
+void
+draw_textarea(struct terminal *term, struct form_state *fs,
+	      struct document_view *doc_view, struct link *link)
+{
+	struct line_info *line, *linex;
+	struct form_control *fc;
+	struct box *box;
+	int vx, vy;
+	int sl, ye;
+	int x, y;
+
+	assert(term && doc_view && doc_view->document && doc_view->vs && link);
+	if_assert_failed return;
+
+	if (term->utf8) {
+		draw_textarea_utf8(term, fs, doc_view, link);
+		return;
+	}
+	fc = get_link_form_control(link);
+	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	if_assert_failed return;
+
+	box = &doc_view->box;
+	vx = doc_view->vs->x;
+	vy = doc_view->vs->y;
+
+	if (!link->npoints) return;
+	area_cursor(fc, fs, 0);
 	linex = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!linex) return;
 	line = linex;
@@ -448,8 +540,8 @@ menu_textarea_edit(struct terminal *term, void *xxx, void *ses_)
 }
 
 static enum frame_event_status
-textarea_op(struct form_state *fs, struct form_control *fc,
-	    int (*do_op)(struct form_state *, struct line_info *, int))
+textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
+	    int (*do_op)(struct form_state *, struct line_info *, int, int))
 {
 	struct line_info *line;
 	int current, state;
@@ -462,28 +554,62 @@ textarea_op(struct form_state *fs, struct form_control *fc,
 
 	current = get_textarea_line_number(line, fs->state);
 	state = fs->state;
-	if (do_op(fs, line, current)) {
+	if (do_op(fs, line, current, utf8)) {
 		mem_free(line);
 		return FRAME_EVENT_IGNORED;
 	}
 
 	mem_free(line);
-
 	return fs->state == state ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
 static int
-do_op_home(struct form_state *fs, struct line_info *line, int current)
+x_pos(struct form_state *fs, struct line_info *line, int current)
+{
+	unsigned char *text = fs->value + line[current].start;
+	unsigned char tmp = fs->value[fs->state];
+	int len;
+
+	fs->value[fs->state] = '\0';
+	len = strlen_utf8(&text);
+	fs->value[fs->state] = tmp;
+	return len;
+}
+
+static void
+new_pos(struct form_state *fs, struct line_info *line, int current, int len)
+{
+	unsigned char *text = fs->value + line[current].start;
+	unsigned char *end = fs->value + line[current].end;
+	int i;
+
+	for (i = 0; i < len; i++) {
+		unicode_val_T data = utf_8_to_unicode(&text, end);
+
+		if (data == UCS_NO_CHAR) break;
+	}
+	fs->state = (int)(text - fs->value);
+}
+
+static int
+do_op_home(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current != -1) fs->state = line[current].start;
 	return 0;
 }
 
 static int
-do_op_up(struct form_state *fs, struct line_info *line, int current)
+do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current == -1) return 0;
 	if (!current) return 1;
+
+	if (utf8) {
+		int len = x_pos(fs, line, current);
+
+		new_pos(fs, line, current - 1, len);
+		return 0;
+	}
 
 	fs->state -= line[current].start - line[current-1].start;
 	int_upper_bound(&fs->state, line[current-1].end);
@@ -491,18 +617,24 @@ do_op_up(struct form_state *fs, struct line_info *line, int current)
 }
 
 static int
-do_op_down(struct form_state *fs, struct line_info *line, int current)
+do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current == -1) return 0;
 	if (line[current+1].start == -1) return 1;
 
+	if (utf8) {
+		int len = x_pos(fs, line, current);
+
+		new_pos(fs, line, current + 1, len);
+		return 0;
+	}
 	fs->state += line[current+1].start - line[current].start;
 	int_upper_bound(&fs->state, line[current+1].end);
 	return 0;
 }
 
 static int
-do_op_end(struct form_state *fs, struct line_info *line, int current)
+do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current == -1) {
 		fs->state = strlen(fs->value);
@@ -517,7 +649,7 @@ do_op_end(struct form_state *fs, struct line_info *line, int current)
 }
 
 static int
-do_op_bob(struct form_state *fs, struct line_info *line, int current)
+do_op_bob(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current == -1) return 0;
 
@@ -527,7 +659,7 @@ do_op_bob(struct form_state *fs, struct line_info *line, int current)
 }
 
 static int
-do_op_eob(struct form_state *fs, struct line_info *line, int current)
+do_op_eob(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	if (current == -1) {
 		fs->state = strlen(fs->value);
@@ -544,35 +676,35 @@ do_op_eob(struct form_state *fs, struct line_info *line, int current)
 }
 
 enum frame_event_status
-textarea_op_home(struct form_state *fs, struct form_control *fc)
+textarea_op_home(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_home);
+	return textarea_op(fs, fc, utf8, do_op_home);
 }
 
 enum frame_event_status
-textarea_op_up(struct form_state *fs, struct form_control *fc)
+textarea_op_up(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_up);
+	return textarea_op(fs, fc, utf8, do_op_up);
 }
 
 enum frame_event_status
-textarea_op_down(struct form_state *fs, struct form_control *fc)
+textarea_op_down(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_down);
+	return textarea_op(fs, fc, utf8, do_op_down);
 }
 
 enum frame_event_status
-textarea_op_end(struct form_state *fs, struct form_control *fc)
+textarea_op_end(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_end);
+	return textarea_op(fs, fc, utf8, do_op_end);
 }
 
 /* Set the form state so the cursor is on the first line of the buffer.
  * Preserve the column if possible. */
 enum frame_event_status
-textarea_op_bob(struct form_state *fs, struct form_control *fc)
+textarea_op_bob(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_bob);
+	return textarea_op(fs, fc, utf8, do_op_bob);
 }
 
 /* Set the form state so the cursor is on the last line of the buffer. Preserve
@@ -580,13 +712,13 @@ textarea_op_bob(struct form_state *fs, struct form_control *fc)
  * then shifting the state by the delta of both lines start position bounding
  * the whole thing to the end of the last line. */
 enum frame_event_status
-textarea_op_eob(struct form_state *fs, struct form_control *fc)
+textarea_op_eob(struct form_state *fs, struct form_control *fc, int utf8)
 {
-	return textarea_op(fs, fc, do_op_eob);
+	return textarea_op(fs, fc, utf8, do_op_eob);
 }
 
 enum frame_event_status
-textarea_op_enter(struct form_state *fs, struct form_control *fc)
+textarea_op_enter(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -607,6 +739,7 @@ set_textarea(struct document_view *doc_view, int direction)
 	struct form_control *fc;
 	struct form_state *fs;
 	struct link *link;
+	int utf8 = doc_view->document->options.utf8;
 
 	assert(doc_view && doc_view->vs && doc_view->document);
 	assert(direction == 1 || direction == -1);
@@ -628,7 +761,7 @@ set_textarea(struct document_view *doc_view, int direction)
 	/* Depending on which way we entered the textarea move cursor so that
 	 * it is available at end or start. */
 	if (direction == 1)
-		textarea_op_eob(fs, fc);
+		textarea_op_eob(fs, fc, utf8);
 	else
-		textarea_op_bob(fs, fc);
+		textarea_op_bob(fs, fc, utf8);
 }

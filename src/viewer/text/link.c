@@ -112,6 +112,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 {
 	struct form_control *fc;
 	struct form_state *fs;
+	int utf8 = doc_view->document->options.utf8;
 
 	switch (link->type) {
 		case LINK_CHECKBOX:
@@ -123,12 +124,15 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 		case LINK_FIELD:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
-			return fs ? fs->state - fs->vpos : 0;
+			if (utf8) {
+				return fs ? fs->utf8_pos - fs->vpos : 0;
+			} else
+				return fs ? fs->state - fs->vpos : 0;
 
 		case LINK_AREA:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
-			return fs ? area_cursor(fc, fs) : 0;
+			return fs ? area_cursor(fc, fs, utf8) : 0;
 
 		case LINK_HYPERTEXT:
 		case LINK_MAP:

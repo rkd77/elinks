@@ -158,16 +158,22 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 	mem_free_set(&fs->value, NULL);
 
 	switch (fc->type) {
+		unsigned char *text;
+
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_TEXTAREA:
 			fs->value = stracpy(fc->default_value);
 			fs->state = strlen(fc->default_value);
+			text = fs->value;
+			if (fc->type != FC_TEXTAREA)
+				fs->utf8_pos = strlen_utf8(&text);
 			fs->vpos = 0;
 			break;
 		case FC_FILE:
 			fs->value = stracpy("");
 			fs->state = 0;
+			fs->utf8_pos = 0;
 			fs->vpos = 0;
 			break;
 		case FC_SELECT:
@@ -330,12 +336,14 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	dy = box->y - vs->y;
 	switch (fc->type) {
 		unsigned char *s;
+		unsigned char *text, *end;
 		int len;
 		int i, x, y;
 
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_FILE:
+			if (term->utf8) goto utf_8;
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			if (!link->npoints) break;
 
@@ -360,6 +368,36 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 				draw_char_data(term, x, y, data);
 			}
 			break;
+utf_8:
+			text = fs->value;
+			end = strchr(text, '\0');
+			int_bounds(&fs->vpos, fs->utf8_pos - fc->size + 1, fs->utf8_pos);
+			if (!link->npoints) break;
+
+			y = link->points[0].y + dy;
+			if (!row_is_in_box(box, y))
+				break;
+			for (i = 0; i < fs->vpos; i++) {
+				utf_8_to_unicode(&text, end);
+			}
+			s = text;
+			len = strlen_utf8(&s);
+			x = link->points[0].x + dx;
+
+			for (i = 0; i < fc->size; i++, x++) {
+				uint16_t data;
+
+				if (!col_is_in_box(box, x)) continue;
+
+				if (fs->value && i >= -fs->vpos && i < len)
+					data = fc->type != FC_PASSWORD
+					     ? utf_8_to_unicode(&text, end) : '*';
+				else
+					data = '_';
+
+				draw_char_data(term, x, y, data);
+			}
+			break;
 		case FC_TEXTAREA:
 			draw_textarea(term, fs, doc_view, link);
 			break;
@@ -378,12 +416,25 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 			else
 				/* XXX: when can this happen? --pasky */
 				s = "";
+			if (term->utf8) goto utf_8_select;
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
 				x = link->points[i].x + dx;
 				y = link->points[i].y + dy;
 				if (is_in_box(box, x, y))
 					draw_char_data(term, x, y, i < len ? s[i] : '_');
+			}
+			break;
+utf_8_select:
+			text = s;
+			end = strchr(s, '\0');
+			len = strlen_utf8(&text);
+			for (i = 0; i < link->npoints; i++) {
+				x = link->points[i].x + dx;
+				y = link->points[i].y + dy;
+				if (is_in_box(box, x, y))
+					draw_char_data(term, x, y, i < len
+					 ? utf_8_to_unicode(&s, end) : '_');
 			}
 			break;
 		case FC_SUBMIT:
@@ -1195,6 +1246,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	unsigned char *text;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
+	int utf8 = ses->tab->term->utf8;
 
 	assert(ses && doc_view && link && ev);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -1214,49 +1266,79 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 	switch (action_id) {
 		case ACT_EDIT_LEFT:
-			fs->state = int_max(fs->state - 1, 0);
+			if (utf8) {
+				unsigned char *text = fs->value;
+				unsigned char *end = fs->value + fs->state - 1;
+				int old = fs->state;
+
+				while (utf_8_to_unicode(&text, end) != UCS_NO_CHAR);
+				fs->state = (int)(text - fs->value);
+				if (old != fs->state) fs->utf8_pos--;
+			} else
+				fs->state = int_max(fs->state - 1, 0);
 			break;
 		case ACT_EDIT_RIGHT:
-			fs->state = int_min(fs->state + 1, strlen(fs->value));
+			if (utf8) {
+				unsigned char *text = fs->value + fs->state;
+				unsigned char *end = strchr(text, '\0');
+				int old = fs->state;
+
+				utf_8_to_unicode(&text, end);
+				fs->state = (int)(text - fs->value);
+				if (old != fs->state) fs->utf8_pos++;
+			} else
+				fs->state = int_min(fs->state + 1, strlen(fs->value));
 			break;
 		case ACT_EDIT_HOME:
 			if (fc->type == FC_TEXTAREA) {
-				status = textarea_op_home(fs, fc);
+				status = textarea_op_home(fs, fc, utf8);
 			} else {
 				fs->state = 0;
+				fs->utf8_pos = 0;
 			}
 			break;
 		case ACT_EDIT_UP:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
-				status = textarea_op_up(fs, fc);
+				status = textarea_op_up(fs, fc, utf8);
 			break;
 		case ACT_EDIT_DOWN:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
-				status = textarea_op_down(fs, fc);
+				status = textarea_op_down(fs, fc, utf8);
 			break;
 		case ACT_EDIT_END:
 			if (fc->type == FC_TEXTAREA) {
-				status = textarea_op_end(fs, fc);
+				status = textarea_op_end(fs, fc, utf8);
 			} else {
 				fs->state = strlen(fs->value);
+				if (utf8) {
+					unsigned char *text = fs->value;
+
+					fs->utf8_pos = strlen_utf8(&text);
+				}
 			}
 			break;
 		case ACT_EDIT_BEGINNING_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
-				status = textarea_op_bob(fs, fc);
+				status = textarea_op_bob(fs, fc, utf8);
 			} else {
 				fs->state = 0;
+				fs->utf8_pos = 0;
 			}
 			break;
 		case ACT_EDIT_END_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
-				status = textarea_op_eob(fs, fc);
+				status = textarea_op_eob(fs, fc, utf8);
 			} else {
 				fs->state = strlen(fs->value);
+				if (utf8) {
+					unsigned char *text = fs->value;
+
+					fs->utf8_pos = strlen_utf8(&text);
+				}
 			}
 			break;
 		case ACT_EDIT_OPEN_EXTERNAL:
@@ -1274,6 +1356,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (!form_field_is_readonly(fc))
 				fs->value[0] = 0;
 			fs->state = 0;
+			fs->utf8_pos = 0;
 			break;
 		case ACT_EDIT_PASTE_CLIPBOARD:
 			if (form_field_is_readonly(fc)) break;
@@ -1289,13 +1372,19 @@ field_op(struct session *ses, struct document_view *doc_view,
 					fs->value = v;
 					memmove(v, text, length + 1);
 					fs->state = strlen(fs->value);
+					if (utf8 && fc->type != FC_TEXTAREA) {
+						unsigned char *text = fs->value;
+
+						fs->utf8_pos = strlen_utf8(&text);
+					}
+
 				}
 			}
 			mem_free(text);
 			break;
 		case ACT_EDIT_ENTER:
 			if (fc->type == FC_TEXTAREA) {
-				status = textarea_op_enter(fs, fc);
+				status = textarea_op_enter(fs, fc, utf8);
 				break;
 			}
 
@@ -1320,7 +1409,19 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
+			if (utf8) {
+				int i;
+				unsigned char *text = fs->value;
+				unsigned char *end = fs->value + fs->state;
 
+				for (i = 0; i < fs->utf8_pos - 1; i++)
+					utf_8_to_unicode(&text, end);
+				length = strlen(end) + 1;
+				memmove(text, end, length);
+				fs->state = (int)(text - fs->value);
+				fs->utf8_pos--;
+				break;
+			}
 			length = strlen(fs->value + fs->state) + 1;
 			text = fs->value + fs->state;
 
@@ -1338,7 +1439,18 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
+			if (utf8) {
+				unsigned char *end = fs->value + length;
+				unsigned char *text = fs->value + fs->state;
+				unsigned char *old = text;
 
+				utf_8_to_unicode(&text, end);
+				if (old != text) {
+					memmove(old, text,
+						(int)(end - text) + 1);
+				}
+				break;
+			}
 			text = fs->value + fs->state;
 
 			memmove(text, text + 1, length - fs->state);
@@ -1368,6 +1480,11 @@ field_op(struct session *ses, struct document_view *doc_view,
 			memmove(text, fs->value + fs->state, length);
 
 			fs->state = (int) (text - fs->value);
+			if (utf8 && fc->type != FC_TEXTAREA) {
+				unsigned char *text = fs->value;
+
+				fs->utf8_pos = strlen_utf8(&text);
+			}
 			break;
 		case ACT_EDIT_KILL_TO_EOL:
 			if (form_field_is_readonly(fc)) {
@@ -1421,13 +1538,41 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 			if (form_field_is_readonly(fc)
-			    || strlen(fs->value) >= fc->maxlength
-			    || !insert_in_string(&fs->value, fs->state, "?", 1)) {
+			    || strlen(fs->value) >= fc->maxlength) {
 				status = FRAME_EVENT_OK;
 				break;
 			}
+			if (utf8) {
+				static unsigned char buf[7];
+				static int i = 0;
+				unicode_val_T data;
+				unsigned char *t;
 
-			fs->value[fs->state++] = get_kbd_key(ev);
+				t = buf;
+				buf[i++] = get_kbd_key(ev);
+				buf[i] = 0;
+				data = utf_8_to_unicode(&t, buf + i);
+				if (data != UCS_NO_CHAR) {
+					if (!insert_in_string(&fs->value, fs->state, buf, i)) {
+					    	i = 0;
+						return FRAME_EVENT_OK;
+					}
+					fs->state += i;
+					fs->utf8_pos++;
+					i = 0;
+					break;
+				}
+				if (i == 6) {
+					i = 0;
+					return FRAME_EVENT_OK;
+				} else {
+					return FRAME_EVENT_OK;
+				}
+			} else {
+				if (!insert_in_string(&fs->value, fs->state, "?", 1))
+					return FRAME_EVENT_OK;
+				fs->value[fs->state++] = get_kbd_key(ev);
+			}
 			break;
 	}
 

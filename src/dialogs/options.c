@@ -59,7 +59,6 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 		unsigned char *name = get_cp_name(i);
 
 		if (!name) break;
-		if (is_cp_special(i)) continue;
 
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
 		    	    display_codepage, get_cp_mime_name(i), 0);

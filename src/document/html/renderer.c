@@ -23,6 +23,7 @@
 #include "document/refresh.h"
 #include "document/renderer.h"
 #include "intl/charsets.h"
+#include "osdep/types.h"
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "terminal/color.h"
@@ -404,7 +405,7 @@ get_format_screen_char(struct html_context *html_context,
 
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
-static inline void
+static inline int
 set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	  enum link_state link_state)
 {
@@ -413,34 +414,83 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	                                                   link_state);
 	int x = part->cx;
 	int y = part->cy;
+	int x2 = x;
+	int len = charslen;
+	int utf8 = html_context->options->utf8;
 
 	assert(part);
-	if_assert_failed return;
+	if_assert_failed return len;
+
+	assert(charslen >= 0);
 
 	if (realloc_spaces(part, x + charslen))
-		return;
+		return len;
 
 	if (part->document) {
 		if (realloc_line(html_context, part->document,
 		                 Y(y), X(x) + charslen - 1))
-			return;
+			return len;
+		if (utf8) {
+			unsigned char *end;
 
-		for (; charslen > 0; charslen--, x++, chars++) {
-			if (*chars == NBSP_CHAR) {
-				schar->data = ' ';
-				part->spaces[x] = html_context->options->wrap_nbsp;
-			} else {
-				part->spaces[x] = (*chars == ' ');
-				schar->data = *chars;
+			for (end = chars + charslen; chars < end; x++) {
+				if (*chars == NBSP_CHAR) {
+					schar->data = ' ';
+					part->spaces[x] = html_context->options->wrap_nbsp;
+					chars++;
+				} else {
+					unicode_val_T data;
+
+					part->spaces[x] = (*chars == ' ');
+					data = utf_8_to_unicode(&chars, end);
+					if (data == UCS_NO_CHAR) {
+						/* HR */
+						unsigned char attr = schar->attr;
+
+						schar->data = *chars++;
+						schar->attr = SCREEN_ATTR_FRAME;
+						copy_screen_chars(&POS(x, y), schar, 1);
+						schar->attr = attr;
+						continue;
+					} else {
+						schar->data = (uint16_t)data;
+					}
+				}
+				copy_screen_chars(&POS(x, y), schar, 1);
+			}
+		} else {
+			for (; charslen > 0; charslen--, x++, chars++) {
+				if (*chars == NBSP_CHAR) {
+					schar->data = ' ';
+					part->spaces[x] = html_context->options->wrap_nbsp;
+				} else {
+					part->spaces[x] = (*chars == ' ');
+					schar->data = *chars;
+				}
+				copy_screen_chars(&POS(x, y), schar, 1);
 			}
 
-			copy_screen_chars(&POS(x, y), schar, 1);
 		}
+		len = x - x2;
 	} else {
-		for (; charslen > 0; charslen--, x++, chars++) {
-			part->spaces[x] = (*chars == ' ');
+		if (utf8) {
+			unsigned char *end;
+
+			for (end = chars + charslen; chars < end; x++) {
+				unicode_val_T data;
+
+				part->spaces[x] = (*chars == ' ');
+				data = utf_8_to_unicode(&chars, end);
+				if (data == UCS_NO_CHAR) chars++;
+			}
+			len = x - x2;
+		} else {
+			for (; charslen > 0; charslen--, x++, chars++) {
+				part->spaces[x] = (*chars == ' ');
+			}
 		}
 	}
+	return len;
 }
 
 static void
@@ -1170,7 +1220,7 @@ done_link_state_info(void)
 
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
-	     unsigned char *chars, int charslen)
+	     unsigned char *chars, int charslen, int utf8_len)
 {
 	struct part *part = html_context->part;
 	struct link *link;
@@ -1222,6 +1272,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (x_offset) {
 			charslen -= x_offset;
 			chars += x_offset;
+			utf8_len -= x_offset;
 		}
 
 		link = new_link(html_context, chars, charslen);
@@ -1236,14 +1287,14 @@ process_link(struct html_context *html_context, enum link_state link_state,
 	}
 
 	/* Add new canvas positions to the link. */
-	if (realloc_points(link, link->npoints + charslen)) {
+	if (realloc_points(link, link->npoints + utf8_len)) {
 		struct point *point = &link->points[link->npoints];
 		int x = X(part->cx) + x_offset;
 		int y = Y(part->cy);
 
-		link->npoints += charslen;
+		link->npoints += utf8_len;
 
-		for (; charslen > 0; charslen--, point++, x++) {
+		for (; utf8_len > 0; utf8_len--, point++, x++) {
 			point->x = x;
 			point->y = y;
 		}
@@ -1295,6 +1346,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	enum link_state link_state;
 	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
+	int utf8_len;
 
 	assert(html_context);
 	if_assert_failed return;
@@ -1353,9 +1405,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		else if (html_context->options->links_numbering)
 			put_link_number(html_context);
 	}
-
-	set_hline(html_context, chars, charslen, link_state);
-
+	utf8_len = set_hline(html_context, chars, charslen, link_state);
 	if (link_state != LINK_STATE_NONE) {
 
 #define is_drawing_subs_or_sups() \
@@ -1375,15 +1425,15 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		}
 
 #undef is_drawing_subs_or_sups
-
-		process_link(html_context, link_state, chars, charslen);
+		process_link(html_context, link_state, chars, charslen,
+			     utf8_len);
 	}
 
 	if (renderer_context.nowrap
-	    && part->cx + charslen > overlap(par_format))
+	    && part->cx + utf8_len > overlap(par_format))
 		return;
 
-	part->cx += charslen;
+	part->cx += utf8_len;
 	renderer_context.nobreak = 0;
 
 	if (!(html_context->options->wrap || html_is_preformatted())) {
@@ -1399,7 +1449,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	}
 
 	assert(charslen > 0);
-	part->xa += charslen;
+	part->xa += utf8_len;
 	int_lower_bound(&part->max_width, part->xa
 			+ par_format.leftmargin + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
@@ -1963,6 +2013,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 							   &document->cp,
 							   &document->cp_status,
 							   document->options.hard_assume);
+	html_context->options->utf8 = is_cp_special(document->options.cp);
 
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,

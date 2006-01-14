@@ -7,6 +7,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "intl/charsets.h"
 #include "terminal/color.h"
 #include "terminal/draw.h"
 #include "terminal/screen.h"
@@ -102,7 +103,7 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 }
 
 void
-draw_char_data(struct terminal *term, int x, int y, unsigned char data)
+draw_char_data(struct terminal *term, int x, int y, uint16_t data)
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -200,7 +201,7 @@ draw_border(struct terminal *term, struct box *box,
 
 void
 draw_char(struct terminal *term, int x, int y,
-	  unsigned char data, enum screen_char_attr attr,
+	  uint16_t data, enum screen_char_attr attr,
 	  struct color_pair *color)
 {
 	struct screen_char *screen_char = get_char(term, x, y);
@@ -277,6 +278,41 @@ draw_shadow(struct terminal *term, struct box *box,
 	draw_box(term, &dbox, ' ', 0, color);
 }
 
+static void
+draw_text_utf8(struct terminal *term, int x, int y,
+	       unsigned char *text, int length,
+	       enum screen_char_attr attr, struct color_pair *color)
+{
+	struct screen_char *start, *pos;
+	unsigned char *end = text + length;
+	unicode_val_T data;
+
+	assert(text && length >= 0);
+	if_assert_failed return;
+
+	if (length <= 0) return;
+	if (x >= term->width) return;
+
+	data = utf_8_to_unicode(&text, end);
+	if (data == UCS_NO_CHAR) return;
+	start = get_char(term, x++, y);
+	start->data = (uint16_t)data;
+	if (color) {
+		start->attr = attr;
+		set_term_color(start, color, 0,
+			       get_opt_int_tree(term->spec, "colors"));
+	}
+
+	for (pos = start + 1; x < term->width; x++, pos++) {
+		data = utf_8_to_unicode(&text, end);
+		if (data == UCS_NO_CHAR) break;
+		if (color) copy_screen_chars(pos, start, 1);
+		pos->data = (uint16_t)data;
+	}
+	set_screen_dirty(term->screen, y, y);
+	
+}
+
 void
 draw_text(struct terminal *term, int x, int y,
 	  unsigned char *text, int length,
@@ -287,6 +323,11 @@ draw_text(struct terminal *term, int x, int y,
 
 	assert(text && length >= 0);
 	if_assert_failed return;
+
+	if (term->utf8) {
+		draw_text_utf8(term, x, y, text, length, attr, color);
+		return;
+	}
 
 	if (length <= 0) return;
 	pos = get_char(term, x, y);

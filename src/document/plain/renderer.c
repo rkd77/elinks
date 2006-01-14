@@ -234,8 +234,10 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char *template = &renderer->template;
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
+	unsigned char *end, *text;
 	int lineno = renderer->lineno;
 	int expanded = 0;
+	int utf8 = document->options.utf8;
 	int width = line_width;
 	int line_pos;
 
@@ -276,6 +278,7 @@ add_document_line(struct plain_renderer *renderer,
 
 	assert(expanded >= 0);
 
+	if (utf8) goto utf_8;
 	startpos = pos = realloc_line(document, width + expanded, lineno);
 	if (!pos) {
 		mem_free(line);
@@ -401,7 +404,139 @@ add_document_line(struct plain_renderer *renderer,
 			*template = saved_renderer_template;
 		}
 	}
+	goto end;
+utf_8:
+	end = line + width;
+	startpos = pos = realloc_line(document, width + expanded, lineno);
+	if (!pos) {
+		mem_free(line);
+		return 0;
+	}
 
+	expanded = 0;
+	for (text = line; text < end; ) {
+		unsigned char line_char = *text;
+		unsigned char next_char, prev_char;
+
+		line_pos = text - line;
+		prev_char = text > line ? *(text - 1) : '\0';
+		next_char = (text + 1 < end) ? *(text + 1) : '\0';
+
+		/* Do not expand tabs that precede back-spaces; this saves the
+		 * back-space code some trouble. */
+		if (line_char == ASCII_TAB && next_char != ASCII_BS) {
+			int tab_width = 7 - ((line_pos + expanded) & 7);
+
+			expanded += tab_width;
+
+			template->data = ' ';
+			do
+				copy_screen_chars(pos++, template, 1);
+			while (tab_width--);
+
+			*template = saved_renderer_template;
+			text++;
+		} else if (line_char == ASCII_BS) {
+			if (!(expanded + line_pos)) {
+				/* We've backspaced to the start of the line */
+				if (expanded > 0)
+					expanded--; /* Don't count it */
+				continue;
+			}
+
+			if (pos > startpos)
+				pos--;  /* Backspace */
+
+			/* Handle x^H_ as _^Hx, but prevent an infinite loop
+			 * swapping two underscores. */
+			if (next_char == '_'  && prev_char != '_') {
+				/* x^H_ becomes _^Hx */
+				if (text - 1 >= line)
+					*(text - 1) = next_char;
+				if (text + 1 < end)
+					*(text + 1) = prev_char;
+
+				/* Go back and reparse the swapped characters */
+				if (text - 2 >= line)
+					text -= 2;
+				continue;
+			}
+
+			if (expanded - 2 >= 0) {
+				/* Don't count the backspace character or the
+				 * deleted character when returning the line's
+				 * width or when expanding tabs. */
+				expanded -= 2;
+			}
+
+			if (pos->data == '_' && next_char == '_') {
+				/* Is _^H_ an underlined underscore
+				 * or an emboldened underscore? */
+
+				if (expanded + line_pos >= 0
+				    && pos - 1 >= startpos
+				    && (pos - 1)->attr) {
+					/* There is some preceding text,
+					 * and it has an attribute; copy it */
+					template->attr |= (pos - 1)->attr;
+				} else {
+					/* Default to bold; seems more useful
+					 * than underlining the underscore */
+					template->attr |= SCREEN_ATTR_BOLD;
+				}
+
+			} else if (pos->data == '_') {
+				/* Underline _^Hx */
+
+				template->attr |= SCREEN_ATTR_UNDERLINE;
+
+			} else if (pos->data == next_char) {
+				/* Embolden x^Hx */
+
+				template->attr |= SCREEN_ATTR_BOLD;
+			}
+
+			/* Handle _^Hx^Hx as both bold and underlined */
+			if (template->attr)
+				template->attr |= pos->attr;
+			text++;
+		} else {
+			int added_chars = 0;
+
+			if (document->options.plain_display_links
+			    && isalpha(line_char) && isalpha(next_char)) {
+				/* We only want to check for a URI if there are
+				 * at least two consecutive alphabetic
+				 * characters, or if we are at the very start of
+				 * the line.  It improves performance a bit.
+				 * --Zas */
+				added_chars = print_document_link(renderer,
+								  lineno, line,
+								  line_pos,
+								  width,
+								  expanded,
+								  pos);
+			}
+
+			if (added_chars) {
+				text += added_chars;
+				pos += added_chars;
+			} else {
+				unicode_val_T data = utf_8_to_unicode(&text, end);
+
+				if (data == UCS_NO_CHAR) text++;
+				template->data = (uint16_t)data;
+				copy_screen_chars(pos++, template, 1);
+
+				/* Detect copy of nul chars to screen, this
+				 * should not occur. --Zas */
+				assert(line_char);
+			}
+
+			*template = saved_renderer_template;
+		}
+	}
+end:
 	mem_free(line);
 
 	realloc_line(document, pos - startpos, lineno);
@@ -559,6 +694,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 	document->width = 0;
+	document->options.utf8 = is_cp_special(document->options.cp);
 
 	/* Setup the style */
 	init_template(&renderer.template, &document->options);

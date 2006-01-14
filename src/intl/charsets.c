@@ -140,6 +140,12 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 	int s;
 
 	if (u < 128) return strings[u];
+
+	to &= ~SYSTEM_CHARSET_FLAG;
+
+	if (codepages[to].table == table_utf_8)
+		return encode_utf_8(u);
+
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
 	if (u == 0xa0) return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
 	if (u == 0xad) return "";
@@ -151,7 +157,6 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 		return u2cp_(strange, to, no_nbsp_hack);
 	}
 
-	to &= ~SYSTEM_CHARSET_FLAG;
 
 	for (j = 0; codepages[to].table[j].c; j++)
 		if (codepages[to].table[j].u == u)
@@ -165,7 +170,7 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 
 static unsigned char utf_buffer[7];
 
-static unsigned char *
+inline unsigned char *
 encode_utf_8(unicode_val_T u)
 {
 	memset(utf_buffer, 0, 7);
@@ -198,6 +203,91 @@ encode_utf_8(unicode_val_T u)
 		utf_buffer[5] = 0x80 | (u & 0x3f);
 
 	return utf_buffer;
+}
+
+inline int
+strlen_utf8(unsigned char **str)
+{
+	unsigned char *s = *str;
+	unsigned char *end = strchr(s, '\0');
+	int x;
+	int len;
+
+	for (x = 0;; x++, s += len) {
+		if (*s < 0x80) len = 1;
+		else if (*s < 0xe0) len = 2;
+		else if (*s < 0xf0) len = 3;
+		else if (*s < 0xf8) len = 4;
+		else if (*s < 0xfc) len = 5;
+		else len = 6;
+		if (s + len > end) break;
+	}
+	*str = s;
+	return x;
+}
+
+inline unicode_val_T
+utf_8_to_unicode(unsigned char **string, unsigned char *end)
+{
+	unsigned char *str = *string;
+	unicode_val_T u;
+	int length;
+
+	if (str[0] < 0x80)
+		length = 1;
+	else if (str[0] < 0xe0)
+		length = 2;
+	else if (str[0] < 0xf0)
+		length = 3;
+	else if (str[0] < 0xf8)
+		length = 4;
+	else if (str[0] < 0xfc)
+		length = 5;
+	else
+		length = 6;
+
+	if (str + length > end) {
+		return UCS_NO_CHAR;
+	} 
+
+	switch (length) {
+		case 1:
+			u = str[0];
+			break;
+		case 2:
+			u = (str[0] & 0x1f) << 6;
+			u += (str[1] & 0x3f);
+			break;
+		case 3:
+			u = (str[0] & 0x0f) << 12;
+			u += ((str[1] & 0x3f) << 6);
+			u += (str[2] & 0x3f);
+			break;
+		case 4:
+			u = (str[0] & 0x0f) << 18;
+			u += ((str[1] & 0x3f) << 12);
+			u += ((str[2] & 0x3f) << 6);
+			u += (str[3] & 0x3f);
+			break;
+		case 5:
+			u = (str[0] & 0x0f) << 24;
+			u += ((str[1] & 0x3f) << 18);
+			u += ((str[2] & 0x3f) << 12);
+			u += ((str[3] & 0x3f) << 6);
+			u += (str[4] & 0x3f);
+			break;
+		case 6:	
+		default:
+			u = (str[0] & 0x01) << 30;
+			u += ((str[1] & 0x3f) << 24);
+			u += ((str[2] & 0x3f) << 18);
+			u += ((str[3] & 0x3f) << 12);
+			u += ((str[4] & 0x3f) << 6);
+			u += (str[5] & 0x3f);
+			break;
+	}
+	*string = str + length;
+	return u > 0xffff ? '*' : u;
 }
 
 /* This slow and ugly code is used by the terminal utf_8_io */
@@ -430,10 +520,15 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	static struct entity_cache entity_cache[ENTITY_CACHE_MAXLEN][ENTITY_CACHE_SIZE];
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
 	static int first_time = 1;
-	unsigned int slen;
+	unsigned int slen = 0;
 	unsigned char *result = NULL;
 
 	if (strlen <= 0) return NULL;
+
+	/* TODO: caching UTF-8 */
+	encoding &= ~SYSTEM_CHARSET_FLAG;
+	if (codepages[encoding].table == table_utf_8)
+		goto skip;
 
 	if (first_time) {
 		memset(&nb_entity_cache, 0, ENTITY_CACHE_MAXLEN * sizeof(unsigned int));
@@ -488,7 +583,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 		fprintf(stderr, "miss\n");
 #endif
 	}
-
+skip:
 	if (*str == '#') { /* Numeric entity. */
 		int l = (int) strlen;
 		unsigned char *st = (unsigned char *) str;
@@ -540,6 +635,9 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 		if (element) result = u2cp(element->c, encoding);
 	}
 
+	if (codepages[encoding].table == table_utf_8) {
+		return result;
+	}
 end:
 	/* Take care of potential buffer overflow. */
 	if (strlen < sizeof(entity_cache[slen][0].str)) {

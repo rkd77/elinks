@@ -71,6 +71,7 @@ struct document_options {
 
 	unsigned int plain:1;
 	unsigned int wrap:1;
+	unsigned int utf8:1;
 
 	/* XXX: Everything past this comment is specialy handled by compare_opt() */
 	unsigned char *framename;

@@ -167,6 +167,31 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		attr = get_opt_bool("ui.dialogs.underline_button_shortcuts")
 		     ? SCREEN_ATTR_UNDERLINE : 0;
 
+		if (term->utf8) {
+			unsigned char *text2 = text;
+			unsigned char *end = text
+				+ widget_data->widget->info.button.truetextlen;
+			int hk_state = 0;
+			int x1;
+
+			for (x1 = 0; x1 - !!hk_state < len && *text2; x1++) {
+				uint16_t data;
+
+				data = (uint16_t)utf_8_to_unicode(&text2, end);
+				if (!hk_state && (int)(text2 - text) == hk_pos + 1) {
+					hk_state = 1;
+					continue;
+				}
+				if (hk_state == 1) {
+					draw_char(term, x + x1 - 1, pos->y, data, attr, shortcut_color);
+					hk_state = 2;
+				} else {
+					draw_char(term, x + x1 - !!hk_state, pos->y, data, 0, color);
+				}
+
+			}
+			len = x1 - !!hk_state;
+		} else
 		if (hk_pos >= 0) {
 			int right = widget_data->widget->info.button.truetextlen - hk_pos - 1;
 

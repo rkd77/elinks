@@ -39,6 +39,7 @@ struct form_state {
 
 	unsigned char *value;
 	int state;
+	int utf8_pos;
 	int vpos;
 	int vypos;
 

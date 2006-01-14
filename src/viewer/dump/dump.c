@@ -26,6 +26,7 @@
 #include "document/options.h"
 #include "document/renderer.h"
 #include "document/view.h"
+#include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "main/main.h"
@@ -322,6 +323,9 @@ add_document_to_string(struct string *string, struct document *document)
 	assert(string && document);
 	if_assert_failed return NULL;
 
+	if (is_cp_special(document->options.cp))
+		goto utf_8;
+
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
 		int x;
@@ -354,7 +358,43 @@ add_document_to_string(struct string *string, struct document *document)
 
 		add_char_to_string(string, '\n');
 	}
+	goto end;
+utf_8:
+	for (y = 0; y < document->height; y++) {
+		struct screen_char *pos = document->data[y].chars;
+		int white = 0;
+		int x;
 
+		for (x = 0; x < document->data[y].length; x++) {
+			uint16_t data = pos->data;
+			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
+
+			if (!isscreensafe(data)) {
+				white++;
+				continue;
+			} else if (frame && data >= 176 && data < 224) {
+				data = frame_dumb[data - 176];
+
+				if (data <= ' ') {
+					/* Count spaces. */
+					white++;
+				} else {
+					/* Print spaces if any. */
+					if (white) {
+						add_xchar_to_string(string, ' ', white);
+						white = 0;
+					}
+					if (frame)
+						add_char_to_string(string, data);
+					else
+						add_to_string(string, encode_utf_8(data));
+				}
+			}
+		}
+
+		add_char_to_string(string, '\n');
+	}
+end:
 	return string;
 }
 
@@ -381,6 +421,9 @@ dump_to_file(struct document *document, int fd)
 	unsigned char *buf = mem_alloc(D_BUF);
 
 	if (!buf) return -1;
+
+	if (is_cp_special(document->options.cp))
+		goto utf_8;
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -418,13 +461,60 @@ dump_to_file(struct document *document, int fd)
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
+	goto ref;
+utf_8:
+	for (y = 0; y < document->height; y++) {
+		int white = 0;
+		int x;
+
+		for (x = 0; x < document->data[y].length; x++) {
+			uint16_t c;
+			unsigned char attr = document->data[y].chars[x].attr;
+
+			c = document->data[y].chars[x].data;
+
+			if ((attr & SCREEN_ATTR_FRAME)
+			    && c >= 176 && c < 224)
+				c = frame_dumb[c - 176];
+			else {
+				unsigned char *utf8_buf = encode_utf_8(c);
+
+				while (*utf8_buf) {
+					if (write_char(*utf8_buf++,
+						fd, buf, &bptr)) goto fail;
+				}
+				continue;
+			}
+
+			if (c <= ' ') {
+				/* Count spaces. */
+				white++;
+				continue;
+			}
+
+			/* Print spaces if any. */
+			while (white) {
+				if (write_char(' ', fd, buf, &bptr))
+					goto fail;
+				white--;
+			}
+
+			/* Print normal char. */
+			if (write_char(c, fd, buf, &bptr))
+				goto fail;
+		}
+
+		/* Print end of line. */
+		if (write_char('\n', fd, buf, &bptr))
+			goto fail;
+	}
 
 	if (hard_write(fd, buf, bptr) != bptr) {
 fail:
 		mem_free(buf);
 		return -1;
 	}
-
+ref:
 	if (document->nlinks && get_opt_bool("document.dump.references")) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";

@@ -250,7 +250,10 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 	struct document *document = renderer->document;
 	struct conv_table *convert = renderer->convert_table;
 	enum convert_string_mode mode = renderer->convert_mode;
+	int utf8 = document->options.utf8;
+	unsigned char *end, *text;
 	int x;
+
 
 	assert(renderer && template && string && length);
 
@@ -265,6 +268,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 
 	add_search_node(renderer, length);
 
+	if (utf8) goto utf_8;
 	for (x = 0; x < length; x++, renderer->canvas_x++) {
 		unsigned char data = string[x];
 
@@ -293,7 +297,42 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 
 		copy_screen_chars(POS(renderer), template, 1);
 	}
+	goto end;
+utf_8:
+	end = string + length;
+	for (text = string; text < end; renderer->canvas_x++) {
+		unsigned char data = *text;
+		unicode_val_T d2;
 
+		/* This is mostly to be able to break out so the indentation
+		 * level won't get to high. */
+		switch (data) {
+		case ASCII_TAB:
+		{
+			int tab_width = 7 - (X(renderer) & 7);
+			int width = WIDTH(renderer, end - text + tab_width);
+
+			template->data = ' ';
+
+			if (!realloc_line(document, width, Y(renderer)))
+				break;
+
+			/* Only loop over the expanded tab chars and let the
+			 * ``main loop'' add the actual tab char. */
+			for (; tab_width-- > 0; renderer->canvas_x++)
+				copy_screen_chars(POS(renderer), template, 1);
+			text++;
+			break;
+		}
+		default:
+			d2 = utf_8_to_unicode(&text, end);
+			if (d2 == UCS_NO_CHAR) text++;
+			template->data = (uint16_t)d2;
+		}
+
+		copy_screen_chars(POS(renderer), template, 1);
+	}
+end:
 	mem_free(string);
 }
 
@@ -989,6 +1028,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	init_dom_renderer(&renderer, document, buffer, convert_table);
 
 	document->bgcolor = document->options.default_bg;
+	document->options.utf8 = is_cp_special(document->options.cp);
 
 	if (document->options.plain)
 		parser_type = SGML_PARSER_STREAM;

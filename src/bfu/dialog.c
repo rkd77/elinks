@@ -12,6 +12,7 @@
 #include "bfu/dialog.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
+#include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "terminal/draw.h"
 #include "main/timer.h"
@@ -96,13 +97,18 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 		title_color = get_bfu_color(term, "dialog.title");
 		if (title_color && box.width > 2) {
 			unsigned char *title = dlg_data->dlg->title;
-			int titlelen = int_min(box.width - 2, strlen(title));
-			int x = (box.width - titlelen) / 2 + box.x;
+			unsigned char *t2 = title;
+			int titlelen = strlen(title);
+			int len = term->utf8 ? strlen_utf8(&t2) : titlelen;
+#if 1			
+			len = int_min(box.width - 2, len);
+#endif
+			int x = (box.width - len) / 2 + box.x;
 			int y = box.y - 1;
 
 			draw_text(term, x - 1, y, " ", 1, 0, title_color);
 			draw_text(term, x, y, title, titlelen, 0, title_color);
-			draw_text(term, x + titlelen, y, " ", 1, 0, title_color);
+			draw_text(term, x + len, y, " ", 1, 0, title_color);
 		}
 	}
 

@@ -53,6 +53,10 @@ unsigned char *get_cp_name(int);
 unsigned char *get_cp_mime_name(int);
 int is_cp_special(int);
 void free_conv_table(void);
+inline unsigned char *encode_utf_8(unicode_val_T);
+inline int strlen_utf8(unsigned char **);
+inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
+
 unsigned char *cp2utf_8(int, int);
 
 unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);

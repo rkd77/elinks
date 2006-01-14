@@ -245,7 +245,6 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 
 	case EVENT_KBD:
 	{
-		int utf8_io = -1;
 		int key = get_kbd_key(ev);
 
 		reset_timer();
@@ -260,9 +259,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 		}
 
 		if (interlink->utf_8.len) {
-			utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
-
-			if ((key & 0xC0) == 0x80 && utf8_io) {
+			if ((key & 0xC0) == 0x80 && term->utf8) {
 				interlink->utf_8.ucs <<= 6;
 				interlink->utf_8.ucs |= key & 0x3F;
 				if (! --interlink->utf_8.len) {
@@ -280,15 +277,14 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			}
 		}
 
-		if (key < 0x80 || key > 0xFF
-		    || (utf8_io == -1
-			? !get_opt_bool_tree(term->spec, "utf_8_io")
-			: !utf8_io)) {
+		if (key < 0x80 || key > 0xFF || !term->utf8) {
 
 			term_send_event(term, ev);
 			break;
 
-		} else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
+		}
+
+		else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
 			unsigned int mask, cov = 0x80;
 			int len = 0;
 
