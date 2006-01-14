@@ -113,10 +113,10 @@ clean-local:
 $(TXT_DIR)/import-features.conf.txt: $(FEATURES) $(IMPORT_FEATURES_CONF)
 	$(IMPORT_FEATURES_CONF) > $@
 
-$(TXT_DIR)/elinks.1.%.txt: $(MAKE_ELINKS_MANPAGE) $(ELINKS)
+$(TXT_DIR)/elinks.1.%.txt: $(MAKE_ELINKS_MANPAGE) $(ELINKS) $(HELP2DOC) Makefile
 	$(LOCALES) $(MAKE_ELINKS_MANPAGE) $@ $(ELINKS) $(HELP2DOC) > $@
 
-$(TXT_DIR)/elinkskeys.5.%.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND)
+$(TXT_DIR)/elinkskeys.5.%.txt: $(MAKE_ELINKSKEYS_MANPAGE) $(KBDBIND) Makefile
 	$(LOCALES) $(MAKE_ELINKSKEYS_MANPAGE) $@ $(KBDBIND) > $@
 
 
@@ -138,7 +138,7 @@ $(MAN_DIR)/man5/elinkskeys.5: $(XML_DIR)/elinkskeys.5.man.xml
 		< $@.tmp > $@
 	rm $@.tmp
 
-$(MAN_DIR)/man5/elinks.conf.5: $(ELINKS)
+$(MAN_DIR)/man5/elinks.conf.5: $(ELINKS) $(HELP2DOC) Makefile
 	$(LOCALES) $(HELP2DOC) --elinks=$(ELINKS) --elinksconf > $@
 
 # XHTML/CSS Man Pages
