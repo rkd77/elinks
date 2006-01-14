@@ -659,7 +659,7 @@ if test "$enable_guile" = "yes"; then
 		GUILE_CFLAGS="`guile-config compile`"
 		LIBS="$GUILE_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $GUILE_CFLAGS"
-		EL_CONFIG(CONFIG_GUILE, [Guile])
+		EL_CONFIG(CONFIG_SCRIPTING_GUILE, [Guile])
 		AC_SUBST(GUILE_CFLAGS)
 		cat <<EOF
 ***********************************************************************
@@ -720,7 +720,7 @@ fi
 if test "$cf_result" != "yes"; then
 	EL_RESTORE_FLAGS
 else
-	EL_CONFIG(CONFIG_PERL, [Perl])
+	EL_CONFIG(CONFIG_SCRIPTING_PERL, [Perl])
 
 	CFLAGS="$CFLAGS_X"
 	AC_SUBST(PERL_LIBS)
@@ -836,7 +836,7 @@ AC_MSG_RESULT($cf_result)
 if test "$cf_result" != yes; then
 	EL_RESTORE_FLAGS
 else
-	EL_CONFIG(CONFIG_LUA, [Lua])
+	EL_CONFIG(CONFIG_SCRIPTING_LUA, [Lua])
 	AC_CHECK_HEADERS(lauxlib.h)
 
 	CFLAGS="$CFLAGS_X"
@@ -849,18 +849,18 @@ dnl ===================================================================
 dnl Check for Ruby, optional even if installed.
 dnl ===================================================================
 
-EL_CONFIG_RUBY
+EL_CONFIG_SCRIPTING_RUBY
 
 dnl ===================================================================
 dnl Setup global scripting
 dnl ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_GUILE CONFIG_LUA CONFIG_PERL CONFIG_PYTHON CONFIG_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
-AC_SUBST(CONFIG_GUILE)
-AC_SUBST(CONFIG_LUA)
-AC_SUBST(CONFIG_PERL)
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_PYTHON CONFIG_SCRIPTING_RUBY CONFIG_SM_SCRIPTING], [Browser scripting])
+AC_SUBST(CONFIG_SCRIPTING_GUILE)
+AC_SUBST(CONFIG_SCRIPTING_LUA)
+AC_SUBST(CONFIG_SCRIPTING_PERL)
 AC_SUBST(CONFIG_PYTHON)
-AC_SUBST(CONFIG_RUBY)
+AC_SUBST(CONFIG_SCRIPTING_RUBY)
 AC_SUBST(CONFIG_SM_SCRIPTING)
 AC_SUBST(CONFIG_SCRIPTING)
 

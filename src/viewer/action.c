@@ -293,7 +293,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			break;
 
 		case ACT_MAIN_LUA_CONSOLE:
-#ifdef CONFIG_LUA
+#ifdef CONFIG_SCRIPTING_LUA
 			trigger_event_name("dialog-lua-console", ses);
 #endif
 			break;
