@@ -172,15 +172,14 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else {
 		unsigned char *frame = SEE_string_to_unsigned_char(p);
 		struct document_view *doc_view = vs->doc_view;
-		struct js_window_object *obj =
-		 js_try_resolve_frame(doc_view, frame);
+		struct js_window_object *obj;
 
-		mem_free_if(frame);
-		if (obj) {
+		if (frame && (obj = js_try_resolve_frame(doc_view, frame))) {
 			SEE_SET_OBJECT(res, (struct SEE_object *)obj);
 		} else {
 			SEE_SET_UNDEFINED(res);
 		}
+		mem_free_if(frame);
 	}
 }
 
@@ -238,8 +237,10 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 		return;
 
 	string = SEE_value_to_unsigned_char(interp, argv[0]);
-	if (!string || !*string)
+	if (!string || !*string) {
+		mem_free_if(string);
 		return;
+	}
 
 	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
 		N_("JavaScript Alert"), ALIGN_CENTER, string);
@@ -330,7 +331,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 		}
 	}
 
-	mem_free_if(target);
 	if (!get_cmd_opt_bool("no-connect")
 	    && !get_cmd_opt_bool("no-home")
 	    && !get_cmd_opt_bool("anonymous")
@@ -350,6 +350,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 
 end:
+	mem_free_if(target);
 	done_uri(uri);
 
 }

@@ -146,15 +146,17 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		struct form_view *form_view;
 		struct js_form *form_object;
 
+		if (!string) return;
+
 		foreach (form, document->forms) {
 			if (!form->name || strcasecmp(string, form->name))
 				continue;
-			mem_free_if(string);
 			form_view = find_form_view(doc_view, form);
 			form_object = js_get_form_object(interp, doc, form_view);
 			SEE_SET_OBJECT(res, (struct SEE_object *)form_object);
 			break;
 		}
+		mem_free(string);
 	}
 }
 
