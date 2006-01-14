@@ -59,7 +59,7 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-acce
 		    --add-comments --language=C \
 		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
-	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl $(top_srcdir) $(PACKAGE).po \
+	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl -S"$(top_srcdir)" $(PACKAGE).po \
 	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
 
 
@@ -91,7 +91,7 @@ update-gmo: Makefile $(GMOFILES)
 #
 
 check-po:
-	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
+	@-$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)$(lang).po; \
 	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/check-accelerator-contexts.pl $(srcdir)$(lang).po; \

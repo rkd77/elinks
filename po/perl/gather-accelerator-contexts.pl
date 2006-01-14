@@ -1,7 +1,21 @@
 #! /usr/bin/perl
+# The copyright notice and license are in the POD at the bottom.
+
 use strict;
 use warnings;
 use Locale::PO qw();
+use Getopt::Long qw(GetOptions :config bundling gnu_compat);
+use autouse 'Pod::Usage' => qw(pod2usage);
+use autouse 'File::Spec::Functions' => qw(catfile);
+
+my $VERSION = "1.0";
+
+sub show_version
+{
+    print "gather-accelerator-contexts.pl $VERSION\n";
+    pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
+	       -exitval => 0});
+}
 
 {
     package Contextline;
@@ -15,49 +29,80 @@ use Locale::PO qw();
     }
 }
 
+my @Srcpath;
+
 # Each key is a file name.
 # Each value is a reference to an array of references to Contextline
 # pseudo-hashes.  The array is in ascending order by {lineno}.
 my %Srcfiles;
 
-# Scan the $srcfile for gettext_accelerator_context directives,
-# cache the result in %Srcfiles, and return it in that format.
-sub contextlines ($$)
+sub open_file_on_path ($@)
 {
-    my($top_srcdir, $srcfile) = @_;
-    return $Srcfiles{$srcfile} if exists($Srcfiles{$srcfile});
-
-    local $_;
-    my @contextlines = ();
-    my @prevctxs;
-    open my $srcfd, "<", "$top_srcdir/$srcfile" or die "$top_srcdir/$srcfile: $!";
-    while (<$srcfd>) {
-	chomp;
-	if (/^\}/ && @prevctxs) {
-	    push @contextlines, Contextline->new($., [@prevctxs = ()]);
+    my($fname, @path) = @_;
+    if (@path) {
+	my @warnings;
+	foreach my $dir (@path) {
+	    my $full_fname = catfile($dir, $fname);
+	    if (open my $fh, "<", $full_fname) {
+		return($fh, $full_fname);
+	    } else {
+		push @warnings, "$full_fname: $!\n";
+	    }
 	}
-	if (my($contexts) = /\[gettext_accelerator_context\(([^()]*)\)\]/) {
-	    my @contexts = grep { $_ ne "" } split(/\s*,\s*/, $contexts);
-	    foreach (@contexts) { s/^\./${srcfile}:/ }
-	    warn "$srcfile:$.: Previous context not closed\n"
-		if @prevctxs && @contexts;
-	    warn "$srcfile:$.: Context already closed\n"
-		if !@prevctxs && !@contexts;
-	    push @contextlines, Contextline->new($., [@prevctxs = @contexts]);
-	} elsif (/gettext_accelerator_context/) {
-	    warn "$srcfile:$.: Suspicious non-directive: $_\n";
+	# Didn't find $name anywhere on @path.
+	warn $_ foreach @warnings;
+	return;
+    } else {			# no path
+	if (open my $fh, "<", $fname) {
+	    return($fh, $fname);
+	} else {
+	    warn "$fname: $!\n";
+	    return;
 	}
     }
-    warn "$srcfile:$.: Last context not closed\n" if @prevctxs;
-
-    return $Srcfiles{$srcfile} = \@contextlines;
+    # not reached
 }
 
-sub contexts ($$$)
+# Scan the file $src_fname for gettext_accelerator_context directives,
+# cache the result in %Srcfiles, and return it in that format.
+# Cache and return [] if the file cannot be read on @Srcpath.
+sub contextlines ($)
 {
-    my($top_srcdir, $srcfile, $lineno) = @_;
+    my($src_fname) = @_;
+    return $Srcfiles{$src_fname} if exists($Srcfiles{$src_fname});
+    my @contextlines = ();
+
+    if (my($src_fh, $src_full_fname) = open_file_on_path($src_fname, @Srcpath)) {
+	my @prevctxs;
+	local $_;
+	while (<$src_fh>) {
+	    chomp;
+	    if (/^\}/ && @prevctxs) {
+		push @contextlines, Contextline->new($., [@prevctxs = ()]);
+	    }
+	    if (my($contexts) = /\[gettext_accelerator_context\(([^()]*)\)\]/) {
+		my @contexts = grep { $_ ne "" } split(/\s*,\s*/, $contexts);
+		s/^\./${src_fname}:/ foreach @contexts;
+		warn "$src_full_fname:$.: Previous context not closed\n"
+		    if @prevctxs && @contexts;
+		warn "$src_full_fname:$.: Context already closed\n"
+		    if !@prevctxs && !@contexts;
+		push @contextlines, Contextline->new($., [@prevctxs = @contexts]);
+	    } elsif (/gettext_accelerator_context/) {
+		warn "$src_full_fname:$.: Suspicious non-directive: $_\n";
+	    }
+	}
+	warn "$src_full_fname:$.: Last context not closed\n" if @prevctxs;
+    } # if opened ok
+
+    return $Srcfiles{$src_fname} = \@contextlines;
+}
+
+sub contexts ($$)
+{
+    my($srcfile, $lineno) = @_;
     # Could use a binary search here.
-    my $contextlines = contextlines($top_srcdir, $srcfile);
+    my $contextlines = contextlines($srcfile);
     my @contexts = ();
     foreach my Contextline $contextline (@{$contextlines}) {
 	return @contexts if $contextline->{lineno} > $lineno;
@@ -66,44 +111,48 @@ sub contexts ($$$)
     return ();
 }
 
-sub format_contexts (@)
+sub gather_accelerator_contexts ($$)
 {
-    if (@_) {
-	return "#. accelerator_context(" . join(", ", @_) . ")\n";
-    } else {
-	return "";
-    }
-}
+    my($pos, $po_fname) = @_;
+    foreach my $po (@$pos) {
+	my $automatic = $po->automatic();
+	$automatic =~ s/^\[gettext_accelerator_context\(.*(?:\n|\z)//mg
+	    if defined($automatic);
 
-my($top_srcdir, $pofile) = @ARGV;
-my $pos = Locale::PO->load_file_asarray($pofile) or die "$pofile: $!";
-foreach my $po (@$pos) {
-    my $automatic = $po->automatic();
-    $automatic =~ s/^\[gettext_accelerator_context\(.*(?:\n|\z)//mg
-	if defined($automatic);
-
-    if ($po->msgid() =~ /\~/) {
-	my @po_contexts = ();
-	foreach my $ref (split(' ', $po->reference())) {
-	    my @parts = split(/\:/, $ref);
-	    warn "weird reference: $ref\n", next unless @parts == 2;
-	    my @ref_contexts = contexts($top_srcdir, $parts[0], $parts[1]);
-	    if (@ref_contexts) {
-		push @po_contexts, grep { $_ ne "IGNORE" } @ref_contexts;
-	    } else {
-		warn "$ref: No accelerator context for msgid " . $po->msgid() . "\n";
+	if ($po->msgid() =~ /\~/) {
+	    my @po_contexts = ();
+	    foreach my $ref (split(' ', $po->reference())) {
+		my @parts = split(/\:/, $ref);
+		warn "weird reference: $ref\n", next unless @parts == 2;
+		my @ref_contexts = contexts($parts[0], $parts[1]);
+		if (@ref_contexts) {
+		    push @po_contexts, grep { $_ ne "IGNORE" } @ref_contexts;
+		} else {
+		    warn "$ref: No accelerator context for msgid " . $po->msgid() . "\n";
+		}
+	    }
+	    if (@po_contexts) {
+		# sort and uniquify
+		@po_contexts = sort keys %{{map { $_ => 1 } @po_contexts}};
+		$automatic .= "\n" if defined($automatic) and $automatic ne "";
+		$automatic .= "accelerator_context(" . join(", ", @po_contexts) . ")";
 	    }
 	}
-	if (@po_contexts) {
-	    # sort and uniquify
-	    @po_contexts = sort keys %{{map { $_ => 1 } @po_contexts}};
-	    $automatic .= "\n" if defined($automatic) and $automatic ne "";
-	    $automatic .= "accelerator_context(" . join(", ", @po_contexts) . ")";
-	}
+	$po->automatic($automatic);
     }
-    $po->automatic($automatic);
 }
-Locale::PO->save_file_fromarray($pofile, $pos) or die "$pofile: $!";
+
+GetOptions("srcdir|source-directory|S=s" => \@Srcpath,
+	   "help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
+	   "version" => \&show_version)
+    or exit 2;
+print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
+print(STDERR "$0: too many operands\n"), exit 2 if @ARGV > 1;
+
+my($po_fname) = @ARGV;
+my $pos = Locale::PO->load_file_asarray($po_fname) or die "$po_fname: $!";
+gather_accelerator_contexts($pos, $po_fname);
+Locale::PO->save_file_fromarray($po_fname, $pos) or die "$po_fname: $!";
 
 __END__
 
@@ -114,7 +163,7 @@ for detecting accelerator conflicts.
 
 =head1 SYNOPSIS
 
-B<gather-accelerator-contexts.pl> I<top_srcdir> F<I<program>.pot>
+B<gather-accelerator-contexts.pl> [B<-S>F<I<srcdir>>]... F<I<program>.pot>
 
 =head1 DESCRIPTION
 
@@ -195,14 +244,23 @@ an accelerator (e.g. in "~/.bashrc"), the warning can be silenced by
 specifying the special context "IGNORE", which
 B<gather-accelerator-contexts.pl> otherwise ignores.
 
-=head1 ARGUMENTS
+=head1 OPTIONS
 
 =over
 
-=item I<top_srcdir>
+=item B<-S>F<I<srcdir>>
 
 The directory to which the source references in "#:" lines are
-relative.
+relative.  Each use of this option adds one directory to the search
+path.  If you do not specify this option,
+B<gather-accelerator-contexts.pl> implicitly searches the current
+directory.
+
+=back
+
+=head1 ARGUMENTS
+
+=over
 
 =item F<I<program>.pot>
 
@@ -229,9 +287,6 @@ the beginning of a line marks the end of a function.
 
 B<gather-accelerator-contexts.pl> doesn't check whether the
 "gettext_accelerator_context" comments actually are comments.
-
-There should be a way to specify a source path, rather than just a
-single I<top_srcdir> directory.
 
 =head1 AUTHOR
 

@@ -4,10 +4,17 @@
 use strict;
 use warnings;
 use Locale::PO qw();
-use Getopt::Long qw(GetOptions);
+use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
 my $VERSION = "1.0";
+
+sub show_version
+{
+    print "check-accelerator-contexts.pl $VERSION\n";
+    pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
+	       -exitval => 0});
+}
 
 sub check_po_file
 {
@@ -47,13 +54,6 @@ sub check_po_file
 	}
     }
     return $warnings ? 1 : 0;
-}
-
-sub show_version
-{
-    print "check-accelerator-contexts.pl $VERSION\n";
-    pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
-	       -exitval => 0});
 }
 
 GetOptions("help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
