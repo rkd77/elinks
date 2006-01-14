@@ -198,25 +198,28 @@ endif
 
 RULES	 = all install clean cleanall init check test
 
-# Setup the basic dependencies.
-define basic_dependency
-.PHONY: $(1) $(1)-recursive
+RULES_LOCAL = $(addsuffix -local,$(RULES))
+RULES_REC   = $(addsuffix -recursive,$(RULES))
 
-# First decend subdirs, then do all the default stuff and finally do any local
-# hooks which can then depend on the default hook making things.
-$(1): $(1)-recursive $(1)-default $(1)-local
+.PHONY: $(RULES) $(RULES_LOCAL) $(RULES_REC) $(addsuffix -default,$(RULES))
 
 # The -recursive rules decend all subdirs.
-$(1)-recursive:
+$(RULES_REC):
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
-		$(call ncmd,recmake,$(subdir),$(1)) || exit 1;)
+		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
 
-# Dummy rules for local hooks
-$(1)-local:
-endef
+# Dummy -local rules
+$(RULES_LOCAL):
 
-$(foreach rule,$(RULES),$(eval $(call basic_dependency,$(rule))))
-
+# Default deps
+rule_deps = $(1)-recursive $(1)-default $(1)-local
+all:	  $(call rule_deps,all)
+install:  $(call rule_deps,install)
+clean:	  $(call rule_deps,clean)
+cleanall: $(call rule_deps,cleanall)
+init:	  $(call rule_deps,init)
+check:	  $(call rule_deps,check)
+test:	  $(call rule_deps,test)
 
 #############################################################################
 # Misc
