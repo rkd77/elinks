@@ -170,7 +170,7 @@ void elinks_assertm(int x, unsigned char *fmt, ...)
  * paths will get hit (and since developers usually don't test CONFIG_FASTMEM mode
  * extensively...). So better don't mess with it, even if you would do that
  * with awareness of this fact. We don't want to iterate over tens of spots all
- * over the code when we chane one detail regarding CONFIG_FASTMEM operation.
+ * over the code when we change one detail regarding CONFIG_FASTMEM operation.
  *
  * This is not that actual after introduction of if_assert_failed, but it's
  * a safe recommendation anyway, so... ;-) */
