@@ -154,7 +154,7 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 	}
 }
 
-struct dom_node *
+enum dom_stack_code
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
 	struct dom_stack_state *state;
@@ -164,13 +164,13 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	assert(0 < node->type && node->type < DOM_NODES);
 
 	if (stack->depth > DOM_STACK_MAX_DEPTH) {
-		return NULL;
+		return DOM_STACK_CODE_ERROR_MAX_DEPTH;
 	}
 
 	state = realloc_dom_stack_states(&stack->states, stack->depth);
 	if (!state) {
 		done_dom_node(node);
-		return NULL;
+		return DOM_STACK_CODE_ERROR_MEM_ALLOC;
 	}
 
 	state += stack->depth;
@@ -181,7 +181,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 		if (context->info->object_size
 		    && !realloc_dom_stack_state_objects(context, stack->depth)) {
 			done_dom_node(node);
-			return NULL;
+			return DOM_STACK_CODE_ERROR_MEM_ALLOC;
 		}
 	}
 
@@ -193,7 +193,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	stack->depth++;
 	call_dom_stack_callbacks(stack, state, DOM_STACK_PUSH);
 
-	return node;
+	return DOM_STACK_CODE_OK;
 }
 
 void
@@ -349,7 +349,8 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 	if (!context)
 		return;
 
-	push_dom_node(stack, root);
+	if (push_dom_node(stack, root) != DOM_STACK_CODE_OK)
+		return;
 
 	while (!dom_stack_is_empty(stack)) {
 		struct dom_stack_state *state = get_dom_stack_top(stack);

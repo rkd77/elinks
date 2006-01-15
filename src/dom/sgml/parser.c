@@ -39,7 +39,10 @@ add_sgml_document(struct dom_stack *stack, struct dom_string *string)
 {
 	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string);
 
-	return node ? push_dom_node(stack, node) : NULL;
+	if (node && push_dom_node(stack, node) == DOM_STACK_CODE_OK)
+		return node;
+
+	return NULL;
 }
 
 static inline struct dom_node *
@@ -58,7 +61,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 	node_info = get_sgml_node_info(parser->info->elements, node);
 	node->data.element.type = node_info->type;
 
-	if (!push_dom_node(stack, node))
+	if (push_dom_node(stack, node) != DOM_STACK_CODE_OK)
 		return NULL;
 
 	state = get_dom_stack_top(stack);
@@ -92,7 +95,7 @@ add_sgml_attribute(struct dom_stack *stack,
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
 		node->data.attribute.quoted = 1;
 
-	if (!node || !push_dom_node(stack, node))
+	if (!node || push_dom_node(stack, node) != DOM_STACK_CODE_OK)
 		return;
 
 	pop_dom_node(stack);
@@ -119,7 +122,10 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tar
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION;
 	}
 
-	return push_dom_node(stack, node);
+	if (push_dom_node(stack, node) == DOM_STACK_CODE_OK)
+		return node;
+
+	return NULL;
 }
 
 static inline void
@@ -133,7 +139,7 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 	if (token->type == SGML_TOKEN_SPACE)
 		node->data.text.only_space = 1;
 
-	if (push_dom_node(stack, node))
+	if (push_dom_node(stack, node) == DOM_STACK_CODE_OK)
 		pop_dom_node(stack);
 }
 
@@ -403,7 +409,7 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 	}
 
 	node = init_dom_node(DOM_NODE_TEXT, &source);
-	if (!node || !push_dom_node(&parser->parsing, node))
+	if (!node || push_dom_node(&parser->parsing, node) != DOM_STACK_CODE_OK)
 		return SGML_PARSER_CODE_MEM_ALLOC;
 
 	pop_dom_node(&parser->parsing);

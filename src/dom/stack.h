@@ -9,6 +9,16 @@ struct dom_stack;
 
 /* API Doc :: dom-stack */
 
+/** DOM stack code
+ *
+ * Codes used by the DOM stack to indicate states.
+ */
+enum dom_stack_code {
+	DOM_STACK_CODE_OK,		/*: All is well */
+	DOM_STACK_CODE_ERROR_MEM_ALLOC,	/*: Memory allocation failure */
+	DOM_STACK_CODE_ERROR_MAX_DEPTH,	/*: Stack max depth reached */
+};
+
 /** DOM stack callback
  *
  * Used by contexts, for 'hooking' into the node traversing. */
@@ -230,7 +240,7 @@ void done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *c
  *
  * If an error occurs the node is released with ref:[done_dom_node] and NULL is
  * returned. Else the pushed node is returned. */
-struct dom_node *push_dom_node(struct dom_stack *stack, struct dom_node *node);
+enum dom_stack_code push_dom_node(struct dom_stack *stack, struct dom_node *node);
 
 /** Pop the top stack state
  *

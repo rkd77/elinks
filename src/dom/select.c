@@ -506,7 +506,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			select->selector = select_node;
 		}
 
-		if (!push_dom_node(stack, &select_node->node))
+		if (push_dom_node(stack, &select_node->node) != DOM_STACK_CODE_OK)
 			return DOM_ERR_INVALID_STATE;
 
 		if (select_node->node.type != DOM_NODE_ELEMENT)
@@ -1070,7 +1070,7 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 			      &dom_select_data_context_info);
 	add_dom_stack_tracer(&select_data.stack, "select-match: ");
 
-	if (push_dom_node(&select_data.stack, &select->selector->node)) {
+	if (push_dom_node(&select_data.stack, &select->selector->node) == DOM_STACK_CODE_OK) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;
 		walk_dom_nodes(&stack, root);
 	}
