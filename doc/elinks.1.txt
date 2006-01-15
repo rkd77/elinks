@@ -107,7 +107,7 @@ FILES
 ~/.elinks/gotohist::
 	GoTo URL dialog history file.
 
-~/.elinks/hooks.{js,lua,pl,py,pl,scm}::
+~/.elinks/hooks.{js,lua,pl,py,rb,scm}::
 	Browser scripting hooks.
 
 ~/.elinks/searchhist::
