@@ -489,7 +489,7 @@ static unsigned char indent_string[] =
 #define get_indent_offset(stack) \
 	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
 
-static void
+enum dom_stack_code
 dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *value = &node->string;
@@ -500,9 +500,11 @@ dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 		get_indent_offset(stack), indent_string,
 		name->length, name->string,
 		value->length, value->string);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string value;
@@ -523,9 +525,11 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -544,9 +548,11 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -561,6 +567,8 @@ dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
+
+	return DOM_STACK_CODE_OK;
 }
 
 struct dom_stack_context_info dom_stack_trace_context_info = {

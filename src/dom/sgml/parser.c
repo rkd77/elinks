@@ -432,7 +432,7 @@ struct sgml_parsing_state {
 	size_t depth;
 };
 
-static void
+enum dom_stack_code
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
@@ -448,9 +448,11 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 			 SGML_STATE_TEXT, count_lines, complete, incremental,
 			 detect_errors);
 	parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
@@ -464,6 +466,8 @@ sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 	}
 
 	assert(parsing->depth == parser->stack.depth);
+
+	return DOM_STACK_CODE_OK;
 }
 
 static struct dom_stack_context_info sgml_parsing_context_info = {

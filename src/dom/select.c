@@ -897,7 +897,7 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node,
 #define get_dom_select_data(stack) ((stack)->current->data)
 
 /* Matches an element node being visited against the current selector stack. */
-static void
+enum dom_stack_code
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -921,11 +921,13 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 		if (selector)
 			push_dom_node(&select_data->stack, &selector->node);
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
 /* Ensures that nodes, no longer 'reachable' on the stack do not have any
  * states associated with them on the select data stack. */
-static void
+enum dom_stack_code
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -944,12 +946,14 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 			continue;
 		}
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
 /* For now this is only for matching the ':contains(<string>)' pseudo-class.
  * Any node which can contain text and thus characters from the given <string>
  * are handled in this common callback. */
-static void
+enum dom_stack_code
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -961,7 +965,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	WDBG("Text node: %d chars", node->string.length);
 
 	if (!text_sel)
-		return;
+		return DOM_STACK_CODE_OK;
 
 	text = &text_sel->node.string;
 
@@ -973,6 +977,8 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	default:
 		ERROR("Unhandled type");
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
 /* Context info for interacting with the DOM tree or stream stack. */

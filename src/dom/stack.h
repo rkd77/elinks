@@ -22,7 +22,8 @@ enum dom_stack_code {
 /** DOM stack callback
  *
  * Used by contexts, for 'hooking' into the node traversing. */
-typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
+typedef enum dom_stack_code
+	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
 #define DOM_STACK_MAX_DEPTH	4096
 

@@ -500,7 +500,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 }
 #endif
 
-static void
+enum dom_stack_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -513,15 +513,15 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 		|| node->type == DOM_NODE_CDATA_SECTION
 		|| node->type == DOM_NODE_COMMENT)) {
 		render_dom_node_enhanced_text(renderer, node);
-		return;
-	}
+	} else
 #endif
+		render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+	return DOM_STACK_CODE_OK;
 }
 
 /* This callback is also used for rendering processing instruction nodes.  */
-static void
+static enum dom_stack_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -529,9 +529,11 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 	assert(node && renderer && renderer->document);
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -544,7 +546,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	assert(node && renderer && renderer->document);
 
 	if (!string || !length)
-		return;
+		return DOM_STACK_CODE_OK;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -553,9 +555,11 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	}
 
 	render_dom_text(renderer, &renderer->styles[node->type], string, length);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -620,9 +624,11 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			render_dom_text(renderer, template, value, valuelen);
 		}
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -639,9 +645,11 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *da
 	}
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -652,6 +660,8 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 	if (check_dom_node_source(renderer, renderer->position, 0)) {
 		render_dom_flush(renderer, renderer->end);
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
 static struct dom_stack_context_info dom_source_renderer_context_info = {
@@ -693,7 +703,7 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 
 /* DOM RSS Renderer */
 
-static void
+enum dom_stack_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -735,9 +745,11 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 
 		renderer->node = node;
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -776,9 +788,11 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	default:
 		break;
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -788,7 +802,7 @@ dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
 	assert(node && renderer && renderer->document);
 
 	if (!renderer->node)
-		return;
+		return DOM_STACK_CODE_OK;
 
 	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
 		string -= 1;
@@ -800,6 +814,8 @@ dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
 	} else {
 		add_to_dom_string(&renderer->text, string, length);
 	}
+
+	return DOM_STACK_CODE_OK;
 }
 
 static struct dom_string *
@@ -901,13 +917,13 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	}
 }
 
-static void
+enum dom_stack_code
 dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 
 	if (!renderer->channel)
-		return;
+		return DOM_STACK_CODE_OK;
 
 	render_rss_item(renderer, renderer->channel);
 
@@ -927,6 +943,8 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 	mem_free_if(renderer->items);
 
 	done_dom_node(root);
+
+	return DOM_STACK_CODE_OK;
 }
 
 
