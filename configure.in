@@ -1292,8 +1292,11 @@ AC_OUTPUT([ \
 abs_srcdir="$(cd "$srcdir" && pwd)"
 # builddir is always absolute!
 if test "$abs_srcdir" != "$builddir"; then
+	# Bootstrap the Makefile creation
 	echo "include $abs_srcdir/Makefile" > "$builddir/Makefile"
 	"$MAKE" "SRC=$abs_srcdir" init
+	# Make cg-status ignore this build directory
+	echo "*" > "$builddir/.gitignore"
 fi
 
 
