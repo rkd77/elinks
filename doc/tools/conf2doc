@@ -4,6 +4,7 @@
 # Copyright (c) Jonas Fonseca <fonseca@diku.dk>, 2005
 #
 
+CONFFILE="$1"
 TMPFILE=$(mktemp import-features.conf.XXXXXX) || exit 1
 
 strip_comment()
@@ -53,7 +54,7 @@ __END__
 	fi
 }
 
-cat ../features.conf | while read line; do
+cat "$CONFFILE" | while read line; do
 	case "$line" in
 	"### "*)
 		print_section

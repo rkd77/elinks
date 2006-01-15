@@ -56,7 +56,7 @@ Some sample settings:
 
 OPTIONS
 -------
-include::option-config.txt[]
+include::{builddir}option-config.txt[]
 
 SEE ALSO
 --------
