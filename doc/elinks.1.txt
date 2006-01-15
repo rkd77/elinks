@@ -22,16 +22,18 @@ external viewers. `mailto:` and `telnet:` are supported via external clients.
 
 ELinks  can handle both local files and remote URLs. The main supported remote
 URL protocols are 'HTTP', 'HTTPS' (with SSL support compiled in) and 'FTP'.
-Additional  protocol  support  exists for 'finger', 'Gopher', 'SMB' and
-'NNTP'.
+Additional  protocol  support  exists for 'BitTorrent' 'finger', 'Gopher',
+'SMB' and 'NNTP'.
+
+The homepage of 'ELinks' can be found at http://elinks.cz/[], where the ELinks
+manual is also hosted.
 
 OPTIONS
 -------
 
 Most options can be set in the user interface or config file, so usually you
-do not need to care about them. Note that this list is by no means complete
-and it is not kept up-to-date. To get complete list of commandline options,
-start 'ELinks' with parameter `--help`.
+do not need to care about them. Note that this list is roughly equivalent to
+the output of running ELinks with the option `--long-help`.
 
 include::option-command.txt[]
 
@@ -93,20 +95,36 @@ FILES
 ~/.elinks/cookies::
 	Cookies file.
 
+~/.elinks/exmodehist::
+	Exmode history file.
+
 ~/.elinks/formhist::
 	Form history file.
+
+~/.elinks/globhist::
+	History file containing most recently visited URLs.
 
 ~/.elinks/gotohist::
 	GoTo URL dialog history file.
 
-~/.elinks/globhist::
-	History file containing most recently visited URLs.
+~/.elinks/hooks.{js,lua,pl,py,rb,scm}::
+	Browser scripting hooks.
 
 ~/.elinks/searchhist::
 	Search history file.
 
 ~/.elinks/socket::
 	Internal 'ELinks' socket for communication between its instances.
+
+~/.mailcap::
+	Mappings of MIME types to external handlers.
+
+~/.mime.types::
+	Mappings of file extensions to MIME types.
+
+Other files that ELinks uses from '~/.elinks/' includes the user defined CSS
+stylesheet. The name of the file can set in the 'document.css.stylesheet'
+option.
 
 PLATFORMS
 ---------
@@ -138,8 +156,6 @@ The 'Links' browser - on which 'ELinks' is based - was written by Mikulas
 Patocka mailto:mikulas@artax.karlin.mff.cuni.cz[]. 'ELinks' was written by
 Petr Baudis mailto:pasky@ucw.cz[]. See file `AUTHORS` in the source tree for a
 list of people contributing to this project. 
-
-The homepage of 'ELinks' can be found at http://elinks.cz/[].
 
 This manual page was written by Peter Gervai mailto:grin@tolna.net[], using
 excerpts from a (yet?) unknown 'Links' fan for the 'Debian GNU/Linux system'
