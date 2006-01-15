@@ -16,6 +16,8 @@
 #include "util/file.h"
 #include "util/string.h"
 
+#define GUILE_HOOKS_FILENAME "hooks.scm"
+#define GUILE_USERHOOKS_FILENAME "user-hooks.scm"
 
 /*
  * Bindings
@@ -52,7 +54,7 @@ init_guile(struct module *module)
 	/* Remember the current module. */
 	user_module = scm_current_module();
 
-	path = straconcat(elinks_home, "hooks.scm", NULL);
+	path = straconcat(elinks_home, GUILE_HOOKS_FILENAME, NULL);
 	if (!path) return;
 
 	if (file_can_read(path)) {
@@ -74,7 +76,7 @@ init_guile(struct module *module)
 
 	mem_free(path);
 
-	path = straconcat(elinks_home, "user-hooks.scm", NULL);
+	path = straconcat(elinks_home, GUILE_USERHOOKS_FILENAME, NULL);
 	if (!path) return;
 	if (file_can_read(path))
 		scm_c_primitive_load_path(path);
