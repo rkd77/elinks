@@ -1348,9 +1348,9 @@ abs_srcdir="$(cd "$srcdir" && pwd)"
 # builddir is always absolute!
 if test "$abs_srcdir" != "$builddir"; then
 	echo "include $abs_srcdir/Makefile" > "$builddir/Makefile"
-	"$MAKE" "SRC=$abs_srcdir" init
 fi
 
+"$MAKE" "SRC=$abs_srcdir" init
 
 dnl ===================================================================
 dnl Configuration summary

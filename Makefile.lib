@@ -78,9 +78,10 @@ INCLUDE_ALL=1
 endif
 
 ifneq ($(findstring init,$(MAKECMDGOALS)),)
-# FIXME: Detect when $(subdir)/Makefile is $(srcdir)/$(subdir)/Makefile
-# and error out so the user won't overwrite the 'master' Makefiles.
 INCLUDE_ALL=1
+ifndef SRC
+SRC = $(shell cd $(top_srcdir) && pwd)
+endif
 endif
 
 ifdef INCLUDE_ALL
@@ -131,9 +132,13 @@ all-default: $(OBJS) $(PROGS) $(MAN1) $(MAN5)
 init-recursive: init-default
 
 init-default:
+	@{ echo ':set runtimepath+=.'; \
+	   echo ':runtime $(SRC)/config/vimrc'; \
+	} > .vimrc
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
-		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
+		test -e "$(subdir)/Makefile" \
+		|| echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
 clean-default cleanall-default:
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
