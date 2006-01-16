@@ -225,21 +225,46 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 	return dom_node_list_bsearch(&search, list);
 }
 
-int
-get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
+static int
+get_dom_node_list_pos(struct dom_node_list *list, struct dom_node *node)
 {
-	struct dom_node_list **list = get_dom_node_list(parent, node);
 	struct dom_node *entry;
 	int i;
 
-	if (!list) return -1;
+	assert(list);
 
-	foreach_dom_node (*list, entry, i) {
+	foreach_dom_node (list, entry, i) {
 		if (entry == node)
 			return i;
 	}
 
 	return -1;
+}
+
+int
+get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
+{
+	struct dom_node_list **list = get_dom_node_list(parent, node);
+
+	return list ? get_dom_node_list_pos(*list, node) : -1;
+}
+
+struct dom_node *
+get_dom_node_prev(struct dom_node *node)
+{
+	struct dom_node_list **list;
+	int index;
+
+	assert(node->parent);
+
+	list = get_dom_node_list(node->parent, node);
+	if (!list) return NULL;
+
+	index = get_dom_node_list_pos(*list, node);
+	if (index > 0)
+		return (*list)->entries[index - 1];
+
+	return NULL;
 }
 
 /* Nodes */

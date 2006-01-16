@@ -243,6 +243,9 @@ int get_dom_node_list_index(struct dom_node *parent, struct dom_node *node);
  * @list is already sorted properly. */
 int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 
+/* Returns the previous sibling to the node. */
+struct dom_node *get_dom_node_prev(struct dom_node *node);
+
 /* Looks up the @node_map for a node matching the requested type and name.
  * The @subtype maybe be 0 indication unknown subtype and only name should be
  * tested else it will indicate either the element or attribute private
