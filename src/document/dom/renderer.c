@@ -22,6 +22,7 @@
 #include "document/document.h"
 #include "document/dom/renderer.h"
 #include "document/renderer.h"
+#include "dom/configuration.h"
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
 #include "dom/sgml/rss/rss.h"
@@ -703,6 +704,9 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 
 /* DOM RSS Renderer */
 
+#define RSS_CONFIG_FLAGS \
+	(DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS)
+
 enum dom_stack_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -787,32 +791,6 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	default:
 		break;
-	}
-
-	return DOM_STACK_CODE_OK;
-}
-
-enum dom_stack_code
-dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->current->data;
-	unsigned char *string = node->string.string;
-	int length = node->string.length;
-
-	assert(node && renderer && renderer->document);
-
-	if (!renderer->node)
-		return DOM_STACK_CODE_OK;
-
-	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
-		string -= 1;
-		length += 2;
-	}
-
-	if (!is_dom_string_set(&renderer->text)) {
-		init_dom_string(&renderer->text, string, length);
-	} else {
-		add_to_dom_string(&renderer->text, string, length);
 	}
 
 	return DOM_STACK_CODE_OK;
@@ -955,9 +933,9 @@ static struct dom_stack_context_info dom_rss_renderer_context_info = {
 		/*				*/ NULL,
 		/* DOM_NODE_ELEMENT		*/ dom_rss_push_element,
 		/* DOM_NODE_ATTRIBUTE		*/ NULL,
-		/* DOM_NODE_TEXT		*/ dom_rss_push_content,
-		/* DOM_NODE_CDATA_SECTION	*/ dom_rss_push_content,
-		/* DOM_NODE_ENTITY_REFERENCE	*/ dom_rss_push_content,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
 		/* DOM_NODE_ENTITY		*/ NULL,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
 		/* DOM_NODE_COMMENT		*/ NULL,
@@ -1046,6 +1024,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	} else if (doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_rss_renderer_context_info);
+		add_dom_config_normalizer(&parser->stack, RSS_CONFIG_FLAGS); 
 	}
 
 	/* FIXME: When rendering this way we don't really care about the code.
