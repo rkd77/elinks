@@ -1132,6 +1132,24 @@ EL_ARG_DEPEND(CONFIG_CGI, cgi, [HAVE_SETENV_OR_PUTENV:yes], [Local CGI],
 EL_ARG_ENABLE(CONFIG_FINGER, finger, [Finger protocol],
 	      [  --enable-finger         enable finger protocol support])
 
+dnl ===================================================================
+dnl FSP protocol
+dnl ===================================================================
+
+EL_ARG_ENABLE(CONFIG_FSP, fsp, [FSP protocol],
+	      [  --enable-fsp            enable FSP protocol support])
+
+if test "x${enable_fsp}" != xno; then
+	AC_CHECK_HEADERS(fsplib.h, CONFIG_FSP=yes, CONFIG_FSP=no)
+
+	if test "$CONFIG_FSP" = yes; then
+		AC_CHECK_LIB(fsplib, fsp_open_session, CONFIG_FSP=yes, CONFIG_FSP=no)
+		if test "$CONFIG_FSP" = yes; then
+			LIBS="$LIBS -lfsplib"
+		fi
+	fi
+fi
+
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
 

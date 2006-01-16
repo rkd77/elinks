@@ -3,6 +3,7 @@ include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
 SUBDIRS-$(CONFIG_FINGER)	+= finger
+SUBDIRS-$(CONFIG_FSP)		+= fsp
 SUBDIRS-$(CONFIG_FTP)		+= ftp
 SUBDIRS-$(CONFIG_GOPHER)	+= gopher
 SUBDIRS-$(CONFIG_NNTP)		+= nntp
