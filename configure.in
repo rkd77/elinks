@@ -1081,19 +1081,24 @@ dnl ===================================================================
 dnl FSP protocol
 dnl ===================================================================
 
-EL_ARG_ENABLE(CONFIG_FSP, fsp, [FSP protocol],
-	      [  --enable-fsp            enable FSP protocol support])
-
 if test "x${enable_fsp}" != xno; then
-	AC_CHECK_HEADERS(fsplib.h, CONFIG_FSP=yes, CONFIG_FSP=no)
+	AC_CHECK_HEADERS(fsplib.h, HAVE_FSPLIB=yes, HAVE_FSPLIB=no)
 
-	if test "$CONFIG_FSP" = yes; then
-		AC_CHECK_LIB(fsplib, fsp_open_session, CONFIG_FSP=yes, CONFIG_FSP=no)
-		if test "$CONFIG_FSP" = yes; then
+	if test "$HAVE_FSPLIB" = yes; then
+		AC_CHECK_LIB(fsplib, fsp_open_session, HAVE_FSPLIB=yes, HAVE_FSPLIB=no)
+		if test "$HAVE_FSPLIB" = yes; then
 			LIBS="$LIBS -lfsplib"
+		else
+			AC_CHECK_LIB(fsp, fsp_open_session, HAVE_FSPLIB=yes, HAVE_FSPLIB=no)
+			if test "$HAVE_FSPLIB" = yes; then
+				LIBS="$LIBS -lfsp"
+			fi
 		fi
 	fi
 fi
+
+EL_ARG_DEPEND(CONFIG_FSP, fsp, [HAVE_FSPLIB:yes], [FSP protocol],
+	      [  --enable-fsp            enable FSP protocol support])
 
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
