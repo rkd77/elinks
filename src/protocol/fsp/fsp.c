@@ -156,7 +156,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	}
 
 	printf("<html><head><title>%s</title><base href=\"%s\">"
-	"</head><body><pre>", buf.source, buf.source);
+	       "</head><body><pre>", buf.source, buf.source);
 
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
@@ -239,10 +239,10 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 		abort_connection(conn, -errno);
 		return;
 	}
+
 	if (len == 0) {
 		if (conn->from)
 			normalize_cache_entry(conn->cached, conn->from);
-		close_socket(socket);
 		abort_connection(conn, S_OK);
 		return;
 	}
@@ -253,6 +253,7 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 		conn->tries = 0;
 	conn->from += len;
 	kill_buffer_data(rb, len);
+
 	read_from_socket(socket, rb, S_TRANS, fsp_got_data);
 }
 
@@ -263,7 +264,7 @@ void
 fsp_protocol_handler(struct connection *conn)
 {
 	int fsp_pipe[2] = { -1, -1 };
-	int cpid;
+	pid_t cpid;
 	struct read_buffer *buf;
 
 	if (c_pipe(fsp_pipe)) {
