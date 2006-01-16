@@ -20,6 +20,13 @@ struct terminal;
 struct uri;
 struct window;
 
+/* Used by delayed_open and delayed_goto_uri_frame. */
+struct delayed_open {
+	struct session *ses;
+	struct uri *uri;
+	unsigned char *target;
+};
+
 enum remote_session_flags {
 	SES_REMOTE_NEW_TAB = 1,
 	SES_REMOTE_NEW_WINDOW = 2,

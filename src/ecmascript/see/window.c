@@ -49,7 +49,6 @@
 static struct js_window_object *js_get_global_object(void *);
 static struct js_window_object *js_try_resolve_frame(struct document_view *, unsigned char *);
 static void delayed_open(void *);
-static void delayed_goto_uri_frame(void *);
 static void window_get(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *);
 static void window_put(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *, int);
 static int window_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
@@ -58,12 +57,6 @@ static void js_window_alert(struct SEE_interpreter *, struct SEE_object *, struc
 static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
 void location_goto(struct document_view *, unsigned char *);
-
-struct delayed_open {
-	struct session *ses;
-	struct uri *uri;
-	unsigned char *target;
-};
 
 struct SEE_objectclass js_window_object_class = {
 	NULL,
@@ -110,21 +103,6 @@ delayed_open(void *data)
 	assert(deo);
 	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
 	done_uri(deo->uri);
-	mem_free(deo);
-}
-
-static void
-delayed_goto_uri_frame(void *data)
-{
-	struct delayed_open *deo = data;
-	struct frame *frame;
-
-	assert(deo);
-	frame = ses_find_frame(deo->ses, deo->target);
-	if (frame)
-		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
-	done_uri(deo->uri);
-	mem_free(deo->target);
 	mem_free(deo);
 }
 

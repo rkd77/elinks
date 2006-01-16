@@ -662,6 +662,21 @@ goto_uri_frame(struct session *ses, struct uri *uri,
 	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
 }
 
+void
+delayed_goto_uri_frame(void *data)
+{
+	struct delayed_open *deo = data;
+	struct frame *frame;
+
+	assert(deo);
+	frame = ses_find_frame(deo->ses, deo->target);
+	if (frame)
+		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
+	done_uri(deo->uri);
+	mem_free(deo->target);
+	mem_free(deo);
+}
+
 /* menu_func_T */
 void
 map_selected(struct terminal *term, void *ld_, void *ses_)

@@ -289,12 +289,6 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
-struct delayed_open {
-	struct session *ses;
-	struct uri *uri;
-	unsigned char *target;
-};
-
 static void
 delayed_open(void *data)
 {
@@ -302,17 +296,6 @@ delayed_open(void *data)
 
 	assert(deo);
 	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
-static void
-delayed_goto_uri_frame(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	goto_uri_frame(deo->ses, deo->uri, deo->target, CACHE_MODE_NORMAL);
 	done_uri(deo->uri);
 	mem_free(deo);
 }
