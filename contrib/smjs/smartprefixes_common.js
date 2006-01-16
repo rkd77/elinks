@@ -58,7 +58,7 @@ function cvsweb (base, project, url)
 /* javascript:gitweb("http://pasky.or.cz/gitweb.cgi", "elinks.git", "%s"); */
 function gitweb(base, project, url)
 {
-	var parts = url.match(/^(search|summary|shortlog|log|commit|commitdiff|tree|tag)(\s(.*))?/);
+	var parts = url.match(/^(search|summary|shortlog|log|blob|commit|commitdiff|history|tree|tag)(\s(.*))?/);
 	var query = '?p=' + project;
 
 	if (parts) {
@@ -67,6 +67,8 @@ function gitweb(base, project, url)
 		/* If the extra arg is not for searching assume it is an ID. */
 		if (parts[1] == 'search' && parts[3])
 			query += ';s=' + escape(parts[3]);
+		else if ((parts[1] == 'blob' || parts[1] == 'history' || parts[1] == 'tree') && parts[3])
+			query += ';f=' + escape(parts[3]);
 		else if (parts[3])
 			query += ';h=' + escape(parts[3]);
 
