@@ -129,10 +129,12 @@ enum dom_stack_action {
 	DOM_STACK_POP,
 };
 
-static void
+/* Returns whether the node should be freed with done_dom_node(). */
+static int
 call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			 enum dom_stack_action action)
 {
+	int free_node = 0;
 	int i;
 
 	for (i = 0; i < stack->contexts_size; i++) {
@@ -148,13 +150,21 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			void *data = get_dom_stack_state_data(context, state);
 
 			stack->current = context;
-			callback(stack, state->node, data);
+			switch (callback(stack, state->node, data)) {
+			case DOM_STACK_CODE_FREE_NODE:
+				free_node = 1;
+				break;
+			default:
+				break;
+			}
 			stack->current = NULL;
 		}
 	}
+
+	return free_node;
 }
 
-struct dom_node *
+enum dom_stack_code
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
 	struct dom_stack_state *state;
@@ -164,13 +174,13 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	assert(0 < node->type && node->type < DOM_NODES);
 
 	if (stack->depth > DOM_STACK_MAX_DEPTH) {
-		return NULL;
+		return DOM_STACK_CODE_ERROR_MAX_DEPTH;
 	}
 
 	state = realloc_dom_stack_states(&stack->states, stack->depth);
 	if (!state) {
 		done_dom_node(node);
-		return NULL;
+		return DOM_STACK_CODE_ERROR_MEM_ALLOC;
 	}
 
 	state += stack->depth;
@@ -181,7 +191,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 		if (context->info->object_size
 		    && !realloc_dom_stack_state_objects(context, stack->depth)) {
 			done_dom_node(node);
-			return NULL;
+			return DOM_STACK_CODE_ERROR_MEM_ALLOC;
 		}
 	}
 
@@ -193,7 +203,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	stack->depth++;
 	call_dom_stack_callbacks(stack, state, DOM_STACK_PUSH);
 
-	return node;
+	return DOM_STACK_CODE_OK;
 }
 
 void
@@ -211,9 +221,8 @@ pop_dom_node(struct dom_stack *stack)
 	if (state->immutable)
 		return;
 
-	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
-
-	if (stack->flags & DOM_STACK_FLAG_FREE_NODES)
+	if (call_dom_stack_callbacks(stack, state, DOM_STACK_POP)
+	    || (stack->flags & DOM_STACK_FLAG_FREE_NODES))
 		done_dom_node(state->node);
 
 	stack->depth--;
@@ -349,7 +358,8 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 	if (!context)
 		return;
 
-	push_dom_node(stack, root);
+	if (push_dom_node(stack, root) != DOM_STACK_CODE_OK)
+		return;
 
 	while (!dom_stack_is_empty(stack)) {
 		struct dom_stack_state *state = get_dom_stack_top(stack);
@@ -488,7 +498,7 @@ static unsigned char indent_string[] =
 #define get_indent_offset(stack) \
 	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
 
-static void
+enum dom_stack_code
 dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *value = &node->string;
@@ -499,9 +509,11 @@ dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 		get_indent_offset(stack), indent_string,
 		name->length, name->string,
 		value->length, value->string);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string value;
@@ -522,9 +534,11 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -543,9 +557,11 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	if (is_dom_string_set(&value))
 		done_dom_string(&value);
+
+	return DOM_STACK_CODE_OK;
 }
 
-static void
+enum dom_stack_code
 dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -560,6 +576,8 @@ dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 		empty_string_or_(stack->current->data),
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
+
+	return DOM_STACK_CODE_OK;
 }
 
 struct dom_stack_context_info dom_stack_trace_context_info = {

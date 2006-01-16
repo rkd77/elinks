@@ -243,6 +243,14 @@ int get_dom_node_list_index(struct dom_node *parent, struct dom_node *node);
  * @list is already sorted properly. */
 int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 
+/* Returns the previous sibling to the node. */
+struct dom_node *get_dom_node_prev(struct dom_node *node);
+
+/* Returns first text node of the element or NULL. */
+struct dom_node *
+get_dom_node_child(struct dom_node *node, enum dom_node_type child_type,
+		   int16_t child_subtype);
+
 /* Looks up the @node_map for a node matching the requested type and name.
  * The @subtype maybe be 0 indication unknown subtype and only name should be
  * tested else it will indicate either the element or attribute private
@@ -304,17 +312,17 @@ struct dom_string *get_dom_node_value(struct dom_node *node);
 /* Returns the name used for identifying the node type. */
 struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
-/* Based on the type of the parent and the node return a proper list
+/* Based on the type of the parent and the node type return a proper list
  * or NULL. This is useful when adding a node to a parent node. */
 static inline struct dom_node_list **
-get_dom_node_list(struct dom_node *parent, struct dom_node *node)
+get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 {
 	switch (parent->type) {
 	case DOM_NODE_DOCUMENT:
 		return &parent->data.document.children;
 
 	case DOM_NODE_ELEMENT:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ATTRIBUTE:
 			return &parent->data.element.map;
 
@@ -323,7 +331,7 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		}
 
 	case DOM_NODE_DOCUMENT_TYPE:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ENTITY:
 			return &parent->data.document_type.entities;
 
@@ -335,7 +343,7 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		}
 
 	case DOM_NODE_PROCESSING_INSTRUCTION:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ATTRIBUTE:
 			return &parent->data.proc_instruction.map;
 
@@ -347,5 +355,8 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		return NULL;
 	}
 }
+
+#define get_dom_node_list(parent, node) \
+	get_dom_node_list_by_type(parent, (node)->type)
 
 #endif
