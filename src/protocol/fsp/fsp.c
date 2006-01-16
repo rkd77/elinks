@@ -34,6 +34,7 @@
 #include "protocol/protocol.h"
 #include "protocol/fsp/fsp.h"
 #include "protocol/uri.h"
+#include "util/conv.h"
 #include "util/memory.h"
 #include "util/snprintf.h"
 #include "util/string.h"
@@ -133,30 +134,17 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
 	struct string buf;
 	FSP_DIR *dir;
+	unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 
-	if (!init_string(&buf))
+	if (!uristring || !data || !init_string(&buf))
 		fsp_error("Out of memory");
 
-	add_to_string(&buf, "fsp://");
-	if (uri->passwordlen) {
-		add_to_string(&buf, "u:");
-		add_bytes_to_string(&buf, uri->password, uri->passwordlen);
-		add_char_to_string(&buf, '@');
-	}
-	add_bytes_to_string(&buf, uri->host, uri->hostlen);
-	if (uri->portlen) {
-		add_char_to_string(&buf, ':');
-		add_bytes_to_string(&buf, uri->port, uri->portlen);
-	}
-	add_char_to_string(&buf, '/');
-	if (uri->datalen) {
-		add_bytes_to_string(&buf, uri->data, uri->datalen);
-		add_char_to_string(&buf, '/');
-	}
+	add_html_to_string(&buf, uristring, strlen(uristring));
 
 	printf("<html><head><title>%s</title><base href=\"%s\">"
-	       "</head><body><pre>", buf.source, buf.source);
+	       "</head><body><h2>FSP directory %s</h2><pre>",
+	       buf.source, uristring, buf.source);
 
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
@@ -189,7 +177,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 		fsp_closedir(dir);
 	}
 end:
-	puts("</pre></body></html>");
+	puts("</pre><hr></body></html>");
 	fsp_close_session(ses);
 	exit(0);
 }
@@ -214,7 +202,7 @@ do_fsp(struct connection *conn)
 	if (S_ISDIR(sb.st_mode))
 		fsp_directory(ses, uri);
 	else { /* regular file */
-		char buf[4096];
+		char buf[READ_SIZE];
 		FSP_FILE *file = fsp_fopen(ses, data, "r");
 		int r;
 
