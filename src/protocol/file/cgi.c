@@ -150,6 +150,7 @@ set_vars(struct connection *conn, unsigned char *script)
 	if (env_set("SCRIPT_NAME", script, -1)) return -1;
 	if (env_set("SCRIPT_FILENAME", script, -1)) return -1;
 	if (env_set("PATH_TRANSLATED", script, -1)) return -1;
+	if (env_set("REDIRECT_STATUS", "1", -1)) return -1;
 
 	/* From now on, just HTTP-like headers are being set. Missing variables
 	 * due to full environment are not a problem according to the CGI/1.1
