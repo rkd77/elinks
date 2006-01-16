@@ -63,10 +63,6 @@ struct module fsp_protocol_module = struct_module(
 );
 
 
-struct fsp_info {
-	int init;
-};
-
 static void
 fsp_error(unsigned char *error)
 {
@@ -113,16 +109,16 @@ sort_and_display_entries(FSP_DIR *dir)
 		memcpy(&table[size], &fentry, sizeof(fentry));
 		size++;
 	}
-	qsort(table, size, sizeof(fentry),
+	qsort(table, size, sizeof(*table),
 	 (int (*)(const void *, const void *)) compare);
 
 	for (i = 0; i < size; i++) {
 		printf("%10d\t<a href=\"%s\">", table[i].size, table[i].name);
-		if (fentry.type == FSP_RDTYPE_DIR && *dircolor) {
+		if (table[i].type == FSP_RDTYPE_DIR && *dircolor) {
 			printf("<font color=\"%s\"><b>", dircolor);
 		}
 		printf("%s", table[i].name);
-		if (fentry.type == FSP_RDTYPE_DIR && *dircolor) {
+		if (table[i].type == FSP_RDTYPE_DIR && *dircolor) {
 			printf("</b></font>");
 		}
 		puts("</a>");
