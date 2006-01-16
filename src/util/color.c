@@ -148,7 +148,7 @@ get_color_string(color_T color, unsigned char hexcolor[8])
 }
 
 void
-color_to_string(color_T color, unsigned char str[])
+color_to_string(color_T color, unsigned char str[8])
 {
 	snprintf(str, 8, "#%06lx", (unsigned long) color);
 }
