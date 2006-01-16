@@ -15,6 +15,7 @@ struct dom_stack;
  */
 enum dom_stack_code {
 	DOM_STACK_CODE_OK,		/*: All is well */
+	DOM_STACK_CODE_FREE_NODE,	/*: Free the (popped) node */
 	DOM_STACK_CODE_ERROR_MEM_ALLOC,	/*: Memory allocation failure */
 	DOM_STACK_CODE_ERROR_MAX_DEPTH,	/*: Stack max depth reached */
 };

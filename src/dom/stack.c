@@ -129,10 +129,12 @@ enum dom_stack_action {
 	DOM_STACK_POP,
 };
 
-static void
+/* Returns whether the node should be freed with done_dom_node(). */
+static int
 call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			 enum dom_stack_action action)
 {
+	int free_node = 0;
 	int i;
 
 	for (i = 0; i < stack->contexts_size; i++) {
@@ -148,10 +150,18 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 			void *data = get_dom_stack_state_data(context, state);
 
 			stack->current = context;
-			callback(stack, state->node, data);
+			switch (callback(stack, state->node, data)) {
+			case DOM_STACK_CODE_FREE_NODE:
+				free_node = 1;
+				break;
+			default:
+				break;
+			}
 			stack->current = NULL;
 		}
 	}
+
+	return free_node;
 }
 
 enum dom_stack_code
@@ -211,9 +221,8 @@ pop_dom_node(struct dom_stack *stack)
 	if (state->immutable)
 		return;
 
-	call_dom_stack_callbacks(stack, state, DOM_STACK_POP);
-
-	if (stack->flags & DOM_STACK_FLAG_FREE_NODES)
+	if (call_dom_stack_callbacks(stack, state, DOM_STACK_POP)
+	    || (stack->flags & DOM_STACK_FLAG_FREE_NODES))
 		done_dom_node(state->node);
 
 	stack->depth--;
