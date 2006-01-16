@@ -267,6 +267,48 @@ get_dom_node_prev(struct dom_node *node)
 	return NULL;
 }
 
+struct dom_node *
+get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
+		   int16_t subtype)
+{
+	struct dom_node_list **list;
+	struct dom_node *node;
+	int index;
+
+	list = get_dom_node_list_by_type(parent, type);
+	if (!list) return NULL;
+
+	foreach_dom_node (*list, node, index) {
+		if (node->type != type)
+			continue;
+
+		if (!subtype) return node;
+
+		switch (type) {
+		case DOM_NODE_ELEMENT:
+			if (node->data.element.type == subtype)
+				return node;
+			break;
+
+		case DOM_NODE_ATTRIBUTE:
+			if (node->data.attribute.type == subtype)
+				return node;
+			break;
+
+		case DOM_NODE_PROCESSING_INSTRUCTION:
+			if (node->data.attribute.type == subtype)
+				return node;
+			break;
+
+		default:
+			return node;
+		}
+	}
+
+	return NULL;
+}
+
+
 /* Nodes */
 
 struct dom_node *

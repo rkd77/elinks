@@ -796,48 +796,17 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	return DOM_STACK_CODE_OK;
 }
 
-static struct dom_string *
-get_rss_node_text(struct dom_node *node)
-{
-	struct dom_node *child;
-	int index;
-
-	if (!node->data.element.children)
-		return NULL;
-
-	foreach_dom_node (node->data.element.children, child, index) {
-		if (child->type == DOM_NODE_TEXT)
-			return &child->string;
-	}
-
-	return NULL;
-}
-
-static struct dom_node *
-get_rss_child(struct dom_node *parent, enum rss_element_type type)
-{
-	struct dom_node *node;
-	int index;
-
-	if (!parent->data.element.children)
-		return NULL;
-
-	foreach_dom_node (parent->data.element.children, node, index) {
-		if (node->type == DOM_NODE_ELEMENT
-		    && type == node->data.element.type)
-			return node;
-	}
-
-	return NULL;
-}
-
 
 static struct dom_string *
 get_rss_text(struct dom_node *node, enum rss_element_type type)
 {
-	node = get_rss_child(node, type);
+	node = get_dom_node_child(node, DOM_NODE_ELEMENT, type);
 
-	return node ? get_rss_node_text(node) : NULL;
+	if (!node) return NULL;
+
+	node = get_dom_node_child(node, DOM_NODE_TEXT, 0);
+
+	return node ? &node->string: NULL;
 }
 
 static void
