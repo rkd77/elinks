@@ -93,7 +93,8 @@ endif
 #############################################################################
 # Internal build rules
 
-# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o
+# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o.
+# Sort them to filter out duplicated and get uniform order.
 LIB_O_DEPS = \
  $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
  $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))

@@ -13,13 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h> /* FreeBSD needs this before resource.h */
-#endif
-#include <sys/types.h> /* FreeBSD needs this before resource.h */
-#ifdef HAVE_SYS_RESOURCE_H
-#include <sys/resource.h>
-#endif
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h> /* OS/2 needs this after sys/types.h */
 #endif
@@ -37,6 +30,7 @@
 #include "network/connection.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
+#include "protocol/common.h"
 #include "protocol/protocol.h"
 #include "protocol/fsp/fsp.h"
 #include "protocol/uri.h"
@@ -265,22 +259,6 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 #undef READ_SIZE
 
 
-/* Close all non-terminal file descriptors. */
-static void
-close_all_non_term_fd(void)
-{
-	int n;
-	int max = 1024;
-#ifdef RLIMIT_NOFILE
-	struct rlimit lim;
-
-	if (!getrlimit(RLIMIT_NOFILE, &lim))
-		max = lim.rlim_max;
-#endif
-	for (n = 3; n < max; n++)
-		close(n);
-}
-
 void
 fsp_protocol_handler(struct connection *conn)
 {
@@ -326,7 +304,7 @@ fsp_protocol_handler(struct connection *conn)
 
 		close_all_non_term_fd();
 		do_fsp(conn);
-		
+	
 	} else {
 		conn->socket->fd = fsp_pipe[0];
 		close(fsp_pipe[1]);
