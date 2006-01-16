@@ -48,7 +48,6 @@
 
 static struct js_window_object *js_get_global_object(void *);
 static struct js_window_object *js_try_resolve_frame(struct document_view *, unsigned char *);
-static void delayed_open(void *);
 static void window_get(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *);
 static void window_put(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *, int);
 static int window_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
@@ -92,18 +91,6 @@ js_try_resolve_frame(struct document_view *doc_view, unsigned char *id)
 		ecmascript_reset_state(&target->vs);
 	if (!target->vs.ecmascript) return NULL;
 	return js_get_global_object(target->vs.ecmascript->backend_data);
-}
-
-
-static void
-delayed_open(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
-	done_uri(deo->uri);
-	mem_free(deo);
 }
 
 

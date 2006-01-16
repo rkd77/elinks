@@ -289,17 +289,6 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
-static void
-delayed_open(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {

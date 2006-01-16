@@ -25,6 +25,7 @@ void close_all_tabs_but_current(struct session *ses);
 	((win)->type != WINDOW_NORMAL && (win) != get_current_tab((win->term)))
 
 void open_uri_in_new_tab(struct session *ses, struct uri *uri, int in_background, int based);
+void delayed_open(void *);
 void open_current_link_in_new_tab(struct session *ses, int in_background);
 
 void move_current_tab(struct session *ses, int direction);
