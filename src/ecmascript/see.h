@@ -14,4 +14,5 @@ void see_eval(struct ecmascript_interpreter *interpreter, struct string *code);
 unsigned char *see_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 int see_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
+extern struct module see_module;
 #endif

@@ -24,6 +24,12 @@
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
 
+#ifdef CONFIG_ECMASCRIPT_SEE
+#include "ecmascript/see.h"
+#elif defined(CONFIG_SPIDERMONKEY)
+#include "ecmascript/spidermonkey.h"
+#endif
+
 
 /* TODO: We should have some kind of ACL for the scripts - i.e. ability to
  * disallow the scripts to open new windows (or so that the windows are always
@@ -133,11 +139,21 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 
 }
 
+static struct module *ecmascript_modules[] = {
+#ifdef CONFIG_ECMASCRIPT_SEE
+	&see_module,
+#elif defined(CONFIG_SPIDERMONKEY)
+	&spidermonkey_module,
+#endif
+	NULL,
+};
+
+
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),
 	/* options: */		ecmascript_options,
 	/* events: */		NULL,
-	/* submodules: */	NULL,
+	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
 	/* init: */		ecmascript_init,
 	/* done: */		ecmascript_done

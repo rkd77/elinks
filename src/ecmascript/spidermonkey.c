@@ -376,3 +376,13 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	return jsval_to_boolean(ctx, &rval);
 }
+
+struct module spidermonkey_module = struct_module(
+	/* name: */		"SpiderMonkey",
+	/* options: */		NULL,
+	/* events: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);

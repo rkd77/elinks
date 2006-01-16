@@ -240,3 +240,13 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	}
 	return res;
 }
+
+struct module see_module = struct_module(
+	/* name: */		"SEE",
+	/* options: */		NULL,
+	/* events: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
