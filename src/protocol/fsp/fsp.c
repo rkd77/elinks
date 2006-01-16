@@ -46,7 +46,7 @@ struct option_info fsp_options[] = {
 
 	INIT_OPT_BOOL("protocol.fsp", N_("Sort entries"),
 		"sort", 0, 1,
-		N_("Whether sort entries in directory listings.")),
+		N_("Whether to sort entries in directory listings.")),
 
 	NULL_OPTION_INFO,
 };
