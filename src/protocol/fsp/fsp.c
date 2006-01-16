@@ -173,7 +173,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 		} else {
 			dircolor[0] = 0;
 		}
-		
+
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
 			printf("%10d\t<a href=\"%s\">", fentry.size, fentry.name);
@@ -304,7 +304,7 @@ fsp_protocol_handler(struct connection *conn)
 
 		close_all_non_term_fd();
 		do_fsp(conn);
-	
+
 	} else {
 		conn->socket->fd = fsp_pipe[0];
 		close(fsp_pipe[1]);
