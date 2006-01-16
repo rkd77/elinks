@@ -117,10 +117,14 @@ static void
 delayed_goto_uri_frame(void *data)
 {
 	struct delayed_open *deo = data;
+	struct frame *frame;
 
 	assert(deo);
-	goto_uri_frame(deo->ses, deo->uri, deo->target, CACHE_MODE_NORMAL);
+	frame = ses_find_frame(deo->ses, deo->target);
+	if (frame)
+		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
 	done_uri(deo->uri);
+	mem_free(deo->target);
 	mem_free(deo);
 }
 
@@ -326,11 +330,13 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
 			deo->target = target;
+			/* target will be freed in delayed_goto_uri_frame */
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			goto end;
 		}
 	}
 
+	mem_free_if(target);
 	if (!get_cmd_opt_bool("no-connect")
 	    && !get_cmd_opt_bool("no-home")
 	    && !get_cmd_opt_bool("anonymous")
@@ -350,7 +356,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 
 end:
-	mem_free_if(target);
 	done_uri(uri);
 
 }
