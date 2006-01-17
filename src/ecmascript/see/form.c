@@ -350,7 +350,7 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct js_input *input = (struct js_input *)self;
+	struct js_input *input = (struct js_input *)thisobj;
 	struct form_state *fs = input->fs;
 	struct form_control *fc;
 	int linknum;
@@ -384,7 +384,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct js_input *input = (struct js_input *)self;
+	struct js_input *input = (struct js_input *)thisobj;
 	struct form_state *fs = input->fs;
 	struct form_control *fc;
 	int linknum;
@@ -502,7 +502,7 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_form_elems *jsfe = (struct js_form_elems *)self;
+	struct js_form_elems *jsfe = (struct js_form_elems *)thisobj;
 	struct js_form *parent_form = jsfe->parent;
 	struct form_view *fv = parent_form->fv;
 	struct form *form = find_form_by_form_view(document, fv);
@@ -544,7 +544,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_form_elems *jsfe = (struct js_form_elems *)self;
+	struct js_form_elems *jsfe = (struct js_form_elems *)thisobj;
 	struct js_form *parent_form = jsfe->parent;
 	struct form_view *fv = parent_form->fv;
 	struct form *form = find_form_by_form_view(document, fv);
@@ -603,10 +603,10 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 		SEE_SET_STRING(&argv, p);
 		if (string[0] >= '0' && string[1] <= '9') {
-			js_form_elems_item(interp, o, o, 1,
+			js_form_elems_item(interp, jsfe->item, o, 1,
 			 (struct SEE_value **)&argv, res);
 		} else {
-			js_form_elems_namedItem(interp, o, o, 1,
+			js_form_elems_namedItem(interp, jsfe->namedItem, o, 1,
 			 (struct SEE_value **)&argv, res);
 		}
 		mem_free(string);
@@ -630,7 +630,7 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 {
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
-	struct js_forms_object *fo = (struct js_forms_object *)self;
+	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
 	struct js_document_object *doc = fo->parent;
 	struct form_view *fv;
 	unsigned char *string;
@@ -668,7 +668,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_forms_object *fo = (struct js_forms_object *)self;
+	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
 	struct js_document_object *doc = fo->parent;
 	struct form *form;
 	unsigned char *string;
@@ -724,10 +724,10 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 		SEE_SET_STRING(argv1, p);
 		if (string[0] >= '0' && string[0] <= '9') {
-			js_forms_item(interp, o, fo->item, 1,
+			js_forms_item(interp, fo->item, o, 1,
 			 (struct SEE_value **)&argv1, res);
 		} else {
-			js_forms_namedItem(interp, o, fo->namedItem, 1,
+			js_forms_namedItem(interp, fo->namedItem, o, 1,
 			 (struct SEE_value **)&argv1, res);
 		}
 		mem_free(string);
@@ -902,7 +902,7 @@ js_form_reset(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
-	struct js_form *js_form = (struct js_form *)self;
+	struct js_form *js_form = (struct js_form *)thisobj;
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
@@ -923,7 +923,7 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
-	struct js_form *js_form = (struct js_form *)self;
+	struct js_form *js_form = (struct js_form *)thisobj;
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
