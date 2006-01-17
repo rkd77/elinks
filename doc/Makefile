@@ -116,6 +116,9 @@ quiet_cmd_conf2doc = ' [$(LINK_COLOR)CONF2DOC$(END_COLOR)]   $(RELPATH)$@'
 quiet_cmd_keys2doc = ' [$(LINK_COLOR)KEYS2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_keys2doc = $(LOCALES) $(KEYS2DOC) $(KBDBIND) $@ > $@
 
+quiet_cmd_code2doc = ' [$(LINK_COLOR)CODE2DOC$(END_COLOR)]   $(RELPATH)$@'
+      cmd_code2doc = $(LOCALES) $(CODE2DOC) $< > $@
+
 features.txt: $(FEATURES) $(CONF2DOC)
 	$(call cmd,conf2doc)
 
@@ -133,10 +136,10 @@ API = $(shell find $(top_srcdir)/src/ -name '*.h' -exec grep -q 'API Doc' \{\} \
 endif
 
 define api_doc
+API_TXT += api/$(2).txt
 api/$(2).txt: $(1) $(CODE2DOC)
 	@test -d api || $(MKINSTALLDIRS) api
-	@$(CODE2DOC) $(1) > $$@
-API_TXT += api/$(2).txt
+	$$(call cmd,code2doc)
 endef
 
 api_name = $(shell sed -n 's/.*API Doc\s*::\s*\([^ 	]*\).*/\1/p' < $(1))
