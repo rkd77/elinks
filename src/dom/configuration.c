@@ -298,3 +298,51 @@ add_dom_config_normalizer(struct dom_stack *stack, enum dom_config_flag flags)
 
 	return NULL;
 }
+
+struct dom_config_info {
+	struct dom_string name;
+	enum dom_config_flag flag;
+};
+
+#define DOM_CONFIG(name, flag) \
+	{ INIT_DOM_STRING(name, -1), (flag) }
+
+static struct dom_config_info dom_config_info[] = {
+	DOM_CONFIG("cdata-sections",		DOM_CONFIG_CDATA_SECTIONS),
+	DOM_CONFIG("comments",			DOM_CONFIG_COMMENTS),
+	DOM_CONFIG("element-content-whitespace",DOM_CONFIG_ELEMENT_CONTENT_WHITESPACE),
+	DOM_CONFIG("entities",			DOM_CONFIG_ENTITIES),
+	DOM_CONFIG("normalize-characters",	DOM_CONFIG_NORMALIZE_CHARACTERS),
+	DOM_CONFIG("unknown",			DOM_CONFIG_UNKNOWN),
+	DOM_CONFIG("normalize-whitespace",	DOM_CONFIG_NORMALIZE_WHITESPACE),
+};
+
+static enum dom_config_flag
+get_dom_config_flag(struct dom_string *name)
+{
+	int i;
+
+	for (i = 0; i < sizeof_array(dom_config_info); i++)
+		if (!dom_string_casecmp(&dom_config_info[i].name, name))
+			return dom_config_info[i].flag;
+
+	return 0;
+}
+
+enum dom_config_flag
+parse_dom_config(unsigned char *flaglist, unsigned char separator)
+{
+	enum dom_config_flag flags = 0;
+
+	while (flaglist) {
+		unsigned char *end = separator ? strchr(flaglist, separator) : NULL;
+		int length = end ? flaglist - end : strlen(flaglist);
+		struct dom_string name = INIT_DOM_STRING(flaglist, length);
+
+		flags |= get_dom_config_flag(&name);
+		if (end) end++;
+		flaglist = end;
+	}
+
+	return flags;
+}
