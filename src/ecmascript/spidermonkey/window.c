@@ -342,7 +342,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		if (deo) {
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
-			deo->target = target;
+			deo->target = stracpy(target);
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			boolean_to_jsval(ctx, rval, 1);
 			goto end;
