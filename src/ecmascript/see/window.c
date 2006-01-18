@@ -294,7 +294,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 		if (deo) {
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
-			deo->target = stracpy(target);
+			deo->target = target;
 			/* target will be freed in delayed_goto_uri_frame */
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			goto end;
