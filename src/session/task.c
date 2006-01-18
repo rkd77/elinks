@@ -672,6 +672,13 @@ delayed_goto_uri_frame(void *data)
 	frame = ses_find_frame(deo->ses, deo->target);
 	if (frame)
 		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
+	else {
+		static unsigned char buf[256];
+
+		strncpy(buf, deo->target, 256);
+		buf[255] = '\0';
+		goto_uri_frame(deo->ses, deo->uri, buf, CACHE_MODE_NORMAL);
+	}
 	done_uri(deo->uri);
 	mem_free(deo->target);
 	mem_free(deo);
