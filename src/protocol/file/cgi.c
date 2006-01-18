@@ -26,6 +26,7 @@
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
+#include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/http/http.h"
 #include "protocol/uri.h"
@@ -335,8 +336,6 @@ execute_cgi(struct connection *conn)
 		goto end0;
 	}
 	if (!pid) { /* CGI script */
-		int i;
-
 		if (set_vars(conn, script)) {
 			_exit(1);
 		}
@@ -345,9 +344,7 @@ execute_cgi(struct connection *conn)
 			_exit(2);
 		}
 		/* We implicitly chain stderr to ELinks' stderr. */
-		for (i = 3; i < 1024; i++) {
-			close(i);
-		}
+		close_all_non_term_fd();
 
 		last_slash[-1] = 0; set_cwd(script); last_slash[-1] = '/';
 		if (execl(script, script, NULL)) {
