@@ -13,6 +13,7 @@ SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 SUBDIRS = auth file http
 
 OBJS-$(CONFIG_DATA)		+= data.o
+OBJS-$(CONFIG_CGI)		+= common.o
 OBJS-$(CONFIG_FSP)		+= common.o
 OBJS-$(CONFIG_SMB)		+= common.o
 
