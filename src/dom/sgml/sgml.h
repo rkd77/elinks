@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 
-#include "dom/stack.h"
+#include "dom/node.h"
 #include "dom/string.h"
 
 /* The flags stored in the attribute sgml node info data */
