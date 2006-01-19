@@ -184,14 +184,13 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		break;
 
 	case DOM_NODE_TEXT:
-		if (config->flags & DOM_CONFIG_NORMALIZE_CHARACTERS) {
-			code = append_node_text(config, node);
-
-		} else if (!(config->flags & DOM_CONFIG_ELEMENT_CONTENT_WHITESPACE)
-			   && node->data.text.only_space) {
+		if (!(config->flags & DOM_CONFIG_ELEMENT_CONTENT_WHITESPACE)
+		    && node->data.text.only_space) {
 			/* Discard all Text nodes that contain
 			 * whitespaces in element content]. */
 			code = DOM_STACK_CODE_FREE_NODE;
+		} else {
+			code = append_node_text(config, node);
 		}
 		break;
 
@@ -336,7 +335,7 @@ parse_dom_config(unsigned char *flaglist, unsigned char separator)
 
 	while (flaglist) {
 		unsigned char *end = separator ? strchr(flaglist, separator) : NULL;
-		int length = end ? flaglist - end : strlen(flaglist);
+		int length = end ? end - flaglist : strlen(flaglist);
 		struct dom_string name = INIT_DOM_STRING(flaglist, length);
 
 		flags |= get_dom_config_flag(&name);
