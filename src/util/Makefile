@@ -5,12 +5,25 @@ include $(top_builddir)/Makefile.config
 # Usage $(call not,$(CONFIG_FOO))
 not = $(if $(findstring yes,$(1)),no,yes)
 
-OBJS-$(CONFIG_DEBUG)		 += memdebug.o
-OBJS-$(CONFIG_MD5)		 += md5.o
-OBJS-$(CONFIG_CSS)		 += scanner.o
-OBJS-$(CONFIG_DOM)		 += scanner.o
-OBJS-$(CONFIG_SHA1)		 += sha1.o
-OBJS-$(call not,$(CONFIG_SMALL)) += fastfind.o
+OBJS-$(call not,$(CONFIG_SMALL))	 += fastfind.o
+OBJS-$(CONFIG_CSS)			 += scanner.o
+OBJS-$(CONFIG_DEBUG)			 += memdebug.o
+OBJS-$(CONFIG_DOM)			 += scanner.o
+OBJS-$(CONFIG_MD5)			 += md5.o
+
+# Use own MD5 implementation if testing libc or there's no OpenSSL
+# (either the real thing or GNUTLS compat wrappers).
+OBJS-$(CONFIG_OWN_LIBC)			 += md5.o
+ifeq ($(CONFIG_GNUTLS_OPENSSL_COMPAT),no)
+OBJS-$(call not,$(CONFIG_OPENSSL))	 += md5.o
+endif
+
+ifeq ($(CONFIG_BITTORRENT),yes)
+# BitTorrent is the only user. Compile in SHA1 if testing libc or
+# there is no OpenSSL. The GNUTLS OpenSSL wrappers doesn't have it.
+OBJS-$(CONFIG_OWN_LIBC)			 += sha1.o
+OBJS-$(call not,$(CONFIG_OPENSSL))	 += sha1.o
+endif
 
 OBJS = \
  base64.o \

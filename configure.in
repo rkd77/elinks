@@ -1224,29 +1224,6 @@ EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
 
-if test "$CONFIG_OPENSSL" != yes &&
-   test "$CONFIG_GNUTLS_OPENSSL_COMPAT" != yes ||
-   test "$CONFIG_OWN_LIBC" = yes;
-then
-	AC_MSG_CHECKING(for built-in MD5 support)
-	AC_MSG_RESULT(yes)
-	EL_CONFIG(CONFIG_MD5, [Built-in MD5])
-fi
-
-AC_SUBST(CONFIG_MD5)
-
-if test "$CONFIG_BITTORRENT" = yes; then
-	if test "$CONFIG_OPENSSL" != yes ||
-	   test "$CONFIG_OWN_LIBC" = yes;
-	then
-		AC_MSG_CHECKING(for built-in SHA1 support)
-		AC_MSG_RESULT(yes)
-		EL_CONFIG(CONFIG_SHA1, [Built-in SHA1])
-	fi
-fi
-
-AC_SUBST(CONFIG_SHA1)
-
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
     Also check out the features.conf file for more information about features!
