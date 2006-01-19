@@ -26,9 +26,7 @@ from GIT in it, use the command:
 	$ cg clone -s check_file_SITES_for_value_of_this
 
   Note that if you obtained the sources directly from GIT, you NEED to run
-
 ./autogen.sh!  (It should be enough to do it once - however, if you have build
-
 problems, try running this first.) Also, you obviously need GNU make and
 autoconf installed on your system (note that autoconf-2.13 is supported, newer
 ones may cause problems thanks to the autoconf developers who don't know how to
