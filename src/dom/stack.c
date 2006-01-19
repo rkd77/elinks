@@ -532,8 +532,7 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 		id->length, id->string, name->length, name->string,
 		value.length, value.string);
 
-	if (is_dom_string_set(&value))
-		done_dom_string(&value);
+	done_dom_string(&value);
 
 	return DOM_STACK_CODE_OK;
 }
@@ -555,8 +554,7 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 		name->length, name->string,
 		value.length, value.string);
 
-	if (is_dom_string_set(&value))
-		done_dom_string(&value);
+	done_dom_string(&value);
 
 	return DOM_STACK_CODE_OK;
 }
