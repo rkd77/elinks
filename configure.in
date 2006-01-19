@@ -1247,12 +1247,6 @@ fi
 
 AC_SUBST(CONFIG_SHA1)
 
-if test "$CONFIG_CSS" = yes || test "$CONFIG_DOM" = yes;
-then
-	EL_CONFIG(CONFIG_SCANNER, [Built-in scanner])
-fi
-AC_SUBST(CONFIG_SCANNER)
-
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
     Also check out the features.conf file for more information about features!

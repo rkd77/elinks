@@ -7,7 +7,8 @@ not = $(if $(findstring yes,$(1)),no,yes)
 
 OBJS-$(CONFIG_DEBUG)		 += memdebug.o
 OBJS-$(CONFIG_MD5)		 += md5.o
-OBJS-$(CONFIG_SCANNER)		 += scanner.o
+OBJS-$(CONFIG_CSS)		 += scanner.o
+OBJS-$(CONFIG_DOM)		 += scanner.o
 OBJS-$(CONFIG_SHA1)		 += sha1.o
 OBJS-$(call not,$(CONFIG_SMALL)) += fastfind.o
 
