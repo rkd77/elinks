@@ -178,6 +178,9 @@ ifdef TEST_PROGS
 TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 TESTDEPS += $(TESTDEPS-yes)
 
+TEST_LIB=$(top_srcdir)/test/libtest.sh
+export TEST_LIB
+
 define test_prog
 $(1): $(1).o $(TESTDEPS)
 	$$(call cmd,link)
