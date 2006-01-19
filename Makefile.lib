@@ -108,7 +108,7 @@ DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
 ifneq ($(strip $(OBJS)),)
 -include $(DEP_FILES)
-OBJS += $(LIB_O_NAME)
+ALL_OBJS = $(LIB_O_DEPS) $(LIB_O_NAME)
 endif
 
 %.o: $(srcdir)%.c
@@ -127,7 +127,7 @@ CLEAN += $(PROG) $(OBJS)
 #############################################################################
 # The main default rules
 
-all-default: $(OBJS) $(PROGS) $(MAN1) $(MAN5) .vimrc
+all-default: $(ALL_OBJS) $(PROGS) $(MAN1) $(MAN5) .vimrc
 
 # Ensure that Makefiles in subdirs are created before we recursive into them
 init-recursive: init-default
