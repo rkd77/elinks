@@ -63,8 +63,9 @@ enum dom_config_flag {
 
 	/** "normalize-whitespace"
 	 *
-	 * If false (default) nothing is done, else all nodes are discarded
-	 * once they have been traversed. */
+	 * If false (default) nothing is done, else all text nodes are
+	 * normalized so that sequences of space characters are changed to
+	 * being only a single space. */
 	DOM_CONFIG_NORMALIZE_WHITESPACE = 64,
 };
 
