@@ -507,6 +507,8 @@ AC_ARG_WITH(see, [  --with-see              enable Simple Ecmascript Engine (SEE
 
 AC_MSG_CHECKING([for SEE])
 
+CONFIG_ECMASCRIPT_SEE=no
+
 if test "$enable_see" = "yes"; then
 	AC_MSG_RESULT(yes);
 	## Based on the SEE_FLAGS macro.
@@ -529,7 +531,6 @@ if test "$enable_see" = "yes"; then
 		CPPFLAGS="$CPPFLAGS $SEE_CFLAGS"
 		EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
 		AC_SUBST(SEE_CFLAGS)
-		AC_SUBST(CONFIG_ECMASCRIPT_SEE)
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
 			AC_MSG_ERROR([SEE not found])
@@ -583,25 +584,19 @@ if test -z "$disable_spidermonkey"; then
 fi
 
 AC_MSG_RESULT($cf_result)
+CONFIG_SPIDERMONKEY="$cf_result"
 EL_RESTORE_FLAGS
 
-if test "$cf_result" = yes; then
-	EL_CONFIG(CONFIG_SPIDERMONKEY, [SpiderMonkey])
-
-	CFLAGS="$CFLAGS_X"
-	AC_SUBST(SPIDERMONKEY_LIBS)
-	AC_SUBST(SPIDERMONKEY_CFLAGS)
-fi
-
-if test "$CONFIG_SPIDERMONKEY" = yes &&
-   test "$CONFIG_ECMASCRIPT_SEE" != yes; then
+if test "x$CONFIG_SPIDERMONKEY" = xyes &&
+   test "x$CONFIG_ECMASCRIPT_SEE" != xyes; then
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
+else
+	CONFIG_ECMASCRIPT_SMJS=no
 fi
-
-AC_SUBST(CONFIG_SPIDERMONKEY)
-AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
+AC_SUBST(CONFIG_ECMASCRIPT_SEE)
+AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 
 dnl ===================================================================
@@ -620,11 +615,12 @@ else
 	CONFIG_SCRIPTING_SPIDERMONKEY=no
 fi
 
-EL_CONFIG_DEPENDS(CONFIG_SPIDERMONKEY, [CONFIG_ECMASCRIPT_SMJS CONFIG_SCRIPTING_SPIDERMONKEY], [SpiderMonkey])
-if test "x$CONFIG_SPIDERMONKEY" = xyes; then
-	LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-	CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
-	CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
+   test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
+	LIBS="$LIBS $SPIDERMONKEY_LIBS"
+	AC_SUBST(SPIDERMONKEY_LIBS)
+	AC_SUBST(SPIDERMONKEY_CFLAGS)
+	AC_SUBST(CONFIG_SPIDERMONKEY)
 fi
 
 dnl ===================================================================
