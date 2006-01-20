@@ -90,16 +90,17 @@ if test "$CONFIG_RUBY" = "yes"; then
 	fi
 fi
 
+EL_RESTORE_FLAGS
+
 if test "$CONFIG_RUBY" != "yes"; then
 	if test -n "$CONFIG_RUBY_WITHVAL" &&
 	   test "$CONFIG_RUBY_WITHVAL" != no; then
 		AC_MSG_ERROR([Ruby not found])
 	fi
-	EL_RESTORE_FLAGS
 else
 	EL_CONFIG(CONFIG_RUBY, [Ruby])
 
-	CFLAGS="$CFLAGS_X"
+	LIBS="$LIBS $RUBY_LIBS"
 	AC_SUBST(RUBY_CFLAGS)
 	AC_SUBST(RUBY_LIBS)
 fi
