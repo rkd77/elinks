@@ -26,7 +26,7 @@
 
 #ifdef CONFIG_ECMASCRIPT_SEE
 #include "ecmascript/see.h"
-#elif defined(CONFIG_SPIDERMONKEY)
+#elif defined(CONFIG_ECMASCRIPT_SMJS)
 #include "ecmascript/spidermonkey.h"
 #endif
 
@@ -142,7 +142,7 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 static struct module *ecmascript_modules[] = {
 #ifdef CONFIG_ECMASCRIPT_SEE
 	&see_module,
-#elif defined(CONFIG_SPIDERMONKEY)
+#elif defined(CONFIG_ECMASCRIPT_SMJS)
 	&spidermonkey_module,
 #endif
 	NULL,
