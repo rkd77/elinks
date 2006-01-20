@@ -420,7 +420,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 		if (is_dom_node_list_member(list, wstate->index)) {
 			struct dom_node *child = list->entries[wstate->index++];
 
-			if (push_dom_node(stack, child))
+			if (push_dom_node(stack, child) == DOM_STACK_CODE_OK)
 				continue;
 		}
 
