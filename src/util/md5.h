@@ -3,12 +3,14 @@
 
 /* Optionally MD5 support can depend on external implementation when linking
  * against a SSL library that supports it. */
-#ifndef CONFIG_MD5
-#if defined(CONFIG_OPENSSL)
+#if defined(CONFIG_OWN_LIBC)
+#define CONFIG_MD5 1
+#elif defined(CONFIG_OPENSSL)
 #include <openssl/md5.h>
 #elif defined(CONFIG_GNUTLS_OPENSSL_COMPAT)
 #include <gnutls/openssl.h>
-#endif
+#else
+#define CONFIG_MD5 1
 #endif
 
 /* GNU TLS doesn't define this */

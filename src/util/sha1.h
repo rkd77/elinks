@@ -36,10 +36,12 @@
 
 /* Optionally SHA1 support can depend on external implementation when linking
  * against a SSL library that supports it. */
-#ifndef CONFIG_SHA1
-#if defined(CONFIG_OPENSSL)
+#if defined(CONFIG_OWN_LIBC)
+#define CONFIG_SHA1 1
+#elif defined(CONFIG_OPENSSL)
 #include <openssl/sha.h>
-#endif
+#else
+#define CONFIG_SHA1 1
 #endif
 
 #ifndef SHA_DIGEST_LENGTH
