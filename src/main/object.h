@@ -16,7 +16,7 @@ struct object {
 
 #define OBJECT_HEAD(type)						\
 	LIST_HEAD(type);						\
-	struct object object;
+	struct object object
 
 struct object_head {
 	OBJECT_HEAD(struct object *);

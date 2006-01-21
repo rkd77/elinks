@@ -140,7 +140,7 @@ static INIT_LIST_HEAD(strerror_buf); /* struct strerror_val */
  * It never returns NULL (if one changes that, be warn that
  * callers may not test for this condition) --Zas */
 unsigned char *
-get_state_message(int state, struct terminal *term)
+get_state_message(enum connection_state state, struct terminal *term)
 {
 	unsigned char *e;
 	struct strerror_val *s;

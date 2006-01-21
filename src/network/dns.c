@@ -77,7 +77,7 @@ static struct dnsquery *dns_queue = NULL;
 
 static INIT_LIST_HEAD(dns_cache);
 
-static void done_dns_lookup(struct dnsquery *query, int res);
+static void done_dns_lookup(struct dnsquery *query, enum dns_result res);
 
 
 /* DNS cache management: */
@@ -136,7 +136,7 @@ del_dns_cache_entry(struct dnsentry *dnsentry)
 
 /* Synchronous DNS lookup management: */
 
-int
+enum dns_result
 do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno,
 	       int in_thread)
 {
