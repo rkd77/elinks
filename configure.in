@@ -1080,6 +1080,7 @@ EL_ARG_ENABLE(CONFIG_FINGER, finger, [Finger protocol],
 dnl ===================================================================
 dnl FSP protocol
 dnl ===================================================================
+EL_SAVE_FLAGS
 
 if test "x${enable_fsp}" != xno; then
 	AC_CHECK_HEADERS(fsplib.h, HAVE_FSPLIB=yes, HAVE_FSPLIB=no)
@@ -1099,6 +1100,10 @@ fi
 
 EL_ARG_DEPEND(CONFIG_FSP, fsp, [HAVE_FSPLIB:yes], [FSP protocol],
 	      [  --enable-fsp            enable FSP protocol support])
+
+if test "x$CONFIG_FSP" = xno; then
+	EL_RESTORE_FLAGS
+fi
 
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
