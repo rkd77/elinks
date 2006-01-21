@@ -2,7 +2,7 @@
 #ifndef EL__ECMASCRIPT_SEE_STRINGS_H
 #define EL__ECMASCRIPT_SEE_STRINGS_H
 
-#include <see/see.h>
+struct SEE_string;
 
 void init_intern_strings(void);
 
