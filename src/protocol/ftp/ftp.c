@@ -126,7 +126,7 @@ static void ftp_pass_info(struct socket *, struct read_buffer *);
 static void ftp_retr_file(struct socket *, struct read_buffer *);
 static void ftp_got_final_response(struct socket *, struct read_buffer *);
 static void got_something_from_data_connection(struct connection *);
-static void ftp_end_request(struct connection *, int);
+static void ftp_end_request(struct connection *, enum connection_state);
 static struct ftp_connection_info *add_file_cmd_to_str(struct connection *);
 static void ftp_data_accept(struct connection *conn);
 
