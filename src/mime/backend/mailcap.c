@@ -684,7 +684,8 @@ struct module mailcap_mime_module = struct_module(
 /* Some ugly shortcuts for getting defined symbols to work. */
 int default_mime_backend,
     install_signal_handler,
-    mimetypes_mime_backend;
+    mimetypes_mime_backend,
+    program;
 struct list_head terminals;
 
 void die(const char *msg, ...)
