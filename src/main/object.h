@@ -15,8 +15,7 @@ struct object {
 };
 
 #define OBJECT_HEAD(type)						\
-	type *next;							\
-	type *prev;							\
+	LIST_HEAD(type);						\
 	struct object object
 
 struct object_head {
