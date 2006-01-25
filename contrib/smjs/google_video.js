@@ -4,10 +4,13 @@
 function load_google_video(cached) {
 	if (!cached.uri.match(/^http:\/\/video.google.com\/videoplay/))
 		return true;
-	var re = /(<object data="\/googleplayer.swf\?videoUrl=)(.*?)(\&)/;
-	var uri = cached.content.match(re)[2];
 
-	if (uri) elinks.location = unescape(uri);
+	var re = /(<object data="\/googleplayer.swf\?videoUrl=)(.*?)(\&.*?<\/object>)/;
+	var match = cached.content.match(re);
+	var url = unescape(match[2]);
+	var meta = '<meta http-equiv="refresh" content="1; url=' + url + '" />';
+
+	cached.content = cached.content.replace(/<head>/, "<head>" + meta);
 
 	return true;
 }
