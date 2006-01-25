@@ -25,6 +25,7 @@
 #include "dom/configuration.h"
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
+#include "dom/sgml/html/html.h"
 #include "dom/sgml/rss/rss.h"
 #include "dom/node.h"
 #include "dom/stack.h"
@@ -40,10 +41,13 @@
 
 
 struct dom_renderer {
+	enum sgml_document_type doctype;
 	struct document *document;
 
 	struct conv_table *convert_table;
 	enum convert_string_mode convert_mode;
+
+	struct uri *base_uri;
 
 	unsigned char *source;
 	unsigned char *end;
@@ -109,6 +113,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->source	= buffer->source;
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
+	renderer->base_uri	= get_uri_reference(document->uri);
 
 #ifdef HAVE_REGEX_H
 	if (renderer->document->options.plain_display_links) {
@@ -368,7 +373,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	                           CSM_DEFAULT, NULL, NULL, NULL);
 	if (!uristring) return NULL;
 
-	where = join_urls(document->uri, uristring);
+	where = join_urls(renderer->base_uri, uristring);
 
 	mem_free(uristring);
 
@@ -560,6 +565,27 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	return DOM_STACK_CODE_OK;
 }
 
+static void
+set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuelen)
+{
+	unsigned char *href = memacpy(value, valuelen);
+	unsigned char *uristring;
+	struct uri *uri;
+
+	if (!href) return;
+	uristring = join_urls(renderer->base_uri, href);
+	mem_free(href);
+
+	if (!uristring) return;
+	uri = get_uri(uristring, 0);
+	mem_free(uristring);
+
+	if (!uri) return;
+
+	done_uri(renderer->base_uri);
+	renderer->base_uri = uri;
+}
+
 enum dom_stack_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -612,6 +638,12 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 					continue;
 
 				break;
+			}
+
+			if (renderer->doctype == SGML_DOCTYPE_HTML
+			    && node->data.attribute.type == HTML_ATTRIBUTE_HREF
+			    && node->parent->data.element.type == HTML_ELEMENT_BASE) {
+				set_base_uri(renderer, value, valuelen - skips);
 			}
 
 			add_dom_link(renderer, value, valuelen - skips,
@@ -941,7 +973,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
-	enum sgml_document_type doctype;
  	enum sgml_parser_type parser_type;
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
@@ -965,32 +996,32 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	/* FIXME: Refactor the doctype lookup. */
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
-		doctype = SGML_DOCTYPE_RSS;
+		renderer.doctype = SGML_DOCTYPE_RSS;
 
 	} else if (!strcasecmp("application/docbook+xml", cached->content_type)) {
-		doctype = SGML_DOCTYPE_DOCBOOK;
+		renderer.doctype = SGML_DOCTYPE_DOCBOOK;
 
 	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
 		   || !strcasecmp("application/x-xbel", cached->content_type)
 		   || !strcasecmp("application/xbel", cached->content_type)) {
-		doctype = SGML_DOCTYPE_XBEL;
+		renderer.doctype = SGML_DOCTYPE_XBEL;
 
 	} else {
 		assertm(!strcasecmp("text/html", cached->content_type)
 			|| !strcasecmp("application/xhtml+xml", cached->content_type),
 			"Couldn't resolve doctype '%s'", cached->content_type);
 
-		doctype = SGML_DOCTYPE_HTML;
+		renderer.doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(parser_type, doctype, &uri, 0);
+	parser = init_sgml_parser(parser_type, renderer.doctype, &uri, 0);
   	if (!parser) return;
 
 	if (document->options.plain) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_source_renderer_context_info);
 
-	} else if (doctype == SGML_DOCTYPE_RSS) {
+	} else if (renderer.doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_rss_renderer_context_info);
 		add_dom_config_normalizer(&parser->stack, RSS_CONFIG_FLAGS); 
@@ -1014,5 +1045,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	if (renderer.find_url)
 		regfree(&renderer.url_regex);
 #endif
+	done_uri(renderer.base_uri);
 	done_sgml_parser(parser);
 }
