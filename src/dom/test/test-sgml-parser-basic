@@ -93,10 +93,17 @@ test_output_equals \
 #text: u'
 
 test_output_equals \
-'Parse bad comment.' \
+'Parse bad comment. (I)' \
 '<!--->s' \
 '
 #comment: ->s'
+
+test_output_equals \
+'Parse bad comment. (II)' \
+'<!--a--!>bad comment' \
+'
+#comment: a
+#text: bad comment'
 
 test_output_equals \
 'Parse empty notation.' \

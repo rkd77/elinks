@@ -368,12 +368,20 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string,
 		/* It is always safe to access index -2 and -1 here since we
 		 * are supposed to have '<!--' before this is called. We do
 		 * however need to check that the '-->' are not overlapping any
-		 * preceeding '-'. */
-		if (pos[-2] == '-' && pos[-1] == '-' && &pos[-2] >= *string) {
-			length = pos - *string - 2;
-			*possibly_incomplete = 0;
-			pos++;
-			break;
+		 * preceeding '-'. Additionally also handle the quirky '--!>'
+		 * end sometimes found. */
+		if (pos[-2] == '-') {
+			if (pos[-1] == '-' && &pos[-2] >= *string) {
+				length = pos - *string - 2;
+				*possibly_incomplete = 0;
+				pos++;
+				break;
+			} else if (pos[-1] == '!' && pos[-3] == '-' && &pos[-3] >= *string) {
+				length = pos - *string - 3;
+				*possibly_incomplete = 0;
+				pos++;
+				break;
+			}
 		}
 	}
 
