@@ -127,7 +127,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 
 
 void
-html_stack_dup(struct html_context *html_context, enum html_element_type type)
+html_stack_dup(struct html_context *html_context, enum html_element_mortality_type type)
 {
 	struct html_element *e;
 	struct html_element *ep = html_context->stack.next;

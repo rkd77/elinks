@@ -659,7 +659,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 struct html_element *
 init_html_parser_state(struct html_context *html_context,
-                       enum html_element_type type,
+                       enum html_element_mortality_type type,
                        int align, int margin, int width)
 {
 	struct html_element *element;

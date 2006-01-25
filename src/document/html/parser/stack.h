@@ -10,7 +10,7 @@ struct html_element *search_html_stack(struct html_context *html_context,
                                        unsigned char *name);
 
 void html_stack_dup(struct html_context *html_context,
-                    enum html_element_type type);
+                    enum html_element_mortality_type type);
 
 void kill_html_stack_item(struct html_context *html_context,
                           struct html_element *e);

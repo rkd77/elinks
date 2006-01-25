@@ -102,7 +102,7 @@ struct par_attrib {
 };
 
 /* HTML parser stack mortality info */
-enum html_element_type {
+enum html_element_mortality_type {
 	/* Elements of this type can not be removed from the stack. This type
 	 * is created by the renderer when formatting a HTML part. */
 	ELEMENT_IMMORTAL,
@@ -122,7 +122,7 @@ enum html_element_type {
 struct html_element {
 	LIST_HEAD(struct html_element);
 
-	enum html_element_type type;
+	enum html_element_mortality_type type;
 
 	struct text_attrib attr;
 	struct par_attrib parattr;
@@ -173,7 +173,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		                  ...));
 
 void done_html_parser(struct html_context *html_context);
-struct html_element *init_html_parser_state(struct html_context *html_context, enum html_element_type type, int align, int margin, int width);
+struct html_element *init_html_parser_state(struct html_context *html_context, enum html_element_mortality_type type, int align, int margin, int width);
 void done_html_parser_state(struct html_context *html_context,
                             struct html_element *element);
 
