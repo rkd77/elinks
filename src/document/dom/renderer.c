@@ -24,6 +24,7 @@
 #include "document/renderer.h"
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
+#include "dom/sgml/html/html.h"
 #include "dom/node.h"
 #include "dom/stack.h"
 #include "intl/charsets.h"
@@ -38,10 +39,13 @@
 
 
 struct dom_renderer {
+	enum sgml_document_type doctype;
 	struct document *document;
 
 	struct conv_table *convert_table;
 	enum convert_string_mode convert_mode;
+
+	struct uri *base_uri;
 
 	unsigned char *source;
 	unsigned char *end;
@@ -100,6 +104,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->source	= buffer->source;
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
+	renderer->base_uri	= get_uri_reference(document->uri);
 
 #ifdef HAVE_REGEX_H
 	if (renderer->document->options.plain_display_links) {
@@ -336,7 +341,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length)
 	                           CSM_DEFAULT, NULL, NULL, NULL);
 	if (!uristring) return NULL;
 
-	where = join_urls(document->uri, uristring);
+	where = join_urls(renderer->base_uri, uristring);
 
 	mem_free(uristring);
 
@@ -525,6 +530,27 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 }
 
 static void
+set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuelen)
+{
+	unsigned char *href = memacpy(value, valuelen);
+	unsigned char *uristring;
+	struct uri *uri;
+
+	if (!href) return;
+	uristring = join_urls(renderer->base_uri, href);
+	mem_free(href);
+
+	if (!uristring) return;
+	uri = get_uri(uristring, 0);
+	mem_free(uristring);
+
+	if (!uri) return;
+
+	done_uri(renderer->base_uri);
+	renderer->base_uri = uri;
+}
+
+static void
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -576,6 +602,12 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 					continue;
 
 				break;
+			}
+
+			if (renderer->doctype == SGML_DOCTYPE_HTML
+			    && node->data.attribute.type == HTML_ATTRIBUTE_HREF
+			    && node->parent->data.element.type == HTML_ELEMENT_BASE) {
+				set_base_uri(renderer, value, valuelen - skips);
 			}
 
 			add_dom_link(renderer, value, valuelen - skips);
@@ -669,7 +701,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
-	enum sgml_document_type doctype;
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
@@ -688,22 +719,22 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	document->bgcolor = document->options.default_bg;
 
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
-		doctype = SGML_DOCTYPE_RSS;
+		renderer.doctype = SGML_DOCTYPE_RSS;
 
 	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
 		   || !strcasecmp("application/x-xbel", cached->content_type)
 		   || !strcasecmp("application/xbel", cached->content_type)) {
-		doctype = SGML_DOCTYPE_XBEL;
+		renderer.doctype = SGML_DOCTYPE_XBEL;
 
 	} else {
 		assertm(!strcasecmp("text/html", cached->content_type)
 			|| !strcasecmp("application/xhtml+xml", cached->content_type),
 			"Couldn't resolve doctype '%s'", cached->content_type);
 
-		doctype = SGML_DOCTYPE_HTML;
+		renderer.doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(SGML_PARSER_STREAM, doctype, &uri);
+	parser = init_sgml_parser(SGML_PARSER_STREAM, renderer.doctype, &uri);
 	if (!parser) return;
 
 	add_dom_stack_context(&parser->stack, &renderer,
@@ -723,5 +754,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	if (renderer.find_url)
 		regfree(&renderer.url_regex);
 #endif
+	done_uri(renderer.base_uri);
 	done_sgml_parser(parser);
 }
