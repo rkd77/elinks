@@ -197,7 +197,10 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = SEE_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
-	unsigned char *string = NULL;
+	/* 'volatile' qualifier prevents register allocation which fixes:
+	 *  warning: variable 'xxx' might be clobbered by 'longjmp' or 'vfork'
+	 */
+	unsigned char *volatile string = NULL;
 
 	g->exec_start = time(NULL);
 	SEE_TRY(interp, try_ctxt) {
@@ -222,7 +225,10 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = SEE_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
-	SEE_int32_t res = 0;
+	/* 'volatile' qualifier prevents register allocation which fixes:
+	 *  warning: variable 'xxx' might be clobbered by 'longjmp' or 'vfork'
+	 */
+	SEE_int32_t volatile res = 0;
 
 	g->exec_start = time(NULL);
 	SEE_TRY(interp, try_ctxt) {
