@@ -231,8 +231,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *url, *url2;
 	struct uri *uri;
 	struct SEE_value url_value, target_value;
-	static struct SEE_string *url_string[8], *target_string[8];
-	static int indeks;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -263,20 +261,34 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 #endif
 	SEE_ToString(interp, argv[0], &url_value);
 	if (argc > 1) {
+		/* Because of gradual rendering window.open is called many
+		 * times with the same arguments.
+		 * This workaround remembers NUMBER_OF_URLS_TO_REMEMBER last
+		 * opened URLs and do not let open them again.
+		 */
+#define NUMBER_OF_URLS_TO_REMEMBER 8
+		static struct {
+			struct SEE_string *url;
+			struct SEE_string *target;
+		} strings[NUMBER_OF_URLS_TO_REMEMBER];
+		static int indeks = 0;
 		int i;
 
 		SEE_ToString(interp, argv[1], &target_value);
-		for (i = 0; i < 8; i++) {
-			if (url_string[i] && target_string[i]) {
-				if (!SEE_string_cmp(url_value.u.string, url_string[i])
-				 && !SEE_string_cmp(target_value.u.string, target_string[i]))
-				 	return;
-			}
+		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
+			if (!(strings[i].url && strings[i].target))
+				continue;
+			if (!SEE_string_cmp(url_value.u.string, strings[i].url)
+			    && !SEE_string_cmp(target_value.u.string, strings[i].target))
+			 	return;
 		}
-		url_string[indeks] = url_value.u.string;
-		target_string[indeks] = target_value.u.string;
-		indeks = (indeks + 1) & 7;
+		strings[indeks].url = url_value.u.string;
+		strings[indeks].target = target_value.u.string;
+		indeks++;
+		if (indeks >= NUMBER_OF_URLS_TO_REMEMBER) indeks = 0;
+#undef NUMBER_OF_URLS_TO_REMEMBER
 	}
+
 	url = SEE_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
 
