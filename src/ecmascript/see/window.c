@@ -231,7 +231,8 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *url, *url2;
 	struct uri *uri;
 	struct SEE_value url_value, target_value;
-	static struct SEE_string *url_string = NULL, *target_string = NULL;
+	static struct SEE_string *url_string[8], *target_string[8];
+	static int indeks;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -262,14 +263,19 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 #endif
 	SEE_ToString(interp, argv[0], &url_value);
 	if (argc > 1) {
+		int i;
+
 		SEE_ToString(interp, argv[1], &target_value);
-		if (url_string && target_string &&
-		 !SEE_string_cmp(url_value.u.string, url_string)
-		 && !SEE_string_cmp(target_value.u.string, target_string)) {
-		 	return;
+		for (i = 0; i < 8; i++) {
+			if (url_string[i] && target_string[i]) {
+				if (!SEE_string_cmp(url_value.u.string, url_string[i])
+				 && !SEE_string_cmp(target_value.u.string, target_string[i]))
+				 	return;
+			}
 		}
-		url_string = url_value.u.string;
-		target_string = target_value.u.string;
+		url_string[indeks] = url_value.u.string;
+		target_string[indeks] = target_value.u.string;
+		indeks = (indeks + 1) & 7;
 	}
 	url = SEE_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
