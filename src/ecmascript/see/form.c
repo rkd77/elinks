@@ -336,6 +336,8 @@ js_input_blur(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
+	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
 }
@@ -390,6 +392,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	int linknum;
 
 	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	assert(fs);
 	fc = find_form_control(document, fs);
 	assert(fc);
@@ -409,6 +412,7 @@ js_input_select(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_value *res)
 {
 	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
 }
