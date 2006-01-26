@@ -66,6 +66,7 @@ struct module fsp_protocol_module = struct_module(
 static void
 fsp_error(unsigned char *error)
 {
+	fprintf(stderr, "text/plain");
 	puts(error);
 	exit(1);
 }
