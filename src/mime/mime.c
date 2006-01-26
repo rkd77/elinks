@@ -225,6 +225,12 @@ get_cache_header_content_type(struct cache_entry *cached)
 }
 
 unsigned char *
+get_default_content_type(void)
+{
+	return get_default_mime_type();
+}
+
+unsigned char *
 get_content_type(struct cache_entry *cached)
 {
 	unsigned char *extension, *ctype;
