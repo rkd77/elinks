@@ -113,14 +113,13 @@ sort_and_display_entries(FSP_DIR *dir)
 	 (int (*)(const void *, const void *)) compare);
 
 	for (i = 0; i < size; i++) {
-		printf("%10d\t<a href=\"%s\">", table[i].size, table[i].name);
-		if (table[i].type == FSP_RDTYPE_DIR && *dircolor) {
+		printf("%10d\t<a href=\"%s%s\">", table[i].size, table[i].name,
+			table[i].type == FSP_RDTYPE_DIR ? "/" : "");
+		if (table[i].type == FSP_RDTYPE_DIR && *dircolor)
 			printf("<font color=\"%s\"><b>", dircolor);
-		}
 		printf("%s", table[i].name);
-		if (table[i].type == FSP_RDTYPE_DIR && *dircolor) {
+		if (table[i].type == FSP_RDTYPE_DIR && *dircolor)
 			printf("</b></font>");
-		}
 		puts("</a>");
 	}
 }
@@ -160,14 +159,13 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
-			printf("%10d\t<a href=\"%s\">", fentry.size, fentry.name);
-			if (fentry.type == FSP_RDTYPE_DIR && *dircolor) {
+			printf("%10d\t<a href=\"%s%s\">", fentry.size,
+			 fentry.name, fentry.type == FSP_RDTYPE_DIR ? "/" : "");
+			if (fentry.type == FSP_RDTYPE_DIR && *dircolor)
 				printf("<font color=\"%s\"><b>", dircolor);
-			}
 			printf("%s", fentry.name);
-			if (fentry.type == FSP_RDTYPE_DIR && *dircolor) {
+			if (fentry.type == FSP_RDTYPE_DIR && *dircolor)
 				printf("</b></font>");
-			}
 			puts("</a>");
 		}
 		fsp_closedir(dir);
