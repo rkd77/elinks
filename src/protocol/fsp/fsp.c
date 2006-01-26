@@ -135,6 +135,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	if (!uristring || !data || !init_string(&buf))
 		fsp_error("Out of memory");
 
+	fprintf(stderr, "text/html");
+	fclose(stderr);
 	add_html_to_string(&buf, uristring, strlen(uristring));
 
 	printf("<html><head><title>%s</title><base href=\"%s\">"
@@ -203,8 +205,15 @@ do_fsp(struct connection *conn)
 		if (!file)
 			fsp_error("fsp_fopen error.");
 
+		/* Use the default way to find the MIME type, so write an
+		 * 'empty' name, since something needs to be written in order
+		 * to avoid socket errors. */
+		fprintf(stderr, "%c", '\0');
+		fclose(stderr);
+
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
 			fwrite(buf, 1, r, stdout);
+
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
@@ -222,14 +231,14 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
-	if (len == 0) {
+	if (!len) {
 		if (conn->from)
 			normalize_cache_entry(conn->cached, conn->from);
 		abort_connection(conn, S_OK);
 		return;
 	}
 
-	conn->socket->state = SOCKET_END_ONCLOSE;
+	socket->state = SOCKET_END_ONCLOSE;
 	conn->received += len;
 	if (add_fragment(conn->cached, conn->from, rb->data, len) == 1)
 		conn->tries = 0;
@@ -239,6 +248,40 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 	read_from_socket(socket, rb, S_TRANS, fsp_got_data);
 }
 
+static void
+fsp_got_header(struct socket *socket, struct read_buffer *rb)
+{
+	struct connection *conn = socket->conn;
+	struct read_buffer *buf;
+
+	conn->cached = get_cache_entry(conn->uri);
+	if (!conn->cached) {
+		close(socket->fd);
+		close(conn->data_socket->fd);
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	socket->state = SOCKET_END_ONCLOSE;
+
+	if (rb->length > 0) {
+		unsigned char *ctype = memacpy(rb->data, rb->length);
+
+		if (ctype && *ctype)
+			mem_free_set(&conn->cached->content_type, ctype);
+		else
+			mem_free_if(ctype);
+	}
+
+	buf = alloc_read_buffer(conn->data_socket);
+	if (!buf) {
+		close(socket->fd);
+		close(conn->data_socket->fd);
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data); 
+}
+
 #undef READ_SIZE
 
 
@@ -246,21 +289,17 @@ void
 fsp_protocol_handler(struct connection *conn)
 {
 	int fsp_pipe[2] = { -1, -1 };
+	int header_pipe[2] = { -1, -1 };
 	pid_t cpid;
-	struct read_buffer *buf;
 
-	if (c_pipe(fsp_pipe)) {
+	if (c_pipe(fsp_pipe) || c_pipe(header_pipe)) {
 		int s_errno = errno;
 
 		if (fsp_pipe[0] >= 0) close(fsp_pipe[0]);
 		if (fsp_pipe[1] >= 0) close(fsp_pipe[1]);
+		if (header_pipe[0] >= 0) close(header_pipe[0]);
+		if (header_pipe[1] >= 0) close(header_pipe[1]);
 		abort_connection(conn, -s_errno);
-		return;
-	}
-
-	conn->cached = get_cache_entry(conn->uri);
-	if (!conn->cached) {
-		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
 	conn->from = 0;
@@ -272,6 +311,8 @@ fsp_protocol_handler(struct connection *conn)
 
 		close(fsp_pipe[0]);
 		close(fsp_pipe[1]);
+		close(header_pipe[0]);
+		close(header_pipe[1]);
 		retry_connection(conn, -s_errno);
 		return;
 	}
@@ -282,21 +323,27 @@ fsp_protocol_handler(struct connection *conn)
 		close(0);
 		dup2(open("/dev/null", O_RDONLY), 0);
 		close(2);
-		dup2(open("/dev/null", O_RDONLY), 2);
+		dup2(header_pipe[1], 2);
 		close(fsp_pipe[0]);
+		close(header_pipe[0]);
 
 		close_all_non_term_fd();
 		do_fsp(conn);
 
 	} else {
-		conn->socket->fd = fsp_pipe[0];
+		struct read_buffer *buf2;
+
+		conn->data_socket->fd = fsp_pipe[0];
+		conn->socket->fd = header_pipe[0];
 		close(fsp_pipe[1]);
-		buf = alloc_read_buffer(conn->socket);
-		if (!buf) {
+		close(header_pipe[1]);
+		buf2 = alloc_read_buffer(conn->socket);
+		if (!buf2) {
 			close(fsp_pipe[0]);
+			close(header_pipe[0]);
 			abort_connection(conn, S_OUT_OF_MEM);
 			return;
 		}
-		read_from_socket(conn->socket, buf, S_CONN, fsp_got_data);
+		read_from_socket(conn->socket, buf2, S_CONN, fsp_got_header);
 	}
 }
