@@ -366,6 +366,7 @@ imported:
 		done_string(&code);
 		if (!ret.length) return;
 
+		/* FIXME: it doesn't work */
 		part = format_html_part(html_context, ret.source,
 		 ret.source + ret.length, par_format.align,
 		 par_format.leftmargin, document->options.box.width,

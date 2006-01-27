@@ -77,6 +77,7 @@ extern struct SEE_string *s_referrer;
 extern struct SEE_string *s_title;
 extern struct SEE_string *s_url;
 extern struct SEE_string *s_write;
+extern struct SEE_string *s_writeln;
 
 extern struct SEE_string *s_Mozilla;
 extern struct SEE_string *s_ELinks_;
