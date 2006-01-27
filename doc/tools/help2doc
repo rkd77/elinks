@@ -138,9 +138,9 @@ do
 
 		[a-z_-]*[.a-z_-]*)
 			parse_description=1
-			path="`echo $line | sed -e 's/\([a-z-][^ ]*\).*/\1/'`"
-			typeid="`echo $line | sed -e 's/[ ]*[a-z-][^ ]* \([^ ]*\).*/\1/'`"
-			default="`echo \"$line\" | sed -e 's/[^(]*(\(.*\))/\1/'`"
+			path="$(echo "$line" | sed -e 's/\([a-z-][^ ]*\).*/\1/')"
+			typeid="$(echo "$line" | sed -n 's/[ ]*[a-z-][^ ]* \([^ ]*\).*/\1/p')"
+			default="$(echo "$line" | sed -n 's/.*[^(]*(\(.*\))/\1/p')"
 			print_option_type "$path" "$typeid" "$default"
 			if test "$typeid" = "<num>";
 			then

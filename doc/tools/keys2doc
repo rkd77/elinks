@@ -75,7 +75,7 @@ print_keymap_defaults()
 	| while read entry
 	do
 		entry=$(echo "$entry" | sed 's/.*{ { //' | sed 's/ }//')
-		key=$(echo "$entry" | sed "s/\(KBD_[^,]*\|'.*'\),.*/\1/")
+		key=$(echo "$entry" | sed "s/.*\(KBD_[^,]*\|'.*'\),.*/\1/")
 		modifier=$(echo "$entry" | sed "s/.*KBD_MOD_\([A-Z_]*\).*/\1/")
 		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
 		action=$(grep " $action," "$CONFIGDIR/actions-$keymap.inc" \
@@ -83,7 +83,7 @@ print_keymap_defaults()
 
 		case "$key" in
 		KBD_*)
-			key=$(grep $key $KBDBIND \
+			key=$(grep "$key" $KBDBIND \
 			    | grep '^[[:space:]]{ "' \
 			    | sed 's/.*"\([^"]*\)".*/\1/')
 			;;
