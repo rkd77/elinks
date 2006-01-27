@@ -412,8 +412,6 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 	if (!node || push_dom_node(&parser->parsing, node) != DOM_STACK_CODE_OK)
 		return SGML_PARSER_CODE_MEM_ALLOC;
 
-	pop_dom_node(&parser->parsing);
-
 	return parser->code;
 }
 
@@ -429,7 +427,9 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 struct sgml_parsing_state {
 	struct dom_scanner scanner;
 	struct dom_node *node;
+	struct dom_string incomplete;
 	size_t depth;
+	unsigned int resume:1;
 };
 
 enum dom_stack_code
@@ -441,13 +441,67 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	int complete = !!(parser->flags & SGML_PARSER_COMPLETE);
 	int incremental = !!(parser->flags & SGML_PARSER_INCREMENTAL);
 	int detect_errors = !!(parser->flags & SGML_PARSER_DETECT_ERRORS);
+	struct dom_string *string = &node->string;
+	struct dom_scanner_token *token;
+	struct dom_string incomplete;
+	enum sgml_scanner_state scanner_state = SGML_STATE_TEXT;
 
 	parsing->depth = parser->stack.depth;
-	get_dom_stack_top(&parser->stack)->immutable = 1;
-	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, &node->string,
-			 SGML_STATE_TEXT, count_lines, complete, incremental,
+
+	if (stack->depth > 1) {
+		struct sgml_parsing_state *parent = &parsing[-1];
+
+		if (parent->resume) {
+			assert(is_dom_string_set(&parent->incomplete));
+
+			if (!add_to_dom_string(&parent->incomplete,
+					       string->string, string->length)) {
+				parser->code = SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_STACK_CODE_OK;
+			}
+
+			string = &parent->incomplete;
+			scanner_state = parent->scanner.state;
+
+			/* Pop down to the parent. */
+			parsing = parent;
+			parsing->resume = 0;
+			pop_dom_node(stack);
+		}
+	}
+
+	init_dom_scanner(&parsing->scanner, &sgml_scanner_info, string,
+			 scanner_state, count_lines, complete, incremental,
 			 detect_errors);
-	parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
+
+	{
+		int immutable = get_dom_stack_top(&parser->stack)->immutable;
+
+		get_dom_stack_top(&parser->stack)->immutable = 1;
+		parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
+		get_dom_stack_top(&parser->stack)->immutable = !!immutable;
+	}
+
+	if (complete || parser->code != SGML_PARSER_CODE_INCOMPLETE) {
+		pop_dom_node(&parser->parsing);
+		return DOM_STACK_CODE_OK;
+	}
+
+	token = get_dom_scanner_token(&parsing->scanner);
+	assert(token && token->type == SGML_TOKEN_INCOMPLETE);
+
+	string = &token->string;
+
+	set_dom_string(&incomplete, NULL, 0);
+
+	if (!init_dom_string(&incomplete, string->string, string->length)) {
+		parser->code = SGML_PARSER_CODE_MEM_ALLOC;
+		return DOM_STACK_CODE_OK;
+	}
+
+	done_dom_string(&parsing->incomplete);
+	set_dom_string(&parsing->incomplete, incomplete.string, incomplete.length);
+	parsing->resume = 1;
 
 	return DOM_STACK_CODE_OK;
 }
@@ -458,14 +512,20 @@ sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct sgml_parser *parser = get_sgml_parser(stack);
 	struct sgml_parsing_state *parsing = data;
 
-	/* Pop the stack back to the state it was in. This includes cleaning
-	 * away even immutable states left on the stack. */
-	while (parsing->depth < parser->stack.depth) {
-		get_dom_stack_top(&parser->stack)->immutable = 0;
-		pop_dom_node(&parser->stack);
+	/* Only clean up the stack if complete so that we get proper nesting. */
+	if (parser->flags & SGML_PARSER_COMPLETE) {
+		/* Pop the stack back to the state it was in. This includes cleaning
+		 * away even immutable states left on the stack. */
+		while (parsing->depth < parser->stack.depth) {
+			get_dom_stack_top(&parser->stack)->immutable = 0;
+			pop_dom_node(&parser->stack);
+		}
+		/* It's bigger than when calling done_sgml_parser() in the middle of an
+		 * incomplete parsing. */
+		assert(parsing->depth == parser->stack.depth);
 	}
 
-	assert(parsing->depth == parser->stack.depth);
+	done_dom_string(&parsing->incomplete);
 
 	return DOM_STACK_CODE_OK;
 }
@@ -611,8 +671,10 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 void
 done_sgml_parser(struct sgml_parser *parser)
 {
-	done_dom_stack(&parser->stack);
+	while (!dom_stack_is_empty(&parser->parsing))
+		pop_dom_node(&parser->parsing);
 	done_dom_stack(&parser->parsing);
+	done_dom_stack(&parser->stack);
 	done_dom_string(&parser->uri);
 	mem_free(parser);
 }

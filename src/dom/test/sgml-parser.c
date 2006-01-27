@@ -266,6 +266,7 @@ main(int argc, char *argv[])
 	enum dom_config_flag normalize_flags = 0;
 	int normalize = 0;
 	int complete = 1;
+	size_t read_stdin = 0;
 	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
 	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
 	int i;
@@ -301,6 +302,20 @@ main(int argc, char *argv[])
 					die("--src expects a string");
 				set_dom_string(&source, argv[i], strlen(argv[i]));
 			}
+
+		} else if (!strncmp(arg, "stdin", 5)) {
+			arg += 5;
+			if (*arg == '=') {
+				arg++;
+				read_stdin = atoi(arg);
+				set_dom_string(&source, arg, strlen(arg));
+			} else {
+				i++;
+				if (i >= argc)
+					die("--stdin expects a number");
+				read_stdin = atoi(argv[i]);
+			}
+			flags |= SGML_PARSER_INCREMENTAL;
 
 		} else if (!strncmp(arg, "normalize", 9)) {
 			arg += 9;
@@ -343,16 +358,49 @@ main(int argc, char *argv[])
 	else
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
-	code = parse_sgml(parser, source.string, source.length, complete);
+	if (read_stdin > 0) {
+		unsigned char *buffer;
+
+		buffer = mem_alloc(read_stdin);
+		if (!buffer)
+			die("Cannot allocate buffer");
+
+		complete = 0;
+
+		while (!complete) {
+			size_t size = fread(buffer, 1, read_stdin, stdin);
+
+			if (ferror(stdin))
+				die("error reading from stdin");
+
+			complete = feof(stdin);
+
+			code = parse_sgml(parser, buffer, size, complete);
+			switch (code) {
+			case SGML_PARSER_CODE_OK:
+				break;
+
+			case SGML_PARSER_CODE_INCOMPLETE:
+				if (!complete) break;
+				/* Error */
+			default:
+				complete = 1;
+			}
+		}
+
+		mem_free(buffer);
+
+	} else {
+		code = parse_sgml(parser, source.string, source.length, complete);
+	}
+
 	if (parser->root) {
-		size_t root_offset = parser->stack.depth - 1;
+		assert(!complete || parser->stack.depth > 0);
 
-		assert(!complete || root_offset == 0);
-
-		get_dom_stack_state(&parser->stack, root_offset)->immutable = 0;
-
-		while (!dom_stack_is_empty(&parser->stack))
+		while (!dom_stack_is_empty(&parser->stack)) {
+			get_dom_stack_top(&parser->stack)->immutable = 0;
 			pop_dom_node(&parser->stack);
+		}
 
 		if (normalize) {
 			struct dom_stack stack;

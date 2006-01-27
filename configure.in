@@ -66,6 +66,12 @@ if test "x$CONFIG_DOC" != xno; then
 		EL_CONFIG(CONFIG_ASCIIDOC, [AsciiDoc])
 		EL_CONFIG(MANUAL_ASCIIDOC, [HTML (one file)])
 		EL_CONFIG(MAN_ASCIIDOC, [HTML])
+
+		echo > config.asciidoc-unsafe.txt
+		if "$ASCIIDOC" --unsafe config.asciidoc-unsafe.txt >&/dev/null; then
+			ASCIIDOC_FLAGS=--unsafe
+		fi
+		rm config.asciidoc-unsafe.*
 	fi
 
 	AC_PATH_PROGS(XMLTO, "xmlto")
@@ -87,6 +93,7 @@ if test "x$CONFIG_DOC" != xno; then
 	fi
 fi
 
+AC_SUBST(ASCIIDOC_FLAGS)
 AC_SUBST(CONFIG_ASCIIDOC)
 AC_SUBST(CONFIG_POD2HTML)
 AC_SUBST(CONFIG_XMLTO)

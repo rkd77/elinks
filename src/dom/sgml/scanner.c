@@ -439,6 +439,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 	int possibly_incomplete = 1;
+	enum sgml_scanner_state scanner_state = scanner->state;
 
 	token->string.string = string++;
 
@@ -451,7 +452,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			string--;
 			real_length = 0;
 			type = SGML_TOKEN_TAG_END;
-			scanner->state = SGML_STATE_TEXT;
+			scanner_state = SGML_STATE_TEXT;
 
 			/* We are creating a 'virtual' that has no source. */
 			possibly_incomplete = 0;
@@ -476,8 +477,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 					/* We found the end. */
 					possibly_incomplete = 0;
 				}
-				scanner->state = SGML_STATE_ELEMENT;
 				type = SGML_TOKEN_ELEMENT_BEGIN;
+				scanner_state = SGML_STATE_ELEMENT;
 			}
 
 		} else if (*string == '!') {
@@ -527,7 +528,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			type = map_dom_scanner_string(scanner, pos, string, base);
 
-			scanner->state = SGML_STATE_PROC_INST;
+			scanner_state = SGML_STATE_PROC_INST;
 
 			real_length = string - token->string.string;
 			skip_sgml_space(scanner, &string);
@@ -563,8 +564,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				possibly_incomplete = 0;
 			}
 
-			if (type != SGML_TOKEN_GARBAGE)
-				scanner->state = SGML_STATE_TEXT;
+			if (type != SGML_TOKEN_GARBAGE) {
+				scanner_state = SGML_STATE_TEXT;
+			}
 
 		} else {
 			/* Alien < > stuff so ignore it */
@@ -594,7 +596,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		type = SGML_TOKEN_TAG_END;
 		assert(scanner->state == SGML_STATE_ELEMENT);
-		scanner->state = SGML_STATE_TEXT;
+		scanner_state = SGML_STATE_TEXT;
 
 	} else if (first_char == '/') {
 		/* We allow '/' inside elements and only consider it as an end
@@ -611,7 +613,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = 0;
 			type = SGML_TOKEN_ELEMENT_EMPTY_END;
 			assert(scanner->state == SGML_STATE_ELEMENT);
-			scanner->state = SGML_STATE_TEXT;
+			scanner_state = SGML_STATE_TEXT;
 
 			/* We found the end. */
 			possibly_incomplete = 0;
@@ -677,6 +679,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				return;
 		}
 	}
+
+	/* Only apply the state change if the token was not abandoned because
+	 * it was incomplete. */
+	scanner->state = scanner_state;
 
 	token->type = type;
 	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
