@@ -366,8 +366,9 @@ imported:
 		done_string(&code);
 		if (!ret.length) return;
 
-		format_html_part(html_context, ret.source, ret.source + ret.length,
-		 par_format.align, par_format.leftmargin, part->box.width,
+		part = format_html_part(html_context, ret.source,
+		 ret.source + ret.length, par_format.align,
+		 par_format.leftmargin, document->options.box.width,
 		 document, part->box.x, part->box.y, NULL, part->link_num);
 
 		done_string(&ret);

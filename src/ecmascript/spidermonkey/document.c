@@ -192,25 +192,53 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 static JSBool document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 const JSFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
+	{ "writeln",		document_writeln,	1 },
 	{ NULL }
 };
 
 static JSBool
 document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-#ifdef CONFIG_LEDS
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-#endif
+	struct string *ret = interpreter->ret;
 
+	if (argc >= 1 && ret) {
+		unsigned char *code = jsval_to_string(ctx, &argv[0]);
+
+		add_to_string(ret, code);
+	}
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
 	 * lighting a led and going away, no muss, no fuss. --pasky */
 	/* TODO: Perhaps we can introduce ecmascript.error_report_unsupported
 	 * -> "Show information about the document using some valid,
 	 *  nevertheless unsupported methods/properties." --pasky too */
+
+#ifdef CONFIG_LEDS
+	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
+#endif
+
+	boolean_to_jsval(ctx, rval, 0);
+
+	return JS_TRUE;
+}
+
+static JSBool
+document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	struct string *ret = interpreter->ret;
+
+	if (argc >= 1 && ret) {
+		unsigned char *code = jsval_to_string(ctx, &argv[0]);
+
+		add_to_string(ret, code);
+		add_char_to_string(ret, '\n');
+	}
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
