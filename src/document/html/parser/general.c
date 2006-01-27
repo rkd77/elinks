@@ -367,10 +367,9 @@ imported:
 		if (!ret.length) return;
 
 		/* FIXME: it doesn't work */
-		part = format_html_part(html_context, ret.source,
-		 ret.source + ret.length, par_format.align,
-		 par_format.leftmargin, document->options.box.width,
-		 document, part->box.x, part->box.y, NULL, part->link_num);
+		html_top->invisible = 0;
+		parse_html(ret.source, ret.source + ret.length, part, NULL,
+			   html_context);
 
 		done_string(&ret);
 #if 0
