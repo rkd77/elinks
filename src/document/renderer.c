@@ -284,7 +284,6 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	    options->gradual_rerendering, struri(vs->uri),
 	    doc_view, doc_view->name, vs);
 #endif
-
 	name = doc_view->name;
 	doc_view->name = NULL;
 
@@ -328,13 +327,18 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	document = get_cached_document(cached, options);
 	if (document) {
 		doc_view->document = document;
+#ifdef CONFIG_ECMASCRIPT
+		document->vs = vs;
+#endif
 	} else {
 		document = init_document(cached, options);
 		if (!document) return;
 		doc_view->document = document;
 
 		shrink_memory(0);
-
+#ifdef CONFIG_ECMASCRIPT
+		document->vs = vs;
+#endif
 		render_encoded_document(cached, document);
 		sort_links(document);
 		if (!document->title) {
