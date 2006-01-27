@@ -57,7 +57,8 @@ in this directory or it's children.
    submitting patches etc., thus every aspiring developer should take the
    pains to read through it, do not forget to also look for README and similar
    text files in the subdirectories containing the relevant sources for
-   detailed notes regarding given modules/subsystems.
+   detailed notes regarding given modules/subsystems. Additionally, it is
+   possible to build API docs. More about this below.
 
 	The Lua Scripting Book ...................... lua-scripting.txt
 	Events Reference Sheet ...................... events.txt
@@ -94,7 +95,10 @@ and the following man page formats:
  - HTML (asciidoc)
  - man / groff (asciidoc + xmlto)
 
-Note: You do not need to build manpages. They are shipped with ELinks.
+Note: You do not need to build manpages. They are shipped with ELinks. However,
+if you want to have the manpages to match your local configuration and changes
+you can rebuild them (this is mostly an issue with elinks.conf(5) which might
+otherwise contain options that is not supported by the version you install.
 
 Note: You must first build the ELinks binary for "make all-docs" to work
 successfully. The binary is used for getting option documentation.
@@ -102,6 +106,43 @@ successfully. The binary is used for getting option documentation.
 The documentation can be installed with:
 
 	$ make install-doc
+
+Building API documentation
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There is some starting effort to make it possible to build HTML documentation
+of the APIs presented by the different modules and subsystems in ELinks. To
+build API documentation run:
+
+	$ make api
+
+in the doc/ directory. The API documentation can then be found in the doc/api/
+directory.
+
+NOTE: Currently only few files provides API docs and there is no over-all
+structure of the various APIs.
+
+The API toolchain uses a Perl script (doc/tools/code2doc) to extract info from
+header files and generate text files with AsciiDoc markup. The text files are
+then converted to HTML with AsciiDoc.
+
+To get an idea of how the code markup works take a look at src/dom/stack.h.
+It has a small tag saying that it provides API docs for the dom-stack module:
+
+	/* API Doc :: dom-stack */
+
+The API doc markup should be pretty straight forward. Here is an example of the
+basic structure:
+
+	/** <title>
+	 *
+	 * <content>
+	 */
+
+Only text in comments starting with '/**' are used. If the comment immediately
+preceeds a declaration of some struct, enum, typedef, function, or macro, the
+name of the declared identifier will be used when creating the output to create
+anchors which can be referred to using ref:[].
 
 
 Contributing
