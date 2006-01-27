@@ -641,6 +641,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			/* We found the end. */
 			possibly_incomplete = 0;
 
+		} else if (scanner->check_complete && scanner->incomplete) {
+			/* Force an incomplete token. */
+			string = scanner->end;
+
 		} else if (is_sgml_attribute(*string)) {
 			token->string.string++;
 			scan_sgml_attribute(scanner, string);
