@@ -96,7 +96,7 @@ see_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 void
 see_eval(struct ecmascript_interpreter *interpreter,
-                  struct string *code)
+                  struct string *code, struct string *ret)
 {
 
 	struct SEE_interpreter *interp = interpreter->backend_data;
@@ -106,6 +106,7 @@ see_eval(struct ecmascript_interpreter *interpreter,
 	struct SEE_value result;
 
 	g->exec_start = time(NULL);
+	g->ret = ret;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 	}
@@ -130,6 +131,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	unsigned char *volatile string = NULL;
 
 	g->exec_start = time(NULL);
+	g->ret = NULL;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 		if (SEE_VALUE_GET_TYPE(&result) != SEE_NULL)
@@ -158,6 +160,7 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	SEE_int32_t volatile res = 0;
 
 	g->exec_start = time(NULL);
+	g->ret = NULL;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 		/* history.back() returns SEE_NULL */

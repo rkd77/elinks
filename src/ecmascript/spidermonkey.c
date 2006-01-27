@@ -239,7 +239,7 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 void
 spidermonkey_eval(struct ecmascript_interpreter *interpreter,
-                  struct string *code)
+                  struct string *code, struct string *ret)
 {
 	JSContext *ctx;
 	jsval rval;
@@ -247,6 +247,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	ctx = interpreter->backend_data;
 	setup_safeguard(interpreter, ctx);
+	interpreter->ret = ret;
 	JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 	                  code->source, code->length, "", 0, &rval);
 }
@@ -262,6 +263,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	ctx = interpreter->backend_data;
 	setup_safeguard(interpreter, ctx);
+	interpreter->ret = NULL;
 	if (JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 			      code->source, code->length, "", 0, &rval)
 	    == JS_FALSE) {
@@ -287,6 +289,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	ctx = interpreter->backend_data;
 	setup_safeguard(interpreter, ctx);
+	interpreter->ret = NULL;
 	ret = JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 			  code->source, code->length, "", 0, &rval);
 	if (ret == 2) { /* onClick="history.back()" */

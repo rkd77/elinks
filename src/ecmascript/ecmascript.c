@@ -119,15 +119,15 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
-                struct string *code)
+                struct string *code, struct string *ret)
 {
 	if (!get_ecmascript_enable())
 		return;
 	assert(interpreter);
 #ifdef CONFIG_ECMASCRIPT_SEE
-	see_eval(interpreter, code);
+	see_eval(interpreter, code, ret);
 #else
-	spidermonkey_eval(interpreter, code);
+	spidermonkey_eval(interpreter, code, ret);
 #endif
 }
 

@@ -362,7 +362,7 @@ imported:
 			return;
 		add_bytes_to_string(&code, html, *end - html);
 
-		ecmascript_eval(interpreter, &code);
+		ecmascript_eval(interpreter, &code, &ret);
 		done_string(&code);
 	
 #if 0

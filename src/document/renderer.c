@@ -129,7 +129,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		if (*string->source != '^') {
 			/* Evaluate <script>code</script> snippet */
-			ecmascript_eval(interpreter, string);
+			ecmascript_eval(interpreter, string, NULL);
 			continue;
 		}
 
@@ -194,7 +194,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		if (fragment) {
 			struct string code = INIT_STRING(fragment->data, fragment->length);
 
-			ecmascript_eval(interpreter, &code);
+			ecmascript_eval(interpreter, &code, NULL);
 		}
 	}
 }
