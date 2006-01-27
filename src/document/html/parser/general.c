@@ -364,7 +364,13 @@ imported:
 
 		ecmascript_eval(interpreter, &code, &ret);
 		done_string(&code);
-	
+		if (!ret.length) return;
+
+		format_html_part(html_context, ret.source, ret.source + ret.length,
+		 par_format.align, par_format.leftmargin, part->box.width,
+		 document, part->box.x, part->box.y, NULL, part->link_num);
+
+		done_string(&ret);
 #if 0
 		add_to_string_list(&html_context->part->document->onload_snippets,
 		                   html, *end - html);
