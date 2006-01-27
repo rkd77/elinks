@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test incremental parsing of SGML documents.
+
+This test checks if the SGML parser correctly recovers during incremental
+parsing.
+'
+
+. "$TEST_LIB"
+
+test_output_equals () {
+	desc="$1"; shift
+	size="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	URI="test:$(echo "$desc" | sed '
+		s/^[ \t]*\[[^]]*\][ \t]*//;
+		s/[:., \t][:., \t]*/-/g;
+		s/_/-/g;
+		# *cough*
+		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+		s/[^a-zA-Z0-9-]//g;')"
+
+	echo "$src" | sgml-parser --uri "$URI" --stdin "$size" \
+	| sed -e 's/^  //' | sed -n '$d;p' > output
+	echo "#document: $URI" > expected
+	echo "$out" | sed -n '2,$p' >> expected
+
+	test_expect_success "$desc" 'cmp output expected' 
+}
+
+for i in 25 20 15 10 9 8 7 6 5 4 3 2 1; do
+	test_output_equals \
+	"Incrementally parse a small document reading $i bytes at a time." \
+	"$i" \
+	'<html><body><p>Hello World!</p></body></html>' \
+	'
+element: html
+  element: body
+    element: p
+      #text: Hello World!'
+
+done
+
+test_done
