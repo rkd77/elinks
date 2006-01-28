@@ -115,9 +115,6 @@ struct dom_attribute_node {
 	 * it added from the document source. */
 	unsigned int specified:1;
 
-	/* Was the node->string allocated */
-	unsigned int allocated:1;
-
 	/* Has the node->string been converted to internal charset. */
 	unsigned int converted:1;
 
@@ -139,9 +136,6 @@ struct dom_text_node {
 	/* We will need to add text nodes even if they contain only whitespace.
 	 * In order to quickly identify such nodes this member is used. */
 	unsigned int only_space:1;
-
-	/* Was the node->string allocated */
-	unsigned int allocated:1;
 
 	/* Has the node->string been converted to internal charset. */
 	unsigned int converted:1;
@@ -196,6 +190,9 @@ union dom_node_data {
 struct dom_node {
 	/* The type of the node */
 	uint16_t type; /* -> enum dom_node_type */
+
+	/* Was the node string allocated? */
+	unsigned int allocated:1;
 
 	/* Can contain either stuff like element name or for attributes the
 	 * attribute name. */

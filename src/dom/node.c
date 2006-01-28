@@ -202,7 +202,7 @@ struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 		       uint16_t subtype, struct dom_string *name)
 {
-	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
+	struct dom_node node = { type, 0, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, list);
 
 	if (subtype) {
@@ -359,8 +359,10 @@ done_dom_node_data(struct dom_node *node)
 
 	switch (node->type) {
 	case DOM_NODE_ATTRIBUTE:
-		if (data->attribute.allocated)
+		if (node->allocated) {
 			done_dom_string(&node->string);
+			done_dom_string(&data->attribute.value);
+		}
 		break;
 
 	case DOM_NODE_DOCUMENT:
@@ -380,16 +382,25 @@ done_dom_node_data(struct dom_node *node)
 
 		if (data->element.map)
 			done_dom_node_list(data->element.map);
+
+		if (node->allocated)
+			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_TEXT:
-		if (data->text.allocated)
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_ENTITY_REFERENCE:
+		if (node->allocated)
 			done_dom_string(&node->string);
 		break;
 
 	case DOM_NODE_PROCESSING_INSTRUCTION:
 		if (data->proc_instruction.map)
 			done_dom_node_list(data->proc_instruction.map);
+		if (node->allocated) {
+			done_dom_string(&node->string);
+			done_dom_string(&data->proc_instruction.instruction);
+		}
 		break;
 
 	default:
