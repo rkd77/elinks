@@ -165,6 +165,37 @@ call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *toke
 	return parser->error_func(parser, &token->string, line);
 }
 
+/* Appends to or 'creates' an incomplete token. This can be used to
+ * force tokens back into the 'stream' if they require that later tokens
+ * are available.
+ *
+ * NOTE: You can only do this for tokens that are not stripped of markup such
+ * as identifiers. */
+static enum sgml_parser_code
+check_sgml_incomplete(struct dom_scanner *scanner,
+		      struct dom_scanner_token *start,
+		      struct dom_scanner_token *token)
+{
+	if (token && token->type == SGML_TOKEN_INCOMPLETE) {
+		token->string.length += token->string.string - start->string.string;
+		token->string.string = start->string.string;
+		return 1;
+
+	} else if (!token && scanner->check_complete && scanner->incomplete) {
+		size_t left = scanner->end - start->string.string;
+
+		assert(left > 0);
+
+		token = scanner->current = scanner->table;
+		scanner->tokens = 1;
+		token->type = SGML_TOKEN_INCOMPLETE;
+		set_dom_string(&token->string, start->string.string, left);
+		return 1;
+	}
+
+	return 0;
+}
+
 static inline enum sgml_parser_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
@@ -195,7 +226,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 				/* If the token is not a valid value token
 				 * ignore it. */
 				token = get_next_dom_scanner_token(scanner);
-				if (token && token->type == SGML_TOKEN_INCOMPLETE)
+				if (check_sgml_incomplete(scanner, &name, token))
 					return SGML_PARSER_CODE_INCOMPLETE;
 
 				if (token
@@ -204,7 +235,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 				    && token->type != SGML_TOKEN_STRING)
 					token = NULL;
 
-			} else if (token && token->type == SGML_TOKEN_INCOMPLETE) {
+			} else if (check_sgml_incomplete(scanner, &name, token)) {
 				return SGML_PARSER_CODE_INCOMPLETE;
 
 			} else {
