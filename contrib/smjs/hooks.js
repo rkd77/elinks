@@ -55,7 +55,14 @@ function mangle_deb_bugnumbers(cached, vs) {
 	/* Debian Policy Manual 4.4 footnote 16 */
 	var closes_re = /closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*/gi;
 
-	cached.content = cached.content.replace(closes_re, rewrite_closes_fn);
+	var new_content = cached.content.replace(closes_re, rewrite_closes_fn);
+	if (cached.content_type == 'text/plain') {
+		cached.content = '<pre>' + new_content + '</pre>';
+		vs.plain = "0";
+	} else {
+		cached.content = new_content;
+	}
+
 
 	return true;
 }
