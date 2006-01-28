@@ -44,7 +44,7 @@ static struct dom_scan_table_info sgml_scan_table_info[] = {
 };
 
 #define SGML_STRING_MAP(str, type, family) \
-	{ INIT_DOM_STRING(str, -1), SGML_TOKEN_##type, SGML_TOKEN_##family }
+	{ STATIC_DOM_STRING(str), SGML_TOKEN_##type, SGML_TOKEN_##family }
 
 static struct dom_scanner_string_mapping sgml_string_mappings[] = {
 	SGML_STRING_MAP("--",		  NOTATION_COMMENT,	  NOTATION),

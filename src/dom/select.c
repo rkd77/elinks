@@ -28,7 +28,7 @@ get_dom_select_pseudo(struct dom_scanner_token *token)
 	} pseudo_info[] = {
 
 #define INIT_DOM_SELECT_PSEUDO_STRING(str, type) \
-	{ INIT_DOM_STRING(str, -1), DOM_SELECT_PSEUDO_##type }
+	{ STATIC_DOM_STRING(str), DOM_SELECT_PSEUDO_##type }
 
 	INIT_DOM_SELECT_PSEUDO_STRING("first-line",	FIRST_LINE),
 	INIT_DOM_SELECT_PSEUDO_STRING("first-letter",	FIRST_LETTER),
