@@ -16,6 +16,7 @@
 #include "config/options.h"
 #include "main/event.h"
 #include "network/connection.h"
+#include "network/state.h"
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
@@ -53,7 +54,8 @@ proxy_probe_no_proxy(unsigned char *url, unsigned char *no_proxy)
 }
 
 static struct uri *
-proxy_uri(struct uri *uri, unsigned char *proxy, int *connection_state)
+proxy_uri(struct uri *uri, unsigned char *proxy,
+          enum connection_state *connection_state)
 {
 	struct string string;
 
@@ -114,7 +116,8 @@ get_protocol_proxy(unsigned char *opt,
 }
 
 static struct uri *
-get_proxy_worker(struct uri *uri, unsigned char *proxy, int *connection_state)
+get_proxy_worker(struct uri *uri, unsigned char *proxy,
+                 enum connection_state *connection_state)
 {
 	unsigned char *protocol_proxy = NULL;
 
@@ -180,7 +183,7 @@ get_proxy_worker(struct uri *uri, unsigned char *proxy, int *connection_state)
 }
 
 struct uri *
-get_proxy_uri(struct uri *uri, int *connection_state)
+get_proxy_uri(struct uri *uri, enum connection_state *connection_state)
 {
 	if (uri->protocol == PROTOCOL_PROXY) {
 		return get_composed_uri(uri, URI_BASE);
