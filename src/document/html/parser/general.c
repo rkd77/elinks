@@ -358,13 +358,19 @@ imported:
 		}
 		if (!interpreter) return;
 
-		if (!init_string(&code) || !init_string(&ret))
+		if (!init_string(&code)) return;
+		if (!init_string(&ret)) {
+			done_string(&code);
 			return;
+		}
 		add_bytes_to_string(&code, html, *end - html);
 
 		ecmascript_eval(interpreter, &code, &ret);
 		done_string(&code);
-		if (!ret.length) return;
+		if (!ret.length) {
+			done_string(&ret);
+			return;
+		}
 
 		/* FIXME: it doesn't work */
 		html_top->invisible = 0;
