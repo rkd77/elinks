@@ -847,7 +847,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	struct cache_entry *cached;
 	struct connection *conn;
 	struct uri *proxy_uri, *proxied_uri;
-	int connection_state = S_OK;
+	enum connection_state connection_state = S_OK;
 
 	if (download) {
 		download->conn = NULL;
