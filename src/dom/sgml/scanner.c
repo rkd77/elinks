@@ -457,6 +457,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			string = token->string.string;
 			real_length = 0;
 
+		} else if (string == scanner->end) {
+			/* It is incomplete. */
+
 		} else if (is_sgml_ident(*string)) {
 			token->string.string = string;
 			scan_sgml(scanner, string, SGML_CHAR_IDENT);
