@@ -74,7 +74,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 }
 
 
-static inline void
+static inline struct dom_node *
 add_sgml_attribute(struct dom_stack *stack,
 		   struct dom_scanner_token *token, struct dom_scanner_token *valtoken)
 {
@@ -96,9 +96,11 @@ add_sgml_attribute(struct dom_stack *stack,
 		node->data.attribute.quoted = 1;
 
 	if (!node || push_dom_node(stack, node) != DOM_STACK_CODE_OK)
-		return;
+		return NULL;
 
 	pop_dom_node(stack);
+
+	return node;
 }
 
 static inline struct dom_node *
@@ -132,19 +134,21 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tar
 	return NULL;
 }
 
-static inline void
+static inline struct dom_node *
 add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scanner_token *token)
 {
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_node *node = add_dom_node(parent, type, &token->string);
 
-	if (!node) return;
+	if (!node) return NULL;
 
 	if (token->type == SGML_TOKEN_SPACE)
 		node->data.text.only_space = 1;
 
 	if (push_dom_node(stack, node) == DOM_STACK_CODE_OK)
 		pop_dom_node(stack);
+
+	return node;
 }
 
 
@@ -214,7 +218,8 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 				token = NULL;
 			}
 
-			add_sgml_attribute(stack, &name, token);
+			if (!add_sgml_attribute(stack, &name, token))
+				return SGML_PARSER_CODE_MEM_ALLOC;
 
 			/* Skip the value token */
 			if (token)
@@ -254,15 +259,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 		switch (token->type) {
 		case SGML_TOKEN_ELEMENT:
 		case SGML_TOKEN_ELEMENT_BEGIN:
-			if (!add_sgml_element(stack, token)) {
-				if (token->type == SGML_TOKEN_ELEMENT) {
-					skip_dom_scanner_token(scanner);
-					break;
-				}
-
-				skip_sgml_tokens(scanner, SGML_TOKEN_TAG_END);
-				break;
-			}
+			if (!add_sgml_element(stack, token))
+				return SGML_PARSER_CODE_MEM_ALLOC;
 
 			if (token->type == SGML_TOKEN_ELEMENT_BEGIN) {
 				enum sgml_parser_code code;
@@ -305,7 +303,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			break;
 
 		case SGML_TOKEN_NOTATION_COMMENT:
-			add_sgml_node(stack, DOM_NODE_COMMENT, token);
+			if (!add_sgml_node(stack, DOM_NODE_COMMENT, token))
+				return SGML_PARSER_CODE_MEM_ALLOC;
 			skip_dom_scanner_token(scanner);
 			break;
 
@@ -318,7 +317,8 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			break;
 
 		case SGML_TOKEN_CDATA_SECTION:
-			add_sgml_node(stack, DOM_NODE_CDATA_SECTION, token);
+			if (!add_sgml_node(stack, DOM_NODE_CDATA_SECTION, token))
+				return SGML_PARSER_CODE_MEM_ALLOC;
 			skip_dom_scanner_token(scanner);
 			break;
 
@@ -339,9 +339,10 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			/* Fall-through */
 
 		case SGML_TOKEN_PROCESS_DATA:
-			if (add_sgml_proc_instruction(stack, &target, token)
-			    && (target.type == SGML_TOKEN_PROCESS_XML
-			        || target.type == SGML_TOKEN_PROCESS_XML_STYLESHEET)
+			if (!add_sgml_proc_instruction(stack, &target, token))
+				return SGML_PARSER_CODE_MEM_ALLOC;
+			if ((target.type == SGML_TOKEN_PROCESS_XML
+			     || target.type == SGML_TOKEN_PROCESS_XML_STYLESHEET)
 			    && token->string.length > 0) {
 				/* Parse the <?xml data="attributes"?>. */
 				struct dom_scanner attr_scanner;
