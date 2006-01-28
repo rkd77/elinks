@@ -364,7 +364,10 @@ imported:
 
 		ecmascript_eval(interpreter, &code, &ret);
 		done_string(&code);
-		if (!ret.length) return;
+		if (!ret.length) {
+			done_string(&ret);
+			return;
+		}
 
 		/* FIXME: it doesn't work */
 		html_top->invisible = 0;
