@@ -522,7 +522,7 @@ sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 		}
 		/* It's bigger than when calling done_sgml_parser() in the middle of an
 		 * incomplete parsing. */
-		assert(parsing->depth == parser->stack.depth);
+		assert(parsing->depth >= parser->stack.depth);	
 	}
 
 	done_dom_string(&parsing->incomplete);
