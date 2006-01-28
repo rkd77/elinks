@@ -19,9 +19,9 @@ test_normalize_output_equals () {
 
 	URI="test:$(normalize "$desc")"
 
-	sgml-parser --src "$src" --normalize "$config" --uri "$URI" --src "$src" | sed 's/^  //' > output
+	sgml-parser --src "$src" --normalize "$config" --uri "$URI" --src "$src" > output
 	echo "#document: $URI" > expected
-	echo "$out" | sed -n '2,$p' >> expected
+	echo "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
 
 	test_expect_success "$desc" 'cmp output expected' 
 }
