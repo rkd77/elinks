@@ -16,13 +16,7 @@ test_incremental_parsing () {
 	src="$1"; shift
 	out="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
+	URI="test:$(normalize "$desc")"
 
 	echo "#document: $URI" > expected
 	echo "$out" | sed -n '2,$p' >> expected

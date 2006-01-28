@@ -16,13 +16,7 @@ test_output_equals () {
 	src="$1"; shift
 	out="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
+	URI="test:$(normalize "$desc")"
 
 	sgml-parser --uri "$URI" --src "$src" | sed 's/^  //' > output
 	echo "#document: $URI" > expected
