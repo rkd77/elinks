@@ -201,7 +201,8 @@ const JSFunctionSpec document_funcs[] = {
 };
 
 static JSBool
-document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+document_write_do(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
+                  jsval *rval, int newline)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct string *ret = interpreter->ret;
@@ -210,6 +211,8 @@ document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 		unsigned char *code = jsval_to_string(ctx, &argv[0]);
 
 		add_to_string(ret, code);
+		if (newline)
+			add_char_to_string(ret, '\n');
 	}
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
@@ -228,23 +231,14 @@ document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 }
 
 static JSBool
+document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+
+	return document_write_do(ctx, obj, argc, argv, rval, 0);
+}
+
+static JSBool
 document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	struct string *ret = interpreter->ret;
-
-	if (argc >= 1 && ret) {
-		unsigned char *code = jsval_to_string(ctx, &argv[0]);
-
-		add_to_string(ret, code);
-		add_char_to_string(ret, '\n');
-	}
-
-#ifdef CONFIG_LEDS
-	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
-#endif
-
-	boolean_to_jsval(ctx, rval, 0);
-
-	return JS_TRUE;
+	return document_write_do(ctx, obj, argc, argv, rval, 1);
 }
