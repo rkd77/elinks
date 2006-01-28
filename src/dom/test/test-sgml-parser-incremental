@@ -16,20 +16,13 @@ test_incremental_parsing () {
 	src="$1"; shift
 	out="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
+	URI="test:$(normalize "$desc")"
 
 	echo "#document: $URI" > expected
-	echo "$out" | sed -n '2,$p' >> expected
+	echo "$out" | sed -n '2,$p' | sed -e 's/^/  /' >> expected
 
 	for size in 1 2 3 4 5 6 7 8 9 10 15 20 25 50; do
-		echo -n "$src" | sgml-parser --uri "$URI" --stdin "$size" \
-		| sed -e 's/^  //' > output
+		echo -n "$src" | sgml-parser --uri "$URI" --stdin "$size" > output
 
 		test_run_ 'cmp output expected'
 		if [ "$?" != 0 -o "$eval_ret" != 0 ]
@@ -45,7 +38,7 @@ test_incremental_parsing () {
 test_incremental_parsing \
 "Parse a small document." \
 '<html><body><p>Hello World!</p></body></html>' \
-	'
+'
 element: html
   element: body
     element: p

@@ -15,7 +15,7 @@ export LANG LC_ALL PAGER TZ
 # test_description='Description of this test...
 # This test checks if command xyzzy does the right thing...
 # '
-# . ./test-lib.sh
+# . "$TEST_LIB
 
 error () {
 	echo "* error: $*"
@@ -26,6 +26,17 @@ error () {
 say () {
 	echo "* $*"
 }
+
+normalize () {
+	echo "$@" | sed '
+		s/^[ \t]*\[[^]]*\][ \t]*//;
+		s/[:., \t][:., \t]*/-/g;
+		s/_/-/g;
+		# *cough*
+		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
+		s/[^a-zA-Z0-9-]//g;'
+}
+
 
 test "${test_description}" != "" ||
 error "Test script did not set test_description."
