@@ -408,6 +408,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	}
 
 	document->nlinks++;
+	document->links_sorted = 0;
 
 	return link;
 }

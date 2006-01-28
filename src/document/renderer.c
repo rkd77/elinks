@@ -39,8 +39,6 @@
 #include "viewer/text/vs.h"
 
 
-static void sort_links(struct document *document);
-
 #ifdef CONFIG_ECMASCRIPT
 /* XXX: This function is de facto obsolete, since we do not need to copy
  * snippets around anymore (we process them in one go after the document is
@@ -496,7 +494,7 @@ comp_links(struct link *l1, struct link *l2)
 	return (l1->number - l2->number);
 }
 
-static void
+void
 sort_links(struct document *document)
 {
 	int i;
@@ -505,6 +503,7 @@ sort_links(struct document *document)
 	if_assert_failed return;
 	if (!document->nlinks) return;
 
+	if (document->links_sorted) return;
 	assert(document->links);
 	if_assert_failed return;
 
@@ -544,6 +543,7 @@ sort_links(struct document *document)
 				document->lines1[j] = &document->links[i];
 		}
 	}
+	document->links_sorted = 1;
 }
 
 struct conv_table *

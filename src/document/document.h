@@ -188,6 +188,7 @@ struct document {
 	color_T bgcolor;
 
 	enum cp_status cp_status;
+	unsigned int links_sorted:1; /* whether links are already sorted */
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)

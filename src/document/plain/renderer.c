@@ -102,7 +102,7 @@ add_document_link(struct document *document, unsigned char *uri, int length,
 	}
 
 	document->nlinks++;
-
+	document->links_sorted = 0;
 	return link;
 }
 

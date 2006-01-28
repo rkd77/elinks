@@ -14,6 +14,7 @@
 #include "bfu/listmenu.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/renderer.h"
 #include "util/error.h"
 #include "util/lists.h"
 #include "util/memory.h"
@@ -130,6 +131,8 @@ get_form_control_link(struct document *document, struct form_control *fc)
 	/* Hidden form fields have no links. */
 	if (fc->type == FC_HIDDEN)
 		return -1;
+
+	if (!document->links_sorted) sort_links(document);
 
 	for (link = 0; link < document->nlinks; link++)
 		if (fc == get_link_form_control(&document->links[link]))
