@@ -364,7 +364,6 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			assert(token->type == SGML_TOKEN_PROCESS_DATA);
 			/* Fall-through */
 
-		case SGML_TOKEN_PROCESS_DATA:
 			if (!add_sgml_proc_instruction(stack, &target, token))
 				return SGML_PARSER_CODE_MEM_ALLOC;
 			if ((target.type == SGML_TOKEN_PROCESS_XML

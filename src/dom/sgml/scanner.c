@@ -543,6 +543,29 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				possibly_incomplete = 0;
 			}
 
+			if (scanner->check_complete && scanner->incomplete) {
+				/* We need to fit both the process target token
+				 * and the process data token into the scanner
+				 * table. */
+				if (token + 1 >= scanner->table + DOM_SCANNER_TOKENS) {
+					possibly_incomplete = 1;
+
+				} else if (!possibly_incomplete) {
+					/* FIXME: We do this twice. */
+					for (pos = string + 1;
+					     (pos = skip_sgml_chars(scanner, pos, '>'));
+					     pos++) {
+						if (pos[-1] == '?')
+							break;
+					}
+					if (!pos)
+						possibly_incomplete = 1;
+				}
+
+				if (possibly_incomplete)
+					string = scanner->end;
+			}
+
 		} else if (*string == '/') {
 			string++;
 			skip_sgml_space(scanner, &string);
@@ -707,7 +730,7 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 	/* The length can be empty for '<??>'. */
 	ssize_t length = -1;
 
-	token->string.string = string;
+	token->string.string = string++;
 
 	/* Figure out where the processing instruction ends. This doesn't use
 	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
