@@ -933,7 +933,7 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	assert(form);
 	checktime(interp);
-	submit_given_form(ses, doc_view, form);
+	submit_given_form(ses, doc_view, form, 0);
 	SEE_SET_BOOLEAN(res, 0);
 }
 

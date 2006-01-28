@@ -854,6 +854,40 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 	}
 }
 
+static void
+try_submit_given_form(struct session *ses, struct document_view *doc_view,
+			struct form *form, int do_reload)
+{
+#ifdef CONFIG_ECMASCRIPT
+	if (form->onsubmit) {
+		struct string code;
+
+		if (init_string(&code)) {
+			struct view_state *vs = doc_view->vs;
+			struct ecmascript_interpreter *interpreter;
+			int res = 1;
+			unsigned char *ret = form->onsubmit;
+
+			if (vs->ecmascript_fragile)
+				ecmascript_reset_state(vs);
+			interpreter = vs->ecmascript;
+			assert(interpreter);
+#ifdef CONFIG_ECMASCRIPT_SEE
+			/* SEE doesn't like return outside functions */
+			while ((ret = strstr(ret, "return "))) {
+				while (*ret != ' ') *ret++ = ' ';
+			}
+#endif
+			add_to_string(&code, form->onsubmit);
+			res = ecmascript_eval_boolback(interpreter, &code);
+			done_string(&code);
+			if (!res) return;
+		}
+	}
+#endif
+	submit_given_form(ses, doc_view, form, do_reload);
+}
+
 struct link *
 goto_current_link(struct session *ses, struct document_view *doc_view, int do_reload)
 {
@@ -866,9 +900,13 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	link = get_current_link(doc_view);
 	if (!link) return NULL;
 
-	if (link_is_form(link))
-		uri = get_form_uri(ses, doc_view, get_link_form_control(link));
-	else
+	if (link_is_form(link)) {
+		struct form_control *fc = link->data.form_control;
+		struct form *form = fc->form;
+
+		try_submit_given_form(ses, doc_view, form, do_reload);
+		return link;
+	} else
 		uri = get_link_uri(ses, doc_view, link);
 
 	if (!uri) return NULL;

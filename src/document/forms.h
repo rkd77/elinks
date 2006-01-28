@@ -32,6 +32,7 @@ struct form {
 
 	unsigned char *action;
 	unsigned char *name;
+	unsigned char *onsubmit;
 	unsigned char *target;
 	enum form_method method;
 

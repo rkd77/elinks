@@ -88,7 +88,7 @@ void draw_forms(struct terminal *term, struct document_view *doc_view);
 
 enum frame_event_status reset_form(struct session *ses, struct document_view *doc_view, int a);
 enum frame_event_status submit_form(struct session *ses, struct document_view *doc_view, int do_reload);
-void submit_given_form(struct session *ses, struct document_view *doc_view, struct form *form);
+void submit_given_form(struct session *ses, struct document_view *doc_view, struct form *form, int do_reload);
 void auto_submit_form(struct session *ses);
 void do_reset_form(struct document_view *doc_view, struct form *form);
 

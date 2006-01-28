@@ -805,7 +805,7 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	submit_given_form(ses, doc_view, form);
+	submit_given_form(ses, doc_view, form, 0);
 
 	boolean_to_jsval(ctx, rval, 0);
 

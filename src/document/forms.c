@@ -91,6 +91,7 @@ done_form(struct form *form)
 
 	mem_free_if(form->action);
 	mem_free_if(form->name);
+	mem_free_if(form->onsubmit);
 	mem_free_if(form->target);
 
 	foreach (fc, form->items) {
