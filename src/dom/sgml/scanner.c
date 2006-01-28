@@ -705,7 +705,7 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 {
 	unsigned char *string = scanner->position;
 	/* The length can be empty for '<??>'. */
-	size_t length = -1;
+	ssize_t length = -1;
 
 	token->string.string = string;
 
