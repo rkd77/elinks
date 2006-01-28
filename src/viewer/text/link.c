@@ -866,16 +866,19 @@ try_submit_given_form(struct session *ses, struct document_view *doc_view,
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
 			int res = 1;
-			unsigned char *ret = form->onsubmit;
 
 			if (vs->ecmascript_fragile)
 				ecmascript_reset_state(vs);
 			interpreter = vs->ecmascript;
 			assert(interpreter);
 #ifdef CONFIG_ECMASCRIPT_SEE
-			/* SEE doesn't like return outside functions */
-			while ((ret = strstr(ret, "return "))) {
-				while (*ret != ' ') *ret++ = ' ';
+			{
+				unsigned char *ret = form->onsubmit;
+
+				/* SEE doesn't like return outside functions */
+				while ((ret = strstr(ret, "return "))) {
+					while (*ret != ' ') *ret++ = ' ';
+				}
 			}
 #endif
 			add_to_string(&code, form->onsubmit);
