@@ -202,7 +202,7 @@ struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 		       uint16_t subtype, struct dom_string *name)
 {
-	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
+	struct dom_node node = { type, 0, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, list);
 
 	if (subtype) {
@@ -314,7 +314,7 @@ get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string)
+		struct dom_string *string, int allocated)
 {
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
@@ -326,7 +326,6 @@ init_dom_node_(unsigned char *file, int line,
 
 	node->type   = type;
 	node->parent = parent;
-	copy_dom_string(&node->string, string);
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
@@ -343,6 +342,22 @@ init_dom_node_(unsigned char *file, int line,
 			done_dom_node(node);
 			return NULL;
 		}
+
+		/* Make it possible to add a node to a parent without
+		 * allocating the strings. */
+		node->allocated = allocated < 0 ? parent->allocated : !!allocated;
+
+	} else if (allocated >= 0) {
+			node->allocated = !!allocated;
+	}
+
+	if (node->allocated) {
+		if (!init_dom_string(&node->string, string->string, string->length)) {
+			done_dom_node(node);
+			return NULL;
+		}
+	} else {
+		copy_dom_string(&node->string, string);
 	}
 
 	return node;
@@ -359,8 +374,8 @@ done_dom_node_data(struct dom_node *node)
 
 	switch (node->type) {
 	case DOM_NODE_ATTRIBUTE:
-		if (data->attribute.allocated)
-			done_dom_string(&node->string);
+		if (node->allocated)
+			done_dom_string(&data->attribute.value);
 		break;
 
 	case DOM_NODE_DOCUMENT:
@@ -382,20 +397,19 @@ done_dom_node_data(struct dom_node *node)
 			done_dom_node_list(data->element.map);
 		break;
 
-	case DOM_NODE_TEXT:
-		if (data->text.allocated)
-			done_dom_string(&node->string);
-		break;
-
 	case DOM_NODE_PROCESSING_INSTRUCTION:
 		if (data->proc_instruction.map)
 			done_dom_node_list(data->proc_instruction.map);
+		if (node->allocated)
+			done_dom_string(&data->proc_instruction.instruction);
 		break;
 
 	default:
 		break;
 	}
 
+	if (node->allocated)
+		done_dom_string(&node->string);
 	mem_free(node);
 }
 

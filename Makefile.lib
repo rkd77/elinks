@@ -127,12 +127,12 @@ CLEAN += $(PROG) $(OBJS)
 #############################################################################
 # The main default rules
 
-all-default: $(ALL_OBJS) $(PROGS) $(MAN1) $(MAN5) .vimrc
+all-default: $(ALL_OBJS) $(PROGS) $(MAN1) $(MAN5)
 
 # Ensure that Makefiles in subdirs are created before we recursive into them
 init-recursive: init-default
 
-init-default: .vimrc
+init-default:
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
 		test -e "$(subdir)/Makefile" \
@@ -163,11 +163,6 @@ ifdef MAN5
 	@$(foreach file,$(MAN5), \
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
-
-.vimrc: $(top_srcdir)/Makefile.lib
-	@{ echo ':set runtimepath+=.'; \
-	   echo ':runtime $(top_srcdir)/config/vimrc'; \
-	} > .vimrc
 
 ##############################################################################
 # Auto-testing infrastructure

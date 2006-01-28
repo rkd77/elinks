@@ -1,7 +1,7 @@
 /* Play videos at video.google.com with minimal niggling. Just follow the link
  * from the front page or the search page, and the video will automatically
  * be loaded. */
-function load_google_video(cached) {
+function load_google_video(cached, vs) {
 	if (!cached.uri.match(/^http:\/\/video.google.com\/videoplay/))
 		return true;
 

@@ -44,11 +44,11 @@ normalize_text_node_whitespace(struct dom_node *node)
 		}
 	}
 
-	if (node->data.text.allocated)
+	if (node->allocated)
 		done_dom_string(&node->string);
 
 	set_dom_string(&node->string, string.string, string.length);
-	node->data.text.allocated = 1;
+	node->allocated = 1;
 
 	return DOM_STACK_CODE_OK;
 
@@ -74,14 +74,14 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 		set_dom_string(&dest, NULL, 0);
 
 	} else {
-		if (prev->data.text.allocated) {
+		if (prev->allocated) {
 			copy_struct(&dest, &prev->string);
 		} else {
 			set_dom_string(&dest, NULL, 0);
 			if (!add_to_dom_string(&dest, prev->string.string, prev->string.length))
 				return DOM_STACK_CODE_ERROR_MEM_ALLOC;
 			set_dom_string(&prev->string, dest.string, dest.length);
-			prev->data.text.allocated = 1;
+			prev->allocated = 1;
 		}
 	}
 
@@ -135,7 +135,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 
 		node->type = DOM_NODE_TEXT;
 		memset(&node->data, 0, sizeof(node->data));
-		node->data.text.allocated = 1;
+		node->allocated = 1;
 		copy_struct(&node->string, &dest);
 
 		if ((config->flags & DOM_CONFIG_NORMALIZE_WHITESPACE)

@@ -449,13 +449,16 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (scanner->state == SGML_STATE_ELEMENT) {
 			/* Already inside an element so insert a tag end token
 			 * and continue scanning in next iteration. */
-			string--;
-			real_length = 0;
 			type = SGML_TOKEN_TAG_END;
 			scanner_state = SGML_STATE_TEXT;
 
 			/* We are creating a 'virtual' that has no source. */
 			possibly_incomplete = 0;
+			string = token->string.string;
+			real_length = 0;
+
+		} else if (string == scanner->end) {
+			/* It is incomplete. */
 
 		} else if (is_sgml_ident(*string)) {
 			token->string.string = string;
@@ -538,6 +541,29 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			    && string < scanner->end) {
 				/* We found the end. */
 				possibly_incomplete = 0;
+			}
+
+			if (scanner->check_complete && scanner->incomplete) {
+				/* We need to fit both the process target token
+				 * and the process data token into the scanner
+				 * table. */
+				if (token + 1 >= scanner->table + DOM_SCANNER_TOKENS) {
+					possibly_incomplete = 1;
+
+				} else if (!possibly_incomplete) {
+					/* FIXME: We do this twice. */
+					for (pos = string + 1;
+					     (pos = skip_sgml_chars(scanner, pos, '>'));
+					     pos++) {
+						if (pos[-1] == '?')
+							break;
+					}
+					if (!pos)
+						possibly_incomplete = 1;
+				}
+
+				if (possibly_incomplete)
+					string = scanner->end;
 			}
 
 		} else if (*string == '/') {
@@ -641,6 +667,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			/* We found the end. */
 			possibly_incomplete = 0;
 
+		} else if (scanner->check_complete && scanner->incomplete) {
+			/* Force an incomplete token. */
+			string = scanner->end;
+
 		} else if (is_sgml_attribute(*string)) {
 			token->string.string++;
 			scan_sgml_attribute(scanner, string);
@@ -698,9 +728,9 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 {
 	unsigned char *string = scanner->position;
 	/* The length can be empty for '<??>'. */
-	size_t length = -1;
+	ssize_t length = -1;
 
-	token->string.string = string;
+	token->string.string = string++;
 
 	/* Figure out where the processing instruction ends. This doesn't use
 	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside
