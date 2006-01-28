@@ -955,6 +955,7 @@ fi
 
 AC_MSG_RESULT($cf_result)
 
+CONFIG_GNUTLS_OPENSSL_COMPAT=no
 dnl ---- GNU TLS
 dnl We can't have AC_MSG_CHECKING here, because AC_PATH_PROG prints its own and
 dnl it looks ugly then.
