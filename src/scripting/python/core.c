@@ -17,6 +17,8 @@
 #include "util/file.h"
 #include "util/string.h"
 
+#include <Python.h>
+
 PyObject *pDict, *pModule;
 
 void
