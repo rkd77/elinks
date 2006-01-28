@@ -256,12 +256,21 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 		       enum dom_node_type type, uint16_t subtype,
 		       struct dom_string *name);
 
+/* Removes the node and all its children and free()s itself */
+void done_dom_node(struct dom_node *node);
+
+/* The allocated argument is used as the value of node->allocated if >= 0.
+ * Use -1 to default node->allocated to the value of parent->allocated. */
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string);
-#define init_dom_node(type, string) init_dom_node_(__FILE__, __LINE__, NULL, type, string)
-#define add_dom_node(parent, type, string) init_dom_node_(__FILE__, __LINE__, parent, type, string)
+		struct dom_string *string, int allocated);
+
+#define init_dom_node(type, string, allocated) \
+	init_dom_node_(__FILE__, __LINE__, NULL, type, string, allocated)
+
+#define add_dom_node(parent, type, string) \
+	init_dom_node_(__FILE__, __LINE__, parent, type, string, -1)
 
 #define add_dom_element(parent, string) \
 	add_dom_node(parent, DOM_NODE_ELEMENT, string)
@@ -273,7 +282,16 @@ add_dom_attribute(struct dom_node *parent, struct dom_string *name,
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, name);
 
 	if (node && value) {
-		copy_dom_string(&node->data.attribute.value, value);
+		struct dom_string *str = &node->data.attribute.value;
+
+		if (node->allocated) {
+			if (!init_dom_string(str, value->string, value->length)) {
+				done_dom_node(node);
+				return NULL;
+			}
+		} else {
+			copy_dom_string(str, value);
+		}
 	}
 
 	return node;
@@ -286,14 +304,20 @@ add_dom_proc_instruction(struct dom_node *parent, struct dom_string *string,
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string);
 
 	if (node && instruction) {
-		copy_dom_string(&node->data.proc_instruction.instruction, instruction);
+		struct dom_string *str = &node->data.proc_instruction.instruction;
+
+		if (node->allocated) {
+			if (!init_dom_string(str, instruction->string, instruction->length)) {
+				done_dom_node(node);
+				return NULL;
+			}
+		} else {
+			copy_dom_string(str, instruction);
+		}
 	}
 
 	return node;
 }
-
-/* Removes the node and all its children and free()s itself */
-void done_dom_node(struct dom_node *node);
 
 /* Compare two nodes returning non-zero if they differ. */
 int dom_node_casecmp(struct dom_node *node1, struct dom_node *node2);

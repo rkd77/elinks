@@ -35,11 +35,13 @@
  * information like node subtypes and SGML parser state information. */
 
 static inline struct dom_node *
-add_sgml_document(struct dom_stack *stack, struct dom_string *string)
+add_sgml_document(struct sgml_parser *parser)
 {
-	struct dom_node *node = init_dom_node(DOM_NODE_DOCUMENT, string);
+	int allocated = parser->flags & SGML_PARSER_INCREMENTAL;
+	struct dom_node *node;
 
-	if (node && push_dom_node(stack, node) == DOM_STACK_CODE_OK)
+	node = init_dom_node(DOM_NODE_DOCUMENT, &parser->uri, allocated);
+	if (node && push_dom_node(&parser->stack, node) == DOM_STACK_CODE_OK)
 		return node;
 
 	return NULL;
@@ -432,13 +434,13 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 		parser->flags |= SGML_PARSER_COMPLETE;
 
 	if (!parser->root) {
-		parser->root = add_sgml_document(&parser->stack, &parser->uri);
+		parser->root = add_sgml_document(parser);
 		if (!parser->root)
 			return SGML_PARSER_CODE_MEM_ALLOC;
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
-	node = init_dom_node(DOM_NODE_TEXT, &source);
+	node = init_dom_node(DOM_NODE_TEXT, &source, 0);
 	if (!node || push_dom_node(&parser->parsing, node) != DOM_STACK_CODE_OK)
 		return SGML_PARSER_CODE_MEM_ALLOC;
 
