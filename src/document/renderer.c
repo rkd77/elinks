@@ -328,7 +328,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	if (document) {
 		doc_view->document = document;
 #ifdef CONFIG_ECMASCRIPT
-		document->vs = vs;
+		document->doc_view = doc_view;
 #endif
 	} else {
 		document = init_document(cached, options);
@@ -337,7 +337,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 
 		shrink_memory(0);
 #ifdef CONFIG_ECMASCRIPT
-		document->vs = vs;
+		document->doc_view = doc_view;
 #endif
 		render_encoded_document(cached, document);
 		sort_links(document);

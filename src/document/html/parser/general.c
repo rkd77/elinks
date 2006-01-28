@@ -18,6 +18,7 @@
 #include "config/options.h"
 #include "document/css/apply.h"
 #include "document/document.h"
+#include "document/view.h"
 #include "document/html/frames.h"
 #include "document/html/parser/general.h"
 #include "document/html/parser/link.h"
@@ -349,14 +350,14 @@ imported:
 		struct string code, ret;
 		struct part *part = html_context->part;
 		struct document *document = part->document;
-		struct view_state *vs = document->vs;
-		struct ecmascript_interpreter *interpreter = vs->ecmascript;
+		struct document_view *doc_view = document->doc_view;
+		struct view_state *vs = doc_view->vs;
+		struct ecmascript_interpreter *interpreter;
 
-		if (!interpreter) {
+		if (vs->ecmascript_fragile)
 			ecmascript_reset_state(vs);
-			interpreter = vs->ecmascript;
-		}
-		if (!interpreter) return;
+		interpreter = vs->ecmascript;
+		assert(interpreter);
 
 		if (!init_string(&code)) return;
 		if (!init_string(&ret)) {

@@ -11,12 +11,12 @@
 
 struct cache_entry;
 struct document_refresh;
+struct document_view;
 struct form_control;
 struct frame_desc;
 struct frameset_desc;
 struct module;
 struct screen_char;
-struct view_state;
 
 /* Nodes are used for marking areas of text on the document canvas as
  * searchable. */
@@ -149,7 +149,7 @@ struct document {
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
 	/* For ecmascript access */
-	struct view_state *vs;
+	struct document_view *doc_view;
 #endif
 #ifdef CONFIG_CSS
 	/* FIXME: We should externally maybe using cache_entry store the
