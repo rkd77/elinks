@@ -7,7 +7,7 @@ struct dom_stack;
 /* API Doc :: dom-config */
 
 /** DOM Configuration
- * 
+ *
  * The DOMConfiguration interface represents the configuration of a document.
  * Using the configuration, it is possible to change the behaviour of how
  * document normalization is done, such as replacing the CDATASection nodes
@@ -33,7 +33,7 @@ enum dom_config_flag {
 	DOM_CONFIG_COMMENTS = 2,
 
 	/** "element-content-whitespace"
-	 * 
+	 *
 	 * The default is true and will keep all whitespaces in the document.
 	 * When false, discard all Text nodes that contain only whitespaces. */
 	DOM_CONFIG_ELEMENT_CONTENT_WHITESPACE = 4,
