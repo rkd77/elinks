@@ -452,15 +452,19 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 		struct sgml_parsing_state *parent = &parsing[-1];
 
 		if (parent->resume) {
-			assert(is_dom_string_set(&parent->incomplete));
+			if (is_dom_string_set(&parent->incomplete)) {
 
-			if (!add_to_dom_string(&parent->incomplete,
-					       string->string, string->length)) {
-				parser->code = SGML_PARSER_CODE_MEM_ALLOC;
-				return DOM_STACK_CODE_OK;
+				if (!add_to_dom_string(&parent->incomplete,
+						       string->string,
+						       string->length)) {
+
+					parser->code = SGML_PARSER_CODE_MEM_ALLOC;
+					return DOM_STACK_CODE_OK;
+				}
+
+				string = &parent->incomplete;
 			}
 
-			string = &parent->incomplete;
 			scanner_state = parent->scanner.state;
 
 			/* Pop down to the parent. */
@@ -474,16 +478,28 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 			 scanner_state, count_lines, complete, incremental,
 			 detect_errors);
 
-	{
-		int immutable = get_dom_stack_top(&parser->stack)->immutable;
-
-		get_dom_stack_top(&parser->stack)->immutable = 1;
+	if (scanner_state == SGML_STATE_ELEMENT) {
+		parser->code = parse_sgml_attributes(&parser->stack, &parsing->scanner);
+		if (parser->code == SGML_PARSER_CODE_OK)
+			parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
+	} else {
 		parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
-		get_dom_stack_top(&parser->stack)->immutable = !!immutable;
 	}
 
-	if (complete || parser->code != SGML_PARSER_CODE_INCOMPLETE) {
+	if (complete) {
 		pop_dom_node(&parser->parsing);
+		return DOM_STACK_CODE_OK;
+	}
+
+	if (parser->code != SGML_PARSER_CODE_INCOMPLETE) {
+		/* No need to preserve the default scanner state. */
+		if (parsing->scanner.state == SGML_STATE_TEXT) {
+			pop_dom_node(&parser->parsing);
+			return DOM_STACK_CODE_OK;
+		}
+
+		done_dom_string(&parsing->incomplete);
+		parsing->resume = 1;
 		return DOM_STACK_CODE_OK;
 	}
 
