@@ -117,6 +117,10 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tar
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION_XML;
 		break;
 
+	case SGML_TOKEN_PROCESS_XML_STYLESHEET:
+		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION_XML_STYLESHEET;
+		break;
+
 	case SGML_TOKEN_PROCESS:
 	default:
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION;

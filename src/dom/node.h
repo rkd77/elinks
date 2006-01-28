@@ -151,9 +151,8 @@ enum dom_proc_instruction_type {
 	DOM_PROC_INSTRUCTION,
 
 	/* Keep this group sorted */
-	DOM_PROC_INSTRUCTION_DBHTML,	/* DocBook toolchain instruction */
-	DOM_PROC_INSTRUCTION_ELINKS,	/* Internal instruction hook */
-	DOM_PROC_INSTRUCTION_XML,	/* XML instructions */
+	DOM_PROC_INSTRUCTION_XML,		/* XML header */
+	DOM_PROC_INSTRUCTION_XML_STYLESHEET,	/* XML stylesheet link */
 
 	DOM_PROC_INSTRUCTION_TYPES
 };
