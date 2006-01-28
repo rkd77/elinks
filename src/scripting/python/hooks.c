@@ -16,8 +16,12 @@
 #include "session/session.h"
 #include "util/string.h"
 
+#include <Python.h>
+
 /* The events that will trigger the functions below and what they are expected
  * to do is explained in doc/events.txt */
+
+extern PyObject *pDict, *pModule;
 
 static void
 do_script_hook_goto_url(struct session *ses, unsigned char **url)
@@ -117,7 +121,7 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 			if (str) {
 				int len = PyString_Size(pValue); /* strlen(str); */
 
-				add_fragment(cached, 0, (unsigned char *) str, len);
+				add_fragment(cached, 0, str, len);
 				normalize_cache_entry(cached, len);
 			}
 			Py_DECREF(pValue);
