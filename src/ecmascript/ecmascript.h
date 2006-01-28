@@ -18,6 +18,8 @@ struct view_state;
 struct ecmascript_interpreter {
 	struct view_state *vs;
 	void *backend_data;
+	/* Used by document.write() */
+	struct string *ret;
 	time_t exec_start;
 
 	/* This is a cross-rerenderings accumulator of
@@ -57,7 +59,7 @@ void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 
 void ecmascript_reset_state(struct view_state *vs);
 
-void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code);
+void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
 unsigned char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 /* Returns -1 if undefined. */
 int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);

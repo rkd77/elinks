@@ -56,79 +56,6 @@
 
 /* TODO? Are there any which need to be implemented? */
 
-
-
-/*** The ELinks interface */
-
-void
-ecmascript_init(struct module *module)
-{
-	see_init();
-}
-
-void
-ecmascript_done(struct module *module)
-{
-	see_done();
-}
-
-struct ecmascript_interpreter *
-ecmascript_get_interpreter(struct view_state *vs)
-{
-	struct ecmascript_interpreter *interpreter;
-
-	assert(vs);
-
-	interpreter = mem_calloc(1, sizeof(*interpreter));
-	if (!interpreter)
-		return NULL;
-
-	interpreter->vs = vs;
-	init_list(interpreter->onload_snippets);
-	see_get_interpreter(interpreter);
-
-	return interpreter;
-}
-
-void
-ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
-{
-	assert(interpreter);
-	see_put_interpreter(interpreter);
-	free_string_list(&interpreter->onload_snippets);
-	mem_free(interpreter);
-}
-
-void
-ecmascript_eval(struct ecmascript_interpreter *interpreter,
-                struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return;
-	assert(interpreter);
-	see_eval(interpreter, code);
-}
-
-unsigned char *
-ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
-			   struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return NULL;
-	assert(interpreter);
-	return see_eval_stringback(interpreter, code);
-}
-
-int
-ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
-			 struct string *code)
-{
-	if (!get_ecmascript_enable())
-		return -1;
-	assert(interpreter);
-	return see_eval_boolback(interpreter, code);
-}
-
 void
 see_init(void)
 {
@@ -169,7 +96,7 @@ see_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 void
 see_eval(struct ecmascript_interpreter *interpreter,
-                  struct string *code)
+                  struct string *code, struct string *ret)
 {
 
 	struct SEE_interpreter *interp = interpreter->backend_data;
@@ -179,6 +106,7 @@ see_eval(struct ecmascript_interpreter *interpreter,
 	struct SEE_value result;
 
 	g->exec_start = time(NULL);
+	g->ret = ret;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 	}
@@ -203,6 +131,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	unsigned char *volatile string = NULL;
 
 	g->exec_start = time(NULL);
+	g->ret = NULL;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 		if (SEE_VALUE_GET_TYPE(&result) != SEE_NULL)
@@ -231,6 +160,7 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	SEE_int32_t volatile res = 0;
 
 	g->exec_start = time(NULL);
+	g->ret = NULL;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 		/* history.back() returns SEE_NULL */

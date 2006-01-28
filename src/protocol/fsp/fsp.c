@@ -296,7 +296,7 @@ end:
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data); 
+	read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
 }
 
 #undef READ_SIZE

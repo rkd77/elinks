@@ -17,6 +17,7 @@ struct js_window_object {
 struct global_object {
 	struct SEE_interpreter interp;
 	struct js_window_object *win;
+	struct string *ret;
 	int exec_start;
 	int max_exec_time;
 };
