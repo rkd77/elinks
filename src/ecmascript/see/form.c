@@ -441,9 +441,11 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	struct js_input *jsinput;
 
 	checktime(interp);
+
+#if 0
 	if (fs->ecmascript_obj)
 		return fs->ecmascript_obj;
-
+#endif
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
@@ -943,9 +945,10 @@ struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 	struct js_form *js_form;
 
 	checktime(interp);
+#if 0
 	if (fv->ecmascript_obj)
 		return fv->ecmascript_obj;
-
+#endif
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
