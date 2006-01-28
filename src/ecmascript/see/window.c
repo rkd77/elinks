@@ -105,8 +105,9 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	checktime(interp);
 	if (p == s_closed) {
 		SEE_SET_BOOLEAN(res, 0);
-	} else if (p == s_self) {
+	} else if (p == s_self || p == s_parent || p == s_top) {
 		SEE_SET_OBJECT(res, o);
+#if 0		
 	} else if (p == s_parent || p == s_top) {
 		struct document_view *doc_view = vs->doc_view;
 		struct document_view *top_view = doc_view->session->doc_view;
@@ -131,7 +132,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
 			SEE_SET_OBJECT(res, (struct SEE_object *)newjsframe);
 		}
-
+#endif
 	} else if (p == s_alert) {
 		SEE_SET_OBJECT(res, win->alert);
 	} else if (p == s_open) {
