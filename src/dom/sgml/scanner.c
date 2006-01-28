@@ -449,13 +449,13 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (scanner->state == SGML_STATE_ELEMENT) {
 			/* Already inside an element so insert a tag end token
 			 * and continue scanning in next iteration. */
-			string--;
-			real_length = 0;
 			type = SGML_TOKEN_TAG_END;
 			scanner_state = SGML_STATE_TEXT;
 
 			/* We are creating a 'virtual' that has no source. */
 			possibly_incomplete = 0;
+			string = token->string.string;
+			real_length = 0;
 
 		} else if (is_sgml_ident(*string)) {
 			token->string.string = string;

@@ -56,7 +56,7 @@ element: root
     #text: a'
 
 test_output_equals \
-'Parse tag soup elements.' \
+'Parse tag soup elements. (I)' \
 '<parent attr="value" <child:1></><child:2</>a</parent>' \
 '
 element: parent
@@ -64,6 +64,14 @@ element: parent
   element: child:1
   element: child:2
   #text: a'
+
+test_output_equals \
+'Parse tag soup elements. (II)' \
+'< a >< b < c / >< / >' \
+'
+element: a
+  element: b
+    element: c'
 
 test_output_equals \
 'Parse an enclosed comment.' \
