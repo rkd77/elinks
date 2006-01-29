@@ -5,6 +5,7 @@
 #endif
 
 #include "scripting/python/core.h"
+#include <Python.h>
 
 #include "elinks.h"
 
@@ -16,7 +17,6 @@
 #include "session/session.h"
 #include "util/string.h"
 
-#include <Python.h>
 
 /* The events that will trigger the functions below and what they are expected
  * to do is explained in doc/events.txt */
