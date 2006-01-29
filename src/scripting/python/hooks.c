@@ -21,7 +21,8 @@
 /* The events that will trigger the functions below and what they are expected
  * to do is explained in doc/events.txt */
 
-extern PyObject *pDict, *pModule;
+extern PyObject *pDict;
+extern PyObject *pModule;
 
 static void
 do_script_hook_goto_url(struct session *ses, unsigned char **url)
@@ -37,7 +38,8 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 		} else {
 			str = struri(cur_loc(ses)->vs.uri);
 		}
-		pValue = PyObject_CallFunction(pFunc, "s", str);
+
+		pValue = PyObject_CallFunction(pFunc, "ss", *url, str);
 		if (pValue && (pValue != Py_None)) {
 			const unsigned char *res = PyString_AsString(pValue);
 
