@@ -1,19 +1,5 @@
 ### The build commands and verbosity
 
-# If we are verbose, we will show commands prefixed by $(Q) (which acts as
-# @ in the non-verbose mode), and we will show the "real" cmds instead of
-# their quiet versions (which are used in the non-verbose mode).
-# Inspired by the Linux kernel build system.
-ifdef V
-	Q =
-	quiet =
-	mquiet = masq_
-else
-	Q = @
-	quiet = quiet_
-	mquiet = quiet_
-endif
-
 # Colorize the build.
 ifdef MAKE_COLOR
 	INFO_COLOR    = $(shell tput setaf 5)
@@ -25,6 +11,25 @@ ifdef MAKE_COLOR
 	END_COLOR     = $(shell tput sgr0)
 endif
 
+# sparse is architecture-neutral, which means that we need to tell it
+# explicitly what architecture to check for. Fix this up for yours..
+SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
+
+
+#############################################################################
+# Build recipies
+
+# If we are verbose, we will show the "real" cmds instead of
+# their quiet versions (which are used in the non-verbose mode).
+# Inspired by the Linux kernel build system.
+ifdef V
+	quiet =
+	mquiet = masq_
+else
+	quiet = quiet_
+	mquiet = quiet_
+endif
+
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
 ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
@@ -33,8 +38,8 @@ mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
- masq_cmd_compile = $(COMPILE) -c $<
-      cmd_compile = $(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+ masq_cmd_compile = $(COMPILE) -o $(@) -c $< $(2)
+      cmd_compile = $(COMPILE) -o $(@) -Wp,-MD,.deps/$(*F).pp -c $< $(2)
 
 # Rule to compile a set of .o files into one .o file
 quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
@@ -59,34 +64,14 @@ quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
 
-### Internal build rules
+#############################################################################
+# Special handling of conditional variables
 
-DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
-DEP_FILES = $(DEP_FILES_1:%.o=%.P)
-
-DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
-
-ifdef OBJS
--include $(DEP_FILES)
-endif
-
-%.o: $(srcdir)%.c
-	$(call mcmd,compile)
-	@-if test -e .deps/$(*F).pp; then \
-		cp .deps/$(*F).pp .deps/$(*F).P; \
-		tr ' ' '\012' < .deps/$(*F).pp \
-			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-			>> .deps/$(*F).P; \
-		rm .deps/$(*F).pp; \
-	fi
-
-ifdef SUBDIRS-yes
 SUBDIRS += $(SUBDIRS-yes)
-endif
+OBJS	+= $(OBJS-yes)
 
-ifdef OBJS-yes
-OBJS += $(OBJS-yes)
-endif
+ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-)
+ALTOBJS  = $(OBJS-no) $(OBJS-)
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
 INCLUDE_ALL=1
@@ -100,33 +85,52 @@ endif
 endif
 
 ifdef INCLUDE_ALL
-ifdef SUBDIRS-no
-SUBDIRS += $(SUBDIRS-no)
-endif
-ifdef SUBDIRS-
-SUBDIRS += $(SUBDIRS-)
-endif
-ifdef OBJS-no
-OBJS += $(OBJS-no)
-endif
-ifdef OBJS-
-OBJS += $(OBJS-)
-endif
-
+SUBDIRS += $(ALTDIRS)
+OBJS	+= $(ALTOBJS)
 endif
 
 
-ifdef OBJS
-$(LIB_O_NAME): $(sort $(OBJS)) $(foreach subdir,$(sort $(filter-out src,$(SUBDIRS))), $(wildcard $(subdir)/$(LIB_O_NAME)))
+#############################################################################
+# Internal build rules
+
+# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o.
+# Sort them to filter out duplicated and get uniform order.
+LIB_O_DEPS = \
+ $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
+ $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))
+
+$(LIB_O_NAME): $(LIB_O_DEPS)
 	$(call cmd,ld_objs)
 
-LIB_O = $(LIB_O_NAME)
-CLEAN += $(OBJS) $(LIB_O)
+DEP_FILES_1 = $(foreach src,$(OBJS),.deps/$(src))
+DEP_FILES = $(DEP_FILES_1:%.o=%.P)
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+ifneq ($(strip $(OBJS)),)
+-include $(DEP_FILES)
+ALL_OBJS = $(LIB_O_DEPS) $(LIB_O_NAME)
 endif
 
-CLEAN += $(PROG)
+%.o: $(srcdir)%.c
+	$(call mcmd,compile)
+	@-if test -e .deps/$(*F).pp; then \
+		cp .deps/$(*F).pp .deps/$(*F).P; \
+		tr ' ' '\012' < .deps/$(*F).pp \
+			| sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+			>> .deps/$(*F).P; \
+		rm .deps/$(*F).pp; \
+	fi
 
-all-default: $(LIB_O) $(PROGS) $(MAN1) $(MAN5)
+CLEAN += $(PROG) $(OBJS)
+
+
+#############################################################################
+# The main default rules
+
+all-default: $(ALL_OBJS) $(PROGS) $(MAN1) $(MAN5)
+
+# Ensure that Makefiles in subdirs are created before we recursive into them
+init-recursive: init-default
 
 init-default:
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
@@ -143,39 +147,6 @@ ifneq ($(SPARSE),)
 		$(call ncmd,sparse,$(file));)
 endif
 
-##############################################################################
-#
-# Auto-testing infrastructure
-#
-
-test-default:
-
-ifdef TEST_PROGS
-TESTDEPS += $(TESTDEPS-yes)
-
-$(TEST_PROGS): $(TESTDEPS) $$@.o
-	$(call cmd,link)
-
-TESTS = $(wildcard $(srcdir)test-*)
-
-$(TESTS): $(TEST_PROGS)
-	@echo "*** $(notdir $@) ***"; \
-	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
-
-test-default: $(TESTS)
-
-clean-test:
-	@rm -fr trash
-
-CLEAN += $(TEST_PROGS) $(patsubst %,%.o,$(TEST_PROGS))
-endif
-
-.PHONY: $(TESTS)
-.NOPARALLEL:
-
-# sparse is architecture-neutral, which means that we need to tell it
-# explicitly what architecture to check for. Fix this up for yours..
-SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 install-default: all-default
 ifdef PROGS
 	@$(MKINSTALLDIRS) $(DESTDIR)$(bindir)
@@ -193,30 +164,74 @@ ifdef MAN5
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
-# Recursion:
+##############################################################################
+# Auto-testing infrastructure
 
-.PHONY: all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive test-recursive
+test-default:
 
-all-recursive install-recursive clean-recursive cleanall-recursive init-recursive check-recursive test-recursive:
-ifdef SUBDIRS
-	@$(foreach subdir,$(sort $(SUBDIRS)), \
-		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
+ifdef TEST_PROGS
+TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
+TESTDEPS += $(TESTDEPS-yes)
+
+TEST_LIB=$(top_srcdir)/test/libtest.sh
+export TEST_LIB
+
+# This does the work for the next rule. It is a very general rule
+# but as long as we don't put test programs in src/ it should work.
+%: %.o $(TESTDEPS)
+	$(call cmd,link)
+
+$(TEST_PROGS): $(addsuffix .o,$(TEST_PROGS)) $(TESTDEPS)
+
+TESTS = $(wildcard $(srcdir)test-*)
+
+$(TESTS): $(TEST_PROGS)
+	@echo "*** $(notdir $@) ***"; \
+	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
+
+test-default: $(TESTS)
+
+clean-test:
+	@rm -fr trash
+
+CLEAN += $(TEST_PROGS) $(addsuffix .o,$(TEST_PROGS))
+clean-default: clean-test
 endif
 
-all: all-recursive all-default all-local
-install: install-recursive install-default install-local
-check: check-recursive check-default check-local
-clean: clean-recursive clean-default clean-local
-test: test-recursive test-default test-local
+.PHONY: $(TESTS)
+.NOPARALLEL:
 
-cleanall: cleanall-recursive cleanall-default
-init: init-default init-recursive
 
-all-local:
-install-local:
-clean-local:
-check-local:
-test-local:
+#############################################################################
+# Basic recursion and dependencies setup
+
+RULES	 = all install clean cleanall init check test
+
+RULES_LOCAL = $(addsuffix -local,$(RULES))
+RULES_REC   = $(addsuffix -recursive,$(RULES))
+
+.PHONY: $(RULES) $(RULES_LOCAL) $(RULES_REC) $(addsuffix -default,$(RULES))
+
+# The -recursive rules decend all subdirs.
+$(RULES_REC):
+	@$(foreach subdir,$(sort $(SUBDIRS)), \
+		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
+
+# Dummy -local rules
+$(RULES_LOCAL):
+
+# Default deps
+rule_deps = $(1)-recursive $(1)-default $(1)-local
+all:	  $(call rule_deps,all)
+install:  $(call rule_deps,install)
+clean:	  $(call rule_deps,clean)
+cleanall: $(call rule_deps,cleanall)
+init:	  $(call rule_deps,init)
+check:	  $(call rule_deps,check)
+test:	  $(call rule_deps,test)
+
+#############################################################################
+# Misc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

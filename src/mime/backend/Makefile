@@ -27,6 +27,5 @@ TESTDEPS = \
  $(top_builddir)/src/util/time.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
-TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 
 include $(top_srcdir)/Makefile.lib

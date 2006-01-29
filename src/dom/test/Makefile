@@ -14,6 +14,4 @@ TESTDEPS = \
  $(top_builddir)/src/util/string.o \
  $(top_builddir)/src/util/memory.o
 
-TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o \
-
 include $(top_srcdir)/Makefile.lib
