@@ -89,11 +89,11 @@ display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
 		printf("/\">");
 		if (*dircolor)
 			printf("<font color=\"%s\"><b>", dircolor);
-		printf("%s/", fentry->name);
+		printf("%s", fentry->name);
 		if (*dircolor)
 			printf("</b></font>");
 	} else {
-		printf("/\">%s", fentry->name);
+		printf("\">%s", fentry->name);
 	}
 	puts("</a>");
 }
