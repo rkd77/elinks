@@ -83,19 +83,11 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 
 
 static void
-sort_and_display_entries(FSP_DIR *dir)
+sort_and_display_entries(FSP_DIR *dir, unsigned char dircolor[])
 {
 	FSP_RDENTRY fentry, *fresult, *table = NULL;
 	int size = 0;
 	int i;
-	unsigned char dircolor[8];
-
-	if (get_opt_bool("document.browse.links.color_dirs")) {
-		color_to_string(get_opt_color("document.colors.dirs"),
-			(unsigned char *) &dircolor);
-	} else {
-		dircolor[0] = 0;
-	}
 
 	while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 		FSP_RDENTRY *new_table;
@@ -132,6 +124,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	FSP_DIR *dir;
 	unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
+	unsigned char dircolor[8] = "";
 
 	if (!uristring || !data || !init_string(&buf))
 		fsp_error("Out of memory");
@@ -148,19 +141,16 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
 
+	if (get_opt_bool("document.browse.links.color_dirs")) {
+		color_to_string(get_opt_color("document.colors.dirs"),
+				(unsigned char *) &dircolor);
+	}
+
 	if (get_opt_bool("protocol.fsp.sort")) {
-		sort_and_display_entries(dir);
+		sort_and_display_entries(dir, dircolor);
 	} else {
 		FSP_RDENTRY fentry, *fresult;
-		unsigned char dircolor[8];
-
-		if (get_opt_bool("document.browse.links.color_dirs")) {
-			color_to_string(get_opt_color("document.colors.dirs"),
-				(unsigned char *) &dircolor);
-		} else {
-			dircolor[0] = 0;
-		}
-
+	
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
 			printf("%10d\t<a href=\"%s%s\">", fentry.size,
