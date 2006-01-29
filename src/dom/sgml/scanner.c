@@ -294,7 +294,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	if (first_char == '<') {
 		skip_sgml_space(scanner, &string);
 
-		if (scanner->state == SGML_STATE_ELEMENT) {
+		if (string == scanner->end) {
+			/* Prevent out of bound access. */
+
+		} else if (scanner->state == SGML_STATE_ELEMENT) {
 			/* Already inside an element so insert a tag end token
 			 * and continue scanning in next iteration. */
 			string--;
@@ -309,7 +312,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string - token->string.string;
 
 			skip_sgml_space(scanner, &string);
-			if (*string == '>') {
+			if (string < scanner->end && *string == '>') {
 				type = SGML_TOKEN_ELEMENT;
 				string++;
 			} else {
@@ -365,7 +368,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			string++;
 			skip_sgml_space(scanner, &string);
 
-			if (is_sgml_ident(*string)) {
+			if (string == scanner->end) {
+				/* Prevent out of bound access. */
+
+			} else if (is_sgml_ident(*string)) {
 				token->string.string = string;
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
 				real_length = string - token->string.string;
@@ -400,7 +406,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		scanner->state = SGML_STATE_TEXT;
 
 	} else if (first_char == '/') {
-		if (*string == '>') {
+		if (string == scanner->end) {
+			/* Prevent out of bound access. */
+
+		} else if (*string == '>') {
 			string++;
 			real_length = 0;
 			type = SGML_TOKEN_ELEMENT_EMPTY_END;
@@ -422,7 +431,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string_end - token->string.string;
 			string = string_end + 1;
 			type = SGML_TOKEN_STRING;
-		} else if (is_sgml_attribute(*string)) {
+
+		} else if (string < scanner->end
+			   && is_sgml_attribute(*string)) {
+
 			token->string.string++;
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
@@ -434,7 +446,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			type = SGML_TOKEN_IDENT;
 		}
 
-		if (is_sgml_attribute(*string)) {
+		if (string < scanner->end
+		    && is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
 			if (string[-1] == '/' && string[0] == '>')
