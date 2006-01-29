@@ -1,2 +1,0 @@
-:set runtimepath+=.
-:runtime ../../../../.vimrc
