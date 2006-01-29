@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "The ELinks text-browser" "2006-01-10" "The ELinks text-browser"
+.TH "ELINKS" 1 "The Elinks text-browser" "2006-01-29" "The Elinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
@@ -34,12 +34,15 @@ elinks \- lynx-like alternative character mode WWW browser
 Frames are supported\&. You can have different file formats associated with external viewers\&. mailto: and telnet: are supported via external clients\&.
 
 
-ELinks can handle both local files and remote URLs\&. The main supported remote URL protocols are \fIHTTP\fR, \fIHTTPS\fR (with SSL support compiled in) and \fIFTP\fR\&. Additional protocol support exists for \fIfinger\fR, \fIGopher\fR, \fISMB\fR and \fINNTP\fR\&.
+ELinks can handle both local files and remote URLs\&. The main supported remote URL protocols are \fIHTTP\fR, \fIHTTPS\fR (with SSL support compiled in) and \fIFTP\fR\&. Additional protocol support exists for \fIBitTorrent\fR \fIfinger\fR, \fIGopher\fR, \fISMB\fR and \fINNTP\fR\&.
+
+
+The homepage of \fIELinks\fR can be found at <http://elinks\&.cz/>, where the ELinks manual is also hosted\&.
 
 .SH "OPTIONS"
 
 
-Most options can be set in the user interface or config file, so usually you do not need to care about them\&. Note that this list is by no means complete and it is not kept up\-to\-date\&. To get complete list of commandline options, start \fIELinks\fR with parameter \-\-help\&.
+Most options can be set in the user interface or config file, so usually you do not need to care about them\&. Note that this list is roughly equivalent to the output of running ELinks with the option \-\-long\-help\&.
 
 .TP
 \-anonymous [0|1] (default: 0)
@@ -200,6 +203,9 @@ The verbose level controls what messages are shown at start up and while running
 \-version
 Print \fIELinks\fR version information and exit\&.
 
+
+Generated using output from ELinks version 0\&.11\&.0\&.GIT\&.
+
 .SH "ENVIRONMENT VARIABLES"
 
 .TP
@@ -236,7 +242,7 @@ The path to the users home directory\&. Used when expanding ~/\&.
 
 .TP
 WWW_HOME
-Homepage location (as in lynx(1))
+Homepage location (as in \fBlynx\fR(1))\&.
 
 .SH "FILES"
 
@@ -257,16 +263,24 @@ Bookmarks file\&.
 Cookies file\&.
 
 .TP
+~/\&.elinks/exmodehist
+Exmode history file\&.
+
+.TP
 ~/\&.elinks/formhist
 Form history file\&.
+
+.TP
+~/\&.elinks/globhist
+History file containing most recently visited URLs\&.
 
 .TP
 ~/\&.elinks/gotohist
 GoTo URL dialog history file\&.
 
 .TP
-~/\&.elinks/globhist
-History file containing most recently visited URLs\&.
+~/\&.elinks/hooks\&.{js,lua,pl,py,rb,scm}
+Browser scripting hooks\&.
 
 .TP
 ~/\&.elinks/searchhist
@@ -275,6 +289,17 @@ Search history file\&.
 .TP
 ~/\&.elinks/socket
 Internal \fIELinks\fR socket for communication between its instances\&.
+
+.TP
+~/\&.mailcap
+Mappings of MIME types to external handlers\&.
+
+.TP
+~/\&.mime\&.types
+Mappings of file extensions to MIME types\&.
+
+
+Other files that ELinks uses from \fI~/\&.elinks/\fR includes the user defined CSS stylesheet\&. The name of the file can set in the \fIdocument\&.css\&.stylesheet\fR option\&.
 
 .SH "PLATFORMS"
 
@@ -297,13 +322,10 @@ Please report any other bugs you find to the either the ELinks mailing list at <
 The \fILinks\fR browser \- on which \fIELinks\fR is based \- was written by Mikulas Patocka <mikulas@artax\&.karlin\&.mff\&.cuni\&.cz>\&. \fIELinks\fR was written by Petr Baudis <pasky@ucw\&.cz>\&. See file AUTHORS in the source tree for a list of people contributing to this project\&.
 
 
-The homepage of \fIELinks\fR can be found at <http://elinks\&.or\&.cz/>\&.
-
-
 This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts from a (yet?) unknown \fILinks\fR fan for the \fIDebian GNU/Linux system\fR (but may be used by others)\&. Contributions from Francis A\&. Holop\&. Extended, clarified and made more up\-to\-date by Petr Baudis <pasky@ucw\&.cz>\&. Updated by Zas <zas@norz\&.org>\&. The conversion to Asciidoc and trimming was done by Jonas Fonseca <fonseca@diku\&.dk>\&.
 
 .SH "SEE ALSO"
 
 
-elinkskeys(5), elinks\&.conf(5), links(1), lynx(1), w3m(1), wget(1)
+\fBelinkskeys\fR(5), \fBelinks\&.conf\fR(5), \fBlinks\fR(1), \fBlynx\fR(1), \fBw3m\fR(1), \fBwget\fR(1)
 

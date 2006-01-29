@@ -1,0 +1,130 @@
+#!/bin/sh
+#
+# Generate the keymap-actions.txt and keymap-defaults.txt for elinkskeys(5)
+# manpage.
+#
+# Copyright (c) Jonas Fonseca <fonseca@diku.dk>, 2005-2006
+#
+
+KBDBIND=$1
+CONFIGDIR=$(dirname "$KBDBIND")
+OUTPUT=$2
+
+test -d "$CONFIGDIR" || exit
+
+print_title()
+{
+	echo
+	echo "$1" | tr 'a-z' 'A-Z'
+	echo "$1" | sed 's/[^~]/~/g'
+	echo
+}
+
+print_keymap_actions()
+{
+	keymap="$1"
+
+	print_title "$keymap ACTIONS"
+
+	echo 'ifdef::backend-xhtml11[]'
+	echo '`----------------------------------`----------------------------------------------------------------------------'
+	echo 'Action                             Description'
+	echo '----------------------------------------------------------------------------------------------------------------'
+	#     open-link-in-new-tab-in-background
+	echo 'endif::backend-xhtml11[]'
+
+	grep ACTION_ "$CONFIGDIR/actions-$keymap.inc" \
+	| while read entry;
+	do
+		action=$(echo "$entry" | sed 's/ACTION_([^,]*, "\([^"]*\)".*/\1/')
+		caption=$(echo "$entry" | sed 's/.*N__("\(.*\)").*/\1/')
+
+		[ "$action" = "none" ] && continue
+		[ "$action" = " *scripting-function*" ] && continue
+
+		echo 'ifdef::backend-docbook[]'
+		echo "$action::"
+		echo "	$caption."
+		echo
+		echo 'endif::backend-docbook[]'
+		echo 'ifdef::backend-xhtml11[]'
+		printf "%-34s %s\n" "$action" "$caption"
+		echo 'endif::backend-xhtml11[]'
+	done
+
+	echo 'ifdef::backend-xhtml11[]'
+	echo '---------------------------------------------------------------------------------------------------------------'
+	echo 'endif::backend-xhtml11[]'                                                                                      	
+}
+
+print_keymap_defaults()
+{
+	keymap="$1"
+	KEYMAP=$(echo $1 | tr '[a-z]' '[A-Z]')
+
+	print_title "$keymap KEYS"
+
+	echo 'ifdef::backend-xhtml11[]'
+	echo '`-----------`-------------------------------------------------------------------------------'
+	echo 'Key         Description (Action)'
+	echo '--------------------------------------------------------------------------------------------'
+	#     Ctrl-Insert
+	echo 'endif::backend-xhtml11[]'
+
+	grep ACT_$KEYMAP $KBDBIND | grep '^[[:space:]]{' | grep -v '{ "' \
+	| while read entry
+	do
+		entry=$(echo "$entry" | sed 's/.*{ { //' | sed 's/ }//')
+		key=$(echo "$entry" | sed "s/\(KBD_[^,]*\|'.*'\),.*/\1/")
+		modifier=$(echo "$entry" | sed "s/.*KBD_MOD_\([A-Z_]*\).*/\1/")
+		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
+		action=$(grep " $action," "$CONFIGDIR/actions-$keymap.inc" \
+			| sed "s/.*\"\([^\"]*\)\".*N__(\"\(.*\)\").*/\2 ('\1')/")
+
+		case "$key" in
+		KBD_*)
+			key=$(grep $key $KBDBIND \
+			    | grep '^[[:space:]]{ "' \
+			    | sed 's/.*"\([^"]*\)".*/\1/')
+			;;
+		"' '")
+			key="Space"
+			;;
+		*)
+			key=$(echo "$key" | sed "s/^'\(.*\)'$/\1/" \
+			    | sed "s/'/{squote}/")
+			;;
+		esac
+
+		case "$modifier" in
+		ALT) 	modifier="Alt-"	 ;;
+		CTRL)	modifier="Ctrl-" ;;
+		*)	modifier=""	 ;;
+		esac
+
+		echo 'ifdef::backend-docbook[]'
+		echo "'$modifier$key'::"
+		echo "	$action"
+		echo
+		echo 'endif::backend-docbook[]'
+		echo 'ifdef::backend-xhtml11[]'
+		printf "%-11s %s\n" "$modifier$key" "$action"
+		echo 'endif::backend-xhtml11[]'
+	done
+
+	echo 'ifdef::backend-xhtml11[]'
+	echo '--------------------------------------------------------------------------------------------'
+	echo 'endif::backend-xhtml11[]'
+
+}
+
+print_keymap_doc=
+
+case "$OUTPUT" in
+	*default*) print_keymap_doc="print_keymap_defaults" ;;
+	*action*)  print_keymap_doc="print_keymap_actions" ;;
+esac
+
+$print_keymap_doc main
+$print_keymap_doc edit
+$print_keymap_doc menu

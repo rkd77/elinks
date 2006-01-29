@@ -71,6 +71,6 @@ include::small.txt[]
 
 include::ecmascript.txt[]
 
-include::txt/import-features.conf.txt[]
+include::{builddir}features.txt[]
 
 endif::installation-webpage[]

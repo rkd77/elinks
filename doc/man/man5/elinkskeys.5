@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKSKEYS" 5 "ELinks keybindings" "2006-01-10" "ELinks keybindings"
+.TH "ELINKSKEYS" 5 "ELinks keybindings" "2006-01-29" "ELinks keybindings"
 .SH NAME
 elinkskeys \- keybindings for ELinks
 .SH "SYNOPSIS"
@@ -28,7 +28,7 @@ Information on how to configure keybinding and overview of the default keybindin
 .SH "DESCRIPTION"
 
 
-Key binding for elinks should be placed in a file called ~/\&.elinks/elinks\&.conf\&. Note that any information regarding their format/structure may not be up\-to\-date\&. If you will discover that, please feed us with a patch\&.
+Key binding for elinks should be placed in the file ~/\&.elinks/elinks\&.conf\&. Note that any information regarding their format/structure may not be up\-to\-date\&. If you will discover that, please feed us with a patch\&.
 
 
 Key binding statements are of the form:
@@ -42,7 +42,7 @@ where:
 
 .TP
 <keymap>
-is \fImain\fR, \fIedit\fR, or \fImenu\fR\&.
+is \fImain\fR, \fIedit\fR, or \fImenu\fR\&. The main keymap is used for general browsing\&. The edit keymap is used for editing text fields\&. The menu keymap is used for navigating menus\&.
 
 .TP
 <keystroke>
@@ -89,10 +89,9 @@ Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\
 
 Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \\" (backslash quote)\&. Backslash can be written as \\\\ (double backslash)\&.
 
-.SS "MAIN KEYMAP ACTIONS"
+.SH "KEYMAP ACTIONS"
 
-
-The main keymap is used for general browsing\&.
+.SS "MAIN ACTIONS"
 
 .TP
 abort\-connection
@@ -538,10 +537,7 @@ Toggle wrapping of text\&.
 view\-image
 View the current image\&.
 
-.SS "EDIT KEYMAP ACTIONS"
-
-
-The edit keymap is used for editing text fields\&.
+.SS "EDIT ACTIONS"
 
 .TP
 auto\-complete
@@ -643,10 +639,7 @@ Toggle regex matching (type\-ahead searching)\&.
 up
 Move cursor upwards\&.
 
-.SS "MENU KEYMAP ACTIONS"
-
-
-The menu keymap is used for navigating menus\&.
+.SS "MENU ACTIONS"
 
 .TP
 cancel
@@ -1323,5 +1316,5 @@ This manual page was finally written by Peter Wang (one and a half years after w
 .SH "SEE ALSO"
 
 
-elinks(1), elinks\&.conf(5)
+\fBelinks\fR(1), \fBelinks\&.conf\fR(5)
 

@@ -1,0 +1,117 @@
+elinkskeys(5)
+=============
+:Description:	ELinks keybindings
+
+NAME
+----
+elinkskeys - keybindings for ELinks
+
+SYNOPSIS
+--------
+Information on how to configure keybinding and overview of the default
+keybindings.
+
+DESCRIPTION
+-----------
+
+Key binding for elinks should be placed in the file `~/.elinks/elinks.conf`.
+Note that any information regarding their format/structure may not be
+up-to-date. If you will discover that, please feed us with a patch.
+
+Key binding statements are of the form:
+
+	bind <keymap> <keystroke> = <action>
+
+where:
+
+<keymap>::
+
+	is 'main', 'edit', or 'menu'.  The main keymap is used for general
+	browsing.  The edit keymap is used for editing text fields.  The menu
+	keymap is used for navigating menus.
+
+<keystroke>::
+
+	is a case sensitive key, which you can prefix with 'Ctrl-' or 'Alt-'.
+	'Ctrl-' must be followed by an uppercase key. See below for a list of
+	valid keys.
+
+<action>::
+
+	is what the key should do. The actions available are dependent on the
+	keymap, and are listed separately below.
+
+All words/strings may all be quoted "like so". Backslashes are escape
+characters, even if not between quotes.	Lines beginning with a hash character
+(`#`) are comments.
+
+Keys can be unbound just by binding them to the special 'none' action. It may
+be of use if you accidentally type a key often.
+
+EXAMPLE BINDINGS
+----------------
+
+Some sample keybindings:
+
+	bind "main" "v" = "view-image"
+	bind "main" "l" = "jump-to-link"
+	bind "main" "L" = "link-menu"
+	bind "main" "F10" = "file-menu"
+	bind "main" "F9" = "menu"
+	bind "main" "Escape" = "menu"
+	bind "edit" "Ctrl-R" = "auto-complete-unambiguous"
+	bind "edit" "Ctrl-W" = "auto-complete"
+	bind "edit" "Ctrl-K" = "kill-to-eol"
+	bind "menu" "Ctrl-B" = "page-up"
+	bind "menu" "PageUp" = "page-up"
+	bind "menu" "Ctrl-F" = "page-down"
+	bind "menu" "PageDown" = "page-down"
+	# ELinks with Lua support
+	bind "main" ","	= "lua-console"
+
+KEYS
+----
+
+Valid keys are: alphanumeric characters, punctuation, 'Enter', 'Backspace',
+'Tab', 'Escape', 'Left', 'Right', 'Up', 'Down', 'Insert', 'Delete', 'Home',
+'End', 'PageUp', 'PageDown', 'F1' to 'F12'.
+
+Some keys will need to be quoted or escaped. For example, space can be written
+as  `" "` (quote space quote), and the quote itself as `\"` (backslash quote).
+Backslash can be written as `\\` (double backslash).
+
+/////////////////////////////////////////////////////////////////////////////
+FIXME:
+
+ - You may prefix each of these keys with a number, telling its repeat count
+  (how many times to do it). You can also re-bind keys, see elinkskeys(5) for
+  documentation and a more complete list of keys  bound by default. 
+
+ - The following keys can be used while editing a line/jumping to a URL
+/////////////////////////////////////////////////////////////////////////////
+
+KEYMAP ACTIONS
+--------------
+
+include::{builddir}keymap-actions.txt[]
+
+DEFAULT BINDINGS
+----------------
+
+The default bindings are shown below. Any bindings in `~/.elinks/elinks.conf`
+will override these.
+
+include::{builddir}keymap-defaults.txt[]
+
+AUTHOR
+------
+
+This manual page was finally written by Peter Wang (one and a half years after
+writing the binding code), using excerpts by David Mediavilla. You can thank
+Petr Baudis for the subtle requests for documentation. Updated by Zas.  Moved
+to asciidoc format and cleaned up by Jonas Fonseca.
+
+SEE ALSO
+--------
+
+man:elinks[1], man:elinks.conf[5]

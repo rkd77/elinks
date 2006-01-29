@@ -312,8 +312,8 @@ place it on the same line as the command, if it's
 place it on the preceding line.
 
 
-3.2, More about style
-~~~~~~~~~~~~~~~~~~~~~
+More about style
+~~~~~~~~~~~~~~~~
 
 Note: We use short variables names and stupid examples here, do not take that
       as a guideline for _REAL_ coding.  Always use descriptive variables
