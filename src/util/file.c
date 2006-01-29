@@ -46,7 +46,7 @@
 #include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
-#include "protocol/uri.h"
+
 
 /* Not that these two would be so useful for portability (they are ANSI C) but
  * they encapsulate the lowlevel stuff (need for <unistd.h>) nicely. */
@@ -54,29 +54,12 @@
 int
 file_exists(const unsigned char *filename)
 {
-	int result;
-	unsigned char *decoded_filename;
 #ifdef HAVE_ACCESS
-
-	result = access(filename, F_OK);
-	if (result >= 0) return 1;
-	decoded_filename = stracpy((unsigned char *)filename);
-	if (!decoded_filename) return 0;
-	decode_uri(decoded_filename);
-	result = access(decoded_filename, F_OK);
-	mem_free(decoded_filename);
-	return result >= 0;
+	return access(filename, F_OK) >= 0;
 #else
 	struct stat buf;
 
-	result = stat(filename, &buf);
-	if (result >= 0) return 1;
-	decoded_filename = stracpy((unsigned char *)filename);
-	if (!decoded_filename) return 0;
-	decode_uri(decoded_filename);
-	result = stat(decoded_filename, &buf);
-	mem_free(decoded_filename);
-	return result >= 0;
+	return stat(filename, &buf) >= 0;
 #endif
 }
 
