@@ -5,6 +5,11 @@ You can see the complete list of recent changes, bugfixes and new features in
 the link:http://pasky.or.cz/gitweb.cgi[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks now:
+-----------
+
+* Native FSP protocol support (replaces CGI program in contrib/cgi/)
+
 ELinks 0.11.0 (Elated):
 -----------------------
 
