@@ -140,9 +140,10 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	fclose(stderr);
 	add_html_to_string(&buf, uristring, strlen(uristring));
 
-	printf("<html><head><title>%s</title><base href=\"%s\">"
-	       "</head><body><h2>FSP directory %s</h2><pre>",
-	       buf.source, uristring, buf.source);
+	printf("<html><head><title>%s</title><base href=\"%s", buf.source,
+		uristring);
+	if (buf.source[buf.length - 1] != '/') printf("/");
+	printf("\"></head><body><h2>FSP directory %s</h2><pre>", buf.source);
 
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
