@@ -5,6 +5,7 @@
 #endif
 
 #include "scripting/python/core.h"
+#include <Python.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +18,6 @@
 #include "util/file.h"
 #include "util/string.h"
 
-#include <Python.h>
 
 PyObject *pDict, *pModule;
 
