@@ -135,6 +135,10 @@ check_link_word(struct document *document, unsigned char *uri, int length,
 
 	if (!where) return NULL;
 
+	/* We need to reparse the URI and normalize it so that the protocol and
+	 * host part are converted to lowercase. */
+	normalize_uri(NULL, where);
+
 	new_link = add_document_link(document, where, length, x, y);
 
 	if (!new_link) mem_free(where);
