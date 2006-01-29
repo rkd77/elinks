@@ -84,13 +84,17 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 static void
 display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
 {
-	printf("%10d\t<a href=\"%s%s\">", fentry->size,
-	       fentry->name, fentry->type == FSP_RDTYPE_DIR ? "/" : "");
-	if (fentry->type == FSP_RDTYPE_DIR && *dircolor)
-		printf("<font color=\"%s\"><b>", dircolor);
-	printf("%s", fentry->name);
-	if (fentry->type == FSP_RDTYPE_DIR && *dircolor)
-		printf("</b></font>");
+	printf("%10d\t<a href=\"%s", fentry->size, fentry->name);
+	if (fentry->type == FSP_RDTYPE_DIR) {
+		printf("/\">");
+		if (*dircolor)
+			printf("<font color=\"%s\"><b>", dircolor);
+		printf("%s/", fentry->name);
+		if (*dircolor)
+			printf("</b></font>");
+	} else {
+		printf("/\">%s", fentry->name);
+	}
 	puts("</a>");
 }
 
