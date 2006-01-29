@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 07:21+0100\n"
+"POT-Creation-Date: 2006-01-29 12:53+0100\n"
 "PO-Revision-Date: 2006-01-11 00:40+0100\n"
 "Last-Translator: Adam Golebiowski <adamg@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -39,7 +39,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
-#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
+#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
 #: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
@@ -1789,7 +1789,7 @@ msgid "Description"
 msgstr "Opis"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:225 src/session/session.c:282
+#: src/protocol/protocol.c:227 src/session/session.c:282
 #: src/session/session.c:954 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
@@ -2297,10 +2297,10 @@ msgid "External editor"
 msgstr "Zewnêtrzny edytor"
 
 #: src/config/options.inc:195
+#, fuzzy
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
-"\n"
 "If this is blank, ELinks will use the value of the environmental\n"
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
@@ -3398,12 +3398,12 @@ msgid "Rules for passing URIs to external commands."
 msgstr "Zasady przekazywania URI do zewnêtrznych poleceñ."
 
 #: src/config/options.inc:730
+#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
-"\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
 "Zasada przekazywania URI do zewnêtrznego polecenia.\n"
@@ -4592,8 +4592,9 @@ msgstr "Skasowanie wszystkich ciasteczek"
 msgid "Do you really want to remove all cookies?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie ciasteczka?"
 
-#: src/cookies/dialogs.c:423
-msgid "~Clear"
+#: src/cookies/dialogs.c:423 src/dialogs/download.c:484 src/dialogs/edit.c:98
+#: src/globhist/dialogs.c:231 src/protocol/auth/dialogs.c:258
+msgid "C~lear"
 msgstr "Wy~czy¶æ"
 
 #: src/cookies/dialogs.c:429
@@ -4725,11 +4726,6 @@ msgstr "Czy na pewno chcesz przerwaæ wszystkie ¶ci±gania?"
 msgid "Abort and delete file"
 msgstr "Przerwij i skasuj plik"
 
-#: src/dialogs/download.c:484 src/dialogs/edit.c:98 src/globhist/dialogs.c:231
-#: src/protocol/auth/dialogs.c:258
-msgid "C~lear"
-msgstr "Wy~czy¶æ"
-
 #: src/dialogs/download.c:489
 msgid "Download manager"
 msgstr "Menad¿er pobierania"
@@ -4752,13 +4748,13 @@ msgid "Copying"
 msgstr "Kopiowanie"
 
 #: src/dialogs/info.c:142
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -5496,9 +5492,10 @@ msgid "Ignore <noscript> content"
 msgstr "Ignoruj zawarto¶æ <noscript>"
 
 #: src/ecmascript/ecmascript.c:50
+#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 "Czy ignorowaæ tre¶æ zawart± w znaczniku <noscript> w przypadku, gdy\n"
 "ECMAScript jest w³±czony."
@@ -5900,7 +5897,7 @@ msgstr "Turecki"
 msgid "Ukrainian"
 msgstr "Ukraiñski"
 
-#: src/main/interlink.c:325 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:255
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Wywo³anie %s nieudane: %d (%s)"
@@ -6103,7 +6100,7 @@ msgid "Option system"
 msgstr "System konfiguracyjny"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:668
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -7025,11 +7022,11 @@ msgstr ""
 "po³±czeñ, aby siê zaczê³y, ale wystarczaj±co ma³y, aby nie pozwoliæ\n"
 "wolnym je¼d¼com wykra¶æ zbyt du¿o pasma."
 
-#: src/protocol/bittorrent/bittorrent.c:195
+#: src/protocol/bittorrent/bittorrent.c:203
 msgid "Rarest first piece selection cutoff"
 msgstr "Ile ¶ci±gaæ przed wybieraniem najrzadszych kawa³ków"
 
-#: src/protocol/bittorrent/bittorrent.c:197
+#: src/protocol/bittorrent/bittorrent.c:205
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
@@ -7037,11 +7034,11 @@ msgstr ""
 "Liczba kawa³ków do uzyskania przed prze³±czeniem strategii\n"
 "wyboru kawa³ka z losowej na wybieranie najpierw najrzadszych."
 
-#: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr "Zezwolenie na \"czarn± listê\""
 
-#: src/protocol/bittorrent/bittorrent.c:202
+#: src/protocol/bittorrent/bittorrent.c:210
 msgid "Allow blacklisting of buggy peers."
 msgstr "W³±czenie \"czarnej listy\" b³êdnych partnerów."
 
@@ -7360,6 +7357,27 @@ msgstr "Plik"
 #: src/protocol/finger/finger.c:21
 msgid "Finger"
 msgstr "Finger"
+
+#. name:
+#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
+#, fuzzy
+msgid "FSP"
+msgstr "FTP"
+
+#: src/protocol/fsp/fsp.c:46
+#, fuzzy
+msgid "FSP specific options."
+msgstr "Opcje dotycz±ce protoko³u FTP."
+
+#: src/protocol/fsp/fsp.c:48
+#, fuzzy
+msgid "Sort entries"
+msgstr "Inteligentne przedrostki"
+
+#: src/protocol/fsp/fsp.c:50
+#, fuzzy
+msgid "Whether to sort entries in directory listings."
+msgstr "Pokazuj ukryte pliki przy wy¶wietlaniu katalogów"
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
@@ -7716,24 +7734,24 @@ msgstr ""
 "Wszystkie pozycje nag³ówka mog± byæ czytane w okienku\n"
 "dialogowym z informacjami o nag³ówku."
 
-#: src/protocol/protocol.c:227
+#: src/protocol/protocol.c:229
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Ta wersja ELinksa nie zawiera obs³ugi protoko³u %s"
 
-#: src/protocol/protocol.c:258
+#: src/protocol/protocol.c:260
 msgid "Protocols"
 msgstr "Protoko³y"
 
-#: src/protocol/protocol.c:260
+#: src/protocol/protocol.c:262
 msgid "Protocol specific options."
 msgstr "Ustawienia dotycz±ce protoko³ów."
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:264
 msgid "No-proxy domains"
 msgstr "Domeny dostêpne bez udzia³u proxy"
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:266
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7746,7 +7764,7 @@ msgstr ""
 "¶rodowiskowa NO_PROXY."
 
 #. name:
-#: src/protocol/protocol.c:300
+#: src/protocol/protocol.c:305
 msgid "Protocol"
 msgstr "Protokó³"
 
@@ -7871,19 +7889,19 @@ msgid "URI rewrite"
 msgstr "Przepisywanie URI"
 
 #. name:
-#: src/protocol/smb/smb.c:72 src/protocol/smb/smb.c:84
+#: src/protocol/smb/smb.c:67 src/protocol/smb/smb.c:79
 msgid "SMB"
 msgstr "SMB"
 
-#: src/protocol/smb/smb.c:74
+#: src/protocol/smb/smb.c:69
 msgid "SAMBA specific options."
 msgstr "Opcje dotycz±ce SAMBY."
 
-#: src/protocol/smb/smb.c:76
+#: src/protocol/smb/smb.c:71
 msgid "Credentials"
 msgstr "Dane uwierzytelniaj±ce"
 
-#: src/protocol/smb/smb.c:78
+#: src/protocol/smb/smb.c:73
 msgid "Credentials file passed to smbclient via -A option."
 msgstr ""
 "Plik z danymi uwierzytelniaj±cymi przekazywany\n"
@@ -8487,9 +8505,11 @@ msgid ""
 "Your input has been truncated, but you can still recover the text that you "
 "entered from this file: %s"
 msgstr ""
-"Przekroczono limit rozmiaru textarea: wprowadzono %d bajtów, ale maksimum to %u bajtów.\n"
+"Przekroczono limit rozmiaru textarea: wprowadzono %d bajtów, ale maksimum to "
+"%u bajtów.\n"
 "\n"
-"Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego pliku: %s"
+"Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
+"pliku: %s"
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
@@ -8506,3 +8526,6 @@ msgstr "B³±d zapisu"
 #: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
+
+#~ msgid "~Clear"
+#~ msgstr "Wy~czy¶æ"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 07:21+0100\n"
+"POT-Creation-Date: 2006-01-29 12:53+0100\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -38,9 +38,9 @@ msgstr "A mappa kinyitásához nyomd meg a Space billentyût."
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
-#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
+#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:799 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
 
@@ -254,7 +254,7 @@ msgstr ""
 "\n"
 "'-' jelzi ha egy LED ki van kapcsolva."
 
-#: src/bfu/menu.c:753
+#: src/bfu/menu.c:730
 msgid "Search menu/"
 msgstr "Keresés menü"
 
@@ -700,7 +700,7 @@ msgstr "Szöveg beszúrása a vágólapról"
 msgid "Move to the previous item"
 msgstr "Ugrás az elõzõ elemre"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:77
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Terminál újrarajzolása"
@@ -875,272 +875,277 @@ msgid "Open the link context menu"
 msgstr "Link helyzetfüggõ menüjének megnyitása"
 
 #: src/config/actions-main.inc:49
+#, fuzzy
+msgid "Open the form fields menu"
+msgstr "Fájl menü megnyitása"
+
+#: src/config/actions-main.inc:50
 msgid "Open a Lua console"
 msgstr "Lua konzol megnyitása"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Go at a specified mark"
 msgstr "Ugrás egy megadott jelölõre"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Set a mark"
 msgstr "Jelölõ elhelyezése"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Activate the menu"
 msgstr "A menü aktiválása"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Move cursor down"
 msgstr "Kurzormozgatás lefelé"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 msgid "Move cursor left"
 msgstr "Kurzor mozgatása balra"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Move cursor right"
 msgstr "Kurzor mozgatása jobbra"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Move cursor up"
 msgstr "A kurzor mozgatása felfelé"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 msgid "Move to the end of the document"
 msgstr "Ugrás a dokumentum végére"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move to the start of the document"
 msgstr "Ugrás a dokumentum elejére"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move one link down"
 msgstr "Ugrás egy linkkel feljebb"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move one link left"
 msgstr "Ugrás egy linkkel feljebb"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move to the next link"
 msgstr "Ugrás a következõ linkre"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move to the previous link"
 msgstr "Ugrás az elõzõ linkre"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move one link right"
 msgstr "Ugrás egy linkkel jobbra"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move one link up"
 msgstr "Ugrás egy linkkel feljebb"
 
-#: src/config/actions-main.inc:65 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Ugrás egy oldallal lentebb"
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Ugrás egy oldallal feljebb"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Open the current link in a new tab"
 msgstr "A kijelölt link megnyitása új fülre"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Open the current link in a new tab in the background"
 msgstr "A kijelölt link megnyitása a háttérben, új fülre"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Open the current link in a new window"
 msgstr "A kijelölt link megnyitása új ablakban"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Open a new tab"
 msgstr "Új ~fül megnyitása"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Open a new tab in the background"
 msgstr "Új fül megnyitása a háttérben"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Open a new window"
 msgstr "Új ablak megnyitása"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Open an OS shell"
 msgstr "Parancssor megnyitása"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Open options manager"
 msgstr "Beállításkezelõ"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open a quit confirmation dialog box"
 msgstr "Kilépést megerõsítõ dialógusablak megnyitása"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Quit without confirmation"
 msgstr "Kilépés rákérdezés nélkül"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 msgid "Reload the current page"
 msgstr "Az aktuális lap újratöltése"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Re-render the current page"
 msgstr "Az aktuális lap újrarajzolása"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Reset form items to their initial values"
 msgstr "Az ûrlap mezõinek beállítása kezdeti értékükre"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Show information about the currently used resources"
 msgstr "Erõforrás Információk megjelenítése"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Save the current document in source form"
 msgstr "Az aktuális oldal mentése forrás formában"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in formatted form"
 msgstr "Az aktuális oldal mentése forrás formában."
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Save options"
 msgstr "Beállítások menté~se"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 msgid "Save URL as"
 msgstr "~URL mentése másként"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Scroll down"
 msgstr "Görgetés lefelé"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll left"
 msgstr "Görgetés balra"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll right"
 msgstr "Görgetés jobbra"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll up"
 msgstr "Görgetés felfelé"
 
-#: src/config/actions-main.inc:90 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Szöveg keresése"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 msgid "Search backwards for a text pattern"
 msgstr "Szöveg keresése visszafelé"
 
-#: src/config/actions-main.inc:92 src/config/actions-main.inc:93
+#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
 msgid "Search link text by typing ahead"
 msgstr "Link keresése gépeléssel"
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Search document text by typing ahead"
 msgstr "Szöveg keresése gépeléssel"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text backwards by typing ahead"
 msgstr "Szöveg keresése gépeléssel visszafelé"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Show terminal options dialog"
 msgstr "Terminál beállítási ablak megnyitása"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Submit form"
 msgstr "Ûrlap elküldése"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Submit form and reload"
 msgstr "Ûrlap elküldése, és az oldal újratöltése"
 
-#: src/config/actions-main.inc:99 src/terminal/tab.c:188
+#: src/config/actions-main.inc:100 src/terminal/tab.c:188
 #: src/terminal/tab.c:224
 msgid "Close tab"
 msgstr "Böngészõfül bezárása"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 msgid "Close all tabs but the current one"
 msgstr "Minden fül bezárása, kivéve az aktuálisat"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Pass URI of current tab to external command"
 msgstr "Az aktuális fül URI-jának átadása külsõ programnak"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 msgid "Open the tab menu"
 msgstr "A fülek menüjének megnyitása"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Move the current tab to the left"
 msgstr "Az aktuális fül mozgatása balra"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Move the current tab to the right"
 msgstr "Az aktuális fül mozgatása jobbra"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Next tab"
 msgstr "Következõ böngészõfül"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Previous tab"
 msgstr "Elõzõ böngészõfül"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Open the terminal resize dialog"
 msgstr "Terminál átméretezési ablak megnyitása"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Toggle rendering of page using CSS"
 msgstr "Az CSS megjelenítésének be/kikapcsolása"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle displaying of links to images"
 msgstr "A képekre mutató linkek megjelenítésének váltogatása"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle rendering of tables"
 msgstr "A táblázatok megjelenítésének váltogatása"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle usage of document specific colors"
 msgstr "A dokumentum által elõírt színek használatának váltogatása"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Az oldal HTML / normál szövegkent való megjelenítésének váltogatása"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Toggle mouse handling"
 msgstr "Mentés be/ki"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle displaying of links numbers"
 msgstr "A linkek sorszámozásának váltogatása"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Az üres sorok összevonásának váltogatása"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Toggle wrapping of text"
 msgstr "A sortörések váltogatása"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "View the current image"
 msgstr "A kijelölt kép megtekintése"
 
@@ -1777,9 +1782,9 @@ msgid "Description"
 msgstr "Leírás"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:961 src/viewer/text/textarea.c:362
-#: src/viewer/text/textarea.c:369
+#: src/protocol/protocol.c:227 src/session/session.c:282
+#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Hiba"
 
@@ -1892,31 +1897,31 @@ msgstr ""
 "változó helyesen van-e beállítva, és hogy a könyvtárra\n"
 "van-e írási jogod."
 
-#: src/config/kbdbind.c:209
+#: src/config/kbdbind.c:220
 msgid "Main mapping"
 msgstr "Fõ billentyûhozzárendelés"
 
-#: src/config/kbdbind.c:210
+#: src/config/kbdbind.c:221
 msgid "Edit mapping"
 msgstr "Szerkesztõ területen mûködõ billentyûhozzárendelés"
 
-#: src/config/kbdbind.c:211
+#: src/config/kbdbind.c:222
 msgid "Menu mapping"
 msgstr "Menüben mûködõ billentyûhozzárendelés"
 
-#: src/config/kbdbind.c:524
+#: src/config/kbdbind.c:555
 msgid "Unrecognised keymap"
 msgstr "Ismeretlen billentyûkiosztás"
 
-#: src/config/kbdbind.c:527
+#: src/config/kbdbind.c:558
 msgid "Error parsing keystroke"
 msgstr "Billentyûkombináció hiba"
 
-#: src/config/kbdbind.c:531
+#: src/config/kbdbind.c:562
 msgid "Unrecognised action (internal error)"
 msgstr "Ismeretlen esemény (belsõ hiba)"
 
-#: src/config/kbdbind.c:547
+#: src/config/kbdbind.c:578
 msgid "Error registering event"
 msgstr "Hiba az esemény regisztrálása közben"
 
@@ -2275,7 +2280,6 @@ msgstr "Megnyitás külsõ szerkesztõprogramban"
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
-"\n"
 "If this is blank, ELinks will use the value of the environmental\n"
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
@@ -3283,12 +3287,12 @@ msgid "Rules for passing URIs to external commands."
 msgstr "A külsõ programoknak átadott URI-kkal kapcsolatos szabályok."
 
 #: src/config/options.inc:730
+#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
-"\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
 "URI átadása külsõ program számára.\n"
@@ -3682,7 +3686,7 @@ msgstr "Szöveg"
 msgid "Dialog text colors."
 msgstr "Dialógusablak szövegének a színei."
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1451
+#: src/config/options.inc:978 src/viewer/text/form.c:1460
 msgid "Checkbox"
 msgstr "Jelölönégyzet"
 
@@ -3730,7 +3734,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr ""
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1455
+#: src/config/options.inc:1006 src/viewer/text/form.c:1464
 msgid "Text field"
 msgstr "Szöveg mezö"
 
@@ -4250,7 +4254,7 @@ msgid "Goto URL History"
 msgstr "Látogatott lapok"
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:824
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
 msgid "Cookies"
 msgstr "Cookie-k"
 
@@ -4445,9 +4449,10 @@ msgstr "Az összes süti törlése"
 msgid "Do you really want to remove all cookies?"
 msgstr "Töröljem az összes sütit?"
 
-#: src/cookies/dialogs.c:423
-msgid "~Clear"
-msgstr "~Az összes törlése"
+#: src/cookies/dialogs.c:423 src/dialogs/download.c:484 src/dialogs/edit.c:98
+#: src/globhist/dialogs.c:231 src/protocol/auth/dialogs.c:258
+msgid "C~lear"
+msgstr "Tör~lés"
 
 #: src/cookies/dialogs.c:429
 msgid "Cookie manager"
@@ -4577,11 +4582,6 @@ msgstr "Biztos, hogy megszakítod az összes letöltést?"
 msgid "Abort and delete file"
 msgstr "Megszakítás, és a fájl törlése"
 
-#: src/dialogs/download.c:484 src/dialogs/edit.c:98 src/globhist/dialogs.c:231
-#: src/protocol/auth/dialogs.c:258
-msgid "C~lear"
-msgstr "Tör~lés"
-
 #: src/dialogs/download.c:489
 msgid "Download manager"
 msgstr "Letöltéskezelõ"
@@ -4604,13 +4604,13 @@ msgid "Copying"
 msgstr "Szerzöi jogok"
 
 #: src/dialogs/info.c:142
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -5323,7 +5323,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 
 #: src/ecmascript/ecmascript.c:53
@@ -5720,7 +5720,7 @@ msgstr "Török"
 msgid "Ukrainian"
 msgstr "Ukrán"
 
-#: src/main/interlink.c:325 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:255
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "A %s hívása hibás volt: %d (%s)"
@@ -5902,12 +5902,12 @@ msgstr ""
 "'*'-ot kell használni itt)."
 
 #. name:
-#: src/mime/backend/default.c:223
+#: src/mime/backend/default.c:227
 msgid "Option system"
 msgstr "Konfigurációs rendszer"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:668
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6474,7 +6474,7 @@ msgstr "Hitelesítés kezelõ"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
-#: src/protocol/bittorrent/bittorrent.c:327
+#: src/protocol/bittorrent/bittorrent.c:335
 msgid "BitTorrent"
 msgstr ""
 
@@ -6559,20 +6559,34 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:73
 #, fuzzy
+msgid "User identification string"
+msgstr "User Agent beállítása"
+
+#: src/protocol/bittorrent/bittorrent.c:75
+msgid ""
+"An additional identification that is not shared with any users.\n"
+"It is intended to allow a client to prove their identity should\n"
+"their IP address change. It is an optional parameter, but some\n"
+"trackers require this parameter. If set to \"\" no user key will\n"
+"be sent to the tracker."
+msgstr ""
+
+#: src/protocol/bittorrent/bittorrent.c:81
+#, fuzzy
 msgid "Maximum number of peers to request"
 msgstr "Bejegyzések maximális száma"
 
-#: src/protocol/bittorrent/bittorrent.c:75
+#: src/protocol/bittorrent/bittorrent.c:83
 msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:78
+#: src/protocol/bittorrent/bittorrent.c:86
 msgid "Minimum peers to skip rerequesting"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:80
+#: src/protocol/bittorrent/bittorrent.c:88
 msgid ""
 "The minimum number of peers to have in the current peer info\n"
 "pool before skipping requesting of more peers. I.e. setting\n"
@@ -6583,20 +6597,20 @@ msgstr ""
 #. ******************************************************************
 #. Lowlevel peer-wire options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:90
+#: src/protocol/bittorrent/bittorrent.c:98
 msgid "Peer-wire"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:92
+#: src/protocol/bittorrent/bittorrent.c:100
 msgid "Lowlevel peer-wire options."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:94
+#: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
 msgstr "Az egyidõben megnyitható maximális kapcsolatok száma"
 
-#: src/protocol/bittorrent/bittorrent.c:96
+#: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
 "The maximum number of allowed connections to both active and\n"
 "non-active peers. By increasing the number of allowed connections,\n"
@@ -6605,55 +6619,55 @@ msgid ""
 "maximum is reached all new incoming connections will be closed."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:102
+#: src/protocol/bittorrent/bittorrent.c:110
 #, fuzzy
 msgid "Maximum peer message length"
 msgstr "A képfájl nevének maximális hossza"
 
-#: src/protocol/bittorrent/bittorrent.c:104
+#: src/protocol/bittorrent/bittorrent.c:112
 msgid ""
 "The maximum length of messages to accept over the wire.\n"
 "Larger values will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:107
+#: src/protocol/bittorrent/bittorrent.c:115
 msgid "Maximum allowed request length"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:109
+#: src/protocol/bittorrent/bittorrent.c:117
 msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:112
+#: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:114
+#: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
 "How many bytes to query for per request. This is complementary\n"
 "to the max_request_length option. If the configured length is\n"
 "bigger than the piece length it will be truncated."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:118
+#: src/protocol/bittorrent/bittorrent.c:126
 #, fuzzy
 msgid "Peer inactivity timeout"
 msgstr "Idötúllépés adatfogadás közben"
 
-#: src/protocol/bittorrent/bittorrent.c:120
+#: src/protocol/bittorrent/bittorrent.c:128
 msgid ""
 "The number of seconds to wait before closing a socket on\n"
 "which nothing has been received or sent."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:123
+#: src/protocol/bittorrent/bittorrent.c:131
 #, fuzzy
 msgid "Maximum peer pool size"
 msgstr "Bejegyzések maximális száma"
 
-#: src/protocol/bittorrent/bittorrent.c:125
+#: src/protocol/bittorrent/bittorrent.c:133
 msgid ""
 "Maximum number of items in the peer pool. The peer pool\n"
 "contains information used for establishing connections to\n"
@@ -6664,24 +6678,24 @@ msgstr ""
 #. ******************************************************************
 #. Piece management options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:135
+#: src/protocol/bittorrent/bittorrent.c:143
 #, fuzzy
 msgid "Maximum piece cache size"
 msgstr "Maximális végrehajtási idõ"
 
-#: src/protocol/bittorrent/bittorrent.c:137
+#: src/protocol/bittorrent/bittorrent.c:145
 msgid ""
 "The maximum amount of memory used to hold recently\n"
 "downloaded pieces.\n"
 "Set to 0 to have unlimited size."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:146
+#: src/protocol/bittorrent/bittorrent.c:154
 #, fuzzy
 msgid "Sharing rate"
 msgstr "Mentési mód"
 
-#: src/protocol/bittorrent/bittorrent.c:148
+#: src/protocol/bittorrent/bittorrent.c:156
 msgid ""
 "The minimum sharing rate to achieve before stop seeding.\n"
 "The sharing rate is computed as the number of uploaded bytes\n"
@@ -6691,44 +6705,44 @@ msgid ""
 "set to 0.0 to have unlimited sharing rate."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:155
+#: src/protocol/bittorrent/bittorrent.c:163
 #, fuzzy
 msgid "Maximum number of uploads"
 msgstr "Bejegyzések maximális száma"
 
-#: src/protocol/bittorrent/bittorrent.c:157
+#: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
 msgstr ""
 
 #. The number of uploads to fill out to with extra optimistic unchokes
-#: src/protocol/bittorrent/bittorrent.c:160
+#: src/protocol/bittorrent/bittorrent.c:168
 #, fuzzy
 msgid "Minimum number of uploads"
 msgstr "Bejegyzések maximális száma"
 
-#: src/protocol/bittorrent/bittorrent.c:162
+#: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:166
+#: src/protocol/bittorrent/bittorrent.c:174
 #, fuzzy
 msgid "Keepalive interval"
 msgstr "Mentés idõköze"
 
-#: src/protocol/bittorrent/bittorrent.c:168
+#: src/protocol/bittorrent/bittorrent.c:176
 msgid ""
 "The number of seconds to pause between sending keepalive\n"
 "messages."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:171
+#: src/protocol/bittorrent/bittorrent.c:179
 #, fuzzy
 msgid "Number of pending requests"
 msgstr "A kiszolgáló feldogozza a kérést"
 
-#: src/protocol/bittorrent/bittorrent.c:173
+#: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
 "How many piece requests to continuously keep in queue. Pipelining\n"
 "of requests is essential to saturate connections and get a good\n"
@@ -6739,22 +6753,22 @@ msgid ""
 msgstr ""
 
 #. Bram uses 30 seconds here.
-#: src/protocol/bittorrent/bittorrent.c:182
+#: src/protocol/bittorrent/bittorrent.c:190
 msgid "Peer snubbing interval"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:184
+#: src/protocol/bittorrent/bittorrent.c:192
 msgid ""
 "The number of seconds to wait for file data before assuming\n"
 "the peer has been snubbed."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:187
+#: src/protocol/bittorrent/bittorrent.c:195
 #, fuzzy
 msgid "Peer choke interval"
 msgstr "Mentés idõköze"
 
-#: src/protocol/bittorrent/bittorrent.c:189
+#: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of seconds between updating the connection state\n"
 "and most importantly choke and unchoke peer connections. The\n"
@@ -6763,21 +6777,21 @@ msgid ""
 "room for stealing bandwidth."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:195
+#: src/protocol/bittorrent/bittorrent.c:203
 msgid "Rarest first piece selection cutoff"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:197
+#: src/protocol/bittorrent/bittorrent.c:205
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr "Feketelista endedélyezése"
 
-#: src/protocol/bittorrent/bittorrent.c:202
+#: src/protocol/bittorrent/bittorrent.c:210
 #, fuzzy
 msgid "Allow blacklisting of buggy peers."
 msgstr "A hibásan mûködõ szerverek felvétele a feketelistára."
@@ -7089,6 +7103,27 @@ msgstr "~Fájl"
 #: src/protocol/finger/finger.c:21
 msgid "Finger"
 msgstr "Finger"
+
+#. name:
+#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
+#, fuzzy
+msgid "FSP"
+msgstr "FTP"
+
+#: src/protocol/fsp/fsp.c:46
+#, fuzzy
+msgid "FSP specific options."
+msgstr "FTP specifikus beállítások."
+
+#: src/protocol/fsp/fsp.c:48
+#, fuzzy
+msgid "Sort entries"
+msgstr "Intelligens elõtagok"
+
+#: src/protocol/fsp/fsp.c:50
+#, fuzzy
+msgid "Whether to sort entries in directory listings."
+msgstr "Rejtett fáljok megjelenítése"
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
@@ -7435,24 +7470,24 @@ msgid ""
 "All header entries can be read in the header info dialog."
 msgstr ""
 
-#: src/protocol/protocol.c:227
+#: src/protocol/protocol.c:229
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Az Elinks ezen verziója nem támogat %s protokollt"
 
-#: src/protocol/protocol.c:258
+#: src/protocol/protocol.c:260
 msgid "Protocols"
 msgstr "Protokollok"
 
-#: src/protocol/protocol.c:260
+#: src/protocol/protocol.c:262
 msgid "Protocol specific options."
 msgstr "Protokoll beállítások."
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:264
 msgid "No-proxy domains"
 msgstr "Proxy tiltása bizonyos domain-ekhez"
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:266
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7465,7 +7500,7 @@ msgstr ""
 "NO_PROXY környezeti változó kerül feldolgozásra."
 
 #. name:
-#: src/protocol/protocol.c:300
+#: src/protocol/protocol.c:305
 msgid "Protocol"
 msgstr "Protokoll"
 
@@ -7497,7 +7532,7 @@ msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 "if you write 'elinks' there, you are directed to\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 msgstr ""
 
 #: src/protocol/rewrite/rewrite.c:60
@@ -7574,19 +7609,19 @@ msgid "URI rewrite"
 msgstr "URI kiegészítés"
 
 #. name:
-#: src/protocol/smb/smb.c:72 src/protocol/smb/smb.c:84
+#: src/protocol/smb/smb.c:67 src/protocol/smb/smb.c:79
 msgid "SMB"
 msgstr "SMB"
 
-#: src/protocol/smb/smb.c:74
+#: src/protocol/smb/smb.c:69
 msgid "SAMBA specific options."
 msgstr "SAMBA specifikus beállítások."
 
-#: src/protocol/smb/smb.c:76
+#: src/protocol/smb/smb.c:71
 msgid "Credentials"
 msgstr ""
 
-#: src/protocol/smb/smb.c:78
+#: src/protocol/smb/smb.c:73
 msgid "Credentials file passed to smbclient via -A option."
 msgstr ""
 
@@ -7640,11 +7675,6 @@ msgstr "Nincs program"
 msgid "No program specified for protocol %s."
 msgstr "Nincs program beállitva ehhez a protokollhoz: %s."
 
-#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
-#, fuzzy
-msgid "SEE Message"
-msgstr "Ruby üzenet"
-
 #: src/scripting/lua/core.c:300
 msgid "Error registering event hook"
 msgstr ""
@@ -7653,15 +7683,15 @@ msgstr ""
 msgid "User dialog"
 msgstr "Egyéni dialógusablak"
 
-#: src/scripting/lua/core.c:716
+#: src/scripting/lua/core.c:724
 msgid "Lua Error"
 msgstr "Lua hiba"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Lua Console"
 msgstr "Lua konzol"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Enter expression"
 msgstr "Kifejezés"
 
@@ -7771,11 +7801,12 @@ msgstr "A fájlt a '%s' programmal fogjuk megnyitni."
 msgid "~Open"
 msgstr "Me~gnyitás"
 
-#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
+#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/viewer/text/textarea.c:385
 msgid "Warning"
 msgstr "Figyelem"
 
-#: src/session/session.c:750
+#: src/session/session.c:743
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7791,7 +7822,7 @@ msgstr ""
 "ezt a beállítást \" \"-re, egyébként töröld ezt a sort a konfigurációs "
 "állományból! Ha kitörlöd, korrekt alapbeállítás lép életbe."
 
-#: src/session/session.c:769
+#: src/session/session.c:762
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7809,11 +7840,11 @@ msgstr ""
 "konfigurációs állomány. Ajánlatos a config.saving_style opciót 3-as\n"
 "értékre állítani ahhoz hogy megfelelõ mûködést érjünk el."
 
-#: src/session/session.c:794
+#: src/session/session.c:787
 msgid "Welcome"
 msgstr "Üdvözlünk"
 
-#: src/session/session.c:795
+#: src/session/session.c:788
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -7920,164 +7951,179 @@ msgstr "Hiányzó töredék"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "A kért töredék \"#%s\" nem létezik."
 
-#: src/viewer/text/form.c:855
+#: src/viewer/text/form.c:864
 msgid "Error while posting form"
 msgstr "Hiba az ûrlap elküldése közben"
 
-#: src/viewer/text/form.c:856
+#: src/viewer/text/form.c:865
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Nem lehet betölteni a fájlt %s: %s"
 
-#: src/viewer/text/form.c:1436
+#: src/viewer/text/form.c:1445
 msgid "Reset form"
 msgstr "Ûrlap törlése"
 
-#: src/viewer/text/form.c:1438
+#: src/viewer/text/form.c:1447
 msgid "Harmless button"
 msgstr "Ártalmatlan gomb"
 
-#: src/viewer/text/form.c:1446
+#: src/viewer/text/form.c:1455
 msgid "Submit form to"
 msgstr "Ûrlap elfogadása"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1456
 msgid "Post form to"
 msgstr "Ûrlap elküldése"
 
-#: src/viewer/text/form.c:1449
+#: src/viewer/text/form.c:1458
 msgid "Radio button"
 msgstr "Radio gomb"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1462
 msgid "Select field"
 msgstr "Mezõ kiválasztása"
 
-#: src/viewer/text/form.c:1457
+#: src/viewer/text/form.c:1466
 msgid "Text area"
 msgstr "Szöveg terület"
 
-#: src/viewer/text/form.c:1459
+#: src/viewer/text/form.c:1468
 msgid "File upload"
 msgstr "Fájl feltöltése"
 
-#: src/viewer/text/form.c:1461
+#: src/viewer/text/form.c:1470
 msgid "Password field"
 msgstr "Jelszó mezõ"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1508
 msgid "name"
 msgstr "név"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1520
 msgid "value"
 msgstr "érték"
 
-#: src/viewer/text/form.c:1524
+#: src/viewer/text/form.c:1533
 msgid "read only"
 msgstr "csak olvasható"
 
-#: src/viewer/text/form.c:1535
+#: src/viewer/text/form.c:1544
 #, c-format
 msgid "press %s to navigate"
 msgstr "nyomj %s billentyût a navigáláshoz"
 
-#: src/viewer/text/form.c:1537
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to edit"
 msgstr "nyomj %s billentyût a szerkesztéshez"
 
-#: src/viewer/text/form.c:1573
+#: src/viewer/text/form.c:1582
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "nyomj %s-t a továbbításhoz ide: %s"
 
-#: src/viewer/text/form.c:1575
+#: src/viewer/text/form.c:1584
 #, c-format
 msgid "press %s to post to %s"
 msgstr "nyomj %s billentyût a küldéshez ide: %s"
 
-#: src/viewer/text/link.c:1145
+#: src/viewer/text/form.c:1686
+#, fuzzy
+msgid "Useless button"
+msgstr "Ártalmatlan gomb"
+
+#: src/viewer/text/form.c:1688
+#, fuzzy
+msgid "Submit button"
+msgstr "Ûrlap elfogadása"
+
+#: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Térkép megjelenítése"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1169
 msgid "~Follow link"
 msgstr "Link követése"
 
-#: src/viewer/text/link.c:1150
+#: src/viewer/text/link.c:1171
 msgid "Follow link and r~eload"
 msgstr "Link követése és újratöltés"
 
-#: src/viewer/text/link.c:1154
+#: src/viewer/text/link.c:1175
 msgid "Open in new ~window"
 msgstr "Megnyitás új ~ablakban"
 
-#: src/viewer/text/link.c:1156
+#: src/viewer/text/link.c:1177
 msgid "Open in new ~tab"
 msgstr "Megnyitás új ~fülben"
 
-#: src/viewer/text/link.c:1158
+#: src/viewer/text/link.c:1179
 msgid "Open in new tab in ~background"
 msgstr "Új fül megnyitása a háttérben"
 
-#: src/viewer/text/link.c:1163
+#: src/viewer/text/link.c:1184
 msgid "~Download link"
 msgstr "Link letöltése"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1187
 msgid "~Add link to bookmarks"
 msgstr "H~ozzáadás a könyvjelzõhöz"
 
-#: src/viewer/text/link.c:1178 src/viewer/text/link.c:1214
+#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
 msgid "~Reset form"
 msgstr "Û~rlap törlése"
 
-#: src/viewer/text/link.c:1191
+#: src/viewer/text/link.c:1212
 msgid "Open in ~external editor"
 msgstr "Megnyitás külsõ szerkesztõprogramban"
 
-#: src/viewer/text/link.c:1197
+#: src/viewer/text/link.c:1218
 msgid "~Submit form"
 msgstr "Ûrlap elküldése"
 
-#: src/viewer/text/link.c:1198
+#: src/viewer/text/link.c:1219
 msgid "Submit form and rel~oad"
 msgstr "Ûrlap elküldése, es újratöltés"
 
-#: src/viewer/text/link.c:1202
+#: src/viewer/text/link.c:1223
 msgid "Submit form and open in new ~window"
 msgstr "Ûrlap elfogadása és megnyitása új ablakban"
 
-#: src/viewer/text/link.c:1204
+#: src/viewer/text/link.c:1225
 msgid "Submit form and open in new ~tab"
 msgstr "Ûrlap továbbítása, és megnyitása új fülön"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1228
 msgid "Submit form and open in new tab in ~background"
 msgstr "Ûrlap továbbítása, és megnyitása új fülön a háttérben"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1233
 msgid "Submit form and ~download"
 msgstr "Ûrlap elfoga~dása és letöltés"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1238
+#, fuzzy
+msgid "Form f~ields"
+msgstr "Jelszó mezõ"
+
+#: src/viewer/text/link.c:1243
 msgid "V~iew image"
 msgstr "Kép megtek~intése"
 
-#: src/viewer/text/link.c:1221
+#: src/viewer/text/link.c:1245
 msgid "Download ima~ge"
 msgstr "Kép letöltése"
 
-#: src/viewer/text/link.c:1229
+#: src/viewer/text/link.c:1253
 msgid "No link selected"
 msgstr "Nincs kiválasztott link"
 
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1301
 msgid "Image"
 msgstr "Kép"
 
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1306
 msgid "Usemap"
 msgstr "Térkép használata"
 
@@ -8150,13 +8196,23 @@ msgstr "Keresés visszafelé"
 msgid "Search History"
 msgstr "Keresési lista"
 
-#: src/viewer/text/textarea.c:363
+#: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Nem indíthatsz külsõ programot anonymus módban."
 
-#: src/viewer/text/textarea.c:370
+#: src/viewer/text/textarea.c:339
 msgid "You can do this only on the master terminal"
 msgstr "Ez csak a fõterminálon mûködik"
+
+#: src/viewer/text/textarea.c:388
+#, c-format
+msgid ""
+"You have exceeded the textarea's size limit: your input is %d bytes, but the "
+"maximum is %u bytes.\n"
+"\n"
+"Your input has been truncated, but you can still recover the text that you "
+"entered from this file: %s"
+msgstr ""
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
@@ -8166,13 +8222,20 @@ msgstr "Ugrás linkre"
 msgid "Enter link number"
 msgstr "Ird be a link számát"
 
-#: src/viewer/text/view.c:1287
+#: src/viewer/text/view.c:1288
 msgid "Save error"
 msgstr "Mentési hiba"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Hiba a fájl irása közben"
+
+#~ msgid "~Clear"
+#~ msgstr "~Az összes törlése"
+
+#, fuzzy
+#~ msgid "SEE Message"
+#~ msgstr "Ruby üzenet"
 
 #~ msgid "Open a Lua console (DISABLED)"
 #~ msgstr "Lua konzol megnyitása (LETILTVA)"

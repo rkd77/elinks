@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 07:21+0100\n"
+"POT-Creation-Date: 2006-01-29 12:53+0100\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Yevgeny Gromov <yevgeny@tut.by>\n"
 "Language-Team: Belarusian <i18n@tut.by>\n"
@@ -32,9 +32,9 @@ msgstr ""
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
-#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
+#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:799 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1593
 #, fuzzy
 msgid "~OK"
 msgstr "ОК"
@@ -243,7 +243,7 @@ msgid ""
 "'-' generally indicates that the LED is off."
 msgstr ""
 
-#: src/bfu/menu.c:753
+#: src/bfu/menu.c:730
 #, fuzzy
 msgid "Search menu/"
 msgstr "Пошук"
@@ -701,7 +701,7 @@ msgstr ""
 msgid "Move to the previous item"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:77
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
@@ -897,311 +897,316 @@ msgstr ""
 
 #: src/config/actions-main.inc:49
 #, fuzzy
+msgid "Open the form fields menu"
+msgstr "Адкрыць у новым акне"
+
+#: src/config/actions-main.inc:50
+#, fuzzy
 msgid "Open a Lua console"
 msgstr "Кансоль Lua"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Go at a specified mark"
 msgstr ""
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 #, fuzzy
 msgid "Set a mark"
 msgstr "Шукаць у закладках"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Activate the menu"
 msgstr ""
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 #, fuzzy
 msgid "Move cursor down"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor left"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor right"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor up"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move to the end of the document"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move to the start of the document"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move one link down"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move one link left"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move to the next link"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the previous link"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link right"
 msgstr "Курсар прамавугольн╕кам"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link up"
 msgstr "Пайц╕ па спасылцы"
 
-#: src/config/actions-main.inc:65 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr ""
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr ""
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Open the current link in a new tab"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Open the current link in a new window"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Open a new tab"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 #, fuzzy
 msgid "Open a new tab in the background"
 msgstr "У фоне"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 #, fuzzy
 msgid "Open a new window"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open an OS shell"
 msgstr "Камандны радок"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open options manager"
 msgstr "Мэнэджэр параметра╝"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open a quit confirmation dialog box"
 msgstr ""
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Quit without confirmation"
 msgstr "Чаканне пацвярджэння перанак╕равання"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 msgid "Reload the current page"
 msgstr ""
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Re-render the current page"
 msgstr "Праглядзець в╕дарыс"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Reset form items to their initial values"
 msgstr ""
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 #, fuzzy
 msgid "Show information about the currently used resources"
 msgstr "Скачаць в╕дарыс"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Save the current document in source form"
 msgstr ""
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in formatted form"
 msgstr ""
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 #, fuzzy
 msgid "Save options"
 msgstr "Захаваць настройк╕"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Save URL as"
 msgstr "Захаваць URL як"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Scroll down"
 msgstr ""
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll left"
 msgstr ""
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll right"
 msgstr ""
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll up"
 msgstr ""
 
-#: src/config/actions-main.inc:90 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
 msgstr "Пошук тэкста"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Search backwards for a text pattern"
 msgstr "Пошук тэкста"
 
-#: src/config/actions-main.inc:92 src/config/actions-main.inc:93
+#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
 msgid "Search link text by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Search document text by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text backwards by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 #, fuzzy
 msgid "Show terminal options dialog"
 msgstr "Настройк╕ тэрм╕нала"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Submit form"
 msgstr "Паслаць форму"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 #, fuzzy
 msgid "Submit form and reload"
 msgstr "Паслаць форму ╕ перазагруз╕ць"
 
-#: src/config/actions-main.inc:99 src/terminal/tab.c:188
+#: src/config/actions-main.inc:100 src/terminal/tab.c:188
 #: src/terminal/tab.c:224
 #, fuzzy
 msgid "Close tab"
 msgstr "Закрыць"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 #, fuzzy
 msgid "Close all tabs but the current one"
 msgstr "Скачаць в╕дарыс"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Pass URI of current tab to external command"
 msgstr ""
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Open the tab menu"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Move the current tab to the left"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Move the current tab to the right"
 msgstr "Адкрыць у новым акне"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Next tab"
 msgstr ""
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Previous tab"
 msgstr "Раней пошуку не было"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 #, fuzzy
 msgid "Open the terminal resize dialog"
 msgstr "Настройк╕ тэрм╕нала"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Toggle rendering of page using CSS"
 msgstr ""
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle displaying of links to images"
 msgstr ""
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle rendering of tables"
 msgstr ""
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle usage of document specific colors"
 msgstr ""
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle rendering page as HTML / plain text"
 msgstr ""
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Toggle mouse handling"
 msgstr "Пераключыць HTML/тэкст"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle displaying of links numbers"
 msgstr ""
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle plain renderer compression of empty lines"
 msgstr ""
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 #, fuzzy
 msgid "Toggle wrapping of text"
 msgstr "Пераключыць HTML/тэкст"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 #, fuzzy
 msgid "View the current image"
 msgstr "Праглядзець в╕дарыс"
@@ -1758,9 +1763,9 @@ msgid "Description"
 msgstr "Ап╕санне"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:961 src/viewer/text/textarea.c:362
-#: src/viewer/text/textarea.c:369
+#: src/protocol/protocol.c:227 src/session/session.c:282
+#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Памылка"
 
@@ -1867,32 +1872,32 @@ msgid ""
 "directory."
 msgstr ""
 
-#: src/config/kbdbind.c:209
+#: src/config/kbdbind.c:220
 msgid "Main mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:210
+#: src/config/kbdbind.c:221
 msgid "Edit mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:211
+#: src/config/kbdbind.c:222
 msgid "Menu mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:524
+#: src/config/kbdbind.c:555
 msgid "Unrecognised keymap"
 msgstr ""
 
-#: src/config/kbdbind.c:527
+#: src/config/kbdbind.c:558
 #, fuzzy
 msgid "Error parsing keystroke"
 msgstr "Памылка запису ╝ сокет"
 
-#: src/config/kbdbind.c:531
+#: src/config/kbdbind.c:562
 msgid "Unrecognised action (internal error)"
 msgstr ""
 
-#: src/config/kbdbind.c:547
+#: src/config/kbdbind.c:578
 #, fuzzy
 msgid "Error registering event"
 msgstr "Памылка запису ╝ сокет"
@@ -2201,7 +2206,6 @@ msgstr "Унутраная памылка"
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
-"\n"
 "If this is blank, ELinks will use the value of the environmental\n"
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
@@ -3139,7 +3143,6 @@ msgid ""
 "The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
-"\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
 
@@ -3494,7 +3497,7 @@ msgstr "Тэкставае поле"
 msgid "Dialog text colors."
 msgstr ""
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1451
+#: src/config/options.inc:978 src/viewer/text/form.c:1460
 msgid "Checkbox"
 msgstr "Адзнака"
 
@@ -3547,7 +3550,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr "Выдал╕ць параметр"
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1455
+#: src/config/options.inc:1006 src/viewer/text/form.c:1464
 msgid "Text field"
 msgstr "Тэкставае поле"
 
@@ -4040,7 +4043,7 @@ msgid "Goto URL History"
 msgstr "Праца з г╕сторыяй"
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:824
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
 msgid "Cookies"
 msgstr ""
 
@@ -4232,9 +4235,10 @@ msgstr "Ачысц╕ць глабальную г╕сторыю"
 msgid "Do you really want to remove all cookies?"
 msgstr "Вы сапра╝ды жадаеце скончыць працу з ELinks?"
 
-#: src/cookies/dialogs.c:423
+#: src/cookies/dialogs.c:423 src/dialogs/download.c:484 src/dialogs/edit.c:98
+#: src/globhist/dialogs.c:231 src/protocol/auth/dialogs.c:258
 #, fuzzy
-msgid "~Clear"
+msgid "C~lear"
 msgstr "Ачысц╕ць"
 
 #: src/cookies/dialogs.c:429
@@ -4377,12 +4381,6 @@ msgstr "Вы  сапра╝ды жадаеце скончыць працу з ELinks ╕ спын╕ць усе закачк╕?"
 msgid "Abort and delete file"
 msgstr "Пасылка зап╕су ╝ файл"
 
-#: src/dialogs/download.c:484 src/dialogs/edit.c:98 src/globhist/dialogs.c:231
-#: src/protocol/auth/dialogs.c:258
-#, fuzzy
-msgid "C~lear"
-msgstr "Ачысц╕ць"
-
 #: src/dialogs/download.c:489
 #, fuzzy
 msgid "Download manager"
@@ -4412,7 +4410,7 @@ msgid ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -5152,7 +5150,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:50
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 
 #: src/ecmascript/ecmascript.c:53
@@ -5555,7 +5553,7 @@ msgstr ""
 msgid "Ukrainian"
 msgstr ""
 
-#: src/main/interlink.c:325 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:255
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr ""
@@ -5732,12 +5730,12 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/mime/backend/default.c:223
+#: src/mime/backend/default.c:227
 msgid "Option system"
 msgstr ""
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:668
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
 msgid "Mailcap"
 msgstr ""
 
@@ -6278,7 +6276,7 @@ msgstr "А╝тэнтыф╕кацыя HTTP"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
-#: src/protocol/bittorrent/bittorrent.c:327
+#: src/protocol/bittorrent/bittorrent.c:335
 msgid "BitTorrent"
 msgstr ""
 
@@ -6362,20 +6360,34 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:73
 #, fuzzy
+msgid "User identification string"
+msgstr "Настройк╕ тэрм╕нала"
+
+#: src/protocol/bittorrent/bittorrent.c:75
+msgid ""
+"An additional identification that is not shared with any users.\n"
+"It is intended to allow a client to prove their identity should\n"
+"their IP address change. It is an optional parameter, but some\n"
+"trackers require this parameter. If set to \"\" no user key will\n"
+"be sent to the tracker."
+msgstr ""
+
+#: src/protocol/bittorrent/bittorrent.c:81
+#, fuzzy
 msgid "Maximum number of peers to request"
 msgstr "Злучэнне"
 
-#: src/protocol/bittorrent/bittorrent.c:75
+#: src/protocol/bittorrent/bittorrent.c:83
 msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:78
+#: src/protocol/bittorrent/bittorrent.c:86
 msgid "Minimum peers to skip rerequesting"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:80
+#: src/protocol/bittorrent/bittorrent.c:88
 msgid ""
 "The minimum number of peers to have in the current peer info\n"
 "pool before skipping requesting of more peers. I.e. setting\n"
@@ -6386,20 +6398,20 @@ msgstr ""
 #. ******************************************************************
 #. Lowlevel peer-wire options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:90
+#: src/protocol/bittorrent/bittorrent.c:98
 msgid "Peer-wire"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:92
+#: src/protocol/bittorrent/bittorrent.c:100
 msgid "Lowlevel peer-wire options."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:94
+#: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
 msgstr "Злучэнне"
 
-#: src/protocol/bittorrent/bittorrent.c:96
+#: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
 "The maximum number of allowed connections to both active and\n"
 "non-active peers. By increasing the number of allowed connections,\n"
@@ -6408,54 +6420,54 @@ msgid ""
 "maximum is reached all new incoming connections will be closed."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:102
+#: src/protocol/bittorrent/bittorrent.c:110
 msgid "Maximum peer message length"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:104
+#: src/protocol/bittorrent/bittorrent.c:112
 msgid ""
 "The maximum length of messages to accept over the wire.\n"
 "Larger values will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:107
+#: src/protocol/bittorrent/bittorrent.c:115
 msgid "Maximum allowed request length"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:109
+#: src/protocol/bittorrent/bittorrent.c:117
 msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:112
+#: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:114
+#: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
 "How many bytes to query for per request. This is complementary\n"
 "to the max_request_length option. If the configured length is\n"
 "bigger than the piece length it will be truncated."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:118
+#: src/protocol/bittorrent/bittorrent.c:126
 #, fuzzy
 msgid "Peer inactivity timeout"
 msgstr "Таймаут пры чытанн╕"
 
-#: src/protocol/bittorrent/bittorrent.c:120
+#: src/protocol/bittorrent/bittorrent.c:128
 msgid ""
 "The number of seconds to wait before closing a socket on\n"
 "which nothing has been received or sent."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:123
+#: src/protocol/bittorrent/bittorrent.c:131
 #, fuzzy
 msgid "Maximum peer pool size"
 msgstr "Злучэнне"
 
-#: src/protocol/bittorrent/bittorrent.c:125
+#: src/protocol/bittorrent/bittorrent.c:133
 msgid ""
 "Maximum number of items in the peer pool. The peer pool\n"
 "contains information used for establishing connections to\n"
@@ -6466,23 +6478,23 @@ msgstr ""
 #. ******************************************************************
 #. Piece management options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:135
+#: src/protocol/bittorrent/bittorrent.c:143
 #, fuzzy
 msgid "Maximum piece cache size"
 msgstr "Злучэнне"
 
-#: src/protocol/bittorrent/bittorrent.c:137
+#: src/protocol/bittorrent/bittorrent.c:145
 msgid ""
 "The maximum amount of memory used to hold recently\n"
 "downloaded pieces.\n"
 "Set to 0 to have unlimited size."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:146
+#: src/protocol/bittorrent/bittorrent.c:154
 msgid "Sharing rate"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:148
+#: src/protocol/bittorrent/bittorrent.c:156
 msgid ""
 "The minimum sharing rate to achieve before stop seeding.\n"
 "The sharing rate is computed as the number of uploaded bytes\n"
@@ -6492,42 +6504,42 @@ msgid ""
 "set to 0.0 to have unlimited sharing rate."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:155
+#: src/protocol/bittorrent/bittorrent.c:163
 msgid "Maximum number of uploads"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:157
+#: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
 msgstr ""
 
 #. The number of uploads to fill out to with extra optimistic unchokes
-#: src/protocol/bittorrent/bittorrent.c:160
+#: src/protocol/bittorrent/bittorrent.c:168
 msgid "Minimum number of uploads"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:162
+#: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:166
+#: src/protocol/bittorrent/bittorrent.c:174
 #, fuzzy
 msgid "Keepalive interval"
 msgstr "Памылка захавання"
 
-#: src/protocol/bittorrent/bittorrent.c:168
+#: src/protocol/bittorrent/bittorrent.c:176
 msgid ""
 "The number of seconds to pause between sending keepalive\n"
 "messages."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:171
+#: src/protocol/bittorrent/bittorrent.c:179
 #, fuzzy
 msgid "Number of pending requests"
 msgstr "Сервер апрацо╝вае запыт"
 
-#: src/protocol/bittorrent/bittorrent.c:173
+#: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
 "How many piece requests to continuously keep in queue. Pipelining\n"
 "of requests is essential to saturate connections and get a good\n"
@@ -6538,22 +6550,22 @@ msgid ""
 msgstr ""
 
 #. Bram uses 30 seconds here.
-#: src/protocol/bittorrent/bittorrent.c:182
+#: src/protocol/bittorrent/bittorrent.c:190
 msgid "Peer snubbing interval"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:184
+#: src/protocol/bittorrent/bittorrent.c:192
 msgid ""
 "The number of seconds to wait for file data before assuming\n"
 "the peer has been snubbed."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:187
+#: src/protocol/bittorrent/bittorrent.c:195
 #, fuzzy
 msgid "Peer choke interval"
 msgstr "Памылка захавання"
 
-#: src/protocol/bittorrent/bittorrent.c:189
+#: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of seconds between updating the connection state\n"
 "and most importantly choke and unchoke peer connections. The\n"
@@ -6562,21 +6574,21 @@ msgid ""
 "room for stealing bandwidth."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:195
+#: src/protocol/bittorrent/bittorrent.c:203
 msgid "Rarest first piece selection cutoff"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:197
+#: src/protocol/bittorrent/bittorrent.c:205
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:202
+#: src/protocol/bittorrent/bittorrent.c:210
 msgid "Allow blacklisting of buggy peers."
 msgstr ""
 
@@ -6890,6 +6902,25 @@ msgid "Finger"
 msgstr "цэлы л╕к"
 
 #. name:
+#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
+msgid "FSP"
+msgstr ""
+
+#: src/protocol/fsp/fsp.c:46
+#, fuzzy
+msgid "FSP specific options."
+msgstr "Не ╝казана праграма для"
+
+#: src/protocol/fsp/fsp.c:48
+#, fuzzy
+msgid "Sort entries"
+msgstr "Злучэння╝"
+
+#: src/protocol/fsp/fsp.c:50
+msgid "Whether to sort entries in directory listings."
+msgstr ""
+
+#. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
 msgid "FTP"
 msgstr ""
@@ -7188,24 +7219,24 @@ msgid ""
 "All header entries can be read in the header info dialog."
 msgstr ""
 
-#: src/protocol/protocol.c:227
+#: src/protocol/protocol.c:229
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Гэта верс╕я Links не падтрымл╕вае SSL/TSL"
 
-#: src/protocol/protocol.c:258
+#: src/protocol/protocol.c:260
 msgid "Protocols"
 msgstr ""
 
-#: src/protocol/protocol.c:260
+#: src/protocol/protocol.c:262
 msgid "Protocol specific options."
 msgstr ""
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:264
 msgid "No-proxy domains"
 msgstr ""
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:266
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7214,7 +7245,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/protocol.c:300
+#: src/protocol/protocol.c:305
 msgid "Protocol"
 msgstr ""
 
@@ -7241,7 +7272,7 @@ msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 "if you write 'elinks' there, you are directed to\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 msgstr ""
 
 #: src/protocol/rewrite/rewrite.c:60
@@ -7310,20 +7341,20 @@ msgid "URI rewrite"
 msgstr ""
 
 #. name:
-#: src/protocol/smb/smb.c:72 src/protocol/smb/smb.c:84
+#: src/protocol/smb/smb.c:67 src/protocol/smb/smb.c:79
 msgid "SMB"
 msgstr ""
 
-#: src/protocol/smb/smb.c:74
+#: src/protocol/smb/smb.c:69
 #, fuzzy
 msgid "SAMBA specific options."
 msgstr "Не ╝казана праграма для"
 
-#: src/protocol/smb/smb.c:76
+#: src/protocol/smb/smb.c:71
 msgid "Credentials"
 msgstr ""
 
-#: src/protocol/smb/smb.c:78
+#: src/protocol/smb/smb.c:73
 msgid "Credentials file passed to smbclient via -A option."
 msgstr ""
 
@@ -7365,10 +7396,6 @@ msgstr "Няма праграмы"
 msgid "No program specified for protocol %s."
 msgstr "Не ╝казана праграма для"
 
-#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
-msgid "SEE Message"
-msgstr ""
-
 #: src/scripting/lua/core.c:300
 #, fuzzy
 msgid "Error registering event hook"
@@ -7378,15 +7405,15 @@ msgstr "Памылка запису ╝ сокет"
 msgid "User dialog"
 msgstr "Карыстальн╕цк╕ дыялог"
 
-#: src/scripting/lua/core.c:716
+#: src/scripting/lua/core.c:724
 msgid "Lua Error"
 msgstr "Памылка Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Lua Console"
 msgstr "Кансоль Lua"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Enter expression"
 msgstr "Увядз╕це выраз"
 
@@ -7490,11 +7517,12 @@ msgstr ""
 msgid "~Open"
 msgstr "Адкрыць"
 
-#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
+#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/viewer/text/textarea.c:385
 msgid "Warning"
 msgstr "Увага"
 
-#: src/session/session.c:750
+#: src/session/session.c:743
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7505,7 +7533,7 @@ msgid ""
 "be used. Apologies for any inconvience caused."
 msgstr ""
 
-#: src/session/session.c:769
+#: src/session/session.c:762
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7518,11 +7546,11 @@ msgid ""
 "for any inconvience caused."
 msgstr ""
 
-#: src/session/session.c:794
+#: src/session/session.c:787
 msgid "Welcome"
 msgstr "В╕таю"
 
-#: src/session/session.c:795
+#: src/session/session.c:788
 #, fuzzy
 msgid ""
 "Welcome to ELinks!\n"
@@ -7624,170 +7652,185 @@ msgstr "Няма рамак"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr ""
 
-#: src/viewer/text/form.c:855
+#: src/viewer/text/form.c:864
 msgid "Error while posting form"
 msgstr "Памылка пад час адпра╝к╕ формы"
 
-#: src/viewer/text/form.c:856
+#: src/viewer/text/form.c:865
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
 msgstr "Немагчыма атрымаць файл"
 
-#: src/viewer/text/form.c:1436
+#: src/viewer/text/form.c:1445
 #, fuzzy
 msgid "Reset form"
 msgstr "Ачыстка формы"
 
-#: src/viewer/text/form.c:1438
+#: src/viewer/text/form.c:1447
 #, fuzzy
 msgid "Harmless button"
 msgstr "Выдал╕ць параметр"
 
-#: src/viewer/text/form.c:1446
+#: src/viewer/text/form.c:1455
 msgid "Submit form to"
 msgstr "Перадача формы па адрасу"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1456
 msgid "Post form to"
 msgstr "Адпра╝ка формы па адресу"
 
-#: src/viewer/text/form.c:1449
+#: src/viewer/text/form.c:1458
 msgid "Radio button"
 msgstr "Радыё-кнопка"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1462
 msgid "Select field"
 msgstr "Выбярыце поле"
 
-#: src/viewer/text/form.c:1457
+#: src/viewer/text/form.c:1466
 msgid "Text area"
 msgstr "Тэкставае поле"
 
-#: src/viewer/text/form.c:1459
+#: src/viewer/text/form.c:1468
 msgid "File upload"
 msgstr "Выгрузка файла"
 
-#: src/viewer/text/form.c:1461
+#: src/viewer/text/form.c:1470
 msgid "Password field"
 msgstr "Поле пароля"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1508
 msgid "name"
 msgstr "метка"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1520
 msgid "value"
 msgstr "значэнне"
 
-#: src/viewer/text/form.c:1524
+#: src/viewer/text/form.c:1533
 msgid "read only"
 msgstr ""
 
-#: src/viewer/text/form.c:1535
+#: src/viewer/text/form.c:1544
 #, c-format
 msgid "press %s to navigate"
 msgstr ""
 
-#: src/viewer/text/form.c:1537
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to edit"
 msgstr ""
 
-#: src/viewer/text/form.c:1573
+#: src/viewer/text/form.c:1582
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
 msgstr "перадаць па адрасу"
 
-#: src/viewer/text/form.c:1575
+#: src/viewer/text/form.c:1584
 #, fuzzy, c-format
 msgid "press %s to post to %s"
 msgstr "перадаць па адрасу"
 
-#: src/viewer/text/link.c:1145
+#: src/viewer/text/form.c:1686
+#, fuzzy
+msgid "Useless button"
+msgstr "Выдал╕ць параметр"
+
+#: src/viewer/text/form.c:1688
+#, fuzzy
+msgid "Submit button"
+msgstr "Перадача формы па адрасу"
+
+#: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Паказаць карту"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1169
 msgid "~Follow link"
 msgstr "Нак╕равацца па спасылцы"
 
-#: src/viewer/text/link.c:1150
+#: src/viewer/text/link.c:1171
 msgid "Follow link and r~eload"
 msgstr "Нак╕равацца па спасылцы ╕ перазагруз╕ць"
 
-#: src/viewer/text/link.c:1154
+#: src/viewer/text/link.c:1175
 msgid "Open in new ~window"
 msgstr "Адкрыць у новым акне"
 
-#: src/viewer/text/link.c:1156
+#: src/viewer/text/link.c:1177
 #, fuzzy
 msgid "Open in new ~tab"
 msgstr "Адкрыць у новым акне"
 
-#: src/viewer/text/link.c:1158
+#: src/viewer/text/link.c:1179
 #, fuzzy
 msgid "Open in new tab in ~background"
 msgstr "У фоне"
 
-#: src/viewer/text/link.c:1163
+#: src/viewer/text/link.c:1184
 msgid "~Download link"
 msgstr "Скачаць па спасылцы"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1187
 msgid "~Add link to bookmarks"
 msgstr "Дадаць спасылку ╝ закладк╕"
 
-#: src/viewer/text/link.c:1178 src/viewer/text/link.c:1214
+#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
 msgid "~Reset form"
 msgstr "Ачыстка формы"
 
-#: src/viewer/text/link.c:1191
+#: src/viewer/text/link.c:1212
 msgid "Open in ~external editor"
 msgstr ""
 
-#: src/viewer/text/link.c:1197
+#: src/viewer/text/link.c:1218
 msgid "~Submit form"
 msgstr "Паслаць форму"
 
-#: src/viewer/text/link.c:1198
+#: src/viewer/text/link.c:1219
 msgid "Submit form and rel~oad"
 msgstr "Паслаць форму ╕ перазагруз╕ць"
 
-#: src/viewer/text/link.c:1202
+#: src/viewer/text/link.c:1223
 msgid "Submit form and open in new ~window"
 msgstr "Паслаць форму ╕ адкрыць у новым акне"
 
-#: src/viewer/text/link.c:1204
+#: src/viewer/text/link.c:1225
 #, fuzzy
 msgid "Submit form and open in new ~tab"
 msgstr "Паслаць форму ╕ адкрыць у новым акне"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1228
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
 msgstr "Паслаць форму ╕ адкрыць у новым акне"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1233
 msgid "Submit form and ~download"
 msgstr "Паслаць форму ╕ скачаць"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1238
+#, fuzzy
+msgid "Form f~ields"
+msgstr "Поле"
+
+#: src/viewer/text/link.c:1243
 msgid "V~iew image"
 msgstr "Праглядзець в╕дарыс"
 
-#: src/viewer/text/link.c:1221
+#: src/viewer/text/link.c:1245
 msgid "Download ima~ge"
 msgstr "Скачаць в╕дарыс"
 
-#: src/viewer/text/link.c:1229
+#: src/viewer/text/link.c:1253
 msgid "No link selected"
 msgstr "Няма выбраных спасылак"
 
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1301
 msgid "Image"
 msgstr "Малюнак"
 
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1306
 msgid "Usemap"
 msgstr "Карта спасылак"
 
@@ -7862,13 +7905,23 @@ msgstr "Зваротны пошук"
 msgid "Search History"
 msgstr "Шукаць у г╕сторы╕"
 
-#: src/viewer/text/textarea.c:363
+#: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr ""
 
-#: src/viewer/text/textarea.c:370
+#: src/viewer/text/textarea.c:339
 msgid "You can do this only on the master terminal"
 msgstr "Вы можаце зраб╕ць гэта тольк╕ на гало╝ным тэрм╕нале"
+
+#: src/viewer/text/textarea.c:388
+#, c-format
+msgid ""
+"You have exceeded the textarea's size limit: your input is %d bytes, but the "
+"maximum is %u bytes.\n"
+"\n"
+"Your input has been truncated, but you can still recover the text that you "
+"entered from this file: %s"
+msgstr ""
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
@@ -7878,13 +7931,17 @@ msgstr "Пайц╕ па спасылцы"
 msgid "Enter link number"
 msgstr "Увядз╕це нумар спасылк╕"
 
-#: src/viewer/text/view.c:1287
+#: src/viewer/text/view.c:1288
 msgid "Save error"
 msgstr "Памылка захавання"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Пасылка зап╕су ╝ файл"
+
+#, fuzzy
+#~ msgid "~Clear"
+#~ msgstr "Ачысц╕ць"
 
 #, fuzzy
 #~ msgid "ELinks Cvs ~History"
@@ -8234,9 +8291,6 @@ msgstr "Пасылка зап╕су ╝ файл"
 #, fuzzy
 #~ msgid "Unknown event."
 #~ msgstr "Невядомы тып"
-
-#~ msgid "A field"
-#~ msgstr "Поле"
 
 #~ msgid "Columns"
 #~ msgstr "Слупко╝"

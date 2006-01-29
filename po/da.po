@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-27 07:21+0100\n"
+"POT-Creation-Date: 2006-01-29 12:53+0100\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -33,9 +33,9 @@ msgstr "Tast mellemrum for at åbne denne mappe."
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
-#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:231
+#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
-#: src/session/session.c:799 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~O.k."
 
@@ -249,7 +249,7 @@ msgstr ""
 "\n"
 "'-' i almindelighed betyder at LED-indikatoren er deaktiveret."
 
-#: src/bfu/menu.c:753
+#: src/bfu/menu.c:730
 msgid "Search menu/"
 msgstr "Søg menu/"
 
@@ -691,7 +691,7 @@ msgstr "Kopiér tekst fra klippebord"
 msgid "Move to the previous item"
 msgstr "Flyt til forrige element"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:77
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Genopfrisk skærm"
@@ -865,271 +865,276 @@ msgid "Open the link context menu"
 msgstr "Åbn link-kontekst-menu"
 
 #: src/config/actions-main.inc:49
+#, fuzzy
+msgid "Open the form fields menu"
+msgstr "Åbn Fil-menuen"
+
+#: src/config/actions-main.inc:50
 msgid "Open a Lua console"
 msgstr "Åbn en Lua-konsol"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Go at a specified mark"
 msgstr "Gå til angivet mærke"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Set a mark"
 msgstr "Sæt et mærke"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Activate the menu"
 msgstr "Aktivér menulinjen"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Move cursor down"
 msgstr "Flyt markøren ned"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 msgid "Move cursor left"
 msgstr "Flyt markør til venstre"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Move cursor right"
 msgstr "Flyt markøren til højre"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Move cursor up"
 msgstr "Flyt markør op"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 msgid "Move to the end of the document"
 msgstr "Flyt markøren til slutningen af dokument"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move to the start of the document"
 msgstr "Flyt markøren til begyndelsen af dokument"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move one link down"
 msgstr "Flyt et link ned"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move one link left"
 msgstr "Flyt et link til venstre"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move to the next link"
 msgstr "Flyt til næste link"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move to the previous link"
 msgstr "Flyt til forrige link"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move one link right"
 msgstr "Flyt et link til højre"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move one link up"
 msgstr "Flyt et link op"
 
-#: src/config/actions-main.inc:65 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Flyt en side ned"
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Flyt en side op"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Open the current link in a new tab"
 msgstr "Åbn det aktuelle link i et nyt faneblad"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Open the current link in a new tab in the background"
 msgstr "Åbn det aktuelle link i et nyt baggrundsfaneblad"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Open the current link in a new window"
 msgstr "Åbn det aktuelle link i et nyt vindue"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Open a new tab"
 msgstr "Åbn et nyt faneblad"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Open a new tab in the background"
 msgstr "Åbn et nyt faneblad i baggrunden"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Open a new window"
 msgstr "Åbn i nyt vindue"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Open an OS shell"
 msgstr "Åbn en kommandofortolker"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Open options manager"
 msgstr "Åbn opsætningshåndtering"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open a quit confirmation dialog box"
 msgstr "Åbn en dialog for at bekræfte afslutning"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Quit without confirmation"
 msgstr "Afslut uden bekræftelse"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 msgid "Reload the current page"
 msgstr "Genindlæs den aktuelle side"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Re-render the current page"
 msgstr "Gentegn den aktuelle side"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Reset form items to their initial values"
 msgstr "Nulstil formularfelter til deres oprindelige værdier"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Show information about the currently used resources"
 msgstr "Vis information om ressourceforbrug"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Save the current document in source form"
 msgstr "Gem det aktuelle dokuments kildetekst"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in formatted form"
 msgstr "Gem aktuelle dokument i formateret form"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Save options"
 msgstr "Gem indstillinger"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 msgid "Save URL as"
 msgstr "Gem adresse som"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Scroll down"
 msgstr "Rul ned"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll left"
 msgstr "Rul til venstre"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll right"
 msgstr "Rul til højre"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll up"
 msgstr "Rul op"
 
-#: src/config/actions-main.inc:90 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Søg efter tekstmønster"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 msgid "Search backwards for a text pattern"
 msgstr "Søg bagud efter tekstmønster"
 
-#: src/config/actions-main.inc:92 src/config/actions-main.inc:93
+#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
 msgid "Search link text by typing ahead"
 msgstr "Tast og find linktekst"
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Search document text by typing ahead"
 msgstr "Søg i dokument med tast og find"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text backwards by typing ahead"
 msgstr "Søg baglæns i dokument med tast og find"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Show terminal options dialog"
 msgstr "Vis dialog med terminalindstillinger"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Submit form"
 msgstr "Indsend formular"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Submit form and reload"
 msgstr "Indsend formular og genindlæs"
 
-#: src/config/actions-main.inc:99 src/terminal/tab.c:188
+#: src/config/actions-main.inc:100 src/terminal/tab.c:188
 #: src/terminal/tab.c:224
 msgid "Close tab"
 msgstr "Luk faneblad"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 msgid "Close all tabs but the current one"
 msgstr "Luk alle faneblade på nær det aktuelle"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Pass URI of current tab to external command"
 msgstr "Videregiv adressen for det aktuelle faneblad til ekstern program"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 msgid "Open the tab menu"
 msgstr "Åbn fanebladsmenuen"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Move the current tab to the left"
 msgstr "Flyt det aktuelle faneblad til venstre"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Move the current tab to the right"
 msgstr "Flyt det aktuelle faneblad til højre"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Next tab"
 msgstr "Næste faneblad"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Previous tab"
 msgstr "Forrige faneblad"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Open the terminal resize dialog"
 msgstr "Vis dialog til ændring af terminalstørrelse"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Toggle rendering of page using CSS"
 msgstr "Slå gengivelse ved brug af CSS fra/til"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle displaying of links to images"
 msgstr "Slå visning af billedlinks fra/til"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle rendering of tables"
 msgstr "Slå tabelgengivelse fra/til"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle usage of document specific colors"
 msgstr "Skift mellem brug af definerede dokumentfarver"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Skift mellem gengivelse som HTML / kildetekst"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 msgid "Toggle mouse handling"
 msgstr "Slå musehåndtering fra/til"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle displaying of links numbers"
 msgstr "Slå visning af linknummerering fra/til"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Slå visning af komprimerede blanke linjer fra/til"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Toggle wrapping of text"
 msgstr "Slå tekstombrydning fra/til"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "View the current image"
 msgstr "Vis det aktuelle billede"
 
@@ -1771,9 +1776,9 @@ msgid "Description"
 msgstr "Beskrivelse"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:225 src/session/session.c:282
-#: src/session/session.c:961 src/viewer/text/textarea.c:362
-#: src/viewer/text/textarea.c:369
+#: src/protocol/protocol.c:227 src/session/session.c:282
+#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Fejl"
 
@@ -1888,31 +1893,31 @@ msgstr ""
 "om variablen $HOME har en korrekt værdi og om du har skriverettigheder til "
 "dit hjemmekatalog."
 
-#: src/config/kbdbind.c:209
+#: src/config/kbdbind.c:220
 msgid "Main mapping"
 msgstr "Primære tastetildelinger"
 
-#: src/config/kbdbind.c:210
+#: src/config/kbdbind.c:221
 msgid "Edit mapping"
 msgstr "Tastetildelinger ved redigering"
 
-#: src/config/kbdbind.c:211
+#: src/config/kbdbind.c:222
 msgid "Menu mapping"
 msgstr "Tastetildelinger i menu"
 
-#: src/config/kbdbind.c:524
+#: src/config/kbdbind.c:555
 msgid "Unrecognised keymap"
 msgstr "Ugenkendt tasteoversigt"
 
-#: src/config/kbdbind.c:527
+#: src/config/kbdbind.c:558
 msgid "Error parsing keystroke"
 msgstr "Fortolkningsfejl i tastetryk"
 
-#: src/config/kbdbind.c:531
+#: src/config/kbdbind.c:562
 msgid "Unrecognised action (internal error)"
 msgstr "Ukendt handling (intern fejl)"
 
-#: src/config/kbdbind.c:547
+#: src/config/kbdbind.c:578
 msgid "Error registering event"
 msgstr "Fejl ved registrering af event"
 
@@ -2271,10 +2276,10 @@ msgid "External editor"
 msgstr "Ekstern editor"
 
 #: src/config/options.inc:195
+#, fuzzy
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
-"\n"
 "If this is blank, ELinks will use the value of the environmental\n"
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
@@ -3339,12 +3344,12 @@ msgid "Rules for passing URIs to external commands."
 msgstr "Regler for håndtering af adresser af eksterne kommandoer."
 
 #: src/config/options.inc:730
+#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
-"\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
 "En regel for at sende en URI til en ekstern kommando.\n"
@@ -3739,7 +3744,7 @@ msgstr "Tekst"
 msgid "Dialog text colors."
 msgstr "Farver på tekst i dialogboks."
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1451
+#: src/config/options.inc:978 src/viewer/text/form.c:1460
 msgid "Checkbox"
 msgstr "Afkrydsningsboks"
 
@@ -3787,7 +3792,7 @@ msgstr "Knapgenveje"
 msgid "Selected button shortcut"
 msgstr "Genvejstast for aktiv knap"
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1455
+#: src/config/options.inc:1006 src/viewer/text/form.c:1464
 msgid "Text field"
 msgstr "Tekstfelt"
 
@@ -4308,7 +4313,7 @@ msgid "Goto URL History"
 msgstr "Gå til adresse historik"
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:824
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
 msgid "Cookies"
 msgstr "Cookier"
 
@@ -4505,8 +4510,9 @@ msgstr "Slet alle cookier"
 msgid "Do you really want to remove all cookies?"
 msgstr "Vil du virkelig slette alle cookier?"
 
-#: src/cookies/dialogs.c:423
-msgid "~Clear"
+#: src/cookies/dialogs.c:423 src/dialogs/download.c:484 src/dialogs/edit.c:98
+#: src/globhist/dialogs.c:231 src/protocol/auth/dialogs.c:258
+msgid "C~lear"
 msgstr "~Ryd"
 
 #: src/cookies/dialogs.c:429
@@ -4637,11 +4643,6 @@ msgstr "Vil du virkelig afbryde alle filoverførsler?"
 msgid "Abort and delete file"
 msgstr "Afbryd og slet fil"
 
-#: src/dialogs/download.c:484 src/dialogs/edit.c:98 src/globhist/dialogs.c:231
-#: src/protocol/auth/dialogs.c:258
-msgid "C~lear"
-msgstr "~Ryd"
-
 #: src/dialogs/download.c:489
 msgid "Download manager"
 msgstr "Downloadhåndtering"
@@ -4664,13 +4665,13 @@ msgid "Copying"
 msgstr "Licens"
 
 #: src/dialogs/info.c:142
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -5388,9 +5389,10 @@ msgid "Ignore <noscript> content"
 msgstr "Ignorer <noscript> indhold"
 
 #: src/ecmascript/ecmascript.c:50
+#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
-" when ECMAScript is enabled."
+"when ECMAScript is enabled."
 msgstr ""
 "Om indhold fra <noscript>-elementer skal ignoreres når\n"
 "ECMAScript er aktiveret."
@@ -5786,7 +5788,7 @@ msgstr "Tyrkisk"
 msgid "Ukrainian"
 msgstr "Ukrainsk"
 
-#: src/main/interlink.c:325 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:255
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Kaldet til %s fejlede: %d (%s)"
@@ -5975,12 +5977,12 @@ msgid ""
 msgstr "MIME-type for denne filendelse (\"*\" bruges i stedet for \".\")."
 
 #. name:
-#: src/mime/backend/default.c:223
+#: src/mime/backend/default.c:227
 msgid "Option system"
 msgstr "Opsætningsssystem"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:668
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6553,7 +6555,7 @@ msgstr "Identitetsbekræftelseshåndtering"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
-#: src/protocol/bittorrent/bittorrent.c:327
+#: src/protocol/bittorrent/bittorrent.c:335
 msgid "BitTorrent"
 msgstr "BitTorrent"
 
@@ -6636,10 +6638,24 @@ msgid ""
 msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:73
+#, fuzzy
+msgid "User identification string"
+msgstr "Identifikation af brugeragent"
+
+#: src/protocol/bittorrent/bittorrent.c:75
+msgid ""
+"An additional identification that is not shared with any users.\n"
+"It is intended to allow a client to prove their identity should\n"
+"their IP address change. It is an optional parameter, but some\n"
+"trackers require this parameter. If set to \"\" no user key will\n"
+"be sent to the tracker."
+msgstr ""
+
+#: src/protocol/bittorrent/bittorrent.c:81
 msgid "Maximum number of peers to request"
 msgstr "Maksimalt antal peers at anmode om"
 
-#: src/protocol/bittorrent/bittorrent.c:75
+#: src/protocol/bittorrent/bittorrent.c:83
 msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
@@ -6647,11 +6663,11 @@ msgstr ""
 "Det maksimalle antal peers der skal hentes fra trackeren.\n"
 "Sæt til 0 for at benytte serverens standardværdi."
 
-#: src/protocol/bittorrent/bittorrent.c:78
+#: src/protocol/bittorrent/bittorrent.c:86
 msgid "Minimum peers to skip rerequesting"
 msgstr "Minimum antal peers for ungåelse af peer anmodning"
 
-#: src/protocol/bittorrent/bittorrent.c:80
+#: src/protocol/bittorrent/bittorrent.c:88
 msgid ""
 "The minimum number of peers to have in the current peer info\n"
 "pool before skipping requesting of more peers. I.e. setting\n"
@@ -6662,19 +6678,19 @@ msgstr ""
 #. ******************************************************************
 #. Lowlevel peer-wire options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:90
+#: src/protocol/bittorrent/bittorrent.c:98
 msgid "Peer-wire"
 msgstr "Peer-forbindelse"
 
-#: src/protocol/bittorrent/bittorrent.c:92
+#: src/protocol/bittorrent/bittorrent.c:100
 msgid "Lowlevel peer-wire options."
 msgstr "Lav niveaut peer forbindelsesindstillinger"
 
-#: src/protocol/bittorrent/bittorrent.c:94
+#: src/protocol/bittorrent/bittorrent.c:102
 msgid "Maximum number of peer connections"
 msgstr "Maksimalt antal peer forbindelser"
 
-#: src/protocol/bittorrent/bittorrent.c:96
+#: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
 "The maximum number of allowed connections to both active and\n"
 "non-active peers. By increasing the number of allowed connections,\n"
@@ -6683,52 +6699,52 @@ msgid ""
 "maximum is reached all new incoming connections will be closed."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:102
+#: src/protocol/bittorrent/bittorrent.c:110
 msgid "Maximum peer message length"
 msgstr "Maksimal længde på peer-beskeder"
 
-#: src/protocol/bittorrent/bittorrent.c:104
+#: src/protocol/bittorrent/bittorrent.c:112
 msgid ""
 "The maximum length of messages to accept over the wire.\n"
 "Larger values will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:107
+#: src/protocol/bittorrent/bittorrent.c:115
 msgid "Maximum allowed request length"
 msgstr "Maksimal tilladte længde på dataforepørgelser"
 
-#: src/protocol/bittorrent/bittorrent.c:109
+#: src/protocol/bittorrent/bittorrent.c:117
 msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:112
+#: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
 msgstr "Længde på dataforepørgelser"
 
-#: src/protocol/bittorrent/bittorrent.c:114
+#: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
 "How many bytes to query for per request. This is complementary\n"
 "to the max_request_length option. If the configured length is\n"
 "bigger than the piece length it will be truncated."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:118
+#: src/protocol/bittorrent/bittorrent.c:126
 msgid "Peer inactivity timeout"
 msgstr "Tidsudløb for inaktive peer-forbindelser"
 
-#: src/protocol/bittorrent/bittorrent.c:120
+#: src/protocol/bittorrent/bittorrent.c:128
 msgid ""
 "The number of seconds to wait before closing a socket on\n"
 "which nothing has been received or sent."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:123
+#: src/protocol/bittorrent/bittorrent.c:131
 msgid "Maximum peer pool size"
 msgstr "Maksimal størrelse på peer-pulje"
 
-#: src/protocol/bittorrent/bittorrent.c:125
+#: src/protocol/bittorrent/bittorrent.c:133
 msgid ""
 "Maximum number of items in the peer pool. The peer pool\n"
 "contains information used for establishing connections to\n"
@@ -6739,22 +6755,22 @@ msgstr ""
 #. ******************************************************************
 #. Piece management options:
 #. ******************************************************************
-#: src/protocol/bittorrent/bittorrent.c:135
+#: src/protocol/bittorrent/bittorrent.c:143
 msgid "Maximum piece cache size"
 msgstr "Maksimal størrelse på fildelscache"
 
-#: src/protocol/bittorrent/bittorrent.c:137
+#: src/protocol/bittorrent/bittorrent.c:145
 msgid ""
 "The maximum amount of memory used to hold recently\n"
 "downloaded pieces.\n"
 "Set to 0 to have unlimited size."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:146
+#: src/protocol/bittorrent/bittorrent.c:154
 msgid "Sharing rate"
 msgstr "Delingsrate"
 
-#: src/protocol/bittorrent/bittorrent.c:148
+#: src/protocol/bittorrent/bittorrent.c:156
 msgid ""
 "The minimum sharing rate to achieve before stop seeding.\n"
 "The sharing rate is computed as the number of uploaded bytes\n"
@@ -6764,40 +6780,40 @@ msgid ""
 "set to 0.0 to have unlimited sharing rate."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:155
+#: src/protocol/bittorrent/bittorrent.c:163
 msgid "Maximum number of uploads"
 msgstr "Maksimal antal fil-uploads"
 
-#: src/protocol/bittorrent/bittorrent.c:157
+#: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
 msgstr "Det maksimale antal peers som der må uploades til på samme tid."
 
 #. The number of uploads to fill out to with extra optimistic unchokes
-#: src/protocol/bittorrent/bittorrent.c:160
+#: src/protocol/bittorrent/bittorrent.c:168
 msgid "Minimum number of uploads"
 msgstr "Minimum antal fil-uploads"
 
-#: src/protocol/bittorrent/bittorrent.c:162
+#: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:166
+#: src/protocol/bittorrent/bittorrent.c:174
 msgid "Keepalive interval"
 msgstr "Keepalive-interval"
 
-#: src/protocol/bittorrent/bittorrent.c:168
+#: src/protocol/bittorrent/bittorrent.c:176
 msgid ""
 "The number of seconds to pause between sending keepalive\n"
 "messages."
 msgstr "Antal sekunder mellem afsendelse af 'i live'-beskeder (keepalive)."
 
-#: src/protocol/bittorrent/bittorrent.c:171
+#: src/protocol/bittorrent/bittorrent.c:179
 msgid "Number of pending requests"
 msgstr "Antal udestående dataforespørgsler"
 
-#: src/protocol/bittorrent/bittorrent.c:173
+#: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
 "How many piece requests to continuously keep in queue. Pipelining\n"
 "of requests is essential to saturate connections and get a good\n"
@@ -6808,11 +6824,11 @@ msgid ""
 msgstr ""
 
 #. Bram uses 30 seconds here.
-#: src/protocol/bittorrent/bittorrent.c:182
+#: src/protocol/bittorrent/bittorrent.c:190
 msgid "Peer snubbing interval"
 msgstr "Peer fornærmelsessinterval"
 
-#: src/protocol/bittorrent/bittorrent.c:184
+#: src/protocol/bittorrent/bittorrent.c:192
 msgid ""
 "The number of seconds to wait for file data before assuming\n"
 "the peer has been snubbed."
@@ -6820,11 +6836,11 @@ msgstr ""
 "Antal sekunder der skal ventes på fildata før det antages\n"
 "at klienten er blevet udnyttet."
 
-#: src/protocol/bittorrent/bittorrent.c:187
+#: src/protocol/bittorrent/bittorrent.c:195
 msgid "Peer choke interval"
 msgstr "Peer afbrydningsinterval"
 
-#: src/protocol/bittorrent/bittorrent.c:189
+#: src/protocol/bittorrent/bittorrent.c:197
 msgid ""
 "The number of seconds between updating the connection state\n"
 "and most importantly choke and unchoke peer connections. The\n"
@@ -6833,21 +6849,21 @@ msgid ""
 "room for stealing bandwidth."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:195
+#: src/protocol/bittorrent/bittorrent.c:203
 msgid "Rarest first piece selection cutoff"
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:197
+#: src/protocol/bittorrent/bittorrent.c:205
 msgid ""
 "The number of pieces to obtain before switching piece\n"
 "selection strategy from random to rarest first."
 msgstr ""
 
-#: src/protocol/bittorrent/bittorrent.c:200 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
 msgid "Allow blacklisting"
 msgstr "Tillad sortlistning"
 
-#: src/protocol/bittorrent/bittorrent.c:202
+#: src/protocol/bittorrent/bittorrent.c:210
 msgid "Allow blacklisting of buggy peers."
 msgstr "Tillad sortlistning af fejlbehæftede peers."
 
@@ -7145,6 +7161,27 @@ msgstr "Fil"
 #: src/protocol/finger/finger.c:21
 msgid "Finger"
 msgstr "Finger"
+
+#. name:
+#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
+#, fuzzy
+msgid "FSP"
+msgstr "FTP"
+
+#: src/protocol/fsp/fsp.c:46
+#, fuzzy
+msgid "FSP specific options."
+msgstr "FTP-specifikke indstillinger."
+
+#: src/protocol/fsp/fsp.c:48
+#, fuzzy
+msgid "Sort entries"
+msgstr "Smarte præfikser"
+
+#: src/protocol/fsp/fsp.c:50
+#, fuzzy
+msgid "Whether to sort entries in directory listings."
+msgstr "Vis skjulte filer i katalogoversigter"
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
@@ -7502,24 +7539,24 @@ msgstr ""
 "som skal vises. Eksempelvis 'Subject' eller 'From'.\n"
 "Hele protokolhovedet kan læses i et separat dialogvindue."
 
-#: src/protocol/protocol.c:227
+#: src/protocol/protocol.c:229
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Denne version af ELinks understøtter ikke protokollen %s"
 
-#: src/protocol/protocol.c:258
+#: src/protocol/protocol.c:260
 msgid "Protocols"
 msgstr "Protokoller"
 
-#: src/protocol/protocol.c:260
+#: src/protocol/protocol.c:262
 msgid "Protocol specific options."
 msgstr "Protokolspecifikke indstillinger."
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:264
 msgid "No-proxy domains"
 msgstr "Ingen-proxy-domæner"
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:266
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7532,7 +7569,7 @@ msgstr ""
 "blive konsulteret."
 
 #. name:
-#: src/protocol/protocol.c:300
+#: src/protocol/protocol.c:305
 msgid "Protocol"
 msgstr "Protokol"
 
@@ -7561,11 +7598,12 @@ msgid "Enable dumb prefixes"
 msgstr "Aktivér simple præfikser"
 
 #: src/protocol/rewrite/rewrite.c:55
+#, fuzzy
 msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
 "if you write 'elinks' there, you are directed to\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 msgstr ""
 "Anvend simple præfikser - simple URI forkortelser som skrives\n"
 "i Gå til adresse dialogvinduet i stedet for de egentlige adresser.\n"
@@ -7654,19 +7692,19 @@ msgid "URI rewrite"
 msgstr "Adresseomskrivning"
 
 #. name:
-#: src/protocol/smb/smb.c:72 src/protocol/smb/smb.c:84
+#: src/protocol/smb/smb.c:67 src/protocol/smb/smb.c:79
 msgid "SMB"
 msgstr "SMB"
 
-#: src/protocol/smb/smb.c:74
+#: src/protocol/smb/smb.c:69
 msgid "SAMBA specific options."
 msgstr "SAMBA-specifikke indstillinger."
 
-#: src/protocol/smb/smb.c:76
+#: src/protocol/smb/smb.c:71
 msgid "Credentials"
 msgstr "Akkreditiver"
 
-#: src/protocol/smb/smb.c:78
+#: src/protocol/smb/smb.c:73
 msgid "Credentials file passed to smbclient via -A option."
 msgstr "Fil med akkreditiver som gives til smbclient med parameteren -A."
 
@@ -7721,10 +7759,6 @@ msgstr "Intet program"
 msgid "No program specified for protocol %s."
 msgstr "Intet program angivet for protokol %s."
 
-#: src/scripting/js/interface.c:146 src/scripting/see/interface.c:146
-msgid "SEE Message"
-msgstr "SEE besked"
-
 #: src/scripting/lua/core.c:300
 msgid "Error registering event hook"
 msgstr "Fejl ved registrering af event-script-kald"
@@ -7733,15 +7767,15 @@ msgstr "Fejl ved registrering af event-script-kald"
 msgid "User dialog"
 msgstr "Brugerdialog"
 
-#: src/scripting/lua/core.c:716
+#: src/scripting/lua/core.c:724
 msgid "Lua Error"
 msgstr "Lua-fejl"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Lua Console"
 msgstr "Lua-konsol"
 
-#: src/scripting/lua/core.c:865
+#: src/scripting/lua/core.c:874
 msgid "Enter expression"
 msgstr "Indtast udtryk"
 
@@ -7851,11 +7885,12 @@ msgstr "Filen vil blive åbnet med programmet \"%s\"."
 msgid "~Open"
 msgstr "~Åbn"
 
-#: src/session/session.c:749 src/session/session.c:768 src/session/task.c:269
+#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/viewer/text/textarea.c:385
 msgid "Warning"
 msgstr "Advarsel"
 
-#: src/session/session.c:750
+#: src/session/session.c:743
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -7872,7 +7907,7 @@ msgstr ""
 "standardindstillingen bruges, så slet venligst denne linje fra din "
 "opsætningsfil. Sidstnævnte anbefales."
 
-#: src/session/session.c:769
+#: src/session/session.c:762
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7893,11 +7928,11 @@ msgstr ""
 "ændres. Derfor anbefales det at sætte værdien af config.saving_style til 3 "
 "for at det fungerer korrekt."
 
-#: src/session/session.c:794
+#: src/session/session.c:787
 msgid "Welcome"
 msgstr "Velkommen"
 
-#: src/session/session.c:795
+#: src/session/session.c:788
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8004,164 +8039,179 @@ msgstr "Manglende fragment"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "Den forespurgte fragment \"#%s\" findes ikke."
 
-#: src/viewer/text/form.c:855
+#: src/viewer/text/form.c:864
 msgid "Error while posting form"
 msgstr "Fejl under afsendelse af formular"
 
-#: src/viewer/text/form.c:856
+#: src/viewer/text/form.c:865
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Kunne ikke indlæse filen %s: %s"
 
-#: src/viewer/text/form.c:1436
+#: src/viewer/text/form.c:1445
 msgid "Reset form"
 msgstr "Nulstil formular"
 
-#: src/viewer/text/form.c:1438
+#: src/viewer/text/form.c:1447
 msgid "Harmless button"
 msgstr "Harmløs knap"
 
-#: src/viewer/text/form.c:1446
+#: src/viewer/text/form.c:1455
 msgid "Submit form to"
 msgstr "Send formular til"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1456
 msgid "Post form to"
 msgstr "Send formular til"
 
-#: src/viewer/text/form.c:1449
+#: src/viewer/text/form.c:1458
 msgid "Radio button"
 msgstr "Radioknap"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1462
 msgid "Select field"
 msgstr "Vælg felt"
 
-#: src/viewer/text/form.c:1457
+#: src/viewer/text/form.c:1466
 msgid "Text area"
 msgstr "Tekstområde"
 
-#: src/viewer/text/form.c:1459
+#: src/viewer/text/form.c:1468
 msgid "File upload"
 msgstr "Fil-upload"
 
-#: src/viewer/text/form.c:1461
+#: src/viewer/text/form.c:1470
 msgid "Password field"
 msgstr "Adgangskodefelt"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1508
 msgid "name"
 msgstr "navn"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1520
 msgid "value"
 msgstr "værdi"
 
-#: src/viewer/text/form.c:1524
+#: src/viewer/text/form.c:1533
 msgid "read only"
 msgstr "kun læsning"
 
-#: src/viewer/text/form.c:1535
+#: src/viewer/text/form.c:1544
 #, c-format
 msgid "press %s to navigate"
 msgstr "tast %s for at navigere"
 
-#: src/viewer/text/form.c:1537
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to edit"
 msgstr "tast %s for at redigere"
 
-#: src/viewer/text/form.c:1573
+#: src/viewer/text/form.c:1582
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "tast %s for at indsende til %s"
 
-#: src/viewer/text/form.c:1575
+#: src/viewer/text/form.c:1584
 #, c-format
 msgid "press %s to post to %s"
 msgstr "tast %s for at sende til %s"
 
-#: src/viewer/text/link.c:1145
+#: src/viewer/text/form.c:1686
+#, fuzzy
+msgid "Useless button"
+msgstr "Harmløs knap"
+
+#: src/viewer/text/form.c:1688
+#, fuzzy
+msgid "Submit button"
+msgstr "Send formular til"
+
+#: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
 msgstr "Vis ~usemap"
 
-#: src/viewer/text/link.c:1148
+#: src/viewer/text/link.c:1169
 msgid "~Follow link"
 msgstr "F~ølg link"
 
-#: src/viewer/text/link.c:1150
+#: src/viewer/text/link.c:1171
 msgid "Follow link and r~eload"
 msgstr "Følg link og ~genindlæs"
 
-#: src/viewer/text/link.c:1154
+#: src/viewer/text/link.c:1175
 msgid "Open in new ~window"
 msgstr "Åbn i nyt ~vindue"
 
-#: src/viewer/text/link.c:1156
+#: src/viewer/text/link.c:1177
 msgid "Open in new ~tab"
 msgstr "Åbn i nyt ~faneblad"
 
-#: src/viewer/text/link.c:1158
+#: src/viewer/text/link.c:1179
 msgid "Open in new tab in ~background"
 msgstr "Åbn i nyt faneblad i ~baggrunden"
 
-#: src/viewer/text/link.c:1163
+#: src/viewer/text/link.c:1184
 msgid "~Download link"
 msgstr "~Hent link"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1187
 msgid "~Add link to bookmarks"
 msgstr "Tilføj ~link til bogmærker"
 
-#: src/viewer/text/link.c:1178 src/viewer/text/link.c:1214
+#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
 msgid "~Reset form"
 msgstr "~Nulstil formular"
 
-#: src/viewer/text/link.c:1191
+#: src/viewer/text/link.c:1212
 msgid "Open in ~external editor"
 msgstr "Åbn i en ~ekstern tekstbehandler"
 
-#: src/viewer/text/link.c:1197
+#: src/viewer/text/link.c:1218
 msgid "~Submit form"
 msgstr "~Indsend formular"
 
-#: src/viewer/text/link.c:1198
+#: src/viewer/text/link.c:1219
 msgid "Submit form and rel~oad"
 msgstr "Indsend formular og ~genindlæs"
 
-#: src/viewer/text/link.c:1202
+#: src/viewer/text/link.c:1223
 msgid "Submit form and open in new ~window"
 msgstr "Indsend formular og åbn i nyt ~vindue"
 
-#: src/viewer/text/link.c:1204
+#: src/viewer/text/link.c:1225
 msgid "Submit form and open in new ~tab"
 msgstr "Indsend formular og åbn i nyt ~faneblad"
 
-#: src/viewer/text/link.c:1207
+#: src/viewer/text/link.c:1228
 msgid "Submit form and open in new tab in ~background"
 msgstr "Indsend formular og åben i nyt faneblad i ~baggrunden"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1233
 msgid "Submit form and ~download"
 msgstr "Indsend formular og ~overfør fil"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1238
+#, fuzzy
+msgid "Form f~ields"
+msgstr "Adgangskodefelt"
+
+#: src/viewer/text/link.c:1243
 msgid "V~iew image"
 msgstr "V~is billede"
 
-#: src/viewer/text/link.c:1221
+#: src/viewer/text/link.c:1245
 msgid "Download ima~ge"
 msgstr "Hent bille~de"
 
-#: src/viewer/text/link.c:1229
+#: src/viewer/text/link.c:1253
 msgid "No link selected"
 msgstr "Ingen links valgt"
 
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1301
 msgid "Image"
 msgstr "Billede"
 
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1306
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8233,13 +8283,23 @@ msgstr "Søg bagud"
 msgid "Search History"
 msgstr "Søgningshistorik"
 
-#: src/viewer/text/textarea.c:363
+#: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Man kan ikke åbne en ekstern editor i tilstanden anonymous."
 
-#: src/viewer/text/textarea.c:370
+#: src/viewer/text/textarea.c:339
 msgid "You can do this only on the master terminal"
 msgstr "Dette er kun muligt i masterterminalen"
+
+#: src/viewer/text/textarea.c:388
+#, c-format
+msgid ""
+"You have exceeded the textarea's size limit: your input is %d bytes, but the "
+"maximum is %u bytes.\n"
+"\n"
+"Your input has been truncated, but you can still recover the text that you "
+"entered from this file: %s"
+msgstr ""
 
 #: src/viewer/text/view.c:715
 msgid "Go to link"
@@ -8249,13 +8309,19 @@ msgstr "Gå til link"
 msgid "Enter link number"
 msgstr "Skriv nummer på link"
 
-#: src/viewer/text/view.c:1287
+#: src/viewer/text/view.c:1288
 msgid "Save error"
 msgstr "Fejl ved skrivning"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "Fejl ved skrivning til fil"
+
+#~ msgid "~Clear"
+#~ msgstr "~Ryd"
+
+#~ msgid "SEE Message"
+#~ msgstr "SEE besked"
 
 #~ msgid "ELinks Cvs ~History"
 #~ msgstr "ELinks CVS ~historik"
