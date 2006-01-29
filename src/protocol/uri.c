@@ -150,8 +150,6 @@ check_uri_file(unsigned char *name)
 {
 	/* Check POST_CHAR etc ... */
 	static const unsigned char chars[] = POST_CHAR_S "#?";
-	int i;
-	int namelen = strlen(name);
 
 	return strcspn(name, chars);
 }
