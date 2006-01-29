@@ -159,7 +159,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 		sort_and_display_entries(dir, dircolor);
 	} else {
 		FSP_RDENTRY fentry, *fresult;
-	
+
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
 			display_entry(&fentry, dircolor);
