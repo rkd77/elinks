@@ -267,8 +267,8 @@ main(int argc, char *argv[])
 	int normalize = 0;
 	int complete = 1;
 	size_t read_stdin = 0;
-	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
-	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
+	struct dom_string uri = STATIC_DOM_STRING("dom://test");
+	struct dom_string source = STATIC_DOM_STRING("(no source)");
 	int i;
 
 	for (i = 1; i < argc; i++) {

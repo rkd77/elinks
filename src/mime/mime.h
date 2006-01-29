@@ -20,9 +20,6 @@ extern struct module mime_module;
  * scanning the uri for extensions. */
 unsigned char *get_content_type(struct cache_entry *cached);
 
-/* Default mime type */
-unsigned char *get_default_content_type(void);
-
 /* Guess content type by looking at configurations of the given @extension */
 unsigned char *get_extension_content_type(unsigned char *extension);
 

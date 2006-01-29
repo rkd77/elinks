@@ -451,11 +451,11 @@ done_dom_node(struct dom_node *node)
 struct dom_string *
 get_dom_node_name(struct dom_node *node)
 {
-	static struct dom_string cdata_section_str = INIT_DOM_STRING("#cdata-section", -1);
-	static struct dom_string comment_str = INIT_DOM_STRING("#comment", -1);
-	static struct dom_string document_str = INIT_DOM_STRING("#document", -1);
-	static struct dom_string document_fragment_str = INIT_DOM_STRING("#document-fragment", -1);
-	static struct dom_string text_str = INIT_DOM_STRING("#text", -1);
+	static struct dom_string cdata_section_str = STATIC_DOM_STRING("#cdata-section");
+	static struct dom_string comment_str = STATIC_DOM_STRING("#comment");
+	static struct dom_string document_str = STATIC_DOM_STRING("#document");
+	static struct dom_string document_fragment_str = STATIC_DOM_STRING("#document-fragment");
+	static struct dom_string text_str = STATIC_DOM_STRING("#text");
 
 	assert(node);
 
@@ -521,18 +521,18 @@ get_dom_node_type_name(enum dom_node_type type)
 {
 	static struct dom_string dom_node_type_names[DOM_NODES] = {
 		INIT_DOM_STRING(NULL, 0),
-		/* DOM_NODE_ELEMENT */			INIT_DOM_STRING("element", -1),
-		/* DOM_NODE_ATTRIBUTE */		INIT_DOM_STRING("attribute", -1),
-		/* DOM_NODE_TEXT */			INIT_DOM_STRING("text", -1),
-		/* DOM_NODE_CDATA_SECTION */		INIT_DOM_STRING("cdata-section", -1),
-		/* DOM_NODE_ENTITY_REFERENCE */		INIT_DOM_STRING("entity-reference", -1),
-		/* DOM_NODE_ENTITY */			INIT_DOM_STRING("entity", -1),
-		/* DOM_NODE_PROCESSING_INSTRUCTION */	INIT_DOM_STRING("proc-instruction", -1),
-		/* DOM_NODE_COMMENT */			INIT_DOM_STRING("comment", -1),
-		/* DOM_NODE_DOCUMENT */			INIT_DOM_STRING("document", -1),
-		/* DOM_NODE_DOCUMENT_TYPE */		INIT_DOM_STRING("document-type", -1),
-		/* DOM_NODE_DOCUMENT_FRAGMENT */	INIT_DOM_STRING("document-fragment", -1),
-		/* DOM_NODE_NOTATION */			INIT_DOM_STRING("notation", -1),
+		/* DOM_NODE_ELEMENT */			STATIC_DOM_STRING("element"),
+		/* DOM_NODE_ATTRIBUTE */		STATIC_DOM_STRING("attribute"),
+		/* DOM_NODE_TEXT */			STATIC_DOM_STRING("text"),
+		/* DOM_NODE_CDATA_SECTION */		STATIC_DOM_STRING("cdata-section"),
+		/* DOM_NODE_ENTITY_REFERENCE */		STATIC_DOM_STRING("entity-reference"),
+		/* DOM_NODE_ENTITY */			STATIC_DOM_STRING("entity"),
+		/* DOM_NODE_PROCESSING_INSTRUCTION */	STATIC_DOM_STRING("proc-instruction"),
+		/* DOM_NODE_COMMENT */			STATIC_DOM_STRING("comment"),
+		/* DOM_NODE_DOCUMENT */			STATIC_DOM_STRING("document"),
+		/* DOM_NODE_DOCUMENT_TYPE */		STATIC_DOM_STRING("document-type"),
+		/* DOM_NODE_DOCUMENT_FRAGMENT */	STATIC_DOM_STRING("document-fragment"),
+		/* DOM_NODE_NOTATION */			STATIC_DOM_STRING("notation"),
 	};
 
 	assert(type < DOM_NODES);

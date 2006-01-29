@@ -27,7 +27,6 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
-#include "mime/mime.h"
 #include "network/connection.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
@@ -181,31 +180,6 @@ end:
 	exit(0);
 }
 
-static unsigned char *
-get_content_type_uri(struct uri *uri)
-{
-	unsigned char *extension = get_extension_from_uri(uri);
-
-	if (extension) {
-		unsigned char *ctype;
-		/* XXX:	A little hack for making extension handling case
-		 * insensitive. We could probably do it better by making
-		 * guess_encoding() case independent the real problem however
-		 * is with default (via option system) and mimetypes resolving
-		 * doing that option and hash lookup will not be easy to
-		 * convert. --jonas */
-		convert_to_lowercase(extension, strlen(extension));
-
-		ctype = get_extension_content_type(extension);
-		if (ctype && *ctype) {
-			return ctype;
-		}
-	}
-
-	return get_default_content_type();
-
-}
-
 #define READ_SIZE	4096
 
 static void
@@ -230,13 +204,18 @@ do_fsp(struct connection *conn)
 		FSP_FILE *file = fsp_fopen(ses, data, "r");
 		int r;
 
-		fprintf(stderr, "%s", get_content_type_uri(uri));
-		fclose(stderr);
 		if (!file)
 			fsp_error("fsp_fopen error.");
 
+		/* Use the default way to find the MIME type, so write an
+		 * 'empty' name, since something needs to be written in order
+		 * to avoid socket errors. */
+		fprintf(stderr, "%c", '\0');
+		fclose(stderr);
+
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
 			fwrite(buf, 1, r, stdout);
+
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
@@ -274,7 +253,6 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	int len = rb->length;
 	struct connection *conn = socket->conn;
 	struct read_buffer *buf;
 
@@ -286,10 +264,16 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 	socket->state = SOCKET_END_ONCLOSE;
-	if (len <= 0) goto end;
-	rb->data[len] = '\0';
-	mem_free_set(&conn->cached->content_type, stracpy(rb->data));
-end:
+
+	if (rb->length > 0) {
+		unsigned char *ctype = memacpy(rb->data, rb->length);
+
+		if (ctype && *ctype)
+			mem_free_set(&conn->cached->content_type, ctype);
+		else
+			mem_free_if(ctype);
+	}
+
 	buf = alloc_read_buffer(conn->data_socket);
 	if (!buf) {
 		close(socket->fd);
