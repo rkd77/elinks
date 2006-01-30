@@ -740,13 +740,17 @@ dnl Check for Python
 dnl ===================================================================
 enable_python="no";
 
-AC_ARG_WITH(python, [  --with-python           enable Python support],
+AC_ARG_WITH(python, [  --with-python=[prefix]       enable Python support],
             [
-if test "$withval" = yes; then
+if test "$withval" != no; then
 	# FIXME: If withval is a valid directory append it to PATH
 	# so that you can specify one of several Python installations.
-	withval="";
-	enable_python=yes;
+	if test "$withval" != yes; then
+		python_prefix="$withval"
+	else
+		python_prefix=""
+	fi
+	enable_python=yes
 	cat <<EOF
 ***********************************************************************
 The Python support is incomplete and not so well integrated to ELinks
@@ -758,35 +762,46 @@ EOF
 fi
 	    ])
 
-AC_MSG_CHECKING([for Python])
 
 cf_result=no
 
 EL_SAVE_FLAGS
 
 if test "$enable_python" = "yes"; then
-	PYTHON_LIBS="-lpython"
-	PYTHON_CFLAGS="-I`python -c 'from distutils import sysconfig; print sysconfig.get_python_inc()' 2> /dev/null`"
-	LIBS="$PYTHON_LIBS $LIBS"
-	CFLAGS="$PYTHON_CFLAGS $CFLAGS"
-	CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
-	AC_TRY_LINK([
-#include <Python.h>
-],
+	if test -n "$python_prefix" && test -d "$python_prefix/bin"; then
+		PYTHON_PATH="$python_prefix/bin:$PATH"
+	else
+		PYTHON_PATH="$PATH"
+	fi
+	AC_PATH_PROG(PYTHON, python, no, $PYTHON_PATH)
+	if test "$PYTHON" = "no" ; then
+		cf_result=no
+	else
+		PYTHON_CFLAGS="-I`$PYTHON -c 'from distutils import sysconfig; print sysconfig.get_python_inc()' 2> /dev/null`"
+		if test -n "$python_prefix" && test -d "$python_prefix/lib"; then
+			PYTHON_LIBS="-L$python_prefix/lib -lpython"
+		else
+			PYTHON_LIBS="-lpython"
+		fi
+		LIBS="$PYTHON_LIBS $LIBS"
+		CFLAGS="$PYTHON_CFLAGS $CFLAGS"
+		AC_TRY_LINK([#include <Python.h>],
 		    [Py_Initialize();],
 		    cf_result=yes, cf_result=no)
+
+		if test "$cf_result" != "yes"; then
+			EL_RESTORE_FLAGS
+		else
+			EL_CONFIG(CONFIG_SCRIPTING_PYTHON, [Python])
+
+			CFLAGS="$CFLAGS_X"
+			AC_SUBST(PYTHON_LIBS)
+			AC_SUBST(PYTHON_CFLAGS)
+		fi
+	fi
 fi
 
-if test "$cf_result" != "yes"; then
-	EL_RESTORE_FLAGS
-else
-	EL_CONFIG(CONFIG_SCRIPTING_PYTHON, [Python])
-
-	CFLAGS="$CFLAGS_X"
-	AC_SUBST(PYTHON_LIBS)
-	AC_SUBST(PYTHON_CFLAGS)
-fi
-
+AC_MSG_CHECKING([for Python])
 if test "$cf_result"; then AC_MSG_RESULT($cf_result); fi
 
 
@@ -955,6 +970,7 @@ fi
 
 AC_MSG_RESULT($cf_result)
 
+CONFIG_GNUTLS_OPENSSL_COMPAT=no
 dnl ---- GNU TLS
 dnl We can't have AC_MSG_CHECKING here, because AC_PATH_PROG prints its own and
 dnl it looks ugly then.

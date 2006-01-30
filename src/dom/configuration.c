@@ -1,5 +1,9 @@
 /* DOM Configuration */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "elinks.h"
 
 #include "dom/configuration.h"
@@ -304,7 +308,7 @@ struct dom_config_info {
 };
 
 #define DOM_CONFIG(name, flag) \
-	{ INIT_DOM_STRING(name, -1), (flag) }
+	{ STATIC_DOM_STRING(name), (flag) }
 
 static struct dom_config_info dom_config_info[] = {
 	DOM_CONFIG("cdata-sections",		DOM_CONFIG_CDATA_SECTIONS),

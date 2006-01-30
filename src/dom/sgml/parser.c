@@ -95,7 +95,7 @@ add_sgml_attribute(struct dom_stack *stack,
 	node->data.attribute.reference = !!(info->flags & SGML_ATTRIBUTE_REFERENCE);
 
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
-		node->data.attribute.quoted = 1;
+		node->data.attribute.quoted = valtoken->string.string[-1];
 
 	if (!node || push_dom_node(stack, node) != DOM_STACK_CODE_OK)
 		return NULL;

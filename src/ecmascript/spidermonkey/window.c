@@ -310,10 +310,38 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	if (argc < 1) return JS_TRUE;
 
+	url = jsval_to_string(ctx, &argv[0]);
+	if (argc > 1) {
+		JSString *url_string = JS_ValueToString(ctx, argv[0]);
+		JSString *target_string = JS_ValueToString(ctx, argv[1]);
+		int i;
+#define NUMBER_OF_URLS_TO_REMEMBER 8
+		static struct {
+			JSContext *ctx;
+			JSString *url;
+			JSString *frame;
+		} strings[NUMBER_OF_URLS_TO_REMEMBER];
+		static int indeks;
+
+		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
+			if (!(strings[i].ctx && strings[i].url && strings[i].frame))
+				continue;
+			if (ctx == strings[i].ctx
+				&& !JS_CompareStrings(url_string, strings[i].url)
+				&& !JS_CompareStrings(target_string, strings[i].frame))
+				return JS_TRUE;
+		}
+		strings[indeks].ctx = ctx;
+		strings[indeks].url = JS_InternString(ctx, url);
+		strings[indeks].frame = JS_InternString(ctx, target);
+		indeks++;
+		if (indeks >= NUMBER_OF_URLS_TO_REMEMBER) indeks = 0;
+#undef NUMBER_OF_URLS_TO_REMEMBER
+	}
+
 	/* Ratelimit window opening. Recursive window.open() is very nice.
 	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
 	 * rough but shall suffice against the usual cases. */
-
 	if (!ratelimit_start || time(NULL) - ratelimit_start > 2) {
 		ratelimit_start = time(NULL);
 		ratelimit_count = 0;
@@ -322,8 +350,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		if (ratelimit_count > 20)
 			return JS_TRUE;
 	}
-
-	url = jsval_to_string(ctx, &argv[0]);
 
 	/* TODO: Support for window naming and perhaps some window features? */
 
@@ -334,7 +360,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	mem_free(url);
 	if (!uri) return JS_TRUE;
 
-	if (argc > 1) target = jsval_to_string(ctx, &argv[1]);
 
 	if (*target && strcasecmp(target, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));

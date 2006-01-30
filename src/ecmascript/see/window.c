@@ -269,6 +269,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 		 */
 #define NUMBER_OF_URLS_TO_REMEMBER 8
 		static struct {
+			struct SEE_interpreter *interp;
 			struct SEE_string *url;
 			struct SEE_string *target;
 		} strings[NUMBER_OF_URLS_TO_REMEMBER];
@@ -277,12 +278,15 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 
 		SEE_ToString(interp, argv[1], &target_value);
 		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
-			if (!(strings[i].url && strings[i].target))
+			if (!(strings[i].url && strings[i].target
+				&& strings[i].interp))
 				continue;
-			if (!SEE_string_cmp(url_value.u.string, strings[i].url)
+			if (strings[i].interp == interp
+			    && !SEE_string_cmp(url_value.u.string, strings[i].url)
 			    && !SEE_string_cmp(target_value.u.string, strings[i].target))
 			 	return;
 		}
+		strings[indeks].interp = interp;
 		strings[indeks].url = url_value.u.string;
 		strings[indeks].target = target_value.u.string;
 		indeks++;

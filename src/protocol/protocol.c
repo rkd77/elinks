@@ -29,6 +29,7 @@
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/connection.h"
 #include "protocol/data.h"
+#include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
 #include "protocol/finger/finger.h"
 #include "protocol/fsp/fsp.h"
@@ -275,6 +276,9 @@ static struct module *protocol_submodules[] = {
 	&bittorrent_protocol_module,
 #endif
 	&file_protocol_module,
+#ifdef CONFIG_CGI
+	&cgi_protocol_module,
+#endif
 #ifdef CONFIG_FINGER
 	&finger_protocol_module,
 #endif

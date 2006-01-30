@@ -63,12 +63,18 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	if (!doc_view->vs->ecmascript) return -1;
 
 	foreach (evhook, *link->event_hooks) {
-		struct string src = INIT_STRING(evhook->src, strlen(evhook->src));
+		unsigned char *ret;
 
 		if (evhook->type != type) continue;
-		/* TODO: Some even handlers return a bool. */
-		if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
-			return 0;
+		ret = evhook->src;
+		while ((ret = strstr(ret, "return ")))
+			while (*ret != ' ') *ret++ = ' ';
+		{
+			struct string src = INIT_STRING(evhook->src, strlen(evhook->src));
+			/* TODO: Some even handlers return a bool. */
+			if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
+				return 0;
+		}
 	}
 
 	return 1;
@@ -865,22 +871,18 @@ try_submit_given_form(struct session *ses, struct document_view *doc_view,
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
-			int res = 1;
+			unsigned char *ret = form->onsubmit;
+			int res;
 
 			if (vs->ecmascript_fragile)
 				ecmascript_reset_state(vs);
 			interpreter = vs->ecmascript;
 			assert(interpreter);
-#ifdef CONFIG_ECMASCRIPT_SEE
-			{
-				unsigned char *ret = form->onsubmit;
+			/* SEE and SpiderMonkey do not like return outside
+			 * functions. */
+			while ((ret = strstr(ret, "return ")))
+				while (*ret != ' ') *ret++ = ' ';
 
-				/* SEE doesn't like return outside functions */
-				while ((ret = strstr(ret, "return "))) {
-					while (*ret != ' ') *ret++ = ' ';
-				}
-			}
-#endif
 			add_to_string(&code, form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);
 			done_string(&code);

@@ -67,7 +67,7 @@ struct dom_scanner_string_mapping {
 };
 
 #define DOM_STRING_MAP(str, type, family) \
-	{ INIT_DOM_STRING(str, -1), (type), (family) }
+	{ STATIC_DOM_STRING(str), (type), (family) }
 
 #define DOM_STRING_MAP_END \
 	{ INIT_DOM_STRING(NULL, 0), 0, 0 }

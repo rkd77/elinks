@@ -1,0 +1,13 @@
+If you want to use Python scripting with ELinks add
+--with-python to the configure invocation copy hooks.py to ~/.elinks
+When your Python installation is your own build, you could give prefix
+to the configure, eg.
+--with-python=/usr/local when Python binary is placed in /usr/local/bin, etc.
+
+When 'configure' cannot find -lpython make symbolic link to the appropriate
+library, eg.
+# cd /usr/local/lib
+# ln -s libpython2.4.so.1.0 libpython.so
+
+For the present hooks.py is not very usable. You are welcome to make it better.
+Good Luck!

@@ -111,6 +111,9 @@ struct dom_attribute_node {
 	 * to reduce string comparing and only do one fast find mapping. */
 	uint16_t type;
 
+	/* The attribute value is delimited by quotes. Can be NUL, ' or ". */
+	unsigned char quoted;
+
 	/* Was the attribute specified in the DTD as a default attribute or was
 	 * it added from the document source. */
 	unsigned int specified:1;
@@ -124,9 +127,6 @@ struct dom_attribute_node {
 
 	/* The attribute value references some other resource */
 	unsigned int reference:1;
-
-	/* The attribute value is delimited by quotes */
-	unsigned int quoted:1;
 };
 
 struct dom_text_node {
@@ -241,6 +241,9 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 
 /* Returns the previous sibling to the node. */
 struct dom_node *get_dom_node_prev(struct dom_node *node);
+
+/* Returns the next sibling to the node. */
+struct dom_node *get_dom_node_next(struct dom_node *node);
 
 /* Returns first text node of the element or NULL. */
 struct dom_node *

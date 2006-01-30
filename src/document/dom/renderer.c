@@ -507,7 +507,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 }
 #endif
 
-enum dom_stack_code
+static enum dom_stack_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;

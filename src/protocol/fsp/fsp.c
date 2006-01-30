@@ -27,7 +27,6 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
-#include "mime/mime.h"
 #include "network/connection.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
@@ -82,21 +81,29 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 	return strcmp(a->name, b->name);
 }
 
+static void
+display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
+{
+	printf("%10d\t<a href=\"%s", fentry->size, fentry->name);
+	if (fentry->type == FSP_RDTYPE_DIR) {
+		printf("/\">");
+		if (*dircolor)
+			printf("<font color=\"%s\"><b>", dircolor);
+		printf("%s", fentry->name);
+		if (*dircolor)
+			printf("</b></font>");
+	} else {
+		printf("\">%s", fentry->name);
+	}
+	puts("</a>");
+}
 
 static void
-sort_and_display_entries(FSP_DIR *dir)
+sort_and_display_entries(FSP_DIR *dir, unsigned char dircolor[])
 {
 	FSP_RDENTRY fentry, *fresult, *table = NULL;
 	int size = 0;
 	int i;
-	unsigned char dircolor[8];
-
-	if (get_opt_bool("document.browse.links.color_dirs")) {
-		color_to_string(get_opt_color("document.colors.dirs"),
-			(unsigned char *) &dircolor);
-	} else {
-		dircolor[0] = 0;
-	}
 
 	while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 		FSP_RDENTRY *new_table;
@@ -115,14 +122,7 @@ sort_and_display_entries(FSP_DIR *dir)
 	 (int (*)(const void *, const void *)) compare);
 
 	for (i = 0; i < size; i++) {
-		printf("%10d\t<a href=\"%s%s\">", table[i].size, table[i].name,
-			table[i].type == FSP_RDTYPE_DIR ? "/" : "");
-		if (table[i].type == FSP_RDTYPE_DIR && *dircolor)
-			printf("<font color=\"%s\"><b>", dircolor);
-		printf("%s", table[i].name);
-		if (table[i].type == FSP_RDTYPE_DIR && *dircolor)
-			printf("</b></font>");
-		puts("</a>");
+		display_entry(&table[i], dircolor);
 	}
 }
 
@@ -131,46 +131,33 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
 	struct string buf;
 	FSP_DIR *dir;
-	unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
+	unsigned char dircolor[8] = "";
 
-	if (!uristring || !data || !init_string(&buf))
+	if (!data || init_directory_listing(&buf, uri) != S_OK)
 		fsp_error("Out of memory");
 
 	fprintf(stderr, "text/html");
 	fclose(stderr);
-	add_html_to_string(&buf, uristring, strlen(uristring));
 
-	printf("<html><head><title>%s</title><base href=\"%s\">"
-	       "</head><body><h2>FSP directory %s</h2><pre>",
-	       buf.source, uristring, buf.source);
+	puts(buf.source);
 
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
 
+	if (get_opt_bool("document.browse.links.color_dirs")) {
+		color_to_string(get_opt_color("document.colors.dirs"),
+				(unsigned char *) &dircolor);
+	}
+
 	if (get_opt_bool("protocol.fsp.sort")) {
-		sort_and_display_entries(dir);
+		sort_and_display_entries(dir, dircolor);
 	} else {
 		FSP_RDENTRY fentry, *fresult;
-		unsigned char dircolor[8];
-
-		if (get_opt_bool("document.browse.links.color_dirs")) {
-			color_to_string(get_opt_color("document.colors.dirs"),
-				(unsigned char *) &dircolor);
-		} else {
-			dircolor[0] = 0;
-		}
 
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
-			printf("%10d\t<a href=\"%s%s\">", fentry.size,
-			 fentry.name, fentry.type == FSP_RDTYPE_DIR ? "/" : "");
-			if (fentry.type == FSP_RDTYPE_DIR && *dircolor)
-				printf("<font color=\"%s\"><b>", dircolor);
-			printf("%s", fentry.name);
-			if (fentry.type == FSP_RDTYPE_DIR && *dircolor)
-				printf("</b></font>");
-			puts("</a>");
+			display_entry(&fentry, dircolor);
 		}
 		fsp_closedir(dir);
 	}
@@ -178,31 +165,6 @@ end:
 	puts("</pre><hr></body></html>");
 	fsp_close_session(ses);
 	exit(0);
-}
-
-static unsigned char *
-get_content_type_uri(struct uri *uri)
-{
-	unsigned char *extension = get_extension_from_uri(uri);
-
-	if (extension) {
-		unsigned char *ctype;
-		/* XXX:	A little hack for making extension handling case
-		 * insensitive. We could probably do it better by making
-		 * guess_encoding() case independent the real problem however
-		 * is with default (via option system) and mimetypes resolving
-		 * doing that option and hash lookup will not be easy to
-		 * convert. --jonas */
-		convert_to_lowercase(extension, strlen(extension));
-
-		ctype = get_extension_content_type(extension);
-		if (ctype && *ctype) {
-			return ctype;
-		}
-	}
-
-	return get_default_content_type();
-
 }
 
 #define READ_SIZE	4096
@@ -229,13 +191,18 @@ do_fsp(struct connection *conn)
 		FSP_FILE *file = fsp_fopen(ses, data, "r");
 		int r;
 
-		fprintf(stderr, "%s", get_content_type_uri(uri));
-		fclose(stderr);
 		if (!file)
 			fsp_error("fsp_fopen error.");
 
+		/* Use the default way to find the MIME type, so write an
+		 * 'empty' name, since something needs to be written in order
+		 * to avoid socket errors. */
+		fprintf(stderr, "%c", '\0');
+		fclose(stderr);
+
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
 			fwrite(buf, 1, r, stdout);
+
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
@@ -273,7 +240,6 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	int len = rb->length;
 	struct connection *conn = socket->conn;
 	struct read_buffer *buf;
 
@@ -285,10 +251,16 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 	socket->state = SOCKET_END_ONCLOSE;
-	if (len <= 0) goto end;
-	rb->data[len] = '\0';
-	mem_free_set(&conn->cached->content_type, stracpy(rb->data));
-end:
+
+	if (rb->length > 0) {
+		unsigned char *ctype = memacpy(rb->data, rb->length);
+
+		if (ctype && *ctype)
+			mem_free_set(&conn->cached->content_type, ctype);
+		else
+			mem_free_if(ctype);
+	}
+
 	buf = alloc_read_buffer(conn->data_socket);
 	if (!buf) {
 		close(socket->fd);

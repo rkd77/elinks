@@ -55,10 +55,10 @@ struct sgml_node_info {
 	{ INIT_DOM_STRING(NULL, doctype##_##nodetype##S - 1), doctype##_##nodetype##_UNKNOWN }
 
 #define SGML_NODE_INFO(doctype, nodetype, name, data) \
-	{ INIT_DOM_STRING(#name, sizeof(#name) - 1), doctype##_##nodetype##_##name, data }
+	{ STATIC_DOM_STRING(#name), doctype##_##nodetype##_##name, data }
 
 #define SGML_NODE_INF2(doctype, nodetype, name, ident, data) \
-	{ INIT_DOM_STRING(ident, sizeof(ident) - 1), doctype##_##nodetype##_##name, data }
+	{ STATIC_DOM_STRING(ident), doctype##_##nodetype##_##name, data }
 
 #define SGML_NODE_INFO_TYPE(doctype, nodetype, name) doctype##_##nodetype##_##name
 
