@@ -25,6 +25,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
+#include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
 #include "protocol/uri.h"
@@ -186,12 +187,12 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
  * @dirpath. */
 /* Returns a connection state. S_OK if all is well. */
 static inline enum connection_state
-list_directory(unsigned char *dirpath, struct string *page)
+list_directory(struct connection *conn, unsigned char *dirpath,
+	       struct string *page)
 {
 	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files");
-	unsigned char *slash = dirpath;
-	unsigned char *pslash = ++slash;
 	struct directory_entry *entries;
+	enum connection_state state;
 
 	errno = 0;
 	entries = get_directory_entries(dirpath, show_hidden_files);
@@ -200,30 +201,17 @@ list_directory(unsigned char *dirpath, struct string *page)
 		return S_OUT_OF_MEM;
 	}
 
-	if (!init_string(page)) return S_OUT_OF_MEM;
+	state = init_directory_listing(page, conn->uri);
+	if (state != S_OK)
+		return S_OUT_OF_MEM;
 
-	add_to_string(page, "<html>\n<head><title>");
-	add_html_to_string(page, dirpath, strlen(dirpath));
-	add_to_string(page, "</title>\n<base href=\"");
-	encode_uri_string(page, dirpath, -1, 0);
-	add_to_string(page, "\" />\n</head>\n<body>\n<h2>Directory /");
+	add_dir_entries(entries, dirpath, page);
 
-	/* Make the directory path with links to each subdir. */
-	while ((slash = strchr(slash, '/'))) {
-		*slash = 0;
-		add_to_string(page, "<a href=\"");
-		/* FIXME: htmlesc? At least we should escape quotes. --pasky */
-		add_to_string(page, dirpath);
-		add_to_string(page, "/\">");
-		add_html_to_string(page, pslash, strlen(pslash));
-		add_to_string(page, "</a>/");
-		*slash = '/';
-		pslash = ++slash;
+	if (!add_to_string(page, "</pre>\n<hr>\n</body>\n</html>\n")) {
+		done_string(page);
+		return S_OUT_OF_MEM;
 	}
 
-	add_to_string(page, "</h2>\n<pre>");
-	add_dir_entries(entries, dirpath, page);
-	add_to_string(page, "</pre>\n<hr>\n</body>\n</html>\n");
 	return S_OK;
 }
 
@@ -277,7 +265,7 @@ file_protocol_handler(struct connection *connection)
 			redirect_location = "/";
 			state = S_OK;
 		} else {
-			state = list_directory(name.source, &page);
+			state = list_directory(connection, name.source, &page);
 			type = "text/html";
 		}
 
