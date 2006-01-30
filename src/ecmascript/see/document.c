@@ -203,9 +203,9 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 }
 
 static void
-js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
+js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
-	     struct SEE_value *res)
+	     struct SEE_value *res, int newline)
 {
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
@@ -217,6 +217,8 @@ js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
 		if (code) {
 			add_to_string(ret, code);
 			mem_free(code);
+			if (newline)
+				add_char_to_string(ret, '\n');
 		}
 	}
 #ifdef CONFIG_LEDS
@@ -234,35 +236,19 @@ js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
 }
 
 static void
+js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
+	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	     struct SEE_value *res)
+{
+	js_document_write_do(interp, self, thisobj, argc, argv, res, 0);
+}
+
+static void
 js_document_writeln(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
-	struct global_object *g = (struct global_object *)interp;
-	struct view_state *vs = g->win->vs;
-	struct string *ret = g->ret;
-
-	if (argc >= 1 && ret) {
-		unsigned char *code = SEE_value_to_unsigned_char(interp, argv[0]);
-
-		if (code) {
-			add_to_string(ret, code);
-			mem_free(code);
-			add_char_to_string(ret, '\n');
-		}
-	}
-#ifdef CONFIG_LEDS
-	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
-	 * function' errors, I want to see just the useful ones. So just
-	 * lighting a led and going away, no muss, no fuss. --pasky */
-	/* TODO: Perhaps we can introduce ecmascript.error_report_unsupported
-	 * -> "Show information about the document using some valid,
-	 *  nevertheless unsupported methods/properties." --pasky too */
-
-	set_led_value(vs->doc_view->session->status.ecmascript_led, 'J');
-#endif
-	checktime(interp);
-	SEE_SET_BOOLEAN(res, 0);
+	js_document_write_do(interp, self, thisobj, argc, argv, res, 1);
 }
 
 static int
