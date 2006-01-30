@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-17 00:01+0100\n"
-"PO-Revision-Date: 2006-01-17 00:02+0100\n"
+"POT-Creation-Date: 2006-01-30 23:26+0100\n"
+"PO-Revision-Date: 2006-01-30 23:28+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:354 src/dialogs/edit.c:97 src/dialogs/info.c:133
 #: src/dialogs/options.c:210 src/dialogs/options.c:290 src/mime/dialogs.c:129
-#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:233
+#: src/protocol/auth/dialogs.c:110 src/protocol/protocol.c:234
 #: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
 #: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
@@ -187,7 +187,7 @@ msgid "Digital clock in the status bar."
 msgstr "Horloge digitale dans la barre de status."
 
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1118
-#: src/config/options.inc:1125 src/ecmascript/ecmascript.c:45
+#: src/config/options.inc:1125 src/ecmascript/ecmascript.c:41
 #: src/globhist/globhist.c:63 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
 msgid "Enable"
@@ -1796,7 +1796,7 @@ msgid "Description"
 msgstr "Description"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:227 src/session/session.c:282
+#: src/protocol/protocol.c:228 src/session/session.c:282
 #: src/session/session.c:954 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
@@ -3747,7 +3747,7 @@ msgstr "Texte"
 msgid "Dialog text colors."
 msgstr "Couleurs du texte des dialogues."
 
-#: src/config/options.inc:978 src/viewer/text/form.c:1460
+#: src/config/options.inc:978 src/viewer/text/form.c:1462
 msgid "Checkbox"
 msgstr "Case à cocher"
 
@@ -3795,7 +3795,7 @@ msgstr "Raccourci du bouton"
 msgid "Selected button shortcut"
 msgstr "Raccourci du bouton sélectionné"
 
-#: src/config/options.inc:1006 src/viewer/text/form.c:1464
+#: src/config/options.inc:1006 src/viewer/text/form.c:1466
 msgid "Text field"
 msgstr "Champ texte"
 
@@ -4400,7 +4400,7 @@ msgid "Domain"
 msgstr "Domaine"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
-#: src/mime/backend/mimetypes.c:56 src/protocol/file/file.c:47
+#: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
 msgid "Path"
 msgstr "Chemin"
 
@@ -5358,31 +5358,31 @@ msgstr ""
 "Laisser à \"\" pour utiliser le style initial du document."
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:153
+#: src/ecmascript/ecmascript.c:37 src/ecmascript/ecmascript.c:247
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
-#: src/ecmascript/ecmascript.c:43
+#: src/ecmascript/ecmascript.c:39
 msgid "ECMAScript options."
 msgstr "Options d'ECMAScript."
 
-#: src/ecmascript/ecmascript.c:47
+#: src/ecmascript/ecmascript.c:43
 msgid "Whether to run those scripts inside of documents."
 msgstr "Exécuter ou non ces scripts présents dans les documents."
 
-#: src/ecmascript/ecmascript.c:49
+#: src/ecmascript/ecmascript.c:45
 msgid "Script error reporting"
 msgstr "Rapport d'erreur de script"
 
-#: src/ecmascript/ecmascript.c:51
+#: src/ecmascript/ecmascript.c:47
 msgid "Open a message box when a script reports an error."
 msgstr "Ouvrir une boîte de message quand un script produit une erreur."
 
-#: src/ecmascript/ecmascript.c:53
+#: src/ecmascript/ecmascript.c:49
 msgid "Ignore <noscript> content"
 msgstr "Ignorer le contenu de <noscript>"
 
-#: src/ecmascript/ecmascript.c:55
+#: src/ecmascript/ecmascript.c:51
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -5390,29 +5390,29 @@ msgstr ""
 "Ignorer ou non le contenu du tag <noscript> quand ECMAScript\n"
 "est actif."
 
-#: src/ecmascript/ecmascript.c:58
+#: src/ecmascript/ecmascript.c:54
 msgid "Maximum execution time"
 msgstr "Temps maximal d'exécution"
 
-#: src/ecmascript/ecmascript.c:60
+#: src/ecmascript/ecmascript.c:56
 msgid "Maximum execution time in seconds for a script."
 msgstr "Temps maximal pour l'exécution d'un script, en secondes."
 
-#: src/ecmascript/ecmascript.c:62
+#: src/ecmascript/ecmascript.c:58
 msgid "Pop-up window blocking"
 msgstr "Blocage des fenêtres Javascript (popups)"
 
-#: src/ecmascript/ecmascript.c:64
+#: src/ecmascript/ecmascript.c:60
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 "Interdire ou non l'ouverture de fenêtres ou d'onglets\n"
 "par les scripts."
 
-#: src/ecmascript/ecmascript.c:132
+#: src/ecmascript/ecmascript.c:226
 msgid "JavaScript Emergency"
 msgstr "Alerte JavaScript"
 
-#: src/ecmascript/ecmascript.c:134
+#: src/ecmascript/ecmascript.c:228
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5425,16 +5425,16 @@ msgstr ""
 "qu'il y a un bogue dans ce script et que cela aurait pû\n"
 "bloquer ELinks, l'exécution du script a donc été interrompue."
 
-#: src/ecmascript/see/window.c:215 src/ecmascript/spidermonkey/window.c:286
+#: src/ecmascript/see/window.c:216 src/ecmascript/spidermonkey/window.c:286
 msgid "JavaScript Alert"
 msgstr "Alerte JavaScript"
 
-#: src/ecmascript/spidermonkey.c:162
+#: src/ecmascript/spidermonkey.c:88
 #, c-format
 msgid "A script embedded in the current document raised the following%s%s%s%s"
 msgstr "Un script contenu dans le document courant a provoqué%s%s%s%s"
 
-#: src/ecmascript/spidermonkey.c:178
+#: src/ecmascript/spidermonkey.c:104
 msgid "JavaScript Error"
 msgstr "Erreur Javascript"
 
@@ -7140,40 +7140,45 @@ msgstr "A~fficher"
 msgid "Show ~header"
 msgstr "~Montrer les en-têtes"
 
-#: src/protocol/file/file.c:38
-msgid "Local files"
-msgstr "Fichiers locaux"
-
-#: src/protocol/file/file.c:40
-msgid "Options specific to local browsing."
-msgstr "Options pour la navigation locale."
-
-#: src/protocol/file/file.c:43
+#: src/protocol/file/cgi.c:39
 msgid "Local CGI"
 msgstr "Scripts CGI locaux"
 
-#: src/protocol/file/file.c:45
+#: src/protocol/file/cgi.c:41
 msgid "Local CGI specific options."
 msgstr "Options des scripts CGI locaux."
 
-#: src/protocol/file/file.c:49
+#: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
 msgstr ""
 "Liste des répertoires où sont les scripts CGI (séparée par des virgules)."
 
-#: src/protocol/file/file.c:51
+#: src/protocol/file/cgi.c:47
 msgid "Allow local CGI"
 msgstr "Autoriser les scripts CGI locaux"
 
-#: src/protocol/file/file.c:53
+#: src/protocol/file/cgi.c:49
 msgid "Whether to execute local CGI scripts."
 msgstr "Exécuter ou non les scripts CGI locaux."
 
-#: src/protocol/file/file.c:56
+#. name:
+#: src/protocol/file/cgi.c:54
+msgid "CGI"
+msgstr "CGI"
+
+#: src/protocol/file/file.c:39
+msgid "Local files"
+msgstr "Fichiers locaux"
+
+#: src/protocol/file/file.c:41
+msgid "Options specific to local browsing."
+msgstr "Options pour la navigation locale."
+
+#: src/protocol/file/file.c:43
 msgid "Allow reading special files"
 msgstr "Autoriser la lecture des fichiers spéciaux"
 
-#: src/protocol/file/file.c:58
+#: src/protocol/file/file.c:45
 msgid ""
 "Whether to allow reading from non-regular files.\n"
 "Note this can be dangerous; reading /dev/urandom or\n"
@@ -7183,11 +7188,11 @@ msgstr ""
 "Notez que cela peut être dangereux; lire /dev/urandom\n"
 "ou /dev/zero peut ruiner votre journée !"
 
-#: src/protocol/file/file.c:62
+#: src/protocol/file/file.c:49
 msgid "Show hidden files in directory listing"
 msgstr "Montrer les fichiers cachés"
 
-#: src/protocol/file/file.c:64
+#: src/protocol/file/file.c:51
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
 "hidden in local directories listing."
@@ -7196,11 +7201,11 @@ msgstr ""
 "seront cachés lors de la visualisation du contenu d'un répertoire\n"
 "local."
 
-#: src/protocol/file/file.c:67
+#: src/protocol/file/file.c:54
 msgid "Try encoding extensions"
 msgstr "Deviner l'extension des fichiers encodés"
 
-#: src/protocol/file/file.c:69
+#: src/protocol/file/file.c:56
 msgid ""
 "When set, if we can't open a file named 'filename', we'll try\n"
 "to open 'filename' with some encoding extension appended\n"
@@ -7211,7 +7216,7 @@ msgstr ""
 "'un_nom.gz'); cela dépend des encodages supportés."
 
 #. name:
-#: src/protocol/file/file.c:77
+#: src/protocol/file/file.c:64
 msgid "File"
 msgstr "File"
 
@@ -7221,46 +7226,46 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp.c:43 src/protocol/fsp/fsp.c:55
+#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
 msgid "FSP"
 msgstr "FSP"
 
-#: src/protocol/fsp/fsp.c:45
+#: src/protocol/fsp/fsp.c:46
 msgid "FSP specific options."
 msgstr "Options du protocole FSP."
 
-#: src/protocol/fsp/fsp.c:47
+#: src/protocol/fsp/fsp.c:48
 msgid "Sort entries"
 msgstr "Trier les entrées"
 
-#: src/protocol/fsp/fsp.c:49
+#: src/protocol/fsp/fsp.c:50
 msgid "Whether to sort entries in directory listings."
 msgstr "Trier ou non les entrées des répertoires."
 
 #. name:
-#: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
+#: src/protocol/ftp/ftp.c:56 src/protocol/ftp/ftp.c:86
 msgid "FTP"
 msgstr "FTP"
 
-#: src/protocol/ftp/ftp.c:57
+#: src/protocol/ftp/ftp.c:58
 msgid "FTP specific options."
 msgstr "Options du protocole FTP."
 
-#: src/protocol/ftp/ftp.c:59 src/protocol/http/http.c:124
+#: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:124
 #: src/protocol/http/http.c:206
 msgid "Proxy configuration"
 msgstr "Configuration proxy"
 
-#: src/protocol/ftp/ftp.c:61
+#: src/protocol/ftp/ftp.c:62
 msgid "FTP proxy configuration."
 msgstr "Configuration proxy FTP."
 
-#: src/protocol/ftp/ftp.c:63 src/protocol/http/http.c:128
+#: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:128
 #: src/protocol/http/http.c:210
 msgid "Host and port-number"
 msgstr "Hôte et numéro de port"
 
-#: src/protocol/ftp/ftp.c:65
+#: src/protocol/ftp/ftp.c:66
 msgid ""
 "Host and port-number (host:port) of the FTP proxy, or blank.\n"
 "If it's blank, FTP_PROXY environment variable is checked as well."
@@ -7268,36 +7273,36 @@ msgstr ""
 "Hôte et numéro de port (hôte:port) du proxy FTP, ou rien.\n"
 "Si rien, la variable d'environnement FTP_PROXY sera utilisée."
 
-#: src/protocol/ftp/ftp.c:68
+#: src/protocol/ftp/ftp.c:69
 msgid "Anonymous password"
 msgstr "Mot de passe anonyme"
 
-#: src/protocol/ftp/ftp.c:70
+#: src/protocol/ftp/ftp.c:71
 msgid "FTP anonymous password to be sent."
 msgstr "Mot de passe pour l'accès FTP anonyme."
 
-#: src/protocol/ftp/ftp.c:72
+#: src/protocol/ftp/ftp.c:73
 msgid "Use passive mode (IPv4)"
 msgstr "Utiliser le mode passif (IPv4)"
 
-#: src/protocol/ftp/ftp.c:74
+#: src/protocol/ftp/ftp.c:75
 msgid "Use PASV instead of PORT (passive vs active mode, IPv4 only)."
 msgstr ""
 "Utiliser PASV au lieu de PORT (mode passif contre mode actif, IPv4\n"
 "seulement)."
 
-#: src/protocol/ftp/ftp.c:76
+#: src/protocol/ftp/ftp.c:77
 msgid "Use passive mode (IPv6)"
 msgstr "Utiliser le mode passif (IPv6)"
 
-#: src/protocol/ftp/ftp.c:78
+#: src/protocol/ftp/ftp.c:79
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
 "Utiliser EPSV au lieu de EPRT (mode passif contre mode actif, IPv6\n"
 "seulement)."
 
 #. name:
-#: src/protocol/gopher/gopher.c:46
+#: src/protocol/gopher/gopher.c:47
 msgid "Gopher"
 msgstr "Gopher"
 
@@ -7590,25 +7595,25 @@ msgstr ""
 "Toutes les entrées possibles peuvent être lues dans le dialogue\n"
 "Info. En-têtes."
 
-#: src/protocol/protocol.c:229
+#: src/protocol/protocol.c:230
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr ""
 "Cette version de ELinks ne contient pas le support pour le protocole %s"
 
-#: src/protocol/protocol.c:260
+#: src/protocol/protocol.c:261
 msgid "Protocols"
 msgstr "Protocoles"
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:263
 msgid "Protocol specific options."
 msgstr "Options des protocoles."
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:265
 msgid "No-proxy domains"
 msgstr "Domaines ignorés en ce qui concerne les proxys"
 
-#: src/protocol/protocol.c:266
+#: src/protocol/protocol.c:267
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7621,7 +7626,7 @@ msgstr ""
 "NO_PROXY sera utilisé."
 
 #. name:
-#: src/protocol/protocol.c:305
+#: src/protocol/protocol.c:309
 msgid "Protocol"
 msgstr "Protocole"
 
@@ -8109,167 +8114,167 @@ msgstr "Erreur lors de l'envoi du formulaire"
 msgid "Could not load file %s: %s"
 msgstr "Impossible de charger le fichier %s: %s"
 
-#: src/viewer/text/form.c:1445
+#: src/viewer/text/form.c:1447
 msgid "Reset form"
 msgstr "Réinitialiser le formulaire"
 
-#: src/viewer/text/form.c:1447
+#: src/viewer/text/form.c:1449
 msgid "Harmless button"
 msgstr "Bouton sans impact"
 
-#: src/viewer/text/form.c:1455
+#: src/viewer/text/form.c:1457
 msgid "Submit form to"
 msgstr "Envoi du formulaire à"
 
-#: src/viewer/text/form.c:1456
+#: src/viewer/text/form.c:1458
 msgid "Post form to"
 msgstr "Transfert du formulaire à"
 
-#: src/viewer/text/form.c:1458
+#: src/viewer/text/form.c:1460
 msgid "Radio button"
 msgstr "Bouton radio"
 
-#: src/viewer/text/form.c:1462
+#: src/viewer/text/form.c:1464
 msgid "Select field"
 msgstr "Liste"
 
-#: src/viewer/text/form.c:1466
+#: src/viewer/text/form.c:1468
 msgid "Text area"
 msgstr "Champ texte multiligne"
 
-#: src/viewer/text/form.c:1468
+#: src/viewer/text/form.c:1470
 msgid "File upload"
 msgstr "Envoi de fichier"
 
-#: src/viewer/text/form.c:1470
+#: src/viewer/text/form.c:1472
 msgid "Password field"
 msgstr "Champ mot de passe"
 
-#: src/viewer/text/form.c:1508
+#: src/viewer/text/form.c:1510
 msgid "name"
 msgstr "Nom"
 
-#: src/viewer/text/form.c:1520
+#: src/viewer/text/form.c:1522
 msgid "value"
 msgstr "Valeur"
 
-#: src/viewer/text/form.c:1533
+#: src/viewer/text/form.c:1535
 msgid "read only"
 msgstr "lecture seule"
 
-#: src/viewer/text/form.c:1544
+#: src/viewer/text/form.c:1546
 #, c-format
 msgid "press %s to navigate"
 msgstr "pressez %s pour naviguer"
 
-#: src/viewer/text/form.c:1546
+#: src/viewer/text/form.c:1548
 #, c-format
 msgid "press %s to edit"
 msgstr "pressez %s pour éditer"
 
-#: src/viewer/text/form.c:1582
+#: src/viewer/text/form.c:1584
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "pressez %s pour soumettre à %s"
 
-#: src/viewer/text/form.c:1584
+#: src/viewer/text/form.c:1586
 #, c-format
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/form.c:1686
+#: src/viewer/text/form.c:1688
 msgid "Useless button"
 msgstr "Bouton inutile"
 
-#: src/viewer/text/form.c:1688
+#: src/viewer/text/form.c:1690
 msgid "Submit button"
 msgstr "Bouton Soumettre"
 
-#: src/viewer/text/link.c:1166
+#: src/viewer/text/link.c:1209
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
 
-#: src/viewer/text/link.c:1169
+#: src/viewer/text/link.c:1212
 msgid "~Follow link"
 msgstr "~Suivre le lien"
 
-#: src/viewer/text/link.c:1171
+#: src/viewer/text/link.c:1214
 msgid "Follow link and r~eload"
 msgstr "Suivre le lien et ~recharger"
 
-#: src/viewer/text/link.c:1175
+#: src/viewer/text/link.c:1218
 msgid "Open in new ~window"
 msgstr "Ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1177
+#: src/viewer/text/link.c:1220
 msgid "Open in new ~tab"
 msgstr "Ouvrir dans un nouvel ongle~t"
 
-#: src/viewer/text/link.c:1179
+#: src/viewer/text/link.c:1222
 msgid "Open in new tab in ~background"
 msgstr "Ouvrir dans un nouvel onglet en arrière-~plan"
 
-#: src/viewer/text/link.c:1184
+#: src/viewer/text/link.c:1227
 msgid "~Download link"
 msgstr "~Enregistrer le lien"
 
-#: src/viewer/text/link.c:1187
+#: src/viewer/text/link.c:1230
 msgid "~Add link to bookmarks"
 msgstr "~Ajouter ce lien aux signets"
 
-#: src/viewer/text/link.c:1199 src/viewer/text/link.c:1235
+#: src/viewer/text/link.c:1242 src/viewer/text/link.c:1278
 msgid "~Reset form"
 msgstr "Remettre à ~zéro le formulaire"
 
-#: src/viewer/text/link.c:1212
+#: src/viewer/text/link.c:1255
 msgid "Open in ~external editor"
 msgstr "Ouvrir dans un ~éditeur externe"
 
-#: src/viewer/text/link.c:1218
+#: src/viewer/text/link.c:1261
 msgid "~Submit form"
 msgstr "~Envoyer le formulaire"
 
-#: src/viewer/text/link.c:1219
+#: src/viewer/text/link.c:1262
 msgid "Submit form and rel~oad"
 msgstr "Envoyer le formulaire et ~recharger"
 
-#: src/viewer/text/link.c:1223
+#: src/viewer/text/link.c:1266
 msgid "Submit form and open in new ~window"
 msgstr "Envoyer le formulaire et ouvrir dans une nouvelle ~fenêtre"
 
-#: src/viewer/text/link.c:1225
+#: src/viewer/text/link.c:1268
 msgid "Submit form and open in new ~tab"
 msgstr "Envoyer le formulaire et ouvrir un ~onglet"
 
-#: src/viewer/text/link.c:1228
+#: src/viewer/text/link.c:1271
 msgid "Submit form and open in new tab in ~background"
 msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 
-#: src/viewer/text/link.c:1233
+#: src/viewer/text/link.c:1276
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
-#: src/viewer/text/link.c:1238
+#: src/viewer/text/link.c:1281
 msgid "Form f~ields"
 msgstr "Champs de formula~ire"
 
-#: src/viewer/text/link.c:1243
+#: src/viewer/text/link.c:1286
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
-#: src/viewer/text/link.c:1245
+#: src/viewer/text/link.c:1288
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1253
+#: src/viewer/text/link.c:1296
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1301
+#: src/viewer/text/link.c:1344
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1306
+#: src/viewer/text/link.c:1349
 msgid "Usemap"
 msgstr "Usemap"
 
