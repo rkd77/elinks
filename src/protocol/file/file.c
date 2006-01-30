@@ -39,20 +39,6 @@ static struct option_info file_options[] = {
 		"file", 0,
 		N_("Options specific to local browsing.")),
 
-#ifdef CONFIG_CGI
-	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
-		"cgi", 0,
-		N_("Local CGI specific options.")),
-
-	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
-		"path", 0, "",
-		N_("Colon separated list of directories, where CGI scripts are stored.")),
-
-	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
-		"policy", 0, 0,
-		N_("Whether to execute local CGI scripts.")),
-#endif /* CONFIG_CGI */
-
 	INIT_OPT_BOOL("protocol.file", N_("Allow reading special files"),
 		"allow_special_files", 0, 0,
 		N_("Whether to allow reading from non-regular files.\n"

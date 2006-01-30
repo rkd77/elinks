@@ -35,6 +35,30 @@
 #include "util/env.h"
 #include "util/string.h"
 
+static struct option_info cgi_options[] = {
+	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
+		"cgi", 0,
+		N_("Local CGI specific options.")),
+
+	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
+		"path", 0, "",
+		N_("Colon separated list of directories, where CGI scripts are stored.")),
+
+	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
+		"policy", 0, 0,
+		N_("Whether to execute local CGI scripts.")),
+	NULL_OPTION_INFO,
+};
+
+struct module cgi_protocol_module = struct_module(
+	/* name: */		N_("CGI"),
+	/* options: */		cgi_options,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
 
 static void
 close_pipe_and_read(struct socket *data_socket)
