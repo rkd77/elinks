@@ -35,6 +35,7 @@
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/socket.h"
+#include "protocol/common.h"
 #include "protocol/gopher/gopher.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -599,25 +600,15 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 	struct string buffer;
 	unsigned char *end;
 
-	if (!init_string(&buffer))
-		return S_OUT_OF_MEM;
-
 	if (conn->from == 0) {
-		unsigned char *where = get_uri_string(conn->uri, URI_PUBLIC);
+		enum connection_state state;
 
-		if (where) decode_uri_for_display(where);
+		state = init_directory_listing(&buffer, conn->uri);
+		if (state != S_OK)
+			return state;
 
-		add_format_to_string(&buffer,
-			"<html>\n"
-			"<head>\n"
-			"<title>Gopher menu at %s</title>\n"
-			"</head>\n"
-			"<body>\n"
-			"<h1>Gopher menu at %s</h1>\n"
-			"<pre>",
-			empty_string_or_(where), empty_string_or_(where));
-
-		mem_free_if(where);
+	} else if (!init_string(&buffer)) {
+		return S_OUT_OF_MEM;
 	}
 
 	while ((end = get_gopher_line_end(rb->data, rb->length))) {

@@ -13,6 +13,7 @@
 
 #include "dom/configuration.h"
 #include "dom/node.h"
+#include "dom/sgml/dump.h"
 #include "dom/sgml/parser.h"
 #include "dom/stack.h"
 
@@ -265,6 +266,7 @@ main(int argc, char *argv[])
 	enum sgml_parser_code code = 0;
 	enum dom_config_flag normalize_flags = 0;
 	int normalize = 0;
+	int dump = 0;
 	int complete = 1;
 	size_t read_stdin = 0;
 	struct dom_string uri = STATIC_DOM_STRING("dom://test");
@@ -338,6 +340,10 @@ main(int argc, char *argv[])
 			flags |= SGML_PARSER_INCREMENTAL;
 			complete = 0;
 
+		} else if (!strcmp(arg, "dump")) {
+			type = SGML_PARSER_TREE;
+			dump = 1;
+
 		} else if (!strcmp(arg, "error")) {
 			flags |= SGML_PARSER_DETECT_ERRORS;
 
@@ -355,7 +361,7 @@ main(int argc, char *argv[])
 	parser->error_func = sgml_error_function;
 	if (normalize)
 		add_dom_config_normalizer(&parser->stack, normalize_flags);
-	else
+	else if (!dump)
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
 	if (read_stdin > 0) {
@@ -402,7 +408,7 @@ main(int argc, char *argv[])
 			pop_dom_node(&parser->stack);
 		}
 
-		if (normalize) {
+		if (normalize || dump) {
 			struct dom_stack stack;
 
 			/* Note, that we cannot free nodes when walking the DOM
@@ -412,7 +418,10 @@ main(int argc, char *argv[])
 			/* XXX: This context needs to be added first because it
 			 * assumes the parser can be accessed via
 			 * stack->contexts[0].data. */
-			add_dom_stack_context(&stack, parser, &sgml_parser_test_context_info);
+			if (normalize)
+				add_dom_stack_context(&stack, parser, &sgml_parser_test_context_info);
+			else if (dump)
+				add_sgml_file_dumper(&stack, stdout);
 			walk_dom_nodes(&stack, parser->root);
 			done_dom_stack(&stack);
 			done_dom_node(parser->root);

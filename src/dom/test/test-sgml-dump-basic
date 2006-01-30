@@ -1,0 +1,173 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test dumping of SGML documents.
+
+Test that DOM documents are consistently dumped to SGML.
+Note, this also test whether attribute nodes are sorted
+correctly.
+'
+
+. "$TEST_LIB"
+
+test_sgml_dump_exact () {
+	desc="$1"; shift
+	src="$1"; shift
+
+	sgml-parser --dump --src "$src" > output
+	echo -n "$src" > expected
+
+	test_expect_success "$desc" 'cmp output expected' 
+}
+
+test_sgml_dump_equals () {
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	sgml-parser --dump --src "$src" > output
+	echo -n "$out" > expected
+
+	test_expect_success "$desc" 'cmp output expected' 
+}
+
+
+################################################################
+# Parse various SGML node types.
+
+test_sgml_dump_exact \
+'Parse a small document.' \
+'<html><body><p>Hello World!</p></body></html>'
+
+test_sgml_dump_exact \
+'Parse an enclosed comment.' \
+'<root><!-- Hello World! --></root>'
+
+test_sgml_dump_exact \
+'Parse comment combinations. (I)' \
+'<root><!-- <!-- -- > --><!--foo--><!----></root>'
+
+test_sgml_dump_exact \
+'Parse comment combinations. (II).' \
+'<!-- comment -->s<!-->-->t<!----->u'
+
+test_sgml_dump_exact \
+'Parse empty comment.' \
+'<!---->s'
+
+test_sgml_dump_exact \
+'Parse an enclosed CDATA section.' \
+'<root><![CDATA[...] ]>...]]></root>'
+
+test_sgml_dump_exact \
+'Parse non-enclosed CDATA section.' \
+'<![CDATA[...]]>'
+
+test_sgml_dump_exact \
+'Parse attributes.' \
+'<e a="1" b="2" c=""></e>'
+
+test_sgml_dump_exact \
+'Parse XML stylesheet processing instructions.' \
+'<?xml-stylesheet type="text/xsl" href="url"?>'
+
+test_sgml_dump_exact \
+'Parse entity references.' \
+'&amp;-&#42;'
+
+#############################################################################
+# Test tidy up dumping
+
+test_sgml_dump_equals \
+'Parse elements.' \
+'<root><child attr="value" /><child2></><child3 >a</></root>' \
+'<root><child attr="value"></child><child2></child2><child3>a</child3></root>'
+
+test_sgml_dump_equals \
+'Parse attributes with garbage.' \
+"<root a=b c='d' e'f' g= h i = j k =></root>" \
+"<root a=\"b\" c='d' g=\"h\" i=\"j\" k></root>"
+
+test_sgml_dump_equals \
+'Parse bad comment. (II)' \
+'<!--a--!>bad comment' \
+'<!--a-->bad comment'
+
+test_sgml_dump_equals \
+'Parse empty notation.' \
+'<!>s' \
+'s'
+
+test_sgml_dump_equals \
+'Parse a bad CDATA section.' \
+'<![CDATA[...' \
+'<![CDATA[...]]>'
+
+test_sgml_dump_equals \
+'Parse tag soup elements. (I)' \
+'<parent attr="value" <child:1></><child:2</>a</parent>' \
+'<parent attr="value"><child:1></child:1><child:2></child:2>a</parent>'
+
+test_sgml_dump_equals \
+'Parse tag soup elements. (II)' \
+'< a >< b < c / >< / >' \
+'<a><b><c></c></b></a>'
+
+test_sgml_dump_equals \
+'Parse attribute with non-quoted values.' \
+'<root color=#abc path=/to/%61-&\one";files/>...' \
+'<root color="#abc" path="/to/%61-&\one";files"></root>...'
+
+# Just how these should be gracefully handled is not clear to me.
+test_sgml_dump_equals \
+'Parse badly formatted entity references.' \
+'& m33p;-&.:-copy;-&;-&#;-&#xx;' \
+'& m33p;-&.:-copy;-&;-&#;-&#xx;'
+
+test_sgml_dump_equals \
+'Parse processing instructions.' \
+'<?xml encoding="UTF8"?>
+...
+<?ecmascript
+var val=2;
+?>' \
+'<?xml encoding="UTF8"?>
+...
+<?ecmascript var val=2;
+?>'
+
+test_sgml_dump_equals \
+'Parse XML processing instructions.' \
+'<?xml version="1.0" />?><?xml />-' \
+'<?xml version="1.0" />?><?xml />-?>'
+
+test_sgml_dump_equals \
+'Parse exotic processing instructions.' \
+'<?xml ?+>+?>-?>-<?js?>-<??>-' \
+'<?xml ?+>+?>-?>-<?js ?>-<? ?>-'
+
+test_sgml_dump_equals \
+'Parse incorrect processing instructions. (I)' \
+'<?js<?>-<?<??>-<?xml <=";&?>-<?' \
+'<?js <?>-<? <??>-<?xml <=";&?>-' \
+
+test_sgml_dump_equals \
+'Parse incorrect processing instructions. (II)' \
+'<?><?' \
+'<? ><??>'
+
+test_sgml_dump_equals \
+'Skip spaces not inside text.' \
+'<
+root
+ns:attr                      
+=
+"value"
+><?	
+	target	
+ data?><	/	root	>' \
+'<root ns:attr="value"><?target data?></root>'
+
+test_done

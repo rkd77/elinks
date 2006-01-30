@@ -160,6 +160,9 @@ enum uri_component {
 	/* Used for HTTP CONNECT method info */
 	URI_HTTP_CONNECT	= URI_HOST | URI_PORT | URI_DEFAULT_PORT,
 
+	/* Used for adding directory listing HTML header, */
+	URI_DIR_LOCATION	= URI_PROTOCOL | URI_HOST | URI_PORT | URI_IDN,
+
 	/* Used for getting the host of a DNS query. As a hidden bonus we get
 	 * IPv6 hostnames without the brackets because we don't ask for
 	 * URI_PORT. */

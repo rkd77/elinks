@@ -42,6 +42,7 @@
 #include "osdep/osdep.h"
 #include "osdep/stat.h"
 #include "protocol/auth/auth.h"
+#include "protocol/common.h"
 #include "protocol/ftp/ftp.h"
 #include "protocol/ftp/parse.h"
 #include "protocol/uri.h"
@@ -1253,37 +1254,21 @@ out_of_mem:
 
 	if (ftp->dir && !conn->from) {
 		struct string string;
-		unsigned char *uristring;
+		enum connection_state state;
 
 		if (!conn->uri->data) {
 			abort_connection(conn, S_FTP_ERROR);
 			return;
 		}
 
-		uristring = get_uri_string(conn->uri, URI_PUBLIC);
-		if (!uristring) goto out_of_mem;
-
-		if (!init_string(&string)) {
-			mem_free(uristring);
-			goto out_of_mem;
+		state = init_directory_listing(&string, conn->uri);
+		if (state != S_OK) {
+			abort_connection(conn, state);
+			return;
 		}
 
-		add_html_to_string(&string, uristring, strlen(uristring));
-		mem_free(uristring);
-
-#define ADD_CONST(str) { \
-	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
-	conn->from += (sizeof(str) - 1); }
-
-#define ADD_STRING() { \
-	add_fragment(conn->cached, conn->from, string.source, string.length); \
-	conn->from += string.length; }
-
-		ADD_CONST("<html>\n<head><title>");
-		ADD_STRING();
-		ADD_CONST("</title></head>\n<body>\n<h2>FTP directory ");
-		ADD_STRING();
-		ADD_CONST("</h2>\n<pre>");
+		add_fragment(conn->cached, conn->from, string.source, string.length);
+		conn->from += string.length;
 
 		done_string(&string);
 
@@ -1342,6 +1327,10 @@ out_of_mem:
 				&conn->tries, colorize_dir,
 				(unsigned char *) dircolor) == -1)
 		goto out_of_mem;
+
+#define ADD_CONST(str) { \
+	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
+	conn->from += (sizeof(str) - 1); }
 
 	if (ftp->dir) ADD_CONST("</pre>\n<hr>\n</body>\n</html>");
 
