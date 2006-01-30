@@ -225,7 +225,7 @@ proc-instruction:  ->
 #text: -'
 
 test_output_equals \
-'Parse incorrect processing instructions.' \
+'Parse incorrect processing instructions. (I)' \
 '<?js<?>-<?<??>-<?xml <=";&?>-<?' \
 '
 proc-instruction: js -> <

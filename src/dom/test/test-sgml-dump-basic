@@ -149,12 +149,12 @@ test_sgml_dump_equals \
 '<?xml ?+>+?>-?>-<?js ?>-<? ?>-'
 
 test_sgml_dump_equals \
-'Parse incorrect processing instructions. (II)' \
+'Parse incorrect processing instructions. (I)' \
 '<?js<?>-<?<??>-<?xml <=";&?>-<?' \
 '<?js <?>-<? <??>-<?xml <=";&?>-' \
 
 test_sgml_dump_equals \
-'Parse incorrect processing instructions (II).' \
+'Parse incorrect processing instructions. (II)' \
 '<?><?' \
 '<? ><??>'
 
