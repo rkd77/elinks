@@ -865,22 +865,18 @@ try_submit_given_form(struct session *ses, struct document_view *doc_view,
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
-			int res = 1;
+			unsigned char *ret = form->onsubmit;
+			int res;
 
 			if (vs->ecmascript_fragile)
 				ecmascript_reset_state(vs);
 			interpreter = vs->ecmascript;
 			assert(interpreter);
-#ifdef CONFIG_ECMASCRIPT_SEE
-			{
-				unsigned char *ret = form->onsubmit;
-
-				/* SEE doesn't like return outside functions */
-				while ((ret = strstr(ret, "return "))) {
-					while (*ret != ' ') *ret++ = ' ';
-				}
+			/* SEE and SpiderMonkey do not like return outside
+			 * functions. */
+			while ((ret = strstr(ret, "return "))) {
+				while (*ret != ' ') *ret++ = ' ';
 			}
-#endif
 			add_to_string(&code, form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);
 			done_string(&code);
