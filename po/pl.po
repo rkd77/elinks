@@ -4388,7 +4388,7 @@ msgstr "Cykliczne zapisywanie"
 #. name:
 #: src/config/urlhist.c:61
 msgid "Goto URL History"
-msgstr "Historia globalna"
+msgstr "Historia \"Przejd¼ do URL-a\""
 
 #. name:
 #: src/cookies/cookies.c:80 src/cookies/cookies.c:827
@@ -5716,7 +5716,7 @@ msgstr "Czy na pewno chcesz skasowaæ wszystkie elementy historii?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
-msgstr "Przeszukaj historiê"
+msgstr "Historia szukania"
 
 #
 #: src/globhist/dialogs.c:226
@@ -8468,7 +8468,7 @@ msgstr "Szukaj wstecz"
 #. name:
 #: src/viewer/text/search.c:1654
 msgid "Search History"
-msgstr "Przeszukaj historiê"
+msgstr "Historia szukania"
 
 #: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
