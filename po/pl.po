@@ -5716,7 +5716,7 @@ msgstr "Czy na pewno chcesz skasowaæ wszystkie elementy historii?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
-msgstr "Historia szukania"
+msgstr "Szukanie w historii"
 
 #
 #: src/globhist/dialogs.c:226
@@ -8468,7 +8468,7 @@ msgstr "Szukaj wstecz"
 #. name:
 #: src/viewer/text/search.c:1654
 msgid "Search History"
-msgstr "Historia szukania"
+msgstr "Szukanie w historii"
 
 #: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
