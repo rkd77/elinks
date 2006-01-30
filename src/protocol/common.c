@@ -62,6 +62,12 @@ init_directory_listing(struct string *page, struct uri *uri)
 	    && !add_char_to_string(&dirpath, '/'))
 		goto out_of_memory;
 
+	if (uri->protocol == PROTOCOL_GOPHER) {
+		/* A little hack to get readable Gopher names. We should find a
+		 * way to do it more general. */
+		decode_uri_string(&dirpath);
+	}
+
 	if (!local && !add_char_to_string(&location, '/'))
 		goto out_of_memory;
 
@@ -81,15 +87,19 @@ init_directory_listing(struct string *page, struct uri *uri)
 	if (!add_to_string(page, "\" />\n</head>\n<body>\n<h2>"))
 		goto out_of_memory;
 
+	/* Use module names? */
 	switch (uri->protocol) {
 	case PROTOCOL_FILE:
 		info = "Local";
 		break;
+	case PROTOCOL_FSP:
+		info = "FSP";
+		break;
 	case PROTOCOL_FTP:
 		info = "FTP";
 		break;
-	case PROTOCOL_FSP:
-		info = "FSP";
+	case PROTOCOL_GOPHER:
+		info = "Gopher";
 		break;
 	default:
 		info = "?";
