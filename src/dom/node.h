@@ -242,6 +242,9 @@ int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 /* Returns the previous sibling to the node. */
 struct dom_node *get_dom_node_prev(struct dom_node *node);
 
+/* Returns the next sibling to the node. */
+struct dom_node *get_dom_node_next(struct dom_node *node);
+
 /* Returns first text node of the element or NULL. */
 struct dom_node *
 get_dom_node_child(struct dom_node *node, enum dom_node_type child_type,

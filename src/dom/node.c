@@ -269,6 +269,24 @@ get_dom_node_prev(struct dom_node *node)
 }
 
 struct dom_node *
+get_dom_node_next(struct dom_node *node)
+{
+	struct dom_node_list **list;
+	int index;
+
+	assert(node->parent);
+
+	list = get_dom_node_list(node->parent, node);
+	if (!list) return NULL;
+
+	index = get_dom_node_list_pos(*list, node);
+	if (index + 1 < (*list)->size)
+		return (*list)->entries[index + 1];
+
+	return NULL;
+}
+
+struct dom_node *
 get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
 		   int16_t subtype)
 {
