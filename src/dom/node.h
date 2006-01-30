@@ -111,6 +111,9 @@ struct dom_attribute_node {
 	 * to reduce string comparing and only do one fast find mapping. */
 	uint16_t type;
 
+	/* The attribute value is delimited by quotes. Can be NUL, ' or ". */
+	unsigned char quoted;
+
 	/* Was the attribute specified in the DTD as a default attribute or was
 	 * it added from the document source. */
 	unsigned int specified:1;
@@ -124,9 +127,6 @@ struct dom_attribute_node {
 
 	/* The attribute value references some other resource */
 	unsigned int reference:1;
-
-	/* The attribute value is delimited by quotes */
-	unsigned int quoted:1;
 };
 
 struct dom_text_node {
