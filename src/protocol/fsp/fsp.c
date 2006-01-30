@@ -131,21 +131,16 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
 	struct string buf;
 	FSP_DIR *dir;
-	unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned char dircolor[8] = "";
 
-	if (!uristring || !data || !init_string(&buf))
+	if (!data || init_directory_listing(&buf, uri) != S_OK)
 		fsp_error("Out of memory");
 
 	fprintf(stderr, "text/html");
 	fclose(stderr);
-	add_html_to_string(&buf, uristring, strlen(uristring));
 
-	printf("<html><head><title>%s</title><base href=\"%s", buf.source,
-		uristring);
-	if (buf.source[buf.length - 1] != '/') printf("/");
-	printf("\"></head><body><h2>FSP directory %s</h2><pre>", buf.source);
+	puts(buf.source);
 
 	dir = fsp_opendir(ses, data);
 	if (!dir) goto end;
