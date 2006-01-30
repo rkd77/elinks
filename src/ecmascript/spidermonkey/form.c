@@ -481,17 +481,19 @@ input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 static JSObject *
 get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 {
-	if (!fs->ecmascript_obj) {
-		/* jsform ('form') is input's parent */
-		/* FIXME: That is NOT correct since the real containing element
-		 * should be its parent, but gimme DOM first. --pasky */
-		JSObject *jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
+#if 0
+	if (fs->ecmascript_obj)
+		return fs->ecmascript_obj;
+#endif
+	/* jsform ('form') is input's parent */
+	/* FIXME: That is NOT correct since the real containing element
+	 * should be its parent, but gimme DOM first. --pasky */
+	JSObject *jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
 
-		JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
-		JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-		JS_SetPrivate(ctx, jsinput, fs); /* to @input_class */
-		fs->ecmascript_obj = jsinput;
-	}
+	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
+	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
+	JS_SetPrivate(ctx, jsinput, fs); /* to @input_class */
+	fs->ecmascript_obj = jsinput;
 	return fs->ecmascript_obj;
 }
 
@@ -1044,17 +1046,19 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 JSObject *
 get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 {
-	if (!fv->ecmascript_obj) {
-		/* jsdoc ('document') is fv's parent */
-		/* FIXME: That is NOT correct since the real containing element
-		 * should be its parent, but gimme DOM first. --pasky */
-		JSObject *jsform = JS_NewObject(ctx, (JSClass *) &form_class, NULL, jsdoc);
+#if 0
+	if (fv->ecmascript_obj)
+		return fv->ecmascript_obj;
+#endif
+	/* jsdoc ('document') is fv's parent */
+	/* FIXME: That is NOT correct since the real containing element
+	 * should be its parent, but gimme DOM first. --pasky */
+	JSObject *jsform = JS_NewObject(ctx, (JSClass *) &form_class, NULL, jsdoc);
 
-		JS_DefineProperties(ctx, jsform, (JSPropertySpec *) form_props);
-		JS_DefineFunctions(ctx, jsform, (JSFunctionSpec *) form_funcs);
-		JS_SetPrivate(ctx, jsform, fv); /* to @form_class */
-		fv->ecmascript_obj = jsform;
-	}
+	JS_DefineProperties(ctx, jsform, (JSPropertySpec *) form_props);
+	JS_DefineFunctions(ctx, jsform, (JSFunctionSpec *) form_funcs);
+	JS_SetPrivate(ctx, jsform, fv); /* to @form_class */
+	fv->ecmascript_obj = jsform;
 	return fv->ecmascript_obj;
 }
 static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
