@@ -190,7 +190,8 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 	return NULL;
 }
 
-int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
+int
+get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 {
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(node, list);
 	struct dom_node *match = dom_node_list_bsearch(&search, list);
@@ -327,6 +328,23 @@ init_dom_node_(unsigned char *file, int line,
 	node->type   = type;
 	node->parent = parent;
 
+	/* Make it possible to add a node to a parent without allocating the
+	 * strings. */
+	if (allocated >= 0) {
+		node->allocated = !!allocated;
+	} else if (parent) {
+		node->allocated = parent->allocated;
+	}
+
+	if (node->allocated) {
+		if (!init_dom_string(&node->string, string->string, string->length)) {
+			done_dom_node(node);
+			return NULL;
+		}
+	} else {
+		copy_dom_string(&node->string, string);
+	}
+
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
 		int sort = (type == DOM_NODE_ATTRIBUTE);
@@ -342,22 +360,6 @@ init_dom_node_(unsigned char *file, int line,
 			done_dom_node(node);
 			return NULL;
 		}
-
-		/* Make it possible to add a node to a parent without
-		 * allocating the strings. */
-		node->allocated = allocated < 0 ? parent->allocated : !!allocated;
-
-	} else if (allocated >= 0) {
-			node->allocated = !!allocated;
-	}
-
-	if (node->allocated) {
-		if (!init_dom_string(&node->string, string->string, string->length)) {
-			done_dom_node(node);
-			return NULL;
-		}
-	} else {
-		copy_dom_string(&node->string, string);
 	}
 
 	return node;
