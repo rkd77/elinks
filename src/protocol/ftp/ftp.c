@@ -1267,15 +1267,8 @@ out_of_mem:
 			return;
 		}
 
-#define ADD_CONST(str) { \
-	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
-	conn->from += (sizeof(str) - 1); }
-
-#define ADD_STRING() { \
-	add_fragment(conn->cached, conn->from, string.source, string.length); \
-	conn->from += string.length; }
-
-		ADD_STRING();
+		add_fragment(conn->cached, conn->from, string.source, string.length);
+		conn->from += string.length;
 
 		done_string(&string);
 
@@ -1334,6 +1327,10 @@ out_of_mem:
 				&conn->tries, colorize_dir,
 				(unsigned char *) dircolor) == -1)
 		goto out_of_mem;
+
+#define ADD_CONST(str) { \
+	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
+	conn->from += (sizeof(str) - 1); }
 
 	if (ftp->dir) ADD_CONST("</pre>\n<hr>\n</body>\n</html>");
 
