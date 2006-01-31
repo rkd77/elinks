@@ -80,7 +80,7 @@ get_dom_select_pseudo(struct dom_scanner_token *token)
 }
 
 /* Parses attribute selector. For example '[foo="bar"]' or '[foo|="boo"]'. */
-static enum dom_exception_code
+static enum dom_code
 parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
@@ -88,25 +88,25 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 	/* Get '['. */
 
 	if (token->type != '[')
-		return DOM_ERR_INVALID_STATE;
+		return DOM_CODE_SYNTAX_ERR;
 
 	/* Get the attribute name. */
 
 	token = get_next_dom_scanner_token(scanner);
 	if (!token || token->type != CSS_TOKEN_IDENT)
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 
 	copy_dom_string(&sel->node.string, &token->string);
 
 	/* Get the optional '=' combo or ending ']'. */
 
 	token = get_next_dom_scanner_token(scanner);
-	if (!token) return DOM_ERR_SYNTAX;
+	if (!token) return DOM_CODE_SYNTAX_ERR;
 
 	switch (token->type) {
 	case ']':
 		sel->match.attribute |= DOM_SELECT_ATTRIBUTE_ANY;
-		return DOM_ERR_NONE;
+		return DOM_CODE_OK;
 
 	case CSS_TOKEN_SELECT_SPACE_LIST:
 		sel->match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
@@ -129,13 +129,13 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 		break;
 
 	default:
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 	}
 
 	/* Get the required value. */
 
 	token = get_next_dom_scanner_token(scanner);
-	if (!token) return DOM_ERR_SYNTAX;
+	if (!token) return DOM_CODE_SYNTAX_ERR;
 
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
@@ -144,16 +144,16 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
 		break;
 
 	default:
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 	}
 
 	/* Get the ending ']'. */
 
 	token = get_next_dom_scanner_token(scanner);
 	if (token && token->type == ']')
-		return DOM_ERR_NONE;
+		return DOM_CODE_OK;
 
-	return DOM_ERR_SYNTAX;
+	return DOM_CODE_SYNTAX_ERR;
 }
 
 /* Parse:
@@ -190,7 +190,7 @@ get_scanner_token_number(struct dom_scanner_token *token)
 }
 
 /* Parses the '(...)' part of ':nth-of-type(...)' and ':nth-child(...)'. */
-static enum dom_exception_code
+static enum dom_code
 parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *token = get_next_dom_scanner_token(scanner);
@@ -198,11 +198,11 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *s
 	int number = -1;
 
 	if (!token || token->type != '(')
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 
 	token = get_next_dom_scanner_token(scanner);
 	if (!token)
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
@@ -220,59 +220,59 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *s
 		}
 
 		if (skip_css_tokens(scanner, ')'))
-			return DOM_ERR_NONE;
+			return DOM_CODE_OK;
 
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 
 	case '-':
 		sign = -1;
 
 		token = get_next_dom_scanner_token(scanner);
-		if (!token) return DOM_ERR_SYNTAX;
+		if (!token) return DOM_CODE_SYNTAX_ERR;
 
 		if (token->type != CSS_TOKEN_IDENT)
 			break;
 
 		if (token->type != CSS_TOKEN_NUMBER)
-			return DOM_ERR_SYNTAX;
+			return DOM_CODE_SYNTAX_ERR;
 		/* Fall-through */
 
 	case CSS_TOKEN_NUMBER:
 		number = get_scanner_token_number(token);
 		if (number < 0)
-			return DOM_ERR_INVALID_STATE;
+			return DOM_CODE_VALUE_ERR;
 
 		token = get_next_dom_scanner_token(scanner);
-		if (!token) return DOM_ERR_SYNTAX;
+		if (!token) return DOM_CODE_SYNTAX_ERR;
 		break;
 
 	default:
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 	}
 
 	/* The rest can contain n+ part */
 	switch (token->type) {
 	case CSS_TOKEN_IDENT:
 		if (!dom_scanner_token_contains(token, "n"))
-			return DOM_ERR_SYNTAX;
+			return DOM_CODE_SYNTAX_ERR;
 
 		nth->step = sign * number;
 
 		token = get_next_dom_scanner_token(scanner);
-		if (!token) return DOM_ERR_SYNTAX;
+		if (!token) return DOM_CODE_SYNTAX_ERR;
 
 		if (token->type != '+')
 			break;
 
 		token = get_next_dom_scanner_token(scanner);
-		if (!token) return DOM_ERR_SYNTAX;
+		if (!token) return DOM_CODE_SYNTAX_ERR;
 
 		if (token->type != CSS_TOKEN_NUMBER)
 			break;
 
 		number = get_scanner_token_number(token);
 		if (number < 0)
-			return DOM_ERR_INVALID_STATE;
+			return DOM_CODE_VALUE_ERR;
 
 		nth->index = sign * number;
 		break;
@@ -283,19 +283,19 @@ parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *s
 	}
 
 	if (skip_css_tokens(scanner, ')'))
-		return DOM_ERR_NONE;
+		return DOM_CODE_OK;
 
-	return DOM_ERR_SYNTAX;
+	return DOM_CODE_SYNTAX_ERR;
 }
 
 /* Parse a pseudo-class or -element with the syntax: ':<ident>'. */
-static enum dom_exception_code
+static enum dom_code
 parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 			struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
 	enum dom_select_pseudo pseudo;
-	enum dom_exception_code code;
+	enum dom_code code;
 
 	/* Skip double :'s in front of some pseudo's (::first-line, etc.) */
 	do {
@@ -303,12 +303,12 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	} while (token && token->type == ':');
 
 	if (!token || token->type != CSS_TOKEN_IDENT)
-		return DOM_ERR_SYNTAX;
+		return DOM_CODE_SYNTAX_ERR;
 
 	pseudo = get_dom_select_pseudo(token);
 	switch (pseudo) {
 	case DOM_SELECT_PSEUDO_UNKNOWN:
-		return DOM_ERR_NOT_FOUND;
+		return DOM_CODE_ERR;
 
 	case DOM_SELECT_PSEUDO_CONTAINS:
 		/* FIXME: E:contains("text") */
@@ -317,7 +317,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	case DOM_SELECT_PSEUDO_NTH_CHILD:
 	case DOM_SELECT_PSEUDO_NTH_LAST_CHILD:
 		code = parse_dom_select_nth_arg(&sel->nth_child, scanner);
-		if (code != DOM_ERR_NONE)
+		if (code != DOM_CODE_OK)
 			return code;
 
 		sel->match.element |= DOM_SELECT_ELEMENT_NTH_CHILD;
@@ -341,7 +341,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	case DOM_SELECT_PSEUDO_NTH_TYPE:
 	case DOM_SELECT_PSEUDO_NTH_LAST_TYPE:
 		code = parse_dom_select_nth_arg(&sel->nth_type, scanner);
-		if (code != DOM_ERR_NONE)
+		if (code != DOM_CODE_OK)
 			return code;
 
 		sel->match.element |= DOM_SELECT_ELEMENT_NTH_TYPE;
@@ -375,7 +375,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 		select->pseudo |= pseudo;
 	}
 
-	return DOM_ERR_NONE;
+	return DOM_CODE_OK;
 }
 
 /* The element relation flags are mutual exclusive. This macro can be used
@@ -384,7 +384,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 	((sel)->match.element & DOM_SELECT_RELATION_FLAGS)
 
 /* Parse a CSS3 selector and add selector nodes to the @select struct. */
-static enum dom_exception_code
+static enum dom_code
 parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		 struct dom_string *string)
 {
@@ -397,7 +397,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 	while (dom_scanner_has_tokens(&scanner)) {
 		struct dom_scanner_token *token = get_dom_scanner_token(&scanner);
-		enum dom_exception_code code;
+		enum dom_code code;
 		struct dom_select_node *select_node;
 
 		assert(token);
@@ -430,14 +430,14 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		case '[':
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			code = parse_dom_select_attribute(&sel, &scanner);
-			if (code != DOM_ERR_NONE)
+			if (code != DOM_CODE_OK)
 				return code;
 			break;
 
 		case '.':
 			token = get_next_dom_scanner_token(&scanner);
 			if (!token || token->type != CSS_TOKEN_IDENT)
-				return DOM_ERR_SYNTAX;
+				return DOM_CODE_SYNTAX_ERR;
 
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
@@ -447,30 +447,30 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 		case ':':
 			code = parse_dom_select_pseudo(select, &sel, &scanner);
-			if (code != DOM_ERR_NONE)
+			if (code != DOM_CODE_OK)
 				return code;
 			break;
 
 		case '>':
 			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
-				return DOM_ERR_SYNTAX;
+				return DOM_CODE_SYNTAX_ERR;
 			sel.match.element |= DOM_SELECT_RELATION_DIRECT_CHILD;
 			break;
 
 		case '+':
 			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
-				return DOM_ERR_SYNTAX;
+				return DOM_CODE_SYNTAX_ERR;
 			sel.match.element |= DOM_SELECT_RELATION_DIRECT_ADJACENT;
 			break;
 
 		case '~':
 			if (get_element_relation(&sel) != DOM_SELECT_RELATION_DESCENDANT)
-				return DOM_ERR_SYNTAX;
+				return DOM_CODE_SYNTAX_ERR;
 			sel.match.element |= DOM_SELECT_RELATION_INDIRECT_ADJACENT;
 			break;
 
 		default:
-			return DOM_ERR_SYNTAX;
+			return DOM_CODE_SYNTAX_ERR;
 		}
 
 		skip_dom_scanner_token(&scanner);
@@ -496,7 +496,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 			if (!add_to_dom_node_list(list, node, index)) {
 				done_dom_node(node);
-				return DOM_ERR_INVALID_STATE;
+				return DOM_CODE_ALLOC_ERR;
 			}
 
 			node->parent = parent;
@@ -506,8 +506,9 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			select->selector = select_node;
 		}
 
-		if (push_dom_node(stack, &select_node->node) != DOM_STACK_CODE_OK)
-			return DOM_ERR_INVALID_STATE;
+		code = push_dom_node(stack, &select_node->node);
+		if (code != DOM_CODE_OK)
+			return code;
 
 		if (select_node->node.type != DOM_NODE_ELEMENT)
 			pop_dom_node(stack);
@@ -516,9 +517,9 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 	}
 
 	if (select->selector)
-		return DOM_ERR_NONE;
+		return DOM_CODE_OK;
 
-	return DOM_ERR_INVALID_STATE;
+	return DOM_CODE_ERR;
 }
 
 /* Basically this is just a wrapper for parse_dom_select() to ease error
@@ -528,7 +529,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 {
 	struct dom_select *select = mem_calloc(1, sizeof(select));
 	struct dom_stack stack;
-	enum dom_exception_code code;
+	enum dom_code code;
 
 	init_dom_stack(&stack, DOM_STACK_FLAG_NONE);
 	add_dom_stack_tracer(&stack, "init-select: ");
@@ -536,7 +537,7 @@ init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 	code = parse_dom_select(select, &stack, string);
 	done_dom_stack(&stack);
 
-	if (code == DOM_ERR_NONE)
+	if (code == DOM_CODE_OK)
 		return select;
 
 	done_dom_select(select);
@@ -897,7 +898,7 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node,
 #define get_dom_select_data(stack) ((stack)->current->data)
 
 /* Matches an element node being visited against the current selector stack. */
-enum dom_stack_code
+enum dom_code
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -922,12 +923,12 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 			push_dom_node(&select_data->stack, &selector->node);
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 /* Ensures that nodes, no longer 'reachable' on the stack do not have any
  * states associated with them on the select data stack. */
-enum dom_stack_code
+enum dom_code
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -947,13 +948,13 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 		}
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 /* For now this is only for matching the ':contains(<string>)' pseudo-class.
  * Any node which can contain text and thus characters from the given <string>
  * are handled in this common callback. */
-enum dom_stack_code
+enum dom_code
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_select_data *select_data = get_dom_select_data(stack);
@@ -965,7 +966,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	WDBG("Text node: %d chars", node->string.length);
 
 	if (!text_sel)
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	text = &text_sel->node.string;
 
@@ -978,7 +979,7 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 		ERROR("Unhandled type");
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 /* Context info for interacting with the DOM tree or stream stack. */
@@ -1076,7 +1077,7 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root)
 			      &dom_select_data_context_info);
 	add_dom_stack_tracer(&select_data.stack, "select-match: ");
 
-	if (push_dom_node(&select_data.stack, &select->selector->node) == DOM_STACK_CODE_OK) {
+	if (push_dom_node(&select_data.stack, &select->selector->node) == DOM_CODE_OK) {
 		get_dom_stack_top(&select_data.stack)->immutable = 1;
 		walk_dom_nodes(&stack, root);
 	}
