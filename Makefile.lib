@@ -176,16 +176,14 @@ TESTDEPS += $(TESTDEPS-yes)
 TEST_LIB=$(top_srcdir)/test/libtest.sh
 export TEST_LIB
 
-# This does the work for the next rule. It is a very general rule
-# but as long as we don't put test programs in src/ it should work.
+# This is a very general rule but as long as we don't put test programs in src/
+# it should work.
 %: %.o $(TESTDEPS)
 	$(call cmd,link)
 
-$(TEST_PROGS): $(addsuffix .o,$(TEST_PROGS)) $(TESTDEPS)
-
 TESTS = $(wildcard $(srcdir)test-*)
 
-$(TESTS): $(TEST_PROGS)
+$(TESTS): $(addsuffix .o,$(TEST_PROGS)) $(TEST_PROGS)
 	@echo "*** $(notdir $@) ***"; \
 	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
