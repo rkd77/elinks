@@ -298,13 +298,20 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	color = get_bfu_color(term, "dialog.field-text");
 	if (color) {
 		unsigned char *text = widget_data->cdata + widget_data->info.field.vpos;
-		int len = strlen(text);
-		int w = int_min(len, widget_data->box.width);
+		unsigned char *text2 = text;
+		int x, l, len, w;
+
+		len = (term->utf8) ? strlen_utf8(&text2) : strlen(text);
+		w = int_min(len, widget_data->box.width);
 
 		if (!hide) {
+			if (term->utf8) {
+				for (l = 0, x = 0; x < w; x++)
+					l += utf8charlen(text+l);
+				w = l;
+			}
 			draw_text(term, widget_data->box.x, widget_data->box.y,
-				  widget_data->cdata + widget_data->info.field.vpos, w,
-				  0, color);
+				  text, w, 0, color);
 		} else {
 			struct box box;
 
