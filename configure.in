@@ -395,9 +395,22 @@ AC_DEFUN([EL_CHECK_OPTIONAL_LIBRARY],
 		AC_MSG_RESULT(yes)
 		EL_SAVE_FLAGS
 		if test -n "$withval" && test -d "$withval"; then
-			CFLAGS="$CFLAGS -I$withval/include";
-			CPPFLAGS="$CPPFLAGS -I$withval/include";
-			LDFLAGS="$LDFLAGS -L$withval/lib";
+			# Be a little more careful when setting
+			# include and lib directories. This way
+			# $withval will work when includes are
+			# there but the library is in the common
+			# /usr/lib ... Does the right thing when
+			# looking for gc on Debian.
+			if test -d "$withval/include"; then
+				CFLAGS="$CFLAGS -I$withval/include"
+				CPPFLAGS="$CPPFLAGS -I$withval/include"
+			else
+				CFLAGS="$CFLAGS -I$withval"
+				CPPFLAGS="$CPPFLAGS -I$withval"
+			fi
+			if test -d "$withval/lib"; then
+				LDFLAGS="$LDFLAGS -L$withval/lib"
+			fi
 		fi
 
 		AC_CHECK_HEADERS([$3], [$1=yes], [$1=no; break;])
@@ -445,6 +458,9 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
+
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GC, gc, gc.h, gc, GC_init,
+	[  --with-gc            enable Boehm's garbage collector])
 
 dnl ===================================================================
 dnl Bookmark and XBEL support
@@ -1252,26 +1268,6 @@ EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
 
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
-
-EL_ARG_ENABLE(CONFIG_GC, gc, [Garbage collector],
-	      [  --enable-gc             enable Boehm's garbage collector])
-
-EL_SAVE_FLAGS
-if test "x${enable_gc}" = xyes; then
-	CFLAGS="$CFLAGS -I/usr/include/gc"
-# -lgc might already be added by SEE 	
-	AC_TRY_LINK([#include <gc.h>
-	], [void *p = GC_MALLOC(1);], CONFIG_GC=yes, CONFIG_GC=no)
-	if test "$CONFIG_GC" != yes; then
-		LIBS="$LIBS -lgc"
-		AC_TRY_LINK([#include <gc.h>
-		], [void *p = GC_MALLOC(1);], CONFIG_GC=yes, CONFIG_GC=no)
-	fi
-	if test "$CONFIG_GC" != yes; then
-		EL_RESTORE_FLAGS
-	fi
-fi
-AC_SUBST(CONFIG_GC)
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
