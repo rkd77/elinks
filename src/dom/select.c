@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "dom/css/scanner.h"
-#include "dom/dom.h"
+#include "dom/code.h"
 #include "dom/node.h"
 #include "dom/scanner.h"
 #include "dom/select.h"

@@ -2,7 +2,7 @@
 #ifndef EL_DOM_SGML_PARSER_H
 #define EL_DOM_SGML_PARSER_H
 
-#include "dom/dom.h"
+#include "dom/code.h"
 #include "dom/node.h"
 #include "dom/stack.h"
 #include "dom/sgml/sgml.h"

@@ -1,5 +1,7 @@
-#ifndef EL_DOM_DOM_H
-#define EL_DOM_DOM_H
+#ifndef EL_DOM_CODE_H
+#define EL_DOM_CODE_H
+
+/* API Doc :: dom-code */
 
 /** DOM status/error/exception codes
  *
