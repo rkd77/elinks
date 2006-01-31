@@ -168,6 +168,21 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 	return no_str;
 }
 
+ 
+/* Number of bytes utf8 character indexed by first byte. Illegal bytes are
+ * equal ones and handled different. */
+static char utf8char_len_tab[256] =
+{
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,
+	3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,6,6,1,1,
+};
+
 static unsigned char utf_buffer[7];
 
 inline unsigned char *
@@ -205,6 +220,15 @@ encode_utf_8(unicode_val_T u)
 	return utf_buffer;
 }
 
+inline int utf8charlen(const unsigned char *p)
+{
+	int len;
+	if (p==NULL)
+		return 0;
+	len = utf8char_len_tab[*p];
+	return len;
+}
+
 inline int
 strlen_utf8(unsigned char **str)
 {
@@ -214,12 +238,7 @@ strlen_utf8(unsigned char **str)
 	int len;
 
 	for (x = 0;; x++, s += len) {
-		if (*s < 0x80) len = 1;
-		else if (*s < 0xe0) len = 2;
-		else if (*s < 0xf0) len = 3;
-		else if (*s < 0xf8) len = 4;
-		else if (*s < 0xfc) len = 5;
-		else len = 6;
+		len = utf8charlen(s);
 		if (s + len > end) break;
 	}
 	*str = s;
@@ -233,18 +252,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 	unicode_val_T u;
 	int length;
 
-	if (str[0] < 0x80)
-		length = 1;
-	else if (str[0] < 0xe0)
-		length = 2;
-	else if (str[0] < 0xf0)
-		length = 3;
-	else if (str[0] < 0xf8)
-		length = 4;
-	else if (str[0] < 0xfc)
-		length = 5;
-	else
-		length = 6;
+	length = utf8char_len_tab[str[0]];
 
 	if (str + length > end) {
 		return UCS_NO_CHAR;
