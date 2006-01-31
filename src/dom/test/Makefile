@@ -4,6 +4,7 @@ include $(top_builddir)/Makefile.config
 # Disabled since it requires DOM_STACK_TRACE to be defined
 #	dom-select
 TEST_PROGS = \
+ html-mangle \
  sgml-parser
 
 TESTDEPS = \
