@@ -323,6 +323,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		} strings[NUMBER_OF_URLS_TO_REMEMBER];
 		static int indeks;
 
+		target = jsval_to_string(ctx, &argv[1]);
 		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
 			if (!(strings[i].ctx && strings[i].url && strings[i].frame))
 				continue;
