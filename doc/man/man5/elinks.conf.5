@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS.CONF" 5 "ELinks configuration file" "2006-01-14" "ELinks configuration file"
+.TH "ELINKS.CONF" 5 "ELinks configuration file" "2006-01-31" "ELinks configuration file"
 .SH NAME
 elinks.conf \- ELinks configuration file
 .SH "SYNOPSIS"
@@ -1157,6 +1157,18 @@ protocol\&.file
 Options specific to local browsing\&.
 
 .TP
+protocol\&.file\&.allow_special_files [0|1] (default: 0)
+Whether to allow reading from non\-regular files\&. Note this can be dangerous; reading /dev/urandom or /dev/zero can ruin your day!
+
+.TP
+protocol\&.file\&.show_hidden_files [0|1] (default: 1)
+When set to false, files with name starting with a dot will be hidden in local directories listing\&.
+
+.TP
+protocol\&.file\&.try_encoding_extensions [0|1] (default: 1)
+When set, if we can't open a file named 'filename', we'll try to open 'filename' with some encoding extension appended (ie\&. 'filename\&.gz'); it depends on the supported encodings\&.
+
+.TP
 protocol\&.file\&.cgi
 Local CGI specific options\&.
 
@@ -1169,16 +1181,12 @@ protocol\&.file\&.cgi\&.policy [0|1] (default: 0)
 Whether to execute local CGI scripts\&.
 
 .TP
-protocol\&.file\&.allow_special_files [0|1] (default: 0)
-Whether to allow reading from non\-regular files\&. Note this can be dangerous; reading /dev/urandom or /dev/zero can ruin your day!
+protocol\&.fsp
+FSP specific options\&.
 
 .TP
-protocol\&.file\&.show_hidden_files [0|1] (default: 1)
-When set to false, files with name starting with a dot will be hidden in local directories listing\&.
-
-.TP
-protocol\&.file\&.try_encoding_extensions [0|1] (default: 1)
-When set, if we can't open a file named 'filename', we'll try to open 'filename' with some encoding extension appended (ie\&. 'filename\&.gz'); it depends on the supported encodings\&.
+protocol\&.fsp\&.sort [0|1] (default: 1)
+Whether to sort entries in directory listings\&.
 
 .TP
 protocol\&.ftp
