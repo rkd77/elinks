@@ -55,6 +55,77 @@ struct line_info {
  *		encoding it for form posting
  */
 static struct line_info *
+format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
+{
+	struct line_info *line = NULL;
+	int line_number = 0;
+	int begin = 0;
+	int pos = 0;
+	int skip;
+	unsigned char *wrappos=NULL;
+	int char_cnt=0; /* Number of console chars on line */
+
+	assert(text);
+	if_assert_failed return NULL;
+
+	/* Allocate the ending entries */
+	if (!realloc_line_info(&line, 0))
+		return NULL;
+
+	while (text[pos]) {
+
+		if (text[pos] == ' ')
+			wrappos = &text[pos];
+
+		if (text[pos] == '\n') {
+			skip = 1;
+
+		} else if (wrap == FORM_WRAP_NONE || char_cnt < width) {
+			pos += utf8charlen(&text[pos]);
+			char_cnt++;
+			continue;
+			
+		} else {
+			if (wrappos) {
+				/* When formatting text for form submitting we
+				 * have to apply the wrapping mode. */
+				if (wrap == FORM_WRAP_HARD && format)
+					*wrappos = '\n';
+				pos = wrappos - text;
+			}
+			skip = !!wrappos;
+			char_cnt = 0;
+			wrappos = NULL;
+		}
+
+		if (!realloc_line_info(&line, line_number)) {
+			mem_free_if(line);
+			return NULL;
+		}
+
+		line[line_number].start = begin;
+		line[line_number++].end = pos;
+		begin = pos += skip;
+	}
+
+	/* Flush the last text before the loop ended */
+	line[line_number].start = begin;
+	line[line_number++].end = pos;
+
+	/* Add end marker */
+	line[line_number].start = line[line_number].end = -1;
+
+	return line;
+}
+
+/* Allocates a line_info table describing the layout of the textarea buffer.
+ *
+ * @width	is max width and the offset at which text will be wrapped
+ * @wrap	controls how the wrapping of text is performed
+ * @format	is non zero the @text will be modified to make it suitable for
+ *		encoding it for form posting
+ */
+static struct line_info *
 format_text(unsigned char *text, int width, enum form_wrap wrap, int format)
 {
 	struct line_info *line = NULL;
@@ -146,7 +217,10 @@ area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 	assert(fc && fs);
 	if_assert_failed return 0;
 
-	line = format_text(fs->value, fc->cols, fc->wrap, 0);
+	if (utf8)
+		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
+	else
+		line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return 0;
 
 	y = get_textarea_line_number(line, fs->state);
@@ -201,7 +275,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 
 	if (!link->npoints) return;
 	area_cursor(fc, fs, 1);
-	linex = format_text(fs->value, fc->cols, fc->wrap, 0);
+	linex = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
 	if (!linex) return;
 	line = linex;
 	sl = fs->vypos;
@@ -349,6 +423,7 @@ encode_textarea(struct submitted_value *sv)
 
 	/* We need to reformat text now if it has to be wrapped hard, just
 	 * before encoding it. */
+	/* TODO: Do we need here UTF-8 format or not? --scrool */
 	blabla = format_text(sv->value, fc->cols, fc->wrap, 1);
 	mem_free_if(blabla);
 
@@ -549,7 +624,10 @@ textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
 
-	line = format_text(fs->value, fc->cols, fc->wrap, 0);
+	if (utf8)
+		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
+	else
+		line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return FRAME_EVENT_OK;
 
 	current = get_textarea_line_number(line, fs->state);

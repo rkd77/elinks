@@ -166,8 +166,7 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 			fs->value = stracpy(fc->default_value);
 			fs->state = strlen(fc->default_value);
 			text = fs->value;
-			if (fc->type != FC_TEXTAREA)
-				fs->utf8_pos = strlen_utf8(&text);
+			fs->utf8_pos = strlen_utf8(&text);
 			fs->vpos = 0;
 			break;
 		case FC_FILE:
