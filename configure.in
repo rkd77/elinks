@@ -459,8 +459,10 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GC, gc, gc.h, gc, GC_init,
-	[  --with-gc            enable Boehm's garbage collector])
+if test "x{with_gc}" != xno; then
+	EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GC, gc, gc.h, gc, GC_init,
+		[  --with-gc            enable Boehm's garbage collector])
+fi
 
 dnl ===================================================================
 dnl Bookmark and XBEL support
