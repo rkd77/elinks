@@ -151,7 +151,7 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 
 			stack->current = context;
 			switch (callback(stack, state->node, data)) {
-			case DOM_STACK_CODE_FREE_NODE:
+			case DOM_CODE_FREE_NODE:
 				free_node = 1;
 				break;
 			default:
@@ -164,7 +164,7 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 	return free_node;
 }
 
-enum dom_stack_code
+enum dom_code
 push_dom_node(struct dom_stack *stack, struct dom_node *node)
 {
 	struct dom_stack_state *state;
@@ -174,13 +174,13 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	assert(0 < node->type && node->type < DOM_NODES);
 
 	if (stack->depth > DOM_STACK_MAX_DEPTH) {
-		return DOM_STACK_CODE_ERROR_MAX_DEPTH;
+		return DOM_CODE_MAX_DEPTH_ERR;
 	}
 
 	state = realloc_dom_stack_states(&stack->states, stack->depth);
 	if (!state) {
 		done_dom_node(node);
-		return DOM_STACK_CODE_ERROR_MEM_ALLOC;
+		return DOM_CODE_ALLOC_ERR;
 	}
 
 	state += stack->depth;
@@ -191,7 +191,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 		if (context->info->object_size
 		    && !realloc_dom_stack_state_objects(context, stack->depth)) {
 			done_dom_node(node);
-			return DOM_STACK_CODE_ERROR_MEM_ALLOC;
+			return DOM_CODE_ALLOC_ERR;
 		}
 	}
 
@@ -203,7 +203,7 @@ push_dom_node(struct dom_stack *stack, struct dom_node *node)
 	stack->depth++;
 	call_dom_stack_callbacks(stack, state, DOM_STACK_PUSH);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 void
@@ -358,7 +358,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 	if (!context)
 		return;
 
-	if (push_dom_node(stack, root) != DOM_STACK_CODE_OK)
+	if (push_dom_node(stack, root) != DOM_CODE_OK)
 		return;
 
 	while (!dom_stack_is_empty(stack)) {
@@ -420,7 +420,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 		if (is_dom_node_list_member(list, wstate->index)) {
 			struct dom_node *child = list->entries[wstate->index++];
 
-			if (push_dom_node(stack, child) == DOM_STACK_CODE_OK)
+			if (push_dom_node(stack, child) == DOM_CODE_OK)
 				continue;
 		}
 
@@ -498,7 +498,7 @@ static unsigned char indent_string[] =
 #define get_indent_offset(stack) \
 	((stack)->depth < sizeof(indent_string)/2 ? (stack)->depth * 2 : sizeof(indent_string))
 
-enum dom_stack_code
+enum dom_code
 dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *value = &node->string;
@@ -510,10 +510,10 @@ dom_stack_trace_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 		name->length, name->string,
 		value->length, value->string);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string value;
@@ -534,10 +534,10 @@ dom_stack_trace_id_leaf(struct dom_stack *stack, struct dom_node *node, void *da
 
 	done_dom_string(&value);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -556,10 +556,10 @@ dom_stack_trace_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	done_dom_string(&value);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -575,7 +575,7 @@ dom_stack_trace_branch(struct dom_stack *stack, struct dom_node *node, void *dat
 		get_indent_offset(stack), indent_string,
 		id->length, id->string, name->length, name->string);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 struct dom_stack_context_info dom_stack_trace_context_info = {

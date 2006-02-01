@@ -41,7 +41,7 @@ add_sgml_document(struct sgml_parser *parser)
 	struct dom_node *node;
 
 	node = init_dom_node(DOM_NODE_DOCUMENT, &parser->uri, allocated);
-	if (node && push_dom_node(&parser->stack, node) == DOM_STACK_CODE_OK)
+	if (node && push_dom_node(&parser->stack, node) == DOM_CODE_OK)
 		return node;
 
 	return NULL;
@@ -63,7 +63,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 	node_info = get_sgml_node_info(parser->info->elements, node);
 	node->data.element.type = node_info->type;
 
-	if (push_dom_node(stack, node) != DOM_STACK_CODE_OK)
+	if (push_dom_node(stack, node) != DOM_CODE_OK)
 		return NULL;
 
 	state = get_dom_stack_top(stack);
@@ -97,7 +97,7 @@ add_sgml_attribute(struct dom_stack *stack,
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
 		node->data.attribute.quoted = valtoken->string.string[-1];
 
-	if (!node || push_dom_node(stack, node) != DOM_STACK_CODE_OK)
+	if (!node || push_dom_node(stack, node) != DOM_CODE_OK)
 		return NULL;
 
 	pop_dom_node(stack);
@@ -130,7 +130,7 @@ add_sgml_proc_instruction(struct dom_stack *stack, struct dom_scanner_token *tar
 		node->data.proc_instruction.type = DOM_PROC_INSTRUCTION;
 	}
 
-	if (push_dom_node(stack, node) == DOM_STACK_CODE_OK)
+	if (push_dom_node(stack, node) == DOM_CODE_OK)
 		return node;
 
 	return NULL;
@@ -147,7 +147,7 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 	if (token->type == SGML_TOKEN_SPACE)
 		node->data.text.only_space = 1;
 
-	if (push_dom_node(stack, node) == DOM_STACK_CODE_OK)
+	if (push_dom_node(stack, node) == DOM_CODE_OK)
 		pop_dom_node(stack);
 
 	return node;
@@ -156,7 +156,7 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 
 /* SGML parser main handling: */
 
-static enum sgml_parser_code
+static enum dom_code
 call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *token)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
@@ -173,7 +173,7 @@ call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *toke
  *
  * NOTE: You can only do this for tokens that are not stripped of markup such
  * as identifiers. */
-static enum sgml_parser_code
+static enum dom_code
 check_sgml_incomplete(struct dom_scanner *scanner,
 		      struct dom_scanner_token *start,
 		      struct dom_scanner_token *token)
@@ -198,7 +198,7 @@ check_sgml_incomplete(struct dom_scanner *scanner,
 	return 0;
 }
 
-static inline enum sgml_parser_code
+static inline enum dom_code
 parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token name;
@@ -216,7 +216,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 		case SGML_TOKEN_ELEMENT_BEGIN:
 		case SGML_TOKEN_ELEMENT_END:
 		case SGML_TOKEN_ELEMENT_EMPTY_END:
-			return SGML_PARSER_CODE_OK;
+			return DOM_CODE_OK;
 
 		case SGML_TOKEN_IDENT:
 			copy_struct(&name, token);
@@ -229,7 +229,7 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 				 * ignore it. */
 				token = get_next_dom_scanner_token(scanner);
 				if (check_sgml_incomplete(scanner, &name, token))
-					return SGML_PARSER_CODE_INCOMPLETE;
+					return DOM_CODE_INCOMPLETE;
 
 				if (token
 				    && token->type != SGML_TOKEN_IDENT
@@ -238,14 +238,14 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 					token = NULL;
 
 			} else if (check_sgml_incomplete(scanner, &name, token)) {
-				return SGML_PARSER_CODE_INCOMPLETE;
+				return DOM_CODE_INCOMPLETE;
 
 			} else {
 				token = NULL;
 			}
 
 			if (!add_sgml_attribute(stack, &name, token))
-				return SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 
 			/* Skip the value token */
 			if (token)
@@ -253,14 +253,14 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 			break;
 
 		case SGML_TOKEN_INCOMPLETE:
-			return SGML_PARSER_CODE_INCOMPLETE;
+			return DOM_CODE_INCOMPLETE;
 
 		case SGML_TOKEN_ERROR:
 		{
-			enum sgml_parser_code code;
+			enum dom_code code;
 
 			code = call_sgml_error_function(stack, token);
-			if (code != SGML_PARSER_CODE_OK)
+			if (code != DOM_CODE_OK)
 				return code;
 
 			skip_dom_scanner_token(scanner);
@@ -271,10 +271,10 @@ parse_sgml_attributes(struct dom_stack *stack, struct dom_scanner *scanner)
 		}
 	}
 
-	return SGML_PARSER_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-static enum sgml_parser_code
+static enum dom_code
 parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 {
 	struct dom_scanner_token target;
@@ -286,15 +286,15 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 		case SGML_TOKEN_ELEMENT:
 		case SGML_TOKEN_ELEMENT_BEGIN:
 			if (!add_sgml_element(stack, token))
-				return SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 
 			if (token->type == SGML_TOKEN_ELEMENT_BEGIN) {
-				enum sgml_parser_code code;
+				enum dom_code code;
 
 				skip_dom_scanner_token(scanner);
 
 				code = parse_sgml_attributes(stack, scanner);
-				if (code != SGML_PARSER_CODE_OK)
+				if (code != DOM_CODE_OK)
 					return code;
 
 			} else {
@@ -332,7 +332,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 
 		case SGML_TOKEN_NOTATION_COMMENT:
 			if (!add_sgml_node(stack, DOM_NODE_COMMENT, token))
-				return SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 			skip_dom_scanner_token(scanner);
 			break;
 
@@ -346,7 +346,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 
 		case SGML_TOKEN_CDATA_SECTION:
 			if (!add_sgml_node(stack, DOM_NODE_CDATA_SECTION, token))
-				return SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 			skip_dom_scanner_token(scanner);
 			break;
 
@@ -358,7 +358,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			/* Skip the target token */
 			token = get_next_dom_scanner_token(scanner);
 			if (!token || token->type == SGML_TOKEN_INCOMPLETE)
-				return SGML_PARSER_CODE_INCOMPLETE;
+				return DOM_CODE_INCOMPLETE;
 
 			if (token->type == SGML_TOKEN_ERROR)
 				break;
@@ -367,7 +367,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			/* Fall-through */
 
 			if (!add_sgml_proc_instruction(stack, &target, token))
-				return SGML_PARSER_CODE_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 			if ((target.type == SGML_TOKEN_PROCESS_XML
 			     || target.type == SGML_TOKEN_PROCESS_XML_STYLESHEET)
 			    && token->string.length > 0) {
@@ -399,14 +399,14 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 			break;
 
 		case SGML_TOKEN_INCOMPLETE:
-			return SGML_PARSER_CODE_INCOMPLETE;
+			return DOM_CODE_INCOMPLETE;
 
 		case SGML_TOKEN_ERROR:
 		{
-			enum sgml_parser_code code;
+			enum dom_code code;
 
 			code = call_sgml_error_function(stack, token);
-			if (code != SGML_PARSER_CODE_OK)
+			if (code != DOM_CODE_OK)
 				return code;
 
 			skip_dom_scanner_token(scanner);
@@ -420,10 +420,10 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 		}
 	}
 
-	return SGML_PARSER_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum sgml_parser_code
+enum dom_code
 parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 	   int complete)
 {
@@ -436,13 +436,13 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
 	if (!parser->root) {
 		parser->root = add_sgml_document(parser);
 		if (!parser->root)
-			return SGML_PARSER_CODE_MEM_ALLOC;
+			return DOM_CODE_ALLOC_ERR;
 		get_dom_stack_top(&parser->stack)->immutable = 1;
 	}
 
 	node = init_dom_node(DOM_NODE_TEXT, &source, 0);
-	if (!node || push_dom_node(&parser->parsing, node) != DOM_STACK_CODE_OK)
-		return SGML_PARSER_CODE_MEM_ALLOC;
+	if (!node || push_dom_node(&parser->parsing, node) != DOM_CODE_OK)
+		return DOM_CODE_ALLOC_ERR;
 
 	return parser->code;
 }
@@ -464,7 +464,7 @@ struct sgml_parsing_state {
 	unsigned int resume:1;
 };
 
-enum dom_stack_code
+enum dom_code
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
@@ -490,8 +490,8 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 						       string->string,
 						       string->length)) {
 
-					parser->code = SGML_PARSER_CODE_MEM_ALLOC;
-					return DOM_STACK_CODE_OK;
+					parser->code = DOM_CODE_ALLOC_ERR;
+					return DOM_CODE_OK;
 				}
 
 				string = &parent->incomplete;
@@ -512,7 +512,7 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	if (scanner_state == SGML_STATE_ELEMENT) {
 		parser->code = parse_sgml_attributes(&parser->stack, &parsing->scanner);
-		if (parser->code == SGML_PARSER_CODE_OK)
+		if (parser->code == DOM_CODE_OK)
 			parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
 	} else {
 		parser->code = parse_sgml_plain(&parser->stack, &parsing->scanner);
@@ -520,19 +520,19 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	if (complete) {
 		pop_dom_node(&parser->parsing);
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 	}
 
-	if (parser->code != SGML_PARSER_CODE_INCOMPLETE) {
+	if (parser->code != DOM_CODE_INCOMPLETE) {
 		/* No need to preserve the default scanner state. */
 		if (parsing->scanner.state == SGML_STATE_TEXT) {
 			pop_dom_node(&parser->parsing);
-			return DOM_STACK_CODE_OK;
+			return DOM_CODE_OK;
 		}
 
 		done_dom_string(&parsing->incomplete);
 		parsing->resume = 1;
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 	}
 
 	token = get_dom_scanner_token(&parsing->scanner);
@@ -543,18 +543,18 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	set_dom_string(&incomplete, NULL, 0);
 
 	if (!init_dom_string(&incomplete, string->string, string->length)) {
-		parser->code = SGML_PARSER_CODE_MEM_ALLOC;
-		return DOM_STACK_CODE_OK;
+		parser->code = DOM_CODE_ALLOC_ERR;
+		return DOM_CODE_OK;
 	}
 
 	done_dom_string(&parsing->incomplete);
 	set_dom_string(&parsing->incomplete, incomplete.string, incomplete.length);
 	parsing->resume = 1;
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = get_sgml_parser(stack);
@@ -575,7 +575,7 @@ sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 
 	done_dom_string(&parsing->incomplete);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 static struct dom_stack_context_info sgml_parsing_context_info = {

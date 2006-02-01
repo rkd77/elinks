@@ -507,7 +507,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 }
 #endif
 
-static enum dom_stack_code
+static enum dom_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -524,11 +524,11 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 #endif
 		render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 /* This callback is also used for rendering processing instruction nodes.  */
-static enum dom_stack_code
+static enum dom_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -537,10 +537,10 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -553,7 +553,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	assert(node && renderer && renderer->document);
 
 	if (!string || !length)
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -563,7 +563,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 
 	render_dom_text(renderer, &renderer->styles[node->type], string, length);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 static void
@@ -587,7 +587,7 @@ set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuele
 	renderer->base_uri = uri;
 }
 
-enum dom_stack_code
+enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -659,10 +659,10 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 		}
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -680,10 +680,10 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *da
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -695,7 +695,7 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 		render_dom_flush(renderer, renderer->end);
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 static struct dom_stack_context_info dom_source_renderer_context_info = {
@@ -740,7 +740,7 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 #define RSS_CONFIG_FLAGS \
 	(DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS)
 
-enum dom_stack_code
+enum dom_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -783,10 +783,10 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 		renderer->node = node;
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-enum dom_stack_code
+enum dom_code
 dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -826,7 +826,7 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 		break;
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 
@@ -897,13 +897,13 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	}
 }
 
-enum dom_stack_code
+enum dom_code
 dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 
 	if (!renderer->channel)
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	render_rss_item(renderer, renderer->channel);
 
@@ -924,7 +924,7 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 
 	done_dom_node(root);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 
@@ -978,7 +978,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
-	enum sgml_parser_code code;
+	enum dom_code code;
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,

@@ -12,7 +12,7 @@
 #include "dom/string.h"
 
 
-static enum dom_stack_code
+static enum dom_code
 normalize_text_node_whitespace(struct dom_node *node)
 {
 	unsigned char buf[256];
@@ -44,7 +44,7 @@ normalize_text_node_whitespace(struct dom_node *node)
 
 		if (!add_to_dom_string(&string, buf, j)) {
 			done_dom_string(&string);
-			return DOM_STACK_CODE_ERROR_MEM_ALLOC;
+			return DOM_CODE_ALLOC_ERR;
 		}
 	}
 
@@ -54,11 +54,11 @@ normalize_text_node_whitespace(struct dom_node *node)
 	set_dom_string(&node->string, string.string, string.length);
 	node->allocated = 1;
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 
 }
 
-static enum dom_stack_code
+static enum dom_code
 append_node_text(struct dom_config *config, struct dom_node *node)
 {
 	struct dom_node *prev = get_dom_node_prev(node);
@@ -72,7 +72,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 	if (!prev || prev->type != DOM_NODE_TEXT) {
 		/* Preserve text nodes with no one to append to. */
 		if (node->type == DOM_NODE_TEXT)
-			return DOM_STACK_CODE_OK;
+			return DOM_CODE_OK;
 
 		prev = NULL;
 		set_dom_string(&dest, NULL, 0);
@@ -83,7 +83,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 		} else {
 			set_dom_string(&dest, NULL, 0);
 			if (!add_to_dom_string(&dest, prev->string.string, prev->string.length))
-				return DOM_STACK_CODE_ERROR_MEM_ALLOC;
+				return DOM_CODE_ALLOC_ERR;
 			set_dom_string(&prev->string, dest.string, dest.length);
 			prev->allocated = 1;
 		}
@@ -119,7 +119,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 			prev->string.length = length;
 		else
 			done_dom_string(&dest);
-		return DOM_STACK_CODE_ERROR_MEM_ALLOC;
+		return DOM_CODE_ALLOC_ERR;
 	}
 
 	if (prev) {
@@ -132,7 +132,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 			normalize_text_node_whitespace(prev);
 		}
 
-		return DOM_STACK_CODE_FREE_NODE;
+		return DOM_CODE_FREE_NODE;
 
 	} else {
 		int was_cdata_section = node->type == DOM_NODE_CDATA_SECTION;
@@ -149,15 +149,15 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 			normalize_text_node_whitespace(node);
 		}
 
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 	}
 }
 
-static enum dom_stack_code
+static enum dom_code
 dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_config *config = stack->current->data;
-	enum dom_stack_code code = DOM_STACK_CODE_OK;
+	enum dom_code code = DOM_CODE_OK;
 
 	switch (node->type) {
 	case DOM_NODE_ELEMENT:
@@ -165,7 +165,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		    && !node->data.element.type) {
 			/* Drop elements that are not known from the built-in
 			 * node info. */
-			code = DOM_STACK_CODE_FREE_NODE;
+			code = DOM_CODE_FREE_NODE;
 		}
 		break;
 
@@ -174,7 +174,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		    && !node->data.attribute.type) {
 			/* Drop elements that are not known from the built-in
 			 * node info. */
-			code = DOM_STACK_CODE_FREE_NODE;
+			code = DOM_CODE_FREE_NODE;
 		}
 		break;
 
@@ -183,7 +183,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		    && !node->data.proc_instruction.type) {
 			/* Drop elements that are not known from the built-in
 			 * node info. */
-			code = DOM_STACK_CODE_FREE_NODE;
+			code = DOM_CODE_FREE_NODE;
 		}
 		break;
 
@@ -192,7 +192,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		    && node->data.text.only_space) {
 			/* Discard all Text nodes that contain
 			 * whitespaces in element content]. */
-			code = DOM_STACK_CODE_FREE_NODE;
+			code = DOM_CODE_FREE_NODE;
 		} else {
 			code = append_node_text(config, node);
 		}
@@ -201,7 +201,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 	case DOM_NODE_COMMENT:
 		if (!(config->flags & DOM_CONFIG_COMMENTS)) {
 			/* Discard all comments. */
-			code = DOM_STACK_CODE_FREE_NODE;
+			code = DOM_CODE_FREE_NODE;
 		}
 		break;
 
@@ -234,7 +234,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 	return code;
 }
 
-enum dom_stack_code
+enum dom_code
 dom_normalize_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_config *config = stack->current->data;
@@ -244,7 +244,7 @@ dom_normalize_text(struct dom_stack *stack, struct dom_node *node, void *data)
 		return normalize_text_node_whitespace(node);
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 
