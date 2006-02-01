@@ -433,5 +433,5 @@ main(int argc, char *argv[])
 	check_memory_leaks();
 #endif
 
-	return code;
+	return code != DOM_CODE_OK ? 1 : 0;
 }
