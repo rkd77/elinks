@@ -99,7 +99,7 @@ print_indent(struct dom_stack *stack)
 	printf("%.*s", get_indent_offset(stack), indent_string);
 }
 
-static enum dom_stack_code
+static enum dom_code
 sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *value = &node->string;
@@ -107,17 +107,17 @@ sgml_parser_test_tree(struct dom_stack *stack, struct dom_node *node, void *data
 
 	/* Always print the URI for identification. */
 	if (update_number_of_lines(stack))
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	print_indent(stack);
 	printf("%.*s: %.*s\n",
 		name->length, name->string,
 		value->length, value->string);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-static enum dom_stack_code
+static enum dom_code
 sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -126,7 +126,7 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 	assert(node);
 
 	if (update_number_of_lines(stack))
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
@@ -138,10 +138,10 @@ sgml_parser_test_id_leaf(struct dom_stack *stack, struct dom_node *node, void *d
 	print_dom_node_value(node);
 	printf("\n");
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-static enum dom_stack_code
+static enum dom_code
 sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -149,7 +149,7 @@ sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data
 	assert(node);
 
 	if (update_number_of_lines(stack))
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	name	= get_dom_node_name(node);
 
@@ -159,10 +159,10 @@ sgml_parser_test_leaf(struct dom_stack *stack, struct dom_node *node, void *data
 	print_dom_node_value(node);
 	printf("\n");
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-static enum dom_stack_code
+static enum dom_code
 sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_string *name;
@@ -171,7 +171,7 @@ sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *da
 	assert(node);
 
 	if (update_number_of_lines(stack))
-		return DOM_STACK_CODE_OK;
+		return DOM_CODE_OK;
 
 	name	= get_dom_node_name(node);
 	id	= get_dom_node_type_name(node->type);
@@ -180,10 +180,10 @@ sgml_parser_test_branch(struct dom_stack *stack, struct dom_node *node, void *da
 	printf("%.*s: %.*s\n",
 		id->length, id->string, name->length, name->string);
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
-static enum dom_stack_code
+static enum dom_code
 sgml_parser_test_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct sgml_parser *parser = stack->contexts[0]->data;
@@ -193,7 +193,7 @@ sgml_parser_test_end(struct dom_stack *stack, struct dom_node *node, void *data)
 		printf("%d\n", number_of_lines);
 	}
 
-	return DOM_STACK_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 struct dom_stack_context_info sgml_parser_test_context_info = {
@@ -232,14 +232,14 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 	}
 };
 
-static enum sgml_parser_code
+static enum dom_code
 sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 		    unsigned int line_number)
 {
 	printf("error on line %d: %.*s\n",
 	       line_number, string->length, string->string);
 
-	return SGML_PARSER_CODE_OK;
+	return DOM_CODE_OK;
 }
 
 void die(const char *msg, ...)
@@ -263,7 +263,7 @@ main(int argc, char *argv[])
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
 	enum sgml_parser_flag flags = 0;
 	enum sgml_parser_type type = SGML_PARSER_STREAM;
-	enum sgml_parser_code code = 0;
+	enum dom_code code = 0;
 	enum dom_config_flag normalize_flags = 0;
 	int normalize = 0;
 	int dump = 0;
@@ -383,10 +383,10 @@ main(int argc, char *argv[])
 
 			code = parse_sgml(parser, buffer, size, complete);
 			switch (code) {
-			case SGML_PARSER_CODE_OK:
+			case DOM_CODE_OK:
 				break;
 
-			case SGML_PARSER_CODE_INCOMPLETE:
+			case DOM_CODE_INCOMPLETE:
 				if (!complete) break;
 				/* Error */
 			default:
