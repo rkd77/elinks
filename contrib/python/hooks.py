@@ -1,3 +1,5 @@
+import re
+
 dumbprefixes = {
 	"7th" : "http://7thguard.net/",
 	"b" : "http://babelfish.altavista.com/babelfish/tr",
@@ -31,6 +33,9 @@ def follow_url_hook(url):
 	return None
 
 def pre_format_html_hook(url, html):
+	if re.search("cygwin\.com", url):
+		html2 = re.sub("<body bgcolor=\"#000000\" color=\"#000000\"", "<body bgcolor=\"#ffffff\" color=\"#000000\"", html)
+		return html2
 	return None
 
 def proxy_for_hook(url):
