@@ -63,6 +63,11 @@ struct module fsp_protocol_module = struct_module(
 );
 
 
+/* FSP synchronous connection management: */
+
+/* FIXME: Although it is probably not so much an issue, check if writes to
+ * stdout fails for directory listing like we do for file fetching. */
+
 static void
 fsp_error(unsigned char *error)
 {
@@ -214,13 +219,19 @@ do_fsp(struct connection *conn)
 		fclose(stderr);
 
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
-			fwrite(buf, 1, r, stdout);
+			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
+				break;
 
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
 	}
 }
+
+#undef READ_SIZE
+
+
+/* FSP asynchronous connection management: */
 
 static void
 fsp_got_data(struct socket *socket, struct read_buffer *rb)
@@ -283,8 +294,6 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 	}
 	read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data); 
 }
-
-#undef READ_SIZE
 
 
 void
