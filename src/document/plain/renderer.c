@@ -234,10 +234,12 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char *template = &renderer->template;
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
+#ifdef CONFIG_UTF_8
 	unsigned char *end, *text;
+	int utf8 = document->options.utf8;
+#endif /* CONFIG_UTF_8 */
 	int lineno = renderer->lineno;
 	int expanded = 0;
-	int utf8 = document->options.utf8;
 	int width = line_width;
 	int line_pos;
 
@@ -278,7 +280,9 @@ add_document_line(struct plain_renderer *renderer,
 
 	assert(expanded >= 0);
 
+#ifdef CONFIG_UTF_8
 	if (utf8) goto utf_8;
+#endif /* CONFIG_UTF_8 */
 	startpos = pos = realloc_line(document, width + expanded, lineno);
 	if (!pos) {
 		mem_free(line);
@@ -404,6 +408,7 @@ add_document_line(struct plain_renderer *renderer,
 			*template = saved_renderer_template;
 		}
 	}
+#ifdef CONFIG_UTF_8
 	goto end;
 utf_8:
 	end = line + width;
@@ -537,6 +542,7 @@ utf_8:
 		}
 	}
 end:
+#endif /* CONFIG_UTF_8 */
 	mem_free(line);
 
 	realloc_line(document, pos - startpos, lineno);
@@ -694,7 +700,9 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 	document->width = 0;
+#ifdef CONFIG_UTF_8
 	document->options.utf8 = is_cp_special(document->options.cp);
+#endif /* CONFIG_UTF_8 */
 
 	/* Setup the style */
 	init_template(&renderer.template, &document->options);

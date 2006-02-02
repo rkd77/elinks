@@ -403,6 +403,7 @@ get_format_screen_char(struct html_context *html_context,
 	return &schar_cache;
 }
 
+#ifdef CONFIG_UTF_8
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline int
@@ -492,6 +493,48 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	}
 	return len;
 }
+#else
+
+/* First possibly do the format change and then find out what coordinates
+ * to use since sub- or superscript might change them */
+static inline void
+set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
+	  enum link_state link_state)
+{
+	struct part *part = html_context->part;
+	struct screen_char *schar = get_format_screen_char(html_context,
+	                                                   link_state);
+	int x = part->cx;
+	int y = part->cy;
+
+	assert(part);
+	if_assert_failed return;
+
+	if (realloc_spaces(part, x + charslen))
+		return;
+
+	if (part->document) {
+		if (realloc_line(html_context, part->document,
+		                 Y(y), X(x) + charslen - 1))
+			return;
+
+		for (; charslen > 0; charslen--, x++, chars++) {
+			if (*chars == NBSP_CHAR) {
+				schar->data = ' ';
+				part->spaces[x] = html_context->options->wrap_nbsp;
+			} else {
+				part->spaces[x] = (*chars == ' ');
+				schar->data = *chars;
+			}
+			copy_screen_chars(&POS(x, y), schar, 1);
+		}
+	} else {
+		for (; charslen > 0; charslen--, x++, chars++) {
+			part->spaces[x] = (*chars == ' ');
+		}
+	}
+}
+#endif /* CONFIG_UTF_8 */
 
 static void
 move_links(struct html_context *html_context, int xf, int yf, int xt, int yt)
@@ -1218,9 +1261,15 @@ done_link_state_info(void)
 	       sizeof(renderer_context.link_state_info));
 }
 
+#ifdef CONFIG_UTF_8
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
 	     unsigned char *chars, int charslen, int utf8_len)
+#else
+static inline void
+process_link(struct html_context *html_context, enum link_state link_state,
+		   unsigned char *chars, int charslen)
+#endif /* CONFIG_UTF_8 */
 {
 	struct part *part = html_context->part;
 	struct link *link;
@@ -1272,7 +1321,9 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (x_offset) {
 			charslen -= x_offset;
 			chars += x_offset;
+#ifdef CONFIG_UTF_8
 			utf8_len -= x_offset;
+#endif /* CONFIG_UTF_8 */
 		}
 
 		link = new_link(html_context, chars, charslen);
@@ -1287,14 +1338,24 @@ process_link(struct html_context *html_context, enum link_state link_state,
 	}
 
 	/* Add new canvas positions to the link. */
-	if (realloc_points(link, link->npoints + utf8_len)) {
+#ifdef CONFIG_UTF_8
+	if (realloc_points(link, link->npoints + utf8_len))
+#else
+	if (realloc_points(link, link->npoints + charslen))
+#endif /* CONFIG_UTF_8 */
+	{
 		struct point *point = &link->points[link->npoints];
 		int x = X(part->cx) + x_offset;
 		int y = Y(part->cy);
 
+#ifdef CONFIG_UTF_8
 		link->npoints += utf8_len;
 
-		for (; utf8_len > 0; utf8_len--, point++, x++) {
+		for (; utf8_len > 0; utf8_len--, point++, x++)
+#else
+		for (; charslen > 0; charslen--, point++, x++)
+#endif /* CONFIG_UTF_8 */
+		{
 			point->x = x;
 			point->y = y;
 		}
@@ -1346,7 +1407,9 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	enum link_state link_state;
 	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
+#ifdef CONFIG_UTF_8
 	int utf8_len;
+#endif /* CONFIG_UTF_8 */
 
 	assert(html_context);
 	if_assert_failed return;
@@ -1405,7 +1468,11 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		else if (html_context->options->links_numbering)
 			put_link_number(html_context);
 	}
-	utf8_len = set_hline(html_context, chars, charslen, link_state);
+#ifdef CONFIG_UTF_8
+	utf8_len = 
+#endif /* CONFIG_UTF_8 */
+		set_hline(html_context, chars, charslen, link_state);
+
 	if (link_state != LINK_STATE_NONE) {
 
 #define is_drawing_subs_or_sups() \
@@ -1425,15 +1492,29 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		}
 
 #undef is_drawing_subs_or_sups
+
+#ifdef CONFIG_UTF_8
 		process_link(html_context, link_state, chars, charslen,
 			     utf8_len);
+#else
+		process_link(html_context, link_state, chars, charslen);
+#endif /* CONFIG_UTF_8 */
 	}
 
+#ifdef CONFIG_UTF_8
 	if (renderer_context.nowrap
 	    && part->cx + utf8_len > overlap(par_format))
 		return;
 
 	part->cx += utf8_len;
+#else
+	if (renderer_context.nowrap
+			&& part->cx + charslen > overlap(par_format))
+		return;
+
+	part->cx += charslen;
+#endif /* CONFIG_UTF_8 */
+
 	renderer_context.nobreak = 0;
 
 	if (!(html_context->options->wrap || html_is_preformatted())) {
@@ -1449,7 +1530,11 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	}
 
 	assert(charslen > 0);
+#ifdef CONFIG_UTF_8
 	part->xa += utf8_len;
+#else
+	part->xa += charslen;
+#endif /* CONFIG_UTF_8 */
 	int_lower_bound(&part->max_width, part->xa
 			+ par_format.leftmargin + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
@@ -2013,7 +2098,9 @@ render_html_document(struct cache_entry *cached, struct document *document,
 							   &document->cp,
 							   &document->cp_status,
 							   document->options.hard_assume);
+#ifdef CONFIG_UTF_8
 	html_context->options->utf8 = is_cp_special(document->options.cp);
+#endif /* CONFIG_UTF_8 */
 
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,

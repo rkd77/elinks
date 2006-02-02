@@ -143,8 +143,10 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 
 	to &= ~SYSTEM_CHARSET_FLAG;
 
+#ifdef CONFIG_UTF_8
 	if (codepages[to].table == table_utf_8)
 		return encode_utf_8(u);
+#endif /* CONFIG_UTF_8 */
 
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
 	if (u == 0xa0) return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
@@ -168,25 +170,15 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 	return no_str;
 }
 
- 
-/* Number of bytes utf8 character indexed by first byte. Illegal bytes are
- * equal ones and handled different. */
-static char utf8char_len_tab[256] =
-{
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
-	2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,
-	3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,6,6,1,1,
-};
-
 static unsigned char utf_buffer[7];
 
+#ifdef CONFIG_UTF_8
 inline unsigned char *
 encode_utf_8(unicode_val_T u)
+#else
+static unsigned char *
+encode_utf_8(unicode_val_T u)
+#endif /* CONFIG_UTF_8 */
 {
 	memset(utf_buffer, 0, 7);
 
@@ -219,6 +211,21 @@ encode_utf_8(unicode_val_T u)
 
 	return utf_buffer;
 }
+
+#ifdef CONFIG_UTF_8
+/* Number of bytes utf8 character indexed by first byte. Illegal bytes are
+ * equal ones and handled different. */
+static char utf8char_len_tab[256] =
+{
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
+	2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2, 2,2,2,2,2,2,2,2,
+	3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,6,6,1,1,
+};
 
 inline int utf8charlen(const unsigned char *p)
 {
@@ -297,6 +304,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 	*string = str + length;
 	return u > 0xffff ? '*' : u;
 }
+#endif /* CONFIG_UTF_8 */
 
 /* This slow and ugly code is used by the terminal utf_8_io */
 unsigned char *
@@ -533,10 +541,12 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 
 	if (strlen <= 0) return NULL;
 
+#ifdef CONFIG_UTF_8
 	/* TODO: caching UTF-8 */
 	encoding &= ~SYSTEM_CHARSET_FLAG;
 	if (codepages[encoding].table == table_utf_8)
 		goto skip;
+#endif /* CONFIG_UTF_8 */
 
 	if (first_time) {
 		memset(&nb_entity_cache, 0, ENTITY_CACHE_MAXLEN * sizeof(unsigned int));
@@ -591,7 +601,9 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 		fprintf(stderr, "miss\n");
 #endif
 	}
+#ifdef CONFIG_UTF_8
 skip:
+#endif /* CONFIG_UTF_8 */
 	if (*str == '#') { /* Numeric entity. */
 		int l = (int) strlen;
 		unsigned char *st = (unsigned char *) str;
@@ -643,9 +655,11 @@ skip:
 		if (element) result = u2cp(element->c, encoding);
 	}
 
+#ifdef CONFIG_UTF_8
 	if (codepages[encoding].table == table_utf_8) {
 		return result;
 	}
+#endif /* CONFIG_UTF_8 */
 end:
 	/* Take care of potential buffer overflow. */
 	if (strlen < sizeof(entity_cache[slen][0].str)) {

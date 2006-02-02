@@ -59,6 +59,9 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 		unsigned char *name = get_cp_name(i);
 
 		if (!name) break;
+#ifndef CONFIG_UTF_8
+		if (is_cp_special(i)) continue;
+#endif /* CONFIG_UTF_8 */
 
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
 		    	    display_codepage, get_cp_mime_name(i), 0);

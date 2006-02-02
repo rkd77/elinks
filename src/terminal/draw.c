@@ -103,7 +103,11 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 }
 
 void
+#ifdef CONFIG_UTF_8
 draw_char_data(struct terminal *term, int x, int y, uint16_t data)
+#else
+draw_char_data(struct terminal *term, int x, int y, unsigned char data)
+#endif /* CONFIG_UTF_8 */	
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -199,10 +203,17 @@ draw_border(struct terminal *term, struct box *box,
 	set_screen_dirty(term->screen, borderbox.y, borderbox.y + borderbox.height);
 }
 
+#ifdef CONFIG_UTF_8
 void
 draw_char(struct terminal *term, int x, int y,
 	  uint16_t data, enum screen_char_attr attr,
 	  struct color_pair *color)
+#else
+void
+draw_char(struct terminal *term, int x, int y,
+		unsigned char data, enum screen_char_attr attr,
+	  struct color_pair *color)
+#endif /* CONFIG_UTF_8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -278,6 +289,7 @@ draw_shadow(struct terminal *term, struct box *box,
 	draw_box(term, &dbox, ' ', 0, color);
 }
 
+#ifdef CONFIG_UTF_8
 static void
 draw_text_utf8(struct terminal *term, int x, int y,
 	       unsigned char *text, int length,
@@ -312,6 +324,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	set_screen_dirty(term->screen, y, y);
 	
 }
+#endif /* CONFIG_UTF_8 */
 
 void
 draw_text(struct terminal *term, int x, int y,
@@ -324,10 +337,12 @@ draw_text(struct terminal *term, int x, int y,
 	assert(text && length >= 0);
 	if_assert_failed return;
 
+#ifdef CONFIG_UTF_8
 	if (term->utf8) {
 		draw_text_utf8(term, x, y, text, length, attr, color);
 		return;
 	}
+#endif /* CONFIG_UTF_8 */
 
 	if (length <= 0) return;
 	pos = get_char(term, x, y);

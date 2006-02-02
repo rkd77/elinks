@@ -323,8 +323,10 @@ add_document_to_string(struct string *string, struct document *document)
 	assert(string && document);
 	if_assert_failed return NULL;
 
+#ifdef CONFIG_UTF_8
 	if (is_cp_special(document->options.cp))
 		goto utf_8;
+#endif /* CONFIG_UTF_8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -358,6 +360,7 @@ add_document_to_string(struct string *string, struct document *document)
 
 		add_char_to_string(string, '\n');
 	}
+#ifdef CONFIG_UTF_8
 	goto end;
 utf_8:
 	for (y = 0; y < document->height; y++) {
@@ -395,6 +398,7 @@ utf_8:
 		add_char_to_string(string, '\n');
 	}
 end:
+#endif /* CONFIG_UTF_8 */
 	return string;
 }
 
@@ -422,8 +426,10 @@ dump_to_file(struct document *document, int fd)
 
 	if (!buf) return -1;
 
+#ifdef CONFIG_UTF_8
 	if (is_cp_special(document->options.cp))
 		goto utf_8;
+#endif /* CONFIG_UTF_8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -461,6 +467,7 @@ dump_to_file(struct document *document, int fd)
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
+#ifdef CONFIG_UTF_8
 	goto ref;
 utf_8:
 	for (y = 0; y < document->height; y++) {
@@ -508,13 +515,16 @@ utf_8:
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
+#endif /* CONFIG_UTF_8 */
 
 	if (hard_write(fd, buf, bptr) != bptr) {
 fail:
 		mem_free(buf);
 		return -1;
 	}
+#ifdef CONFIG_UTF_8
 ref:
+#endif /* CONFIG_UTF_8 */
 	if (document->nlinks && get_opt_bool("document.dump.references")) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";

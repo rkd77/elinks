@@ -167,6 +167,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		attr = get_opt_bool("ui.dialogs.underline_button_shortcuts")
 		     ? SCREEN_ATTR_UNDERLINE : 0;
 
+#ifdef CONFIG_UTF_8
 		if (term->utf8) {
 			unsigned char *text2 = text;
 			unsigned char *end = text
@@ -192,6 +193,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			}
 			len = x1 - !!hk_state;
 		} else
+#endif /* CONFIG_UTF_8 */
 		if (hk_pos >= 0) {
 			int right = widget_data->widget->info.button.truetextlen - hk_pos - 1;
 

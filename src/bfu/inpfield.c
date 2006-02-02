@@ -266,8 +266,11 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color;
 	int sel = is_selected_widget(dlg_data, widget_data);
+#ifdef CONFIG_UTF_8
 	int len = 0, left = 0;
+#endif /* CONFIG_UTF_8 */
 
+#ifdef CONFIG_UTF_8
 	if (term->utf8) {
 		unsigned char *t = widget_data->cdata;
 		unsigned char *t2 = t;
@@ -284,7 +287,9 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		}
 		t[p] = tmp;
 		widget_data->info.field.vpos = (int)(t2 - t);
-	} else {
+	} else 
+#endif /* CONFIG_UTF_8 */	
+	{
 		int_bounds(&widget_data->info.field.vpos,
 		   widget_data->info.field.cpos - widget_data->box.width + 1,
 		   widget_data->info.field.cpos);
@@ -298,25 +303,33 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	color = get_bfu_color(term, "dialog.field-text");
 	if (color) {
 		unsigned char *text = widget_data->cdata + widget_data->info.field.vpos;
+#ifdef CONFIG_UTF_8
 		unsigned char *text2 = text;
-		int x, l, len, w;
+#endif /* CONFIG_UTF_8 */
+		int len, w;
 
-		len = (term->utf8) ? strlen_utf8(&text2) : strlen(text);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			len = strlen_utf8(&text2);
+		else
+#endif /* CONFIG_UTF_8 */
+			len = strlen(text);
 		w = int_min(len, widget_data->box.width);
 
 		if (!hide) {
+#ifdef CONFIG_UTF_8
+			int x;
 			if (term->utf8) {
+				int l;
 				for (l = 0, x = 0; x < w; x++)
 					l += utf8charlen(text+l);
 				w = l;
 			}
+#endif /* CONFIG_UTF_8 */
 			draw_text(term, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color);
 		} else {
 			struct box box;
-
-			if (term->utf8) len = strlen_utf8(&text);
-			w = int_min(len, widget_data->box.width);
 
 			copy_box(&box, &widget_data->box);
 			box.width = w;
@@ -328,12 +341,13 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	if (sel) {
 		int x;
 
-		if (term->utf8) {
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
 			x = widget_data->box.x + len - left;
-		} else {
+		else 
+#endif /* CONFIG_UTF_8 */
 			x = widget_data->box.x + widget_data->info.field.cpos - widget_data->info.field.vpos;
 
-		}
 		set_cursor(term, x, widget_data->box.y, 0);
 		set_window_ptr(dlg_data->win, widget_data->box.x, widget_data->box.y);
 	}
@@ -473,6 +487,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 		case ACT_EDIT_RIGHT:
 			if (widget_data->info.field.cpos < strlen(widget_data->cdata)) {
+#ifdef CONFIG_UTF_8
 				if (term->utf8) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *end = strchr(next, '\0');
@@ -480,13 +495,17 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 					utf_8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);
 				} else
+#endif /* CONFIG_UTF_8 */
+				{
 					widget_data->info.field.cpos++;
+				}
 			}
 			goto display_field;
 
 		case ACT_EDIT_LEFT:
 			if (widget_data->info.field.cpos > 0)
 				widget_data->info.field.cpos--;
+#ifdef CONFIG_UTF_8
 			if (widget_data->info.field.cpos && term->utf8) {
 				unsigned char *t = widget_data->cdata;
 				unsigned char *t2 = t;
@@ -499,6 +518,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				widget_data->info.field.cpos = (int)(t2 - t);
 				
 			}
+#endif /* CONFIG_UTF_8 */
 			goto display_field;
 
 		case ACT_EDIT_HOME:
@@ -510,6 +530,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			goto display_field;
 
 		case ACT_EDIT_BACKSPACE:
+#ifdef CONFIG_UTF_8
 			if (widget_data->info.field.cpos && term->utf8) {
 				unsigned char *t = widget_data->cdata;
 				unsigned char *t2 = t;
@@ -523,6 +544,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				widget_data->info.field.cpos = (int)(t2 - t);
 				goto display_field;
 			}
+#endif /* CONFIG_UTF_8 */
 			if (widget_data->info.field.cpos) {
 				memmove(widget_data->cdata + widget_data->info.field.cpos - 1,
 					widget_data->cdata + widget_data->info.field.cpos,
@@ -537,6 +559,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 				if (widget_data->info.field.cpos >= cdata_len) goto display_field;
 
+#ifdef CONFIG_UTF_8
 				if (term->utf8) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *dest = next;
@@ -546,6 +569,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 					memmove(dest, next, strlen(next) + 1);
 					goto display_field;
 				}
+#endif /* CONFIG_UTF_8 */
 				memmove(widget_data->cdata + widget_data->info.field.cpos,
 					widget_data->cdata + widget_data->info.field.cpos + 1,
 					cdata_len - widget_data->info.field.cpos + 1);
@@ -627,6 +651,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 				memmove(text + 1, text, textlen + 1);
 				*text = get_kbd_key(ev);
+#ifdef CONFIG_UTF_8
 				if (term->utf8) {
 					static unsigned char buf[7];
 					unsigned char *t = buf;
@@ -641,6 +666,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 						return EVENT_PROCESSED;
 					else i = 0;
 				}
+#endif /* CONFIG_UTF_8 */
 				goto display_field;
 			}
 	}

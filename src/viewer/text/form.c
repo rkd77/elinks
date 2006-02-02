@@ -158,21 +158,27 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 	mem_free_set(&fs->value, NULL);
 
 	switch (fc->type) {
+#ifdef CONFIG_UTF_8
 		unsigned char *text;
+#endif /* CONFIG_UTF_8 */
 
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_TEXTAREA:
 			fs->value = stracpy(fc->default_value);
 			fs->state = strlen(fc->default_value);
+#ifdef CONFIG_UTF_8
 			text = fs->value;
 			fs->utf8_pos = strlen_utf8(&text);
+#endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
 		case FC_FILE:
 			fs->value = stracpy("");
 			fs->state = 0;
+#ifdef CONFIG_UTF_8
 			fs->utf8_pos = 0;
+#endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
 		case FC_SELECT:
@@ -335,14 +341,18 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	dy = box->y - vs->y;
 	switch (fc->type) {
 		unsigned char *s;
+#ifdef CONFIG_UTF_8
 		unsigned char *text, *end;
+#endif /* CONFIG_UTF_8 */
 		int len;
 		int i, x, y;
 
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_FILE:
+#ifdef CONFIG_UTF_8
 			if (term->utf8) goto utf_8;
+#endif /* CONFIG_UTF_8 */
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			if (!link->npoints) break;
 
@@ -367,6 +377,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 				draw_char_data(term, x, y, data);
 			}
 			break;
+#ifdef CONFIG_UTF_8
 utf_8:
 			text = fs->value;
 			end = strchr(text, '\0');
@@ -397,6 +408,7 @@ utf_8:
 				draw_char_data(term, x, y, data);
 			}
 			break;
+#endif /* CONFIG_UTF_8 */
 		case FC_TEXTAREA:
 			draw_textarea(term, fs, doc_view, link);
 			break;
@@ -415,7 +427,9 @@ utf_8:
 			else
 				/* XXX: when can this happen? --pasky */
 				s = "";
+#ifdef CONFIG_UTF_8
 			if (term->utf8) goto utf_8_select;
+#endif /* CONFIG_UTF_8 */
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
 				x = link->points[i].x + dx;
@@ -424,6 +438,7 @@ utf_8:
 					draw_char_data(term, x, y, i < len ? s[i] : '_');
 			}
 			break;
+#ifdef CONFIG_UTF_8
 utf_8_select:
 			text = s;
 			end = strchr(s, '\0');
@@ -436,6 +451,7 @@ utf_8_select:
 					 ? utf_8_to_unicode(&s, end) : '_');
 			}
 			break;
+#endif /* CONFIG_UTF_8 */
 		case FC_SUBMIT:
 		case FC_IMAGE:
 		case FC_RESET:
@@ -1245,7 +1261,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 	unsigned char *text;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
+#ifdef CONFIG_UTF_8
 	int utf8 = ses->tab->term->utf8;
+#endif /* CONFIG_UTF_8 */
 
 	assert(ses && doc_view && link && ev);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -1265,6 +1283,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 	switch (action_id) {
 		case ACT_EDIT_LEFT:
+#ifdef CONFIG_UTF_8
 			if (utf8) {
 				unsigned char *text = fs->value;
 				unsigned char *end = fs->value + fs->state - 1;
@@ -1274,9 +1293,11 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->state = (int)(text - fs->value);
 				if (old != fs->state) fs->utf8_pos--;
 			} else
+#endif /* CONFIG_UTF_8 */
 				fs->state = int_max(fs->state - 1, 0);
 			break;
 		case ACT_EDIT_RIGHT:
+#ifdef CONFIG_UTF_8
 			if (utf8) {
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *end = strchr(text, '\0');
@@ -1286,58 +1307,91 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->state = (int)(text - fs->value);
 				if (old != fs->state) fs->utf8_pos++;
 			} else
+#endif /* CONFIG_UTF_8 */
 				fs->state = int_min(fs->state + 1, strlen(fs->value));
 			break;
 		case ACT_EDIT_HOME:
 			if (fc->type == FC_TEXTAREA) {
+#ifdef CONFIG_UTF_8
 				status = textarea_op_home(fs, fc, utf8);
+#else
+				status = textarea_op_home(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = 0;
+#ifdef CONFIG_UTF_8
 				fs->utf8_pos = 0;
+#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_UP:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
+#ifdef CONFIG_UTF_8
 				status = textarea_op_up(fs, fc, utf8);
+#else
+				status = textarea_op_up(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_DOWN:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
+#ifdef CONFIG_UTF_8
 				status = textarea_op_down(fs, fc, utf8);
+#else
+				status = textarea_op_down(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_END:
 			if (fc->type == FC_TEXTAREA) {
+#ifdef CONFIG_UTF_8
 				status = textarea_op_end(fs, fc, utf8);
+#else
+				status = textarea_op_end(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = strlen(fs->value);
+#ifdef CONFIG_UTF_8
 				if (utf8) {
 					unsigned char *text = fs->value;
 
 					fs->utf8_pos = strlen_utf8(&text);
 				}
+#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_BEGINNING_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
+#ifdef CONFIG_UTF_8
 				status = textarea_op_bob(fs, fc, utf8);
+#else
+				status = textarea_op_bob(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = 0;
+#ifdef CONFIG_UTF_8
 				fs->utf8_pos = 0;
+#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_END_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
+#ifdef CONFIG_UTF_8
 				status = textarea_op_eob(fs, fc, utf8);
+#else
+				status = textarea_op_eob(fs, fc);
+#endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = strlen(fs->value);
+#ifdef CONFIG_UTF_8
 				if (utf8) {
 					unsigned char *text = fs->value;
 
 					fs->utf8_pos = strlen_utf8(&text);
 				}
+#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_OPEN_EXTERNAL:
@@ -1355,7 +1409,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (!form_field_is_readonly(fc))
 				fs->value[0] = 0;
 			fs->state = 0;
+#ifdef CONFIG_UTF_8
 			fs->utf8_pos = 0;
+#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_PASTE_CLIPBOARD:
 			if (form_field_is_readonly(fc)) break;
@@ -1371,19 +1427,24 @@ field_op(struct session *ses, struct document_view *doc_view,
 					fs->value = v;
 					memmove(v, text, length + 1);
 					fs->state = strlen(fs->value);
+#ifdef CONFIG_UTF_8
 					if (utf8 && fc->type != FC_TEXTAREA) {
 						unsigned char *text = fs->value;
 
 						fs->utf8_pos = strlen_utf8(&text);
 					}
-
+#endif /* CONFIG_UTF_8 */
 				}
 			}
 			mem_free(text);
 			break;
 		case ACT_EDIT_ENTER:
 			if (fc->type == FC_TEXTAREA) {
+#ifdef CONFIG_UTF_8
 				status = textarea_op_enter(fs, fc, utf8);
+#else
+				status = textarea_op_enter(fs, fc);
+#endif /* CONFIG_UTF_8 */
 				break;
 			}
 
@@ -1408,6 +1469,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
+#ifdef CONFIG_UTF_8
 			if (utf8) {
 				int i;
 				unsigned char *text = fs->value;
@@ -1421,6 +1483,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->utf8_pos--;
 				break;
 			}
+#endif /* CONFIG_UTF_8 */
 			length = strlen(fs->value + fs->state) + 1;
 			text = fs->value + fs->state;
 
@@ -1438,6 +1501,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
+#ifdef CONFIG_UTF_8
 			if (utf8) {
 				unsigned char *end = fs->value + length;
 				unsigned char *text = fs->value + fs->state;
@@ -1450,6 +1514,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				}
 				break;
 			}
+#endif /* CONFIG_UTF_8 */
 			text = fs->value + fs->state;
 
 			memmove(text, text + 1, length - fs->state);
@@ -1479,11 +1544,13 @@ field_op(struct session *ses, struct document_view *doc_view,
 			memmove(text, fs->value + fs->state, length);
 
 			fs->state = (int) (text - fs->value);
+#ifdef CONFIG_UTF_8
 			if (utf8 && fc->type != FC_TEXTAREA) {
 				unsigned char *text = fs->value;
 
 				fs->utf8_pos = strlen_utf8(&text);
 			}
+#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_KILL_TO_EOL:
 			if (form_field_is_readonly(fc)) {
@@ -1537,10 +1604,16 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 			if (form_field_is_readonly(fc)
-			    || strlen(fs->value) >= fc->maxlength) {
+					|| strlen(fs->value) >= fc->maxlength
+#ifndef CONFIG_UTF_8
+					|| !insert_in_string(&fs->value, fs->state, "?", 1)
+#endif /* CONFIG_UTF_8 */
+					)
+					{
 				status = FRAME_EVENT_OK;
 				break;
 			}
+#ifdef CONFIG_UTF_8
 			if (utf8) {
 				static unsigned char buf[7];
 				static int i = 0;
@@ -1572,6 +1645,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 					return FRAME_EVENT_OK;
 				fs->value[fs->state++] = get_kbd_key(ev);
 			}
+#else
+			fs->value[fs->state++] = get_kbd_key(ev);
+#endif /* CONFIG_UTF_8 */
 			break;
 	}
 

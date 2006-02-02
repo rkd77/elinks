@@ -47,6 +47,7 @@ struct line_info {
 #define realloc_line_info(info, size) \
 	mem_align_alloc(info, size, (size) + 3, 0xFF)
 
+#ifdef CONFIG_UTF_8
 /* Allocates a line_info table describing the layout of the textarea buffer.
  *
  * @width	is max width and the offset at which text will be wrapped
@@ -117,6 +118,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 
 	return line;
 }
+#endif /* CONFIG_UTF_8 */
 
 /* Allocates a line_info table describing the layout of the textarea buffer.
  *
@@ -209,7 +211,11 @@ get_textarea_line_number(struct line_info *line, int cursor_position)
 /* Fixes up the vpos and vypos members of the form_state. Returns the
  * logical position in the textarea view. */
 int
+#ifdef CONFIG_UTF_8
 area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
+#else
+area_cursor(struct form_control *fc, struct form_state *fs)
+#endif /* CONFIG_UTF_8 */
 {
 	struct line_info *line;
 	int x, y;
@@ -217,9 +223,11 @@ area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 	assert(fc && fs);
 	if_assert_failed return 0;
 
+#ifdef CONFIG_UTF_8
 	if (utf8)
 		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
 	else
+#endif /* CONFIG_UTF_8 */
 		line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return 0;
 
@@ -228,7 +236,7 @@ area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 		mem_free(line);
 		return 0;
 	}
-
+#ifdef CONFIG_UTF_8
 	if (utf8) {
 		unsigned char *text = fs->value + line[y].start;
 		unsigned char tmp = fs->value[fs->state];
@@ -237,6 +245,7 @@ area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 		x = strlen_utf8(&text);
 		fs->value[fs->state] = tmp;
 	} else
+#endif /* CONFIG_UTF_8 */
 		x = fs->state - line[y].start;
 
 	mem_free(line);
@@ -252,6 +261,7 @@ area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
 	return y * fc->cols + x;
 }
 
+#ifdef CONFIG_UTF_8
 static void
 draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	      struct document_view *doc_view, struct link *link)
@@ -329,7 +339,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 
 	mem_free(linex);
 }
-
+#endif /* CONFIG_UTF_8 */
 
 void
 draw_textarea(struct terminal *term, struct form_state *fs,
@@ -345,10 +355,12 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	assert(term && doc_view && doc_view->document && doc_view->vs && link);
 	if_assert_failed return;
 
+#ifdef CONFIG_UTF_8
 	if (term->utf8) {
 		draw_textarea_utf8(term, fs, doc_view, link);
 		return;
 	}
+#endif /* CONFIG_UTF_8 */
 	fc = get_link_form_control(link);
 	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
@@ -358,7 +370,11 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	vy = doc_view->vs->y;
 
 	if (!link->npoints) return;
+#ifdef CONFIG_UTF_8
 	area_cursor(fc, fs, 0);
+#else
+	area_cursor(fc, fs);
+#endif /* CONFIG_UTF_8 */
 	linex = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!linex) return;
 	line = linex;
@@ -615,8 +631,13 @@ menu_textarea_edit(struct terminal *term, void *xxx, void *ses_)
 }
 
 static enum frame_event_status
+#ifdef CONFIG_UTF_8
 textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
 	    int (*do_op)(struct form_state *, struct line_info *, int, int))
+#else
+textarea_op(struct form_state *fs, struct form_control *fc,
+	    int (*do_op)(struct form_state *, struct line_info *, int))
+#endif /* CONFIG_UTF_8 */
 {
 	struct line_info *line;
 	int current, state;
@@ -624,15 +645,22 @@ textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
 
+#ifdef CONFIG_UTF_8
 	if (utf8)
 		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
 	else
+#endif /* CONFIG_UTF_8 */
 		line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return FRAME_EVENT_OK;
 
 	current = get_textarea_line_number(line, fs->state);
 	state = fs->state;
-	if (do_op(fs, line, current, utf8)) {
+#ifdef CONFIG_UTF_8
+	if (do_op(fs, line, current, utf8))
+#else
+	if (do_op(fs, line, current))
+#endif /* CONFIG_UTF_8 */
+{
 		mem_free(line);
 		return FRAME_EVENT_IGNORED;
 	}
@@ -641,6 +669,7 @@ textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
 	return fs->state == state ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
+#ifdef CONFIG_UTF_8
 static int
 x_pos(struct form_state *fs, struct line_info *line, int current)
 {
@@ -668,26 +697,37 @@ new_pos(struct form_state *fs, struct line_info *line, int current, int len)
 	}
 	fs->state = (int)(text - fs->value);
 }
+#endif /* CONFIG_UTF_8 */
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_home(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_home(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current != -1) fs->state = line[current].start;
 	return 0;
 }
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_up(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) return 0;
 	if (!current) return 1;
 
+#ifdef CONFIG_UTF_8
 	if (utf8) {
 		int len = x_pos(fs, line, current);
 
 		new_pos(fs, line, current - 1, len);
 		return 0;
 	}
+#endif /* CONFIG_UTF_8 */
 
 	fs->state -= line[current].start - line[current-1].start;
 	int_upper_bound(&fs->state, line[current-1].end);
@@ -695,24 +735,35 @@ do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 }
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_down(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) return 0;
 	if (line[current+1].start == -1) return 1;
 
+#ifdef CONFIG_UTF_8
 	if (utf8) {
 		int len = x_pos(fs, line, current);
 
 		new_pos(fs, line, current + 1, len);
 		return 0;
 	}
+#endif /* CONFIG_UTF_8 */
+
 	fs->state += line[current+1].start - line[current].start;
 	int_upper_bound(&fs->state, line[current+1].end);
 	return 0;
 }
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_end(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) {
 		fs->state = strlen(fs->value);
@@ -727,7 +778,11 @@ do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
 }
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_bob(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_bob(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) return 0;
 
@@ -737,7 +792,11 @@ do_op_bob(struct form_state *fs, struct line_info *line, int current, int utf8)
 }
 
 static int
+#ifdef CONFIG_UTF_8
 do_op_eob(struct form_state *fs, struct line_info *line, int current, int utf8)
+#else
+do_op_eob(struct form_state *fs, struct line_info *line, int current)
+#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) {
 		fs->state = strlen(fs->value);
@@ -753,50 +812,102 @@ do_op_eob(struct form_state *fs, struct line_info *line, int current, int utf8)
 	return 0;
 }
 
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_home(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_home);
 }
+#else
+enum frame_event_status
+textarea_op_home(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_home);
+}
+#endif /* CONFIG_UTF_8 */
 
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_up(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_up);
 }
+#else
+enum frame_event_status
+textarea_op_up(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_up);
+}
+#endif /* CONFIG_UTF_8 */
 
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_down(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_down);
 }
+#else
+enum frame_event_status
+textarea_op_down(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_down);
+}
+#endif /* CONFIG_UTF_8 */
 
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_end(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_end);
 }
+#else
+enum frame_event_status
+textarea_op_end(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_end);
+}
+#endif /* CONFIG_UTF_8 */
 
 /* Set the form state so the cursor is on the first line of the buffer.
  * Preserve the column if possible. */
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_bob(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_bob);
 }
+#else
+enum frame_event_status
+textarea_op_bob(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_bob);
+}
+#endif /* CONFIG_UTF_8 */
 
 /* Set the form state so the cursor is on the last line of the buffer. Preserve
  * the column if possible. This is done by getting current and last line and
  * then shifting the state by the delta of both lines start position bounding
  * the whole thing to the end of the last line. */
+#ifdef CONFIG_UTF_8
 enum frame_event_status
 textarea_op_eob(struct form_state *fs, struct form_control *fc, int utf8)
 {
 	return textarea_op(fs, fc, utf8, do_op_eob);
 }
+#else
+enum frame_event_status
+textarea_op_eob(struct form_state *fs, struct form_control *fc)
+{
+	return textarea_op(fs, fc, do_op_eob);
+}
+#endif /* CONFIG_UTF_8 */
 
 enum frame_event_status
+#ifdef CONFIG_UTF_8
 textarea_op_enter(struct form_state *fs, struct form_control *fc, int utf8)
+#else
+textarea_op_enter(struct form_state *fs, struct form_control *fc)
+#endif /* CONFIG_UTF_8 */
 {
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -817,7 +928,9 @@ set_textarea(struct document_view *doc_view, int direction)
 	struct form_control *fc;
 	struct form_state *fs;
 	struct link *link;
+#ifdef CONFIG_UTF_8
 	int utf8 = doc_view->document->options.utf8;
+#endif /* CONFIG_UTF_8 */
 
 	assert(doc_view && doc_view->vs && doc_view->document);
 	assert(direction == 1 || direction == -1);
@@ -838,8 +951,15 @@ set_textarea(struct document_view *doc_view, int direction)
 
 	/* Depending on which way we entered the textarea move cursor so that
 	 * it is available at end or start. */
+#ifdef CONFIG_UTF_8
 	if (direction == 1)
 		textarea_op_eob(fs, fc, utf8);
 	else
 		textarea_op_bob(fs, fc, utf8);
+#else
+	if (direction == 1)
+		textarea_op_eob(fs, fc);
+	else
+		textarea_op_bob(fs, fc);
+#endif /* CONFIG_UTF_8 */
 }

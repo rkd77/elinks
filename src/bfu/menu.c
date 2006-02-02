@@ -346,7 +346,6 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	struct color_pair *hk_color_sel = get_bfu_color(term, "menu.hotkey.selected");
 	enum screen_char_attr hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys")
 				      ? SCREEN_ATTR_UNDERLINE : 0;
-	unsigned char *text2, *end;
 	unsigned char c;
 	int xbase = x + L_TEXT_SPACE;
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
@@ -368,7 +367,10 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 		hk_color_sel = tmp;
 	}
 
+#ifdef CONFIG_UTF_8
 	if (term->utf8) goto utf8;
+#endif /* CONFIG_UTF_8 */
+
 	for (x = 0; x - !!hk_state < w && (c = text[x]); x++) {
 		if (!hk_state && x == hotkey_pos - 1) {
 			hk_state = 1;
@@ -381,13 +383,15 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 				  (double_hk ? hk_color_sel : hk_color));
 #else
 			draw_char(term, xbase + x - 1, y, c, hk_attr, hk_color);
-#endif
+#endif /* CONFIG_DEBUG */
 			hk_state = 2;
 		} else {
 			draw_char(term, xbase + x - !!hk_state, y, c, 0, color);
 		}
 	}
 	return;
+#ifdef CONFIG_UTF_8
+	unsigned char *text2, *end;
 utf8:
 	end = strchr(text, '\0');
 	text2 = text;
@@ -405,14 +409,14 @@ utf8:
 				  (double_hk ? hk_color_sel : hk_color));
 #else
 			draw_char(term, xbase + x - 1, y, data, hk_attr, hk_color);
-#endif
+#endif /* CONFIG_DEBUG */
 			hk_state = 2;
 		} else {
 			draw_char(term, xbase + x - !!hk_state, y, data, 0, color);
 		}
 
 	}
-
+#endif /* CONFIG_UTF_8 */
 }
 
 static inline void
