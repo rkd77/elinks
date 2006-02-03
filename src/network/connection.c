@@ -979,26 +979,26 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 
 /* FIXME: one object in more connections */
 void
-cancel_download(struct download *old, int interrupt)
+cancel_download(struct download *download, int interrupt)
 {
 	struct connection *conn;
 
-	assert(old);
+	assert(download);
 	if_assert_failed return;
 
-	if (is_in_result_state(old->state))
+	if (is_in_result_state(download->state))
 		return;
 
 	check_queue_bugs();
 
-	conn = old->conn;
+	conn = download->conn;
 
-	conn->pri[old->pri]--;
-	assertm(conn->pri[old->pri] >= 0, "priority counter underflow");
-	if_assert_failed conn->pri[old->pri] = 0;
+	conn->pri[download->pri]--;
+	assertm(conn->pri[download->pri] >= 0, "priority counter underflow");
+	if_assert_failed conn->pri[download->pri] = 0;
 
-	del_from_list(old);
-	old->state = S_INTERRUPTED;
+	del_from_list(download);
+	download->state = S_INTERRUPTED;
 
 	if (list_empty(conn->downloads)) {
 		/* Necessary because of assertion in get_priority(). */
