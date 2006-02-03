@@ -1002,8 +1002,9 @@ change_connection(struct download *old, struct download *new,
 	if (new) {
 		add_to_list(conn->downloads, new);
 
-	} else if (conn->detached || interrupt) {
-		abort_connection(conn, S_INTERRUPTED);
+	} else {
+		if (conn->detached || interrupt)
+			abort_connection(conn, S_INTERRUPTED);
 	}
 
 	sort_queue();
