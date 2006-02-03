@@ -989,9 +989,6 @@ change_connection(struct download *old, struct download *new,
 
 	if (is_in_result_state(old->state)) {
 		if (new) {
-			new->cached = old->cached;
-			new->state = old->state;
-			new->prev_error = old->prev_error;
 			if (new->callback)
 				new->callback(new, new->data);
 		}
@@ -1011,13 +1008,7 @@ change_connection(struct download *old, struct download *new,
 	old->state = S_INTERRUPTED;
 
 	if (new) {
-		new->progress = conn->progress;
 		add_to_list(conn->downloads, new);
-		new->state = conn->state;
-		new->prev_error = conn->prev_error;
-		new->pri = newpri;
-		new->conn = conn;
-		new->cached = conn->cached;
 
 	} else if (conn->detached || interrupt) {
 		abort_connection(conn, S_INTERRUPTED);
@@ -1039,6 +1030,15 @@ void
 move_download(struct download *old, struct download *new,
 	       enum connection_priority newpri)
 {
+	struct connection *conn = old->conn;
+
+	new->conn	= conn;
+	new->cached	= conn->cached;
+	new->prev_error	= conn->prev_error;
+	new->progress	= conn->progress;
+	new->state	= conn->state;
+	new->pri	= newpri;
+
 	change_connection(old, new, newpri, 0);
 }
 
