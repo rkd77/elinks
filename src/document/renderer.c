@@ -512,7 +512,9 @@ sort_links(struct document *document)
 
 	if (!document->height) return;
 
+	mem_free_if(document->lines1);
 	document->lines1 = mem_calloc(document->height, sizeof(*document->lines1));
+	mem_free_if(document->lines2);
 	if (!document->lines1) return;
 	document->lines2 = mem_calloc(document->height, sizeof(*document->lines2));
 	if (!document->lines2) {
