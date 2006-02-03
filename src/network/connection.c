@@ -978,14 +978,16 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 
 
 /* FIXME: one object in more connections */
-static void
-change_connection(struct download *old, struct download *new,
-		  enum connection_priority newpri, int interrupt)
+void
+cancel_download(struct download *old, int interrupt)
 {
 	struct connection *conn;
 
 	assert(old);
 	if_assert_failed return;
+
+	if (is_in_result_state(old->state))
+		return;
 
 	check_queue_bugs();
 
@@ -1013,15 +1015,6 @@ change_connection(struct download *old, struct download *new,
 }
 
 void
-cancel_download(struct download *download, int interrupt)
-{
-	if (is_in_result_state(download->state))
-		return;
-
-	change_connection(download, NULL, PRI_CANCEL, interrupt);
-}
-
-void
 move_download(struct download *old, struct download *new,
 	       enum connection_priority newpri)
 {
@@ -1043,7 +1036,7 @@ move_download(struct download *old, struct download *new,
 	conn->pri[new->pri]++;
 	add_to_list(conn->downloads, new);
 
-	change_connection(old, new, newpri, 0);
+	cancel_download(old, 0);
 }
 
 
