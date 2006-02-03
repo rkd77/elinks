@@ -987,14 +987,6 @@ change_connection(struct download *old, struct download *new,
 	assert(old);
 	if_assert_failed return;
 
-	if (is_in_result_state(old->state)) {
-		if (new) {
-			if (new->callback)
-				new->callback(new, new->data);
-		}
-		return;
-	}
-
 	check_queue_bugs();
 
 	conn = old->conn;
@@ -1023,6 +1015,9 @@ change_connection(struct download *old, struct download *new,
 void
 cancel_download(struct download *download, int interrupt)
 {
+	if (is_in_result_state(download->state))
+		return;
+
 	change_connection(download, NULL, PRI_CANCEL, interrupt);
 }
 
@@ -1038,6 +1033,12 @@ move_download(struct download *old, struct download *new,
 	new->progress	= conn->progress;
 	new->state	= conn->state;
 	new->pri	= newpri;
+
+	if (is_in_result_state(old->state)) {
+		if (new->callback)
+			new->callback(new, new->data);
+		return;
+	}
 
 	change_connection(old, new, newpri, 0);
 }
