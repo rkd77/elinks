@@ -995,14 +995,13 @@ change_connection(struct download *old, struct download *new,
 	assertm(conn->pri[old->pri] >= 0, "priority counter underflow");
 	if_assert_failed conn->pri[old->pri] = 0;
 
-	conn->pri[newpri]++;
 	del_from_list(old);
 	old->state = S_INTERRUPTED;
 
-	if (new) {
-		add_to_list(conn->downloads, new);
+	if (list_empty(conn->downloads)) {
+		/* Necessary because of assertion in get_priority(). */
+		conn->pri[PRI_CANCEL]++;
 
-	} else {
 		if (conn->detached || interrupt)
 			abort_connection(conn, S_INTERRUPTED);
 	}
@@ -1040,6 +1039,9 @@ move_download(struct download *old, struct download *new,
 			new->callback(new, new->data);
 		return;
 	}
+
+	conn->pri[new->pri]++;
+	add_to_list(conn->downloads, new);
 
 	change_connection(old, new, newpri, 0);
 }
