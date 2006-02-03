@@ -399,12 +399,6 @@ done_dom_node_data(struct dom_node *node)
 		break;
 
 	case DOM_NODE_DOCUMENT:
-		if (data->document.element_ids)
-			free_hash(data->document.element_ids);
-
-		if (data->document.meta_nodes)
-			done_dom_node_list(data->document.meta_nodes);
-
 		if (data->document.children)
 			done_dom_node_list(data->document.children);
 		break;
@@ -444,7 +438,6 @@ done_dom_node(struct dom_node *node)
 
 		switch (parent->type) {
 		case DOM_NODE_DOCUMENT:
-			del_from_dom_node_list(data->document.meta_nodes, node);
 			del_from_dom_node_list(data->document.children, node);
 			break;
 

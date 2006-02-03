@@ -3,9 +3,9 @@
 #define EL_DOM_NODE_H
 
 #include "dom/string.h"
-#include "util/hash.h"
 
 struct dom_node_list;
+struct dom_document;
 
 enum dom_node_type {
 	DOM_NODE_UNKNOWN		=  0, /* for internal purpose only */
@@ -27,27 +27,15 @@ enum dom_node_type {
 };
 
 /* Following is the node specific datastructures. They may contain no more
- * than 3 pointers or something equivalent. */
+ * than 4 pointers or something equivalent. */
 
-struct dom_node_id_item {
-	/* The attibute node containing the id value */
-	struct dom_node *id_attribute;
-
-	/* The node with the @id attribute */
-	struct dom_node *node;
-};
-
+/* The document URI is stored in the string / length members. */
 struct dom_document_node {
-	/* The document URI is stored in the string / length members. */
-	/* An id to node hash for fast lookup. */
-	struct hash *element_ids; /* -> {struct dom_node_id_item} */
-
-	/* Any meta data the root node carries such as document type nodes,
-	 * entity and notation map nodes and maybe some internal CSS stylesheet
-	 * node. */
-	struct dom_node_list *meta_nodes;
+	/* The document. */
+	struct dom_document *document;
 
 	/* The child nodes. May be NULL. Ordered like they where inserted. */
+	/* FIXME: Should be just one element (root) node reference. */
 	struct dom_node_list *children;
 };
 
@@ -176,12 +164,13 @@ union dom_node_data {
 	struct dom_id			 entity;
 	struct dom_proc_instruction_node proc_instruction;
 
-	/* Node types without a union member yet
+	/* Node types without a union member yet (mostly because it hasn't
+	 * been necessary):
 	 *
-	 * DOM_NODE_CDATA_SECTION,
-	 * DOM_NODE_COMMENT,
-	 * DOM_NODE_DOCUMENT_FRAGMENT,
-	 * DOM_NODE_ENTITY_REFERENCE,
+	 * DOM_NODE_CDATA_SECTION:	Use dom_text_node?
+	 * DOM_NODE_DOCUMENT_FRAGMENT:	struct dom_node_list children;
+	 * DOM_NODE_ENTITY_REFERENCE:	unicode_val_T
+	 * DOM_NODE_COMMENT
 	 */
 };
 
