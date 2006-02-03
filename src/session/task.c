@@ -55,7 +55,7 @@ abort_preloading(struct session *ses, int interrupt)
 {
 	if (!ses->task.type) return;
 
-	change_connection(&ses->loading, NULL, PRI_CANCEL, interrupt);
+	cancel_download(&ses->loading, interrupt);
 	free_task(ses);
 }
 
@@ -506,7 +506,7 @@ do_move(struct session *ses, struct download **download_p)
 	if (is_in_progress_state((*download_p)->state)) {
 		if (have_location(ses))
 			*download_p = &cur_loc(ses)->download;
-		change_connection(&ses->loading, *download_p, PRI_MAIN, 0);
+		move_download(&ses->loading, *download_p, PRI_MAIN);
 	} else if (have_location(ses)) {
 		cur_loc(ses)->download.state = ses->loading.state;
 	}

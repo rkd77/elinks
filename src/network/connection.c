@@ -978,7 +978,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 
 
 /* FIXME: one object in more connections */
-void
+static void
 change_connection(struct download *old, struct download *new,
 		  enum connection_priority newpri, int interrupt)
 {
@@ -1028,6 +1028,20 @@ change_connection(struct download *old, struct download *new,
 
 	register_check_queue();
 }
+
+void
+cancel_download(struct download *download, int interrupt)
+{
+	change_connection(download, NULL, PRI_CANCEL, interrupt);
+}
+
+void
+move_download(struct download *old, struct download *new,
+	       enum connection_priority newpri)
+{
+	change_connection(old, new, newpri, 0);
+}
+
 
 /* This will remove 'pos' bytes from the start of the cache for the specified
  * connection, if the cached object is already too big. */

@@ -352,7 +352,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 
 	if (cached->redirect && fetcher->redirects++ < MAX_REDIRECTS) {
 		if (is_in_progress_state(download->state))
-			change_connection(download, NULL, PRI_CANCEL, 0);
+			cancel_download(download, 0);
 
 		download->state = S_WAIT_REDIR;
 
@@ -428,7 +428,7 @@ end_bittorrent_fetch(void *fetcher_data)
 
 	/* Stop any running connections. */
 	if (is_in_progress_state(fetcher->download.state))
-		change_connection(&fetcher->download, NULL, PRI_CANCEL, 0);
+		cancel_download(&fetcher->download, 0);
 
 	mem_free(fetcher);
 }
