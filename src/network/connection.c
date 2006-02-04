@@ -986,19 +986,22 @@ cancel_download(struct download *download, int interrupt)
 	assert(download);
 	if_assert_failed return;
 
+	/* Did the connection already end? */
 	if (is_in_result_state(download->state))
 		return;
 
+	assertm(download->conn, "last state is %d", download->state);
+
 	check_queue_bugs();
+
+	download->state = S_INTERRUPTED;
+	del_from_list(download);
 
 	conn = download->conn;
 
 	conn->pri[download->pri]--;
 	assertm(conn->pri[download->pri] >= 0, "priority counter underflow");
 	if_assert_failed conn->pri[download->pri] = 0;
-
-	del_from_list(download);
-	download->state = S_INTERRUPTED;
 
 	if (list_empty(conn->downloads)) {
 		/* Necessary because of assertion in get_priority(). */
@@ -1016,15 +1019,21 @@ cancel_download(struct download *download, int interrupt)
 
 void
 move_download(struct download *old, struct download *new,
-	       enum connection_priority newpri)
+	      enum connection_priority newpri)
 {
 	struct connection *conn = old->conn;
 
-	new->conn	= conn;
-	new->cached	= conn->cached;
-	new->prev_error	= conn->prev_error;
-	new->progress	= conn->progress;
-	new->state	= conn->state;
+	assert(old);
+
+	/* The download doesn't necessarily have a connection attached, for
+	 * example the file protocol loads it's object immediately. This is
+	 * catched by the result state check below. */
+
+	new->conn	= old->conn;
+	new->cached	= old->cached;
+	new->prev_error	= old->prev_error;
+	new->progress	= old->progress;
+	new->state	= old->state;
 	new->pri	= newpri;
 
 	if (is_in_result_state(old->state)) {
@@ -1032,6 +1041,8 @@ move_download(struct download *old, struct download *new,
 			new->callback(new, new->data);
 		return;
 	}
+
+	assertm(old->conn, "last state is %d", old->state);
 
 	conn->pri[new->pri]++;
 	add_to_list(conn->downloads, new);
