@@ -1634,12 +1634,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 					i = 0;
 					break;
 				}
+
 				if (i == 6) {
 					i = 0;
-					return FRAME_EVENT_OK;
-				} else {
-					return FRAME_EVENT_OK;
 				}
+				return FRAME_EVENT_OK;
+
 			} else {
 				if (!insert_in_string(&fs->value, fs->state, "?", 1))
 					return FRAME_EVENT_OK;

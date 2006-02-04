@@ -95,9 +95,9 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 				pos = wrappos - text;
 			}
 			skip = !!wrappos;
-			char_cnt = 0;
-			wrappos = NULL;
 		}
+		char_cnt = 0;
+		wrappos = NULL;
 
 		if (!realloc_line_info(&line, line_number)) {
 			mem_free_if(line);
@@ -238,10 +238,13 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 	}
 #ifdef CONFIG_UTF_8
 	if (utf8) {
-		unsigned char *text = fs->value + line[y].start;
+		unsigned char *text = fs->value;
 		unsigned char tmp = fs->value[fs->state];
 
 		fs->value[fs->state] = '\0';
+		fs->utf8_pos = strlen_utf8(&text);
+
+		text = fs->value + line[y].start;
 		x = strlen_utf8(&text);
 		fs->value[fs->state] = tmp;
 	} else
