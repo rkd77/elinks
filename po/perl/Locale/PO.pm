@@ -133,7 +133,9 @@ sub php_format {
     @_ ? $self->{'php_format'} = shift: $self->{'php_format'};
 }
 
-sub normalize_str {
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _normalize_str {
     my $self     = shift;       # can be called as a class method
     my $string   = shift;
     my $dequoted = $self->dequote($string);
@@ -163,11 +165,11 @@ sub normalize_str {
 sub dump {
     my Locale::PO $self = shift;
     my $dump;
-    $dump = $self->dump_multi_comment( $self->comment, "# " )
+    $dump = $self->_dump_multi_comment( $self->comment, "# " )
       if ( $self->comment );
-    $dump .= $self->dump_multi_comment( $self->automatic, "#. " )
+    $dump .= $self->_dump_multi_comment( $self->automatic, "#. " )
       if ( $self->automatic );
-    $dump .= $self->dump_multi_comment( $self->reference, "#: " )
+    $dump .= $self->_dump_multi_comment( $self->reference, "#: " )
       if ( $self->reference );
     my $flags = '';
     $flags .= ", fuzzy" if $self->fuzzy;
@@ -181,14 +183,14 @@ sub dump {
       if ( defined( $self->php_format )
         and $self->php_format );
     $dump .= "#$flags\n" if length $flags;
-    $dump .= "msgid " . $self->normalize_str( $self->msgid );
-    $dump .= "msgid_plural " . $self->normalize_str( $self->msgid_plural )
+    $dump .= "msgid " . $self->_normalize_str( $self->msgid );
+    $dump .= "msgid_plural " . $self->_normalize_str( $self->msgid_plural )
       if $self->msgid_plural;
 
-    $dump .= "msgstr " . $self->normalize_str( $self->msgstr ) if $self->msgstr;
+    $dump .= "msgstr " . $self->_normalize_str( $self->msgstr ) if $self->msgstr;
 
     if ( my $msgstr_n = $self->msgstr_n ) {
-        $dump .= "msgstr[$_] " . $self->normalize_str( $$msgstr_n{$_} )
+        $dump .= "msgstr[$_] " . $self->_normalize_str( $$msgstr_n{$_} )
           for sort { $a <=> $b } keys %$msgstr_n;
     }
 
@@ -196,7 +198,9 @@ sub dump {
     return $dump;
 }
 
-sub dump_multi_comment {
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _dump_multi_comment {
     my $self    = shift;        # can be called as a class method
     my $comment = shift;
     my $leader  = shift;
@@ -629,7 +633,8 @@ Reformatted this list of changes.
 =item Z<>2006-02-05  Kalle Olavi Niemitalo  <kon@iki.fi>
 
 Added comments about the fields of Locale::PO objects.
-The load_file function binds $/ and $_ dynamically. 
+The load_file function binds $/ and $_ dynamically.
+Renamed normalize_str to _normalize_str, and dump_multi_comment to _dump_multi_comment.
 
 =back
 
