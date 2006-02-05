@@ -1049,6 +1049,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 
 	init_link_event_hooks(html_context, link);
 
+	document->links_sorted = 0;
 	return link;
 }
 

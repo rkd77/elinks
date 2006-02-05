@@ -51,6 +51,7 @@ static void document_put(struct SEE_interpreter *, struct SEE_object *, struct S
 static int document_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static int document_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static void js_document_write(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
+static void js_document_writeln(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
 void location_goto(struct document_view *, unsigned char *);
 
@@ -140,6 +141,8 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, doc->forms);
 	} else if (p == s_write) {
 		SEE_SET_OBJECT(res, doc->write);
+	} else if (p == s_writeln) {
+		SEE_SET_OBJECT(res, doc->writeln);
 	} else {
 		struct form *form;
 		unsigned char *string = SEE_string_to_unsigned_char(p);
@@ -200,14 +203,25 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 }
 
 static void
-js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
+js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
-	     struct SEE_value *res)
+	     struct SEE_value *res, int newline)
 {
-#ifdef CONFIG_LEDS
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
+	struct string *ret = g->ret;
 
+	if (argc >= 1 && ret) {
+		unsigned char *code = SEE_value_to_unsigned_char(interp, argv[0]);
+
+		if (code) {
+			add_to_string(ret, code);
+			mem_free(code);
+			if (newline)
+				add_char_to_string(ret, '\n');
+		}
+	}
+#ifdef CONFIG_LEDS
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
 	 * lighting a led and going away, no muss, no fuss. --pasky */
@@ -219,6 +233,22 @@ js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
 #endif
 	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
+}
+
+static void
+js_document_write(struct SEE_interpreter *interp, struct SEE_object *self,
+	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	     struct SEE_value *res)
+{
+	js_document_write_do(interp, self, thisobj, argc, argv, res, 0);
+}
+
+static void
+js_document_writeln(struct SEE_interpreter *interp, struct SEE_object *self,
+	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	     struct SEE_value *res)
+{
+	js_document_write_do(interp, self, thisobj, argc, argv, res, 1);
 }
 
 static int
@@ -258,4 +288,5 @@ init_js_document_object(struct ecmascript_interpreter *interpreter)
 	SEE_OBJECT_PUT(interp, interp->Global, s_document, &v, 0);
 
 	doc->write = SEE_cfunction_make(interp, js_document_write, s_write, 1);
+	doc->writeln = SEE_cfunction_make(interp, js_document_writeln, s_writeln, 1);
 }

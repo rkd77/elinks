@@ -55,5 +55,10 @@ test_output_line_numbers \
 7
 8' \
 8
+ 
+test_output_line_numbers \
+'Check line numbers. (IIII)' \
+$'1\r\f 2\v\n 3\r\n 4\t\f 5' \
+5
 
 test_done

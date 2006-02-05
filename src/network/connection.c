@@ -979,48 +979,36 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 
 /* FIXME: one object in more connections */
 void
-change_connection(struct download *old, struct download *new,
-		  enum connection_priority newpri, int interrupt)
+cancel_download(struct download *download, int interrupt)
 {
 	struct connection *conn;
 
-	assert(old);
+	assert(download);
 	if_assert_failed return;
 
-	if (is_in_result_state(old->state)) {
-		if (new) {
-			new->cached = old->cached;
-			new->state = old->state;
-			new->prev_error = old->prev_error;
-			if (new->callback)
-				new->callback(new, new->data);
-		}
+	/* Did the connection already end? */
+	if (is_in_result_state(download->state))
 		return;
-	}
+
+	assertm(download->conn, "last state is %d", download->state);
 
 	check_queue_bugs();
 
-	conn = old->conn;
+	download->state = S_INTERRUPTED;
+	del_from_list(download);
 
-	conn->pri[old->pri]--;
-	assertm(conn->pri[old->pri] >= 0, "priority counter underflow");
-	if_assert_failed conn->pri[old->pri] = 0;
+	conn = download->conn;
 
-	conn->pri[newpri]++;
-	del_from_list(old);
-	old->state = S_INTERRUPTED;
+	conn->pri[download->pri]--;
+	assertm(conn->pri[download->pri] >= 0, "priority counter underflow");
+	if_assert_failed conn->pri[download->pri] = 0;
 
-	if (new) {
-		new->progress = conn->progress;
-		add_to_list(conn->downloads, new);
-		new->state = conn->state;
-		new->prev_error = conn->prev_error;
-		new->pri = newpri;
-		new->conn = conn;
-		new->cached = conn->cached;
+	if (list_empty(conn->downloads)) {
+		/* Necessary because of assertion in get_priority(). */
+		conn->pri[PRI_CANCEL]++;
 
-	} else if (conn->detached || interrupt) {
-		abort_connection(conn, S_INTERRUPTED);
+		if (conn->detached || interrupt)
+			abort_connection(conn, S_INTERRUPTED);
 	}
 
 	sort_queue();
@@ -1028,6 +1016,40 @@ change_connection(struct download *old, struct download *new,
 
 	register_check_queue();
 }
+
+void
+move_download(struct download *old, struct download *new,
+	      enum connection_priority newpri)
+{
+	struct connection *conn = old->conn;
+
+	assert(old);
+
+	/* The download doesn't necessarily have a connection attached, for
+	 * example the file protocol loads it's object immediately. This is
+	 * catched by the result state check below. */
+
+	new->conn	= old->conn;
+	new->cached	= old->cached;
+	new->prev_error	= old->prev_error;
+	new->progress	= old->progress;
+	new->state	= old->state;
+	new->pri	= newpri;
+
+	if (is_in_result_state(old->state)) {
+		if (new->callback)
+			new->callback(new, new->data);
+		return;
+	}
+
+	assertm(old->conn, "last state is %d", old->state);
+
+	conn->pri[new->pri]++;
+	add_to_list(conn->downloads, new);
+
+	cancel_download(old, 0);
+}
+
 
 /* This will remove 'pos' bytes from the start of the cache for the specified
  * connection, if the cached object is already too big. */

@@ -319,7 +319,11 @@ debug_mem_alloc(unsigned char *file, int line, size_t size)
 
 	true_size = SIZE_BASE2AH(size);
 	do {
+#ifdef CONFIG_GC
+		ah = GC_MALLOC(true_size);
+#else
 		ah = malloc(true_size);
+#endif
 		if (ah) break;
 	} while (patience(file, line, "malloc"));
 	if (!ah) return NULL;
@@ -368,7 +372,11 @@ debug_mem_calloc(unsigned char *file, int line, size_t eltcount, size_t eltsize)
 
 	true_size = SIZE_BASE2AH(size);
 	do {
-		ah = calloc(1, SIZE_BASE2AH(size));
+#ifdef CONFIG_GC
+		ah = GC_MALLOC(true_size);
+#else
+		ah = calloc(1, true_size);
+#endif
 		if (ah) break;
 	} while (patience(file, line, "calloc"));
 	if (!ah) return NULL;
@@ -450,7 +458,11 @@ debug_mem_free(unsigned char *file, int line, void *ptr)
 
 	if (ah->comment) {
 		mem_stats.true_amount -= strlen(ah->comment) + 1;
+#ifdef CONFIG_GC
+		ah->comment = NULL;
+#else
 		free(ah->comment);
+#endif
 	}
 
 	del_from_list(ah);
@@ -465,7 +477,11 @@ debug_mem_free(unsigned char *file, int line, void *ptr)
 	ah->magic = AH_FREE_MAGIC;
 #endif
 
+#ifdef CONFIG_GC
+	ah = NULL;
+#else
 	free(ah);
+#endif
 }
 
 void *
@@ -502,7 +518,11 @@ debug_mem_realloc(unsigned char *file, int line, void *ptr, size_t size)
 
 	true_size = SIZE_BASE2AH(size);
 	do {
+#ifdef CONFIG_GC
+		ah2 = GC_REALLOC(ah, true_size);
+#else
 		ah2 = realloc(ah, true_size);
+#endif
 		if (ah2) {
 			ah = ah2;
 			break;
@@ -546,10 +566,17 @@ set_mem_comment(void *ptr, unsigned char *str, int len)
 
 	if (ah->comment) {
 		mem_stats.true_amount -= strlen(ah->comment) + 1;
+#ifdef CONFIG_GC
+		ah->comment = NULL;
+#else
 		free(ah->comment);
+#endif
 	}
-
+#ifdef CONFIG_GC
+	ah->comment = GC_MALLOC(len + 1);
+#else
 	ah->comment = malloc(len + 1);
+#endif
 	if (ah->comment) {
 		memcpy(ah->comment, str, len);
 		ah->comment[len] = 0;

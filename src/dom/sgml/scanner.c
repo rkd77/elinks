@@ -44,7 +44,7 @@ static struct dom_scan_table_info sgml_scan_table_info[] = {
 };
 
 #define SGML_STRING_MAP(str, type, family) \
-	{ INIT_DOM_STRING(str, -1), SGML_TOKEN_##type, SGML_TOKEN_##family }
+	{ STATIC_DOM_STRING(str), SGML_TOKEN_##type, SGML_TOKEN_##family }
 
 static struct dom_scanner_string_mapping sgml_string_mappings[] = {
 	SGML_STRING_MAP("--",		  NOTATION_COMMENT,	  NOTATION),
@@ -368,12 +368,20 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string,
 		/* It is always safe to access index -2 and -1 here since we
 		 * are supposed to have '<!--' before this is called. We do
 		 * however need to check that the '-->' are not overlapping any
-		 * preceeding '-'. */
-		if (pos[-2] == '-' && pos[-1] == '-' && &pos[-2] >= *string) {
-			length = pos - *string - 2;
-			*possibly_incomplete = 0;
-			pos++;
-			break;
+		 * preceeding '-'. Additionally also handle the quirky '--!>'
+		 * end sometimes found. */
+		if (pos[-2] == '-') {
+			if (pos[-1] == '-' && &pos[-2] >= *string) {
+				length = pos - *string - 2;
+				*possibly_incomplete = 0;
+				pos++;
+				break;
+			} else if (pos[-1] == '!' && pos[-3] == '-' && &pos[-3] >= *string) {
+				length = pos - *string - 3;
+				*possibly_incomplete = 0;
+				pos++;
+				break;
+			}
 		}
 	}
 
@@ -431,6 +439,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 	int possibly_incomplete = 1;
+	enum sgml_scanner_state scanner_state = scanner->state;
 
 	token->string.string = string++;
 
@@ -440,13 +449,17 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		if (scanner->state == SGML_STATE_ELEMENT) {
 			/* Already inside an element so insert a tag end token
 			 * and continue scanning in next iteration. */
-			string--;
-			real_length = 0;
 			type = SGML_TOKEN_TAG_END;
-			scanner->state = SGML_STATE_TEXT;
+			scanner_state = SGML_STATE_TEXT;
 
 			/* We are creating a 'virtual' that has no source. */
 			possibly_incomplete = 0;
+			string = token->string.string;
+			real_length = 0;
+
+		} else if (string == scanner->end) {
+			/* It is incomplete so prevent out of bound acess to
+			 * the scanned string. */
 
 		} else if (is_sgml_ident(*string)) {
 			token->string.string = string;
@@ -455,7 +468,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			real_length = string - token->string.string;
 
 			skip_sgml_space(scanner, &string);
-			if (*string == '>') {
+			if (string < scanner->end && *string == '>') {
 				type = SGML_TOKEN_ELEMENT;
 				string++;
 
@@ -468,8 +481,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 					/* We found the end. */
 					possibly_incomplete = 0;
 				}
-				scanner->state = SGML_STATE_ELEMENT;
 				type = SGML_TOKEN_ELEMENT_BEGIN;
+				scanner_state = SGML_STATE_ELEMENT;
 			}
 
 		} else if (*string == '!') {
@@ -519,7 +532,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 			type = map_dom_scanner_string(scanner, pos, string, base);
 
-			scanner->state = SGML_STATE_PROC_INST;
+			scanner_state = SGML_STATE_PROC_INST;
 
 			real_length = string - token->string.string;
 			skip_sgml_space(scanner, &string);
@@ -531,11 +544,37 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				possibly_incomplete = 0;
 			}
 
+			if (scanner->check_complete && scanner->incomplete) {
+				/* We need to fit both the process target token
+				 * and the process data token into the scanner
+				 * table. */
+				if (token + 1 >= scanner->table + DOM_SCANNER_TOKENS) {
+					possibly_incomplete = 1;
+
+				} else if (!possibly_incomplete) {
+					/* FIXME: We do this twice. */
+					for (pos = string + 1;
+					     (pos = skip_sgml_chars(scanner, pos, '>'));
+					     pos++) {
+						if (pos[-1] == '?')
+							break;
+					}
+					if (!pos)
+						possibly_incomplete = 1;
+				}
+
+				if (possibly_incomplete)
+					string = scanner->end;
+			}
+
 		} else if (*string == '/') {
 			string++;
 			skip_sgml_space(scanner, &string);
 
-			if (is_sgml_ident(*string)) {
+			if (string == scanner->end) {
+				/* Prevent out of bound access. */
+
+			} else if (is_sgml_ident(*string)) {
 				token->string.string = string;
 				scan_sgml(scanner, string, SGML_CHAR_IDENT);
 				real_length = string - token->string.string;
@@ -555,8 +594,9 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 				possibly_incomplete = 0;
 			}
 
-			if (type != SGML_TOKEN_GARBAGE)
-				scanner->state = SGML_STATE_TEXT;
+			if (type != SGML_TOKEN_GARBAGE) {
+				scanner_state = SGML_STATE_TEXT;
+			}
 
 		} else {
 			/* Alien < > stuff so ignore it */
@@ -586,7 +626,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		type = SGML_TOKEN_TAG_END;
 		assert(scanner->state == SGML_STATE_ELEMENT);
-		scanner->state = SGML_STATE_TEXT;
+		scanner_state = SGML_STATE_TEXT;
 
 	} else if (first_char == '/') {
 		/* We allow '/' inside elements and only consider it as an end
@@ -598,12 +638,15 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		 * For stricter parsing we should always require attribute
 		 * values to be quoted.
 		 */
-		if (*string == '>') {
+		if (string == scanner->end) {
+			/* Prevent out of bound access. */
+ 
+ 		} else if (*string == '>') {
 			string++;
 			real_length = 0;
 			type = SGML_TOKEN_ELEMENT_EMPTY_END;
 			assert(scanner->state == SGML_STATE_ELEMENT);
-			scanner->state = SGML_STATE_TEXT;
+			scanner_state = SGML_STATE_TEXT;
 
 			/* We found the end. */
 			possibly_incomplete = 0;
@@ -631,7 +674,12 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			/* We found the end. */
 			possibly_incomplete = 0;
 
-		} else if (is_sgml_attribute(*string)) {
+		} else if (scanner->check_complete && scanner->incomplete) {
+			/* Force an incomplete token. */
+			string = scanner->end;
+
+		} else if (string < scanner->end
+			   && is_sgml_attribute(*string)) {
 			token->string.string++;
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
@@ -643,7 +691,8 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			type = SGML_TOKEN_IDENT;
 		}
 
-		if (is_sgml_attribute(*string)) {
+		if (string < scanner->end
+		    && is_sgml_attribute(*string)) {
 			scan_sgml_attribute(scanner, string);
 			type = SGML_TOKEN_ATTRIBUTE;
 			if (string[-1] == '/' && string[0] == '>') {
@@ -670,6 +719,10 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 	}
 
+	/* Only apply the state change if the token was not abandoned because
+	 * it was incomplete. */
+	scanner->state = scanner_state;
+
 	token->type = type;
 	token->string.length = real_length >= 0 ? real_length : string - token->string.string;
 	token->precedence = get_sgml_precedence(type);
@@ -684,9 +737,9 @@ scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token 
 {
 	unsigned char *string = scanner->position;
 	/* The length can be empty for '<??>'. */
-	size_t length = -1;
+	ssize_t length = -1;
 
-	token->string.string = string;
+	token->string.string = string++;
 
 	/* Figure out where the processing instruction ends. This doesn't use
 	 * skip_sgml() since we MUST ignore precedence here to allow '<' inside

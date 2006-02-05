@@ -3,9 +3,9 @@
 #define EL_DOM_NODE_H
 
 #include "dom/string.h"
-#include "util/hash.h"
 
 struct dom_node_list;
+struct dom_document;
 
 enum dom_node_type {
 	DOM_NODE_UNKNOWN		=  0, /* for internal purpose only */
@@ -27,27 +27,15 @@ enum dom_node_type {
 };
 
 /* Following is the node specific datastructures. They may contain no more
- * than 3 pointers or something equivalent. */
+ * than 4 pointers or something equivalent. */
 
-struct dom_node_id_item {
-	/* The attibute node containing the id value */
-	struct dom_node *id_attribute;
-
-	/* The node with the @id attribute */
-	struct dom_node *node;
-};
-
+/* The document URI is stored in the string / length members. */
 struct dom_document_node {
-	/* The document URI is stored in the string / length members. */
-	/* An id to node hash for fast lookup. */
-	struct hash *element_ids; /* -> {struct dom_node_id_item} */
-
-	/* Any meta data the root node carries such as document type nodes,
-	 * entity and notation map nodes and maybe some internal CSS stylesheet
-	 * node. */
-	struct dom_node_list *meta_nodes;
+	/* The document. */
+	struct dom_document *document;
 
 	/* The child nodes. May be NULL. Ordered like they where inserted. */
+	/* FIXME: Should be just one element (root) node reference. */
 	struct dom_node_list *children;
 };
 
@@ -111,12 +99,12 @@ struct dom_attribute_node {
 	 * to reduce string comparing and only do one fast find mapping. */
 	uint16_t type;
 
+	/* The attribute value is delimited by quotes. Can be NUL, ' or ". */
+	unsigned char quoted;
+
 	/* Was the attribute specified in the DTD as a default attribute or was
 	 * it added from the document source. */
 	unsigned int specified:1;
-
-	/* Was the node->string allocated */
-	unsigned int allocated:1;
 
 	/* Has the node->string been converted to internal charset. */
 	unsigned int converted:1;
@@ -127,9 +115,6 @@ struct dom_attribute_node {
 
 	/* The attribute value references some other resource */
 	unsigned int reference:1;
-
-	/* The attribute value is delimited by quotes */
-	unsigned int quoted:1;
 };
 
 struct dom_text_node {
@@ -140,9 +125,6 @@ struct dom_text_node {
 	 * In order to quickly identify such nodes this member is used. */
 	unsigned int only_space:1;
 
-	/* Was the node->string allocated */
-	unsigned int allocated:1;
-
 	/* Has the node->string been converted to internal charset. */
 	unsigned int converted:1;
 };
@@ -151,9 +133,8 @@ enum dom_proc_instruction_type {
 	DOM_PROC_INSTRUCTION,
 
 	/* Keep this group sorted */
-	DOM_PROC_INSTRUCTION_DBHTML,	/* DocBook toolchain instruction */
-	DOM_PROC_INSTRUCTION_ELINKS,	/* Internal instruction hook */
-	DOM_PROC_INSTRUCTION_XML,	/* XML instructions */
+	DOM_PROC_INSTRUCTION_XML,		/* XML header */
+	DOM_PROC_INSTRUCTION_XML_STYLESHEET,	/* XML stylesheet link */
 
 	DOM_PROC_INSTRUCTION_TYPES
 };
@@ -183,12 +164,13 @@ union dom_node_data {
 	struct dom_id			 entity;
 	struct dom_proc_instruction_node proc_instruction;
 
-	/* Node types without a union member yet
+	/* Node types without a union member yet (mostly because it hasn't
+	 * been necessary):
 	 *
-	 * DOM_NODE_CDATA_SECTION,
-	 * DOM_NODE_COMMENT,
-	 * DOM_NODE_DOCUMENT_FRAGMENT,
-	 * DOM_NODE_ENTITY_REFERENCE,
+	 * DOM_NODE_CDATA_SECTION:	Use dom_text_node?
+	 * DOM_NODE_DOCUMENT_FRAGMENT:	struct dom_node_list children;
+	 * DOM_NODE_ENTITY_REFERENCE:	unicode_val_T
+	 * DOM_NODE_COMMENT
 	 */
 };
 
@@ -197,6 +179,9 @@ union dom_node_data {
 struct dom_node {
 	/* The type of the node */
 	uint16_t type; /* -> enum dom_node_type */
+
+	/* Was the node string allocated? */
+	unsigned int allocated:1;
 
 	/* Can contain either stuff like element name or for attributes the
 	 * attribute name. */
@@ -243,6 +228,17 @@ int get_dom_node_list_index(struct dom_node *parent, struct dom_node *node);
  * @list is already sorted properly. */
 int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node);
 
+/* Returns the previous sibling to the node. */
+struct dom_node *get_dom_node_prev(struct dom_node *node);
+
+/* Returns the next sibling to the node. */
+struct dom_node *get_dom_node_next(struct dom_node *node);
+
+/* Returns first text node of the element or NULL. */
+struct dom_node *
+get_dom_node_child(struct dom_node *node, enum dom_node_type child_type,
+		   int16_t child_subtype);
+
 /* Looks up the @node_map for a node matching the requested type and name.
  * The @subtype maybe be 0 indication unknown subtype and only name should be
  * tested else it will indicate either the element or attribute private
@@ -252,12 +248,21 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 		       enum dom_node_type type, uint16_t subtype,
 		       struct dom_string *name);
 
+/* Removes the node and all its children and free()s itself */
+void done_dom_node(struct dom_node *node);
+
+/* The allocated argument is used as the value of node->allocated if >= 0.
+ * Use -1 to default node->allocated to the value of parent->allocated. */
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string);
-#define init_dom_node(type, string) init_dom_node_(__FILE__, __LINE__, NULL, type, string)
-#define add_dom_node(parent, type, string) init_dom_node_(__FILE__, __LINE__, parent, type, string)
+		struct dom_string *string, int allocated);
+
+#define init_dom_node(type, string, allocated) \
+	init_dom_node_(__FILE__, __LINE__, NULL, type, string, allocated)
+
+#define add_dom_node(parent, type, string) \
+	init_dom_node_(__FILE__, __LINE__, parent, type, string, -1)
 
 #define add_dom_element(parent, string) \
 	add_dom_node(parent, DOM_NODE_ELEMENT, string)
@@ -269,7 +274,16 @@ add_dom_attribute(struct dom_node *parent, struct dom_string *name,
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_ATTRIBUTE, name);
 
 	if (node && value) {
-		copy_dom_string(&node->data.attribute.value, value);
+		struct dom_string *str = &node->data.attribute.value;
+
+		if (node->allocated) {
+			if (!init_dom_string(str, value->string, value->length)) {
+				done_dom_node(node);
+				return NULL;
+			}
+		} else {
+			copy_dom_string(str, value);
+		}
 	}
 
 	return node;
@@ -282,14 +296,20 @@ add_dom_proc_instruction(struct dom_node *parent, struct dom_string *string,
 	struct dom_node *node = add_dom_node(parent, DOM_NODE_PROCESSING_INSTRUCTION, string);
 
 	if (node && instruction) {
-		copy_dom_string(&node->data.proc_instruction.instruction, instruction);
+		struct dom_string *str = &node->data.proc_instruction.instruction;
+
+		if (node->allocated) {
+			if (!init_dom_string(str, instruction->string, instruction->length)) {
+				done_dom_node(node);
+				return NULL;
+			}
+		} else {
+			copy_dom_string(str, instruction);
+		}
 	}
 
 	return node;
 }
-
-/* Removes the node and all its children and free()s itself */
-void done_dom_node(struct dom_node *node);
 
 /* Compare two nodes returning non-zero if they differ. */
 int dom_node_casecmp(struct dom_node *node1, struct dom_node *node2);
@@ -304,17 +324,17 @@ struct dom_string *get_dom_node_value(struct dom_node *node);
 /* Returns the name used for identifying the node type. */
 struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
-/* Based on the type of the parent and the node return a proper list
+/* Based on the type of the parent and the node type return a proper list
  * or NULL. This is useful when adding a node to a parent node. */
 static inline struct dom_node_list **
-get_dom_node_list(struct dom_node *parent, struct dom_node *node)
+get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 {
 	switch (parent->type) {
 	case DOM_NODE_DOCUMENT:
 		return &parent->data.document.children;
 
 	case DOM_NODE_ELEMENT:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ATTRIBUTE:
 			return &parent->data.element.map;
 
@@ -323,7 +343,7 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		}
 
 	case DOM_NODE_DOCUMENT_TYPE:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ENTITY:
 			return &parent->data.document_type.entities;
 
@@ -335,7 +355,7 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		}
 
 	case DOM_NODE_PROCESSING_INSTRUCTION:
-		switch (node->type) {
+		switch (type) {
 		case DOM_NODE_ATTRIBUTE:
 			return &parent->data.proc_instruction.map;
 
@@ -347,5 +367,8 @@ get_dom_node_list(struct dom_node *parent, struct dom_node *node)
 		return NULL;
 	}
 }
+
+#define get_dom_node_list(parent, node) \
+	get_dom_node_list_by_type(parent, (node)->type)
 
 #endif

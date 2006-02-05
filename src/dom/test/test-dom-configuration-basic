@@ -1,0 +1,230 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test the DOM configuration module
+
+This test checks that the normalization performed by the DOM configuration
+is done correctly.
+'
+
+. "$TEST_LIB"
+
+test_normalize_output_equals () {
+	desc="$1"; shift
+	config="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	URI="test:$(normalize "$desc")"
+
+	sgml-parser --src "$src" --normalize "$config" --uri "$URI" --src "$src" > output
+	echo "#document: $URI" > expected
+	echo "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
+
+	test_expect_success "$desc" 'cmp output expected' 
+}
+
+
+## Config strings ###########################################################
+
+NOOP='cdata-sections,comments,element-content-whitespace,entities'
+NOCOMMENTS='cdata-sections,element-content-whitespace,entities'
+CDATA2TEXT='comments,element-content-whitespace,entities'
+ENTITIES='cdata-section,comments,element-content-whitespace'
+NOWSTEXT='cdata-section,comments,entities'
+NORM1=''
+
+
+## No-ops ###################################################################
+
+test_normalize_output_equals \
+'Normalization no-op.' \
+"$NOOP" \
+'<roswell>   <![CDATA[|  that  |]]><!-- ends -->  well</roswell>' \
+'
+element: roswell
+  #text:    
+  #cdata-section: |  that  |
+  #comment:  ends 
+  #text:   well'
+
+test_normalize_output_equals \
+'Keep comments.' \
+"$NOOP" \
+'and<!-- comment:1 -->or<!-- comment:2 -->' \
+'
+#text: and
+#comment:  comment:1 
+#text: or
+#comment:  comment:2 '
+
+test_normalize_output_equals \
+'Keep CDATA sections ' \
+"$NOOP" \
+'<![CDATA[and]]>or<![CDATA[maybe]]>' \
+'
+#cdata-section: and
+#text: or
+#cdata-section: maybe'
+
+
+## Comments #################################################################
+
+test_normalize_output_equals \
+'Remove comments. (I)' \
+"$NOCOMMENTS" \
+"<no><!-- comment -->?</no>" \
+'
+element: no
+  #text: ?'
+
+test_normalize_output_equals \
+'Remove comments. (II)' \
+"$NOCOMMENTS" \
+'<!-- comment:1 -->and<!-- comment:2 -->' \
+'
+#text: and'
+
+test_normalize_output_equals \
+'Remove comments. (III)' \
+"$NOCOMMENTS" \
+'nothing to see <!-- comment -->here' \
+'
+#text: nothing to see here'
+
+
+## Entities #################################################################
+
+# Entities should be shown 'verbatim' here after expansion.
+
+test_normalize_output_equals \
+'Expand entities. (I)' \
+"$ENTITIES" \
+'a&lt;b&gt;c' \
+'
+#text: a&lt;b&gt;c'
+
+test_normalize_output_equals \
+'Expand entities. (II)' \
+"$ENTITIES" \
+'&bad-entity&good-entity;' \
+'
+#text: &bad-entity;&good-entity;'
+
+test_normalize_output_equals \
+'Expand entities. (III)' \
+"$ENTITIES" \
+'<a>&b;</a>' \
+'
+element: a
+  #text: &b;'
+
+
+## CDATA Sections ###########################################################
+
+test_normalize_output_equals \
+'Replace CDATA section with text. (I)' \
+"$CDATA2TEXT" \
+'<![CDATA[a small text snippet]]>' \
+'
+#text: a small text snippet'
+
+test_normalize_output_equals \
+'Replace CDATA section with text. (II)' \
+"$CDATA2TEXT" \
+'<![CDATA[a small]]> <![CDATA[text snippet]]>' \
+'
+#text: a small text snippet'
+
+test_normalize_output_equals \
+'Replace CDATA section with text. (III)' \
+"$CDATA2TEXT" \
+'before <![CDATA[and]]> after' \
+'
+#text: before and after'
+
+
+## Element Content Whitespace ###############################################
+
+test_normalize_output_equals \
+'Remove element content whitespace. (I)' \
+"$NOWSTEXT" \
+'<a>
+	<b>some text</b>
+</a>' \
+'
+element: a
+  element: b
+    #text: some text' \
+
+# I haven't read the specs about this thing, for now it just blasts all
+# space-only text nodes. Probably not the wanted behaviour all of the time.
+# --jonas
+test_normalize_output_equals \
+'Remove element content whitespace. (II)' \
+"$NOWSTEXT" \
+'<e>space between &this; &that; gets removed</e>' \
+'
+element: e
+  #text: space between 
+  entity-reference: this
+  entity-reference: that
+  #text:  gets removed'
+
+
+## Mixes ####################################################################
+
+test_normalize_output_equals \
+'Normalization mix #1. (I)' \
+"$NORM1" \
+'before <![CDATA[and]]> after &some;<!--comments--> remain' \
+'
+#text: before and after &some; remain'
+
+test_normalize_output_equals \
+'Normalization mix #1. (II)' \
+"$NORM1" \
+'<!--a-->b&c;  <![CDATA[d]]>' \
+'
+#text: b&c;d'
+
+
+## Special ELinks Extensions ################################################
+
+test_normalize_output_equals \
+'Remove unknown (HTML) elements and attributes. (I)' \
+"$NOOP,unknown" \
+'<html wack="..."><title w00t="...">where?<doit>here!</doit></title></html>' \
+'
+element: html
+  element: title
+    #text: where?' \
+
+test_normalize_output_equals \
+'Remove unknown (HTML) elements and attributes. (II)' \
+"$NOOP,unknown" \
+'<x y=""><z></z></x> aint no HTML' \
+'
+#text:  aint no HTML' \
+
+test_normalize_output_equals \
+'Normalize whitespace. (I)' \
+"$NOOP,normalize-whitespace" \
+'Here    is      a
+
+
+
+lot of     useless	space.' \
+'
+#text: Here is a lot of useless space.' \
+
+test_normalize_output_equals \
+'Normalize whitespace. (II)' \
+"$CDATA2TEXT,normalize-whitespace" \
+'Could we <![CDATA[    please     ]]> read that again?' \
+'
+#text: Could we please read that again?' \
+
+test_done

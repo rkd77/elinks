@@ -2546,7 +2546,7 @@ msgstr "Numerowanie odno¶ników"
 
 #: src/config/options.inc:306
 msgid "Display numbers next to the links."
-msgstr "Czy wy¶wietlaæ liczby z prawej strony odno¶ników."
+msgstr "Czy wy¶wietlaæ numery odno¶ników."
 
 #: src/config/options.inc:308
 msgid "Handling of target=_blank"
@@ -3274,7 +3274,7 @@ msgstr "Czy pamiêtaæ historiê powrotów."
 #
 #: src/config/options.inc:670
 msgid "HTML rendering"
-msgstr "Renderowanie HTML-a"
+msgstr "Formatowanie HTML-a"
 
 #: src/config/options.inc:672
 msgid "Options concerning the display of HTML pages."
@@ -3320,7 +3320,7 @@ msgstr "Pokazuj indeks górny (jako ^co¶)."
 
 #: src/config/options.inc:690
 msgid "Rendering of html link element"
-msgstr "Renderowanie elementu odno¶nika html"
+msgstr "Wy¶wietlanie elementu odno¶nika html"
 
 #: src/config/options.inc:692
 msgid ""
@@ -3332,7 +3332,7 @@ msgid ""
 "4 is type in addition\n"
 "5 is everything"
 msgstr ""
-"W jaki sposób renderowaæ znaczniki <link> w nag³ówku HTML:\n"
+"W jaki sposób pokazywaæ znaczniki <link> w nag³ówku HTML:\n"
 "0 - w ogóle\n"
 "1 - tytu³\n"
 "2 - dodatkowo nazwa\n"
@@ -3365,7 +3365,7 @@ msgstr ""
 #
 #: src/config/options.inc:711
 msgid "Plain rendering"
-msgstr "Renderowanie zwyk³ego tekstu"
+msgstr "Formatowanie zwyk³ego tekstu"
 
 #: src/config/options.inc:713
 msgid "Options concerning the display of plain text pages."
@@ -4388,7 +4388,7 @@ msgstr "Cykliczne zapisywanie"
 #. name:
 #: src/config/urlhist.c:61
 msgid "Goto URL History"
-msgstr "Historia globalna"
+msgstr "Historia \"Przejd¼ do URL-a\""
 
 #. name:
 #: src/cookies/cookies.c:80 src/cookies/cookies.c:827
@@ -5716,7 +5716,7 @@ msgstr "Czy na pewno chcesz skasowaæ wszystkie elementy historii?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
-msgstr "Przeszukaj historiê"
+msgstr "Szukanie w historii"
 
 #
 #: src/globhist/dialogs.c:226
@@ -8468,7 +8468,7 @@ msgstr "Szukaj wstecz"
 #. name:
 #: src/viewer/text/search.c:1654
 msgid "Search History"
-msgstr "Przeszukaj historiê"
+msgstr "Szukanie w historii"
 
 #: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."

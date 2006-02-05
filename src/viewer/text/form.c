@@ -1102,7 +1102,8 @@ submit_form(struct session *ses, struct document_view *doc_view, int do_reload)
 }
 
 void
-submit_given_form(struct session *ses, struct document_view *doc_view, struct form *form)
+submit_given_form(struct session *ses, struct document_view *doc_view,
+		  struct form *form, int do_reload)
 {
 /* Added support for submitting forms in hidden
  * links in 1.285, commented code can safely be removed once we have made sure the new
@@ -1125,11 +1126,12 @@ submit_given_form(struct session *ses, struct document_view *doc_view, struct fo
 	if (!list_empty(form->items)) {
 		struct form_control *fc = (struct form_control *)form->items.next;
 		struct uri *uri;
+		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
 
 		if (!fc) return;
 		uri = get_form_uri(ses, doc_view, fc);
 		if (!uri) return;
-		goto_uri_frame(ses, uri, form->target, CACHE_MODE_NORMAL);
+		goto_uri_frame(ses, uri, form->target, mode);
 		done_uri(uri);
 	}
 }
@@ -1140,7 +1142,7 @@ auto_submit_form(struct session *ses)
 	struct document *document = ses->doc_view->document;
 
 	if (!list_empty(document->forms))
-		submit_given_form(ses, ses->doc_view, document->forms.next);
+		submit_given_form(ses, ses->doc_view, document->forms.next, 0);
 }
 
 

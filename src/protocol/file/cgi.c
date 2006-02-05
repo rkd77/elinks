@@ -26,6 +26,7 @@
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
+#include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/http/http.h"
 #include "protocol/uri.h"
@@ -34,6 +35,30 @@
 #include "util/env.h"
 #include "util/string.h"
 
+static struct option_info cgi_options[] = {
+	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
+		"cgi", 0,
+		N_("Local CGI specific options.")),
+
+	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
+		"path", 0, "",
+		N_("Colon separated list of directories, where CGI scripts are stored.")),
+
+	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
+		"policy", 0, 0,
+		N_("Whether to execute local CGI scripts.")),
+	NULL_OPTION_INFO,
+};
+
+struct module cgi_protocol_module = struct_module(
+	/* name: */		N_("CGI"),
+	/* options: */		cgi_options,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
 
 static void
 close_pipe_and_read(struct socket *data_socket)
@@ -150,6 +175,7 @@ set_vars(struct connection *conn, unsigned char *script)
 	if (env_set("SCRIPT_NAME", script, -1)) return -1;
 	if (env_set("SCRIPT_FILENAME", script, -1)) return -1;
 	if (env_set("PATH_TRANSLATED", script, -1)) return -1;
+	if (env_set("REDIRECT_STATUS", "1", -1)) return -1;
 
 	/* From now on, just HTTP-like headers are being set. Missing variables
 	 * due to full environment are not a problem according to the CGI/1.1
@@ -334,8 +360,6 @@ execute_cgi(struct connection *conn)
 		goto end0;
 	}
 	if (!pid) { /* CGI script */
-		int i;
-
 		if (set_vars(conn, script)) {
 			_exit(1);
 		}
@@ -344,9 +368,7 @@ execute_cgi(struct connection *conn)
 			_exit(2);
 		}
 		/* We implicitly chain stderr to ELinks' stderr. */
-		for (i = 3; i < 1024; i++) {
-			close(i);
-		}
+		close_all_non_term_fd();
 
 		last_slash[-1] = 0; set_cwd(script); last_slash[-1] = '/';
 		if (execl(script, script, NULL)) {

@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "The Elinks text-browser" "2006-01-14" "The Elinks text-browser"
+.TH "ELINKS" 1 "The Elinks text-browser" "2006-01-31" "The Elinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
@@ -279,7 +279,7 @@ History file containing most recently visited URLs\&.
 GoTo URL dialog history file\&.
 
 .TP
-~/\&.elinks/hooks\&.{js,lua,pl,py,pl,scm}
+~/\&.elinks/hooks\&.{js,lua,pl,py,rb,scm}
 Browser scripting hooks\&.
 
 .TP

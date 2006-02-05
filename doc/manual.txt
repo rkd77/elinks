@@ -14,7 +14,7 @@ command-line arguments. The built-in documentation is sure to be up-to-date.
 There was a complete (or, for the most part complete) manual for Links 0.82 at
 one time, and you can still find it at:
 
-	http://links.sourceforge.net/docs/manual-0.82-en/index.html
+ - http://links.sourceforge.net/docs/manual-0.82-en/index.html[]
 
 While large parts of it do not apply anymore, you may still find some relevant
 information there.

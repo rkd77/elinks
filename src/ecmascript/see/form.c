@@ -336,6 +336,8 @@ js_input_blur(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
+	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
 }
@@ -390,6 +392,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	int linknum;
 
 	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	assert(fs);
 	fc = find_form_control(document, fs);
 	assert(fc);
@@ -409,6 +412,7 @@ js_input_select(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_value *res)
 {
 	checktime(interp);
+	SEE_SET_BOOLEAN(res, 0);
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
 }
@@ -437,9 +441,11 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	struct js_input *jsinput;
 
 	checktime(interp);
+
+#if 0
 	if (fs->ecmascript_obj)
 		return fs->ecmascript_obj;
-
+#endif
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
@@ -603,10 +609,10 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 		SEE_SET_STRING(&argv, p);
 		if (string[0] >= '0' && string[1] <= '9') {
-			js_form_elems_item(interp, o, o, 1,
+			js_form_elems_item(interp, jsfe->item, o, 1,
 			 (struct SEE_value **)&argv, res);
 		} else {
-			js_form_elems_namedItem(interp, o, o, 1,
+			js_form_elems_namedItem(interp, jsfe->namedItem, o, 1,
 			 (struct SEE_value **)&argv, res);
 		}
 		mem_free(string);
@@ -630,7 +636,7 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 {
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
-	struct js_forms_object *fo = (struct js_forms_object *)self;
+	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
 	struct js_document_object *doc = fo->parent;
 	struct form_view *fv;
 	unsigned char *string;
@@ -668,7 +674,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_forms_object *fo = (struct js_forms_object *)self;
+	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
 	struct js_document_object *doc = fo->parent;
 	struct form *form;
 	unsigned char *string;
@@ -724,10 +730,10 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 		SEE_SET_STRING(argv1, p);
 		if (string[0] >= '0' && string[0] <= '9') {
-			js_forms_item(interp, o, fo->item, 1,
+			js_forms_item(interp, fo->item, o, 1,
 			 (struct SEE_value **)&argv1, res);
 		} else {
-			js_forms_namedItem(interp, o, fo->namedItem, 1,
+			js_forms_namedItem(interp, fo->namedItem, o, 1,
 			 (struct SEE_value **)&argv1, res);
 		}
 		mem_free(string);
@@ -929,7 +935,7 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	assert(form);
 	checktime(interp);
-	submit_given_form(ses, doc_view, form);
+	submit_given_form(ses, doc_view, form, 0);
 	SEE_SET_BOOLEAN(res, 0);
 }
 
@@ -939,9 +945,10 @@ struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 	struct js_form *js_form;
 
 	checktime(interp);
+#if 0
 	if (fv->ecmascript_obj)
 		return fv->ecmascript_obj;
-
+#endif
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */

@@ -69,7 +69,7 @@ html_form(struct html_context *html_context, unsigned char *a,
 		}
 		mem_free(al);
 	}
-
+	form->onsubmit = get_attr_val(a, "onsubmit", html_context->options);
 	al = get_attr_val(a, "name", html_context->options);
 	if (al) form->name = al;
 

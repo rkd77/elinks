@@ -13,6 +13,7 @@
 #include "elinks.h"
 
 #include "util/color.h"
+#include "util/conv.h"
 #include "util/fastfind.h"
 #include "util/string.h"
 
@@ -148,7 +149,8 @@ get_color_string(color_T color, unsigned char hexcolor[8])
 }
 
 void
-color_to_string(color_T color, unsigned char str[])
+color_to_string(color_T color, unsigned char str[8])
 {
-	snprintf(str, 8, "#%06lx", (unsigned long) color);
+	str[0]='#';
+	elinks_ulongcat(&str[1], NULL, (unsigned long) color, 6, '0', 16, 0);
 }

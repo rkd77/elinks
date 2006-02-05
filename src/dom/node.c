@@ -190,7 +190,8 @@ dom_node_list_bsearch(struct dom_node_search *search, struct dom_node_list *list
 	return NULL;
 }
 
-int get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
+int
+get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 {
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(node, list);
 	struct dom_node *match = dom_node_list_bsearch(&search, list);
@@ -202,7 +203,7 @@ struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 		       uint16_t subtype, struct dom_string *name)
 {
-	struct dom_node node = { type, INIT_DOM_STRING(name->string, name->length) };
+	struct dom_node node = { type, 0, INIT_DOM_STRING(name->string, name->length) };
 	struct dom_node_search search = INIT_DOM_NODE_SEARCH(&node, list);
 
 	if (subtype) {
@@ -225,16 +226,15 @@ get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
 	return dom_node_list_bsearch(&search, list);
 }
 
-int
-get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
+static int
+get_dom_node_list_pos(struct dom_node_list *list, struct dom_node *node)
 {
-	struct dom_node_list **list = get_dom_node_list(parent, node);
 	struct dom_node *entry;
 	int i;
 
-	if (!list) return -1;
+	assert(list);
 
-	foreach_dom_node (*list, entry, i) {
+	foreach_dom_node (list, entry, i) {
 		if (entry == node)
 			return i;
 	}
@@ -242,12 +242,98 @@ get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
 	return -1;
 }
 
+int
+get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
+{
+	struct dom_node_list **list = get_dom_node_list(parent, node);
+
+	return list ? get_dom_node_list_pos(*list, node) : -1;
+}
+
+struct dom_node *
+get_dom_node_prev(struct dom_node *node)
+{
+	struct dom_node_list **list;
+	int index;
+
+	assert(node->parent);
+
+	list = get_dom_node_list(node->parent, node);
+	if (!list) return NULL;
+
+	index = get_dom_node_list_pos(*list, node);
+	if (index > 0)
+		return (*list)->entries[index - 1];
+
+	return NULL;
+}
+
+struct dom_node *
+get_dom_node_next(struct dom_node *node)
+{
+	struct dom_node_list **list;
+	int index;
+
+	assert(node->parent);
+
+	list = get_dom_node_list(node->parent, node);
+	if (!list) return NULL;
+
+	index = get_dom_node_list_pos(*list, node);
+	if (index + 1 < (*list)->size)
+		return (*list)->entries[index + 1];
+
+	return NULL;
+}
+
+struct dom_node *
+get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
+		   int16_t subtype)
+{
+	struct dom_node_list **list;
+	struct dom_node *node;
+	int index;
+
+	list = get_dom_node_list_by_type(parent, type);
+	if (!list) return NULL;
+
+	foreach_dom_node (*list, node, index) {
+		if (node->type != type)
+			continue;
+
+		if (!subtype) return node;
+
+		switch (type) {
+		case DOM_NODE_ELEMENT:
+			if (node->data.element.type == subtype)
+				return node;
+			break;
+
+		case DOM_NODE_ATTRIBUTE:
+			if (node->data.attribute.type == subtype)
+				return node;
+			break;
+
+		case DOM_NODE_PROCESSING_INSTRUCTION:
+			if (node->data.attribute.type == subtype)
+				return node;
+			break;
+
+		default:
+			return node;
+		}
+	}
+
+	return NULL;
+}
+
+
 /* Nodes */
 
 struct dom_node *
 init_dom_node_(unsigned char *file, int line,
 		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string)
+		struct dom_string *string, int allocated)
 {
 #ifdef DEBUG_MEMLEAK
 	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
@@ -259,7 +345,23 @@ init_dom_node_(unsigned char *file, int line,
 
 	node->type   = type;
 	node->parent = parent;
-	copy_dom_string(&node->string, string);
+
+	/* Make it possible to add a node to a parent without allocating the
+	 * strings. */
+	if (allocated >= 0) {
+		node->allocated = !!allocated;
+	} else if (parent) {
+		node->allocated = parent->allocated;
+	}
+
+	if (node->allocated) {
+		if (!init_dom_string(&node->string, string->string, string->length)) {
+			done_dom_node(node);
+			return NULL;
+		}
+	} else {
+		copy_dom_string(&node->string, string);
+	}
 
 	if (parent) {
 		struct dom_node_list **list = get_dom_node_list(parent, node);
@@ -292,17 +394,11 @@ done_dom_node_data(struct dom_node *node)
 
 	switch (node->type) {
 	case DOM_NODE_ATTRIBUTE:
-		if (data->attribute.allocated)
-			done_dom_string(&node->string);
+		if (node->allocated)
+			done_dom_string(&data->attribute.value);
 		break;
 
 	case DOM_NODE_DOCUMENT:
-		if (data->document.element_ids)
-			free_hash(data->document.element_ids);
-
-		if (data->document.meta_nodes)
-			done_dom_node_list(data->document.meta_nodes);
-
 		if (data->document.children)
 			done_dom_node_list(data->document.children);
 		break;
@@ -315,20 +411,19 @@ done_dom_node_data(struct dom_node *node)
 			done_dom_node_list(data->element.map);
 		break;
 
-	case DOM_NODE_TEXT:
-		if (data->text.allocated)
-			done_dom_string(&node->string);
-		break;
-
 	case DOM_NODE_PROCESSING_INSTRUCTION:
 		if (data->proc_instruction.map)
 			done_dom_node_list(data->proc_instruction.map);
+		if (node->allocated)
+			done_dom_string(&data->proc_instruction.instruction);
 		break;
 
 	default:
 		break;
 	}
 
+	if (node->allocated)
+		done_dom_string(&node->string);
 	mem_free(node);
 }
 
@@ -343,7 +438,6 @@ done_dom_node(struct dom_node *node)
 
 		switch (parent->type) {
 		case DOM_NODE_DOCUMENT:
-			del_from_dom_node_list(data->document.meta_nodes, node);
 			del_from_dom_node_list(data->document.children, node);
 			break;
 
@@ -370,11 +464,11 @@ done_dom_node(struct dom_node *node)
 struct dom_string *
 get_dom_node_name(struct dom_node *node)
 {
-	static struct dom_string cdata_section_str = INIT_DOM_STRING("#cdata-section", -1);
-	static struct dom_string comment_str = INIT_DOM_STRING("#comment", -1);
-	static struct dom_string document_str = INIT_DOM_STRING("#document", -1);
-	static struct dom_string document_fragment_str = INIT_DOM_STRING("#document-fragment", -1);
-	static struct dom_string text_str = INIT_DOM_STRING("#text", -1);
+	static struct dom_string cdata_section_str = STATIC_DOM_STRING("#cdata-section");
+	static struct dom_string comment_str = STATIC_DOM_STRING("#comment");
+	static struct dom_string document_str = STATIC_DOM_STRING("#document");
+	static struct dom_string document_fragment_str = STATIC_DOM_STRING("#document-fragment");
+	static struct dom_string text_str = STATIC_DOM_STRING("#text");
 
 	assert(node);
 
@@ -440,18 +534,18 @@ get_dom_node_type_name(enum dom_node_type type)
 {
 	static struct dom_string dom_node_type_names[DOM_NODES] = {
 		INIT_DOM_STRING(NULL, 0),
-		/* DOM_NODE_ELEMENT */			INIT_DOM_STRING("element", -1),
-		/* DOM_NODE_ATTRIBUTE */		INIT_DOM_STRING("attribute", -1),
-		/* DOM_NODE_TEXT */			INIT_DOM_STRING("text", -1),
-		/* DOM_NODE_CDATA_SECTION */		INIT_DOM_STRING("cdata-section", -1),
-		/* DOM_NODE_ENTITY_REFERENCE */		INIT_DOM_STRING("entity-reference", -1),
-		/* DOM_NODE_ENTITY */			INIT_DOM_STRING("entity", -1),
-		/* DOM_NODE_PROCESSING_INSTRUCTION */	INIT_DOM_STRING("proc-instruction", -1),
-		/* DOM_NODE_COMMENT */			INIT_DOM_STRING("comment", -1),
-		/* DOM_NODE_DOCUMENT */			INIT_DOM_STRING("document", -1),
-		/* DOM_NODE_DOCUMENT_TYPE */		INIT_DOM_STRING("document-type", -1),
-		/* DOM_NODE_DOCUMENT_FRAGMENT */	INIT_DOM_STRING("document-fragment", -1),
-		/* DOM_NODE_NOTATION */			INIT_DOM_STRING("notation", -1),
+		/* DOM_NODE_ELEMENT */			STATIC_DOM_STRING("element"),
+		/* DOM_NODE_ATTRIBUTE */		STATIC_DOM_STRING("attribute"),
+		/* DOM_NODE_TEXT */			STATIC_DOM_STRING("text"),
+		/* DOM_NODE_CDATA_SECTION */		STATIC_DOM_STRING("cdata-section"),
+		/* DOM_NODE_ENTITY_REFERENCE */		STATIC_DOM_STRING("entity-reference"),
+		/* DOM_NODE_ENTITY */			STATIC_DOM_STRING("entity"),
+		/* DOM_NODE_PROCESSING_INSTRUCTION */	STATIC_DOM_STRING("proc-instruction"),
+		/* DOM_NODE_COMMENT */			STATIC_DOM_STRING("comment"),
+		/* DOM_NODE_DOCUMENT */			STATIC_DOM_STRING("document"),
+		/* DOM_NODE_DOCUMENT_TYPE */		STATIC_DOM_STRING("document-type"),
+		/* DOM_NODE_DOCUMENT_FRAGMENT */	STATIC_DOM_STRING("document-fragment"),
+		/* DOM_NODE_NOTATION */			STATIC_DOM_STRING("notation"),
 	};
 
 	assert(type < DOM_NODES);

@@ -8,9 +8,9 @@ elinks.keymaps.main["@"] = function () {
 };
 
 elinks.preformat_html_hooks = new Array();
-elinks.preformat_html = function (cached) {
+elinks.preformat_html = function (cached, vs) {
 	for (var i in elinks.preformat_html_hooks)
-		if (!elinks.preformat_html_hooks[i](cached))
+		if (!elinks.preformat_html_hooks[i](cached, vs))
 			return false;
 
 	return true;
@@ -36,13 +36,13 @@ elinks.follow_url_hook = function (url) {
 	return url;
 };
 
-function root_w00t(cached) {
+function root_w00t(cached, vs) {
 	cached.content = cached.content.replace(/root/g, "w00t");
 	return true;
 };
 elinks.preformat_html_hooks.push(root_w00t);
 
-function mangle_deb_bugnumbers(cached) {
+function mangle_deb_bugnumbers(cached, vs) {
 	if (!cached.uri.match(/^[a-z0-9]+:\/\/[a-z0-9A-Z.-]+debian\.org/)
 	    && !cached.uri.match(/changelog\.Debian/))
 		return true;
@@ -55,7 +55,14 @@ function mangle_deb_bugnumbers(cached) {
 	/* Debian Policy Manual 4.4 footnote 16 */
 	var closes_re = /closes:\s*(?:bug)?\#?\s?\d+(?:,\s*(?:bug)?\#?\s?\d+)*/gi;
 
-	cached.content = cached.content.replace(closes_re, rewrite_closes_fn);
+	var new_content = cached.content.replace(closes_re, rewrite_closes_fn);
+	if (cached.type == 'text/plain') {
+		cached.content = '<pre>' + new_content + '</pre>';
+		vs.plain = "0";
+	} else {
+		cached.content = new_content;
+	}
+
 
 	return true;
 }

@@ -55,7 +55,7 @@ abort_preloading(struct session *ses, int interrupt)
 {
 	if (!ses->task.type) return;
 
-	change_connection(&ses->loading, NULL, PRI_CANCEL, interrupt);
+	cancel_download(&ses->loading, interrupt);
 	free_task(ses);
 }
 
@@ -507,7 +507,7 @@ do_move(struct session *ses, struct download **download_p)
 	if (is_in_progress_state((*download_p)->state)) {
 		if (have_location(ses))
 			*download_p = &cur_loc(ses)->download;
-		change_connection(&ses->loading, *download_p, PRI_MAIN, 0);
+		move_download(&ses->loading, *download_p, PRI_MAIN);
 	} else if (have_location(ses)) {
 		cur_loc(ses)->download.state = ses->loading.state;
 	}
@@ -661,6 +661,24 @@ goto_uri_frame(struct session *ses, struct uri *uri,
 	       unsigned char *target, enum cache_mode cache_mode)
 {
 	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
+}
+
+void
+delayed_goto_uri_frame(void *data)
+{
+	struct delayed_open *deo = data;
+	struct frame *frame;
+
+	assert(deo);
+	frame = ses_find_frame(deo->ses, deo->target);
+	if (frame)
+		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
+	else {
+		goto_uri_frame(deo->ses, deo->uri, NULL, CACHE_MODE_NORMAL);
+	}
+	done_uri(deo->uri);
+	mem_free(deo->target);
+	mem_free(deo);
 }
 
 /* menu_func_T */

@@ -16,17 +16,11 @@ test_output_equals () {
 	src="$1"; shift
 	out="$1"; shift
 
-	URI="test:$(echo "$desc" | sed '
-		s/^[ \t]*\[[^]]*\][ \t]*//;
-		s/[:., \t][:., \t]*/-/g;
-		s/_/-/g;
-		# *cough*
-		y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/;
-		s/[^a-zA-Z0-9-]//g;')"
+	URI="test:$(normalize "$desc")"
 
-	sgml-parser --uri "$URI" --src "$src" | sed 's/^  //' > output
+	sgml-parser --uri "$URI" --src "$src" > output
 	echo "#document: $URI" > expected
-	echo "$out" | sed -n '2,$p' >> expected
+	echo "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
 
 	test_expect_success "$desc" 'cmp output expected' 
 }
@@ -56,7 +50,7 @@ element: root
     #text: a'
 
 test_output_equals \
-'Parse tag soup elements.' \
+'Parse tag soup elements. (I)' \
 '<parent attr="value" <child:1></><child:2</>a</parent>' \
 '
 element: parent
@@ -64,6 +58,14 @@ element: parent
   element: child:1
   element: child:2
   #text: a'
+
+test_output_equals \
+'Parse tag soup elements. (II)' \
+'< a >< b < c / >< / >' \
+'
+element: a
+  element: b
+    element: c'
 
 test_output_equals \
 'Parse an enclosed comment.' \
@@ -93,10 +95,17 @@ test_output_equals \
 #text: u'
 
 test_output_equals \
-'Parse bad comment.' \
+'Parse bad comment. (I)' \
 '<!--->s' \
 '
 #comment: ->s'
+
+test_output_equals \
+'Parse bad comment. (II)' \
+'<!--a--!>bad comment' \
+'
+#comment: a
+#text: bad comment'
 
 test_output_equals \
 'Parse empty notation.' \
@@ -216,7 +225,7 @@ proc-instruction:  ->
 #text: -'
 
 test_output_equals \
-'Parse incorrect processing instructions.' \
+'Parse incorrect processing instructions. (I)' \
 '<?js<?>-<?<??>-<?xml <=";&?>-<?' \
 '
 proc-instruction: js -> <

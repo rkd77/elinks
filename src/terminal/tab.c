@@ -242,6 +242,17 @@ open_uri_in_new_tab(struct session *ses, struct uri *uri, int in_background,
 }
 
 void
+delayed_open(void *data)
+{
+	struct delayed_open *deo = data;
+
+	assert(deo);
+	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
+	done_uri(deo->uri);
+	mem_free(deo);
+}
+
+void
 open_current_link_in_new_tab(struct session *ses, int in_background)
 {
 	struct document_view *doc_view = current_frame(ses);

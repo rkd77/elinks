@@ -12,6 +12,9 @@ docdir = $(datadir)/doc
 HTML_DIR = $(DESTDIR)$(docdir)/$(PACKAGE)/html
 PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
 
+ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
+ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/"
+
 #############################################################################
 # Build files
 
@@ -108,10 +111,13 @@ quiet_cmd_help2doc = ' [$(LINK_COLOR)HELP2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_help2doc = $(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
 
 quiet_cmd_conf2doc = ' [$(LINK_COLOR)CONF2DOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_conf2doc = $(LOCALES) $(CONF2DOC) > $@
+      cmd_conf2doc = $(LOCALES) $(CONF2DOC) $(FEATURES) > $@
 
 quiet_cmd_keys2doc = ' [$(LINK_COLOR)KEYS2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_keys2doc = $(LOCALES) $(KEYS2DOC) $(KBDBIND) $@ > $@
+
+quiet_cmd_code2doc = ' [$(LINK_COLOR)CODE2DOC$(END_COLOR)]   $(RELPATH)$@'
+      cmd_code2doc = $(LOCALES) $(CODE2DOC) $< > $@
 
 features.txt: $(FEATURES) $(CONF2DOC)
 	$(call cmd,conf2doc)
@@ -130,10 +136,10 @@ API = $(shell find $(top_srcdir)/src/ -name '*.h' -exec grep -q 'API Doc' \{\} \
 endif
 
 define api_doc
+API_TXT += api/$(2).txt
 api/$(2).txt: $(1) $(CODE2DOC)
 	@test -d api || $(MKINSTALLDIRS) api
-	@$(CODE2DOC) $(1) > $$@
-API_TXT += api/$(2).txt
+	$$(call cmd,code2doc)
 endef
 
 api_name = $(shell sed -n 's/.*API Doc\s*::\s*\([^ 	]*\).*/\1/p' < $(1))
@@ -149,25 +155,27 @@ api: $(patsubst %.txt,%.html,$(API_TXT))
             cmd_jw = $(JW) -b $(2) $<
 
    quiet_cmd_xmlto = '    [$(LINK_COLOR)XMLTO$(END_COLOR)]   $(RELPATH)$@'
-         cmd_xmlto = $(XMLTO) $(3) $(2) $<
+         cmd_xmlto = $(XMLTO) -o $(call outdir) $(3) $(2) $<
 
 quiet_cmd_pod2html = ' [$(LINK_COLOR)POD2HTML$(END_COLOR)]   $(RELPATH)$@'
       cmd_pod2html = $(POD2HTML) --outfile=$@ < $<
 
 quiet_cmd_asciidoc = ' [$(LINK_COLOR)ASCIIDOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_asciidoc = $(ASCIIDOC) -f asciidoc.conf -b $(2) -d $(call doctype,$<) -o $@ $<
+      cmd_asciidoc = $(ASCIIDOC) $(ASCIIDOC_FLAGS) -b $(call backend) -d $(call doctype) -o $@ $<
 
-# Based on filename in $(1) find out asciidoc doctype.
-doctype = $(if $(findstring .1.,$(1)),manpage,$(if $(findstring .5.,$(1)),manpage,book))
+# Based on $@ find out asciidoc doctype or backend + xmlto output dir.
+doctype = $(if $(findstring .1.,$@)$(findstring .5.,$@),manpage,book)
+backend = $(if $(findstring .xml,$@),docbook,xhtml11)
+outdir  = $(if $(findstring -chunked,$@),$@,.)
 
 # Loosely track dependencies via asciidoc includes.
-asciidoc_dep = sed -n 's@include::\(.*\)\[.*@$@: \1@p' < $< > .deps/$(@F).asciidoc
+asciidoc_dep = sed -n 's/[{]builddir}//g;s@include::\(.*\)\[.*@$@: $< \1@p' < $< > .deps/$(@F).asciidoc
 
 -include .deps/*.asciidoc
 
 # Do a little post-processing of man pages. Inserting title headers and date.
 MAN_DATE = $(shell date -I)
-man_desc = `sed -n 's/:Description:\s*\(.*\)/\1/p' < $(subst .xml,.txt,$<)`
+man_desc = `sed -n 's/:Description:\s*\(.*\)/\1/p' < $(srcdir)$(subst .xml,.txt,$(<F))`
 man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\" \"$(1)\"/" < $@ | \
 	   sed "s/@squote@/\\\\'/g" > $@.tmp && mv $@.tmp $@
 
@@ -175,11 +183,11 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 #############################################################################
 # Build recipies
 
-%.html: %.txt asciidoc.conf
+%.html: %.txt $(ASCIIDOC_CONF)
 	$(call cmd,asciidoc,xhtml11)
 	@-$(call asciidoc_dep)
 
-%.xml: %.txt asciidoc.conf
+%.xml: %.txt $(ASCIIDOC_CONF)
 	$(call cmd,asciidoc,docbook)
 	@-$(call asciidoc_dep)
 
@@ -192,7 +200,7 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 	@$(call man_hack,$(call man_desc))
 
 %.html-chunked: %.xml
-	$(call cmd,xmlto,html,-o $@)
+	$(call cmd,xmlto,html)
 
 %.pdf: %.xml
 	$(call cmd,jw,pdf)

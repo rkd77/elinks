@@ -22,8 +22,10 @@
 #include "document/document.h"
 #include "document/dom/renderer.h"
 #include "document/renderer.h"
+#include "dom/configuration.h"
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
+#include "dom/sgml/html/html.h"
 #include "dom/sgml/rss/rss.h"
 #include "dom/node.h"
 #include "dom/stack.h"
@@ -39,10 +41,13 @@
 
 
 struct dom_renderer {
+	enum sgml_document_type doctype;
 	struct document *document;
 
 	struct conv_table *convert_table;
 	enum convert_string_mode convert_mode;
+
+	struct uri *base_uri;
 
 	unsigned char *source;
 	unsigned char *end;
@@ -108,6 +113,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->source	= buffer->source;
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
+	renderer->base_uri	= get_uri_reference(document->uri);
 
 #ifdef HAVE_REGEX_H
 	if (renderer->document->options.plain_display_links) {
@@ -367,7 +373,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	                           CSM_DEFAULT, NULL, NULL, NULL);
 	if (!uristring) return NULL;
 
-	where = join_urls(document->uri, uristring);
+	where = join_urls(renderer->base_uri, uristring);
 
 	mem_free(uristring);
 
@@ -402,6 +408,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	}
 
 	document->nlinks++;
+	document->links_sorted = 0;
 
 	return link;
 }
@@ -500,7 +507,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 }
 #endif
 
-static void
+static enum dom_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -513,15 +520,15 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *dat
 		|| node->type == DOM_NODE_CDATA_SECTION
 		|| node->type == DOM_NODE_COMMENT)) {
 		render_dom_node_enhanced_text(renderer, node);
-		return;
-	}
+	} else
 #endif
+		render_dom_node_text(renderer, &renderer->styles[node->type], node);
 
-	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+	return DOM_CODE_OK;
 }
 
 /* This callback is also used for rendering processing instruction nodes.  */
-static void
+static enum dom_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -529,9 +536,11 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 	assert(node && renderer && renderer->document);
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+
+	return DOM_CODE_OK;
 }
 
-static void
+enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -544,7 +553,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	assert(node && renderer && renderer->document);
 
 	if (!string || !length)
-		return;
+		return DOM_CODE_OK;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -553,9 +562,32 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	}
 
 	render_dom_text(renderer, &renderer->styles[node->type], string, length);
+
+	return DOM_CODE_OK;
 }
 
 static void
+set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuelen)
+{
+	unsigned char *href = memacpy(value, valuelen);
+	unsigned char *uristring;
+	struct uri *uri;
+
+	if (!href) return;
+	uristring = join_urls(renderer->base_uri, href);
+	mem_free(href);
+
+	if (!uristring) return;
+	uri = get_uri(uristring, 0);
+	mem_free(uristring);
+
+	if (!uri) return;
+
+	done_uri(renderer->base_uri);
+	renderer->base_uri = uri;
+}
+
+enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -609,6 +641,12 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 				break;
 			}
 
+			if (renderer->doctype == SGML_DOCTYPE_HTML
+			    && node->data.attribute.type == HTML_ATTRIBUTE_HREF
+			    && node->parent->data.element.type == HTML_ELEMENT_BASE) {
+				set_base_uri(renderer, value, valuelen - skips);
+			}
+
 			add_dom_link(renderer, value, valuelen - skips,
 				     value, valuelen - skips);
 
@@ -620,9 +658,11 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			render_dom_text(renderer, template, value, valuelen);
 		}
 	}
+
+	return DOM_CODE_OK;
 }
 
-static void
+enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -639,9 +679,11 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *da
 	}
 
 	render_dom_node_text(renderer, &renderer->styles[node->type], node);
+
+	return DOM_CODE_OK;
 }
 
-static void
+enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -652,6 +694,8 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 	if (check_dom_node_source(renderer, renderer->position, 0)) {
 		render_dom_flush(renderer, renderer->end);
 	}
+
+	return DOM_CODE_OK;
 }
 
 static struct dom_stack_context_info dom_source_renderer_context_info = {
@@ -693,7 +737,10 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 
 /* DOM RSS Renderer */
 
-static void
+#define RSS_CONFIG_FLAGS \
+	(DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS)
+
+enum dom_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -735,9 +782,11 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 
 		renderer->node = node;
 	}
+
+	return DOM_CODE_OK;
 }
 
-static void
+enum dom_code
 dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -776,74 +825,21 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	default:
 		break;
 	}
-}
 
-static void
-dom_rss_push_content(struct dom_stack *stack, struct dom_node *node, void *data)
-{
-	struct dom_renderer *renderer = stack->current->data;
-	unsigned char *string = node->string.string;
-	int length = node->string.length;
-
-	assert(node && renderer && renderer->document);
-
-	if (!renderer->node)
-		return;
-
-	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
-		string -= 1;
-		length += 2;
-	}
-
-	if (!is_dom_string_set(&renderer->text)) {
-		init_dom_string(&renderer->text, string, length);
-	} else {
-		add_to_dom_string(&renderer->text, string, length);
-	}
-}
-
-static struct dom_string *
-get_rss_node_text(struct dom_node *node)
-{
-	struct dom_node *child;
-	int index;
-
-	if (!node->data.element.children)
-		return NULL;
-
-	foreach_dom_node (node->data.element.children, child, index) {
-		if (child->type == DOM_NODE_TEXT)
-			return &child->string;
-	}
-
-	return NULL;
-}
-
-static struct dom_node *
-get_rss_child(struct dom_node *parent, enum rss_element_type type)
-{
-	struct dom_node *node;
-	int index;
-
-	if (!parent->data.element.children)
-		return NULL;
-
-	foreach_dom_node (parent->data.element.children, node, index) {
-		if (node->type == DOM_NODE_ELEMENT
-		    && type == node->data.element.type)
-			return node;
-	}
-
-	return NULL;
+	return DOM_CODE_OK;
 }
 
 
 static struct dom_string *
 get_rss_text(struct dom_node *node, enum rss_element_type type)
 {
-	node = get_rss_child(node, type);
+	node = get_dom_node_child(node, DOM_NODE_ELEMENT, type);
 
-	return node ? get_rss_node_text(node) : NULL;
+	if (!node) return NULL;
+
+	node = get_dom_node_child(node, DOM_NODE_TEXT, 0);
+
+	return node ? &node->string: NULL;
 }
 
 static void
@@ -901,13 +897,13 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	}
 }
 
-static void
+enum dom_code
 dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 
 	if (!renderer->channel)
-		return;
+		return DOM_CODE_OK;
 
 	render_rss_item(renderer, renderer->channel);
 
@@ -927,6 +923,8 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 	mem_free_if(renderer->items);
 
 	done_dom_node(root);
+
+	return DOM_CODE_OK;
 }
 
 
@@ -937,9 +935,9 @@ static struct dom_stack_context_info dom_rss_renderer_context_info = {
 		/*				*/ NULL,
 		/* DOM_NODE_ELEMENT		*/ dom_rss_push_element,
 		/* DOM_NODE_ATTRIBUTE		*/ NULL,
-		/* DOM_NODE_TEXT		*/ dom_rss_push_content,
-		/* DOM_NODE_CDATA_SECTION	*/ dom_rss_push_content,
-		/* DOM_NODE_ENTITY_REFERENCE	*/ dom_rss_push_content,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
 		/* DOM_NODE_ENTITY		*/ NULL,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
 		/* DOM_NODE_COMMENT		*/ NULL,
@@ -976,12 +974,11 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_renderer renderer;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
-	enum sgml_document_type doctype;
  	enum sgml_parser_type parser_type;
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
-	enum sgml_parser_code code;
+	enum dom_code code;
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,
@@ -1000,34 +997,35 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	/* FIXME: Refactor the doctype lookup. */
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
-		doctype = SGML_DOCTYPE_RSS;
+		renderer.doctype = SGML_DOCTYPE_RSS;
 
 	} else if (!strcasecmp("application/docbook+xml", cached->content_type)) {
-		doctype = SGML_DOCTYPE_DOCBOOK;
+		renderer.doctype = SGML_DOCTYPE_DOCBOOK;
 
 	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
 		   || !strcasecmp("application/x-xbel", cached->content_type)
 		   || !strcasecmp("application/xbel", cached->content_type)) {
-		doctype = SGML_DOCTYPE_XBEL;
+		renderer.doctype = SGML_DOCTYPE_XBEL;
 
 	} else {
 		assertm(!strcasecmp("text/html", cached->content_type)
 			|| !strcasecmp("application/xhtml+xml", cached->content_type),
 			"Couldn't resolve doctype '%s'", cached->content_type);
 
-		doctype = SGML_DOCTYPE_HTML;
+		renderer.doctype = SGML_DOCTYPE_HTML;
 	}
 
-	parser = init_sgml_parser(parser_type, doctype, &uri, 0);
+	parser = init_sgml_parser(parser_type, renderer.doctype, &uri, 0);
   	if (!parser) return;
 
 	if (document->options.plain) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_source_renderer_context_info);
 
-	} else if (doctype == SGML_DOCTYPE_RSS) {
+	} else if (renderer.doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_rss_renderer_context_info);
+		add_dom_config_normalizer(&parser->stack, RSS_CONFIG_FLAGS);
 	}
 
 	/* FIXME: When rendering this way we don't really care about the code.
@@ -1048,5 +1046,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	if (renderer.find_url)
 		regfree(&renderer.url_regex);
 #endif
+	done_uri(renderer.base_uri);
 	done_sgml_parser(parser);
 }

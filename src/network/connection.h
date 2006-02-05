@@ -86,11 +86,13 @@ int has_keepalive_connection(struct connection *);
 void add_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 			      void (*done)(struct connection *));
 
-void abort_connection(struct connection *, int);
-void retry_connection(struct connection *, int);
+void abort_connection(struct connection *, enum connection_state);
+void retry_connection(struct connection *, enum connection_state);
 
-void change_connection(struct download *old, struct download *new,
-		       enum connection_priority newpri, int interrupt);
+void cancel_download(struct download *download, int interrupt);
+void move_download(struct download *old, struct download *new,
+		     enum connection_priority newpri);
+
 void detach_connection(struct download *, off_t);
 void abort_all_connections(void);
 void abort_background_connections(void);

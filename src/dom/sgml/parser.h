@@ -2,6 +2,7 @@
 #ifndef EL_DOM_SGML_PARSER_H
 #define EL_DOM_SGML_PARSER_H
 
+#include "dom/code.h"
 #include "dom/node.h"
 #include "dom/stack.h"
 #include "dom/sgml/sgml.h"
@@ -62,27 +63,13 @@ struct sgml_parser_state {
 	struct dom_scanner_token end_token;
 };
 
-/** (Error) codes for the SGML parser
- *
- * These enum values are used for return codes.
- */
-enum sgml_parser_code {
-	SGML_PARSER_CODE_OK,		/*: The parsing was successful */
-	SGML_PARSER_CODE_INCOMPLETE,	/*: The parsing could not be completed */
-	SGML_PARSER_CODE_MEM_ALLOC,	/*: Failed to allocate memory */
-	/**
-	 * FIXME: For when we will add support for requiring stricter parsing
-	 * or even a validator. */
-	SGML_PARSER_CODE_ERROR,
-};
-
 /** SGML error callback
  *
  * Called by the SGML parser when a parsing error has occurred.
  *
- * If the return code is not ref:[SGML_PARSER_CODE_OK] the parsing will be
+ * If the return code is not ref:[DOM_CODE_OK] the parsing will be
  * ended and that code will be returned. */
-typedef enum sgml_parser_code
+typedef enum dom_code
 (*sgml_error_T)(struct sgml_parser *, struct dom_string *, unsigned int);
 
 
@@ -101,7 +88,7 @@ struct sgml_parser {
 	struct dom_string uri;		/*: The URI of the DOM document */
 	struct dom_node *root;		/*: The document root node */
 
-	enum sgml_parser_code code;	/*: The latest (error) code */
+	enum dom_code code;		/*: The latest (error) code */
 	sgml_error_T error_func;	/*: Called for detected errors */
 
 	struct dom_stack stack;		/*: A stack for tracking parsed nodes */
@@ -142,10 +129,10 @@ void done_sgml_parser(struct sgml_parser *parser);
  * bufsize::	The size of the buffer given in the buf parameter.
  * complete::	Whether this is the last chunk to parse.
  *
- * The returned code is ref:[SGML_PARSER_CODE_OK] if the buffer was
+ * The returned code is ref:[DOM_CODE_OK] if the buffer was
  * successfully parserd, else a code hinting at the error.
  */
-enum sgml_parser_code
+enum dom_code
 parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize, int complete);
 
 /** Get the line position in the source

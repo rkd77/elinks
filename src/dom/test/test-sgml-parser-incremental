@@ -1,0 +1,258 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test incremental parsing of SGML documents.
+
+This test checks if the SGML parser correctly recovers during incremental
+parsing.
+'
+
+. "$TEST_LIB"
+
+test_incremental_parsing () {
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	URI="test:$(normalize "$desc")"
+
+	echo "#document: $URI" > expected
+	echo "$out" | sed -n '2,$p' | sed -e 's/^/  /' >> expected
+
+	for size in 1 2 3 4 5 6 7 8 9 10 15 20 25 50; do
+		echo -n "$src" | sgml-parser --uri "$URI" --stdin "$size" > output
+
+		test_run_ 'cmp output expected'
+		if [ "$?" != 0 -o "$eval_ret" != 0 ]
+		then
+			test_failure_ "$desc" "($size bytes)"
+			return
+		fi
+	done
+
+	test_ok_ "$desc"
+}
+
+test_incremental_parsing \
+"Parse a small document." \
+'<html><body><p>Hello World!</p></body></html>' \
+'
+element: html
+  element: body
+    element: p
+      #text: Hello World!'
+
+test_incremental_parsing \
+'Parse elements.' \
+'<root><child attr="value" /><child2></><child3 >a</></root>' \
+'
+element: root
+  element: child
+    attribute: attr -> value
+  element: child2
+  element: child3
+    #text: a'
+
+test_incremental_parsing \
+'Parse tag soup elements.' \
+'<parent attr="value" <child:1></><child:2</>a</parent>' \
+'
+element: parent
+  attribute: attr -> value
+  element: child:1
+  element: child:2
+  #text: a'
+
+test_incremental_parsing \
+'Parse an enclosed comment.' \
+'<root><!-- Hello World! --></root>' \
+'
+element: root
+  #comment:  Hello World! '
+
+test_incremental_parsing \
+'Parse comment combinations. (I)' \
+'<root><!-- <!-- -- > --><!--foo--><!----></root>' \
+'
+element: root
+  #comment:  <!-- -- > 
+  #comment: foo
+  #comment: '
+
+test_incremental_parsing \
+'Parse comment combinations. (II).' \
+'<! -- comment -->s<!-->-->t<!----->u' \
+'
+#comment:  comment 
+#text: s
+#comment: >
+#text: t
+#comment: -
+#text: u'
+
+test_incremental_parsing \
+'Parse bad comment. (I)' \
+'<!--->s' \
+'
+#comment: ->s'
+
+test_incremental_parsing \
+'Parse bad comment. (II)' \
+'<!--a--!>bad comment' \
+'
+#comment: a
+#text: bad comment'
+
+test_incremental_parsing \
+'Parse empty notation.' \
+'<!>s' \
+'
+#text: s'
+
+test_incremental_parsing \
+'Parse an enclosed CDATA section.' \
+'<root><![CDATA[...] ]>...]]></root>' \
+'
+element: root
+  #cdata-section: ...] ]>...'
+
+test_incremental_parsing \
+'Parse non-enclosed CDATA section.' \
+'<![CDATA[...]]>' \
+'
+#cdata-section: ...'
+
+test_incremental_parsing \
+'Parse a bad CDATA section.' \
+'<![CDATA[...' \
+'
+#cdata-section: ...'
+
+test_incremental_parsing \
+'Parse attributes.' \
+'<root lang="fr" attr name="value with &foo; <stuff"></root>' \
+'
+element: root
+  attribute: lang -> fr
+  attribute: attr -> 
+  attribute: name -> value with &foo; <stuff'
+
+test_incremental_parsing \
+'Parse attributes with garbage.' \
+"<root a=b c='d' e'f' g= h i = j k =></root>" \
+'
+element: root
+  attribute: a -> b
+  attribute: c -> d
+  attribute: g -> h
+  attribute: i -> j
+  attribute: k -> ' 
+
+test_incremental_parsing \
+'Parse attribute with non-quoted values.' \
+'<root color=#abc path=/to/%61-&\one";files/>...' \
+'
+element: root
+  attribute: color -> #abc
+  attribute: path -> /to/%61-&\one";files
+#text: ...'
+
+test_incremental_parsing \
+'Parse entity references.' \
+'&amp;-&#42;' \
+'
+entity-reference: amp
+#text: -
+entity-reference: #42'
+
+# Just how these should be gracefully handled is not clear to me.
+test_incremental_parsing \
+'Parse badly formatted entity references.' \
+'& m33p;-&.:-copy;-&;-&#;-&#xx;' \
+'
+#text: & m33p;
+#text: -
+entity-reference: .:-copy
+#text: -
+#text: &;
+#text: -
+entity-reference: #
+#text: -
+entity-reference: #xx'
+
+test_incremental_parsing \
+'Parse processing instructions.' \
+'<?xml encoding="UTF8"?>
+...
+<?ecmascript
+var val=2;
+?>' \
+'
+proc-instruction: xml -> encoding="UTF8"
+  attribute: encoding -> UTF8
+#text: \n...\n
+proc-instruction: ecmascript -> var val=2;\n'
+
+test_incremental_parsing \
+'Parse XML processing instructions.' \
+'<?xml version="1.0" />?><?xml />-' \
+'
+proc-instruction: xml -> version="1.0" />
+  attribute: version -> 1.0
+proc-instruction: xml -> />-'
+
+test_incremental_parsing \
+'Parse XML stylesheet processing instructions.' \
+'<?xml-stylesheet type="text/xsl" href="url"?>' \
+'
+proc-instruction: xml-stylesheet -> type="text/xsl" href="url"
+  attribute: type -> text/xsl
+  attribute: href -> url'
+
+test_incremental_parsing \
+'Parse exotic processing instructions.' \
+'<?xml ?+>+?>-?>-<?js?>-<??>-' \
+'
+proc-instruction: xml -> ?+>+
+#text: -?>-
+proc-instruction: js -> 
+#text: -
+proc-instruction:  -> 
+#text: -'
+
+test_incremental_parsing \
+'Parse incorrect processing instructions.' \
+'<?js<?>-<?<??>-<?xml <=";&?>-<?' \
+'
+proc-instruction: js -> <
+#text: -
+proc-instruction:  -> <?
+#text: -
+proc-instruction: xml -> <=";&
+#text: -'
+
+test_incremental_parsing \
+'Parse incorrect processing instructions (II).' \
+'<?><?' \
+'
+proc-instruction:  -> ><?'
+
+test_incremental_parsing \
+'Skip spaces not inside text.' \
+'<
+root
+ns:attr                      
+=
+"value"
+><?	
+	target	
+ data?><	/	root	>' \
+'
+element: root
+  attribute: ns:attr -> value
+  proc-instruction: target -> data'
+
+
+test_done

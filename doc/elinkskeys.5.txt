@@ -93,7 +93,7 @@ FIXME:
 KEYMAP ACTIONS
 --------------
 
-include::keymap-actions.txt[]
+include::{builddir}keymap-actions.txt[]
 
 DEFAULT BINDINGS
 ----------------
@@ -101,7 +101,7 @@ DEFAULT BINDINGS
 The default bindings are shown below. Any bindings in `~/.elinks/elinks.conf`
 will override these.
 
-include::keymap-defaults.txt[]
+include::{builddir}keymap-defaults.txt[]
 
 AUTHOR
 ------

@@ -71,6 +71,7 @@ struct SEE_string *s_referrer;
 struct SEE_string *s_title;
 struct SEE_string *s_url;
 struct SEE_string *s_write;
+struct SEE_string *s_writeln;
 
 struct SEE_string *s_Mozilla;
 struct SEE_string *s_ELinks_;
@@ -228,6 +229,8 @@ init_intern_strings(void)
 	static struct SEE_string S_url = SEE_STRING_DECL(SA_url);
 	static SEE_char_t SA_write[] = {'w','r','i','t','e'};
 	static struct SEE_string S_write = SEE_STRING_DECL(SA_write);
+	static SEE_char_t SA_writeln[] = {'w','r','i','t','e','l','n'};
+	static struct SEE_string S_writeln = SEE_STRING_DECL(SA_writeln);
 
 	static SEE_char_t SA_Mozilla[] = {'M','o','z','i','l','l','a'};
 	static struct SEE_string S_Mozilla = SEE_STRING_DECL(SA_Mozilla);
@@ -354,6 +357,7 @@ init_intern_strings(void)
 	SEE_intern_global(s_title = &S_title);
 	SEE_intern_global(s_url = &S_url);
 	SEE_intern_global(s_write = &S_write);
+	SEE_intern_global(s_writeln = &S_writeln);
 
 	SEE_intern_global(s_Mozilla = &S_Mozilla);
 	SEE_intern_global(s_ELinks_ = &S_ELinks_);

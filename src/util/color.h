@@ -21,7 +21,7 @@ unsigned char *get_color_string(color_T color, unsigned char hexcolor[8]);
 
 /* Translate rgb color to string in #rrggbb format. str should be a pointer to
  * a 8 bytes memory space. */
-void color_to_string(color_T color, unsigned char str[]);
+void color_to_string(color_T color, unsigned char str[8]);
 
 /* Fastfind lookup management. */
 void init_colors_lookup(void);

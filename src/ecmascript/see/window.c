@@ -48,8 +48,6 @@
 
 static struct js_window_object *js_get_global_object(void *);
 static struct js_window_object *js_try_resolve_frame(struct document_view *, unsigned char *);
-static void delayed_open(void *);
-static void delayed_goto_uri_frame(void *);
 static void window_get(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *);
 static void window_put(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *, struct SEE_value *, int);
 static int window_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
@@ -58,12 +56,6 @@ static void js_window_alert(struct SEE_interpreter *, struct SEE_object *, struc
 static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
 void location_goto(struct document_view *, unsigned char *);
-
-struct delayed_open {
-	struct session *ses;
-	struct uri *uri;
-	unsigned char *target;
-};
 
 struct SEE_objectclass js_window_object_class = {
 	NULL,
@@ -102,29 +94,6 @@ js_try_resolve_frame(struct document_view *doc_view, unsigned char *id)
 }
 
 
-static void
-delayed_open(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
-static void
-delayed_goto_uri_frame(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	goto_uri_frame(deo->ses, deo->uri, deo->target, CACHE_MODE_NORMAL);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
-
 
 static void
 window_get(struct SEE_interpreter *interp, struct SEE_object *o,
@@ -136,8 +105,9 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	checktime(interp);
 	if (p == s_closed) {
 		SEE_SET_BOOLEAN(res, 0);
-	} else if (p == s_self) {
+	} else if (p == s_self || p == s_parent || p == s_top) {
 		SEE_SET_OBJECT(res, o);
+#if 0		
 	} else if (p == s_parent || p == s_top) {
 		struct document_view *doc_view = vs->doc_view;
 		struct document_view *top_view = doc_view->session->doc_view;
@@ -162,7 +132,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
 			SEE_SET_OBJECT(res, (struct SEE_object *)newjsframe);
 		}
-
+#endif
 	} else if (p == s_alert) {
 		SEE_SET_OBJECT(res, win->alert);
 	} else if (p == s_open) {
@@ -262,7 +232,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *url, *url2;
 	struct uri *uri;
 	struct SEE_value url_value, target_value;
-	static struct SEE_string *url_string = NULL, *target_string = NULL;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -293,15 +262,38 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 #endif
 	SEE_ToString(interp, argv[0], &url_value);
 	if (argc > 1) {
+		/* Because of gradual rendering window.open is called many
+		 * times with the same arguments.
+		 * This workaround remembers NUMBER_OF_URLS_TO_REMEMBER last
+		 * opened URLs and do not let open them again.
+		 */
+#define NUMBER_OF_URLS_TO_REMEMBER 8
+		static struct {
+			struct SEE_interpreter *interp;
+			struct SEE_string *url;
+			struct SEE_string *target;
+		} strings[NUMBER_OF_URLS_TO_REMEMBER];
+		static int indeks = 0;
+		int i;
+
 		SEE_ToString(interp, argv[1], &target_value);
-		if (url_string && target_string &&
-		 !SEE_string_cmp(url_value.u.string, url_string)
-		 && !SEE_string_cmp(target_value.u.string, target_string)) {
-		 	return;
+		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
+			if (!(strings[i].url && strings[i].target
+				&& strings[i].interp))
+				continue;
+			if (strings[i].interp == interp
+			    && !SEE_string_cmp(url_value.u.string, strings[i].url)
+			    && !SEE_string_cmp(target_value.u.string, strings[i].target))
+			 	return;
 		}
-		url_string = url_value.u.string;
-		target_string = target_value.u.string;
+		strings[indeks].interp = interp;
+		strings[indeks].url = url_value.u.string;
+		strings[indeks].target = target_value.u.string;
+		indeks++;
+		if (indeks >= NUMBER_OF_URLS_TO_REMEMBER) indeks = 0;
+#undef NUMBER_OF_URLS_TO_REMEMBER
 	}
+
 	url = SEE_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
 
@@ -326,11 +318,13 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
 			deo->target = target;
+			/* target will be freed in delayed_goto_uri_frame */
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			goto end;
 		}
 	}
 
+	mem_free_if(target);
 	if (!get_cmd_opt_bool("no-connect")
 	    && !get_cmd_opt_bool("no-home")
 	    && !get_cmd_opt_bool("anonymous")
@@ -350,7 +344,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 
 end:
-	mem_free_if(target);
 	done_uri(uri);
 
 }

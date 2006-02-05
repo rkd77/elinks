@@ -12,7 +12,7 @@
 
 
 struct module smjs_scripting_module = struct_module(
-	/* name: */		"ECMAScript scripting engine",
+	/* name: */		"Spidermonkey ECMAScript",
 	/* options: */		NULL,
 	/* events: */		smjs_scripting_hooks,
 	/* submodules: */	NULL,

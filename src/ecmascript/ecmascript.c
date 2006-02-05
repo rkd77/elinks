@@ -12,6 +12,8 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see.h"
+#include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "protocol/uri.h"
@@ -59,6 +61,104 @@ static struct option_info ecmascript_options[] = {
 
 	NULL_OPTION_INFO,
 };
+
+void
+ecmascript_init(struct module *module)
+{
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_init();
+#else
+	spidermonkey_init();
+#endif
+}
+
+void
+ecmascript_done(struct module *module)
+{
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_done();
+#else
+	spidermonkey_done();
+#endif
+}
+
+struct ecmascript_interpreter *
+ecmascript_get_interpreter(struct view_state *vs)
+{
+	struct ecmascript_interpreter *interpreter;
+
+	assert(vs);
+
+	interpreter = mem_calloc(1, sizeof(*interpreter));
+	if (!interpreter)
+		return NULL;
+
+	interpreter->vs = vs;
+	init_list(interpreter->onload_snippets);
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_get_interpreter(interpreter);
+#else
+	spidermonkey_get_interpreter(interpreter);
+#endif
+	return interpreter;
+}
+
+void
+ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
+{
+	assert(interpreter);
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_put_interpreter(interpreter);
+#else
+	spidermonkey_put_interpreter(interpreter);
+#endif
+	free_string_list(&interpreter->onload_snippets);
+	interpreter->vs->ecmascript = NULL;
+	mem_free(interpreter);
+}
+
+void
+ecmascript_eval(struct ecmascript_interpreter *interpreter,
+                struct string *code, struct string *ret)
+{
+	if (!get_ecmascript_enable())
+		return;
+	assert(interpreter);
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_eval(interpreter, code, ret);
+#else
+	spidermonkey_eval(interpreter, code, ret);
+#endif
+}
+
+unsigned char *
+ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
+			   struct string *code)
+{
+	if (!get_ecmascript_enable())
+		return NULL;
+	assert(interpreter);
+#ifdef CONFIG_ECMASCRIPT_SEE
+	return see_eval_stringback(interpreter, code);
+#else
+	return spidermonkey_eval_stringback(interpreter, code);
+#endif
+}
+
+int
+ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
+			 struct string *code)
+{
+	if (!get_ecmascript_enable())
+		return -1;
+	assert(interpreter);
+#ifdef CONFIG_ECMASCRIPT_SEE
+	return see_eval_boolback(interpreter, code);
+#else
+	return spidermonkey_eval_boolback(interpreter, code);
+#endif
+}
+
 
 void
 ecmascript_reset_state(struct view_state *vs)
@@ -133,11 +233,21 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 
 }
 
+static struct module *ecmascript_modules[] = {
+#ifdef CONFIG_ECMASCRIPT_SEE
+	&see_module,
+#elif defined(CONFIG_ECMASCRIPT_SMJS)
+	&spidermonkey_module,
+#endif
+	NULL,
+};
+
+
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),
 	/* options: */		ecmascript_options,
 	/* events: */		NULL,
-	/* submodules: */	NULL,
+	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
 	/* init: */		ecmascript_init,
 	/* done: */		ecmascript_done

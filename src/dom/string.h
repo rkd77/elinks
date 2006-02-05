@@ -3,13 +3,22 @@
 
 #include "util/memory.h"
 
+/* For now DOM has it's own little string library. Mostly because there are
+ * some memory overhead associated with util/string's block-based allocation
+ * scheme which is optimized for building strings and quickly dispose of it.
+ * Also, at some point we need to switch to use mainly UTF-8 strings for DOM
+ * and it needs to be possible to adapt the string library to that. --jonas */
+
 struct dom_string {
 	size_t length;
 	unsigned char *string;
 };
 
 #define INIT_DOM_STRING(strvalue, strlength) \
-	{ (strlength) == -1 ? sizeof(strvalue) - 1 : (strlength), (strvalue) }
+	{ (strlength), (strvalue) }
+
+#define STATIC_DOM_STRING(strvalue) \
+	{ sizeof(strvalue) - 1, (strvalue) }
 
 static inline void
 set_dom_string(struct dom_string *string, unsigned char *value, size_t length)

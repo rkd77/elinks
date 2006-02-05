@@ -297,7 +297,7 @@ abort_files_load(struct session *ses, int interrupt)
 				continue;
 
 			more = 1;
-			change_connection(&ftl->download, NULL, PRI_CANCEL, interrupt);
+			cancel_download(&ftl->download, interrupt);
 		}
 
 		if (!more) break;
@@ -663,7 +663,7 @@ request_additional_file(struct session *ses, unsigned char *name, struct uri *ur
 		if (compare_uri(ftl->uri, uri, URI_BASE)) {
 			if (ftl->pri > pri) {
 				ftl->pri = pri;
-				change_connection(&ftl->download, &ftl->download, pri, 0);
+				move_download(&ftl->download, &ftl->download, pri);
 			}
 			return NULL;
 		}
@@ -1117,7 +1117,7 @@ abort_loading(struct session *ses, int interrupt)
 		struct location *loc = cur_loc(ses);
 
 		if (is_in_progress_state(loc->download.state))
-			change_connection(&loc->download, NULL, PRI_CANCEL, interrupt);
+			cancel_download(&loc->download, interrupt);
 		abort_files_load(ses, interrupt);
 	}
 	abort_preloading(ses, interrupt);

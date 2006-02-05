@@ -11,6 +11,7 @@
 
 struct cache_entry;
 struct document_refresh;
+struct document_view;
 struct form_control;
 struct frame_desc;
 struct frameset_desc;
@@ -147,6 +148,8 @@ struct document {
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
+	/* For ecmascript access */
+	struct document_view *doc_view;
 #endif
 #ifdef CONFIG_CSS
 	/* FIXME: We should externally maybe using cache_entry store the
@@ -185,6 +188,7 @@ struct document {
 	color_T bgcolor;
 
 	enum cp_status cp_status;
+	unsigned int links_sorted:1; /* whether links are already sorted */
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)

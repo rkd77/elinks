@@ -21,14 +21,12 @@ usage($HELP) if $opt_h or @ARGV < 1;
 sub put_section {
 	if ($title) {
 		print "\n$title\n";
-		$_ = $title;
-		s/[^-]/-/g;
-		print "$_\n" if not $indent;
+		$title =~ s/[^-]/-/g;
+		print "$title\n" if not $indent;
 	}
 	if ($body) {
-		$_ = $body;
-		s/#newline#/$indent/g;
-		print "$_\n";
+		$body =~ s/#newline#/$indent/g;
+		print "$body\n";
 	}
 	$title = $body = undef;
 }

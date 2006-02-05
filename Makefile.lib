@@ -48,7 +48,7 @@ quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"
 			    `test -e $(subdir)/$(LIB_O_NAME) && echo $(subdir)/$(LIB_O_NAME)`)
 
    quiet_cmd_link = '    [$(LINK_COLOR)LINK$(END_COLOR)]   $(RELPATH)$@'
-         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(2) $(LIBS)
+         cmd_link = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
  quiet_cmd_sparse = '    [SPARSE]   $(RELPATH)$(2)'
        cmd_sparse = $(SPARSE) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS) $(SPARSE_FLAGS) $(2)
@@ -78,9 +78,10 @@ INCLUDE_ALL=1
 endif
 
 ifneq ($(findstring init,$(MAKECMDGOALS)),)
-# FIXME: Detect when $(subdir)/Makefile is $(srcdir)/$(subdir)/Makefile
-# and error out so the user won't overwrite the 'master' Makefiles.
 INCLUDE_ALL=1
+ifndef SRC
+SRC = $(shell cd $(top_srcdir) && pwd)
+endif
 endif
 
 ifdef INCLUDE_ALL
@@ -92,7 +93,8 @@ endif
 #############################################################################
 # Internal build rules
 
-# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o
+# All files in $(OBJS) and any $(subdir)/lib.o are linked into lib.o.
+# Sort them to filter out duplicated and get uniform order.
 LIB_O_DEPS = \
  $(sort $(filter-out $(LIB_O_NAME),$(OBJS))) \
  $(foreach subdir,$(sort $(SUBDIRS)),$(wildcard $(subdir)/$(LIB_O_NAME)))
@@ -106,7 +108,7 @@ DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
 ifneq ($(strip $(OBJS)),)
 -include $(DEP_FILES)
-OBJS += $(LIB_O_NAME)
+ALL_OBJS = $(LIB_O_DEPS) $(LIB_O_NAME)
 endif
 
 %.o: $(srcdir)%.c
@@ -125,7 +127,7 @@ CLEAN += $(PROG) $(OBJS)
 #############################################################################
 # The main default rules
 
-all-default: $(OBJS) $(PROGS) $(MAN1) $(MAN5)
+all-default: $(ALL_OBJS) $(PROGS) $(MAN1) $(MAN5)
 
 # Ensure that Makefiles in subdirs are created before we recursive into them
 init-recursive: init-default
@@ -133,7 +135,8 @@ init-recursive: init-default
 init-default:
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(MKINSTALLDIRS) $(subdir) >/dev/null; \
-		echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
+		test -e "$(subdir)/Makefile" \
+		|| echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
 clean-default cleanall-default:
 	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
@@ -161,7 +164,6 @@ ifdef MAN5
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
-
 ##############################################################################
 # Auto-testing infrastructure
 
@@ -171,13 +173,16 @@ ifdef TEST_PROGS
 TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 TESTDEPS += $(TESTDEPS-yes)
 
+TEST_LIB=$(top_srcdir)/test/libtest.sh
+export TEST_LIB
+
+# This is a very general rule but as long as we don't put test programs in src/
+# it should work.
+%: %.o $(TESTDEPS)
+	$(call cmd,link)
+
 TESTS = $(wildcard $(srcdir)test-*)
 
-$(TEST_PROGS): $(TESTDEPS)
-	$(call cmd,link,$@.o)
-
-# We cannot use $$@.o in the rule above so ensure that all test programs are
-# built before linking.
 $(TESTS): $(addsuffix .o,$(TEST_PROGS)) $(TEST_PROGS)
 	@echo "*** $(notdir $@) ***"; \
 	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)

@@ -12,10 +12,13 @@
 #include "main/event.h"
 #include "main/module.h"
 #include "scripting/smjs/cache_object.h"
+#include "scripting/smjs/view_state_object.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/hooks.h"
+#include "session/location.h"
 #include "session/session.h"
+#include "viewer/text/vs.h"
 
 
 static enum evhook_status
@@ -88,8 +91,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
-	JSObject *cache_entry_object;
-	jsval args[1], rval;
+	JSObject *cache_entry_object, *view_state_object = JSVAL_NULL;
+	jsval args[2], rval;
 
 	evhook_use_params(ses && cached);
 
@@ -97,13 +100,20 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	smjs_ses = ses;
 
+	if (have_location(ses)) {
+		struct view_state *vs = &cur_loc(ses)->vs;
+
+		view_state_object = smjs_get_view_state_object(vs);
+	}
+
 	cache_entry_object = smjs_get_cache_entry_object(cached);
 	if (!cache_entry_object) goto end;
 
 	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
+	args[1] = OBJECT_TO_JSVAL(view_state_object);
 
 	if (JS_TRUE == smjs_invoke_elinks_object_method("preformat_html",
-	                                                args, 1, &rval))
+	                                                args, 2, &rval))
 		if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
 			ret = EVENT_HOOK_STATUS_LAST;
 

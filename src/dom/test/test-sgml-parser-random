@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Copyright (c) 2005 Jonas Fonseca
+#
+
+test_description='Test parsing of random SGML garbage documents.
+
+This test checks if the SGML parser will not barf on randomly generated
+HTML documents.
+'
+
+. "$TEST_LIB"
+
+# Make it possible to torture test by passing number of times to
+# test.
+test -n "$1" && runs="$1" || runs=100
+run=1
+
+while test "$run" -le "$runs"; do
+	desc="Parsing randomised HTML"
+
+	html-mangle > "$run.html"
+	test_run_ 'sgml-parser --stdin "$run" < "$run.html"'
+	if [ "$?" != 0 -o "$eval_ret" != 0 ]
+	then
+		test_failure_ "$desc" "output saved in $run.html"
+	else
+		test_ok_ "$desc"
+		rm "$run.html"
+	fi
+	run=$((run + 1))
+done
+
+test_done

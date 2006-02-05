@@ -533,8 +533,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 	}
 
 	target = get_target(options, attr);
-	if (!target) target = null_or_stracpy(target_base);
-	if (!target) target = stracpy("");
+	if (!target) target = stracpy(empty_string_or_(target_base));
 	if (!target) {
 		mem_free_if(label);
 		return 1;
@@ -660,7 +659,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 struct html_element *
 init_html_parser_state(struct html_context *html_context,
-                       enum html_element_type type,
+                       enum html_element_mortality_type type,
                        int align, int margin, int width)
 {
 	html_stack_dup(html_context, type);

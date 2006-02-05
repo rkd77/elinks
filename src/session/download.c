@@ -141,8 +141,7 @@ abort_download(struct file_download *file_download)
 	if (file_download->dlg_data)
 		cancel_dialog(file_download->dlg_data, NULL);
 	if (is_in_progress_state(file_download->download.state))
-		change_connection(&file_download->download, NULL, PRI_CANCEL,
-				  file_download->stop);
+		cancel_download(&file_download->download, file_download->stop);
 	if (file_download->uri) done_uri(file_download->uri);
 
 	if (file_download->handle != -1) {
@@ -391,7 +390,7 @@ download_data(struct download *download, struct file_download *file_download)
 
 	if (cached->redirect && file_download->redirect_cnt++ < MAX_REDIRECTS) {
 		if (is_in_progress_state(download->state))
-			change_connection(&file_download->download, NULL, PRI_CANCEL, 0);
+			cancel_download(&file_download->download, 0);
 
 		assertm(compare_uri(cached->uri, file_download->uri, 0),
 			"Redirecting using bad base URI");
@@ -823,7 +822,7 @@ continue_download_do(struct terminal *term, int fd, void *data, int resume)
 	 * handler can become initialized. */
 	display_download(term, file_download, type_query->ses);
 
-	change_connection(&type_query->download, &file_download->download, PRI_DOWNLOAD, 0);
+	move_download(&type_query->download, &file_download->download, PRI_DOWNLOAD);
 	done_type_query(type_query);
 
 	mem_free(codw_hop);
@@ -889,7 +888,7 @@ init_type_query(struct session *ses, struct download *download,
 	type_query->cached = cached;
 	object_lock(type_query->cached);
 
-	change_connection(download, &type_query->download, PRI_MAIN, 0);
+	move_download(download, &type_query->download, PRI_MAIN);
 	download->state = S_OK;
 
 	add_to_list(ses->type_queries, type_query);
@@ -902,7 +901,7 @@ done_type_query(struct type_query *type_query)
 {
 	/* Unregister any active download */
 	if (is_in_progress_state(type_query->download.state))
-		change_connection(&type_query->download, NULL, PRI_CANCEL, 0);
+		cancel_download(&type_query->download, 0);
 
 	object_unlock(type_query->cached);
 	done_uri(type_query->uri);
@@ -917,8 +916,9 @@ void
 tp_cancel(void *data)
 {
 	struct type_query *type_query = data;
+
 	/* XXX: Should we really abort? (1 vs 0 as the last param) --pasky */
-	change_connection(&type_query->download, NULL, PRI_CANCEL, 1);
+	cancel_download(&type_query->download, 1);
 	done_type_query(type_query);
 }
 
@@ -969,7 +969,7 @@ tp_display(struct type_query *type_query)
 		new->data = ses;
 
 		if (is_in_progress_state(old->state))
-			change_connection(old, new, PRI_MAIN, 0);
+			move_download(old, new, PRI_MAIN);
 		else
 			new->state = old->state;
 	}

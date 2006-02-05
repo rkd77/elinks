@@ -57,11 +57,11 @@ const JSClass document_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-enum document_prop { JSP_DOC_REF, JSP_DOC_TITLE, JSP_DOC_URL };
+enum document_prop { JSP_DOC_LOC, JSP_DOC_REF, JSP_DOC_TITLE, JSP_DOC_URL };
 /* "cookie" is special; it isn't a regular property but we channel it to the
  * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 const JSPropertySpec document_props[] = {
-	{ "location",	JSP_DOC_URL,	JSPROP_ENUMERATE },
+	{ "location",	JSP_DOC_LOC,	JSPROP_ENUMERATE },
 	{ "referrer",	JSP_DOC_REF,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "title",	JSP_DOC_TITLE,	JSPROP_ENUMERATE }, /* TODO: Charset? */
 	{ "url",	JSP_DOC_URL,	JSPROP_ENUMERATE },
@@ -114,6 +114,9 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	undef_to_jsval(ctx, vp);
 
 	switch (JSVAL_TO_INT(id)) {
+	case JSP_DOC_LOC:
+		JS_GetProperty(ctx, parent, "location", vp);
+		break;
 	case JSP_DOC_REF:
 		switch (get_opt_int("protocol.http.referer.policy")) {
 		case REFERER_NONE:
@@ -179,6 +182,7 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
 		print_screen_status(doc_view->session);
 		break;
+	case JSP_DOC_LOC:
 	case JSP_DOC_URL:
 		/* According to the specs this should be readonly but some
 		 * broken sites still assign to it (i.e.
@@ -192,19 +196,28 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 static JSBool document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 const JSFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
+	{ "writeln",		document_writeln,	1 },
 	{ NULL }
 };
 
 static JSBool
-document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+document_write_do(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
+                  jsval *rval, int newline)
 {
-#ifdef CONFIG_LEDS
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-#endif
+	struct string *ret = interpreter->ret;
 
+	if (argc >= 1 && ret) {
+		unsigned char *code = jsval_to_string(ctx, &argv[0]);
+
+		add_to_string(ret, code);
+		if (newline)
+			add_char_to_string(ret, '\n');
+	}
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
 	 * lighting a led and going away, no muss, no fuss. --pasky */
@@ -219,4 +232,17 @@ document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 	boolean_to_jsval(ctx, rval, 0);
 
 	return JS_TRUE;
+}
+
+static JSBool
+document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+
+	return document_write_do(ctx, obj, argc, argv, rval, 0);
+}
+
+static JSBool
+document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	return document_write_do(ctx, obj, argc, argv, rval, 1);
 }

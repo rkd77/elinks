@@ -289,34 +289,6 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
-struct delayed_open {
-	struct session *ses;
-	struct uri *uri;
-	unsigned char *target;
-};
-
-static void
-delayed_open(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
-static void
-delayed_goto_uri_frame(void *data)
-{
-	struct delayed_open *deo = data;
-
-	assert(deo);
-	goto_uri_frame(deo->ses, deo->uri, deo->target, CACHE_MODE_NORMAL);
-	done_uri(deo->uri);
-	mem_free(deo);
-}
-
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -338,10 +310,39 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	if (argc < 1) return JS_TRUE;
 
+	url = jsval_to_string(ctx, &argv[0]);
+	if (argc > 1) {
+		JSString *url_string = JS_ValueToString(ctx, argv[0]);
+		JSString *target_string = JS_ValueToString(ctx, argv[1]);
+		int i;
+#define NUMBER_OF_URLS_TO_REMEMBER 8
+		static struct {
+			JSContext *ctx;
+			JSString *url;
+			JSString *frame;
+		} strings[NUMBER_OF_URLS_TO_REMEMBER];
+		static int indeks;
+
+		target = jsval_to_string(ctx, &argv[1]);
+		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
+			if (!(strings[i].ctx && strings[i].url && strings[i].frame))
+				continue;
+			if (ctx == strings[i].ctx
+				&& !JS_CompareStrings(url_string, strings[i].url)
+				&& !JS_CompareStrings(target_string, strings[i].frame))
+				return JS_TRUE;
+		}
+		strings[indeks].ctx = ctx;
+		strings[indeks].url = JS_InternString(ctx, url);
+		strings[indeks].frame = JS_InternString(ctx, target);
+		indeks++;
+		if (indeks >= NUMBER_OF_URLS_TO_REMEMBER) indeks = 0;
+#undef NUMBER_OF_URLS_TO_REMEMBER
+	}
+
 	/* Ratelimit window opening. Recursive window.open() is very nice.
 	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
 	 * rough but shall suffice against the usual cases. */
-
 	if (!ratelimit_start || time(NULL) - ratelimit_start > 2) {
 		ratelimit_start = time(NULL);
 		ratelimit_count = 0;
@@ -350,8 +351,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		if (ratelimit_count > 20)
 			return JS_TRUE;
 	}
-
-	url = jsval_to_string(ctx, &argv[0]);
 
 	/* TODO: Support for window naming and perhaps some window features? */
 
@@ -362,7 +361,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	mem_free(url);
 	if (!uri) return JS_TRUE;
 
-	if (argc > 1) target = jsval_to_string(ctx, &argv[1]);
 
 	if (*target && strcasecmp(target, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
@@ -370,7 +368,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		if (deo) {
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
-			deo->target = target;
+			deo->target = stracpy(target);
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			boolean_to_jsval(ctx, rval, 1);
 			goto end;

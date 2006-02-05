@@ -39,8 +39,6 @@
 #include "viewer/text/vs.h"
 
 
-static void sort_links(struct document *document);
-
 #ifdef CONFIG_ECMASCRIPT
 /* XXX: This function is de facto obsolete, since we do not need to copy
  * snippets around anymore (we process them in one go after the document is
@@ -129,7 +127,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		if (*string->source != '^') {
 			/* Evaluate <script>code</script> snippet */
-			ecmascript_eval(interpreter, string);
+			ecmascript_eval(interpreter, string, NULL);
 			continue;
 		}
 
@@ -194,7 +192,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		if (fragment) {
 			struct string code = INIT_STRING(fragment->data, fragment->length);
 
-			ecmascript_eval(interpreter, &code);
+			ecmascript_eval(interpreter, &code, NULL);
 		}
 	}
 }
@@ -284,7 +282,6 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	    options->gradual_rerendering, struri(vs->uri),
 	    doc_view, doc_view->name, vs);
 #endif
-
 	name = doc_view->name;
 	doc_view->name = NULL;
 
@@ -328,13 +325,18 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	document = get_cached_document(cached, options);
 	if (document) {
 		doc_view->document = document;
+#ifdef CONFIG_ECMASCRIPT
+		document->doc_view = doc_view;
+#endif
 	} else {
 		document = init_document(cached, options);
 		if (!document) return;
 		doc_view->document = document;
 
 		shrink_memory(0);
-
+#ifdef CONFIG_ECMASCRIPT
+		document->doc_view = doc_view;
+#endif
 		render_encoded_document(cached, document);
 		sort_links(document);
 		if (!document->title) {
@@ -492,7 +494,7 @@ comp_links(struct link *l1, struct link *l2)
 	return (l1->number - l2->number);
 }
 
-static void
+void
 sort_links(struct document *document)
 {
 	int i;
@@ -501,6 +503,7 @@ sort_links(struct document *document)
 	if_assert_failed return;
 	if (!document->nlinks) return;
 
+	if (document->links_sorted) return;
 	assert(document->links);
 	if_assert_failed return;
 
@@ -509,7 +512,9 @@ sort_links(struct document *document)
 
 	if (!document->height) return;
 
+	mem_free_if(document->lines1);
 	document->lines1 = mem_calloc(document->height, sizeof(*document->lines1));
+	mem_free_if(document->lines2);
 	if (!document->lines1) return;
 	document->lines2 = mem_calloc(document->height, sizeof(*document->lines2));
 	if (!document->lines2) {
@@ -540,6 +545,7 @@ sort_links(struct document *document)
 				document->lines1[j] = &document->links[i];
 		}
 	}
+	document->links_sorted = 1;
 }
 
 struct conv_table *

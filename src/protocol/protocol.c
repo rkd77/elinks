@@ -29,8 +29,10 @@
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/connection.h"
 #include "protocol/data.h"
+#include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
 #include "protocol/finger/finger.h"
+#include "protocol/fsp/fsp.h"
 #include "protocol/ftp/ftp.h"
 #include "protocol/gopher/gopher.h"
 #include "protocol/http/http.h"
@@ -57,6 +59,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "data",	   0, data_protocol_handler,		0, 0, 1, 0 },
 	{ "file",	   0, file_protocol_handler,		1, 0, 0, 0 },
 	{ "finger",	  79, finger_protocol_handler,		1, 1, 0, 0 },
+	{ "fsp",	  21, fsp_protocol_handler,		1, 1, 0, 0 },
 	{ "ftp",	  21, ftp_protocol_handler,		1, 1, 0, 0 },
 	{ "gopher",	  70, gopher_protocol_handler,		1, 1, 0, 0 },
 	{ "http",	  80, http_protocol_handler,		1, 1, 0, 0 },
@@ -274,8 +277,14 @@ static struct module *protocol_submodules[] = {
 	&bittorrent_protocol_module,
 #endif
 	&file_protocol_module,
+#ifdef CONFIG_CGI
+	&cgi_protocol_module,
+#endif
 #ifdef CONFIG_FINGER
 	&finger_protocol_module,
+#endif
+#ifdef CONFIG_FSP
+	&fsp_protocol_module,
 #endif
 #ifdef CONFIG_FTP
 	&ftp_protocol_module,

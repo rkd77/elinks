@@ -35,7 +35,7 @@ Most options can be set in the user interface or config file, so usually you
 do not need to care about them. Note that this list is roughly equivalent to
 the output of running ELinks with the option `--long-help`.
 
-include::option-command.txt[]
+include::{builddir}option-command.txt[]
 
 ENVIRONMENT VARIABLES
 ---------------------

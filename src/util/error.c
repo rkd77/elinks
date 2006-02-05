@@ -192,7 +192,7 @@ done_log(void)
 		       loctime);
 	errbuf[len] = '\0';
 
-	fprintf(log_file, "[%-5s %-13s %4s]: Log stopped at %s\n\n\n",
+	fprintf(log_file, "[%-5s %-15s %4s]: Log stopped at %s\n\n\n",
 		"", "", "", errbuf);
 
 	fclose(log_file);
@@ -224,7 +224,7 @@ elinks_log(unsigned char *msg, unsigned char *file, int line,
 			       loctime);
 		errbuf[len] = '\0';
 
-		fprintf(log_file, "\n\n[%-5s %-13s %4s]: Log started at %s\n",
+		fprintf(log_file, "\n\n[%-5s %-15s %4s]: Log started at %s\n",
 			"type", "file", "line", errbuf);
 
 		atexit(done_log);
@@ -238,7 +238,7 @@ elinks_log(unsigned char *msg, unsigned char *file, int line,
 
 	va_start(params, fmt);
 
-	snprintf(errbuf, sizeof(errbuf), "[%-5s %-13s %4d]: %s",
+	snprintf(errbuf, sizeof(errbuf), "[%-5s %-15s %4d]: %s",
 		 msg, file, line,  fmt);
 
 	vfprintf(log_file, errbuf, params);

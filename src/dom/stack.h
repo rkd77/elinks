@@ -1,6 +1,7 @@
 #ifndef EL_DOM_STACK_H
 #define EL_DOM_STACK_H
 
+#include "dom/code.h"
 #include "dom/node.h"
 #include "util/error.h"
 #include "util/hash.h"
@@ -12,7 +13,8 @@ struct dom_stack;
 /** DOM stack callback
  *
  * Used by contexts, for 'hooking' into the node traversing. */
-typedef void (*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
+typedef enum dom_code
+	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 
 #define DOM_STACK_MAX_DEPTH	4096
 
@@ -230,7 +232,7 @@ void done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *c
  *
  * If an error occurs the node is released with ref:[done_dom_node] and NULL is
  * returned. Else the pushed node is returned. */
-struct dom_node *push_dom_node(struct dom_stack *stack, struct dom_node *node);
+enum dom_code push_dom_node(struct dom_stack *stack, struct dom_node *node);
 
 /** Pop the top stack state
  *

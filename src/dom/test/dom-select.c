@@ -38,9 +38,9 @@ main(int argc, char *argv[])
 	struct sgml_parser *parser;
 	struct dom_select *select;
 	enum sgml_document_type doctype = SGML_DOCTYPE_HTML;
-	struct dom_string uri = INIT_DOM_STRING("dom://test", -1);
-	struct dom_string source = INIT_DOM_STRING("(no source)", -1);
-	struct dom_string selector = INIT_DOM_STRING("(no select)", -1);
+	struct dom_string uri = STATIC_DOM_STRING("dom://test");
+	struct dom_string source = STATIC_DOM_STRING("(no source)");
+	struct dom_string selector = STATIC_DOM_STRING("(no select)");
 	int i;
 
 	for (i = 1; i < argc; i++) {
