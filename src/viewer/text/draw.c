@@ -373,5 +373,4 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 	draw_doc(ses, doc_view, 1);
 	if (frames) draw_frames(ses);
 	print_screen_status(ses);
-	redraw_from_window(ses->tab);
 }
