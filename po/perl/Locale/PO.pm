@@ -7,9 +7,25 @@ use warnings;
 package Locale::PO;
 
 use Carp;
-use fields qw(msgid msgid_plural msgstr msgstr_n
-              comment automatic reference
-              fuzzy c_format php_format);
+
+# Internally, each Locale::PO object is a reference to a hash
+# (or pseudo-hash, for Perl < 5.9) with the following keys.
+# The format of the hash is subject to change; other modules
+# should use the accessor methods instead.
+use fields
+    # Multiline strings including quotes and newlines, but excluding
+    # the initial keywords and any "#~ " obsoletion marks.  Can be
+    # either undef or "" if not present.  These end with a newline
+    # if not empty.
+    qw(msgid msgid_plural msgstr),
+    # A reference to a hash where keys are numbers (as strings)
+    # and values are in the same format as $self->{msgstr}.
+    qw(msgstr_n),
+    # Multiline strings excluding the trailing newline and comment
+    # markers, or undef if there are no such lines.
+    qw(comment automatic reference),
+    # Flags; see the accessors with the same names.
+    qw(fuzzy c_format php_format);
 
 #use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 #use locale;
@@ -256,6 +272,8 @@ sub load_file {
     my $po;
     my %buffer;
     my $last_buffer;
+    local $/ = "\n";
+    local $_;
     open( IN, "<$file" ) or return undef;
 
     while (<IN>) {
@@ -607,6 +625,11 @@ Documented the C<php_format> method.
 POD changes:
 Greatly expanded the L</BUGS> section.
 Reformatted this list of changes.
+
+=item Z<>2006-02-05  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+Added comments about the fields of Locale::PO objects.
+The load_file function binds $/ and $_ dynamically. 
 
 =back
 
