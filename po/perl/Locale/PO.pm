@@ -428,6 +428,7 @@ Locale::PO - Perl module for manipulating .po entries from GNU gettext
   [$string =] $po->reference([new string]);
   [$value =] $po->fuzzy([value]);
   [$value =] $po->c_format([value]);
+  [$value =] $po->php_format([value]);
   print $po->dump;
 
   $quoted_string = $po->quote($string);
@@ -435,8 +436,10 @@ Locale::PO - Perl module for manipulating .po entries from GNU gettext
 
   $aref = Locale::PO->load_file_asarray(<filename>);
   $href = Locale::PO->load_file_ashash(<filename>);
+  $ref = Locale::PO->load_file(<filename>,$ashash);
   Locale::PO->save_file_fromarray(<filename>,$aref);
   Locale::PO->save_file_fromhash(<filename>,$href);
+  Locale::PO->save_file(<filename>,$ref,$fromhash);
 
 =head1 DESCRIPTION
 
@@ -583,6 +586,13 @@ the file. The hash keys are the untranslated strings, so this is a cheap
 way to remove duplicates. The method will prefer to keep entries that
 have been translated.
 
+=item load_file
+
+This method behaves as C<load_file_asarray> if the C<$ashash>
+parameter is 0, or as C<load_file_ashash> if C<$ashash> is 1.
+Your code will probably be easier to understand if you call either
+of those methods instead of this one.
+
 =item save_file_fromarray
 
 Given a filename and a reference to a list of Locale::PO objects,
@@ -593,6 +603,13 @@ saves those objects to the file, creating a po-file.
 Given a filename and a reference to a hash of Locale::PO objects,
 saves those objects to the file, creating a po-file. The entries
 are sorted alphabetically by untranslated string.
+
+=item save_file
+
+This method behaves as C<save_file_fromarray> if the C<$fromhash>
+parameter is 0, or as C<save_file_fromhash> if C<$fromhash> is 1.
+Your code will probably be easier to understand if you call either
+of those methods instead of this one.
 
 =back
 
@@ -635,6 +652,9 @@ Reformatted this list of changes.
 Added comments about the fields of Locale::PO objects.
 The load_file function binds $/ and $_ dynamically.
 Renamed normalize_str to _normalize_str, and dump_multi_comment to _dump_multi_comment.
+
+POD changes:
+Documented C<load_file> and C<save_file>.
 
 =back
 
