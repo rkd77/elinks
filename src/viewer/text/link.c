@@ -861,8 +861,8 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 }
 
 static int
-call_onsubmit_or_submit(struct session *ses, struct document_view *doc_view,
-			struct form_control *fc, int do_reload)
+call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
+			 struct form_control *fc, int do_reload)
 {
 	struct uri *uri = NULL;
 	enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
@@ -881,7 +881,7 @@ call_onsubmit_or_submit(struct session *ses, struct document_view *doc_view,
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
-			unsigned char *ret = form->onsubmit;
+			unsigned char *ret = fc->form->onsubmit;
 			int res;
 
 			if (vs->ecmascript_fragile)
@@ -893,7 +893,7 @@ call_onsubmit_or_submit(struct session *ses, struct document_view *doc_view,
 			while ((ret = strstr(ret, "return ")))
 				while (*ret != ' ') *ret++ = ' ';
 
-			add_to_string(&code, form->onsubmit);
+			add_to_string(&code, fc->form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);
 			done_string(&code);
 			/* If the user presses Enter in a text field,
@@ -928,7 +928,7 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	if (link_is_form(link)) {
 		struct form_control *fc = link->data.form_control;
 
-		if (!call_onsubmit_or_submit(ses, doc_view, fc, do_reload))
+		if (!call_onsubmit_and_submit(ses, doc_view, fc, do_reload))
 			return NULL;
 		else
 			return link;
