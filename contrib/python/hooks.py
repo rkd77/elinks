@@ -36,6 +36,9 @@ def pre_format_html_hook(url, html):
 	if re.search("cygwin\.com", url):
 		html2 = re.sub("<body bgcolor=\"#000000\" color=\"#000000\"", "<body bgcolor=\"#ffffff\" color=\"#000000\"", html)
 		return html2
+	if re.search("https://www.mbank.com.pl/ib_navibar_3.asp", url):
+		html2 = re.sub("<td valign=\"top\"><img", "<tr><td valign=\"top\"><img", html)
+		return html2
 	return None
 
 def proxy_for_hook(url):
