@@ -967,10 +967,7 @@ tp_display(struct type_query *type_query)
 		new->callback = (download_callback_T *) doc_loading_callback;
 		new->data = ses;
 
-		if (is_in_progress_state(old->state))
-			move_download(old, new, PRI_MAIN);
-		else
-			new->state = old->state;
+		move_download(old, new, PRI_MAIN);
 	}
 
 	display_timer(ses);

@@ -604,11 +604,19 @@ doc_loading_callback(struct download *download, struct session *ses)
 	print_screen_status(ses);
 
 #ifdef CONFIG_GLOBHIST
-	if (download->conn && download->pri != PRI_CSS) {
+	if (download->pri != PRI_CSS) {
 		unsigned char *title = ses->doc_view->document->title;
-		struct uri *uri = download->conn->proxied_uri;
+		struct uri *uri;
 
-		add_global_history_item(struri(uri), title, time(NULL));
+		if (download->conn)
+			uri = download->conn->proxied_uri;
+		else if (download->cached)
+			uri = download->cached->uri;
+		else
+			uri = NULL;
+
+		if (uri)
+			add_global_history_item(struri(uri), title, time(NULL));
 	}
 #endif
 
