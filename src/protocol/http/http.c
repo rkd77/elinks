@@ -470,14 +470,12 @@ http_end_request(struct connection *conn, enum connection_state state,
 {
 	shutdown_connection_stream(conn);
 
-	if (state == S_OK && conn->cached) {
-		normalize_cache_entry(conn->cached, !notrunc ? conn->from : -1);
-	}
-
 	if (conn->info && !((struct http_connection_info *) conn->info)->close
 	    && (!conn->socket->ssl) /* We won't keep alive ssl connections */
 	    && (!get_opt_bool("protocol.http.bugs.post_no_keepalive")
 		|| !conn->uri->post)) {
+		if (state == S_OK && conn->cached)
+			normalize_cache_entry(conn->cached, !notrunc ? conn->from : -1);
 		set_connection_state(conn, state);
 		add_keepalive_connection(conn, HTTP_KEEPALIVE_TIMEOUT, NULL);
 	} else {

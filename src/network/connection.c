@@ -724,6 +724,9 @@ abort_connection(struct connection *conn, enum connection_state state)
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
+	if (state == S_OK && conn->cached)
+		normalize_cache_entry(conn->cached, conn->from);
+
 	set_connection_state(conn, state);
 
 	if (conn->running) interrupt_connection(conn);

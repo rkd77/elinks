@@ -28,15 +28,6 @@ struct module finger_protocol_module = struct_module(
 );
 
 static void
-finger_end_request(struct connection *conn, enum connection_state state)
-{
-	if (state == S_OK && conn->cached)
-		normalize_cache_entry(conn->cached, conn->from);
-
-	abort_connection(conn, state);
-}
-
-static void
 finger_get_response(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
@@ -50,7 +41,7 @@ finger_get_response(struct socket *socket, struct read_buffer *rb)
 	conn->cached = cached;
 
 	if (socket->state == SOCKET_CLOSED) {
-		finger_end_request(conn, S_OK);
+		abort_connection(conn, S_OK);
 		return;
 	}
 

@@ -475,10 +475,8 @@ end_smb_connection(struct connection *conn)
 
 	if (smb_get_cache(conn)) return;
 
-	if (conn->from) {
-		normalize_cache_entry(conn->cached, conn->from);
+	if (conn->from)
 		goto bye;
-	}
 
 	/* Ensure termination by LF + NUL chars, memory for this
 	 * was reserved by smb_read_text(). */
@@ -507,7 +505,6 @@ end_smb_connection(struct connection *conn)
 
 		add_fragment(conn->cached, 0, page.source, page.length);
 		conn->from += page.length;
-		normalize_cache_entry(conn->cached, page.length);
 		done_string(&page);
 
 		mem_free_set(&conn->cached->content_type, stracpy("text/html"));

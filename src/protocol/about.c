@@ -114,8 +114,6 @@ about_protocol_handler(struct connection *conn)
 		}
 #endif
 
-		normalize_cache_entry(cached, len);
-
 		/* Set content to known type */
 		mem_free_set(&cached->content_type, stracpy("text/html"));
 	}

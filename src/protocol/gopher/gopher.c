@@ -346,7 +346,6 @@ end_gopher_connection(struct connection *conn, enum connection_state state)
 			conn->from -= 3;
 		}
 #endif
-		normalize_cache_entry(conn->cached, conn->from);
 	}
 
 	abort_connection(conn, state);

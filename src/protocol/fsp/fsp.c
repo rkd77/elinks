@@ -232,8 +232,6 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 	}
 
 	if (!len) {
-		if (conn->from)
-			normalize_cache_entry(conn->cached, conn->from);
 		abort_connection(conn, S_OK);
 		return;
 	}

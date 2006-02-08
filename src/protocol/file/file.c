@@ -279,6 +279,7 @@ file_protocol_handler(struct connection *connection)
 
 		} else {
 			add_fragment(cached, 0, page.source, page.length);
+			connection->from += page.length;
 
 			if (!cached->content_type) {
 				unsigned char *ctype = null_or_stracpy(type);
@@ -287,15 +288,10 @@ file_protocol_handler(struct connection *connection)
 				 * allocation. */
 				if (type && !ctype)
 					state = S_OUT_OF_MEM;
-				else
-					normalize_cache_entry(cached, page.length);
 
 				/* Setup file read or directory listing for
 				 * viewing. */
 				mem_free_set(&cached->content_type, ctype);
-
-			} else {
-				normalize_cache_entry(cached, page.length);
 			}
 
 			done_string(&page);
