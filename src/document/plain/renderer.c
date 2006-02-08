@@ -175,12 +175,12 @@ get_uri_length(unsigned char *line, int length)
 static int
 print_document_link(struct plain_renderer *renderer, int lineno,
 		    unsigned char *line, int line_pos, int width,
-		    int expanded, struct screen_char *pos)
+		    int expanded, struct screen_char *pos, int cells)
 {
 	struct document *document = renderer->document;
 	unsigned char *start = &line[line_pos];
 	int len = get_uri_length(start, width - line_pos);
-	int screen_column = line_pos + expanded;
+	int screen_column = cells + expanded;
 	struct link *new_link;
 	int link_end = line_pos + len;
 	unsigned char saved_char;
@@ -235,9 +235,9 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
 #ifdef CONFIG_UTF_8
-	unsigned char *end, *text;
 	int utf8 = document->options.utf8;
 #endif /* CONFIG_UTF_8 */
+	int cells = 0;
 	int lineno = renderer->lineno;
 	int expanded = 0;
 	int width = line_width;
@@ -249,13 +249,31 @@ add_document_line(struct plain_renderer *renderer,
 	if (!line) return 0;
 
 	/* Now expand tabs */
-	for (line_pos = 0; line_pos < width; line_pos++) {
+	for (line_pos = 0; line_pos < width;) {
 		unsigned char line_char = line[line_pos];
+		int charlen = 1;
+		int cell = 1;
+#ifdef CONFIG_UTF_8
+		unicode_val_T data;
+
+		if (utf8) {
+			unsigned char *line_char2 = &line[line_pos];
+			charlen = utf8charlen(&line_char);
+			data = utf_8_to_unicode(&line_char2, &line[width]);
+
+			if (data == UCS_NO_CHAR) {
+				line_pos += charlen;
+				continue;
+			}
+
+			cell = unicode_to_cell(data);
+		}
+#endif /* CONFIG_UTF_8 */
 
 		if (line_char == ASCII_TAB
-		    && (line_pos + 1 == width
-			|| line[line_pos + 1] != ASCII_BS)) {
-			int tab_width = 7 - ((line_pos + expanded) & 7);
+		    && (line_pos + charlen == width
+		      	|| line[line_pos + charlen] != ASCII_BS)) {
+		  	int tab_width = 7 - ((cells + expanded) & 7);
 
 			expanded += tab_width;
 		} else if (line_char == ASCII_BS) {
@@ -276,32 +294,50 @@ add_document_line(struct plain_renderer *renderer,
 				expanded--;
 #endif
 		}
+		line_pos += charlen;
+		cells += cell;
 	}
 
 	assert(expanded >= 0);
 
-#ifdef CONFIG_UTF_8
-	if (utf8) goto utf_8;
-#endif /* CONFIG_UTF_8 */
 	startpos = pos = realloc_line(document, width + expanded, lineno);
 	if (!pos) {
 		mem_free(line);
 		return 0;
 	}
 
+	cells = 0;
 	expanded = 0;
-	for (line_pos = 0; line_pos < width; line_pos++) {
+	for (line_pos = 0; line_pos < width;) {
 		unsigned char line_char = line[line_pos];
 		unsigned char next_char, prev_char;
+		int charlen = 1;
+		int cell = 1;
+#ifdef CONFIG_UTF_8
+		unicode_val_T data;
+
+		if (utf8) {
+			unsigned char *line_char2 = &line[line_pos];
+			charlen = utf8charlen(&line_char);
+			data = utf_8_to_unicode(&line_char2, &line[width]);
+
+			if (data == UCS_NO_CHAR) {
+				line_pos += charlen;
+				continue;
+			}
+ 
+			cell = unicode_to_cell(data);
+		}
+#endif /* CONFIG_UTF_8 */
 
 		prev_char = line_pos > 0 ? line[line_pos - 1] : '\0';
-		next_char = (line_pos + 1 < width) ? line[line_pos + 1]
-						   : '\0';
+		next_char = (line_pos + charlen < width) ? 
+		  		line[line_pos + charlen] : '\0';
 
 		/* Do not expand tabs that precede back-spaces; this saves the
 		 * back-space code some trouble. */
 		if (line_char == ASCII_TAB && next_char != ASCII_BS) {
-			int tab_width = 7 - ((line_pos + expanded) & 7);
+			int tab_width = 7 - ((cells + expanded) & 7);
 
 			expanded += tab_width;
 
@@ -313,7 +349,7 @@ add_document_line(struct plain_renderer *renderer,
 			*template = saved_renderer_template;
 
 		} else if (line_char == ASCII_BS) {
-			if (!(expanded + line_pos)) {
+			if (!(expanded + cells)) {
 				/* We've backspaced to the start of the line */
 				continue;
 			}
@@ -327,8 +363,8 @@ add_document_line(struct plain_renderer *renderer,
 				/* x^H_ becomes _^Hx */
 				if (line_pos - 1 >= 0)
 					line[line_pos - 1] = next_char;
-				if (line_pos + 1 < width)
-					line[line_pos + 1] = prev_char;
+				if (line_pos + charlen < width)
+					line[line_pos + charlen] = prev_char;
 
 				/* Go back and reparse the swapped characters */
 				if (line_pos - 2 >= 0)
@@ -388,161 +424,53 @@ add_document_line(struct plain_renderer *renderer,
 								  line_pos,
 								  width,
 								  expanded,
-								  pos);
+								  pos, cells);
 			}
 
 			if (added_chars) {
 				line_pos += added_chars - 1;
 				pos += added_chars;
 			} else {
-				if (!isscreensafe(line_char))
-					line_char = '.';
-				template->data = line_char;
-				copy_screen_chars(pos++, template, 1);
-
-				/* Detect copy of nul chars to screen, this
-				 * should not occur. --Zas */
-				assert(line_char);
-			}
-
-			*template = saved_renderer_template;
-		}
-	}
 #ifdef CONFIG_UTF_8
-	goto end;
-utf_8:
-	end = line + width;
-	startpos = pos = realloc_line(document, width + expanded, lineno);
-	if (!pos) {
-		mem_free(line);
-		return 0;
-	}
+				if (utf8) {
+					unsigned char *text = &line[line_pos];
+					unicode_val_T data =
+						utf_8_to_unicode(&text,
+								&line[width]);
 
-	expanded = 0;
-	for (text = line; text < end; ) {
-		unsigned char line_char = *text;
-		unsigned char next_char, prev_char;
+					if (data == UCS_NO_CHAR) {
+						line_pos += charlen;
+						continue;
+					}
 
-		line_pos = text - line;
-		prev_char = text > line ? *(text - 1) : '\0';
-		next_char = (text + 1 < end) ? *(text + 1) : '\0';
+					template->data = (uint16_t)data;
+					copy_screen_chars(pos++, template, 1);
 
-		/* Do not expand tabs that precede back-spaces; this saves the
-		 * back-space code some trouble. */
-		if (line_char == ASCII_TAB && next_char != ASCII_BS) {
-			int tab_width = 7 - ((line_pos + expanded) & 7);
+					if (unicode_to_cell(data) == 2) {
+						template->data = UCS_NO_CHAR;
+						copy_screen_chars(pos++,
+								template, 1);
+					}
+				} else
+#endif /* CONFIG_UTF_8 */
+				{
+					if (!isscreensafe(line_char))
+						line_char = '.';
+					template->data = line_char;
+					copy_screen_chars(pos++, template, 1);
 
-			expanded += tab_width;
-
-			template->data = ' ';
-			do
-				copy_screen_chars(pos++, template, 1);
-			while (tab_width--);
-
-			*template = saved_renderer_template;
-			text++;
-		} else if (line_char == ASCII_BS) {
-			if (!(expanded + line_pos)) {
-				/* We've backspaced to the start of the line */
-				if (expanded > 0)
-					expanded--; /* Don't count it */
-				continue;
-			}
-
-			if (pos > startpos)
-				pos--;  /* Backspace */
-
-			/* Handle x^H_ as _^Hx, but prevent an infinite loop
-			 * swapping two underscores. */
-			if (next_char == '_'  && prev_char != '_') {
-				/* x^H_ becomes _^Hx */
-				if (text - 1 >= line)
-					*(text - 1) = next_char;
-				if (text + 1 < end)
-					*(text + 1) = prev_char;
-
-				/* Go back and reparse the swapped characters */
-				if (text - 2 >= line)
-					text -= 2;
-				continue;
-			}
-
-			if (expanded - 2 >= 0) {
-				/* Don't count the backspace character or the
-				 * deleted character when returning the line's
-				 * width or when expanding tabs. */
-				expanded -= 2;
-			}
-
-			if (pos->data == '_' && next_char == '_') {
-				/* Is _^H_ an underlined underscore
-				 * or an emboldened underscore? */
-
-				if (expanded + line_pos >= 0
-				    && pos - 1 >= startpos
-				    && (pos - 1)->attr) {
-					/* There is some preceding text,
-					 * and it has an attribute; copy it */
-					template->attr |= (pos - 1)->attr;
-				} else {
-					/* Default to bold; seems more useful
-					 * than underlining the underscore */
-					template->attr |= SCREEN_ATTR_BOLD;
+					/* Detect copy of nul chars to screen,
+					 * this should not occur. --Zas */
+					assert(line_char);
 				}
-
-			} else if (pos->data == '_') {
-				/* Underline _^Hx */
-
-				template->attr |= SCREEN_ATTR_UNDERLINE;
-
-			} else if (pos->data == next_char) {
-				/* Embolden x^Hx */
-
-				template->attr |= SCREEN_ATTR_BOLD;
-			}
-
-			/* Handle _^Hx^Hx as both bold and underlined */
-			if (template->attr)
-				template->attr |= pos->attr;
-			text++;
-		} else {
-			int added_chars = 0;
-
-			if (document->options.plain_display_links
-			    && isalpha(line_char) && isalpha(next_char)) {
-				/* We only want to check for a URI if there are
-				 * at least two consecutive alphabetic
-				 * characters, or if we are at the very start of
-				 * the line.  It improves performance a bit.
-				 * --Zas */
-				added_chars = print_document_link(renderer,
-								  lineno, line,
-								  line_pos,
-								  width,
-								  expanded,
-								  pos);
-			}
-
-			if (added_chars) {
-				text += added_chars;
-				pos += added_chars;
-			} else {
-				unicode_val_T data = utf_8_to_unicode(&text, end);
-
-				if (data == UCS_NO_CHAR) text++;
-				template->data = (uint16_t)data;
-				copy_screen_chars(pos++, template, 1);
-
-				/* Detect copy of nul chars to screen, this
-				 * should not occur. --Zas */
-				assert(line_char);
 			}
 
 			*template = saved_renderer_template;
 		}
+
+		line_pos += charlen;
+		cells += cell;
 	}
-end:
-#endif /* CONFIG_UTF_8 */
 	mem_free(line);
 
 	realloc_line(document, pos - startpos, lineno);
@@ -596,10 +524,11 @@ add_document_lines(struct plain_renderer *renderer)
 		int last_space = 0;
 		int tab_spaces = 0;
 		int step = 0;
-		int doc_width = int_min(renderer->max_width, length);
+ 		int cells = 0;
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
-		for (width = 0; width + tab_spaces < doc_width; width++) {
+ 		for (width = 0; (width < length) && 
+ 				(cells < renderer->max_width);) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)
@@ -617,6 +546,22 @@ add_document_lines(struct plain_renderer *renderer)
 			} else {
 				only_spaces = 0;
 				was_spaces = 0;
+			}
+#ifdef CONFIG_UTF_8
+			if (renderer->document->options.utf8) {
+				unsigned char *text = &source[width];
+				unicode_val_T data = utf_8_to_unicode(&text,
+							&source[length]);
+
+				if (data == UCS_NO_CHAR) return;
+
+				cells += unicode_to_cell(data);
+				width += utf8charlen(&source[width]);
+			} else
+#endif /* CONFIG_UTF_8 */
+			{
+				cells++;
+				width++;
 			}
 		}
 
@@ -645,6 +590,7 @@ add_document_lines(struct plain_renderer *renderer)
 				width -= was_spaces;
 				step += was_spaces;
 			}
+
 			if (!step && (width < length) && last_space) {
 				width = last_space;
 				step = 1;
