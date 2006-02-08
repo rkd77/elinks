@@ -252,6 +252,38 @@ strlen_utf8(unsigned char **str)
 	return x;
 }
 
+
+/* 
+ * Find out number of standard terminal collumns needed for displaying symbol
+ * (glyph) which represents Unicode character c.
+ * TODO: Use wcwidth when it is available.
+ *
+ * @return	2 for double-width glyph, 1 for others.
+ * 		TODO: May be extended to return 0 for zero-width glyphs
+ * 		(like composing, maybe unprintable too).
+ */
+inline int
+unicode_to_cell(unicode_val_T c)
+{
+	if (c >= 0x1100
+		&& (c <= 0x115f			/* Hangul Jamo */
+		|| c == 0x2329
+		|| c == 0x232a
+		|| (c >= 0x2e80 && c <= 0xa4cf
+			&& c != 0x303f)		/* CJK ... Yi */
+		|| (c >= 0xac00 && c <= 0xd7a3)	/* Hangul Syllables */
+		|| (c >= 0xf900 && c <= 0xfaff)	/* CJK Compatibility
+								Ideographs */
+		|| (c >= 0xfe30 && c <= 0xfe6f)	/* CJK Compatibility Forms */
+		|| (c >= 0xff00 && c <= 0xff60)	/* Fullwidth Forms */
+		|| (c >= 0xffe0 && c <= 0xffe6)
+		|| (c >= 0x20000 && c <= 0x2fffd)
+		|| (c >= 0x30000 && c <= 0x3fffd)))
+		return 2;
+
+	return 1;	
+}
+
 inline unicode_val_T
 utf_8_to_unicode(unsigned char **string, unsigned char *end)
 {

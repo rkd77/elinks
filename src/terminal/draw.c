@@ -114,6 +114,26 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 	if (!screen_char) return;
 
 	screen_char->data = data;
+	
+#ifdef CONFIG_UTF_8
+	if (unicode_to_cell(data) == 2) {
+
+#ifdef CONFIG_DEBUG
+		/* Detect attempt to draw double-width char on the last
+		 * collumn of terminal. */
+		if (x+1 > term->width) 
+			INTERNAL("Attempt to draw double-width glyph on "
+					"last collumn!!");
+#endif /* CONFIG_DEBUG */
+
+		screen_char = get_char(term, x+1, y);
+
+		if (!screen_char) return;
+
+		screen_char->data = UCS_NO_CHAR;
+	}
+#endif /* CONFIG_UTF_8 */	
+
 	set_screen_dirty(term->screen, y, y);
 }
 
@@ -315,7 +335,25 @@ draw_text_utf8(struct terminal *term, int x, int y,
 			       get_opt_int_tree(term->spec, "colors"));
 	}
 
-	for (pos = start + 1; x < term->width; x++, pos++) {
+	pos = start + 1;
+
+	if (unicode_to_cell(data) == 2) {
+
+#ifdef CONFIG_DEBUG
+		/* Detect attempt to draw double-width char on the last
+		 * collumn of terminal. */
+		if (x+1 > term->width) 
+			INTERNAL("Attempt to draw double-width character on "
+					"last collumn!!");
+#endif /* CONFIG_DEBUG */
+		
+		pos->data = UCS_NO_CHAR;
+		if (color) copy_screen_chars(pos, start, 1);
+		x++;
+		pos++;
+	}
+
+	for (; x < term->width; x++, pos++) {
 		data = utf_8_to_unicode(&text, end);
 		if (data == UCS_NO_CHAR) break;
 		if (color) copy_screen_chars(pos, start, 1);

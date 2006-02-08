@@ -56,6 +56,7 @@ void free_conv_table(void);
 #ifdef CONFIG_UTF_8
 inline unsigned char *encode_utf_8(unicode_val_T);
 inline int utf8charlen(const unsigned char *);
+inline int unicode_to_cell(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
 inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF_8 */
