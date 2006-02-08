@@ -250,11 +250,11 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 	struct document *document = renderer->document;
 	struct conv_table *convert = renderer->convert_table;
 	enum convert_string_mode mode = renderer->convert_mode;
+	int x, charlen;
 #ifdef CONFIG_UTF_8
 	int utf8 = document->options.utf8;
-	unsigned char *end, *text;
+	unsigned char *end;
 #endif /* CONFIG_UTF_8 */
-	int x;
 
 
 	assert(renderer && template && string && length);
@@ -271,14 +271,14 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 	add_search_node(renderer, length);
 
 #ifdef CONFIG_UTF_8
-	if (utf8) goto utf_8;
+	end = string + length;
 #endif /* CONFIG_UTF_8 */
-	for (x = 0; x < length; x++, renderer->canvas_x++) {
-		unsigned char data = string[x];
+	for (x = 0, charlen = 1; x < length;x += charlen, renderer->canvas_x++) {
+		unsigned char *text = &string[x];
 
 		/* This is mostly to be able to break out so the indentation
 		 * level won't get to high. */
-		switch (data) {
+		switch (*text) {
 		case ASCII_TAB:
 		{
 			int tab_width = 7 - (X(renderer) & 7);
@@ -293,52 +293,33 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			 * ``main loop'' add the actual tab char. */
 			for (; tab_width-- > 0; renderer->canvas_x++)
 				copy_screen_chars(POS(renderer), template, 1);
+			charlen = 1;
 			break;
 		}
 		default:
-			template->data = isscreensafe(data) ? data : '.';
-		}
-
-		copy_screen_chars(POS(renderer), template, 1);
-	}
 #ifdef CONFIG_UTF_8
-	goto end;
-utf_8:
-	end = string + length;
-	for (text = string; text < end; renderer->canvas_x++) {
-		unsigned char data = *text;
-		unicode_val_T d2;
+			if (utf8) {
+				unicode_val_T data;
+				charlen = utf8charlen(text);
+				data = utf_8_to_unicode(&text, end);
 
-		/* This is mostly to be able to break out so the indentation
-		 * level won't get to high. */
-		switch (data) {
-		case ASCII_TAB:
-		{
-			int tab_width = 7 - (X(renderer) & 7);
-			int width = WIDTH(renderer, end - text + tab_width);
+				template->data = (uint16_t)data;
 
-			template->data = ' ';
+				if (unicode_to_cell(data) == 2) {
+					copy_screen_chars(POS(renderer),
+							template, 1);
 
-			if (!realloc_line(document, width, Y(renderer)))
-				break;
+					X(renderer)++;
+					template->data = UCS_NO_CHAR;
+				}
 
-			/* Only loop over the expanded tab chars and let the
-			 * ``main loop'' add the actual tab char. */
-			for (; tab_width-- > 0; renderer->canvas_x++)
-				copy_screen_chars(POS(renderer), template, 1);
-			text++;
-			break;
-		}
-		default:
-			d2 = utf_8_to_unicode(&text, end);
-			if (d2 == UCS_NO_CHAR) text++;
-			template->data = (uint16_t)d2;
+			} else
+#endif /* CONFIG_UTF_8 */
+				template->data = isscreensafe(*text) ? *text:'.';
 		}
 
 		copy_screen_chars(POS(renderer), template, 1);
 	}
-end:
-#endif /* CONFIG_UTF_8 */
 	mem_free(string);
 }
 
