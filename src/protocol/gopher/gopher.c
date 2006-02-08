@@ -329,29 +329,6 @@ init_gopher_connection_info(struct connection *conn)
 }
 
 
-static void
-end_gopher_connection(struct connection *conn, enum connection_state state)
-{
-	if (state == S_OK && conn->cached) {
-#if 0
-		/* Seeing dots at all files .. trying to remove the end-marker
-		 * ".\r\n" */
-		struct gopher_connection_info *gopher = conn->info;
-
-		if (gopher
-		    && gopher->entity
-		    && gopher->entity->type != GOPHER_DIRECTORY
-		    && gopher->entity->type != GOPHER_INDEX
-		    && gopher->entity->type != GOPHER_CSO) {
-			conn->from -= 3;
-		}
-#endif
-	}
-
-	abort_connection(conn, state);
-}
-
-
 /* Add a link. The title of the destination is set, as there is no way of
  * knowing what the title is when we arrive.
  *
@@ -712,7 +689,7 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 	assert(gopher && gopher->entity);
 
 	if (!conn->cached && !init_gopher_cache_entry(conn)) {
-		end_gopher_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
 
@@ -762,7 +739,7 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 	}
 
 	if (state != S_TRANS) {
-		end_gopher_connection(conn, state);
+		abort_connection(conn, state);
 		return;
 	}
 
@@ -796,7 +773,7 @@ gopher_protocol_handler(struct connection *conn)
 		 * - FM */
 		if (uri->datalen == 1 && *uri->data == GOPHER_CSO) {
 			/* FIXME: redirect_cache() */
-			end_gopher_connection(conn, S_GOPHER_CSO_ERROR);
+			abort_connection(conn, S_GOPHER_CSO_ERROR);
 		}
 		break;
 
@@ -809,7 +786,7 @@ gopher_protocol_handler(struct connection *conn)
 		 * - FM */
 		if (uri->datalen >= 1 && *uri->data == GOPHER_FILE) {
 			/* FIXME: redirect_cache() */
-			end_gopher_connection(conn, S_OK);
+			abort_connection(conn, S_OK);
 		}
 #endif
 		break;
@@ -818,7 +795,7 @@ gopher_protocol_handler(struct connection *conn)
 	state = init_gopher_connection_info(conn);
 	if (state != S_CONN) {
 		/* FIXME: Handle bad selector ... */
-		end_gopher_connection(conn, state);
+		abort_connection(conn, state);
 		return;
 	}
 
