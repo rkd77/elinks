@@ -217,8 +217,6 @@ nntp_end_request(struct connection *conn, enum connection_state state)
 		return;
 	}
 
-	set_connection_state(conn, state);
-
 	if (conn->state == S_OK) {
 		if (conn->cached) {
 			normalize_cache_entry(conn->cached, conn->from);
@@ -228,6 +226,7 @@ nntp_end_request(struct connection *conn, enum connection_state state)
 		 * grabing the keepalive connection will be able to go on. */
 	}
 
+	set_connection_state(conn, state);
 	add_keepalive_connection(conn, NNTP_KEEPALIVE_TIMEOUT, nntp_quit);
 }
 
