@@ -1046,6 +1046,7 @@ move_download(struct download *old, struct download *new,
 		 * connection has been detached and non-NULL otherwise. */
 		if (new->callback) {
 			new->conn = NULL;
+			new->progress = NULL;
 			new->callback(new, new->data);
 		}
 		return;
