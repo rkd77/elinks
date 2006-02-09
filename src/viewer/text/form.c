@@ -982,9 +982,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	if (fc->type == FC_RESET) {
 		do_reset_form(doc_view, form);
 		return NULL;
-	} else if (fc->type == FC_BUTTON) {
-		return NULL;
-	}
+	} 
 
 	if (!form->action
 	    || !init_string(&data))
