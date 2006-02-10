@@ -10,7 +10,7 @@
  * and it needs to be possible to adapt the string library to that. --jonas */
 
 struct dom_string {
-	size_t length;
+	unsigned int length;
 	unsigned char *string;
 };
 
