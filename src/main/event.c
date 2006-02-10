@@ -149,7 +149,7 @@ get_event_name(int id)
 	return events[id].name;
 }
 
-static inline void
+static void
 trigger_event_va(int id, va_list ap_init)
 {
 	int i;
