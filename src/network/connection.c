@@ -724,6 +724,9 @@ abort_connection(struct connection *conn, enum connection_state state)
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
+	if (state == S_OK && conn->cached)
+		normalize_cache_entry(conn->cached, conn->from);
+
 	set_connection_state(conn, state);
 
 	if (conn->running) interrupt_connection(conn);
@@ -1021,7 +1024,7 @@ void
 move_download(struct download *old, struct download *new,
 	      enum connection_priority newpri)
 {
-	struct connection *conn = old->conn;
+	struct connection *conn;
 
 	assert(old);
 
@@ -1029,7 +1032,9 @@ move_download(struct download *old, struct download *new,
 	 * example the file protocol loads it's object immediately. This is
 	 * catched by the result state check below. */
 
-	new->conn	= old->conn;
+	conn = old->conn;
+
+	new->conn	= conn;
 	new->cached	= old->cached;
 	new->prev_error	= old->prev_error;
 	new->progress	= old->progress;
@@ -1037,8 +1042,13 @@ move_download(struct download *old, struct download *new,
 	new->pri	= newpri;
 
 	if (is_in_result_state(old->state)) {
-		if (new->callback)
+		/* Ensure that new->conn is always "valid", that is NULL if the
+		 * connection has been detached and non-NULL otherwise. */
+		if (new->callback) {
+			new->conn = NULL;
+			new->progress = NULL;
 			new->callback(new, new->data);
+		}
 		return;
 	}
 

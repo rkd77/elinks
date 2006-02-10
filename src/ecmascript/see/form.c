@@ -859,7 +859,17 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		return;
 
 	if (p == s_action) {
-		mem_free_set(&form->action, string);
+		if (form->action) {
+			struct uri *uri =  get_uri(form->action, URI_HTTP_REFERRER_HOST);
+
+			if (uri) {
+				mem_free_set(&form->action, join_urls(uri, string));
+				mem_free(string);
+				done_uri(uri);
+			}
+		} else {
+			mem_free_set(&form->action, string);
+		}
 	} else if (p == s_encoding) {
 		if (!strcasecmp(string, "application/x-www-form-urlencoded")) {
 			form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET

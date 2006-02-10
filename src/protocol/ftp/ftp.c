@@ -1347,11 +1347,10 @@ out_of_mem:
 static void
 ftp_end_request(struct connection *conn, enum connection_state state)
 {
-	set_connection_state(conn, state);
-
-	if (conn->state == S_OK && conn->cached) {
+	if (state == S_OK && conn->cached) {
 		normalize_cache_entry(conn->cached, conn->from);
 	}
 
+	set_connection_state(conn, state);
 	add_keepalive_connection(conn, FTP_KEEPALIVE_TIMEOUT, NULL);
 }

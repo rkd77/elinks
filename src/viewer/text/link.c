@@ -860,18 +860,28 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 	}
 }
 
-static void
-try_submit_given_form(struct session *ses, struct document_view *doc_view,
-			struct form *form, int do_reload)
+static int
+call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
+			 struct form_control *fc, int do_reload)
 {
+	struct uri *uri = NULL;
+	enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
+
+	assert(fc->form); /* regardless of whether there is a FORM element */
+	if_assert_failed return 0;
+
 #ifdef CONFIG_ECMASCRIPT
-	if (form->onsubmit) {
+	/* If the form has multiple submit buttons, this does not
+	 * explicitly tell the ECMAScript code which of them was
+	 * pressed.  W3C DOM Level 3 doesn't seem to include such a
+	 * feature.  */
+	if (fc->form->onsubmit) {
 		struct string code;
 
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
-			unsigned char *ret = form->onsubmit;
+			unsigned char *ret = fc->form->onsubmit;
 			int res;
 
 			if (vs->ecmascript_fragile)
@@ -883,14 +893,24 @@ try_submit_given_form(struct session *ses, struct document_view *doc_view,
 			while ((ret = strstr(ret, "return ")))
 				while (*ret != ' ') *ret++ = ' ';
 
-			add_to_string(&code, form->onsubmit);
+			add_to_string(&code, fc->form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);
 			done_string(&code);
-			if (!res) return;
+			/* If the user presses Enter in a text field,
+			 * and document.browse.forms.auto_submit is
+			 * true, and the form has an onsubmit script
+			 * that returns false, then insert mode should
+			 * end, so return 1 here rather than 0. */
+			if (!res) return 1;
 		}
 	}
-#endif
-	submit_given_form(ses, doc_view, form, do_reload);
+#endif	/* CONFIG_ECMASCRIPT */
+
+	uri = get_form_uri(ses, doc_view, fc);
+	if (!uri) return 0;
+	goto_uri_frame(ses, uri, fc->form->target, mode);
+	done_uri(uri);
+	return 1;
 }
 
 struct link *
@@ -907,10 +927,11 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 
 	if (link_is_form(link)) {
 		struct form_control *fc = link->data.form_control;
-		struct form *form = fc->form;
 
-		try_submit_given_form(ses, doc_view, form, do_reload);
-		return link;
+		if (!call_onsubmit_and_submit(ses, doc_view, fc, do_reload))
+			return NULL;
+		else
+			return link;
 	} else
 		uri = get_link_uri(ses, doc_view, link);
 

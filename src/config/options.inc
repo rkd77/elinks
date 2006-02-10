@@ -724,7 +724,16 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_TREE("document", N_("URI passing"),
 		"uri_passing", OPT_SORT | OPT_AUTOCREATE,
-		N_("Rules for passing URIs to external commands.")),
+		N_("Rules for passing URIs to external commands. When one rule\n"
+		"is defined the link and tab menu will have a menu item that\n"
+		"makes it possible to pass the the link, frame or tab URI to\n"
+		"an external command. If several rules are defined the link and\n"
+		"tab menu will have a submenu of items for each rule. Note, this\n"
+		"is mostly useful for launching graphical viewers, since there\n"
+		"is not support for releasing the terminal while the command runs.\n"
+		"The action and submenus are also available by binding keys to\n"
+		"the frame-external-command, the link-external-command, and\n"
+		"the tab-external-command actions.")),
 
 	INIT_OPT_STRING("document.uri_passing", NULL,
 		"_template_", 0, "",

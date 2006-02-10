@@ -735,6 +735,15 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_FORM_ACTION:
+		if (form->action) {
+			struct uri *uri =  get_uri(form->action, URI_HTTP_REFERRER_HOST);
+
+			if (uri) {
+				mem_free_set(&form->action, join_urls(uri, jsval_to_string(ctx, vp)));
+				done_uri(uri);
+				break;
+			}
+		}
 		mem_free_set(&form->action, stracpy(jsval_to_string(ctx, vp)));
 		break;
 

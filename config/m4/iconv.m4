@@ -7,10 +7,12 @@ AC_DEFUN([AM_ICONV],
   dnl Some systems have iconv in libc, some have it in libiconv (OSF/1 and
   dnl those with the standalone portable GNU libiconv installed).
 
+  EL_SAVE_FLAGS
+
   AC_ARG_WITH([libiconv],
 [  --with-libiconv=DIR     search for libiconv in DIR/include and DIR/lib], [
     for dir in `echo "$withval" | tr : ' '`; do
-      if test -d $dir/include; then CPPFLAGS="$CPPFLAGS -I$dir/include"; fi
+      if test -d $dir/include; then CFLAGS="$CFLAGS -I$dir/include"; fi
       if test -d $dir/lib; then LDFLAGS="$LDFLAGS -L$dir/lib"; fi
     done
    ])
@@ -64,5 +66,7 @@ size_t iconv();
   LIBICONV=
   if test "$am_cv_lib_iconv" = yes; then
     LIBICONV="-liconv"
+  else
+    EL_RESTORE_FLAGS
   fi
 ])
