@@ -37,7 +37,6 @@
 #include "util/string.h"
 #include "util/time.h"
 
-
 /* TODO: move stuff from here to itrm.{c,h} and mouse.{c,h} */
 
 struct itrm *ditrm = NULL;
@@ -636,6 +635,7 @@ get_esc_code(unsigned char *str, int len, unsigned char *code, int *num)
 /* #define DEBUG_ITRM_QUEUE */
 
 #ifdef DEBUG_ITRM_QUEUE
+#include <stdio.h>
 #include <ctype.h>	/* isprint() isspace() */
 #endif
 
@@ -680,6 +680,19 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	case 'H': kbd.key = KBD_HOME; break;
 	case 'I': kbd.key = KBD_PAGE_UP; break;
 	case 'G': kbd.key = KBD_PAGE_DOWN; break;
+/* Free BSD */
+/*	case 'M': kbd.key = KBD_F1; break;*/
+	case 'N': kbd.key = KBD_F2; break;
+	case 'O': kbd.key = KBD_F3; break;
+	case 'P': kbd.key = KBD_F4; break;
+	case 'Q': kbd.key = KBD_F5; break;
+/*	case 'R': kbd.key = KBD_F6; break;*/
+	case 'S': kbd.key = KBD_F7; break;
+	case 'T': kbd.key = KBD_F8; break;
+	case 'U': kbd.key = KBD_F9; break;
+	case 'V': kbd.key = KBD_F10; break;
+	case 'W': kbd.key = KBD_F11; break;
+	case 'X': kbd.key = KBD_F12; break;
 
 	case 'z': switch (v) {
 		case 247: kbd.key = KBD_INS; break;
@@ -758,9 +771,12 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 		key = KBD_TAB;
 		break;
 
+/* Free BSD uses ASCII_DEL on console */
 	case ASCII_BS:
-	case ASCII_DEL:
 		key = KBD_BS;
+		break;
+	case ASCII_DEL:
+		key = KBD_DEL;
 		break;
 
 	case ASCII_LF:
