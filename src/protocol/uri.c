@@ -460,8 +460,6 @@ struct string *
 add_uri_to_string(struct string *string, struct uri *uri,
 		  enum uri_component components)
 {
-	int add_host = 0;
-
 	/* Custom or unknown keep the URI untouched. */
 	if (uri->protocol == PROTOCOL_UNKNOWN)
 		return add_to_string(string, struri(uri));
@@ -488,7 +486,7 @@ add_uri_to_string(struct string *string, struct uri *uri,
  	}
 
  	if (wants(URI_HOST) && uri->hostlen) {
-		add_host = 1;
+		int add_host = 1;
 
 #ifdef CONFIG_IPV6
 		/* Rationale for wants(URI_PORT): The [notation] was invented
@@ -552,7 +550,7 @@ add_uri_to_string(struct string *string, struct uri *uri,
 	}
 
 	/* Only add slash if we need to separate */
-	if ((wants(URI_DATA) || wants(URI_POST) || add_host)
+	if ((wants(URI_DATA) || wants(URI_POST) || components == URI_HTTP_REFERRER_HOST)
 	    && wants(~(URI_DATA | URI_PORT))
 	    && get_protocol_need_slash_after_host(uri->protocol))
 		add_char_to_string(string, '/');
