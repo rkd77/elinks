@@ -587,7 +587,7 @@ if test "$enable_guile" = "yes"; then
 		cat <<EOF
 ***********************************************************************
 The Guile support is incomplete and not so well integrated to ELinks
-yet. That means, ie., that you have no Guile console and there might
+yet. That means, e.g., that you have no Guile console and there might
 not be all the necessary hooks. Also, the Guile interface is not too
 well tested (success stories heartily welcomed!).  See
 src/scripting/guile/README for further details and hints.
@@ -666,7 +666,7 @@ if test "$withval" = yes; then
 	cat <<EOF
 ***********************************************************************
 The Python support is incomplete and not so well integrated to ELinks
-yet. That means, ie., that you have no Python console and there might
+yet. That means, e.g.., that you have no Python console and there might
 not be all the necessary hooks. Also, the Python interface is not too
 well tested (success stories heartily welcomed!).
 ***********************************************************************
