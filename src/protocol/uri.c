@@ -550,7 +550,7 @@ add_uri_to_string(struct string *string, struct uri *uri,
 	}
 
 	/* Only add slash if we need to separate */
-	if ((wants(URI_DATA) || wants(URI_POST))
+	if ((wants(URI_DATA) || wants(URI_POST) || components == URI_HTTP_REFERRER_HOST)
 	    && wants(~(URI_DATA | URI_PORT))
 	    && get_protocol_need_slash_after_host(uri->protocol))
 		add_char_to_string(string, '/');
