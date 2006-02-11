@@ -23,13 +23,8 @@ sub check_po_file ($)
     my($po_file_name) = @_;
     my %contexts;
     my $warnings = 0;
-    my $pos = do {
-	# Locale::PO 0.16 doesn't understand "#~" obsolete lines and
-	# spews warnings.
-	local $SIG{__WARN__} = sub {};
-	Locale::PO->load_file_asarray($po_file_name)
-	    or warn "$po_file_name: $!\n", return 2;
-    };
+    my $pos = Locale::PO->load_file_asarray($po_file_name)
+	or warn "$po_file_name: $!\n", return 2;
     foreach my $po (@$pos) {
 	next if $po->fuzzy();
 	my $msgstr = $po->msgstr()
@@ -158,9 +153,6 @@ Jonas Fonseca suggested the script could propose accelerators that are
 still available.  This has not been implemented.
 
 =head2 Waiting for Locale::PO fixes
-
-Locale::PO does not understand "#~" lines and spews warnings about
-them.  There is an ugly hack to hide these warnings.
 
 The warning messages should include line numbers, so that users of
 Emacs could conveniently edit the conflicting part of the PO file.

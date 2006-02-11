@@ -23,9 +23,9 @@ use fields
     qw(msgstr_n),
     # Multiline strings excluding the trailing newline and comment
     # markers, or undef if there are no such lines.
-    qw(comment automatic reference),
+    qw(comment automatic reference _flag),
     # Flags; see the accessors with the same names.
-    qw(fuzzy c_format php_format);
+    qw(fuzzy c_format php_format _obsolete);
 
 #use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 #use locale;
@@ -123,6 +123,11 @@ sub fuzzy {
     @_ ? $self->{'fuzzy'} = shift: $self->{'fuzzy'};
 }
 
+sub obsolete {
+    my Locale::PO $self = shift;
+    @_ ? $self->{_obsolete} = shift : $self->{_obsolete};
+}
+
 sub c_format {
     my Locale::PO $self = shift;
     @_ ? $self->{'c_format'} = shift: $self->{'c_format'};
@@ -166,11 +171,11 @@ sub dump {
     my Locale::PO $self = shift;
     my $dump;
     $dump = $self->_dump_multi_comment( $self->comment, "# " )
-      if ( $self->comment );
+      if defined( $self->comment );
     $dump .= $self->_dump_multi_comment( $self->automatic, "#. " )
-      if ( $self->automatic );
+      if defined( $self->automatic );
     $dump .= $self->_dump_multi_comment( $self->reference, "#: " )
-      if ( $self->reference );
+      if defined( $self->reference );
     my $flags = '';
     $flags .= ", fuzzy" if $self->fuzzy;
     $flags .= ", c-format"
@@ -182,6 +187,9 @@ sub dump {
     $flags .= ", php-format"
       if ( defined( $self->php_format )
         and $self->php_format );
+    $flags .= ", no-php-format"
+      if ( defined( $self->php_format )
+        and !$self->php_format );
     $dump .= "#$flags\n" if length $flags;
     $dump .= "msgid " . $self->_normalize_str( $self->msgid );
     $dump .= "msgid_plural " . $self->_normalize_str( $self->msgid_plural )
@@ -194,6 +202,7 @@ sub dump {
           for sort { $a <=> $b } keys %$msgstr_n;
     }
 
+    $dump =~ s/^(?!#)/#~ /gm if $self->{_obsolete};
     $dump .= "\n";
     return $dump;
 }
@@ -224,7 +233,7 @@ sub quote {
 sub dequote {
     my $self   = shift;         # can be called as a class method
     my $string = shift;
-    $string =~ s/^"(.*)"/$1/;
+    $string =~ s/^"(.*)"/$1/gm;
     $string =~ s/\\"/"/g;
     return $string;
 }
@@ -260,149 +269,187 @@ sub save_file {
 
 sub load_file_asarray {
     my $self = shift;           # normally called as a class method
-    $self->load_file( $_[0], 0 );
+    my $file = shift;
+    my @entries;
+    my $po;
+    my $last_buffer;
+    use constant {
+        # Nothing other than comments has been seen for $po yet.
+        # $po may also be undef.
+        # On comment: save it, and stay in this state.
+        # On msgid: save it, and switch to STATE_STRING.
+        # On some other string: warn that the msgid is missing,
+        #   and redo in STATE_STRING.
+        STATE_COMMENT => 1,
+
+        # A non-comment string has been seen for $po.
+        # $po can not be undef.
+        # If $po->{msgid} is undef, that has already been warned about.
+        # On comment: close the entry, and redo in STATE_COMMENT.
+        # On msgid: close the entry, and redo in STATE_COMMENT.
+        # On some other string: save it, and stay in this state.
+        STATE_STRING => 2,
+    };
+    my $state = STATE_COMMENT;
+    local $/ = "\n";
+    local $_;
+
+    # "my sub" not yet implemented
+    my $check_and_push_entry = sub {
+        # Call this only if defined($po).
+        warn "$file:$.: Expected msgid\n"
+            unless defined $po->{msgid} or $state == STATE_STRING;
+        if (defined $po->{msgid_plural}) {
+            warn "$file:$.: Expected msgstr[n]\n"
+                unless defined $po->{msgstr_n};
+        }
+        else {
+            warn "$file:$.: Expected msgstr\n"
+                unless defined $po->{msgstr};
+        }
+
+        my @flags;
+        @flags = split(/[\s,]+/, $po->{_flag}) if defined $po->{_flag};
+        $po->fuzzy(1)      if grep(        /^fuzzy$/i, @flags);
+        $po->c_format(1)   if grep(     /^c-format$/i, @flags);
+        $po->c_format(0)   if grep(  /^no-c-format$/i, @flags);
+        $po->php_format(1) if grep(   /^php-format$/i, @flags);
+        $po->php_format(0) if grep(/^no-php-format$/i, @flags);
+
+        push( @entries, $po);
+        $po = undef;
+        $last_buffer = undef;
+    };
+        
+    open( IN, "<$file" ) or return undef;
+    LINE: while (<IN>) {
+        chomp;
+        my $obsolete = s/^#~ ?//;
+        next LINE if /^$/;
+
+        if (/^"/) {
+            # Continued string.  This is very common, so check it first.
+            warn("$file:$.: There is no string to be continued\n"), next LINE
+                unless defined $last_buffer;
+            $$last_buffer .= "\n$_";
+        }
+        elsif (/^#([,.:]?)()$/ or /^#([,.:]?) (.*)$/) {
+            &$check_and_push_entry if $state == STATE_STRING;
+            $state = STATE_COMMENT;
+            $po = new Locale::PO unless defined $po;
+
+            my $comment;
+            if    ($1 eq "")  { $comment = \$po->{comment} }
+            elsif ($1 eq ",") { $comment = \$po->{_flag} }
+            elsif ($1 eq ".") { $comment = \$po->{automatic} }
+            elsif ($1 eq ":") { $comment = \$po->{reference} }
+            else { warn "Bug: did not recognize '$1'"; next LINE }
+
+            if (defined( $$comment )) { $$comment .= "\n$2" }
+            else { $$comment = $2 }
+        }
+        elsif (/^msgid (.*)$/) {
+            &$check_and_push_entry if $state == STATE_STRING;
+            $state = STATE_STRING;
+            $po = new Locale::PO unless defined $po;
+            $last_buffer = \($po->{msgid} = $1);
+        }
+        elsif (/^msgid_plural (.*)$/) {
+            if ($state == STATE_COMMENT) {
+                warn "$file:$.: Expected msgid\n";
+                $po = new Locale::PO unless defined $po;
+                $state = STATE_STRING;
+            }
+            if (defined $po->{msgid_plural}) {
+                warn "$file:$.: Replacing previous msgid_plural\n";
+            }
+            elsif (defined $po->{msgstr}) {
+                warn "$file:$.: Should not have msgid_plural with msgstr\n";
+            }
+            $last_buffer = \($po->{msgid_plural} = $1);
+        }
+        elsif (/^msgstr (.*)$/) {
+            if ($state == STATE_COMMENT) {
+                warn "$file:$.: Expected msgid\n";
+                $po = new Locale::PO unless defined $po;
+                $state = STATE_STRING;
+            }
+            if (defined $po->{msgstr}) {
+                warn "$file:$.: Replacing previous msgstr\n";
+            }
+            elsif (defined $po->{msgid_plural}) {
+                warn "$file:$.: Should not have msgstr with msgid_plural\n";
+            }
+            elsif (defined $po->{msgstr_n}) {
+                warn "$file:$.: Should not have msgstr with msgstr[n]\n";
+            }
+            $last_buffer = \($po->{msgstr} = $1);
+        }
+        elsif (/^msgstr\[(\d+)\] (.*)$/) {
+            if ($state == STATE_COMMENT) {
+                warn "$file:$.: Expected msgid\n";
+                $po = new Locale::PO unless defined $po;
+                $state = STATE_STRING;
+            }
+            if (defined $po->{msgstr_n}) {
+                warn "$file:$.: Replacing previous msgstr[$1]\n"
+                    if defined $po->{msgstr_n}{$1};
+            }
+            elsif (defined $po->{msgstr}) {
+                warn "$file:$.: Should not have msgstr[n] with msgstr\n";
+            }
+            $last_buffer = \($po->{msgstr_n}{$1} = $2);
+        }
+        else {
+            warn "$file:$.: Ignoring strange line: $_\n";
+        }
+        $po->{_obsolete} = 1 if $obsolete && defined $po;
+    }
+    &$check_and_push_entry if defined $po;
+    close IN;
+    return \@entries;
 }
 
 sub load_file_ashash {
     my $self = shift;           # normally called as a class method
-    $self->load_file( $_[0], 1 );
+    my $file = shift;
+    my $entries = $self->load_file_asarray( $file );
+    my %entries;
+
+    ENTRY: foreach my $po (@$entries) {
+        my $msgid = $po->msgid;
+        if (!defined( $msgid )) {
+            # The entry had no msgid line in the input file.
+            # &load_file_asarray already warned about that.  Such
+            # entries have no identity and cannot be put in the hash.
+            next ENTRY;
+        }
+        # The hash keys were quoted strings in Locale-PO-0.16,
+        # so keep them that way.  However, if the same string has
+        # been quoted in two different ways, there should not be
+        # two different hash entries.  Canonicalize the key.
+        my $key = $po->quote( $po->dequote( $msgid ));
+        if (exists( $entries{$key} ) && $entries{$key}->msgstr =~ /\w/) {
+            # This msgid has a translation already.  Don't replace it.
+            next ENTRY;
+        }
+        $entries{$key} = $po;
+    }
+
+    return \%entries;
 }
 
 sub load_file {
     my $self   = shift;         # normally called as a class method
     my $file   = shift;
     my $ashash = shift;
-    my ( @entries, %entries );
-    my $po;
-    my %buffer;
-    my $last_buffer;
-    local $/ = "\n";
-    local $_;
-    open( IN, "<$file" ) or return undef;
 
-    while (<IN>) {
-        chop;
-        if (/^$/) {
-
-            # Empty line. End of an entry.
-
-            if ( defined($po) ) {
-
-                $po->msgid( $buffer{msgid} ) if defined $buffer{msgid};
-                $po->msgid_plural( $buffer{msgid_plural} )
-                  if defined $buffer{msgid_plural};
-                $po->msgstr( $buffer{msgstr} )     if defined $buffer{msgstr};
-                $po->msgstr_n( $buffer{msgstr_n} ) if defined $buffer{msgstr_n};
-
-                if ($ashash) {
-                    my $key = $po->msgid;
-                    if ( defined( $entries{$key} ) ) {
-
-                        # Prefer translated ones.
-                        $entries{ $po->msgid } = $po
-                          if $entries{$key}->msgstr !~ /\w/;
-                    }
-                    else {
-
-                        # No previous entry
-                        $entries{ $po->msgid } = $po;
-                    }
-                }
-                else {
-                    push( @entries, $po );
-                }
-
-                undef $po;
-                undef $last_buffer;
-                %buffer = ();
-            }
-        }
-        elsif ( /^# (.*)/ or /^#()$/ ) {
-
-            # Translator comments
-            $po = new Locale::PO unless defined($po);
-            if ( defined( $po->comment ) ) {
-                $po->comment( $po->comment . "\n$1" );
-            }
-            else {
-                $po->comment($1);
-            }
-        }
-        elsif (/^#\. (.*)/) {
-
-            # Automatic comments
-            $po = new Locale::PO unless defined($po);
-            if ( defined( $po->automatic ) ) {
-                $po->automatic( $po->automatic . "\n$1" );
-            }
-            else {
-                $po->automatic($1);
-            }
-        }
-        elsif (/^#: (.*)/) {
-
-            # reference
-            $po = new Locale::PO unless defined($po);
-            if ( defined( $po->reference ) ) {
-                $po->reference( $po->reference . "\n$1" );
-            }
-            else {
-                $po->reference($1);
-            }
-        }
-        elsif (/^#, (.*)/) {
-
-            # flags
-            my $flags = $1;
-            $po = new Locale::PO unless defined($po);
-            $po->fuzzy(1)      if $flags =~ /fuzzy/i;
-            $po->c_format(1)   if $flags =~ /c-format/i;
-            $po->c_format(0)   if $flags =~ /no-c-format/i;
-            $po->php_format(1) if $flags =~ /php-format/i;
-        }
-        elsif (/^msgid (.*)/) {
-            $po = new Locale::PO unless defined($po);
-            $buffer{msgid} = $self->dequote($1);
-            $last_buffer = \$buffer{msgid};
-        }
-        elsif (/^msgid_plural (.*)/) {
-            $po = new Locale::PO unless defined($po);
-            $buffer{msgid_plural} = $self->dequote($1);
-            $last_buffer .= \$buffer{msgid_plural};
-        }
-        elsif (/^msgstr (.*)/) {
-
-            # translated string
-            $buffer{msgstr} = $self->dequote($1);
-            $last_buffer = \$buffer{msgstr};
-        }
-        elsif (/^msgstr\[(\d+)\] (.*)/) {
-
-            # translated string
-            $buffer{msgstr_n}{$1} = $self->dequote($2);
-            $last_buffer = \$buffer{msgstr_n}{$1};
-        }
-        elsif (/^"/) {
-
-            # contined string
-            $$last_buffer .= $self->dequote($_);
-        }
-        else {
-            warn "Strange line in $file: $_\n";
-        }
+    if ($ashash) {
+        return $self->load_file_ashash($file);
     }
-    if ( defined($po) ) {
-        $po->msgid( $buffer{msgid} ) if defined $buffer{msgid};
-        $po->msgid_plural( $buffer{msgid_plural} )
-          if defined $buffer{msgid_plural};
-        $po->msgstr( $buffer{msgstr} )     if defined $buffer{msgstr};
-        $po->msgstr_n( $buffer{msgstr_n} ) if defined $buffer{msgstr_n};
-
-        $entries{ $po->msgid } = $po if $ashash;
-        push( @entries, $po ) unless $ashash;
+    else {
+        return $self->load_file_asarray($file);
     }
-    close IN;
-    return ( $ashash ? \%entries : \@entries );
 }
 
 # Autoload methods go after =cut, and are processed by the autosplit program.
@@ -427,6 +474,7 @@ Locale::PO - Perl module for manipulating .po entries from GNU gettext
   [$string =] $po->automatic([new string]);
   [$string =] $po->reference([new string]);
   [$value =] $po->fuzzy([value]);
+  [$value =] $po->obsolete([value]);
   [$value =] $po->c_format([value]);
   [$value =] $po->php_format([value]);
   print $po->dump;
@@ -447,6 +495,51 @@ This module simplifies management of GNU gettext .po files and is an
 alternative to using emacs po-mode. It provides an object-oriented
 interface in which each entry in a .po file is a Locale::PO object.
 
+=head2 Levels of Quoting
+
+When you use methods of Locale::PO, you need to distinguish between
+three possible levels of quoting strings.  These levels are described
+below.  The descriptions also list how the following sample msgid
+string would be quoted in each level.
+
+  msgid "The characters /\\ denote the \"AND\" operator.\n"
+  "Please enter all numbers in octal."
+
+=over
+
+=item FULLY-QUOTED
+
+The same format as in a PO file: the string may consist of multiple
+lines, and each line has double-quote characters around it and may
+contain backslash sequences.  Any double-quote or backslash characters
+that should be part of the data must be escaped with backslashes.
+
+The example in Perl syntax: C<qq("The characters /\\\\ denote the
+\\"AND\\" operator.\\n"\n"Please enter all numbers in octal.")>
+
+=item BACKSLASHED
+
+The string may consist of multiple lines.  The lines do not have
+double-quote characters around them, but they may contain backslash
+sequences.  Any backslash characters that should be part of the data
+must be escaped with backslashes, but double-quote characters must not.
+
+The example in Perl syntax: C<qq(The characters /\\\\ denote the
+"AND" operator.\\n\nPlease enter all numbers in octal.)>
+
+=item NOT-QUOTED
+
+This is the format that a C program would pass to the C<gettext>
+function or output to a terminal device.  Any remaining quotes are
+part of the data itself, and backslash escapes have been replaced
+with control characters.  Locale::PO does not currently support
+this quoting level.
+
+The example in Perl syntax: C<qq(The characters /\\ denote the "AND"
+operator.\nPlease enter all numbers in octal.)>
+
+=back
+
 =head1 METHODS
 
 =over 4
@@ -459,8 +552,9 @@ a list/hash of the form:
 
  -option=>value, -option=>value, etc.
 
-Where options are msgid, msgstr, comment, automatic, reference,
-fuzzy, and c-format. See accessor methods below.
+Where options are msgid, msgstr, comment, automatic, reference, fuzzy,
+c-format, and no-c-format. See accessor methods below.  Currently, you
+cannot set the "obsolete" or "php-format" flags via options.
 
 To generate a po file header, add an entry with an empty
 msgid, like this:
@@ -474,26 +568,40 @@ msgid, like this:
 	"Content-Type: text/plain; charset=CHARSET\\n" .
 	"Content-Transfer-Encoding: ENCODING\\n");
 
+Note that the C<msgid> and C<msgstr> must be in BACKSLASHED form.
+
 =item msgid
 
 Set or get the untranslated string from the object.
 
-This method expects the new string in unquoted form
-but returns the current string in quoted form.
+The value is C<undef> if there is no such string for this message, not
+even an empty string.  If the message was loaded from a PO file, this
+can occur if there are comments after the last C<msgid> line.  The
+loading functions warn about such omissions.
+
+This method expects the new string in BACKSLASHED form
+but returns the current string in FULLY-QUOTED form.
 
 =item msgid_plural
 
-Set or get the untranslated plural string from the object.
+Set or get the untranslated plural string from the object.  The value
+is C<undef> if there is no plural form for this message.
 
-This method expects the new string in unquoted form
-but returns the current string in quoted form.
+This method expects the new string in BACKSLASHED form
+but returns the current string in FULLY-QUOTED form.
 
 =item msgstr
 
 Set or get the translated string from the object.
 
-This method expects the new string in unquoted form
-but returns the current string in quoted form.
+The value is C<undef> if there is no such string for this message, not
+even an empty string.  If the message was loaded from a PO file, this
+can occur if there are comments after the last C<msgid> line, or if
+there are two C<msgid> lines without a C<msgstr> between them.  The
+loading functions warn about such omissions.
+
+This method expects the new string in BACKSLASHED form
+but returns the current string in FULLY-QUOTED form.
 
 =item msgstr_n
 
@@ -508,14 +616,16 @@ the strings. eg:
         }
     );
 
-This method expects the new strings in unquoted form
-but returns the current strings in quoted form.
+The value C<undef> should be treated the same as an empty hash.
+
+This method expects the new strings in BACKSLASHED form
+but returns the current strings in FULLY-QUOTED form.
 
 =item comment
 
 Set or get translator comments from the object.
 
-If there are no such comments, then the value is undef.  Otherwise,
+If there are no such comments, then the value is C<undef>.  Otherwise,
 the value is a string that contains the comment lines delimited with
 "\n".  The string includes neither the S<"# "> at the beginning of
 each comment line nor the newline at the end of the last comment line.
@@ -525,7 +635,7 @@ each comment line nor the newline at the end of the last comment line.
 Set or get automatic comments from the object (inserted by 
 emacs po-mode or xgettext).
 
-If there are no such comments, then the value is undef.  Otherwise,
+If there are no such comments, then the value is C<undef>.  Otherwise,
 the value is a string that contains the comment lines delimited with
 "\n".  The string includes neither the S<"#. "> at the beginning of
 each comment line nor the newline at the end of the last comment line.
@@ -535,7 +645,7 @@ each comment line nor the newline at the end of the last comment line.
 Set or get reference marking comments from the object (inserted
 by emacs po-mode or gettext).
 
-If there are no such comments, then the value is undef.  Otherwise,
+If there are no such comments, then the value is C<undef>.  Otherwise,
 the value is a string that contains the comment lines delimited with
 "\n".  The string includes neither the S<"#: "> at the beginning of
 each comment line nor the newline at the end of the last comment line.
@@ -544,6 +654,11 @@ each comment line nor the newline at the end of the last comment line.
 
 Set or get the fuzzy flag on the object ("check this translation").
 When setting, use 1 to turn on fuzzy, and 0 to turn it off.
+
+=item obsolete
+
+Set or get the obsolete flag on the object ("no longer used").
+When setting, use 1 to turn on obsolete, and 0 to turn it off.
 
 =item c_format
 
@@ -563,14 +678,18 @@ Returns the entry as a string, suitable for output to a po file.
 
 =item quote
 
-Applies po quotation rules to a string, and returns the quoted
-string. The quoted string will have all existing double-quote
-characters escaped by backslashes, and will be enclosed in double
-quotes.
+Converts a string from BACKSLASHED to FULLY-QUOTED form.
+Specifically, the quoted string will have all existing double-quote
+characters escaped by backslashes, and each line will be enclosed in
+double quotes.  Preexisting backslashes will not be doubled.
 
 =item dequote
 
-Returns a quoted po string to its natural form.
+Converts a string from FULLY-QUOTED to BACKSLASHED form.
+Specifically, it first removes the double-quote characters that
+surround each line.  After this, each remaining double-quote character
+should have a backslash in front of it; the method then removes those
+backslashes.  Backslashes in any other position will be left intact.
 
 =item load_file_asarray
 
@@ -578,13 +697,21 @@ Given the filename of a po-file, reads the file and returns a
 reference to a list of Locale::PO objects corresponding to the contents of
 the file, in the same order.
 
+If the file cannot be read, then this method returns C<undef>, and you
+can check C<$!> for the actual error.  If the file does not follow the
+expected syntax, then the method generates warnings but keeps going.
+Other errors (e.g. out of memory) may result in C<die> being called,
+of course.
+
 =item load_file_ashash
 
 Given the filename of a po-file, reads the file and returns a
 reference to a hash of Locale::PO objects corresponding to the contents of
-the file. The hash keys are the untranslated strings, so this is a cheap
-way to remove duplicates. The method will prefer to keep entries that
-have been translated.
+the file. The hash keys are the untranslated strings (in BACKSLASHED form),
+so this is a cheap way to remove duplicates. The method will prefer to keep
+entries that have been translated.
+
+This handles errors in the same way as C<load_file_asarray> does.
 
 =item load_file
 
@@ -649,12 +776,27 @@ Reformatted this list of changes.
 
 =item Z<>2006-02-05  Kalle Olavi Niemitalo  <kon@iki.fi>
 
-Added comments about the fields of Locale::PO objects.
-The load_file function binds $/ and $_ dynamically.
-Renamed normalize_str to _normalize_str, and dump_multi_comment to _dump_multi_comment.
+Added comments about the fields of C<Locale::PO> objects.
+The C<load_file> function binds C<$/> and C<$_> dynamically.
+Renamed C<normalize_str> to C<_normalize_str>, and C<dump_multi_comment> to C<_dump_multi_comment>.
 
 POD changes:
 Documented C<load_file> and C<save_file>.
+
+=item Z<>2006-02-11  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+Rewrote the file parser.  It now warns about various inconsistencies, and no longer relies on empty lines.
+The parser writes directly to fields of Locale::PO objects, preserving internal newlines in strings.  Changed C<dequote> to process all lines of multi-line strings.
+The parser supports obsolete entries.  Added the C<_obsolete> field and the C<obsolete> method.  C<dump> comments the entry out if it is obsolete.
+The parser preserves the original string of flags and scans it more carefully.  Added the C<_flag> field.  Implemented "no-php-format".
+C<dump> dumps comments even if they are C<eq "0">.
+
+POD changes:
+Documented the bugs fixed with the changes above.
+Documented levels of quoting, and the exact behaviour of C<quote> and C<unquote>.
+Documented the C<obsolete> method.
+Documented error handling in C<load_file_asarray> and C<load_file_ashash>.
+Documented when C<msgid>, C<msgstr> etc. can return C<undef>.
 
 =back
 
@@ -669,27 +811,17 @@ redistribute it and/or modify it under the same terms as Perl itself.
 If you load_file then save_file, the output file may have slight
 cosmetic differences from the input file (an extra blank line here or there).
 
-Locale::PO does not understand obsolete entries that msgmerge comments
-out with "#~", and it warns about every such line.  The warnings can
-be silenced via C<$SIG{__WARN__}>, but that isn't very clean.
-
-Document the situations in which C<msgstr> et al can return C<undef>.
-
 The C<c_format> and C<php_format> methods are documented: "1 implies
 c-format, 0 implies no-c-format, and blank or undefined implies
 neither."  However, the implementation seems to treat empty strings
 the same as 0.
 
-Locale::PO either discards or corrupts the "#," flags it does not
-recognize: "objc-format" becomes "c-format", and "no-php-format"
-becomes "php-format".  Unrecognized flags should be preserved;
-perhaps the order of flags should also be preserved.
+Locale::PO discards the "#," flags it does not recognize.
+Unrecognized flags should be preserved; perhaps the order of flags
+should also be preserved.
 
 Names of flags are case-insensitive in Locale::PO but case-sensitive
 in GNU Gettext.
-
-Locale::PO requires blank lines between entries, but Uniforum style PO
-files don't have any.
 
 The C<quote> and C<dequote> methods assume Perl knows the encoding
 of the string.  If it doesn't, they'll treat each 0x5C byte as a
@@ -705,9 +837,10 @@ Gettext doesn't support.
 Locale::PO does not save the line numbers at which entries begin or
 end in the PO file.  These would be useful in error messages.
 
-The C<msgid> and C<msgstr> methods return quoted strings, but they
-expect unquoted strings as input.  It would be better to have both
-quoted or both unquoted; or perhaps C<< $po->msgid(-quoted => 1) >>.
+The C<msgid> and C<msgstr> methods return FULLY-QUOTED strings, but
+they expect BACKSLASHED strings as input.  It would be better to have
+both quoted or both unquoted; or perhaps C<< $po->msgid(-level =>
+'BACKSLASHED') >>.
 
 Locale::PO discards all types of comments it does not recognize.
 The B<msgmerge> program of GNU gettext-tools 0.14.3 does the same,
