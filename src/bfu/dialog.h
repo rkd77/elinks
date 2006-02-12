@@ -131,6 +131,7 @@ void refresh_dialog(struct dialog_data *, dialog_refresh_handler_T handler, void
 void select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data);
 struct widget_data *select_widget_by_id(struct dialog_data *dlg_data, int i);
 
+#define before_widgets(dlg_data) (&(dlg_data)->widgets_data[-1])
 #define end_of_widgets(dlg_data) (&(dlg_data)->widgets_data[(dlg_data)->number_of_widgets])
 #define first_widget(dlg_data) (&(dlg_data)->widgets_data[0])
 #define last_widget(dlg_data) (&(dlg_data)->widgets_data[(dlg_data)->number_of_widgets - 1])
@@ -139,6 +140,11 @@ struct widget_data *select_widget_by_id(struct dialog_data *dlg_data, int i);
 	for ((widget_data) = first_widget(dlg_data); \
 	     (widget_data) != end_of_widgets(dlg_data); \
 	     (widget_data)++)
+
+#define foreach_widget_back(dlg_data, widget_data) \
+	for ((widget_data) = last_widget(dlg_data); \
+	     (widget_data) != before_widgets(dlg_data); \
+	     (widget_data)--)
 
 #define is_selected_widget(dlg_data, widget_data) ((widget_data) == selected_widget(dlg_data))
 
