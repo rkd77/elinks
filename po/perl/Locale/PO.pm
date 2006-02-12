@@ -15,8 +15,8 @@ use Carp;
 use fields
     # Multiline strings including quotes and newlines, but excluding
     # the initial keywords and any "#~ " obsoletion marks.  Can be
-    # either undef or "" if not present.  These end with a newline
-    # if not empty.
+    # either undef or "" if not present.  These normally do not end
+    # with a newline.
     qw(msgid msgid_plural msgstr),
     # A reference to a hash where keys are numbers (as strings)
     # and values are in the same format as $self->{msgstr}.
@@ -253,18 +253,21 @@ sub save_file {
     my $file    = shift;
     my $entries = shift;
     my $ashash  = shift;
+    my $err     = undef;
     open( OUT, ">$file" ) or return undef;
     if ($ashash) {
         foreach ( sort keys %$entries ) {
-            print OUT $entries->{$_}->dump;
+            print OUT $entries->{$_}->dump or $err=$!, last;
         }
     }
     else {
         foreach (@$entries) {
-            print OUT $_->dump;
+            print OUT $_->dump or $err=$!, last;
         }
     }
-    close OUT;
+    close OUT or $err=$!;
+    if ($err) { $!=$err; return undef }
+    else { return 1 }
 }
 
 sub load_file_asarray {
@@ -468,26 +471,31 @@ Locale::PO - Perl module for manipulating .po entries from GNU gettext
   use Locale::PO;
 
   $po = new Locale::PO([-option=>value,...])
-  [$string =] $po->msgid([new string]);
-  [$string =] $po->msgstr([new string]);
-  [$string =] $po->comment([new string]);
-  [$string =] $po->automatic([new string]);
-  [$string =] $po->reference([new string]);
-  [$value =] $po->fuzzy([value]);
-  [$value =] $po->obsolete([value]);
-  [$value =] $po->c_format([value]);
-  [$value =] $po->php_format([value]);
+
+  # get fields                         # set fields
+  $fully_quoted = $po->msgid;          $po->msgid($backslashed);
+  $fully_quoted = $po->msgid_plural;   $po->msgid_plural($backslashed);
+  $fully_quoted = $po->msgstr;         $po->msgstr($backslashed);
+  $fully_quoted_href = $po->msgstr_n;  $po->msgstr_n($backslashed_href);
+  $string = $po->comment;              $po->comment($string);
+  $string = $po->automatic;            $po->automatic($string);
+  $string = $po->reference;            $po->reference($string);
+  $flag = $po->fuzzy;                  $po->fuzzy($flag);
+  $flag = $po->obsolete;               $po->obsolete($flag);
+  $tristate = $po->c_format;           $po->c_format($tristate);
+  $tristate = $po->php_format;         $po->php_format($tristate);
+
   print $po->dump;
 
-  $quoted_string = $po->quote($string);
-  $string = $po->dequote($quoted_string);
+  $fully_quoted_string = $po->quote($backslashed_string);
+  $backslashed_string = $po->dequote($fully_quoted_string);
 
-  $aref = Locale::PO->load_file_asarray(<filename>);
-  $href = Locale::PO->load_file_ashash(<filename>);
-  $ref = Locale::PO->load_file(<filename>,$ashash);
-  Locale::PO->save_file_fromarray(<filename>,$aref);
-  Locale::PO->save_file_fromhash(<filename>,$href);
-  Locale::PO->save_file(<filename>,$ref,$fromhash);
+  $aref = Locale::PO->load_file_asarray($filename);
+  $href = Locale::PO->load_file_ashash($filename);
+  $ref = Locale::PO->load_file($filename, $ashash);
+  Locale::PO->save_file_fromarray($filename, $aref);
+  Locale::PO->save_file_fromhash($filename, $href);
+  Locale::PO->save_file($filename, $ref, $fromhash);
 
 =head1 DESCRIPTION
 
@@ -546,6 +554,9 @@ operator.\nPlease enter all numbers in octal.)>
 
 =item new
 
+  my Locale::PO $po = new Locale::PO;
+  my Locale::PO $po = new Locale::PO(%options);
+
 Create a new Locale::PO object to represent a po entry.
 You can optionally set the attributes of the entry by passing 
 a list/hash of the form:
@@ -572,6 +583,10 @@ Note that the C<msgid> and C<msgstr> must be in BACKSLASHED form.
 
 =item msgid
 
+  $fully_quoted_string = $po->msgid;
+  # $backslashed_string = $po->dequote($fully_quoted_string);
+  $po->msgid($backslashed_string);
+
 Set or get the untranslated string from the object.
 
 The value is C<undef> if there is no such string for this message, not
@@ -584,6 +599,10 @@ but returns the current string in FULLY-QUOTED form.
 
 =item msgid_plural
 
+  $fully_quoted_string = $po->msgid_plural;
+  # $backslashed_string = $po->dequote($fully_quoted_string);
+  $po->msgid_plural($backslashed_string);
+
 Set or get the untranslated plural string from the object.  The value
 is C<undef> if there is no plural form for this message.
 
@@ -591,6 +610,10 @@ This method expects the new string in BACKSLASHED form
 but returns the current string in FULLY-QUOTED form.
 
 =item msgstr
+
+  $fully_quoted_string = $po->msgstr;
+  # $backslashed_string = $po->dequote($fully_quoted_string);
+  $po->msgstr($backslashed_string);
 
 Set or get the translated string from the object.
 
@@ -605,6 +628,11 @@ but returns the current string in FULLY-QUOTED form.
 
 =item msgstr_n
 
+  $fully_quoted_hashref = $po->msgstr_n;
+  # $backslashed_hashref = { %$fully_quoted_hashref };
+  # $_ = $po->dequote($_) foreach values(%$backslashed_hashref);
+  $po->msgstr_n($backslashed_hashref);
+
 Get or set the translations if there are plurals involved. Takes and
 returns a hashref where the keys are the 'N' case and the values are
 the strings. eg:
@@ -617,11 +645,17 @@ the strings. eg:
     );
 
 The value C<undef> should be treated the same as an empty hash.
+Callers should neither modify the hash to which the returned reference
+points, nor assume it to remain valid if C<msgstr_n> is later called
+to install a new set of translations.
 
 This method expects the new strings in BACKSLASHED form
 but returns the current strings in FULLY-QUOTED form.
 
 =item comment
+
+  $string = $po->comment;
+  $po->comment($string);
 
 Set or get translator comments from the object.
 
@@ -631,6 +665,9 @@ the value is a string that contains the comment lines delimited with
 each comment line nor the newline at the end of the last comment line.
 
 =item automatic
+
+  $string = $po->automatic;
+  $po->automatic($string);
 
 Set or get automatic comments from the object (inserted by 
 emacs po-mode or xgettext).
@@ -642,6 +679,9 @@ each comment line nor the newline at the end of the last comment line.
 
 =item reference
 
+  $string = $po->reference;
+  $po->reference($string);
+
 Set or get reference marking comments from the object (inserted
 by emacs po-mode or gettext).
 
@@ -652,15 +692,24 @@ each comment line nor the newline at the end of the last comment line.
 
 =item fuzzy
 
+  $flag = $po->fuzzy;
+  $po->fuzzy($flag);
+
 Set or get the fuzzy flag on the object ("check this translation").
 When setting, use 1 to turn on fuzzy, and 0 to turn it off.
 
 =item obsolete
 
+  $flag = $po->obsolete;
+  $po->obsolete($flag);
+
 Set or get the obsolete flag on the object ("no longer used").
 When setting, use 1 to turn on obsolete, and 0 to turn it off.
 
 =item c_format
+
+  $tristate = $po->obsolete;
+  $po->obsolete($tristate);
 
 Set or get the c-format or no-c-format flag on the object.
 This can take 3 values: 1 implies c-format, 0 implies no-c-format,
@@ -668,15 +717,22 @@ and blank or undefined implies neither.
 
 =item php_format
 
+  $tristate = $po->php_format;
+  $po->php_format($tristate);
+
 Set or get the php-format or no-php-format flag on the object.
 This can take 3 values: 1 implies php-format, 0 implies no-php-format,
 and blank or undefined implies neither.
 
 =item dump
 
+  print $po->dump;
+
 Returns the entry as a string, suitable for output to a po file.
 
 =item quote
+
+  $fully_quoted_string = $po->quote($backslashed_string);
 
 Converts a string from BACKSLASHED to FULLY-QUOTED form.
 Specifically, the quoted string will have all existing double-quote
@@ -685,6 +741,8 @@ double quotes.  Preexisting backslashes will not be doubled.
 
 =item dequote
 
+  $backslashed_string = $po->dequote($fully_quoted_string);
+
 Converts a string from FULLY-QUOTED to BACKSLASHED form.
 Specifically, it first removes the double-quote characters that
 surround each line.  After this, each remaining double-quote character
@@ -692,6 +750,8 @@ should have a backslash in front of it; the method then removes those
 backslashes.  Backslashes in any other position will be left intact.
 
 =item load_file_asarray
+
+  $arrayref = Locale::PO->load_file_asarray($filename);
 
 Given the filename of a po-file, reads the file and returns a
 reference to a list of Locale::PO objects corresponding to the contents of
@@ -705,6 +765,8 @@ of course.
 
 =item load_file_ashash
 
+  $hashref = Locale::PO->load_file_ashash($filename);
+
 Given the filename of a po-file, reads the file and returns a
 reference to a hash of Locale::PO objects corresponding to the contents of
 the file. The hash keys are the untranslated strings (in BACKSLASHED form),
@@ -715,6 +777,8 @@ This handles errors in the same way as C<load_file_asarray> does.
 
 =item load_file
 
+  $ref = Locale::PO->load_file($filename, $ashash);
+
 This method behaves as C<load_file_asarray> if the C<$ashash>
 parameter is 0, or as C<load_file_ashash> if C<$ashash> is 1.
 Your code will probably be easier to understand if you call either
@@ -722,16 +786,30 @@ of those methods instead of this one.
 
 =item save_file_fromarray
 
+  $ok = Locale::PO->save_file_fromarray($filename, \@objects)
+
 Given a filename and a reference to a list of Locale::PO objects,
 saves those objects to the file, creating a po-file.
 
+Returns true if successful.
+Returns C<undef> and sets C<$!> if an I/O error occurs.
+Dies if a serious error occurs.
+
 =item save_file_fromhash
+
+  $ok = Locale::PO->save_file_fromhash($filename, \%objects);
 
 Given a filename and a reference to a hash of Locale::PO objects,
 saves those objects to the file, creating a po-file. The entries
 are sorted alphabetically by untranslated string.
 
+Returns true if successful.
+Returns C<undef> and sets C<$!> if an I/O error occurs.
+Dies if a serious error occurs.
+
 =item save_file
+
+  $ok = Locale::PO->save_file($filename, $ref, $fromhash);
 
 This method behaves as C<save_file_fromarray> if the C<$fromhash>
 parameter is 0, or as C<save_file_fromhash> if C<$fromhash> is 1.
@@ -776,7 +854,7 @@ Reformatted this list of changes.
 
 =item Z<>2006-02-05  Kalle Olavi Niemitalo  <kon@iki.fi>
 
-Added comments about the fields of C<Locale::PO> objects.
+Added comments about the fields of Locale::PO objects.
 The C<load_file> function binds C<$/> and C<$_> dynamically.
 Renamed C<normalize_str> to C<_normalize_str>, and C<dump_multi_comment> to C<_dump_multi_comment>.
 
@@ -793,10 +871,19 @@ C<dump> dumps comments even if they are C<eq "0">.
 
 POD changes:
 Documented the bugs fixed with the changes above.
-Documented levels of quoting, and the exact behaviour of C<quote> and C<unquote>.
+Documented levels of quoting, and the exact behaviour of C<quote> and C<dequote>.
 Documented the C<obsolete> method.
 Documented error handling in C<load_file_asarray> and C<load_file_ashash>.
 Documented when C<msgid>, C<msgstr> etc. can return C<undef>.
+
+=item Z<>2006-02-12  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+C<save_file> returns C<undef> and remembers C<$!> if C<print> fails.
+
+POD changes:
+Revised the synopses of the methods, paying attention to levels of quoting.
+Repeat the synopsis above the description of each method.
+Never write C<< CZ<><Locale::PO> >>; it looks bad in B<pod2text>.
 
 =back
 
@@ -808,7 +895,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 BUGS
 
-If you load_file then save_file, the output file may have slight
+If you C<load_file> then C<save_file>, the output file may have slight
 cosmetic differences from the input file (an extra blank line here or there).
 
 The C<c_format> and C<php_format> methods are documented: "1 implies
@@ -839,8 +926,8 @@ end in the PO file.  These would be useful in error messages.
 
 The C<msgid> and C<msgstr> methods return FULLY-QUOTED strings, but
 they expect BACKSLASHED strings as input.  It would be better to have
-both quoted or both unquoted; or perhaps C<< $po->msgid(-level =>
-'BACKSLASHED') >>.
+both FULLY-QUOTED or both BACKSLASHED; or perhaps C<<
+$po->msgid(-level => 'BACKSLASHED') >>.
 
 Locale::PO discards all types of comments it does not recognize.
 The B<msgmerge> program of GNU gettext-tools 0.14.3 does the same,
