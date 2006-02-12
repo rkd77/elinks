@@ -17,8 +17,6 @@
 
 #include "config/options.h"
 #include "document/css/apply.h"
-#include "document/document.h"
-#include "document/view.h"
 #include "document/html/frames.h"
 #include "document/html/parser/general.h"
 #include "document/html/parser/link.h"
@@ -28,7 +26,6 @@
 #include "document/html/renderer.h"
 #include "document/html/tables.h"
 #include "document/options.h"
-#include "ecmascript/ecmascript.h"
 #include "intl/charsets.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
@@ -40,7 +37,6 @@
 #include "util/memdebug.h"
 #include "util/memory.h"
 #include "util/string.h"
-#include "viewer/text/vs.h"
 
 /* Unsafe macros */
 #include "document/html/internal.h"
@@ -347,42 +343,8 @@ imported:
 	}
 
 	if (html_context->part->document && *html != '^') {
-		struct string code, ret;
-		struct part *part = html_context->part;
-		struct document *document = part->document;
-		struct document_view *doc_view = document->doc_view;
-		struct view_state *vs = doc_view->vs;
-		struct ecmascript_interpreter *interpreter;
-
-		if (vs->ecmascript_fragile)
-			ecmascript_reset_state(vs);
-		interpreter = vs->ecmascript;
-		assert(interpreter);
-
-		if (!init_string(&code)) return;
-		if (!init_string(&ret)) {
-			done_string(&code);
-			return;
-		}
-		add_bytes_to_string(&code, html, *end - html);
-
-		ecmascript_eval(interpreter, &code, &ret);
-		done_string(&code);
-		if (!ret.length) {
-			done_string(&ret);
-			return;
-		}
-
-		/* FIXME: it doesn't work */
-		html_top->invisible = 0;
-		parse_html(ret.source, ret.source + ret.length, part, NULL,
-			   html_context);
-
-		done_string(&ret);
-#if 0
 		add_to_string_list(&html_context->part->document->onload_snippets,
 		                   html, *end - html);
-#endif
 	}
 #endif
 }
