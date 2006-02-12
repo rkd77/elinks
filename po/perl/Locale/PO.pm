@@ -21,6 +21,8 @@ use fields
     # A reference to a hash where keys are numbers (as strings)
     # and values are in the same format as $self->{msgstr}.
     qw(msgstr_n),
+    # Line numbers.  The file name is not currently saved.
+    qw(_msgid_begin_lineno _msgstr_begin_lineno),
     # Multiline strings excluding the trailing newline and comment
     # markers, or undef if there are no such lines.
     qw(comment automatic reference _flag),
@@ -64,7 +66,25 @@ sub new {
 
 sub msgid {
     my Locale::PO $self = shift;
-    @_ ? $self->{'msgid'} = $self->quote(shift) : $self->{'msgid'};
+    if (@_) {
+        $self->{msgid} = $self->quote(shift);
+        # TODO: Should this erase $self->{_msgid_begin_lineno}?
+    }
+    else {
+        return $self->{msgid};
+    }
+}
+
+sub msgid_begin_lineno {
+    my Locale::PO $self = shift;
+    # We should have a way to pass extra arguments (e.g. quoting
+    # level) to getters, without making them behave as setters.  That
+    # may require an incompatible API change, which in turn requires
+    # extra methods in order to preserve compatibility.  Don't allow
+    # setting msgid_begin_lineno yet; thus this method won't have to
+    # be duplicated.
+    croak "Setting msgid_begin_lineno is not currently allowed" if @_;
+    return $self->{_msgid_begin_lineno};
 }
 
 sub msgid_plural {
@@ -77,7 +97,25 @@ sub msgid_plural {
 
 sub msgstr {
     my Locale::PO $self = shift;
-    @_ ? $self->{'msgstr'} = $self->quote(shift) : $self->{'msgstr'};
+    if (@_) {
+        $self->{msgstr} = $self->quote(shift);
+        # TODO: Should this erase $self->{_msgstr_begin_lineno}?
+    }
+    else {
+        return $self->{msgstr};
+    }
+}
+
+sub msgstr_begin_lineno {
+    my Locale::PO $self = shift;
+    # We should have a way to pass extra arguments (e.g. quoting
+    # level) to getters, without making them behave as setters.  That
+    # may require an incompatible API change, which in turn requires
+    # extra methods in order to preserve compatibility.  Don't allow
+    # setting msgstr_begin_lineno yet; thus this method won't have to
+    # be duplicated.
+    croak "Setting msgstr_begin_lineno is not currently allowed" if @_;
+    return $self->{_msgstr_begin_lineno};
 }
 
 sub msgstr_n {
@@ -356,6 +394,7 @@ sub load_file_asarray {
             $state = STATE_STRING;
             $po = new Locale::PO unless defined $po;
             $last_buffer = \($po->{msgid} = $1);
+            $po->{_msgid_begin_lineno} = $.;
         }
         elsif (/^msgid_plural (.*)$/) {
             if ($state == STATE_COMMENT) {
@@ -387,6 +426,7 @@ sub load_file_asarray {
                 warn "$file:$.: Should not have msgstr with msgstr[n]\n";
             }
             $last_buffer = \($po->{msgstr} = $1);
+            $po->{_msgstr_begin_lineno} = $.;
         }
         elsif (/^msgstr\[(\d+)\] (.*)$/) {
             if ($state == STATE_COMMENT) {
@@ -476,6 +516,7 @@ Locale::PO - Perl module for manipulating .po entries from GNU gettext
   $fully_quoted = $po->msgid;          $po->msgid($backslashed);
   $fully_quoted = $po->msgid_plural;   $po->msgid_plural($backslashed);
   $fully_quoted = $po->msgstr;         $po->msgstr($backslashed);
+  $lineno = $po->msgstr_begin_lineno;
   $fully_quoted_href = $po->msgstr_n;  $po->msgstr_n($backslashed_href);
   $string = $po->comment;              $po->comment($string);
   $string = $po->automatic;            $po->automatic($string);
@@ -597,6 +638,14 @@ loading functions warn about such omissions.
 This method expects the new string in BACKSLASHED form
 but returns the current string in FULLY-QUOTED form.
 
+=item msgid_begin_lineno
+
+  $line_number = $po->msgid_begin_lineno;
+
+Get the line number at which the C<msgid> string begins in the PO file.
+This is undef if the entry was not loaded from a file.
+There is currently no setter method for this field.
+
 =item msgid_plural
 
   $fully_quoted_string = $po->msgid_plural;
@@ -617,14 +666,23 @@ but returns the current string in FULLY-QUOTED form.
 
 Set or get the translated string from the object.
 
-The value is C<undef> if there is no such string for this message, not
-even an empty string.  If the message was loaded from a PO file, this
-can occur if there are comments after the last C<msgid> line, or if
-there are two C<msgid> lines without a C<msgstr> between them.  The
-loading functions warn about such omissions.
+If the string has plural forms, then they are instead accessible via
+C<msgstr_n>, and C<msgstr> normally returns C<undef>.  However, if the
+entry has been loaded from an incorrectly formatted PO file, then it
+is also possible that both C<msgstr> and C<msgstr_n> return C<undef>,
+or that they both return defined values.  The loading functions warn
+about such transgressions.
 
 This method expects the new string in BACKSLASHED form
 but returns the current string in FULLY-QUOTED form.
+
+=item msgstr_begin_lineno
+
+  $line_number = $po->msgstr_begin_lineno;
+
+Get the line number at which the C<msgstr> string begins in the PO file.
+This is undef if the entry was not loaded from a file.
+There is currently no setter method for this field.
 
 =item msgstr_n
 
@@ -879,11 +937,14 @@ Documented when C<msgid>, C<msgstr> etc. can return C<undef>.
 =item Z<>2006-02-12  Kalle Olavi Niemitalo  <kon@iki.fi>
 
 C<save_file> returns C<undef> and remembers C<$!> if C<print> fails.
+C<load_file_asarray> saves line numbers of C<msgid> and C<msgstr>.  New fields C<_msgid_begin_lineno> and C<_msgstr_begin_lineno>; new methods C<msgid_begin_lineno> and C<msgstr_begin_lineno>.
 
 POD changes:
 Revised the synopses of the methods, paying attention to levels of quoting.
 Repeat the synopsis above the description of each method.
 Never write C<< CZ<><Locale::PO> >>; it looks bad in B<pod2text>.
+Documented that C<msgstr> normally returns C<undef> if there are plurals.
+Documented the new methods C<msgid_begin_lineno> and C<msgstr_begin_lineno>.
 
 =back
 

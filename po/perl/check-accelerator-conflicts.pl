@@ -40,10 +40,10 @@ sub check_po_file ($)
 	    my $prev = $contexts{$context}{$accelerator};
 	    if (defined($prev)) {
 		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in \"$context\":\n";
-		warn "$po_file_name:  1st msgid " . $prev->msgid() . "\n";
-		warn "$po_file_name:  1st msgstr " . $prev->msgstr() . "\n";
-		warn "$po_file_name:  2nd msgid " . $po->msgid() . "\n";
-		warn "$po_file_name:  2nd msgstr " . $po->msgstr() . "\n";
+		warn sprintf("%s:%d: 1st msgid %s\n", $po_file_name, $prev->msgid_begin_lineno(), $prev->msgid());
+		warn sprintf("%s:%d: 1st msgstr %s\n", $po_file_name, $prev->msgstr_begin_lineno(), $prev->msgstr());
+		warn sprintf("%s:%d: 2nd msgid %s\n", $po_file_name, $po->msgid_begin_lineno(), $po->msgid());
+		warn sprintf("%s:%d: 2nd msgstr %s\n", $po_file_name, $po->msgstr_begin_lineno(), $po->msgstr());
 		$warnings++;
 	    } else {
 		$contexts{$context}{$accelerator} = $po;
@@ -153,10 +153,6 @@ Jonas Fonseca suggested the script could propose accelerators that are
 still available.  This has not been implemented.
 
 =head2 Waiting for Locale::PO fixes
-
-The warning messages should include line numbers, so that users of
-Emacs could conveniently edit the conflicting part of the PO file.
-This is not feasible with the current version of Locale::PO.
 
 When B<check-accelerator-conflicts.pl> includes C<msgstr> strings in
 warnings, it should transcode them from the charset of the PO file to
