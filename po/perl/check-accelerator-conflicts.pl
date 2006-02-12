@@ -7,7 +7,7 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.1";
+my $VERSION = "1.2";
 
 sub show_version
 {
@@ -18,35 +18,61 @@ sub show_version
 
 my $Accelerator_tag;
 
+sub po_arrays_eq ($$)
+{
+    my($left, $right) = @_;
+    ref($left) eq "ARRAY" or return 0;
+    ref($right) eq "ARRAY" or return 0;
+    @$left == @$right or return 0;
+    $left->[$_] eq $right->[$_] or return 0
+	foreach (0 .. $#$right);
+    return 1;
+}
+
 sub check_po_file ($)
 {
     my($po_file_name) = @_;
-    my %contexts;
+    my %accelerators;
     my $warnings = 0;
-    my $pos = Locale::PO->load_file_asarray($po_file_name)
-	or warn "$po_file_name: $!\n", return 2;
-    foreach my $po (@$pos) {
-	next if $po->fuzzy();
-	my $msgstr = $po->msgstr()
-	    or next;
-	my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)
-	    or next;
-	$accelerator = uc($accelerator);
-	my $automatic = $po->automatic()
-	    or next;
-	my($contexts) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
-	    or next;
-	foreach my $context (split(/\s*,\s*/, $contexts)) {
-	    my $prev = $contexts{$context}{$accelerator};
-	    if (defined($prev)) {
-		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in \"$context\":\n";
-		warn sprintf("%s:%d: 1st msgid %s\n", $po_file_name, $prev->msgid_begin_lineno(), $prev->msgid());
-		warn sprintf("%s:%d: 1st msgstr %s\n", $po_file_name, $prev->msgstr_begin_lineno(), $prev->msgstr());
-		warn sprintf("%s:%d: 2nd msgid %s\n", $po_file_name, $po->msgid_begin_lineno(), $po->msgid());
-		warn sprintf("%s:%d: 2nd msgstr %s\n", $po_file_name, $po->msgstr_begin_lineno(), $po->msgstr());
+
+    {
+	my $pos = Locale::PO->load_file_asarray($po_file_name)
+	    or warn "$po_file_name: $!\n", return 2;
+	foreach my $po (@$pos) {
+	    next if $po->fuzzy();
+	    my $msgstr = $po->msgstr()
+		or next;
+	    my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)
+		or next;
+	    $accelerator = uc($accelerator);
+	    my $automatic = $po->automatic()
+		or next;
+	    my($contexts) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
+		or next;
+	    foreach my $context (split(/\s*,\s*/, $contexts)) {
+		push @{$accelerators{$accelerator}{$context}}, $po;
+	    }
+	}
+    }
+
+    foreach my $accelerator (sort keys %accelerators) {
+	my $ctxhash = $accelerators{$accelerator};
+	foreach my $ctxname (sort keys %$ctxhash) {
+	    my $pos = $ctxhash->{$ctxname};
+	    if (ref($pos) eq "ARRAY" && @$pos > 1) {
+		my @ctxnames_with_conflicts;
+		foreach my $other_ctxname (sort keys %$ctxhash) {
+		    if (po_arrays_eq($ctxhash->{$other_ctxname}, $pos)) {
+			push @ctxnames_with_conflicts, $other_ctxname;
+			$ctxhash->{$other_ctxname} = 0;
+		    }
+		}
+		my $ctxnames_with_conflicts = join(", ", map(qq("$_"), @ctxnames_with_conflicts));
+		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in $ctxnames_with_conflicts:\n";
+		foreach my $po (@$pos) {
+		    warn sprintf("%s:%d: msgstr %s\n", $po_file_name, $po->msgstr_begin_lineno(), $po->msgstr());
+		}
 		$warnings++;
-	    } else {
-		$contexts{$context}{$accelerator} = $po;
 	    }
 	}
     }
@@ -145,9 +171,6 @@ If the special comments are missing, no conflicts will be found.
 2 if the command line is invalid or a file cannot be read.
 
 =head1 BUGS
-
-B<check-accelerator-conflicts.pl> reports the same conflict multiple
-times if it occurs in multiple contexts.
 
 Jonas Fonseca suggested the script could propose accelerators that are
 still available.  This has not been implemented.
