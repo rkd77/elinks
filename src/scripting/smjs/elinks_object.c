@@ -6,8 +6,10 @@
 
 #include "elinks.h"
 
+#include "bfu/msgbox.h"
 #include "config/home.h"
 #include "ecmascript/spidermonkey/util.h"
+#include "intl/gettext/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
 #include "scripting/smjs/bookmarks.h"
@@ -75,7 +77,8 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	if (!*string)
 		return JS_TRUE;
 
-	alert_smjs_error(string);
+	info_box(smjs_ses->tab->term, MSGBOX_NO_TEXT_INTL,
+	         N_("User script alert"), ALIGN_LEFT, string);
 
 	undef_to_jsval(ctx, rval);
 
