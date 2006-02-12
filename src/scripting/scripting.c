@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "bfu/msgbox.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "scripting/scripting.h"
