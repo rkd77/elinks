@@ -771,12 +771,9 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 		key = KBD_TAB;
 		break;
 
-/* Free BSD uses ASCII_DEL on console */
 	case ASCII_BS:
-		key = KBD_BS;
-		break;
 	case ASCII_DEL:
-		key = KBD_DEL;
+		key = KBD_BS;
 		break;
 
 	case ASCII_LF:
