@@ -217,9 +217,10 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 		if (code) {
 			add_to_string(ret, code);
 			mem_free(code);
-			if (newline)
-				add_char_to_string(ret, '\n');
 		}
+
+		if (newline)
+			add_char_to_string(ret, '\n');
 	}
 #ifdef CONFIG_LEDS
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
