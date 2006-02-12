@@ -982,13 +982,14 @@ Gettext doesn't support.
 
 =head2 Almost Bugs
 
-Locale::PO does not save the line numbers at which entries begin or
-end in the PO file.  These would be useful in error messages.
+C<msgid_begin_lineno> and C<msgstr_begin_lineno> are read-only.
+Perhaps there should also be ways to get the line numbers of the
+other strings.  Probably not line numbers of comments, though.
 
-The C<msgid> and C<msgstr> methods return FULLY-QUOTED strings, but
-they expect BACKSLASHED strings as input.  It would be better to have
-both FULLY-QUOTED or both BACKSLASHED; or perhaps C<<
-$po->msgid(-level => 'BACKSLASHED') >>.
+The C<msgid>, C<msgid_plural>, C<msgstr>, and C<msgstr_n> methods
+output FULLY-QUOTED strings, but they expect BACKSLASHED strings as
+input.  It would be better to have both FULLY-QUOTED or both
+BACKSLASHED; or perhaps C<< $po->msgid(-level => 'BACKSLASHED') >>.
 
 Locale::PO discards all types of comments it does not recognize.
 The B<msgmerge> program of GNU gettext-tools 0.14.3 does the same,
