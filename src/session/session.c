@@ -1123,8 +1123,7 @@ abort_loading(struct session *ses, int interrupt)
 	if (have_location(ses)) {
 		struct location *loc = cur_loc(ses);
 
-		if (is_in_progress_state(loc->download.state))
-			cancel_download(&loc->download, interrupt);
+		cancel_download(&loc->download, interrupt);
 		abort_files_load(ses, interrupt);
 	}
 	abort_preloading(ses, interrupt);
