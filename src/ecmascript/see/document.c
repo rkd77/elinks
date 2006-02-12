@@ -212,11 +212,17 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct string *ret = g->ret;
 
 	if (argc >= 1 && ret) {
-		unsigned char *code = SEE_value_to_unsigned_char(interp, argv[0]);
+		int i = 0;
 
-		if (code) {
-			add_to_string(ret, code);
-			mem_free(code);
+		for (; i < argc; ++i) {
+			unsigned char *code;
+			
+			code = SEE_value_to_unsigned_char(interp, argv[i]);
+
+			if (code) {
+				add_to_string(ret, code);
+				mem_free(code);
+			}
 		}
 
 		if (newline)
