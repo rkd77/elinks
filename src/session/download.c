@@ -140,8 +140,7 @@ abort_download(struct file_download *file_download)
 
 	if (file_download->dlg_data)
 		cancel_dialog(file_download->dlg_data, NULL);
-	if (is_in_progress_state(file_download->download.state))
-		cancel_download(&file_download->download, file_download->stop);
+	cancel_download(&file_download->download, file_download->stop);
 	if (file_download->uri) done_uri(file_download->uri);
 
 	if (file_download->handle != -1) {
@@ -389,8 +388,7 @@ download_data(struct download *download, struct file_download *file_download)
 		file_download->remotetime = parse_date(&cached->last_modified, NULL, 0, 1);
 
 	if (cached->redirect && file_download->redirect_cnt++ < MAX_REDIRECTS) {
-		if (is_in_progress_state(download->state))
-			cancel_download(&file_download->download, 0);
+		cancel_download(&file_download->download, 0);
 
 		assertm(compare_uri(cached->uri, file_download->uri, 0),
 			"Redirecting using bad base URI");
@@ -900,8 +898,7 @@ void
 done_type_query(struct type_query *type_query)
 {
 	/* Unregister any active download */
-	if (is_in_progress_state(type_query->download.state))
-		cancel_download(&type_query->download, 0);
+	cancel_download(&type_query->download, 0);
 
 	object_unlock(type_query->cached);
 	done_uri(type_query->uri);

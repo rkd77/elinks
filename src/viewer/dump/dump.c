@@ -206,8 +206,7 @@ dump_loading_callback(struct download *download, void *p)
 	if (cached && cached->redirect && dump_redir_count++ < MAX_REDIRECTS) {
 		struct uri *uri = cached->redirect;
 
-		if (is_in_progress_state(download->state))
-			cancel_download(download, 0);
+		cancel_download(download, 0);
 
 		load_uri(uri, cached->uri, download, PRI_MAIN, 0, -1);
 		return;
