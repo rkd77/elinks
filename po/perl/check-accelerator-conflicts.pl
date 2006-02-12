@@ -7,7 +7,7 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.2";
+my $VERSION = "1.3";
 
 sub show_version
 {
@@ -57,25 +57,54 @@ sub check_po_file ($)
 
     foreach my $accelerator (sort keys %accelerators) {
 	my $ctxhash = $accelerators{$accelerator};
-	foreach my $ctxname (sort keys %$ctxhash) {
-	    my $pos = $ctxhash->{$ctxname};
+	foreach my $outer_ctxname (sort keys %$ctxhash) {
+	    # Cannot use "foreach my $pos" directly, because $pos
+	    # would then become an alias and change to 0 below.
+	    my $pos = $ctxhash->{$outer_ctxname};
 	    if (ref($pos) eq "ARRAY" && @$pos > 1) {
-		my @ctxnames_with_conflicts;
-		foreach my $other_ctxname (sort keys %$ctxhash) {
-		    if (po_arrays_eq($ctxhash->{$other_ctxname}, $pos)) {
-			push @ctxnames_with_conflicts, $other_ctxname;
-			$ctxhash->{$other_ctxname} = 0;
+		my @ctxnames_in_conflict;
+		foreach my $ctxname (sort keys %$ctxhash) {
+		    if (po_arrays_eq($ctxhash->{$ctxname}, $pos)) {
+			push @ctxnames_in_conflict, $ctxname;
+			$ctxhash->{$ctxname} = 0;
 		    }
 		}
-		my $ctxnames_with_conflicts = join(", ", map(qq("$_"), @ctxnames_with_conflicts));
-		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in $ctxnames_with_conflicts:\n";
+		my $ctxnames_in_conflict = join(", ", map(qq("$_"), @ctxnames_in_conflict));
+		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in $ctxnames_in_conflict:\n";
 		foreach my $po (@$pos) {
-		    warn sprintf("%s:%d: msgstr %s\n", $po_file_name, $po->msgstr_begin_lineno(), $po->msgstr());
+		    my $lineno = $po->msgstr_begin_lineno();
+		    my $msgstr = $po->msgstr();
+
+		    # Get a string of unique characters in $msgstr,
+		    # preferring characters that start a word.
+		    my $displaystr = $msgstr;
+		    $displaystr =~ s/\Q$Accelerator_tag\E//g;
+		    my $suggestions = "";
+		    foreach my $char ($displaystr =~ /\b(\w)/g,
+				      $displaystr =~ /(\w)/g) {
+			$suggestions .= $char unless $suggestions =~ /\Q$char\E/i;
+		    }
+
+		    # But don't suggest unavailable characters.
+		    SUGGESTION: foreach my $char (split(//, $suggestions)) {
+			foreach my $ctxname (@ctxnames_in_conflict) {
+			    $suggestions =~ s/\Q$char\E//, next SUGGESTION
+				if exists $accelerators{uc($char)}{$ctxname};
+			}
+		    }
+
+		    warn "$po_file_name:$lineno: msgstr $msgstr\n";
+		    if ($suggestions eq "") {
+			warn "$po_file_name:$lineno: no suggestions :-(\n";
+		    }
+		    else {
+			warn "$po_file_name:$lineno: suggestions: $suggestions\n";
+		    }
 		}
 		$warnings++;
-	    }
-	}
-    }
+	    } # if found a conflict 
+	} # foreach context known for $accelerator
+    } # foreach $accelerator
     return $warnings ? 1 : 0;
 }
 
@@ -171,9 +200,6 @@ If the special comments are missing, no conflicts will be found.
 2 if the command line is invalid or a file cannot be read.
 
 =head1 BUGS
-
-Jonas Fonseca suggested the script could propose accelerators that are
-still available.  This has not been implemented.
 
 =head2 Waiting for Locale::PO fixes
 
