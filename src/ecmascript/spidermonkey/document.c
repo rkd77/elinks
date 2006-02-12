@@ -212,9 +212,14 @@ document_write_do(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	struct string *ret = interpreter->ret;
 
 	if (argc >= 1 && ret) {
-		unsigned char *code = jsval_to_string(ctx, &argv[0]);
+		int i = 0;
 
-		add_to_string(ret, code);
+		for (; i < argc; ++i) {
+			unsigned char *code = jsval_to_string(ctx, &argv[i]);
+
+			add_to_string(ret, code);
+		}
+
 		if (newline)
 			add_char_to_string(ret, '\n');
 	}
