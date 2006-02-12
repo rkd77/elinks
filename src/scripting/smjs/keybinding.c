@@ -124,7 +124,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	return JS_TRUE;
+	return JS_FALSE;
 }
 
 static void
