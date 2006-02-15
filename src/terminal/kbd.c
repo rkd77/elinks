@@ -770,12 +770,19 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 	case ASCII_TAB:
 		key = KBD_TAB;
 		break;
-
+#if defined(HAVE_SYS_CONSIO_H) || defined(HAVE_MACHINE_CONSOLE_H) /* BSD */
+	case ASCII_BS:
+		key = KBD_BS;
+		break;
+	case ASCII_DEL:
+		key = KBD_DEL;
+		break;
+#else
 	case ASCII_BS:
 	case ASCII_DEL:
 		key = KBD_BS;
 		break;
-
+#endif
 	case ASCII_LF:
 	case ASCII_CR:
 		key = KBD_ENTER;
