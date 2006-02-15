@@ -447,16 +447,18 @@ add_document_lines(struct plain_renderer *renderer)
 	unsigned char *source = renderer->source;
 	int length = renderer->length;
 	int was_empty_line = 0;
+	int was_wrapped = 0;
 
 	for (; length > 0; renderer->lineno++) {
 		unsigned char *xsource;
 		int width, added, only_spaces = 1, spaces = 0, was_spaces = 0;
 		int last_space = 0;
+		int tab_spaces = 0;
 		int step = 0;
 		int doc_width = int_min(renderer->max_width, length);
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
-		for (width = 0; width < doc_width; width++) {
+		for (width = 0; width + tab_spaces < doc_width; width++) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)
@@ -469,6 +471,8 @@ add_document_lines(struct plain_renderer *renderer)
 					spaces++;
 				else
 					was_spaces++;
+				if (source[width] == '\t')
+					tab_spaces += 7 - ((width + tab_spaces) % 8);
 			} else {
 				only_spaces = 0;
 				was_spaces = 0;
@@ -476,7 +480,7 @@ add_document_lines(struct plain_renderer *renderer)
 		}
 
 		if (only_spaces && step) {
-			if (renderer->compress && was_empty_line) {
+			if (was_wrapped || (renderer->compress && was_empty_line)) {
 				/* Successive empty lines will appear as one. */
 				length -= step + spaces;
 				source += step + spaces;
@@ -493,6 +497,7 @@ add_document_lines(struct plain_renderer *renderer)
 
 		} else {
 			was_empty_line = 0;
+			was_wrapped = !step;
 
 			if (was_spaces && step) {
 				/* Drop trailing whitespaces. */

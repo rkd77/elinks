@@ -643,7 +643,13 @@ del_chars(struct html_context *html_context, int x, int y)
 	move_links(html_context, x, y, -1, -1);
 }
 
-#define overlap(x) int_max((x).width - (x).rightmargin, 0)
+#if TABLE_LINE_PADDING < 0
+# define overlap_width(x) (x).width
+#else
+# define overlap_width(x) int_min((x).width, \
+	html_context->options->box.width - TABLE_LINE_PADDING)
+#endif
+#define overlap(x) int_max(overlap_width(x) - (x).rightmargin, 0)
 
 static int inline
 split_line_at(struct html_context *html_context, int width)
@@ -1379,7 +1385,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	part->cx += charslen;
 	renderer_context.nobreak = 0;
 
-	if (!html_is_preformatted()) {
+	if (!(html_context->options->wrap || html_is_preformatted())) {
 		while (part->cx > overlap(par_format)
 		       && part->cx > par_format.leftmargin) {
 			int x = split_line(html_context);
