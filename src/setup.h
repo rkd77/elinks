@@ -106,4 +106,8 @@
 #define DEFAULT_TERMINAL_WIDTH		80
 #define DEFAULT_TERMINAL_HEIGHT		25
 
+/* If this is non-negative, lines in extra-wide table cells will be wrapped
+ * to fit in the screen, with this much extra space.  Try 4. */
+#define TABLE_LINE_PADDING		-1
+
 #endif
