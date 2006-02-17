@@ -206,10 +206,9 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 	if (n >= vs->form_info_len) {
 		int nn = n + 1;
 
-		fs = mem_realloc(vs->form_info, nn * sizeof(*fs));
+		fs = mem_align_alloc(&vs->form_info, vs->form_info_len, nn,
+		                     struct form_state, 0);
 		if (!fs) return NULL;
-		memset(fs + vs->form_info_len, 0,
-		       (nn - vs->form_info_len) * sizeof(*fs));
 		vs->form_info = fs;
 		vs->form_info_len = nn;
 	}
