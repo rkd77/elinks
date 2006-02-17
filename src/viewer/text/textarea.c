@@ -45,7 +45,7 @@ struct line_info {
 /* We add two extra entries to the table so the ending info can be added
  * without reallocating. */
 #define realloc_line_info(info, size) \
-	mem_align_alloc(info, size, (size) + 3, struct line_info, 0xFF)
+	mem_align_alloc(info, size, (size) + 3, 0xFF)
 
 /* Allocates a line_info table describing the layout of the textarea buffer.
  *

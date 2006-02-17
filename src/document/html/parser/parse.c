@@ -126,7 +126,7 @@ end:
 }
 
 
-#define realloc_chrs(x, l) mem_align_alloc(x, l, (l) + 1, unsigned char, 0xFF)
+#define realloc_chrs(x, l) mem_align_alloc(x, l, (l) + 1, 0xFF)
 
 #define add_chr(s, l, c)						\
 	do {								\

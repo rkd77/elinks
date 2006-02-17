@@ -31,7 +31,7 @@
 #define INIT_REAL_ROWS		2
 
 #define realloc_bad_html(bad_html, size) \
-	mem_align_alloc(bad_html, size, (size) + 1, struct html_start_end, 0xFF)
+	mem_align_alloc(bad_html, size, (size) + 1, 0xFF)
 
 static void
 add_table_bad_html_start(struct table *table, unsigned char *start)

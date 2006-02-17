@@ -184,7 +184,7 @@ squeezastring(struct string *string)
 
 #define realloc_string(str, size) \
 	mem_align_alloc(&(str)->source, (str)->length, (size) + 1, \
-			unsigned char, STRING_GRANULARITY)
+			STRING_GRANULARITY)
 
 #ifdef DEBUG_MEMLEAK
 

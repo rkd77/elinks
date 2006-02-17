@@ -152,11 +152,11 @@ mem_align_alloc__(
 }
 
 #ifdef DEBUG_MEMLEAK
-#define mem_align_alloc(ptr, old, new, obj, mask) \
-	mem_align_alloc__(__FILE__, __LINE__, (void **) ptr, old, new, sizeof(obj), mask)
+#define mem_align_alloc(ptr, old, new, mask) \
+	mem_align_alloc__(__FILE__, __LINE__, (void **) ptr, old, new, sizeof(**ptr), mask)
 #else
-#define mem_align_alloc(ptr, old, new, obj, mask) \
-	mem_align_alloc__((void **) ptr, old, new, sizeof(obj), mask)
+#define mem_align_alloc(ptr, old, new, mask) \
+	mem_align_alloc__((void **) ptr, old, new, sizeof(**ptr), mask)
 #endif
 
 

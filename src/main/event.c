@@ -65,7 +65,7 @@ static struct hash *event_hash = NULL;
 #define EVENT_GRANULARITY 0x07
 
 #define realloc_events(ptr, size) \
-	mem_align_alloc(ptr, (size), (size) + 1, struct event, EVENT_GRANULARITY)
+	mem_align_alloc(ptr, (size), (size) + 1, EVENT_GRANULARITY)
 
 static inline int
 invalid_event_id(register int id)
