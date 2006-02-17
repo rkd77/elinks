@@ -24,7 +24,6 @@ static inline struct dom_stack_state *
 realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 {
 	return mem_align_alloc(states, size, size + 1,
-			       struct dom_stack_state,
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
@@ -32,7 +31,6 @@ static inline struct dom_stack_state *
 realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 {
 	return mem_align_alloc(contexts, size, size + 1,
-			       struct dom_stack_context *,
 			       DOM_STACK_STATE_GRANULARITY);
 }
 

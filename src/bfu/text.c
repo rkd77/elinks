@@ -83,7 +83,7 @@ split_line(unsigned char *text, int max_width)
 #undef is_unsplitable
 
 #define LINES_GRANULARITY 0x7
-#define realloc_lines(x, o, n) mem_align_alloc(x, o, n, unsigned char *, LINES_GRANULARITY)
+#define realloc_lines(x, o, n) mem_align_alloc(x, o, n, LINES_GRANULARITY)
 
 /* Find the start of each line with the current max width */
 static unsigned char **

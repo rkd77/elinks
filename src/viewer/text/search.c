@@ -539,7 +539,7 @@ is_in_range(struct document *document, int y, int height,
 }
 
 #define realloc_points(pts, size) \
-	mem_align_alloc(pts, size, (size) + 1, struct point, 0xFF)
+	mem_align_alloc(pts, size, (size) + 1, 0xFF)
 
 static void
 get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,

@@ -1406,7 +1406,7 @@ decode_uri_string_for_display(struct string *string)
 
 #define realloc_uri_list(list) \
 	mem_align_alloc(&(list)->uris, (list)->size, (list)->size + 1, \
-			struct uri *, URI_LIST_GRANULARITY)
+			URI_LIST_GRANULARITY)
 
 struct uri *
 add_to_uri_list(struct uri_list *list, struct uri *uri)
