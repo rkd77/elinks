@@ -330,6 +330,10 @@ or
 It can potentially report some false positives if the .po file contains fuzzy
 message strings.
 
+Note: It will in some situations report a false-positive. The only currently
+known issue is when the msgid contains a tilde not being used a an accelerator
+mark (e.g. "~/.elinks") and the translated msgstr do not.
+
 2.5 Making the updates part of ELinks:
 --------------------------------------
 
