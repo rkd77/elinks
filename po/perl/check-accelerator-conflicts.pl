@@ -18,7 +18,7 @@ sub show_version
 
 my $Accelerator_tag;
 
-sub po_arrays_eq ($$)
+sub acceleration_arrays_eq ($$)
 {
     my($left, $right) = @_;
     ref($left) eq "ARRAY" or return 0;
@@ -40,17 +40,40 @@ sub check_po_file ($)
 	    or warn "$po_file_name: $!\n", return 2;
 	foreach my $po (@$pos) {
 	    next if $po->fuzzy();
-	    my $msgstr = $po->msgstr()
-		or next;
-	    my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)
-		or next;
-	    $accelerator = uc($accelerator);
 	    my $automatic = $po->automatic()
 		or next;
-	    my($contexts) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
+	    my($ctxnames) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
 		or next;
-	    foreach my $context (split(/\s*,\s*/, $contexts)) {
-		push @{$accelerators{$accelerator}{$context}}, $po;
+	    my @ctxnames = split(/\s*,\s*/, $ctxnames);
+	    my @accelerations;
+	    if (defined(my $msgstr = $po->msgstr())) {
+		if (my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)) {
+		    push @accelerations, { PO => $po,
+					   ACCELERATOR => $accelerator,
+					   LINENO => $po->msgstr_begin_lineno(),
+					   STRING => $msgstr,
+					   EXPLAIN => "msgstr $msgstr" };
+		}
+
+		# TODO: look for accelerators in plural forms?
+	    }
+	    # The msgid checking below is disabled because it doesn't
+	    # help choose good accelerators for translated strings.
+ 	    elsif (0 && defined(my $msgid = $po->msgid())) {
+ 	    	if (my($accelerator) = ($msgid =~ /\Q$Accelerator_tag\E(.)/s)) {
+ 	    	    push @accelerations, { PO => $po,
+ 	    				   ACCELERATOR => $accelerator,
+ 	    				   LINENO => $po->msgid_begin_lineno(),
+ 	    				   STRING => $msgstr,
+ 	    				   EXPLAIN => "msgid $msgid" };
+ 	    	}
+ 	    }
+
+	    foreach my $acceleration (@accelerations) {
+		foreach my $ctxname (@ctxnames) {
+		    push(@{$accelerators{uc $acceleration->{ACCELERATOR}}{$ctxname}},
+			 $acceleration);
+		}
 	    }
 	}
     }
@@ -58,26 +81,27 @@ sub check_po_file ($)
     foreach my $accelerator (sort keys %accelerators) {
 	my $ctxhash = $accelerators{$accelerator};
 	foreach my $outer_ctxname (sort keys %$ctxhash) {
-	    # Cannot use "foreach my $pos" directly, because $pos
-	    # would then become an alias and change to 0 below.
-	    my $pos = $ctxhash->{$outer_ctxname};
-	    if (ref($pos) eq "ARRAY" && @$pos > 1) {
+	    # Cannot use "foreach my $accelerations" directly, because
+	    # $accelerations would then become an alias and change to 0 below.
+	    my $accelerations = $ctxhash->{$outer_ctxname};
+	    if (ref($accelerations) eq "ARRAY" && @$accelerations > 1) {
 		my @ctxnames_in_conflict;
 		foreach my $ctxname (sort keys %$ctxhash) {
-		    if (po_arrays_eq($ctxhash->{$ctxname}, $pos)) {
+		    if (acceleration_arrays_eq($ctxhash->{$ctxname}, $accelerations)) {
 			push @ctxnames_in_conflict, $ctxname;
 			$ctxhash->{$ctxname} = 0;
 		    }
 		}
 		my $ctxnames_in_conflict = join(", ", map(qq("$_"), @ctxnames_in_conflict));
 		warn "$po_file_name: Accelerator conflict for \"$accelerator\" in $ctxnames_in_conflict:\n";
-		foreach my $po (@$pos) {
-		    my $lineno = $po->msgstr_begin_lineno();
-		    my $msgstr = $po->msgstr();
+		foreach my $acceleration (@$accelerations) {
+		    my $lineno = $acceleration->{LINENO};
+		    my $explain = $acceleration->{EXPLAIN};
 
-		    # Get a string of unique characters in $msgstr,
+		    # Get a string of unique characters in the string,
 		    # preferring characters that start a word.
-		    my $displaystr = $msgstr;
+		    # FIXME: should remove quotes and resolve \n etc.
+		    my $displaystr = $acceleration->{STRING};
 		    $displaystr =~ s/\Q$Accelerator_tag\E//g;
 		    my $suggestions = "";
 		    foreach my $char ($displaystr =~ /\b(\w)/g,
@@ -93,7 +117,7 @@ sub check_po_file ($)
 			}
 		    }
 
-		    warn "$po_file_name:$lineno: msgstr $msgstr\n";
+		    warn "$po_file_name:$lineno: $explain\n";
 		    if ($suggestions eq "") {
 			warn "$po_file_name:$lineno: no suggestions :-(\n";
 		    }
