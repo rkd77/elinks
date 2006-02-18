@@ -424,7 +424,7 @@ abort:
 				preselect = order;
 			value = get_attr_val(t_attr, "value", html_context->options);
 
-			if (!mem_align_alloc(&values, order, order + 1, unsigned char *, 0xFF))
+			if (!mem_align_alloc(&values, order, order + 1, 0xFF))
 				goto abort;
 
 			values[order++] = value;

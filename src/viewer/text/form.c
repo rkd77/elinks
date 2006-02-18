@@ -206,10 +206,8 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 	if (n >= vs->form_info_len) {
 		int nn = n + 1;
 
-		fs = mem_realloc(vs->form_info, nn * sizeof(*fs));
+		fs = mem_align_alloc(&vs->form_info, vs->form_info_len, nn, 0);
 		if (!fs) return NULL;
-		memset(fs + vs->form_info_len, 0,
-		       (nn - vs->form_info_len) * sizeof(*fs));
 		vs->form_info = fs;
 		vs->form_info_len = nn;
 	}
@@ -630,7 +628,7 @@ encode_controls(struct list_head *l, struct string *data,
 
 #define BOUNDARY_LENGTH	32
 #define realloc_bound_ptrs(bptrs, bptrs_size) \
-	mem_align_alloc(bptrs, bptrs_size, bptrs_size + 1, int, 0xFF)
+	mem_align_alloc(bptrs, bptrs_size, bptrs_size + 1, 0xFF)
 
 struct boundary_info {
 	int count;

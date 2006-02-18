@@ -134,7 +134,7 @@ void put_chars(struct html_context *, unsigned char *, int);
 
 #define SPACES_GRANULARITY	0x7F
 
-#define ALIGN_SPACES(x, o, n) mem_align_alloc(x, o, n, unsigned char, SPACES_GRANULARITY)
+#define ALIGN_SPACES(x, o, n) mem_align_alloc(x, o, n, SPACES_GRANULARITY)
 
 static inline void
 set_screen_char_color(struct screen_char *schar,

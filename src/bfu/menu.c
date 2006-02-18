@@ -1146,7 +1146,7 @@ mainmenu_handler(struct window *win, struct term_event *ev)
 
 /* For dynamic menus the last (cleared) item is used to mark the end. */
 #define realloc_menu_items(mi_, size) \
-	mem_align_alloc(mi_, size, (size) + 2, struct menu_item, 0xF)
+	mem_align_alloc(mi_, size, (size) + 2, 0xF)
 
 struct menu_item *
 new_menu(enum menu_item_flags flags)
