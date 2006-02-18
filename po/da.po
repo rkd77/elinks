@@ -180,7 +180,7 @@ msgstr "Tom tekststreng ikke tilladt"
 #: src/session/download.c:542 src/session/download.c:1139
 #: src/viewer/text/search.c:1595
 msgid "~Cancel"
-msgstr "~Annullér"
+msgstr "A~nnullér"
 
 #: src/bfu/leds.c:74
 msgid "Clock"
@@ -1304,9 +1304,9 @@ msgid ""
 "relative to your HOME directory."
 msgstr ""
 "Sæt opsætningskatalog til angiven sti. ELinks vil læse og skrive\n"
-"sine opsætningsfiler herfra. Hvis stien begynder med en \"/\" bliver\n"
-"den opfattet som absolut. Ellers antages den at være relativ i\n"
-"forhold til dit hjemmekatalog."
+"sine opsætningsfiler herfra i stedet for ~/.elinks. Hvis stien\n"
+"begynder med en \"/\" bliver den opfattet som absolut. Ellers\n"
+"antages den at være relativ i forhold til dit hjemmekatalog."
 
 #: src/config/cmdline.c:673
 msgid "Print default configuration file to stdout"
@@ -4904,7 +4904,7 @@ msgstr "Tilfø~j dokument som bogmærke"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:245 src/dialogs/menu.c:411
 msgid "Toggle ~html/plain"
-msgstr "S~kift mellem HTML/tekst"
+msgstr "~Skift mellem HTML/tekst"
 
 #. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:246
@@ -5237,7 +5237,7 @@ msgstr "Gem i fil"
 #. accelerator_context(tab_menu.uri_frame)
 #: src/dialogs/menu.c:886
 msgid "~Pass frame URI to external command"
-msgstr "Videregiv rammens adresse til ekstern ~kommando"
+msgstr "~Videregiv rammens adresse til ekstern kommando"
 
 #. accelerator_context(tab_menu.uri_link)
 #: src/dialogs/menu.c:893
@@ -7170,8 +7170,8 @@ msgstr[1] "%u låste"
 #, c-format
 msgid "%u rejected"
 msgid_plural "%u rejected"
-msgstr[0] "%d afvist"
-msgstr[1] "%d afviste"
+msgstr[0] "%u afvist"
+msgstr[1] "%u afviste"
 
 #: src/protocol/bittorrent/dialogs.c:443
 #, c-format
@@ -8322,7 +8322,7 @@ msgstr "Åbn i en ~ekstern tekstbehandler"
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1291
 msgid "~Submit form"
-msgstr "~Indsend formular"
+msgstr "Ind~send formular"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1292
