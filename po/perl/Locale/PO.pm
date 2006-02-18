@@ -25,9 +25,18 @@ use fields
     qw(_msgid_begin_lineno _msgstr_begin_lineno),
     # Multiline strings excluding the trailing newline and comment
     # markers, or undef if there are no such lines.
-    qw(comment automatic reference _flag),
-    # Flags; see the accessors with the same names.
-    qw(fuzzy c_format php_format _obsolete);
+    qw(comment automatic reference),
+    # Named flags.  These are kept in two formats:
+    # - $self->{'_flaghash'} is undef Locale::PO has not yet parsed the flags.
+    #   Otherwise, it refers to a hash where the keys are names of flags that
+    #   have been set, and the values are all 1.  (The hash can be empty.)
+    # - $self->{'_flagstr'} is undef if there are no flags; or a string in the
+    #   same format as $self->{'automatic'}; or a reference to the same hash as
+    #   $self->{'_flaghash'} if Locale::PO has changed a flag and not yet
+    #   reformatted the flags as a string.
+    qw(_flagstr _flaghash),
+    # 1 if the entry is obsolete; undef if not.
+    qw(_obsolete);
 
 #use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
 #use locale;
@@ -156,24 +165,106 @@ sub reference {
     @_ ? $self->{'reference'} = shift: $self->{'reference'};
 }
 
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _update_flaghash {
+    my Locale::PO $self = shift;
+    if (!defined($self->{'_flaghash'})) {
+	my @flags;
+	@flags = split(/[\s,]+/, $self->{'_flagstr'})
+	    if defined $self->{'_flagstr'};
+	$self->{'_flaghash'} = { map { $_ => 1 } @flags };
+    }
+}
+
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _update_flagstr {
+    my Locale::PO $self = shift;
+    if (ref($self->{'_flagstr'}) eq 'HASH') {
+	# GNU Gettext seems to put the "fuzzy" flag first.
+	# Do the same here, in case someone's relying on it.
+	# However, the other flags will be sorted differently.
+	my %flags = %{$self->{'_flagstr'}};
+	my @flags = ();
+	push @flags, 'fuzzy' if delete $flags{'fuzzy'};
+	push @flags, sort { $a cmp $b } keys %flags;
+	$self->{'_flagstr'} = (@flags ? join(', ', @flags) : undef);
+    }
+}
+
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _flag {
+    my Locale::PO $self = shift;
+    my $name = shift;
+    $self->_update_flaghash();
+    if (@_) { # set or clear the flag
+	$self->{'_flagstr'} = $self->{'_flaghash'};
+	if (shift) {
+	    $self->{'_flaghash'}{$name} = 1;
+	    return 1;
+	}
+	else {
+	    delete $self->{'_flaghash'}{$name};
+	    return "";
+	}
+    }
+    else { # check the flag
+	return exists $self->{'_flaghash'}{$name};
+    }
+}
+
+# Methods whose names begin with "_" may be changed or removed in
+# future versions.
+sub _tristate {
+    my Locale::PO $self = shift;
+    my $name = shift;
+    $self->_update_flaghash();
+    if (@_) { # set or clear the flags
+	$self->{'_flagstr'} = $self->{'_flaghash'};
+	my $val = shift;
+	if (!defined($val) || $val eq "") {
+	    delete $self->{'_flaghash'}{"$name"};
+	    delete $self->{'_flaghash'}{"no-$name"};
+	    return undef;
+	}
+	elsif ($val) {
+	    $self->{'_flaghash'}{"$name"} = 1;
+	    delete $self->{'_flaghash'}{"no-$name"};
+	    return 1;
+	}
+	else {
+	    delete $self->{'_flaghash'}{"$name"};
+	    $self->{'_flaghash'}{"no-$name"} = 1;
+	    return 0;
+	}
+    }
+    else { # check the flags
+	return 1 if $self->{'_flaghash'}{"$name"};
+	return 0 if $self->{'_flaghash'}{"no-$name"};
+	return undef;
+    }
+}
+
 sub fuzzy {
     my Locale::PO $self = shift;
-    @_ ? $self->{'fuzzy'} = shift: $self->{'fuzzy'};
+    return $self->_flag('fuzzy', @_);
+}
+
+sub c_format {
+    my Locale::PO $self = shift;
+    return $self->_tristate('c-format', @_);
+}
+
+sub php_format {
+    my Locale::PO $self = shift;
+    return $self->_tristate('php-format', @_);
 }
 
 sub obsolete {
     my Locale::PO $self = shift;
     @_ ? $self->{_obsolete} = shift : $self->{_obsolete};
-}
-
-sub c_format {
-    my Locale::PO $self = shift;
-    @_ ? $self->{'c_format'} = shift: $self->{'c_format'};
-}
-
-sub php_format {
-    my Locale::PO $self = shift;
-    @_ ? $self->{'php_format'} = shift: $self->{'php_format'};
 }
 
 # Methods whose names begin with "_" may be changed or removed in
@@ -208,27 +299,15 @@ sub _normalize_str {
 sub dump {
     my Locale::PO $self = shift;
     my $dump;
-    $dump = $self->_dump_multi_comment( $self->comment, "# " )
+    $dump .= $self->_dump_multi_comment( $self->comment, "# " )
       if defined( $self->comment );
     $dump .= $self->_dump_multi_comment( $self->automatic, "#. " )
       if defined( $self->automatic );
     $dump .= $self->_dump_multi_comment( $self->reference, "#: " )
       if defined( $self->reference );
-    my $flags = '';
-    $flags .= ", fuzzy" if $self->fuzzy;
-    $flags .= ", c-format"
-      if ( defined( $self->c_format )
-        and $self->c_format );
-    $flags .= ", no-c-format"
-      if ( defined( $self->c_format )
-        and !$self->c_format );
-    $flags .= ", php-format"
-      if ( defined( $self->php_format )
-        and $self->php_format );
-    $flags .= ", no-php-format"
-      if ( defined( $self->php_format )
-        and !$self->php_format );
-    $dump .= "#$flags\n" if length $flags;
+    $self->_update_flagstr();
+    $dump .= $self->_dump_multi_comment( $self->{'_flagstr'}, "#, " )
+      if defined( $self->{'_flagstr'} );
     $dump .= "msgid " . $self->_normalize_str( $self->msgid );
     $dump .= "msgid_plural " . $self->_normalize_str( $self->msgid_plural )
       if $self->msgid_plural;
@@ -349,14 +428,6 @@ sub load_file_asarray {
                 unless defined $po->{msgstr};
         }
 
-        my @flags;
-        @flags = split(/[\s,]+/, $po->{_flag}) if defined $po->{_flag};
-        $po->fuzzy(1)      if grep(        /^fuzzy$/i, @flags);
-        $po->c_format(1)   if grep(     /^c-format$/i, @flags);
-        $po->c_format(0)   if grep(  /^no-c-format$/i, @flags);
-        $po->php_format(1) if grep(   /^php-format$/i, @flags);
-        $po->php_format(0) if grep(/^no-php-format$/i, @flags);
-
         push( @entries, $po);
         $po = undef;
         $last_buffer = undef;
@@ -381,7 +452,7 @@ sub load_file_asarray {
 
             my $comment;
             if    ($1 eq "")  { $comment = \$po->{comment} }
-            elsif ($1 eq ",") { $comment = \$po->{_flag} }
+            elsif ($1 eq ",") { $comment = \$po->{_flagstr} }
             elsif ($1 eq ".") { $comment = \$po->{automatic} }
             elsif ($1 eq ":") { $comment = \$po->{reference} }
             else { warn "Bug: did not recognize '$1'"; next LINE }
@@ -946,6 +1017,16 @@ Never write C<< CZ<><Locale::PO> >>; it looks bad in B<pod2text>.
 Documented that C<msgstr> normally returns C<undef> if there are plurals.
 Documented the new methods C<msgid_begin_lineno> and C<msgstr_begin_lineno>.
 
+=item Z<>2006-02-28  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+Locale::PO now preserves unrecognized flags, although there is still no documented way to access them.  It also preserves the order of flags, if no flags are modified.  Replaced the C<fuzzy>, C<c_format>, and C<php_format> fields with C<_flaghash>, and renamed the C<_flag> field to C<_flagstr>.
+Flag-setting functions silently map unsupported values (e.g. 42) to supported ones (e.g. 1), which they also return.
+The C<c_format> and C<php_format> methods treat empty strings as C<undef>, rather than as 0.
+Names of flags are case-sensitive, like in GNU Gettext.
+
+POD changes:
+Unlisted the bugs that have now been fixed.
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
@@ -958,18 +1039,6 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 If you C<load_file> then C<save_file>, the output file may have slight
 cosmetic differences from the input file (an extra blank line here or there).
-
-The C<c_format> and C<php_format> methods are documented: "1 implies
-c-format, 0 implies no-c-format, and blank or undefined implies
-neither."  However, the implementation seems to treat empty strings
-the same as 0.
-
-Locale::PO discards the "#," flags it does not recognize.
-Unrecognized flags should be preserved; perhaps the order of flags
-should also be preserved.
-
-Names of flags are case-insensitive in Locale::PO but case-sensitive
-in GNU Gettext.
 
 The C<quote> and C<dequote> methods assume Perl knows the encoding
 of the string.  If it doesn't, they'll treat each 0x5C byte as a
