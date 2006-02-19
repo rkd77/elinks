@@ -733,19 +733,18 @@ query_delete_selected_item(void *context_)
 
 	assert(item);
 
-	context = init_listbox_context(box, term, item, NULL);
-	if (!context) return EVENT_PROCESSED;
-
-	context->widget_data = oldcontext->widget_data;
-
 	delete = ops->can_delete(item)
 		 ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
 
 	if (delete == DELETE_IMPOSSIBLE || ops->is_used(item)) {
 		print_delete_error(item, term, ops, delete);
-		mem_free(context);
 		return EVENT_PROCESSED;
 	}
+
+	context = init_listbox_context(box, term, item, NULL);
+	if (!context) return EVENT_PROCESSED;
+
+	context->widget_data = oldcontext->widget_data;
 
 	text = ops->get_text(item, term);
 	if (!text) {
