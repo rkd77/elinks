@@ -42,14 +42,6 @@ function root_w00t(cached, vs) {
 };
 elinks.preformat_html_hooks.push(root_w00t);
 
-function fix_rss_content_type(cached, vs) {
-	if (cached.uri.match(/rss\.slashdot\.org|\.(rss|rdf)$/))
-		cached.type = 'application/rss+xml';
-
-	return true;
-};
-elinks.preformat_html_hooks.push(fix_rss_content_type);
-
 function mangle_deb_bugnumbers(cached, vs) {
 	if (!cached.uri.match(/^[a-z0-9]+:\/\/[a-z0-9A-Z.-]+debian\.org/)
 	    && !cached.uri.match(/changelog\.Debian/))
