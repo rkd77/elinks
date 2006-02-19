@@ -754,26 +754,26 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	delete = ops->can_delete(context->item)
+	delete = ops->can_delete(item)
 		 ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
 
-	if (delete == DELETE_IMPOSSIBLE || ops->is_used(context->item)) {
-		print_delete_error(context->item, term, ops, delete);
+	if (delete == DELETE_IMPOSSIBLE || ops->is_used(item)) {
+		print_delete_error(item, term, ops, delete);
 		mem_free(context);
 		return EVENT_PROCESSED;
 	}
 
-	text = ops->get_text(context->item, term);
+	text = ops->get_text(item, term);
 	if (!text) {
 		mem_free(context);
 		return EVENT_PROCESSED;
 	}
 
-	if (context->item->type == BI_FOLDER) {
+	if (item->type == BI_FOLDER) {
 		unsigned char *title = listbox_message(delete_folder_title);
 		unsigned char *message = listbox_message(delete_folder);
 
-		ops->lock(context->item);
+		ops->lock(item);
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
 			title, ALIGN_CENTER,
 			msg_text(term, message, text),
@@ -783,9 +783,9 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	} else {
 		unsigned char *title = listbox_message(delete_item_title);
 		unsigned char *message = listbox_message(delete_item);
-		unsigned char *msg = ops->get_info(context->item, term);
+		unsigned char *msg = ops->get_info(item, term);
 
-		ops->lock(context->item);
+		ops->lock(item);
 
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
 			title, ALIGN_LEFT,
