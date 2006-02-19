@@ -4,7 +4,7 @@ include $(top_builddir)/Makefile.config
 SUBDIRS = man
 
 # A little trick to simplify some of the rules.
-VPATH = $(builddir):$(srcdir):$(top_srcdir)/contrib/perl
+VPATH = $(builddir):$(srcdir):$(top_srcdir)/contrib/perl:$(top_srcdir)/po/perl
 
 docdir = $(datadir)/doc
 
@@ -36,6 +36,8 @@ HTML_DOCS-$(CONFIG_XMLTO) += \
  manual.html-chunked
 
 HTML_DOCS-$(CONFIG_POD2HTML) += \
+ perl-check-accelerator-conflicts.html \
+ perl-gather-accelerator-contexts.html \
  perl.html \
  perl-hooks.html
 
