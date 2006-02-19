@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-19 00:03+0100\n"
-"PO-Revision-Date: 2006-02-18 22:42+0100\n"
+"POT-Creation-Date: 2006-02-19 01:41+0100\n"
+"PO-Revision-Date: 2006-02-19 01:42+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -8412,7 +8412,7 @@ msgstr "Envoyer le formulaire et ~télécharger"
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1313
 msgid "Form f~ields"
-msgstr "Champs de formula~ire"
+msgstr "C~hamps de formulaire"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1320
@@ -8522,7 +8522,7 @@ msgid ""
 "entered from this file: %s"
 msgstr ""
 "Vous avez dépassé la longueur maximale de l'aire de texte:\n"
-"votre entrée fait %u caractères, mais le maximum est de %u caractères.\n"
+"votre entrée fait %d caractères, mais le maximum est de %u caractères.\n"
 "\n"
 "Votre entrée a été tronquée, mais vous pouvez toujours récupérer le texte "
 "que vous avez entré dans le fichier suivant: %s"
