@@ -733,8 +733,7 @@ query_delete_selected_item(void *context_)
 
 	assert(item);
 
-	delete = ops->can_delete(item)
-		 ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
+	delete = ops->can_delete(item) ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
 
 	if (delete == DELETE_IMPOSSIBLE || ops->is_used(item)) {
 		print_delete_error(item, term, ops, delete);
