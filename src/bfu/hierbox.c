@@ -742,12 +742,10 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	context->widget_data = dlg_data->widgets_data;
 
 	if (!context->item) {
-		unsigned char *title = listbox_message(delete_marked_items_title);
-		unsigned char *message = listbox_message(delete_marked_items);
-
 		msg_box(term, getml(context, NULL), 0,
-			title, ALIGN_CENTER,
-			message,
+			listbox_message(delete_marked_items_title),
+			ALIGN_CENTER,
+			listbox_message(delete_marked_items),
 			context, 2,
 			N_("~Yes"), push_ok_delete_button, B_ENTER,
 			N_("~No"), done_listbox_context, B_ESC);
@@ -770,26 +768,22 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	}
 
 	if (item->type == BI_FOLDER) {
-		unsigned char *title = listbox_message(delete_folder_title);
-		unsigned char *message = listbox_message(delete_folder);
-
 		ops->lock(item);
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
-			title, ALIGN_CENTER,
-			msg_text(term, message, text),
+			listbox_message(delete_folder_title), ALIGN_CENTER,
+			msg_text(term, listbox_message(delete_folder), text),
 			context, 2,
 			N_("~Yes"), push_ok_delete_button, B_ENTER,
 			N_("~No"), done_listbox_context, B_ESC);
 	} else {
-		unsigned char *title = listbox_message(delete_item_title);
-		unsigned char *message = listbox_message(delete_item);
 		unsigned char *msg = ops->get_info(item, term);
 
 		ops->lock(item);
 
 		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
-			title, ALIGN_LEFT,
-			msg_text(term, message, text, empty_string_or_(msg)),
+			listbox_message(delete_item_title), ALIGN_LEFT,
+			msg_text(term, listbox_message(delete_item),
+			         text, empty_string_or_(msg)),
 			context, 2,
 			N_("~Yes"), push_ok_delete_button, B_ENTER,
 			N_("~No"), done_listbox_context, B_ESC);
@@ -833,8 +827,6 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 	struct listbox_ops *ops = box->ops;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
-	unsigned char *title = listbox_message(clear_all_items_title);
-	unsigned char *message = listbox_message(clear_all_items);
 
 	if (!box->sel) return EVENT_PROCESSED;
 
@@ -854,8 +846,8 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 	}
 
 	msg_box(term, getml(context, NULL), 0,
-		title, ALIGN_CENTER,
-		message,
+		listbox_message(clear_all_items_title), ALIGN_CENTER,
+		listbox_message(clear_all_items),
 		context, 2,
 		N_("~Yes"), do_clear_browser, B_ENTER,
 		N_("~No"), NULL, B_ESC);
