@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-02-19 00:03+0100\n"
-"PO-Revision-Date: 2005-12-04 17:33+0200\n"
+"PO-Revision-Date: 2006-02-19 02:00+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1846,9 +1846,8 @@ msgstr ""
 
 #. accelerator_context(menu_keys, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
 #: src/config/dialogs.c:946 src/dialogs/info.c:135 src/globhist/dialogs.c:231
-#, fuzzy
 msgid "~Toggle display"
-msgstr "Valitse ~HTML/tavallinen"
+msgstr "~Vaihda näyttötapa"
 
 #: src/config/dialogs.c:953
 msgid "Keybinding manager"
@@ -4234,9 +4233,8 @@ msgstr "Haluatko tosiaan poistaa kaikki evästeet?"
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cookies/dialogs.c:426 src/dialogs/download.c:486 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:260
-#, fuzzy
 msgid "C~lear"
-msgstr "Tyhjennä"
+msgstr "T~yhjennä"
 
 #: src/cookies/dialogs.c:432
 #, fuzzy
@@ -4587,14 +4585,13 @@ msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:241 src/dialogs/menu.c:319
-#, fuzzy
 msgid "Bookm~ark document"
-msgstr "documentit"
+msgstr "~Kirjanmerkki dokumentista"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:245 src/dialogs/menu.c:411
 msgid "Toggle ~html/plain"
-msgstr "Valitse ~HTML/tavallinen"
+msgstr "Vaihda ~HTML/tavallinen"
 
 #. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:246
@@ -4604,17 +4601,17 @@ msgstr "~Lataa uudelleen"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:249 src/dialogs/menu.c:421
 msgid "Frame at ~full-screen"
-msgstr "~Kehys koko näytöllä"
+msgstr "Kehys koko ~näytöllä"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:258 src/dialogs/menu.c:423
 msgid "Nex~t tab"
-msgstr "~Seuraava välilehti"
+msgstr "Seu~raava välilehti"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:259 src/dialogs/menu.c:424
 msgid "Pre~v tab"
-msgstr "~Edellinen välilehti"
+msgstr "Edell~inen välilehti"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
 #: src/dialogs/menu.c:262 src/dialogs/menu.c:425
@@ -4634,12 +4631,12 @@ msgstr "Kirjanmerkit kaikista ~välilehdistä"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:303
 msgid "Open new ~tab"
-msgstr "Avaa ~uusi välilehti"
+msgstr "~Avaa uusi välilehti"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:304
 msgid "Open new tab in backgroun~d"
-msgstr "Avaa uusi välilehti ~taustalla"
+msgstr "Avaa ~uusi välilehti taustalla"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:305
@@ -4658,14 +4655,13 @@ msgstr "~Historia"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:309
-#, fuzzy
 msgid "~Unhistory"
-msgstr "~Historia"
+msgstr "Epähi~storia"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
 msgid "~Save as"
-msgstr "~Tallenna nimellä"
+msgstr "Tallenna ~nimellä"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:316
@@ -4675,15 +4671,13 @@ msgstr "Tallenna ~URL nimellä"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:317
-#, fuzzy
 msgid "Sa~ve formatted document"
 msgstr "Tallenna muotoiltu ~dokumentti"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:326
-#, fuzzy
 msgid "~Kill background connections"
-msgstr "Poista taustayhteydet"
+msgstr "Poista tausta~yhteydet"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:327
@@ -4693,9 +4687,8 @@ msgstr "Tyhjennä väli~muisti"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:328
-#, fuzzy
 msgid "Resource ~info"
-msgstr "Lähdet~iedot"
+msgstr "~Resurssitiedot"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
@@ -4710,28 +4703,27 @@ msgstr "Avaa uusi ~ikkuna"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:381
 msgid "~OS shell"
-msgstr "~Käyttöjärjestelmä"
+msgstr "Käyttö~järjestelmä"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:388
-#, fuzzy
 msgid "Resize t~erminal"
-msgstr "Aseta ~terminaalin koko"
+msgstr "Aseta päätteen k~oko"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:406
 msgid "Search ~backward"
-msgstr "Etsi ~takaisinpäin"
+msgstr "Etsi takaisin~päin"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:407
 msgid "Find ~next"
-msgstr "Etsi ~seuraava"
+msgstr "Etsi seur~aava"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:408
 msgid "Find ~previous"
-msgstr "Etsi ~edellinen"
+msgstr "Etsi e~dellinen"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:409
@@ -4740,20 +4732,18 @@ msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:412
-#, fuzzy
 msgid "Toggle i~mages"
-msgstr "Valitse ~HTML/tavallinen"
+msgstr "Vaihda ~kuvat päälle/pois"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:413
-#, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Valitse linkkinumero"
+msgstr "Vaihda ~linkkien numerointi"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Toggle ~document colors"
-msgstr ""
+msgstr "Vaihda dokumentin ~värit"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
@@ -4763,7 +4753,7 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
 msgid "Document ~info"
-msgstr "Dokumentin t~iedot"
+msgstr "Dokumentin ~tiedot"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:418
@@ -4772,15 +4762,13 @@ msgstr "~Otsikkotieto"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:419
-#, fuzzy
 msgid "Rel~oad document"
-msgstr "documentit"
+msgstr "Lataa dokumentti ~uudestaan"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:420
-#, fuzzy
 msgid "~Rerender document"
-msgstr "Tallenna muotoiltu ~dokumentti"
+msgstr "~Muotoile dokumentti uudestaan"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:432
@@ -4893,13 +4881,12 @@ msgstr "~Evästeet"
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:495
 msgid "~Form history"
-msgstr "~Kaavakehistoria"
+msgstr "K~aavakehistoria"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:497
-#, fuzzy
 msgid "~Authentication"
-msgstr "Dokumentin t~iedot"
+msgstr "~Todennus"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:514
@@ -4919,7 +4906,7 @@ msgstr "~Linkki"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:517
 msgid "~Tools"
-msgstr ""
+msgstr "~Välineet"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:518
@@ -4943,7 +4930,7 @@ msgstr "Tallenna tiedostoon"
 #. accelerator_context(tab_menu.uri_frame)
 #: src/dialogs/menu.c:886
 msgid "~Pass frame URI to external command"
-msgstr ""
+msgstr "~Anna kehyksen URI ulkoiselle komennolle"
 
 #. accelerator_context(tab_menu.uri_link)
 #: src/dialogs/menu.c:893
@@ -5320,9 +5307,8 @@ msgstr "Käyttäjän ID"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:212
-#, fuzzy
 msgid "~Toggle saving"
-msgstr "Valitse ~HTML/tavallinen"
+msgstr "~Salli/estä tallennus"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -7852,12 +7838,12 @@ msgstr "Lisää linkki ~kirjanmerkkeihin"
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1268 src/viewer/text/link.c:1308
 msgid "~Reset form"
-msgstr "~Tyhjennä kaavake"
+msgstr "T~yhjennä kaavake"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1283
 msgid "Open in ~external editor"
-msgstr ""
+msgstr "~Avaa ulkoisessa muokkausohjelmassa"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1291
@@ -7887,23 +7873,22 @@ msgstr "Lähetä kaavake ja avaa uuteen välilehteen ~taustalla"
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1306
 msgid "Submit form and ~download"
-msgstr "Lähetä kaavake ja ~lataa"
+msgstr "Lähetä kaavake ~ja lataa"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1313
-#, fuzzy
 msgid "Form f~ields"
-msgstr "Salasanakenttä"
+msgstr "Kaavakkeen k~entät"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1320
 msgid "V~iew image"
-msgstr "Näytä ~kuva"
+msgstr "~Näytä kuva"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1322
 msgid "Download ima~ge"
-msgstr "Lataa k~uva"
+msgstr "Lataa kuv~a"
 
 #: src/viewer/text/link.c:1331
 msgid "No link selected"
