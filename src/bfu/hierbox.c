@@ -813,7 +813,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		listbox_message(delete_marked_items),
 		context, 2,
 		N_("~Yes"), push_ok_delete_button, B_ENTER,
-		N_("~No"), done_listbox_context, B_ESC);
+		N_("~No"), query_delete_selected_item, B_ESC);
 
 	return EVENT_PROCESSED;
 }
