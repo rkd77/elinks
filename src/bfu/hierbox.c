@@ -719,38 +719,24 @@ push_ok_delete_button(void *context_)
 		listbox_sel_move(context->widget_data, -1);
 }
 
-widget_handler_status_T
-push_hierbox_delete_button(struct dialog_data *dlg_data,
-			   struct widget_data *button)
+static widget_handler_status_T
+query_delete_selected_item(void *context_)
 {
-	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
-	struct terminal *term = dlg_data->win->term;
-	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	/* [gettext_accelerator_context(query_delete_selected_item)] */
+	struct listbox_context *context, *oldcontext = context_;
+	struct terminal *term = oldcontext->term;
+	struct listbox_data *box = oldcontext->box;
 	struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
-	struct listbox_context *context;
 	unsigned char *text;
 	enum delete_error delete;
 
-	if (!item) return EVENT_PROCESSED;
+	assert(item);
 
-	assert(ops && ops->can_delete && ops->delete);
-
-	context = init_listbox_context(box, term, item, scan_for_marks);
+	context = init_listbox_context(box, term, item, NULL);
 	if (!context) return EVENT_PROCESSED;
 
-	context->widget_data = dlg_data->widgets_data;
-
-	if (!context->item) {
-		msg_box(term, getml(context, NULL), 0,
-			listbox_message(delete_marked_items_title),
-			ALIGN_CENTER,
-			listbox_message(delete_marked_items),
-			context, 2,
-			N_("~Yes"), push_ok_delete_button, B_ENTER,
-			N_("~No"), done_listbox_context, B_ESC);
-		return EVENT_PROCESSED;
-	}
+	context->widget_data = oldcontext->widget_data;
 
 	delete = ops->can_delete(item)
 		 ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
@@ -793,6 +779,45 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 
 	return EVENT_PROCESSED;
 }
+
+widget_handler_status_T
+push_hierbox_delete_button(struct dialog_data *dlg_data,
+			   struct widget_data *button)
+{
+	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
+	struct terminal *term = dlg_data->win->term;
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct listbox_ops *ops = box->ops;
+	struct listbox_item *item = box->sel;
+	struct listbox_context *context;
+	widget_handler_status_T status;
+
+	if (!item) return EVENT_PROCESSED;
+
+	assert(ops && ops->can_delete && ops->delete);
+
+	context = init_listbox_context(box, term, item, scan_for_marks);
+	if (!context) return EVENT_PROCESSED;
+
+	context->widget_data = dlg_data->widgets_data;
+
+	if (!context->item) {
+		msg_box(term, getml(context, NULL), 0,
+			listbox_message(delete_marked_items_title),
+			ALIGN_CENTER,
+			listbox_message(delete_marked_items),
+			context, 2,
+			N_("~Yes"), push_ok_delete_button, B_ENTER,
+			N_("~No"), done_listbox_context, B_ESC);
+		return EVENT_PROCESSED;
+	}
+
+	status = query_delete_selected_item(context);
+	mem_free(context);
+
+	return status;
+}
+
 
 
 /* Clear action */
