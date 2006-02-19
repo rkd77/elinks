@@ -7,7 +7,7 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.3";
+my $VERSION = "1.4";
 
 sub show_version
 {
@@ -16,7 +16,13 @@ sub show_version
 	       -exitval => 0});
 }
 
-my $Accelerator_tag;
+# The character that precedes accelerators in strings.
+# Set with the --accelerator-tag=CHARACTER option.
+my $Opt_accelerator_tag;
+
+# True if, for missing or fuzzy translations, the msgid string should
+# be checked instead of msgstr.  Set with the --msgid-fallback option.
+my $Opt_msgid_fallback;
 
 sub acceleration_arrays_eq ($$)
 {
@@ -39,16 +45,18 @@ sub check_po_file ($)
 	my $pos = Locale::PO->load_file_asarray($po_file_name)
 	    or warn "$po_file_name: $!\n", return 2;
 	foreach my $po (@$pos) {
-	    next if $po->fuzzy();
 	    my $automatic = $po->automatic()
 		or next;
 	    my($ctxnames) = ($automatic =~ /^accelerator_context\(([^\)]*)\)/)
 		or next;
 	    my @ctxnames = split(/\s*,\s*/, $ctxnames);
 	    my @accelerations;
-	    if (defined(my $msgstr = $po->msgstr())) {
-		if (my($accelerator) = ($msgstr =~ /\Q$Accelerator_tag\E(.)/s)) {
+	    my $msgid = $po->msgid();
+	    my $msgstr = $po->msgstr();
+	    if ($po->dequote($msgstr) ne "" && !$po->fuzzy()) {
+		if (my($accelerator) = ($msgstr =~ /\Q$Opt_accelerator_tag\E(.)/s)) {
 		    push @accelerations, { PO => $po,
+					   CTXNAMES => \@ctxnames,
 					   ACCELERATOR => $accelerator,
 					   LINENO => $po->msgstr_begin_lineno(),
 					   STRING => $msgstr,
@@ -57,14 +65,13 @@ sub check_po_file ($)
 
 		# TODO: look for accelerators in plural forms?
 	    }
-	    # The msgid checking below is disabled because it doesn't
-	    # help choose good accelerators for translated strings.
- 	    elsif (0 && defined(my $msgid = $po->msgid())) {
- 	    	if (my($accelerator) = ($msgid =~ /\Q$Accelerator_tag\E(.)/s)) {
+ 	    elsif ($Opt_msgid_fallback && $po->dequote($msgid) ne "") {
+ 	    	if (my($accelerator) = ($msgid =~ /\Q$Opt_accelerator_tag\E(.)/s)) {
  	    	    push @accelerations, { PO => $po,
+					   CTXNAMES => \@ctxnames,
  	    				   ACCELERATOR => $accelerator,
  	    				   LINENO => $po->msgid_begin_lineno(),
- 	    				   STRING => $msgstr,
+ 	    				   STRING => $msgid,
  	    				   EXPLAIN => "msgid $msgid" };
  	    	}
  	    }
@@ -102,7 +109,7 @@ sub check_po_file ($)
 		    # preferring characters that start a word.
 		    # FIXME: should remove quotes and resolve \n etc.
 		    my $displaystr = $acceleration->{STRING};
-		    $displaystr =~ s/\Q$Accelerator_tag\E//g;
+		    $displaystr =~ s/\Q$Opt_accelerator_tag\E//g;
 		    my $suggestions = "";
 		    foreach my $char ($displaystr =~ /\b(\w)/g,
 				      $displaystr =~ /(\w)/g) {
@@ -111,7 +118,7 @@ sub check_po_file ($)
 
 		    # But don't suggest unavailable characters.
 		    SUGGESTION: foreach my $char (split(//, $suggestions)) {
-			foreach my $ctxname (@ctxnames_in_conflict) {
+			foreach my $ctxname (@{$acceleration->{CTXNAMES}}) {
 			    $suggestions =~ s/\Q$char\E//, next SUGGESTION
 				if exists $accelerators{uc($char)}{$ctxname};
 			}
@@ -135,15 +142,16 @@ sub check_po_file ($)
 GetOptions("accelerator-tag=s" => sub {
 	       my($option, $value) = @_;
 	       die "Cannot use multiple --accelerator-tag options\n"
-		   if defined($Accelerator_tag);
+		   if defined($Opt_accelerator_tag);
 	       die "--accelerator-tag requires a single-character argument\n"
 		   if length($value) != 1;
-	       $Accelerator_tag = $value;
+	       $Opt_accelerator_tag = $value;
 	   },
+	   "msgid-fallback" => \$Opt_msgid_fallback,
 	   "help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
 	   "version" => \&show_version)
     or exit 2;
-$Accelerator_tag = "~" unless defined $Accelerator_tag;
+$Opt_accelerator_tag = "~" unless defined $Opt_accelerator_tag;
 print(STDERR "$0: missing file operand\n"), exit 2 unless @ARGV;
 
 my $max_error = 0;
@@ -179,6 +187,7 @@ or merged with B<msgmerge>.
 
 B<check-accelerator-conflicts.pl> reads the F<I<language>.po> file
 named on the command line and reports any conflicts to standard error.
+It also tries to suggest replacements for the conflicting accelerators.
 
 B<check-accelerator-conflicts.pl> does not access the source files to
 which F<I<language>.po> refers.  Thus, it does not matter if the line
@@ -200,6 +209,18 @@ Omitting the B<--accelerator-tag> option implies
 B<--accelerator-tag="~">.  The option must be given to each program
 separately because there is no standard way to save this information
 in the PO file.
+
+=item B<--msgid-fallback>
+
+If the C<msgstr> is empty or the entry is fuzzy, check the C<msgid>
+instead.  Without this option, B<check-accelerator-conflicts.pl>
+completely ignores such entries.
+
+This option also causes B<check-accelerator-conflicts.pl> not to
+suggest accelerators that would conflict with a C<msgid> that was thus
+checked.  Following these suggestions may lead to bad choices for
+accelerators, because the conflicting C<msgid> will eventually be
+shadowed by a C<msgstr> that may use a different accelerator.
 
 =back
 
