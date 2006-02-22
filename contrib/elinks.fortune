@@ -99,3 +99,11 @@ fonseca > The other releases has taken 2 hours, to go through the backlog. But t
 fonseca > Not all is in the elinks-cvs mailbox.
 arcatan > I'm going to quote that when you have hacked 10 hours
 fonseca > And I'm going to quote that when I've done it in 3 hours. ;)
+%
+Scrool > pasky: HTML renderer doesn't work well with double-with characters. I
+         want to test it in source code view. But after switching into Source
+         code view some characters from HTML view stays there.
+ pasky > ctrl-l
+Scrool > What's that?
+Scrool > It kills my current build.
+Miciah > Scary!
