@@ -700,7 +700,7 @@ next_break:
 		}
 
 		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
-		    && !html_context->was_xmp) {
+		    && !(html_context->was_xmp || html_context->was_style)) {
 			put_chrs(html_context, base_pos, html - base_pos);
 			html = skip_comment(html, eof);
 			continue;
@@ -901,6 +901,7 @@ end_element(struct element_info *ei,
 	int kill = 0;
 
 	if (ei->func == html_xmp) html_context->was_xmp = 0;
+	if (ei->func == html_style) html_context->was_style = 0;
 
 	html_context->was_br = 0;
 	if (ei->type == ELEMENT_TYPE_NON_PAIRABLE
@@ -974,8 +975,8 @@ process_element(unsigned char *name, int namelen, int endingtag,
 #else
 	ei = (struct element_info *) fastfind_search(&ff_tags_index, name, namelen);
 #endif
-	if (html_context->was_xmp) {
-		if (!ei || ei->func != html_xmp || !endingtag) {
+	if (html_context->was_xmp || html_context->was_style) {
+		if (!ei || (ei->func != html_xmp && ei->func != html_style) || !endingtag) {
 			put_chrs(html_context, "<", 1);
 			return prev_html + 1;
 		}
