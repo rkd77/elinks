@@ -353,6 +353,7 @@ void
 html_style(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	html_context->was_style = 1;
 	html_skip(html_context, a);
 }
 

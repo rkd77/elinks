@@ -67,6 +67,7 @@ struct html_context {
 
 	unsigned int was_br:1;
 	unsigned int was_xmp:1;
+	unsigned int was_style:1;
 	unsigned int has_link_lines:1;
 	unsigned int was_body:1; /* For META refresh inside <body>. */
 	unsigned int was_body_background:1; /* For <HTML> with style. */
