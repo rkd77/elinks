@@ -68,7 +68,7 @@ if test "x$CONFIG_DOC" != xno; then
 		EL_CONFIG(MAN_ASCIIDOC, [HTML])
 
 		echo > config.asciidoc-unsafe.txt
-		if "$ASCIIDOC" --unsafe config.asciidoc-unsafe.txt >&/dev/null; then
+		if "$ASCIIDOC" --unsafe config.asciidoc-unsafe.txt >/dev/null 2>/dev/null; then
 			ASCIIDOC_FLAGS=--unsafe
 		fi
 		rm config.asciidoc-unsafe.*
