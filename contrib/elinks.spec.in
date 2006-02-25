@@ -104,7 +104,7 @@ install \
 	contrib/elinks.vim contrib/elinks-vim.diff contrib/keybind*.conf \
 	$RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}/contrib/
 install \
-	contrib/conv/w3m2links.gawk contrib/conv/conf-links2elinks.pl \
+	contrib/conv/w3m2links.awk contrib/conv/conf-links2elinks.pl \
 	contrib/conv/mailcap.pl contrib/conv/old_to_new_bookmarks.sh \
 	$RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}/conv/
 install \
