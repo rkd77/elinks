@@ -62,26 +62,6 @@ static struct option_info ecmascript_options[] = {
 	NULL_OPTION_INFO,
 };
 
-void
-ecmascript_init(struct module *module)
-{
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_init();
-#else
-	spidermonkey_init();
-#endif
-}
-
-void
-ecmascript_done(struct module *module)
-{
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_done();
-#else
-	spidermonkey_done();
-#endif
-}
-
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
 {
@@ -249,6 +229,6 @@ struct module ecmascript_module = struct_module(
 	/* events: */		NULL,
 	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
-	/* init: */		ecmascript_init,
-	/* done: */		ecmascript_done
+	/* init: */		NULL,
+	/* done: */		NULL
 );

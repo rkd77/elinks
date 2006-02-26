@@ -4,9 +4,6 @@
 struct ecmascript_interpreter;
 struct string;
 
-void spidermonkey_init();
-void spidermonkey_done();
-
 void *spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter);
 void spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter);
 

@@ -68,8 +68,6 @@ int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct 
  * follows a link with this synstax. */
 void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
 
-void ecmascript_init(struct module *);
-void ecmascript_done(struct module *);
 void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 

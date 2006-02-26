@@ -56,14 +56,14 @@
 
 /* TODO? Are there any which need to be implemented? */
 
-void
-see_init(void)
+static void
+see_init(struct module *xxx)
 {
 	init_intern_strings();
 }
 
-void
-see_done(void)
+static void
+see_done(struct module *xxx)
 {
 }
 
@@ -183,6 +183,6 @@ struct module see_module = struct_module(
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		NULL,
-	/* done: */		NULL
+	/* init: */		see_init,
+	/* done: */		see_done
 );

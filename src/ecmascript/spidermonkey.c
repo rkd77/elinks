@@ -134,14 +134,14 @@ setup_safeguard(struct ecmascript_interpreter *interpreter,
 }
 
 
-void
-spidermonkey_init(void)
+static void
+spidermonkey_init(struct module *xxx)
 {
 	jsrt = JS_NewRuntime(0x400000UL);
 }
 
-void
-spidermonkey_done(void)
+static void
+spidermonkey_done(struct module *xxx)
 {
 	JS_DestroyRuntime(jsrt);
 	JS_ShutDown();
@@ -312,6 +312,6 @@ struct module spidermonkey_module = struct_module(
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		NULL,
-	/* done: */		NULL
+	/* init: */		spidermonkey_init,
+	/* done: */		spidermonkey_done
 );

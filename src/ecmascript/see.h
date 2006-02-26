@@ -4,9 +4,6 @@
 struct ecmascript_interpreter;
 struct string;
 
-void see_init();
-void see_done();
-
 void *see_get_interpreter(struct ecmascript_interpreter *interpreter);
 void see_put_interpreter(struct ecmascript_interpreter *interpreter);
 
