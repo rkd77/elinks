@@ -570,8 +570,8 @@ if test -z "$disable_spidermonkey"; then
 		withval="";
 	fi
 	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
-		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs"; do
-			for spidermonkeylib in js smjs; do
+		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs /include/mozjs"; do
+			for spidermonkeylib in js smjs mozjs; do
 				if test "$cf_result" = no; then
 					SPIDERMONKEY_LIBS="-l$spidermonkeylib"
 
