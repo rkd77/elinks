@@ -845,10 +845,11 @@ if test -z "$disable_lua"; then
 				AC_TRY_LINK([	#include <lua.h>
 						#include <lualib.h>],
 					    [	lua_State *L = lua_open();
-						lua_baselibopen(L);
-						lua_mathlibopen(L);
-						lua_strlibopen(L);
-						lua_tablibopen(L);
+						luaopen_base(L);
+						luaopen_table(L);
+						luaopen_io(L);
+						luaopen_string(L);
+						luaopen_math(L);
 						lua_pushboolean(L, 1);
 						lua_close(L);],
 					    cf_result=yes, cf_result=no)
