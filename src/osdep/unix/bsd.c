@@ -5,7 +5,6 @@
 #endif
 
 #include "osdep/system.h"
-#include <stdio.h>
 
 #ifdef CONFIG_SYSMOUSE
 #ifdef HAVE_SYS_CONSIO_H
@@ -199,26 +198,43 @@ handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
 	} else {
 		return NULL;
 	}
-
 }
 
 void
 unhandle_mouse(void *data)
 {
-	if (data) install_signal_handler(SIGUSR2, NULL, NULL, 0);
+	if (data) {
+		mouse_info_t mi;
+		int fd = get_output_handle();
+
+		mi.operation = MOUSE_MODE;
+		mi.u.mode.mode = 0;
+		mi.u.mode.signal = 0;
+		install_signal_handler(SIGUSR2, NULL, NULL, 0);
+		ioctl(fd, CONS_MOUSECTL, &mi);
+	}
 }
 
 void
 suspend_mouse(void *data)
 {
-	if (data) install_signal_handler(SIGUSR2, NULL, NULL, 0);
+	unhandle_mouse(data);
 }
 
 void
 resume_mouse(void *data)
 {
-	if (data) install_signal_handler(SIGUSR2,
+	if (data) {
+		mouse_info_t mi;
+		int fd = get_output_handle();
+
+		mi.operation = MOUSE_MODE;
+		mi.u.mode.mode = 0;
+		mi.u.mode.signal = SIGUSR2;;
+		install_signal_handler(SIGUSR2,
 		(void (*)(void *))sysmouse_signal_handler, data, 0);
+		ioctl(fd, CONS_MOUSECTL, &mi);
+	}
 }
 
 #endif
