@@ -5,6 +5,7 @@
 #endif
 
 #include "osdep/system.h"
+#include <stdio.h>
 
 #ifdef CONFIG_SYSMOUSE
 #ifdef HAVE_SYS_CONSIO_H
@@ -42,6 +43,7 @@ sysmouse_handler(void *data)
 	void *itrm = sp->itrm;
 	int fd = get_output_handle();
 	int buttons, change;
+	int extended_button;
 	mouse_info_t mi;
 	struct term_event_mouse mouse;
 	struct term_event ev;
@@ -63,90 +65,93 @@ sysmouse_handler(void *data)
 	prev_mouse = mouse;
 	/* It's horrible. */
 	switch (buttons) {
+	case 0:
+		switch (prev_buttons) {
 		case 0:
-			switch (prev_buttons) {
-				case 0:
-					return;
-					break;
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-					mouse.button = B_LEFT | B_UP;
-					break;
-				case 2:
-				case 6:
-					mouse.button = B_MIDDLE | B_UP;
-					break;
-				case 4:
-					mouse.button = B_RIGHT | B_UP;
-					break;
-			}
+			extended_button = mi.u.data.buttons & 24;
+			if (!extended_button) return;
+			if (extended_button & 8) mouse.button = B_WHEEL_UP;
+			else mouse.button = B_WHEEL_DOWN;
 			break;
 		case 1:
 		case 3:
 		case 5:
 		case 7:
-			switch (prev_buttons) {
-				case 0:
-				case 2:
-				case 4:
-				case 6:
-					mouse.button = B_LEFT | B_DOWN;
-					break;
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-					if (change)
-						mouse.button = B_LEFT | B_DRAG;
-					else mouse.button = B_LEFT | B_DOWN;
-					break;
-			}
+			mouse.button = B_LEFT | B_UP;
 			break;
 		case 2:
 		case 6:
-			switch (prev_buttons) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-					mouse.button = B_LEFT | B_UP;
-		    			break;
-				case 0:
-				case 4:
-					mouse.button = B_MIDDLE | B_DOWN;
-					break;
-				case 2:
-				case 6:
-					if (change)
-					mouse.button = B_MIDDLE | B_DRAG;
-					else mouse.button = B_MIDDLE | B_DOWN;
-					break;
-			}
+			mouse.button = B_MIDDLE | B_UP;
 			break;
 		case 4:
-			switch (prev_buttons) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-					mouse.button = B_LEFT | B_UP;
-					break;
-				case 2:
-				case 6:
-					mouse.button = B_MIDDLE | B_UP;
-					break;
-				case 0:
-					mouse.button = B_RIGHT | B_DOWN;
-					break;
-				case 4:
-					if (change)
-						mouse.button = B_RIGHT | B_DRAG;
-					else mouse.button = B_RIGHT | B_DOWN;
-					break;
-			}
+			mouse.button = B_RIGHT | B_UP;
 			break;
+		}
+		break;
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+		switch (prev_buttons) {
+		case 0:
+		case 2:
+		case 4:
+		case 6:
+			mouse.button = B_LEFT | B_DOWN;
+			break;
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			if (change)
+				mouse.button = B_LEFT | B_DRAG;
+			else mouse.button = B_LEFT | B_DOWN;
+			break;
+		}
+		break;
+	case 2:
+	case 6:
+		switch (prev_buttons) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			mouse.button = B_LEFT | B_UP;
+			break;
+		case 0:
+		case 4:
+			mouse.button = B_MIDDLE | B_DOWN;
+			break;
+		case 2:
+		case 6:
+			if (change)
+				mouse.button = B_MIDDLE | B_DRAG;
+			else mouse.button = B_MIDDLE | B_DOWN;
+			break;
+		}
+		break;
+	case 4:
+		switch (prev_buttons) {
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+			mouse.button = B_LEFT | B_UP;
+			break;
+		case 2:
+		case 6:
+			mouse.button = B_MIDDLE | B_UP;
+			break;
+		case 0:
+			mouse.button = B_RIGHT | B_DOWN;
+			break;
+		case 4:
+			if (change)
+				mouse.button = B_RIGHT | B_DRAG;
+			else mouse.button = B_RIGHT | B_DOWN;
+			break;
+		}
+		break;
 	}
 
 	prev_buttons = buttons;
