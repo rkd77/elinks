@@ -317,7 +317,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		int i;
 #define NUMBER_OF_URLS_TO_REMEMBER 8
 		static struct {
-			JSContext *ctx;
 			JSString *url;
 			JSString *frame;
 		} strings[NUMBER_OF_URLS_TO_REMEMBER];
@@ -325,14 +324,12 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 		target = jsval_to_string(ctx, &argv[1]);
 		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
-			if (!(strings[i].ctx && strings[i].url && strings[i].frame))
+			if (!(strings[i].url && strings[i].frame))
 				continue;
-			if (ctx == strings[i].ctx
-				&& !JS_CompareStrings(url_string, strings[i].url)
+			if (!JS_CompareStrings(url_string, strings[i].url)
 				&& !JS_CompareStrings(target_string, strings[i].frame))
 				return JS_TRUE;
 		}
-		strings[indeks].ctx = ctx;
 		strings[indeks].url = JS_InternString(ctx, url);
 		strings[indeks].frame = JS_InternString(ctx, target);
 		indeks++;
