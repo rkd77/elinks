@@ -149,6 +149,11 @@ void
 spidermonkey_init(void)
 {
 	jsrt = JS_NewRuntime(0x400000UL);
+	/* XXX: This is a hack to avoid a crash on exit. SMJS will crash
+	 * on JS_DestroyRuntime if the given runtime has never had any context
+	 * created, which will be the case if one closes ELinks without having
+	 * loaded any documents. */
+	JS_DestroyContext(JS_NewContext(jsrt, 0));
 }
 
 void
