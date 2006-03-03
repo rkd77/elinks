@@ -1177,6 +1177,10 @@ static struct option_info config_options_info[] = {
 		N_("Language of user interface. 'System' means that the language will\n"
 		"be extracted from the environment dynamically.")),
 
+	INIT_OPT_BOOL("ui", N_("Display menu bar always"),
+		"show_menu_bar_always", 0, 0,
+		N_("Always show menu bar on the screen.")),
+
 	INIT_OPT_BOOL("ui", N_("Display status bar"),
 		"show_status_bar", 0, 1,
 		N_("Show status bar on the screen.")),

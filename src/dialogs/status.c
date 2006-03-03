@@ -379,11 +379,14 @@ display_title_bar(struct session *ses, struct terminal *term)
 	unsigned char buf[40];
 	int buflen = 0;
 	int height;
-	struct box box;
 
 	/* Clear the old title */
-	set_box(&box, 0, 0, term->width, 1);
-	draw_box(term, &box, ' ', 0, get_bfu_color(term, "title.title-bar"));
+	if (!get_opt_bool("ui.show_menu_bar_always")) {
+		struct box box;
+
+		set_box(&box, 0, 0, term->width, 1);
+		draw_box(term, &box, ' ', 0, get_bfu_color(term, "title.title-bar"));
+	}
 
 	doc_view = current_frame(ses);
 	if (!doc_view || !doc_view->document) return;

@@ -868,10 +868,16 @@ void
 do_mainmenu(struct terminal *term, struct menu_item *items,
 	    void *data, int sel)
 {
-	struct menu *menu = mem_calloc(1, sizeof(*menu));
+	int init = 0;
+	struct menu *menu;
 
-	if (!menu) return;
+	if (!term->main_menu) {
+		term->main_menu = mem_calloc(1, sizeof(*menu));
+		if (!term->main_menu) return;
+		init = 1;
+	}
 
+	menu = term->main_menu;
 	menu->selected = (sel == -1 ? 0 : sel);
 	menu->items = items;
 	menu->data = data;
@@ -882,7 +888,20 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 	clear_hotkeys_cache(menu);
 #endif
 	init_hotkeys(term, menu);
-	add_window(term, mainmenu_handler, menu);
+	if (init) {
+		menu->selected = -1;
+		add_window(term, mainmenu_handler, menu);
+	} else {
+		struct window *win;
+
+		foreach (win, term->windows) {
+			if (win->data == menu) {
+				del_from_list(win);
+				add_at_pos((struct window *) &term->windows, win);
+				break;
+			}
+		}
+	}
 
 	if (sel != -1) {
 		select_menu(term, menu);
@@ -1107,8 +1126,10 @@ mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 		}
 
 	case ACT_MENU_CANCEL:
-		delete_window_ev(win, action_id != ACT_MENU_CANCEL ? ev : NULL);
-		return;
+		menu->selected = -1;
+		del_from_list(win);
+		add_to_list_end(win->term->windows, win);
+		break;
 	}
 
 	/* Redraw the menu */

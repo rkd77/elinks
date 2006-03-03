@@ -88,6 +88,8 @@ struct terminal {
 	/* This is the screen. See terminal/screen.h */
 	struct terminal_screen *screen;
 
+	/* This is for displaying main menu */
+	struct menu *main_menu;
 	/* These are pipes for communication with the ELinks instance owning
 	 * this terminal. */
 	int fdin, fdout;
