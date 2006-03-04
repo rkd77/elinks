@@ -1161,6 +1161,10 @@ static struct option_info config_options_info[] = {
 		"1 means only if two or more tabs are open\n"
 		"2 means always")),
 
+	INIT_OPT_BOOL("ui.tabs", N_("Tab bar at top"),
+		"top", 0, 0,
+		N_("Whether display tab bar at top like other browsers do.")),
+
 	INIT_OPT_BOOL("ui.tabs", N_("Wrap-around tabs cycling"),
 		"wraparound", 0, 1,
 		N_("When moving right from the last tab, jump at the first one, and\n"

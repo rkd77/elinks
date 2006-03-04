@@ -430,7 +430,10 @@ render_document_frames(struct session *ses, int no_cache)
 		doc_opts.box.height--;
 	}
 	if (ses->status.show_status_bar) doc_opts.box.height--;
-	if (ses->status.show_tabs_bar) doc_opts.box.height--;
+	if (ses->status.show_tabs_bar) {
+		doc_opts.box.height--;
+		if (ses->status.show_tabs_bar_at_top) doc_opts.box.y++;
+	}
 
 	doc_opts.color_mode = get_opt_int_tree(ses->tab->term->spec, "colors");
 	if (!get_opt_bool_tree(ses->tab->term->spec, "underline"))

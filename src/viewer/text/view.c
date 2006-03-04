@@ -1007,6 +1007,17 @@ do_mouse_event(struct session *ses, struct term_event *ev,
 	return send_to_frame(ses, doc_view, &evv);
 }
 
+static int
+is_mouse_on_tab_bar(struct session *ses, struct term_event_mouse *mouse)
+{
+	struct terminal *term = ses->tab->term;
+	int y;
+
+	if (ses->status.show_tabs_bar_at_top) y = ses->status.show_title_bar;
+	else y = term->height - 1 - !!ses->status.show_status_bar;
+
+	return mouse->y == y;
+}
 /* Returns the session if event cleanup should be done or NULL if no cleanup is
  * needed. */
 static struct session *
@@ -1029,8 +1040,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 	}
 
 	/* Handle tabs navigation if tabs bar is displayed. */
-	if (ses->status.show_tabs_bar
-	    && mouse->y == term->height - 1 - !!ses->status.show_status_bar) {
+	if (ses->status.show_tabs_bar && is_mouse_on_tab_bar(ses, mouse)) {
 		int tab_num = get_tab_number_by_xpos(term, mouse->x);
 		struct window *tab = get_current_tab(term);
 

@@ -67,6 +67,7 @@ update_status(void)
 	int show_title_bar = get_opt_bool("ui.show_title_bar");
 	int show_status_bar = get_opt_bool("ui.show_status_bar");
 	int show_tabs_bar = get_opt_int("ui.tabs.show_bar");
+	int show_tabs_bar_at_top = get_opt_bool("ui.tabs.top");
 #ifdef CONFIG_LEDS
 	int show_leds = get_opt_bool("ui.leds.enable");
 #endif
@@ -104,6 +105,13 @@ update_status(void)
 		if (show_tabs(show_tabs_bar, tabs) != status->show_tabs_bar) {
 			status->show_tabs_bar = show_tabs(show_tabs_bar, tabs);
 			dirty = 1;
+		}
+
+		if (status->show_tabs_bar) {
+			if (status->show_tabs_bar_at_top != show_tabs_bar_at_top) {
+				status->show_tabs_bar_at_top = show_tabs_bar_at_top;
+				dirty = 1;
+			}
 		}
 #ifdef CONFIG_LEDS
 		if (status->show_leds != show_leds) {
@@ -290,7 +298,8 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 	int tab_num;
 	struct box box;
 
-	set_box(&box, 0, term->height - (status->show_status_bar ? 2 : 1), 0, 1);
+	if (status->show_tabs_bar_at_top) set_box(&box, 0, status->show_title_bar, term->width, 1);
+	else set_box(&box, 0, term->height - (status->show_status_bar ? 2 : 1), 0, 1);
 
 	for (tab_num = 0; tab_num < tabs_count; tab_num++) {
 		struct download *download = NULL;
