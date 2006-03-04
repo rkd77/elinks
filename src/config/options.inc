@@ -632,6 +632,30 @@ static struct option_info config_options_info[] = {
 		N_("Codepage used in dump output. 'System' stands for\n"
 		"a codepage determined by a selected locale.")),
 
+	INIT_OPT_INT("document.dump", N_("Color mode"),
+		"color_mode", 0, -1,
+#if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS)
+3,
+#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+2,
+#else
+1,
+#endif
+-1,
+		N_("Color mode for dumps:\n"
+		"-1 is standard dump mode\n"
+		"0 is mono mode\n"
+		"1 is 16 color mode\n"
+#if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS)
+		"2 is 88 color mode\n"
+		"3 is 256 color mode\n"
+#elif defined(CONFIG_88_COLORS)
+		"2 is 88 color mode\n"
+#elif defined(CONFIG_256_COLORS)
+		"2 is 256 color mode\n"
+#endif
+		)),
+
 	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", 0, "",
 		N_("Footer string used in dumps. %u is substituted by URL.")),
