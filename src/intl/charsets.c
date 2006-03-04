@@ -252,6 +252,89 @@ strlen_utf8(unsigned char **str)
 	return x;
 }
 
+/* Count number of standard terminal cells needed for displaying UTF-8
+ * character. */
+int
+utf8_char2cells(unsigned char *utf8_char, unsigned char *end)
+{
+	unicode_val_T u;
+
+	if (end == NULL)
+		end = strchr(utf8_char, '\0');
+
+	if(!utf8_char || !end)
+		return -1;
+
+	u = utf_8_to_unicode(&utf8_char, end);
+
+	return unicode_to_cell(u);
+}
+
+/* Count number of standard terminal cells needed for displaying string
+ * with UTF-8 characters. */
+int
+utf8_ptr2cells(unsigned char *string, unsigned char *end)
+{
+	int charlen, cell, cells = 0;
+
+	if (end == NULL)
+		end = strchr(string, '\0');
+
+	if(!string || !end)
+		return -1;
+
+	do {
+		charlen = utf8charlen(string);
+		if (string + charlen > end) 
+			break;
+
+		cell = utf8_char2cells(string, end);
+		if  (cell < 0)
+			return -1;
+
+		cells += cell;
+		string += charlen;
+	} while (1);
+
+	return cells;
+}
+
+/*
+ * Count number of bytes from begining of the string needed for displaying
+ * specified number of cells.
+ */
+int
+utf8_cells2bytes(unsigned char *string, int max_cells, unsigned char *end)
+{
+	unsigned int bytes = 0, cells = 0;
+
+	assert(max_cells>=0);
+
+	if (end == NULL)
+		end = strchr(string, '\0');
+
+	if(!string || !end)
+		return -1;
+
+	do {
+		int cell = utf8_char2cells(&string[bytes], end);
+		if (cell < 0)
+			return -1;
+
+		cells += cell;
+		if (cells > max_cells)
+			break;
+
+		bytes += utf8charlen(&string[bytes]);
+
+		if (string + bytes > end) {
+			bytes = end - string;
+			break;
+		}
+	} while(1);
+
+	return bytes;
+}
 
 /* 
  * Find out number of standard terminal collumns needed for displaying symbol
