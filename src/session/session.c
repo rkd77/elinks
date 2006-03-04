@@ -903,6 +903,7 @@ init_session(struct session *base_session, struct terminal *term,
 	if (!in_background)
 		switch_to_tab(term, get_tab_number(ses->tab), -1);
 
+	if (!term->main_menu) activate_bfu_technology(ses, -1);
 	return ses;
 }
 

@@ -70,9 +70,6 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 	struct document_view *doc_view = current_frame(ses);
 	struct link *link = NULL;
 
-	/* FIXME: Move it to appropriate place */
-	if (!term->main_menu) activate_bfu_technology(ses, -1);
-
 	if (action_id == -1) goto unknown_action;
 
 	if (doc_view && doc_view->vs) {
