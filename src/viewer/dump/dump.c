@@ -423,6 +423,7 @@ dump_to_file_16(struct document *document, int fd)
 	int bptr = 0;
 	unsigned char *buf = mem_alloc(D_BUF);
 	unsigned char color = 0;
+	int width = get_opt_int("document.dump.width");
 
 	if (!buf) return -1;
 
@@ -430,6 +431,7 @@ dump_to_file_16(struct document *document, int fd)
 		int white = 0;
 		int x;
 
+		write_color_16(color, fd, buf, &bptr);
 		for (x = 0; x < document->data[y].length; x++) {
 			unsigned char c;
 			unsigned char attr = document->data[y].chars[x].attr;
@@ -462,6 +464,10 @@ dump_to_file_16(struct document *document, int fd)
 
 			/* Print normal char. */
 			if (write_char(c, fd, buf, &bptr))
+				goto fail;
+		}
+		for (;x < width; x++) {
+			if (write_char(' ', fd, buf, &bptr))
 				goto fail;
 		}
 
@@ -521,7 +527,7 @@ write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *
 	unsigned char bufor[16];
 	unsigned char *data = bufor;
 
-	snprintf(bufor, 16, "\033[;%s;5;%dm", str, color);
+	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
 	while(*data) {
 		if (write_char(*data++, fd, buf, bptr)) return -1;
 	}
@@ -536,12 +542,15 @@ dump_to_file_256(struct document *document, int fd)
 	unsigned char *buf = mem_alloc(D_BUF);
 	unsigned char foreground = 0;
 	unsigned char background = 0;
+	int width = get_opt_int("document.dump.width");
 
 	if (!buf) return -1;
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
 		int x;
+		write_color_256("38", foreground, fd, buf, &bptr);
+		write_color_256("48", background, fd, buf, &bptr);
 
 		for (x = 0; x < document->data[y].length; x++) {
 			unsigned char c;
@@ -582,6 +591,10 @@ dump_to_file_256(struct document *document, int fd)
 
 			/* Print normal char. */
 			if (write_char(c, fd, buf, &bptr))
+				goto fail;
+		}
+		for (;x < width; x++) {
+			if (write_char(' ', fd, buf, &bptr))
 				goto fail;
 		}
 
