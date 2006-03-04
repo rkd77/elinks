@@ -327,37 +327,53 @@ draw_text_utf8(struct terminal *term, int x, int y,
 
 	data = utf_8_to_unicode(&text, end);
 	if (data == UCS_NO_CHAR) return;
-	start = get_char(term, x++, y);
-	start->data = (uint16_t)data;
+	start = get_char(term, x, y);
 	if (color) {
 		start->attr = attr;
 		set_term_color(start, color, 0,
 			       get_opt_int_tree(term->spec, "colors"));
 	}
 
-	pos = start + 1;
+	pos = start;
 
 	if (unicode_to_cell(data) == 2) {
+		/* Is there enough room for whole double-width char? */
+		if (x + 1 < term->width) {
+			pos->data = data;
+			pos++;
+			x++;
 
-#ifdef CONFIG_DEBUG
-		/* Detect attempt to draw double-width char on the last
-		 * collumn of terminal. */
-		if (x+1 > term->width) 
-			INTERNAL("Attempt to draw double-width character on "
-					"last collumn!!");
-#endif /* CONFIG_DEBUG */
-		
-		pos->data = UCS_NO_CHAR;
-		if (color) copy_screen_chars(pos, start, 1);
-		x++;
-		pos++;
+			pos->data = UCS_NO_CHAR;
+			pos->attr = 0;
+		} else {
+			pos->data = (unicode_val_T)' ';
+		}
+	} else {
+		pos->data = data;
 	}
+	pos++;
+	x++;
 
 	for (; x < term->width; x++, pos++) {
 		data = utf_8_to_unicode(&text, end);
 		if (data == UCS_NO_CHAR) break;
 		if (color) copy_screen_chars(pos, start, 1);
-		pos->data = (uint16_t)data;
+
+		if (unicode_to_cell(data) == 2) {
+			/* Is there enough room for whole double-width char? */
+			if (x + 1 < term->width) {
+				pos->data = data;
+
+				x++;
+				pos++;
+				pos->data = UCS_NO_CHAR;
+				pos->attr = 0;
+			} else {
+				pos->data = (unicode_val_T)' ';
+			}
+		} else {
+			pos->data = data;
+		}
 	}
 	set_screen_dirty(term->screen, y, y);
 	
