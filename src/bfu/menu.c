@@ -186,7 +186,14 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 
 	if (!text[0]) return 0;
 
-	return L_TEXT_SPACE + strlen(text) - !!mi->hotkey_pos + R_TEXT_SPACE;
+#ifdef CONFIG_UTF_8
+	if (term->utf8)
+		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL) 
+		       - !!mi->hotkey_pos + R_TEXT_SPACE;
+	else
+#endif /* CONFIG_UTF_8 */
+		return L_TEXT_SPACE + strlen(text) 
+		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 }
 
 /* Get desired width for right text in menu item, accounting spacing. */
@@ -321,17 +328,31 @@ select_item:
 	int_bounds(&menu->first, 0, menu->size - height);
 }
 
+/* width - number of standard terminal cells to be displayed (text + whitespace
+ *         separators). For double-width glyph width == 2.
+ * len - length of text in bytes */
 static inline void
 draw_menu_left_text(struct terminal *term, unsigned char *text, int len,
 		    int x, int y, int width, struct color_pair *color)
 {
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
+	int max_len;
 
 	if (w <= 0) return;
 
 	if (len < 0) len = strlen(text);
 	if (!len) return;
-	if (len > w) len = w;
+
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		max_len = utf8_cells2bytes(text, w, NULL);
+		if (max_len <= 0) 
+			return;
+	} else
+#endif /* CONFIG_UTF_8 */
+		max_len = w;
+
+	if (len > max_len) len = max_len;
 
 	draw_text(term, x + L_TEXT_SPACE, y, text, len, 0, color);
 }
@@ -404,15 +425,52 @@ utf8:
 			continue;
 		}
 		if (hk_state == 1) {
+			if (unicode_to_cell(data) == 2) {
+				if (x < w) {
 #ifdef CONFIG_DEBUG
-			draw_char(term, xbase + x - 1, y, data, hk_attr,
-				  (double_hk ? hk_color_sel : hk_color));
+					draw_char(term, xbase + x - 1, y,
+						  data, hk_attr,
+						  (double_hk ? hk_color_sel
+						             : hk_color));
 #else
-			draw_char(term, xbase + x - 1, y, data, hk_attr, hk_color);
+					draw_char(term, xbase + x - 1, y,
+						  data, hk_attr, hk_color);
 #endif /* CONFIG_DEBUG */
+					x++;
+					draw_char(term, xbase + x - 1, y, 
+						  UCS_NO_CHAR, 0, color);
+				} else {
+					draw_char(term, xbase + x - 1, y, 
+						  ' ', 0, color);
+				}
+			} else {
+#ifdef CONFIG_DEBUG
+				draw_char(term, xbase + x - 1, y,
+					  data, hk_attr,
+					  (double_hk ? hk_color_sel
+					   	     : hk_color));
+#else
+				draw_char(term, xbase + x - 1, y,
+					  data, hk_attr, hk_color);
+#endif /* CONFIG_DEBUG */
+			}
 			hk_state = 2;
 		} else {
-			draw_char(term, xbase + x - !!hk_state, y, data, 0, color);
+			if (unicode_to_cell(data) == 2) {
+				if (x - !!hk_state + 1 < w) {
+					draw_char(term, xbase + x - !!hk_state,
+						  y, data, 0, color);
+					x++;
+					draw_char(term, xbase + x - !!hk_state,
+						  y, UCS_NO_CHAR, 0, color);
+				} else {
+					draw_char(term, xbase + x - !!hk_state,
+						  y, ' ', 0, color);
+				}
+			} else {
+				draw_char(term, xbase + x - !!hk_state,
+					  y, data, 0, color);
+			}
 		}
 
 	}
@@ -971,18 +1029,33 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 		int l = mi->hotkey_pos;
 		int textlen;
 		int selected = (i == menu->selected);
+		int screencnt;
 
 		if (mi_text_translate(mi))
 			text = _(text, term);
 
 		textlen = strlen(text) - !!l;
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			screencnt = utf8_ptr2cells(text, NULL) - !!l;
+		else
+#endif /* CONFIG_UTF_8 */
+			screencnt = textlen;
 
 		if (selected) {
 			color = selected_color;
 			box.x = p;
-			box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
-				    + textlen
-				    + R_TEXT_SPACE + R_MAINTEXT_SPACE;
+#ifdef CONFIG_UTF_8
+			if (term->utf8)
+				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
+					+ screencnt
+					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
+			else
+#endif /* CONFIG_UTF_8 */
+				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
+					+ textlen
+					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
+
 			draw_box(term, &box, ' ', 0, color);
 			set_cursor(term, p, 0, 1);
 			set_window_ptr(menu->win, p, 1);
@@ -1000,7 +1073,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 					    color);
 		}
 
-		p += textlen;
+		p += screencnt;
 
 		if (p >= term->width - R_MAINMENU_SPACE)
 			break;
