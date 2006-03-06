@@ -77,17 +77,34 @@ add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags,
 	}
 }
 
+#ifdef CONFIG_UTF_8
+static void
+buttons_width(struct widget_data *widget_data, int n,
+	      int *minwidth, int *maxwidth, int utf8)
+#else
 static void
 buttons_width(struct widget_data *widget_data, int n,
 	      int *minwidth, int *maxwidth)
+#endif /* CONFIG_UTF_8 */
 {
 	int maxw = -BUTTON_HSPACING;
+#ifdef CONFIG_UTF_8
+	int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL) 
+			  + utf8_ptr2cells(BUTTON_RIGHT, NULL);
+#endif /* CONFIG_UTF_8 */
 
 	assert(n > 0);
 	if_assert_failed return;
 
 	while (n--) {
-		int minw = (widget_data++)->widget->info.button.textlen
+		int minw;
+#ifdef CONFIG_UTF_8
+		if (utf8)
+			minw = utf8_ptr2cells((widget_data++)->widget->text, NULL)
+			       + BUTTON_HSPACING + button_lr_len;
+		else
+#endif /* CONFIG_UTF_8 */
+			minw = (widget_data++)->widget->info.button.textlen
 				+ BUTTON_HSPACING + BUTTON_LR_LEN;
 
 		maxw += minw;
@@ -111,24 +128,45 @@ dlg_format_buttons(struct terminal *term,
 
 		while (i2 < n) {
 			mw = 0;
+#ifdef CONFIG_UTF_8
+			buttons_width(widget_data1, i2 - i1 + 1, NULL, &mw,
+				      term->utf8);
+#else
 			buttons_width(widget_data1, i2 - i1 + 1, NULL, &mw);
+#endif /* CONFIG_UTF_8 */
 			if (mw <= w) i2++;
 			else break;
 		}
 
 		mw = 0;
+#ifdef CONFIG_UTF_8
+		buttons_width(widget_data1, i2 - i1, NULL, &mw, term->utf8);
+#else
 		buttons_width(widget_data1, i2 - i1, NULL, &mw);
+#endif /* CONFIG_UTF_8 */
 		if (rw) int_bounds(rw, mw, w);
 
 		if (!format_only) {
 			int i;
 			int p = x + (align == ALIGN_CENTER ? (w - mw) / 2 : 0);
+#ifdef CONFIG_UTF_8
+			int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL) 
+					  + utf8_ptr2cells(BUTTON_RIGHT, NULL);
+#endif /* CONFIG_UTF_8 */
 
 			for (i = i1; i < i2; i++) {
-				set_box(&widget_data[i].box,
-					 p, *y,
-					 widget_data[i].widget->info.button.textlen
-					 + BUTTON_LR_LEN, BUTTON_HEIGHT);
+#ifdef CONFIG_UTF_8
+				if (term->utf8)
+					set_box(&widget_data[i].box,
+						p, *y,
+						utf8_ptr2cells(widget_data[i].widget->text, NULL)
+						+ button_lr_len, BUTTON_HEIGHT);
+				else
+#endif /* CONFIG_UTF_8 */
+					set_box(&widget_data[i].box,
+						p, *y,
+						widget_data[i].widget->info.button.textlen
+						+ BUTTON_LR_LEN, BUTTON_HEIGHT);
 
 				p += widget_data[i].box.width + BUTTON_HSPACING;
 			}
@@ -145,8 +183,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color, *shortcut_color;
 	struct box *pos = &widget_data->box;
-	int len = widget_data->box.width - BUTTON_LR_LEN;
-	int x = pos->x + BUTTON_LEFT_LEN;
+	int len, x;
 	int sel = is_selected_widget(dlg_data, widget_data);
 
 	if (sel) {
@@ -157,6 +194,23 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		color =  get_bfu_color(term, "dialog.button");
 	}
 	if (!color || !shortcut_color) return EVENT_PROCESSED;
+
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		int button_left_len = utf8_ptr2cells(BUTTON_LEFT, NULL);
+		int button_right_len = utf8_ptr2cells(BUTTON_RIGHT, NULL);
+
+		x = pos->x + button_left_len;
+		len = widget_data->box.width - 
+			(button_left_len + button_right_len);
+		
+	} else
+#endif /* CONFIG_UTF_8 */
+	{
+		x = pos->x + BUTTON_LEFT_LEN;
+		len = widget_data->box.width - BUTTON_LR_LEN;
+	}
+
 
 	draw_text(term, pos->x, pos->y, BUTTON_LEFT, BUTTON_LEFT_LEN, 0, color);
 	if (len > 0) {
@@ -169,30 +223,48 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 #ifdef CONFIG_UTF_8
 		if (term->utf8) {
-			unsigned char *text2 = text;
-			unsigned char *end = text
-				+ widget_data->widget->info.button.truetextlen;
-			int hk_state = 0;
-			int x1;
+			if (hk_pos >= 0) {
+				int hk_bytes = utf8charlen(&text[hk_pos+1]);
+				int cells_to_hk = utf8_ptr2cells(text,
+						&text[hk_pos]);
+				int right = widget_data->widget->info.button.truetextlen 
+					- hk_pos 
+					- hk_bytes;
 
-			for (x1 = 0; x1 - !!hk_state < len && *text2; x1++) {
-				uint16_t data;
+				int hk_cells = utf8_char2cells(&text[hk_pos 
+								      + 1],
+								NULL);
 
-				data = (uint16_t)utf_8_to_unicode(&text2, end);
-				if (!hk_state && (int)(text2 - text) == hk_pos + 1) {
-					hk_state = 1;
-					continue;
-				}
-				if (hk_state == 1) {
-					draw_char(term, x + x1 - 1, pos->y, data, attr, shortcut_color);
-					hk_state = 2;
-				} else {
-					draw_char(term, x + x1 - !!hk_state, pos->y, data, 0, color);
-				}
+				if (hk_pos)
+					draw_text(term, x, pos->y, 
+						  text, hk_pos, 0, color);
 
+				draw_text(term, x + cells_to_hk, pos->y,
+					  &text[hk_pos + 1], hk_bytes, 
+					  attr, shortcut_color);
 
+				if (right > 1)
+					draw_text(term, x+cells_to_hk+hk_cells, 
+						  pos->y, 
+						  &text[hk_pos + hk_bytes + 1],
+						  right - 1, 0, color);
+
+			} else {
+				int hk_width = utf8_char2cells(text, NULL);
+				int hk_len = utf8charlen(text);
+				int len_to_display = 
+					utf8_cells2bytes(&text[hk_len], 
+							 len - hk_width,
+							 NULL);
+
+				draw_text(term, x, pos->y, 
+					  text, hk_len, 
+					  attr, shortcut_color);
+
+				draw_text(term, x + hk_width, pos->y,
+					  &text[hk_len], len_to_display,
+					  0, color);
 			}
-			len = x1 - !!hk_state;
 		} else
 #endif /* CONFIG_UTF_8 */
 		if (hk_pos >= 0) {
@@ -213,8 +285,17 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			draw_text(term, x + 1, pos->y, &text[1], len - 1, 0, color);
 		}
 	}
-	draw_text(term, x + len, pos->y, BUTTON_RIGHT, BUTTON_RIGHT_LEN, 0, color);
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		int text_cells = utf8_ptr2cells(widget_data->widget->text, NULL);
+		int hk = (widget_data->widget->info.button.hotkey_pos >= 0);
 
+		draw_text(term, x + text_cells - hk, pos->y, 
+			  BUTTON_RIGHT, BUTTON_RIGHT_LEN, 0, color);
+	} else
+#endif /* CONFIG_UTF_8 */
+		draw_text(term, x + len, pos->y, BUTTON_RIGHT,
+			  BUTTON_RIGHT_LEN, 0, color);
 	if (sel) {
 		set_cursor(term, x, pos->y, 1);
 		set_window_ptr(dlg_data->win, pos->x, pos->y);
