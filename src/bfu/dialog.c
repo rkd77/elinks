@@ -97,25 +97,33 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 		title_color = get_bfu_color(term, "dialog.title");
 		if (title_color && box.width > 2) {
 			unsigned char *title = dlg_data->dlg->title;
-#ifdef CONFIG_UTF_8
-			unsigned char *t2 = title;
 			int titlelen = strlen(title);
-			int len = term->utf8 ? strlen_utf8(&t2) : titlelen;
-			len = int_min(box.width - 2, len);
-			int x = (box.width - len) / 2 + box.x;
-#else
-			int titlelen = int_min(box.width - 2, strlen(title));
-			int x = (box.width - titlelen) / 2 + box.x;
+			int titlecells = titlelen;
+			int x, y;
+#ifdef CONFIG_UTF_8
+			if (term->utf8)
+				titlecells = utf8_ptr2cells(title, 
+							&title[titlelen]);
 #endif /* CONFIG_UTF_8 */
-			int y = box.y - 1;
+
+			titlecells = int_min(box.width - 2, titlecells);
+
+#ifdef CONFIG_UTF_8
+			if (term->utf8) {
+				titlelen = utf8_cells2bytes(title,
+							    titlecells,
+							    NULL);
+			}
+#endif /* CONFIG_UTF_8 */
+
+			x = (box.width - titlecells) / 2 + box.x;
+			y = box.y - 1;
+
 
 			draw_text(term, x - 1, y, " ", 1, 0, title_color);
 			draw_text(term, x, y, title, titlelen, 0, title_color);
-#ifdef CONFIG_UTF_8
-			draw_text(term, x + len, y, " ", 1, 0, title_color);
-#else
-			draw_text(term, x + titlelen, y, " ", 1, 0, title_color);
-#endif /* CONFIG_UTF_8 */
+			draw_text(term, x + titlecells, y, " ", 1, 0,
+				  title_color);
 		}
 	}
 
@@ -579,7 +587,13 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
 	int height = dialog_max_height(term);
-	int rw = int_min(w, strlen(dlg_data->dlg->title));
+	int rw;
+#ifdef CONFIG_UTF_8
+	if (term->utf8)
+		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
+	else
+#endif /* CONFIG_UTF_8 */
+		rw = int_min(w, strlen(dlg_data->dlg->title));
 	int y = dlg_data->dlg->layout.padding_top ? 0 : -1;
 	int x = 0;
 
