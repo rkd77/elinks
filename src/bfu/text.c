@@ -19,6 +19,7 @@
 #include "terminal/terminal.h"
 #include "util/color.h"
 
+/* FIXME: For UTF-8 strings we need better function than isspace. */
 #define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace(*(pos)))
 
 void
@@ -35,49 +36,103 @@ add_dlg_text(struct dialog *dlg, unsigned char *text,
 }
 
 /* Returns length of substring (from start of @text) before a split. */
+#ifdef CONFIG_UTF_8
+static inline int
+split_line(unsigned char *text, int max_width, int *cells, int utf8)
+#else
 static inline int
 split_line(unsigned char *text, int max_width, int *cells)
+#endif /* CONFIG_UTF_8 */
 {
 	unsigned char *split = text;
+	int cells_save = *cells;
 
 	if (max_width <= 0) return 0;
 
 	while (*split && *split != '\n') {
-		unsigned char *next_split = split + 1;
+		unsigned char *next_split;
+#ifdef CONFIG_UTF_8
+		if (utf8) {
+			unsigned char *next_char_begin = split 
+							 + utf8charlen(split);
 
-		while (is_unsplitable(next_split))
-			next_split++;
+			next_split = split;
 
-		if (next_split - text > max_width) {
+			*cells += utf8_char2cells(split, NULL);
+			while (*next_split && next_split != next_char_begin)
+				next_split++;
+
+			next_char_begin = next_split;
+			while (is_unsplitable(next_split)) 
+			{
+				if (next_split < next_char_begin) {
+					next_split++;
+					continue;
+				}
+				*cells += utf8_char2cells(next_split, NULL);
+				next_char_begin += utf8charlen(next_split);
+			}
+		} else
+#endif /* CONFIG_UTF_8 */
+		{
+			next_split = split + 1;
+
+			while (is_unsplitable(next_split))
+				next_split++;
+			*cells = next_split - text;
+		}
+
+		if (*cells > max_width) {
 			/* Force a split if no position was found yet,
 			 * meaning there's no splittable substring under
 			 * requested width. */
 			if (split == text) {
-				split = &text[max_width];
+#ifdef CONFIG_UTF_8
+				if (utf8) {
+					int m_bytes = utf8_cells2bytes(text,
+								       max_width,
+								       NULL);
+					split = &text[m_bytes];
+				} else
+#endif /* CONFIG_UTF_8 */
+					split = &text[max_width];
 
-				/* Give preference to split on a punctuation
-				 * if any. Note that most of the time
-				 * punctuation char is followed by a space so
-				 * this rule will not match often.
-				 * We match dash and quotes too. */
+
+				/* FIXME: Function ispunct won't work correctly
+				 * with UTF-8 characters. We need some similar
+				 * function for UTF-8 characters. */
+#ifndef CONFIG_UTF_8
+				/* Give preference to split on a
+				 * punctuation if any. Note that most
+				 * of the time punctuation char is
+				 * followed by a space so this rule
+				 * will not match often. We match dash
+				 * and quotes too. */
+				cells_save--;
 				while (--split != text) {
+					cells_save--;
 					if (!ispunct(*split)) continue;
 					split++;
+					cells_save++;
 					break;
 				}
 #endif /* CONFIG_UTF_8 */
 
 				/* If no way to do a clean split, just return
 				 * requested maximal width. */
-				if (split == text)
+				if (split == text) {
+					*cells = max_width;
 					return max_width;
+				}
 			}
 			break;
 		}
 
+		cells_save = *cells;
 		split = next_split;
 	}
 
+	*cells = cells_save;
 	return split - text;
 }
 
@@ -87,8 +142,13 @@ split_line(unsigned char *text, int max_width, int *cells)
 #define realloc_lines(x, o, n) mem_align_alloc(x, o, n, LINES_GRANULARITY)
 
 /* Find the start of each line with the current max width */
+#ifdef CONFIG_UTF_8
+static unsigned char **
+split_lines(struct widget_data *widget_data, int max_width, int utf8)
+#else
 static unsigned char **
 split_lines(struct widget_data *widget_data, int max_width)
+#endif /* CONFIG_UTF_8 */
 {
 	unsigned char *text = widget_data->widget->text;
 	unsigned char **lines = (unsigned char **) widget_data->cdata;
@@ -101,19 +161,27 @@ split_lines(struct widget_data *widget_data, int max_width)
 
 	while (*text) {
 		int width;
+		int cells = 0;
 
 		/* Skip first leading \n or space. */
 		if (isspace(*text)) text++;
 		if (!*text) break;
 
-		width = split_line(text, max_width);
+#ifdef CONFIG_UTF_8
+		width = split_line(text, max_width, &cells, utf8);
+#else
+		width = split_line(text, max_width, &cells);
+#endif
 
 		/* split_line() may return 0. */
 		if (width < 1) {
 			width = 1; /* Infinite loop prevention. */
 		}
+		if (cells < 1) {
+			cells = 1; /* Infinite loop prevention. */
+		}
 
-		int_lower_bound(&widget_data->box.width, width);
+		int_lower_bound(&widget_data->box.width, cells);
 
 		if (!realloc_lines(&lines, line, line + 1))
 			break;
@@ -143,6 +211,7 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 
 	for (; *text; text += line_width, (*y)++) {
 		int shift;
+		int cells = 0;
 
 		/* Skip first leading \n or space. */
 		if (!firstline && isspace(*text))
@@ -151,7 +220,11 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 			firstline = 0;
 		if (!*text) break;
 
-		line_width = split_line(text, width);
+#ifdef CONFIG_UTF_8
+		line_width = split_line(text, width, &cells, term->utf8);
+#else
+		line_width = split_line(text, width, &cells);
+#endif /* CONFIG_UTF_8 */
 
 		/* split_line() may return 0. */
 		if (line_width < 1) {
@@ -159,18 +232,18 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 			continue;
 		}
 
-		if (real_width) int_lower_bound(real_width, line_width);
+		if (real_width) int_lower_bound(real_width, cells);
 		if (format_only || !line_width) continue;
 
 		/* Calculate the number of chars to indent */
 		if (align == ALIGN_CENTER)
-			shift = (width - line_width) / 2;
+			shift = (width - cells) / 2;
 		else if (align == ALIGN_RIGHT)
-			shift = width - line_width;
+			shift = width - cells;
 		else
 			shift = 0;
 
-		assert(line_width <= width && shift < width);
+		assert(cells <= width && shift < width);
 
 		draw_text(term, x + shift, *y, text, line_width, 0, color);
 	}
@@ -205,9 +278,15 @@ dlg_format_text(struct terminal *term, struct widget_data *widget_data,
 
 		/* Ensure that the current split is valid but don't
 		 * split if we don't have to */
+#ifdef CONFIG_UTF_8
+		if (widget_data->box.width != width
+		    && !split_lines(widget_data, width, term->utf8))
+			return;
+#else
 		if (widget_data->box.width != width
 		    && !split_lines(widget_data, width))
 			return;
+#endif
 
 		lines = (unsigned char **) widget_data->cdata;
 
