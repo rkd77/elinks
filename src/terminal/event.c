@@ -162,6 +162,12 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	object_unlock(term->spec);
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
+#ifdef CONFIG_UTF_8
+	/* Probably not best place for set this. But now we finally have
+	 * term->spec and term->utf8 should be set before decode session info.
+	 * --Scrool */
+	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io");
+#endif /* CONFIG_UTF_8 */
 }
 
 #ifdef CONFIG_MOUSE
