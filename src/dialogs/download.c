@@ -152,8 +152,8 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		int_lower_bound(&w, DOWN_DLG_MIN);
 	}
 
-	dlg_format_text_do(NULL, url, 0, &y, w, &rw,
-			dialog_text_color, ALIGN_LEFT);
+	dlg_format_text_do(term, url, 0, &y, w, &rw,
+			dialog_text_color, ALIGN_LEFT, 1);
 
 	y++;
 	if (show_meter) y += 2;
@@ -161,13 +161,13 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 #if CONFIG_BITTORRENT
 	if (bittorrent) y += 2;
 #endif
-	dlg_format_text_do(NULL, msg, 0, &y, w, &rw,
-			dialog_text_color, ALIGN_LEFT);
+	dlg_format_text_do(term, msg, 0, &y, w, &rw,
+			dialog_text_color, ALIGN_LEFT, 1);
 
 	y++;
-	dlg_format_buttons(NULL, dlg_data->widgets_data,
+	dlg_format_buttons(term, dlg_data->widgets_data,
 			   dlg_data->number_of_widgets, 0, &y, w,
-			   &rw, ALIGN_CENTER);
+			   &rw, ALIGN_CENTER, 1);
 
 	draw_dialog(dlg_data, w, y);
 
@@ -186,7 +186,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	y = dlg_data->box.y + DIALOG_TB + 1;
 	x = dlg_data->box.x + DIALOG_LB;
 	dlg_format_text_do(term, url, x, &y, w, NULL,
-			dialog_text_color, ALIGN_LEFT);
+			dialog_text_color, ALIGN_LEFT, 0);
 
 	if (show_meter) {
 		y++;
@@ -203,12 +203,12 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 #endif
 	y++;
 	dlg_format_text_do(term, msg, x, &y, w, NULL,
-			dialog_text_color, ALIGN_LEFT);
+			dialog_text_color, ALIGN_LEFT, 0);
 
 	y++;
 	dlg_format_buttons(term, dlg_data->widgets_data,
 			   dlg_data->number_of_widgets, x, &y, w,
-			   NULL, ALIGN_CENTER);
+			   NULL, ALIGN_CENTER, 0);
 
 	mem_free(url);
 	mem_free(msg);

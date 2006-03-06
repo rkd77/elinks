@@ -39,7 +39,7 @@ void
 dlg_format_checkbox(struct terminal *term,
 		    struct widget_data *widget_data,
 		    int x, int *y, int w, int *rw,
-		    enum format_align align)
+		    enum format_align align, int format_only)
 {
 	unsigned char *text = widget_data->widget->text;
 
@@ -52,7 +52,7 @@ dlg_format_checkbox(struct terminal *term,
 		dlg_format_text_do(term, text, x + CHECKBOX_LS, y,
 				   w - CHECKBOX_LS, rw,
 				   get_bfu_color(term, "dialog.checkbox-label"),
-				   align);
+				   align, format_only);
 		if (rw) *rw += CHECKBOX_LS;
 	}
 }

@@ -105,7 +105,7 @@ check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 void
 dlg_format_field(struct terminal *term,
 		 struct widget_data *widget_data,
-		 int x, int *y, int w, int *rw, enum format_align align)
+		 int x, int *y, int w, int *rw, enum format_align align, int format_only)
 {
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
@@ -130,9 +130,9 @@ dlg_format_field(struct terminal *term,
 	}
 
 	if (label && *label) {
-		if (term) text_color = get_bfu_color(term, "dialog.text");
+		if (!format_only) text_color = get_bfu_color(term, "dialog.text");
 
-		dlg_format_text_do(term, label, x, y, w, rw, text_color, ALIGN_LEFT);
+		dlg_format_text_do(term, label, x, y, w, rw, text_color, ALIGN_LEFT, format_only);
 	}
 
 	/* XXX: We want the field and label on the same line if the terminal
@@ -142,7 +142,7 @@ dlg_format_field(struct terminal *term,
 			(*y) -= INPUTFIELD_HEIGHT;
 			dlg_format_text_do(term, INPUTFIELD_FLOAT_SEPARATOR,
 					   x + label_width, y, w, rw,
-					   text_color, ALIGN_LEFT);
+					   text_color, ALIGN_LEFT, format_only);
 			w -= INPUTFIELD_FLOAT_SEPARATOR_LEN + INPUTFIELD_FLOATLABEL_PADDING;
 			x += INPUTFIELD_FLOAT_SEPARATOR_LEN + INPUTFIELD_FLOATLABEL_PADDING;
 		}
@@ -722,7 +722,7 @@ input_line_layouter(struct dialog_data *dlg_data)
 		- ses->status.show_tabs_bar;
 
 	dlg_format_field(win->term, dlg_data->widgets_data, 0,
-			 &y, win->term->width, NULL, ALIGN_LEFT);
+			 &y, win->term->width, NULL, ALIGN_LEFT, 0);
 }
 
 static widget_handler_status_T

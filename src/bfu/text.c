@@ -36,7 +36,7 @@ add_dlg_text(struct dialog *dlg, unsigned char *text,
 
 /* Returns length of substring (from start of @text) before a split. */
 static inline int
-split_line(unsigned char *text, int max_width)
+split_line(unsigned char *text, int max_width, int *cells)
 {
 	unsigned char *split = text;
 
@@ -65,6 +65,7 @@ split_line(unsigned char *text, int max_width)
 					split++;
 					break;
 				}
+#endif /* CONFIG_UTF_8 */
 
 				/* If no way to do a clean split, just return
 				 * requested maximal width. */
@@ -134,7 +135,8 @@ split_lines(struct widget_data *widget_data, int max_width)
 void
 dlg_format_text_do(struct terminal *term, unsigned char *text,
 		int x, int *y, int width, int *real_width,
-		struct color_pair *color, enum format_align align)
+		struct color_pair *color, enum format_align align, 
+		int format_only)
 {
 	int line_width;
 	int firstline = 1;
@@ -158,7 +160,7 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 		}
 
 		if (real_width) int_lower_bound(real_width, line_width);
-		if (!term || !line_width) continue;
+		if (format_only || !line_width) continue;
 
 		/* Calculate the number of chars to indent */
 		if (align == ALIGN_CENTER)
@@ -176,7 +178,8 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 
 void
 dlg_format_text(struct terminal *term, struct widget_data *widget_data,
-		int x, int *y, int width, int *real_width, int max_height)
+		int x, int *y, int width, int *real_width, int max_height,
+		int format_only)
 {
 	unsigned char *text = widget_data->widget->text;
 	unsigned char saved = 0;
@@ -246,7 +249,7 @@ dlg_format_text(struct terminal *term, struct widget_data *widget_data,
 	dlg_format_text_do(term, text,
 		x, y, width, real_width,
 		get_bfu_color(term, "dialog.text"),
-		widget_data->widget->info.text.align);
+		widget_data->widget->info.text.align, format_only);
 
 	if (widget_data->widget->info.text.is_label) (*y)--;
 
@@ -333,7 +336,7 @@ format_and_display_text(struct widget_data *widget_data,
 
 	dlg_format_text(term, widget_data,
 			widget_data->box.x, &y, widget_data->box.width, NULL,
-			height);
+			height, 0);
 
 	display_text(dlg_data, widget_data);
 	redraw_from_window(dlg_data->win);

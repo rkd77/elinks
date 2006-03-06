@@ -19,7 +19,7 @@
 void
 dlg_format_group(struct terminal *term,
 		 struct widget_data *widget_data,
-		 int n, int x, int *y, int w, int *rw)
+		 int n, int x, int *y, int w, int *rw, int format_only)
 {
 	int space_between_widgets = 1;
 	int line_width = 0;
@@ -56,7 +56,7 @@ dlg_format_group(struct terminal *term,
 
 		xpos = x + line_width;
 
-		if (term) {
+		if (!format_only) {
 			if (widget_data->widget->type == WIDGET_CHECKBOX) {
 				/* Draw text at right of checkbox. */
 				if (label_length)
@@ -72,7 +72,6 @@ dlg_format_group(struct terminal *term,
 					draw_text(term, xpos, *y,
 						  text, label_length,
 						  0, color);
-
 				set_box(&widget_data->box,
 					xpos + label_padding + label_length, *y,
 					width, 1);
@@ -97,12 +96,13 @@ group_layouter(struct dialog_data *dlg_data)
 	int y = 0;
 	int n = dlg_data->number_of_widgets - 2;
 
-	dlg_format_group(NULL, dlg_data->widgets_data, n,
-			 0, &y, w, &rw);
+
+	dlg_format_group(term, dlg_data->widgets_data, n,
+			 0, &y, w, &rw, 1);
 
 	y++;
-	dlg_format_buttons(NULL, dlg_data->widgets_data + n, 2, 0, &y, w,
-			   &rw, ALIGN_CENTER);
+	dlg_format_buttons(term, dlg_data->widgets_data + n, 2, 0, &y, w,
+			   &rw, ALIGN_CENTER, 1);
 
 	w = rw;
 
@@ -110,9 +110,9 @@ group_layouter(struct dialog_data *dlg_data)
 
 	y = dlg_data->box.y + DIALOG_TB + 1;
 	dlg_format_group(term, dlg_data->widgets_data, n,
-			 dlg_data->box.x + DIALOG_LB, &y, w, NULL);
+			 dlg_data->box.x + DIALOG_LB, &y, w, NULL, 0);
 
 	y++;
 	dlg_format_buttons(term, dlg_data->widgets_data + n, 2,
-			   dlg_data->box.x + DIALOG_LB, &y, w, &rw, ALIGN_CENTER);
+			   dlg_data->box.x + DIALOG_LB, &y, w, &rw, ALIGN_CENTER, 0);
 }

@@ -88,7 +88,7 @@ buttons_width(struct widget_data *widget_data, int n,
 
 	while (n--) {
 		int minw = (widget_data++)->widget->info.button.textlen
-			   + BUTTON_HSPACING + BUTTON_LR_LEN;
+				+ BUTTON_HSPACING + BUTTON_LR_LEN;
 
 		maxw += minw;
 		if (minwidth) int_lower_bound(minwidth, minw);
@@ -100,7 +100,7 @@ buttons_width(struct widget_data *widget_data, int n,
 void
 dlg_format_buttons(struct terminal *term,
 		   struct widget_data *widget_data, int n,
-		   int x, int *y, int w, int *rw, enum format_align align)
+		   int x, int *y, int w, int *rw, enum format_align align, int format_only)
 {
 	int i1 = 0;
 
@@ -120,7 +120,7 @@ dlg_format_buttons(struct terminal *term,
 		buttons_width(widget_data1, i2 - i1, NULL, &mw);
 		if (rw) int_bounds(rw, mw, w);
 
-		if (term) {
+		if (!format_only) {
 			int i;
 			int p = x + (align == ALIGN_CENTER ? (w - mw) / 2 : 0);
 
@@ -189,6 +189,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				} else {
 					draw_char(term, x + x1 - !!hk_state, pos->y, data, 0, color);
 				}
+
 
 			}
 			len = x1 - !!hk_state;
