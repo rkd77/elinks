@@ -1254,7 +1254,8 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 				add_menu_action(&mi, N_("~Add link to bookmarks"),
 						ACT_MAIN_ADD_BOOKMARK_LINK);
 #endif
-				add_uri_command_to_menu(&mi, PASS_URI_LINK);
+				add_uri_command_to_menu(&mi, PASS_URI_LINK,
+							N_("Pass link URI to e~xternal command"));
 			}
 			/* [gettext_accelerator_context()] */
 		}

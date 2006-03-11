@@ -51,7 +51,7 @@ enum pass_uri_type {
 	PASS_URI_TAB,
 };
 
-void add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type);
+void add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type, unsigned char *text);
 enum frame_event_status pass_uri_to_command(struct session *ses, struct document_view *doc_view, int /* enum pass_uri_type */ type);
 
 void

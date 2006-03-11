@@ -216,7 +216,7 @@ unhistory_menu(struct terminal *term, void *xxx, void *ses_)
 void
 tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 {
-	/* [gettext_accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)] */
+	/* [gettext_accelerator_context(tab_menu)] */
 	struct menu_item *menu;
 	int tabs;
 #ifdef CONFIG_BOOKMARKS
@@ -247,7 +247,8 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 
 		if (ses->doc_view && document_has_frames(ses->doc_view->document)) {
 			add_menu_action(&menu, N_("Frame at ~full-screen"), ACT_MAIN_FRAME_MAXIMIZE);
-			add_uri_command_to_menu(&menu, PASS_URI_FRAME);
+			add_uri_command_to_menu(&menu, PASS_URI_FRAME,
+						N_("~Pass frame URI to external command"));
 		}
 	}
 
@@ -272,8 +273,10 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 #endif
 	}
 
-	if (have_location(ses))
-		add_uri_command_to_menu(&menu, PASS_URI_TAB);
+	if (have_location(ses)) {
+		add_uri_command_to_menu(&menu, PASS_URI_TAB,
+					N_("Pass tab URI to e~xternal command"));
+	}
 
 	/* Adjust the menu position taking the menu frame into account */
 	if (place_above_cursor) {
@@ -869,37 +872,30 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 	return FRAME_EVENT_OK;
 }
 
+/* The caller provides the text of the menu item, so that it can
+ * choose an available accelerator key. */
 void
-add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type)
+add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type,
+			unsigned char *text)
 {
 	struct list_head *tree = get_opt_tree("document.uri_passing");
 	struct option *option;
 	int commands = 0;
 	enum menu_item_flags flags = NO_FLAG;
 	action_id_T action_id;
-	unsigned char *text;
 
 	switch (type) {
 	case PASS_URI_FRAME:
-		/* [gettext_accelerator_context(tab_menu.uri_frame)] */
 		action_id = ACT_MAIN_FRAME_EXTERNAL_COMMAND;
-		text = N_("~Pass frame URI to external command");
-		/* [gettext_accelerator_context()] */
 		break;
 
 	case PASS_URI_LINK:
-		/* [gettext_accelerator_context(tab_menu.uri_link)] */
 		action_id = ACT_MAIN_LINK_EXTERNAL_COMMAND;
-		text = N_("Pass link URI to e~xternal command");
-		/* [gettext_accelerator_context()] */
 		break;
 
 	default:
 	case PASS_URI_TAB:
-		/* [gettext_accelerator_context(tab_menu.uri_tab)] */
 		action_id = ACT_MAIN_TAB_EXTERNAL_COMMAND;
-		text = N_("Pass tab URI to e~xternal command");
-		/* [gettext_accelerator_context()] */
 	};
 
 	foreach (option, *tree) {
