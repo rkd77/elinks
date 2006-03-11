@@ -308,11 +308,13 @@ sub dump {
     $self->_update_flagstr();
     $dump .= $self->_dump_multi_comment( $self->{'_flagstr'}, "#, " )
       if defined( $self->{'_flagstr'} );
-    $dump .= "msgid " . $self->_normalize_str( $self->msgid );
+    $dump .= "msgid " . $self->_normalize_str( $self->msgid )
+      if $self->msgid;
     $dump .= "msgid_plural " . $self->_normalize_str( $self->msgid_plural )
       if $self->msgid_plural;
 
-    $dump .= "msgstr " . $self->_normalize_str( $self->msgstr ) if $self->msgstr;
+    $dump .= "msgstr " . $self->_normalize_str( $self->msgstr )
+	if $self->msgstr;
 
     if ( my $msgstr_n = $self->msgstr_n ) {
         $dump .= "msgstr[$_] " . $self->_normalize_str( $$msgstr_n{$_} )
@@ -1017,7 +1019,7 @@ Never write C<< CZ<><Locale::PO> >>; it looks bad in B<pod2text>.
 Documented that C<msgstr> normally returns C<undef> if there are plurals.
 Documented the new methods C<msgid_begin_lineno> and C<msgstr_begin_lineno>.
 
-=item Z<>2006-02-28  Kalle Olavi Niemitalo  <kon@iki.fi>
+=item Z<>2006-02-18  Kalle Olavi Niemitalo  <kon@iki.fi>
 
 Locale::PO now preserves unrecognized flags, although there is still no documented way to access them.  It also preserves the order of flags, if no flags are modified.  Replaced the C<fuzzy>, C<c_format>, and C<php_format> fields with C<_flaghash>, and renamed the C<_flag> field to C<_flagstr>.
 Flag-setting functions silently map unsupported values (e.g. 42) to supported ones (e.g. 1), which they also return.
@@ -1026,6 +1028,10 @@ Names of flags are case-sensitive, like in GNU Gettext.
 
 POD changes:
 Unlisted the bugs that have now been fixed.
+
+=item Z<>2006-02-19  Kalle Olavi Niemitalo  <kon@iki.fi>
+
+The C<dump> method doesn't output an C<msgid> if there isn't one. 
 
 =back
 

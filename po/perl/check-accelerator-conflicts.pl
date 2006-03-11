@@ -7,7 +7,7 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.4";
+my $VERSION = "1.5";
 
 sub show_version
 {
@@ -21,8 +21,9 @@ sub show_version
 my $Opt_accelerator_tag;
 
 # True if, for missing or fuzzy translations, the msgid string should
-# be checked instead of msgstr.  Set with the --msgid-fallback option.
-my $Opt_msgid_fallback;
+# be checked instead of msgstr.  Set with the --msgid-fallback and
+# --no-msgid-fallback options.
+my $Opt_msgid_fallback = 1;
 
 sub acceleration_arrays_eq ($$)
 {
@@ -37,9 +38,43 @@ sub acceleration_arrays_eq ($$)
 
 sub check_po_file ($)
 {
+    # The name of the PO file to be checked.
     my($po_file_name) = @_;
+
+    # A nested hash that lists the accelerators and their uses.
+    # $accelerators{$accelerator}{$ctxname}{ACCELERATIONS}[$i]{LINENO}
+    # 1. In %accelerators, the keys are one-character strings,
+    #    and the values are hash references.
+    # 2. In %{$accelerators{$accelerator}}, the keys are names
+    #    of contexts in which the accelerator is used, and the
+    #    values are references to "crossing" hashes.
+    # 3. %{$accelerators{$accelerator}{$ctxname}} is a "crossing" hash,
+    #    so named because it describes how an accelerator and a context
+    #    cross each other.  It has the following elements:
+    #    (ACCELERATIONS => [see point 4 below],
+    #     REPORTED => (1 if this is a conflict and has been reported),
+    #     AVOID => (1 if this accelerator should not be suggested in this
+    #               context))
+    # 4. @{$accelerators{$accelerator}{$ctxname}{ACCELERATIONS}} is a list of
+    #    references to "acceleration" hashes.  If the same acceleration occurs
+    #    in multiple contexts, then the references are to the same hash.
+    # 5. %{$accelerators{$accelerator}{ctxname}{ACCELERATIONS}[$i]} is an
+    #    "acceleration" hash.  It has the following structure:
+    #    (PO => (the Locale::PO object),
+    #     CTXNAMES => [read-only list of names of contexts in which the
+    #                  accelerator is used],
+    #     ACCELERATOR => (a one-character string),
+    #     LINENO => (line number in the PO file),
+    #     STRING => (the msgid or msgstr string that defines the accelerator;
+    #                unquoted as much as possible),
+    #     EXPLAIN => (a string to be displayed if a conflict is found))
     my %accelerators;
-    my $warnings = 0;
+
+    # How many entries had checkable accelerators.
+    my $checkable_count = 0;
+
+    # How many conflicts have been found so far.
+    my $conflict_count = 0;
 
     {
 	my $pos = Locale::PO->load_file_asarray($po_file_name)
@@ -76,10 +111,12 @@ sub check_po_file ($)
  	    	}
  	    }
 
+	    $checkable_count++ if @accelerations;
 	    foreach my $acceleration (@accelerations) {
-		foreach my $ctxname (@ctxnames) {
-		    push(@{$accelerators{uc $acceleration->{ACCELERATOR}}{$ctxname}},
-			 $acceleration);
+		my $accelerator = uc($acceleration->{ACCELERATOR});
+		foreach my $crossing (@{$accelerators{$accelerator}}{@ctxnames}) {
+		    push @{$crossing->{ACCELERATIONS}}, $acceleration;
+		    $crossing->{AVOID} = 1 if $acceleration->{EXPLAIN} =~ /^msgstr/;
 		}
 	    }
 	}
@@ -87,16 +124,16 @@ sub check_po_file ($)
 
     foreach my $accelerator (sort keys %accelerators) {
 	my $ctxhash = $accelerators{$accelerator};
-	foreach my $outer_ctxname (sort keys %$ctxhash) {
-	    # Cannot use "foreach my $accelerations" directly, because
-	    # $accelerations would then become an alias and change to 0 below.
-	    my $accelerations = $ctxhash->{$outer_ctxname};
-	    if (ref($accelerations) eq "ARRAY" && @$accelerations > 1) {
+	foreach my $crossing (@{$ctxhash}{sort keys %$ctxhash}) {
+	    my $accelerations = $crossing->{ACCELERATIONS};
+	    if ($accelerations && @$accelerations > 1 && !$crossing->{REPORTED}) {
 		my @ctxnames_in_conflict;
-		foreach my $ctxname (sort keys %$ctxhash) {
-		    if (acceleration_arrays_eq($ctxhash->{$ctxname}, $accelerations)) {
-			push @ctxnames_in_conflict, $ctxname;
-			$ctxhash->{$ctxname} = 0;
+		foreach my $inner_ctxname (keys %$ctxhash) {
+		    my $inner_crossing = $ctxhash->{$inner_ctxname};
+		    if (acceleration_arrays_eq($inner_crossing->{ACCELERATIONS},
+					       $accelerations)) {
+			push @ctxnames_in_conflict, $inner_ctxname;
+			$inner_crossing->{REPORTED} = 1;
 		    }
 		}
 		my $ctxnames_in_conflict = join(", ", map(qq("$_"), @ctxnames_in_conflict));
@@ -120,7 +157,7 @@ sub check_po_file ($)
 		    SUGGESTION: foreach my $char (split(//, $suggestions)) {
 			foreach my $ctxname (@{$acceleration->{CTXNAMES}}) {
 			    $suggestions =~ s/\Q$char\E//, next SUGGESTION
-				if exists $accelerators{uc($char)}{$ctxname};
+				if $accelerators{uc($char)}{$ctxname}{AVOID};
 			}
 		    }
 
@@ -131,12 +168,18 @@ sub check_po_file ($)
 		    else {
 			warn "$po_file_name:$lineno: suggestions: $suggestions\n";
 		    }
-		}
-		$warnings++;
+		} # foreach $acceleration in conflict
+		$conflict_count++;
 	    } # if found a conflict 
 	} # foreach context known for $accelerator
     } # foreach $accelerator
-    return $warnings ? 1 : 0;
+
+    print "$po_file_name: "
+	. ($checkable_count == 1 ? "Checked 1 entry" : "Checked $checkable_count entries")
+	. ", "
+	. ($conflict_count == 1 ? "found 1 accelerator conflict" : "found $conflict_count accelerator conflicts")
+	. ".\n";
+    return $conflict_count ? 1 : 0;
 }
 
 GetOptions("accelerator-tag=s" => sub {
@@ -147,7 +190,7 @@ GetOptions("accelerator-tag=s" => sub {
 		   if length($value) != 1;
 	       $Opt_accelerator_tag = $value;
 	   },
-	   "msgid-fallback" => \$Opt_msgid_fallback,
+	   "msgid-fallback!" => \$Opt_msgid_fallback,
 	   "help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
 	   "version" => \&show_version)
     or exit 2;
@@ -212,15 +255,20 @@ in the PO file.
 
 =item B<--msgid-fallback>
 
-If the C<msgstr> is empty or the entry is fuzzy, check the C<msgid>
-instead.  Without this option, B<check-accelerator-conflicts.pl>
-completely ignores such entries.
+=item B<--no-msgid-fallback>
 
-This option also causes B<check-accelerator-conflicts.pl> not to
-suggest accelerators that would conflict with a C<msgid> that was thus
-checked.  Following these suggestions may lead to bad choices for
-accelerators, because the conflicting C<msgid> will eventually be
-shadowed by a C<msgstr> that may use a different accelerator.
+Select how to check entries where the C<msgstr> is missing or fuzzy.
+The default is B<--msgid-fallback>, which makes
+B<check-accelerator-conflicts.pl> use the C<msgid> instead, and report
+any conflicts between C<msgid> and C<msgstr> strings.  The alternative
+is B<--no-msgid-fallback>, which makes B<check-accelerator-conflicts.pl>
+completely ignore such entries.
+
+Regardless of these options, B<check-accelerator-conflicts.pl> will
+suggest accelerators that would conflict with ones defined in C<msgid>
+strings.  Those strings will be eventually shadowed by C<msgstr>
+strings, so their accelerators should not affect which accelerators
+the translator chooses for C<msgstr> strings.
 
 =back
 
