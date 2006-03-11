@@ -146,7 +146,14 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 			    && win->handler != mainmenu_handler)
 				break;
 
-			delete_window(win);
+			if (win->handler == mainmenu_handler) {
+				struct menu *menu = win->data;
+
+				menu->selected = -1;
+				del_from_list(win);
+				add_to_list_end(term->windows, win);
+			} else
+				delete_window(win);
 		}
 	}
 
@@ -1026,9 +1033,11 @@ mainmenu_mouse_handler(struct menu *menu, struct term_event *ev)
 
 	/* Mouse was clicked outside the mainmenu bar */
 	if (ev->info.mouse.y) {
-		if (check_mouse_action(ev, B_DOWN))
-			delete_window_ev(win, NULL);
-
+		if (check_mouse_action(ev, B_DOWN)) {
+			del_from_list(win);
+			add_to_list_end(win->term->windows, win);
+			menu->selected = -1;
+		}
 		return;
 	}
 
