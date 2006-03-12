@@ -5,9 +5,9 @@ function load_google_video(cached, vs) {
 	if (!cached.uri.match(/^http:\/\/video.google.com\/videoplay/))
 		return true;
 
-	var re = /(<object data="\/googleplayer.swf\?videoUrl=)(.*?)(\&.*?<\/object>)/;
+	var re = /(?:videoUrl(?:\\u003d|=))(.*?)\&/;
 	var match = cached.content.match(re);
-	var url = unescape(match[2]);
+	var url = unescape(match[1]);
 	var meta = '<meta http-equiv="refresh" content="1; url=' + url + '" />';
 
 	cached.content = cached.content.replace(/<head>/, "<head>" + meta);
