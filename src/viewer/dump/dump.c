@@ -51,7 +51,9 @@ static struct download dump_download;
 static int dump_redir_count = 0;
 
 static int dump_to_file_16(struct document *document, int fd);
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 static int dump_to_file_256(struct document *document, int fd);
+#endif
 
 /* This dumps the given @cached's source onto @fd nothing more. It returns 0 if it
  * all went fine and 1 if something isn't quite right and we should terminate
@@ -521,6 +523,11 @@ fail:
 	return 0;
 }
 
+/* configure --enable-debug uses gcc -Wall -Werror, and -Wall includes
+ * -Wunused-function, so declaring or defining any unused function
+ * would break the build. */
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+
 static int
 write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *buf, int *bptr)
 {
@@ -648,6 +655,7 @@ fail:
 	return 0;
 }
 
+#endif /* defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS) */
 
 int
 dump_to_file(struct document *document, int fd)

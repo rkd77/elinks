@@ -632,29 +632,43 @@ static struct option_info config_options_info[] = {
 		N_("Codepage used in dump output. 'System' stands for\n"
 		"a codepage determined by a selected locale.")),
 
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1,
+	/* The #if directives cannot be inside the argument list of
+	 * the INIT_OPT_INT macro; that wouldn't be standard C.
+	 * And they especially cannot be inside the argument list of N_;
+	 * xgettext (GNU gettext-tools) 0.14.3 wouldn't support that. */
 #if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS)
-3,
-#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-2,
-#else
-1,
-#endif
--1,
+	INIT_OPT_INT("document.dump", N_("Color mode"),
+		"color_mode", 0, -1, 3, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
 		"1 is 16 color mode\n"
-#if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS)
 		"2 is 88 color mode\n"
-		"3 is 256 color mode\n"
-#elif defined(CONFIG_88_COLORS)
-		"2 is 88 color mode\n"
-#elif defined(CONFIG_256_COLORS)
-		"2 is 256 color mode\n"
-#endif
-		)),
+		"3 is 256 color mode")),
+#elif defined(CONFIG_88_COLORS) /* && !defined(CONFIG_256_COLORS) */
+	INIT_OPT_INT("document.dump", N_("Color mode"),
+		"color_mode", 0, -1, 2, -1,
+		N_("Color mode for dumps:\n"
+		"-1 is standard dump mode\n"
+		"0 is mono mode\n"
+		"1 is 16 color mode\n"
+		"2 is 88 color mode")),
+#elif defined(CONFIG_256_COLORS) /* && !defined(CONFIG_88_COLORS) */
+	INIT_OPT_INT("document.dump", N_("Color mode"),
+		"color_mode", 0, -1, 2, -1,
+		N_("Color mode for dumps:\n"
+		"-1 is standard dump mode\n"
+		"0 is mono mode\n"
+		"1 is 16 color mode\n"
+		"2 is 256 color mode")),
+#else /* !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) */
+	INIT_OPT_INT("document.dump", N_("Color mode"),
+		"color_mode", 0, -1, 1, -1,
+		N_("Color mode for dumps:\n"
+		"-1 is standard dump mode\n"
+		"0 is mono mode\n"
+		"1 is 16 color mode")),
+#endif /* !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) */
 
 	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", 0, "",
