@@ -574,7 +574,12 @@ bittorrent_message_dialog(struct session *ses, void *data)
 
 	uristring = get_uri_string(message->uri, URI_PUBLIC);
 	if (uristring) {
-		decode_uri_for_display(uristring);
+#ifdef CONFIG_UTF_8
+		if (ses->tab->term->utf8)
+			decode_uri(uristring);
+		else
+#endif /* CONFIG_UTF_8 */
+			decode_uri_for_display(uristring);
 		add_format_to_string(&string,
 			_("Unable to retrieve %s", ses->tab->term),
 			uristring);
@@ -719,7 +724,12 @@ bittorrent_query_callback(void *data, enum connection_state state,
 
 		/* Let's make the filename pretty for display & save */
 		/* TODO: The filename can be the empty string here. See bug 396. */
-		decode_uri_string_for_display(&filename);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			decode_uri_string(&filename);
+		else
+#endif /* CONFIG_UTF_8 */
+			decode_uri_string_for_display(&filename);
 	}
 
 	add_format_to_string(&msg,

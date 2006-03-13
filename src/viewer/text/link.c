@@ -1347,7 +1347,7 @@ end:
 	do_menu(term, mi, ses, 1);
 }
 
-/* Return current link's title. Pretty trivial. */
+/* Return current link's title. */
 unsigned char *
 get_current_link_title(struct document_view *doc_view)
 {
@@ -1361,7 +1361,29 @@ get_current_link_title(struct document_view *doc_view)
 
 	link = get_current_link(doc_view);
 
-	return (link && link->title && *link->title) ? stracpy(link->title) : NULL;
+	if (link && link->title && *link->title) {
+		unsigned char *link_title, *src;
+		struct conv_table *convert_table;
+
+		convert_table = get_translation_table(doc_view->document->cp,
+						      doc_view->document->options.cp);
+
+		link_title = convert_string(convert_table, link->title,
+					    strlen(link->title),
+					    doc_view->document->options.cp,
+					    CSM_DEFAULT, NULL, NULL, NULL);
+		/* Remove illicit chars. */
+#ifdef CONFIG_UTF_8
+		if (link_title && !doc_view->document->options.utf8)
+#endif /* CONFIG_UTF_8 */
+			for (src = link_title; *src; src++)
+				if (!isprint(*src) || iscntrl(*src))
+					*src = '*';
+
+		return link_title;
+	}
+
+	return NULL;
 }
 
 unsigned char *
@@ -1406,7 +1428,12 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 			add_char_to_string(&str, ')');
 		}
 
-		decode_uri_string_for_display(&str);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			decode_uri_string(&str);
+		else
+#endif /* CONFIG_UTF_8 */
+			decode_uri_string_for_display(&str);
 		return str.source;
 	}
 

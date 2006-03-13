@@ -345,8 +345,14 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 			}
 
 			document->title = get_uri_string(document->uri, components);
-			if (document->title)
-				decode_uri_for_display(document->title);
+			if (document->title) {
+#ifdef CONFIG_UTF_8
+				if (doc_view->document->options.utf8)
+					decode_uri(document->title);
+				else
+#endif /* CONFIG_UTF_8 */
+					decode_uri_for_display(document->title);
+			}
 		}
 
 #ifdef CONFIG_CSS

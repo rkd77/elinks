@@ -142,14 +142,7 @@ get_current_link_info_and_title(struct session *ses,
 
 	link_title = get_current_link_title(doc_view);
 	if (link_title) {
-		unsigned char *src;
-
 		assert(*link_title);
-
-		/* Remove illicit chars. */
-		for (src = link_title; *src; src++)
-			if (!isprint(*src) || iscntrl(*src))
-				*src = '*';
 
 		ret = straconcat(link_info, " - ", link_title, NULL);
 		mem_free(link_info);
