@@ -805,8 +805,28 @@ get_filesize_from_RETR(unsigned char *data, int data_len)
 		if (data[pos] == '(')
 			pos_file_len = pos;
 
-	if (!pos_file_len || pos_file_len == data_len - 1)
-		return -1;
+	if (!pos_file_len || pos_file_len == data_len - 1) {
+	/* Getting file size from ftp.task.gda.pl */
+	/* 150 5676.4 kbytes to download */
+		unsigned char tmp = data[data_len - 1];
+		unsigned char *kbytes;
+		char *endptr;
+		double size;
+
+		data[data_len - 1] = '\0';
+		kbytes = strstr(data, "kbytes");
+		data[data_len - 1] = tmp;
+		if (!kbytes) return -1;
+
+		for (kbytes -= 2; kbytes >= data; kbytes--) {
+			if (*kbytes == ' ') break;
+		}
+		if (*kbytes != ' ') return -1;
+		kbytes++;
+		size = strtod((const char *)kbytes, &endptr);
+		if (endptr == (char *)kbytes) return -1;
+		return (off_t)(size * 1024.0);
+	}
 
 	pos_file_len++;
 	if (!isdigit(data[pos_file_len]))
