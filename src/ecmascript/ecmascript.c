@@ -16,12 +16,14 @@
 #include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "session/task.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/conv.h"
+#include "util/string.h"
 #include "viewer/text/view.h" /* current_frame() */
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
@@ -211,6 +213,40 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 		  "ELinks, so the script execution was interrupted."),
 		  max_exec_time));
 
+}
+
+void
+ecmascript_set_action(unsigned char **action, unsigned char *string)
+{
+	struct uri *protocol;
+
+	trim_chars(string, ' ', NULL);
+	protocol = get_uri(string, URI_PROTOCOL);
+
+	if (protocol) { /* full uri with protocol */
+		done_uri(protocol);
+		mem_free_set(action, string);
+	} else {
+		if (string[0] == '/') { /* absolute uri */
+			struct uri *uri = get_uri(*action, URI_HTTP_REFERRER_HOST);
+
+			if (uri->protocol == PROTOCOL_FILE) {
+				mem_free_set(action, straconcat(struri(uri), string, NULL));
+			}
+			else
+				mem_free_set(action, straconcat(struri(uri), string + 1, NULL));
+			done_uri(uri);
+			mem_free(string);
+		} else { /* relative uri */
+			unsigned char *last_slash = strrchr(*action, '/');
+			unsigned char *new_action;
+
+			if (last_slash) *(last_slash + 1) = '\0';
+			new_action = straconcat(*action, string, NULL);
+			mem_free_set(action, new_action);
+			mem_free(string);
+		}
+	}
 }
 
 static struct module *ecmascript_modules[] = {
