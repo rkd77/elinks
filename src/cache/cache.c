@@ -181,22 +181,6 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	if (!cached || cached->incomplete)
 		return NULL;
 
-	/* Check if the entry can be deleted */
-	/* FIXME: This does not make sense to me. Why should the usage pattern
-	 * of the cache entry matter? Only reason I can think of is to avoid
-	 * reloading when spawning a new tab which could potentially be a big
-	 * penalty but shouldn't that be taken care of on a higher level?
-	 * --jonas */
-	if (is_object_used(cached)) {
-#if 0
-		/* Never use expired entries. */
-		/* Disabled because it hurts usability too much. */
-		if (cached->expire && cache_entry_has_expired(cached))
-			return NULL;
-#endif
-		return cached;
-	}
-
 	/* A bit of a gray zone. Delete the entry if the it has the stricktest
 	 * cache mode and we don't want the most aggressive mode or we have to
 	 * remove the redirect or the entry expired. Please enlighten me.
@@ -204,7 +188,7 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	if ((cached->cache_mode == CACHE_MODE_NEVER && cache_mode != CACHE_MODE_ALWAYS)
 	    || (cached->redirect && !get_opt_bool("document.cache.cache_redirects"))
 	    || (cached->expire && cache_entry_has_expired(cached))) {
-		delete_cache_entry(cached);
+		if (!is_object_used(cached)) delete_cache_entry(cached);
 		return NULL;
 	}
 
