@@ -94,11 +94,13 @@ static struct decoding_backend dummy_decoding_backend = {
 
 #include "encoding/bzip2.h"
 #include "encoding/gzip.h"
+#include "encoding/lzma.h"
 
 static struct decoding_backend *decoding_backends[] = {
 	&dummy_decoding_backend,
 	&gzip_decoding_backend,
 	&bzip2_decoding_backend,
+	&lzma_decoding_backend,
 };
 
 

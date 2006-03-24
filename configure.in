@@ -450,6 +450,8 @@ if test "x{with_gc}" != xno; then
 		[  --with-gc            enable Boehm's garbage collector])
 fi
 
+EL_ARG_ENABLE(CONFIG_LZMA, lzma, [lzma],
+	      [  --enable-lzma          enable lzma encoding support])
 dnl ===================================================================
 dnl Bookmark and XBEL support
 dnl ===================================================================
