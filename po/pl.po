@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-25 10:30+0100\n"
+"POT-Creation-Date: 2006-03-28 13:40+0200\n"
 "PO-Revision-Date: 2006-03-25 10:40+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -459,14 +459,14 @@ msgstr "~Edytuj"
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:465 src/cache/dialogs.c:231
 #: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:425
-#: src/dialogs/menu.c:454 src/formhist/dialogs.c:211
+#: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:259
 msgid "~Delete"
 msgstr "~Usuñ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:466 src/config/dialogs.c:531
-#: src/config/dialogs.c:944 src/cookies/dialogs.c:423 src/dialogs/menu.c:452
+#: src/config/dialogs.c:944 src/cookies/dialogs.c:423 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Dodaj"
 
@@ -487,7 +487,7 @@ msgstr "Prze~nie¶"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:470 src/cache/dialogs.c:232
-#: src/config/dialogs.c:533 src/config/dialogs.c:947 src/dialogs/menu.c:405
+#: src/config/dialogs.c:533 src/config/dialogs.c:947 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Szukaj"
@@ -1303,9 +1303,9 @@ msgid ""
 "The ID maps to information that will be used when creating the\n"
 "new instance. You don't want to use it."
 msgstr ""
-"U¿ywane wewnêtrznie podczas otwierania instacji ELinksa w nowych oknach.\n"
-"ID jest mapowane do informacji u¿ywanej podczas tworzenia nowej\n"
-"instancji. Nie chcesz tego u¿ywaæ."
+"U¿ywane wewnêtrznie podczas otwierania instacji ELinksa w nowych\n"
+"oknach. ID jest mapowane do informacji u¿ywanej podczas tworzenia\n"
+"nowej instancji. Nie zechcesz tego u¿ywaæ."
 
 #: src/config/cmdline.c:666
 msgid "Name of directory with configuration file"
@@ -1346,7 +1346,8 @@ msgid ""
 "relative to config-dir."
 msgstr ""
 "Nazwa pliku z konfiguracj±, z którego bêdzie czytana i do którego\n"
-"bêdzie zapisywana konfiguracja. Powinna byæ wzglêdna (wzglêdem config-dir)."
+"bêdzie zapisywana konfiguracja. Powinna byæ wzglêdna (wzglêdem\n"
+"config-dir)."
 
 #: src/config/cmdline.c:686
 msgid "Print help for configuration options"
@@ -1384,7 +1385,9 @@ msgstr "Wypisanie sformatowanych wersji danych URL-i na standardowe wyj¶cie"
 
 #: src/config/cmdline.c:702
 msgid "Print formatted plain-text versions of given URLs to stdout."
-msgstr "Wypisanie sformatowanych wersji podanych URL-i na standardowe wyj¶cie."
+msgstr ""
+"Wypisanie sformatowanych wersji podanych URL-i na standardowe\n"
+"wyj¶cie."
 
 #: src/config/cmdline.c:704
 msgid "Codepage to use with -dump"
@@ -1437,9 +1440,10 @@ msgid ""
 "Useful when using ELinks as an external viewer from MUAs.\n"
 "This is equivalent to -default-mime-type text/html."
 msgstr ""
-"Sprawia, ¿e ELinks przyjmuje, i¿ dokumenty nieznanego typu s± w HTML-u.\n"
-"Przydatne podczas u¿ywania ELinks jako zewnêtrznej przegl±darki z MUA.\n"
-"Jest to równowa¿ne z -default-mime-type text/html."
+"Sprawia, ¿e ELinks przyjmuje, i¿ dokumenty nieznanego typu s±\n"
+"w HTML-u. Przydatne podczas u¿ywania ELinks jako zewnêtrznej\n"
+"przegl±darki z programem pocztowym. Jest to równowa¿ne\n"
+"z -default-mime-type text/html."
 
 #: src/config/cmdline.c:736
 msgid "Print usage help and exit"
@@ -1470,7 +1474,8 @@ msgstr "Wypisz dok³adne informacje na temat u¿ycia ELinksa i zakoñcz dzia³anie"
 #: src/config/cmdline.c:748
 msgid "Print detailed usage help and exit."
 msgstr ""
-"Wypisz dok³adne informacje na temat u¿ycia ELinksa i zakoñcz dzia³anie."
+"Wypisz dok³adne informacje na temat u¿ycia ELinksa i zakoñcz\n"
+"dzia³anie."
 
 #
 #: src/config/cmdline.c:750
@@ -1507,9 +1512,9 @@ msgid ""
 "configuration directory (~/.elinks). It forces default configuration\n"
 "values to be used and disables saving of runtime state files."
 msgstr ""
-"Blokuje tworzenie i u¿ywanie plików w katalogu konfiguracji u¿ytkownika\n"
-"(~/.elinks). Wymusza u¿ycie domy¶lnej konfiguracji i blokuje zapis plików\n"
-"stanu przegl±darki."
+"Blokuje tworzenie i u¿ywanie plików w katalogu z konfiguracj±\n"
+"u¿ytkownika (~/.elinks). Wymusza u¿ycie domy¶lnej konfiguracji\n"
+"i blokuje zapis plików konfiguracyjnych."
 
 #: src/config/cmdline.c:767
 msgid "Disable link numbering in dump output"
@@ -1599,16 +1604,17 @@ msgstr ""
 "sesja ELinksa. ELinks dzia³a w tak zwanych pier¶cieniach sesji,\n"
 "gdzie wszystkie instancje ELinksa s± po³±czone i wspó³dziel±\n"
 "stan (pamiêæ podrêczn±, zak³adki, ciasteczka, i tak dalej).\n"
-"Domy¶lnie wszystkie instancje ELinksa pod³±czaj± siê do pier¶cienia 0.\n"
-"Mo¿esz to zachowanie zmieniæ z prze³±cznikiem i tworzyæ tak wiele\n"
-"pier¶cieni sesji ile tylko chcesz. Oczywi¶cie je¶li pier¶cieñ o danym\n"
-"numerze nie istnieje, to jest tworzony i bie¿±ca sesja staje siê sesj±\n"
-"nadrzêdn± (co zwykle nie ma wiêkszego znaczenia dla Ciebie jako\n"
-"zwyk³ego u¿ytkownika). Wiedz, ¿e normalnie nie bêdziesz chcia³ tego\n"
-"u¿ywaæ, dopóki nie jeste¶ developerem i chcesz zrobiæ parê testów.\n"
-"Je¶li chcesz oddzielne instancje raczej u¿yj -no-connect w linii\n"
-"komend. Wiedz, ¿e normalnie ¿adne pliki stanu nie s± zapisywane\n"
-"na dysk, gdy ta opcja jest u¿yta. Zobacz tak¿e -touch-files."
+"Domy¶lnie wszystkie instancje ELinksa pod³±czaj± siê do pier¶cienia\n"
+"0. Mo¿esz to zachowanie zmieniæ z prze³±cznikiem i tworzyæ tak wiele\n"
+"pier¶cieni sesji ile tylko chcesz. Oczywi¶cie je¶li pier¶cieñ\n"
+"o danym numerze nie istnieje, to jest tworzony i bie¿±ca sesja staje\n"
+"siê sesj± nadrzêdn± (co zwykle nie ma wiêkszego znaczenia dla Ciebie\n"
+"jako zwyk³ego u¿ytkownika). Wiedz, ¿e normalnie nie bêdziesz chcia³\n"
+"tego u¿ywaæ, dopóki nie jeste¶ developerem i chcesz zrobiæ parê\n"
+"testów. Je¶li chcesz oddzielne instancje raczej u¿yj -no-connect\n"
+"w linii komend. Wiedz, ¿e normalnie ¿adne pliki stanu nie s±\n"
+"zapisywane na dysk, gdy ta opcja jest u¿yta. Zobacz tak¿e\n"
+"-touch-files."
 
 #: src/config/cmdline.c:813
 msgid "Print the source of given URLs to stdout"
@@ -4261,7 +4267,8 @@ msgstr "Pasek kart u góry"
 
 #: src/config/options.inc:1204
 msgid "Whether display tab bar at top like other browsers do."
-msgstr "Czy wy¶wietlaæ pasek kart u góry strony, tak jak w innych\n"
+msgstr ""
+"Czy wy¶wietlaæ pasek kart u góry strony, tak jak w innych\n"
 "przegl±darkach."
 
 #: src/config/options.inc:1206
@@ -4788,7 +4795,7 @@ msgstr "Wewnêtrzne informacje o nag³ówku"
 msgid "No header info."
 msgstr "Brak nag³ówka."
 
-#: src/dialogs/download.c:238 src/dialogs/menu.c:585
+#: src/dialogs/download.c:238 src/dialogs/menu.c:588
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:360
 msgid "Download"
 msgstr "Pobieranie"
@@ -5058,7 +5065,7 @@ msgstr[2] "%ld bajtów na stercie"
 msgid "Save URL"
 msgstr "Zapisz URL"
 
-#: src/dialogs/menu.c:96 src/dialogs/menu.c:534
+#: src/dialogs/menu.c:96 src/dialogs/menu.c:537
 msgid "Enter URL"
 msgstr "Wprowad¼ URL"
 
@@ -5078,382 +5085,377 @@ msgstr "Czy na pewno chcesz wyj¶æ z ELinksa?"
 msgid "No history"
 msgstr "Brak historii"
 
-#. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:233 src/dialogs/menu.c:306
+#. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
+#: src/dialogs/menu.c:233 src/dialogs/menu.c:309
 msgid "Go ~back"
 msgstr "~Wróæ"
 
-#. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
+#. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:234
 msgid "Go for~ward"
 msgstr "Naprzó~d"
 
-#. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:241 src/dialogs/menu.c:319
+#. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
+#: src/dialogs/menu.c:241 src/dialogs/menu.c:322
 msgid "Bookm~ark document"
 msgstr "Dodaj doku~ment do zak³adek"
 
-#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:245 src/dialogs/menu.c:411
+#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
+#: src/dialogs/menu.c:245 src/dialogs/menu.c:414
 msgid "Toggle ~html/plain"
 msgstr "Prze³±cz ~html/plain"
 
-#. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
+#. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:246
 msgid "~Reload"
 msgstr "P~rze³aduj"
 
-#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:249 src/dialogs/menu.c:421
+#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
+#: src/dialogs/menu.c:249 src/dialogs/menu.c:424
 msgid "Frame at ~full-screen"
 msgstr "Ramka na ~ca³ym ekranie"
 
-#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:258 src/dialogs/menu.c:423
+#. accelerator_context(tab_menu)
+#: src/dialogs/menu.c:251
+msgid "~Pass frame URI to external command"
+msgstr "Przeka¿ ~URI ramki do zewnêtrznego polecenia"
+
+#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
+#: src/dialogs/menu.c:259 src/dialogs/menu.c:426
 msgid "Nex~t tab"
 msgstr "Nas~têpna karta"
 
-#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:259 src/dialogs/menu.c:424
+#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
+#: src/dialogs/menu.c:260 src/dialogs/menu.c:427
 msgid "Pre~v tab"
 msgstr "Poprzednia ~karta"
 
-#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:262 src/dialogs/menu.c:425
+#. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
+#: src/dialogs/menu.c:263 src/dialogs/menu.c:428
 msgid "~Close tab"
 msgstr "~Zamknij kartê"
 
-#. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:265
+#. accelerator_context(tab_menu)
+#: src/dialogs/menu.c:266
 msgid "C~lose all tabs but the current"
 msgstr "Z~amknij wszystkie karty za wyj±tkiem bie¿±cej"
 
 #
-#. accelerator_context(tab_menu.uri_frame, tab_menu.uri_link, tab_menu.uri_tab)
-#: src/dialogs/menu.c:269
+#. accelerator_context(tab_menu)
+#: src/dialogs/menu.c:270
 msgid "B~ookmark all tabs"
 msgstr "Zapisz ~informacje o wszystkich kartach"
 
+#. accelerator_context(tab_menu)
+#: src/dialogs/menu.c:278
+msgid "Pass tab URI to e~xternal command"
+msgstr "~Przeka¿ URI karty do zewnêtrznego polecenia"
+
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:303
+#: src/dialogs/menu.c:306
 msgid "Open new ~tab"
 msgstr "Otwó~rz w nowej karcie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:304
+#: src/dialogs/menu.c:307
 msgid "Open new tab in backgroun~d"
 msgstr "Otwórz now± kartê w t~le"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:305
+#: src/dialogs/menu.c:308
 msgid "~Go to URL"
 msgstr "Przejd¼ do ~URL-a"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:307
+#: src/dialogs/menu.c:310
 msgid "Go ~forward"
 msgstr "Naprzó~d"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:308
+#: src/dialogs/menu.c:311
 msgid "~History"
 msgstr "~Historia"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:309
+#: src/dialogs/menu.c:312
 msgid "~Unhistory"
 msgstr "Historia ~powrotów"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:315
+#: src/dialogs/menu.c:318
 msgid "~Save as"
 msgstr "Zapi~sz jako"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:316
+#: src/dialogs/menu.c:319
 msgid "Save UR~L as"
 msgstr "Zapisz URL ~jako"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:317
+#: src/dialogs/menu.c:320
 msgid "Sa~ve formatted document"
 msgstr "Zapisz s~formatowany dokument"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:326
+#: src/dialogs/menu.c:329
 msgid "~Kill background connections"
 msgstr "Przerwij wszyst~kie po³±czenia w tle"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:327
+#: src/dialogs/menu.c:330
 msgid "Flush all ~caches"
 msgstr "Wyczy¶æ ~ca³± pamiêæ podrêczn±"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:328
+#: src/dialogs/menu.c:331
 msgid "Resource ~info"
 msgstr "~Informacje o zasobach"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:335
+#: src/dialogs/menu.c:338
 msgid "E~xit"
 msgstr "W~yj¶cie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:362
+#: src/dialogs/menu.c:365
 msgid "Open ~new window"
 msgstr "Otwórz ~nowe okno"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:381
+#: src/dialogs/menu.c:384
 msgid "~OS shell"
 msgstr "P~ow³oka systemowa"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:388
+#: src/dialogs/menu.c:391
 msgid "Resize t~erminal"
 msgstr "Zmieñ rozmiar ~terminala"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:406
+#: src/dialogs/menu.c:409
 msgid "Search ~backward"
 msgstr "Szukaj ~wstecz"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:407
+#: src/dialogs/menu.c:410
 msgid "Find ~next"
 msgstr "Znajd¼ ~nastêpne"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:408
+#: src/dialogs/menu.c:411
 msgid "Find ~previous"
 msgstr "Znajd¼ ~poprzednie"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:409
+#: src/dialogs/menu.c:412
 msgid "T~ypeahead search"
 msgstr "Szukanie z w~yprzedzeniem"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:412
+#: src/dialogs/menu.c:415
 msgid "Toggle i~mages"
 msgstr "Prze³±cz ~obrazki"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:413
+#: src/dialogs/menu.c:416
 msgid "Toggle ~link numbering"
 msgstr "Prze³±cz n~umerowanie odno¶ników"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:414
+#: src/dialogs/menu.c:417
 msgid "Toggle ~document colors"
 msgstr "Prze³±cz sposób u¿ycia kolorów podanych w ~dokumencie"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:415
+#: src/dialogs/menu.c:418
 msgid "~Wrap text on/off"
 msgstr "Zawi~janie tekstu w³/wy³"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:417
+#: src/dialogs/menu.c:420
 msgid "Document ~info"
 msgstr "~Informacje o dokumencie"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:418
+#: src/dialogs/menu.c:421
 msgid "H~eader info"
 msgstr "Informacj~e o nag³ówku"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:419
+#: src/dialogs/menu.c:422
 msgid "Rel~oad document"
 msgstr "P~rze³aduj dokument"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:420
+#: src/dialogs/menu.c:423
 msgid "~Rerender document"
 msgstr "Prze~formatuj dokument"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:432
+#: src/dialogs/menu.c:435
 msgid "~ELinks homepage"
 msgstr "Strona domowa ~ELinksa"
 
 #
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:433
+#: src/dialogs/menu.c:436
 msgid "~Documentation"
 msgstr "~Dokumentacja"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:434
+#: src/dialogs/menu.c:437
 msgid "~Keys"
 msgstr "~Klawiszologia"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:436
+#: src/dialogs/menu.c:439
 msgid "LED ~indicators"
 msgstr "Wska¼n~iki LED"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:439
+#: src/dialogs/menu.c:442
 msgid "~Bugs information"
 msgstr "Informacje o ~b³êdach"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:441
+#: src/dialogs/menu.c:444
 msgid "ELinks ~GITWeb"
 msgstr "ELinks ~GITWeb"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:444
+#: src/dialogs/menu.c:447
 msgid "~Copying"
 msgstr "Ko~piowanie"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:445
+#: src/dialogs/menu.c:448
 msgid "~About"
 msgstr "~O programie"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
-#: src/dialogs/menu.c:453
+#: src/dialogs/menu.c:456
 msgid "~Modify"
 msgstr "~Zmieñ"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:461 src/dialogs/menu.c:475
+#: src/dialogs/menu.c:464 src/dialogs/menu.c:478
 msgid "~Language"
 msgstr "~Jêzyk"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:463 src/dialogs/menu.c:476
+#: src/dialogs/menu.c:466 src/dialogs/menu.c:479
 msgid "C~haracter set"
 msgstr "~Zestaw znaków"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:464 src/dialogs/menu.c:477
+#: src/dialogs/menu.c:467 src/dialogs/menu.c:480
 msgid "~Terminal options"
 msgstr "Opcje ~terminala"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:465
+#: src/dialogs/menu.c:468
 msgid "File ~extensions"
 msgstr "~Rozszerzenia"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:467
+#: src/dialogs/menu.c:470
 msgid "~Options manager"
 msgstr "Menad¿er ~ustawieñ"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:468
+#: src/dialogs/menu.c:471
 msgid "~Keybinding manager"
 msgstr "Menad¿er przypisañ ~klawiszy"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:469
+#: src/dialogs/menu.c:472
 msgid "~Save options"
 msgstr "Zapisz ~opcje"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:484
+#: src/dialogs/menu.c:487
 msgid "Global ~history"
 msgstr "Historia ~globalna"
 
 #
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:487
+#: src/dialogs/menu.c:490
 msgid "~Bookmarks"
 msgstr "~Zak³adki"
 
 #
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:489
+#: src/dialogs/menu.c:492
 msgid "~Cache"
 msgstr "Pamiêæ podrê~czna"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:490
+#: src/dialogs/menu.c:493
 msgid "~Downloads"
 msgstr "Po~bieranie"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:492
+#: src/dialogs/menu.c:495
 msgid "Coo~kies"
 msgstr "Ciastecz~ka"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:495
+#: src/dialogs/menu.c:498
 msgid "~Form history"
 msgstr "Historia ~formularzy"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:497
+#: src/dialogs/menu.c:500
 msgid "~Authentication"
 msgstr "~Autentykacja"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:514
+#: src/dialogs/menu.c:517
 msgid "~File"
 msgstr "~Plik"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:515
+#: src/dialogs/menu.c:518
 msgid "~View"
 msgstr "~Widok"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:516
+#: src/dialogs/menu.c:519
 msgid "~Link"
 msgstr "~Odno¶nik"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:517
+#: src/dialogs/menu.c:520
 msgid "~Tools"
 msgstr "~Narzêdzia"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:518
+#: src/dialogs/menu.c:521
 msgid "~Setup"
 msgstr "~Ustawienia"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:519
+#: src/dialogs/menu.c:522
 msgid "~Help"
 msgstr "Po~moc"
 
-#: src/dialogs/menu.c:534
+#: src/dialogs/menu.c:537
 msgid "Go to URL"
 msgstr "Przejd¼ do URL-a"
 
-#: src/dialogs/menu.c:585
+#: src/dialogs/menu.c:588
 msgid "Save to file"
 msgstr "Zapisz do pliku"
 
-#. accelerator_context(tab_menu.uri_frame)
-#: src/dialogs/menu.c:886
-msgid "~Pass frame URI to external command"
-msgstr "Przeka¿ ~URI ramki do zewnêtrznego polecenia"
-
-#. accelerator_context(tab_menu.uri_link)
-#: src/dialogs/menu.c:893
-msgid "Pass link URI to e~xternal command"
-msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
-
-#. accelerator_context(tab_menu.uri_tab)
-#: src/dialogs/menu.c:901
-msgid "Pass tab URI to e~xternal command"
-msgstr "~Przeka¿ URI karty do zewnêtrznego polecenia"
-
-#: src/dialogs/menu.c:927
+#: src/dialogs/menu.c:923
 msgid "Empty directory"
 msgstr "Pusty katalog"
 
-#: src/dialogs/menu.c:971
+#: src/dialogs/menu.c:967
 msgid "Directories:"
 msgstr "Katalogi:"
 
-#: src/dialogs/menu.c:984
+#: src/dialogs/menu.c:980
 msgid "Files:"
 msgstr "Pliki:"
 
@@ -8599,70 +8601,75 @@ msgstr "~Pobierz"
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
+#. accelerator_context(link_menu.std)
+#: src/viewer/text/link.c:1258
+msgid "Pass link URI to e~xternal command"
+msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
+
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1268 src/viewer/text/link.c:1308
+#: src/viewer/text/link.c:1269 src/viewer/text/link.c:1309
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1283
+#: src/viewer/text/link.c:1284
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1292
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1292
+#: src/viewer/text/link.c:1293
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1296
+#: src/viewer/text/link.c:1297
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1298
+#: src/viewer/text/link.c:1299
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1301
+#: src/viewer/text/link.c:1302
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1306
+#: src/viewer/text/link.c:1307
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1313
+#: src/viewer/text/link.c:1314
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1320
+#: src/viewer/text/link.c:1321
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1322
+#: src/viewer/text/link.c:1323
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1331
+#: src/viewer/text/link.c:1332
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1379
+#: src/viewer/text/link.c:1380
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1384
+#: src/viewer/text/link.c:1385
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
