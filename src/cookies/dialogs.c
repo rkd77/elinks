@@ -411,6 +411,51 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 }
 
 static widget_handler_status_T
+set_server(struct dialog_data *dlg_data, struct widget_data *widget_data)
+{
+	unsigned char *value = widget_data->cdata;
+	struct uri uri;
+
+	if (!value) return EVENT_NOT_PROCESSED;
+	uri.host = stracpy(value);
+	if (uri.host) {
+		uri.hostlen = strlen(value);
+		set_cookie(&uri, "empty=1; path=/;");
+		mem_free(uri.host);
+	}
+	return EVENT_PROCESSED;
+}
+
+static widget_handler_status_T
+push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+#define SERVER_WIDGETS_COUNT 3
+	struct terminal *term = dlg_data->win->term;
+	struct dialog *dlg;
+	unsigned char *name;
+	unsigned char *text;
+
+	dlg = calloc_dialog(SERVER_WIDGETS_COUNT, MAX_STR_LEN);
+	if (!dlg) return EVENT_NOT_PROCESSED;
+
+	name = get_dialog_offset(dlg, SERVER_WIDGETS_COUNT);
+	dlg->title = _("Add server", term);
+	dlg->layouter = generic_dialog_layouter;
+	dlg->udata = NULL;
+	dlg->udata2 = NULL;
+	text = _("Server name", term);
+	add_dlg_field_float(dlg, text, 0, 0, set_server, MAX_STR_LEN, name, NULL);
+	add_dlg_button(dlg, _("~OK", term), B_ENTER, ok_dialog, NULL);
+	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);
+	add_dlg_end(dlg, SERVER_WIDGETS_COUNT);
+	do_dialog(term, dlg, getml(dlg, text, NULL));
+
+	return EVENT_PROCESSED;
+#undef SERVER_WIDGETS_COUNT
+}
+
+
+static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
 	save_cookies();
@@ -421,6 +466,7 @@ static struct hierbox_browser_button cookie_buttons[] = {
 	/* [gettext_accelerator_context(.cookie_buttons)] */
 	{ N_("~Info"),		push_hierbox_info_button,	1 },
 	{ N_("~Add"),		push_add_button,		1 },
+	{ N_("Add ~server"),	push_add_server_button,		1 },
 	{ N_("~Edit"),		push_edit_button,		1 },
 	{ N_("~Delete"),	push_hierbox_delete_button,	1 },
 	{ N_("C~lear"),		push_hierbox_clear_button,	1 },
