@@ -93,8 +93,6 @@ js_try_resolve_frame(struct document_view *doc_view, unsigned char *id)
 	return js_get_global_object(target->vs.ecmascript->backend_data);
 }
 
-
-
 static void
 window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *res)
@@ -228,10 +226,10 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
-	unsigned char *target = NULL;
-	unsigned char *url, *url2;
+	unsigned char *frame = "";
+	unsigned char *url;
 	struct uri *uri;
-	struct SEE_value url_value, target_value;
+	struct SEE_value url_value;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -261,70 +259,42 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 #endif
 	SEE_ToString(interp, argv[0], &url_value);
-	if (argc > 1) {
-		/* Because of gradual rendering window.open is called many
-		 * times with the same arguments.
-		 * This workaround remembers NUMBER_OF_URLS_TO_REMEMBER last
-		 * opened URLs and do not let open them again.
-		 */
-#define NUMBER_OF_URLS_TO_REMEMBER 8
-		static struct {
-			struct SEE_interpreter *interp;
-			struct SEE_string *url;
-			struct SEE_string *target;
-		} strings[NUMBER_OF_URLS_TO_REMEMBER];
-		static int indeks = 0;
-		int i;
-
-		SEE_ToString(interp, argv[1], &target_value);
-		for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
-			if (!(strings[i].url && strings[i].target
-				&& strings[i].interp))
-				continue;
-			if (strings[i].interp == interp
-			    && !SEE_string_cmp(url_value.u.string, strings[i].url)
-			    && !SEE_string_cmp(target_value.u.string, strings[i].target))
-			 	return;
-		}
-		strings[indeks].interp = interp;
-		strings[indeks].url = url_value.u.string;
-		strings[indeks].target = target_value.u.string;
-		indeks++;
-		if (indeks >= NUMBER_OF_URLS_TO_REMEMBER) indeks = 0;
-#undef NUMBER_OF_URLS_TO_REMEMBER
-	}
-
 	url = SEE_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
+	trim_chars(url, ' ', 0);
+	if (argc > 1) {
+		struct SEE_value target_value;
 
+		SEE_ToString(interp, argv[1], &target_value);
+		frame = SEE_string_to_unsigned_char(target_value.u.string);
+		if (!frame) {
+			mem_free(url);
+			return;
+		}
+		/* url and frame will be freed by ecmascript_check_url */
+		if (!ecmascript_check_url(url, frame)) return;
+	}
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	url2 = join_urls(doc_view->document->uri,
-	                trim_chars(url, ' ', 0));
+	url = join_urls(doc_view->document->uri, url);
+	if (!url) return;
+	uri = get_uri(url, 0);
 	mem_free(url);
-	if (!url2) return;
-	uri = get_uri(url2, 0);
-	mem_free(url2);
 	if (!uri) return;
 
-	if (argc > 1) {
-		target = SEE_string_to_unsigned_char(target_value.u.string);
-	}
-
-	if (target && *target && strcasecmp(target, "_blank")) {
+	if (*frame && strcasecmp(frame, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
 
 		if (deo) {
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
-			deo->target = target;
+			deo->target = stracpy(frame);
 			/* target will be freed in delayed_goto_uri_frame */
 			register_bottom_half(delayed_goto_uri_frame, deo);
 			goto end;
 		}
 	}
 
-	mem_free_if(target);
 	if (!get_cmd_opt_bool("no-connect")
 	    && !get_cmd_opt_bool("no-home")
 	    && !get_cmd_opt_bool("anonymous")
@@ -345,9 +315,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 
 end:
 	done_uri(uri);
-
 }
-
 
 void
 init_js_window_object(struct ecmascript_interpreter *interpreter)

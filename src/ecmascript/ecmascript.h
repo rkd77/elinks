@@ -54,6 +54,9 @@ struct ecmascript_interpreter {
  * reset for each rerendering, and it sucks to do all the magic to preserve the
  * interpreter over the rerenderings (we tried). */
 
+int ecmascript_check_url(unsigned char *url, unsigned char *frame);
+void ecmascript_free_urls(struct module *module);
+
 struct ecmascript_interpreter *ecmascript_get_interpreter(struct view_state*vs);
 void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 
