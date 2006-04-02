@@ -89,6 +89,8 @@ ecmascript_check_url(unsigned char *url, unsigned char *frame)
 			return 0;
 		}
 	}
+	mem_free_if(u[url_index].url);
+	mem_free_if(u[url_index].frame);
 	u[url_index].url = url;
 	u[url_index].frame = frame;
 	url_index++;
