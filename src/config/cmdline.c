@@ -706,7 +706,7 @@ struct option_info cmdline_options_info[] = {
 		N_("Codepage used when formatting dump output.")),
 
 	INIT_OPT_CMDALIAS("", N_("Color mode used with -dump"),
-		"dump-color_mode", 0, "document.dump.color_mode",
+		"dump-color-mode", 0, "document.dump.color_mode",
 		N_("Color mode used with -dump.")),
 
 	INIT_OPT_CMDALIAS("", N_("Width of document formatted with -dump"),
