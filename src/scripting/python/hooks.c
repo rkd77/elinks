@@ -4,19 +4,20 @@
 #include "config.h"
 #endif
 
-#include "scripting/python/core.h"
-#include <Python.h>
 
 #include "elinks.h"
 
 #include "cache/cache.h"
 #include "main/event.h"
 #include "protocol/uri.h"
+#include "scripting/python/core.h"
 #include "scripting/python/hooks.h"
 #include "session/location.h"
 #include "session/session.h"
 #include "util/string.h"
 
+#undef _POSIX_C_SOURCE
+#include <Python.h>
 
 /* The events that will trigger the functions below and what they are expected
  * to do is explained in doc/events.txt */
