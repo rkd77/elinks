@@ -102,6 +102,8 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 #define skip_nonspace(S) \
 	do { while (*(S) && !isspace(*(S))) (S)++; } while (0)
 
+#undef isdigit
+#define isdigit(c)	((c) >= '0' && (c) <= '9')
 #define isquote(c)	((c) == '"' || (c) == '\'')
 #define isasciialpha(c)	(((c) >= 'A' && (c) <= 'Z') || ((c) >= 'a' && (c) <= 'z'))
 #define isasciialnum(c)	(isasciialpha(c) || isdigit(c))
