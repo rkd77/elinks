@@ -593,8 +593,13 @@ check_table_widths(struct html_context *html_context, struct table *table)
 		if (!cell->start) continue;
 
 		for (k = 0; k < cell->colspan; k++) {
+#ifdef __TINYC__
+			p += table->cols_widths[col + k];
+			if (k) p+= (has_vline_width(table, col + k));
+#else
 			p += table->cols_widths[col + k] +
 			     (k && has_vline_width(table, col + k));
+#endif
 		}
 
 		get_cell_width(html_context, cell->start, cell->end,
@@ -763,9 +768,15 @@ get_table_heights(struct html_context *html_context, struct table *table)
 			if (!cell->is_used || cell->is_spanned) continue;
 
 			for (sp = 0; sp < cell->colspan; sp++) {
+#ifdef __TINYC__
+				width += table->cols_widths[col + sp];
+				if (sp < cell->colspan - 1)
+					width += (has_vline_width(table, col + sp + 1));
+#else
 				width += table->cols_widths[col + sp] +
 					 (sp < cell->colspan - 1 &&
 					  has_vline_width(table, col + sp + 1));
+#endif
 			}
 
 			part = format_cell(html_context, table, cell, NULL,
@@ -827,15 +838,27 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 	if (!cell->start) return;
 
 	for (s = 0; s < cell->colspan; s++) {
+#ifdef __TINYC__
+		width += table->cols_widths[col + s];
+		if (s < cell->colspan - 1)
+			width += (has_vline_width(table, col + s + 1));
+#else
 		width += table->cols_widths[col + s] +
 			(s < cell->colspan - 1 &&
 			 has_vline_width(table, col + s + 1));
+#endif
 	}
 
 	for (s = 0; s < cell->rowspan; s++) {
+#ifdef __TINYC__
+		height += table->rows_heights[row + s];
+		if (s < cell->rowspan - 1)
+			height += (has_hline_width(table, row + s + 1));
+#else
 		height += table->rows_heights[row + s] +
 			(s < cell->rowspan - 1 &&
 			 has_hline_width(table, row + s + 1));
+#endif
 	}
 
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
