@@ -273,20 +273,12 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 #ifdef CONFIG_UTF_8
 	if (term->utf8) {
 		unsigned char *t = widget_data->cdata;
-		unsigned char *t2 = t;
 		int p = widget_data->info.field.cpos;
-		unsigned char tmp = t[p];
-		int x;
 
-		t[p] = '\0';
-		len = strlen_utf8(&t2);
+		len = utf8_ptr2cells(t, &t[p]);
 		int_bounds(&left, len - widget_data->box.width + 1, len);
 		int_lower_bound(&left, 0);
-		for (t2 = t, x = 0; x < left; x++) {
-			utf_8_to_unicode(&t2, &t[p]);
-		}
-		t[p] = tmp;
-		widget_data->info.field.vpos = (int)(t2 - t);
+		widget_data->info.field.vpos = utf8_cells2bytes(t, left, NULL);
 	} else 
 #endif /* CONFIG_UTF_8 */	
 	{
@@ -303,14 +295,13 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	color = get_bfu_color(term, "dialog.field-text");
 	if (color) {
 		unsigned char *text = widget_data->cdata + widget_data->info.field.vpos;
-#ifdef CONFIG_UTF_8
-		unsigned char *text2 = text;
-#endif /* CONFIG_UTF_8 */
 		int len, w;
 
 #ifdef CONFIG_UTF_8
-		if (term->utf8)
-			len = strlen_utf8(&text2);
+		if (term->utf8 && !hide)
+			len = utf8_ptr2cells(text, NULL);
+		else if (term->utf8)
+			len = utf8_ptr2chars(text, NULL);
 		else
 #endif /* CONFIG_UTF_8 */
 			len = strlen(text);
@@ -318,13 +309,8 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 
 		if (!hide) {
 #ifdef CONFIG_UTF_8
-			int x;
-			if (term->utf8) {
-				int l;
-				for (l = 0, x = 0; x < w; x++)
-					l += utf8charlen(text+l);
-				w = l;
-			}
+			if (term->utf8)
+				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF_8 */
 			draw_text(term, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color);
@@ -532,16 +518,29 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case ACT_EDIT_BACKSPACE:
 #ifdef CONFIG_UTF_8
 			if (widget_data->info.field.cpos && term->utf8) {
-				unsigned char *t = widget_data->cdata;
-				unsigned char *t2 = t;
-				int p = widget_data->info.field.cpos - 1;
-				unsigned char tmp = t[p];
+				/* XXX: stolen from src/viewer/text/form.c */
+				/* FIXME: This isn't nice. We remove last byte
+				 *        from UTF-8 character to detect
+				 *        character before it. */
+				unsigned char *text = widget_data->cdata;
+				unsigned char *end = widget_data->cdata + widget_data->info.field.cpos - 1;
+				unicode_val_T data;
+				int old = widget_data->info.field.cpos;
 
-				t[p] = '\0';
-				strlen_utf8(&t2);
-				t[p] = tmp;
-				memmove(t2, &t[p + 1], strlen(&t[p + 1]) + 1);
-				widget_data->info.field.cpos = (int)(t2 - t);
+				while(1) {
+					data = utf_8_to_unicode(&text, end);
+					if (data == UCS_NO_CHAR)
+						break;
+				}
+
+				widget_data->info.field.cpos = (int)(text - widget_data->cdata);
+				if (old != widget_data->info.field.cpos) {
+					int length;
+
+					text = widget_data->cdata;
+					length = strlen(text + old) + 1;
+					memmove(text + widget_data->info.field.cpos, text + old, length);
+				}
 				goto display_field;
 			}
 #endif /* CONFIG_UTF_8 */
@@ -561,12 +560,15 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 #ifdef CONFIG_UTF_8
 				if (term->utf8) {
-					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
-					unsigned char *dest = next;
-					unsigned char *end = strchr(next, '\0');
-					
-					utf_8_to_unicode(&next, end);
-					memmove(dest, next, strlen(next) + 1);
+					unsigned char *end = widget_data->cdata + cdata_len;
+					unsigned char *text = widget_data->cdata + widget_data->info.field.cpos;
+					unsigned char *old = text;
+
+					utf_8_to_unicode(&text, end);
+					if (old != text) {
+						memmove(old, text,
+								(int)(end - text) + 1);
+					}
 					goto display_field;
 				}
 #endif /* CONFIG_UTF_8 */
