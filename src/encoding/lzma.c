@@ -18,6 +18,7 @@
 #include "encoding/lzma.h"
 #include "util/memory.h"
 
+#define LZMAMAXOUTPUT 2097152
 
 struct lzma_enc_data {
 	unsigned char *output;
@@ -77,18 +78,14 @@ lzma_open(struct stream_encoded *stream, int fd)
 	inSize = buf.st_size - LZMA_PROPERTIES_SIZE - 8;
 	inData = input + LZMA_PROPERTIES_SIZE;
 	data->outSize = 0;
-	if (inData[0] == 0xff) {
-		/* End of stream */
-		mem_free(state.Probs);
-		mem_free(input);
-		lzma_cleanup(data);
-		return -1;
-	}
+
 	/* The size is 8 bytes long, but who wants such big files */
 	for (i = 0; i < 4; i++) {
 		unsigned char b = inData[i];
 		data->outSize += (unsigned int)(b) << (i * 8);
 	}
+	if (data->outSize == 0xffffffff) data->outSize = LZMAMAXOUTPUT;
+
 	data->output = mem_alloc(data->outSize);
 	if (!data->output) {
 		mem_free(state.Probs);
@@ -160,15 +157,13 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 	inSize = len - LZMA_PROPERTIES_SIZE - 8;
 	inData = data + LZMA_PROPERTIES_SIZE;
 	outSize = 0;
-	if (inData[0] == 0xff) {
-		/* End of stream */
-		mem_free(state.Probs);
-		return NULL;
-	}
+
 	for (i = 0; i < 4; i++) {
 		unsigned char b = inData[i];
 		outSize += (unsigned int)(b) << (i * 8);
 	}
+	if (outSize == 0xffffffff) outSize = LZMAMAXOUTPUT;
+
 	output = mem_alloc(outSize);
 	if (!output) {
 		mem_free(state.Probs);
