@@ -426,7 +426,7 @@ utf8:
 		}
 		if (hk_state == 1) {
 			if (unicode_to_cell(data) == 2) {
-				if (x < w) {
+				if (x < w && xbase + x < term->width) {
 #ifdef CONFIG_DEBUG
 					draw_char(term, xbase + x - 1, y,
 						  data, hk_attr,
@@ -438,10 +438,10 @@ utf8:
 #endif /* CONFIG_DEBUG */
 					x++;
 					draw_char(term, xbase + x - 1, y, 
-						  UCS_NO_CHAR, 0, color);
+						  UCS_NO_CHAR, 0, hk_color);
 				} else {
 					draw_char(term, xbase + x - 1, y, 
-						  ' ', 0, color);
+						  ' ', 0, hk_color);
 				}
 			} else {
 #ifdef CONFIG_DEBUG
@@ -457,7 +457,8 @@ utf8:
 			hk_state = 2;
 		} else {
 			if (unicode_to_cell(data) == 2) {
-				if (x - !!hk_state + 1 < w) {
+				if (x - !!hk_state + 1 < w &&
+				    xbase + x - !!hk_state + 1 < term->width) {
 					draw_char(term, xbase + x - !!hk_state,
 						  y, data, 0, color);
 					x++;
@@ -1084,6 +1085,18 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	menu->last = i - 1;
 	int_lower_bound(&menu->last, menu->first);
 	if (menu->last < menu->size - 1) {
+		struct screen_char *schar; 
+
+		schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);
+		/* Is second cell of double-width char on the place where
+		 * first char of the R_MAINMENU_SPACE will be displayed? */
+		if (schar->data == UCS_NO_CHAR) {
+			/* Replace double-width char with ' '. */
+			schar++;
+			draw_char_data(term, term->width - R_MAINMENU_SPACE - 1,
+				       0, ' ');
+		}
+
 		set_box(&box,
 			term->width - R_MAINMENU_SPACE, 0,
 			R_MAINMENU_SPACE, 1);
