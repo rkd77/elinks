@@ -299,6 +299,30 @@ utf8_ptr2cells(unsigned char *string, unsigned char *end)
 	return cells;
 }
 
+/* Count number of characters in string. */
+int
+utf8_ptr2chars(unsigned char *string, unsigned char *end)
+{
+	int charlen, chars = 0;
+
+	if (end == NULL)
+		end = strchr(string, '\0');
+
+	if(!string || !end)
+		return -1;
+
+	do {
+		charlen = utf8charlen(string);
+		if (string + charlen > end) 
+			break;
+
+		chars++;
+		string += charlen;
+	} while (1);
+
+	return chars;
+}
+
 /*
  * Count number of bytes from begining of the string needed for displaying
  * specified number of cells.
