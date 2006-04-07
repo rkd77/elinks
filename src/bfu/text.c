@@ -101,22 +101,25 @@ split_line(unsigned char *text, int max_width, int *cells)
 				/* FIXME: Function ispunct won't work correctly
 				 * with UTF-8 characters. We need some similar
 				 * function for UTF-8 characters. */
-#ifndef CONFIG_UTF_8
-				/* Give preference to split on a
-				 * punctuation if any. Note that most
-				 * of the time punctuation char is
-				 * followed by a space so this rule
-				 * will not match often. We match dash
-				 * and quotes too. */
-				cells_save--;
-				while (--split != text) {
-					cells_save--;
-					if (!ispunct(*split)) continue;
-					split++;
-					cells_save++;
-					break;
-				}
+#ifdef CONFIG_UTF_8
+				if (!utf8)
 #endif /* CONFIG_UTF_8 */
+				{
+					/* Give preference to split on a
+					 * punctuation if any. Note that most
+					 * of the time punctuation char is
+					 * followed by a space so this rule
+					 * will not match often. We match dash
+					 * and quotes too. */
+					cells_save--;
+					while (--split != text) {
+						cells_save--;
+						if (!ispunct(*split)) continue;
+						split++;
+						cells_save++;
+						break;
+					}
+				}
 
 				/* If no way to do a clean split, just return
 				 * requested maximal width. */
