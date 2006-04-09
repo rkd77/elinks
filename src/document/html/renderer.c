@@ -1264,7 +1264,7 @@ done_link_state_info(void)
 #ifdef CONFIG_UTF_8
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
-	     unsigned char *chars, int charslen, int utf8_len)
+	     unsigned char *chars, int charslen, int cells)
 #else
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
@@ -1322,7 +1322,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 			charslen -= x_offset;
 			chars += x_offset;
 #ifdef CONFIG_UTF_8
-			utf8_len -= x_offset;
+			cells -= x_offset;
 #endif /* CONFIG_UTF_8 */
 		}
 
@@ -1339,7 +1339,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 
 	/* Add new canvas positions to the link. */
 #ifdef CONFIG_UTF_8
-	if (realloc_points(link, link->npoints + utf8_len))
+	if (realloc_points(link, link->npoints + cells))
 #else
 	if (realloc_points(link, link->npoints + charslen))
 #endif /* CONFIG_UTF_8 */
@@ -1349,9 +1349,9 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		int y = Y(part->cy);
 
 #ifdef CONFIG_UTF_8
-		link->npoints += utf8_len;
+		link->npoints += cells;
 
-		for (; utf8_len > 0; utf8_len--, point++, x++)
+		for (; cells > 0; cells--, point++, x++)
 #else
 		for (; charslen > 0; charslen--, point++, x++)
 #endif /* CONFIG_UTF_8 */
@@ -1408,7 +1408,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
 #ifdef CONFIG_UTF_8
-	int utf8_len;
+	int cells;
 #endif /* CONFIG_UTF_8 */
 
 	assert(html_context);
@@ -1469,7 +1469,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 			put_link_number(html_context);
 	}
 #ifdef CONFIG_UTF_8
-	utf8_len = 
+	cells = 
 #endif /* CONFIG_UTF_8 */
 		set_hline(html_context, chars, charslen, link_state);
 
@@ -1495,7 +1495,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 
 #ifdef CONFIG_UTF_8
 		process_link(html_context, link_state, chars, charslen,
-			     utf8_len);
+			     cells);
 #else
 		process_link(html_context, link_state, chars, charslen);
 #endif /* CONFIG_UTF_8 */
@@ -1503,10 +1503,10 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 
 #ifdef CONFIG_UTF_8
 	if (renderer_context.nowrap
-	    && part->cx + utf8_len > overlap(par_format))
+	    && part->cx + cells > overlap(par_format))
 		return;
 
-	part->cx += utf8_len;
+	part->cx += cells;
 #else
 	if (renderer_context.nowrap
 			&& part->cx + charslen > overlap(par_format))
@@ -1531,7 +1531,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 
 	assert(charslen > 0);
 #ifdef CONFIG_UTF_8
-	part->xa += utf8_len;
+	part->xa += cells;
 #else
 	part->xa += charslen;
 #endif /* CONFIG_UTF_8 */
