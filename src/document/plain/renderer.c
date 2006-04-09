@@ -443,13 +443,14 @@ add_document_line(struct plain_renderer *renderer,
 						continue;
 					}
 
-					template->data = (uint16_t)data;
+					template->data = (unicode_val_T)data;
 					copy_screen_chars(pos++, template, 1);
 
 					if (unicode_to_cell(data) == 2) {
 						template->data = UCS_NO_CHAR;
 						copy_screen_chars(pos++,
-								template, 1);
+								  template, 1);
+						cell++;
 					}
 				} else
 #endif /* CONFIG_UTF_8 */

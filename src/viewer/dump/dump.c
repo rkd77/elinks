@@ -369,7 +369,7 @@ utf_8:
 		int x;
 
 		for (x = 0; x < document->data[y].length; x++) {
-			uint16_t data = pos->data;
+			unicode_val_T data = pos->data;
 			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
 
 			if (!isscreensafe(data)) {
@@ -475,7 +475,7 @@ utf_8:
 		int x;
 
 		for (x = 0; x < document->data[y].length; x++) {
-			uint16_t c;
+			unicode_val_T c;
 			unsigned char attr = document->data[y].chars[x].attr;
 
 			c = document->data[y].chars[x].data;

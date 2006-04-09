@@ -303,7 +303,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 				charlen = utf8charlen(text);
 				data = utf_8_to_unicode(&text, end);
 
-				template->data = (uint16_t)data;
+				template->data = (unicode_val_T)data;
 
 				if (unicode_to_cell(data) == 2) {
 					copy_screen_chars(POS(renderer),
