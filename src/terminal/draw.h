@@ -1,6 +1,8 @@
 #ifndef EL__TERMINAL_DRAW_H
 #define EL__TERMINAL_DRAW_H
 
+#include "intl/charsets.h" /* unicode_val_T */
+
 struct color_pair;
 struct box;
 struct terminal;
@@ -20,7 +22,7 @@ enum screen_char_attr {
 struct screen_char {
 	/* Contains either character value or frame data. */
 #ifdef CONFIG_UTF_8
-	uint16_t data;
+	unicode_val_T data;
 #else
 	unsigned char data;
 #endif /* CONFIG_UTF_8 */	
@@ -207,7 +209,7 @@ void draw_char_color(struct terminal *term, int x, int y,
 
 /* Sets the data of a screen position. */
 #ifdef CONFIG_UTF_8
-void draw_char_data(struct terminal *term, int x, int y, uint16_t data);
+void draw_char_data(struct terminal *term, int x, int y, unicode_val_T data);
 #else
 void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
 #endif /* CONFIG_UTF_8 */
@@ -223,7 +225,7 @@ void draw_border_cross(struct terminal *, int x, int y,
 /* Draws a char. */
 #ifdef CONFIG_UTF_8
 void draw_char(struct terminal *term, int x, int y,
-	       uint16_t data, enum screen_char_attr attr,
+	       unicode_val_T data, enum screen_char_attr attr,
 	       struct color_pair *color);
 #else
 void draw_char(struct terminal *term, int x, int y,

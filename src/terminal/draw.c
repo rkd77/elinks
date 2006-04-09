@@ -104,7 +104,7 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 
 void
 #ifdef CONFIG_UTF_8
-draw_char_data(struct terminal *term, int x, int y, uint16_t data)
+draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
 #else
 draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 #endif /* CONFIG_UTF_8 */	
@@ -226,7 +226,7 @@ draw_border(struct terminal *term, struct box *box,
 #ifdef CONFIG_UTF_8
 void
 draw_char(struct terminal *term, int x, int y,
-	  uint16_t data, enum screen_char_attr attr,
+	  unicode_val_T data, enum screen_char_attr attr,
 	  struct color_pair *color)
 #else
 void
