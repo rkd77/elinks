@@ -247,6 +247,77 @@ draw_border(struct terminal *term, struct box *box,
 }
 
 #ifdef CONFIG_UTF_8
+/* Checks cells left and right to the box for broken double-width chars.
+ * Replace it with ' '.
+ * 1+---+3
+ * 1|box|##4
+ * 1|   |##4
+ * 1|   |##4
+ * 1+---+##4
+ *   2#####4
+ * 1,2,3,4 - needs to be checked, # - shadow , +,-,| - border
+ */
+void
+fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
+		     int shadow_width, int shadow_height)
+{
+	struct screen_char *schar; 
+	int height, x, y;
+
+	if (!term->utf8)
+		return;
+
+	/* 1 */
+	x = box->x - border - 1;
+	if (x > 0) {
+		y = box->y - border;
+		height = box->height + 2 * border;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (unicode_to_cell(schar->data) == 2)
+				schar->data = ' ';
+	}
+
+	/* 2 */
+	x = box->x - border + shadow_width - 1;
+	if (x > 0 && x < term->width) {
+		y = box->y + border + box->height;
+		height = shadow_height;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (unicode_to_cell(schar->data) == 2)
+				schar->data = ' ';
+	}
+
+	/* 3 */
+	x = box->x + box->width + border;
+	if (x < term->width) {
+		y = box->y - border;
+		height = shadow_height;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (schar->data == UCS_NO_CHAR)
+				schar->data = ' ';
+	}
+
+	/* 4 */
+	x = box->x + box->width + border + shadow_width;
+	if (x < term->width) {
+		y = box->y - border + shadow_height;
+		height = box->height + 2 * border;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (schar->data == UCS_NO_CHAR)
+				schar->data = ' ';
+	}
+}
+#endif
+
+#ifdef CONFIG_UTF_8
 void
 draw_char(struct terminal *term, int x, int y,
 	  unicode_val_T data, enum screen_char_attr attr,

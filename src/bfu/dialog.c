@@ -639,7 +639,15 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 		/* Draw shadow */
 		draw_shadow(term, &dlg_data->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			fix_dwchar_around_box(term, &dlg_data->box, 0, 2, 1);
+#endif /* CONFIG_UTF_8 */
 	}
+#ifdef CONFIG_UTF_8
+	else if(term->utf8)
+		fix_dwchar_around_box(term, &dlg_data->box, 0, 0, 0);
+#endif /* CONFIG_UTF_8 */
 }
 
 static void

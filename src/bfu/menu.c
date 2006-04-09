@@ -518,7 +518,15 @@ display_menu(struct terminal *term, struct menu *menu)
 		/* Draw shadow */
 		draw_shadow(term, &menu->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			fix_dwchar_around_box(term, &box, 1, 2, 1);
+#endif /* CONFIG_UTF_8 */
 	}
+#ifdef CONFIG_UTF_8
+	else if(term->utf8)
+		fix_dwchar_around_box(term, &box, 1, 0, 0);
+#endif /* CONFIG_UTF_8 */
 
 	menu_height = box.height;
 	box.height = 1;

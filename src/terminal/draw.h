@@ -246,6 +246,11 @@ void draw_shadow(struct terminal *term, struct box *box,
 void draw_border(struct terminal *term, struct box *box,
 		 struct color_pair *color, int width);
 
+#ifdef CONFIG_UTF_8
+void fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
+			   int shadow_width, int shadow_height);
+#endif /* CONFIG_UTF_8 */
+
 /* Draws @length chars from @text. */
 void draw_text(struct terminal *term, int x, int y,
 	       unsigned char *text, int length,
