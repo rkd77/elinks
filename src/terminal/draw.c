@@ -116,22 +116,15 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 	screen_char->data = data;
 	
 #ifdef CONFIG_UTF_8
-	if (unicode_to_cell(data) == 2) {
-
 #ifdef CONFIG_DEBUG
-		/* Detect attempt to draw double-width char on the last
-		 * collumn of terminal. */
-		if (x+1 > term->width) 
-			INTERNAL("Attempt to draw double-width glyph on "
-					"last collumn!!");
+	/* Detect attempt to draw double-width char on the last
+	 * collumn of terminal. */
+	if (unicode_to_cell(data) == 2 && x + 1 > term->width)
+		INTERNAL("Attempt to draw double-width glyph on last collumn!");
 #endif /* CONFIG_DEBUG */
 
-		screen_char = get_char(term, x+1, y);
-
-		if (!screen_char) return;
-
-		screen_char->data = UCS_NO_CHAR;
-	}
+	if (data == UCS_NO_CHAR)
+		screen_char->attr = 0;
 #endif /* CONFIG_UTF_8 */	
 
 	set_screen_dirty(term->screen, y, y);
@@ -152,7 +145,37 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	size = int_min(l, term->width - x);
 	if (size == 0) return;
 
-	copy_screen_chars(screen_char, line, size);
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		struct screen_char *sc;
+
+		if (line->data == UCS_NO_CHAR && x == 0) {
+			sc = line;
+			unicode_val_T data_save = sc->data;
+
+			sc->data = ' ';
+			copy_screen_chars(screen_char, line, 1);
+			sc->data = data_save;
+			size--;
+			line++;
+			screen_char++;
+
+		}
+		/* Instead of displaying double-width character at last collumn
+		 * display only space. */
+		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
+			sc = &line[size - 1];
+			unicode_val_T data_save = sc->data;
+
+			sc->data = ' ';
+			copy_screen_chars(screen_char, line, size);
+			sc->data = data_save;
+		} else {
+			copy_screen_chars(screen_char, line, size);
+		}
+	} else
+#endif
+		copy_screen_chars(screen_char, line, size);
 	set_screen_dirty(term->screen, y, y);
 }
 
@@ -333,6 +356,9 @@ draw_text_utf8(struct terminal *term, int x, int y,
 		set_term_color(start, color, 0,
 			       get_opt_int_tree(term->spec, "colors"));
 	}
+
+	if (start->data == UCS_NO_CHAR && x - 1 > 0)
+		draw_char_data(term, x - 1, y, ' ');
 
 	pos = start;
 
