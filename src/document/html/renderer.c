@@ -210,6 +210,10 @@ realloc_spaces(struct part *part, int length)
 
 	if (!ALIGN_SPACES(&part->spaces, part->spaces_len, length))
 		return -1;
+#ifdef CONFIG_UTF_8
+	if (!ALIGN_SPACES(&part->char_width, part->spaces_len, length))
+		return -1;
+#endif
 
 	part->spaces_len = length;
 
@@ -438,6 +442,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				if (*chars == NBSP_CHAR) {
 					schar->data = ' ';
 					part->spaces[x] = html_context->options->wrap_nbsp;
+					part->char_width[x] = 1;
 					chars++;
 				} else {
 					unicode_val_T data;
@@ -452,15 +457,27 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						schar->attr = SCREEN_ATTR_FRAME;
 						copy_screen_chars(&POS(x, y), schar, 1);
 						schar->attr = attr;
+						part->char_width[x] = 0;
 						continue;
 					} else {
-						schar->data = (uint16_t)data;
+						if (unicode_to_cell(data) == 2) {
+							schar->data = (unicode_val_T)data;
+							part->char_width[x] = 2;
+							copy_screen_chars(&POS(x++, y), schar, 1);
+							schar->data = UCS_NO_CHAR;
+							part->spaces[x] = 0;
+							part->char_width[x] = 0;
+						} else {
+							part->char_width[x] = unicode_to_cell(data);
+							schar->data = (unicode_val_T)data;
+						}
 					}
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
 		} else {
 			for (; charslen > 0; charslen--, x++, chars++) {
+				part->char_width[x] = 1;
 				if (*chars == NBSP_CHAR) {
 					schar->data = ' ';
 					part->spaces[x] = html_context->options->wrap_nbsp;
@@ -482,12 +499,23 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 
 				part->spaces[x] = (*chars == ' ');
 				data = utf_8_to_unicode(&chars, end);
-				if (data == UCS_NO_CHAR) chars++;
+				part->char_width[x] = unicode_to_cell(data);
+				if (part->char_width[x] == 2) {
+					x++;
+					part->spaces[x] = 0;
+					part->char_width[x] = 0;
+				}
+				if (data == UCS_NO_CHAR) {
+					chars++;
+					part->char_width[x] = 0;
+					x++;
+				}
 			}
 			len = x - x2;
 		} else {
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->spaces[x] = (*chars == ' ');
+				part->char_width[x] = 1;
 			}
 		}
 	}
@@ -766,29 +794,53 @@ split_line_at(struct html_context *html_context, int width)
 	if (part->document) {
 		assert(part->document->data);
 		if_assert_failed return 0;
-		assertm(POS(width, part->cy).data == ' ',
-			"bad split: %c", POS(width, part->cy).data);
-		move_chars(html_context, width + 1, part->cy, par_format.leftmargin, part->cy + 1);
-		del_chars(html_context, width, part->cy);
+#ifdef CONFIG_UTF_8
+		if (html_context->options->utf8
+		    && width < part->spaces_len && part->char_width[width] == 2) {
+			move_chars(html_context, width, part->cy, par_format.leftmargin, part->cy + 1);
+			del_chars(html_context, width, part->cy);
+		} else
+#endif
+		{
+			assertm(POS(width, part->cy).data == ' ',
+					"bad split: %c", POS(width, part->cy).data);
+			move_chars(html_context, width + 1, part->cy, par_format.leftmargin, part->cy + 1);
+			del_chars(html_context, width, part->cy);
+
+		}
 	}
 
-	width++; /* Since we were using (x + 1) only later... */
+#ifdef CONFIG_UTF_8
+	if (!(html_context->options->utf8
+	      && width < part->spaces_len
+	      && part->char_width[width] == 2))
+#endif
+		width++; /* Since we were using (x + 1) only later... */
 
 	tmp = part->spaces_len - width;
 	if (tmp > 0) {
 		/* 0 is possible and I'm paranoid ... --Zas */
 		memmove(part->spaces, part->spaces + width, tmp);
+#ifdef CONFIG_UTF_8
+		memmove(part->char_width, part->char_width + width, tmp);
+#endif
 	}
 
 	assert(tmp >= 0);
 	if_assert_failed tmp = 0;
 	memset(part->spaces + tmp, 0, width);
+#ifdef CONFIG_UTF_8
+	memset(part->char_width + tmp, 0, width);
+#endif
 
 	if (par_format.leftmargin > 0) {
 		tmp = part->spaces_len - par_format.leftmargin;
 		assertm(tmp > 0, "part->spaces_len - par_format.leftmargin == %d", tmp);
 		/* So tmp is zero, memmove() should survive that. Don't recover. */
 		memmove(part->spaces + par_format.leftmargin, part->spaces, tmp);
+#ifdef CONFIG_UTF_8
+		memmove(part->char_width + par_format.leftmargin, part->char_width, tmp);
+#endif
 	}
 
 	part->cy++;
@@ -826,13 +878,38 @@ split_line(struct html_context *html_context)
 	assert(part);
 	if_assert_failed return 0;
 
-	for (x = overlap(par_format); x >= par_format.leftmargin; x--)
-		if (x < part->spaces_len && part->spaces[x])
-			return split_line_at(html_context, x);
+#ifdef CONFIG_UTF_8
+	if (html_context->options->utf8) {
+		for (x = overlap(par_format); x >= par_format.leftmargin; x--) {
 
-	for (x = par_format.leftmargin; x < part->cx ; x++)
-		if (x < part->spaces_len && part->spaces[x])
-			return split_line_at(html_context, x);
+			if (x < part->spaces_len && (part->spaces[x]
+			    || (part->char_width[x] == 2
+				/* Ugly hack. If we haven't place for
+				 * double-width characters we print two
+				 * double-width characters. */
+				&& x != par_format.leftmargin)))
+				return split_line_at(html_context, x);
+		}
+
+		for (x = par_format.leftmargin; x < part->cx ; x++) {
+			if (x < part->spaces_len && (part->spaces[x]
+			    || (part->char_width[x] == 2
+				/* We want to break line after _second_
+				 * double-width character. */
+				&& x > par_format.leftmargin)))
+				return split_line_at(html_context, x);
+		}
+	} else
+#endif
+	{
+		for (x = overlap(par_format); x >= par_format.leftmargin; x--)
+			if (x < part->spaces_len && part->spaces[x])
+				return split_line_at(html_context, x);
+
+		for (x = par_format.leftmargin; x < part->cx ; x++)
+			if (x < part->spaces_len && part->spaces[x])
+				return split_line_at(html_context, x);
+	}
 
 	/* Make sure that we count the right margin to the total
 	 * actual box width. */
@@ -1593,6 +1670,9 @@ end:
 	part->cx = -1;
 	part->xa = 0;
    	memset(part->spaces, 0, part->spaces_len);
+#ifdef CONFIG_UTF_8
+   	memset(part->char_width, 0, part->spaces_len);
+#endif
 }
 
 static void
@@ -2014,6 +2094,9 @@ format_html_part(struct html_context *html_context,
 
 	done_link_state_info();
 	mem_free_if(part->spaces);
+#ifdef CONFIG_UTF_8
+	mem_free_if(part->char_width);
+#endif
 
 	if (document) {
 		struct node *node = document->nodes.next;

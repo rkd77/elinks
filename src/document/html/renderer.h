@@ -23,6 +23,10 @@ struct part {
 
 	unsigned char *spaces;
 	int spaces_len;
+#ifdef CONFIG_UTF_8
+	unsigned char *char_width;
+#endif
+
 
 	struct box box;
 
