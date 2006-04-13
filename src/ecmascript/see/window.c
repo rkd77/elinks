@@ -137,6 +137,8 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, win->open);
 	} else if (p == s_location) {
 		SEE_OBJECT_GET(interp, interp->Global, s_location, res);
+	} else if (p == s_navigator) {
+		SEE_OBJECT_GET(interp, interp->Global, s_navigator, res);
 	} else {
 		unsigned char *frame = SEE_string_to_unsigned_char(p);
 		struct document_view *doc_view = vs->doc_view;
