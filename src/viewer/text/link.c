@@ -11,6 +11,7 @@
 
 #include "bfu/listmenu.h"
 #include "bfu/menu.h"
+#include "bfu/style.h"
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/document.h"
@@ -31,6 +32,7 @@
 #include "terminal/screen.h"
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
+#include "util/box.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -317,6 +319,37 @@ clear_link(struct terminal *term, struct document_view *doc_view)
 		}
 
 		free_link(doc_view);
+	}
+}
+
+void
+highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
+                                                struct document_view *doc_view,
+                                                int n)
+{
+	struct color_pair *color = get_bfu_color(term, "searched");
+	int xoffset = doc_view->box.x - doc_view->vs->x;
+	int yoffset = doc_view->box.y - doc_view->vs->y;
+	struct document *document = doc_view->document;
+	int m;
+
+	for (m = n + 1; n <= document->nlinks; n *= 10, m *= 10) {
+		int linkn;
+
+		for (linkn = n; linkn < m; ++linkn) {
+			struct link *link = &document->links[linkn - 1];
+			int i;
+
+			if (linkn > document->nlinks) break;
+
+			for (i = 0; i < link->npoints; ++i) {
+				int x = link->points[i].x + xoffset;
+				int y = link->points[i].y + yoffset;
+
+				if (is_in_box(&doc_view->box, x, y))
+					draw_char_color(term, x, y, color);
+			}
+		}
 	}
 }
 
