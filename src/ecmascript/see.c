@@ -134,7 +134,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	g->ret = NULL;
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
-		if (SEE_VALUE_GET_TYPE(&result) != SEE_NULL)
+		if (SEE_VALUE_GET_TYPE(&result) == SEE_STRING)
 			string = SEE_value_to_unsigned_char(interp, &result);
 
 	}
