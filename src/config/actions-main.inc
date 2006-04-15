@@ -10,6 +10,7 @@ ACTION_(MAIN, "add-bookmark", ADD_BOOKMARK, N__("Add a new bookmark"), ACTION_RE
 ACTION_(MAIN, "add-bookmark-link", ADD_BOOKMARK_LINK, N__("Add a new bookmark using current link"), ACTION_RESTRICT_ANONYMOUS | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "add-bookmark-tabs", ADD_BOOKMARK_TABS, N__("Bookmark all open tabs"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "auth-manager", AUTH_MANAGER, N__("Open authentication manager"), 0),
+ACTION_(MAIN, "backspace-prefix", BACKSPACE_PREFIX, N__("Backspace the last entered digit of the current prefix"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "bookmark-manager", BOOKMARK_MANAGER, N__("Open bookmark manager"), 0),
 ACTION_(MAIN, "cache-manager", CACHE_MANAGER, N__("Open cache manager"), 0),
 ACTION_(MAIN, "cache-minimize", CACHE_MINIMIZE, N__("Free unused cache entries"), 0),

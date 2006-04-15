@@ -689,6 +689,9 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 		 * the first time by init_session() calloc() call.
 		 * When used, it has to be reset to zero. */
 
+		/* Clear the highlighting for the previous partial prefix. */
+		if (ses->kbdprefix.repeat_count) draw_formatted(ses, 0);
+
 		ses->kbdprefix.repeat_count *= 10;
 		ses->kbdprefix.repeat_count += digit;
 
@@ -696,6 +699,10 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 		 * '0' six times or more will reset the count. */
 		if (ses->kbdprefix.repeat_count > 99999)
 			ses->kbdprefix.repeat_count = 0;
+		else if (ses->kbdprefix.repeat_count)
+			highlight_links_with_prefixes_that_start_with_n(
+			                           ses->tab->term, doc_view,
+			                           ses->kbdprefix.repeat_count);
 
 		return FRAME_EVENT_OK;
 	}

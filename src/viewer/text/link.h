@@ -17,6 +17,10 @@ void free_link(struct document_view *doc_view);
 void clear_link(struct terminal *term, struct document_view *doc_view);
 void draw_current_link(struct session *ses, struct document_view *doc_view);
 
+void highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
+                                                 struct document_view *doc_view,
+                                                 int n);
+
 void link_menu(struct terminal *term, void *, void *ses);
 
 struct link *get_first_link(struct document_view *doc_view);
