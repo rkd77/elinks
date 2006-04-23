@@ -5,7 +5,7 @@ This is an introduction to how some of the internals of ELinks work. It
 focuses on covering the basic low level subsystems and data structures and
 give an overview of how things are glued together. Some additional information
 about ELinks internals are available in ELinks Hacking. Consult the README
-file\cite{6} in the source directory to get an overview of how the different
+file in the source directory to get an overview of how the different
 parts of ELinks depend on each other.
 
 
@@ -74,7 +74,7 @@ or initialised in an allocated data structure using the following:
 
 When iterating a list, there are two looping macros: 
 
-foreach (list-item, list-head})::
+foreach (list-item, list-head)::
 
 	Iterates through all items in the list.
 
@@ -194,7 +194,7 @@ The `select()` loop regularly causes timer expiration to be checked. The
 interface is defined in `src/main/timer.h` and can be used to schedule work to
 be performed some time in the future.
 
-install_timer(timer-id, time-in-milliseconds, expiration-callback}, data)::
+install_timer(timer-id, time-in-milliseconds, expiration-callback, data)::
 
 	Starts a one shot timer bound to the given timer ID that will expire
 	after the given time in milliseconds. When the timer expires the
@@ -213,7 +213,7 @@ using bottom halves. This is especially useful when nested deeply in some call
 tree and one needs to cleanup some data structure but cannot do so immidately.
 The interface is defined in `src/main/select.h`
 
-register_bottom_half(work-function, data})::
+register_bottom_half(work-function, data)::
 
 	Schedules postponed work to be run and completed in the nearest
 	future. Note that although this helps to improve the response time it
@@ -225,10 +225,10 @@ Simple Threads
 ^^^^^^^^^^^^^^
 
 ELinks also supports a simple threading architecture. It is possible to start
-a thread\footnote{(on UNIX systems this will end up using the `fork()`
-system call} so that communication between it and the ELinks program is
+a thread footnote:[on UNIX systems this will end up using the `fork()`
+system call] so that communication between it and the ELinks program is
 handled via a pipe. This pipe can then be used to pass to the
-`set_handlers()` function so that communcation is done asynchronously.
+`set_handlers()` function so that communication is done asynchronously.
 
 start_thread(thread-function, thread-data, thread-data-length)::
 
@@ -261,14 +261,14 @@ make_connection(socket, uri, connect-callback, no-dns-cache)::
 
 	This function handles connecting to the host and port given in the uri
 	argument. If the internal DNS cache is not to be used the
-	no-dns-cache} argument should be non-zero.  Upon successful connection
+	no-dns-cache argument should be non-zero.  Upon successful connection
 	establishment the connect callback is called.
 
 read_from_socket(socket, read-buffer, connection-state, read-callback)::
 
 	Reads data from socket into the given read buffer. Each time new data
 	is received the read callback is called. Changes the connection state
-	to connection-state} immediately  after it has been called.
+	to connection-state immediately after it has been called.
 
 write_to_socket(socket, data, datalen, connection-state, write-callback)::
 
@@ -304,7 +304,7 @@ connection state. How the protocol back-end chooses to handle the connection
 and load the URI it points to is entirely up to the back-end.  The interface
 is defined in `src/protocol/protocol.h` and `src/network/connection.h`.
 
-A connection can have multiple downloads attached to it. Each download struct}
+A connection can have multiple downloads attached to it. Each `download struct'
 contains information about the connection state and the connection with which
 it is attached. Additionally, the `download struct` specifies callback data,
 and a callback which is called each time the download progresses.  The
@@ -319,7 +319,7 @@ load_uri(uri, referrer, download, priority, cache-mode, offset)::
 
 change_connection(old-download, new-download, new-priority, interrupt)::
 
-	Removes the old download from the connection it is attached to and add
+	Removes the old download from the connection it is attached to and adds
 	the new download instead. If the new download argument is `NULL`, the
 	old download is simply stopped.
 
