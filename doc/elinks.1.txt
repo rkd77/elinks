@@ -138,9 +138,9 @@ BUGS
 
 Please report any other bugs you find to the either the ELinks mailing list at
 mailto:elinks-users@linuxfromscratch.org[] or if you prefer enter them into
-http://bugzilla.elinks.or.cz/[the bug tracking system]. More information about
+http://bugzilla.elinks.cz/[the bug tracking system]. More information about
 how to get in contact with developers and getting help can be found on
-http://elinks.or.cz/community.html[the community page].
+http://elinks.cz/community.html[the community page].
 
 LICENSE
 -------
