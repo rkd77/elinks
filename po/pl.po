@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-28 13:40+0200\n"
-"PO-Revision-Date: 2006-03-25 10:40+0100\n"
+"POT-Creation-Date: 2006-04-28 19:36+0200\n"
+"PO-Revision-Date: 2006-04-28 20:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -38,11 +38,12 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:447 src/bfu/inpfield.c:255 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:393
-#: src/cookies/dialogs.c:356 src/dialogs/edit.c:98 src/dialogs/info.c:134
-#: src/dialogs/options.c:211 src/dialogs/options.c:292 src/mime/dialogs.c:131
-#: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:235
-#: src/scripting/lua/core.c:378 src/scripting/lua/core.c:459
-#: src/session/session.c:801 src/viewer/text/search.c:1594
+#: src/cookies/dialogs.c:356 src/cookies/dialogs.c:448 src/dialogs/edit.c:98
+#: src/dialogs/info.c:134 src/dialogs/options.c:211 src/dialogs/options.c:292
+#: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:111
+#: src/protocol/protocol.c:235 src/scripting/lua/core.c:378
+#: src/scripting/lua/core.c:459 src/session/session.c:801
+#: src/viewer/text/search.c:1594
 msgid "~OK"
 msgstr "~OK"
 
@@ -179,8 +180,8 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:255 src/config/dialogs.c:394 src/cookies/dialogs.c:357
-#: src/dialogs/edit.c:102 src/dialogs/edit.c:105 src/dialogs/options.c:214
-#: src/dialogs/options.c:293 src/mime/dialogs.c:132
+#: src/cookies/dialogs.c:449 src/dialogs/edit.c:102 src/dialogs/edit.c:105
+#: src/dialogs/options.c:214 src/dialogs/options.c:293 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:802
 #: src/scripting/lua/core.c:379 src/scripting/lua/core.c:460
 #: src/session/download.c:542 src/session/download.c:1139
@@ -452,13 +453,13 @@ msgstr "~Przejd¼ do"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:464 src/config/dialogs.c:530
-#: src/cookies/dialogs.c:424
+#: src/cookies/dialogs.c:470
 msgid "~Edit"
 msgstr "~Edytuj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:465 src/cache/dialogs.c:231
-#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:425
+#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:471
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:259
 msgid "~Delete"
@@ -466,7 +467,7 @@ msgstr "~Usuñ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:466 src/config/dialogs.c:531
-#: src/config/dialogs.c:944 src/cookies/dialogs.c:423 src/dialogs/menu.c:455
+#: src/config/dialogs.c:944 src/cookies/dialogs.c:468 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Dodaj"
 
@@ -619,7 +620,7 @@ msgid "Delete this cache entry?"
 msgstr "Czy usun±æ zaznaczony wpis cache?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:422
+#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:467
 #: src/dialogs/download.c:250 src/dialogs/download.c:480
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:258
@@ -663,7 +664,7 @@ msgstr "Przejd¼ do pierwszej linii bufora"
 msgid "Cancel current state"
 msgstr "Anuluj bie¿±cy stan"
 
-#: src/config/actions-edit.inc:13 src/config/actions-main.inc:18
+#: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
 msgstr "Skopiuj tekst do schowka"
 
@@ -687,7 +688,7 @@ msgstr "Przejd¼ na koniec strony/linii"
 msgid "Go to the last line of the buffer"
 msgstr "Przejd¼ do ostatniej linii bufora"
 
-#: src/config/actions-edit.inc:19 src/config/actions-main.inc:46
+#: src/config/actions-edit.inc:19 src/config/actions-main.inc:47
 #: src/config/actions-menu.inc:12
 msgid "Follow the current link"
 msgstr "Pod±¿aj za bie¿±cym odno¶nikiem"
@@ -724,7 +725,7 @@ msgstr "Wstaw tekst ze schowka"
 msgid "Move to the previous item"
 msgstr "Przesuñ do poprzedniej pozycji"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:78
+#: src/config/actions-edit.inc:28 src/config/actions-main.inc:79
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Odrysuj terminal"
@@ -763,412 +764,416 @@ msgid "Open authentication manager"
 msgstr "Otwórz menad¿era autentykacji"
 
 #: src/config/actions-main.inc:13
+msgid "Backspace the last entered digit of the current prefix"
+msgstr "Cofnij ostatnio wprowadzon± cyfrê bie¿±cego przedrostka"
+
+#: src/config/actions-main.inc:14
 msgid "Open bookmark manager"
 msgstr "Otwórz menad¿era zak³adek"
 
-#: src/config/actions-main.inc:14
+#: src/config/actions-main.inc:15
 msgid "Open cache manager"
 msgstr "Otwórz menad¿era pamiêci podrêcznej"
 
-#: src/config/actions-main.inc:15
+#: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
 msgstr "Zwolnij nieu¿ywane pozycje pamiêci podrêcznej"
 
-#: src/config/actions-main.inc:16
+#: src/config/actions-main.inc:17
 msgid "Open cookie manager"
 msgstr "Otwórz menad¿era ciasteczek"
 
-#: src/config/actions-main.inc:17
+#: src/config/actions-main.inc:18
 msgid "Reload cookies file"
 msgstr "Prze³aduj plik ciasteczek"
 
-#: src/config/actions-main.inc:19
+#: src/config/actions-main.inc:20
 msgid "Show information about the current page"
 msgstr "Poka¿ informacje na temat bie¿±cej strony"
 
-#: src/config/actions-main.inc:20
+#: src/config/actions-main.inc:21
 msgid "Open download manager"
 msgstr "Otwórz menad¿era pobierania"
 
-#: src/config/actions-main.inc:21
+#: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
 msgstr "Wejd¼ w tryb ex (linia poleceñ)"
 
-#: src/config/actions-main.inc:22
+#: src/config/actions-main.inc:23
 msgid "Open the File menu"
 msgstr "Otwórz menu Plik"
 
-#: src/config/actions-main.inc:23
+#: src/config/actions-main.inc:24
 msgid "Find the next occurrence of the current search text"
 msgstr "Znajd¼ nastêpne wyst±pienie szukanego tekstu"
 
-#: src/config/actions-main.inc:24
+#: src/config/actions-main.inc:25
 msgid "Find the previous occurrence of the current search text"
 msgstr "Znajd¼ poprzednie wyst±pienie szukanego tekstu"
 
 #
-#: src/config/actions-main.inc:25
+#: src/config/actions-main.inc:26
 msgid "Forget authentication credentials"
 msgstr "Zapomnij dane uwierzytelniaj±ce u¿ytkownika"
 
-#: src/config/actions-main.inc:26
+#: src/config/actions-main.inc:27
 msgid "Open form history manager"
 msgstr "Otwórz menad¿era historii formularzy"
 
-#: src/config/actions-main.inc:27
+#: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
 msgstr "Prze¶lij URI bie¿±cej ramki do zewnêtrznego polecenia"
 
-#: src/config/actions-main.inc:28
+#: src/config/actions-main.inc:29
 msgid "Maximize the current frame"
 msgstr "Powiêksz bie¿±c± ramkê"
 
-#: src/config/actions-main.inc:29
+#: src/config/actions-main.inc:30
 msgid "Move to the next frame"
 msgstr "Przesuñ do nastêpnej ramki"
 
-#: src/config/actions-main.inc:30
+#: src/config/actions-main.inc:31
 msgid "Move to the previous frame"
 msgstr "Przesuñ do poprzedniej ramki"
 
-#: src/config/actions-main.inc:31
+#: src/config/actions-main.inc:32
 msgid "Open \"Go to URL\" dialog box"
 msgstr "Otwórz okienko dialogowe \"Id¼ do\""
 
-#: src/config/actions-main.inc:32
+#: src/config/actions-main.inc:33
 msgid "Open \"Go to URL\" dialog box containing the current URL"
 msgstr "Otwórz okienko dialogowe \"Id¼ do\" z bie¿±cym URL-em"
 
-#: src/config/actions-main.inc:33
+#: src/config/actions-main.inc:34
 msgid "Open \"Go to URL\" dialog box containing the current link URL"
 msgstr "Otwórz okienko dialogowe \"Id¼ do\" z bie¿±cym odno¶nikiem"
 
-#: src/config/actions-main.inc:34
+#: src/config/actions-main.inc:35
 msgid "Go to the homepage"
 msgstr "Strona domowa"
 
-#: src/config/actions-main.inc:35
+#: src/config/actions-main.inc:36
 msgid "Show information about the current page protocol headers"
 msgstr "Poka¿ informacje na temat pól nag³ówka protoko³u dla bie¿±cej strony"
 
-#: src/config/actions-main.inc:36
+#: src/config/actions-main.inc:37
 msgid "Open history manager"
 msgstr "Otwórz menad¿era historii"
 
-#: src/config/actions-main.inc:37
+#: src/config/actions-main.inc:38
 msgid "Return to the previous document in history"
 msgstr "Powrót do poprzedniego dokumentu w historii"
 
-#: src/config/actions-main.inc:38
+#: src/config/actions-main.inc:39
 msgid "Go forward in history"
 msgstr "Przejd¼ naprzód w \"historii\""
 
-#: src/config/actions-main.inc:39
+#: src/config/actions-main.inc:40
 msgid "Jump to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/config/actions-main.inc:40
+#: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
 msgstr "Otwórz menad¿era przypisañ klawiszy"
 
-#: src/config/actions-main.inc:41
+#: src/config/actions-main.inc:42
 msgid "Kill all backgrounded connections"
 msgstr "Przerwij wszystkie po³±czenia w tle"
 
-#: src/config/actions-main.inc:42
+#: src/config/actions-main.inc:43
 msgid "Download the current link"
 msgstr "Pobierz dokument wskazywany przez bie¿±cy odno¶nik"
 
-#: src/config/actions-main.inc:43
+#: src/config/actions-main.inc:44
 msgid "Download the current image"
 msgstr "Pobierz obrazek"
 
-#: src/config/actions-main.inc:44
+#: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
 msgstr "Próba wznowienia pobierania bie¿±cego odno¶nika"
 
-#: src/config/actions-main.inc:45
+#: src/config/actions-main.inc:46
 msgid "Pass URI of current link to external command"
 msgstr "Prze¶lij URI bie¿±cego odno¶nika do zewnêtrznego polecenia"
 
-#: src/config/actions-main.inc:47
+#: src/config/actions-main.inc:48
 msgid "Follow the current link, forcing reload of the target"
 msgstr "Pod±¿aj za bie¿±cym odno¶nikiem prze³adowuj±c dokument"
 
-#: src/config/actions-main.inc:48
+#: src/config/actions-main.inc:49
 msgid "Open the link context menu"
 msgstr "Otwórz menu kontekstowe dla odno¶nika"
 
-#: src/config/actions-main.inc:49
+#: src/config/actions-main.inc:50
 msgid "Open the form fields menu"
 msgstr "Otwórz menu pól formularzy"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 msgid "Open a Lua console"
 msgstr "Otwórz konsolê Lua"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Go at a specified mark"
 msgstr "Przejd¼ do podanego znacznika"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 msgid "Set a mark"
 msgstr "Ustaw znacznik"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Activate the menu"
 msgstr "Uaktywnij menu"
 
-#: src/config/actions-main.inc:54
+#: src/config/actions-main.inc:55
 msgid "Move cursor down"
 msgstr "Przesuñ kursor w dó³"
 
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Move cursor left"
 msgstr "Przesuñ kursor w lewo"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Move cursor right"
 msgstr "Przesuñ kursor w prawo"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 msgid "Move cursor up"
 msgstr "Przesuñ kursor w górê"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move to the end of the document"
 msgstr "Przejd¼ na koniec dokumentu"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move to the start of the document"
 msgstr "Przejd¼ do pocz±tku dokumentu"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move one link down"
 msgstr "Przejd¼ w dó³ o jeden odno¶nik"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move one link left"
 msgstr "Przejd¼ w górê o jeden odno¶nik"
 
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move to the next link"
 msgstr "Przejd¼ do kolejnego odno¶nika"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move to the previous link"
 msgstr "Przejd¼ do poprzedniego odno¶nika"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move one link right"
 msgstr "Przejd¼ w prawo o jeden odno¶nik"
 
-#: src/config/actions-main.inc:65
+#: src/config/actions-main.inc:66
 msgid "Move one link up"
 msgstr "Przejd¼ w górê o jeden odno¶nik"
 
-#: src/config/actions-main.inc:66 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:67 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Przesuñ w dó³ o stronê"
 
-#: src/config/actions-main.inc:67 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:68 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Przesuñ w górê o stronê"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Open the current link in a new tab"
 msgstr "Otwórz bie¿±cy odno¶nik w nowej karcie"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Open the current link in a new tab in the background"
 msgstr "Otwórz bie¿±cy odno¶nik w nowej karcie w tle"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Open the current link in a new window"
 msgstr "Otwórz bie¿±cy odno¶nik w nowym oknie"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Open a new tab"
 msgstr "Otwórz now± kartê"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Open a new tab in the background"
 msgstr "Otwórz now± kartê w tle"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Open a new window"
 msgstr "Otwórz nowe okno"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Open an OS shell"
 msgstr "Otwórz pow³okê systemow±"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Open options manager"
 msgstr "Otwórz menad¿er ustawieñ"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Open a quit confirmation dialog box"
 msgstr "Otwórz okno dialogowe potwierdzania zakoñczenia dzia³ania"
 
-#: src/config/actions-main.inc:77
+#: src/config/actions-main.inc:78
 msgid "Quit without confirmation"
 msgstr "Zakoñcz bez potwierdzenia"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Reload the current page"
 msgstr "Prze³aduj bie¿±c± stronê"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Re-render the current page"
 msgstr "Przeformatuj bie¿±c± stronê"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Reset form items to their initial values"
 msgstr "Ustaw elementy formularza na ich pocz±tkowe warto¶ci"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Show information about the currently used resources"
 msgstr "Poka¿ informacje na temat obecnie u¿ywanych zasobów"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Save the current document in source form"
 msgstr "Zapisz bie¿±cy dokument w formie ¼ród³owej"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Save the current document in formatted form"
 msgstr "Zapisz bie¿±cy dokument jako tekst"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 msgid "Save options"
 msgstr "Zapisz ustawienia"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Save URL as"
 msgstr "Zapisz URL jako"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Scroll down"
 msgstr "Przewiñ w dó³"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Scroll left"
 msgstr "Przewiñ w lewo"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:90
 msgid "Scroll right"
 msgstr "Przewiñ w prawo"
 
-#: src/config/actions-main.inc:90
+#: src/config/actions-main.inc:91
 msgid "Scroll up"
 msgstr "Przewiñ w górê"
 
-#: src/config/actions-main.inc:91 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:92 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Szukaj tekstu"
 
-#: src/config/actions-main.inc:92
+#: src/config/actions-main.inc:93
 msgid "Search backwards for a text pattern"
 msgstr "Szukaj tekstu wstecz"
 
-#: src/config/actions-main.inc:93 src/config/actions-main.inc:94
+#: src/config/actions-main.inc:94 src/config/actions-main.inc:95
 msgid "Search link text by typing ahead"
 msgstr "Szukaj odno¶nika wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Search document text by typing ahead"
 msgstr "Przeszukuj dokument wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Search document text backwards by typing ahead"
 msgstr "Przeszukuj dokument wstecz wpisuj±c pojedyncze znaki"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Show terminal options dialog"
 msgstr "Poka¿ okienko dialogowe ustawieñ terminala"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Submit form"
 msgstr "Prze¶lij formularz"
 
-#: src/config/actions-main.inc:99
+#: src/config/actions-main.inc:100
 msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
-#: src/config/actions-main.inc:100 src/terminal/tab.c:189
+#: src/config/actions-main.inc:101 src/terminal/tab.c:189
 #: src/terminal/tab.c:226
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Close all tabs but the current one"
 msgstr "Zamknij wszystkie karty za wyj±tkiem bie¿±cej"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 msgid "Pass URI of current tab to external command"
 msgstr "Prze¶lij URI bie¿±cej karty do zewnêtrznego polecenia"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Open the tab menu"
 msgstr "Otwórz menu kart"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Move the current tab to the left"
 msgstr "Przesuñ bie¿±c± kartê w lewo"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 msgid "Move the current tab to the right"
 msgstr "Przesuñ bie¿±c± kartê w prawo"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Next tab"
 msgstr "Nastêpna karta"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Previous tab"
 msgstr "Poprzednia karta"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Open the terminal resize dialog"
 msgstr "Poka¿ okienko dialogowe zmiany rozmiarów terminala"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Toggle rendering of page using CSS"
 msgstr "Zmieñ formatowanie strony u¿ywaj±c CSS"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Toggle displaying of links to images"
 msgstr "Zmieñ sposób wy¶wietlania odno¶ników do obrazków"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Toggle rendering of tables"
 msgstr "Zmieñ sposób wy¶wietlania tabel"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Toggle usage of document specific colors"
 msgstr "Prze³±cz sposób u¿ycia kolorów podanych w dokumencie"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Prze³±cz wy¶wietlanie strony jako HTML / zwyk³y tekst"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Toggle mouse handling"
 msgstr "Prze³±cz obs³ugê myszy"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Toggle displaying of links numbers"
 msgstr "Prze³±cz sposób wy¶wietlania numerów odno¶ników"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Prze³±cz sposób kompresji pustych linii przez renderer zwyk³ego tekstu"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "Toggle wrapping of text"
 msgstr "Zmieñ sposób zawijania tekstu"
 
-#: src/config/actions-main.inc:118
+#: src/config/actions-main.inc:119
 msgid "View the current image"
 msgstr "Poka¿ bie¿±cy obrazek"
 
@@ -1866,7 +1871,7 @@ msgid "Cannot add an option here."
 msgstr "Nie mo¿na dodaæ tu opcji."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:427
+#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:473
 #: src/dialogs/options.c:213 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1123
 msgid "Sa~ve"
@@ -4728,13 +4733,26 @@ msgstr "Skasowanie wszystkich ciasteczek"
 msgid "Do you really want to remove all cookies?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie ciasteczka?"
 
+#: src/cookies/dialogs.c:442
+msgid "Add server"
+msgstr "Dodaj serwer"
+
+#: src/cookies/dialogs.c:446
+msgid "Server name"
+msgstr "Nazwa serwera"
+
+#. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
+#: src/cookies/dialogs.c:469
+msgid "Add ~server"
+msgstr "Dodaj ~serwer"
+
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:426 src/dialogs/download.c:486 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:472 src/dialogs/download.c:486 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:260
 msgid "C~lear"
 msgstr "Wy~czy¶æ"
 
-#: src/cookies/dialogs.c:432
+#: src/cookies/dialogs.c:478
 msgid "Cookie manager"
 msgstr "Menad¿er ciasteczek"
 
@@ -5673,7 +5691,7 @@ msgstr ""
 "Zostaw jako \"\", ¿eby u¿ywaæ wbudowanych styli dokumentu."
 
 #. name:
-#: src/ecmascript/ecmascript.c:39 src/ecmascript/ecmascript.c:263
+#: src/ecmascript/ecmascript.c:39 src/ecmascript/ecmascript.c:310
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
@@ -5722,11 +5740,11 @@ msgstr "Blokowanie okienek pop-up"
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr "Czy zabroniæ skryptom otwieranie nowych okien lub kart."
 
-#: src/ecmascript/ecmascript.c:208
+#: src/ecmascript/ecmascript.c:255
 msgid "JavaScript Emergency"
 msgstr "Wypadek JavaScriptu"
 
-#: src/ecmascript/ecmascript.c:210
+#: src/ecmascript/ecmascript.c:257
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -6185,7 +6203,7 @@ msgstr "W³asne funkcje Libc"
 msgid "No Backtrace"
 msgstr "Bez backtrace"
 
-#: src/main/version.c:117
+#: src/main/version.c:120
 msgid "No mouse"
 msgstr "Brak myszy"
 
@@ -8562,114 +8580,114 @@ msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1231
+#: src/viewer/text/link.c:1264
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1236
+#: src/viewer/text/link.c:1269
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1238
+#: src/viewer/text/link.c:1271
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1242
+#: src/viewer/text/link.c:1275
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1244
+#: src/viewer/text/link.c:1277
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1246
+#: src/viewer/text/link.c:1279
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1251
+#: src/viewer/text/link.c:1284
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1254
+#: src/viewer/text/link.c:1287
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1258
+#: src/viewer/text/link.c:1291
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1269 src/viewer/text/link.c:1309
+#: src/viewer/text/link.c:1302 src/viewer/text/link.c:1342
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1284
+#: src/viewer/text/link.c:1317
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1292
+#: src/viewer/text/link.c:1325
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1293
+#: src/viewer/text/link.c:1326
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1297
+#: src/viewer/text/link.c:1330
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1299
+#: src/viewer/text/link.c:1332
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1302
+#: src/viewer/text/link.c:1335
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1307
+#: src/viewer/text/link.c:1340
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1314
+#: src/viewer/text/link.c:1347
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1321
+#: src/viewer/text/link.c:1354
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1323
+#: src/viewer/text/link.c:1356
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1365
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1380
+#: src/viewer/text/link.c:1413
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1385
+#: src/viewer/text/link.c:1418
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8764,19 +8782,19 @@ msgstr ""
 "Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:715
+#: src/viewer/text/view.c:722
 msgid "Go to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/viewer/text/view.c:715
+#: src/viewer/text/view.c:722
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1298
+#: src/viewer/text/view.c:1305
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1299
+#: src/viewer/text/view.c:1306
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 
