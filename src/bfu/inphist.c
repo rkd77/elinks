@@ -62,7 +62,7 @@ do_tab_compl(struct dialog_data *dlg_data, struct list_head *history)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct widget_data *widget_data = selected_widget(dlg_data);
-	int cdata_len = strlen(widget_data->cdata);
+	int cpos = widget_data->info.field.cpos;
 	int n = 0;
 	struct input_history_entry *entry;
 	struct menu_item *items = new_menu(FREE_LIST | NO_INTL);
@@ -70,7 +70,7 @@ do_tab_compl(struct dialog_data *dlg_data, struct list_head *history)
 	if (!items) return;
 
 	foreach (entry, *history) {
-		if (strncmp(widget_data->cdata, entry->data, cdata_len))
+		if (strncmp(widget_data->cdata, entry->data, cpos))
 			continue;
 
 		add_to_menu(&items, entry->data, NULL, ACT_MAIN_NONE,
@@ -107,7 +107,7 @@ void
 do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history)
 {
 	struct widget_data *widget_data = selected_widget(dlg_data);
-	int base_len = strlen(widget_data->cdata);
+	int base_len = widget_data->info.field.cpos;
 	/* Maximum number of characters in a match. Characters after this
 	 * position are varying in other matches. */
 	int longest_common_match = 0;
