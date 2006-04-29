@@ -106,6 +106,7 @@ strcommonlen(unsigned char *a, unsigned char *b)
 void
 do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history)
 {
+	struct string completion;
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int base_len = widget_data->info.field.cpos;
 	/* Maximum number of characters in a match. Characters after this
@@ -139,7 +140,15 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history
 
 	if (!match) return;
 
-	tab_compl_n(dlg_data, match, longest_common_match);
+	if (!init_string(&completion)) return;
+
+	add_bytes_to_string(&completion, match, longest_common_match);
+	add_to_string(&completion, widget_data->cdata
+	                            + widget_data->info.field.cpos);
+
+	tab_compl_n(dlg_data, completion.source, completion.length);
+
+	done_string(&completion);
 }
 
 
