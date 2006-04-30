@@ -998,12 +998,12 @@ activate_link(struct session *ses, struct document_view *doc_view,
 	case LINK_MAP:
 	case LINK_FIELD:
 	case LINK_AREA:
-	case LINK_BUTTON:
 		if (goto_current_link(ses, doc_view, do_reload))
 			return FRAME_EVENT_OK;
 
 		break;
-
+	case LINK_BUTTON:
+		break;
 	case LINK_CHECKBOX:
 		link_fc = get_link_form_control(link);
 
