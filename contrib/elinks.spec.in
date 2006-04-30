@@ -117,7 +117,7 @@ install \
 	contrib/perl/hooks.pl \
 	$RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}/perl
 install \
-	doc/*.txt \
+	doc/html/*.html \
 	$RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}/
 
 %find_lang %{name}
@@ -133,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 
 # date +"%a %b %d %Y"
 %changelog
+* Sat Apr 29 2006 Witold Filipczyk <witekfl@pld-linux.org>
+- html docs instead of text files
+
 * Fri Feb 17 2006 Witold Filipczyk <witekfl@pld-linux.org>
 - typo
 
