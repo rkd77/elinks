@@ -167,6 +167,7 @@ no_type_attr:
 	fc = init_form_control(type, a, html_context);
 	if (!fc) return;
 
+	fc->id = get_attr_val(a, "id", html_context->options);
 	fc->name = get_attr_val(a, "name", html_context->options);
 	fc->default_value = get_attr_val(a, "value", html_context->options);
 	if (!fc->default_value) {
@@ -300,6 +301,7 @@ html_input(struct html_context *html_context, unsigned char *a,
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
 
+	fc->id = get_attr_val(a, "id", html_context->options);
 	fc->name = get_attr_val(a, "name", html_context->options);
 
 	fc->size = get_num(a, "size", html_context->options);
@@ -475,6 +477,7 @@ end_parse:
 		goto abort;
 	}
 
+	fc->id = get_attr_val(attr, "id", html_context->options);
 	fc->name = get_attr_val(attr, "name", html_context->options);
 	fc->default_state = preselect < 0 ? 0 : preselect;
 	fc->default_value = order ? stracpy(values[fc->default_state]) : stracpy("");
@@ -591,6 +594,7 @@ end_parse:
 		return;
 	}
 
+	fc->id = get_attr_val(a, "id", html_context->options);
 	fc->name = null_or_stracpy(format.select);
 	fc->default_value = val;
 	fc->default_state = has_attr(a, "selected", html_context->options);
@@ -636,6 +640,7 @@ pp:
 	fc = init_form_control(FC_TEXTAREA, attr, html_context);
 	if (!fc) return;
 
+	fc->id = get_attr_val(attr, "id", html_context->options);
 	fc->name = get_attr_val(attr, "name", html_context->options);
 	fc->default_value = memacpy(html, p - html);
 	for (p = fc->default_value; p && p[0]; p++) {

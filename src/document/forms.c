@@ -151,6 +151,7 @@ done_form_control(struct form_control *fc)
 	assert(fc);
 	if_assert_failed return;
 
+	mem_free_if(fc->id);
 	mem_free_if(fc->name);
 	mem_free_if(fc->alt);
 	mem_free_if(fc->default_value);
