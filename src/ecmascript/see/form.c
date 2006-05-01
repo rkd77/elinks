@@ -566,7 +566,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 		return;
 
 	foreach (fc, form->items) {
-		if (fc->name && !strcasecmp(string, fc->name)) {
+		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
 			struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, find_form_state(doc_view, fc));
 
 			if (fcobj) {

@@ -631,7 +631,7 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
 
-			if (!fc->name || strcasecmp(string, fc->name))
+			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
 				continue;
 
 			fcobj = get_form_control_object(ctx, obj, fc->type, find_form_state(doc_view, fc));
