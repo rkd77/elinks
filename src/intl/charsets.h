@@ -55,6 +55,7 @@ int is_cp_special(int);
 void free_conv_table(void);
 #ifdef CONFIG_UTF_8
 inline unsigned char *encode_utf_8(unicode_val_T);
+inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
 inline int utf8charlen(const unsigned char *);
 int utf8_char2cells(unsigned char *, unsigned char *);
 int utf8_ptr2cells(unsigned char *, unsigned char *);

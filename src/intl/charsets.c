@@ -252,6 +252,24 @@ strlen_utf8(unsigned char **str)
 	return x;
 }
 
+#define utf8_issingle(p) (((p) & 0x80) == 0)
+#define utf8_islead(p) (utf8_issingle(p) || ((p) & 0xc0) == 0xc0)
+
+/* Start from @current and move back to @pos char. This pointer return. The
+ * most left pointer is @start. */
+inline unsigned char *
+utf8_prevchar(unsigned char *current, int pos, unsigned char *start)
+{
+  if (current == NULL || start == NULL || pos < 0)
+    return NULL;
+  while (pos > 0 && current != start) {
+    current--;
+    if (utf8_islead(*current))
+      pos--;
+  }
+  return current;
+}
+
 /* Count number of standard terminal cells needed for displaying UTF-8
  * character. */
 int
