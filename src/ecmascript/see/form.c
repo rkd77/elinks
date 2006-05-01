@@ -826,10 +826,11 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		if (!string)
 			return;
+
 		foreach(fc, form->items) {
 			struct js_input *fcobj = NULL;
 
-			if (!fc->name || strcasecmp(string, fc->name))
+			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
 				continue;
 			fcobj = js_get_form_control_object(interp, js_form, fc->type, find_form_state(doc_view, fc));
 

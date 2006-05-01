@@ -554,7 +554,7 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	undef_to_jsval(ctx, rval);
 
 	foreach (fc, form->items) {
-		if (fc->name && !strcasecmp(string, fc->name)) {
+		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
 			JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, find_form_state(doc_view, fc));
 
 			if (fcobj) {
