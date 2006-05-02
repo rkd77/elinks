@@ -300,6 +300,17 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 		break;
+	case JSP_INPUT_SELECTED_INDEX:
+		if (fc->type == FC_SELECT) {
+			int item = atoi(jsval_to_string(ctx, vp));
+
+			if (item >= 0 && item < fc->nvalues) {
+				fs->state = item;
+				mem_free_set(&fs->value, stracpy(fc->values[item]));
+				fixup_select_state(fc, fs);
+			}
+		}
+		break;
 
 	default:
 		INTERNAL("Invalid ID %d in input_set_property().", JSVAL_TO_INT(id));

@@ -331,6 +331,16 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		mem_free_set(&fs->value, string);
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
+	} else if (p == s_selectedIndex) {
+		if (fc->type == FC_SELECT) {
+			SEE_uint32_t item = SEE_ToUint32(interp, val);
+
+			if (item >=0 && item < fc->nvalues) {
+				fs->state = item;
+				mem_free_set(&fs->value, stracpy(fc->values[item]));
+				fixup_select_state(fc, fs);
+			}
+		}
 	}
 }
 
