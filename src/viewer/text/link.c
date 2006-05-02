@@ -998,11 +998,9 @@ activate_link(struct session *ses, struct document_view *doc_view,
 	case LINK_MAP:
 	case LINK_FIELD:
 	case LINK_AREA:
+	case LINK_BUTTON:
 		if (goto_current_link(ses, doc_view, do_reload))
 			return FRAME_EVENT_OK;
-
-		break;
-	case LINK_BUTTON:
 		break;
 	case LINK_CHECKBOX:
 		link_fc = get_link_form_control(link);
@@ -1063,7 +1061,6 @@ activate_link(struct session *ses, struct document_view *doc_view,
 enum frame_event_status
 enter(struct session *ses, struct document_view *doc_view, int do_reload)
 {
-	enum frame_event_status ret;
 	struct link *link;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -1072,12 +1069,10 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 	link = get_current_link(doc_view);
 	if (!link) return FRAME_EVENT_REFRESH;
 
-	ret = activate_link(ses, doc_view, link, do_reload);
-	if (ret != FRAME_EVENT_IGNORED)
-		if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
-			return FRAME_EVENT_REFRESH;
 
-	return ret;
+	if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
+		return FRAME_EVENT_REFRESH;
+	return activate_link(ses, doc_view, link, do_reload);
 }
 
 struct link *
