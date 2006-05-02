@@ -72,7 +72,6 @@ struct uri *get_form_uri(struct session *ses, struct document_view *doc_view, st
 
 unsigned char *get_form_info(struct session *ses, struct document_view *doc_view);
 
-void fixup_select_state(struct form_control *fc, struct form_state *fs);
 void selected_item(struct terminal *term, void *item_, void *ses_);
 int get_current_state(struct session *ses);
 

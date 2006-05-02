@@ -307,7 +307,6 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 			if (item >= 0 && item < fc->nvalues) {
 				fs->state = item;
 				mem_free_set(&fs->value, stracpy(fc->values[item]));
-				fixup_select_state(fc, fs);
 			}
 		}
 		break;

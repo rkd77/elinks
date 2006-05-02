@@ -338,7 +338,6 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 			if (item >=0 && item < fc->nvalues) {
 				fs->state = item;
 				mem_free_set(&fs->value, stracpy(fc->values[item]));
-				fixup_select_state(fc, fs);
 			}
 		}
 	}

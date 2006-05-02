@@ -89,7 +89,7 @@ done_submitted_value(struct submitted_value *sv)
 	mem_free(sv);
 }
 
-void
+static void
 fixup_select_state(struct form_control *fc, struct form_state *fs)
 {
 	int i;
