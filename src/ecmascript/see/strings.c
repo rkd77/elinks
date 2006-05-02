@@ -51,6 +51,7 @@ struct SEE_string *s_blur;
 struct SEE_string *s_click;
 struct SEE_string *s_focus;
 struct SEE_string *s_select;
+struct SEE_string *s_selectedIndex;
 
 struct SEE_string *s_elements;
 struct SEE_string *s_item;
@@ -193,6 +194,8 @@ init_intern_strings(void)
 	static struct SEE_string S_focus = SEE_STRING_DECL(SA_focus);
 	static SEE_char_t SA_select[] ={'s','e','l','e','c','t'};
 	static struct SEE_string S_select = SEE_STRING_DECL(SA_select);
+	static SEE_char_t SA_selectedIndex[] ={'s','e','l','e','c','t','e','d','I','n','d','e','x'};
+	static struct SEE_string S_selectedIndex = SEE_STRING_DECL(SA_selectedIndex);
 
 	static SEE_char_t SA_elements[] ={'e','l','e','m','e','n','t','s'};
 	static struct SEE_string S_elements = SEE_STRING_DECL(SA_elements);
@@ -337,6 +340,7 @@ init_intern_strings(void)
 	SEE_intern_global(s_click = &S_click);
 	SEE_intern_global(s_focus = &S_focus);
 	SEE_intern_global(s_select = &S_select);
+	SEE_intern_global(s_selectedIndex = &S_selectedIndex);
 
 	SEE_intern_global(s_elements = &S_elements);
 	SEE_intern_global(s_item = &S_item);

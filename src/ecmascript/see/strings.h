@@ -57,6 +57,7 @@ extern struct SEE_string *s_blur;
 extern struct SEE_string *s_click;
 extern struct SEE_string *s_focus;
 extern struct SEE_string *s_select;
+extern struct SEE_string *s_selectedIndex;
 
 extern struct SEE_string *s_elements;
 extern struct SEE_string *s_item;

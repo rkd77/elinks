@@ -71,6 +71,7 @@ enum input_prop {
 	JSP_INPUT_MAX_LENGTH,
 	JSP_INPUT_NAME,
 	JSP_INPUT_READONLY,
+	JSP_INPUT_SELECTED_INDEX,
 	JSP_INPUT_SIZE,
 	JSP_INPUT_SRC,
 	JSP_INPUT_TABINDEX,
@@ -94,6 +95,7 @@ static const JSPropertySpec input_props[] = {
 	{ "maxLength",	JSP_INPUT_MAX_LENGTH,	JSPROP_ENUMERATE },
 	{ "name",	JSP_INPUT_NAME,		JSPROP_ENUMERATE },
 	{ "readonly",	JSP_INPUT_READONLY,	JSPROP_ENUMERATE },
+	{ "selectedIndex",JSP_INPUT_SELECTED_INDEX,JSPROP_ENUMERATE },
 	{ "size",	JSP_INPUT_SIZE,		JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "src",	JSP_INPUT_SRC,		JSPROP_ENUMERATE },
 	{ "tabindex",	JSP_INPUT_TABINDEX,	JSPROP_ENUMERATE | JSPROP_READONLY },
@@ -210,6 +212,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		case FC_RESET: s = "reset"; break;
 		case FC_BUTTON: s = "button"; break;
 		case FC_HIDDEN: s = "hidden"; break;
+		case FC_SELECT: s = "select"; break;
 		default: INTERNAL("input_get_property() upon a non-input item."); break;
 		}
 		string_to_jsval(ctx, vp, s);
@@ -219,6 +222,9 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, fs->value);
 		break;
 
+	case JSP_INPUT_SELECTED_INDEX:
+		if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
+		break;
 	default:
 		INTERNAL("Invalid ID %d in input_get_property().", JSVAL_TO_INT(id));
 		break;
@@ -416,10 +422,10 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, s
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
+		case FC_SELECT:
 			return get_input_object(ctx, jsform, fs);
 
 		case FC_TEXTAREA:
-		case FC_SELECT:
 			/* TODO */
 			return NULL;
 

@@ -239,6 +239,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		case FC_RESET: str = s_reset; break;
 		case FC_BUTTON: str = s_button; break;
 		case FC_HIDDEN: str = s_hidden; break;
+		case FC_SELECT: str = s_select; break;
 		default: str = NULL;
 		}
 		if (str) {
@@ -247,6 +248,8 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_value) {
 		str = string_to_SEE_string(interp, fs->value);
 		SEE_SET_STRING(res, str);
+	} else if (p == s_selectedIndex) {
+		if (fc->type == FC_SELECT) SEE_SET_NUMBER(res, fs->state);
 	} else if (p == s_blur) {
 		SEE_SET_OBJECT(res, input->blur);
 	}  else if (p == s_click) {
@@ -483,10 +486,10 @@ js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsfor
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
+		case FC_SELECT:
 			return js_get_input_object(interp, jsform, fs);
 
 		case FC_TEXTAREA:
-		case FC_SELECT:
 			/* TODO */
 			return NULL;
 
