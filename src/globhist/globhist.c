@@ -39,6 +39,7 @@
 
 
 INIT_INPUT_HISTORY(global_history);
+INIT_LIST_HEAD(global_history_reap_list);
 
 
 /* GUI stuff. Declared here because done_global_history() frees it. */
@@ -107,12 +108,28 @@ remove_item_from_global_history(struct global_history_item *history_item)
 }
 
 static void
+reap_deleted_globhist_items(void)
+{
+	struct global_history_item *history_item, *next;
+
+	foreachsafe(history_item, next, global_history_reap_list) {
+		if (!is_object_used(history_item)) {
+			del_from_list(history_item);
+			mem_free(history_item->title);
+			mem_free(history_item->url);
+			mem_free(history_item);
+		}
+	}
+}
+
+static void
 done_global_history_item(struct global_history_item *history_item)
 {
 	done_listbox_item(&globhist_browser, history_item->box_item);
-	mem_free(history_item->title);
-	mem_free(history_item->url);
-	mem_free(history_item);
+
+	history_item->box_item = NULL;
+
+	add_to_list(global_history_reap_list, history_item);
 }
 
 void
@@ -260,6 +277,8 @@ add_global_history_item(unsigned char *url, unsigned char *title, time_t vtime)
 
 	if (!cap_global_history(max_globhist_items)) return;
 
+	reap_deleted_globhist_items();
+
 	history_item = init_global_history_item(url, title, vtime);
 	if (!history_item) return;
 
@@ -394,6 +413,8 @@ free_global_history(void)
 
 	while (!list_empty(global_history.entries))
 		delete_global_history_item(global_history.entries.next);
+
+	reap_deleted_globhist_items();
 }
 
 static enum evhook_status
