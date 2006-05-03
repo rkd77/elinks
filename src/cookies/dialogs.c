@@ -448,7 +448,7 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 	add_dlg_button(dlg, _("~OK", term), B_ENTER, ok_dialog, NULL);
 	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);
 	add_dlg_end(dlg, SERVER_WIDGETS_COUNT);
-	do_dialog(term, dlg, getml(dlg, text, NULL));
+	do_dialog(term, dlg, getml(dlg, NULL));
 
 	return EVENT_PROCESSED;
 #undef SERVER_WIDGETS_COUNT

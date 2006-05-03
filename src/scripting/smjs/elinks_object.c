@@ -16,6 +16,7 @@
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/global_object.h"
+#include "scripting/smjs/globhist.h"
 #include "scripting/smjs/keybinding.h"
 #include "scripting/smjs/load_uri.h"
 #include "session/location.h"
@@ -130,6 +131,7 @@ smjs_init_elinks_object(void)
 	smjs_elinks_object = smjs_get_elinks_object();
 
 	smjs_init_bookmarks_interface();
+	smjs_init_globhist_interface();
 	smjs_init_keybinding_interface();
 	smjs_init_load_uri_interface();
 }
