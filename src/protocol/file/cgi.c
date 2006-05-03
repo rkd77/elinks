@@ -73,8 +73,8 @@ close_pipe_and_read(struct socket *data_socket)
 	rb->freespace -= 17;
 
 	conn->unrestartable = 1;
-	close(conn->cgi_pipes[1]);
-	data_socket->fd = conn->cgi_pipes[1] = -1;
+	close(data_socket->fd);
+	data_socket->fd = -1;
 
 	conn->socket->state = SOCKET_END_ONCLOSE;
 	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
@@ -119,9 +119,6 @@ send_post_data(struct connection *conn)
 	if (n)
 		add_bytes_to_string(&data, buffer, n);
 
-	/* Use data socket for passing the pipe. It will be cleaned up in
-	 * close_pipe_and_read(). */
-	conn->data_socket->fd = conn->cgi_pipes[1];
 
 	write_to_socket(conn->data_socket, data.source, data.length,
 			S_SENT, close_pipe_and_read);
@@ -383,9 +380,11 @@ execute_cgi(struct connection *conn)
 		mem_free(script);
 
 		close(pipe_read[1]); close(pipe_write[0]);
-		conn->cgi_pipes[0] = pipe_read[0];
-		conn->cgi_pipes[1] = pipe_write[1];
-		conn->socket->fd = conn->cgi_pipes[0];
+		conn->socket->fd = pipe_read[0];
+
+		/* Use data socket for passing the pipe. It will be cleaned up in
+	 	* close_pipe_and_read(). */
+		conn->data_socket->fd = pipe_read[1];
 
 		send_request(conn);
 		return 0;

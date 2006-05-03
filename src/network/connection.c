@@ -303,7 +303,6 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 
 	conn->content_encoding = ENCODING_NONE;
 	conn->stream_pipes[0] = conn->stream_pipes[1] = -1;
-	conn->cgi_pipes[0] = conn->cgi_pipes[1] = -1;
 	init_list(conn->downloads);
 	conn->est_length = -1;
 	conn->timer = TIMER_ID_UNDEF;
@@ -400,12 +399,6 @@ free_connection_data(struct connection *conn)
 	done_socket(conn->data_socket);
 
 	shutdown_connection_stream(conn);
-
-	if (conn->cgi_pipes[0] >= 0)
-		close(conn->cgi_pipes[0]);
-	if (conn->cgi_pipes[1] >= 0)
-		close(conn->cgi_pipes[1]);
-	conn->cgi_pipes[0] = conn->cgi_pipes[1] = -1;
 
 	mem_free_set(&conn->info, NULL);
 

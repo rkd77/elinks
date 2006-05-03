@@ -51,7 +51,6 @@ struct connection {
 
 	int tries;
 	timer_id_T timer;
-	int cgi_pipes[2];
 	int stream_pipes[2];
 
 	unsigned int running:1;
