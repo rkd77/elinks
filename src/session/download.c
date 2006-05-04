@@ -302,6 +302,23 @@ abort_download_and_beep(struct file_download *file_download, struct terminal *te
 }
 
 static void
+read_from_popen(struct session *ses, unsigned char *handler)
+{
+	FILE *pop = popen(handler, "r");
+
+	if (pop) {
+		int fd = fileno(pop);
+
+		if (fd > 0) {
+			unsigned char buf[48];
+
+			snprintf(buf, 48, "file:///dev/fd/%d", fd);
+			goto_url(ses, buf);
+		}
+	}
+}
+
+static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
 	struct terminal *term = file_download->term;
@@ -338,11 +355,16 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		prealloc_truncate(file_download->handle, file_download->seek);
 		close(file_download->handle);
 		file_download->handle = -1;
-		exec_on_terminal(term, file_download->external_handler,
+		if (file_download->copiousoutput) {
+			read_from_popen(file_download->ses,
+					file_download->external_handler);
+		} else {
+			exec_on_terminal(term, file_download->external_handler,
 				 file_download->file,
 				 !!file_download->block);
-		file_download->delete = 0;
-		abort_download_and_beep(file_download, term);
+			file_download->delete = 0;
+			abort_download_and_beep(file_download, term);
+		}
 		return;
 	}
 
@@ -974,23 +996,6 @@ tp_display(struct type_query *type_query)
 	done_type_query(type_query);
 }
 
-static void
-read_from_popen(struct type_query *type_query, unsigned char *handler)
-{
-	FILE *pop = popen(handler, "r");
-
-	if (pop) {
-		int fd = fileno(pop);
-
-		if (fd > 0) {
-			struct session *ses = type_query->ses;
-			unsigned char buf[48];
-
-			snprintf(buf, 48, "file:///dev/fd/%d", fd);
-			goto_url(ses, buf);
-		}
-	}
-}
 
 static void
 tp_open(struct type_query *type_query)
@@ -1011,7 +1016,7 @@ tp_open(struct type_query *type_query)
 
 		if (handler) {
 			if (type_query->copiousoutput)
-				read_from_popen(type_query, handler);
+				read_from_popen(type_query->ses, handler);
 			else
 				exec_on_terminal(type_query->ses->tab->term,
 					 handler, "", !!type_query->block);
