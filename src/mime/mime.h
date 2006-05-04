@@ -11,6 +11,7 @@ struct mime_handler {
 	unsigned char *backend_name;
 	unsigned int ask:1;
 	unsigned int block:1;
+	unsigned int copiousoutput:1;
 	unsigned char program[1]; /* XXX: Keep last! */
 };
 
