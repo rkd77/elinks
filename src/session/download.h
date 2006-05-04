@@ -48,6 +48,7 @@ struct type_query {
 	unsigned char *target_frame;
 	unsigned char *external_handler;
 	int block;
+	unsigned int copiousoutput:1;
 	/* int frame; */
 };
 
@@ -74,6 +75,9 @@ struct file_download {
 
 	/* Whether to block the terminal when running the external handler. */
 	unsigned int block:1;
+
+	/* Whether copiousoutput mode is used by the mailcap entry */
+	unsigned int copiousoutput:1;
 
 	/* The current dialog for this download. Can be NULL. */
 	struct dialog_data *dlg_data;
