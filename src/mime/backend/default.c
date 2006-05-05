@@ -191,22 +191,19 @@ get_mime_handler_option(unsigned char *type, int xwin)
 static struct mime_handler *
 get_mime_handler_default(unsigned char *type, int have_x)
 {
+	unsigned char *desc = "";
+	struct option *opt = get_mime_type_option(type);
 	struct option *opt_tree = get_mime_handler_option(type, have_x);
 
-	if (opt_tree) {
-		unsigned char *desc = "";
-		struct option *opt = get_mime_type_option(type);
+	if (!opt_tree) return NULL;
 
-		/* Try to find some description to assing to @name */
-		if (opt) desc = opt->value.string;
+	/* Try to find some description to assing to @name */
+	if (opt) desc = opt->value.string;
 
-		return init_mime_handler(get_opt_str_tree(opt_tree, "program"),
-					 desc, default_mime_module.name,
-					 get_opt_bool_tree(opt_tree, "ask"),
-					 get_opt_bool_tree(opt_tree, "block"));
-	}
-
-	return NULL;
+	return init_mime_handler(get_opt_str_tree(opt_tree, "program"),
+				 desc, default_mime_module.name,
+				 get_opt_bool_tree(opt_tree, "ask"),
+				 get_opt_bool_tree(opt_tree, "block"));
 }
 
 
