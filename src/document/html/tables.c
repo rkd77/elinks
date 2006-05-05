@@ -689,9 +689,15 @@ check_table_height(struct table *table, struct table_frames *frames, int y)
 	 * and has non-zero cellspacing or vcellpadding. --pasky */
 
 	for (row = 0; row < table->rows; row++) {
+#ifdef __TINYC__
+		our_height += table->rows_heights[row];
+		if (row < table->rows - 1 && has_hline_width(table, row + 1))
+			our_height++;
+#else
 		our_height += table->rows_heights[row] +
 			      (row < table->rows - 1 &&
 			       has_hline_width(table, row + 1));
+#endif
 	}
 
 	assertm(old_height == our_height, "size not matching! %d vs %d",
