@@ -172,12 +172,11 @@ get_mime_type_option(unsigned char *type)
 }
 
 static inline struct option *
-get_mime_handler_option(unsigned char *type, int xwin)
+get_mime_handler_option(struct option *type_opt, int xwin)
 {
 	struct option *handler_opt;
-	struct option *type_opt = get_mime_type_option(type);
 
-	if (!type_opt) return NULL;
+	assert(type_opt);
 
 	handler_opt = get_opt_rec_real(config_options, "mime.handler");
 	if (!handler_opt) return NULL;
@@ -193,8 +192,11 @@ get_mime_handler_default(unsigned char *type, int have_x)
 {
 	unsigned char *desc = "";
 	struct option *type_opt = get_mime_type_option(type);
-	struct option *handler_opt = get_mime_handler_option(type, have_x);
+	struct option *handler_opt;
 
+	if (!type_opt) return NULL;
+
+	handler_opt = get_mime_handler_option(type_opt, have_x);
 	if (!handler_opt) return NULL;
 
 	/* Try to find some description to assing to @name */
