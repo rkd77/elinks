@@ -174,19 +174,19 @@ get_mime_type_option(unsigned char *type)
 static inline struct option *
 get_mime_handler_option(unsigned char *type, int xwin)
 {
-	struct option *opt = get_mime_type_option(type);
+	struct option *type_opt = get_mime_type_option(type);
 	unsigned char *name;
 
-	if (!opt) return NULL;
+	if (!type_opt) return NULL;
 
-	name = straconcat("mime.handler.", opt->value.string,
+	name = straconcat("mime.handler.", type_opt->value.string,
 			  ".", get_system_str(xwin), NULL);
 	if (!name) return NULL;
 
-	opt = get_opt_rec_real(config_options, name);
+	type_opt = get_opt_rec_real(config_options, name);
 	mem_free(name);
 
-	return opt;
+	return type_opt;
 }
 
 static struct mime_handler *
