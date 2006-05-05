@@ -316,15 +316,8 @@ read_encoded_file(struct string *filename, struct string *page)
 		encoding = guess_encoding(filename->source);
 	}
 
-	if (fd == -1) {
-#ifdef HAVE_SYS_CYGWIN_H
-		/* There is no /dev/stdin on Cygwin. */
-		if (!strlcmp(filename->source, filename->length, "/dev/stdin", 10)) {
-			fd = STDIN_FILENO;
-		} else
-#endif
+	if (fd == -1)
 		return state;
-	}
 
 	/* Some file was opened so let's get down to bi'ness */
 	set_bin(fd);

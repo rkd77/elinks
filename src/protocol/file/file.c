@@ -25,9 +25,12 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
+#include "network/socket.h"
+#include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
+#include "protocol/http/http.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/file.h"
@@ -201,6 +204,29 @@ list_directory(struct connection *conn, unsigned char *dirpath,
 	return S_OK;
 }
 
+static void
+read_special(struct connection *conn, int fd)
+{
+	struct read_buffer *rb;
+
+	if (!init_http_connection_info(conn, 1, 0, 1)) {
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	set_nonblocking_fd(fd);
+	conn->socket->fd = fd;
+	rb = alloc_read_buffer(conn->socket);
+	if (!rb) {
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	memcpy(rb->data, "HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n", 45);
+	rb->length = 45;
+	rb->freespace -= 45;
+
+	conn->socket->state = SOCKET_END_ONCLOSE;
+	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
+}
 
 /* To reduce redundant error handling code [calls to abort_connection()]
  * most of the function is build around conditions that will assign the error
@@ -256,6 +282,20 @@ file_protocol_handler(struct connection *connection)
 		}
 
 	} else {
+		if (!strcmp(name.source, "/dev/stdin")) {
+			done_string(&name);
+			read_special(connection, STDIN_FILENO);
+			return;
+		}
+		if (!strncmp(name.source, "/dev/fd/", 8)) {
+			int fd = atoi(name.source + 8);
+
+			if (fd > 0) {
+				done_string(&name);
+				read_special(connection, fd);
+				return;
+			}
+		}
 		state = read_encoded_file(&name, &page);
 		/* FIXME: If state is now S_ENCODE_ERROR we should try loading
 		 * the file undecoded. --jonas */
