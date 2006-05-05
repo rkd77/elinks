@@ -146,23 +146,21 @@ get_content_type_default(unsigned char *extension)
 static struct option *
 get_mime_type_option(unsigned char *type)
 {
+	struct option *opt;
 	struct string name;
-	int oldlength;
+
+	opt = get_opt_rec_real(config_options, "mime.type");
+	if (!opt) return NULL;
 
 	if (!init_string(&name)) return NULL;
 
-	add_to_string(&name, "mime.type.");
-	oldlength = name.length;
 	if (add_optname_to_string(&name, type, strlen(type))) {
-		unsigned char *pos = name.source + oldlength;
-
 		/* Search for end of the base type. */
-		pos = strchr(pos, '/');
-		if (pos) {
-			struct option *opt;
+		unsigned char *pos = strchr(name.source, '/');
 
+		if (pos) {
 			*pos = '.';
-			opt = get_opt_rec_real(config_options, name.source);
+			opt = get_opt_rec_real(opt, name.source);
 			done_string(&name);
 
 			return opt;
