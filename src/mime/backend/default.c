@@ -143,8 +143,8 @@ get_content_type_default(unsigned char *extension)
 	return NULL;
 }
 
-static unsigned char *
-get_mime_type_name(unsigned char *type)
+static struct option *
+get_mime_type_option(unsigned char *type)
 {
 	struct string name;
 	int oldlength;
@@ -159,8 +159,13 @@ get_mime_type_name(unsigned char *type)
 		/* Search for end of the base type. */
 		pos = strchr(pos, '/');
 		if (pos) {
+			struct option *opt;
+
 			*pos = '.';
-			return name.source;
+			opt = get_opt_rec_real(config_options, name.source);
+			done_string(&name);
+
+			return opt;
 		}
 	}
 
@@ -171,13 +176,9 @@ get_mime_type_name(unsigned char *type)
 static inline struct option *
 get_mime_handler_option(unsigned char *type, int xwin)
 {
-	struct option *opt;
-	unsigned char *name = get_mime_type_name(type);
+	struct option *opt = get_mime_type_option(type);
+	unsigned char *name;
 
-	if (!name) return NULL;
-
-	opt = get_opt_rec_real(config_options, name);
-	mem_free(name);
 	if (!opt) return NULL;
 
 	name = straconcat("mime.handler.", opt->value.string,
@@ -197,17 +198,10 @@ get_mime_handler_default(unsigned char *type, int have_x)
 
 	if (opt_tree) {
 		unsigned char *desc = "";
-		unsigned char *mt = get_mime_type_name(type);
+		struct option *opt = get_mime_type_option(type);
 
 		/* Try to find some description to assing to @name */
-		if (mt) {
-			struct option *opt;
-
-			opt = get_opt_rec_real(config_options, mt);
-			mem_free(mt);
-
-			if (opt) desc = opt->value.string;
-		}
+		if (opt) desc = opt->value.string;
 
 		return init_mime_handler(get_opt_str_tree(opt_tree, "program"),
 					 desc, default_mime_module.name,
