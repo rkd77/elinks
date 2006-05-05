@@ -190,7 +190,6 @@ get_mime_handler_option(struct option *type_opt, int xwin)
 static struct mime_handler *
 get_mime_handler_default(unsigned char *type, int have_x)
 {
-	unsigned char *desc = "";
 	struct option *type_opt = get_mime_type_option(type);
 	struct option *handler_opt;
 
@@ -199,11 +198,9 @@ get_mime_handler_default(unsigned char *type, int have_x)
 	handler_opt = get_mime_handler_option(type_opt, have_x);
 	if (!handler_opt) return NULL;
 
-	/* Try to find some description to assing to @name */
-	if (type_opt) desc = type_opt->value.string;
-
 	return init_mime_handler(get_opt_str_tree(handler_opt, "program"),
-				 desc, default_mime_module.name,
+				 type_opt->value.string,
+				 default_mime_module.name,
 				 get_opt_bool_tree(handler_opt, "ask"),
 				 get_opt_bool_tree(handler_opt, "block"));
 }
