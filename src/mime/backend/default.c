@@ -168,8 +168,8 @@ get_mime_type_name(unsigned char *type)
 	return NULL;
 }
 
-static inline unsigned char *
-get_mime_handler_name(unsigned char *type, int xwin)
+static inline struct option *
+get_mime_handler_option(unsigned char *type, int xwin)
 {
 	struct option *opt;
 	unsigned char *name = get_mime_type_name(type);
@@ -180,20 +180,20 @@ get_mime_handler_name(unsigned char *type, int xwin)
 	mem_free(name);
 	if (!opt) return NULL;
 
-	return straconcat("mime.handler.", opt->value.string,
+	name = straconcat("mime.handler.", opt->value.string,
 			  ".", get_system_str(xwin), NULL);
+	if (!name) return NULL;
+
+	opt = get_opt_rec_real(config_options, name);
+	mem_free(name);
+
+	return opt;
 }
 
 static struct mime_handler *
 get_mime_handler_default(unsigned char *type, int have_x)
 {
-	struct option *opt_tree;
-	unsigned char *handler_name = get_mime_handler_name(type, have_x);
-
-	if (!handler_name) return NULL;
-
-	opt_tree = get_opt_rec_real(config_options, handler_name);
-	mem_free(handler_name);
+	struct option *opt_tree = get_mime_handler_option(type, have_x);
 
 	if (opt_tree) {
 		unsigned char *desc = "";
