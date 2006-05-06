@@ -143,24 +143,27 @@ get_content_type_default(unsigned char *extension)
 	return NULL;
 }
 
-static unsigned char *
-get_mime_type_name(unsigned char *type)
+static struct option *
+get_mime_type_option(unsigned char *type)
 {
+	struct option *opt;
 	struct string name;
-	int oldlength;
+
+	opt = get_opt_rec_real(config_options, "mime.type");
+	if (!opt) return NULL;
 
 	if (!init_string(&name)) return NULL;
 
-	add_to_string(&name, "mime.type.");
-	oldlength = name.length;
 	if (add_optname_to_string(&name, type, strlen(type))) {
-		unsigned char *pos = name.source + oldlength;
-
 		/* Search for end of the base type. */
-		pos = strchr(pos, '/');
+		unsigned char *pos = strchr(name.source, '/');
+
 		if (pos) {
 			*pos = '.';
-			return name.source;
+			opt = get_opt_rec_real(opt, name.source);
+			done_string(&name);
+
+			return opt;
 		}
 	}
 
@@ -168,54 +171,38 @@ get_mime_type_name(unsigned char *type)
 	return NULL;
 }
 
-static inline unsigned char *
-get_mime_handler_name(unsigned char *type, int xwin)
+static inline struct option *
+get_mime_handler_option(struct option *type_opt, int xwin)
 {
-	struct option *opt;
-	unsigned char *name = get_mime_type_name(type);
+	struct option *handler_opt;
 
-	if (!name) return NULL;
+	assert(type_opt);
 
-	opt = get_opt_rec_real(config_options, name);
-	mem_free(name);
-	if (!opt) return NULL;
+	handler_opt = get_opt_rec_real(config_options, "mime.handler");
+	if (!handler_opt) return NULL;
 
-	return straconcat("mime.handler.", opt->value.string,
-			  ".", get_system_str(xwin), NULL);
+	handler_opt = get_opt_rec_real(handler_opt, type_opt->value.string);
+	if (!handler_opt) return NULL;
+
+	return get_opt_rec_real(handler_opt, get_system_str(xwin));
 }
 
 static struct mime_handler *
 get_mime_handler_default(unsigned char *type, int have_x)
 {
-	struct option *opt_tree;
-	unsigned char *handler_name = get_mime_handler_name(type, have_x);
+	struct option *type_opt = get_mime_type_option(type);
+	struct option *handler_opt;
 
-	if (!handler_name) return NULL;
+	if (!type_opt) return NULL;
 
-	opt_tree = get_opt_rec_real(config_options, handler_name);
-	mem_free(handler_name);
+	handler_opt = get_mime_handler_option(type_opt, have_x);
+	if (!handler_opt) return NULL;
 
-	if (opt_tree) {
-		unsigned char *desc = "";
-		unsigned char *mt = get_mime_type_name(type);
-
-		/* Try to find some description to assing to @name */
-		if (mt) {
-			struct option *opt;
-
-			opt = get_opt_rec_real(config_options, mt);
-			mem_free(mt);
-
-			if (opt) desc = opt->value.string;
-		}
-
-		return init_mime_handler(get_opt_str_tree(opt_tree, "program"),
-					 desc, default_mime_module.name,
-					 get_opt_bool_tree(opt_tree, "ask"),
-					 get_opt_bool_tree(opt_tree, "block"));
-	}
-
-	return NULL;
+	return init_mime_handler(get_opt_str_tree(handler_opt, "program"),
+				 type_opt->value.string,
+				 default_mime_module.name,
+				 get_opt_bool_tree(handler_opt, "ask"),
+				 get_opt_bool_tree(handler_opt, "block"));
 }
 
 
