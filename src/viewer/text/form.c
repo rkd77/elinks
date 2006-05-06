@@ -158,18 +158,16 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 	mem_free_set(&fs->value, NULL);
 
 	switch (fc->type) {
-#ifdef CONFIG_UTF_8
-		unsigned char *text;
-#endif /* CONFIG_UTF_8 */
-
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_TEXTAREA:
 			fs->value = stracpy(fc->default_value);
 			fs->state = strlen(fc->default_value);
 #ifdef CONFIG_UTF_8
-			text = fs->value;
-			fs->state_cell = strlen_utf8(&text);
+			if (fc->type == FC_TEXT)
+				fs->state_cell = utf8_ptr2cells(fs->value, NULL);
+			if (fc->type == FC_PASSWORD)
+				fs->state_cell = utf8_ptr2chars(fs->value, NULL);
 #endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
@@ -350,18 +348,18 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 		case FC_TEXT:
 		case FC_PASSWORD:
 		case FC_FILE:
-#ifdef CONFIG_UTF_8
-			if (term->utf8) goto utf_8;
-#endif /* CONFIG_UTF_8 */
-			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			if (!link->npoints) break;
 
 			y = link->points[0].y + dy;
 			if (!row_is_in_box(box, y))
 				break;
 
-			len = strlen(fs->value) - fs->vpos;
 			x = link->points[0].x + dx;
+#ifdef CONFIG_UTF_8
+			if (term->utf8) goto utf_8;
+#endif /* CONFIG_UTF_8 */
+			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
+			len = strlen(fs->value) - fs->vpos;
 
 			for (i = 0; i < fc->size; i++, x++) {
 				unsigned char data;
@@ -379,32 +377,37 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 			break;
 #ifdef CONFIG_UTF_8
 utf_8:
+			end = NULL; /* Shut up the compiler. */
+			int_bounds(&fs->vpos, fs->state_cell - fc->size + 1, fs->state_cell);
+			if (fc->type == FC_PASSWORD)
+				len = utf8_ptr2chars(fs->value + fs->vpos, NULL);
+			else
+				len = utf8_ptr2cells(fs->value + fs->vpos, NULL);
 			text = fs->value;
 			end = strchr(text, '\0');
-			int_bounds(&fs->vpos, fs->state_cell - fc->size + 1, fs->state_cell);
-			if (!link->npoints) break;
-
-			y = link->points[0].y + dy;
-			if (!row_is_in_box(box, y))
-				break;
-			for (i = 0; i < fs->vpos; i++) {
-				utf_8_to_unicode(&text, end);
-			}
-			s = text;
-			len = strlen_utf8(&s);
-			x = link->points[0].x + dx;
+			
 
 			for (i = 0; i < fc->size; i++, x++) {
-				uint16_t data;
+				unicode_val_T data;
 
 				if (!col_is_in_box(box, x)) continue;
 
-				if (fs->value && i >= -fs->vpos && i < len)
-					data = fc->type != FC_PASSWORD
-					     ? utf_8_to_unicode(&text, end) : '*';
-				else
+				if (fs->value && i >= -fs->vpos && i < len) {
+					if (fc->type != FC_PASSWORD)
+						data = utf_8_to_unicode(&text, end);
+					else
+						data = '*';
+				} else
 					data = '_';
 
+				if (unicode_to_cell(data) == 2) {
+					if (i + 1 < fc->size) {
+						draw_char_data(term, x++, y, data);
+						data = UCS_NO_CHAR;
+						i++;
+					} else
+						data = ' ';
+				}
 				draw_char_data(term, x, y, data);
 			}
 			break;
@@ -442,13 +445,29 @@ utf_8:
 utf_8_select:
 			text = s;
 			end = strchr(s, '\0');
-			len = strlen_utf8(&text);
+			len = utf8_ptr2cells(text, end);
 			for (i = 0; i < link->npoints; i++) {
 				x = link->points[i].x + dx;
 				y = link->points[i].y + dy;
-				if (is_in_box(box, x, y))
-					draw_char_data(term, x, y, i < len
-					 ? utf_8_to_unicode(&s, end) : '_');
+				if (is_in_box(box, x, y)) {
+					unicode_val_T data;
+					if (i < len) {
+						int cell;
+
+						data = utf_8_to_unicode(&s, end);
+						cell = unicode_to_cell(data);
+						if (i + 1 < len && cell == 2) {
+							draw_char_data(term, x++, y, data);
+
+							data = UCS_NO_CHAR;
+							i++;
+						} else if (cell == 2) {
+							data = ' ';
+						}
+					} else
+						data = '_';
+					draw_char_data(term, x, y, data);
+				}
 			}
 			break;
 #endif /* CONFIG_UTF_8 */
@@ -1285,13 +1304,18 @@ field_op(struct session *ses, struct document_view *doc_view,
 		case ACT_EDIT_LEFT:
 #ifdef CONFIG_UTF_8
 			if (utf8) {
-				unsigned char *text = fs->value;
-				unsigned char *end = fs->value + fs->state - 1;
-				int old = fs->state;
+				int old_state = fs->state;
+				unsigned char *new_value;
+				
+				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+				fs->state = new_value - fs->value;
 
-				while (utf_8_to_unicode(&text, end) != UCS_NO_CHAR);
-				fs->state = (int)(text - fs->value);
-				if (old != fs->state) fs->state_cell--;
+				if (old_state != fs->state) {
+					if (fc->type == FC_PASSWORD)
+						fs->state_cell = int_max(fs->state_cell - 1, 0);
+					else
+						fs->state_cell = int_max(utf8_char2cells(new_value, NULL) - 1, 0);
+				}
 			} else
 #endif /* CONFIG_UTF_8 */
 				fs->state = int_max(fs->state - 1, 0);
@@ -1301,11 +1325,17 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8) {
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *end = strchr(text, '\0');
-				int old = fs->state;
+				int old_state = fs->state;
+				unicode_val_T data = utf_8_to_unicode(&text, end);
 
-				utf_8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
-				if (old != fs->state) fs->state_cell++;
+				if (old_state != fs->state) {
+					if (fc->type == FC_PASSWORD)
+						fs->state_cell = int_min(fs->state_cell + 1,
+								         utf8_ptr2cells(fs->value, NULL));
+					else
+						fs->state_cell += unicode_to_cell(data);
+				}
 			} else
 #endif /* CONFIG_UTF_8 */
 				fs->state = int_min(fs->state + 1, strlen(fs->value));
@@ -1354,11 +1384,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 			} else {
 				fs->state = strlen(fs->value);
 #ifdef CONFIG_UTF_8
-				if (utf8) {
-					unsigned char *text = fs->value;
-
-					fs->state_cell = strlen_utf8(&text);
-				}
+				if (utf8 && fc->type != FC_PASSWORD)
+					fs->state_cell = utf8_ptr2cells(fs->value,
+									fs->value + fs->state);
+				else if(utf8)
+					fs->state_cell = utf8_ptr2chars(fs->value,
+									fs->value + fs->state);
 #endif /* CONFIG_UTF_8 */
 			}
 			break;
@@ -1386,11 +1417,13 @@ field_op(struct session *ses, struct document_view *doc_view,
 			} else {
 				fs->state = strlen(fs->value);
 #ifdef CONFIG_UTF_8
-				if (utf8) {
-					unsigned char *text = fs->value;
+				if (utf8 && fc->type != FC_PASSWORD)
+					fs->state_cell = utf8_ptr2cells(fs->value,
+									fs->value + fs->state);
+				else if(utf8)
+					fs->state_cell = utf8_ptr2chars(fs->value,
+									fs->value + fs->state);
 
-					fs->state_cell = strlen_utf8(&text);
-				}
 #endif /* CONFIG_UTF_8 */
 			}
 			break;
@@ -1428,11 +1461,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 					memmove(v, text, length + 1);
 					fs->state = strlen(fs->value);
 #ifdef CONFIG_UTF_8
-					if (utf8 && fc->type != FC_TEXTAREA) {
-						unsigned char *text = fs->value;
-
-						fs->state_cell = strlen_utf8(&text);
-					}
+					if(utf8 && fc->type == FC_PASSWORD)
+						fs->state_cell = utf8_ptr2chars(fs->value,
+										fs->value + fs->state);
+					else if (utf8)
+						fs->state_cell = utf8_ptr2cells(fs->value,
+										fs->value + fs->state);
 #endif /* CONFIG_UTF_8 */
 				}
 			}
@@ -1471,24 +1505,29 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 #ifdef CONFIG_UTF_8
 			if (utf8) {
-				int i;
-				unsigned char *text = fs->value;
-				unsigned char *end = fs->value + fs->state;
+				int old_state = fs->state;
+				unsigned char *new_value;
+				
+				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+				fs->state = new_value - fs->value;
 
-				for (i = 0; i < fs->state_cell - 1; i++)
-					utf_8_to_unicode(&text, end);
-				length = strlen(end) + 1;
-				memmove(text, end, length);
-				fs->state = (int)(text - fs->value);
-				fs->state_cell--;
-				break;
-			}
+				if (old_state != fs->state) {
+					if (fc->type == FC_PASSWORD)
+						fs->state_cell = int_max(fs->state_cell - 1, 0);
+					else
+						fs->state_cell -= utf8_char2cells(new_value, NULL);
+					length = strlen(fs->value + old_state) + 1;
+					memmove(new_value, fs->value + old_state, length);
+				}
+			} else
 #endif /* CONFIG_UTF_8 */
-			length = strlen(fs->value + fs->state) + 1;
-			text = fs->value + fs->state;
+			{
+				length = strlen(fs->value + fs->state) + 1;
+				text = fs->value + fs->state;
 
-			memmove(text - 1, text, length);
-			fs->state--;
+				memmove(text - 1, text, length);
+				fs->state--;
+			}
 			break;
 		case ACT_EDIT_DELETE:
 			if (form_field_is_readonly(fc)) {
@@ -1545,10 +1584,13 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 			fs->state = (int) (text - fs->value);
 #ifdef CONFIG_UTF_8
-			if (utf8 && fc->type != FC_TEXTAREA) {
-				unsigned char *text = fs->value;
-
-				fs->state_cell = strlen_utf8(&text);
+			if (utf8) {
+				if(fc->type == FC_PASSWORD)
+					fs->state_cell = utf8_ptr2cells(fs->value,
+									fs->value + fs->state);
+				else
+					fs->state_cell = utf8_ptr2cells(fs->value,
+									fs->value + fs->state);
 			}
 #endif /* CONFIG_UTF_8 */
 			break;
@@ -1630,7 +1672,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 						return FRAME_EVENT_OK;
 					}
 					fs->state += i;
-					fs->state_cell++;
+					if (fc->type == FC_PASSWORD)
+						fs->state_cell++;
+					else
+						fs->state_cell += unicode_to_cell(data);
 					i = 0;
 					break;
 				}
