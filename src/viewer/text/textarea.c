@@ -274,7 +274,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	struct box *box;
 	int vx, vy;
 	int sl, ye;
-	int x, y;
+	int x, xbase, y;
 
 	assert(term && doc_view && doc_view->document && doc_view->vs && link);
 	if_assert_failed return;
@@ -294,7 +294,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	sl = fs->vypos;
 	while (line->start != -1 && sl) sl--, line++;
 
-	x = link->points[0].x + box->x - vx;
+	xbase = link->points[0].x + box->x - vx;
 	y = link->points[0].y + box->y - vy;
 	ye = y + fc->rows;
 
@@ -310,11 +310,10 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 
 		if (!row_is_in_box(box, y)) continue;
 
-		for (i = 0; i < fc->cols; i++) {
-			uint16_t data;
-			int xi = x + i;
+		for (i = 0, x = xbase; i < fc->cols; i++, x++) {
+			unicode_val_T data;
 
-			if (!col_is_in_box(box, xi))
+			if (!col_is_in_box(box, x))
 				continue;
 
 			if (i >= -fs->vpos
@@ -323,7 +322,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 			else
 				data = '_';
 
-			draw_char_data(term, xi, y, data);
+			draw_char_data(term, x, y, data);
 		}
 	}
 
@@ -332,11 +331,9 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 
 		if (!row_is_in_box(box, y)) continue;
 
-		for (i = 0; i < fc->cols; i++) {
-			int xi = x + i;
-
-			if (col_is_in_box(box, xi))
-				draw_char_data(term, xi, y, '_');
+		for (i = 0, x = xbase; i < fc->cols; i++, x++) {
+			if (col_is_in_box(box, x))
+				draw_char_data(term, x, y, '_');
 		}
 	}
 
