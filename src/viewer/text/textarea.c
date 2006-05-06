@@ -40,6 +40,11 @@
 struct line_info {
 	int start;
 	int end;
+#ifdef CONFIG_UTF_8
+	int last_char_width;
+	int split_prev:1;
+	int split_next:1;
+#endif /* CONFIG_UTF_8 */
 };
 
 /* We add two extra entries to the table so the ending info can be added
@@ -74,6 +79,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 		return NULL;
 
 	while (text[pos]) {
+		int char_cells = utf8_char2cells(&text[pos], NULL);
 
 		if (text[pos] == ' ')
 			wrappos = &text[pos];
@@ -81,11 +87,11 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 		if (text[pos] == '\n') {
 			skip = 1;
 
-		} else if (wrap == FORM_WRAP_NONE || chars_cells < width) {
+		} else if (wrap == FORM_WRAP_NONE || chars_cells + char_cells < width) {
 			pos += utf8charlen(&text[pos]);
-			chars_cells++;
+			chars_cells += char_cells;
 			continue;
-			
+
 		} else {
 			if (wrappos) {
 				/* When formatting text for form submitting we
@@ -96,18 +102,25 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 			}
 			skip = !!wrappos;
 		}
-		chars_cells = 0;
-		wrappos = NULL;
 
 		if (!realloc_line_info(&line, line_number)) {
 			mem_free_if(line);
 			return NULL;
 		}
 
+		line[line_number].last_char_width = char_cells;
+		line[line_number].split_next = !skip;
 		line[line_number].start = begin;
 		line[line_number++].end = pos;
+		line[line_number].split_prev = !skip;
+
 		begin = pos += skip;
+
+		chars_cells = 0;
+		wrappos = NULL; 
 	}
+
+	line[line_number].split_next = 0;
 
 	/* Flush the last text before the loop ended */
 	line[line_number].start = begin;
@@ -115,6 +128,9 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 
 	/* Add end marker */
 	line[line_number].start = line[line_number].end = -1;
+
+	line[line_number].split_next = line[line_number].split_prev = 0;
+	line[0].split_prev = 0;
 
 	return line;
 }
@@ -210,12 +226,9 @@ get_textarea_line_number(struct line_info *line, int cursor_position)
 
 /* Fixes up the vpos and vypos members of the form_state. Returns the
  * logical position in the textarea view. */
-int
 #ifdef CONFIG_UTF_8
+int
 area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
-#else
-area_cursor(struct form_control *fc, struct form_state *fs)
-#endif /* CONFIG_UTF_8 */
 {
 	struct line_info *line;
 	int x, y;
@@ -223,12 +236,59 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 	assert(fc && fs);
 	if_assert_failed return 0;
 
-#ifdef CONFIG_UTF_8
 	if (utf8)
 		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
 	else
-#endif /* CONFIG_UTF_8 */
 		line = format_text(fs->value, fc->cols, fc->wrap, 0);
+
+	if (!line) return 0;
+
+	if (fs->state_cell)
+		y = get_textarea_line_number(line, fs->state_cell);
+	else
+		y = get_textarea_line_number(line, fs->state);
+
+	if (y == -1) {
+		mem_free(line);
+		return 0;
+	}
+
+	if (utf8) {
+		if (fs->state_cell) {
+			x = utf8_ptr2cells(fs->value + line[y].start,
+					   fs->value + fs->state_cell);
+			x += line[y].last_char_width;
+		} else
+			x = utf8_ptr2cells(fs->value + line[y].start,
+					   fs->value + fs->state);
+	} else {
+		x = fs->state - line[y].start;
+		if (fc->wrap && x == fc->cols) x--;
+	}
+
+	mem_free(line);
+
+	int_bounds(&fs->vpos, x - fc->cols + 1, x);
+	int_bounds(&fs->vypos, y - fc->rows + 1, y);
+
+	x -= fs->vpos;
+	y -= fs->vypos;
+
+	return y * fc->cols + x;
+}
+
+#else
+
+int
+area_cursor(struct form_control *fc, struct form_state *fs)
+{
+	struct line_info *line;
+	int x, y;
+
+	assert(fc && fs);
+	if_assert_failed return 0;
+
+	line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return 0;
 
 	y = get_textarea_line_number(line, fs->state);
@@ -236,20 +296,8 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 		mem_free(line);
 		return 0;
 	}
-#ifdef CONFIG_UTF_8
-	if (utf8) {
-		unsigned char *text = fs->value;
-		unsigned char tmp = fs->value[fs->state];
 
-		fs->value[fs->state] = '\0';
-		fs->state_cell = strlen_utf8(&text);
-
-		text = fs->value + line[y].start;
-		x = strlen_utf8(&text);
-		fs->value[fs->state] = tmp;
-	} else
-#endif /* CONFIG_UTF_8 */
-		x = fs->state - line[y].start;
+	x = fs->state - line[y].start;
 
 	mem_free(line);
 
@@ -263,6 +311,7 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 
 	return y * fc->cols + x;
 }
+#endif
 
 #ifdef CONFIG_UTF_8
 static void
@@ -305,8 +354,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 		text = fs->value + line->start;
 		end = fs->value + line->end;
 
-		for (i = 0; i < fs->vpos; i++)
-			utf_8_to_unicode(&text, end);
+		text += utf8_cells2bytes(text, fs->vpos, end);
 
 		if (!row_is_in_box(box, y)) continue;
 
@@ -316,10 +364,18 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 			if (!col_is_in_box(box, x))
 				continue;
 
-			if (i >= -fs->vpos
-			    && text < end)
+			if (i >= -fs->vpos && text < end) {
+				int cell;
+
 				data = utf_8_to_unicode(&text, end);
-			else
+				cell = unicode_to_cell(data);
+				if (cell == 2) {
+					draw_char_data(term, x++, y, data);
+					i++;
+					data = UCS_NO_CHAR;
+				}
+
+			} else
 				data = '_';
 
 			draw_char_data(term, x, y, data);
@@ -630,14 +686,42 @@ menu_textarea_edit(struct terminal *term, void *xxx, void *ses_)
 	textarea_edit(0, term, fs, doc_view, link);
 }
 
-static enum frame_event_status
 #ifdef CONFIG_UTF_8
+static enum frame_event_status
 textarea_op(struct form_state *fs, struct form_control *fc, int utf8,
 	    int (*do_op)(struct form_state *, struct line_info *, int, int))
+{
+	struct line_info *line;
+	int current, state;
+	int state_cell;
+
+	assert(fs && fs->value && fc);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	if (utf8)
+		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
+	else
+		line = format_text(fs->value, fc->cols, fc->wrap, 0);
+	if (!line) return FRAME_EVENT_OK;
+
+	current = get_textarea_line_number(line, fs->state);
+	state = fs->state;
+	state_cell = fs->state_cell;
+	if (do_op(fs, line, current, utf8)) {
+		mem_free(line);
+		return FRAME_EVENT_IGNORED;
+	}
+
+	mem_free(line);
+	return (fs->state == state && fs->state_cell == state_cell)
+		? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
+}
+
 #else
+
+static enum frame_event_status
 textarea_op(struct form_state *fs, struct form_control *fc,
 	    int (*do_op)(struct form_state *, struct line_info *, int))
-#endif /* CONFIG_UTF_8 */
 {
 	struct line_info *line;
 	int current, state;
@@ -645,55 +729,35 @@ textarea_op(struct form_state *fs, struct form_control *fc,
 	assert(fs && fs->value && fc);
 	if_assert_failed return FRAME_EVENT_OK;
 
-#ifdef CONFIG_UTF_8
-	if (utf8)
-		line = format_textutf8(fs->value, fc->cols, fc->wrap, 0);
-	else
-#endif /* CONFIG_UTF_8 */
-		line = format_text(fs->value, fc->cols, fc->wrap, 0);
+	line = format_text(fs->value, fc->cols, fc->wrap, 0);
 	if (!line) return FRAME_EVENT_OK;
 
 	current = get_textarea_line_number(line, fs->state);
 	state = fs->state;
-#ifdef CONFIG_UTF_8
-	if (do_op(fs, line, current, utf8))
-#else
-	if (do_op(fs, line, current))
-#endif /* CONFIG_UTF_8 */
-{
+	if (do_op(fs, line, current)) {
 		mem_free(line);
 		return FRAME_EVENT_IGNORED;
 	}
 
 	mem_free(line);
+
 	return fs->state == state ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
+#endif /* CONFIG_UTF_8 */
 
 #ifdef CONFIG_UTF_8
-static int
-x_pos(struct form_state *fs, struct line_info *line, int current)
-{
-	unsigned char *text = fs->value + line[current].start;
-	unsigned char tmp = fs->value[fs->state];
-	int len;
-
-	fs->value[fs->state] = '\0';
-	len = strlen_utf8(&text);
-	fs->value[fs->state] = tmp;
-	return len;
-}
-
-static void
-new_pos(struct form_state *fs, struct line_info *line, int current, int len)
+void
+new_pos(struct form_state *fs, struct line_info *line, int current, int max_cells)
 {
 	unsigned char *text = fs->value + line[current].start;
 	unsigned char *end = fs->value + line[current].end;
-	int i;
+	int cells = 0;
 
-	for (i = 0; i < len; i++) {
+	while(cells < max_cells) {
 		unicode_val_T data = utf_8_to_unicode(&text, end);
 
 		if (data == UCS_NO_CHAR) break;
+		cells += unicode_to_cell(data);
 	}
 	fs->state = (int)(text - fs->value);
 }
@@ -706,64 +770,157 @@ do_op_home(struct form_state *fs, struct line_info *line, int current, int utf8)
 do_op_home(struct form_state *fs, struct line_info *line, int current)
 #endif /* CONFIG_UTF_8 */
 {
-	if (current != -1) fs->state = line[current].start;
+	if (current == -1)
+		return 0;
+#ifdef CONFIG_UTF_8
+	if (utf8)
+		fs->state = line[current - !!fs->state_cell].start;
+	else
+#endif /* CONFIG_UTF_8 */
+		fs->state = line[current].start;
 	return 0;
 }
 
-static int
 #ifdef CONFIG_UTF_8
+static int
 do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
+{
+	if (current == -1) return 0;
+
+	if (!(current - !!fs->state_cell)) return 1;
+
+	if (!utf8) {
+		fs->state -= line[current].start - line[current-1].start;
+		int_upper_bound(&fs->state, line[current-1].end);
+		return 0;
+	}
+
+	int old_state = fs->state;
+	if (fs->state_cell) {
+		int len = utf8_ptr2cells(fs->value + line[current - 1].start,
+			                 fs->value + fs->state_cell);
+
+		new_pos(fs, line, current - 2, len + line[current - 1].last_char_width);
+	} else {
+		int len = utf8_ptr2cells(fs->value + line[current].start,
+					 fs->value + fs->state);
+
+		new_pos(fs, line, current - 1, len);
+	}
+
+	if (old_state != fs->state ) {
+		if (fs->state_cell && fs->state == line[current - 1].start) {
+			unsigned char *new_value;
+
+			new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+			fs->state_cell = new_value - fs->value;
+		} else
+			fs->state_cell = 0;
+	}
+
+	return 0;
+}
+
 #else
+
+static int
 do_op_up(struct form_state *fs, struct line_info *line, int current)
-#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) return 0;
 	if (!current) return 1;
-
-#ifdef CONFIG_UTF_8
-	if (utf8) {
-		int len = x_pos(fs, line, current);
-
-		new_pos(fs, line, current - 1, len);
-		return 0;
-	}
-#endif /* CONFIG_UTF_8 */
 
 	fs->state -= line[current].start - line[current-1].start;
 	int_upper_bound(&fs->state, line[current-1].end);
 	return 0;
 }
+#endif /* CONFIG_UTF_8 */
+
+#ifdef CONFIG_UTF_8
+static int
+do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
+{
+	if (current == -1) return 0;
+
+	if (line[current + 1 - !!fs->state_cell].start == -1) return 1;
+
+	if (!utf8) {
+		fs->state += line[current+1].start - line[current].start;
+		int_upper_bound(&fs->state, line[current+1].end);
+		return 0;
+	}
+
+	int old_state = fs->state;
+	if (fs->state_cell) {
+		int len = utf8_ptr2cells(fs->value + line[current - 1].start,
+			                 fs->value + fs->state_cell);
+
+		new_pos(fs, line, current, len + line[current - 1].last_char_width);
+	} else {
+		int len = utf8_ptr2cells(fs->value + line[current].start,
+					 fs->value + fs->state);
+
+		new_pos(fs, line, current + 1, len);
+	}
+	if (old_state != fs->state ) {
+		if (fs->state_cell && fs->state == line[current+1].start) {
+			unsigned char *new_value;
+
+			new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+			fs->state_cell = new_value - fs->value;
+		} else
+			fs->state_cell = 0;
+	}
+	return 0;
+}
+
+#else
 
 static int
-#ifdef CONFIG_UTF_8
-do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
-#else
 do_op_down(struct form_state *fs, struct line_info *line, int current)
-#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) return 0;
 	if (line[current+1].start == -1) return 1;
-
-#ifdef CONFIG_UTF_8
-	if (utf8) {
-		int len = x_pos(fs, line, current);
-
-		new_pos(fs, line, current + 1, len);
-		return 0;
-	}
-#endif /* CONFIG_UTF_8 */
 
 	fs->state += line[current+1].start - line[current].start;
 	int_upper_bound(&fs->state, line[current+1].end);
 	return 0;
 }
+#endif /* CONFIG_UTF_8 */
+
+#ifdef CONFIG_UTF_8
+static int
+do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
+{
+	if (current == -1) {
+		fs->state = strlen(fs->value);
+		return 0;
+	}
+
+	if (!utf8) {
+		int wrap = line[current + 1].start == line[current].end;
+
+		/* Don't jump to next line when wrapping. */
+		fs->state = int_max(0, line[current].end - wrap);
+		return 0;
+	}
+
+	current -= !!fs->state_cell;
+	fs->state = line[current].end;
+	if (line[current].split_next) {
+		unsigned char *new_value;
+
+		new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+		fs->state_cell = new_value - fs->value;
+	} else {
+		fs->state_cell = 0;
+	}
+	return 0;
+}
+
+#else
 
 static int
-#ifdef CONFIG_UTF_8
-do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
-#else
 do_op_end(struct form_state *fs, struct line_info *line, int current)
-#endif /* CONFIG_UTF_8 */
 {
 	if (current == -1) {
 		fs->state = strlen(fs->value);
@@ -776,6 +933,7 @@ do_op_end(struct form_state *fs, struct line_info *line, int current)
 	}
 	return 0;
 }
+#endif /* CONFIG_UTF_8 */
 
 static int
 #ifdef CONFIG_UTF_8
@@ -921,6 +1079,81 @@ textarea_op_enter(struct form_state *fs, struct form_control *fc)
 	return FRAME_EVENT_REFRESH;
 }
 
+#ifdef CONFIG_UTF_8
+static int
+do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
+{
+	if (!utf8) {
+		fs->state = int_max(fs->state - 1, 0);
+		return 0;
+	}
+
+	if (fs->state_cell) {
+		fs->state = fs->state_cell;
+		fs->state_cell = 0;
+		return 0;
+	}
+
+	int old_state = fs->state;
+	int new_state;
+	unsigned char *new_value;
+
+	new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
+	new_state = new_value - fs->value;
+
+	if (old_state != new_state) {
+		if (old_state == line[current].start && line[current].split_prev)
+			fs->state_cell = new_state;
+		else
+			fs->state = new_state;
+	}
+	return 0;
+}
+
+static int
+do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8)
+{
+	if (!utf8) {
+		/* TODO: zle */
+		fs->state = int_min(fs->state + 1, strlen(fs->value));
+		return 0;
+	}
+
+	if (fs->state_cell) {
+		fs->state_cell = 0;
+		return 0;
+	}
+
+	unsigned char *text = fs->value + fs->state;
+	unsigned char *end = strchr(text, '\0');
+	int old_state = fs->state;
+	utf_8_to_unicode(&text, end);
+
+	fs->state = text - fs->value;
+
+	if (old_state != fs->state && line[current].split_next) {
+		fs->state_cell = (fs->state == line[current].end) ? old_state:0;
+	} else if (!line[current].split_next) {
+		fs->state_cell = 0;
+	}
+
+	return 0;
+}
+#endif /* CONFIG_UTF_8 */
+
+#ifdef CONFIG_UTF_8
+enum frame_event_status
+textarea_op_left(struct form_state *fs, struct form_control *fc, int utf8)
+{
+	return textarea_op(fs, fc, utf8, do_op_left);
+}
+
+enum frame_event_status
+textarea_op_right(struct form_state *fs, struct form_control *fc, int utf8)
+{
+	return textarea_op(fs, fc, utf8, do_op_right);
+}
+#endif /* CONFIG_UTF_8 */
 
 void
 set_textarea(struct document_view *doc_view, int direction)

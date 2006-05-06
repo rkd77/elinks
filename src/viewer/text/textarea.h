@@ -33,6 +33,8 @@ enum frame_event_status textarea_op_end(struct form_state *fs, struct form_contr
 enum frame_event_status textarea_op_bob(struct form_state *fs, struct form_control *fc, int utf8);
 enum frame_event_status textarea_op_eob(struct form_state *fs, struct form_control *fc, int utf8);
 enum frame_event_status textarea_op_enter(struct form_state *fs, struct form_control *fc, int utf8);
+enum frame_event_status textarea_op_left(struct form_state *fs, struct form_control *fc, int utf8);
+enum frame_event_status textarea_op_right(struct form_state *fs, struct form_control *fc, int utf8);
 #else
 enum frame_event_status textarea_op_home(struct form_state *fs, struct form_control *fc);
 enum frame_event_status textarea_op_up(struct form_state *fs, struct form_control *fc);

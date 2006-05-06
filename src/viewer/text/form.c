@@ -168,6 +168,8 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 				fs->state_cell = utf8_ptr2cells(fs->value, NULL);
 			if (fc->type == FC_PASSWORD)
 				fs->state_cell = utf8_ptr2chars(fs->value, NULL);
+			if (fc->type == FC_TEXTAREA)
+				fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
@@ -1303,6 +1305,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 	switch (action_id) {
 		case ACT_EDIT_LEFT:
 #ifdef CONFIG_UTF_8
+			if (fc->type == FC_TEXTAREA) {
+				status = textarea_op_left(fs, fc, utf8);
+				break;
+			}
 			if (utf8) {
 				int old_state = fs->state;
 				unsigned char *new_value;
@@ -1341,18 +1347,21 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->state = int_min(fs->state + 1, strlen(fs->value));
 			break;
 		case ACT_EDIT_HOME:
-			if (fc->type == FC_TEXTAREA) {
 #ifdef CONFIG_UTF_8
+			if (fc->type == FC_TEXTAREA) {
 				status = textarea_op_home(fs, fc, utf8);
-#else
-				status = textarea_op_home(fs, fc);
-#endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = 0;
-#ifdef CONFIG_UTF_8
 				fs->state_cell = 0;
-#endif /* CONFIG_UTF_8 */
 			}
+#else
+			if (fc->type == FC_TEXTAREA) {
+				status = textarea_op_home(fs, fc);
+			} else {
+				fs->state = 0;
+			}
+
+#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_UP:
 			if (fc->type != FC_TEXTAREA)
@@ -1402,10 +1411,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 #endif /* CONFIG_UTF_8 */
 			} else {
 				fs->state = 0;
+			}
 #ifdef CONFIG_UTF_8
 				fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
-			}
 			break;
 		case ACT_EDIT_END_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
@@ -1464,6 +1473,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 					if(utf8 && fc->type == FC_PASSWORD)
 						fs->state_cell = utf8_ptr2chars(fs->value,
 										fs->value + fs->state);
+					else if (utf8 && fc->type == FC_TEXTAREA)
+						fs->state_cell = 0;
 					else if (utf8)
 						fs->state_cell = utf8_ptr2cells(fs->value,
 										fs->value + fs->state);
@@ -1512,7 +1523,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->state = new_value - fs->value;
 
 				if (old_state != fs->state) {
-					if (fc->type == FC_PASSWORD)
+					if (fc->type == FC_TEXTAREA)
+						fs->state_cell = 0;
+					else if (fc->type == FC_PASSWORD)
 						fs->state_cell = int_max(fs->state_cell - 1, 0);
 					else
 						fs->state_cell -= utf8_char2cells(new_value, NULL);
@@ -1588,6 +1601,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 				if(fc->type == FC_PASSWORD)
 					fs->state_cell = utf8_ptr2cells(fs->value,
 									fs->value + fs->state);
+				else if (fc->type == FC_TEXTAREA)
+					fs->state_cell = 0;
 				else
 					fs->state_cell = utf8_ptr2cells(fs->value,
 									fs->value + fs->state);
@@ -1674,6 +1689,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 					fs->state += i;
 					if (fc->type == FC_PASSWORD)
 						fs->state_cell++;
+					else if (fc->type == FC_TEXTAREA)
+						fs->state_cell = 0;
 					else
 						fs->state_cell += unicode_to_cell(data);
 					i = 0;
