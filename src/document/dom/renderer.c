@@ -200,6 +200,16 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	}
 }
 
+static inline void
+done_dom_renderer(struct dom_renderer *renderer)
+{
+#ifdef HAVE_REGEX_H
+	if (renderer->find_url)
+		regfree(&renderer->url_regex);
+#endif
+	done_uri(renderer->base_uri);
+}
+
 
 /* Document maintainance */
 
@@ -1042,10 +1052,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		pop_dom_node(&parser->stack);
 	}
 
-#ifdef HAVE_REGEX_H
-	if (renderer.find_url)
-		regfree(&renderer.url_regex);
-#endif
-	done_uri(renderer.base_uri);
+	done_dom_renderer(&renderer);
 	done_sgml_parser(parser);
 }
