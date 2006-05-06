@@ -26,7 +26,6 @@
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/socket.h"
-#include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
@@ -213,7 +212,6 @@ read_special(struct connection *conn, int fd)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	set_nonblocking_fd(fd);
 	conn->socket->fd = fd;
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
