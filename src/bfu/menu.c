@@ -1093,17 +1093,21 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	menu->last = i - 1;
 	int_lower_bound(&menu->last, menu->first);
 	if (menu->last < menu->size - 1) {
-		struct screen_char *schar; 
+#ifdef CONFIG_UTF_8
+		if (term->utf8) {
+			struct screen_char *schar; 
 
-		schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);
-		/* Is second cell of double-width char on the place where
-		 * first char of the R_MAINMENU_SPACE will be displayed? */
-		if (schar->data == UCS_NO_CHAR) {
-			/* Replace double-width char with ' '. */
-			schar++;
-			draw_char_data(term, term->width - R_MAINMENU_SPACE - 1,
-				       0, ' ');
+			schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);
+			/* Is second cell of double-width char on the place where
+			 * first char of the R_MAINMENU_SPACE will be displayed? */
+			if (schar->data == UCS_NO_CHAR) {
+				/* Replace double-width char with ' '. */
+				schar++;
+				draw_char_data(term, term->width - R_MAINMENU_SPACE - 1,
+						0, ' ');
+			}
 		}
+#endif
 
 		set_box(&box,
 			term->width - R_MAINMENU_SPACE, 0,
