@@ -169,7 +169,7 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 			fs->state = strlen(fc->default_value);
 #ifdef CONFIG_UTF_8
 			text = fs->value;
-			fs->utf8_pos = strlen_utf8(&text);
+			fs->state_cell = strlen_utf8(&text);
 #endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
@@ -177,7 +177,7 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 			fs->value = stracpy("");
 			fs->state = 0;
 #ifdef CONFIG_UTF_8
-			fs->utf8_pos = 0;
+			fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
@@ -381,7 +381,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 utf_8:
 			text = fs->value;
 			end = strchr(text, '\0');
-			int_bounds(&fs->vpos, fs->utf8_pos - fc->size + 1, fs->utf8_pos);
+			int_bounds(&fs->vpos, fs->state_cell - fc->size + 1, fs->state_cell);
 			if (!link->npoints) break;
 
 			y = link->points[0].y + dy;
@@ -1291,7 +1291,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 				while (utf_8_to_unicode(&text, end) != UCS_NO_CHAR);
 				fs->state = (int)(text - fs->value);
-				if (old != fs->state) fs->utf8_pos--;
+				if (old != fs->state) fs->state_cell--;
 			} else
 #endif /* CONFIG_UTF_8 */
 				fs->state = int_max(fs->state - 1, 0);
@@ -1305,7 +1305,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 				utf_8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
-				if (old != fs->state) fs->utf8_pos++;
+				if (old != fs->state) fs->state_cell++;
 			} else
 #endif /* CONFIG_UTF_8 */
 				fs->state = int_min(fs->state + 1, strlen(fs->value));
@@ -1320,7 +1320,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			} else {
 				fs->state = 0;
 #ifdef CONFIG_UTF_8
-				fs->utf8_pos = 0;
+				fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
 			}
 			break;
@@ -1357,7 +1357,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				if (utf8) {
 					unsigned char *text = fs->value;
 
-					fs->utf8_pos = strlen_utf8(&text);
+					fs->state_cell = strlen_utf8(&text);
 				}
 #endif /* CONFIG_UTF_8 */
 			}
@@ -1372,7 +1372,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			} else {
 				fs->state = 0;
 #ifdef CONFIG_UTF_8
-				fs->utf8_pos = 0;
+				fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
 			}
 			break;
@@ -1389,7 +1389,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				if (utf8) {
 					unsigned char *text = fs->value;
 
-					fs->utf8_pos = strlen_utf8(&text);
+					fs->state_cell = strlen_utf8(&text);
 				}
 #endif /* CONFIG_UTF_8 */
 			}
@@ -1410,7 +1410,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->value[0] = 0;
 			fs->state = 0;
 #ifdef CONFIG_UTF_8
-			fs->utf8_pos = 0;
+			fs->state_cell = 0;
 #endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_PASTE_CLIPBOARD:
@@ -1431,7 +1431,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 					if (utf8 && fc->type != FC_TEXTAREA) {
 						unsigned char *text = fs->value;
 
-						fs->utf8_pos = strlen_utf8(&text);
+						fs->state_cell = strlen_utf8(&text);
 					}
 #endif /* CONFIG_UTF_8 */
 				}
@@ -1475,12 +1475,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 				unsigned char *text = fs->value;
 				unsigned char *end = fs->value + fs->state;
 
-				for (i = 0; i < fs->utf8_pos - 1; i++)
+				for (i = 0; i < fs->state_cell - 1; i++)
 					utf_8_to_unicode(&text, end);
 				length = strlen(end) + 1;
 				memmove(text, end, length);
 				fs->state = (int)(text - fs->value);
-				fs->utf8_pos--;
+				fs->state_cell--;
 				break;
 			}
 #endif /* CONFIG_UTF_8 */
@@ -1548,7 +1548,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8 && fc->type != FC_TEXTAREA) {
 				unsigned char *text = fs->value;
 
-				fs->utf8_pos = strlen_utf8(&text);
+				fs->state_cell = strlen_utf8(&text);
 			}
 #endif /* CONFIG_UTF_8 */
 			break;
@@ -1630,7 +1630,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 						return FRAME_EVENT_OK;
 					}
 					fs->state += i;
-					fs->utf8_pos++;
+					fs->state_cell++;
 					i = 0;
 					break;
 				}

@@ -40,7 +40,7 @@ struct form_state {
 	unsigned char *value;
 	int state;
 #ifdef CONFIG_UTF_8
-	int utf8_pos;
+	int state_cell;
 #endif /* CONFIG_UTF_8 */
 	int vpos;
 	int vypos;

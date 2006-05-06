@@ -64,7 +64,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 	int pos = 0;
 	int skip;
 	unsigned char *wrappos=NULL;
-	int char_cnt=0; /* Number of console chars on line */
+	int chars_cells=0; /* Number of console chars on line */
 
 	assert(text);
 	if_assert_failed return NULL;
@@ -81,9 +81,9 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 		if (text[pos] == '\n') {
 			skip = 1;
 
-		} else if (wrap == FORM_WRAP_NONE || char_cnt < width) {
+		} else if (wrap == FORM_WRAP_NONE || chars_cells < width) {
 			pos += utf8charlen(&text[pos]);
-			char_cnt++;
+			chars_cells++;
 			continue;
 			
 		} else {
@@ -96,7 +96,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 			}
 			skip = !!wrappos;
 		}
-		char_cnt = 0;
+		chars_cells = 0;
 		wrappos = NULL;
 
 		if (!realloc_line_info(&line, line_number)) {
@@ -242,7 +242,7 @@ area_cursor(struct form_control *fc, struct form_state *fs)
 		unsigned char tmp = fs->value[fs->state];
 
 		fs->value[fs->state] = '\0';
-		fs->utf8_pos = strlen_utf8(&text);
+		fs->state_cell = strlen_utf8(&text);
 
 		text = fs->value + line[y].start;
 		x = strlen_utf8(&text);
