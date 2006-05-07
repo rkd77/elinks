@@ -291,21 +291,8 @@ add_document_line(struct plain_renderer *renderer,
 		next_char = (line_pos + 1 < width) ? line[line_pos + 1]
 						   : '\0';
 
-		/* Do not expand tabs that precede back-spaces; this saves the
-		 * back-space code some trouble. */
-		if (line_char == ASCII_TAB && next_char != ASCII_BS) {
-			int tab_width = 7 - ((line_pos + expanded) & 7);
-
-			expanded += tab_width;
-
-			template->data = ' ';
-			do
-				copy_screen_chars(pos++, template, 1);
-			while (tab_width--);
-
-			*template = saved_renderer_template;
-
-		} else if (line_char == ASCII_BS) {
+		switch (line_char) {
+		case ASCII_BS:
 			if (!(expanded + line_pos)) {
 				/* We've backspaced to the start of the line */
 				continue;
@@ -366,39 +353,58 @@ add_document_line(struct plain_renderer *renderer,
 			/* Handle _^Hx^Hx as both bold and underlined */
 			if (template->attr)
 				template->attr |= pos->attr;
-		} else {
-			int added_chars = 0;
+			break;
+		case ASCII_TAB:
+			/* Do not expand tabs that precede back-spaces; this saves the
+			 * back-space code some trouble. */
+			if (next_char != ASCII_BS) {
+				int tab_width = 7 - ((line_pos + expanded) & 7);
 
-			if (document->options.plain_display_links
-			    && isalpha(line_char) && isalpha(next_char)) {
-				/* We only want to check for a URI if there are
-				 * at least two consecutive alphabetic
-				 * characters, or if we are at the very start of
-				 * the line.  It improves performance a bit.
-				 * --Zas */
-				added_chars = print_document_link(renderer,
+				expanded += tab_width;
+
+				template->data = ' ';
+				do
+					copy_screen_chars(pos++, template, 1);
+				while (tab_width--);
+
+				*template = saved_renderer_template;
+				break;
+			}
+		default:
+			{
+				int added_chars = 0;
+
+				if (document->options.plain_display_links
+				    && isalpha(line_char) && isalpha(next_char)) {
+					/* We only want to check for a URI if there are
+				 	* at least two consecutive alphabetic
+				 	* characters, or if we are at the very start of
+				 	* the line.  It improves performance a bit.
+				 	* --Zas */
+					added_chars = print_document_link(renderer,
 								  lineno, line,
 								  line_pos,
 								  width,
 								  expanded,
 								  pos);
+				}
+
+				if (added_chars) {
+					line_pos += added_chars - 1;
+					pos += added_chars;
+				} else {
+					if (!isscreensafe(line_char) && line_char != 27)
+						line_char = '.';
+					template->data = line_char;
+					copy_screen_chars(pos++, template, 1);
+
+					/* Detect copy of nul chars to screen, this
+				 	* should not occur. --Zas */
+					assert(line_char);
+				}
+
+				*template = saved_renderer_template;
 			}
-
-			if (added_chars) {
-				line_pos += added_chars - 1;
-				pos += added_chars;
-			} else {
-				if (!isscreensafe(line_char))
-					line_char = '.';
-				template->data = line_char;
-				copy_screen_chars(pos++, template, 1);
-
-				/* Detect copy of nul chars to screen, this
-				 * should not occur. --Zas */
-				assert(line_char);
-			}
-
-			*template = saved_renderer_template;
 		}
 	}
 
