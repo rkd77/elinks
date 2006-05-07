@@ -6,6 +6,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "elinks.h"
 
@@ -227,6 +228,55 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 }
 
 static inline int
+change_colors(struct screen_char *template, unsigned char *text, struct document *document)
+{
+	unsigned char fg, bg, bold;
+	unsigned char *start = text;
+
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	fg = template->color[0];
+	bg = template->color[1];
+#else
+	fg = template->color[0] & 15;
+	bg = template->color[0] >> 4;
+#endif
+	bold = template->attr & SCREEN_ATTR_BOLD;
+	for (start = text; *text && *text != 'm'; text++) {
+		switch (*text) {
+			case ';':
+				break;
+			case '3':
+				text++;
+				if (*text >= '0' && *text < '9')
+					fg = *text - '0';
+				else
+					fg = 7;
+				break;
+			case '4':
+				text++;
+				if (*text >= '0' && *text < '9')
+					bg = *text - '0';
+				else
+					bg = 0;
+				break;
+			case '1':
+				bold = SCREEN_ATTR_BOLD;
+				break;
+			case '0':
+				bold = 0;
+				break;
+			default:
+				break;
+				
+		}
+	}
+	fg |= bold;
+	set_term_color16(template, document->options.color_flags, fg, bg);
+	return (int)(text - start);
+
+}
+
+static inline int
 add_document_line(struct plain_renderer *renderer,
 		  unsigned char *line, int line_width)
 {
@@ -292,6 +342,12 @@ add_document_line(struct plain_renderer *renderer,
 						   : '\0';
 
 		switch (line_char) {
+		case 27:
+			if (next_char != '[') goto normal;
+			line_pos += 2;
+			line_pos += change_colors(&saved_renderer_template, &line[line_pos], document);
+			*template = saved_renderer_template;
+			break;
 		case ASCII_BS:
 			if (!(expanded + line_pos)) {
 				/* We've backspaced to the start of the line */
@@ -371,6 +427,7 @@ add_document_line(struct plain_renderer *renderer,
 				break;
 			}
 		default:
+normal:
 			{
 				int added_chars = 0;
 
