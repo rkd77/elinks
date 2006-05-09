@@ -384,7 +384,7 @@ close_popen(int fd)
 	foreach (pop, copiousoutput_data) {
 		if (pop->fd == fd) {
 			del_from_list(pop);
-			pclose(pop->stream);
+			fclose(pop->stream);
 			if (pop->filename) {
 				unlink(pop->filename);
 				mem_free(pop->filename);
