@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -376,6 +377,25 @@ shutdown_connection_stream(struct connection *conn)
 }
 
 static void
+close_popen(int fd)
+{
+	struct popen_data *pop;
+
+	foreach (pop, copiousoutput_data) {
+		if (pop->fd == fd) {
+			del_from_list(pop);
+			pclose(pop->stream);
+			if (pop->filename) {
+				unlink(pop->filename);
+				mem_free(pop->filename);
+			}
+			mem_free(pop);
+			break;
+		}
+	}
+}
+
+static void
 free_connection_data(struct connection *conn)
 {
 	assertm(conn->running, "connection already suspended");
@@ -395,6 +415,7 @@ free_connection_data(struct connection *conn)
 	if (conn->done)
 		conn->done(conn);
 
+	if (conn->popen) close_popen(conn->socket->fd);
 	done_socket(conn->socket);
 	done_socket(conn->data_socket);
 

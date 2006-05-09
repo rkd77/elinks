@@ -64,6 +64,8 @@
 
 INIT_LIST_HEAD(downloads);
 
+INIT_LIST_HEAD(copiousoutput_data);
+
 int
 download_is_progressing(struct download *download)
 {
@@ -302,16 +304,26 @@ abort_download_and_beep(struct file_download *file_download, struct terminal *te
 }
 
 static void
-read_from_popen(struct session *ses, unsigned char *handler)
+read_from_popen(struct session *ses, unsigned char *handler, unsigned char *filename)
 {
-	FILE *pop = popen(handler, "r");
+	FILE *stream = popen(handler, "r");
 
-	if (pop) {
-		int fd = fileno(pop);
+	if (stream) {
+		int fd = fileno(stream);
 
 		if (fd > 0) {
 			unsigned char buf[48];
 
+			struct popen_data *data = mem_calloc(1, sizeof(*data));
+
+			if (!data) {
+				fclose(stream);
+				return;
+			}
+			data->fd = fd;
+			data->stream = stream;
+			if (filename) data->filename = stracpy(filename);
+			add_to_list(copiousoutput_data, data);
 			snprintf(buf, 48, "file:///dev/fd/%d", fd);
 			goto_url(ses, buf);
 		}
@@ -357,7 +369,10 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		file_download->handle = -1;
 		if (file_download->copiousoutput) {
 			read_from_popen(file_download->ses,
-					file_download->external_handler);
+					file_download->external_handler,
+					file_download->file);
+			file_download->delete = 0;
+			abort_download_and_beep(file_download, term);
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
 				 file_download->file,
@@ -1016,7 +1031,7 @@ tp_open(struct type_query *type_query)
 
 		if (handler) {
 			if (type_query->copiousoutput)
-				read_from_popen(type_query->ses, handler);
+				read_from_popen(type_query->ses, handler, NULL);
 			else
 				exec_on_terminal(type_query->ses->tab->term,
 					 handler, "", !!type_query->block);
