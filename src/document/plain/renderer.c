@@ -226,11 +226,23 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 	return len;
 }
 
-static inline int
-change_colors(struct screen_char *template, unsigned char *text, struct document *document)
+enum mode_16_256 {
+	COLOR_NONE,
+	COLOR_16_FOREGROUND,
+	COLOR_16_BACKGROUND,
+	COLOR_38,
+	COLOR_48,
+	COLOR_256_FOREGROUND,
+	COLOR_256_BACKGROUND
+};
+
+static int
+change_colors(struct screen_char *template, unsigned char *line, int line_pos, int width, struct document *document)
 {
 	unsigned char fg, bg, bold;
-	unsigned char *start = text;
+	enum mode_16_256 color = COLOR_NONE;
+	unsigned char value = 0;
+	int start = 0;
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	fg = template->color[0];
@@ -240,39 +252,177 @@ change_colors(struct screen_char *template, unsigned char *text, struct document
 	bg = template->color[0] >> 4;
 #endif
 	bold = template->attr & SCREEN_ATTR_BOLD;
-	for (start = text; *text && *text != 'm'; text++) {
-		switch (*text) {
-			case ';':
-				break;
-			case '3':
-				text++;
-				if (*text >= '0' && *text < '9')
-					fg = *text - '0';
-				else
-					fg = 7;
-				break;
-			case '4':
-				text++;
-				if (*text >= '0' && *text < '9')
-					bg = *text - '0';
-				else
-					bg = 0;
+	for (; line_pos < width; line_pos++) {
+		unsigned char ch = line[line_pos];
+
+		switch (color) {
+		case COLOR_NONE:
+			switch (ch) {
+			case '0':
+				bold = 0;
 				break;
 			case '1':
 				bold = SCREEN_ATTR_BOLD;
 				break;
-			case '0':
-				bold = 0;
+			case '3':
+				color = COLOR_16_FOREGROUND;
 				break;
+			case '4':
+				color = COLOR_16_BACKGROUND;
+				break;
+			case 'm':
+				goto end;
 			default:
 				break;
-				
+			}
+			break;
+
+		case COLOR_16_FOREGROUND:
+			switch (ch) {
+			case '9':
+				fg = 7;
+				color = COLOR_NONE;
+				break;
+			case '8':
+				color = COLOR_38;
+				break;
+			case 'm':
+				goto end;
+			default:
+				if (ch >= '0' && ch <= '7') fg = ch - '0';
+				color = COLOR_NONE;
+				break;
+			}
+			break;
+
+		case COLOR_16_BACKGROUND:
+			switch (ch) {
+			case '9':
+				bg = 0;
+				color = COLOR_NONE;
+				break;
+			case '8':
+				color = COLOR_48;
+				break;
+			case 'm':
+				goto end;
+			default:
+				if (ch >= '0' && ch <= '7') bg = ch - '0';
+				color = COLOR_NONE;
+				break;
+			}
+			break;
+
+		case COLOR_38:
+			switch (ch) {
+			case '5':
+				start = 1;
+				value = 0;
+				color = COLOR_256_FOREGROUND;
+				break;
+			case 'm':
+				goto end;
+			case ';':
+				break;
+			default:
+				color = COLOR_NONE;
+				break;
+			}
+			break;
+
+		case COLOR_48:
+			switch (ch) {
+			case '5':
+				start = 1;
+				value = 0;
+				color = COLOR_256_BACKGROUND;
+				break;
+			case 'm':
+				goto end;
+			case ';':
+				break;
+			default:
+				color = COLOR_NONE;
+				break;
+			}
+			break;
+
+		case COLOR_256_FOREGROUND:
+			switch (ch) {
+			case ';':
+			case 'm':
+				if (start) {
+					start = 0;
+					value = 0;
+				} else {
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+#ifdef CONFIG_88_COLORS
+					if (document->options.color_mode == COLOR_MODE_88) fg = value;
+#endif
+#ifdef CONFIG_256_COLORS
+					if (document->options.color_mode == COLOR_MODE_256) fg = value;
+#endif
+#endif
+					color = COLOR_NONE;
+					value = 0;
+				}
+				if (ch == 'm') goto end;
+				break;
+			default:
+				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
+				break;
+			}
+			break;
+
+		case COLOR_256_BACKGROUND:
+			switch (ch) {
+			case ';':
+			case 'm':
+				if (start) {
+					start = 0;
+					value = 0;
+				} else {
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+#ifdef CONFIG_88_COLORS
+					if (document->options.color_mode == COLOR_MODE_88) bg = value;
+#endif
+#ifdef CONFIG_256_COLORS
+					if (document->options.color_mode == COLOR_MODE_256) bg = value;
+#endif
+#endif
+					color = COLOR_NONE;
+					value = 0;
+				}
+				if (ch == 'm') goto end;
+				break;
+			default:
+				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
+				break;
+			}
+			break;
 		}
 	}
-	fg |= bold;
-	set_term_color16(template, document->options.color_flags, fg, bg);
-	return (int)(text - start);
+end:
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+#ifdef CONFIG_88_COLORS
+	if (document->options.color_mode == COLOR_MODE_88) {
+		TERM_COLOR_FOREGROUND(template->color) = fg;
+		TERM_COLOR_BACKGROUND(template->color) = bg;
+	}
+#endif
+#ifdef CONFIG_256_COLORS
+	if (document->options.color_mode == COLOR_MODE_256) {
+		TERM_COLOR_FOREGROUND(template->color) = fg;
+		TERM_COLOR_BACKGROUND(template->color) = bg;
+	}
+#endif
+#endif
 
+	if (document->options.color_mode == COLOR_MODE_16) {
+		fg |= bold;
+		set_term_color16(template, document->options.color_flags, fg, bg);
+	}
+	return line_pos;
 }
 
 static inline int
@@ -344,7 +494,7 @@ add_document_line(struct plain_renderer *renderer,
 		case 27:
 			if (next_char != '[') goto normal;
 			line_pos += 2;
-			line_pos += change_colors(&saved_renderer_template, &line[line_pos], document);
+			line_pos = change_colors(&saved_renderer_template, line, line_pos, width, document);
 			*template = saved_renderer_template;
 			break;
 		case ASCII_BS:
