@@ -290,6 +290,7 @@ change_colors(struct screen_char *template, unsigned char *line, int line_pos, i
 				goto end;
 			default:
 				if (ch >= '0' && ch <= '7') fg = ch - '0';
+				else goto end;
 				color = COLOR_NONE;
 				break;
 			}
@@ -308,6 +309,7 @@ change_colors(struct screen_char *template, unsigned char *line, int line_pos, i
 				goto end;
 			default:
 				if (ch >= '0' && ch <= '7') bg = ch - '0';
+				else goto end;
 				color = COLOR_NONE;
 				break;
 			}
@@ -370,6 +372,7 @@ change_colors(struct screen_char *template, unsigned char *line, int line_pos, i
 				break;
 			default:
 				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
+				else goto end;
 				break;
 			}
 			break;
@@ -397,6 +400,7 @@ change_colors(struct screen_char *template, unsigned char *line, int line_pos, i
 				break;
 			default:
 				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
+				else goto end;
 				break;
 			}
 			break;
