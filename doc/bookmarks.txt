@@ -35,7 +35,7 @@ you will add them) and couple of buttons shriveling at the bottom. So, as a
 start, move with the right (or left; both will do) arrow to the button *Add
 bookmark* and fill in the input fields it offers to you. I mean, you can type
 something like "ELinks homepage" to the first field, then move down by e.g.
-the down arrow and fill "http://elinks.or.cz/" to the second field. Then,
+the down arrow and fill "http://elinks.cz/" to the second field. Then,
 bravely press enter and watch the bookmark popping up at the top of the vast
 area reserved for bookmarks.
 

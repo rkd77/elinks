@@ -100,7 +100,7 @@ You need to write some scripts.
 ELinks Lua additions
 ^^^^^^^^^^^^^^^^^^^^
 
-The Lua support is based on the idea of @dfn{hooks}.  A hook is a function that
+The Lua support is based on the idea of *hooks*.  A hook is a function that
 gets called at a particular point during the execution of ELinks.  To make
 ELinks do what you want, you can add and edit such hooks.
 
@@ -180,14 +180,13 @@ standard Lua functions.
 enable_systems_functions ()::
 Enable some potentially dangerous functions, as well as some other
 functions which were unfortunate enough to be lumped in the same group.
-
++
 The functions are: `openfile`, `closefile`, `readfrom`, `writeto`, `appendto`,
 `pipe_read`, `remove`, `rename`, `flush`, `seek`, `tmpname`, `read`, `write`
 `execute`, `exit`, `clock`, `date`, `getenv`, `setlocale`.
-
++
 Note: `setlocale` is a standard Lua function and will not affect
 the current ELinks locale.
-@end deffn
 
 current_url ()::
 	Returns the URL of the current page being shown (in the ELinks session
@@ -249,13 +248,13 @@ instead of copying code out of this document.  Also, not everything in there is
 covered here.
 
 If you would like to contribute scripts, that would be great!  Please send
-them to me at mailto:tjaden@@users.sourceforge.net[].  Cliff and I plan to
+them to me at mailto:tjaden@users.sourceforge.net[].  Cliff and I plan to
 start a script repository, provided we get some contributions.  As for script
 ideas, you'll just have to be a little creative :-)
 
 Also take a look at the `contrib/lua/` directory in the ELinks distribution.
 Note that Peter and Cliff don't maintain the Lua support intensively anymore,
-thus it would be probably nice to Cc me (mailto:pasky@@ucw.cz[]) if you want
+thus it would be probably nice to Cc me (mailto:pasky@ucw.cz[]) if you want
 to contribute some patch, so that I would be able to add it to the ELinks
 distribution.
 

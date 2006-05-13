@@ -2,7 +2,7 @@ PURPOSE
 =======
 
 The scripts in this directory scan the PO files and search for
-translations that assign the same accelerator to for multiple buttons
+translations that assign the same accelerator to multiple buttons
 in a dialog box or to multiple items in a menu.
 
 In addition to this static checking, ELinks can also detect

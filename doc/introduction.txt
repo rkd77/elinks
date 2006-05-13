@@ -97,7 +97,7 @@ and buttons at the bottom. Below, a view of the cookie manager is shown.
 
 	+------------------------- Cookie manager -------------------------+
 	|                                                                  |
-	|   [-]- bugzilla.elinks.or.cz                                     |
+	|   [-]- bugzilla.elinks.cz                                        |
 	|    |    |-- BUGLIST                                              |
 	|    |    `-- LASTORDER                                            |
 	|   [+]- kerneltrap.org                                            |

@@ -1,0 +1,51 @@
+OVERVIEW OF BFU
+===============
+
+BFU is the text-mode user interface used by ELinks.  It builds dialogs,
+widgets and menus on top of the window system implemented at src/terminal/.
+
+                                                 =====================
+                                                 | struct widget_ops |
+                                                 |   bfu/widget.h    |
+                                                 =====================
+                                                          1^
+                                                           |
+                                                          *|
+ ====================  ======================      =================
+ | struct menu_item |  | struct widget_data | *  1 | struct widget |
+ |    bfu/menu.h    |  |    bfu/widget.h    | ---> |  bfu/widget.h |
+ ====================  ======================      =================
+       +^                     +^                       +^
+        |                      |                        |
+       ?|                     1|                       1|
+ ===============     ======================       =================
+ | struct menu |     | struct dialog_data | *   1 | struct dialog |
+ |  bfu/menu.h |     |    bfu/dialog.h    | ----> |  bfu/dialog.h |
+ ===============     ======================       =================
+  ?^     ?^            ?^          ?|               1|      1|
+   |      |             |           |                |       |
+   |      |             |          1v                |      1v
+   |     1v            1v    ======================  |  ========================
+   |  =====================  | struct memory_list |  |  | struct dialog_layout |
+   |  |   struct window   |  |   util/memlist.h   |  |  |     bfu/dialog.h     |
+   |  | terminal/window.h |  ======================  |  ========================
+   |  =====================                         ?v
+   |               *^                             =========================
+   |                |                             | struct dialog_refresh |
+   |               1v                             |      bfu/dialog.h     |
+   |          =======================             =========================
+   |        ? |   struct terminal   |
+   ---------- | terminal/terminal.h |
+   main_menu  =======================
+                   ?|           ?|
+                    |            |
+                   1v           ?v
+ ==========================  =============================
+ | struct terminal_screen |  | struct terminal_interlink |
+ |   terminal/screen.h    |  |      terminal/event.c     |
+ ==========================  =============================
+
+                                    Legend:  ---> can be followed like a pointer
+                                                ? zero or one      1 exactly one
+ 					        * zero or more     + one or more
+                                    There may be errors in the quantifiers.
