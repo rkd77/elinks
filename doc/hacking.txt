@@ -682,7 +682,7 @@ which is why everybody concerned with ELinks develepment should use it:
 In 0.5 versions `--enable-debug` add some fancy things:
 - many data integrity checking (see `lists.h`)
 - hotkey debugging: especially cool for translators, it highlights redundant
-  hotkeys in a menu.  (See also po/perl/check-accelerator-conflicts.pl.)
+  hotkeys in a menu.  (See also po/perl/README.)
 - more errors messages
 - low bug tolerance: it will core dump on some errors instead of just writing
   an error description.
