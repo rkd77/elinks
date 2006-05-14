@@ -304,7 +304,7 @@ connection state. How the protocol back-end chooses to handle the connection
 and load the URI it points to is entirely up to the back-end.  The interface
 is defined in `src/protocol/protocol.h` and `src/network/connection.h`.
 
-A connection can have multiple downloads attached to it. Each `download struct'
+A connection can have multiple downloads attached to it. Each `download struct`
 contains information about the connection state and the connection with which
 it is attached. Additionally, the `download struct` specifies callback data,
 and a callback which is called each time the download progresses.  The
