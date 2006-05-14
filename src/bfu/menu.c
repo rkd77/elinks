@@ -60,6 +60,7 @@ static int m_submenu_len = sizeof(m_submenu) - 1;
 /* Prototypes */
 static window_handler_T menu_handler;
 static window_handler_T mainmenu_handler;
+static void display_mainmenu(struct terminal *term, struct menu *menu);
 
 
 static inline int
@@ -911,6 +912,7 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 			if (win->data == menu) {
 				del_from_list(win);
 				add_at_pos((struct window *) &term->windows, win);
+				display_mainmenu(term, menu);
 				break;
 			}
 		}
