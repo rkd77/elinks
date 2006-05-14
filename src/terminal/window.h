@@ -56,4 +56,10 @@ void get_parent_ptr(struct window *, int *, int *);
 
 void add_empty_window(struct terminal *, void (*)(void *), void *);
 
+#if CONFIG_DEBUG
+void assert_window_stacking(struct terminal *);
+#else
+#define assert_window_stacking(t) ((void) (t))
+#endif
+
 #endif

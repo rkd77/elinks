@@ -30,6 +30,7 @@ struct window *
 init_tab(struct terminal *term, void *data, window_handler_T handler)
 {
 	struct window *win = mem_calloc(1, sizeof(*win));
+	struct window *pos;
 
 	if (!win) return NULL;
 
@@ -39,7 +40,21 @@ init_tab(struct terminal *term, void *data, window_handler_T handler)
 	win->type = WINDOW_TAB;
 	win->resize = 1;
 
-	add_to_list(term->windows, win);
+	/* Insert the new tab immediately above all existing tabs in
+	 * the stack of windows.  */
+	foreach_tab (pos, term->windows) {
+		pos = pos->prev;
+		goto found_pos;
+	}
+	/* This is a new terminal and there are no tabs yet.  If there
+	 * were a main menu already, then we'd have to place the tab
+	 * above it if it were inactive, or below if it were active.  */
+	assert(term->main_menu == NULL);
+	pos = (struct window *) term->windows.prev;
+ found_pos:
+	add_at_pos(pos, win);
+
+	assert_window_stacking(term);
 
 	return win;
 }

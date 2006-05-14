@@ -69,13 +69,26 @@ struct terminal {
 	 * are sure what are you doing) to make sure that you don't distribute
 	 * events etc to inactive tabs.
 	 *
-	 * The stack is top-down, thus .next is the stack's top, the current
-	 * window. .prev is the first tab.
+	 * The stack is top-down, thus .next is the stack's top, the
+	 * current window; and .prev is the bottom, covered by others.
+	 * - Dialogs or active menus are at the top.
+	 * - Next come all tabs (window.type == WINDOW_TAB).  The tab
+	 *   created last is at the top, and the tab created first is
+	 *   at the bottom; but current_tab controls which tab is
+	 *   actually displayed.
+	 * - If the main menu is inactive, then it is at the very bottom,
+	 *   hidden under the tabs.
+	 * Call assert_window_stacking to verify this.
 	 *
 	 * FIXME: Tabs violate the stack nature of this list, they appear there
 	 * randomly but always in the order in which they were inserted there.
 	 * Eventually, they should all live at the stack bottom, with the
-	 * actual tab living on the VERY bottom. --pasky */
+	 * actual tab living on the VERY bottom. --pasky
+	 *
+	 *   Keeping the current tab at the very bottom would require storing
+	 *   tab numbers explicitly, rather than computing them from the
+	 *   stack order as is done now.  Also, what should be done with the
+	 *   inactive main menu?  --KON */
 	struct list_head windows; /* {struct window} */
 
 	/* The specification of terminal in terms of terminal options. */

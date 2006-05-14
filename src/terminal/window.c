@@ -6,6 +6,7 @@
 
 #include "elinks.h"
 
+#include "bfu/menu.h"
 #include "terminal/event.h"
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
@@ -171,3 +172,25 @@ add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 	ewd->called_once = 0;
 	add_window(term, empty_window_handler, ewd);
 }
+
+#if CONFIG_DEBUG
+/* Check that term->windows are in the documented order.  */
+void
+assert_window_stacking(struct terminal *term)
+{
+	int prev_type = WINDOW_NORMAL;
+	const struct window *win;
+	const struct window *main_menu_win;
+
+	/* The main menu can be either above or below the tabs.  */
+	main_menu_win = term->main_menu ? term->main_menu->win : NULL;
+
+	foreach (win, term->windows) {
+		if (win != main_menu_win) {
+			if (prev_type == WINDOW_TAB)
+				assert(win->type == WINDOW_TAB);
+			prev_type = win->type;
+		}
+	}
+}
+#endif	/* CONFIG_DEBUG */
