@@ -116,6 +116,12 @@ destroy_terminal(struct terminal *term)
 	bookmark_auto_save_tabs(term);
 #endif
 
+	/* delete_window doesn't update term->current_tab, but it
+	   calls redraw_terminal, which requires term->current_tab
+	   to be valid if there are any tabs left.  So set a value
+	   that will be valid for that long.  */
+	term->current_tab = 0;
+
 	while (!list_empty(term->windows))
 		delete_window(term->windows.next);
 
