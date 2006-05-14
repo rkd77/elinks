@@ -103,6 +103,12 @@ get_tab_by_number(struct terminal *term, int num)
 		num--;
 	}
 
+	/* Ensure that the return value actually points to a struct
+	 * window.  */
+	assertm((struct list_head *) win != &term->windows,
+	        "tab number out of range");
+	if_assert_failed return term->windows.next;
+
 	return win;
 }
 
@@ -301,22 +307,27 @@ move_current_tab(struct session *ses, int direction)
 
 	new_pos = term->current_tab + direction;
 
-	while (new_pos < 1 || new_pos > tabs)
-		new_pos += new_pos < 1 ? tabs : -tabs;
+	if (get_opt_bool("ui.tabs.wraparound")) {
+		while (new_pos < 0 || new_pos >= tabs)
+			new_pos += new_pos < 0 ? tabs : -tabs;
+	} else {
+		if (new_pos < 0)
+			new_pos = 0;
+		else if (new_pos >= tabs)
+			new_pos = tabs - 1;
+	}
+	assert(0 <= new_pos && new_pos < tabs);
 
-	assert(0 < new_pos && new_pos <= tabs);
-
+	/* This protects against tabs==1 and optimizes an unusual case.  */
 	if (new_pos == term->current_tab) return;
 
-	tab = get_tab_by_number(term, new_pos);
-
 	del_from_list(current_tab);
-
-	if (new_pos < term->current_tab) {
-		add_at_pos(tab, current_tab);
+	if (new_pos == 0) {
+		tab = get_tab_by_number(term, 0);
 	} else {
-		add_to_list_end(*tab, current_tab);
+		tab = get_tab_by_number(term, new_pos-1)->prev;
 	}
+	add_at_pos(tab, current_tab);
 
 	switch_to_tab(term, new_pos, tabs);
 }

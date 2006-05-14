@@ -178,7 +178,7 @@ add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 void
 assert_window_stacking(struct terminal *term)
 {
-	int prev_type = WINDOW_NORMAL;
+	enum { WANT_ANY, WANT_TAB, WANT_NONE } want = WANT_ANY;
 	const struct window *win;
 	const struct window *main_menu_win;
 
@@ -186,10 +186,20 @@ assert_window_stacking(struct terminal *term)
 	main_menu_win = term->main_menu ? term->main_menu->win : NULL;
 
 	foreach (win, term->windows) {
-		if (win != main_menu_win) {
-			if (prev_type == WINDOW_TAB)
+		switch (want) {
+		case WANT_ANY:
+			if (win->type == WINDOW_TAB)
+				want = WANT_TAB;
+			break;
+		case WANT_TAB:
+			if (win == main_menu_win)
+				want = WANT_NONE;
+			else
 				assert(win->type == WINDOW_TAB);
-			prev_type = win->type;
+			break;
+		case WANT_NONE:
+			assert(0);
+			break;
 		}
 	}
 }

@@ -73,9 +73,9 @@ struct terminal {
 	 * current window; and .prev is the bottom, covered by others.
 	 * - Dialogs or active menus are at the top.
 	 * - Next come all tabs (window.type == WINDOW_TAB).  The tab
-	 *   created last is at the top, and the tab created first is
-	 *   at the bottom; but current_tab controls which tab is
-	 *   actually displayed.
+	 *   listed leftmost in the tab bar is at the top, and the tab
+	 *   listed rightmost is at the bottom; but current_tab controls
+	 *   which tab is actually displayed.
 	 * - If the main menu is inactive, then it is at the very bottom,
 	 *   hidden under the tabs.
 	 * Call assert_window_stacking to verify this.
