@@ -153,6 +153,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 				menu->selected = -1;
 				del_from_list(win);
 				add_to_list_end(term->windows, win);
+				redraw_terminal(term);
 			} else
 				delete_window(win);
 		}
