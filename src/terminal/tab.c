@@ -308,8 +308,8 @@ move_current_tab(struct session *ses, int direction)
 	new_pos = term->current_tab + direction;
 
 	if (get_opt_bool("ui.tabs.wraparound")) {
-		while (new_pos < 0 || new_pos >= tabs)
-			new_pos += new_pos < 0 ? tabs : -tabs;
+		new_pos %= tabs;
+		if (new_pos < 0) new_pos = tabs + new_pos;
 	} else {
 	        int_bounds(&new_pos, 0, tabs - 1);
 	}
