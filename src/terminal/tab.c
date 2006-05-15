@@ -311,10 +311,7 @@ move_current_tab(struct session *ses, int direction)
 		while (new_pos < 0 || new_pos >= tabs)
 			new_pos += new_pos < 0 ? tabs : -tabs;
 	} else {
-		if (new_pos < 0)
-			new_pos = 0;
-		else if (new_pos >= tabs)
-			new_pos = tabs - 1;
+	        int_bounds(&new_pos, 0, tabs - 1);
 	}
 	assert(0 <= new_pos && new_pos < tabs);
 
