@@ -206,7 +206,12 @@ end:
 struct secure_save_info *
 secure_open(unsigned char *file_name)
 {
+#ifdef CONFIG_OS_WIN32
+	/* There is neither S_IRWXG nor S_IRWXO under crossmingw32-gcc */
+	return secure_open_umask(file_name, 0177);
+#else
 	return secure_open_umask(file_name, S_IXUSR | S_IRWXG | S_IRWXO);
+#endif
 }
 
 /* Close a file opened with secure_open, and return 0 on success, errno

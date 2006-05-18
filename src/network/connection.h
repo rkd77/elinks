@@ -6,6 +6,7 @@
 #include "main/timer.h" /* timer_id_T */
 #include "network/state.h"
 #include "util/lists.h"
+#include <stdio.h>
 
 struct download;
 struct socket;

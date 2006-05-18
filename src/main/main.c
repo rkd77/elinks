@@ -111,7 +111,6 @@ init(void)
 	enum retval ret;
 
 	init_osdep();
-	init_static_version();
 	check_cwd();
 
 #ifdef CONFIG_NLS
@@ -119,14 +118,14 @@ init(void)
 	textdomain(PACKAGE);
 	set_language(0);
 #endif
-
 	init_event();
-
 	init_charsets_lookup();
 	init_colors_lookup();
 	init_modules(main_modules);
 
 	init_options();
+	init_static_version();
+
 	register_modules_options(main_modules);
 	register_modules_options(builtin_modules);
 	set_sigcld();

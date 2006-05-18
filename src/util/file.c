@@ -272,11 +272,13 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
 int
 safe_mkstemp(unsigned char *template)
 {
+#ifndef CONFIG_OS_WIN32
 	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
+#endif	
 	int fd = mkstemp(template);
-
+#ifndef CONFIG_OS_WIN32
 	umask(saved_mask);
-
+#endif
 	return fd;
 }
 
