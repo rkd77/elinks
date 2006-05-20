@@ -28,6 +28,7 @@
 #include "network/ssl/ssl.h"
 #include "protocol/protocol.h"
 #include "scripting/scripting.h"
+#include "terminal/terminal.h"
 #include "viewer/text/search.h"
 #include "viewer/timer.h"
 
@@ -35,6 +36,7 @@
 struct module *main_modules[] = {
 	&document_module,
 	&kbdbind_module,
+	&terminal_module,
 	NULL /* XXX: Keep this */
 };
 

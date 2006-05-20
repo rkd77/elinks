@@ -287,7 +287,6 @@ terminate_all_subsystems(void)
 #endif
 		free_history_lists();
 		done_modules(builtin_modules);
-		done_screen_drivers();
 		done_saved_session_info();
 	}
 

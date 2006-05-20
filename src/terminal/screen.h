@@ -2,6 +2,7 @@
 #define EL__TERMINAL_SCREEN_H
 
 
+struct module;
 struct screen_char;
 struct terminal;
 
@@ -49,7 +50,6 @@ void erase_screen(struct terminal *term);
 /* Meeep! */
 void beep_terminal(struct terminal *term);
 
-/* Release private screen drawing utilities. */
-void done_screen_drivers(void);
+extern struct module terminal_screen_module;
 
 #endif
