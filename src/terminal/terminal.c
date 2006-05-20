@@ -17,6 +17,7 @@
 #include "config/options.h"
 #include "intl/gettext/libintl.h"
 #include "main/main.h"
+#include "main/module.h"
 #include "main/object.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
@@ -370,3 +371,18 @@ attach_terminal(int in, int out, int ctl, void *info, int len)
 
 	return term;
 }
+
+static struct module *terminal_submodules[] = {
+	&terminal_screen_module,
+	NULL
+};
+
+struct module terminal_module = struct_module(
+	/* name: */		"Terminal",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	terminal_submodules,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);

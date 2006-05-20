@@ -5,6 +5,7 @@
 #include "terminal/event.h"
 #include "util/lists.h"
 
+struct module;
 struct option;
 struct terminal_screen;
 struct terminal_interlink;
@@ -177,5 +178,7 @@ void do_terminal_function(struct terminal *, unsigned char, unsigned char *);
 int check_terminal_pipes(void);
 void close_terminal_pipes(void);
 struct terminal *attach_terminal(int in, int out, int ctl, void *info, int len);
+
+extern struct module terminal_module;
 
 #endif /* EL__TERMINAL_TERMINAL_H */

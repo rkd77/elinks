@@ -11,6 +11,7 @@
 
 #include "config/options.h"
 #include "intl/charsets.h"
+#include "main/module.h"
 #include "osdep/ascii.h"
 #include "osdep/osdep.h"
 #include "terminal/color.h"
@@ -305,8 +306,9 @@ get_screen_driver(struct terminal *term)
 	return add_screen_driver(type, term, len);
 }
 
+/* Release private screen drawing utilities. */
 void
-done_screen_drivers(void)
+done_screen_drivers(struct module *xxx)
 {
 	free_list(active_screen_drivers);
 }
@@ -776,3 +778,13 @@ done_screen(struct terminal_screen *screen)
 	mem_free_if(screen->image);
 	mem_free(screen);
 }
+
+struct module terminal_screen_module = struct_module(
+	/* name: */		"Terminal Screen",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		done_screen_drivers
+);

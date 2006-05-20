@@ -14,6 +14,7 @@
 
 #include "bfu/dialog.h"
 #include "bookmarks/bookmarks.h"
+#include "config/kbdbind.h"
 #include "config/timer.h"
 #include "config/urlhist.h"
 #include "cookies/cookies.h"
@@ -27,19 +28,21 @@
 #include "network/ssl/ssl.h"
 #include "protocol/protocol.h"
 #include "scripting/scripting.h"
-#include "viewer/text/search.h"
-#include "viewer/timer.h"
+#include "terminal/terminal.h"
+#include "viewer/viewer.h"
 
 
 struct module *main_modules[] = {
 	&document_module,
+	&kbdbind_module,
+	&terminal_module,
 	NULL /* XXX: Keep this */
 };
 
 /* This is also used for version string composing so keep NULL terminated */
 struct module *builtin_modules[] = {
 	&periodic_saving_module,
-	&timer_module,
+	&viewer_module,
 #ifdef CONFIG_CSS
 	&css_module,
 #endif
@@ -73,7 +76,6 @@ struct module *builtin_modules[] = {
 	&exmode_module,
 #endif
 	&goto_url_history_module,
-	&search_history_module,
 	NULL
 };
 

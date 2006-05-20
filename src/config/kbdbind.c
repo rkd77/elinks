@@ -16,6 +16,7 @@
 #include "config/options.h"
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
+#include "main/module.h"
 #include "terminal/kbd.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -515,8 +516,8 @@ static struct action_list action_table[KEYMAP_MAX] = {
 #undef ACTION_
 
 
-void
-init_keymaps(void)
+static void
+init_keymaps(struct module *xxx)
 {
 	enum keymap_id keymap_id;
 
@@ -527,8 +528,8 @@ init_keymaps(void)
 	add_default_keybindings();
 }
 
-void
-free_keymaps(void)
+static void
+free_keymaps(struct module *xxx)
 {
 	enum keymap_id keymap_id;
 
@@ -948,3 +949,13 @@ bind_config_string(struct string *file)
 		}
 	}
 }
+
+struct module kbdbind_module = struct_module(
+	/* name: */		"Keyboard Bindings",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		init_keymaps,
+	/* done: */		free_keymaps
+);

@@ -10,6 +10,7 @@
 
 #include "bfu/hierbox.h"
 #include "intl/gettext/libintl.h"
+#include "main/module.h"
 #include "protocol/auth/auth.h"
 #include "protocol/auth/dialogs.h"
 #include "protocol/protocol.h"
@@ -305,6 +306,12 @@ free_auth(void)
 	free_list(questions_queue);
 }
 
+static void
+done_auth(struct module *xxx)
+{
+	free_auth();
+}
+
 struct auth_entry *
 get_invalid_auth_entry(void)
 {
@@ -320,3 +327,13 @@ get_invalid_auth_entry(void)
 
 	return NULL;
 }
+
+struct module auth_module = struct_module(
+	/* name: */		"HTTP Authentication",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		done_auth
+);

@@ -74,7 +74,11 @@ void done_module(struct module *module);
 
 /* Interface for handling builtin modules */
 
+/* Builtin modules are initialised only when not connecting to a master
+ * terminal. */
 extern struct module *builtin_modules[];
+
+/* Main modules are initialised earlier and are not listed in Help -> About. */
 extern struct module *main_modules[];
 
 void register_modules_options(struct module *modules[]);
