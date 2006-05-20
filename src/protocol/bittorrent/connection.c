@@ -114,10 +114,7 @@ update_bittorrent_connection_state(struct connection *conn)
 			continue;
 
 		if (min_uploads < max_uploads) {
-			if (peer->remote.choked)
-				unchoke_bittorrent_peer(peer);
-
-			peer->remote.choked = 0;
+			unchoke_bittorrent_peer(peer);
 
 			/* Uninterested peers are not counted as uploads. */
 			if (peer->remote.interested)
