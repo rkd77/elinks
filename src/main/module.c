@@ -29,6 +29,7 @@
 #include "protocol/protocol.h"
 #include "scripting/scripting.h"
 #include "terminal/terminal.h"
+#include "viewer/text/marks.h"
 #include "viewer/text/search.h"
 #include "viewer/timer.h"
 
@@ -44,6 +45,9 @@ struct module *main_modules[] = {
 struct module *builtin_modules[] = {
 	&periodic_saving_module,
 	&timer_module,
+#ifdef CONFIG_MARKS
+	&viewer_marks_module,
+#endif
 #ifdef CONFIG_CSS
 	&css_module,
 #endif

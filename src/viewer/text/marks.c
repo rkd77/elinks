@@ -10,6 +10,7 @@
 #include "elinks.h"
 
 #include "document/view.h"
+#include "main/module.h"
 #include "protocol/uri.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -136,8 +137,8 @@ set_mark(unsigned char mark, struct view_state *mark_vs)
 	marks[i] = vs;
 }
 
-void
-free_marks(void)
+static void
+done_marks(struct module *xxx)
 {
 	int i;
 
@@ -145,3 +146,13 @@ free_marks(void)
 		free_mark_by_index(i);
 	}
 }
+
+struct module viewer_marks_module = struct_module(
+	/* name: */		"Marks",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		done_marks
+);

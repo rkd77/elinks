@@ -282,9 +282,6 @@ terminate_all_subsystems(void)
 #ifdef CONFIG_SCRIPTING
 		trigger_event_name("quit");
 #endif
-#ifdef CONFIG_MARKS
-		free_marks();
-#endif
 		free_history_lists();
 		done_modules(builtin_modules);
 		done_saved_session_info();
