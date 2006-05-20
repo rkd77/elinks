@@ -565,8 +565,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 			}
 
 		} else if (fd < SOCK_SHIFT) {
-			if (FD_ISSET(fd,rd))
-				rc += select_read(fd, rd);
+			rc += select_read(fd, rd);
 			if (FD_ISSET(fd,wr))
 				rc++;   /* assume always writable */
 
