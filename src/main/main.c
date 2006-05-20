@@ -23,7 +23,6 @@
 #include "config/cmdline.h"
 #include "config/conf.h"
 #include "config/home.h"
-#include "config/kbdbind.h"
 #include "config/options.h"
 #include "dialogs/menu.h"
 #include "document/document.h"
@@ -130,7 +129,6 @@ init(void)
 	register_modules_options(builtin_modules);
 	set_sigcld();
 	get_system_name();
-	init_keymaps();
 
 	/* XXX: OS/2 has some stupid bug and the pipe must be created before
 	 * socket :-/. -- Mikulas */
@@ -298,7 +296,6 @@ terminate_all_subsystems(void)
 	free_charsets_lookup();
 	free_colors_lookup();
 	done_modules(main_modules);
-	free_keymaps();
 	free_conv_table();
 	check_bottom_halves();
 	done_home();

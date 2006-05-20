@@ -14,6 +14,7 @@
 
 #include "bfu/dialog.h"
 #include "bookmarks/bookmarks.h"
+#include "config/kbdbind.h"
 #include "config/timer.h"
 #include "config/urlhist.h"
 #include "cookies/cookies.h"
@@ -33,6 +34,7 @@
 
 struct module *main_modules[] = {
 	&document_module,
+	&kbdbind_module,
 	NULL /* XXX: Keep this */
 };
 

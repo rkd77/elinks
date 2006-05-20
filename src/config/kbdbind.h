@@ -8,6 +8,7 @@
 #include "util/string.h"
 
 struct listbox_item;
+struct module;
 
 /* Used for holding enum <keymap>_action values. */
 typedef long action_id_T;
@@ -114,9 +115,6 @@ struct keybinding {
 };
 
 
-void init_keymaps(void);
-void free_keymaps(void);
-
 struct keybinding *add_keybinding(enum keymap_id keymap_id, action_id_T action_id, struct term_event_keyboard *kbd, int event);
 int keybinding_exists(enum keymap_id keymap_id, struct term_event_keyboard *kbd, action_id_T *action_id);
 void free_keybinding(struct keybinding *);
@@ -207,4 +205,6 @@ unsigned char *get_keystroke(action_id_T action_id, enum keymap_id keymap_id);
 void add_actions_to_string(struct string *string, action_id_T actions[],
 			   enum keymap_id keymap_id, struct terminal *term);
 
+extern struct module kbdbind_module;
+ 
 #endif
