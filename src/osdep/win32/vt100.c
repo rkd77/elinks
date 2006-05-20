@@ -89,8 +89,12 @@ VT100_decode(HANDLE fd, const void *b, int len)
 					begin = tail + 1;
 					if (kod == 0) {
 						intensity = 0;
+						back = 0;
+						fore = 7;
 					} else if (kod == 1) {
 						intensity = 8;
+					} else if (kod == 22) {
+						intensity = 0;
 					} else if (kod >= 30 && kod <= 37) {
 						fore = kolors[kod - 30];
 					} else if (kod >= 40 && kod <= 47) {
