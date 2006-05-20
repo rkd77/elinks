@@ -18,6 +18,7 @@ static struct module *viewer_submodules[] = {
 #ifdef CONFIG_MARKS
 	&viewer_marks_module,
 #endif
+	NULL
 };
 
 struct module viewer_module = struct_module(
