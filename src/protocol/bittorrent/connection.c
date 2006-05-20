@@ -124,10 +124,7 @@ update_bittorrent_connection_state(struct connection *conn)
 				max_uploads--;
 
 		} else {
-			if (!peer->remote.choked)
-				choke_bittorrent_peer(peer);
-
-			peer->remote.choked = 1;
+			choke_bittorrent_peer(peer);
 		}
 
 		/* Can remove the peer so we use foreachsafe(). */
