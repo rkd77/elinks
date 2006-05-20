@@ -29,9 +29,7 @@
 #include "protocol/protocol.h"
 #include "scripting/scripting.h"
 #include "terminal/terminal.h"
-#include "viewer/text/marks.h"
-#include "viewer/text/search.h"
-#include "viewer/timer.h"
+#include "viewer/viewer.h"
 
 
 struct module *main_modules[] = {
@@ -44,10 +42,7 @@ struct module *main_modules[] = {
 /* This is also used for version string composing so keep NULL terminated */
 struct module *builtin_modules[] = {
 	&periodic_saving_module,
-	&timer_module,
-#ifdef CONFIG_MARKS
-	&viewer_marks_module,
-#endif
+	&viewer_module,
 #ifdef CONFIG_CSS
 	&css_module,
 #endif
@@ -81,7 +76,6 @@ struct module *builtin_modules[] = {
 	&exmode_module,
 #endif
 	&goto_url_history_module,
-	&search_history_module,
 	NULL
 };
 
