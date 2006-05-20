@@ -243,7 +243,7 @@ select_loop(void (*init)(void))
 #endif
 		if (has_timer) {
 			/* Be sure timeout is not negative. */
-			timeval_limit_to_zero(&t);
+			timeval_limit_to_zero_or_one(&t);
 			timeout = (struct timeval *) &t;
 		}
 
@@ -335,5 +335,10 @@ can_read(int fd)
 int
 can_write(int fd)
 {
+#ifdef CONFIG_OS_WIN32
+	/* temporary hack. ELinks didn't start properly under Wine */
+	return 1;
+#else
 	return can_read_or_write(fd, 1);
+#endif
 }

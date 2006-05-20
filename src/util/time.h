@@ -37,7 +37,7 @@ milliseconds_T timeval_to_milliseconds(timeval_T *t);
 long timeval_to_seconds(timeval_T *t);
 
 int timeval_is_positive(timeval_T *t);
-void timeval_limit_to_zero(timeval_T *t);
+void timeval_limit_to_zero_or_one(timeval_T *t);
 timeval_T *timeval_now(timeval_T *t);
 timeval_T *timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer);
 timeval_T *timeval_add(timeval_T *res, timeval_T *base, timeval_T *t);
