@@ -7,6 +7,7 @@
 #include "util/lists.h"
 
 struct listbox_item;
+struct module;
 
 struct auth_entry {
 	OBJECT_HEAD(struct auth_entry);
@@ -40,5 +41,7 @@ struct auth_entry *add_auth_entry(struct uri *, unsigned char *,
 void del_auth_entry(struct auth_entry *);
 void free_auth(void);
 struct auth_entry *get_invalid_auth_entry(void);
+
+extern struct module auth_module;
 
 #endif

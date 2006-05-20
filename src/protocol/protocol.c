@@ -26,6 +26,7 @@
 /* Backends dynamic area: */
 
 #include "protocol/about.h"
+#include "protocol/auth/auth.h"
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/connection.h"
 #include "protocol/data.h"
@@ -273,6 +274,7 @@ static struct option_info protocol_options[] = {
 	NULL_OPTION_INFO,
 };
 static struct module *protocol_submodules[] = {
+	&auth_module,
 #ifdef CONFIG_BITTORRENT
 	&bittorrent_protocol_module,
 #endif

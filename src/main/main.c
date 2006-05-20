@@ -286,7 +286,6 @@ terminate_all_subsystems(void)
 		free_marks();
 #endif
 		free_history_lists();
-		free_auth();
 		done_modules(builtin_modules);
 		done_screen_drivers();
 		done_saved_session_info();
