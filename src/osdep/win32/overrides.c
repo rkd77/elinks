@@ -590,12 +590,14 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 				errno = WSAGetLastError();
 			}
 
-			sel_rc = select(fd + 1, NULL, &sock_wr, NULL, &tv);
-			if (sel_rc > 0) {
-				FD_SET (fd, wr);
-				rc++;
-			} else if (sel_rc < 0) {
-				errno = WSAGetLastError();
+			if (wr) {
+				sel_rc = select(fd + 1, NULL, &sock_wr, NULL, &tv);
+				if (sel_rc > 0) {
+					FD_SET (fd, wr);
+					rc++;
+				} else if (sel_rc < 0) {
+					errno = WSAGetLastError();
+				}
 			}
 
 			sel_rc = select(fd + 1, NULL, NULL, &sock_ex, &tv);
