@@ -261,6 +261,11 @@ scroll_menu(struct menu *menu, int steps, int wrap)
 	int pos, start;
 	int s = steps ? steps/abs(steps) : 1; /* Selectable item search direction. */
 
+	/* menu->selected sometimes became -2 and caused infinite loops.
+	 * That should no longer be possible. */
+	assert(menu->selected >= -1);
+	if_assert_failed return;
+
 	if (menu->size <= 0) {
 no_item:
 		/* Menu is empty. */
@@ -271,7 +276,13 @@ no_item:
 
 	start = pos = menu->selected;
 
-	if (!steps) steps = 1, --pos;
+	if (!steps) {
+		/* The caller wants us to check that menu->selected is
+		 * actually selectable, and correct it if not. */
+		steps = 1;
+		if (pos >= 0)
+			--pos;
+	}
 
 	while (steps) {
 		pos += s, steps -= s;
@@ -601,8 +612,7 @@ menu_mouse_handler(struct menu *menu, struct term_event *ev)
 
 		if (sel >= 0 && sel < menu->size
 		    && mi_is_selectable(&menu->items[sel])) {
-			menu->selected = sel;
-			scroll_menu(menu, 0, 1);
+			set_menu_selection(menu, sel);
 			display_menu(win->term, menu);
 			select_menu(win->term, menu);
 		}
@@ -687,6 +697,7 @@ menu_search_handler(struct input_line *line, int action_id)
 	unsigned char *buffer = line->buffer;
 	struct window *win;
 	int pos = menu->selected;
+	int start;
 	int direction;
 
 	switch (action_id) {
@@ -719,6 +730,7 @@ menu_search_handler(struct input_line *line, int action_id)
 
 	pos %= menu->size;
 
+	start = pos;
 	do {
 		struct menu_item *item = &menu->items[pos];
 
@@ -732,7 +744,7 @@ menu_search_handler(struct input_line *line, int action_id)
 
 		if (pos == menu->size) pos = 0;
 		else if (pos < 0) pos = menu->size - 1;
-	} while (pos != menu->selected);
+	} while (pos != start);
 
 	return INPUT_LINE_CANCEL;
 }
@@ -858,8 +870,10 @@ menu_handler(struct window *win, struct term_event *ev)
 		case EVENT_REDRAW:
 			get_parent_ptr(win, &menu->parent_x, &menu->parent_y);
 			count_menu_size(win->term, menu);
-			menu->selected--;
-			scroll_menu(menu, 1, 1);
+			/* do_menu sets menu->selected = 0.  If that
+			 * item isn't actually selectable, correct
+			 * menu->selected here. */
+			scroll_menu(menu, 0, 1);
 			display_menu(win->term, menu);
 			break;
 
