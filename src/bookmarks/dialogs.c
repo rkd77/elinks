@@ -350,23 +350,36 @@ update_depths(struct listbox_item *parent)
 	}
 }
 
+enum move_bookmark_flags {
+	MOVE_BOOKMARK_NONE  = 0x00,
+	MOVE_BOOKMARK_MOVED = 0x01,
+	MOVE_BOOKMARK_CYCLE = 0x02
+};
+
 /* Traverse all bookmarks and move all marked items
  * _into_ destb or, if destb is NULL, _after_ dest. */
-static void
+static enum move_bookmark_flags
 do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 		 struct list_head *desti, struct list_head *src,
 		 struct listbox_data *box)
 {
 	static int move_bookmark_event_id = EVENT_NONE;
 	struct bookmark *bm, *next;
+	enum move_bookmark_flags result = MOVE_BOOKMARK_NONE;
 
 	assert((destb && desti) || (!destb && !desti));
 
 	set_event_id(move_bookmark_event_id, "bookmark-move");
 
 	foreachsafe (bm, next, *src) {
-		if (bm != dest /* prevent moving a folder into itself */
-		    && bm->box_item->marked && bm != move_cache_root_avoid) {
+		if (!bm->box_item->marked) {
+			/* Don't move this bookmark itself; but if
+			 * it's a folder, then we'll look inside. */
+		} else if (bm == dest || bm == move_cache_root_avoid) {
+			/* Prevent moving a folder into itself. */
+			result |= MOVE_BOOKMARK_CYCLE;
+		} else {
+			result |= MOVE_BOOKMARK_MOVED;
 			bm->box_item->marked = 0;
 
 			trigger_event(move_bookmark_event_id, bm,
@@ -411,9 +424,12 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 		}
 
 		if (bm->box_item->type == BI_FOLDER) {
-			do_move_bookmark(dest, destb, desti, &bm->child, box);
+			result |= do_move_bookmark(dest, destb, desti,
+						   &bm->child, box);
 		}
 	}
+
+	return result;
 }
 
 static widget_handler_status_T
@@ -424,6 +440,7 @@ push_move_button(struct dialog_data *dlg_data,
 	struct bookmark *dest = NULL;
 	struct list_head *destb = NULL, *desti = NULL;
 	struct widget_data *widget_data = dlg_data->widgets_data;
+	enum move_bookmark_flags result;
 
 	if (!box->sel) return EVENT_PROCESSED; /* nowhere to move to */
 
@@ -444,14 +461,36 @@ push_move_button(struct dialog_data *dlg_data,
 		}
 	}
 
-	do_move_bookmark(dest, destb, desti, &bookmarks, box);
-
-	bookmarks_set_dirty();
+	result = do_move_bookmark(dest, destb, desti, &bookmarks, box);
+	if (result & MOVE_BOOKMARK_MOVED) {
+		bookmarks_set_dirty();
 
 #ifdef BOOKMARKS_RESAVE
-	write_bookmarks();
+		write_bookmarks();
 #endif
-	display_widget(dlg_data, widget_data);
+		display_widget(dlg_data, widget_data); /* the hierbox */
+	} else if (result & MOVE_BOOKMARK_CYCLE) {
+		/* If the user also selected other bookmarks, then
+		 * they have already been moved, and this box doesn't
+		 * appear.  */
+		info_box(dlg_data->win->term, 0,
+			 N_("Cannot move folder inside itself"), ALIGN_LEFT,
+			 N_("You are trying to move the marked folder inside "
+			    "itself. To move the folder to a different "
+			    "location select the new location before pressing "
+			    "the Move button."));
+	} else {
+		info_box(dlg_data->win->term, 0,
+			 N_("Nothing to move"), ALIGN_LEFT,
+			 N_("To move bookmarks, first mark all the bookmarks "
+			    "(or folders) you want to move.  This can be done "
+			    "with the Insert key if you're using the default "
+			    "key-bindings.  An asterisk will appear near all "
+			    "marked bookmarks.  Now move to where you want to "
+			    "have the stuff moved to, and press the \"Move\" "
+			    "button."));
+	}
+
 	return EVENT_PROCESSED;
 }
 
