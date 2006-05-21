@@ -429,6 +429,7 @@ set_server(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
+	/* [gettext_accelerator_context(.push_add_server_button)] */
 #define SERVER_WIDGETS_COUNT 3
 	struct terminal *term = dlg_data->win->term;
 	struct dialog *dlg;

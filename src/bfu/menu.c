@@ -61,6 +61,7 @@ static int m_submenu_len = sizeof(m_submenu) - 1;
 static window_handler_T menu_handler;
 static window_handler_T mainmenu_handler;
 static void display_mainmenu(struct terminal *term, struct menu *menu);
+static void set_menu_selection(struct menu *menu, int pos);
 
 
 static inline int
@@ -266,8 +267,13 @@ count_menu_size(struct terminal *term, struct menu *menu)
 static void
 scroll_menu(struct menu *menu, int steps, int wrap)
 {
-	int height, scr_i, pos, start;
+	int pos, start;
 	int s = steps ? steps/abs(steps) : 1; /* Selectable item search direction. */
+
+	/* menu->selected sometimes became -2 and caused infinite loops.
+	 * That should no longer be possible. */
+	assert(menu->selected >= -1);
+	if_assert_failed return;
 
 	if (menu->size <= 0) {
 no_item:
@@ -279,7 +285,13 @@ no_item:
 
 	start = pos = menu->selected;
 
-	if (!steps) steps = 1, --pos;
+	if (!steps) {
+		/* The caller wants us to check that menu->selected is
+		 * actually selectable, and correct it if not. */
+		steps = 1;
+		if (pos >= 0)
+			--pos;
+	}
 
 	while (steps) {
 		pos += s, steps -= s;
@@ -314,6 +326,20 @@ no_item:
 select_item:
 	if (!mi_is_selectable(&menu->items[pos]))
 		goto no_item;
+	set_menu_selection(menu, pos);
+}
+
+/* Set menu->selected = pos, and adjust menu->first if needed.
+ * This neither redraws the menu nor runs the item's action.
+ * The caller must ensure that menu->items[pos] is selectable. */
+static void
+set_menu_selection(struct menu *menu, int pos)
+{
+	int height, scr_i;
+
+	assert(pos >= 0 && pos < menu->size);
+	assert(mi_is_selectable(&menu->items[pos]));
+	if_assert_failed return;
 
 	menu->selected = pos;
 
@@ -595,8 +621,7 @@ menu_mouse_handler(struct menu *menu, struct term_event *ev)
 
 		if (sel >= 0 && sel < menu->size
 		    && mi_is_selectable(&menu->items[sel])) {
-			menu->selected = sel;
-			scroll_menu(menu, 0, 1);
+			set_menu_selection(menu, sel);
 			display_menu(win->term, menu);
 			select_menu(win->term, menu);
 		}
@@ -654,7 +679,8 @@ search_menu_item(struct menu_item *item, unsigned char *buffer,
 {
 	unsigned char *text, *match;
 
-	if (!mi_has_left_text(item)) return 0;
+	/* set_menu_selection asserts selectability. */
+	if (!mi_has_left_text(item) || !mi_is_selectable(item)) return 0;
 
 	text = mi_text_translate(item) ? _(item->text, term) : item->text;
 
@@ -680,6 +706,7 @@ menu_search_handler(struct input_line *line, int action_id)
 	unsigned char *buffer = line->buffer;
 	struct window *win;
 	int pos = menu->selected;
+	int start;
 	int direction;
 
 	switch (action_id) {
@@ -712,11 +739,12 @@ menu_search_handler(struct input_line *line, int action_id)
 
 	pos %= menu->size;
 
+	start = pos;
 	do {
 		struct menu_item *item = &menu->items[pos];
 
 		if (search_menu_item(item, buffer, term)) {
-			scroll_menu(menu, pos - menu->selected, 0);
+			set_menu_selection(menu, pos);
 			display_menu(term, menu);
 			return INPUT_LINE_PROCEED;
 		}
@@ -725,7 +753,7 @@ menu_search_handler(struct input_line *line, int action_id)
 
 		if (pos == menu->size) pos = 0;
 		else if (pos < 0) pos = menu->size - 1;
-	} while (pos != menu->selected);
+	} while (pos != start);
 
 	return INPUT_LINE_CANCEL;
 }
@@ -851,8 +879,10 @@ menu_handler(struct window *win, struct term_event *ev)
 		case EVENT_REDRAW:
 			get_parent_ptr(win, &menu->parent_x, &menu->parent_y);
 			count_menu_size(win->term, menu);
-			menu->selected--;
-			scroll_menu(menu, 1, 1);
+			/* do_menu sets menu->selected = 0.  If that
+			 * item isn't actually selectable, correct
+			 * menu->selected here. */
+			scroll_menu(menu, 0, 1);
 			display_menu(win->term, menu);
 			break;
 
