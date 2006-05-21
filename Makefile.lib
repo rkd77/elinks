@@ -210,10 +210,19 @@ RULES_REC   = $(addsuffix -recursive,$(RULES))
 
 .PHONY: $(RULES) $(RULES_LOCAL) $(RULES_REC) $(addsuffix -default,$(RULES))
 
-# The -recursive rules decend all subdirs.
+# The -recursive rules descend all subdirs.
+# If make -k was used and a sub-Make fails, then keep building the
+# remaining subdirectories, but return an error at the end.
 $(RULES_REC):
+ifneq (,$(findstring k,$(MAKEFLAGS)))
+	@suberr=0; \
+	$(foreach subdir,$(sort $(SUBDIRS)), \
+		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || suberr=1;) \
+	exit $$suberr
+else
 	@$(foreach subdir,$(sort $(SUBDIRS)), \
 		$(call ncmd,recmake,$(subdir),$(subst -recursive,,$@)) || exit 1;)
+endif
 
 # Dummy -local rules
 $(RULES_LOCAL):
