@@ -566,7 +566,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 
 		} else if (fd < SOCK_SHIFT) {
 			rc += select_read(fd, rd);
-			if (FD_ISSET(fd,wr))
+			if (wr && FD_ISSET(fd,wr))
 				rc++;   /* assume always writable */
 
 		} else {
@@ -614,7 +614,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		struct fd_set *ex, struct timeval *tv)
 {
-	struct fd_set tmp_rd, tmp_wr, tmp_ex;
+	struct fd_set tmp_rd, tmp_ex;
 	struct timeval expiry, start_time;
 	int    fd, rc;
 	BOOL   expired = FALSE;
@@ -627,7 +627,6 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		select_dump(num_fds, rd, wr, ex);
 
 	FD_ZERO(&tmp_rd);
-	FD_ZERO(&tmp_wr);
 	FD_ZERO(&tmp_ex);
 
 	if (tv) {
@@ -646,7 +645,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 	errno = 0;
 
 	for (rc = 0; !expired; ) {
-		rc += select_one_loop (num_fds, &tmp_rd, &tmp_wr, &tmp_ex);
+		rc += select_one_loop (num_fds, &tmp_rd, wr, &tmp_ex);
 
 		if (tv) {
 			struct timeval now;
@@ -661,18 +660,16 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		if (rc) break;
 	}
 
-	/* Copy fd_sets to output */
-	if (rd) FD_ZERO(rd);
-	if (wr) FD_ZERO(wr);
-	if (ex) FD_ZERO(ex);
-
+	rc = 0;
 	for (fd = 0; fd < num_fds; fd++) {
-		if (rd && FD_ISSET(fd,&tmp_rd))
-			FD_SET (fd, rd);
-		if (wr && FD_ISSET(fd,&tmp_wr))
-			FD_SET (fd, wr);
-		if (ex && FD_ISSET(fd,&tmp_ex))
-			FD_SET (fd, ex);
+		if (rd && FD_ISSET(fd, rd) && !FD_ISSET(fd, &tmp_rd))
+			FD_CLR(fd, rd);
+		else rc++;
+		if (wr && FD_ISSET(fd, wr)) rc++;
+		/* wr always set */
+		if (ex && FD_ISSET(fd, ex) && !FD_ISSET(fd, &tmp_ex))
+			FD_CLR(fd, ex);
+		else rc++;
 	}
 
 	TRACE("-> rc %d, err %d", rc, rc < 0 ? errno : 0);

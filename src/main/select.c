@@ -335,10 +335,5 @@ can_read(int fd)
 int
 can_write(int fd)
 {
-#ifdef CONFIG_OS_WIN32
-	/* temporary hack. ELinks didn't start properly under Wine */
-	return 1;
-#else
 	return can_read_or_write(fd, 1);
-#endif
 }
