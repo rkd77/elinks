@@ -9,10 +9,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ELinks 0.11.CVS\n"
+"Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-28 19:36+0200\n"
-"PO-Revision-Date: 2006-04-28 20:00+0200\n"
+"POT-Creation-Date: 2006-05-25 14:29+0200\n"
+"PO-Revision-Date: 2006-05-25 20:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -35,13 +35,13 @@ msgstr "Informacja"
 msgid "Press space to expand this folder."
 msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:447 src/bfu/inpfield.c:255 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:393
-#: src/cookies/dialogs.c:356 src/cookies/dialogs.c:448 src/dialogs/edit.c:98
+#: src/cookies/dialogs.c:356 src/cookies/dialogs.c:449 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:211 src/dialogs/options.c:292
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:111
-#: src/protocol/protocol.c:235 src/scripting/lua/core.c:378
+#: src/protocol/protocol.c:236 src/scripting/lua/core.c:378
 #: src/scripting/lua/core.c:459 src/session/session.c:801
 #: src/viewer/text/search.c:1594
 msgid "~OK"
@@ -127,7 +127,7 @@ msgstr "B³±d przy usuwaniu"
 #: src/bfu/hierbox.c:760 src/bfu/hierbox.c:772 src/bfu/hierbox.c:814
 #: src/bfu/hierbox.c:876 src/config/dialogs.c:836 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:192 src/terminal/tab.c:229
+#: src/terminal/tab.c:213 src/terminal/tab.c:250
 msgid "~Yes"
 msgstr "~Tak"
 
@@ -135,7 +135,7 @@ msgstr "~Tak"
 #: src/bfu/hierbox.c:761 src/bfu/hierbox.c:773 src/bfu/hierbox.c:815
 #: src/bfu/hierbox.c:877 src/config/dialogs.c:837 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:193 src/terminal/tab.c:230
+#: src/terminal/tab.c:214 src/terminal/tab.c:251
 msgid "~No"
 msgstr "~Nie"
 
@@ -178,13 +178,13 @@ msgstr "Nieprawid³owe wyra¿enie"
 msgid "Empty string not allowed"
 msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:255 src/config/dialogs.c:394 src/cookies/dialogs.c:357
-#: src/cookies/dialogs.c:449 src/dialogs/edit.c:102 src/dialogs/edit.c:105
+#: src/cookies/dialogs.c:450 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:214 src/dialogs/options.c:293 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:802
 #: src/scripting/lua/core.c:379 src/scripting/lua/core.c:460
-#: src/session/download.c:542 src/session/download.c:1139
+#: src/session/download.c:580 src/session/download.c:1182
 #: src/viewer/text/search.c:1595
 msgid "~Cancel"
 msgstr "~Anuluj"
@@ -200,7 +200,7 @@ msgstr "Cyfrowy zegar w pasku statusu."
 #
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1166
 #: src/config/options.inc:1173 src/ecmascript/ecmascript.c:43
-#: src/globhist/globhist.c:63 src/mime/backend/mailcap.c:93
+#: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
 msgid "Enable"
 msgstr "W³±cz"
@@ -270,7 +270,7 @@ msgstr ""
 "\n"
 "'-' - oznacza i¿ dany wska¼nik jest wy³±czony."
 
-#: src/bfu/menu.c:737
+#: src/bfu/menu.c:767
 msgid "Search menu/"
 msgstr "Menu wyszukiwania/"
 
@@ -445,49 +445,80 @@ msgstr "Nazwa foldera"
 msgid "Edit bookmark"
 msgstr "Edytuj zak³adkê"
 
+#: src/bookmarks/dialogs.c:477
+msgid "Cannot move folder inside itself"
+msgstr "Nie mo¿na przesun±æ folderu wewn±trz niego samego"
+
+#: src/bookmarks/dialogs.c:478
+msgid ""
+"You are trying to move the marked folder inside itself. To move the folder "
+"to a different location select the new location before pressing the Move "
+"button."
+msgstr ""
+"Próbujesz przesun±æ zaznaczony folder wewn±trz niego samego. Aby przesun±æ "
+"folder w inne miejsce zaznacz nowe po³o¿enie zanim naci¶niesz przycisk "
+"\"Przesuñ\"."
+
+#: src/bookmarks/dialogs.c:484
+msgid "Nothing to move"
+msgstr "Nic do przesuniêcia"
+
+#: src/bookmarks/dialogs.c:485
+msgid ""
+"To move bookmarks, first mark all the bookmarks (or folders) you want to "
+"move.  This can be done with the Insert key if you're using the default key-"
+"bindings.  An asterisk will appear near all marked bookmarks.  Now move to "
+"where you want to have the stuff moved to, and press the \"Move\" button."
+msgstr ""
+"Aby przesun±æ zak³adki, najpierw zaznacz wszystki zak³adki (lub foldery), "
+"które chcesz przesun±æ. Mo¿esz to zrobiæ klawiszem \"Insert\", je¶li u¿ywasz "
+"domy¶lnych przypisañ klawiszy. Obok zaznaczonych zak³adek pojawi siê "
+"gwiazdka. Teraz przenie¶ siê tam, gdzie chcesz przesun±æ zak³adki i naci¶nij "
+"przycisk \"Przenie¶\"."
+
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/bookmarks/dialogs.c:463 src/cache/dialogs.c:230
+#: src/bookmarks/dialogs.c:502 src/cache/dialogs.c:230
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:257
 msgid "~Goto"
 msgstr "~Przejd¼ do"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
-#: src/bookmarks/dialogs.c:464 src/config/dialogs.c:530
-#: src/cookies/dialogs.c:470
+#: src/bookmarks/dialogs.c:503 src/config/dialogs.c:530
+#: src/cookies/dialogs.c:471
 msgid "~Edit"
 msgstr "~Edytuj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/bookmarks/dialogs.c:465 src/cache/dialogs.c:231
-#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:471
+#: src/bookmarks/dialogs.c:504 src/cache/dialogs.c:231
+#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:472
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:259
 msgid "~Delete"
 msgstr "~Usuñ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
-#: src/bookmarks/dialogs.c:466 src/config/dialogs.c:531
-#: src/config/dialogs.c:944 src/cookies/dialogs.c:468 src/dialogs/menu.c:455
+#: src/bookmarks/dialogs.c:505 src/config/dialogs.c:531
+#: src/config/dialogs.c:944 src/cookies/dialogs.c:469 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Dodaj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:467
+#: src/bookmarks/dialogs.c:506
 msgid "Add se~parator"
 msgstr "Separator ~kart"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:468
+#: src/bookmarks/dialogs.c:507
 msgid "Add ~folder"
 msgstr "Dodaj ~folder"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:469
+#: src/bookmarks/dialogs.c:508
 msgid "~Move"
 msgstr "Prze~nie¶"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
-#: src/bookmarks/dialogs.c:470 src/cache/dialogs.c:232
+#: src/bookmarks/dialogs.c:509 src/cache/dialogs.c:232
 #: src/config/dialogs.c:533 src/config/dialogs.c:947 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
@@ -495,37 +526,37 @@ msgstr "~Szukaj"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
-#: src/bookmarks/dialogs.c:474
+#: src/bookmarks/dialogs.c:513
 msgid "Clear"
 msgstr "Wyczy¶æ"
 
 #. TODO: Would this be useful? --jonas
-#: src/bookmarks/dialogs.c:477 src/globhist/dialogs.c:235
+#: src/bookmarks/dialogs.c:516 src/globhist/dialogs.c:235
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/bookmarks/dialogs.c:483
+#: src/bookmarks/dialogs.c:522
 msgid "Bookmark manager"
 msgstr "Obs³uga zak³adek"
 
-#: src/bookmarks/dialogs.c:609
+#: src/bookmarks/dialogs.c:648
 msgid "Search bookmarks"
 msgstr "Przeszukaj zak³adki"
 
-#: src/bookmarks/dialogs.c:638
+#: src/bookmarks/dialogs.c:677
 msgid "Add bookmark"
 msgstr "Dodaj do zak³adek"
 
-#: src/bookmarks/dialogs.c:674
+#: src/bookmarks/dialogs.c:713
 msgid "Saved session"
 msgstr "Zapisana sesja"
 
 #
-#: src/bookmarks/dialogs.c:682
+#: src/bookmarks/dialogs.c:721
 msgid "Bookmark tabs"
 msgstr "Zapisywanie informacji o kartach"
 
-#: src/bookmarks/dialogs.c:682
+#: src/bookmarks/dialogs.c:721
 msgid "Enter folder name"
 msgstr "Wpisz nazwê folderu"
 
@@ -620,7 +651,7 @@ msgid "Delete this cache entry?"
 msgstr "Czy usun±æ zaznaczony wpis cache?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:467
+#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:468
 #: src/dialogs/download.c:250 src/dialogs/download.c:480
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:258
@@ -1100,8 +1131,8 @@ msgstr "Prze¶lij formularz"
 msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:189
-#: src/terminal/tab.c:226
+#: src/config/actions-main.inc:101 src/terminal/tab.c:210
+#: src/terminal/tab.c:247
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
@@ -1832,7 +1863,7 @@ msgid "Description"
 msgstr "Opis"
 
 #: src/config/dialogs.c:321 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:229 src/session/session.c:282
+#: src/protocol/protocol.c:230 src/session/session.c:282
 #: src/session/session.c:964 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
@@ -1871,9 +1902,9 @@ msgid "Cannot add an option here."
 msgstr "Nie mo¿na dodaæ tu opcji."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:473
+#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:474
 #: src/dialogs/options.c:213 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1123
+#: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1166
 msgid "Sa~ve"
 msgstr "~Zapisz"
 
@@ -1950,31 +1981,31 @@ msgstr ""
 "czy zmienna $HOME jest ustawiona poprawnie i czy masz prawo zapisu do "
 "katalogu domowego."
 
-#: src/config/kbdbind.c:220
+#: src/config/kbdbind.c:221
 msgid "Main mapping"
 msgstr "G³ówna mapa klawiszy"
 
-#: src/config/kbdbind.c:221
+#: src/config/kbdbind.c:222
 msgid "Edit mapping"
 msgstr "Mapa klawiszy edycji"
 
-#: src/config/kbdbind.c:222
+#: src/config/kbdbind.c:223
 msgid "Menu mapping"
 msgstr "Mapa klawiszy menu"
 
-#: src/config/kbdbind.c:555
+#: src/config/kbdbind.c:556
 msgid "Unrecognised keymap"
 msgstr "Nierozpoznana mapa klawiszy"
 
-#: src/config/kbdbind.c:558
+#: src/config/kbdbind.c:559
 msgid "Error parsing keystroke"
 msgstr "B³±d przy odczytywaniu kombinacji klawiszy"
 
-#: src/config/kbdbind.c:562
+#: src/config/kbdbind.c:563
 msgid "Unrecognised action (internal error)"
 msgstr "Nierozpoznana akcja (b³±d wewnêtrzny)"
 
-#: src/config/kbdbind.c:578
+#: src/config/kbdbind.c:579
 msgid "Error registering event"
 msgstr "B³±d przy rejestrowaniu zdarzenia"
 
@@ -4733,26 +4764,26 @@ msgstr "Skasowanie wszystkich ciasteczek"
 msgid "Do you really want to remove all cookies?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie ciasteczka?"
 
-#: src/cookies/dialogs.c:442
+#: src/cookies/dialogs.c:443
 msgid "Add server"
 msgstr "Dodaj serwer"
 
-#: src/cookies/dialogs.c:446
+#: src/cookies/dialogs.c:447
 msgid "Server name"
 msgstr "Nazwa serwera"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
-#: src/cookies/dialogs.c:469
+#: src/cookies/dialogs.c:470
 msgid "Add ~server"
 msgstr "Dodaj ~serwer"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:472 src/dialogs/download.c:486 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:473 src/dialogs/download.c:486 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:260
 msgid "C~lear"
 msgstr "Wy~czy¶æ"
 
-#: src/cookies/dialogs.c:478
+#: src/cookies/dialogs.c:479
 msgid "Cookie manager"
 msgstr "Menad¿er ciasteczek"
 
@@ -4814,7 +4845,7 @@ msgid "No header info."
 msgstr "Brak nag³ówka."
 
 #: src/dialogs/download.c:238 src/dialogs/menu.c:588
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:360
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:398
 msgid "Download"
 msgstr "Pobieranie"
 
@@ -5953,33 +5984,33 @@ msgstr "~Zak³adki"
 msgid "Global history manager"
 msgstr "Menad¿er historii globalnej"
 
-#: src/globhist/globhist.c:59
+#: src/globhist/globhist.c:60
 msgid "Global history"
 msgstr "Historia globalna"
 
 #
-#: src/globhist/globhist.c:61
+#: src/globhist/globhist.c:62
 msgid "Global history options."
 msgstr "Ustawienia historii globalnej."
 
-#: src/globhist/globhist.c:65
+#: src/globhist/globhist.c:66
 msgid "Enable global history (\"history of all pages visited\")."
 msgstr "W³±cz globaln± historiê (\"historiê wszystkich odwiedzanych stron\")."
 
-#: src/globhist/globhist.c:67
+#: src/globhist/globhist.c:68
 msgid "Maximum number of entries"
 msgstr "Maksymalna liczba pozycji"
 
-#: src/globhist/globhist.c:69
+#: src/globhist/globhist.c:70
 msgid "Maximum number of entries in the global history."
 msgstr "Maksymalna liczba pozycji w globalnej historii."
 
 #
-#: src/globhist/globhist.c:71
+#: src/globhist/globhist.c:72
 msgid "Display style"
 msgstr "Sposób pokazywania"
 
-#: src/globhist/globhist.c:73
+#: src/globhist/globhist.c:74
 msgid ""
 "What to display in global history dialog:\n"
 "0 is URLs\n"
@@ -5990,7 +6021,7 @@ msgstr ""
 "1 - tytu³y stron"
 
 #. name:
-#: src/globhist/globhist.c:428
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Historia globalna"
 
@@ -6131,29 +6162,29 @@ msgstr "Ukraiñski"
 msgid "The call to %s failed: %d (%s)"
 msgstr "Wywo³anie %s nieudane: %d (%s)"
 
-#: src/main/main.c:139
+#: src/main/main.c:136
 msgid "Cannot create a pipe for internal communication."
 msgstr "Nie mo¿na utworzyæ potoku dla wewnêtrznej komunikacji."
 
-#: src/main/main.c:203
+#: src/main/main.c:200
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Spodziewany URL po -%s"
 
-#: src/main/main.c:211
+#: src/main/main.c:208
 msgid "No running ELinks found."
 msgstr "¯adnego dzia³aj±cego ELinksa nie znaleziono."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:215
 msgid "No remote session to connect to."
 msgstr "Brak zdalnej sesji, ¿eby siê przy³±czyæ."
 
-#: src/main/main.c:227
+#: src/main/main.c:224
 msgid "Unable to encode session info."
 msgstr "Nie jestem w stanie zdekodowaæ informacji o sesji."
 
-#: src/main/main.c:244
+#: src/main/main.c:241
 msgid "Unable to attach_terminal()."
 msgstr "Nie jestem w stanie przy³±czyæ terminala."
 
@@ -6324,12 +6355,12 @@ msgstr ""
 "u¿ywana tutaj zamiast '.')."
 
 #. name:
-#: src/mime/backend/default.c:228
+#: src/mime/backend/default.c:215
 msgid "Option system"
 msgstr "System konfiguracyjny"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:674
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:675
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -7306,7 +7337,7 @@ msgstr "Pliki"
 msgid "Comment"
 msgstr "Komentarz"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:361
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:399
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7494,7 +7525,7 @@ msgstr "Co chcesz zrobiæ z plikiem '%s'?"
 msgid "Information about the torrent"
 msgstr "Informacje o potoku"
 
-#: src/protocol/bittorrent/dialogs.c:764 src/session/download.c:1035
+#: src/protocol/bittorrent/dialogs.c:764 src/session/download.c:1078
 msgid "What to do?"
 msgstr "Co mam zrobiæ?"
 
@@ -7504,12 +7535,12 @@ msgid "Down~load"
 msgstr "~Pobierz"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:792 src/session/download.c:1129
+#: src/protocol/bittorrent/dialogs.c:792 src/session/download.c:1172
 msgid "~Display"
 msgstr "~Wy¶wietl"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:796 src/session/download.c:1133
+#: src/protocol/bittorrent/dialogs.c:796 src/session/download.c:1176
 msgid "Show ~header"
 msgstr "Poka¿ ~nag³ówek"
 
@@ -7542,19 +7573,19 @@ msgid "CGI"
 msgstr "CGI"
 
 #
-#: src/protocol/file/file.c:39
+#: src/protocol/file/file.c:41
 msgid "Local files"
 msgstr "Lokalne pliki"
 
-#: src/protocol/file/file.c:41
+#: src/protocol/file/file.c:43
 msgid "Options specific to local browsing."
 msgstr "Ustawienia dotycz±ce przegl±dania lokalnych plików."
 
-#: src/protocol/file/file.c:43
+#: src/protocol/file/file.c:45
 msgid "Allow reading special files"
 msgstr "Zezwolenie na czytanie plików specjalnych"
 
-#: src/protocol/file/file.c:45
+#: src/protocol/file/file.c:47
 msgid ""
 "Whether to allow reading from non-regular files.\n"
 "Note this can be dangerous; reading /dev/urandom or\n"
@@ -7564,11 +7595,11 @@ msgstr ""
 "NIEBEZPIECZNE - czytanie /dev/urandom czy /dev/zero\n"
 "mo¿e zepsuæ Ci dzieñ!"
 
-#: src/protocol/file/file.c:49
+#: src/protocol/file/file.c:51
 msgid "Show hidden files in directory listing"
 msgstr "Pokazuj ukryte pliki przy wy¶wietlaniu katalogów"
 
-#: src/protocol/file/file.c:51
+#: src/protocol/file/file.c:53
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
 "hidden in local directories listing."
@@ -7577,11 +7608,11 @@ msgstr ""
 "nie bêd± pokazywane."
 
 #
-#: src/protocol/file/file.c:54
+#: src/protocol/file/file.c:56
 msgid "Try encoding extensions"
 msgstr "Próbuj ró¿ne rozszerzenia plików"
 
-#: src/protocol/file/file.c:56
+#: src/protocol/file/file.c:58
 msgid ""
 "When set, if we can't open a file named 'filename', we'll try\n"
 "to open 'filename' with some encoding extension appended\n"
@@ -7592,7 +7623,7 @@ msgstr ""
 "(np. 'plik.gz'); zale¿y to od wspieranych formatów kompresji."
 
 #. name:
-#: src/protocol/file/file.c:64
+#: src/protocol/file/file.c:66
 msgid "File"
 msgstr "Plik"
 
@@ -7973,24 +8004,24 @@ msgstr ""
 "Wszystkie pozycje nag³ówka mog± byæ czytane w okienku\n"
 "dialogowym z informacjami o nag³ówku."
 
-#: src/protocol/protocol.c:231
+#: src/protocol/protocol.c:232
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Ta wersja ELinksa nie zawiera obs³ugi protoko³u %s"
 
-#: src/protocol/protocol.c:262
+#: src/protocol/protocol.c:263
 msgid "Protocols"
 msgstr "Protoko³y"
 
-#: src/protocol/protocol.c:264
+#: src/protocol/protocol.c:265
 msgid "Protocol specific options."
 msgstr "Ustawienia dotycz±ce protoko³ów."
 
-#: src/protocol/protocol.c:266
+#: src/protocol/protocol.c:267
 msgid "No-proxy domains"
 msgstr "Domeny dostêpne bez udzia³u proxy"
 
-#: src/protocol/protocol.c:268
+#: src/protocol/protocol.c:269
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -8003,7 +8034,7 @@ msgstr ""
 "¶rodowiskowa NO_PROXY."
 
 #. name:
-#: src/protocol/protocol.c:310
+#: src/protocol/protocol.c:312
 msgid "Protocol"
 msgstr "Protokó³"
 
@@ -8236,16 +8267,16 @@ msgstr "B³±d skryptów przegl±darki"
 msgid "Scripting"
 msgstr "Skryptowanie"
 
-#: src/scripting/smjs/elinks_object.c:81
+#: src/scripting/smjs/elinks_object.c:83
 msgid "User script alert"
 msgstr "B³±d skryptu u¿ytkownika"
 
-#: src/session/download.c:232 src/session/download.c:329
-#: src/session/download.c:496 src/session/download.c:591
+#: src/session/download.c:235 src/session/download.c:359
+#: src/session/download.c:534 src/session/download.c:629
 msgid "Download error"
 msgstr "B³±d pobierania"
 
-#: src/session/download.c:233 src/session/download.c:592
+#: src/session/download.c:236 src/session/download.c:630
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8254,7 +8285,7 @@ msgstr ""
 "Nie mo¿na utworzyæ pliku '%s':\n"
 "%s"
 
-#: src/session/download.c:330
+#: src/session/download.c:360
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8265,17 +8296,17 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:497
+#: src/session/download.c:535
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' to katalog."
 
 #
-#: src/session/download.c:531
+#: src/session/download.c:569
 msgid "File exists"
 msgstr "Plik istnieje"
 
-#: src/session/download.c:532
+#: src/session/download.c:570
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8291,46 +8322,46 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:539
+#: src/session/download.c:577
 msgid "Sa~ve under the alternative name"
 msgstr "Zap~isz pod alternatywn± nazw±"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:540
+#: src/session/download.c:578
 msgid "~Overwrite the original file"
 msgstr "Nadpisz ~oryginalny plik"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:541
+#: src/session/download.c:579
 msgid "~Resume download of the original file"
 msgstr "Wznów pobie~ranie oryginalnego pliku"
 
-#: src/session/download.c:1038
+#: src/session/download.c:1081
 msgid "Unknown type"
 msgstr "Nieznany typ"
 
-#: src/session/download.c:1055
+#: src/session/download.c:1098
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Co chcesz zrobiæ z plikiem '%s' (typu %s%s%s)?"
 
-#: src/session/download.c:1085
+#: src/session/download.c:1128
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Program ('%' zostanie zast±pione nazw± pliku)"
 
 #
-#: src/session/download.c:1089
+#: src/session/download.c:1132
 msgid "Block the terminal"
 msgstr "Blokowanie terminala"
 
-#: src/session/download.c:1095
+#: src/session/download.c:1138
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Plik zostanie otwarty przy u¿yciu programu '%s'."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1116
+#: src/session/download.c:1159
 msgid "~Open"
 msgstr "~Otwórz"
 
@@ -8460,11 +8491,11 @@ msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
-#: src/terminal/tab.c:190
+#: src/terminal/tab.c:211
 msgid "Do you really want to close the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
 
-#: src/terminal/tab.c:227
+#: src/terminal/tab.c:248
 msgid "Do you really want to close all except the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ wszystkie karty za wyj±tkiem bie¿±cej?"
 
@@ -8580,114 +8611,114 @@ msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1264
+#: src/viewer/text/link.c:1259
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1269
+#: src/viewer/text/link.c:1264
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1271
+#: src/viewer/text/link.c:1266
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1275
+#: src/viewer/text/link.c:1270
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1277
+#: src/viewer/text/link.c:1272
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1279
+#: src/viewer/text/link.c:1274
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1284
+#: src/viewer/text/link.c:1279
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1287
+#: src/viewer/text/link.c:1282
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1286
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1302 src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1297 src/viewer/text/link.c:1337
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1317
+#: src/viewer/text/link.c:1312
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1325
+#: src/viewer/text/link.c:1320
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1326
+#: src/viewer/text/link.c:1321
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1330
+#: src/viewer/text/link.c:1325
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1327
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1335
+#: src/viewer/text/link.c:1330
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1340
+#: src/viewer/text/link.c:1335
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1347
+#: src/viewer/text/link.c:1342
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1349
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1356
+#: src/viewer/text/link.c:1351
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1365
+#: src/viewer/text/link.c:1360
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1413
+#: src/viewer/text/link.c:1408
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1418
+#: src/viewer/text/link.c:1413
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8797,6 +8828,11 @@ msgstr "B³±d zapisu"
 #: src/viewer/text/view.c:1306
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
+
+#. name:
+#: src/viewer/viewer.c:25
+msgid "Viewer"
+msgstr "Przegl±darka"
 
 #~ msgid "Rules for passing URIs to external commands."
 #~ msgstr "Zasady przekazywania URI do zewnêtrznych poleceñ."
