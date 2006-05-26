@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-25 14:29+0200\n"
+"POT-Creation-Date: 2006-05-26 15:22+0200\n"
 "PO-Revision-Date: 2006-05-25 20:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -6517,7 +6517,7 @@ msgstr "Ustawienia dotycz±ce certyfikatów X509."
 msgid ""
 "Enable or not the sending of X509 client certificates\n"
 "to servers which request them."
-msgstr "Czy wysy³aæ certyfikaty klienta X509 do serwerów, które ich za¿±daj±?"
+msgstr "Czy wysy³aæ certyfikaty klienta X509 do serwerów, które ich wymagaj±?"
 
 #: src/network/ssl/ssl.c:85
 msgid "Certificate File"
@@ -6571,7 +6571,7 @@ msgstr "Negocjacja SSL"
 
 #: src/network/state.c:30
 msgid "Request sent"
-msgstr "¯±danie wys³ane"
+msgstr "Zapytanie wys³ane"
 
 #: src/network/state.c:31
 msgid "Logging in"
@@ -6583,7 +6583,7 @@ msgstr "Pobieranie nag³ówków"
 
 #: src/network/state.c:33
 msgid "Server is processing request"
-msgstr "Serwer przetwarza ¿±danie"
+msgstr "Serwer przetwarza zapytanie"
 
 #: src/network/state.c:34
 msgid "Transferring"
@@ -6641,7 +6641,7 @@ msgstr "Z³a sk³adnia URL-a"
 
 #: src/network/state.c:53
 msgid "Request must be restarted"
-msgstr "¯±danie musi byæ powtórzone"
+msgstr "Zapytanie musi byæ powtórzone"
 
 #: src/network/state.c:54
 msgid "Can't get socket state"
@@ -6817,7 +6817,7 @@ msgstr "Plik metainformacji BitTorrent zawiera b³êdy"
 
 #: src/network/state.c:124
 msgid "The tracker requesting failed"
-msgstr "¯±danie ¶ledzenia nie powiod³o siê"
+msgstr "Zapytanie dotycz±ce ¶ledzenia nie powiod³o siê"
 
 #: src/network/state.c:148
 msgid "Unknown error"
@@ -6993,12 +6993,12 @@ msgid ""
 "in compact format. Note, the compact format only supports\n"
 "IPv4 addresses."
 msgstr ""
-"Czy ¿±daæ zwrócenia informacji o partnerze w krótkim formacie.\n"
+"Czy zapytaæ o informacjê o partnerze w krótkim formacie.\n"
 "Uwaga, krótki format obs³uguje tylko adresy IPv4."
 
 #: src/protocol/bittorrent/bittorrent.c:61
 msgid "Tracker announce interval"
-msgstr "Czêstotliwo¶æ rozg³aszania tackera"
+msgstr "Czêstotliwo¶æ rozg³aszania trackera"
 
 #: src/protocol/bittorrent/bittorrent.c:63
 msgid ""
@@ -7007,9 +7007,9 @@ msgid ""
 "Set to zero to use the interval requested by the tracker."
 msgstr ""
 "Liczba sekund do odczekania pomiêdzy regularnym kontaktowaniem\n"
-"siê z trackerem w celu uzyskania informacji o postêpach i ¿±dania\n"
+"siê z trackerem w celu uzyskania informacji o postêpach i wymagania\n"
 "wiêkszej liczby partnerów. Ustawienie zera oznacza u¿ycie\n"
-"czêstotliwo¶ci ¿±danej przez trackera."
+"czêstotliwo¶ci wymaganej przez trackera."
 
 #: src/protocol/bittorrent/bittorrent.c:67
 msgid "IP-address to announce"
@@ -7052,7 +7052,7 @@ msgid ""
 "The maximum number of peers to request from the tracker.\n"
 "Set to 0 to use the server default."
 msgstr ""
-"Maksymalna liczba partnerów do za¿±dania od trackera.\n"
+"Maksymalna liczba partnerów do odpytania u trackera.\n"
 "0 oznacza u¿ycie warto¶ci domy¶lnej dla serwera."
 
 #: src/protocol/bittorrent/bittorrent.c:86
@@ -7123,12 +7123,12 @@ msgid ""
 "The maximum length to allow for incoming requests.\n"
 "Larger requests will cause the connection to be dropped."
 msgstr ""
-"Maksymalna d³ugo¶æ dozwolonych ¿±dañ przychodz±cych.\n"
-"Wiêksze ¿±dania spowoduj± porzucenie po³±czenia."
+"Maksymalna d³ugo¶æ dozwolonych zapytañ przychodz±cych.\n"
+"Wiêksze zapytania spowoduj± porzucenie po³±czenia."
 
 #: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
-msgstr "D³ugo¶æ ¿adañ"
+msgstr "D³ugo¶æ zapytañ"
 
 #: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
@@ -7136,7 +7136,7 @@ msgid ""
 "to the max_request_length option. If the configured length is\n"
 "bigger than the piece length it will be truncated."
 msgstr ""
-"O ile bajtów pytaæ dla ka¿dego ¿±dania. Jest to opcja komplementarna\n"
+"O ile bajtów pytaæ dla ka¿dego zapytania. Jest to opcja komplementarna\n"
 "do max_request_length. Je¶li skonfigurowana d³ugo¶æ jest wiêksza\n"
 "ni¿ d³ugo¶æ kawa³ka, bêdzie on obciêty."
 
@@ -7240,7 +7240,7 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:179
 msgid "Number of pending requests"
-msgstr "Liczba oczekuj±cych ¿±dañ"
+msgstr "Liczba oczekuj±cych zapytañ"
 
 #: src/protocol/bittorrent/bittorrent.c:181
 msgid ""
@@ -7251,11 +7251,12 @@ msgid ""
 "of the connection since remaining piece blocks will be requested\n"
 "from multiple peers."
 msgstr ""
-"Liczba ¿±dañ do ci±g³ego trzymania w kolejce. Ci±g³o¶æ ¿±dañ jest\n"
+"Liczba zapytañ do ci±g³ego trzymania w kolejce. Ci±g³o¶æ zapytañ jest\n"
 "podstawowa dla wysycenia po³±czeñ i otrzymania dobrej wydajno¶ci\n"
 "po³±czenia, a tym samym szybszego pobrania. Jednak bardzo du¿y\n"
 "rozmiar kolejki mo¿e prowadziæ do tracenia pasma przy koñcu\n"
-"po³±czenia poniewa¿ pozosta³e bloki bêd± ¿±dane od wielu partnerów."
+"po³±czenia poniewa¿ o pozosta³e bloki bêdzie proszonych wielu\n"
+"partnerów."
 
 #. Bram uses 30 seconds here.
 #: src/protocol/bittorrent/bittorrent.c:190
@@ -7891,7 +7892,7 @@ msgid ""
 "security risk because it tells web-masters and the FBI sniffers about\n"
 "your language preference."
 msgstr ""
-"¯±da narodowej wersji dokumentu od serwera (u¿ywaj±c\n"
+"Prosi o narodow± wersjê dokumentu od serwera (u¿ywaj±c\n"
 "Accept-Language) u¿ywaj±c jêzyka dla którego masz\n"
 "skonfigurowany interfejs u¿ytkownika (dotyczy to tak¿e\n"
 "w³a¶ciwo¶ci navigator.language ECMAScript, która jest\n"
@@ -7936,7 +7937,7 @@ msgid ""
 "Use \" \" if you don't want any User-Agent header to be sent at all."
 msgstr ""
 "Zmienia identyfikator przegl±darki. To znaczy ³añcuch, który\n"
-"jest wysy³any do serwera HTTP przy ka¿dym ¿±daniu dokumentu.\n"
+"jest wysy³any do serwera HTTP przy ka¿dym zapytaniu.\n"
 "Cz³on 'textmode' w pierwszym polu jest nasz± cich± prób±\n"
 "ustanowienia standardu dla przegl±darek tekstowych. Dziêki\n"
 "temu webmasterzy bêd± mogli ³atwo sprawdziæ typ przegl±darki\n"
@@ -8521,7 +8522,7 @@ msgstr "Brakuj±cy fragment"
 #: src/viewer/text/draw.c:64
 #, c-format
 msgid "The requested fragment \"#%s\" doesn't exist."
-msgstr "¯±dany fragment \"#%s\" nie istnieje."
+msgstr "Wybrany fragment \"#%s\" nie istnieje."
 
 #: src/viewer/text/form.c:862
 msgid "Error while posting form"
