@@ -126,8 +126,8 @@ static struct renderer_context renderer_context;
 
 
 /* Prototypes */
-void line_break(struct html_context *);
-void put_chars(struct html_context *, unsigned char *, int);
+static void line_break(struct html_context *);
+static void put_chars(struct html_context *, unsigned char *, int);
 
 #define X(x_)	(part->box.x + (x_))
 #define Y(y_)	(part->box.y + (y_))
@@ -1261,7 +1261,7 @@ html_has_non_space_chars(unsigned char *chars, int charslen)
 	return 0;
 }
 
-void
+static void
 put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 {
 	enum link_state link_state;
@@ -1362,7 +1362,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 
 #undef overlap
 
-void
+static void
 line_break(struct html_context *html_context)
 {
 	struct part *part;
