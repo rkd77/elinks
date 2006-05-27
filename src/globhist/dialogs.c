@@ -119,7 +119,7 @@ static struct listbox_ops_messages globhist_messages = {
 	NULL,
 	/* delete_item_title */
 	N_("Delete history entry"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this history entry?"),
 	/* clear_all_items_title */
 	N_("Clear all history entries"),

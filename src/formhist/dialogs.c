@@ -134,7 +134,7 @@ static struct listbox_ops_messages formhist_messages = {
 	NULL,
 	/* delete_item_title */
 	N_("Delete form"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this form?"),
 	/* clear_all_items_title */
 	N_("Clear all forms"),

@@ -425,7 +425,7 @@ static struct listbox_ops_messages download_messages = {
 	NULL,
 	/* delete_item_title */
 	N_("Interrupt download"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Interrupt this download?"),
 	/* clear_all_items_title */
 	N_("Interrupt all downloads"),

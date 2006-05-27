@@ -215,7 +215,7 @@ static struct listbox_ops_messages cookies_messages = {
 	N_("Delete all cookies from domain \"%s\"?"),
 	/* delete_item_title */
 	N_("Delete cookie"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this cookie?"),
 	/* clear_all_items_title */
 	N_("Clear all cookies"),

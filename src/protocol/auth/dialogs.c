@@ -229,7 +229,7 @@ static struct listbox_ops_messages http_auth_messages = {
 	NULL,
 	/* delete_item_title */
 	N_("Delete auth entry"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this auth entry?"),
 	/* clear_all_items_title */
 	N_("Clear all auth entries"),

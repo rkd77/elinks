@@ -201,7 +201,7 @@ static struct listbox_ops_messages cache_messages = {
 	NULL,
 	/* delete_item_title */
 	N_("Delete cache entry"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this cache entry?"),
 	/* clear_all_items_title */
 	NULL,

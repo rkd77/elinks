@@ -129,7 +129,7 @@ static struct listbox_ops_messages bookmarks_messages = {
 	N_("Delete the folder \"%s\" and all bookmarks in it?"),
 	/* delete_item_title */
 	N_("Delete bookmark"),
-	/* delete_item */
+	/* delete_item; xgettext:c-format */
 	N_("Delete this bookmark?"),
 	/* clear_all_items_title */
 	N_("Clear all bookmarks"),

@@ -45,18 +45,18 @@ struct listbox_context {
 };
 
 struct listbox_ops_messages {
-	unsigned char *cant_delete_item;
-	unsigned char *cant_delete_used_item;
-	unsigned char *cant_delete_folder;
-	unsigned char *cant_delete_used_folder;
-	unsigned char *delete_marked_items_title;
-	unsigned char *delete_marked_items;
-	unsigned char *delete_folder_title;
-	unsigned char *delete_folder;
-	unsigned char *delete_item_title;
-	unsigned char *delete_item;
-	unsigned char *clear_all_items_title;
-	unsigned char *clear_all_items;
+	unsigned char *cant_delete_item;          /* %s = text of item */
+	unsigned char *cant_delete_used_item;     /* %s = text of item */
+	unsigned char *cant_delete_folder;        /* %s = text of item */
+	unsigned char *cant_delete_used_folder;   /* %s = text of item */
+	unsigned char *delete_marked_items_title; /* not a format string */
+	unsigned char *delete_marked_items;	  /* not a format string */
+	unsigned char *delete_folder_title;	  /* not a format string */
+	unsigned char *delete_folder;		  /* %s = text of item */
+	unsigned char *delete_item_title;	  /* not a format string */
+	unsigned char *delete_item;		  /* %s = text of item */
+	unsigned char *clear_all_items_title;	  /* not a format string */
+	unsigned char *clear_all_items;		  /* not a format string */
 };
 
 /* TODO: We can maybe find a better way of figuring out whether a user of a
