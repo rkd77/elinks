@@ -358,6 +358,13 @@ html_style(struct html_context *html_context, unsigned char *a,
 }
 
 void
+html_style_close(struct html_context *html_context, unsigned char *a,
+                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	html_context->was_style = 0;
+}
+
+void
 html_html(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
@@ -369,6 +376,15 @@ html_html(struct html_context *html_context, unsigned char *a,
 
 	if (par_format.bgcolor != format.style.bg)
 		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
+}
+
+void
+html_html_close(struct html_context *html_context, unsigned char *a,
+                unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	if (html_top->type >= ELEMENT_KILLABLE
+	    && !html_context->was_body_background)
+		html_apply_canvas_bgcolor(html_context);
 }
 
 void
@@ -559,6 +575,13 @@ html_xmp(struct html_context *html_context, unsigned char *a,
 {
 	html_context->was_xmp = 1;
 	html_pre(html_context, a, html, eof, end);
+}
+
+void
+html_xmp_close(struct html_context *html_context, unsigned char *a,
+               unsigned char *html, unsigned char *eof, unsigned char **end)
+{
+	html_context->was_xmp = 0;
 }
 
 void

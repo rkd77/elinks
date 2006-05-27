@@ -455,7 +455,7 @@ static struct element_info elements[] = {
  {"H6",          html_h6,          NULL,                 2, ET_NON_NESTABLE},
  {"HEAD",        html_head,        NULL,                 0, ET_NESTABLE    },
  {"HR",          html_hr,          NULL,                 2, ET_NON_PAIRABLE},
- {"HTML",        html_html,        NULL,                 0, ET_NESTABLE    },
+ {"HTML",        html_html,        html_html_close,      0, ET_NESTABLE    },
  {"I",           html_italic,      NULL,                 0, ET_NESTABLE    },
  {"IFRAME",      html_iframe,      NULL,                 1, ET_NON_PAIRABLE},
  {"IMG",         html_img,         NULL,                 0, ET_NON_PAIRABLE},
@@ -479,7 +479,7 @@ static struct element_info elements[] = {
  {"SPAN",        html_span,        NULL,                 0, ET_NESTABLE    },
  {"STRIKE",      html_underline,   NULL,                 0, ET_NESTABLE    },
  {"STRONG",      html_bold,        NULL,                 0, ET_NESTABLE    },
- {"STYLE",       html_style,       NULL,                 0, ET_NESTABLE    },
+ {"STYLE",       html_style,       html_style_close,     0, ET_NESTABLE    },
  {"SUB",         html_subscript,   NULL,                 0, ET_NESTABLE    },
  {"SUP",         html_superscript, NULL,                 0, ET_NESTABLE    },
  {"TABLE",       html_table,       NULL,                 2, ET_NESTABLE    },
@@ -491,7 +491,7 @@ static struct element_info elements[] = {
  {"TT",          html_tt,          NULL,                 0, ET_NON_NESTABLE},
  {"U",           html_underline,   NULL,                 0, ET_NESTABLE    },
  {"UL",          html_ul,          NULL,                 2, ET_NESTABLE    },
- {"XMP",         html_xmp,         NULL,                 2, ET_NESTABLE    },
+ {"XMP",         html_xmp,         html_xmp_close,       2, ET_NESTABLE    },
  {NULL,          NULL,             NULL,                 0, ET_NESTABLE    },
 };
 
@@ -908,14 +908,7 @@ end_element(struct element_info *ei,
 	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
 		return html;
 
-	if (ei->open == html_xmp) html_context->was_xmp = 0;
-	if (ei->open == html_style) html_context->was_style = 0;
-
-	/* Apply background color from the <HTML> element. (bug 696) */
-	if (ei->open == html_html
-	    && html_top->type >= ELEMENT_KILLABLE
-	    && !html_context->was_body_background)
-		html_apply_canvas_bgcolor(html_context);
+	if (ei->close) ei->close(html_context, attr, html, eof, &html);
 
 	/* dump_html_stack(html_context); */
 	foreach (e, html_context->stack) {
