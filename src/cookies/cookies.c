@@ -125,7 +125,7 @@ static struct option_info cookies_options[] = {
 #define get_cookies_save()		get_opt_cookies(COOKIES_SAVE).number
 #define get_cookies_resave()		get_opt_cookies(COOKIES_RESAVE).number
 
-static struct cookie_server *
+struct cookie_server *
 get_cookie_server(unsigned char *host, int hostlen)
 {
 	struct cookie_server *sort_spot = NULL;

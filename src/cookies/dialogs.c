@@ -414,15 +414,26 @@ static widget_handler_status_T
 set_server(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	unsigned char *value = widget_data->cdata;
-	struct uri uri;
+	struct cookie *dummy_cookie = NULL;
 
 	if (!value) return EVENT_NOT_PROCESSED;
-	uri.host = stracpy(value);
-	if (uri.host) {
-		uri.hostlen = strlen(value);
-		set_cookie(&uri, "empty=1; path=/;");
-		mem_free(uri.host);
+
+	dummy_cookie = mem_calloc(1, sizeof(*dummy_cookie));
+	if (dummy_cookie == NULL) return EVENT_PROCESSED;
+
+	dummy_cookie->name = stracpy("empty");
+	dummy_cookie->value = stracpy("1");
+	dummy_cookie->path = stracpy("/");
+	dummy_cookie->domain = stracpy(value);
+	dummy_cookie->server = get_cookie_server(value, strlen(value));
+	if (dummy_cookie->name == NULL || dummy_cookie->value == NULL
+	    || dummy_cookie->path == NULL || dummy_cookie->domain == NULL
+	    || dummy_cookie->server == NULL) {
+		done_cookie(dummy_cookie);
+		return EVENT_PROCESSED;
 	}
+
+	accept_cookie(dummy_cookie);
 	return EVENT_PROCESSED;
 }
 

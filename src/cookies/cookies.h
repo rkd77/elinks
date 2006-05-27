@@ -35,6 +35,7 @@ struct cookie {
 	struct listbox_item *box_item;
 };
 
+struct cookie_server *get_cookie_server(unsigned char *host, int hostlen);
 void accept_cookie(struct cookie *);
 void done_cookie(struct cookie *);
 void delete_cookie(struct cookie *);
