@@ -80,14 +80,21 @@ void
 html_subscript(struct html_context *html_context, unsigned char *a,
                unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	format.style.attr |= AT_SUBSCRIPT | AT_UPDATE_SUB;
+	html_context->put_chars_f(html_context, "[", 1);
+}
+
+void
+html_subscript_close(struct html_context *html_context, unsigned char *a,
+                unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	html_context->put_chars_f(html_context, "]", 1);
 }
 
 void
 html_superscript(struct html_context *html_context, unsigned char *a,
                  unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	format.style.attr |= AT_SUPERSCRIPT | AT_UPDATE_SUP;
+	html_context->put_chars_f(html_context, "^", 1);
 }
 
 void

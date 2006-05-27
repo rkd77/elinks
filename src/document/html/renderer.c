@@ -338,7 +338,7 @@ get_format_screen_char(struct html_context *html_context,
 		copy_struct(&ta_cache, &format.style);
 
 		schar_cache.attr = 0;
-		if (format.style.attr & ~(AT_UPDATE_SUB|AT_UPDATE_SUP)) {
+		if (format.style.attr) {
 			if (format.style.attr & AT_UNDERLINE) {
 				schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 			}
@@ -364,34 +364,6 @@ get_format_screen_char(struct html_context *html_context,
 		set_screen_char_color(&schar_cache, format.style.bg, format.style.fg,
 				      html_context->options->color_flags,
 				      html_context->options->color_mode);
-
-		if (html_context->options->display_subs) {
-			if (format.style.attr & AT_SUBSCRIPT) {
-				if (format.style.attr & AT_UPDATE_SUB) {
-					renderer_context.subscript++;
-					format.style.attr &= ~AT_UPDATE_SUB;
-					put_chars(html_context, "[", 1);
-				}
-			} else {
-				while (renderer_context.subscript) {
-					renderer_context.subscript--;
-					put_chars(html_context, "]", 1);
-				}
-			}
-		}
-
-		if (html_context->options->display_sups) {
-			if (format.style.attr & AT_SUPERSCRIPT) {
-				if (format.style.attr & AT_UPDATE_SUP) {
-					renderer_context.supscript++;
-					format.style.attr &= ~AT_UPDATE_SUP;
-					put_chars(html_context, "^", 1);
-				}
-			} else {
-				while (renderer_context.supscript)
-					renderer_context.supscript--;
-			}
-		}
 	}
 
 	if (!!(schar_cache.attr & SCREEN_ATTR_UNSEARCHABLE)
@@ -1293,7 +1265,6 @@ void
 put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 {
 	enum link_state link_state;
-	int update_after_subscript = renderer_context.subscript;
 	struct part *part;
 
 	assert(html_context);
@@ -1357,25 +1328,6 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	set_hline(html_context, chars, charslen, link_state);
 
 	if (link_state != LINK_STATE_NONE) {
-
-#define is_drawing_subs_or_sups() \
-		((format.style.attr & AT_SUBSCRIPT \
-		  && html_context->options->display_subs) \
-		 || (format.style.attr & AT_SUPERSCRIPT \
-		     && html_context->options->display_sups))
-
-		/* We need to update the current @link_state because <sub> and
-		 * <sup> tags will output to the canvas using an inner
-		 * put_chars() call which results in their process_link() call
-		 * will ``update'' the @link_state. */
-		if (link_state == LINK_STATE_NEW
-		    && (is_drawing_subs_or_sups()
-			|| update_after_subscript != renderer_context.subscript)) {
-			link_state = get_link_state(html_context);
-		}
-
-#undef is_drawing_subs_or_sups
-
 		process_link(html_context, link_state, chars, charslen);
 	}
 

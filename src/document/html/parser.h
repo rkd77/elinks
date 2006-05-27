@@ -27,11 +27,7 @@ enum format_attr {
 	AT_UNDERLINE = 4,
 	AT_FIXED = 8,
 	AT_GRAPHICS = 16,
-	AT_SUBSCRIPT = 32,
-	AT_SUPERSCRIPT = 64,
-	AT_PREFORMATTED = 128,
-	AT_UPDATE_SUB = 256,
-	AT_UPDATE_SUP = 512,
+	AT_PREFORMATTED = 32,
 };
 
 struct text_attrib_style {

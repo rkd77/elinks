@@ -480,7 +480,7 @@ static struct element_info elements[] = {
  {"STRIKE",      html_underline,   NULL,                 0, ET_NESTABLE    },
  {"STRONG",      html_bold,        NULL,                 0, ET_NESTABLE    },
  {"STYLE",       html_style,       html_style_close,     0, ET_NESTABLE    },
- {"SUB",         html_subscript,   NULL,                 0, ET_NESTABLE    },
+ {"SUB",         html_subscript,   html_subscript_close, 0, ET_NESTABLE    },
  {"SUP",         html_superscript, NULL,                 0, ET_NESTABLE    },
  {"TABLE",       html_table,       NULL,                 2, ET_NESTABLE    },
  {"TD",          html_td,          NULL,                 0, ET_NESTABLE    },
