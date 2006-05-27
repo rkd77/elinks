@@ -904,12 +904,12 @@ end_element(struct element_info *ei,
 	int lnb = 0;
 	int kill = 0;
 
-	if (ei->open == html_xmp) html_context->was_xmp = 0;
-	if (ei->open == html_style) html_context->was_style = 0;
-
 	html_context->was_br = 0;
 	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
 		return html;
+
+	if (ei->open == html_xmp) html_context->was_xmp = 0;
+	if (ei->open == html_style) html_context->was_style = 0;
 
 	/* Apply background color from the <HTML> element. (bug 696) */
 	if (ei->open == html_html
