@@ -400,7 +400,7 @@ struct element_info {
 	 * formatting (by calling renderer hooks). Note that in a few cases,
 	 * this is just a placeholder and the element is given special care
 	 * in start_element() (which is also where we call these handlers). */
-	element_handler_T *func;
+	element_handler_T *open;
 
 	/* How many line-breaks to ensure we have before and after an element.
 	 * Value of 1 means the element will be on a line on its own, value
@@ -773,7 +773,7 @@ start_element(struct element_info *ei,
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. */
 	if (html_top->invisible
-	    && (ei->func != html_script || html_top->invisible < 2)) {
+	    && (ei->open != html_script || html_top->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
@@ -782,13 +782,13 @@ start_element(struct element_info *ei,
 	old_format = par_format;
 
 	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
-	if (ei->func == html_meta && html_context->was_body) {
+	if (ei->open == html_meta && html_context->was_body) {
 		html_handle_body_meta(html_context, name - 1, eof);
 		html_context->was_body = 0;
 	}
 
 #ifdef CONFIG_CSS
-	if (ei->func == html_style && html_context->options->css_enable) {
+	if (ei->open == html_style && html_context->options->css_enable) {
 		css_parse_stylesheet(&html_context->css_styles,
 				     html_context->base_href, html, eof);
 	}
@@ -869,7 +869,7 @@ start_element(struct element_info *ei,
 	 * that's what the display: property plays with. */
 #endif
 	ELEMENT_RENDER_PROLOGUE
-	if (ei->func) ei->func(html_context, attr, html, eof, &html);
+	if (ei->open) ei->open(html_context, attr, html, eof, &html);
 #ifdef CONFIG_CSS
 	if (selector && html_top->options) {
 		/* Call it now to override default colors of the elements. */
@@ -884,7 +884,7 @@ start_element(struct element_info *ei,
 	}
 #endif
 
-	if (ei->func != html_br) html_context->was_br = 0;
+	if (ei->open != html_br) html_context->was_br = 0;
 
 	if (restore_format) par_format = old_format;
 
@@ -903,8 +903,8 @@ end_element(struct element_info *ei,
 	int lnb = 0;
 	int kill = 0;
 
-	if (ei->func == html_xmp) html_context->was_xmp = 0;
-	if (ei->func == html_style) html_context->was_style = 0;
+	if (ei->open == html_xmp) html_context->was_xmp = 0;
+	if (ei->open == html_style) html_context->was_style = 0;
 
 	html_context->was_br = 0;
 	if (ei->type == ELEMENT_TYPE_NON_PAIRABLE
@@ -912,7 +912,7 @@ end_element(struct element_info *ei,
 		return html;
 
 	/* Apply background color from the <HTML> element. (bug 696) */
-	if (ei->func == html_html
+	if (ei->open == html_html
 	    && html_top->type >= ELEMENT_KILLABLE
 	    && !html_context->was_body_background)
 		html_apply_canvas_bgcolor(html_context);
@@ -979,7 +979,7 @@ process_element(unsigned char *name, int namelen, int endingtag,
 	ei = (struct element_info *) fastfind_search(&ff_tags_index, name, namelen);
 #endif
 	if (html_context->was_xmp || html_context->was_style) {
-		if (!ei || (ei->func != html_xmp && ei->func != html_style) || !endingtag) {
+		if (!ei || (ei->open != html_xmp && ei->open != html_style) || !endingtag) {
 			put_chrs(html_context, "<", 1);
 			return prev_html + 1;
 		}
