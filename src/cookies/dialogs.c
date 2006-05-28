@@ -410,16 +410,19 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-static widget_handler_status_T
-set_server(struct dialog_data *dlg_data, struct widget_data *widget_data)
+/* Called by ok_dialog for the "OK" button in the "Add Server" dialog.
+ * The data parameter points to the buffer used by the server name
+ * widget.  */
+static void
+add_server_do(void *data)
 {
-	unsigned char *value = widget_data->cdata;
+	unsigned char *value = data;
 	struct cookie *dummy_cookie = NULL;
 
-	if (!value) return EVENT_NOT_PROCESSED;
+	if (!value) return;
 
 	dummy_cookie = mem_calloc(1, sizeof(*dummy_cookie));
-	if (dummy_cookie == NULL) return EVENT_PROCESSED;
+	if (dummy_cookie == NULL) return;
 
 	dummy_cookie->name = stracpy("empty");
 	dummy_cookie->value = stracpy("1");
@@ -430,11 +433,10 @@ set_server(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	    || dummy_cookie->path == NULL || dummy_cookie->domain == NULL
 	    || dummy_cookie->server == NULL) {
 		done_cookie(dummy_cookie);
-		return EVENT_PROCESSED;
+		return;
 	}
 
 	accept_cookie(dummy_cookie);
-	return EVENT_PROCESSED;
 }
 
 static widget_handler_status_T
@@ -456,8 +458,8 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 	dlg->udata = NULL;
 	dlg->udata2 = NULL;
 	text = _("Server name", term);
-	add_dlg_field_float(dlg, text, 0, 0, set_server, MAX_STR_LEN, name, NULL);
-	add_dlg_button(dlg, _("~OK", term), B_ENTER, ok_dialog, NULL);
+	add_dlg_field_float(dlg, text, 0, 0, check_nonempty, MAX_STR_LEN, name, NULL);
+	add_dlg_ok_button(dlg, _("~OK", term), B_ENTER, add_server_do, name);
 	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);
 	add_dlg_end(dlg, SERVER_WIDGETS_COUNT);
 	do_dialog(term, dlg, getml(dlg, NULL));
