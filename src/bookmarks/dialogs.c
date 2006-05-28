@@ -202,20 +202,6 @@ move_bookmark_after_selected(struct bookmark *bookmark, struct bookmark *selecte
 }
 
 static void
-focus_bookmark(struct widget_data *box_widget_data, struct listbox_data *box,
-		struct bookmark *bm)
-{
-	/* Infinite loop protector. Maximal safety. It will protect your system
-	 * from 100% CPU time. Buy it now. Only from Sirius Labs. */
-	struct listbox_item *sel2 = NULL;
-
-	do {
-		sel2 = box->sel;
-		listbox_sel_move(box_widget_data, 1);
-	} while (box->sel->udata != bm && box->sel != sel2);
-}
-
-static void
 do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned char *url)
 {
 	struct bookmark *bm = NULL;
@@ -250,7 +236,7 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 
 		/* We touch only the actual bookmark dialog, not all of them;
 		 * that's right, right? ;-) --pasky */
-		focus_bookmark(widget_data, box, bm);
+		listbox_sel(widget_data, bm->box_item);
 	}
 }
 
