@@ -257,7 +257,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		draw_view_status(ses, doc_view, active);
 		return;
 	}
-	free_link(doc_view);
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
 	draw_box(term, box, ' ', 0, &color);

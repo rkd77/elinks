@@ -141,29 +141,18 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 	return 0;
 }
 
-/* Allocate doc_view->link_bg with enough space to save the colour
- * and attributes of each point of the given link plus one byte
- * for the template character. Initialise that template character
- * with the colour and attributes appropriate for an active link. */
+/* Initialise a static template character with the colour and attributes
+ * appropriate for an active link and return that character. */
 static inline struct screen_char *
 init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 {
 	struct document_options *doc_opts;
-	struct screen_char *template;
+	static struct screen_char template;
 	enum color_flags color_flags;
 	enum color_mode color_mode;
 	struct color_pair colors;
 
-	/* Allocate an extra background char to work on here. */
-	doc_view->link_bg = mem_alloc((1 + link->npoints) * sizeof(*doc_view->link_bg));
-	if (!doc_view->link_bg) return NULL;
-
-	doc_view->link_bg_n = link->npoints;
-
-	/* Setup the template char. */
-	template = &doc_view->link_bg[link->npoints].c;
-
-	template->attr = SCREEN_ATTR_STANDOUT;
+	template.attr = SCREEN_ATTR_STANDOUT;
 
 	doc_opts = &doc_view->document->options;
 
@@ -171,10 +160,10 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 	color_mode = doc_opts->color_mode;
 
 	if (doc_opts->active_link.underline)
-		template->attr |= SCREEN_ATTR_UNDERLINE;
+		template.attr |= SCREEN_ATTR_UNDERLINE;
 
 	if (doc_opts->active_link.bold)
-		template->attr |= SCREEN_ATTR_BOLD;
+		template.attr |= SCREEN_ATTR_BOLD;
 
 	if (doc_opts->active_link.color) {
 		colors.foreground = doc_opts->active_link.fg;
@@ -207,13 +196,12 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 		}
 	}
 
-	set_term_color(template, &colors, color_flags, color_mode);
+	set_term_color(&template, &colors, color_flags, color_mode);
 
-	return template;
+	return &template;
 }
 
-/* Save the current link's colours and attributes to doc_view->link_bg
- * and give it the appropriate colour and attributes for an active link. */
+/* Give the current link the appropriate colour and attributes. */
 void
 draw_current_link(struct session *ses, struct document_view *doc_view)
 {
@@ -229,9 +217,6 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 
 	assert(ses->tab == get_current_tab(term));
 	if_assert_failed return;
-
-	assertm(!doc_view->link_bg, "link background not empty");
-	if_assert_failed mem_free(doc_view->link_bg);
 
 	link = get_current_link(doc_view);
 	if (!link) return;
@@ -258,16 +243,10 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 		struct screen_char *co;
 
 		if (!is_in_box(&doc_view->box, x, y)) {
-			doc_view->link_bg[i].x = -1;
-			doc_view->link_bg[i].y = -1;
 			continue;
 		}
 
-		doc_view->link_bg[i].x = x;
-		doc_view->link_bg[i].y = y;
-
 		co = get_char(term, x, y);
-		copy_screen_chars(&doc_view->link_bg[i].c, co, 1);
 
 		if (i == cursor_offset) {
 			int blockable = (!link_is_textinput(link)
@@ -281,16 +260,8 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
  		copy_screen_chars(co, template, 1);
 		set_screen_dirty(term->screen, y, y);
 	}
-}
 
-void
-free_link(struct document_view *doc_view)
-{
-	assert(doc_view);
-	if_assert_failed return;
-
-	mem_free_set(&doc_view->link_bg, NULL);
-	doc_view->link_bg_n = 0;
+	doc_view->vs->old_current_link = doc_view->vs->current_link;
 }
 
 /* Restore the colours and attributes that the active link had
@@ -298,28 +269,28 @@ free_link(struct document_view *doc_view)
 void
 clear_link(struct terminal *term, struct document_view *doc_view)
 {
-	assert(term && doc_view);
-	if_assert_failed return;
+	struct link *link = get_current_link(doc_view);
+	struct link *last = get_old_current_link(doc_view);
 
-	if (doc_view->link_bg) {
-		struct link_bg *link_bg = doc_view->link_bg;
+	if (last && last != link) {
+		int xpos = doc_view->box.x - doc_view->vs->x;
+		int ypos = doc_view->box.y - doc_view->vs->y;
 		int i;
 
-		for (i = doc_view->link_bg_n - 1; i >= 0; i--) {
-			struct link_bg *bgchar = &link_bg[i];
+		for (i = 0; i < last->npoints; ++i) {
+			int x = last->points[i].x;
+			int y = last->points[i].y;
 
-			if (bgchar->x != -1 && bgchar->y != -1) {
-				struct terminal_screen *screen = term->screen;
-				struct screen_char *co;
-
-				co = get_char(term, bgchar->x, bgchar->y);
-				copy_screen_chars(co, &bgchar->c, 1);
-				set_screen_dirty(screen, bgchar->y, bgchar->y);
+			if (is_in_box(&doc_view->box, x + xpos, y + ypos)){
+				struct screen_char *ch;
+				
+				ch = get_char(term, x + xpos, y + ypos);
+				copy_struct(ch, &doc_view->document->data[y].chars[x]);
 			}
 		}
-
-		free_link(doc_view);
 	}
+
+	doc_view->vs->old_current_link = doc_view->vs->current_link;
 }
 
 void
