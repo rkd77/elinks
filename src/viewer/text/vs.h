@@ -20,6 +20,7 @@ struct view_state {
 
 	int x, y;
 	int current_link;
+	int old_current_link;
 
 	int plain;
 	unsigned int wrap:1;

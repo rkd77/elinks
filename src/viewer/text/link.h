@@ -13,7 +13,6 @@ struct terminal;
 struct uri;
 
 void set_link(struct document_view *doc_view);
-void free_link(struct document_view *doc_view);
 void clear_link(struct terminal *term, struct document_view *doc_view);
 void draw_current_link(struct session *ses, struct document_view *doc_view);
 

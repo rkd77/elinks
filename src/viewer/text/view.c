@@ -75,7 +75,6 @@ detach_formatted(struct document_view *doc_view)
 		doc_view->vs->doc_view = NULL;
 		doc_view->vs = NULL;
 	}
-	if (doc_view->link_bg) free_link(doc_view);
 	mem_free_set(&doc_view->name, NULL);
 }
 

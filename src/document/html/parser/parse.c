@@ -386,10 +386,10 @@ skip_comment(unsigned char *html, unsigned char *eof)
 
 
 enum element_type {
-	ELEMENT_TYPE_NESTABLE,
-	ELEMENT_TYPE_NON_NESTABLE,
-	ELEMENT_TYPE_NON_PAIRABLE,
-	ELEMENT_TYPE_LI,
+	ET_NESTABLE,
+	ET_NON_NESTABLE,
+	ET_NON_PAIRABLE,
+	ET_LI,
 };
 
 struct element_info {
@@ -400,7 +400,9 @@ struct element_info {
 	 * formatting (by calling renderer hooks). Note that in a few cases,
 	 * this is just a placeholder and the element is given special care
 	 * in start_element() (which is also where we call these handlers). */
-	element_handler_T *func;
+	element_handler_T *open;
+
+	element_handler_T *close;
 
 	/* How many line-breaks to ensure we have before and after an element.
 	 * Value of 1 means the element will be on a line on its own, value
@@ -418,79 +420,79 @@ struct element_info {
 };
 
 static struct element_info elements[] = {
-        {"A",           html_a,           0, ELEMENT_TYPE_NON_NESTABLE},
-        {"ABBR",        html_italic,      0, ELEMENT_TYPE_NESTABLE    },
-        {"ADDRESS",     html_address,     2, ELEMENT_TYPE_NESTABLE    },
-        {"APPLET",      html_applet,      1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"B",           html_bold,        0, ELEMENT_TYPE_NESTABLE    },
-        {"BASE",        html_base,        0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"BASEFONT",    html_font,        0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"BLOCKQUOTE",  html_blockquote,  2, ELEMENT_TYPE_NESTABLE    },
-        {"BODY",        html_body,        0, ELEMENT_TYPE_NESTABLE    },
-        {"BR",          html_br,          1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"BUTTON",      html_button,      0, ELEMENT_TYPE_NESTABLE    },
-        {"CAPTION",     html_center,      1, ELEMENT_TYPE_NESTABLE    },
-        {"CENTER",      html_center,      1, ELEMENT_TYPE_NESTABLE    },
-        {"CODE",        html_fixed,       0, ELEMENT_TYPE_NESTABLE    },
-        {"DD",          html_dd,          1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"DFN",         html_bold,        0, ELEMENT_TYPE_NESTABLE    },
-        {"DIR",         html_ul,          2, ELEMENT_TYPE_NESTABLE    },
-        {"DIV",         html_linebrk,     1, ELEMENT_TYPE_NESTABLE    },
-        {"DL",          html_dl,          2, ELEMENT_TYPE_NESTABLE    },
-        {"DT",          html_dt,          1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"EM",          html_italic,      0, ELEMENT_TYPE_NESTABLE    },
-        {"EMBED",       html_embed,       0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"FIXED",       html_fixed,       0, ELEMENT_TYPE_NESTABLE    },
-        {"FONT",        html_font,        0, ELEMENT_TYPE_NESTABLE    },
-        {"FORM",        html_form,        1, ELEMENT_TYPE_NESTABLE    },
-        {"FRAME",       html_frame,       1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"FRAMESET",    html_frameset,    1, ELEMENT_TYPE_NESTABLE    },
-        {"H1",          html_h1,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"H2",          html_h2,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"H3",          html_h3,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"H4",          html_h4,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"H5",          html_h5,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"H6",          html_h6,          2, ELEMENT_TYPE_NON_NESTABLE},
-        {"HEAD",        html_head,        0, ELEMENT_TYPE_NESTABLE    },
-        {"HR",          html_hr,          2, ELEMENT_TYPE_NON_PAIRABLE},
-        {"HTML",        html_html,        0, ELEMENT_TYPE_NESTABLE    },
-        {"I",           html_italic,      0, ELEMENT_TYPE_NESTABLE    },
-        {"IFRAME",      html_iframe,      1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"IMG",         html_img,         0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"INPUT",       html_input,       0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"LI",          html_li,          1, ELEMENT_TYPE_LI          },
-        {"LINK",        html_link,        1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"LISTING",     html_pre,         2, ELEMENT_TYPE_NESTABLE    },
-        {"MENU",        html_ul,          2, ELEMENT_TYPE_NESTABLE    },
-        {"META",        html_meta,        0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"NOFRAMES",    html_noframes,    0, ELEMENT_TYPE_NESTABLE    },
-        {"NOSCRIPT",    html_noscript,    0, ELEMENT_TYPE_NESTABLE    },
-        {"OBJECT",      html_object,      1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"OL",          html_ol,          2, ELEMENT_TYPE_NESTABLE    },
-        {"OPTION",      html_option,      1, ELEMENT_TYPE_NON_PAIRABLE},
-        {"P",           html_p,           2, ELEMENT_TYPE_NON_NESTABLE},
-        {"PRE",         html_pre,         2, ELEMENT_TYPE_NESTABLE    },
-        {"Q",           html_italic,      0, ELEMENT_TYPE_NESTABLE    },
-        {"S",           html_underline,   0, ELEMENT_TYPE_NESTABLE    },
-        {"SCRIPT",      html_script,      0, ELEMENT_TYPE_NESTABLE    },
-        {"SELECT",      html_select,      0, ELEMENT_TYPE_NESTABLE    },
-        {"SPAN",        html_span,        0, ELEMENT_TYPE_NESTABLE    },
-        {"STRIKE",      html_underline,   0, ELEMENT_TYPE_NESTABLE    },
-        {"STRONG",      html_bold,        0, ELEMENT_TYPE_NESTABLE    },
-        {"STYLE",       html_style,       0, ELEMENT_TYPE_NESTABLE    },
-        {"SUB",         html_subscript,   0, ELEMENT_TYPE_NESTABLE    },
-        {"SUP",         html_superscript, 0, ELEMENT_TYPE_NESTABLE    },
-        {"TABLE",       html_table,       2, ELEMENT_TYPE_NESTABLE    },
-        {"TD",          html_td,          0, ELEMENT_TYPE_NESTABLE    },
-        {"TEXTAREA",    html_textarea,    0, ELEMENT_TYPE_NON_PAIRABLE},
-        {"TH",          html_th,          0, ELEMENT_TYPE_NESTABLE    },
-        {"TITLE",       html_title,       0, ELEMENT_TYPE_NESTABLE    },
-        {"TR",          html_tr,          1, ELEMENT_TYPE_NESTABLE    },
-        {"TT",          html_tt,          0, ELEMENT_TYPE_NON_NESTABLE},
-        {"U",           html_underline,   0, ELEMENT_TYPE_NESTABLE    },
-        {"UL",          html_ul,          2, ELEMENT_TYPE_NESTABLE    },
-        {"XMP",         html_xmp,         2, ELEMENT_TYPE_NESTABLE    },
-        {NULL,          NULL,             0, ELEMENT_TYPE_NESTABLE    },
+ {"A",           html_a,           NULL,                 0, ET_NON_NESTABLE},
+ {"ABBR",        html_italic,      NULL,                 0, ET_NESTABLE    },
+ {"ADDRESS",     html_address,     NULL,                 2, ET_NESTABLE    },
+ {"APPLET",      html_applet,      NULL,                 1, ET_NON_PAIRABLE},
+ {"B",           html_bold,        NULL,                 0, ET_NESTABLE    },
+ {"BASE",        html_base,        NULL,                 0, ET_NON_PAIRABLE},
+ {"BASEFONT",    html_font,        NULL,                 0, ET_NON_PAIRABLE},
+ {"BLOCKQUOTE",  html_blockquote,  NULL,                 2, ET_NESTABLE    },
+ {"BODY",        html_body,        NULL,                 0, ET_NESTABLE    },
+ {"BR",          html_br,          NULL,                 1, ET_NON_PAIRABLE},
+ {"BUTTON",      html_button,      NULL,                 0, ET_NESTABLE    },
+ {"CAPTION",     html_center,      NULL,                 1, ET_NESTABLE    },
+ {"CENTER",      html_center,      NULL,                 1, ET_NESTABLE    },
+ {"CODE",        html_fixed,       NULL,                 0, ET_NESTABLE    },
+ {"DD",          html_dd,          NULL,                 1, ET_NON_PAIRABLE},
+ {"DFN",         html_bold,        NULL,                 0, ET_NESTABLE    },
+ {"DIR",         html_ul,          NULL,                 2, ET_NESTABLE    },
+ {"DIV",         html_linebrk,     NULL,                 1, ET_NESTABLE    },
+ {"DL",          html_dl,          NULL,                 2, ET_NESTABLE    },
+ {"DT",          html_dt,          NULL,                 1, ET_NON_PAIRABLE},
+ {"EM",          html_italic,      NULL,                 0, ET_NESTABLE    },
+ {"EMBED",       html_embed,       NULL,                 0, ET_NON_PAIRABLE},
+ {"FIXED",       html_fixed,       NULL,                 0, ET_NESTABLE    },
+ {"FONT",        html_font,        NULL,                 0, ET_NESTABLE    },
+ {"FORM",        html_form,        NULL,                 1, ET_NESTABLE    },
+ {"FRAME",       html_frame,       NULL,                 1, ET_NON_PAIRABLE},
+ {"FRAMESET",    html_frameset,    NULL,                 1, ET_NESTABLE    },
+ {"H1",          html_h1,          NULL,                 2, ET_NON_NESTABLE},
+ {"H2",          html_h2,          NULL,                 2, ET_NON_NESTABLE},
+ {"H3",          html_h3,          NULL,                 2, ET_NON_NESTABLE},
+ {"H4",          html_h4,          NULL,                 2, ET_NON_NESTABLE},
+ {"H5",          html_h5,          NULL,                 2, ET_NON_NESTABLE},
+ {"H6",          html_h6,          NULL,                 2, ET_NON_NESTABLE},
+ {"HEAD",        html_head,        NULL,                 0, ET_NESTABLE    },
+ {"HR",          html_hr,          NULL,                 2, ET_NON_PAIRABLE},
+ {"HTML",        html_html,        html_html_close,      0, ET_NESTABLE    },
+ {"I",           html_italic,      NULL,                 0, ET_NESTABLE    },
+ {"IFRAME",      html_iframe,      NULL,                 1, ET_NON_PAIRABLE},
+ {"IMG",         html_img,         NULL,                 0, ET_NON_PAIRABLE},
+ {"INPUT",       html_input,       NULL,                 0, ET_NON_PAIRABLE},
+ {"LI",          html_li,          NULL,                 1, ET_LI          },
+ {"LINK",        html_link,        NULL,                 1, ET_NON_PAIRABLE},
+ {"LISTING",     html_pre,         NULL,                 2, ET_NESTABLE    },
+ {"MENU",        html_ul,          NULL,                 2, ET_NESTABLE    },
+ {"META",        html_meta,        NULL,                 0, ET_NON_PAIRABLE},
+ {"NOFRAMES",    html_noframes,    NULL,                 0, ET_NESTABLE    },
+ {"NOSCRIPT",    html_noscript,    NULL,                 0, ET_NESTABLE    },
+ {"OBJECT",      html_object,      NULL,                 1, ET_NON_PAIRABLE},
+ {"OL",          html_ol,          NULL,                 2, ET_NESTABLE    },
+ {"OPTION",      html_option,      NULL,                 1, ET_NON_PAIRABLE},
+ {"P",           html_p,           NULL,                 2, ET_NON_NESTABLE},
+ {"PRE",         html_pre,         NULL,                 2, ET_NESTABLE    },
+ {"Q",           html_quote,       html_quote_close,     0, ET_NESTABLE    },
+ {"S",           html_underline,   NULL,                 0, ET_NESTABLE    },
+ {"SCRIPT",      html_script,      NULL,                 0, ET_NESTABLE    },
+ {"SELECT",      html_select,      NULL,                 0, ET_NESTABLE    },
+ {"SPAN",        html_span,        NULL,                 0, ET_NESTABLE    },
+ {"STRIKE",      html_underline,   NULL,                 0, ET_NESTABLE    },
+ {"STRONG",      html_bold,        NULL,                 0, ET_NESTABLE    },
+ {"STYLE",       html_style,       html_style_close,     0, ET_NESTABLE    },
+ {"SUB",         html_subscript,   html_subscript_close, 0, ET_NESTABLE    },
+ {"SUP",         html_superscript, NULL,                 0, ET_NESTABLE    },
+ {"TABLE",       html_table,       NULL,                 2, ET_NESTABLE    },
+ {"TD",          html_td,          NULL,                 0, ET_NESTABLE    },
+ {"TEXTAREA",    html_textarea,    NULL,                 0, ET_NON_PAIRABLE},
+ {"TH",          html_th,          NULL,                 0, ET_NESTABLE    },
+ {"TITLE",       html_title,       NULL,                 0, ET_NESTABLE    },
+ {"TR",          html_tr,          NULL,                 1, ET_NESTABLE    },
+ {"TT",          html_tt,          NULL,                 0, ET_NON_NESTABLE},
+ {"U",           html_underline,   NULL,                 0, ET_NESTABLE    },
+ {"UL",          html_ul,          NULL,                 2, ET_NESTABLE    },
+ {"XMP",         html_xmp,         html_xmp_close,       2, ET_NESTABLE    },
+ {NULL,          NULL,             NULL,                 0, ET_NESTABLE    },
 };
 
 #define NUMBER_OF_TAGS (sizeof_array(elements) - 1)
@@ -773,7 +775,7 @@ start_element(struct element_info *ei,
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. */
 	if (html_top->invisible
-	    && (ei->func != html_script || html_top->invisible < 2)) {
+	    && (ei->open != html_script || html_top->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
@@ -782,23 +784,22 @@ start_element(struct element_info *ei,
 	old_format = par_format;
 
 	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
-	if (ei->func == html_meta && html_context->was_body) {
+	if (ei->open == html_meta && html_context->was_body) {
 		html_handle_body_meta(html_context, name - 1, eof);
 		html_context->was_body = 0;
 	}
 
 #ifdef CONFIG_CSS
-	if (ei->func == html_style && html_context->options->css_enable) {
+	if (ei->open == html_style && html_context->options->css_enable) {
 		css_parse_stylesheet(&html_context->css_styles,
 				     html_context->base_href, html, eof);
 	}
 #endif
 
-	if (ei->type == ELEMENT_TYPE_NON_NESTABLE
-	    || ei->type == ELEMENT_TYPE_LI) {
+	if (ei->type == ET_NON_NESTABLE || ei->type == ET_LI) {
 		struct html_element *e;
 
-		if (ei->type == ELEMENT_TYPE_NON_NESTABLE) {
+		if (ei->type == ET_NON_NESTABLE) {
 			foreach (e, html_context->stack) {
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
@@ -820,7 +821,7 @@ start_element(struct element_info *ei,
 		}
 	}
 
-	if (ei->type != ELEMENT_TYPE_NON_PAIRABLE) {
+	if (ei->type != ET_NON_PAIRABLE) {
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
 		html_top->name = name;
 		html_top->namelen = namelen;
@@ -847,7 +848,7 @@ start_element(struct element_info *ei,
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
 		 * Probably just applying CSS from more places, since we
-		 * usually have type != ELEMENT_TYPE_NESTABLE when we either (1)
+		 * usually have type != ET_NESTABLE when we either (1)
 		 * rescan on your own from somewhere else (2) html_stack_dup()
 		 * in our own way.  --pasky */
 		/* Call it now to gain some of the stuff which might affect
@@ -869,7 +870,7 @@ start_element(struct element_info *ei,
 	 * that's what the display: property plays with. */
 #endif
 	ELEMENT_RENDER_PROLOGUE
-	if (ei->func) ei->func(html_context, attr, html, eof, &html);
+	if (ei->open) ei->open(html_context, attr, html, eof, &html);
 #ifdef CONFIG_CSS
 	if (selector && html_top->options) {
 		/* Call it now to override default colors of the elements. */
@@ -884,7 +885,7 @@ start_element(struct element_info *ei,
 	}
 #endif
 
-	if (ei->func != html_br) html_context->was_br = 0;
+	if (ei->open != html_br) html_context->was_br = 0;
 
 	if (restore_format) par_format = old_format;
 
@@ -903,19 +904,11 @@ end_element(struct element_info *ei,
 	int lnb = 0;
 	int kill = 0;
 
-	if (ei->func == html_xmp) html_context->was_xmp = 0;
-	if (ei->func == html_style) html_context->was_style = 0;
-
 	html_context->was_br = 0;
-	if (ei->type == ELEMENT_TYPE_NON_PAIRABLE
-	    || ei->type == ELEMENT_TYPE_LI)
+	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
 		return html;
 
-	/* Apply background color from the <HTML> element. (bug 696) */
-	if (ei->func == html_html
-	    && html_top->type >= ELEMENT_KILLABLE
-	    && !html_context->was_body_background)
-		html_apply_canvas_bgcolor(html_context);
+	if (ei->close) ei->close(html_context, attr, html, eof, &html);
 
 	/* dump_html_stack(html_context); */
 	foreach (e, html_context->stack) {
@@ -979,7 +972,7 @@ process_element(unsigned char *name, int namelen, int endingtag,
 	ei = (struct element_info *) fastfind_search(&ff_tags_index, name, namelen);
 #endif
 	if (html_context->was_xmp || html_context->was_style) {
-		if (!ei || (ei->func != html_xmp && ei->func != html_style) || !endingtag) {
+		if (!ei || (ei->open != html_xmp && ei->open != html_style) || !endingtag) {
 			put_chrs(html_context, "<", 1);
 			return prev_html + 1;
 		}

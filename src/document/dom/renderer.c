@@ -200,6 +200,16 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	}
 }
 
+static inline void
+done_dom_renderer(struct dom_renderer *renderer)
+{
+#ifdef HAVE_REGEX_H
+	if (renderer->find_url)
+		regfree(&renderer->url_regex);
+#endif
+	done_uri(renderer->base_uri);
+}
+
 
 /* Document maintainance */
 
@@ -965,6 +975,31 @@ static struct dom_stack_context_info dom_rss_renderer_context_info = {
 };
 
 
+static void
+get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
+{
+	if (!strcasecmp("application/rss+xml", cached->content_type)) {
+		renderer->doctype = SGML_DOCTYPE_RSS;
+
+	} else if (!strcasecmp("application/docbook+xml",
+	                       cached->content_type)) {
+		renderer->doctype = SGML_DOCTYPE_DOCBOOK;
+
+	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
+		   || !strcasecmp("application/x-xbel", cached->content_type)
+		   || !strcasecmp("application/xbel", cached->content_type)) {
+		renderer->doctype = SGML_DOCTYPE_XBEL;
+
+	} else {
+		assertm(!strcasecmp("text/html", cached->content_type)
+			|| !strcasecmp("application/xhtml+xml",
+		                       cached->content_type),
+			"Couldn't resolve doctype '%s'", cached->content_type);
+
+		renderer->doctype = SGML_DOCTYPE_HTML;
+	}
+}
+
 /* Shared multiplexor between renderers */
 void
 render_dom_document(struct cache_entry *cached, struct document *document,
@@ -995,28 +1030,10 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	else
 		parser_type = SGML_PARSER_TREE;
 
-	/* FIXME: Refactor the doctype lookup. */
-	if (!strcasecmp("application/rss+xml", cached->content_type)) {
-		renderer.doctype = SGML_DOCTYPE_RSS;
-
-	} else if (!strcasecmp("application/docbook+xml", cached->content_type)) {
-		renderer.doctype = SGML_DOCTYPE_DOCBOOK;
-
-	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
-		   || !strcasecmp("application/x-xbel", cached->content_type)
-		   || !strcasecmp("application/xbel", cached->content_type)) {
-		renderer.doctype = SGML_DOCTYPE_XBEL;
-
-	} else {
-		assertm(!strcasecmp("text/html", cached->content_type)
-			|| !strcasecmp("application/xhtml+xml", cached->content_type),
-			"Couldn't resolve doctype '%s'", cached->content_type);
-
-		renderer.doctype = SGML_DOCTYPE_HTML;
-	}
+	get_doctype(&renderer, cached);
 
 	parser = init_sgml_parser(parser_type, renderer.doctype, &uri, 0);
-  	if (!parser) return;
+	if (!parser) return;
 
 	if (document->options.plain) {
 		add_dom_stack_context(&parser->stack, &renderer,
@@ -1042,10 +1059,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		pop_dom_node(&parser->stack);
 	}
 
-#ifdef HAVE_REGEX_H
-	if (renderer.find_url)
-		regfree(&renderer.url_regex);
-#endif
-	done_uri(renderer.base_uri);
+	done_dom_renderer(&renderer);
 	done_sgml_parser(parser);
 }
