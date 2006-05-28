@@ -472,7 +472,7 @@ static struct element_info elements[] = {
  {"OPTION",      html_option,      NULL,                 1, ET_NON_PAIRABLE},
  {"P",           html_p,           NULL,                 2, ET_NON_NESTABLE},
  {"PRE",         html_pre,         NULL,                 2, ET_NESTABLE    },
- {"Q",           html_italic,      NULL,                 0, ET_NESTABLE    },
+ {"Q",           html_quote,       html_quote_close,     0, ET_NESTABLE    },
  {"S",           html_underline,   NULL,                 0, ET_NESTABLE    },
  {"SCRIPT",      html_script,      NULL,                 0, ET_NESTABLE    },
  {"SELECT",      html_select,      NULL,                 0, ET_NESTABLE    },

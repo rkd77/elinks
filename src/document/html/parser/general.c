@@ -97,6 +97,28 @@ html_superscript(struct html_context *html_context, unsigned char *a,
 	html_context->put_chars_f(html_context, "^", 1);
 }
 
+/* TODO: Add more languages. */
+static unsigned char *quote_char[2] = { "\"", "'" };
+
+void
+html_quote(struct html_context *html_context, unsigned char *a,
+	   unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	unsigned char *q = quote_char[html_context->quote_level++ % 2];
+
+	html_context->put_chars_f(html_context, q, 1);
+}
+
+void
+html_quote_close(struct html_context *html_context, unsigned char *a,
+		 unsigned char *xxx3, unsigned char *xxx4,
+		 unsigned char **xxx5)
+{
+	unsigned char *q = quote_char[--html_context->quote_level % 2];
+
+	html_context->put_chars_f(html_context, q, 1);
+}
+
 void
 html_font(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)

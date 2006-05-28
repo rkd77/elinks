@@ -250,6 +250,9 @@ Jonas Fonseca <fonseca@diku.dk>
 	BFU and document management hacking
 	Random hacking
 
+Jonas Kölker <jonaskoelker@gnu.org>
+	Handling of <q>quotes</q>.
+
 Jon Shapcott <eden@xibalba.demon.co.uk>
 	Lua 5 retrofits
 

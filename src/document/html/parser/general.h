@@ -37,6 +37,8 @@ element_handler_T html_noscript;
 element_handler_T html_ol;
 element_handler_T html_p;
 element_handler_T html_pre;
+element_handler_T html_quote;
+element_handler_T html_quote_close;
 element_handler_T html_script;
 element_handler_T html_span;
 element_handler_T html_style;
