@@ -400,13 +400,9 @@ set_cookie(struct uri *uri, unsigned char *str)
 			return;
 		}
 
-		for (path_end = path + strlen(path) - 1;
-		     path_end >= path; path_end--) {
-			if (*path_end == '/') {
-				path_end[1] = '\0';
-				break;
-			}
-		}
+		path_end = strrchr(path, '/');
+		if (path_end)
+			path_end[1] = '\0';
 		break;
 
 	default: /* error */
