@@ -358,7 +358,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 			if (expires) {
 				if (max_age > 0) {
-					int seconds = max_age*24*3600;
+					time_t seconds = ((time_t) max_age)*24*3600;
 					time_t deadline = time(NULL) + seconds;
 
 					if (expires > deadline) /* Over-aged cookie ? */
