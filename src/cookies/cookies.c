@@ -283,7 +283,7 @@ is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_l
 void
 set_cookie(struct uri *uri, unsigned char *str)
 {
-	unsigned char *secure, *path;
+	unsigned char *path;
 	struct cookie *cookie;
 	struct cookie_str cstr;
 	int max_age;
@@ -307,8 +307,9 @@ set_cookie(struct uri *uri, unsigned char *str)
 	cookie->name = memacpy(str, cstr.nam_end - str);
 	cookie->value = memacpy(cstr.val_start, cstr.val_end - cstr.val_start);
 	cookie->server = get_cookie_server(uri->host, uri->hostlen);
-	parse_header_param(str, "domain", &cookie->domain);
-	if (!cookie->domain) cookie->domain = memacpy(uri->host, uri->hostlen);
+	if (parse_header_param(str, "domain", &cookie->domain)
+	    == HEADER_PARAM_NOT_FOUND)
+		cookie->domain = memacpy(uri->host, uri->hostlen);
 
 	/* Now check that all is well */
 	if (!cookie->domain
@@ -347,10 +348,11 @@ set_cookie(struct uri *uri, unsigned char *str)
 	max_age = get_cookies_max_age();
 	if (max_age) {
 		unsigned char *date;
-		parse_header_param(str, "expires", &date);
+		time_t expires;
 
-		if (date) {
-			time_t expires = parse_date(&date, NULL, 0, 1); /* Convert date to seconds. */
+		switch (parse_header_param(str, "expires", &date)) {
+		case HEADER_PARAM_FOUND:
+			expires = parse_date(&date, NULL, 0, 1); /* Convert date to seconds. */
 
 			mem_free(date);
 
@@ -365,13 +367,33 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 				cookie->expires = expires;
 			}
+			break;
+
+		case HEADER_PARAM_NOT_FOUND:
+			break;
+
+		default: /* error */
+			done_cookie(cookie);
+			return;
 		}
 	}
 
-	parse_header_param(str, "path", &path);
-	if (!path) {
+	switch (parse_header_param(str, "path", &path)) {
 		unsigned char *path_end;
 
+	case HEADER_PARAM_FOUND:
+		if (!path[0]
+		    || path[strlen(path) - 1] != '/')
+			add_to_strn(&path, "/");
+
+		if (path[0] != '/') {
+			add_to_strn(&path, "x");
+			memmove(path + 1, path, strlen(path) - 1);
+			path[0] = '/';
+		}
+		break;
+
+	case HEADER_PARAM_NOT_FOUND:
 		path = get_uri_string(uri, URI_PATH);
 		if (!path) {
 			done_cookie(cookie);
@@ -385,17 +407,11 @@ set_cookie(struct uri *uri, unsigned char *str)
 				break;
 			}
 		}
+		break;
 
-	} else {
-		if (!path[0]
-		    || path[strlen(path) - 1] != '/')
-			add_to_strn(&path, "/");
-
-		if (path[0] != '/') {
-			add_to_strn(&path, "x");
-			memmove(path + 1, path, strlen(path) - 1);
-			path[0] = '/';
-		}
+	default: /* error */
+		done_cookie(cookie);
+		return;
 	}
 	cookie->path = path;
 
@@ -403,12 +419,8 @@ set_cookie(struct uri *uri, unsigned char *str)
 		memmove(cookie->domain, cookie->domain + 1,
 			strlen(cookie->domain));
 
-	/* cookie->secure is set to 0 by default by calloc(). */
-	parse_header_param(str, "secure", &secure);
-	if (secure) {
-		cookie->secure = 1;
-		mem_free(secure);
-	}
+	cookie->secure = (parse_header_param(str, "secure", NULL)
+	                  == HEADER_PARAM_FOUND);
 
 #ifdef DEBUG_COOKIES
 	{
