@@ -270,7 +270,7 @@ process_head(struct html_context *html_context, unsigned char *head)
 	refresh = parse_header(head, "Refresh", NULL);
 	if (!refresh) return;
 
-	url = parse_header_param(refresh, "URL");
+	parse_header_param(refresh, "URL", &url);
 	if (!url) {
 		/* If the URL parameter is missing assume that the
 		 * document being processed should be refreshed. */

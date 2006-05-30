@@ -307,7 +307,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 	cookie->name = memacpy(str, cstr.nam_end - str);
 	cookie->value = memacpy(cstr.val_start, cstr.val_end - cstr.val_start);
 	cookie->server = get_cookie_server(uri->host, uri->hostlen);
-	cookie->domain = parse_header_param(str, "domain");
+	parse_header_param(str, "domain", &cookie->domain);
 	if (!cookie->domain) cookie->domain = memacpy(uri->host, uri->hostlen);
 
 	/* Now check that all is well */
@@ -346,7 +346,8 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 	max_age = get_cookies_max_age();
 	if (max_age) {
-		unsigned char *date = parse_header_param(str, "expires");
+		unsigned char *date;
+		parse_header_param(str, "expires", &date);
 
 		if (date) {
 			time_t expires = parse_date(&date, NULL, 0, 1); /* Convert date to seconds. */
@@ -367,7 +368,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 		}
 	}
 
-	path = parse_header_param(str, "path");
+	parse_header_param(str, "path", &path);
 	if (!path) {
 		unsigned char *path_end;
 
@@ -403,7 +404,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 			strlen(cookie->domain));
 
 	/* cookie->secure is set to 0 by default by calloc(). */
-	secure = parse_header_param(str, "secure");
+	parse_header_param(str, "secure", &secure);
 	if (secure) {
 		cookie->secure = 1;
 		mem_free(secure);

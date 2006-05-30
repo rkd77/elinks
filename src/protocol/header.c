@@ -193,34 +193,49 @@ parse_header(unsigned char *head, unsigned char *item, unsigned char **ptr)
 
 /* Extract the value of name part of the value of attribute content.
  * Ie. @name = "charset" and @str = "text/html; charset=iso-8859-1"
- * will return allocated string containing "iso-8859-1".
+ * will store in *@ret an allocated string containing "iso-8859-1".
  * It supposes that separator is ';' and ignore first element in the
- * list. (ie. '1' is ignored in "1; URL=xxx") */
-unsigned char *
-parse_header_param(unsigned char *str, unsigned char *name)
+ * list. (ie. '1' is ignored in "1; URL=xxx")
+ * The return value is one of:
+ * - HEADER_PARAM_FOUND: the parameter was found, copied, and stored in *@ret.
+ * - HEADER_PARAM_NOT_FOUND: the parameter is not there.  *@ret is now NULL.
+ * - HEADER_PARAM_OUT_OF_MEMORY: error. *@ret is now NULL.
+ * If @ret is NULL, then this function doesn't actually access *@ret,
+ * and tries to avoid allocating memory as well. */
+enum parse_header_param
+parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret)
 {
 	unsigned char *p = str;
 	int namelen, plen = 0;
 
+	if (ret) *ret = NULL;	/* default in case of early return */
+
 	assert(str && name && *name);
-	if_assert_failed return NULL;
+	if_assert_failed return HEADER_PARAM_NOT_FOUND;
 
 	/* Returns now if string @str is empty. */
-	if (!*p) return NULL;
+	if (!*p) return HEADER_PARAM_NOT_FOUND;
 
 	namelen = strlen(name);
 	do {
 		p = strchr(p, ';');
-		if (!p) return NULL;
+		if (!p) return HEADER_PARAM_NOT_FOUND;
 
 		while (*p && (*p == ';' || *p <= ' ')) p++;
-		if (strlen(p) < namelen) return NULL;
+		if (strlen(p) < namelen) return HEADER_PARAM_NOT_FOUND;
 	} while (strncasecmp(p, name, namelen));
 
 	p += namelen;
 
 	while (*p && (*p <= ' ' || *p == '=')) p++;
-	if (!*p) return stracpy("");
+	if (!*p) {
+		if (ret) {
+			*ret = stracpy("");
+			if (!*ret)
+				return HEADER_PARAM_OUT_OF_MEMORY;
+		}
+		return HEADER_PARAM_FOUND;
+	}
 
 	while ((p[plen] > ' ' || LWS(p[plen])) && p[plen] != ';') plen++;
 
@@ -241,7 +256,12 @@ parse_header_param(unsigned char *str, unsigned char *name)
 		plen -= 2;
 	}
 
-	return memacpy(p, plen);
+	if (ret) {
+		*ret = memacpy(p, plen);
+		if (!*ret)
+			return HEADER_PARAM_OUT_OF_MEMORY;
+	}
+	return HEADER_PARAM_FOUND;
 }
 
 /* Parse string param="value", return value as new string or NULL if any

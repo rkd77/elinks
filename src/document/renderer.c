@@ -578,7 +578,7 @@ get_convert_table(unsigned char *head, int to_cp,
 			mem_free_set(&a, meta);
 		}
 
-		ct_charset = parse_header_param(a, "charset");
+		parse_header_param(a, "charset", &ct_charset);
 		if (ct_charset) {
 			cp_index = get_cp_index(ct_charset);
 			mem_free(ct_charset);
