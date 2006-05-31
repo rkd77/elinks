@@ -41,7 +41,7 @@ get_bfu_color(struct terminal *term, unsigned char *stylename)
 
 	if (!bfu_colors) {
 		/* Initialize the style hash. */
-		bfu_colors = init_hash(8, &strhash);
+		bfu_colors = init_hash8();
 		if (!bfu_colors) return NULL;
 
 		last_color_mode = color_mode;

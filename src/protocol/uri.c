@@ -1518,7 +1518,7 @@ get_uri(unsigned char *string, enum uri_component components)
 	}
 
 	if (!is_object_used(&uri_cache)) {
-		uri_cache.map = init_hash(hash_size(3), strhash);
+		uri_cache.map = init_hash8();
 		if (!uri_cache.map) return NULL;
 		object_nolock(&uri_cache, "uri_cache");
 	}

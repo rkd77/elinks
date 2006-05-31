@@ -396,7 +396,7 @@ init_mailcap_map(void)
 	unsigned char *path;
 	unsigned int priority = 0;
 
-	mailcap_map = init_hash(8, &strhash);
+	mailcap_map = init_hash8();
 	if (!mailcap_map) return NULL;
 
 	/* Try to setup mailcap_path */

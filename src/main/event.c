@@ -308,7 +308,7 @@ unregister_event_hooks(struct event_hook_info *hooks)
 void
 init_event(void)
 {
-	event_hash = init_hash(8, strhash);
+	event_hash = init_hash8();
 }
 
 void

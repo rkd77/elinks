@@ -22,8 +22,11 @@
  * array (same hash value). */
 
 #define hash_mask(n) (hash_size(n) - 1)
+#define hash_size(n) (1 << (n))
 
-struct hash *
+static hash_value_T strhash(unsigned char *k, unsigned int length, hash_value_T initval);
+
+static inline struct hash *
 init_hash(unsigned int width, hash_func_T func)
 {
 	struct hash *hash;
@@ -45,6 +48,12 @@ init_hash(unsigned int width, hash_func_T func)
 		init_list(hash->hash[i]);
 
 	return hash;
+}
+
+struct hash *
+init_hash8(void)
+{
+	return init_hash(8, &strhash);
 }
 
 void
@@ -130,7 +139,7 @@ del_hash_item(struct hash *hash, struct hash_item *item)
 #ifdef X31_HASH
 
 /* Fast string hashing. */
-hash_value_T
+static hash_value_T
 strhash(unsigned char *k, /* the key */
 	unsigned int length, /* the length of the key */
 	hash_value_T initval /* the previous hash, or an arbitrary value */)
@@ -251,7 +260,7 @@ strhash(unsigned char *k, /* the key */
 			+ ((hash_value_T) (k[(a)+2])<<16) \
 			+ ((hash_value_T) (k[(a)+3])<<24))
 
-hash_value_T
+static hash_value_T
 strhash(unsigned char *k, /* the key */
 	unsigned int length, /* the length of the key */
 	hash_value_T initval /* the previous hash, or an arbitrary value */)

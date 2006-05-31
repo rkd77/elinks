@@ -339,7 +339,7 @@ add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int p
 
 	/* Hash creation if needed. */
 	if (!bookmark_cache)
-		bookmark_cache = init_hash(8, &strhash);
+		bookmark_cache = init_hash8();
 
 	/* Create a new entry. */
 	if (check_bookmark_cache(bm->url))

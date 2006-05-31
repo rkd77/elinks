@@ -23,18 +23,16 @@ struct hash {
 	struct list_head hash[1]; /* Must be at end ! */
 };
 
-#define hash_size(n) (1 << (n))
+struct hash *init_hash8(void);
 
-struct hash *init_hash(unsigned int width, hash_func_T func);
 void free_hash(struct hash *hash);
 
 struct hash_item *add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen, void *value);
 struct hash_item *get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen);
 void del_hash_item(struct hash *hash, struct hash_item *item);
-hash_value_T strhash(unsigned char *k, unsigned int length, hash_value_T initval);
 
 #define foreach_hash_item(item, hash_table, iterator) \
-	for (iterator = 0; iterator < hash_size((hash_table).width); iterator++) \
+	for (iterator = 0; iterator < (1 << (hash_table).width); iterator++) \
 		foreach (item, (hash_table).hash[iterator])
 
 #endif

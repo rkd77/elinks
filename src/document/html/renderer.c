@@ -1750,7 +1750,7 @@ format_html_part(struct html_context *html_context,
 
 	/* Hash creation if needed. */
 	if (!table_cache) {
-		table_cache = init_hash(8, &strhash);
+		table_cache = init_hash8();
 	} else if (!document) {
 		/* Search for cached entry. */
 		struct table_cache_entry_key key;

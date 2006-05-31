@@ -248,7 +248,7 @@ add_item_to_global_history(struct global_history_item *history_item,
 
 	/* Hash creation if needed. */
 	if (!globhist_cache)
-		globhist_cache = init_hash(8, &strhash);
+		globhist_cache = init_hash8();
 
 	if (globhist_cache && globhist_cache_entries < max_globhist_items) {
 		int urllen = strlen(history_item->url);

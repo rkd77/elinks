@@ -171,7 +171,7 @@ init_mimetypes_map(void)
 {
 	unsigned char *path;
 
-	mimetypes_map = init_hash(8, &strhash);
+	mimetypes_map = init_hash8();
 	if (!mimetypes_map)
 		return NULL;
 
