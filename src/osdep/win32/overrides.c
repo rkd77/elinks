@@ -210,8 +210,8 @@ win32_write(int fd, const void *buf, unsigned len)
 
 	case FDT_TERMINAL:
 		if (isatty(STDOUT_FILENO) > 0) {
-#if 0			
-			WriteConsole ((HANDLE) fd, buf, len, &written, NULL); 
+#if 0
+			WriteConsole ((HANDLE) fd, buf, len, &written, NULL);
 			rc = written;
 #endif
 			rc = VT100_decode((HANDLE) fd, buf, len);

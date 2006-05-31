@@ -216,7 +216,7 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 
 		for (; i < argc; ++i) {
 			unsigned char *code;
-			
+
 			code = SEE_value_to_unsigned_char(interp, argv[i]);
 
 			if (code) {

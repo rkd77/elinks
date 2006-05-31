@@ -640,7 +640,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		 */
 		if (string == scanner->end) {
 			/* Prevent out of bound access. */
- 
+
  		} else if (*string == '>') {
 			string++;
 			real_length = 0;

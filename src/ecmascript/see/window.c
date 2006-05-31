@@ -105,7 +105,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_BOOLEAN(res, 0);
 	} else if (p == s_self || p == s_parent || p == s_top) {
 		SEE_SET_OBJECT(res, o);
-#if 0		
+#if 0
 	} else if (p == s_parent || p == s_top) {
 		struct document_view *doc_view = vs->doc_view;
 		struct document_view *top_view = doc_view->session->doc_view;

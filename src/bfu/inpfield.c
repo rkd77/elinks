@@ -250,7 +250,7 @@ input_dialog(struct terminal *term, struct memory_list *ml,
 	     widget_handler_T *check,
 	     void (*fn)(void *, unsigned char *),
 	     void (*cancelfn)(void *))
-{ 
+{
 	/* [gettext_accelerator_context(input_dialog)] */
 	input_field(term, ml, 1, title, text, N_("~OK"), N_("~Cancel"),
 		    data, history, l,

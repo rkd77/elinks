@@ -206,5 +206,5 @@ void add_actions_to_string(struct string *string, action_id_T actions[],
 			   enum keymap_id keymap_id, struct terminal *term);
 
 extern struct module kbdbind_module;
- 
+
 #endif

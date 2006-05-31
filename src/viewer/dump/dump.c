@@ -125,7 +125,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	render_document(&vs, &formatted, &o);
 	switch(o.color_mode) {
 	case COLOR_MODE_DUMP:
-	case COLOR_MODE_MONO: /* FIXME: inversion */	
+	case COLOR_MODE_MONO: /* FIXME: inversion */
 		dump_to_file(formatted.document, fd);
 		break;
 	case COLOR_MODE_16:
