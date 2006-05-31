@@ -57,17 +57,17 @@ init_hash8(void)
 }
 
 void
-free_hash(struct hash *hash)
+free_hash(struct hash **hashp)
 {
 	unsigned int i = 0;
 
-	assert(hash);
+	assert(hashp && *hashp);
 	if_assert_failed return;
 
-	for (; i < hash_size(hash->width); i++)
-		free_list(hash->hash[i]);
+	for (; i < hash_size((*hashp)->width); i++)
+		free_list((*hashp)->hash[i]);
 
-	mem_free(hash);
+	mem_free_set(hashp, NULL);
 }
 
 

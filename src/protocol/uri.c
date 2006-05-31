@@ -1526,7 +1526,7 @@ get_uri(unsigned char *string, enum uri_component components)
 	entry = get_uri_cache_entry(string, strlen(string));
 	if (!entry) {
 		if (!is_object_used(&uri_cache))
-			free_hash(uri_cache.map);
+			free_hash(&uri_cache.map);
 		return NULL;
 	}
 
@@ -1560,5 +1560,5 @@ done_uri(struct uri *uri)
 	/* Last URI frees the cache */
 	object_unlock(&uri_cache);
 	if (!is_object_used(&uri_cache))
-		free_hash(uri_cache.map);
+		free_hash(&uri_cache.map);
 }

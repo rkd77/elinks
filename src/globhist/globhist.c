@@ -406,8 +406,7 @@ static void
 free_global_history(void)
 {
 	if (globhist_cache) {
-		free_hash(globhist_cache);
-		globhist_cache = NULL;
+		free_hash(&globhist_cache);
 		globhist_cache_entries = 0;
 	}
 

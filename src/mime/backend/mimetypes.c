@@ -207,8 +207,7 @@ done_mimetypes(struct module *module)
 		}
 	}
 
-	free_hash(mimetypes_map);
-	mimetypes_map = NULL;
+	free_hash(&mimetypes_map);
 	mimetypes_map_size = 0;
 }
 

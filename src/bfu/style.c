@@ -108,6 +108,5 @@ done_bfu_colors(void)
 		mem_free_if(item->value);
 	}
 
-	free_hash(bfu_colors);
-	bfu_colors = NULL;
+	free_hash(&bfu_colors);
 };

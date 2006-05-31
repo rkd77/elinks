@@ -316,13 +316,13 @@ done_event(void)
 {
 	int i;
 
-	if (event_hash)	free_hash(event_hash);
-
 	for (i = 0; i < eventssize; i++) {
 		mem_free_if(events[i].handlers);
 		mem_free(events[i].name);
 	}
 
 	mem_free_set(&events, NULL);
+
+	if (event_hash)	free_hash(&event_hash);
 	eventssize = 0;
 }

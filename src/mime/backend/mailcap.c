@@ -438,8 +438,7 @@ done_mailcap(struct module *module)
 		mem_free(mitem);
 	}
 
-	free_hash(mailcap_map);
-	mailcap_map = NULL;
+	free_hash(&mailcap_map);
 	mailcap_map_size = 0;
 }
 

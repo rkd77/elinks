@@ -1727,11 +1727,9 @@ free_table_cache(void)
 			mem_free_if(item->value);
 		}
 
-		free_hash(table_cache);
+		free_hash(&table_cache);
+		table_cache_entries = 0;
 	}
-
-	table_cache = NULL;
-	table_cache_entries = 0;
 }
 
 struct part *

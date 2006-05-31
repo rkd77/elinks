@@ -162,10 +162,7 @@ free_bookmarks(struct list_head *bookmarks_list,
 
 	free_list(*box_items);
 	free_list(*bookmarks_list);
-	if (bookmark_cache) {
-		free_hash(bookmark_cache);
-		bookmark_cache = NULL;
-	}
+	if (bookmark_cache) free_hash(&bookmark_cache);
 }
 
 /* Does final cleanup and saving of bookmarks */

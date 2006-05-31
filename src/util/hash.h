@@ -25,7 +25,7 @@ struct hash {
 
 struct hash *init_hash8(void);
 
-void free_hash(struct hash *hash);
+void free_hash(struct hash **hashp);
 
 struct hash_item *add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen, void *value);
 struct hash_item *get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen);
