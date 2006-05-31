@@ -36,6 +36,9 @@ struct cookie {
 };
 
 struct cookie_server *get_cookie_server(unsigned char *host, int hostlen);
+struct cookie *init_cookie(unsigned char *name, unsigned char *value,
+			   unsigned char *path, unsigned char *domain,
+			   struct cookie_server *server);
 void accept_cookie(struct cookie *);
 void done_cookie(struct cookie *);
 void delete_cookie(struct cookie *);

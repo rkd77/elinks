@@ -387,9 +387,6 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
 
-	new_cookie = mem_calloc(1, sizeof(*new_cookie));
-	if (!new_cookie) return EVENT_PROCESSED;
-
 	if (box->sel->type == BI_FOLDER) {
 		assert(box->sel->depth == 0);
 		server = box->sel->udata;
@@ -399,12 +396,15 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 		server = cookie->server;
 	}
 
-	object_lock(server);
-	new_cookie->server = server;
+	object_lock(server);	/* ref consumed by init_cookie */
 
-	new_cookie->name = stracpy("");
-	new_cookie->value = stracpy("");
-	new_cookie->domain = stracpy("");
+	new_cookie = init_cookie(stracpy("") /* name */,
+				 stracpy("") /* value */,
+				 stracpy("/") /* path */,
+				 stracpy(server->host) /* domain */,
+				 server);
+	if (!new_cookie) return EVENT_PROCESSED;
+
 	accept_cookie(new_cookie);
 	build_edit_dialog(term, new_cookie);
 	return EVENT_PROCESSED;
@@ -417,24 +417,16 @@ static void
 add_server_do(void *data)
 {
 	unsigned char *value = data;
-	struct cookie *dummy_cookie = NULL;
+	struct cookie *dummy_cookie;
 
 	if (!value) return;
 
-	dummy_cookie = mem_calloc(1, sizeof(*dummy_cookie));
-	if (dummy_cookie == NULL) return;
-
-	dummy_cookie->name = stracpy("empty");
-	dummy_cookie->value = stracpy("1");
-	dummy_cookie->path = stracpy("/");
-	dummy_cookie->domain = stracpy(value);
-	dummy_cookie->server = get_cookie_server(value, strlen(value));
-	if (dummy_cookie->name == NULL || dummy_cookie->value == NULL
-	    || dummy_cookie->path == NULL || dummy_cookie->domain == NULL
-	    || dummy_cookie->server == NULL) {
-		done_cookie(dummy_cookie);
-		return;
-	}
+	dummy_cookie = init_cookie(stracpy("empty") /* name */,
+				   stracpy("1") /* value */,
+				   stracpy("/") /* path */,
+				   stracpy(value) /* domain */,
+				   get_cookie_server(value, strlen(value)));
+	if (!dummy_cookie) return;
 
 	accept_cookie(dummy_cookie);
 }

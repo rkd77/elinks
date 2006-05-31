@@ -280,10 +280,50 @@ is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_l
 	return 1;
 }
 
+/* Allocate a struct cookie and initialize it with the specified
+ * values (rather than copies).  Returns NULL on error.  On success,
+ * the cookie is basically safe for @done_cookie or @accept_cookie,
+ * although you may also want to set the remaining members and check
+ * @get_cookies_accept_policy and @is_domain_security_ok.
+ *
+ * The unsigned char * arguments must be allocated with @mem_alloc or
+ * equivalent, because @done_cookie will @mem_free them.  Likewise,
+ * the caller must already have locked @server.  If @init_cookie
+ * fails, then it frees the strings itself, and unlocks @server.
+ *
+ * If any parameter is NULL, then @init_cookie fails and does not
+ * consider that a bug.  This means callers can use e.g. @stracpy
+ * and let @init_cookie check whether the call ran out of memory.  */
+struct cookie *
+init_cookie(unsigned char *name, unsigned char *value,
+	    unsigned char *path, unsigned char *domain,
+	    struct cookie_server *server)
+{
+	struct cookie *cookie = mem_calloc(1, sizeof(*cookie));
+	if (!cookie || !name || !value || !path || !domain || !server) {
+		mem_free_if(cookie);
+		mem_free_if(name);
+		mem_free_if(value);
+		mem_free_if(path);
+		mem_free_if(domain);
+		done_cookie_server(server);
+		return NULL;
+	}
+	object_nolock(cookie, "cookie"); /* Debugging purpose. */
+
+	cookie->name = name;
+	cookie->value = value;
+	cookie->domain = domain;
+	cookie->path = path;
+	cookie->server = server; /* the caller already locked it for us */
+
+	return cookie;
+}
+
 void
 set_cookie(struct uri *uri, unsigned char *str)
 {
-	unsigned char *path;
+	unsigned char *path, *domain;
 	struct cookie *cookie;
 	struct cookie_str cstr;
 	int max_age;
@@ -297,28 +337,47 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 	if (!parse_cookie_str(&cstr, str)) return;
 
-	cookie = mem_calloc(1, sizeof(*cookie));
-	if (!cookie) return;
+	switch (parse_header_param(str, "path", &path)) {
+		unsigned char *path_end;
 
-	object_nolock(cookie, "cookie"); /* Debugging purpose. */
+	case HEADER_PARAM_FOUND:
+		if (!path[0]
+		    || path[strlen(path) - 1] != '/')
+			add_to_strn(&path, "/");
 
-	/* Fill main fields */
+		if (path[0] != '/') {
+			add_to_strn(&path, "x");
+			memmove(path + 1, path, strlen(path) - 1);
+			path[0] = '/';
+		}
+		break;
 
-	cookie->name = memacpy(str, cstr.nam_end - str);
-	cookie->value = memacpy(cstr.val_start, cstr.val_end - cstr.val_start);
-	cookie->server = get_cookie_server(uri->host, uri->hostlen);
-	if (parse_header_param(str, "domain", &cookie->domain)
-	    == HEADER_PARAM_NOT_FOUND)
-		cookie->domain = memacpy(uri->host, uri->hostlen);
+	case HEADER_PARAM_NOT_FOUND:
+		path = get_uri_string(uri, URI_PATH);
+		if (!path)
+			return;
 
-	/* Now check that all is well */
-	if (!cookie->domain
-	    || !cookie->name
-	    || !cookie->value
-	    || !cookie->server) {
-		done_cookie(cookie);
+		path_end = strrchr(path, '/');
+		if (path_end)
+			path_end[1] = '\0';
+		break;
+
+	default: /* error */
 		return;
 	}
+
+	if (parse_header_param(str, "domain", &domain) == HEADER_PARAM_NOT_FOUND)
+		domain = memacpy(uri->host, uri->hostlen);
+	if (domain && domain[0] == '.')
+		memmove(domain, domain + 1, strlen(domain));
+
+	cookie = init_cookie(memacpy(str, cstr.nam_end - str),
+			     memacpy(cstr.val_start, cstr.val_end - cstr.val_start),
+			     path,
+			     domain,
+			     get_cookie_server(uri->host, uri->hostlen));
+	if (!cookie) return;
+	/* @cookie now owns @path and @domain.  */
 
 #if 0
 	/* We don't actually set ->accept at the moment. But I have kept it
@@ -377,43 +436,6 @@ set_cookie(struct uri *uri, unsigned char *str)
 			return;
 		}
 	}
-
-	switch (parse_header_param(str, "path", &path)) {
-		unsigned char *path_end;
-
-	case HEADER_PARAM_FOUND:
-		if (!path[0]
-		    || path[strlen(path) - 1] != '/')
-			add_to_strn(&path, "/");
-
-		if (path[0] != '/') {
-			add_to_strn(&path, "x");
-			memmove(path + 1, path, strlen(path) - 1);
-			path[0] = '/';
-		}
-		break;
-
-	case HEADER_PARAM_NOT_FOUND:
-		path = get_uri_string(uri, URI_PATH);
-		if (!path) {
-			done_cookie(cookie);
-			return;
-		}
-
-		path_end = strrchr(path, '/');
-		if (path_end)
-			path_end[1] = '\0';
-		break;
-
-	default: /* error */
-		done_cookie(cookie);
-		return;
-	}
-	cookie->path = path;
-
-	if (cookie->domain[0] == '.')
-		memmove(cookie->domain, cookie->domain + 1,
-			strlen(cookie->domain));
 
 	cookie->secure = (parse_header_param(str, "secure", NULL)
 	                  == HEADER_PARAM_FOUND);
