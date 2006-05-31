@@ -1367,7 +1367,6 @@ line_break(struct html_context *html_context)
 {
 	struct part *part;
 	struct tag *tag;
-	int i;
 
 	assert(html_context);
 	if_assert_failed return;
@@ -1398,12 +1397,6 @@ line_break(struct html_context *html_context)
 	}
 
 	if (part->cx > 0) align_line(html_context, part->cy, 1);
-	/* This change is visible only for glib, gtk, gnome docs in 256 colors */
-	if (html_is_preformatted()) {
-		for (i = part->cx ; i < part->document->options.box.width; i++) {
-			put_chars(html_context, " ", 1);
-		}
-	}
 
 	for (tag = renderer_context.last_tag_for_newline;
 	     tag && tag != (struct tag *) &part->document->tags;
