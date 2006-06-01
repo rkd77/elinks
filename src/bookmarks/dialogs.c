@@ -455,7 +455,9 @@ push_move_button(struct dialog_data *dlg_data,
 		write_bookmarks();
 #endif
 		display_widget(dlg_data, widget_data); /* the hierbox */
-	} else if (result & MOVE_BOOKMARK_CYCLE) {
+	}
+#ifndef CONFIG_SMALL
+	else if (result & MOVE_BOOKMARK_CYCLE) {
 		/* If the user also selected other bookmarks, then
 		 * they have already been moved, and this box doesn't
 		 * appear.  */
@@ -476,6 +478,7 @@ push_move_button(struct dialog_data *dlg_data,
 			    "have the stuff moved to, and press the \"Move\" "
 			    "button."));
 	}
+#endif	/* ndef CONFIG_SMALL */
 
 	return EVENT_PROCESSED;
 }
