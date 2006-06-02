@@ -60,7 +60,8 @@ struct html_context {
 	/* For parser/parse.c: */
 	unsigned char *eoff; /* For parser/forms.c too */
 	int line_breax; /* This is for ln_break. */
-	int position;
+	int position; /* This is the position on the document canvas relative
+	               * to the current line and is maintained by put_chrs. */
 	enum html_whitespace_state putsp; /* This is for the put_chrs
 					   * state-machine. */
 	int was_li;
