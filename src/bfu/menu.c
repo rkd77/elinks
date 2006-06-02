@@ -942,7 +942,7 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 		foreach (win, term->windows) {
 			if (win->data == menu) {
 				del_from_list(win);
-				add_at_pos((struct window *) &term->windows, win);
+				add_to_list(term->windows, win);
 				display_mainmenu(term, menu);
 				break;
 			}
