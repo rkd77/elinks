@@ -931,13 +931,13 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 	if (init) {
 		menu->selected = -1;
 		add_window(term, mainmenu_handler, menu);
-		foreach (win, term->windows) {
-			if (win->data == menu) {
-				del_from_list(win);
-				add_to_list_end(term->windows, win);
-				break;
-			}
-		}
+		win = menu->win;
+		/* This should be fine because add_window will call
+		 * mainmenu_handler which will assign the window to menu->win.
+		 */
+		assert(win);
+		del_from_list(win);
+		add_to_list_end(term->windows, win);
 	} else {
 		foreach (win, term->windows) {
 			if (win->data == menu) {
