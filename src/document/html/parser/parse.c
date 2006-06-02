@@ -729,9 +729,8 @@ element:
 			if (ee < eof && isspace(*ee)) {
 				put_chrs(html_context, " ", 1);
 			}
-ng:;
 		}
-
+ng:
 		html = process_element(name, namelen, endingtag, end, html, eof, attr, html_context);
 	}
 
