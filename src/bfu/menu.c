@@ -64,6 +64,14 @@ static void display_mainmenu(struct terminal *term, struct menu *menu);
 static void set_menu_selection(struct menu *menu, int pos);
 
 
+static void
+deselect_mainmenu(struct terminal *term, struct menu *menu)
+{
+	menu->selected = -1;
+	del_from_list(menu->win);
+	add_to_list_end(term->windows, menu->win);
+}
+
 static inline int
 count_items(struct menu_item *items)
 {
@@ -149,11 +157,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 				break;
 
 			if (win->handler == mainmenu_handler) {
-				struct menu *menu = win->data;
-
-				menu->selected = -1;
-				del_from_list(win);
-				add_to_list_end(term->windows, win);
+				deselect_mainmenu(term, win->data);
 				redraw_terminal(term);
 			} else
 				delete_window(win);
@@ -929,15 +933,13 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 #endif
 	init_hotkeys(term, menu);
 	if (init) {
-		menu->selected = -1;
 		add_window(term, mainmenu_handler, menu);
 		win = menu->win;
 		/* This should be fine because add_window will call
 		 * mainmenu_handler which will assign the window to menu->win.
 		 */
 		assert(win);
-		del_from_list(win);
-		add_to_list_end(term->windows, win);
+		deselect_mainmenu(term, menu);
 	} else {
 		foreach (win, term->windows) {
 			if (win->data == menu) {
@@ -1067,9 +1069,7 @@ mainmenu_mouse_handler(struct menu *menu, struct term_event *ev)
 	/* Mouse was clicked outside the mainmenu bar */
 	if (ev->info.mouse.y) {
 		if (check_mouse_action(ev, B_DOWN)) {
-			del_from_list(win);
-			add_to_list_end(win->term->windows, win);
-			menu->selected = -1;
+			deselect_mainmenu(win->term, menu);
 		}
 		return;
 	}
@@ -1174,9 +1174,7 @@ mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 		}
 
 	case ACT_MENU_CANCEL:
-		menu->selected = -1;
-		del_from_list(win);
-		add_to_list_end(win->term->windows, win);
+		deselect_mainmenu(win->term, menu);
 		break;
 	}
 
