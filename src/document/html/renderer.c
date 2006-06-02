@@ -1887,7 +1887,6 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	unsigned char *end;
 	struct string title;
 	struct string head;
-	int i;
 
 	assert(cached && document);
 	if_assert_failed return;
@@ -1929,17 +1928,17 @@ render_html_document(struct cache_entry *cached, struct document *document,
 
 	/* Drop empty allocated lines at end of document if any
 	 * and adjust document height. */
-	for (i = document->height - 1; i >= 0 ; i--) {
-		if (!document->data[i].length) {
-			mem_free_if(document->data[i].chars);
-			document->height--;
-		} else break;
-	}
+	while (document->height && !document->data[document->height - 1].length)
+		mem_free_if(document->data[--document->height].chars);
 
 	/* Calculate document width. */
-	document->width = 0;
-	for (i = 0; i < document->height; i++)
-		int_lower_bound(&document->width, document->data[i].length);
+	{
+		int i;
+
+		document->width = 0;
+		for (i = 0; i < document->height; i++)
+			int_lower_bound(&document->width, document->data[i].length);
+	}
 
 #if 1
 	document->options.needs_width = 1;
