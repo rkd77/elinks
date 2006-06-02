@@ -100,6 +100,8 @@ struct html_context {
 	 * html/parser/link.c
 	 * html/parser/parse.c
 	 * html/parser.c */
+	/* Note that this is for usage by put_chrs only; anywhere else in
+	 * the parser, one should use put_chrs. */
 	void (*put_chars_f)(struct html_context *, unsigned char *, int);
 
 	/* For:
