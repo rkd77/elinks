@@ -52,7 +52,7 @@ program: view %
 
 type: application/postscript
 block: 1
-program: ps2ascii %|copiousoutput_handler
+program: ps2ascii %
 
 type: application/foo
 EOF
