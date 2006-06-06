@@ -67,7 +67,6 @@ static struct option_info mimetypes_options[] = {
 
 /* State variables */
 static struct hash *mimetypes_map = NULL;
-static int mimetypes_map_size = 0;
 
 
 static void
@@ -123,10 +122,7 @@ parse_mimetypes_extensions(unsigned char *token, unsigned char *ctype)
 
 		item = add_hash_item(mimetypes_map, entry->extension, extlen,
 				     entry);
-
-		if (item)
-			mimetypes_map_size++;
-		else
+		if (!item)
 			done_mimetypes_entry(entry);
 	}
 }
@@ -208,7 +204,6 @@ done_mimetypes(struct module *module)
 	}
 
 	free_hash(&mimetypes_map);
-	mimetypes_map_size = 0;
 }
 
 static int

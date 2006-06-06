@@ -130,7 +130,6 @@ static struct option_info mailcap_options[] = {
 
 /* State variables */
 static struct hash *mailcap_map = NULL;
-static int mailcap_map_size = 0;
 
 
 static inline void
@@ -195,7 +194,6 @@ add_mailcap_entry(struct mailcap_entry *entry, unsigned char *type, int typelen)
 	}
 
 	add_to_list_end(mitem->entries, entry);
-	mailcap_map_size++;
 }
 
 /* Parsing of a RFC1524 mailcap file */
@@ -439,7 +437,6 @@ done_mailcap(struct module *module)
 	}
 
 	free_hash(&mailcap_map);
-	mailcap_map_size = 0;
 }
 
 #ifndef TEST_MAILCAP
