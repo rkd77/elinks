@@ -189,10 +189,20 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 
 	code = get_attr_val(element->options, "class", html_context->options);
 	if (code && seltype <= CST_CLASS) {
-		selector = find_css_selector(selectors, CST_CLASS, rel, code, -1);
-		process_found_selector(selector, CST_CLASS, base);
+		unsigned char *class = code;
+
+		while (class) {
+			unsigned char *end = strchr(class, ' ');
+
+			if (end)
+				*end++ = 0;
+
+			selector = find_css_selector(selectors, CST_CLASS, rel, class, -1);
+			process_found_selector(selector, CST_CLASS, base);
+			class = end;
+		}
 	}
-	if (code) mem_free(code);
+	mem_free_if(code);
 
 	code = get_attr_val(element->options, "id", html_context->options);
 	if (code && seltype <= CST_ID) {
