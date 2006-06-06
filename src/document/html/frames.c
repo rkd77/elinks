@@ -304,12 +304,13 @@ distribute_rows_or_cols(int *val_, int max_value, int *values, int values_count)
 	int tmp_val;
 	int val = *val_ - max_value;
 
-	for (i = 0; i < values_count; i++)
+	for (i = 0; i < values_count; i++) {
 		if (values[i] < 1)
 			values[i] = 1;
 
-	for (i = 0; i < values_count; i++)
 		divisor += values[i];
+	}
+
 	assert(divisor);
 
 	tmp_val = val;
