@@ -242,7 +242,6 @@ done_bookmark(struct bookmark *bm)
 	mem_free(bm);
 }
 
-/* Deletes a bookmark. Returns 0 on failure (no such bm), 1 on success. */
 void
 delete_bookmark(struct bookmark *bm)
 {
