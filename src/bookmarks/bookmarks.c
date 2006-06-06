@@ -118,8 +118,6 @@ bookmark_write_hook(va_list ap, void *data)
 }
 
 
-void bookmarks_set_dirty(void);
-
 static int
 change_hook_folder_state(struct session *ses, struct option *current,
 			 struct option *changed)
