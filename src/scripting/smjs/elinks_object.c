@@ -87,6 +87,24 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
+static JSBool
+elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	unsigned char *string;
+
+	if (argc != 1)
+		return JS_TRUE;
+
+	string = jsval_to_string(ctx, &argv[0]);
+	if (!*string)
+		return JS_TRUE;
+
+	exec_on_terminal(smjs_ses->tab->term, string, "", 0);
+	undef_to_jsval(ctx, rval);
+
+	return JS_TRUE;
+}
+
 static const JSClass elinks_class = {
 	"elinks",
 	0,
@@ -97,6 +115,7 @@ static const JSClass elinks_class = {
 
 static const JSFunctionSpec elinks_funcs[] = {
 	{ "alert",	elinks_alert,		1 },
+	{ "execute",	elinks_execute,		1 },
 	{ NULL }
 };
 
