@@ -586,7 +586,7 @@ memorize_last_searched_bookmark(struct bookmark_search_ctx *ctx)
 	/* Memorize last searched url */
 	mem_free_set(&bm_last_searched_url, stracpy(ctx->url));
 	if (!bm_last_searched_url) {
-		mem_free(bm_last_searched_title);
+		mem_free_set(&bm_last_searched_title, NULL);
 		return 0;
 	}
 
