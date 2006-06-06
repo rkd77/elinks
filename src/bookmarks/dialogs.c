@@ -208,7 +208,7 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 		box = get_dlg_listbox_data(dlg_data);
 
 		if (box->sel) {
-			selected = box->sel ? box->sel->udata : NULL;
+			selected = box->sel->udata;
 
 			if (box->sel->type == BI_FOLDER && box->sel->expanded) {
 				bm = selected;
