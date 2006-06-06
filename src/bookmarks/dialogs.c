@@ -156,10 +156,6 @@ static struct listbox_ops bookmarks_listbox_ops = {
   Bookmark manager stuff.
 ****************************************************************************/
 
-void launch_bm_add_doc_dialog(struct terminal *, struct dialog_data *,
-			      struct session *);
-
-
 /* Callback for the "add" button in the bookmark manager */
 static widget_handler_status_T
 push_add_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
