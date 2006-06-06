@@ -410,8 +410,7 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 	trigger_event(update_bookmark_event_id, bm, title2, url2);
 
 	if (title2) {
-		mem_free(bm->title);
-		bm->title = title2;
+		mem_free_set(&bm->title, title2);
 	}
 
 	if (url2) {
@@ -427,8 +426,7 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 			add_hash_item(bookmark_cache, url2, strlen(url2), bm);
 		}
 
-		mem_free(bm->url);
-		bm->url = url2;
+		mem_free_set(&bm->url, url2);
 	}
 
 	bookmarks_set_dirty();
