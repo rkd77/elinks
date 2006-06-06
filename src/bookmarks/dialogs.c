@@ -624,7 +624,6 @@ bookmark_search_do(void *data)
 }
 
 
-/* launch_bm_search_doc_dialog() */
 static void
 launch_bm_search_doc_dialog(struct terminal *term,
 			    struct dialog_data *parent,
