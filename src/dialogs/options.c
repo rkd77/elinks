@@ -49,21 +49,28 @@ void
 charset_list(struct terminal *term, void *xxx, void *ses_)
 {
 	struct session *ses = ses_;
-	int i;
+	int i, items;
 	int sel = int_max(0, get_opt_codepage_tree(term->spec, "charset"));
 	struct menu_item *mi = new_menu(FREE_LIST);
 
 	if (!mi) return;
 
-	for (i = 0; ; i++) {
+	for (i = 0, items = 0; ; i++) {
 		unsigned char *name = get_cp_name(i);
 
 		if (!name) break;
-		if (is_cp_special(i)) continue;
+		if (is_cp_special(i))
+			continue;
 
+		items++;
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
-		    	    display_codepage, get_cp_mime_name(i), 0);
+			    display_codepage, get_cp_mime_name(i), 0);
 	}
+
+	/* Special codepages are not in the menu and it may cause assertion
+	 * failures later if the selected item is out of bound. */
+	if (sel >= items)
+		sel = 0;
 
 	do_menu_selected(term, mi, ses, sel, 0);
 }
