@@ -1070,6 +1070,8 @@ mainmenu_mouse_handler(struct menu *menu, struct term_event *ev)
 	if (ev->info.mouse.y) {
 		if (check_mouse_action(ev, B_DOWN)) {
 			deselect_mainmenu(win->term, menu);
+			display_mainmenu(win->term, menu);
+
 		}
 		return;
 	}
