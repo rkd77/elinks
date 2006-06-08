@@ -157,6 +157,7 @@ data_protocol_handler(struct connection *conn)
 		int datalen = strlen(data);
 
 		add_fragment(cached, conn->from, data, datalen);
+		conn->from += datalen;
 	}
 
 	mem_free(data);
