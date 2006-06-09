@@ -1169,6 +1169,8 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		int bufp;
 		unsigned char *newline;
 
+		if (!bufl) return ret;
+
 		/* Newline quest. */
 
 		newline = memchr(buf, ASCII_LF, bufl);
@@ -1179,7 +1181,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			if (bufp && buf[bufp - 1] == ASCII_CR) bufp--;
 		} else {
 			bufp = bufl;
-			if (!bufp || (!last && bufl < FTP_BUF_SIZE)) {
+			if (!last && bufl < FTP_BUF_SIZE) {
 				return ret;
 			}
 
