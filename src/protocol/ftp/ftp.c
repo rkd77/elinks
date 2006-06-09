@@ -1221,11 +1221,6 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 				return ret;
 			}
 		}
-#ifdef DEBUG_FTP_PARSER
-		else {
-			ERROR("Error parsing: [%.*s]", line_length, buf);
-		}
-#endif
 	}
 }
 
