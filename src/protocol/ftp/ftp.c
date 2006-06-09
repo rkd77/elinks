@@ -1165,8 +1165,6 @@ ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
 
 	if (!bufl) return -1;
 
-	/* Newline quest. */
-
 	newline = memchr(buf, ASCII_LF, bufl);
 
 	if (newline) {
