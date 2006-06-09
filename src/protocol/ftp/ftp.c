@@ -1175,14 +1175,14 @@ ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
 		} else {
 			return 1;
 		}
-	} else {
-		if (last || bufl >= FTP_BUF_SIZE) {
-			*len = bufl;
-			return 0;
-		}
-
-		return -1;
 	}
+
+	if (last || bufl >= FTP_BUF_SIZE) {
+		*len = bufl;
+		return 0;
+	}
+
+	return -1;
 }
 
 /* List a directory in html format. */
