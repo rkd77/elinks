@@ -1167,21 +1167,18 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		unsigned char *buf = buffer + ret;
 		int bufl = buflen - ret;
 		int bufp;
-		int newline = 0;
+		unsigned char *newline;
 
 		/* Newline quest. */
 
-		for (bufp = 0; bufp < bufl; bufp++) {
-			if (buf[bufp] == ASCII_LF) {
-				newline = 1;
-				break;
-			}
-		}
+		newline = memchr(buf, ASCII_LF, bufl);
 
 		if (newline) {
+			bufp = newline - buf;
 			ret += bufp + 1;
 			if (bufp && buf[bufp - 1] == ASCII_CR) bufp--;
 		} else {
+			bufp = bufl;
 			if (!bufp || (!last && bufl < FTP_BUF_SIZE)) {
 				return ret;
 			}
