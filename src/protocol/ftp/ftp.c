@@ -1154,6 +1154,39 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 	return 0;
 }
 
+/* Get the next line of input and set *@len to the length of the line.
+ * Return the number of newline characters at the end of the line or -1
+ * if we must wait for more input. */
+static int
+ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
+             int last, int *len)
+{
+	unsigned char *newline;
+
+	if (!bufl) return -1;
+
+	/* Newline quest. */
+
+	newline = memchr(buf, ASCII_LF, bufl);
+
+	if (newline) {
+		*len = newline - buf;
+		if (*len && buf[*len - 1] == ASCII_CR) {
+			--*len;
+			return 2;
+		} else {
+			return 1;
+		}
+	} else {
+		*len = bufl;
+		if (!last && bufl < FTP_BUF_SIZE) {
+			return -1;
+		}
+
+		return 0;
+	}
+}
+
 /* List a directory in html format. */
 static int
 ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
@@ -1166,27 +1199,13 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
 		unsigned char *buf = buffer + ret;
 		int bufl = buflen - ret;
-		int bufp;
-		unsigned char *newline;
+		int bufp, eol;
 
-		if (!bufl) return ret;
+		eol = ftp_get_line(cached, buf, bufl, last, &bufp);
+		if (eol == -1)
+			return ret;
 
-		/* Newline quest. */
-
-		newline = memchr(buf, ASCII_LF, bufl);
-
-		if (newline) {
-			bufp = newline - buf;
-			ret += bufp + 1;
-			if (bufp && buf[bufp - 1] == ASCII_CR) bufp--;
-		} else {
-			bufp = bufl;
-			if (!last && bufl < FTP_BUF_SIZE) {
-				return ret;
-			}
-
-			ret += bufp;
-		}
+		ret += bufp + eol;
 
 		/* Process line whose end we've already found. */
 
