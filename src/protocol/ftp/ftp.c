@@ -1176,11 +1176,11 @@ ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
 			return 1;
 		}
 	} else {
-		*len = bufl;
 		if (!last && bufl < FTP_BUF_SIZE) {
 			return -1;
 		}
 
+		*len = bufl;
 		return 0;
 	}
 }
