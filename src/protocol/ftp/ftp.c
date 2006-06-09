@@ -1197,17 +1197,17 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
 		unsigned char *buf = buffer + ret;
 		int bufl = buflen - ret;
-		int bufp, eol;
+		int line_length, eol;
 
-		eol = ftp_get_line(cached, buf, bufl, last, &bufp);
+		eol = ftp_get_line(cached, buf, bufl, last, &line_length);
 		if (eol == -1)
 			return ret;
 
-		ret += bufp + eol;
+		ret += line_length + eol;
 
 		/* Process line whose end we've already found. */
 
-		if (parse_ftp_file_info(&ftp_info, buf, bufp)) {
+		if (parse_ftp_file_info(&ftp_info, buf, line_length)) {
 			int retv;
 
 			if ((ftp_info.name.length == 1 && ftp_info.name.source[0] == '.')
@@ -1223,7 +1223,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		}
 #ifdef DEBUG_FTP_PARSER
 		else {
-			ERROR("Error parsing: [%.*s]", bufp, buf);
+			ERROR("Error parsing: [%.*s]", line_length, buf);
 		}
 #endif
 	}
