@@ -1210,9 +1210,10 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		if (parse_ftp_file_info(&ftp_info, buf, line_length)) {
 			int retv;
 
-			if ((ftp_info.name.length == 1 && ftp_info.name.source[0] == '.')
-			    || (ftp_info.name.length == 2 && ftp_info.name.source[0] == '.'
-				&& ftp_info.name.source[1] == '.'))
+			if (ftp_info.name.source[0] == '.'
+			    && (ftp_info.name.length == 1
+				|| (ftp_info.name.length == 2
+				    && ftp_info.name.source[1] == '.')))
 				continue;
 
 			retv = display_dir_entry(cached, pos, tries, colorize_dir,
