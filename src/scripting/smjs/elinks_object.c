@@ -180,7 +180,7 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 		return JS_FALSE;
 
 	func = JS_ValueToFunction(smjs_ctx, *rval);
-	assert(func);
+	if (!func) return JS_FALSE;
 
 	return JS_CallFunction(smjs_ctx, smjs_elinks_object,
 		               func, argc, argv, rval);
