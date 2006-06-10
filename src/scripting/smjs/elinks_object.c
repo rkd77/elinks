@@ -12,6 +12,7 @@
 #include "intl/gettext/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
+#include "scripting/smjs/action_object.h"
 #include "scripting/smjs/bookmarks.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
@@ -149,6 +150,7 @@ smjs_init_elinks_object(void)
 {
 	smjs_elinks_object = smjs_get_elinks_object();
 
+	smjs_init_action_interface();
 	smjs_init_bookmarks_interface();
 	smjs_init_globhist_interface();
 	smjs_init_keybinding_interface();
