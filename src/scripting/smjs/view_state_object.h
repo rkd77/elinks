@@ -5,5 +5,7 @@ struct view_state;
 
 JSObject *smjs_get_view_state_object(struct view_state *vs);
 
+void smjs_init_view_state_interface(void);
+
 #endif
 

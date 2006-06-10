@@ -10,8 +10,12 @@
 
 #include "ecmascript/spidermonkey/util.h"
 #include "protocol/uri.h"
+#include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/view_state_object.h"
 #include "scripting/smjs/core.h"
+#include "session/history.h"
+#include "session/location.h"
+#include "session/session.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "viewer/text/vs.h"
@@ -106,4 +110,36 @@ smjs_get_view_state_object(struct view_state *vs)
 		return NULL;
 
 	return view_state_object;
+}
+
+static JSBool
+smjs_elinks_get_view_state(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+{
+	JSObject *vs_obj;
+	struct view_state *vs;
+
+	*vp = JSVAL_NULL;
+
+	if (!smjs_ses) return JS_TRUE;
+
+	vs = &cur_loc(smjs_ses)->vs;
+	if (!vs) return JS_TRUE;
+
+	vs_obj = smjs_get_view_state_object(vs);
+	if (!vs_obj) return JS_TRUE;
+
+	*vp = OBJECT_TO_JSVAL(vs_obj);
+
+	return JS_TRUE;
+}
+
+void
+smjs_init_view_state_interface(void)
+{
+	if (!smjs_ctx || !smjs_elinks_object)
+		return;
+
+	JS_DefineProperty(smjs_ctx, smjs_elinks_object, "vs", JSVAL_NULL,
+	                smjs_elinks_get_view_state, JS_PropertyStub,
+	                JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY);
 }
