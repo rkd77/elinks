@@ -165,19 +165,13 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct bookmark *folder = JS_GetPrivate(ctx, obj);
 	unsigned char *title;
 
-	title = JS_GetStringBytes(JS_ValueToString(ctx, id));
-	if (!title) {
-		*vp = JSVAL_NULL;
+	*vp = JSVAL_NULL;
 
-		return JS_TRUE;
-	}
+	title = JS_GetStringBytes(JS_ValueToString(ctx, id));
+	if (!title) return JS_TRUE;
 
 	bookmark = get_bookmark_by_name(folder, title);
-	if (!bookmark) {
-		*vp = JSVAL_NULL;
-
-		return JS_TRUE;
-	}
+	if (!bookmark) return JS_TRUE;
 
 	*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
 
