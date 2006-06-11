@@ -38,6 +38,7 @@ struct attributes {
 	LIST_HEAD(struct attributes);
 
 	unsigned char *name;
+	unsigned char *value;
 };
 
 /* Prototypes */
@@ -257,7 +258,6 @@ write_bookmarks_list(struct secure_save_info *ssi,
 static void
 on_element_open(void *data, const char *name, const char **attr)
 {
-	struct attributes *attribute;
 	struct tree_node *node;
 
 	node = new_node(current_node);
@@ -284,26 +284,23 @@ on_element_open(void *data, const char *name, const char **attr)
 		return;
 	}
 
-	while (*attr) {
-		unsigned char *tmp = stracpy((unsigned char *) *attr);
+	for (; *attr; attr += 2) {
+		struct attributes *attribute = mem_calloc(1, sizeof(*attribute));
+		unsigned char *name = stracpy((unsigned char *) attr[0]);
+		unsigned char *value = stracpy((unsigned char *) attr[1]);
 
-		if (!tmp) {
+		if (!attribute || !name || !value) {
+			mem_free_if(attribute);
+			mem_free_if(name);
+			mem_free_if(value);
 			free_node(current_node);
 			return;
 		}
 
-		attribute = mem_calloc(1, sizeof(*attribute));
-		if (!attribute) {
-			mem_free(tmp);
-			free_node(current_node);
-			return;
-		}
+		attribute->name = name;
+		attribute->value = value;
 
-		attribute->name = tmp;
-
-		add_to_list(current_node->attrs, attribute);
-
-		++attr;
+		add_to_list_end(current_node->attrs, attribute);
 	}
 
 }
@@ -491,9 +488,9 @@ get_attribute_value(struct tree_node *node, unsigned char *name)
 {
 	struct attributes *attribute;
 
-	foreachback (attribute, node->attrs) {
+	foreach (attribute, node->attrs) {
 		if (!strcmp(attribute->name, name)) {
-			return attribute->prev->name;
+			return attribute->value;
 		}
 	}
 
@@ -519,8 +516,11 @@ free_node(struct tree_node *node)
 {
 	struct attributes *attribute;
 
-	foreachback (attribute, node->attrs)
-		mem_free_if(attribute->name);
+	foreach (attribute, node->attrs) {
+		/* on_element_open() ensures ->name and ->value aren't NULL. */
+		mem_free(attribute->name);
+		mem_free(attribute->value);
+	}
 	free_list(node->attrs); /* Don't free list during traversal */
 
 	mem_free_if(node->name);
