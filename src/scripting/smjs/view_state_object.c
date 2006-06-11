@@ -120,7 +120,7 @@ smjs_elinks_get_view_state(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	*vp = JSVAL_NULL;
 
-	if (!smjs_ses) return JS_TRUE;
+	if (!smjs_ses || !have_location(smjs_ses)) return JS_TRUE;
 
 	vs = &cur_loc(smjs_ses)->vs;
 	if (!vs) return JS_TRUE;
