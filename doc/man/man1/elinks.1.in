@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS" 1 "The Elinks text-browser" "2006-01-31" "The Elinks text-browser"
+.TH "ELINKS" 1 "The Elinks text-browser" "2006-06-12" "The Elinks text-browser"
 .SH NAME
 elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
@@ -87,6 +87,10 @@ Print formatted plain\-text versions of given URLs to stdout\&.
 .TP
 \-dump\-charset (alias for document\&.dump\&.codepage)
 Codepage used when formatting dump output\&.
+
+.TP
+\-dump\-color\-mode (alias for document\&.dump\&.color_mode)
+Color mode used with \-dump\&.
 
 .TP
 \-dump\-width (alias for document\&.dump\&.width)
@@ -309,7 +313,7 @@ Other files that ELinks uses from \fI~/\&.elinks/\fR includes the user defined C
 .SH "BUGS"
 
 
-Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch\&.org> or if you prefer enter them into the bug tracking system <http://bugzilla\&.elinks\&.or\&.cz/>\&. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks\&.or\&.cz/community\&.html>\&.
+Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch\&.org> or if you prefer enter them into the bug tracking system <http://bugzilla\&.elinks\&.cz/>\&. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks\&.cz/community\&.html>\&.
 
 .SH "LICENSE"
 

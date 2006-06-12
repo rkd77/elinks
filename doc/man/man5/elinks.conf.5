@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS.CONF" 5 "ELinks configuration file" "2006-01-31" "ELinks configuration file"
+.TH "ELINKS.CONF" 5 "ELinks configuration file" "2006-06-12" "ELinks configuration file"
 .SH NAME
 elinks.conf \- ELinks configuration file
 .SH "SYNOPSIS"
@@ -777,6 +777,27 @@ document\&.dump\&.codepage <codepage> (default: System)
 Codepage used in dump output\&. 'System' stands for a codepage determined by a selected locale\&.
 
 .TP
+document\&.dump\&.color_mode <num> (default: \-1)
+Color mode for dumps:
+
+.RS
+.TP 3
+\(bu
+\-1: is standard dump mode
+.TP
+\(bu
+0: is mono mode
+.TP
+\(bu
+1: is 16 color mode
+.TP
+\(bu
+2: is 256 color mode
+.LP
+.RE
+.IP
+
+.TP
 document\&.dump\&.footer <str> (default: "")
 Footer string used in dumps\&. %u is substituted by URL\&.
 
@@ -900,7 +921,7 @@ Compress successive empty lines to only one in displayed text\&.
 
 .TP
 document\&.uri_passing
-Rules for passing URIs to external commands\&.
+Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&. Note, this is mostly useful for launching graphical viewers, since there is not support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
 
 .TP
 document\&.uri_passing\&._template_ <str> (default: "")
@@ -2518,6 +2539,10 @@ Show tabs bar on the screen:
 .IP
 
 .TP
+ui\&.tabs\&.top [0|1] (default: 0)
+Whether display tab bar at top like other browsers do\&.
+
+.TP
 ui\&.tabs\&.wraparound [0|1] (default: 1)
 When moving right from the last tab, jump at the first one, and vice versa\&.
 
@@ -2562,6 +2587,10 @@ Date format to use in dialogs\&. See strftime(3)\&.
 .TP
 ui\&.language <language> (default: "System")
 Language of user interface\&. 'System' means that the language will be extracted from the environment dynamically\&.
+
+.TP
+ui\&.show_menu_bar_always [0|1] (default: 0)
+Always show menu bar on the screen\&.
 
 .TP
 ui\&.show_status_bar [0|1] (default: 1)
