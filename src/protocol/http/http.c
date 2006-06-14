@@ -813,7 +813,7 @@ http_send_header(struct socket *socket)
 	if (http_negotiate_output(uri, &header) != 0)
 #endif
 		entry = find_auth(uri);
-	
+
 	if (entry) {
 		if (entry->digest) {
 			unsigned char *response;
@@ -1334,7 +1334,7 @@ get_header(struct read_buffer *rb)
 
 /* returns 1 if we need retry the connection (for negotiate-auth only) */
 static int
-check_http_authentication(struct connection *conn, struct uri *uri, 
+check_http_authentication(struct connection *conn, struct uri *uri,
 		unsigned char *header, unsigned char *header_field)
 {
 	unsigned char *str, *d;
@@ -1608,12 +1608,12 @@ again:
 	}
 
 	if (h == 401) {
-		if (check_http_authentication(conn, uri, 
+		if (check_http_authentication(conn, uri,
 				conn->cached->head, "WWW-Authenticate")) {
 			retry_connection(conn, S_RESTART);
 			return;
 		}
-	
+
 	}
 	if (h == 407) {
 		unsigned char *str;

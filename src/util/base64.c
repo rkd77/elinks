@@ -19,7 +19,7 @@ base64_encode(register unsigned char *in)
 {
 	assert(in && *in);
 	if_assert_failed return NULL;
-	
+
 	return base64_encode_bin(in, strlen(in), NULL);
 }
 
@@ -62,12 +62,12 @@ base64_encode_bin(register unsigned char *in, int inlen, int *outlen)
 	return outstr;
 }
 
-/* Base64 decoding is used only with the CONFIG_FORMHIST or CONFIG_GSSAPI 
+/* Base64 decoding is used only with the CONFIG_FORMHIST or CONFIG_GSSAPI
    feature, so i'll #ifdef it */
 #if  defined(CONFIG_FORMHIST) || defined(CONFIG_GSSAPI)
 
 unsigned char *
-base64_decode(register unsigned char *in) 
+base64_decode(register unsigned char *in)
 {
 	assert(in && *in);
 	if_assert_failed return NULL;
