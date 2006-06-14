@@ -47,6 +47,9 @@
 #include "util/memory.h"
 #include "util/string.h"
 
+#ifdef CONFIG_GSSAPI
+#include "http_negotiate.h"
+#endif
 
 struct http_version {
 	int major;
@@ -549,7 +552,7 @@ http_send_header(struct socket *socket)
 	int trace = get_opt_bool("protocol.http.trace");
 	struct string header;
 	unsigned char *post_data = NULL;
-	struct auth_entry *entry;
+	struct auth_entry *entry = NULL;
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
@@ -806,7 +809,11 @@ http_send_header(struct socket *socket)
 		add_crlf_to_string(&header);
 	}
 
-	entry = find_auth(uri);
+#ifdef CONFIG_GSSAPI
+	if (http_negotiate_output(uri, &header) != 0)
+#endif
+		entry = find_auth(uri);
+	
 	if (entry) {
 		if (entry->digest) {
 			unsigned char *response;
@@ -1325,12 +1332,13 @@ get_header(struct read_buffer *rb)
 	return 0;
 }
 
-
-static void
-check_http_authentication(struct uri *uri, unsigned char *header,
-			  unsigned char *header_field)
+/* returns 1 if we need retry the connection (for negotiate-auth only) */
+static int
+check_http_authentication(struct connection *conn, struct uri *uri, 
+		unsigned char *header, unsigned char *header_field)
 {
 	unsigned char *str, *d;
+	int ret = 0;
 
 	d = parse_header(header, header_field, &str);
 	while (d) {
@@ -1356,10 +1364,24 @@ check_http_authentication(struct uri *uri, unsigned char *header,
 			mem_free(d);
 			break;
 		}
-
+#ifdef CONFIG_GSSAPI
+		else if (!strncasecmp(d, HTTPNEG_GSS_STR, HTTPNEG_GSS_STRLEN)) {
+			if (http_negotiate_input(conn, uri, HTTPNEG_GSS, str)==0)
+				ret = 1;
+			mem_free(d);
+			break;
+		}
+		else if (!strncasecmp(d, HTTPNEG_NEG_STR, HTTPNEG_NEG_STRLEN)) {
+			if (http_negotiate_input(conn, uri, HTTPNEG_NEG, str)==0)
+				ret = 1;
+			mem_free(d);
+			break;
+		}
+#endif
 		mem_free(d);
 		d = parse_header(str, header_field, &str);
 	}
+	return ret;
 }
 
 
@@ -1586,11 +1608,13 @@ again:
 	}
 
 	if (h == 401) {
-		unsigned char *head = conn->cached->head;
-
-		check_http_authentication(uri, head, "WWW-Authenticate");
+		if (check_http_authentication(conn, uri, 
+				conn->cached->head, "WWW-Authenticate")) {
+			retry_connection(conn, S_RESTART);
+			return;
+		}
+	
 	}
-
 	if (h == 407) {
 		unsigned char *str;
 

@@ -17,14 +17,21 @@ static unsigned char base64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno
 unsigned char *
 base64_encode(register unsigned char *in)
 {
+	assert(in && *in);
+	if_assert_failed return NULL;
+	
+	return base64_encode_bin(in, strlen(in), NULL);
+}
+
+unsigned char *
+base64_encode_bin(register unsigned char *in, int inlen, int *outlen)
+{
 	unsigned char *out;
 	unsigned char *outstr;
-	int inlen;
 
 	assert(in && *in);
 	if_assert_failed return NULL;
 
-	inlen = strlen(in);
 	out = outstr = mem_alloc((inlen / 3) * 4 + 4 + 1);
 	if (!out) return NULL;
 
@@ -49,16 +56,29 @@ base64_encode(register unsigned char *in)
 	}
 	*out = 0;
 
+	if (outlen)
+		*outlen = out-outstr;
+
 	return outstr;
 }
 
-/* Base64 decoding is used only with the CONFIG_FORMHIST feature, so i'll #ifdef it */
-#ifdef CONFIG_FORMHIST
+/* Base64 decoding is used only with the CONFIG_FORMHIST or CONFIG_GSSAPI 
+   feature, so i'll #ifdef it */
+#if  defined(CONFIG_FORMHIST) || defined(CONFIG_GSSAPI)
+
+unsigned char *
+base64_decode(register unsigned char *in) 
+{
+	assert(in && *in);
+	if_assert_failed return NULL;
+
+	return base64_decode_bin(in, strlen(in), NULL);
+}
 
 /* base64_decode:  @in string to decode
  *		   returns the string decoded (must be freed by the caller) */
 unsigned char *
-base64_decode(register unsigned char *in)
+base64_decode_bin(register unsigned char *in, int inlen, int *outlen)
 {
 	static unsigned char is_base64_char[256]; /* static to force initialization at zero */
 	static unsigned char decode[256];
@@ -71,7 +91,7 @@ base64_decode(register unsigned char *in)
 	assert(in && *in);
 	if_assert_failed return NULL;
 
-	outstr = out = mem_alloc(strlen(in) / 4 * 3 + 1);
+	outstr = out = mem_alloc(inlen / 4 * 3 + 1);
 	if (!outstr) return NULL;
 
 	if (!once) {
@@ -123,6 +143,10 @@ base64_decode(register unsigned char *in)
 	}
 
 	*out = 0;
+
+	if (outlen)
+		*outlen = out-outstr;
+
 	return outstr;
 
 decode_error:

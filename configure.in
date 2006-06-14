@@ -453,6 +453,30 @@ fi
 EL_ARG_ENABLE(CONFIG_LZMA, lzma, [lzma],
 	      [  --enable-lzma           enable lzma encoding support])
 dnl ===================================================================
+dnl Check for GSSAPI, optional even if installed.
+dnl ===================================================================
+
+enable_gssapi="no";
+
+AC_ARG_WITH(gssapi, [  --with-gssapi           enable GSSAPI support],
+            [ if test "x$withval" != xno; then enable_gssapi=yes; fi ])
+
+AC_MSG_CHECKING([for GSSAPI])
+
+if test "$enable_gssapi" = "yes"; then
+	AC_MSG_RESULT(yes)
+	GSSAPI_CFLAGS=`krb5-config --cflags gssapi`
+	GSSAPI_LIBS=`krb5-config --libs gssapi`
+	CFLAGS="$GSSAPI_CFLAGS $CFLAGS"
+	LIBS="$GSSAPI_LIBS $LIBS"
+ 	EL_CONFIG(CONFIG_GSSAPI, [GssApi])
+else
+	AC_MSG_RESULT(no)
+fi
+
+AC_SUBST(CONFIG_GSSAPI)
+
+dnl ===================================================================
 dnl Bookmark and XBEL support
 dnl ===================================================================
 
