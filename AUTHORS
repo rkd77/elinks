@@ -286,6 +286,9 @@ Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 	Fixed compile incompatibility
 	One of Links authors; a lot of misc. features & code
 
+Karel Zak <kzak@redhat.com>
+	Support for negotiate-auth based on GSSAPI
+
 Karsten Schölzel <kuser@gmx.de>
 	Event system chief engineer
 	Scripting subsystem hacking
