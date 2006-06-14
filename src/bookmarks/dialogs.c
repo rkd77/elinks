@@ -13,6 +13,8 @@
 #include "elinks.h"
 
 #include "bfu/dialog.h"
+#include "bfu/hierbox.h"
+#include "bfu/listbox.h"
 #include "bookmarks/bookmarks.h"
 #include "bookmarks/dialogs.h"
 #include "dialogs/edit.h"

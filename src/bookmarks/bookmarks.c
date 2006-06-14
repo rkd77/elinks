@@ -12,6 +12,7 @@
 
 #include "bfu/dialog.h"
 #include "bfu/hierbox.h"
+#include "bfu/listbox.h"
 #include "bookmarks/backend/common.h"
 #include "bookmarks/bookmarks.h"
 #include "bookmarks/dialogs.h"
