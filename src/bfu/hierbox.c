@@ -90,6 +90,7 @@ done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item)
 	struct listbox_data *box_data;
 
 	assert(item && list_empty(item->child));
+	if_assert_failed return;
 
 	/* The option dialog needs this test */
 	if (item->next) {
