@@ -343,15 +343,12 @@ enum move_bookmark_flags {
 /* Traverse all bookmarks and move all marked items
  * _into_ destb or, if destb is NULL, _after_ dest. */
 static enum move_bookmark_flags
-do_move_bookmark(struct bookmark *dest, struct list_head *destb,
-		 struct list_head *desti, struct list_head *src,
-		 struct listbox_data *box)
+do_move_bookmark(struct bookmark *dest, int insert_as_child,
+		 struct list_head *src, struct listbox_data *box)
 {
 	static int move_bookmark_event_id = EVENT_NONE;
 	struct bookmark *bm, *next;
 	enum move_bookmark_flags result = MOVE_BOOKMARK_NONE;
-
-	assert((destb && desti) || (!destb && !desti));
 
 	set_event_id(move_bookmark_event_id, "bookmark-move");
 
@@ -368,9 +365,7 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 			result |= MOVE_BOOKMARK_MOVED;
 			bm->box_item->marked = 0;
 
-			trigger_event(move_bookmark_event_id, bm,
-				      destb ? (struct bookmark *) destb
-					    : dest);
+			trigger_event(move_bookmark_event_id, bm, dest);
 
 			foreach (item, bookmark_browser.dialogs) {
 				struct widget_data *widget_data;
@@ -385,14 +380,16 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 				
 			del_from_list(bm->box_item);
 			del_from_list(bm);
-			add_at_pos(destb ? (struct bookmark *) destb
-					 : dest,
-				   bm);
-			add_at_pos(desti ? (struct listbox_item *) desti
-					 : dest->box_item,
-				   bm->box_item);
-
-			bm->root = destb ? dest : dest->root;
+			if (insert_as_child) {
+				add_to_list(dest->child, bm);
+				add_to_list(dest->box_item->child, bm->box_item);
+				bm->root = dest;
+				insert_as_child = 0;
+			} else {
+				add_at_pos(dest, bm);
+				add_at_pos(dest->box_item, bm->box_item);
+				bm->root = dest->root;
+			}
 
 			bm->box_item->depth = bm->root
 						? bm->root->box_item->depth + 1
@@ -402,7 +399,6 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 				update_depths(bm->box_item);
 
 			dest = bm;
-			desti = destb = NULL;
 
 			/* We don't want to care about anything marked inside
 			 * of the marked folder, let's move it as a whole
@@ -412,7 +408,7 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 		}
 
 		if (bm->box_item->type == BI_FOLDER) {
-			result |= do_move_bookmark(dest, destb, desti,
+			result |= do_move_bookmark(dest, insert_as_child,
 						   &bm->child, box);
 		}
 	}
@@ -426,15 +422,14 @@ push_move_button(struct dialog_data *dlg_data,
 {
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct bookmark *dest = NULL;
-	struct list_head *destb = NULL, *desti = NULL;
+	int insert_as_child = 0;
 	enum move_bookmark_flags result;
 
 	if (!box->sel) return EVENT_PROCESSED; /* nowhere to move to */
 
 	dest = box->sel->udata;
 	if (box->sel->type == BI_FOLDER && box->sel->expanded) {
-		destb = &((struct bookmark *) box->sel->udata)->child;
-		desti = &box->sel->child;
+		insert_as_child = 1;
 	}
 	/* Avoid recursion headaches (prevents moving a folder into itself). */
 	move_cache_root_avoid = NULL;
@@ -448,7 +443,7 @@ push_move_button(struct dialog_data *dlg_data,
 		}
 	}
 
-	result = do_move_bookmark(dest, destb, desti, &bookmarks, box);
+	result = do_move_bookmark(dest, insert_as_child, &bookmarks, box);
 	if (result & MOVE_BOOKMARK_MOVED) {
 		bookmarks_set_dirty();
 
