@@ -671,10 +671,12 @@ add_document_lines(struct plain_renderer *renderer)
 		int last_space = 0;
 		int tab_spaces = 0;
 		int step = 0;
-		int doc_width = int_min(renderer->max_width, length);
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
-		for (width = 0; width + tab_spaces < doc_width; width++) {
+		for (width = 0;
+		     width + tab_spaces < renderer->max_width
+		      && width < length;
+		     width++) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)
