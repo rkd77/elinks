@@ -363,6 +363,8 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 			/* Prevent moving a folder into itself. */
 			result |= MOVE_BOOKMARK_CYCLE;
 		} else {
+			struct hierbox_dialog_list_item *item;
+
 			result |= MOVE_BOOKMARK_MOVED;
 			bm->box_item->marked = 0;
 
@@ -370,15 +372,17 @@ do_move_bookmark(struct bookmark *dest, struct list_head *destb,
 				      destb ? (struct bookmark *) destb
 					    : dest);
 
-			if (box->top == bm->box_item) {
-				/* It's theoretically impossible that bm->next
-				 * would be invalid (point to list_head), as it
-				 * would be case only when there would be only
-				 * one item in the list, and then bm != dest
-				 * will save us already. */
-				box->top = bm->box_item->next;
-			}
+			foreach (item, bookmark_browser.dialogs) {
+				struct widget_data *widget_data;
+				struct listbox_data *box2;
 
+				widget_data = item->dlg_data->widgets_data;
+				box2 = get_listbox_widget_data(widget_data);
+
+				if (box2->top == bm->box_item)
+					listbox_sel_move(widget_data, 1);
+			}
+				
 			del_from_list(bm->box_item);
 			del_from_list(bm);
 			add_at_pos(destb ? (struct bookmark *) destb
@@ -423,7 +427,6 @@ push_move_button(struct dialog_data *dlg_data,
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct bookmark *dest = NULL;
 	struct list_head *destb = NULL, *desti = NULL;
-	struct widget_data *widget_data = dlg_data->widgets_data;
 	enum move_bookmark_flags result;
 
 	if (!box->sel) return EVENT_PROCESSED; /* nowhere to move to */
@@ -452,7 +455,7 @@ push_move_button(struct dialog_data *dlg_data,
 #ifdef BOOKMARKS_RESAVE
 		write_bookmarks();
 #endif
-		display_widget(dlg_data, widget_data); /* the hierbox */
+		update_hierbox_browser(&bookmark_browser);
 	}
 #ifndef CONFIG_SMALL
 	else if (result & MOVE_BOOKMARK_CYCLE) {
