@@ -50,6 +50,12 @@ struct hierbox_browser {
 		ops,							\
 	}
 
+struct hierbox_dialog_list_item {
+	LIST_HEAD(struct hierbox_dialog_list_item);
+
+	struct dialog_data *dlg_data;
+};
+
 void done_listbox_item(struct hierbox_browser *browser, struct listbox_item *box_item);
 void update_hierbox_browser(struct hierbox_browser *browser);
 

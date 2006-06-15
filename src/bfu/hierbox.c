@@ -24,13 +24,6 @@
 #include "terminal/terminal.h"
 
 
-struct hierbox_dialog_list_item {
-	LIST_HEAD(struct hierbox_dialog_list_item);
-
-	struct dialog_data *dlg_data;
-};
-
-
 void
 update_hierbox_browser(struct hierbox_browser *browser)
 {
