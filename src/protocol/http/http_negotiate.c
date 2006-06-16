@@ -57,14 +57,15 @@ http_negotiate_get(struct uri *uri, int *isnew, int alloc)
 	}
 	if (!alloc)
 		return NULL;
-	if (isnew)
-		*isnew = 1;
 
 	neg = mem_calloc(1, sizeof(*neg));
 	if (!neg)
 		return NULL;
 
 	neg->uri = get_uri_reference(uri);
+
+	if (isnew)
+		*isnew = 1;
 
 	return neg;
 }
