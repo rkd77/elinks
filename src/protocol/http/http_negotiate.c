@@ -106,7 +106,7 @@ http_negotiate_get_name(struct connection *conn, struct negotiate *neg)
 	OM_uint32 major_status, minor_status;
 	gss_buffer_desc token = GSS_C_EMPTY_BUFFER;
 	char name[2048];
-	const char* service;
+	const char *service;
 	struct uri *uri = conn->proxied_uri;
 
 	/* GSSAPI implementation by Globus (known as GSI) requires the name to be
@@ -128,17 +128,16 @@ http_negotiate_get_name(struct connection *conn, struct negotiate *neg)
 	snprintf(name, token.length, "%s@%*s", service, uri->hostlen, uri->host);
 
 	token.value = (void *) name;
-	major_status = gss_import_name(&minor_status,
-			 &token,
-			 GSS_C_NT_HOSTBASED_SERVICE,
-			 &neg->server_name);
+	major_status = gss_import_name(&minor_status, &token,
+				       GSS_C_NT_HOSTBASED_SERVICE,
+				       &neg->server_name);
 
 	return GSS_ERROR(major_status) ? -1 : 0;
 }
 
 static int
 http_negotiate_parse_data(unsigned char *data, int type,
-			gss_buffer_desc *token)
+			  gss_buffer_desc *token)
 {
 	int len = 0;
 	unsigned char *end;
@@ -146,9 +145,12 @@ http_negotiate_parse_data(unsigned char *data, int type,
 	if (data == NULL || *data == '\0')
 		return 0;
 
-	data += type == HTTPNEG_GSS ? HTTPNEG_GSS_STRLEN : HTTPNEG_NEG_STRLEN;
+	if (type == HTTPNEG_GSS)
+		data += HTTPNEG_GSS_STRLEN;
+	else
+		data += HTTPNEG_NEG_STRLEN;
 
-	while(*data && isspace((int)*data))
+	while (*data && isspace((int) *data))
 		data++;
 
 	if (*data == '\0' || *data == ASCII_CR || *data == ASCII_LF)
@@ -195,9 +197,7 @@ http_negotiate_create_context(struct negotiate *neg)
 					    NULL);
 	neg->status = major_status;
 
-	if (GSS_ERROR(major_status))
-		return -1;
-	if (neg->output_token.length == 0)
+	if (GSS_ERROR(major_status) || neg->output_token.length == 0)
 		return -1;
 
 	return 0;
@@ -212,17 +212,16 @@ http_negotiate_create_context(struct negotiate *neg)
  */
 int
 http_negotiate_input(struct connection *conn, struct uri *uri,
-					int type, unsigned char *data)
+		     int type, unsigned char *data)
 {
 	struct negotiate *neg;
 	int ret = 0, isnew = 0;
 
 	neg = http_negotiate_get(uri, &isnew, 1);
 
-	if (neg->context) {
-		if (type != HTTPNEG_GSS)
-			return -1;
-	}
+	if (neg->context && type != HTTPNEG_GSS)
+		return -1;
+
 	neg->type = type;
 
 	if (neg->context && neg->status == GSS_S_COMPLETE) {
@@ -233,10 +232,13 @@ http_negotiate_input(struct connection *conn, struct uri *uri,
 		http_negotiate_cleanup(neg, 1);
 		return -1;
 	}
+
 	if (neg->server_name == NULL && http_negotiate_get_name(conn, neg) < 0)
 		return -1;
+
 	if (data && http_negotiate_parse_data(data, type, &neg->input_token))
 		return -1;
+
 	ret = http_negotiate_create_context(neg);
 	if (ret == 0 && isnew)
 		http_negotiate_save(neg);
@@ -269,14 +271,14 @@ http_negotiate_output(struct uri *uri, struct string *header)
 	}
 
 	encoded = base64_encode_bin((unsigned char *) neg->output_token.value,
-				neg->output_token.length, &len);
+				    neg->output_token.length, &len);
 
 	if (encoded == NULL || len == 0)
 		return -1;
 
 	add_to_string(header, "Authorization: ");
 	add_to_string(header, neg->type == HTTPNEG_GSS ?
-			HTTPNEG_GSS_STR : HTTPNEG_NEG_STR);
+		      HTTPNEG_GSS_STR : HTTPNEG_NEG_STR);
 	add_char_to_string(header, ' ');
 	add_to_string(header, encoded);
 	add_crlf_to_string(header);
@@ -287,4 +289,3 @@ http_negotiate_output(struct uri *uri, struct string *header)
 
 	return 0;
 }
-
