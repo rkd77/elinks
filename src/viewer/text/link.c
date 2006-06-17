@@ -264,6 +264,27 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 	doc_view->vs->old_current_link = doc_view->vs->current_link;
 }
 
+static void
+draw_link(struct terminal *term, struct document_view *doc_view,
+          struct link *link)
+{
+	int xpos = doc_view->box.x - doc_view->vs->x;
+	int ypos = doc_view->box.y - doc_view->vs->y;
+	int i;
+
+	for (i = 0; i < link->npoints; ++i) {
+		int x = link->points[i].x;
+		int y = link->points[i].y;
+
+		if (is_in_box(&doc_view->box, x + xpos, y + ypos)){
+			struct screen_char *ch;
+
+			ch = get_char(term, x + xpos, y + ypos);
+			copy_struct(ch, &doc_view->document->data[y].chars[x]);
+		}
+	}
+}
+
 /* Restore the colours and attributes that the active link had
  * before it was selected. */
 void
@@ -273,21 +294,7 @@ clear_link(struct terminal *term, struct document_view *doc_view)
 	struct link *last = get_old_current_link(doc_view);
 
 	if (last && last != link) {
-		int xpos = doc_view->box.x - doc_view->vs->x;
-		int ypos = doc_view->box.y - doc_view->vs->y;
-		int i;
-
-		for (i = 0; i < last->npoints; ++i) {
-			int x = last->points[i].x;
-			int y = last->points[i].y;
-
-			if (is_in_box(&doc_view->box, x + xpos, y + ypos)){
-				struct screen_char *ch;
-
-				ch = get_char(term, x + xpos, y + ypos);
-				copy_struct(ch, &doc_view->document->data[y].chars[x]);
-			}
-		}
+		draw_link(term, doc_view, last);
 	}
 
 	doc_view->vs->old_current_link = doc_view->vs->current_link;
