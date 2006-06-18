@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-26 15:22+0200\n"
-"PO-Revision-Date: 2006-05-25 20:00+0200\n"
+"POT-Creation-Date: 2006-06-18 17:49+0200\n"
+"PO-Revision-Date: 2006-06-18 18:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -21,25 +21,25 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
 
-#: src/bfu/hierbox.c:338
+#: src/bfu/hierbox.c:332
 msgid "Close"
 msgstr "Zamknij"
 
 #. | MSGBOX_SCROLLABLE
-#: src/bfu/hierbox.c:435 src/bfu/hierbox.c:444 src/dialogs/document.c:43
+#: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:240
 msgid "Info"
 msgstr "Informacja"
 
-#: src/bfu/hierbox.c:436
+#: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
 msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
-#: src/bfu/hierbox.c:447 src/bfu/inpfield.c:255 src/bfu/msgbox.c:173
+#: src/bfu/hierbox.c:441 src/bfu/inpfield.c:255 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:393
-#: src/cookies/dialogs.c:356 src/cookies/dialogs.c:449 src/dialogs/edit.c:98
-#: src/dialogs/info.c:134 src/dialogs/options.c:211 src/dialogs/options.c:292
+#: src/cookies/dialogs.c:356 src/cookies/dialogs.c:454 src/dialogs/edit.c:98
+#: src/dialogs/info.c:134 src/dialogs/options.c:218 src/dialogs/options.c:299
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:111
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:378
 #: src/scripting/lua/core.c:459 src/session/session.c:801
@@ -48,57 +48,57 @@ msgid "~OK"
 msgstr "~OK"
 
 #. cant_delete_item
-#: src/bfu/hierbox.c:558
+#: src/bfu/hierbox.c:552
 #, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
 msgstr "Przykro mi, ale element \"%s\" nie mo¿e byæ usuniêty."
 
 #. cant_delete_used_item
-#: src/bfu/hierbox.c:561
+#: src/bfu/hierbox.c:555
 #, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
 msgstr "Przykro mi, ale element \"%s\" jest u¿ywany przez co¶ innego."
 
 #. cant_delete_folder
-#: src/bfu/hierbox.c:564 src/bookmarks/dialogs.c:119
+#: src/bfu/hierbox.c:558 src/bookmarks/dialogs.c:121
 #, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
 msgstr "Przykro mi, ale folder \"%s\" nie mo¿e byæ usuniêty."
 
 #. cant_delete_used_folder
-#: src/bfu/hierbox.c:567 src/bookmarks/dialogs.c:121
+#: src/bfu/hierbox.c:561 src/bookmarks/dialogs.c:123
 #, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
 msgstr "Przykro mi, ale folder \"%s\" jest u¿ywany przez co¶ innego."
 
 #. delete_marked_items_title
-#: src/bfu/hierbox.c:570
+#: src/bfu/hierbox.c:564
 msgid "Delete marked items"
 msgstr "Usuwanie zaznaczonych elementów"
 
 #. delete_marked_items
-#: src/bfu/hierbox.c:573
+#: src/bfu/hierbox.c:567
 msgid "Delete marked items?"
 msgstr "Czy usun±æ zaznaczone elementy?"
 
 #. delete_folder_title
-#: src/bfu/hierbox.c:576 src/bookmarks/dialogs.c:127
+#: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:129
 msgid "Delete folder"
 msgstr "Usuñ folder"
 
 #. delete_folder
-#: src/bfu/hierbox.c:579
+#: src/bfu/hierbox.c:573
 #, c-format
 msgid "Delete the folder \"%s\" and its content?"
 msgstr "Czy skasowaæ folder \"%s\" i jego zawarto¶æ?"
 
 #. delete_item_title
-#: src/bfu/hierbox.c:582
+#: src/bfu/hierbox.c:576
 msgid "Delete item"
 msgstr "Usuwanie pozycji"
 
 #. delete_item
-#: src/bfu/hierbox.c:585
+#: src/bfu/hierbox.c:579
 #, c-format
 msgid ""
 "Delete \"%s\"?\n"
@@ -110,47 +110,47 @@ msgstr ""
 "%s"
 
 #. clear_all_items_title
-#: src/bfu/hierbox.c:588
+#: src/bfu/hierbox.c:582
 msgid "Clear all items"
 msgstr "Skasowanie wszystkich pozycji"
 
 #. clear_all_items
-#: src/bfu/hierbox.c:591
+#: src/bfu/hierbox.c:585
 msgid "Do you really want to remove all items?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie pozycje?"
 
-#: src/bfu/hierbox.c:648
+#: src/bfu/hierbox.c:642
 msgid "Delete error"
 msgstr "B³±d przy usuwaniu"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
-#: src/bfu/hierbox.c:760 src/bfu/hierbox.c:772 src/bfu/hierbox.c:814
-#: src/bfu/hierbox.c:876 src/config/dialogs.c:836 src/dialogs/menu.c:127
+#: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
+#: src/bfu/hierbox.c:870 src/config/dialogs.c:836 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
 #: src/terminal/tab.c:213 src/terminal/tab.c:250
 msgid "~Yes"
 msgstr "~Tak"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
-#: src/bfu/hierbox.c:761 src/bfu/hierbox.c:773 src/bfu/hierbox.c:815
-#: src/bfu/hierbox.c:877 src/config/dialogs.c:837 src/dialogs/menu.c:128
+#: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
+#: src/bfu/hierbox.c:871 src/config/dialogs.c:837 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
 #: src/terminal/tab.c:214 src/terminal/tab.c:251
 msgid "~No"
 msgstr "~Nie"
 
-#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1013
+#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
 #: src/viewer/text/search.c:1613
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1014
+#: src/bfu/hierbox.c:941 src/viewer/text/search.c:1014
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Nie znaleziono wyra¿enia '%s'"
 
-#: src/bfu/hierbox.c:976 src/config/dialogs.c:169 src/config/dialogs.c:359
+#: src/bfu/hierbox.c:970 src/config/dialogs.c:169 src/config/dialogs.c:359
 #: src/config/dialogs.c:506 src/cookies/dialogs.c:34 src/cookies/dialogs.c:350
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:374
 #: src/scripting/lua/core.c:375 src/scripting/lua/core.c:456
@@ -180,11 +180,11 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:255 src/config/dialogs.c:394 src/cookies/dialogs.c:357
-#: src/cookies/dialogs.c:450 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:214 src/dialogs/options.c:293 src/mime/dialogs.c:132
+#: src/cookies/dialogs.c:455 src/dialogs/edit.c:102 src/dialogs/edit.c:105
+#: src/dialogs/options.c:221 src/dialogs/options.c:300 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:802
 #: src/scripting/lua/core.c:379 src/scripting/lua/core.c:460
-#: src/session/download.c:580 src/session/download.c:1182
+#: src/session/download.c:580 src/session/download.c:1188
 #: src/viewer/text/search.c:1595
 msgid "~Cancel"
 msgstr "~Anuluj"
@@ -270,7 +270,7 @@ msgstr ""
 "\n"
 "'-' - oznacza i¿ dany wska¼nik jest wy³±czony."
 
-#: src/bfu/menu.c:767
+#: src/bfu/menu.c:771
 msgid "Search menu/"
 msgstr "Menu wyszukiwania/"
 
@@ -302,21 +302,21 @@ msgstr "Brak URL-a"
 
 #
 #. name:
-#: src/bookmarks/bookmarks.c:47 src/bookmarks/bookmarks.c:185
+#: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:181
 msgid "Bookmarks"
 msgstr "Zak³adki"
 
 #
-#: src/bookmarks/bookmarks.c:49
+#: src/bookmarks/bookmarks.c:50
 msgid "Bookmark options."
 msgstr "Ustawienia zak³adek."
 
 #
-#: src/bookmarks/bookmarks.c:52 src/bookmarks/bookmarks.c:58
+#: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:59
 msgid "File format"
 msgstr "Format pliku"
 
-#: src/bookmarks/bookmarks.c:54
+#: src/bookmarks/bookmarks.c:55
 msgid ""
 "File format for bookmarks (affects both reading and saving):\n"
 "0 is the default native ELinks format\n"
@@ -326,7 +326,7 @@ msgstr ""
 "0 - domy¶lny format ELinksa\n"
 "1 - XBEL uniwersalny format XML (BEZ OBS£UGI ZNAKÓW NARODOWYCH!)"
 
-#: src/bookmarks/bookmarks.c:60
+#: src/bookmarks/bookmarks.c:61
 msgid ""
 "File format for bookmarks (affects both reading and saving):\n"
 "0 is the default native ELinks format\n"
@@ -337,11 +337,11 @@ msgstr ""
 "0 - domy¶lny format ELinksa\n"
 "1 - XBEL uniwersalny format XML (BEZ OBS£UGI ZNAKÓW NARODOWYCH!) (WY£¡CZONE)"
 
-#: src/bookmarks/bookmarks.c:66
+#: src/bookmarks/bookmarks.c:67
 msgid "Save folder state"
 msgstr "Zapisz stan folderu"
 
-#: src/bookmarks/bookmarks.c:68
+#: src/bookmarks/bookmarks.c:69
 msgid ""
 "When saving bookmarks also store whether folders are\n"
 "expanded or not, so the look of the bookmark dialog is\n"
@@ -354,11 +354,11 @@ msgstr ""
 "wy³±czone, wszystkie foldery bêd± zwiniête przy nastêpnym\n"
 "uruchomieniu ELinksa."
 
-#: src/bookmarks/bookmarks.c:73
+#: src/bookmarks/bookmarks.c:74
 msgid "Periodic snapshotting"
 msgstr "Cykliczne zapisywanie"
 
-#: src/bookmarks/bookmarks.c:75
+#: src/bookmarks/bookmarks.c:76
 msgid ""
 "Automatically save a snapshot of all tabs periodically.\n"
 "This will periodically bookmark the tabs of each terminal in a separate "
@@ -373,12 +373,12 @@ msgstr ""
 "\n"
 "Wymagana jest obs³uga zak³adek."
 
-#: src/bookmarks/dialogs.c:70 src/config/options.inc:1018
+#: src/bookmarks/dialogs.c:72 src/config/options.inc:1018
 #: src/dialogs/document.c:145 src/globhist/dialogs.c:65
 msgid "Title"
 msgstr "Tytu³"
 
-#: src/bookmarks/dialogs.c:71 src/cache/dialogs.c:65
+#: src/bookmarks/dialogs.c:73 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:159
 #: src/scripting/lua/core.c:376
@@ -386,70 +386,70 @@ msgid "URL"
 msgstr "URL"
 
 #. cant_delete_item
-#: src/bookmarks/dialogs.c:115
+#: src/bookmarks/dialogs.c:117
 #, c-format
 msgid "Sorry, but the bookmark \"%s\" cannot be deleted."
 msgstr "Przykro mi, ale zak³adka \"%s\" nie mo¿e byæ usuniêta."
 
 #. cant_delete_used_item
-#: src/bookmarks/dialogs.c:117
+#: src/bookmarks/dialogs.c:119
 #, c-format
 msgid "Sorry, but the bookmark \"%s\" is being used by something else."
 msgstr "Przykro mi, ale zak³adka \"%s\" jest u¿ywana przez co¶ innego."
 
 #. delete_marked_items_title
-#: src/bookmarks/dialogs.c:123
+#: src/bookmarks/dialogs.c:125
 msgid "Delete marked bookmarks"
 msgstr "Usuwanie zaznaczonych zak³adek"
 
 #. delete_marked_items
-#: src/bookmarks/dialogs.c:125
+#: src/bookmarks/dialogs.c:127
 msgid "Delete marked bookmarks?"
 msgstr "Czy usun±æ zaznaczone zak³adki?"
 
 #. delete_folder
-#: src/bookmarks/dialogs.c:129
+#: src/bookmarks/dialogs.c:131
 #, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
 msgstr "Czy skasowaæ folder \"%s\" i znajduj±ce siê wnim zak³adki?"
 
 #. delete_item_title
-#: src/bookmarks/dialogs.c:131
+#: src/bookmarks/dialogs.c:133
 msgid "Delete bookmark"
 msgstr "Skasuj zak³adkê"
 
-#. delete_item
-#: src/bookmarks/dialogs.c:133
+#: src/bookmarks/dialogs.c:135
+#, c-format
 msgid "Delete this bookmark?"
 msgstr "Czy skasowac t± zak³adkê?"
 
 #. clear_all_items_title
-#: src/bookmarks/dialogs.c:135
+#: src/bookmarks/dialogs.c:137
 msgid "Clear all bookmarks"
 msgstr "Wyczy¶æ wszystkie zak³adki"
 
 #. clear_all_items_title
-#: src/bookmarks/dialogs.c:137
+#: src/bookmarks/dialogs.c:139
 msgid "Do you really want to remove all bookmarks?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie zak³adki?"
 
-#: src/bookmarks/dialogs.c:270
+#: src/bookmarks/dialogs.c:254
 msgid "Add folder"
 msgstr "Dodaj folder"
 
-#: src/bookmarks/dialogs.c:270
+#: src/bookmarks/dialogs.c:254
 msgid "Folder name"
 msgstr "Nazwa foldera"
 
-#: src/bookmarks/dialogs.c:326 src/scripting/lua/core.c:370
+#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:370
 msgid "Edit bookmark"
 msgstr "Edytuj zak³adkê"
 
-#: src/bookmarks/dialogs.c:477
+#: src/bookmarks/dialogs.c:461
 msgid "Cannot move folder inside itself"
 msgstr "Nie mo¿na przesun±æ folderu wewn±trz niego samego"
 
-#: src/bookmarks/dialogs.c:478
+#: src/bookmarks/dialogs.c:462
 msgid ""
 "You are trying to move the marked folder inside itself. To move the folder "
 "to a different location select the new location before pressing the Move "
@@ -459,11 +459,11 @@ msgstr ""
 "folder w inne miejsce zaznacz nowe po³o¿enie zanim naci¶niesz przycisk "
 "\"Przesuñ\"."
 
-#: src/bookmarks/dialogs.c:484
+#: src/bookmarks/dialogs.c:468
 msgid "Nothing to move"
 msgstr "Nic do przesuniêcia"
 
-#: src/bookmarks/dialogs.c:485
+#: src/bookmarks/dialogs.c:469
 msgid ""
 "To move bookmarks, first mark all the bookmarks (or folders) you want to "
 "move.  This can be done with the Insert key if you're using the default key-"
@@ -477,48 +477,48 @@ msgstr ""
 "przycisk \"Przenie¶\"."
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/bookmarks/dialogs.c:502 src/cache/dialogs.c:230
+#: src/bookmarks/dialogs.c:487 src/cache/dialogs.c:230
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:257
 msgid "~Goto"
 msgstr "~Przejd¼ do"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
-#: src/bookmarks/dialogs.c:503 src/config/dialogs.c:530
-#: src/cookies/dialogs.c:471
+#: src/bookmarks/dialogs.c:488 src/config/dialogs.c:530
+#: src/cookies/dialogs.c:476
 msgid "~Edit"
 msgstr "~Edytuj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/bookmarks/dialogs.c:504 src/cache/dialogs.c:231
-#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:472
+#: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
+#: src/config/dialogs.c:532 src/config/dialogs.c:945 src/cookies/dialogs.c:477
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:259
 msgid "~Delete"
 msgstr "~Usuñ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
-#: src/bookmarks/dialogs.c:505 src/config/dialogs.c:531
-#: src/config/dialogs.c:944 src/cookies/dialogs.c:469 src/dialogs/menu.c:455
+#: src/bookmarks/dialogs.c:490 src/config/dialogs.c:531
+#: src/config/dialogs.c:944 src/cookies/dialogs.c:474 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Dodaj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:506
+#: src/bookmarks/dialogs.c:491
 msgid "Add se~parator"
 msgstr "Separator ~kart"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:507
+#: src/bookmarks/dialogs.c:492
 msgid "Add ~folder"
 msgstr "Dodaj ~folder"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
-#: src/bookmarks/dialogs.c:508
+#: src/bookmarks/dialogs.c:493
 msgid "~Move"
 msgstr "Prze~nie¶"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
-#: src/bookmarks/dialogs.c:509 src/cache/dialogs.c:232
+#: src/bookmarks/dialogs.c:494 src/cache/dialogs.c:232
 #: src/config/dialogs.c:533 src/config/dialogs.c:947 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
@@ -526,37 +526,37 @@ msgstr "~Szukaj"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
-#: src/bookmarks/dialogs.c:513
+#: src/bookmarks/dialogs.c:498
 msgid "Clear"
 msgstr "Wyczy¶æ"
 
 #. TODO: Would this be useful? --jonas
-#: src/bookmarks/dialogs.c:516 src/globhist/dialogs.c:235
+#: src/bookmarks/dialogs.c:501 src/globhist/dialogs.c:235
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/bookmarks/dialogs.c:522
+#: src/bookmarks/dialogs.c:507
 msgid "Bookmark manager"
 msgstr "Obs³uga zak³adek"
 
-#: src/bookmarks/dialogs.c:648
+#: src/bookmarks/dialogs.c:632
 msgid "Search bookmarks"
 msgstr "Przeszukaj zak³adki"
 
-#: src/bookmarks/dialogs.c:677
+#: src/bookmarks/dialogs.c:661
 msgid "Add bookmark"
 msgstr "Dodaj do zak³adek"
 
-#: src/bookmarks/dialogs.c:713
+#: src/bookmarks/dialogs.c:697
 msgid "Saved session"
 msgstr "Zapisana sesja"
 
 #
-#: src/bookmarks/dialogs.c:721
+#: src/bookmarks/dialogs.c:705
 msgid "Bookmark tabs"
 msgstr "Zapisywanie informacji o kartach"
 
-#: src/bookmarks/dialogs.c:721
+#: src/bookmarks/dialogs.c:705
 msgid "Enter folder name"
 msgstr "Wpisz nazwê folderu"
 
@@ -645,13 +645,13 @@ msgstr "Czy usun±æ zaznaczone wpisy cache?"
 msgid "Delete cache entry"
 msgstr "Usuñ wpis cache"
 
-#. delete_item
 #: src/cache/dialogs.c:205
+#, c-format
 msgid "Delete this cache entry?"
 msgstr "Czy usun±æ zaznaczony wpis cache?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:468
+#: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:473
 #: src/dialogs/download.c:250 src/dialogs/download.c:480
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:258
@@ -1902,9 +1902,9 @@ msgid "Cannot add an option here."
 msgstr "Nie mo¿na dodaæ tu opcji."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:474
-#: src/dialogs/options.c:213 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1166
+#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:479
+#: src/dialogs/options.c:220 src/formhist/dialogs.c:214
+#: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1172
 msgid "Sa~ve"
 msgstr "~Zapisz"
 
@@ -2599,7 +2599,7 @@ msgid "Invert the fore- and background color so the link stands out."
 msgstr "Odwróæ kolory tekstu i t³a tak, ¿eby wyró¿niæ odno¶nik."
 
 #: src/config/options.inc:296 src/config/options.inc:875
-#: src/dialogs/options.c:208
+#: src/dialogs/options.c:215
 msgid "Underline"
 msgstr "Podkre¶lenie"
 
@@ -3665,7 +3665,7 @@ msgstr ""
 "3 - KOI-8\n"
 "4 - FreeBSD"
 
-#: src/config/options.inc:837 src/dialogs/options.c:204
+#: src/config/options.inc:837 src/dialogs/options.c:211
 msgid "Switch fonts for line drawing"
 msgstr "Zmiana fontu do rysowania linii"
 
@@ -3678,7 +3678,7 @@ msgstr ""
 "Zmienia font podczas rysowania linii, w³±czaj±c oba zestawy\n"
 "znaków. Ma sens jedynie na linuksowym terminalu."
 
-#: src/config/options.inc:843 src/dialogs/options.c:209
+#: src/config/options.inc:843 src/dialogs/options.c:216
 msgid "UTF-8 I/O"
 msgstr "I/O w UTF-8"
 
@@ -3691,7 +3691,7 @@ msgstr ""
 "jedynie podzbiór UTF8 jest u¿ywany w zale¿no¶ci od u¿ywanej\n"
 "strony kodowej."
 
-#: src/config/options.inc:848 src/dialogs/options.c:205
+#: src/config/options.inc:848 src/dialogs/options.c:212
 msgid "Restrict frames in cp850/852"
 msgstr "Ogranicz ramki w cp850/852"
 
@@ -3704,7 +3704,7 @@ msgstr ""
 "z terminalami linuksowymi u¿ywaj±cymi stron kodowych cp850/852."
 
 #
-#: src/config/options.inc:853 src/dialogs/options.c:206
+#: src/config/options.inc:853 src/dialogs/options.c:213
 msgid "Block cursor"
 msgstr "Kursor blokowy"
 
@@ -3733,7 +3733,7 @@ msgstr ""
 "1 - tryb 16 kolorowy, u¿ywa standardowych kolorów ANSI\n"
 "2 - tryb 256 kolorowy, u¿ywa kodów RGB xterma"
 
-#: src/config/options.inc:867 src/dialogs/options.c:207
+#: src/config/options.inc:867 src/dialogs/options.c:214
 msgid "Transparency"
 msgstr "Przezroczysto¶æ"
 
@@ -4561,7 +4561,7 @@ msgid "Goto URL History"
 msgstr "Historia \"Przejd¼ do URL-a\""
 
 #. name:
-#: src/cookies/cookies.c:80 src/cookies/cookies.c:827
+#: src/cookies/cookies.c:80 src/cookies/cookies.c:858
 msgid "Cookies"
 msgstr "Ciasteczka"
 
@@ -4749,8 +4749,8 @@ msgstr "Czy usun±æ wszystkie ciasteczka z domeny \"%s\"?"
 msgid "Delete cookie"
 msgstr "Usuwanie ciasteczka"
 
-#. delete_item
 #: src/cookies/dialogs.c:219
+#, c-format
 msgid "Delete this cookie?"
 msgstr "Czy usun±æ to ciasteczko?"
 
@@ -4764,26 +4764,26 @@ msgstr "Skasowanie wszystkich ciasteczek"
 msgid "Do you really want to remove all cookies?"
 msgstr "Czy na pewno chcesz skasowaæ wszystkie ciasteczka?"
 
-#: src/cookies/dialogs.c:443
+#: src/cookies/dialogs.c:448
 msgid "Add server"
 msgstr "Dodaj serwer"
 
-#: src/cookies/dialogs.c:447
+#: src/cookies/dialogs.c:452
 msgid "Server name"
 msgstr "Nazwa serwera"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
-#: src/cookies/dialogs.c:470
+#: src/cookies/dialogs.c:475
 msgid "Add ~server"
 msgstr "Dodaj ~serwer"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:473 src/dialogs/download.c:486 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:478 src/dialogs/download.c:486 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:260
 msgid "C~lear"
 msgstr "Wy~czy¶æ"
 
-#: src/cookies/dialogs.c:479
+#: src/cookies/dialogs.c:484
 msgid "Cookie manager"
 msgstr "Menad¿er ciasteczek"
 
@@ -4896,8 +4896,8 @@ msgstr "Przerwaæ zaznaczone ¶ci±gania?"
 msgid "Interrupt download"
 msgstr "Przerwij ¶ci±ganie"
 
-#. delete_item
 #: src/dialogs/download.c:429
+#, c-format
 msgid "Interrupt this download?"
 msgstr "Przerwaæ to ¶ci±ganie?"
 
@@ -5509,7 +5509,7 @@ msgid "Files:"
 msgstr "Pliki:"
 
 #. 2 '\n' + 1 '\0'
-#: src/dialogs/options.c:152
+#: src/dialogs/options.c:159
 #, c-format
 msgid ""
 "The environmental variable TERM is set to '%s'.\n"
@@ -5526,63 +5526,63 @@ msgstr ""
 "Pozwala to na konfiguracjê tych ustawieñ dla ka¿dego z\n"
 "terminali, w których uruchamiasz ELinksa."
 
-#: src/dialogs/options.c:178
+#: src/dialogs/options.c:185
 msgid "Terminal options"
 msgstr "Opcje terminala"
 
-#: src/dialogs/options.c:187
+#: src/dialogs/options.c:194
 msgid "Frame handling:"
 msgstr "Rysowanie ramek:"
 
-#: src/dialogs/options.c:188
+#: src/dialogs/options.c:195
 msgid "No frames"
 msgstr "Brak ramek"
 
-#: src/dialogs/options.c:189
+#: src/dialogs/options.c:196
 msgid "VT 100 frames"
 msgstr "Ramki VT100"
 
-#: src/dialogs/options.c:190
+#: src/dialogs/options.c:197
 msgid "Linux or OS/2 frames"
 msgstr "Ramki typu Linux lub OS/2"
 
-#: src/dialogs/options.c:191
+#: src/dialogs/options.c:198
 msgid "FreeBSD frames"
 msgstr "Ramki FreeBSD"
 
-#: src/dialogs/options.c:192
+#: src/dialogs/options.c:199
 msgid "KOI8-R frames"
 msgstr "Ramki KOI8-R"
 
-#: src/dialogs/options.c:194
+#: src/dialogs/options.c:201
 msgid "Color mode:"
 msgstr "Tryb kolorowy:"
 
-#: src/dialogs/options.c:195
+#: src/dialogs/options.c:202
 msgid "No colors (mono)"
 msgstr "Brak kolorów (mono)"
 
-#: src/dialogs/options.c:196
+#: src/dialogs/options.c:203
 msgid "16 colors"
 msgstr "16 kolorów"
 
-#: src/dialogs/options.c:198
+#: src/dialogs/options.c:205
 msgid "88 colors"
 msgstr "88 kolorów"
 
-#: src/dialogs/options.c:201
+#: src/dialogs/options.c:208
 msgid "256 colors"
 msgstr "256 kolorów"
 
-#: src/dialogs/options.c:286
+#: src/dialogs/options.c:293
 msgid "Resize terminal"
 msgstr "Zmieñ rozmiar terminala"
 
-#: src/dialogs/options.c:289
+#: src/dialogs/options.c:296
 msgid "Width="
 msgstr "Szeroko¶æ="
 
-#: src/dialogs/options.c:290
+#: src/dialogs/options.c:297
 msgid "Height="
 msgstr "Wysoko¶æ="
 
@@ -5836,8 +5836,8 @@ msgstr "Czy usun±æ zaznaczone formularze?"
 msgid "Delete form"
 msgstr "Usuñ formularz"
 
-#. delete_item
 #: src/formhist/dialogs.c:138
+#, c-format
 msgid "Delete this form?"
 msgstr "Czy usun±æ ten formularz?"
 
@@ -5955,8 +5955,8 @@ msgstr "Czy usun±æ zaznaczone elementy historii?"
 msgid "Delete history entry"
 msgstr "Usuwanie elementów historii"
 
-#. delete_item
 #: src/globhist/dialogs.c:123
+#, c-format
 msgid "Delete this history entry?"
 msgstr "Czy usun±æ ten element historii?"
 
@@ -6021,7 +6021,7 @@ msgstr ""
 "1 - tytu³y stron"
 
 #. name:
-#: src/globhist/globhist.c:449
+#: src/globhist/globhist.c:448
 msgid "Global History"
 msgstr "Historia globalna"
 
@@ -6360,7 +6360,7 @@ msgid "Option system"
 msgstr "System konfiguracyjny"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:675
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:671
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6418,13 +6418,13 @@ msgstr ""
 "(takie jak: image/*) bêd± tak¿e sprawdzane zanim wybrany\n"
 "zostanie uchwyt."
 
-#: src/mime/backend/mailcap.c:351
+#: src/mime/backend/mailcap.c:349
 #, c-format
 msgid "Badly formated mailcap entry for type %s in \"%s\" line %d"
 msgstr "¬le sformatowana pozycja dla mailcap dla typu %s w \"%s\" linii %d"
 
 #. name:
-#: src/mime/backend/mimetypes.c:46 src/mime/backend/mimetypes.c:285
+#: src/mime/backend/mimetypes.c:46 src/mime/backend/mimetypes.c:279
 msgid "Mimetypes files"
 msgstr "Pliki typu MIME"
 
@@ -6866,7 +6866,7 @@ msgstr "Uwierzytelnienie HTTP"
 msgid "Login"
 msgstr "Nazwa u¿ytkownika"
 
-#: src/protocol/auth/dialogs.c:109 src/protocol/http/http.c:137
+#: src/protocol/auth/dialogs.c:109 src/protocol/http/http.c:140
 msgid "Password"
 msgstr "Has³o"
 
@@ -6914,8 +6914,8 @@ msgstr "Czy usun±æ zaznaczone pozycje autentykacji?"
 msgid "Delete auth entry"
 msgstr "Usuwanie pozycji autentykacji"
 
-#. delete_item
 #: src/protocol/auth/dialogs.c:233
+#, c-format
 msgid "Delete this auth entry?"
 msgstr "Czy usun±æ tê pozycjê autentykacji?"
 
@@ -7301,7 +7301,7 @@ msgstr ""
 "Liczba kawa³ków do uzyskania przed prze³±czeniem strategii\n"
 "wyboru kawa³ka z losowej na wybieranie najpierw najrzadszych."
 
-#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:106
+#: src/protocol/bittorrent/bittorrent.c:208 src/protocol/http/http.c:109
 msgid "Allow blacklisting"
 msgstr "Zezwolenie na \"czarn± listê\""
 
@@ -7536,12 +7536,12 @@ msgid "Down~load"
 msgstr "~Pobierz"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:792 src/session/download.c:1172
+#: src/protocol/bittorrent/dialogs.c:792 src/session/download.c:1178
 msgid "~Display"
 msgstr "~Wy¶wietl"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:796 src/session/download.c:1176
+#: src/protocol/bittorrent/dialogs.c:796 src/session/download.c:1182
 msgid "Show ~header"
 msgstr "Poka¿ ~nag³ówek"
 
@@ -7659,8 +7659,8 @@ msgstr "FTP"
 msgid "FTP specific options."
 msgstr "Opcje dotycz±ce protoko³u FTP."
 
-#: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:124
-#: src/protocol/http/http.c:206
+#: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:127
+#: src/protocol/http/http.c:209
 msgid "Proxy configuration"
 msgstr "Konfiguracja proxy"
 
@@ -7669,8 +7669,8 @@ msgid "FTP proxy configuration."
 msgstr "Konfiguracja proxy dla protoko³u FTP."
 
 #
-#: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:128
-#: src/protocol/http/http.c:210
+#: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:131
+#: src/protocol/http/http.c:213
 msgid "Host and port-number"
 msgstr "Host i numer portu"
 
@@ -7733,27 +7733,27 @@ msgstr ""
 "  z oprogramowaniem serwera www.\n"
 
 #. name:
-#: src/protocol/http/http.c:92 src/protocol/http/http.c:220
+#: src/protocol/http/http.c:95 src/protocol/http/http.c:223
 msgid "HTTP"
 msgstr "HTTP"
 
-#: src/protocol/http/http.c:94
+#: src/protocol/http/http.c:97
 msgid "HTTP-specific options."
 msgstr "Ustawienia dotycz±ce protoko³u HTTP."
 
-#: src/protocol/http/http.c:97
+#: src/protocol/http/http.c:100
 msgid "Server bug workarounds"
 msgstr "Obej¶cie b³êdów serwera"
 
-#: src/protocol/http/http.c:99
+#: src/protocol/http/http.c:102
 msgid "Server-side HTTP bugs workarounds."
 msgstr "Obej¶cia b³êdów HTTP po stronie serwera."
 
-#: src/protocol/http/http.c:101
+#: src/protocol/http/http.c:104
 msgid "Do not send Accept-Charset"
 msgstr "Nie wysy³aj Accept-Charset"
 
-#: src/protocol/http/http.c:103
+#: src/protocol/http/http.c:106
 msgid ""
 "The Accept-Charset header is quite long and sending it can trigger\n"
 "bugs in some rarely found servers."
@@ -7761,15 +7761,15 @@ msgstr ""
 "Pole nag³ówka Accept-Charset jest d³ugie i wys³anie go mo¿e\n"
 "powodowaæ b³êdy w dzia³aniu niektórych serwerów."
 
-#: src/protocol/http/http.c:108
+#: src/protocol/http/http.c:111
 msgid "Allow blacklisting of buggy servers."
 msgstr "Pozwól na \"czarn± listê\" zapluskwionym serwerom."
 
-#: src/protocol/http/http.c:110
+#: src/protocol/http/http.c:113
 msgid "Broken 302 redirects"
 msgstr "B³êdne przekierowania 302"
 
-#: src/protocol/http/http.c:112
+#: src/protocol/http/http.c:115
 msgid ""
 "Broken 302 redirect (violates RFC but compatible with Netscape).\n"
 "This is a problem for a lot of web discussion boards and the like.\n"
@@ -7780,27 +7780,27 @@ msgstr ""
 "forum dyskusyjnych. Je¶li sprawiaj± problemy, spróbuj\n"
 "to ustawiæ."
 
-#: src/protocol/http/http.c:116
+#: src/protocol/http/http.c:119
 msgid "No keepalive after POST requests"
 msgstr "Brak keepalive po zg³oszeniu POST"
 
-#: src/protocol/http/http.c:118
+#: src/protocol/http/http.c:121
 msgid "Disable keepalive connection after POST request."
 msgstr "Wy³±cza po³±czenia keepalive po zg³oszeniu POST."
 
-#: src/protocol/http/http.c:120
+#: src/protocol/http/http.c:123
 msgid "Use HTTP/1.0"
 msgstr "U¿ywanie HTTP/1.0"
 
-#: src/protocol/http/http.c:122
+#: src/protocol/http/http.c:125
 msgid "Use HTTP/1.0 protocol instead of HTTP/1.1."
 msgstr "U¿yj protoko³u HTTP/1.0 zamiast HTTP/1.1."
 
-#: src/protocol/http/http.c:126
+#: src/protocol/http/http.c:129
 msgid "HTTP proxy configuration."
 msgstr "Konfiguracja proxy dla protoko³u HTTP."
 
-#: src/protocol/http/http.c:130
+#: src/protocol/http/http.c:133
 msgid ""
 "Host and port-number (host:port) of the HTTP proxy, or blank.\n"
 "If it's blank, HTTP_PROXY environment variable is checked as well."
@@ -7810,26 +7810,26 @@ msgstr ""
 "HTTP_PROXY."
 
 #
-#: src/protocol/http/http.c:133
+#: src/protocol/http/http.c:136
 msgid "Username"
 msgstr "Nazwa u¿ytkownika"
 
 #
-#: src/protocol/http/http.c:135
+#: src/protocol/http/http.c:138
 msgid "Proxy authentication username."
 msgstr "Nazwa u¿ytkownika do uwierzytelnienia wobec serwera proxy."
 
 #
-#: src/protocol/http/http.c:139
+#: src/protocol/http/http.c:142
 msgid "Proxy authentication password."
 msgstr "Has³o do uwierzytelnienia wobec serwera proxy."
 
 #
-#: src/protocol/http/http.c:142
+#: src/protocol/http/http.c:145
 msgid "Referer sending"
 msgstr "Wysy³anie referencji"
 
-#: src/protocol/http/http.c:144
+#: src/protocol/http/http.c:147
 msgid ""
 "HTTP referer sending options. HTTP referer is a special header\n"
 "sent in the HTTP requests, which is supposed to contain the previous\n"
@@ -7845,11 +7845,11 @@ msgstr ""
 "odno¶nik wybra³e¶(a¶). Takie zachowanie mo¿e naruszaæ\n"
 "prywatno¶æ."
 
-#: src/protocol/http/http.c:151
+#: src/protocol/http/http.c:154
 msgid "Policy"
 msgstr "Polisa"
 
-#: src/protocol/http/http.c:154
+#: src/protocol/http/http.c:157
 msgid ""
 "Mode of sending HTTP referer:\n"
 "0 is send no referer\n"
@@ -7863,27 +7863,27 @@ msgstr ""
 "2 - wysy³aj z góry ustalony Referer\n"
 "3 - wysy³aj poprzedni URL (poprawne, ale niebezpieczne)"
 
-#: src/protocol/http/http.c:160
+#: src/protocol/http/http.c:163
 msgid "Fake referer URL"
 msgstr "Ustalony zmy¶lony Referer URL"
 
-#: src/protocol/http/http.c:162
+#: src/protocol/http/http.c:165
 msgid "Fake referer to be sent when policy is 2."
 msgstr "Zmy¶lony URL jest wysy³any, gdy polisa jest ustawiona na 2."
 
-#: src/protocol/http/http.c:165
+#: src/protocol/http/http.c:168
 msgid "Send Accept-Language header"
 msgstr "Wysy³anie pola nag³ówka Accept-Language"
 
-#: src/protocol/http/http.c:167
+#: src/protocol/http/http.c:170
 msgid "Send Accept-Language header."
 msgstr "Wy¶lij pole nag³ówka Accept-Language."
 
-#: src/protocol/http/http.c:169
+#: src/protocol/http/http.c:172
 msgid "Use UI language as Accept-Language"
 msgstr "U¿yj jêzyka interfejsu u¿ytkownika jako Accept-Language"
 
-#: src/protocol/http/http.c:171
+#: src/protocol/http/http.c:174
 msgid ""
 "Request localised versions of documents from web-servers (using the\n"
 "Accept-Language header) using the language you have configured for\n"
@@ -7900,11 +7900,11 @@ msgstr ""
 "z pewnym ryzykiem poniewa¿ mówisz serwerowi o swoich\n"
 "preferencjach jêzykowych."
 
-#: src/protocol/http/http.c:178
+#: src/protocol/http/http.c:181
 msgid "Activate HTTP TRACE debugging"
 msgstr "Uaktywnij debugowanie HTTP TRACE"
 
-#: src/protocol/http/http.c:180
+#: src/protocol/http/http.c:183
 msgid ""
 "If active, all HTTP requests are sent with TRACE as their method\n"
 "rather than GET or POST. This is useful for debugging of both ELinks\n"
@@ -7918,11 +7918,11 @@ msgstr ""
 "do klienta.  Wiedz, ¿e nie wszystkie serwery to obs³uguj±."
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
-#: src/protocol/http/http.c:187
+#: src/protocol/http/http.c:190
 msgid "User-agent identification"
 msgstr "Identyfikacja przegl±darki"
 
-#: src/protocol/http/http.c:189
+#: src/protocol/http/http.c:192
 msgid ""
 "Change the User Agent ID. That means identification string, which\n"
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
@@ -7949,19 +7949,19 @@ msgstr ""
 "%b - liczba pasków wy¶wietlanych przez ELinksa\n"
 "U¿yj \" \" je¶li nie chcesz wysy³ania ¿adnej informacji o przegl±darce."
 
-#: src/protocol/http/http.c:202
+#: src/protocol/http/http.c:205
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/protocol/http/http.c:204
+#: src/protocol/http/http.c:207
 msgid "HTTPS-specific options."
 msgstr "Ustawienia dotycz±ce protoko³u HTTPS."
 
-#: src/protocol/http/http.c:208
+#: src/protocol/http/http.c:211
 msgid "HTTPS proxy configuration."
 msgstr "Konfiguracja proxy dla protoko³u HTTPS."
 
-#: src/protocol/http/http.c:212
+#: src/protocol/http/http.c:215
 msgid ""
 "Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank.\n"
 "If it's blank, HTTPS_PROXY environment variable is checked as well."
@@ -8268,7 +8268,7 @@ msgstr "B³±d skryptów przegl±darki"
 msgid "Scripting"
 msgstr "Skryptowanie"
 
-#: src/scripting/smjs/elinks_object.c:83
+#: src/scripting/smjs/elinks_object.c:85
 msgid "User script alert"
 msgstr "B³±d skryptu u¿ytkownika"
 
@@ -8351,18 +8351,22 @@ msgstr "Co chcesz zrobiæ z plikiem '%s' (typu %s%s%s)?"
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Program ('%' zostanie zast±pione nazw± pliku)"
 
+#: src/session/download.c:1133
+msgid "The output of the program will be shown in the tab"
+msgstr "Wyniki programu bêd± widoczne na karcie"
+
 #
-#: src/session/download.c:1132
+#: src/session/download.c:1137
 msgid "Block the terminal"
 msgstr "Blokowanie terminala"
 
-#: src/session/download.c:1138
+#: src/session/download.c:1144
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Plik zostanie otwarty przy u¿yciu programu '%s'."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1159
+#: src/session/download.c:1165
 msgid "~Open"
 msgstr "~Otwórz"
 
@@ -8612,114 +8616,114 @@ msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1259
+#: src/viewer/text/link.c:1237
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1264
+#: src/viewer/text/link.c:1242
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1266
+#: src/viewer/text/link.c:1244
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1270
+#: src/viewer/text/link.c:1248
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1272
+#: src/viewer/text/link.c:1250
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1274
+#: src/viewer/text/link.c:1252
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1279
+#: src/viewer/text/link.c:1257
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1282
+#: src/viewer/text/link.c:1260
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1264
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1297 src/viewer/text/link.c:1337
+#: src/viewer/text/link.c:1275 src/viewer/text/link.c:1315
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1312
+#: src/viewer/text/link.c:1290
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1320
+#: src/viewer/text/link.c:1298
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1321
+#: src/viewer/text/link.c:1299
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1325
+#: src/viewer/text/link.c:1303
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1327
+#: src/viewer/text/link.c:1305
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1330
+#: src/viewer/text/link.c:1308
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1335
+#: src/viewer/text/link.c:1313
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1320
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1349
+#: src/viewer/text/link.c:1327
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1329
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1360
+#: src/viewer/text/link.c:1338
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1408
+#: src/viewer/text/link.c:1386
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1413
+#: src/viewer/text/link.c:1391
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8814,19 +8818,19 @@ msgstr ""
 "Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:722
+#: src/viewer/text/view.c:721
 msgid "Go to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/viewer/text/view.c:722
+#: src/viewer/text/view.c:721
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1305
+#: src/viewer/text/view.c:1304
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1306
+#: src/viewer/text/view.c:1305
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 
