@@ -175,5 +175,6 @@ add_to_menu(struct menu_item **mi, unsigned char *text, unsigned char *rtext,
 void do_menu(struct terminal *, struct menu_item *, void *, int);
 void do_menu_selected(struct terminal *, struct menu_item *, void *, int, int);
 void do_mainmenu(struct terminal *, struct menu_item *, void *, int);
+void deselect_mainmenu(struct terminal *term, struct menu *menu);
 
 #endif

@@ -1171,7 +1171,8 @@ quit:
 		win = ses->tab->term->windows.next;
 		win->handler(win, ev);
 		if (ses->tab->term->windows.next == win) {
-			delete_window(win);
+			deselect_mainmenu(win->term, win->data);
+			print_screen_status(ses);
 			get_kbd_modifier(ev) |= KBD_MOD_ALT;
 
 			return NULL;

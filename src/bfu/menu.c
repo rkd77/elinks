@@ -64,7 +64,7 @@ static void display_mainmenu(struct terminal *term, struct menu *menu);
 static void set_menu_selection(struct menu *menu, int pos);
 
 
-static void
+void
 deselect_mainmenu(struct terminal *term, struct menu *menu)
 {
 	menu->selected = -1;
