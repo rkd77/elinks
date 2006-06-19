@@ -1173,10 +1173,10 @@ quit:
 		if (ses->tab->term->windows.next == win) {
 			deselect_mainmenu(win->term, win->data);
 			print_screen_status(ses);
-			get_kbd_modifier(ev) |= KBD_MOD_ALT;
-
-			return NULL;
 		}
+		if (ses->tab != ses->tab->term->windows.next)
+			return NULL;
+		get_kbd_modifier(ev) |= KBD_MOD_ALT;
 
 		if (doc_view
 		    && get_opt_int("document.browse.accesskey"
