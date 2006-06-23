@@ -1392,6 +1392,51 @@ field_op(struct session *ses, struct document_view *doc_view,
 			memmove(fs->value + fs->state, text, strlen(text) + 1);
 			break;
 
+		case ACT_EDIT_KILL_WORD_BACK:
+			if (form_field_is_readonly(fc)) {
+				status = FRAME_EVENT_IGNORED;
+				break;
+			}
+
+			if (fs->state <= 0) {
+				status = FRAME_EVENT_OK;
+				break;
+			}
+
+			text = &fs->value[fs->state];
+			while (text > fs->value && isspace(*(text - 1)))
+				--text;
+			while (text > fs->value && !isspace(*(text - 1)))
+				--text;
+			if (*text == ASCII_LF
+			    && text != &fs->value[fs->state - 1])
+				text++;
+
+			length = strlen(fs->value + fs->state) + 1;
+			memmove(text, fs->value + fs->state, length);
+
+			fs->state = (int) (text - fs->value);
+			break;
+
+		case ACT_EDIT_MOVE_BACKWARD_WORD:
+			while (fs->state > 0
+			       && isspace(fs->value[fs->state - 1]))
+				--fs->state;
+			while (fs->state > 0 
+			       && !isspace(fs->value[fs->state - 1]))
+				--fs->state;
+			break;
+
+		case ACT_EDIT_MOVE_FORWARD_WORD:
+			while (isspace(fs->value[fs->state]))
+				++fs->state;
+			while (fs->value[fs->state]
+			       && !isspace(fs->value[fs->state]))
+				++fs->state;
+			while (isspace(fs->value[fs->state]))
+				++fs->state;
+			break;
+
 		case ACT_EDIT_AUTO_COMPLETE:
 			if (fc->type != FC_FILE
 			    || form_field_is_readonly(fc)) {

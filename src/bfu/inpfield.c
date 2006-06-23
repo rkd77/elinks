@@ -484,6 +484,43 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			widget_data->cdata[widget_data->info.field.cpos] = 0;
 			goto display_field;
 
+		case ACT_EDIT_KILL_WORD_BACK:
+			{
+				int cdata_len = strlen(widget_data->cdata);
+				int start = widget_data->info.field.cpos;
+
+				while (start > 0 && isspace(widget_data->cdata[start - 1]))
+					--start;
+				while (start > 0 && !isspace(widget_data->cdata[start - 1]))
+					--start;
+
+				memmove(widget_data->cdata + start,
+					widget_data->cdata + widget_data->info.field.cpos,
+					cdata_len - widget_data->info.field.cpos + 1);
+
+				widget_data->info.field.cpos = start;
+
+				goto display_field;
+			}
+
+		case ACT_EDIT_MOVE_BACKWARD_WORD:
+			while (widget_data->info.field.cpos > 0 && isspace(widget_data->cdata[widget_data->info.field.cpos - 1]))
+				--widget_data->info.field.cpos;
+			while (widget_data->info.field.cpos > 0 && !isspace(widget_data->cdata[widget_data->info.field.cpos - 1]))
+				--widget_data->info.field.cpos;
+
+			goto display_field;
+
+		case ACT_EDIT_MOVE_FORWARD_WORD:
+			while (isspace(widget_data->cdata[widget_data->info.field.cpos]))
+				++widget_data->info.field.cpos;
+			while (widget_data->cdata[widget_data->info.field.cpos] && !isspace(widget_data->cdata[widget_data->info.field.cpos]))
+				++widget_data->info.field.cpos;
+			while (isspace(widget_data->cdata[widget_data->info.field.cpos]))
+				++widget_data->info.field.cpos;
+
+			goto display_field;
+
 		case ACT_EDIT_COPY_CLIPBOARD:
 			/* Copy to clipboard */
 			set_clipboard_text(widget_data->cdata);
