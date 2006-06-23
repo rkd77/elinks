@@ -85,7 +85,17 @@ function gmane (url)
 	var v = url.split(' ');
 	var group = v[0], words = v.slice(1).join(' ');
 
-	if (!words) return "";
+	if (!group) return base_url;
+
+	if (!words) {
+		if (group.match(/^gmane\./)) {
+			/* Looks like a newsgroup. */
+			return "http://dir.gmane.org/" + group;
+		} else {
+			/* Looks like a mailing list. */
+			return "http://gmane.org/find.php?list=" + group;
+		}
+	}
 
 	return "http://search.gmane.org/search.php?query=" + words
 	        + "&group=" + group;
