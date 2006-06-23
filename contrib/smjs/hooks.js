@@ -78,5 +78,9 @@ function block_pr0n(uri) {
 }
 elinks.follow_url_hooks.push(block_pr0n);
 
+function reload() {
+	do_file(elinks.home + 'hooks.js');
+}
+
 do_file(elinks.home + 'smartprefixes_bookmarks.js');
 do_file(elinks.home + 'smartprefixes_classic.js');
