@@ -161,3 +161,15 @@ function babelfish (url)
 
 	return url;
 }
+
+/* javascript:videodownloader("%s"); */
+function videodownloader (url)
+{
+	elinks.load_uri("http://videodownloader.net/get/?url=" + escape(url),
+	                function (cached) {
+	                        var url = cached.content.match(/<a href="(.*?)"><img src=".\/vd\/botdl.gif"/)[1]
+	                        if (url) elinks.location = url;
+	                } );
+
+	return "";
+}
