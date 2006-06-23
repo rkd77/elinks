@@ -197,11 +197,14 @@ parse_header(unsigned char *head, unsigned char *item, unsigned char **ptr)
  * It supposes that separator is ';' and ignore first element in the
  * list. (ie. '1' is ignored in "1; URL=xxx")
  * The return value is one of:
+ *
  * - HEADER_PARAM_FOUND: the parameter was found, copied, and stored in *@ret.
  * - HEADER_PARAM_NOT_FOUND: the parameter is not there.  *@ret is now NULL.
  * - HEADER_PARAM_OUT_OF_MEMORY: error. *@ret is now NULL.
+ *
  * If @ret is NULL, then this function doesn't actually access *@ret,
- * and tries to avoid allocating memory as well. */
+ * and cannot fail with HEADER_PARAM_OUT_OF_MEMORY.  Some callers may
+ * rely on this. */
 enum parse_header_param
 parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret)
 {
