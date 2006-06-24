@@ -920,7 +920,7 @@ push_kbdbind_toggle_display_button(struct dialog_data *dlg_data,
 {
 #ifndef CONFIG_SMALL
 	keybinding_text_toggle = !keybinding_text_toggle;
-	clear_dialog(dlg_data, some_useless_info_button);
+	redraw_dialog(dlg_data, 0);
 #endif
 	return EVENT_PROCESSED;
 }
