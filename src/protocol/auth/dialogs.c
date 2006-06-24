@@ -89,7 +89,8 @@ do_auth_dialog(struct session *ses, void *data)
 	if (sticker_len < 0 || sticker_len > MAX_STR_LEN) return;
 
 #define AUTH_WIDGETS_COUNT 5
-	dlg = calloc_dialog(AUTH_WIDGETS_COUNT, sticker_len);
+	/* + 1 to leave room for the '\0'. */
+	dlg = calloc_dialog(AUTH_WIDGETS_COUNT, sticker_len + 1);
 	if (!dlg) return;
 
 	a->blocked = 1;
@@ -98,7 +99,7 @@ do_auth_dialog(struct session *ses, void *data)
 	dlg->layouter = generic_dialog_layouter;
 
 	text = get_dialog_offset(dlg, AUTH_WIDGETS_COUNT);
-	memcpy(text, sticker, sticker_len);
+	memcpy(text, sticker, sticker_len); /* calloc_dialog has stored '\0' */
 
 	dlg->udata = (void *) ses;
 	dlg->udata2 = a;
