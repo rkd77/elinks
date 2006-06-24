@@ -80,13 +80,13 @@ detach_formatted(struct document_view *doc_view)
 
 /* type == 0 -> PAGE_DOWN
  * type == 1 -> DOWN */
-static enum frame_event_status
+static void
 move_down(struct session *ses, struct document_view *doc_view, int type)
 {
 	int newpos;
 
 	assert(ses && doc_view && doc_view->vs);
-	if_assert_failed return FRAME_EVENT_OK;
+	if_assert_failed return;
 
 	assert(ses->navigate_mode == NAVIGATE_LINKWISE);	/* XXX: drop it at some time. --Zas */
 
@@ -95,72 +95,66 @@ move_down(struct session *ses, struct document_view *doc_view, int type)
 		doc_view->vs->y = newpos;
 
 	if (current_link_is_visible(doc_view))
-		return FRAME_EVENT_REFRESH;
+		return;
 
 	if (type)
 		find_link_down(doc_view);
 	else
 		find_link_page_down(doc_view);
 
-	return FRAME_EVENT_REFRESH;
+	return;
 }
 
 enum frame_event_status
 move_page_down(struct session *ses, struct document_view *doc_view)
 {
-	enum frame_event_status status;
+	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
 	ses->navigate_mode = NAVIGATE_LINKWISE;
 
-	do {
-		status = move_down(ses, doc_view, 0);
-		if (status != FRAME_EVENT_REFRESH) break;
-	} while (--count > 0);
+	do move_down(ses, doc_view, 0); while (--count > 0);
 
-	return status;
+	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
 /* type == 0 -> PAGE_UP
  * type == 1 -> UP */
-static enum frame_event_status
+static void
 move_up(struct session *ses, struct document_view *doc_view, int type)
 {
 	assert(ses && doc_view && doc_view->vs);
-	if_assert_failed return FRAME_EVENT_OK;
+	if_assert_failed return;
 
 	assert(ses->navigate_mode == NAVIGATE_LINKWISE);	/* XXX: drop it at some time. --Zas */
 
-	if (doc_view->vs->y == 0) return FRAME_EVENT_OK;
+	if (doc_view->vs->y == 0) return;
 
 	doc_view->vs->y -= doc_view->box.height;
 	int_lower_bound(&doc_view->vs->y, 0);
 
 	if (current_link_is_visible(doc_view))
-		return FRAME_EVENT_REFRESH;
+		return;
 
 	if (type)
 		find_link_up(doc_view);
 	else
 		find_link_page_up(doc_view);
 
-	return FRAME_EVENT_REFRESH;
+	return;
 }
 
 enum frame_event_status
 move_page_up(struct session *ses, struct document_view *doc_view)
 {
-	enum frame_event_status status;
+	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
 	ses->navigate_mode = NAVIGATE_LINKWISE;
 
-	do {
-		status = move_up(ses, doc_view, 0);
-		if (status != FRAME_EVENT_REFRESH) break;
-	} while (--count > 0);
+	do move_up(ses, doc_view, 0); while (--count > 0);
 
-	return status;
+	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
 enum frame_event_status
