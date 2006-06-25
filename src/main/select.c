@@ -119,11 +119,12 @@ check_bottom_halves(void)
 select_handler_T
 get_handler(int fd, enum select_handler_type tp)
 {
+#ifndef CONFIG_OS_WIN32
 	assertm(fd >= 0 && fd < FD_SETSIZE,
 		"get_handler: handle %d >= FD_SETSIZE %d",
 		fd, FD_SETSIZE);
 	if_assert_failed return NULL;
-
+#endif
 	switch (tp) {
 		case SELECT_HANDLER_READ:	return threads[fd].read_func;
 		case SELECT_HANDLER_WRITE:	return threads[fd].write_func;
@@ -139,11 +140,12 @@ void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	     select_handler_T error_func, void *data)
 {
+#ifndef CONFIG_OS_WIN32
 	assertm(fd >= 0 && fd < FD_SETSIZE,
 		"set_handlers: handle %d >= FD_SETSIZE %d",
 		fd, FD_SETSIZE);
 	if_assert_failed return;
-
+#endif
 	threads[fd].read_func = read_func;
 	threads[fd].write_func = write_func;
 	threads[fd].error_func = error_func;
