@@ -508,13 +508,15 @@ l_set_option(LS)
 		option_types[opt->type].set(opt, (unsigned char *) (&value));
 		break;
 	}
-
 	case OPT_INT:
+	{
+		int value = lua_tonumber(S, 2);
+		option_types[opt->type].set(opt, (unsigned char *) (&value));
+		break;
+	}
 	case OPT_LONG:
 	{
-		int value;
-
-		value = lua_tonumber(S, 2);
+		long value = lua_tonumber(S, 2);
 		option_types[opt->type].set(opt, (unsigned char *) (&value));
 		break;
 	}
