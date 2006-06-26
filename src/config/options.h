@@ -253,7 +253,7 @@ extern union option_value *get_opt_(struct option *, unsigned char *);
 
 extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 			      unsigned char *, enum option_flags, enum option_type,
-			      int, int, void *, unsigned char *);
+			      long, long, void *, unsigned char *);
 
 /* Hack which permit to disable option descriptions, to reduce elinks binary size.
  * It may of some use for people wanting a very small static non-i18n elinks binary,

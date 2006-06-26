@@ -473,7 +473,7 @@ init_option_listbox_item(struct option *option)
 struct option *
 add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 	unsigned char *name, enum option_flags flags, enum option_type type,
-	int min, int max, void *value, unsigned char *desc)
+	long min, long max, void *value, unsigned char *desc)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
