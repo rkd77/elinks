@@ -493,28 +493,19 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 
 	debug_check_option_syntax(option);
 
-	if (option->type != OPT_ALIAS
-	    && ((tree->flags & OPT_LISTBOX) || (option->flags & OPT_LISTBOX))) {
-		option->box_item = init_option_listbox_item(option);
-		if (!option->box_item) {
-			delete_option(option);
-			return NULL;
-		}
-	}
-
 	/* XXX: For allocated values we allocate in the add_opt_<type>() macro.
 	 * This involves OPT_TREE and OPT_STRING. */
 	switch (type) {
 		case OPT_TREE:
 			if (!value) {
-				delete_option(option);
+				mem_free(option);
 				return NULL;
 			}
 			option->value.tree = value;
 			break;
 		case OPT_STRING:
 			if (!value) {
-				delete_option(option);
+				mem_free(option);
 				return NULL;
 			}
 			option->value.string = value;
@@ -539,6 +530,15 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 			break;
 	}
 
+	if (option->type != OPT_ALIAS
+	    && ((tree->flags & OPT_LISTBOX) || (option->flags & OPT_LISTBOX))) {
+		option->box_item = init_option_listbox_item(option);
+		if (!option->box_item) {
+			mem_free(option);
+			return NULL;
+		}
+	}
+	
 	add_opt_rec(tree, path, option);
 	return option;
 }
