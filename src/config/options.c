@@ -516,8 +516,10 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 		case OPT_BOOL:
 		case OPT_INT:
 		case OPT_CODEPAGE:
+			option->value.number = (int) value;
+			break;
 		case OPT_LONG:
-			option->value.number = (long) value;
+			option->value.number = (long) value; /* FIXME: bignumber */
 			break;
 		case OPT_COLOR:
 			decode_color(value, strlen((unsigned char *) value),
