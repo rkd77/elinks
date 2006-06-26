@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-19 16:38+0200\n"
-"PO-Revision-Date: 2006-06-21 17:55+0200\n"
+"POT-Creation-Date: 2006-06-26 09:43+0200\n"
+"PO-Revision-Date: 2006-06-26 09:45+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -727,40 +727,52 @@ msgstr "Supprimer jusqu'au début de la ligne"
 msgid "Delete to end of line"
 msgstr "Supprimer jusqu'à la fin de la ligne"
 
-#: src/config/actions-edit.inc:23 src/config/actions-menu.inc:15
+#: src/config/actions-edit.inc:23
+msgid "Delete backwards to start of word"
+msgstr "Effacer en arrière jusqu'au début du mot"
+
+#: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 msgid "Move the cursor left"
 msgstr "Déplacer le curseur vers la gauche"
 
-#: src/config/actions-edit.inc:24 src/config/actions-menu.inc:17
+#: src/config/actions-edit.inc:25
+msgid "Move cursor before current word"
+msgstr "Déplacer le curseur avant le mot courant"
+
+#: src/config/actions-edit.inc:26
+msgid "Move cursor after current word"
+msgstr "Déplacer le curseur après le mot courant"
+
+#: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
 msgstr "Se déplacer à l'item suivant"
 
-#: src/config/actions-edit.inc:25
+#: src/config/actions-edit.inc:28
 msgid "Open in external editor"
 msgstr "Ouvrir dans un éditeur externe"
 
-#: src/config/actions-edit.inc:26
+#: src/config/actions-edit.inc:29
 msgid "Paste text from the clipboard"
 msgstr "Coller le texte du tampon"
 
-#: src/config/actions-edit.inc:27 src/config/actions-menu.inc:20
+#: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 msgid "Move to the previous item"
 msgstr "Se déplacer à l'item précédent"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:79
+#: src/config/actions-edit.inc:31 src/config/actions-main.inc:79
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Redessiner le terminal"
 
-#: src/config/actions-edit.inc:29 src/config/actions-menu.inc:22
+#: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 msgid "Move the cursor right"
 msgstr "Déplacer le curseur vers la droite"
 
-#: src/config/actions-edit.inc:30
+#: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
 msgstr "Bascule recherche regex (préfrappe)"
 
-#: src/config/actions-edit.inc:31 src/config/actions-menu.inc:26
+#: src/config/actions-edit.inc:34 src/config/actions-menu.inc:26
 msgid "Move cursor upwards"
 msgstr "Déplacer le curseur vers le haut"
 
@@ -3888,7 +3900,7 @@ msgstr "Texte"
 msgid "Dialog text colors."
 msgstr "Couleurs du texte des dialogues."
 
-#: src/config/options.inc:1026 src/viewer/text/form.c:1458
+#: src/config/options.inc:1026 src/viewer/text/form.c:1503
 msgid "Checkbox"
 msgstr "Case à cocher"
 
@@ -3936,7 +3948,7 @@ msgstr "Raccourci du bouton"
 msgid "Selected button shortcut"
 msgstr "Raccourci du bouton sélectionné"
 
-#: src/config/options.inc:1054 src/viewer/text/form.c:1462
+#: src/config/options.inc:1054 src/viewer/text/form.c:1507
 msgid "Text field"
 msgstr "Champ texte"
 
@@ -6033,7 +6045,7 @@ msgstr "Turque"
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: src/main/interlink.c:329 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:257
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "L'appel à %s a échoué: %d (%s)"
@@ -6065,7 +6077,7 @@ msgid "Unable to attach_terminal()."
 msgstr "Echec de attach_terminal()."
 
 #. Infinite loop prevention.
-#: src/main/select.c:258
+#: src/main/select.c:260
 #, c-format
 msgid "%d select() failures."
 msgstr "%d échecs de select()."
@@ -8383,79 +8395,79 @@ msgstr "Erreur lors de l'envoi du formulaire"
 msgid "Could not load file %s: %s"
 msgstr "Impossible de charger le fichier %s: %s"
 
-#: src/viewer/text/form.c:1443
+#: src/viewer/text/form.c:1488
 msgid "Reset form"
 msgstr "Réinitialiser le formulaire"
 
-#: src/viewer/text/form.c:1445
+#: src/viewer/text/form.c:1490
 msgid "Harmless button"
 msgstr "Bouton sans impact"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1498
 msgid "Submit form to"
 msgstr "Envoi du formulaire à"
 
-#: src/viewer/text/form.c:1454
+#: src/viewer/text/form.c:1499
 msgid "Post form to"
 msgstr "Transfert du formulaire à"
 
-#: src/viewer/text/form.c:1456
+#: src/viewer/text/form.c:1501
 msgid "Radio button"
 msgstr "Bouton radio"
 
-#: src/viewer/text/form.c:1460
+#: src/viewer/text/form.c:1505
 msgid "Select field"
 msgstr "Liste"
 
-#: src/viewer/text/form.c:1464
+#: src/viewer/text/form.c:1509
 msgid "Text area"
 msgstr "Champ texte multiligne"
 
-#: src/viewer/text/form.c:1466
+#: src/viewer/text/form.c:1511
 msgid "File upload"
 msgstr "Envoi de fichier"
 
-#: src/viewer/text/form.c:1468
+#: src/viewer/text/form.c:1513
 msgid "Password field"
 msgstr "Champ mot de passe"
 
-#: src/viewer/text/form.c:1506
+#: src/viewer/text/form.c:1551
 msgid "name"
 msgstr "Nom"
 
-#: src/viewer/text/form.c:1518
+#: src/viewer/text/form.c:1563
 msgid "value"
 msgstr "Valeur"
 
-#: src/viewer/text/form.c:1531
+#: src/viewer/text/form.c:1576
 msgid "read only"
 msgstr "lecture seule"
 
-#: src/viewer/text/form.c:1542
+#: src/viewer/text/form.c:1587
 #, c-format
 msgid "press %s to navigate"
 msgstr "pressez %s pour naviguer"
 
-#: src/viewer/text/form.c:1544
+#: src/viewer/text/form.c:1589
 #, c-format
 msgid "press %s to edit"
 msgstr "pressez %s pour éditer"
 
-#: src/viewer/text/form.c:1580
+#: src/viewer/text/form.c:1625
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "pressez %s pour soumettre à %s"
 
-#: src/viewer/text/form.c:1582
+#: src/viewer/text/form.c:1627
 #, c-format
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/form.c:1684
+#: src/viewer/text/form.c:1729
 msgid "Useless button"
 msgstr "Bouton inutile"
 
-#: src/viewer/text/form.c:1686
+#: src/viewer/text/form.c:1731
 msgid "Submit button"
 msgstr "Bouton Soumettre"
 
@@ -8662,19 +8674,19 @@ msgstr ""
 "Votre entrée a été tronquée, mais vous pouvez toujours récupérer le texte "
 "que vous avez entré dans le fichier suivant: %s"
 
-#: src/viewer/text/view.c:721
+#: src/viewer/text/view.c:715
 msgid "Go to link"
 msgstr "Aller au lien"
 
-#: src/viewer/text/view.c:721
+#: src/viewer/text/view.c:715
 msgid "Enter link number"
 msgstr "Entrez un numéro de lien"
 
-#: src/viewer/text/view.c:1305
+#: src/viewer/text/view.c:1299
 msgid "Save error"
 msgstr "Erreur lors de la sauvegarde"
 
-#: src/viewer/text/view.c:1306
+#: src/viewer/text/view.c:1300
 msgid "Error writing to file"
 msgstr "Erreur lors de l'écriture du fichier"
 
