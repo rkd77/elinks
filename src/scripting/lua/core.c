@@ -562,8 +562,10 @@ l_get_option(LS)
 		lua_pushboolean(S, opt->value.number);
 		break;
 	case OPT_INT:
-	case OPT_LONG:
 		lua_pushnumber(S, opt->value.number);
+		break;
+	case OPT_LONG:
+		lua_pushnumber(S, opt->value.big_number);
 		break;
 	case OPT_STRING:
 		lua_pushstring(S, opt->value.string);

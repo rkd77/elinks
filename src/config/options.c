@@ -307,10 +307,14 @@ get_opt_(
 		break;
 	case OPT_BOOL:
 	case OPT_INT:
-	case OPT_LONG:
 		if (opt->value.number < opt->min
 		    || opt->value.number > opt->max)
 			elinks_internal("Option %s has invalid value %d!", name, opt->value.number);
+		break;
+	case OPT_LONG:
+		if (opt->value.big_number < opt->min
+		    || opt->value.big_number > opt->max)
+			elinks_internal("Option %s has invalid value %ld!", name, opt->value.big_number);
 		break;
 	case OPT_COMMAND:
 		if (!opt->value.command)
@@ -519,7 +523,7 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 			option->value.number = (int) value;
 			break;
 		case OPT_LONG:
-			option->value.number = (long) value; /* FIXME: bignumber */
+			option->value.big_number = (long) value; /* FIXME: cast from void * */
 			break;
 		case OPT_COLOR:
 			decode_color(value, strlen((unsigned char *) value),
