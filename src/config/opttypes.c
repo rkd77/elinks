@@ -213,6 +213,19 @@ num_wr(struct option *option, struct string *string)
 }
 
 
+static int
+long_set(struct option *opt, unsigned char *str)
+{
+	opt->value.big_number = *((long *) str);
+	return 1;
+}
+
+static void
+long_wr(struct option *option, struct string *string)
+{
+	add_knum_to_string(string, option->value.big_number);
+}
+
 static unsigned char *
 str_rd(struct option *opt, unsigned char **file, int *line)
 {
@@ -388,7 +401,7 @@ tree_dup(struct option *opt, struct option *template)
 const struct option_type_info option_types[] = {
 	{ N_("Boolean"), bool_cmd, num_rd, num_wr, NULL, num_set, NULL, N_("[0|1]") },
 	{ N_("Integer"), gen_cmd, num_rd, num_wr, NULL, num_set, NULL, N_("<num>") },
-	{ N_("Longint"), gen_cmd, num_rd, num_wr, NULL, num_set, NULL, N_("<num>") },
+	{ N_("Longint"), gen_cmd, num_rd, long_wr, NULL, long_set, NULL, N_("<num>") },
 	{ N_("String"), gen_cmd, str_rd, str_wr, str_dup, str_set, NULL, N_("<str>") },
 
 	{ N_("Codepage"), gen_cmd, str_rd, cp_wr, NULL, cp_set, NULL, N_("<codepage>") },
