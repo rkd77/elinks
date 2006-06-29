@@ -44,11 +44,10 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
-		STRLEN n_a;	/* Used by POPpx macro. */
 		unsigned char *new_url = POPpx;
 
 		if (new_url) {
-			unsigned char *n = memacpy(new_url, n_a);
+			unsigned char *n = stracpy(new_url);
 
 			if (n) {
 				mem_free_set(url, n);
@@ -90,11 +89,10 @@ do_script_hook_follow_url(unsigned char **url)
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
-		STRLEN n_a;	/* Used by POPpx macro. */
 		unsigned char *new_url = POPpx;
 
 		if (new_url) {
-			unsigned char *n = memacpy(new_url, n_a);
+			unsigned char *n = stracpy(new_url);
 
 			if (n) {
 				mem_free_set(url, n);
@@ -137,11 +135,10 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
-		STRLEN n_a;	/* Used by POPpx macro. */
 		unsigned char *new_html = POPpx;
 
 		if (new_html) {
-			int len = n_a;
+			int len = strlen(new_html);
 
 			add_fragment(cached, 0, new_html, len);
 			normalize_cache_entry(cached, len);
@@ -188,10 +185,9 @@ do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
 			(void) POPs;
 			mem_free_set(new_proxy_url, NULL);
 		} else {
-			STRLEN n_a;	/* Used by POPpx macro. */
 			unsigned char *new_url = POPpx;
 
-			mem_free_set(new_proxy_url, memacpy(new_url, n_a));
+			mem_free_set(new_proxy_url, stracpy(new_url));
 		}
 	}
 
