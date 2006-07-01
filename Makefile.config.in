@@ -170,7 +170,7 @@ LIBS = @LIBS@
 
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)/src
 
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CFLAGS) $(CFLAGS)
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 MAKE_COLOR = @MAKE_COLOR@
 
