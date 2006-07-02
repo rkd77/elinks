@@ -15,6 +15,7 @@
 #include "main/main.h"
 #include "main/object.h"
 #include "network/connection.h"
+#include "osdep/osdep.h"
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
@@ -694,7 +695,7 @@ redirect_cache(struct cache_entry *cached, unsigned char *location,
 	/* XXX: We are assuming here that incomplete will only be zero when
 	 * doing these fake redirects which only purpose is to add an ending
 	 * slash *cough* dirseparator to the end of the URI. */
-	if (incomplete == 0 && location[0] == '/' && location[1] == 0) {
+	if (incomplete == 0 && dir_sep(location[0]) && location[1] == 0) {
 		/* To be sure use get_uri_string() to get rid of post data */
 		uristring = get_uri_string(cached->uri, URI_ORIGINAL);
 		if (uristring) add_to_strn(&uristring, location);
