@@ -96,7 +96,10 @@ do_auth_dialog(struct session *ses, void *data)
 
 	a->blocked = 1;
 
-	dlg->title = _("HTTP Authentication", term);
+	/* This function is used for at least HTTP and FTP, so don't
+	 * name the protocol here.  Consider also what an FTP server
+	 * behind an HTTP proxy should be called.  */
+	dlg->title = _("Authentication required", term);
 	dlg->layouter = generic_dialog_layouter;
 
 	text = get_dialog_offset(dlg, AUTH_WIDGETS_COUNT);
