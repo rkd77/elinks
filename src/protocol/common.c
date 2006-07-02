@@ -18,6 +18,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -59,7 +60,7 @@ init_directory_listing(struct string *page, struct uri *uri)
 
 	if (dirpath.length > 0
 	    && !dir_sep(dirpath.source[dirpath.length - 1])
-	    && !add_char_to_string(&dirpath, '/'))
+	    && !add_char_to_string(&dirpath, local ? CHAR_DIR_SEP : '/'))
 		goto out_of_memory;
 
 	if (local || uri->protocol == PROTOCOL_GOPHER) {
@@ -116,13 +117,15 @@ init_directory_listing(struct string *page, struct uri *uri)
 	{
 		unsigned char *slash = dirpath.source;
 		unsigned char *pslash = slash;
+		unsigned char sep = local ? CHAR_DIR_SEP :  '/';
 
-		while ((slash = strchr(slash, '/'))) {
+		while ((slash = strchr(slash, sep))) {
 			/* FIXME: htmlesc? At least we should escape quotes. --pasky */
 			if (!add_to_string(page, "<a href=\"")
 	    		    || !add_string_to_string(page, &location)
 			    || !add_bytes_to_string(page, dirpath.source, slash - dirpath.source)
-			    || !add_to_string(page, "/\">")
+			    || !add_char_to_string(page, sep)
+			    || !add_to_string(page, "\">")
 			    || !add_html_to_string(page, pslash, slash - pslash)
 			    || !add_to_string(page, "</a>/"))
 				goto out_of_memory;
