@@ -60,6 +60,21 @@ static const char *keymap[] = {
 	"\E[3~"  /* VK_DELETE */
 };
 
+static const char *keymap_2[] = {
+	"\E[11~", /* VK_F1 */
+	"\E[12~", /* VK_F2 */
+	"\E[13~",  /* VK_F3 */
+	"\E[14~",  /* VK_F4 */
+	"\E[15~",  /* VK_F5 */
+	"\E[17~",  /* VK_F6 */
+	"\E[18~",  /* VK_F7 */
+	"\E[19~",  /* VK_F8 */
+	"\E[20~",  /* VK_F9 */
+	"\E[21~",  /* VK_F10 */
+	"\E[23~",  /* VK_F11 */
+	"\E[24~"   /* VK_F12 */
+};
+
 #define TRACE(m...)					\
 	do {						\
 		if (get_cmd_opt_int("verbose") == 2)	\
@@ -101,11 +116,15 @@ console_key_read(const KEY_EVENT_RECORD *ker, char *buf, int max)
 	}
 
 	vkey = ker->wVirtualKeyCode;
-	if (vkey < VK_PRIOR || vkey > VK_DELETE)
-		return 0;
-
-	strncpy(buf, keymap[vkey-VK_PRIOR], max);
-
+	if (vkey >= VK_PRIOR && vkey <= VK_DELETE) {
+		strncpy(buf, keymap[vkey - VK_PRIOR], max);
+	} else {
+		if (vkey >= VK_F1 && vkey <= VK_F12) {
+			strncpy(buf, keymap_2[vkey - VK_F1], max);
+		} else {
+			return 0;
+		}
+	}
 	return strlen(buf);
 }
 
