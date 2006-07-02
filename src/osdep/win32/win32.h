@@ -4,6 +4,8 @@
 
 #ifdef CONFIG_OS_WIN32
 
+#undef CHAR_DIR_SEP
+#define CHAR_DIR_SEP '\\'
 #undef STRING_DIR_SEP
 #define STRING_DIR_SEP "\\"
 
