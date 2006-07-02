@@ -83,7 +83,14 @@ init_directory_listing(struct string *page, struct uri *uri)
 	    || !add_string_to_string(page, &location))
 		goto out_of_memory;
 
-	encode_uri_string(page, dirpath.source, -1, 0);
+#ifdef CONFIG_OS_WIN32
+	/* Stupid. ':' and '\\' are encoded and base href with them
+	 * doesn't "work". */
+	if (local)
+		encode_win32_uri_string(page, dirpath.source, dirpath.length);
+	else
+#endif
+		encode_uri_string(page, dirpath.source, dirpath.length, 0);
 
 	if (!add_to_string(page, "\" />\n</head>\n<body>\n<h2>"))
 		goto out_of_memory;

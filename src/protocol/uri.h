@@ -281,6 +281,9 @@ int get_uri_port(struct uri *uri);
 void encode_uri_string(struct string *string, unsigned char *name, int namelen,
 		       int convert_slashes);
 
+/* special version for Windows directory listing */
+void encode_win32_uri_string(struct string *string, unsigned char *name, int namelen);
+
 void decode_uri_string(struct string *string);
 void decode_uri(unsigned char *uristring);
 
