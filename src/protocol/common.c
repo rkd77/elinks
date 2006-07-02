@@ -127,7 +127,8 @@ init_directory_listing(struct string *page, struct uri *uri)
 			    || !add_char_to_string(page, sep)
 			    || !add_to_string(page, "\">")
 			    || !add_html_to_string(page, pslash, slash - pslash)
-			    || !add_to_string(page, "</a>/"))
+			    || !add_to_string(page, "</a>")
+			    || !add_char_to_string(page, sep))
 				goto out_of_memory;
 
 			pslash = ++slash;
