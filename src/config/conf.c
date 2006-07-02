@@ -500,13 +500,13 @@ load_config_file(unsigned char *prefix, unsigned char *name,
 {
 	unsigned char *config_str, *config_file;
 
-	config_file = straconcat(prefix, "/", name, NULL);
+	config_file = straconcat(prefix, STRING_DIR_SEP, name, NULL);
 	if (!config_file) return 1;
 
 	config_str = read_config_file(config_file);
 	if (!config_str) {
 		mem_free(config_file);
-		config_file = straconcat(prefix, "/.", name, NULL);
+		config_file = straconcat(prefix, STRING_DIR_SEP, ".", name, NULL);
 		if (!config_file) return 2;
 
 		config_str = read_config_file(config_file);
@@ -796,7 +796,7 @@ write_config_file(unsigned char *prefix, unsigned char *name,
 	int prefixlen = strlen(prefix);
 	int prefix_has_slash = (prefixlen && dir_sep(prefix[prefixlen - 1]));
 	int name_has_slash = dir_sep(name[0]);
-	unsigned char *slash = name_has_slash || prefix_has_slash ? "" : "/";
+	unsigned char *slash = name_has_slash || prefix_has_slash ? "" : STRING_DIR_SEP;
 
 	if (!cfg_str) return -1;
 
