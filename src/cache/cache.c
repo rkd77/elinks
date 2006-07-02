@@ -15,7 +15,6 @@
 #include "main/main.h"
 #include "main/object.h"
 #include "network/connection.h"
-#include "osdep/osdep.h"
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
