@@ -7,6 +7,10 @@
 #include "osdep/unix/unix.h"
 #include "osdep/win32/win32.h"
 
+#ifndef STRING_DIR_SEP
+#define STRING_DIR_SEP "/"
+#endif
+
 int get_system_env(void);
 int get_e(unsigned char *env);
 int is_xterm(void);

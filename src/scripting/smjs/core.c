@@ -9,6 +9,7 @@
 #include "config/home.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "main/module.h"
+#include "osdep/osdep.h"
 #include "scripting/scripting.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
@@ -114,7 +115,7 @@ smjs_load_hooks(void)
 	if (elinks_home) {
 		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME, NULL);
 	} else {
-		path = stracpy(CONFDIR "/" SMJS_HOOKS_FILENAME);
+		path = stracpy(CONFDIR STRING_DIR_SEP SMJS_HOOKS_FILENAME);
 	}
 
 	if (file_exists(path))
