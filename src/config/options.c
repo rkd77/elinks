@@ -449,7 +449,7 @@ init_option_listbox_item(struct option *option)
 struct option *
 add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 	unsigned char *name, enum option_flags flags, enum option_type type,
-	long min, long max, void *value, unsigned char *desc)
+	long min, long max, longptr_T value, unsigned char *desc)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
@@ -477,17 +477,17 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 				mem_free(option);
 				return NULL;
 			}
-			option->value.tree = value;
+			option->value.tree = (struct list_head *) value;
 			break;
 		case OPT_STRING:
 			if (!value) {
 				mem_free(option);
 				return NULL;
 			}
-			option->value.string = value;
+			option->value.string = (unsigned char *) value;
 			break;
 		case OPT_ALIAS:
-			option->value.string = value;
+			option->value.string = (unsigned char *) value;
 			break;
 		case OPT_BOOL:
 		case OPT_INT:
@@ -498,11 +498,11 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 			option->value.big_number = (long) value; /* FIXME: cast from void * */
 			break;
 		case OPT_COLOR:
-			decode_color(value, strlen((unsigned char *) value),
+			decode_color((unsigned char *) value, strlen((unsigned char *) value),
 					&option->value.color);
 			break;
 		case OPT_COMMAND:
-			option->value.command = value;
+			option->value.command = (void *) value;
 			break;
 		case OPT_LANGUAGE:
 			break;
