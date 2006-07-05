@@ -36,6 +36,9 @@ So, you need to get (and install) SpiderMonkey and then recompile your ELinks
 (if you installed SM properly, ELinks should autodetect it during the
 configure phase) and you are ready to fly.
 
+If you have installed SpiderMonkey via apt-get, you are done and should ignore
+the following directions!
+
 Note that this procedure enables you to install SpiderMonkey, but in such a
 way that it might not work with anything else but ELinks. It is unlikely that
 anything else is ever going to use SpiderMonkey on your system, but if you
