@@ -253,7 +253,7 @@ extern union option_value *get_opt_(struct option *, unsigned char *);
 
 extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 			      unsigned char *, enum option_flags, enum option_type,
-			      long, long, void *, unsigned char *);
+			      long, long, longptr_T, unsigned char *);
 
 /* Hack which permit to disable option descriptions, to reduce elinks binary size.
  * It may of some use for people wanting a very small static non-i18n elinks binary,
@@ -266,38 +266,38 @@ extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 
 
 #define add_opt_bool_tree(tree, path, capt, name, flags, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_BOOL, 0, 1, (void *) def, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_BOOL, 0, 1, (longptr_T) def, DESC(desc))
 
 #define add_opt_int_tree(tree, path, capt, name, flags, min, max, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_INT, min, max, (void *) def, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_INT, min, max, (longptr_T) def, DESC(desc))
 
 #define add_opt_long_tree(tree, path, capt, name, flags, min, max, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_LONG, min, max, (void *) def, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_LONG, min, max, (longptr_T) def, DESC(desc))
 
 #define add_opt_str_tree(tree, path, capt, name, flags, def, desc) \
 do { \
 	unsigned char *ptr = mem_alloc(MAX_STR_LEN); \
 	safe_strncpy(ptr, def, MAX_STR_LEN); \
-	add_opt(tree, path, capt, name, flags, OPT_STRING, 0, MAX_STR_LEN, ptr, DESC(desc)); \
+	add_opt(tree, path, capt, name, flags, OPT_STRING, 0, MAX_STR_LEN, (longptr_T) ptr, DESC(desc)); \
 } while (0)
 
 #define add_opt_codepage_tree(tree, path, capt, name, flags, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_CODEPAGE, 0, 0, (void *) get_cp_index(def), DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_CODEPAGE, 0, 0, (longptr_T) get_cp_index(def), DESC(desc))
 
 #define add_opt_lang_tree(tree, path, capt, name, flags, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_LANGUAGE, 0, 0, NULL, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_LANGUAGE, 0, 0, (longptr_T) 0, DESC(desc))
 
 #define add_opt_color_tree(tree, path, capt, name, flags, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_COLOR, 0, 0, def, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_COLOR, 0, 0, (longptr_T) def, DESC(desc))
 
 #define add_opt_command_tree(tree, path, capt, name, flags, cmd, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_COMMAND, 0, 0, cmd, DESC(desc));
+	add_opt(tree, path, capt, name, flags, OPT_COMMAND, 0, 0, (longptr_T) cmd, DESC(desc));
 
 #define add_opt_alias_tree(tree, path, capt, name, flags, def, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_ALIAS, 0, strlen(def), def, DESC(desc))
+	add_opt(tree, path, capt, name, flags, OPT_ALIAS, 0, strlen(def), (longptr_T) def, DESC(desc))
 
 #define add_opt_tree_tree(tree, path, capt, name, flags, desc) \
-	add_opt(tree, path, capt, name, flags, OPT_TREE, 0, 0, init_options_tree(), DESC(desc));
+	add_opt(tree, path, capt, name, flags, OPT_TREE, 0, 0, (longptr_T) init_options_tree(), DESC(desc));
 
 
 /* Builtin options */

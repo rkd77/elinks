@@ -140,6 +140,12 @@ typedef unsigned long long uint32_t;
 #define __SHRT_MAX__ 0x7fff
 #endif
 
+/*
+ * long l; (long) (longptr_T) l == l
+ * void *p; (void *) (longptr_T) p == p
+ */
+typedef long longptr_T;
+
 /* Define internal off_t format macro for printing variables. */
 #if HAVE_OFF_T == 1 && SIZEOF_OFF_T == 8
 #define OFF_T_FORMAT "lld"
