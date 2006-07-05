@@ -83,6 +83,9 @@ Check for:
 
 	libjs.so -> libjs.so
 
+If you don't get such result, check that the library's installation path
+(e.g. /usr/local/lib) is present in /etc/ld.so.conf (man 8 ldconfig).
+
 If all went well, you can proceed to rebuild ELinks now. If something broke,
 see you on #elinks @ FreeNode or in the mailing list.
 You may add your options to `./configure` as usual; SpiderMonkey should be
