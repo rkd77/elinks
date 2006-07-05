@@ -550,6 +550,9 @@ Unai Uribarri <unai@telecable.es>
 Varga Balázs <vinnui@ent.hu>
 	Hungarian translation updates
 
+Vitaly Lavrov <lve@guap.ru>
+	Fix for http digest authentification
+
 Wiktor Grebla <greblus@poczta.onet.pl>
 	Keybinding for toggling of document.browse.links.numbering
 
