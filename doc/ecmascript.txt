@@ -27,8 +27,13 @@ care of installation through a package system. Below are listed instructions
 on what package you need to install on various systems (please help improve
 the list). If all goes well you can proceed to rebuilding ELinks.
 
-On Debian testing or unstable, install the packages 'libsmjs1' and
-'libsmjs-dev' by running:
+On Debian testing (Etch) or unstable (SID), install the packages 'libmozjs0d'
+and 'libmozjs-dev' by running:
+
+	$ apt-get install libmozjs0d libmozjs-dev
+
+On Debian stable (Sarge), install the packages 'libsmjs1' and 'libsmjs-dev'
+by running:
 
 	$ apt-get install libsmjs1 libsmjs-dev
 
