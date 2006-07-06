@@ -105,7 +105,11 @@ autodetected.
 	$ cd ../..
 	$ ./configure
 
-Check for "`Ecmascript .................... SpiderMonkey`" in Feature summary.
+Check for the following line in the features summary:
+
+	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+
+Then run:
 
 	$ make
 	$ su -c 'make install'
