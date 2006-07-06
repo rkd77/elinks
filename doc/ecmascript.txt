@@ -27,22 +27,25 @@ care of installation through a package system. Below are listed instructions
 on what package you need to install on various systems (please help improve
 the list). If all goes well you can proceed to rebuilding ELinks.
 
-On Debian testing (Etch) or unstable (SID), install the packages 'libmozjs0d'
-and 'libmozjs-dev' by running:
+On Debian testing (Etch) or unstable (SID), run the following:
 
-	$ apt-get install libmozjs0d libmozjs-dev
+	$ apt-get install libmozjs-dev
 
-On Debian stable (Sarge), install the packages 'libsmjs1' and 'libsmjs-dev'
-by running:
+On Debian stable (Sarge), run the following:
 
-	$ apt-get install libsmjs1 libsmjs-dev
+	$ apt-get install libsmjs-dev
 
-So, you need to get (and install) SpiderMonkey and then recompile your ELinks
-(if you installed SM properly, ELinks should autodetect it during the
-configure phase) and you are ready to fly.
+Installing the -dev package will automatically pull in the library package.
 
-If you have installed SpiderMonkey via apt-get, you are done and should ignore
-the following directions!
+Once this is done, rebuild ELinks. The configure script should detect
+the SpiderMonkey library--check for this line in the features summary:
+
+	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+
+After following these instructions on a Debian system, you are done and should
+ignore the following directions.
+
+The rest is only for non-Debian system.
 
 Note that this procedure enables you to install SpiderMonkey, but in such a
 way that it might not work with anything else but ELinks. It is unlikely that
