@@ -681,7 +681,7 @@ cf_result=no
 EL_SAVE_FLAGS
 
 if test "$enable_python" = "yes"; then
-	PYTHON_LIBS="-lpython"
+	PYTHON_LIBS="-lpython`python -c 'from distutils import sysconfig; print sysconfig.get_config_var("VERSION")' 2> /dev/null`"
 	PYTHON_CFLAGS="-I`python -c 'from distutils import sysconfig; print sysconfig.get_python_inc()' 2> /dev/null`"
 	LIBS="$PYTHON_LIBS $LIBS"
 	CFLAGS="$PYTHON_CFLAGS $CFLAGS"
