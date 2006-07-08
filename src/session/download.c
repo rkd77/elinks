@@ -594,7 +594,6 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 			int resume)
 {
 	struct cdf_hop *cdf_hop = data;
-	unsigned char *wd;
 	int h = -1;
 	int saved_errno;
 #ifdef NO_FILE_SECURITY
@@ -604,9 +603,6 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 #endif
 
 	if (!file) goto finish;
-
-	wd = get_cwd();
-	set_cwd(term->cwd);
 
 	/* Create parent directories if needed. */
 	mkalldirs(file);
@@ -618,11 +614,6 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 			| (sf && !resume ? O_EXCL : 0),
 		 sf ? 0600 : 0666);
 	saved_errno = errno; /* Saved in case of ... --Zas */
-
-	if (wd) {
-		set_cwd(wd);
-		mem_free(wd);
-	}
 
 	if (h == -1) {
 		info_box(term, MSGBOX_FREE_TEXT,
@@ -667,7 +658,6 @@ create_download_file(struct terminal *term, unsigned char *fi,
 		     void *data)
 {
 	struct cdf_hop *cdf_hop = mem_calloc(1, sizeof(*cdf_hop));
-	unsigned char *wd;
 
 	if (!cdf_hop) {
 		callback(term, -1, data, 0);
@@ -679,17 +669,8 @@ create_download_file(struct terminal *term, unsigned char *fi,
 	cdf_hop->callback = callback;
 	cdf_hop->data = data;
 
-	/* FIXME: The wd bussiness is probably useless here? --pasky */
-	wd = get_cwd();
-	set_cwd(term->cwd);
-
 	/* Also the tilde will be expanded here. */
 	lookup_unique_name(term, fi, resume, create_download_file_do, cdf_hop);
-
-	if (wd) {
-		set_cwd(wd);
-		mem_free(wd);
-	}
 }
 
 
