@@ -35,11 +35,9 @@ BUILD_ID = $(subst elinks-,,$(GITDESC))$(if $(WTDIRTY),-dirty)
 endif
 INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
-OBJS = vernum.o
-vernum.o: FORCE
-FORCE:
+vernum.o: $(LIB_O_NAME)
 
-elinks: $(LIB_O_NAME)
+elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
 PROGS = elinks
