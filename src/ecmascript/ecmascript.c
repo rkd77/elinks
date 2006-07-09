@@ -16,6 +16,7 @@
 #include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "osdep/osdep.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "session/session.h"
@@ -274,7 +275,7 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 		done_uri(protocol);
 		mem_free_set(action, string);
 	} else {
-		if (string[0] == '/') { /* absolute uri */
+		if (dir_sep(string[0])) { /* absolute uri, TODO: disk drive under WIN32 */
 			struct uri *uri = get_uri(*action, URI_HTTP_REFERRER_HOST);
 
 			if (uri->protocol == PROTOCOL_FILE) {
