@@ -25,9 +25,11 @@ SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 ifdef V
 	quiet =
 	mquiet = masq_
+	Q =
 else
 	quiet = quiet_
 	mquiet = quiet_
+	Q = @
 endif
 
 # Show the command (quiet or non-quiet version based on the assignment
@@ -121,7 +123,7 @@ endif
 		rm .deps/$(*F).pp; \
 	fi
 
-CLEAN += $(PROG) $(OBJS) $(LIB_O_NAME)
+CLEAN += $(PROGS) $(OBJS) $(LIB_O_NAME)
 
 
 #############################################################################
@@ -139,7 +141,7 @@ init-default:
 		|| echo 'include $(SRC)/$(RELPATH)/$(subdir)/Makefile' > $(subdir)/Makefile;)
 
 clean-default cleanall-default:
-	@-test -z "$(CLEAN)" || $(RM) $(CLEAN)
+	$(Q)-test -z "$(CLEAN)" || $(RM) $(CLEAN)
 
 check-default:
 ifneq ($(SPARSE),)
