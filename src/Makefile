@@ -41,5 +41,6 @@ elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
 PROGS = elinks
+CLEAN = vernum.o
 
 include $(top_srcdir)/Makefile.lib
