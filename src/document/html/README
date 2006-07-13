@@ -15,26 +15,26 @@ of ELinks is inside the renderer, which sets up couple of callbacks (like "put
 this text on screen" or "special element indicator", where special element
 might be a <hr>, a link or a table) and calls the parser.
 
-Usually, renderer just lets the parser chew through the document on its own and
-just processes the callbacks, sometimes it kicks in though - at that point it
+Usually, the renderer just lets the parser chew through the document on its own and
+only processes the callbacks, sometimes it kicks in though - at that point it
 does a "management override", skips a chunk of the source and resumes the parser
-after it's over. Most commonly it does this with tables - when you hit a table,
+after it's over. Most commonly, it does this with tables - when you hit a table,
 html_table() does basically nothing and the renderer at that point skips to
 </table>. What happens with the table you ask? The renderer calls itself
 recursively on just the table; that means a separate parser instance is run for
 the table, and for each distinct cell a new renderer instance is called. The
 table is (parsed and) rendered two times - first to just find out the wanted
 cell sizes, then it optimizes that and figures out the layout and does a second
-rendering pass with figured out cell sizes enforced and cells actually written
-out to the canvas.
+rendering pass where it uses the calculated cell sizes to actually write the cells
+to the canvas.
 
 
 Box model plans
 ===============
 
-What you've seen above - renderer called recursively on table and each cell -
-is a cheap substitute for box model. Basically, now except of those cases the
-renderer just writes on the canvas sequentially as the text comes in, moving
+The design described above - calling the renderer recursively on the table and each cell -
+is a cheap substitute for the box model. Except for those cases where the
+renderer basically just writes on the canvas sequentially as the text comes in, moving
 the pen only rightwards and down; there are only some parameters like
 indentation and border sizes which affect the rightwards and down motion.
 
@@ -45,16 +45,16 @@ instance - you can't get away without boxes when rendering tables. But boxes
 are essential for all block elements at the moment you go CSS, and we went CSS
 and would like to support floating elements.
 
-Even without float, boxes will have an immediate advantage since you will be
+Even without support of the float property, boxes will have an immediate advantage since you will be
 able to e.g. set their background - now e.g. slashdot looks really ugly since
-it has bg set on some block elements but since we have no box model we set the
-background only on the rendered text itself, not the rectangural canvas around
+it has background set on some block elements but since we have no box model we set the
+background only on the rendered text itself, not the rectangular canvas around
 it.
 
-Boxes can be probably implemented by just transmitting information "here a new
+Boxes can probably be implemented by just transmitting information "here a new
 box (block element) begins" and "here a box ends" from parser to the renderer,
-and maintaining box stack with some geometry information in the renderer (and
-wow, you've just got DOM for block elements if you turn this from a temporary
+and maintaining a box stack with some geometry information in the renderer (and
+now, you've just got DOM for block elements if you turn this from a temporary
 stack to a persistent tree; but we might not want to do that, at least not
 unconditionally).
 
