@@ -11,6 +11,7 @@
 
 #include "config/home.h"
 #include "main/module.h"
+#include "osdep/osdep.h"
 #include "scripting/perl/core.h"
 #include "util/file.h"
 
@@ -27,7 +28,7 @@ extern char **environ;
 static char *
 get_global_hook_file(void)
 {
-	static char buf[] = CONFDIR "/" PERL_HOOKS_FILENAME;
+	static char buf[] = CONFDIR STRING_DIR_SEP PERL_HOOKS_FILENAME;
 
 	if (file_exists(buf)) return buf;
 	return NULL;

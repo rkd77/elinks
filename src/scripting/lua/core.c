@@ -30,6 +30,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
+#include "osdep/osdep.h"
 #include "osdep/signals.h"
 #include "protocol/uri.h"
 #include "scripting/lua/core.h"
@@ -630,7 +631,7 @@ eval_function(LS, int num_args, int num_results)
 static void
 do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 {
-	unsigned char *file = straconcat(prefix, "/", filename, NULL);
+	unsigned char *file = straconcat(prefix, STRING_DIR_SEP, filename, NULL);
 
 	if (!file) return;
 

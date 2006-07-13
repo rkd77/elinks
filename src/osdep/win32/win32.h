@@ -4,6 +4,11 @@
 
 #ifdef CONFIG_OS_WIN32
 
+#undef CHAR_DIR_SEP
+#define CHAR_DIR_SEP '\\'
+#undef STRING_DIR_SEP
+#define STRING_DIR_SEP "\\"
+
 struct terminal;
 
 void open_in_new_win32(struct terminal *term, unsigned char *exe_name,

@@ -26,6 +26,7 @@
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/socket.h"
+#include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
@@ -101,7 +102,7 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 	add_string_to_string(page, &uri_encoded_name);
 
 	if (entry->attrib[0] == 'd') {
-		add_char_to_string(page, '/');
+		add_char_to_string(page, CHAR_DIR_SEP);
 
 #ifdef FS_UNIX_SOFTLINKS
 	} else if (entry->attrib[0] == 'l') {
@@ -274,7 +275,7 @@ file_protocol_handler(struct connection *connection)
 		 * function properly the directory url must end with a
 		 * directory separator. */
 		if (name.source[0] && !dir_sep(name.source[name.length - 1])) {
-			redirect_location = "/";
+			redirect_location = STRING_DIR_SEP;
 			state = S_OK;
 		} else {
 			state = list_directory(connection, name.source, &page);

@@ -23,7 +23,7 @@ convert_to_md5_digest_hex_T(md5_digest_bin_T bin, md5_digest_hex_T hex)
 {
 	int i;
 
-	for (i = 0; i < sizeof(bin); i++) {
+	for (i = 0; i < sizeof(md5_digest_bin_T); i++) {
 		int j = i * 2;
 
 		hex[j]   = hx(bin[i] >> 4 & 0xF);
@@ -108,18 +108,18 @@ init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 	init_uri_method_digest(Ha2_hex, uri);
 
 	MD5_Init(&MD5Ctx);
-	MD5_Update(&MD5Ctx, ha1, sizeof(ha1));
+	MD5_Update(&MD5Ctx, ha1, sizeof(md5_digest_hex_T));
 	MD5_Update(&MD5Ctx, ":", 1);
 	if (entry->nonce)
 		MD5_Update(&MD5Ctx, entry->nonce, strlen(entry->nonce));
 	MD5_Update(&MD5Ctx, ":", 1);
 	MD5_Update(&MD5Ctx, "00000001", 8);
 	MD5_Update(&MD5Ctx, ":", 1);
-	MD5_Update(&MD5Ctx, cnonce, sizeof(cnonce));
+	MD5_Update(&MD5Ctx, cnonce, sizeof(md5_digest_hex_T));
 	MD5_Update(&MD5Ctx, ":", 1);
 	MD5_Update(&MD5Ctx, "auth", 4);
 	MD5_Update(&MD5Ctx, ":", 1);
-	MD5_Update(&MD5Ctx, Ha2_hex, sizeof(Ha2_hex));
+	MD5_Update(&MD5Ctx, Ha2_hex, sizeof(md5_digest_hex_T));
 	MD5_Final(Ha2, &MD5Ctx);
 
 	convert_to_md5_digest_hex_T(Ha2, response);
@@ -155,10 +155,10 @@ get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "qop=auth, nc=00000001, ");
 	add_to_string(&string, "cnonce=\"");
-	add_bytes_to_string(&string, cnonce, sizeof(cnonce));
+	add_bytes_to_string(&string, cnonce, sizeof(md5_digest_hex_T));
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "response=\"");
-	add_bytes_to_string(&string, response, sizeof(response));
+	add_bytes_to_string(&string, response, sizeof(md5_digest_hex_T));
 	add_to_string(&string, "\"");
 
 	if (entry->opaque) {

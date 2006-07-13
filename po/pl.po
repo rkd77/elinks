@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-18 17:49+0200\n"
-"PO-Revision-Date: 2006-06-18 18:00+0200\n"
+"POT-Creation-Date: 2006-06-30 21:43+0200\n"
+"PO-Revision-Date: 2006-06-30 22:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -736,40 +736,52 @@ msgstr "Skasuj do pocz±tku linii"
 msgid "Delete to end of line"
 msgstr "Skasuj do koñca linii"
 
-#: src/config/actions-edit.inc:23 src/config/actions-menu.inc:15
+#: src/config/actions-edit.inc:23
+msgid "Delete backwards to start of word"
+msgstr "Skasuj do ty³u do pocz±tku s³owa"
+
+#: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 msgid "Move the cursor left"
 msgstr "Przesuñ kursor w lewo"
 
-#: src/config/actions-edit.inc:24 src/config/actions-menu.inc:17
+#: src/config/actions-edit.inc:25
+msgid "Move cursor before current word"
+msgstr "Przesuñ kursor przed bie¿±ce s³owo"
+
+#: src/config/actions-edit.inc:26
+msgid "Move cursor after current word"
+msgstr "Przesuñ kursor za bie¿±ce s³owo"
+
+#: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
 msgstr "Przesuñ do nastêpnej pozycji"
 
-#: src/config/actions-edit.inc:25
+#: src/config/actions-edit.inc:28
 msgid "Open in external editor"
 msgstr "Otwórz w zewnêtrznym edytorze"
 
-#: src/config/actions-edit.inc:26
+#: src/config/actions-edit.inc:29
 msgid "Paste text from the clipboard"
 msgstr "Wstaw tekst ze schowka"
 
-#: src/config/actions-edit.inc:27 src/config/actions-menu.inc:20
+#: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 msgid "Move to the previous item"
 msgstr "Przesuñ do poprzedniej pozycji"
 
-#: src/config/actions-edit.inc:28 src/config/actions-main.inc:79
+#: src/config/actions-edit.inc:31 src/config/actions-main.inc:79
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Odrysuj terminal"
 
-#: src/config/actions-edit.inc:29 src/config/actions-menu.inc:22
+#: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 msgid "Move the cursor right"
 msgstr "Przesuñ kursor w prawo"
 
-#: src/config/actions-edit.inc:30
+#: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
 msgstr "Prze³±cz szukanie wyra¿eñ regularnych (szukanie z wyprzedzeniem)"
 
-#: src/config/actions-edit.inc:31 src/config/actions-menu.inc:26
+#: src/config/actions-edit.inc:34 src/config/actions-menu.inc:26
 msgid "Move cursor upwards"
 msgstr "Przesuñ kursor w górê"
 
@@ -3265,7 +3277,7 @@ msgid "Dump output options."
 msgstr "Ustawienia dotycz±ce zrzutów."
 
 #: src/config/options.inc:630 src/config/options.inc:879
-#: src/config/opttypes.c:394 src/dialogs/document.c:163
+#: src/config/opttypes.c:407 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Strona kodowa"
 
@@ -3958,7 +3970,7 @@ msgstr "Tekst"
 msgid "Dialog text colors."
 msgstr "Kolory tekstu w oknie dialogowym."
 
-#: src/config/options.inc:1026 src/viewer/text/form.c:1458
+#: src/config/options.inc:1026 src/viewer/text/form.c:1503
 msgid "Checkbox"
 msgstr "Przycisk wyboru"
 
@@ -4010,7 +4022,7 @@ msgstr "Klawisz skrótu przycisku"
 msgid "Selected button shortcut"
 msgstr "Klawisz skrótu wybranego przycisku"
 
-#: src/config/options.inc:1054 src/viewer/text/form.c:1462
+#: src/config/options.inc:1054 src/viewer/text/form.c:1507
 msgid "Text field"
 msgstr "Pole tekstowe"
 
@@ -4325,7 +4337,7 @@ msgstr "Potwierdzenie zamkniêcia karty"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Przy zamykaniu karty pokazuj okienko dialogowe potwierdzania."
 
-#: src/config/options.inc:1217 src/config/opttypes.c:395
+#: src/config/options.inc:1217 src/config/opttypes.c:408
 msgid "Language"
 msgstr "Jêzyk"
 
@@ -4491,62 +4503,62 @@ msgstr ""
 msgid "Read error"
 msgstr "B³±d odczytu"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:402
 msgid "Boolean"
 msgstr "Typ boolowski"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:402
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:390
+#: src/config/opttypes.c:403
 msgid "Integer"
 msgstr "Liczba ca³kowita"
 
-#: src/config/opttypes.c:390 src/config/opttypes.c:391
+#: src/config/opttypes.c:403 src/config/opttypes.c:404
 msgid "<num>"
 msgstr "<liczba>"
 
-#: src/config/opttypes.c:391
+#: src/config/opttypes.c:404
 msgid "Longint"
 msgstr "Du¿a liczba ca³kowita"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:405
 msgid "String"
 msgstr "Napis"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:405
 msgid "<str>"
 msgstr "<³añcuch>"
 
 #
-#: src/config/opttypes.c:394
+#: src/config/opttypes.c:407
 msgid "<codepage>"
 msgstr "<strona kodowa>"
 
 #
-#: src/config/opttypes.c:395
+#: src/config/opttypes.c:408
 msgid "<language>"
 msgstr "<jêzyk>"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:409
 msgid "Color"
 msgstr "Kolor"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:409
 msgid "<color|#rrggbb>"
 msgstr "<kolor|#rrggbb>"
 
-#: src/config/opttypes.c:398
+#: src/config/opttypes.c:411
 msgid "Special"
 msgstr "Specjalny"
 
-#: src/config/opttypes.c:400
+#: src/config/opttypes.c:413
 msgid "Alias"
 msgstr "Alias"
 
 #. tree
-#: src/config/opttypes.c:403
+#: src/config/opttypes.c:416
 msgid "Folder"
 msgstr "Folder"
 
@@ -6157,7 +6169,7 @@ msgstr "Turecki"
 msgid "Ukrainian"
 msgstr "Ukraiñski"
 
-#: src/main/interlink.c:329 src/main/select.c:255
+#: src/main/interlink.c:329 src/main/select.c:257
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Wywo³anie %s nieudane: %d (%s)"
@@ -6189,7 +6201,7 @@ msgid "Unable to attach_terminal()."
 msgstr "Nie jestem w stanie przy³±czyæ terminala."
 
 #. Infinite loop prevention.
-#: src/main/select.c:258
+#: src/main/select.c:260
 #, c-format
 msgid "%d select() failures."
 msgstr "%d b³êdów select()."
@@ -8238,15 +8250,15 @@ msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
 msgid "User dialog"
 msgstr "Okno dialogowe u¿ytkownika"
 
-#: src/scripting/lua/core.c:726
+#: src/scripting/lua/core.c:730
 msgid "Lua Error"
 msgstr "B³±d Lua"
 
-#: src/scripting/lua/core.c:876
+#: src/scripting/lua/core.c:880
 msgid "Lua Console"
 msgstr "Konsola Lua"
 
-#: src/scripting/lua/core.c:876
+#: src/scripting/lua/core.c:880
 msgid "Enter expression"
 msgstr "Wprowad¼ wyra¿enie"
 
@@ -8537,81 +8549,81 @@ msgstr "Wyst±pi³ b³±d podczas wysy³ania formularza"
 msgid "Could not load file %s: %s"
 msgstr "Nie mo¿na wczytaæ pliku %s: %s"
 
-#: src/viewer/text/form.c:1443
+#: src/viewer/text/form.c:1488
 msgid "Reset form"
 msgstr "Wyczy¶æ formularz"
 
 #
-#: src/viewer/text/form.c:1445
+#: src/viewer/text/form.c:1490
 msgid "Harmless button"
 msgstr "Nieszkodliwy przycisk"
 
-#: src/viewer/text/form.c:1453
+#: src/viewer/text/form.c:1498
 msgid "Submit form to"
 msgstr "Prze¶lij formularz do"
 
-#: src/viewer/text/form.c:1454
+#: src/viewer/text/form.c:1499
 msgid "Post form to"
 msgstr "Wy¶lij formularz do"
 
-#: src/viewer/text/form.c:1456
+#: src/viewer/text/form.c:1501
 msgid "Radio button"
 msgstr "Okr±g³y przycisk"
 
-#: src/viewer/text/form.c:1460
+#: src/viewer/text/form.c:1505
 msgid "Select field"
 msgstr "Pole wyboru"
 
-#: src/viewer/text/form.c:1464
+#: src/viewer/text/form.c:1509
 msgid "Text area"
 msgstr "Pole tekstowe"
 
-#: src/viewer/text/form.c:1466
+#: src/viewer/text/form.c:1511
 msgid "File upload"
 msgstr "£adowanie pliku"
 
-#: src/viewer/text/form.c:1468
+#: src/viewer/text/form.c:1513
 msgid "Password field"
 msgstr "Pole has³a"
 
-#: src/viewer/text/form.c:1506
+#: src/viewer/text/form.c:1551
 msgid "name"
 msgstr "nazwa"
 
-#: src/viewer/text/form.c:1518
+#: src/viewer/text/form.c:1563
 msgid "value"
 msgstr "warto¶æ"
 
-#: src/viewer/text/form.c:1531
+#: src/viewer/text/form.c:1576
 msgid "read only"
 msgstr "tylko do odczytu"
 
-#: src/viewer/text/form.c:1542
+#: src/viewer/text/form.c:1587
 #, c-format
 msgid "press %s to navigate"
 msgstr "wci¶nij %s aby nawigowaæ"
 
-#: src/viewer/text/form.c:1544
+#: src/viewer/text/form.c:1589
 #, c-format
 msgid "press %s to edit"
 msgstr "wci¶nij %s aby edytowaæ"
 
-#: src/viewer/text/form.c:1580
+#: src/viewer/text/form.c:1625
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
-#: src/viewer/text/form.c:1582
+#: src/viewer/text/form.c:1627
 #, c-format
 msgid "press %s to post to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
 #
-#: src/viewer/text/form.c:1684
+#: src/viewer/text/form.c:1729
 msgid "Useless button"
 msgstr "Bezu¿yteczny przycisk"
 
-#: src/viewer/text/form.c:1686
+#: src/viewer/text/form.c:1731
 msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
@@ -8818,19 +8830,19 @@ msgstr ""
 "Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:721
+#: src/viewer/text/view.c:715
 msgid "Go to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/viewer/text/view.c:721
+#: src/viewer/text/view.c:715
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1304
+#: src/viewer/text/view.c:1299
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1305
+#: src/viewer/text/view.c:1300
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 

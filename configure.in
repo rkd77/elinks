@@ -808,10 +808,9 @@ if test "$enable_python" = "yes"; then
 		cf_result=no
 	else
 		PYTHON_CFLAGS="-I`$PYTHON -c 'from distutils import sysconfig; print sysconfig.get_python_inc()' 2> /dev/null`"
+		PYTHON_LIBS="-lpython`$PYTHON -c 'from distutils import sysconfig; print sysconfig.get_config_var("VERSION")' 2> /dev/null`"
 		if test -n "$python_prefix" && test -d "$python_prefix/lib"; then
-			PYTHON_LIBS="-L$python_prefix/lib -lpython"
-		else
-			PYTHON_LIBS="-lpython"
+			PYTHON_LIBS="-L$python_prefix/lib $PYTHON_LIBS"
 		fi
 		LIBS="$PYTHON_LIBS $LIBS"
 		CFLAGS="$PYTHON_CFLAGS $CFLAGS"

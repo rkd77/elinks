@@ -75,6 +75,8 @@ disable_mouse(void)
 {
 	int h = get_output_handle(); /* XXX: Is this all right? -- Miciah */
 
+	if (!mouse_enabled) return;
+
 	unhandle_mouse(ditrm->mouse_h);
 	if (is_xterm()) send_mouse_done_sequence(h);
 
@@ -85,6 +87,8 @@ void
 enable_mouse(void)
 {
 	int h = get_output_handle(); /* XXX: Is this all right? -- Miciah */
+
+	if (mouse_enabled) return;
 
 	if (is_xterm()) send_mouse_init_sequence(h);
 	ditrm->mouse_h = handle_mouse(0, (void (*)(void *, unsigned char *, int)) itrm_queue_event, ditrm);

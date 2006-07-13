@@ -262,6 +262,36 @@ html_skip(struct html_context *html_context, unsigned char *a)
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
+/* Parse meta refresh without URL= in it:
+ *  <meta http-equiv="refresh" content="3,http://elinks.or.cz/">
+ *  <meta http-equiv="refresh" content="3; http://elinks.or.cz/">
+ *  <meta http-equiv="refresh" content="   3 ;   http://elinks.or.cz/    ">
+ */
+static void
+parse_old_meta_refresh(unsigned char *str, unsigned char **ret)
+{
+	unsigned char *p = str;
+	int len;
+
+	assert(str && ret);
+	if_assert_failed return;
+
+	*ret = NULL;
+	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	if (!*p) return;
+	while (*p && *p >= '0' && *p <= '9') p++;
+	if (!*p) return;
+	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	if (!*p) return;
+	if (*p == ';' || *p == ',') p++; else return;
+	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	if (!*p) return;
+
+	len = strlen(p);
+	while (len && (p[len] == ' ' || p[len] == ASCII_TAB)) len--;
+	if (len) *ret = memacpy(p, len);
+}
+
 void
 process_head(struct html_context *html_context, unsigned char *head)
 {
@@ -272,9 +302,13 @@ process_head(struct html_context *html_context, unsigned char *head)
 
 	parse_header_param(refresh, "URL", &url);
 	if (!url) {
-		/* If the URL parameter is missing assume that the
-		 * document being processed should be refreshed. */
-		url = get_uri_string(html_context->base_href, URI_ORIGINAL);
+		/* Let's try a more tolerant parsing. */
+		parse_old_meta_refresh(refresh, &url);
+		if (!url) {
+			/* If the URL parameter is missing assume that the
+			 * document being processed should be refreshed. */
+			url = get_uri_string(html_context->base_href, URI_ORIGINAL);
+		}
 	}
 
 	if (url) {

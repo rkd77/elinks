@@ -49,7 +49,7 @@ test_confdir(unsigned char *home, unsigned char *path,
 	if (!path || !*path) return NULL;
 
 	if (home && *home && !dir_sep(*path))
-		confdir = straconcat(home, "/", path, NULL);
+		confdir = straconcat(home, STRING_DIR_SEP, path, NULL);
 	else
 		confdir = stracpy(path);
 
@@ -134,7 +134,7 @@ get_home(void)
 
 end:
 	if (home_elinks)
-		add_to_strn(&home_elinks, "/");
+		add_to_strn(&home_elinks, STRING_DIR_SEP);
 	mem_free_if(home);
 
 	return home_elinks;

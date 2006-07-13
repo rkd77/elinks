@@ -33,13 +33,12 @@ BUILD_ID=$(shell GIT_DIR=$(top_srcdir)/.git $(CG_COMMIT_ID) 2> /dev/null)
 endif
 INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
-OBJS = vernum.o
-vernum.o: FORCE
-FORCE:
+vernum.o: $(LIB_O_NAME)
 
-elinks: $(LIB_O_NAME)
+elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
 PROGS = elinks
+CLEAN = vernum.o
 
 include $(top_srcdir)/Makefile.lib

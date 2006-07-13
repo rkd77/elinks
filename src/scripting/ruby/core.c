@@ -14,6 +14,7 @@
 #include "config/home.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "osdep/osdep.h"
 #include "scripting/scripting.h"
 #include "scripting/ruby/core.h"
 #include "scripting/ruby/ruby.h"
@@ -235,7 +236,7 @@ init_ruby(struct module *module)
 		path = straconcat(elinks_home, RUBY_HOOKS_FILENAME, NULL);
 
 	} else {
-		path = stracpy(CONFDIR "/" RUBY_HOOKS_FILENAME);
+		path = stracpy(CONFDIR STRING_DIR_SEP RUBY_HOOKS_FILENAME);
 	}
 
 	if (!path) return;

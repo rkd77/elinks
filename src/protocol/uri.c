@@ -568,6 +568,9 @@ add_uri_to_string(struct string *string, struct uri *uri,
 			"URI_FILENAME should be used alone %d", components);
 
 		if (wants(URI_PATH) && !is_uri_dir_sep(uri, *filename)) {
+#ifdef CONFIG_OS_WIN32
+			if (uri->protocol != PROTOCOL_FILE)
+#endif
 			/* FIXME: Add correct separator */
 			add_char_to_string(string, '/');
 		}
@@ -1324,6 +1327,29 @@ encode_uri_string(struct string *string, unsigned char *name, int namelen,
 		else
 #endif
 		if (safe_char(*name) || (!convert_slashes && *name == '/')) {
+			add_char_to_string(string, *name);
+		} else {
+			/* Hex it. */
+			n[1] = hx((((int) *name) & 0xF0) >> 4);
+			n[2] = hx(((int) *name) & 0xF);
+			add_bytes_to_string(string, n, sizeof(n) - 1);
+		}
+	}
+}
+
+void
+encode_win32_uri_string(struct string *string, unsigned char *name, int namelen)
+{
+	unsigned char n[4];
+	unsigned char *end;
+
+	n[0] = '%';
+	n[3] = '\0';
+
+	if (namelen < 0) namelen = strlen(name);
+
+	for (end = name + namelen; name < end; name++) {
+		if (safe_char(*name) || *name == ':' || *name == '\\') {
 			add_char_to_string(string, *name);
 		} else {
 			/* Hex it. */

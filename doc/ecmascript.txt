@@ -27,14 +27,25 @@ care of installation through a package system. Below are listed instructions
 on what package you need to install on various systems (please help improve
 the list). If all goes well you can proceed to rebuilding ELinks.
 
-On Debian testing or unstable, install the packages 'libsmjs1' and
-'libsmjs-dev' by running:
+On Debian testing (Etch) or unstable (SID), run the following:
 
-	$ apt-get install libsmjs1 libsmjs-dev
+	$ apt-get install libmozjs-dev
 
-So, you need to get (and install) SpiderMonkey and then recompile your ELinks
-(if you installed SM properly, ELinks should autodetect it during the
-configure phase) and you are ready to fly.
+On Debian stable (Sarge), run the following:
+
+	$ apt-get install libsmjs-dev
+
+Installing the -dev package will automatically pull in the library package.
+
+Once this is done, rebuild ELinks. The configure script should detect
+the SpiderMonkey library--check for this line in the features summary:
+
+	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+
+After following these instructions on a Debian system, you are done and should
+ignore the following directions.
+
+The rest is only for non-Debian system.
 
 Note that this procedure enables you to install SpiderMonkey, but in such a
 way that it might not work with anything else but ELinks. It is unlikely that
@@ -83,6 +94,9 @@ Check for:
 
 	libjs.so -> libjs.so
 
+If you don't get such result, check that the library's installation path
+(e.g. /usr/local/lib) is present in /etc/ld.so.conf (man 8 ldconfig).
+
 If all went well, you can proceed to rebuild ELinks now. If something broke,
 see you on #elinks @ FreeNode or in the mailing list.
 You may add your options to `./configure` as usual; SpiderMonkey should be
@@ -91,7 +105,11 @@ autodetected.
 	$ cd ../..
 	$ ./configure
 
-Check for "`Ecmascript .................... SpiderMonkey`" in Feature summary.
+Check for the following line in the features summary:
+
+	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+
+Then run:
 
 	$ make
 	$ su -c 'make install'
