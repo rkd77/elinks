@@ -1223,7 +1223,7 @@ msgstr "Poka¿ bie¿±cy obrazek"
 #
 #: src/config/actions-menu.inc:13
 msgid "Expand item"
-msgstr "Rozszerz pozycjê"
+msgstr "Rozwiñ pozycjê"
 
 #
 #: src/config/actions-menu.inc:16
@@ -1844,7 +1844,7 @@ msgstr "zmodyfikowany"
 
 #: src/config/dialogs.c:174
 msgid "(expand by pressing space)"
-msgstr "(rozszerz przyciskaj±c spacjê)"
+msgstr "(rozwiñ przyciskaj±c spacjê)"
 
 #: src/config/dialogs.c:177 src/config/dialogs.c:360
 #: src/config/options.inc:827
