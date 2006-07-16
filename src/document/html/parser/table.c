@@ -128,7 +128,7 @@ get_column_width(unsigned char *attr, int *width, int sh,
 		al[len - 1] = '\0';
 		errno = 0;
 		n = strtoul(al, (char **) &en, 10);
-		if (!errno && n >= 0 && !*en)
+		if (!errno && n >= 0 && (!*en || *en == '.'))
 			*width = WIDTH_RELATIVE - n;
 	} else {
 		int w = get_width(attr, "width", sh, html_context);

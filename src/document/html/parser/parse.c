@@ -310,7 +310,8 @@ get_width(unsigned char *a, unsigned char *name, int limited,
 
 	/* @end points into the @value string so check @end position
 	 * before freeing @value. */
-	if (errno || *end || width >= INT_MAX) {
+	/* We will accept floats but ceil() them. */
+	if (errno || (*end && *end != '.') || width >= INT_MAX) {
 		/* Not a valid number. */
 		mem_free(value);
 		return -1;
