@@ -466,27 +466,37 @@ struct lun_hop {
 	void *data;
 };
 
+enum {
+	COMMON_DOWNLOAD_DO = 0,
+	CONTINUE_DOWNLOAD_DO
+};
+
+struct cmdw_hop {
+	int magic; /* Must be first --witekfl */
+	struct session *ses;
+	unsigned char *real_file;
+};
+
+struct codw_hop {
+	int magic; /* must be first --witekfl */
+	struct type_query *type_query;
+	unsigned char *real_file;
+	unsigned char *file;
+};
+
+struct cdf_hop {
+	unsigned char **real_file;
+	int safe;
+
+	void (*callback)(struct terminal *, int, void *, int);
+	void *data;
+};
+
 static void
 lun_alternate(struct lun_hop *lun_hop)
 {
 	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data, 0);
 	mem_free_if(lun_hop->ofile);
-	mem_free(lun_hop);
-}
-
-static void
-lun_overwrite(struct lun_hop *lun_hop)
-{
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 0);
-	mem_free_if(lun_hop->file);
-	mem_free(lun_hop);
-}
-
-static void
-lun_resume(struct lun_hop *lun_hop)
-{
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 1);
-	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
@@ -498,6 +508,53 @@ lun_cancel(struct lun_hop *lun_hop)
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
+
+static void
+lun_overwrite(struct lun_hop *lun_hop)
+{
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 0);
+	mem_free_if(lun_hop->file);
+	mem_free(lun_hop);
+}
+
+static void common_download_do(struct terminal *term, int fd, void *data, int resume);
+
+static void
+lun_resume(struct lun_hop *lun_hop)
+{
+	struct cdf_hop *cdf_hop = lun_hop->data;
+
+	int magic = *(int *)cdf_hop->data;
+
+	if (magic == CONTINUE_DOWNLOAD_DO) {
+		struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
+
+		if (!cmdw_hop) {
+			lun_cancel(lun_hop);
+			return;
+		} else {
+			struct codw_hop *codw_hop = cdf_hop->data;
+			struct type_query *type_query = codw_hop->type_query;
+
+			cmdw_hop->magic = COMMON_DOWNLOAD_DO;
+			cmdw_hop->ses = type_query->ses;
+			/* FIXME: Current ses->download_uri is overwritten here --witekfl */
+			cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
+
+			if (type_query->external_handler) mem_free_if(codw_hop->file);
+			tp_cancel(type_query);
+			mem_free(codw_hop);
+
+			cdf_hop->real_file = &cmdw_hop->real_file;
+			cdf_hop->data = cmdw_hop;
+			cdf_hop->callback = common_download_do;
+		}
+	}
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 1);
+	mem_free_if(lun_hop->file);
+	mem_free(lun_hop);
+}
+
 
 static void
 lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
@@ -581,13 +638,6 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 }
 
 
-struct cdf_hop {
-	unsigned char **real_file;
-	int safe;
-
-	void (*callback)(struct terminal *, int, void *, int);
-	void *data;
-};
 
 static void
 create_download_file_do(struct terminal *term, unsigned char *file, void *data,
@@ -760,10 +810,6 @@ subst_file(unsigned char *prog, unsigned char *file)
 }
 
 
-struct cmdw_hop {
-	struct session *ses;
-	unsigned char *real_file;
-};
 
 static void
 common_download_do(struct terminal *term, int fd, void *data, int resume)
@@ -799,6 +845,7 @@ common_download(struct session *ses, unsigned char *file, int resume)
 	cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 	if (!cmdw_hop) return;
 	cmdw_hop->ses = ses;
+	cmdw_hop->magic = COMMON_DOWNLOAD_DO;
 
 	kill_downloads_to_file(file);
 
@@ -819,11 +866,6 @@ resume_download(void *ses, unsigned char *file)
 }
 
 
-struct codw_hop {
-	struct type_query *type_query;
-	unsigned char *real_file;
-	unsigned char *file;
-};
 
 static void
 continue_download_do(struct terminal *term, int fd, void *data, int resume)
@@ -894,6 +936,7 @@ continue_download(void *data, unsigned char *file)
 
 	codw_hop->type_query = type_query;
 	codw_hop->file = file;
+	codw_hop->magic = CONTINUE_DOWNLOAD_DO;
 
 	kill_downloads_to_file(file);
 
