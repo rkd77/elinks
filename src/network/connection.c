@@ -938,10 +938,6 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 		    || !compare_uri(conn->uri, proxy_uri, 0))
 			continue;
 
-		if (start > 0) {
-			abort_connection(conn, S_INTERRUPTED);
-			break;
-		}
 		done_uri(proxy_uri);
 		done_uri(proxied_uri);
 
