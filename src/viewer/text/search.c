@@ -472,10 +472,10 @@ lowered_string(UCHAR *text, int textlen)
 
 	if (textlen < 0) textlen = strlen_u(text);
 
-	ret = mem_calloc(1, (textlen + 1) * sizeof(UCHAR));
+	ret = memacpy_u(text, textlen);
 	if (ret && textlen) {
 		do {
-			ret[textlen] = tolower(text[textlen]);
+			ret[textlen] = tolower(ret[textlen]);
 		} while (textlen--);
 	}
 
