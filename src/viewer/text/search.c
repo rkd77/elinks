@@ -263,17 +263,17 @@ get_range(struct document *document, int y, int height, int l,
 /* Returns a string |doc| that is a copy of the text in the search nodes
  * from |s1| to |s1 + doclen - 1| with the space at the end of each line
  * converted to a new-line character (LF). */
-static UCHAR *
+static unsigned char *
 get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 				    int pattern_len, int *doclen)
 {
-	UCHAR *doc;
+	unsigned char *doc;
 	int i;
 
 	*doclen = s2 - s1 + pattern_len;
 	if (!*doclen) return NULL;
 
-	doc = mem_alloc((*doclen + 1) * sizeof(UCHAR));
+	doc = mem_alloc(*doclen + 1);
 	if (!doc) {
 		*doclen = -1;
 		return NULL;
@@ -327,8 +327,8 @@ static void
 search_for_pattern(struct regex_match_context *common_ctx, void *data,
 		   void (*match)(struct regex_match_context *, void *))
 {
-	UCHAR *doc;
-	UCHAR *doctmp;
+	unsigned char *doc;
+	unsigned char *doctmp;
 	int doclen;
 	int regexec_flags = 0;
 	regex_t regex;
@@ -1260,7 +1260,7 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 	int xoffset = doc_view->box.x - doc_view->vs->x;
 	int yoffset = doc_view->box.y - doc_view->vs->y;
 	struct link *link = get_current_link(doc_view);
-	UCHAR *text = get_link_typeahead_text(link);
+	unsigned char *text = get_link_typeahead_text(link);
 	int end = offset + chars;
 	int i, j;
 
