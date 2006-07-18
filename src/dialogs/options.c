@@ -60,7 +60,7 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 
 		if (!name) break;
 #ifndef CONFIG_UTF_8
-		if (is_cp_special(i)) continue;
+		if (is_cp_utf8(i)) continue;
 #endif /* CONFIG_UTF_8 */
 
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,

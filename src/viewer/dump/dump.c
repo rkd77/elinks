@@ -324,7 +324,7 @@ add_document_to_string(struct string *string, struct document *document)
 	if_assert_failed return NULL;
 
 #ifdef CONFIG_UTF_8
-	if (is_cp_special(document->options.cp))
+	if (is_cp_utf8(document->options.cp))
 		goto utf_8;
 #endif /* CONFIG_UTF_8 */
 
@@ -427,7 +427,7 @@ dump_to_file(struct document *document, int fd)
 	if (!buf) return -1;
 
 #ifdef CONFIG_UTF_8
-	if (is_cp_special(document->options.cp))
+	if (is_cp_utf8(document->options.cp))
 		goto utf_8;
 #endif /* CONFIG_UTF_8 */
 

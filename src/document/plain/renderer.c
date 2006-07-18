@@ -648,7 +648,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	document->bgcolor = document->options.default_bg;
 	document->width = 0;
 #ifdef CONFIG_UTF_8
-	document->options.utf8 = is_cp_special(document->options.cp);
+	document->options.utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF_8 */
 
 	/* Setup the style */

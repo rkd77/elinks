@@ -2182,7 +2182,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 							   &document->cp_status,
 							   document->options.hard_assume);
 #ifdef CONFIG_UTF_8
-	html_context->options->utf8 = is_cp_special(document->options.cp);
+	html_context->options->utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF_8 */
 
 	if (title.length) {

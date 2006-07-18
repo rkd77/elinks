@@ -1142,7 +1142,7 @@ get_cp_mime_name(int cp_index)
 }
 
 int
-is_cp_special(int cp_index)
+is_cp_utf8(int cp_index)
 {
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	return codepages[cp_index].table == table_utf_8;
