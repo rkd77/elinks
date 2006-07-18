@@ -9,6 +9,11 @@
 #endif
 
 #include <ctype.h> /* tolower(), isprint() */
+
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#include <wctype.h>
+#endif
+
 #include <sys/types.h> /* FreeBSD needs this before regex.h */
 #ifdef HAVE_REGEX_H
 #include <regex.h>
@@ -464,9 +469,19 @@ memacpy_u(unsigned char *text, int textlen)
 #endif
 }
 
+static int
+strlen_u(unsigned char *text)
+{
+#ifdef CONFIG_UTF_8
+	return strlen_utf8(&text);
+#else
+	return strlen(text);
+#endif
+}
+
 /* Returns an allocated string which is a lowered copy of passed one. */
 static UCHAR *
-lowered_string(UCHAR *text, int textlen)
+lowered_string(unsigned char *text, int textlen)
 {
 	UCHAR *ret;
 
@@ -475,7 +490,11 @@ lowered_string(UCHAR *text, int textlen)
 	ret = memacpy_u(text, textlen);
 	if (ret && textlen) {
 		do {
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+			ret[textlen] = towlower(ret[textlen]);
+#else
 			ret[textlen] = tolower(ret[textlen]);
+#endif
 		} while (textlen--);
 	}
 
@@ -484,7 +503,7 @@ lowered_string(UCHAR *text, int textlen)
 
 static int
 is_in_range_plain(struct document *document, int y, int height,
-		  unsigned *text, int textlen,
+		  unsigned char *text, int textlen,
 		  int *min, int *max,
 		  struct search *s1, struct search *s2)
 {
@@ -501,9 +520,11 @@ is_in_range_plain(struct document *document, int y, int height,
 	 * trivial, probably a starter; very fast as well) or Turbo-BM (or
 	 * maybe some other Boyer-Moore variant, I don't feel that strong in
 	 * this area), hmm?  >:) --pasky */
-
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#define maybe_tolower(c) (case_sensitive ? (c) : towlower(c))
+#else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
-
+#endif
 	for (; s1 <= s2; s1++) {
 		int i;
 
@@ -536,15 +557,6 @@ srch_failed:
 	return found;
 }
 
-static int
-strlen_u(unsigned char *text)
-{
-#ifdef CONFIG_UTF_8
-	return strlen_utf8(&text);
-#else
-	return strlen(text);
-#endif
-}
 
 static int
 is_in_range(struct document *document, int y, int height,
@@ -593,7 +605,11 @@ get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,
 	xoffset = box->x - doc_view->vs->x;
 	yoffset = box->y - doc_view->vs->y;
 
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#define maybe_tolower(c) (case_sensitive ? (c) : towlower(c))
+#else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
+#endif
 
 	for (; s1 <= s2; s1++) {
 		int i;
