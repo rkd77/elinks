@@ -459,7 +459,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 			break;
 	}
 	*string = str + length;
-	return u > 0xffff ? '*' : u;
+	return u;
 }
 #endif /* CONFIG_UTF_8 */
 
