@@ -580,7 +580,7 @@ is_in_range(struct document *document, int y, int height,
 	if_assert_failed return -1;
 
 #ifdef CONFIG_UTF_8
-	utf8 = is_cp_utf8(document->options.cp);
+	utf8 = document->options.utf8;
 #endif
 	*min = INT_MAX, *max = 0;
 	textlen = strlen_u(text, utf8);
@@ -778,7 +778,7 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 		return;
 
 #ifdef CONFIG_UTF_8
-	utf8 = is_cp_utf8(doc_view->document->options.cp);
+	utf8 = doc_view->document->options.utf8;
 #endif
 	get_searched(doc_view, &pt, &len, utf8);
 	if (len) {
@@ -945,7 +945,7 @@ find_next_link_in_search(struct document_view *doc_view, int direction)
 		int len;
 		int utf8 = 0;
 #ifdef CONFIG_UTF_8
-		utf8 = is_cp_utf8(doc_view->document->options.cp);
+		utf8 = doc_view->document->options.utf8;
 #endif
 
 nt:
