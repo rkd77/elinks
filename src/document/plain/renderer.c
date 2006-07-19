@@ -518,7 +518,9 @@ add_document_lines(struct plain_renderer *renderer)
 	int length = renderer->length;
 	int was_empty_line = 0;
 	int was_wrapped = 0;
-
+#ifdef CONFIG_UTF_8
+	int utf8 = is_cp_utf8(renderer->document->cp);
+#endif
 	for (; length > 0; renderer->lineno++) {
 		unsigned char *xsource;
 		int width, added, only_spaces = 1, spaces = 0, was_spaces = 0;
@@ -549,7 +551,7 @@ add_document_lines(struct plain_renderer *renderer)
 				was_spaces = 0;
 			}
 #ifdef CONFIG_UTF_8
-			if (renderer->document->options.utf8) {
+			if (utf8) {
 				unsigned char *text = &source[width];
 				unicode_val_T data = utf_8_to_unicode(&text,
 							&source[length]);
