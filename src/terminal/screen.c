@@ -450,12 +450,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
 #endif /* CONFIG_UTF_8 */
 {
-	if (
-#ifdef CONFIG_UTF_8
-	    !use_utf8_io(driver) &&
-#endif /* CONFIG_UTF_8 */
-	    !isscreensafe(data)
-	   ) {
+	if (!isscreensafe(data)) {
 		add_char_to_string(screen, ' ');
 		return;
 	}
