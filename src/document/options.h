@@ -71,9 +71,6 @@ struct document_options {
 
 	unsigned int plain:1;
 	unsigned int wrap:1;
-#ifdef CONFIG_UTF_8
-	unsigned int utf8:1;
-#endif /* CONFIG_UTF_8 */
 
 	/* XXX: Everything past this comment is specialy handled by compare_opt() */
 	unsigned char *framename;
@@ -104,6 +101,9 @@ struct document_options {
 	unsigned int no_cache:1;
 	unsigned int gradual_rerendering:1;
 
+#ifdef CONFIG_UTF_8
+	unsigned int utf8:1;
+#endif /* CONFIG_UTF_8 */
 	/* Active link coloring */
 	/* This is mostly here to make use of this option cache so link
 	 * drawing is faster. --jonas */
