@@ -1430,6 +1430,8 @@ process_link(struct html_context *html_context, enum link_state link_state,
 
 		for (; cells > 0; cells--, point++, x++)
 #else
+		link->npoints += charslen;
+
 		for (; charslen > 0; charslen--, point++, x++)
 #endif /* CONFIG_UTF_8 */
 		{
