@@ -1382,7 +1382,6 @@ text_typeahead_handler(struct input_line *line, int action_id)
 				 * clears the last search. */
 				search_for_do(ses, buffer, direction, 0);
 			}
-			goto_current_link(ses, doc_view, 0);
 			return INPUT_LINE_CANCEL;
 
 		case ACT_EDIT_PREVIOUS_ITEM:
