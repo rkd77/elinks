@@ -408,30 +408,61 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		                 Y(y), X(x) + charslen - 1))
 			return len;
 		if (utf8) {
-			unsigned char *end;
+			unsigned char *end = chars + charslen;
+			unicode_val_T data;
 
-			for (end = chars + charslen; chars < end; x++) {
+			if (part->document->buf_length) {
+				/* previous char was broken in the middle */
+				int length = utf8charlen(part->document->buf);
+				unsigned char i;
+				unsigned char *buf_ptr = part->document->buf;
+
+				for (i = part->document->buf_length; i < length && chars < end;) {
+					part->document->buf[i++] = *chars++;
+				}
+				part->document->buf_length = i;
+				part->document->buf[i] = '\0';
+				data = utf_8_to_unicode(&buf_ptr, buf_ptr + i);
+				if (data != UCS_NO_CHAR) {
+					part->document->buf_length = 0;
+					goto good_char;
+				} else {
+					/* Still not full char */
+					return len;
+				}
+			}
+
+			for (; chars < end; x++) {
 				if (*chars == NBSP_CHAR) {
 					schar->data = ' ';
 					part->spaces[x] = html_context->options->wrap_nbsp;
 					part->char_width[x] = 1;
 					chars++;
 				} else {
-					unicode_val_T data;
-
 					part->spaces[x] = (*chars == ' ');
 					data = utf_8_to_unicode(&chars, end);
 					if (data == UCS_NO_CHAR) {
-						/* HR */
-						unsigned char attr = schar->attr;
+						if (charslen == 1) {
+							/* HR */
+							unsigned char attr = schar->attr;
 
-						schar->data = *chars++;
-						schar->attr = SCREEN_ATTR_FRAME;
-						copy_screen_chars(&POS(x, y), schar, 1);
-						schar->attr = attr;
-						part->char_width[x] = 0;
-						continue;
+							schar->data = *chars++;
+							schar->attr = SCREEN_ATTR_FRAME;
+							copy_screen_chars(&POS(x, y), schar, 1);
+							schar->attr = attr;
+							part->char_width[x] = 0;
+							continue;
+						} else {
+							unsigned char i;
+							/* broken char */
+							for (i = 0; chars < end;i++) {
+								part->document->buf[i] = *chars++;
+							}
+							part->document->buf_length = i;
+							return x - x2;
+						}
 					} else {
+good_char:
 						if (unicode_to_cell(data) == 2) {
 							schar->data = (unicode_val_T)data;
 							part->char_width[x] = 2;
