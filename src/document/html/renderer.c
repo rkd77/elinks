@@ -1524,6 +1524,8 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		set_hline(html_context, chars, charslen, link_state);
 
 	if (link_state != LINK_STATE_NONE) {
+#if 0
+/* This all code is from utf8 branch */
 #define is_drawing_subs_or_sups() \
 		((format.style.attr & AT_SUBSCRIPT \
 		  && html_context->options->display_subs) \
@@ -1541,6 +1543,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		}
 
 #undef is_drawing_subs_or_sups
+#endif
 
 #ifdef CONFIG_UTF_8
 		process_link(html_context, link_state, chars, charslen,
