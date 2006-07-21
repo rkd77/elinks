@@ -175,12 +175,12 @@ get_uri_length(unsigned char *line, int length)
 static int
 print_document_link(struct plain_renderer *renderer, int lineno,
 		    unsigned char *line, int line_pos, int width,
-		    int expanded, struct screen_char *pos)
+		    int expanded, struct screen_char *pos, int cells)
 {
 	struct document *document = renderer->document;
 	unsigned char *start = &line[line_pos];
 	int len = get_uri_length(start, width - line_pos);
-	int screen_column = line_pos + expanded;
+	int screen_column = cells + expanded;
 	struct link *new_link;
 	int link_end = line_pos + len;
 	unsigned char saved_char;
@@ -226,209 +226,6 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 	return len;
 }
 
-enum mode_16_256 {
-	COLOR_NONE,
-	COLOR_16_FOREGROUND,
-	COLOR_16_BACKGROUND,
-	COLOR_38,
-	COLOR_48,
-	COLOR_256_FOREGROUND,
-	COLOR_256_BACKGROUND
-};
-
-static int
-change_colors(struct screen_char *template, unsigned char *line, int line_pos, int width, struct document *document)
-{
-	unsigned char fg, bg, bold;
-	enum mode_16_256 color = COLOR_NONE;
-	unsigned char value = 0;
-	int start = 0;
-
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	fg = template->color[0];
-	bg = template->color[1];
-#else
-	fg = template->color[0] & 15;
-	bg = template->color[0] >> 4;
-#endif
-	bold = template->attr & SCREEN_ATTR_BOLD;
-	for (; line_pos < width; line_pos++) {
-		unsigned char ch = line[line_pos];
-
-		switch (color) {
-		case COLOR_NONE:
-			switch (ch) {
-			case '0':
-				bold = 0;
-				break;
-			case '1':
-				bold = SCREEN_ATTR_BOLD;
-				break;
-			case '3':
-				color = COLOR_16_FOREGROUND;
-				break;
-			case '4':
-				color = COLOR_16_BACKGROUND;
-				break;
-			case 'm':
-				goto end;
-			default:
-				break;
-			}
-			break;
-
-		case COLOR_16_FOREGROUND:
-			switch (ch) {
-			case '9':
-				fg = 7;
-				color = COLOR_NONE;
-				break;
-			case '8':
-				color = COLOR_38;
-				break;
-			case 'm':
-				goto end;
-			default:
-				if (ch >= '0' && ch <= '7') fg = ch - '0';
-				else goto end;
-				color = COLOR_NONE;
-				break;
-			}
-			break;
-
-		case COLOR_16_BACKGROUND:
-			switch (ch) {
-			case '9':
-				bg = 0;
-				color = COLOR_NONE;
-				break;
-			case '8':
-				color = COLOR_48;
-				break;
-			case 'm':
-				goto end;
-			default:
-				if (ch >= '0' && ch <= '7') bg = ch - '0';
-				else goto end;
-				color = COLOR_NONE;
-				break;
-			}
-			break;
-
-		case COLOR_38:
-			switch (ch) {
-			case '5':
-				start = 1;
-				value = 0;
-				color = COLOR_256_FOREGROUND;
-				break;
-			case 'm':
-				goto end;
-			case ';':
-				break;
-			default:
-				color = COLOR_NONE;
-				break;
-			}
-			break;
-
-		case COLOR_48:
-			switch (ch) {
-			case '5':
-				start = 1;
-				value = 0;
-				color = COLOR_256_BACKGROUND;
-				break;
-			case 'm':
-				goto end;
-			case ';':
-				break;
-			default:
-				color = COLOR_NONE;
-				break;
-			}
-			break;
-
-		case COLOR_256_FOREGROUND:
-			switch (ch) {
-			case ';':
-			case 'm':
-				if (start) {
-					start = 0;
-					value = 0;
-				} else {
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#ifdef CONFIG_88_COLORS
-					if (document->options.color_mode == COLOR_MODE_88) fg = value;
-#endif
-#ifdef CONFIG_256_COLORS
-					if (document->options.color_mode == COLOR_MODE_256) fg = value;
-#endif
-#endif
-					color = COLOR_NONE;
-					value = 0;
-				}
-				if (ch == 'm') goto end;
-				break;
-			default:
-				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
-				else goto end;
-				break;
-			}
-			break;
-
-		case COLOR_256_BACKGROUND:
-			switch (ch) {
-			case ';':
-			case 'm':
-				if (start) {
-					start = 0;
-					value = 0;
-				} else {
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#ifdef CONFIG_88_COLORS
-					if (document->options.color_mode == COLOR_MODE_88) bg = value;
-#endif
-#ifdef CONFIG_256_COLORS
-					if (document->options.color_mode == COLOR_MODE_256) bg = value;
-#endif
-#endif
-					color = COLOR_NONE;
-					value = 0;
-				}
-				if (ch == 'm') goto end;
-				break;
-			default:
-				if (ch >= '0' && ch <= '9') value *= 10 + ch - '0';
-				else goto end;
-				break;
-			}
-			break;
-		}
-	}
-end:
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#ifdef CONFIG_88_COLORS
-	if (document->options.color_mode == COLOR_MODE_88) {
-		TERM_COLOR_FOREGROUND(template->color) = fg;
-		TERM_COLOR_BACKGROUND(template->color) = bg;
-	}
-#endif
-#ifdef CONFIG_256_COLORS
-	if (document->options.color_mode == COLOR_MODE_256) {
-		TERM_COLOR_FOREGROUND(template->color) = fg;
-		TERM_COLOR_BACKGROUND(template->color) = bg;
-	}
-#endif
-#endif
-
-	if (document->options.color_mode == COLOR_MODE_16) {
-		fg |= bold;
-		set_term_color16(template, document->options.color_flags, fg, bg);
-	}
-	return line_pos;
-}
-
 static inline int
 add_document_line(struct plain_renderer *renderer,
 		  unsigned char *line, int line_width)
@@ -437,6 +234,10 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char *template = &renderer->template;
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
+#ifdef CONFIG_UTF_8
+	int utf8 = document->options.utf8;
+#endif /* CONFIG_UTF_8 */
+	int cells = 0;
 	int lineno = renderer->lineno;
 	int expanded = 0;
 	int width = line_width;
@@ -448,13 +249,31 @@ add_document_line(struct plain_renderer *renderer,
 	if (!line) return 0;
 
 	/* Now expand tabs */
-	for (line_pos = 0; line_pos < width; line_pos++) {
+	for (line_pos = 0; line_pos < width;) {
 		unsigned char line_char = line[line_pos];
+		int charlen = 1;
+		int cell = 1;
+#ifdef CONFIG_UTF_8
+		unicode_val_T data;
+
+		if (utf8) {
+			unsigned char *line_char2 = &line[line_pos];
+			charlen = utf8charlen(&line_char);
+			data = utf_8_to_unicode(&line_char2, &line[width]);
+
+			if (data == UCS_NO_CHAR) {
+				line_pos += charlen;
+				continue;
+			}
+
+			cell = unicode_to_cell(data);
+		}
+#endif /* CONFIG_UTF_8 */
 
 		if (line_char == ASCII_TAB
-		    && (line_pos + 1 == width
-			|| line[line_pos + 1] != ASCII_BS)) {
-			int tab_width = 7 - ((line_pos + expanded) & 7);
+		    && (line_pos + charlen == width
+		      	|| line[line_pos + charlen] != ASCII_BS)) {
+		  	int tab_width = 7 - ((cells + expanded) & 7);
 
 			expanded += tab_width;
 		} else if (line_char == ASCII_BS) {
@@ -475,6 +294,8 @@ add_document_line(struct plain_renderer *renderer,
 				expanded--;
 #endif
 		}
+		line_pos += charlen;
+		cells += cell;
 	}
 
 	assert(expanded >= 0);
@@ -485,24 +306,50 @@ add_document_line(struct plain_renderer *renderer,
 		return 0;
 	}
 
+	cells = 0;
 	expanded = 0;
-	for (line_pos = 0; line_pos < width; line_pos++) {
+	for (line_pos = 0; line_pos < width;) {
 		unsigned char line_char = line[line_pos];
 		unsigned char next_char, prev_char;
+		int charlen = 1;
+		int cell = 1;
+#ifdef CONFIG_UTF_8
+		unicode_val_T data;
+
+		if (utf8) {
+			unsigned char *line_char2 = &line[line_pos];
+			charlen = utf8charlen(&line_char);
+			data = utf_8_to_unicode(&line_char2, &line[width]);
+
+			if (data == UCS_NO_CHAR) {
+				line_pos += charlen;
+				continue;
+			}
+ 
+			cell = unicode_to_cell(data);
+		}
+#endif /* CONFIG_UTF_8 */
 
 		prev_char = line_pos > 0 ? line[line_pos - 1] : '\0';
-		next_char = (line_pos + 1 < width) ? line[line_pos + 1]
-						   : '\0';
+		next_char = (line_pos + charlen < width) ? 
+		  		line[line_pos + charlen] : '\0';
 
-		switch (line_char) {
-		case 27:
-			if (next_char != '[') goto normal;
-			line_pos += 2;
-			line_pos = change_colors(&saved_renderer_template, line, line_pos, width, document);
+		/* Do not expand tabs that precede back-spaces; this saves the
+		 * back-space code some trouble. */
+		if (line_char == ASCII_TAB && next_char != ASCII_BS) {
+			int tab_width = 7 - ((cells + expanded) & 7);
+
+			expanded += tab_width;
+
+			template->data = ' ';
+			do
+				copy_screen_chars(pos++, template, 1);
+			while (tab_width--);
+
 			*template = saved_renderer_template;
-			break;
-		case ASCII_BS:
-			if (!(expanded + line_pos)) {
+
+		} else if (line_char == ASCII_BS) {
+			if (!(expanded + cells)) {
 				/* We've backspaced to the start of the line */
 				continue;
 			}
@@ -516,8 +363,8 @@ add_document_line(struct plain_renderer *renderer,
 				/* x^H_ becomes _^Hx */
 				if (line_pos - 1 >= 0)
 					line[line_pos - 1] = next_char;
-				if (line_pos + 1 < width)
-					line[line_pos + 1] = prev_char;
+				if (line_pos + charlen < width)
+					line[line_pos + charlen] = prev_char;
 
 				/* Go back and reparse the swapped characters */
 				if (line_pos - 2 >= 0)
@@ -562,62 +409,69 @@ add_document_line(struct plain_renderer *renderer,
 			/* Handle _^Hx^Hx as both bold and underlined */
 			if (template->attr)
 				template->attr |= pos->attr;
-			break;
-		case ASCII_TAB:
-			/* Do not expand tabs that precede back-spaces; this saves the
-			 * back-space code some trouble. */
-			if (next_char != ASCII_BS) {
-				int tab_width = 7 - ((line_pos + expanded) & 7);
+		} else {
+			int added_chars = 0;
 
-				expanded += tab_width;
-
-				template->data = ' ';
-				do
-					copy_screen_chars(pos++, template, 1);
-				while (tab_width--);
-
-				*template = saved_renderer_template;
-				break;
-			}
-		default:
-normal:
-			{
-				int added_chars = 0;
-
-				if (document->options.plain_display_links
-				    && isalpha(line_char) && isalpha(next_char)) {
-					/* We only want to check for a URI if there are
-				 	* at least two consecutive alphabetic
-				 	* characters, or if we are at the very start of
-				 	* the line.  It improves performance a bit.
-				 	* --Zas */
-					added_chars = print_document_link(renderer,
+			if (document->options.plain_display_links
+			    && isalpha(line_char) && isalpha(next_char)) {
+				/* We only want to check for a URI if there are
+				 * at least two consecutive alphabetic
+				 * characters, or if we are at the very start of
+				 * the line.  It improves performance a bit.
+				 * --Zas */
+				added_chars = print_document_link(renderer,
 								  lineno, line,
 								  line_pos,
 								  width,
 								  expanded,
-								  pos);
-				}
+								  pos, cells);
+			}
 
-				if (added_chars) {
-					line_pos += added_chars - 1;
-					pos += added_chars;
-				} else {
-					if (!isscreensafe(line_char) && line_char != 27)
+			if (added_chars) {
+				line_pos += added_chars - 1;
+				pos += added_chars;
+			} else {
+#ifdef CONFIG_UTF_8
+				if (utf8) {
+					unsigned char *text = &line[line_pos];
+					unicode_val_T data =
+						utf_8_to_unicode(&text,
+								&line[width]);
+
+					if (data == UCS_NO_CHAR) {
+						line_pos += charlen;
+						continue;
+					}
+
+					template->data = (unicode_val_T)data;
+					copy_screen_chars(pos++, template, 1);
+
+					if (unicode_to_cell(data) == 2) {
+						template->data = UCS_NO_CHAR;
+						copy_screen_chars(pos++,
+								  template, 1);
+						cell++;
+					}
+				} else
+#endif /* CONFIG_UTF_8 */
+				{
+					if (!isscreensafe(line_char))
 						line_char = '.';
 					template->data = line_char;
 					copy_screen_chars(pos++, template, 1);
 
-					/* Detect copy of nul chars to screen, this
-				 	* should not occur. --Zas */
+					/* Detect copy of nul chars to screen,
+					 * this should not occur. --Zas */
 					assert(line_char);
 				}
-
-				*template = saved_renderer_template;
 			}
-		}
-	}
 
+			*template = saved_renderer_template;
+		}
+
+		line_pos += charlen;
+		cells += cell;
+	}
 	mem_free(line);
 
 	realloc_line(document, pos - startpos, lineno);
@@ -664,19 +518,20 @@ add_document_lines(struct plain_renderer *renderer)
 	int length = renderer->length;
 	int was_empty_line = 0;
 	int was_wrapped = 0;
-
+#ifdef CONFIG_UTF_8
+	int utf8 = is_cp_utf8(renderer->document->cp);
+#endif
 	for (; length > 0; renderer->lineno++) {
 		unsigned char *xsource;
 		int width, added, only_spaces = 1, spaces = 0, was_spaces = 0;
 		int last_space = 0;
 		int tab_spaces = 0;
 		int step = 0;
+ 		int cells = 0;
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
-		for (width = 0;
-		     width + tab_spaces < renderer->max_width
-		      && width < length;
-		     width++) {
+ 		for (width = 0; (width < length) && 
+ 				(cells < renderer->max_width);) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)
@@ -694,6 +549,22 @@ add_document_lines(struct plain_renderer *renderer)
 			} else {
 				only_spaces = 0;
 				was_spaces = 0;
+			}
+#ifdef CONFIG_UTF_8
+			if (utf8) {
+				unsigned char *text = &source[width];
+				unicode_val_T data = utf_8_to_unicode(&text,
+							&source[length]);
+
+				if (data == UCS_NO_CHAR) return;
+
+				cells += unicode_to_cell(data);
+				width += utf8charlen(&source[width]);
+			} else
+#endif /* CONFIG_UTF_8 */
+			{
+				cells++;
+				width++;
 			}
 		}
 
@@ -722,6 +593,7 @@ add_document_lines(struct plain_renderer *renderer)
 				width -= was_spaces;
 				step += was_spaces;
 			}
+
 			if (!step && (width < length) && last_space) {
 				width = last_space;
 				step = 1;
@@ -777,6 +649,9 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 	document->width = 0;
+#ifdef CONFIG_UTF_8
+	document->options.utf8 = is_cp_utf8(document->options.cp);
+#endif /* CONFIG_UTF_8 */
 
 	/* Setup the style */
 	init_template(&renderer.template, &document->options);

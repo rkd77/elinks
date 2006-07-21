@@ -268,7 +268,12 @@ print_error_dialog(struct session *ses, enum connection_state state,
 
 	uristring = uri ? get_uri_string(uri, URI_PUBLIC) : NULL;
 	if (uristring) {
-		decode_uri_for_display(uristring);
+#ifdef CONFIG_UTF_8
+		if (ses->tab->term->utf8)
+			decode_uri(uristring);
+		else
+#endif /* CONFIG_UTF_8 */
+			decode_uri_for_display(uristring);
 		add_format_to_string(&msg,
 			_("Unable to retrieve %s", ses->tab->term),
 			uristring);

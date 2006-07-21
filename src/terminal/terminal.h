@@ -126,6 +126,11 @@ struct terminal {
 	 * work and even maintaining these structures ;-). */
 	unsigned int master:1;
 
+#ifdef CONFIG_UTF_8
+	/* Indicates whether UTF-8 I/O is used */
+	unsigned int utf8:1;
+#endif /* CONFIG_UTF_8 */
+
 	/* The current tab number. */
 	int current_tab;
 

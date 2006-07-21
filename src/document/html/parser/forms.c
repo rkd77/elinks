@@ -495,7 +495,13 @@ end_parse:
 	max_width = 0;
 	for (i = 0; i < order; i++) {
 		if (!labels[i]) continue;
-		int_lower_bound(&max_width, strlen(labels[i]));
+#ifdef CONFIG_UTF_8
+		if (html_context->options->utf8)
+			int_lower_bound(&max_width,
+					utf8_ptr2cells(labels[i], NULL));
+		else
+#endif /* CONFIG_UTF_8 */
+			int_lower_bound(&max_width, strlen(labels[i]));
 	}
 
 	for (i = 0; i < max_width; i++)

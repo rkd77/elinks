@@ -1134,7 +1134,12 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 
 		/* Let's make the filename pretty for display & save */
 		/* TODO: The filename can be the empty string here. See bug 396. */
-		decode_uri_string_for_display(&filename);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			decode_uri_string(&filename);
+		else
+#endif /* CONFIG_UTF_8 */
+			decode_uri_string_for_display(&filename);
 	}
 
 	text = get_dialog_offset(dlg, TYPE_QUERY_WIDGETS_COUNT);

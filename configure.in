@@ -168,6 +168,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 
+AC_CHECK_HEADERS(wctype.h)
 AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
@@ -1282,6 +1283,10 @@ EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
 
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
+
+EL_ARG_ENABLE(CONFIG_UTF_8, utf-8, [UTF-8],
+	      [  --enable-utf-8          enable UTF-8 support])
+
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [

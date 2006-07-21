@@ -150,14 +150,7 @@ get_current_link_info_and_title(struct session *ses,
 
 	link_title = get_current_link_title(doc_view);
 	if (link_title) {
-		unsigned char *src;
-
 		assert(*link_title);
-
-		/* Remove illicit chars. */
-		for (src = link_title; *src; src++)
-			if (!isprint(*src) || iscntrl(*src))
-				*src = '*';
 
 		ret = straconcat(link_info, " - ", link_title, NULL);
 		mem_free(link_info);
@@ -424,11 +417,25 @@ display_title_bar(struct session *ses, struct terminal *term)
 
 	if (document->title) {
 		int maxlen = int_max(term->width - 4 - buflen, 0);
-		int titlelen = int_min(strlen(document->title), maxlen);
+		int titlelen, titlewidth;
+
+#ifdef CONFIG_UTF_8
+		if (term->utf8) {
+			titlewidth = utf8_ptr2cells(document->title, NULL);
+			titlewidth = int_min(titlewidth, maxlen);
+
+			titlelen = utf8_cells2bytes(document->title,
+							titlewidth, NULL);
+		} else
+#endif /* CONFIG_UTF_8 */
+		{
+			titlewidth = int_min(strlen(document->title), maxlen);
+			titlelen = titlewidth;
+		}
 
 		add_bytes_to_string(&title, document->title, titlelen);
 
-		if (titlelen == maxlen)
+		if (titlewidth == maxlen)
 			add_bytes_to_string(&title, "...", 3);
 	}
 
@@ -436,7 +443,16 @@ display_title_bar(struct session *ses, struct terminal *term)
 		add_bytes_to_string(&title, buf, buflen);
 
 	if (title.length) {
-		int x = int_max(term->width - 1 - title.length, 0);
+		int x;
+#ifdef CONFIG_UTF_8
+		if (term->utf8) {
+			x = int_max(term->width - 1 
+				    - utf8_ptr2cells(title.source, 
+						     title.source
+						     + title.length), 0);
+		} else
+#endif /* CONFIG_UTF_8 */
+			x = int_max(term->width - 1 - title.length, 0);
 
 		draw_text(term, x, 0, title.source, title.length, 0,
 			  get_bfu_color(term, "title.title-text"));

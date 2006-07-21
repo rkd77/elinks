@@ -12,6 +12,7 @@
 #include "bfu/dialog.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
+#include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "terminal/draw.h"
 #include "main/timer.h"
@@ -96,13 +97,33 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 		title_color = get_bfu_color(term, "dialog.title");
 		if (title_color && box.width > 2) {
 			unsigned char *title = dlg_data->dlg->title;
-			int titlelen = int_min(box.width - 2, strlen(title));
-			int x = (box.width - titlelen) / 2 + box.x;
-			int y = box.y - 1;
+			int titlelen = strlen(title);
+			int titlecells = titlelen;
+			int x, y;
+#ifdef CONFIG_UTF_8
+			if (term->utf8)
+				titlecells = utf8_ptr2cells(title, 
+							&title[titlelen]);
+#endif /* CONFIG_UTF_8 */
+
+			titlecells = int_min(box.width - 2, titlecells);
+
+#ifdef CONFIG_UTF_8
+			if (term->utf8) {
+				titlelen = utf8_cells2bytes(title,
+							    titlecells,
+							    NULL);
+			}
+#endif /* CONFIG_UTF_8 */
+
+			x = (box.width - titlecells) / 2 + box.x;
+			y = box.y - 1;
+
 
 			draw_text(term, x - 1, y, " ", 1, 0, title_color);
 			draw_text(term, x, y, title, titlelen, 0, title_color);
-			draw_text(term, x + titlelen, y, " ", 1, 0, title_color);
+			draw_text(term, x + titlecells, y, " ", 1, 0,
+				  title_color);
 		}
 	}
 
@@ -499,7 +520,7 @@ clear_dialog(struct dialog_data *dlg_data, struct widget_data *xxx)
 
 static void
 format_widgets(struct terminal *term, struct dialog_data *dlg_data,
-	       int x, int *y, int w, int h, int *rw)
+	       int x, int *y, int w, int h, int *rw, int format_only)
 {
 	struct widget_data *wdata = dlg_data->widgets_data;
 	int widgets = dlg_data->number_of_widgets;
@@ -509,15 +530,18 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		switch (wdata->widget->type) {
 		case WIDGET_FIELD_PASS:
 		case WIDGET_FIELD:
-			dlg_format_field(term, wdata, x, y, w, rw, ALIGN_LEFT);
+			dlg_format_field(term, wdata, x, y, w, rw, ALIGN_LEFT,
+					 format_only);
 			break;
 
 		case WIDGET_LISTBOX:
-			dlg_format_listbox(term, wdata, x, y, w, h, rw, ALIGN_LEFT);
+			dlg_format_listbox(term, wdata, x, y, w, h, rw,
+					   ALIGN_LEFT, format_only);
 			break;
 
 		case WIDGET_TEXT:
-			dlg_format_text(term, wdata, x, y, w, rw, h);
+			dlg_format_text(term, wdata, x, y, w, rw, h,
+					format_only);
 			break;
 
 		case WIDGET_CHECKBOX:
@@ -535,14 +559,16 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 						break;
 				}
 
-				dlg_format_group(term, wdata, size, x, y, w, rw);
+				dlg_format_group(term, wdata, size, x, y, w, rw,
+						 format_only);
 				wdata += size - 1;
 
 			} else {
 
 				/* No horizontal space between checkboxes belonging to
 				 * the same group. */
-				dlg_format_checkbox(term, wdata, x, y, w, rw, ALIGN_LEFT);
+				dlg_format_checkbox(term, wdata, x, y, w, rw,
+						    ALIGN_LEFT, format_only);
 				if (widgets > 1
 				    && group == widget_has_group(&wdata[1]))
 					(*y)--;
@@ -554,7 +580,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		 * of the dialog. */
 		case WIDGET_BUTTON:
 			dlg_format_buttons(term, wdata, widgets,
-					   x, y, w, rw, ALIGN_CENTER);
+					   x, y, w, rw, ALIGN_CENTER, format_only);
 			return;
 		}
 	}
@@ -566,11 +592,17 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
 	int height = dialog_max_height(term);
-	int rw = int_min(w, strlen(dlg_data->dlg->title));
+	int rw;
+#ifdef CONFIG_UTF_8
+	if (term->utf8)
+		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
+	else
+#endif /* CONFIG_UTF_8 */
+		rw = int_min(w, strlen(dlg_data->dlg->title));
 	int y = dlg_data->dlg->layout.padding_top ? 0 : -1;
 	int x = 0;
 
-	format_widgets(NULL, dlg_data, x, &y, w, height, &rw);
+	format_widgets(term, dlg_data, x, &y, w, height, &rw, 1);
 
 	/* Update the width to respond to the required minimum width */
 	if (dlg_data->dlg->layout.fit_datalen) {
@@ -585,7 +617,7 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	y = dlg_data->box.y + DIALOG_TB + dlg_data->dlg->layout.padding_top;
 	x = dlg_data->box.x + DIALOG_LB;
 
-	format_widgets(term, dlg_data, x, &y, w, height, NULL);
+	format_widgets(term, dlg_data, x, &y, w, height, NULL, 0);
 }
 
 
@@ -607,7 +639,15 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 		/* Draw shadow */
 		draw_shadow(term, &dlg_data->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			fix_dwchar_around_box(term, &dlg_data->box, 0, 2, 1);
+#endif /* CONFIG_UTF_8 */
 	}
+#ifdef CONFIG_UTF_8
+	else if(term->utf8)
+		fix_dwchar_around_box(term, &dlg_data->box, 0, 0, 0);
+#endif /* CONFIG_UTF_8 */
 }
 
 static void
