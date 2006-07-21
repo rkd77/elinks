@@ -1328,6 +1328,10 @@ AC_SUBST(CONFDIR)
 
 # Create LOCALEDIR #define for config.h
 LOCALEDIR=`eval echo "$datadir/locale"`
+while echo "$LOCALEDIR" | grep "\\$"
+do
+	LOCALEDIR=`eval echo "$LOCALEDIR"`
+done > /dev/null 2> /dev/null
 AC_DEFINE_UNQUOTED(LOCALEDIR, "$LOCALEDIR", [Directory containing locales])
 AC_SUBST(LOCALEDIR)
 
