@@ -923,6 +923,11 @@ point_intersect(struct point *p1, int l1, struct point *p2, int l2)
 static int
 find_next_link_in_search(struct document_view *doc_view, int direction)
 {
+	int utf8 = 0;
+#ifdef CONFIG_UTF_8
+	utf8 = doc_view->document->options.utf8;
+#endif
+
 	assert(doc_view && doc_view->vs);
 	if_assert_failed return 0;
 
@@ -943,10 +948,6 @@ find_next_link_in_search(struct document_view *doc_view, int direction)
 		struct point *pt = NULL;
 		struct link *link;
 		int len;
-		int utf8 = 0;
-#ifdef CONFIG_UTF_8
-		utf8 = doc_view->document->options.utf8;
-#endif
 
 nt:
 		link = &doc_view->document->links[doc_view->vs->current_link];
