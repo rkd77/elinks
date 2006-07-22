@@ -182,6 +182,10 @@ struct document {
 	struct search **slines1;
 	struct search **slines2;
 
+#ifdef CONFIG_UTF_8
+	unsigned char buf[7];
+	unsigned char buf_length;
+#endif
 	unsigned int id; /* Used to check cache entries. */
 
 	int cp;
