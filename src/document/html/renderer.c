@@ -454,7 +454,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 							continue;
 						} else {
 							unsigned char i;
-							/* broken char */
+broken_char:							/* broken char */
 							for (i = 0; chars < end;i++) {
 								part->document->buf[i] = *chars++;
 							}
@@ -467,7 +467,9 @@ good_char:
 							schar->data = (unicode_val_T)data;
 							part->char_width[x] = 2;
 							copy_screen_chars(&POS(x++, y), schar, 1);
-							schar->data = UCS_NO_CHAR;
+							data = utf_8_to_unicode(&chars, end);
+							if (data == UCS_NO_CHAR) goto broken_char;
+							schar->data = (unicode_val_T)data;
 							part->spaces[x] = 0;
 							part->char_width[x] = 0;
 						} else {
