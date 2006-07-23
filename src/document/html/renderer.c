@@ -509,11 +509,11 @@ good_char:
 					x++;
 					part->spaces[x] = 0;
 					part->char_width[x] = 0;
+					data = utf_8_to_unicode(&chars, end);
 				}
 				if (data == UCS_NO_CHAR) {
-					chars++;
-					part->char_width[x] = 0;
-					x++;
+					/* this is at the end only */
+					return x - x2;
 				}
 			}
 			len = x - x2;
