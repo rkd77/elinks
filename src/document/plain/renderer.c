@@ -349,11 +349,12 @@ add_document_line(struct plain_renderer *renderer,
 			*template = saved_renderer_template;
 
 		} else if (line_char == ASCII_BS) {
+#if 0
 			if (!(expanded + cells)) {
 				/* We've backspaced to the start of the line */
 				continue;
 			}
-
+#endif
 			if (pos > startpos)
 				pos--;  /* Backspace */
 
