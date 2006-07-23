@@ -401,12 +401,12 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	assert(charslen >= 0);
 
 	if (realloc_spaces(part, x + charslen))
-		return len;
+		return 0;
 
 	if (part->document) {
 		if (realloc_line(html_context, part->document,
 		                 Y(y), X(x) + charslen - 1))
-			return len;
+			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
 			unicode_val_T data;
@@ -428,7 +428,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					goto good_char;
 				} else {
 					/* Still not full char */
-					return len;
+					return 0;
 				}
 			}
 
