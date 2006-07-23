@@ -1328,6 +1328,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 			break;
 		case ACT_EDIT_RIGHT:
 #ifdef CONFIG_UTF_8
+			if (fc->type == FC_TEXTAREA) {
+				status = textarea_op_right(fs, fc, utf8);
+				break;
+			}
 			if (utf8) {
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *end = strchr(text, '\0');
