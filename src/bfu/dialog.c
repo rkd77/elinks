@@ -592,15 +592,15 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	struct terminal *term = dlg_data->win->term;
 	int w = dialog_max_width(term);
 	int height = dialog_max_height(term);
-	int rw;
+	int x = 0, y, rw;
+
 #ifdef CONFIG_UTF_8
 	if (term->utf8)
 		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
 	else
 #endif /* CONFIG_UTF_8 */
 		rw = int_min(w, strlen(dlg_data->dlg->title));
-	int y = dlg_data->dlg->layout.padding_top ? 0 : -1;
-	int x = 0;
+	y = dlg_data->dlg->layout.padding_top ? 0 : -1;
 
 	format_widgets(term, dlg_data, x, &y, w, height, &rw, 1);
 
