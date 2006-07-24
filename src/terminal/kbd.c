@@ -62,6 +62,10 @@ free_all_itrms(void)
 }
 
 
+/* A select_handler_T write_func for itrm->out.sock.  This is called
+ * when there is data in itrm->out.queue and it is possible to write
+ * it to itrm->out.sock.  When itrm->out.queue becomes empty, this
+ * handler is temporarily removed.  */
 static void
 itrm_queue_write(struct itrm *itrm)
 {
@@ -230,6 +234,31 @@ setraw(int fd, struct termios *p)
 	return 0;
 }
 
+/* Construct the struct itrm of this process, make ditrm point to it,
+ * set up select() handlers, and send the initial interlink packet.
+ *
+ * The first five parameters are file descriptors that this function
+ * saves in submembers of struct itrm, and for which this function may
+ * set select() handlers.  Please see the definitions of struct
+ * itrm_in and struct itrm_out for further explanations.
+ *
+ * param     member    file if process is master    file if process is slave
+ * ------    ------    -------------------------    ------------------------
+ * std_in    in.std    read tty device (or pipe)    read tty device (or pipe)
+ * std_out   out.std   write tty device (or pipe)   write tty device (or pipe)
+ * sock_in   in.sock   ==std_out (masterhood flag)  read socket from master
+ * sock_out  out.sock  write pipe to same process   write socket to master
+ * ctl_in    in.ctl    control tty device           control tty device
+ *
+ * The remaining three parameters control the initial interlink packet.
+ *
+ * init_string = A string to be passed to the master process.  Need
+ *               not be null-terminated.  If remote==0, this is a URI.
+ *               Otherwise, this is a remote command.
+ * init_len    = The length of init_string, in bytes.
+ * remote      = 0 if asking the master to start a new session
+ *               and display it via this process.  Otherwise,
+ *               enum remote_session_flags.  */
 void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	   void *init_string, int init_len, int remote)
@@ -305,6 +334,9 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 }
 
 
+/* A select_handler_T read_func and error_func for the pipe (long) h.
+ * This is called when the subprocess started on the terminal of this
+ * ELinks process exits.  ELinks then resumes using the terminal.  */
 static void
 unblock_itrm_x(void *h)
 {
@@ -459,6 +491,9 @@ safe_hard_write(int fd, unsigned char *buf, int len)
 	done_draw();
 }
 
+/* A select_handler_T read_func for itrm->in.sock.  A slave process
+ * calls this when the master sends it data to be displayed.  The
+ * master process never calls this.  */
 static void
 in_sock(struct itrm *itrm)
 {
@@ -893,6 +928,8 @@ ret:
 }
 
 
+/* A select_handler_T read_func for itrm->in.std.  This is called when
+ * characters typed by the user arrive from the terminal. */
 static void
 in_kbd(struct itrm *itrm)
 {
