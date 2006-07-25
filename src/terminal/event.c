@@ -251,9 +251,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 
 	case EVENT_KBD:
 	{
-#ifndef CONFIG_UTF_8
 		int utf8_io = -1;
-#endif /* CONFIG_UTF_8 */
 		int key = get_kbd_key(ev);
 
 		reset_timer();
@@ -267,14 +265,14 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			return 0;
 		}
 
-		if (interlink->utf_8.len) {
 #ifdef CONFIG_UTF_8
-			if ((key & 0xC0) == 0x80 && term->utf8)
+		utf8_io = !!term->utf8;
 #else
-			utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
-			if ((key & 0xC0) == 0x80 && utf8_io)
+		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
 #endif /* CONFIG_UTF_8 */
-			{
+
+		if (interlink->utf_8.len) {
+			if ((key & 0xC0) == 0x80 && utf8_io) {
 				interlink->utf_8.ucs <<= 6;
 				interlink->utf_8.ucs |= key & 0x3F;
 				if (! --interlink->utf_8.len) {
@@ -292,15 +290,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			}
 		}
 
-#ifdef CONFIG_UTF_8
-		if (key < 0x80 || key > 0xFF || !term->utf8)
-#else
-		if (key < 0x80 || key > 0xFF
-				|| (utf8_io == -1
-					? !get_opt_bool_tree(term->spec, "utf_8_io")
-					: !utf8_io))
-#endif /* CONFIG_UTF_8 */
-		{
+		if (key < 0x80 || key > 0xFF || !utf8_io) {
 			term_send_event(term, ev);
 			break;
 

@@ -118,9 +118,9 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 #ifdef CONFIG_UTF_8
 #ifdef CONFIG_DEBUG
 	/* Detect attempt to draw double-width char on the last
-	 * collumn of terminal. */
+	 * column of terminal. */
 	if (unicode_to_cell(data) == 2 && x + 1 > term->width)
-		INTERNAL("Attempt to draw double-width glyph on last collumn!");
+		INTERNAL("Attempt to draw double-width glyph on last column!");
 #endif /* CONFIG_DEBUG */
 
 	if (data == UCS_NO_CHAR)
@@ -161,7 +161,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 			screen_char++;
 
 		}
-		/* Instead of displaying double-width character at last collumn
+		/* Instead of displaying double-width character at last column
 		 * display only space. */
 		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
 			sc = &line[size - 1];

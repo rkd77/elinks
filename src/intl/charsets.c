@@ -215,8 +215,7 @@ encode_utf_8(unicode_val_T u)
 #ifdef CONFIG_UTF_8
 /* Number of bytes utf8 character indexed by first byte. Illegal bytes are
  * equal ones and handled different. */
-static char utf8char_len_tab[256] =
-{
+static char utf8char_len_tab[256] = {
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
@@ -229,11 +228,7 @@ static char utf8char_len_tab[256] =
 
 inline int utf8charlen(const unsigned char *p)
 {
-	int len;
-	if (p==NULL)
-		return 0;
-	len = utf8char_len_tab[*p];
-	return len;
+	return p ? utf8char_len_tab[*p] : 0;
 }
 
 inline int
@@ -260,14 +255,14 @@ strlen_utf8(unsigned char **str)
 inline unsigned char *
 utf8_prevchar(unsigned char *current, int pos, unsigned char *start)
 {
-  if (current == NULL || start == NULL || pos < 0)
-    return NULL;
-  while (pos > 0 && current != start) {
-    current--;
-    if (utf8_islead(*current))
-      pos--;
-  }
-  return current;
+	if (current == NULL || start == NULL || pos < 0)
+		return NULL;
+	while (pos > 0 && current != start) {
+		current--;
+		if (utf8_islead(*current))
+			pos--;
+	}
+	return current;
 }
 
 /* Count number of standard terminal cells needed for displaying UTF-8

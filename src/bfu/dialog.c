@@ -100,20 +100,19 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 			int titlelen = strlen(title);
 			int titlecells = titlelen;
 			int x, y;
+
 #ifdef CONFIG_UTF_8
 			if (term->utf8)
 				titlecells = utf8_ptr2cells(title, 
-							&title[titlelen]);
+							    &title[titlelen]);
 #endif /* CONFIG_UTF_8 */
 
 			titlecells = int_min(box.width - 2, titlecells);
 
 #ifdef CONFIG_UTF_8
-			if (term->utf8) {
-				titlelen = utf8_cells2bytes(title,
-							    titlecells,
+			if (term->utf8)
+				titlelen = utf8_cells2bytes(title, titlecells,
 							    NULL);
-			}
 #endif /* CONFIG_UTF_8 */
 
 			x = (box.width - titlecells) / 2 + box.x;

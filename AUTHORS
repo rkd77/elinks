@@ -423,6 +423,9 @@ Omar Khayam <omark@cyentec.com>
 <otte@duke.edu>
 	Fix stdin reading on Mac OS X
 
+Pavol Babincak <scroolik@gmail.com>
+	Improved UTF-8 support with double-width chars
+
 Peder Stray <peder@ifi.uio.no>
 	Fix handling of key presses turning up as key prefixes
 

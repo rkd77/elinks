@@ -51,6 +51,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 
 	while (*split && *split != '\n') {
 		unsigned char *next_split;
+
 #ifdef CONFIG_UTF_8
 		if (utf8) {
 			unsigned char *next_char_begin = split 
