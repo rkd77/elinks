@@ -771,50 +771,32 @@ dnl Check for Python
 dnl ===================================================================
 enable_python="no";
 
-AC_ARG_WITH(python, [  --with-python=[prefix]       enable Python support],
-            [
-if test "$withval" != no; then
-	# FIXME: If withval is a valid directory append it to PATH
-	# so that you can specify one of several Python installations.
-	if test "$withval" != yes; then
-		python_prefix="$withval"
-	else
-		python_prefix=""
-	fi
-	enable_python=yes
-	cat <<EOF
-***********************************************************************
-The Python support is incomplete and not so well integrated to ELinks
-yet. That means, e.g.., that you have no Python console and there might
-not be all the necessary hooks. Also, the Python interface is not too
-well tested (success stories heartily welcomed!).
-***********************************************************************
-EOF
-fi
-	    ])
-
-
-cf_result=no
+AC_ARG_WITH(python, [  --with-python=[DIR]     enable Python support],
+            [ if test "x$withval" != xno; then enable_python=yes; fi ])
 
 EL_SAVE_FLAGS
+cf_result=no
+
+AC_MSG_CHECKING([for Python])
 
 if test "$enable_python" = "yes"; then
-	if test -n "$python_prefix" && test -d "$python_prefix/bin"; then
-		PYTHON_PATH="$python_prefix/bin:$PATH"
+	AC_MSG_RESULT(yes);
+
+	if test -d "$withval"; then
+		PYTHON_PATH="$withval:$PATH"
 	else
 		PYTHON_PATH="$PATH"
 	fi
+
 	AC_PATH_PROG(PYTHON, python, no, $PYTHON_PATH)
-	if test "$PYTHON" = "no" ; then
-		cf_result=no
-	else
-		PYTHON_CFLAGS="-I`$PYTHON -c 'from distutils import sysconfig; print sysconfig.get_python_inc()' 2> /dev/null`"
-		PYTHON_LIBS="-lpython`$PYTHON -c 'from distutils import sysconfig; print sysconfig.get_config_var("VERSION")' 2> /dev/null`"
-		if test -n "$python_prefix" && test -d "$python_prefix/lib"; then
-			PYTHON_LIBS="-L$python_prefix/lib $PYTHON_LIBS"
-		fi
+
+	if test "$PYTHON" != no; then
+		cf_result="yes";
+
+		PYTHON_CFLAGS="`$PYTHON -c 'from distutils import sysconfig; print "-I%s -I%s" % (sysconfig.get_python_inc(), sysconfig.get_python_inc(plat_specific=True))'`"
+		PYTHON_LIBS="`$PYTHON -c 'from distutils import sysconfig; var = sysconfig.get_config_var; print "%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION"))'`"
 		LIBS="$PYTHON_LIBS $LIBS"
-		CFLAGS="$PYTHON_CFLAGS $CFLAGS"
+		CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
 		AC_TRY_LINK([#include <Python.h>],
 		    [Py_Initialize();],
 		    cf_result=yes, cf_result=no)
@@ -823,16 +805,27 @@ if test "$enable_python" = "yes"; then
 			EL_RESTORE_FLAGS
 		else
 			EL_CONFIG(CONFIG_SCRIPTING_PYTHON, [Python])
-
-			CFLAGS="$CFLAGS_X"
 			AC_SUBST(PYTHON_LIBS)
 			AC_SUBST(PYTHON_CFLAGS)
+			cat <<EOF
+***********************************************************************
+The Python support is incomplete and not so well integrated to ELinks
+yet. That means, e.g.., that you have no Python console and there might
+not be all the necessary hooks. Also, the Python interface is not too
+well tested (success stories heartily welcomed!).
+***********************************************************************
+EOF
+		fi
+	else
+		if test -n "$withval" && test "x$withval" != xno; then
+			AC_MSG_ERROR([Python not found])
+		else
+			AC_MSG_WARN([Python support disabled])
 		fi
 	fi
+else
+	AC_MSG_RESULT(no);
 fi
-
-AC_MSG_CHECKING([for Python])
-if test "$cf_result"; then AC_MSG_RESULT($cf_result); fi
 
 
 dnl ===================================================================
