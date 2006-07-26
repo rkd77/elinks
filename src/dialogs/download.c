@@ -381,7 +381,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 
 	color = get_bfu_color(context->term, stylename);
 
-	text = get_file_download_text(item, NULL);
+	text = get_file_download_text(item, context->term);
 	if (!text) return;
 
 	length = strlen(text);
