@@ -448,7 +448,7 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_versio
 
 if test "x{with_gc}" != xno; then
 	EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GC, gc, gc.h, gc, GC_init,
-		[  --with-gc            enable Boehm's garbage collector])
+		[  --with-gc               enable Boehm's garbage collector])
 fi
 
 EL_ARG_ENABLE(CONFIG_LZMA, lzma, [lzma],
