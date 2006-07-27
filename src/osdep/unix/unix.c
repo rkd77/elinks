@@ -17,6 +17,7 @@
 #include "osdep/osdep.h"
 #include "terminal/event.h"
 #include "terminal/mouse.h"
+#include "util/error.h"
 #include "util/memory.h"
 
 
@@ -43,6 +44,7 @@ gpm_mouse_in(struct gpm_mouse_spec *gms)
 
 	mouse.x = int_max(gev.x - 1, 0);
 	mouse.y = int_max(gev.y - 1, 0);
+	Gpm_DrawPointer(gev.x, gev.y, 1);
 
 	if (gev.buttons & GPM_B_LEFT)
 		mouse.button = B_LEFT;
@@ -50,6 +52,12 @@ gpm_mouse_in(struct gpm_mouse_spec *gms)
 		mouse.button = B_MIDDLE;
 	else if (gev.buttons & GPM_B_RIGHT)
 		mouse.button = B_RIGHT;
+	/* Somehow, we don't get those events more frequently than every
+	 * second or so. Duh. Well, gpm. */
+	else if (gev.wdy < 0)
+		mouse.button = B_WHEEL_DOWN;
+	else if (gev.wdy > 0)
+		mouse.button = B_WHEEL_UP;
 	else
 		return;
 
@@ -59,6 +67,8 @@ gpm_mouse_in(struct gpm_mouse_spec *gms)
 		mouse.button |= B_UP;
 	else if (gev.type & GPM_DRAG)
 		mouse.button |= B_DRAG;
+	else if (gev.wdy != 0)
+		mouse.button |= B_DOWN;
 	else
 		return;
 
@@ -71,10 +81,12 @@ init_mouse(int cons, int suspend)
 {
 	Gpm_Connect conn;
 
-	conn.eventMask = suspend ? 0 : ~GPM_MOVE;
-	conn.defaultMask = suspend ? ~0 : GPM_MOVE;
+	/* We want to get even move events because of the wheels. */
+	conn.eventMask = suspend ? 0 : ~0;
+	conn.defaultMask = suspend ? ~0 : 0;
 	conn.minMod = suspend ? ~0 : 0;
 	conn.maxMod = suspend ? ~0 : 0;
+	gpm_visiblepointer = 1;
 
 	return Gpm_Open(&conn, cons);
 }
