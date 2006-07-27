@@ -650,7 +650,7 @@ init_gopher_index_cache_entry(struct connection *conn)
 
 	where = get_uri_string(conn->uri, URI_PUBLIC);
 
-	/* TODO: Use different function when using UTF-8 
+	/* TODO: Use different function when using UTF-8
 	 * in terminal (decode_uri_for_display replaces
 	 * bytes of UTF-8 characters width '*'). */
 	if (where) decode_uri_for_display(where);

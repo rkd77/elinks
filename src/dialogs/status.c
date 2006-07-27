@@ -446,8 +446,8 @@ display_title_bar(struct session *ses, struct terminal *term)
 		int x;
 #ifdef CONFIG_UTF_8
 		if (term->utf8) {
-			x = int_max(term->width - 1 
-				    - utf8_ptr2cells(title.source, 
+			x = int_max(term->width - 1
+				    - utf8_ptr2cells(title.source,
 						     title.source
 						     + title.length), 0);
 		} else

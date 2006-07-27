@@ -279,8 +279,8 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int_bounds(&left, len - widget_data->box.width + 1, len);
 		int_lower_bound(&left, 0);
 		widget_data->info.field.vpos = utf8_cells2bytes(t, left, NULL);
-	} else 
-#endif /* CONFIG_UTF_8 */	
+	} else
+#endif /* CONFIG_UTF_8 */
 	{
 		int_bounds(&widget_data->info.field.vpos,
 		   widget_data->info.field.cpos - widget_data->box.width + 1,
@@ -330,7 +330,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 #ifdef CONFIG_UTF_8
 		if (term->utf8)
 			x = widget_data->box.x + len - left;
-		else 
+		else
 #endif /* CONFIG_UTF_8 */
 			x = widget_data->box.x + widget_data->info.field.cpos - widget_data->info.field.vpos;
 
@@ -477,7 +477,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				if (term->utf8) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *end = strchr(next, '\0');
-					
+
 					utf_8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);
 				} else
@@ -502,7 +502,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				strlen_utf8(&t2);
 				t[p] = tmp;
 				widget_data->info.field.cpos = (int)(t2 - t);
-				
+
 			}
 #endif /* CONFIG_UTF_8 */
 			goto display_field;
@@ -696,7 +696,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 					unsigned char *t = buf;
 					static int i = 0;
 					unicode_val_T data;
-	
+
 					buf[i++] = *text;
 					buf[i] = '\0';
 					data = utf_8_to_unicode(&t, buf + i);

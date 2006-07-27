@@ -113,13 +113,13 @@ dlg_format_group(struct terminal *term,
 								text,
 								label_length,
 								NULL);
-						draw_text(term, xpos, *y, 
+						draw_text(term, xpos, *y,
 							  text, lb, 0, color);
 					} else
 #endif /* CONFIG_UTF_8 */
 					{
-						draw_text(term, xpos, *y, 
-							  text, label_length, 
+						draw_text(term, xpos, *y,
+							  text, label_length,
 							  0, color);
 					}
 				}

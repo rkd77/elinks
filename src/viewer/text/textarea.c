@@ -117,7 +117,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 		begin = pos += skip;
 
 		chars_cells = 0;
-		wrappos = NULL; 
+		wrappos = NULL;
 	}
 
 	line[line_number].split_next = 0;
@@ -786,7 +786,7 @@ static int
 do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	int old_state;
-	
+
 	if (current == -1) return 0;
 
 	if (!(current - !!fs->state_cell)) return 1;

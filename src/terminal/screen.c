@@ -464,7 +464,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF_8
 		if (border)
 			add_char_to_string(screen, (unsigned char)data);
-		else 
+		else
 			if (data != UCS_NO_CHAR)
 				add_to_string(screen, encode_utf_8(data));
 #else

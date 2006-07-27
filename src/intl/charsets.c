@@ -298,7 +298,7 @@ utf8_ptr2cells(unsigned char *string, unsigned char *end)
 
 	do {
 		charlen = utf8charlen(string);
-		if (string + charlen > end) 
+		if (string + charlen > end)
 			break;
 
 		cell = utf8_char2cells(string, end);
@@ -326,7 +326,7 @@ utf8_ptr2chars(unsigned char *string, unsigned char *end)
 
 	do {
 		charlen = utf8charlen(string);
-		if (string + charlen > end) 
+		if (string + charlen > end)
 			break;
 
 		chars++;
@@ -373,7 +373,7 @@ utf8_cells2bytes(unsigned char *string, int max_cells, unsigned char *end)
 	return bytes;
 }
 
-/* 
+/*
  * Find out number of standard terminal collumns needed for displaying symbol
  * (glyph) which represents Unicode character c.
  * TODO: Use wcwidth when it is available.
@@ -401,7 +401,7 @@ unicode_to_cell(unicode_val_T c)
 		|| (c >= 0x30000 && c <= 0x3fffd)))
 		return 2;
 
-	return 1;	
+	return 1;
 }
 
 inline unicode_val_T
@@ -415,7 +415,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 
 	if (str + length > end) {
 		return UCS_NO_CHAR;
-	} 
+	}
 
 	switch (length) {
 		case 1:
@@ -443,7 +443,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 			u += ((str[3] & 0x3f) << 6);
 			u += (str[4] & 0x3f);
 			break;
-		case 6:	
+		case 6:
 		default:
 			u = (str[0] & 0x01) << 30;
 			u += ((str[1] & 0x3f) << 24);

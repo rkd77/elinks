@@ -1552,7 +1552,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 			put_link_number(html_context);
 	}
 #ifdef CONFIG_UTF_8
-	cells = 
+	cells =
 #endif /* CONFIG_UTF_8 */
 		set_hline(html_context, chars, charslen, link_state);
 

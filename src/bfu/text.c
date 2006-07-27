@@ -54,7 +54,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 
 #ifdef CONFIG_UTF_8
 		if (utf8) {
-			unsigned char *next_char_begin = split 
+			unsigned char *next_char_begin = split
 							 + utf8charlen(split);
 
 			next_split = split;
@@ -64,7 +64,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 				next_split++;
 
 			next_char_begin = next_split;
-			while (is_unsplitable(next_split)) 
+			while (is_unsplitable(next_split))
 			{
 				if (next_split < next_char_begin) {
 					next_split++;
@@ -207,7 +207,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 void
 dlg_format_text_do(struct terminal *term, unsigned char *text,
 		int x, int *y, int width, int *real_width,
-		struct color_pair *color, enum format_align align, 
+		struct color_pair *color, enum format_align align,
 		int format_only)
 {
 	int line_width;

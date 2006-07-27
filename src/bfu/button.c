@@ -89,7 +89,7 @@ buttons_width(struct widget_data *widget_data, int n,
 {
 	int maxw = -BUTTON_HSPACING;
 #ifdef CONFIG_UTF_8
-	int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL) 
+	int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL)
 			  + utf8_ptr2cells(BUTTON_RIGHT, NULL);
 #endif /* CONFIG_UTF_8 */
 
@@ -150,7 +150,7 @@ dlg_format_buttons(struct terminal *term,
 			int i;
 			int p = x + (align == ALIGN_CENTER ? (w - mw) / 2 : 0);
 #ifdef CONFIG_UTF_8
-			int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL) 
+			int button_lr_len = utf8_ptr2cells(BUTTON_LEFT, NULL)
 					  + utf8_ptr2cells(BUTTON_RIGHT, NULL);
 #endif /* CONFIG_UTF_8 */
 
@@ -201,9 +201,9 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		int button_right_len = utf8_ptr2cells(BUTTON_RIGHT, NULL);
 
 		x = pos->x + button_left_len;
-		len = widget_data->box.width - 
+		len = widget_data->box.width -
 			(button_left_len + button_right_len);
-		
+
 	} else
 #endif /* CONFIG_UTF_8 */
 	{
@@ -227,38 +227,38 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				int hk_bytes = utf8charlen(&text[hk_pos+1]);
 				int cells_to_hk = utf8_ptr2cells(text,
 						&text[hk_pos]);
-				int right = widget_data->widget->info.button.truetextlen 
-					- hk_pos 
+				int right = widget_data->widget->info.button.truetextlen
+					- hk_pos
 					- hk_bytes;
 
-				int hk_cells = utf8_char2cells(&text[hk_pos 
+				int hk_cells = utf8_char2cells(&text[hk_pos
 								      + 1],
 								NULL);
 
 				if (hk_pos)
-					draw_text(term, x, pos->y, 
+					draw_text(term, x, pos->y,
 						  text, hk_pos, 0, color);
 
 				draw_text(term, x + cells_to_hk, pos->y,
-					  &text[hk_pos + 1], hk_bytes, 
+					  &text[hk_pos + 1], hk_bytes,
 					  attr, shortcut_color);
 
 				if (right > 1)
-					draw_text(term, x+cells_to_hk+hk_cells, 
-						  pos->y, 
+					draw_text(term, x+cells_to_hk+hk_cells,
+						  pos->y,
 						  &text[hk_pos + hk_bytes + 1],
 						  right - 1, 0, color);
 
 			} else {
 				int hk_width = utf8_char2cells(text, NULL);
 				int hk_len = utf8charlen(text);
-				int len_to_display = 
-					utf8_cells2bytes(&text[hk_len], 
+				int len_to_display =
+					utf8_cells2bytes(&text[hk_len],
 							 len - hk_width,
 							 NULL);
 
-				draw_text(term, x, pos->y, 
-					  text, hk_len, 
+				draw_text(term, x, pos->y,
+					  text, hk_len,
 					  attr, shortcut_color);
 
 				draw_text(term, x + hk_width, pos->y,
@@ -290,7 +290,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		int text_cells = utf8_ptr2cells(widget_data->widget->text, NULL);
 		int hk = (widget_data->widget->info.button.hotkey_pos >= 0);
 
-		draw_text(term, x + text_cells - hk, pos->y, 
+		draw_text(term, x + text_cells - hk, pos->y,
 			  BUTTON_RIGHT, BUTTON_RIGHT_LEN, 0, color);
 	} else
 #endif /* CONFIG_UTF_8 */

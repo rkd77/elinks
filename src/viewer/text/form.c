@@ -387,7 +387,7 @@ utf_8:
 				len = utf8_ptr2cells(fs->value + fs->vpos, NULL);
 			text = fs->value;
 			end = strchr(text, '\0');
-			
+
 
 			for (i = 0; i < fc->size; i++, x++) {
 				unicode_val_T data;
@@ -1312,7 +1312,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8) {
 				int old_state = fs->state;
 				unsigned char *new_value;
-				
+
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
 
@@ -1522,7 +1522,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8) {
 				int old_state = fs->state;
 				unsigned char *new_value;
-				
+
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
 
@@ -1666,7 +1666,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			while (fs->state > 0
 			       && isspace(fs->value[fs->state - 1]))
 				--fs->state;
-			while (fs->state > 0 
+			while (fs->state > 0
 			       && !isspace(fs->value[fs->state - 1]))
 				--fs->state;
 			break;

@@ -325,13 +325,13 @@ add_document_line(struct plain_renderer *renderer,
 				line_pos += charlen;
 				continue;
 			}
- 
+
 			cell = unicode_to_cell(data);
 		}
 #endif /* CONFIG_UTF_8 */
 
 		prev_char = line_pos > 0 ? line[line_pos - 1] : '\0';
-		next_char = (line_pos + charlen < width) ? 
+		next_char = (line_pos + charlen < width) ?
 		  		line[line_pos + charlen] : '\0';
 
 		/* Do not expand tabs that precede back-spaces; this saves the
@@ -531,7 +531,7 @@ add_document_lines(struct plain_renderer *renderer)
  		int cells = 0;
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
- 		for (width = 0; (width < length) && 
+ 		for (width = 0; (width < length) &&
  				(cells < renderer->max_width);) {
 			if (source[width] == ASCII_CR)
 				step++;

@@ -418,8 +418,8 @@ static const unsigned char yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals. */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "'?'", "'|'", "'&'", "EQUOP2", "CMPOP2", 
-  "ADDOP2", "MULOP2", "'!'", "NUMBER", "':'", "'n'", "'('", "')'", 
+  "$end", "error", "$undefined", "'?'", "'|'", "'&'", "EQUOP2", "CMPOP2",
+  "ADDOP2", "MULOP2", "'!'", "NUMBER", "':'", "'n'", "'('", "')'",
   "$accept", "start", "exp", 0
 };
 #endif
@@ -1336,7 +1336,7 @@ yyerrlab1:
   /* Suppress GCC warning that yyerrlab1 is unused when no action
      invokes YYERROR.  */
 #if defined (__GNUC_MINOR__) && 2093 <= (__GNUC__ * 1000 + __GNUC_MINOR__)
-  /* but it's harmful in C++ code 
+  /* but it's harmful in C++ code
    * (gcc 3.2.1 complained about erroneous yylerrsp declaration) */
 #  ifndef __cplusplus
   __attribute__ ((__unused__))

@@ -202,11 +202,11 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 
 #ifdef CONFIG_UTF_8
 	if (term->utf8)
-		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL) 
+		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL)
 		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 	else
 #endif /* CONFIG_UTF_8 */
-		return L_TEXT_SPACE + strlen(text) 
+		return L_TEXT_SPACE + strlen(text)
 		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 }
 
@@ -385,7 +385,7 @@ draw_menu_left_text(struct terminal *term, unsigned char *text, int len,
 #ifdef CONFIG_UTF_8
 	if (term->utf8) {
 		max_len = utf8_cells2bytes(text, w, NULL);
-		if (max_len <= 0) 
+		if (max_len <= 0)
 			return;
 	} else
 #endif /* CONFIG_UTF_8 */
@@ -479,10 +479,10 @@ utf8:
 						  data, hk_attr, hk_color);
 #endif /* CONFIG_DEBUG */
 					x++;
-					draw_char(term, xbase + x - 1, y, 
+					draw_char(term, xbase + x - 1, y,
 						  UCS_NO_CHAR, 0, hk_color);
 				} else {
-					draw_char(term, xbase + x - 1, y, 
+					draw_char(term, xbase + x - 1, y,
 						  ' ', 0, hk_color);
 				}
 			} else {
@@ -1165,7 +1165,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	if (menu->last < menu->size - 1) {
 #ifdef CONFIG_UTF_8
 		if (term->utf8) {
-			struct screen_char *schar; 
+			struct screen_char *schar;
 
 			schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);
 			/* Is second cell of double-width char on the place where

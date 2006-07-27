@@ -25,7 +25,7 @@ struct screen_char {
 	unicode_val_T data;
 #else
 	unsigned char data;
-#endif /* CONFIG_UTF_8 */	
+#endif /* CONFIG_UTF_8 */
 
 	/* Attributes are screen_char_attr bits. */
 	unsigned char attr;

@@ -103,7 +103,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 
 #ifdef CONFIG_UTF_8
 			if (term->utf8)
-				titlecells = utf8_ptr2cells(title, 
+				titlecells = utf8_ptr2cells(title,
 							    &title[titlelen]);
 #endif /* CONFIG_UTF_8 */
 

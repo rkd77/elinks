@@ -107,14 +107,14 @@ void
 draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
 #else
 draw_char_data(struct terminal *term, int x, int y, unsigned char data)
-#endif /* CONFIG_UTF_8 */	
+#endif /* CONFIG_UTF_8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
 
 	screen_char->data = data;
-	
+
 #ifdef CONFIG_UTF_8
 #ifdef CONFIG_DEBUG
 	/* Detect attempt to draw double-width char on the last
@@ -125,7 +125,7 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 
 	if (data == UCS_NO_CHAR)
 		screen_char->attr = 0;
-#endif /* CONFIG_UTF_8 */	
+#endif /* CONFIG_UTF_8 */
 
 	set_screen_dirty(term->screen, y, y);
 }
@@ -166,7 +166,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 		 * display only space. */
 		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
 			unicode_val_T data_save;
-			
+
 			sc = &line[size - 1];
 			data_save = sc->data;
 			sc->data = ' ';
@@ -263,7 +263,7 @@ void
 fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 		     int shadow_width, int shadow_height)
 {
-	struct screen_char *schar; 
+	struct screen_char *schar;
 	int height, x, y;
 
 	if (!term->utf8)
@@ -475,7 +475,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 		}
 	}
 	set_screen_dirty(term->screen, y, y);
-	
+
 }
 #endif /* CONFIG_UTF_8 */
 
