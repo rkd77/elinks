@@ -260,7 +260,12 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 	struct document *document = renderer->document;
 	struct conv_table *convert = renderer->convert_table;
 	enum convert_string_mode mode = renderer->convert_mode;
-	int x;
+	int x, charlen;
+#ifdef CONFIG_UTF_8
+	int utf8 = document->options.utf8;
+	unsigned char *end;
+#endif /* CONFIG_UTF_8 */
+
 
 	assert(renderer && template && string && length);
 
@@ -275,12 +280,15 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 
 	add_search_node(renderer, length);
 
-	for (x = 0; x < length; x++, renderer->canvas_x++) {
-		unsigned char data = string[x];
+#ifdef CONFIG_UTF_8
+	end = string + length;
+#endif /* CONFIG_UTF_8 */
+	for (x = 0, charlen = 1; x < length;x += charlen, renderer->canvas_x++) {
+		unsigned char *text = &string[x];
 
 		/* This is mostly to be able to break out so the indentation
 		 * level won't get to high. */
-		switch (data) {
+		switch (*text) {
 		case ASCII_TAB:
 		{
 			int tab_width = 7 - (X(renderer) & 7);
@@ -295,15 +303,33 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			 * ``main loop'' add the actual tab char. */
 			for (; tab_width-- > 0; renderer->canvas_x++)
 				copy_screen_chars(POS(renderer), template, 1);
+			charlen = 1;
 			break;
 		}
 		default:
-			template->data = isscreensafe(data) ? data : '.';
+#ifdef CONFIG_UTF_8
+			if (utf8) {
+				unicode_val_T data;
+				charlen = utf8charlen(text);
+				data = utf_8_to_unicode(&text, end);
+
+				template->data = (unicode_val_T)data;
+
+				if (unicode_to_cell(data) == 2) {
+					copy_screen_chars(POS(renderer),
+							template, 1);
+
+					X(renderer)++;
+					template->data = UCS_NO_CHAR;
+				}
+
+			} else
+#endif /* CONFIG_UTF_8 */
+				template->data = isscreensafe(*text) ? *text:'.';
 		}
 
 		copy_screen_chars(POS(renderer), template, 1);
 	}
-
 	mem_free(string);
 }
 
@@ -1024,6 +1050,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	init_dom_renderer(&renderer, document, buffer, convert_table);
 
 	document->bgcolor = document->options.default_bg;
+#ifdef CONFIG_UTF_8
+	document->options.utf8 = is_cp_utf8(document->options.cp);
+#endif /* CONFIG_UTF_8 */
 
 	if (document->options.plain)
 		parser_type = SGML_PARSER_STREAM;

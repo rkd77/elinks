@@ -7,6 +7,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "intl/charsets.h"
 #include "terminal/color.h"
 #include "terminal/draw.h"
 #include "terminal/screen.h"
@@ -102,13 +103,30 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 }
 
 void
+#ifdef CONFIG_UTF_8
+draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
+#else
 draw_char_data(struct terminal *term, int x, int y, unsigned char data)
+#endif /* CONFIG_UTF_8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
 	if (!screen_char) return;
 
 	screen_char->data = data;
+
+#ifdef CONFIG_UTF_8
+#ifdef CONFIG_DEBUG
+	/* Detect attempt to draw double-width char on the last
+	 * column of terminal. */
+	if (unicode_to_cell(data) == 2 && x + 1 > term->width)
+		INTERNAL("Attempt to draw double-width glyph on last column!");
+#endif /* CONFIG_DEBUG */
+
+	if (data == UCS_NO_CHAR)
+		screen_char->attr = 0;
+#endif /* CONFIG_UTF_8 */
+
 	set_screen_dirty(term->screen, y, y);
 }
 
@@ -127,7 +145,39 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	size = int_min(l, term->width - x);
 	if (size == 0) return;
 
-	copy_screen_chars(screen_char, line, size);
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		struct screen_char *sc;
+
+		if (line->data == UCS_NO_CHAR && x == 0) {
+			unicode_val_T data_save;
+
+			sc = line;
+			data_save = sc->data;
+			sc->data = ' ';
+			copy_screen_chars(screen_char, line, 1);
+			sc->data = data_save;
+			size--;
+			line++;
+			screen_char++;
+
+		}
+		/* Instead of displaying double-width character at last column
+		 * display only space. */
+		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
+			unicode_val_T data_save;
+
+			sc = &line[size - 1];
+			data_save = sc->data;
+			sc->data = ' ';
+			copy_screen_chars(screen_char, line, size);
+			sc->data = data_save;
+		} else {
+			copy_screen_chars(screen_char, line, size);
+		}
+	} else
+#endif
+		copy_screen_chars(screen_char, line, size);
 	set_screen_dirty(term->screen, y, y);
 }
 
@@ -198,10 +248,88 @@ draw_border(struct terminal *term, struct box *box,
 	set_screen_dirty(term->screen, borderbox.y, borderbox.y + borderbox.height);
 }
 
+#ifdef CONFIG_UTF_8
+/* Checks cells left and right to the box for broken double-width chars.
+ * Replace it with ' '.
+ * 1+---+3
+ * 1|box|##4
+ * 1|   |##4
+ * 1|   |##4
+ * 1+---+##4
+ *   2#####4
+ * 1,2,3,4 - needs to be checked, # - shadow , +,-,| - border
+ */
+void
+fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
+		     int shadow_width, int shadow_height)
+{
+	struct screen_char *schar;
+	int height, x, y;
+
+	if (!term->utf8)
+		return;
+
+	/* 1 */
+	x = box->x - border - 1;
+	if (x > 0) {
+		y = box->y - border;
+		height = box->height + 2 * border;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (unicode_to_cell(schar->data) == 2)
+				schar->data = ' ';
+	}
+
+	/* 2 */
+	x = box->x - border + shadow_width - 1;
+	if (x > 0 && x < term->width) {
+		y = box->y + border + box->height;
+		height = shadow_height;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (unicode_to_cell(schar->data) == 2)
+				schar->data = ' ';
+	}
+
+	/* 3 */
+	x = box->x + box->width + border;
+	if (x < term->width) {
+		y = box->y - border;
+		height = shadow_height;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (schar->data == UCS_NO_CHAR)
+				schar->data = ' ';
+	}
+
+	/* 4 */
+	x = box->x + box->width + border + shadow_width;
+	if (x < term->width) {
+		y = box->y - border + shadow_height;
+		height = box->height + 2 * border;
+
+		schar = get_char(term, x, y);
+		for (;height--; schar += term->width)
+			if (schar->data == UCS_NO_CHAR)
+				schar->data = ' ';
+	}
+}
+#endif
+
+#ifdef CONFIG_UTF_8
 void
 draw_char(struct terminal *term, int x, int y,
-	  unsigned char data, enum screen_char_attr attr,
+	  unicode_val_T data, enum screen_char_attr attr,
 	  struct color_pair *color)
+#else
+void
+draw_char(struct terminal *term, int x, int y,
+		unsigned char data, enum screen_char_attr attr,
+	  struct color_pair *color)
+#endif /* CONFIG_UTF_8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -277,6 +405,80 @@ draw_shadow(struct terminal *term, struct box *box,
 	draw_box(term, &dbox, ' ', 0, color);
 }
 
+#ifdef CONFIG_UTF_8
+static void
+draw_text_utf8(struct terminal *term, int x, int y,
+	       unsigned char *text, int length,
+	       enum screen_char_attr attr, struct color_pair *color)
+{
+	struct screen_char *start, *pos;
+	unsigned char *end = text + length;
+	unicode_val_T data;
+
+	assert(text && length >= 0);
+	if_assert_failed return;
+
+	if (length <= 0) return;
+	if (x >= term->width) return;
+
+	data = utf_8_to_unicode(&text, end);
+	if (data == UCS_NO_CHAR) return;
+	start = get_char(term, x, y);
+	if (color) {
+		start->attr = attr;
+		set_term_color(start, color, 0,
+			       get_opt_int_tree(term->spec, "colors"));
+	}
+
+	if (start->data == UCS_NO_CHAR && x - 1 > 0)
+		draw_char_data(term, x - 1, y, ' ');
+
+	pos = start;
+
+	if (unicode_to_cell(data) == 2) {
+		/* Is there enough room for whole double-width char? */
+		if (x + 1 < term->width) {
+			pos->data = data;
+			pos++;
+			x++;
+
+			pos->data = UCS_NO_CHAR;
+			pos->attr = 0;
+		} else {
+			pos->data = (unicode_val_T)' ';
+		}
+	} else {
+		pos->data = data;
+	}
+	pos++;
+	x++;
+
+	for (; x < term->width; x++, pos++) {
+		data = utf_8_to_unicode(&text, end);
+		if (data == UCS_NO_CHAR) break;
+		if (color) copy_screen_chars(pos, start, 1);
+
+		if (unicode_to_cell(data) == 2) {
+			/* Is there enough room for whole double-width char? */
+			if (x + 1 < term->width) {
+				pos->data = data;
+
+				x++;
+				pos++;
+				pos->data = UCS_NO_CHAR;
+				pos->attr = 0;
+			} else {
+				pos->data = (unicode_val_T)' ';
+			}
+		} else {
+			pos->data = data;
+		}
+	}
+	set_screen_dirty(term->screen, y, y);
+
+}
+#endif /* CONFIG_UTF_8 */
+
 void
 draw_text(struct terminal *term, int x, int y,
 	  unsigned char *text, int length,
@@ -287,6 +489,13 @@ draw_text(struct terminal *term, int x, int y,
 
 	assert(text && length >= 0);
 	if_assert_failed return;
+
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		draw_text_utf8(term, x, y, text, length, attr, color);
+		return;
+	}
+#endif /* CONFIG_UTF_8 */
 
 	if (length <= 0) return;
 	pos = get_char(term, x, y);

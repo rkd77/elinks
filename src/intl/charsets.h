@@ -51,8 +51,21 @@ unsigned char *convert_string(struct conv_table *convert_table,
 int get_cp_index(unsigned char *);
 unsigned char *get_cp_name(int);
 unsigned char *get_cp_mime_name(int);
-int is_cp_special(int);
+int is_cp_utf8(int);
 void free_conv_table(void);
+#ifdef CONFIG_UTF_8
+inline unsigned char *encode_utf_8(unicode_val_T);
+inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
+inline int utf8charlen(const unsigned char *);
+int utf8_char2cells(unsigned char *, unsigned char *);
+int utf8_ptr2cells(unsigned char *, unsigned char *);
+int utf8_ptr2chars(unsigned char *, unsigned char *);
+int utf8_cells2bytes(unsigned char *, int, unsigned char *);
+inline int unicode_to_cell(unicode_val_T);
+inline int strlen_utf8(unsigned char **);
+inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
+#endif /* CONFIG_UTF_8 */
+
 unsigned char *cp2utf_8(int, int);
 
 unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);

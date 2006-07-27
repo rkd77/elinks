@@ -11,6 +11,7 @@ struct session;
 struct term_event;
 struct terminal;
 struct uri;
+struct conv_table;
 
 void set_link(struct document_view *doc_view);
 void clear_link(struct terminal *term, struct document_view *doc_view);

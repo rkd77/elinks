@@ -200,7 +200,14 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 
 	if (!text[0]) return 0;
 
-	return L_TEXT_SPACE + strlen(text) - !!mi->hotkey_pos + R_TEXT_SPACE;
+#ifdef CONFIG_UTF_8
+	if (term->utf8)
+		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL)
+		       - !!mi->hotkey_pos + R_TEXT_SPACE;
+	else
+#endif /* CONFIG_UTF_8 */
+		return L_TEXT_SPACE + strlen(text)
+		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 }
 
 /* Get desired width for right text in menu item, accounting spacing. */
@@ -360,17 +367,31 @@ set_menu_selection(struct menu *menu, int pos)
 	int_bounds(&menu->first, 0, menu->size - height);
 }
 
+/* width - number of standard terminal cells to be displayed (text + whitespace
+ *         separators). For double-width glyph width == 2.
+ * len - length of text in bytes */
 static inline void
 draw_menu_left_text(struct terminal *term, unsigned char *text, int len,
 		    int x, int y, int width, struct color_pair *color)
 {
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
+	int max_len;
 
 	if (w <= 0) return;
 
 	if (len < 0) len = strlen(text);
 	if (!len) return;
-	if (len > w) len = w;
+
+#ifdef CONFIG_UTF_8
+	if (term->utf8) {
+		max_len = utf8_cells2bytes(text, w, NULL);
+		if (max_len <= 0)
+			return;
+	} else
+#endif /* CONFIG_UTF_8 */
+		max_len = w;
+
+	if (len > max_len) len = max_len;
 
 	draw_text(term, x + L_TEXT_SPACE, y, text, len, 0, color);
 }
@@ -389,6 +410,10 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	int xbase = x + L_TEXT_SPACE;
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
 	int hk_state = 0;
+#ifdef CONFIG_UTF_8
+	unsigned char *text2, *end;
+#endif
+
 #ifdef CONFIG_DEBUG
 	/* For redundant hotkeys highlighting. */
 	int double_hk = 0;
@@ -405,6 +430,10 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 		hk_color_sel = tmp;
 	}
 
+#ifdef CONFIG_UTF_8
+	if (term->utf8) goto utf8;
+#endif /* CONFIG_UTF_8 */
+
 	for (x = 0; x - !!hk_state < w && (c = text[x]); x++) {
 		if (!hk_state && x == hotkey_pos - 1) {
 			hk_state = 1;
@@ -417,12 +446,78 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 				  (double_hk ? hk_color_sel : hk_color));
 #else
 			draw_char(term, xbase + x - 1, y, c, hk_attr, hk_color);
-#endif
+#endif /* CONFIG_DEBUG */
 			hk_state = 2;
 		} else {
 			draw_char(term, xbase + x - !!hk_state, y, c, 0, color);
 		}
 	}
+	return;
+
+#ifdef CONFIG_UTF_8
+utf8:
+	end = strchr(text, '\0');
+	text2 = text;
+	for (x = 0; x - !!hk_state < w && *text2; x++) {
+		unicode_val_T data;
+
+		data = utf_8_to_unicode(&text2, end);
+		if (!hk_state && (int)(text2 - text) == hotkey_pos) {
+			hk_state = 1;
+			continue;
+		}
+		if (hk_state == 1) {
+			if (unicode_to_cell(data) == 2) {
+				if (x < w && xbase + x < term->width) {
+#ifdef CONFIG_DEBUG
+					draw_char(term, xbase + x - 1, y,
+						  data, hk_attr,
+						  (double_hk ? hk_color_sel
+						             : hk_color));
+#else
+					draw_char(term, xbase + x - 1, y,
+						  data, hk_attr, hk_color);
+#endif /* CONFIG_DEBUG */
+					x++;
+					draw_char(term, xbase + x - 1, y,
+						  UCS_NO_CHAR, 0, hk_color);
+				} else {
+					draw_char(term, xbase + x - 1, y,
+						  ' ', 0, hk_color);
+				}
+			} else {
+#ifdef CONFIG_DEBUG
+				draw_char(term, xbase + x - 1, y,
+					  data, hk_attr,
+					  (double_hk ? hk_color_sel
+					   	     : hk_color));
+#else
+				draw_char(term, xbase + x - 1, y,
+					  data, hk_attr, hk_color);
+#endif /* CONFIG_DEBUG */
+			}
+			hk_state = 2;
+		} else {
+			if (unicode_to_cell(data) == 2) {
+				if (x - !!hk_state + 1 < w &&
+				    xbase + x - !!hk_state + 1 < term->width) {
+					draw_char(term, xbase + x - !!hk_state,
+						  y, data, 0, color);
+					x++;
+					draw_char(term, xbase + x - !!hk_state,
+						  y, UCS_NO_CHAR, 0, color);
+				} else {
+					draw_char(term, xbase + x - !!hk_state,
+						  y, ' ', 0, color);
+				}
+			} else {
+				draw_char(term, xbase + x - !!hk_state,
+					  y, data, 0, color);
+			}
+		}
+
+	}
+#endif /* CONFIG_UTF_8 */
 }
 
 static inline void
@@ -465,7 +560,15 @@ display_menu(struct terminal *term, struct menu *menu)
 		/* Draw shadow */
 		draw_shadow(term, &menu->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			fix_dwchar_around_box(term, &box, 1, 2, 1);
+#endif /* CONFIG_UTF_8 */
 	}
+#ifdef CONFIG_UTF_8
+	else if(term->utf8)
+		fix_dwchar_around_box(term, &box, 1, 0, 0);
+#endif /* CONFIG_UTF_8 */
 
 	menu_height = box.height;
 	box.height = 1;
@@ -1005,18 +1108,33 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 		int l = mi->hotkey_pos;
 		int textlen;
 		int selected = (i == menu->selected);
+		int screencnt;
 
 		if (mi_text_translate(mi))
 			text = _(text, term);
 
 		textlen = strlen(text) - !!l;
+#ifdef CONFIG_UTF_8
+		if (term->utf8)
+			screencnt = utf8_ptr2cells(text, NULL) - !!l;
+		else
+#endif /* CONFIG_UTF_8 */
+			screencnt = textlen;
 
 		if (selected) {
 			color = selected_color;
 			box.x = p;
-			box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
-				    + textlen
-				    + R_TEXT_SPACE + R_MAINTEXT_SPACE;
+#ifdef CONFIG_UTF_8
+			if (term->utf8)
+				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
+					+ screencnt
+					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
+			else
+#endif /* CONFIG_UTF_8 */
+				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
+					+ textlen
+					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
+
 			draw_box(term, &box, ' ', 0, color);
 			set_cursor(term, p, 0, 1);
 			set_window_ptr(menu->win, p, 1);
@@ -1034,7 +1152,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 					    color);
 		}
 
-		p += textlen;
+		p += screencnt;
 
 		if (p >= term->width - R_MAINMENU_SPACE)
 			break;
@@ -1045,6 +1163,22 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	menu->last = i - 1;
 	int_lower_bound(&menu->last, menu->first);
 	if (menu->last < menu->size - 1) {
+#ifdef CONFIG_UTF_8
+		if (term->utf8) {
+			struct screen_char *schar;
+
+			schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);
+			/* Is second cell of double-width char on the place where
+			 * first char of the R_MAINMENU_SPACE will be displayed? */
+			if (schar->data == UCS_NO_CHAR) {
+				/* Replace double-width char with ' '. */
+				schar++;
+				draw_char_data(term, term->width - R_MAINMENU_SPACE - 1,
+						0, ' ');
+			}
+		}
+#endif
+
 		set_box(&box,
 			term->width - R_MAINMENU_SPACE, 0,
 			R_MAINMENU_SPACE, 1);

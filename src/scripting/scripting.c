@@ -24,10 +24,14 @@
 #include "scripting/ruby/ruby.h"
 #include "scripting/smjs/smjs.h"
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 
 /* Error reporting. */
 
-#if defined(CONFIG_SCRIPTING_RUBY) || defined(CONFIG_SCRIPTING_SPIDERMONKEY)
+#if defined(CONFIG_SCRIPTING_RUBY) || defined(CONFIG_SCRIPTING_SPIDERMONKEY) || defined(CONFIG_SCRIPTING_PYTHON)
 void
 report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)
@@ -38,6 +42,7 @@ report_scripting_error(struct module *module, struct session *ses,
 	if (!ses) {
 		if (list_empty(terminals)) {
 			usrerror("[%s error] %s", module->name, msg);
+			sleep(3);
 			return;
 		}
 

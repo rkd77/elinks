@@ -9,6 +9,11 @@
 #endif
 
 #include <ctype.h> /* tolower(), isprint() */
+
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#include <wctype.h>
+#endif
+
 #include <sys/types.h> /* FreeBSD needs this before regex.h */
 #ifdef HAVE_REGEX_H
 #include <regex.h>
@@ -22,6 +27,7 @@
 #include "config/kbdbind.h"
 #include "document/document.h"
 #include "document/view.h"
+#include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
@@ -44,9 +50,15 @@
 
 static INIT_INPUT_HISTORY(search_history);
 
+#undef UCHAR
+#ifdef CONFIG_UTF_8
+#define UCHAR unicode_val_T
+#else
+#define UCHAR unsigned char
+#endif
 
 static inline void
-add_srch_chr(struct document *document, unsigned char c, int x, int y, int nn)
+add_srch_chr(struct document *document, UCHAR c, int x, int y, int nn)
 {
 	assert(document);
 	if_assert_failed return;
@@ -146,7 +158,7 @@ get_srch(struct document *document)
 			     x++);
 
 			for (; x < width; x++) {
-				unsigned char c = document->data[y].chars[x].data;
+				UCHAR c = document->data[y].chars[x].data;
 				int count = 0;
 				int xx;
 
@@ -441,18 +453,58 @@ is_in_range_regex(struct document *document, int y, int height,
 }
 #endif /* HAVE_REGEX_H */
 
-/* Returns an allocated string which is a lowered copy of passed one. */
-static unsigned char *
-lowered_string(unsigned char *text, int textlen)
+static UCHAR *
+memacpy_u(unsigned char *text, int textlen, int utf8)
 {
-	unsigned char *ret;
+#ifdef CONFIG_UTF_8
+	UCHAR *mem = mem_alloc((textlen + 1) * sizeof(UCHAR));
 
-	if (textlen < 0) textlen = strlen(text);
+	if (!mem) return NULL;
+	if (utf8) {
+		int i;
 
-	ret = mem_calloc(1, textlen + 1);
+		for (i = 0; i < textlen; i++)
+			mem[i] = utf_8_to_unicode(&text, text + 7);
+	} else {
+		int i;
+
+		for (i = 0; i < textlen; i++)
+			mem[i] = text[i];
+	}
+	mem[textlen] = 0;
+	return mem;
+#else
+	return memacpy(text, textlen);
+#endif
+}
+
+static int
+strlen_u(unsigned char *text, int utf8)
+{
+#ifdef CONFIG_UTF_8
+	if (utf8)
+		return strlen_utf8(&text);
+#endif
+	return strlen(text);
+
+}
+
+/* Returns an allocated string which is a lowered copy of passed one. */
+static UCHAR *
+lowered_string(unsigned char *text, int textlen, int utf8)
+{
+	UCHAR *ret;
+
+	if (textlen < 0) textlen = strlen_u(text, utf8);
+
+	ret = memacpy_u(text, textlen, utf8);
 	if (ret && textlen) {
 		do {
-			ret[textlen] = tolower(text[textlen]);
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+			ret[textlen] = utf8 ? towlower(ret[textlen]) : tolower(ret[textlen]);
+#else
+			ret[textlen] = tolower(ret[textlen]);
+#endif
 		} while (textlen--);
 	}
 
@@ -463,14 +515,14 @@ static int
 is_in_range_plain(struct document *document, int y, int height,
 		  unsigned char *text, int textlen,
 		  int *min, int *max,
-		  struct search *s1, struct search *s2)
+		  struct search *s1, struct search *s2, int utf8)
 {
 	int yy = y + height;
-	unsigned char *txt;
+	UCHAR *txt;
 	int found = 0;
 	int case_sensitive = get_opt_bool("document.browse.search.case");
 
-	txt = case_sensitive ? stracpy(text) : lowered_string(text, textlen);
+	txt = case_sensitive ? memacpy_u(text, textlen, utf8) : lowered_string(text, textlen, utf8);
 	if (!txt) return -1;
 
 	/* TODO: This is a great candidate for nice optimizations. Fresh CS
@@ -478,9 +530,11 @@ is_in_range_plain(struct document *document, int y, int height,
 	 * trivial, probably a starter; very fast as well) or Turbo-BM (or
 	 * maybe some other Boyer-Moore variant, I don't feel that strong in
 	 * this area), hmm?  >:) --pasky */
-
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#define maybe_tolower(c) (case_sensitive ? (c) : utf8 ? towlower(c) : tolower(c))
+#else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
-
+#endif
 	for (; s1 <= s2; s1++) {
 		int i;
 
@@ -513,18 +567,23 @@ srch_failed:
 	return found;
 }
 
+
 static int
 is_in_range(struct document *document, int y, int height,
 	    unsigned char *text, int *min, int *max)
 {
 	struct search *s1, *s2;
 	int textlen;
+	int utf8 = 0;
 
 	assert(document && text && min && max);
 	if_assert_failed return -1;
 
+#ifdef CONFIG_UTF_8
+	utf8 = document->options.utf8;
+#endif
 	*min = INT_MAX, *max = 0;
-	textlen = strlen(text);
+	textlen = strlen_u(text, utf8);
 
 	if (get_range(document, y, height, textlen, &s1, &s2))
 		return 0;
@@ -535,7 +594,7 @@ is_in_range(struct document *document, int y, int height,
 					 min, max, s1, s2);
 #endif
 	return is_in_range_plain(document, y, height, text, textlen,
-				 min, max, s1, s2);
+				 min, max, s1, s2, utf8);
 }
 
 #define realloc_points(pts, size) \
@@ -543,24 +602,28 @@ is_in_range(struct document *document, int y, int height,
 
 static void
 get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,
-		   int l, struct search *s1, struct search *s2)
+		   int l, struct search *s1, struct search *s2, int utf8)
 {
-	unsigned char *txt;
+	UCHAR *txt;
 	struct point *points = NULL;
 	struct box *box;
 	int xoffset, yoffset;
 	int len = 0;
 	int case_sensitive = get_opt_bool("document.browse.search.case");
 
-	txt = case_sensitive ? stracpy(*doc_view->search_word)
-			     : lowered_string(*doc_view->search_word, l);
+	txt = case_sensitive ? memacpy_u(*doc_view->search_word, l, utf8)
+			     : lowered_string(*doc_view->search_word, l, utf8);
 	if (!txt) return;
 
 	box = &doc_view->box;
 	xoffset = box->x - doc_view->vs->x;
 	yoffset = box->y - doc_view->vs->y;
 
+#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#define maybe_tolower(c) (case_sensitive ? (c) : utf8 ? towlower(c) : tolower(c))
+#else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
+#endif
 
 	for (; s1 <= s2; s1++) {
 		int i;
@@ -671,7 +734,7 @@ get_searched_regex(struct document_view *doc_view, struct point **pt, int *pl,
 #endif /* HAVE_REGEX_H */
 
 static void
-get_searched(struct document_view *doc_view, struct point **pt, int *pl)
+get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf8)
 {
 	struct search *s1, *s2;
 	int l;
@@ -683,7 +746,7 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl)
 		return;
 
 	get_search_data(doc_view->document);
-	l = strlen(*doc_view->search_word);
+	l = strlen_u(*doc_view->search_word, utf8);
 	if (get_range(doc_view->document, doc_view->vs->y,
 		      doc_view->box.height, l, &s1, &s2)) {
 		*pt = NULL;
@@ -697,7 +760,7 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl)
 		get_searched_regex(doc_view, pt, pl, l, s1, s2);
 	else
 #endif
-		get_searched_plain(doc_view, pt, pl, l, s1, s2);
+		get_searched_plain(doc_view, pt, pl, l, s1, s2, utf8);
 }
 
 /* Highlighting of searched strings. */
@@ -706,6 +769,7 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 {
 	struct point *pt = NULL;
 	int len = 0;
+	int utf8 = 0;
 
 	assert(term && doc_view);
 	if_assert_failed return;
@@ -713,7 +777,10 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 	if (!has_search_word(doc_view))
 		return;
 
-	get_searched(doc_view, &pt, &len);
+#ifdef CONFIG_UTF_8
+	utf8 = doc_view->document->options.utf8;
+#endif
+	get_searched(doc_view, &pt, &len, utf8);
 	if (len) {
 		int i;
 		struct color_pair *color = get_bfu_color(term, "searched");
@@ -856,6 +923,11 @@ point_intersect(struct point *p1, int l1, struct point *p2, int l2)
 static int
 find_next_link_in_search(struct document_view *doc_view, int direction)
 {
+	int utf8 = 0;
+#ifdef CONFIG_UTF_8
+	utf8 = doc_view->document->options.utf8;
+#endif
+
 	assert(doc_view && doc_view->vs);
 	if_assert_failed return 0;
 
@@ -879,7 +951,7 @@ find_next_link_in_search(struct document_view *doc_view, int direction)
 
 nt:
 		link = &doc_view->document->links[doc_view->vs->current_link];
-		get_searched(doc_view, &pt, &len);
+		get_searched(doc_view, &pt, &len, utf8);
 		if (point_intersect(pt, len, link->points, link->npoints)) {
 			mem_free(pt);
 			return 0;
@@ -1174,7 +1246,7 @@ fixup_typeahead_match(struct session *ses, struct document_view *doc_view)
 	doc_view->box.height += 1;
 }
 
-static inline unsigned char
+static inline UCHAR
 get_document_char(struct document *document, int x, int y)
 {
 	return (document->height > y && document->data[y].length > x)
@@ -1196,7 +1268,7 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 	for (i = 0, j = 0; text[j] && i < end; i++, j++) {
 		int x = link->points[i].x;
 		int y = link->points[i].y;
-		unsigned char data = get_document_char(doc_view->document, x, y);
+		UCHAR data = get_document_char(doc_view->document, x, y);
 
 		/* Text wrapping might remove space chars from the link
 		 * position array so try to align the matched typeahead text
@@ -1311,7 +1383,6 @@ text_typeahead_handler(struct input_line *line, int action_id)
 				 * clears the last search. */
 				search_for_do(ses, buffer, direction, 0);
 			}
-			goto_current_link(ses, doc_view, 0);
 			return INPUT_LINE_CANCEL;
 
 		case ACT_EDIT_PREVIOUS_ITEM:

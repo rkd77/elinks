@@ -32,29 +32,29 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 
 	if (pFunc && PyCallable_Check(pFunc)) {
 		PyObject *pValue;
-		unsigned char *str;
+		unsigned char *current_url;
 
 		if (!ses || !have_location(ses)) {
-			str = NULL;
+			current_url = NULL;
 		} else {
-			str = struri(cur_loc(ses)->vs.uri);
+			current_url = struri(cur_loc(ses)->vs.uri);
 		}
 
-		pValue = PyObject_CallFunction(pFunc, "ss", *url, str);
-		if (pValue && (pValue != Py_None)) {
-			const unsigned char *res = PyString_AsString(pValue);
+		pValue = PyObject_CallFunction(pFunc, "ss", *url, current_url);
+		if (pValue) {
+			if (pValue != Py_None) {
+				const unsigned char *str;
+				unsigned char *new_url;
 
-			if (res) {
-				unsigned char *new_url = stracpy((unsigned char *)res);
-
-				if (new_url) mem_free_set(url, new_url);
+				str = PyString_AsString(pValue);
+				if (str) {
+					new_url = stracpy((unsigned char *)str);
+					if (new_url) mem_free_set(url, new_url);
+				}
 			}
 			Py_DECREF(pValue);
 		} else {
-			if (PyErr_Occurred()) {
-				PyErr_Print();
-				PyErr_Clear();
-			}
+			alert_python_error(ses);
 		}
 	}
 }
@@ -72,26 +72,26 @@ script_hook_goto_url(va_list ap, void *data)
 }
 
 static void
-do_script_hook_follow_url(unsigned char **url)
+do_script_hook_follow_url(struct session *ses, unsigned char **url)
 {
 	PyObject *pFunc = PyDict_GetItemString(pDict, "follow_url_hook");
 
 	if (pFunc && PyCallable_Check(pFunc)) {
 		PyObject *pValue = PyObject_CallFunction(pFunc, "s", *url);
-		if (pValue && (pValue != Py_None)) {
-			const unsigned char *str = PyString_AsString(pValue);
-			unsigned char *new_url;
+		if (pValue) {
+			if (pValue != Py_None) {
+				const unsigned char *str;
+				unsigned char *new_url;
 
-			if (str) {
-				new_url = stracpy((unsigned char *)str);
-				if (new_url) mem_free_set(url, new_url);
+				str = PyString_AsString(pValue);
+				if (str) {
+					new_url = stracpy((unsigned char *)str);
+					if (new_url) mem_free_set(url, new_url);
+				}
 			}
 			Py_DECREF(pValue);
 		} else {
-			if (PyErr_Occurred()) {
-				PyErr_Print();
-				PyErr_Clear();
-			}
+			alert_python_error(ses);
 		}
 	}
 }
@@ -100,15 +100,17 @@ static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
 	unsigned char **url = va_arg(ap, unsigned char **);
+	struct session *ses = va_arg(ap, struct session *);
 
 	if (pDict && *url)
-		do_script_hook_follow_url(url);
+		do_script_hook_follow_url(ses, url);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
 static void
-do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
+do_script_hook_pre_format_html(struct session *ses, unsigned char *url,
+			       struct cache_entry *cached,
 			       struct fragment *fragment)
 {
 	PyObject *pFunc = PyDict_GetItemString(pDict, "pre_format_html_hook");
@@ -118,21 +120,21 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 		                                         fragment->data,
 		                                         fragment->length);
 
-		if (pValue && (pValue != Py_None)) {
-			const unsigned char *str = PyString_AsString(pValue);
+		if (pValue) {
+			if (pValue != Py_None) {
+				const unsigned char *str;
+				int len;
 
-			if (str) {
-				int len = PyString_Size(pValue); /* strlen(str); */
-
-				add_fragment(cached, 0, str, len);
-				normalize_cache_entry(cached, len);
+				str = PyString_AsString(pValue);
+				if (str) {
+					len = PyString_Size(pValue);
+					add_fragment(cached, 0, str, len);
+					normalize_cache_entry(cached, len);
+				}
 			}
 			Py_DECREF(pValue);
 		} else {
-			if (PyErr_Occurred()) {
-				PyErr_Print();
-				PyErr_Clear();
-			}
+			alert_python_error(ses);
 		}
 	}
 }
@@ -146,7 +148,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	unsigned char *url = struri(cached->uri);
 
 	if (pDict && ses && url && cached->length && *fragment->data)
-		do_script_hook_pre_format_html(url, cached, fragment);
+		do_script_hook_pre_format_html(ses, url, cached, fragment);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
@@ -159,20 +161,21 @@ do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
 	if (pFunc && PyCallable_Check(pFunc)) {
 		PyObject *pValue = PyObject_CallFunction(pFunc, "s", url);
 
-		if (pValue && (pValue != Py_None)) {
-			const unsigned char *str = PyString_AsString(pValue);
+		if (pValue) {
+			if (pValue != Py_None) {
+				const unsigned char *str;
+				unsigned char *new_url;
 
-			if (str) {
-				unsigned char *new_url = stracpy((unsigned char *)str);
-
-				if (new_url) mem_free_set(new_proxy_url, new_url);
+				str = PyString_AsString(pValue);
+				if (str) {
+					new_url = stracpy((unsigned char *)str);
+					if (new_url) mem_free_set(new_proxy_url,
+								  new_url);
+				}
 			}
 			Py_DECREF(pValue);
 		} else {
-			if (PyErr_Occurred()) {
-				PyErr_Print();
-				PyErr_Clear();
-			}
+			alert_python_error(NULL);
 		}
 	}
 }
@@ -198,14 +201,9 @@ do_script_hook_quit(void)
 		PyObject *pValue = PyObject_CallFunction(pFunc, NULL);
 
 		if (pValue) {
-			if (pValue != Py_None) {
-				Py_DECREF(pValue);
-			}
+			Py_DECREF(pValue);
 		} else {
-			if (PyErr_Occurred()) {
-				PyErr_Print();
-				PyErr_Clear();
-			}
+			alert_python_error(NULL);
 		}
 	}
 }

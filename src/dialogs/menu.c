@@ -581,7 +581,12 @@ query_file(struct session *ses, struct uri *uri, void *data,
 	add_mime_filename_to_string(&def, uri);
 
 	/* Remove the %-ugliness for display */
-	decode_uri_string_for_display(&def);
+#ifdef CONFIG_UTF_8
+	if (ses->tab->term->utf8)
+		decode_uri_string(&def);
+	else
+#endif /* CONFIG_UTF_8 */
+		decode_uri_string_for_display(&def);
 
 	if (interactive) {
 		input_dialog(ses->tab->term, NULL,

@@ -162,6 +162,12 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	object_unlock(term->spec);
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
+#ifdef CONFIG_UTF_8
+	/* Probably not best place for set this. But now we finally have
+	 * term->spec and term->utf8 should be set before decode session info.
+	 * --Scrool */
+	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io");
+#endif /* CONFIG_UTF_8 */
 }
 
 #ifdef CONFIG_MOUSE
@@ -259,9 +265,13 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			return 0;
 		}
 
-		if (interlink->utf_8.len) {
-			utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
+#ifdef CONFIG_UTF_8
+		utf8_io = !!term->utf8;
+#else
+		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
+#endif /* CONFIG_UTF_8 */
 
+		if (interlink->utf_8.len) {
 			if ((key & 0xC0) == 0x80 && utf8_io) {
 				interlink->utf_8.ucs <<= 6;
 				interlink->utf_8.ucs |= key & 0x3F;
@@ -280,11 +290,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			}
 		}
 
-		if (key < 0x80 || key > 0xFF
-		    || (utf8_io == -1
-			? !get_opt_bool_tree(term->spec, "utf_8_io")
-			: !utf8_io)) {
-
+		if (key < 0x80 || key > 0xFF || !utf8_io) {
 			term_send_event(term, ev);
 			break;
 

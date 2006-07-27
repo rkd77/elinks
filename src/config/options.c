@@ -516,7 +516,7 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 			return NULL;
 		}
 	}
-	
+
 	add_opt_rec(tree, path, option);
 	return option;
 }

@@ -377,7 +377,7 @@ do_move_bookmark(struct bookmark *dest, int insert_as_child,
 				if (box2->top == bm->box_item)
 					listbox_sel_move(widget_data, 1);
 			}
-				
+
 			del_from_list(bm->box_item);
 			del_from_list(bm);
 			if (insert_as_child) {

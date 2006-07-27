@@ -119,8 +119,7 @@ static css_applier_T css_appliers[CSS_PT_LAST] = {
 static void
 examine_element(struct html_context *html_context, struct css_selector *base,
 		enum css_selector_type seltype, enum css_selector_relation rel,
-                struct list_head *selectors, struct html_element *element,
-                struct list_head *html_stack)
+                struct list_head *selectors, struct html_element *element)
 {
 	struct css_selector *selector;
 	unsigned char *code;
@@ -138,7 +137,8 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		dbginfo(sel, type, base); \
 		merge_css_selectors(base, sel); \
 		/* Ancestor matches? */ \
-		if ((struct list_head *) element->next != html_stack) { \
+		if ((struct list_head *) element->next \
+		     != &html_context->stack) { \
 			struct html_element *ancestor; \
 			/* This is less effective than doing reverse iterations,
 			 * first over sel->leaves and then over the HTML stack,
@@ -147,21 +147,20 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 			 * have to duplicate the whole examine_element(), so if
 			 * profiles won't show it really costs... */ \
 			for (ancestor = element->next; \
-			     (struct list_head *) ancestor != html_stack;\
+			     (struct list_head *) ancestor \
+			      != &html_context->stack;\
 			     ancestor = ancestor->next) \
 				examine_element(html_context, base, \
 						CST_ELEMENT, CSR_ANCESTOR, \
-						&sel->leaves, ancestor, \
-						html_stack); \
+						&sel->leaves, ancestor); \
 			examine_element(html_context, base, \
 			                CST_ELEMENT, CSR_PARENT, \
-			                &sel->leaves, element->next, \
-			                html_stack); \
+			                &sel->leaves, element->next); \
 		} \
 		/* More specific matches? */ \
 		examine_element(html_context, base, type + 1, \
 		                CSR_SPECIFITY, \
-		                &sel->leaves, element, html_stack); \
+		                &sel->leaves, element); \
 	}
 
 	if (seltype <= CST_ELEMENT && element->namelen) {
@@ -235,7 +234,7 @@ get_css_selector_for_element(struct html_context *html_context,
 #endif
 
 	examine_element(html_context, selector, CST_ELEMENT, CSR_ROOT,
-	                &css->selectors, element, html_stack);
+	                &css->selectors, element);
 
 #ifdef DEBUG_CSS
 	DBG("Element %.*s applied.", element->namelen, element->name);
