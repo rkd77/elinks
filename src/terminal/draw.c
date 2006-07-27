@@ -150,9 +150,10 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 		struct screen_char *sc;
 
 		if (line->data == UCS_NO_CHAR && x == 0) {
-			sc = line;
-			unicode_val_T data_save = sc->data;
+			unicode_val_T data_save;
 
+			sc = line;
+			data_save = sc->data;
 			sc->data = ' ';
 			copy_screen_chars(screen_char, line, 1);
 			sc->data = data_save;
@@ -164,9 +165,10 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 		/* Instead of displaying double-width character at last column
 		 * display only space. */
 		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
+			unicode_val_T data_save;
+			
 			sc = &line[size - 1];
-			unicode_val_T data_save = sc->data;
-
+			data_save = sc->data;
 			sc->data = ' ';
 			copy_screen_chars(screen_char, line, size);
 			sc->data = data_save;

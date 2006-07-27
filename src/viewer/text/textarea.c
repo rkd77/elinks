@@ -785,6 +785,8 @@ do_op_home(struct form_state *fs, struct line_info *line, int current)
 static int
 do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	int old_state;
+	
 	if (current == -1) return 0;
 
 	if (!(current - !!fs->state_cell)) return 1;
@@ -795,7 +797,7 @@ do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 		return 0;
 	}
 
-	int old_state = fs->state;
+	old_state = fs->state;
 	if (fs->state_cell) {
 		int len = utf8_ptr2cells(fs->value + line[current - 1].start,
 			                 fs->value + fs->state_cell);
@@ -839,6 +841,8 @@ do_op_up(struct form_state *fs, struct line_info *line, int current)
 static int
 do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	int old_state;
+
 	if (current == -1) return 0;
 
 	if (line[current + 1 - !!fs->state_cell].start == -1) return 1;
@@ -849,7 +853,7 @@ do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 		return 0;
 	}
 
-	int old_state = fs->state;
+	old_state = fs->state;
 	if (fs->state_cell) {
 		int len = utf8_ptr2cells(fs->value + line[current - 1].start,
 			                 fs->value + fs->state_cell);
@@ -1083,6 +1087,10 @@ textarea_op_enter(struct form_state *fs, struct form_control *fc)
 static int
 do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	int old_state;
+	int new_state;
+	unsigned char *new_value;
+
 	if (!utf8) {
 		fs->state = int_max(fs->state - 1, 0);
 		return 0;
@@ -1094,10 +1102,7 @@ do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 		return 0;
 	}
 
-	int old_state = fs->state;
-	int new_state;
-	unsigned char *new_value;
-
+	old_state = fs->state;
 	new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 	new_state = new_value - fs->value;
 
@@ -1113,6 +1118,9 @@ do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
+	unsigned char *text, *end;
+	int old_state;
+
 	if (!utf8) {
 		/* TODO: zle */
 		fs->state = int_min(fs->state + 1, strlen(fs->value));
@@ -1124,9 +1132,9 @@ do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8
 		return 0;
 	}
 
-	unsigned char *text = fs->value + fs->state;
-	unsigned char *end = strchr(text, '\0');
-	int old_state = fs->state;
+	text = fs->value + fs->state;
+	end = strchr(text, '\0');
+	old_state = fs->state;
 	utf_8_to_unicode(&text, end);
 
 	fs->state = text - fs->value;

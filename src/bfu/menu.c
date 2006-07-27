@@ -410,6 +410,9 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	int xbase = x + L_TEXT_SPACE;
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
 	int hk_state = 0;
+#ifdef CONFIG_UTF_8
+	unsigned char *text2, *end;
+#endif
 
 #ifdef CONFIG_DEBUG
 	/* For redundant hotkeys highlighting. */
@@ -450,8 +453,8 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 		}
 	}
 	return;
+
 #ifdef CONFIG_UTF_8
-	unsigned char *text2, *end;
 utf8:
 	end = strchr(text, '\0');
 	text2 = text;
