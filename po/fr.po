@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-26 09:43+0200\n"
-"PO-Revision-Date: 2006-06-26 09:45+0200\n"
+"POT-Creation-Date: 2006-07-27 15:44+0200\n"
+"PO-Revision-Date: 2006-07-27 15:45+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,14 +30,14 @@ msgid "Press space to expand this folder."
 msgstr "Pressez espace pour déployer le dossier."
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
-#: src/bfu/hierbox.c:441 src/bfu/inpfield.c:255 src/bfu/msgbox.c:173
+#: src/bfu/hierbox.c:441 src/bfu/inpfield.c:256 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:393
 #: src/cookies/dialogs.c:356 src/cookies/dialogs.c:454 src/dialogs/edit.c:98
-#: src/dialogs/info.c:134 src/dialogs/options.c:218 src/dialogs/options.c:299
+#: src/dialogs/info.c:134 src/dialogs/options.c:220 src/dialogs/options.c:301
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:111
-#: src/protocol/protocol.c:236 src/scripting/lua/core.c:378
-#: src/scripting/lua/core.c:459 src/session/session.c:801
-#: src/viewer/text/search.c:1594
+#: src/protocol/protocol.c:236 src/scripting/lua/core.c:379
+#: src/scripting/lua/core.c:460 src/session/session.c:806
+#: src/viewer/text/search.c:1665
 msgid "~OK"
 msgstr "~OK"
 
@@ -133,53 +133,53 @@ msgstr "~Oui"
 msgid "~No"
 msgstr "~Non"
 
-#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1013
-#: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
-#: src/viewer/text/search.c:1613
+#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1085
+#: src/viewer/text/search.c:1093 src/viewer/text/search.c:1109
+#: src/viewer/text/search.c:1684
 msgid "Search"
 msgstr "Chercher"
 
-#: src/bfu/hierbox.c:941 src/viewer/text/search.c:1014
+#: src/bfu/hierbox.c:941 src/viewer/text/search.c:1086
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
 
 #: src/bfu/hierbox.c:970 src/config/dialogs.c:169 src/config/dialogs.c:359
 #: src/config/dialogs.c:506 src/cookies/dialogs.c:34 src/cookies/dialogs.c:350
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:374
-#: src/scripting/lua/core.c:375 src/scripting/lua/core.c:456
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:375
+#: src/scripting/lua/core.c:376 src/scripting/lua/core.c:457
 msgid "Name"
 msgstr "Nom"
 
-#: src/bfu/inpfield.c:71 src/bfu/inpfield.c:78
+#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79
 msgid "Bad number"
 msgstr "Nombre incorrect"
 
-#: src/bfu/inpfield.c:72
+#: src/bfu/inpfield.c:73
 msgid "Number expected in field"
 msgstr "Saisir un nombre"
 
-#: src/bfu/inpfield.c:80
+#: src/bfu/inpfield.c:81
 #, c-format
 msgid "Number should be in the range from %d to %d."
 msgstr "Le nombre doit être compris entre %d et %d."
 
-#: src/bfu/inpfield.c:98 src/config/dialogs.c:460
+#: src/bfu/inpfield.c:99 src/config/dialogs.c:460
 msgid "Bad string"
 msgstr "Mauvaise chaîne"
 
-#: src/bfu/inpfield.c:99
+#: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
 msgstr "Chaîne vide non autorisée"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
-#: src/bfu/inpfield.c:255 src/config/dialogs.c:394 src/cookies/dialogs.c:357
+#: src/bfu/inpfield.c:256 src/config/dialogs.c:394 src/cookies/dialogs.c:357
 #: src/cookies/dialogs.c:455 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:221 src/dialogs/options.c:300 src/mime/dialogs.c:132
-#: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:802
-#: src/scripting/lua/core.c:379 src/scripting/lua/core.c:460
-#: src/session/download.c:580 src/session/download.c:1188
-#: src/viewer/text/search.c:1595
+#: src/dialogs/options.c:223 src/dialogs/options.c:302 src/mime/dialogs.c:132
+#: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:812
+#: src/scripting/lua/core.c:380 src/scripting/lua/core.c:461
+#: src/session/download.c:637 src/session/download.c:1236
+#: src/viewer/text/search.c:1666
 msgid "~Cancel"
 msgstr "~Annuler"
 
@@ -192,7 +192,7 @@ msgid "Digital clock in the status bar."
 msgstr "Horloge digitale dans la barre de status."
 
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1166
-#: src/config/options.inc:1173 src/ecmascript/ecmascript.c:43
+#: src/config/options.inc:1173 src/ecmascript/ecmascript.c:44
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
 msgid "Enable"
@@ -263,7 +263,7 @@ msgstr ""
 "\n"
 "'-' indique généralement que la LED est inactive."
 
-#: src/bfu/menu.c:771
+#: src/bfu/menu.c:874
 msgid "Search menu/"
 msgstr "Chercher menu/"
 
@@ -373,7 +373,7 @@ msgstr "Titre"
 #: src/bookmarks/dialogs.c:73 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:159
-#: src/scripting/lua/core.c:376
+#: src/scripting/lua/core.c:377
 msgid "URL"
 msgstr "URL"
 
@@ -433,7 +433,7 @@ msgstr "Créer dossier"
 msgid "Folder name"
 msgstr "Nom du dossier"
 
-#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:370
+#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:371
 msgid "Edit bookmark"
 msgstr "Modifier un signet"
 
@@ -644,7 +644,7 @@ msgstr "Supprimer cette entrée de cache ?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cache/dialogs.c:229 src/config/dialogs.c:529 src/cookies/dialogs.c:473
-#: src/dialogs/download.c:250 src/dialogs/download.c:480
+#: src/dialogs/download.c:255 src/dialogs/download.c:492
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:258
 msgid "~Info"
@@ -1866,10 +1866,10 @@ msgstr "N/A"
 msgid "Description"
 msgstr "Description"
 
-#: src/config/dialogs.c:321 src/protocol/bittorrent/dialogs.c:594
-#: src/protocol/protocol.c:230 src/session/session.c:282
-#: src/session/session.c:964 src/viewer/text/textarea.c:331
-#: src/viewer/text/textarea.c:338
+#: src/config/dialogs.c:321 src/protocol/bittorrent/dialogs.c:599
+#: src/protocol/protocol.c:230 src/session/session.c:287
+#: src/session/session.c:969 src/viewer/text/textarea.c:570
+#: src/viewer/text/textarea.c:577
 msgid "Error"
 msgstr "Erreur"
 
@@ -1908,8 +1908,8 @@ msgstr "Impossible d'ajouter une option ici."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:534 src/config/dialogs.c:948 src/cookies/dialogs.c:479
-#: src/dialogs/options.c:220 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:789 src/session/download.c:1172
+#: src/dialogs/options.c:222 src/formhist/dialogs.c:214
+#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1220
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
 
@@ -1940,7 +1940,7 @@ msgid ""
 "Are you sure you want to replace it?"
 msgstr ""
 "La combinaison de touches \"%s\" est déjà utilisée pour l'action \"%s\".\n"
-"Etes-vous sûr de vouloir remplacer ?"
+"Etes-vous sûr de vouloir la remplacer ?"
 
 #: src/config/dialogs.c:854 src/config/dialogs.c:871 src/config/dialogs.c:908
 msgid "Add keybinding"
@@ -1983,8 +1983,8 @@ msgid ""
 "directory."
 msgstr ""
 "Impossible de trouver ou de créer le répertoire de configuration d'ELinks. "
-"Merci de vérifier si vous avez la variable $HOME correctement configurée et "
-"si vous avez le droit d'écrire dans votre répertoire personnel."
+"Merci de vérifier que la variable $HOME correctement configurée et que vous "
+"avez le droit d'écrire dans votre répertoire personnel."
 
 #: src/config/kbdbind.c:221
 msgid "Main mapping"
@@ -2591,7 +2591,7 @@ msgstr ""
 "Inverser les couleurs de fond et de texte pour mettre le lien en évidence."
 
 #: src/config/options.inc:296 src/config/options.inc:875
-#: src/dialogs/options.c:215
+#: src/dialogs/options.c:217
 msgid "Underline"
 msgstr "Souligné"
 
@@ -2661,7 +2661,7 @@ msgstr ""
 
 #: src/config/options.inc:335
 msgid "Number keys select links"
-msgstr "Sélection des liens par le pavé numérique"
+msgstr "Sélection des liens par les touches numériques"
 
 #: src/config/options.inc:337
 msgid ""
@@ -2671,8 +2671,8 @@ msgid ""
 "1 means if document.browse.links.numbering = 1\n"
 "2 means always"
 msgstr ""
-"Le pavé numérique sélectionne les liens plutôt que de spécifier les\n"
-"préfixes de commande:\n"
+"Les touches numériques permettent la sélection des liens plutôt que\n"
+"de spécifier les préfixes de commande:\n"
 "0 jamais\n"
 "1 si document.browse.links.numbering = 1 (numérotation des liens)\n"
 "2 toujours"
@@ -3226,7 +3226,7 @@ msgid "Dump output options."
 msgstr "Options de sortie (dump)."
 
 #: src/config/options.inc:630 src/config/options.inc:879
-#: src/config/opttypes.c:394 src/dialogs/document.c:163
+#: src/config/opttypes.c:407 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Jeu de caractères"
 
@@ -3617,7 +3617,7 @@ msgstr ""
 "3 KOI-8\n"
 "4 FreeBSD"
 
-#: src/config/options.inc:837 src/dialogs/options.c:211
+#: src/config/options.inc:837 src/dialogs/options.c:213
 msgid "Switch fonts for line drawing"
 msgstr "Echanger les fontes pour dessiner les lignes"
 
@@ -3630,7 +3630,7 @@ msgstr ""
 "Echanger les fontes de caractères pour le dessin des lignes, seulement\n"
 "intéressant avec le terminal de type linux."
 
-#: src/config/options.inc:843 src/dialogs/options.c:216
+#: src/config/options.inc:843 src/dialogs/options.c:218
 msgid "UTF-8 I/O"
 msgstr "E/S UTF-8"
 
@@ -3641,10 +3641,10 @@ msgid ""
 msgstr ""
 "Activer les E/S en UTF8 pour les terminaux Unicode. Notez que, pour "
 "l'instant,\n"
-"seulement une partie de l'UTF8 est utilisée, en accord avec le jeu de "
-"caractères du terminal."
+"seule une partie de l'UTF8 est utilisée, en accord avec le jeu de caractères "
+"du terminal."
 
-#: src/config/options.inc:848 src/dialogs/options.c:212
+#: src/config/options.inc:848 src/dialogs/options.c:214
 msgid "Restrict frames in cp850/852"
 msgstr "Limiter les cadres dans cp850/852"
 
@@ -3657,7 +3657,7 @@ msgstr ""
 "N'a du sens que pour les terminaux linux utilisant les jeux de\n"
 "caractères cp850/852."
 
-#: src/config/options.inc:853 src/dialogs/options.c:213
+#: src/config/options.inc:853 src/dialogs/options.c:215
 msgid "Block cursor"
 msgstr "Bloquer le curseur"
 
@@ -3686,7 +3686,7 @@ msgstr ""
 "1 mode 16 couleurs, les couleurs ANSI sont utilisées\n"
 "2 mode 256 couleurs, utilise les codes RGB d'XTerm"
 
-#: src/config/options.inc:867 src/dialogs/options.c:214
+#: src/config/options.inc:867 src/dialogs/options.c:216
 msgid "Transparency"
 msgstr "Transparence"
 
@@ -3900,7 +3900,7 @@ msgstr "Texte"
 msgid "Dialog text colors."
 msgstr "Couleurs du texte des dialogues."
 
-#: src/config/options.inc:1026 src/viewer/text/form.c:1503
+#: src/config/options.inc:1026 src/viewer/text/form.c:1789
 msgid "Checkbox"
 msgstr "Case à cocher"
 
@@ -3948,7 +3948,7 @@ msgstr "Raccourci du bouton"
 msgid "Selected button shortcut"
 msgstr "Raccourci du bouton sélectionné"
 
-#: src/config/options.inc:1054 src/viewer/text/form.c:1507
+#: src/config/options.inc:1054 src/viewer/text/form.c:1793
 msgid "Text field"
 msgstr "Champ texte"
 
@@ -4254,7 +4254,7 @@ msgid "When closing a tab show confirmation dialog."
 msgstr ""
 "Lors de la fermeture d'un onglet, afficher un dialogue de confirmation."
 
-#: src/config/options.inc:1217 src/config/opttypes.c:395
+#: src/config/options.inc:1217 src/config/opttypes.c:408
 msgid "Language"
 msgstr "Langue"
 
@@ -4413,60 +4413,60 @@ msgstr ""
 msgid "Read error"
 msgstr "Erreur de lecture"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:402
 msgid "Boolean"
 msgstr "Booléen"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:402
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:390
+#: src/config/opttypes.c:403
 msgid "Integer"
 msgstr "Entier"
 
-#: src/config/opttypes.c:390 src/config/opttypes.c:391
+#: src/config/opttypes.c:403 src/config/opttypes.c:404
 msgid "<num>"
 msgstr "<nombre>"
 
-#: src/config/opttypes.c:391
+#: src/config/opttypes.c:404
 msgid "Longint"
 msgstr "Entier long"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:405
 msgid "String"
 msgstr "Chaîne"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:405
 msgid "<str>"
 msgstr "<chaîne>"
 
-#: src/config/opttypes.c:394
+#: src/config/opttypes.c:407
 msgid "<codepage>"
 msgstr "<jeu de caractères>"
 
-#: src/config/opttypes.c:395
+#: src/config/opttypes.c:408
 msgid "<language>"
 msgstr "<langue>"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:409
 msgid "Color"
 msgstr "Couleur"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:409
 msgid "<color|#rrggbb>"
 msgstr "<couleur|#rrvvbb>"
 
-#: src/config/opttypes.c:398
+#: src/config/opttypes.c:411
 msgid "Special"
 msgstr "Spécial"
 
-#: src/config/opttypes.c:400
+#: src/config/opttypes.c:413
 msgid "Alias"
 msgstr "Alias"
 
 #. tree
-#: src/config/opttypes.c:403
+#: src/config/opttypes.c:416
 msgid "Folder"
 msgstr "Dossier"
 
@@ -4694,7 +4694,7 @@ msgid "Add ~server"
 msgstr "Ajouter un ser~veur"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:478 src/dialogs/download.c:486 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:478 src/dialogs/download.c:498 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:260
 msgid "C~lear"
 msgstr "~Effacer"
@@ -4759,80 +4759,80 @@ msgstr "Info. en-têtes internes"
 msgid "No header info."
 msgstr "Aucune information d'en-tête."
 
-#: src/dialogs/download.c:238 src/dialogs/menu.c:588
+#: src/dialogs/download.c:243 src/dialogs/menu.c:593
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:398
 msgid "Download"
 msgstr "Téléchargement"
 
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:245
+#: src/dialogs/download.c:250
 msgid "~Background"
 msgstr "Arrière-~plan"
 
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:246
+#: src/dialogs/download.c:251
 msgid "Background with ~notify"
 msgstr "Arrière-plan et ~notifier"
 
 #. accelerator_context(display_download, src/dialogs/download.c:download_buttons)
-#: src/dialogs/download.c:253 src/dialogs/download.c:481
+#: src/dialogs/download.c:258 src/dialogs/download.c:493
 msgid "~Abort"
 msgstr "~Arrêter"
 
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:258
+#: src/dialogs/download.c:263
 msgid "Abort and ~delete file"
 msgstr "Arrêter et ~supprimer fichier"
 
 #. cant_delete_item
-#: src/dialogs/download.c:411
+#: src/dialogs/download.c:423
 #, c-format
 msgid "Sorry, but download \"%s\" cannot be interrupted."
 msgstr "Désolé, mais le téléchargement \"%s\" ne peut être supprimé."
 
 #. cant_delete_used_item
-#: src/dialogs/download.c:413
+#: src/dialogs/download.c:425
 #, c-format
 msgid "Sorry, but download \"%s\" is being used by something else."
 msgstr ""
 "Désolé, mais le téléchargement \"%s\" est actuellement utilisé ailleurs."
 
 #. delete_marked_items_title
-#: src/dialogs/download.c:419
+#: src/dialogs/download.c:431
 msgid "Interrupt marked downloads"
 msgstr "Interrompre les téléchargements marqués"
 
 #. delete_marked_items
-#: src/dialogs/download.c:421
+#: src/dialogs/download.c:433
 msgid "Interrupt marked downloads?"
 msgstr "Interrompre les téléchargements marqués ?"
 
 #. delete_item_title
-#: src/dialogs/download.c:427
+#: src/dialogs/download.c:439
 msgid "Interrupt download"
 msgstr "Interrompre le téléchargement"
 
-#: src/dialogs/download.c:429
+#: src/dialogs/download.c:441
 #, c-format
 msgid "Interrupt this download?"
 msgstr "Interrompre ce téléchargement ?"
 
 #. clear_all_items_title
-#: src/dialogs/download.c:431
+#: src/dialogs/download.c:443
 msgid "Interrupt all downloads"
 msgstr "Interrompre tous les téléchargements"
 
 #. clear_all_items_title
-#: src/dialogs/download.c:433
+#: src/dialogs/download.c:445
 msgid "Do you really want to interrupt all downloads?"
 msgstr "Interrompre tous les téléchargements en cours ?"
 
 #. This requires more work to make locking work and query the user
-#: src/dialogs/download.c:484
+#: src/dialogs/download.c:496
 msgid "Abort and delete file"
 msgstr "Arrêter et supprimer fichier"
 
-#: src/dialogs/download.c:491
+#: src/dialogs/download.c:503
 msgid "Download manager"
 msgstr "Gestionnaire de téléchargements"
 
@@ -5385,24 +5385,24 @@ msgstr "A~ide"
 msgid "Go to URL"
 msgstr "Atteindre l'URL"
 
-#: src/dialogs/menu.c:588
+#: src/dialogs/menu.c:593
 msgid "Save to file"
 msgstr "Enregistrer dans le fichier"
 
-#: src/dialogs/menu.c:923
+#: src/dialogs/menu.c:928
 msgid "Empty directory"
 msgstr "Répertoire vide"
 
-#: src/dialogs/menu.c:967
+#: src/dialogs/menu.c:972
 msgid "Directories:"
 msgstr "Répertoires:"
 
-#: src/dialogs/menu.c:980
+#: src/dialogs/menu.c:985
 msgid "Files:"
 msgstr "Fichiers:"
 
 #. 2 '\n' + 1 '\0'
-#: src/dialogs/options.c:159
+#: src/dialogs/options.c:161
 #, c-format
 msgid ""
 "The environmental variable TERM is set to '%s'.\n"
@@ -5419,63 +5419,63 @@ msgstr ""
 "valeur de TERM. Cela vous permet de configurer indépendemment\n"
 "chacun des terminaux où vous utilisez ELinks."
 
-#: src/dialogs/options.c:185
+#: src/dialogs/options.c:187
 msgid "Terminal options"
 msgstr "Options du terminal"
 
-#: src/dialogs/options.c:194
+#: src/dialogs/options.c:196
 msgid "Frame handling:"
 msgstr "Gestion des cadres:"
 
-#: src/dialogs/options.c:195
+#: src/dialogs/options.c:197
 msgid "No frames"
 msgstr "Aucun cadre"
 
-#: src/dialogs/options.c:196
+#: src/dialogs/options.c:198
 msgid "VT 100 frames"
 msgstr "Cadres VT 100"
 
-#: src/dialogs/options.c:197
+#: src/dialogs/options.c:199
 msgid "Linux or OS/2 frames"
 msgstr "Cadres Linux ou OS/2"
 
-#: src/dialogs/options.c:198
+#: src/dialogs/options.c:200
 msgid "FreeBSD frames"
 msgstr "Cadres FreeBSD"
 
-#: src/dialogs/options.c:199
+#: src/dialogs/options.c:201
 msgid "KOI8-R frames"
 msgstr "Cadres KOI8-R"
 
-#: src/dialogs/options.c:201
+#: src/dialogs/options.c:203
 msgid "Color mode:"
 msgstr "Mode couleurs:"
 
-#: src/dialogs/options.c:202
+#: src/dialogs/options.c:204
 msgid "No colors (mono)"
 msgstr "Monochrome"
 
-#: src/dialogs/options.c:203
+#: src/dialogs/options.c:205
 msgid "16 colors"
 msgstr "16 couleurs"
 
-#: src/dialogs/options.c:205
+#: src/dialogs/options.c:207
 msgid "88 colors"
 msgstr "88 couleurs"
 
-#: src/dialogs/options.c:208
+#: src/dialogs/options.c:210
 msgid "256 colors"
 msgstr "256 couleurs"
 
-#: src/dialogs/options.c:293
+#: src/dialogs/options.c:295
 msgid "Resize terminal"
 msgstr "Redimensionner le terminal"
 
-#: src/dialogs/options.c:296
+#: src/dialogs/options.c:298
 msgid "Width="
 msgstr "Largeur="
 
-#: src/dialogs/options.c:297
+#: src/dialogs/options.c:299
 msgid "Height="
 msgstr "Hauteur="
 
@@ -5538,29 +5538,29 @@ msgstr "temps restant estimé"
 msgid "ETA"
 msgstr "ETA"
 
-#: src/dialogs/status.c:191
+#: src/dialogs/status.c:184
 msgid "Enter a mark to set"
 msgstr "Entrez une marque"
 
-#: src/dialogs/status.c:195
+#: src/dialogs/status.c:188
 msgid "Enter a mark to which to jump"
 msgstr "Entrez la marque à trouver"
 
-#: src/dialogs/status.c:202
+#: src/dialogs/status.c:195
 #, c-format
 msgid "Keyboard prefix: %d"
 msgstr "Préfixe clavier: %d"
 
-#: src/dialogs/status.c:226
+#: src/dialogs/status.c:219
 #, c-format
 msgid "Cursor position: %dx%d"
 msgstr "Position du curseur: %dx%d"
 
-#: src/dialogs/status.c:326
+#: src/dialogs/status.c:319
 msgid "Untitled"
 msgstr "Sans titre"
 
-#: src/dialogs/status.c:328
+#: src/dialogs/status.c:321
 msgid "No document"
 msgstr "Aucun document"
 
@@ -5614,31 +5614,31 @@ msgstr ""
 "Laisser à \"\" pour utiliser le style initial du document."
 
 #. name:
-#: src/ecmascript/ecmascript.c:39 src/ecmascript/ecmascript.c:310
+#: src/ecmascript/ecmascript.c:40 src/ecmascript/ecmascript.c:311
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
-#: src/ecmascript/ecmascript.c:41
+#: src/ecmascript/ecmascript.c:42
 msgid "ECMAScript options."
 msgstr "Options d'ECMAScript."
 
-#: src/ecmascript/ecmascript.c:45
+#: src/ecmascript/ecmascript.c:46
 msgid "Whether to run those scripts inside of documents."
 msgstr "Exécuter ou non ces scripts présents dans les documents."
 
-#: src/ecmascript/ecmascript.c:47
+#: src/ecmascript/ecmascript.c:48
 msgid "Script error reporting"
 msgstr "Rapport d'erreur de script"
 
-#: src/ecmascript/ecmascript.c:49
+#: src/ecmascript/ecmascript.c:50
 msgid "Open a message box when a script reports an error."
 msgstr "Ouvrir une boîte de message quand un script produit une erreur."
 
-#: src/ecmascript/ecmascript.c:51
+#: src/ecmascript/ecmascript.c:52
 msgid "Ignore <noscript> content"
 msgstr "Ignorer le contenu de <noscript>"
 
-#: src/ecmascript/ecmascript.c:53
+#: src/ecmascript/ecmascript.c:54
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -5646,29 +5646,29 @@ msgstr ""
 "Ignorer ou non le contenu du tag <noscript> quand ECMAScript\n"
 "est actif."
 
-#: src/ecmascript/ecmascript.c:56
+#: src/ecmascript/ecmascript.c:57
 msgid "Maximum execution time"
 msgstr "Temps maximal d'exécution"
 
-#: src/ecmascript/ecmascript.c:58
+#: src/ecmascript/ecmascript.c:59
 msgid "Maximum execution time in seconds for a script."
 msgstr "Temps maximal pour l'exécution d'un script, en secondes."
 
-#: src/ecmascript/ecmascript.c:60
+#: src/ecmascript/ecmascript.c:61
 msgid "Pop-up window blocking"
 msgstr "Blocage des fenêtres Javascript (popups)"
 
-#: src/ecmascript/ecmascript.c:62
+#: src/ecmascript/ecmascript.c:63
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 "Interdire ou non l'ouverture de fenêtres ou d'onglets\n"
 "par les scripts."
 
-#: src/ecmascript/ecmascript.c:255
+#: src/ecmascript/ecmascript.c:256
 msgid "JavaScript Emergency"
 msgstr "Alerte JavaScript"
 
-#: src/ecmascript/ecmascript.c:257
+#: src/ecmascript/ecmascript.c:258
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -7377,36 +7377,36 @@ msgid_plural "%u unavailable"
 msgstr[0] "%u indisponible"
 msgstr[1] "%u indisponibles"
 
-#: src/protocol/bittorrent/dialogs.c:579 src/session/session.c:273
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Incapable de récupérer %s"
 
-#: src/protocol/bittorrent/dialogs.c:726
+#: src/protocol/bittorrent/dialogs.c:736
 #, c-format
 msgid "What would you like to do with the file '%s'?"
 msgstr "Que voulez-vous faire avec le fichier '%s' ?"
 
-#: src/protocol/bittorrent/dialogs.c:742
+#: src/protocol/bittorrent/dialogs.c:752
 msgid "Information about the torrent"
 msgstr "Informations sur le torrent"
 
-#: src/protocol/bittorrent/dialogs.c:764 src/session/download.c:1078
+#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1121
 msgid "What to do?"
 msgstr "Que faire ?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
-#: src/protocol/bittorrent/dialogs.c:786
+#: src/protocol/bittorrent/dialogs.c:796
 msgid "Down~load"
 msgstr "Té~lécharger"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:792 src/session/download.c:1178
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1226
 msgid "~Display"
 msgstr "A~fficher"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:796 src/session/download.c:1182
+#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1230
 msgid "Show ~header"
 msgstr "~Montrer les en-têtes"
 
@@ -7436,19 +7436,19 @@ msgstr "Exécuter ou non les scripts CGI locaux."
 msgid "CGI"
 msgstr "CGI"
 
-#: src/protocol/file/file.c:41
+#: src/protocol/file/file.c:42
 msgid "Local files"
 msgstr "Fichiers locaux"
 
-#: src/protocol/file/file.c:43
+#: src/protocol/file/file.c:44
 msgid "Options specific to local browsing."
 msgstr "Options pour la navigation locale."
 
-#: src/protocol/file/file.c:45
+#: src/protocol/file/file.c:46
 msgid "Allow reading special files"
 msgstr "Autoriser la lecture des fichiers spéciaux"
 
-#: src/protocol/file/file.c:47
+#: src/protocol/file/file.c:48
 msgid ""
 "Whether to allow reading from non-regular files.\n"
 "Note this can be dangerous; reading /dev/urandom or\n"
@@ -7458,11 +7458,11 @@ msgstr ""
 "Notez que cela peut être dangereux; lire /dev/urandom\n"
 "ou /dev/zero peut ruiner votre journée !"
 
-#: src/protocol/file/file.c:51
+#: src/protocol/file/file.c:52
 msgid "Show hidden files in directory listing"
 msgstr "Montrer les fichiers cachés"
 
-#: src/protocol/file/file.c:53
+#: src/protocol/file/file.c:54
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
 "hidden in local directories listing."
@@ -7471,11 +7471,11 @@ msgstr ""
 "seront cachés lors de la visualisation du contenu d'un répertoire\n"
 "local."
 
-#: src/protocol/file/file.c:56
+#: src/protocol/file/file.c:57
 msgid "Try encoding extensions"
 msgstr "Deviner l'extension des fichiers encodés"
 
-#: src/protocol/file/file.c:58
+#: src/protocol/file/file.c:59
 msgid ""
 "When set, if we can't open a file named 'filename', we'll try\n"
 "to open 'filename' with some encoding extension appended\n"
@@ -7486,7 +7486,7 @@ msgstr ""
 "'un_nom.gz'); cela dépend des encodages supportés."
 
 #. name:
-#: src/protocol/file/file.c:66
+#: src/protocol/file/file.c:67
 msgid "File"
 msgstr "File"
 
@@ -8088,41 +8088,41 @@ msgstr "Aucun programme"
 msgid "No program specified for protocol %s."
 msgstr "Aucun programme spécifié pour le protocole %s."
 
-#: src/scripting/lua/core.c:300
+#: src/scripting/lua/core.c:301
 msgid "Error registering event hook"
 msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 
-#: src/scripting/lua/core.c:451
+#: src/scripting/lua/core.c:452
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:726
+#: src/scripting/lua/core.c:731
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:876
+#: src/scripting/lua/core.c:881
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:876
+#: src/scripting/lua/core.c:881
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
-#: src/scripting/ruby/core.c:130 src/scripting/ruby/core.c:183
+#: src/scripting/ruby/core.c:131 src/scripting/ruby/core.c:184
 msgid "Ruby Message"
 msgstr "Message Ruby"
 
-#: src/scripting/scripting.c:54
+#: src/scripting/scripting.c:59
 #, c-format
 msgid "An error occurred while running a %s script"
 msgstr "Une erreur s'est produite lors de l'exécution d'un script %s"
 
-#: src/scripting/scripting.c:60
+#: src/scripting/scripting.c:65
 msgid "Browser scripting error"
 msgstr "Erreur de script"
 
 #. name:
-#: src/scripting/scripting.c:88
+#: src/scripting/scripting.c:93
 msgid "Scripting"
 msgstr "Scripting"
 
@@ -8131,11 +8131,11 @@ msgid "User script alert"
 msgstr "Alerte script utilisateur"
 
 #: src/session/download.c:235 src/session/download.c:359
-#: src/session/download.c:534 src/session/download.c:629
+#: src/session/download.c:591 src/session/download.c:679
 msgid "Download error"
 msgstr "Erreur de téléchargement"
 
-#: src/session/download.c:236 src/session/download.c:630
+#: src/session/download.c:236 src/session/download.c:680
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8155,16 +8155,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:535
+#: src/session/download.c:592
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' est un répertoire."
 
-#: src/session/download.c:569
+#: src/session/download.c:626
 msgid "File exists"
 msgstr "Fichier existant"
 
-#: src/session/download.c:570
+#: src/session/download.c:627
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8180,58 +8180,58 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:577
+#: src/session/download.c:634
 msgid "Sa~ve under the alternative name"
 msgstr "Sau~ver sous un nom alternatif"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:578
+#: src/session/download.c:635
 msgid "~Overwrite the original file"
 msgstr "Ecraser le fichier ~original"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:579
+#: src/session/download.c:636
 msgid "~Resume download of the original file"
 msgstr "~Reprendre le téléchargement du fichier original"
 
-#: src/session/download.c:1081
+#: src/session/download.c:1124
 msgid "Unknown type"
 msgstr "Type inconnu"
 
-#: src/session/download.c:1098
+#: src/session/download.c:1146
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Que voulez-vous faire avec le fichier '%s' (type: %s%s%s) ?"
 
-#: src/session/download.c:1128
+#: src/session/download.c:1176
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Programme ('%' sera remplacé par le nom du fichier)"
 
-#: src/session/download.c:1133
+#: src/session/download.c:1181
 msgid "The output of the program will be shown in the tab"
 msgstr "La sortie du programme sera montrée dans l'onglet"
 
-#: src/session/download.c:1137
+#: src/session/download.c:1185
 msgid "Block the terminal"
 msgstr "Bloquer le terminal"
 
-#: src/session/download.c:1144
+#: src/session/download.c:1192
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Le fichier sera ouvert avec le programme '%s'."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1165
+#: src/session/download.c:1213
 msgid "~Open"
 msgstr "~Ouvrir"
 
-#: src/session/session.c:751 src/session/session.c:770 src/session/task.c:270
-#: src/viewer/text/textarea.c:385
+#: src/session/session.c:756 src/session/session.c:775 src/session/task.c:270
+#: src/viewer/text/textarea.c:624
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:752
+#: src/session/session.c:757
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -8250,7 +8250,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:771
+#: src/session/session.c:776
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8271,11 +8271,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:796
+#: src/session/session.c:801
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:797
+#: src/session/session.c:802
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8337,16 +8337,16 @@ msgstr "Mauvaise taille de terminal: %d, %d"
 msgid "Warning: terminal name contains illicit chars."
 msgstr "Attention: le nom du terminal contient des caractères illicites."
 
-#: src/terminal/event.c:225
+#: src/terminal/event.c:231
 msgid "Failed to create session."
 msgstr "Echec de création de session."
 
-#: src/terminal/event.c:315
+#: src/terminal/event.c:321
 #, c-format
 msgid "Bad event %d"
 msgstr "Mauvais évènement %d"
 
-#: src/terminal/event.c:355
+#: src/terminal/event.c:361
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
@@ -8363,16 +8363,16 @@ msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
 msgid "Do you really want to close all except the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer tout sauf l'onglet courant ?"
 
-#: src/viewer/dump/dump.c:83
+#: src/viewer/dump/dump.c:84
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Ne peut écrire sur la sortie standard: %s"
 
-#: src/viewer/dump/dump.c:86
+#: src/viewer/dump/dump.c:87
 msgid "Can't write to stdout."
 msgstr "Ne peut écrire sur la sortie standard."
 
-#: src/viewer/dump/dump.c:276
+#: src/viewer/dump/dump.c:277
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr "Protocole de l'URL non supporté (%s)."
@@ -8386,280 +8386,280 @@ msgstr "Ancre manquante"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "L'ancre recherchée \"#%s\" n'existe pas."
 
-#: src/viewer/text/form.c:862
+#: src/viewer/text/form.c:949
 msgid "Error while posting form"
 msgstr "Erreur lors de l'envoi du formulaire"
 
-#: src/viewer/text/form.c:863
+#: src/viewer/text/form.c:950
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Impossible de charger le fichier %s: %s"
 
-#: src/viewer/text/form.c:1488
+#: src/viewer/text/form.c:1774
 msgid "Reset form"
 msgstr "Réinitialiser le formulaire"
 
-#: src/viewer/text/form.c:1490
+#: src/viewer/text/form.c:1776
 msgid "Harmless button"
 msgstr "Bouton sans impact"
 
-#: src/viewer/text/form.c:1498
+#: src/viewer/text/form.c:1784
 msgid "Submit form to"
 msgstr "Envoi du formulaire à"
 
-#: src/viewer/text/form.c:1499
+#: src/viewer/text/form.c:1785
 msgid "Post form to"
 msgstr "Transfert du formulaire à"
 
-#: src/viewer/text/form.c:1501
+#: src/viewer/text/form.c:1787
 msgid "Radio button"
 msgstr "Bouton radio"
 
-#: src/viewer/text/form.c:1505
+#: src/viewer/text/form.c:1791
 msgid "Select field"
 msgstr "Liste"
 
-#: src/viewer/text/form.c:1509
+#: src/viewer/text/form.c:1795
 msgid "Text area"
 msgstr "Champ texte multiligne"
 
-#: src/viewer/text/form.c:1511
+#: src/viewer/text/form.c:1797
 msgid "File upload"
 msgstr "Envoi de fichier"
 
-#: src/viewer/text/form.c:1513
+#: src/viewer/text/form.c:1799
 msgid "Password field"
 msgstr "Champ mot de passe"
 
-#: src/viewer/text/form.c:1551
+#: src/viewer/text/form.c:1837
 msgid "name"
 msgstr "Nom"
 
-#: src/viewer/text/form.c:1563
+#: src/viewer/text/form.c:1849
 msgid "value"
 msgstr "Valeur"
 
-#: src/viewer/text/form.c:1576
+#: src/viewer/text/form.c:1862
 msgid "read only"
 msgstr "lecture seule"
 
-#: src/viewer/text/form.c:1587
+#: src/viewer/text/form.c:1873
 #, c-format
 msgid "press %s to navigate"
 msgstr "pressez %s pour naviguer"
 
-#: src/viewer/text/form.c:1589
+#: src/viewer/text/form.c:1875
 #, c-format
 msgid "press %s to edit"
 msgstr "pressez %s pour éditer"
 
-#: src/viewer/text/form.c:1625
+#: src/viewer/text/form.c:1911
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "pressez %s pour soumettre à %s"
 
-#: src/viewer/text/form.c:1627
+#: src/viewer/text/form.c:1913
 #, c-format
 msgid "press %s to post to %s"
 msgstr "pressez %s pour poster à %s"
 
-#: src/viewer/text/form.c:1729
+#: src/viewer/text/form.c:2015
 msgid "Useless button"
 msgstr "Bouton inutile"
 
-#: src/viewer/text/form.c:1731
+#: src/viewer/text/form.c:2017
 msgid "Submit button"
 msgstr "Bouton Soumettre"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1237
+#: src/viewer/text/link.c:1249
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1242
+#: src/viewer/text/link.c:1254
 msgid "~Follow link"
 msgstr "~Suivre le lien"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1244
+#: src/viewer/text/link.c:1256
 msgid "Follow link and r~eload"
 msgstr "Suivre le lien et ~recharger"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1248
+#: src/viewer/text/link.c:1260
 msgid "Open in new ~window"
 msgstr "Ouvrir dans une nouvelle ~fenêtre"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1250
+#: src/viewer/text/link.c:1262
 msgid "Open in new ~tab"
 msgstr "Ouvrir dans un nouvel ongle~t"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1252
+#: src/viewer/text/link.c:1264
 msgid "Open in new tab in ~background"
 msgstr "Ouvrir dans un nouvel onglet en arrière-~plan"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1257
+#: src/viewer/text/link.c:1269
 msgid "~Download link"
 msgstr "~Enregistrer le lien"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1260
+#: src/viewer/text/link.c:1272
 msgid "~Add link to bookmarks"
 msgstr "~Ajouter ce lien aux signets"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1264
+#: src/viewer/text/link.c:1276
 msgid "Pass link URI to e~xternal command"
 msgstr "Passer l'URI du lien à une commande e~xterne"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1275 src/viewer/text/link.c:1315
+#: src/viewer/text/link.c:1287 src/viewer/text/link.c:1327
 msgid "~Reset form"
 msgstr "Remettre à ~zéro le formulaire"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1290
+#: src/viewer/text/link.c:1302
 msgid "Open in ~external editor"
 msgstr "Ouvrir dans un ~éditeur externe"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1298
+#: src/viewer/text/link.c:1310
 msgid "~Submit form"
 msgstr "~Envoyer le formulaire"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1299
+#: src/viewer/text/link.c:1311
 msgid "Submit form and rel~oad"
 msgstr "Envoyer le formulaire et ~recharger"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1315
 msgid "Submit form and open in new ~window"
 msgstr "Envoyer le formulaire et ouvrir dans une nouvelle ~fenêtre"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1305
+#: src/viewer/text/link.c:1317
 msgid "Submit form and open in new ~tab"
 msgstr "Envoyer le formulaire et ouvrir un ~onglet"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1308
+#: src/viewer/text/link.c:1320
 msgid "Submit form and open in new tab in ~background"
 msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1313
+#: src/viewer/text/link.c:1325
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1320
+#: src/viewer/text/link.c:1332
 msgid "Form f~ields"
 msgstr "C~hamps de formulaire"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1327
+#: src/viewer/text/link.c:1339
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1329
+#: src/viewer/text/link.c:1341
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1338
+#: src/viewer/text/link.c:1350
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1386
+#: src/viewer/text/link.c:1420
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1391
+#: src/viewer/text/link.c:1425
 msgid "Usemap"
 msgstr "Usemap"
 
-#: src/viewer/text/search.c:1006
+#: src/viewer/text/search.c:1078
 msgid "Search hit top, continuing at bottom."
 msgstr "La recherche a atteint le haut du document, poursuite à partir du bas."
 
-#: src/viewer/text/search.c:1007
+#: src/viewer/text/search.c:1079
 msgid "Search hit bottom, continuing at top."
 msgstr "La recherche a atteint le bas du document, poursuite à partir du haut."
 
-#: src/viewer/text/search.c:1010
+#: src/viewer/text/search.c:1082
 msgid "No previous search"
 msgstr "Aucune clef de recherche"
 
-#: src/viewer/text/search.c:1022
+#: src/viewer/text/search.c:1094
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr "Ne peut compiler l'expression régulière '%s'"
 
-#: src/viewer/text/search.c:1065
+#: src/viewer/text/search.c:1137
 #, c-format
 msgid "No further matches for '%s'."
 msgstr "Aucune autre correspondance pour '%s'."
 
-#: src/viewer/text/search.c:1067
+#: src/viewer/text/search.c:1139
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr "Ne peut trouver un lien avec le texte '%s'."
 
-#: src/viewer/text/search.c:1069 src/viewer/text/search.c:1478
+#: src/viewer/text/search.c:1141 src/viewer/text/search.c:1549
 msgid "Typeahead"
 msgstr "Préfrappe"
 
-#: src/viewer/text/search.c:1480
+#: src/viewer/text/search.c:1551
 msgid "No links in current document"
 msgstr "Aucun lien dans le document courant"
 
-#: src/viewer/text/search.c:1558
+#: src/viewer/text/search.c:1629
 msgid "Search for text"
 msgstr "Recherche du texte"
 
-#: src/viewer/text/search.c:1588
+#: src/viewer/text/search.c:1659
 msgid "Normal search"
 msgstr "Plein texte"
 
-#: src/viewer/text/search.c:1589
+#: src/viewer/text/search.c:1660
 msgid "Regexp search"
 msgstr "Expression régulière"
 
-#: src/viewer/text/search.c:1590
+#: src/viewer/text/search.c:1661
 msgid "Extended regexp search"
 msgstr "Expression régulière étendue"
 
-#: src/viewer/text/search.c:1591
+#: src/viewer/text/search.c:1662
 msgid "Case sensitive"
 msgstr "Respecter la casse"
 
-#: src/viewer/text/search.c:1592
+#: src/viewer/text/search.c:1663
 msgid "Case insensitive"
 msgstr "Ignorer la casse"
 
-#: src/viewer/text/search.c:1616
+#: src/viewer/text/search.c:1687
 msgid "Search backward"
 msgstr "Chercher en arrière"
 
 #. name:
-#: src/viewer/text/search.c:1655
+#: src/viewer/text/search.c:1726
 msgid "Search History"
 msgstr "Historique des recherches"
 
-#: src/viewer/text/textarea.c:332
+#: src/viewer/text/textarea.c:571
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Vous ne pouvez utiliser un éditeur externe en mode anonyme."
 
-#: src/viewer/text/textarea.c:339
+#: src/viewer/text/textarea.c:578
 msgid "You can do this only on the master terminal"
 msgstr "Vous ne pouvez faire ça que dans le terminal maître"
 
-#: src/viewer/text/textarea.c:388
+#: src/viewer/text/textarea.c:627
 #, c-format
 msgid ""
 "You have exceeded the textarea's size limit: your input is %d bytes, but the "
