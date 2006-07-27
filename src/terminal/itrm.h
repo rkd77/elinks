@@ -27,9 +27,9 @@ struct itrm_in {
 	/* In a slave process, a file descriptor for a socket from
 	 * which it reads data sent by the master process.  The other
 	 * end of the socket connection is terminal.fdout in the
-	 * master process.  The format of this data is almost the same
-	 * as could be sent to the terminal (via itrm.out.std), but
-	 * there are special commands that begin with a null byte.
+	 * master process.  The format of these data is almost the
+	 * same as could be sent to the terminal (via itrm.out.std),
+	 * but there are special commands that begin with a null byte.
 	 *
 	 * In the master process, @sock is the same as @ctl, but
 	 * nothing actually uses it.  */
@@ -53,8 +53,9 @@ struct itrm_in {
 struct itrm_out {
 	/* A file descriptor for the standard output.  In some ports,
 	 * this is the terminal device itself; in others, this is a
-	 * pipe to an output thread.  In principle, the data format
-	 * depends on the terminal; but see bug 96.  */
+	 * pipe to an output thread.  The data format depends on the
+	 * terminal in principle, but this has not yet been
+	 * implemented; see bug 96.  */
 	int std;
 
 	/* A file descriptor for a pipe or socket to which this
@@ -63,7 +64,7 @@ struct itrm_out {
 	 * If the connection is from the master process to itself, it
 	 * uses a pipe; otherwise a socket.  The events are formatted
 	 * as struct term_event, but at the beginning of the
-	 * connection, a struct terminal_info and extra data is also
+	 * connection, a struct terminal_info and extra data are also
 	 * sent.  */
 	int sock;
 
@@ -91,6 +92,11 @@ struct itrm {
 	unsigned int blocked:1;		/* Whether it was blocked */
 	unsigned int altscreen:1;	/* Whether to use alternate screen */
 	unsigned int touched_title:1;	/* Whether the term title was changed */
+	/* The @remote flag is not set in regular slave terminals.
+	 * Instead, it means the itrm controls a preexisting terminal,
+	 * and windows should not be displayed on the terminal of the
+	 * itrm (but see bug 776: the master clears the terminal anyway);
+	 * thus the terminal init and done strings are not sent.  */
 	unsigned int remote:1;		/* Whether it is a remote session */
 };
 
