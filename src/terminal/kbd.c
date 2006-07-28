@@ -373,6 +373,8 @@ block_itrm(int fd)
 
 	ditrm->blocked = 1;
 	block_stdin();
+	kill_timer(&ditrm->timer);
+	ditrm->in.queue.len = 0;
 	unhandle_terminal_resize(ditrm->in.ctl);
 	send_done_sequence(ditrm->out.std, ditrm->altscreen);
 	tcsetattr(ditrm->in.ctl, TCSANOW, &ditrm->t);
@@ -626,13 +628,14 @@ kbd_timeout(struct itrm *itrm)
 
 	itrm->timer = TIMER_ID_UNDEF;
 
+	assertm(itrm->in.queue.len, "timeout on empty queue");
+	assert(!itrm->blocked);	/* block_itrm should have killed itrm->timer */
+	if_assert_failed return;
+
 	if (can_read(itrm->in.std)) {
 		in_kbd(itrm);
 		return;
 	}
-
-	assertm(itrm->in.queue.len, "timeout on empty queue");
-	if_assert_failed return;
 
 	set_kbd_term_event(&ev, KBD_ESC, KBD_MOD_NONE);
 	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
@@ -839,7 +842,7 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
  * Return the number of bytes removed from itrm->in.queue; at least 0.
  * If this function leaves the queue not full, it also reenables reading
  * from itrm->in.std.  (Because it does not add to the queue, it never
- * need disable reading.)  */
+ * need disable reading.)  On entry, the itrm must not be blocked.  */
 static int
 process_queue(struct itrm *itrm)
 {
@@ -847,6 +850,8 @@ process_queue(struct itrm *itrm)
 	int el = 0;
 
 	if (!itrm->in.queue.len) goto end;
+	assert(!itrm->blocked);
+	if_assert_failed return 0; /* unlike goto, don't enable reading */
 
 	set_kbd_term_event(&ev, KBD_UNDEF, KBD_MOD_NONE);
 
