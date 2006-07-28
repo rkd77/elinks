@@ -349,12 +349,10 @@ add_document_line(struct plain_renderer *renderer,
 			*template = saved_renderer_template;
 
 		} else if (line_char == ASCII_BS) {
-#if 0
 			if (!(expanded + cells)) {
 				/* We've backspaced to the start of the line */
-				continue;
+				goto next;
 			}
-#endif
 			if (pos > startpos)
 				pos--;  /* Backspace */
 
@@ -368,8 +366,10 @@ add_document_line(struct plain_renderer *renderer,
 					line[line_pos + charlen] = prev_char;
 
 				/* Go back and reparse the swapped characters */
-				if (line_pos - 2 >= 0)
-					line_pos -= 2;
+				if (line_pos - 2 >= 0) {
+					cells--;
+					line_pos--;
+				}
 				continue;
 			}
 
@@ -430,6 +430,7 @@ add_document_line(struct plain_renderer *renderer,
 
 			if (added_chars) {
 				line_pos += added_chars - 1;
+				cells += added_chars - 1;
 				pos += added_chars;
 			} else {
 #ifdef CONFIG_UTF_8
@@ -469,7 +470,7 @@ add_document_line(struct plain_renderer *renderer,
 
 			*template = saved_renderer_template;
 		}
-
+next:
 		line_pos += charlen;
 		cells += cell;
 	}
