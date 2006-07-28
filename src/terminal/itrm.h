@@ -44,7 +44,11 @@ struct itrm_in {
 	/* Bytes that have been received from @std but not yet
 	 * converted to events.  queue.data is allocated for
 	 * ITRM_IN_QUEUE_SIZE bytes and never resized.  The itrm
-	 * layer cannot parse control sequences longer than that.  */
+	 * layer cannot parse control sequences longer than that.
+	 * Anything that modifies queue.len should also call
+	 * unhandle_itrm_stdin() if the queue becomes full, or
+	 * handle_itrm_stdin() if the queue stops being full.
+	 * Those functions are internal to kbd.c.  */
 	struct itrm_queue queue;
 };
 

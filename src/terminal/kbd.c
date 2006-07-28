@@ -835,6 +835,11 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 
 /* I feeeeeel the neeeed ... to rewrite this ... --pasky */
 /* Just Do it ! --Zas */
+/* Parse one event from itrm->in.queue and append to itrm->out.queue.
+ * Return the number of bytes removed from itrm->in.queue; at least 0.
+ * If this function leaves the queue not full, it also reenables reading
+ * from itrm->in.std.  (Because it does not add to the queue, it never
+ * need disable reading.)  */
 static int
 process_queue(struct itrm *itrm)
 {
@@ -863,6 +868,10 @@ process_queue(struct itrm *itrm)
 	}
 #endif /* DEBUG_ITRM_QUEUE */
 
+	/* ELinks should also recognize U+009B CONTROL SEQUENCE INTRODUCER
+	 * as meaning the same as ESC 0x5B, and U+008F SINGLE SHIFT THREE as
+	 * meaning the same as ESC 0x4F, but those cannot yet be implemented
+	 * because of bug 777: the UTF-8 decoder is run too late.  */
 	if (itrm->in.queue.data[0] == ASCII_ESC) {
 		if (itrm->in.queue.len < 2) goto ret;
 		if (itrm->in.queue.data[1] == '[' || itrm->in.queue.data[1] == 'O') {
@@ -961,6 +970,10 @@ in_kbd(struct itrm *itrm)
 	while (process_queue(itrm));
 }
 
+/* Enable reading from itrm->in.std.  ELinks will read any available
+ * bytes from the tty into itrm->in.queue and then parse them.
+ * Reading should be enabled whenever itrm->in.queue is not full and
+ * itrm->blocked is 0.  */
 static void
 handle_itrm_stdin(struct itrm *itrm)
 {
@@ -968,6 +981,9 @@ handle_itrm_stdin(struct itrm *itrm)
 		     (select_handler_T) free_itrm, itrm);
 }
 
+/* Disable reading from itrm->in.std.  Reading should be disabled
+ * whenever itrm->in.queue is full (there is no room for the data)
+ * or itrm->blocked is 1 (other processes may read the data).  */
 static void
 unhandle_itrm_stdin(struct itrm *itrm)
 {
