@@ -800,6 +800,10 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 		key = KBD_ENTER;
 		break;
 
+	case ASCII_ESC:
+		key = KBD_ESC;
+		break;
+
 	default:
 		if (key < ' ') {
 			key += 'A' - 1;
@@ -814,6 +818,7 @@ static void
 kbd_timeout(struct itrm *itrm)
 {
 	struct term_event ev;
+	int el;
 
 	itrm->timer = TIMER_ID_UNDEF;
 
@@ -826,11 +831,19 @@ kbd_timeout(struct itrm *itrm)
 		return;
 	}
 
-	set_kbd_term_event(&ev, KBD_ESC, KBD_MOD_NONE);
+	if (itrm->in.queue.len >= 2 && itrm->in.queue.data[0] == ASCII_ESC) {
+		/* This is used for ESC [ and ESC O.  */
+		set_kbd_event(&ev, itrm->in.queue.data[1], KBD_MOD_ALT);
+		el = 2;
+	} else {
+		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
+		el = 1;
+	}
 	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
 
-	if (--itrm->in.queue.len)
-		memmove(itrm->in.queue.data, itrm->in.queue.data + 1, itrm->in.queue.len);
+	itrm->in.queue.len -= el;
+	if (itrm->in.queue.len)
+		memmove(itrm->in.queue.data, itrm->in.queue.data + el, itrm->in.queue.len);
 
 	while (process_queue(itrm));
 }
