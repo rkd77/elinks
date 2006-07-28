@@ -848,8 +848,6 @@ kbd_timeout(struct itrm *itrm)
 	while (process_queue(itrm));
 }
 
-/* I feeeeeel the neeeed ... to rewrite this ... --pasky */
-/* Just Do it ! --Zas */
 /* Parse one event from itrm->in.queue and append to itrm->out.queue.
  * Return the number of bytes removed from itrm->in.queue; at least 0.
  * If this function leaves the queue not full, it also reenables reading
@@ -861,7 +859,7 @@ process_queue(struct itrm *itrm)
 	struct term_event ev;
 	int el = 0;
 
-	if (!itrm->in.queue.len) goto end;
+	if (!itrm->in.queue.len) goto return_without_event;
 	assert(!itrm->blocked);
 	if_assert_failed return 0; /* unlike goto, don't enable reading */
 
@@ -885,32 +883,55 @@ process_queue(struct itrm *itrm)
 	}
 #endif /* DEBUG_ITRM_QUEUE */
 
+	/* el == -1 means itrm->in.queue appears to be the beginning of an
+	 *          escape sequence but it is not yet complete.  Set a timer;
+	 *          if it times out, then assume it wasn't an escape sequence
+	 *          after all.
+	 * el == 0 means this function has not yet figured out what the data
+	 *         in itrm->in.queue is, but some possibilities remain.
+	 *         One of them will be chosen before returning.
+	 * el > 0 means some bytes were successfully parsed from the beginning
+	 *        of itrm->in.queue and should now be removed from there.
+	 *        However, this does not always imply an event will be queued.
+	 */
+
 	/* ELinks should also recognize U+009B CONTROL SEQUENCE INTRODUCER
 	 * as meaning the same as ESC 0x5B, and U+008F SINGLE SHIFT THREE as
 	 * meaning the same as ESC 0x4F, but those cannot yet be implemented
 	 * because of bug 777: the UTF-8 decoder is run too late.  */
 	if (itrm->in.queue.data[0] == ASCII_ESC) {
-		if (itrm->in.queue.len < 2) goto ret;
-		if (itrm->in.queue.data[1] == '[' || itrm->in.queue.data[1] == 'O') {
+		if (itrm->in.queue.len < 2) {
+			el = -1;
+		} else if (itrm->in.queue.data[1] == 0x5B /* CSI */
+			   || itrm->in.queue.data[1] == 0x4F /* SS3 */) {
 			el = decode_terminal_escape_sequence(itrm, &ev);
-
-			if (el == -1) goto ret;
-
-		} else {
-			el = 2;
-
-			if (itrm->in.queue.data[1] == ASCII_ESC) {
-				if (itrm->in.queue.len >= 3 &&
-				    (itrm->in.queue.data[2] == '[' ||
-				     itrm->in.queue.data[2] == 'O')) {
-					el = 1;
-				}
-
-				set_kbd_event(&ev, KBD_ESC, KBD_MOD_NONE);
-
+		} else if (itrm->in.queue.data[1] == ASCII_ESC) {
+			/* ESC ESC can be either Alt-Esc or the
+			 * beginning of e.g. ESC ESC 0x5B 0x41,
+			 * which we should parse as Esc Up.  */
+			if (itrm->in.queue.len < 3) {
+				/* Need more data to figure it out.  */
+				el = -1;
+			} else if (itrm->in.queue.data[2] == 0x5B
+				   || itrm->in.queue.data[2] == 0x4F) {
+				/* The first ESC appears to be followed
+				 * by an escape sequence.  Treat it as
+				 * a standalone Esc.  */
+				el = 1;
+				set_kbd_event(&ev, itrm->in.queue.data[0],
+					      KBD_MOD_NONE);
 			} else {
-				set_kbd_event(&ev, itrm->in.queue.data[1], KBD_MOD_ALT);
+				/* The second ESC of ESC ESC is not the
+				 * beginning of any known escape sequence.
+				 * This must be Alt-Esc, then.  */
+				el = 2;
+				set_kbd_event(&ev, itrm->in.queue.data[1],
+					      KBD_MOD_ALT);
 			}
+		} else {	/* ESC followed by something else */
+			el = 2;
+			set_kbd_event(&ev, itrm->in.queue.data[1],
+				      KBD_MOD_ALT);
 		}
 
 	} else if (itrm->in.queue.data[0] == 0) {
@@ -918,39 +939,42 @@ process_queue(struct itrm *itrm)
 #include "terminal/key.inc"
 		};
 
-		if (itrm->in.queue.len < 2) goto ret;
-		copy_struct(&ev.info.keyboard, &os2xtd[itrm->in.queue.data[1]]);
-		el = 2;
-
-	} else {
-		el = 1;
-		set_kbd_event(&ev, itrm->in.queue.data[0], 0);
+		if (itrm->in.queue.len < 2)
+			el = -1;
+		else {
+			el = 2;
+			copy_struct(&ev.info.keyboard, &os2xtd[itrm->in.queue.data[1]]);
+		}
 	}
 
-	assertm(itrm->in.queue.len >= el, "event queue underflow");
-	if_assert_failed { itrm->in.queue.len = el; }
-
-	itrm->in.queue.len -= el;
+	if (el == 0) {
+		el = 1;
+		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
+	}
 
 	/* The call to decode_terminal_escape_sequence() might have changed the
 	 * keyboard event to a mouse event. */
 	if (ev.ev == EVENT_MOUSE || ev.info.keyboard.key != KBD_UNDEF)
 		itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
 
-	if (itrm->in.queue.len)
-		memmove(itrm->in.queue.data, itrm->in.queue.data + el, itrm->in.queue.len);
+ return_without_event:
+	if (el == -1) {
+		install_timer(&itrm->timer, ESC_TIMEOUT, (void (*)(void *)) kbd_timeout,
+			      itrm);
+		return 0;
+	} else {
+		assertm(itrm->in.queue.len >= el, "event queue underflow");
+		if_assert_failed { itrm->in.queue.len = el; }
 
-end:
-	if (itrm->in.queue.len < ITRM_IN_QUEUE_SIZE)
-		handle_itrm_stdin(itrm);
+		itrm->in.queue.len -= el;
+		if (itrm->in.queue.len)
+			memmove(itrm->in.queue.data, itrm->in.queue.data + el, itrm->in.queue.len);
 
-	return el;
+		if (itrm->in.queue.len < ITRM_IN_QUEUE_SIZE)
+			handle_itrm_stdin(itrm);
 
-ret:
-	install_timer(&itrm->timer, ESC_TIMEOUT, (void (*)(void *)) kbd_timeout,
-			itrm);
-
-	return 0;
+		return el;
+	}
 }
 
 
