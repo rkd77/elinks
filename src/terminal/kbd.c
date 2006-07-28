@@ -692,7 +692,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	case 'H': kbd.key = KBD_HOME; break;
 	case 'I': kbd.key = KBD_PAGE_UP; break;
 	case 'G': kbd.key = KBD_PAGE_DOWN; break;
-/* Free BSD */
+/* Free BSD (TERM=cons25 etc.) */
 /*	case 'M': kbd.key = KBD_F1; break;*/
 	case 'N': kbd.key = KBD_F2; break;
 	case 'O': kbd.key = KBD_F3; break;
