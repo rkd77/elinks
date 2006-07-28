@@ -775,6 +775,63 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	return el;
 }
 
+/* Decode an escape sequence that begins with SS3 (SINGLE SHIFT 3).
+ * These are used for application cursor keys and the application keypad.
+ * Return one of:
+ *   -1 if the escape sequence is not yet complete; the caller sets a timer.
+ *   0 if the escape sequence should be parsed by some other function.
+ *   The length of the escape sequence otherwise.
+ * Returning >0 does not imply this function has altered *ev.  */
+static int
+decode_terminal_application_key(struct itrm *itrm, struct term_event *ev)
+{
+	unsigned char c;
+	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
+
+	assert(itrm->in.queue.len >= 2);
+	assert(itrm->in.queue.data[0] == ASCII_ESC);
+	assert(itrm->in.queue.data[1] == 0x4F); /* == 'O', incidentally */
+	if_assert_failed return 0;
+
+	if (itrm->in.queue.len < 3) return -1;
+	/* According to ECMA-35 section 8.4, a single (possibly multibyte)
+	 * character follows the SS3.  We now assume the code identifies
+	 * GL as the single-shift area and the designated set has 94
+	 * characters.  */
+	c = itrm->in.queue.data[2];
+	if (c < 0x21 || c > 0x7E) return 0;
+
+	/* These are all from xterm-215/ctlseqs.txt.  */
+	switch (c) {
+	case ' ': kbd.key = ' '; break;
+	case 'A': kbd.key = KBD_UP; break;
+	case 'B': kbd.key = KBD_DOWN; break;
+	case 'C': kbd.key = KBD_RIGHT; break;
+	case 'D': kbd.key = KBD_LEFT; break;
+	case 'F': kbd.key = KBD_END; break;
+	case 'H': kbd.key = KBD_HOME; break;
+	case 'I': kbd.key = KBD_TAB; break;
+	case 'M': kbd.key = KBD_ENTER; break;
+		/* FIXME: xterm generates ESC O 2 P for Shift-PF1 */
+	case 'P': kbd.key = KBD_F1; break;
+	case 'Q': kbd.key = KBD_F2; break;
+	case 'R': kbd.key = KBD_F3; break;
+	case 'S': kbd.key = KBD_F4; break;
+	case 'X': kbd.key = '='; break;
+
+	case 'j': case 'k': case 'l': case 'm': /* *+,- */
+	case 'n': case 'o': case 'p': case 'q': /* ./01 */
+	case 'r': case 's': case 't': case 'u': /* 2345 */
+	case 'v': case 'w': case 'x': case 'y': /* 6789 */
+		kbd.key = c - 'p' + '0'; break;
+	}
+	if (kbd.key != KBD_UNDEF)
+		copy_struct(&ev->info.keyboard, &kbd);
+
+	return 3;		/* even if we didn't recognize it */
+}
+
+
 static void
 set_kbd_event(struct term_event *ev, int key, int modifier)
 {
@@ -902,9 +959,10 @@ process_queue(struct itrm *itrm)
 	if (itrm->in.queue.data[0] == ASCII_ESC) {
 		if (itrm->in.queue.len < 2) {
 			el = -1;
-		} else if (itrm->in.queue.data[1] == 0x5B /* CSI */
-			   || itrm->in.queue.data[1] == 0x4F /* SS3 */) {
-			el = decode_terminal_escape_sequence(itrm, &ev);
+		} else if (itrm->in.queue.data[1] == 0x5B /* CSI */) {
+ 			el = decode_terminal_escape_sequence(itrm, &ev);
+		} else if (itrm->in.queue.data[1] == 0x4F /* SS3 */) {
+			el = decode_terminal_application_key(itrm, &ev);
 		} else if (itrm->in.queue.data[1] == ASCII_ESC) {
 			/* ESC ESC can be either Alt-Esc or the
 			 * beginning of e.g. ESC ESC 0x5B 0x41,
