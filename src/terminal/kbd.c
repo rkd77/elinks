@@ -621,32 +621,6 @@ free_and_return:
 }
 
 
-static void
-kbd_timeout(struct itrm *itrm)
-{
-	struct term_event ev;
-
-	itrm->timer = TIMER_ID_UNDEF;
-
-	assertm(itrm->in.queue.len, "timeout on empty queue");
-	assert(!itrm->blocked);	/* block_itrm should have killed itrm->timer */
-	if_assert_failed return;
-
-	if (can_read(itrm->in.std)) {
-		in_kbd(itrm);
-		return;
-	}
-
-	set_kbd_term_event(&ev, KBD_ESC, KBD_MOD_NONE);
-	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
-
-	if (--itrm->in.queue.len)
-		memmove(itrm->in.queue.data, itrm->in.queue.data + 1, itrm->in.queue.len);
-
-	while (process_queue(itrm));
-}
-
-
 /* Returns the length of the escape sequence */
 static inline int
 get_esc_code(unsigned char *str, int len, unsigned char *code, int *num)
@@ -834,6 +808,31 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 	}
 
 	set_kbd_term_event(ev, key, modifier);
+}
+
+static void
+kbd_timeout(struct itrm *itrm)
+{
+	struct term_event ev;
+
+	itrm->timer = TIMER_ID_UNDEF;
+
+	assertm(itrm->in.queue.len, "timeout on empty queue");
+	assert(!itrm->blocked);	/* block_itrm should have killed itrm->timer */
+	if_assert_failed return;
+
+	if (can_read(itrm->in.std)) {
+		in_kbd(itrm);
+		return;
+	}
+
+	set_kbd_term_event(&ev, KBD_ESC, KBD_MOD_NONE);
+	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
+
+	if (--itrm->in.queue.len)
+		memmove(itrm->in.queue.data, itrm->in.queue.data + 1, itrm->in.queue.len);
+
+	while (process_queue(itrm));
 }
 
 /* I feeeeeel the neeeed ... to rewrite this ... --pasky */
