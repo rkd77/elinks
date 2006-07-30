@@ -664,6 +664,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	if (itrm->in.queue.len < 3) return -1;
 
 	if (itrm->in.queue.data[2] == '[') {
+		/* The terminfo entry for linux has "kf1=\E[[A", etc.
+		 * These are not control sequences compliant with
+		 * clause 5.4 of ECMA-48.  */
 		if (itrm->in.queue.len >= 4
 		    && itrm->in.queue.data[3] >= 'A'
 		    && itrm->in.queue.data[3] <= 'L') {
@@ -681,64 +684,64 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	fflush(stderr);
 #endif
 
-	switch (c) {
-	case 0: return -1;
-	case 'A': kbd.key = KBD_UP; break;
-	case 'B': kbd.key = KBD_DOWN; break;
-	case 'C': kbd.key = KBD_RIGHT; break;
-	case 'D': kbd.key = KBD_LEFT; break;
-	case 'F':
-	case 'e': kbd.key = KBD_END; break;
-	case 'H': kbd.key = KBD_HOME; break;
-	case 'I': kbd.key = KBD_PAGE_UP; break;
-	case 'G': kbd.key = KBD_PAGE_DOWN; break;
+	switch (c) {				/* ECMA-48 Terminfo $TERM */
+	case 0: return -1;			/* ------- -------- ----- */
+	case 'A': kbd.key = KBD_UP; break;	/*    CUU  kcuu1    vt200 */
+	case 'B': kbd.key = KBD_DOWN; break;	/*    CUD  kcud1    vt200 */
+	case 'C': kbd.key = KBD_RIGHT; break;	/*    CUF  kcuf1    vt200 */
+	case 'D': kbd.key = KBD_LEFT; break;	/*    CUB  kcub1    vt200 */
+	case 'F':				/*   (CPL) kend     cons25 */
+	case 'e': kbd.key = KBD_END; break;	/*   (VPR) kend */
+	case 'H': kbd.key = KBD_HOME; break;	/*    CUP  khome    cons25 */
+	case 'I': kbd.key = KBD_PAGE_UP; break; /*   (CHT) kpp      cons25 */
+	case 'G': kbd.key = KBD_PAGE_DOWN; break; /* (CHA) knp      cons25 */
 /* Free BSD (TERM=cons25 etc.) */
-/*	case 'M': kbd.key = KBD_F1; break;*/
-	case 'N': kbd.key = KBD_F2; break;
-	case 'O': kbd.key = KBD_F3; break;
-	case 'P': kbd.key = KBD_F4; break;
-	case 'Q': kbd.key = KBD_F5; break;
-/*	case 'R': kbd.key = KBD_F6; break;*/
-	case 'S': kbd.key = KBD_F7; break;
-	case 'T': kbd.key = KBD_F8; break;
-	case 'U': kbd.key = KBD_F9; break;
-	case 'V': kbd.key = KBD_F10; break;
-	case 'W': kbd.key = KBD_F11; break;
-	case 'X': kbd.key = KBD_F12; break;
+/*	case 'M': kbd.key = KBD_F1; break;*/	/*   (DL)  kf1      cons25 */
+	case 'N': kbd.key = KBD_F2; break;	/*   (EF)  kf2      cons25 */
+	case 'O': kbd.key = KBD_F3; break;	/*   (EA)  kf3      cons25 */
+	case 'P': kbd.key = KBD_F4; break;	/*   (DCH) kf4      cons25 */
+	case 'Q': kbd.key = KBD_F5; break;	/*   (SEE) kf5      cons25 */
+/*	case 'R': kbd.key = KBD_F6; break;*/	/*   (CPR) kf6      cons25 */
+	case 'S': kbd.key = KBD_F7; break;	/*   (SU)  kf7      cons25 */
+	case 'T': kbd.key = KBD_F8; break;	/*   (SD)  kf8      cons25 */
+	case 'U': kbd.key = KBD_F9; break;	/*   (NP)  kf9      cons25 */
+	case 'V': kbd.key = KBD_F10; break;	/*   (PP)  kf10     cons25 */
+	case 'W': kbd.key = KBD_F11; break;	/*   (CTC) kf11     cons25 */
+	case 'X': kbd.key = KBD_F12; break;	/*   (ECH) kf12     cons25 */
 
-	case 'z': switch (v) {
-		case 247: kbd.key = KBD_INS; break;
-		case 214: kbd.key = KBD_HOME; break;
-		case 220: kbd.key = KBD_END; break;
-		case 216: kbd.key = KBD_PAGE_UP; break;
-		case 222: kbd.key = KBD_PAGE_DOWN; break;
-		case 249: kbd.key = KBD_DEL; break;
+	case 'z': switch (v) {			/* private */
+		case 247: kbd.key = KBD_INS; break;     /* kich1 */
+		case 214: kbd.key = KBD_HOME; break;	/* khome */
+		case 220: kbd.key = KBD_END; break;	/* kend */
+		case 216: kbd.key = KBD_PAGE_UP; break; /* kpp */
+		case 222: kbd.key = KBD_PAGE_DOWN; break; /* knp */
+		case 249: kbd.key = KBD_DEL; break;	/* kdch1 */
 		} break;
 
-	case '~': switch (v) {
-		case 1: kbd.key = KBD_HOME; break;
-		case 2: kbd.key = KBD_INS; break;
-		case 3: kbd.key = KBD_DEL; break;
-		case 4: kbd.key = KBD_END; break;
-		case 5: kbd.key = KBD_PAGE_UP; break;
-		case 6: kbd.key = KBD_PAGE_DOWN; break;
-		case 7: kbd.key = KBD_HOME; break;
-		case 8: kbd.key = KBD_END; break;
+	case '~': switch (v) {			/* private */
+		case 1: kbd.key = KBD_HOME; break;      /* khome    linux */
+		case 2: kbd.key = KBD_INS; break;	/* kich1    linux */
+		case 3: kbd.key = KBD_DEL; break;	/* kdch1    linux */
+		case 4: kbd.key = KBD_END; break;	/* kend     linux */
+		case 5: kbd.key = KBD_PAGE_UP; break;	/* kpp      linux */
+		case 6: kbd.key = KBD_PAGE_DOWN; break; /* knp      linux */
+		case 7: kbd.key = KBD_HOME; break;	/* khome    rxvt */
+		case 8: kbd.key = KBD_END; break;	/* kend     rxvt */
 
-		case 11: kbd.key = KBD_F1; break;
-		case 12: kbd.key = KBD_F2; break;
-		case 13: kbd.key = KBD_F3; break;
-		case 14: kbd.key = KBD_F4; break;
-		case 15: kbd.key = KBD_F5; break;
+		case 11: kbd.key = KBD_F1; break;	/* kf1      rxvt */
+		case 12: kbd.key = KBD_F2; break;	/* kf2      rxvt */
+		case 13: kbd.key = KBD_F3; break;	/* kf3      rxvt */
+		case 14: kbd.key = KBD_F4; break;	/* kf4      rxvt */
+		case 15: kbd.key = KBD_F5; break;	/* kf5      rxvt */
 
-		case 17: kbd.key = KBD_F6; break;
-		case 18: kbd.key = KBD_F7; break;
-		case 19: kbd.key = KBD_F8; break;
-		case 20: kbd.key = KBD_F9; break;
-		case 21: kbd.key = KBD_F10; break;
+		case 17: kbd.key = KBD_F6; break;	/* kf6      vt200 */
+		case 18: kbd.key = KBD_F7; break;	/* kf7      vt200 */
+		case 19: kbd.key = KBD_F8; break;	/* kf8      vt200 */
+		case 20: kbd.key = KBD_F9; break;	/* kf9      vt200 */
+		case 21: kbd.key = KBD_F10; break;	/* kf10     vt200 */
 
-		case 23: kbd.key = KBD_F11; break;
-		case 24: kbd.key = KBD_F12; break;
+		case 23: kbd.key = KBD_F11; break;	/* kf11     vt200 */
+		case 24: kbd.key = KBD_F12; break;	/* kf12     vt200 */
 
 		/* Give preference to F11 and F12 over shifted F1 and F2. */
 		/*
@@ -759,8 +762,8 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 
 		} break;
 
-	case 'R': resize_terminal(); break;
-	case 'M':
+	case 'R': resize_terminal(); break;	/*    CPR  */
+	case 'M':                               /*   (DL)  kmous    xterm */
 #ifdef CONFIG_MOUSE
 		el = decode_terminal_mouse_escape_sequence(itrm, ev, el, v);
 #endif /* CONFIG_MOUSE */
@@ -801,28 +804,27 @@ decode_terminal_application_key(struct itrm *itrm, struct term_event *ev)
 	c = itrm->in.queue.data[2];
 	if (c < 0x21 || c > 0x7E) return 0;
 
-	/* These are all from xterm-215/ctlseqs.txt.  */
-	switch (c) {
-	case ' ': kbd.key = ' '; break;
-	case 'A': kbd.key = KBD_UP; break;
-	case 'B': kbd.key = KBD_DOWN; break;
-	case 'C': kbd.key = KBD_RIGHT; break;
-	case 'D': kbd.key = KBD_LEFT; break;
-	case 'F': kbd.key = KBD_END; break;
-	case 'H': kbd.key = KBD_HOME; break;
-	case 'I': kbd.key = KBD_TAB; break;
-	case 'M': kbd.key = KBD_ENTER; break;
+	switch (c) {					/* Terminfo $TERM */
+	case ' ': kbd.key = ' '; break;			/*          xterm */
+	case 'A': kbd.key = KBD_UP; break;		/* kcuu1    vt100 */
+	case 'B': kbd.key = KBD_DOWN; break;		/* kcud1    vt100 */
+	case 'C': kbd.key = KBD_RIGHT; break;		/* kcuf1    vt100 */
+	case 'D': kbd.key = KBD_LEFT; break;		/* kcub1    vt100 */
+	case 'F': kbd.key = KBD_END; break;		/* kend     xterm */
+	case 'H': kbd.key = KBD_HOME; break;		/* khome    xterm */
+	case 'I': kbd.key = KBD_TAB; break;		/*          xterm */
+	case 'M': kbd.key = KBD_ENTER; break;		/* kent     vt100 */
 		/* FIXME: xterm generates ESC O 2 P for Shift-PF1 */
-	case 'P': kbd.key = KBD_F1; break;
-	case 'Q': kbd.key = KBD_F2; break;
-	case 'R': kbd.key = KBD_F3; break;
-	case 'S': kbd.key = KBD_F4; break;
-	case 'X': kbd.key = '='; break;
+	case 'P': kbd.key = KBD_F1; break;		/* kf1      vt100 */
+	case 'Q': kbd.key = KBD_F2; break;		/* kf2      vt100 */
+	case 'R': kbd.key = KBD_F3; break;		/* kf3      vt100 */
+	case 'S': kbd.key = KBD_F4; break;		/* kf4      vt100 */
+	case 'X': kbd.key = '='; break;			/*          xterm */
 
-	case 'j': case 'k': case 'l': case 'm': /* *+,- */
-	case 'n': case 'o': case 'p': case 'q': /* ./01 */
-	case 'r': case 's': case 't': case 'u': /* 2345 */
-	case 'v': case 'w': case 'x': case 'y': /* 6789 */
+	case 'j': case 'k': case 'l': case 'm': /* *+,-             xterm */
+	case 'n': case 'o': case 'p': case 'q': /* ./01             xterm */
+	case 'r': case 's': case 't': case 'u': /* 2345             xterm */
+	case 'v': case 'w': case 'x': case 'y': /* 6789             xterm */
 		kbd.key = c - 'p' + '0'; break;
 	}
 	if (kbd.key != KBD_UNDEF)
@@ -960,7 +962,7 @@ process_queue(struct itrm *itrm)
 		if (itrm->in.queue.len < 2) {
 			el = -1;
 		} else if (itrm->in.queue.data[1] == 0x5B /* CSI */) {
- 			el = decode_terminal_escape_sequence(itrm, &ev);
+			el = decode_terminal_escape_sequence(itrm, &ev);
 		} else if (itrm->in.queue.data[1] == 0x4F /* SS3 */) {
 			el = decode_terminal_application_key(itrm, &ev);
 		} else if (itrm->in.queue.data[1] == ASCII_ESC) {
