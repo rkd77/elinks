@@ -573,6 +573,7 @@ get_translation_table_to_utf_8(int from)
 	if (from == -1) return NULL;
 	from &= ~SYSTEM_CHARSET_FLAG;
 	if (from == lfr) return utf_table;
+	lfr = from;
 	if (utf_table_init)
 		memset(utf_table, 0, sizeof(utf_table)),
 		utf_table_init = 0;
