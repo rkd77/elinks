@@ -711,10 +711,10 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 
 	case 'z': switch (v) {			/* private */
 		case 247: kbd.key = KBD_INS; break;     /* kich1 */
-		case 214: kbd.key = KBD_HOME; break;	/* khome */
-		case 220: kbd.key = KBD_END; break;	/* kend */
-		case 216: kbd.key = KBD_PAGE_UP; break; /* kpp */
-		case 222: kbd.key = KBD_PAGE_DOWN; break; /* knp */
+		case 214: kbd.key = KBD_HOME; break;	/* khome    sun */
+		case 220: kbd.key = KBD_END; break;	/* kend     sun */
+		case 216: kbd.key = KBD_PAGE_UP; break; /* kpp      sun */
+		case 222: kbd.key = KBD_PAGE_DOWN; break; /* knp    sun */
 		case 249: kbd.key = KBD_DEL; break;	/* kdch1 */
 		} break;
 
@@ -762,7 +762,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 
 		} break;
 
-	case 'R': resize_terminal(); break;	/*    CPR  */
+	case 'R': resize_terminal(); break;	/*    CPR  u6 */
 	case 'M':                               /*   (DL)  kmous    xterm */
 #ifdef CONFIG_MOUSE
 		el = decode_terminal_mouse_escape_sequence(itrm, ev, el, v);
