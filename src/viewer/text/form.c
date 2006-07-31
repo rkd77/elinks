@@ -1312,15 +1312,17 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8) {
 				int old_state = fs->state;
 				unsigned char *new_value;
+				int cells;
 
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
 
 				if (old_state != fs->state) {
 					if (fc->type == FC_PASSWORD)
-						fs->state_cell = int_max(fs->state_cell - 1, 0);
+						cells = 1;
 					else
-						fs->state_cell = int_max(utf8_char2cells(new_value, NULL) - 1, 0);
+						cells = utf8_char2cells(new_value, NULL);
+					fs->state_cell = int_max(fs->state_cell - cells, 0);
 				}
 			} else
 #endif /* CONFIG_UTF_8 */
