@@ -4,7 +4,7 @@
 typedef uint32_t unicode_val_T;
 
 /* UCS/Unicode replacement character. */
-#define UCS_NO_CHAR ((unicode_val_T) 0xFFFD)
+#define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
 /* &nbsp; replacement character. See u2cp(). */
 #define NBSP_CHAR ((unsigned char) 1)
