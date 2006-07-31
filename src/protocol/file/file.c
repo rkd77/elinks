@@ -196,7 +196,7 @@ list_directory(struct connection *conn, unsigned char *dirpath,
 
 	add_dir_entries(entries, dirpath, page);
 
-	if (!add_to_string(page, "</pre>\n<hr>\n</body>\n</html>\n")) {
+	if (!add_to_string(page, "</pre>\n<hr/>\n</body>\n</html>\n")) {
 		done_string(page);
 		return S_OUT_OF_MEM;
 	}

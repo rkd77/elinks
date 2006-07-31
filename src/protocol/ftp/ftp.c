@@ -1367,7 +1367,7 @@ out_of_mem:
 	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
 	conn->from += (sizeof(str) - 1); }
 
-	if (ftp->dir) ADD_CONST("</pre>\n<hr>\n</body>\n</html>");
+	if (ftp->dir) ADD_CONST("</pre>\n<hr/>\n</body>\n</html>");
 
 	close_socket(conn->data_socket);
 

@@ -167,7 +167,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 		fsp_closedir(dir);
 	}
 end:
-	puts("</pre><hr></body></html>");
+	puts("</pre><hr/></body></html>");
 	fsp_close_session(ses);
 	exit(0);
 }
