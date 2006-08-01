@@ -94,10 +94,14 @@ split_line(unsigned char *text, int max_width, int *cells)
 								       max_width,
 								       NULL);
 					split = &text[m_bytes];
+					cells_save = utf8_ptr2cells(text,
+								    split);
 				} else
 #endif /* CONFIG_UTF_8 */
+				{
 					split = &text[max_width];
-
+					cells_save = max_width;
+				}
 
 				/* FIXME: Function ispunct won't work correctly
 				 * with UTF-8 characters. We need some similar
