@@ -31,8 +31,8 @@ struct itrm_in {
 	 * same as could be sent to the terminal (via itrm.out.std),
 	 * but there are special commands that begin with a null byte.
 	 *
-	 * In the master process, @sock is the same as @ctl, but
-	 * nothing actually uses it.  */
+	 * In the master process, @sock is the same as itrm.out.std,
+	 * but nothing actually uses it.  */
 	int sock;
 
 	/* A file descriptor for controlling the standard input.  This
