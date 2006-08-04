@@ -152,7 +152,7 @@ document_info_dialog(struct session *ses)
 	if (cached) {
 		unsigned char *a;
 
-		add_format_to_string(&msg, "\n%s: %" PRId64,
+		add_format_to_string(&msg, "\n%s: %" OFF_T_FORMAT,
 				     _("Size", term), cached->length);
 
 		if (cached->incomplete) {

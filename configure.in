@@ -222,6 +222,7 @@ AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 EL_CHECK_TYPE(ssize_t, int)
 EL_CHECK_SYS_TYPE(long long, HAVE_LONG_LONG, [])
+EL_CHECK_SYS_TYPE(off_t, HAVE_OFF_T, [])
 EL_CHECK_INT_TYPE(int32_t, HAVE_INT32_T)
 EL_CHECK_INT_TYPE(uint32_t, HAVE_UINT32_T)
 EL_CHECK_INT_TYPE(uint16_t, HAVE_UINT16_T)
@@ -231,6 +232,7 @@ AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 4)
 AC_CHECK_SIZEOF(long, 4)
 test "x$HAVE_LONG_LONG" = xyes && AC_CHECK_SIZEOF(long long, 8)
+test "x$HAVE_OFF_T" = xyes && AC_CHECK_SIZEOF(off_t, 4)
 
 dnl Check for variadic macros
 EL_CHECK_CODE([variadic macros], HAVE_VARIADIC_MACROS,
