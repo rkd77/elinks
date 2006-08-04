@@ -124,4 +124,12 @@ typedef unsigned long long uint32_t;
  */
 typedef long longptr_T;
 
+/* Define internal off_t format macro for printing variables. */
+#if HAVE_OFF_T == 1 && SIZEOF_OFF_T == 8
+#define OFF_T_FORMAT "lld"
+#else
+/* For ELinks, off_t defaults to long. */
+#define OFF_T_FORMAT "ld"
+#endif
+
 #endif
