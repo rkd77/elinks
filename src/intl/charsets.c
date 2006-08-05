@@ -10,6 +10,9 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#if HAVE_WCTYPE_H
+#include <wctype.h>
+#endif
 
 #include "elinks.h"
 
@@ -402,6 +405,27 @@ unicode_to_cell(unicode_val_T c)
 		return 2;
 
 	return 1;
+}
+
+/* Fold the case of a Unicode character, so that hotkeys in labels can
+ * be compared case-insensitively.  This should be called only if
+ * check_kbd_label_key(c) is true.  It is unspecified whether the
+ * result will be in upper or lower case.  */
+unicode_val_T
+unicode_fold_label_case(unicode_val_T c)
+{
+#if __STDC_ISO_10646__ && HAVE_WCTYPE_H
+	return towlower(c);
+#else  /* !(__STDC_ISO_10646__ && HAVE_WCTYPE_H) */
+	/* For now, this supports only ASCII.  It would be possible to
+	 * use code generated from CaseFolding.txt of Unicode if the
+	 * acknowledgements required by http://www.unicode.org/copyright.html
+	 * were added to associated documentation of ELinks.  */
+	if (c >= 0x41 && c <= 0x5A)
+		return c + 0x20;
+	else
+		return c;
+#endif /* !(__STDC_ISO_10646__ && HAVE_WCTYPE_H) */
 }
 
 inline unicode_val_T
