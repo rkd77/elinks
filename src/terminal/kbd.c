@@ -770,10 +770,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 		break;
 	}
 
-	/* The event might have been changed to a mouse event */
-	if (ev->ev == EVENT_KBD && kbd.key != KBD_UNDEF) {
-		copy_struct(&ev->info.keyboard, &kbd);
-	}
+	/* KBD_UNDEF here means it was unrecognized or a mouse event.  */
+	if (kbd.key != KBD_UNDEF)
+		set_kbd_term_event(ev, kbd.key, kbd.modifier);
 
 	return el;
 }
