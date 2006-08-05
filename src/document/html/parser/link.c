@@ -215,7 +215,8 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 	unsigned char *usemap_attr;
 	struct document_options *options = html_context->options;
 	int display_style = options->image_link.display_style;
-	int cp = html_context->part->document->cp;
+	int cp = (html_context->part && html_context->part->document) ?
+	          html_context->part->document->cp : html_context->options->cp;
 
 	/* Note about display_style:
 	 * 0     means always display IMG

@@ -146,7 +146,8 @@ html_button(struct html_context *html_context, unsigned char *a,
 	unsigned char *al;
 	struct form_control *fc;
 	enum form_type type = FC_SUBMIT;
-	int cp = html_context->part->document->cp;
+	int cp = (html_context->part && html_context->part->document) ?
+	          html_context->part->document->cp : html_context->options->cp;
 
 	html_focusable(html_context, a);
 
@@ -266,7 +267,8 @@ html_input(struct html_context *html_context, unsigned char *a,
 {
 	unsigned char *al;
 	struct form_control *fc;
-	int cp = html_context->part->document->cp;
+	int cp = (html_context->part && html_context->part->document) ?
+	          html_context->part->document->cp : html_context->options->cp;
 
 	fc = init_form_control(FC_TEXT, a, html_context);
 	if (!fc) return;
