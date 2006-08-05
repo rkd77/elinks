@@ -828,7 +828,7 @@ start_element(struct element_info *ei,
 		html_top->linebreak = ei->linebreak;
 
 #ifdef CONFIG_ECMASCRIPT
-		if (has_attr(attr, "onClick", html_context->options)) {
+		if (has_attr(attr, "onClick", html_context->options->cp)) {
 			/* XXX: Put something better to format.link. --pasky */
 			mem_free_set(&format.link, stracpy("javascript:void(0);"));
 			mem_free_set(&format.target, stracpy(html_context->base_target));
