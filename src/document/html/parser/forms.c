@@ -146,10 +146,11 @@ html_button(struct html_context *html_context, unsigned char *a,
 	unsigned char *al;
 	struct form_control *fc;
 	enum form_type type = FC_SUBMIT;
+	int cp = html_context->part->document->cp;
 
 	html_focusable(html_context, a);
 
-	al = get_attr_val(a, "type", html_context->options->cp);
+	al = get_attr_val(a, "type", cp);
 	if (!al) goto no_type_attr;
 
 	if (!strcasecmp(al, "button")) {
@@ -167,9 +168,9 @@ no_type_attr:
 	fc = init_form_control(type, a, html_context);
 	if (!fc) return;
 
-	fc->id = get_attr_val(a, "id", html_context->options->cp);
-	fc->name = get_attr_val(a, "name", html_context->options->cp);
-	fc->default_value = get_attr_val(a, "value", html_context->options->cp);
+	fc->id = get_attr_val(a, "id", cp);
+	fc->name = get_attr_val(a, "name", cp);
+	fc->default_value = get_attr_val(a, "value", cp);
 	if (!fc->default_value) {
 		if (fc->type == FC_SUBMIT)
 			fc->default_value = stracpy("Submit");
@@ -265,11 +266,12 @@ html_input(struct html_context *html_context, unsigned char *a,
 {
 	unsigned char *al;
 	struct form_control *fc;
+	int cp = html_context->part->document->cp;
 
 	fc = init_form_control(FC_TEXT, a, html_context);
 	if (!fc) return;
 
-	al = get_attr_val(a, "type", html_context->options->cp);
+	al = get_attr_val(a, "type", cp);
 	if (al) {
 		if (!strcasecmp(al, "text")) fc->type = FC_TEXT;
 		else if (!strcasecmp(al, "hidden")) fc->type = FC_HIDDEN;
@@ -286,8 +288,7 @@ html_input(struct html_context *html_context, unsigned char *a,
 	}
 
 	if (fc->type != FC_FILE)
-		fc->default_value = get_attr_val(a, "value",
-		                                 html_context->options->cp);
+		fc->default_value = get_attr_val(a, "value", cp);
 	if (!fc->default_value) {
 		if (fc->type == FC_CHECKBOX)
 			fc->default_value = stracpy("on");
@@ -301,22 +302,21 @@ html_input(struct html_context *html_context, unsigned char *a,
 	if (!fc->default_value)
 		fc->default_value = stracpy("");
 
-	fc->id = get_attr_val(a, "id", html_context->options->cp);
-	fc->name = get_attr_val(a, "name", html_context->options->cp);
+	fc->id = get_attr_val(a, "id", cp);
+	fc->name = get_attr_val(a, "name", cp);
 
-	fc->size = get_num(a, "size", html_context->options->cp);
+	fc->size = get_num(a, "size", cp);
 	if (fc->size == -1)
 		fc->size = html_context->options->default_form_input_size;
 	fc->size++;
 	if (fc->size > html_context->options->box.width)
 		fc->size = html_context->options->box.width;
-	fc->maxlength = get_num(a, "maxlength", html_context->options->cp);
+	fc->maxlength = get_num(a, "maxlength", cp);
 	if (fc->maxlength == -1) fc->maxlength = INT_MAX;
 	if (fc->type == FC_CHECKBOX || fc->type == FC_RADIO)
-		fc->default_state = has_attr(a, "checked",
-		                             html_context->options->cp);
+		fc->default_state = has_attr(a, "checked", cp);
 	if (fc->type == FC_IMAGE)
-		fc->alt = get_attr_val(a, "alt", html_context->options->cp);
+		fc->alt = get_attr_val(a, "alt", cp);
 
 	if (fc->type != FC_HIDDEN) {
 		html_input_format(html_context, a, fc);

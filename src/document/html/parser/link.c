@@ -215,6 +215,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 	unsigned char *usemap_attr;
 	struct document_options *options = html_context->options;
 	int display_style = options->image_link.display_style;
+	int cp = html_context->part->document->cp;
 
 	/* Note about display_style:
 	 * 0     means always display IMG
@@ -246,7 +247,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 	        && !usemap;
 
 	if (display_style == 2 || display_style == 3) {
-		label = get_attr_val(a, "alt", options->cp);
+		label = get_attr_val(a, "alt", cp);
 		if (!label)
 			label = get_attr_val(a, "title", options->cp);
 
