@@ -272,7 +272,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 #endif /* CONFIG_UTF_8 */
 
 		if (interlink->utf_8.len) {
-			if ((key & 0xC0) == 0x80 && utf8_io) {
+			if (key >= 0x80 && key <= 0xBF && utf8_io) {
 				interlink->utf_8.ucs <<= 6;
 				interlink->utf_8.ucs |= key & 0x3F;
 				if (! --interlink->utf_8.len) {
