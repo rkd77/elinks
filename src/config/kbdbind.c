@@ -398,7 +398,7 @@ parse_keystroke(unsigned char *s, struct term_event_keyboard *kbd)
 	}
 
 	kbd->key = read_key(s);
-	return (kbd->key < 0) ? -1 : 0;
+	return (kbd->key == KBD_UNDEF) ? -1 : 0;
 }
 
 void
@@ -409,7 +409,7 @@ add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
 	unsigned char *key_string = NULL;
 	struct key *key;
 
-	if (kbd->key < 0) return;
+	if (kbd->key == KBD_UNDEF) return;
 
 	if (kbd->modifier & KBD_MOD_SHIFT)
 		add_to_string(str, "Shift-");
