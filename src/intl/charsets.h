@@ -64,6 +64,7 @@ int utf8_cells2bytes(unsigned char *, int, unsigned char *);
 inline int unicode_to_cell(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
 inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
+unicode_val_T cp2u(int, unsigned char);
 #endif /* CONFIG_UTF_8 */
 
 unsigned char *cp2utf_8(int, int);

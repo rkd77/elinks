@@ -264,14 +264,14 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 	{
 		int utf8_io = -1;
 		int key = ilev->info.keyboard.key;
+		int modifier = ilev->info.keyboard.modifier;
 
 		if (key >= 0x100)
 			key = -key;
-		set_kbd_term_event(&tev, key, ilev->info.keyboard.modifier);
 
 		reset_timer();
 
-		if (check_kbd_modifier(&tev, KBD_MOD_CTRL) && (key == 'l' || key == 'L')) {
+		if (modifier == KBD_MOD_CTRL && (key == 'l' || key == 'L')) {
 			redraw_terminal_cls(term);
 			break;
 
@@ -280,9 +280,32 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			return 0;
 		}
 
+		/* Character Conversions.  */
 #ifdef CONFIG_UTF_8
-		utf8_io = !!term->utf8;
+		/* struct term_event_keyboard carries bytes in the
+		 * charset of the terminal.
+		 * - If the "utf_8_io" option (i.e. term->utf8) is
+		 *   true or the "charset" option refers to UTF-8,
+		 *   then handle_interlink_event() converts from UTF-8
+		 *   to UCS-4, and term_send_ucs() converts from UCS-4
+		 *   to the codepage specified with the "charset" option.
+		 * - Otherwise, handle_interlink_event() converts from
+		 *   the codepage specified with the "charset" option
+		 *   to UCS-4, and term_send_ucs() converts right back.
+		 * TO DO: Change struct term_event_keyboard to carry
+		 * UCS-4 instead, reducing these conversions.  */
+		utf8_io = term->utf8
+			|| is_cp_utf8(get_opt_codepage_tree(term->spec, "charset"));
 #else
+		/* struct term_event_keyboard carries bytes in the
+		 * charset of the terminal.
+		 * - If the "utf_8_io" option is true, then
+		 *   handle_interlink_event() converts from UTF-8 to
+		 *   UCS-4, and term_send_ucs() converts from UCS-4 to
+		 *   the codepage specified with the "charset" option;
+		 *   this codepage cannot be UTF-8.
+		 * - Otherwise, handle_interlink_event() passes the
+		 *   bytes straight through.  */
 		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
 #endif /* CONFIG_UTF_8 */
 
@@ -295,19 +318,27 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 					if (u < interlink->utf_8.min)
 						u = UCS_NO_CHAR;
-					term_send_ucs(term, u,
-						      get_kbd_modifier(&tev));
+					term_send_ucs(term, u, modifier);
 				}
 				break;
 
 			} else {
 				interlink->utf_8.len = 0;
-				term_send_ucs(term, UCS_NO_CHAR,
-					      get_kbd_modifier(&tev));
+				term_send_ucs(term, UCS_NO_CHAR, modifier);
 			}
 		}
 
 		if (key < 0x80 || key > 0xFF || !utf8_io) {
+#ifdef CONFIG_UTF_8
+			if (key >= 0 && key <= 0xFF && !utf8_io) {
+				key = cp2u(get_opt_codepage_tree(term->spec,
+								 "charset"),
+					   key);
+				term_send_ucs(term, key, modifier);
+				break;
+			}
+#endif /* !CONFIG_UTF_8 */
+			set_kbd_term_event(&tev, key, modifier);
 			term_send_event(term, &tev);
 			break;
 
@@ -326,7 +357,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			break;
 		}
 
-		term_send_ucs(term, UCS_NO_CHAR, get_kbd_modifier(&tev));
+		term_send_ucs(term, UCS_NO_CHAR, modifier);
 		break;
 	}
 

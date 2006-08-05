@@ -458,22 +458,46 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 }
 #endif /* CONFIG_UTF_8 */
 
+/* Slow algorithm, the common part of cp2u and cp2utf_8.  */
+static unicode_val_T
+cp2u_shared(const struct codepage_desc *from, unsigned char c)
+{
+	int j;
+
+	for (j = 0; from->table[j].c; j++)
+		if (from->table[j].c == c)
+			return from->table[j].u;
+
+	return UCS_NO_CHAR;
+}
+
+#ifdef CONFIG_UTF_8
+/* Slow algorithm, used for converting input from the terminal.  */
+unicode_val_T
+cp2u(int from, unsigned char c)
+{
+	from &= ~SYSTEM_CHARSET_FLAG;
+
+	/* UTF-8 is a multibyte codepage and cannot be handled with
+	 * this function.  */
+	assert(codepages[from].table != table_utf_8);
+	if_assert_failed return UCS_NO_CHAR;
+
+	if (c < 0x80) return c;
+	else return cp2u_shared(&codepages[from], c);
+}
+#endif	/* CONFIG_UTF_8 */
+
 /* This slow and ugly code is used by the terminal utf_8_io */
 unsigned char *
 cp2utf_8(int from, int c)
 {
-	int j;
-
 	from &= ~SYSTEM_CHARSET_FLAG;
 
 	if (codepages[from].table == table_utf_8 || c < 128)
 		return strings[c];
 
-	for (j = 0; codepages[from].table[j].c; j++)
-		if (codepages[from].table[j].c == c)
-			return encode_utf_8(codepages[from].table[j].u);
-
-	return encode_utf_8(UCS_NO_CHAR);
+	return encode_utf_8(cp2u_shared(&codepages[from], c));
 }
 
 static void
