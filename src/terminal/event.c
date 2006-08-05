@@ -127,15 +127,17 @@ term_send_event(struct terminal *term, struct term_event *ev)
 }
 
 static void
-term_send_ucs(struct terminal *term, struct term_event *ev, unicode_val_T u)
+term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
 {
 	unsigned char *recoded;
+	struct term_event ev;
 
+	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
 	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset"));
 	if (!recoded) recoded = "*";
 	while (*recoded) {
-		ev->info.keyboard.key = *recoded;
-		term_send_event(term, ev);
+		ev.info.keyboard.key = *recoded;
+		term_send_event(term, &ev);
 		recoded++;
 	}
 }
@@ -293,13 +295,15 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 					if (u < interlink->utf_8.min)
 						u = UCS_NO_CHAR;
-					term_send_ucs(term, &tev, u);
+					term_send_ucs(term, u,
+						      get_kbd_modifier(&tev));
 				}
 				break;
 
 			} else {
 				interlink->utf_8.len = 0;
-				term_send_ucs(term, &tev, UCS_NO_CHAR);
+				term_send_ucs(term, UCS_NO_CHAR,
+					      get_kbd_modifier(&tev));
 			}
 		}
 
@@ -322,7 +326,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			break;
 		}
 
-		term_send_ucs(term, &tev, UCS_NO_CHAR);
+		term_send_ucs(term, UCS_NO_CHAR, get_kbd_modifier(&tev));
 		break;
 	}
 
