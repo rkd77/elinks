@@ -783,7 +783,7 @@ struct kbdbind_add_hop {
 	struct widget_data *widget_data;
 };
 
-struct kbdbind_add_hop *
+static struct kbdbind_add_hop *
 new_hop_from(struct kbdbind_add_hop *hop)
 {
 	struct kbdbind_add_hop *new_hop = mem_alloc(sizeof(*new_hop));
@@ -842,7 +842,7 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 	really_really_add_keybinding((void *) hop);
 }
 
-widget_handler_status_T
+static widget_handler_status_T
 check_keystroke(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct kbdbind_add_hop *hop = dlg_data->dlg->udata2;
