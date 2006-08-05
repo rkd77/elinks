@@ -680,32 +680,27 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			if (check_kbd_textinput_key(ev)) {
 				unsigned char *text = widget_data->cdata;
 				int textlen = strlen(text);
+#ifdef CONFIG_UTF_8
+				const unsigned char *ins = encode_utf_8(get_kbd_key(ev));
+				int inslen = utf8charlen(ins);
+#else  /* !CONFIG_UTF_8 */
+				const int inslen = 1;
+#endif /* !CONFIG_UTF_8 */
 
-				if (textlen >= widget_data->widget->datalen - 1)
+				if (textlen >= widget_data->widget->datalen - inslen)
 					goto display_field;
 
 				/* Shift to position of the cursor */
 				textlen -= widget_data->info.field.cpos;
-				text	+= widget_data->info.field.cpos++;
+				text	+= widget_data->info.field.cpos;
 
-				memmove(text + 1, text, textlen + 1);
-				*text = get_kbd_key(ev);
+				memmove(text + inslen, text, textlen + 1);
 #ifdef CONFIG_UTF_8
-				if (term->utf8) {
-					static unsigned char buf[7];
-					unsigned char *t = buf;
-					static int i = 0;
-					unicode_val_T data;
-
-					buf[i++] = *text;
-					buf[i] = '\0';
-					data = utf_8_to_unicode(&t, buf + i);
-					if (i == 6) i = 0;
-					if (data == UCS_NO_CHAR)
-						return EVENT_PROCESSED;
-					else i = 0;
-				}
-#endif /* CONFIG_UTF_8 */
+				memcpy(text, ins, inslen);
+#else  /* !CONFIG_UTF_8 */
+				*text = get_kbd_key(ev);
+#endif /* !CONFIG_UTF_8 */
+				widget_data->info.field.cpos += inslen;
 				goto display_field;
 			}
 	}

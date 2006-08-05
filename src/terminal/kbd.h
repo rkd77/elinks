@@ -7,8 +7,8 @@ struct term_event_keyboard {
 	/* Values <= -0x100 are special; e.g. KBD_ENTER.
 	 * Values between -0xFF and -2 are not used yet; treat as special.
 	 * Value  == -1 is KBD_UNDEF; not sent via socket. 
-	 * Values between 0 and 0xFF are bytes received from the terminal.
-	 * Values >= 0x100 are not used.  */
+	 * Values >= 0 are characters received from the terminal;
+	 * in UCS-4 #ifdef CONFIG_UTF_8. */
 	int key;
 	int modifier;
 };

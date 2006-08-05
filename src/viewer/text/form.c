@@ -1712,8 +1712,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 			if (form_field_is_readonly(fc)
-					|| strlen(fs->value) >= fc->maxlength
 #ifndef CONFIG_UTF_8
+					|| strlen(fs->value) >= fc->maxlength
 					|| !insert_in_string(&fs->value, fs->state, "?", 1)
 #endif /* CONFIG_UTF_8 */
 					)
@@ -1721,42 +1721,31 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
-#ifdef CONFIG_UTF_8
-			if (utf8) {
-				static unsigned char buf[7];
-				static int i = 0;
-				unicode_val_T data;
-				unsigned char *t;
 
-				t = buf;
-				buf[i++] = get_kbd_key(ev);
-				buf[i] = 0;
-				data = utf_8_to_unicode(&t, buf + i);
-				if (data != UCS_NO_CHAR) {
-					if (!insert_in_string(&fs->value, fs->state, buf, i)) {
-					    	i = 0;
-						return FRAME_EVENT_OK;
-					}
-					fs->state += i;
-					if (fc->type == FC_PASSWORD)
-						fs->state_cell++;
-					else if (fc->type == FC_TEXTAREA)
-						fs->state_cell = 0;
-					else
-						fs->state_cell += unicode_to_cell(data);
-					i = 0;
+#ifdef CONFIG_UTF_8
+			{
+				/* The charset of the terminal; we assume
+				 * fs->value is in this charset.
+				 * (Is that OK?)  */
+				int cp = get_opt_codepage_tree(ses->tab->term->spec,
+							       "charset");
+
+				text = u2cp_no_nbsp(get_kbd_key(ev), cp);
+				length = strlen(text);
+
+				if (strlen(fs->value) + length > fc->maxlength
+				    || !insert_in_string(&fs->value, fs->state, text, length)) {
+					status = FRAME_EVENT_OK;
 					break;
 				}
 
-				if (i == 6) {
-					i = 0;
-				}
-				return FRAME_EVENT_OK;
-
-			} else {
-				if (!insert_in_string(&fs->value, fs->state, "?", 1))
-					return FRAME_EVENT_OK;
-				fs->value[fs->state++] = get_kbd_key(ev);
+				fs->state += length;
+				if (fc->type == FC_PASSWORD)
+					fs->state_cell += (is_cp_utf8(cp) ? 1 : length);
+				else if (fc->type == FC_TEXTAREA)
+					fs->state_cell = 0;
+				else
+					fs->state_cell += (is_cp_utf8(cp) ? unicode_to_cell(get_kbd_key(ev)) : length);
 			}
 #else
 			fs->value[fs->state++] = get_kbd_key(ev);

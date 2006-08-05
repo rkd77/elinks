@@ -129,8 +129,14 @@ term_send_event(struct terminal *term, struct term_event *ev)
 static void
 term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
 {
-	unsigned char *recoded;
+#ifdef CONFIG_UTF_8
 	struct term_event ev;
+
+	set_kbd_term_event(&ev, u, modifier);
+	term_send_event(term, &ev);
+#else  /* !CONFIG_UTF_8 */
+	struct term_event ev;
+	unsigned char *recoded;
 
 	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
 	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset"));
@@ -140,6 +146,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
 		term_send_event(term, &ev);
 		recoded++;
 	}
+#endif /* !CONFIG_UTF_8 */
 }
 
 static void
@@ -282,18 +289,14 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 		/* Character Conversions.  */
 #ifdef CONFIG_UTF_8
-		/* struct term_event_keyboard carries bytes in the
-		 * charset of the terminal.
+		/* struct term_event_keyboard carries UCS-4.
 		 * - If the "utf_8_io" option (i.e. term->utf8) is
 		 *   true or the "charset" option refers to UTF-8,
 		 *   then handle_interlink_event() converts from UTF-8
-		 *   to UCS-4, and term_send_ucs() converts from UCS-4
-		 *   to the codepage specified with the "charset" option.
+		 *   to UCS-4.
 		 * - Otherwise, handle_interlink_event() converts from
 		 *   the codepage specified with the "charset" option
-		 *   to UCS-4, and term_send_ucs() converts right back.
-		 * TO DO: Change struct term_event_keyboard to carry
-		 * UCS-4 instead, reducing these conversions.  */
+		 *   to UCS-4.  */
 		utf8_io = term->utf8
 			|| is_cp_utf8(get_opt_codepage_tree(term->spec, "charset"));
 #else

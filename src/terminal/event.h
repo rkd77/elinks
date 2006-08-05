@@ -165,8 +165,18 @@ void in_term(struct terminal *);
 #define get_kbd_modifier(event)		(kbd_get_modifier(&(event)->info.keyboard))
 #define check_kbd_modifier(event, mod)	(kbd_modifier_is(&(event)->info.keyboard, (mod)))
 
-#define check_kbd_textinput_key(event)	(get_kbd_key(event) >= ' ' && get_kbd_key(event) < 256 && check_kbd_modifier(event, KBD_MOD_NONE))
-#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && get_kbd_key(event) < 256)
+#define check_kbd_textinput_key(event)	(get_kbd_key(event) >= ' ' && check_kbd_modifier(event, KBD_MOD_NONE))
+#ifdef CONFIG_UTF_8
+/* We must currently limit hotkeys of labels to ASCII, because
+ * get_kbd_key(event) is in UCS-4 and various event handlers pass it
+ * to toupper() if check_kbd_label_key() returns true.
+ * TO DO: Change the event handlers to use unicode_fold_label_case()
+ * instead.  The code that extracts the hotkey from the label string
+ * will also have to be changed.  */
+#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && get_kbd_key(event) <= 0x7F)
+#else  /* !CONFIG_UTF_8 */
+#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ')
+#endif /* !CONFIG_UTF_8 */
 
 
 /* For mouse events handling */
