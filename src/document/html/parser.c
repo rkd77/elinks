@@ -57,7 +57,7 @@ get_color(struct html_context *html_context, unsigned char *a,
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
 
-	at = get_attr_val(a, c, html_context->options);
+	at = get_attr_val(a, c, html_context->options->cp);
 	if (!at) return -1;
 
 	r = decode_color(at, strlen(at), rgb);
@@ -78,7 +78,7 @@ get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
 unsigned char *
 get_target(struct document_options *options, unsigned char *a)
 {
-	unsigned char *v = get_attr_val(a, "target", options);
+	unsigned char *v = get_attr_val(a, "target", options->cp);
 
 	if (!v) return NULL;
 
@@ -154,7 +154,7 @@ set_fragment_identifier(struct html_context *html_context,
 {
 	unsigned char *id_attr;
 
-	id_attr = get_attr_val(attr_name, attr, html_context->options);
+	id_attr = get_attr_val(attr_name, attr, html_context->options->cp);
 
 	if (id_attr) {
 		html_context->special_f(html_context, SP_TAG, id_attr);
@@ -226,6 +226,7 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 {
 	struct document_options *options;
 	unsigned char *accesskey;
+	int cp;
 	int tabindex;
 
 	format.accesskey = 0;
@@ -234,25 +235,26 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 	if (!a) return;
 
 	options = html_context->options;
+	cp = options->cp;
 
-	accesskey = get_attr_val(a, "accesskey", options);
+	accesskey = get_attr_val(a, "accesskey", cp);
 	if (accesskey) {
 		format.accesskey = accesskey_string_to_unicode(accesskey);
 		mem_free(accesskey);
 	}
 
-	tabindex = get_num(a, "tabindex", options);
+	tabindex = get_num(a, "tabindex", options->cp);
 	if (0 < tabindex && tabindex < 32767) {
 		format.tabindex = (tabindex & 0x7fff) << 16;
 	}
 
-	mem_free_set(&format.onclick, get_attr_val(a, "onclick", options));
-	mem_free_set(&format.ondblclick, get_attr_val(a, "ondblclick", options));
-	mem_free_set(&format.onmouseover, get_attr_val(a, "onmouseover", options));
-	mem_free_set(&format.onhover, get_attr_val(a, "onhover", options));
-	mem_free_set(&format.onfocus, get_attr_val(a, "onfocus", options));
-	mem_free_set(&format.onmouseout, get_attr_val(a, "onmouseout", options));
-	mem_free_set(&format.onblur, get_attr_val(a, "onblur", options));
+	mem_free_set(&format.onclick, get_attr_val(a, "onclick", cp));
+	mem_free_set(&format.ondblclick, get_attr_val(a, "ondblclick", cp));
+	mem_free_set(&format.onmouseover, get_attr_val(a, "onmouseover", cp));
+	mem_free_set(&format.onhover, get_attr_val(a, "onhover", cp));
+	mem_free_set(&format.onfocus, get_attr_val(a, "onfocus", cp));
+	mem_free_set(&format.onmouseout, get_attr_val(a, "onmouseout", cp));
+	mem_free_set(&format.onblur, get_attr_val(a, "onblur", cp));
 }
 
 void
@@ -448,7 +450,7 @@ look_for_map(unsigned char **pos, unsigned char *eof, struct uri *uri,
 	if (strlcasecmp(name, namelen, "MAP", 3)) return 1;
 
 	if (uri && uri->fragment) {
-		al = get_attr_val(attr, "name", options);
+		al = get_attr_val(attr, "name", options->cp);
 		if (!al) return 1;
 
 		if (strlcasecmp(al, -1, uri->fragment, uri->fragmentlen)) {
@@ -546,7 +548,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		if (*pos >= eof) return 0;
 
 	} else if (!strlcasecmp(name, namelen, "AREA", 4)) {
-		unsigned char *alt = get_attr_val(attr, "alt", options);
+		unsigned char *alt = get_attr_val(attr, "alt", options->cp);
 
 		if (alt) {
 			label = convert_string(ct, alt, strlen(alt),
@@ -580,7 +582,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		return 1;
 	}
 
-	href = get_url_val(attr, "href", options);
+	href = get_url_val(attr, "href", options->cp);
 	if (!href) {
 		mem_free_if(label);
 		mem_free(target);

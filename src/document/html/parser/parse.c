@@ -136,7 +136,7 @@ end:
 
 unsigned char *
 get_attr_value(register unsigned char *e, unsigned char *name,
-	       struct document_options *options, enum html_attr_flags flags)
+	       int cp, enum html_attr_flags flags)
 {
 	unsigned char *n;
 	unsigned char *name_start;
@@ -206,9 +206,8 @@ found_endattr:
 		    memchr(attr, '&', attrlen)) {
 			unsigned char *saved_attr = attr;
 
-			attr = convert_string(NULL, saved_attr, attrlen,
-			                      options->cp, CSM_QUERY,
-			                      NULL, NULL, NULL);
+			attr = convert_string(NULL, saved_attr, attrlen, cp,
+			                      CSM_QUERY, NULL, NULL, NULL);
 			mem_free(saved_attr);
 		}
 
@@ -246,9 +245,9 @@ parse_error:
  * It will return a positive integer value on success,
  * or -1 on error. */
 int
-get_num(unsigned char *a, unsigned char *name, struct document_options *options)
+get_num(unsigned char *a, unsigned char *name, int cp)
 {
-	unsigned char *al = get_attr_val(a, name, options);
+	unsigned char *al = get_attr_val(a, name, cp);
 	int result = -1;
 
 	if (al) {
@@ -274,7 +273,7 @@ int
 get_width(unsigned char *a, unsigned char *name, int limited,
           struct html_context *html_context)
 {
-	unsigned char *value = get_attr_val(a, name, html_context->options);
+	unsigned char *value = get_attr_val(a, name, html_context->options->cp);
 	unsigned char *str = value;
 	unsigned char *end;
 	int percentage = 0;
@@ -755,7 +754,7 @@ start_element(struct element_info *ei,
 {
 #define ELEMENT_RENDER_PROLOGUE \
 	ln_break(html_context, ei->linebreak); \
-	a = get_attr_val(attr, "id", html_context->options); \
+	a = get_attr_val(attr, "id", html_context->options->cp); \
 	if (a) { \
 		html_context->special_f(html_context, SP_TAG, a); \
 		mem_free(a); \
@@ -1039,20 +1038,20 @@ xsp:
 	}
 	if (strlcasecmp(name, namelen, "META", 4)) goto se;
 
-	he = get_attr_val(attr, "charset", options);
+	he = get_attr_val(attr, "charset", options->cp);
 	if (he) {
 		add_to_string(head, "Charset: ");
 		add_to_string(head, he);
 		mem_free(he);
 	}
 
-	he = get_attr_val(attr, "http-equiv", options);
+	he = get_attr_val(attr, "http-equiv", options->cp);
 	if (!he) goto se;
 
 	add_to_string(head, he);
 	mem_free(he);
 
-	c = get_attr_val(attr, "content", options);
+	c = get_attr_val(attr, "content", options->cp);
 	if (c) {
 		add_to_string(head, ": ");
 		add_to_string(head, c);

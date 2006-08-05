@@ -33,12 +33,12 @@ enum html_attr_flags {
  * - name is searched attribute
  *
  * Returns allocated string containing the attribute, or NULL on unsuccess. */
-unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, struct document_options *options, enum html_attr_flags flags);
+unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, int cp, enum html_attr_flags flags);
 
 /* Wrappers for get_attr_value(). */
-#define get_attr_val(e, name, options) get_attr_value(e, name, options, HTML_ATTR_NONE)
-#define get_url_val(e, name, options) get_attr_value(e, name, options, HTML_ATTR_EAT_NL)
-#define has_attr(e, name, options) (!!get_attr_value(e, name, options, HTML_ATTR_TEST))
+#define get_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_NONE)
+#define get_url_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_EAT_NL)
+#define has_attr(e, name, cp) (!!get_attr_value(e, name, cp, HTML_ATTR_TEST))
 
 
 /* Interface for both the renderer and the table handling */
@@ -55,7 +55,7 @@ typedef void (element_handler_T)(struct html_context *, unsigned char *attr,
 
 int parse_element(unsigned char *, unsigned char *, unsigned char **, int *, unsigned char **, unsigned char **);
 
-int get_num(unsigned char *, unsigned char *, struct document_options *);
+int get_num(unsigned char *, unsigned char *, int);
 int get_width(unsigned char *, unsigned char *, int, struct html_context *);
 
 unsigned char *skip_comment(unsigned char *, unsigned char *);
