@@ -670,7 +670,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 		if (itrm->in.queue.len >= 4
 		    && itrm->in.queue.data[3] >= 'A'
 		    && itrm->in.queue.data[3] <= 'L') {
-			kbd.key = KBD_F1 + itrm->in.queue.data[3] - 'A';
+			kbd.key = number_to_kbd_fkey(itrm->in.queue.data[3] - 'A' + 1);
 			set_kbd_interlink_event(ev, kbd.key, kbd.modifier);
 			return 4;
 		}

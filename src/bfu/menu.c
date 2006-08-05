@@ -950,7 +950,7 @@ menu_kbd_handler(struct menu *menu, struct term_event *ev)
 		{
 			int key = get_kbd_key(ev);
 
-			if ((key >= KBD_F1 && key <= KBD_F12)
+			if (is_kbd_fkey(key)
 			    || check_kbd_modifier(ev, KBD_MOD_ALT)) {
 				delete_window_ev(win, ev);
 				return;

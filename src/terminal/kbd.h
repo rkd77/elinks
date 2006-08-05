@@ -42,6 +42,9 @@ struct interlink_event_keyboard {
 #define KBD_F10		0x129
 #define KBD_F11		0x12a
 #define KBD_F12		0x12b
+static inline int is_kbd_fkey(int key) { return key >= KBD_F1 && key <= KBD_F12; }
+#define number_to_kbd_fkey(num) ((num) + KBD_F1 - 1)
+#define kbd_fkey_to_number(key) ((key) - KBD_F1 + 1)
 
 #define KBD_CTRL_C	0x200
 
