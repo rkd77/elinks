@@ -34,8 +34,8 @@ static void
 gpm_mouse_in(struct gpm_mouse_spec *gms)
 {
 	Gpm_Event gev;
-	struct term_event ev;
-	struct term_event_mouse mouse;
+	struct interlink_event ev;
+	struct interlink_event_mouse mouse;
 
 	if (Gpm_GetEvent(&gev) <= 0) {
 		clear_handlers(gms->h);
@@ -72,7 +72,7 @@ gpm_mouse_in(struct gpm_mouse_spec *gms)
 	else
 		return;
 
-	set_mouse_term_event(&ev, mouse.x, mouse.y, mouse.button);
+	set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
 	gms->fn(gms->data, (char *) &ev, sizeof(ev));
 }
 

@@ -8,6 +8,11 @@ struct term_event_keyboard {
 	int modifier;
 };
 
+struct interlink_event_keyboard {
+	int key;
+	int modifier;
+};
+
 #define KBD_UNDEF	-1
 
 #define KBD_ENTER	0x100

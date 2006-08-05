@@ -67,7 +67,7 @@ struct itrm_out {
 	 * socket connection is terminal.fdin in the master process.
 	 * If the connection is from the master process to itself, it
 	 * uses a pipe; otherwise a socket.  The events are formatted
-	 * as struct term_event, but at the beginning of the
+	 * as struct interlink_event, but at the beginning of the
 	 * connection, a struct terminal_info and extra data are also
 	 * sent.  */
 	int sock;

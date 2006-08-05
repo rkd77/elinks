@@ -135,10 +135,10 @@ itrm_queue_event(struct itrm *itrm, unsigned char *data, int len)
 void
 kbd_ctrl_c(void)
 {
-	struct term_event ev;
+	struct interlink_event ev;
 
 	if (!ditrm) return;
-	set_kbd_term_event(&ev, KBD_CTRL_C, KBD_MOD_NONE);
+	set_kbd_interlink_event(&ev, KBD_CTRL_C, KBD_MOD_NONE);
 	itrm_queue_event(ditrm, (unsigned char *) &ev, sizeof(ev));
 }
 
@@ -190,11 +190,11 @@ send_done_sequence(int h, int altscreen)
 void
 resize_terminal(void)
 {
-	struct term_event ev;
+	struct interlink_event ev;
 	int width, height;
 
 	get_terminal_size(ditrm->out.std, &width, &height);
-	set_resize_term_event(&ev, width, height);
+	set_resize_interlink_event(&ev, width, height);
 	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
@@ -265,7 +265,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 {
 	struct itrm *itrm;
 	struct terminal_info info;
-	struct term_event_size *size = &info.event.info.size;
+	struct interlink_event_size *size = &info.event.info.size;
 	unsigned char *ts;
 
 	memset(&info, 0, sizeof(info));
@@ -654,7 +654,7 @@ get_esc_code(unsigned char *str, int len, unsigned char *code, int *num)
 /* Returns length of the escape sequence or -1 if the caller needs to set up
  * the ESC delay timer. */
 static int
-decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
+decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
 	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
 	unsigned char c;
@@ -671,7 +671,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 		    && itrm->in.queue.data[3] >= 'A'
 		    && itrm->in.queue.data[3] <= 'L') {
 			kbd.key = KBD_F1 + itrm->in.queue.data[3] - 'A';
-			copy_struct(&ev->info.keyboard, &kbd);
+			set_kbd_interlink_event(ev, kbd.key, kbd.modifier);
 			return 4;
 		}
 
@@ -772,7 +772,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 
 	/* KBD_UNDEF here means it was unrecognized or a mouse event.  */
 	if (kbd.key != KBD_UNDEF)
-		set_kbd_term_event(ev, kbd.key, kbd.modifier);
+		set_kbd_interlink_event(ev, kbd.key, kbd.modifier);
 
 	return el;
 }
@@ -785,10 +785,10 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
  *   The length of the escape sequence otherwise.
  * Returning >0 does not imply this function has altered *ev.  */
 static int
-decode_terminal_application_key(struct itrm *itrm, struct term_event *ev)
+decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 {
 	unsigned char c;
-	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
+	struct interlink_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
 
 	assert(itrm->in.queue.len >= 2);
 	assert(itrm->in.queue.data[0] == ASCII_ESC);
@@ -834,7 +834,7 @@ decode_terminal_application_key(struct itrm *itrm, struct term_event *ev)
 
 
 static void
-set_kbd_event(struct term_event *ev, int key, int modifier)
+set_kbd_event(struct interlink_event *ev, int key, int modifier)
 {
 	switch (key) {
 	case ASCII_TAB:
@@ -869,13 +869,13 @@ set_kbd_event(struct term_event *ev, int key, int modifier)
 		}
 	}
 
-	set_kbd_term_event(ev, key, modifier);
+	set_kbd_interlink_event(ev, key, modifier);
 }
 
 static void
 kbd_timeout(struct itrm *itrm)
 {
-	struct term_event ev;
+	struct interlink_event ev;
 	int el;
 
 	itrm->timer = TIMER_ID_UNDEF;
@@ -914,14 +914,14 @@ kbd_timeout(struct itrm *itrm)
 static int
 process_queue(struct itrm *itrm)
 {
-	struct term_event ev;
+	struct interlink_event ev;
 	int el = 0;
 
 	if (!itrm->in.queue.len) goto return_without_event;
 	assert(!itrm->blocked);
 	if_assert_failed return 0; /* unlike goto, don't enable reading */
 
-	set_kbd_term_event(&ev, KBD_UNDEF, KBD_MOD_NONE);
+	set_kbd_interlink_event(&ev, KBD_UNDEF, KBD_MOD_NONE);
 
 #ifdef DEBUG_ITRM_QUEUE
 	{
@@ -1002,7 +1002,9 @@ process_queue(struct itrm *itrm)
 			el = -1;
 		else {
 			el = 2;
-			copy_struct(&ev.info.keyboard, &os2xtd[itrm->in.queue.data[1]]);
+			set_kbd_interlink_event(&ev,
+						os2xtd[itrm->in.queue.data[1]].key,
+						os2xtd[itrm->in.queue.data[1]].modifier);
 		}
 	}
 

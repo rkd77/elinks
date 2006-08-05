@@ -36,7 +36,7 @@ struct sysmouse_spec {
 static void
 sysmouse_handler(void *data)
 {
-	static struct term_event_mouse prev_mouse;
+	static struct interlink_event_mouse prev_mouse;
 	static int prev_buttons;
 	struct sysmouse_spec *sp = data;
 	void *itrm = sp->itrm;
@@ -44,8 +44,8 @@ sysmouse_handler(void *data)
 	int buttons, change;
 	int extended_button;
 	mouse_info_t mi;
-	struct term_event_mouse mouse;
-	struct term_event ev;
+	struct interlink_event_mouse mouse;
+	struct interlink_event ev;
 
 	mi.operation = MOUSE_GETINFO;
 	if (ioctl(fd, CONS_MOUSECTL, &mi) == -1) return;
@@ -154,7 +154,7 @@ sysmouse_handler(void *data)
 	}
 
 	prev_buttons = buttons;
-	set_mouse_term_event(&ev, mouse.x, mouse.y, mouse.button);
+	set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
 	sp->fn(itrm, (unsigned char *)&ev, sizeof(ev));
 }
 

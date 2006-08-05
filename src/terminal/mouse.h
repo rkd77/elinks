@@ -1,7 +1,7 @@
 #ifndef EL__TERMINAL_MOUSE_H
 #define EL__TERMINAL_MOUSE_H
 
-struct term_event;
+struct interlink_event;
 struct itrm;
 
 /* The mouse reporting button byte looks like:
@@ -80,6 +80,7 @@ struct term_event_mouse {
 	int x, y;
 	unsigned int button;
 };
+#define interlink_event_mouse term_event_mouse
 
 #define BM_BUTT		7
 #define B_LEFT		0
@@ -116,7 +117,7 @@ void send_mouse_done_sequence(int h);
 void disable_mouse(void);
 void enable_mouse(void);
 void toggle_mouse(void);
-int decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct term_event *ev, int el, int v);
+int decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev, int el, int v);
 
 
 #endif

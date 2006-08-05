@@ -126,11 +126,11 @@ decode_mouse_position(struct itrm *itrm, int from)
 /* Returns length of the escape sequence or -1 if the caller needs to set up
  * the ESC delay timer. */
 int
-decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct term_event *ev,
+decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev,
 				      int el, int v)
 {
 	static int xterm_button = -1;
-	struct term_event_mouse mouse;
+	struct interlink_event_mouse mouse;
 
 	if (itrm->in.queue.len - el < 3)
 		return -1;
@@ -203,7 +203,7 @@ decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct term_event *ev,
 
 	/* Postpone changing of the event type until all sanity
 	 * checks have been done. */
-	set_mouse_term_event(ev, mouse.x, mouse.y, mouse.button);
+	set_mouse_interlink_event(ev, mouse.x, mouse.y, mouse.button);
 
 	return el;
 }

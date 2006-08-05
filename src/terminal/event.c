@@ -192,17 +192,18 @@ ignore_mouse_event(struct terminal *term, struct term_event *ev)
 #endif
 
 static int
-handle_interlink_event(struct terminal *term, struct term_event *ev)
+handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 {
 	struct terminal_info *info = NULL;
 	struct terminal_interlink *interlink = term->interlink;
+	struct term_event tev;
 
-	switch (ev->ev) {
+	switch (ilev->ev) {
 	case EVENT_INIT:
 		if (interlink->qlen < TERMINAL_INFO_SIZE)
 			return 0;
 
-		info = (struct terminal_info *) ev;
+		info = (struct terminal_info *) ilev;
 
 		if (interlink->qlen < TERMINAL_INFO_SIZE + info->length)
 			return 0;
@@ -219,7 +220,10 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 		 * terminal screen before decoding the session info so that
 		 * handling of bad URL syntax by openning msg_box() will be
 		 * possible. */
-		term_send_event(term, ev);
+		set_init_term_event(&tev, 
+				    ilev->info.size.width,
+				    ilev->info.size.height);
+		term_send_event(term, &tev);
 
 		/* Either the initialization of the first session failed or we
 		 * are doing a remote session so quit.*/
@@ -234,29 +238,38 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			return 0;
 		}
 
-		ev->ev = EVENT_REDRAW;
+		ilev->ev = EVENT_REDRAW;
 		/* Fall through */
 	case EVENT_REDRAW:
 	case EVENT_RESIZE:
-		term_send_event(term, ev);
+		set_wh_term_event(&tev, ilev->ev,
+				  ilev->info.size.width,
+				  ilev->info.size.height);
+		term_send_event(term, &tev);
 		break;
 
 	case EVENT_MOUSE:
 #ifdef CONFIG_MOUSE
 		reset_timer();
-		if (!ignore_mouse_event(term, ev))
-			term_send_event(term, ev);
+		tev.ev = ilev->ev;
+		copy_struct(&tev.info.mouse, &ilev->info.mouse);
+		if (!ignore_mouse_event(term, &tev))
+			term_send_event(term, &tev);
 #endif
 		break;
 
 	case EVENT_KBD:
 	{
 		int utf8_io = -1;
-		int key = get_kbd_key(ev);
+		int key;
+
+		set_kbd_term_event(&tev, ilev->info.keyboard.key, ilev->info.keyboard.modifier);
+
+		key = get_kbd_key(&tev);
 
 		reset_timer();
 
-		if (check_kbd_modifier(ev, KBD_MOD_CTRL) && (key == 'l' || key == 'L')) {
+		if (check_kbd_modifier(&tev, KBD_MOD_CTRL) && (key == 'l' || key == 'L')) {
 			redraw_terminal_cls(term);
 			break;
 
@@ -280,18 +293,18 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 
 					if (u < interlink->utf_8.min)
 						u = UCS_NO_CHAR;
-					term_send_ucs(term, ev, u);
+					term_send_ucs(term, &tev, u);
 				}
 				break;
 
 			} else {
 				interlink->utf_8.len = 0;
-				term_send_ucs(term, ev, UCS_NO_CHAR);
+				term_send_ucs(term, &tev, UCS_NO_CHAR);
 			}
 		}
 
 		if (key < 0x80 || key > 0xFF || !utf8_io) {
-			term_send_event(term, ev);
+			term_send_event(term, &tev);
 			break;
 
 		} else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
@@ -309,7 +322,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 			break;
 		}
 
-		term_send_ucs(term, ev, UCS_NO_CHAR);
+		term_send_ucs(term, &tev, UCS_NO_CHAR);
 		break;
 	}
 
@@ -318,12 +331,12 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 		return 0;
 
 	default:
-		ERROR(gettext("Bad event %d"), ev->ev);
+		ERROR(gettext("Bad event %d"), ilev->ev);
 	}
 
 	/* For EVENT_INIT we read a liitle more */
 	if (info) return TERMINAL_INFO_SIZE + info->length;
-	return sizeof(*ev);
+	return sizeof(*ilev);
 }
 
 void
@@ -368,8 +381,8 @@ in_term(struct terminal *term)
 	interlink->qlen += r;
 	interlink->qfreespace -= r;
 
-	while (interlink->qlen >= sizeof(struct term_event)) {
-		struct term_event *ev = (struct term_event *) iq;
+	while (interlink->qlen >= sizeof(struct interlink_event)) {
+		struct interlink_event *ev = (struct interlink_event *) iq;
 		int event_size = handle_interlink_event(term, ev);
 
 		/* If the event was not handled save the bytes in the queue for

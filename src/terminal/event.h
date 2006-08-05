@@ -38,6 +38,22 @@ struct term_event {
 	} info;
 };
 
+struct interlink_event {
+	enum term_event_type ev;
+
+	union {
+		/* EVENT_MOUSE */
+		struct interlink_event_mouse mouse;
+
+		/* EVENT_KBD */
+		struct interlink_event_keyboard keyboard;
+
+		/* EVENT_INIT, EVENT_RESIZE, EVENT_REDRAW */
+#define interlink_event_size term_event_size
+		struct interlink_event_size size;
+	} info;
+};
+
 static inline void
 set_mouse_term_event(struct term_event *ev, int x, int y, unsigned int button)
 {
@@ -47,7 +63,23 @@ set_mouse_term_event(struct term_event *ev, int x, int y, unsigned int button)
 }
 
 static inline void
+set_mouse_interlink_event(struct interlink_event *ev, int x, int y, unsigned int button)
+{
+	memset(ev, 0, sizeof(*ev));
+	ev->ev = EVENT_MOUSE;
+	set_mouse(&ev->info.mouse, x, y, button);
+}
+
+static inline void
 set_kbd_term_event(struct term_event *ev, int key, int modifier)
+{
+	memset(ev, 0, sizeof(*ev));
+	ev->ev = EVENT_KBD;
+	kbd_set(&ev->info.keyboard, key, modifier);
+}
+
+static inline void
+set_kbd_interlink_event(struct interlink_event *ev, int key, int modifier)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = EVENT_KBD;
@@ -74,6 +106,17 @@ set_wh_term_event(struct term_event *ev, enum term_event_type type, int width, i
 #define set_resize_term_event(ev, w, h) set_wh_term_event(ev, EVENT_RESIZE, w, h)
 #define set_redraw_term_event(ev, w, h) set_wh_term_event(ev, EVENT_REDRAW, w, h)
 
+static inline void
+set_wh_interlink_event(struct interlink_event *ev, enum term_event_type type, int width, int height)
+{
+	memset(ev, 0, sizeof(*ev));
+	ev->ev = type;
+	ev->info.size.width = width;
+	ev->info.size.height = height;
+}
+
+#define set_resize_interlink_event(ev, w, h) set_wh_interlink_event(ev, EVENT_RESIZE, w, h)
+
 
 /* This holds the information used when handling the initial connection between
  * a dumb and master terminal. */
@@ -83,7 +126,7 @@ set_wh_term_event(struct term_event *ev, enum term_event_type type, int width, i
  * add new members add them at the bottom and use magic variables to
  * distinguish them when decoding the terminal info. */
 struct terminal_info {
-	struct term_event event;		/* The EVENT_INIT event */
+	struct interlink_event event;		/* The EVENT_INIT event */
 	unsigned char name[MAX_TERM_LEN];	/* $TERM environment name */
 	unsigned char cwd[MAX_CWD_LEN];		/* Current working directory */
 	int system_env;				/* System info (X, screen) */
