@@ -261,11 +261,11 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 	case EVENT_KBD:
 	{
 		int utf8_io = -1;
-		int key;
+		int key = ilev->info.keyboard.key;
 
-		set_kbd_term_event(&tev, ilev->info.keyboard.key, ilev->info.keyboard.modifier);
-
-		key = get_kbd_key(&tev);
+		if (key >= 0x100)
+			key = -key;
+		set_kbd_term_event(&tev, key, ilev->info.keyboard.modifier);
 
 		reset_timer();
 

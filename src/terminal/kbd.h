@@ -4,49 +4,58 @@
 struct itrm;
 
 struct term_event_keyboard {
+	/* Values <= -0x100 are special; e.g. KBD_ENTER.
+	 * Values between -0xFF and -2 are not used yet; treat as special.
+	 * Value  == -1 is KBD_UNDEF; not sent via socket. 
+	 * Values between 0 and 0xFF are bytes received from the terminal.
+	 * Values >= 0x100 are not used.  */
 	int key;
 	int modifier;
 };
 
 struct interlink_event_keyboard {
+	/* Values <= -2 are not used, for ELinks 0.11 compatibility.
+	 * Value  == -1 is KBD_UNDEF; not sent via socket.
+	 * Values between 0 and 0xFF are bytes received from the terminal.
+	 * Values >= 0x100 are special; e.g. -KBD_ENTER.  */
 	int key;
 	int modifier;
 };
 
 #define KBD_UNDEF	-1
 
-#define KBD_ENTER	0x100
-#define KBD_BS		0x101
-#define KBD_TAB		0x102
-#define KBD_ESC		0x103
-#define KBD_LEFT	0x104
-#define KBD_RIGHT	0x105
-#define KBD_UP		0x106
-#define KBD_DOWN	0x107
-#define KBD_INS		0x108
-#define KBD_DEL		0x109
-#define KBD_HOME	0x10a
-#define KBD_END		0x10b
-#define KBD_PAGE_UP	0x10c
-#define KBD_PAGE_DOWN	0x10d
+#define KBD_ENTER	(-0x100)
+#define KBD_BS		(-0x101)
+#define KBD_TAB		(-0x102)
+#define KBD_ESC		(-0x103)
+#define KBD_LEFT	(-0x104)
+#define KBD_RIGHT	(-0x105)
+#define KBD_UP		(-0x106)
+#define KBD_DOWN	(-0x107)
+#define KBD_INS		(-0x108)
+#define KBD_DEL		(-0x109)
+#define KBD_HOME	(-0x10a)
+#define KBD_END		(-0x10b)
+#define KBD_PAGE_UP	(-0x10c)
+#define KBD_PAGE_DOWN	(-0x10d)
 
-#define KBD_F1		0x120
-#define KBD_F2		0x121
-#define KBD_F3		0x122
-#define KBD_F4		0x123
-#define KBD_F5		0x124
-#define KBD_F6		0x125
-#define KBD_F7		0x126
-#define KBD_F8		0x127
-#define KBD_F9		0x128
-#define KBD_F10		0x129
-#define KBD_F11		0x12a
-#define KBD_F12		0x12b
-static inline int is_kbd_fkey(int key) { return key >= KBD_F1 && key <= KBD_F12; }
-#define number_to_kbd_fkey(num) ((num) + KBD_F1 - 1)
-#define kbd_fkey_to_number(key) ((key) - KBD_F1 + 1)
+#define KBD_F1		(-0x120)
+#define KBD_F2		(-0x121)
+#define KBD_F3		(-0x122)
+#define KBD_F4		(-0x123)
+#define KBD_F5		(-0x124)
+#define KBD_F6		(-0x125)
+#define KBD_F7		(-0x126)
+#define KBD_F8		(-0x127)
+#define KBD_F9		(-0x128)
+#define KBD_F10		(-0x129)
+#define KBD_F11		(-0x12a)
+#define KBD_F12		(-0x12b)
+static inline int is_kbd_fkey(int key) { return key <= KBD_F1 && key >= KBD_F12; }
+#define number_to_kbd_fkey(num) (KBD_F1 - (num) + 1)
+#define kbd_fkey_to_number(key) (KBD_F1 - (key) + 1)
 
-#define KBD_CTRL_C	0x200
+#define KBD_CTRL_C	(-0x200)
 
 #define KBD_MOD_NONE	0
 #define KBD_MOD_SHIFT	1

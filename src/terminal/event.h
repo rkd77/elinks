@@ -78,11 +78,15 @@ set_kbd_term_event(struct term_event *ev, int key, int modifier)
 	kbd_set(&ev->info.keyboard, key, modifier);
 }
 
+/* @key can be e.g. KBD_ENTER as in term_event_keyboard.key.
+ * This function then sets ev->info.keyboard.key = -KBD_ENTER.  */
 static inline void
 set_kbd_interlink_event(struct interlink_event *ev, int key, int modifier)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = EVENT_KBD;
+	if (key <= -0x100)
+		key = -key;
 	kbd_set(&ev->info.keyboard, key, modifier);
 }
 
