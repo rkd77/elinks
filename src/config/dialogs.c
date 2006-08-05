@@ -465,6 +465,7 @@ check_option_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 	return EVENT_PROCESSED;
 }
+
 static widget_handler_status_T
 push_add_button(struct dialog_data *dlg_data,
 		struct widget_data *some_useless_info_button)
