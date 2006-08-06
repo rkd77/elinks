@@ -318,8 +318,19 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
 #endif /* CONFIG_UTF_8 */
 
+		/* In UTF-8 byte sequences that have more than one byte, the
+		 * first byte is between 0xC0 and 0xFF and the remaining bytes
+		 * are between 0x80 and 0xBF.  If there is just one byte, then
+		 * it is between 0x00 and 0x7F and it is straight ASCII.
+		 * (All 'betweens' are inclusive.) */
+
 		if (interlink->utf_8.len) {
+			/* A previous call to handle_interlink_event
+			 * got a UTF-8 start byte. */
+
 			if (key >= 0x80 && key <= 0xBF && utf8_io) {
+				/* This is a UTF-8 continuation byte. */
+
 				interlink->utf_8.ucs <<= 6;
 				interlink->utf_8.ucs |= key & 0x3F;
 				if (! --interlink->utf_8.len) {
@@ -333,6 +344,11 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				break;
 
 			} else {
+				/* The byte sequence for this character is
+				 * ending prematurely.  Send UCS_NO_CHAR for the
+				 * terminated character, but don't break; let
+				 * this byte be handled below. */
+
 				interlink->utf_8.len = 0;
 				term_send_ucs(term, UCS_NO_CHAR,
 					      term->interlink->utf_8.modifier);
@@ -340,8 +356,16 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		}
 
 		if (key < 0x80 || key > 0xFF || !utf8_io) {
+			/* This byte is not part of a multibyte character
+			 * encoding: either it is outside of the ranges for
+			 * UTF-8 start and continuation bytes or UTF-8 I/O mode
+			 * is disabled. */
+
 #ifdef CONFIG_UTF_8
 			if (key >= 0 && key <= 0xFF && !utf8_io) {
+				/* Not special and UTF-8 mode is disabled:
+				 * recode from the terminal charset to UCS-4. */
+
 				key = cp2u(get_opt_codepage_tree(term->spec,
 								 "charset"),
 					   key);
@@ -349,14 +373,24 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				break;
 			}
 #endif /* !CONFIG_UTF_8 */
+
+			/* It must be special (e.g., F1 or Enter)
+			 * or a single-byte UTF-8 character. */
 			set_kbd_term_event(&tev, key, modifier);
 			term_send_event(term, &tev);
 			break;
 
 		} else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
+			/* This is a UTF-8 start byte. */
+
 			unsigned int mask, cov = 0x80;
 			int len = 0;
 
+			/* The number of 1's between the first bit and first
+			 * 0 bit (exclusive) is the number of remaining 
+			 * continuation bytes in the encoding of the character
+			 * that is now being processed, which number will be
+			 * stored in interlink->utf_8.len. */
 			for (mask = 0x80; key & mask; mask >>= 1) {
 				len++;
 				interlink->utf_8.min = cov;
