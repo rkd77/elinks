@@ -44,6 +44,12 @@ struct terminal_interlink {
 		unicode_val_T ucs;
 		int len;
 		int min;
+		/* Modifier keys from the key event that carried the
+		 * first byte of the character.  We need this because
+		 * ELinks sees e.g. ESC U+00F6 as 0x1B 0xC3 0xB6 and
+		 * converts it to Alt-0xC3 0xB6, attaching the
+		 * modifier to the first byte only.  */
+		int modifier;
 	} utf_8;
 
 	/* This is the queue of events as coming from the other ELinks instance
@@ -321,13 +327,15 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 					if (u < interlink->utf_8.min)
 						u = UCS_NO_CHAR;
-					term_send_ucs(term, u, modifier);
+					term_send_ucs(term, u,
+						      term->interlink->utf_8.modifier);
 				}
 				break;
 
 			} else {
 				interlink->utf_8.len = 0;
-				term_send_ucs(term, UCS_NO_CHAR, modifier);
+				term_send_ucs(term, UCS_NO_CHAR,
+					      term->interlink->utf_8.modifier);
 			}
 		}
 
@@ -357,6 +365,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 			interlink->utf_8.len = len - 1;
 			interlink->utf_8.ucs = key & (mask - 1);
+			interlink->utf_8.modifier = modifier;
 			break;
 		}
 
