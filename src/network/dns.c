@@ -34,6 +34,7 @@
 #include "main/select.h"
 #include "network/dns.h"
 #include "osdep/osdep.h"
+#include "protocol/uri.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/time.h"
@@ -143,7 +144,7 @@ do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno
 #ifdef CONFIG_IPV6
 	struct addrinfo hint, *ai, *ai_cur;
 #else
-	struct hostent *hostent;
+	struct hostent *hostent = NULL;
 #endif
 	int i;
 
@@ -165,7 +166,12 @@ do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno
 	 * gethostbyaddr(), but there are problems with gethostbyaddr on Cygwin,
 	 * so we do not use gethostbyaddr there. */
 #if defined(HAVE_GETHOSTBYADDR) && !defined(HAVE_SYS_CYGWIN_H)
-	hostent = gethostbyaddr(name, strlen(name), AF_INET);
+	{
+		struct in_addr inp;
+
+		if (is_ip_address(name, strlen(name)) && inet_aton(name, &inp))
+			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
+	}
 	if (!hostent)
 #endif
 	{
