@@ -179,9 +179,14 @@ unsigned char *get_keymap_name(enum keymap_id);
 int parse_keystroke(unsigned char *, struct term_event_keyboard *);
 void add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd, int escape);
 
+/* void add_accesskey_to_string(struct string *str, unicode_val_T accesskey); */
 #define add_accesskey_to_string(str, accesskey) do { 		\
 	struct term_event_keyboard kbd; 			\
-	kbd.key = accesskey; /* FIXME: unicode_val_T to int */	\
+	/* FIXME: #ifndef CONFIG_UTF_8, kbd.key is encoded in	\
+	 * the charset of the terminal, so accesskey should be	\
+	 * converted from unicode_val_T to that.		\
+	 * #ifdef CONFIG_UTF_8, the code is correct.  */	\
+	kbd.key = accesskey;					\
 	kbd.modifier = 0; 					\
 	add_keystroke_to_string(str, &kbd, 0); 			\
 } while (0)
