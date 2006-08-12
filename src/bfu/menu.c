@@ -948,7 +948,7 @@ menu_kbd_handler(struct menu *menu, struct term_event *ev)
 
 		default:
 		{
-			int key = get_kbd_key(ev);
+			term_event_key_T key = get_kbd_key(ev);
 
 			if (is_kbd_fkey(key)
 			    || check_kbd_modifier(ev, KBD_MOD_ALT)) {

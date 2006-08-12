@@ -354,7 +354,7 @@ static struct key key_table[] = {
 	{ NULL, 0 }
 };
 
-long
+term_event_key_T
 read_key(unsigned char *key_str)
 {
 	struct key *key;
@@ -366,7 +366,7 @@ read_key(unsigned char *key_str)
 		if (!strcasecmp(key->str, key_str))
 			return key->num;
 
-	return -1;
+	return KBD_UNDEF;
 }
 
 int
