@@ -61,6 +61,12 @@ static inline int is_kbd_fkey(term_event_key_T key) { return key <= KBD_F1 && ke
 
 #define KBD_CTRL_C	(-0x200)
 
+/* int is_kbd_character(term_event_key_T key);
+ * Return true if @key is a character in some charset, rather than a
+ * special key.  The character is not necessarily printable.  As for
+ * which charset it is in, see the definition of term_event_key_T.  */
+#define is_kbd_character(key) ((key) >= 0)
+
 /* Values for term_event_keyboard.modifier and
  * interlink_event_keyboard.modifier */
 #define KBD_MOD_NONE	0

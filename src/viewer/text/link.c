@@ -1178,31 +1178,37 @@ enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
-	term_event_key_T key;
+	unicode_val_T key;
 	int passed = -1;
 	int i; /* GOD I HATE C! --FF */ /* YEAH, BRAINFUCK RULEZ! --pasky */
 
 	assert(ses && doc_view && doc_view->document && doc_view->vs && ev);
 	if_assert_failed return FRAME_EVENT_IGNORED;
 
-	if (!check_kbd_modifier(ev, KBD_MOD_ALT)) {
-		/* We accept those only in alt-combo. */
+	if (!check_kbd_modifier(ev, KBD_MOD_ALT)
+	    || !is_kbd_character(get_kbd_key(ev))) {
+		/* We accept only alt-character combos. */
 		return FRAME_EVENT_IGNORED;
 	}
 
+	/* The key is a character.  Convert it to Unicode so that it
+	 * can be compared with link.accesskey.  */
+#ifdef CONFIG_UTF_8
+	key = get_kbd_key(ev);
+#else  /* !CONFIG_UTF_8 */
+	key = cp2u(get_opt_codepage_tree(ses->tab->term->spec,
+					 "charset"),
+		   get_kbd_key(ev));
+#endif /* !CONFIG_UTF_8 */
+	/* If @key now is 0 (which is used in link.accesskey if there
+	 * is no access key) or UCS_REPLACEMENT_CHARACTER, then the
+	 * results may be a little odd, but not really harmful.  */
+
 	/* Run through all the links and see if one of them is bound to the
 	 * key we test.. */
-	key = get_kbd_key(ev);
-
 	for (i = 0; i < doc_view->document->nlinks; i++) {
 		struct link *link = &doc_view->document->links[i];
 
-		/* FIXME: charset mismatch.  @link->accesskey is always
-		 * unicode_val_T; if CONFIG_UTF_8 is not defined, @key
-		 * can be a byte from the charset of the terminal, in
-		 * which case one of them should be converted for
-		 * comparison.  When implementing this, note that @key
-		 * can also be a special key.  */
 		if (key == link->accesskey) {
 			if (passed != i && i <= doc_view->vs->current_link) {
 				/* This is here in order to rotate between

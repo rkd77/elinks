@@ -495,7 +495,6 @@ cp2u_shared(const struct codepage_desc *from, unsigned char c)
 	return UCS_NO_CHAR;
 }
 
-#ifdef CONFIG_UTF_8
 /* Slow algorithm, used for converting input from the terminal.  */
 unicode_val_T
 cp2u(int from, unsigned char c)
@@ -510,7 +509,6 @@ cp2u(int from, unsigned char c)
 	if (c < 0x80) return c;
 	else return cp2u_shared(&codepages[from], c);
 }
-#endif	/* CONFIG_UTF_8 */
 
 /* This slow and ugly code is used by the terminal utf_8_io */
 unsigned char *
