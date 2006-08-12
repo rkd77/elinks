@@ -1178,7 +1178,7 @@ enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
-	long key;
+	term_event_key_T key;
 	int passed = -1;
 	int i; /* GOD I HATE C! --FF */ /* YEAH, BRAINFUCK RULEZ! --pasky */
 

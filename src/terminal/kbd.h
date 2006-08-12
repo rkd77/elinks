@@ -3,13 +3,15 @@
 
 struct itrm;
 
+/* Values <= -0x100 are special; e.g. KBD_ENTER.
+ * Values between -0xFF and -2 are not used yet; treat as special.
+ * Value  == -1 is KBD_UNDEF; not sent via socket. 
+ * Values >= 0 are characters received from the terminal;
+ * in UCS-4 #ifdef CONFIG_UTF_8. */
+typedef int term_event_key_T;
+
 struct term_event_keyboard {
-	/* Values <= -0x100 are special; e.g. KBD_ENTER.
-	 * Values between -0xFF and -2 are not used yet; treat as special.
-	 * Value  == -1 is KBD_UNDEF; not sent via socket. 
-	 * Values >= 0 are characters received from the terminal;
-	 * in UCS-4 #ifdef CONFIG_UTF_8. */
-	int key;
+	term_event_key_T key;
 	int modifier;
 };
 
@@ -21,6 +23,8 @@ struct interlink_event_keyboard {
 	int key;
 	int modifier;
 };
+
+/* Values for term_event_key_T */
 
 #define KBD_UNDEF	-1
 
@@ -51,12 +55,14 @@ struct interlink_event_keyboard {
 #define KBD_F10		(-0x129)
 #define KBD_F11		(-0x12a)
 #define KBD_F12		(-0x12b)
-static inline int is_kbd_fkey(int key) { return key <= KBD_F1 && key >= KBD_F12; }
+static inline int is_kbd_fkey(term_event_key_T key) { return key <= KBD_F1 && key >= KBD_F12; }
 #define number_to_kbd_fkey(num) (KBD_F1 - (num) + 1)
 #define kbd_fkey_to_number(key) (KBD_F1 - (key) + 1)
 
 #define KBD_CTRL_C	(-0x200)
 
+/* Values for term_event_keyboard.modifier and
+ * interlink_event_keyboard.modifier */
 #define KBD_MOD_NONE	0
 #define KBD_MOD_SHIFT	1
 #define KBD_MOD_CTRL	2

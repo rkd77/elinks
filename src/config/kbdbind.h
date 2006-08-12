@@ -173,7 +173,7 @@ action_requires_form(enum keymap_id keymap_id, action_id_T action_id)
 	return action && (action->flags & ACTION_REQUIRE_FORM);
 }
 
-long read_key(unsigned char *);
+term_event_key_T read_key(unsigned char *);
 unsigned char *get_keymap_name(enum keymap_id);
 
 int parse_keystroke(unsigned char *, struct term_event_keyboard *);
