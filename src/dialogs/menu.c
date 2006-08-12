@@ -364,7 +364,7 @@ do_file_menu(struct terminal *term, void *xxx, void *ses_)
 	if (o) {
 		SET_MENU_ITEM(e, N_("Open ~new window"), NULL, ACT_MAIN_OPEN_NEW_WINDOW,
 			      open_in_new_window, send_open_new_window,
-			      (o - 1) ? SUBMENU : 0, 0, HKS_SHOW);
+			      (o - 1) ? SUBMENU : 0, HKS_SHOW, 0);
 		e++;
 	}
 
@@ -382,14 +382,14 @@ do_file_menu(struct terminal *term, void *xxx, void *ses_)
 	x = 1;
 	if (!anonymous && can_open_os_shell(term->environment)) {
 		SET_MENU_ITEM(e, N_("~OS shell"), NULL, ACT_MAIN_OPEN_OS_SHELL,
-			      NULL, NULL, 0, 0, HKS_SHOW);
+			      NULL, NULL, 0, HKS_SHOW, 0);
 		e++;
 		x = 0;
 	}
 
 	if (can_resize_window(term->environment)) {
 		SET_MENU_ITEM(e, N_("Resize t~erminal"), NULL, ACT_MAIN_TERMINAL_RESIZE,
-			      NULL, NULL, 0, 0, HKS_SHOW);
+			      NULL, NULL, 0, HKS_SHOW, 0);
 		e++;
 		x = 0;
 	}
