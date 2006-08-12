@@ -1197,7 +1197,13 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 	for (i = 0; i < doc_view->document->nlinks; i++) {
 		struct link *link = &doc_view->document->links[i];
 
-		if (key == link->accesskey) {	/* FIXME: key vs unicode ... */
+		/* FIXME: charset mismatch.  @link->accesskey is always
+		 * unicode_val_T; if CONFIG_UTF_8 is not defined, @key
+		 * can be a byte from the charset of the terminal, in
+		 * which case one of them should be converted for
+		 * comparison.  When implementing this, note that @key
+		 * can also be a special key.  */
+		if (key == link->accesskey) {
 			if (passed != i && i <= doc_view->vs->current_link) {
 				/* This is here in order to rotate between
 				 * links with same accesskey. */
