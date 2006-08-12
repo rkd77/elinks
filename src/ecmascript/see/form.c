@@ -176,7 +176,6 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	assert(fc);
 	assert(fc->form && fs);
 
-	checktime(interp);
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
@@ -279,7 +278,6 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	assert(fc);
 	assert(fc->form && fs);
 
-	checktime(interp);
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
@@ -348,7 +346,6 @@ js_input_blur(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
@@ -369,7 +366,6 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct form_control *fc;
 	int linknum;
 
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -403,7 +399,6 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct form_control *fc;
 	int linknum;
 
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -423,7 +418,6 @@ js_input_select(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
@@ -433,7 +427,6 @@ static int
 input_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	return 1;
 }
 
@@ -442,7 +435,6 @@ input_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
 	/* all unknown properties return UNDEFINED value */
-	checktime(interp);
 	return 1;
 }
 
@@ -452,7 +444,6 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 {
 	struct js_input *jsinput;
 
-	checktime(interp);
 
 #if 0
 	if (fs->ecmascript_obj)
@@ -482,7 +473,6 @@ static struct js_input *
 js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	enum form_type type,  struct form_state *fs)
 {
-	checktime(interp);
 	switch (type) {
 		case FC_TEXT:
 		case FC_PASSWORD:
@@ -528,7 +518,6 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	int counter = -1;
 	int index;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
@@ -568,7 +557,6 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct form_control *fc;
 	unsigned char *string;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
@@ -602,7 +590,6 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct form_view *fv = parent_form->fv;
 	struct form *form = find_form_by_form_view(document, fv);
 
-	checktime(interp);
 	if (p == s_length) {
 		SEE_number_t length = list_size(&form->items);
 		SEE_SET_NUMBER(res, length);
@@ -634,7 +621,6 @@ static int
 form_elems_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	/* all unknown properties return UNDEFINED value */
 	return 1;
 }
@@ -654,7 +640,6 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	int counter = -1;
 	int index;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
@@ -690,7 +675,6 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct form *form;
 	unsigned char *string;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
@@ -722,7 +706,6 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_forms_object *fo = (struct js_forms_object *)o;
 
-	checktime(interp);
 	if (p == s_length) {
 		SEE_number_t length = list_size(&document->forms);
 		SEE_SET_NUMBER(res, length);
@@ -755,7 +738,6 @@ static int
 forms_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	/* all unknown properties return UNDEFINED value */
 	return 1;
 }
@@ -774,7 +756,6 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	struct SEE_string *str;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 
 	if (p == s_action) {
@@ -865,7 +846,6 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	unsigned char *string = SEE_value_to_unsigned_char(interp, val);
 
-	checktime(interp);
 	if (!string)
 		return;
 
@@ -903,7 +883,6 @@ static int
 form_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	return 1;
 }
 
@@ -911,7 +890,6 @@ static int
 form_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	return 1;
 }
 
@@ -929,7 +907,6 @@ js_form_reset(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	assert(form);
 
-	checktime(interp);
 	do_reset_form(doc_view, form);
 	draw_forms(doc_view->session->tab->term, doc_view);
 	SEE_SET_BOOLEAN(res, 0);
@@ -949,7 +926,6 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	checktime(interp);
 	submit_given_form(ses, doc_view, form, 0);
 	SEE_SET_BOOLEAN(res, 0);
 }
@@ -959,7 +935,6 @@ struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 {
 	struct js_form *js_form;
 
-	checktime(interp);
 #if 0
 	if (fv->ecmascript_obj)
 		return fv->ecmascript_obj;

@@ -83,7 +83,6 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct SEE_string *str;
 	unsigned char *string;
 
-	checktime(interp);
 	SEE_SET_UNDEFINED(res);
 
 	if (p == s_cookie) {
@@ -175,7 +174,6 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct SEE_value res;
 	unsigned char *string;
 
-	checktime(interp);
 	if (p == s_forms) {
 		SEE_ToObject(interp, val, &res);
 		doc->forms = res.u.object;
@@ -238,7 +236,6 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	set_led_value(vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 0);
 }
 
@@ -262,7 +259,6 @@ static int
 document_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_location || p == s_url || p == s_cookie)
 		return 1;
 	return 0;
@@ -272,7 +268,6 @@ static int
 document_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	/* all unknown properties return UNDEFINED value */
 	return 1;
 }

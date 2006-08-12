@@ -160,7 +160,6 @@ history_get(struct SEE_interpreter *interp, struct SEE_object *o,
 {
 	struct js_history_object *history = (struct js_history_object *)o;
 
-	checktime(interp);
 	if (p == s_back) {
 		SEE_SET_OBJECT(res, history->back);
 	} else if (p == s_forward) {
@@ -176,7 +175,6 @@ static int
 history_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_back || p == s_forward || p == s_go)
 		return 1;
 	return 0;
@@ -206,7 +204,6 @@ js_history_forward(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
 
-	checktime(interp);
 	SEE_SET_NULL(res);
 	go_unback(ses);
 }
@@ -224,7 +221,6 @@ js_history_go(struct SEE_interpreter *interp, struct SEE_object *self,
 	int index;
 	struct location *loc;
 
-	checktime(interp);
 	SEE_SET_NULL(res);
 	if (argc < 1)
 		return;
@@ -259,7 +255,6 @@ js_location_toString(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct SEE_string *str = string_to_SEE_string(interp, string);
 
 	mem_free_if(string);
-	checktime(interp);
 
 	SEE_SET_STRING(res, str);
 }
@@ -270,7 +265,6 @@ location_get(struct SEE_interpreter *interp, struct SEE_object *o,
 {
 	struct js_location_object *loc = (struct js_location_object *)o;
 
-	checktime(interp);
 	if (p == s_toString || p == s_toLocaleString) {
 		SEE_SET_OBJECT(res, loc->toString);
 	} else if (p == s_href) {
@@ -290,7 +284,6 @@ static void
 location_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *val, int attr)
 {
-	checktime(interp);
 	if (p == s_href) {
 		struct global_object *g = (struct global_object *)interp;
 		struct view_state *vs = g->win->vs;
@@ -306,7 +299,6 @@ static int
 location_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_toString || p == s_toLocaleString || p == s_href)
 		return 1;
 	return 0;
@@ -316,7 +308,6 @@ static int
 location_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_href)
 		return 1;
 	return 0;

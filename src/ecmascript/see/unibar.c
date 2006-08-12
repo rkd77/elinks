@@ -95,7 +95,6 @@ unibar_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct js_unibar_object *obj = (struct js_unibar_object *)o;
 	unsigned char bar = obj->bar;
 
-	checktime(interp);
 	if (p == s_visible) {
 #define unibar_fetch(bar) \
 	SEE_SET_BOOLEAN(res, status->force_show_##bar##_bar >= 0 \
@@ -122,7 +121,6 @@ static void
 unibar_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *val, int attr)
 {
-	checktime(interp);
 	if (p == s_location) {
 		struct global_object *g = (struct global_object *)interp;
 		struct view_state *vs = g->win->vs;
@@ -151,7 +149,6 @@ static int
 unibar_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_visible)
 		return 1;
 	return 0;
@@ -161,7 +158,6 @@ static int
 unibar_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_visible)
 		return 1;
 	return 0;
