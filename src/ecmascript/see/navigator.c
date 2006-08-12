@@ -50,7 +50,7 @@ static void navigator_get(struct SEE_interpreter *, struct SEE_object *, struct 
 static int navigator_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 
 struct SEE_objectclass js_navigator_object_class = {
-	NULL,
+	"navigator",
 	navigator_get,
 	SEE_no_put,
 	SEE_no_canput,
@@ -142,7 +142,6 @@ init_js_navigator_object(struct ecmascript_interpreter *interpreter)
 	navigator = SEE_NEW(interp, struct SEE_object);
 
 	navigator->objectclass = &js_navigator_object_class;
-	navigator->objectclass->Class = s_navigator;
 	navigator->Prototype = NULL;
 
 	SEE_SET_OBJECT(&v, navigator);

@@ -80,7 +80,7 @@ struct delayed_goto {
 };
 
 struct SEE_objectclass js_history_object_class = {
-	NULL,
+	"history",
 	history_get,
 	SEE_no_put,
 	SEE_no_canput,
@@ -94,7 +94,7 @@ struct SEE_objectclass js_history_object_class = {
 };
 
 struct SEE_objectclass js_location_object_class = {
-	NULL,
+	"location",
 	location_get,
 	location_put,
 	location_canput,
@@ -332,7 +332,6 @@ init_js_history_object(struct ecmascript_interpreter *interpreter)
 	 struct js_history_object);
 
 	history->object.objectclass = &js_history_object_class;
-	history->object.objectclass->Class = s_history;
 	history->object.Prototype = NULL;
 
 	SEE_SET_OBJECT(&v, (struct SEE_object *)history);
@@ -353,7 +352,6 @@ init_js_location_object(struct ecmascript_interpreter *interpreter)
 		struct js_location_object);
 
 	loc->object.objectclass = &js_location_object_class;
-	loc->object.objectclass->Class = s_location;
 	loc->object.Prototype = NULL;
 
 	SEE_SET_OBJECT(&v, (struct SEE_object *)loc);

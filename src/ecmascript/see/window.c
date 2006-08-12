@@ -58,7 +58,7 @@ static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct
 void location_goto(struct document_view *, unsigned char *);
 
 struct SEE_objectclass js_window_object_class = {
-	NULL,
+	"window",
 	window_get,
 	window_put,
 	window_canput,
@@ -329,7 +329,6 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 	g->win = SEE_NEW(interp, struct js_window_object);
 
 	g->win->object.objectclass = &js_window_object_class;
-	g->win->object.objectclass->Class = s_window;
 	g->win->object.Prototype = NULL;
 	g->win->vs = interpreter->vs;
 

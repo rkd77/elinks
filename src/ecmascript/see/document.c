@@ -56,7 +56,7 @@ static void js_document_writeln(struct SEE_interpreter *, struct SEE_object *, s
 void location_goto(struct document_view *, unsigned char *);
 
 struct SEE_objectclass js_document_object_class = {
-	NULL,
+	"document",
 	document_get,
 	document_put,
 	document_canput,
@@ -288,7 +288,6 @@ init_js_document_object(struct ecmascript_interpreter *interpreter)
 		struct js_document_object);
 
 	doc->object.objectclass = &js_document_object_class;
-	doc->object.objectclass->Class = s_document;
 	doc->object.Prototype = NULL;
 
 	SEE_SET_OBJECT(&v, (struct SEE_object *)doc);

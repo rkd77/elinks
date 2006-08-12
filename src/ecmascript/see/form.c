@@ -77,7 +77,7 @@ static void js_form_submit(struct SEE_interpreter *, struct SEE_object *, struct
 
 
 struct SEE_objectclass js_input_object_class = {
-	NULL,
+	"input",
 	input_get,
 	input_put,
 	input_canput,
@@ -91,7 +91,7 @@ struct SEE_objectclass js_input_object_class = {
 };
 
 struct SEE_objectclass js_form_elems_class = {
-	NULL,
+	"elements",
 	form_elems_get,
 	SEE_no_put,
 	SEE_no_canput,
@@ -105,7 +105,7 @@ struct SEE_objectclass js_form_elems_class = {
 };
 
 struct SEE_objectclass js_forms_object_class = {
-	NULL,
+	"forms",
 	forms_get,
 	SEE_no_put,
 	SEE_no_canput,
@@ -119,7 +119,7 @@ struct SEE_objectclass js_forms_object_class = {
 };
 
 struct SEE_objectclass js_form_class = {
-	NULL,
+	"form",
 	form_get,
 	form_put,
 	form_canput,
@@ -464,7 +464,6 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	jsinput = SEE_NEW(interp, struct js_input);
 
 	jsinput->object.objectclass = &js_input_object_class;
-	jsinput->object.objectclass->Class = s_input;
 	jsinput->object.Prototype = NULL;
 
 	jsinput->blur = SEE_cfunction_make(interp, js_input_blur, s_blur, 0);
@@ -822,7 +821,6 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		struct js_form_elems *jsfe = SEE_NEW(interp, struct js_form_elems);
 
 		jsfe->object.objectclass = &js_form_elems_class;
-		jsfe->object.objectclass->Class = s_elements;
 		jsfe->object.Prototype = NULL;
 		jsfe->parent = js_form;
 		jsfe->item = SEE_cfunction_make(interp, js_form_elems_item, s_item, 1);
@@ -971,7 +969,6 @@ struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 	 * should be its parent, but gimme DOM first. --pasky */
 	js_form = SEE_NEW(interp, struct js_form);
 	js_form->object.objectclass = &js_form_class;
-	js_form->object.objectclass->Class = s_form;
 	js_form->object.Prototype = NULL; /* TODO: use prototype for form */
 	js_form->parent = doc;
 	js_form->reset = SEE_cfunction_make(interp, js_form_reset, s_reset, 0);
@@ -992,7 +989,6 @@ init_js_forms_object(struct ecmascript_interpreter *interpreter)
 	 struct js_forms_object);
 
 	forms->object.objectclass = &js_forms_object_class;
-	forms->object.objectclass->Class = s_forms;
 	forms->object.Prototype = NULL;
 
 	SEE_OBJECT_GET(interp, interp->Global, s_document, &document);

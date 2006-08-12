@@ -57,7 +57,7 @@ struct js_unibar_object {
 };
 
 struct SEE_objectclass js_menubar_object_class = {
-	NULL,
+	"menubar",
 	unibar_get,
 	unibar_put,
 	unibar_canput,
@@ -71,7 +71,7 @@ struct SEE_objectclass js_menubar_object_class = {
 };
 
 struct SEE_objectclass js_statusbar_object_class = {
-	NULL,
+	"statusbar",
 	unibar_get,
 	unibar_put,
 	unibar_canput,
@@ -178,7 +178,6 @@ init_js_menubar_object(struct ecmascript_interpreter *interpreter)
 	menu = SEE_NEW(interp, struct js_unibar_object);
 
 	menu->object.objectclass = &js_menubar_object_class;
-	menu->object.objectclass->Class = s_menubar;
 	menu->object.Prototype = NULL;
 	menu->bar = 't';
 
@@ -197,7 +196,6 @@ init_js_statusbar_object(struct ecmascript_interpreter *interpreter)
 	status = SEE_NEW(interp, struct js_unibar_object);
 
 	status->object.objectclass = &js_statusbar_object_class;
-	status->object.objectclass->Class = s_statusbar;
 	status->object.Prototype = NULL;
 	status->bar = 's';
 
