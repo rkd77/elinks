@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-13 10:18+0200\n"
-"PO-Revision-Date: 2006-08-13 10:20+0200\n"
+"POT-Creation-Date: 2006-08-13 15:22+0200\n"
+"PO-Revision-Date: 2006-08-13 15:24+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:379
 #: src/scripting/lua/core.c:460 src/session/session.c:806
-#: src/viewer/text/search.c:1665
+#: src/viewer/text/search.c:1666
 msgid "~OK"
 msgstr "~OK"
 
@@ -119,7 +119,7 @@ msgstr "Erreur de suppression"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
-#: src/bfu/hierbox.c:870 src/config/dialogs.c:837 src/dialogs/menu.c:127
+#: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
 #: src/terminal/tab.c:213 src/terminal/tab.c:250
 msgid "~Yes"
@@ -127,7 +127,7 @@ msgstr "~Oui"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
-#: src/bfu/hierbox.c:871 src/config/dialogs.c:838 src/dialogs/menu.c:128
+#: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
 #: src/terminal/tab.c:214 src/terminal/tab.c:251
 msgid "~No"
@@ -135,7 +135,7 @@ msgstr "~Non"
 
 #: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1085
 #: src/viewer/text/search.c:1093 src/viewer/text/search.c:1109
-#: src/viewer/text/search.c:1684
+#: src/viewer/text/search.c:1685
 msgid "Search"
 msgstr "Chercher"
 
@@ -179,7 +179,7 @@ msgstr "Chaîne vide non autorisée"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:380 src/scripting/lua/core.c:461
 #: src/session/download.c:637 src/session/download.c:1236
-#: src/viewer/text/search.c:1666
+#: src/viewer/text/search.c:1667
 msgid "~Cancel"
 msgstr "~Annuler"
 
@@ -482,7 +482,7 @@ msgstr "~Modifier"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
-#: src/config/dialogs.c:533 src/config/dialogs.c:946 src/cookies/dialogs.c:477
+#: src/config/dialogs.c:533 src/config/dialogs.c:960 src/cookies/dialogs.c:477
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
@@ -490,7 +490,7 @@ msgstr "~Supprimer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:490 src/config/dialogs.c:532
-#: src/config/dialogs.c:945 src/cookies/dialogs.c:474 src/dialogs/menu.c:455
+#: src/config/dialogs.c:959 src/cookies/dialogs.c:474 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Ajouter"
 
@@ -511,7 +511,7 @@ msgstr "~Déplacer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:494 src/cache/dialogs.c:232
-#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/dialogs/menu.c:408
+#: src/config/dialogs.c:534 src/config/dialogs.c:962 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Chercher"
@@ -1907,7 +1907,7 @@ msgid "Cannot add an option here."
 msgstr "Impossible d'ajouter une option ici."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:535 src/config/dialogs.c:949 src/cookies/dialogs.c:479
+#: src/config/dialogs.c:535 src/config/dialogs.c:963 src/cookies/dialogs.c:479
 #: src/dialogs/options.c:222 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1220
 msgid "Sa~ve"
@@ -1929,11 +1929,11 @@ msgstr "Action"
 msgid "Keymap"
 msgstr "Table"
 
-#: src/config/dialogs.c:831
+#: src/config/dialogs.c:844
 msgid "Keystroke already used"
 msgstr "Touche déjà utilisée"
 
-#: src/config/dialogs.c:832
+#: src/config/dialogs.c:845
 #, c-format
 msgid ""
 "The keystroke \"%s\" is currently used for \"%s\".\n"
@@ -1942,26 +1942,25 @@ msgstr ""
 "La combinaison de touches \"%s\" est déjà utilisée pour l'action \"%s\".\n"
 "Etes-vous sûr de vouloir la remplacer ?"
 
-#: src/config/dialogs.c:855 src/config/dialogs.c:872 src/config/dialogs.c:909
+#: src/config/dialogs.c:870 src/config/dialogs.c:887 src/config/dialogs.c:923
 msgid "Add keybinding"
 msgstr "Ajouter une association de touches"
 
-#: src/config/dialogs.c:856
+#: src/config/dialogs.c:871
 msgid "Invalid keystroke."
 msgstr "Touche invalide."
 
-#: src/config/dialogs.c:873
+#: src/config/dialogs.c:888
 msgid "Need to select a keymap."
 msgstr "Vous devez sélectionner une table."
 
-#: src/config/dialogs.c:895
+#: src/config/dialogs.c:910
 #, c-format
 msgid ""
 "Action: %s\n"
 "Keymap: %s\n"
 "\n"
-"Keystroke should be written in the format: [Prefix-]Key\n"
-"Prefix: Shift, Ctrl, Alt\n"
+"Keystroke should be written in the format: [Shift-][Ctrl-][Alt-]Key\n"
 "Key: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,...\n"
 "\n"
 "Keystroke"
@@ -1970,18 +1969,17 @@ msgstr ""
 "Table: %s\n"
 "\n"
 "La combinaison de touches doit être écrite dans le format suivant:\n"
-"[Préfixe-]Touche\n"
-"Préfixes: Shift, Ctrl, Alt\n"
-"Touches: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,...\n"
+"[Shift-][Ctrl-][Alt-]Touche\n"
+"Touche: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,...\n"
 "\n"
 "Combinaison de touches"
 
 #. accelerator_context(menu_keys, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/config/dialogs.c:947 src/dialogs/info.c:135 src/globhist/dialogs.c:231
+#: src/config/dialogs.c:961 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 msgid "~Toggle display"
 msgstr "Co~mmuter affich."
 
-#: src/config/dialogs.c:954
+#: src/config/dialogs.c:968
 msgid "Keybinding manager"
 msgstr "Gestionnaire d'assoc. de touches"
 
@@ -2020,19 +2018,19 @@ msgstr "Edition"
 msgid "Menu mapping"
 msgstr "Menu"
 
-#: src/config/kbdbind.c:556
+#: src/config/kbdbind.c:566
 msgid "Unrecognised keymap"
 msgstr "Table d'associations de touches non reconnue"
 
-#: src/config/kbdbind.c:559
+#: src/config/kbdbind.c:569
 msgid "Error parsing keystroke"
 msgstr "Erreur d'interprétation de touche"
 
-#: src/config/kbdbind.c:563
+#: src/config/kbdbind.c:573
 msgid "Unrecognised action (internal error)"
 msgstr "Action non reconnue (erreur interne)"
 
-#: src/config/kbdbind.c:579
+#: src/config/kbdbind.c:589
 msgid "Error registering event"
 msgstr "Erreur d'enregistrement d'événement"
 
@@ -8647,32 +8645,32 @@ msgstr "Aucun lien dans le document courant"
 msgid "Search for text"
 msgstr "Recherche du texte"
 
-#: src/viewer/text/search.c:1659
+#: src/viewer/text/search.c:1660
 msgid "Normal search"
 msgstr "Plein texte"
 
-#: src/viewer/text/search.c:1660
+#: src/viewer/text/search.c:1661
 msgid "Regexp search"
 msgstr "Expression régulière"
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1662
 msgid "Extended regexp search"
 msgstr "Expression régulière étendue"
 
-#: src/viewer/text/search.c:1662
+#: src/viewer/text/search.c:1663
 msgid "Case sensitive"
 msgstr "Respecter la casse"
 
-#: src/viewer/text/search.c:1663
+#: src/viewer/text/search.c:1664
 msgid "Case insensitive"
 msgstr "Ignorer la casse"
 
-#: src/viewer/text/search.c:1687
+#: src/viewer/text/search.c:1688
 msgid "Search backward"
 msgstr "Chercher en arrière"
 
 #. name:
-#: src/viewer/text/search.c:1726
+#: src/viewer/text/search.c:1727
 msgid "Search History"
 msgstr "Historique des recherches"
 
@@ -8699,19 +8697,19 @@ msgstr ""
 "Votre entrée a été tronquée, mais vous pouvez toujours récupérer le texte "
 "que vous avez entré dans le fichier suivant: %s"
 
-#: src/viewer/text/view.c:727
+#: src/viewer/text/view.c:728
 msgid "Go to link"
 msgstr "Aller au lien"
 
-#: src/viewer/text/view.c:727
+#: src/viewer/text/view.c:728
 msgid "Enter link number"
 msgstr "Entrez un numéro de lien"
 
-#: src/viewer/text/view.c:1311
+#: src/viewer/text/view.c:1313
 msgid "Save error"
 msgstr "Erreur lors de la sauvegarde"
 
-#: src/viewer/text/view.c:1312
+#: src/viewer/text/view.c:1314
 msgid "Error writing to file"
 msgstr "Erreur lors de l'écriture du fichier"
 
