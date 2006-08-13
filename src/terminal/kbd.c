@@ -48,6 +48,14 @@ static int process_queue(struct itrm *);
 static void handle_itrm_stdin(struct itrm *);
 static void unhandle_itrm_stdin(struct itrm *);
 
+#ifdef CONFIG_DEBUG
+/* This hack makes GCC put enum term_event_special_key in the debug
+ * information even though it is not otherwise used.  The const
+ * prevents an unused-variable warning.  */
+static const enum term_event_special_key dummy_term_event_special_key;
+#endif
+
+
 int
 is_blocked(void)
 {
@@ -833,8 +841,14 @@ decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 }
 
 
+/* Initialize *@ev to match the byte @key received from the terminal.
+ * Actually, @key could also be a value from enum term_event_special_key;
+ * but callers that use those values generally don't need the mapping
+ * provided by this function, so they call set_kbd_interlink_event()
+ * directly.  */
 static void
-set_kbd_event(struct interlink_event *ev, int key, int modifier)
+set_kbd_event(struct interlink_event *ev,
+	      int key, term_event_modifier_T modifier)
 {
 	switch (key) {
 	case ASCII_TAB:

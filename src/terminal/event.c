@@ -49,7 +49,7 @@ struct terminal_interlink {
 		 * ELinks sees e.g. ESC U+00F6 as 0x1B 0xC3 0xB6 and
 		 * converts it to Alt-0xC3 0xB6, attaching the
 		 * modifier to the first byte only.  */
-		int modifier;
+		term_event_modifier_T modifier;
 	} utf_8;
 
 	/* This is the queue of events as coming from the other ELinks instance
@@ -133,7 +133,8 @@ term_send_event(struct terminal *term, struct term_event *ev)
 }
 
 static void
-term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
+term_send_ucs(struct terminal *term, unicode_val_T u,
+	      term_event_modifier_T modifier)
 {
 #ifdef CONFIG_UTF_8
 	struct term_event ev;
@@ -277,7 +278,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 	{
 		int utf8_io = -1;
 		int key = ilev->info.keyboard.key;
-		int modifier = ilev->info.keyboard.modifier;
+		term_event_modifier_T modifier = ilev->info.keyboard.modifier;
 
 		if (key >= 0x100)
 			key = -key;

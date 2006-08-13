@@ -3,76 +3,91 @@
 
 struct itrm;
 
-/* Values <= -0x100 are special; e.g. KBD_ENTER.
+/* Values <= -0x100 are special; from enum term_event_special_key.
  * Values between -0xFF and -2 are not used yet; treat as special.
  * Value  == -1 is KBD_UNDEF; not sent via socket. 
  * Values >= 0 are characters received from the terminal;
- * in UCS-4 #ifdef CONFIG_UTF_8. */
-typedef int term_event_key_T;
+ * in UCS-4 #ifdef CONFIG_UTF_8.  Test with is_kbd_character().
+ *
+ * Any at least 32-bit signed integer type would work here; using an
+ * exact-width type hurts portability in principle, but some other
+ * parts of ELinks already require the existence of uint32_t.  */
+typedef int32_t term_event_key_T;
+
+/* Values for term_event_keyboard.modifier and
+ * interlink_event_keyboard.modifier */
+typedef enum {
+	KBD_MOD_NONE	= 0,
+	KBD_MOD_SHIFT	= 1,
+	KBD_MOD_CTRL	= 2,
+	KBD_MOD_ALT	= 4
+} term_event_modifier_T;
 
 struct term_event_keyboard {
 	term_event_key_T key;
-	int modifier;
+	term_event_modifier_T modifier;
 };
 
 struct interlink_event_keyboard {
 	/* Values <= -2 are not used, for ELinks 0.11 compatibility.
 	 * Value  == -1 is KBD_UNDEF; not sent via socket.
 	 * Values between 0 and 0xFF are bytes received from the terminal.
-	 * Values >= 0x100 are special; e.g. -KBD_ENTER.  */
+	 * Values >= 0x100 are special; absolute values of constants
+	 * from enum term_event_special_key, e.g. -KBD_ENTER.  */
 	int key;
+	/* The values are from term_event_modifier_T, but the type
+	 * must be int so that the representation remains compatible
+	 * with ELinks 0.11.  */
 	int modifier;
 };
 
-/* Values for term_event_key_T */
+/* Codes of special keys, for use in term_event_key_T.
+ * The enum has a tag mainly to let you cast numbers to it in GDB and see
+ * their names.  ELinks doesn't use this enum type as term_event_key_T,
+ * because it might be 16-bit and Unicode characters wouldn't then fit.  */
+enum term_event_special_key {
+	KBD_UNDEF 	= -1,
 
-#define KBD_UNDEF	-1
+	KBD_ENTER	= -0x100,
+	KBD_BS		= -0x101,
+	KBD_TAB		= -0x102,
+	KBD_ESC		= -0x103,
+	KBD_LEFT	= -0x104,
+	KBD_RIGHT	= -0x105,
+	KBD_UP		= -0x106,
+	KBD_DOWN	= -0x107,
+	KBD_INS		= -0x108,
+	KBD_DEL		= -0x109,
+	KBD_HOME	= -0x10a,
+	KBD_END		= -0x10b,
+	KBD_PAGE_UP	= -0x10c,
+	KBD_PAGE_DOWN	= -0x10d,
 
-#define KBD_ENTER	(-0x100)
-#define KBD_BS		(-0x101)
-#define KBD_TAB		(-0x102)
-#define KBD_ESC		(-0x103)
-#define KBD_LEFT	(-0x104)
-#define KBD_RIGHT	(-0x105)
-#define KBD_UP		(-0x106)
-#define KBD_DOWN	(-0x107)
-#define KBD_INS		(-0x108)
-#define KBD_DEL		(-0x109)
-#define KBD_HOME	(-0x10a)
-#define KBD_END		(-0x10b)
-#define KBD_PAGE_UP	(-0x10c)
-#define KBD_PAGE_DOWN	(-0x10d)
+	KBD_F1		= -0x120,
+	KBD_F2		= -0x121,
+	KBD_F3		= -0x122,
+	KBD_F4		= -0x123,
+	KBD_F5		= -0x124,
+	KBD_F6		= -0x125,
+	KBD_F7		= -0x126,
+	KBD_F8		= -0x127,
+	KBD_F9		= -0x128,
+	KBD_F10		= -0x129,
+	KBD_F11		= -0x12a,
+	KBD_F12		= -0x12b,
 
-#define KBD_F1		(-0x120)
-#define KBD_F2		(-0x121)
-#define KBD_F3		(-0x122)
-#define KBD_F4		(-0x123)
-#define KBD_F5		(-0x124)
-#define KBD_F6		(-0x125)
-#define KBD_F7		(-0x126)
-#define KBD_F8		(-0x127)
-#define KBD_F9		(-0x128)
-#define KBD_F10		(-0x129)
-#define KBD_F11		(-0x12a)
-#define KBD_F12		(-0x12b)
+	KBD_CTRL_C	= -0x200
+};
+
 static inline int is_kbd_fkey(term_event_key_T key) { return key <= KBD_F1 && key >= KBD_F12; }
 #define number_to_kbd_fkey(num) (KBD_F1 - (num) + 1)
 #define kbd_fkey_to_number(key) (KBD_F1 - (key) + 1)
-
-#define KBD_CTRL_C	(-0x200)
 
 /* int is_kbd_character(term_event_key_T key);
  * Return true if @key is a character in some charset, rather than a
  * special key.  The character is not necessarily printable.  As for
  * which charset it is in, see the definition of term_event_key_T.  */
 #define is_kbd_character(key) ((key) >= 0)
-
-/* Values for term_event_keyboard.modifier and
- * interlink_event_keyboard.modifier */
-#define KBD_MOD_NONE	0
-#define KBD_MOD_SHIFT	1
-#define KBD_MOD_CTRL	2
-#define KBD_MOD_ALT	4
 
 void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
