@@ -285,16 +285,33 @@ select_button_by_flag(struct dialog_data *dlg_data, int flag)
 static void
 select_button_by_key(struct dialog_data *dlg_data)
 {
+#ifdef CONFIG_UTF_8
+	unicode_val_T key;
+	int codepage;
+#else
 	unsigned char key;
+#endif
+	
 	struct widget_data *widget_data;
 	struct term_event *ev = dlg_data->term_event;
 
 	if (!check_kbd_label_key(ev)) return;
 
+#ifdef CONFIG_UTF_8
+	key = unicode_fold_label_case(get_kbd_key(ev));
+	codepage = get_opt_codepage_tree(dlg_data->win->term->spec, "charset");
+#else
 	key = toupper(get_kbd_key(ev));
+#endif
 
 	foreach_widget(dlg_data, widget_data) {
 		int hk_pos;
+		unsigned char *hk_ptr;
+#ifdef CONFIG_UTF_8
+		unicode_val_T hk_char;
+#else
+		unsigned char hk_char;
+#endif
 
 		if (widget_data->widget->type != WIDGET_BUTTON)
 			continue;
@@ -303,16 +320,26 @@ select_button_by_key(struct dialog_data *dlg_data)
 		 * one else we fallback to first character in button
 		 * name. */
 		hk_pos = widget_data->widget->info.button.hotkey_pos;
-		if (hk_pos >= 0) {
-			if (toupper(widget_data->widget->text[hk_pos + 1]) != key)
-				continue;
-		} else {
-			if (toupper(widget_data->widget->text[0]) != key)
-				continue;
-		}
+		if (hk_pos >= 0)
+			hk_ptr = &widget_data->widget->text[hk_pos + 1];
+		else
+			hk_ptr = widget_data->widget->text;
 
-		select_dlg_item(dlg_data, widget_data);
-		break;
+#ifdef CONFIG_UTF_8
+		if (is_cp_utf8(codepage))
+			hk_char = utf_8_to_unicode(&hk_ptr,
+						   strchr(hk_ptr, '\0'));
+		else
+			hk_char = cp2u(codepage, *hk_ptr);
+		hk_char = unicode_fold_label_case(hk_char);
+#else
+		hk_char = toupper(*hk_ptr);
+#endif
+
+		if (hk_char == key) {
+			select_dlg_item(dlg_data, widget_data);
+			break;
+		}
 	}
 }
 
