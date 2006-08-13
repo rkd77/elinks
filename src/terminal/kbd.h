@@ -7,8 +7,12 @@ struct itrm;
  * Values between -0xFF and -2 are not used yet; treat as special.
  * Value  == -1 is KBD_UNDEF; not sent via socket. 
  * Values >= 0 are characters received from the terminal;
- * in UCS-4 #ifdef CONFIG_UTF_8. */
-typedef int term_event_key_T;
+ * in UCS-4 #ifdef CONFIG_UTF_8.
+ *
+ * Any at least 32-bit signed integer type would work here; using an
+ * exact-width type hurts portability in principle, but some other
+ * parts of ELinks already require the existence of uint32_t.  */
+typedef int32_t term_event_key_T;
 
 struct term_event_keyboard {
 	term_event_key_T key;
