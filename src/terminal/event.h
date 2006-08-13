@@ -173,9 +173,9 @@ void in_term(struct terminal *);
  * TO DO: Change the event handlers to use unicode_fold_label_case()
  * instead.  The code that extracts the hotkey from the label string
  * will also have to be changed.  */
-#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && get_kbd_key(event) <= 0x7F)
+#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && get_kbd_key(event) <= 0x7F && (check_kbd_modifier(event, KBD_MOD_NONE) || check_kbd_modifier(event, KBD_MOD_ALT)))
 #else  /* !CONFIG_UTF_8 */
-#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ')
+#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && (check_kbd_modifier(event, KBD_MOD_NONE) || check_kbd_modifier(event, KBD_MOD_ALT)))
 #endif /* !CONFIG_UTF_8 */
 
 
