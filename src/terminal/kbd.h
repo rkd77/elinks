@@ -14,9 +14,18 @@ struct itrm;
  * parts of ELinks already require the existence of uint32_t.  */
 typedef int32_t term_event_key_T;
 
+/* Values for term_event_keyboard.modifier and
+ * interlink_event_keyboard.modifier */
+typedef enum {
+	KBD_MOD_NONE	= 0,
+	KBD_MOD_SHIFT	= 1,
+	KBD_MOD_CTRL	= 2,
+	KBD_MOD_ALT	= 4
+} term_event_modifier_T;
+
 struct term_event_keyboard {
 	term_event_key_T key;
-	int modifier;
+	term_event_modifier_T modifier;
 };
 
 struct interlink_event_keyboard {
@@ -26,6 +35,9 @@ struct interlink_event_keyboard {
 	 * Values >= 0x100 are special; absolute values of constants
 	 * from enum term_event_special_key, e.g. -KBD_ENTER.  */
 	int key;
+	/* The values are from term_event_modifier_T, but the type
+	 * must be int so that the representation remains compatible
+	 * with ELinks 0.11.  */
 	int modifier;
 };
 
@@ -76,13 +88,6 @@ static inline int is_kbd_fkey(term_event_key_T key) { return key <= KBD_F1 && ke
  * special key.  The character is not necessarily printable.  As for
  * which charset it is in, see the definition of term_event_key_T.  */
 #define is_kbd_character(key) ((key) >= 0)
-
-/* Values for term_event_keyboard.modifier and
- * interlink_event_keyboard.modifier */
-#define KBD_MOD_NONE	0
-#define KBD_MOD_SHIFT	1
-#define KBD_MOD_CTRL	2
-#define KBD_MOD_ALT	4
 
 void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,

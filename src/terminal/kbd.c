@@ -841,8 +841,14 @@ decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 }
 
 
+/* Initialize *@ev to match the byte @key received from the terminal.
+ * Actually, @key could also be a value from enum term_event_special_key;
+ * but callers that use those values generally don't need the mapping
+ * provided by this function, so they call set_kbd_interlink_event()
+ * directly.  */
 static void
-set_kbd_event(struct interlink_event *ev, int key, int modifier)
+set_kbd_event(struct interlink_event *ev,
+	      int key, term_event_modifier_T modifier)
 {
 	switch (key) {
 	case ASCII_TAB:
