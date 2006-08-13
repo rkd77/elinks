@@ -369,6 +369,9 @@ read_key(const unsigned char *key_str)
 	return KBD_UNDEF;
 }
 
+/* Parse the string @s as the name of a keystroke.
+ * Write the parsed key and modifiers to *@kbd.
+ * Return >=0 on success, <0 on error.  */
 int
 parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
