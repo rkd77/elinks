@@ -637,6 +637,7 @@ enum frame_event_status
 try_mark_key(struct session *ses, struct document_view *doc_view,
 	     struct term_event *ev)
 {
+	term_event_key_T key = get_kbd_key(ev);
 	unsigned char mark;
 
 	/* set_mark and goto_mark allow only a subset of the ASCII
@@ -646,8 +647,8 @@ try_mark_key(struct session *ses, struct document_view *doc_view,
 	 * will not accept, so the results are consistent.
 	 * When CONFIG_UTF_8 is not defined, this assumes that codes
 	 * 0 to 0x7F in all codepages match ASCII.  */
-	if (get_kbd_key(ev) >= 0 && get_kbd_key(ev) <= 0x7F)
-		mark = get_kbd_key(ev);
+	if (key >= 0 && key <= 0x7F)
+		mark = (unsigned char) key;
 	else
 		mark = 0;
 
