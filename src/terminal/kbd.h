@@ -35,13 +35,24 @@ typedef enum {
 	KBD_MOD_ALT	= 4
 } term_event_modifier_T;
 
+/* A key received from a terminal, with modifiers.  */
 struct term_event_keyboard {
 	term_event_key_T key;
 	term_event_modifier_T modifier;
 };
 
+/* Like struct term_event_keyboard but used in the interlink protocol
+ * between ELinks processes.  Because the processes may be running
+ * different versions of ELinks, especially if a new version has just
+ * been installed, this structure should be kept binary compatible as
+ * long as possible.  See bug 793 for a list of pending changes to the
+ * protocol.  */
 struct interlink_event_keyboard {
-	/* Values <= -2 are not used, for ELinks 0.11 compatibility.
+	/* This is like term_event_key_T but carries individual bytes
+	 * rather than entire characters, and uses different values
+	 * for special keys.
+	 *
+	 * Values <= -2 are not used, for ELinks 0.11 compatibility.
 	 * Value  == -1 is KBD_UNDEF; not sent via socket.
 	 * Values between 0 and 0xFF are bytes received from the terminal.
 	 * Values >= 0x100 are special; absolute values of constants
