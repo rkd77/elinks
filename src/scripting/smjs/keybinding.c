@@ -17,7 +17,7 @@ static JSBool
 keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	unsigned char *action_str;
-	unsigned char *keystroke_str;
+	const unsigned char *keystroke_str;
 	int *data = JS_GetPrivate(ctx, obj);
 	enum keymap_id keymap_id = *data;
 
@@ -64,7 +64,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	int *data = JS_GetPrivate(ctx, obj);
 	enum keymap_id keymap_id = *data;
 	unsigned char *keymap_str;
-	unsigned char *keystroke_str;
+	const unsigned char *keystroke_str;
 
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
 	 * which will of course then convert the string back to an id... */
