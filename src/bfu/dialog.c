@@ -285,11 +285,9 @@ select_button_by_flag(struct dialog_data *dlg_data, int flag)
 static void
 select_button_by_key(struct dialog_data *dlg_data)
 {
+	term_event_char_T key;
 #ifdef CONFIG_UTF_8
-	unicode_val_T key;
 	int codepage;
-#else
-	unsigned char key;
 #endif
 	
 	struct widget_data *widget_data;
@@ -307,11 +305,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 	foreach_widget(dlg_data, widget_data) {
 		int hk_pos;
 		unsigned char *hk_ptr;
-#ifdef CONFIG_UTF_8
-		unicode_val_T hk_char;
-#else
-		unsigned char hk_char;
-#endif
+		term_event_char_T hk_char;
 
 		if (widget_data->widget->type != WIDGET_BUTTON)
 			continue;

@@ -1,13 +1,25 @@
 #ifndef EL__TERMINAL_KBD_H
 #define EL__TERMINAL_KBD_H
 
+#include "intl/charsets.h"
+
 struct itrm;
 
-/* Values <= -0x100 are special; from enum term_event_special_key.
+/* A character received from a terminal.  */
+#ifdef CONFIG_UTF_8
+typedef unicode_val_T term_event_char_T; /* in UCS-4 */
+#else
+typedef unsigned char term_event_char_T; /* in the charset of the terminal */
+#endif
+
+/* A key received from a terminal, without modifiers.  The value is
+ * either from term_event_char_T or from enum term_event_special_key.
+ * To check which one it is, use is_kbd_character(). 
+ *
+ * Values <= -0x100 are special; from enum term_event_special_key.
  * Values between -0xFF and -2 are not used yet; treat as special.
  * Value  == -1 is KBD_UNDEF; not sent via socket. 
- * Values >= 0 are characters received from the terminal;
- * in UCS-4 #ifdef CONFIG_UTF_8.  Test with is_kbd_character().
+ * Values >= 0 are characters; from term_event_char_T.
  *
  * Any at least 32-bit signed integer type would work here; using an
  * exact-width type hurts portability in principle, but some other
@@ -84,9 +96,10 @@ static inline int is_kbd_fkey(term_event_key_T key) { return key <= KBD_F1 && ke
 #define kbd_fkey_to_number(key) (KBD_F1 - (key) + 1)
 
 /* int is_kbd_character(term_event_key_T key);
- * Return true if @key is a character in some charset, rather than a
- * special key.  The character is not necessarily printable.  As for
- * which charset it is in, see the definition of term_event_key_T.  */
+ * Check whether @key is a character or a special key.
+ * Return true if @key is a character from term_event_char_T.
+ * (The character is not necessarily printable.)
+ * Return false if @key is a special key from enum term_event_special_key.  */
 #define is_kbd_character(key) ((key) >= 0)
 
 void
