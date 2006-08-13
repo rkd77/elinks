@@ -109,6 +109,7 @@ about_protocol_handler(struct connection *conn)
 				str = page->string;
 				len = strlen(str);
 				add_fragment(cached, 0, str, len);
+				conn->from = len;
 				break;
 			}
 		}
