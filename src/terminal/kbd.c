@@ -865,7 +865,7 @@ set_kbd_event(struct interlink_event *ev, int key, int modifier)
 	default:
 		if (key < ' ') {
 			key += 'A' - 1;
-			modifier = KBD_MOD_CTRL;
+			modifier |= KBD_MOD_CTRL;
 		}
 	}
 

@@ -1169,7 +1169,8 @@ quit:
 
 	if (check_kbd_key(ev, KBD_CTRL_C)) goto quit;
 
-	if (get_kbd_modifier(ev) & KBD_MOD_ALT) {
+	/* Ctrl-Alt-F should not open the File menu like Alt-f does.  */
+	if (check_kbd_modifier(ev, KBD_MOD_ALT)) {
 		struct window *win;
 
 		get_kbd_modifier(ev) &= ~KBD_MOD_ALT;

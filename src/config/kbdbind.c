@@ -374,24 +374,27 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
 	unsigned char ctrlbuf[2];
 
-	if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
-		/* Shift+a == shiFt-a == Shift-a */
-		kbd->modifier = KBD_MOD_SHIFT;
-		s += 6;
+	kbd->modifier = KBD_MOD_NONE;
+	while (1) {
+		if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
+			/* Shift+a == shiFt-a == Shift-a */
+			kbd->modifier |= KBD_MOD_SHIFT;
+			s += 6;
 
-	} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
-		/* Ctrl+a == ctRl-a == Ctrl-a */
-		kbd->modifier = KBD_MOD_CTRL;
-		s += 5;
+		} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
+			/* Ctrl+a == ctRl-a == Ctrl-a */
+			kbd->modifier |= KBD_MOD_CTRL;
+			s += 5;
 
-	} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
-		/* Alt+a == aLt-a == Alt-a */
-		kbd->modifier = KBD_MOD_ALT;
-		s += 4;
+		} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
+			/* Alt+a == aLt-a == Alt-a */
+			kbd->modifier |= KBD_MOD_ALT;
+			s += 4;
 
-	} else {
-		/* No modifier. */
-		kbd->modifier = KBD_MOD_NONE;
+		} else {
+			/* No modifier. */
+			break;
+		}
 	}
 
 	if ((kbd->modifier & KBD_MOD_CTRL) != 0 && s[0] && !s[1]) {
