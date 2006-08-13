@@ -843,10 +843,10 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 		msg_box(new_hop->term, getml(new_hop, NULL), MSGBOX_FREE_TEXT,
 			N_("Keystroke already used"), ALIGN_CENTER,
 			msg_text(new_hop->term, N_("The keystroke \"%s\" "
-			"is currently used for \"%s\".\n"
-			"Are you sure you want to replace it?"),
-			canonical.length ? canonical.source : keystroke,
-			get_action_name(hop->keymap_id, action_id)),
+				 "is currently used for \"%s\".\n"
+				 "Are you sure you want to replace it?"),
+				 canonical.length ? canonical.source : keystroke,
+				 get_action_name(hop->keymap_id, action_id)),
 			new_hop, 2,
 			N_("~Yes"), really_really_add_keybinding, B_ENTER,
 			N_("~No"), NULL, B_ESC);
