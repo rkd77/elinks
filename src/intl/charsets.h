@@ -65,6 +65,7 @@ inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
 inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
+unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF_8 */
 
 unicode_val_T cp2u(int, unsigned char);

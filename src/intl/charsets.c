@@ -522,6 +522,25 @@ cp2utf_8(int from, int c)
 	return encode_utf_8(cp2u_shared(&codepages[from], c));
 }
 
+#ifdef CONFIG_UTF_8
+unicode_val_T
+cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
+{
+	if (is_cp_utf8(codepage))
+		return utf_8_to_unicode(string, end);
+	else {
+		if (*string >= end)
+			return UCS_NO_CHAR;
+		else {
+			unicode_val_T ret = cp2u(codepage, **string);
+			++*string;
+			return ret;
+		}
+	}
+}
+#endif	/* CONFIG_UTF_8 */
+
+
 static void
 add_utf_8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
 {

@@ -320,11 +320,8 @@ select_button_by_key(struct dialog_data *dlg_data)
 			hk_ptr = widget_data->widget->text;
 
 #ifdef CONFIG_UTF_8
-		if (is_cp_utf8(codepage))
-			hk_char = utf_8_to_unicode(&hk_ptr,
-						   strchr(hk_ptr, '\0'));
-		else
-			hk_char = cp2u(codepage, *hk_ptr);
+		hk_char = cp_to_unicode(codepage, &hk_ptr,
+					strchr(hk_ptr, '\0'));
 		hk_char = unicode_fold_label_case(hk_char);
 #else
 		hk_char = toupper(*hk_ptr);
