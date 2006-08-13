@@ -1032,7 +1032,7 @@ process_queue(struct itrm *itrm)
 	if (ev.ev == EVENT_MOUSE || ev.info.keyboard.key != KBD_UNDEF)
 		itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
 
- return_without_event:
+return_without_event:
 	if (el == -1) {
 		install_timer(&itrm->timer, ESC_TIMEOUT, (void (*)(void *)) kbd_timeout,
 			      itrm);

@@ -5,7 +5,7 @@ struct itrm;
 
 /* Values <= -0x100 are special; from enum term_event_special_key.
  * Values between -0xFF and -2 are not used yet; treat as special.
- * Value  == -1 is KBD_UNDEF; not sent via socket. 
+ * Value  == -1 is KBD_UNDEF; not sent via socket.
  * Values >= 0 are characters received from the terminal;
  * in UCS-4 #ifdef CONFIG_UTF_8.  Test with is_kbd_character().
  *

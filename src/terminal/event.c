@@ -236,7 +236,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * terminal screen before decoding the session info so that
 		 * handling of bad URL syntax by openning msg_box() will be
 		 * possible. */
-		set_init_term_event(&tev, 
+		set_init_term_event(&tev,
 				    ilev->info.size.width,
 				    ilev->info.size.height);
 		term_send_event(term, &tev);
@@ -388,7 +388,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			int len = 0;
 
 			/* The number of 1's between the first bit and first
-			 * 0 bit (exclusive) is the number of remaining 
+			 * 0 bit (exclusive) is the number of remaining
 			 * continuation bytes in the encoding of the character
 			 * that is now being processed, which number will be
 			 * stored in interlink->utf_8.len. */
