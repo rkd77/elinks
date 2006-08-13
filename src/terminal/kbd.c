@@ -48,6 +48,14 @@ static int process_queue(struct itrm *);
 static void handle_itrm_stdin(struct itrm *);
 static void unhandle_itrm_stdin(struct itrm *);
 
+#ifdef CONFIG_DEBUG
+/* This hack makes GCC put enum term_event_special_key in the debug
+ * information even though it is not otherwise used.  The const
+ * prevents an unused-variable warning.  */
+static const enum term_event_special_key dummy_term_event_special_key;
+#endif
+
+
 int
 is_blocked(void)
 {
