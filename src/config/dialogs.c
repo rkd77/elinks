@@ -821,7 +821,7 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 	if (keybinding_exists(hop->keymap_id, &hop->kbd, &action_id)
 	    && action_id != ACT_MAIN_NONE) {
 		struct kbdbind_add_hop *new_hop;
-		struct string canonical = NULL_STRING;
+		struct string canonical;
 
 		/* Same keystroke for same action, just return. */
 		if (action_id == hop->action_id) return;
