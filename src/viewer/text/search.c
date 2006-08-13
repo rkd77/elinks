@@ -1627,12 +1627,13 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	unsigned char *field;
 	struct search_dlg_hop *hop;
 	unsigned char *text = _("Search for text", term);
+	struct option *search_options;
 
 	hop = mem_calloc(1, sizeof(*hop));
 	if (!hop) return;
 
-	checkout_option_values(resolvers, get_opt_rec(config_options,
-						      "document.browse.search"),
+	search_options = get_opt_rec(config_options, "document.browse.search");
+	checkout_option_values(resolvers, search_options,
 			       hop->values, SEARCH_OPTIONS);
 	hop->data = data;
 
