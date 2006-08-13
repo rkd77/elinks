@@ -289,7 +289,7 @@ l_bind_key(LS)
 	add_format_to_string(&event_name, "lua-run-func %i", ref);
 
 	event_id = bind_key_to_event_name((unsigned char *) lua_tostring(S, 1),
-					  (unsigned char *) lua_tostring(S, 2),
+					  (const unsigned char *) lua_tostring(S, 2),
 					  event_name.source, &err);
 	done_string(&event_name);
 
