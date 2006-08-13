@@ -408,8 +408,7 @@ unicode_to_cell(unicode_val_T c)
 }
 
 /* Fold the case of a Unicode character, so that hotkeys in labels can
- * be compared case-insensitively.  This should be called only if
- * check_kbd_label_key(c) is true.  It is unspecified whether the
+ * be compared case-insensitively.  It is unspecified whether the
  * result will be in upper or lower case.  */
 unicode_val_T
 unicode_fold_label_case(unicode_val_T c)
