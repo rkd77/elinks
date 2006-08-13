@@ -372,29 +372,33 @@ read_key(unsigned char *key_str)
 int
 parse_keystroke(unsigned char *s, struct term_event_keyboard *kbd)
 {
+	unsigned char ctrlbuf[2];
+
 	if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
 		/* Shift+a == shiFt-a == Shift-a */
-		memcpy(s, "Shift-", 6);
 		kbd->modifier = KBD_MOD_SHIFT;
 		s += 6;
 
 	} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
 		/* Ctrl+a == ctRl-a == Ctrl-a */
-		memcpy(s, "Ctrl-", 5);
 		kbd->modifier = KBD_MOD_CTRL;
 		s += 5;
-		/* Ctrl-a == Ctrl-A */
-		if (s[0] && !s[1]) s[0] = toupper(s[0]);
 
 	} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
 		/* Alt+a == aLt-a == Alt-a */
-		memcpy(s, "Alt-", 4);
 		kbd->modifier = KBD_MOD_ALT;
 		s += 4;
 
 	} else {
 		/* No modifier. */
 		kbd->modifier = KBD_MOD_NONE;
+	}
+
+	if ((kbd->modifier & KBD_MOD_CTRL) != 0 && s[0] && !s[1]) {
+		/* Ctrl-a == Ctrl-A */
+		ctrlbuf[0] = toupper(s[0]);
+		ctrlbuf[1] = '\0';
+		s = ctrlbuf;
 	}
 
 	kbd->key = read_key(s);
