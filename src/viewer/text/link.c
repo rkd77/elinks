@@ -293,6 +293,7 @@ draw_link(struct terminal *term, struct document_view *doc_view,
 
 			ch = get_char(term, x + xpos, y + ypos);
 			copy_struct(ch, &doc_view->document->data[y].chars[x]);
+			set_screen_dirty(term->screen, y + ypos, y + ypos);
 		}
 	}
 }
