@@ -223,11 +223,17 @@ really_close_tabs(struct session *ses)
 
 	foreach_tab (tab, term->windows) {
 		if (tab == current) continue;
+
+		/* Update the current tab counter so assertions in the
+		 * delete_window() call-chain will hold, namely the one in
+		 * get_tab_by_number().  */
+		if (term->current_tab > 0)
+			term->current_tab--;
+
 		tab = tab->prev;
 		delete_window(tab->next);
 	}
 
-	term->current_tab = 0;
 	redraw_terminal(term);
 }
 
