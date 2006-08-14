@@ -525,17 +525,17 @@ cp2utf_8(int from, int c)
 unicode_val_T
 cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 {
+	unicode_val_T ret;
+
 	if (is_cp_utf8(codepage))
 		return utf_8_to_unicode(string, end);
-	else {
-		if (*string >= end)
-			return UCS_NO_CHAR;
-		else {
-			unicode_val_T ret = cp2u(codepage, **string);
-			++*string;
-			return ret;
-		}
-	}
+
+	if (*string >= end)
+		return UCS_NO_CHAR;
+
+	ret = cp2u(codepage, **string);
+	++*string;
+	return ret;
 }
 #endif	/* CONFIG_UTF_8 */
 
