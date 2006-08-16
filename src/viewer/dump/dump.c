@@ -799,6 +799,7 @@ utf_8:
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
+ref:
 #endif /* CONFIG_UTF_8 */
 
 	if (hard_write(fd, buf, bptr) != bptr) {
@@ -806,9 +807,7 @@ fail:
 		mem_free(buf);
 		return -1;
 	}
-#ifdef CONFIG_UTF_8
-ref:
-#endif /* CONFIG_UTF_8 */
+
 	if (document->nlinks && get_opt_bool("document.dump.references")) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
