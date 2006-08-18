@@ -977,7 +977,9 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 			if (file_len > 0) {
 				/* FIXME: ..when downloads resuming
 				 * implemented.. */
-				conn->est_length = file_len + conn->progress->start;
+				/* This is right for vsftpd.
+				 * Show me urls where this is wrong. --witekfl */
+				conn->est_length = file_len; /* + conn->progress->start; */
 			}
 		}
 	}
