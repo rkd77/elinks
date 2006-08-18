@@ -3,7 +3,7 @@
 # Grzegorz Golawski <grzegol@pld.org.pl>
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2006
 # Wojtek Bojdo/l <wojboj@lp.net.pl>
-# Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
+# Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2006
 # Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
 # Miko³aj Machowski <mikmach@wp.pl>, 2003
 #
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-11 21:01+0200\n"
-"PO-Revision-Date: 2006-06-30 22:00+0200\n"
+"POT-Creation-Date: 2006-08-18 19:30+0200\n"
+"PO-Revision-Date: 2006-08-18 20:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:379
 #: src/scripting/lua/core.c:460 src/session/session.c:806
-#: src/viewer/text/search.c:1665
+#: src/viewer/text/search.c:1666
 msgid "~OK"
 msgstr "~OK"
 
@@ -125,23 +125,23 @@ msgstr "B³±d przy usuwaniu"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
-#: src/bfu/hierbox.c:870 src/config/dialogs.c:837 src/dialogs/menu.c:127
+#: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:213 src/terminal/tab.c:250
+#: src/terminal/tab.c:213 src/terminal/tab.c:256
 msgid "~Yes"
 msgstr "~Tak"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
-#: src/bfu/hierbox.c:871 src/config/dialogs.c:838 src/dialogs/menu.c:128
+#: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:214 src/terminal/tab.c:251
+#: src/terminal/tab.c:214 src/terminal/tab.c:257
 msgid "~No"
 msgstr "~Nie"
 
 #: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1085
 #: src/viewer/text/search.c:1093 src/viewer/text/search.c:1109
-#: src/viewer/text/search.c:1684
+#: src/viewer/text/search.c:1685
 msgid "Search"
 msgstr "Szukaj"
 
@@ -185,7 +185,7 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:380 src/scripting/lua/core.c:461
 #: src/session/download.c:637 src/session/download.c:1236
-#: src/viewer/text/search.c:1666
+#: src/viewer/text/search.c:1667
 msgid "~Cancel"
 msgstr "~Anuluj"
 
@@ -490,7 +490,7 @@ msgstr "~Edytuj"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
-#: src/config/dialogs.c:533 src/config/dialogs.c:946 src/cookies/dialogs.c:477
+#: src/config/dialogs.c:533 src/config/dialogs.c:960 src/cookies/dialogs.c:477
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
@@ -498,7 +498,7 @@ msgstr "~Usuñ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:490 src/config/dialogs.c:532
-#: src/config/dialogs.c:945 src/cookies/dialogs.c:474 src/dialogs/menu.c:455
+#: src/config/dialogs.c:959 src/cookies/dialogs.c:474 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Dodaj"
 
@@ -519,7 +519,7 @@ msgstr "Prze~nie¶"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:494 src/cache/dialogs.c:232
-#: src/config/dialogs.c:534 src/config/dialogs.c:948 src/dialogs/menu.c:408
+#: src/config/dialogs.c:534 src/config/dialogs.c:962 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Szukaj"
@@ -1144,7 +1144,7 @@ msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
 #: src/config/actions-main.inc:101 src/terminal/tab.c:210
-#: src/terminal/tab.c:247
+#: src/terminal/tab.c:253
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
@@ -1914,7 +1914,7 @@ msgid "Cannot add an option here."
 msgstr "Nie mo¿na dodaæ tu opcji."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:535 src/config/dialogs.c:949 src/cookies/dialogs.c:479
+#: src/config/dialogs.c:535 src/config/dialogs.c:963 src/cookies/dialogs.c:479
 #: src/dialogs/options.c:222 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1220
 msgid "Sa~ve"
@@ -1936,11 +1936,11 @@ msgstr "Akcja"
 msgid "Keymap"
 msgstr "Mapowanie klawiatury"
 
-#: src/config/dialogs.c:831
+#: src/config/dialogs.c:844
 msgid "Keystroke already used"
 msgstr "Skrót klawiszowy jest ju¿ u¿ywany"
 
-#: src/config/dialogs.c:832
+#: src/config/dialogs.c:845
 #, c-format
 msgid ""
 "The keystroke \"%s\" is currently used for \"%s\".\n"
@@ -1949,24 +1949,45 @@ msgstr ""
 "Skrót klawiszowy \"%s\" jest u¿ywany przez \"%s\".\n"
 "Czy na pewno chcesz go zmieniæ?"
 
-#: src/config/dialogs.c:855 src/config/dialogs.c:872 src/config/dialogs.c:909
+#: src/config/dialogs.c:870 src/config/dialogs.c:887 src/config/dialogs.c:923
 msgid "Add keybinding"
 msgstr "Dodaj przypisanie"
 
-#: src/config/dialogs.c:856
+#: src/config/dialogs.c:871
 msgid "Invalid keystroke."
 msgstr "Niepoprawny skrót klawiszowy."
 
-#: src/config/dialogs.c:873
+#: src/config/dialogs.c:888
 msgid "Need to select a keymap."
 msgstr "Trzeba wybraæ mapowanie klawiatury."
 
+#: src/config/dialogs.c:910
+#, c-format
+msgid ""
+"Action: %s\n"
+"Keymap: %s\n"
+"\n"
+"Keystroke should be written in the format: [Shift-][Ctrl-][Alt-]Key\n"
+"Key: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,...\n"
+"\n"
+"Keystroke"
+msgstr ""
+"Akcja: %s\n"
+"Mapa klawiatury: %s\n"
+"\n"
+"Skrót klawiszowy powinien byæ zapisany w formacie:\n"
+"[Shift-][Ctrl-][Alt-]Klawisz\n"
+"Klawisz: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,\n"
+"F5,...\n"
+"\n"
+"Skrót klawiszowy"
+
 #. accelerator_context(menu_keys, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/config/dialogs.c:947 src/dialogs/info.c:135 src/globhist/dialogs.c:231
+#: src/config/dialogs.c:961 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 msgid "~Toggle display"
 msgstr "~Krótki/d³ugi opis"
 
-#: src/config/dialogs.c:954
+#: src/config/dialogs.c:968
 msgid "Keybinding manager"
 msgstr "Menad¿er przypisañ klawiszy"
 
@@ -2005,19 +2026,19 @@ msgstr "Mapa klawiszy edycji"
 msgid "Menu mapping"
 msgstr "Mapa klawiszy menu"
 
-#: src/config/kbdbind.c:556
+#: src/config/kbdbind.c:566
 msgid "Unrecognised keymap"
 msgstr "Nierozpoznana mapa klawiszy"
 
-#: src/config/kbdbind.c:559
+#: src/config/kbdbind.c:569
 msgid "Error parsing keystroke"
 msgstr "B³±d przy odczytywaniu kombinacji klawiszy"
 
-#: src/config/kbdbind.c:563
+#: src/config/kbdbind.c:573
 msgid "Unrecognised action (internal error)"
 msgstr "Nierozpoznana akcja (b³±d wewnêtrzny)"
 
-#: src/config/kbdbind.c:579
+#: src/config/kbdbind.c:589
 msgid "Error registering event"
 msgstr "B³±d przy rejestrowaniu zdarzenia"
 
@@ -5800,7 +5821,7 @@ msgstr ""
 "b³±d i mo¿e to spowodowaæ zastopowanie ca³ego ELinksa.\n"
 "Wykonywanie skryptu zosta³o przerwane."
 
-#: src/ecmascript/see/window.c:216 src/ecmascript/spidermonkey/window.c:286
+#: src/ecmascript/see/window.c:211 src/ecmascript/spidermonkey/window.c:286
 msgid "JavaScript Alert"
 msgstr "Alert JavaScriptu"
 
@@ -8489,25 +8510,25 @@ msgstr "Czy chcesz ponownie wys³aæ formularz do %s?"
 msgid "Bad terminal size: %d, %d"
 msgstr "B³êdny rozmiar terminala: %d, %d"
 
-#: src/terminal/event.c:169
+#: src/terminal/event.c:170
 msgid "Warning: terminal name contains illicit chars."
 msgstr "Ostrze¿enie: nazwa terminala zawiera \"nieprzyzwoite\" znaki."
 
-#: src/terminal/event.c:250
+#: src/terminal/event.c:251
 msgid "Failed to create session."
 msgstr "Nie uda³o siê utworzyæ sesji."
 
-#: src/terminal/event.c:415
+#: src/terminal/event.c:416
 #, c-format
 msgid "Bad event %d"
 msgstr "B³êdne zdarzenie %d"
 
-#: src/terminal/event.c:455
+#: src/terminal/event.c:456
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 
-#: src/terminal/kbd.c:1068
+#: src/terminal/kbd.c:1082
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
@@ -8515,7 +8536,7 @@ msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 msgid "Do you really want to close the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
 
-#: src/terminal/tab.c:248
+#: src/terminal/tab.c:254
 msgid "Do you really want to close all except the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ wszystkie karty za wyj±tkiem bie¿±cej?"
 
@@ -8631,114 +8652,114 @@ msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1249
+#: src/viewer/text/link.c:1262
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1254
+#: src/viewer/text/link.c:1267
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1256
+#: src/viewer/text/link.c:1269
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1260
+#: src/viewer/text/link.c:1273
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1262
+#: src/viewer/text/link.c:1275
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1264
+#: src/viewer/text/link.c:1277
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1269
+#: src/viewer/text/link.c:1282
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1272
+#: src/viewer/text/link.c:1285
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1276
+#: src/viewer/text/link.c:1289
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1287 src/viewer/text/link.c:1327
+#: src/viewer/text/link.c:1300 src/viewer/text/link.c:1340
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1302
+#: src/viewer/text/link.c:1315
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1310
+#: src/viewer/text/link.c:1323
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1311
+#: src/viewer/text/link.c:1324
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1315
+#: src/viewer/text/link.c:1328
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1317
+#: src/viewer/text/link.c:1330
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1320
+#: src/viewer/text/link.c:1333
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1325
+#: src/viewer/text/link.c:1338
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1345
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1339
+#: src/viewer/text/link.c:1352
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1354
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1350
+#: src/viewer/text/link.c:1363
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1420
+#: src/viewer/text/link.c:1433
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1425
+#: src/viewer/text/link.c:1438
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8781,32 +8802,32 @@ msgstr "Brak odno¶ników w bie¿±cym dokumencie"
 msgid "Search for text"
 msgstr "Znajd¼ tekst"
 
-#: src/viewer/text/search.c:1659
+#: src/viewer/text/search.c:1660
 msgid "Normal search"
 msgstr "Zwyk³e szukanie"
 
-#: src/viewer/text/search.c:1660
+#: src/viewer/text/search.c:1661
 msgid "Regexp search"
 msgstr "Szukanie z u¿yciem wyra¿eñ regularnych"
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1662
 msgid "Extended regexp search"
 msgstr "Szukanie z u¿yciem rozszerzonych wyra¿eñ regularnych"
 
-#: src/viewer/text/search.c:1662
+#: src/viewer/text/search.c:1663
 msgid "Case sensitive"
 msgstr "Rozró¿nianie wielko¶ci liter"
 
-#: src/viewer/text/search.c:1663
+#: src/viewer/text/search.c:1664
 msgid "Case insensitive"
 msgstr "Nierozró¿nianie wielko¶ci liter"
 
-#: src/viewer/text/search.c:1687
+#: src/viewer/text/search.c:1688
 msgid "Search backward"
 msgstr "Szukaj wstecz"
 
 #. name:
-#: src/viewer/text/search.c:1726
+#: src/viewer/text/search.c:1727
 msgid "Search History"
 msgstr "Szukanie w historii"
 
@@ -8833,19 +8854,19 @@ msgstr ""
 "Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:715
+#: src/viewer/text/view.c:728
 msgid "Go to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/viewer/text/view.c:715
+#: src/viewer/text/view.c:728
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1299
+#: src/viewer/text/view.c:1313
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1300
+#: src/viewer/text/view.c:1314
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 
