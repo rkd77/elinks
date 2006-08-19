@@ -885,7 +885,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 
 	if (!item || !item->depth) {
 		info_box(term, 0, N_("Add keybinding"), ALIGN_CENTER,
-			 N_("Need to select a keymap."));
+			 N_("Need to select an action."));
 		return EVENT_PROCESSED;
 	}
 
