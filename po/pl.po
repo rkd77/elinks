@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-18 19:30+0200\n"
+"POT-Creation-Date: 2006-08-19 14:09+0200\n"
 "PO-Revision-Date: 2006-08-18 20:00+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1958,8 +1958,9 @@ msgid "Invalid keystroke."
 msgstr "Niepoprawny skrót klawiszowy."
 
 #: src/config/dialogs.c:888
-msgid "Need to select a keymap."
-msgstr "Trzeba wybraæ mapowanie klawiatury."
+#, fuzzy
+msgid "Need to select an action."
+msgstr "Trzeba wybraæ akcjê."
 
 #: src/config/dialogs.c:910
 #, c-format
@@ -8518,12 +8519,12 @@ msgstr "Ostrze¿enie: nazwa terminala zawiera \"nieprzyzwoite\" znaki."
 msgid "Failed to create session."
 msgstr "Nie uda³o siê utworzyæ sesji."
 
-#: src/terminal/event.c:416
+#: src/terminal/event.c:417
 #, c-format
 msgid "Bad event %d"
 msgstr "B³êdne zdarzenie %d"
 
-#: src/terminal/event.c:456
+#: src/terminal/event.c:457
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
