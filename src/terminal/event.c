@@ -338,20 +338,21 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 					unicode_val_T u = interlink->utf_8.ucs;
 
 					if (u < interlink->utf_8.min)
-						u = UCS_NO_CHAR;
+						u = UCS_REPLACEMENT_CHARACTER;
 					term_send_ucs(term, u,
 						      term->interlink->utf_8.modifier);
 				}
 				break;
 
 			} else {
-				/* The byte sequence for this character is
-				 * ending prematurely.  Send UCS_NO_CHAR for the
-				 * terminated character, but don't break; let
-				 * this byte be handled below. */
+				/* The byte sequence for this character
+				 * is ending prematurely.  Send
+				 * UCS_REPLACEMENT_CHARACTER for the
+				 * terminated character, but don't break;
+				 * let this byte be handled below. */
 
 				interlink->utf_8.len = 0;
-				term_send_ucs(term, UCS_NO_CHAR,
+				term_send_ucs(term, UCS_REPLACEMENT_CHARACTER,
 					      term->interlink->utf_8.modifier);
 			}
 		}
@@ -404,7 +405,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			break;
 		}
 
-		term_send_ucs(term, UCS_NO_CHAR, modifier);
+		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}
 

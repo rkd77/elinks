@@ -3,7 +3,17 @@
 
 typedef uint32_t unicode_val_T;
 
-/* UCS/Unicode replacement character. */
+/* U+FFFD REPLACEMENT CHARACTER.  Used when no Unicode mapping is
+ * known for a byte in a codepage, or when invalid UTF-8 is received
+ * from a terminal.  After generating the character, ELinks then
+ * treats it like any other Unicode character.  The user can also type
+ * this character directly, and it can occur in documents.  */
+#define UCS_REPLACEMENT_CHARACTER ((unicode_val_T) 0xFFFD)
+
+/* A special value that fits in unicode_val_T but is outside the range
+ * of Unicode characters.  utf_8_to_unicode and cp_to_unicode return
+ * this if the input is too short.  This is also used as a placeholder
+ * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
 /* &nbsp; replacement character. See u2cp(). */

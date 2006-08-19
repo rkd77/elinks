@@ -491,7 +491,7 @@ cp2u_shared(const struct codepage_desc *from, unsigned char c)
 		if (from->table[j].c == c)
 			return from->table[j].u;
 
-	return UCS_NO_CHAR;
+	return UCS_REPLACEMENT_CHARACTER;
 }
 
 /* Slow algorithm, used for converting input from the terminal.  */
@@ -503,7 +503,7 @@ cp2u(int from, unsigned char c)
 	/* UTF-8 is a multibyte codepage and cannot be handled with
 	 * this function.  */
 	assert(codepages[from].table != table_utf_8);
-	if_assert_failed return UCS_NO_CHAR;
+	if_assert_failed return UCS_REPLACEMENT_CHARACTER;
 
 	if (c < 0x80) return c;
 	else return cp2u_shared(&codepages[from], c);
