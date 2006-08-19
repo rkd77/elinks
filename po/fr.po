@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-13 15:22+0200\n"
-"PO-Revision-Date: 2006-08-13 15:24+0200\n"
+"POT-Creation-Date: 2006-08-19 16:38+0200\n"
+"PO-Revision-Date: 2006-08-19 16:39+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "Erreur de suppression"
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
 #: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:213 src/terminal/tab.c:250
+#: src/terminal/tab.c:213 src/terminal/tab.c:256
 msgid "~Yes"
 msgstr "~Oui"
 
@@ -129,7 +129,7 @@ msgstr "~Oui"
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
 #: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:214 src/terminal/tab.c:251
+#: src/terminal/tab.c:214 src/terminal/tab.c:257
 msgid "~No"
 msgstr "~Non"
 
@@ -1133,7 +1133,7 @@ msgid "Submit form and reload"
 msgstr "Envoyer le formulaire et recharger"
 
 #: src/config/actions-main.inc:101 src/terminal/tab.c:210
-#: src/terminal/tab.c:247
+#: src/terminal/tab.c:253
 msgid "Close tab"
 msgstr "Fermer l'onglet"
 
@@ -1951,8 +1951,8 @@ msgid "Invalid keystroke."
 msgstr "Touche invalide."
 
 #: src/config/dialogs.c:888
-msgid "Need to select a keymap."
-msgstr "Vous devez sélectionner une table."
+msgid "Need to select an action."
+msgstr "Vous devez sélectionner une action."
 
 #: src/config/dialogs.c:910
 #, c-format
@@ -8356,25 +8356,25 @@ msgstr "Voulez-vous re-poster les données de formulaire à l'URL %s ?"
 msgid "Bad terminal size: %d, %d"
 msgstr "Mauvaise taille de terminal: %d, %d"
 
-#: src/terminal/event.c:169
+#: src/terminal/event.c:170
 msgid "Warning: terminal name contains illicit chars."
 msgstr "Attention: le nom du terminal contient des caractères illicites."
 
-#: src/terminal/event.c:250
+#: src/terminal/event.c:251
 msgid "Failed to create session."
 msgstr "Echec de création de session."
 
-#: src/terminal/event.c:415
+#: src/terminal/event.c:417
 #, c-format
 msgid "Bad event %d"
 msgstr "Mauvais évènement %d"
 
-#: src/terminal/event.c:455
+#: src/terminal/event.c:457
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
 
-#: src/terminal/kbd.c:1068
+#: src/terminal/kbd.c:1082
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
 
@@ -8382,7 +8382,7 @@ msgstr "Trop d'octets lus en provenance de itrm!"
 msgid "Do you really want to close the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
 
-#: src/terminal/tab.c:248
+#: src/terminal/tab.c:254
 msgid "Do you really want to close all except the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer tout sauf l'onglet courant ?"
 
@@ -8495,114 +8495,114 @@ msgid "Submit button"
 msgstr "Bouton Soumettre"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1261
+#: src/viewer/text/link.c:1262
 msgid "Display ~usemap"
 msgstr "Afficher ~usemap"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1266
+#: src/viewer/text/link.c:1267
 msgid "~Follow link"
 msgstr "~Suivre le lien"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1268
+#: src/viewer/text/link.c:1269
 msgid "Follow link and r~eload"
 msgstr "Suivre le lien et ~recharger"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1272
+#: src/viewer/text/link.c:1273
 msgid "Open in new ~window"
 msgstr "Ouvrir dans une nouvelle ~fenêtre"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1274
+#: src/viewer/text/link.c:1275
 msgid "Open in new ~tab"
 msgstr "Ouvrir dans un nouvel ongle~t"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1276
+#: src/viewer/text/link.c:1277
 msgid "Open in new tab in ~background"
 msgstr "Ouvrir dans un nouvel onglet en arrière-~plan"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1281
+#: src/viewer/text/link.c:1282
 msgid "~Download link"
 msgstr "~Enregistrer le lien"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1284
+#: src/viewer/text/link.c:1285
 msgid "~Add link to bookmarks"
 msgstr "~Ajouter ce lien aux signets"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1288
+#: src/viewer/text/link.c:1289
 msgid "Pass link URI to e~xternal command"
 msgstr "Passer l'URI du lien à une commande e~xterne"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1299 src/viewer/text/link.c:1339
+#: src/viewer/text/link.c:1300 src/viewer/text/link.c:1340
 msgid "~Reset form"
 msgstr "Remettre à ~zéro le formulaire"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1314
+#: src/viewer/text/link.c:1315
 msgid "Open in ~external editor"
 msgstr "Ouvrir dans un ~éditeur externe"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1322
+#: src/viewer/text/link.c:1323
 msgid "~Submit form"
 msgstr "~Envoyer le formulaire"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1323
+#: src/viewer/text/link.c:1324
 msgid "Submit form and rel~oad"
 msgstr "Envoyer le formulaire et ~recharger"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1327
+#: src/viewer/text/link.c:1328
 msgid "Submit form and open in new ~window"
 msgstr "Envoyer le formulaire et ouvrir dans une nouvelle ~fenêtre"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1329
+#: src/viewer/text/link.c:1330
 msgid "Submit form and open in new ~tab"
 msgstr "Envoyer le formulaire et ouvrir un ~onglet"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1333
 msgid "Submit form and open in new tab in ~background"
 msgstr "Envoyer le formulaire et ouvrir un onglet en ~arrière-plan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1337
+#: src/viewer/text/link.c:1338
 msgid "Submit form and ~download"
 msgstr "Envoyer le formulaire et ~télécharger"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1344
+#: src/viewer/text/link.c:1345
 msgid "Form f~ields"
 msgstr "C~hamps de formulaire"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1352
 msgid "V~iew image"
 msgstr "~Voir l'image"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1353
+#: src/viewer/text/link.c:1354
 msgid "Download ima~ge"
 msgstr "Enregistrer l'~image"
 
-#: src/viewer/text/link.c:1362
+#: src/viewer/text/link.c:1363
 msgid "No link selected"
 msgstr "Aucun lien sélectionné"
 
-#: src/viewer/text/link.c:1432
+#: src/viewer/text/link.c:1433
 msgid "Image"
 msgstr "Image"
 
-#: src/viewer/text/link.c:1437
+#: src/viewer/text/link.c:1438
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8716,4 +8716,4 @@ msgstr "Erreur lors de l'écriture du fichier"
 #. name:
 #: src/viewer/viewer.c:25
 msgid "Viewer"
-msgstr "Viewer"
+msgstr "Visualisateur"
