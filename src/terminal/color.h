@@ -51,7 +51,9 @@ enum color_mode {
 #ifdef CONFIG_256_COLORS
 	COLOR_MODE_256,
 #endif
-
+#ifdef CONFIG_TRUE_COLOR
+	COLOR_MODE_TRUE_COLOR,
+#endif
 	COLOR_MODES, /* XXX: Keep last */
 };
 

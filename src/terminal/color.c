@@ -326,6 +326,16 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 		 * hue-ligthness-saturation color model */
 		break;
 #endif
+#ifdef CONFIG_TRUE_COLOR
+	case COLOR_MODE_TRUE_COLOR:
+		schar->color[0] = (pair->foreground >> 16) & 255; /* r */
+		schar->color[1] = (pair->foreground >> 8) & 255; /* g */
+		schar->color[2] = pair->foreground & 255; /* b */
+		schar->color[3] = (pair->background >> 16) & 255; /* r */
+		schar->color[4] = (pair->background >> 8) & 255; /* g */
+		schar->color[5] = pair->background & 255; /* b */
+		return;
+#endif
 	case COLOR_MODE_DUMP:
 		return;
 
@@ -371,6 +381,10 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 		TERM_COLOR_FOREGROUND(schar->color) = fg;
 		TERM_COLOR_BACKGROUND(schar->color) = bg;
 		break;
+#endif
+#ifdef CONFIG_TRUE_COLOR
+	case COLOR_MODE_TRUE_COLOR:
+		return;
 #endif
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:

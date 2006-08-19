@@ -1239,6 +1239,8 @@ EL_ARG_ENABLE(CONFIG_88_COLORS, 88-colors, [88 colors],
 EL_ARG_ENABLE(CONFIG_256_COLORS, 256-colors, [256 colors],
 	      [  --enable-256-colors     enable 256 color support])
 
+EL_ARG_ENABLE(CONFIG_TRUE_COLOR, true-color, [true color],
+	      [  --enable-true-color     enable true color support])
 
 EL_ARG_ENABLE(CONFIG_EXMODE, exmode, [Exmode interface],
 	      [  --enable-exmode         enable exmode (CLI) interface])

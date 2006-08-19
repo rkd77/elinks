@@ -30,8 +30,12 @@ struct screen_char {
 	/* Attributes are screen_char_attr bits. */
 	unsigned char attr;
 
+#if defined(CONFIG_TRUE_COLOR)
+	/* 0, 1, 2 - rgb foreground,
+	3, 4, 5 - rgb background */
+	unsigned char color[6];
 	/* The encoded fore- and background color. */
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	unsigned char color[2];
 #else
 	unsigned char color[1];

@@ -131,13 +131,25 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-#if	defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS)
-#define TERMOPT_WIDGETS_COUNT 21
-#elif	defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define TERMOPT_WIDGETS_COUNT 20
+#if	defined(CONFIG_88_COLORS)
+#define	RADIO_88 1
 #else
-#define TERMOPT_WIDGETS_COUNT 19
+#define	RADIO_88 0
 #endif
+
+#if	defined(CONFIG_256_COLORS)
+#define	RADIO_256 1
+#else
+#define	RADIO_256 0
+#endif
+
+#if	defined(CONFIG_TRUE_COLOR)
+#define	RADIO_TRUE 1
+#else
+#define	RADIO_TRUE 0
+#endif
+
+#define TERMOPT_WIDGETS_COUNT (19 + RADIO_88 + RADIO_256 + RADIO_TRUE)
 
 #define TERM_OPTION_VALUE_SIZE (sizeof(union option_value) * TERM_OPTIONS)
 
@@ -209,7 +221,9 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 #ifdef CONFIG_256_COLORS
 	add_dlg_radio(dlg, _("256 colors", term), 2, COLOR_MODE_256, &values[TERM_OPT_COLORS].number);
 #endif
-
+#ifdef CONFIG_TRUE_COLOR
+	add_dlg_radio(dlg, _("true color", term), 2, COLOR_MODE_TRUE_COLOR, &values[TERM_OPT_COLORS].number);
+#endif
 	add_dlg_checkbox(dlg, _("Switch fonts for line drawing", term), &values[TERM_OPT_M11_HACK].number);
 	add_dlg_checkbox(dlg, _("Restrict frames in cp850/852", term), &values[TERM_OPT_RESTRICT_852].number);
 	add_dlg_checkbox(dlg, _("Block cursor", term), &values[TERM_OPT_BLOCK_CURSOR].number);
