@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-21 16:40+0300\n"
-"PO-Revision-Date: 2006-05-21 17:10+0300\n"
+"PO-Revision-Date: 2006-08-19 08:28+0300\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1086,7 +1086,7 @@ msgstr "Piirrä nykyinen sivu uudestaan"
 
 #: src/config/actions-main.inc:82
 msgid "Reset form items to their initial values"
-msgstr "Palauta kaavakkeen kohtiin niiden alkuarvot"
+msgstr "Palauta lomakkeen kohtiin niiden alkuarvot"
 
 #: src/config/actions-main.inc:83
 #, fuzzy
@@ -1155,12 +1155,12 @@ msgstr "Terminaaliasetukset"
 #: src/config/actions-main.inc:99
 #, fuzzy
 msgid "Submit form"
-msgstr "Lähetä kaavake"
+msgstr "Lähetä lomake"
 
 #: src/config/actions-main.inc:100
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Lähetä kaavake ja lataa"
+msgstr "Lähetä lomake ja lataa"
 
 #: src/config/actions-main.inc:101 src/terminal/tab.c:210
 #: src/terminal/tab.c:247
@@ -1350,14 +1350,10 @@ msgid ""
 "in the association table can't be added or modified."
 msgstr ""
 
-# TODO: Nykyään ELinksissä "form" = "kaavake". Mutta Mozilla Firefox
-# 1.0:ssa ja Microsoft Internet Explorer 6.0:ssa se on "lomake".
-# Pitäisikö muuttaa?
-#
 # "automaattisesti" olisi kovin pitkä.
 #: src/config/cmdline.c:654
 msgid "Autosubmit first form"
-msgstr "Lähetä ensimmäinen kaavake heti"
+msgstr "Lähetä ensimmäinen lomake heti"
 
 #: src/config/cmdline.c:656
 msgid "Automatically submit the first form in the given URLs."
@@ -2243,7 +2239,7 @@ msgstr ""
 #: src/config/options.inc:172
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Hyväksy kaavake:"
+msgstr "Hyväksy lomake:"
 
 #: src/config/options.inc:174
 msgid ""
@@ -5408,7 +5404,7 @@ msgstr ""
 #. clear_all_items_title
 #: src/formhist/dialogs.c:142
 msgid "Do you really want to remove all forms?"
-msgstr "Haluatko tosiaan poistaa kaikki kaavakkeet?"
+msgstr "Haluatko tosiaan poistaa kaikki lomakkeet?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5444,7 +5440,7 @@ msgstr "Muisti loppu"
 
 #: src/formhist/formhist.c:36
 msgid "Show form history dialog"
-msgstr "Näytä kaavakehistoriaikkuna"
+msgstr "Näytä lomakehistoriaikkuna"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5455,7 +5451,7 @@ msgstr ""
 
 #: src/formhist/formhist.c:413
 msgid "Form history"
-msgstr "Kaavakehistoria"
+msgstr "Lomakehistoria"
 
 #: src/formhist/formhist.c:414
 msgid ""
@@ -5475,7 +5471,7 @@ msgstr ""
 #. name:
 #: src/formhist/formhist.c:440
 msgid "Form History"
-msgstr "Kaavakehistoria"
+msgstr "Lomakehistoria"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -7820,7 +7816,7 @@ msgstr ""
 
 #: src/viewer/text/form.c:862
 msgid "Error while posting form"
-msgstr "Virhe kaavaketta lähetettäessä"
+msgstr "Virhe lomaketta lähetettäessä"
 
 #: src/viewer/text/form.c:863
 #, fuzzy, c-format
@@ -7830,7 +7826,7 @@ msgstr "Tiedoston haku epäonnistui"
 #: src/viewer/text/form.c:1443
 #, fuzzy
 msgid "Reset form"
-msgstr "Tyhjennä kaavake"
+msgstr "Tyhjennä lomake"
 
 #: src/viewer/text/form.c:1445
 msgid "Harmless button"
@@ -7838,11 +7834,11 @@ msgstr "Harmiton painike"
 
 #: src/viewer/text/form.c:1453
 msgid "Submit form to"
-msgstr "Hyväksy kaavake:"
+msgstr "Hyväksy lomake:"
 
 #: src/viewer/text/form.c:1454
 msgid "Post form to"
-msgstr "Lähetä kaavake:"
+msgstr "Lähetä lomake:"
 
 #: src/viewer/text/form.c:1456
 msgid "Radio button"
@@ -7953,7 +7949,7 @@ msgstr "Anna linkin U~RI ulkoiselle komennolle"
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1297 src/viewer/text/link.c:1337
 msgid "~Reset form"
-msgstr "T~yhjennä kaavake"
+msgstr "T~yhjennä lomake"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1312
@@ -7963,37 +7959,37 @@ msgstr "~Avaa ulkoisessa muokkausohjelmassa"
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1320
 msgid "~Submit form"
-msgstr "~Lähetä kaavake"
+msgstr "~Lähetä lomake"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1321
 msgid "Submit form and rel~oad"
-msgstr "Lähetä kaavake ja lataa ~uudestaan"
+msgstr "Lähetä lomake ja lataa ~uudestaan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1325
 msgid "Submit form and open in new ~window"
-msgstr "Lähetä kaavake ja avaa uuteen ~ikkunaan"
+msgstr "Lähetä lomake ja avaa uuteen ~ikkunaan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1327
 msgid "Submit form and open in new ~tab"
-msgstr "Lähetä kaavake ja avaa uuteen ~välilehteen"
+msgstr "Lähetä lomake ja avaa uuteen ~välilehteen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1330
 msgid "Submit form and open in new tab in ~background"
-msgstr "Lähetä kaavake ja avaa uuteen välilehteen ~taustalla"
+msgstr "Lähetä lomake ja avaa uuteen välilehteen ~taustalla"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1335
 msgid "Submit form and ~download"
-msgstr "Lähetä kaavake ~ja lataa tiedostoksi"
+msgstr "Lähetä lomake ~ja lataa tiedostoksi"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1342
 msgid "Form f~ields"
-msgstr "Kaavakkeen k~entät"
+msgstr "Lomakkeen k~entät"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1349
@@ -8083,9 +8079,8 @@ msgstr "Etsi takaisinpäin"
 
 #. name:
 #: src/viewer/text/search.c:1655
-#, fuzzy
 msgid "Search History"
-msgstr "Kaavakehistoria"
+msgstr "Etsintähistoria"
 
 #: src/viewer/text/textarea.c:332
 msgid "You cannot launch an external editor in the anonymous mode."
