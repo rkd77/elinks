@@ -375,8 +375,6 @@ read_key(const unsigned char *key_str)
 int
 parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
-	unsigned char ctrlbuf[2];
-
 	kbd->modifier = KBD_MOD_NONE;
 	while (1) {
 		if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
@@ -400,8 +398,10 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 		}
 	}
 
+	kbd->key = read_key(s);
+
 	if ((kbd->modifier & KBD_MOD_CTRL) != 0
-	    && s[0] && s[0] <= 0x7F && !s[1]) {
+	    && is_kbd_character(kbd->key) && kbd->key <= 0x7F) {
 		/* Convert Ctrl-letter keystrokes to upper case,
 		 * e.g. Ctrl-a to Ctrl-A.  Do this because terminals
 		 * typically generate the same ASCII control
@@ -415,7 +415,7 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 		 * lower-case variants of such keystrokes as different
 		 * and let the user bind them to separate actions.
 		 * Besides, toupper() might not understand the charset
-		 * of s[0].
+		 * of kbd->key.
 		 *
 		 * FIXME: Actually, it is possible that some terminals
 		 * preserve case in all Ctrl-letter keystrokes, even
@@ -427,12 +427,9 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 		 * and instead make kbd_ev_lookup() or its callers
 		 * search for different variants of the keystroke if
 		 * the original one is not bound to any action.  */
-		ctrlbuf[0] = toupper(s[0]);
-		ctrlbuf[1] = '\0';
-		s = ctrlbuf;
+		kbd->key = toupper(kbd->key);
 	}
 
-	kbd->key = read_key(s);
 	return (kbd->key == KBD_UNDEF) ? -1 : 0;
 }
 
