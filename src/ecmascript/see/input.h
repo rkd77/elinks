@@ -13,5 +13,6 @@ unsigned char *SEE_value_to_unsigned_char(struct SEE_interpreter *, struct SEE_v
 struct SEE_string *string_to_SEE_string(struct SEE_interpreter *, unsigned char *);
 void append_unicode_to_SEE_string(struct SEE_interpreter *, struct SEE_string *,
 				  unicode_val_T);
+unicode_val_T SEE_string_to_unicode(struct SEE_interpreter *, struct SEE_string *);
 
 #endif

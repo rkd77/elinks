@@ -118,6 +118,7 @@ static const JSFunctionSpec input_funcs[] = {
 };
 
 static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
+static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -253,6 +254,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
+	unicode_val_T accesskey;
 
 	assert(fc);
 	assert(fc->form && fs);
@@ -266,8 +268,11 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
-		if (link)
-			link->accesskey = accesskey_string_to_unicode(jsval_to_string(ctx, vp));
+		accesskey = jsval_to_accesskey(ctx, vp);
+		if (accesskey == UCS_NO_CHAR)
+			return JS_FALSE;
+		else if (link)
+			link->accesskey = accesskey;
 		break;
 	case JSP_INPUT_ALT:
 		mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
@@ -1000,4 +1005,31 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 	} else {
 		return NULL;
 	}
+}
+
+/* Convert the string *@vp to an access key.  Return 0 for no access
+ * key, UCS_NO_CHAR on error, or the access key otherwise.  */
+static unicode_val_T
+jsval_to_accesskey(JSContext *ctx, jsval *vp)
+{
+	size_t len;
+	const jschar *chr;
+
+	/* Convert the value in place, to protect the result from GC.  */
+	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, vp) == JS_FALSE)
+		return UCS_NO_CHAR;
+	len = JS_GetStringLength(JSVAL_TO_STRING(*vp));
+	chr = JS_GetStringChars(JSVAL_TO_STRING(*vp));
+
+	/* This implementation ignores extra characters in the string.  */
+	if (len < 1)
+		return 0;	/* which means no access key */
+	if (chr[0] < 0xD800 || chr[0] > 0xDFFF)
+		return chr[0];
+	if (len >= 2
+	    && chr[0] >= 0xD800 && chr[0] <= 0xDBFF
+	    && chr[1] >= 0xDC00 && chr[1] <= 0xDFFF)
+		return 0x10000 + ((chr[0] & 0x3FF) << 10) + (chr[1] & 0x3FF);
+	JS_ReportError(ctx, "Invalid UTF-16 sequence");
+	return UCS_NO_CHAR;	/* which the caller will reject */
 }

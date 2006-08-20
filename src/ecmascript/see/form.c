@@ -283,13 +283,17 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (p == s_accessKey) {
-		if (link) {
-			string = SEE_value_to_unsigned_char(interp, val);
-			if (!string)
-				return;
-			link->accesskey = accesskey_string_to_unicode(string);
-			mem_free(string);
-		}
+		struct SEE_value conv;
+		unicode_val_T accesskey;
+
+		SEE_ToString(interp, val, &conv);
+		if (conv.u.string->length)
+			accesskey = SEE_string_to_unicode(interp, conv.u.string);
+		else
+			accesskey = 0;
+
+		if (link)
+			link->accesskey = accesskey;
 	} else if (p == s_alt) {
 		string = SEE_value_to_unsigned_char(interp, val);
 		mem_free_set(&fc->alt, string);

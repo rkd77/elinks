@@ -123,3 +123,24 @@ append_unicode_to_SEE_string(struct SEE_interpreter *interp,
 				(unsigned int) u);
 	}
 }
+
+unicode_val_T
+SEE_string_to_unicode(struct SEE_interpreter *interp, struct SEE_string *S)
+{
+	/* This implementation ignores extra characters in the string.  */
+	if (S->length < 1) {
+		SEE_error_throw(interp, interp->Error,
+				"String is empty");
+	} else if (S->data[0] < 0xD800 || S->data[0] > 0xDFFF) {
+		return S->data[0];
+	} else if (S->length >= 2
+		   && S->data[0] >= 0xD800 && S->data[0] <= 0xDBFF
+		   && S->data[1] >= 0xDC00 && S->data[1] <= 0xDFFF) {
+		return 0x10000
+			+ ((S->data[0] & 0x3FF) << 10)
+			+ (S->data[1] & 0x3FF);
+	} else {
+		SEE_error_throw(interp, interp->Error,
+				"Invalid UTF-16 sequence");
+	}
+}
