@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+	"http://www.w3.org/TR/REC-html40/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Script-Type" content="application/ecmascript">
+<title>accessKey test</title>
+<form action="#">
+<p><input type="button" onclick="run()" value="Test"> <input id="result" value="not run">
+<input type="reset">
+<table>
+<tr><td><input id="a" accesskey="a"><td>U+0020<td>must not become "Space"
+<tr><td><input id="b" accesskey="b"><td>U+0025<td>ASCII punctuation
+<tr><td><input id="c" accesskey="c"><td>U+007A<td>ASCII letter
+<tr><td><input id="d" accesskey="d"><td>U+00E5<td>Latin-1
+<tr><td><input id="e" accesskey="e"><td>U+0161<td>Latin-9
+<tr><td><input id="f" accesskey="f"><td>U+3042<td>Hiragana
+<tr><td><input id="g" accesskey="g"><td>U+10A55<td>Kharoshthi
+</table>
+</form>
+
+<script type="application/ecmascript">
+function run() {
+  var form = window.document.forms[0];
+  form.elements["result"].value = "running";
+  var ok = true;
+  var probe = function(element, accessKey) {
+    element.accessKey = accessKey;
+    if (element.accessKey != accessKey) {
+      ok = false;
+      element.value = "failed " + accessKey + " " + element.accessKey;
+    } else {
+      element.value = "passed " + accessKey + " " + element.accessKey;
+    }
+  }
+  probe(form.elements["a"], " ");
+  probe(form.elements["b"], "%");
+  probe(form.elements["c"], "z");
+  probe(form.elements["d"], "\u00E5");
+  probe(form.elements["e"], "\u0161");
+  probe(form.elements["f"], "\u3042");
+  probe(form.elements["g"], "\uD802\uDE55");
+  form.elements["result"].value = ok ? "passed" : "failed";
+  return false;
+}
+</script>
