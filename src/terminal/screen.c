@@ -463,6 +463,14 @@ copy_color_true(unsigned char *a, unsigned char *b)
 {
 	memcpy(a, b, 6);
 }
+
+static inline int
+background_is_black(unsigned char *a)
+{
+	static unsigned char b[6] = {0, 0, 0, 0, 0, 0};
+
+	return compare_bg_color_true(a, b);
+}
 #endif
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -855,7 +863,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		copy_color_true(state->color, ch->color);
 
 		add_true_foreground_color(screen, color_true_seqs, ch);
-		if (!driver->transparent || ch->color[1] != 0) {
+		if (!driver->transparent || !background_is_black(ch->color)) {
 			add_true_background_color(screen, color_true_seqs, ch);
 		}
 
