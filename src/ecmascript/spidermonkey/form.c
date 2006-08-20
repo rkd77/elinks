@@ -117,6 +117,8 @@ static const JSFunctionSpec input_funcs[] = {
 	{ NULL }
 };
 
+static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
+
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -146,14 +148,19 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
 	{
-		struct string keystr;
+		JSString *keystr;
 
 		if (!link) break;
 
-		init_string(&keystr);
-		add_accesskey_to_string(&keystr, link->accesskey);
-		string_to_jsval(ctx, vp, keystr.source);
-		done_string(&keystr);
+		if (!link->accesskey) {
+			*vp = JS_GetEmptyStringValue(ctx);
+		} else {
+			keystr = unicode_to_jsstring(ctx, link->accesskey);
+			if (keystr)
+				*vp = STRING_TO_JSVAL(keystr);
+			else
+				return JS_FALSE;
+		}
 		break;
 	}
 	case JSP_INPUT_ALT:
@@ -969,4 +976,28 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	}
 
 	return JS_TRUE;
+}
+
+
+static JSString *
+unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
+{
+	jschar buf[2];
+
+	/* If JS_NewUCStringCopyN hits a null character, it truncates
+	 * the string there and pads it with more nulls.  However,
+	 * that is not a problem here, because if there is a null
+	 * character in buf[], then it must be the only character.  */
+	if (u <= 0xFFFF) {
+		/* TODO: Should this reject code points in the
+		 * surrogate range? */
+		buf[0] = u;
+		return JS_NewUCStringCopyN(ctx, buf, 1);
+	} else if (u <= 0x10FFFF) {
+		buf[0] = 0xD800 + ((u - 0x10000) >> 10);
+		buf[1] = 0xDC00 + (u & 0x3FF);
+		return JS_NewUCStringCopyN(ctx, buf, 2);
+	} else {
+		return NULL;
+	}
 }

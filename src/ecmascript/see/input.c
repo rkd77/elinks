@@ -101,3 +101,25 @@ string_to_SEE_string(struct SEE_interpreter *interp, unsigned char *s)
 		str->data[i] = s[i];
 	return str;
 }
+
+void
+append_unicode_to_SEE_string(struct SEE_interpreter *interp,
+			     struct SEE_string *str,
+			     unicode_val_T u)
+{
+	if (u <= 0xFFFF) {
+		/* TODO: Should this reject code points in the
+		 * surrogate range? */
+		SEE_string_addch(str, u);
+	} else if (u <= 0x10FFFF) {
+		SEE_string_addch(0xD800 + ((u - 0x10000) >> 10));
+		SEE_string_addch(0xDC00 + (u & 0x3FF));
+	} else {
+		/* str->interpreter exists but is not documented, so don't
+		 * use it; use a separate @interp parameter instead.
+		 * Also, SEE does not support "%lX".  */
+		SEE_error_throw(interp, interp->RangeError,
+				"UTF-16 cannot encode U+%.4X",
+				(unsigned int) u);
+	}
+}

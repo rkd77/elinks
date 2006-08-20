@@ -182,15 +182,15 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	SEE_SET_UNDEFINED(res);
 
 	if (p == s_accessKey) {
-		struct string keystr;
+		struct SEE_string *keystr;
 		if (!link)
 			return;
 
-		init_string(&keystr);
-		add_accesskey_to_string(&keystr, link->accesskey);
-		str = string_to_SEE_string(interp, keystr.source);
+		keystr = SEE_string_new(interp, 0);
+		if (link->accesskey)
+			append_unicode_to_SEE_string(interp, keystr,
+						     link->accesskey);
 		SEE_SET_STRING(res, str);
-		done_string(&keystr);
 	} else if (p == s_alt) {
 		str = string_to_SEE_string(interp, fc->alt);
 		SEE_SET_STRING(res, str);
