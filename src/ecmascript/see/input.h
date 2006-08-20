@@ -1,6 +1,8 @@
 #ifndef EL__ECMASCRIPT_SEE_INPUT_H
 #define EL__ECMASCRIPT_SEE_INPUT_H
 
+#include "intl/charsets.h"
+
 struct SEE_interpreter;
 struct SEE_string;
 struct SEE_value;
