@@ -103,7 +103,7 @@ static struct option_info config_options_info[] = {
 		"at all unless you are sure what are you doing.\n"
 		"Note that you can also force a given protocol\n"
 		"to be used on a per-connection basis by using an URL\n"
-		"in the style of i.e. http4://elinks.or.cz/.")),
+		"in the style of e.g. http4://elinks.or.cz/.")),
 #else
 	INIT_OPT_BOOL("connection", N_("Try IPv4 when connecting"),
 		"try_ipv4", 0, 1,
@@ -111,7 +111,7 @@ static struct option_info config_options_info[] = {
 		"Do not touch this option.\n"
 		"Note that you can also force a given protocol\n"
 		"to be used on a per-connection basis by using an URL\n"
-		"in the style of i.e. http4://elinks.or.cz/.")),
+		"in the style of e.g. http4://elinks.or.cz/.")),
 #endif
 
 #ifdef CONFIG_IPV6
