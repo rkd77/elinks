@@ -43,7 +43,7 @@ struct terminal_interlink {
 	struct {
 		unicode_val_T ucs;
 		int len;
-		int min;
+		unicode_val_T min;
 		/* Modifier keys from the key event that carried the
 		 * first byte of the character.  We need this because
 		 * ELinks sees e.g. ESC U+00F6 as 0x1B 0xC3 0xB6 and
@@ -385,26 +385,43 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		} else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
 			/* This is a UTF-8 start byte. */
 
-			unsigned int mask, cov = 0x80;
+			/* Minimum character values for UTF-8 octet
+			 * sequences of each length, from RFC 2279.
+			 * According to the RFC, UTF-8 decoders should
+			 * reject characters that are encoded with
+			 * more octets than necessary.  (RFC 3629,
+			 * which ELinks does not yet otherwise follow,
+			 * tightened the "should" to "MUST".)  */
+			static const unicode_val_T min[] = {
+				0x00000080, /* ... 0x000007FF with 2 octets */
+				0x00000800, /* ... 0x0000FFFF with 3 octets */
+				0x00010000, /* ... 0x001FFFFF with 4 octets */
+				0x00200000, /* ... 0x03FFFFFF with 5 octets */
+				0x04000000  /* ... 0x7FFFFFFF with 6 octets */
+			};
+			unsigned int mask;
 			int len = 0;
 
-			/* The number of 1's between the first bit and first
-			 * 0 bit (exclusive) is the number of remaining
-			 * continuation bytes in the encoding of the character
-			 * that is now being processed, which number will be
-			 * stored in interlink->utf_8.len. */
-			for (mask = 0x80; key & mask; mask >>= 1) {
+			/* Set @len = the number of contiguous 1's
+			 * in the most significant bits of the first
+			 * octet, i.e. @key.  It is also the number
+			 * of octets in the character.  Leave @mask
+			 * pointing to the first 0 bit found.  */
+			for (mask = 0x80; key & mask; mask >>= 1)
 				len++;
-				interlink->utf_8.min = cov;
-				cov = 1 << (1 + 5 * len);
-			}
 
+			/* This will hold because @key was checked above.  */
+			assert(len >= 2 && len <= 6);
+			if_assert_failed goto invalid_utf_8_start_byte;
+
+			interlink->utf_8.min = min[len - 2];
 			interlink->utf_8.len = len - 1;
 			interlink->utf_8.ucs = key & (mask - 1);
 			interlink->utf_8.modifier = modifier;
 			break;
 		}
 
+	invalid_utf_8_start_byte:
 		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}
