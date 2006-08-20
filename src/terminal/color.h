@@ -17,10 +17,9 @@ struct screen_char;
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 #define TERM_COLOR_FOREGROUND(color) ((color)[0])
 #define TERM_COLOR_BACKGROUND(color) ((color)[1])
-#else
-#define TERM_COLOR_FOREGROUND(color) ((color)[0] & TERM_COLOR_MASK)
-#define TERM_COLOR_BACKGROUND(color) (((color)[0] >> 4) & TERM_COLOR_MASK)
 #endif
+#define TERM_COLOR_FOREGROUND_16(color) ((color)[0] & TERM_COLOR_MASK)
+#define TERM_COLOR_BACKGROUND_16(color) (((color)[0] >> 4) & TERM_COLOR_MASK)
 
 /* Bit flags to control how the colors are handled. */
 enum color_flags {

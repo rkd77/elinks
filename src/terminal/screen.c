@@ -431,33 +431,90 @@ struct screen_state {
 #endif
 };
 
-/* FIXME: This is inefficient. When CONFIG_TRUE_COLOR is defined even in 16 color mode
- * all 6 bytes are copied or compared. */
-
 #if defined(CONFIG_TRUE_COLOR)
-#define compare_color(a, b)	((a)[0] == (b)[0] && (a)[1] == (b)[1] && (a)[2] == (b)[2] \
-				&& (a)[3] == (b)[3] && (a)[4] == (b)[4] && (a)[5] == (b)[5])
-#define copy_color(a, b)	do { (a)[0] = (b)[0]; (a)[1] = (b)[1]; (a)[2] = (b)[2]; \
-				(a)[3] = (b)[3]; (a)[4] = (b)[4]; (a)[5] = (b)[5];} while (0)
 #define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
-
 #elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define compare_color(a, b)	((a)[0] == (b)[0] && (a)[1] == (b)[1])
-#define copy_color(a, b)	do { (a)[0] = (b)[0]; (a)[1] = (b)[1]; } while (0)
 #define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF } }
 #else
-#define compare_color(a, b)	((a)[0] == (b)[0])
-#define copy_color(a, b)	do { (a)[0] = (b)[0]; } while (0)
 #define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF } }
 #endif
 
-#if defined(CONFIG_TRUE_COLOR)
-#define compare_bg_color(a, b)	((a)[3] == (b[3]) && (a)[4] == (b)[4] && (a)[5] == (b)[5])
-#define compare_fg_color(a, b)	((a)[0] == (b[0]) && (a)[1] == (b)[1] && (a)[2] == (b)[2])
-#else
-#define compare_bg_color(a, b)	(TERM_COLOR_BACKGROUND(a) == TERM_COLOR_BACKGROUND(b))
-#define compare_fg_color(a, b)	(TERM_COLOR_FOREGROUND(a) == TERM_COLOR_FOREGROUND(b))
+#ifdef CONFIG_TRUE_COLOR
+static inline int
+compare_color_true(unsigned char *a, unsigned char *b)
+{
+	return !memcmp(a, b, 6);
+}
+
+static inline int
+compare_bg_color_true(unsigned char *a, unsigned char *b)
+{
+	return (a[3] == b[3] && a[4] == b[4] && a[5] == b[5]);
+}
+
+static inline int
+compare_fg_color_true(unsigned char *a, unsigned char *b)
+{
+	return (a[0] == b[0] && a[1] == b[1] && a[2] == b[2]);
+}
+
+static inline void
+copy_color_true(unsigned char *a, unsigned char *b)
+{
+	memcpy(a, b, 6);
+}
 #endif
+
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+static inline int
+compare_color_256(unsigned char *a, unsigned char *b)
+{
+	return (a[0] == b[0] && a[1] == b[1]);
+}
+
+static inline int
+compare_bg_color_256(unsigned char *a, unsigned char *b)
+{
+	return (a[1] == b[1]);
+}
+
+static inline int
+compare_fg_color_256(unsigned char *a, unsigned char *b)
+{
+	return (a[0] == b[0]);
+}
+
+static inline void
+copy_color_256(unsigned char *a, unsigned char *b)
+{
+	a[0] = b[0];
+	a[1] = b[1];
+}
+#endif
+
+static inline int
+compare_color_16(unsigned char *a, unsigned char *b)
+{
+	return (a[0] == b[0]);
+}
+
+static inline int
+compare_bg_color_16(unsigned char *a, unsigned char *b)
+{
+	return (TERM_COLOR_BACKGROUND_16(a) == TERM_COLOR_BACKGROUND_16(b));
+}
+
+static inline int
+compare_fg_color_16(unsigned char *a, unsigned char *b)
+{
+	return (TERM_COLOR_FOREGROUND_16(a) == TERM_COLOR_FOREGROUND_16(b));
+}
+
+static inline void
+copy_color_16(unsigned char *a, unsigned char *b)
+{
+	a[0] = b[0];
+}
 
 #ifdef CONFIG_UTF_8
 static inline void
@@ -543,17 +600,17 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF_8
 	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF_8 */
-	    !compare_color(ch->color, state->color)
+	    !compare_color_16(ch->color, state->color)
 	   ) {
-		copy_color(state->color, ch->color);
+		copy_color_16(state->color, ch->color);
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
 		if (driver->color_mode == COLOR_MODE_16) {
 			unsigned char code[6] = ";30;40";
-			unsigned char bgcolor = TERM_COLOR_BACKGROUND(ch->color);
+			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->color);
 
-			code[2] += TERM_COLOR_FOREGROUND(ch->color);
+			code[2] += TERM_COLOR_FOREGROUND_16(ch->color);
 
 			if (!driver->transparent || bgcolor != 0) {
 				code[5] += bgcolor;
@@ -678,9 +735,9 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF_8
 	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF_8 */
-	    !compare_color(ch->color, state->color)
+	    !compare_color_256(ch->color, state->color)
 	   ) {
-		copy_color(state->color, ch->color);
+		copy_color_256(state->color, ch->color);
 
 		add_foreground_color(screen, color256_seqs, ch);
 		if (!driver->transparent || ch->color[1] != 0) {
@@ -793,9 +850,9 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF_8
 	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF_8 */
-	    !compare_color(ch->color, state->color)
+	    !compare_color_true(ch->color, state->color)
 	   ) {
-		copy_color(state->color, ch->color);
+		copy_color_true(state->color, ch->color);
 
 		add_true_foreground_color(screen, color_true_seqs, ch);
 		if (!driver->transparent || ch->color[1] != 0) {
@@ -815,7 +872,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 }
 #endif
 
-#define add_chars(image_, term_, driver_, state_, ADD_CHAR)			\
+#define add_chars(image_, term_, driver_, state_, ADD_CHAR, compare_bg_color, compare_fg_color)			\
 {										\
 	struct terminal_screen *screen = (term_)->screen;			\
 	int y = screen->dirty_from;					\
@@ -895,21 +952,21 @@ redraw_screen(struct terminal *term)
 	switch (driver->color_mode) {
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
-		add_chars(&image, term, driver, &state, add_char16);
+		add_chars(&image, term, driver, &state, add_char16, compare_bg_color_16, compare_fg_color_16);
 		break;
 #ifdef CONFIG_88_COLORS
 	case COLOR_MODE_88:
-		add_chars(&image, term, driver, &state, add_char256);
+		add_chars(&image, term, driver, &state, add_char256, compare_bg_color_256, compare_fg_color_256);
 		break;
 #endif
 #ifdef CONFIG_256_COLORS
 	case COLOR_MODE_256:
-		add_chars(&image, term, driver, &state, add_char256);
+		add_chars(&image, term, driver, &state, add_char256, compare_bg_color_256, compare_fg_color_256);
 		break;
 #endif
 #ifdef CONFIG_TRUE_COLOR
 	case COLOR_MODE_TRUE_COLOR:
-		add_chars(&image, term, driver, &state, add_char_true);
+		add_chars(&image, term, driver, &state, add_char_true, compare_bg_color_true, compare_fg_color_true);
 		break;
 #endif
 	case COLOR_MODES:
