@@ -400,8 +400,33 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 		}
 	}
 
-	if ((kbd->modifier & KBD_MOD_CTRL) != 0 && s[0] && !s[1]) {
-		/* Ctrl-a == Ctrl-A */
+	if ((kbd->modifier & KBD_MOD_CTRL) != 0
+	    && s[0] && s[0] <= 0x7F && !s[1]) {
+		/* Convert Ctrl-letter keystrokes to upper case,
+		 * e.g. Ctrl-a to Ctrl-A.  Do this because terminals
+		 * typically generate the same ASCII control
+		 * characters regardless of Shift and Caps Lock.
+		 *
+		 * However, that applies only to ASCII letters.  For
+		 * other Ctrl-letter combinations, there seems to be
+		 * no standard of what the terminal should generate.
+		 * Because it is possible that the terminal does not
+		 * fold case then, ELinks should treat upper-case and
+		 * lower-case variants of such keystrokes as different
+		 * and let the user bind them to separate actions.
+		 * Besides, toupper() might not understand the charset
+		 * of s[0].
+		 *
+		 * FIXME: Actually, it is possible that some terminals
+		 * preserve case in all Ctrl-letter keystrokes, even
+		 * for ASCII letters.  In particular, the Win32
+		 * console API looks like it might do this.  When the
+		 * terminal handling part of ELinks is eventually
+		 * extended to fully support that, it could be a good
+		 * idea to change parse_keystroke() not to fold case,
+		 * and instead make kbd_ev_lookup() or its callers
+		 * search for different variants of the keystroke if
+		 * the original one is not bound to any action.  */
 		ctrlbuf[0] = toupper(s[0]);
 		ctrlbuf[1] = '\0';
 		s = ctrlbuf;
