@@ -7,6 +7,16 @@ struct color_pair;
 struct box;
 struct terminal;
 
+#if defined(CONFIG_TRUE_COLOR)
+/* 0, 1, 2 - rgb foreground; 3, 4, 5 - rgb background */
+#define SCREEN_COLOR_SIZE	6
+#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+/* 0 is foreground; 1 is background */
+#define SCREEN_COLOR_SIZE	2
+#else
+#define SCREEN_COLOR_SIZE	1
+#endif
+
 /* All attributes should fit inside an unsigned char. */
 /* XXX: The bold mask is used as part of the color encoding. */
 enum screen_char_attr {
@@ -30,16 +40,8 @@ struct screen_char {
 	/* Attributes are screen_char_attr bits. */
 	unsigned char attr;
 
-#if defined(CONFIG_TRUE_COLOR)
-	/* 0, 1, 2 - rgb foreground,
-	3, 4, 5 - rgb background */
-	unsigned char color[6];
-	/* The encoded fore- and background color. */
-#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	unsigned char color[2];
-#else
-	unsigned char color[1];
-#endif
+	/* The fore- and background color. */
+	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
 #define copy_screen_chars(to, from, amount) \

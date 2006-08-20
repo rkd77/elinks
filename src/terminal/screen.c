@@ -422,13 +422,7 @@ struct screen_state {
 	unsigned char bold;
 	unsigned char attr;
 	/* Following should match struct screen_char color field. */
-#if defined(CONFIG_TRUE_COLOR)
-	unsigned char color[6];
-#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	unsigned char color[2];
-#else
-	unsigned char color[1];
-#endif
+	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
 #if defined(CONFIG_TRUE_COLOR)

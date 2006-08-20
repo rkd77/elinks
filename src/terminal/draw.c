@@ -21,12 +21,13 @@
 		int_bounds(&(x), 0, (term)->width - 1); \
 		int_bounds(&(y), 0, (term)->height - 1); \
 	} while (0)
-#if defined(CONFIG_TRUE_COLOR)
-#define clear_screen_char_color(schar) do { memset((schar)->color, 0, 6); } while (0)
-#elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define clear_screen_char_color(schar) do { memset((schar)->color, 0, 2); } while (0)
+
+#if SCREEN_COLOR_SIZE > 1
+#define clear_screen_char_color(schar) \
+	do { memset((schar)->color, 0, SCREEN_COLOR_SIZE); } while (0)
 #else
-#define clear_screen_char_color(schar) do { (schar)->color[0] = 0; } while (0)
+#define clear_screen_char_color(schar) \
+	do { (schar)->color[0] = 0; } while (0)
 #endif
 
 
