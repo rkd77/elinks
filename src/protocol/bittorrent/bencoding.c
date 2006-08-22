@@ -15,6 +15,10 @@
 #include <netinet/in.h> /* OS/2 needs this after sys/types.h */
 #endif
 
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
+
 #include "elinks.h"
 
 #include "protocol/bittorrent/bencoding.h"
