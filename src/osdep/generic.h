@@ -37,6 +37,13 @@
 #define IP_ADDRESS_BUFFER_SIZE INET_ADDRSTRLEN
 #endif
 
+#ifndef PF_INET
+#define PF_INET AF_INET
+#endif
+
+#ifndef PF_INET6
+#define PF_INET6 AF_INET6
+#endif
 
 /* Attempt to workaround the EINTR mess. */
 #if defined(EINTR) && !defined(CONFIG_WIN32)
