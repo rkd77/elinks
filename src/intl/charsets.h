@@ -88,4 +88,16 @@ unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
 void init_charsets_lookup(void);
 void free_charsets_lookup(void);
 
+/* UTF-16 encodes each Unicode character U+0000...U+FFFF as a single
+ * 16-bit code unit, and each character U+10000...U+10FFFF as a pair
+ * of two code units: a high surrogate followed by a low surrogate.
+ * The range U+D800...U+DFFF is reserved for these surrogates.  */
+#define is_utf16_surrogate(u)           (((u) & 0xFFFFF800) == 0xD800)
+#define is_utf16_high_surrogate(u)      (((u) & 0xFFFFFC00) == 0xD800)
+#define is_utf16_low_surrogate(u)       (((u) & 0xFFFFFC00) == 0xDC00)
+#define join_utf16_surrogates(high,low) (0x10000 + (((high) - 0xD800L) << 10) + ((low) - 0xDC00))
+#define needs_utf16_surrogates(u)       ((uint32_t) ((u) - 0x10000) < 0x100000)
+#define get_utf16_high_surrogate(u)     (0xD800 + (((u) - 0x10000) >> 10))
+#define get_utf16_low_surrogate(u)      (0xDC00 + ((u) & 0x3FF))
+
 #endif

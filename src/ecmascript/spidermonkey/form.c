@@ -998,9 +998,9 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 		 * surrogate range? */
 		buf[0] = u;
 		return JS_NewUCStringCopyN(ctx, buf, 1);
-	} else if (u <= 0x10FFFF) {
-		buf[0] = 0xD800 + ((u - 0x10000) >> 10);
-		buf[1] = 0xDC00 + (u & 0x3FF);
+	} else if (needs_utf16_surrogates(u)) {
+		buf[0] = get_utf16_high_surrogate(u);
+		buf[1] = get_utf16_low_surrogate(u);
 		return JS_NewUCStringCopyN(ctx, buf, 2);
 	} else {
 		return NULL;
@@ -1024,12 +1024,12 @@ jsval_to_accesskey(JSContext *ctx, jsval *vp)
 	/* This implementation ignores extra characters in the string.  */
 	if (len < 1)
 		return 0;	/* which means no access key */
-	if (chr[0] < 0xD800 || chr[0] > 0xDFFF)
+	if (!is_utf16_surrogate(chr[0]))
 		return chr[0];
 	if (len >= 2
-	    && chr[0] >= 0xD800 && chr[0] <= 0xDBFF
-	    && chr[1] >= 0xDC00 && chr[1] <= 0xDFFF)
-		return 0x10000 + ((chr[0] & 0x3FF) << 10) + (chr[1] & 0x3FF);
+	    && is_utf16_high_surrogate(chr[0])
+	    && is_utf16_low_surrogate(chr[1]))
+		return join_utf16_surrogates(chr[0], chr[1]);
 	JS_ReportError(ctx, "Invalid UTF-16 sequence");
 	return UCS_NO_CHAR;	/* which the caller will reject */
 }

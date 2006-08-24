@@ -111,9 +111,9 @@ append_unicode_to_SEE_string(struct SEE_interpreter *interp,
 		/* TODO: Should this reject code points in the
 		 * surrogate range? */
 		SEE_string_addch(str, u);
-	} else if (u <= 0x10FFFF) {
-		SEE_string_addch(str, 0xD800 + ((u - 0x10000) >> 10));
-		SEE_string_addch(str, 0xDC00 + (u & 0x3FF));
+	} else if (needs_utf16_surrogates(u)) {
+		SEE_string_addch(str, get_utf16_high_surrogate(u));
+		SEE_string_addch(str, get_utf16_low_surrogate(u));
 	} else {
 		/* str->interpreter exists but is not documented, so don't
 		 * use it; use a separate @interp parameter instead.
@@ -131,14 +131,12 @@ SEE_string_to_unicode(struct SEE_interpreter *interp, struct SEE_string *S)
 	if (S->length < 1) {
 		SEE_error_throw(interp, interp->Error,
 				"String is empty");
-	} else if (S->data[0] < 0xD800 || S->data[0] > 0xDFFF) {
+	} else if (!is_utf16_surrogate(S->data[0])) {
 		return S->data[0];
 	} else if (S->length >= 2
-		   && S->data[0] >= 0xD800 && S->data[0] <= 0xDBFF
-		   && S->data[1] >= 0xDC00 && S->data[1] <= 0xDFFF) {
-		return 0x10000
-			+ ((S->data[0] & 0x3FF) << 10)
-			+ (S->data[1] & 0x3FF);
+		   && is_utf16_high_surrogate(S->data[0])
+		   && is_utf16_low_surrogate(S->data[1])) {
+		return join_utf16_surrogates(S->data[0], S->data[1]);
 	} else {
 		SEE_error_throw(interp, interp->Error,
 				"Invalid UTF-16 sequence");
