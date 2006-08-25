@@ -337,7 +337,10 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				if (! --interlink->utf_8.len) {
 					unicode_val_T u = interlink->utf_8.ucs;
 
-					if (u < interlink->utf_8.min)
+					/* UTF-8 allows neither overlong
+					 * sequences nor surrogates.  */
+					if (u < interlink->utf_8.min
+					    || is_utf16_surrogate(u))
 						u = UCS_REPLACEMENT_CHARACTER;
 					term_send_ucs(term, u,
 						      term->interlink->utf_8.modifier);
