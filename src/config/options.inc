@@ -671,7 +671,7 @@ static struct option_info config_options_info[] = {
 		"1 is 16 color mode")),
 #elif defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
+		"color_mode", 0, -1, 4, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
@@ -681,7 +681,7 @@ static struct option_info config_options_info[] = {
 		"4 is true color mode")),
 #elif defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
+		"color_mode", 0, -1, 3, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
@@ -690,7 +690,7 @@ static struct option_info config_options_info[] = {
 		"3 is true color mode")),
 #elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
+		"color_mode", 0, -1, 3, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
@@ -699,7 +699,7 @@ static struct option_info config_options_info[] = {
 		"3 is true color mode")),
 #elif !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 1, -1,
+		"color_mode", 0, -1, 2, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
