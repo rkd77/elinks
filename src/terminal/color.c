@@ -269,16 +269,6 @@ set_term_color16(struct screen_char *schar, enum color_flags flags,
 	if (use_inverse(bg, fg)) {
 		schar->attr |= SCREEN_ATTR_STANDOUT;
 	}
-#if 0
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	/* With 256 color support we use memcmp() when comparing color in
-	 * terminal/screen.c:add_char*() so we need to clear this byte. */
-	TERM_COLOR_FOREGROUND(schar->color) = (fg & TERM_COLOR_MASK);
-	TERM_COLOR_BACKGROUND(schar->color) = bg;
-#else
-	schar->color[0] = (bg << 4 | fg);
-#endif
-#endif
 	schar->color[0] = (bg << 4 | fg);
 }
 
@@ -380,8 +370,8 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 			}
 		}
 
-		TERM_COLOR_FOREGROUND(schar->color) = fg;
-		TERM_COLOR_BACKGROUND(schar->color) = bg;
+		TERM_COLOR_FOREGROUND_256(schar->color) = fg;
+		TERM_COLOR_BACKGROUND_256(schar->color) = bg;
 		break;
 #endif
 #ifdef CONFIG_TRUE_COLOR
