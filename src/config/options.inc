@@ -687,7 +687,7 @@ static struct option_info config_options_info[] = {
 		"0 is mono mode\n"
 		"1 is 16 color mode\n"
 		"2 is 88 color mode\n"
-		"3 is true color mode\n")),
+		"3 is true color mode")),
 #elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
 		"color_mode", 0, -1, 2, -1,
