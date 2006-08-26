@@ -320,6 +320,14 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 #endif
 #ifdef CONFIG_TRUE_COLOR
 	case COLOR_MODE_TRUE_COLOR:
+        	/* TODO: make it better */
+        	if (pair->foreground == pair->background && (flags & COLOR_ENSURE_CONTRAST)) {
+			if (flags & COLOR_ENSURE_INVERTED_CONTRAST) {
+				pair->background = (pair->foreground == 0) ? 0xffffff : 0;
+			} else {
+				pair->foreground = (pair->background == 0) ? 0xffffff : 0;
+			}
+                }
 		schar->color[0] = (pair->foreground >> 16) & 255; /* r */
 		schar->color[1] = (pair->foreground >> 8) & 255; /* g */
 		schar->color[2] = pair->foreground & 255; /* b */
