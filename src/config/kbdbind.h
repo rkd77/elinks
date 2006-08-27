@@ -187,7 +187,9 @@ void add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd
 	 * converted from unicode_val_T to that.		\
 	 * #ifdef CONFIG_UTF_8, the code is correct.  */	\
 	kbd.key = accesskey;					\
-	kbd.modifier = KBD_MOD_NONE;				\
+	/* try_document_key() recognizes only Alt-accesskey	\
+	 * combos.  */						\
+	kbd.modifier = KBD_MOD_ALT;				\
 	add_keystroke_to_string(str, &kbd, 0); 			\
 } while (0)
 
