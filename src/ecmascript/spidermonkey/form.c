@@ -989,13 +989,16 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 {
 	jschar buf[2];
 
-	/* If JS_NewUCStringCopyN hits a null character, it truncates
+	/* This is supposed to make a string from which
+	 * jsval_to_accesskey() can get the original @u back.
+	 * If @u is a surrogate, then that is not possible, so
+	 * return NULL to indicate an error instead.
+	 *
+	 * If JS_NewUCStringCopyN hits a null character, it truncates
 	 * the string there and pads it with more nulls.  However,
 	 * that is not a problem here, because if there is a null
 	 * character in buf[], then it must be the only character.  */
-	if (u <= 0xFFFF) {
-		/* TODO: Should this reject code points in the
-		 * surrogate range? */
+	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
 		buf[0] = u;
 		return JS_NewUCStringCopyN(ctx, buf, 1);
 	} else if (needs_utf16_surrogates(u)) {

@@ -107,9 +107,11 @@ append_unicode_to_SEE_string(struct SEE_interpreter *interp,
 			     struct SEE_string *str,
 			     unicode_val_T u)
 {
-	if (u <= 0xFFFF) {
-		/* TODO: Should this reject code points in the
-		 * surrogate range? */
+	/* This is supposed to make a string from which
+	 * SEE_string_to_unicode() can get the original @u back.
+	 * If @u is a surrogate, then that is not possible, so
+	 * throw an error instead.  */
+	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
 		SEE_string_addch(str, u);
 	} else if (needs_utf16_surrogates(u)) {
 		SEE_string_addch(str, get_utf16_high_surrogate(u));

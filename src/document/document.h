@@ -231,7 +231,9 @@ void shrink_format_cache(int);
 extern struct module document_module;
 
 /* FIXME: support for entities and all Unicode characters.
- * For now, we only support simple printable character. */
+ * (Unpaired surrogates should be rejected, so that the ECMAScript
+ * interface can convert the access key to UTF-16.)
+ * For now, we only support simple printable character.  */
 #define accesskey_string_to_unicode(s) (((s)[0] && !(s)[1] && isprint((s)[0])) ? (s)[0] : 0)
 
 #endif
