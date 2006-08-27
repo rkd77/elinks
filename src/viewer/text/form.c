@@ -342,7 +342,8 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	switch (fc->type) {
 		unsigned char *s;
 #ifdef CONFIG_UTF_8
-		unsigned char *text, *end;
+		unsigned char *text, *end, *last_in_view;
+		int retried;
 #endif /* CONFIG_UTF_8 */
 		int len;
 		int i, x, y;
@@ -379,38 +380,118 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 			break;
 #ifdef CONFIG_UTF_8
 utf_8:
-			end = NULL; /* Shut up the compiler. */
-			int_bounds(&fs->vpos, fs->state_cell - fc->size + 1, fs->state_cell);
-			if (fc->type == FC_PASSWORD)
-				len = utf8_ptr2chars(fs->value + fs->vpos, NULL);
-			else
-				len = utf8_ptr2cells(fs->value + fs->vpos, NULL);
+			retried = 0;
+
+retry_after_scroll:
 			text = fs->value;
-			end = strchr(text, '\0');
+			if (!text) text = "";
+			len = strlen(text);
+			int_bounds(&fs->state, 0, len);
+			int_bounds(&fs->vpos, 0, fs->state);
+			end = text + len;
+			text += fs->vpos;
+			last_in_view = NULL;
 
-
-			for (i = 0; i < fc->size; i++, x++) {
+			for (i = 0; i < fc->size; ) {
 				unicode_val_T data;
+				int cells, cell;
+				unsigned char *maybe_in_view = text;
 
-				if (!col_is_in_box(box, x)) continue;
-
-				if (fs->value && i >= -fs->vpos && i < len) {
-					if (fc->type != FC_PASSWORD)
-						data = utf_8_to_unicode(&text, end);
-					else
-						data = '*';
-				} else
+				data = utf_8_to_unicode(&text, end);
+				if (data == UCS_NO_CHAR) /* end of string */
 					data = '_';
+				else if (fc->type == FC_PASSWORD)
+					data = '*';
 
-				if (unicode_to_cell(data) == 2) {
-					if (i + 1 < fc->size) {
-						draw_char_data(term, x++, y, data);
-						data = UCS_NO_CHAR;
-						i++;
-					} else
-						data = ' ';
+				cells = unicode_to_cell(data);
+				if (i + cells <= fc->size) {
+					last_in_view = maybe_in_view;
+					if (colspan_is_in_box(box, x + i, cells)) {
+						/* The character fits completely.
+						 * Draw the character, and mark any
+						 * further cells with UCS_NO_CHAR.  */
+						draw_char_data(term, x + i, y, data);
+						for (cell = 1; cell < cells; cell++)
+							draw_char_data(term, x + i + cell,
+								       y, UCS_NO_CHAR);
+						goto drew_char;
+					}
 				}
-				draw_char_data(term, x, y, data);
+
+				/* The character does not fit completely.
+				 * Write spaces to the cells that do fit.  */
+				for (cell = 0; cell < cells; cell++) {
+					if (col_is_in_box(box, x + i + cell)
+					    && i + cell < fc->size)
+						draw_char_data(term,
+							       x + i + cell,
+							       y, ' ');
+				}
+
+drew_char:
+				i += cells;
+			}
+
+			/* The int_bounds calls above ensured that the
+			 * insertion point cannot be at the left side
+			 * of the scrolled-visible part of the text.
+			 * However it can still be at the right side.
+			 * Check whether we need to change fs->vpos.
+			 *
+			 * This implementation attempts to follow
+			 * these rules:
+			 * - If the insertion point is at the end of
+			 *   the string, leave at least one empty cell
+			 *   so that there is a place for the cursor.
+			 * - If a character follows the insertion
+			 *   point, make that character fully visible;
+			 *   note the character may be double-width.
+			 * - If fc->size < 2, it is not possible to
+			 *   make a double-width character fully
+			 *   visible.  In this case, it is OK if the
+			 *   output is ugly, but ELinks must not fall
+			 *   into an infinite loop or crash.
+			 * - The length of the string should not affect
+			 *   how long this function takes.  The width
+			 *   of the widget naturally will.
+			 * - Optimize the case where fields are drawn
+			 *   several times without being modified.
+			 *
+			 * It follows that:
+			 * - If the "for i" loop above hit UCS_NO_CHAR,
+			 *   then there is no need to scroll.
+			 * - When the string ends with a double-width
+			 *   character that fits in only partially,
+			 *   then text==end, but the field may have
+			 *   to be scrolled.  */
+			if (fs->value && last_in_view
+			    && last_in_view < fs->value + fs->state) {
+				unsigned char *ptr = fs->value + fs->state;
+				int cells = fc->size;
+				enum utf8_step how = (fc->type == FC_PASSWORD)
+					? utf8_step_characters
+					: utf8_step_cells_fewer;
+
+				/* The insertion point is at the right
+				 * side of the scrolled-visible part
+				 * of the text.  Decide a new fs->vpos
+				 * by counting cells backwards from
+				 * @ptr.  But first advance @ptr past
+				 * the character that follows the
+				 * insertion point, so that it will be
+				 * fully displayed.  If there is no
+				 * such character, reserve one cell
+				 * for the cursor anyway.  */
+				if (utf_8_to_unicode(&ptr, end) == UCS_NO_CHAR)
+					--cells;
+				ptr = utf8_step_backward(ptr, fs->value,
+							 cells, how, NULL);
+
+				if (fs->vpos != ptr - fs->value) {
+					fs->vpos = ptr - fs->value;
+					retried = 1;
+					goto retry_after_scroll;
+				}
 			}
 			break;
 #endif /* CONFIG_UTF_8 */

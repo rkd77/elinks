@@ -52,16 +52,14 @@ struct form_state {
 	 * in @form_control.labels.  */
 	int state;
 #ifdef CONFIG_UTF_8
-	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is the
-	 * number of cells needed for the text before the insertion
-	 * point.  (For FC_PASSWORD, each character is one cell.)
-	 * When CONFIG_UTF_8 is not defined, @state_cell is assumed
-	 * to be the same as @state.  */
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is not
+	 * used.  There is still code that updates it; such code
+	 * should be removed.  */
 	int state_cell;
 #endif /* CONFIG_UTF_8 */
-	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the number
-	 * of cells that scrolling has hidden at the left.  Thus, the
-	 * X offset of the cursor is @state_cell - @vpos.  */
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the index
+	 * of the first displayed byte in @value.  It should never be
+	 * in the middle of a character.  */
 	int vpos;
 	int vypos;
 

@@ -128,11 +128,17 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 		case LINK_FIELD:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
-			if (!fs)
+			if (!fs || !fs->value)
 				return 0;
 #ifdef CONFIG_UTF_8
 			else if (utf8) {
-				return fs->state_cell - fs->vpos;
+				unsigned char *scroll = fs->value + fs->vpos;
+				unsigned char *point = fs->value + fs->state;
+
+				if (fs->type == FC_PASSWORD)
+					return utf8_ptr2chars(scroll, point);
+				else
+					return utf8_ptr2cells(scroll, point);
 			}
 #endif /* CONFIG_UTF_8 */
 			else
