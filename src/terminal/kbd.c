@@ -206,7 +206,7 @@ resize_terminal(void)
 	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
-static void
+void
 get_terminal_name(unsigned char name[MAX_TERM_LEN])
 {
 	unsigned char *term = getenv("TERM");

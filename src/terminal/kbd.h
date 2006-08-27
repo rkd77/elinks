@@ -125,6 +125,7 @@ void resize_terminal(void);
 void dispatch_special(unsigned char *);
 void kbd_ctrl_c(void);
 int is_blocked(void);
+void get_terminal_name(unsigned char *);
 
 #define kbd_get_key(kbd_)	((kbd_)->key)
 #define kbd_key_is(kbd_, key)	(kbd_get_key(kbd_) == (key))
