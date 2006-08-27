@@ -424,7 +424,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			break;
 		}
 
-	invalid_utf_8_start_byte:
+invalid_utf_8_start_byte:
 		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}

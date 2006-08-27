@@ -51,7 +51,8 @@ init_tab(struct terminal *term, void *data, window_handler_T handler)
 	 * above it if it were inactive, or below if it were active.  */
 	assert(term->main_menu == NULL);
 	pos = (struct window *) term->windows.prev;
- found_pos:
+
+found_pos:
 	add_at_pos(pos, win);
 
 	assert_window_stacking(term);
