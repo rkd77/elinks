@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-20 21:59+0200\n"
-"PO-Revision-Date: 2006-08-20 21:53+0200\n"
+"POT-Creation-Date: 2006-08-29 15:48+0200\n"
+"PO-Revision-Date: 2006-08-29 15:50+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "Erreur de suppression"
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
 #: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:213 src/terminal/tab.c:256
+#: src/terminal/tab.c:214 src/terminal/tab.c:257
 msgid "~Yes"
 msgstr "~Oui"
 
@@ -129,7 +129,7 @@ msgstr "~Oui"
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
 #: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:214 src/terminal/tab.c:257
+#: src/terminal/tab.c:215 src/terminal/tab.c:258
 msgid "~No"
 msgstr "~Non"
 
@@ -1132,8 +1132,8 @@ msgstr "Envoyer le formulaire"
 msgid "Submit form and reload"
 msgstr "Envoyer le formulaire et recharger"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:210
-#: src/terminal/tab.c:253
+#: src/config/actions-main.inc:101 src/terminal/tab.c:211
+#: src/terminal/tab.c:254
 msgid "Close tab"
 msgstr "Fermer l'onglet"
 
@@ -3348,14 +3348,14 @@ msgid ""
 "0 is mono mode\n"
 "1 is 16 color mode\n"
 "2 is 88 color mode\n"
-"3 is true color mode\n"
+"3 is true color mode"
 msgstr ""
 "Mode couleurs pour la sortie (option -dump):\n"
 "-1 pas de couleurs (normal)\n"
 "0 mode monochrome\n"
 "1 mode 16 couleurs\n"
 "2 mode 88 couleurs\n"
-"3 mode vraies couleurs\n"
+"3 mode vraies couleurs"
 
 #: src/config/options.inc:694
 msgid ""
@@ -8436,12 +8436,12 @@ msgstr "Attention: le nom du terminal contient des caractères illicites."
 msgid "Failed to create session."
 msgstr "Echec de création de session."
 
-#: src/terminal/event.c:417
+#: src/terminal/event.c:437
 #, c-format
 msgid "Bad event %d"
 msgstr "Mauvais évènement %d"
 
-#: src/terminal/event.c:457
+#: src/terminal/event.c:477
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
@@ -8450,24 +8450,24 @@ msgstr "Impossible de lire l'évènement: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
 
-#: src/terminal/tab.c:211
+#: src/terminal/tab.c:212
 msgid "Do you really want to close the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
 
-#: src/terminal/tab.c:254
+#: src/terminal/tab.c:255
 msgid "Do you really want to close all except the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer tout sauf l'onglet courant ?"
 
-#: src/viewer/dump/dump.c:84
+#: src/viewer/dump/dump.c:87
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Ne peut écrire sur la sortie standard: %s"
 
-#: src/viewer/dump/dump.c:87
+#: src/viewer/dump/dump.c:90
 msgid "Can't write to stdout."
 msgstr "Ne peut écrire sur la sortie standard."
 
-#: src/viewer/dump/dump.c:277
+#: src/viewer/dump/dump.c:285
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr "Protocole de l'URL non supporté (%s)."
