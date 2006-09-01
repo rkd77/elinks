@@ -43,7 +43,10 @@ static void check_if_no_terminal(void);
 static int
 was_utf8(int in, int out)
 {
-	/* taken from setedit */
+	/* Taken from setedit.
+	 * Set cursor in the up left corner. Write "\357\200\240" == U+F020.
+	 * Read cursor position. For UTF-8 x will be 2.
+	 * For normal mode it will be 4. */
 	static unsigned char *str = "\033[1;1H\357\200\240\033[6n";
 	unsigned char buf[20];
 	int x, y;
