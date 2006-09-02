@@ -28,6 +28,13 @@ col_is_in_box(struct box *box, int x)
 	return (x >= box->x && x < box->x + box->width);
 }
 
+/* Mainly intended for use with double-width characters.  */
+static inline int
+colspan_is_in_box(struct box *box, int x, int span)
+{
+	return (x >= box->x && x + span <= box->x + box->width);
+}
+
 
 static inline void
 set_box(struct box *box, int x, int y, int width, int height)
