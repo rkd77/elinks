@@ -37,11 +37,31 @@ struct form_state {
 	int position;
 	enum form_type type;
 
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @value is the text
+	 * string that the user can edit.  The string is null-terminated;
+	 * its length is not stored separately.  The size of the buffer
+	 * is not stored anywhere; extending the string always requires
+	 * calling realloc().  The string is not normally allowed to grow
+	 * past @form_control.maxlength bytes (not counting the null),
+	 * but there may be ways to get longer strings.  */
 	unsigned char *value;
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state is the byte
+	 * position of the insertion point in @value.
+	 * For FC_CHECKBOX and FC_RADIO, @state is 1 or 0.
+	 * For FC_SELECT, @state is the index of the selected item
+	 * in @form_control.labels.  */
 	int state;
 #ifdef CONFIG_UTF_8
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is the
+	 * number of cells needed for the text before the insertion
+	 * point.  (For FC_PASSWORD, each character is one cell.)
+	 * When CONFIG_UTF_8 is not defined, @state_cell is assumed
+	 * to be the same as @state.  */
 	int state_cell;
 #endif /* CONFIG_UTF_8 */
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the number
+	 * of cells that scrolling has hidden at the left.  Thus, the
+	 * X offset of the cursor is @state_cell - @vpos.  */
 	int vpos;
 	int vypos;
 
