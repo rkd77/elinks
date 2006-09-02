@@ -71,6 +71,26 @@ int utf8_char2cells(unsigned char *, unsigned char *);
 int utf8_ptr2cells(unsigned char *, unsigned char *);
 int utf8_ptr2chars(unsigned char *, unsigned char *);
 int utf8_cells2bytes(unsigned char *, int, unsigned char *);
+/* How utf8_step_forward and utf8_step_backward count steps.  */
+enum utf8_step {
+	/* Each step is one character, even if it is a combining or
+	 * double-width character.  */
+	utf8_step_characters,
+
+	/* Each step is one cell.  If the specified number of steps
+	 * would end in the middle of a double-width character, do not
+	 * include the character.  */
+	utf8_step_cells_fewer,
+
+	/* Each step is one cell.  If the specified number of steps
+	 * would end in the middle of a double-width character,
+	 * include the whole character.  */
+	utf8_step_cells_more
+};
+unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
+				 int, enum utf8_step, int *);
+unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
+				  int, enum utf8_step, int *);
 inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);

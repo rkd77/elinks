@@ -376,6 +376,146 @@ utf8_cells2bytes(unsigned char *string, int max_cells, unsigned char *end)
 	return bytes;
 }
 
+/* Take @max steps forward from @string in the specified @way, but
+ * not going past @end.  Return the resulting address.  Store the
+ * number of steps taken to *@count, unless @count is NULL.
+ *
+ * This assumes the text is valid UTF-8, and @string and @end point to
+ * character boundaries.  If not, it doesn't crash but the results may
+ * be inconsistent.
+ *
+ * This function can do some of the same jobs as utf8charlen(),
+ * utf8_cells2bytes(), and strlen_utf8().  */
+unsigned char *
+utf8_step_forward(unsigned char *string, unsigned char *end,
+		  int max, enum utf8_step way, int *count)
+{
+	int steps = 0;
+	unsigned char *current = string;
+
+	assert(string);
+	assert(max >= 0);
+	if_assert_failed return string;
+	if (end == NULL)
+		end = strchr(string, '\0');
+
+	switch (way) {
+	case utf8_step_characters:
+		while (steps < max && current < end) {
+			++current;
+			if (utf8_islead(*current))
+				++steps;
+		}
+		break;
+
+	case utf8_step_cells_fewer:
+	case utf8_step_cells_more:
+		while (steps < max) {
+			unicode_val_T u;
+			unsigned char *prev = current;
+			int width;
+
+			u = utf_8_to_unicode(&current, end);
+			if (u == UCS_NO_CHAR) {
+				/* Assume the incomplete sequence
+				 * costs one cell.  */
+				current = end;
+				++steps;
+				break;
+			}
+
+			width = unicode_to_cell(u);
+			if (way == utf8_step_cells_fewer
+			    && steps + width > max) {
+				/* Back off.  */
+				current = prev;
+				break;
+			}
+			steps += width;
+		}
+		break;
+
+	default:
+		INTERNAL("impossible enum utf8_step");
+	}
+
+	if (count)
+		*count = steps;
+	return current;
+}
+
+/* Take @max steps backward from @string in the specified @way, but
+ * not going past @start.  Return the resulting address.  Store the
+ * number of steps taken to *@count, unless @count is NULL.
+ *
+ * This assumes the text is valid UTF-8, and @string and @start point
+ * to character boundaries.  If not, it doesn't crash but the results
+ * may be inconsistent.
+ *
+ * This function can do some of the same jobs as utf8_prevchar().  */
+unsigned char *
+utf8_step_backward(unsigned char *string, unsigned char *start,
+		   int max, enum utf8_step way, int *count)
+{
+	int steps = 0;
+	unsigned char *current = string;
+
+	assert(string);
+	assert(start);
+	assert(max >= 0);
+	if_assert_failed return string;
+
+	switch (way) {
+	case utf8_step_characters:
+		while (steps < max && current > start) {
+			--current;
+			if (utf8_islead(*current))
+				++steps;
+		}
+		break;
+
+	case utf8_step_cells_fewer:
+	case utf8_step_cells_more:
+		while (steps < max) {
+			unsigned char *prev = current;
+			unsigned char *look;
+			unicode_val_T u;
+			int width;
+
+			if (current <= start)
+				break;
+			do {
+				--current;
+			} while (current > start && !utf8_islead(*current));
+
+			look = current;
+			u = utf_8_to_unicode(&look, prev);
+			if (u == UCS_NO_CHAR) {
+				/* Assume the incomplete sequence
+				 * costs one cell.  */
+				width = 1;
+			} else
+				width = unicode_to_cell(u);
+
+			if (way == utf8_step_cells_fewer
+			    && steps + width > max) {
+				/* Back off.  */
+				current = prev;
+				break;
+			}
+			steps += width;
+		}
+		break;
+
+	default:
+		INTERNAL("impossible enum utf8_step");
+	}
+
+	if (count)
+		*count = steps;
+	return current;
+}
+
 /*
  * Find out number of standard terminal collumns needed for displaying symbol
  * (glyph) which represents Unicode character c.
