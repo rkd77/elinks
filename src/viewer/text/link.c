@@ -128,12 +128,15 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 		case LINK_FIELD:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
+			if (!fs)
+				return 0;
 #ifdef CONFIG_UTF_8
-			if (utf8) {
-				return fs ? fs->state_cell - fs->vpos : 0;
-			} else
+			else if (utf8) {
+				return fs->state_cell - fs->vpos;
+			}
 #endif /* CONFIG_UTF_8 */
-				return fs ? fs->state - fs->vpos : 0;
+			else
+				return fs->state - fs->vpos;
 
 		case LINK_AREA:
 			fc = get_link_form_control(link);
