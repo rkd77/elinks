@@ -25,7 +25,7 @@ dumbprefixes = {
 cygwin = re.compile("cygwin\.com")
 cygwin_sub1 = re.compile('<body bgcolor="#000000" color="#000000"')
 cygwin_sub2 = '<body bgcolor="#ffffff" color="#000000"'
-mbank = re.compile('https://www\.mbank\.com\.pl/ib_navibar_3\.asp')
+mbank = re.compile('^https://www\.mbank\.com\.pl/ib_navibar_3\.asp')
 mbank_sub1 = re.compile('<td valign="top"><img')
 mbank_sub2 = '<tr><td valign="top"><img'
 google_redirect = re.compile('^http://www\.google\.com/url\?sa=D&q=(.*)')
