@@ -53,8 +53,7 @@ struct form_state {
 	int state;
 #ifdef CONFIG_UTF_8
 	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is not
-	 * used.  There is still code that updates it; such code
-	 * should be removed.  */
+	 * used.  */
 	int state_cell;
 #endif /* CONFIG_UTF_8 */
 	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the index
