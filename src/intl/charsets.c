@@ -395,7 +395,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 
 	assert(string);
 	assert(max >= 0);
-	if_assert_failed return string;
+	if_assert_failed goto invalid_arg;
 	if (end == NULL)
 		end = strchr(string, '\0');
 
@@ -439,6 +439,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 		INTERNAL("impossible enum utf8_step");
 	}
 
+invalid_arg:
 	if (count)
 		*count = steps;
 	return current;
@@ -463,7 +464,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 	assert(string);
 	assert(start);
 	assert(max >= 0);
-	if_assert_failed return string;
+	if_assert_failed goto invalid_arg;
 
 	switch (way) {
 	case utf8_step_characters:
@@ -511,6 +512,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 		INTERNAL("impossible enum utf8_step");
 	}
 
+invalid_arg:
 	if (count)
 		*count = steps;
 	return current;
