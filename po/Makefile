@@ -108,6 +108,11 @@ install-local: all-local
 		$(call ncmd,installdata,$(lang).gmo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES/$(PACKAGE).mo); \
 	)
 
+uninstall-local:
+	@$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(CATALOGS))), \
+		$(call ncmd,uninstall,$(PACKAGE).mo,$(DESTDIR)$(localedir)/$(lang)/LC_MESSAGES); \
+	)
+
 clean-local:
 	@rm -f $(PACKAGE).po *.new.po $(srcdir)$(POTFILES_ABS_LIST)
 

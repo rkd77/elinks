@@ -8,6 +8,7 @@ ifdef MAKE_COLOR
 	PO_COLOR      = $(shell tput setaf 6)
 	LINK_COLOR    = $(shell tput bold;tput setaf 4)
 	INSTALL_COLOR = $(shell tput setaf 3)
+	UNINSTALL_COLOR = $(shell tput setaf 1)
 	END_COLOR     = $(shell tput sgr0)
 endif
 
@@ -65,6 +66,8 @@ quiet_cmd_installdata = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
 quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
+quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(2)"
+      cmd_uninstall = $(UNINSTALL) $(3)/$(2)
 
 #############################################################################
 # Special handling of conditional variables
@@ -166,6 +169,19 @@ ifdef MAN5
 		$(call ncmd,installdata,$(file),$(DESTDIR)$(mandir)/man5);)
 endif
 
+uninstall-default:
+ifdef PROGS
+	@$(foreach file,$(PROGS), \
+		$(call ncmd,uninstall,$(file),$(DESTDIR)$(bindir));)
+endif		
+ifdef MAN1
+	@$(foreach file,$(MAN1), \
+		$(call ncmd,uninstall,$(file),$(DESTDIR)$(mandir)/man1);)
+endif
+ifdef MAN5
+	@$(foreach file,$(MAN5), \
+		$(call ncmd,uninstall,$(file),$(DESTDIR)$(mandir)/man5);)
+endif
 ##############################################################################
 # Auto-testing infrastructure
 
@@ -205,7 +221,7 @@ endif
 #############################################################################
 # Basic recursion and dependencies setup
 
-RULES	 = all install clean cleanall init check test
+RULES	 = all install clean cleanall init check test uninstall
 
 RULES_LOCAL = $(addsuffix -local,$(RULES))
 RULES_REC   = $(addsuffix -recursive,$(RULES))
@@ -238,6 +254,7 @@ cleanall: $(call rule_deps,cleanall)
 init:	  $(call rule_deps,init)
 check:	  $(call rule_deps,check)
 test:	  $(call rule_deps,test)
+uninstall: $(call rule_deps,uninstall)
 
 #############################################################################
 # Misc
