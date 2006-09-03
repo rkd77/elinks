@@ -190,7 +190,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		if (link->accesskey)
 			append_unicode_to_SEE_string(interp, keystr,
 						     link->accesskey);
-		SEE_SET_STRING(res, str);
+		SEE_SET_STRING(res, keystr);
 	} else if (p == s_alt) {
 		str = string_to_SEE_string(interp, fc->alt);
 		SEE_SET_STRING(res, str);
