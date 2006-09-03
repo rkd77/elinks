@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-26 19:34+0200\n"
-"PO-Revision-Date: 2006-08-26 20:00+0200\n"
+"POT-Creation-Date: 2006-09-03 08:24+0200\n"
+"PO-Revision-Date: 2006-09-03 08:30+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -127,7 +127,7 @@ msgstr "B³±d przy usuwaniu"
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
 #: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:213 src/terminal/tab.c:256
+#: src/terminal/tab.c:214 src/terminal/tab.c:257
 msgid "~Yes"
 msgstr "~Tak"
 
@@ -135,7 +135,7 @@ msgstr "~Tak"
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
 #: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:214 src/terminal/tab.c:257
+#: src/terminal/tab.c:215 src/terminal/tab.c:258
 msgid "~No"
 msgstr "~Nie"
 
@@ -1143,8 +1143,8 @@ msgstr "Prze¶lij formularz"
 msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:210
-#: src/terminal/tab.c:253
+#: src/config/actions-main.inc:101 src/terminal/tab.c:211
+#: src/terminal/tab.c:254
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
@@ -2224,13 +2224,13 @@ msgid ""
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using an URL\n"
-"in the style of e.g. http4://elinks.or.cz/."
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv4?\n"
 "Je¶li connection.try_ipv6 jest tak¿e w³±czone, to ma\n"
 "pierwszeñstwo. Lepiej nie dotykaj tego, dopóki nie wiesz\n"
 "co robisz. Pamiêtaj, ¿e mo¿esz wymusiæ dany protokó³\n"
-"przy po³±czeniu u¿ywaj±c URL-a w stylu np. http4://elinks.or.cz/."
+"przy po³±czeniu u¿ywaj±c URL-a w stylu np. http4://elinks.cz/."
 
 #: src/config/options.inc:110
 msgid ""
@@ -2238,12 +2238,12 @@ msgid ""
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using an URL\n"
-"in the style of e.g. http4://elinks.or.cz/."
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv4?\n"
 "Nie dotykaj tej opcji.\n"
 "Pamiêtaj, ¿ê mo¿esz wymusiæ dany protokó³ przy po³±czeniu\n"
-"u¿ywaj±c URL-a w stylu np. http4://elinks.or.cz/."
+"u¿ywaj±c URL-a w stylu np. http4://elinks.cz/."
 
 #: src/config/options.inc:118
 msgid "Try IPv6 when connecting"
@@ -2254,11 +2254,11 @@ msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http6://elinks.or.cz/."
+"in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv6?\n"
 "Pamiêtaj, ¿e mo¿esz tak¿e wymusiæ dany protokó³ przy\n"
-"po³±czeniu u¿ywaj±c URL-a w stylu np. http6://elinks.or.cz/."
+"po³±czeniu u¿ywaj±c URL-a w stylu np. http6://elinks.cz/."
 
 #: src/config/options.inc:126
 msgid "Timeout for non-restartable connections"
@@ -4059,7 +4059,7 @@ msgstr "Tekst"
 msgid "Dialog text colors."
 msgstr "Kolory tekstu w oknie dialogowym."
 
-#: src/config/options.inc:1063 src/viewer/text/form.c:1780
+#: src/config/options.inc:1063 src/viewer/text/form.c:1797
 msgid "Checkbox"
 msgstr "Przycisk wyboru"
 
@@ -4111,7 +4111,7 @@ msgstr "Klawisz skrótu przycisku"
 msgid "Selected button shortcut"
 msgstr "Klawisz skrótu wybranego przycisku"
 
-#: src/config/options.inc:1091 src/viewer/text/form.c:1784
+#: src/config/options.inc:1091 src/viewer/text/form.c:1801
 msgid "Text field"
 msgstr "Pole tekstowe"
 
@@ -8605,24 +8605,24 @@ msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
-#: src/terminal/tab.c:211
+#: src/terminal/tab.c:212
 msgid "Do you really want to close the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
 
-#: src/terminal/tab.c:254
+#: src/terminal/tab.c:255
 msgid "Do you really want to close all except the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ wszystkie karty za wyj±tkiem bie¿±cej?"
 
-#: src/viewer/dump/dump.c:84
+#: src/viewer/dump/dump.c:87
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "B³±d przy zapisywaniu na standardowe wyj¶cie: %s"
 
-#: src/viewer/dump/dump.c:87
+#: src/viewer/dump/dump.c:90
 msgid "Can't write to stdout."
 msgstr "Nie mo¿na zapisaæ na standardowe wyj¶cie."
 
-#: src/viewer/dump/dump.c:277
+#: src/viewer/dump/dump.c:285
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr "Protokó³ URL-a nie obs³ugiwany (%s)."
@@ -8637,202 +8637,202 @@ msgstr "Brakuj±cy fragment"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr "Wybrany fragment \"#%s\" nie istnieje."
 
-#: src/viewer/text/form.c:949
+#: src/viewer/text/form.c:1023
 msgid "Error while posting form"
 msgstr "Wyst±pi³ b³±d podczas wysy³ania formularza"
 
-#: src/viewer/text/form.c:950
+#: src/viewer/text/form.c:1024
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Nie mo¿na wczytaæ pliku %s: %s"
 
-#: src/viewer/text/form.c:1765
+#: src/viewer/text/form.c:1782
 msgid "Reset form"
 msgstr "Wyczy¶æ formularz"
 
 #
-#: src/viewer/text/form.c:1767
+#: src/viewer/text/form.c:1784
 msgid "Harmless button"
 msgstr "Nieszkodliwy przycisk"
 
-#: src/viewer/text/form.c:1775
+#: src/viewer/text/form.c:1792
 msgid "Submit form to"
 msgstr "Prze¶lij formularz do"
 
-#: src/viewer/text/form.c:1776
+#: src/viewer/text/form.c:1793
 msgid "Post form to"
 msgstr "Wy¶lij formularz do"
 
-#: src/viewer/text/form.c:1778
+#: src/viewer/text/form.c:1795
 msgid "Radio button"
 msgstr "Okr±g³y przycisk"
 
-#: src/viewer/text/form.c:1782
+#: src/viewer/text/form.c:1799
 msgid "Select field"
 msgstr "Pole wyboru"
 
-#: src/viewer/text/form.c:1786
+#: src/viewer/text/form.c:1803
 msgid "Text area"
 msgstr "Pole tekstowe"
 
-#: src/viewer/text/form.c:1788
+#: src/viewer/text/form.c:1805
 msgid "File upload"
 msgstr "£adowanie pliku"
 
-#: src/viewer/text/form.c:1790
+#: src/viewer/text/form.c:1807
 msgid "Password field"
 msgstr "Pole has³a"
 
-#: src/viewer/text/form.c:1828
+#: src/viewer/text/form.c:1845
 msgid "name"
 msgstr "nazwa"
 
-#: src/viewer/text/form.c:1840
+#: src/viewer/text/form.c:1857
 msgid "value"
 msgstr "warto¶æ"
 
-#: src/viewer/text/form.c:1853
+#: src/viewer/text/form.c:1870
 msgid "read only"
 msgstr "tylko do odczytu"
 
-#: src/viewer/text/form.c:1864
+#: src/viewer/text/form.c:1881
 #, c-format
 msgid "press %s to navigate"
 msgstr "wci¶nij %s aby nawigowaæ"
 
-#: src/viewer/text/form.c:1866
+#: src/viewer/text/form.c:1883
 #, c-format
 msgid "press %s to edit"
 msgstr "wci¶nij %s aby edytowaæ"
 
-#: src/viewer/text/form.c:1902
+#: src/viewer/text/form.c:1919
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
-#: src/viewer/text/form.c:1904
+#: src/viewer/text/form.c:1921
 #, c-format
 msgid "press %s to post to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
 #
-#: src/viewer/text/form.c:2006
+#: src/viewer/text/form.c:2023
 msgid "Useless button"
 msgstr "Bezu¿yteczny przycisk"
 
-#: src/viewer/text/form.c:2008
+#: src/viewer/text/form.c:2025
 msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1262
+#: src/viewer/text/link.c:1271
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1267
+#: src/viewer/text/link.c:1276
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1269
+#: src/viewer/text/link.c:1278
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1273
+#: src/viewer/text/link.c:1282
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1275
+#: src/viewer/text/link.c:1284
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1277
+#: src/viewer/text/link.c:1286
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1282
+#: src/viewer/text/link.c:1291
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1294
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1289
+#: src/viewer/text/link.c:1298
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1300 src/viewer/text/link.c:1340
+#: src/viewer/text/link.c:1309 src/viewer/text/link.c:1349
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1315
+#: src/viewer/text/link.c:1324
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1323
+#: src/viewer/text/link.c:1332
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1324
+#: src/viewer/text/link.c:1333
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1328
+#: src/viewer/text/link.c:1337
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1330
+#: src/viewer/text/link.c:1339
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1342
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1338
+#: src/viewer/text/link.c:1347
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1345
+#: src/viewer/text/link.c:1354
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1352
+#: src/viewer/text/link.c:1361
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1363
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1372
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1433
+#: src/viewer/text/link.c:1442
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1438
+#: src/viewer/text/link.c:1447
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
