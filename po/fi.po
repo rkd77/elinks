@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-02 17:41+0300\n"
-"PO-Revision-Date: 2006-09-02 17:42+0300\n"
+"POT-Creation-Date: 2006-09-03 13:50+0300\n"
+"PO-Revision-Date: 2006-09-03 13:49+0300\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -3669,7 +3669,7 @@ msgstr "Tekstialue"
 msgid "Dialog text colors."
 msgstr ""
 
-#: src/config/options.inc:1063 src/viewer/text/form.c:1780
+#: src/config/options.inc:1063 src/viewer/text/form.c:1797
 msgid "Checkbox"
 msgstr "Valintalaatikko"
 
@@ -3721,7 +3721,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr "Valitse kenttä"
 
-#: src/config/options.inc:1091 src/viewer/text/form.c:1784
+#: src/config/options.inc:1091 src/viewer/text/form.c:1801
 msgid "Text field"
 msgstr "Tekstikenttä"
 
@@ -4317,7 +4317,7 @@ msgstr "ei"
 #: src/cookies/dialogs.c:70
 #, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Sallitko evästeen verkkoalueelta %s??"
+msgstr "Sallitko evästeen verkkoalueelta %s?"
 
 #: src/cookies/dialogs.c:78
 msgid "Accept cookie?"
@@ -5627,10 +5627,9 @@ msgstr "valkovenäjä"
 
 #: src/intl/gettext/libintl.c:31
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "brasilianportugali"
 
 #: src/intl/gettext/libintl.c:32
-#, fuzzy
 msgid "Bulgarian"
 msgstr "bulgaria"
 
@@ -5688,7 +5687,7 @@ msgstr "islanti"
 
 #: src/intl/gettext/libintl.c:46
 msgid "Indonesian"
-msgstr ""
+msgstr "indonesia"
 
 #: src/intl/gettext/libintl.c:47
 msgid "Italian"
@@ -5720,7 +5719,7 @@ msgstr "venäjä"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Serbian"
-msgstr ""
+msgstr "serbia"
 
 #: src/intl/gettext/libintl.c:55
 msgid "Slovak"
@@ -6298,9 +6297,8 @@ msgid "No such article"
 msgstr "Ei otsikkoa"
 
 #: src/network/state.c:103
-#, fuzzy
 msgid "Transfer failed"
-msgstr "Siirtää"
+msgstr "Siirto epäonnistui"
 
 #: src/network/state.c:104
 msgid "Authorization required"
@@ -6791,9 +6789,8 @@ msgid "Creation date"
 msgstr ""
 
 #: src/protocol/bittorrent/dialogs.c:160
-#, fuzzy
 msgid "Directory"
-msgstr "Historia"
+msgstr "Hakemisto"
 
 #: src/protocol/bittorrent/dialogs.c:170
 msgid "Files"
@@ -6939,35 +6936,39 @@ msgstr[1] "%u jäljellä"
 #. Statistics:
 #: src/protocol/bittorrent/dialogs.c:419
 msgid "Statistics"
-msgstr ""
+msgstr "Tilasto"
 
 #: src/protocol/bittorrent/dialogs.c:423
-#, fuzzy, c-format
+#, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Muisti loppu"
-msgstr[1] "Muisti loppu"
+msgstr[0] "%u muistissa"
+msgstr[1] "%u muistissa"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
 msgid "%u locked"
 msgid_plural "%u locked"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%u lukossa"
+msgstr[1] "%u lukossa"
 
+# Tilasto: 42 muistissa, 69 hylätty
+# Tilasto: 42 muistissa, 69 hylättyä
+# "hylätty" on parempi, koska hylättyjä tietoja ei säilytetä.
 #: src/protocol/bittorrent/dialogs.c:436
 #, c-format
 msgid "%u rejected"
 msgid_plural "%u rejected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%u hylätty"
+msgstr[1] "%u hylätty"
 
+# kadoksissa?
 #: src/protocol/bittorrent/dialogs.c:443
-#, fuzzy, c-format
+#, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "FTP-palvelin ei vastaa"
-msgstr[1] "FTP-palvelin ei vastaa"
+msgstr[0] "%u ei saatavana"
+msgstr[1] "%u ei saatavana"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
@@ -6977,7 +6978,7 @@ msgstr "Asetustiedoston kirjoitus ei onnistu"
 #: src/protocol/bittorrent/dialogs.c:736
 #, c-format
 msgid "What would you like to do with the file '%s'?"
-msgstr ""
+msgstr "Mitä haluat tehdä tiedostolla \"%s\"?"
 
 #: src/protocol/bittorrent/dialogs.c:752
 #, fuzzy
@@ -7093,9 +7094,8 @@ msgid "FSP specific options."
 msgstr "Ei ohjelmaa osoitettu"
 
 #: src/protocol/fsp/fsp.c:48
-#, fuzzy
 msgid "Sort entries"
-msgstr "Yhteydet"
+msgstr "Lajittele"
 
 # Unixissa tiedosto on piilossa, jos sen nimi alkaa pisteellä.
 # Tiedostoa ei siis voi piilottaa muuttamatta sen nimeä.
@@ -7262,9 +7262,11 @@ msgstr ""
 msgid "Proxy authentication password."
 msgstr ""
 
+# Koska tämä on "Referer" eikä "Referrer", kyseessä lienee HTTP:ssä
+# käytetty otsakkeen nimi, joten en suomenna.
 #: src/protocol/http/http.c:145
 msgid "Referer sending"
-msgstr ""
+msgstr "Refererin lähetys"
 
 #: src/protocol/http/http.c:147
 msgid ""
@@ -7377,9 +7379,8 @@ msgid "NNTP"
 msgstr "NNTP"
 
 #: src/protocol/nntp/nntp.c:34
-#, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Ei ohjelmaa osoitettu"
+msgstr ""
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7402,6 +7403,7 @@ msgid ""
 "All header entries can be read in the header info dialog."
 msgstr ""
 
+# protokollan?
 #: src/protocol/protocol.c:232
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
@@ -7601,7 +7603,7 @@ msgstr "Kirjoita lauseke"
 
 #: src/scripting/ruby/core.c:131 src/scripting/ruby/core.c:184
 msgid "Ruby Message"
-msgstr ""
+msgstr "Ruby-viesti"
 
 #: src/scripting/scripting.c:59
 #, c-format
@@ -7627,19 +7629,24 @@ msgid "Download error"
 msgstr "Vastaanottovirhe"
 
 #: src/session/download.c:236 src/session/download.c:680
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Tiedostoon kirjoitus epäonnistui"
+msgstr ""
+"Tiedostoa \"%s\" ei voi perustaa:\n"
+"%s"
 
 #: src/session/download.c:360
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Virhe ladattaessa"
+msgstr ""
+"Virhe ladattaessa %s:\n"
+"\n"
+"%s"
 
 #: src/session/download.c:592
 #, c-format
@@ -7659,6 +7666,11 @@ msgid ""
 "The alternative filename is:\n"
 "%s"
 msgstr ""
+"Tämä tiedosto on jo olemassa:\n"
+"%s\n"
+"\n"
+"Vaihtoehtoinen nimi on:\n"
+"%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
 #: src/session/download.c:634
@@ -7682,7 +7694,7 @@ msgstr "Tuntematon tyyppi"
 #: src/session/download.c:1146
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
-msgstr ""
+msgstr "Mitä haluat tehdä tiedostolla \"%s\" (tyyppi: %s%s%s)?"
 
 #: src/session/download.c:1176
 #, no-c-format
@@ -7848,202 +7860,202 @@ msgstr "Ei kehyksiä"
 msgid "The requested fragment \"#%s\" doesn't exist."
 msgstr ""
 
-#: src/viewer/text/form.c:949
+#: src/viewer/text/form.c:1023
 msgid "Error while posting form"
 msgstr "Virhe lomaketta lähetettäessä"
 
-#: src/viewer/text/form.c:950
+#: src/viewer/text/form.c:1024
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
 msgstr "Tiedoston haku epäonnistui"
 
-#: src/viewer/text/form.c:1765
+#: src/viewer/text/form.c:1782
 #, fuzzy
 msgid "Reset form"
 msgstr "Tyhjennä lomake"
 
-#: src/viewer/text/form.c:1767
+#: src/viewer/text/form.c:1784
 msgid "Harmless button"
 msgstr "Harmiton painike"
 
-#: src/viewer/text/form.c:1775
+#: src/viewer/text/form.c:1792
 msgid "Submit form to"
 msgstr "Hyväksy lomake:"
 
-#: src/viewer/text/form.c:1776
+#: src/viewer/text/form.c:1793
 msgid "Post form to"
 msgstr "Lähetä lomake:"
 
-#: src/viewer/text/form.c:1778
+#: src/viewer/text/form.c:1795
 msgid "Radio button"
 msgstr "Radionäppäin"
 
 # kenttä, jossa on joukko arvoja, joista pitää valita yksi
-#: src/viewer/text/form.c:1782
+#: src/viewer/text/form.c:1799
 msgid "Select field"
 msgstr "Valintakenttä"
 
-#: src/viewer/text/form.c:1786
+#: src/viewer/text/form.c:1803
 msgid "Text area"
 msgstr "Tekstialue"
 
-#: src/viewer/text/form.c:1788
+#: src/viewer/text/form.c:1805
 msgid "File upload"
 msgstr "Tiedoston lähetys"
 
-#: src/viewer/text/form.c:1790
+#: src/viewer/text/form.c:1807
 msgid "Password field"
 msgstr "Salasanakenttä"
 
-#: src/viewer/text/form.c:1828
+#: src/viewer/text/form.c:1845
 msgid "name"
 msgstr "nimi"
 
-#: src/viewer/text/form.c:1840
+#: src/viewer/text/form.c:1857
 msgid "value"
 msgstr "arvo"
 
-#: src/viewer/text/form.c:1853
+#: src/viewer/text/form.c:1870
 msgid "read only"
 msgstr ""
 
-#: src/viewer/text/form.c:1864
+#: src/viewer/text/form.c:1881
 #, c-format
 msgid "press %s to navigate"
 msgstr ""
 
-#: src/viewer/text/form.c:1866
+#: src/viewer/text/form.c:1883
 #, c-format
 msgid "press %s to edit"
 msgstr "paina %s muokataksesi"
 
-#: src/viewer/text/form.c:1902
+#: src/viewer/text/form.c:1919
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
 msgstr "hyväksy"
 
-#: src/viewer/text/form.c:1904
+#: src/viewer/text/form.c:1921
 #, fuzzy, c-format
 msgid "press %s to post to %s"
 msgstr "hyväksy"
 
-#: src/viewer/text/form.c:2006
+#: src/viewer/text/form.c:2023
 msgid "Useless button"
 msgstr "Hyödytön painike"
 
-#: src/viewer/text/form.c:2008
+#: src/viewer/text/form.c:2025
 msgid "Submit button"
 msgstr "Lähetyspainike"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1262
+#: src/viewer/text/link.c:1271
 msgid "Display ~usemap"
 msgstr "Näytä kuvan linkit (~usemap)"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1267
+#: src/viewer/text/link.c:1276
 msgid "~Follow link"
 msgstr "~Seuraa linkkiä"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1269
+#: src/viewer/text/link.c:1278
 msgid "Follow link and r~eload"
 msgstr "Seuraa linkkiä ja lataa ~uudestaan"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1273
+#: src/viewer/text/link.c:1282
 msgid "Open in new ~window"
 msgstr "Avaa uuteen ~ikkunaan"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1275
+#: src/viewer/text/link.c:1284
 msgid "Open in new ~tab"
 msgstr "Avaa uuteen ~välilehteen"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1277
+#: src/viewer/text/link.c:1286
 msgid "Open in new tab in ~background"
 msgstr "Avaa uuteen välilehteen ~taustalla"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1282
+#: src/viewer/text/link.c:1291
 msgid "~Download link"
 msgstr "~Lataa linkki tiedostoksi"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1294
 msgid "~Add link to bookmarks"
 msgstr "Lisää linkki ~kirjanmerkkeihin"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1289
+#: src/viewer/text/link.c:1298
 msgid "Pass link URI to e~xternal command"
 msgstr "Anna linkin U~RI ulkoiselle komennolle"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1300 src/viewer/text/link.c:1340
+#: src/viewer/text/link.c:1309 src/viewer/text/link.c:1349
 msgid "~Reset form"
 msgstr "T~yhjennä lomake"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1315
+#: src/viewer/text/link.c:1324
 msgid "Open in ~external editor"
 msgstr "~Avaa ulkoisessa muokkausohjelmassa"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1323
+#: src/viewer/text/link.c:1332
 msgid "~Submit form"
 msgstr "~Lähetä lomake"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1324
+#: src/viewer/text/link.c:1333
 msgid "Submit form and rel~oad"
 msgstr "Lähetä lomake ja lataa ~uudestaan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1328
+#: src/viewer/text/link.c:1337
 msgid "Submit form and open in new ~window"
 msgstr "Lähetä lomake ja avaa uuteen ~ikkunaan"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1330
+#: src/viewer/text/link.c:1339
 msgid "Submit form and open in new ~tab"
 msgstr "Lähetä lomake ja avaa uuteen ~välilehteen"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1342
 msgid "Submit form and open in new tab in ~background"
 msgstr "Lähetä lomake ja avaa uuteen välilehteen ~taustalla"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1338
+#: src/viewer/text/link.c:1347
 msgid "Submit form and ~download"
 msgstr "Lähetä lomake ~ja lataa tiedostoksi"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1345
+#: src/viewer/text/link.c:1354
 msgid "Form f~ields"
 msgstr "Lomakkeen k~entät"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1352
+#: src/viewer/text/link.c:1361
 msgid "V~iew image"
 msgstr "~Näytä kuva"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1363
 msgid "Download ima~ge"
 msgstr "Lataa kuv~a tiedostoksi"
 
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1372
 msgid "No link selected"
 msgstr "Ei linkkiä"
 
-#: src/viewer/text/link.c:1433
+#: src/viewer/text/link.c:1442
 msgid "Image"
 msgstr "Kuva"
 
-#: src/viewer/text/link.c:1438
+#: src/viewer/text/link.c:1447
 msgid "Usemap"
 msgstr "Kartta"
 
