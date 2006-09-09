@@ -570,13 +570,41 @@ resize_window(int width, int height, int old_width, int old_height)
 	}
 
 	if (!x_error && status) {
-		double ratio_width = (double) attributes.width  / old_width;
-		double ratio_height = (double) attributes.height / old_height;
+		XSizeHints *size_hints;
+		long mask;
+		int px_width = 0;
+		int px_height = 0;
 
-		width  = (int) ((double) width * ratio_width);
-		height = (int) ((double) height * ratio_height);
+		/* With xterm 210, a window with 80x24 characters at
+		 * a 6x13 font appears to have 484x316 pixels; both
+		 * the width and height include four extra pixels.
+		 * Computing a new size by scaling these values often
+		 * results in windows that cannot display as many
+		 * characters as was intended.  We can do better if we
+		 * can find out the actual size of character cells.
+		 * If the terminal emulator has set a window size
+		 * increment, assume that is the cell size.  */
+		size_hints = XAllocSizeHints();
+		if (size_hints != NULL
+		    && XGetWMNormalHints(display, window, size_hints, &mask)
+		    && (mask & PResizeInc) != 0) {
+			px_width = attributes.width
+				+ (width - old_width) * size_hints->width_inc;
+			px_height = attributes.height
+				+ (height - old_height) * size_hints->height_inc;
+		}
+		if (px_width <= 0 || px_height <= 0) {
+			double ratio_width = (double) attributes.width  / old_width;
+			double ratio_height = (double) attributes.height / old_height;
 
-		status = XResizeWindow(display, window, width, height);
+			px_width  = (int) ((double) width * ratio_width);
+			px_height = (int) ((double) height * ratio_height);
+		}
+
+		if (size_hints)
+			XFree(size_hints);
+
+		status = XResizeWindow(display, window, px_width, px_height);
 		while (!x_error && !status) {
 			Window root, parent, *children;
 			unsigned int num_children;
@@ -588,7 +616,7 @@ resize_window(int width, int height, int old_width, int old_height)
 			if (parent == root || parent == 0)
 				break;
 			window = parent;
-			status = XResizeWindow(display, window, width, height);
+			status = XResizeWindow(display, window, px_width, px_height);
 		}
 	}
 
