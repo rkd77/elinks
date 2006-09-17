@@ -261,10 +261,10 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 	struct conv_table *convert = renderer->convert_table;
 	enum convert_string_mode mode = renderer->convert_mode;
 	int x, charlen;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int utf8 = document->options.utf8;
 	unsigned char *end;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 
 	assert(renderer && template && string && length);
@@ -280,9 +280,9 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 
 	add_search_node(renderer, length);
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	end = string + length;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	for (x = 0, charlen = 1; x < length;x += charlen, renderer->canvas_x++) {
 		unsigned char *text = &string[x];
 
@@ -307,7 +307,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			break;
 		}
 		default:
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (utf8) {
 				unicode_val_T data;
 				charlen = utf8charlen(text);
@@ -324,7 +324,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 				}
 
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				template->data = isscreensafe(*text) ? *text:'.';
 		}
 
@@ -1050,9 +1050,9 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	init_dom_renderer(&renderer, document, buffer, convert_table);
 
 	document->bgcolor = document->options.default_bg;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	document->options.utf8 = is_cp_utf8(document->options.cp);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	if (document->options.plain)
 		parser_type = SGML_PARSER_STREAM;

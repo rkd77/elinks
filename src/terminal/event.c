@@ -136,12 +136,12 @@ static void
 term_send_ucs(struct terminal *term, unicode_val_T u,
 	      term_event_modifier_T modifier)
 {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	struct term_event ev;
 
 	set_kbd_term_event(&ev, u, modifier);
 	term_send_event(term, &ev);
-#else  /* !CONFIG_UTF_8 */
+#else  /* !CONFIG_UTF8 */
 	struct term_event ev;
 	unsigned char *recoded;
 
@@ -153,7 +153,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 		term_send_event(term, &ev);
 		recoded++;
 	}
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 }
 
 static void
@@ -178,12 +178,12 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	object_unlock(term->spec);
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	/* Probably not best place for set this. But now we finally have
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
 	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io");
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 }
 
 #ifdef CONFIG_MOUSE
@@ -295,7 +295,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		}
 
 		/* Character Conversions.  */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		/* struct term_event_keyboard carries UCS-4.
 		 * - If the "utf_8_io" option (i.e. term->utf8) is
 		 *   true or the "charset" option refers to UTF-8,
@@ -317,7 +317,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * - Otherwise, handle_interlink_event() passes the
 		 *   bytes straight through.  */
 		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		/* In UTF-8 byte sequences that have more than one byte, the
 		 * first byte is between 0xC0 and 0xFF and the remaining bytes
@@ -366,7 +366,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			 * UTF-8 start and continuation bytes or UTF-8 I/O mode
 			 * is disabled. */
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (key >= 0 && key <= 0xFF && !utf8_io) {
 				/* Not special and UTF-8 mode is disabled:
 				 * recode from the terminal charset to UCS-4. */
@@ -377,7 +377,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				term_send_ucs(term, key, modifier);
 				break;
 			}
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 
 			/* It must be special (e.g., F1 or Enter)
 			 * or a single-byte UTF-8 character. */

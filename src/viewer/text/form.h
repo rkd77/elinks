@@ -51,11 +51,11 @@ struct form_state {
 	 * For FC_SELECT, @state is the index of the selected item
 	 * in @form_control.labels.  */
 	int state;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is not
 	 * used.  */
 	int state_cell;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the index
 	 * of the first displayed byte in @value.  It should never be
 	 * in the middle of a character.  */

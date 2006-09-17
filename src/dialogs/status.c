@@ -419,7 +419,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 		int maxlen = int_max(term->width - 4 - buflen, 0);
 		int titlelen, titlewidth;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			titlewidth = utf8_ptr2cells(document->title, NULL);
 			titlewidth = int_min(titlewidth, maxlen);
@@ -427,7 +427,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 			titlelen = utf8_cells2bytes(document->title,
 							titlewidth, NULL);
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		{
 			titlewidth = int_min(strlen(document->title), maxlen);
 			titlelen = titlewidth;
@@ -444,14 +444,14 @@ display_title_bar(struct session *ses, struct terminal *term)
 
 	if (title.length) {
 		int x;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			x = int_max(term->width - 1
 				    - utf8_ptr2cells(title.source,
 						     title.source
 						     + title.length), 0);
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			x = int_max(term->width - 1 - title.length, 0);
 
 		draw_text(term, x, 0, title.source, title.length, 0,

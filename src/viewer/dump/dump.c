@@ -355,10 +355,10 @@ add_document_to_string(struct string *string, struct document *document)
 	assert(string && document);
 	if_assert_failed return NULL;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
 		goto utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -392,7 +392,7 @@ add_document_to_string(struct string *string, struct document *document)
 
 		add_char_to_string(string, '\n');
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	goto end;
 utf8:
 	for (y = 0; y < document->height; y++) {
@@ -430,7 +430,7 @@ utf8:
 		add_char_to_string(string, '\n');
 	}
 end:
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	return string;
 }
 
@@ -849,10 +849,10 @@ dump_to_file(struct document *document, int fd)
 
 	if (!buf) return -1;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
 		goto utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -890,7 +890,7 @@ dump_to_file(struct document *document, int fd)
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	goto ref;
 utf8:
 	for (y = 0; y < document->height; y++) {
@@ -939,7 +939,7 @@ utf8:
 			goto fail;
 	}
 ref:
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	if (hard_write(fd, buf, bptr) != bptr) {
 fail:

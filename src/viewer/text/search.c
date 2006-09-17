@@ -10,7 +10,7 @@
 
 #include <ctype.h> /* tolower(), isprint() */
 
-#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#if defined(CONFIG_UTF8) && defined(HAVE_WCTYPE_H)
 #include <wctype.h>
 #endif
 
@@ -51,7 +51,7 @@
 static INIT_INPUT_HISTORY(search_history);
 
 #undef UCHAR
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 #define UCHAR unicode_val_T
 #else
 #define UCHAR unsigned char
@@ -456,7 +456,7 @@ is_in_range_regex(struct document *document, int y, int height,
 static UCHAR *
 memacpy_u(unsigned char *text, int textlen, int utf8)
 {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	UCHAR *mem = mem_alloc((textlen + 1) * sizeof(UCHAR));
 
 	if (!mem) return NULL;
@@ -481,7 +481,7 @@ memacpy_u(unsigned char *text, int textlen, int utf8)
 static int
 strlen_u(unsigned char *text, int utf8)
 {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (utf8)
 		return strlen_utf8(&text);
 #endif
@@ -500,7 +500,7 @@ lowered_string(unsigned char *text, int textlen, int utf8)
 	ret = memacpy_u(text, textlen, utf8);
 	if (ret && textlen) {
 		do {
-#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#if defined(CONFIG_UTF8) && defined(HAVE_WCTYPE_H)
 			ret[textlen] = utf8 ? towlower(ret[textlen]) : tolower(ret[textlen]);
 #else
 			ret[textlen] = tolower(ret[textlen]);
@@ -530,7 +530,7 @@ is_in_range_plain(struct document *document, int y, int height,
 	 * trivial, probably a starter; very fast as well) or Turbo-BM (or
 	 * maybe some other Boyer-Moore variant, I don't feel that strong in
 	 * this area), hmm?  >:) --pasky */
-#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#if defined(CONFIG_UTF8) && defined(HAVE_WCTYPE_H)
 #define maybe_tolower(c) (case_sensitive ? (c) : utf8 ? towlower(c) : tolower(c))
 #else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
@@ -579,7 +579,7 @@ is_in_range(struct document *document, int y, int height,
 	assert(document && text && min && max);
 	if_assert_failed return -1;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	utf8 = document->options.utf8;
 #endif
 	*min = INT_MAX, *max = 0;
@@ -619,7 +619,7 @@ get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,
 	xoffset = box->x - doc_view->vs->x;
 	yoffset = box->y - doc_view->vs->y;
 
-#if defined(CONFIG_UTF_8) && defined(HAVE_WCTYPE_H)
+#if defined(CONFIG_UTF8) && defined(HAVE_WCTYPE_H)
 #define maybe_tolower(c) (case_sensitive ? (c) : utf8 ? towlower(c) : tolower(c))
 #else
 #define maybe_tolower(c) (case_sensitive ? (c) : tolower(c))
@@ -777,7 +777,7 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 	if (!has_search_word(doc_view))
 		return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	utf8 = doc_view->document->options.utf8;
 #endif
 	get_searched(doc_view, &pt, &len, utf8);
@@ -924,7 +924,7 @@ static int
 find_next_link_in_search(struct document_view *doc_view, int direction)
 {
 	int utf8 = 0;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	utf8 = doc_view->document->options.utf8;
 #endif
 

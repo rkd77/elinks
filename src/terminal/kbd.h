@@ -6,7 +6,7 @@
 struct itrm;
 
 /* A character received from a terminal.  */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 typedef unicode_val_T term_event_char_T; /* in UCS-4 */
 #else
 typedef unsigned char term_event_char_T; /* in the charset of the terminal */

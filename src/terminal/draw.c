@@ -105,11 +105,11 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 }
 
 void
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
 #else
 draw_char_data(struct terminal *term, int x, int y, unsigned char data)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -117,7 +117,7 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 
 	screen_char->data = data;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 #ifdef CONFIG_DEBUG
 	/* Detect attempt to draw double-width char on the last
 	 * column of terminal. */
@@ -127,7 +127,7 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 
 	if (data == UCS_NO_CHAR)
 		screen_char->attr = 0;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	set_screen_dirty(term->screen, y, y);
 }
@@ -147,7 +147,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	size = int_min(l, term->width - x);
 	if (size == 0) return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8) {
 		struct screen_char *sc;
 
@@ -250,7 +250,7 @@ draw_border(struct terminal *term, struct box *box,
 	set_screen_dirty(term->screen, borderbox.y, borderbox.y + borderbox.height);
 }
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 /* Checks cells left and right to the box for broken double-width chars.
  * Replace it with ' '.
  * 1+---+3
@@ -321,7 +321,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 }
 #endif
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 void
 draw_char(struct terminal *term, int x, int y,
 	  unicode_val_T data, enum screen_char_attr attr,
@@ -331,7 +331,7 @@ void
 draw_char(struct terminal *term, int x, int y,
 		unsigned char data, enum screen_char_attr attr,
 	  struct color_pair *color)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -407,7 +407,7 @@ draw_shadow(struct terminal *term, struct box *box,
 	draw_box(term, &dbox, ' ', 0, color);
 }
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 static void
 draw_text_utf8(struct terminal *term, int x, int y,
 	       unsigned char *text, int length,
@@ -479,7 +479,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	set_screen_dirty(term->screen, y, y);
 
 }
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 void
 draw_text(struct terminal *term, int x, int y,
@@ -492,12 +492,12 @@ draw_text(struct terminal *term, int x, int y,
 	assert(text && length >= 0);
 	if_assert_failed return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8) {
 		draw_text_utf8(term, x, y, text, length, attr, color);
 		return;
 	}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	if (length <= 0) return;
 	pos = get_char(term, x, y);

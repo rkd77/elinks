@@ -23,7 +23,7 @@ struct part {
 
 	unsigned char *spaces;
 	int spaces_len;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	unsigned char *char_width;
 #endif
 

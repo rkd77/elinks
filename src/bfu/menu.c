@@ -200,12 +200,12 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 
 	if (!text[0]) return 0;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8)
 		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL)
 		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 	else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		return L_TEXT_SPACE + strlen(text)
 		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 }
@@ -382,13 +382,13 @@ draw_menu_left_text(struct terminal *term, unsigned char *text, int len,
 	if (len < 0) len = strlen(text);
 	if (!len) return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8) {
 		max_len = utf8_cells2bytes(text, w, NULL);
 		if (max_len <= 0)
 			return;
 	} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		max_len = w;
 
 	if (len > max_len) len = max_len;
@@ -410,7 +410,7 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	int xbase = x + L_TEXT_SPACE;
 	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
 	int hk_state = 0;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	unsigned char *text2, *end;
 #endif
 
@@ -430,9 +430,9 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 		hk_color_sel = tmp;
 	}
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8) goto utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	for (x = 0; x - !!hk_state < w && (c = text[x]); x++) {
 		if (!hk_state && x == hotkey_pos - 1) {
@@ -454,7 +454,7 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	}
 	return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 utf8:
 	end = strchr(text, '\0');
 	text2 = text;
@@ -517,7 +517,7 @@ utf8:
 		}
 
 	}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 }
 
 static inline void
@@ -560,15 +560,15 @@ display_menu(struct terminal *term, struct menu *menu)
 		/* Draw shadow */
 		draw_shadow(term, &menu->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			fix_dwchar_around_box(term, &box, 1, 2, 1);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	else if(term->utf8)
 		fix_dwchar_around_box(term, &box, 1, 0, 0);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	menu_height = box.height;
 	box.height = 1;
@@ -1114,23 +1114,23 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 			text = _(text, term);
 
 		textlen = strlen(text) - !!l;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			screencnt = utf8_ptr2cells(text, NULL) - !!l;
 		else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			screencnt = textlen;
 
 		if (selected) {
 			color = selected_color;
 			box.x = p;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (term->utf8)
 				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
 					+ screencnt
 					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
 			else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
 					+ textlen
 					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
@@ -1163,7 +1163,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	menu->last = i - 1;
 	int_lower_bound(&menu->last, menu->first);
 	if (menu->last < menu->size - 1) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			struct screen_char *schar;
 

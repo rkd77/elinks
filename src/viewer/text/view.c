@@ -645,7 +645,7 @@ try_mark_key(struct session *ses, struct document_view *doc_view,
 	 * is something else (i.e. a special key or a non-ASCII
 	 * character), map it to an ASCII character that the functions
 	 * will not accept, so the results are consistent.
-	 * When CONFIG_UTF_8 is not defined, this assumes that codes
+	 * When CONFIG_UTF8 is not defined, this assumes that codes
 	 * 0 to 0x7F in all codepages match ASCII.  */
 	if (key >= 0 && key <= 0x7F)
 		mark = (unsigned char) key;

@@ -145,11 +145,11 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		mem_free(msg);
 		return;
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8)
 		decode_uri(url);
 	else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		decode_uri_for_display(url);
 	url_len = strlen(url);
 
@@ -302,11 +302,11 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 
 	uristring = get_uri_string(file_download->uri, URI_PUBLIC);
 	if (uristring) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			decode_uri(uristring);
 		else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			decode_uri_for_display(uristring);
 	}
 

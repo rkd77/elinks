@@ -1281,7 +1281,7 @@ EL_ARG_ENABLE(CONFIG_OWN_LIBC, own-libc, [Own libc stubs],
 EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 	      [  --enable-small          reduce binary size as far as possible (but see the bottom of doc/small.txt!)])
 
-EL_ARG_ENABLE(CONFIG_UTF_8, utf-8, [UTF-8],
+EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 	      [  --enable-utf-8          enable UTF-8 support])
 
 

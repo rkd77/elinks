@@ -39,14 +39,14 @@ dlg_format_group(struct terminal *term,
 		int label_length;
 		int label_padding;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			if (text && *text)
 				label_length = utf8_ptr2cells(text, NULL);
 			else
 				label_length = 0;
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			label_length = (text && *text) ? strlen(text) : 0;
 
 		label_padding = (label_length > 0);
@@ -54,12 +54,12 @@ dlg_format_group(struct terminal *term,
 		if (widget_data->widget->type == WIDGET_CHECKBOX) {
 			width = CHECKBOX_LEN;
 		} else if (widget_is_textfield(widget_data)) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (term->utf8) {
 				width = utf8_ptr2cells(widget_data->widget->data,
 						       NULL);
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				width = widget_data->widget->datalen;
 		} else {
 			/* TODO: handle all widget types. */
@@ -81,7 +81,7 @@ dlg_format_group(struct terminal *term,
 			if (widget_data->widget->type == WIDGET_CHECKBOX) {
 				/* Draw text at right of checkbox. */
 				if (label_length) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 					if (term->utf8) {
 						int lb = utf8_cells2bytes(
 								text,
@@ -92,7 +92,7 @@ dlg_format_group(struct terminal *term,
 							  *y, text, lb, 0,
 							  color);
 					} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 					{
 						draw_text(term, xpos + width
 								+ label_padding,
@@ -107,7 +107,7 @@ dlg_format_group(struct terminal *term,
 			} else if (widget_is_textfield(widget_data)) {
 				/* Draw label at left of widget. */
 				if (label_length) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 					if (term->utf8) {
 						int lb = utf8_cells2bytes(
 								text,
@@ -116,7 +116,7 @@ dlg_format_group(struct terminal *term,
 						draw_text(term, xpos, *y,
 							  text, lb, 0, color);
 					} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 					{
 						draw_text(term, xpos, *y,
 							  text, label_length,
@@ -148,11 +148,11 @@ group_layouter(struct dialog_data *dlg_data)
 	int y = 0;
 	int n = dlg_data->number_of_widgets - 2;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8)
 		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
 	else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		rw = int_min(w, strlen(dlg_data->dlg->title));
 
 	dlg_format_group(term, dlg_data->widgets_data, n,

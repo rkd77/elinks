@@ -101,19 +101,19 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 			int titlecells = titlelen;
 			int x, y;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (term->utf8)
 				titlecells = utf8_ptr2cells(title,
 							    &title[titlelen]);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 			titlecells = int_min(box.width - 2, titlecells);
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (term->utf8)
 				titlelen = utf8_cells2bytes(title, titlecells,
 							    NULL);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 			x = (box.width - titlecells) / 2 + box.x;
 			y = box.y - 1;
@@ -286,7 +286,7 @@ static void
 select_button_by_key(struct dialog_data *dlg_data)
 {
 	term_event_char_T key;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int codepage;
 #endif
 	
@@ -295,7 +295,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 
 	if (!check_kbd_label_key(ev)) return;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	key = unicode_fold_label_case(get_kbd_key(ev));
 	codepage = get_opt_codepage_tree(dlg_data->win->term->spec, "charset");
 #else
@@ -319,7 +319,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 		else
 			hk_ptr = widget_data->widget->text;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		hk_char = cp_to_unicode(codepage, &hk_ptr,
 					strchr(hk_ptr, '\0'));
 		hk_char = unicode_fold_label_case(hk_char);
@@ -611,11 +611,11 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	int height = dialog_max_height(term);
 	int x = 0, y, rw;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8)
 		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
 	else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		rw = int_min(w, strlen(dlg_data->dlg->title));
 	y = dlg_data->dlg->layout.padding_top ? 0 : -1;
 
@@ -656,15 +656,15 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 		/* Draw shadow */
 		draw_shadow(term, &dlg_data->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			fix_dwchar_around_box(term, &dlg_data->box, 0, 2, 1);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	else if(term->utf8)
 		fix_dwchar_around_box(term, &dlg_data->box, 0, 0, 0);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 }
 
 static void

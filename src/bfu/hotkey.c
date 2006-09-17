@@ -125,7 +125,7 @@ static int
 check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct terminal *term,
 		     int check_mode)
 {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	unicode_val_T key = unicode_fold_label_case(hotkey);
 	int codepage = get_opt_codepage_tree(term->spec, "charset");
 #else
@@ -143,7 +143,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 	do {
 		struct menu_item *item;
 		unsigned char *text;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		unicode_val_T items_hotkey;
 #endif
 		int found;
@@ -176,7 +176,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 		}
 
 		/* Compare @key to the character to which @text points.  */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		items_hotkey = cp_to_unicode(codepage, &text,
 					     strchr(text, '\0'));
 		found = (unicode_fold_label_case(items_hotkey) == key);

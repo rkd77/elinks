@@ -31,11 +31,11 @@ enum screen_char_attr {
 /* One position in the terminal screen's image. */
 struct screen_char {
 	/* Contains either character value or frame data. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	unicode_val_T data;
 #else
 	unsigned char data;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	/* Attributes are screen_char_attr bits. */
 	unsigned char attr;
@@ -214,11 +214,11 @@ void draw_char_color(struct terminal *term, int x, int y,
 		     struct color_pair *color);
 
 /* Sets the data of a screen position. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 void draw_char_data(struct terminal *term, int x, int y, unicode_val_T data);
 #else
 void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 /* Sets the data to @border and of a screen position. */
 void draw_border_char(struct terminal *term, int x, int y,
@@ -229,7 +229,7 @@ void draw_border_cross(struct terminal *, int x, int y,
 		       enum border_cross_direction, struct color_pair *color);
 
 /* Draws a char. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 void draw_char(struct terminal *term, int x, int y,
 	       unicode_val_T data, enum screen_char_attr attr,
 	       struct color_pair *color);
@@ -237,7 +237,7 @@ void draw_char(struct terminal *term, int x, int y,
 void draw_char(struct terminal *term, int x, int y,
 	       unsigned char data, enum screen_char_attr attr,
 	       struct color_pair *color);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 /* Draws area defined by @box using the same colors and attributes. */
 void draw_box(struct terminal *term, struct box *box,
@@ -252,10 +252,10 @@ void draw_shadow(struct terminal *term, struct box *box,
 void draw_border(struct terminal *term, struct box *box,
 		 struct color_pair *color, int width);
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 void fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 			   int shadow_width, int shadow_height);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 /* Draws @length chars from @text. */
 void draw_text(struct terminal *term, int x, int y,
