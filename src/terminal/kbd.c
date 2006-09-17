@@ -737,6 +737,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	case 'W': kbd.key = KBD_F11; break;	/*   (CTC) kf11     cons25 */
 	case 'X': kbd.key = KBD_F12; break;	/*   (ECH) kf12     cons25 */
 
+	case 'Z':				/*    CBT  kcbt     cons25 */
+		kbd.key = KBD_TAB; kbd.modifier = KBD_MOD_SHIFT; break;
+
 	case 'z': switch (v) {			/* private */
 		case 247: kbd.key = KBD_INS; break;     /* kich1 */
 		case 214: kbd.key = KBD_HOME; break;	/* khome    sun */
