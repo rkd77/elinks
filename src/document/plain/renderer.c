@@ -259,7 +259,7 @@ add_document_line(struct plain_renderer *renderer,
 		if (utf8) {
 			unsigned char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
-			data = utf_8_to_unicode(&line_char2, &line[width]);
+			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
 				line_pos += charlen;
@@ -319,7 +319,7 @@ add_document_line(struct plain_renderer *renderer,
 		if (utf8) {
 			unsigned char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
-			data = utf_8_to_unicode(&line_char2, &line[width]);
+			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
 				line_pos += charlen;
@@ -437,7 +437,7 @@ add_document_line(struct plain_renderer *renderer,
 				if (utf8) {
 					unsigned char *text = &line[line_pos];
 					unicode_val_T data =
-						utf_8_to_unicode(&text,
+						utf8_to_unicode(&text,
 								&line[width]);
 
 					if (data == UCS_NO_CHAR) {
@@ -555,7 +555,7 @@ add_document_lines(struct plain_renderer *renderer)
 #ifdef CONFIG_UTF_8
 			if (utf8) {
 				unsigned char *text = &source[width];
-				unicode_val_T data = utf_8_to_unicode(&text,
+				unicode_val_T data = utf8_to_unicode(&text,
 							&source[length]);
 
 				if (data == UCS_NO_CHAR) return;

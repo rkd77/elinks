@@ -461,7 +461,7 @@ utf8:
 	for (x = 0; x - !!hk_state < w && *text2; x++) {
 		unicode_val_T data;
 
-		data = utf_8_to_unicode(&text2, end);
+		data = utf8_to_unicode(&text2, end);
 		if (!hk_state && (int)(text2 - text) == hotkey_pos) {
 			hk_state = 1;
 			continue;

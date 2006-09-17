@@ -478,7 +478,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *end = strchr(next, '\0');
 
-					utf_8_to_unicode(&next, end);
+					utf8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);
 				} else
 #endif /* CONFIG_UTF_8 */
@@ -528,7 +528,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				int old = widget_data->info.field.cpos;
 
 				while(1) {
-					data = utf_8_to_unicode(&text, end);
+					data = utf8_to_unicode(&text, end);
 					if (data == UCS_NO_CHAR)
 						break;
 				}
@@ -564,7 +564,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 					unsigned char *text = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *old = text;
 
-					utf_8_to_unicode(&text, end);
+					utf8_to_unicode(&text, end);
 					if (old != text) {
 						memmove(old, text,
 								(int)(end - text) + 1);
@@ -681,7 +681,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				unsigned char *text = widget_data->cdata;
 				int textlen = strlen(text);
 #ifdef CONFIG_UTF_8
-				const unsigned char *ins = encode_utf_8(get_kbd_key(ev));
+				const unsigned char *ins = encode_utf8(get_kbd_key(ev));
 				int inslen = utf8charlen(ins);
 #else  /* !CONFIG_UTF_8 */
 				const int inslen = 1;

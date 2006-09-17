@@ -352,7 +352,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 
 			x = link->points[0].x + dx;
 #ifdef CONFIG_UTF_8
-			if (term->utf8) goto utf_8;
+			if (term->utf8) goto utf8;
 #endif /* CONFIG_UTF_8 */
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			len = strlen(fs->value) - fs->vpos;
@@ -372,7 +372,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 			}
 			break;
 #ifdef CONFIG_UTF_8
-utf_8:
+utf8:
 			retried = 0;
 
 retry_after_scroll:
@@ -390,7 +390,7 @@ retry_after_scroll:
 				int cells, cell;
 				unsigned char *maybe_in_view = text;
 
-				data = utf_8_to_unicode(&text, end);
+				data = utf8_to_unicode(&text, end);
 				if (data == UCS_NO_CHAR) /* end of string */
 					data = '_';
 				else if (fc->type == FC_PASSWORD)
@@ -475,7 +475,7 @@ drew_char:
 				 * fully displayed.  If there is no
 				 * such character, reserve one cell
 				 * for the cursor anyway.  */
-				if (utf_8_to_unicode(&ptr, end) == UCS_NO_CHAR)
+				if (utf8_to_unicode(&ptr, end) == UCS_NO_CHAR)
 					--cells;
 				ptr = utf8_step_backward(ptr, fs->value,
 							 cells, how, NULL);
@@ -507,7 +507,7 @@ drew_char:
 				/* XXX: when can this happen? --pasky */
 				s = "";
 #ifdef CONFIG_UTF_8
-			if (term->utf8) goto utf_8_select;
+			if (term->utf8) goto utf8_select;
 #endif /* CONFIG_UTF_8 */
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
@@ -518,7 +518,7 @@ drew_char:
 			}
 			break;
 #ifdef CONFIG_UTF_8
-utf_8_select:
+utf8_select:
 			text = s;
 			end = strchr(s, '\0');
 			len = utf8_ptr2cells(text, end);
@@ -530,7 +530,7 @@ utf_8_select:
 					if (i < len) {
 						int cell;
 
-						data = utf_8_to_unicode(&s, end);
+						data = utf8_to_unicode(&s, end);
 						cell = unicode_to_cell(data);
 						if (i + 1 < len && cell == 2) {
 							draw_char_data(term, x++, y, data);
@@ -1402,7 +1402,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *end = strchr(text, '\0');
 
-				utf_8_to_unicode(&text, end);
+				utf8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
 			} else
 #endif /* CONFIG_UTF_8 */
@@ -1592,7 +1592,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *old = text;
 
-				utf_8_to_unicode(&text, end);
+				utf8_to_unicode(&text, end);
 				if (old != text) {
 					memmove(old, text,
 						(int)(end - text) + 1);

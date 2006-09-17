@@ -464,7 +464,7 @@ memacpy_u(unsigned char *text, int textlen, int utf8)
 		int i;
 
 		for (i = 0; i < textlen; i++)
-			mem[i] = utf_8_to_unicode(&text, text + 7);
+			mem[i] = utf8_to_unicode(&text, text + 7);
 	} else {
 		int i;
 

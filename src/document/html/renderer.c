@@ -422,7 +422,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				}
 				part->document->buf_length = i;
 				part->document->buf[i] = '\0';
-				data = utf_8_to_unicode(&buf_ptr, buf_ptr + i);
+				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
 					part->document->buf_length = 0;
 					goto good_char;
@@ -440,7 +440,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					chars++;
 				} else {
 					part->spaces[x] = (*chars == ' ');
-					data = utf_8_to_unicode(&chars, end);
+					data = utf8_to_unicode(&chars, end);
 					if (data == UCS_NO_CHAR) {
 						if (charslen == 1) {
 							/* HR */
@@ -467,7 +467,7 @@ good_char:
 							schar->data = (unicode_val_T)data;
 							part->char_width[x] = 2;
 							copy_screen_chars(&POS(x++, y), schar, 1);
-							data = utf_8_to_unicode(&chars, end);
+							data = utf8_to_unicode(&chars, end);
 							if (data == UCS_NO_CHAR) goto broken_char;
 							schar->data = (unicode_val_T)data;
 							part->spaces[x] = 0;
@@ -503,13 +503,13 @@ good_char:
 				unicode_val_T data;
 
 				part->spaces[x] = (*chars == ' ');
-				data = utf_8_to_unicode(&chars, end);
+				data = utf8_to_unicode(&chars, end);
 				part->char_width[x] = unicode_to_cell(data);
 				if (part->char_width[x] == 2) {
 					x++;
 					part->spaces[x] = 0;
 					part->char_width[x] = 0;
-					data = utf_8_to_unicode(&chars, end);
+					data = utf8_to_unicode(&chars, end);
 				}
 				if (data == UCS_NO_CHAR) {
 					/* this is at the end only */

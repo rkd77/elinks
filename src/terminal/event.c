@@ -50,7 +50,7 @@ struct terminal_interlink {
 		 * converts it to Alt-0xC3 0xB6, attaching the
 		 * modifier to the first byte only.  */
 		term_event_modifier_T modifier;
-	} utf_8;
+	} utf8;
 
 	/* This is the queue of events as coming from the other ELinks instance
 	 * owning the hosting terminal. */
@@ -325,25 +325,25 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * it is between 0x00 and 0x7F and it is straight ASCII.
 		 * (All 'betweens' are inclusive.) */
 
-		if (interlink->utf_8.len) {
+		if (interlink->utf8.len) {
 			/* A previous call to handle_interlink_event
 			 * got a UTF-8 start byte. */
 
 			if (key >= 0x80 && key <= 0xBF && utf8_io) {
 				/* This is a UTF-8 continuation byte. */
 
-				interlink->utf_8.ucs <<= 6;
-				interlink->utf_8.ucs |= key & 0x3F;
-				if (! --interlink->utf_8.len) {
-					unicode_val_T u = interlink->utf_8.ucs;
+				interlink->utf8.ucs <<= 6;
+				interlink->utf8.ucs |= key & 0x3F;
+				if (! --interlink->utf8.len) {
+					unicode_val_T u = interlink->utf8.ucs;
 
 					/* UTF-8 allows neither overlong
 					 * sequences nor surrogates.  */
-					if (u < interlink->utf_8.min
+					if (u < interlink->utf8.min
 					    || is_utf16_surrogate(u))
 						u = UCS_REPLACEMENT_CHARACTER;
 					term_send_ucs(term, u,
-						      term->interlink->utf_8.modifier);
+						      term->interlink->utf8.modifier);
 				}
 				break;
 
@@ -354,9 +354,9 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				 * terminated character, but don't break;
 				 * let this byte be handled below. */
 
-				interlink->utf_8.len = 0;
+				interlink->utf8.len = 0;
 				term_send_ucs(term, UCS_REPLACEMENT_CHARACTER,
-					      term->interlink->utf_8.modifier);
+					      term->interlink->utf8.modifier);
 			}
 		}
 
@@ -415,16 +415,16 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 			/* This will hold because @key was checked above.  */
 			assert(len >= 2 && len <= 6);
-			if_assert_failed goto invalid_utf_8_start_byte;
+			if_assert_failed goto invalid_utf8_start_byte;
 
-			interlink->utf_8.min = min[len - 2];
-			interlink->utf_8.len = len - 1;
-			interlink->utf_8.ucs = key & (mask - 1);
-			interlink->utf_8.modifier = modifier;
+			interlink->utf8.min = min[len - 2];
+			interlink->utf8.len = len - 1;
+			interlink->utf8.ucs = key & (mask - 1);
+			interlink->utf8.modifier = modifier;
 			break;
 		}
 
-invalid_utf_8_start_byte:
+invalid_utf8_start_byte:
 		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}

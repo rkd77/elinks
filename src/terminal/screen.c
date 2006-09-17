@@ -542,11 +542,11 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 			add_char_to_string(screen, (unsigned char)data);
 		else
 			if (data != UCS_NO_CHAR)
-				add_to_string(screen, encode_utf_8(data));
+				add_to_string(screen, encode_utf8(data));
 #else
 		int charset = driver->charsets[!!border];
 
-		add_to_string(screen, cp2utf_8(charset, data));
+		add_to_string(screen, cp2utf8(charset, data));
 #endif /* CONFIG_UTF_8 */
 		return;
 	}

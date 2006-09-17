@@ -357,7 +357,7 @@ add_document_to_string(struct string *string, struct document *document)
 
 #ifdef CONFIG_UTF_8
 	if (is_cp_utf8(document->options.cp))
-		goto utf_8;
+		goto utf8;
 #endif /* CONFIG_UTF_8 */
 
 	for (y = 0; y < document->height; y++) {
@@ -394,7 +394,7 @@ add_document_to_string(struct string *string, struct document *document)
 	}
 #ifdef CONFIG_UTF_8
 	goto end;
-utf_8:
+utf8:
 	for (y = 0; y < document->height; y++) {
 		struct screen_char *pos = document->data[y].chars;
 		int white = 0;
@@ -422,7 +422,7 @@ utf_8:
 					if (frame)
 						add_char_to_string(string, data);
 					else
-						add_to_string(string, encode_utf_8(data));
+						add_to_string(string, encode_utf8(data));
 				}
 			}
 		}
@@ -851,7 +851,7 @@ dump_to_file(struct document *document, int fd)
 
 #ifdef CONFIG_UTF_8
 	if (is_cp_utf8(document->options.cp))
-		goto utf_8;
+		goto utf8;
 #endif /* CONFIG_UTF_8 */
 
 	for (y = 0; y < document->height; y++) {
@@ -892,7 +892,7 @@ dump_to_file(struct document *document, int fd)
 	}
 #ifdef CONFIG_UTF_8
 	goto ref;
-utf_8:
+utf8:
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
 		int x;
@@ -907,7 +907,7 @@ utf_8:
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
 			else {
-				unsigned char *utf8_buf = encode_utf_8(c);
+				unsigned char *utf8_buf = encode_utf8(c);
 
 				while (*utf8_buf) {
 					if (write_char(*utf8_buf++,

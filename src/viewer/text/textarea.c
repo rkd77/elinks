@@ -367,7 +367,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 			if (i >= -fs->vpos && text < end) {
 				int cell;
 
-				data = utf_8_to_unicode(&text, end);
+				data = utf8_to_unicode(&text, end);
 				cell = unicode_to_cell(data);
 				if (cell == 2) {
 					draw_char_data(term, x++, y, data);
@@ -754,7 +754,7 @@ new_pos(struct form_state *fs, struct line_info *line, int current, int max_cell
 	int cells = 0;
 
 	while(cells < max_cells) {
-		unicode_val_T data = utf_8_to_unicode(&text, end);
+		unicode_val_T data = utf8_to_unicode(&text, end);
 
 		if (data == UCS_NO_CHAR) break;
 		cells += unicode_to_cell(data);
@@ -1135,7 +1135,7 @@ do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8
 	text = fs->value + fs->state;
 	end = strchr(text, '\0');
 	old_state = fs->state;
-	utf_8_to_unicode(&text, end);
+	utf8_to_unicode(&text, end);
 
 	fs->state = text - fs->value;
 

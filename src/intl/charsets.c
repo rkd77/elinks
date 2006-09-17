@@ -148,7 +148,7 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 
 #ifdef CONFIG_UTF_8
 	if (codepages[to].table == table_utf_8)
-		return encode_utf_8(u);
+		return encode_utf8(u);
 #endif /* CONFIG_UTF_8 */
 
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
@@ -177,10 +177,10 @@ static unsigned char utf_buffer[7];
 
 #ifdef CONFIG_UTF_8
 inline unsigned char *
-encode_utf_8(unicode_val_T u)
+encode_utf8(unicode_val_T u)
 #else
 static unsigned char *
-encode_utf_8(unicode_val_T u)
+encode_utf8(unicode_val_T u)
 #endif /* CONFIG_UTF_8 */
 {
 	memset(utf_buffer, 0, 7);
@@ -281,7 +281,7 @@ utf8_char2cells(unsigned char *utf8_char, unsigned char *end)
 	if(!utf8_char || !end)
 		return -1;
 
-	u = utf_8_to_unicode(&utf8_char, end);
+	u = utf8_to_unicode(&utf8_char, end);
 
 	return unicode_to_cell(u);
 }
@@ -415,7 +415,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 			unsigned char *prev = current;
 			int width;
 
-			u = utf_8_to_unicode(&current, end);
+			u = utf8_to_unicode(&current, end);
 			if (u == UCS_NO_CHAR) {
 				/* Assume the incomplete sequence
 				 * costs one cell.  */
@@ -490,7 +490,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 			} while (current > start && !utf8_islead(*current));
 
 			look = current;
-			u = utf_8_to_unicode(&look, prev);
+			u = utf8_to_unicode(&look, prev);
 			if (u == UCS_NO_CHAR) {
 				/* Assume the incomplete sequence
 				 * costs one cell.  */
@@ -570,7 +570,7 @@ unicode_fold_label_case(unicode_val_T c)
 }
 
 inline unicode_val_T
-utf_8_to_unicode(unsigned char **string, unsigned char *end)
+utf8_to_unicode(unsigned char **string, unsigned char *end)
 {
 	unsigned char *str = *string;
 	unicode_val_T u;
@@ -623,7 +623,7 @@ utf_8_to_unicode(unsigned char **string, unsigned char *end)
 }
 #endif /* CONFIG_UTF_8 */
 
-/* Slow algorithm, the common part of cp2u and cp2utf_8.  */
+/* Slow algorithm, the common part of cp2u and cp2utf8.  */
 static unicode_val_T
 cp2u_shared(const struct codepage_desc *from, unsigned char c)
 {
@@ -653,14 +653,14 @@ cp2u(int from, unsigned char c)
 
 /* This slow and ugly code is used by the terminal utf_8_io */
 unsigned char *
-cp2utf_8(int from, int c)
+cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
 
 	if (codepages[from].table == table_utf_8 || c < 128)
 		return strings[c];
 
-	return encode_utf_8(cp2u_shared(&codepages[from], c));
+	return encode_utf8(cp2u_shared(&codepages[from], c));
 }
 
 #ifdef CONFIG_UTF_8
@@ -670,7 +670,7 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 	unicode_val_T ret;
 
 	if (is_cp_utf8(codepage))
-		return utf_8_to_unicode(string, end);
+		return utf8_to_unicode(string, end);
 
 	if (*string >= end)
 		return UCS_NO_CHAR;
@@ -683,9 +683,9 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 
 
 static void
-add_utf_8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
+add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
 {
-	unsigned char *p = encode_utf_8(u);
+	unsigned char *p = encode_utf8(u);
 
 	while (p[1]) {
 		if (ct[*p].t) ct = ct[*p].u.tbl;
@@ -725,7 +725,7 @@ free_utf_table(void)
 }
 
 static struct conv_table *
-get_translation_table_to_utf_8(int from)
+get_translation_table_to_utf8(int from)
 {
 	int i;
 	static int lfr = -1;
@@ -757,7 +757,7 @@ get_translation_table_to_utf_8(int from)
 
 		if (!utf_table[codepages[from].table[i].c].u.str)
 			utf_table[codepages[from].table[i].c].u.str =
-				stracpy(encode_utf_8(u));
+				stracpy(encode_utf8(u));
 	}
 
 	for (i = 128; i < 256; i++)
@@ -797,7 +797,7 @@ get_translation_table(int from, int to)
 	if (/*from == to ||*/ from == -1 || to == -1)
 		return NULL;
 	if (codepages[to].table == table_utf_8)
-		return get_translation_table_to_utf_8(from);
+		return get_translation_table_to_utf8(from);
 	if (from == lfr && to == lto)
 		return table;
 	lfr = from;
@@ -808,13 +808,13 @@ get_translation_table(int from, int to)
 		int i;
 
 		for (i = 0; codepages[to].table[i].c; i++)
-			add_utf_8(table, codepages[to].table[i].u,
-				  strings[codepages[to].table[i].c]);
+			add_utf8(table, codepages[to].table[i].u,
+				 strings[codepages[to].table[i].c]);
 
 		for (i = 0; unicode_7b[i].x != -1; i++)
 			if (unicode_7b[i].x >= 0x80)
-				add_utf_8(table, unicode_7b[i].x,
-					  unicode_7b[i].s);
+				add_utf8(table, unicode_7b[i].x,
+					 unicode_7b[i].s);
 
 	} else {
 		int i;

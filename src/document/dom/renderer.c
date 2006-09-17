@@ -311,7 +311,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			if (utf8) {
 				unicode_val_T data;
 				charlen = utf8charlen(text);
-				data = utf_8_to_unicode(&text, end);
+				data = utf8_to_unicode(&text, end);
 
 				template->data = (unicode_val_T)data;
 

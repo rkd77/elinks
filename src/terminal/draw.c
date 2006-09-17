@@ -423,7 +423,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	if (length <= 0) return;
 	if (x >= term->width) return;
 
-	data = utf_8_to_unicode(&text, end);
+	data = utf8_to_unicode(&text, end);
 	if (data == UCS_NO_CHAR) return;
 	start = get_char(term, x, y);
 	if (color) {
@@ -456,7 +456,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	x++;
 
 	for (; x < term->width; x++, pos++) {
-		data = utf_8_to_unicode(&text, end);
+		data = utf8_to_unicode(&text, end);
 		if (data == UCS_NO_CHAR) break;
 		if (color) copy_screen_chars(pos, start, 1);
 

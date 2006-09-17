@@ -11,7 +11,7 @@ typedef uint32_t unicode_val_T;
 #define UCS_REPLACEMENT_CHARACTER ((unicode_val_T) 0xFFFD)
 
 /* A special value that fits in unicode_val_T but is outside the range
- * of Unicode characters.  utf_8_to_unicode and cp_to_unicode return
+ * of Unicode characters.  utf8_to_unicode and cp_to_unicode return
  * this if the input is too short.  This is also used as a placeholder
  * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
@@ -64,7 +64,7 @@ unsigned char *get_cp_mime_name(int);
 int is_cp_utf8(int);
 void free_conv_table(void);
 #ifdef CONFIG_UTF_8
-inline unsigned char *encode_utf_8(unicode_val_T);
+inline unsigned char *encode_utf8(unicode_val_T);
 inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
 inline int utf8charlen(const unsigned char *);
 int utf8_char2cells(unsigned char *, unsigned char *);
@@ -94,12 +94,12 @@ unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
 inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
-inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
+inline unicode_val_T utf8_to_unicode(unsigned char **, unsigned char *);
 unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF_8 */
 
 unicode_val_T cp2u(int, unsigned char);
-unsigned char *cp2utf_8(int, int);
+unsigned char *cp2utf8(int, int);
 
 unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
 #define u2cp(u, to) u2cp_(u, to, 0)
