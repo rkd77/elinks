@@ -692,6 +692,26 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	fflush(stderr);
 #endif
 
+	/* The following information should be listed for each escape
+	 * sequence recognized here:
+	 *
+	 * 1. Which control function ECMA-48 assigns to the sequence.
+	 *    Put parentheses around this if the control function
+	 *    seems unrelated to how ELinks actually treats the
+	 *    sequence.  Write "private" if it is a control sequence
+	 *    reserved for private or experimental use in ECMA-48.
+	 *    (Those have a Final Byte in the range 0x70 to 0x7F,
+	 *    optionally preceded by a single Intermediate Byte 0x20.)
+	 *
+	 * 2. The capname used by Terminfo, if any.  These should help
+	 *    when ELinks is eventually changed to read escape
+	 *    sequences from Terminfo (bug 96).
+	 *
+	 * 3. The $TERM identifier of some terminal that generates
+	 *    this escape sequence with the meaning expected by
+	 *    ELinks.  Escape sequences with no known terminal may end
+	 *    up being removed from ELinks when bug 96 is fixed.
+	 */
 	switch (c) {				/* ECMA-48 Terminfo $TERM */
 	case 0: return -1;			/* ------- -------- ----- */
 	case 'A': kbd.key = KBD_UP; break;	/*    CUU  kcuu1    vt200 */
