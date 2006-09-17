@@ -838,7 +838,7 @@ if test "$enable_python" = "yes"; then
 			cat <<EOF
 ***********************************************************************
 The Python support is incomplete and not so well integrated to ELinks
-yet. That means, e.g.., that you have no Python console and there might
+yet. That means, e.g., that you have no Python console and there might
 not be all the necessary hooks. Also, the Python interface is not too
 well tested (success stories heartily welcomed!).
 ***********************************************************************
