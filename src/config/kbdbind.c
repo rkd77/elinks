@@ -678,6 +678,7 @@ static struct default_kb default_main_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_CTRL }, ACT_MAIN_LINK_FOLLOW_RELOAD },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_MAIN_FRAME_NEXT },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_MAIN_FRAME_PREV },
+	{ { KBD_TAB,     KBD_MOD_SHIFT}, ACT_MAIN_FRAME_PREV },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_MAIN_MOVE_LINK_PREV },
 	{ { 0, 0 }, 0 }
 };
@@ -712,6 +713,7 @@ static struct default_kb default_edit_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_NONE }, ACT_EDIT_RIGHT },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_EDIT_NEXT_ITEM },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_EDIT_PREVIOUS_ITEM },
+	{ { KBD_TAB,	 KBD_MOD_SHIFT}, ACT_EDIT_PREVIOUS_ITEM },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_EDIT_UP },
 	{ { 0, 0 }, 0 }
 };
@@ -748,6 +750,7 @@ static struct default_kb default_menu_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_NONE }, ACT_MENU_RIGHT },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_MENU_NEXT_ITEM },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_MENU_PREVIOUS_ITEM },
+	{ { KBD_TAB,	 KBD_MOD_SHIFT}, ACT_MENU_PREVIOUS_ITEM },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_MENU_UP },
 	{ { 0, 0 }, 0}
 };

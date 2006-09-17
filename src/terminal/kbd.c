@@ -694,6 +694,8 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct term_event *ev)
 	case 'W': kbd.key = KBD_F11; break;
 	case 'X': kbd.key = KBD_F12; break;
 
+	case 'Z': kbd.key = KBD_TAB; kbd.modifier = KBD_MOD_SHIFT; break;
+
 	case 'z': switch (v) {
 		case 247: kbd.key = KBD_INS; break;
 		case 214: kbd.key = KBD_HOME; break;
