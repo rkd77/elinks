@@ -228,6 +228,32 @@ EL_CHECK_CODE([variadic macros], HAVE_VARIADIC_MACROS,
                 [a("foo");a("%s","bar");a("%s%s","baz","quux");])
 
 dnl Check for -rdynamic
+dnl
+dnl gcc -rdynamic calls ld -export-dynamic, which adds all symbols of
+dnl the executable to its dynamic symbol table.  ELinks uses this for
+dnl two purposes:
+dnl
+dnl 1. If ELinks detects a bug, it can try to display a backtrace by
+dnl    calling backtrace_symbols_fd() in the GNU libc.  The glibc-2.3.6
+dnl    manual states users of GNU ld must pass -rdynamic to make the
+dnl    symbols available to the program.
+dnl
+dnl 2. It would eventually be nice to dynamically load shared
+dnl    libraries as plugins (bug 73).  The plugins must be able to
+dnl    call ELinks functions.  This can be implemented either by
+dnl    registering all callable functions in ELinks-specific data
+dnl    structures, or by letting the dynamic linker handle them.
+dnl    The latter way requires something equivalent to -rdynamic.
+dnl
+dnl Because backtraces are not needed for correct operation, and bug
+dnl 73 is not yet being fixed, the configure script and makefiles
+dnl should not complain to the user if they find that -rdynamic does
+dnl not work.  Besides, it was reported at elinks-users on 2006-09-12
+dnl that gcc-3.4.2 with "ld: Software Generation Utilities - Solaris
+dnl Link Editors: 5.8-1.284" on Sun Solaris 8 Sparc does not support
+dnl -rdynamic but does something equivalent automatically.  (This was
+dnl tested with "nm -D elinks | grep redraw_from_window".)
+dnl
 dnl FIXME: This check doesn't work. Something to do with the compiler
 dnl happily ignoring it and stderr not being checked for error messages.
 AC_MSG_CHECKING([for -rdynamic])
