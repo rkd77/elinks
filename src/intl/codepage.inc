@@ -4606,13 +4606,13 @@ unsigned char *aliases_viscii [] = {
 };
 
 
-/*** utf_8 ***/
+/*** utf8 ***/
 
-struct table_entry table_utf_8 [] = {
+struct table_entry table_utf8 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_utf_8 [] = {
+unsigned char *aliases_utf8 [] = {
 	"utf-8",
 	"utf8",
 	NULL
@@ -4653,7 +4653,7 @@ struct codepage_desc codepages [] = {
 	{"KOI8-RU", aliases_koi8_ru, table_koi8_ru},
 	{"TCVN-5712", aliases_tcvn5712, table_tcvn5712},
 	{"VISCII", aliases_viscii, table_viscii},
-	{"Unicode UTF-8", aliases_utf_8, table_utf_8},
+	{"Unicode UTF-8", aliases_utf8, table_utf8},
 	{NULL, NULL, NULL}
 };
 

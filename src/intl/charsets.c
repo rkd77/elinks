@@ -147,7 +147,7 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 	to &= ~SYSTEM_CHARSET_FLAG;
 
 #ifdef CONFIG_UTF8
-	if (codepages[to].table == table_utf_8)
+	if (codepages[to].table == table_utf8)
 		return encode_utf8(u);
 #endif /* CONFIG_UTF8 */
 
@@ -644,7 +644,7 @@ cp2u(int from, unsigned char c)
 
 	/* UTF-8 is a multibyte codepage and cannot be handled with
 	 * this function.  */
-	assert(codepages[from].table != table_utf_8);
+	assert(codepages[from].table != table_utf8);
 	if_assert_failed return UCS_REPLACEMENT_CHARACTER;
 
 	if (c < 0x80) return c;
@@ -657,7 +657,7 @@ cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
 
-	if (codepages[from].table == table_utf_8 || c < 128)
+	if (codepages[from].table == table_utf8 || c < 128)
 		return strings[c];
 
 	return encode_utf8(cp2u_shared(&codepages[from], c));
@@ -743,7 +743,7 @@ get_translation_table_to_utf8(int from)
 	for (i = 0; i < 128; i++)
 		utf_table[i].u.str = strings[i];
 
-	if (codepages[from].table == table_utf_8) {
+	if (codepages[from].table == table_utf8) {
 		for (i = 128; i < 256; i++)
 			utf_table[i].u.str = stracpy(strings[i]);
 		return utf_table;
@@ -796,7 +796,7 @@ get_translation_table(int from, int to)
 	}
 	if (/*from == to ||*/ from == -1 || to == -1)
 		return NULL;
-	if (codepages[to].table == table_utf_8)
+	if (codepages[to].table == table_utf8)
 		return get_translation_table_to_utf8(from);
 	if (from == lfr && to == lto)
 		return table;
@@ -804,7 +804,7 @@ get_translation_table(int from, int to)
 	lto = to;
 	new_translation_table(table);
 
-	if (codepages[from].table == table_utf_8) {
+	if (codepages[from].table == table_utf8) {
 		int i;
 
 		for (i = 0; codepages[to].table[i].c; i++)
@@ -903,7 +903,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 #ifdef CONFIG_UTF8
 	/* TODO: caching UTF-8 */
 	encoding &= ~SYSTEM_CHARSET_FLAG;
-	if (codepages[encoding].table == table_utf_8)
+	if (codepages[encoding].table == table_utf8)
 		goto skip;
 #endif /* CONFIG_UTF8 */
 
@@ -1015,7 +1015,7 @@ skip:
 	}
 
 #ifdef CONFIG_UTF8
-	if (codepages[encoding].table == table_utf_8) {
+	if (codepages[encoding].table == table_utf8) {
 		return result;
 	}
 #endif /* CONFIG_UTF8 */
@@ -1347,5 +1347,5 @@ int
 is_cp_utf8(int cp_index)
 {
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
-	return codepages[cp_index].table == table_utf_8;
+	return codepages[cp_index].table == table_utf8;
 }

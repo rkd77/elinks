@@ -32,4 +32,4 @@ koi8_u
 koi8_ru
 tcvn5712
 viscii
-utf_8
+utf8
