@@ -179,6 +179,10 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 #ifdef CONFIG_UTF8
 		items_hotkey = cp_to_unicode(codepage, &text,
 					     strchr(text, '\0'));
+		/* items_hotkey can be UCS_NO_CHAR only if the text of
+		 * the menu item is not in the expected codepage.  */
+		assert(items_hotkey != UCS_NO_CHAR);
+		if_assert_failed continue;
 		found = (unicode_fold_label_case(items_hotkey) == key);
 #else
 		found = (toupper(*text) == key);

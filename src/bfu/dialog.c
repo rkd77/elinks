@@ -310,18 +310,24 @@ select_button_by_key(struct dialog_data *dlg_data)
 		if (widget_data->widget->type != WIDGET_BUTTON)
 			continue;
 
+		hk_ptr = widget_data->widget->text;
+		if (!*hk_ptr)
+			continue;
+
 		/* We first try to match marked hotkey if there is
 		 * one else we fallback to first character in button
 		 * name. */
 		hk_pos = widget_data->widget->info.button.hotkey_pos;
 		if (hk_pos >= 0)
-			hk_ptr = &widget_data->widget->text[hk_pos + 1];
-		else
-			hk_ptr = widget_data->widget->text;
+			hk_ptr += hk_pos + 1;
 
 #ifdef CONFIG_UTF8
 		hk_char = cp_to_unicode(codepage, &hk_ptr,
 					strchr(hk_ptr, '\0'));
+		/* hk_char can be UCS_NO_CHAR only if the text of the
+		 * widget is not in the expected codepage.  */
+		assert(hk_char != UCS_NO_CHAR);
+		if_assert_failed continue;
 		hk_char = unicode_fold_label_case(hk_char);
 #else
 		hk_char = toupper(*hk_ptr);
