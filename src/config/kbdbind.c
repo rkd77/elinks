@@ -108,7 +108,7 @@ free_keybinding(struct keybinding *keybinding)
 	}
 
 #ifdef CONFIG_SCRIPTING
-/* TODO: unref function must be implemented. */
+/* TODO: unref function must be implemented. This is part of bug 810. */
 /*	if (keybinding->event != EVENT_NONE)
 		scripting_unref(keybinding->event); */
 #endif

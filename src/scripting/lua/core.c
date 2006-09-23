@@ -268,6 +268,7 @@ run_lua_func(va_list ap, void *data)
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
+/* bind_key (keymap, keystroke, function) */
 static int
 l_bind_key(LS)
 {
@@ -284,6 +285,16 @@ l_bind_key(LS)
 
 	if (!init_string(&event_name)) goto lua_error;
 
+	/* ELinks will need to call the Lua function when the user
+	 * presses the key.  However, ELinks cannot store a pointer
+	 * to the function, because the C API of Lua does not provide
+	 * one.  Instead, ask the "reference system" of Lua to
+	 * generate an integer key that ELinks can store.
+	 *
+	 * TODO: If l_bind_key() succeeds, then the function will
+	 * never be removed from the reference system again, because
+	 * the rest of ELinks does not tell this module if the
+	 * keybinding is removed.  This is part of bug 810.  */
 	lua_pushvalue(S, 3);
 	ref = luaL_ref(S, LUA_REGISTRYINDEX);
 	add_format_to_string(&event_name, "lua-run-func %i", ref);
