@@ -1,0 +1,253 @@
+Python programmers can customize the behavior of ELinks by creating a Python
+hooks module. The embedded Python interpreter provides an internal module
+called elinks that can be used by the hooks module to create keystroke
+bindings for Python code, obtain information about the document being
+viewed, display simple dialog boxes and menus, load documents into the
+ELinks cache, or display documents to the user. These two modules are
+described below.
+
+------------------------------------------------------------------------------
+
+MODULE
+    hooks - Python hooks for ELinks.
+
+DESCRIPTION
+    If ELinks is compiled with an embedded Python interpreter, it will try
+    to import a Python module called hooks when the browser starts up. To
+    use Python code from within ELinks, create a file called hooks.py in
+    the ~/.elinks directory, or in the system-wide configuration directory
+    (defined when ELinks was compiled), or in the standard Python search path.
+    An example hooks.py file can be found in the contrib/python directory of
+    the ELinks source distribution.
+    
+    The hooks module may implement any of several functions that will be
+    called automatically by ELinks in appropriate circumstances; it may also
+    bind ELinks keystrokes to callable Python objects so that arbitrary Python
+    code can be invoked at the whim of the user.
+    
+    Functions that will be automatically called by ELinks (if they're defined):
+    
+    follow_url_hook() -- Rewrite a URL for a link that's about to be followed.
+    goto_url_hook() -- Rewrite a URL received from a "Go to URL" dialog box.
+    pre_format_html_hook() -- Rewrite a document's body before it's formatted.
+    proxy_for_hook() -- Determine what proxy server to use for a given URL.
+    quit_hook() -- Clean up before ELinks exits.
+
+FUNCTIONS
+    follow_url_hook(url)
+        Rewrite a URL for a link that's about to be followed.
+        
+        This function should return a URL for ELinks to follow, or None if
+        ELinks should follow the original URL.
+        
+        Arguments:
+        
+        url -- The URL of the link.
+    
+    goto_url_hook(url, current_url)
+        Rewrite a URL that was entered in a "Go to URL" dialog box.
+        
+        This function should return a URL for ELinks to follow, or None if
+        ELinks should follow the original URL.
+        
+        Arguments:
+        
+        url -- The URL provided by the user.
+        current_url -- The URL of the document being viewed, or None if no
+                document is being viewed.
+    
+    pre_format_html_hook(url, html)
+        Rewrite the body of a document before it's formatted.
+        
+        This function should return a string for ELinks to format, or None
+        if ELinks should format the original document body. It can be used
+        to repair bad HTML, alter the layout or colors of a document, etc.
+        
+        Arguments:
+        
+        url -- The URL of the document.
+        html -- The body of the document.
+    
+    proxy_for_hook(url)
+        Determine what proxy server to use for a given URL.
+        
+        This function should return a string of the form "hostname:portnumber"
+        identifying a proxy server to use, or an empty string if the request
+        shouldn't use any proxy server, or None if ELinks should use its
+        default proxy server.
+        
+        Arguments:
+        
+        url -- The URL that is about to be followed.
+    
+    quit_hook()
+        Clean up before ELinks exits.
+        
+        This function should handle any clean-up tasks that need to be
+        performed before ELinks exits. Its return value is ignored.
+    
+------------------------------------------------------------------------------
+
+MODULE
+    elinks - Interface to the ELinks web browser.
+
+DESCRIPTION
+    Functions:
+    
+    bind_key() -- Bind a keystroke to a callable object.
+    current_document() -- Return the body of the document being viewed.
+    current_header() -- Return the header of the document being viewed.
+    current_link_url() -- Return the URL of the currently selected link.
+    current_title() -- Return the title of the document being viewed.
+    current_url() -- Return the URL of the document being viewed.
+    info_box() -- Display information to the user.
+    input_box() -- Prompt for user input.
+    load() -- Load a document into the ELinks cache.
+    menu() -- Display a menu.
+    open() -- View a document.
+    
+    Exception classes:
+    
+    error -- Errors internal to ELinks.
+    
+    Other public objects:
+    
+    home -- A string containing the pathname of the ~/.elinks directory.
+
+FUNCTIONS
+    bind_key(...)
+        bind_key(keystroke, callback[, keymap]) -> None
+        
+        Bind a keystroke to a callable object.
+        
+        Arguments:
+        
+        keystroke -- A string containing a keystroke. The syntax for
+                keystrokes is described in the elinkskeys(5) man page.
+        callback -- A callable object to be called when the keystroke is
+                typed. It will be called without any arguments.
+        
+        Optional arguments:
+        
+        keymap -- A string containing the name of a keymap. Valid keymap
+                  names can be found in the elinkskeys(5) man page. By
+                  default the "main" keymap is used.
+    
+    current_document(...)
+        current_document() -> string or None
+        
+        If a document is being viewed, return its body; otherwise return None.
+    
+    current_header(...)
+        current_header() -> string or None
+        
+        If a document is being viewed and it has a header, return the header;
+        otherwise return None.
+    
+    current_link_url(...)
+        current_link_url() -> string or None
+        
+        If a link is selected, return its URL; otherwise return None.
+    
+    current_title(...)
+        current_title() -> string or None
+        
+        If a document is being viewed, return its title; otherwise return None.
+    
+    current_url(...)
+        current_url() -> string or None
+        
+        If a document is being viewed, return its URL; otherwise return None.
+    
+    info_box(...)
+        info_box(text[, title]) -> None
+        
+        Display information to the user in a dialog box.
+        
+        Arguments:
+        
+        text -- The text to be displayed in the dialog box. This argument can
+                be a string or any object that has a string representation as
+                returned by str(object).
+        
+        Optional arguments:
+        
+        title -- A string containing a title for the dialog box. By default
+                the string "Info" is used.
+    
+    input_box(...)
+        input_box(prompt, callback, title="User dialog", initial="") -> None
+        
+        Display a dialog box to prompt for user input.
+        
+        Arguments:
+        
+        prompt -- A string containing a prompt for the dialog box.
+        callback -- A callable object to be called after the dialog is
+                finished. It will be called with a single argument, which
+                will be either a string provided by the user or else None
+                if the user canceled the dialog.
+        
+        Optional keyword arguments:
+        
+        title -- A string containing a title for the dialog box. By default
+                the string "User dialog" is used.
+        initial -- A string containing an initial value for the text entry
+                field. By default the entry field is initially empty.
+    
+    load(...)
+        load(url, callback) -> None
+        
+        Load a document into the ELinks cache and pass its contents to a
+        callable object.
+        
+        Arguments:
+        
+        url -- A string containing the URL to load.
+        callback -- A callable object to be called after the document has
+                been loaded. It will be called with two arguments: the first
+                will be a string representing the document's header, or None
+                if it has no header; the second will be a string representing
+                the document's body, or None if it has no body.
+    
+    menu(...)
+        menu(items[, type]) -> None
+        
+        Display a menu.
+        
+        Arguments:
+        
+        items -- A sequence of tuples. Each tuple must have two elements: a
+                string containing the name of a menu item, and a callable
+                object that will be called without any arguments if the user
+                selects that menu item.
+        
+        Optional arguments:
+        
+        type -- A constant specifying the type of menu to display. By default
+                the menu is displayed at the top of the screen, but if this
+                argument's value is the constant elinks.MENU_TAB then the menu
+                is displayed in the same location as the ELinks tab menu. If
+                its value is the constant elinks.MENU_LINK then the menu is
+                displayed in the same location as the ELinks link menu and is
+                not displayed unless a link is currently selected.
+    
+    open(...)
+        open(url, new_tab=False, background=False) -> None
+        
+        View a document in either the current tab or a new tab.
+        
+        Arguments:
+        
+        url -- A string containing the URL to view.
+        
+        Optional keyword arguments:
+        
+        new_tab -- By default the URL is opened in the current tab. If this
+                argument's value is the boolean True then the URL is instead
+                opened in a new tab.
+        background -- By default a new tab is opened in the foreground. If
+                this argument's value is the boolean True then a new tab is
+                instead opened in the background. This argument is ignored
+                unless new_tab's value is True.
+    

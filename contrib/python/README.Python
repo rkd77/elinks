@@ -1,8 +1,0 @@
-If you want to use Python scripting with ELinks, add --with-python to the
-configure invocation and copy hooks.py to your ~/.elinks directory.
-
-If configure cannot find Python you can supply a path, e.g.
---with-python=/usr/local/bin if your Python binary is in /usr/local/bin, etc.
-
-For the present hooks.py is not very usable. You are welcome to make it better.
-Good Luck!
