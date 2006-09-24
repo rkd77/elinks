@@ -43,6 +43,21 @@ struct table_entry {
 struct codepage_desc {
 	unsigned char *name;
 	unsigned char *const *aliases;
+ 
+ 	/* The Unicode mappings of codepage bytes 0x80...0xFF.
+ 	 * (0x00...0x7F are assumed to be ASCII in all codepages.)
+ 	 * Because all current values fit in 16 bits, we store them as
+ 	 * uint16_t rather than unicode_val_T.  If the codepage does
+ 	 * not use some byte, then @highhalf maps that byte to 0xFFFF,
+ 	 * which C code converts to UCS_REPLACEMENT_CHARACTER where
+ 	 * appropriate.  (U+FFFF is reserved and will never be
+ 	 * assigned as a character.)  */
+	const uint16_t *highhalf;
+ 
+ 	/* If some byte in the codepage corresponds to multiple Unicode
+ 	 * characters, then the preferred character is in @highhalf
+ 	 * above, and the rest are listed here in @extra.  This table
+ 	 * is not used for translating from the codepage to Unicode.  */
 	const struct table_entry *table;
 };
 
@@ -142,7 +157,7 @@ static const unicode_val_T strange_chars[32] = {
 };
 
 #define SYSTEM_CHARSET_FLAG 128
-#define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->table == table_utf8)
+#define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
 unsigned char *
 u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
@@ -170,7 +185,10 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 		return u2cp_(strange, to, no_nbsp_hack);
 	}
 
-
+	if (u < 0xFFFF)
+		for (j = 0; j < 0x80; j++)
+			if (codepages[to].highhalf[j] == u)
+				return strings[0x80 + j];
 	for (j = 0; codepages[to].table[j].c; j++)
 		if (codepages[to].table[j].u == u)
 			return strings[codepages[to].table[j].c];
@@ -631,20 +649,17 @@ utf8_to_unicode(unsigned char **string, unsigned char *end)
 }
 #endif /* CONFIG_UTF8 */
 
-/* Slow algorithm, the common part of cp2u and cp2utf8.  */
+/* The common part of cp2u and cp2utf_8.  */
 static unicode_val_T
 cp2u_shared(const struct codepage_desc *from, unsigned char c)
 {
-	int j;
-
-	for (j = 0; from->table[j].c; j++)
-		if (from->table[j].c == c)
-			return from->table[j].u;
-
-	return UCS_REPLACEMENT_CHARACTER;
+	unicode_val_T u = from->highhalf[c - 0x80];
+	
+	if (u == 0xFFFF) u = UCS_REPLACEMENT_CHARACTER;
+	return u;
 }
 
-/* Slow algorithm, used for converting input from the terminal.  */
+/* Used for converting input from the terminal.  */
 unicode_val_T
 cp2u(int from, unsigned char c)
 {
@@ -757,8 +772,14 @@ get_translation_table_to_utf8(int from)
 		return utf_table;
 	}
 
-	for (i = 128; i < 256; i++)
-		utf_table[i].u.str = NULL;
+	for (i = 128; i < 256; i++) {
+		unicode_val_T u = codepages[from].highhalf[i - 0x80];
+
+		if (u == 0xFFFF)
+			utf_table[i].u.str = NULL;
+		else
+			utf_table[i].u.str = stracpy(encode_utf8(u));
+	}
 
 	for (i = 0; codepages[from].table[i].c; i++) {
 		unicode_val_T u = codepages[from].table[i].u;
@@ -815,6 +836,12 @@ get_translation_table(int from, int to)
 	if (is_cp_ptr_utf8(&codepages[from])) {
 		int i;
 
+		for (i = 0x80; i <= 0xFF; i++)
+			if (codepages[to].highhalf[i - 0x80] != 0xFFFF)
+				add_utf8(table,
+					 codepages[to].highhalf[i - 0x80],
+					 strings[i]);
+
 		for (i = 0; codepages[to].table[i].c; i++)
 			add_utf8(table, codepages[to].table[i].u,
 				 strings[codepages[to].table[i].c]);
@@ -828,16 +855,11 @@ get_translation_table(int from, int to)
 		int i;
 
 		for (i = 128; i < 256; i++) {
-			int j;
+			if (codepages[from].highhalf[i - 0x80] != 0xFFFF) {
+				unsigned char *u;
 
-			for (j = 0; codepages[from].table[j].c; j++) {
-				if (codepages[from].table[j].c == i) {
-					unsigned char *u;
-
-					u = u2cp(codepages[from].table[j].u, to);
-					if (u) table[i].u.str = u;
-					break;
-				}
+				u = u2cp(codepages[from].highhalf[i - 0x80], to);
+				if (u) table[i].u.str = u;
 			}
 		}
 	}
