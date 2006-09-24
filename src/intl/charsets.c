@@ -35,8 +35,8 @@ struct table_entry {
 
 struct codepage_desc {
 	unsigned char *name;
-	unsigned char **aliases;
-	struct table_entry *table;
+	unsigned char *const *aliases;
+	const struct table_entry *table;
 };
 
 #include "intl/codepage.inc"
@@ -1261,7 +1261,7 @@ charsets_list_next(void)
 	if (!codepages[i_name].name) return NULL;
 
 	kv.key = codepages[i_name].aliases[i_alias];
-	kv.data = &codepages[i_name];
+	kv.data = (void *) &codepages[i_name]; /* cast away const */
 
 	if (codepages[i_name].aliases[i_alias + 1])
 		i_alias++;
@@ -1281,7 +1281,7 @@ static struct fastfind_index ff_charsets_index
 int
 get_cp_index(unsigned char *name)
 {
-	struct codepage_desc *codepage;
+	const struct codepage_desc *codepage;
 	int syscp = 0;
 
 	if (!strcasecmp(name, "System")) {

@@ -5,11 +5,11 @@
 
 /*** 7bit ***/
 
-struct table_entry table_7bit [] = {
+const struct table_entry table_7bit [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_7bit [] = {
+unsigned char *const aliases_7bit [] = {
 	"us-ascii",
 	"ascii",
 	"7bit",
@@ -32,7 +32,7 @@ unsigned char *aliases_7bit [] = {
 
 /*** 8859_1 ***/
 
-struct table_entry table_8859_1 [] = {
+const struct table_entry table_8859_1 [] = {
 	{0xA0, 0x00A0 /* NO-BREAK SPACE */ },
 	{0xA1, 0x00A1 /* INVERTED EXCLAMATION MARK */ },
 	{0xA2, 0x00A2 /* CENT SIGN */ },
@@ -132,7 +132,7 @@ struct table_entry table_8859_1 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_1 [] = {
+unsigned char *const aliases_8859_1 [] = {
 	"ISO-8859-1",
 	"iso8859-1",
 	"8859-1",
@@ -153,7 +153,7 @@ unsigned char *aliases_8859_1 [] = {
 
 /*** 8859_2 ***/
 
-struct table_entry table_8859_2 [] = {
+const struct table_entry table_8859_2 [] = {
 	{0xA0, 0x00A0 /* NO-BREAK SPACE */ },
 	{0xA1, 0x0104 /* LATIN CAPITAL LETTER A WITH OGONEK */ },
 	{0xA2, 0x02D8 /* BREVE */ },
@@ -253,7 +253,7 @@ struct table_entry table_8859_2 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_2 [] = {
+unsigned char *const aliases_8859_2 [] = {
 	"ISO-8859-2",
 	"iso8859-2",
 	"8859-2",
@@ -271,7 +271,7 @@ unsigned char *aliases_8859_2 [] = {
 
 /*** 8859_3 ***/
 
-struct table_entry table_8859_3 [] = {
+const struct table_entry table_8859_3 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -396,7 +396,7 @@ struct table_entry table_8859_3 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_3 [] = {
+unsigned char *const aliases_8859_3 [] = {
 	"ISO-8859-3",
 	"8859-3",
 	"ISO_8859-3:1988",
@@ -413,7 +413,7 @@ unsigned char *aliases_8859_3 [] = {
 
 /*** 8859_4 ***/
 
-struct table_entry table_8859_4 [] = {
+const struct table_entry table_8859_4 [] = {
 	{0x80, 0x0080 /* PADDING CHARACTER (PAD) */ },
 	{0x81, 0x0081 /* HIGH OCTET PRESET (HOP) */ },
 	{0x82, 0x0082 /* BREAK PERMITTED HERE (BPH) */ },
@@ -545,7 +545,7 @@ struct table_entry table_8859_4 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_4 [] = {
+unsigned char *const aliases_8859_4 [] = {
 	"ISO-8859-4",
 	"iso8859-4",
 	"8859-4",
@@ -563,7 +563,7 @@ unsigned char *aliases_8859_4 [] = {
 
 /*** 8859_5 ***/
 
-struct table_entry table_8859_5 [] = {
+const struct table_entry table_8859_5 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -695,7 +695,7 @@ struct table_entry table_8859_5 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_5 [] = {
+unsigned char *const aliases_8859_5 [] = {
 	"ISO-8859-5",
 	"iso8859-5",
 	"8859-5",
@@ -711,7 +711,7 @@ unsigned char *aliases_8859_5 [] = {
 
 /*** 8859_6 ***/
 
-struct table_entry table_8859_6 [] = {
+const struct table_entry table_8859_6 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -798,7 +798,7 @@ struct table_entry table_8859_6 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_6 [] = {
+unsigned char *const aliases_8859_6 [] = {
 	"ISO-8859-6",
 	"8859-6",
 	"ISO_8859-6",
@@ -816,7 +816,7 @@ unsigned char *aliases_8859_6 [] = {
 
 /*** 8859_7 ***/
 
-struct table_entry table_8859_7 [] = {
+const struct table_entry table_8859_7 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -942,7 +942,7 @@ struct table_entry table_8859_7 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_7 [] = {
+unsigned char *const aliases_8859_7 [] = {
 	"ISO-8859-7",
 	"iso8859-7",
 	"8859-7",
@@ -961,7 +961,7 @@ unsigned char *aliases_8859_7 [] = {
 
 /*** 8859_8 ***/
 
-struct table_entry table_8859_8 [] = {
+const struct table_entry table_8859_8 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -1057,7 +1057,7 @@ struct table_entry table_8859_8 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_8 [] = {
+unsigned char *const aliases_8859_8 [] = {
 	"ISO-8859-8",
 	"8859-8",
 	"ISO_8859-8:1988",
@@ -1072,7 +1072,7 @@ unsigned char *aliases_8859_8 [] = {
 
 /*** 8859_9 ***/
 
-struct table_entry table_8859_9 [] = {
+const struct table_entry table_8859_9 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -1204,7 +1204,7 @@ struct table_entry table_8859_9 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_9 [] = {
+unsigned char *const aliases_8859_9 [] = {
 	"ISO-8859-9",
 	"iso8859-9",
 	"8859-9",
@@ -1220,7 +1220,7 @@ unsigned char *aliases_8859_9 [] = {
 
 /*** 8859_10 ***/
 
-struct table_entry table_8859_10 [] = {
+const struct table_entry table_8859_10 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -1352,7 +1352,7 @@ struct table_entry table_8859_10 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_10 [] = {
+unsigned char *const aliases_8859_10 [] = {
 	"ISO-8859-10",
 	"8859-10",
 	"ISO_8859-10:1992",
@@ -1367,7 +1367,7 @@ unsigned char *aliases_8859_10 [] = {
 
 /*** 8859_13 ***/
 
-struct table_entry table_8859_13 [] = {
+const struct table_entry table_8859_13 [] = {
 	{0x80, 0x0080 /* PADDING CHARACTER (PAD) */ },
 	{0x81, 0x0081 /* HIGH OCTET PRESET (HOP) */ },
 	{0x82, 0x0082 /* BREAK PERMITTED HERE (BPH) */ },
@@ -1499,7 +1499,7 @@ struct table_entry table_8859_13 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_13 [] = {
+unsigned char *const aliases_8859_13 [] = {
 	"ISO-8859-13",
 	"iso8859-13",
 	"8859-13",
@@ -1514,7 +1514,7 @@ unsigned char *aliases_8859_13 [] = {
 
 /*** 8859_14 ***/
 
-struct table_entry table_8859_14 [] = {
+const struct table_entry table_8859_14 [] = {
 	{0x80, 0x0080 /* <control> */ },
 	{0x81, 0x0081 /* <control> */ },
 	{0x82, 0x0082 /* <control> */ },
@@ -1646,7 +1646,7 @@ struct table_entry table_8859_14 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_14 [] = {
+unsigned char *const aliases_8859_14 [] = {
 	"ISO-8859-14",
 	"8859-14",
 	"ISO_8859-14",
@@ -1660,7 +1660,7 @@ unsigned char *aliases_8859_14 [] = {
 
 /*** 8859_15 ***/
 
-struct table_entry table_8859_15 [] = {
+const struct table_entry table_8859_15 [] = {
 	{0xA0, 0x00A0 /* NO-BREAK SPACE */ },
 	{0xA1, 0x00A1 /* INVERTED EXCLAMATION MARK */ },
 	{0xA2, 0x00A2 /* CENT SIGN */ },
@@ -1760,7 +1760,7 @@ struct table_entry table_8859_15 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_15 [] = {
+unsigned char *const aliases_8859_15 [] = {
 	"ISO-8859-15",
 	"iso8859-15",
 	"8859-15",
@@ -1779,7 +1779,7 @@ unsigned char *aliases_8859_15 [] = {
 
 /*** 8859_16 ***/
 
-struct table_entry table_8859_16 [] = {
+const struct table_entry table_8859_16 [] = {
 	{0xA0, 0x00A0 /* NO-BREAK SPACE */ },
 	{0xA1, 0x0104 /* LATIN CAPITAL LETTER A WITH OGONEK */ },
 	{0xA2, 0x0105 /* LATIN SMALL LETTER A WITH OGONEK */ },
@@ -1879,7 +1879,7 @@ struct table_entry table_8859_16 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_8859_16 [] = {
+unsigned char *const aliases_8859_16 [] = {
 	"ISO-8859-16",
 	"iso8859-16",
 	"8859-16",
@@ -1896,7 +1896,7 @@ unsigned char *aliases_8859_16 [] = {
 
 /*** cp1250 ***/
 
-struct table_entry table_cp1250 [] = {
+const struct table_entry table_cp1250 [] = {
 	{0x80, 0x20AC /* EURO SIGN */ },
 	{0x81, 0x0000 /* UNDEFINED */ },
 	{0x82, 0x201A /* SINGLE LOW-9 QUOTATION MARK */ },
@@ -2028,7 +2028,7 @@ struct table_entry table_cp1250 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1250 [] = {
+unsigned char *const aliases_cp1250 [] = {
 	"windows-1250",
 	"windows1250",
 	"1250",
@@ -2040,7 +2040,7 @@ unsigned char *aliases_cp1250 [] = {
 
 /*** cp1251 ***/
 
-struct table_entry table_cp1251 [] = {
+const struct table_entry table_cp1251 [] = {
 	{0x80, 0x0402 /* CYRILLIC CAPITAL LETTER DJE */ },
 	{0x81, 0x0403 /* CYRILLIC CAPITAL LETTER GJE */ },
 	{0x82, 0x201A /* SINGLE LOW-9 QUOTATION MARK */ },
@@ -2171,7 +2171,7 @@ struct table_entry table_cp1251 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1251 [] = {
+unsigned char *const aliases_cp1251 [] = {
 	"windows-1251",
 	"windows1251",
 	"1251",
@@ -2183,7 +2183,7 @@ unsigned char *aliases_cp1251 [] = {
 
 /*** cp1252 ***/
 
-struct table_entry table_cp1252 [] = {
+const struct table_entry table_cp1252 [] = {
 	{0x80, 0x20AC /* EURO SIGN */ },
 	{0x82, 0x201A /* SINGLE LOW-9 QUOTATION MARK */ },
 	{0x83, 0x0192 /* LATIN SMALL LETTER F WITH HOOK */ },
@@ -2310,7 +2310,7 @@ struct table_entry table_cp1252 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1252 [] = {
+unsigned char *const aliases_cp1252 [] = {
 	"windows-1252",
 	"1252",
 	NULL
@@ -2319,7 +2319,7 @@ unsigned char *aliases_cp1252 [] = {
 
 /*** cp1256 ***/
 
-struct table_entry table_cp1256 [] = {
+const struct table_entry table_cp1256 [] = {
 	{0x80, 0x20AC /* EURO SIGN */ },
 	{0x81, 0x067E /* ARABIC LETTER PEH */ },
 	{0x82, 0x201A /* SINGLE LOW-9 QUOTATION MARK */ },
@@ -2451,7 +2451,7 @@ struct table_entry table_cp1256 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1256 [] = {
+unsigned char *const aliases_cp1256 [] = {
 	"windows-1256",
 	"1256",
 	"cp1256",
@@ -2462,7 +2462,7 @@ unsigned char *aliases_cp1256 [] = {
 
 /*** cp1257 ***/
 
-struct table_entry table_cp1257 [] = {
+const struct table_entry table_cp1257 [] = {
 	{0x80, 0x20AC /* EURO SIGN */ },
 	{0x81, 0x0000 /* UNDEFINED */ },
 	{0x82, 0x201A /* SINGLE LOW-9 QUOTATION MARK */ },
@@ -2594,7 +2594,7 @@ struct table_entry table_cp1257 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1257 [] = {
+unsigned char *const aliases_cp1257 [] = {
 	"windows-1257",
 	"windows1257",
 	"1257",
@@ -2606,7 +2606,7 @@ unsigned char *aliases_cp1257 [] = {
 
 /*** cp437 ***/
 
-struct table_entry table_cp437 [] = {
+const struct table_entry table_cp437 [] = {
 	{0x80, 0x00c7 /* LATIN CAPITAL LETTER C WITH CEDILLA */ },
 	{0x81, 0x00fc /* LATIN SMALL LETTER U WITH DIAERESIS */ },
 	{0x82, 0x00e9 /* LATIN SMALL LETTER E WITH ACUTE */ },
@@ -2738,7 +2738,7 @@ struct table_entry table_cp437 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp437 [] = {
+unsigned char *const aliases_cp437 [] = {
 	"cp437",
 	"437",
 	"IBM437",
@@ -2749,7 +2749,7 @@ unsigned char *aliases_cp437 [] = {
 
 /*** cp737 ***/
 
-struct table_entry table_cp737 [] = {
+const struct table_entry table_cp737 [] = {
 	{0x80, 0x0391 /* GREEK CAPITAL LETTER ALPHA */ },
 	{0x81, 0x0392 /* GREEK CAPITAL LETTER BETA */ },
 	{0x82, 0x0393 /* GREEK CAPITAL LETTER GAMMA */ },
@@ -2881,7 +2881,7 @@ struct table_entry table_cp737 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp737 [] = {
+unsigned char *const aliases_cp737 [] = {
 	"cp737",
 	"737",
 	NULL
@@ -2890,7 +2890,7 @@ unsigned char *aliases_cp737 [] = {
 
 /*** cp850 ***/
 
-struct table_entry table_cp850 [] = {
+const struct table_entry table_cp850 [] = {
 	{0x80, 0x00c7 /* LATIN CAPITAL LETTER C WITH CEDILLA */ },
 	{0x81, 0x00fc /* LATIN SMALL LETTER U WITH DIAERESIS */ },
 	{0x82, 0x00e9 /* LATIN SMALL LETTER E WITH ACUTE */ },
@@ -3022,7 +3022,7 @@ struct table_entry table_cp850 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp850 [] = {
+unsigned char *const aliases_cp850 [] = {
 	"cp850",
 	"850",
 	"IBM850",
@@ -3033,7 +3033,7 @@ unsigned char *aliases_cp850 [] = {
 
 /*** cp852 ***/
 
-struct table_entry table_cp852 [] = {
+const struct table_entry table_cp852 [] = {
 	{0x80, 0x00c7 /* LATIN CAPITAL LETTER C WITH CEDILLA */ },
 	{0x81, 0x00fc /* LATIN SMALL LETTER U WITH DIAERESIS */ },
 	{0x82, 0x00e9 /* LATIN SMALL LETTER E WITH ACUTE */ },
@@ -3165,7 +3165,7 @@ struct table_entry table_cp852 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp852 [] = {
+unsigned char *const aliases_cp852 [] = {
 	"cp852",
 	"852",
 	"csPCp852",
@@ -3175,7 +3175,7 @@ unsigned char *aliases_cp852 [] = {
 
 /*** cp866 ***/
 
-struct table_entry table_cp866 [] = {
+const struct table_entry table_cp866 [] = {
 	{0x80, 0x0410 /* CYRILLIC CAPITAL LETTER A */ },
 	{0x81, 0x0411 /* CYRILLIC CAPITAL LETTER BE */ },
 	{0x82, 0x0412 /* CYRILLIC CAPITAL LETTER VE */ },
@@ -3307,7 +3307,7 @@ struct table_entry table_cp866 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp866 [] = {
+unsigned char *const aliases_cp866 [] = {
 	"cp866",
 	"866",
 	"IBM866",
@@ -3318,7 +3318,7 @@ unsigned char *aliases_cp866 [] = {
 
 /*** cp1125 ***/
 
-struct table_entry table_cp1125 [] = {
+const struct table_entry table_cp1125 [] = {
 	{0x80, 0x0410 /* CYRILLIC CAPITAL LETTER A */ },
 	{0x81, 0x0411 /* CYRILLIC CAPITAL LETTER BE */ },
 	{0x82, 0x0412 /* CYRILLIC CAPITAL LETTER VE */ },
@@ -3450,7 +3450,7 @@ struct table_entry table_cp1125 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_cp1125 [] = {
+unsigned char *const aliases_cp1125 [] = {
 	"x-cp866-u",
 	"ruscii",
 	"1125",
@@ -3461,7 +3461,7 @@ unsigned char *aliases_cp1125 [] = {
 
 /*** macroman ***/
 
-struct table_entry table_macroman [] = {
+const struct table_entry table_macroman [] = {
 	{0x80, 0x00C4 /* LATIN CAPITAL LETTER A WITH DIAERESIS */ },
 	{0x81, 0x00C5 /* LATIN CAPITAL LETTER A WITH RING ABOVE */ },
 	{0x82, 0x00C7 /* LATIN CAPITAL LETTER C WITH CEDILLA */ },
@@ -3593,7 +3593,7 @@ struct table_entry table_macroman [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_macroman [] = {
+unsigned char *const aliases_macroman [] = {
 	"x-mac",
 	"mac",
 	"macroman",
@@ -3605,7 +3605,7 @@ unsigned char *aliases_macroman [] = {
 
 /*** mac_lat2 ***/
 
-struct table_entry table_mac_lat2 [] = {
+const struct table_entry table_mac_lat2 [] = {
 	{0x80, 0x00C4 /* LATIN CAPITAL LETTER A WITH DIAERESIS */ },
 	{0x81, 0x0100 /* LATIN CAPITAL LETTER A WITH MACRON */ },
 	{0x82, 0x0101 /* LATIN SMALL LETTER A WITH MACRON */ },
@@ -3737,7 +3737,7 @@ struct table_entry table_mac_lat2 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_mac_lat2 [] = {
+unsigned char *const aliases_mac_lat2 [] = {
 	"x-mac-ce",
 	"mac-ce",
 	"maclatin2",
@@ -3749,7 +3749,7 @@ unsigned char *aliases_mac_lat2 [] = {
 
 /*** kamen ***/
 
-struct table_entry table_kamen [] = {
+const struct table_entry table_kamen [] = {
 	{0x80, 0x010C /* LATIN CAPITAL LETTER C WITH CARON */ },
 	{0x81, 0x00FC /* LATIN SMALL LETTER U WITH DIAERESIS */ },
 	{0x82, 0x00E9 /* LATIN SMALL LETTER E WITH ACUTE */ },
@@ -3881,7 +3881,7 @@ struct table_entry table_kamen [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_kamen [] = {
+unsigned char *const aliases_kamen [] = {
 	"x-kam-cs",
 	"kam",
 	"867",
@@ -3892,7 +3892,7 @@ unsigned char *aliases_kamen [] = {
 
 /*** koi8_r ***/
 
-struct table_entry table_koi8_r [] = {
+const struct table_entry table_koi8_r [] = {
 	{0x80, 0x2500 /* BOX DRAWINGS LIGHT HORIZONTAL */ },
 	{0x81, 0x2502 /* BOX DRAWINGS LIGHT VERTICAL */ },
 	{0x82, 0x250C /* BOX DRAWINGS LIGHT DOWN AND RIGHT */ },
@@ -4024,7 +4024,7 @@ struct table_entry table_koi8_r [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_koi8_r [] = {
+unsigned char *const aliases_koi8_r [] = {
 	"koi8-r",
 	"csKOI8R",
 	NULL
@@ -4033,7 +4033,7 @@ unsigned char *aliases_koi8_r [] = {
 
 /*** koi8_u ***/
 
-struct table_entry table_koi8_u [] = {
+const struct table_entry table_koi8_u [] = {
 	{0x80, 0x2500 /* BOX DRAWINGS LIGHT HORIZONTAL */ },
 	{0x81, 0x2502 /* BOX DRAWINGS LIGHT VERTICAL */ },
 	{0x82, 0x250C /* BOX DRAWINGS LIGHT DOWN AND RIGHT */ },
@@ -4165,7 +4165,7 @@ struct table_entry table_koi8_u [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_koi8_u [] = {
+unsigned char *const aliases_koi8_u [] = {
 	"koi8-u",
 	NULL
 };
@@ -4173,7 +4173,7 @@ unsigned char *aliases_koi8_u [] = {
 
 /*** koi8_ru ***/
 
-struct table_entry table_koi8_ru [] = {
+const struct table_entry table_koi8_ru [] = {
 	{0x80, 0x2500 /* BOX DRAWINGS LIGHT HORIZONTAL */ },
 	{0x81, 0x2502 /* BOX DRAWINGS LIGHT VERTICAL */ },
 	{0x82, 0x250C /* BOX DRAWINGS LIGHT DOWN AND RIGHT */ },
@@ -4305,7 +4305,7 @@ struct table_entry table_koi8_ru [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_koi8_ru [] = {
+unsigned char *const aliases_koi8_ru [] = {
 	"koi8-ru",
 	NULL
 };
@@ -4313,7 +4313,7 @@ unsigned char *aliases_koi8_ru [] = {
 
 /*** tcvn5712 ***/
 
-struct table_entry table_tcvn5712 [] = {
+const struct table_entry table_tcvn5712 [] = {
 	{0x80, 0x00C0 /* LATIN CAPITAL LETTER A WITH GRAVE */ },
 	{0x81, 0x1EA2 /* LATIN CAPITAL LETTER A WITH HOOK ABOVE */ },
 	{0x82, 0x00C3 /* LATIN CAPITAL LETTER A WITH TILDE */ },
@@ -4447,7 +4447,7 @@ struct table_entry table_tcvn5712 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_tcvn5712 [] = {
+unsigned char *const aliases_tcvn5712 [] = {
 	"TCVN-5712",
 	"TCVN",
 	"TCVN-0",
@@ -4461,7 +4461,7 @@ unsigned char *aliases_tcvn5712 [] = {
 
 /*** viscii ***/
 
-struct table_entry table_viscii [] = {
+const struct table_entry table_viscii [] = {
 	{0x80, 0x1EA0 /* LATIN CAPITAL LETTER A WITH DOT BELOW */ },
 	{0x81, 0x1EAE /* LATIN CAPITAL LETTER A WITH BREVE AND ACUTE */ },
 	{0x82, 0x1EB0 /* LATIN CAPITAL LETTER A WITH BREVE AND GRAVE */ },
@@ -4595,7 +4595,7 @@ struct table_entry table_viscii [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_viscii [] = {
+unsigned char *const aliases_viscii [] = {
 	"VISCII",
 	"VISCII-1",
 	"VISCII 1.1",
@@ -4608,17 +4608,17 @@ unsigned char *aliases_viscii [] = {
 
 /*** utf8 ***/
 
-struct table_entry table_utf8 [] = {
+const struct table_entry table_utf8 [] = {
 	{0, 0}
 };
 
-unsigned char *aliases_utf8 [] = {
+unsigned char *const aliases_utf8 [] = {
 	"utf-8",
 	"utf8",
 	NULL
 };
 
-struct codepage_desc codepages [] = {
+const struct codepage_desc codepages [] = {
 	{"7-bit ASCII", aliases_7bit, table_7bit},
 	{"ISO 8859-1", aliases_8859_1, table_8859_1},
 	{"ISO 8859-2", aliases_8859_2, table_8859_2},

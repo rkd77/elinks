@@ -23,7 +23,7 @@ for i in $codepages; do
 	echo "/*** $i ***/"
 	echo
 
-	echo 'struct table_entry table_'$i' [] = {'
+	echo 'const struct table_entry table_'$i' [] = {'
 
 	# TODO: Comments inside of the structure are ugliness in a pure clean
 	# form, and my aesthetical feeling shivers upon glancing at it. However
@@ -37,7 +37,7 @@ for i in $codepages; do
 	echo '};'
 	echo
 
-	echo 'unsigned char *aliases_'$i' [] = {'
+	echo 'unsigned char *const aliases_'$i' [] = {'
 	head -n 2 $i.cp | tail -n +2 | sed 's/ \+/ /g; s/ $//; s/\", /\",£/g; s/$/,/' | tr "£" "\n" \
 	| sed 's/^/£/g' | tr "£" "\t" 
 	echo '	NULL
@@ -46,7 +46,7 @@ for i in $codepages; do
 done
 
 echo
-echo 'struct codepage_desc codepages [] = {'
+echo 'const struct codepage_desc codepages [] = {'
 
 for i in $codepages; do
 	echo '	{"'`head -n 1 $i.cp`'", aliases_'$i', table_'$i'},'
