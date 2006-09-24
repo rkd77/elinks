@@ -30,7 +30,14 @@
 
 struct table_entry {
 	unsigned char c;
-	unicode_val_T u;
+	/* This should in principle be unicode_val_T, but because all
+	 * the values currently in codepage.inc fit in 16 bits, we can
+	 * as well use uint16_t and halve sizeof(struct table_entry)
+	 * from 8 bytes to 4.  Should other characters ever be needed,
+	 * unicode_val_T u : 24 might be a possibility, although it
+	 * seems a little unportable as bitfields are in principle
+	 * restricted to int, which may be 16-bit.  */
+	uint16_t u;
 };
 
 struct codepage_desc {
