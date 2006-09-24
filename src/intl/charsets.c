@@ -10,6 +10,9 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#if HAVE_WCHAR_H
+#include <wchar.h>
+#endif
 #if HAVE_WCTYPE_H
 #include <wctype.h>
 #endif
@@ -547,7 +550,6 @@ invalid_arg:
 /*
  * Find out number of standard terminal collumns needed for displaying symbol
  * (glyph) which represents Unicode character c.
- * TODO: Use wcwidth when it is available.
  *
  * @return	2 for double-width glyph, 1 for others.
  * 		TODO: May be extended to return 0 for zero-width glyphs
@@ -556,6 +558,10 @@ invalid_arg:
 inline int
 unicode_to_cell(unicode_val_T c)
 {
+#if __STDC_ISO_10646__ && HAVE_WCWIDTH
+	if (wcwidth(c) >= 2)
+		return 2;
+#else  /* !__STDC_ISO_10646 || !HAVE_WCWIDTH */
 	if (c >= 0x1100
 		&& (c <= 0x115f			/* Hangul Jamo */
 		|| c == 0x2329
@@ -571,6 +577,7 @@ unicode_to_cell(unicode_val_T c)
 		|| (c >= 0x20000 && c <= 0x2fffd)
 		|| (c >= 0x30000 && c <= 0x3fffd)))
 		return 2;
+#endif /* !__STDC_ISO_10646 || !HAVE_WCWIDTH */
 
 	return 1;
 }

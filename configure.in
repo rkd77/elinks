@@ -168,7 +168,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 
-AC_CHECK_HEADERS(wctype.h)
+AC_CHECK_HEADERS(wctype.h wchar.h)
 AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
@@ -279,7 +279,7 @@ AC_FUNC_MMAP
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(cfmakeraw gethostbyaddr herror strerror)
 AC_CHECK_FUNCS(popen uname access chmod alarm timegm mremap)
-AC_CHECK_FUNCS(strcasecmp strncasecmp strcasestr strstr strchr strrchr)
+AC_CHECK_FUNCS(strcasecmp strncasecmp strcasestr strstr strchr strrchr wcwidth)
 AC_CHECK_FUNCS(memmove bcopy stpcpy strdup index isdigit mempcpy memrchr)
 AC_CHECK_FUNCS(snprintf vsnprintf asprintf vasprintf)
 AC_CHECK_FUNCS(getifaddrs getpwnam inet_pton inet_ntop)
