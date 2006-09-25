@@ -89,10 +89,26 @@ end:
 	return ret;
 }
 
+static enum evhook_status
+script_hook_flush_caches(va_list ap, void *data)
+{
+	/* script_hook_pre_format_html() calls smjs_get_cache_entry_object()
+	 * for each struct cache_entry.  The resulting SMJS objects hold
+	 * references to the structs, and these references prevent ELinks
+	 * from freeing the cache entries.  (The resource info dialog shows
+	 * that the entries are "in use".)  SMJS does not immediately collect
+	 * these objects as garbage.  If we're really trying to flush the
+	 * caches then ask SMJS to run a check.  */
+	if (smjs_ctx)
+		JS_GC(smjs_ctx);
+	return EVENT_HOOK_STATUS_NEXT;
+}
+
 struct event_hook_info smjs_scripting_hooks[] = {
 	{ "goto-url", 0, script_hook_url, "goto_url_hook" },
 	{ "follow-url", 0, script_hook_url, "follow_url_hook" },
 	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
+	{ "flush-caches", 0, script_hook_flush_caches, NULL },
 
 	NULL_EVENT_HOOK_INFO,
 };
