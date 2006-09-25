@@ -21,13 +21,13 @@ Below is a template showing how to read the event information
 
 Name:		<event name>
 Managed By:	<what part of the code registers and unregister the event>
-Arguments:
-
- <the order and type of the arguments>
-
 Triggered When:
 
  <short description of when the event is triggered>
+
+Arguments:
+
+ <the order and type of the arguments>
 
 Description:
 
