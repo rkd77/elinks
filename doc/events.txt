@@ -114,6 +114,27 @@ Description:
  Open Lua console dialog.
 
 -------------------------------------------------------------------------------
+Name:		follow-url
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ The user decides to load some document by following a link, entering an URL
+ in the goto URL dialog, loading frames from a frameset (?) etc.
+
+Arguments:
+
+ unsigned char **url, struct session *ses
+
+Description:
+
+ If another URL than @url should be followed it is passed by setting @url.
+ If @url is changed the event propagation should be ended.
+ Valid values for @url includes:
+ - leaving @url unchanged if the original URL should be followed;
+ - NULL if no URL should be followed; or
+ - a dynamically allocated new URL to be followed instead.
+
+-------------------------------------------------------------------------------
 Name:		free-history
 Managed By:	The scripting subsystem/backends
 Triggered When:
@@ -127,6 +148,24 @@ Arguments:
 Description:
 
  Allow a subsystem to free its history lists.
+
+-------------------------------------------------------------------------------
+Name:		get-proxy
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ Determining what proxy, if any, should be used to load a requested URL.
+
+Arguments:
+
+ unsigned char **new_proxy_url, unsigned char *url
+
+Description:
+
+ Possible values for @new_proxy_url includes:
+ - a dynamically allocated string with the format proxy:port;
+ - an empty string (dynamically allocated!) to use no proxy; or
+ - NULL to use the default proxies.
 
 -------------------------------------------------------------------------------
 Name:		goto-url
@@ -153,45 +192,6 @@ Description:
  potential errors during the hook processing through the UI. With @ses being
  NULL the hook handler should assume no current URI and no suitable UI set up
  (i.e., starting up yet or -dump).
-
--------------------------------------------------------------------------------
-Name:		follow-url
-Managed By:	The scripting subsystem/backends
-Triggered When:
-
- The user decides to load some document by following a link, entering an URL
- in the goto URL dialog, loading frames from a frameset (?) etc.
-
-Arguments:
-
- unsigned char **url, struct session *ses
-
-Description:
-
- If another URL than @url should be followed it is passed by setting @url.
- If @url is changed the event propagation should be ended.
- Valid values for @url includes:
- - leaving @url unchanged if the original URL should be followed;
- - NULL if no URL should be followed; or
- - a dynamically allocated new URL to be followed instead.
-
--------------------------------------------------------------------------------
-Name:		get-proxy
-Managed By:	The scripting subsystem/backends
-Triggered When:
-
- Determining what proxy, if any, should be used to load a requested URL.
-
-Arguments:
-
- unsigned char **new_proxy_url, unsigned char *url
-
-Description:
-
- Possible values for @new_proxy_url includes:
- - a dynamically allocated string with the format proxy:port;
- - an empty string (dynamically allocated!) to use no proxy; or
- - NULL to use the default proxies.
 
 -------------------------------------------------------------------------------
 Name:		periodic-saving
