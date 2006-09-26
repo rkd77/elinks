@@ -121,7 +121,7 @@ static void
 unibar_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *val, int attr)
 {
-	if (p == s_location) {
+	if (p == s_visible) {
 		struct global_object *g = (struct global_object *)interp;
 		struct view_state *vs = g->win->vs;
 		struct document_view *doc_view = vs->doc_view;
