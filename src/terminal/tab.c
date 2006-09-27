@@ -138,19 +138,11 @@ switch_to_tab(struct terminal *term, int tab, int tabs)
 	if (tabs < 0) tabs = number_of_tabs(term);
 
 	if (tabs > 1) {
-		if (tab >= tabs) {
-			if (get_opt_bool("ui.tabs.wraparound"))
-				tab = tab % tabs;
-			else
-				tab = tabs - 1;
-		}
-
-		if (tab < 0) {
-			if (get_opt_bool("ui.tabs.wraparound"))
-				tab = tabs + tab % tabs;
-			else
-				tab = 0;
-		}
+		if (get_opt_bool("ui.tabs.wraparound")) {
+			tab %= tabs;
+			if (tab < 0) tab += tabs;
+		} else
+			int_bounds(&tab, 0, tabs - 1);
 	} else tab = 0;
 
 	if (tab != term->current_tab) {
