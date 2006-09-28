@@ -74,7 +74,7 @@ update_status(void)
 	int set_window_title = get_opt_bool("ui.window_title");
 	int insert_mode = get_opt_bool("document.browse.forms.insert_mode");
 	struct session *ses;
-	int tabs = 1;
+	int tabs_count = 1;
 	struct terminal *term = NULL;
 
 	foreach (ses, sessions) {
@@ -85,7 +85,7 @@ update_status(void)
 		 * tab sessions share the same term. */
 		if (ses->tab->term != term) {
 			term = ses->tab->term;
-			tabs = number_of_tabs(term);
+			tabs_count = number_of_tabs(term);
 		}
 
 		if (status->force_show_title_bar >= 0)
@@ -102,8 +102,8 @@ update_status(void)
 			dirty = 1;
 		}
 
-		if (show_tabs(show_tabs_bar, tabs) != status->show_tabs_bar) {
-			status->show_tabs_bar = show_tabs(show_tabs_bar, tabs);
+		if (show_tabs(show_tabs_bar, tabs_count) != status->show_tabs_bar) {
+			status->show_tabs_bar = show_tabs(show_tabs_bar, tabs_count);
 			dirty = 1;
 		}
 

@@ -130,19 +130,19 @@ get_tab_number_by_xpos(struct terminal *term, int xpos)
 	return -1;
 }
 
-/* if @tabs > 0, then it is taken as the result of a recent
+/* if @tabs_count > 0, then it is taken as the result of a recent
  * call to number_of_tabs() so it just uses this value. */
 void
-switch_to_tab(struct terminal *term, int tab, int tabs)
+switch_to_tab(struct terminal *term, int tab, int tabs_count)
 {
-	if (tabs < 0) tabs = number_of_tabs(term);
+	if (tabs_count < 0) tabs_count = number_of_tabs(term);
 
-	if (tabs > 1) {
+	if (tabs_count > 1) {
 		if (get_opt_bool("ui.tabs.wraparound")) {
-			tab %= tabs;
-			if (tab < 0) tab += tabs;
+			tab %= tabs_count;
+			if (tab < 0) tab += tabs_count;
 		} else
-			int_bounds(&tab, 0, tabs - 1);
+			int_bounds(&tab, 0, tabs_count - 1);
 	} else tab = 0;
 
 	if (tab != term->current_tab) {
@@ -156,16 +156,16 @@ void
 switch_current_tab(struct session *ses, int direction)
 {
 	struct terminal *term = ses->tab->term;
-	int num_tabs = number_of_tabs(term);
+	int tabs_count = number_of_tabs(term);
 	int count;
 
-	if (num_tabs < 2)
+	if (tabs_count < 2)
 		return;
 
 	count = eat_kbd_repeat_count(ses);
 	if (count) direction *= count;
 
-	switch_to_tab(term, term->current_tab + direction, num_tabs);
+	switch_to_tab(term, term->current_tab + direction, tabs_count);
 }
 
 static void
@@ -175,9 +175,9 @@ really_close_tab(struct session *ses)
 	struct window *current_tab = get_current_tab(term);
 
 	if (ses->tab == current_tab) {
-		int num_tabs = number_of_tabs(term);
+		int tabs_count = number_of_tabs(term);
 
-		switch_to_tab(term, term->current_tab - 1, num_tabs - 1);
+		switch_to_tab(term, term->current_tab - 1, tabs_count - 1);
 	}
 
 	delete_window(ses->tab);
@@ -187,9 +187,9 @@ void
 close_tab(struct terminal *term, struct session *ses)
 {
 	/* [gettext_accelerator_context(close_tab)] */
-	int num_tabs = number_of_tabs(term);
+	int tabs_count = number_of_tabs(term);
 
-	if (num_tabs < 2) {
+	if (tabs_count < 2) {
 		query_exit(ses);
 		return;
 	}

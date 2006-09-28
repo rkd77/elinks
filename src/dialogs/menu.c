@@ -218,7 +218,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 {
 	/* [gettext_accelerator_context(tab_menu)] */
 	struct menu_item *menu;
-	int tabs;
+	int tabs_count;
 #ifdef CONFIG_BOOKMARKS
 	int anonymous = get_cmd_opt_bool("anonymous");
 #endif
@@ -226,7 +226,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 	assert(ses && ses->tab);
 	if_assert_failed return;
 
-	tabs = number_of_tabs(ses->tab->term);
+	tabs_count = number_of_tabs(ses->tab->term);
 	menu = new_menu(FREE_LIST);
 	if (!menu) return;
 
@@ -255,14 +255,14 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 	/* Keep tab related operations below this separator */
 	add_menu_separator(&menu);
 
-	if (tabs > 1) {
+	if (tabs_count > 1) {
 		add_menu_action(&menu, N_("Nex~t tab"), ACT_MAIN_TAB_NEXT);
 		add_menu_action(&menu, N_("Pre~v tab"), ACT_MAIN_TAB_PREV);
 	}
 
 	add_menu_action(&menu, N_("~Close tab"), ACT_MAIN_TAB_CLOSE);
 
-	if (tabs > 1) {
+	if (tabs_count > 1) {
 		add_menu_action(&menu, N_("C~lose all tabs but the current"),
 				ACT_MAIN_TAB_CLOSE_ALL_BUT_CURRENT);
 #ifdef CONFIG_BOOKMARKS
