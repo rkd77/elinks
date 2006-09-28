@@ -221,9 +221,9 @@ get_master_session(void)
 
 	foreach (ses, sessions)
 		if (ses->tab->term->master) {
-			struct window *tab = get_current_tab(ses->tab->term);
+			struct window *current_tab = get_current_tab(ses->tab->term);
 
-			return tab ? tab->data : NULL;
+			return current_tab ? current_tab->data : NULL;
 		}
 
 	return NULL;

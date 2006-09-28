@@ -211,11 +211,11 @@ static void
 really_close_tabs(struct session *ses)
 {
 	struct terminal *term = ses->tab->term;
-	struct window *current = get_current_tab(term);
+	struct window *current_tab = get_current_tab(term);
 	struct window *tab;
 
 	foreach_tab (tab, term->windows) {
-		if (tab == current) continue;
+		if (tab == current_tab) continue;
 
 		/* Update the current tab counter so assertions in the
 		 * delete_window() call-chain will hold, namely the one in

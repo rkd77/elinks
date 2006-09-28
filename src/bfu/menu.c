@@ -869,8 +869,8 @@ static void
 search_menu(struct menu *menu)
 {
 	struct terminal *term = menu->win->term;
-	struct window *tab = get_current_tab(term);
-	struct session *ses = tab ? tab->data : NULL;
+	struct window *current_tab = get_current_tab(term);
+	struct session *ses = current_tab ? current_tab->data : NULL;
 	unsigned char *prompt = _("Search menu/", term);
 
 	if (menu->size < 1 || !ses) return;

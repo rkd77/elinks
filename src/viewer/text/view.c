@@ -1055,15 +1055,15 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 	/* Handle tabs navigation if tabs bar is displayed. */
 	if (ses->status.show_tabs_bar && is_mouse_on_tab_bar(ses, mouse)) {
 		int tab_num = get_tab_number_by_xpos(term, mouse->x);
-		struct window *tab = get_current_tab(term);
+		struct window *current_tab = get_current_tab(term);
 
 		if (check_mouse_action(ev, B_UP)) {
 			if (check_mouse_button(ev, B_MIDDLE)
 			    && term->current_tab == tab_num
 			    && mouse->y == term->prev_mouse_event.y) {
-				if (tab->data == ses) ses = NULL;
+				if (current_tab->data == ses) ses = NULL;
 
-				close_tab(term, tab->data);
+				close_tab(term, current_tab->data);
 			}
 
 			return ses;
@@ -1081,7 +1081,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 			if (check_mouse_button(ev, B_MIDDLE)) {
 				do_not_ignore_next_mouse_event(term);
 			} else if (check_mouse_button(ev, B_RIGHT)) {
-				tab_menu(tab->data, mouse->x, mouse->y, 1);
+				tab_menu(current_tab->data, mouse->x, mouse->y, 1);
 			}
 		}
 
