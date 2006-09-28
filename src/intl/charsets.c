@@ -46,7 +46,7 @@ struct table_entry {
 struct codepage_desc {
 	unsigned char *name;
 	unsigned char *const *aliases;
- 
+
  	/* The Unicode mappings of codepage bytes 0x80...0xFF.
  	 * (0x00...0x7F are assumed to be ASCII in all codepages.)
  	 * Because all current values fit in 16 bits, we store them as
@@ -56,7 +56,7 @@ struct codepage_desc {
  	 * appropriate.  (U+FFFF is reserved and will never be
  	 * assigned as a character.)  */
 	const uint16_t *highhalf;
- 
+
  	/* If some byte in the codepage corresponds to multiple Unicode
  	 * characters, then the preferred character is in @highhalf
  	 * above, and the rest are listed here in @extra.  This table
@@ -661,7 +661,7 @@ static unicode_val_T
 cp2u_shared(const struct codepage_desc *from, unsigned char c)
 {
 	unicode_val_T u = from->highhalf[c - 0x80];
-	
+
 	if (u == 0xFFFF) u = UCS_REPLACEMENT_CHARACTER;
 	return u;
 }

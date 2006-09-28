@@ -289,7 +289,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 #ifdef CONFIG_UTF8
 	int codepage;
 #endif
-	
+
 	struct widget_data *widget_data;
 	struct term_event *ev = dlg_data->term_event;
 

@@ -186,7 +186,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 		found = (unicode_fold_label_case(items_hotkey) == key);
 #else
 		found = (toupper(*text) == key);
-#endif		
+#endif
 
 		if (found) {
 			menu->selected = i;
