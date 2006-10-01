@@ -35,6 +35,17 @@ enum convert_string_mode {
 	CSM_NONE, /* Convert nothing. */
 };
 
+/* How to translate non-breaking spaces.  */
+enum nbsp_mode {
+	/* Convert to NBSP_CHAR.  This lets the HTML renderer
+	 * recognize nbsp even if the codepage doesn't support
+	 * nbsp.  (VISCII doesn't.)  */
+	NBSP_MODE_HACK = 0,
+
+	/* Convert to normal ASCII space.  */
+	NBSP_MODE_ASCII = 1
+};
+
 struct conv_table *get_translation_table(int, int);
 unsigned char *get_entity_string(const unsigned char *str, const int strlen, int encoding);
 
@@ -101,9 +112,9 @@ unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 unicode_val_T cp2u(int, unsigned char);
 unsigned char *cp2utf8(int, int);
 
-unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
-#define u2cp(u, to) u2cp_(u, to, 0)
-#define u2cp_no_nbsp(u, to) u2cp_(u, to, 1)
+unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
+#define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)
+#define u2cp_no_nbsp(u, to) u2cp_(u, to, NBSP_MODE_ASCII)
 
 void init_charsets_lookup(void);
 void free_charsets_lookup(void);

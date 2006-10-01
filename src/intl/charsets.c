@@ -164,7 +164,7 @@ static const unicode_val_T strange_chars[32] = {
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
 unsigned char *
-u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
+u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
 	int s;
@@ -179,14 +179,17 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 #endif /* CONFIG_UTF8 */
 
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
-	if (u == 0xa0) return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
+	if (u == 0xa0) {
+		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
+		else /* NBSP_MODE_ASCII */ return " ";
+	}
 	if (u == 0xad) return "";
 
 	if (u < 0xa0) {
 		unicode_val_T strange = strange_chars[u - 0x80];
 
 		if (!strange) return NULL;
-		return u2cp_(strange, to, no_nbsp_hack);
+		return u2cp_(strange, to, nbsp_mode);
 	}
 
 	if (u < 0xFFFF)
