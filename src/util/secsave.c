@@ -69,9 +69,8 @@ enum secsave_errno secsave_errno = SS_ERR_NONE;
 /* Open a file for writing in a secure way. It returns a pointer to a structure
  * secure_save_info on success, or NULL on failure. */
 static struct secure_save_info *
-secure_open_umask(unsigned char *file_name, mode_t mask)
+secure_open_umask(unsigned char *file_name)
 {
-	mode_t saved_mask;
 	struct stat st;
 	struct secure_save_info *ssi;
 
@@ -144,8 +143,6 @@ secure_open_umask(unsigned char *file_name, mode_t mask)
 		}
 	}
 
-	saved_mask = umask(mask);
-
 	if (ssi->secure_save) {
 		/* We use a random name for temporary file, mkstemp() opens
 		 * the file and return a file descriptor named fd, which is
@@ -187,8 +184,6 @@ secure_open_umask(unsigned char *file_name, mode_t mask)
 		}
 	}
 
-	umask(saved_mask);
-
 	return ssi;
 
 free_file_name:
@@ -206,7 +201,15 @@ end:
 struct secure_save_info *
 secure_open(unsigned char *file_name)
 {
-	return secure_open_umask(file_name, S_IXUSR | S_IRWXG | S_IRWXO);
+	struct secure_save_info *ssi;
+	mode_t saved_mask;
+	const mode_t mask = S_IXUSR | S_IRWXG | S_IRWXO;
+
+	saved_mask = umask(mask);
+	ssi = secure_open_umask(file_name);
+	umask(saved_mask);
+
+	return ssi;
 }
 
 /* Close a file opened with secure_open, and return 0 on success, errno
