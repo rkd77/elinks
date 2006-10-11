@@ -291,6 +291,7 @@ Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 
 Karel Zak <kzak@redhat.com>
 	Support for negotiate-auth based on GSSAPI
+	Minor bug fixes
 
 Karsten Schölzel <kuser@gmx.de>
 	Event system chief engineer
