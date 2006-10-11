@@ -283,6 +283,9 @@ Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 	Fixed compile incompatibility
 	One of Links authors; a lot of misc. features & code
 
+Karel Zak <kzak@redhat.com>
+	Minor bug fixes
+
 Karsten Schölzel <kuser@gmx.de>
 	Event system chief engineer
 	Scripting subsystem hacking
