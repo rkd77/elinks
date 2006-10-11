@@ -383,6 +383,7 @@ tree_dup(struct option *opt, struct option *template)
 		struct option *new_opt = copy_option(option);
 
 		if (!new_opt) continue;
+		object_nolock(new_opt, "option");
 		add_to_list_end(*new, new_opt);
 		new_opt->root = opt;
 
