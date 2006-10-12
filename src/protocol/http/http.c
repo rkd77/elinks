@@ -570,9 +570,9 @@ http_send_header(struct socket *socket)
 		http_end_request(conn, S_OUT_OF_MEM, 0);
 		return;
 	}
-
+#if 0
 	if (!conn->cached) conn->cached = find_in_cache(uri);
-
+#endif
 	talking_to_proxy = IS_PROXY_URI(conn->uri) && !conn->socket->ssl;
 	use_connect = connection_is_https_proxy(conn) && !conn->socket->ssl;
 
