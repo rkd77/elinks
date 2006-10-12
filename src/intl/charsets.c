@@ -1,5 +1,12 @@
 /* Charsets convertor */
 
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE /* wcwidth() */
+#endif
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* strcasecmp() */
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
