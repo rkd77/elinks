@@ -1816,7 +1816,7 @@ html_special_form_control(struct part *part, struct form_control *fc)
 						   fc->default_value,
 						   strlen(fc->default_value),
 						   part->document->options.cp,
-						   CSM_QUERY, NULL, NULL, NULL);
+						   CSM_FORM, NULL, NULL, NULL);
 
 		if (dv) mem_free_set(&fc->default_value, dv);
 	}
