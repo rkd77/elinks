@@ -792,7 +792,7 @@ ftp_send_retr_req(struct connection *conn, int state)
 
 /* Parse RETR response and return file size or -1 on error. */
 static off_t
-get_filesize_from_RETR(unsigned char *data, int data_len)
+get_filesize_from_RETR(unsigned char *data, int data_len, int *resume)
 {
 	off_t file_len;
 	int pos;
@@ -801,6 +801,7 @@ get_filesize_from_RETR(unsigned char *data, int data_len)
 	/* Getting file size from text response.. */
 	/* 150 Opening BINARY mode data connection for hello-1.0-1.1.diff.gz (16452 bytes). */
 
+	*resume = 0;
 	for (pos = 0; pos < data_len && data[pos] != ASCII_LF; pos++)
 		if (data[pos] == '(')
 			pos_file_len = pos;
@@ -825,6 +826,7 @@ get_filesize_from_RETR(unsigned char *data, int data_len)
 		kbytes++;
 		size = strtod((const char *)kbytes, &endptr);
 		if (endptr == (char *)kbytes) return -1;
+		*resume = 1;
 		return (off_t)(size * 1024.0);
 	}
 
@@ -972,12 +974,16 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 		 * get filesize if needed. */
 		if (!ftp->dir && conn->est_length == -1) {
 			off_t file_len;
+			int res;
 
-			file_len = get_filesize_from_RETR(rb->data, rb->length);
+			file_len = get_filesize_from_RETR(rb->data, rb->length, &res);
 			if (file_len > 0) {
 				/* FIXME: ..when downloads resuming
 				 * implemented.. */
-				conn->est_length = file_len + conn->progress->start;
+				/* This is right for vsftpd.
+				 * Show me urls where this is wrong. --witekfl */
+				conn->est_length = res ?
+					file_len + conn->progress->start : file_len;
 			}
 		}
 	}

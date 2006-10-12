@@ -48,6 +48,14 @@ static int process_queue(struct itrm *);
 static void handle_itrm_stdin(struct itrm *);
 static void unhandle_itrm_stdin(struct itrm *);
 
+#ifdef CONFIG_DEBUG
+/* This hack makes GCC put enum term_event_special_key in the debug
+ * information even though it is not otherwise used.  The const
+ * prevents an unused-variable warning.  */
+static const enum term_event_special_key dummy_term_event_special_key;
+#endif
+
+
 int
 is_blocked(void)
 {
@@ -198,7 +206,7 @@ resize_terminal(void)
 	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
-static void
+void
 get_terminal_name(unsigned char name[MAX_TERM_LEN])
 {
 	unsigned char *term = getenv("TERM");
@@ -684,6 +692,26 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	fflush(stderr);
 #endif
 
+	/* The following information should be listed for each escape
+	 * sequence recognized here:
+	 *
+	 * 1. Which control function ECMA-48 assigns to the sequence.
+	 *    Put parentheses around this if the control function
+	 *    seems unrelated to how ELinks actually treats the
+	 *    sequence.  Write "private" if it is a control sequence
+	 *    reserved for private or experimental use in ECMA-48.
+	 *    (Those have a Final Byte in the range 0x70 to 0x7F,
+	 *    optionally preceded by a single Intermediate Byte 0x20.)
+	 *
+	 * 2. The capname used by Terminfo, if any.  These should help
+	 *    when ELinks is eventually changed to read escape
+	 *    sequences from Terminfo (bug 96).
+	 *
+	 * 3. The $TERM identifier of some terminal that generates
+	 *    this escape sequence with the meaning expected by
+	 *    ELinks.  Escape sequences with no known terminal may end
+	 *    up being removed from ELinks when bug 96 is fixed.
+	 */
 	switch (c) {				/* ECMA-48 Terminfo $TERM */
 	case 0: return -1;			/* ------- -------- ----- */
 	case 'A': kbd.key = KBD_UP; break;	/*    CUU  kcuu1    vt200 */
@@ -708,6 +736,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	case 'V': kbd.key = KBD_F10; break;	/*   (PP)  kf10     cons25 */
 	case 'W': kbd.key = KBD_F11; break;	/*   (CTC) kf11     cons25 */
 	case 'X': kbd.key = KBD_F12; break;	/*   (ECH) kf12     cons25 */
+
+	case 'Z':				/*    CBT  kcbt     cons25 */
+		kbd.key = KBD_TAB; kbd.modifier = KBD_MOD_SHIFT; break;
 
 	case 'z': switch (v) {			/* private */
 		case 247: kbd.key = KBD_INS; break;     /* kich1 */
@@ -833,8 +864,14 @@ decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 }
 
 
+/* Initialize *@ev to match the byte @key received from the terminal.
+ * Actually, @key could also be a value from enum term_event_special_key;
+ * but callers that use those values generally don't need the mapping
+ * provided by this function, so they call set_kbd_interlink_event()
+ * directly.  */
 static void
-set_kbd_event(struct interlink_event *ev, int key, int modifier)
+set_kbd_event(struct interlink_event *ev,
+	      int key, term_event_modifier_T modifier)
 {
 	switch (key) {
 	case ASCII_TAB:
@@ -865,7 +902,7 @@ set_kbd_event(struct interlink_event *ev, int key, int modifier)
 	default:
 		if (key < ' ') {
 			key += 'A' - 1;
-			modifier = KBD_MOD_CTRL;
+			modifier |= KBD_MOD_CTRL;
 		}
 	}
 
@@ -1018,7 +1055,7 @@ process_queue(struct itrm *itrm)
 	if (ev.ev == EVENT_MOUSE || ev.info.keyboard.key != KBD_UNDEF)
 		itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
 
- return_without_event:
+return_without_event:
 	if (el == -1) {
 		install_timer(&itrm->timer, ESC_TIMEOUT, (void (*)(void *)) kbd_timeout,
 			      itrm);

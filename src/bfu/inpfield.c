@@ -266,11 +266,11 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color;
 	int sel = is_selected_widget(dlg_data, widget_data);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int len = 0, left = 0;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (term->utf8) {
 		unsigned char *t = widget_data->cdata;
 		int p = widget_data->info.field.cpos;
@@ -280,7 +280,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int_lower_bound(&left, 0);
 		widget_data->info.field.vpos = utf8_cells2bytes(t, left, NULL);
 	} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	{
 		int_bounds(&widget_data->info.field.vpos,
 		   widget_data->info.field.cpos - widget_data->box.width + 1,
@@ -297,21 +297,21 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		unsigned char *text = widget_data->cdata + widget_data->info.field.vpos;
 		int len, w;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8 && !hide)
 			len = utf8_ptr2cells(text, NULL);
 		else if (term->utf8)
 			len = utf8_ptr2chars(text, NULL);
 		else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			len = strlen(text);
 		w = int_min(len, widget_data->box.width);
 
 		if (!hide) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (term->utf8)
 				w = utf8_cells2bytes(text, w, NULL);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			draw_text(term, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color);
 		} else {
@@ -327,11 +327,11 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	if (sel) {
 		int x;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			x = widget_data->box.x + len - left;
 		else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			x = widget_data->box.x + widget_data->info.field.cpos - widget_data->info.field.vpos;
 
 		set_cursor(term, x, widget_data->box.y, 0);
@@ -473,15 +473,15 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 		case ACT_EDIT_RIGHT:
 			if (widget_data->info.field.cpos < strlen(widget_data->cdata)) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				if (term->utf8) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *end = strchr(next, '\0');
 
-					utf_8_to_unicode(&next, end);
+					utf8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);
 				} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				{
 					widget_data->info.field.cpos++;
 				}
@@ -491,7 +491,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case ACT_EDIT_LEFT:
 			if (widget_data->info.field.cpos > 0)
 				widget_data->info.field.cpos--;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (widget_data->info.field.cpos && term->utf8) {
 				unsigned char *t = widget_data->cdata;
 				unsigned char *t2 = t;
@@ -504,7 +504,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				widget_data->info.field.cpos = (int)(t2 - t);
 
 			}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			goto display_field;
 
 		case ACT_EDIT_HOME:
@@ -516,7 +516,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			goto display_field;
 
 		case ACT_EDIT_BACKSPACE:
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (widget_data->info.field.cpos && term->utf8) {
 				/* XXX: stolen from src/viewer/text/form.c */
 				/* FIXME: This isn't nice. We remove last byte
@@ -528,7 +528,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				int old = widget_data->info.field.cpos;
 
 				while(1) {
-					data = utf_8_to_unicode(&text, end);
+					data = utf8_to_unicode(&text, end);
 					if (data == UCS_NO_CHAR)
 						break;
 				}
@@ -543,7 +543,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				}
 				goto display_field;
 			}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			if (widget_data->info.field.cpos) {
 				memmove(widget_data->cdata + widget_data->info.field.cpos - 1,
 					widget_data->cdata + widget_data->info.field.cpos,
@@ -558,20 +558,20 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 				if (widget_data->info.field.cpos >= cdata_len) goto display_field;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				if (term->utf8) {
 					unsigned char *end = widget_data->cdata + cdata_len;
 					unsigned char *text = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *old = text;
 
-					utf_8_to_unicode(&text, end);
+					utf8_to_unicode(&text, end);
 					if (old != text) {
 						memmove(old, text,
 								(int)(end - text) + 1);
 					}
 					goto display_field;
 				}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				memmove(widget_data->cdata + widget_data->info.field.cpos,
 					widget_data->cdata + widget_data->info.field.cpos + 1,
 					cdata_len - widget_data->info.field.cpos + 1);
@@ -680,12 +680,12 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			if (check_kbd_textinput_key(ev)) {
 				unsigned char *text = widget_data->cdata;
 				int textlen = strlen(text);
-#ifdef CONFIG_UTF_8
-				const unsigned char *ins = encode_utf_8(get_kbd_key(ev));
+#ifdef CONFIG_UTF8
+				const unsigned char *ins = encode_utf8(get_kbd_key(ev));
 				int inslen = utf8charlen(ins);
-#else  /* !CONFIG_UTF_8 */
+#else  /* !CONFIG_UTF8 */
 				const int inslen = 1;
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 
 				if (textlen >= widget_data->widget->datalen - inslen)
 					goto display_field;
@@ -695,11 +695,11 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				text	+= widget_data->info.field.cpos;
 
 				memmove(text + inslen, text, textlen + 1);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				memcpy(text, ins, inslen);
-#else  /* !CONFIG_UTF_8 */
+#else  /* !CONFIG_UTF8 */
 				*text = get_kbd_key(ev);
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 				widget_data->info.field.cpos += inslen;
 				goto display_field;
 			}

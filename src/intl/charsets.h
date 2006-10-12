@@ -3,7 +3,17 @@
 
 typedef uint32_t unicode_val_T;
 
-/* UCS/Unicode replacement character. */
+/* U+FFFD REPLACEMENT CHARACTER.  Used when no Unicode mapping is
+ * known for a byte in a codepage, or when invalid UTF-8 is received
+ * from a terminal.  After generating the character, ELinks then
+ * treats it like any other Unicode character.  The user can also type
+ * this character directly, and it can occur in documents.  */
+#define UCS_REPLACEMENT_CHARACTER ((unicode_val_T) 0xFFFD)
+
+/* A special value that fits in unicode_val_T but is outside the range
+ * of Unicode characters.  utf8_to_unicode and cp_to_unicode return
+ * this if the input is too short.  This is also used as a placeholder
+ * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
 /* &nbsp; replacement character. See u2cp(). */
@@ -53,22 +63,43 @@ unsigned char *get_cp_name(int);
 unsigned char *get_cp_mime_name(int);
 int is_cp_utf8(int);
 void free_conv_table(void);
-#ifdef CONFIG_UTF_8
-inline unsigned char *encode_utf_8(unicode_val_T);
+#ifdef CONFIG_UTF8
+inline unsigned char *encode_utf8(unicode_val_T);
 inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
 inline int utf8charlen(const unsigned char *);
 int utf8_char2cells(unsigned char *, unsigned char *);
 int utf8_ptr2cells(unsigned char *, unsigned char *);
 int utf8_ptr2chars(unsigned char *, unsigned char *);
 int utf8_cells2bytes(unsigned char *, int, unsigned char *);
+/* How utf8_step_forward and utf8_step_backward count steps.  */
+enum utf8_step {
+	/* Each step is one character, even if it is a combining or
+	 * double-width character.  */
+	utf8_step_characters,
+
+	/* Each step is one cell.  If the specified number of steps
+	 * would end in the middle of a double-width character, do not
+	 * include the character.  */
+	utf8_step_cells_fewer,
+
+	/* Each step is one cell.  If the specified number of steps
+	 * would end in the middle of a double-width character,
+	 * include the whole character.  */
+	utf8_step_cells_more
+};
+unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
+				 int, enum utf8_step, int *);
+unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
+				  int, enum utf8_step, int *);
 inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
-inline unicode_val_T utf_8_to_unicode(unsigned char **, unsigned char *);
-unicode_val_T cp2u(int, unsigned char);
-#endif /* CONFIG_UTF_8 */
+inline unicode_val_T utf8_to_unicode(unsigned char **, unsigned char *);
+unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
+#endif /* CONFIG_UTF8 */
 
-unsigned char *cp2utf_8(int, int);
+unicode_val_T cp2u(int, unsigned char);
+unsigned char *cp2utf8(int, int);
 
 unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
 #define u2cp(u, to) u2cp_(u, to, 0)
@@ -76,5 +107,17 @@ unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
 
 void init_charsets_lookup(void);
 void free_charsets_lookup(void);
+
+/* UTF-16 encodes each Unicode character U+0000...U+FFFF as a single
+ * 16-bit code unit, and each character U+10000...U+10FFFF as a pair
+ * of two code units: a high surrogate followed by a low surrogate.
+ * The range U+D800...U+DFFF is reserved for these surrogates.  */
+#define is_utf16_surrogate(u)           (((u) & 0xFFFFF800) == 0xD800)
+#define is_utf16_high_surrogate(u)      (((u) & 0xFFFFFC00) == 0xD800)
+#define is_utf16_low_surrogate(u)       (((u) & 0xFFFFFC00) == 0xDC00)
+#define join_utf16_surrogates(high,low) (0x10000 + (((high) - 0xD800L) << 10) + ((low) - 0xDC00))
+#define needs_utf16_surrogates(u)       ((uint32_t) ((u) - 0x10000) < 0x100000)
+#define get_utf16_high_surrogate(u)     (0xD800 + (((u) - 0x10000) >> 10))
+#define get_utf16_low_surrogate(u)      (0xDC00 + ((u) & 0x3FF))
 
 #endif

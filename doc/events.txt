@@ -21,13 +21,13 @@ Below is a template showing how to read the event information
 
 Name:		<event name>
 Managed By:	<what part of the code registers and unregister the event>
-Arguments:
-
- <the order and type of the arguments>
-
 Triggered When:
 
  <short description of when the event is triggered>
+
+Arguments:
+
+ <the order and type of the arguments>
 
 Description:
 
@@ -114,6 +114,47 @@ Description:
  Open Lua console dialog.
 
 -------------------------------------------------------------------------------
+Name:		flush-caches
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ Elinks is going to free its caches.  This happens when the user chooses
+ ACT_MAIN_CACHE_MINIMIZE, but currently also on ACT_MAIN_FORGET_CREDENTIALS
+ and when ELinks is quitting.
+
+Arguments:
+
+ None
+
+Description:
+
+ If scripting backends hold pointers to cache entries, they should try
+ to release those pointers so that ELinks can free the entries.  This
+ may involve a full garbage collection.  Also, if backends have some
+ caches of their own, they should flush them.
+
+-------------------------------------------------------------------------------
+Name:		follow-url
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ The user decides to load some document by following a link, entering an URL
+ in the goto URL dialog, loading frames from a frameset (?) etc.
+
+Arguments:
+
+ unsigned char **url, struct session *ses
+
+Description:
+
+ If another URL than @url should be followed it is passed by setting @url.
+ If @url is changed the event propagation should be ended.
+ Valid values for @url includes:
+ - leaving @url unchanged if the original URL should be followed;
+ - NULL if no URL should be followed; or
+ - a dynamically allocated new URL to be followed instead.
+
+-------------------------------------------------------------------------------
 Name:		free-history
 Managed By:	The scripting subsystem/backends
 Triggered When:
@@ -127,6 +168,24 @@ Arguments:
 Description:
 
  Allow a subsystem to free its history lists.
+
+-------------------------------------------------------------------------------
+Name:		get-proxy
+Managed By:	The scripting subsystem/backends
+Triggered When:
+
+ Determining what proxy, if any, should be used to load a requested URL.
+
+Arguments:
+
+ unsigned char **new_proxy_url, unsigned char *url
+
+Description:
+
+ Possible values for @new_proxy_url includes:
+ - a dynamically allocated string with the format proxy:port;
+ - an empty string (dynamically allocated!) to use no proxy; or
+ - NULL to use the default proxies.
 
 -------------------------------------------------------------------------------
 Name:		goto-url
@@ -153,45 +212,6 @@ Description:
  potential errors during the hook processing through the UI. With @ses being
  NULL the hook handler should assume no current URI and no suitable UI set up
  (i.e., starting up yet or -dump).
-
--------------------------------------------------------------------------------
-Name:		follow-url
-Managed By:	The scripting subsystem/backends
-Triggered When:
-
- The user decides to load some document by following a link, entering an URL
- in the goto URL dialog, loading frames from a frameset (?) etc.
-
-Arguments:
-
- unsigned char **url, struct session *ses
-
-Description:
-
- If another URL than @url should be followed it is passed by setting @url.
- If @url is changed the event propagation should be ended.
- Valid values for @url includes:
- - leaving @url unchanged if the original URL should be followed;
- - NULL if no URL should be followed; or
- - a dynamically allocated new URL to be followed instead.
-
--------------------------------------------------------------------------------
-Name:		get-proxy
-Managed By:	The scripting subsystem/backends
-Triggered When:
-
- Determining what proxy, if any, should be used to load a requested URL.
-
-Arguments:
-
- unsigned char **new_proxy_url, unsigned char *url
-
-Description:
-
- Possible values for @new_proxy_url includes:
- - a dynamically allocated string with the format proxy:port;
- - an empty string (dynamically allocated!) to use no proxy; or
- - NULL to use the default proxies.
 
 -------------------------------------------------------------------------------
 Name:		periodic-saving

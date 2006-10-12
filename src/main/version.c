@@ -119,7 +119,7 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifndef CONFIG_MOUSE
 		comma, _("No mouse", term),
 #endif
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		comma, "UTF-8",
 #endif
 		comma,

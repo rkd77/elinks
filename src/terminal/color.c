@@ -269,15 +269,7 @@ set_term_color16(struct screen_char *schar, enum color_flags flags,
 	if (use_inverse(bg, fg)) {
 		schar->attr |= SCREEN_ATTR_STANDOUT;
 	}
-
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	/* With 256 color support we use memcmp() when comparing color in
-	 * terminal/screen.c:add_char*() so we need to clear this byte. */
-	TERM_COLOR_FOREGROUND(schar->color) = (fg & TERM_COLOR_MASK);
-	TERM_COLOR_BACKGROUND(schar->color) = bg;
-#else
 	schar->color[0] = (bg << 4 | fg);
-#endif
 }
 
 void
@@ -326,6 +318,24 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 		 * hue-ligthness-saturation color model */
 		break;
 #endif
+#ifdef CONFIG_TRUE_COLOR
+	case COLOR_MODE_TRUE_COLOR:
+        	/* TODO: make it better */
+        	if (pair->foreground == pair->background && (flags & COLOR_ENSURE_CONTRAST)) {
+			if (flags & COLOR_ENSURE_INVERTED_CONTRAST) {
+				pair->background = (pair->foreground == 0) ? 0xffffff : 0;
+			} else {
+				pair->foreground = (pair->background == 0) ? 0xffffff : 0;
+			}
+                }
+		schar->color[0] = (pair->foreground >> 16) & 255; /* r */
+		schar->color[1] = (pair->foreground >> 8) & 255; /* g */
+		schar->color[2] = pair->foreground & 255; /* b */
+		schar->color[3] = (pair->background >> 16) & 255; /* r */
+		schar->color[4] = (pair->background >> 8) & 255; /* g */
+		schar->color[5] = pair->background & 255; /* b */
+		return;
+#endif
 	case COLOR_MODE_DUMP:
 		return;
 
@@ -368,9 +378,13 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 			}
 		}
 
-		TERM_COLOR_FOREGROUND(schar->color) = fg;
-		TERM_COLOR_BACKGROUND(schar->color) = bg;
+		TERM_COLOR_FOREGROUND_256(schar->color) = fg;
+		TERM_COLOR_BACKGROUND_256(schar->color) = bg;
 		break;
+#endif
+#ifdef CONFIG_TRUE_COLOR
+	case COLOR_MODE_TRUE_COLOR:
+		return;
 #endif
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:

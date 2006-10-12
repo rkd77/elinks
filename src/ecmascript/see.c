@@ -60,6 +60,7 @@ static void
 see_init(struct module *xxx)
 {
 	init_intern_strings();
+	SEE_system.periodic = checktime;
 }
 
 static void

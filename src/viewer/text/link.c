@@ -114,9 +114,9 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 {
 	struct form_control *fc;
 	struct form_state *fs;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int utf8 = doc_view->document->options.utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	switch (link->type) {
 		case LINK_CHECKBOX:
@@ -128,21 +128,30 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 		case LINK_FIELD:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
-#ifdef CONFIG_UTF_8
-			if (utf8) {
-				return fs ? fs->state_cell - fs->vpos : 0;
-			} else
-#endif /* CONFIG_UTF_8 */
-				return fs ? fs->state - fs->vpos : 0;
+			if (!fs || !fs->value)
+				return 0;
+#ifdef CONFIG_UTF8
+			else if (utf8) {
+				unsigned char *scroll = fs->value + fs->vpos;
+				unsigned char *point = fs->value + fs->state;
+
+				if (fs->type == FC_PASSWORD)
+					return utf8_ptr2chars(scroll, point);
+				else
+					return utf8_ptr2cells(scroll, point);
+			}
+#endif /* CONFIG_UTF8 */
+			else
+				return fs->state - fs->vpos;
 
 		case LINK_AREA:
 			fc = get_link_form_control(link);
 			fs = find_form_state(doc_view, fc);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			return fs ? area_cursor(fc, fs, utf8) : 0;
 #else
 			return fs ? area_cursor(fc, fs) : 0;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		case LINK_HYPERTEXT:
 		case LINK_MAP:
@@ -293,6 +302,7 @@ draw_link(struct terminal *term, struct document_view *doc_view,
 
 			ch = get_char(term, x + xpos, y + ypos);
 			copy_struct(ch, &doc_view->document->data[y].chars[x]);
+			set_screen_dirty(term->screen, y + ypos, y + ypos);
 		}
 	}
 }
@@ -1178,26 +1188,38 @@ enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
-	long key;
+	unicode_val_T key;
 	int passed = -1;
 	int i; /* GOD I HATE C! --FF */ /* YEAH, BRAINFUCK RULEZ! --pasky */
 
 	assert(ses && doc_view && doc_view->document && doc_view->vs && ev);
 	if_assert_failed return FRAME_EVENT_IGNORED;
 
-	if (!check_kbd_modifier(ev, KBD_MOD_ALT)) {
-		/* We accept those only in alt-combo. */
+	if (!check_kbd_modifier(ev, KBD_MOD_ALT)
+	    || !is_kbd_character(get_kbd_key(ev))) {
+		/* We accept only alt-character combos. */
 		return FRAME_EVENT_IGNORED;
 	}
 
+	/* The key is a character.  Convert it to Unicode so that it
+	 * can be compared with link.accesskey.  */
+#ifdef CONFIG_UTF8
+	key = get_kbd_key(ev);
+#else  /* !CONFIG_UTF8 */
+	key = cp2u(get_opt_codepage_tree(ses->tab->term->spec,
+					 "charset"),
+		   get_kbd_key(ev));
+#endif /* !CONFIG_UTF8 */
+	/* If @key now is 0 (which is used in link.accesskey if there
+	 * is no access key) or UCS_REPLACEMENT_CHARACTER, then the
+	 * results may be a little odd, but not really harmful.  */
+
 	/* Run through all the links and see if one of them is bound to the
 	 * key we test.. */
-	key = get_kbd_key(ev);
-
 	for (i = 0; i < doc_view->document->nlinks; i++) {
 		struct link *link = &doc_view->document->links[i];
 
-		if (key == link->accesskey) {	/* FIXME: key vs unicode ... */
+		if (key == link->accesskey) {
 			if (passed != i && i <= doc_view->vs->current_link) {
 				/* This is here in order to rotate between
 				 * links with same accesskey. */
@@ -1380,9 +1402,9 @@ get_current_link_title(struct document_view *doc_view)
 					    doc_view->document->options.cp,
 					    CSM_DEFAULT, NULL, NULL, NULL);
 		/* Remove illicit chars. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (link_title && !doc_view->document->options.utf8)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			for (src = link_title; *src; src++)
 				if (!isprint(*src) || iscntrl(*src))
 					*src = '*';
@@ -1435,11 +1457,11 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 			add_char_to_string(&str, ')');
 		}
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8)
 			decode_uri_string(&str);
 		else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			decode_uri_string_for_display(&str);
 		return str.source;
 	}

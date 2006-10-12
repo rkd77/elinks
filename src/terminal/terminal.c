@@ -38,9 +38,29 @@
 
 INIT_LIST_HEAD(terminals);
 
-
 static void check_if_no_terminal(void);
 
+#if 0
+static int
+was_utf8(int in, int out)
+{
+	/* Taken from setedit.
+	 * Set cursor in the up left corner. Write "\357\200\240" == U+F020.
+	 * Read cursor position. For UTF-8 x will be 2.
+	 * For normal mode it will be 4. */
+	static unsigned char *str = "\033[1;1H\357\200\240\033[6n";
+	unsigned char buf[20];
+	int x, y;
+
+	hard_write(out, str, strlen(str));
+	buf[0] = '\0';
+	read(in, buf, 6);
+	if (sscanf(buf,"\033[%d;%dR",&y,&x)==2) {
+		if (x > 2) return 0;
+	}
+	return 1;
+}
+#endif
 
 void
 redraw_terminal(struct terminal *term)
@@ -72,6 +92,7 @@ cls_redraw_all_terminals(void)
 struct terminal *
 init_term(int fdin, int fdout)
 {
+	unsigned char name[MAX_TERM_LEN + 9] = "terminal.";
 	struct terminal *term = mem_calloc(1, sizeof(*term));
 
 	if (!term) {
@@ -91,8 +112,17 @@ init_term(int fdin, int fdout)
 	term->fdout = fdout;
 	term->master = (term->fdout == get_output_handle());
 	term->blocked = -1;
-	term->spec = get_opt_rec(config_options, "terminal._template_");
+
+	get_terminal_name(name + 9);
+	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
+
+#if 0
+	/* The hack to restore console in the right mode */
+	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
+		term->linux_was_utf8 = was_utf8(get_input_handle(), term->fdout);
+	}
+#endif
 
 	add_to_list(terminals, term);
 
@@ -140,6 +170,17 @@ destroy_terminal(struct terminal *term)
 
 	del_from_list(term);
 	close(term->fdin);
+
+#if 0
+	/* This code doesn't work with slave terminals. */
+	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
+		if (term->linux_was_utf8) {
+			hard_write(term->fdout, "\033%G", 3);
+		} else {
+			hard_write(term->fdout, "\033%@", 3);
+		}
+	}
+#endif
 
 	if (term->fdout != 1) {
 		if (term->fdout != term->fdin) close(term->fdout);

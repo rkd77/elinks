@@ -218,7 +218,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 {
 	/* [gettext_accelerator_context(tab_menu)] */
 	struct menu_item *menu;
-	int tabs;
+	int tabs_count;
 #ifdef CONFIG_BOOKMARKS
 	int anonymous = get_cmd_opt_bool("anonymous");
 #endif
@@ -226,7 +226,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 	assert(ses && ses->tab);
 	if_assert_failed return;
 
-	tabs = number_of_tabs(ses->tab->term);
+	tabs_count = number_of_tabs(ses->tab->term);
 	menu = new_menu(FREE_LIST);
 	if (!menu) return;
 
@@ -255,14 +255,14 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 	/* Keep tab related operations below this separator */
 	add_menu_separator(&menu);
 
-	if (tabs > 1) {
+	if (tabs_count > 1) {
 		add_menu_action(&menu, N_("Nex~t tab"), ACT_MAIN_TAB_NEXT);
 		add_menu_action(&menu, N_("Pre~v tab"), ACT_MAIN_TAB_PREV);
 	}
 
 	add_menu_action(&menu, N_("~Close tab"), ACT_MAIN_TAB_CLOSE);
 
-	if (tabs > 1) {
+	if (tabs_count > 1) {
 		add_menu_action(&menu, N_("C~lose all tabs but the current"),
 				ACT_MAIN_TAB_CLOSE_ALL_BUT_CURRENT);
 #ifdef CONFIG_BOOKMARKS
@@ -364,7 +364,7 @@ do_file_menu(struct terminal *term, void *xxx, void *ses_)
 	if (o) {
 		SET_MENU_ITEM(e, N_("Open ~new window"), NULL, ACT_MAIN_OPEN_NEW_WINDOW,
 			      open_in_new_window, send_open_new_window,
-			      (o - 1) ? SUBMENU : 0, 0, HKS_SHOW);
+			      (o - 1) ? SUBMENU : 0, HKS_SHOW, 0);
 		e++;
 	}
 
@@ -382,14 +382,14 @@ do_file_menu(struct terminal *term, void *xxx, void *ses_)
 	x = 1;
 	if (!anonymous && can_open_os_shell(term->environment)) {
 		SET_MENU_ITEM(e, N_("~OS shell"), NULL, ACT_MAIN_OPEN_OS_SHELL,
-			      NULL, NULL, 0, 0, HKS_SHOW);
+			      NULL, NULL, 0, HKS_SHOW, 0);
 		e++;
 		x = 0;
 	}
 
 	if (can_resize_window(term->environment)) {
 		SET_MENU_ITEM(e, N_("Resize t~erminal"), NULL, ACT_MAIN_TERMINAL_RESIZE,
-			      NULL, NULL, 0, 0, HKS_SHOW);
+			      NULL, NULL, 0, HKS_SHOW, 0);
 		e++;
 		x = 0;
 	}
@@ -581,11 +581,11 @@ query_file(struct session *ses, struct uri *uri, void *data,
 	add_mime_filename_to_string(&def, uri);
 
 	/* Remove the %-ugliness for display */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (ses->tab->term->utf8)
 		decode_uri_string(&def);
 	else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		decode_uri_string_for_display(&def);
 
 	if (interactive) {

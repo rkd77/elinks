@@ -1,11 +1,12 @@
 import re
+import sys
 
 dumbprefixes = {
 	"7th" : "http://7thguard.net/",
-	"b" : "http://babelfish.altavista.com/babelfish/tr",
-	"bz" : "http://bugzilla.elinks.cz",
-	"bug" : "http://bugzilla.elinks.cz",
-	"d" : "http://www.dict.org",
+	"b" : "http://babelfish.altavista.com/babelfish/tr/",
+	"bz" : "http://bugzilla.elinks.cz/",
+	"bug" : "http://bugzilla.elinks.cz/",
+	"d" : "http://www.dict.org/",
 	"g" : "http://www.google.com/",
 	"gg" : "http://www.google.com/",
 	"go" : "http://www.google.com/",
@@ -21,6 +22,14 @@ dumbprefixes = {
 	"sd" : "http://www.slashdot.org/"
 }
 
+cygwin = re.compile("cygwin\.com")
+cygwin_sub1 = re.compile('<body bgcolor="#000000" color="#000000"')
+cygwin_sub2 = '<body bgcolor="#ffffff" color="#000000"'
+mbank = re.compile('^https://www\.mbank\.com\.pl/ib_navibar_3\.asp')
+mbank_sub1 = re.compile('<td valign="top"><img')
+mbank_sub2 = '<tr><td valign="top"><img'
+google_redirect = re.compile('^http://www\.google\.com/url\?sa=D&q=(.*)')
+
 def goto_url_hook(url, current_url):
 	global dumbprefixes
 
@@ -30,14 +39,17 @@ def goto_url_hook(url, current_url):
 		return None
 
 def follow_url_hook(url):
+	m = google_redirect.search(url)
+	if m:
+		return m.group(1)
 	return None
 
 def pre_format_html_hook(url, html):
-	if re.search("cygwin\.com", url):
-		html2 = re.sub("<body bgcolor=\"#000000\" color=\"#000000\"", "<body bgcolor=\"#ffffff\" color=\"#000000\"", html)
+	if cygwin.search(url):
+		html2 = cygwin_sub1.sub(cygwin_sub2, html)
 		return html2
-	if re.search("https://www.mbank.com.pl/ib_navibar_3.asp", url):
-		html2 = re.sub("<td valign=\"top\"><img", "<tr><td valign=\"top\"><img", html)
+	if mbank.search(url):
+		html2 = mbank_sub1.sub(mbank_sub2, html)
 		return html2
 	return None
 

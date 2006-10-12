@@ -108,7 +108,7 @@ free_keybinding(struct keybinding *keybinding)
 	}
 
 #ifdef CONFIG_SCRIPTING
-/* TODO: unref function must be implemented. */
+/* TODO: unref function must be implemented. This is part of bug 810. */
 /*	if (keybinding->event != EVENT_NONE)
 		scripting_unref(keybinding->event); */
 #endif
@@ -206,7 +206,7 @@ kbd_nm_lookup(enum keymap_id keymap_id, unsigned char *name)
 }
 
 static struct keybinding *
-kbd_stroke_lookup(enum keymap_id keymap_id, unsigned char *keystroke_str)
+kbd_stroke_lookup(enum keymap_id keymap_id, const unsigned char *keystroke_str)
 {
 	struct term_event_keyboard kbd;
 
@@ -230,7 +230,7 @@ static struct keymap keymap_table[] = {
 
 static struct action *
 get_action_from_keystroke(enum keymap_id keymap_id,
-                          unsigned char *keystroke_str)
+                          const unsigned char *keystroke_str)
 {
 	struct keybinding *keybinding = kbd_stroke_lookup(keymap_id,
 	                                                  keystroke_str);
@@ -240,7 +240,7 @@ get_action_from_keystroke(enum keymap_id keymap_id,
 
 unsigned char *
 get_action_name_from_keystroke(enum keymap_id keymap_id,
-                               unsigned char *keystroke_str)
+                               const unsigned char *keystroke_str)
 {
 	struct action *action = get_action_from_keystroke(keymap_id,
 	                                                  keystroke_str);
@@ -354,8 +354,8 @@ static struct key key_table[] = {
 	{ NULL, 0 }
 };
 
-long
-read_key(unsigned char *key_str)
+term_event_key_T
+read_key(const unsigned char *key_str)
 {
 	struct key *key;
 
@@ -366,38 +366,70 @@ read_key(unsigned char *key_str)
 		if (!strcasecmp(key->str, key_str))
 			return key->num;
 
-	return -1;
+	return KBD_UNDEF;
 }
 
+/* Parse the string @s as the name of a keystroke.
+ * Write the parsed key and modifiers to *@kbd.
+ * Return >=0 on success, <0 on error.  */
 int
-parse_keystroke(unsigned char *s, struct term_event_keyboard *kbd)
+parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
-	if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
-		/* Shift+a == shiFt-a == Shift-a */
-		memcpy(s, "Shift-", 6);
-		kbd->modifier = KBD_MOD_SHIFT;
-		s += 6;
+	kbd->modifier = KBD_MOD_NONE;
+	while (1) {
+		if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
+			/* Shift+a == shiFt-a == Shift-a */
+			kbd->modifier |= KBD_MOD_SHIFT;
+			s += 6;
 
-	} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
-		/* Ctrl+a == ctRl-a == Ctrl-a */
-		memcpy(s, "Ctrl-", 5);
-		kbd->modifier = KBD_MOD_CTRL;
-		s += 5;
-		/* Ctrl-a == Ctrl-A */
-		if (s[0] && !s[1]) s[0] = toupper(s[0]);
+		} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
+			/* Ctrl+a == ctRl-a == Ctrl-a */
+			kbd->modifier |= KBD_MOD_CTRL;
+			s += 5;
 
-	} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
-		/* Alt+a == aLt-a == Alt-a */
-		memcpy(s, "Alt-", 4);
-		kbd->modifier = KBD_MOD_ALT;
-		s += 4;
+		} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
+			/* Alt+a == aLt-a == Alt-a */
+			kbd->modifier |= KBD_MOD_ALT;
+			s += 4;
 
-	} else {
-		/* No modifier. */
-		kbd->modifier = KBD_MOD_NONE;
+		} else {
+			/* No modifier. */
+			break;
+		}
 	}
 
 	kbd->key = read_key(s);
+
+	if ((kbd->modifier & KBD_MOD_CTRL) != 0
+	    && is_kbd_character(kbd->key) && kbd->key <= 0x7F) {
+		/* Convert Ctrl-letter keystrokes to upper case,
+		 * e.g. Ctrl-a to Ctrl-A.  Do this because terminals
+		 * typically generate the same ASCII control
+		 * characters regardless of Shift and Caps Lock.
+		 *
+		 * However, that applies only to ASCII letters.  For
+		 * other Ctrl-letter combinations, there seems to be
+		 * no standard of what the terminal should generate.
+		 * Because it is possible that the terminal does not
+		 * fold case then, ELinks should treat upper-case and
+		 * lower-case variants of such keystrokes as different
+		 * and let the user bind them to separate actions.
+		 * Besides, toupper() might not understand the charset
+		 * of kbd->key.
+		 *
+		 * FIXME: Actually, it is possible that some terminals
+		 * preserve case in all Ctrl-letter keystrokes, even
+		 * for ASCII letters.  In particular, the Win32
+		 * console API looks like it might do this.  When the
+		 * terminal handling part of ELinks is eventually
+		 * extended to fully support that, it could be a good
+		 * idea to change parse_keystroke() not to fold case,
+		 * and instead make kbd_ev_lookup() or its callers
+		 * search for different variants of the keystroke if
+		 * the original one is not bound to any action.  */
+		kbd->key = toupper(kbd->key);
+	}
+
 	return (kbd->key == KBD_UNDEF) ? -1 : 0;
 }
 
@@ -546,7 +578,7 @@ free_keymaps(struct module *xxx)
 
 #ifdef CONFIG_SCRIPTING
 static unsigned char *
-bind_key_to_event(unsigned char *ckmap, unsigned char *ckey, int event)
+bind_key_to_event(unsigned char *ckmap, const unsigned char *ckey, int event)
 {
 	struct term_event_keyboard kbd;
 	action_id_T action_id;
@@ -568,7 +600,7 @@ bind_key_to_event(unsigned char *ckmap, unsigned char *ckey, int event)
 }
 
 int
-bind_key_to_event_name(unsigned char *ckmap, unsigned char *ckey,
+bind_key_to_event_name(unsigned char *ckmap, const unsigned char *ckey,
 		       unsigned char *event_name, unsigned char **err)
 {
 	int event_id;
@@ -680,6 +712,7 @@ static struct default_kb default_main_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_CTRL }, ACT_MAIN_LINK_FOLLOW_RELOAD },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_MAIN_FRAME_NEXT },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_MAIN_FRAME_PREV },
+	{ { KBD_TAB,     KBD_MOD_SHIFT}, ACT_MAIN_FRAME_PREV },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_MAIN_MOVE_LINK_PREV },
 	{ { 0, 0 }, 0 }
 };
@@ -717,6 +750,7 @@ static struct default_kb default_edit_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_NONE }, ACT_EDIT_RIGHT },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_EDIT_NEXT_ITEM },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_EDIT_PREVIOUS_ITEM },
+	{ { KBD_TAB,	 KBD_MOD_SHIFT}, ACT_EDIT_PREVIOUS_ITEM },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_EDIT_UP },
 	{ { 0, 0 }, 0 }
 };
@@ -753,6 +787,7 @@ static struct default_kb default_menu_keymap[] = {
 	{ { KBD_RIGHT,	 KBD_MOD_NONE }, ACT_MENU_RIGHT },
 	{ { KBD_TAB,	 KBD_MOD_NONE }, ACT_MENU_NEXT_ITEM },
 	{ { KBD_TAB,	 KBD_MOD_ALT  }, ACT_MENU_PREVIOUS_ITEM },
+	{ { KBD_TAB,	 KBD_MOD_SHIFT}, ACT_MENU_PREVIOUS_ITEM },
 	{ { KBD_UP,	 KBD_MOD_NONE }, ACT_MENU_UP },
 	{ { 0, 0 }, 0}
 };
@@ -863,7 +898,7 @@ get_aliased_action(enum keymap_id keymap_id, unsigned char *action_str)
 
 /* Return 0 when ok, something strange otherwise. */
 int
-bind_do(unsigned char *keymap_str, unsigned char *keystroke_str,
+bind_do(unsigned char *keymap_str, const unsigned char *keystroke_str,
 	unsigned char *action_str, int is_system_conf)
 {
 	enum keymap_id keymap_id;
@@ -887,7 +922,7 @@ bind_do(unsigned char *keymap_str, unsigned char *keystroke_str,
 }
 
 unsigned char *
-bind_act(unsigned char *keymap_str, unsigned char *keystroke_str)
+bind_act(unsigned char *keymap_str, const unsigned char *keystroke_str)
 {
 	enum keymap_id keymap_id;
 	unsigned char *action;

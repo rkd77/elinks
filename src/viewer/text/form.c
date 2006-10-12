@@ -163,22 +163,15 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 		case FC_TEXTAREA:
 			fs->value = stracpy(fc->default_value);
 			fs->state = strlen(fc->default_value);
-#ifdef CONFIG_UTF_8
-			if (fc->type == FC_TEXT)
-				fs->state_cell = utf8_ptr2cells(fs->value, NULL);
-			if (fc->type == FC_PASSWORD)
-				fs->state_cell = utf8_ptr2chars(fs->value, NULL);
+#ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA)
 				fs->state_cell = 0;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			fs->vpos = 0;
 			break;
 		case FC_FILE:
 			fs->value = stracpy("");
 			fs->state = 0;
-#ifdef CONFIG_UTF_8
-			fs->state_cell = 0;
-#endif /* CONFIG_UTF_8 */
 			fs->vpos = 0;
 			break;
 		case FC_SELECT:
@@ -341,9 +334,10 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	dy = box->y - vs->y;
 	switch (fc->type) {
 		unsigned char *s;
-#ifdef CONFIG_UTF_8
-		unsigned char *text, *end;
-#endif /* CONFIG_UTF_8 */
+#ifdef CONFIG_UTF8
+		unsigned char *text, *end, *last_in_view;
+		int retried;
+#endif /* CONFIG_UTF8 */
 		int len;
 		int i, x, y;
 
@@ -357,9 +351,9 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 				break;
 
 			x = link->points[0].x + dx;
-#ifdef CONFIG_UTF_8
-			if (term->utf8) goto utf_8;
-#endif /* CONFIG_UTF_8 */
+#ifdef CONFIG_UTF8
+			if (term->utf8) goto utf8;
+#endif /* CONFIG_UTF8 */
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			len = strlen(fs->value) - fs->vpos;
 
@@ -377,43 +371,123 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 				draw_char_data(term, x, y, data);
 			}
 			break;
-#ifdef CONFIG_UTF_8
-utf_8:
-			end = NULL; /* Shut up the compiler. */
-			int_bounds(&fs->vpos, fs->state_cell - fc->size + 1, fs->state_cell);
-			if (fc->type == FC_PASSWORD)
-				len = utf8_ptr2chars(fs->value + fs->vpos, NULL);
-			else
-				len = utf8_ptr2cells(fs->value + fs->vpos, NULL);
+#ifdef CONFIG_UTF8
+utf8:
+			retried = 0;
+
+retry_after_scroll:
 			text = fs->value;
-			end = strchr(text, '\0');
+			if (!text) text = "";
+			len = strlen(text);
+			int_bounds(&fs->state, 0, len);
+			int_bounds(&fs->vpos, 0, fs->state);
+			end = text + len;
+			text += fs->vpos;
+			last_in_view = NULL;
 
-
-			for (i = 0; i < fc->size; i++, x++) {
+			for (i = 0; i < fc->size; ) {
 				unicode_val_T data;
+				int cells, cell;
+				unsigned char *maybe_in_view = text;
 
-				if (!col_is_in_box(box, x)) continue;
-
-				if (fs->value && i >= -fs->vpos && i < len) {
-					if (fc->type != FC_PASSWORD)
-						data = utf_8_to_unicode(&text, end);
-					else
-						data = '*';
-				} else
+				data = utf8_to_unicode(&text, end);
+				if (data == UCS_NO_CHAR) /* end of string */
 					data = '_';
+				else if (fc->type == FC_PASSWORD)
+					data = '*';
 
-				if (unicode_to_cell(data) == 2) {
-					if (i + 1 < fc->size) {
-						draw_char_data(term, x++, y, data);
-						data = UCS_NO_CHAR;
-						i++;
-					} else
-						data = ' ';
+				cells = unicode_to_cell(data);
+				if (i + cells <= fc->size) {
+					last_in_view = maybe_in_view;
+					if (colspan_is_in_box(box, x + i, cells)) {
+						/* The character fits completely.
+						 * Draw the character, and mark any
+						 * further cells with UCS_NO_CHAR.  */
+						draw_char_data(term, x + i, y, data);
+						for (cell = 1; cell < cells; cell++)
+							draw_char_data(term, x + i + cell,
+								       y, UCS_NO_CHAR);
+						goto drew_char;
+					}
 				}
-				draw_char_data(term, x, y, data);
+
+				/* The character does not fit completely.
+				 * Write spaces to the cells that do fit.  */
+				for (cell = 0; cell < cells; cell++) {
+					if (col_is_in_box(box, x + i + cell)
+					    && i + cell < fc->size)
+						draw_char_data(term,
+							       x + i + cell,
+							       y, ' ');
+				}
+
+drew_char:
+				i += cells;
+			}
+
+			/* The int_bounds calls above ensured that the
+			 * insertion point cannot be at the left side
+			 * of the scrolled-visible part of the text.
+			 * However it can still be at the right side.
+			 * Check whether we need to change fs->vpos.
+			 *
+			 * This implementation attempts to follow
+			 * these rules:
+			 * - If the insertion point is at the end of
+			 *   the string, leave at least one empty cell
+			 *   so that there is a place for the cursor.
+			 * - If a character follows the insertion
+			 *   point, make that character fully visible;
+			 *   note the character may be double-width.
+			 * - If fc->size < 2, it is not possible to
+			 *   make a double-width character fully
+			 *   visible.  In this case, it is OK if the
+			 *   output is ugly, but ELinks must not fall
+			 *   into an infinite loop or crash.
+			 * - The length of the string should not affect
+			 *   how long this function takes.  The width
+			 *   of the widget naturally will.
+			 * - Optimize the case where fields are drawn
+			 *   several times without being modified.
+			 *
+			 * It follows that:
+			 * - If the "for i" loop above hit UCS_NO_CHAR,
+			 *   then there is no need to scroll.
+			 * - When the string ends with a double-width
+			 *   character that fits in only partially,
+			 *   then text==end, but the field may have
+			 *   to be scrolled.  */
+			if (fs->value && last_in_view
+			    && last_in_view < fs->value + fs->state) {
+				unsigned char *ptr = fs->value + fs->state;
+				int cells = fc->size;
+				enum utf8_step how = (fc->type == FC_PASSWORD)
+					? utf8_step_characters
+					: utf8_step_cells_fewer;
+
+				/* The insertion point is at the right
+				 * side of the scrolled-visible part
+				 * of the text.  Decide a new fs->vpos
+				 * by counting cells backwards from
+				 * @ptr.  But first advance @ptr past
+				 * the character that follows the
+				 * insertion point, so that it will be
+				 * fully displayed.  If there is no
+				 * such character, reserve one cell
+				 * for the cursor anyway.  */
+				if (utf8_to_unicode(&ptr, end) == UCS_NO_CHAR)
+					--cells;
+				ptr = utf8_step_backward(ptr, fs->value,
+							 cells, how, NULL);
+
+				if (fs->vpos != ptr - fs->value) {
+					fs->vpos = ptr - fs->value;
+					retried = 1;
+					goto retry_after_scroll;
+				}
 			}
 			break;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		case FC_TEXTAREA:
 			draw_textarea(term, fs, doc_view, link);
 			break;
@@ -432,9 +506,9 @@ utf_8:
 			else
 				/* XXX: when can this happen? --pasky */
 				s = "";
-#ifdef CONFIG_UTF_8
-			if (term->utf8) goto utf_8_select;
-#endif /* CONFIG_UTF_8 */
+#ifdef CONFIG_UTF8
+			if (term->utf8) goto utf8_select;
+#endif /* CONFIG_UTF8 */
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
 				x = link->points[i].x + dx;
@@ -443,8 +517,8 @@ utf_8:
 					draw_char_data(term, x, y, i < len ? s[i] : '_');
 			}
 			break;
-#ifdef CONFIG_UTF_8
-utf_8_select:
+#ifdef CONFIG_UTF8
+utf8_select:
 			text = s;
 			end = strchr(s, '\0');
 			len = utf8_ptr2cells(text, end);
@@ -456,7 +530,7 @@ utf_8_select:
 					if (i < len) {
 						int cell;
 
-						data = utf_8_to_unicode(&s, end);
+						data = utf8_to_unicode(&s, end);
 						cell = unicode_to_cell(data);
 						if (i + 1 < len && cell == 2) {
 							draw_char_data(term, x++, y, data);
@@ -472,7 +546,7 @@ utf_8_select:
 				}
 			}
 			break;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		case FC_SUBMIT:
 		case FC_IMAGE:
 		case FC_RESET:
@@ -1282,9 +1356,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 	unsigned char *text;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int utf8 = ses->tab->term->utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	assert(ses && doc_view && link && ev);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -1304,32 +1378,22 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 	switch (action_id) {
 		case ACT_EDIT_LEFT:
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA) {
 				status = textarea_op_left(fs, fc, utf8);
 				break;
 			}
 			if (utf8) {
-				int old_state = fs->state;
 				unsigned char *new_value;
-				int cells;
 
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
-
-				if (old_state != fs->state) {
-					if (fc->type == FC_PASSWORD)
-						cells = 1;
-					else
-						cells = utf8_char2cells(new_value, NULL);
-					fs->state_cell = int_max(fs->state_cell - cells, 0);
-				}
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				fs->state = int_max(fs->state - 1, 0);
 			break;
 		case ACT_EDIT_RIGHT:
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA) {
 				status = textarea_op_right(fs, fc, utf8);
 				break;
@@ -1337,28 +1401,19 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (utf8) {
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *end = strchr(text, '\0');
-				int old_state = fs->state;
-				unicode_val_T data = utf_8_to_unicode(&text, end);
 
+				utf8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
-				if (old_state != fs->state) {
-					if (fc->type == FC_PASSWORD)
-						fs->state_cell = int_min(fs->state_cell + 1,
-								         utf8_ptr2cells(fs->value, NULL));
-					else
-						fs->state_cell += unicode_to_cell(data);
-				}
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				fs->state = int_min(fs->state + 1, strlen(fs->value));
 			break;
 		case ACT_EDIT_HOME:
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA) {
 				status = textarea_op_home(fs, fc, utf8);
 			} else {
 				fs->state = 0;
-				fs->state_cell = 0;
 			}
 #else
 			if (fc->type == FC_TEXTAREA) {
@@ -1367,79 +1422,60 @@ field_op(struct session *ses, struct document_view *doc_view,
 				fs->state = 0;
 			}
 
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			break;
 		case ACT_EDIT_UP:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_up(fs, fc, utf8);
 #else
 				status = textarea_op_up(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			break;
 		case ACT_EDIT_DOWN:
 			if (fc->type != FC_TEXTAREA)
 				status = FRAME_EVENT_IGNORED;
 			else
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_down(fs, fc, utf8);
 #else
 				status = textarea_op_down(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			break;
 		case ACT_EDIT_END:
 			if (fc->type == FC_TEXTAREA) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_end(fs, fc, utf8);
 #else
 				status = textarea_op_end(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			} else {
 				fs->state = strlen(fs->value);
-#ifdef CONFIG_UTF_8
-				if (utf8 && fc->type != FC_PASSWORD)
-					fs->state_cell = utf8_ptr2cells(fs->value,
-									fs->value + fs->state);
-				else if(utf8)
-					fs->state_cell = utf8_ptr2chars(fs->value,
-									fs->value + fs->state);
-#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_BEGINNING_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_bob(fs, fc, utf8);
+				fs->state_cell = 0;
 #else
 				status = textarea_op_bob(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			} else {
 				fs->state = 0;
 			}
-#ifdef CONFIG_UTF_8
-				fs->state_cell = 0;
-#endif /* CONFIG_UTF_8 */
 			break;
 		case ACT_EDIT_END_OF_BUFFER:
 			if (fc->type == FC_TEXTAREA) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_eob(fs, fc, utf8);
 #else
 				status = textarea_op_eob(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			} else {
 				fs->state = strlen(fs->value);
-#ifdef CONFIG_UTF_8
-				if (utf8 && fc->type != FC_PASSWORD)
-					fs->state_cell = utf8_ptr2cells(fs->value,
-									fs->value + fs->state);
-				else if(utf8)
-					fs->state_cell = utf8_ptr2chars(fs->value,
-									fs->value + fs->state);
-
-#endif /* CONFIG_UTF_8 */
 			}
 			break;
 		case ACT_EDIT_OPEN_EXTERNAL:
@@ -1457,9 +1493,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (!form_field_is_readonly(fc))
 				fs->value[0] = 0;
 			fs->state = 0;
-#ifdef CONFIG_UTF_8
-			fs->state_cell = 0;
-#endif /* CONFIG_UTF_8 */
+#ifdef CONFIG_UTF8
+			if (fc->type == FC_TEXTAREA)
+				fs->state_cell = 0;
+#endif /* CONFIG_UTF8 */
 			break;
 		case ACT_EDIT_PASTE_CLIPBOARD:
 			if (form_field_is_readonly(fc)) break;
@@ -1475,27 +1512,21 @@ field_op(struct session *ses, struct document_view *doc_view,
 					fs->value = v;
 					memmove(v, text, length + 1);
 					fs->state = strlen(fs->value);
-#ifdef CONFIG_UTF_8
-					if(utf8 && fc->type == FC_PASSWORD)
-						fs->state_cell = utf8_ptr2chars(fs->value,
-										fs->value + fs->state);
-					else if (utf8 && fc->type == FC_TEXTAREA)
+#ifdef CONFIG_UTF8
+					if (utf8 && fc->type == FC_TEXTAREA)
 						fs->state_cell = 0;
-					else if (utf8)
-						fs->state_cell = utf8_ptr2cells(fs->value,
-										fs->value + fs->state);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				}
 			}
 			mem_free(text);
 			break;
 		case ACT_EDIT_ENTER:
 			if (fc->type == FC_TEXTAREA) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				status = textarea_op_enter(fs, fc, utf8);
 #else
 				status = textarea_op_enter(fs, fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				break;
 			}
 
@@ -1520,7 +1551,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (utf8) {
 				int old_state = fs->state;
 				unsigned char *new_value;
@@ -1531,15 +1562,11 @@ field_op(struct session *ses, struct document_view *doc_view,
 				if (old_state != fs->state) {
 					if (fc->type == FC_TEXTAREA)
 						fs->state_cell = 0;
-					else if (fc->type == FC_PASSWORD)
-						fs->state_cell = int_max(fs->state_cell - 1, 0);
-					else
-						fs->state_cell -= utf8_char2cells(new_value, NULL);
 					length = strlen(fs->value + old_state) + 1;
 					memmove(new_value, fs->value + old_state, length);
 				}
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			{
 				length = strlen(fs->value + fs->state) + 1;
 				text = fs->value + fs->state;
@@ -1559,20 +1586,20 @@ field_op(struct session *ses, struct document_view *doc_view,
 				status = FRAME_EVENT_OK;
 				break;
 			}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (utf8) {
 				unsigned char *end = fs->value + length;
 				unsigned char *text = fs->value + fs->state;
 				unsigned char *old = text;
 
-				utf_8_to_unicode(&text, end);
+				utf8_to_unicode(&text, end);
 				if (old != text) {
 					memmove(old, text,
 						(int)(end - text) + 1);
 				}
 				break;
 			}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			text = fs->value + fs->state;
 
 			memmove(text, text + 1, length - fs->state);
@@ -1602,18 +1629,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 			memmove(text, fs->value + fs->state, length);
 
 			fs->state = (int) (text - fs->value);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (utf8) {
-				if(fc->type == FC_PASSWORD)
-					fs->state_cell = utf8_ptr2cells(fs->value,
-									fs->value + fs->state);
-				else if (fc->type == FC_TEXTAREA)
+				if (fc->type == FC_TEXTAREA)
 					fs->state_cell = 0;
-				else
-					fs->state_cell = utf8_ptr2cells(fs->value,
-									fs->value + fs->state);
 			}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			break;
 		case ACT_EDIT_KILL_TO_EOL:
 			if (form_field_is_readonly(fc)) {
@@ -1712,17 +1733,17 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 			if (form_field_is_readonly(fc)
-#ifndef CONFIG_UTF_8
+#ifndef CONFIG_UTF8
 					|| strlen(fs->value) >= fc->maxlength
 					|| !insert_in_string(&fs->value, fs->state, "?", 1)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 					)
 					{
 				status = FRAME_EVENT_OK;
 				break;
 			}
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			{
 				/* The charset of the terminal; we assume
 				 * fs->value is in this charset.
@@ -1740,16 +1761,12 @@ field_op(struct session *ses, struct document_view *doc_view,
 				}
 
 				fs->state += length;
-				if (fc->type == FC_PASSWORD)
-					fs->state_cell += (is_cp_utf8(cp) ? 1 : length);
-				else if (fc->type == FC_TEXTAREA)
+				if (fc->type == FC_TEXTAREA)
 					fs->state_cell = 0;
-				else
-					fs->state_cell += (is_cp_utf8(cp) ? unicode_to_cell(get_kbd_key(ev)) : length);
 			}
 #else
 			fs->value[fs->state++] = get_kbd_key(ev);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			break;
 	}
 

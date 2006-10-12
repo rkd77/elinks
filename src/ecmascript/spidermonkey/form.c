@@ -117,6 +117,9 @@ static const JSFunctionSpec input_funcs[] = {
 	{ NULL }
 };
 
+static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
+static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
+
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -146,14 +149,19 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
 	{
-		struct string keystr;
+		JSString *keystr;
 
 		if (!link) break;
 
-		init_string(&keystr);
-		add_accesskey_to_string(&keystr, link->accesskey);
-		string_to_jsval(ctx, vp, keystr.source);
-		done_string(&keystr);
+		if (!link->accesskey) {
+			*vp = JS_GetEmptyStringValue(ctx);
+		} else {
+			keystr = unicode_to_jsstring(ctx, link->accesskey);
+			if (keystr)
+				*vp = STRING_TO_JSVAL(keystr);
+			else
+				return JS_FALSE;
+		}
 		break;
 	}
 	case JSP_INPUT_ALT:
@@ -246,6 +254,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
+	unicode_val_T accesskey;
 
 	assert(fc);
 	assert(fc->form && fs);
@@ -259,8 +268,11 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
-		if (link)
-			link->accesskey = accesskey_string_to_unicode(jsval_to_string(ctx, vp));
+		accesskey = jsval_to_accesskey(ctx, vp);
+		if (accesskey == UCS_NO_CHAR)
+			return JS_FALSE;
+		else if (link)
+			link->accesskey = accesskey;
 		break;
 	case JSP_INPUT_ALT:
 		mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
@@ -969,4 +981,58 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	}
 
 	return JS_TRUE;
+}
+
+
+static JSString *
+unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
+{
+	jschar buf[2];
+
+	/* This is supposed to make a string from which
+	 * jsval_to_accesskey() can get the original @u back.
+	 * If @u is a surrogate, then that is not possible, so
+	 * return NULL to indicate an error instead.
+	 *
+	 * If JS_NewUCStringCopyN hits a null character, it truncates
+	 * the string there and pads it with more nulls.  However,
+	 * that is not a problem here, because if there is a null
+	 * character in buf[], then it must be the only character.  */
+	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
+		buf[0] = u;
+		return JS_NewUCStringCopyN(ctx, buf, 1);
+	} else if (needs_utf16_surrogates(u)) {
+		buf[0] = get_utf16_high_surrogate(u);
+		buf[1] = get_utf16_low_surrogate(u);
+		return JS_NewUCStringCopyN(ctx, buf, 2);
+	} else {
+		return NULL;
+	}
+}
+
+/* Convert the string *@vp to an access key.  Return 0 for no access
+ * key, UCS_NO_CHAR on error, or the access key otherwise.  */
+static unicode_val_T
+jsval_to_accesskey(JSContext *ctx, jsval *vp)
+{
+	size_t len;
+	const jschar *chr;
+
+	/* Convert the value in place, to protect the result from GC.  */
+	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, vp) == JS_FALSE)
+		return UCS_NO_CHAR;
+	len = JS_GetStringLength(JSVAL_TO_STRING(*vp));
+	chr = JS_GetStringChars(JSVAL_TO_STRING(*vp));
+
+	/* This implementation ignores extra characters in the string.  */
+	if (len < 1)
+		return 0;	/* which means no access key */
+	if (!is_utf16_surrogate(chr[0]))
+		return chr[0];
+	if (len >= 2
+	    && is_utf16_high_surrogate(chr[0])
+	    && is_utf16_low_surrogate(chr[1]))
+		return join_utf16_surrogates(chr[0], chr[1]);
+	JS_ReportError(ctx, "Invalid UTF-16 sequence");
+	return UCS_NO_CHAR;	/* which the caller will reject */
 }

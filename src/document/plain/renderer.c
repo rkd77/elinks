@@ -234,9 +234,9 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char *template = &renderer->template;
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int utf8 = document->options.utf8;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	int cells = 0;
 	int lineno = renderer->lineno;
 	int expanded = 0;
@@ -253,13 +253,13 @@ add_document_line(struct plain_renderer *renderer,
 		unsigned char line_char = line[line_pos];
 		int charlen = 1;
 		int cell = 1;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		unicode_val_T data;
 
 		if (utf8) {
 			unsigned char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
-			data = utf_8_to_unicode(&line_char2, &line[width]);
+			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
 				line_pos += charlen;
@@ -268,7 +268,7 @@ add_document_line(struct plain_renderer *renderer,
 
 			cell = unicode_to_cell(data);
 		}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		if (line_char == ASCII_TAB
 		    && (line_pos + charlen == width
@@ -313,13 +313,13 @@ add_document_line(struct plain_renderer *renderer,
 		unsigned char next_char, prev_char;
 		int charlen = 1;
 		int cell = 1;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		unicode_val_T data;
 
 		if (utf8) {
 			unsigned char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
-			data = utf_8_to_unicode(&line_char2, &line[width]);
+			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
 				line_pos += charlen;
@@ -328,7 +328,7 @@ add_document_line(struct plain_renderer *renderer,
 
 			cell = unicode_to_cell(data);
 		}
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		prev_char = line_pos > 0 ? line[line_pos - 1] : '\0';
 		next_char = (line_pos + charlen < width) ?
@@ -433,11 +433,11 @@ add_document_line(struct plain_renderer *renderer,
 				cells += added_chars - 1;
 				pos += added_chars;
 			} else {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				if (utf8) {
 					unsigned char *text = &line[line_pos];
 					unicode_val_T data =
-						utf_8_to_unicode(&text,
+						utf8_to_unicode(&text,
 								&line[width]);
 
 					if (data == UCS_NO_CHAR) {
@@ -455,7 +455,7 @@ add_document_line(struct plain_renderer *renderer,
 						cell++;
 					}
 				} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				{
 					if (!isscreensafe(line_char))
 						line_char = '.';
@@ -520,7 +520,7 @@ add_document_lines(struct plain_renderer *renderer)
 	int length = renderer->length;
 	int was_empty_line = 0;
 	int was_wrapped = 0;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int utf8 = is_cp_utf8(renderer->document->cp);
 #endif
 	for (; length > 0; renderer->lineno++) {
@@ -552,10 +552,10 @@ add_document_lines(struct plain_renderer *renderer)
 				only_spaces = 0;
 				was_spaces = 0;
 			}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (utf8) {
 				unsigned char *text = &source[width];
-				unicode_val_T data = utf_8_to_unicode(&text,
+				unicode_val_T data = utf8_to_unicode(&text,
 							&source[length]);
 
 				if (data == UCS_NO_CHAR) return;
@@ -563,7 +563,7 @@ add_document_lines(struct plain_renderer *renderer)
 				cells += unicode_to_cell(data);
 				width += utf8charlen(&source[width]);
 			} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			{
 				cells++;
 				width++;
@@ -651,9 +651,9 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 	document->width = 0;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	document->options.utf8 = is_cp_utf8(document->options.cp);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	/* Setup the style */
 	init_template(&renderer.template, &document->options);

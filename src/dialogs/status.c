@@ -74,7 +74,7 @@ update_status(void)
 	int set_window_title = get_opt_bool("ui.window_title");
 	int insert_mode = get_opt_bool("document.browse.forms.insert_mode");
 	struct session *ses;
-	int tabs = 1;
+	int tabs_count = 1;
 	struct terminal *term = NULL;
 
 	foreach (ses, sessions) {
@@ -85,7 +85,7 @@ update_status(void)
 		 * tab sessions share the same term. */
 		if (ses->tab->term != term) {
 			term = ses->tab->term;
-			tabs = number_of_tabs(term);
+			tabs_count = number_of_tabs(term);
 		}
 
 		if (status->force_show_title_bar >= 0)
@@ -102,8 +102,8 @@ update_status(void)
 			dirty = 1;
 		}
 
-		if (show_tabs(show_tabs_bar, tabs) != status->show_tabs_bar) {
-			status->show_tabs_bar = show_tabs(show_tabs_bar, tabs);
+		if (show_tabs(show_tabs_bar, tabs_count) != status->show_tabs_bar) {
+			status->show_tabs_bar = show_tabs(show_tabs_bar, tabs_count);
 			dirty = 1;
 		}
 
@@ -419,7 +419,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 		int maxlen = int_max(term->width - 4 - buflen, 0);
 		int titlelen, titlewidth;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			titlewidth = utf8_ptr2cells(document->title, NULL);
 			titlewidth = int_min(titlewidth, maxlen);
@@ -427,7 +427,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 			titlelen = utf8_cells2bytes(document->title,
 							titlewidth, NULL);
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		{
 			titlewidth = int_min(strlen(document->title), maxlen);
 			titlelen = titlewidth;
@@ -444,14 +444,14 @@ display_title_bar(struct session *ses, struct terminal *term)
 
 	if (title.length) {
 		int x;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (term->utf8) {
 			x = int_max(term->width - 1
 				    - utf8_ptr2cells(title.source,
 						     title.source
 						     + title.length), 0);
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 			x = int_max(term->width - 1 - title.length, 0);
 
 		draw_text(term, x, 0, title.source, title.length, 0,

@@ -13,11 +13,11 @@ struct link;
 struct session;
 struct terminal;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 int area_cursor(struct form_control *fc, struct form_state *fs, int utf8);
 #else
 int area_cursor(struct form_control *fc, struct form_state *fs);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 void draw_textarea(struct terminal *term, struct form_state *fs, struct document_view *doc_view, struct link *link);
 unsigned char *encode_textarea(struct submitted_value *sv);
 
@@ -25,7 +25,7 @@ extern int textarea_editor;
 void textarea_edit(int, struct terminal *, struct form_state *, struct document_view *, struct link *);
 void menu_textarea_edit(struct terminal *term, void *xxx, void *ses_);
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 enum frame_event_status textarea_op_home(struct form_state *fs, struct form_control *fc, int utf8);
 enum frame_event_status textarea_op_up(struct form_state *fs, struct form_control *fc, int utf8);
 enum frame_event_status textarea_op_down(struct form_state *fs, struct form_control *fc, int utf8);
@@ -43,7 +43,7 @@ enum frame_event_status textarea_op_end(struct form_state *fs, struct form_contr
 enum frame_event_status textarea_op_bob(struct form_state *fs, struct form_control *fc);
 enum frame_event_status textarea_op_eob(struct form_state *fs, struct form_control *fc);
 enum frame_event_status textarea_op_enter(struct form_state *fs, struct form_control *fc);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 void set_textarea(struct document_view *doc_view, int direction);
 

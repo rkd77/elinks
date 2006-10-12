@@ -32,6 +32,10 @@
 #endif
 #endif				/* HAVE_GETIFADDRS */
 
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
+
 #include "elinks.h"
 
 #include "config/options.h"
@@ -275,7 +279,7 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 	struct sockaddr *pasv_addr = (struct sockaddr *) addr;
 	size_t addrlen;
 	int sock = -1;
-	int len;
+	socklen_t len;
 #ifdef CONFIG_IPV6
 	struct sockaddr_in6 bind_addr6;
 
@@ -449,7 +453,7 @@ static void
 connected(struct socket *socket)
 {
 	int err = 0;
-	int len = sizeof(err);
+	socklen_t len = sizeof(err);
 
 	assertm(socket->connect_info, "Lost connect_info!");
 	if_assert_failed return;

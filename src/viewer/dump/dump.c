@@ -55,6 +55,9 @@ static int dump_to_file_16(struct document *document, int fd);
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 static int dump_to_file_256(struct document *document, int fd);
 #endif
+#ifdef CONFIG_TRUE_COLOR
+static int dump_to_file_true_color(struct document *document, int fd);
+#endif
 
 /* This dumps the given @cached's source onto @fd nothing more. It returns 0 if it
  * all went fine and 1 if something isn't quite right and we should terminate
@@ -140,6 +143,11 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 #ifdef CONFIG_256_COLORS
 	case COLOR_MODE_256:
 		dump_to_file_256(formatted.document, fd);
+		break;
+#endif
+#ifdef CONFIG_TRUE_COLOR
+	case COLOR_MODE_TRUE_COLOR:
+		dump_to_file_true_color(formatted.document, fd);
 		break;
 #endif
 	default:
@@ -347,10 +355,10 @@ add_document_to_string(struct string *string, struct document *document)
 	assert(string && document);
 	if_assert_failed return NULL;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
-		goto utf_8;
-#endif /* CONFIG_UTF_8 */
+		goto utf8;
+#endif /* CONFIG_UTF8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -384,9 +392,9 @@ add_document_to_string(struct string *string, struct document *document)
 
 		add_char_to_string(string, '\n');
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	goto end;
-utf_8:
+utf8:
 	for (y = 0; y < document->height; y++) {
 		struct screen_char *pos = document->data[y].chars;
 		int white = 0;
@@ -414,7 +422,7 @@ utf_8:
 					if (frame)
 						add_char_to_string(string, data);
 					else
-						add_to_string(string, encode_utf_8(data));
+						add_to_string(string, encode_utf8(data));
 				}
 			}
 		}
@@ -422,7 +430,7 @@ utf_8:
 		add_char_to_string(string, '\n');
 	}
 end:
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	return string;
 }
 
@@ -701,6 +709,137 @@ fail:
 
 #endif /* defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS) */
 
+#ifdef CONFIG_TRUE_COLOR
+
+static int
+write_true_color(unsigned char *str, unsigned char *color, int fd, unsigned char *buf, int *bptr)
+{
+	unsigned char bufor[24];
+	unsigned char *data = bufor;
+
+	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
+	while(*data) {
+		if (write_char(*data++, fd, buf, bptr)) return -1;
+	}
+	return 0;
+}
+
+static int
+dump_to_file_true_color(struct document *document, int fd)
+{
+	static unsigned char color[6] = {255, 255, 255, 0, 0, 0};
+	int y;
+	int bptr = 0;
+	unsigned char *buf = mem_alloc(D_BUF);
+	unsigned char *foreground = &color[0];
+	unsigned char *background = &color[3];
+	int width = get_opt_int("document.dump.width");
+
+	if (!buf) return -1;
+
+	for (y = 0; y < document->height; y++) {
+		int white = 0;
+		int x;
+		write_true_color("38", foreground, fd, buf, &bptr);
+		write_true_color("48", background, fd, buf, &bptr);
+
+		for (x = 0; x < document->data[y].length; x++) {
+			unsigned char c;
+			unsigned char attr = document->data[y].chars[x].attr;
+			unsigned char *new_foreground = &document->data[y].chars[x].color[0];
+			unsigned char *new_background = &document->data[y].chars[x].color[3];
+
+			if (memcmp(foreground, new_foreground, 3)) {
+				foreground = new_foreground;
+				if (write_true_color("38", foreground, fd, buf, &bptr))
+					goto fail;
+			}
+
+			if (memcmp(background, new_background, 3)) {
+				background = new_background;
+				if (write_true_color("48", background, fd, buf, &bptr))
+					goto fail;
+			}
+
+			c = document->data[y].chars[x].data;
+
+			if ((attr & SCREEN_ATTR_FRAME)
+			    && c >= 176 && c < 224)
+				c = frame_dumb[c - 176];
+
+			if (c <= ' ') {
+				/* Count spaces. */
+				white++;
+				continue;
+			}
+
+			/* Print spaces if any. */
+			while (white) {
+				if (write_char(' ', fd, buf, &bptr))
+					goto fail;
+				white--;
+			}
+
+			/* Print normal char. */
+			if (write_char(c, fd, buf, &bptr))
+				goto fail;
+		}
+		for (;x < width; x++) {
+			if (write_char(' ', fd, buf, &bptr))
+				goto fail;
+		}
+
+		/* Print end of line. */
+		if (write_char('\n', fd, buf, &bptr))
+			goto fail;
+	}
+
+	if (hard_write(fd, buf, bptr) != bptr) {
+fail:
+		mem_free(buf);
+		return -1;
+	}
+
+	if (document->nlinks && get_opt_bool("document.dump.references")) {
+		int x;
+		unsigned char *header = "\nReferences\n\n   Visible links\n";
+		int headlen = strlen(header);
+
+		if (hard_write(fd, header, headlen) != headlen)
+			goto fail;
+
+		for (x = 0; x < document->nlinks; x++) {
+			struct link *link = &document->links[x];
+			unsigned char *where = link->where;
+
+			if (!where) continue;
+
+			if (document->options.links_numbering) {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
+						 x + 1, link->title, where);
+				else
+					snprintf(buf, D_BUF, "%4d. %s\n",
+						 x + 1, where);
+			} else {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
+						 link->title, where);
+				else
+					snprintf(buf, D_BUF, "   . %s\n", where);
+			}
+
+			bptr = strlen(buf);
+			if (hard_write(fd, buf, bptr) != bptr)
+				goto fail;
+		}
+	}
+
+	mem_free(buf);
+	return 0;
+}
+
+#endif /* CONFIG_TRUE_COLOR */
 int
 dump_to_file(struct document *document, int fd)
 {
@@ -710,10 +849,10 @@ dump_to_file(struct document *document, int fd)
 
 	if (!buf) return -1;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
-		goto utf_8;
-#endif /* CONFIG_UTF_8 */
+		goto utf8;
+#endif /* CONFIG_UTF8 */
 
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
@@ -751,9 +890,9 @@ dump_to_file(struct document *document, int fd)
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	goto ref;
-utf_8:
+utf8:
 	for (y = 0; y < document->height; y++) {
 		int white = 0;
 		int x;
@@ -768,7 +907,7 @@ utf_8:
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
 			else {
-				unsigned char *utf8_buf = encode_utf_8(c);
+				unsigned char *utf8_buf = encode_utf8(c);
 
 				while (*utf8_buf) {
 					if (write_char(*utf8_buf++,
@@ -799,16 +938,15 @@ utf_8:
 		if (write_char('\n', fd, buf, &bptr))
 			goto fail;
 	}
-#endif /* CONFIG_UTF_8 */
+ref:
+#endif /* CONFIG_UTF8 */
 
 	if (hard_write(fd, buf, bptr) != bptr) {
 fail:
 		mem_free(buf);
 		return -1;
 	}
-#ifdef CONFIG_UTF_8
-ref:
-#endif /* CONFIG_UTF_8 */
+
 	if (document->nlinks && get_opt_bool("document.dump.references")) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";

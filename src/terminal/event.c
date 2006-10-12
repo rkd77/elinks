@@ -43,14 +43,14 @@ struct terminal_interlink {
 	struct {
 		unicode_val_T ucs;
 		int len;
-		int min;
+		unicode_val_T min;
 		/* Modifier keys from the key event that carried the
 		 * first byte of the character.  We need this because
 		 * ELinks sees e.g. ESC U+00F6 as 0x1B 0xC3 0xB6 and
 		 * converts it to Alt-0xC3 0xB6, attaching the
 		 * modifier to the first byte only.  */
-		int modifier;
-	} utf_8;
+		term_event_modifier_T modifier;
+	} utf8;
 
 	/* This is the queue of events as coming from the other ELinks instance
 	 * owning the hosting terminal. */
@@ -133,14 +133,15 @@ term_send_event(struct terminal *term, struct term_event *ev)
 }
 
 static void
-term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
+term_send_ucs(struct terminal *term, unicode_val_T u,
+	      term_event_modifier_T modifier)
 {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	struct term_event ev;
 
 	set_kbd_term_event(&ev, u, modifier);
 	term_send_event(term, &ev);
-#else  /* !CONFIG_UTF_8 */
+#else  /* !CONFIG_UTF8 */
 	struct term_event ev;
 	unsigned char *recoded;
 
@@ -152,7 +153,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u, int modifier)
 		term_send_event(term, &ev);
 		recoded++;
 	}
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 }
 
 static void
@@ -177,12 +178,12 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	object_unlock(term->spec);
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	/* Probably not best place for set this. But now we finally have
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
 	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io");
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 }
 
 #ifdef CONFIG_MOUSE
@@ -235,7 +236,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * terminal screen before decoding the session info so that
 		 * handling of bad URL syntax by openning msg_box() will be
 		 * possible. */
-		set_init_term_event(&tev, 
+		set_init_term_event(&tev,
 				    ilev->info.size.width,
 				    ilev->info.size.height);
 		term_send_event(term, &tev);
@@ -277,7 +278,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 	{
 		int utf8_io = -1;
 		int key = ilev->info.keyboard.key;
-		int modifier = ilev->info.keyboard.modifier;
+		term_event_modifier_T modifier = ilev->info.keyboard.modifier;
 
 		if (key >= 0x100)
 			key = -key;
@@ -294,7 +295,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		}
 
 		/* Character Conversions.  */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		/* struct term_event_keyboard carries UCS-4.
 		 * - If the "utf_8_io" option (i.e. term->utf8) is
 		 *   true or the "charset" option refers to UTF-8,
@@ -316,7 +317,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * - Otherwise, handle_interlink_event() passes the
 		 *   bytes straight through.  */
 		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		/* In UTF-8 byte sequences that have more than one byte, the
 		 * first byte is between 0xC0 and 0xFF and the remaining bytes
@@ -324,34 +325,38 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * it is between 0x00 and 0x7F and it is straight ASCII.
 		 * (All 'betweens' are inclusive.) */
 
-		if (interlink->utf_8.len) {
+		if (interlink->utf8.len) {
 			/* A previous call to handle_interlink_event
 			 * got a UTF-8 start byte. */
 
 			if (key >= 0x80 && key <= 0xBF && utf8_io) {
 				/* This is a UTF-8 continuation byte. */
 
-				interlink->utf_8.ucs <<= 6;
-				interlink->utf_8.ucs |= key & 0x3F;
-				if (! --interlink->utf_8.len) {
-					unicode_val_T u = interlink->utf_8.ucs;
+				interlink->utf8.ucs <<= 6;
+				interlink->utf8.ucs |= key & 0x3F;
+				if (! --interlink->utf8.len) {
+					unicode_val_T u = interlink->utf8.ucs;
 
-					if (u < interlink->utf_8.min)
-						u = UCS_NO_CHAR;
+					/* UTF-8 allows neither overlong
+					 * sequences nor surrogates.  */
+					if (u < interlink->utf8.min
+					    || is_utf16_surrogate(u))
+						u = UCS_REPLACEMENT_CHARACTER;
 					term_send_ucs(term, u,
-						      term->interlink->utf_8.modifier);
+						      term->interlink->utf8.modifier);
 				}
 				break;
 
 			} else {
-				/* The byte sequence for this character is
-				 * ending prematurely.  Send UCS_NO_CHAR for the
-				 * terminated character, but don't break; let
-				 * this byte be handled below. */
+				/* The byte sequence for this character
+				 * is ending prematurely.  Send
+				 * UCS_REPLACEMENT_CHARACTER for the
+				 * terminated character, but don't break;
+				 * let this byte be handled below. */
 
-				interlink->utf_8.len = 0;
-				term_send_ucs(term, UCS_NO_CHAR,
-					      term->interlink->utf_8.modifier);
+				interlink->utf8.len = 0;
+				term_send_ucs(term, UCS_REPLACEMENT_CHARACTER,
+					      term->interlink->utf8.modifier);
 			}
 		}
 
@@ -361,7 +366,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			 * UTF-8 start and continuation bytes or UTF-8 I/O mode
 			 * is disabled. */
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			if (key >= 0 && key <= 0xFF && !utf8_io) {
 				/* Not special and UTF-8 mode is disabled:
 				 * recode from the terminal charset to UCS-4. */
@@ -372,7 +377,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				term_send_ucs(term, key, modifier);
 				break;
 			}
-#endif /* !CONFIG_UTF_8 */
+#endif /* !CONFIG_UTF8 */
 
 			/* It must be special (e.g., F1 or Enter)
 			 * or a single-byte UTF-8 character. */
@@ -383,27 +388,44 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		} else if ((key & 0xC0) == 0xC0 && (key & 0xFE) != 0xFE) {
 			/* This is a UTF-8 start byte. */
 
-			unsigned int mask, cov = 0x80;
+			/* Minimum character values for UTF-8 octet
+			 * sequences of each length, from RFC 2279.
+			 * According to the RFC, UTF-8 decoders should
+			 * reject characters that are encoded with
+			 * more octets than necessary.  (RFC 3629,
+			 * which ELinks does not yet otherwise follow,
+			 * tightened the "should" to "MUST".)  */
+			static const unicode_val_T min[] = {
+				0x00000080, /* ... 0x000007FF with 2 octets */
+				0x00000800, /* ... 0x0000FFFF with 3 octets */
+				0x00010000, /* ... 0x001FFFFF with 4 octets */
+				0x00200000, /* ... 0x03FFFFFF with 5 octets */
+				0x04000000  /* ... 0x7FFFFFFF with 6 octets */
+			};
+			unsigned int mask;
 			int len = 0;
 
-			/* The number of 1's between the first bit and first
-			 * 0 bit (exclusive) is the number of remaining 
-			 * continuation bytes in the encoding of the character
-			 * that is now being processed, which number will be
-			 * stored in interlink->utf_8.len. */
-			for (mask = 0x80; key & mask; mask >>= 1) {
+			/* Set @len = the number of contiguous 1's
+			 * in the most significant bits of the first
+			 * octet, i.e. @key.  It is also the number
+			 * of octets in the character.  Leave @mask
+			 * pointing to the first 0 bit found.  */
+			for (mask = 0x80; key & mask; mask >>= 1)
 				len++;
-				interlink->utf_8.min = cov;
-				cov = 1 << (1 + 5 * len);
-			}
 
-			interlink->utf_8.len = len - 1;
-			interlink->utf_8.ucs = key & (mask - 1);
-			interlink->utf_8.modifier = modifier;
+			/* This will hold because @key was checked above.  */
+			assert(len >= 2 && len <= 6);
+			if_assert_failed goto invalid_utf8_start_byte;
+
+			interlink->utf8.min = min[len - 2];
+			interlink->utf8.len = len - 1;
+			interlink->utf8.ucs = key & (mask - 1);
+			interlink->utf8.modifier = modifier;
 			break;
 		}
 
-		term_send_ucs(term, UCS_NO_CHAR, modifier);
+invalid_utf8_start_byte:
+		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}
 

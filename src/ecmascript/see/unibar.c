@@ -57,7 +57,7 @@ struct js_unibar_object {
 };
 
 struct SEE_objectclass js_menubar_object_class = {
-	NULL,
+	"menubar",
 	unibar_get,
 	unibar_put,
 	unibar_canput,
@@ -71,7 +71,7 @@ struct SEE_objectclass js_menubar_object_class = {
 };
 
 struct SEE_objectclass js_statusbar_object_class = {
-	NULL,
+	"statusbar",
 	unibar_get,
 	unibar_put,
 	unibar_canput,
@@ -95,7 +95,6 @@ unibar_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct js_unibar_object *obj = (struct js_unibar_object *)o;
 	unsigned char bar = obj->bar;
 
-	checktime(interp);
 	if (p == s_visible) {
 #define unibar_fetch(bar) \
 	SEE_SET_BOOLEAN(res, status->force_show_##bar##_bar >= 0 \
@@ -122,8 +121,7 @@ static void
 unibar_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *val, int attr)
 {
-	checktime(interp);
-	if (p == s_location) {
+	if (p == s_visible) {
 		struct global_object *g = (struct global_object *)interp;
 		struct view_state *vs = g->win->vs;
 		struct document_view *doc_view = vs->doc_view;
@@ -151,7 +149,6 @@ static int
 unibar_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_visible)
 		return 1;
 	return 0;
@@ -161,7 +158,6 @@ static int
 unibar_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_visible)
 		return 1;
 	return 0;
@@ -178,7 +174,6 @@ init_js_menubar_object(struct ecmascript_interpreter *interpreter)
 	menu = SEE_NEW(interp, struct js_unibar_object);
 
 	menu->object.objectclass = &js_menubar_object_class;
-	menu->object.objectclass->Class = s_menubar;
 	menu->object.Prototype = NULL;
 	menu->bar = 't';
 
@@ -197,7 +192,6 @@ init_js_statusbar_object(struct ecmascript_interpreter *interpreter)
 	status = SEE_NEW(interp, struct js_unibar_object);
 
 	status->object.objectclass = &js_statusbar_object_class;
-	status->object.objectclass->Class = s_statusbar;
 	status->object.Prototype = NULL;
 	status->bar = 's';
 

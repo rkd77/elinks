@@ -118,7 +118,7 @@ struct link {
 #define get_link_name(link) \
 	(!link_is_form(link) ? (link)->data.name : NULL)
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 struct search {
 	int x, y;
 	signed int n;		/* RAM is cheap nowadays */
@@ -182,7 +182,7 @@ struct document {
 	struct search **slines1;
 	struct search **slines2;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	unsigned char buf[7];
 	unsigned char buf_length;
 #endif
@@ -231,7 +231,9 @@ void shrink_format_cache(int);
 extern struct module document_module;
 
 /* FIXME: support for entities and all Unicode characters.
- * For now, we only support simple printable character. */
+ * (Unpaired surrogates should be rejected, so that the ECMAScript
+ * interface can convert the access key to UTF-16.)
+ * For now, we only support simple printable character.  */
 #define accesskey_string_to_unicode(s) (((s)[0] && !(s)[1] && isprint((s)[0])) ? (s)[0] : 0)
 
 #endif

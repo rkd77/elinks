@@ -60,7 +60,8 @@ int register_event(unsigned char *name);
 
 /* This unregisters an event number @event, freeing the resources it
  * occupied, chain of associated hooks and unallocating the event id for
- * further recyclation. */
+ * further recyclation.
+ * Bug 810: unregister_event has not yet been implemented. */
 int unregister_event(int event);
 
 int register_event_hook(int id, event_hook_T callback, int priority, void *data);

@@ -210,7 +210,7 @@ realloc_spaces(struct part *part, int length)
 
 	if (!ALIGN_SPACES(&part->spaces, part->spaces_len, length))
 		return -1;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (!ALIGN_SPACES(&part->char_width, part->spaces_len, length))
 		return -1;
 #endif
@@ -379,7 +379,7 @@ get_format_screen_char(struct html_context *html_context,
 	return &schar_cache;
 }
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline int
@@ -422,7 +422,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				}
 				part->document->buf_length = i;
 				part->document->buf[i] = '\0';
-				data = utf_8_to_unicode(&buf_ptr, buf_ptr + i);
+				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
 					part->document->buf_length = 0;
 					goto good_char;
@@ -440,7 +440,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					chars++;
 				} else {
 					part->spaces[x] = (*chars == ' ');
-					data = utf_8_to_unicode(&chars, end);
+					data = utf8_to_unicode(&chars, end);
 					if (data == UCS_NO_CHAR) {
 						if (charslen == 1) {
 							/* HR */
@@ -454,7 +454,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 							continue;
 						} else {
 							unsigned char i;
-broken_char:							/* broken char */
+
 							for (i = 0; chars < end;i++) {
 								part->document->buf[i] = *chars++;
 							}
@@ -467,9 +467,7 @@ good_char:
 							schar->data = (unicode_val_T)data;
 							part->char_width[x] = 2;
 							copy_screen_chars(&POS(x++, y), schar, 1);
-							data = utf_8_to_unicode(&chars, end);
-							if (data == UCS_NO_CHAR) goto broken_char;
-							schar->data = (unicode_val_T)data;
+							schar->data = UCS_NO_CHAR;
 							part->spaces[x] = 0;
 							part->char_width[x] = 0;
 						} else {
@@ -503,13 +501,13 @@ good_char:
 				unicode_val_T data;
 
 				part->spaces[x] = (*chars == ' ');
-				data = utf_8_to_unicode(&chars, end);
+				data = utf8_to_unicode(&chars, end);
 				part->char_width[x] = unicode_to_cell(data);
 				if (part->char_width[x] == 2) {
 					x++;
 					part->spaces[x] = 0;
 					part->char_width[x] = 0;
-					data = utf_8_to_unicode(&chars, end);
+					data = utf8_to_unicode(&chars, end);
 				}
 				if (data == UCS_NO_CHAR) {
 					/* this is at the end only */
@@ -567,7 +565,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		}
 	}
 }
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 static void
 move_links(struct html_context *html_context, int xf, int yf, int xt, int yt)
@@ -799,7 +797,7 @@ split_line_at(struct html_context *html_context, int width)
 	if (part->document) {
 		assert(part->document->data);
 		if_assert_failed return 0;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (html_context->options->utf8
 		    && width < part->spaces_len && part->char_width[width] == 2) {
 			move_chars(html_context, width, part->cy, par_format.leftmargin, part->cy + 1);
@@ -815,7 +813,7 @@ split_line_at(struct html_context *html_context, int width)
 		}
 	}
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (!(html_context->options->utf8
 	      && width < part->spaces_len
 	      && part->char_width[width] == 2))
@@ -826,7 +824,7 @@ split_line_at(struct html_context *html_context, int width)
 	if (tmp > 0) {
 		/* 0 is possible and I'm paranoid ... --Zas */
 		memmove(part->spaces, part->spaces + width, tmp);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		memmove(part->char_width, part->char_width + width, tmp);
 #endif
 	}
@@ -834,7 +832,7 @@ split_line_at(struct html_context *html_context, int width)
 	assert(tmp >= 0);
 	if_assert_failed tmp = 0;
 	memset(part->spaces + tmp, 0, width);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	memset(part->char_width + tmp, 0, width);
 #endif
 
@@ -843,7 +841,7 @@ split_line_at(struct html_context *html_context, int width)
 		assertm(tmp > 0, "part->spaces_len - par_format.leftmargin == %d", tmp);
 		/* So tmp is zero, memmove() should survive that. Don't recover. */
 		memmove(part->spaces + par_format.leftmargin, part->spaces, tmp);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		memmove(part->char_width + par_format.leftmargin, part->char_width, tmp);
 #endif
 	}
@@ -883,7 +881,7 @@ split_line(struct html_context *html_context)
 	assert(part);
 	if_assert_failed return 0;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (html_context->options->utf8) {
 		for (x = overlap(par_format); x >= par_format.leftmargin; x--) {
 
@@ -1343,7 +1341,7 @@ done_link_state_info(void)
 	       sizeof(renderer_context.link_state_info));
 }
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
 	     unsigned char *chars, int charslen, int cells)
@@ -1351,7 +1349,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
 		   unsigned char *chars, int charslen)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 {
 	struct part *part = html_context->part;
 	struct link *link;
@@ -1403,9 +1401,9 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (x_offset) {
 			charslen -= x_offset;
 			chars += x_offset;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 			cells -= x_offset;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		}
 
 		link = new_link(html_context, chars, charslen);
@@ -1420,17 +1418,17 @@ process_link(struct html_context *html_context, enum link_state link_state,
 	}
 
 	/* Add new canvas positions to the link. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (realloc_points(link, link->npoints + cells))
 #else
 	if (realloc_points(link, link->npoints + charslen))
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	{
 		struct point *point = &link->points[link->npoints];
 		int x = X(part->cx) + x_offset;
 		int y = Y(part->cy);
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		link->npoints += cells;
 
 		for (; cells > 0; cells--, point++, x++)
@@ -1438,7 +1436,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		link->npoints += charslen;
 
 		for (; charslen > 0; charslen--, point++, x++)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		{
 			point->x = x;
 			point->y = y;
@@ -1490,9 +1488,9 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 {
 	enum link_state link_state;
 	struct part *part;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	int cells;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	assert(html_context);
 	if_assert_failed return;
@@ -1551,21 +1549,21 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		else if (html_context->options->links_numbering)
 			put_link_number(html_context);
 	}
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	cells =
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		set_hline(html_context, chars, charslen, link_state);
 
 	if (link_state != LINK_STATE_NONE) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		process_link(html_context, link_state, chars, charslen,
 			     cells);
 #else
 		process_link(html_context, link_state, chars, charslen);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	}
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	if (renderer_context.nowrap
 	    && part->cx + cells > overlap(par_format))
 		return;
@@ -1577,7 +1575,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		return;
 
 	part->cx += charslen;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	renderer_context.nobreak = 0;
 
@@ -1594,11 +1592,11 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	}
 
 	assert(charslen > 0);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	part->xa += cells;
 #else
 	part->xa += charslen;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 	int_lower_bound(&part->max_width, part->xa
 			+ par_format.leftmargin + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
@@ -1657,7 +1655,7 @@ end:
 	part->cx = -1;
 	part->xa = 0;
    	memset(part->spaces, 0, part->spaces_len);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
    	memset(part->char_width, 0, part->spaces_len);
 #endif
 }
@@ -2079,7 +2077,7 @@ format_html_part(struct html_context *html_context,
 
 	done_link_state_info();
 	mem_free_if(part->spaces);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	mem_free_if(part->char_width);
 #endif
 
@@ -2165,9 +2163,9 @@ render_html_document(struct cache_entry *cached, struct document *document,
 							   &document->cp,
 							   &document->cp_status,
 							   document->options.hard_assume);
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,

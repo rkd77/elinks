@@ -21,6 +21,7 @@ exec_prefix = @exec_prefix@
 bindir = @bindir@
 sbindir = @sbindir@
 libexecdir = @libexecdir@
+datarootdir = @datarootdir@
 datadir = @datadir@
 sysconfdir = @sysconfdir@
 sharedstatedir = @sharedstatedir@
@@ -38,10 +39,14 @@ ACLOCAL = @ACLOCAL@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 
-INSTALL = @INSTALL@
+# The INSTALL substituted by configure can be either absolute or
+# relative to the top build directory.  Adjust it so that it can
+# be used in build subdirectories.
+INSTALL = $(if $(patsubst /%,,$(firstword @INSTALL@)),$(top_builddir)/)@INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
+UNINSTALL = rm -f
 
 host = @host@
 
@@ -155,8 +160,9 @@ CONFIG_SMB = @CONFIG_SMB@
 CONFIG_SPIDERMONKEY = @CONFIG_SPIDERMONKEY@
 CONFIG_SSL = @CONFIG_SSL@
 CONFIG_SYSMOUSE = @CONFIG_SYSMOUSE@
+CONFIG_TRUE_COLOR = @CONFIG_TRUE_COLOR@
 CONFIG_URI_REWRITE = @CONFIG_URI_REWRITE@
-CONFIG_UTF_8 = @CONFIG_UTF_8@
+CONFIG_UTF8 = @CONFIG_UTF8@
 CONFIG_XBEL_BOOKMARKS = @CONFIG_XBEL_BOOKMARKS@
 CONFIG_XMLTO = @CONFIG_XMLTO@
 CONFIG_GSSAPI = @CONFIG_GSSAPI@

@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+	"http://www.w3.org/TR/REC-html40/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Script-Type" content="application/ecmascript">
+<title>ECMAScript accessKey tests</title>
+<h1>ECMAScript accessKey tests</h1>
+
+<h2>Set valid access keys and read them back</h2>
+
+<p>This does not automatically test that the assigned access keys
+actually work.</p>
+<form name="form1" action="#">
+<p><input type="button" onclick="run1()" value="Test"> <input id="result1" value="not run">
+<input type="reset">
+<table>
+<tr><td><input id="a1" accesskey="a"><td><td>empty string
+<tr><td><input id="b1" accesskey="b"><td>U+0020<td>must not become "Space"
+<tr><td><input id="c1" accesskey="c"><td>U+0025<td>ASCII punctuation
+<tr><td><input id="d1" accesskey="d"><td>U+007A<td>ASCII letter
+<tr><td><input id="e1" accesskey="e"><td>U+00E5<td>Latin-1
+<tr><td><input id="f1" accesskey="f"><td>U+0161<td>Latin-9
+<tr><td><input id="g1" accesskey="g"><td>U+3042<td>Hiragana
+<tr><td><input id="h1" accesskey="h"><td>U+10A55<td>Kharoshthi
+</table>
+</form>
+<script type="application/ecmascript">
+function run1() {
+  var form = window.document.forms["form1"];
+  form.elements["result1"].value = "running";
+  var ok = true;
+  var probe = function(element, accessKey) {
+    element.accessKey = accessKey;
+    if (element.accessKey != accessKey) {
+      ok = false;
+      element.value = "failed " + accessKey + "/" + element.accessKey;
+    } else {
+      element.value = "passed " + accessKey + "/" + element.accessKey;
+    }
+  }
+  probe(form.elements["a1"], "");
+  probe(form.elements["b1"], " ");
+  probe(form.elements["c1"], "%");
+  probe(form.elements["d1"], "z");
+  probe(form.elements["e1"], "\u00E5");
+  probe(form.elements["f1"], "\u0161");
+  probe(form.elements["g1"], "\u3042");
+  probe(form.elements["h1"], "\uD802\uDE55");
+  form.elements["result1"].value = ok ? "passed" : "failed";
+  return false;
+}
+</script>
+
+<h2>These might throw errors</h2>
+<form name="form2" action="#">
+<table>
+<tr><td><input type="button" value="Test" onclick='run2("a2",-273.15)'><td><input id="a2"><td>number -273.15
+<tr><td><input type="button" value="Test" onclick='run2("b2","\u0000")'><td><input id="b2"><td>U+0000
+<tr><td><input type="button" value="Test" onclick='run2("c2","\u0001")'><td><input id="c2"><td>U+0001
+<tr><td><input type="button" value="Test" onclick='run2("d2","\u000A")'><td><input id="d2"><td>U+000A
+<tr><td><input type="button" value="Test" onclick='run2("e2","hyi")'><td><input id="e2"><td>"hyi"
+<tr><td><input type="reset">
+</table>
+</form>
+<script type="application/ecmascript">
+function run2(name, accessKey) {
+  var form = window.document.forms["form2"];
+  var element = form.elements[name];
+  element.accessKey = accessKey;
+  if (element.accessKey != accessKey)
+     element.value = "different " + accessKey + "/" + element.accessKey;
+  else
+     element.value = "same " + accessKey + "/" + element.accessKey;
+  return false;
+}
+</script>
+
+<h2>Invalid uses of surrogates</h2>
+<form name="form3" action="#">
+<table>
+<tr><td><input type="button" value="Test" onclick='run3("a3","\uD800")'><td><input id="a3"><td>U+D800
+<tr><td><input type="button" value="Test" onclick='run3("b3","\uD800.")'><td><input id="b3"><td>U+D800 U+002E
+<tr><td><input type="button" value="Test" onclick='run3("c3","\uD800\uD800")'><td><input id="c3"><td>U+D800 U+D800
+<tr><td><input type="button" value="Test" onclick='run3("d3","\uD800\uDBFF")'><td><input id="d3"><td>U+D800 U+DBFF
+<tr><td><input type="button" value="Test" onclick='run3("e3","\uD800\uE000")'><td><input id="e3"><td>U+D800 U+E000
+<tr><td><input type="button" value="Test" onclick='run3("f3","\uDBFF\uDBFF")'><td><input id="f3"><td>U+DBFF U+DBFF
+<tr><td><input type="button" value="Test" onclick='run3("g3","\uDC00")'><td><input id="g3"><td>U+DC00
+<tr><td><input type="button" value="Test" onclick='run3("h3","\uDC00.")'><td><input id="h3"><td>U+DC00 U+002E
+<tr><td><input type="button" value="Test" onclick='run3("i3","\uDC00\uD800")'><td><input id="i3"><td>U+DC00 U+D800
+<tr><td><input type="button" value="Test" onclick='run3("j3","\uDC00\uDBFF")'><td><input id="j3"><td>U+DC00 U+DBFF
+<tr><td><input type="button" value="Test" onclick='run3("k3","\uDC00\uDC00")'><td><input id="k3"><td>U+DC00 U+DC00
+<tr><td><input type="button" value="Test" onclick='run3("l3","\uDC00\uDFFF")'><td><input id="l3"><td>U+DC00 U+DFFF
+<tr><td><input type="button" value="Test" onclick='run3("m3","\uDC00\uFF20")'><td><input id="m3"><td>U+DC00 U+FF20
+<tr><td><input type="button" value="Test" onclick='run3("n3","\uDFFF")'><td><input id="n3"><td>U+DFFF
+<tr><td><input type="button" value="Test" onclick='run3("o3","\uDFFF\uDFFF")'><td><input id="o3"><td>U+DFFF U+DFFF
+<tr><td><input type="reset">
+</table>
+</form>
+<script type="application/ecmascript">
+function run3(name, accessKey) {
+  var form = window.document.forms["form3"];
+  var element = form.elements[name];
+  element.accessKey = accessKey;
+  if (element.accessKey != accessKey)
+     element.value = "different " + accessKey + "/" + element.accessKey;
+  else
+     element.value = "same " + accessKey + "/" + element.accessKey;
+  return false;
+}
+</script>

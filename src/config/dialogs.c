@@ -817,26 +817,41 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 	struct kbdbind_add_hop *hop = data;
 	action_id_T action_id;
 
+	/* check_keystroke() has parsed @keystroke to @hop->kbd.  */
 	if (keybinding_exists(hop->keymap_id, &hop->kbd, &action_id)
 	    && action_id != ACT_MAIN_NONE) {
 		struct kbdbind_add_hop *new_hop;
+		struct string canonical;
 
 		/* Same keystroke for same action, just return. */
 		if (action_id == hop->action_id) return;
 
+		/* @*hop is on the memory_list of the input_dialog,
+		 * which will be closed when this function returns.  */
 		new_hop = new_hop_from(hop);
 		if (!new_hop) return; /* out of mem */
+
+		/* Try to convert the parsed keystroke back to a
+		 * string, so that the "Keystroke already used" box
+		 * displays the same canonical name as the keybinding
+		 * manager does.  If something goes wrong here, then
+		 * canonical.length will probably be 0, in which case
+		 * we'll use the original @keystroke string instead. */
+		if (init_string(&canonical))
+			add_keystroke_to_string(&canonical, &hop->kbd, 0);
 
 		msg_box(new_hop->term, getml(new_hop, NULL), MSGBOX_FREE_TEXT,
 			N_("Keystroke already used"), ALIGN_CENTER,
 			msg_text(new_hop->term, N_("The keystroke \"%s\" "
-			"is currently used for \"%s\".\n"
-			"Are you sure you want to replace it?"),
-			keystroke, get_action_name(hop->keymap_id, action_id)),
+				 "is currently used for \"%s\".\n"
+				 "Are you sure you want to replace it?"),
+				 canonical.length ? canonical.source : keystroke,
+				 get_action_name(hop->keymap_id, action_id)),
 			new_hop, 2,
 			N_("~Yes"), really_really_add_keybinding, B_ENTER,
 			N_("~No"), NULL, B_ESC);
 
+		done_string(&canonical); /* safe even if init failed */
 		return;
 	}
 
@@ -870,7 +885,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 
 	if (!item || !item->depth) {
 		info_box(term, 0, N_("Add keybinding"), ALIGN_CENTER,
-			 N_("Need to select a keymap."));
+			 N_("Need to select an action."));
 		return EVENT_PROCESSED;
 	}
 
@@ -892,16 +907,15 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 	}
 
 	text = msg_text(term,
-			"Action: %s\n"
-			"Keymap: %s\n"
-			"\n"
-			"Keystroke should be written in the format: "
-			"[Prefix-]Key\n"
-			"Prefix: Shift, Ctrl, Alt\n"
-			"Key: a,b,c,...,1,2,3,...,Space,Up,PageDown,"
-			"Tab,Enter,Insert,F5,..."
-			"\n\n"
-			"Keystroke",
+			N_("Action: %s\n"
+			   "Keymap: %s\n"
+			   "\n"
+			   "Keystroke should be written in the format: "
+			   "[Shift-][Ctrl-][Alt-]Key\n"
+			   "Key: a,b,c,...,1,2,3,...,Space,Up,PageDown,"
+			   "Tab,Enter,Insert,F5,..."
+			   "\n\n"
+			   "Keystroke"),
 			get_action_name(hop->keymap_id, hop->action_id),
 			get_keymap_name(hop->keymap_id));
 

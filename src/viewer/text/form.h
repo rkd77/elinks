@@ -37,11 +37,28 @@ struct form_state {
 	int position;
 	enum form_type type;
 
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @value is the text
+	 * string that the user can edit.  The string is null-terminated;
+	 * its length is not stored separately.  The size of the buffer
+	 * is not stored anywhere; extending the string always requires
+	 * calling realloc().  The string is not normally allowed to grow
+	 * past @form_control.maxlength bytes (not counting the null),
+	 * but there may be ways to get longer strings.  */
 	unsigned char *value;
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state is the byte
+	 * position of the insertion point in @value.
+	 * For FC_CHECKBOX and FC_RADIO, @state is 1 or 0.
+	 * For FC_SELECT, @state is the index of the selected item
+	 * in @form_control.labels.  */
 	int state;
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is not
+	 * used.  */
 	int state_cell;
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
+	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the index
+	 * of the first displayed byte in @value.  It should never be
+	 * in the middle of a character.  */
 	int vpos;
 	int vypos;
 

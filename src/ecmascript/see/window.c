@@ -58,7 +58,7 @@ static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct
 void location_goto(struct document_view *, unsigned char *);
 
 struct SEE_objectclass js_window_object_class = {
-	NULL,
+	"window",
 	window_get,
 	window_put,
 	window_canput,
@@ -100,7 +100,6 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct js_window_object *win = (struct js_window_object *)o;
 	struct view_state *vs = win->vs;
 
-	checktime(interp);
 	if (p == s_closed) {
 		SEE_SET_BOOLEAN(res, 0);
 	} else if (p == s_self || p == s_parent || p == s_top) {
@@ -157,7 +156,6 @@ static void
 window_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *val, int attr)
 {
-	checktime(interp);
 	if (p == s_location) {
 		struct js_window_object *win = (struct js_window_object *)o;
 		struct view_state *vs = win->vs;
@@ -175,7 +173,6 @@ static int
 window_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	if (p == s_location)
 		return 1;
 	return 0;
@@ -185,7 +182,6 @@ static int
 window_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	checktime(interp);
 	/* all unknown properties return UNDEFINED value */
 	return 1;
 }
@@ -201,7 +197,6 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = win->vs;
 	unsigned char *string;
 
-	checktime(interp);
 	SEE_SET_BOOLEAN(res, 1);
 	if (argc < 1)
 		return;
@@ -236,7 +231,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	static time_t ratelimit_start;
 	static int ratelimit_count;
 #endif
-	checktime(interp);
 	SEE_SET_OBJECT(res, (struct SEE_object *)win);
 	if (get_opt_bool("ecmascript.block_window_opening")) {
 #ifdef CONFIG_LEDS
@@ -329,7 +323,6 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 	g->win = SEE_NEW(interp, struct js_window_object);
 
 	g->win->object.objectclass = &js_window_object_class;
-	g->win->object.objectclass->Class = s_window;
 	g->win->object.Prototype = NULL;
 	g->win->vs = interpreter->vs;
 

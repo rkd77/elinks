@@ -36,13 +36,13 @@ add_dlg_text(struct dialog *dlg, unsigned char *text,
 }
 
 /* Returns length of substring (from start of @text) before a split. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 static inline int
 split_line(unsigned char *text, int max_width, int *cells, int utf8)
 #else
 static inline int
 split_line(unsigned char *text, int max_width, int *cells)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 {
 	unsigned char *split = text;
 	int cells_save = *cells;
@@ -52,7 +52,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 	while (*split && *split != '\n') {
 		unsigned char *next_split;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (utf8) {
 			unsigned char *next_char_begin = split
 							 + utf8charlen(split);
@@ -74,7 +74,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 				next_char_begin += utf8charlen(next_split);
 			}
 		} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 		{
 			next_split = split + 1;
 
@@ -88,7 +88,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 			 * meaning there's no splittable substring under
 			 * requested width. */
 			if (split == text) {
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				if (utf8) {
 					int m_bytes = utf8_cells2bytes(text,
 								       max_width,
@@ -97,7 +97,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 					cells_save = utf8_ptr2cells(text,
 								    split);
 				} else
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				{
 					split = &text[max_width];
 					cells_save = max_width;
@@ -106,9 +106,9 @@ split_line(unsigned char *text, int max_width, int *cells)
 				/* FIXME: Function ispunct won't work correctly
 				 * with UTF-8 characters. We need some similar
 				 * function for UTF-8 characters. */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 				if (!utf8)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 				{
 					/* Give preference to split on a
 					 * punctuation if any. Note that most
@@ -150,13 +150,13 @@ split_line(unsigned char *text, int max_width, int *cells)
 #define realloc_lines(x, o, n) mem_align_alloc(x, o, n, LINES_GRANULARITY)
 
 /* Find the start of each line with the current max width */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 static unsigned char **
 split_lines(struct widget_data *widget_data, int max_width, int utf8)
 #else
 static unsigned char **
 split_lines(struct widget_data *widget_data, int max_width)
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 {
 	unsigned char *text = widget_data->widget->text;
 	unsigned char **lines = (unsigned char **) widget_data->cdata;
@@ -175,7 +175,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 		if (isspace(*text)) text++;
 		if (!*text) break;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		width = split_line(text, max_width, &cells, utf8);
 #else
 		width = split_line(text, max_width, &cells);
@@ -228,11 +228,11 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 			firstline = 0;
 		if (!*text) break;
 
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		line_width = split_line(text, width, &cells, term->utf8);
 #else
 		line_width = split_line(text, width, &cells);
-#endif /* CONFIG_UTF_8 */
+#endif /* CONFIG_UTF8 */
 
 		/* split_line() may return 0. */
 		if (line_width < 1) {
@@ -286,7 +286,7 @@ dlg_format_text(struct terminal *term, struct widget_data *widget_data,
 
 		/* Ensure that the current split is valid but don't
 		 * split if we don't have to */
-#ifdef CONFIG_UTF_8
+#ifdef CONFIG_UTF8
 		if (widget_data->box.width != width
 		    && !split_lines(widget_data, width, term->utf8))
 			return;

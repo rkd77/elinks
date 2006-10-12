@@ -71,17 +71,21 @@ set_mouse_interlink_event(struct interlink_event *ev, int x, int y, unsigned int
 }
 
 static inline void
-set_kbd_term_event(struct term_event *ev, int key, int modifier)
+set_kbd_term_event(struct term_event *ev, int key,
+		   term_event_modifier_T modifier)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = EVENT_KBD;
 	kbd_set(&ev->info.keyboard, key, modifier);
 }
 
-/* @key can be e.g. KBD_ENTER as in term_event_keyboard.key.
- * This function then sets ev->info.keyboard.key = -KBD_ENTER.  */
+/* @key can be either an 8-bit byte or a value from enum term_event_special_key.
+ * In the latter case, this function negates the value, unless it is KBD_UNDEF.
+ * For example, key == KBD_ENTER results in ev->info.keyboard.key = -KBD_ENTER.
+ * This mapping keeps the interlink protocol compatible with ELinks 0.11.  */
 static inline void
-set_kbd_interlink_event(struct interlink_event *ev, int key, int modifier)
+set_kbd_interlink_event(struct interlink_event *ev, int key,
+			term_event_modifier_T modifier)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = EVENT_KBD;
@@ -166,17 +170,7 @@ void in_term(struct terminal *);
 #define check_kbd_modifier(event, mod)	(kbd_modifier_is(&(event)->info.keyboard, (mod)))
 
 #define check_kbd_textinput_key(event)	(get_kbd_key(event) >= ' ' && check_kbd_modifier(event, KBD_MOD_NONE))
-#ifdef CONFIG_UTF_8
-/* We must currently limit hotkeys of labels to ASCII, because
- * get_kbd_key(event) is in UCS-4 and various event handlers pass it
- * to toupper() if check_kbd_label_key() returns true.
- * TO DO: Change the event handlers to use unicode_fold_label_case()
- * instead.  The code that extracts the hotkey from the label string
- * will also have to be changed.  */
-#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && get_kbd_key(event) <= 0x7F)
-#else  /* !CONFIG_UTF_8 */
-#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ')
-#endif /* !CONFIG_UTF_8 */
+#define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && (check_kbd_modifier(event, KBD_MOD_NONE) || check_kbd_modifier(event, KBD_MOD_ALT)))
 
 
 /* For mouse events handling */
