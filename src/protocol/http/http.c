@@ -896,11 +896,11 @@ http_send_header(struct socket *socket)
 			int h1, h2;
 
 			h1 = unhx(post[0]);
-			assert(h1 >= 0 && h1 < 16);
+			assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
 			if_assert_failed h1 = 0;
 
 			h2 = unhx(post[1]);
-			assert(h2 >= 0 && h2 < 16);
+			assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
 			if_assert_failed h2 = 0;
 
 			buffer[n++] = (h1<<4) + h2;
