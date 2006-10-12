@@ -181,12 +181,13 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	if (!cached || cached->incomplete)
 		return NULL;
 
+#if 0
 	if (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS
 	    || uri->protocol == PROTOCOL_FILE /* CGI */) {
 	    	if (cached->last_modified && cache_mode == CACHE_MODE_NORMAL)
 			return NULL;
 	}
-
+#endif
 
 	/* A bit of a gray zone. Delete the entry if the it has the stricktest
 	 * cache mode and we don't want the most aggressive mode or we have to

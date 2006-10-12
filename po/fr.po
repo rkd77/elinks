@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-03 15:20+0200\n"
-"PO-Revision-Date: 2006-09-03 15:22+0200\n"
+"POT-Creation-Date: 2006-10-12 11:11+0200\n"
+"PO-Revision-Date: 2006-10-12 11:14+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,8 +35,8 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/cookies/dialogs.c:356 src/cookies/dialogs.c:454 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
-#: src/protocol/protocol.c:236 src/scripting/lua/core.c:379
-#: src/scripting/lua/core.c:460 src/session/session.c:806
+#: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
+#: src/scripting/lua/core.c:471 src/session/session.c:806
 #: src/viewer/text/search.c:1666
 msgid "~OK"
 msgstr "~OK"
@@ -121,7 +121,7 @@ msgstr "Erreur de suppression"
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
 #: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:214 src/terminal/tab.c:257
+#: src/terminal/tab.c:206 src/terminal/tab.c:249
 msgid "~Yes"
 msgstr "~Oui"
 
@@ -129,7 +129,7 @@ msgstr "~Oui"
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
 #: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:215 src/terminal/tab.c:258
+#: src/terminal/tab.c:207 src/terminal/tab.c:250
 msgid "~No"
 msgstr "~Non"
 
@@ -146,8 +146,8 @@ msgstr "Chaîne recherchée '%s' introuvable"
 
 #: src/bfu/hierbox.c:970 src/config/dialogs.c:169 src/config/dialogs.c:359
 #: src/config/dialogs.c:507 src/cookies/dialogs.c:34 src/cookies/dialogs.c:350
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:375
-#: src/scripting/lua/core.c:376 src/scripting/lua/core.c:457
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:386
+#: src/scripting/lua/core.c:387 src/scripting/lua/core.c:468
 msgid "Name"
 msgstr "Nom"
 
@@ -177,7 +177,7 @@ msgstr "Chaîne vide non autorisée"
 #: src/cookies/dialogs.c:455 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
-#: src/scripting/lua/core.c:380 src/scripting/lua/core.c:461
+#: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
 #: src/session/download.c:637 src/session/download.c:1236
 #: src/viewer/text/search.c:1667
 msgid "~Cancel"
@@ -373,7 +373,7 @@ msgstr "Titre"
 #: src/bookmarks/dialogs.c:73 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:163
-#: src/scripting/lua/core.c:377
+#: src/scripting/lua/core.c:388
 msgid "URL"
 msgstr "URL"
 
@@ -433,7 +433,7 @@ msgstr "Créer dossier"
 msgid "Folder name"
 msgstr "Nom du dossier"
 
-#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:371
+#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:382
 msgid "Edit bookmark"
 msgstr "Modifier un signet"
 
@@ -1132,8 +1132,8 @@ msgstr "Envoyer le formulaire"
 msgid "Submit form and reload"
 msgstr "Envoyer le formulaire et recharger"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:211
-#: src/terminal/tab.c:254
+#: src/config/actions-main.inc:101 src/terminal/tab.c:203
+#: src/terminal/tab.c:246
 msgid "Close tab"
 msgstr "Fermer l'onglet"
 
@@ -6018,122 +6018,126 @@ msgid "English"
 msgstr "Anglais"
 
 #: src/intl/gettext/libintl.c:30
+msgid "Afrikaans"
+msgstr "Afrikaans"
+
+#: src/intl/gettext/libintl.c:31
 msgid "Belarusian"
 msgstr "Biélorusse"
 
-#: src/intl/gettext/libintl.c:31
+#: src/intl/gettext/libintl.c:32
 msgid "Brazilian Portuguese"
 msgstr "Brésilien"
 
-#: src/intl/gettext/libintl.c:32
+#: src/intl/gettext/libintl.c:33
 msgid "Bulgarian"
 msgstr "Bulgare"
 
-#: src/intl/gettext/libintl.c:33
+#: src/intl/gettext/libintl.c:34
 msgid "Catalan"
 msgstr "Catalan"
 
-#: src/intl/gettext/libintl.c:34
+#: src/intl/gettext/libintl.c:35
 msgid "Croatian"
 msgstr "Croate"
 
-#: src/intl/gettext/libintl.c:35
+#: src/intl/gettext/libintl.c:36
 msgid "Czech"
 msgstr "Tchèque"
 
-#: src/intl/gettext/libintl.c:36
+#: src/intl/gettext/libintl.c:37
 msgid "Danish"
 msgstr "Danois"
 
-#: src/intl/gettext/libintl.c:37
+#: src/intl/gettext/libintl.c:38
 msgid "Dutch"
 msgstr "Hollandais"
 
-#: src/intl/gettext/libintl.c:38
+#: src/intl/gettext/libintl.c:39
 msgid "Estonian"
 msgstr "Estonien"
 
-#: src/intl/gettext/libintl.c:39
+#: src/intl/gettext/libintl.c:40
 msgid "Finnish"
 msgstr "Finnois"
 
-#: src/intl/gettext/libintl.c:40
+#: src/intl/gettext/libintl.c:41
 msgid "French"
 msgstr "Français"
 
-#: src/intl/gettext/libintl.c:41
+#: src/intl/gettext/libintl.c:42
 msgid "Galician"
 msgstr "Galicien"
 
-#: src/intl/gettext/libintl.c:42
+#: src/intl/gettext/libintl.c:43
 msgid "German"
 msgstr "Allemand"
 
-#: src/intl/gettext/libintl.c:43
+#: src/intl/gettext/libintl.c:44
 msgid "Greek"
 msgstr "Grec"
 
-#: src/intl/gettext/libintl.c:44
+#: src/intl/gettext/libintl.c:45
 msgid "Hungarian"
 msgstr "Hongrois"
 
-#: src/intl/gettext/libintl.c:45
+#: src/intl/gettext/libintl.c:46
 msgid "Icelandic"
 msgstr "Islandais"
 
-#: src/intl/gettext/libintl.c:46
+#: src/intl/gettext/libintl.c:47
 msgid "Indonesian"
 msgstr "Indonésien"
 
-#: src/intl/gettext/libintl.c:47
+#: src/intl/gettext/libintl.c:48
 msgid "Italian"
 msgstr "Italien"
 
-#: src/intl/gettext/libintl.c:48
+#: src/intl/gettext/libintl.c:49
 msgid "Lithuanian"
 msgstr "Lituanien"
 
-#: src/intl/gettext/libintl.c:49
+#: src/intl/gettext/libintl.c:50
 msgid "Norwegian"
 msgstr "Norvégien"
 
-#: src/intl/gettext/libintl.c:50
+#: src/intl/gettext/libintl.c:51
 msgid "Polish"
 msgstr "Polonais"
 
-#: src/intl/gettext/libintl.c:51
+#: src/intl/gettext/libintl.c:52
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: src/intl/gettext/libintl.c:52
+#: src/intl/gettext/libintl.c:53
 msgid "Romanian"
 msgstr "Roumain"
 
-#: src/intl/gettext/libintl.c:53
+#: src/intl/gettext/libintl.c:54
 msgid "Russian"
 msgstr "Russe"
 
-#: src/intl/gettext/libintl.c:54
+#: src/intl/gettext/libintl.c:55
 msgid "Serbian"
 msgstr "Serbe"
 
-#: src/intl/gettext/libintl.c:55
+#: src/intl/gettext/libintl.c:56
 msgid "Slovak"
 msgstr "Slovaque"
 
-#: src/intl/gettext/libintl.c:56
+#: src/intl/gettext/libintl.c:57
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: src/intl/gettext/libintl.c:57
+#: src/intl/gettext/libintl.c:58
 msgid "Swedish"
 msgstr "Suèdois"
 
-#: src/intl/gettext/libintl.c:58
+#: src/intl/gettext/libintl.c:59
 msgid "Turkish"
 msgstr "Turque"
 
-#: src/intl/gettext/libintl.c:59
+#: src/intl/gettext/libintl.c:60
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
@@ -8183,23 +8187,23 @@ msgstr "Aucun programme"
 msgid "No program specified for protocol %s."
 msgstr "Aucun programme spécifié pour le protocole %s."
 
-#: src/scripting/lua/core.c:301
+#: src/scripting/lua/core.c:312
 msgid "Error registering event hook"
 msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 
-#: src/scripting/lua/core.c:452
+#: src/scripting/lua/core.c:463
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:731
+#: src/scripting/lua/core.c:742
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:881
+#: src/scripting/lua/core.c:892
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:881
+#: src/scripting/lua/core.c:892
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
@@ -8446,15 +8450,15 @@ msgstr "Mauvais évènement %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
 
-#: src/terminal/kbd.c:1082
+#: src/terminal/kbd.c:1105
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
 
-#: src/terminal/tab.c:212
+#: src/terminal/tab.c:204
 msgid "Do you really want to close the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
 
-#: src/terminal/tab.c:255
+#: src/terminal/tab.c:247
 msgid "Do you really want to close all except the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer tout sauf l'onglet courant ?"
 

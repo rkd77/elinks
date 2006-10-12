@@ -40,7 +40,6 @@ INIT_LIST_HEAD(terminals);
 
 static void check_if_no_terminal(void);
 
-#if 0
 static int
 was_utf8(int in, int out)
 {
@@ -60,7 +59,6 @@ was_utf8(int in, int out)
 	}
 	return 1;
 }
-#endif
 
 void
 redraw_terminal(struct terminal *term)
@@ -117,12 +115,10 @@ init_term(int fdin, int fdout)
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
 
-#if 0
 	/* The hack to restore console in the right mode */
 	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
-		term->linux_was_utf8 = was_utf8(get_input_handle(), term->fdout);
+		term->linux_was_utf8 = was_utf8(get_input_handle(), get_output_handle());
 	}
-#endif
 
 	add_to_list(terminals, term);
 
@@ -171,8 +167,6 @@ destroy_terminal(struct terminal *term)
 	del_from_list(term);
 	close(term->fdin);
 
-#if 0
-	/* This code doesn't work with slave terminals. */
 	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
 		if (term->linux_was_utf8) {
 			hard_write(term->fdout, "\033%G", 3);
@@ -180,7 +174,6 @@ destroy_terminal(struct terminal *term)
 			hard_write(term->fdout, "\033%@", 3);
 		}
 	}
-#endif
 
 	if (term->fdout != 1) {
 		if (term->fdout != term->fdin) close(term->fdout);
