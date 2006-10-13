@@ -540,7 +540,8 @@ loading_callback(struct download *download, struct session *ses)
 
 	if (is_in_result_state(download->state) && download->state != S_OK) {
 		print_error_dialog(ses, download->state,
-				   download->conn ? download->conn->uri : NULL,				   	   download->pri);
+				   download->conn ? download->conn->uri : NULL,
+				   download->pri);
 		if (d == DO_MOVE_ABORT) reload(ses, CACHE_MODE_NORMAL);
 	}
 
