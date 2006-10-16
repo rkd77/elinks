@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+	"http://www.w3.org/TR/REC-html40/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=macintosh">
+<meta http-equiv="Content-Script-Type" content="application/ecmascript">
+<title>non-breaking space in forms (ELinks bug 811)</title>
+<h1>non-breaking space in forms (ELinks bug 811)</h1>
+
+<p>Setting protocol.http.trace = 1 and ecmascript.enable = 1 may be a good idea.</p>
+
+<table>
+<tr><th>Unicode<th>macintosh<th>koi8-r<th>cp850
+<tr><td>U+0001 &#x0001;<td>0x01<td>-<td>0x01
+<tr><td>U+00A0 &#x00A0;<td>0xCA<td>0x9A<td>0xFF
+<tr><td>U+00F7 &#x00F7;<td>0xD6<td>0x9F<td>0xF6
+</table>
+
+<h2>GET without accept-charset; ambient macintosh</h2>
+<form name="form1" action="http://localhost:60000/" method="GET">
+<p><input type="reset"><input type="button" onclick="prepare('1')" value="Run script"><input type="submit">
+<table>
+<tr><td><th>Input<th>List of characters
+<tr><td>Please type a non-breaking space:<td><input name="a1"><td><input id="a1p" readonly size="30">
+<tr><td>Pre-filled non-breaking spaces:<td><input name="b1" value="&nbsp;&#160;&#xa0; "><td><input id="b1p" readonly size="30">
+<tr><td>U+0001 U+00A0 U+00F7 from script:<td><input name="c1"><td><input id="c1p" readonly size="30">
+</table>
+</form>
+
+<h2>POST without accept-charset; ambient macintosh</h2>
+<form name="form2" action="http://localhost:60000/" method="POST" enctype="multipart/form-data">
+<p><input type="reset"><input type="button" onclick="prepare('2')" value="Run script"><input type="submit">
+<table>
+<tr><td><th>Input<th>List of characters
+<tr><td>Please type a non-breaking space:<td><input name="a2"><td><input id="a2p" readonly size="30">
+<tr><td>Pre-filled non-breaking spaces:<td><input name="b2" value="&nbsp;&#160;&#xa0; "><td><input id="b2p" readonly size="30">
+<tr><td>U+0001 U+00A0 U+00F7 from script:<td><input name="c2"><td><input id="c2p" readonly size="30">
+</table>
+</form>
+
+<h2>GET with accept-charset="koi8-r, cp850"; ambient macintosh</h2>
+<form name="form3" action="http://localhost:60000/" method="GET" accept-charset="koi8-r, cp850">
+<p><input type="reset"><input type="button" onclick="prepare('3')" value="Run script"><input type="submit">
+<table>
+<tr><td><th>Input<th>List of characters
+<tr><td>Please type a non-breaking space:<td><input name="a3"><td><input id="a3p" readonly size="30">
+<tr><td>Pre-filled non-breaking spaces:<td><input name="b3" value="&nbsp;&#160;&#xa0; "><td><input id="b3p" readonly size="30">
+<tr><td>U+0001 U+00A0 U+00F7 from script:<td><input name="c3"><td><input id="c3p" readonly size="30">
+</table>
+</form>
+
+<h2>POST with accept-charset="koi8-r, cp850"; ambient macintosh</h2>
+<form name="form4" action="http://localhost:60000/" method="POST" enctype="multipart/form-data" accept-charset="koi8-r, cp850">
+<p><input type="reset"><input type="button" onclick="prepare('4')" value="Run script"><input type="submit">
+<table>
+<tr><td><th>Input<th>List of characters
+<tr><td>Please type a non-breaking space:<td><input name="a4"><td><input id="a4p" readonly size="30">
+<tr><td>Pre-filled non-breaking spaces:<td><input name="b4" value="&nbsp;&#160;&#xa0; "><td><input id="b4p" readonly size="30">
+<tr><td>U+0001 U+00A0 U+00F7 from script:<td><input name="c4"><td><input id="c4p" readonly size="30">
+</table>
+</form>
+
+<script type="application/ecmascript">
+function prepare(num) {
+  var form = window.document.forms["form" + num];
+  form.elements["c" + num].value = "\u0001\u00a0\u00f7";
+  var expose = function(elname) {
+    var src = form.elements[elname].value;
+    var dst = "";
+    for (var i = 0; i < src.length; ++i) {
+      dst += "U+" + src.charCodeAt(i).toString(16) + " ";
+    }
+    form.elements[elname + "p"].value = dst;
+  };
+  expose("a" + num);
+  expose("b" + num);
+  expose("c" + num);
+  return false;
+}
+</script>
+
+<!--
+Local Variables:
+coding: mac-roman
+End:
+-->
