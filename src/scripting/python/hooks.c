@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#include <Python.h>
+
+#include <stdarg.h>
+#include <string.h>
 
 #include "elinks.h"
 
@@ -11,133 +15,89 @@
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
-#include "scripting/python/hooks.h"
 #include "session/location.h"
 #include "session/session.h"
+#include "util/memory.h"
 #include "util/string.h"
 
-#undef _POSIX_C_SOURCE
-#include <Python.h>
+extern PyObject *python_hooks;
 
-/* The events that will trigger the functions below and what they are expected
- * to do is explained in doc/events.txt */
+/*
+ * A utility function for script_hook_url() and script_hook_get_proxy():
+ * Free a char * and replace it with the contents of a Python string.
+ * (Py_None is ignored.)
+ */
 
-extern PyObject *pDict;
-extern PyObject *pModule;
-
-static void
-do_script_hook_goto_url(struct session *ses, unsigned char **url)
+static PyObject *
+replace_with_python_string(unsigned char **dest, PyObject *object)
 {
-	PyObject *pFunc = PyDict_GetItemString(pDict, "goto_url_hook");
+	unsigned char *str;
 
-	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue;
-		unsigned char *current_url;
+	if (object == Py_None) return object;
 
-		if (!ses || !have_location(ses)) {
-			current_url = NULL;
-		} else {
+	str = (unsigned char *) PyString_AsString(object);
+	if (!str) return NULL;
+
+	str = stracpy(str);
+	if (!str) return PyErr_NoMemory();
+
+	mem_free_set(dest, str);
+	return object;
+}
+
+/* Call a Python hook for a goto-url or follow-url event. */
+
+static enum evhook_status
+script_hook_url(va_list ap, void *data)
+{
+	unsigned char **url = va_arg(ap, unsigned char **);
+	struct session *ses = va_arg(ap, struct session *);
+	char *method = data;
+	struct session *saved_python_ses = python_ses;
+	PyObject *result;
+
+	evhook_use_params(url && ses);
+
+	if (!python_hooks || !url || !*url
+	    || !PyObject_HasAttrString(python_hooks, method))
+		return EVENT_HOOK_STATUS_NEXT;
+
+	python_ses = ses;
+
+	/*
+	 * Historical note: The only reason the goto and follow hooks are
+	 * treated differently is to maintain backwards compatibility for
+	 * people who already have a goto_url_hook() function in hooks.py
+	 * that expects a second argument. If we were starting over from
+	 * scratch, we could treat the goto and follow hooks identically and
+	 * simply pass @url as the sole argument in both cases; the Python
+	 * code for the goto hook no longer needs its @current_url argument
+	 * since it could instead determine the current URL by calling the
+	 * Python interpreter's elinks.current_url() function.
+	 */
+	if (!strcmp(method, "goto_url_hook")) {
+		unsigned char *current_url = NULL;
+
+		if (python_ses && have_location(python_ses))
 			current_url = struri(cur_loc(ses)->vs.uri);
-		}
 
-		pValue = PyObject_CallFunction(pFunc, "ss", *url, current_url);
-		if (pValue) {
-			if (pValue != Py_None) {
-				const unsigned char *str;
-				unsigned char *new_url;
-
-				str = PyString_AsString(pValue);
-				if (str) {
-					new_url = stracpy((unsigned char *)str);
-					if (new_url) mem_free_set(url, new_url);
-				}
-			}
-			Py_DECREF(pValue);
-		} else {
-			alert_python_error(ses);
-		}
+		result = PyObject_CallMethod(python_hooks, method, "ss", *url,
+					     current_url);
+	} else {
+		result = PyObject_CallMethod(python_hooks, method, "s", *url);
 	}
-}
 
-static enum evhook_status
-script_hook_goto_url(va_list ap, void *data)
-{
-	unsigned char **url = va_arg(ap, unsigned char **);
-	struct session *ses = va_arg(ap, struct session *);
+	if (!result || !replace_with_python_string(url, result))
+		alert_python_error();
 
-	if (pDict && *url)
-		do_script_hook_goto_url(ses, url);
+	Py_XDECREF(result);
+
+	python_ses = saved_python_ses;
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
-static void
-do_script_hook_follow_url(struct session *ses, unsigned char **url)
-{
-	PyObject *pFunc = PyDict_GetItemString(pDict, "follow_url_hook");
-
-	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, "s", *url);
-		if (pValue) {
-			if (pValue != Py_None) {
-				const unsigned char *str;
-				unsigned char *new_url;
-
-				str = PyString_AsString(pValue);
-				if (str) {
-					new_url = stracpy((unsigned char *)str);
-					if (new_url) mem_free_set(url, new_url);
-				}
-			}
-			Py_DECREF(pValue);
-		} else {
-			alert_python_error(ses);
-		}
-	}
-}
-
-static enum evhook_status
-script_hook_follow_url(va_list ap, void *data)
-{
-	unsigned char **url = va_arg(ap, unsigned char **);
-	struct session *ses = va_arg(ap, struct session *);
-
-	if (pDict && *url)
-		do_script_hook_follow_url(ses, url);
-
-	return EVENT_HOOK_STATUS_NEXT;
-}
-
-static void
-do_script_hook_pre_format_html(struct session *ses, unsigned char *url,
-			       struct cache_entry *cached,
-			       struct fragment *fragment)
-{
-	PyObject *pFunc = PyDict_GetItemString(pDict, "pre_format_html_hook");
-
-	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, "ss#", url,
-		                                         fragment->data,
-		                                         fragment->length);
-
-		if (pValue) {
-			if (pValue != Py_None) {
-				const unsigned char *str;
-				int len;
-
-				str = PyString_AsString(pValue);
-				if (str) {
-					len = PyString_Size(pValue);
-					add_fragment(cached, 0, str, len);
-					normalize_cache_entry(cached, len);
-				}
-			}
-			Py_DECREF(pValue);
-		} else {
-			alert_python_error(ses);
-		}
-	}
-}
+/* Call a Python hook for a pre-format-html event. */
 
 static enum evhook_status
 script_hook_pre_format_html(va_list ap, void *data)
@@ -146,78 +106,94 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
 	unsigned char *url = struri(cached->uri);
+	char *method = "pre_format_html_hook";
+	struct session *saved_python_ses = python_ses;
+	PyObject *result;
+	int success = 0;
 
-	if (pDict && ses && url && cached->length && *fragment->data)
-		do_script_hook_pre_format_html(ses, url, cached, fragment);
+	evhook_use_params(ses && cached);
+
+	if (!python_hooks || !cached->length || !*fragment->data
+	    || !PyObject_HasAttrString(python_hooks, method))
+		return EVENT_HOOK_STATUS_NEXT;
+
+	python_ses = ses;
+
+	result = PyObject_CallMethod(python_hooks, method, "ss#", url,
+				     fragment->data, fragment->length);
+	if (!result) goto error;
+
+	if (result != Py_None) {
+		unsigned char *str;
+		int len;
+
+		if (PyString_AsStringAndSize(result, (char **) &str, &len) != 0)
+			goto error;
+
+		(void) add_fragment(cached, 0, str, len);
+		normalize_cache_entry(cached, len);
+	}
+
+	success = 1;
+
+error:
+	if (!success) alert_python_error();
+
+	Py_XDECREF(result);
+
+	python_ses = saved_python_ses;
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
-static inline void
-do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
-{
-	PyObject *pFunc = PyDict_GetItemString(pDict, "proxy_for_hook");
-
-	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, "s", url);
-
-		if (pValue) {
-			if (pValue != Py_None) {
-				const unsigned char *str;
-				unsigned char *new_url;
-
-				str = PyString_AsString(pValue);
-				if (str) {
-					new_url = stracpy((unsigned char *)str);
-					if (new_url) mem_free_set(new_proxy_url,
-								  new_url);
-				}
-			}
-			Py_DECREF(pValue);
-		} else {
-			alert_python_error(NULL);
-		}
-	}
-}
+/* Call a Python hook for a get-proxy event. */
 
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
-	unsigned char **new_proxy_url = va_arg(ap, unsigned char **);
+	unsigned char **proxy = va_arg(ap, unsigned char **);
 	unsigned char *url = va_arg(ap, unsigned char *);
+	char *method = "proxy_for_hook";
+	PyObject *result;
 
-	if (pDict && new_proxy_url && url)
-		do_script_hook_get_proxy(new_proxy_url, url);
+	evhook_use_params(proxy && url);
+
+	if (!python_hooks || !proxy || !url
+	    || !PyObject_HasAttrString(python_hooks, method))
+		return EVENT_HOOK_STATUS_NEXT;
+
+	result = PyObject_CallMethod(python_hooks, method, "s", url);
+
+	if (!result || !replace_with_python_string(proxy, result))
+		alert_python_error();
+
+	Py_XDECREF(result);
 
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
-static void
-do_script_hook_quit(void)
-{
-	PyObject *pFunc = PyDict_GetItemString(pDict, "quit_hook");
-
-	if (pFunc && PyCallable_Check(pFunc)) {
-		PyObject *pValue = PyObject_CallFunction(pFunc, NULL);
-
-		if (pValue) {
-			Py_DECREF(pValue);
-		} else {
-			alert_python_error(NULL);
-		}
-	}
-}
+/* Call a Python hook for a quit event. */
 
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
-	if (pDict) do_script_hook_quit();
+	char *method = "quit_hook";
+	PyObject *result;
+
+	if (!python_hooks || !PyObject_HasAttrString(python_hooks, method))
+		return EVENT_HOOK_STATUS_NEXT;
+
+	result = PyObject_CallMethod(python_hooks, method, NULL);
+	if (!result) alert_python_error();
+
+	Py_XDECREF(result);
+
 	return EVENT_HOOK_STATUS_NEXT;
 }
 
 struct event_hook_info python_scripting_hooks[] = {
-	{ "goto-url", 0, script_hook_goto_url, NULL },
-	{ "follow-url", 0, script_hook_follow_url, NULL },
+	{ "goto-url", 0, script_hook_url, "goto_url_hook" },
+	{ "follow-url", 0, script_hook_url, "follow_url_hook" },
 	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
 	{ "get-proxy", 0, script_hook_get_proxy, NULL },
 	{ "quit", 0, script_hook_quit, NULL },

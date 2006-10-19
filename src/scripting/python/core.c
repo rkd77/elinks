@@ -5,37 +5,42 @@
 #endif
 
 #include <Python.h>
+#include <osdefs.h>
 
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "elinks.h"
 
 #include "config/home.h"
 #include "main/module.h"
-#include "scripting/scripting.h"
 #include "scripting/python/core.h"
+#include "scripting/python/dialogs.h"
+#include "scripting/python/document.h"
+#include "scripting/python/keybinding.h"
+#include "scripting/python/load.h"
+#include "scripting/python/menu.h"
+#include "scripting/python/open.h"
 #include "scripting/python/python.h"
+#include "scripting/scripting.h"
+#include "session/session.h"
 #include "util/env.h"
-#include "util/file.h"
 #include "util/string.h"
 
+struct session *python_ses = NULL;
 
-PyObject *pDict = NULL, *pModule = NULL;
+PyObject *python_elinks_err = NULL;
+PyObject *python_hooks = NULL;
 
 /* Error reporting. */
 
 void
-alert_python_error(struct session *ses)
+alert_python_error(void)
 {
 	unsigned char *msg = "(no traceback available)";
 	PyObject *err_type = NULL, *err_value = NULL, *err_traceback = NULL;
 	PyObject *tb_module = NULL;
-	PyObject *tb_dict;
-	PyObject *format_function;
 	PyObject *msg_list = NULL;
 	PyObject *empty_string = NULL;
-	PyObject *join_method = NULL;
 	PyObject *msg_string = NULL;
 	unsigned char *temp;
 
@@ -46,17 +51,15 @@ alert_python_error(struct session *ses)
 	 */
 	PyErr_Fetch(&err_type, &err_value, &err_traceback);
 	PyErr_NormalizeException(&err_type, &err_value, &err_traceback);
-	if (!err_traceback) goto end;
+	if (!err_type) goto end;
 
 	tb_module = PyImport_ImportModule("traceback");
 	if (!tb_module) goto end;
 
-	tb_dict = PyModule_GetDict(tb_module);
-	format_function = PyDict_GetItemString(tb_dict, "format_exception");
-	if (!format_function || !PyCallable_Check(format_function)) goto end;
-
-	msg_list = PyObject_CallFunction(format_function, "OOO",
-					 err_type, err_value, err_traceback);
+	msg_list = PyObject_CallMethod(tb_module, "format_exception", "OOO",
+				       err_type,
+				       err_value ? err_value : Py_None,
+				       err_traceback ? err_traceback : Py_None);
 	if (!msg_list) goto end;
 
 	/*
@@ -67,17 +70,14 @@ alert_python_error(struct session *ses)
 	empty_string = PyString_FromString("");
 	if (!empty_string) goto end;
 
-	join_method = PyObject_GetAttrString(empty_string, "join");
-	if (!join_method || !PyCallable_Check(join_method)) goto end;
-
-	msg_string = PyObject_CallFunction(join_method, "O", msg_list);
+	msg_string = PyObject_CallMethod(empty_string, "join", "O", msg_list);
 	if (!msg_string) goto end;
 
-	temp = (unsigned char *)PyString_AsString(msg_string);
+	temp = (unsigned char *) PyString_AsString(msg_string);
 	if (temp) msg = temp;
 
 end:
-	report_scripting_error(&python_scripting_module, ses, msg);
+	report_scripting_error(&python_scripting_module, python_ses, msg);
 
 	Py_XDECREF(err_type);
 	Py_XDECREF(err_value);
@@ -85,31 +85,69 @@ end:
 	Py_XDECREF(tb_module);
 	Py_XDECREF(msg_list);
 	Py_XDECREF(empty_string);
-	Py_XDECREF(join_method);
 	Py_XDECREF(msg_string);
 
 	/* In case another error occurred while reporting the original error: */
 	PyErr_Clear();
 }
 
-void
-cleanup_python(struct module *module)
+/* Prepend ELinks directories to Python's search path. */
+
+static int
+set_python_search_path(void)
 {
-	if (Py_IsInitialized()) {
-		Py_XDECREF(pDict);
-		Py_XDECREF(pModule);
-		Py_Finalize();
-	}
+	struct string new_python_path, *okay;
+	unsigned char *old_python_path;
+	int result = -1;
+
+	if (!init_string(&new_python_path)) return result;
+
+	old_python_path = (unsigned char *) getenv("PYTHONPATH");
+	if (old_python_path)
+		okay = add_format_to_string(&new_python_path, "%s%c%s%c%s",
+					    elinks_home, DELIM, CONFDIR,
+					    DELIM, old_python_path);
+	else
+		okay = add_format_to_string(&new_python_path, "%s%c%s",
+					    elinks_home, DELIM, CONFDIR);
+	if (okay) result = env_set("PYTHONPATH", new_python_path.source, -1);
+	done_string(&new_python_path);
+	return result;
 }
+
+/* Module-level documentation for the Python interpreter's elinks module. */
+
+static char module_doc[] =
+PYTHON_DOCSTRING("Interface to the ELinks web browser.\n\
+\n\
+Functions:\n\
+\n\
+bind_key() -- Bind a keystroke to a callable object.\n\
+current_document() -- Return the body of the document being viewed.\n\
+current_header() -- Return the header of the document being viewed.\n\
+current_link_url() -- Return the URL of the currently selected link.\n\
+current_title() -- Return the title of the document being viewed.\n\
+current_url() -- Return the URL of the document being viewed.\n\
+info_box() -- Display information to the user.\n\
+input_box() -- Prompt for user input.\n\
+load() -- Load a document into the ELinks cache.\n\
+menu() -- Display a menu.\n\
+open() -- View a document.\n\
+\n\
+Exception classes:\n\
+\n\
+error -- Errors internal to ELinks.\n\
+\n\
+Other public objects:\n\
+\n\
+home -- A string containing the pathname of the ~/.elinks directory.\n");
 
 void
 init_python(struct module *module)
 {
-	unsigned char *python_path = straconcat(elinks_home, ":", CONFDIR, NULL);
+	PyObject *elinks_module, *module_dict, *module_name;
 
-	if (!python_path) return;
-	env_set("PYTHONPATH", python_path, -1);
-	mem_free(python_path);
+	if (set_python_search_path() != 0) return;
 
 	/* Treat warnings as errors so they can be caught and handled;
 	 * otherwise they would be printed to stderr.
@@ -123,12 +161,66 @@ init_python(struct module *module)
 	PySys_AddWarnOption("error");
 
 	Py_Initialize();
-	pModule = PyImport_ImportModule("hooks");
 
-	if (pModule) {
-		pDict = PyModule_GetDict(pModule);
-		Py_INCREF(pDict);
-	} else {
-		alert_python_error(NULL);
+	elinks_module = Py_InitModule3("elinks", NULL, module_doc);
+	if (!elinks_module) goto python_error;
+
+	if (PyModule_AddStringConstant(elinks_module, "home", elinks_home) != 0)
+		goto python_error;
+
+	python_elinks_err = PyErr_NewException("elinks.error", NULL, NULL);
+	if (!python_elinks_err) goto python_error;
+
+	if (PyModule_AddObject(elinks_module, "error", python_elinks_err) != 0)
+		goto python_error;
+
+	module_dict = PyModule_GetDict(elinks_module);
+	if (!module_dict) goto python_error;
+	module_name = PyString_FromString("elinks");
+	if (!module_name) goto python_error;
+
+	if (python_init_dialogs_interface(module_dict, module_name) != 0
+	    || python_init_document_interface(module_dict, module_name) != 0
+	    || python_init_keybinding_interface(module_dict, module_name) != 0
+	    || python_init_load_interface(module_dict, module_name) != 0
+	    || python_init_menu_interface(module_dict, module_name) != 0
+	    || python_init_open_interface(module_dict, module_name) != 0)
+		goto python_error;
+
+	python_hooks = PyImport_ImportModule("hooks");
+	if (!python_hooks) goto python_error;
+
+	return;
+
+python_error:
+	alert_python_error();
+}
+
+void
+cleanup_python(struct module *module)
+{
+	if (Py_IsInitialized()) {
+		python_done_keybinding_interface();
+		Py_XDECREF(python_hooks);
+		Py_Finalize();
 	}
+}
+
+/* Add methods to a Python extension module. */
+
+int
+add_python_methods(PyObject *dict, PyObject *name, PyMethodDef *methods)
+{
+	PyMethodDef *method;
+
+	for (method = methods; method && method->ml_name; method++) {
+		PyObject *function = PyCFunction_NewEx(method, NULL, name);
+		int result;
+
+		if (!function) return -1;
+		result = PyDict_SetItemString(dict, method->ml_name, function);
+		Py_DECREF(function);
+		if (result != 0) return -1;
+	}
+	return 0;
 }

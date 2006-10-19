@@ -4,11 +4,12 @@
 #include "config.h"
 #endif
 
-#include "scripting/python/core.h"
+#include <Python.h>
 
 #include "elinks.h"
 
 #include "main/module.h"
+#include "scripting/python/core.h"
 #include "scripting/python/hooks.h"
 
 
