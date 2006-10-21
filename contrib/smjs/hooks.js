@@ -74,7 +74,7 @@ function block_pr0n(uri) {
 		return "";
 	}
 
-	return true;
+	return uri;
 }
 elinks.follow_url_hooks.push(block_pr0n);
 

@@ -474,7 +474,8 @@ check_dialog(struct dialog_data *dlg_data)
 			continue;
 
 		if (widget_data->widget->handler &&
-		    widget_data->widget->handler(dlg_data, widget_data)) {
+		    widget_data->widget->handler(dlg_data, widget_data)
+		     == EVENT_NOT_PROCESSED) {
 			select_widget(dlg_data, widget_data);
 			redraw_dialog(dlg_data, 0);
 			return 1;

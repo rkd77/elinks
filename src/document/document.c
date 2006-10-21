@@ -285,7 +285,7 @@ shrink_format_cache(int whole)
 	assertm(format_cache_entries >= 0, "format_cache_entries underflow on entry");
 	if_assert_failed format_cache_entries = 0;
 
-	foreachback (document, format_cache) {
+	foreachbacksafe (document, next, format_cache) {
 		if (is_object_used(document)) continue;
 
 		/* If we are not purging the whole format cache, stop
@@ -293,10 +293,7 @@ shrink_format_cache(int whole)
 		if (!whole && format_cache_entries <= format_cache_size)
 			break;
 
-		/* Jump back to already processed entry (or list head), and let
-		 * the foreachback move it to the next entry to go. */
-		document = document->next;
-		done_document(document->prev);
+		done_document(document);
 		format_cache_entries--;
 	}
 

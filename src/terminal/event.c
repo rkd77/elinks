@@ -360,14 +360,16 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 			}
 		}
 
-		if (key < 0x80 || key > 0xFF || !utf8_io) {
+		/* Note: We know that key <= 0xFF. */
+
+		if (key < 0x80 || !utf8_io) {
 			/* This byte is not part of a multibyte character
 			 * encoding: either it is outside of the ranges for
 			 * UTF-8 start and continuation bytes or UTF-8 I/O mode
 			 * is disabled. */
 
 #ifdef CONFIG_UTF8
-			if (key >= 0 && key <= 0xFF && !utf8_io) {
+			if (key >= 0 && !utf8_io) {
 				/* Not special and UTF-8 mode is disabled:
 				 * recode from the terminal charset to UCS-4. */
 

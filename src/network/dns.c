@@ -159,7 +159,7 @@ do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno
 	memset(&hint, 0, sizeof(hint));
 	hint.ai_family = AF_UNSPEC;
 	hint.ai_socktype = SOCK_STREAM;
-	if (getaddrinfo(name, NULL, &hint, &ai) != 0) return -1;
+	if (getaddrinfo(name, NULL, &hint, &ai) != 0) return DNS_ERROR;
 
 #else
 	/* Seems there are problems on Mac, so we first need to try
@@ -386,7 +386,7 @@ do_queued_lookup(struct dnsquery *query)
 		assertm(!dns_queue->next_in_queue, "DNS queue corrupted");
 		dns_queue->next_in_queue = query;
 		dns_queue = query;
-		return -1;
+		return DNS_ERROR;
 	}
 
 	dns_queue = query;
@@ -512,7 +512,7 @@ kill_dns_request(void **queryref)
 	assert(query);
 
 	query->done = NULL;
-	done_dns_lookup(query, -1);
+	done_dns_lookup(query, DNS_ERROR);
 }
 
 void
