@@ -680,12 +680,32 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			if (check_kbd_textinput_key(ev)) {
 				unsigned char *text = widget_data->cdata;
 				int textlen = strlen(text);
-#ifdef CONFIG_UTF8
-				const unsigned char *ins = encode_utf8(get_kbd_key(ev));
-				int inslen = utf8charlen(ins);
-#else  /* !CONFIG_UTF8 */
+#ifndef CONFIG_UTF8
+				/* Both get_kbd_key(ev) and @text
+				 * are in the terminal's charset.  */
 				const int inslen = 1;
-#endif /* !CONFIG_UTF8 */
+#else  /* CONFIG_UTF8 */
+				const unsigned char *ins;
+				int inslen;
+
+				if (term->utf8) {
+					/* get_kbd_key(ev) is in UCS-4,
+					 * and @text is in UTF-8.  */
+					ins = encode_utf8(get_kbd_key(ev));
+					/* get_kbd_key(ev) cannot be L'\0'
+					 * because @check_kbd_textinput_key
+					 * would have rejected it.  So it
+					 * is OK to use @strlen below.  */
+				} else {
+					/* get_kbd_key(ev) is UCS-4, and @text
+					 * is in the terminal's charset.  */
+					int cp = get_opt_codepage_tree(term->spec,
+								       "charset");
+
+					ins = u2cp_no_nbsp(get_kbd_key(ev), cp);
+				}
+				inslen = strlen(ins);
+#endif /* CONFIG_UTF8 */
 
 				if (textlen >= widget_data->widget->datalen - inslen)
 					goto display_field;
