@@ -1,8 +1,5 @@
 /* Charsets convertor */
 
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE /* wcwidth() */
-#endif
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* strcasecmp() */
 #endif
@@ -17,9 +14,6 @@
 
 #include <ctype.h>
 #include <stdlib.h>
-#if HAVE_WCHAR_H
-#include <wchar.h>
-#endif
 #if HAVE_WCTYPE_H
 #include <wctype.h>
 #endif
@@ -558,6 +552,30 @@ invalid_arg:
  * Find out number of standard terminal collumns needed for displaying symbol
  * (glyph) which represents Unicode character c.
  *
+ * TODO: Use wcwidth when it is available. This seems to require:
+ * - Make the configure script check whether <wchar.h> and wcwidth exist.
+ * - Define _XOPEN_SOURCE and include <wchar.h>.
+ * - Test that __STDC_ISO_10646__ is defined.  (This macro means wchar_t
+ *   matches ISO 10646 in all locales.)
+ * However, these do not suffice, because wcwidth depends on LC_CTYPE
+ * in glibc-2.3.6.  For instance, wcwidth(0xff20) is -1 when LC_CTYPE
+ * is "fi_FI.ISO-8859-1" or "C", but 2 when LC_CTYPE is "fi_FI.UTF-8".
+ * <features.h> defines __STDC_ISO_10646__ as 200009L, so 0xff20 means
+ * U+FF20 FULLWIDTH COMMERCIAL AT regardless of LC_CTYPE; but this
+ * character is apparently not supported in all locales.  Why is that?
+ * - Perhaps there is standardese that requires supported characters
+ *   to be convertable to multibyte form.  Then ELinks could just pick
+ *   some UTF-8 locale for its wcwidth purposes.
+ * - Perhaps wcwidth can even return different nonnegative values for
+ *   the same ISO 10646 character in different locales.  Then ELinks
+ *   would have to set LC_CTYPE to match at least the terminal's
+ *   charset (which may differ from the LC_CTYPE environment variable,
+ *   especially when the master process is serving a slave terminal).
+ *   But there is no guarantee that the libc supports all the same
+ *   charsets as ELinks does.
+ * For now, it seems safest to avoid the potentially locale-dependent
+ * libc version of wcwidth, and instead use a hardcoded mapping.
+ *
  * @return	2 for double-width glyph, 1 for others.
  * 		TODO: May be extended to return 0 for zero-width glyphs
  * 		(like composing, maybe unprintable too).
@@ -565,10 +583,6 @@ invalid_arg:
 inline int
 unicode_to_cell(unicode_val_T c)
 {
-#if __STDC_ISO_10646__ && HAVE_WCWIDTH
-	if (wcwidth(c) >= 2)
-		return 2;
-#else  /* !__STDC_ISO_10646__ || !HAVE_WCWIDTH */
 	if (c >= 0x1100
 		&& (c <= 0x115f			/* Hangul Jamo */
 		|| c == 0x2329
@@ -584,7 +598,6 @@ unicode_to_cell(unicode_val_T c)
 		|| (c >= 0x20000 && c <= 0x2fffd)
 		|| (c >= 0x30000 && c <= 0x3fffd)))
 		return 2;
-#endif /* !__STDC_ISO_10646__ || !HAVE_WCWIDTH */
 
 	return 1;
 }
