@@ -53,7 +53,7 @@ invoke_load_uri_callback(struct download *download, void *data)
 
 	if (download->cached) {
 		PyObject *result;
-		struct fragment *f = download->cached->frag.next;
+		struct fragment *f = get_cache_fragment(download->cached);
 
 		python_ses = hop->ses;
 
