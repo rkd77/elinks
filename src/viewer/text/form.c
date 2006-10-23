@@ -1744,26 +1744,29 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 #ifdef CONFIG_UTF8
-			{
-				/* The charset of the terminal; we assume
-				 * fs->value is in this charset.
-				 * (Is that OK?)  */
+			if (ses->tab->term->utf8) {
+				/* fs->value is in UTF-8 regardless of
+				 * the charset of the terminal.  */
+				text = encode_utf8(get_kbd_key(ev));
+			} else {
+				/* fs->value is in the charset of the
+				 * terminal.  */
 				int cp = get_opt_codepage_tree(ses->tab->term->spec,
 							       "charset");
 
 				text = u2cp_no_nbsp(get_kbd_key(ev), cp);
-				length = strlen(text);
-
-				if (strlen(fs->value) + length > fc->maxlength
-				    || !insert_in_string(&fs->value, fs->state, text, length)) {
-					status = FRAME_EVENT_OK;
-					break;
-				}
-
-				fs->state += length;
-				if (fc->type == FC_TEXTAREA)
-					fs->state_cell = 0;
 			}
+			length = strlen(text);
+
+			if (strlen(fs->value) + length > fc->maxlength
+			    || !insert_in_string(&fs->value, fs->state, text, length)) {
+				status = FRAME_EVENT_OK;
+				break;
+			}
+
+			fs->state += length;
+			if (fc->type == FC_TEXTAREA)
+				fs->state_cell = 0;
 #else
 			fs->value[fs->state++] = get_kbd_key(ev);
 #endif /* CONFIG_UTF8 */

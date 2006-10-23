@@ -115,7 +115,9 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 	struct form_control *fc;
 	struct form_state *fs;
 #ifdef CONFIG_UTF8
-	int utf8 = doc_view->document->options.utf8;
+	/* The encoding of form fields depends on the terminal,
+	 * rather than on the document.  */
+	int utf8 = doc_view->session->tab->term->utf8;
 #endif /* CONFIG_UTF8 */
 
 	switch (link->type) {
