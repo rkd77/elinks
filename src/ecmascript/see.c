@@ -68,6 +68,22 @@ see_done(struct module *xxx)
 {
 }
 
+static void
+js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
+	      struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	      struct SEE_value *res)
+{
+	struct ecmascript_interpreter *ei;
+	unsigned char *code;
+	int timeout;
+ 
+	if (argc != 2) return;
+	ei = ((struct global_object *)interp)->interpreter;
+	code = SEE_value_to_unsigned_char(interp, argv[0]);
+	timeout = SEE_ToInt32(interp, argv[1]);
+	ecmascript_set_timeout(ei, code, timeout);
+}
+
 void *
 see_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
@@ -77,6 +93,8 @@ see_get_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = g;
 	g->max_exec_time = get_opt_int("ecmascript.max_exec_time");
 	g->exec_start = time(NULL);
+	/* used by setTimeout */
+	g->interpreter = interpreter;
 	SEE_interpreter_init(interp);
 	init_js_window_object(interpreter);
 	init_js_menubar_object(interpreter);
@@ -86,6 +104,7 @@ see_get_interpreter(struct ecmascript_interpreter *interpreter)
 	init_js_location_object(interpreter);
 	init_js_document_object(interpreter);
 	init_js_forms_object(interpreter);
+	SEE_CFUNCTION_PUTA(interp, interp->Global, "setTimeout", js_setTimeout, 2, 0);
 	return interp;
 }
 

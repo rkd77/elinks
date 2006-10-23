@@ -130,6 +130,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 #else
 	spidermonkey_get_interpreter(interpreter);
 #endif
+	init_string(&interpreter->code);
 	return interpreter;
 }
 
@@ -143,6 +144,8 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	spidermonkey_put_interpreter(interpreter);
 #endif
 	free_string_list(&interpreter->onload_snippets);
+	kill_timer(&interpreter->timeout);
+	done_string(&interpreter->code);
 	interpreter->vs->ecmascript = NULL;
 	mem_free(interpreter);
 }
@@ -295,6 +298,26 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			mem_free(string);
 		}
 	}
+}
+
+static void
+ecmascript_timeout_handler(void *i)
+{
+	struct ecmascript_interpreter *interpreter = i;
+
+	ecmascript_eval(interpreter, &interpreter->code, NULL);
+}
+
+void
+ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
+{
+	assert(interpreter);
+	if (!code) return;
+	done_string(&interpreter->code);
+	init_string(&interpreter->code);
+	add_to_string(&interpreter->code, code);
+	mem_free(code);
+	install_timer(&interpreter->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
 
 static struct module *ecmascript_modules[] = {

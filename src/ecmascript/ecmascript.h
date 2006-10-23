@@ -6,6 +6,7 @@
  * plasm displays for everyone. */
 
 #include "main/module.h"
+#include "main/timer.h"
 #include "util/time.h"
 
 struct string;
@@ -20,6 +21,11 @@ struct ecmascript_interpreter {
 	void *backend_data;
 	/* Used by document.write() */
 	struct string *ret;
+
+	/* The code evaluated by setTimeout() */
+	struct string code;
+	timer_id_T timeout;
+	
 	time_t exec_start;
 
 	/* This is a cross-rerenderings accumulator of
@@ -74,6 +80,8 @@ void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
 void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(unsigned char **action, unsigned char *string);
+
+void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
 
 extern struct module ecmascript_module;
 

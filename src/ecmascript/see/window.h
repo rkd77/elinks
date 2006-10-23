@@ -3,6 +3,7 @@
 
 struct SEE_object;
 struct SEE_interpreter;
+struct ecmascript_interpreter;
 struct string;
 struct view_state;
 
@@ -16,6 +17,8 @@ struct js_window_object {
 
 struct global_object {
 	struct SEE_interpreter interp;
+	/* used by setTimeout */
+	struct ecmascript_interpreter *interpreter; 
 	struct js_window_object *win;
 	struct string *ret;
 	int exec_start;
