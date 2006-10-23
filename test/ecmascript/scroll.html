@@ -1,0 +1,14 @@
+<body onload="scroll()">
+<script>
+var tekst = '                                                                                           ELinks';
+function scrollText() {
+	var znak = tekst.charAt(0);
+	tekst = tekst.substring(1, tekst.length) + znak;
+	return tekst.substring(0, 80);
+}
+function scroll () {
+     document.title = scrollText();
+     setTimeout("scroll()", 100);
+}
+</script>
+</body>
