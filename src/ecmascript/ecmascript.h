@@ -6,7 +6,6 @@
  * plasm displays for everyone. */
 
 #include "main/module.h"
-#include "main/timer.h"
 #include "util/time.h"
 
 struct string;

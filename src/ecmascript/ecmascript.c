@@ -16,6 +16,7 @@
 #include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "main/timer.h"
 #include "osdep/osdep.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -145,6 +146,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #endif
 	free_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
+	/* Is it superfluous? */
+	if (interpreter->vs->doc_view)
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
 	interpreter->vs->ecmascript = NULL;
 	mem_free(interpreter);
 }
