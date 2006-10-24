@@ -4,6 +4,7 @@
 #include "document/options.h"
 #include "intl/charsets.h" /* unicode_val_T */
 #include "main/object.h"
+#include "main/timer.h"
 #include "protocol/uri.h"
 #include "util/color.h"
 #include "util/lists.h"
@@ -153,6 +154,8 @@ struct document {
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
+	/* used by setTimeout */
+	timer_id_T timeout;
 #endif
 #ifdef CONFIG_CSS
 	/* FIXME: We should externally maybe using cache_entry store the

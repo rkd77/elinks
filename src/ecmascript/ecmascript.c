@@ -144,7 +144,6 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	spidermonkey_put_interpreter(interpreter);
 #endif
 	free_string_list(&interpreter->onload_snippets);
-	kill_timer(&interpreter->timeout);
 	done_string(&interpreter->code);
 	interpreter->vs->ecmascript = NULL;
 	mem_free(interpreter);
@@ -311,13 +310,13 @@ ecmascript_timeout_handler(void *i)
 void
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
-	assert(interpreter);
+	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return;
 	done_string(&interpreter->code);
 	init_string(&interpreter->code);
 	add_to_string(&interpreter->code, code);
 	mem_free(code);
-	install_timer(&interpreter->timeout, timeout, ecmascript_timeout_handler, interpreter);
+	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
 
 static struct module *ecmascript_modules[] = {

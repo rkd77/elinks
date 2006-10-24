@@ -24,7 +24,6 @@ struct ecmascript_interpreter {
 
 	/* The code evaluated by setTimeout() */
 	struct string code;
-	timer_id_T timeout;
 	
 	time_t exec_start;
 

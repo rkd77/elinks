@@ -157,6 +157,7 @@ done_document(struct document *document)
 #ifdef CONFIG_ECMASCRIPT
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
+	kill_timer(&document->timeout);
 #endif
 
 	free_list(document->tags);
@@ -177,6 +178,9 @@ release_document(struct document *document)
 	if_assert_failed return;
 
 	if (document->refresh) kill_document_refresh(document->refresh);
+#ifdef CONFIG_ECMASCRIPT
+	kill_timer(&document->timeout);
+#endif
 	object_unlock(document);
 	move_to_top_of_list(format_cache, document);
 }
