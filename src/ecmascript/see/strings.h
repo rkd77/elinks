@@ -100,4 +100,5 @@ extern struct SEE_string *s_button;
 extern struct SEE_string *s_hidden;
 
 extern struct SEE_string *s_timeout;
+extern struct SEE_string *s_setTimeout;
 #endif

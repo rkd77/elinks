@@ -54,6 +54,7 @@ static int window_canput(struct SEE_interpreter *, struct SEE_object *, struct S
 static int window_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static void js_window_alert(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
+static void js_setTimeout(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
 void location_goto(struct document_view *, unsigned char *);
 
@@ -134,6 +135,8 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, win->alert);
 	} else if (p == s_open) {
 		SEE_SET_OBJECT(res, win->open);
+	} else if (p == s_setTimeout) {
+		SEE_SET_OBJECT(res, win->setTimeout);
 	} else if (p == s_location) {
 		SEE_OBJECT_GET(interp, interp->Global, s_location, res);
 	} else if (p == s_navigator) {
@@ -313,6 +316,22 @@ end:
 	done_uri(uri);
 }
 
+static void
+js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
+	      struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	      struct SEE_value *res)
+{
+	struct ecmascript_interpreter *ei;
+	unsigned char *code;
+	int timeout;
+
+	if (argc != 2) return;
+	ei = ((struct global_object *)interp)->interpreter;
+	code = SEE_value_to_unsigned_char(interp, argv[0]);
+	timeout = SEE_ToInt32(interp, argv[1]);
+	ecmascript_set_timeout(ei, code, timeout);
+}
+
 void
 init_js_window_object(struct ecmascript_interpreter *interpreter)
 {
@@ -331,6 +350,7 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 
 	g->win->alert = SEE_cfunction_make(interp, js_window_alert, s_alert, 1);
 	g->win->open = SEE_cfunction_make(interp, js_window_open, s_open, 3);
+	g->win->setTimeout = SEE_cfunction_make(interp, js_setTimeout, s_setTimeout, 2);
 
 	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_top, &v);
 	SEE_OBJECT_PUT(interp, interp->Global, s_top, &v, 0);
@@ -342,6 +362,8 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 	SEE_OBJECT_PUT(interp, interp->Global, s_alert, &v, 0);
 	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_open, &v);
 	SEE_OBJECT_PUT(interp, interp->Global, s_open, &v, 0);
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_setTimeout, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_setTimeout, &v, 0);
 }
 
 void
