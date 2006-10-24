@@ -262,10 +262,12 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static JSBool window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 const JSFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
 	{ "open",	window_open,		3 },
+	{ "setTimeout",	window_setTimeout,	2 },
 	{ NULL }
 };
 
@@ -380,5 +382,27 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 end:
 	done_uri(uri);
 
+	return JS_TRUE;
+}
+
+static JSBool
+window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	unsigned char *code;
+	int timeout;
+
+	if (argc != 2)
+		return JS_TRUE;
+
+	code = jsval_to_string(ctx, &argv[0]);
+	if (!*code)
+		return JS_TRUE;
+
+	code = stracpy(code);
+	if (!code)
+		return JS_TRUE;
+	timeout = atoi(jsval_to_string(ctx, &argv[1]));
+	ecmascript_set_timeout(interpreter, code, timeout);
 	return JS_TRUE;
 }
