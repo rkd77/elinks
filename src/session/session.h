@@ -92,6 +92,9 @@ struct session_status {
 
 	unsigned int set_window_title:1;
 	unsigned char *last_title;
+#ifdef CONFIG_ECMASCRIPT
+	unsigned char *window_status;
+#endif
 
 #ifdef CONFIG_LEDS
 	unsigned int show_leds:1;

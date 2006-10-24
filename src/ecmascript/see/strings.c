@@ -96,6 +96,7 @@ struct SEE_string *s_hidden;
 
 struct SEE_string *s_timeout;
 struct SEE_string *s_setTimeout;
+struct SEE_string *s_status;
 
 void
 init_intern_strings(void)
@@ -195,4 +196,5 @@ init_intern_strings(void)
 
 	s_timeout = SEE_intern_global("timeout");
 	s_setTimeout = SEE_intern_global("setTimeout");
+	s_status = SEE_intern_global("status");
 }

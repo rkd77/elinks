@@ -1171,6 +1171,9 @@ destroy_session(struct session *ses)
 	mem_free_if(ses->search_word);
 	mem_free_if(ses->last_search_word);
 	mem_free_if(ses->status.last_title);
+#ifdef CONFIG_ECMASCRIPT
+	mem_free_if(ses->status.window_status);
+#endif
 	del_from_list(ses);
 }
 

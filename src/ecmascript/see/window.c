@@ -103,7 +103,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 
 	if (p == s_closed) {
 		SEE_SET_BOOLEAN(res, 0);
-	} else if (p == s_self || p == s_parent || p == s_top) {
+	} else if (p == s_self || p == s_parent || p == s_top || p == s_status) {
 		SEE_SET_OBJECT(res, o);
 #if 0
 	} else if (p == s_parent || p == s_top) {
@@ -169,6 +169,16 @@ window_put(struct SEE_interpreter *interp, struct SEE_object *o,
 			location_goto(doc_view, str);
 			mem_free(str);
 		}
+	} else if (p == s_status) {
+		struct global_object *g = (struct global_object *)interp;
+		struct js_window_object *win = g->win;
+		struct view_state *vs = win->vs;
+		struct document_view *doc_view = vs->doc_view;
+		struct session *ses = doc_view->session;
+		unsigned char *stat = SEE_value_to_unsigned_char(interp, val);
+
+		mem_free_set(&ses->status.window_status, stat);
+		print_screen_status(ses);
 	}
 }
 
@@ -176,7 +186,7 @@ static int
 window_canput(struct SEE_interpreter *interp, struct SEE_object *o,
 	      struct SEE_string *p)
 {
-	if (p == s_location)
+	if (p == s_location || p == s_status)
 		return 1;
 	return 0;
 }

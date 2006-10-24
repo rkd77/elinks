@@ -101,4 +101,5 @@ extern struct SEE_string *s_hidden;
 
 extern struct SEE_string *s_timeout;
 extern struct SEE_string *s_setTimeout;
+extern struct SEE_string *s_status;
 #endif

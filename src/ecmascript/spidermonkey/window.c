@@ -60,6 +60,7 @@ enum window_prop {
 	JSP_WIN_CLOSED,
 	JSP_WIN_PARENT,
 	JSP_WIN_SELF,
+	JSP_WIN_STATUS,
 	JSP_WIN_TOP,
 };
 /* "location" is special because we need to simulate "location.href"
@@ -72,6 +73,7 @@ const JSPropertySpec window_props[] = {
 	{ "closed",	JSP_WIN_CLOSED,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "parent",	JSP_WIN_PARENT,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "self",	JSP_WIN_SELF,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "status",	JSP_WIN_STATUS,	JSPROP_ENUMERATE },
 	{ "top",	JSP_WIN_TOP,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "window",	JSP_WIN_SELF,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
@@ -251,6 +253,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
+	case JSP_WIN_STATUS:
+		mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, vp)));
+		print_screen_status(vs->doc_view->session);
+		return JS_TRUE;
 	default:
 		INTERNAL("Invalid ID %d in window_set_property().", JSVAL_TO_INT(id));
 		return JS_TRUE;
