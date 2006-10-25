@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-03 08:24+0200\n"
+"POT-Creation-Date: 2006-10-25 21:19+0200\n"
 "PO-Revision-Date: 2006-09-03 08:30+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -26,8 +26,9 @@ msgid "Close"
 msgstr "Zamknij"
 
 #. | MSGBOX_SCROLLABLE
+#.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
-#: src/dialogs/document.c:240
+#: src/dialogs/document.c:240 src/scripting/python/dialogs.c:43
 msgid "Info"
 msgstr "Informacja"
 
@@ -35,15 +36,15 @@ msgstr "Informacja"
 msgid "Press space to expand this folder."
 msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, python_info_box, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:441 src/bfu/inpfield.c:256 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:393
 #: src/cookies/dialogs.c:356 src/cookies/dialogs.c:454 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
-#: src/protocol/protocol.c:236 src/scripting/lua/core.c:379
-#: src/scripting/lua/core.c:460 src/session/session.c:806
-#: src/viewer/text/search.c:1666
+#: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
+#: src/scripting/lua/core.c:471 src/scripting/python/dialogs.c:86
+#: src/session/session.c:806 src/viewer/text/search.c:1666
 msgid "~OK"
 msgstr "~OK"
 
@@ -127,7 +128,7 @@ msgstr "B³±d przy usuwaniu"
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
 #: src/bfu/hierbox.c:870 src/config/dialogs.c:851 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
-#: src/terminal/tab.c:214 src/terminal/tab.c:257
+#: src/terminal/tab.c:206 src/terminal/tab.c:249
 msgid "~Yes"
 msgstr "~Tak"
 
@@ -135,7 +136,7 @@ msgstr "~Tak"
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
 #: src/bfu/hierbox.c:871 src/config/dialogs.c:852 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
-#: src/terminal/tab.c:215 src/terminal/tab.c:258
+#: src/terminal/tab.c:207 src/terminal/tab.c:250
 msgid "~No"
 msgstr "~Nie"
 
@@ -152,12 +153,12 @@ msgstr "Nie znaleziono wyra¿enia '%s'"
 
 #: src/bfu/hierbox.c:970 src/config/dialogs.c:169 src/config/dialogs.c:359
 #: src/config/dialogs.c:507 src/cookies/dialogs.c:34 src/cookies/dialogs.c:350
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:375
-#: src/scripting/lua/core.c:376 src/scripting/lua/core.c:457
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:386
+#: src/scripting/lua/core.c:387 src/scripting/lua/core.c:468
 msgid "Name"
 msgstr "Nazwa"
 
-#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79
+#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:112
 msgid "Bad number"
 msgstr "Nieprawid³owa liczba"
 
@@ -183,7 +184,7 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 #: src/cookies/dialogs.c:455 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
-#: src/scripting/lua/core.c:380 src/scripting/lua/core.c:461
+#: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
 #: src/session/download.c:637 src/session/download.c:1236
 #: src/viewer/text/search.c:1667
 msgid "~Cancel"
@@ -199,7 +200,7 @@ msgstr "Cyfrowy zegar w pasku statusu."
 
 #
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1203
-#: src/config/options.inc:1210 src/ecmascript/ecmascript.c:44
+#: src/config/options.inc:1210 src/ecmascript/ecmascript.c:45
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
 msgid "Enable"
@@ -381,7 +382,7 @@ msgstr "Tytu³"
 #: src/bookmarks/dialogs.c:73 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:163
-#: src/scripting/lua/core.c:377
+#: src/scripting/lua/core.c:388
 msgid "URL"
 msgstr "URL"
 
@@ -441,7 +442,7 @@ msgstr "Dodaj folder"
 msgid "Folder name"
 msgstr "Nazwa foldera"
 
-#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:371
+#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:382
 msgid "Edit bookmark"
 msgstr "Edytuj zak³adkê"
 
@@ -1143,8 +1144,8 @@ msgstr "Prze¶lij formularz"
 msgid "Submit form and reload"
 msgstr "Prze¶lij formularz i prze³aduj"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:211
-#: src/terminal/tab.c:254
+#: src/config/actions-main.inc:101 src/terminal/tab.c:203
+#: src/terminal/tab.c:246
 msgid "Close tab"
 msgstr "Zamknij kartê"
 
@@ -2026,7 +2027,7 @@ msgstr "Mapa klawiszy edycji"
 msgid "Menu mapping"
 msgstr "Mapa klawiszy menu"
 
-#: src/config/kbdbind.c:588
+#: src/config/kbdbind.c:588 src/scripting/python/keybinding.c:104
 msgid "Unrecognised keymap"
 msgstr "Nierozpoznana mapa klawiszy"
 
@@ -3298,7 +3299,7 @@ msgid "Dump output options."
 msgstr "Ustawienia dotycz±ce zrzutów."
 
 #: src/config/options.inc:630 src/config/options.inc:916
-#: src/config/opttypes.c:407 src/dialogs/document.c:163
+#: src/config/opttypes.c:408 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Strona kodowa"
 
@@ -4059,7 +4060,7 @@ msgstr "Tekst"
 msgid "Dialog text colors."
 msgstr "Kolory tekstu w oknie dialogowym."
 
-#: src/config/options.inc:1063 src/viewer/text/form.c:1797
+#: src/config/options.inc:1063 src/viewer/text/form.c:1800
 msgid "Checkbox"
 msgstr "Przycisk wyboru"
 
@@ -4111,7 +4112,7 @@ msgstr "Klawisz skrótu przycisku"
 msgid "Selected button shortcut"
 msgstr "Klawisz skrótu wybranego przycisku"
 
-#: src/config/options.inc:1091 src/viewer/text/form.c:1801
+#: src/config/options.inc:1091 src/viewer/text/form.c:1804
 msgid "Text field"
 msgstr "Pole tekstowe"
 
@@ -4426,7 +4427,7 @@ msgstr "Potwierdzenie zamkniêcia karty"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Przy zamykaniu karty pokazuj okienko dialogowe potwierdzania."
 
-#: src/config/options.inc:1254 src/config/opttypes.c:408
+#: src/config/options.inc:1254 src/config/opttypes.c:409
 msgid "Language"
 msgstr "Jêzyk"
 
@@ -4592,62 +4593,62 @@ msgstr ""
 msgid "Read error"
 msgstr "B³±d odczytu"
 
-#: src/config/opttypes.c:402
+#: src/config/opttypes.c:403
 msgid "Boolean"
 msgstr "Typ boolowski"
 
-#: src/config/opttypes.c:402
+#: src/config/opttypes.c:403
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:403
+#: src/config/opttypes.c:404
 msgid "Integer"
 msgstr "Liczba ca³kowita"
 
-#: src/config/opttypes.c:403 src/config/opttypes.c:404
+#: src/config/opttypes.c:404 src/config/opttypes.c:405
 msgid "<num>"
 msgstr "<liczba>"
 
-#: src/config/opttypes.c:404
+#: src/config/opttypes.c:405
 msgid "Longint"
 msgstr "Du¿a liczba ca³kowita"
 
-#: src/config/opttypes.c:405
+#: src/config/opttypes.c:406
 msgid "String"
 msgstr "Napis"
 
-#: src/config/opttypes.c:405
+#: src/config/opttypes.c:406
 msgid "<str>"
 msgstr "<³añcuch>"
 
 #
-#: src/config/opttypes.c:407
+#: src/config/opttypes.c:408
 msgid "<codepage>"
 msgstr "<strona kodowa>"
 
 #
-#: src/config/opttypes.c:408
+#: src/config/opttypes.c:409
 msgid "<language>"
 msgstr "<jêzyk>"
 
-#: src/config/opttypes.c:409
+#: src/config/opttypes.c:410
 msgid "Color"
 msgstr "Kolor"
 
-#: src/config/opttypes.c:409
+#: src/config/opttypes.c:410
 msgid "<color|#rrggbb>"
 msgstr "<kolor|#rrggbb>"
 
-#: src/config/opttypes.c:411
+#: src/config/opttypes.c:412
 msgid "Special"
 msgstr "Specjalny"
 
-#: src/config/opttypes.c:413
+#: src/config/opttypes.c:414
 msgid "Alias"
 msgstr "Alias"
 
 #. tree
-#: src/config/opttypes.c:416
+#: src/config/opttypes.c:417
 msgid "Folder"
 msgstr "Folder"
 
@@ -5764,16 +5765,16 @@ msgstr "Wprowad¼ zaznaczenie, do którego skoczyæ"
 msgid "Keyboard prefix: %d"
 msgstr "Prefix klawiatury: %d"
 
-#: src/dialogs/status.c:219
+#: src/dialogs/status.c:225
 #, c-format
 msgid "Cursor position: %dx%d"
 msgstr "Pozycja kursora: %dx%d"
 
-#: src/dialogs/status.c:319
+#: src/dialogs/status.c:325
 msgid "Untitled"
 msgstr "Bez tytu³u"
 
-#: src/dialogs/status.c:321
+#: src/dialogs/status.c:327
 msgid "No document"
 msgstr "Brak dokumentu"
 
@@ -5828,32 +5829,32 @@ msgstr ""
 "Zostaw jako \"\", ¿eby u¿ywaæ wbudowanych styli dokumentu."
 
 #. name:
-#: src/ecmascript/ecmascript.c:40 src/ecmascript/ecmascript.c:311
+#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:337
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
 #
-#: src/ecmascript/ecmascript.c:42
+#: src/ecmascript/ecmascript.c:43
 msgid "ECMAScript options."
 msgstr "Ustawienia ECMAScript."
 
-#: src/ecmascript/ecmascript.c:46
+#: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
 msgstr "Czy wykonywaæ skrypty zawarte w dokumentach."
 
-#: src/ecmascript/ecmascript.c:48
+#: src/ecmascript/ecmascript.c:49
 msgid "Script error reporting"
 msgstr "Raportowanie b³êdów skryptu"
 
-#: src/ecmascript/ecmascript.c:50
+#: src/ecmascript/ecmascript.c:51
 msgid "Open a message box when a script reports an error."
 msgstr "Czy otwieraæ okienko dialogowe z raportem o b³êdzie skryptu."
 
-#: src/ecmascript/ecmascript.c:52
+#: src/ecmascript/ecmascript.c:53
 msgid "Ignore <noscript> content"
 msgstr "Ignoruj zawarto¶æ <noscript>"
 
-#: src/ecmascript/ecmascript.c:54
+#: src/ecmascript/ecmascript.c:55
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -5861,27 +5862,27 @@ msgstr ""
 "Czy ignorowaæ tre¶æ zawart± w znaczniku <noscript> w przypadku, gdy\n"
 "ECMAScript jest w³±czony."
 
-#: src/ecmascript/ecmascript.c:57
+#: src/ecmascript/ecmascript.c:58
 msgid "Maximum execution time"
 msgstr "Maksymalny czas wykonywania"
 
-#: src/ecmascript/ecmascript.c:59
+#: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
 msgstr "Maksymalny czas w sekundach wykonywania skryptu."
 
-#: src/ecmascript/ecmascript.c:61
+#: src/ecmascript/ecmascript.c:62
 msgid "Pop-up window blocking"
 msgstr "Blokowanie okienek pop-up"
 
-#: src/ecmascript/ecmascript.c:63
+#: src/ecmascript/ecmascript.c:64
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr "Czy zabroniæ skryptom otwieranie nowych okien lub kart."
 
-#: src/ecmascript/ecmascript.c:256
+#: src/ecmascript/ecmascript.c:262
 msgid "JavaScript Emergency"
 msgstr "Wypadek JavaScriptu"
 
-#: src/ecmascript/ecmascript.c:258
+#: src/ecmascript/ecmascript.c:264
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5894,7 +5895,7 @@ msgstr ""
 "b³±d i mo¿e to spowodowaæ zastopowanie ca³ego ELinksa.\n"
 "Wykonywanie skryptu zosta³o przerwane."
 
-#: src/ecmascript/see/window.c:211 src/ecmascript/spidermonkey/window.c:286
+#: src/ecmascript/see/window.c:224 src/ecmascript/spidermonkey/window.c:294
 msgid "JavaScript Alert"
 msgstr "Alert JavaScriptu"
 
@@ -6141,125 +6142,129 @@ msgid "English"
 msgstr "Angielski"
 
 #: src/intl/gettext/libintl.c:30
+msgid "Afrikaans"
+msgstr "Afrykanerski"
+
+#: src/intl/gettext/libintl.c:31
 msgid "Belarusian"
 msgstr "Bia³oruski"
 
-#: src/intl/gettext/libintl.c:31
+#: src/intl/gettext/libintl.c:32
 msgid "Brazilian Portuguese"
 msgstr "Brazylijski portugalski"
 
-#: src/intl/gettext/libintl.c:32
+#: src/intl/gettext/libintl.c:33
 msgid "Bulgarian"
 msgstr "Bu³garski"
 
-#: src/intl/gettext/libintl.c:33
+#: src/intl/gettext/libintl.c:34
 msgid "Catalan"
 msgstr "Kataloñski"
 
 #
-#: src/intl/gettext/libintl.c:34
+#: src/intl/gettext/libintl.c:35
 msgid "Croatian"
 msgstr "Chorwacki"
 
 #
-#: src/intl/gettext/libintl.c:35
+#: src/intl/gettext/libintl.c:36
 msgid "Czech"
 msgstr "Czeski"
 
-#: src/intl/gettext/libintl.c:36
+#: src/intl/gettext/libintl.c:37
 msgid "Danish"
 msgstr "Duñski"
 
-#: src/intl/gettext/libintl.c:37
+#: src/intl/gettext/libintl.c:38
 msgid "Dutch"
 msgstr "Holenderski"
 
-#: src/intl/gettext/libintl.c:38
+#: src/intl/gettext/libintl.c:39
 msgid "Estonian"
 msgstr "Estoñski"
 
-#: src/intl/gettext/libintl.c:39
+#: src/intl/gettext/libintl.c:40
 msgid "Finnish"
 msgstr "Fiñski"
 
-#: src/intl/gettext/libintl.c:40
+#: src/intl/gettext/libintl.c:41
 msgid "French"
 msgstr "Francuski"
 
-#: src/intl/gettext/libintl.c:41
+#: src/intl/gettext/libintl.c:42
 msgid "Galician"
 msgstr "Galijski"
 
-#: src/intl/gettext/libintl.c:42
+#: src/intl/gettext/libintl.c:43
 msgid "German"
 msgstr "Niemiecki"
 
-#: src/intl/gettext/libintl.c:43
+#: src/intl/gettext/libintl.c:44
 msgid "Greek"
 msgstr "Grecki"
 
-#: src/intl/gettext/libintl.c:44
+#: src/intl/gettext/libintl.c:45
 msgid "Hungarian"
 msgstr "Wêgierski"
 
-#: src/intl/gettext/libintl.c:45
+#: src/intl/gettext/libintl.c:46
 msgid "Icelandic"
 msgstr "Islandzki"
 
-#: src/intl/gettext/libintl.c:46
+#: src/intl/gettext/libintl.c:47
 msgid "Indonesian"
 msgstr "Indonezyjski"
 
-#: src/intl/gettext/libintl.c:47
+#: src/intl/gettext/libintl.c:48
 msgid "Italian"
 msgstr "W³oski"
 
-#: src/intl/gettext/libintl.c:48
+#: src/intl/gettext/libintl.c:49
 msgid "Lithuanian"
 msgstr "Litewski"
 
-#: src/intl/gettext/libintl.c:49
+#: src/intl/gettext/libintl.c:50
 msgid "Norwegian"
 msgstr "Norweski"
 
-#: src/intl/gettext/libintl.c:50
+#: src/intl/gettext/libintl.c:51
 msgid "Polish"
 msgstr "Polski"
 
-#: src/intl/gettext/libintl.c:51
+#: src/intl/gettext/libintl.c:52
 msgid "Portuguese"
 msgstr "Portugalski"
 
 #
-#: src/intl/gettext/libintl.c:52
+#: src/intl/gettext/libintl.c:53
 msgid "Romanian"
 msgstr "Rumuñski"
 
-#: src/intl/gettext/libintl.c:53
+#: src/intl/gettext/libintl.c:54
 msgid "Russian"
 msgstr "Rosyjski"
 
-#: src/intl/gettext/libintl.c:54
+#: src/intl/gettext/libintl.c:55
 msgid "Serbian"
 msgstr "Serbski"
 
-#: src/intl/gettext/libintl.c:55
+#: src/intl/gettext/libintl.c:56
 msgid "Slovak"
 msgstr "S³owacki"
 
-#: src/intl/gettext/libintl.c:56
+#: src/intl/gettext/libintl.c:57
 msgid "Spanish"
 msgstr "Hiszpañski"
 
-#: src/intl/gettext/libintl.c:57
+#: src/intl/gettext/libintl.c:58
 msgid "Swedish"
 msgstr "Szwedzki"
 
-#: src/intl/gettext/libintl.c:58
+#: src/intl/gettext/libintl.c:59
 msgid "Turkish"
 msgstr "Turecki"
 
-#: src/intl/gettext/libintl.c:59
+#: src/intl/gettext/libintl.c:60
 msgid "Ukrainian"
 msgstr "Ukraiñski"
 
@@ -6725,7 +6730,10 @@ msgstr "Przerwano"
 msgid "Socket exception"
 msgstr "B³±d gniazda"
 
-#: src/network/state.c:45
+#: src/network/state.c:45 src/scripting/python/dialogs.c:59
+#: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
+#: src/scripting/python/load.c:113 src/scripting/python/menu.c:98
+#: src/scripting/python/open.c:59
 msgid "Internal error"
 msgstr "B³±d wewnêtrzny"
 
@@ -6741,7 +6749,8 @@ msgstr "B³±d przy czytaniu z gniazda"
 msgid "Data modified"
 msgstr "Dane zosta³y zmodyfikowane"
 
-#: src/network/state.c:51
+#: src/network/state.c:51 src/scripting/python/load.c:119
+#: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
 msgstr "Z³a sk³adnia URL-a"
 
@@ -8339,23 +8348,23 @@ msgstr "Nie okre¶lono programu"
 msgid "No program specified for protocol %s."
 msgstr "Nie okre¶lono programu do obs³ugi protoko³u %s."
 
-#: src/scripting/lua/core.c:301
+#: src/scripting/lua/core.c:312 src/scripting/python/keybinding.c:151
 msgid "Error registering event hook"
 msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
 
-#: src/scripting/lua/core.c:452
+#: src/scripting/lua/core.c:463 src/scripting/python/dialogs.c:171
 msgid "User dialog"
 msgstr "Okno dialogowe u¿ytkownika"
 
-#: src/scripting/lua/core.c:731
+#: src/scripting/lua/core.c:742
 msgid "Lua Error"
 msgstr "B³±d Lua"
 
-#: src/scripting/lua/core.c:881
+#: src/scripting/lua/core.c:892
 msgid "Lua Console"
 msgstr "Konsola Lua"
 
-#: src/scripting/lua/core.c:881
+#: src/scripting/lua/core.c:892
 msgid "Enter expression"
 msgstr "Wprowad¼ wyra¿enie"
 
@@ -8591,25 +8600,25 @@ msgstr "Ostrze¿enie: nazwa terminala zawiera \"nieprzyzwoite\" znaki."
 msgid "Failed to create session."
 msgstr "Nie uda³o siê utworzyæ sesji."
 
-#: src/terminal/event.c:437
+#: src/terminal/event.c:439
 #, c-format
 msgid "Bad event %d"
 msgstr "B³êdne zdarzenie %d"
 
-#: src/terminal/event.c:477
+#: src/terminal/event.c:479
 #, c-format
 msgid "Could not read event: %d (%s)"
 msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 
-#: src/terminal/kbd.c:1082
+#: src/terminal/kbd.c:1105
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
-#: src/terminal/tab.c:212
+#: src/terminal/tab.c:204
 msgid "Do you really want to close the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
 
-#: src/terminal/tab.c:255
+#: src/terminal/tab.c:247
 msgid "Do you really want to close all except the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ wszystkie karty za wyj±tkiem bie¿±cej?"
 
@@ -8646,193 +8655,193 @@ msgstr "Wyst±pi³ b³±d podczas wysy³ania formularza"
 msgid "Could not load file %s: %s"
 msgstr "Nie mo¿na wczytaæ pliku %s: %s"
 
-#: src/viewer/text/form.c:1782
+#: src/viewer/text/form.c:1785
 msgid "Reset form"
 msgstr "Wyczy¶æ formularz"
 
 #
-#: src/viewer/text/form.c:1784
+#: src/viewer/text/form.c:1787
 msgid "Harmless button"
 msgstr "Nieszkodliwy przycisk"
 
-#: src/viewer/text/form.c:1792
+#: src/viewer/text/form.c:1795
 msgid "Submit form to"
 msgstr "Prze¶lij formularz do"
 
-#: src/viewer/text/form.c:1793
+#: src/viewer/text/form.c:1796
 msgid "Post form to"
 msgstr "Wy¶lij formularz do"
 
-#: src/viewer/text/form.c:1795
+#: src/viewer/text/form.c:1798
 msgid "Radio button"
 msgstr "Okr±g³y przycisk"
 
-#: src/viewer/text/form.c:1799
+#: src/viewer/text/form.c:1802
 msgid "Select field"
 msgstr "Pole wyboru"
 
-#: src/viewer/text/form.c:1803
+#: src/viewer/text/form.c:1806
 msgid "Text area"
 msgstr "Pole tekstowe"
 
-#: src/viewer/text/form.c:1805
+#: src/viewer/text/form.c:1808
 msgid "File upload"
 msgstr "£adowanie pliku"
 
-#: src/viewer/text/form.c:1807
+#: src/viewer/text/form.c:1810
 msgid "Password field"
 msgstr "Pole has³a"
 
-#: src/viewer/text/form.c:1845
+#: src/viewer/text/form.c:1848
 msgid "name"
 msgstr "nazwa"
 
-#: src/viewer/text/form.c:1857
+#: src/viewer/text/form.c:1860
 msgid "value"
 msgstr "warto¶æ"
 
-#: src/viewer/text/form.c:1870
+#: src/viewer/text/form.c:1873
 msgid "read only"
 msgstr "tylko do odczytu"
 
-#: src/viewer/text/form.c:1881
+#: src/viewer/text/form.c:1884
 #, c-format
 msgid "press %s to navigate"
 msgstr "wci¶nij %s aby nawigowaæ"
 
-#: src/viewer/text/form.c:1883
+#: src/viewer/text/form.c:1886
 #, c-format
 msgid "press %s to edit"
 msgstr "wci¶nij %s aby edytowaæ"
 
-#: src/viewer/text/form.c:1919
+#: src/viewer/text/form.c:1922
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
-#: src/viewer/text/form.c:1921
+#: src/viewer/text/form.c:1924
 #, c-format
 msgid "press %s to post to %s"
 msgstr "wci¶nij %s aby wys³aæ do %s"
 
 #
-#: src/viewer/text/form.c:2023
+#: src/viewer/text/form.c:2026
 msgid "Useless button"
 msgstr "Bezu¿yteczny przycisk"
 
-#: src/viewer/text/form.c:2025
+#: src/viewer/text/form.c:2028
 msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1271
+#: src/viewer/text/link.c:1273
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1276
+#: src/viewer/text/link.c:1278
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1278
+#: src/viewer/text/link.c:1280
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1282
+#: src/viewer/text/link.c:1284
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1284
+#: src/viewer/text/link.c:1286
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1288
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1293
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1294
+#: src/viewer/text/link.c:1296
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1298
+#: src/viewer/text/link.c:1300
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1309 src/viewer/text/link.c:1349
+#: src/viewer/text/link.c:1311 src/viewer/text/link.c:1351
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1324
+#: src/viewer/text/link.c:1326
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1334
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1335
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1337
+#: src/viewer/text/link.c:1339
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1339
+#: src/viewer/text/link.c:1341
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1344
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1347
+#: src/viewer/text/link.c:1349
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1356
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1361
+#: src/viewer/text/link.c:1363
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1365
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1372
+#: src/viewer/text/link.c:1374
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1442
+#: src/viewer/text/link.c:1444
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1447
+#: src/viewer/text/link.c:1449
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
@@ -8927,19 +8936,19 @@ msgstr ""
 "Wej¶cie zosta³o obciête, ale mo¿na nadal odzyskaæ wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:728
+#: src/viewer/text/view.c:733
 msgid "Go to link"
 msgstr "Przejd¼ do odno¶nika"
 
-#: src/viewer/text/view.c:728
+#: src/viewer/text/view.c:733
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1313
+#: src/viewer/text/view.c:1318
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1314
+#: src/viewer/text/view.c:1319
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 
