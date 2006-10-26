@@ -502,6 +502,11 @@ static struct option_info config_options_info[] = {
 		"is always cached, even if it is over the memory cache size\n"
 		"threshold. (Then of course no other documents can be cached.)")),
 
+/* FIXME: Write more. */
+	INIT_OPT_INT("document.cache", N_("Interval"),
+		"interval", 0, 0, 86400, 600,
+		N_("Interval between requests for the same document in seconds.")),
+
 	INIT_OPT_TREE("document.cache", N_("Memory cache"),
 		"memory", 0,
 		N_("Memory cache options.")),

@@ -21,6 +21,7 @@
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
+#include "util/time.h"
 
 /* The list of cache entries */
 static INIT_LIST_HEAD(cache_entries);
@@ -181,13 +182,6 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	if (!cached || cached->incomplete)
 		return NULL;
 
-#if 0
-	if (uri->protocol == PROTOCOL_HTTP || uri->protocol == PROTOCOL_HTTPS
-	    || uri->protocol == PROTOCOL_FILE /* CGI */) {
-	    	if (cached->last_modified && cache_mode == CACHE_MODE_NORMAL)
-			return NULL;
-	}
-#endif
 
 	/* A bit of a gray zone. Delete the entry if the it has the stricktest
 	 * cache mode and we don't want the most aggressive mode or we have to
@@ -198,6 +192,13 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	    || (cached->expire && cache_entry_has_expired(cached))) {
 		if (!is_object_used(cached)) delete_cache_entry(cached);
 		return NULL;
+	}
+
+	if (cached->cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED
+	    && cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED
+	    && (cached->last_modified || cached->etag)) {
+		if (cached->seconds + get_opt_int("document.cache.interval") < time(NULL))
+			return NULL;
 	}
 
 	return cached;
@@ -685,6 +686,7 @@ normalize_cache_entry(struct cache_entry *cached, off_t truncate_length)
 	truncate_entry(cached, truncate_length, 1);
 	cached->incomplete = 0;
 	cached->preformatted = 0;
+	cached->seconds = time(NULL);
 }
 
 

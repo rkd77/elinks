@@ -570,9 +570,9 @@ http_send_header(struct socket *socket)
 		http_end_request(conn, S_OUT_OF_MEM, 0);
 		return;
 	}
-#if 0
+
 	if (!conn->cached) conn->cached = find_in_cache(uri);
-#endif
+
 	talking_to_proxy = IS_PROXY_URI(conn->uri) && !conn->socket->ssl;
 	use_connect = connection_is_https_proxy(conn) && !conn->socket->ssl;
 
@@ -786,11 +786,18 @@ http_send_header(struct socket *socket)
 	}
 
 	if (conn->cached) {
-		if (!conn->cached->incomplete && conn->cached->head && conn->cached->last_modified
+		if (!conn->cached->incomplete && conn->cached->head
 		    && conn->cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED) {
-			add_to_string(&header, "If-Modified-Since: ");
-			add_to_string(&header, conn->cached->last_modified);
-			add_crlf_to_string(&header);
+			if (conn->cached->last_modified) {
+				add_to_string(&header, "If-Modified-Since: ");
+				add_to_string(&header, conn->cached->last_modified);
+				add_crlf_to_string(&header);
+			}
+			if (conn->cached->etag) {
+				add_to_string(&header, "If-None-Match: ");
+				add_to_string(&header, conn->cached->etag);
+				add_crlf_to_string(&header);
+			}
 		}
 	}
 

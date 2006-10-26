@@ -44,6 +44,8 @@ struct cache_entry {
 
 	unsigned int id;		/* Change each time entry is modified. */
 
+	time_t seconds;			/* Access time. Used by 'If-Modified-Since' */
+
 	off_t length;			/* The expected and complete size */
 	off_t data_size;		/* The actual size of all fragments */
 
