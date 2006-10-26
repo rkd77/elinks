@@ -195,6 +195,8 @@ found_parent:
 		break;
 	}
 #endif
+	case JSP_WIN_STATUS:
+		return JS_FALSE;
 	case JSP_WIN_TOP:
 	{
 		struct document_view *doc_view = vs->doc_view;
