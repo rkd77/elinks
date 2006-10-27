@@ -6284,7 +6284,7 @@ msgstr "Spodziewany URL po -%s"
 
 #: src/main/main.c:208
 msgid "No running ELinks found."
-msgstr "¯adnego dzia³aj±cego ELinksa nie znaleziono."
+msgstr "Nie znaleziono ¿adnego dzia³aj±cego ELinksa."
 
 #. The remote session(s) can not be created
 #: src/main/main.c:215
