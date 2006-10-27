@@ -153,6 +153,8 @@ init(void)
 
 	if (!remote_session_flags) {
 		check_stdio(&url_list);
+	} else {
+		program.terminate = 1;
 	}
 
 	if (!get_cmd_opt_bool("no-home")) {
@@ -208,13 +210,11 @@ init(void)
 			usrerror(gettext("No running ELinks found."));
 			program.retval = RET_PING;
 		}
-		program.terminate = 1;
 
 	} else if (remote_session_flags && fd == -1) {
 		/* The remote session(s) can not be created */
 		usrerror(gettext("No remote session to connect to."));
 		program.retval = RET_REMOTE;
-		program.terminate = 1;
 
 	} else {
 		struct string info;
