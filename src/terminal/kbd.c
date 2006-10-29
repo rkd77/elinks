@@ -629,25 +629,69 @@ free_and_return:
 }
 
 
-/* Returns the length of the escape sequence */
+/* Parse an ECMA-48 control sequence that was received from a
+ * terminal.  Extract the Final Byte (if there are no Intermediate
+ * Bytes) and the value of the first parameter (if it is an integer).
+ *
+ * This function assumes the control sequence begins with a CSI -
+ * CONTROL SEQUENCE INTRODUCER encoded as ESC [.  (ECMA-48 also allows
+ * 0x9B as a single-byte CSI, but we don't support that here.)
+ *
+ * Return one of:
+ *   -1 if the control sequence is not yet complete; the caller sets a timer.
+ *   0 if the control sequence does not comply with ECMA-48.
+ *   The length of the control sequence otherwise.  */
 static inline int
-get_esc_code(unsigned char *str, int len, unsigned char *code, int *num)
+get_esc_code(unsigned char *str, int len, unsigned char *final_byte,
+	     int *first_param_value)
 {
+	const int parameter_pos = 2;
+	int intermediate_pos;
+	int final_pos;
 	int pos;
 
-	*num = 0;
-	*code = '\0';
+	*final_byte = '\0';
+	*first_param_value = 0;
 
-	for (pos = 2; pos < len; pos++) {
-		if (!isdigit(str[pos]) || pos > 7) {
-			*code = str[pos];
+	/* Parameter Bytes */
+	pos = parameter_pos;
+	while (pos < len && str[pos] >= 0x30 && str[pos] <= 0x3F)
+		++pos;
 
-			return pos + 1;
-		}
-		*num = *num * 10 + str[pos] - '0';
-	}
+	/* Intermediate Bytes */
+	intermediate_pos = pos;
+	while (pos < len && str[pos] >= 0x20 && str[pos] <= 0x2F)
+		++pos;
 
-	return 0;
+	/* Final Byte */
+	final_pos = pos;
+	if (pos >= len)
+		return -1;
+	if (!(str[pos] >= 0x40 && str[pos] <= 0x7E))
+		return 0;
+
+	/* The control sequence seems OK.  If the first Parameter
+	 * Byte indicates that the parameter string is formatted
+	 * as specified in clause 5.4.2 of ECMA-48, and the first
+	 * parameter is an integer, then compute its value.
+	 * (We need not check @len here because the loop cannot get
+	 * past the Final Byte.)  */
+	for (pos = parameter_pos; str[pos] >= 0x30 && str[pos] <= 0x39; ++pos)
+		*first_param_value = *first_param_value * 10 + str[pos] - 0x30;
+	/* If the first parameter contains an embedded separator, then
+	 * the value is not an integer, so discard what we computed.  */
+	if (str[pos] == 0x3A)
+		*first_param_value = 0;
+
+	/* The meaning of the Final Byte depends on the Intermediate
+	 * Bytes.  Because we don't currently need to recognize any
+	 * control sequences that use Intermediate Bytes, we just
+	 * discard the Final Byte if there are any Intermediate
+	 * Bytes.  */
+	if (intermediate_pos == final_pos)
+		*final_byte = str[final_pos];
+
+	return final_pos + 1;
 }
 
 /* Define it to dump queue content in a readable form,
@@ -659,8 +703,16 @@ get_esc_code(unsigned char *str, int len, unsigned char *code, int *num)
 #include <ctype.h>	/* isprint() isspace() */
 #endif
 
-/* Returns length of the escape sequence or -1 if the caller needs to set up
- * the ESC delay timer. */
+/* Decode a control sequence that begins with CSI (CONTROL SEQUENCE
+ * INTRODUCER) encoded as ESC [, and set *@ev accordingly.
+ * (ECMA-48 also allows 0x9B as a single-byte CSI, but we don't
+ * support that here.)
+ *
+ * Return one of:
+ *   -1 if the control sequence is not yet complete; the caller sets a timer.
+ *   0 if the control sequence should be parsed by some other function.
+ *   The length of the control sequence otherwise.
+ * Returning >0 does not imply this function has altered *ev.  */
 static int
 decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
@@ -674,7 +726,8 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	if (itrm->in.queue.data[2] == '[') {
 		/* The terminfo entry for linux has "kf1=\E[[A", etc.
 		 * These are not control sequences compliant with
-		 * clause 5.4 of ECMA-48.  */
+		 * clause 5.4 of ECMA-48.  (According to ECMA-48,
+		 * "\E[[" is SRS - START REVERSED STRING.)  */
 		if (itrm->in.queue.len >= 4
 		    && itrm->in.queue.data[3] >= 'A'
 		    && itrm->in.queue.data[3] <= 'L') {
@@ -687,6 +740,17 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	}
 
 	el = get_esc_code(itrm->in.queue.data, itrm->in.queue.len, &c, &v);
+	if (el == -1) {
+		/* If the control sequence is incomplete but itrm->in.queue
+		 * is already full, then we must not wait for more input:
+		 * kbd_timeout might call in_kbd and thus process_input
+		 * and come right back here.  Better just reject the whole
+		 * thing and let the initial CSI be handled as Alt-[.  */
+		if (itrm->in.queue.len == ITRM_IN_QUEUE_SIZE)
+			return 0;
+		else
+			return -1;
+	}
 #ifdef DEBUG_ITRM_QUEUE
 	fprintf(stderr, "esc code: %c v=%d c=%c el=%d\n", itrm->in.queue.data[1], v, c, el);
 	fflush(stderr);
@@ -711,9 +775,8 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	 *    this escape sequence with the meaning expected by
 	 *    ELinks.  Escape sequences with no known terminal may end
 	 *    up being removed from ELinks when bug 96 is fixed.
-	 */
-	switch (c) {				/* ECMA-48 Terminfo $TERM */
-	case 0: return -1;			/* ------- -------- ----- */
+	 */					/* ECMA-48 Terminfo $TERM */
+	switch (c) {				/* ------- -------- ----- */
 	case 'A': kbd.key = KBD_UP; break;	/*    CUU  kcuu1    vt200 */
 	case 'B': kbd.key = KBD_DOWN; break;	/*    CUD  kcud1    vt200 */
 	case 'C': kbd.key = KBD_RIGHT; break;	/*    CUF  kcuf1    vt200 */
