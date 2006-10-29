@@ -1024,7 +1024,8 @@ process_queue(struct itrm *itrm)
 				set_kbd_event(&ev, itrm->in.queue.data[1],
 					      KBD_MOD_ALT);
 			}
-		} else {	/* ESC followed by something else */
+		}
+		if (el == 0) {	/* Begins with ESC, but none of the above */
 			el = 2;
 			set_kbd_event(&ev, itrm->in.queue.data[1],
 				      KBD_MOD_ALT);
