@@ -3,7 +3,14 @@
 
 
 #define ITRM_OUT_QUEUE_SIZE	16384
-#define ITRM_IN_QUEUE_SIZE	16
+
+/* Currently, ELinks treats control sequences as text if they are
+ * longer than ITRM_IN_QUEUE_SIZE bytes.  So it should be defined
+ * as greater than the length of any control sequence that ELinks
+ * is expected to receive.  These are the longest so far:
+ * VT420: "\E[?64;1;2;6;7;8;9;15;18;19;21c"
+ * VT510: "\E[?64;1;2;7;8;9;12;15;18;21;23;24;42;44;45;46c" */
+#define ITRM_IN_QUEUE_SIZE	64
 
 struct itrm_queue {
 	unsigned char *data;
