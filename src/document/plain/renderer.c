@@ -435,11 +435,6 @@ add_document_line(struct plain_renderer *renderer,
 			} else {
 #ifdef CONFIG_UTF8
 				if (utf8) {
-					unsigned char *text = &line[line_pos];
-					unicode_val_T data =
-						utf8_to_unicode(&text,
-								&line[width]);
-
 					if (data == UCS_NO_CHAR) {
 						line_pos += charlen;
 						continue;
