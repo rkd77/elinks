@@ -443,7 +443,7 @@ add_document_line(struct plain_renderer *renderer,
 					template->data = (unicode_val_T)data;
 					copy_screen_chars(pos++, template, 1);
 
-					if (unicode_to_cell(data) == 2) {
+					if (cell == 2) {
 						template->data = UCS_NO_CHAR;
 						copy_screen_chars(pos++,
 								  template, 1);
