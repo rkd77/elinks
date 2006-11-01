@@ -452,7 +452,6 @@ add_document_line(struct plain_renderer *renderer,
 						template->data = UCS_NO_CHAR;
 						copy_screen_chars(pos++,
 								  template, 1);
-						cell++;
 					}
 				} else
 #endif /* CONFIG_UTF8 */
