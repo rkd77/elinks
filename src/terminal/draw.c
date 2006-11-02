@@ -120,7 +120,11 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 #ifdef CONFIG_UTF8
 #ifdef CONFIG_DEBUG
 	/* Detect attempt to draw double-width char on the last
-	 * column of terminal. */
+	 * column of terminal.  The unicode_to_cell(data) call
+	 * is in principle wrong if CONFIG_UTF8 is defined but
+	 * UTF-8 I/O is disabled, because @data is then a byte
+	 * in the charset of the terminal; but unicode_to_cell
+	 * returns 1 for U+0000...U+00FF so it's not a problem.  */
 	if (unicode_to_cell(data) == 2 && x + 1 > term->width)
 		INTERNAL("Attempt to draw double-width glyph on last column!");
 #endif /* CONFIG_DEBUG */
