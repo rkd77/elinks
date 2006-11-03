@@ -135,13 +135,13 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
-		unsigned char *new_html = POPpx;
+		SV *new_html_sv = POPs;
+		int new_html_len;
+		unsigned char *new_html = SvPV(new_html_sv, new_html_len);
 
 		if (new_html) {
-			int len = strlen(new_html);
-
-			add_fragment(cached, 0, new_html, len);
-			normalize_cache_entry(cached, len);
+			add_fragment(cached, 0, new_html, new_html_len);
+			normalize_cache_entry(cached, new_html_len);
 		}
 	}
 
