@@ -314,7 +314,7 @@ add_document_line(struct plain_renderer *renderer,
 		int charlen = 1;
 		int cell = 1;
 #ifdef CONFIG_UTF8
-		unicode_val_T data;
+		unicode_val_T data = UCS_NO_CHAR;
 
 		if (utf8) {
 			unsigned char *line_char2 = &line[line_pos];
