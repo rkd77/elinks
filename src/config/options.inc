@@ -504,7 +504,7 @@ static struct option_info config_options_info[] = {
 
 	/* FIXME: Write more. */
 	INIT_OPT_INT("document.cache", N_("revalidation_Interval"),
-		"revalidation_interval", -1, 0, 86400, -1,
+		"revalidation_interval", 0, -1, 86400, -1,
 		N_("Interval (in seconds) between a server is poked about changes in an\n"
 		"already cached document.")),
 
