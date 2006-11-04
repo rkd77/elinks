@@ -309,7 +309,7 @@ ecmascript_timeout_handler(void *i)
 	struct ecmascript_interpreter *interpreter = i;
 
 	assert(interpreter->vs->doc_view->document);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
 
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
 }
