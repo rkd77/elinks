@@ -234,14 +234,15 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		skip_space(arg);
 
 		argend = strchr(arg, ')');
-
-		if (!argend) {
-			/* Just open any passed URLs in new tabs */
-			remote_session_flags |= SES_REMOTE_NEW_TAB;
-			return NULL;
-		}
-		skipback_whitespace(arg, argend);
 	}
+
+	if (!argend) {
+		/* Just open any passed URLs in new tabs */
+		remote_session_flags |= SES_REMOTE_NEW_TAB;
+		return NULL;
+	}
+
+	skipback_whitespace(arg, argend);
 
 	for (method = 0; remote_methods[method].name; method++) {
 		unsigned char *name = remote_methods[method].name;
