@@ -323,6 +323,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char
 	init_string(&interpreter->code);
 	add_to_string(&interpreter->code, code);
 	mem_free(code);
+	kill_timer(&interpreter->vs->doc_view->document->timeout);
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
 
