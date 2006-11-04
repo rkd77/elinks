@@ -159,9 +159,9 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 			else {
 				outcharset = getenv("OUTPUT_CHARSET");
 				if (outcharset == NULL || outcharset[0] == '\0') {
-					extern const unsigned char *locale_charset(void);
+					extern const unsigned char *elinks_locale_charset(void);
 
-					outcharset = locale_charset();
+					outcharset = elinks_locale_charset();
 				}
 			}
 

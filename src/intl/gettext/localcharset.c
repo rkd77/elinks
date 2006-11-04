@@ -193,13 +193,13 @@ get_charset_aliases(void)
    name.  */
 
 /* Should be in .h file, used in _nl_init_domain_conv() function. */
-const unsigned char *locale_charset(void);
+const unsigned char *elinks_locale_charset(void);
 
 #ifdef STATIC
 STATIC
 #endif
 const unsigned char *
-locale_charset(void)
+elinks_locale_charset(void)
 {
 	const unsigned char *codeset;
 	const unsigned char *aliases;
