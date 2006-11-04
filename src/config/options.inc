@@ -503,10 +503,13 @@ static struct option_info config_options_info[] = {
 		"threshold. (Then of course no other documents can be cached.)")),
 
 	/* FIXME: Write more. */
-	INIT_OPT_INT("document.cache", N_("revalidation_Interval"),
+	INIT_OPT_INT("document.cache", N_("Revalidation interval"),
 		"revalidation_interval", 0, -1, 86400, -1,
-		N_("Interval (in seconds) between a server is poked about changes in an\n"
-		"already cached document.")),
+		N_("Period that a cache entry is considered to be up-to-date.\n"
+		"When a document is loaded and this interval has elapsed since the\n"
+		"document was initially loaded or most recently revalidated\n"
+		"with the server, the server will be checked in case there is\n"
+		"a more up-to-date version of the document.")),
 
 	INIT_OPT_TREE("document.cache", N_("Memory cache"),
 		"memory", 0,
