@@ -308,8 +308,8 @@ ecmascript_timeout_handler(void *i)
 {
 	struct ecmascript_interpreter *interpreter = i;
 
-	assert(interpreter->vs->doc_view->document);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
+	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
 
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
 }
@@ -323,6 +323,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char
 	init_string(&interpreter->code);
 	add_to_string(&interpreter->code, code);
 	mem_free(code);
+	kill_timer(&interpreter->vs->doc_view->document->timeout);
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
 

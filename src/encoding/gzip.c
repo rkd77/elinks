@@ -33,6 +33,7 @@ gzip_open(struct stream_encoded *stream, int fd)
 static int
 gzip_read(struct stream_encoded *stream, unsigned char *data, int len)
 {
+	gzclearerr((gzFile *) stream->data);
 	return gzread((gzFile *) stream->data, data, len);
 }
 
