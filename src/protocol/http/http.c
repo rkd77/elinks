@@ -971,8 +971,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 #define BIG_READ 65536
 	if (!*length_of_block) {
 		/* Going to finish this decoding bussiness. */
-		/* Some nicely big value - empty encoded output queue by reading
-		 * big chunks from it. */
 		state = FINISHING;
 	}
 
@@ -1027,6 +1025,9 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 				}
 			}
 		} else {
+			/* state is FINISHING. Set to_read to some nice, big
+			 * value to empty the encoded output queue by reading
+			 * big chunks from it. */
 			to_read = BIG_READ;
 		}
 
