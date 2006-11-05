@@ -1030,8 +1030,8 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			if (!conn->stream) return NULL;
 			/* On "startup" pipe is treated with care, but if everything
 			 * was already written to the pipe, caution isn't necessary */
-			else if (to_read != BIG_READ) init = 1;
-		} else init = 0;
+			if (to_read != BIG_READ) init = 1;
+		}
 
 		output = (unsigned char *) mem_realloc(output, *new_len + to_read);
 		if (!output) break;
