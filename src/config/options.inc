@@ -911,11 +911,13 @@ static struct option_info config_options_info[] = {
 		"3 is true color mode, uses konsole RGB codes.")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Transparency"),
-		"transparency", 0, 1,
+		"transparency", 0, 0,
 		N_("If we should not set the background to black. This is particularly\n"
 		"useful when we have a terminal (typically in some windowing\n"
 		"environment) with a background image or a transparent background -\n"
-		"it will be visible in ELinks as well. Note that this option makes\n"
+		"it will be visible in ELinks as well (but ELinks document color handling\n"
+		"will still assume the background is black so if you have a bright background\n"
+		"you might experience contrast problems. Note that this option makes\n"
 		"sense only when colors are enabled.")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Underline"),
