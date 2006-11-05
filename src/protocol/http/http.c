@@ -960,7 +960,8 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	 * causes further malfunction of zlib :[ ... so we will make sure that
 	 * we will always have at least PIPE_BUF / 2 + 1 in the pipe (returning
 	 * early otherwise)). */
-	int to_read = PIPE_BUF / 2, did_read = 0;
+	enum { NORMAL, FINISHING } state = NORMAL;
+	int did_read = 0;
 	int *length_of_block;
 	unsigned char *output = NULL;
 
@@ -972,7 +973,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		/* Going to finish this decoding bussiness. */
 		/* Some nicely big value - empty encoded output queue by reading
 		 * big chunks from it. */
-		to_read = BIG_READ;
+		state = FINISHING;
 	}
 
 	if (conn->content_encoding == ENCODING_NONE) {
@@ -991,11 +992,15 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	}
 
 	do {
+		int to_read;
 		int init = 0;
 
-		if (to_read == PIPE_BUF / 2) {
+		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
-			int written = safe_write(conn->stream_pipes[1], data,
+			int written;
+			
+			to_read = PIPE_BUF / 2;
+			written = safe_write(conn->stream_pipes[1], data,
 						 len > to_read ? to_read : len);
 
 			if (written > 0) {
@@ -1009,7 +1014,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 				 * non-keep-alive and chunked */
 				if (!http->length) {
 					/* That's all, folks - let's finish this. */
-					to_read = BIG_READ;
+					state = FINISHING;
 				} else if (!len) {
 					/* We've done for this round (but not done
 					 * completely). Thus we will get out with
@@ -1022,6 +1027,8 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 					return output;
 				}
 			}
+		} else {
+			to_read = BIG_READ;
 		}
 
 		if (!conn->stream) {
@@ -1030,7 +1037,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			if (!conn->stream) return NULL;
 			/* On "startup" pipe is treated with care, but if everything
 			 * was already written to the pipe, caution isn't necessary */
-			if (to_read != BIG_READ) init = 1;
+			if (state != FINISHING) init = 1;
 		}
 
 		output = (unsigned char *) mem_realloc(output, *new_len + to_read);
