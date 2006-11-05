@@ -993,7 +993,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 	do {
 		int to_read;
-		int init = 0;
 
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
@@ -1037,14 +1036,17 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			if (!conn->stream) return NULL;
 			/* On "startup" pipe is treated with care, but if everything
 			 * was already written to the pipe, caution isn't necessary */
-			if (state != FINISHING) init = 1;
+			if (state != FINISHING) {
+				/* on init don't read too much */
+				to_read = PIPE_BUF / 32;
+			}
 		}
 
 		output = (unsigned char *) mem_realloc(output, *new_len + to_read);
 		if (!output) break;
 
 		did_read = read_encoded(conn->stream, output + *new_len,
-					init ? PIPE_BUF / 32 : to_read); /* on init don't read too much */
+					to_read);
 		if (did_read > 0) *new_len += did_read;
 		else if (did_read == -1) {
 			mem_free_set(&output, NULL);
