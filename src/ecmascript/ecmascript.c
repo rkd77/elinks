@@ -308,7 +308,7 @@ ecmascript_timeout_handler(void *i)
 {
 	struct ecmascript_interpreter *interpreter = i;
 
-	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->doc_view);
+	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
 	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
 
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
