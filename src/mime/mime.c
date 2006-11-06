@@ -234,7 +234,7 @@ get_fragment_content_type(struct cache_entry *cached)
 	struct fragment *fragment;
 	size_t length;
 	unsigned char *sample;
-	unsigned char *ctype;
+	unsigned char *ctype = NULL;
 
 	if (list_empty(cached->frag))
 		return NULL;
