@@ -250,6 +250,13 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 			datalen = strlen(prefix_end);
 		}
 
+		/* A bit of a special case, but using the "normal" host
+		 * parsing seems a bit scary at this point. (see bug 107). */
+		if (datalen > 9 && !strncasecmp(prefix_end, "localhost/", 10)) {
+			prefix_end += 9;
+			datalen -= 9;
+		}
+
 		uri->data = prefix_end;
 		uri->datalen = datalen;
 
