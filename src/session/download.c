@@ -1143,8 +1143,15 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 	}
 
 	text = get_dialog_offset(dlg, TYPE_QUERY_WIDGETS_COUNT);
-	format = _("What would you like to do with the file '%s' (type: %s%s%s)?", term);
-	snprintf(text, MAX_STR_LEN, format, filename.source, ct, desc_sep, description);
+	/* For "default directory index pages" with wrong content-type
+	 * the filename can be NULL, e.g. http://www.spamhaus.org in bug 396. */
+	if (filename.length) {
+		format = _("What would you like to do with the file '%s' (type: %s%s%s)?", term);
+		snprintf(text, MAX_STR_LEN, format, filename.source, ct, desc_sep, description);
+	} else {
+		format = _("What would you like to do with the file (type: %s%s%s)?", term);
+		snprintf(text, MAX_STR_LEN, format, ct, desc_sep, description);
+	}
 
 	done_string(&filename);
 
