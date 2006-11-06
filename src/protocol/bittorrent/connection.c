@@ -290,6 +290,10 @@ init_bittorrent_connection(struct connection *conn)
 	bittorrent->conn = conn;
 	bittorrent->tracker.timer = TIMER_ID_UNDEF;
 
+	/* Initialize here so that error handling can safely call
+	 * free_list on it. */
+	init_list(bittorrent->meta.files);
+
 	return bittorrent;
 }
 
@@ -383,7 +387,7 @@ bittorrent_metainfo_callback(void *data, enum connection_state state,
 void
 bittorrent_protocol_handler(struct connection *conn)
 {
-	struct uri *uri;
+	struct uri *uri = NULL;
 	struct bittorrent_connection *bittorrent;
 
 	bittorrent = init_bittorrent_connection(conn);
@@ -392,11 +396,11 @@ bittorrent_protocol_handler(struct connection *conn)
 		return;
 	}
 
-	assert(conn->uri->datalen);
+	if (conn->uri->datalen)
+		uri = get_uri(conn->uri->data, 0);
 
-	uri = get_uri(conn->uri->data, 0);
 	if (!uri) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, S_BITTORRENT_BAD_URL);
 		return;
 	}
 

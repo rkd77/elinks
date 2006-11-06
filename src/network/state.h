@@ -104,6 +104,7 @@ enum connection_state {
 	S_BITTORRENT_ERROR	= -100800,
 	S_BITTORRENT_METAINFO	= -100801,
 	S_BITTORRENT_TRACKER	= -100802,
+	S_BITTORRENT_BAD_URL	= -100803,
 };
 
 unsigned char *get_state_message(enum connection_state state, struct terminal *term);
