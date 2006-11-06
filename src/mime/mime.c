@@ -1,5 +1,9 @@
 /* Functionality for handling mime types */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
