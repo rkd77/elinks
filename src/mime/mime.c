@@ -228,7 +228,7 @@ get_cache_header_content_type(struct cache_entry *cached)
 	return NULL;
 }
 
-unsigned char *
+static unsigned char *
 get_fragment_content_type(struct cache_entry *cached)
 {
 	struct fragment *fragment;
