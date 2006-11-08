@@ -1,5 +1,9 @@
 /* Functionality for handling mime types */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -224,6 +228,34 @@ get_cache_header_content_type(struct cache_entry *cached)
 	return NULL;
 }
 
+static unsigned char *
+get_fragment_content_type(struct cache_entry *cached)
+{
+	struct fragment *fragment;
+	size_t length;
+	unsigned char *sample;
+	unsigned char *ctype = NULL;
+
+	if (list_empty(cached->frag))
+		return NULL;
+
+	fragment = cached->frag.next;
+	if (fragment->offset)
+		return NULL;
+
+	length = fragment->length > 1024 ? 1024 : fragment->length;
+	sample = memacpy(fragment->data, length);
+	if (!sample)
+		return NULL;
+
+	if (strcasestr(sample, "<html>"))
+		ctype = stracpy("text/html");
+
+	mem_free(sample);
+
+	return ctype;
+}
+
 unsigned char *
 get_content_type(struct cache_entry *cached)
 {
@@ -267,6 +299,12 @@ get_content_type(struct cache_entry *cached)
 			return ctype;
 		}
 		mem_free_if(ctype);
+	}
+
+	ctype = get_fragment_content_type(cached);
+	if (ctype && *ctype) {
+		cached->content_type = ctype;
+		return ctype;
 	}
 
 	debug_ctype(get_default_mime_type());

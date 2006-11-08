@@ -122,6 +122,7 @@ struct s_msg_dsc {
 	{S_BITTORRENT_ERROR,	N_("BitTorrent error")},
 	{S_BITTORRENT_METAINFO,	N_("The BitTorrent metainfo file contained errors")},
 	{S_BITTORRENT_TRACKER,	N_("The tracker requesting failed")},
+	{S_BITTORRENT_BAD_URL,	N_("The BitTorrent URL does not point to a valid URL")},
 #endif
 
 	{0,			NULL}
