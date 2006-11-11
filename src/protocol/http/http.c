@@ -990,13 +990,14 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	}
 
 	do {
-		int to_read;
+		/* The initial value is used only when state == NORMAL.
+		 * Unconditional initialization avoids a GCC warning.  */
+		int to_read = PIPE_BUF / 2;
 
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
 			int written;
 			
-			to_read = PIPE_BUF / 2;
 			written = safe_write(conn->stream_pipes[1], data,
 						 len > to_read ? to_read : len);
 
