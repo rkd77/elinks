@@ -565,6 +565,67 @@ static unsigned char *process_element(unsigned char *name, int namelen, int endi
                 unsigned char *eof, unsigned char *attr,
                 struct html_context *html_context);
 
+/* Count the consecutive newline entity references (e.g. "&#13;") at
+ * the beginning of the range from @html to @eof.  Store the number of
+ * newlines to *@newlines_out and return the address where they end.
+ *
+ * This function currently requires a semicolon at the end of any
+ * entity reference, and does not support U+2028 LINE SEPARATOR and
+ * U+2029 PARAGRAPH SEPARATOR.  */
+static const unsigned char *
+count_newline_entities(const unsigned char *html, const unsigned char *eof,
+		       int *newlines_out)
+{
+	int newlines = 0;
+	int prev_was_cr = 0; /* treat CRLF as one newline, not two */
+
+	while ((html + 5 < eof && html[0] == '&' && html[1] == '#')) {
+		const unsigned char *peek = html + 2;
+		int this_is_cr;
+
+		if (*peek == 'x' || *peek == 'X') {
+			++peek;
+			while (peek < eof && *peek == '0')
+				++peek;
+			if (peek == eof)
+				break;
+			else if (*peek == 'a' || *peek == 'A')
+				this_is_cr = 0;
+			else if (*peek == 'd' || *peek == 'D')
+				this_is_cr = 1;
+			else
+				break;
+			++peek;
+		} else {
+			while (peek < eof && *peek == '0')
+				++peek;
+			if (eof - peek < 2 || *peek != '1')
+				break;
+			else if (peek[1] == '0')
+				this_is_cr = 0;
+			else if (peek[1] == '3')
+				this_is_cr = 1;
+			else
+				break;
+			peek += 2;
+		}
+		/* @peek should now be pointing to the semicolon of
+		 * e.g. "&#00013;" or "&#x00a;".  Or more digits might
+		 * follow.  */
+		if (peek == eof || *peek != ';')
+			break;
+		++peek;
+		
+		if (this_is_cr || !prev_was_cr)
+			++newlines;
+		prev_was_cr = this_is_cr;
+		html = peek;
+	}
+
+	*newlines_out = newlines;
+	return html;
+}
+
 void
 parse_html(unsigned char *html, unsigned char *eof,
 	   struct part *part, unsigned char *head,
@@ -666,15 +727,9 @@ next_break:
 				 * checking for '\n's in AT_PREFORMATTED text. */
 				/* See bug 52 and 387 for more info. */
 				int length = html - base_pos;
-				int newlines = 0;
+				int newlines;
 
-				while ((html + 5 < eof && html[0] == '&' && html[1] == '#')
-				       && (!memcmp(html + 2, "13;", 3)
-					   || (html + 6 < eof && !strncasecmp(html + 2, "x0a;", 4)))) {
-					newlines++;
-					html += 5 + (html[4] != ';');
-				}
-
+				html = (unsigned char *) count_newline_entities(html, eof, &newlines);
 				if (newlines) {
 					put_chrs(html_context, base_pos, length);
 					ln_break(html_context, newlines);
