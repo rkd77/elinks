@@ -462,8 +462,8 @@ drew_char:
 				unsigned char *ptr = fs->value + fs->state;
 				int cells = fc->size;
 				enum utf8_step how = (fc->type == FC_PASSWORD)
-					? utf8_step_characters
-					: utf8_step_cells_fewer;
+					? UTF8_STEP_CHARACTERS
+					: UTF8_STEP_CELLS_FEWER;
 
 				/* The insertion point is at the right
 				 * side of the scrolled-visible part

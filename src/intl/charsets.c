@@ -433,7 +433,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 		end = strchr(string, '\0');
 
 	switch (way) {
-	case utf8_step_characters:
+	case UTF8_STEP_CHARACTERS:
 		while (steps < max && current < end) {
 			++current;
 			if (utf8_islead(*current))
@@ -441,8 +441,8 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 		}
 		break;
 
-	case utf8_step_cells_fewer:
-	case utf8_step_cells_more:
+	case UTF8_STEP_CELLS_FEWER:
+	case UTF8_STEP_CELLS_MORE:
 		while (steps < max) {
 			unicode_val_T u;
 			unsigned char *prev = current;
@@ -458,7 +458,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 			}
 
 			width = unicode_to_cell(u);
-			if (way == utf8_step_cells_fewer
+			if (way == UTF8_STEP_CELLS_FEWER
 			    && steps + width > max) {
 				/* Back off.  */
 				current = prev;
@@ -500,7 +500,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 	if_assert_failed goto invalid_arg;
 
 	switch (way) {
-	case utf8_step_characters:
+	case UTF8_STEP_CHARACTERS:
 		while (steps < max && current > start) {
 			--current;
 			if (utf8_islead(*current))
@@ -508,8 +508,8 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 		}
 		break;
 
-	case utf8_step_cells_fewer:
-	case utf8_step_cells_more:
+	case UTF8_STEP_CELLS_FEWER:
+	case UTF8_STEP_CELLS_MORE:
 		while (steps < max) {
 			unsigned char *prev = current;
 			unsigned char *look;
@@ -531,7 +531,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 			} else
 				width = unicode_to_cell(u);
 
-			if (way == utf8_step_cells_fewer
+			if (way == UTF8_STEP_CELLS_FEWER
 			    && steps + width > max) {
 				/* Back off.  */
 				current = prev;

@@ -86,17 +86,17 @@ int utf8_cells2bytes(unsigned char *, int, unsigned char *);
 enum utf8_step {
 	/* Each step is one character, even if it is a combining or
 	 * double-width character.  */
-	utf8_step_characters,
+	UTF8_STEP_CHARACTERS,
 
 	/* Each step is one cell.  If the specified number of steps
 	 * would end in the middle of a double-width character, do not
 	 * include the character.  */
-	utf8_step_cells_fewer,
+	UTF8_STEP_CELLS_FEWER,
 
 	/* Each step is one cell.  If the specified number of steps
 	 * would end in the middle of a double-width character,
 	 * include the whole character.  */
-	utf8_step_cells_more
+	UTF8_STEP_CELLS_MORE
 };
 unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
 				 int, enum utf8_step, int *);
