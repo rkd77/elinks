@@ -160,7 +160,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 
 			sc = line;
 			data_save = sc->data;
-			sc->data = ' ';
+			sc->data = UCS_ORPHAN_CELL;
 			copy_screen_chars(screen_char, line, 1);
 			sc->data = data_save;
 			size--;
@@ -169,13 +169,13 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 
 		}
 		/* Instead of displaying double-width character at last column
-		 * display only space. */
+		 * display only UCS_ORPHAN_CELL. */
 		if (size - 1 > 0 && unicode_to_cell(line[size - 1].data) == 2) {
 			unicode_val_T data_save;
 
 			sc = &line[size - 1];
 			data_save = sc->data;
-			sc->data = ' ';
+			sc->data = UCS_ORPHAN_CELL;
 			copy_screen_chars(screen_char, line, size);
 			sc->data = data_save;
 		} else {
@@ -256,7 +256,7 @@ draw_border(struct terminal *term, struct box *box,
 
 #ifdef CONFIG_UTF8
 /* Checks cells left and right to the box for broken double-width chars.
- * Replace it with ' '.
+ * Replace it with UCS_ORPHAN_CELL.
  * 1+---+3
  * 1|box|##4
  * 1|   |##4
@@ -284,7 +284,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 		schar = get_char(term, x, y);
 		for (;height--; schar += term->width)
 			if (unicode_to_cell(schar->data) == 2)
-				schar->data = ' ';
+				schar->data = UCS_ORPHAN_CELL;
 	}
 
 	/* 2 */
@@ -296,7 +296,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 		schar = get_char(term, x, y);
 		for (;height--; schar += term->width)
 			if (unicode_to_cell(schar->data) == 2)
-				schar->data = ' ';
+				schar->data = UCS_ORPHAN_CELL;
 	}
 
 	/* 3 */
@@ -308,7 +308,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 		schar = get_char(term, x, y);
 		for (;height--; schar += term->width)
 			if (schar->data == UCS_NO_CHAR)
-				schar->data = ' ';
+				schar->data = UCS_ORPHAN_CELL;
 	}
 
 	/* 4 */
@@ -320,7 +320,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 		schar = get_char(term, x, y);
 		for (;height--; schar += term->width)
 			if (schar->data == UCS_NO_CHAR)
-				schar->data = ' ';
+				schar->data = UCS_ORPHAN_CELL;
 	}
 }
 #endif
@@ -437,7 +437,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 	}
 
 	if (start->data == UCS_NO_CHAR && x - 1 > 0)
-		draw_char_data(term, x - 1, y, ' ');
+		draw_char_data(term, x - 1, y, UCS_ORPHAN_CELL);
 
 	pos = start;
 
@@ -451,7 +451,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 			pos->data = UCS_NO_CHAR;
 			pos->attr = 0;
 		} else {
-			pos->data = (unicode_val_T)' ';
+			pos->data = UCS_ORPHAN_CELL;
 		}
 	} else {
 		pos->data = data;
@@ -474,7 +474,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 				pos->data = UCS_NO_CHAR;
 				pos->attr = 0;
 			} else {
-				pos->data = (unicode_val_T)' ';
+				pos->data = UCS_ORPHAN_CELL;
 			}
 		} else {
 			pos->data = data;

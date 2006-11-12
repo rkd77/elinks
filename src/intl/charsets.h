@@ -16,6 +16,17 @@ typedef uint32_t unicode_val_T;
  * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
+/* If ELinks should display a double-cell character but there is only
+ * one cell available, it displays this character instead.  This must
+ * be a single-cell character but need not be unique.  Possible values
+ * might be U+0020 SPACE or U+303F IDEOGRAPHIC HALF FILL SPACE.
+ *
+ * Some BFU widgets (at least input fields and list boxes) currently
+ * ignore this setting and use U+0020 instead.  (They first draw spaces
+ * and then overwrite with text; look for utf8_cells2bytes calls.)
+ * We should fix that if we ever change the value.  */
+#define UCS_ORPHAN_CELL ((unicode_val_T) 0x20)
+
 /* &nbsp; replacement character. See u2cp(). */
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
