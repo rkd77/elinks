@@ -225,7 +225,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	command = *(*argv);
 
-	while (isalpha(command[len]))
+	while (isasciialpha(command[len]))
 		len++;
 
 	/* Find the begining and end of the argument list. */
@@ -240,7 +240,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	/* Decide whether to use the "extended" --remote format where
 	 * all URLs following should be opened in tabs. */
-	if (*arg != '(' || *argend != ')') {
+	if (len == 0 || *arg != '(' || *argend != ')') {
 		/* Just open any passed URLs in new tabs */
 		remote_session_flags |= SES_REMOTE_NEW_TAB;
 		return NULL;
