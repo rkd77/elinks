@@ -150,9 +150,9 @@ Description:
  If another URL than @url should be followed it is passed by setting @url.
  If @url is changed the event propagation should be ended.
  Valid values for @url includes:
- - leaving @url unchanged if the original URL should be followed;
- - NULL if no URL should be followed; or
- - a dynamically allocated new URL to be followed instead.
+ - unchanged, if the original URL should be followed;
+ - a new, dynamically allocated URL to be followed instead; or
+ - NULL or an empty, dynamically allocated string if no URL should be followed.
 
 -------------------------------------------------------------------------------
 Name:		free-history
@@ -206,7 +206,7 @@ Description:
  Valid values for @url are:
  - unchanged, if the original URL should be followed;
  - a new, dynamically allocated URL to be followed instead; or
- - an empty string, if no URL should be followed.
+ - NULL or an empty, dynamically allocated string if no URL should be followed.
 
  @ses is usually used for deciding based on the current URI or for reporting
  potential errors during the hook processing through the UI. With @ses being
