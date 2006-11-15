@@ -813,7 +813,7 @@ static struct option_info config_options_info[] = {
 		"an external command. If several rules are defined the link and\n"
 		"tab menu will have a submenu of items for each rule. Note, this\n"
 		"is mostly useful for launching graphical viewers, since there\n"
-		"is not support for releasing the terminal while the command runs.\n"
+		"is no support for releasing the terminal while the command runs.\n"
 		"The action and submenus are also available by binding keys to\n"
 		"the frame-external-command, the link-external-command, and\n"
 		"the tab-external-command actions.")),
