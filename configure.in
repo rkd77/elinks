@@ -1246,7 +1246,13 @@ EL_ARG_ENABLE(CONFIG_NNTP, nntp, [NNTP protocol],
 	      [  --enable-nntp           enable nntp protocol support])
 
 EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
-	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
+	      [  --enable-smb            not currently allowed])
+dnl	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
+if test "$CONFIG_SMB" != no; then
+  AC_MSG_WARN([Ignoring --enable-smb because of vulnerability CVE-2006-5925.
+If you want to use SMB, please vote for bug 844 or post a patch.])
+  CONFIG_SMB=no
+fi
 
 
 EL_ARG_ENABLE(CONFIG_MOUSE, mouse, [Mouse handling],
