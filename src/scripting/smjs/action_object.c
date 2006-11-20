@@ -63,7 +63,7 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 
 static const JSClass action_fn_class = {
 	"action_fn",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
 	JS_PropertyStub, JS_PropertyStub,
 	JS_PropertyStub, JS_PropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,

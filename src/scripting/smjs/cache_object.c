@@ -141,7 +141,7 @@ cache_entry_finalize(JSContext *ctx, JSObject *obj)
 
 static const JSClass cache_entry_class = {
 	"cache_entry",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct cache_entry * */
 	JS_PropertyStub, JS_PropertyStub,
 	cache_entry_get_property, cache_entry_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize

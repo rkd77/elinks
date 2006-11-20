@@ -131,7 +131,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 static const JSClass smjs_globhist_item_class = {
 	"global_history_item",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
 	JS_PropertyStub, JS_PropertyStub,
 	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,

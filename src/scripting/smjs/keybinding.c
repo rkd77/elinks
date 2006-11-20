@@ -137,7 +137,7 @@ keymap_finalize(JSContext *ctx, JSObject *obj)
 
 static const JSClass keymap_class = {
 	"keymap",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* int * */
 	JS_PropertyStub, JS_PropertyStub,
 	keymap_get_property, keymap_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, keymap_finalize,
