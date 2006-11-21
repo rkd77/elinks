@@ -411,6 +411,8 @@ window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval 
 	if (!code)
 		return JS_TRUE;
 	timeout = atoi(jsval_to_string(ctx, &argv[1]));
+	if (timeout <= 0)
+		return JS_TRUE;
 	ecmascript_set_timeout(interpreter, code, timeout);
 	return JS_TRUE;
 }
