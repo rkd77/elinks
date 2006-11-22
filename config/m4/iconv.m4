@@ -12,7 +12,7 @@ AC_DEFUN([AM_ICONV],
   AC_ARG_WITH([libiconv],
 [  --with-libiconv=DIR     search for libiconv in DIR/include and DIR/lib], [
     for dir in `echo "$withval" | tr : ' '`; do
-      if test -d $dir/include; then CFLAGS="$CFLAGS -I$dir/include"; fi
+      if test -d $dir/include; then CPPFLAGS="$CPPFLAGS -I$dir/include"; fi
       if test -d $dir/lib; then LDFLAGS="$LDFLAGS -L$dir/lib"; fi
     done
    ])

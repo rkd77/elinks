@@ -1407,13 +1407,10 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
   esac
 fi
 
-# CFLAGS doesn't contain all compile flags. Some will be added only when
-# needed in the respective source directory. To get all compile flags
-# easily just add CPPFLAGS.
-ALL_CFLAGS="$CFLAGS $CPPFLAGS"
-
-EL_LOG_CONFIG(ALL_CFLAGS, [Compiler options (CFLAGS)], [])
-EL_LOG_CONFIG(LIBS, [Linker options (LIBS)], [])
+EL_LOG_CONFIG(CFLAGS, [Compiler flags (CFLAGS)], [])
+EL_LOG_CONFIG(CPPFLAGS, [Preprocessor flags (CPPFLAGS)], [])
+EL_LOG_CONFIG(LDFLAGS, [Linker flags (LDFLAGS)], [])
+EL_LOG_CONFIG(LIBS, [Library flags (LIBS)], [])
 
 dnl ===================================================================
 dnl Colored make output
