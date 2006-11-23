@@ -35,6 +35,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 	return NULL;
 };
 
+/* @bookmark_class.finalize, @bookmark_folder_class.finalize */
 static void
 bookmark_finalize(JSContext *ctx, JSObject *obj)
 {
@@ -61,6 +62,7 @@ static const JSPropertySpec bookmark_props[] = {
 
 static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
 
+/* @bookmark_class.getProperty */
 static JSBool
 bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -96,6 +98,7 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_FALSE;
 }
 
+/* @bookmark_class.setProperty */
 static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -158,6 +161,7 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 
 /*** bookmark folder object ***/
 
+/* @bookmark_folder_class.getProperty */
 static JSBool
 bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {

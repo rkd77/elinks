@@ -21,6 +21,7 @@ struct smjs_action_fn_callback_hop {
 	action_id_T action_id;
 };
 
+/* @action_fn_class.finalize */
 static void
 smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 {
@@ -29,6 +30,7 @@ smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 	if (hop) mem_free(hop);
 }
 
+/* @action_fn_class.call */
 static JSBool
 smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
                         jsval *rval)
@@ -108,6 +110,7 @@ smjs_get_action_fn_object(unsigned char *action_str)
 
 /*** elinks.action object ***/
 
+/* @action_class.getProperty */
 static JSBool
 action_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {

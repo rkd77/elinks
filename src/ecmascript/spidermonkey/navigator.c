@@ -75,6 +75,7 @@ const JSPropertySpec navigator_props[] = {
 };
 
 
+/* @navigator_class.getProperty */
 static JSBool
 navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {

@@ -69,6 +69,7 @@ const JSPropertySpec unibar_props[] = {
 };
 
 
+/* @menubar_class.getProperty, @statusbar_class.getProperty */
 static JSBool
 unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -108,6 +109,7 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @menubar_class.setProperty, @statusbar_class.setProperty */
 static JSBool
 unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {

@@ -13,6 +13,7 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
+/* @keymap_class.getProperty */
 static JSBool
 keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -58,6 +59,7 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 	return EVENT_HOOK_STATUS_LAST;
 }
 
+/* @keymap_class.setProperty */
 static JSBool
 keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -127,6 +129,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_FALSE;
 }
 
+/* @keymap_class.finalize */
 static void
 keymap_finalize(JSContext *ctx, JSObject *obj)
 {

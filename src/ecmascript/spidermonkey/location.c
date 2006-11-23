@@ -63,6 +63,7 @@ const JSFunctionSpec history_funcs[] = {
 	{ NULL }
 };
 
+/* @history_funcs{"back"} */
 static JSBool
 history_back(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -79,6 +80,7 @@ history_back(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return 2;
 }
 
+/* @history_funcs{"forward"} */
 static JSBool
 history_forward(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -91,6 +93,7 @@ history_forward(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	return 2;
 }
 
+/* @history_funcs{"go"} */
 static JSBool
 history_go(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -137,6 +140,7 @@ const JSPropertySpec location_props[] = {
 	{ NULL }
 };
 
+/* @location_class.getProperty */
 static JSBool
 location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -160,6 +164,7 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @location_class.setProperty */
 static JSBool
 location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -187,6 +192,7 @@ const JSFunctionSpec location_funcs[] = {
 	{ NULL }
 };
 
+/* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static JSBool
 location_toString(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {

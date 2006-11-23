@@ -13,6 +13,7 @@
 #include "util/memory.h"
 
 
+/* @smjs_globhist_item_class.finalize */
 static void
 smjs_globhist_item_finalize(JSContext *ctx, JSObject *obj)
 {
@@ -34,6 +35,7 @@ static const JSPropertySpec smjs_globhist_item_props[] = {
 	{ NULL }
 };
 
+/* @smjs_globhist_item_class.getProperty */
 static JSBool
 smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
                                 jsval *vp)
@@ -86,6 +88,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 	return JS_FALSE;
 }
 
+/* @smjs_globhist_item_class.setProperty */
 static JSBool
 smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -157,6 +160,7 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 }
 
 
+/* @smjs_globhist_class.getProperty */
 static JSBool
 smjs_globhist_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {

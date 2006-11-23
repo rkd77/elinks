@@ -120,6 +120,7 @@ static const JSFunctionSpec input_funcs[] = {
 static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
 static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 
+/* @input_class.getProperty */
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -241,6 +242,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @input_class.setProperty */
 static JSBool
 input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -331,6 +333,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"blur"} */
 static JSBool
 input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -339,6 +342,7 @@ input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"click"} */
 static JSBool
 input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -373,6 +377,7 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"focus"} */
 static JSBool
 input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -402,6 +407,7 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"select"} */
 static JSBool
 input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -486,6 +492,7 @@ static const JSPropertySpec form_elements_props[] = {
 	{ NULL }
 };
 
+/* @form_elements_class.getProperty */
 static JSBool
 form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -521,6 +528,7 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @form_elements_funcs{"item"} */
 static JSBool
 form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -558,6 +566,7 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	return JS_TRUE;
 }
 
+/* @form_elements_funcs{"namedItem"} */
 static JSBool
 form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -638,6 +647,7 @@ static const JSFunctionSpec form_funcs[] = {
 	{ NULL }
 };
 
+/* @form_class.getProperty */
 static JSBool
 form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -745,6 +755,7 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @form_class.setProperty */
 static JSBool
 form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -808,6 +819,7 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @form_funcs{"reset"} */
 static JSBool
 form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -828,6 +840,7 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @form_funcs{"submit"} */
 static JSBool
 form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -894,6 +907,7 @@ const JSPropertySpec forms_props[] = {
 	{ NULL }
 };
 
+/* @forms_class.getProperty */
 static JSBool
 forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -924,6 +938,7 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @forms_funcs{"item"} */
 static JSBool
 forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -952,6 +967,7 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @forms_funcs{"namedItem"} */
 static JSBool
 forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
