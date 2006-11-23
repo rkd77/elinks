@@ -47,6 +47,7 @@
 static JSBool unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @menubar_class object must have a @window_class parent.  */
 const JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
@@ -54,6 +55,7 @@ const JSClass menubar_class = {
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
+/* Each @statusbar_class object must have a @window_class parent.  */
 const JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */

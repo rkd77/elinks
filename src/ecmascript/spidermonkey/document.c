@@ -49,6 +49,7 @@
 static JSBool document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @document_class object must have a @window_class parent.  */
 const JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,

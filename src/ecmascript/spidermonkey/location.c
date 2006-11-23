@@ -126,6 +126,7 @@ history_go(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 static JSBool location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @location_class object must have a @window_class parent.  */
 const JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
