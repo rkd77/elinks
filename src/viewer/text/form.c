@@ -412,13 +412,14 @@ retry_after_scroll:
 				}
 
 				/* The character does not fit completely.
-				 * Write spaces to the cells that do fit.  */
+				 * Write UCS_ORPHAN_CELL to the cells that
+				 * do fit.  */
 				for (cell = 0; cell < cells; cell++) {
 					if (col_is_in_box(box, x + i + cell)
 					    && i + cell < fc->size)
 						draw_char_data(term,
-							       x + i + cell,
-							       y, ' ');
+							       x + i + cell, y,
+							       UCS_ORPHAN_CELL);
 				}
 
 drew_char:
@@ -462,8 +463,8 @@ drew_char:
 				unsigned char *ptr = fs->value + fs->state;
 				int cells = fc->size;
 				enum utf8_step how = (fc->type == FC_PASSWORD)
-					? utf8_step_characters
-					: utf8_step_cells_fewer;
+					? UTF8_STEP_CHARACTERS
+					: UTF8_STEP_CELLS_FEWER;
 
 				/* The insertion point is at the right
 				 * side of the scrolled-visible part
@@ -538,7 +539,7 @@ utf8_select:
 							data = UCS_NO_CHAR;
 							i++;
 						} else if (cell == 2) {
-							data = ' ';
+							data = UCS_ORPHAN_CELL;
 						}
 					} else
 						data = '_';

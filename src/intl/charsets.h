@@ -16,6 +16,17 @@ typedef uint32_t unicode_val_T;
  * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
 
+/* If ELinks should display a double-cell character but there is only
+ * one cell available, it displays this character instead.  This must
+ * be a single-cell character but need not be unique.  Possible values
+ * might be U+0020 SPACE or U+303F IDEOGRAPHIC HALF FILL SPACE.
+ *
+ * Some BFU widgets (at least input fields and list boxes) currently
+ * ignore this setting and use U+0020 instead.  (They first draw spaces
+ * and then overwrite with text; look for utf8_cells2bytes calls.)
+ * We should fix that if we ever change the value.  */
+#define UCS_ORPHAN_CELL ((unicode_val_T) 0x20)
+
 /* &nbsp; replacement character. See u2cp(). */
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
@@ -33,6 +44,17 @@ enum convert_string_mode {
 	CSM_QUERY, /* Special handling of '&' and '=' chars. */
 	CSM_FORM, /* Special handling of '&' and '=' chars in forms. */
 	CSM_NONE, /* Convert nothing. */
+};
+
+/* How to translate non-breaking spaces.  */
+enum nbsp_mode {
+	/* Convert to NBSP_CHAR.  This lets the HTML renderer
+	 * recognize nbsp even if the codepage doesn't support
+	 * nbsp.  (VISCII doesn't.)  */
+	NBSP_MODE_HACK = 0,
+
+	/* Convert to normal ASCII space.  */
+	NBSP_MODE_ASCII = 1
 };
 
 struct conv_table *get_translation_table(int, int);
@@ -75,17 +97,17 @@ int utf8_cells2bytes(unsigned char *, int, unsigned char *);
 enum utf8_step {
 	/* Each step is one character, even if it is a combining or
 	 * double-width character.  */
-	utf8_step_characters,
+	UTF8_STEP_CHARACTERS,
 
 	/* Each step is one cell.  If the specified number of steps
 	 * would end in the middle of a double-width character, do not
 	 * include the character.  */
-	utf8_step_cells_fewer,
+	UTF8_STEP_CELLS_FEWER,
 
 	/* Each step is one cell.  If the specified number of steps
 	 * would end in the middle of a double-width character,
 	 * include the whole character.  */
-	utf8_step_cells_more
+	UTF8_STEP_CELLS_MORE
 };
 unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
 				 int, enum utf8_step, int *);
@@ -101,9 +123,9 @@ unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 unicode_val_T cp2u(int, unsigned char);
 unsigned char *cp2utf8(int, int);
 
-unsigned char *u2cp_(unicode_val_T, int, int no_nbsp_hack);
-#define u2cp(u, to) u2cp_(u, to, 0)
-#define u2cp_no_nbsp(u, to) u2cp_(u, to, 1)
+unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
+#define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)
+#define u2cp_no_nbsp(u, to) u2cp_(u, to, NBSP_MODE_ASCII)
 
 void init_charsets_lookup(void);
 void free_charsets_lookup(void);

@@ -32,7 +32,7 @@ if test "$CONFIG_SCRIPTING_RUBY" = "yes"; then
 	if test "$CONFIG_SCRIPTING_RUBY" != "no"; then
 
 		AC_MSG_CHECKING(Ruby version)
-		if $CONFIG_SCRIPTING_RUBY -e 'puts "#{VERSION rescue RUBY_VERSION}" >= "1.6.0" or exit 1' >/dev/null 2>/dev/null; then
+		if $CONFIG_SCRIPTING_RUBY -e 'exit((VERSION or RUBY_VERSION) >= "1.6.0")' >/dev/null 2>/dev/null; then
 			ruby_version=`$CONFIG_SCRIPTING_RUBY -e 'puts "#{VERSION rescue RUBY_VERSION}"'`
 			AC_MSG_RESULT($ruby_version)
 

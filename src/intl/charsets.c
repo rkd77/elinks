@@ -164,7 +164,7 @@ static const unicode_val_T strange_chars[32] = {
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
 unsigned char *
-u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
+u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
 	int s;
@@ -179,14 +179,17 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 #endif /* CONFIG_UTF8 */
 
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
-	if (u == 0xa0) return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
+	if (u == 0xa0) {
+		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
+		else /* NBSP_MODE_ASCII */ return " ";
+	}
 	if (u == 0xad) return "";
 
 	if (u < 0xa0) {
 		unicode_val_T strange = strange_chars[u - 0x80];
 
 		if (!strange) return NULL;
-		return u2cp_(strange, to, no_nbsp_hack);
+		return u2cp_(strange, to, nbsp_mode);
 	}
 
 	if (u < 0xFFFF)
@@ -430,7 +433,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 		end = strchr(string, '\0');
 
 	switch (way) {
-	case utf8_step_characters:
+	case UTF8_STEP_CHARACTERS:
 		while (steps < max && current < end) {
 			++current;
 			if (utf8_islead(*current))
@@ -438,8 +441,8 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 		}
 		break;
 
-	case utf8_step_cells_fewer:
-	case utf8_step_cells_more:
+	case UTF8_STEP_CELLS_FEWER:
+	case UTF8_STEP_CELLS_MORE:
 		while (steps < max) {
 			unicode_val_T u;
 			unsigned char *prev = current;
@@ -455,7 +458,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 			}
 
 			width = unicode_to_cell(u);
-			if (way == utf8_step_cells_fewer
+			if (way == UTF8_STEP_CELLS_FEWER
 			    && steps + width > max) {
 				/* Back off.  */
 				current = prev;
@@ -497,7 +500,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 	if_assert_failed goto invalid_arg;
 
 	switch (way) {
-	case utf8_step_characters:
+	case UTF8_STEP_CHARACTERS:
 		while (steps < max && current > start) {
 			--current;
 			if (utf8_islead(*current))
@@ -505,8 +508,8 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 		}
 		break;
 
-	case utf8_step_cells_fewer:
-	case utf8_step_cells_more:
+	case UTF8_STEP_CELLS_FEWER:
+	case UTF8_STEP_CELLS_MORE:
 		while (steps < max) {
 			unsigned char *prev = current;
 			unsigned char *look;
@@ -528,7 +531,7 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 			} else
 				width = unicode_to_cell(u);
 
-			if (way == utf8_step_cells_fewer
+			if (way == UTF8_STEP_CELLS_FEWER
 			    && steps + width > max) {
 				/* Back off.  */
 				current = prev;

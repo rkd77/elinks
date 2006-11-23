@@ -1245,8 +1245,17 @@ EL_ARG_ENABLE(CONFIG_GOPHER, gopher, [Gopher protocol],
 EL_ARG_ENABLE(CONFIG_NNTP, nntp, [NNTP protocol],
 	      [  --enable-nntp           enable nntp protocol support])
 
+dnl Force disable SMB before EL_ARG_DEPEND so that it logs the correct value.
+if test "${enable_smb-no}" != no || test "${CONFIG_SMB-no}" != no; then
+  AC_MSG_WARN([Forcing --disable-smb because of vulnerability CVE-2006-5925.
+If you want to use SMB, please vote for bug 844 or post a patch.])
+fi
+enable_smb=no
+CONFIG_SMB=no
 EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
-	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
+	      [  --enable-smb            not currently allowed])
+dnl EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
+dnl 	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
 
 
 EL_ARG_ENABLE(CONFIG_MOUSE, mouse, [Mouse handling],
@@ -1398,13 +1407,10 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
   esac
 fi
 
-# CFLAGS doesn't contain all compile flags. Some will be added only when
-# needed in the respective source directory. To get all compile flags
-# easily just add CPPFLAGS.
-ALL_CFLAGS="$CFLAGS $CPPFLAGS"
-
-EL_LOG_CONFIG(ALL_CFLAGS, [Compiler options (CFLAGS)], [])
-EL_LOG_CONFIG(LIBS, [Linker options (LIBS)], [])
+EL_LOG_CONFIG(CFLAGS, [Compiler flags (CFLAGS)], [])
+EL_LOG_CONFIG(CPPFLAGS, [Preprocessor flags (CPPFLAGS)], [])
+EL_LOG_CONFIG(LDFLAGS, [Linker flags (LDFLAGS)], [])
+EL_LOG_CONFIG(LIBS, [Library flags (LIBS)], [])
 
 dnl ===================================================================
 dnl Colored make output

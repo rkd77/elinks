@@ -483,7 +483,7 @@ utf8:
 						  UCS_NO_CHAR, 0, hk_color);
 				} else {
 					draw_char(term, xbase + x - 1, y,
-						  ' ', 0, hk_color);
+						  UCS_ORPHAN_CELL, 0, hk_color);
 				}
 			} else {
 #ifdef CONFIG_DEBUG
@@ -508,7 +508,7 @@ utf8:
 						  y, UCS_NO_CHAR, 0, color);
 				} else {
 					draw_char(term, xbase + x - !!hk_state,
-						  y, ' ', 0, color);
+						  y, UCS_ORPHAN_CELL, 0, color);
 				}
 			} else {
 				draw_char(term, xbase + x - !!hk_state,
@@ -1171,10 +1171,10 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 			/* Is second cell of double-width char on the place where
 			 * first char of the R_MAINMENU_SPACE will be displayed? */
 			if (schar->data == UCS_NO_CHAR) {
-				/* Replace double-width char with ' '. */
+				/* Replace double-width char with UCS_ORPHAN_CELL. */
 				schar++;
 				draw_char_data(term, term->width - R_MAINMENU_SPACE - 1,
-						0, ' ');
+					       0, UCS_ORPHAN_CELL);
 			}
 		}
 #endif

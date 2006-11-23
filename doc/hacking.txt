@@ -495,6 +495,8 @@ Please write sizeof(something) instead of sizeof something.
 
 Use assert() and assertm() where applicable. It will prevent hidden bugs.
 
+Names of enum constants should be in upper case.
+
 If you see code in ELinks that doesn't follow these rules, fix it or tell us
 about it.
 

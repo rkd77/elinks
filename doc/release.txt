@@ -1,0 +1,100 @@
+Release check list
+==================
+
+When releasing a new version
+----------------------------
+
+1. Tasks in the elinks module:
+
+ - Go over the changes since the last release. Use git-shortlog as a template.
+   Write a small changelog highlighting the most important changes. Changes
+   by new contributors are always important!
+ - Update NEWS file and commit.
+ - Change VERSION in the top of configure.in to hold the new version number.
+ - Commit only this change.
+ - Create a signed tag having the version ("ELinks X.X.X") as the subject and
+   using the changelog create above as the body. Use something like:
+
+	$ cg-tag -s -M changelog.file elinks-X.X.X
+
+ - Append ".GIT" to the VERSION variable in the top of configure.in.
+ - Commit only this change.
+ - Push these changes plus tag using:
+
+	$ cg-push -t elinks-X.X.X
+
+2. Tasks on http://elinks.cz/ (part 1):
+
+ - Wait until the tag etc. has been synced or force a sync of the repository
+   at http://elinks.cz/elinks.git/.
+ - Run script to create new tarballs (both .gz and .bz2).
+
+	$ mkdist elinks-X.X.X X.X.X -r
+
+3. Tasks on localhost:
+
+ - Download new tarballs and create ASCII armored signature files.
+
+	$ gpg -b --armor elinks-X.X.X.tar.bz2
+	$ gpg -b --armor elinks-X.X.X.tar.gz
+
+ - Copy the elinks-X.X.X.tar.*.asc files to http://elinks.cz/download/.
+ - Send announcement to elinks-users mailing list.
+
+4. Tasks in the elinks-web module:
+
+ - Change the version and release data in the start of website.conf.
+ - Wait for the announcement to hit the elinks-users mailing list archive.
+ - Add paraphrased version of the first paragraph of the release announcement
+   as a news entry in news/latest.txt. Make the entry link to both the
+   archived announcement from linuxfromscratch.org and gmane.org using the
+   "magic numbers" expanded by the macro. Possibly, move the cut-off markers
+   that control which news entries to display on the front page.
+ - Rebuild index.html, news.html, and news.rss.
+ - Commit the updates HTML and asciidoc files.
+ - Push the commits.
+
+5. Tasks on http://elinks.cz/ (part 2):
+
+ - Wait until the elinks-web module has been synced or force a sync of the
+   repository.
+ - Checkout the new updated webpages.
+
+6. Tasks on http://bugzilla.elinks.cz/:
+
+ - Add the new version.
+
+7. Tasks external sites and resources:
+
+ - Add a new release to the freshmeat.net page.
+ - Change topic of #elinks
+ - (Request update of FSFs free software directory).
+ - (Update current version on wikipedia).
+
+When releasing a new stable branch
+----------------------------------
+
+(I only vaguely remember this process. --jonas)
+
+1. Tasks on localhost:
+
+ - Locally clone the freezed repository to a new repository that will contain
+   the new stable branch.
+ - Unfreeze the repository that was cloned by changing the VERSION variable in
+   configure.in to the version of the new unstable branch (remember the
+   ending ".GIT"), commit, and push.
+ - Add new remote branch that will track the new stable "trunk". It should
+   basically be the push URL of the cloned repository with "#elinks-X.X"
+   appended.
+ - Push to this new remote branch to create it.
+ - Perform the normal version release tasks described above in this new
+   repository.
+
+2. Tasks on http://elinks.cz/:
+
+ - Update http://elinks.cz/download/*-current-* tarball links to point to the
+   correct versions.
+
+3. Tasks external sites and resources:
+
+ - Add a new branch to the freshmeat.net page.

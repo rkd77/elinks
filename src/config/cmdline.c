@@ -218,30 +218,37 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		{ "xfeDoCommand", REMOTE_METHOD_XFEDOCOMMAND },
 		{ NULL,		  REMOTE_METHOD_NOT_SUPPORTED },
 	};
-	unsigned char *command, *arg, *argend = NULL;
+	unsigned char *command, *arg, *argend;
 	int method, len = 0;
 
 	if (*argc < 1) return gettext("Parameter expected");
 
 	command = *(*argv);
 
-	while (isalpha(command[len]))
+	while (isasciialpha(command[len]))
 		len++;
 
-	arg = strchr(&command[len], '(');
-	if (arg) {
-		arg++;
-		skip_space(arg);
+	/* Find the begining and end of the argument list. */
 
-		argend = strchr(arg, ')');
-	}
+	arg = command + len;
+	skip_space(arg);
 
-	if (!argend) {
+	argend = arg + strlen(arg);
+	skipback_whitespace(arg, argend);
+	if (argend > arg)
+		argend--;
+
+	/* Decide whether to use the "extended" --remote format where
+	 * all URLs following should be opened in tabs. */
+	if (len == 0 || *arg != '(' || *argend != ')') {
 		/* Just open any passed URLs in new tabs */
 		remote_session_flags |= SES_REMOTE_NEW_TAB;
 		return NULL;
 	}
 
+	/* Skip parenthesis and surrounding whitespace. */
+	arg++;
+	skip_space(arg);
 	skipback_whitespace(arg, argend);
 
 	for (method = 0; remote_methods[method].name; method++) {

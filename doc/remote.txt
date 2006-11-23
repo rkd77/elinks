@@ -10,7 +10,10 @@ When invoking ELinks with the -remote argument, it does not start a new
 instance, but instead connects to an already running ELinks, making it
 possible to control that ELinks instance. The -remote command line switch
 takes a command consisting of the action to invoke and any parameters to the
-action.  Here is an example for opening freshmeat.net in a new tab:
+action. Commands must begin with a nonempty sequence of ASCII alphabetic
+characters followed by optional whitespace and an opening parenthesis. They
+must end with a closing parenthesis optionally followed by whitespace. Here is
+an example for opening freshmeat.net in a new tab:
 
 	$ elinks -remote "openURL(http://freshmeat.net/, new-tab)"
 
