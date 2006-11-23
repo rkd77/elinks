@@ -52,6 +52,7 @@
 static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
 	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
@@ -579,6 +580,7 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 static JSBool form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @form_class object must have a @document_class parent.  */
 static const JSClass form_class = {
 	"form",
 	JSCLASS_HAS_PRIVATE,	/* struct form_view * */
@@ -845,6 +847,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 
 static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @forms_class object must have a @document_class parent.  */
 const JSClass forms_class = {
 	"forms",
 	JSCLASS_HAS_PRIVATE,
