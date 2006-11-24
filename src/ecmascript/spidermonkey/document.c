@@ -73,8 +73,8 @@ const JSPropertySpec document_props[] = {
 static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
+	JSObject *parent_win = JS_GetParent(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
@@ -117,7 +117,7 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_DOC_LOC:
-		JS_GetProperty(ctx, parent, "location", vp);
+		JS_GetProperty(ctx, parent_win, "location", vp);
 		break;
 	case JSP_DOC_REF:
 		switch (get_opt_int("protocol.http.referer.policy")) {
@@ -160,8 +160,8 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
+	JSObject *parent_win = JS_GetParent(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 
