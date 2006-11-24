@@ -25,7 +25,9 @@ struct smjs_action_fn_callback_hop {
 static void
 smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 {
-	struct smjs_action_fn_callback_hop *hop = JS_GetPrivate(ctx, obj); /* from @action_fn_class */
+	struct smjs_action_fn_callback_hop *hop;
+
+	hop = JS_GetPrivate(ctx, obj); /* from @action_fn_class */
 
 	if (hop) mem_free(hop);
 }

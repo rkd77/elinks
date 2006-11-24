@@ -120,7 +120,9 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static JSBool
 window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
+	struct view_state *vs;
+
+	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	/* No need for special window.location measurements - when
 	 * location is then evaluated in string context, toString()
@@ -239,7 +241,9 @@ void location_goto(struct document_view *doc_view, unsigned char *url);
 static JSBool
 window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
+	struct view_state *vs;
+
+	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	if (JSVAL_IS_STRING(id)) {
 		if (!strcmp(jsval_to_string(ctx, &id), "location")) {
@@ -285,8 +289,10 @@ const JSFunctionSpec window_funcs[] = {
 static JSBool
 window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
+	struct view_state *vs;
 	unsigned char *string;
+
+	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	if (argc != 1)
 		return JS_TRUE;
@@ -306,14 +312,18 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
-	struct document_view *doc_view = vs->doc_view;
-	struct session *ses = doc_view->session;
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct session *ses;
 	unsigned char *frame = "";
 	unsigned char *url;
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
+
+	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
+	doc_view = vs->doc_view;
+	ses = doc_view->session;
 
 	if (get_opt_bool("ecmascript.block_window_opening")) {
 #ifdef CONFIG_LEDS

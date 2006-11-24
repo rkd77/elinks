@@ -17,7 +17,9 @@
 static void
 smjs_globhist_item_finalize(JSContext *ctx, JSObject *obj)
 {
-	struct global_history_item *history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	struct global_history_item *history_item;
+
+	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
 	if (history_item) object_unlock(history_item);
 }
@@ -40,7 +42,9 @@ static JSBool
 smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
                                 jsval *vp)
 {
-	struct global_history_item *history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	struct global_history_item *history_item;
+
+	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
 	if (!history_item) return JS_FALSE;
 
@@ -92,7 +96,9 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 static JSBool
 smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct global_history_item *history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	struct global_history_item *history_item;
+
+	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
 	if (!history_item) return JS_FALSE;
 
