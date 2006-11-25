@@ -16,6 +16,8 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
+static const JSClass view_state_class; /* defined below */
+
 enum view_state_prop {
 	VIEW_STATE_PLAIN,
 	VIEW_STATE_URI,
@@ -32,6 +34,9 @@ static JSBool
 view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 
@@ -63,6 +68,9 @@ static JSBool
 view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 

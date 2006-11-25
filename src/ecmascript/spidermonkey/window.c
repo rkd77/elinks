@@ -120,6 +120,9 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	/* No need for special window.location measurements - when
@@ -239,6 +242,9 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	if (JSVAL_IS_STRING(id)) {
@@ -281,6 +287,8 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 {
 	struct view_state *vs;
 	unsigned char *string;
+
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, argv)) return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
@@ -338,6 +346,8 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
+
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, argv)) return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	doc_view = vs->doc_view;

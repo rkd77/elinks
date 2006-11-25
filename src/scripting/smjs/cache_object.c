@@ -14,6 +14,8 @@
 #include "util/error.h"
 #include "util/memory.h"
 
+static const JSClass cache_entry_class; /* defined below */
+
 enum cache_entry_prop {
 	CACHE_ENTRY_CONTENT,
 	CACHE_ENTRY_TYPE,
@@ -36,6 +38,9 @@ static JSBool
 cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
@@ -91,6 +96,9 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
 	if (!cache_entry_is_valid(cached)) return JS_FALSE;
@@ -140,6 +148,9 @@ static void
 cache_entry_finalize(JSContext *ctx, JSObject *obj)
 {
 	struct cache_entry *cached;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
+	if_assert_failed return;
 
 	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 

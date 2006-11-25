@@ -14,13 +14,19 @@
 #include "util/memory.h"
 
 
+static const JSClass bookmark_class, bookmark_folder_class; /* defined below */
+
+
 /*** common code ***/
 
 static JSObject *
 smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 {
 	JSObject *jsobj;
-	
+
+	assert(clasp == &bookmark_class || clasp == &bookmark_folder_class);
+	if_assert_failed return NULL;
+
 	jsobj = JS_NewObject(smjs_ctx, clasp, NULL, NULL);
 	if (!jsobj) return NULL;
 
@@ -40,6 +46,10 @@ static void
 bookmark_finalize(JSContext *ctx, JSObject *obj)
 {
 	struct bookmark *bookmark;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL)
+	    || JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL));
+	if_assert_failed return;
 
 	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class or @bookmark_folder_class */
 
@@ -69,6 +79,9 @@ static JSBool
 bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
@@ -107,6 +120,9 @@ static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
@@ -174,6 +190,9 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct bookmark *bookmark;
 	struct bookmark *folder;
 	unsigned char *title;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	folder = JS_GetPrivate(ctx, obj); /* from @bookmark_folder_class */
 
