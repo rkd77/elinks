@@ -31,6 +31,7 @@ static const JSPropertySpec cache_entry_props[] = {
 	{ NULL }
 };
 
+/* @cache_entry_class.getProperty */
 static JSBool
 cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -82,6 +83,7 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_FALSE;
 }
 
+/* @cache_entry_class.setProperty */
 static JSBool
 cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -129,6 +131,7 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_FALSE;
 }
 
+/* @cache_entry_class.finalize */
 static void
 cache_entry_finalize(JSContext *ctx, JSObject *obj)
 {

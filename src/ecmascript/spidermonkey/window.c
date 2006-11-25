@@ -114,6 +114,7 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 }
 #endif
 
+/* @window_class.getProperty */
 static JSBool
 window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -230,6 +231,7 @@ found_parent:
 
 void location_goto(struct document_view *doc_view, unsigned char *url);
 
+/* @window_class.setProperty */
 static JSBool
 window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -269,6 +271,7 @@ const JSFunctionSpec window_funcs[] = {
 	{ NULL }
 };
 
+/* @window_funcs{"alert"} */
 static JSBool
 window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -317,6 +320,7 @@ delayed_goto_uri_frame(void *data)
 	mem_free(deo);
 }
 
+/* @window_funcs{"open"} */
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {

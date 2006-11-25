@@ -68,6 +68,7 @@ const JSPropertySpec document_props[] = {
 	{ NULL }
 };
 
+/* @document_class.getProperty */
 static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -151,6 +152,7 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @document_class.setProperty */
 static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -198,6 +200,7 @@ const JSFunctionSpec document_funcs[] = {
 	{ NULL }
 };
 
+/* @document_funcs{"write"} */
 static JSBool
 document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {

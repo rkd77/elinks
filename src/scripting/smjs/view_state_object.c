@@ -27,6 +27,7 @@ static const JSPropertySpec view_state_props[] = {
 	{ NULL }
 };
 
+/* @view_state_class.getProperty */
 static JSBool
 view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -55,6 +56,7 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_FALSE;
 }
 
+/* @view_state_class.setProperty */
 static JSBool
 view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
