@@ -76,10 +76,10 @@ static JSBool
 unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session_status *status = &doc_view->session->status;
-	unsigned char *bar = JS_GetPrivate(ctx, obj);
+	unsigned char *bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
@@ -116,10 +116,10 @@ static JSBool
 unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session_status *status = &doc_view->session->status;
-	unsigned char *bar = JS_GetPrivate(ctx, obj);
+	unsigned char *bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;

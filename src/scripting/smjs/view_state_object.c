@@ -31,7 +31,7 @@ static const JSPropertySpec view_state_props[] = {
 static JSBool
 view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 
 	undef_to_jsval(ctx, vp);
 
@@ -60,7 +60,7 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 
 	if (!JSVAL_IS_INT(id))
 		return JS_FALSE;
@@ -100,7 +100,7 @@ smjs_get_view_state_object(struct view_state *vs)
 
 	if (!view_state_object) return NULL;
 
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, view_state_object, vs))
+	if (JS_FALSE == JS_SetPrivate(smjs_ctx, view_state_object, vs))	/* to @view_state_class */
 		return NULL;
 
 	if (JS_FALSE == JS_DefineProperties(smjs_ctx, view_state_object,
