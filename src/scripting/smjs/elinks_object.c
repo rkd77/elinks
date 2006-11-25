@@ -69,6 +69,7 @@ elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @elinks_funcs{"alert"} */
 static JSBool
 elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -89,6 +90,7 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
+/* @elinks_funcs{"execute"} */
 static JSBool
 elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
