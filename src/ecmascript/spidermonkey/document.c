@@ -73,11 +73,17 @@ const JSPropertySpec document_props[] = {
 static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent_win = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	struct session *ses = doc_view->session;
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct session *ses;
+
+	parent_win = JS_GetParent(ctx, obj);
+	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	ses = doc_view->session;
 
 	if (JSVAL_IS_STRING(id)) {
 		struct form *form;
@@ -157,10 +163,15 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent_win = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+
+	parent_win = JS_GetParent(ctx, obj);
+	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	doc_view = vs->doc_view;
+	document = doc_view->document;
 
 	if (JSVAL_IS_STRING(id)) {
 #ifdef CONFIG_COOKIES

@@ -35,7 +35,9 @@ static const JSPropertySpec cache_entry_props[] = {
 static JSBool
 cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct cache_entry *cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	struct cache_entry *cached;
+
+	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
 	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
@@ -87,7 +89,9 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct cache_entry *cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	struct cache_entry *cached;
+
+	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
 	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
@@ -135,7 +139,9 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static void
 cache_entry_finalize(JSContext *ctx, JSObject *obj)
 {
-	struct cache_entry *cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	struct cache_entry *cached;
+
+	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
 	if (!cached) return;
 
