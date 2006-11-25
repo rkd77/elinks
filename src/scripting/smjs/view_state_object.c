@@ -79,7 +79,7 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static const JSClass view_state_class = {
 	"view_state",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	view_state_get_property, view_state_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub

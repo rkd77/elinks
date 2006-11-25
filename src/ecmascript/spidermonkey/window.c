@@ -49,7 +49,7 @@ static JSBool window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval
 
 const JSClass window_class = {
 	"window",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	window_get_property, window_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub

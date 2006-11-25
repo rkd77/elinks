@@ -49,14 +49,14 @@ static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval
 
 const JSClass menubar_class = {
 	"menubar",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
 	JS_PropertyStub, JS_PropertyStub,
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 const JSClass statusbar_class = {
 	"statusbar",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
 	JS_PropertyStub, JS_PropertyStub,
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub

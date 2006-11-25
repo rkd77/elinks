@@ -54,7 +54,7 @@ static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval 
 
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -572,7 +572,7 @@ static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 static const JSClass form_class = {
 	"form",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct form_view * */
 	JS_PropertyStub, JS_PropertyStub,
 	form_get_property, form_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub

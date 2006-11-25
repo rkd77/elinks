@@ -133,7 +133,7 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static const JSClass bookmark_class = {
 	"bookmark",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
 	JS_PropertyStub, JS_PropertyStub,
 	bookmark_get_property, bookmark_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
@@ -186,7 +186,7 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
 	JS_PropertyStub, JS_PropertyStub,
 	bookmark_folder_get_property, JS_PropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
