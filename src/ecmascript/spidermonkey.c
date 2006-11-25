@@ -184,7 +184,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS_InitStandardClasses(ctx, window_obj);
 	JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props);
 	JS_DefineFunctions(ctx, window_obj, (JSFunctionSpec *) window_funcs);
-	JS_SetPrivate(ctx, window_obj, interpreter->vs);
+	JS_SetPrivate(ctx, window_obj, interpreter->vs); /* to @window_class */
 
 	document_obj = JS_InitClass(ctx, window_obj, NULL,
 				    (JSClass *) &document_class, NULL, 0,
@@ -214,13 +214,13 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 				   (JSClass *) &menubar_class, NULL, 0,
 				   (JSPropertySpec *) unibar_props, NULL,
 				   NULL, NULL);
-	JS_SetPrivate(ctx, menubar_obj, "t");
+	JS_SetPrivate(ctx, menubar_obj, "t"); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &statusbar_class, NULL, 0,
 				     (JSPropertySpec *) unibar_props, NULL,
 				     NULL, NULL);
-	JS_SetPrivate(ctx, statusbar_obj, "s");
+	JS_SetPrivate(ctx, statusbar_obj, "s"); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &navigator_class, NULL, 0,

@@ -19,7 +19,7 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
-	int *data = JS_GetPrivate(ctx, obj);
+	int *data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 	enum keymap_id keymap_id = *data;
 
 	keystroke_str = JS_GetStringBytes(JS_ValueToString(ctx, id));
@@ -63,7 +63,7 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 static JSBool
 keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	int *data = JS_GetPrivate(ctx, obj);
+	int *data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 	enum keymap_id keymap_id = *data;
 	unsigned char *keymap_str;
 	const unsigned char *keystroke_str;
@@ -133,7 +133,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static void
 keymap_finalize(JSContext *ctx, JSObject *obj)
 {
-	void *data = JS_GetPrivate(ctx, obj);
+	void *data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 
 	mem_free(data);
 }
@@ -162,7 +162,7 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 	data = intdup(keymap_id);
 	if (!data) return NULL;
 
-	if (JS_TRUE == JS_SetPrivate(smjs_ctx, keymap_object, data))
+	if (JS_TRUE == JS_SetPrivate(smjs_ctx, keymap_object, data)) /* to @keymap_class */
 		return keymap_object;
 
 	mem_free(data);

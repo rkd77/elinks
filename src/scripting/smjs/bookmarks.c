@@ -26,7 +26,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 
 	if (!bookmark) return jsobj;
 
-	if (JS_TRUE == JS_SetPrivate(smjs_ctx, jsobj, bookmark)) {
+	if (JS_TRUE == JS_SetPrivate(smjs_ctx, jsobj, bookmark)) { /* to @bookmark_class or @bookmark_folder_class */
 		object_lock(bookmark);
 
 		return jsobj;
@@ -39,7 +39,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 static void
 bookmark_finalize(JSContext *ctx, JSObject *obj)
 {
-	struct bookmark *bookmark = JS_GetPrivate(ctx, obj);
+	struct bookmark *bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class or @bookmark_folder_class */
 
 	if (bookmark) object_unlock(bookmark);
 }
@@ -66,7 +66,7 @@ static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
 static JSBool
 bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct bookmark *bookmark = JS_GetPrivate(ctx, obj);
+	struct bookmark *bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
 	if (!bookmark) return JS_FALSE;
 
@@ -102,7 +102,7 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct bookmark *bookmark = JS_GetPrivate(ctx, obj);
+	struct bookmark *bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
 	if (!bookmark) return JS_FALSE;
 
@@ -166,7 +166,7 @@ static JSBool
 bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
-	struct bookmark *folder = JS_GetPrivate(ctx, obj);
+	struct bookmark *folder = JS_GetPrivate(ctx, obj); /* from @bookmark_folder_class */
 	unsigned char *title;
 
 	*vp = JSVAL_NULL;

@@ -74,7 +74,7 @@ static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
@@ -161,7 +161,7 @@ static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 

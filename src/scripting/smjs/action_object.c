@@ -25,7 +25,7 @@ struct smjs_action_fn_callback_hop {
 static void
 smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 {
-	struct smjs_action_fn_callback_hop *hop = JS_GetPrivate(ctx, obj);
+	struct smjs_action_fn_callback_hop *hop = JS_GetPrivate(ctx, obj); /* from @action_fn_class */
 
 	if (hop) mem_free(hop);
 }
@@ -45,7 +45,7 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	if (JS_TRUE != JS_ValueToObject(ctx, argv[-2], &fn_obj))
 		return JS_TRUE;
 
-	hop = JS_GetPrivate(ctx, fn_obj);
+	hop = JS_GetPrivate(ctx, fn_obj); /* from @action_fn_class */
 	if (!hop) return JS_TRUE;
 
 	if (argc >= 1) {
@@ -99,7 +99,7 @@ smjs_get_action_fn_object(unsigned char *action_str)
 	hop->action_id = get_action_from_string(KEYMAP_MAIN, action_str);
 
 	if (-1 != hop->action_id
-	    && JS_TRUE == JS_SetPrivate(smjs_ctx, obj, hop)) {
+	    && JS_TRUE == JS_SetPrivate(smjs_ctx, obj, hop)) { /* to @action_fn_class */
 	    	return obj;
 	}
 
