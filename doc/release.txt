@@ -63,6 +63,9 @@ When releasing a new version
 6. Tasks on http://bugzilla.elinks.cz/:
 
  - Add the new version.
+ - Add a comment to each bug fixed in this version.  If some of them
+   are already VERIFIED, change them to CLOSED, unless they are also
+   waiting for a release in another branch.
 
 7. Tasks external sites and resources:
 
