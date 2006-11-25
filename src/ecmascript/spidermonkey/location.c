@@ -145,8 +145,8 @@ const JSPropertySpec location_props[] = {
 static JSBool
 location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
+	JSObject *parent_win = JS_GetParent(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
@@ -169,8 +169,8 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
+	JSObject *parent_win = JS_GetParent(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!JSVAL_IS_INT(id))
