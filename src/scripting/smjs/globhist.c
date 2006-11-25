@@ -13,11 +13,17 @@
 #include "util/memory.h"
 
 
+static const JSClass smjs_globhist_item_class; /* defined below */
+
+
 /* @smjs_globhist_item_class.finalize */
 static void
 smjs_globhist_item_finalize(JSContext *ctx, JSObject *obj)
 {
 	struct global_history_item *history_item;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
+	if_assert_failed return;
 
 	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
@@ -43,6 +49,9 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
                                 jsval *vp)
 {
 	struct global_history_item *history_item;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
@@ -97,6 +106,9 @@ static JSBool
 smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct global_history_item *history_item;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 

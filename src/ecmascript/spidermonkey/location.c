@@ -23,6 +23,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/location.h"
+#include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -148,7 +149,12 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 
 	if (!JSVAL_IS_INT(id))
@@ -176,7 +182,12 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 

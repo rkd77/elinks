@@ -25,6 +25,7 @@
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
+#include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -79,7 +80,12 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document *document;
 	struct session *ses;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -171,7 +177,12 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;

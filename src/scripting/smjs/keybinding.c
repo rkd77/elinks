@@ -13,6 +13,8 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
+static const JSClass keymap_class; /* defined below */
+
 /* @keymap_class.getProperty */
 static JSBool
 keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -21,6 +23,9 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	const unsigned char *keystroke_str;
 	int *data;
 	enum keymap_id keymap_id = *data;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 
@@ -69,6 +74,9 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	enum keymap_id keymap_id = *data;
 	unsigned char *keymap_str;
 	const unsigned char *keystroke_str;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
+	if_assert_failed return JS_FALSE;
 
 	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 
@@ -138,6 +146,9 @@ static void
 keymap_finalize(JSContext *ctx, JSObject *obj)
 {
 	void *data;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
+	if_assert_failed return;
 
 	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 

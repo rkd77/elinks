@@ -23,6 +23,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/unibar.h"
+#include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -81,7 +82,13 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
@@ -127,7 +134,13 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;

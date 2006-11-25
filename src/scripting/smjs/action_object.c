@@ -21,11 +21,16 @@ struct smjs_action_fn_callback_hop {
 	action_id_T action_id;
 };
 
+static const JSClass action_fn_class; /* defined below */
+
 /* @action_fn_class.finalize */
 static void
 smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 {
 	struct smjs_action_fn_callback_hop *hop;
+
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &action_fn_class, NULL));
+	if_assert_failed return;
 
 	hop = JS_GetPrivate(ctx, obj); /* from @action_fn_class */
 
@@ -40,7 +45,9 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	struct smjs_action_fn_callback_hop *hop;
 	JSObject *fn_obj;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &action_fn_class, NULL));
 	assert(smjs_ctx);
+	if_assert_failed return JS_FALSE;
 
 	*rval = JS_FALSE;
 
