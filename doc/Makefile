@@ -76,7 +76,7 @@ install-doc: all-docs update-man install
 		fi;)
 	@$(foreach doc,$(PDF_DOCS), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/pdf; \
-		$(call ncmd,installdata,$(doc),$(PDF_DIR);))
+		$(call ncmd,installdata,$(doc),$(PDF_DIR));)
 
 update-man: man
 	@$(if $(MAN_DOCS), \
