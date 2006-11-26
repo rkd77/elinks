@@ -183,7 +183,7 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 		return NULL;
 
 
-	/* A bit of a gray zone. Delete the entry if the it has the stricktest
+	/* A bit of a gray zone. Delete the entry if the it has the strictest
 	 * cache mode and we don't want the most aggressive mode or we have to
 	 * remove the redirect or the entry expired. Please enlighten me.
 	 * --jonas */
