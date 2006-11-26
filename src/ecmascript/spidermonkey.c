@@ -62,6 +62,8 @@
 
 /*** Classes */
 
+static const JSClass form_class, document_class; /* defined below */
+
 enum prop_type {
 	JSPT_UNDEF,
 	JSPT_INT,
@@ -303,6 +305,9 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct view_state *vs;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	set_prop_undef(&prop);
@@ -424,6 +429,9 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct view_state *vs;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
 	if (JSVAL_IS_STRING(id)) {
@@ -466,6 +474,8 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	struct view_state *vs;
 	union jsval_union v;
 	struct jsval_property prop;
+
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, argv)) return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
@@ -514,6 +524,8 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc,jsval *argv, jsval *rval)
 	static time_t ratelimit_start;
 	static int ratelimit_count;
 	struct jsval_property prop;
+
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, argv)) return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	doc_view = vs->doc_view;
@@ -670,9 +682,18 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct link *link = NULL;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -795,9 +816,18 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct link *link = NULL;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -899,9 +929,17 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	int linknum;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, argv)) return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -946,9 +984,17 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	int linknum;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, argv)) return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1070,9 +1116,18 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form *form;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1127,9 +1182,17 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	int index;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, argv)) return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1179,9 +1242,17 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	union jsval_union v;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, argv)) return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, parent_form);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1272,8 +1343,15 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form *form;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
@@ -1394,8 +1472,15 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form *form;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
@@ -1463,8 +1548,14 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct form *form;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
@@ -1495,8 +1586,14 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct form *form;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
@@ -1570,8 +1667,15 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document *document;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1619,8 +1723,14 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	int index;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 
 	set_prop_undef(&prop);
@@ -1657,8 +1767,14 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	union jsval_union v;
 	struct jsval_property prop;
 
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, parent_doc);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1720,7 +1836,12 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session *ses;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1807,7 +1928,12 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document *document;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1908,7 +2034,12 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct view_state *vs;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 
 	set_prop_undef(&prop);
@@ -1938,7 +2069,12 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 
@@ -2059,7 +2195,13 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	unsigned char *bar;
 	struct jsval_property prop;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
@@ -2109,7 +2251,13 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	unsigned char *bar;
 	union jsval_union v;
 
+	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
+	if_assert_failed return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
+	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
