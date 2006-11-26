@@ -232,7 +232,7 @@ static JSBool window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval
 
 static const JSClass window_class = {
 	"window",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	window_get_property, window_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -578,7 +578,7 @@ static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval 
 
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -1134,7 +1134,7 @@ static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 static const JSClass form_class = {
 	"form",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* struct form_view * */
 	JS_PropertyStub, JS_PropertyStub,
 	form_get_property, form_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -1858,14 +1858,14 @@ static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval
 
 static const JSClass menubar_class = {
 	"menubar",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
 	JS_PropertyStub, JS_PropertyStub,
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 static const JSClass statusbar_class = {
 	"statusbar",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
 	JS_PropertyStub, JS_PropertyStub,
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
