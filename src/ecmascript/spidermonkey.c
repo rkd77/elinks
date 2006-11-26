@@ -300,7 +300,7 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static JSBool
 window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	struct jsval_property prop;
 
 	set_prop_undef(&prop);
@@ -419,7 +419,7 @@ static void location_goto(struct document_view *doc_view, unsigned char *url);
 static JSBool
 window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	union jsval_union v;
 
 	if (JSVAL_IS_STRING(id)) {
@@ -459,7 +459,7 @@ static const JSFunctionSpec window_funcs[] = {
 static JSBool
 window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	union jsval_union v;
 	struct jsval_property prop;
 
@@ -499,7 +499,7 @@ delayed_open(void *data)
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc,jsval *argv, jsval *rval)
 {
-	struct view_state *vs = JS_GetPrivate(ctx, obj);
+	struct view_state *vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
 	union jsval_union v;
@@ -651,10 +651,10 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct form_state *fs = JS_GetPrivate(ctx, obj);
+	struct form_state *fs = JS_GetPrivate(ctx, obj); /* from @input_class */
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -767,10 +767,10 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct form_state *fs = JS_GetPrivate(ctx, obj);
+	struct form_state *fs = JS_GetPrivate(ctx, obj); /* from @input_class */
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -862,11 +862,11 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct form_state *fs = JS_GetPrivate(ctx, obj);
+	struct form_state *fs = JS_GetPrivate(ctx, obj); /* from @input_class */
 	struct form_control *fc;
 	int linknum;
 	struct jsval_property prop;
@@ -900,11 +900,11 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct form_state *fs = JS_GetPrivate(ctx, obj);
+	struct form_state *fs = JS_GetPrivate(ctx, obj); /* from @input_class */
 	struct form_control *fc;
 	int linknum;
 	struct jsval_property prop;
@@ -946,7 +946,7 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 
 		JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 		JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-		JS_SetPrivate(ctx, jsinput, fs);
+		JS_SetPrivate(ctx, jsinput, fs); /* to @input_class */
 		fs->ecmascript_obj = jsinput;
 	}
 	return fs->ecmascript_obj;
@@ -1017,10 +1017,10 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct form_view *form_view = JS_GetPrivate(ctx, parent_form);
+	struct form_view *form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
 	struct form *form = find_form_by_form_view(document, form_view);
 	struct jsval_property prop;
 
@@ -1061,10 +1061,10 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct form_view *form_view = JS_GetPrivate(ctx, parent_form);
+	struct form_view *form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
 	struct form *form = find_form_by_form_view(document, form_view);
 	struct form_control *fc;
 	union jsval_union v;
@@ -1106,10 +1106,10 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	JSObject *parent_form = JS_GetParent(ctx, obj);
 	JSObject *parent_doc = JS_GetParent(ctx, parent_form);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct form_view *form_view = JS_GetPrivate(ctx, parent_form);
+	struct form_view *form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
 	struct form *form = find_form_by_form_view(document, form_view);
 	struct form_control *fc;
 	union jsval_union v;
@@ -1193,9 +1193,9 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
-	struct form_view *fv = JS_GetPrivate(ctx, obj);
+	struct form_view *fv = JS_GetPrivate(ctx, obj); /* from @form_class */
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	struct jsval_property prop;
 
@@ -1308,9 +1308,9 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
-	struct form_view *fv = JS_GetPrivate(ctx, obj);
+	struct form_view *fv = JS_GetPrivate(ctx, obj); /* from @form_class */
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	union jsval_union v;
 
@@ -1370,9 +1370,9 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
-	struct form_view *fv = JS_GetPrivate(ctx, obj);
+	struct form_view *fv = JS_GetPrivate(ctx, obj); /* from @form_class */
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	struct jsval_property prop;
 
@@ -1394,10 +1394,10 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
-	struct form_view *fv = JS_GetPrivate(ctx, obj);
+	struct form_view *fv = JS_GetPrivate(ctx, obj); /* from @form_class */
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	struct jsval_property prop;
 
@@ -1422,7 +1422,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 
 		JS_DefineProperties(ctx, jsform, (JSPropertySpec *) form_props);
 		JS_DefineFunctions(ctx, jsform, (JSFunctionSpec *) form_funcs);
-		JS_SetPrivate(ctx, jsform, fv);
+		JS_SetPrivate(ctx, jsform, fv); /* to @form_class */
 		fv->ecmascript_obj = jsform;
 	}
 	return fv->ecmascript_obj;
@@ -1463,7 +1463,7 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct jsval_property prop;
@@ -1504,7 +1504,7 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct form_view *fv;
 	union jsval_union v;
 	int counter = -1;
@@ -1538,7 +1538,7 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 {
 	JSObject *parent_doc = JS_GetParent(ctx, obj);
 	JSObject *parent_win = JS_GetParent(ctx, parent_doc);
-	struct view_state *vs = JS_GetPrivate(ctx, parent_win);
+	struct view_state *vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct form *form;
@@ -1596,7 +1596,7 @@ static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
@@ -1678,7 +1678,7 @@ static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	union jsval_union v;
@@ -1776,7 +1776,7 @@ static JSBool
 location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct jsval_property prop;
 
 	set_prop_undef(&prop);
@@ -1802,7 +1802,7 @@ static JSBool
 location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	union jsval_union v;
 
@@ -1917,10 +1917,10 @@ static JSBool
 unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session_status *status = &doc_view->session->status;
-	unsigned char *bar = JS_GetPrivate(ctx, obj);
+	unsigned char *bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 	struct jsval_property prop;
 
 	set_prop_undef(&prop);
@@ -1961,10 +1961,10 @@ static JSBool
 unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	JSObject *parent = JS_GetParent(ctx, obj);
-	struct view_state *vs = JS_GetPrivate(ctx, parent);
+	struct view_state *vs = JS_GetPrivate(ctx, parent); /* from @window_class */
 	struct document_view *doc_view = vs->doc_view;
 	struct session_status *status = &doc_view->session->status;
-	unsigned char *bar = JS_GetPrivate(ctx, obj);
+	unsigned char *bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 	union jsval_union v;
 
 	if (!JSVAL_IS_INT(id))
@@ -2236,7 +2236,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS_InitStandardClasses(ctx, window_obj);
 	JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props);
 	JS_DefineFunctions(ctx, window_obj, (JSFunctionSpec *) window_funcs);
-	JS_SetPrivate(ctx, window_obj, interpreter->vs);
+	JS_SetPrivate(ctx, window_obj, interpreter->vs); /* to @window_class */
 
 	document_obj = JS_InitClass(ctx, window_obj, NULL,
 				    (JSClass *) &document_class, NULL, 0,
@@ -2260,13 +2260,13 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 				   (JSClass *) &menubar_class, NULL, 0,
 				   (JSPropertySpec *) unibar_props, NULL,
 				   NULL, NULL);
-	JS_SetPrivate(ctx, menubar_obj, "t");
+	JS_SetPrivate(ctx, menubar_obj, "t"); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &statusbar_class, NULL, 0,
 				     (JSPropertySpec *) unibar_props, NULL,
 				     NULL, NULL);
-	JS_SetPrivate(ctx, statusbar_obj, "s");
+	JS_SetPrivate(ctx, statusbar_obj, "s"); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &navigator_class, NULL, 0,
