@@ -36,10 +36,14 @@ HTML_DOCS-$(CONFIG_XMLTO) += \
  manual.html-chunked
 
 HTML_DOCS-$(CONFIG_POD2HTML) += \
- perl-check-accelerator-conflicts.html \
- perl-gather-accelerator-contexts.html \
  perl.html \
  perl-hooks.html
+
+# Don't install these documents, because the corresponding scripts
+# are not installed either.  However, generating them may be useful.
+HTML_DOCS_NOINSTALL-$(CONFIG_POD2HTML) += \
+ perl-check-accelerator-conflicts.html \
+ perl-gather-accelerator-contexts.html
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.1 \
@@ -56,10 +60,11 @@ PDF_DOCS-$(CONFIG_JW) += \
 
 MAN_DOCS  = $(MAN_DOCS-yes)
 HTML_DOCS = $(HTML_DOCS-yes)
+HTML_DOCS_NOINSTALL = $(HTML_DOCS_NOINSTALL-yes)
 PDF_DOCS  = $(PDF_DOCS-yes)
 
 txt:  $(TXT_DOCS)
-html: txt $(HTML_DOCS)
+html: txt $(HTML_DOCS) $(HTML_DOCS_NOINSTALL)
 pdf:  txt $(PDF_DOCS)
 man:  txt $(MAN_DOCS)
 
@@ -85,7 +90,7 @@ update-man: man
 		$(call ncmd,installdata,elinks.conf.5,man/man5/))
 
 clean-local:
-	@$(RM) -r api $(TXT_DOCS) $(MAN_DOCS) $(HTML_DOCS) $(PDF_DOCS) *.tmp *.xml
+	@$(RM) -r api $(TXT_DOCS) $(MAN_DOCS) $(HTML_DOCS) $(HTML_DOCS_NOINSTALL) $(PDF_DOCS) *.tmp *.xml
 
 # TODO: perl.pod should be pod2ized during make install. --pasky
 install-local:
