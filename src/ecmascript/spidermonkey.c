@@ -296,6 +296,7 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 }
 #endif
 
+/* @window_class.getProperty */
 static JSBool
 window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -414,6 +415,7 @@ convert:
 
 static void location_goto(struct document_view *doc_view, unsigned char *url);
 
+/* @window_class.setProperty */
 static JSBool
 window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -453,6 +455,7 @@ static const JSFunctionSpec window_funcs[] = {
 	{ NULL }
 };
 
+/* @window_funcs{"alert"} */
 static JSBool
 window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -492,6 +495,7 @@ delayed_open(void *data)
 	mem_free(deo);
 }
 
+/* @window_funcs{"open"} */
 static JSBool
 window_open(JSContext *ctx, JSObject *obj, uintN argc,jsval *argv, jsval *rval)
 {
@@ -639,6 +643,7 @@ static const JSFunctionSpec input_funcs[] = {
 	{ NULL }
 };
 
+/* @input_class.getProperty */
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -754,6 +759,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @input_class.setProperty */
 static JSBool
 input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -839,6 +845,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"blur"} */
 static JSBool
 input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -847,6 +854,7 @@ input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"click"} */
 static JSBool
 input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -884,6 +892,7 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"focus"} */
 static JSBool
 input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -916,6 +925,7 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @input_funcs{"select"} */
 static JSBool
 input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -998,6 +1008,7 @@ static const JSPropertySpec form_elements_props[] = {
 	{ NULL }
 };
 
+/* @form_elements_class.getProperty */
 static JSBool
 form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1041,6 +1052,7 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @form_elements_funcs{"item"} */
 static JSBool
 form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1085,6 +1097,7 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	return JS_TRUE;
 }
 
+/* @form_elements_funcs{"namedItem"} */
 static JSBool
 form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1170,6 +1183,7 @@ static const JSFunctionSpec form_funcs[] = {
 	{ NULL }
 };
 
+/* @form_class.getProperty */
 static JSBool
 form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1285,6 +1299,7 @@ convert:
 	return JS_TRUE;
 }
 
+/* @form_class.setProperty */
 static JSBool
 form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1346,6 +1361,7 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @form_funcs{"reset"} */
 static JSBool
 form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1369,6 +1385,7 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @form_funcs{"submit"} */
 static JSBool
 form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1436,6 +1453,7 @@ static const JSPropertySpec forms_props[] = {
 	{ NULL }
 };
 
+/* @forms_class.getProperty */
 static JSBool
 forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1476,6 +1494,7 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* forms_funcs{"item"} */
 static JSBool
 forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1509,6 +1528,7 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	return JS_TRUE;
 }
 
+/* @forms_funcs{"namedItem"} */
 static JSBool
 forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1566,6 +1586,7 @@ static const JSPropertySpec document_props[] = {
 	{ NULL }
 };
 
+/* @document_class.getProperty */
 static JSBool
 document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1647,6 +1668,7 @@ convert:
 	return JS_TRUE;
 }
 
+/* @document_class.setProperty */
 static JSBool
 document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1697,6 +1719,7 @@ static const JSFunctionSpec document_funcs[] = {
 	{ NULL }
 };
 
+/* @document_funcs{"write"} */
 static JSBool
 document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1742,6 +1765,7 @@ static const JSPropertySpec location_props[] = {
 	{ NULL }
 };
 
+/* @location_class.getProperty */
 static JSBool
 location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1767,6 +1791,7 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @location_class.setProperty */
 static JSBool
 location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1796,6 +1821,7 @@ static const JSFunctionSpec location_funcs[] = {
 	{ NULL }
 };
 
+/* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static JSBool
 location_toString(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1878,6 +1904,7 @@ static const JSPropertySpec unibar_props[] = {
 };
 
 
+/* @menubar_class.getProperty, @statusbar_class.getProperty */
 static JSBool
 unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1921,6 +1948,7 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
+/* @menubar_class.setProperty, @statusbar_class.setProperty */
 static JSBool
 unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
@@ -1993,6 +2021,7 @@ static const JSPropertySpec navigator_props[] = {
 };
 
 
+/* @navigator_class.getProperty */
 static JSBool
 navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
