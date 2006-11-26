@@ -580,6 +580,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc,jsval *argv, jsval *rval)
 static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
 	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
@@ -983,6 +984,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, s
 
 static JSBool form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @form_elements_class object must have a @form_class parent.  */
 static const JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
@@ -1145,6 +1147,7 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 static JSBool form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @form_class object must have a @document_class parent.  */
 static const JSClass form_class = {
 	"form",
 	JSCLASS_HAS_PRIVATE,	/* struct form_view * */
@@ -1428,6 +1431,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 
 static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @forms_class object must have a @document_class parent.  */
 static const JSClass forms_class = {
 	"forms",
 	JSCLASS_HAS_PRIVATE,
@@ -1567,6 +1571,7 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 static JSBool document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @document_class object must have a @window_class parent.  */
 static const JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,
@@ -1751,6 +1756,7 @@ document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 static JSBool location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @location_class object must have a @window_class parent.  */
 static const JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
@@ -1882,6 +1888,7 @@ location_goto(struct document_view *doc_view, unsigned char *url)
 static JSBool unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @menubar_class object must have a @window_class parent.  */
 static const JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
@@ -1889,6 +1896,7 @@ static const JSClass menubar_class = {
 	unibar_get_property, unibar_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
+/* Each @statusbar_class object must have a @window_class parent.  */
 static const JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
