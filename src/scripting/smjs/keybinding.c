@@ -22,7 +22,6 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
 	int *data;
-	enum keymap_id keymap_id = *data;
 
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -32,7 +31,8 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	keystroke_str = JS_GetStringBytes(JS_ValueToString(ctx, id));
 	if (!keystroke_str) goto ret_null;
 
-	action_str = get_action_name_from_keystroke(keymap_id, keystroke_str);
+	action_str = get_action_name_from_keystroke((enum keymap_id) *data,
+						    keystroke_str);
 	if (!action_str) goto ret_null;
 
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(ctx, action_str));
