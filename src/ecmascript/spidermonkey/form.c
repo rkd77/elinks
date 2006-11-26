@@ -513,6 +513,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, s
 
 static JSBool form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Each @form_elements_class object must have a @form_class parent.  */
 static const JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
