@@ -114,7 +114,12 @@ html_quote_close(struct html_context *html_context, unsigned char *a,
 		 unsigned char *xxx3, unsigned char *xxx4,
 		 unsigned char **xxx5)
 {
-	unsigned char *q = quote_char[--html_context->quote_level % 2];
+	unsigned char *q;
+	
+	if (html_context->quote_level > 0)
+		html_context->quote_level--;
+
+	q = quote_char[html_context->quote_level % 2];
 
 	put_chrs(html_context, q, 1);
 }

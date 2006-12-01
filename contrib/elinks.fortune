@@ -107,3 +107,9 @@ Scrool > pasky: HTML renderer doesn't work well with double-width characters. I
 Scrool > What's that?
 Scrool > It kills my current build.
 Miciah > Scary!
+%
+ paakku> fonseca: I think quote_level should be unsigned after all, in case it
+	 overflows in html_quote on a 64-bit machine.
+fonseca> paakku: I am curious why you especially mention 64-bit?
+ paakku> 64-bit because exploiting this is likely to need a 6 GB HTML page and
+	 that is not possible on 32-bit.
