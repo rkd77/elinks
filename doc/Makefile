@@ -18,7 +18,7 @@ ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/"
 #############################################################################
 # Build files
 
-TXT_DOCS = \
+TXT_DOCS_NOINSTALL = \
  features.txt \
  keymap-actions.txt \
  keymap-defaults.txt \
@@ -63,7 +63,7 @@ HTML_DOCS = $(HTML_DOCS-yes)
 HTML_DOCS_NOINSTALL = $(HTML_DOCS_NOINSTALL-yes)
 PDF_DOCS  = $(PDF_DOCS-yes)
 
-txt:  $(TXT_DOCS)
+txt:  $(TXT_DOCS_NOINSTALL)
 html: txt $(HTML_DOCS) $(HTML_DOCS_NOINSTALL)
 pdf:  txt $(PDF_DOCS)
 man:  txt $(MAN_DOCS)
@@ -90,7 +90,7 @@ update-man: man
 		$(call ncmd,installdata,elinks.conf.5,man/man5/))
 
 clean-local:
-	@$(RM) -r api $(TXT_DOCS) $(MAN_DOCS) $(HTML_DOCS) $(HTML_DOCS_NOINSTALL) $(PDF_DOCS) *.tmp *.xml
+	@$(RM) -r api $(TXT_DOCS_NOINSTALL) $(MAN_DOCS) $(HTML_DOCS) $(HTML_DOCS_NOINSTALL) $(PDF_DOCS) *.tmp *.xml
 
 # TODO: perl.pod should be pod2ized during make install. --pasky
 install-local:
