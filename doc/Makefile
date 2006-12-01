@@ -11,6 +11,7 @@ docdir = $(datadir)/doc
 # Used by install-doc
 HTML_DIR = $(DESTDIR)$(docdir)/$(PACKAGE)/html
 PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
+TXT_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/txt
 
 ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
 ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/"
@@ -24,6 +25,9 @@ TXT_DOCS_NOINSTALL = \
  keymap-defaults.txt \
  option-command.txt \
  option-config.txt
+
+TXT_DOCS_ASIS = \
+ python.txt
 
 HTML_DOCS-$(CONFIG_ASCIIDOC) += \
  elinks.1.html \
@@ -82,6 +86,9 @@ install-doc: all-docs update-man install
 	@$(foreach doc,$(PDF_DOCS), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/pdf; \
 		$(call ncmd,installdata,$(doc),$(PDF_DIR));)
+	@$(foreach doc,$(TXT_DOCS_ASIS), \
+		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/txt; \
+		$(call ncmd,installsrcdata,$(doc),$(TXT_DIR));)
 
 update-man: man
 	@$(if $(MAN_DOCS), \

@@ -63,6 +63,10 @@ quiet_cmd_recmake = "[$(INFO_COLOR)MAKE $(3)$(END_COLOR)]   $(RELPATH)$(2)"
 quiet_cmd_installdata = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installdata = $(INSTALL_DATA) $(2) $(3)
 
+# Install a data file from the source (not build) directory
+quiet_cmd_installsrcdata = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
+      cmd_installsrcdata = $(INSTALL_DATA) $(srcdir)$(2) $(3)
+
 quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
