@@ -83,7 +83,10 @@ sort_bittorrent_peer_connections(struct bittorrent_connection *bittorrent)
 #endif
 }
 
-/* This is basically the choke period handler. */
+/* Timer callback for @bittorrent->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.
+ *
+ * This is basically the choke period handler. */
 void
 update_bittorrent_connection_state(struct connection *conn)
 {
@@ -94,6 +97,7 @@ update_bittorrent_connection_state(struct connection *conn)
 	int max_uploads = get_opt_int("protocol.bittorrent.max_uploads");
 
 	set_bittorrent_connection_timer(conn);
+	/* The expired timer ID has now been erased.  */
 	set_connection_timeout(conn);
 
 	peer_conns = list_size(&bittorrent->peers);
@@ -182,6 +186,9 @@ update_bittorrent_connection_state(struct connection *conn)
 	}
 }
 
+/* Progress timer callback for @bittorrent->upload_progress.  As
+ * explained in @start_update_progress, this function must erase the
+ * expired timer ID from @bittorrent->upload_progress->timer.  */
 static void
 update_bittorrent_connection_upload(void *data)
 {
@@ -191,7 +198,7 @@ update_bittorrent_connection_upload(void *data)
 			bittorrent->uploaded,
 			bittorrent->downloaded,
 			bittorrent->uploaded);
-
+	/* The expired timer ID has now been erased.  */
 }
 
 void

@@ -303,6 +303,9 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 	}
 }
 
+/* Timer callback for @interpreter->vs->doc_view->document->timeout.
+ * As explained in @install_timer, this function must erase the
+ * expired timer ID from all variables.  */
 static void
 ecmascript_timeout_handler(void *i)
 {
@@ -310,6 +313,7 @@ ecmascript_timeout_handler(void *i)
 
 	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
 	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
 }

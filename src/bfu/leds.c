@@ -268,6 +268,8 @@ sync_leds(struct session *ses)
 	return 0;
 }
 
+/* Timer callback for @redraw_timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 redraw_leds(void *xxx)
 {
@@ -280,6 +282,7 @@ redraw_leds(void *xxx)
 	}
 
 	install_timer(&redraw_timer, LEDS_REFRESH_DELAY, redraw_leds, NULL);
+	/* The expired timer ID has now been erased.  */
 
 	if (drawing) return;
 	drawing = 1;

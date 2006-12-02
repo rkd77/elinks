@@ -18,6 +18,8 @@
 /* Timer for periodically saving configuration files to disk */
 static timer_id_T periodic_save_timer = TIMER_ID_UNDEF;
 
+/* Timer callback for @periodic_save_timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 periodic_save_handler(void *xxx)
 {
@@ -33,9 +35,16 @@ periodic_save_handler(void *xxx)
 		trigger_event(periodic_save_event_id);
 
 	interval = sec_to_ms(get_opt_int("infofiles.save_interval"));
-	if (!interval) return;
+	if (!interval) {
+		/* We should get here only if @periodic_save_handler
+		 * is being called from @periodic_save_change_hook or
+		 * @init_timer, rather than from the timer system.  */
+		assert(periodic_save_timer == TIMER_ID_UNDEF);
+		return;
+	}
 
 	install_timer(&periodic_save_timer, interval, periodic_save_handler, NULL);
+	/* The expired timer ID has now been erased.  */
 }
 
 static int

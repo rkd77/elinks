@@ -674,6 +674,8 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 #endif /* CONFIG_UTF8 */
 }
 
+/* Timer callback for @refresh->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 do_refresh_dialog(struct dialog_data *dlg_data)
 {
@@ -700,6 +702,7 @@ do_refresh_dialog(struct dialog_data *dlg_data)
 
 	install_timer(&refresh->timer, RESOURCE_INFO_REFRESH,
 		      (void (*)(void *)) do_refresh_dialog, dlg_data);
+	/* The expired timer ID has now been erased.  */
 }
 
 void

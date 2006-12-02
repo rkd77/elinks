@@ -144,6 +144,8 @@ done_saved_session_info(void)
 		done_session_info(session_info.next);
 }
 
+/* Timer callback for @info->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 session_info_timeout(int id)
 {
@@ -151,6 +153,7 @@ session_info_timeout(int id)
 
 	if (!info) return;
 	info->timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 	done_session_info(info);
 }
 
@@ -442,6 +445,8 @@ load_frames(struct session *ses, struct document_view *doc_view)
 	}
 }
 
+/* Timer callback for @ses->display_timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 void
 display_timer(struct session *ses)
 {
@@ -458,6 +463,7 @@ display_timer(struct session *ses)
 	install_timer(&ses->display_timer, t,
 		      (void (*)(void *)) display_timer,
 		      ses);
+	/* The expired timer ID has now been erased.  */
 
 	load_frames(ses, ses->doc_view);
 	load_css_imports(ses, ses->doc_view);

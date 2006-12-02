@@ -327,10 +327,14 @@ update_connection_progress(struct connection *conn)
 	update_progress(conn->progress, conn->received, conn->est_length, conn->from);
 }
 
+/* Progress timer callback for @conn->progress.  As explained in
+ * @start_update_progress, this function must erase the expired timer
+ * ID from @conn->progress->timer.  */
 static void
 stat_timer(struct connection *conn)
 {
 	update_connection_progress(conn);
+	/* The expired timer ID has now been erased.  */
 	notify_connection_callbacks(conn);
 }
 
@@ -617,10 +621,13 @@ done:
 	register_check_queue();
 }
 
+/* Timer callback for @keepalive_timeout.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 keepalive_timer(void *x)
 {
 	keepalive_timeout = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 	check_keepalive_connections();
 }
 
@@ -1127,14 +1134,20 @@ detach_connection(struct download *download, off_t pos)
 	free_entry_to(conn->cached, pos);
 }
 
+/* Timer callback for @conn->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 connection_timeout(struct connection *conn)
 {
 	conn->timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 	timeout_socket(conn->socket);
 }
 
-/* Huh, using two timers? Is this to account for changes of c->unrestartable
+/* Timer callback for @conn->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.
+ *
+ * Huh, using two timers? Is this to account for changes of c->unrestartable
  * or can it be reduced? --jonas */
 static void
 connection_timeout_1(struct connection *conn)
@@ -1144,6 +1157,7 @@ connection_timeout_1(struct connection *conn)
 			 ? get_opt_int("connection.unrestartable_receive_timeout")
 			 : get_opt_int("connection.receive_timeout"))
 			* 500), (void (*)(void *)) connection_timeout, conn);
+	/* The expired timer ID has now been erased.  */
 }
 
 void

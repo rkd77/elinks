@@ -28,6 +28,8 @@ get_timer_duration(void)
 	return timer_duration;
 }
 
+/* Timer callback for @countdown.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 count_down(void *xxx)
 {
@@ -40,6 +42,7 @@ count_down(void *xxx)
 	} else {
 		countdown = TIMER_ID_UNDEF;
 	}
+	/* The expired timer ID has now been erased.  */
 
 	keybinding = kbd_nm_lookup(KEYMAP_MAIN, get_opt_str("ui.timer.action"));
 	if (keybinding) {

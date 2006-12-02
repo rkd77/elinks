@@ -59,6 +59,8 @@ done_document_refresh(struct document_refresh *refresh)
 	mem_free(refresh);
 }
 
+/* Timer callback for @refresh->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 do_document_refresh(void *data)
 {
@@ -69,6 +71,7 @@ do_document_refresh(void *data)
 	assert(refresh);
 
 	refresh->timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 
 	/* When refreshing documents that will trigger a download (like
 	 * sourceforge's download pages) make sure that we do not endlessly

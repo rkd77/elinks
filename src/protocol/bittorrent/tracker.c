@@ -130,7 +130,9 @@ check_bittorrent_stopped_request(void *____)
 	free_uri_list(&bittorrent_stopped_requests);
 }
 
-/* Called both when the timer expires and from the request sending front-end. */
+/* Timer callback for @bittorrent->tracker.timer.  As explained in
+ * @install_timer, this function must erase the expired timer ID from
+ * all variables.  Also called from the request sending front-end. */
 /* XXX: When called with event set to ``stopped'' failure handling should not
  * end the connection, since that is already in progress. */
 /* TODO: Make a special timer callback entry point that can check if
@@ -146,6 +148,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	int numwant, index, min_size;
 
 	bittorrent->tracker.timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 
 	/* If the previous request didn't make it, nuke it. This shouldn't
 	 * happen but not doing this makes it a potential leak. */

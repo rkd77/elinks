@@ -972,6 +972,8 @@ set_kbd_event(struct interlink_event *ev,
 	set_kbd_interlink_event(ev, key, modifier);
 }
 
+/* Timer callback for @itrm->timer.  As explained in @install_timer,
+ * this function must erase the expired timer ID from all variables.  */
 static void
 kbd_timeout(struct itrm *itrm)
 {
@@ -979,6 +981,7 @@ kbd_timeout(struct itrm *itrm)
 	int el;
 
 	itrm->timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
 
 	assertm(itrm->in.queue.len, "timeout on empty queue");
 	assert(!itrm->blocked);	/* block_itrm should have killed itrm->timer */
