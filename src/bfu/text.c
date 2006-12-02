@@ -45,6 +45,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 #endif /* CONFIG_UTF8 */
 {
 	unsigned char *split = text;
+	unsigned char *text_end = split + strlen(split);
 	int cells_save = *cells;
 
 	if (max_width <= 0) return 0;
@@ -59,7 +60,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 
 			next_split = split;
 
-			*cells += utf8_char2cells(split, NULL);
+			*cells += utf8_char2cells(split, text_end);
 			while (*next_split && next_split != next_char_begin)
 				next_split++;
 
@@ -70,7 +71,7 @@ split_line(unsigned char *text, int max_width, int *cells)
 					next_split++;
 					continue;
 				}
-				*cells += utf8_char2cells(next_split, NULL);
+				*cells += utf8_char2cells(next_split, text_end);
 				next_char_begin += utf8charlen(next_split);
 			}
 		} else

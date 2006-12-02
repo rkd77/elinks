@@ -67,6 +67,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 	int line_number = 0;
 	int begin = 0;
 	int pos = 0;
+	unsigned char *text_end;
 	int skip;
 	unsigned char *wrappos=NULL;
 	int chars_cells=0; /* Number of console chars on line */
@@ -78,8 +79,9 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 	if (!realloc_line_info(&line, 0))
 		return NULL;
 
+	text_end = text + strlen(text);
 	while (text[pos]) {
-		int char_cells = utf8_char2cells(&text[pos], NULL);
+		int char_cells = utf8_char2cells(&text[pos], text_end);
 
 		if (text[pos] == ' ')
 			wrappos = &text[pos];
