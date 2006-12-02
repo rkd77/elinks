@@ -22,6 +22,8 @@ struct timer {
 	void *data;
 };
 
+/* @timers.next points to the timer with the smallest interval,
+ * @timers.next->next to the second smallest, and so on.  */
 static INIT_LIST_HEAD(timers);
 
 int
@@ -36,7 +38,7 @@ check_timers(timeval_T *last_time)
 {
 	timeval_T now;
 	timeval_T interval;
-	struct timer *timer, *next;
+	struct timer *timer;
 
 	timeval_now(&now);
 	timeval_sub(&interval, last_time, &now);
@@ -45,11 +47,19 @@ check_timers(timeval_T *last_time)
 		timeval_sub_interval(&timer->interval, &interval);
 	}
 
-	foreachsafe (timer, next, timers) {
+	while (!list_empty(timers)) {
+		timer = timers.next;
+
 		if (timeval_is_positive(&timer->interval))
 			break;
 
 		del_from_list(timer);
+		/* At this point, *@timer is to be considered invalid
+		 * outside timers.c; if anything e.g. passes it to
+		 * @kill_timer, that's a bug.  However, @timer->func
+		 * and @check_bottom_halves can still call @kill_timer
+		 * on other timers, so this loop must be careful not to
+		 * keep pointers to them.  (bug 868) */
 		timer->func(timer->data);
 		mem_free(timer);
 		check_bottom_halves();
