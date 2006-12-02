@@ -363,24 +363,23 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 		for (i = 0, x = xbase; i < fc->cols; i++, x++) {
 			unicode_val_T data;
 
-			if (!col_is_in_box(box, x))
-				continue;
-
 			if (i >= -fs->vpos && text < end) {
-				int cell;
-
+				/* utf8_to_unicode will increment text. */
 				data = utf8_to_unicode(&text, end);
-				cell = unicode_to_cell(data);
+			} else
+				data = '_';
+
+			if (col_is_in_box(box, x)) {
+				int cell = unicode_to_cell(data);
+
 				if (cell == 2) {
 					draw_char_data(term, x++, y, data);
 					i++;
 					data = UCS_NO_CHAR;
 				}
 
-			} else
-				data = '_';
-
-			draw_char_data(term, x, y, data);
+				draw_char_data(term, x, y, data);
+			}
 		}
 	}
 
