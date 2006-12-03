@@ -45,7 +45,9 @@ split_line(unsigned char *text, int max_width, int *cells)
 #endif /* CONFIG_UTF8 */
 {
 	unsigned char *split = text;
+#ifdef CONFIG_UTF8
 	unsigned char *text_end = split + strlen(split);
+#endif /* CONFIG_UTF8 */
 	int cells_save = *cells;
 
 	if (max_width <= 0) return 0;
