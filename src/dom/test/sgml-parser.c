@@ -96,7 +96,7 @@ static unsigned char indent_string[] =
 static void
 print_indent(struct dom_stack *stack)
 {
-	printf("%.*s", get_indent_offset(stack), indent_string);
+	printf("%.*s", (int) get_indent_offset(stack), indent_string);
 }
 
 static enum dom_code
