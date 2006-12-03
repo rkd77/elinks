@@ -414,7 +414,10 @@ found_parent:
 		break;
 	}
 	default:
-		INTERNAL("Invalid ID %d in window_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -457,7 +460,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	default:
-		INTERNAL("Invalid ID %d in window_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -801,7 +807,10 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in input_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -909,7 +918,10 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in input_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -1469,7 +1481,10 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in form_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -1550,7 +1565,10 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in form_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		break;
 	}
 
@@ -1936,7 +1954,10 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		set_prop_astring(&prop, get_uri_string(document->uri, URI_ORIGINAL));
 		break;
 	default:
-		INTERNAL("Invalid ID %d in document_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -2085,7 +2106,10 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		set_prop_astring(&prop, get_uri_string(vs->uri, URI_ORIGINAL));
 		break;
 	default:
-		INTERNAL("Invalid ID %d in location_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -2271,7 +2295,10 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 #undef unibar_fetch
 		break;
 	default:
-		INTERNAL("Invalid ID %d in unibar_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -2328,7 +2355,10 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 #undef unibar_set
 		break;
 	default:
-		INTERNAL("Invalid ID %d in unibar_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -2431,7 +2461,10 @@ navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	}
 		break;
 	default:
-		INTERNAL("Invalid ID %d in navigator_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		return JS_TRUE;
 	}
 
