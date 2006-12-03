@@ -50,8 +50,11 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 {
 	struct global_history_item *history_item;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return JS_FALSE;
 
 	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 
@@ -107,8 +110,11 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 {
 	struct global_history_item *history_item;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return JS_FALSE;
 
 	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
 

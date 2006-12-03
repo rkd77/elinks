@@ -141,8 +141,11 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	int linknum;
 	struct link *link = NULL;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -282,8 +285,11 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct link *link = NULL;
 	unicode_val_T accesskey;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -582,8 +588,11 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_view *form_view;
 	struct form *form;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -789,8 +798,11 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_view *fv;
 	struct form *form;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -911,8 +923,11 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form *form;
 	unsigned char *string;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -1101,8 +1116,11 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;

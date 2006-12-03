@@ -82,9 +82,12 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of either
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -134,9 +137,12 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of either
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;

@@ -39,8 +39,11 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
 
 	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 
@@ -96,8 +99,11 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
 
 	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
 

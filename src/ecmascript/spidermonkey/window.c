@@ -122,8 +122,11 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
@@ -246,8 +249,11 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 

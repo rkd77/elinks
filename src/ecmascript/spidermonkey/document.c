@@ -80,8 +80,11 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document *document;
 	struct session *ses;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -177,8 +180,11 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;

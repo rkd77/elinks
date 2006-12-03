@@ -149,8 +149,11 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -182,8 +185,11 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;

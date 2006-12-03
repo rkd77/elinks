@@ -23,8 +23,11 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	const unsigned char *keystroke_str;
 	int *data;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL))
+		return JS_FALSE;
 
 	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 
@@ -74,8 +77,11 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	unsigned char *keymap_str;
 	const unsigned char *keystroke_str;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL))
+		return JS_FALSE;
 
 	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
 
