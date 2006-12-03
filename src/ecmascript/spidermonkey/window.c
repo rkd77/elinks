@@ -230,7 +230,12 @@ found_parent:
 		break;
 	}
 	default:
-		INTERNAL("Invalid ID %d in window_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
 		break;
 	}
 
@@ -270,7 +275,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	default:
-		INTERNAL("Invalid ID %d in window_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 
