@@ -80,8 +80,11 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
+		return JS_FALSE;
 
 	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
@@ -121,8 +124,11 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
+		return JS_FALSE;
 
 	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
 
@@ -191,8 +197,11 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct bookmark *folder;
 	unsigned char *title;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL))
+		return JS_FALSE;
 
 	folder = JS_GetPrivate(ctx, obj); /* from @bookmark_folder_class */
 
