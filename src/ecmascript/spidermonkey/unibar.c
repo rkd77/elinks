@@ -82,9 +82,12 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of either
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -117,7 +120,10 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 #undef unibar_fetch
 		break;
 	default:
-		INTERNAL("Invalid ID %d in unibar_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.  */
 		break;
 	}
 
@@ -134,9 +140,12 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct session_status *status;
 	unsigned char *bar;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	    || JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of either
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -164,7 +173,10 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		register_bottom_half(update_status, NULL);
 		break;
 	default:
-		INTERNAL("Invalid ID %d in unibar_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 

@@ -136,8 +136,11 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	int linknum;
 	struct link *link = NULL;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -245,7 +248,12 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in input_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
 		break;
 	}
 
@@ -267,8 +275,11 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	int linknum;
 	struct link *link = NULL;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -340,7 +351,10 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in input_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 
@@ -552,8 +566,11 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_view *form_view;
 	struct form *form;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, NULL))
+		return JS_FALSE;
 	parent_form = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_form, (JSClass *) &form_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -759,8 +776,11 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form_view *fv;
 	struct form *form;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -862,7 +882,12 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in form_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
 		break;
 	}
 
@@ -881,8 +906,11 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct form *form;
 	unsigned char *string;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -935,7 +963,10 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		INTERNAL("Invalid ID %d in form_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		break;
 	}
 
@@ -1064,8 +1095,11 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, NULL))
+		return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_doc, (JSClass *) &document_class, NULL));
 	if_assert_failed return JS_FALSE;

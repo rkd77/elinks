@@ -35,8 +35,11 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 
@@ -56,11 +59,14 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 		return JS_TRUE;
 	default:
-		INTERNAL("Invalid ID %d in view_state_get_property().",
-		         JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
+		return JS_TRUE;
 	}
-
-	return JS_FALSE;
 }
 
 /* @view_state_class.setProperty */
@@ -69,8 +75,11 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
 
@@ -84,11 +93,12 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 	default:
-		INTERNAL("Invalid ID %d in view_state_set_property().",
-		         JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
+		return JS_TRUE;
 	}
-
-	return JS_FALSE;
 }
 
 static const JSClass view_state_class = {

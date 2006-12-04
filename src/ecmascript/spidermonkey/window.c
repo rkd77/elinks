@@ -120,8 +120,11 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
@@ -227,7 +230,12 @@ found_parent:
 		break;
 	}
 	default:
-		INTERNAL("Invalid ID %d in window_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
 		break;
 	}
 
@@ -242,8 +250,11 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct view_state *vs;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &window_class, NULL))
+		return JS_FALSE;
 
 	vs = JS_GetPrivate(ctx, obj); /* from @window_class */
 
@@ -264,7 +275,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	default:
-		INTERNAL("Invalid ID %d in window_set_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * Do the same here.  */
 		return JS_TRUE;
 	}
 

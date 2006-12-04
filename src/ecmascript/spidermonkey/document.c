@@ -80,8 +80,11 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document *document;
 	struct session *ses;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
@@ -158,7 +161,12 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_ORIGINAL));
 		break;
 	default:
-		INTERNAL("Invalid ID %d in document_get_property().", JSVAL_TO_INT(id));
+		/* Unrecognized property ID; someone is using the
+		 * object as an array.  SMJS builtin classes (e.g.
+		 * js_RegExpClass) just return JS_TRUE in this case
+		 * and leave *@vp unchanged.  Do the same here.
+		 * (Actually not quite the same, as we already used
+		 * @undef_to_jsval.)  */
 		break;
 	}
 
@@ -174,8 +182,11 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+		return JS_FALSE;
 	parent_win = JS_GetParent(ctx, obj);
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
