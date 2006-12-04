@@ -218,8 +218,10 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		{ "xfeDoCommand", REMOTE_METHOD_XFEDOCOMMAND },
 		{ NULL,		  REMOTE_METHOD_NOT_SUPPORTED },
 	};
-	unsigned char *command, *arg, *argend;
+	unsigned char *command, *arg, *argend, *argstring;
 	int method, len = 0;
+	unsigned char *remote_argv[10];
+	int remote_argc;
 
 	if (*argc < 1) return gettext("Parameter expected");
 
@@ -246,10 +248,69 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		return NULL;
 	}
 
-	/* Skip parenthesis and surrounding whitespace. */
 	arg++;
-	skip_space(arg);
-	skipback_whitespace(arg, argend);
+
+	arg = argstring = memacpy(arg, argend - arg);
+	if (!argstring)
+		return gettext("Out of memory");
+
+	remote_argc = 0;
+	do {
+		unsigned char *start, *end;
+
+		if (remote_argc > sizeof_array(remote_argv)) {
+			mem_free(argstring);
+			return gettext("Too many arguments");
+		}
+
+		/* Skip parenthesis, comma, and surrounding whitespace. */
+		skip_space(arg);
+		start = arg;
+
+		if (*start == '"') {
+			end = ++start;
+			while ((end = strchr(end, '"'))) {
+				/* Treat "" inside quoted arg as ". */
+				if (end[1] != '"')
+					break;
+
+				end += 2;
+			}
+
+			if (!end)
+				return gettext("Mismatched ending argument quoting");
+
+			arg = end + 1;
+			skip_space(arg);
+			if (*arg && *arg != ',')
+				return gettext("Garbage after quoted argument");
+
+			remote_argv[remote_argc++] = start;
+			*end = 0;
+
+			/* Unescape "" to ". */
+			for (end = start; *end; start++, end++) {
+				*start = *end;
+				if (*end == '"')
+					end++;
+			}
+			*start = 0;
+
+		} else {
+			end = strchr(start, ',');
+			if (!end)
+				end = start + strlen(start);
+			arg = end;
+			skipback_whitespace(start, end);
+
+			if (start != end)
+				remote_argv[remote_argc++] = start;
+			*end = 0;
+		}
+
+		if (*arg == ',')
+			arg++;
+	} while (*arg);
 
 	for (method = 0; remote_methods[method].name; method++) {
 		unsigned char *name = remote_methods[method].name;
@@ -260,15 +321,14 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	switch (remote_methods[method].type) {
 	case REMOTE_METHOD_OPENURL:
-		if (arg == argend) {
+		if (remote_argc < 1) {
 			/* Prompt for a URL with a dialog box */
 			remote_session_flags |= SES_REMOTE_PROMPT_URL;
 			break;
 		}
 
-		len = strcspn(arg, ",)");
-		if (arg[len] == ',') {
-			unsigned char *where = arg + len + 1;
+		if (remote_argc == 2) {
+			unsigned char *where = remote_argv[1];
 
 			if (strstr(where, "new-window")) {
 				remote_session_flags |= SES_REMOTE_NEW_WINDOW;
@@ -286,24 +346,14 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 			remote_session_flags |= SES_REMOTE_CURRENT_TAB;
 		}
 
-		while (len > 0 && isspace(arg[len - 1])) len--;
-
-		if (len > 1) {
-			/* Skip possible string delimiters. Atleast urlview
-			 * seems to add them. */
-			if ((arg[0] == '\'' && arg[len - 1] == '\'')
-			    || (arg[0] == '"' && arg[len - 1] == '"'))
-				arg++, len -= 2;
-		}
-
-		if (len) remote_url = memacpy(arg, len);
-
+		remote_url = stracpy(remote_argv[0]);
 		break;
 
 	case REMOTE_METHOD_XFEDOCOMMAND:
-		len = argend - arg;
+		if (remote_argc < 1)
+			break;
 
-		if (!strlcasecmp(arg, len, "openBrowser", 11)) {
+		if (!strcasecmp(remote_argv[0], "openBrowser")) {
 			remote_session_flags = SES_REMOTE_NEW_WINDOW;
 		}
 		break;
@@ -313,14 +363,16 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		break;
 
 	case REMOTE_METHOD_ADDBOOKMARK:
-		if (arg == argend) break;
-		remote_url = memacpy(arg, argend - arg);
+		if (remote_argc < 1)
+			break;
+		remote_url = stracpy(remote_argv[0]);
 		remote_session_flags = SES_REMOTE_ADD_BOOKMARK;
 		break;
 
 	case REMOTE_METHOD_INFOBOX:
-		if (arg == argend) break;
-		remote_url = memacpy(arg, argend - arg);
+		if (remote_argc < 1)
+			break;
+		remote_url = stracpy(remote_argv[0]);
 		if (remote_url)
 			insert_in_string(&remote_url, 0, "about:", 6);
 		remote_session_flags = SES_REMOTE_INFO_BOX;
@@ -329,6 +381,8 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 	case REMOTE_METHOD_NOT_SUPPORTED:
 		break;
 	}
+
+	mem_free(argstring);
 
 	/* If no flags was applied it can only mean we are dealing with
 	 * unknown method. */
