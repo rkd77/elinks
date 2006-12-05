@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-29 12:53+0100\n"
-"PO-Revision-Date: 2006-01-11 00:40+0100\n"
+"PO-Revision-Date: 2006-12-05 20:35+0100\n"
 "Last-Translator: Adam Golebiowski <adamg@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -397,7 +397,7 @@ msgstr "Czy usun±æ zaznaczone zak³adki?"
 #: src/bookmarks/dialogs.c:129
 #, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Czy skasowaæ folder \"%s\" i znajduj±ce siê wnim zak³adki?"
+msgstr "Czy skasowaæ folder \"%s\" i znajduj±ce siê w nim zak³adki?"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:131
@@ -407,7 +407,7 @@ msgstr "Skasuj zak³adkê"
 #. delete_item
 #: src/bookmarks/dialogs.c:133
 msgid "Delete this bookmark?"
-msgstr "Czy skasowac t± zak³adkê?"
+msgstr "Czy skasowaæ t± zak³adkê?"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:135
@@ -1280,7 +1280,7 @@ msgid ""
 "The ID maps to information that will be used when creating the\n"
 "new instance. You don't want to use it."
 msgstr ""
-"U¿ywane wewnêtrznie podczas otwierania instacji ELinksa w nowych oknach.\n"
+"U¿ywane wewnêtrznie podczas otwierania instancji ELinksa w nowych oknach.\n"
 "ID jest mapowane do informacji u¿ywanej podczas tworzenia nowej\n"
 "instancji. Nie chcesz tego u¿ywaæ."
 
@@ -1574,7 +1574,7 @@ msgstr ""
 "numerze nie istnieje, to jest tworzony i bie¿±ca sesja staje siê sesj±\n"
 "nadrzêdn± (co zwykle nie ma wiêkszego znaczenia dla Ciebie jako\n"
 "zwyk³ego u¿ytkownika). Wiedz, ¿e normalnie nie bêdziesz chcia³ tego\n"
-"u¿ywaæ, dopóki nie jeste¶ developerem i chcesz zrobiæ parê testów.\n"
+"u¿ywaæ, dopóki nie jeste¶ deweloperem i chcesz zrobiæ parê testów.\n"
 "Je¶li chcesz oddzielne instancje raczej u¿yj -no-connect w linii\n"
 "komend. Wiedz, ¿e normalnie ¿adne pliki stanu nie s± zapisywane\n"
 "na dysk, gdy ta opcja jest u¿yta. Zobacz tak¿e -touch-files."
@@ -1640,7 +1640,7 @@ msgstr ""
 "## je¶li sobie tego ¿yczysz; plik ten jest edytowany przez ELinksa\n"
 "## gdy zapisujesz konfiguracjê poprzez menad¿era ustawieñ, jednak\n"
 "## tylko warto¶ci opcji bêd± zmienione a formatowanie, komentarze\n"
-"## itp. pozostan± niezmienione.\n"
+"## i.t.p. pozostan± niezmienione.\n"
 
 #: src/config/conf.c:728
 msgid ""
@@ -2297,7 +2297,6 @@ msgid "External editor"
 msgstr "Zewnêtrzny edytor"
 
 #: src/config/options.inc:195
-#, fuzzy
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
@@ -2306,10 +2305,10 @@ msgid ""
 "default to \"vi\"."
 msgstr ""
 "¦cie¿ka do programu, który ELinks powinien uruchomiæ, gdy\n"
-"u¿ytkownik zechce edytowaæ pole tekstowe przy u¿yciu\n"
+"u¿ytkownik zechce modyfikowaæ pole tekstowe przy u¿yciu\n"
 "zewnêtrznego edytora.\n"
 "\n"
-"Je¶li nieustawione, ELinks u¿yje warto¶ci zmiennej\n"
+"Je¶li jest nieustawione, ELinks u¿yje warto¶ci zmiennej\n"
 "¶rodowiskowej $EDITOR. Gdy $EDITOR jest pusty albo\n"
 "nieustawiony, ELinks u¿yje \"vi\"."
 
@@ -2405,7 +2404,7 @@ msgid ""
 msgstr ""
 "Maksymalna d³ugo¶æ etykiety obrazka (alt/title):\n"
 "0   -  zawsze wy¶wietlaj pe³n± etykietê\n"
-"1-500 - wy¶wietlaj eytkietê o takiej maksymalnej d³ugo¶ci;\n"
+"1-500 - wy¶wietlaj etykietê o takiej maksymalnej d³ugo¶ci;\n"
 "      je¶li nazwa jest d³u¿sza, ¶rodek jest zastêpowany\n"
 "      gwiazdkami"
 
@@ -2546,7 +2545,7 @@ msgstr "Numerowanie odno¶ników"
 
 #: src/config/options.inc:306
 msgid "Display numbers next to the links."
-msgstr "Czy wy¶wietlaæ liczby z prawej strony odno¶ników."
+msgstr "Czy wy¶wietlaæ numery odno¶ników."
 
 #: src/config/options.inc:308
 msgid "Handling of target=_blank"
@@ -2591,7 +2590,7 @@ msgstr "Zg³aszanie brakuj±cych fragmentów"
 msgid "Open a message box when document has no tag with given id."
 msgstr ""
 "Czy otwieraæ okienko dialogowe z raportem, je¶li dokument nie posiada "
-"zniacznika z podanym id."
+"znacznika z podanym id."
 
 #: src/config/options.inc:334
 msgid "Number keys select links"
@@ -2672,7 +2671,7 @@ msgid ""
 "operations."
 msgstr ""
 "Czy zezwoliæ na poziome przewijanie w przypadku, gdy\n"
-"dokukment nie jest wiêkszy ni¿ szeroko¶æ ekranu. Przydatne\n"
+"dokument nie jest wiêkszy ni¿ szeroko¶æ ekranu. Przydatne\n"
 "przy operacjach kopiowania/wklejania."
 
 #: src/config/options.inc:371
@@ -3199,7 +3198,7 @@ msgid ""
 "Codepage used in dump output. 'System' stands for\n"
 "a codepage determined by a selected locale."
 msgstr ""
-"Strona kodowa u¿yta podczasu zrzutu. 'System' oznacza\n"
+"Strona kodowa u¿yta podczas zrzutu. 'System' oznacza\n"
 "i¿ zostanie okre¶lona przez wybrane locale."
 
 #: src/config/options.inc:634
@@ -3274,7 +3273,7 @@ msgstr "Czy pamiêtaæ historiê powrotów."
 #
 #: src/config/options.inc:670
 msgid "HTML rendering"
-msgstr "Renderowanie HTML-a"
+msgstr "Formatowanie HTML-a"
 
 #: src/config/options.inc:672
 msgid "Options concerning the display of HTML pages."
@@ -3320,7 +3319,7 @@ msgstr "Pokazuj indeks górny (jako ^co¶)."
 
 #: src/config/options.inc:690
 msgid "Rendering of html link element"
-msgstr "Renderowanie elementu odno¶nika html"
+msgstr "Wy¶wietlanie elementu odno¶nika html"
 
 #: src/config/options.inc:692
 msgid ""
@@ -3332,7 +3331,7 @@ msgid ""
 "4 is type in addition\n"
 "5 is everything"
 msgstr ""
-"W jaki sposób renderowaæ znaczniki <link> w nag³ówku HTML:\n"
+"W jaki sposób pokazywaæ znaczniki <link> w nag³ówku HTML:\n"
 "0 - w ogóle\n"
 "1 - tytu³\n"
 "2 - dodatkowo nazwa\n"
@@ -3365,7 +3364,7 @@ msgstr ""
 #
 #: src/config/options.inc:711
 msgid "Plain rendering"
-msgstr "Renderowanie zwyk³ego tekstu"
+msgstr "Formatowanie zwyk³ego tekstu"
 
 #: src/config/options.inc:713
 msgid "Options concerning the display of plain text pages."
@@ -3398,7 +3397,6 @@ msgid "Rules for passing URIs to external commands."
 msgstr "Zasady przekazywania URI do zewnêtrznych poleceñ."
 
 #: src/config/options.inc:730
-#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
@@ -3411,7 +3409,7 @@ msgstr ""
 "%c w ³añcuchu oznacza bie¿±cy URL\n"
 "%% w ³añcuchu oznacza '%'\n"
 "\n"
-"Nie dodawaj apostrofów lub cudzys³owiów wokó³ %c."
+"Nie dodawaj apostrofów lub cudzys³owów wokó³ %c."
 
 #. Keep options in alphabetical order.
 #: src/config/options.inc:740
@@ -3611,7 +3609,7 @@ msgid ""
 "'System' stands for a codepage determined by a selected locale."
 msgstr ""
 "Strona kodowa u¿ywana do wy¶wietlania na terminalu.\n"
-"'System' oznacza i¿ zostanie okreslona przez wybrane locale."
+"'System' oznacza i¿ zostanie okre¶lona przez wybrane locale."
 
 #. Keep options in alphabetical order.
 #: src/config/options.inc:840
@@ -4453,7 +4451,7 @@ msgstr ""
 "nienarodowych domen (zamiast zwykle dwóch). Niektóre\n"
 "kraje posiadaj± domeny ogólnego u¿ytku drugiego poziomu\n"
 "(np. .com.pl, .co.uk) i zezwolenie stronom na ustawienie\n"
-"ciasteczka dla tych domen mo¿e byæ niebzpiecznie.\n"
+"ciasteczka dla tych domen mo¿e byæ niebezpiecznie.\n"
 "Domy¶lnie ta opcja jest wy³±czona, poniewa¿ powoduje\n"
 "b³êdy na wielu stronach."
 
@@ -4748,7 +4746,7 @@ msgid "Copying"
 msgstr "Kopiowanie"
 
 #: src/dialogs/info.c:142
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
@@ -4766,12 +4764,12 @@ msgstr ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "i inni\n"
 "\n"
-"Niniejszy program jest oprogramowaniem wolnodostêpnym; mo¿esz go "
+"Niniejszy program jest oprogramowaniem wolnodostêpnym; mo¿na go "
 "rozprowadzaæ dalej i/lub modyfikowaæ na warunkach GPL GNU, wydanej przez "
-"Free Software Foundation - wed³ug wersji 2-giej tej Licencji."
+"Free Software Foundation - wed³ug wersji 2. tej Licencji."
 
 #: src/dialogs/info.c:170 src/dialogs/info.c:275
 msgid "Resources"
@@ -5492,7 +5490,6 @@ msgid "Ignore <noscript> content"
 msgstr "Ignoruj zawarto¶æ <noscript>"
 
 #: src/ecmascript/ecmascript.c:50
-#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -5589,7 +5586,7 @@ msgstr "Czy usun±æ ten formularz?"
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
 msgid "Clear all forms"
-msgstr "Skasowanie wszystkich formualrzy"
+msgstr "Skasowanie wszystkich formularzy"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:142
@@ -6423,7 +6420,7 @@ msgstr ""
 "Ten URL zawiera protokó³ nie obs³ugiwany natywnie przez\n"
 "ELinks co oznacza i¿ ELinks bêdzie polega³ na zewnêtrznym\n"
 "programie do jego obs³ugi. ¦ci±ganie URLi za pomoc±\n"
-"zewnêtrznyc programów nie jest w tej chwili wspierane."
+"zewnêtrznych programów nie jest w tej chwili wspierane."
 
 #: src/network/state.c:70
 msgid "Bad HTTP response"
@@ -6690,7 +6687,7 @@ msgstr "Zakres portów na którym mo¿na nas³uchiwaæ"
 
 #: src/protocol/bittorrent/bittorrent.c:38
 msgid "Minimum port"
-msgstr "Minumalny numer portów"
+msgstr "Minimalny numer portów"
 
 #: src/protocol/bittorrent/bittorrent.c:40
 msgid "The minimum port to try and listen on."
@@ -6732,7 +6729,7 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:61
 msgid "Tracker announce interval"
-msgstr "Czêstotliwo¶æ rozg³aszania tackera"
+msgstr "Czêstotliwo¶æ rozg³aszania trackera"
 
 #: src/protocol/bittorrent/bittorrent.c:63
 msgid ""
@@ -6832,7 +6829,7 @@ msgstr ""
 "Maksymalna liczba dozwolonych po³±czeñ zarówno z aktywnymi jak\n"
 "i nieaktywnymi partnerami. Zwiêkszaj±c tê liczbê zwiêksza siê\n"
 "szansê znalezienia dobrych partnerów do pobierania.\n"
-"Jednak zbyt wiele po³±czeñ mo¿e prowadziæ do przytkanai TCP.\n"
+"Jednak zbyt wiele po³±czeñ mo¿e prowadziæ do przytkania TCP.\n"
 "Po osi±gniêciu maksimum wszystkie nowe przychodz±ce po³±czenia\n"
 "bêd± zamykane."
 
@@ -6862,7 +6859,7 @@ msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:120
 msgid "Length of requests"
-msgstr "D³ugo¶æ ¿adañ"
+msgstr "D³ugo¶æ ¿±dañ"
 
 #: src/protocol/bittorrent/bittorrent.c:122
 msgid ""
@@ -7017,7 +7014,7 @@ msgid ""
 "room for stealing bandwidth."
 msgstr ""
 "Liczba sekund miêdzy uaktualnieniami stanu po³±czenia i, co bardziej\n"
-"istotne, przyt³umaniem lub odt³umianiem po³±czeñ z partnerami.\n"
+"istotne, przyt³umianiem lub odt³umianiem po³±czeñ z partnerami.\n"
 "Okres ten powinien byæ wystarczaj±co du¿y dla nowo odt³umionych\n"
 "po³±czeñ, aby siê zaczê³y, ale wystarczaj±co ma³y, aby nie pozwoliæ\n"
 "wolnym je¼d¼com wykra¶æ zbyt du¿o pasma."
@@ -7120,9 +7117,9 @@ msgstr "Partnerzy"
 #, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "%d po³±czenie"
-msgstr[1] "%d po³±czenia"
-msgstr[2] "%d po³±czeñ"
+msgstr[0] "%u po³±czenie"
+msgstr[1] "%u po³±czenia"
+msgstr[2] "%u po³±czeñ"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7136,9 +7133,9 @@ msgstr[2] "%u karmi±cych"
 #, c-format
 msgid "%u available"
 msgid_plural "%u available"
-msgstr[0] "%d dostêpny"
-msgstr[1] "%d dostêpne"
-msgstr[2] "%d dostêpnych"
+msgstr[0] "%u dostêpny"
+msgstr[1] "%u dostêpne"
+msgstr[2] "%u dostêpnych"
 
 #: src/protocol/bittorrent/dialogs.c:340
 msgid "Swarm info"
@@ -7360,24 +7357,20 @@ msgstr "Finger"
 
 #. name:
 #: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
-#, fuzzy
 msgid "FSP"
-msgstr "FTP"
+msgstr "FSP"
 
 #: src/protocol/fsp/fsp.c:46
-#, fuzzy
 msgid "FSP specific options."
-msgstr "Opcje dotycz±ce protoko³u FTP."
+msgstr "Opcje dotycz±ce protoko³u FSP."
 
 #: src/protocol/fsp/fsp.c:48
-#, fuzzy
 msgid "Sort entries"
-msgstr "Inteligentne przedrostki"
+msgstr "Sortowanie wpisów"
 
 #: src/protocol/fsp/fsp.c:50
-#, fuzzy
 msgid "Whether to sort entries in directory listings."
-msgstr "Pokazuj ukryte pliki przy wy¶wietlaniu katalogów"
+msgstr "Czy sortowaæ wpisy przy wy¶wietlania katalogu."
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
@@ -8526,6 +8519,3 @@ msgstr "B³±d zapisu"
 #: src/viewer/text/view.c:1289
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
-
-#~ msgid "~Clear"
-#~ msgstr "Wy~czy¶æ"
