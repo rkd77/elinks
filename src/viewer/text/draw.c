@@ -47,29 +47,42 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
 	struct uri *uri = doc_view->vs->uri;
-	int vy = find_tag(document, uri->fragment, uri->fragmentlen);
+	int vy;
+	struct string fragment;
 
+	assert(uri->fragmentlen);
+
+	if (!init_string(&fragment)) return -2;
+	if (!add_uri_to_string(&fragment, uri, URI_FRAGMENT)) {
+		done_string(&fragment);
+		return -2;
+	}
+	decode_uri_string(&fragment);
+	assert(fragment.length);
+	assert(*fragment.source);
+
+	/* Omit the leading '#' when calling find_tag. */
+	vy = find_tag(document, fragment.source + 1, fragment.length - 1);
 	if (vy == -1) {
 		struct cache_entry *cached = find_in_cache(document->uri);
-		unsigned char *fragment;
 
-		if (!cached || cached->incomplete || cached->id != document->id)
+		if (!cached || cached->incomplete || cached->id != document->id) {
+			done_string(&fragment);
 			return -2;
-
-		fragment = memacpy(uri->fragment, uri->fragmentlen);
+		}
 
 		if (get_opt_bool("document.browse.links.missing_fragment")) {
 			info_box(ses->tab->term, MSGBOX_FREE_TEXT,
 			 N_("Missing fragment"), ALIGN_CENTER,
 			 msg_text(ses->tab->term, N_("The requested fragment "
-				  "\"#%s\" doesn't exist."),
-				  fragment));
+				  "\"%s\" doesn't exist."),
+				  fragment.source));
 		}
-
-		mem_free_if(fragment);
 	} else {
 		int_bounds(&vy, 0, document->height - 1);
 	}
+
+	done_string(&fragment);
 
 	return vy;
 }
