@@ -30,10 +30,14 @@ smjs_globhist_item_finalize(JSContext *ctx, JSObject *obj)
 	if (history_item) object_unlock(history_item);
 }
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in global_history_item[-1];
+ * future future versions of ELinks may change the numbers.  */
 enum smjs_globhist_item_prop {
-	GLOBHIST_TITLE,
-	GLOBHIST_URL,
-	GLOBHIST_LAST_VISIT,
+	GLOBHIST_TITLE      = -1,
+	GLOBHIST_URL        = -2,
+	GLOBHIST_LAST_VISIT = -3,
 };
 
 static const JSPropertySpec smjs_globhist_item_props[] = {

@@ -66,23 +66,27 @@ static const JSClass input_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in input[-1];
+ * future versions of ELinks may change the numbers.  */
 enum input_prop {
-	JSP_INPUT_ACCESSKEY,
-	JSP_INPUT_ALT,
-	JSP_INPUT_CHECKED,
-	JSP_INPUT_DEFAULT_CHECKED,
-	JSP_INPUT_DEFAULT_VALUE,
-	JSP_INPUT_DISABLED,
-	JSP_INPUT_FORM,
-	JSP_INPUT_MAX_LENGTH,
-	JSP_INPUT_NAME,
-	JSP_INPUT_READONLY,
-	JSP_INPUT_SELECTED_INDEX,
-	JSP_INPUT_SIZE,
-	JSP_INPUT_SRC,
-	JSP_INPUT_TABINDEX,
-	JSP_INPUT_TYPE,
-	JSP_INPUT_VALUE
+	JSP_INPUT_ACCESSKEY       = -1,
+	JSP_INPUT_ALT             = -2,
+	JSP_INPUT_CHECKED         = -3,
+	JSP_INPUT_DEFAULT_CHECKED = -4,
+	JSP_INPUT_DEFAULT_VALUE   = -5,
+	JSP_INPUT_DISABLED        = -6,
+	JSP_INPUT_FORM            = -7,
+	JSP_INPUT_MAX_LENGTH      = -8,
+	JSP_INPUT_NAME            = -9,
+	JSP_INPUT_READONLY        = -10,
+	JSP_INPUT_SELECTED_INDEX  = -11,
+	JSP_INPUT_SIZE            = -12,
+	JSP_INPUT_SRC             = -13,
+	JSP_INPUT_TABINDEX        = -14,
+	JSP_INPUT_TYPE            = -15,
+	JSP_INPUT_VALUE           = -16,
 };
 
 /* XXX: Some of those are marked readonly just because we can't change them
@@ -575,9 +579,13 @@ static const JSFunctionSpec form_elements_funcs[] = {
 	{ NULL }
 };
 
-/* INTs from 0 up are equivalent to item(INT), so we have to stuff length out
- * of the way. */
-enum form_elements_prop { JSP_FORM_ELEMENTS_LENGTH = -1 };
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (elements[INT] for INT>=0 is equivalent to
+ * elements.item(INT)).  ECMAScript code should not use these directly
+ * as in elements[-1]; future versions of ELinks may change the numbers.  */
+enum form_elements_prop {
+	JSP_FORM_ELEMENTS_LENGTH = -1,
+};
 static const JSPropertySpec form_elements_props[] = {
 	{ "length",	JSP_FORM_ELEMENTS_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY},
 	{ NULL }
@@ -764,14 +772,18 @@ static const JSClass form_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in form[-1];
+ * future versions of ELinks may change the numbers.  */
 enum form_prop {
-	JSP_FORM_ACTION,
-	JSP_FORM_ELEMENTS,
-	JSP_FORM_ENCODING,
-	JSP_FORM_LENGTH,
-	JSP_FORM_METHOD,
-	JSP_FORM_NAME,
-	JSP_FORM_TARGET
+	JSP_FORM_ACTION   = -1,
+	JSP_FORM_ELEMENTS = -2,
+	JSP_FORM_ENCODING = -3,
+	JSP_FORM_LENGTH   = -4,
+	JSP_FORM_METHOD   = -5,
+	JSP_FORM_NAME     = -6,
+	JSP_FORM_TARGET   = -7,
 };
 
 static const JSPropertySpec form_props[] = {
@@ -1114,9 +1126,13 @@ const JSFunctionSpec forms_funcs[] = {
 	{ NULL }
 };
 
-/* INTs from 0 up are equivalent to item(INT), so we have to stuff length out
- * of the way. */
-enum forms_prop { JSP_FORMS_LENGTH = -1 };
+/* Tinyids of properties.  Use negative values to distinguish these from
+ * array indexes (forms[INT] for INT>=0 is equivalent to forms.item(INT)).
+ * ECMAScript code should not use these directly as in forms[-1];
+ * future versions of ELinks may change the numbers.  */
+enum forms_prop {
+	JSP_FORMS_LENGTH = -1,
+};
 const JSPropertySpec forms_props[] = {
 	{ "length",	JSP_FORMS_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY},
 	{ NULL }

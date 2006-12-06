@@ -65,7 +65,13 @@ const JSClass statusbar_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-enum unibar_prop { JSP_UNIBAR_VISIBLE };
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in menubar[-1];
+ * future versions of ELinks may change the numbers.  */
+enum unibar_prop {
+	JSP_UNIBAR_VISIBLE = -1,
+};
 const JSPropertySpec unibar_props[] = {
 	{ "visible",	JSP_UNIBAR_VISIBLE,	JSPROP_ENUMERATE },
 	{ NULL }

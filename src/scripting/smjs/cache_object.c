@@ -16,12 +16,16 @@
 
 static const JSClass cache_entry_class; /* defined below */
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in cache_entry[-1];
+ * future versions of ELinks may change the numbers.  */
 enum cache_entry_prop {
-	CACHE_ENTRY_CONTENT,
-	CACHE_ENTRY_TYPE,
-	CACHE_ENTRY_LENGTH,
-	CACHE_ENTRY_HEAD,
-	CACHE_ENTRY_URI,
+	CACHE_ENTRY_CONTENT = -1,
+	CACHE_ENTRY_TYPE    = -2,
+	CACHE_ENTRY_LENGTH  = -3,
+	CACHE_ENTRY_HEAD    = -4,
+	CACHE_ENTRY_URI     = -5,
 };
 
 static const JSPropertySpec cache_entry_props[] = {

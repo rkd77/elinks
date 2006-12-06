@@ -54,15 +54,19 @@ const JSClass navigator_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in navigator[-1];
+ * future versions of ELinks may change the numbers.  */
 enum navigator_prop {
-	JSP_NAVIGATOR_APP_CODENAME,
-	JSP_NAVIGATOR_APP_NAME,
-	JSP_NAVIGATOR_APP_VERSION,
-	JSP_NAVIGATOR_LANGUAGE,
-	/* JSP_NAVIGATOR_MIME_TYPES, */
-	JSP_NAVIGATOR_PLATFORM,
-	/* JSP_NAVIGATOR_PLUGINS, */
-	JSP_NAVIGATOR_USER_AGENT,
+	JSP_NAVIGATOR_APP_CODENAME = -1,
+	JSP_NAVIGATOR_APP_NAME     = -2,
+	JSP_NAVIGATOR_APP_VERSION  = -3,
+	JSP_NAVIGATOR_LANGUAGE     = -4,
+	/* JSP_NAVIGATOR_MIME_TYPES = -5, */
+	JSP_NAVIGATOR_PLATFORM     = -6,
+	/* JSP_NAVIGATOR_PLUGINS   = -7, */
+	JSP_NAVIGATOR_USER_AGENT   = -8,
 };
 const JSPropertySpec navigator_props[] = {
 	{ "appCodeName",	JSP_NAVIGATOR_APP_CODENAME,	JSPROP_ENUMERATE | JSPROP_READONLY },

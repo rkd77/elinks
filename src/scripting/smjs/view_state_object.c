@@ -22,9 +22,13 @@
 
 static const JSClass view_state_class; /* defined below */
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in view_state[-1];
+ * future versions of ELinks may change the numbers.  */
 enum view_state_prop {
-	VIEW_STATE_PLAIN,
-	VIEW_STATE_URI,
+	VIEW_STATE_PLAIN = -1,
+	VIEW_STATE_URI   = -2,
 };
 
 static const JSPropertySpec view_state_props[] = {

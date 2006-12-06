@@ -56,12 +56,16 @@ const JSClass window_class = {
 };
 
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in window[-1];
+ * future versions of ELinks may change the numbers.  */
 enum window_prop {
-	JSP_WIN_CLOSED,
-	JSP_WIN_PARENT,
-	JSP_WIN_SELF,
-	JSP_WIN_STATUS,
-	JSP_WIN_TOP,
+	JSP_WIN_CLOSED = -1,
+	JSP_WIN_PARENT = -2,
+	JSP_WIN_SELF   = -3,
+	JSP_WIN_STATUS = -4,
+	JSP_WIN_TOP    = -5,
 };
 /* "location" is special because we need to simulate "location.href"
  * when the code is asking directly for "location". We do not register

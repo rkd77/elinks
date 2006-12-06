@@ -136,7 +136,13 @@ const JSClass location_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-enum location_prop { JSP_LOC_HREF };
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in location[-1];
+ * future versions of ELinks may change the numbers.  */
+enum location_prop {
+	JSP_LOC_HREF = -1,
+};
 const JSPropertySpec location_props[] = {
 	{ "href",	JSP_LOC_HREF,	JSPROP_ENUMERATE },
 	{ NULL }

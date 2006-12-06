@@ -59,10 +59,14 @@ bookmark_finalize(JSContext *ctx, JSObject *obj)
 
 /*** bookmark object ***/
 
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in bookmark[-1];
+ * future versions of ELinks may change the numbers.  */
 enum bookmark_prop {
-	BOOKMARK_TITLE,
-	BOOKMARK_URL,
-	BOOKMARK_CHILDREN,
+	BOOKMARK_TITLE    = -1,
+	BOOKMARK_URL      = -2,
+	BOOKMARK_CHILDREN = -3,
 };
 
 static const JSPropertySpec bookmark_props[] = {

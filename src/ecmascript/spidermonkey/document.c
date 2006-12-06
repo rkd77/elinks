@@ -59,7 +59,16 @@ const JSClass document_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-enum document_prop { JSP_DOC_LOC, JSP_DOC_REF, JSP_DOC_TITLE, JSP_DOC_URL };
+/* Tinyids of properties.  Use negative values to distinguish these
+ * from array indexes (even though this object has no array elements).
+ * ECMAScript code should not use these directly as in document[-1];
+ * future versions of ELinks may change the numbers.  */
+enum document_prop {
+	JSP_DOC_LOC   = -1,
+	JSP_DOC_REF   = -2,
+	JSP_DOC_TITLE = -3,
+	JSP_DOC_URL   = -4,
+};
 /* "cookie" is special; it isn't a regular property but we channel it to the
  * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 const JSPropertySpec document_props[] = {
