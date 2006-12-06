@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-29 12:53+0100\n"
-"PO-Revision-Date: 2006-12-05 20:35+0100\n"
+"PO-Revision-Date: 2006-12-06 11:01+0100\n"
 "Last-Translator: Adam Golebiowski <adamg@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -407,7 +407,7 @@ msgstr "Skasuj zak³adkê"
 #. delete_item
 #: src/bookmarks/dialogs.c:133
 msgid "Delete this bookmark?"
-msgstr "Czy skasowaæ t± zak³adkê?"
+msgstr "Czy skasowaæ tê zak³adkê?"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:135
