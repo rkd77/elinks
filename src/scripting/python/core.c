@@ -96,21 +96,27 @@ end:
 static int
 set_python_search_path(void)
 {
-	struct string new_python_path, *okay;
+	struct string new_python_path;
 	unsigned char *old_python_path;
 	int result = -1;
 
 	if (!init_string(&new_python_path)) return result;
 
+	if (elinks_home && !add_format_to_string(&new_python_path, "%s%c",
+						 elinks_home, DELIM))
+		goto end;
+
+	if (!add_to_string(&new_python_path, CONFDIR))
+		goto end;
+
 	old_python_path = (unsigned char *) getenv("PYTHONPATH");
-	if (old_python_path)
-		okay = add_format_to_string(&new_python_path, "%s%c%s%c%s",
-					    elinks_home, DELIM, CONFDIR,
-					    DELIM, old_python_path);
-	else
-		okay = add_format_to_string(&new_python_path, "%s%c%s",
-					    elinks_home, DELIM, CONFDIR);
-	if (okay) result = env_set("PYTHONPATH", new_python_path.source, -1);
+	if (old_python_path && !add_format_to_string(&new_python_path, "%c%s",
+						     DELIM, old_python_path))
+		goto end;
+
+	result = env_set("PYTHONPATH", new_python_path.source, -1);
+
+end:
 	done_string(&new_python_path);
 	return result;
 }
@@ -140,7 +146,8 @@ error -- Errors internal to ELinks.\n\
 \n\
 Other public objects:\n\
 \n\
-home -- A string containing the pathname of the ~/.elinks directory.\n");
+home -- A string containing the pathname of the ~/.elinks directory, or\n\
+        None if ELinks has no configuration directory.\n");
 
 void
 init_python(struct module *module)
@@ -165,7 +172,9 @@ init_python(struct module *module)
 	elinks_module = Py_InitModule3("elinks", NULL, module_doc);
 	if (!elinks_module) goto python_error;
 
-	if (PyModule_AddStringConstant(elinks_module, "home", elinks_home) != 0)
+	/* If @elinks_home is NULL, Py_BuildValue() returns a None reference. */
+	if (PyModule_AddObject(elinks_module, "home",
+			       Py_BuildValue("s", elinks_home)) != 0)
 		goto python_error;
 
 	python_elinks_err = PyErr_NewException("elinks.error", NULL, NULL);

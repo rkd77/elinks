@@ -112,7 +112,8 @@ DESCRIPTION
     
     Other public objects:
     
-    home -- A string containing the pathname of the ~/.elinks directory.
+    home -- A string containing the pathname of the ~/.elinks directory, or
+            None if ELinks has no configuration directory.
 
 FUNCTIONS
     bind_key(...)

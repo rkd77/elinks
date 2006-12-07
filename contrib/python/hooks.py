@@ -221,6 +221,9 @@ class feedreader:
 
     def __init__(self, feeds=my_favorite_feeds):
         """Constructor."""
+        if elinks.home is None:
+            raise elinks.error("Cannot identify unread entries without "
+                               "a ~/.elinks configuration directory.")
         self._results = {}
         self._feeds = feeds
         for feed in feeds:
