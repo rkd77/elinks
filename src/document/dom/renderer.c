@@ -84,18 +84,6 @@ init_template(struct screen_char *template, struct document_options *options,
 		       options->color_flags, options->color_mode);
 }
 
-static inline struct css_property *
-get_css_property(struct list_head *list, enum css_property_type type)
-{
-	struct css_property *property;
-
-	foreach (property, *list)
-		if (property->type == type)
-			return property;
-
-	return NULL;
-}
-
 
 /* Checks the user CSS for properties for each DOM node type name */
 static inline void
@@ -160,39 +148,40 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 						     name->string, name->length);
 
 		if (selector) {
-			struct list_head *properties = &selector->properties;
 			struct css_property *property;
 
-			property = get_css_property(properties, CSS_PT_BACKGROUND_COLOR);
-			if (!property)
-				property = get_css_property(properties, CSS_PT_BACKGROUND);
+			foreach (property, selector->properties) {
+				switch (property->type) {
+				case CSS_PT_BACKGROUND_COLOR:
+				case CSS_PT_BACKGROUND:
+					if (property->value_type == CSS_VT_COLOR)
+						background = property->value.color;
+					break;
+				case CSS_PT_COLOR:
+					foreground = property->value.color;
+					break;
+				case CSS_PT_FONT_WEIGHT:
+					if (property->value.font_attribute.add & AT_BOLD)
+						attr |= SCREEN_ATTR_BOLD;
+					break;
+				case CSS_PT_FONT_STYLE:
+					if (property->value.font_attribute.add & AT_UNDERLINE)
+						attr |= SCREEN_ATTR_UNDERLINE;
 
-			if (property && property->value_type == CSS_VT_COLOR)
-				background = property->value.color;
-
-			property = get_css_property(properties, CSS_PT_COLOR);
-			if (property) foreground = property->value.color;
-
-			property = get_css_property(properties, CSS_PT_FONT_WEIGHT);
-			if (property) {
-				if (property->value.font_attribute.add & AT_BOLD)
-					attr |= SCREEN_ATTR_BOLD;
-			}
-
-			property = get_css_property(properties, CSS_PT_FONT_STYLE);
-			if (property) {
-				if (property->value.font_attribute.add & AT_UNDERLINE)
-					attr |= SCREEN_ATTR_UNDERLINE;
-
-				if (property->value.font_attribute.add & AT_ITALIC)
-					attr |= SCREEN_ATTR_ITALIC;
-
-			}
-
-			property = get_css_property(properties, CSS_PT_TEXT_DECORATION);
-			if (property) {
-				if (property->value.font_attribute.add & AT_UNDERLINE)
-					attr |= SCREEN_ATTR_UNDERLINE;
+					if (property->value.font_attribute.add & AT_ITALIC)
+						attr |= SCREEN_ATTR_ITALIC;
+					break;
+				case CSS_PT_TEXT_DECORATION:
+					if (property->value.font_attribute.add & AT_UNDERLINE)
+						attr |= SCREEN_ATTR_UNDERLINE;
+					break;
+				case CSS_PT_DISPLAY:
+				case CSS_PT_NONE:
+				case CSS_PT_TEXT_ALIGN:
+				case CSS_PT_WHITE_SPACE:
+				case CSS_PT_LAST:
+					break;
+				}
 			}
 		}
 
