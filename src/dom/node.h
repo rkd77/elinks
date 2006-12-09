@@ -1,4 +1,3 @@
-
 #ifndef EL_DOM_NODE_H
 #define EL_DOM_NODE_H
 

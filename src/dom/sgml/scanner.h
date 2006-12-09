@@ -1,4 +1,3 @@
-
 #ifndef EL_DOM_SGML_SCANNER_H
 #define EL_DOM_SGML_SCANNER_H
 

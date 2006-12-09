@@ -1,4 +1,3 @@
-
 #ifndef EL__DOM_CSS_SCANNER_H
 #define EL__DOM_CSS_SCANNER_H
 
