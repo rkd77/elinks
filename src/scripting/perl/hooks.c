@@ -44,6 +44,9 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
+#ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
+		STRLEN n_a;	/* Used by POPpx macro. */
+#endif
 		unsigned char *new_url = POPpx;
 
 		if (new_url) {
@@ -89,6 +92,9 @@ do_script_hook_follow_url(unsigned char **url)
 	if (SvTRUE(ERRSV)) count = 0;	/* FIXME: error message ? */
 	SPAGAIN;
 	if (count == 1) {
+#ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
+		STRLEN n_a;	/* Used by POPpx macro. */
+#endif
 		unsigned char *new_url = POPpx;
 
 		if (new_url) {
@@ -185,6 +191,9 @@ do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
 			(void) POPs;
 			mem_free_set(new_proxy_url, NULL);
 		} else {
+#ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
+			STRLEN n_a; /* Used by POPpx macro. */
+#endif
 			unsigned char *new_url = POPpx;
 
 			mem_free_set(new_proxy_url, stracpy(new_url));
