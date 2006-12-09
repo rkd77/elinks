@@ -200,6 +200,10 @@ done_cookie(struct cookie *c)
 	mem_free(c);
 }
 
+/* The cookie @c can be either in @cookies or in @cookie_queries.
+ * Because changes in @cookie_queries should not affect the cookie
+ * file, this function does not set @cookies_dirty.  Instead, the
+ * caller must do that if appropriate.  */
 void
 delete_cookie(struct cookie *c)
 {
