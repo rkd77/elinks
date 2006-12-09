@@ -58,8 +58,15 @@ struct c_domain {
 	unsigned char domain[1]; /* Must be at end of struct. */
 };
 
+/* List of domains for which there may be cookies.  This supposedly
+ * speeds up @send_cookies for other domains.  Each element is a
+ * struct c_domain.  No other data structures have pointers to these
+ * objects.  Currently the domains remain in the list until
+ * @done_cookies clears the whole list.  */
 static INIT_LIST_HEAD(c_domains);
 
+/* List of servers for which there are cookies.  Each element is a
+ * struct cookie_server.  */
 static INIT_LIST_HEAD(cookie_servers);
 
 static int cookies_dirty = 0;
