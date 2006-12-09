@@ -783,6 +783,21 @@ if test "$enable_perl" = "yes"; then
 		    cf_result=yes, cf_result=no)
 fi
 
+if test "$cf_result"; then AC_MSG_RESULT($cf_result); fi
+
+AC_MSG_CHECKING([whether POPpx works without an n_a variable])
+AC_TRY_COMPILE([
+#include <EXTERN.h>
+#include <perl.h>
+extern PerlInterpreter *my_perl;
+],
+	[dSP; (void) POPpx;],
+	[AC_MSG_RESULT([yes])
+AC_DEFINE([CONFIG_PERL_POPPX_WITHOUT_N_A], [1],
+		[Define if using Perl 5.8.8 or later, where the "POPpx" macro
+no longer needs an "n_a" variable like it did in 5.8.7])],
+	[AC_MSG_RESULT([no])])
+
 if test "$cf_result" != "yes"; then
 	EL_RESTORE_FLAGS
 else
@@ -793,7 +808,6 @@ else
 	AC_SUBST(PERL_CFLAGS)
 fi
 
-if test "$cf_result"; then AC_MSG_RESULT($cf_result); fi
 dnl ===================================================================
 dnl Check for Python
 dnl ===================================================================
