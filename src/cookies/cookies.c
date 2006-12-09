@@ -29,6 +29,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
+#include "main/select.h"
 #include "protocol/date.h"
 #include "protocol/header.h"
 #include "protocol/protocol.h"
@@ -62,6 +63,7 @@ static INIT_LIST_HEAD(c_domains);
 
 static INIT_LIST_HEAD(cookie_servers);
 
+/* Only @set_cookies_dirty may make this nonzero.  */
 static int cookies_dirty = 0;
 
 enum cookies_option {
@@ -468,7 +470,7 @@ accept_cookie(struct cookie *cookie)
 	}
 
 	add_to_list(cookies, cookie);
-	cookies_dirty = 1;
+	set_cookies_dirty();
 
 	/* XXX: This crunches CPU too. --pasky */
 	foreach (cd, c_domains)
@@ -482,9 +484,6 @@ accept_cookie(struct cookie *cookie)
 
 	memcpy(cd->domain, cookie->domain, domain_len + 1);
 	add_to_list(c_domains, cd);
-
-	if (get_cookies_save() && get_cookies_resave())
-		save_cookies();
 }
 
 #if 0
@@ -511,9 +510,6 @@ delete_cookie(struct cookie *c)
 end:
 	del_from_list(c);
 	done_cookie(c);
-
-	if (get_cookies_save() && get_cookies_resave())
-		save_cookies();
 }
 
 
@@ -641,7 +637,7 @@ send_cookies(struct uri *uri)
 #endif
 			delete_cookie(c);
 
-			cookies_dirty = 1;
+			set_cookies_dirty();
 			continue;
 		}
 
@@ -661,9 +657,6 @@ send_cookies(struct uri *uri)
 	}
 
 	mem_free(path);
-
-	if (cookies_dirty && get_cookies_save() && get_cookies_resave())
-		save_cookies();
 
 	if (!header.length) {
 		done_string(&header);
@@ -734,7 +727,7 @@ load_cookies(void) {
 		/* Skip expired cookies if any. */
 		expires = str_to_time_t(members[EXPIRES].pos);
 		if (!expires || expires <= now) {
-			cookies_dirty = 1;
+			set_cookies_dirty();
 			continue;
 		}
 
@@ -763,6 +756,30 @@ load_cookies(void) {
 
 	cookies_nosave = 0;
 	fclose(fp);
+}
+
+static void
+resave_cookies_bottom_half(void *always_null)
+{
+	if (get_cookies_save() && get_cookies_resave())
+		save_cookies();	/* checks cookies_dirty */
+}
+
+/* Note that the cookies have been modified, and register a bottom
+ * half for saving them if appropriate.  We use a bottom half so that
+ * if something makes multiple changes and calls this for each change,
+ * the cookies get saved only once at the end.  */
+void
+set_cookies_dirty(void)
+{
+	/* Do not check @cookies_dirty here.  If the previous attempt
+	 * to save cookies failed, @cookies_dirty can still be nonzero
+	 * even though @resave_cookies_bottom_half is no longer in the
+	 * queue.  */
+	cookies_dirty = 1;
+	/* If @resave_cookies_bottom_half is already in the queue,
+	 * @register_bottom_half does nothing.  */
+	register_bottom_half(resave_cookies_bottom_half, NULL);
 }
 
 void
