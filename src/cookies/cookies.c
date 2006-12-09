@@ -802,7 +802,7 @@ static void
 resave_cookies_bottom_half(void *always_null)
 {
 	if (get_cookies_save() && get_cookies_resave())
-		save_cookies();	/* checks cookies_dirty */
+		save_cookies(0); /* checks cookies_dirty */
 }
 
 /* Note that the cookies have been modified, and register a bottom
@@ -822,14 +822,18 @@ set_cookies_dirty(void)
 	register_bottom_half(resave_cookies_bottom_half, NULL);
 }
 
+/* @interactive is 1 if the user told ELinks to save cookies, or 0 if
+ * ELinks decided that on its own.  In the latter case, this function
+ * does not save the cookies if it thinks the file is already up to
+ * date.  */
 void
-save_cookies(void) {
+save_cookies(int interactive) {
 	struct cookie *c;
 	unsigned char *cookfile;
 	struct secure_save_info *ssi;
 	time_t now;
 
-	if (cookies_nosave || !elinks_home || !cookies_dirty
+	if (cookies_nosave || !elinks_home || !(cookies_dirty || interactive)
 	    || get_cmd_opt_bool("anonymous"))
 		return;
 
@@ -880,7 +884,7 @@ done_cookies(struct module *module)
 	free_list(c_domains);
 
 	if (!cookies_nosave && get_cookies_save())
-		save_cookies();
+		save_cookies(0);
 
 	free_cookies_list(&cookies);
 	free_cookies_list(&cookie_queries);

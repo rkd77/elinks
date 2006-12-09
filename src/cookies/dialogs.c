@@ -465,7 +465,7 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 static widget_handler_status_T
 push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
-	save_cookies();
+	save_cookies(1);
 	return EVENT_PROCESSED;
 }
 
