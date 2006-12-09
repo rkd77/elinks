@@ -29,6 +29,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
+#include "main/select.h"
 #include "protocol/date.h"
 #include "protocol/header.h"
 #include "protocol/protocol.h"
@@ -69,6 +70,7 @@ static INIT_LIST_HEAD(c_domains);
  * struct cookie_server.  */
 static INIT_LIST_HEAD(cookie_servers);
 
+/* Only @set_cookies_dirty may make this nonzero.  */
 static int cookies_dirty = 0;
 
 enum cookies_option {
@@ -207,6 +209,10 @@ done_cookie(struct cookie *c)
 	mem_free(c);
 }
 
+/* The cookie @c can be either in @cookies or in @cookie_queries.
+ * Because changes in @cookie_queries should not affect the cookie
+ * file, this function does not set @cookies_dirty.  Instead, the
+ * caller must do that if appropriate.  */
 void
 delete_cookie(struct cookie *c)
 {
@@ -498,11 +504,12 @@ accept_cookie(struct cookie *cookie)
 				continue;
 
 			delete_cookie(c);
+			/* @set_cookies_dirty will be called below.  */
 		}
 	}
 
 	add_to_list(cookies, cookie);
-	cookies_dirty = 1;
+	set_cookies_dirty();
 
 	/* XXX: This crunches CPU too. --pasky */
 	foreach (cd, c_domains)
@@ -516,9 +523,6 @@ accept_cookie(struct cookie *cookie)
 
 	memcpy(cd->domain, cookie->domain, domain_len + 1);
 	add_to_list(c_domains, cd);
-
-	if (get_cookies_save() && get_cookies_resave())
-		save_cookies();
 }
 
 #if 0
@@ -545,9 +549,6 @@ delete_cookie(struct cookie *c)
 end:
 	del_from_list(c);
 	done_cookie(c);
-
-	if (get_cookies_save() && get_cookies_resave())
-		save_cookies();
 }
 
 
@@ -573,6 +574,7 @@ reject_cookie(void *idp)
 	if (!c)	return;
 
 	delete_cookie(c);
+	set_cookies_dirty(); /* @find_cookie_id doesn't use @cookie_queries */
 }
 
 
@@ -675,7 +677,7 @@ send_cookies(struct uri *uri)
 #endif
 			delete_cookie(c);
 
-			cookies_dirty = 1;
+			set_cookies_dirty();
 			continue;
 		}
 
@@ -695,9 +697,6 @@ send_cookies(struct uri *uri)
 	}
 
 	mem_free(path);
-
-	if (cookies_dirty && get_cookies_save() && get_cookies_resave())
-		save_cookies();
 
 	if (!header.length) {
 		done_string(&header);
@@ -768,7 +767,7 @@ load_cookies(void) {
 		/* Skip expired cookies if any. */
 		expires = str_to_time_t(members[EXPIRES].pos);
 		if (!expires || expires <= now) {
-			cookies_dirty = 1;
+			set_cookies_dirty();
 			continue;
 		}
 
@@ -799,23 +798,82 @@ load_cookies(void) {
 	fclose(fp);
 }
 
+static void
+resave_cookies_bottom_half(void *always_null)
+{
+	if (get_cookies_save() && get_cookies_resave())
+		save_cookies(NULL); /* checks cookies_dirty */
+}
+
+/* Note that the cookies have been modified, and register a bottom
+ * half for saving them if appropriate.  We use a bottom half so that
+ * if something makes multiple changes and calls this for each change,
+ * the cookies get saved only once at the end.  */
 void
-save_cookies(void) {
+set_cookies_dirty(void)
+{
+	/* Do not check @cookies_dirty here.  If the previous attempt
+	 * to save cookies failed, @cookies_dirty can still be nonzero
+	 * even though @resave_cookies_bottom_half is no longer in the
+	 * queue.  */
+	cookies_dirty = 1;
+	/* If @resave_cookies_bottom_half is already in the queue,
+	 * @register_bottom_half does nothing.  */
+	register_bottom_half(resave_cookies_bottom_half, NULL);
+}
+
+/* @term is non-NULL if the user told ELinks to save cookies, or NULL
+ * if ELinks decided that on its own.  In the former case, this
+ * function reports errors to @term, unless CONFIG_SMALL is defined.
+ * In the latter case, this function does not save the cookies if it
+ * thinks the file is already up to date.  */
+void
+save_cookies(struct terminal *term) {
 	struct cookie *c;
 	unsigned char *cookfile;
 	struct secure_save_info *ssi;
 	time_t now;
 
-	if (cookies_nosave || !elinks_home || !cookies_dirty
-	    || get_cmd_opt_bool("anonymous"))
+#ifdef CONFIG_SMALL
+# define CANNOT_SAVE_COOKIES(message) 
+#else
+# define CANNOT_SAVE_COOKIES(flags, message)				\
+	do {								\
+		if (term)						\
+			info_box(term, flags, N_("Cannot save cookies"),\
+				 ALIGN_LEFT, message);			\
+	} while (0)
+#endif
+
+	if (cookies_nosave) {
+		assert(term == NULL);
+		if_assert_failed {}
 		return;
+	}
+	if (!elinks_home) {
+		CANNOT_SAVE_COOKIES(0, N_("ELinks was started without a home directory."));
+		return;
+	}
+	if (!cookies_dirty && !term)
+		return;
+	if (get_cmd_opt_bool("anonymous")) {
+		CANNOT_SAVE_COOKIES(0, N_("ELinks was started with the -anonymous option."));
+		return;
+	}
 
 	cookfile = straconcat(elinks_home, COOKIES_FILENAME, NULL);
-	if (!cookfile) return;
+	if (!cookfile) {
+		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));
+		return;
+	}
 
 	ssi = secure_open(cookfile);
 	mem_free(cookfile);
-	if (!ssi) return;
+	if (!ssi) {
+		CANNOT_SAVE_COOKIES(MSGBOX_NO_TEXT_INTL,
+				    secsave_strerror(secsave_errno, term));
+		return;
+	}
 
 	now = time(NULL);
 	foreach (c, cookies) {
@@ -829,7 +887,13 @@ save_cookies(void) {
 			break;
 	}
 
+	secsave_errno = SS_ERR_OTHER; /* @secure_close doesn't always set it */
 	if (!secure_close(ssi)) cookies_dirty = 0;
+	else {
+		CANNOT_SAVE_COOKIES(MSGBOX_NO_TEXT_INTL,
+				    secsave_strerror(secsave_errno, term));
+	}
+#undef CANNOT_SAVE_COOKIES	
 }
 
 static void
@@ -839,6 +903,8 @@ init_cookies(struct module *module)
 		load_cookies();
 }
 
+/* Like @delete_cookie, this function does not set @cookies_dirty.
+ * The caller must do that if appropriate.  */
 static void
 free_cookies_list(struct list_head *list)
 {
@@ -855,10 +921,15 @@ done_cookies(struct module *module)
 	free_list(c_domains);
 
 	if (!cookies_nosave && get_cookies_save())
-		save_cookies();
+		save_cookies(NULL);
 
 	free_cookies_list(&cookies);
 	free_cookies_list(&cookie_queries);
+	/* If @save_cookies failed above, @cookies_dirty can still be
+	 * nonzero.  Now if @resave_cookies_bottom_half were in the
+	 * queue, it could save the empty @cookies list to the file.
+	 * Prevent that.  */
+	cookies_dirty = 0;
 }
 
 struct module cookies_module = struct_module(

@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <sys/types.h> /* mode_t */
 
+struct terminal;
+
 enum secsave_errno {
 	SS_ERR_NONE = 0,
 	SS_ERR_DISABLED, /* secsave is disabled. */
@@ -39,5 +41,7 @@ int secure_fputs(struct secure_save_info *, const char *);
 int secure_fputc(struct secure_save_info *, int);
 
 int secure_fprintf(struct secure_save_info *, const char *, ...);
+
+unsigned char *secsave_strerror(enum secsave_errno, struct terminal *);
 
 #endif
