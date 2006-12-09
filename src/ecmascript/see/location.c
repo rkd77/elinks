@@ -22,6 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see/checktype.h"
 #include "ecmascript/see/input.h"
 #include "ecmascript/see/location.h"
 #include "ecmascript/see/strings.h"
@@ -190,6 +191,8 @@ js_history_back(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
 
+	see_check_class(interp, thisobj, &js_history_object_class);
+
 	SEE_SET_NULL(res);
 	go_back(ses);
 }
@@ -203,6 +206,8 @@ js_history_forward(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
+
+	see_check_class(interp, thisobj, &js_history_object_class);
 
 	SEE_SET_NULL(res);
 	go_unback(ses);
@@ -220,6 +225,8 @@ js_history_go(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *str;
 	int index;
 	struct location *loc;
+
+	see_check_class(interp, thisobj, &js_history_object_class);
 
 	SEE_SET_NULL(res);
 	if (argc < 1)
@@ -253,6 +260,8 @@ js_location_toString(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	unsigned char *string = get_uri_string(vs->uri, URI_ORIGINAL);
 	struct SEE_string *str = string_to_SEE_string(interp, string);
+
+	see_check_class(interp, thisobj, &js_location_object_class);
 
 	mem_free_if(string);
 

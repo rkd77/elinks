@@ -21,6 +21,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see/checktype.h"
 #include "ecmascript/see/document.h"
 #include "ecmascript/see/form.h"
 #include "ecmascript/see/input.h"
@@ -208,6 +209,8 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
 	struct string *ret = g->ret;
+
+	see_check_class(interp, thisobj, &js_document_object_class);
 
 	if (argc >= 1 && ret) {
 		int i = 0;

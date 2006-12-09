@@ -23,6 +23,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see/checktype.h"
 #include "ecmascript/see/input.h"
 #include "ecmascript/see/strings.h"
 #include "ecmascript/see/window.h"
@@ -210,6 +211,8 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = win->vs;
 	unsigned char *string;
 
+	see_check_class(interp, thisobj, &js_window_object_class);
+
 	SEE_SET_BOOLEAN(res, 1);
 	if (argc < 1)
 		return;
@@ -244,6 +247,9 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	static time_t ratelimit_start;
 	static int ratelimit_count;
 #endif
+
+	see_check_class(interp, thisobj, &js_window_object_class);
+
 	SEE_SET_OBJECT(res, (struct SEE_object *)win);
 	if (get_opt_bool("ecmascript.block_window_opening")) {
 #ifdef CONFIG_LEDS
@@ -334,6 +340,8 @@ js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct ecmascript_interpreter *ei;
 	unsigned char *code;
 	int timeout;
+
+	see_check_class(interp, thisobj, &js_window_object_class);
 
 	if (argc != 2) return;
 	ei = ((struct global_object *)interp)->interpreter;
