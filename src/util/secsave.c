@@ -18,6 +18,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "intl/gettext/libintl.h"
 #include "osdep/osdep.h" /* Needed for mkstemp() on win32 */
 #include "util/memory.h"
 #include "util/secsave.h"
@@ -349,4 +350,31 @@ secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
 	va_end(ap);
 
 	return ret;
+}
+
+unsigned char *
+secsave_strerror(enum secsave_errno secsave_error, struct terminal *term)
+{
+	switch (secsave_error) {
+	case SS_ERR_OPEN_READ:
+		return _("Cannot read the file", term);
+	case SS_ERR_STAT:
+		return _("Cannot get file status", term);
+	case SS_ERR_ACCESS:
+		return _("Cannot access the file", term);
+	case SS_ERR_MKSTEMP:
+		return _("Cannot create temp file", term);
+	case SS_ERR_RENAME:
+		return _("Cannot rename the file", term);
+	case SS_ERR_DISABLED:
+		return _("File saving disabled by option", term);
+	case SS_ERR_OUT_OF_MEM:
+		return _("Out of memory", term);
+	case SS_ERR_OPEN_WRITE:
+		return _("Cannot write the file", term);
+	case SS_ERR_NONE: /* Impossible. */
+	case SS_ERR_OTHER:
+	default:
+		return _("Secure file saving error", term);
+	}
 }

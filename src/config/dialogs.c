@@ -60,37 +60,7 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 		return;
 	}
 
-	switch (secsave_error) {
-		case SS_ERR_OPEN_READ:
-			strerr = _("Cannot read the file", term);
-			break;
-		case SS_ERR_STAT:
-			strerr = _("Cannot get file status", term);
-			break;
-		case SS_ERR_ACCESS:
-			strerr = _("Cannot access the file", term);
-			break;
-		case SS_ERR_MKSTEMP:
-			strerr = _("Cannot create temp file", term);
-			break;
-		case SS_ERR_RENAME:
-			strerr = _("Cannot rename the file", term);
-			break;
-		case SS_ERR_DISABLED:
-			strerr = _("File saving disabled by option", term);
-			break;
-		case SS_ERR_OUT_OF_MEM:
-			strerr = _("Out of memory", term);
-			break;
-		case SS_ERR_OPEN_WRITE:
-			strerr = _("Cannot write the file", term);
-			break;
-		case SS_ERR_NONE: /* Impossible. */
-		case SS_ERR_OTHER:
-		default:
-			strerr = _("Secure file saving error", term);
-			break;
-	}
+	strerr = secsave_strerror(secsave_error, term);
 
 	if (stdio_error > 0)
 		errmsg = straconcat(strerr, " (", strerror(stdio_error), ")", NULL);
