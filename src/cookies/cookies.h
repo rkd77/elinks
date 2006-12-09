@@ -45,6 +45,7 @@ void delete_cookie(struct cookie *);
 void set_cookie(struct uri *, unsigned char *);
 void load_cookies(void);
 void save_cookies(void);
+void set_cookies_dirty(void);
 
 /* Note that the returned value points to a static structure and thus the
  * string will be overwritten at the next call time. The string source
