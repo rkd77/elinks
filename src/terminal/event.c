@@ -182,7 +182,11 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	/* Probably not best place for set this. But now we finally have
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
-	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io");
+	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
+	 * places assume that the terminal's charset is unibyte if
+	 * UTF-8 I/O is disabled.  (bug 827) */
+	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io")
+		|| is_cp_utf8(get_opt_codepage_tree(term->spec, "charset"));
 #endif /* CONFIG_UTF8 */
 }
 
@@ -297,15 +301,14 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		/* Character Conversions.  */
 #ifdef CONFIG_UTF8
 		/* struct term_event_keyboard carries UCS-4.
-		 * - If the "utf_8_io" option (i.e. term->utf8) is
-		 *   true or the "charset" option refers to UTF-8,
-		 *   then handle_interlink_event() converts from UTF-8
+		 * - If the "utf_8_io" option is true or the "charset"
+		 *   option refers to UTF-8, then term->utf8 is true,
+		 *   and handle_interlink_event() converts from UTF-8
 		 *   to UCS-4.
 		 * - Otherwise, handle_interlink_event() converts from
 		 *   the codepage specified with the "charset" option
 		 *   to UCS-4.  */
-		utf8_io = term->utf8
-			|| is_cp_utf8(get_opt_codepage_tree(term->spec, "charset"));
+		utf8_io = term->utf8;
 #else
 		/* struct term_event_keyboard carries bytes in the
 		 * charset of the terminal.

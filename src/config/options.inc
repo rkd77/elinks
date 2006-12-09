@@ -887,8 +887,12 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("terminal._template_", N_("UTF-8 I/O"),
 		"utf_8_io", 0, 0,
-		N_("Enable I/O in UTF8 for Unicode terminals. Note that currently,\n"
-		"only the subset of UTF8 according to terminal codepage is used.")),
+		N_("Enable I/O in UTF-8 for Unicode terminals. Note that currently,\n"
+		"only the subset of UTF-8 according to terminal codepage is used.\n"
+		"ELinks ignores this option if the terminal codepage is UTF-8.")),
+		/* When CONFIG_UTF8 is defined, any code that reads the "utf_8_io"
+		 * option should also check whether the "codepage" option is UTF-8,
+		 * and if so, behave as if "utf_8_io" were 1.  */
 
 	INIT_OPT_BOOL("terminal._template_", N_("Restrict frames in cp850/852"),
 		"restrict_852", 0, 0,
