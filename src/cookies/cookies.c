@@ -802,7 +802,7 @@ static void
 resave_cookies_bottom_half(void *always_null)
 {
 	if (get_cookies_save() && get_cookies_resave())
-		save_cookies(0); /* checks cookies_dirty */
+		save_cookies(NULL); /* checks cookies_dirty */
 }
 
 /* Note that the cookies have been modified, and register a bottom
@@ -822,27 +822,58 @@ set_cookies_dirty(void)
 	register_bottom_half(resave_cookies_bottom_half, NULL);
 }
 
-/* @interactive is 1 if the user told ELinks to save cookies, or 0 if
- * ELinks decided that on its own.  In the latter case, this function
- * does not save the cookies if it thinks the file is already up to
- * date.  */
+/* @term is non-NULL if the user told ELinks to save cookies, or NULL
+ * if ELinks decided that on its own.  In the former case, this
+ * function reports errors to @term, unless CONFIG_SMALL is defined.
+ * In the latter case, this function does not save the cookies if it
+ * thinks the file is already up to date.  */
 void
-save_cookies(int interactive) {
+save_cookies(struct terminal *term) {
 	struct cookie *c;
 	unsigned char *cookfile;
 	struct secure_save_info *ssi;
 	time_t now;
 
-	if (cookies_nosave || !elinks_home || !(cookies_dirty || interactive)
-	    || get_cmd_opt_bool("anonymous"))
+#ifdef CONFIG_SMALL
+# define CANNOT_SAVE_COOKIES(message) 
+#else
+# define CANNOT_SAVE_COOKIES(flags, message)				\
+	do {								\
+		if (term)						\
+			info_box(term, flags, N_("Cannot save cookies"),\
+				 ALIGN_LEFT, message);			\
+	} while (0)
+#endif
+
+	if (cookies_nosave) {
+		assert(term == NULL);
+		if_assert_failed {}
 		return;
+	}
+	if (!elinks_home) {
+		CANNOT_SAVE_COOKIES(0, N_("ELinks was started without a home directory."));
+		return;
+	}
+	if (!cookies_dirty && !term)
+		return;
+	if (get_cmd_opt_bool("anonymous")) {
+		CANNOT_SAVE_COOKIES(0, N_("ELinks was started with the -anonymous option."));
+		return;
+	}
 
 	cookfile = straconcat(elinks_home, COOKIES_FILENAME, NULL);
-	if (!cookfile) return;
+	if (!cookfile) {
+		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));
+		return;
+	}
 
 	ssi = secure_open(cookfile);
 	mem_free(cookfile);
-	if (!ssi) return;
+	if (!ssi) {
+		CANNOT_SAVE_COOKIES(MSGBOX_NO_TEXT_INTL,
+				    secsave_strerror(secsave_errno, term));
+		return;
+	}
 
 	now = time(NULL);
 	foreach (c, cookies) {
@@ -856,7 +887,13 @@ save_cookies(int interactive) {
 			break;
 	}
 
+	secsave_errno = SS_ERR_OTHER; /* @secure_close doesn't always set it */
 	if (!secure_close(ssi)) cookies_dirty = 0;
+	else {
+		CANNOT_SAVE_COOKIES(MSGBOX_NO_TEXT_INTL,
+				    secsave_strerror(secsave_errno, term));
+	}
+#undef CANNOT_SAVE_COOKIES	
 }
 
 static void
@@ -884,7 +921,7 @@ done_cookies(struct module *module)
 	free_list(c_domains);
 
 	if (!cookies_nosave && get_cookies_save())
-		save_cookies(0);
+		save_cookies(NULL);
 
 	free_cookies_list(&cookies);
 	free_cookies_list(&cookie_queries);

@@ -8,6 +8,7 @@
 #include "util/time.h"
 
 struct listbox_item;
+struct terminal;
 
 enum cookies_accept {
 	COOKIES_ACCEPT_NONE,
@@ -44,7 +45,7 @@ void done_cookie(struct cookie *);
 void delete_cookie(struct cookie *);
 void set_cookie(struct uri *, unsigned char *);
 void load_cookies(void);
-void save_cookies(int interactive);
+void save_cookies(struct terminal *);
 void set_cookies_dirty(void);
 
 /* Note that the returned value points to a static structure and thus the
