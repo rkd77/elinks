@@ -504,6 +504,7 @@ accept_cookie(struct cookie *cookie)
 				continue;
 
 			delete_cookie(c);
+			/* @set_cookies_dirty will be called below.  */
 		}
 	}
 
@@ -573,6 +574,7 @@ reject_cookie(void *idp)
 	if (!c)	return;
 
 	delete_cookie(c);
+	set_cookies_dirty(); /* @find_cookie_id doesn't use @cookie_queries */
 }
 
 
@@ -860,6 +862,8 @@ init_cookies(struct module *module)
 		load_cookies();
 }
 
+/* Like @delete_cookie, this function does not set @cookies_dirty.
+ * The caller must do that if appropriate.  */
 static void
 free_cookies_list(struct list_head *list)
 {
@@ -880,6 +884,11 @@ done_cookies(struct module *module)
 
 	free_cookies_list(&cookies);
 	free_cookies_list(&cookie_queries);
+	/* If @save_cookies failed above, @cookies_dirty can still be
+	 * nonzero.  Now if @resave_cookies_bottom_half were in the
+	 * queue, it could save the empty @cookies list to the file.
+	 * Prevent that.  */
+	cookies_dirty = 0;
 }
 
 struct module cookies_module = struct_module(
