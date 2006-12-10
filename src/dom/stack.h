@@ -1,3 +1,44 @@
+/** The DOM stack interface.
+ *
+ * @file dom/stack.h
+ *
+ * The DOM stack interface is used by the parser when building a DOM
+ * tree and by the various DOM tree traversers. It allows for several
+ * stack contexts to be registered, each defining their own type
+ * specific node handlers or callbacks (#dom_stack_callback_T) which
+ * will be called upon a node being pushed onto or popped from the
+ * stack. As an example a example, by defining DOM_STACK_TRACE it is be
+ * possible to add a DOM stack tracer (using #add_dom_stack_tracer) to
+ * debug all push and pop operations.
+ *
+ * The stack interface provides a method for automatically having
+ * objects allocated when a new node is pushed onto the stack. This
+ * object can then be used for storing private state information
+ * belonging to the individual contexts. This is done by setting the
+ * #dom_stack_context_info.object_size member to a non-zero value,
+ * usually using sizeof().
+ *
+ * States on the stack can be marked immutable meaning that they will
+ * be "locked" down so that any operations to pop them will fail. This
+ * can be used when parsing a "subdocument", e.g. output from
+ * ECMAScripts "document.write" function, where badly formatted SGML
+ * should not be allowed to change the root document.
+ *
+ * In some situations, it may be desired to avoid building a complete
+ * DOM tree in memory when only one document traversal is required, for
+ * example when highlighting SGML code. This can be done by passing the
+ * #DOM_STACK_FLAG_FREE_NODES flag to #init_dom_stack. Nodes that are
+ * popped from the stack will immediately be deallocated. A pop node
+ * callback can also request that a node is deallocated and removed from
+ * the DOM tree by returning the #DOM_CODE_FREE_NODE return code. An
+ * example of this can be seen in the DOM configuration module where
+ * comment nodes may be pruned from the tree.
+ */
+/* TODO: Write about:
+ * - How to access stack states and context state objects.
+ * - Using search_dom_stack() and walk_dom_nodes().
+ */
+
 #ifndef EL_DOM_STACK_H
 #define EL_DOM_STACK_H
 
