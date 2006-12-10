@@ -66,7 +66,8 @@ struct html_context {
 					   * state-machine. */
 	int was_li;
 
-	int quote_level; /* Nesting level of <q> tags. */
+	unsigned int quote_level; /* Nesting level of <q> tags. See @html_quote
+				   * for why this is unsigned. */
 
 	unsigned int was_br:1;
 	unsigned int was_xmp:1;
