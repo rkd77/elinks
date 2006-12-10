@@ -131,8 +131,8 @@ l_current_title(LS)
 static int
 l_current_document(LS)
 {
-	if (lua_ses) {
-		struct cache_entry *cached = find_in_cache(cur_loc(lua_ses)->vs.uri);
+	if (lua_ses && lua_ses->doc_view && lua_ses->doc_view->document) {
+		struct cache_entry *cached = lua_ses->doc_view->document->cached;
 		struct fragment *f = cached ? cached->frag.next : NULL;
 
 		if (f && f->length) {

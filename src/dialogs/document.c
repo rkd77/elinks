@@ -148,7 +148,7 @@ document_info_dialog(struct session *ses)
 
 	add_char_to_string(&msg, '\n');
 
-	cached = find_in_cache(location->vs.uri);
+	cached = doc_view->document->cached;
 	if (cached) {
 		unsigned char *a;
 
@@ -317,5 +317,6 @@ protocol_header_dialog(struct session *ses)
 		return;
 	}
 
-	cached_header_dialog(ses, find_in_cache(cur_loc(ses)->vs.uri));
+	if (ses->doc_view && ses->doc_view->document)
+		cached_header_dialog(ses, ses->doc_view->document->cached);
 }
