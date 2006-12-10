@@ -507,7 +507,6 @@ good_char:
 					x++;
 					part->spaces[x] = 0;
 					part->char_width[x] = 0;
-					data = utf8_to_unicode(&chars, end);
 				}
 				if (data == UCS_NO_CHAR) {
 					/* this is at the end only */
