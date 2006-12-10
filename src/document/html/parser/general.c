@@ -104,6 +104,14 @@ void
 html_quote(struct html_context *html_context, unsigned char *a,
 	   unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	/* An HTML document containing extremely many repetitions of
+	 * "<q>" could cause @html_context->quote_level to overflow.
+	 * Because it is unsigned, it then wraps around to zero, and
+	 * we don't get a negative array index here.  If the document
+	 * then tries to close the quotes with "</q>", @html_quote_close
+	 * won't let the quote level wrap back, so it will render the
+	 * quotes incorrectly, but such a document probably doesn't
+	 * make sense anyway.  */
 	unsigned char *q = quote_char[html_context->quote_level++ % 2];
 
 	put_chrs(html_context, q, 1);
