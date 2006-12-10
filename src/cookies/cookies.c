@@ -835,7 +835,7 @@ save_cookies(struct terminal *term) {
 	time_t now;
 
 #ifdef CONFIG_SMALL
-# define CANNOT_SAVE_COOKIES(message) 
+# define CANNOT_SAVE_COOKIES(flags, message) 
 #else
 # define CANNOT_SAVE_COOKIES(flags, message)				\
 	do {								\
