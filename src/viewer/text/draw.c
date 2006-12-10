@@ -64,9 +64,10 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 	/* Omit the leading '#' when calling find_tag. */
 	vy = find_tag(document, fragment.source + 1, fragment.length - 1);
 	if (vy == -1) {
-		struct cache_entry *cached = find_in_cache(document->uri);
+		struct cache_entry *cached = document->cached;
 
-		if (!cached || cached->incomplete || cached->id != document->id) {
+		assert(cached);
+		if (cached->incomplete || cached->id != document->id) {
 			done_string(&fragment);
 			return -2;
 		}

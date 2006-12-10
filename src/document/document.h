@@ -169,6 +169,7 @@ struct document {
 
 	struct uri *uri;
 	unsigned char *title;
+	struct cache_entry *cached;
 
 	struct frame_desc *frame;
 	struct frameset_desc *frame_desc; /* RENAME ME */

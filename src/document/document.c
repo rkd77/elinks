@@ -46,6 +46,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 	object_lock(cached);
 	document->id = cached->id;
+	document->cached = cached;
 
 	init_list(document->forms);
 	init_list(document->tags);
@@ -106,19 +107,14 @@ done_link_members(struct link *link)
 void
 done_document(struct document *document)
 {
-	struct cache_entry *cached;
-
 	assert(document);
 	if_assert_failed return;
 
 	assertm(!is_object_used(document), "Attempt to free locked formatted data.");
 	if_assert_failed return;
 
-	cached = find_in_cache(document->uri);
-	if (!cached)
-		INTERNAL("no cache entry for document");
-	else
-		object_unlock(cached);
+	assert(document->cached);
+	object_unlock(document->cached);
 
 	if (document->uri) done_uri(document->uri);
 	mem_free_if(document->title);
@@ -270,17 +266,14 @@ shrink_format_cache(int whole)
 	int format_cache_entries = 0;
 
 	foreachsafe (document, next, format_cache) {
-		struct cache_entry *cached;
-
 		if (is_object_used(document)) continue;
 
 		format_cache_entries++;
 
 		/* Destroy obsolete renderer documents which are already
 		 * out-of-sync. */
-		cached = find_in_cache(document->uri);
-		assertm(cached, "cached formatted document has no cache entry");
-		if (cached->id == document->id) continue;
+		if (document->cached->id == document->id)
+			continue;
 
 		done_document(document);
 		format_cache_entries--;

@@ -503,10 +503,8 @@ display_window_title(struct session *ses, struct terminal *term)
 static inline void
 display_leds(struct session *ses, struct session_status *status)
 {
-	if (ses->doc_view && ses->doc_view->document
-	    && ses->doc_view->document->uri) {
-		struct cache_entry *cached =
-			find_in_cache(ses->doc_view->document->uri);
+	if (ses->doc_view && ses->doc_view->document) {
+		struct cache_entry *cached = ses->doc_view->document->cached;
 
 		if (cached) {
 			if (cached->ssl_info)
