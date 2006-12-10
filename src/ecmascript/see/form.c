@@ -22,6 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see/checktype.h"
 #include "ecmascript/see/document.h"
 #include "ecmascript/see/form.h"
 #include "ecmascript/see/input.h"
@@ -350,6 +351,7 @@ js_input_blur(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
+	see_check_class(interp, thisobj, &js_input_object_class);
 	SEE_SET_BOOLEAN(res, 0);
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
@@ -365,7 +367,9 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct js_input *input = (struct js_input *)thisobj;
+	struct js_input *input = (
+		see_check_class(interp, thisobj, &js_input_object_class),
+		(struct js_input *)thisobj);
 	struct form_state *fs = input->fs;
 	struct form_control *fc;
 	int linknum;
@@ -398,7 +402,9 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct session *ses = doc_view->session;
-	struct js_input *input = (struct js_input *)thisobj;
+	struct js_input *input = (
+		see_check_class(interp, thisobj, &js_input_object_class),
+		(struct js_input *)thisobj);
 	struct form_state *fs = input->fs;
 	struct form_control *fc;
 	int linknum;
@@ -422,6 +428,7 @@ js_input_select(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	     struct SEE_value *res)
 {
+	see_check_class(interp, thisobj, &js_input_object_class);
 	SEE_SET_BOOLEAN(res, 0);
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
@@ -513,7 +520,9 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_form_elems *jsfe = (struct js_form_elems *)thisobj;
+	struct js_form_elems *jsfe = (
+		see_check_class(interp, thisobj, &js_form_elems_class),
+		(struct js_form_elems *)thisobj);
 	struct js_form *parent_form = jsfe->parent;
 	struct form_view *fv = parent_form->fv;
 	struct form *form = find_form_by_form_view(document, fv);
@@ -554,7 +563,9 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_form_elems *jsfe = (struct js_form_elems *)thisobj;
+	struct js_form_elems *jsfe = (
+		see_check_class(interp, thisobj, &js_form_elems_class),
+		(struct js_form_elems *)thisobj);
 	struct js_form *parent_form = jsfe->parent;
 	struct form_view *fv = parent_form->fv;
 	struct form *form = find_form_by_form_view(document, fv);
@@ -637,7 +648,9 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 {
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
-	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
+	struct js_forms_object *fo = (
+		see_check_class(interp, thisobj, &js_forms_object_class),
+		(struct js_forms_object *)thisobj);
 	struct js_document_object *doc = fo->parent;
 	struct form_view *fv;
 	unsigned char *string;
@@ -674,7 +687,9 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_forms_object *fo = (struct js_forms_object *)thisobj;
+	struct js_forms_object *fo = (
+		see_check_class(interp, thisobj, &js_forms_object_class),
+		(struct js_forms_object *)thisobj);
 	struct js_document_object *doc = fo->parent;
 	struct form *form;
 	unsigned char *string;
@@ -905,7 +920,9 @@ js_form_reset(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct global_object *g = (struct global_object *)interp;
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
-	struct js_form *js_form = (struct js_form *)thisobj;
+	struct js_form *js_form = (
+		see_check_class(interp, thisobj, &js_form_class),
+		(struct js_form *)thisobj);
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
@@ -925,7 +942,9 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
-	struct js_form *js_form = (struct js_form *)thisobj;
+	struct js_form *js_form = (
+		see_check_class(interp, thisobj, &js_form_class),
+		(struct js_form *)thisobj);
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
