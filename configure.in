@@ -481,6 +481,7 @@ fi
 
 EL_ARG_ENABLE(CONFIG_LZMA, lzma, [lzma],
 	      [  --enable-lzma           enable lzma encoding support])
+
 dnl ===================================================================
 dnl Check for GSSAPI, optional even if installed.
 dnl ===================================================================
