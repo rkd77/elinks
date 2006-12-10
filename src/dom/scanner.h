@@ -4,8 +4,6 @@
 #include "dom/string.h"
 #include "util/error.h"
 
-/* API Doc :: dom-scanner */
-
 /* Define if you want a talking scanner */
 /* #define DEBUG_DOM_SCANNER */
 
@@ -104,7 +102,7 @@ struct dom_scanner_info {
 
 /** Initializes a DOM scanner
  *
- * See struct ref:[dom_scanner] for a description of the `int` flags. */
+ * See struct #dom_scanner for a description of the `int` flags. */
 void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scanner_info,
 		      struct dom_string *string, int state, int count_lines, int complete,
 		      int check_complete, int detect_error);
@@ -125,21 +123,23 @@ struct dom_scanner {
 	unsigned char *string;
 	/** The end of the scanned string. */
 	unsigned char *end;
-	/**
+	/** The current position in the sstring being scanned.
+	 *
 	 * The position in the string where to scan next and the end of the
 	 * string. If position is NULL it means that no more tokens can be
 	 * retrieved from the string. */
 	unsigned char *position;
 
-	/**
-	 * The current token. If the number of scanned tokens is less than
-	 * ref:[DOM_SCANNER_TOKENS] it is because there are no more tokens in
+	/** The current token.
+	 *
+	 * If the number of scanned tokens is less than
+	 * #DOM_SCANNER_TOKENS it is because there are no more tokens in
 	 * the string. */
 	struct dom_scanner_token *current;
 	/** The number of scanned tokens left in the table. */
 	int tokens;
 
-	/** The 'meta' scanner information */
+	/** The 'meta' scanner information. */
 	struct dom_scanner_info *info;
 
 #ifdef DEBUG_SCANNER
@@ -151,19 +151,20 @@ struct dom_scanner {
 	/* The following two flags are used when parsing is incremental and
 	 * the scanner must ensure that only tokens that are complete are
 	 * generated. */
-	unsigned int check_complete:1;	/*: Only generate complete tokens */
-	unsigned int incomplete:1;	/*: The scanned string is incomplete */
+	unsigned int check_complete:1;	/**< Only generate complete tokens */
+	unsigned int incomplete:1;	/**< The scanned string is incomplete */
 
-	unsigned int detect_errors:1;	/*: Check for markup errors */
-	unsigned int found_error;	/*: Did we already report this error? */
+	unsigned int detect_errors:1;	/**< Check for markup errors */
+	unsigned int found_error;	/**< Did we already report this error? */
 
-	unsigned int count_lines:1;	/*: Is line counting enbaled? */
-	unsigned int lineno;		/*: Line # of the last scanned token */
+	unsigned int count_lines:1;	/**< Is line counting enbaled? */
+	unsigned int lineno;		/**< Line # of the last scanned token */
 
 	/** Some state indicator only meaningful to the scanner internals */
 	int state;
 
-	/**
+	/** Token table.
+	 *
 	 * The table contain already scanned tokens. It is maintained in
 	 * order to optimize the scanning a bit and make it possible to look
 	 * ahead at the next token. You should always use the accessors
@@ -223,7 +224,7 @@ skip_dom_scanner_tokens(struct dom_scanner *scanner, int skipto, int precedence)
 
 /** Map a string to internal ID
  *
- * Looks up the string from @ident to @end to in the scanners string mapping
+ * Looks up the string from ident to end to in the scanners string mapping
  * table. */
 int
 map_dom_scanner_string(struct dom_scanner *scanner,

@@ -8,8 +8,6 @@
 
 struct dom_stack;
 
-/* API Doc :: dom-stack */
-
 /** DOM stack callback
  *
  * Used by contexts, for 'hooking' into the node traversing. */
@@ -28,7 +26,8 @@ struct dom_stack_state {
 	 * The depth of the state in the stack. This is amongst other things
 	 * used to get the state object data. */
 	unsigned int depth;
-	/** Whether this stack state can be popped with pop_dom_*() family. */
+	/** Whether this stack state can be popped with #pop_dom_node,
+	 * #pop_dom_nodes, or #pop_dom_state. */
 	unsigned int immutable:1;
 };
 
@@ -38,9 +37,9 @@ struct dom_stack_state {
  * stack. */
 struct dom_stack_context_info {
 	/**
-	 * This member tells whether the stack should allocate objects for each
-	 * state to be assigned to the state's @data member.  Zero means no
-	 * state data should be allocated. */
+	 * The number of bytes to allocate on the stack for each state's
+	 * data member.  Zero means no state data should be allocated.
+	 * */
 	size_t object_size;
 
 	/** Callbacks to be called when pushing nodes. */
@@ -59,7 +58,7 @@ struct dom_stack_context {
 	/**
 	 * This is one big array of context specific objects. For the SGML
 	 * parser this holds DTD-oriented info about the node (recorded in
-	 * struct sgml_node_info). E.g.  whether an element node is optional.
+	 * struct #sgml_node_info). E.g.  whether an element node is optional.
 	 */
 	unsigned char *state_objects;
 
@@ -72,7 +71,7 @@ enum dom_stack_flag {
 	/** No flag needed. */
 	DOM_STACK_FLAG_NONE = 0,
 
-	/** Free nodes when popping by calling ref:[done_dom_node]. */
+	/** Free nodes when popping by calling #done_dom_node. */
 	DOM_STACK_FLAG_FREE_NODES = 1,
 };
 
@@ -97,24 +96,24 @@ struct dom_stack {
 
 	/**
 	 * The current context. Only meaningful within
-	 * ref:[dom_stack_callback_T] functions. */
+	 * #dom_stack_callback_T functions. */
 	struct dom_stack_context *current;
 };
 
 /** Check whether stack is empty or not
  *
- * stack::	The stack to check.
+ * @param stack		The stack to check.
  *
- * Returns non-zero if stack is empty. */
+ * @returns		Non-zero if stack is empty. */
 #define dom_stack_is_empty(stack) \
 	(!(stack)->states || (stack)->depth == 0)
 
 /** Access state by offset from top
  *
- * stack::	The stack to fetch the state from.
- * top_offset::	The offset from the stack top, zero is the top.
+ * @param stack		The stack to fetch the state from.
+ * @param top_offset	The offset from the stack top, zero is the top.
  *
- * Returns the requested state. */
+ * @returns		The requested state. */
 static inline struct dom_stack_state *
 get_dom_stack_state(struct dom_stack *stack, int top_offset)
 {
@@ -125,9 +124,9 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
 
 /** Access the stack top
  *
- * stack:: The stack to get the top state from.
+ * @param stack		The stack to get the top state from.
  *
- * Returns the top state. */
+ * @returns		The top state. */
 #define get_dom_stack_top(stack) \
 	get_dom_stack_state(stack, 0)
 
@@ -136,11 +135,11 @@ get_dom_stack_state(struct dom_stack *stack, int top_offset)
  * Similar to ref:[get_dom_stack_state], this will fetch the data
  * associated with the state for the given context.
  *
- * context::	The context to get data from.
- * state::	The stack state to get data from.
+ * @param context	The context to get data from.
+ * @param state		The stack state to get data from.
  *
- * Returns the state data or NULL if ref:[dom_stack_context_info.object_size]
- * was zero. */
+ * @returns		The state data or NULL if
+ *			#dom_stack_context_info.object_size was zero. */
 static inline void *
 get_dom_stack_state_data(struct dom_stack_context *context,
 			 struct dom_stack_state *state)
@@ -156,8 +155,6 @@ get_dom_stack_state_data(struct dom_stack_context *context,
 
 /*#define DOM_STACK_TRACE*/
 
-#ifdef DOM_STACK_TRACE
-extern struct dom_stack_context_info dom_stack_trace_context_info;
 /** Get debug info from the DOM stack
  *
  * Define `DOM_STACK_TRACE` to have debug info about the nodes added printed to
@@ -165,11 +162,13 @@ extern struct dom_stack_context_info dom_stack_trace_context_info;
  *
  * Run as:
  *
- *	ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect <url>
+ *	ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect URL
  *
  * to have the debug dumped into a file. */
+#ifdef DOM_STACK_TRACE
 #define add_dom_stack_tracer(stack, name) \
 	add_dom_stack_context(stack, name, &dom_stack_trace_context_info)
+extern struct dom_stack_context_info dom_stack_trace_context_info;
 #else
 #define add_dom_stack_tracer(stack, name) /* Nada */
 #endif
@@ -192,15 +191,17 @@ extern struct dom_stack_context_info dom_stack_trace_context_info;
 /* Life cycle functions. */
 
 /** Initialise a DOM stack
- * stack::	Pointer to a (preallocated) stack.
- * flags::	Any flags needed for controlling the behaviour of the stack.
+ *
+ * @param stack		Pointer to a (preallocated) stack.
+ * @param flags		Any flags needed for controlling the behaviour of the stack.
  */
 void init_dom_stack(struct dom_stack *stack, enum dom_stack_flag flags);
+
 /** Release a DOM stack
  *
  * Free all resources collected by the stack.
  *
- * stack::	The stack to release. */
+ * @param stack		The stack to release. */
 void done_dom_stack(struct dom_stack *stack);
 
 /** Add a context to the stack
@@ -209,16 +210,17 @@ void done_dom_stack(struct dom_stack *stack);
  * created states and/or if you want to install callbacks for pushing or
  * popping.
  *
- * stack::	  The stack where the context should be created.
- * data::	  Private data to be stored in ref:[dom_stack_context.data].
- * context_info:: Information about state objects and node callbacks.
+ * @param stack		The stack where the context should be created.
+ * @param data		Private data to be stored in ref:[dom_stack_context.data].
+ * @param context_info	Information about state objects and node callbacks.
  *
- * Returns a pointer to the newly created context or NULL. */
+ * @returns		A pointer to the newly created context or NULL. */
 struct dom_stack_context *
 add_dom_stack_context(struct dom_stack *stack, void *data,
 		      struct dom_stack_context_info *context_info);
 
 /** Unregister a stack context
+ *
  * This should be done especially for temporary stack contexts (without any
  * callbacks) so that they do not increasing the memory usage. */
 void done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *context);
@@ -227,16 +229,17 @@ void done_dom_stack_context(struct dom_stack *stack, struct dom_stack_context *c
  *
  * Makes the pushed node the new top of the stack.
  *
- * stack::	The stack to push onto.
- * node::	The node to push onto the stack.
+ * @param stack		The stack to push onto.
+ * @param node		The node to push onto the stack.
  *
- * If an error occurs the node is released with ref:[done_dom_node] and NULL is
- * returned. Else the pushed node is returned. */
+ * @returns		If an error occurs the node is released with
+ *			#done_dom_node and NULL is returned. Else the pushed
+ *			node is returned. */
 enum dom_code push_dom_node(struct dom_stack *stack, struct dom_node *node);
 
 /** Pop the top stack state
  *
- * stack::	The stack to pop from. */
+ * @param stack		The stack to pop from. */
 void pop_dom_node(struct dom_stack *stack);
 
 /** Conditionally pop the stack states
@@ -244,7 +247,8 @@ void pop_dom_node(struct dom_stack *stack);
  * Searches the stack (using ref:[search_dom_stack]) for a specific node and
  * pops all states until that particular state is met.
  *
- * NOTE: The popping is stopped if an immutable state is encountered. */
+ * @note		The popping is stopped if an immutable state is
+ *			encountered. */
 void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
 		   struct dom_string *string);
 
@@ -253,8 +257,8 @@ void pop_dom_nodes(struct dom_stack *stack, enum dom_node_type type,
  * Pop all stack states until a specific state is reached. The target state
  * is also popped.
  *
- * stack::	The stack to pop from.
- * target::	The state to pop until and including. */
+ * @param stack		The stack to pop from.
+ * @param target	The state to pop until and including. */
 void pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target);
 
 /** Search the stack states
@@ -262,11 +266,11 @@ void pop_dom_state(struct dom_stack *stack, struct dom_stack_state *target);
  * The string comparison is done against the ref:[dom_node.string] member of
  * the of the state nodes.
  *
- * stack::	The stack to search in.
- * type::	The type of node to match against.
- * string::	The string to match against.
+ * @param stack		The stack to search in.
+ * @param type		The type of node to match against.
+ * @param string	The string to match against.
  *
- * Returns a state that matched the type and string or NULL. */
+ * @returns		A state that matched the type and string or NULL. */
 struct dom_stack_state *
 search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
 		 struct dom_string *string);
@@ -275,12 +279,12 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
  *
  * Visits each node in the DOM tree rooted at a given node, pre-order style.
  *
- * stack::	The stack to use for walking the nodes.
- * root::	The root node to start from.
+ * @param stack		The stack to use for walking the nodes.
+ * @param root		The root node to start from.
  *
  * It is assummed that the given stack has been initialised with
- * ref:[init_dom_stack] and that the caller already added one or more
- * context to the stack. */
+ * #init_dom_stack and that the caller already added one or more context
+ * to the stack. */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);
 
 #endif

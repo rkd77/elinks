@@ -4,8 +4,6 @@
 struct dom_node;
 struct dom_stack;
 
-/* API Doc :: dom-config */
-
 /** DOM Configuration
  *
  * The DOMConfiguration interface represents the configuration of a document.
@@ -13,10 +11,12 @@ struct dom_stack;
  * document normalization is done, such as replacing the CDATASection nodes
  * with Text nodes.
  *
- * Note: Parameters are similar to features and properties used in SAX2 [SAX].
+ * Note: Parameters are similar to features and properties used in SAX2.
+ */
+
+/** DOM configuration flags.
  *
  * The following list of parameters defined in the DOM: */
-
 enum dom_config_flag {
 	/** "cdata-sections"
 	 *
@@ -72,9 +72,9 @@ enum dom_config_flag {
 struct dom_error;
 
 struct dom_config {
-	enum dom_config_flag flags; /*: DOM configuration flags. */
+	enum dom_config_flag flags; /**< DOM configuration flags. */
 
-	/** FIXME: "error-handler"
+	/** A user defined error handler.
 	 *
 	 * Contains an error handler. If an error is encountered in the
 	 * document, this handler is called. When called, DOMError.relatedData
