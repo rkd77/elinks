@@ -107,7 +107,6 @@ install-local:
 # Generated asciidoc files
 
 # Scripts and Dependencies
-CODE2DOC = $(srcdir)tools/code2doc
 HELP2DOC = $(srcdir)tools/help2doc
 CONF2DOC = $(srcdir)tools/conf2doc
 KEYS2DOC = $(srcdir)tools/keys2doc
@@ -130,9 +129,6 @@ quiet_cmd_conf2doc = ' [$(LINK_COLOR)CONF2DOC$(END_COLOR)]   $(RELPATH)$@'
 quiet_cmd_keys2doc = ' [$(LINK_COLOR)KEYS2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_keys2doc = $(LOCALES) $(KEYS2DOC) $(KBDBIND) $@ > $@
 
-quiet_cmd_code2doc = ' [$(LINK_COLOR)CODE2DOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_code2doc = $(LOCALES) $(CODE2DOC) $< > $@
-
 features.txt: $(FEATURES) $(CONF2DOC)
 	$(call cmd,conf2doc)
 
@@ -141,25 +137,6 @@ keymap-%.txt: $(KBDBIND) $(KEYS2DOC)
 
 option-%.txt: $(ELINKS) $(HELP2DOC)
 	$(call cmd,help2doc)
-
-
-# API Docs
-
-ifeq ($(findstring api,$(MAKECMDGOALS)),api)
-API = $(shell find $(top_srcdir)/src/ -name '*.h' -exec grep -q 'API Doc' \{\} \; -printf "%p " | sort)
-endif
-
-define api_doc
-API_TXT += api/$(2).txt
-api/$(2).txt: $(1) $(CODE2DOC)
-	@test -d api || $(MKINSTALLDIRS) api
-	$$(call cmd,code2doc)
-endef
-
-api_name = $(shell sed -n 's/.*API Doc\s*::\s*\([^ 	]*\).*/\1/p' < $(1))
-$(foreach api,$(API),$(eval $(call api_doc,$(api),$(call api_name,$(api)))))
-
-api: $(patsubst %.txt,%.html,$(API_TXT))
 
 
 #############################################################################
