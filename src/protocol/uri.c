@@ -490,7 +490,10 @@ add_uri_to_string(struct string *string, struct uri *uri,
  		}
 
 		add_char_to_string(string, '@');
- 	}
+
+	} else if (wants(URI_PASSWORD) && uri->passwordlen) {
+		add_bytes_to_string(string, uri->password, uri->passwordlen);
+	}
 
  	if (wants(URI_HOST) && uri->hostlen) {
 		int add_host = 1;
