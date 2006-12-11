@@ -318,18 +318,34 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 /* Removes the node and all its children and free()s itself */
 void done_dom_node(struct dom_node *node);
 
+#ifndef DEBUG_MEMLEAK
+
 /* The allocated argument is used as the value of node->allocated if >= 0.
  * Use -1 to default node->allocated to the value of parent->allocated. */
+
 struct dom_node *
-init_dom_node_(unsigned char *file, int line,
-		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string, int allocated);
+init_dom_node_at(struct dom_node *parent, enum dom_node_type type,
+		 struct dom_string *string, int allocated);
 
 #define init_dom_node(type, string, allocated) \
-	init_dom_node_(__FILE__, __LINE__, NULL, type, string, allocated)
+	init_dom_node_at(NULL, type, string, allocated)
 
 #define add_dom_node(parent, type, string) \
-	init_dom_node_(__FILE__, __LINE__, parent, type, string, -1)
+	init_dom_node_at(parent, type, string, -1)
+
+#else
+struct dom_node *
+init_dom_node_at(unsigned char *file, int line,
+		 struct dom_node *parent, enum dom_node_type type,
+		 struct dom_string *string, int allocated);
+
+#define init_dom_node(type, string, allocated) \
+	init_dom_node_at(__FILE__, __LINE__, NULL, type, string, allocated)
+
+#define add_dom_node(parent, type, string) \
+	init_dom_node_at(__FILE__, __LINE__, parent, type, string, -1)
+
+#endif /* DEBUG_MEMLEAK */
 
 #define add_dom_element(parent, string) \
 	add_dom_node(parent, DOM_NODE_ELEMENT, string)
