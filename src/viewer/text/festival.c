@@ -72,6 +72,7 @@ write_to_festival(struct fest *fest)
 
 	data = doc->data[fest->line].chars;
 	add_to_string(&buf, "(SayText \"");
+	/* UTF-8 not supported yet. If festival support UTF-8? */
 	for (i = 0; i < len; i++) {
 		unsigned char ch = (unsigned char)data[i].data;
 
