@@ -10,8 +10,6 @@ DEBs:
 
 RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=elinks
-	http://ftp.nest.pld-linux.org/pool/e/elinks/
-	http://ftp.pld-linux.org/pool/e/elinks/
 
 RISC OS binaries:
 	http://www.riscos.info/unix/indexes/browser.html
@@ -43,6 +41,4 @@ DEBs:
 
 RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=links
-	http://ftp.nest.pld-linux.org/pool/l/links/
-	http://ftp.pld-linux.org/pool/l/links/
 
