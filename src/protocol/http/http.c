@@ -1027,30 +1027,17 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			}
 		}
 		
-		if (state == FINISHING) {
-			/* state is FINISHING. Set to_read to some nice, big
-			 * value to empty the encoded output queue by reading
-			 * big chunks from it. */
-			to_read = BIG_READ;
-		}
-
 		if (!conn->stream) {
 			conn->stream = open_encoded(conn->stream_pipes[0],
 					conn->content_encoding);
 			if (!conn->stream) return NULL;
-			/* On "startup" pipe is treated with care, but if everything
-			 * was already written to the pipe, caution isn't necessary */
-			if (state != FINISHING) {
-				/* on init don't read too much */
-				to_read = PIPE_BUF / 32;
-			}
 		}
 
-		output = (unsigned char *) mem_realloc(output, *new_len + to_read);
+		output = (unsigned char *) mem_realloc(output, *new_len + BIG_READ);
 		if (!output) break;
 
-		did_read = read_encoded(conn->stream, output + *new_len,
-					to_read);
+		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
+
 		if (did_read > 0) *new_len += did_read;
 		else if (did_read == -1) {
 			mem_free_set(&output, NULL);
