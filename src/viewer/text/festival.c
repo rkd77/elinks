@@ -83,7 +83,7 @@ write_to_festival(struct fest *fest)
 
 	w = safe_write(fest->out, buf.source, buf.length);
 	if (w >= 0) {
-		if (fest->line > doc_view->vs->y + doc_view->box.height) {
+		if (fest->line >= doc_view->vs->y + doc_view->box.height) {
 			move_page_down(doc_view->session, doc_view);
 			refresh_view(doc_view->session, doc_view, 0);
 		}
