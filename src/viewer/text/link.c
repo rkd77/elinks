@@ -38,6 +38,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/action.h"
+#include "viewer/text/festival.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/search.h"
@@ -984,6 +985,9 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	}
 
 	done_uri(uri);
+#ifdef HAVE_FORK
+	festival.line = 0;
+#endif
 	return link;
 }
 

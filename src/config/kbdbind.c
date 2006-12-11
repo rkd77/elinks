@@ -662,6 +662,7 @@ static struct default_kb default_main_keymap[] = {
 	{ { 'N',	 KBD_MOD_CTRL }, ACT_MAIN_SCROLL_DOWN },
 	{ { 'P',	 KBD_MOD_CTRL }, ACT_MAIN_SCROLL_UP },
 	{ { 'Q',	 KBD_MOD_NONE }, ACT_MAIN_REALLY_QUIT },
+	{ { 'R',	 KBD_MOD_NONE }, ACT_MAIN_SAY_TEXT },
 	{ { 'R',	 KBD_MOD_CTRL }, ACT_MAIN_RELOAD },
 	{ { 'T',	 KBD_MOD_NONE }, ACT_MAIN_OPEN_LINK_IN_NEW_TAB_IN_BACKGROUND },
 	{ { 'W',	 KBD_MOD_NONE }, ACT_MAIN_TOGGLE_WRAP_TEXT },

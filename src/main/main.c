@@ -52,6 +52,7 @@
 #include "util/memdebug.h"
 #include "util/memory.h"
 #include "viewer/dump/dump.h"
+#include "viewer/text/festival.h"
 #include "viewer/text/marks.h"
 
 struct program program;
@@ -109,6 +110,10 @@ init(void)
 	int fd = -1;
 	enum retval ret;
 
+#ifdef HAVE_FORK
+	festival.in = -1;
+	festival.out = -1;
+#endif
 	init_osdep();
 	check_cwd();
 

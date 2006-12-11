@@ -39,6 +39,7 @@
 #include "session/task.h"
 #include "viewer/action.h"
 #include "viewer/text/draw.h"
+#include "viewer/text/festival.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/search.h"
@@ -470,6 +471,12 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_SAVE_URL_AS:
 			save_url_as(ses);
+			break;
+
+		case ACT_MAIN_SAY_TEXT:
+#ifdef HAVE_FORK
+			run_festival(ses, doc_view);
+#endif
 			break;
 
 		case ACT_MAIN_SCROLL_DOWN:

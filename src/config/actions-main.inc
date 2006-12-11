@@ -85,6 +85,7 @@ ACTION_(MAIN, "save-as", SAVE_AS, N__("Save the current document in source form"
 ACTION_(MAIN, "save-formatted", SAVE_FORMATTED, N__("Save the current document in formatted form"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION),
 ACTION_(MAIN, "save-options", SAVE_OPTIONS, N__("Save options"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "save-url-as", SAVE_URL_AS, N__("Save URL as"), ACTION_RESTRICT_ANONYMOUS),
+ACTION_(MAIN, "say-text", SAY_TEXT, N__("Reads out the document"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "scroll-down", SCROLL_DOWN, N__("Scroll down"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "scroll-left", SCROLL_LEFT, N__("Scroll left"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "scroll-right", SCROLL_RIGHT, N__("Scroll right"), ACTION_REQUIRE_VIEW_STATE),

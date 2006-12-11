@@ -93,6 +93,9 @@ if test "x$CONFIG_DOC" != xno; then
 	fi
 fi
 
+AC_PATH_PROGS(FESTIVAL, "festival", [/usr/bin/festival])
+AC_SUBST(FESTIVAL)
+AC_DEFINE_UNQUOTED(FESTIVAL, "$FESTIVAL", [Festival])
 AC_SUBST(ASCIIDOC_FLAGS)
 AC_SUBST(CONFIG_ASCIIDOC)
 AC_SUBST(CONFIG_POD2HTML)
@@ -283,7 +286,7 @@ AC_CHECK_FUNCS(strcasecmp strncasecmp strcasestr strstr strchr strrchr)
 AC_CHECK_FUNCS(memmove bcopy stpcpy strdup index isdigit mempcpy memrchr)
 AC_CHECK_FUNCS(snprintf vsnprintf asprintf vasprintf)
 AC_CHECK_FUNCS(getifaddrs getpwnam inet_pton inet_ntop)
-AC_CHECK_FUNCS(fflush fsync fseeko ftello sigaction)
+AC_CHECK_FUNCS(fflush fork fsync fseeko ftello sigaction)
 AC_CHECK_FUNCS(gettimeofday clock_gettime)
 
 AC_HAVE_FUNCS(cygwin_conv_to_full_win32_path)
@@ -1334,6 +1337,7 @@ EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 	      [  --enable-utf-8          enable UTF-8 support])
 
+EL_LOG_CONFIG(FESTIVAL, [festival], [])
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
