@@ -132,6 +132,7 @@ init_festival(void)
 		close(in_pipe[0]);
 		festival.in = out_pipe[0];
 		festival.out = in_pipe[1];
+		set_nonblocking_fd(festival.out);
 		set_handlers(festival.in, (select_handler_T) read_from_festival,
 		     NULL, NULL, &festival);
 		return 0;
