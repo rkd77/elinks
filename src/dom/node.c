@@ -331,7 +331,10 @@ get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
 /* Nodes */
 
 struct dom_node *
-init_dom_node_(unsigned char *file, int line,
+init_dom_node_at(
+#ifdef DEBUG_MEMLEAK
+		unsigned char *file, int line,
+#endif
 		struct dom_node *parent, enum dom_node_type type,
 		struct dom_string *string, int allocated)
 {

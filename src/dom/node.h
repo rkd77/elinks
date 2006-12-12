@@ -1,3 +1,58 @@
+/** DOM node module
+ *
+ * @file dom/node.h
+ *
+ * This module defines the various node and node list data structures
+ * and functionality to modify and access them, such as adding a node as
+ * a child to a given node and getting the text string of a node as
+ * defined by the DOM specification.
+ *
+ * @par Node hierarchy
+ *
+ * DOM documents are represented as a collection of nodes arranged in a
+ * hierarchic structure. At the root is either a #DOM_NODE_DOCUMENT or
+ * #DOM_NODE_DOCUMENT_FRAGMENT node, each of which may have multiple
+ * child nodes. There is a well-defined order that dictates which child
+ * nodes may be descendants of a given type of node. For example, text
+ * and attribute nodes can have no children, while elements node may
+ * have both attribute and element nodes as children but with each type
+ * in different node lists. The hierarchy is somewhat encoded in the
+ * type specific node data, however, certain node types also define
+ * "custom" node lists for conveniently storing additional "embedded"
+ * data, such as processing instruction nodes having an attribute node
+ * list for conveniently accessing variable-value pairs given for
+ * XML-specific processing instructions:
+ *
+ *	@verbatim <?xml version="1.0"?> @endverbatim
+ *
+ * @par Node lists
+ *
+ * There are two types of list: unordered (the default) and
+ * alphabetically ordered (also called "maps"). Both types of list
+ * stores all contained nodes in the index-oriented #dom_node_list data
+ * structure.
+ *
+ * When inserting a node into a list, first use either
+ * #get_dom_node_list_index or #get_dom_node_map_index (depending on
+ * whether the list is unordered or ordered respectively) to calculate
+ * the index at which to insert the new node. Then use
+ * #add_to_dom_node_list to insert the node in the list at the given
+ * position. Alternatively (and mostly preferred), simply use
+ * #add_dom_node to have all of the above done automatically plus some
+ * additional checks.
+ *
+ * A variety of node list accessors are defined. The node structure does
+ * not define any "next" or "previous" members to get siblings due to
+ * reduce memory usage (this might have to change --jonas). Instead, use
+ * #get_dom_node_next and #get_dom_node_next to access siblings. To
+ * lookup the existence of a node in a sorted node list (map) use
+ * #get_dom_node_map_entry. If a specific and unique node subtype should
+ * be found use #get_dom_node_child that given a parent node will find a
+ * child node based on a specific child node type and subtype. Finally,
+ * list can be iterated in forward and reverse order using
+ * #foreach_dom_node and #foreachback_dom_node.
+ */
+
 #ifndef EL_DOM_NODE_H
 #define EL_DOM_NODE_H
 
@@ -6,27 +61,28 @@
 struct dom_node_list;
 struct dom_document;
 
+/** DOM node types */
 enum dom_node_type {
-	DOM_NODE_UNKNOWN		=  0, /* for internal purpose only */
+	DOM_NODE_UNKNOWN		=  0, /**< Node type used internally. */
 
-	DOM_NODE_ELEMENT		=  1,
-	DOM_NODE_ATTRIBUTE		=  2,
-	DOM_NODE_TEXT			=  3,
-	DOM_NODE_CDATA_SECTION		=  4,
-	DOM_NODE_ENTITY_REFERENCE	=  5,
-	DOM_NODE_ENTITY			=  6,
-	DOM_NODE_PROCESSING_INSTRUCTION	=  7,
-	DOM_NODE_COMMENT		=  8,
-	DOM_NODE_DOCUMENT		=  9,
-	DOM_NODE_DOCUMENT_TYPE		= 10,
-	DOM_NODE_DOCUMENT_FRAGMENT	= 11,
-	DOM_NODE_NOTATION		= 12,
+	DOM_NODE_ELEMENT		=  1, /**< Element node */
+	DOM_NODE_ATTRIBUTE		=  2, /**< Attribute node */
+	DOM_NODE_TEXT			=  3, /**< Text node */
+	DOM_NODE_CDATA_SECTION		=  4, /**< CData section node */
+	DOM_NODE_ENTITY_REFERENCE	=  5, /**< Entity reference node */
+	DOM_NODE_ENTITY			=  6, /**< Entity node */
+	DOM_NODE_PROCESSING_INSTRUCTION	=  7, /**< Processing instruction node */
+	DOM_NODE_COMMENT		=  8, /**< Comment node */
+	DOM_NODE_DOCUMENT		=  9, /**< Document root node */
+	DOM_NODE_DOCUMENT_TYPE		= 10, /**< Document type (DTD) node */
+	DOM_NODE_DOCUMENT_FRAGMENT	= 11, /**< Document fragment node */
+	DOM_NODE_NOTATION		= 12, /**< Notation node */
 
-	DOM_NODES
+	DOM_NODES			      /**< The number of DOM nodes */
 };
 
-/* Following is the node specific datastructures. They may contain no more
- * than 4 pointers or something equivalent. */
+/* Following is the node specific data structures. They may contain no
+ * more than 4 pointers or something equivalent. */
 
 /* The document URI is stored in the string / length members. */
 struct dom_document_node {
@@ -173,26 +229,38 @@ union dom_node_data {
 	 */
 };
 
-/* This structure is size critical so keep ordering to make it easier to pack
- * and avoid unneeded members. */
+/** DOM node
+ *
+ * The node data structure is an abstract container that can be used to
+ * represent the hierarchic structure of a document, such as relation
+ * between elements, attributes, etc.
+ *
+ * @note	This structure is size critical so keep ordering to make
+ *		it easier to pack and avoid unneeded members.
+ */
 struct dom_node {
-	/* The type of the node */
+	/** The type of the node. Holds a #dom_node_type enum value. */
 	uint16_t type; /* -> enum dom_node_type */
 
-	/* Was the node string allocated? */
+	/** Was the node string allocated? */
 	unsigned int allocated:1;
 
-	/* Can contain either stuff like element name or for attributes the
-	 * attribute name. */
+	/** Type specific node string. Can contain either stuff like
+	 * element name or for attributes the attribute name. */
 	struct dom_string string;
 
+	/** The parent node. The parent node is NULL for the root node. */
 	struct dom_node *parent;
 
-	/* Various info depending on the type of the node. */
+	/** Type specific node data. */
 	union dom_node_data data;
 };
 
-/* A node list can be used for storing indexed nodes */
+/** DOM node list
+ *
+ * A node list can be used for storing indexed nodes. If a node list
+ * should be sorted alphabetically use the #get_dom_node_map_index
+ * function to find the index of new nodes before inserting them. */
 struct dom_node_list {
 	size_t size;
 	struct dom_node *entries[1];
@@ -250,18 +318,34 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 /* Removes the node and all its children and free()s itself */
 void done_dom_node(struct dom_node *node);
 
+#ifndef DEBUG_MEMLEAK
+
 /* The allocated argument is used as the value of node->allocated if >= 0.
  * Use -1 to default node->allocated to the value of parent->allocated. */
+
 struct dom_node *
-init_dom_node_(unsigned char *file, int line,
-		struct dom_node *parent, enum dom_node_type type,
-		struct dom_string *string, int allocated);
+init_dom_node_at(struct dom_node *parent, enum dom_node_type type,
+		 struct dom_string *string, int allocated);
 
 #define init_dom_node(type, string, allocated) \
-	init_dom_node_(__FILE__, __LINE__, NULL, type, string, allocated)
+	init_dom_node_at(NULL, type, string, allocated)
 
 #define add_dom_node(parent, type, string) \
-	init_dom_node_(__FILE__, __LINE__, parent, type, string, -1)
+	init_dom_node_at(parent, type, string, -1)
+
+#else
+struct dom_node *
+init_dom_node_at(unsigned char *file, int line,
+		 struct dom_node *parent, enum dom_node_type type,
+		 struct dom_string *string, int allocated);
+
+#define init_dom_node(type, string, allocated) \
+	init_dom_node_at(__FILE__, __LINE__, NULL, type, string, allocated)
+
+#define add_dom_node(parent, type, string) \
+	init_dom_node_at(__FILE__, __LINE__, parent, type, string, -1)
+
+#endif /* DEBUG_MEMLEAK */
 
 #define add_dom_element(parent, string) \
 	add_dom_node(parent, DOM_NODE_ELEMENT, string)
