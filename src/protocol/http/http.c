@@ -723,18 +723,14 @@ http_send_header(struct socket *socket)
 #if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2)
 	add_to_string(&header, "Accept-Encoding: ");
 
-#ifdef BUG_517
 #ifdef CONFIG_BZIP2
 	add_to_string(&header, "bzip2");
-#endif
 #endif
 
 #ifdef CONFIG_GZIP
 
-#ifdef BUG_517
 #ifdef CONFIG_BZIP2
 	add_to_string(&header, ", ");
-#endif
 #endif
 
 	add_to_string(&header, "gzip");
@@ -1820,13 +1816,13 @@ again:
 		    && (!strcasecmp(d, "gzip") || !strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
 #endif
-#ifdef BUG_517
+
 #ifdef CONFIG_BZIP2
 		if (file_encoding != ENCODING_BZIP2
 		    && (!strcasecmp(d, "bzip2") || !strcasecmp(d, "x-bzip2")))
 			conn->content_encoding = ENCODING_BZIP2;
 #endif
-#endif
+
 		mem_free(d);
 	}
 
