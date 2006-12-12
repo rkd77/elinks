@@ -160,12 +160,11 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 	int err = 0;
-	struct bzFile *bzf = (struct bzFile *)data->bzfile;
 
 	if (data->last_read)
 		return 0;
 
-	clearerr(bzf->handle);
+	clearerr(data->file);
 	len = BZ2_bzRead2(&err, data->bzfile, buf, len);
 
 	if (err == BZ_STREAM_END)
