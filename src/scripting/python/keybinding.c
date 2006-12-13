@@ -194,5 +194,11 @@ python_init_keybinding_interface(PyObject *dict, PyObject *name)
 void
 python_done_keybinding_interface(void)
 {
-	Py_XDECREF(keybindings);
+	PyObject *temp;
+
+	/* This is equivalent to Py_CLEAR(), but it works with older
+	 * versions of Python predating that macro: */
+	temp = keybindings;
+	keybindings = NULL;
+	Py_XDECREF(temp);
 }

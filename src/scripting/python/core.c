@@ -209,8 +209,16 @@ void
 cleanup_python(struct module *module)
 {
 	if (Py_IsInitialized()) {
+		PyObject *temp;
+
 		python_done_keybinding_interface();
-		Py_XDECREF(python_hooks);
+
+		/* This is equivalent to Py_CLEAR(), but it works with older
+		 * versions of Python predating that macro: */
+		temp = python_hooks;
+		python_hooks = NULL;
+		Py_XDECREF(temp);
+
 		Py_Finalize();
 	}
 }
