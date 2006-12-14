@@ -69,10 +69,10 @@ struct module fsp_protocol_module = struct_module(
  * stdout fails for directory listing like we do for file fetching. */
 
 static void
-fsp_error(unsigned char *error)
+fsp_error(int error)
 {
-	fprintf(stderr, "text/plain");
-	puts(error);
+	printf("%d\n", error);
+	fprintf(stderr, "text/x-error");
 	exit(1);
 }
 
@@ -140,15 +140,15 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	unsigned char dircolor[8] = "";
 
 	if (!data || init_directory_listing(&buf, uri) != S_OK)
-		fsp_error("Out of memory");
+		fsp_error(-S_OUT_OF_MEM);
+
+	dir = fsp_opendir(ses, data);
+	if (!dir) fsp_error(errno);
 
 	fprintf(stderr, "text/html");
 	fclose(stderr);
 
 	puts(buf.source);
-
-	dir = fsp_opendir(ses, data);
-	if (!dir) goto end;
 
 	if (get_opt_bool("document.browse.links.color_dirs")) {
 		color_to_string(get_opt_color("document.colors.dirs"),
@@ -166,7 +166,6 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 		}
 		fsp_closedir(dir);
 	}
-end:
 	puts("</pre><hr/></body></html>");
 	fsp_close_session(ses);
 	exit(0);
@@ -186,9 +185,9 @@ do_fsp(struct connection *conn)
 	FSP_SESSION *ses = fsp_open_session(host, port, password);
 
 	if (!ses)
-		fsp_error("Session initialization failed.");
+		fsp_error(errno);
 	if (fsp_stat(ses, data, &sb))
-		fsp_error("File not found.");
+		fsp_error(errno);
 	if (S_ISDIR(sb.st_mode))
 		fsp_directory(ses, uri);
 	else { /* regular file */
@@ -197,7 +196,7 @@ do_fsp(struct connection *conn)
 		int r;
 
 		if (!file)
-			fsp_error("fsp_fopen error.");
+			fsp_error(errno);
 
 		/* Use the default way to find the MIME type, so write an
 		 * 'empty' name, since something needs to be written in order
@@ -219,6 +218,28 @@ do_fsp(struct connection *conn)
 
 
 /* FSP asynchronous connection management: */
+
+static void
+fsp_got_error(struct socket *socket, struct read_buffer *rb)
+{
+	int len = rb->length;
+	struct connection *conn = socket->conn;
+
+	if (len < 0) {
+		abort_connection(conn, -errno);
+		return;
+	}
+
+	if (len >= 0) {
+		int error;
+
+		rb->data[len] = '\0';
+		error = atoi(rb->data);
+		kill_buffer_data(rb, len);
+		abort_connection(conn, -error);
+		return;
+	}
+}
 
 static void
 fsp_got_data(struct socket *socket, struct read_buffer *rb)
@@ -251,6 +272,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
 	struct read_buffer *buf;
+	int error = 0;
 
 	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
@@ -264,8 +286,14 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 	if (rb->length > 0) {
 		unsigned char *ctype = memacpy(rb->data, rb->length);
 
-		if (ctype && *ctype)
-			mem_free_set(&conn->cached->content_type, ctype);
+		if (ctype && *ctype) {
+			if (!strcmp(ctype, "text/x-error")) {
+				error = 1;
+				mem_free(ctype);
+			} else {
+				mem_free_set(&conn->cached->content_type, ctype);
+			}
+		}
 		else
 			mem_free_if(ctype);
 	}
@@ -277,7 +305,10 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
+	if (error)
+		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_error);
+	else
+		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
 }
 
 
