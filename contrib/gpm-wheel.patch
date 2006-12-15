@@ -1,0 +1,11 @@
+--- gpm-1.20.1/src/gpm.c.old	2006-07-27 22:52:10.095084528 +0200
++++ gpm-1.20.1/src/gpm.c	2006-07-27 22:52:48.503245600 +0200
+@@ -530,7 +530,7 @@
+    /* up and down, up and down, ... who does a do..while(0) loop ???
+       and then makes a break into it... argh ! */
+ 
+-   if (!event->dx && !event->dy && (event->buttons==oldB))
++   if (!event->dx && !event->dy && !event->wdx && !event->wdy && (event->buttons==oldB))
+       do { /* so to break */
+          static long awaketime;
+          /*
