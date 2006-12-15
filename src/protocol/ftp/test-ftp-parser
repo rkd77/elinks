@@ -73,6 +73,11 @@ test_ftp_response_expect_success \
 -------r--         326  1391972  1392298 Nov 22  1995 MegaPhone.sit\r\n
 drwxrwxr-x               folder        2 May 10  1996 network\r\n"
 
+test_ftp_response_expect_success \
+'Response from server mentioned in debian bug 403139' \
+"
+-rw-r--r--   1 root     root      1126400 Jul 28  2003 client.tar\r\n
+-rw-r--r--   1 root     root     3146776576 Dec 15 19:08 dontlook\r\n"
 
 #############################################################################
 #
