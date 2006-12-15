@@ -947,16 +947,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		int *new_len)
 {
 	struct http_connection_info *http = conn->info;
-	/* to_read is number of bytes to be read from the decoder. It is 65536
-	 * (then we are just emptying the decoder buffer as we finished the walk
-	 * through the incoming stream already) or PIPE_BUF / 2 (when we are
-	 * still walking through the stream - then we write PIPE_BUF / 2 to the
-	 * pipe and read it back to the decoder ASAP; the point is that we can't
-	 * write more than PIPE_BUF to the pipe at once, but we also have to
-	 * never let read_encoded() (gzread(), in fact) to empty the pipe - that
-	 * causes further malfunction of zlib :[ ... so we will make sure that
-	 * we will always have at least PIPE_BUF / 2 + 1 in the pipe (returning
-	 * early otherwise)). */
 	enum { NORMAL, FINISHING } state = NORMAL;
 	int did_read = 0;
 	int *length_of_block;
@@ -989,7 +979,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	do {
 		/* The initial value is used only when state == NORMAL.
 		 * Unconditional initialization avoids a GCC warning.  */
-		int to_read = PIPE_BUF / 2;
+		int to_read = PIPE_BUF;
 
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
@@ -1010,16 +1000,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 				if (!http->length) {
 					/* That's all, folks - let's finish this. */
 					state = FINISHING;
-				} else if (!len) {
-					/* We've done for this round (but not done
-					 * completely). Thus we will get out with
-					 * what we have and leave what we wrote to
-					 * the next round - we have to do that since
-					 * we MUST NOT ever empty the pipe completely
-					 * - this would cause a disaster for
-					 * read_encoded(), which would simply not
-					 * work right then. */
-					return output;
 				}
 			}
 		}
@@ -1039,11 +1019,12 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		else if (did_read == -1) {
 			mem_free_set(&output, NULL);
 			*new_len = 0;
+			state = FINISHING;
 			break; /* Loop prevention (bug 517), is this correct ? --Zas */
 		}
 	} while (len || did_read == BIG_READ);
 
-	shutdown_connection_stream(conn);
+	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
 
