@@ -25,16 +25,6 @@ struct bz2_enc_data {
 	int last_read; /* If err after last bzRead() was BZ_STREAM_END.. */
 };
 
-struct bzFile {
-	FILE *handle;
-	char buf[BZ_MAX_UNUSED];
-	int bufN;
-	unsigned char writing;
-	bz_stream strm;
-	int lastErr;
-	unsigned char initialisedOk;
-};
-
 /* TODO: When it'll be official, use bzdopen() from Yoshioka Tsuneo. --pasky */
 
 static int
@@ -61,100 +51,6 @@ bzip2_open(struct stream_encoded *stream, int fd)
 	return 0;
 }
 
-static unsigned char
-myfeof(FILE *f)
-{
-	int c = fgetc (f);
-
-	if (c == EOF) return 1;
-	ungetc(c, f);
-	return 0;
-}
-
-#define BZ_SETERR(eee)                    \
-{                                         \
-   if (bzerror != NULL) *bzerror = eee;   \
-   if (bzf != NULL) bzf->lastErr = eee;   \
-}
-
-static int
-BZ2_bzRead2(int *bzerror, BZFILE *b, void *buf, int len)
-{
-	int n, ret, pi = 0;
-	struct bzFile *bzf = (struct bzFile *)b;
-
-	BZ_SETERR(BZ_OK);
-
-	if (bzf == NULL || buf == NULL || len < 0) {
-		BZ_SETERR(BZ_PARAM_ERROR);
-		return 0;
-	}
-
-	if (bzf->writing) {
-		BZ_SETERR(BZ_SEQUENCE_ERROR);
-		return 0;
-	}
-
-	if (len == 0) {
-		BZ_SETERR(BZ_OK);
-		return 0;
-	}
-
-	bzf->strm.avail_out = len;
-	bzf->strm.next_out = buf;
-
-	while (1) {
-		if (ferror(bzf->handle)) {
-			BZ_SETERR(BZ_IO_ERROR);
-			return 0;
-		}
-
-		if (bzf->strm.avail_in == 0 && !myfeof(bzf->handle)) {
-			n = fread(bzf->buf, 1, BZ_MAX_UNUSED, bzf->handle);
-			if (ferror(bzf->handle)) {
-				if (n < 0) {
-					BZ_SETERR(BZ_IO_ERROR);
-					return 0;
-				} else {
-					BZ_SETERR(BZ_OK);
-					pi = 1;
-				}
-			}
-			bzf->bufN = n;
-			bzf->strm.avail_in = bzf->bufN;
-			bzf->strm.next_in = bzf->buf;
-		}
-
-		ret = BZ2_bzDecompress ( &(bzf->strm) );
-		if (ret != BZ_OK && ret != BZ_STREAM_END) {
-			BZ_SETERR(ret);
-			return 0;
-		}
-
-		if (ret == BZ_OK && myfeof(bzf->handle) &&
-			bzf->strm.avail_in == 0 && bzf->strm.avail_out > 0) {
-			if (!pi) {
-				BZ_SETERR(BZ_UNEXPECTED_EOF);
-				return 0;
-			} else {
-				return len - bzf->strm.avail_out;
-			}
-		}
-
-		if (ret == BZ_STREAM_END) {
-			BZ_SETERR(BZ_STREAM_END);
-			return len - bzf->strm.avail_out;
-		}
-
-		if (bzf->strm.avail_out == 0) {
-			BZ_SETERR(BZ_OK);
-			return len;
-		}
-	}
-	return 0; /*not reached*/
-}
-#undef BZ_STRERR
-
 static int
 bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
@@ -165,7 +61,7 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 		return 0;
 
 	clearerr(data->file);
-	len = BZ2_bzRead2(&err, data->bzfile, buf, len);
+	len = BZ2_bzRead(&err, data->bzfile, buf, len);
 
 	if (err == BZ_STREAM_END)
 		data->last_read = 1;
