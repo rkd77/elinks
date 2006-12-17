@@ -88,7 +88,7 @@ install-doc: all-docs update-man install
 		$(call ncmd,installdata,$(doc),$(PDF_DIR));)
 	@$(foreach doc,$(TXT_DOCS_ASIS), \
 		$(MKINSTALLDIRS) $(DESTDIR)$(docdir)/$(PACKAGE)/txt; \
-		$(call ncmd,installsrcdata,$(doc),$(TXT_DIR));)
+		$(call ncmd,installdata,$(srcdir)$(doc),$(TXT_DIR));)
 
 update-man: man
 	@$(if $(MAN_DOCS), \
