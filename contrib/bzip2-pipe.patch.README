@@ -1,0 +1,4 @@
+With the bzip2-pipe.patch Content-Encoding: bzip2 works with ELinks.
+The patched bzlib wasn't heavilly tested in other situations.
+bzerror may be set to other error code rather than BZ_IO_ERROR
+in some cases, but IMHO it is safe to use this patch. --witekfl
