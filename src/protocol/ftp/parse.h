@@ -19,7 +19,7 @@ struct ftp_file_info {
 	enum ftp_file_type type;	/* File type */
 	struct string name;		/* File name */
 	struct string symlink;		/* Link to which file points */
-	long size;			/* File size. -1 if unknown. */
+	off_t size;			/* File size. -1 if unknown. */
 	time_t mtime;			/* Modification time */
 	unsigned int local_time_zone:1;	/* What format the mtime is in */
 	mode_t permissions;		/* File permissions */

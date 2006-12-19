@@ -41,10 +41,10 @@
 #define skip_nonspace_end(src, end) \
 	do { while ((src) < (end) && *(src) != ' ') (src)++; } while (0)
 
-static long
-parse_ftp_number(unsigned char **src, unsigned char *end, long from, long to)
+static off_t
+parse_ftp_number(unsigned char **src, unsigned char *end, off_t from, off_t to)
 {
-	long number = 0;
+	off_t number = 0;
 	unsigned char *pos = *src;
 
 	for (; pos < end && isdigit(*pos); pos++)
@@ -104,7 +104,7 @@ parse_ftp_eplf_response(struct ftp_file_info *info, unsigned char *src, int len)
 
 		case FTP_EPLF_SIZE:
 			if (src >= pos) break;
-			info->size = parse_ftp_number(&src, pos, 0, LONG_MAX);
+			info->size = parse_ftp_number(&src, pos, 0, OFFT_MAX);
 			break;
 
 		case FTP_EPLF_MTIME:
@@ -278,7 +278,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 				break;
 			}
 
-			info->size = parse_ftp_number(&src, pos, 0, LONG_MAX);
+			info->size = parse_ftp_number(&src, pos, 0, OFFT_MAX);
 			break;
 
 		case FTP_UNIX_DAY:
@@ -543,7 +543,7 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 	memset(&mtime, 0, sizeof(mtime));
 	mtime.tm_isdst = -1;
 
-	mtime.tm_mon = parse_ftp_number(&src, end, 1, 12);
+	mtime.tm_mon = (int) parse_ftp_number(&src, end, 1, 12);
 	if (src + 2 >= end || *src != '-')
 		return NULL;
 
@@ -587,7 +587,7 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 	} else if (isdigit(*src)) {
 		info->type = FTP_FILE_PLAINFILE;
-		info->size = parse_ftp_number(&src, end, 0, LONG_MAX);
+		info->size = parse_ftp_number(&src, end, 0, OFFT_MAX);
 		info->permissions = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
 	} else {

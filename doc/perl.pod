@@ -1,6 +1,6 @@
 =head1 NAME
 
-ELinks Perl Interface
+elinks-perl - ELinks Perl Interface
 
 =head1 INTRODUCTION
 

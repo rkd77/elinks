@@ -121,6 +121,41 @@ end:
 	return result;
 }
 
+/* Determine whether or not a user-supplied hooks module exists. */
+
+static int
+hooks_module_exists(void)
+{
+	PyObject *imp_module = NULL, *result = NULL;
+	int found_hooks = 0;
+
+	/*
+	 * Use the find_module() function in Python's imp module to look for
+	 * the hooks module in Python's search path. An ImportError exception
+	 * indicates that no such module was found; any other exception will
+	 * be reported as an error.
+	 */
+	imp_module = PyImport_ImportModule("imp");
+	if (!imp_module) goto python_error;
+
+	result = PyObject_CallMethod(imp_module, "find_module", "s", "hooks");
+	if (result) {
+		found_hooks = 1;
+		goto end;
+	} else if (PyErr_ExceptionMatches(PyExc_ImportError)) {
+		PyErr_Clear();
+		goto end;
+	}
+
+python_error:
+	alert_python_error();
+
+end:
+	Py_XDECREF(imp_module);
+	Py_XDECREF(result);
+	return found_hooks;
+}
+
 /* Module-level documentation for the Python interpreter's elinks module. */
 
 static char module_doc[] =
@@ -168,6 +203,8 @@ init_python(struct module *module)
 	PySys_AddWarnOption("error");
 
 	Py_Initialize();
+
+	if (!hooks_module_exists()) return;
 
 	elinks_module = Py_InitModule3("elinks", NULL, module_doc);
 	if (!elinks_module) goto python_error;
