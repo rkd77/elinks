@@ -640,39 +640,70 @@ utf8_to_unicode(unsigned char **string, unsigned char *end)
 
 	switch (length) {
 		case 1:
+			if (str[0] >= 0x80) {
+invalid_utf8:
+				++*string;
+				return UCS_REPLACEMENT_CHARACTER;
+			}
 			u = str[0];
 			break;
 		case 2:
+			if ((str[1] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x1f) << 6;
 			u += (str[1] & 0x3f);
+			if (u < 0x80)
+				goto invalid_utf8;
 			break;
 		case 3:
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 12;
 			u += ((str[1] & 0x3f) << 6);
 			u += (str[2] & 0x3f);
+			if (u < 0x800)
+				goto invalid_utf8;
 			break;
 		case 4:
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 18;
 			u += ((str[1] & 0x3f) << 12);
 			u += ((str[2] & 0x3f) << 6);
 			u += (str[3] & 0x3f);
+			if (u < 0x10000)
+				goto invalid_utf8;
 			break;
 		case 5:
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 24;
 			u += ((str[1] & 0x3f) << 18);
 			u += ((str[2] & 0x3f) << 12);
 			u += ((str[3] & 0x3f) << 6);
 			u += (str[4] & 0x3f);
+			if (u < 0x200000)
+				goto invalid_utf8;
 			break;
 		case 6:
-		default:
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80
+			    || (str[5] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x01) << 30;
 			u += ((str[1] & 0x3f) << 24);
 			u += ((str[2] & 0x3f) << 18);
 			u += ((str[3] & 0x3f) << 12);
 			u += ((str[4] & 0x3f) << 6);
 			u += (str[5] & 0x3f);
+			if (u < 0x4000000)
+				goto invalid_utf8;
 			break;
+		default:
+			INTERNAL("utf8char_len_tab out of range");
+			goto invalid_utf8;
 	}
 	*string = str + length;
 	return u;
