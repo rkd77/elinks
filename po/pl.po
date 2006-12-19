@@ -593,7 +593,7 @@ msgstr "Szyfr SSL"
 
 #: src/cache/dialogs.c:106 src/dialogs/document.c:188
 msgid "Encoding"
-msgstr "Kodowanie"
+msgstr "Kompresja"
 
 #: src/cache/dialogs.c:112
 msgid "Flags"
