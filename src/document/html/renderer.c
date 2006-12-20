@@ -471,7 +471,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 								part->document->buf[i] = *chars++;
 							}
 							part->document->buf_length = i;
-							return x - x2;
+							break;
 						}
 					} else {
 good_char:
@@ -504,6 +504,13 @@ good_char:
 			}
 
 		}
+		/* Assert that we haven't written past the end of the
+		 * LINE(y).chars array.  @x here is one greater than
+		 * the last one used in POS(x, y).  Instead of this,
+		 * we could assert(X(x) < LINE(y).length) immediately
+		 * before each @copy_screen_chars call above, but
+		 * those are in an inner loop that should be fast.  */
+		assert(X(x) <= LINE(y).length);
 		len = x - x2;
 	} else {
 		if (utf8) {
