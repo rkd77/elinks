@@ -497,6 +497,9 @@ Use assert() and assertm() where applicable. It will prevent hidden bugs.
 
 Names of enum constants should be in upper case.
 
+Please call the charset "utf8" or "UTF8" in identifiers, "UTF-8"
+elsewhere, and "utf_8" only for compatibility.
+
 If you see code in ELinks that doesn't follow these rules, fix it or tell us
 about it.
 
