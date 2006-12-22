@@ -404,8 +404,20 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		return 0;
 
 	if (part->document) {
+		/* Reallocate LINE(y).chars[] to large enough.  The
+		 * last parameter of realloc_line is the index of the
+		 * last element to which we may want to write,
+		 * i.e. one less than the required size of the array.
+		 * Compute the required size by assuming that each
+		 * byte of input will need at most one character cell.
+		 * (All double-cell characters take up at least two
+		 * bytes in UTF-8, and there are no triple-cell or
+		 * wider characters.)  However, if there already is an
+		 * incomplete character in part->document->buf, then
+		 * the first byte of input can result in a double-cell
+		 * character, so we must reserve one extra element.  */
 		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen - 1))
+		                 Y(y), X(x) + charslen))
 			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
@@ -459,7 +471,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 								part->document->buf[i] = *chars++;
 							}
 							part->document->buf_length = i;
-							return x - x2;
+							break;
 						}
 					} else {
 good_char:
@@ -492,6 +504,13 @@ good_char:
 			}
 
 		}
+		/* Assert that we haven't written past the end of the
+		 * LINE(y).chars array.  @x here is one greater than
+		 * the last one used in POS(x, y).  Instead of this,
+		 * we could assert(X(x) < LINE(y).length) immediately
+		 * before each @copy_screen_chars call above, but
+		 * those are in an inner loop that should be fast.  */
+		assert(X(x) <= LINE(y).length);
 		len = x - x2;
 	} else {
 		if (utf8) {
