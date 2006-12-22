@@ -1,3 +1,5 @@
+/* Check the type of a SEE object so it's safe to cast */
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
