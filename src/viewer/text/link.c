@@ -1019,6 +1019,13 @@ activate_link(struct session *ses, struct document_view *doc_view,
 			return FRAME_EVENT_REFRESH;
 		}
 
+		/* @link_fc->type must be FC_RADIO, then.  First turn
+		 * this one on, and then turn off all the other radio
+		 * buttons in the group.  Do it in this order because
+		 * further @find_form_state calls may reallocate
+		 * @doc_view->vs->form_info[] and thereby make the @fs
+		 * pointer invalid.  */
+		fs->state = 1;
 		foreach (form, doc_view->document->forms) {
 			struct form_control *fc;
 
@@ -1027,7 +1034,8 @@ activate_link(struct session *ses, struct document_view *doc_view,
 
 			foreach (fc, form->items) {
 				if (fc->type == FC_RADIO
-				    && !xstrcmp(fc->name, link_fc->name)) {
+				    && !xstrcmp(fc->name, link_fc->name)
+				    && fc != link_fc) {
 					struct form_state *frm_st;
 
 					frm_st = find_form_state(doc_view, fc);
@@ -1035,7 +1043,6 @@ activate_link(struct session *ses, struct document_view *doc_view,
 				}
 			}
 		}
-		fs->state = 1;
 
 		break;
 
