@@ -639,7 +639,7 @@ utf8_to_unicode(unsigned char **string, unsigned char *end)
 	}
 
 	switch (length) {
-		case 1:
+		case 1:		/* U+0000 to U+007F */
 			if (str[0] >= 0x80) {
 invalid_utf8:
 				++*string;
@@ -647,7 +647,7 @@ invalid_utf8:
 			}
 			u = str[0];
 			break;
-		case 2:
+		case 2:		/* U+0080 to U+07FF */
 			if ((str[1] & 0xc0) != 0x80)
 				goto invalid_utf8;
 			u = (str[0] & 0x1f) << 6;
@@ -655,16 +655,16 @@ invalid_utf8:
 			if (u < 0x80)
 				goto invalid_utf8;
 			break;
-		case 3:
+		case 3:		/* U+0800 to U+FFFF, except surrogates */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
 				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 12;
 			u += ((str[1] & 0x3f) << 6);
 			u += (str[2] & 0x3f);
-			if (u < 0x800)
+			if (u < 0x800 || is_utf16_surrogate(u))
 				goto invalid_utf8;
 			break;
-		case 4:
+		case 4:		/* U+10000 to U+1FFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
 			    || (str[3] & 0xc0) != 0x80)
 				goto invalid_utf8;
@@ -675,7 +675,7 @@ invalid_utf8:
 			if (u < 0x10000)
 				goto invalid_utf8;
 			break;
-		case 5:
+		case 5:		/* U+200000 to U+3FFFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
 			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80)
 				goto invalid_utf8;
@@ -687,7 +687,7 @@ invalid_utf8:
 			if (u < 0x200000)
 				goto invalid_utf8;
 			break;
-		case 6:
+		case 6:		/* U+4000000 to U+7FFFFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
 			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80
 			    || (str[5] & 0xc0) != 0x80)
