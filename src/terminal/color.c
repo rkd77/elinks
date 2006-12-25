@@ -25,7 +25,7 @@ struct rgb_cache_entry {
 };
 
 static inline int
-color_distance(struct rgb *c1, struct rgb *c2)
+color_distance(const struct rgb *c1, const struct rgb *c2)
 {
 	int r = c1->r - c2->r;
 	int g = c1->g - c2->g;
@@ -57,7 +57,7 @@ color_distance(struct rgb *c1, struct rgb *c2)
 
 /* Locates the nearest terminal color. */
 static inline unsigned char
-get_color(color_T color, struct rgb *palette, int level)
+get_color(color_T color, const struct rgb *palette, int level)
 {
 	static struct rgb_cache_entry cache[RGB_HASH_SIZE];
 	struct rgb_cache_entry *rgb_cache = &cache[HASH_RGB(color, level)];
@@ -120,7 +120,7 @@ enum palette_range {
 };
 
 struct color_mode_info {
-	struct rgb *palette;
+	const struct rgb *palette;
 
 	struct {
 		int bg;
