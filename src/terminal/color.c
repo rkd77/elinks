@@ -315,7 +315,7 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 	case COLOR_MODE_256:
 #endif
 		/* TODO: Handle decrease lightness by converting to
-		 * hue-ligthness-saturation color model */
+		 * hue-lightness-saturation color model */
 		break;
 #endif
 #ifdef CONFIG_TRUE_COLOR
