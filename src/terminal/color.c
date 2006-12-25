@@ -128,7 +128,7 @@ struct color_mode_info {
 	} palette_range[PALETTE_RANGES];
 };
 
-static struct color_mode_info color_mode_16 = {
+static const struct color_mode_info color_mode_16 = {
 	palette16,
 	{
 		/* PALETTE_FULL */	{ 8, 16 },
@@ -137,7 +137,7 @@ static struct color_mode_info color_mode_16 = {
 };
 
 #ifdef CONFIG_88_COLORS
-static struct color_mode_info color_mode_88 = {
+static const struct color_mode_info color_mode_88 = {
 	palette88,
 	{
 		/* PALETTE_FULL */	{ 88, 88 },
@@ -147,7 +147,7 @@ static struct color_mode_info color_mode_88 = {
 #endif
 
 #ifdef CONFIG_256_COLORS
-static struct color_mode_info color_mode_256 = {
+static const struct color_mode_info color_mode_256 = {
 	palette256,
 	{
 		/* PALETTE_FULL */	{ 256, 256 },
@@ -156,7 +156,7 @@ static struct color_mode_info color_mode_256 = {
 };
 #endif
 
-static struct color_mode_info *color_modes[] = {
+static const struct color_mode_info *color_modes[] = {
 	/* COLOR_MODE_MONO */	&color_mode_16,
 	/* COLOR_MODE_16 */	&color_mode_16,
 #ifdef CONFIG_88_COLORS
@@ -276,7 +276,7 @@ void
 set_term_color(struct screen_char *schar, struct color_pair *pair,
 	       enum color_flags flags, enum color_mode color_mode)
 {
-	struct color_mode_info *mode;
+	const struct color_mode_info *mode;
 	enum palette_range palette_range = PALETTE_FULL;
 	unsigned char fg, bg;
 
