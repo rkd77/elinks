@@ -183,7 +183,7 @@ static const struct color_mode_info *const color_modes[] = {
 /* This table is based mostly on wild guesses of mine. Feel free to
  * correct it. --pasky */
 /* Indexed by [fg][bg]->fg: */
-static unsigned char fg_color[16][8] = {
+static const unsigned char fg_color[16][8] = {
 	/* bk  r  gr  br  bl   m   c   w */
 
 	/* 0 (black) */
