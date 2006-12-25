@@ -132,6 +132,9 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	case COLOR_MODE_MONO: /* FIXME: inversion */
 		dump_to_file(formatted.document, fd);
 		break;
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_16:
 		dump_to_file_16(formatted.document, fd);
 		break;
@@ -150,8 +153,6 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 		dump_to_file_true_color(formatted.document, fd);
 		break;
 #endif
-	default:
-		break;
 	}
 
 	detach_formatted(&formatted);

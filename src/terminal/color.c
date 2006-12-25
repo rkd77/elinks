@@ -301,6 +301,9 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 		}
 		break;
 
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_16:
 		/* Decrease the range of the 16 palette to not include
 		 * bright colors. */
@@ -386,6 +389,9 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 	case COLOR_MODE_TRUE_COLOR:
 		return;
 #endif
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
 		set_term_color16(schar, flags, fg, bg);
