@@ -983,7 +983,7 @@ redraw_screen(struct terminal *term)
 	}
 
 	if (image.length) {
-		if (driver->color_mode)
+		if (driver->color_mode != COLOR_MODE_MONO)
 			add_bytes_to_string(&image, "\033[37;40m", 8);
 
 		add_bytes_to_string(&image, "\033[0m", 4);
