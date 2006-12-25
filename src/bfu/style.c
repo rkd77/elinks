@@ -68,7 +68,8 @@ get_bfu_color(struct terminal *term, unsigned char *stylename)
 		struct option *opt;
 
 		/* Construct the color entry. */
-		opt = get_opt_rec_real(config_options, color_mode
+		opt = get_opt_rec_real(config_options,
+				       color_mode != COLOR_MODE_MONO
 				       ? "ui.colors.color" : "ui.colors.mono");
 		if (!opt) return NULL;
 

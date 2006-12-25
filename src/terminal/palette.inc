@@ -2,7 +2,7 @@
 /* TODO: We should probably autogenerate this using xterm's perl script. */
 
 /* The 16 ANSI colors. */
-static struct rgb palette16[] = {
+static const struct rgb palette16[] = {
 #if defined(PALA)
 	{0x00, 0x00, 0x00},
 	{0x80, 0x00, 0x00},
@@ -62,7 +62,7 @@ static struct rgb palette16[] = {
 /* Colors  0-16 are the ANSI colors (and the same as palette16[]).
  * Colors 16-79 are 4x4x4 color cubes
  * Colors 80-91 are a grayscale ramp (with black and white left out). */
-static struct rgb palette88[] = {
+static const struct rgb palette88[] = {
 	{0x00, 0x00, 0x00}, /* 0 */
 	{0x80, 0x00, 0x00}, /* 1 */
 	{0x00, 0x80, 0x00}, /* 2 */
@@ -164,7 +164,7 @@ static struct rgb palette88[] = {
 /* Colors   0- 16 are the ANSI colors (and the same as palette16[]).
  * Colors  16-231 are a 6x6x6 color cube
  * Colors 231-255 are a grayscale ramp (with black and white left out). */
-static struct rgb palette256[] = {
+static const struct rgb palette256[] = {
 	{0x00, 0x00, 0x00}, /* 0 */
 	{0x80, 0x00, 0x00}, /* 1 */
 	{0x00, 0x80, 0x00}, /* 2 */

@@ -612,7 +612,15 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
-		if (driver->color_mode == COLOR_MODE_16) {
+		/* @update_screen_driver has set @driver->color_mode
+		 * according to terminal-type-specific options.
+		 * The caller of @add_char16 has already partially
+		 * checked it, but there are still these possibilities:
+		 * - COLOR_MODE_MONO.  Then don't show colors, but
+		 *   perhaps use the standout attribute.
+		 * - COLOR_MODE_16.  Use 16 colors.
+		 * - An unsupported color mode.  Use 16 colors.  */
+		if (driver->color_mode != COLOR_MODE_MONO) {
 			unsigned char code[6] = ";30;40";
 			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->color);
 
@@ -956,6 +964,9 @@ redraw_screen(struct terminal *term)
 	if (!init_string(&image)) return;
 
 	switch (driver->color_mode) {
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
 		add_chars(&image, term, driver, &state, add_char16, compare_bg_color_16, compare_fg_color_16);
@@ -977,13 +988,12 @@ redraw_screen(struct terminal *term)
 #endif
 	case COLOR_MODES:
 	case COLOR_MODE_DUMP:
-	default:
 		INTERNAL("Invalid color mode (%d).", driver->color_mode);
 		return;
 	}
 
 	if (image.length) {
-		if (driver->color_mode)
+		if (driver->color_mode != COLOR_MODE_MONO)
 			add_bytes_to_string(&image, "\033[37;40m", 8);
 
 		add_bytes_to_string(&image, "\033[0m", 4);

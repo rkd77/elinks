@@ -251,11 +251,15 @@ select_loop(void (*init)(void))
 
 		n = select(w_max, &x_read, &x_write, &x_error, timeout);
 		if (n < 0) {
+			/* The following calls (especially gettext)
+			 * might change errno.  */
+			const int errno_from_select = errno;
+
 			critical_section = 0;
 			uninstall_alarm();
-			if (errno != EINTR) {
+			if (errno_from_select != EINTR) {
 				ERROR(gettext("The call to %s failed: %d (%s)"),
-				      "select()", errno, (unsigned char *) strerror(errno));
+				      "select()", errno_from_select, (unsigned char *) strerror(errno_from_select));
 				if (++select_errors > 10) /* Infinite loop prevention. */
 					INTERNAL(gettext("%d select() failures."),
 						 select_errors);

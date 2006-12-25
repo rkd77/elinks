@@ -25,7 +25,7 @@ struct rgb_cache_entry {
 };
 
 static inline int
-color_distance(struct rgb *c1, struct rgb *c2)
+color_distance(const struct rgb *c1, const struct rgb *c2)
 {
 	int r = c1->r - c2->r;
 	int g = c1->g - c2->g;
@@ -57,7 +57,7 @@ color_distance(struct rgb *c1, struct rgb *c2)
 
 /* Locates the nearest terminal color. */
 static inline unsigned char
-get_color(color_T color, struct rgb *palette, int level)
+get_color(color_T color, const struct rgb *palette, int level)
 {
 	static struct rgb_cache_entry cache[RGB_HASH_SIZE];
 	struct rgb_cache_entry *rgb_cache = &cache[HASH_RGB(color, level)];
@@ -120,7 +120,7 @@ enum palette_range {
 };
 
 struct color_mode_info {
-	struct rgb *palette;
+	const struct rgb *palette;
 
 	struct {
 		int bg;
@@ -128,7 +128,7 @@ struct color_mode_info {
 	} palette_range[PALETTE_RANGES];
 };
 
-static struct color_mode_info color_mode_16 = {
+static const struct color_mode_info color_mode_16 = {
 	palette16,
 	{
 		/* PALETTE_FULL */	{ 8, 16 },
@@ -137,7 +137,7 @@ static struct color_mode_info color_mode_16 = {
 };
 
 #ifdef CONFIG_88_COLORS
-static struct color_mode_info color_mode_88 = {
+static const struct color_mode_info color_mode_88 = {
 	palette88,
 	{
 		/* PALETTE_FULL */	{ 88, 88 },
@@ -147,7 +147,7 @@ static struct color_mode_info color_mode_88 = {
 #endif
 
 #ifdef CONFIG_256_COLORS
-static struct color_mode_info color_mode_256 = {
+static const struct color_mode_info color_mode_256 = {
 	palette256,
 	{
 		/* PALETTE_FULL */	{ 256, 256 },
@@ -156,16 +156,27 @@ static struct color_mode_info color_mode_256 = {
 };
 #endif
 
-static struct color_mode_info *color_modes[] = {
+static const struct color_mode_info *const color_modes[] = {
 	/* COLOR_MODE_MONO */	&color_mode_16,
 	/* COLOR_MODE_16 */	&color_mode_16,
 #ifdef CONFIG_88_COLORS
 	/* COLOR_MODE_88 */	&color_mode_88,
+#else
+	/* COLOR_MODE_88 */	&color_mode_16,
 #endif
 #ifdef CONFIG_256_COLORS
 	/* COLOR_MODE_256 */	&color_mode_256,
+#else
+	/* COLOR_MODE_256 */	&color_mode_16,
 #endif
+	/* @set_term_color reads @color_modes[COLOR_MODE_TRUE_COLOR]
+	 * only if CONFIG_TRUE_COLOR is not defined.  */
+	/* COLOR_MODE_TRUE_COLOR */ &color_mode_16,
 };
+/* Get a compile-time error if the array has the wrong size.  */
+typedef int assert_enough_color_modes[
+	(sizeof(color_modes) / sizeof(color_modes[0]) == COLOR_MODES)
+	? 1 : -1];
 
 /* Colors values used in the foreground color table:
  *
@@ -183,7 +194,7 @@ static struct color_mode_info *color_modes[] = {
 /* This table is based mostly on wild guesses of mine. Feel free to
  * correct it. --pasky */
 /* Indexed by [fg][bg]->fg: */
-static unsigned char fg_color[16][8] = {
+static const unsigned char fg_color[16][8] = {
 	/* bk  r  gr  br  bl   m   c   w */
 
 	/* 0 (black) */
@@ -276,7 +287,7 @@ void
 set_term_color(struct screen_char *schar, struct color_pair *pair,
 	       enum color_flags flags, enum color_mode color_mode)
 {
-	struct color_mode_info *mode;
+	const struct color_mode_info *mode;
 	enum palette_range palette_range = PALETTE_FULL;
 	unsigned char fg, bg;
 
@@ -301,6 +312,9 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 		}
 		break;
 
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_16:
 		/* Decrease the range of the 16 palette to not include
 		 * bright colors. */
@@ -315,7 +329,7 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 	case COLOR_MODE_256:
 #endif
 		/* TODO: Handle decrease lightness by converting to
-		 * hue-ligthness-saturation color model */
+		 * hue-lightness-saturation color model */
 		break;
 #endif
 #ifdef CONFIG_TRUE_COLOR
@@ -386,6 +400,9 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 	case COLOR_MODE_TRUE_COLOR:
 		return;
 #endif
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
 		set_term_color16(schar, flags, fg, bg);
