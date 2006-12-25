@@ -641,80 +641,20 @@ static struct option_info config_options_info[] = {
 		N_("Codepage used in dump output. 'System' stands for\n"
 		"a codepage determined by a selected locale.")),
 
-	/* The #if directives cannot be inside the argument list of
-	 * the INIT_OPT_INT macro; that wouldn't be standard C.
-	 * And they especially cannot be inside the argument list of N_;
-	 * xgettext (GNU gettext-tools) 0.14.3 wouldn't support that. */
-	 /* FIXME: It's totally brainless --witekfl */
-#if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode\n"
-		"3 is 256 color mode")),
-#elif defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode")),
-#elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 256 color mode")),
-#elif !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 1, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode")),
-#elif defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 4, -1,
+		"color_mode", 0, -1, COLOR_MODES - 1, -1,
 		N_("Color mode for dumps:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
 		"1 is 16 color mode\n"
 		"2 is 88 color mode\n"
 		"3 is 256 color mode\n"
-		"4 is true color mode")),
-#elif defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode\n"
-		"3 is true color mode")),
-#elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 256 color mode\n"
-		"3 is true color mode")),
-#elif !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is true color mode")),
-#endif /* !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) */
+		"4 is true color mode\n"
+		"Some of these may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.")),
+
 	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", 0, "",
 		N_("Footer string used in dumps. %u is substituted by URL.")),
@@ -909,12 +849,17 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_INT("terminal._template_", N_("Color mode"),
 		"colors", 0, 0, COLOR_MODES - 1, 0,
-		N_("The color mode controls what colors are used and how they are\n"
+		N_("The color mode controls what colors are used and how they are "
 		"output to the terminal. The color modes are:\n"
 		"0 is mono mode, only 2 colors are used\n"
 		"1 is 16 color mode, uses the common ANSI colors\n"
-		"2 is 256 color mode, uses XTerm RGB codes\n"
-		"3 is true color mode, uses konsole RGB codes.")),
+		"2 is 88 color mode, uses XTerm RGB codes\n"
+		"3 is 256 color mode, uses XTerm RGB codes\n"
+		"4 is true color mode, uses konsole RGB codes.\n"
+		"Some of these may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Transparency"),
 		"transparency", 0, 0,

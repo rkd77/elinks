@@ -161,11 +161,22 @@ static const struct color_mode_info *const color_modes[] = {
 	/* COLOR_MODE_16 */	&color_mode_16,
 #ifdef CONFIG_88_COLORS
 	/* COLOR_MODE_88 */	&color_mode_88,
+#else
+	/* COLOR_MODE_88 */	&color_mode_16,
 #endif
 #ifdef CONFIG_256_COLORS
 	/* COLOR_MODE_256 */	&color_mode_256,
+#else
+	/* COLOR_MODE_256 */	&color_mode_16,
 #endif
+	/* @set_term_color reads @color_modes[COLOR_MODE_TRUE_COLOR]
+	 * only if CONFIG_TRUE_COLOR is not defined.  */
+	/* COLOR_MODE_TRUE_COLOR */ &color_mode_16,
 };
+/* Get a compile-time error if the array has the wrong size.  */
+typedef int assert_enough_color_modes[
+	(sizeof(color_modes) / sizeof(color_modes[0]) == COLOR_MODES)
+	? 1 : -1];
 
 /* Colors values used in the foreground color table:
  *
