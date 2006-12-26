@@ -154,14 +154,16 @@ realloc_line(struct html_context *html_context, struct document *document,
 {
 	struct screen_char *pos, *end;
 	struct line *line;
+	int orig_length;
 
 	if (!realloc_lines(document, y))
 		return -1;
 
 	line = &document->data[y];
-
-	if (length < line->length)
-		return 0;
+	orig_length = line->length;
+	
+	if (length < orig_length)
+		return orig_length;
 
 	if (!ALIGN_LINE(&line->chars, line->length, length + 1))
 		return -1;
@@ -181,7 +183,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 
 	line->length = length + 1;
 
-	return 0;
+	return orig_length;
 }
 
 void
