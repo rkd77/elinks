@@ -396,6 +396,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	const int x2 = x;
 	int len = charslen;
 	const int utf8 = html_context->options->utf8;
+	int orig_length;
 
 	assert(part);
 	if_assert_failed return len;
@@ -418,8 +419,9 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		 * incomplete character in part->document->buf, then
 		 * the first byte of input can result in a double-cell
 		 * character, so we must reserve one extra element.  */
-		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen) < 0)
+		orig_length = realloc_line(html_context, part->document,
+					   Y(y), X(x) + charslen);
+		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
@@ -442,6 +444,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					goto good_char;
 				} else {
 					/* Still not full char */
+					LINE(y).length = orig_length;
 					return 0;
 				}
 			}
@@ -513,6 +516,13 @@ good_char:
 		 * before each @copy_screen_chars call above, but
 		 * those are in an inner loop that should be fast.  */
 		assert(X(x) <= LINE(y).length);
+		/* Some part of the code is apparently using LINE(y).length
+		 * for line-wrapping decisions.  It may currently be too
+		 * large because it was allocated above based on @charslen
+		 * which is the number of bytes, not the number of cells.
+		 * Change the length to the correct size, but dont let it
+		 * get smaller than it was on entry to this function.  */
+		LINE(y).length = int_max(orig_length, X(x));
 		len = x - x2;
 	} else {
 		if (utf8) {
