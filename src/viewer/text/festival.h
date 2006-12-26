@@ -10,6 +10,7 @@ struct fest {
 	int line;
 	int in;
 	int out;
+	int festival_or_flite;
 	unsigned int running:1;
 };
 

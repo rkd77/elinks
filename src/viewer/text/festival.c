@@ -49,6 +49,9 @@ read_from_festival(struct fest *fest)
 		     NULL, NULL, fest);
 }
 
+#define FESTIVAL_SYSTEM	0
+#define FLITE_SYSTEM	1
+
 static void
 write_to_festival(struct fest *fest)
 {
@@ -71,7 +74,8 @@ write_to_festival(struct fest *fest)
 		return;
 
 	data = doc->data[fest->line].chars;
-	add_to_string(&buf, "(SayText \"");
+	if (festival.festival_or_flite == FESTIVAL_SYSTEM)
+		add_to_string(&buf, "(SayText \"");
 	/* UTF-8 not supported yet. If festival support UTF-8? */
 	for (i = 0; i < len; i++) {
 		unsigned char ch = (unsigned char)data[i].data;
@@ -80,7 +84,9 @@ write_to_festival(struct fest *fest)
 			add_char_to_string(&buf, '\\');
 		add_char_to_string(&buf, ch);
 	}
-	add_to_string(&buf, "\")\n");
+	if (festival.festival_or_flite == FESTIVAL_SYSTEM)
+		add_to_string(&buf, "\")");
+	add_char_to_string(&buf, '\n');
 
 	w = safe_write(fest->out, buf.source, buf.length);
 	if (w >= 0) {
@@ -100,8 +106,12 @@ init_festival(void)
 	int out_pipe[2] = {-1, -1};
 	pid_t cpid;
 
-	if (access(FESTIVAL, X_OK))
-		return 1;
+	festival.festival_or_flite = get_opt_int("document.speech.system");
+	if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
+		if (access(FESTIVAL, X_OK)) return 1;
+	} else {
+		if (access(FLITE, X_OK)) return 1;
+	}
 
 	if (c_pipe(in_pipe) || c_pipe(out_pipe)) {
 		if (in_pipe[0] >= 0) close(in_pipe[0]);
@@ -126,8 +136,22 @@ init_festival(void)
 		close(in_pipe[1]);
 		close(2);
 		close_all_non_term_fd();
-		execl(FESTIVAL, "festival", "-i", NULL);
-		_exit(0);
+		if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
+			execl(FESTIVAL, "festival", "-i", NULL);
+			_exit(0);
+		} else {
+			char line[1024];
+			char command[1200];
+
+			do {
+				fgets(line, 1024, stdin);
+				snprintf(command, 1200, "%s -t \"%s\"", FLITE, line);
+				system(command);
+				putchar(' ');
+				fflush(stdout);
+			} while (!feof(stdin));
+			_exit(0);
+		}
 	} else {
 		close(out_pipe[1]);
 		close(in_pipe[0]);
@@ -139,6 +163,8 @@ init_festival(void)
 		return 0;
 	}
 }
+#undef FESTIVAL_SYSTEM
+#undef FLITE_SYSTEM
 
 void
 run_festival(struct session *ses, struct document_view *doc_view)

@@ -744,6 +744,15 @@ static struct option_info config_options_info[] = {
 		"compress_empty_lines", 0, 0,
 		N_("Compress successive empty lines to only one in displayed text.")),
 
+	INIT_OPT_TREE("document", N_("Speech"),
+		"speech", 0,
+		N_("Speech.")),
+
+	INIT_OPT_INT("document.speech", N_("Default speech system"),
+		"system", 0, 0, 1, 0,
+		N_("Default speech system:\n"
+		"0 is festival\n"
+		"1 is flite")),
 
 	INIT_OPT_TREE("document", N_("URI passing"),
 		"uri_passing", OPT_SORT | OPT_AUTOCREATE,
