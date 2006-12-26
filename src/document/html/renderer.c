@@ -386,14 +386,14 @@ static inline int
 set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	  enum link_state link_state)
 {
-	struct part *part = html_context->part;
-	struct screen_char *schar = get_format_screen_char(html_context,
-	                                                   link_state);
+	struct part *const part = html_context->part;
+	struct screen_char *const schar = get_format_screen_char(html_context,
+								 link_state);
 	int x = part->cx;
-	int y = part->cy;
-	int x2 = x;
+	const int y = part->cy;
+	const int x2 = x;
 	int len = charslen;
-	int utf8 = html_context->options->utf8;
+	const int utf8 = html_context->options->utf8;
 
 	assert(part);
 	if_assert_failed return len;
