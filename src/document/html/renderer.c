@@ -244,7 +244,7 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	assert(part && part->document && width > 0);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	assert(part->document->data);
@@ -277,7 +277,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	assert(part && part->document && x >= 0 && y >= 0);
 	if_assert_failed return NULL;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 		return NULL;
 
 	assert(part->document->data);
@@ -325,7 +325,7 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 	/* The template char is the first vertical char to be drawn. So
 	 * copy it to the rest. */
 	for (height -= 1, y += 1; height; height--, y++) {
-	    	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 			return;
 
 		copy_screen_chars(&POS(x, y), template, 1);
@@ -417,7 +417,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		 * the first byte of input can result in a double-cell
 		 * character, so we must reserve one extra element.  */
 		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen))
+		                 Y(y), X(x) + charslen) < 0)
 			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
@@ -564,7 +564,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 
 	if (part->document) {
 		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen - 1))
+		                 Y(y), X(x) + charslen - 1) < 0)
 			return;
 
 		for (; charslen > 0; charslen--, x++, chars++) {
@@ -713,7 +713,7 @@ copy_chars(struct html_context *html_context, int x, int y, int width, struct sc
 	assert(width > 0 && part && part->document && part->document->data);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	copy_screen_chars(&POS(x, y), d, width);
