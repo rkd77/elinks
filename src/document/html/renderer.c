@@ -154,14 +154,16 @@ realloc_line(struct html_context *html_context, struct document *document,
 {
 	struct screen_char *pos, *end;
 	struct line *line;
+	int orig_length;
 
 	if (!realloc_lines(document, y))
 		return -1;
 
 	line = &document->data[y];
-
-	if (length < line->length)
-		return 0;
+	orig_length = line->length;
+	
+	if (length < orig_length)
+		return orig_length;
 
 	if (!ALIGN_LINE(&line->chars, line->length, length + 1))
 		return -1;
@@ -181,7 +183,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 
 	line->length = length + 1;
 
-	return 0;
+	return orig_length;
 }
 
 void
@@ -244,7 +246,7 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	assert(part && part->document && width > 0);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	assert(part->document->data);
@@ -277,7 +279,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	assert(part && part->document && x >= 0 && y >= 0);
 	if_assert_failed return NULL;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 		return NULL;
 
 	assert(part->document->data);
@@ -325,7 +327,7 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 	/* The template char is the first vertical char to be drawn. So
 	 * copy it to the rest. */
 	for (height -= 1, y += 1; height; height--, y++) {
-	    	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 			return;
 
 		copy_screen_chars(&POS(x, y), template, 1);
@@ -386,14 +388,15 @@ static inline int
 set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	  enum link_state link_state)
 {
-	struct part *part = html_context->part;
-	struct screen_char *schar = get_format_screen_char(html_context,
-	                                                   link_state);
+	struct part *const part = html_context->part;
+	struct screen_char *const schar = get_format_screen_char(html_context,
+								 link_state);
 	int x = part->cx;
-	int y = part->cy;
-	int x2 = x;
+	const int y = part->cy;
+	const int x2 = x;
 	int len = charslen;
-	int utf8 = html_context->options->utf8;
+	const int utf8 = html_context->options->utf8;
+	int orig_length;
 
 	assert(part);
 	if_assert_failed return len;
@@ -416,8 +419,9 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		 * incomplete character in part->document->buf, then
 		 * the first byte of input can result in a double-cell
 		 * character, so we must reserve one extra element.  */
-		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen))
+		orig_length = realloc_line(html_context, part->document,
+					   Y(y), X(x) + charslen);
+		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
@@ -436,10 +440,21 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				part->document->buf[i] = '\0';
 				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
+					/* FIXME: If there was invalid
+					 * UTF-8 in the buffer,
+					 * @utf8_to_unicode may have left
+					 * some bytes unused.  Those
+					 * bytes should be pulled back
+					 * into @chars, rather than
+					 * discarded.  This is not
+					 * trivial to implement because
+					 * each byte may have arrived in
+					 * a separate call.  */
 					part->document->buf_length = 0;
 					goto good_char;
 				} else {
 					/* Still not full char */
+					LINE(y).length = orig_length;
 					return 0;
 				}
 			}
@@ -511,6 +526,13 @@ good_char:
 		 * before each @copy_screen_chars call above, but
 		 * those are in an inner loop that should be fast.  */
 		assert(X(x) <= LINE(y).length);
+		/* Some part of the code is apparently using LINE(y).length
+		 * for line-wrapping decisions.  It may currently be too
+		 * large because it was allocated above based on @charslen
+		 * which is the number of bytes, not the number of cells.
+		 * Change the length to the correct size, but dont let it
+		 * get smaller than it was on entry to this function.  */
+		LINE(y).length = int_max(orig_length, X(x));
 		len = x - x2;
 	} else {
 		if (utf8) {
@@ -564,7 +586,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 
 	if (part->document) {
 		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen - 1))
+		                 Y(y), X(x) + charslen - 1) < 0)
 			return;
 
 		for (; charslen > 0; charslen--, x++, chars++) {
@@ -713,7 +735,7 @@ copy_chars(struct html_context *html_context, int x, int y, int width, struct sc
 	assert(width > 0 && part && part->document && part->document->data);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	copy_screen_chars(&POS(x, y), d, width);
