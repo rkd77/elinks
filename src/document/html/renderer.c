@@ -440,6 +440,16 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				part->document->buf[i] = '\0';
 				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
+					/* FIXME: If there was invalid
+					 * UTF-8 in the buffer,
+					 * @utf8_to_unicode may have left
+					 * some bytes unused.  Those
+					 * bytes should be pulled back
+					 * into @chars, rather than
+					 * discarded.  This is not
+					 * trivial to implement because
+					 * each byte may have arrived in
+					 * a separate call.  */
 					part->document->buf_length = 0;
 					goto good_char;
 				} else {
