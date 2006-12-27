@@ -21,7 +21,7 @@ on most UNIX systems--usually in /etc/mailcap--so this makes it possible for
 ELinks to know how to handle a great variety of file formats with little
 configuration. To be able to use mailcap, it has to be compiled into ELinks.
 This is the default. If you don't need mailcap support, just configure ELinks
-with the flag: --disable-mailcap.
+with the flag: \--disable-mailcap.
 
 
 Parameters to Mailcap Entries

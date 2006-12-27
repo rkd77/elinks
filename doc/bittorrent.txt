@@ -5,7 +5,7 @@ This chapter provides a small manual for using the implemented
 BitTorrent client. The BitTorrent client is provided as an optional
 add-on for ELinks, and needs to be enabled at compile time.  To build
 ELinks with BitTorrent support be sure to either pass
-`--enable-bittorrent` to `./configure` or change the value of
+`\--enable-bittorrent` to `./configure` or change the value of
 `CONFIG_BITTORRENT` to `yes` in `features.conf`.
 
 Using the BitTorrent Client
