@@ -92,7 +92,7 @@ or present on your system.
 Mailcap Configuration
 ~~~~~~~~~~~~~~~~~~~~~
 
-Apart from the mime.mailcap.path option, you can configure if mailca support
+Apart from the mime.mailcap.path option, you can configure if mailcap support
 should be disabled. The default being that it is enabled. To disable it just
 put:
 
@@ -100,8 +100,8 @@ put:
 
 in elinks.conf.
 
-It is also possible to control wether ELinks should ask you before opening a
-file. The option is a boolian and can be set like this:
+It is also possible to control whether ELinks should ask you before opening a
+file. The option is a boolean and can be set like this:
 
 	set mime.mailcap.ask = 1
 
