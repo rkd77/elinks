@@ -73,7 +73,8 @@ cat "$CONFFILE" | while read line; do
 		# Ignore
 		;;
 	"#"*)
-		line=$(strip_comment "$line")
+		# Backslashify --help, --enable, --disable to avoid &#8212;.
+		line=$(strip_comment "$line" | sed 's/ --\([hed]\)/ \\--\1/')
 		echo "$line" >> $TMPFILE
 		;;
 	esac
