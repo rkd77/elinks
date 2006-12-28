@@ -74,18 +74,24 @@ write_to_festival(struct fest *fest)
 		return;
 
 	data = doc->data[fest->line].chars;
-	if (festival.festival_or_flite == FESTIVAL_SYSTEM)
+	if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
 		add_to_string(&buf, "(SayText \"");
-	/* UTF-8 not supported yet. Does festival support UTF-8? */
-	for (i = 0; i < len; i++) {
-		unsigned char ch = (unsigned char)data[i].data;
+		/* UTF-8 not supported yet. Does festival support UTF-8? */
+		for (i = 0; i < len; i++) {
+			unsigned char ch = (unsigned char)data[i].data;
 
-		if (ch == '"' || ch == '\\' || ch == '\'')
-			add_char_to_string(&buf, '\\');
-		add_char_to_string(&buf, ch);
-	}
-	if (festival.festival_or_flite == FESTIVAL_SYSTEM)
+			if (ch == '"' || ch == '\\')
+				add_char_to_string(&buf, '\\');
+			add_char_to_string(&buf, ch);
+		}
 		add_to_string(&buf, "\")");
+	} else { /* flite */
+		for (i = 0; i < len; i++) {
+			unsigned char ch = (unsigned char)data[i].data;
+
+			add_char_to_string(&buf, ch);
+		}
+	}
 	add_char_to_string(&buf, '\n');
 
 	w = safe_write(fest->out, buf.source, buf.length);
@@ -140,15 +146,18 @@ init_festival(void)
 			execl(FESTIVAL, "festival", "-i", NULL);
 			_exit(0);
 		} else {
-			char line[1024];
-			char command[1200];
-
 			do {
+				char line[1024];
+				FILE *out;
+
 				fgets(line, 1024, stdin);
-				snprintf(command, 1200, "%s -t '%s'", FLITE, line);
-				system(command);
-				putchar(' ');
-				fflush(stdout);
+				out = popen(FLITE, "w");
+				if (out) {
+					fputs(line, out);
+					pclose(out);
+					putchar(' ');
+					fflush(stdout);
+				}
 			} while (!feof(stdin));
 			_exit(0);
 		}
