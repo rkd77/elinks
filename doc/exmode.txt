@@ -6,7 +6,7 @@ Are you a vim-controls nerd who wants to see them everywhere?  Welcome.
 Actually ELinks doesn't shine in this area yet very much. Heck, the famous
 hjkl foursome is still occupied by some feeble managers in the default keymap
 (we have that in our monumental TODO lists). Still, if you know what to touch
-during the compilation (`--enable-exmode`), you can get at least some familiar
+during the compilation (`\--enable-exmode`), you can get at least some familiar
 reply to the mighty ``:'' (colon) grip.
 
 

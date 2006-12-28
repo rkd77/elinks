@@ -34,7 +34,7 @@ The reason why normal cut and paste does not work is that ELinks requests all
 mouse event info even if it is compiled without GPM.  Therefore it is necessary
 to hold down the Shift key when cutting or pasting text.  If you do not need to
 use the mouse for navigation you can disable mouse support by passing
-`--disable-mouse` to configure.
+`\--disable-mouse` to configure.
 
 
 [[move]]
@@ -110,7 +110,7 @@ First, you must enable it in the `feature.conf` file before compiling.
 Second, you must run ELinks on a terminal that supports 256 colours:
 
  - link:http://dickey.his.com/xterm/xterm.html[Thomas Dickey's XTerm],
-   revision 111. XTerm must be compiled with `--enable-256-color`.
+   revision 111. XTerm must be compiled with `\--enable-256-color`.
 
  - Recent versions of
    link:http://www.chiark.greenend.org.uk/~sgtatham/putty/[PuTTY].
