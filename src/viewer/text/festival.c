@@ -76,11 +76,11 @@ write_to_festival(struct fest *fest)
 	data = doc->data[fest->line].chars;
 	if (festival.festival_or_flite == FESTIVAL_SYSTEM)
 		add_to_string(&buf, "(SayText \"");
-	/* UTF-8 not supported yet. If festival support UTF-8? */
+	/* UTF-8 not supported yet. Does festival support UTF-8? */
 	for (i = 0; i < len; i++) {
 		unsigned char ch = (unsigned char)data[i].data;
 
-		if (ch == '"' || ch == '\\')
+		if (ch == '"' || ch == '\\' || ch == '\'')
 			add_char_to_string(&buf, '\\');
 		add_char_to_string(&buf, ch);
 	}
@@ -145,7 +145,7 @@ init_festival(void)
 
 			do {
 				fgets(line, 1024, stdin);
-				snprintf(command, 1200, "%s -t \"%s\"", FLITE, line);
+				snprintf(command, 1200, "%s -t '%s'", FLITE, line);
 				system(command);
 				putchar(' ');
 				fflush(stdout);
