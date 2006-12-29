@@ -43,7 +43,7 @@ static struct option_info ecmascript_options[] = {
 		N_("ECMAScript options.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Enable"),
-		"enable", 0, 1,
+		"enable", 0, 0,
 		N_("Whether to run those scripts inside of documents.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
