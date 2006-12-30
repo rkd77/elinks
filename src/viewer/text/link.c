@@ -1024,7 +1024,8 @@ activate_link(struct session *ses, struct document_view *doc_view,
 		 * buttons in the group.  Do it in this order because
 		 * further @find_form_state calls may reallocate
 		 * @doc_view->vs->form_info[] and thereby make the @fs
-		 * pointer invalid.  */
+		 * pointer invalid.  This also allows us to re-use
+		 * @fs in the loop. */
 		fs->state = 1;
 		foreach (form, doc_view->document->forms) {
 			struct form_control *fc;
@@ -1036,10 +1037,8 @@ activate_link(struct session *ses, struct document_view *doc_view,
 				if (fc->type == FC_RADIO
 				    && !xstrcmp(fc->name, link_fc->name)
 				    && fc != link_fc) {
-					struct form_state *frm_st;
-
-					frm_st = find_form_state(doc_view, fc);
-					if (frm_st) frm_st->state = 0;
+					fs = find_form_state(doc_view, fc);
+					if (fs) fs->state = 0;
 				}
 			}
 		}
