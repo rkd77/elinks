@@ -202,8 +202,10 @@ timeval_limit_to_zero_or_one(timeval_T *t)
 {
 	if (t->sec < 0) t->sec = 0;
 	if (t->usec < 0) t->usec = 0;
+#ifdef CONFIG_OS_WIN32
 /* Under Windows I got 300 seconds timeout, so 1 second should not hurt --witekfl */
 	if (t->sec > 1) t->sec = 1;
+#endif
 }
 
 /* Returns 1 if t1 > t2
