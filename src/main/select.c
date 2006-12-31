@@ -149,11 +149,19 @@ void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	     select_handler_T error_func, void *data)
 {
+	struct epoll_event ev;
+
+	if (threads[fd].read_func == read_func
+		&& threads[fd].write_func == write_func
+		&& threads[fd].error_func == error_func
+		&& threads[fd].data == data) {
+			return;
+	}
+
 	threads[fd].read_func = read_func;
 	threads[fd].write_func = write_func;
 	threads[fd].error_func = error_func;
 	threads[fd].data = data;
-	struct epoll_event ev;
 
 	memset(&ev, 0, sizeof(ev));
 	ev.data.fd = fd;
