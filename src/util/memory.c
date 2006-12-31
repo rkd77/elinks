@@ -175,7 +175,7 @@ mem_mmap_realloc(void *p, size_t old_size, size_t new_size)
 		void *p2 = mem_mmap_alloc(new_size);
 
 		if (p2) {
-			memcpy(p2, p, old_size);
+			memcpy(p2, p, MIN(old_size, new_size));
 			mem_mmap_free(p, old_size);
 			return p2;
 		}
