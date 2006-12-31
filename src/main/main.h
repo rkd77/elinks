@@ -10,6 +10,7 @@ enum retval {
 	RET_PING,	/* --remote "ping()" found no running ELinkses */
 	RET_REMOTE,	/* --remote failed to connect to a running ELinks */
 	RET_COMMAND,	/* Used internally for exiting from cmdline commands */
+	RET_EPOLL,	/* Failed to epoll_create */
 };
 
 struct program {
@@ -19,6 +20,7 @@ struct program {
 };
 
 extern struct program program;
+extern int epoll_fd;
 
 void shrink_memory(int);
 

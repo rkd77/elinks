@@ -15,6 +15,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_SYS_EPOLL_H
+#include <sys/epoll.h>
+#endif
 
 #include "elinks.h"
 
@@ -56,6 +59,7 @@
 #include "viewer/text/marks.h"
 
 struct program program;
+int epoll_fd;
 
 static int ac;
 static unsigned char **av;
@@ -113,6 +117,15 @@ init(void)
 #ifdef HAVE_FORK
 	festival.in = -1;
 	festival.out = -1;
+#endif
+
+#ifdef CONFIG_EPOLL
+	epoll_fd = epoll_create(1024);
+	if (epoll_fd == -1) {
+		program.retval = RET_EPOLL;
+		program.terminate = 1;
+		return;
+	}
 #endif
 	init_osdep();
 	check_cwd();

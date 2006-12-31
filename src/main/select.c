@@ -26,6 +26,10 @@
 #include <sys/select.h>
 #endif
 
+#ifdef HAVE_SYS_EPOLL_H
+#include <sys/epoll.h>
+#endif
+
 #include "elinks.h"
 
 #include "intl/gettext/libintl.h"
@@ -52,6 +56,9 @@ struct thread {
 
 static struct thread threads[FD_SETSIZE];
 
+#ifdef CONFIG_EPOLL
+static struct epoll_event events[FD_SETSIZE];
+#else
 static fd_set w_read;
 static fd_set w_write;
 static fd_set w_error;
@@ -60,6 +67,7 @@ static fd_set x_read;
 static fd_set x_write;
 static fd_set x_error;
 
+#endif
 static int w_max;
 
 int
@@ -135,6 +143,125 @@ get_handler(int fd, enum select_handler_type tp)
 	INTERNAL("get_handler: bad type %d", tp);
 	return NULL;
 }
+
+#ifdef CONFIG_EPOLL
+void
+set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
+	     select_handler_T error_func, void *data)
+{
+	threads[fd].read_func = read_func;
+	threads[fd].write_func = write_func;
+	threads[fd].error_func = error_func;
+	threads[fd].data = data;
+	struct epoll_event ev;
+
+	memset(&ev, 0, sizeof(ev));
+	ev.data.fd = fd;
+	if (read_func) ev.events |= EPOLLIN;
+	if (write_func) ev.events |= EPOLLOUT;
+	if (error_func) ev.events |= EPOLLERR;
+
+	if (read_func || write_func || error_func) {
+		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev))
+			epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &ev);
+		if (fd > w_max) w_max = fd;
+	} else {
+		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, &ev);
+		if (w_max == fd) w_max--;
+	}
+}
+
+void
+select_loop(void (*init)(void))
+{
+	timeval_T last_time;
+	int select_errors = 0;
+
+	clear_signal_mask_and_handlers();
+	timeval_now(&last_time);
+#ifdef SIGPIPE
+	signal(SIGPIPE, SIG_IGN);
+#endif
+	init();
+	check_bottom_halves();
+
+	while (!program.terminate) {
+		int n, i, has_timer, timeout;
+		timeval_T t;
+
+		check_signals();
+		check_timers(&last_time);
+		redraw_all_terminals();
+
+		if (program.terminate) break;
+
+		has_timer = get_next_timer_time(&t);
+		if (!has_timer) break;
+		critical_section = 1;
+
+		if (check_signals()) {
+			critical_section = 0;
+			continue;
+		}
+
+		if (has_timer) {
+			/* Be sure timeout is not negative. */
+			timeval_limit_to_zero_or_one(&t);
+			timeout = (int)timeval_to_milliseconds(&t);
+		} else {
+			timeout = -1;
+		}
+
+		n = epoll_wait(epoll_fd, events, w_max, timeout);
+		if (n < 0) {
+			/* The following calls (especially gettext)
+			 * might change errno.  */
+			const int errno_from_select = errno;
+
+			critical_section = 0;
+			uninstall_alarm();
+			if (errno_from_select != EINTR) {
+				ERROR(gettext("The call to %s failed: %d (%s)"),
+				      "epoll_wait()", errno_from_select, (unsigned char *) strerror(errno_from_select));
+				if (++select_errors > 10) /* Infinite loop prevention. */
+					INTERNAL(gettext("%d epoll_wait() failures."),
+						 select_errors);
+			}
+			continue;
+		}
+
+		select_errors = 0;
+		critical_section = 0;
+		uninstall_alarm();
+		check_signals();
+		/*printf("sel: %d\n", n);*/
+		check_timers(&last_time);
+
+		for (i = 0; i < n; i++) {
+			int fd = events[i].data.fd;
+
+			if ((events[i].events & EPOLLIN)
+				&& threads[fd].read_func) {
+				threads[fd].read_func(threads[fd].data);
+				check_bottom_halves();
+			}
+			if ((events[i].events & EPOLLOUT)
+				&& threads[fd].write_func) {
+				threads[fd].write_func(threads[fd].data);
+				check_bottom_halves();
+			}
+			if ((events[i].events & EPOLLERR)
+				&& threads[fd].error_func) {
+				threads[fd].error_func(threads[fd].data);
+				check_bottom_halves();
+			}
+
+		}
+	}
+	close(epoll_fd);
+}
+
+#else
 
 void
 set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
@@ -312,6 +439,7 @@ select_loop(void (*init)(void))
 		}
 	}
 }
+#endif /* CONFIG_EPOLL */
 
 static int
 can_read_or_write(int fd, int write)

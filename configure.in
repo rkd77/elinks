@@ -194,6 +194,7 @@ AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(locale.h pwd.h)
 AC_CHECK_HEADERS(termios.h)
 
+AC_CHECK_HEADERS(sys/epoll.h, [HAVE_SYS_EPOLL_H=yes])
 
 AC_CHECK_HEADERS(sys/un.h,
 	[CONFIG_INTERLINK=yes
@@ -297,6 +298,7 @@ AC_HAVE_FUNCS(cygwin_conv_to_full_win32_path)
 AC_CHECK_FUNCS(setenv putenv, HAVE_SETENV_OR_PUTENV=yes)
 AC_CHECK_FUNCS(getuid, HAVE_GETUID=yes)
 AC_CHECK_FUNCS(geteuid, HAVE_GETEUID=yes)
+AC_CHECK_FUNCS(epoll_ctl, HAVE_EPOLL_CTL=yes)
 
 dnl These aren't probably needed now, as they are commented in links.h.
 dnl I've no idea about their historical background, but I keep them here
@@ -1343,6 +1345,9 @@ EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 
 EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 	      [  --enable-utf-8          enable UTF-8 support])
+
+EL_ARG_DEPEND(CONFIG_EPOLL, epoll, [HAVE_SYS_EPOLL_H:yes HAVE_EPOLL_CTL:yes], [epoll],
+	      [  --enable-epoll          enable epoll])
 
 EL_LOG_CONFIG(FESTIVAL, [festival], [])
 EL_LOG_CONFIG(FLITE, [flite], [])
