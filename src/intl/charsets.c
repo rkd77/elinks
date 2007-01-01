@@ -864,7 +864,7 @@ get_translation_table_to_utf8(int from)
 }
 
 /* A conversion table between two charsets, where the target is not UTF-8.  */
-struct conv_table table[256];
+static struct conv_table table[256];
 static int first = 1;
 
 void
