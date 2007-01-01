@@ -31,10 +31,24 @@ typedef uint32_t unicode_val_T;
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
 
+/* How to convert a byte from a source charset.  This is used in an
+ * array (struct conv_table[256]) indexed by the byte value.  */
 struct conv_table {
+	/* 0 if this is the final byte of a character, or 1 if more
+	 * bytes are needed.  */
 	int t;
 	union {
+		/* If @t==0: a null-terminated string that is the
+		 * corresponding character in the target charset.
+		 * Normally, the string is statically allocated.
+		 * However, if the translation table is to UTF-8,
+		 * then the strings in elements 0x80 to 0xFF are
+		 * allocated with mem_alloc.  */
 		unsigned char *str;
+		/* If @t==1: a pointer to a nested conversion table
+		 * (with 256 elements) that describes how to convert
+		 * each possible subsequent byte.  The conversion
+		 * table owns the nested conversion table.  */
 		struct conv_table *tbl;
 	} u;
 };
