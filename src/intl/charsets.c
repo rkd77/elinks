@@ -117,6 +117,8 @@ free_translation_table(struct conv_table *p)
 	mem_free(p);
 }
 
+/* A string used in conversion tables when there is no correct
+ * conversion.  */
 static unsigned char *no_str = "*";
 
 static void
@@ -796,6 +798,10 @@ add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
 		ct[*p].u.str = str;
 }
 
+/* A conversion table from some charset to UTF-8.
+ * If it is from UTF-8 to UTF-8, it converts each byte separately.
+ * Unlike in other translation tables, the strings in elements 0x80 to
+ * 0xFF are allocated dynamically.  */
 struct conv_table utf_table[256];
 int utf_table_init = 1;
 
@@ -857,6 +863,7 @@ get_translation_table_to_utf8(int from)
 	return utf_table;
 }
 
+/* A conversion table between two charsets, where the target is not UTF-8.  */
 struct conv_table table[256];
 static int first = 1;
 
