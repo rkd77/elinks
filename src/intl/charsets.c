@@ -118,8 +118,11 @@ free_translation_table(struct conv_table *p)
 }
 
 /* A string used in conversion tables when there is no correct
- * conversion.  */
-static unsigned char *no_str = "*";
+ * conversion.  This is compared by address and therefore should be a
+ * named array rather than a pointer so that it won't share storage
+ * with any other string literal that happens to have the same
+ * characters.  */
+static unsigned char no_str[] = "*";
 
 static void
 new_translation_table(struct conv_table *p)
