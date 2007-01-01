@@ -9,7 +9,7 @@ ELinks now:
 -----------
 
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (4d10c3fb8c2c4945fd9dba757b32a96ed16fe6a4).  The next
+ELinks 0.12.GIT (26473f72f59641aa60277f14f703f8a76dda5a82).  The next
 step will be to scan through Bugzilla and look for bug numbers that
 were not mentioned in related commit messages.
 
@@ -114,6 +114,7 @@ roughly in decreasing order of importance.
     after HTTP proxy was changed
   - (bugfix 899, Debian 403139) Fix size handling in FTP directory
     listings.
+  - (bugfix 919) Fixed a buffer overflow when shrinking a cached fragment.
 * Changes in parsing and rendering of HTML (without DOM)
   - (enhancement) The list of SGML character entities has been updated
     from unicode.org.  However, it still isn't subsetted per DTD like
@@ -181,7 +182,7 @@ roughly in decreasing order of importance.
     may interfere with CONFIG_IPV6 on Linux.
   - (bugfix) When the configure script cleans old object files, this
     no longer causes it to loop.
-  - (new feature) --with-python=DIRECTORY, --with-gc=DIRECTORY
+  - (experimental, new feature) --with-python=DIRECTORY, --with-gc=DIRECTORY
   - (bugfix) Include <sys/types.h> and fix compilation on an old
     PPC/Debian system
   - (bitrot) Fix compilation under gcc 4.x. Backported from gentoo portage.
@@ -190,7 +191,8 @@ roughly in decreasing order of importance.
   - (experimental, new feature) Native Win32 port
   - (enhancement) If make -k was used and a sub-Make fails, build the
     rest before propagating.
-  - (bitrot 768) Look for e.g. -lpython2.4 rather than -lpython.
+  - (experimental, bitrot 768) Look for e.g. -lpython2.4 rather than
+    -lpython.
   - (enhancement) Avoid compilation of vernum.c in 'make install'
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
   - (bugfix) Fix compilation on Minix3.
