@@ -116,7 +116,8 @@ add_to_strn(unsigned char **dst, unsigned char *src)
 }
 
 unsigned char *
-insert_in_string(unsigned char **dst, int pos, unsigned char *seq, int seqlen)
+insert_in_string(unsigned char **dst, int pos,
+		 const unsigned char *seq, int seqlen)
 {
 	int dstlen = strlen(*dst);
 	unsigned char *string = mem_realloc(*dst, dstlen + seqlen + 1);

@@ -47,8 +47,8 @@ void add_to_strn(unsigned char **str, unsigned char *src);
 
 /* Inserts @seqlen chars from @seq at position @pos in the @dst string. */
 /* If reallocation of @dst fails it is not touched and NULL is returned. */
-unsigned char *
-insert_in_string(unsigned char **dst, int pos, unsigned char *seq, int seqlen);
+unsigned char *insert_in_string(unsigned char **dst, int pos,
+				const unsigned char *seq, int seqlen);
 
 /* Takes a list of strings where the last parameter _must_ be NULL and
  * concatenates them. */
