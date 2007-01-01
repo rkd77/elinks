@@ -251,7 +251,7 @@ encode_utf8(unicode_val_T u)
 #ifdef CONFIG_UTF8
 /* Number of bytes utf8 character indexed by first byte. Illegal bytes are
  * equal ones and handled different. */
-static char utf8char_len_tab[256] = {
+static const char utf8char_len_tab[256] = {
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
