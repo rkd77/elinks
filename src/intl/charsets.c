@@ -813,8 +813,9 @@ free_utf_table(void)
 {
 	int i;
 
+	/* Cast away const.  */
 	for (i = 128; i < 256; i++)
-		mem_free(utf_table[i].u.str);
+		mem_free((unsigned char *) utf_table[i].u.str);
 }
 
 static struct conv_table *
@@ -1191,7 +1192,7 @@ convert_string(struct conv_table *convert_table,
 	/* Iterate ;-) */
 
 	while (charspos < charslen) {
-		unsigned char *translit;
+		const unsigned char *translit;
 
 #define PUTC do { \
 		buffer[bufferpos++] = chars[charspos++]; \

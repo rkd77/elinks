@@ -44,7 +44,7 @@ struct conv_table {
 		 * However, if the translation table is to UTF-8,
 		 * then the strings in elements 0x80 to 0xFF are
 		 * allocated with mem_alloc.  */
-		unsigned char *str;
+		const unsigned char *str;
 		/* If @t==1: a pointer to a nested conversion table
 		 * (with 256 elements) that describes how to convert
 		 * each possible subsequent byte.  The conversion
