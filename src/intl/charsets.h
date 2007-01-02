@@ -136,7 +136,7 @@ unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF8 */
 
 unicode_val_T cp2u(int, unsigned char);
-unsigned char *cp2utf8(int, int);
+const unsigned char *cp2utf8(int, int);
 
 const unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
 #define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)

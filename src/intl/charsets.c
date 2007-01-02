@@ -741,7 +741,7 @@ cp2u(int from, unsigned char c)
 }
 
 /* This slow and ugly code is used by the terminal utf_8_io */
-unsigned char *
+const unsigned char *
 cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
