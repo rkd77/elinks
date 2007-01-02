@@ -70,7 +70,7 @@ struct codepage_desc {
 #include "intl/entity.inc"
 
 
-static char strings[256][2] = {
+static const char strings[256][2] = {
 	"\000", "\001", "\002", "\003", "\004", "\005", "\006", "\007",
 	"\010", "\011", "\012", "\013", "\014", "\015", "\016", "\017",
 	"\020", "\021", "\022", "\023", "\024", "\025", "\026", "\033",
@@ -122,7 +122,7 @@ free_translation_table(struct conv_table *p)
  * named array rather than a pointer so that it won't share storage
  * with any other string literal that happens to have the same
  * characters.  */
-static unsigned char no_str[] = "*";
+static const unsigned char no_str[] = "*";
 
 static void
 new_translation_table(struct conv_table *p)
