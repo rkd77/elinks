@@ -11,7 +11,7 @@
 /* This errfile thing is needed, as we don't have var-arg macros in standart,
  * only as gcc extension :(. */
 extern int errline;
-extern unsigned char *errfile;
+extern const unsigned char *errfile;
 
 /* @DBG(format_string) is used for printing of debugging information. It
  * should not be used anywhere in the official codebase (although it is often

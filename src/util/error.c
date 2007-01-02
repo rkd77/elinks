@@ -52,7 +52,7 @@ er(int bell, int shall_sleep, unsigned char *fmt, va_list params)
 }
 
 int errline;
-unsigned char *errfile;
+const unsigned char *errfile;
 
 void
 elinks_debug(unsigned char *fmt, ...)
