@@ -964,7 +964,7 @@ struct entity_cache {
 	unsigned int hits;
 	int strlen;
 	int encoding;
-	unsigned char *result;
+	const unsigned char *result;
 	unsigned char str[20]; /* Suffice in any case. */
 };
 
@@ -998,7 +998,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
 	static int first_time = 1;
 	unsigned int slen = 0;
-	unsigned char *result = NULL;
+	const unsigned char *result = NULL;
 
 	if (strlen <= 0) return NULL;
 
