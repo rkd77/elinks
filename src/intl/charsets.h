@@ -72,7 +72,8 @@ enum nbsp_mode {
 };
 
 struct conv_table *get_translation_table(int, int);
-unsigned char *get_entity_string(const unsigned char *str, const int strlen, int encoding);
+const unsigned char *get_entity_string(const unsigned char *str,
+				       const int strlen, int encoding);
 
 /* The convert_string() name is also used by Samba (version 3.0.3), which
  * provides libnss_wins.so.2, which is called somewhere inside

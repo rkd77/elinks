@@ -988,7 +988,7 @@ compare_entities(const void *key_, const void *element_)
 	return xxstrcmp(first, second, length);
 }
 
-unsigned char *
+const unsigned char *
 get_entity_string(const unsigned char *str, const int strlen, int encoding)
 {
 #define ENTITY_CACHE_SIZE 10	/* 10 seems a good value. */
