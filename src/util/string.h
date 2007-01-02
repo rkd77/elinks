@@ -25,17 +25,17 @@
 /* Allocates NUL terminated string with @len bytes from @src.
  * If @src == NULL or @len < 0 only one byte is allocated and set it to 0. */
 /* Returns the string or NULL on allocation failure. */
-unsigned char *memacpy(unsigned char *src, int len);
+unsigned char *memacpy(const unsigned char *src, int len);
 
 /* Allocated NUL terminated string with the content of @src. */
-unsigned char *stracpy(unsigned char *src);
+unsigned char *stracpy(const unsigned char *src);
 
 #else /* DEBUG_MEMLEAK */
 
-unsigned char *debug_memacpy(unsigned char *, int, unsigned char *, int);
+unsigned char *debug_memacpy(const unsigned char *, int, const unsigned char *, int);
 #define memacpy(s, l) debug_memacpy(__FILE__, __LINE__, s, l)
 
-unsigned char *debug_stracpy(unsigned char *, int, unsigned char *);
+unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
 #define stracpy(s) debug_stracpy(__FILE__, __LINE__, s)
 
 #endif /* DEBUG_MEMLEAK */
@@ -47,8 +47,8 @@ void add_to_strn(unsigned char **str, unsigned char *src);
 
 /* Inserts @seqlen chars from @seq at position @pos in the @dst string. */
 /* If reallocation of @dst fails it is not touched and NULL is returned. */
-unsigned char *
-insert_in_string(unsigned char **dst, int pos, unsigned char *seq, int seqlen);
+unsigned char *insert_in_string(unsigned char **dst, int pos,
+				const unsigned char *seq, int seqlen);
 
 /* Takes a list of strings where the last parameter _must_ be NULL and
  * concatenates them. */

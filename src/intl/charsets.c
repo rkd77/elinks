@@ -70,7 +70,7 @@ struct codepage_desc {
 #include "intl/entity.inc"
 
 
-static char strings[256][2] = {
+static const char strings[256][2] = {
 	"\000", "\001", "\002", "\003", "\004", "\005", "\006", "\007",
 	"\010", "\011", "\012", "\013", "\014", "\015", "\016", "\017",
 	"\020", "\021", "\022", "\023", "\024", "\025", "\026", "\033",
@@ -117,7 +117,12 @@ free_translation_table(struct conv_table *p)
 	mem_free(p);
 }
 
-static unsigned char *no_str = "*";
+/* A string used in conversion tables when there is no correct
+ * conversion.  This is compared by address and therefore should be a
+ * named array rather than a pointer so that it won't share storage
+ * with any other string literal that happens to have the same
+ * characters.  */
+static const unsigned char no_str[] = "*";
 
 static void
 new_translation_table(struct conv_table *p)
@@ -163,7 +168,7 @@ static const unicode_val_T strange_chars[32] = {
 #define SYSTEM_CHARSET_FLAG 128
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
-unsigned char *
+const unsigned char *
 u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
@@ -251,7 +256,7 @@ encode_utf8(unicode_val_T u)
 #ifdef CONFIG_UTF8
 /* Number of bytes utf8 character indexed by first byte. Illegal bytes are
  * equal ones and handled different. */
-static char utf8char_len_tab[256] = {
+static const char utf8char_len_tab[256] = {
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
@@ -736,7 +741,7 @@ cp2u(int from, unsigned char c)
 }
 
 /* This slow and ugly code is used by the terminal utf_8_io */
-unsigned char *
+const unsigned char *
 cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
@@ -767,7 +772,7 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 
 
 static void
-add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
+add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
 {
 	unsigned char *p = encode_utf8(u);
 
@@ -796,6 +801,10 @@ add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
 		ct[*p].u.str = str;
 }
 
+/* A conversion table from some charset to UTF-8.
+ * If it is from UTF-8 to UTF-8, it converts each byte separately.
+ * Unlike in other translation tables, the strings in elements 0x80 to
+ * 0xFF are allocated dynamically.  */
 struct conv_table utf_table[256];
 int utf_table_init = 1;
 
@@ -804,8 +813,9 @@ free_utf_table(void)
 {
 	int i;
 
+	/* Cast away const.  */
 	for (i = 128; i < 256; i++)
-		mem_free(utf_table[i].u.str);
+		mem_free((unsigned char *) utf_table[i].u.str);
 }
 
 static struct conv_table *
@@ -857,7 +867,8 @@ get_translation_table_to_utf8(int from)
 	return utf_table;
 }
 
-struct conv_table table[256];
+/* A conversion table between two charsets, where the target is not UTF-8.  */
+static struct conv_table table[256];
 static int first = 1;
 
 void
@@ -917,7 +928,7 @@ get_translation_table(int from, int to)
 
 		for (i = 128; i < 256; i++) {
 			if (codepages[from].highhalf[i - 0x80] != 0xFFFF) {
-				unsigned char *u;
+				const unsigned char *u;
 
 				u = u2cp(codepages[from].highhalf[i - 0x80], to);
 				if (u) table[i].u.str = u;
@@ -953,7 +964,7 @@ struct entity_cache {
 	unsigned int hits;
 	int strlen;
 	int encoding;
-	unsigned char *result;
+	const unsigned char *result;
 	unsigned char str[20]; /* Suffice in any case. */
 };
 
@@ -977,7 +988,7 @@ compare_entities(const void *key_, const void *element_)
 	return xxstrcmp(first, second, length);
 }
 
-unsigned char *
+const unsigned char *
 get_entity_string(const unsigned char *str, const int strlen, int encoding)
 {
 #define ENTITY_CACHE_SIZE 10	/* 10 seems a good value. */
@@ -987,7 +998,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
 	static int first_time = 1;
 	unsigned int slen = 0;
-	unsigned char *result = NULL;
+	const unsigned char *result = NULL;
 
 	if (strlen <= 0) return NULL;
 
@@ -1181,7 +1192,7 @@ convert_string(struct conv_table *convert_table,
 	/* Iterate ;-) */
 
 	while (charspos < charslen) {
-		unsigned char *translit;
+		const unsigned char *translit;
 
 #define PUTC do { \
 		buffer[bufferpos++] = chars[charspos++]; \

@@ -31,10 +31,24 @@ typedef uint32_t unicode_val_T;
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
 
+/* How to convert a byte from a source charset.  This is used in an
+ * array (struct conv_table[256]) indexed by the byte value.  */
 struct conv_table {
+	/* 0 if this is the final byte of a character, or 1 if more
+	 * bytes are needed.  */
 	int t;
 	union {
-		unsigned char *str;
+		/* If @t==0: a null-terminated string that is the
+		 * corresponding character in the target charset.
+		 * Normally, the string is statically allocated.
+		 * However, if the translation table is to UTF-8,
+		 * then the strings in elements 0x80 to 0xFF are
+		 * allocated with mem_alloc.  */
+		const unsigned char *str;
+		/* If @t==1: a pointer to a nested conversion table
+		 * (with 256 elements) that describes how to convert
+		 * each possible subsequent byte.  The conversion
+		 * table owns the nested conversion table.  */
 		struct conv_table *tbl;
 	} u;
 };
@@ -58,7 +72,8 @@ enum nbsp_mode {
 };
 
 struct conv_table *get_translation_table(int, int);
-unsigned char *get_entity_string(const unsigned char *str, const int strlen, int encoding);
+const unsigned char *get_entity_string(const unsigned char *str,
+				       const int strlen, int encoding);
 
 /* The convert_string() name is also used by Samba (version 3.0.3), which
  * provides libnss_wins.so.2, which is called somewhere inside
@@ -121,9 +136,9 @@ unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF8 */
 
 unicode_val_T cp2u(int, unsigned char);
-unsigned char *cp2utf8(int, int);
+const unsigned char *cp2utf8(int, int);
 
-unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
+const unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
 #define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)
 #define u2cp_no_nbsp(u, to) u2cp_(u, to, NBSP_MODE_ASCII)
 

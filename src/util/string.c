@@ -40,7 +40,7 @@
 #ifdef DEBUG_MEMLEAK
 
 unsigned char *
-debug_memacpy(unsigned char *f, int l, unsigned char *src, int len)
+debug_memacpy(const unsigned char *f, int l, const unsigned char *src, int len)
 {
 	unsigned char *m;
 
@@ -57,7 +57,7 @@ debug_memacpy(unsigned char *f, int l, unsigned char *src, int len)
 }
 
 unsigned char *
-debug_stracpy(unsigned char *f, int l, unsigned char *src)
+debug_stracpy(const unsigned char *f, int l, const unsigned char *src)
 {
 	string_assert(f, l, src, "stracpy");
 	if_assert_failed return NULL;
@@ -68,7 +68,7 @@ debug_stracpy(unsigned char *f, int l, unsigned char *src)
 #else /* DEBUG_MEMLEAK */
 
 unsigned char *
-memacpy(unsigned char *src, int len)
+memacpy(const unsigned char *src, int len)
 {
 	unsigned char *m;
 
@@ -85,7 +85,7 @@ memacpy(unsigned char *src, int len)
 }
 
 unsigned char *
-stracpy(unsigned char *src)
+stracpy(const unsigned char *src)
 {
 	assertm(src, "[stracpy]");
 	if_assert_failed return NULL;
@@ -116,7 +116,8 @@ add_to_strn(unsigned char **dst, unsigned char *src)
 }
 
 unsigned char *
-insert_in_string(unsigned char **dst, int pos, unsigned char *seq, int seqlen)
+insert_in_string(unsigned char **dst, int pos,
+		 const unsigned char *seq, int seqlen)
 {
 	int dstlen = strlen(*dst);
 	unsigned char *string = mem_realloc(*dst, dstlen + seqlen + 1);

@@ -44,7 +44,7 @@ FUNCTIONS
         
         url -- The URL of the link.
     
-    goto_url_hook(url, current_url)
+    goto_url_hook(url)
         Rewrite a URL that was entered in a "Go to URL" dialog box.
         
         This function should return a URL for ELinks to follow, or None if
@@ -53,8 +53,6 @@ FUNCTIONS
         Arguments:
         
         url -- The URL provided by the user.
-        current_url -- The URL of the document being viewed, or None if no
-                document is being viewed.
     
     pre_format_html_hook(url, html)
         Rewrite the body of a document before it's formatted.

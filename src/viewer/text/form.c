@@ -1355,6 +1355,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	struct form_state *fs;
 	enum edit_action action_id;
 	unsigned char *text;
+	const unsigned char *ctext;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
@@ -1748,19 +1749,19 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (ses->tab->term->utf8) {
 				/* fs->value is in UTF-8 regardless of
 				 * the charset of the terminal.  */
-				text = encode_utf8(get_kbd_key(ev));
+				ctext = encode_utf8(get_kbd_key(ev));
 			} else {
 				/* fs->value is in the charset of the
 				 * terminal.  */
 				int cp = get_opt_codepage_tree(ses->tab->term->spec,
 							       "charset");
 
-				text = u2cp_no_nbsp(get_kbd_key(ev), cp);
+				ctext = u2cp_no_nbsp(get_kbd_key(ev), cp);
 			}
-			length = strlen(text);
+			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength
-			    || !insert_in_string(&fs->value, fs->state, text, length)) {
+			    || !insert_in_string(&fs->value, fs->state, ctext, length)) {
 				status = FRAME_EVENT_OK;
 				break;
 			}

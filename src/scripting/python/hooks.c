@@ -15,7 +15,6 @@
 #include "main/event.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
-#include "session/location.h"
 #include "session/session.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -64,28 +63,7 @@ script_hook_url(va_list ap, void *data)
 
 	python_ses = ses;
 
-	/*
-	 * Historical note: The only reason the goto and follow hooks are
-	 * treated differently is to maintain backwards compatibility for
-	 * people who already have a goto_url_hook() function in hooks.py
-	 * that expects a second argument. If we were starting over from
-	 * scratch, we could treat the goto and follow hooks identically and
-	 * simply pass @url as the sole argument in both cases; the Python
-	 * code for the goto hook no longer needs its @current_url argument
-	 * since it could instead determine the current URL by calling the
-	 * Python interpreter's elinks.current_url() function.
-	 */
-	if (!strcmp(method, "goto_url_hook")) {
-		unsigned char *current_url = NULL;
-
-		if (python_ses && have_location(python_ses))
-			current_url = struri(cur_loc(ses)->vs.uri);
-
-		result = PyObject_CallMethod(python_hooks, method, "ss", *url,
-					     current_url);
-	} else {
-		result = PyObject_CallMethod(python_hooks, method, "s", *url);
-	}
+	result = PyObject_CallMethod(python_hooks, method, "s", *url);
 
 	if (!result || !replace_with_python_string(url, result))
 		alert_python_error();
