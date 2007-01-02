@@ -772,7 +772,7 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 
 
 static void
-add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
+add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
 {
 	unsigned char *p = encode_utf8(u);
 
