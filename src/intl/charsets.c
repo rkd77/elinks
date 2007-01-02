@@ -168,7 +168,7 @@ static const unicode_val_T strange_chars[32] = {
 #define SYSTEM_CHARSET_FLAG 128
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
-unsigned char *
+const unsigned char *
 u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
@@ -928,7 +928,7 @@ get_translation_table(int from, int to)
 
 		for (i = 128; i < 256; i++) {
 			if (codepages[from].highhalf[i - 0x80] != 0xFFFF) {
-				unsigned char *u;
+				const unsigned char *u;
 
 				u = u2cp(codepages[from].highhalf[i - 0x80], to);
 				if (u) table[i].u.str = u;
