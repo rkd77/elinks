@@ -1355,10 +1355,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 	struct form_state *fs;
 	enum edit_action action_id;
 	unsigned char *text;
-	const unsigned char *ctext;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
+	const unsigned char *ctext;
 	int utf8 = ses->tab->term->utf8;
 #endif /* CONFIG_UTF8 */
 
