@@ -60,7 +60,7 @@ struct codepage_desc {
 
  	/* If some byte in the codepage corresponds to multiple Unicode
  	 * characters, then the preferred character is in @highhalf
- 	 * above, and the rest are listed here in @extra.  This table
+ 	 * above, and the rest are listed here in @table.  This table
  	 * is not used for translating from the codepage to Unicode.  */
 	const struct table_entry *table;
 };
