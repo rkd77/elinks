@@ -110,4 +110,5 @@
  * to fit in the screen, with this much extra space.  Try 4. */
 #define TABLE_LINE_PADDING		-1
 
+#define ELINKS_EPOLL_SIZE		128
 #endif

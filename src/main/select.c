@@ -57,7 +57,7 @@ struct thread {
 static struct thread threads[FD_SETSIZE];
 
 #ifdef CONFIG_EPOLL
-static struct epoll_event events[FD_SETSIZE];
+static struct epoll_event events[ELINKS_EPOLL_SIZE];
 #else
 static fd_set w_read;
 static fd_set w_write;
@@ -66,9 +66,8 @@ static fd_set w_error;
 static fd_set x_read;
 static fd_set x_write;
 static fd_set x_error;
-
-#endif
 static int w_max;
+#endif
 
 int
 get_file_handles_count(void)
@@ -172,10 +171,8 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	if (read_func || write_func || error_func) {
 		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev))
 			epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &ev);
-		if (fd > w_max) w_max = fd;
 	} else {
 		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, &ev);
-		if (w_max == fd) w_max--;
 	}
 }
 
@@ -220,7 +217,7 @@ select_loop(void (*init)(void))
 			timeout = -1;
 		}
 
-		n = epoll_wait(epoll_fd, events, w_max, timeout);
+		n = epoll_wait(epoll_fd, events, ELINKS_EPOLL_SIZE, timeout);
 		if (n < 0) {
 			/* The following calls (especially gettext)
 			 * might change errno.  */

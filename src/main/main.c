@@ -120,7 +120,7 @@ init(void)
 #endif
 
 #ifdef CONFIG_EPOLL
-	epoll_fd = epoll_create(1024);
+	epoll_fd = epoll_create(ELINKS_EPOLL_SIZE);
 	if (epoll_fd == -1) {
 		program.retval = RET_EPOLL;
 		program.terminate = 1;
