@@ -41,9 +41,9 @@ struct conv_table {
 		/* If @t==0: a null-terminated string that is the
 		 * corresponding character in the target charset.
 		 * Normally, the string is statically allocated.
-		 * However, if the translation table is to UTF-8,
-		 * then the strings in elements 0x80 to 0xFF are
-		 * allocated with mem_alloc.  */
+		 * However, if the conversion table is to UTF-8, then
+		 * the strings in elements 0x80 to 0xFF are allocated
+		 * with @mem_alloc and owned by the table.  */
 		const unsigned char *str;
 		/* If @t==1: a pointer to a nested conversion table
 		 * (with 256 elements) that describes how to convert
