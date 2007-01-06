@@ -165,11 +165,24 @@ asciidoc_dep = sed -n 's/[{]builddir}//g;s@include::\(.*\)\[.*@$@: $< \1@p' < $<
 -include .deps/*.asciidoc
 
 # Do a little post-processing of man pages. Inserting title headers and date.
+# - Change SYNOPSIS to OVERVIEW in elinkskeys.5 (but not in elinks.1).
+#   SYNOPSIS isn't supposed to contain running text.  But AsciiDoc
+#   7.1.2 complains "ERROR: elinkskeys.5.txt: line 10: second section
+#   must be named SYNOPSIS" so we can't change this in  elinkskeys.5.txt.
+# - Write backslash as "\e" not "\\", but be careful not to replace
+#   double-backslashes that actually mean something else.  This is
+#   apparently a bug in db2man, which xmlto runs.
+# Run all the hacks together in one sed command so that we get the right
+# exit code if there is an error somewhere in the middle.
 MAN_DATE = $(shell date -I)
 man_desc = `sed -n 's/:Description:\s*\(.*\)/\1/p' < $(srcdir)$(subst .xml,.txt,$(<F))`
-man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\" \"$(1)\"/" < $@ | \
-	   sed "s/@squote@/\\\\'/g" > $@.tmp && mv $@.tmp $@
-
+man_hack = sed -e "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\" \"$(1)\"/" \
+	       -e 's/\\\\\\\\ /\\e\\e /' \
+	       -e 's/\(\\fI\)\\\\\(\\fR\)/\1\\e\2/' \
+	       -e "s/@squote@/\\\\'/g" \
+	       $(if $(findstring elinkskeys.5,$(<F)),-e 's/^\.SH "SYNOPSIS"$$/.SH "OVERVIEW"/') \
+	       $(2) < $@ > $@.tmp \
+	   && mv $@.tmp $@
 
 #############################################################################
 # Build recipies
