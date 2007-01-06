@@ -643,17 +643,23 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_INT("document.dump", N_("Color mode"),
 		"color_mode", 0, -1, COLOR_MODES - 1, -1,
-		N_("Color mode for dumps:\n"
+		/* The list of modes must be at the end of this string
+		 * because AsciiDoc 7.1.2 does not support continuing
+		 * an outer list entry after an inner list.
+		 * TRANSLATORS: This restriction applies only to the
+		 * "en" (English) translation.  (See doc/Makefile.)  */
+		N_("Color mode for dumps.\n"
+		"Some modes may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.\n"
+		"The color modes are:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
 		"1 is 16 color mode\n"
 		"2 is 88 color mode\n"
 		"3 is 256 color mode\n"
-		"4 is true color mode\n"
-		"Some of these may have been disabled at compile time. "
-		"The Setup -> Terminal options dialog lists the modes "
-		"supported by this executable. If you select an "
-		"unsupported mode, ELinks uses 16 colors.")),
+		"4 is true color mode")),
 
 	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", 0, "",
@@ -849,17 +855,23 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_INT("terminal._template_", N_("Color mode"),
 		"colors", 0, 0, COLOR_MODES - 1, 0,
+		/* The list of modes must be at the end of this string
+		 * because AsciiDoc 7.1.2 does not support continuing
+		 * an outer list entry after an inner list.
+		 * TRANSLATORS: This restriction applies only to the
+		 * "en" (English) translation.  (See doc/Makefile.)  */
 		N_("The color mode controls what colors are used and how they are "
-		"output to the terminal. The color modes are:\n"
+		"output to the terminal.\n"
+		"Some modes may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.\n"
+		"The color modes are:\n"
 		"0 is mono mode, only 2 colors are used\n"
 		"1 is 16 color mode, uses the common ANSI colors\n"
 		"2 is 88 color mode, uses XTerm RGB codes\n"
 		"3 is 256 color mode, uses XTerm RGB codes\n"
-		"4 is true color mode, uses konsole RGB codes.\n"
-		"Some of these may have been disabled at compile time. "
-		"The Setup -> Terminal options dialog lists the modes "
-		"supported by this executable. If you select an "
-		"unsupported mode, ELinks uses 16 colors.")),
+		"4 is true color mode, uses konsole RGB codes")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Transparency"),
 		"transparency", 0, 0,
