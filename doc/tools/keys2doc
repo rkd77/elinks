@@ -78,8 +78,11 @@ print_keymap_defaults()
 		key=$(echo "$entry" | sed "s/\(KBD_[^,]*\|'.*'\),.*/\1/")
 		modifier=$(echo "$entry" | sed "s/.*KBD_MOD_\([A-Z_]*\).*/\1/")
 		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
+		# If there are backslashed quotes, remove the backslashes.
+		# (This is not needed in print_keymap_actions because
+		# there the "read" command consumes the backslashes.)
 		action=$(grep " $action," "$CONFIGDIR/actions-$keymap.inc" \
-			| sed "s/.*\"\([^\"]*\)\".*N__(\"\(.*\)\").*/\2 ('\1')/")
+			| sed "s/.*\"\([^\"]*\)\".*N__(\"\(.*\)\").*/\2 ('\1')/;s/\\\\\"/\"/g")
 
 		case "$key" in
 		KBD_*)
