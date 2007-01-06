@@ -397,33 +397,34 @@ add_document_to_string(struct string *string, struct document *document)
 	goto end;
 utf8:
 	for (y = 0; y < document->height; y++) {
-		struct screen_char *pos = document->data[y].chars;
 		int white = 0;
 		int x;
 
 		for (x = 0; x < document->data[y].length; x++) {
+			struct screen_char *pos = &document->data[y].chars[x];
 			unicode_val_T data = pos->data;
 			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
 
 			if (!isscreensafe(data)) {
 				white++;
 				continue;
-			} else if (frame && data >= 176 && data < 224) {
-				data = frame_dumb[data - 176];
+			} else {
+				if (frame && data >= 176 && data < 224)
+					data = frame_dumb[data - 176];
 
 				if (data <= ' ') {
 					/* Count spaces. */
 					white++;
+				} else if (data == UCS_NO_CHAR) {
+					/* This is the second cell of
+					 * a double-cell character.  */
 				} else {
 					/* Print spaces if any. */
 					if (white) {
 						add_xchar_to_string(string, ' ', white);
 						white = 0;
 					}
-					if (frame)
-						add_char_to_string(string, data);
-					else
-						add_to_string(string, encode_utf8(data));
+					add_to_string(string, encode_utf8(data));
 				}
 			}
 		}
