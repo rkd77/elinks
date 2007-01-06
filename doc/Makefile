@@ -92,9 +92,9 @@ install-doc: all-docs update-man install
 
 update-man: man
 	@$(if $(MAN_DOCS), \
-		$(call ncmd,installdata,elinks.1,man/man1/elinks.1.in); \
-		$(call ncmd,installdata,elinkskeys.5,man/man5/); \
-		$(call ncmd,installdata,elinks.conf.5,man/man5/))
+		$(call ncmd,installdata,elinks.1,$(srcdir)man/man1/elinks.1.in); \
+		$(call ncmd,installdata,elinkskeys.5,$(srcdir)man/man5/); \
+		$(call ncmd,installdata,elinks.conf.5,$(srcdir)man/man5/))
 
 clean-local:
 	@$(RM) -r api $(TXT_DOCS_NOINSTALL) $(MAN_DOCS) $(HTML_DOCS) $(HTML_DOCS_NOINSTALL) $(PDF_DOCS) *.tmp *.xml
