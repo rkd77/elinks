@@ -66,8 +66,9 @@ static fd_set w_error;
 static fd_set x_read;
 static fd_set x_write;
 static fd_set x_error;
-static int w_max;
 #endif
+
+static int w_max;
 
 int
 get_file_handles_count(void)
@@ -169,10 +170,13 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	if (error_func) ev.events |= EPOLLERR;
 
 	if (read_func || write_func || error_func) {
-		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev))
+		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, fd, &ev)) {
 			epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &ev);
+			w_max++;
+		}
 	} else {
 		epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, &ev);
+		if (w_max) w_max--;
 	}
 }
 
@@ -184,6 +188,7 @@ select_loop(void (*init)(void))
 
 	clear_signal_mask_and_handlers();
 	timeval_now(&last_time);
+	w_max = 0;
 #ifdef SIGPIPE
 	signal(SIGPIPE, SIG_IGN);
 #endif
@@ -201,6 +206,8 @@ select_loop(void (*init)(void))
 		if (program.terminate) break;
 
 		has_timer = get_next_timer_time(&t);
+		if (!w_max && !has_timer) break;
+
 		critical_section = 1;
 
 		if (check_signals()) {
