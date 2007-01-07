@@ -471,10 +471,6 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzdopen,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
 
-EL_ARG_DEPEND(CONFIG_BZIP2_ENCODING, bzip2_encoding, [CONFIG_BZIP2:yes],
-	      [Bzip2 content encoding],
-	      [  --enable-bzip2-encoding enable Content-Encoding: bzip2 support (requires patched bzlib)])
-
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
 

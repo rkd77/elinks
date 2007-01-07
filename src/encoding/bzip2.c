@@ -12,6 +12,7 @@
 #ifdef HAVE_BZLIB_H
 #include <bzlib.h> /* Everything needs this after stdio.h */
 #endif
+#include <errno.h>
 
 #include "elinks.h"
 
@@ -19,13 +20,14 @@
 #include "encoding/encoding.h"
 #include "util/memory.h"
 
-struct bz2_enc_data {
-	FILE *file;
-	BZFILE *bzfile;
-	int last_read; /* If err after last bzRead() was BZ_STREAM_END.. */
-};
+#define ELINKS_BZ_BUFFER_LENGTH BZ_MAX_UNUSED
 
-/* TODO: When it'll be official, use bzdopen() from Yoshioka Tsuneo. --pasky */
+struct bz2_enc_data {
+	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
+	bz_stream fbz_stream;
+	int fdread;
+	int last_read; /* If err after last bzDecompress was BZ_STREAM_END.. */
+};
 
 static int
 bzip2_open(struct stream_encoded *stream, int fd)
@@ -33,15 +35,17 @@ bzip2_open(struct stream_encoded *stream, int fd)
 	struct bz2_enc_data *data = mem_alloc(sizeof(*data));
 	int err;
 
+	stream->data = 0;
 	if (!data) {
 		return -1;
 	}
+	memset(data, 0, sizeof(struct bz2_enc_data) - ELINKS_BZ_BUFFER_LENGTH);
+
 	data->last_read = 0;
-
-	data->file = fdopen(fd, "rb");
-
-	data->bzfile = BZ2_bzReadOpen(&err, data->file, 0, 0, NULL, 0);
-	if (!data->bzfile) {
+	data->fdread = fd;
+	
+	err = BZ2_bzDecompressInit(&data->fbz_stream, 0, 0);
+	if (err != BZ_OK) {
 		mem_free(data);
 		return -1;
 	}
@@ -57,18 +61,44 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 	int err = 0;
 
-	if (data->last_read)
-		return 0;
+	if (!data) return -1;
 
-	clearerr(data->file);
-	len = BZ2_bzRead(&err, data->bzfile, buf, len);
+	assert(len > 0);	
 
-	if (err == BZ_STREAM_END)
-		data->last_read = 1;
-	else if (err)
-		return -1;
+	if (data->last_read) return 0;
 
-	return len;
+	data->fbz_stream.avail_out = len;
+	data->fbz_stream.next_out = buf;
+
+	do {	
+		if (data->fbz_stream.avail_in == 0) {
+			int l = safe_read(data->fdread, data->buf,
+			                  ELINKS_BZ_BUFFER_LENGTH);
+
+			if (l == -1) {
+				if (errno == EAGAIN)
+					break;
+				else
+					return -1; /* I/O error */
+			} else if (l == 0) {
+				/* EOF. It is error: we wait for more bytes */
+				return -1;
+			}
+
+			data->fbz_stream.next_in = data->buf;
+			data->fbz_stream.avail_in = l;
+		}
+		
+		err = BZ2_bzDecompress(&data->fbz_stream);
+		if (err == BZ_STREAM_END) { 
+			data->last_read = 1;
+			break;
+		} else if (err != BZ_OK) { 
+			return -1;
+		}
+	} while (data->fbz_stream.avail_out > 0);
+	
+	return len - data->fbz_stream.avail_out;
 }
 
 static unsigned char *
@@ -148,11 +178,13 @@ static void
 bzip2_close(struct stream_encoded *stream)
 {
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
-	int err;
 
-	BZ2_bzReadClose(&err, data->bzfile);
-	fclose(data->file);
-	mem_free(data);
+	if (data) {
+		BZ2_bzDecompressEnd(&data->fbz_stream);
+		close(data->fdread);
+		mem_free(data);
+		stream->data = 0;
+	}
 }
 
 static unsigned char *bzip2_extensions[] = { ".bz2", ".tbz", NULL };

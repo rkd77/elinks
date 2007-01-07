@@ -720,16 +720,16 @@ http_send_header(struct socket *socket)
 	add_crlf_to_string(&header);
 
 	/* TODO: Make this encoding.c function. */
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2_ENCODING)
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2)
 	add_to_string(&header, "Accept-Encoding: ");
 
-#ifdef CONFIG_BZIP2_ENCODING
+#ifdef CONFIG_BZIP2
 	add_to_string(&header, "bzip2");
 #endif
 
 #ifdef CONFIG_GZIP
 
-#ifdef CONFIG_BZIP2_ENCODING
+#ifdef CONFIG_BZIP2
 	add_to_string(&header, ", ");
 #endif
 
@@ -1798,7 +1798,7 @@ again:
 		    	conn->content_encoding = ENCODING_GZIP;
 #endif
 
-#ifdef CONFIG_BZIP2_ENCODING
+#ifdef CONFIG_BZIP2
 		if (file_encoding != ENCODING_BZIP2
 		    && (!strcasecmp(d, "bzip2") || !strcasecmp(d, "x-bzip2")))
 			conn->content_encoding = ENCODING_BZIP2;
