@@ -201,7 +201,6 @@ select_loop(void (*init)(void))
 		if (program.terminate) break;
 
 		has_timer = get_next_timer_time(&t);
-		if (!has_timer) break;
 		critical_section = 1;
 
 		if (check_signals()) {
