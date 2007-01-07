@@ -17,10 +17,10 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKSKEYS" 5 "ELinks keybindings" "2006-06-12" "ELinks keybindings"
+.TH "ELINKSKEYS" 5 "ELinks keybindings" "2007-01-06" "ELinks keybindings"
 .SH NAME
 elinkskeys \- keybindings for ELinks
-.SH "SYNOPSIS"
+.SH "OVERVIEW"
 
 
 Information on how to configure keybinding and overview of the default keybindings\&.
@@ -87,7 +87,7 @@ bind "main" "," = "lua\-console"
 Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\fR, \fITab\fR, \fIEscape\fR, \fILeft\fR, \fIRight\fR, \fIUp\fR, \fIDown\fR, \fIInsert\fR, \fIDelete\fR, \fIHome\fR, \fIEnd\fR, \fIPageUp\fR, \fIPageDown\fR, \fIF1\fR to \fIF12\fR\&.
 
 
-Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \\" (backslash quote)\&. Backslash can be written as \\\\ (double backslash)\&.
+Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \\" (backslash quote)\&. Backslash can be written as \e\e (double backslash)\&.
 
 .SH "KEYMAP ACTIONS"
 
@@ -608,8 +608,20 @@ kill\-to\-eol
 Delete to end of line\&.
 
 .TP
+kill\-word\-back
+Delete backwards to start of word\&.
+
+.TP
 left
 Move the cursor left\&.
+
+.TP
+move\-backward\-word
+Move cursor before current word\&.
+
+.TP
+move\-forward\-word
+Move cursor after current word\&.
 
 .TP
 next\-item
@@ -806,7 +818,7 @@ Open download manager (\fIdownload\-manager\fR)
 
 .TP
 \fIE\fR
-Open \\"Go to URL\\" dialog box containing the current link URL (\fIgoto\-url\-current\-link\fR)
+Open "Go to URL" dialog box containing the current link URL (\fIgoto\-url\-current\-link\fR)
 
 .TP
 \fICtrl\-E\fR
@@ -822,7 +834,7 @@ Move downwards by a page (\fImove\-page\-down\fR)
 
 .TP
 \fIG\fR
-Open \\"Go to URL\\" dialog box containing the current URL (\fIgoto\-url\-current\fR)
+Open "Go to URL" dialog box containing the current URL (\fIgoto\-url\-current\fR)
 
 .TP
 \fIH\fR
@@ -881,7 +893,7 @@ Scroll left (\fIscroll\-left\fR)
 Go at a specified mark (\fImark\-goto\fR)
 
 .TP
-\fI\\\fR
+\fI\e\fR
 Toggle rendering page as HTML / plain text (\fItoggle\-html\-plain\fR)
 
 .TP
@@ -914,7 +926,7 @@ Maximize the current frame (\fIframe\-maximize\fR)
 
 .TP
 \fIg\fR
-Open \\"Go to URL\\" dialog box (\fIgoto\-url\fR)
+Open "Go to URL" dialog box (\fIgoto\-url\fR)
 
 .TP
 \fIh\fR
@@ -1061,6 +1073,10 @@ Move to the next frame (\fIframe\-next\fR)
 Move to the previous frame (\fIframe\-prev\fR)
 
 .TP
+\fITab\fR
+Move to the previous frame (\fIframe\-prev\fR)
+
+.TP
 \fIUp\fR
 Move to the previous link (\fImove\-link\-prev\fR)
 
@@ -1079,12 +1095,20 @@ Go to the last line of the buffer (\fIend\-of\-buffer\fR)
 Go to the start of the page/line (\fIhome\fR)
 
 .TP
+\fIAlt\-b\fR
+Move cursor before current word (\fImove\-backward\-word\fR)
+
+.TP
 \fICtrl\-D\fR
 Delete character under cursor (\fIdelete\fR)
 
 .TP
 \fICtrl\-E\fR
 Go to the end of the page/line (\fIend\fR)
+
+.TP
+\fIAlt\-f\fR
+Move cursor after current word (\fImove\-forward\-word\fR)
 
 .TP
 \fICtrl\-H\fR
@@ -1129,6 +1153,10 @@ Attempt to auto\-complete the input (\fIauto\-complete\fR)
 .TP
 \fICtrl\-X\fR
 Delete text from clipboard (\fIcut\-clipboard\fR)
+
+.TP
+\fIAlt\-Backspace\fR
+Delete backwards to start of word (\fIkill\-word\-back\fR)
 
 .TP
 \fIBackspace\fR
@@ -1180,6 +1208,10 @@ Move to the next item (\fInext\-item\fR)
 
 .TP
 \fIAlt\-Tab\fR
+Move to the previous item (\fIprevious\-item\fR)
+
+.TP
+\fITab\fR
 Move to the previous item (\fIprevious\-item\fR)
 
 .TP
@@ -1310,6 +1342,10 @@ Move to the next item (\fInext\-item\fR)
 
 .TP
 \fIAlt\-Tab\fR
+Move to the previous item (\fIprevious\-item\fR)
+
+.TP
+\fITab\fR
 Move to the previous item (\fIprevious\-item\fR)
 
 .TP
