@@ -23,10 +23,10 @@
 #define ELINKS_BZ_BUFFER_LENGTH BZ_MAX_UNUSED
 
 struct bz2_enc_data {
-	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 	bz_stream fbz_stream;
 	int fdread;
 	int last_read; /* If err after last bzDecompress was BZ_STREAM_END.. */
+	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH]; /* must be the last */
 };
 
 static int
