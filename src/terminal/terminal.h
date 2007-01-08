@@ -132,9 +132,6 @@ struct terminal {
 	unsigned int utf8:1;
 #endif /* CONFIG_UTF8 */
 
-	/* Indicates whether Linux console was in UTF-8 mode on startup */
-	unsigned int linux_was_utf8:1;
-
 	/* The current tab number. */
 	int current_tab;
 
