@@ -5102,9 +5102,9 @@ msgstr[2] "%ld sformatowanych"
 #, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "%ld od¶wie¿anych"
-msgstr[1] "%ld od¶wie¿any"
-msgstr[2] "%ld od¶wie¿ane"
+msgstr[0] "%ld od¶wie¿any"
+msgstr[1] "%ld od¶wie¿ane"
+msgstr[2] "%ld od¶wie¿anych"
 
 #: src/dialogs/info.c:236
 msgid "Interlinking"
