@@ -251,7 +251,7 @@ select_loop(void (*init)(void))
 		for (i = 0; i < n; i++) {
 			int fd = events[i].data.fd;
 
-			if ((events[i].events & EPOLLIN)
+			if ((events[i].events & (EPOLLIN | EPOLLHUP))
 				&& threads[fd].read_func) {
 				threads[fd].read_func(threads[fd].data);
 				check_bottom_halves();
