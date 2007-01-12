@@ -19,6 +19,11 @@ typedef long milliseconds_T;
 /* Is using atol() in this way acceptable? It seems
  * non-portable to me; time_t might not be a long. -- Miciah */
 #define str_to_time_t(s) ((time_t) atol(s))
+/* When formatting time_t values to be parsed with str_to_time_t,
+ * we first cast to time_print_T and then printf the result with
+ * TIME_PRINT_FORMAT.  */
+typedef long time_print_T;
+#define TIME_PRINT_FORMAT "ld"
 
 /* Redefine a timeval that has all fields signed so calculations
  * will be simplified on rare systems that define timeval with
