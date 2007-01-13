@@ -280,6 +280,7 @@ set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 
+	/* Bug 923: Assumes time_t values fit in long.  */
 	errno = 0;
 	number = strtol(value, (char **) &end, 10);
 	if (errno || *end || number < 0) return EVENT_NOT_PROCESSED;
@@ -335,6 +336,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	safe_strncpy(name, cookie->name, MAX_STR_LEN);
 	safe_strncpy(value, cookie->value, MAX_STR_LEN);
 	safe_strncpy(domain, cookie->domain, MAX_STR_LEN);
+	/* Bug 923: Assumes time_t values fit in unsigned long.  */
 	ulongcat(expires, &length, cookie->expires, MAX_STR_LEN, 0);
 	length = 0;
 	ulongcat(secure, &length, cookie->secure, MAX_STR_LEN, 0);

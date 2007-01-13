@@ -760,6 +760,7 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta, struct string *metafile)
 			break;
 
 		case BENCODING_TOKEN_CREATION_DATE:
+			/* Bug 923: Assumes time_t values fit in off_t.  */
 			meta->creation_date = (time_t) parse_bencoding_integer(value);
 			skip_scanner_token(&scanner);
 			break;

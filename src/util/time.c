@@ -134,6 +134,8 @@ timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 	return t;
 }
 
+/* Bug 923: Assumes time_t values fit in long.  (This function is used
+ * for both timestamps and durations.)  */
 timeval_T *
 timeval_from_seconds(timeval_T *t, long seconds)
 {
@@ -184,6 +186,8 @@ timeval_to_milliseconds(timeval_T *t)
 	return add_ms_to_ms(a, b);
 }
 
+/* Bug 923: Assumes time_t values fit in long.  (This function is used
+ * for both timestamps and durations.)  */
 long
 timeval_to_seconds(timeval_T *t)
 {
