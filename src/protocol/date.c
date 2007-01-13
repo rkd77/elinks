@@ -218,6 +218,8 @@ my_timegm(struct tm *tm)
 	tm->tm_mon *= 153; tm->tm_mon += 2;
 	tm->tm_year -= 68;
 
+	/* Bug 924: Assumes all years divisible by 4 are leap years,
+	 * even though e.g. 2100 is not.  */
 	tm->tm_mday += tm->tm_year * 1461 / 4;
 	tm->tm_mday += ((tm->tm_mon / 5) - 672);
 
