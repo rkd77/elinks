@@ -150,6 +150,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 	case GLOBHIST_LAST_VISIT: {
 		uint32 seconds;
 
+		/* Bug 923: Assumes time_t values fit in uint32.  */
 		JS_ValueToECMAUint32(smjs_ctx, *vp, &seconds);
 		history_item->last_visit = seconds;
 

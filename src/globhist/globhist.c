@@ -393,10 +393,11 @@ write_global_history(void)
 	if (!ssi) return;
 
 	foreachback (history_item, global_history.entries) {
-		if (secure_fprintf(ssi, "%s\t%s\t%ld\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%"TIME_PRINT_FORMAT"\n",
 				   history_item->title,
 				   history_item->url,
-				   history_item->last_visit) < 0) break;
+				   (time_print_T) history_item->last_visit) < 0)
+			break;
 	}
 
 	if (!secure_close(ssi)) global_history.dirty = 0;

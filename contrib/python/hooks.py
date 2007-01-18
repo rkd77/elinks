@@ -49,7 +49,8 @@ dumbprefixes = {
 def goto_url_hook(url):
     """Rewrite a URL that was entered in a "Go to URL" dialog box.
 
-    This function should return a URL for ELinks to follow, or None if
+    This function should return a string containing a URL for ELinks to
+    follow, or an empty string if no URL should be followed, or None if
     ELinks should follow the original URL.
 
     Arguments:
@@ -63,7 +64,8 @@ def goto_url_hook(url):
 def follow_url_hook(url):
     """Rewrite a URL for a link that's about to be followed.
 
-    This function should return a URL for ELinks to follow, or None if
+    This function should return a string containing a URL for ELinks to
+    follow, or an empty string if no URL should be followed, or None if
     ELinks should follow the original URL.
 
     Arguments:
