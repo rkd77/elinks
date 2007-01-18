@@ -345,11 +345,8 @@ fsp_protocol_handler(struct connection *conn)
 	}
 
 	if (!cpid) {
-		close(1);
 		dup2(fsp_pipe[1], 1);
-		close(0);
 		dup2(open("/dev/null", O_RDONLY), 0);
-		close(2);
 		dup2(header_pipe[1], 2);
 		close(fsp_pipe[0]);
 		close(header_pipe[0]);
