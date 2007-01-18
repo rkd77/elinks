@@ -19,6 +19,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 #include "elinks.h"
 
@@ -201,7 +204,7 @@ do_fsp(struct connection *conn)
 		/* Use the default way to find the MIME type, so write an
 		 * 'empty' name, since something needs to be written in order
 		 * to avoid socket errors. */
-		fprintf(stderr, "%c", '\0');
+		fprintf(stderr, "%d\n", (unsigned int)(sb.st_size));
 		fclose(stderr);
 
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
@@ -291,7 +294,11 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 				error = 1;
 				mem_free(ctype);
 			} else {
-				mem_free_set(&conn->cached->content_type, ctype);
+				if (ctype[0] >= '0' && ctype[0] <= '9') {
+					conn->est_length = (off_t)atoi(ctype);
+					mem_free(ctype);
+				}
+				else mem_free_set(&conn->cached->content_type, ctype);
 			}
 		}
 		else
