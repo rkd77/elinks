@@ -42,7 +42,7 @@ get_content_type_backends(unsigned char *extension)
 	struct mime_backend *backend;
 	int i;
 
-	foreach_module (backend, mime_backends, i) {
+	foreach_module_builtin (backend, mime_backends, i) {
 		if (backend->get_content_type) {
 			unsigned char *content_type;
 
@@ -60,7 +60,7 @@ get_mime_handler_backends(unsigned char *ctype, int have_x)
 	struct mime_backend *backend;
 	int i;
 
-	foreach_module (backend, mime_backends, i) {
+	foreach_module_builtin (backend, mime_backends, i) {
 		if (backend->get_mime_handler) {
 			struct mime_handler *handler;
 
