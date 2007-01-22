@@ -67,7 +67,7 @@ roughly in decreasing order of importance.
   - (enhancement) Tell the user how to move bookmarks.
   - (bugfix) Fix crash when moving bookmarks out of a folder.
   - (bugfix) Fixed crash if XBEL bookmark has no title
-  - (bugfix 886) If the user edits or deletes a cookie, mark the
+  - (bugfix 886, 872) If the user edits or deletes a cookie, mark the
     cookie list as needing to be saved.
   - (enhancement 887) Save in cookie manager should save cookies even
     if unmodified.
@@ -81,7 +81,7 @@ roughly in decreasing order of importance.
   - (new feature) Autocreate directories needed to download a file.
   - (new feature) Option ui.show_menu_bar_always
   - (new feature) Option ui.tabs moves the tab bar to the top.
-  - (bugfix) Fix searching in menus past unselectable items.
+  - (bugfix 24) Fix searching in menus past unselectable items.
   - (bugfix) Fix crash with empty File extensions menu.
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
@@ -258,6 +258,9 @@ have already been considered.
   - (bugfix 826) too small table for double-cell characters
   - (bugfix 902) crash: "overflow detected realloc()" in realloc_line
   - (bugfix 912) wrong color in one cell of an HTML input field
+  - (bugfix 835) Text in textarea is unaffected by horizontal
+    scrolling of document in UTF-8 mode
+  - (bugfix 823) Big textarea is too slow with CONFIG_UTF8
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
