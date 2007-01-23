@@ -30,6 +30,7 @@
 #include "network/connection.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
+#include "protocol/auth/auth.h"
 #include "protocol/common.h"
 #include "protocol/protocol.h"
 #include "protocol/fsp/fsp.h"
@@ -176,13 +177,21 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 static void
 do_fsp(struct connection *conn)
 {
+	FSP_SESSION *ses;
 	struct stat sb;
 	struct uri *uri = conn->uri;
+	struct auth_entry *auth;
 	unsigned char *host = get_uri_string(uri, URI_HOST);
-	unsigned char *password = get_uri_string(uri, URI_PASSWORD);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned short port = (unsigned short)get_uri_port(uri);
-	FSP_SESSION *ses = fsp_open_session(host, port, password);
+	unsigned char *password = NULL;
+
+	if (uri->passwordlen) password = get_uri_string(uri, URI_PASSWORD);
+	else {
+		auth = find_auth(conn->uri);
+		if (auth && auth->valid) password = auth->password;
+	}
+	ses = fsp_open_session(host, port, password);
 
 	if (!ses)
 		fsp_error(errno);
@@ -217,6 +226,16 @@ do_fsp(struct connection *conn)
 #undef READ_SIZE
 
 
+/* Kill the current connection and ask for a username/password for the next
+ * try. */
+static void
+prompt_username_pw(struct connection *conn)
+{
+	add_auth_entry(conn->uri, "FSP", NULL, NULL, 0);
+	abort_connection(conn, S_OK);
+}
+
+
 /* FSP asynchronous connection management: */
 
 static void
@@ -224,20 +243,23 @@ fsp_got_error(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
 	struct connection *conn = socket->conn;
+	int error;
 
 	if (len < 0) {
 		abort_connection(conn, -errno);
 		return;
 	}
 
-	if (len >= 0) {
-		int error;
-
-		rb->data[len] = '\0';
-		error = atoi(rb->data);
-		kill_buffer_data(rb, len);
+	rb->data[len] = '\0';
+	error = atoi(rb->data);
+	kill_buffer_data(rb, len);
+	switch (error) {
+	case EPERM:
+		prompt_username_pw(conn);
+		break;
+	default:
 		abort_connection(conn, -error);
-		return;
+		break;
 	}
 }
 
@@ -309,10 +331,13 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	if (error)
+
+	if (error) {
+		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
 		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_error);
-	else
+	} else {
 		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
+	}
 }
 
 
