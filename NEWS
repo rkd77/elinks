@@ -135,8 +135,6 @@ roughly in decreasing order of importance.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature) If a mailcap entry indicates copiousoutput, ELinks
     itself acts as a pager.
-  - (new feature) Let plain text change colors with ESC [ 31 m or
-    similar control sequences.
 * Changes in the document viewer and tabs
   - (new feature) Highlight links as one enters link prefixes.
   - (new feature) Backspace backs out the last digit of the prefix.
@@ -268,6 +266,9 @@ have already been considered.
     in 10d72cae7eafa6b90db1c8f303deb200555734c2
   - (enhancement) wcwidth, reverted in
     d050cb67aa37390ab938b0a308c7541f19578506
+  - (new feature) Let plain text change colors with ESC [ 31 m or
+    similar control sequences, reverted in
+    2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
 
