@@ -318,7 +318,7 @@ add_crlf_to_string(struct string *string)
 }
 
 inline struct string *
-add_string_to_string(struct string *string, struct string *from)
+add_string_to_string(struct string *string, const struct string *from)
 {
 	assertm(string && from, "[add_string_to_string]");
 	if_assert_failed { return NULL; }
