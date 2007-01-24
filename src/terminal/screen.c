@@ -140,7 +140,7 @@ struct screen_driver {
 	unsigned char name[1]; /* XXX: Keep last! */
 };
 
-static struct screen_driver dumb_screen_driver = {
+static const struct screen_driver dumb_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_DUMB,
 #ifndef CONFIG_UTF8
@@ -156,7 +156,7 @@ static struct screen_driver dumb_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver vt100_screen_driver = {
+static const struct screen_driver vt100_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_VT100,
 #ifndef CONFIG_UTF8
@@ -172,7 +172,7 @@ static struct screen_driver vt100_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver linux_screen_driver = {
+static const struct screen_driver linux_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_LINUX,
 #ifndef CONFIG_UTF8
@@ -188,7 +188,7 @@ static struct screen_driver linux_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver koi8_screen_driver = {
+static const struct screen_driver koi8_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_KOI8,
 #ifndef CONFIG_UTF8
@@ -204,7 +204,7 @@ static struct screen_driver koi8_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver freebsd_screen_driver = {
+static const struct screen_driver freebsd_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_FREEBSD,
 #ifndef CONFIG_UTF8
@@ -221,7 +221,7 @@ static struct screen_driver freebsd_screen_driver = {
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
-static struct screen_driver *screen_drivers[] = {
+static const struct screen_driver *const screen_drivers[] = {
 	/* TERM_DUMB: */	&dumb_screen_driver,
 	/* TERM_VT100: */	&vt100_screen_driver,
 	/* TERM_LINUX: */	&linux_screen_driver,
