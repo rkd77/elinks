@@ -93,7 +93,7 @@ static const struct string vt100_frame_seqs[] = {
 	/* begin border: */	TERM_STRING("\x0e"),
 };
 
-static struct string underline_seqs[] = {
+static const struct string underline_seqs[] = {
 	/* begin underline: */	TERM_STRING("\033[24m"),
 	/* end underline: */	TERM_STRING("\033[4m"),
 };
@@ -123,7 +123,7 @@ struct screen_driver {
 	const struct string *frame_seqs;
 
 	/* The underline mode setup and teardown sequences. May be NULL. */
-	struct string *underline;
+	const struct string *underline;
 
 	/* The color mode */
 	enum color_mode color_mode;
