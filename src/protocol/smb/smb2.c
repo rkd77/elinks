@@ -1,0 +1,452 @@
+/* SMB protocol implementation */
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* Needed for asprintf() */
+#endif
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <errno.h>
+#ifdef HAVE_LIBSMBCLIENT_H
+#include <libsmbclient.h>
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h> /* OS/2 needs this after sys/types.h */
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#include "elinks.h"
+
+#include "cache/cache.h"
+#include "config/options.h"
+#include "intl/gettext/libintl.h"
+#include "main/module.h"
+#include "main/select.h"
+#include "network/connection.h"
+#include "network/socket.h"
+#include "osdep/osdep.h"
+#include "protocol/auth/auth.h"
+#include "protocol/common.h"
+#include "protocol/protocol.h"
+#include "protocol/smb/smb.h"
+#include "protocol/uri.h"
+#include "util/conv.h"
+#include "util/memory.h"
+#include "util/snprintf.h"
+#include "util/string.h"
+
+/* These options are not used. */
+struct option_info smb_options[] = {
+	INIT_OPT_TREE("protocol", N_("SMB"),
+		"smb", 0,
+		N_("SAMBA specific options.")),
+
+	INIT_OPT_STRING("protocol.smb", N_("Credentials"),
+		"credentials", 0, "",
+		N_("Credentials file passed to smbclient via -A option.")),
+
+	NULL_OPTION_INFO,
+};
+
+struct module smb_protocol_module = struct_module(
+	/* name: */		N_("SMB"),
+	/* options: */		smb_options,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
+
+static void
+smb_error(int error)
+{
+	fprintf(stderr, "text/x-error");
+	printf("%d\n", error);
+	exit(1);
+}
+
+static int
+compare(const void *a, const void *b)
+{
+	const struct smbc_dirent **da = (const struct smbc_dirent **)a;
+	const struct smbc_dirent **db = (const struct smbc_dirent **)b;
+	int res = (*da)->smbc_type - (*db)->smbc_type;
+
+	if (res) {
+		return res;
+	}
+	return strcmp((*da)->name, (*db)->name);
+}
+
+static void
+display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
+{
+	switch (entry->smbc_type) {
+	case SMBC_WORKGROUP:
+		printf("<a href=\"%s\">", entry->name);
+		if (*dircolor) {
+			printf("<font color=\"%s\"><b>", dircolor);
+		}
+		printf("%s", entry->name);
+		if (*dircolor) {
+			printf("</b></font>");
+		}
+		puts("</a> WORKGROUP");
+		break;
+	case SMBC_SERVER:
+		printf("<a href=\"%s\">", entry->name);
+		if (*dircolor) {
+			printf("<font color=\"%s\"><b>", dircolor);
+		}
+		printf("%s", entry->name);
+		if (*dircolor) {
+			printf("</b></font>");
+		}
+		puts("</a> SERVER");
+		break;
+	case SMBC_FILE_SHARE:
+		printf("<a href=\"%s\">", entry->name);
+		if (*dircolor) {
+			printf("<font color=\"%s\"><b>", dircolor);
+		}
+		printf("%s", entry->name);
+		if (*dircolor) {
+			printf("</b></font>");
+		}
+		puts("</a> FILE SHARE");
+	case SMBC_PRINTER_SHARE:
+		printf("%s PRINTER\n", entry->name);
+		break;
+	case SMBC_COMMS_SHARE:
+		printf("%s COMM\n", entry->name);
+		break;
+	case SMBC_IPC_SHARE:
+		printf("%s IPC\n", entry->name);
+		break;
+	case SMBC_DIR:
+		printf("<a href=\"%s\">", entry->name);
+		if (*dircolor) {
+			printf("<font color=\"%s\"><b>", dircolor);
+		}
+		printf("%s", entry->name);
+		if (*dircolor) {
+			printf("</b></font>");
+		}
+		puts("</a>");
+		break;
+	case SMBC_LINK:
+		printf("<a href=\"%s\">%s</a> Link\n", entry->name, entry->name);
+		break;
+	case SMBC_FILE:
+		printf("<a href=\"%s\">%s</a>\n", entry->name, entry->name);
+		break;
+	default:
+		/* unknown type */
+		break;
+	}
+}
+
+static void
+sort_and_display_entries(int dir, unsigned char dircolor[])
+{
+	struct smbc_dirent *fentry, **table = NULL;
+	int size = 0;
+	int i;
+
+	while ((fentry = smbc_readdir(dir))) {
+		struct smbc_dirent **new_table, *new_entry;
+		int length = sizeof(*fentry) + fentry->namelen;
+
+		if (!strcmp(fentry->name, "."))
+			continue;
+
+		new_entry = mem_alloc(length);
+		if (!new_entry)
+			continue;
+		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
+		if (!new_table)
+			continue;
+		memcpy(new_entry, fentry, length);
+		table = new_table;
+		table[size] = new_entry;
+		size++;
+	}
+	qsort(table, size, sizeof(*table),
+	 (int (*)(const void *, const void *)) compare);
+
+	for (i = 0; i < size; i++) {
+		display_entry(table[i], dircolor);
+	}
+}
+
+static void
+smb_directory(int dir, struct uri *uri)
+{
+	struct string buf;
+	unsigned char dircolor[8] = "";
+
+	if (init_directory_listing(&buf, uri) != S_OK) {
+		smb_error(-S_OUT_OF_MEM);
+	}
+
+	fprintf(stderr, "text/html");
+	fclose(stderr);
+
+	puts(buf.source);
+
+	if (get_opt_bool("document.browse.links.color_dirs")) {
+		color_to_string(get_opt_color("document.colors.dirs"),
+				(unsigned char *) &dircolor);
+	}
+
+	sort_and_display_entries(dir, dircolor);
+	puts("</pre><hr/></body></html>");
+	smbc_closedir(dir);
+	exit(0);
+}
+
+static void
+smb_auth(const char *srv, const char *shr, char *wg, int wglen, char *un,
+	int unlen, char *pw, int pwlen)
+{
+	/* TODO */
+}
+
+#define READ_SIZE	4096
+
+static void
+do_smb(struct connection *conn)
+{
+	unsigned char url_data[1024];
+	struct uri *uri = conn->uri;
+	struct auth_entry *auth = find_auth(uri);
+	unsigned char *url;
+	int dir;
+
+	if ((uri->userlen && uri->passwordlen) || !auth || !auth->valid) {
+		url = get_uri_string(uri, URI_BASE);
+	} else {
+		snprintf(url_data, 1024, "smb://%s:%s@%s", auth->user, auth->password,
+			get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA));
+		url = url_data;
+	}
+
+	if (!url) {
+		smb_error(-S_OUT_OF_MEM);
+	}
+	if (smbc_init(smb_auth, 0)) {
+		smb_error(errno);
+	};
+	dir = smbc_opendir(url);
+	if (dir >= 0) {
+		smb_directory(dir, conn->uri);
+	} else {
+		char buf[READ_SIZE];
+		struct stat sb;
+		int r, res;
+		int file = smbc_open(url, O_RDONLY, 0);
+
+		if (file < 0) {
+			smb_error(errno);
+		}
+
+		res = smbc_fstat(file, &sb);
+		if (res) {
+			smb_error(res);
+		}
+		/* filesize */
+		fprintf(stderr, "%" OFF_T_FORMAT, sb.st_size);
+		fclose(stderr);
+
+		while ((r = smbc_read(file, buf, READ_SIZE)) > 0) {
+			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
+					break;
+		}
+		smbc_close(file);
+		exit(0);
+	}
+}
+
+#undef READ_SIZE
+
+/* Kill the current connection and ask for a username/password for the next
+ * try. */
+static void
+prompt_username_pw(struct connection *conn)
+{
+	add_auth_entry(conn->uri, "Samba", NULL, NULL, 0);
+	abort_connection(conn, S_OK);
+}
+
+static void
+smb_got_error(struct socket *socket, struct read_buffer *rb)
+{
+	int len = rb->length;
+	struct connection *conn = socket->conn;
+	int error;
+
+	if (len < 0) {
+		abort_connection(conn, -errno);
+		return;
+	}
+
+	rb->data[len] = '\0';
+	error = atoi(rb->data);
+	kill_buffer_data(rb, len);
+	switch (error) {
+	case EACCES:
+		prompt_username_pw(conn);
+		break;
+	default:
+		abort_connection(conn, -error);
+		break;
+	}
+}
+
+static void
+smb_got_data(struct socket *socket, struct read_buffer *rb)
+{
+	int len = rb->length;
+	struct connection *conn = socket->conn;
+
+	if (len < 0) {
+		abort_connection(conn, -errno);
+		return;
+	}
+
+	if (!len) {
+		abort_connection(conn, S_OK);
+		return;
+	}
+
+	socket->state = SOCKET_END_ONCLOSE;
+	conn->received += len;
+	if (add_fragment(conn->cached, conn->from, rb->data, len) == 1)
+		conn->tries = 0;
+	conn->from += len;
+	kill_buffer_data(rb, len);
+
+	read_from_socket(socket, rb, S_TRANS, smb_got_data);
+}
+
+static void
+smb_got_header(struct socket *socket, struct read_buffer *rb)
+{
+	struct connection *conn = socket->conn;
+	struct read_buffer *buf;
+	int error = 0;
+
+	conn->cached = get_cache_entry(conn->uri);
+	if (!conn->cached) {
+		close(socket->fd);
+		close(conn->data_socket->fd);
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	socket->state = SOCKET_END_ONCLOSE;
+
+	if (rb->length > 0) {
+		unsigned char *ctype = memacpy(rb->data, rb->length);
+
+		if (ctype && *ctype) {
+			if (!strcmp(ctype, "text/x-error")) {
+				error = 1;
+				mem_free(ctype);
+			} else {
+				if (ctype[0] >= '0' && ctype[0] <= '9') {
+#ifdef HAVE_ATOLL
+					conn->est_length = (off_t)atoll(ctype);
+#else
+					conn->est_length = (off_t)atoi(ctype);
+#endif
+					mem_free(ctype);
+				}
+				else mem_free_set(&conn->cached->content_type, ctype);
+			}
+		} else {
+			mem_free_if(ctype);
+		}
+	}
+
+	buf = alloc_read_buffer(conn->data_socket);
+	if (!buf) {
+		close(socket->fd);
+		close(conn->data_socket->fd);
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+	if (error) {
+		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
+		read_from_socket(conn->data_socket, buf, S_CONN, smb_got_error);
+	} else {
+		read_from_socket(conn->data_socket, buf, S_CONN, smb_got_data);
+	}
+}
+
+void
+smb_protocol_handler(struct connection *conn)
+{
+	int smb_pipe[2] = { -1, -1 };
+	int header_pipe[2] = { -1, -1 };
+	pid_t cpid;
+
+	if (c_pipe(smb_pipe) || c_pipe(header_pipe)) {
+		int s_errno = errno;
+
+		if (smb_pipe[0] >= 0) close(smb_pipe[0]);
+		if (smb_pipe[1] >= 0) close(smb_pipe[1]);
+		if (header_pipe[0] >= 0) close(header_pipe[0]);
+		if (header_pipe[1] >= 0) close(header_pipe[1]);
+		abort_connection(conn, -s_errno);
+		return;
+	}
+	conn->from = 0;
+	conn->unrestartable = 1;
+
+	cpid = fork();
+	if (cpid == -1) {
+		int s_errno = errno;
+
+		close(smb_pipe[0]);
+		close(smb_pipe[1]);
+		close(header_pipe[0]);
+		close(header_pipe[1]);
+		retry_connection(conn, -s_errno);
+		return;
+	}
+
+	if (!cpid) {
+		dup2(smb_pipe[1], 1);
+		dup2(open("/dev/null", O_RDONLY), 0);
+		dup2(header_pipe[1], 2);
+		close(smb_pipe[0]);
+		close(header_pipe[0]);
+
+		close_all_non_term_fd();
+		do_smb(conn);
+
+	} else {
+		struct read_buffer *buf2;
+
+		conn->data_socket->fd = smb_pipe[0];
+		conn->socket->fd = header_pipe[0];
+		close(smb_pipe[1]);
+		close(header_pipe[1]);
+		buf2 = alloc_read_buffer(conn->socket);
+		if (!buf2) {
+			close(smb_pipe[0]);
+			close(header_pipe[0]);
+			abort_connection(conn, S_OUT_OF_MEM);
+			return;
+		}
+		read_from_socket(conn->socket, buf2, S_CONN, smb_got_header);
+	}
+}

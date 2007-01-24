@@ -109,6 +109,9 @@ init_directory_listing(struct string *page, struct uri *uri)
 	case PROTOCOL_GOPHER:
 		info = "Gopher";
 		break;
+	case PROTOCOL_SMB:
+		info = "Samba";
+		break;
 	default:
 		info = "?";
 	}
