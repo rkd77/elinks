@@ -76,19 +76,19 @@ static const unsigned char frame_restrict[48] = {
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
-static struct string m11_hack_frame_seqs[] = {
+static const struct string m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
 
 #ifdef CONFIG_UTF8
-static struct string utf8_linux_frame_seqs[] = {
+static const struct string utf8_linux_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m\033%G"),
 	/* begin border: */	TERM_STRING("\033%@\033[11m"),
 };
 #endif /* CONFIG_UTF8 */
 
-static struct string vt100_frame_seqs[] = {
+static const struct string vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
 	/* begin border: */	TERM_STRING("\x0e"),
 };
@@ -120,7 +120,7 @@ struct screen_driver {
 	const unsigned char *frame;
 
 	/* The frame mode setup and teardown sequences. May be NULL. */
-	struct string *frame_seqs;
+	const struct string *frame_seqs;
 
 	/* The underline mode setup and teardown sequences. May be NULL. */
 	struct string *underline;
