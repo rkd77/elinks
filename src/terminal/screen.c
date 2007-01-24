@@ -28,12 +28,12 @@
 
 /* TODO: We must use termcap/terminfo if available! --pasky */
 
-unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
-static unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
+const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
+static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
 #ifndef CONFIG_UTF8
 /* For UTF8 I/O */
-static unsigned char frame_vt100_u[48] = {
+static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
 	192, 193, 194, 195, 196, 197, 195, 195,
@@ -43,7 +43,7 @@ static unsigned char frame_vt100_u[48] = {
 };
 #endif /* CONFIG_UTF8 */
 
-static unsigned char frame_freebsd[48] = {
+static const unsigned char frame_freebsd[48] = {
 	130, 138, 128, 153, 150, 150, 150, 140,
 	140, 150, 153, 140, 139, 139, 139, 140,
 	142, 151, 152, 149, 146, 143, 149, 149,
@@ -52,7 +52,7 @@ static unsigned char frame_freebsd[48] = {
 	143, 139, 141, 128, 128, 128, 128, 128,
 };
 
-static unsigned char frame_koi[48] = {
+static const unsigned char frame_koi[48] = {
 	144, 145, 146, 129, 135, 178, 180, 167,
 	166, 181, 161, 168, 174, 173, 172, 131,
 	132, 137, 136, 134, 128, 138, 175, 176,
@@ -62,7 +62,7 @@ static unsigned char frame_koi[48] = {
 };
 
 /* Most of this table is just 176 + <index in table>. */
-static unsigned char frame_restrict[48] = {
+static const unsigned char frame_restrict[48] = {
 	176, 177, 178, 179, 180, 179, 186, 186,
 	205, 185, 186, 187, 188, 186, 205, 191,
 	192, 193, 194, 195, 196, 197, 179, 186,
@@ -117,7 +117,7 @@ struct screen_driver {
 #endif /* CONFIG_UTF8 */
 
 	/* The frame translation table. May be NULL. */
-	unsigned char *frame;
+	const unsigned char *frame;
 
 	/* The frame mode setup and teardown sequences. May be NULL. */
 	struct string *frame_seqs;

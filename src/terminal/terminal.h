@@ -162,7 +162,7 @@ struct terminal {
 extern struct list_head terminals;
 
 
-extern unsigned char frame_dumb[];
+extern const unsigned char frame_dumb[];
 
 struct terminal *init_term(int, int);
 void destroy_terminal(struct terminal *);
