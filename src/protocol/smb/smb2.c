@@ -110,7 +110,8 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 		if (*dircolor) {
 			printf("</b></font>");
 		}
-		puts("</a> SERVER");
+		printf("</a> SERVER ");
+		puts(entry->comment ? entry->comment : "");
 		break;
 	case SMBC_FILE_SHARE:
 		printf("<a href=\"%s\">", entry->name);
@@ -121,9 +122,12 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 		if (*dircolor) {
 			printf("</b></font>");
 		}
-		puts("</a> FILE SHARE");
+		printf("</a> FILE SHARE ");
+		puts(entry->comment ? entry->comment : "");
+		break;
 	case SMBC_PRINTER_SHARE:
-		printf("%s PRINTER\n", entry->name);
+		printf("%s PRINTER ", entry->name);
+		puts(entry->comment ? entry->comment : "");
 		break;
 	case SMBC_COMMS_SHARE:
 		printf("%s COMM\n", entry->name);
@@ -163,12 +167,18 @@ sort_and_display_entries(int dir, unsigned char dircolor[])
 
 	while ((fentry = smbc_readdir(dir))) {
 		struct smbc_dirent **new_table, *new_entry;
-		int length = sizeof(*fentry) + fentry->namelen;
+		int length = fentry->dirlen;
 
 		if (!strcmp(fentry->name, "."))
 			continue;
 
 		new_entry = mem_alloc(length);
+		if (fentry->comment) {
+			char *comment = mem_alloc(fentry->commentlen + 1);
+
+			if (comment) memcpy(comment, fentry->comment, fentry->commentlen + 1);
+			fentry->comment = comment;
+		}
 		if (!new_entry)
 			continue;
 		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
