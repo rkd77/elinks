@@ -155,7 +155,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	if (term->utf8) {
 		struct screen_char *sc;
 
-		if (line->data == UCS_NO_CHAR && x == 0) {
+		if (line[0].data == UCS_NO_CHAR && x == 0) {
 			unicode_val_T data_save;
 
 			sc = line;
