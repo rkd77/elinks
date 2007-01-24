@@ -655,13 +655,13 @@ add_char16(struct string *screen, struct screen_driver *driver,
 }
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-static struct string color256_seqs[] = {
+static const struct string color256_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;5;%dm"),
 	/* background: */	TERM_STRING("\033[48;5;%dm"),
 };
 
 static inline void
-add_char_color(struct string *screen, struct string *seq, unsigned char color)
+add_char_color(struct string *screen, const struct string *seq, unsigned char color)
 {
 	unsigned char color_buf[3];
 	unsigned char *color_pos = color_buf;
@@ -772,14 +772,14 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
-static struct string color_true_seqs[] = {
+static const struct string color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->color[0])
 static inline void
-add_char_true_color(struct string *screen, struct string *seq, unsigned char *colors)
+add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
 	unsigned char color_buf[3];
 	int i;
