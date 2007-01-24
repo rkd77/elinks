@@ -277,7 +277,7 @@ AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_FUNC_STRFTIME
-AC_CHECK_FUNCS(cfmakeraw gethostbyaddr herror strerror)
+AC_CHECK_FUNCS(atoll cfmakeraw gethostbyaddr herror strerror)
 AC_CHECK_FUNCS(popen uname access chmod alarm timegm mremap)
 AC_CHECK_FUNCS(strcasecmp strncasecmp strcasestr strstr strchr strrchr)
 AC_CHECK_FUNCS(memmove bcopy stpcpy strdup index isdigit mempcpy memrchr)
@@ -1162,13 +1162,6 @@ AC_CHECK_HEADERS(execinfo.h, HAVE_EXECINFO=yes, HAVE_EXECINFO=no)
 
 
 dnl ===================================================================
-dnl SMB protocol support.
-dnl ===================================================================
-
-AC_CHECK_PROG(HAVE_SMBCLIENT, smbclient, yes, no)
-
-
-dnl ===================================================================
 dnl Gettext grey zone. Beware.
 dnl ===================================================================
 
@@ -1260,17 +1253,28 @@ EL_ARG_ENABLE(CONFIG_GOPHER, gopher, [Gopher protocol],
 EL_ARG_ENABLE(CONFIG_NNTP, nntp, [NNTP protocol],
 	      [  --enable-nntp           enable nntp protocol support])
 
-dnl Force disable SMB before EL_ARG_DEPEND so that it logs the correct value.
-if test "${enable_smb-no}" != no || test "${CONFIG_SMB-no}" != no; then
-  AC_MSG_WARN([Forcing --disable-smb because of vulnerability CVE-2006-5925.
-If you want to use SMB, please see bug 844.])
+dnl ===================================================================
+dnl SMB protocol support.
+dnl ===================================================================
+EL_SAVE_FLAGS
+
+if test "x${enable_smb}" != xno; then
+	AC_CHECK_HEADERS(libsmbclient.h, HAVE_SMBCLIENT=yes, HAVE_SMBCLIENT=no)
+
+	if test "$HAVE_SMBCLIENT" = yes; then
+		AC_CHECK_LIB(smbclient, smbc_init, HAVE_SMBCLIENT=yes, HAVE_SMBCLIENT=no)
+		if test "$HAVE_SMBCLIENT" = yes; then
+			LIBS="$LIBS -lsmbclient"
+		fi
+	fi
 fi
-enable_smb=no
-CONFIG_SMB=no
-EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
-	      [  --enable-smb            not currently allowed])
-dnl EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [SMB protocol],
-dnl 	      [  --disable-smb           disable SMB protocol support (requires smbclient)])
+
+EL_ARG_DEPEND(CONFIG_SMB, smb, [HAVE_SMBCLIENT:yes], [Samba protocol],
+	      [  --enable-smb            enable Samba protocol support])
+
+if test "x$CONFIG_SMB" = xno; then
+	EL_RESTORE_FLAGS
+fi
 
 
 EL_ARG_ENABLE(CONFIG_MOUSE, mouse, [Mouse handling],
