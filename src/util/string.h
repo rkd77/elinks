@@ -109,7 +109,9 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 #define isasciialnum(c)	(isasciialpha(c) || isdigit(c))
 #define isident(c)	(isasciialnum(c) || (c) == '_' || (c) == '-')
 
-/* Char is safe to write to the terminal screen */
+/* Char is safe to write to the terminal screen.  Cannot test for C1
+ * control characters (0x80 to 0x9F) because this is also used for
+ * non-ISO-8859 charsets.  */
 #define isscreensafe(c)	((c) >= ' ' && (c) != ASCII_DEL)
 
 

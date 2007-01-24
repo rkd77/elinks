@@ -112,7 +112,7 @@ struct screen_driver {
 #ifndef CONFIG_UTF8
 	/* Charsets when doing UTF8 I/O. */
 	/* [0] is the common charset and [1] is the frame charset.
-	 * Test wether to use UTF8 I/O using the use_utf8_io() macro. */
+	 * Test whether to use UTF8 I/O using the use_utf8_io() macro. */
 	int charsets[2];
 #endif /* CONFIG_UTF8 */
 
