@@ -235,18 +235,27 @@ smb_auth(const char *srv, const char *shr, char *wg, int wglen, char *un,
 static void
 do_smb(struct connection *conn)
 {
-	unsigned char url_data[1024];
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth = find_auth(uri);
+	struct string string;
 	unsigned char *url;
 	int dir;
 
 	if ((uri->userlen && uri->passwordlen) || !auth || !auth->valid) {
 		url = get_uri_string(uri, URI_BASE);
 	} else {
-		snprintf(url_data, 1024, "smb://%s:%s@%s", auth->user, auth->password,
-			get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA));
-		url = url_data;
+		unsigned char *uri_string = get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA);
+
+		if (!uri_string || !init_string(&string)) {
+			smb_error(-S_OUT_OF_MEM);
+		}
+		add_to_string(&string, "smb://");
+		add_to_string(&string, auth->user);
+		add_char_to_string(&string, ':');
+		add_to_string(&string, auth->password);
+		add_char_to_string(&string, '@');
+		add_to_string(&string, uri_string);
+		url = string.source;
 	}
 
 	if (!url) {
