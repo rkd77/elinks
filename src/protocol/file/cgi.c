@@ -385,6 +385,8 @@ execute_cgi(struct connection *conn)
 		/* Use data socket for passing the pipe. It will be cleaned up in
 	 	* close_pipe_and_read(). */
 		conn->data_socket->fd = pipe_read[1];
+		set_nonblocking_fd(conn->socket->fd);
+		set_nonblocking_fd(conn->data_socket->fd);
 
 		send_request(conn);
 		return 0;
