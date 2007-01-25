@@ -394,6 +394,8 @@ fsp_protocol_handler(struct connection *conn)
 
 		conn->data_socket->fd = fsp_pipe[0];
 		conn->socket->fd = header_pipe[0];
+		set_nonblocking_fd(conn->data_socket->fd);
+		set_nonblocking_fd(conn->socket->fd);
 		close(fsp_pipe[1]);
 		close(header_pipe[1]);
 		buf2 = alloc_read_buffer(conn->socket);
