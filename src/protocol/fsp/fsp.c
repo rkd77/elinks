@@ -316,12 +316,18 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 				if (ctype[0] >= '0' && ctype[0] <= '9') {
 					conn->est_length = (off_t)atoi(ctype);
 					mem_free(ctype);
+
+					/* avoid read from socket error */
+					if (!conn->est_length) {
+						abort_connection(conn, S_OK);
+						return;
+					}
 				}
 				else mem_free_set(&conn->cached->content_type, ctype);
 			}
-		}
-		else
+		} else {
 			mem_free_if(ctype);
+		}
 	}
 
 	buf = alloc_read_buffer(conn->data_socket);

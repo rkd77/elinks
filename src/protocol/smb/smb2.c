@@ -387,6 +387,12 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 					conn->est_length = (off_t)atoi(ctype);
 #endif
 					mem_free(ctype);
+
+					/* avoid error */
+					if (!conn->est_length) {
+						abort_connection(conn, S_OK);
+						return;
+					}
 				}
 				else mem_free_set(&conn->cached->content_type, ctype);
 			}
