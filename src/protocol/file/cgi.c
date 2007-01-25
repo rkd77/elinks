@@ -371,6 +371,8 @@ execute_cgi(struct connection *conn)
 		close(pipe_read[1]); close(pipe_write[0]);
 		conn->cgi_pipes[0] = pipe_read[0];
 		conn->cgi_pipes[1] = pipe_write[1];
+		set_nonblocking_fd(conn->cgi_pipes[0]);
+		set_nonblocking_fd(conn->cgi_pipes[1]);
 		conn->socket.fd = conn->cgi_pipes[0];
 
 		send_request(conn);
