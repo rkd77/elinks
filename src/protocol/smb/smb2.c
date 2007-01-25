@@ -87,75 +87,73 @@ compare(const void *a, const void *b)
 }
 
 static void
+smb_add_link(struct string *string, struct smbc_dirent *entry,
+	unsigned char *text, unsigned char dircolor[])
+{
+	add_to_string(string, "<a href=\"");
+	add_to_string(string, entry->name);
+	add_to_string(string, "\">");
+	if (*dircolor) {
+		add_to_string(string, "<font color=\"");
+		add_to_string(string, dircolor);
+		add_to_string(string, "\"><b>");
+	}
+	add_to_string(string, entry->name);
+	if (*dircolor) {
+		add_to_string(string, "</b></font>");
+	}
+	add_to_string(string, "</a>");
+	if (text) add_to_string(string, text);
+}
+
+static void
 display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 {
+	static unsigned char zero = '\0';
+	struct string string;
+
+	if (!init_string(&string)) return;
+
 	switch (entry->smbc_type) {
 	case SMBC_WORKGROUP:
-		printf("<a href=\"%s\">", entry->name);
-		if (*dircolor) {
-			printf("<font color=\"%s\"><b>", dircolor);
-		}
-		printf("%s", entry->name);
-		if (*dircolor) {
-			printf("</b></font>");
-		}
-		puts("</a> WORKGROUP");
+		smb_add_link(&string, entry, " WORKGROUP ", dircolor);
 		break;
 	case SMBC_SERVER:
-		printf("<a href=\"%s\">", entry->name);
-		if (*dircolor) {
-			printf("<font color=\"%s\"><b>", dircolor);
-		}
-		printf("%s", entry->name);
-		if (*dircolor) {
-			printf("</b></font>");
-		}
-		printf("</a> SERVER ");
-		puts(entry->comment ? entry->comment : "");
+		smb_add_link(&string, entry, " SERVER ", dircolor);
+		if (entry->comment) add_to_string(&string, entry->comment);
 		break;
 	case SMBC_FILE_SHARE:
-		printf("<a href=\"%s\">", entry->name);
-		if (*dircolor) {
-			printf("<font color=\"%s\"><b>", dircolor);
-		}
-		printf("%s", entry->name);
-		if (*dircolor) {
-			printf("</b></font>");
-		}
-		printf("</a> FILE SHARE ");
-		puts(entry->comment ? entry->comment : "");
+		smb_add_link(&string, entry, " FILE SHARE ", dircolor);
+		if (entry->comment) add_to_string(&string, entry->comment);
 		break;
 	case SMBC_PRINTER_SHARE:
-		printf("%s PRINTER ", entry->name);
-		puts(entry->comment ? entry->comment : "");
+		add_to_string(&string, entry->name);
+		add_to_string(&string, " PRINTER ");
+		if (entry->comment) add_to_string(&string, entry->comment);
 		break;
 	case SMBC_COMMS_SHARE:
-		printf("%s COMM\n", entry->name);
+		add_to_string(&string, entry->name);
+		add_to_string(&string, " COMM");
 		break;
 	case SMBC_IPC_SHARE:
-		printf("%s IPC\n", entry->name);
+		add_to_string(&string, entry->name);
+		add_to_string(&string, " IPC");
 		break;
 	case SMBC_DIR:
-		printf("<a href=\"%s\">", entry->name);
-		if (*dircolor) {
-			printf("<font color=\"%s\"><b>", dircolor);
-		}
-		printf("%s", entry->name);
-		if (*dircolor) {
-			printf("</b></font>");
-		}
-		puts("</a>");
+		smb_add_link(&string, entry, NULL, dircolor);
 		break;
 	case SMBC_LINK:
-		printf("<a href=\"%s\">%s</a> Link\n", entry->name, entry->name);
+		smb_add_link(&string, entry, " Link", &zero);
 		break;
 	case SMBC_FILE:
-		printf("<a href=\"%s\">%s</a>\n", entry->name, entry->name);
+		smb_add_link(&string, entry, NULL, &zero);
 		break;
 	default:
 		/* unknown type */
 		break;
 	}
+	puts(string.source);
+	done_string(&string);
 }
 
 static void
