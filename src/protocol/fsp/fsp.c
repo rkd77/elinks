@@ -90,18 +90,30 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 static void
 display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
 {
-	printf("%10d\t<a href=\"%s", fentry->size, fentry->name);
+	struct string string;
+
+	if (!init_string(&string)) return;
+	add_format_to_string(&string, "%10d", fentry->size);
+	add_to_string(&string, "\t<a href=\"");
+	encode_uri_string(&string, fentry->name, -1, 0); 
 	if (fentry->type == FSP_RDTYPE_DIR) {
-		printf("/\">");
-		if (*dircolor)
-			printf("<font color=\"%s\"><b>", dircolor);
-		printf("%s", fentry->name);
-		if (*dircolor)
-			printf("</b></font>");
+		add_to_string(&string, "/\">");
+		if (*dircolor) {
+			add_to_string(&string, "<font color=\"");
+			add_to_string(&string, dircolor);
+			add_to_string(&string, "\"><b>");
+		}
+		add_to_string(&string, fentry->name);
+		if (*dircolor) {
+			add_to_string(&string, "</b></font>");
+		}
 	} else {
-		printf("\">%s", fentry->name);
+		add_to_string(&string, "\">");
+		add_to_string(&string, fentry->name);
 	}
-	puts("</a>");
+	add_to_string(&string, "</a>");
+	puts(string.source);
+	done_string(&string);
 }
 
 static void
@@ -140,6 +152,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned char dircolor[8] = "";
 
+	decode_uri(data);
 	if (!data || init_directory_listing(&buf, uri) != S_OK)
 		fsp_error(-S_OUT_OF_MEM);
 
@@ -186,30 +199,29 @@ do_fsp(struct connection *conn)
 	unsigned short port = (unsigned short)get_uri_port(uri);
 	unsigned char *password = NULL;
 
+	decode_uri(data);
 	if (uri->passwordlen) password = get_uri_string(uri, URI_PASSWORD);
 	else {
 		auth = find_auth(conn->uri);
 		if (auth && auth->valid) password = auth->password;
 	}
-	ses = fsp_open_session(host, port, password);
 
-	if (!ses)
-		fsp_error(errno);
-	if (fsp_stat(ses, data, &sb))
-		fsp_error(errno);
-	if (S_ISDIR(sb.st_mode))
+	ses = fsp_open_session(host, port, password);
+	if (!ses) fsp_error(errno);
+	if (fsp_stat(ses, data, &sb)) fsp_error(errno);
+
+	if (S_ISDIR(sb.st_mode)) {
 		fsp_directory(ses, uri);
-	else { /* regular file */
+	} else { /* regular file */
 		char buf[READ_SIZE];
 		FSP_FILE *file = fsp_fopen(ses, data, "r");
 		int r;
 
-		if (!file)
+		if (!file) {
 			fsp_error(errno);
+		}
 
-		/* Use the default way to find the MIME type, so write an
-		 * 'empty' name, since something needs to be written in order
-		 * to avoid socket errors. */
+		/* Send filesize */
 		fprintf(stderr, "%d\n", (unsigned int)(sb.st_size));
 		fclose(stderr);
 
