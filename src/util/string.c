@@ -132,10 +132,10 @@ insert_in_string(unsigned char **dst, int pos,
 }
 
 unsigned char *
-straconcat(unsigned char *str, ...)
+straconcat(const unsigned char *str, ...)
 {
 	va_list ap;
-	unsigned char *a;
+	const unsigned char *a;
 	unsigned char *s;
 	unsigned int len;
 
@@ -149,7 +149,7 @@ straconcat(unsigned char *str, ...)
 	if (len) memcpy(s, str, len);
 
 	va_start(ap, str);
-	while ((a = va_arg(ap, unsigned char *))) {
+	while ((a = va_arg(ap, const unsigned char *))) {
 		unsigned int l = strlen(a);
 		unsigned char *ns;
 

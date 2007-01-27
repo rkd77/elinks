@@ -58,7 +58,7 @@ unsigned char *insert_in_string(unsigned char **dst, int pos,
  *	if (abc) return;
  *	printf("%s", abc);	-> print "ABC"
  *	mem_free(abc);		-> free memory used by @abc */
-unsigned char *straconcat(unsigned char *str, ...);
+unsigned char *straconcat(const unsigned char *str, ...);
 
 
 /* Misc. utility string functions. */
