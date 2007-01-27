@@ -173,7 +173,7 @@ straconcat(const unsigned char *str, ...)
 }
 
 int
-xstrcmp(unsigned char *s1, unsigned char *s2)
+xstrcmp(const unsigned char *s1, const unsigned char *s2)
 {
 	if (!s1) return -!!s2;
 	if (!s2) return 1;

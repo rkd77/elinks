@@ -64,7 +64,7 @@ unsigned char *straconcat(const unsigned char *str, ...);
 /* Misc. utility string functions. */
 
 /* Compare two strings, handling correctly @s1 or @s2 being NULL. */
-int xstrcmp(unsigned char *s1, unsigned char *s2);
+int xstrcmp(const unsigned char *s1, const unsigned char *s2);
 
 /* Copies at most @len chars into @dst. Ensures null termination of @dst. */
 unsigned char *safe_strncpy(unsigned char *dst, const unsigned char *src, size_t len);
