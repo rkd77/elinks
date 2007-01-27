@@ -150,7 +150,7 @@ struct string {
 
 /* Initializes the passed string struct by preallocating the @source member. */
 #ifdef DEBUG_MEMLEAK
-struct string *init_string__(unsigned char *file, int line, struct string *string);
+struct string *init_string__(const unsigned char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
 struct string *init_string(struct string *string);

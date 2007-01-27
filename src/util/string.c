@@ -245,7 +245,7 @@ elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 
 inline struct string *
 #ifdef DEBUG_MEMLEAK
-init_string__(unsigned char *file, int line, struct string *string)
+init_string__(const unsigned char *file, int line, struct string *string)
 #else
 init_string(struct string *string)
 #endif
