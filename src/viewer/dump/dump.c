@@ -405,7 +405,7 @@ utf8:
 			unicode_val_T data = pos->data;
 			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
 
-			if (!isscreensafe(data)) {
+			if (!isscreensafe_ucs(data)) {
 				white++;
 				continue;
 			} else {

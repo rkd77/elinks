@@ -114,6 +114,9 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
  * non-ISO-8859 charsets.  */
 #define isscreensafe(c)	((c) >= ' ' && (c) != ASCII_DEL)
 
+/* Like isscreensafe but takes Unicode values and so can check for C1.  */
+#define isscreensafe_ucs(c) (((c) >= 0x20 && (c) <= 0x7E) || (c) >= 0xA0)
+
 
 /* String debugging using magic number, it may catch some errors. */
 #ifdef CONFIG_DEBUG

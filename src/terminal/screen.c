@@ -542,12 +542,9 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	 * defined      0            1       enum border_char  border unibyte
 	 * defined      1            0       UTF-32            UTF-8
 	 * defined      1            1       enum border_char  border unibyte
+	 *
+	 * For "UTF-32" above, the data can also be UCS_NO_CHAR.
 	 */
-
-	if (!isscreensafe(data)) {
-		add_char_to_string(screen, ' ');
-		return;
-	}
 
 	if (border && driver->frame && data >= 176 && data < 224)
 		data = driver->frame[data - 176];
@@ -556,18 +553,25 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 		if (border)
 			add_char_to_string(screen, (unsigned char)data);
-		else
-			if (data != UCS_NO_CHAR)
-				add_to_string(screen, encode_utf8(data));
+		else if (data != UCS_NO_CHAR) {
+			if (!isscreensafe_ucs(data))
+				data = UCS_SPACE;
+			add_to_string(screen, encode_utf8(data));
+		}
 #else
 		int charset = driver->charsets[!!border];
 
-		add_to_string(screen, cp2utf8(charset, data));
+		if (border || isscreensafe(data))
+			add_to_string(screen, cp2utf8(charset, data));
+		else /* UCS_SPACE <= 0x7F and so fits in one UTF-8 byte */
+			add_char_to_string(screen, UCS_SPACE);
 #endif /* CONFIG_UTF8 */
-		return;
+	} else {
+		if (border || isscreensafe(data))
+			add_char_to_string(screen, (unsigned char)data);
+		else
+			add_char_to_string(screen, ' ');
 	}
-
-	add_char_to_string(screen, (unsigned char)data);
 }
 
 /* Time critical section. */
