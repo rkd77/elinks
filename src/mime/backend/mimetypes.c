@@ -221,7 +221,7 @@ change_hook_mimetypes(struct session *ses, struct option *current, struct option
 static void
 init_mimetypes(struct module *module)
 {
-	struct change_hook_info mimetypes_change_hooks[] = {
+	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.mimetypes",		change_hook_mimetypes },
 		{ NULL,				NULL },
 	};

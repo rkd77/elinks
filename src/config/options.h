@@ -145,7 +145,7 @@ struct change_hook_info {
 	change_hook_T change_hook;
 };
 
-extern void register_change_hooks(struct change_hook_info *change_hooks);
+extern void register_change_hooks(const struct change_hook_info *change_hooks);
 
 
 extern struct list_head *init_options_tree(void);

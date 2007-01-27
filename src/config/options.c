@@ -680,7 +680,7 @@ register_autocreated_options(void)
 
 static struct option_info config_options_info[];
 extern struct option_info cmdline_options_info[];
-static struct change_hook_info change_hooks[];
+static const struct change_hook_info change_hooks[];
 
 void
 init_options(void)
@@ -716,7 +716,7 @@ done_options(void)
 }
 
 void
-register_change_hooks(struct change_hook_info *change_hooks)
+register_change_hooks(const struct change_hook_info *change_hooks)
 {
 	int i;
 
@@ -976,7 +976,7 @@ change_hook_language(struct session *ses, struct option *current, struct option 
 	return 0;
 }
 
-static struct change_hook_info change_hooks[] = {
+static const struct change_hook_info change_hooks[] = {
 	{ "config.show_template",	change_hook_stemplate },
 	{ "connection",			change_hook_connection },
 	{ "document.browse",		change_hook_html },

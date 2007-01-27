@@ -135,7 +135,7 @@ change_hook_css(struct session *ses, struct option *current, struct option *chan
 static void
 init_css(struct module *module)
 {
-	struct change_hook_info css_change_hooks[] = {
+	static const struct change_hook_info css_change_hooks[] = {
 		{ "document.css",		change_hook_css },
 		{ NULL,				NULL },
 	};
