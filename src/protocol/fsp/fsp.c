@@ -193,7 +193,7 @@ do_fsp(struct connection *conn)
 	FSP_SESSION *ses;
 	struct stat sb;
 	struct uri *uri = conn->uri;
-	struct auth_entry *auth = find_auth(uri);
+	struct auth_entry *auth;
 	unsigned char *host = get_uri_string(uri, URI_HOST);
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned short port = (unsigned short)get_uri_port(uri);
@@ -203,7 +203,8 @@ do_fsp(struct connection *conn)
 	if (uri->passwordlen) {
 		password = get_uri_string(uri, URI_PASSWORD);
 	} else {
-		if (auth && auth->valid) password = auth->password;
+		auth = find_auth(uri);
+		if (auth) password = auth->password;
 	}
 
 	ses = fsp_open_session(host, port, password);
@@ -378,6 +379,7 @@ fsp_protocol_handler(struct connection *conn)
 	}
 	conn->from = 0;
 	conn->unrestartable = 1;
+	find_auth(conn->uri); /* remember username and password */
 
 	cpid = fork();
 	if (cpid == -1) {
