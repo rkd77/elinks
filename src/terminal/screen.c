@@ -532,6 +532,18 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
 #endif /* CONFIG_UTF8 */
 {
+	/* CONFIG_UTF8  use_utf8_io  border  data              add_to_string
+	 * -----------  -----------  ------  ----------------  ----------------
+	 * not defined  0            0       terminal unibyte  terminal unibyte
+	 * not defined  0            1       enum border_char  border unibyte
+	 * not defined  1            0       terminal unibyte  UTF-8
+	 * not defined  1            1       enum border_char  UTF-8
+	 * defined      0            0       terminal unibyte  terminal unibyte
+	 * defined      0            1       enum border_char  border unibyte
+	 * defined      1            0       UTF-32            UTF-8
+	 * defined      1            1       enum border_char  border unibyte
+	 */
+
 	if (!isscreensafe(data)) {
 		add_char_to_string(screen, ' ');
 		return;
