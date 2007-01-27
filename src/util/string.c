@@ -332,7 +332,7 @@ add_string_to_string(struct string *string, const struct string *from)
 }
 
 struct string *
-add_file_to_string(struct string *string, unsigned char *filename)
+add_file_to_string(struct string *string, const unsigned char *filename)
 {
 	FILE *file;
 	off_t filelen;
