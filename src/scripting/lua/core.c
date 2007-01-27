@@ -537,7 +537,7 @@ l_set_option(LS)
 	}
 
 	/* Call hook */
-	option_changed(lua_ses, opt, opt);
+	option_changed(lua_ses, opt);
 	return 1;
 
 lua_error:
