@@ -105,7 +105,7 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 		add_to_string(string, dircolor);
 		add_to_string(string, "\"><b>");
 	}
-	add_to_string(string, entry->name);
+	add_bytes_to_string(string, entry->name, entry->namelen);
 	if (*dircolor) {
 		add_to_string(string, "</b></font>");
 	}
@@ -127,23 +127,29 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 		break;
 	case SMBC_SERVER:
 		smb_add_link(&string, entry, " SERVER ", dircolor);
-		if (entry->comment) add_to_string(&string, entry->comment);
+		if (entry->comment) {
+			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+		}
 		break;
 	case SMBC_FILE_SHARE:
 		smb_add_link(&string, entry, " FILE SHARE ", dircolor);
-		if (entry->comment) add_to_string(&string, entry->comment);
+		if (entry->comment) {
+			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+		}
 		break;
 	case SMBC_PRINTER_SHARE:
-		add_to_string(&string, entry->name);
+		add_bytes_to_string(&string, entry->name, entry->namelen);
 		add_to_string(&string, " PRINTER ");
-		if (entry->comment) add_to_string(&string, entry->comment);
+		if (entry->comment) {
+			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+		}
 		break;
 	case SMBC_COMMS_SHARE:
-		add_to_string(&string, entry->name);
+		add_bytes_to_string(&string, entry->name, entry->namelen);
 		add_to_string(&string, " COMM");
 		break;
 	case SMBC_IPC_SHARE:
-		add_to_string(&string, entry->name);
+		add_bytes_to_string(&string, entry->name, entry->namelen);
 		add_to_string(&string, " IPC");
 		break;
 	case SMBC_DIR:
