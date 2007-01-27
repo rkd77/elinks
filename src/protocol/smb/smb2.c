@@ -90,8 +90,15 @@ static void
 smb_add_link(struct string *string, struct smbc_dirent *entry,
 	unsigned char *text, unsigned char dircolor[])
 {
+	struct string uri_string;
+
+	if (!init_string(&uri_string)) return;
+	encode_uri_string(&uri_string, entry->name, entry->namelen, 0);
+
 	add_to_string(string, "<a href=\"");
-	add_to_string(string, entry->name);
+	add_string_to_string(string, &uri_string);
+	done_string(&uri_string);
+
 	add_to_string(string, "\">");
 	if (*dircolor) {
 		add_to_string(string, "<font color=\"");
@@ -262,6 +269,8 @@ do_smb(struct connection *conn)
 	if (smbc_init(smb_auth, 0)) {
 		smb_error(errno);
 	};
+	decode_uri(url);
+
 	dir = smbc_opendir(url);
 	if (dir >= 0) {
 		smb_directory(dir, conn->uri);
