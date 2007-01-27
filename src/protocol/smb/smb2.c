@@ -448,7 +448,7 @@ smb_protocol_handler(struct connection *conn)
 	}
 	conn->from = 0;
 	conn->unrestartable = 1;
-	find_auth(conn->uri); /* remember useranme and password */
+	find_auth(conn->uri); /* remember username and password */
 
 	cpid = fork();
 	if (cpid == -1) {
