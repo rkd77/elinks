@@ -43,7 +43,7 @@ unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
 
 /* Concatenates @src to @str. */
 /* If reallocation of @str fails @str is not touched. */
-void add_to_strn(unsigned char **str, unsigned char *src);
+void add_to_strn(unsigned char **str, const unsigned char *src);
 
 /* Inserts @seqlen chars from @seq at position @pos in the @dst string. */
 /* If reallocation of @dst fails it is not touched and NULL is returned. */

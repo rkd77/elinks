@@ -97,7 +97,7 @@ stracpy(const unsigned char *src)
 
 
 void
-add_to_strn(unsigned char **dst, unsigned char *src)
+add_to_strn(unsigned char **dst, const unsigned char *src)
 {
 	unsigned char *newdst;
 	int dstlen;
