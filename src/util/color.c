@@ -18,7 +18,7 @@
 #include "util/string.h"
 
 struct color_spec {
-	char *name;
+	const char *name;
 	color_T rgb;
 };
 
@@ -135,7 +135,7 @@ decode_hex_color:
 	return -1; /* Not found */
 }
 
-unsigned char *
+const unsigned char *
 get_color_string(color_T color, unsigned char hexcolor[8])
 {
 	struct color_spec *cs;

@@ -599,7 +599,7 @@ l_get_option(LS)
 	{
 		color_T color;
 		unsigned char hexcolor[8];
-		unsigned char *strcolor;
+		const unsigned char *strcolor;
 
 		color = opt->value.color;
 		strcolor = get_color_string(color, hexcolor);
