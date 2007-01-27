@@ -105,7 +105,19 @@ union option_value {
 	unsigned char *string;
 };
 
-typedef int (*change_hook_T)(struct session *, struct option *current,
+
+/* @session is the session via which the user changed the options,
+ * or NULL if not known.  Because the options are currently not
+ * session-specific, it is best to ignore this parameter.  In a future
+ * version of ELinks, this parameter might mean the session to which
+ * the changed options apply.
+ *
+ * @current is the option whose change hook is being called.  It is
+ * never NULL.
+ *
+ * @changed is the option that was changed, or NULL if multiple
+ * descendants of @current may have been changed.  */
+typedef int (*change_hook_T)(struct session *session, struct option *current,
 			     struct option *changed);
 
 struct option {
