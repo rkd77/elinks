@@ -491,7 +491,7 @@ static int
 l_set_option(LS)
 {
 	int nargs;
-	struct option *opt, *current;
+	struct option *opt;
 	const char *name;
 
 	nargs = lua_gettop(S);
@@ -536,11 +536,8 @@ l_set_option(LS)
 		goto lua_error;
 	}
 
-	opt->flags |= OPT_TOUCHED;
-
 	/* Call hook */
-	current = opt;
-	call_change_hooks(lua_ses, current, opt);
+	option_changed(lua_ses, opt, opt);
 	return 1;
 
 lua_error:
