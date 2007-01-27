@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-10 09:16+0100\n"
-"PO-Revision-Date: 2007-01-10 09:18+0100\n"
+"POT-Creation-Date: 2007-01-25 13:58+0100\n"
+"PO-Revision-Date: 2007-01-25 14:00+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, python_info_box, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:441 src/bfu/inpfield.c:256 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:363
-#: src/cookies/dialogs.c:357 src/cookies/dialogs.c:455 src/dialogs/edit.c:98
+#: src/cookies/dialogs.c:359 src/cookies/dialogs.c:457 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
@@ -146,7 +146,7 @@ msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
 
 #: src/bfu/hierbox.c:970 src/config/dialogs.c:139 src/config/dialogs.c:329
-#: src/config/dialogs.c:477 src/cookies/dialogs.c:34 src/cookies/dialogs.c:351
+#: src/config/dialogs.c:477 src/cookies/dialogs.c:34 src/cookies/dialogs.c:353
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:386
 #: src/scripting/lua/core.c:387 src/scripting/lua/core.c:468
 msgid "Name"
@@ -174,8 +174,8 @@ msgid "Empty string not allowed"
 msgstr "Chaîne vide non autorisée"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
-#: src/bfu/inpfield.c:256 src/config/dialogs.c:364 src/cookies/dialogs.c:358
-#: src/cookies/dialogs.c:456 src/dialogs/edit.c:102 src/dialogs/edit.c:105
+#: src/bfu/inpfield.c:256 src/config/dialogs.c:364 src/cookies/dialogs.c:360
+#: src/cookies/dialogs.c:458 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
@@ -478,13 +478,13 @@ msgstr "A~ller à"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:488 src/config/dialogs.c:501
-#: src/cookies/dialogs.c:477
+#: src/cookies/dialogs.c:479
 msgid "~Edit"
 msgstr "~Modifier"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
-#: src/config/dialogs.c:503 src/config/dialogs.c:930 src/cookies/dialogs.c:478
+#: src/config/dialogs.c:503 src/config/dialogs.c:930 src/cookies/dialogs.c:480
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
@@ -492,7 +492,7 @@ msgstr "~Supprimer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:490 src/config/dialogs.c:502
-#: src/config/dialogs.c:929 src/cookies/dialogs.c:475 src/dialogs/menu.c:455
+#: src/config/dialogs.c:929 src/cookies/dialogs.c:477 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Ajouter"
 
@@ -599,7 +599,7 @@ msgid "invalid"
 msgstr "invalide"
 
 #: src/cache/dialogs.c:125 src/cookies/dialogs.c:40 src/cookies/dialogs.c:44
-#: src/cookies/dialogs.c:354
+#: src/cookies/dialogs.c:356
 msgid "Expires"
 msgstr "Expiration"
 
@@ -645,7 +645,7 @@ msgid "Delete this cache entry?"
 msgstr "Supprimer cette entrée de cache ?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:500 src/cookies/dialogs.c:474
+#: src/cache/dialogs.c:229 src/config/dialogs.c:500 src/cookies/dialogs.c:476
 #: src/dialogs/download.c:255 src/dialogs/download.c:492
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:262
@@ -1827,7 +1827,7 @@ msgid "Type"
 msgstr "Type"
 
 #: src/config/dialogs.c:172 src/config/dialogs.c:359 src/cookies/dialogs.c:35
-#: src/cookies/dialogs.c:352
+#: src/cookies/dialogs.c:354
 msgid "Value"
 msgstr "Valeur"
 
@@ -1860,7 +1860,7 @@ msgstr "Erreur"
 msgid "Bad option value."
 msgstr "Mauvaise valeur."
 
-#: src/config/dialogs.c:320 src/config/dialogs.c:388 src/cookies/dialogs.c:324
+#: src/config/dialogs.c:320 src/config/dialogs.c:388 src/cookies/dialogs.c:325
 msgid "Edit"
 msgstr "Modifier"
 
@@ -1890,7 +1890,7 @@ msgid "Cannot add an option here."
 msgstr "Impossible d'ajouter une option ici."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:480
+#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:482
 #: src/dialogs/options.c:236 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1227
 msgid "Sa~ve"
@@ -3705,7 +3705,7 @@ msgstr ""
 "1 mode 16 couleurs, utilise les couleurs ANSI\n"
 "2 mode 88 couleurs, utilise les codes RVB d'XTerm\n"
 "3 mode 256 couleurs, utilise les codes RVB d'XTerm\n"
-"4 mode vraies couleurs, utilise les codes RVB de konsole."
+"4 mode vraies couleurs, utilise les codes RVB de konsole"
 
 #: src/config/options.inc:876 src/dialogs/options.c:230
 msgid "Transparency"
@@ -4605,7 +4605,7 @@ msgstr "ELinks a été démarré sans répertoire personnel."
 msgid "ELinks was started with the -anonymous option."
 msgstr "ELinks a été démarré avec l'option -anonymous."
 
-#: src/cookies/dialogs.c:36 src/cookies/dialogs.c:353
+#: src/cookies/dialogs.c:36 src/cookies/dialogs.c:355
 msgid "Domain"
 msgstr "Domaine"
 
@@ -4618,7 +4618,7 @@ msgstr "Chemin"
 msgid "at quit time"
 msgstr "au moment de quitter"
 
-#: src/cookies/dialogs.c:49 src/cookies/dialogs.c:355
+#: src/cookies/dialogs.c:49 src/cookies/dialogs.c:357
 msgid "Secure"
 msgstr "Sécurisé"
 
@@ -4649,7 +4649,7 @@ msgstr "~Accepter"
 msgid "~Reject"
 msgstr "~Rejeter"
 
-#: src/cookies/dialogs.c:149 src/cookies/dialogs.c:343
+#: src/cookies/dialogs.c:149 src/cookies/dialogs.c:345
 #: src/dialogs/document.c:177
 msgid "Server"
 msgstr "Serveur"
@@ -4720,26 +4720,26 @@ msgstr "Effacer tous les cookies"
 msgid "Do you really want to remove all cookies?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les cookies ?"
 
-#: src/cookies/dialogs.c:449
+#: src/cookies/dialogs.c:451
 msgid "Add server"
 msgstr "Ajouter un serveur"
 
-#: src/cookies/dialogs.c:453
+#: src/cookies/dialogs.c:455
 msgid "Server name"
 msgstr "Nom du serveur"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
-#: src/cookies/dialogs.c:476
+#: src/cookies/dialogs.c:478
 msgid "Add ~server"
 msgstr "Ajouter un ser~veur"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:479 src/dialogs/download.c:498 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:481 src/dialogs/download.c:498 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 msgid "C~lear"
 msgstr "~Effacer"
 
-#: src/cookies/dialogs.c:485
+#: src/cookies/dialogs.c:487
 msgid "Cookie manager"
 msgstr "Gestionnaire de cookies"
 
@@ -5957,7 +5957,7 @@ msgstr ""
 "1 afficher les titres des pages"
 
 #. name:
-#: src/globhist/globhist.c:448
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Historique Global"
 
