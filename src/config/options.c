@@ -955,7 +955,6 @@ toggle_option(struct session *ses, struct option *option)
 	assert(option->type == OPT_BOOL || option->type == OPT_INT);
 	assert(option->max);
 
-	/* TODO: call change hooks. --jonas */
 	option->value.number = (number <= option->max) ? number : option->min;
 	option_changed(ses, option, option);
 }
