@@ -19,6 +19,7 @@
 #include "main/module.h"
 #include "network/connection.h"
 #include "protocol/uri.h"
+#include "session/session.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "viewer/text/draw.h"
@@ -127,7 +128,10 @@ change_hook_css(struct session *ses, struct option *current, struct option *chan
 		import_default_css();
 	}
 
-	draw_formatted(ses, 1);
+	/* Instead of using the value of the @ses parameter, iterate
+	 * through the @sessions list.  The parameter may be NULL and
+	 * anyway we don't support session-specific options yet.  */
+	foreach (ses, sessions) draw_formatted(ses, 1);
 
 	return 0;
 }
