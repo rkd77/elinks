@@ -683,8 +683,15 @@ add_file_cmd_to_str(struct connection *conn)
 
 	if (!conn->uri->datalen
 	    || conn->uri->data[conn->uri->datalen - 1] == '/') {
+		struct string uri_string;
 		/* Commands to get directory listing. */
 
+		if (!init_string(&uri_string)) {
+			done_string(&command);
+			done_string(&ftp_data_command);
+			abort_connection(conn, S_OUT_OF_MEM);
+			return NULL;
+		}
 		ftp->dir = 1;
 		ftp->pending_commands = 4;
 
@@ -695,17 +702,27 @@ add_file_cmd_to_str(struct connection *conn)
 		add_string_to_string(&command, &ftp_data_command);
 
 		add_to_string(&command, "CWD ");
-		add_uri_to_string(&command, conn->uri, URI_PATH);
+		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
+		decode_uri_string(&uri_string);
+		add_string_to_string(&command, &uri_string);
 		add_crlf_to_string(&command);
 
 		add_to_string(&command, "LIST");
 		add_crlf_to_string(&command);
+		done_string(&uri_string);
 
 		conn->from = 0;
 
 	} else {
+		struct string uri_string;
 		/* Commands to get a file. */
 
+		if (!init_string(&uri_string)) {
+			done_string(&command);
+			done_string(&ftp_data_command);
+			abort_connection(conn, S_OUT_OF_MEM);
+			return NULL;
+		}
 		ftp->dir = 0;
 		ftp->pending_commands = 3;
 
@@ -727,8 +744,11 @@ add_file_cmd_to_str(struct connection *conn)
 		}
 
 		add_to_string(&command, "RETR ");
-		add_uri_to_string(&command, conn->uri, URI_PATH);
+		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
+		decode_uri_string(&uri_string);
+		add_string_to_string(&command, &uri_string);
 		add_crlf_to_string(&command);
+		done_string(&uri_string);
 	}
 
 	done_string(&ftp_data_command);
@@ -1134,7 +1154,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 	}
 
 	add_to_string(&string, "<a href=\"");
-	add_html_to_string(&string, ftp_info->name.source, ftp_info->name.length);
+	encode_uri_string(&string, ftp_info->name.source, ftp_info->name.length, 0);
 	if (ftp_info->type == FTP_FILE_DIRECTORY)
 		add_char_to_string(&string, '/');
 	add_to_string(&string, "\">");
