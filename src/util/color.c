@@ -22,7 +22,7 @@ struct color_spec {
 	color_T rgb;
 };
 
-static struct color_spec color_specs[] = {
+static const struct color_spec color_specs[] = {
 #include "util/color_s.inc"
 #ifndef CONFIG_SMALL
 #include "util/color.inc"
@@ -32,7 +32,7 @@ static struct color_spec color_specs[] = {
 
 #ifdef USE_FASTFIND
 
-static struct color_spec *internal_pointer;
+static const struct color_spec *internal_pointer;
 
 static void
 colors_list_reset(void)
@@ -52,7 +52,7 @@ colors_list_next(void)
 	if (!internal_pointer->name) return NULL;
 
 	kv.key = (unsigned char *) internal_pointer->name;
-	kv.data = internal_pointer;
+	kv.data = (void *) internal_pointer; /* cast away const */
 
 	internal_pointer++;
 
@@ -107,7 +107,7 @@ decode_hex_color:
 			return 0;
 		}
 	} else {
-		struct color_spec *cs;
+		const struct color_spec *cs;
 
 #ifndef USE_FASTFIND
 		for (cs = color_specs; cs->name; cs++)
@@ -138,7 +138,7 @@ decode_hex_color:
 const unsigned char *
 get_color_string(color_T color, unsigned char hexcolor[8])
 {
-	struct color_spec *cs;
+	const struct color_spec *cs;
 
 	for (cs = color_specs; cs->name; cs++)
 		if (cs->rgb == color)
