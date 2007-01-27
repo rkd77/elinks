@@ -1400,7 +1400,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 
 			opt->value.number = (opt->value.number + 1)
 					    % (opt->max + 1);
-			option_changed(ses, opt, opt);
+			option_changed(ses, opt);
 		}
 		/* Fall thru */
 

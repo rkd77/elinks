@@ -275,9 +275,7 @@ check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data
 	if (chinon) {
 		if (option_types[option->type].set &&
 		    option_types[option->type].set(option, chinon)) {
-			struct option *current = option;
-
-			option_changed(ses, current, option);
+			option_changed(ses, option);
 
 			commandline = 0;
 			mem_free(chinon);

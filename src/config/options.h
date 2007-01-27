@@ -180,8 +180,7 @@ void call_change_hooks(struct session *ses, struct option *current,
 
 /* Do proper bookkeeping after an option has changed - call this every time
  * you change an option value. */
-void option_changed(struct session *ses, struct option *current,
-                    struct option *option);
+void option_changed(struct session *ses, struct option *option);
 
 extern int commit_option_values(struct option_resolver *resolvers,
 				struct option *root,
