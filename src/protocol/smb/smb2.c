@@ -252,7 +252,7 @@ do_smb(struct connection *conn)
 	unsigned char *url;
 	int dir;
 
-	if ((uri->userlen && uri->passwordlen) || !auth || !auth->valid) {
+	if ((uri->userlen && uri->passwordlen) || !auth) {
 		url = get_uri_string(uri, URI_BASE);
 	} else {
 		unsigned char *uri_string = get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA);
@@ -448,6 +448,7 @@ smb_protocol_handler(struct connection *conn)
 	}
 	conn->from = 0;
 	conn->unrestartable = 1;
+	find_auth(conn->uri); /* remember useranme and password */
 
 	cpid = fork();
 	if (cpid == -1) {
