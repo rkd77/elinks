@@ -295,7 +295,7 @@ add_html_to_string(struct string *string, unsigned char *src, int len)
 
 /* TODO Optimize later --pasky */
 struct string *
-add_quoted_to_string(struct string *string, unsigned char *src, int len)
+add_quoted_to_string(struct string *string, const unsigned char *src, int len)
 {
 	for (; len; len--, src++) {
 		if (isquote(*src) || *src == '\\')
