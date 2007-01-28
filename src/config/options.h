@@ -208,8 +208,8 @@ extern void checkout_option_values(struct option_resolver *resolvers,
  * use get_opt_type() and add_opt_type(). For command line options, you want to
  * use get_opt_type_tree(cmdline_options, "option"). */
 
-extern struct option *get_opt_rec(struct option *, unsigned char *);
-extern struct option *get_opt_rec_real(struct option *, unsigned char *);
+extern struct option *get_opt_rec(struct option *, const unsigned char *);
+extern struct option *get_opt_rec_real(struct option *, const unsigned char *);
 #ifdef CONFIG_DEBUG
 extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *);
 #define get_opt(tree, name, type) get_opt_(__FILE__, __LINE__, type, tree, name)

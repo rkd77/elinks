@@ -159,7 +159,7 @@ static int no_autocreate = 0;
 
 /* Get record of option of given name, or NULL if there's no such option. */
 struct option *
-get_opt_rec(struct option *tree, unsigned char *name_)
+get_opt_rec(struct option *tree, const unsigned char *name_)
 {
 	struct option *option;
 	unsigned char *aname = stracpy(name_);
@@ -231,7 +231,7 @@ get_opt_rec(struct option *tree, unsigned char *name_)
  * do not create the option if it doesn't exist and there's autocreation
  * enabled. */
 struct option *
-get_opt_rec_real(struct option *tree, unsigned char *name)
+get_opt_rec_real(struct option *tree, const unsigned char *name)
 {
 	struct option *opt;
 
