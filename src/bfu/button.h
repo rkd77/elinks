@@ -30,7 +30,7 @@ struct widget_info_button {
 
 
 #ifdef DEBUG_BUTTON_HOTKEY
-void add_dlg_button_do(unsigned char *file, int line, struct dialog *dlg, unsigned char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
+void add_dlg_button_do(const unsigned char *file, int line, struct dialog *dlg, unsigned char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
 #define add_dlg_ok_button(dlg, text, flags, done, data)	\
 	add_dlg_button_do(__FILE__, __LINE__, dlg, text, flags, ok_dialog, NULL, done, data)
 
