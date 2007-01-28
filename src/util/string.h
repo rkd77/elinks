@@ -214,7 +214,7 @@ squeezastring(struct string *string)
 static inline struct string *
 add_bytes_to_string__(
 #ifdef DEBUG_MEMLEAK
-		    unsigned char *file, int line,
+		    const unsigned char *file, int line,
 #endif
 		    struct string *string, const unsigned char *bytes,
 		    int length)
