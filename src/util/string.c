@@ -375,7 +375,7 @@ struct string *
 string_concat(struct string *string, ...)
 {
 	va_list ap;
-	unsigned char *source;
+	const unsigned char *source;
 
 	assertm(string, "[string_concat]");
 	if_assert_failed { return NULL; }
@@ -383,7 +383,7 @@ string_concat(struct string *string, ...)
 	check_string_magic(string);
 
 	va_start(ap, string);
-	while ((source = va_arg(ap, unsigned char *)))
+	while ((source = va_arg(ap, const unsigned char *)))
 		if (*source)
 			add_to_string(string, source);
 
