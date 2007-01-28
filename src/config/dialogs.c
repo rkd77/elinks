@@ -34,9 +34,8 @@
 static void
 toggle_success_msgbox(void *dummy)
 {
-	/* TODO: option_changed() */
 	get_opt_bool("ui.success_msgbox") = !get_opt_bool("ui.success_msgbox");
-	get_opt_rec(config_options, "ui.success_msgbox")->flags |= OPT_TOUCHED;
+	option_changed(NULL, get_opt_rec(config_options, "ui.success_msgbox"));
 }
 
 void
