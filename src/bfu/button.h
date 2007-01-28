@@ -47,7 +47,7 @@ void add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags, widge
 	add_dlg_button_do(dlg, text, flags, handler, data, NULL, NULL)
 #endif
 
-extern struct widget_ops button_ops;
+extern const struct widget_ops button_ops;
 void dlg_format_buttons(struct terminal *, struct widget_data *, int, int, int *, int, int *, enum format_align, int);
 
 #endif

@@ -56,8 +56,8 @@ add_dlg_field_do(struct dialog *dlg, enum widget_type type, unsigned char *label
 	add_dlg_field_do(dlg, WIDGET_FIELD_PASS, label, min, max, handler, len, field, NULL, INPFIELD_FLOAT)
 
 
-extern struct widget_ops field_ops;
-extern struct widget_ops field_pass_ops;
+extern const struct widget_ops field_ops;
+extern const struct widget_ops field_pass_ops;
 
 widget_handler_status_T check_number(struct dialog_data *, struct widget_data *);
 widget_handler_status_T check_nonempty(struct dialog_data *, struct widget_data *);

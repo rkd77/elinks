@@ -735,7 +735,7 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_NOT_PROCESSED;
 }
 
-struct widget_ops listbox_ops = {
+const struct widget_ops listbox_ops = {
 	display_listbox,
 	init_listbox,
 	mouse_listbox,

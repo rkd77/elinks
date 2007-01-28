@@ -331,7 +331,7 @@ select_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return widget_data->widget->handler(dlg_data, widget_data);
 }
 
-struct widget_ops button_ops = {
+const struct widget_ops button_ops = {
 	display_button,
 	NULL,
 	mouse_button,

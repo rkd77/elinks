@@ -140,7 +140,7 @@ select_dlg_item(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		widget_data->widget->ops->select(dlg_data, widget_data);
 }
 
-static struct widget_ops *widget_type_to_ops[] = {
+static const struct widget_ops *const widget_type_to_ops[] = {
 	&checkbox_ops,
 	&field_ops,
 	&field_pass_ops,
