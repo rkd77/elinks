@@ -32,10 +32,10 @@
 
 
 static void
-toggle_success_msgbox(void *dummy)
+disable_success_msgbox(void *dummy)
 {
 	/* TODO: option_changed() */
-	get_opt_bool("ui.success_msgbox") = !get_opt_bool("ui.success_msgbox");
+	get_opt_bool("ui.success_msgbox") = 0;
 	get_opt_rec(config_options, "ui.success_msgbox")->flags |= OPT_TOUCHED;
 }
 
@@ -55,7 +55,7 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 				 config_file),
 			NULL, 2,
 			N_("~OK"), NULL, B_ENTER | B_ESC,
-			N_("~Do not show anymore"), toggle_success_msgbox, 0);
+			N_("~Do not show anymore"), disable_success_msgbox, 0);
 		return;
 	}
 
