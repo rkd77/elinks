@@ -547,7 +547,7 @@ enum delete_error {
 	DELETE_ERRORS,
 };
 
-struct listbox_ops_messages default_listbox_ops_messages = {
+static const struct listbox_ops_messages default_listbox_ops_messages = {
 	/* cant_delete_item */
 	N_("Sorry, but the item \"%s\" cannot be deleted."),
 
