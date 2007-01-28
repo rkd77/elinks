@@ -434,7 +434,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 
 /* Add printf-like format string to @string. */
 struct string *
-add_format_to_string(struct string *string, unsigned char *format, ...)
+add_format_to_string(struct string *string, const unsigned char *format, ...)
 {
 	int newlength;
 	int width;

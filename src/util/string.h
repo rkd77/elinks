@@ -174,7 +174,7 @@ struct string *string_concat(struct string *string, ...);
 struct string *add_xchar_to_string(struct string *string, unsigned char character, int times);
 
 /* Add printf-style format string to @string. */
-struct string *add_format_to_string(struct string *string, unsigned char *format, ...);
+struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
 
 /* Get a regular newly allocated stream of bytes from @string. */
 static unsigned char *squeezastring(struct string *string);
