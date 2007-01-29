@@ -505,7 +505,7 @@ good_char:
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
 				if (*chars == NBSP_CHAR) {
@@ -517,8 +517,8 @@ good_char:
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
+		} /* end of UTF-8 check */
 
-		}
 		/* Assert that we haven't written past the end of the
 		 * LINE(y).chars array.  @x here is one greater than
 		 * the last one used in POS(x, y).  Instead of this,
@@ -530,11 +530,11 @@ good_char:
 		 * for line-wrapping decisions.  It may currently be too
 		 * large because it was allocated above based on @charslen
 		 * which is the number of bytes, not the number of cells.
-		 * Change the length to the correct size, but dont let it
+		 * Change the length to the correct size, but don't let it
 		 * get smaller than it was on entry to this function.  */
 		LINE(y).length = int_max(orig_length, X(x));
 		len = x - x2;
-	} else {
+	} else { /* part->document == NULL */
 		if (utf8) {
 			unsigned char *end;
 
@@ -555,13 +555,13 @@ good_char:
 				}
 			}
 			len = x - x2;
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->spaces[x] = (*chars == ' ');
 				part->char_width[x] = 1;
 			}
 		}
-	}
+	} /* end of part->document check */
 	return len;
 }
 #else
