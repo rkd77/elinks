@@ -31,7 +31,8 @@ typedef uint32_t unicode_val_T;
  * We should fix that if we ever change the value.  */
 #define UCS_ORPHAN_CELL ((unicode_val_T) 0x20)
 
-/* &nbsp; replacement character. See u2cp(). */
+/* &nbsp; replacement character. See u2cp().
+ * UTF-8 strings should use the encoding of U+00A0 instead. */
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
 
@@ -64,7 +65,8 @@ enum convert_string_mode {
 	CSM_NONE, /* Convert nothing. */
 };
 
-/* How to translate non-breaking spaces.  */
+/* How to translate U+00A0 NO-BREAK SPACE.  If u2cp_ is converting to
+ * UTF-8, it ignores this choice and just encodes the U+00A0.  */
 enum nbsp_mode {
 	/* Convert to NBSP_CHAR.  This lets the HTML renderer
 	 * recognize nbsp even if the codepage doesn't support
