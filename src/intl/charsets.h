@@ -7,6 +7,9 @@ typedef uint32_t unicode_val_T;
  * shouldn't rely on that.  */
 #define UCS_SPACE ((unicode_val_T) 0x0020)
 
+/* U+00A0 NO-BREAK SPACE.  */
+#define UCS_NO_BREAK_SPACE ((unicode_val_T) 0x00A0)
+
 /* U+FFFD REPLACEMENT CHARACTER.  Used when no Unicode mapping is
  * known for a byte in a codepage, or when invalid UTF-8 is received
  * from a terminal.  After generating the character, ELinks then

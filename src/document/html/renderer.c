@@ -460,15 +460,14 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 			}
 
 			for (; chars < end; x++) {
-				if (*chars == NBSP_CHAR) {
-					schar->data = ' ';
-					part->spaces[x] = html_context->options->wrap_nbsp;
-					part->char_width[x] = 1;
-					chars++;
-				} else {
-					part->spaces[x] = (*chars == ' ');
+				/* ELinks does not use NBSP_CHAR in UTF-8.  */
+
+				/* The following is temporarily indented
+				 * just to make the diff easier to read.  */
+				{
 					data = utf8_to_unicode(&chars, end);
 					if (data == UCS_NO_CHAR) {
+						part->spaces[x] = 0;
 						if (charslen == 1) {
 							/* HR */
 							unsigned char attr = schar->attr;
@@ -490,6 +489,10 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						}
 					} else {
 good_char:
+						if (data == UCS_NO_BREAK_SPACE
+						    && html_context->options->wrap_nbsp)
+							data = UCS_SPACE;
+						part->spaces[x] = (data == UCS_SPACE);
 						if (unicode_to_cell(data) == 2) {
 							schar->data = (unicode_val_T)data;
 							part->char_width[x] = 2;
