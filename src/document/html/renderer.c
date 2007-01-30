@@ -462,48 +462,44 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 			for (; chars < end; x++) {
 				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
-				/* The following is temporarily indented
-				 * just to make the diff easier to read.  */
-				{
-					data = utf8_to_unicode(&chars, end);
-					if (data == UCS_NO_CHAR) {
-						part->spaces[x] = 0;
-						if (charslen == 1) {
-							/* HR */
-							unsigned char attr = schar->attr;
+				data = utf8_to_unicode(&chars, end);
+				if (data == UCS_NO_CHAR) {
+					part->spaces[x] = 0;
+					if (charslen == 1) {
+						/* HR */
+						unsigned char attr = schar->attr;
 
-							schar->data = *chars++;
-							schar->attr = SCREEN_ATTR_FRAME;
-							copy_screen_chars(&POS(x, y), schar, 1);
-							schar->attr = attr;
-							part->char_width[x] = 0;
-							continue;
-						} else {
-							unsigned char i;
-
-							for (i = 0; chars < end;i++) {
-								part->document->buf[i] = *chars++;
-							}
-							part->document->buf_length = i;
-							break;
-						}
+						schar->data = *chars++;
+						schar->attr = SCREEN_ATTR_FRAME;
+						copy_screen_chars(&POS(x, y), schar, 1);
+						schar->attr = attr;
+						part->char_width[x] = 0;
+						continue;
 					} else {
-good_char:
-						if (data == UCS_NO_BREAK_SPACE
-						    && html_context->options->wrap_nbsp)
-							data = UCS_SPACE;
-						part->spaces[x] = (data == UCS_SPACE);
-						if (unicode_to_cell(data) == 2) {
-							schar->data = (unicode_val_T)data;
-							part->char_width[x] = 2;
-							copy_screen_chars(&POS(x++, y), schar, 1);
-							schar->data = UCS_NO_CHAR;
-							part->spaces[x] = 0;
-							part->char_width[x] = 0;
-						} else {
-							part->char_width[x] = unicode_to_cell(data);
-							schar->data = (unicode_val_T)data;
+						unsigned char i;
+
+						for (i = 0; chars < end;i++) {
+							part->document->buf[i] = *chars++;
 						}
+						part->document->buf_length = i;
+						break;
+					}
+				} else {
+good_char:
+					if (data == UCS_NO_BREAK_SPACE
+					    && html_context->options->wrap_nbsp)
+						data = UCS_SPACE;
+					part->spaces[x] = (data == UCS_SPACE);
+					if (unicode_to_cell(data) == 2) {
+						schar->data = (unicode_val_T)data;
+						part->char_width[x] = 2;
+						copy_screen_chars(&POS(x++, y), schar, 1);
+						schar->data = UCS_NO_CHAR;
+						part->spaces[x] = 0;
+						part->char_width[x] = 0;
+					} else {
+						part->char_width[x] = unicode_to_cell(data);
+						schar->data = (unicode_val_T)data;
 					}
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
