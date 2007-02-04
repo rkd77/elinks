@@ -25,11 +25,11 @@
 
 struct http_code {
 	int num;
-	unsigned char *str;
+	const unsigned char *str;
 };
 
 /* Source: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html */
-static struct http_code http_code[] = {
+static const struct http_code http_code[] = {
 	{ 100, "Continue" },
 	{ 101, "Switching Protocols" },
 	{ 200, "OK" },
@@ -77,18 +77,19 @@ static int
 compare_http_codes(const void *key, const void *element)
 {
 	int first = (long) key;
-	int second = ((struct http_code *) element)->num;
+	int second = ((const struct http_code *) element)->num;
 
 	return first - second;
 }
 
-static unsigned char *
+static const unsigned char *
 http_code_to_string(int code)
 {
-	struct http_code *element = bsearch((void *) (long) code, http_code,
-					    sizeof_array(http_code),
-					    sizeof(*element),
-					    compare_http_codes);
+	const struct http_code *element
+		= bsearch((void *) (long) code, http_code,
+			  sizeof_array(http_code),
+			  sizeof(*element),
+			  compare_http_codes);
 
 	if (element) return element->str;
 
@@ -100,7 +101,7 @@ http_code_to_string(int code)
 static unsigned char *
 get_http_error_document(struct terminal *term, struct uri *uri, int code)
 {
-	unsigned char *codestr = http_code_to_string(code);
+	const unsigned char *codestr = http_code_to_string(code);
 	unsigned char *title = asprintfa(_("HTTP error %03d", term), code);
 	struct string string;
 
