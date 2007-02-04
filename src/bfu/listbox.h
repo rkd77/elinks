@@ -100,7 +100,7 @@ struct listbox_ops {
 struct listbox_data {
 	LIST_HEAD(struct listbox_data);
 
-	struct listbox_ops *ops; /* Backend-provided operations */
+	const struct listbox_ops *ops; /* Backend-provided operations */
 	struct listbox_item *sel; /* Item currently selected */
 	struct listbox_item *top; /* Item which is on the top line of the box */
 

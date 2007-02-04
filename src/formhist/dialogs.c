@@ -142,7 +142,7 @@ static struct listbox_ops_messages formhist_messages = {
 	N_("Do you really want to remove all forms?"),
 };
 
-static struct listbox_ops formhist_listbox_ops = {
+static const struct listbox_ops formhist_listbox_ops = {
 	lock_formhist_data,
 	unlock_formhist_data,
 	is_formhist_data_used,

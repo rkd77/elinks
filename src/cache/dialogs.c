@@ -209,7 +209,7 @@ static struct listbox_ops_messages cache_messages = {
 	NULL,
 };
 
-static struct listbox_ops cache_entry_listbox_ops = {
+static const struct listbox_ops cache_entry_listbox_ops = {
 	lock_cache_entry,
 	unlock_cache_entry,
 	is_cache_entry_used,

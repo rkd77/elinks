@@ -241,7 +241,7 @@ static struct listbox_ops_messages http_auth_messages = {
 	N_("Do you really want to remove all auth entries?"),
 };
 
-static struct listbox_ops auth_listbox_ops = {
+static const struct listbox_ops auth_listbox_ops = {
 	lock_auth_entry,
 	unlock_auth_entry,
 	is_auth_entry_used,

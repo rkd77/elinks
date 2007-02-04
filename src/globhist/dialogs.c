@@ -127,7 +127,7 @@ static struct listbox_ops_messages globhist_messages = {
 	N_("Do you really want to remove all history entries?"),
 };
 
-static struct listbox_ops gh_listbox_ops = {
+static const struct listbox_ops gh_listbox_ops = {
 	lock_globhist_item,
 	unlock_globhist_item,
 	is_globhist_item_used,

@@ -445,7 +445,7 @@ static struct listbox_ops_messages download_messages = {
 	N_("Do you really want to interrupt all downloads?"),
 };
 
-static struct listbox_ops downloads_listbox_ops = {
+static const struct listbox_ops downloads_listbox_ops = {
 	lock_file_download,
 	unlock_file_download,
 	is_file_download_used,

@@ -242,7 +242,7 @@ delete_option_item(struct listbox_item *item, int last)
 		mark_option_as_deleted(option);
 }
 
-static struct listbox_ops options_listbox_ops = {
+static const struct listbox_ops options_listbox_ops = {
 	lock_option,
 	unlock_option,
 	is_option_used,
@@ -727,7 +727,7 @@ delete_keybinding_item(struct listbox_item *item, int last)
 	free_keybinding(keybinding);
 }
 
-static struct listbox_ops keybinding_listbox_ops = {
+static const struct listbox_ops keybinding_listbox_ops = {
 	lock_keybinding,
 	unlock_keybinding,
 	is_keybinding_used,

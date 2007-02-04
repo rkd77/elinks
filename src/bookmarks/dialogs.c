@@ -139,7 +139,7 @@ static struct listbox_ops_messages bookmarks_messages = {
 	N_("Do you really want to remove all bookmarks?"),
 };
 
-static struct listbox_ops bookmarks_listbox_ops = {
+static const struct listbox_ops bookmarks_listbox_ops = {
 	lock_bookmark,
 	unlock_bookmark,
 	is_bookmark_used,

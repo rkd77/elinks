@@ -219,7 +219,7 @@ static struct listbox_ops_messages cookies_messages = {
 	N_("Do you really want to remove all cookies?"),
 };
 
-static struct listbox_ops cookies_listbox_ops = {
+static const struct listbox_ops cookies_listbox_ops = {
 	lock_cookie,
 	unlock_cookie,
 	is_cookie_used,

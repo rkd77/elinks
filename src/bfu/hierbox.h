@@ -24,7 +24,7 @@ struct hierbox_browser {
 	struct list_head boxes;
 	struct list_head dialogs;
 	struct listbox_item root;
-	struct listbox_ops *ops;
+	const struct listbox_ops *ops;
 
 	/* For saving state */
 	unsigned int do_not_save_state:1;
