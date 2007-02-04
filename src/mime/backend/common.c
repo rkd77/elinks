@@ -24,7 +24,7 @@
 #include "mime/backend/mailcap.h"
 #include "mime/backend/mimetypes.h"
 
-static struct mime_backend *mime_backends[] = {
+static const struct mime_backend *const mime_backends[] = {
 	&default_mime_backend,
 #ifdef CONFIG_MAILCAP
 	&mailcap_mime_backend,
@@ -39,7 +39,7 @@ static struct mime_backend *mime_backends[] = {
 unsigned char *
 get_content_type_backends(unsigned char *extension)
 {
-	struct mime_backend *backend;
+	const struct mime_backend *backend;
 	int i;
 
 	foreach_module (backend, mime_backends, i) {
@@ -57,7 +57,7 @@ get_content_type_backends(unsigned char *extension)
 struct mime_handler *
 get_mime_handler_backends(unsigned char *ctype, int have_x)
 {
-	struct mime_backend *backend;
+	const struct mime_backend *backend;
 	int i;
 
 	foreach_module (backend, mime_backends, i) {

@@ -270,7 +270,7 @@ get_content_type_mimetypes(unsigned char *extension)
 	return NULL;
 }
 
-struct mime_backend mimetypes_mime_backend = {
+const struct mime_backend mimetypes_mime_backend = {
 	/* get_content_type: */	get_content_type_mimetypes,
 	/* get_mime_handler: */	NULL,
 };

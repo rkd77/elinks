@@ -661,7 +661,7 @@ get_mime_handler_mailcap(unsigned char *type, int options)
 }
 
 
-struct mime_backend mailcap_mime_backend = {
+const struct mime_backend mailcap_mime_backend = {
 	/* get_content_type: */	NULL,
 	/* get_mime_handler: */	get_mime_handler_mailcap,
 };

@@ -5,7 +5,7 @@
 #include "main/module.h"
 #include "mime/backend/common.h"
 
-extern struct mime_backend mimetypes_mime_backend;
+extern const struct mime_backend mimetypes_mime_backend;
 extern struct module mimetypes_mime_module;
 
 #endif
