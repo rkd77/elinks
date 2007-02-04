@@ -1265,7 +1265,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 struct {
 	unsigned char *type;
 	unsigned int plain:1;
-} static known_types[] = {
+} static const known_types[] = {
 	{ "text/html",			0 },
 	{ "text/plain",			1 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
