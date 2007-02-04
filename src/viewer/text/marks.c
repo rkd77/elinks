@@ -71,6 +71,7 @@ index_from_char(unsigned char mark)
 void
 goto_mark(unsigned char mark, struct view_state *vs)
 {
+	int old_current_link;
 #ifdef CONFIG_ECMASCRIPT
 	struct ecmascript_interpreter *ecmascript;
 	int ecmascript_fragile;
@@ -88,6 +89,7 @@ goto_mark(unsigned char mark, struct view_state *vs)
 	if (!marks[i] || !compare_uri(marks[i]->uri, vs->uri, 0))
 		return;
 
+	old_current_link = vs->current_link;
 #ifdef CONFIG_ECMASCRIPT
 	ecmascript = vs->ecmascript;
 	ecmascript_fragile = vs->ecmascript_fragile;
@@ -103,6 +105,7 @@ goto_mark(unsigned char mark, struct view_state *vs)
 	vs->ecmascript = ecmascript;
 	vs->ecmascript_fragile = ecmascript_fragile;
 #endif
+	vs->old_current_link = old_current_link;
 }
 
 static void
