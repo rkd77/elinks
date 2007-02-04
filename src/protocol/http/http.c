@@ -440,8 +440,9 @@ static int
 check_http_server_bugs(struct uri *uri, struct http_connection_info *http,
 		       unsigned char *head)
 {
-	unsigned char *server, **s;
-	static unsigned char *buggy_servers[] = {
+	unsigned char *server;
+	const unsigned char *const *s;
+	static const unsigned char *const buggy_servers[] = {
 		"mod_czech/3.1.0",
 		"Purveyor",
 		"Netscape-Enterprise",
