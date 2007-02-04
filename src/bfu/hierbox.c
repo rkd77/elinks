@@ -318,7 +318,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	add_dlg_listbox(dlg, listbox_data);
 
 	for (button = 0; button < browser->buttons_size; button++) {
-		struct hierbox_browser_button *but = &browser->buttons[button];
+		const struct hierbox_browser_button *but = &browser->buttons[button];
 
 		/* Skip buttons that should not be displayed in anonymous mode */
 		if (anonymous && !but->anonymous) {

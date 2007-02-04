@@ -487,7 +487,7 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
  * - Open button that can be used to set file_download->prog.
  * - Toggle notify button
  */
-static struct hierbox_browser_button download_buttons[] = {
+static const struct hierbox_browser_button download_buttons[] = {
 	/* [gettext_accelerator_context(.download_buttons)] */
 	{ N_("~Info"),                  push_info_button           },
 	{ N_("~Abort"),                 push_hierbox_delete_button },

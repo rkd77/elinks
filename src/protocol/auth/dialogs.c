@@ -256,7 +256,7 @@ static struct listbox_ops auth_listbox_ops = {
 	&http_auth_messages,
 };
 
-static struct hierbox_browser_button auth_buttons[] = {
+static const struct hierbox_browser_button auth_buttons[] = {
 	/* [gettext_accelerator_context(.auth_buttons)] */
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
 	{ N_("~Info"),   push_hierbox_info_button,   1 },

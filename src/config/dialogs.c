@@ -492,7 +492,7 @@ push_save_button(struct dialog_data *dlg_data,
 }
 
 
-static struct hierbox_browser_button option_buttons[] = {
+static const struct hierbox_browser_button option_buttons[] = {
 	/* [gettext_accelerator_context(.option_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Edit"),   push_edit_button,           0 },
@@ -921,7 +921,7 @@ push_kbdbind_save_button(struct dialog_data *dlg_data,
 
 static INIT_LIST_HEAD(keybinding_dialog_list);
 
-static struct hierbox_browser_button keybinding_buttons[] = {
+static const struct hierbox_browser_button keybinding_buttons[] = {
 	/* [gettext_accelerator_context(.keybinding_buttons)] */
 	{ N_("~Add"),            push_kbdbind_add_button,            0 },
 	{ N_("~Delete"),         push_hierbox_delete_button,         0 },

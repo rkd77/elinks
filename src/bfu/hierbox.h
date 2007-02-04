@@ -18,7 +18,7 @@ struct hierbox_browser_button {
 struct hierbox_browser {
 	unsigned char *title;
 	void (*expansion_callback)(void);
-	struct hierbox_browser_button *buttons;
+	const struct hierbox_browser_button *buttons;
 	size_t buttons_size;
 
 	struct list_head boxes;

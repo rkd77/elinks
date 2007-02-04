@@ -471,7 +471,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-static struct hierbox_browser_button cookie_buttons[] = {
+static const struct hierbox_browser_button cookie_buttons[] = {
 	/* [gettext_accelerator_context(.cookie_buttons)] */
 	{ N_("~Info"),		push_hierbox_info_button,	1 },
 	{ N_("~Add"),		push_add_button,		1 },

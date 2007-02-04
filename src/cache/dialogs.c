@@ -224,7 +224,7 @@ static struct listbox_ops cache_entry_listbox_ops = {
 	&cache_messages,
 };
 
-static struct hierbox_browser_button cache_buttons[] = {
+static const struct hierbox_browser_button cache_buttons[] = {
 	/* [gettext_accelerator_context(.cache_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
