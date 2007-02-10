@@ -1201,7 +1201,6 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
 {
 	unicode_val_T key;
-	int passed = -1;
 	int i; /* GOD I HATE C! --FF */ /* YEAH, BRAINFUCK RULEZ! --pasky */
 
 	assert(ses && doc_view && doc_view->document && doc_view->vs && ev);
@@ -1228,24 +1227,24 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 
 	/* Run through all the links and see if one of them is bound to the
 	 * key we test.. */
-	for (i = 0; i < doc_view->document->nlinks; i++) {
+
+	i = doc_view->vs->current_link >= 0 ? doc_view->vs->current_link : 0;
+	for (; i < doc_view->document->nlinks; i++) {
 		struct link *link = &doc_view->document->links[i];
 
 		if (key == link->accesskey) {
-			if (passed != i && i <= doc_view->vs->current_link) {
-				/* This is here in order to rotate between
-				 * links with same accesskey. */
-				if (passed < 0)	passed = i;
-				continue;
-			}
 			ses->kbdprefix.repeat_count = 0;
 			goto_link_number_do(ses, doc_view, i);
 			return FRAME_EVENT_REFRESH;
 		}
+	}
+	for (i = 0; i < doc_view->vs->current_link; i++) {
+		struct link *link = &doc_view->document->links[i];
 
-		if (i == doc_view->document->nlinks - 1 && passed >= 0) {
-			/* Return to the start. */
-			i = passed - 1;
+		if (key == link->accesskey) {
+			ses->kbdprefix.repeat_count = 0;
+			goto_link_number_do(ses, doc_view, i);
+			return FRAME_EVENT_REFRESH;
 		}
 	}
 
