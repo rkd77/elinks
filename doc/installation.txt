@@ -34,7 +34,12 @@ have the following libraries and programs installed:
 Dependency		Description
 -----------------------------------------------------------------------------
 Lua or Guile		Makes it possible to write scripting plugins.	    \
+ifdef::installation-webpage[]
+			See link:manual.html#lua-scripting[the Elinks - Lua interface]    \
+endif::installation-webpage[]
+ifndef::installation-webpage[]
 			See <<lua-scripting,the Elinks - Lua interface>>    \
+endif::installation-webpage[]
 			for more info.
 GNU zip			For handling compressed documents both locally and  \
 			sent from server.
@@ -50,7 +55,12 @@ xterm with 256 colors	Program atleast patch level  179 or rxvt program    \
 libidn			For internationalized domain names.
 SpiderMonkey		Mozilla's JavaScript engine for getting		    \	
 			JavaScript/ECMAScript support in ELinks.	    \
+ifdef::installation-webpage[]
+			See also link:manual.html#ecmascript[notes on ECMAScript support].
+endif::installation-webpage[]
+ifndef::installation-webpage[]
 			See also <<ecmascript,notes on ECMAScript support>>.
+endif::installation-webpage[]
 -----------------------------------------------------------------------------
 
 When compiling, you also need the header files for the libraries. Most OS
