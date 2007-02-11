@@ -1107,7 +1107,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 	 * key we test.. */
 	key = get_kbd_key(ev);
 
-	i = doc_view->vs->current_link >= 0 ? doc_view->vs->current_link : 0;
+	i = doc_view->vs->current_link + 1;
 	for (; i < doc_view->document->nlinks; i++) {
 		struct link *link = &doc_view->document->links[i];
 
@@ -1117,7 +1117,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 			return FRAME_EVENT_REFRESH;
 		}
 	}
-	for (i = 0; i < doc_view->vs->current_link; i++) {
+	for (i = 0; i <= doc_view->vs->current_link; i++) {
 		struct link *link = &doc_view->document->links[i];
 
 		if (key == link->accesskey) {	/* FIXME: key vs unicode ... */
