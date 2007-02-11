@@ -34,7 +34,6 @@ roughly in decreasing order of importance.
   - (enhancement) Reject invalid UTF-8 input from documents and
     terminals.
 * Changes in terminal support
-  - (new feature) Support for pasting from GNU screen clipboard
   - (enhancement) Make ELinks FreeBSD friendly. Defined keys used on
     FreeBSD console
   - (enhancement) Mouse wheel support on BSD via moused -z 4
@@ -72,7 +71,7 @@ roughly in decreasing order of importance.
   - (enhancement 887) Save in cookie manager should save cookies even
     if unmodified.
 * Changes in the user interface
-  - (new feature) Internal clipboard support
+  - (new feature 145) Internal clipboard support
   - (enhancement) Place the cursor on the current listbox item, to
     help screen readers
   - (enhancement) Localization updates
@@ -270,6 +269,7 @@ have already been considered.
   - (new feature) Let plain text change colors with ESC [ 31 m or
     similar control sequences, reverted in
     2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
+  - (enhancement) Support for pasting from GNU screen clipboard
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
 
