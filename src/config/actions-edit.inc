@@ -11,7 +11,7 @@ ACTION_(EDIT, "backspace", BACKSPACE, N__("Delete character in front of the curs
 ACTION_(EDIT, "beginning-of-buffer", BEGINNING_OF_BUFFER, N__("Go to the first line of the buffer"), 0),
 ACTION_(EDIT, "cancel", CANCEL, N__("Cancel current state"), 0),
 ACTION_(EDIT, "copy-clipboard", COPY_CLIPBOARD, N__("Copy text to clipboard"), 0),
-ACTION_(EDIT, "cut-clipboard", CUT_CLIPBOARD, N__("Delete text from clipboard"), 0),
+ACTION_(EDIT, "cut-clipboard", CUT_CLIPBOARD, N__("Cut text to clipboard"), 0),
 ACTION_(EDIT, "delete", DELETE, N__("Delete character under cursor"), 0),
 ACTION_(EDIT, "down", DOWN, N__("Move cursor downwards"), 0),
 ACTION_(EDIT, "end", END, N__("Go to the end of the page/line"), 0),
