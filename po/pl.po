@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-12-25 13:27+0100\n"
-"PO-Revision-Date: 2006-12-25 13:35+0100\n"
+"PO-Revision-Date: 2007-02-12 22:35+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -7008,7 +7008,7 @@ msgstr "Zakres portów"
 
 #: src/protocol/bittorrent/bittorrent.c:36
 msgid "Port range allowed to be used for listening on."
-msgstr "Zakres portów na którym mo¿na nas³uchiwaæ"
+msgstr "Zakres portów na którym mo¿na nas³uchiwaæ."
 
 #: src/protocol/bittorrent/bittorrent.c:38
 msgid "Minimum port"
@@ -7016,7 +7016,7 @@ msgstr "Minimalny numer portów"
 
 #: src/protocol/bittorrent/bittorrent.c:40
 msgid "The minimum port to try and listen on."
-msgstr "Minimalny numer portu do nas³uchiwania"
+msgstr "Minimalny numer portu do nas³uchiwania."
 
 #
 #: src/protocol/bittorrent/bittorrent.c:42
@@ -7097,7 +7097,7 @@ msgstr ""
 "Ma s³u¿yæ aby umo¿liwiæ klientom udowodnienie swojej to¿samo¶ci po\n"
 "zmianie adresu IP. Jest to parametr opcjonalny, ale niektóre trackery\n"
 "wymagaj± tego parametru. W przypadku ustawienia na \"\" ¿aden klucz\n"
-"u¿ytkownika nie bêdzie wysy³any do trackera"
+"u¿ytkownika nie bêdzie wysy³any do trackera."
 
 #: src/protocol/bittorrent/bittorrent.c:81
 msgid "Maximum number of peers to request"
@@ -7141,7 +7141,7 @@ msgstr "Niskopoziomowe opcje peer-wire."
 
 #: src/protocol/bittorrent/bittorrent.c:102
 msgid "Maximum number of peer connections"
-msgstr "Maksymalna liczba po³±czeñ z partnerami."
+msgstr "Maksymalna liczba po³±czeñ z partnerami"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
