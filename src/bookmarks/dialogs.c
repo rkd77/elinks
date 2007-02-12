@@ -139,7 +139,7 @@ static struct listbox_ops_messages bookmarks_messages = {
 	N_("Do you really want to remove all bookmarks?"),
 };
 
-static struct listbox_ops bookmarks_listbox_ops = {
+static const struct listbox_ops bookmarks_listbox_ops = {
 	lock_bookmark,
 	unlock_bookmark,
 	is_bookmark_used,
@@ -482,7 +482,7 @@ push_move_button(struct dialog_data *dlg_data,
 
 /**** MANAGEMENT *****************************************************/
 
-static struct hierbox_browser_button bookmark_buttons[] = {
+static const struct hierbox_browser_button bookmark_buttons[] = {
 	/* [gettext_accelerator_context(.bookmark_buttons)] */
 	{ N_("~Goto"),		push_hierbox_goto_button,	1 },
 	{ N_("~Edit"),		push_edit_button,		0 },
@@ -498,7 +498,7 @@ static struct hierbox_browser_button bookmark_buttons[] = {
 	{ N_("Clear"),		push_hierbox_clear_button,	0 },
 
 	/* TODO: Would this be useful? --jonas */
-	{ N_("Save"),		push_save_button		},
+	{ N_("Save"),		push_save_button,		0 },
 #endif
 };
 

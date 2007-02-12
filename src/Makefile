@@ -38,6 +38,13 @@ vernum.o: $(LIB_O_NAME)
 elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
+TAGS:
+	find $(srcdir). -name "*.[ch]" -print \
+	| etags --regex='{c}/INIT_LIST_HEAD(\([[:alnum:]_]+\))/\1/' \
+		--regex='{c}/struct_hierbox_browser(\n[ \t]*\([[:alnum:]_]+\),/\1/m' \
+		-
+.PHONY: TAGS
+
 PROGS = elinks
 CLEAN = vernum.o
 

@@ -460,52 +460,51 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 			}
 
 			for (; chars < end; x++) {
-				if (*chars == NBSP_CHAR) {
-					schar->data = ' ';
-					part->spaces[x] = html_context->options->wrap_nbsp;
-					part->char_width[x] = 1;
-					chars++;
-				} else {
-					part->spaces[x] = (*chars == ' ');
-					data = utf8_to_unicode(&chars, end);
-					if (data == UCS_NO_CHAR) {
-						if (charslen == 1) {
-							/* HR */
-							unsigned char attr = schar->attr;
+				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
-							schar->data = *chars++;
-							schar->attr = SCREEN_ATTR_FRAME;
-							copy_screen_chars(&POS(x, y), schar, 1);
-							schar->attr = attr;
-							part->char_width[x] = 0;
-							continue;
-						} else {
-							unsigned char i;
+				data = utf8_to_unicode(&chars, end);
+				if (data == UCS_NO_CHAR) {
+					part->spaces[x] = 0;
+					if (charslen == 1) {
+						/* HR */
+						unsigned char attr = schar->attr;
 
-							for (i = 0; chars < end;i++) {
-								part->document->buf[i] = *chars++;
-							}
-							part->document->buf_length = i;
-							break;
-						}
+						schar->data = *chars++;
+						schar->attr = SCREEN_ATTR_FRAME;
+						copy_screen_chars(&POS(x, y), schar, 1);
+						schar->attr = attr;
+						part->char_width[x] = 0;
+						continue;
 					} else {
-good_char:
-						if (unicode_to_cell(data) == 2) {
-							schar->data = (unicode_val_T)data;
-							part->char_width[x] = 2;
-							copy_screen_chars(&POS(x++, y), schar, 1);
-							schar->data = UCS_NO_CHAR;
-							part->spaces[x] = 0;
-							part->char_width[x] = 0;
-						} else {
-							part->char_width[x] = unicode_to_cell(data);
-							schar->data = (unicode_val_T)data;
+						unsigned char i;
+
+						for (i = 0; chars < end;i++) {
+							part->document->buf[i] = *chars++;
 						}
+						part->document->buf_length = i;
+						break;
+					}
+				} else {
+good_char:
+					if (data == UCS_NO_BREAK_SPACE
+					    && html_context->options->wrap_nbsp)
+						data = UCS_SPACE;
+					part->spaces[x] = (data == UCS_SPACE);
+					if (unicode_to_cell(data) == 2) {
+						schar->data = (unicode_val_T)data;
+						part->char_width[x] = 2;
+						copy_screen_chars(&POS(x++, y), schar, 1);
+						schar->data = UCS_NO_CHAR;
+						part->spaces[x] = 0;
+						part->char_width[x] = 0;
+					} else {
+						part->char_width[x] = unicode_to_cell(data);
+						schar->data = (unicode_val_T)data;
 					}
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
 				if (*chars == NBSP_CHAR) {
@@ -517,8 +516,8 @@ good_char:
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
+		} /* end of UTF-8 check */
 
-		}
 		/* Assert that we haven't written past the end of the
 		 * LINE(y).chars array.  @x here is one greater than
 		 * the last one used in POS(x, y).  Instead of this,
@@ -530,11 +529,11 @@ good_char:
 		 * for line-wrapping decisions.  It may currently be too
 		 * large because it was allocated above based on @charslen
 		 * which is the number of bytes, not the number of cells.
-		 * Change the length to the correct size, but dont let it
+		 * Change the length to the correct size, but don't let it
 		 * get smaller than it was on entry to this function.  */
 		LINE(y).length = int_max(orig_length, X(x));
 		len = x - x2;
-	} else {
+	} else { /* part->document == NULL */
 		if (utf8) {
 			unsigned char *end;
 
@@ -555,13 +554,13 @@ good_char:
 				}
 			}
 			len = x - x2;
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->spaces[x] = (*chars == ' ');
 				part->char_width[x] = 1;
 			}
 		}
-	}
+	} /* end of part->document check */
 	return len;
 }
 #else

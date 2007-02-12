@@ -127,7 +127,7 @@ static struct listbox_ops_messages globhist_messages = {
 	N_("Do you really want to remove all history entries?"),
 };
 
-static struct listbox_ops gh_listbox_ops = {
+static const struct listbox_ops gh_listbox_ops = {
 	lock_globhist_item,
 	unlock_globhist_item,
 	is_globhist_item_used,
@@ -219,7 +219,7 @@ push_bookmark_button(struct dialog_data *dlg_data,
 
 /* The global history manager: */
 
-static struct hierbox_browser_button globhist_buttons[] = {
+static const struct hierbox_browser_button globhist_buttons[] = {
 	/* [gettext_accelerator_context(.globhist_buttons)] */
 	{ N_("~Goto"),           push_hierbox_goto_button,   1 },
 	{ N_("~Info"),           push_hierbox_info_button,   1 },
@@ -232,7 +232,7 @@ static struct hierbox_browser_button globhist_buttons[] = {
 	{ N_("C~lear"),          push_hierbox_clear_button,  0 },
 #if 0
 	/* TODO: Would this be useful? --jonas */
-	{ N_("Save"),		push_save_button		},
+	{ N_("Save"),		push_save_button,            0 },
 #endif
 };
 

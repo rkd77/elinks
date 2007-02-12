@@ -183,7 +183,8 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 		return encode_utf8(u);
 #endif /* CONFIG_UTF8 */
 
-	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
+	/* To mark non breaking spaces in non-UTF-8 strings, we use a
+	 * special char NBSP_CHAR. */
 	if (u == 0xa0) {
 		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
 		else /* NBSP_MODE_ASCII */ return " ";

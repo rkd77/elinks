@@ -34,7 +34,6 @@ roughly in decreasing order of importance.
   - (enhancement) Reject invalid UTF-8 input from documents and
     terminals.
 * Changes in terminal support
-  - (new feature) Support for pasting from GNU screen clipboard
   - (enhancement) Make ELinks FreeBSD friendly. Defined keys used on
     FreeBSD console
   - (enhancement) Mouse wheel support on BSD via moused -z 4
@@ -67,12 +66,12 @@ roughly in decreasing order of importance.
   - (enhancement) Tell the user how to move bookmarks.
   - (bugfix) Fix crash when moving bookmarks out of a folder.
   - (bugfix) Fixed crash if XBEL bookmark has no title
-  - (bugfix 886) If the user edits or deletes a cookie, mark the
+  - (bugfix 886, 872) If the user edits or deletes a cookie, mark the
     cookie list as needing to be saved.
   - (enhancement 887) Save in cookie manager should save cookies even
     if unmodified.
 * Changes in the user interface
-  - (new feature) Internal clipboard support
+  - (new feature 145) Internal clipboard support
   - (enhancement) Place the cursor on the current listbox item, to
     help screen readers
   - (enhancement) Localization updates
@@ -81,7 +80,7 @@ roughly in decreasing order of importance.
   - (new feature) Autocreate directories needed to download a file.
   - (new feature) Option ui.show_menu_bar_always
   - (new feature) Option ui.tabs moves the tab bar to the top.
-  - (bugfix) Fix searching in menus past unselectable items.
+  - (bugfix 24) Fix searching in menus past unselectable items.
   - (bugfix) Fix crash with empty File extensions menu.
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
@@ -92,8 +91,8 @@ roughly in decreasing order of importance.
   - (bugfix 396) Never show empty filename in the what-to-do dialog
 * Changes in support for URI schemes, protocols, caching, and encodings
   - (workaround 841) SMB is now disabled because of CVE-2006-5925.
-  - (new feature) Native FSP protocol support (replaces CGI program in
-    contrib/fsp/)
+  - (new feature 630) Native FSP protocol support (replaces CGI
+    program in contrib/fsp/)
   - (new feature) Local CGI
   - (experimental, bugfix) Gopher changes, including crash fixes
   - (enhancement) FTP handler parses file sizes better
@@ -135,13 +134,11 @@ roughly in decreasing order of importance.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature) If a mailcap entry indicates copiousoutput, ELinks
     itself acts as a pager.
-  - (new feature) Let plain text change colors with ESC [ 31 m or
-    similar control sequences.
 * Changes in the document viewer and tabs
   - (new feature) Highlight links as one enters link prefixes.
   - (new feature) Backspace backs out the last digit of the prefix.
   - (bugfix) Tabs opened by -remote now go behind existing dialogs.
-  - (new feature) -dump-color-mode
+  - (new feature 622) -dump-color-mode
   - (bugfix) Fix accesskeys so that they work when priority is 0
   - (enhancement) Text type-ahead searching: don't follow current link
     on enter
@@ -239,7 +236,7 @@ have already been considered.
   - (bugfix) Fix a crash when adding a server in the cookie manager.
   - (bugfix) cookies: "Add Server" ignores "cookies.accept_policy".
   - (bugfix) Fix data: protocol.
-  - (bugfix) Properly deselect the main menu instead of crashing
+  - (bugfix 747) Properly deselect the main menu instead of crashing
   - (bugfix 778) ELinks crashes on binary files when
     document.plain.display_links is set
   - (bugfix 784) UTF-8 mode misconverts non-ASCII entity in Latin-1
@@ -258,6 +255,11 @@ have already been considered.
   - (bugfix 826) too small table for double-cell characters
   - (bugfix 902) crash: "overflow detected realloc()" in realloc_line
   - (bugfix 912) wrong color in one cell of an HTML input field
+  - (bugfix 835) Text in textarea is unaffected by horizontal
+    scrolling of document in UTF-8 mode
+  - (bugfix 823) Big textarea is too slow with CONFIG_UTF8
+  - (bugfix 754) Pressing ESC do not pop up main menu anymore.
+  - (bugfix 794) tab-close-all-but-current crashes
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -265,6 +267,10 @@ have already been considered.
     in 10d72cae7eafa6b90db1c8f303deb200555734c2
   - (enhancement) wcwidth, reverted in
     d050cb67aa37390ab938b0a308c7541f19578506
+  - (new feature) Let plain text change colors with ESC [ 31 m or
+    similar control sequences, reverted in
+    2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
+  - (enhancement) Support for pasting from GNU screen clipboard
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
 

@@ -2134,14 +2134,14 @@ unsigned char *const aliases_8859_16 [] = {
 
 const uint16_t highhalf_cp1250 [] = {
 	/* 0x80 */ 0x20AC, /* EURO SIGN */
-	/* 0x81 */ 0x0000, /* UNDEFINED */
+	/* 0x81 */ 0xFFFF,
 	/* 0x82 */ 0x201A, /* SINGLE LOW-9 QUOTATION MARK */
-	/* 0x83 */ 0x0000, /* UNDEFINED */
+	/* 0x83 */ 0xFFFF,
 	/* 0x84 */ 0x201E, /* DOUBLE LOW-9 QUOTATION MARK */
 	/* 0x85 */ 0x2026, /* HORIZONTAL ELLIPSIS */
 	/* 0x86 */ 0x2020, /* DAGGER */
 	/* 0x87 */ 0x2021, /* DOUBLE DAGGER */
-	/* 0x88 */ 0x0000, /* UNDEFINED */
+	/* 0x88 */ 0xFFFF,
 	/* 0x89 */ 0x2030, /* PER MILLE SIGN */
 	/* 0x8A */ 0x0160, /* LATIN CAPITAL LETTER S WITH CARON */
 	/* 0x8B */ 0x2039, /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK */
@@ -2149,7 +2149,7 @@ const uint16_t highhalf_cp1250 [] = {
 	/* 0x8D */ 0x0164, /* LATIN CAPITAL LETTER T WITH CARON */
 	/* 0x8E */ 0x017D, /* LATIN CAPITAL LETTER Z WITH CARON */
 	/* 0x8F */ 0x0179, /* LATIN CAPITAL LETTER Z WITH ACUTE */
-	/* 0x90 */ 0x0000, /* UNDEFINED */
+	/* 0x90 */ 0xFFFF,
 	/* 0x91 */ 0x2018, /* LEFT SINGLE QUOTATION MARK */
 	/* 0x92 */ 0x2019, /* RIGHT SINGLE QUOTATION MARK */
 	/* 0x93 */ 0x201C, /* LEFT DOUBLE QUOTATION MARK */
@@ -2157,7 +2157,7 @@ const uint16_t highhalf_cp1250 [] = {
 	/* 0x95 */ 0x2022, /* BULLET */
 	/* 0x96 */ 0x2013, /* EN DASH */
 	/* 0x97 */ 0x2014, /* EM DASH */
-	/* 0x98 */ 0x0000, /* UNDEFINED */
+	/* 0x98 */ 0xFFFF,
 	/* 0x99 */ 0x2122, /* TRADE MARK SIGN */
 	/* 0x9A */ 0x0161, /* LATIN SMALL LETTER S WITH CARON */
 	/* 0x9B */ 0x203A, /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
@@ -2710,22 +2710,22 @@ unsigned char *const aliases_cp1256 [] = {
 
 const uint16_t highhalf_cp1257 [] = {
 	/* 0x80 */ 0x20AC, /* EURO SIGN */
-	/* 0x81 */ 0x0000, /* UNDEFINED */
+	/* 0x81 */ 0xFFFF,
 	/* 0x82 */ 0x201A, /* SINGLE LOW-9 QUOTATION MARK */
-	/* 0x83 */ 0x0000, /* UNDEFINED */
+	/* 0x83 */ 0xFFFF,
 	/* 0x84 */ 0x201E, /* DOUBLE LOW-9 QUOTATION MARK */
 	/* 0x85 */ 0x2026, /* HORIZONTAL ELLIPSIS */
 	/* 0x86 */ 0x2020, /* DAGGER */
 	/* 0x87 */ 0x2021, /* DOUBLE DAGGER */
-	/* 0x88 */ 0x0000, /* UNDEFINED */
+	/* 0x88 */ 0xFFFF,
 	/* 0x89 */ 0x2030, /* PER MILLE SIGN */
-	/* 0x8A */ 0x0000, /* UNDEFINED */
+	/* 0x8A */ 0xFFFF,
 	/* 0x8B */ 0x2039, /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK */
-	/* 0x8C */ 0x0000, /* UNDEFINED */
+	/* 0x8C */ 0xFFFF,
 	/* 0x8D */ 0x00A8, /* DIAERESIS */
 	/* 0x8E */ 0x02C7, /* CARON */
 	/* 0x8F */ 0x00B8, /* CEDILLA */
-	/* 0x90 */ 0x0000, /* UNDEFINED */
+	/* 0x90 */ 0xFFFF,
 	/* 0x91 */ 0x2018, /* LEFT SINGLE QUOTATION MARK */
 	/* 0x92 */ 0x2019, /* RIGHT SINGLE QUOTATION MARK */
 	/* 0x93 */ 0x201C, /* LEFT DOUBLE QUOTATION MARK */
@@ -2733,20 +2733,20 @@ const uint16_t highhalf_cp1257 [] = {
 	/* 0x95 */ 0x2022, /* BULLET */
 	/* 0x96 */ 0x2013, /* EN DASH */
 	/* 0x97 */ 0x2014, /* EM DASH */
-	/* 0x98 */ 0x0000, /* UNDEFINED */
+	/* 0x98 */ 0xFFFF,
 	/* 0x99 */ 0x2122, /* TRADE MARK SIGN */
-	/* 0x9A */ 0x0000, /* UNDEFINED */
+	/* 0x9A */ 0xFFFF,
 	/* 0x9B */ 0x203A, /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
-	/* 0x9C */ 0x0000, /* UNDEFINED */
+	/* 0x9C */ 0xFFFF,
 	/* 0x9D */ 0x00AF, /* MACRON */
 	/* 0x9E */ 0x02DB, /* OGONEK */
-	/* 0x9F */ 0x0000, /* UNDEFINED */
+	/* 0x9F */ 0xFFFF,
 	/* 0xA0 */ 0x00A0, /* NO-BREAK SPACE */
-	/* 0xA1 */ 0x0000, /* UNDEFINED */
+	/* 0xA1 */ 0xFFFF,
 	/* 0xA2 */ 0x00A2, /* CENT SIGN */
 	/* 0xA3 */ 0x00A3, /* POUND SIGN */
 	/* 0xA4 */ 0x00A4, /* CURRENCY SIGN */
-	/* 0xA5 */ 0x0000, /* UNDEFINED */
+	/* 0xA5 */ 0xFFFF,
 	/* 0xA6 */ 0x00A6, /* BROKEN BAR */
 	/* 0xA7 */ 0x00A7, /* SECTION SIGN */
 	/* 0xA8 */ 0x00D8, /* LATIN CAPITAL LETTER O WITH STROKE */

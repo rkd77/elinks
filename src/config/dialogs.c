@@ -32,11 +32,10 @@
 
 
 static void
-toggle_success_msgbox(void *dummy)
+disable_success_msgbox(void *dummy)
 {
-	/* TODO: option_changed() */
-	get_opt_bool("ui.success_msgbox") = !get_opt_bool("ui.success_msgbox");
-	get_opt_rec(config_options, "ui.success_msgbox")->flags |= OPT_TOUCHED;
+	get_opt_bool("ui.success_msgbox") = 0;
+	option_changed(NULL, get_opt_rec(config_options, "ui.success_msgbox"));
 }
 
 void
@@ -56,7 +55,7 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 				 config_file),
 			NULL, 2,
 			N_("~OK"), NULL, B_ENTER | B_ESC,
-			N_("~Do not show anymore"), toggle_success_msgbox, 0);
+			N_("~Do not show anymore"), disable_success_msgbox, 0);
 		return;
 	}
 
@@ -243,7 +242,7 @@ delete_option_item(struct listbox_item *item, int last)
 		mark_option_as_deleted(option);
 }
 
-static struct listbox_ops options_listbox_ops = {
+static const struct listbox_ops options_listbox_ops = {
 	lock_option,
 	unlock_option,
 	is_option_used,
@@ -275,9 +274,7 @@ check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data
 	if (chinon) {
 		if (option_types[option->type].set &&
 		    option_types[option->type].set(option, chinon)) {
-			struct option *current = option;
-
-			option_changed(ses, current, option);
+			option_changed(ses, option);
 
 			commandline = 0;
 			mem_free(chinon);
@@ -495,7 +492,7 @@ push_save_button(struct dialog_data *dlg_data,
 }
 
 
-static struct hierbox_browser_button option_buttons[] = {
+static const struct hierbox_browser_button option_buttons[] = {
 	/* [gettext_accelerator_context(.option_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Edit"),   push_edit_button,           0 },
@@ -730,7 +727,7 @@ delete_keybinding_item(struct listbox_item *item, int last)
 	free_keybinding(keybinding);
 }
 
-static struct listbox_ops keybinding_listbox_ops = {
+static const struct listbox_ops keybinding_listbox_ops = {
 	lock_keybinding,
 	unlock_keybinding,
 	is_keybinding_used,
@@ -924,7 +921,7 @@ push_kbdbind_save_button(struct dialog_data *dlg_data,
 
 static INIT_LIST_HEAD(keybinding_dialog_list);
 
-static struct hierbox_browser_button keybinding_buttons[] = {
+static const struct hierbox_browser_button keybinding_buttons[] = {
 	/* [gettext_accelerator_context(.keybinding_buttons)] */
 	{ N_("~Add"),            push_kbdbind_add_button,            0 },
 	{ N_("~Delete"),         push_hierbox_delete_button,         0 },

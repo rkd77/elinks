@@ -32,9 +32,9 @@ where:
 
 <keystroke>::
 
-	is a case sensitive key, which you can prefix with 'Ctrl-' or 'Alt-'.
-	'Ctrl-' must be followed by an uppercase key. See below for a list of
-	valid keys.
+	is a case sensitive key, which you can prefix with 'Ctrl-', 'Alt-',
+	or both.  'Ctrl-' must be followed by an uppercase key. See below for
+	a list of valid keys.
 
 <action>::
 

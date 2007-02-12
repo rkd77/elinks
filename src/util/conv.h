@@ -80,7 +80,7 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 struct string *add_html_to_string(struct string *string, unsigned char *html, int htmllen);
 
 /* Escapes \ and " with a \ */
-struct string *add_quoted_to_string(struct string *string, unsigned char *q, int qlen);
+struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
 
 /* Adds ', |len| bytes of |src| with all single-quotes converted to '\'',
  * and ' to |string|. */

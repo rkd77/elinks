@@ -22,7 +22,8 @@
 struct s_msg_dsc {
 	int n;
 	unsigned char *msg;
-} msg_dsc[] = {
+};
+static const struct s_msg_dsc msg_dsc[] = {
 	{S_WAIT,		N_("Waiting in queue")},
 	{S_DNS,			N_("Looking up host")},
 	{S_CONN,		N_("Making connection")},

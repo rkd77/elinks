@@ -31,6 +31,8 @@ enum screen_char_attr {
 /* One position in the terminal screen's image. */
 struct screen_char {
 	/* Contains either character value or frame data.
+	 * If @attr includes SCREEN_ATTR_FRAME, then @data is enum
+	 * border_char; otherwise, @data is a character value.
 	 * If CONFIG_UTF8 is defined, and UTF-8 I/O is enabled for the
 	 * terminal, then the character value is in UCS-4; otherwise,
 	 * it is in the charset of the terminal, and the charset is

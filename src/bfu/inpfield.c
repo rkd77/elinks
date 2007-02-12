@@ -744,7 +744,7 @@ clear_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_PROCESSED;
 }
 
-struct widget_ops field_ops = {
+const struct widget_ops field_ops = {
 	display_field,
 	init_field,
 	mouse_field,
@@ -753,7 +753,7 @@ struct widget_ops field_ops = {
 	clear_field,
 };
 
-struct widget_ops field_pass_ops = {
+const struct widget_ops field_pass_ops = {
 	display_field_pass,
 	init_field,
 	mouse_field,

@@ -30,7 +30,7 @@ struct widget_ops {
 };
 
 struct widget {
-	struct widget_ops *ops;
+	const struct widget_ops *ops;
 
 	unsigned char *text;
 

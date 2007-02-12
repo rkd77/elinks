@@ -23,17 +23,29 @@ for i in $codepages; do
 	echo "/*** $i ***/"
 	echo
 
-	sed '1,2d
+	sed '	# Delete the name and aliases lines.
+		1,2d
+		# Delete comment-only and blank lines.
 		/^[	 ]*\(#.*\)\{,1\}$/d
+		# Copy to the hold space.
 		h
+		# Delete everything except the comment.
 		s/^[^#]*//
+		# If there is a comment, change it to use /* */ delimiters.
 		s!#[	 ]*\(.*\)!/* \1 */!
+		# Exchange spaces; now hold space = comment and pattern space = all.
 		x
+		# Delete the comment. 
 		s/#.*//
+		# Canonicalize case so the strings can be used as lookup keys.
 		y/Xabcdef/xABCDEF/
+		# Delete mappings of bytes 0x00...0x7F.  ELinks assumes those match ASCII. 
 		/^0x[01234567]/d
-		/[^0x0123456789ABCDEF	 ]/d
+		# Delete lines that do not map the byte to exactly one character.
+		/^[ 	]*0x[0123456789ABCDEF]\{2\}[ 	]\{1,\}0x[0123456789ABCDEF]\{1,\}[ 	]*$/!d
+		# Append a newline and the comment from the hold space.
 		G
+		# Delete the newline added by the previous command.
 		s/\n//' "$i.cp" | {
 		for left in 8 9 A B C D E F; do
 			for right in 0 1 2 3 4 5 6 7 8 9 A B C D E F; do

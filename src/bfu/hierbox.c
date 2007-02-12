@@ -318,7 +318,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	add_dlg_listbox(dlg, listbox_data);
 
 	for (button = 0; button < browser->buttons_size; button++) {
-		struct hierbox_browser_button *but = &browser->buttons[button];
+		const struct hierbox_browser_button *but = &browser->buttons[button];
 
 		/* Skip buttons that should not be displayed in anonymous mode */
 		if (anonymous && !but->anonymous) {
@@ -547,7 +547,7 @@ enum delete_error {
 	DELETE_ERRORS,
 };
 
-struct listbox_ops_messages default_listbox_ops_messages = {
+static const struct listbox_ops_messages default_listbox_ops_messages = {
 	/* cant_delete_item */
 	N_("Sorry, but the item \"%s\" cannot be deleted."),
 
@@ -592,7 +592,7 @@ struct listbox_ops_messages default_listbox_ops_messages = {
 
 static void
 print_delete_error(struct listbox_item *item, struct terminal *term,
-		   struct listbox_ops *ops, enum delete_error err)
+		   const struct listbox_ops *ops, enum delete_error err)
 {
 	struct string msg;
 	unsigned char *errmsg;
@@ -647,7 +647,7 @@ static void
 do_delete_item(struct listbox_item *item, struct listbox_context *info,
 	       int last)
 {
-	struct listbox_ops *ops = info->box->ops;
+	const struct listbox_ops *ops = info->box->ops;
 
 	assert(item);
 
@@ -720,7 +720,7 @@ query_delete_selected_item(void *context_)
 	struct listbox_context *context, *oldcontext = context_;
 	struct terminal *term = oldcontext->term;
 	struct listbox_data *box = oldcontext->box;
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	unsigned char *text;
 	enum delete_error delete;
@@ -779,7 +779,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	struct listbox_context *context;
 
@@ -842,7 +842,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 {
 	/* [gettext_accelerator_context(push_hierbox_clear_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 

@@ -37,9 +37,7 @@ display_codepage(struct terminal *term, void *name_, void *xxx)
 
 	if (opt->value.number != index) {
 		opt->value.number = index;
-		/* TODO: option_changed() (we need to review the hooks
-		 * to handle NULL ses or properly document that stuff). */
-		opt->flags |= OPT_TOUCHED;
+		option_changed(NULL, opt);
 	}
 
 	cls_redraw_all_terminals();

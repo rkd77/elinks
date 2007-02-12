@@ -445,7 +445,7 @@ static struct listbox_ops_messages download_messages = {
 	N_("Do you really want to interrupt all downloads?"),
 };
 
-static struct listbox_ops downloads_listbox_ops = {
+static const struct listbox_ops downloads_listbox_ops = {
 	lock_file_download,
 	unlock_file_download,
 	is_file_download_used,
@@ -487,7 +487,7 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
  * - Open button that can be used to set file_download->prog.
  * - Toggle notify button
  */
-static struct hierbox_browser_button download_buttons[] = {
+static const struct hierbox_browser_button download_buttons[] = {
 	/* [gettext_accelerator_context(.download_buttons)] */
 	{ N_("~Info"),                  push_info_button           },
 	{ N_("~Abort"),                 push_hierbox_delete_button },

@@ -5,7 +5,7 @@
 #include "main/module.h"
 #include "mime/backend/common.h"
 
-extern struct mime_backend mailcap_mime_backend;
+extern const struct mime_backend mailcap_mime_backend;
 extern struct module mailcap_mime_module;
 
 #endif

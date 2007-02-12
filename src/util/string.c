@@ -97,7 +97,7 @@ stracpy(const unsigned char *src)
 
 
 void
-add_to_strn(unsigned char **dst, unsigned char *src)
+add_to_strn(unsigned char **dst, const unsigned char *src)
 {
 	unsigned char *newdst;
 	int dstlen;
@@ -132,10 +132,10 @@ insert_in_string(unsigned char **dst, int pos,
 }
 
 unsigned char *
-straconcat(unsigned char *str, ...)
+straconcat(const unsigned char *str, ...)
 {
 	va_list ap;
-	unsigned char *a;
+	const unsigned char *a;
 	unsigned char *s;
 	unsigned int len;
 
@@ -149,7 +149,7 @@ straconcat(unsigned char *str, ...)
 	if (len) memcpy(s, str, len);
 
 	va_start(ap, str);
-	while ((a = va_arg(ap, unsigned char *))) {
+	while ((a = va_arg(ap, const unsigned char *))) {
 		unsigned int l = strlen(a);
 		unsigned char *ns;
 
@@ -173,7 +173,7 @@ straconcat(unsigned char *str, ...)
 }
 
 int
-xstrcmp(unsigned char *s1, unsigned char *s2)
+xstrcmp(const unsigned char *s1, const unsigned char *s2)
 {
 	if (!s1) return -!!s2;
 	if (!s2) return 1;
@@ -245,7 +245,7 @@ elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 
 inline struct string *
 #ifdef DEBUG_MEMLEAK
-init_string__(unsigned char *file, int line, struct string *string)
+init_string__(const unsigned char *file, int line, struct string *string)
 #else
 init_string(struct string *string)
 #endif
@@ -318,7 +318,7 @@ add_crlf_to_string(struct string *string)
 }
 
 inline struct string *
-add_string_to_string(struct string *string, struct string *from)
+add_string_to_string(struct string *string, const struct string *from)
 {
 	assertm(string && from, "[add_string_to_string]");
 	if_assert_failed { return NULL; }
@@ -332,7 +332,7 @@ add_string_to_string(struct string *string, struct string *from)
 }
 
 struct string *
-add_file_to_string(struct string *string, unsigned char *filename)
+add_file_to_string(struct string *string, const unsigned char *filename)
 {
 	FILE *file;
 	off_t filelen;
@@ -375,7 +375,7 @@ struct string *
 string_concat(struct string *string, ...)
 {
 	va_list ap;
-	unsigned char *source;
+	const unsigned char *source;
 
 	assertm(string, "[string_concat]");
 	if_assert_failed { return NULL; }
@@ -383,7 +383,7 @@ string_concat(struct string *string, ...)
 	check_string_magic(string);
 
 	va_start(ap, string);
-	while ((source = va_arg(ap, unsigned char *)))
+	while ((source = va_arg(ap, const unsigned char *)))
 		if (*source)
 			add_to_string(string, source);
 
@@ -434,7 +434,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 
 /* Add printf-like format string to @string. */
 struct string *
-add_format_to_string(struct string *string, unsigned char *format, ...)
+add_format_to_string(struct string *string, const unsigned char *format, ...)
 {
 	int newlength;
 	int width;

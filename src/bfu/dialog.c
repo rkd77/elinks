@@ -140,7 +140,7 @@ select_dlg_item(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		widget_data->widget->ops->select(dlg_data, widget_data);
 }
 
-static struct widget_ops *widget_type_to_ops[] = {
+static const struct widget_ops *const widget_type_to_ops[] = {
 	&checkbox_ops,
 	&field_ops,
 	&field_pass_ops,
@@ -344,7 +344,7 @@ static void
 dialog_ev_kbd(struct dialog_data *dlg_data)
 {
 	struct widget_data *widget_data = selected_widget(dlg_data);
-	struct widget_ops *ops = widget_data->widget->ops;
+	const struct widget_ops *ops = widget_data->widget->ops;
 	/* XXX: KEYMAP_EDIT ? --pasky */
 	enum menu_action action_id;
 	struct term_event *ev = dlg_data->term_event;

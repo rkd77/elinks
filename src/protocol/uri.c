@@ -93,7 +93,7 @@ int
 end_with_known_tld(unsigned char *s, int slen)
 {
 	int i;
-	static const unsigned char *tld[] =
+	static const unsigned char *const tld[] =
 	{ "com", "edu", "net",
 	  "org", "gov", "mil",
 	  "int", "biz", "arpa",

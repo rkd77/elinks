@@ -491,7 +491,7 @@ static int
 l_set_option(LS)
 {
 	int nargs;
-	struct option *opt, *current;
+	struct option *opt;
 	const char *name;
 
 	nargs = lua_gettop(S);
@@ -536,11 +536,8 @@ l_set_option(LS)
 		goto lua_error;
 	}
 
-	opt->flags |= OPT_TOUCHED;
-
 	/* Call hook */
-	current = opt;
-	call_change_hooks(lua_ses, current, opt);
+	option_changed(lua_ses, opt);
 	return 1;
 
 lua_error:
@@ -602,7 +599,7 @@ l_get_option(LS)
 	{
 		color_T color;
 		unsigned char hexcolor[8];
-		unsigned char *strcolor;
+		const unsigned char *strcolor;
 
 		color = opt->value.color;
 		strcolor = get_color_string(color, hexcolor);

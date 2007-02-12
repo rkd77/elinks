@@ -166,7 +166,7 @@ redir_add(struct option *opt, unsigned char *str)
 /* Support functions for config file parsing. */
 
 static void
-add_optstring_to_string(struct string *s, unsigned char *q, int qlen)
+add_optstring_to_string(struct string *s, const unsigned char *q, int qlen)
 {
  	if (!commandline) add_char_to_string(s, '"');
 	add_quoted_to_string(s, q, qlen);
@@ -364,7 +364,7 @@ color_wr(struct option *opt, struct string *str)
 {
 	color_T color = opt->value.color;
 	unsigned char hexcolor[8];
-	unsigned char *strcolor = get_color_string(color, hexcolor);
+	const unsigned char *strcolor = get_color_string(color, hexcolor);
 
 	add_optstring_to_string(str, strcolor, strlen(strcolor));
 }

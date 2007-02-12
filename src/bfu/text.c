@@ -542,7 +542,7 @@ mouse_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 
-struct widget_ops text_ops = {
+const struct widget_ops text_ops = {
 	display_text,
 	NULL,
 	mouse_text,
