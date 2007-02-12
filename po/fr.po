@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-25 13:58+0100\n"
-"PO-Revision-Date: 2007-01-25 14:00+0100\n"
+"POT-Creation-Date: 2007-02-12 16:30+0100\n"
+"PO-Revision-Date: 2007-02-12 16:31+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -32,9 +32,9 @@ msgstr "Pressez espace pour déployer le dossier."
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, python_info_box, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:441 src/bfu/inpfield.c:256 src/bfu/msgbox.c:173
-#: src/bfu/msgbox.c:191 src/config/dialogs.c:58 src/config/dialogs.c:363
+#: src/bfu/msgbox.c:191 src/config/dialogs.c:57 src/config/dialogs.c:360
 #: src/cookies/dialogs.c:359 src/cookies/dialogs.c:457 src/dialogs/edit.c:98
-#: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
+#: src/dialogs/info.c:134 src/dialogs/options.c:232 src/dialogs/options.c:313
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
 #: src/scripting/lua/core.c:471 src/scripting/python/dialogs.c:86
@@ -120,7 +120,7 @@ msgstr "Erreur de suppression"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:808
-#: src/bfu/hierbox.c:870 src/config/dialogs.c:821 src/dialogs/menu.c:127
+#: src/bfu/hierbox.c:870 src/config/dialogs.c:818 src/dialogs/menu.c:127
 #: src/formhist/formhist.c:419 src/mime/dialogs.c:70 src/session/task.c:273
 #: src/terminal/tab.c:206 src/terminal/tab.c:249
 msgid "~Yes"
@@ -128,7 +128,7 @@ msgstr "~Oui"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:809
-#: src/bfu/hierbox.c:871 src/config/dialogs.c:822 src/dialogs/menu.c:128
+#: src/bfu/hierbox.c:871 src/config/dialogs.c:819 src/dialogs/menu.c:128
 #: src/formhist/formhist.c:420 src/mime/dialogs.c:71 src/session/task.c:274
 #: src/terminal/tab.c:207 src/terminal/tab.c:250
 msgid "~No"
@@ -145,8 +145,8 @@ msgstr "Chercher"
 msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
 
-#: src/bfu/hierbox.c:970 src/config/dialogs.c:139 src/config/dialogs.c:329
-#: src/config/dialogs.c:477 src/cookies/dialogs.c:34 src/cookies/dialogs.c:353
+#: src/bfu/hierbox.c:970 src/config/dialogs.c:138 src/config/dialogs.c:326
+#: src/config/dialogs.c:474 src/cookies/dialogs.c:34 src/cookies/dialogs.c:353
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:386
 #: src/scripting/lua/core.c:387 src/scripting/lua/core.c:468
 msgid "Name"
@@ -165,7 +165,7 @@ msgstr "Saisir un nombre"
 msgid "Number should be in the range from %d to %d."
 msgstr "Le nombre doit être compris entre %d et %d."
 
-#: src/bfu/inpfield.c:99 src/config/dialogs.c:430
+#: src/bfu/inpfield.c:99 src/config/dialogs.c:427
 msgid "Bad string"
 msgstr "Mauvaise chaîne"
 
@@ -174,9 +174,9 @@ msgid "Empty string not allowed"
 msgstr "Chaîne vide non autorisée"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
-#: src/bfu/inpfield.c:256 src/config/dialogs.c:364 src/cookies/dialogs.c:360
+#: src/bfu/inpfield.c:256 src/config/dialogs.c:361 src/cookies/dialogs.c:360
 #: src/cookies/dialogs.c:458 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
+#: src/dialogs/options.c:235 src/dialogs/options.c:314 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
 #: src/session/download.c:637 src/session/download.c:1243
@@ -477,22 +477,22 @@ msgid "~Goto"
 msgstr "A~ller à"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
-#: src/bookmarks/dialogs.c:488 src/config/dialogs.c:501
+#: src/bookmarks/dialogs.c:488 src/config/dialogs.c:498
 #: src/cookies/dialogs.c:479
 msgid "~Edit"
 msgstr "~Modifier"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
-#: src/config/dialogs.c:503 src/config/dialogs.c:930 src/cookies/dialogs.c:480
+#: src/config/dialogs.c:500 src/config/dialogs.c:927 src/cookies/dialogs.c:480
 #: src/dialogs/menu.c:457 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
 msgstr "~Supprimer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
-#: src/bookmarks/dialogs.c:490 src/config/dialogs.c:502
-#: src/config/dialogs.c:929 src/cookies/dialogs.c:477 src/dialogs/menu.c:455
+#: src/bookmarks/dialogs.c:490 src/config/dialogs.c:499
+#: src/config/dialogs.c:926 src/cookies/dialogs.c:477 src/dialogs/menu.c:455
 msgid "~Add"
 msgstr "~Ajouter"
 
@@ -513,7 +513,7 @@ msgstr "~Déplacer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:494 src/cache/dialogs.c:232
-#: src/config/dialogs.c:504 src/config/dialogs.c:932 src/dialogs/menu.c:408
+#: src/config/dialogs.c:501 src/config/dialogs.c:929 src/dialogs/menu.c:408
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Chercher"
@@ -645,7 +645,7 @@ msgid "Delete this cache entry?"
 msgstr "Supprimer cette entrée de cache ?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:500 src/cookies/dialogs.c:476
+#: src/cache/dialogs.c:229 src/config/dialogs.c:497 src/cookies/dialogs.c:476
 #: src/dialogs/download.c:255 src/dialogs/download.c:492
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:262
@@ -693,8 +693,8 @@ msgid "Copy text to clipboard"
 msgstr "Copier le texte vers le tampon"
 
 #: src/config/actions-edit.inc:14
-msgid "Delete text from clipboard"
-msgstr "Effacer le texte du tampon"
+msgid "Cut text to clipboard"
+msgstr "Couper le texte vers le tampon"
 
 #: src/config/actions-edit.inc:15 src/config/actions-menu.inc:9
 msgid "Delete character under cursor"
@@ -1250,7 +1250,7 @@ msgstr "Trop de paramètres"
 msgid "error"
 msgstr "erreur"
 
-#: src/config/cmdline.c:164 src/network/state.c:47
+#: src/config/cmdline.c:164 src/network/state.c:48
 msgid "Host not found"
 msgstr "Hôte introuvable"
 
@@ -1258,7 +1258,7 @@ msgstr "Hôte introuvable"
 msgid "Resolver error"
 msgstr "Erreur du résolveur"
 
-#: src/config/cmdline.c:255 src/cookies/cookies.c:866 src/network/state.c:46
+#: src/config/cmdline.c:255 src/cookies/cookies.c:866 src/network/state.c:47
 #: src/util/secsave.c:372
 msgid "Out of memory"
 msgstr "Mémoire saturée"
@@ -1786,25 +1786,25 @@ msgstr "Options sauvées automatiquement\n"
 msgid "Automatically saved keybindings\n"
 msgstr "Associations de touches sauvées automatiquement\n"
 
-#: src/config/dialogs.c:54
+#: src/config/dialogs.c:53
 msgid "Write config success"
 msgstr "Succès d'écriture de configuration"
 
-#: src/config/dialogs.c:55
+#: src/config/dialogs.c:54
 #, c-format
 msgid "Options were saved successfully to config file %s."
 msgstr "Les options ont été sauvées avec succès dans le fichier %s."
 
 #. accelerator_context(write_config_dialog)
-#: src/config/dialogs.c:59
+#: src/config/dialogs.c:58
 msgid "~Do not show anymore"
 msgstr "~Ne plus montrer"
 
-#: src/config/dialogs.c:69
+#: src/config/dialogs.c:68
 msgid "Write config error"
 msgstr "Erreur d'écriture de configuration"
 
-#: src/config/dialogs.c:70
+#: src/config/dialogs.c:69
 #, c-format
 msgid ""
 "Unable to write to config file %s.\n"
@@ -1813,25 +1813,25 @@ msgstr ""
 "Impossible d'écrire dans le fichier de configuration %s.\n"
 "%s"
 
-#: src/config/dialogs.c:125
+#: src/config/dialogs.c:124
 msgid "modified"
 msgstr "modifié"
 
-#: src/config/dialogs.c:144
+#: src/config/dialogs.c:143
 msgid "(expand by pressing space)"
 msgstr "(déployer en pressant espace)"
 
-#: src/config/dialogs.c:147 src/config/dialogs.c:330
+#: src/config/dialogs.c:146 src/config/dialogs.c:327
 #: src/config/options.inc:818
 msgid "Type"
 msgstr "Type"
 
-#: src/config/dialogs.c:172 src/config/dialogs.c:359 src/cookies/dialogs.c:35
+#: src/config/dialogs.c:171 src/config/dialogs.c:356 src/cookies/dialogs.c:35
 #: src/cookies/dialogs.c:354
 msgid "Value"
 msgstr "Valeur"
 
-#: src/config/dialogs.c:176
+#: src/config/dialogs.c:175
 msgid ""
 "\n"
 "\n"
@@ -1841,30 +1841,30 @@ msgstr ""
 "\n"
 "Cette valeur a changé depuis que vous avez sauvé votre configuration."
 
-#: src/config/dialogs.c:182 src/config/dialogs.c:334
+#: src/config/dialogs.c:181 src/config/dialogs.c:331
 msgid "N/A"
 msgstr "N/A"
 
-#: src/config/dialogs.c:184 src/config/dialogs.c:332
+#: src/config/dialogs.c:183 src/config/dialogs.c:329
 msgid "Description"
 msgstr "Description"
 
-#: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:599
+#: src/config/dialogs.c:288 src/protocol/bittorrent/dialogs.c:599
 #: src/protocol/protocol.c:230 src/session/session.c:290
 #: src/session/session.c:975 src/viewer/text/textarea.c:571
 #: src/viewer/text/textarea.c:578
 msgid "Error"
 msgstr "Erreur"
 
-#: src/config/dialogs.c:292
+#: src/config/dialogs.c:289
 msgid "Bad option value."
 msgstr "Mauvaise valeur."
 
-#: src/config/dialogs.c:320 src/config/dialogs.c:388 src/cookies/dialogs.c:325
+#: src/config/dialogs.c:317 src/config/dialogs.c:385 src/cookies/dialogs.c:325
 msgid "Edit"
 msgstr "Modifier"
 
-#: src/config/dialogs.c:389
+#: src/config/dialogs.c:386
 msgid ""
 "This option cannot be edited. This means that this is some special option "
 "like a folder - try to press a space in order to see its contents."
@@ -1873,7 +1873,7 @@ msgstr ""
 "Il s'agit d'une option spéciale (comme un dossier),\n"
 "essayez de presser la touche ESPACE pour voir son contenu."
 
-#: src/config/dialogs.c:431
+#: src/config/dialogs.c:428
 msgid ""
 "Option names may only contain alpha-numeric characters\n"
 "in addition to '_' and '-'."
@@ -1881,42 +1881,42 @@ msgstr ""
 "Les noms d'options ne doivent contenir que des caractères\n"
 "alphanumériques ou les caractères '_' et '-'."
 
-#: src/config/dialogs.c:452 src/config/dialogs.c:477
+#: src/config/dialogs.c:449 src/config/dialogs.c:474
 msgid "Add option"
 msgstr "Ajouter option"
 
-#: src/config/dialogs.c:453
+#: src/config/dialogs.c:450
 msgid "Cannot add an option here."
 msgstr "Impossible d'ajouter une option ici."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:482
-#: src/dialogs/options.c:236 src/formhist/dialogs.c:214
+#: src/config/dialogs.c:502 src/config/dialogs.c:930 src/cookies/dialogs.c:482
+#: src/dialogs/options.c:234 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1227
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
 
-#: src/config/dialogs.c:510
+#: src/config/dialogs.c:507
 msgid "Option manager"
 msgstr "Gestionnaire d'options"
 
-#: src/config/dialogs.c:672
+#: src/config/dialogs.c:669
 msgid "Keystroke"
 msgstr "Touches"
 
-#: src/config/dialogs.c:674 src/config/options.inc:1197
+#: src/config/dialogs.c:671 src/config/options.inc:1197
 msgid "Action"
 msgstr "Action"
 
-#: src/config/dialogs.c:675
+#: src/config/dialogs.c:672
 msgid "Keymap"
 msgstr "Table"
 
-#: src/config/dialogs.c:814
+#: src/config/dialogs.c:811
 msgid "Keystroke already used"
 msgstr "Touche déjà utilisée"
 
-#: src/config/dialogs.c:815
+#: src/config/dialogs.c:812
 #, c-format
 msgid ""
 "The keystroke \"%s\" is currently used for \"%s\".\n"
@@ -1925,19 +1925,19 @@ msgstr ""
 "La combinaison de touches \"%s\" est déjà utilisée pour l'action \"%s\".\n"
 "Etes-vous sûr de vouloir la remplacer ?"
 
-#: src/config/dialogs.c:840 src/config/dialogs.c:857 src/config/dialogs.c:893
+#: src/config/dialogs.c:837 src/config/dialogs.c:854 src/config/dialogs.c:890
 msgid "Add keybinding"
 msgstr "Ajouter une association de touches"
 
-#: src/config/dialogs.c:841
+#: src/config/dialogs.c:838
 msgid "Invalid keystroke."
 msgstr "Touche invalide."
 
-#: src/config/dialogs.c:858
+#: src/config/dialogs.c:855
 msgid "Need to select an action."
 msgstr "Vous devez sélectionner une action."
 
-#: src/config/dialogs.c:880
+#: src/config/dialogs.c:877
 #, c-format
 msgid ""
 "Action: %s\n"
@@ -1958,11 +1958,11 @@ msgstr ""
 "Combinaison de touches"
 
 #. accelerator_context(menu_keys, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
-#: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
+#: src/config/dialogs.c:928 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 msgid "~Toggle display"
 msgstr "Co~mmuter affich."
 
-#: src/config/dialogs.c:938
+#: src/config/dialogs.c:935
 msgid "Keybinding manager"
 msgstr "Gestionnaire d'assoc. de touches"
 
@@ -2173,7 +2173,7 @@ msgstr ""
 "Nombre d'essais pour établir une connexion.\n"
 "Zéro signifie essais infinis."
 
-#: src/config/options.inc:93 src/network/state.c:52
+#: src/config/options.inc:93 src/network/state.c:53
 msgid "Receive timeout"
 msgstr "Délai d'expiration pour la réception"
 
@@ -2594,7 +2594,7 @@ msgstr ""
 "Inverser les couleurs de fond et de texte pour mettre le lien en évidence."
 
 #: src/config/options.inc:296 src/config/options.inc:886
-#: src/dialogs/options.c:231
+#: src/dialogs/options.c:229
 msgid "Underline"
 msgstr "Souligné"
 
@@ -3614,7 +3614,7 @@ msgstr ""
 "3 KOI-8\n"
 "4 FreeBSD"
 
-#: src/config/options.inc:828 src/dialogs/options.c:227
+#: src/config/options.inc:828 src/dialogs/options.c:225
 msgid "Switch fonts for line drawing"
 msgstr "Echanger les fontes pour dessiner les lignes"
 
@@ -3632,7 +3632,7 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:839 src/dialogs/options.c:232
+#: src/config/options.inc:839 src/dialogs/options.c:230
 msgid "UTF-8 I/O"
 msgstr "E/S UTF-8"
 
@@ -3647,7 +3647,7 @@ msgstr ""
 "avec l'encodage de caractères du terminal. ELinks ignore cette\n"
 "option si l'encodage de caractères utilisé par le terminal est UTF-8."
 
-#: src/config/options.inc:845 src/dialogs/options.c:228
+#: src/config/options.inc:845 src/dialogs/options.c:226
 msgid "Restrict frames in cp850/852"
 msgstr "Limiter les cadres dans cp850/852"
 
@@ -3660,7 +3660,7 @@ msgstr ""
 "N'a du sens que pour les terminaux linux utilisant les jeux de\n"
 "caractères cp850/852."
 
-#: src/config/options.inc:850 src/dialogs/options.c:229
+#: src/config/options.inc:850 src/dialogs/options.c:227
 msgid "Block cursor"
 msgstr "Bloquer le curseur"
 
@@ -3707,7 +3707,7 @@ msgstr ""
 "3 mode 256 couleurs, utilise les codes RVB d'XTerm\n"
 "4 mode vraies couleurs, utilise les codes RVB de konsole"
 
-#: src/config/options.inc:876 src/dialogs/options.c:230
+#: src/config/options.inc:876 src/dialogs/options.c:228
 msgid "Transparency"
 msgstr "Transparence"
 
@@ -5442,7 +5442,7 @@ msgid "Files:"
 msgstr "Fichiers:"
 
 #. 2 '\n' + 1 '\0'
-#: src/dialogs/options.c:173
+#: src/dialogs/options.c:171
 #, c-format
 msgid ""
 "The environmental variable TERM is set to '%s'.\n"
@@ -5459,67 +5459,67 @@ msgstr ""
 "valeur de TERM. Cela vous permet de configurer indépendemment\n"
 "chacun des terminaux où vous utilisez ELinks."
 
-#: src/dialogs/options.c:199
+#: src/dialogs/options.c:197
 msgid "Terminal options"
 msgstr "Options du terminal"
 
-#: src/dialogs/options.c:208
+#: src/dialogs/options.c:206
 msgid "Frame handling:"
 msgstr "Gestion des cadres:"
 
-#: src/dialogs/options.c:209
+#: src/dialogs/options.c:207
 msgid "No frames"
 msgstr "Aucun cadre"
 
-#: src/dialogs/options.c:210
+#: src/dialogs/options.c:208
 msgid "VT 100 frames"
 msgstr "Cadres VT 100"
 
-#: src/dialogs/options.c:211
+#: src/dialogs/options.c:209
 msgid "Linux or OS/2 frames"
 msgstr "Cadres Linux ou OS/2"
 
-#: src/dialogs/options.c:212
+#: src/dialogs/options.c:210
 msgid "FreeBSD frames"
 msgstr "Cadres FreeBSD"
 
-#: src/dialogs/options.c:213
+#: src/dialogs/options.c:211
 msgid "KOI8-R frames"
 msgstr "Cadres KOI8-R"
 
-#: src/dialogs/options.c:215
+#: src/dialogs/options.c:213
 msgid "Color mode:"
 msgstr "Mode couleurs:"
 
-#: src/dialogs/options.c:216
+#: src/dialogs/options.c:214
 msgid "No colors (mono)"
 msgstr "Monochrome"
 
-#: src/dialogs/options.c:217
+#: src/dialogs/options.c:215
 msgid "16 colors"
 msgstr "16 couleurs"
 
-#: src/dialogs/options.c:219
+#: src/dialogs/options.c:217
 msgid "88 colors"
 msgstr "88 couleurs"
 
-#: src/dialogs/options.c:222
+#: src/dialogs/options.c:220
 msgid "256 colors"
 msgstr "256 couleurs"
 
-#: src/dialogs/options.c:225
+#: src/dialogs/options.c:223
 msgid "true color"
 msgstr "vraies couleurs"
 
-#: src/dialogs/options.c:309
+#: src/dialogs/options.c:307
 msgid "Resize terminal"
 msgstr "Redimensionner le terminal"
 
-#: src/dialogs/options.c:312
+#: src/dialogs/options.c:310
 msgid "Width="
 msgstr "Largeur="
 
-#: src/dialogs/options.c:313
+#: src/dialogs/options.c:311
 msgid "Height="
 msgstr "Hauteur="
 
@@ -5609,27 +5609,27 @@ msgid "No document"
 msgstr "Aucun document"
 
 #. name:
-#: src/document/css/css.c:28 src/document/css/css.c:155
+#: src/document/css/css.c:29 src/document/css/css.c:159
 msgid "Cascading Style Sheets"
 msgstr "Feuilles de style (CSS)"
 
-#: src/document/css/css.c:30
+#: src/document/css/css.c:31
 msgid "Options concerning how to use CSS for styling documents."
 msgstr "Options concernant l'utilisation des CSS."
 
-#: src/document/css/css.c:32
+#: src/document/css/css.c:33
 msgid "Enable CSS"
 msgstr "Activer les CSS"
 
-#: src/document/css/css.c:34
+#: src/document/css/css.c:35
 msgid "Enable adding of CSS style info to documents."
 msgstr "Permettre l'ajout d'info de style CSS aux documents."
 
-#: src/document/css/css.c:36
+#: src/document/css/css.c:37
 msgid "Import external style sheets"
 msgstr "Importer les feuilles de style externes"
 
-#: src/document/css/css.c:38
+#: src/document/css/css.c:39
 msgid ""
 "When enabled any external style sheets that are imported from\n"
 "either CSS itself using the @import keyword or from the HTML using\n"
@@ -5639,11 +5639,11 @@ msgstr ""
 "soit par le mot clé @import soit par une balise <link> dans l'en-tête du\n"
 "document sera effectivement téléchargée."
 
-#: src/document/css/css.c:42
+#: src/document/css/css.c:43
 msgid "Default style sheet"
 msgstr "Feuille de style par défaut"
 
-#: src/document/css/css.c:44
+#: src/document/css/css.c:45
 msgid ""
 "The path to the file containing the default user defined\n"
 "Cascading Style Sheet. It can be used to control the basic\n"
@@ -6488,111 +6488,111 @@ msgstr "SSL"
 msgid "SSL options."
 msgstr "Options SSL."
 
-#: src/network/state.c:26
+#: src/network/state.c:27
 msgid "Waiting in queue"
 msgstr "en liste d'attente"
 
-#: src/network/state.c:27
+#: src/network/state.c:28
 msgid "Looking up host"
 msgstr "Recherche de l'hôte"
 
-#: src/network/state.c:28
+#: src/network/state.c:29
 msgid "Making connection"
 msgstr "Établissement de la connexion"
 
-#: src/network/state.c:29
+#: src/network/state.c:30
 msgid "SSL negotiation"
 msgstr "Négociation SSL"
 
-#: src/network/state.c:30
+#: src/network/state.c:31
 msgid "Request sent"
 msgstr "Requête transmise"
 
-#: src/network/state.c:31
+#: src/network/state.c:32
 msgid "Logging in"
 msgstr "Authentification"
 
-#: src/network/state.c:32
+#: src/network/state.c:33
 msgid "Getting headers"
 msgstr "Réception des en-têtes"
 
-#: src/network/state.c:33
+#: src/network/state.c:34
 msgid "Server is processing request"
 msgstr "Le serveur traîte la requête"
 
-#: src/network/state.c:34
+#: src/network/state.c:35
 msgid "Transferring"
 msgstr "Transfert en cours"
 
-#: src/network/state.c:36
+#: src/network/state.c:37
 msgid "Resuming"
 msgstr "Reprise"
 
-#: src/network/state.c:37
+#: src/network/state.c:38
 msgid "Connecting to peers"
 msgstr "Connexion aux peers"
 
-#: src/network/state.c:38
+#: src/network/state.c:39
 msgid "Connecting to tracker"
 msgstr "Connexion au tracker"
 
-#: src/network/state.c:41
+#: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
 msgstr "Attente de confirmation de redirection"
 
-#: src/network/state.c:42
+#: src/network/state.c:43
 msgid "OK"
 msgstr "OK"
 
-#: src/network/state.c:43
+#: src/network/state.c:44
 msgid "Interrupted"
 msgstr "Interrompu"
 
-#: src/network/state.c:44
+#: src/network/state.c:45
 msgid "Socket exception"
 msgstr "Exception socket"
 
-#: src/network/state.c:45 src/scripting/python/dialogs.c:59
+#: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:98
 #: src/scripting/python/open.c:59
 msgid "Internal error"
 msgstr "Erreur interne"
 
-#: src/network/state.c:48
+#: src/network/state.c:49
 msgid "Error writing to socket"
 msgstr "Erreur d'écriture sur le socket"
 
-#: src/network/state.c:49
+#: src/network/state.c:50
 msgid "Error reading from socket"
 msgstr "Erreur de lecture sur le socket"
 
-#: src/network/state.c:50
+#: src/network/state.c:51
 msgid "Data modified"
 msgstr "Données modifiées"
 
-#: src/network/state.c:51 src/scripting/python/load.c:119
+#: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
 msgstr "Erreur de syntaxe dans l'URL"
 
-#: src/network/state.c:53
+#: src/network/state.c:54
 msgid "Request must be restarted"
 msgstr "Re-transmission de la requête"
 
-#: src/network/state.c:54
+#: src/network/state.c:55
 msgid "Can't get socket state"
 msgstr "Impossible d'obtenir l'état du socket"
 
-#: src/network/state.c:55
+#: src/network/state.c:56
 msgid "Only local connections are permitted"
 msgstr "Seules les connexions locales sont permises"
 
-#: src/network/state.c:56
+#: src/network/state.c:57
 msgid "No host in the specified IP family was found"
 msgstr "Aucun hôte dans la famille IP spécifiée n'a été trouvé"
 
-#: src/network/state.c:58
+#: src/network/state.c:59
 msgid ""
 "Error while decoding file. This might be caused\n"
 "by the encoded file being corrupt."
@@ -6600,7 +6600,7 @@ msgstr ""
 "Erreur lors du décodage du fichier. Le fichier est peut-être\n"
 "corrompu."
 
-#: src/network/state.c:61
+#: src/network/state.c:62
 msgid ""
 "This URL contains a protocol not yet known by ELinks.\n"
 "You can configure an external handler for it through\n"
@@ -6610,7 +6610,7 @@ msgstr ""
 "Vous pouvez configurer la gestion de ce protocole par un\n"
 "programme externe grâce au système d'options."
 
-#: src/network/state.c:65
+#: src/network/state.c:66
 msgid ""
 "This URL contains a protocol that is not natively known\n"
 "by ELinks which means that ELinks relies on external\n"
@@ -6622,71 +6622,71 @@ msgstr ""
 "la manipuler. Télécharger des URLs en utilisant des programmes\n"
 "externes n'est pas supporté."
 
-#: src/network/state.c:70
+#: src/network/state.c:71
 msgid "Bad HTTP response"
 msgstr "Réponse HTTP incorrecte"
 
-#: src/network/state.c:71
+#: src/network/state.c:72
 msgid "No content"
 msgstr "Aucun contenu"
 
-#: src/network/state.c:73
+#: src/network/state.c:74
 msgid "Unknown file type"
 msgstr "Type de fichier inconnu"
 
-#: src/network/state.c:74
+#: src/network/state.c:75
 msgid "Error opening file"
 msgstr "Erreur lors de l'ouverture du fichier"
 
-#: src/network/state.c:75
+#: src/network/state.c:76
 msgid "CGI script not in CGI path"
 msgstr "Script CGI absent du chemin des CGIs"
 
-#: src/network/state.c:76
+#: src/network/state.c:77
 msgid "Local file access is not allowed in anonymous mode"
 msgstr "L'accès aux fichiers locaux n'est pas autorisé en mode anonyme"
 
-#: src/network/state.c:79
+#: src/network/state.c:80
 msgid "Bad FTP response"
 msgstr "Réponse FTP incorrecte"
 
-#: src/network/state.c:80
+#: src/network/state.c:81
 msgid "FTP service unavailable"
 msgstr "Service FTP indisponible"
 
-#: src/network/state.c:81
+#: src/network/state.c:82
 msgid "Bad FTP login"
 msgstr "Échec de l'authentification FTP"
 
-#: src/network/state.c:82
+#: src/network/state.c:83
 msgid "FTP PORT command failed"
 msgstr "Échec de la commande FTP PORT"
 
-#: src/network/state.c:83
+#: src/network/state.c:84
 msgid "File not found"
 msgstr "Fichier introuvable"
 
-#: src/network/state.c:84
+#: src/network/state.c:85
 msgid "FTP file error"
 msgstr "Erreur de fichier FTP"
 
-#: src/network/state.c:88
+#: src/network/state.c:89
 msgid "SSL error"
 msgstr "Erreur SSL"
 
-#: src/network/state.c:90
+#: src/network/state.c:91
 msgid "This version of ELinks does not contain SSL/TLS support"
 msgstr "Cette version d'ELinks ne supporte ni SSL ni TLS"
 
-#: src/network/state.c:93
+#: src/network/state.c:94
 msgid "JavaScript support is not enabled"
 msgstr "Le support du Javascript n'est pas activé"
 
-#: src/network/state.c:96
+#: src/network/state.c:97
 msgid "Bad NNTP response"
 msgstr "Réponse NNTP incorrecte"
 
-#: src/network/state.c:97
+#: src/network/state.c:98
 msgid ""
 "Unable to handle news: URI because no news server has been\n"
 "been configured. Either set the option protocol.nntp.server\n"
@@ -6696,35 +6696,35 @@ msgstr ""
 "n'a été configuré. Configurez l'option protocol.nntp.server\n"
 "ou la variable d'environnement NNTPSERVER."
 
-#: src/network/state.c:100
+#: src/network/state.c:101
 msgid "Server hang up for some reason"
 msgstr "Le serveur est bloqué pour une raison inconnue"
 
-#: src/network/state.c:101
+#: src/network/state.c:102
 msgid "No such newsgroup"
 msgstr "Groupe de nouvelles introuvable"
 
-#: src/network/state.c:102
+#: src/network/state.c:103
 msgid "No such article"
 msgstr "Article introuvable"
 
-#: src/network/state.c:103
+#: src/network/state.c:104
 msgid "Transfer failed"
 msgstr "Echec de transfert"
 
-#: src/network/state.c:104
+#: src/network/state.c:105
 msgid "Authorization required"
 msgstr "Authentication requise"
 
-#: src/network/state.c:105
+#: src/network/state.c:106
 msgid "Access to server denied"
 msgstr "Accès au serveur refusé"
 
-#: src/network/state.c:109
+#: src/network/state.c:110
 msgid "The CSO phone-book protocol is not supported."
 msgstr "Le protocole de carnet d'adresse CSO n'est pas supporté."
 
-#: src/network/state.c:112
+#: src/network/state.c:113
 msgid ""
 "Configuration of the proxy server failed.\n"
 "This might be caused by an incorrect proxy\n"
@@ -6743,23 +6743,23 @@ msgstr ""
 "le nom d'hôte éventuellement suivi de deux points et\n"
 "du numéro de port. Par exemple: 'localhost:8080'."
 
-#: src/network/state.c:122
+#: src/network/state.c:123
 msgid "BitTorrent error"
 msgstr "Erreur de BitTorrent"
 
-#: src/network/state.c:123
+#: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
 msgstr "Le fichier metainfo de BitTorrent contenait des erreurs"
 
-#: src/network/state.c:124
+#: src/network/state.c:125
 msgid "The tracker requesting failed"
 msgstr "L'interrogation du serveur a échouée"
 
-#: src/network/state.c:125
+#: src/network/state.c:126
 msgid "The BitTorrent URL does not point to a valid URL"
 msgstr "L'URL BitTorrent ne pointe pas sur une URL valide"
 
-#: src/network/state.c:149
+#: src/network/state.c:150
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -7635,12 +7635,12 @@ msgstr ""
 msgid "Gopher"
 msgstr "Gopher"
 
-#: src/protocol/http/codes.c:104
+#: src/protocol/http/codes.c:105
 #, c-format
 msgid "HTTP error %03d"
 msgstr "Erreur HTTP %03d"
 
-#: src/protocol/http/codes.c:127
+#: src/protocol/http/codes.c:128
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested. However, the server did not send back any explanation of what\n"
@@ -8155,15 +8155,15 @@ msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:742
+#: src/scripting/lua/core.c:739
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:892
+#: src/scripting/lua/core.c:889
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:892
+#: src/scripting/lua/core.c:889
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
@@ -8790,3 +8790,6 @@ msgstr "Erreur lors de l'écriture du fichier"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Visualisateur"
+
+#~ msgid "Delete text from clipboard"
+#~ msgstr "Effacer le texte du tampon"
