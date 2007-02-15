@@ -1,10 +1,5 @@
 /* Sessions managment - you'll find things here which you wouldn't expect */
 
-/* stpcpy */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
