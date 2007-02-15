@@ -1152,7 +1152,6 @@ AC_PATH_X
 if test x"$no_x" != xyes; then
 	if test -n "$x_includes"; then
 		X_CFLAGS="-I$x_includes"
-		CPPFLAGS="$CPPFLAGS -I$x_includes"
 	fi
 	if test -n "$x_libraries"; then
 		LDFLAGS="$LDFLAGS -L$x_libraries"
