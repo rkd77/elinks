@@ -595,7 +595,6 @@ if test "$enable_see" = "yes"; then
 		SEE_LIBS="`$SEE_CONFIG --libs`"
 		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
 		LIBS="$SEE_LIBS $LIBS"
-		CPPFLAGS="$CPPFLAGS $SEE_CFLAGS"
 		EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
 		AC_SUBST(SEE_CFLAGS)
 	else

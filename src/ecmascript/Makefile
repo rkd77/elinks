@@ -1,6 +1,6 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
-INCLUDES += $(SPIDERMONKEY_CFLAGS)
+INCLUDES += $(SPIDERMONKEY_CFLAGS) $(SEE_CFLAGS)
 
 SUBDIRS-$(CONFIG_ECMASCRIPT_SEE)	+= see
 SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
