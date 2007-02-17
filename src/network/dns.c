@@ -196,7 +196,29 @@ do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno
 
 #ifdef CONFIG_IPV6
 	for (i = 0, ai_cur = ai; ai_cur; i++, ai_cur = ai_cur->ai_next) {
-		struct sockaddr_in6 *addr = (struct sockaddr_in6 *) &(*addrs)[i];
+		/* Don't use struct sockaddr_in6 here: because we
+		 * called getaddrinfo with AF_UNSPEC, the address
+		 * might not be for IP at all.  */
+		struct sockaddr_storage *addr = &(*addrs)[i];
+
+		/* RFC 3493 says struct sockaddr_storage is supposed
+		 * to be "Large enough to accommodate all supported
+		 * protocol-specific address structures."  So if
+		 * getaddrinfo supports an address that does not fit
+		 * in struct sockaddr_storage, then it is a bug in the
+		 * library.  In this case, fail the whole lookup, to
+		 * make the bug more likely to be noticed.  */
+		assert(ai_cur->ai_addrlen <= sizeof(*addr));
+		if_assert_failed {
+			freeaddrinfo(ai);
+			if (in_thread)
+				free(*addrs);
+			else
+				mem_free(*addrs);
+			*addrs = NULL;
+			*addrno = 0;
+			return DNS_ERROR;
+		}
 
 		memcpy(addr, ai_cur->ai_addr, ai_cur->ai_addrlen);
 	}
