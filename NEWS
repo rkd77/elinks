@@ -271,7 +271,8 @@ have already been considered.
   - (new feature) Let plain text change colors with ESC [ 31 m or
     similar control sequences, reverted in
     2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
-  - (enhancement) Support for pasting from GNU screen clipboard
+  - (enhancement) Support for pasting from GNU screen clipboard,
+    reverted in 763f03f146cc1391b303c8074556f0ddea1e3c7a
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
 
