@@ -43,6 +43,7 @@
 #include "util/string.h"
 
 /* These options are not used. */
+#if 0
 struct option_info smb_options[] = {
 	INIT_OPT_TREE("protocol", N_("SMB"),
 		"smb", 0,
@@ -54,10 +55,11 @@ struct option_info smb_options[] = {
 
 	NULL_OPTION_INFO,
 };
+#endif
 
 struct module smb_protocol_module = struct_module(
 	/* name: */		N_("SMB"),
-	/* options: */		smb_options,
+	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
