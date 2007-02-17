@@ -724,7 +724,6 @@ if test "$enable_guile" = "yes"; then
 		GUILE_LIBS="`guile-config link`"
 		GUILE_CFLAGS="`guile-config compile`"
 		LIBS="$GUILE_LIBS $LIBS"
-		CPPFLAGS="$CPPFLAGS $GUILE_CFLAGS"
 		EL_CONFIG(CONFIG_SCRIPTING_GUILE, [Guile])
 		AC_SUBST(GUILE_CFLAGS)
 		cat <<EOF
