@@ -54,7 +54,7 @@ add_modules_to_string(struct string *string, struct terminal *term)
 	if (last_newline)
 		last_split = last_newline - string->source;
 
-	foreach_module_builtin (module, builtin_modules, i) {
+	foreach_module (module, builtin_modules, i) {
 		if (i > 0) add_to_string(string, ", ");
 		if (string->length - last_split > 70) {
 			add_char_to_string(string, '\n');

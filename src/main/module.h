@@ -45,11 +45,6 @@ struct module {
 	     module;						\
 	     i++, module = modules[i])
 
-#define foreach_module_builtin(module, modules, i)		\
-	for (i = 0, module = modules[i];			\
-	     module;						\
-	     i++, module = modules[i])
-
 /* The module table has to be NULL terminates */
 static inline int
 sizeof_modules(struct module **modules)
