@@ -1532,7 +1532,7 @@ get_uri_cache_entry(unsigned char *string, int length)
 		return NULL;
 	}
 
-	object_lock_without_assert(&uri_cache); /* was warning */
+	object_lock(&uri_cache);
 
 	return entry;
 }
@@ -1556,7 +1556,7 @@ get_uri(unsigned char *string, enum uri_component components)
 	if (!is_object_used(&uri_cache)) {
 		uri_cache.map = init_hash8();
 		if (!uri_cache.map) return NULL;
-		object_nolock_without_assert(&uri_cache, "uri_cache");
+		object_nolock(&uri_cache, "uri_cache");
 	}
 
 	entry = get_uri_cache_entry(string, strlen(string));
@@ -1594,7 +1594,7 @@ done_uri(struct uri *uri)
 	mem_free(entry);
 
 	/* Last URI frees the cache */
-	object_unlock_without_assert(&uri_cache);
+	object_unlock(&uri_cache);
 	if (!is_object_used(&uri_cache))
 		free_hash(&uri_cache.map);
 }

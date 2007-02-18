@@ -47,20 +47,11 @@ struct object_head {
 		if_assert_failed (obj)->object.refcount = 0;		\
 	} while (0)
 
-#define object_sanity_check_without_assert(obj)				\
-	do {								\
-		assertm((obj)->object.refcount >= 0,			\
-			"Object %s[%p] refcount underflow.",		\
-			(obj)->object.name, obj);			\
-		if_assert_failed (obj)->object.refcount = 0;		\
-	} while (0)
-
 #define object_set_name(obj, objname)					\
 	do { (obj)->object.name = (objname); } while (0)
 #define INIT_OBJECT(name)	{ 0, name }
 #else
 #define object_sanity_check(obj)
-#define object_sanity_check_without_assert(obj)
 #define object_set_name(obj, name)
 #define INIT_OBJECT(name)	{ 0 }
 #endif /* CONFIG_DEBUG */
@@ -87,28 +78,6 @@ struct object_head {
 	do {								\
 		object_set_name(obj, name);				\
 		object_sanity_check(obj);				\
-		object_lock_debug(obj, "initialized");			\
-	} while (0)
-
-/* These macros are here because of gcc warnings in uri.c . --witekfl */
-#define object_lock_without_assert(obj)					\
-	do {								\
-		object_sanity_check_without_assert(obj);		\
-		(obj)->object.refcount++;				\
-		object_lock_debug(obj, "incremented");			\
-	} while (0)
-
-#define object_unlock_without_assert(obj)				\
-	do {								\
-		(obj)->object.refcount--;				\
-		object_lock_debug(obj, "decremented");			\
-		object_sanity_check_without_assert(obj);		\
-	} while (0)
-
-#define object_nolock_without_assert(obj, name)				\
-	do {								\
-		object_set_name(obj, name);				\
-		object_sanity_check_without_assert(obj);		\
 		object_lock_debug(obj, "initialized");			\
 	} while (0)
 
