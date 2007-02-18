@@ -93,7 +93,6 @@ roughly in decreasing order of importance.
   - (workaround 841) SMB is now disabled because of CVE-2006-5925.
   - (new feature 630) Native FSP protocol support (replaces CGI
     program in contrib/fsp/)
-  - (new feature) Local CGI
   - (experimental, bugfix) Gopher changes, including crash fixes
   - (enhancement) FTP handler parses file sizes better
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
