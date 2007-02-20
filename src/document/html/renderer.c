@@ -1730,7 +1730,8 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			unsigned long seconds = va_arg(l, unsigned long);
 			unsigned char *t = va_arg(l, unsigned char *);
 
-			document->refresh = init_document_refresh(t, seconds);
+			if (document)
+				document->refresh = init_document_refresh(t, seconds);
 			break;
 		}
 		case SP_COLOR_LINK_LINES:
