@@ -315,6 +315,7 @@ read_from_popen(struct session *ses, unsigned char *handler, unsigned char *file
 			unsigned char buf[48];
 
 			struct popen_data *data = mem_calloc(1, sizeof(*data));
+			struct delayed_open *deo;
 
 			if (!data) {
 				fclose(stream);
@@ -324,8 +325,13 @@ read_from_popen(struct session *ses, unsigned char *handler, unsigned char *file
 			data->stream = stream;
 			if (filename) data->filename = stracpy(filename);
 			add_to_list(copiousoutput_data, data);
+
+			deo = mem_calloc(1, sizeof(*deo));
+			if (!deo) return;
 			snprintf(buf, 48, "file:///dev/fd/%d", fd);
-			goto_url(ses, buf);
+			deo->uri = get_uri(buf, 0);
+			deo->ses = ses;
+			register_bottom_half(delayed_goto_uri, deo);
 		}
 	}
 }
@@ -778,6 +784,9 @@ static unsigned char *
 subst_file(unsigned char *prog, unsigned char *file)
 {
 	struct string name;
+	/* When there is no %s in the mailcap entry, the handler program reads
+	 * data from stdin instead of a file. */
+	int input = 1;
 
 	if (!init_string(&name)) return NULL;
 
@@ -790,6 +799,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 		prog += p;
 
 		if (*prog == '%') {
+			input = 0;
 #if defined(HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH)
 #ifdef MAX_PATH
 			unsigned char new_path[MAX_PATH];
@@ -808,6 +818,19 @@ subst_file(unsigned char *prog, unsigned char *file)
 		}
 	}
 
+	if (input) {
+		struct string s;
+
+		if (init_string(&s)) {
+			add_to_string(&s, "/bin/cat ");
+			add_char_to_string(&s, '"');
+			add_to_string(&s, file);
+			add_to_string(&s, "\" | ");
+			add_string_to_string(&s, &name);
+			done_string(&name);
+			return s.source;
+		}
+	}
 	return name.source;
 }
 

@@ -682,6 +682,17 @@ delayed_goto_uri_frame(void *data)
 	mem_free(deo);
 }
 
+void
+delayed_goto_uri(void *data)
+{
+	struct delayed_open *deo = data;
+
+	assert(deo);
+	goto_uri(deo->ses, deo->uri);
+	done_uri(deo->uri);
+	mem_free(deo);
+}
+
 /* menu_func_T */
 void
 map_selected(struct terminal *term, void *ld_, void *ses_)
