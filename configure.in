@@ -1310,13 +1310,28 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
       ;;
     4.*)
       # Do not show warnings related to (char * | unsigned char *) type
-      # difference. Do not show "always evaluate as true".
-      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-always-true"
+      # difference.
+      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
       ;;
     *)
       # These should be ok using -Werror
       ;;
   esac
+
+  # GCC 4.2 snapshots warn that comparisons like &object != NULL
+  # always return true.  Some macros in ELinks check whether pointer
+  # arguments are NULL, and giving them addresses of named objects
+  # triggers the warning.  These warnings have not revealed any real
+  # bugs, so shut them up instead of complicating the code.  GCC 4.1
+  # does not recognize -Wno-always-true and exits with code 1 if it is
+  # given.
+  AC_MSG_CHECKING([whether $CC accepts -Wno-always-true])
+  EL_SAVE_FLAGS
+  CFLAGS="$CFLAGS -Wno-always-true"
+  AC_TRY_COMPILE([], [],
+    [AC_MSG_RESULT([yes])],
+    [EL_RESTORE_FLAGS
+     AC_MSG_RESULT([no])])
 fi
 
 # CFLAGS doesn't contain all compile flags. Some will be added only when
