@@ -8,6 +8,7 @@ file for details.
 ELinks now:
 -----------
 
+//////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
 ELinks 0.12.GIT (26473f72f59641aa60277f14f703f8a76dda5a82).  The next
 step will be to scan through Bugzilla and look for bug numbers that
@@ -18,6 +19,7 @@ important enough.  Please move them to the separate "should be removed
 from NEWS" list below, or coalesce several changes into one entry (but
 do list all bug numbers).  It might be a good idea to sort the entries
 roughly in decreasing order of importance.
+//////////////////////////////////////////////////////////////////////
 
 * Miscellaneous
   - (bugfix) If ELinks logs debug information to a file, it now opens
@@ -93,7 +95,6 @@ roughly in decreasing order of importance.
   - (workaround 841) SMB is now disabled because of CVE-2006-5925.
   - (new feature 630) Native FSP protocol support (replaces CGI
     program in contrib/fsp/)
-  - (new feature) Local CGI
   - (experimental, bugfix) Gopher changes, including crash fixes
   - (enhancement) FTP handler parses file sizes better
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
@@ -193,7 +194,6 @@ roughly in decreasing order of importance.
   - (enhancement) Avoid compilation of vernum.c in 'make install'
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
   - (bugfix) Fix compilation on Minix3.
-  - (new feature) make uninstall
   - (bitrot) Fix two warnings on Mac OS X.
 * (experimental) Changes in ECMAScript support
   - (enhancement) Disable ECMAScript by default.
@@ -225,6 +225,7 @@ roughly in decreasing order of importance.
   - (new feature) Incremental parsing
   - And more.
 
+//////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.12.0
 is released.  They are currently listed here just to show that they
 have already been considered.
@@ -232,6 +233,7 @@ have already been considered.
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
   - (bugfix 725) Fixes version checking for Ruby in 'configure'
+  - (new feature 779) make uninstall
 * Fixed bugs that were not in previous versions:
   - (bugfix) Fix a crash when adding a server in the cookie manager.
   - (bugfix) cookies: "Add Server" ignores "cookies.accept_policy".
@@ -260,6 +262,7 @@ have already been considered.
   - (bugfix 823) Big textarea is too slow with CONFIG_UTF8
   - (bugfix 754) Pressing ESC do not pop up main menu anymore.
   - (bugfix 794) tab-close-all-but-current crashes
+  - (bugfix 781) document->buf can overflow with UTF-8 enabled
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -270,9 +273,11 @@ have already been considered.
   - (new feature) Let plain text change colors with ESC [ 31 m or
     similar control sequences, reverted in
     2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
-  - (enhancement) Support for pasting from GNU screen clipboard
+  - (enhancement) Support for pasting from GNU screen clipboard,
+    reverted in 763f03f146cc1391b303c8074556f0ddea1e3c7a
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
+//////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.0 (Elated):
 -----------------------
