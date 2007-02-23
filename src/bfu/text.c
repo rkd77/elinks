@@ -243,7 +243,7 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 			continue;
 		}
 
-		if (real_width) int_lower_bound(real_width, cells);
+		if (real_width) int_lower_bound(real_width, line_width);
 		if (format_only || !line_width) continue;
 
 		/* Calculate the number of chars to indent */
