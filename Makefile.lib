@@ -67,7 +67,7 @@ quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
 quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(2)"
-      cmd_uninstall = $(UNINSTALL) $(3)/$(2)
+      cmd_uninstall = $(RM) $(3)/$(2)
 
 #############################################################################
 # Special handling of conditional variables
