@@ -37,14 +37,6 @@ gzip_read(struct stream_encoded *stream, unsigned char *data, int len)
 	return gzread((gzFile *) stream->data, data, len);
 }
 
-static unsigned char *
-gzip_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	    int *new_len)
-{
-	*new_len = len;
-	return data;
-}
-
 
 /* The following code for decoding gzip in memory is a mix of code from zlib's
  * gzio.c file copyrighted 1995-2002 by Jean-loup Gailly and the costumized
@@ -244,7 +236,6 @@ struct decoding_backend gzip_decoding_backend = {
 	gzip_extensions,
 	gzip_open,
 	gzip_read,
-	gzip_decode,
 	gzip_decode_buffer,
 	gzip_close,
 };

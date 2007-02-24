@@ -52,14 +52,6 @@ dummy_read(struct stream_encoded *stream, unsigned char *data, int len)
 }
 
 static unsigned char *
-dummy_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	     int *new_len)
-{
-	*new_len = len;
-	return data;
-}
-
-static unsigned char *
 dummy_decode_buffer(unsigned char *data, int len, int *new_len)
 {
 	unsigned char *buffer = memacpy(data, len);
@@ -84,7 +76,6 @@ static struct decoding_backend dummy_decoding_backend = {
 	dummy_extensions,
 	dummy_open,
 	dummy_read,
-	dummy_decode,
 	dummy_decode_buffer,
 	dummy_close,
 };
@@ -135,16 +126,9 @@ read_encoded(struct stream_encoded *stream, unsigned char *data, int len)
 	return decoding_backends[stream->encoding]->read(stream, data, len);
 }
 
-/* Decode the given chunk of data in the context of @stream. @data contains the
- * original data chunk, @len bytes long. The resulting decoded data chunk is
- * *@new_len bytes long. */
-unsigned char *
-decode_encoded(struct stream_encoded *stream, unsigned char *data, int len,
-		int *new_len)
-{
-	return decoding_backends[stream->encoding]->decode(stream, data, len, new_len);
-}
-
+/* Decode an entire file from a buffer. This function is not suitable
+ * for parts of files. @data contains the original data, @len bytes
+ * long. The resulting decoded data chunk is *@new_len bytes long. */
 unsigned char *
 decode_encoded_buffer(enum stream_encoding encoding, unsigned char *data, int len,
 		      int *new_len)

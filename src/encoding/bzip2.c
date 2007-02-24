@@ -101,14 +101,6 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	return len - data->fbz_stream.avail_out;
 }
 
-static unsigned char *
-bzip2_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	     int *new_len)
-{
-	*new_len = len;
-	return data;
-}
-
 #ifdef CONFIG_SMALL
 #define BZIP2_SMALL 1
 #else
@@ -194,7 +186,6 @@ struct decoding_backend bzip2_decoding_backend = {
 	bzip2_extensions,
 	bzip2_open,
 	bzip2_read,
-	bzip2_decode,
 	bzip2_decode_buffer,
 	bzip2_close,
 };

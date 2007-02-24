@@ -24,14 +24,12 @@ struct decoding_backend {
 	unsigned char **extensions;
 	int (*open)(struct stream_encoded *stream, int fd);
 	int (*read)(struct stream_encoded *stream, unsigned char *data, int len);
-	unsigned char *(*decode)(struct stream_encoded *stream, unsigned char *data, int len, int *new_len);
 	unsigned char *(*decode_buffer)(unsigned char *data, int len, int *new_len);
 	void (*close)(struct stream_encoded *stream);
 };
 
 struct stream_encoded *open_encoded(int, enum stream_encoding);
 int read_encoded(struct stream_encoded *, unsigned char *, int);
-unsigned char *decode_encoded(struct stream_encoded *, unsigned char *, int, int *);
 unsigned char *decode_encoded_buffer(enum stream_encoding encoding, unsigned char *data, int len, int *new_len);
 void close_encoded(struct stream_encoded *);
 
