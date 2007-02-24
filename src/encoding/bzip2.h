@@ -4,7 +4,7 @@
 #include "encoding/encoding.h"
 
 #ifdef CONFIG_BZIP2
-extern struct decoding_backend bzip2_decoding_backend;
+extern const struct decoding_backend bzip2_decoding_backend;
 #else
 #define bzip2_decoding_backend dummy_decoding_backend
 #endif

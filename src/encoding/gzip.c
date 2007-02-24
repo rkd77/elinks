@@ -229,9 +229,9 @@ gzip_close(struct stream_encoded *stream)
 	gzclose((gzFile *) stream->data);
 }
 
-static unsigned char *gzip_extensions[] = { ".gz", ".tgz", NULL };
+static const unsigned char *const gzip_extensions[] = { ".gz", ".tgz", NULL };
 
-struct decoding_backend gzip_decoding_backend = {
+const struct decoding_backend gzip_decoding_backend = {
 	"gzip",
 	gzip_extensions,
 	gzip_open,

@@ -182,9 +182,9 @@ lzma_close(struct stream_encoded *stream)
 	lzma_cleanup(data);
 }
 
-static unsigned char *lzma_extensions[] = { ".lzma", NULL };
+static const unsigned char *const lzma_extensions[] = { ".lzma", NULL };
 
-struct decoding_backend lzma_decoding_backend = {
+const struct decoding_backend lzma_decoding_backend = {
 	"lzma",
 	lzma_extensions,
 	lzma_open,
