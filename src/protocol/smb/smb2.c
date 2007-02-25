@@ -98,7 +98,7 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 	encode_uri_string(&uri_string, entry->name, entry->namelen, 0);
 
 	add_to_string(string, "<a href=\"");
-	add_string_to_string(string, &uri_string);
+	add_html_to_string(string, uri_string.source, uri_string.length);
 	done_string(&uri_string);
 
 	add_to_string(string, "\">");
@@ -107,7 +107,7 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 		add_to_string(string, dircolor);
 		add_to_string(string, "\"><b>");
 	}
-	add_bytes_to_string(string, entry->name, entry->namelen);
+	add_html_to_string(string, entry->name, entry->namelen);
 	if (*dircolor) {
 		add_to_string(string, "</b></font>");
 	}
@@ -130,20 +130,20 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 	case SMBC_SERVER:
 		smb_add_link(&string, entry, " SERVER ", dircolor);
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_FILE_SHARE:
 		smb_add_link(&string, entry, " FILE SHARE ", dircolor);
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_PRINTER_SHARE:
-		add_bytes_to_string(&string, entry->name, entry->namelen);
+		add_html_to_string(&string, entry->name, entry->namelen);
 		add_to_string(&string, " PRINTER ");
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_COMMS_SHARE:
