@@ -551,7 +551,7 @@ http_send_header(struct socket *socket)
 	int trace = get_opt_bool("protocol.http.trace");
 	struct string header;
 	unsigned char *post_data = NULL;
-	struct auth_entry *entry;
+	struct auth_entry *entry = NULL;
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
