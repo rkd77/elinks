@@ -853,8 +853,7 @@ http_send_header(struct socket *socket)
 	}
 
 	/* CONNECT: The Authorization header is for the origin server only.  */
-	if (!use_connect)
-	{
+	if (!use_connect) {
 #ifdef CONFIG_GSSAPI
 		if (http_negotiate_output(uri, &header) != 0)
 #endif
