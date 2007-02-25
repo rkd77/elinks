@@ -185,22 +185,44 @@ sort_and_display_entries(int dir, unsigned char dircolor[])
 		if (!strcmp(fentry->name, "."))
 			continue;
 
-		new_entry = mem_alloc(length);
-		if (fentry->comment) {
-			char *comment = mem_alloc(fentry->commentlen + 1);
-
-			if (comment) memcpy(comment, fentry->comment, fentry->commentlen + 1);
-			fentry->comment = comment;
-		}
-		if (!new_entry)
-			continue;
+		/* Preallocate a @table element, but don't increment
+		 * @size yet.  This way, we need not explicitly free
+		 * the element if something goes wrong.  It may cause
+		 * CHECK_USELESS_REALLOC to complain, though.  */
 		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
 		if (!new_table)
 			continue;
-		memcpy(new_entry, fentry, length);
 		table = new_table;
-		table[size] = new_entry;
-		size++;
+
+		new_entry = mem_alloc(length);
+		if (!new_entry)
+			continue;
+		memcpy(new_entry, fentry, length);
+
+		/* In libsmbclient 3.0.10, @smbc_dirent.namelen and
+		 * @smbc_dirent.commentlen include the null characters
+		 * (tested with GDB).  In libsmbclient 3.0.24, they
+		 * don't.  This is related to Samba bug 3030.  Adjust
+		 * the lengths to exclude the null characters, so that
+		 * other code need not care.  */
+		if (new_entry->commentlen > 0
+		    && new_entry->comment[new_entry->commentlen - 1] == '\0')
+			new_entry->commentlen--;
+		if (new_entry->namelen > 0
+		    && new_entry->name[new_entry->namelen - 1] == '\0')
+			new_entry->namelen--;
+
+		if (new_entry->comment) {
+			/* memacpy appends a null character.  */
+			new_entry->comment = memacpy(new_entry->comment,
+						     new_entry->commentlen);
+			if (new_entry->comment == NULL) {
+				mem_free(new_entry);
+				continue;
+			}
+		}
+
+		table[size++] = new_entry;
 	}
 	qsort(table, size, sizeof(*table),
 	 (int (*)(const void *, const void *)) compare);
