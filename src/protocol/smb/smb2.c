@@ -305,12 +305,21 @@ do_smb(struct connection *conn)
 	if (dir >= 0) {
 		smb_directory(dir, conn->uri);
 	} else {
+		const int errno_from_opendir = errno;
 		char buf[READ_SIZE];
 		struct stat sb;
 		int r, res;
 		int file = smbc_open(url, O_RDONLY, 0);
 
 		if (file < 0) {
+			/* If we're opening the list of shares without
+			 * proper authentication, then smbc_opendir
+			 * fails with EACCES and smbc_open fails with
+			 * ENOENT.  In this case, return the EACCES so
+			 * that the parent ELinks process will prompt
+			 * for credentials.  */
+			if (errno == ENOENT && errno_from_opendir == EACCES)
+				errno = errno_from_opendir;
 			smb_error(errno);
 		}
 
