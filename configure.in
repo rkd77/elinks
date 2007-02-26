@@ -1431,7 +1431,7 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
     4.*)
       # Do not show warnings related to (char * | unsigned char *) type
       # difference. Do not show "always evaluate as true".
-      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-always-true"
+      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
       ;;
     *)
       # These should be ok using -Werror
