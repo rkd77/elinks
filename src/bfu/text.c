@@ -119,7 +119,6 @@ split_line(unsigned char *text, int max_width, int *cells)
 					 * followed by a space so this rule
 					 * will not match often. We match dash
 					 * and quotes too. */
-					cells_save--;
 					while (--split != text) {
 						cells_save--;
 						if (!ispunct(*split)) continue;
