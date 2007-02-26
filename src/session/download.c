@@ -822,9 +822,8 @@ subst_file(unsigned char *prog, unsigned char *file)
 
 		if (init_string(&s)) {
 			add_to_string(&s, "/bin/cat ");
-			add_char_to_string(&s, '"');
-			add_to_string(&s, file);
-			add_to_string(&s, "\" | ");
+			add_shell_quoted_to_string(&s, file, strlen(file));
+			add_to_string(&s, " | ");
 			add_string_to_string(&s, &name);
 			done_string(&name);
 			return s.source;
