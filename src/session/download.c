@@ -810,9 +810,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 			cygwin_conv_to_full_win32_path(file, new_path);
 			add_to_string(&name, new_path);
 #else
-			add_char_to_string(&name, '"');
-			add_to_string(&name, file);
-			add_char_to_string(&name, '"');
+			add_shell_quoted_to_string(&name, file, strlen(file));
 #endif
 			prog++;
 		}
@@ -823,9 +821,8 @@ subst_file(unsigned char *prog, unsigned char *file)
 
 		if (init_string(&s)) {
 			add_to_string(&s, "/bin/cat ");
-			add_char_to_string(&s, '"');
-			add_to_string(&s, file);
-			add_to_string(&s, "\" | ");
+			add_shell_quoted_to_string(&s, file, strlen(file));
+			add_to_string(&s, " | ");
 			add_string_to_string(&s, &name);
 			done_string(&name);
 			return s.source;
