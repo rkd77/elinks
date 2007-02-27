@@ -164,7 +164,35 @@ static const struct rgb palette88[] = {
 /* Colors   0- 15 are the ANSI colors (from xterm-215/XTerm-col.ad
  *                and Xorg's rgb.txt, not the same as palette16[]).
  * Colors  16-231 are a 6x6x6 color cube
- * Colors 231-255 are a grayscale ramp (with black and white left out). */
+ * Colors 231-255 are a grayscale ramp (with black and white left out).
+ *
+ * The 6x6x6 color cube of xterm uses brightnesses 00-5f-87-af-d7-ff
+ * whereas the "web-safe" palette uses 00-33-66-99-cc-ff, which then
+ * becomes 00-5f-5f-87-d7-ff when ELinks finds the nearest available
+ * color.  If it is important to preserve distinctions between
+ * "web-safe" colors, you can alter the 6x6x6 cube in palette256[] to
+ * make ELinks imagine the brightnesses are 00-33-66-99-cc-ff, so that
+ * the "web-safe" colors then fall directly on it.  If you do this,
+ * you should also change the other entries of palette256[] in a
+ * similar way, to keep the brightnesses in the correct order.  You
+ * could for instance interpolate the brightnesses with the following
+ * function, which passes through all six points and has a continuous
+ * positive first derivative:
+ *
+ * y = (765/11) - sqrt(585225/121 - (2601/55)*x) when x <= 0x5f
+ * x = (-55/2601)*y^2 + (150/51)*y               when x <= 0x5f
+ * y = (51/40)*x + (-561/8)                      when x >= 0x5f
+ *
+ * If you use Emacs then here is how to do it easily:
+ *
+ * (while (re-search-forward "0x\\([[:xdigit:]]+\\)" nil t)
+     (let* ((x (string-to-number (match-string 1) 16))
+	    (y (if (<= x #x5f)
+		 (- (/ 765.0 11.0)
+		    (sqrt (- (/ 585225.0 121.0) (* (/ 2601.0 55.0) x))))
+		 (+ (* (/ 51.0 40.0) x) (/ -561.0 8.0)))))
+       (replace-match (format "%.2x" (round y)) nil t nil 1)))
+ */
 static const struct rgb palette256[] = {
 	{0x00, 0x00, 0x00}, /* 0 black */
 	{0xcd, 0x00, 0x00}, /* 1 red3 */
