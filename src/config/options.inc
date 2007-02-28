@@ -509,7 +509,8 @@ static struct option_info config_options_info[] = {
 		"When a document is loaded and this interval has elapsed since the\n"
 		"document was initially loaded or most recently revalidated\n"
 		"with the server, the server will be checked in case there is\n"
-		"a more up-to-date version of the document.")),
+		"a more up-to-date version of the document.\n\n"
+		"A value of -1 disables automatic revalidation.")),
 
 	INIT_OPT_TREE("document.cache", N_("Memory cache"),
 		"memory", 0,
