@@ -241,11 +241,18 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 
 	} else if (uri->protocol == PROTOCOL_FILE) {
 		int datalen = check_uri_file(prefix_end);
+		unsigned char *frag_or_post = prefix_end + datalen;
 
 		/* Extract the fragment part. */
-		if (datalen >= 0 && prefix_end[datalen] == '#') {
-			uri->fragment = prefix_end + datalen + 1;
-			uri->fragmentlen = strlen(uri->fragment);
+		if (datalen >= 0) {
+			if (*frag_or_post == '#') {
+				uri->fragment = frag_or_post + 1;
+				uri->fragmentlen = strcspn(uri->fragment, POST_CHAR_S);
+				frag_or_post = uri->fragment + uri->fragmentlen;
+			}
+			if (*frag_or_post == POST_CHAR) {
+				uri->post = frag_or_post + 1;
+			}
 		} else {
 			datalen = strlen(prefix_end);
 		}
