@@ -373,11 +373,13 @@ execute_cgi(struct connection *conn)
 		}
 
 	} else { /* ELinks */
-
-		if (!init_http_connection_info(conn, 1, 0, 1))
-			return 0;
-
 		mem_free(script);
+
+		if (!init_http_connection_info(conn, 1, 0, 1)) {
+			close(pipe_read[0]); close(pipe_read[1]);
+			close(pipe_write[0]); close(pipe_write[1]);
+			return 0;
+		}
 
 		close(pipe_read[1]); close(pipe_write[0]);
 		conn->socket->fd = pipe_read[0];
