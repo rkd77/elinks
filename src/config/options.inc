@@ -505,11 +505,11 @@ static struct option_info config_options_info[] = {
 	/* FIXME: Write more. */
 	INIT_OPT_INT("document.cache", N_("Revalidation interval"),
 		"revalidation_interval", 0, -1, 86400, -1,
-		N_("Period that a cache entry is considered to be up-to-date.\n"
-		"When a document is loaded and this interval has elapsed since the\n"
-		"document was initially loaded or most recently revalidated\n"
-		"with the server, the server will be checked in case there is\n"
-		"a more up-to-date version of the document.\n\n"
+		N_("Period in seconds that a cache entry is considered to be\n"
+		"up-to-date. When a document is loaded and this interval has elapsed\n"
+		"since the document was initially loaded or most recently\n"
+		"revalidated with the server, the server will be checked in case\n"
+		"there is a more up-to-date version of the document.\n\n"
 		"A value of -1 disables automatic revalidation.")),
 
 	INIT_OPT_TREE("document.cache", N_("Memory cache"),
