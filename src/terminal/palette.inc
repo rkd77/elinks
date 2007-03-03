@@ -59,8 +59,8 @@ static const struct rgb palette16[] = {
 
 #ifdef CONFIG_88_COLORS
 /* Regexp'd from Dickey's xterm 88colres.h file. */
-/* Colors  0-16 are the ANSI colors (and the same as palette16[]).
- * Colors 16-79 are 4x4x4 color cubes
+/* Colors  0-15 are the ANSI colors (and the same as palette16[]).
+ * Colors 16-79 are a 4x4x4 color cube
  * Colors 80-91 are a grayscale ramp (with black and white left out). */
 static const struct rgb palette88[] = {
 	{0x00, 0x00, 0x00}, /* 0 */
@@ -164,7 +164,7 @@ static const struct rgb palette88[] = {
 /* Colors   0- 15 are the ANSI colors (from xterm-215/XTerm-col.ad
  *                and Xorg's rgb.txt, not the same as palette16[]).
  * Colors  16-231 are a 6x6x6 color cube
- * Colors 231-255 are a grayscale ramp (with black and white left out).
+ * Colors 232-255 are a grayscale ramp (with black and white left out).
  *
  * The 6x6x6 color cube of xterm uses brightnesses 00-5f-87-af-d7-ff
  * whereas the "web-safe" palette uses 00-33-66-99-cc-ff, which then
