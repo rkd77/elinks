@@ -52,6 +52,7 @@ read_from_festival(struct fest *fest)
 
 #define FESTIVAL_SYSTEM	0
 #define FLITE_SYSTEM	1
+#define ESPEAK_SYSTEM	2
 
 static void
 write_to_festival(struct fest *fest)
@@ -75,7 +76,7 @@ write_to_festival(struct fest *fest)
 		return;
 
 	data = doc->data[fest->line].chars;
-	if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
+	if (festival.speech_system == FESTIVAL_SYSTEM) {
 		add_to_string(&buf, "(SayText \"");
 		/* UTF-8 not supported yet. Does festival support UTF-8? */
 		for (i = 0; i < len; i++) {
@@ -113,11 +114,18 @@ init_festival(void)
 	int out_pipe[2] = {-1, -1};
 	pid_t cpid;
 
-	festival.festival_or_flite = get_opt_int("document.speech.system");
-	if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
+	festival.speech_system = get_opt_int("document.speech.system");
+	switch (festival.speech_system) {
+	case FESTIVAL_SYSTEM:
+	default:
 		if (access(FESTIVAL, X_OK)) return 1;
-	} else {
+		break;
+	case FLITE_SYSTEM:
 		if (access(FLITE, X_OK)) return 1;
+		break;
+	case ESPEAK_SYSTEM:
+		if (access(ESPEAK, X_OK)) return 1;
+		break;
 	}
 
 	if (c_pipe(in_pipe) || c_pipe(out_pipe)) {
@@ -137,31 +145,40 @@ init_festival(void)
 		return 1;
 	}
 	if (!cpid) {
+		unsigned char *program;
+
 		dup2(out_pipe[1], 1);
 		dup2(in_pipe[0], 0);
 		close(out_pipe[0]);
 		close(in_pipe[1]);
 		close(2);
 		close_all_non_term_fd();
-		if (festival.festival_or_flite == FESTIVAL_SYSTEM) {
+		switch (festival.speech_system) {
+		case FESTIVAL_SYSTEM:
+		default:
 			execl(FESTIVAL, "festival", "-i", NULL);
 			_exit(0);
-		} else {
-			do {
-				char line[1024];
-				FILE *out;
-
-				fgets(line, 1024, stdin);
-				out = popen(FLITE, "w");
-				if (out) {
-					fputs(line, out);
-					pclose(out);
-					putchar(' ');
-					fflush(stdout);
-				}
-			} while (!feof(stdin));
-			_exit(0);
+		case FLITE_SYSTEM:
+			program = FLITE;
+			break;
+		case ESPEAK_SYSTEM:
+			program = ESPEAK;
+			break;
 		}
+		do {
+			char line[1024];
+			FILE *out;
+
+			fgets(line, 1024, stdin);
+			out = popen(program, "w");
+			if (out) {
+				fputs(line, out);
+				pclose(out);
+				putchar(' ');
+				fflush(stdout);
+			}
+		} while (!feof(stdin));
+		_exit(0);
 	} else {
 		close(out_pipe[1]);
 		close(in_pipe[0]);
@@ -175,6 +192,7 @@ init_festival(void)
 }
 #undef FESTIVAL_SYSTEM
 #undef FLITE_SYSTEM
+#undef ESPEAK_SYSTEM
 
 void
 run_festival(struct session *ses, struct document_view *doc_view)

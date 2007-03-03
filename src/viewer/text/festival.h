@@ -1,4 +1,3 @@
-
 #ifndef EL__VIEWER_TEXT_FESTIVAL_H
 #define EL__VIEWER_TEXT_FESTIVAL_H
 
@@ -10,7 +9,7 @@ struct fest {
 	int line;
 	int in;
 	int out;
-	int festival_or_flite;
+	int speech_system;
 	unsigned int running:1;
 };
 
