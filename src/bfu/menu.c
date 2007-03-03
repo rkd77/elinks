@@ -867,8 +867,8 @@ menu_handler(struct window *win, struct term_event *ev)
 	switch (ev->ev) {
 		case EVENT_INIT:
 		case EVENT_RESIZE:
-		case EVENT_REDRAW:
 			get_parent_ptr(win, &menu->parent_x, &menu->parent_y);
+		case EVENT_REDRAW:
 			count_menu_size(win->term, menu);
 			/* do_menu sets menu->selected = 0.  If that
 			 * item isn't actually selectable, correct
