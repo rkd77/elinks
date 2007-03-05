@@ -266,6 +266,9 @@ do_fsp(struct connection *conn)
 #undef READ_SIZE
 
 
+
+/* FSP asynchronous connection management (parent process): */
+
 /* Kill the current connection and ask for a username/password for the next
  * try. */
 static void
@@ -274,9 +277,6 @@ prompt_username_pw(struct connection *conn)
 	add_auth_entry(conn->uri, "FSP", NULL, NULL, 0);
 	abort_connection(conn, S_OK);
 }
-
-
-/* FSP asynchronous connection management (parent process): */
 
 static void
 fsp_got_error(struct socket *socket, struct read_buffer *rb)
