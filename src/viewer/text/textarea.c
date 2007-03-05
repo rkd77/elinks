@@ -534,6 +534,7 @@ save_textarea_file(unsigned char *value)
 	unsigned char *filename;
 	FILE *fp = NULL;
 	int fd;
+	size_t nmemb;
 
 	filename = get_tempdir_filename("elinks-area-XXXXXX");
 	if (!filename) return NULL;
@@ -546,14 +547,22 @@ save_textarea_file(unsigned char *value)
 
 	fp = fdopen(fd, "w");
 	if (!fp) {
+
+error:
 		unlink(filename);
 		mem_free(filename);
 		close(fd);
 		return NULL;
 	}
 
-	fwrite(value, strlen(value), 1, fp);
-	fclose(fp);
+	nmemb = fwrite(value, strlen(value), 1, fp);
+	if (nmemb != 1) {
+		fclose(fp);
+		goto error;
+	}
+
+	if (fclose(fp) != 0)
+		goto error;
 
 	return filename;
 }
