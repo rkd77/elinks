@@ -262,7 +262,7 @@ smb_directory(int dir, struct uri *uri)
 
 	if (get_opt_bool("document.browse.links.color_dirs")) {
 		color_to_string(get_opt_color("document.colors.dirs"),
-				(unsigned char *) &dircolor);
+				dircolor);
 	}
 
 	sort_and_display_entries(dir, dircolor);
