@@ -180,24 +180,54 @@ sort_and_display_entries(int dir, unsigned char dircolor[])
 
 	while ((fentry = smbc_readdir(dir))) {
 		struct smbc_dirent **new_table, *new_entry;
-		int length = fentry->dirlen;
+		unsigned int commentlen = fentry->commentlen;
+		unsigned int namelen = fentry->namelen;
 
 		if (!strcmp(fentry->name, "."))
 			continue;
 
-		new_entry = mem_alloc(length);
-		if (fentry->comment) {
-			char *comment = mem_alloc(fentry->commentlen + 1);
+		/* In libsmbclient 3.0.10, @smbc_dirent.namelen and
+		 * @smbc_dirent.commentlen include the null characters
+		 * (tested with GDB).  In libsmbclient 3.0.24, they
+		 * don't.  This is related to Samba bug 3030.  Adjust
+		 * the lengths to exclude the null characters, so that
+		 * other code need not care.
+		 *
+		 * Make all changes to local copies rather than
+		 * directly to *@fentry, so that there's no chance of
+		 * ELinks messing up whatever mechanism libsmbclient
+		 * will use to free @fentry.  */
+		if (commentlen > 0 && fentry->comment[commentlen - 1] == '\0')
+			commentlen--;
+		if (namelen > 0 && fentry->name[namelen - 1] == '\0')
+			namelen--;
 
-			if (comment) memcpy(comment, fentry->comment, fentry->commentlen + 1);
-			fentry->comment = comment;
-		}
+		/* libsmbclient seems to place the struct smbc_dirent,
+		 * the name string, and the comment string all in one
+		 * block of memory, which then is smbc_dirent.dirlen
+		 * bytes long.  This has however not been really
+		 * documented, so ELinks should not assume copying
+		 * fentry->dirlen bytes will copy the comment too.
+		 * Yet, it would be wasteful to copy both dirlen bytes
+		 * and then the comment string separately.  What we do
+		 * here is ignore fentry->dirlen and recompute the
+		 * size based on namelen.  */
+		new_entry = (struct smbc_dirent *)
+			memacpy((const unsigned char *) fentry,
+				offsetof(struct smbc_dirent, name)
+				+ namelen); /* memacpy appends '\0' */
 		if (!new_entry)
 			continue;
+		new_entry->namelen = namelen;
+		new_entry->commentlen = commentlen;
+		if (fentry->comment)
+			new_entry->comment = memacpy(fentry->comment, commentlen);
+		if (!new_entry->comment)
+			new_entry->commentlen = 0;
+
 		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
 		if (!new_table)
 			continue;
-		memcpy(new_entry, fentry, length);
 		table = new_table;
 		table[size] = new_entry;
 		size++;
