@@ -829,10 +829,10 @@ get_translation_table_to_utf8(int from)
 	from &= ~SYSTEM_CHARSET_FLAG;
 	if (from == lfr) return utf_table;
 	lfr = from;
-	if (utf_table_init)
-		memset(utf_table, 0, sizeof(utf_table)),
+	if (utf_table_init) {
+		memset(utf_table, 0, sizeof(utf_table));
 		utf_table_init = 0;
-	else
+	} else
 		free_utf_table();
 
 	for (i = 0; i < 128; i++)
