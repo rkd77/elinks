@@ -509,6 +509,17 @@ smb_protocol_handler(struct connection *conn)
 		close(smb_pipe[0]);
 		close(header_pipe[0]);
 
+		/* There may be outgoing data in stdio buffers
+		 * inherited from the parent process.  The parent
+		 * process is going to write this data, so the child
+		 * process must not do that.  Closing the file
+		 * descriptors ensures this.
+		 *
+		 * FIXME: If something opens more files and gets the
+		 * same file descriptors and does not close them
+		 * before exit(), then stdio may attempt to write the
+		 * buffers to the wrong files.  This might happen for
+		 * example if libsmbclient calls syslog().  */
 		close_all_non_term_fd();
 		do_smb(conn);
 
