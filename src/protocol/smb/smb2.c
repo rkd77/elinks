@@ -418,8 +418,13 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 
 	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
-		close(socket->fd);
-		close(conn->data_socket->fd);
+		/* Even though these are pipes rather than real
+		 * sockets, call close_socket instead of close, to
+		 * ensure that abort_connection won't try to close the
+		 * file descriptors again.  (Could we skip the calls
+		 * and assume abort_connection will do them?)  */
+		close_socket(socket);
+		close_socket(conn->data_socket);
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
@@ -456,8 +461,8 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 
 	buf = alloc_read_buffer(conn->data_socket);
 	if (!buf) {
-		close(socket->fd);
-		close(conn->data_socket->fd);
+		close_socket(socket);
+		close_socket(conn->data_socket);
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
@@ -534,8 +539,8 @@ smb_protocol_handler(struct connection *conn)
 		close(header_pipe[1]);
 		buf2 = alloc_read_buffer(conn->socket);
 		if (!buf2) {
-			close(smb_pipe[0]);
-			close(header_pipe[0]);
+			close_socket(conn->data_socket);
+			close_socket(conn->socket);
 			abort_connection(conn, S_OUT_OF_MEM);
 			return;
 		}
