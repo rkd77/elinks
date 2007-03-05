@@ -376,6 +376,15 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
+	/* There should be free space in the buffer, because
+	 * @alloc_read_buffer allocated several kibibytes, and the
+	 * child process wrote only an integer and a newline to the
+	 * pipe.  */
+	assert(rb->freespace >= 1);
+	if_assert_failed {
+		abort_connection(conn, S_INTERNAL);
+		return;
+	}
 	rb->data[len] = '\0';
 	error = atoi(rb->data);
 	kill_buffer_data(rb, len);
