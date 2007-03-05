@@ -199,7 +199,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 
 	if (get_opt_bool("document.browse.links.color_dirs")) {
 		color_to_string(get_opt_color("document.colors.dirs"),
-				(unsigned char *) &dircolor);
+				dircolor);
 	}
 
 	if (get_opt_bool("protocol.fsp.sort")) {
