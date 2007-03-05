@@ -200,7 +200,7 @@ unblock_terminal(struct terminal *term)
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
 		     (select_handler_T) destroy_terminal, term);
-	unblock_itrm(term->fdin);
+	unblock_itrm();
 	redraw_terminal_cls(term);
 	if (textarea_editor)	/* XXX */
 		textarea_edit(1, NULL, NULL, NULL, NULL);
@@ -223,13 +223,13 @@ exec_on_master_terminal(struct terminal *term,
 	memcpy(param + 1, path, plen + 1);
 	memcpy(param + 1 + plen + 1, delete, dlen + 1);
 
-	if (fg == 1) block_itrm(term->fdin);
+	if (fg == 1) block_itrm();
 
 	blockh = start_thread((void (*)(void *, int)) exec_thread,
 			      param, param_size);
 	fmem_free(param);
 	if (blockh == -1) {
-		if (fg == 1) unblock_itrm(term->fdin);
+		if (fg == 1) unblock_itrm();
 		return;
 	}
 
