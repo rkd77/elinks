@@ -206,8 +206,10 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned char dircolor[8] = "";
 
+	if (!data)
+		fsp_error(-S_OUT_OF_MEM);
 	decode_uri(data);
-	if (!data || init_directory_listing(&buf, uri) != S_OK)
+	if (init_directory_listing(&buf, uri) != S_OK)
 		fsp_error(-S_OUT_OF_MEM);
 
 	dir = fsp_opendir(ses, data);
