@@ -539,14 +539,21 @@ save_textarea_file(unsigned char *value)
 	if (!filename) return NULL;
 
 	fd = safe_mkstemp(filename);
-	if (fd >= 0) fp = fdopen(fd, "w");
-
-	if (fp) {
-		fwrite(value, strlen(value), 1, fp);
-		fclose(fp);
-	} else {
+	if (fd < 0) {
 		mem_free(filename);
+		return NULL;
 	}
+
+	fp = fdopen(fd, "w");
+	if (!fp) {
+		unlink(filename);
+		mem_free(filename);
+		close(fd);
+		return NULL;
+	}
+
+	fwrite(value, strlen(value), 1, fp);
+	fclose(fp);
 
 	return filename;
 }
