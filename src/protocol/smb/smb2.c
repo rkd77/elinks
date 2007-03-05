@@ -232,8 +232,7 @@ sort_and_display_entries(int dir, const unsigned char dircolor[])
 		table[size] = new_entry;
 		size++;
 	}
-	qsort(table, size, sizeof(*table),
-	 (int (*)(const void *, const void *)) compare);
+	qsort(table, size, sizeof(*table), compare);
 
 	for (i = 0; i < size; i++) {
 		display_entry(table[i], dircolor);
