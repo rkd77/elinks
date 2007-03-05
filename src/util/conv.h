@@ -77,7 +77,7 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 	add_string_replace(str, src, len, '*', '.')
 
 /* Convert reserved chars to html &#xx */
-struct string *add_html_to_string(struct string *string, unsigned char *html, int htmllen);
+struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
 
 /* Escapes \ and " with a \ */
 struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
