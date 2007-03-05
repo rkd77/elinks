@@ -279,7 +279,7 @@ do_fsp(struct connection *conn)
 		}
 
 		/* Send filesize */
-		fprintf(stderr, "%d\n", (unsigned int)(sb.st_size));
+		fprintf(stderr, "%" OFF_T_FORMAT "\n", (off_t)(sb.st_size));
 		fclose(stderr);
 
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
@@ -397,7 +397,11 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 				mem_free(ctype);
 			} else {
 				if (ctype[0] >= '0' && ctype[0] <= '9') {
-					conn->est_length = (off_t)atoi(ctype);
+#ifdef HAVE_ATOLL
+					conn->est_length = (off_t)atoll(ctype);
+#else
+					conn->est_length = (off_t)atol(ctype);
+#endif
 					mem_free(ctype);
 
 					/* avoid read from socket error */
