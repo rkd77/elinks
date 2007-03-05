@@ -67,6 +67,12 @@ struct module smb_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
+/* The child process generally does not bother to free the memory it
+ * allocates.  When the process exits, the operating system will free
+ * the memory anyway.  There is no point in changing this, because the
+ * child process also inherits memory allocations from the parent
+ * process, and it would be very cumbersome to free those.  */
+
 static void
 smb_error(int error)
 {
