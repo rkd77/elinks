@@ -230,6 +230,7 @@ save_form_data_to_file(struct uri *uri)
 
 	fp = fdopen(fd, "w");
 	if (!fp) {
+		unlink(filename);
 		mem_free(filename);
 		close(fd);
 		return NULL;
