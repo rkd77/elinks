@@ -107,6 +107,13 @@ fsp_error(int error)
 {
 	printf("%d\n", error);
 	fprintf(stderr, "text/x-error");
+	/* In principle, this should perhaps call fsp_close_session to
+	 * make the server accept any key from the next client process
+	 * at this IP address.  That doesn't seem necessary though:
+	 * fsplib uses various IPC schemes to synchronize the use of
+	 * server-provided keys between client processes, so the next
+	 * client process will probably be able to use the key saved
+	 * by this one.  */
 	exit(1);
 }
 
