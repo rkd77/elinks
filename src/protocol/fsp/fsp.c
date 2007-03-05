@@ -115,7 +115,7 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 }
 
 static void
-display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
+display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 {
 	struct string string;
 
@@ -144,7 +144,7 @@ display_entry(FSP_RDENTRY *fentry, unsigned char dircolor[])
 }
 
 static void
-sort_and_display_entries(FSP_DIR *dir, unsigned char dircolor[])
+sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 {
 	FSP_RDENTRY fentry, *fresult, *table = NULL;
 	int size = 0;
