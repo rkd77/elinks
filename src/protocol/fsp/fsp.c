@@ -188,7 +188,10 @@ sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 		copy_struct(&table[size], &fentry);
 		size++;
 	}
-	qsort(table, size, sizeof(*table), compare);
+	/* If size==0, then table==NULL.  According to ISO/IEC 9899:1999
+	 * 7.20.5p1, the NULL must not be given to qsort.  */
+	if (size > 0)
+		qsort(table, size, sizeof(*table), compare);
 
 	for (i = 0; i < size; i++) {
 		display_entry(&table[i], dircolor);
