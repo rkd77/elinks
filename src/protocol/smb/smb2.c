@@ -89,8 +89,8 @@ compare(const void *a, const void *b)
 }
 
 static void
-smb_add_link(struct string *string, struct smbc_dirent *entry,
-	unsigned char *text, unsigned char dircolor[])
+smb_add_link(struct string *string, const struct smbc_dirent *entry,
+	const unsigned char *text, const unsigned char dircolor[])
 {
 	struct string uri_string;
 
@@ -116,9 +116,9 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 }
 
 static void
-display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
+display_entry(const struct smbc_dirent *entry, const unsigned char dircolor[])
 {
-	static unsigned char zero = '\0';
+	static const unsigned char zero = '\0';
 	struct string string;
 
 	if (!init_string(&string)) return;
@@ -172,7 +172,7 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 }
 
 static void
-sort_and_display_entries(int dir, unsigned char dircolor[])
+sort_and_display_entries(int dir, const unsigned char dircolor[])
 {
 	struct smbc_dirent *fentry, **table = NULL;
 	int size = 0;
