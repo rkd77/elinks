@@ -105,8 +105,9 @@ fsp_error(int error)
 }
 
 static int
-compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
+compare(const void *av, const void *bv)
 {
+	const FSP_RDENTRY *a = av, *b = bv;
 	int res = ((b->type == FSP_RDTYPE_DIR) - (a->type == FSP_RDTYPE_DIR));
 
 	if (res)
@@ -163,8 +164,7 @@ sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 		memcpy(&table[size], &fentry, sizeof(fentry));
 		size++;
 	}
-	qsort(table, size, sizeof(*table),
-	 (int (*)(const void *, const void *)) compare);
+	qsort(table, size, sizeof(*table), compare);
 
 	for (i = 0; i < size; i++) {
 		display_entry(&table[i], dircolor);
