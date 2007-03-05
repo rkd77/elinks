@@ -64,7 +64,34 @@ struct module fsp_protocol_module = struct_module(
 );
 
 
-/* FSP synchronous connection management: */
+/* Because functions of fsplib block waiting for a response from the
+ * server, and ELinks wants non-blocking operations so that other
+ * connections and the user interface keep working, this FSP protocol
+ * module forks a child process for each FSP connection.  The child
+ * process writes the results to two pipes, which the main ELinks
+ * process then reads in a non-blocking fashion.  The child process
+ * gets these pipes as its stdout and stderr.
+ *
+ * - If an error occurs, the child process writes "text/x-error"
+ *   without newline to stderr, and an error code and a newline to
+ *   stdout.  The error code is either from errno or a negated value
+ *   from enum connection_state, e.g. -S_OUT_OF_MEM.  In particular,
+ *   EPERM causes the parent process to prompt for username and
+ *   password.  (In this, fsplib differs from libsmbclient, which uses
+ *   EACCES if authentication fails.)
+ *
+ * - If the resource is a regular file, the child process writes the
+ *   estimated length of the file (in bytes) and a newline to stderr,
+ *   and the contents of the file to stdout.
+ *
+ * - If the resource is a directory, the child process writes
+ *   "text/html" without newline to stderr, and an HTML rendering
+ *   of the directory listing to stdout.
+ *
+ * The exit code of the child process also indicates whether an error
+ * occurred, but the parent process ignores it.  */
+
+/* FSP synchronous connection management (child process): */
 
 /* FIXME: Although it is probably not so much an issue, check if writes to
  * stdout fails for directory listing like we do for file fetching. */
@@ -249,7 +276,7 @@ prompt_username_pw(struct connection *conn)
 }
 
 
-/* FSP asynchronous connection management: */
+/* FSP asynchronous connection management (parent process): */
 
 static void
 fsp_got_error(struct socket *socket, struct read_buffer *rb)
