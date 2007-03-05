@@ -91,7 +91,13 @@ struct module fsp_protocol_module = struct_module(
  * The exit code of the child process also indicates whether an error
  * occurred, but the parent process ignores it.  */
 
-/* FSP synchronous connection management (child process): */
+/* FSP synchronous connection management (child process):
+ *
+ * The child process generally does not bother to free the memory it
+ * allocates.  When the process exits, the operating system will free
+ * the memory anyway.  There is no point in changing this, because the
+ * child process also inherits memory allocations from the parent
+ * process, and it would be very cumbersome to free those.  */
 
 /* FIXME: Although it is probably not so much an issue, check if writes to
  * stdout fails for directory listing like we do for file fetching. */
