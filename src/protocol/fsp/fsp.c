@@ -185,7 +185,7 @@ sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 		if (!new_table)
 			continue;
 		table = new_table;
-		memcpy(&table[size], &fentry, sizeof(fentry));
+		copy_struct(&table[size], &fentry);
 		size++;
 	}
 	qsort(table, size, sizeof(*table), compare);
