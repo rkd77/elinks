@@ -133,10 +133,21 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 {
 	struct string string;
 
+	/* fentry->name is a fixed-size array and is followed by other
+	 * members; thus, if the name reported by the server does not
+	 * fit in the array, fsplib must either truncate or reject it.
+	 * If fsplib truncates the name, it does not document whether
+	 * fentry->namlen is the original length or the truncated
+	 * length.  ELinks therefore ignores fentry->namlen and
+	 * instead measures the length on its own.  */
+	const size_t namelen = strlen(fentry->name);
+
 	if (!init_string(&string)) return;
 	add_format_to_string(&string, "%10d", fentry->size);
 	add_to_string(&string, "\t<a href=\"");
-	encode_uri_string(&string, fentry->name, -1, 0); 
+	/* The result of encode_uri_string does not include '&' or '<'
+	 * which could mess up the HTML.  */
+	encode_uri_string(&string, fentry->name, namelen, 0); 
 	if (fentry->type == FSP_RDTYPE_DIR) {
 		add_to_string(&string, "/\">");
 		if (*dircolor) {
@@ -144,13 +155,13 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 			add_to_string(&string, dircolor);
 			add_to_string(&string, "\"><b>");
 		}
-		add_to_string(&string, fentry->name);
+		add_html_to_string(&string, fentry->name, namelen);
 		if (*dircolor) {
 			add_to_string(&string, "</b></font>");
 		}
 	} else {
 		add_to_string(&string, "\">");
-		add_to_string(&string, fentry->name);
+		add_html_to_string(&string, fentry->name, namelen);
 	}
 	add_to_string(&string, "</a>");
 	puts(string.source);
