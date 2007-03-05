@@ -234,8 +234,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 			if (!fresult) break;
 			display_entry(&fentry, dircolor);
 		}
-		fsp_closedir(dir);
 	}
+	fsp_closedir(dir);
 	puts("</pre><hr/></body></html>");
 	fsp_close_session(ses);
 	exit(0);
