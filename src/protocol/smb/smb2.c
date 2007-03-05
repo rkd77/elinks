@@ -460,7 +460,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 #ifdef HAVE_ATOLL
 					conn->est_length = (off_t)atoll(ctype);
 #else
-					conn->est_length = (off_t)atoi(ctype);
+					conn->est_length = (off_t)atol(ctype);
 #endif
 					mem_free(ctype);
 
