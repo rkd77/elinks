@@ -219,7 +219,7 @@ save_form_data_to_file(struct uri *uri)
 	unsigned char *filename = get_tempdir_filename("elinks-XXXXXX");
 	int fd;
 	FILE *fp;
-	size_t nmemb;
+	size_t nmemb, len;
 	unsigned char *formdata;
 
 	if (!filename) return NULL;
@@ -232,6 +232,12 @@ save_form_data_to_file(struct uri *uri)
 
 	if (!uri->post) return filename;
 
+	/* Jump the content type */
+	formdata = strchr(uri->post, '\n');
+	formdata = formdata ? formdata + 1 : uri->post;
+	len = strlen(formdata);
+	if (len == 0) return filename;
+
 	fp = fdopen(fd, "w");
 	if (!fp) {
 
@@ -242,11 +248,7 @@ error:
 		return NULL;
 	}
 
-	/* Jump the content type */
-	formdata = strchr(uri->post, '\n');
-	formdata = formdata ? formdata + 1 : uri->post;
-
-	nmemb = fwrite(formdata, strlen(formdata), 1, fp);
+	nmemb = fwrite(formdata, len, 1, fp);
 	if (nmemb != 1) {
 		fclose(fp);
 		goto error;
