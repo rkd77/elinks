@@ -532,21 +532,40 @@ static unsigned char *
 save_textarea_file(unsigned char *value)
 {
 	unsigned char *filename;
-	FILE *file = NULL;
-	int h;
+	FILE *fp = NULL;
+	int fd;
+	size_t nmemb, len;
 
 	filename = get_tempdir_filename("elinks-area-XXXXXX");
 	if (!filename) return NULL;
 
-	h = safe_mkstemp(filename);
-	if (h >= 0) file = fdopen(h, "w");
-
-	if (file) {
-		fwrite(value, strlen(value), 1, file);
-		fclose(file);
-	} else {
+	fd = safe_mkstemp(filename);
+	if (fd < 0) {
 		mem_free(filename);
+		return NULL;
 	}
+
+	len = strlen(value);
+	if (len == 0) return filename;
+
+	fp = fdopen(fd, "w");
+	if (!fp) {
+
+error:
+		unlink(filename);
+		mem_free(filename);
+		close(fd);
+		return NULL;
+	}
+
+	nmemb = fwrite(value, len, 1, fp);
+	if (nmemb != 1) {
+		fclose(fp);
+		goto error;
+	}
+
+	if (fclose(fp) != 0)
+		goto error;
 
 	return filename;
 }

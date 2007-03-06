@@ -1,9 +1,5 @@
 /* SMB protocol implementation */
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE /* Needed for asprintf() */
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -39,7 +35,6 @@
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/memory.h"
-#include "util/snprintf.h"
 #include "util/string.h"
 
 /* These options are not used. */
