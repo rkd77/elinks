@@ -63,12 +63,8 @@ init_directory_listing(struct string *page, struct uri *uri)
 	    && !add_char_to_string(&dirpath, local ? CHAR_DIR_SEP : '/'))
 		goto out_of_memory;
 
-	if (local || uri->protocol == PROTOCOL_FSP || uri->protocol == PROTOCOL_GOPHER
-		  || uri->protocol == PROTOCOL_SMB) {
-		/* A little hack to get readable Gopher names. We should find a
-		 * way to do it more general. */
-		decode_uri_string(&dirpath);
-	}
+	/* Decode the uri for displaying. */
+	decode_uri_string(&dirpath);
 
 	if (!local && !add_char_to_string(&location, '/'))
 		goto out_of_memory;
