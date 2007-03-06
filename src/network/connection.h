@@ -53,6 +53,8 @@ struct connection {
 	int tries;
 	timer_id_T timer;
 	int stream_pipes[2];
+	/* The number of bytes actually in the pipe. */
+	int stream_pipes_written;
 
 	unsigned int running:1;
 	unsigned int unrestartable:1;

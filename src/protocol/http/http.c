@@ -1016,11 +1016,13 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 	*new_len = 0; /* new_len must be zero if we would ever return NULL */
 
-	if (conn->stream_pipes[0] == -1
-	    && (c_pipe(conn->stream_pipes) < 0
+	if (conn->stream_pipes[0] == -1) {
+		if (c_pipe(conn->stream_pipes) < 0
 		|| set_nonblocking_fd(conn->stream_pipes[0]) < 0
-		|| set_nonblocking_fd(conn->stream_pipes[1]) < 0)) {
-		return NULL;
+		|| set_nonblocking_fd(conn->stream_pipes[1]) < 0) {
+			return NULL;
+		}
+		conn->stream_pipes_written = 0;
 	}
 
 	do {
@@ -1029,13 +1031,15 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
 			int written;
+			int to_write = PIPE_BUF - conn->stream_pipes_written;
 			
 			written = safe_write(conn->stream_pipes[1], data,
-						 len > PIPE_BUF ? PIPE_BUF : len);
+						 len > to_write ? to_write : len);
 
 			if (written > 0) {
 				data += written;
 				len -= written;
+				conn->stream_pipes_written += written;
 
 				/* In non-keep-alive connections http->length == -1, so the test below */
 				if (*length_of_block > 0)
@@ -1045,6 +1049,8 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 				if (!http->length) {
 					/* That's all, folks - let's finish this. */
 					state = FINISHING;
+				} else if (!len) {
+					return output;
 				}
 			}
 		}
@@ -1059,6 +1065,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		if (!output) break;
 
 		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
+		conn->stream_pipes_written = 0;
 
 		if (did_read > 0) *new_len += did_read;
 		else if (did_read == -1) {
