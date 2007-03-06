@@ -265,6 +265,25 @@ do_fsp(struct connection *conn)
 
 	ses = fsp_open_session(host, port, password);
 	if (!ses) fsp_error(errno);
+
+	/* fsplib 0.8 ABI depends on _FILE_OFFSET_BITS
+	 * https://sourceforge.net/tracker/index.php?func=detail&aid=1674729&group_id=93841&atid=605738
+	 * If ELinks and fsplib are using different values of
+	 * _FILE_OFFSET_BITS, then they get different definitions of
+	 * struct stat, and the st_size stored by fsp_stat is
+	 * typically not the same as the st_size read by ELinks.
+	 * Fortunately, st_mode seems to have the same offset and size
+	 * in both versions of struct stat.
+	 *
+	 * If all the bytes used by the 32-bit st_size are also used
+	 * by the 64-bit st_size, then ELinks may be able to guess
+	 * which ones they are, because the current version 2 of FSP
+	 * supports only 32-bit file sizes in protocol packets.  Begin
+	 * by filling struct stat with 0xAA so that it's easier to
+	 * detect which bytes fsp_stat has left unchanged.  (Only
+	 * sb.st_size really needs to be filled, but filling the rest
+	 * too helps viewing the data with a debugger.)  */
+	memset(&sb, 0xAA, sizeof(sb));
 	if (fsp_stat(ses, data, &sb)) fsp_error(errno);
 
 	if (S_ISDIR(sb.st_mode)) {
@@ -277,6 +296,22 @@ do_fsp(struct connection *conn)
 		if (!file) {
 			fsp_error(errno);
 		}
+
+#if SIZEOF_OFF_T >= 8
+		if (sb.st_size < 0 || sb.st_size > 0xFFFFFFFF) {
+			/* Probably a _FILE_OFFSET_BITS mismatch as
+			 * described above.  Try to detect which half
+			 * of st_size is the real size.  This may
+			 * depend on the endianness of the processor
+			 * and on the padding in struct stat.  */
+			if ((sb.st_size & 0xFFFFFFFF00000000ULL) == 0xAAAAAAAA00000000ULL)
+				sb.st_size = sb.st_size & 0xFFFFFFFF;
+			else if ((sb.st_size & 0xFFFFFFFF) == 0xAAAAAAAA)
+				sb.st_size = (sb.st_size >> 32) & 0xFFFFFFFF;
+			else	/* Can't figure it out. */
+				sb.st_size = 1;
+		}
+#endif
 
 		/* Send filesize */
 		fprintf(stderr, "%" OFF_T_FORMAT "\n", (off_t)(sb.st_size));
