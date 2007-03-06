@@ -1326,11 +1326,11 @@ safe_char(unsigned char c)
 }
 
 void
-encode_uri_string(struct string *string, unsigned char *name, int namelen,
+encode_uri_string(struct string *string, const unsigned char *name, int namelen,
 		  int convert_slashes)
 {
 	unsigned char n[4];
-	unsigned char *end;
+	const unsigned char *end;
 
 	n[0] = '%';
 	n[3] = '\0';

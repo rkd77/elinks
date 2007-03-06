@@ -130,7 +130,7 @@ static inline unsigned char *
 check_encoding_type(unsigned char *extension)
 {
 	enum stream_encoding encoding = guess_encoding(extension);
-	unsigned char **extension_list;
+	const unsigned char *const *extension_list;
 	unsigned char *last_extension = strrchr(extension, '.');
 
 	if (encoding == ENCODING_NONE || !last_extension)

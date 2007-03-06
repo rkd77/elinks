@@ -1391,5 +1391,7 @@ eat_kbd_repeat_count(struct session *ses)
 
 	ses->kbdprefix.repeat_count = 0;
 
+	/* Clear status bar when prefix is eaten (bug 930) */
+	print_screen_status(ses);
 	return count;
 }

@@ -278,7 +278,7 @@ int get_uri_port(struct uri *uri);
 /* Encode and add @namelen bytes from @name to @string. If @namelen is -1 it is
  * set to strlen(@name). If the boolean convert_slashes is zero '/'-chars will
  * not be encoded. */
-void encode_uri_string(struct string *string, unsigned char *name, int namelen,
+void encode_uri_string(struct string *string, const unsigned char *name, int namelen,
 		       int convert_slashes);
 
 /* special version for Windows directory listing */

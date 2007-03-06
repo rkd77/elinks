@@ -73,7 +73,7 @@ sig_tstp(struct terminal *term)
 #ifdef SIGSTOP
 	pid_t pid = getpid();
 
-	block_itrm(0);
+	block_itrm();
 #if defined (SIGCONT) && defined(SIGTTOU)
 	if (!fork()) {
 		sleep(1);
@@ -95,7 +95,7 @@ sig_tstp(struct terminal *term)
 static void
 sig_cont(struct terminal *term)
 {
-	if (!unblock_itrm(0)) resize_terminal();
+	if (!unblock_itrm()) resize_terminal();
 }
 #endif
 

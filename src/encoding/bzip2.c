@@ -20,29 +20,52 @@
 #include "encoding/encoding.h"
 #include "util/memory.h"
 
+/* How many bytes of compressed data to read before decompressing.
+ * This is currently defined as BZ_MAX_UNUSED to make the behaviour
+ * similar to BZ2_bzRead; but other values would work too.  */
 #define ELINKS_BZ_BUFFER_LENGTH BZ_MAX_UNUSED
 
 struct bz2_enc_data {
 	bz_stream fbz_stream;
+
+	/* The file descriptor from which we read.  */
 	int fdread;
-	int last_read; /* If err after last bzDecompress was BZ_STREAM_END.. */
-	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH]; /* must be the last */
+
+	/* Initially 0; set to 1 when BZ2_bzDecompress indicates
+	 * BZ_STREAM_END, which means it has found the bzip2-specific
+	 * end-of-stream marker and all data has been decompressed.
+	 * Then we neither read from the file nor call BZ2_bzDecompress
+	 * any more.  */
+	int last_read;
+
+	/* A buffer for data that has been read from the file but not
+	 * yet decompressed.  fbz_stream.next_in and fbz_stream.avail_in
+	 * refer to this buffer.  */
+	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
 
 static int
 bzip2_open(struct stream_encoded *stream, int fd)
 {
+	/* A zero-initialized bz_stream.  The compiler ensures that all
+	 * pointer members in it are null.  (Can't do this with memset
+	 * because C99 does not require all-bits-zero to be a null
+	 * pointer.)  */
+	static const bz_stream null_bz_stream = {0};
+
 	struct bz2_enc_data *data = mem_alloc(sizeof(*data));
 	int err;
 
-	stream->data = 0;
+	stream->data = NULL;
 	if (!data) {
 		return -1;
 	}
-	memset(data, 0, sizeof(struct bz2_enc_data) - ELINKS_BZ_BUFFER_LENGTH);
 
-	data->last_read = 0;
+	/* Initialize all members of *data, except data->buf[], which
+	 * will be initialized on demand by bzip2_read.  */
+	copy_struct(&data->fbz_stream, &null_bz_stream);
 	data->fdread = fd;
+	data->last_read = 0;
 	
 	err = BZ2_bzDecompressInit(&data->fbz_stream, 0, 0);
 	if (err != BZ_OK) {
@@ -97,16 +120,9 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 			return -1;
 		}
 	} while (data->fbz_stream.avail_out > 0);
-	
-	return len - data->fbz_stream.avail_out;
-}
 
-static unsigned char *
-bzip2_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	     int *new_len)
-{
-	*new_len = len;
-	return data;
+	assert(len - data->fbz_stream.avail_out == data->fbz_stream.next_out - (char *) buf);
+	return len - data->fbz_stream.avail_out;
 }
 
 #ifdef CONFIG_SMALL
@@ -187,14 +203,13 @@ bzip2_close(struct stream_encoded *stream)
 	}
 }
 
-static unsigned char *bzip2_extensions[] = { ".bz2", ".tbz", NULL };
+static const unsigned char *const bzip2_extensions[] = { ".bz2", ".tbz", NULL };
 
-struct decoding_backend bzip2_decoding_backend = {
+const struct decoding_backend bzip2_decoding_backend = {
 	"bzip2",
 	bzip2_extensions,
 	bzip2_open,
 	bzip2_read,
-	bzip2_decode,
 	bzip2_decode_buffer,
 	bzip2_close,
 };

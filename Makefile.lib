@@ -66,8 +66,10 @@ quiet_cmd_installdata = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)
 quiet_cmd_installprog = "     [$(INSTALL_COLOR)INSTALL$(END_COLOR)]   $(RELPATH)$(2) -> $(3)"
       cmd_installprog = $(INSTALL_PROGRAM) $(2) $(3)
 
-quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(2)"
-      cmd_uninstall = $(RM) $(3)/$(2)
+# $(INSTALL_DATA) in cmd_installdata doesn't use the directory part of
+# $(2) when it forms the output file name, so don't use it here either.
+quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(notdir $(2))"
+      cmd_uninstall = $(RM) $(3)/$(notdir $(2))
 
 #############################################################################
 # Special handling of conditional variables

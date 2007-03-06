@@ -272,7 +272,7 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 }
 
 struct string *
-add_html_to_string(struct string *string, unsigned char *src, int len)
+add_html_to_string(struct string *string, const unsigned char *src, int len)
 {
 
 #define isalphanum(q) (isalnum(q) || (q) == '-' || (q) == '_')

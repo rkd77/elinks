@@ -118,8 +118,8 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	   void *init_string, int init_len, int remote);
 
 void itrm_queue_event(struct itrm *itrm, unsigned char *data, int len);
-void block_itrm(int);
-int unblock_itrm(int);
+void block_itrm(void);
+int unblock_itrm(void);
 void free_all_itrms(void);
 void resize_terminal(void);
 void dispatch_special(unsigned char *);

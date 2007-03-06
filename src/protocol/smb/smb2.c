@@ -1,9 +1,5 @@
 /* SMB protocol implementation */
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE /* Needed for asprintf() */
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -39,7 +35,6 @@
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/memory.h"
-#include "util/snprintf.h"
 #include "util/string.h"
 
 /* These options are not used. */
@@ -67,6 +62,12 @@ struct module smb_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
+/* The child process generally does not bother to free the memory it
+ * allocates.  When the process exits, the operating system will free
+ * the memory anyway.  There is no point in changing this, because the
+ * child process also inherits memory allocations from the parent
+ * process, and it would be very cumbersome to free those.  */
+
 static void
 smb_error(int error)
 {
@@ -89,8 +90,8 @@ compare(const void *a, const void *b)
 }
 
 static void
-smb_add_link(struct string *string, struct smbc_dirent *entry,
-	unsigned char *text, unsigned char dircolor[])
+smb_add_link(struct string *string, const struct smbc_dirent *entry,
+	const unsigned char *text, const unsigned char dircolor[])
 {
 	struct string uri_string;
 
@@ -98,7 +99,7 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 	encode_uri_string(&uri_string, entry->name, entry->namelen, 0);
 
 	add_to_string(string, "<a href=\"");
-	add_string_to_string(string, &uri_string);
+	add_html_to_string(string, uri_string.source, uri_string.length);
 	done_string(&uri_string);
 
 	add_to_string(string, "\">");
@@ -107,7 +108,7 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 		add_to_string(string, dircolor);
 		add_to_string(string, "\"><b>");
 	}
-	add_bytes_to_string(string, entry->name, entry->namelen);
+	add_html_to_string(string, entry->name, entry->namelen);
 	if (*dircolor) {
 		add_to_string(string, "</b></font>");
 	}
@@ -116,9 +117,9 @@ smb_add_link(struct string *string, struct smbc_dirent *entry,
 }
 
 static void
-display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
+display_entry(const struct smbc_dirent *entry, const unsigned char dircolor[])
 {
-	static unsigned char zero = '\0';
+	static const unsigned char zero = '\0';
 	struct string string;
 
 	if (!init_string(&string)) return;
@@ -130,20 +131,20 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 	case SMBC_SERVER:
 		smb_add_link(&string, entry, " SERVER ", dircolor);
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_FILE_SHARE:
 		smb_add_link(&string, entry, " FILE SHARE ", dircolor);
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_PRINTER_SHARE:
-		add_bytes_to_string(&string, entry->name, entry->namelen);
+		add_html_to_string(&string, entry->name, entry->namelen);
 		add_to_string(&string, " PRINTER ");
 		if (entry->comment) {
-			add_bytes_to_string(&string, entry->comment, entry->commentlen);
+			add_html_to_string(&string, entry->comment, entry->commentlen);
 		}
 		break;
 	case SMBC_COMMS_SHARE:
@@ -172,7 +173,7 @@ display_entry(struct smbc_dirent *entry, unsigned char dircolor[])
 }
 
 static void
-sort_and_display_entries(int dir, unsigned char dircolor[])
+sort_and_display_entries(int dir, const unsigned char dircolor[])
 {
 	struct smbc_dirent *fentry, **table = NULL;
 	int size = 0;
@@ -180,30 +181,62 @@ sort_and_display_entries(int dir, unsigned char dircolor[])
 
 	while ((fentry = smbc_readdir(dir))) {
 		struct smbc_dirent **new_table, *new_entry;
-		int length = fentry->dirlen;
+		unsigned int commentlen = fentry->commentlen;
+		unsigned int namelen = fentry->namelen;
 
 		if (!strcmp(fentry->name, "."))
 			continue;
 
-		new_entry = mem_alloc(length);
-		if (fentry->comment) {
-			char *comment = mem_alloc(fentry->commentlen + 1);
+		/* In libsmbclient 3.0.10, @smbc_dirent.namelen and
+		 * @smbc_dirent.commentlen include the null characters
+		 * (tested with GDB).  In libsmbclient 3.0.24, they
+		 * don't.  This is related to Samba bug 3030.  Adjust
+		 * the lengths to exclude the null characters, so that
+		 * other code need not care.
+		 *
+		 * Make all changes to local copies rather than
+		 * directly to *@fentry, so that there's no chance of
+		 * ELinks messing up whatever mechanism libsmbclient
+		 * will use to free @fentry.  */
+		if (commentlen > 0 && fentry->comment[commentlen - 1] == '\0')
+			commentlen--;
+		if (namelen > 0 && fentry->name[namelen - 1] == '\0')
+			namelen--;
 
-			if (comment) memcpy(comment, fentry->comment, fentry->commentlen + 1);
-			fentry->comment = comment;
-		}
+		/* libsmbclient seems to place the struct smbc_dirent,
+		 * the name string, and the comment string all in one
+		 * block of memory, which then is smbc_dirent.dirlen
+		 * bytes long.  This has however not been really
+		 * documented, so ELinks should not assume copying
+		 * fentry->dirlen bytes will copy the comment too.
+		 * Yet, it would be wasteful to copy both dirlen bytes
+		 * and then the comment string separately.  What we do
+		 * here is ignore fentry->dirlen and recompute the
+		 * size based on namelen.  */
+		new_entry = (struct smbc_dirent *)
+			memacpy((const unsigned char *) fentry,
+				offsetof(struct smbc_dirent, name)
+				+ namelen); /* memacpy appends '\0' */
 		if (!new_entry)
 			continue;
+		new_entry->namelen = namelen;
+		new_entry->commentlen = commentlen;
+		if (fentry->comment)
+			new_entry->comment = memacpy(fentry->comment, commentlen);
+		if (!new_entry->comment)
+			new_entry->commentlen = 0;
+
 		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
 		if (!new_table)
 			continue;
-		memcpy(new_entry, fentry, length);
 		table = new_table;
 		table[size] = new_entry;
 		size++;
 	}
-	qsort(table, size, sizeof(*table),
-	 (int (*)(const void *, const void *)) compare);
+	/* If size==0, then table==NULL.  According to ISO/IEC 9899:1999
+	 * 7.20.5p1, the NULL must not be given to qsort.  */
+	if (size > 0)
+		qsort(table, size, sizeof(*table), compare);
 
 	for (i = 0; i < size; i++) {
 		display_entry(table[i], dircolor);
@@ -227,7 +260,7 @@ smb_directory(int dir, struct uri *uri)
 
 	if (get_opt_bool("document.browse.links.color_dirs")) {
 		color_to_string(get_opt_color("document.colors.dirs"),
-				(unsigned char *) &dircolor);
+				dircolor);
 	}
 
 	sort_and_display_entries(dir, dircolor);
@@ -283,12 +316,21 @@ do_smb(struct connection *conn)
 	if (dir >= 0) {
 		smb_directory(dir, conn->uri);
 	} else {
+		const int errno_from_opendir = errno;
 		char buf[READ_SIZE];
 		struct stat sb;
 		int r, res;
 		int file = smbc_open(url, O_RDONLY, 0);
 
 		if (file < 0) {
+			/* If we're opening the list of shares without
+			 * proper authentication, then smbc_opendir
+			 * fails with EACCES and smbc_open fails with
+			 * ENOENT.  In this case, return the EACCES so
+			 * that the parent ELinks process will prompt
+			 * for credentials.  */
+			if (errno == ENOENT && errno_from_opendir == EACCES)
+				errno = errno_from_opendir;
 			smb_error(errno);
 		}
 
@@ -332,6 +374,15 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
+	/* There should be free space in the buffer, because
+	 * @alloc_read_buffer allocated several kibibytes, and the
+	 * child process wrote only an integer and a newline to the
+	 * pipe.  */
+	assert(rb->freespace >= 1);
+	if_assert_failed {
+		abort_connection(conn, S_INTERNAL);
+		return;
+	}
 	rb->data[len] = '\0';
 	error = atoi(rb->data);
 	kill_buffer_data(rb, len);
@@ -380,8 +431,13 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 
 	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
-		close(socket->fd);
-		close(conn->data_socket->fd);
+		/* Even though these are pipes rather than real
+		 * sockets, call close_socket instead of close, to
+		 * ensure that abort_connection won't try to close the
+		 * file descriptors again.  (Could we skip the calls
+		 * and assume abort_connection will do them?)  */
+		close_socket(socket);
+		close_socket(conn->data_socket);
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
@@ -399,7 +455,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 #ifdef HAVE_ATOLL
 					conn->est_length = (off_t)atoll(ctype);
 #else
-					conn->est_length = (off_t)atoi(ctype);
+					conn->est_length = (off_t)atol(ctype);
 #endif
 					mem_free(ctype);
 
@@ -418,8 +474,8 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 
 	buf = alloc_read_buffer(conn->data_socket);
 	if (!buf) {
-		close(socket->fd);
-		close(conn->data_socket->fd);
+		close_socket(socket);
+		close_socket(conn->data_socket);
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
@@ -471,6 +527,17 @@ smb_protocol_handler(struct connection *conn)
 		close(smb_pipe[0]);
 		close(header_pipe[0]);
 
+		/* There may be outgoing data in stdio buffers
+		 * inherited from the parent process.  The parent
+		 * process is going to write this data, so the child
+		 * process must not do that.  Closing the file
+		 * descriptors ensures this.
+		 *
+		 * FIXME: If something opens more files and gets the
+		 * same file descriptors and does not close them
+		 * before exit(), then stdio may attempt to write the
+		 * buffers to the wrong files.  This might happen for
+		 * example if libsmbclient calls syslog().  */
 		close_all_non_term_fd();
 		do_smb(conn);
 
@@ -485,8 +552,8 @@ smb_protocol_handler(struct connection *conn)
 		close(header_pipe[1]);
 		buf2 = alloc_read_buffer(conn->socket);
 		if (!buf2) {
-			close(smb_pipe[0]);
-			close(header_pipe[0]);
+			close_socket(conn->data_socket);
+			close_socket(conn->socket);
 			abort_connection(conn, S_OUT_OF_MEM);
 			return;
 		}

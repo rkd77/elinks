@@ -350,13 +350,13 @@ unblock_itrm_x(void *h)
 {
 	close_handle(h);
 	if (!ditrm) return;
-	unblock_itrm(0);
+	unblock_itrm();
 	resize_terminal();
 }
 
 
 int
-unblock_itrm(int fd)
+unblock_itrm(void)
 {
 	if (!ditrm) return -1;
 
@@ -375,7 +375,7 @@ unblock_itrm(int fd)
 
 
 void
-block_itrm(int fd)
+block_itrm(void)
 {
 	if (!ditrm) return;
 
@@ -591,7 +591,7 @@ has_nul_byte:
 		memcpy(param + 1, path.source, path_len + 1);
 		memcpy(param + 1 + path_len + 1, delete.source, del_len + 1);
 
-		if (fg == 1) block_itrm(itrm->in.ctl);
+		if (fg == 1) block_itrm();
 
 		blockh = start_thread((void (*)(void *, int)) exec_thread,
 				      param, param_len);
@@ -599,7 +599,7 @@ has_nul_byte:
 
 		if (blockh == -1) {
 			if (fg == 1)
-				unblock_itrm(itrm->in.ctl);
+				unblock_itrm();
 
 			goto nasty_thing;
 		}
