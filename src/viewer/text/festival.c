@@ -54,6 +54,8 @@ read_from_festival(struct fest *fest)
 #define FLITE_SYSTEM	1
 #define ESPEAK_SYSTEM	2
 
+#define MAX_LINE_LENGTH	240
+
 static void
 write_to_festival(struct fest *fest)
 {
@@ -77,7 +79,7 @@ write_to_festival(struct fest *fest)
 		return;
 
 	len = doc->data[fest->line].length;
-	int_upper_bound(&len, 512);
+	int_upper_bound(&len, MAX_LINE_LENGTH);
 
 	if (!init_string(&buf))
 		return;
@@ -200,6 +202,7 @@ init_festival(void)
 #undef FESTIVAL_SYSTEM
 #undef FLITE_SYSTEM
 #undef ESPEAK_SYSTEM
+#undef MAX_LINE_LENGTH
 
 void
 run_festival(struct session *ses, struct document_view *doc_view)
