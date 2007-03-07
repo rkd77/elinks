@@ -50,10 +50,16 @@ read_from_festival(struct fest *fest)
 		     NULL, NULL, fest);
 }
 
+/* These numbers must match the documentation of the
+ * "document.speech.system" option.  */
 #define FESTIVAL_SYSTEM	0
 #define FLITE_SYSTEM	1
 #define ESPEAK_SYSTEM	2
 
+/* How many character cells to speak from each line.  Because
+ * write_to_festival currently cannot recover from short writes, this
+ * must be set so low that the generated string cannot become more
+ * than PIPE_BUF bytes long.  SUSv2 says PIPE_BUF >= 512.  */
 #define MAX_LINE_LENGTH	240
 
 static void
@@ -86,6 +92,8 @@ write_to_festival(struct fest *fest)
 
 	data = doc->data[fest->line].chars;
 	if (festival.speech_system == FESTIVAL_SYSTEM) {
+		/* The string generated here will be at most
+		 * 10+MAX_LINE_LENGTH*2+2+1 bytes long.  */ 
 		add_to_string(&buf, "(SayText \"");
 		/* UTF-8 not supported yet. Does festival support UTF-8? */
 		for (i = 0; i < len; i++) {
@@ -105,8 +113,29 @@ write_to_festival(struct fest *fest)
 	}
 	add_char_to_string(&buf, '\n');
 
+	/* Cannot allow a short write here.  It would probably cause
+	 * an unpaired quote character to be sent to festival,
+	 * enabling a command injection attack.  If buf.length <=
+	 * PIPE_BUF, then the write will occur either completely or
+	 * not at all.  Compare to _POSIX_PIPE_BUF instead, to ensure
+	 * portability to systems with an unusually low PIPE_BUF.
+	 * If this assertion fails, that means MAX_LINE_LENGTH was
+	 * set too high.  */ 
+	assert(buf.length <= _POSIX_PIPE_BUF);
+	if_assert_failed { buf.length = 0; }
 	w = safe_write(fest->out, buf.source, buf.length);
 	if (w >= 0) {
+		assert(w == buf.length);
+		if_assert_failed {
+			/* The input parser of the festival process is
+			 * now in an unknown state.  */
+			clear_handlers(fest->in);
+			close(fest->in);
+			fest->in = -1;
+			clear_handlers(fest->out);
+			close(fest->out);
+			fest->out = -1;
+		}
 		if (fest->line >= doc_view->vs->y + doc_view->box.height) {
 			move_page_down(doc_view->session, doc_view);
 			refresh_view(doc_view->session, doc_view, 0);
