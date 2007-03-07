@@ -35,6 +35,7 @@
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
+#include "viewer/text/festival.h"
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
@@ -473,6 +474,9 @@ render_document_frames(struct session *ses, int no_cache)
 
 		detach_formatted(doc_view);
 		del_from_list(doc_view);
+#ifdef HAVE_FORK
+		stop_festival(doc_view);
+#endif		
 		mem_free(doc_view);
 		doc_view = prev_doc_view;
 	}

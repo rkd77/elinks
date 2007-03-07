@@ -22,7 +22,6 @@
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/lists.h"
-#include "viewer/text/festival.h"
 #include "viewer/text/link.h"
 #include "viewer/text/view.h"
 
@@ -174,10 +173,6 @@ really_close_tab(struct session *ses)
 {
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
-
-#ifdef HAVE_FORK
-	stop_festival(ses->doc_view);
-#endif
 
 	if (ses->tab == current_tab) {
 		int tabs_count = number_of_tabs(term);

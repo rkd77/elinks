@@ -47,6 +47,7 @@
 #include "util/string.h"
 #include "util/time.h"
 #include "viewer/text/draw.h"
+#include "viewer/text/festival.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/view.h"
@@ -1150,6 +1151,9 @@ destroy_session(struct session *ses)
 	free_files(ses);
 	if (ses->doc_view) {
 		detach_formatted(ses->doc_view);
+#ifdef HAVE_FORK
+		stop_festival(ses->doc_view);
+#endif
 		mem_free(ses->doc_view);
 	}
 

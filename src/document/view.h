@@ -9,6 +9,8 @@
 struct document;
 struct view_state;
 
+
+/* Remember to call stop_festival before freeing document_view. --witekfl */
 struct document_view {
 	LIST_HEAD(struct document_view);
 
