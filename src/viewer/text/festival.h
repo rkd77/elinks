@@ -17,6 +17,7 @@ struct fest {
 extern struct fest festival;
 
 void run_festival(struct session *, struct document_view *);
+void stop_festival(struct document_view *);
 #endif
 
 #endif

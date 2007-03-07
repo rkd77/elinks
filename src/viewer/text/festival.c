@@ -61,11 +61,18 @@ write_to_festival(struct fest *fest)
 	int i, w;
 	int len;
 	struct document_view *doc_view = fest->doc_view;
-	struct document *doc = doc_view->document;
+	struct document *doc = NULL;
 	struct screen_char *data;
 
-	if (fest->line >= doc->height)
+	if (!doc_view) {
 		fest->running = 0;
+	} else {
+		doc = doc_view->document;
+		assert(doc);
+		if (fest->line >= doc->height)
+			fest->running = 0;
+	}
+
 	if (!fest->running)
 		return;
 
@@ -208,4 +215,12 @@ run_festival(struct session *ses, struct document_view *doc_view)
 		write_to_festival(&festival);
 	}
 }
+
+void
+stop_festival(struct document_view *doc_view)
+{
+	if (festival.doc_view == doc_view)
+		festival.doc_view = NULL;
+}
+
 #endif
