@@ -28,6 +28,7 @@
 #include "main/module.h"
 #include "main/select.h"
 #include "network/connection.h"
+#include "network/progress.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "protocol/auth/auth.h"
@@ -317,6 +318,10 @@ do_fsp(struct connection *conn)
 		fprintf(stderr, "%" OFF_T_FORMAT "\n", (off_t)(sb.st_size));
 		fclose(stderr);
 
+		if (conn->progress->start > 0) {
+			fsp_fseek(file, (long)conn->progress->start, SEEK_SET);
+		}
+
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
 			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
 				break;
@@ -407,7 +412,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
 	struct read_buffer *buf;
-	int error = 0;
+	int type_of_data = 0;
 
 	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
@@ -428,7 +433,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 
 		if (ctype && *ctype) {
 			if (!strcmp(ctype, "text/x-error")) {
-				error = 1;
+				type_of_data = 1;
 				mem_free(ctype);
 			} else {
 				if (ctype[0] >= '0' && ctype[0] <= '9') {
@@ -444,6 +449,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 						abort_connection(conn, S_OK);
 						return;
 					}
+					type_of_data = 2;
 				}
 				else mem_free_set(&conn->cached->content_type, ctype);
 			}
@@ -460,10 +466,17 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
-	if (error) {
+	switch (type_of_data) {
+	case 1:
 		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
 		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_error);
-	} else {
+		break;
+	case 2:
+		if (conn->progress->start > 0) {
+			conn->from = conn->progress->seek = conn->progress->start;
+		}
+		/* no break here! */
+	default:
 		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
 	}
 }
@@ -486,8 +499,6 @@ fsp_protocol_handler(struct connection *conn)
 		abort_connection(conn, -s_errno);
 		return;
 	}
-	conn->from = 0;
-	conn->unrestartable = 1;
 	find_auth(conn->uri); /* remember username and password */
 
 	cpid = fork();
