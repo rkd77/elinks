@@ -755,9 +755,9 @@ static struct option_info config_options_info[] = {
 		"speech", 0,
 		N_("Speech.")),
 
-	INIT_OPT_INT("document.speech", N_("Default speech system"),
+	INIT_OPT_INT("document.speech", N_("The speech system"),
 		"system", 0, 0, 2, 0,
-		N_("Default speech system:\n"
+		N_("The speech system used to read out documents:\n"
 		"0 is festival\n"
 		"1 is flite\n"
 		"2 is espeak")),
