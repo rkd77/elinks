@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-03 22:07+0100\n"
-"PO-Revision-Date: 2007-03-03 22:09+0100\n"
+"POT-Creation-Date: 2007-03-10 13:18+0100\n"
+"PO-Revision-Date: 2007-03-10 13:19+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
 #: src/scripting/lua/core.c:471 src/scripting/python/dialogs.c:86
-#: src/session/session.c:807 src/viewer/text/search.c:1666
+#: src/session/session.c:807 src/viewer/text/search.c:1669
 msgid "~OK"
 msgstr "~OK"
 
@@ -134,13 +134,13 @@ msgstr "~Oui"
 msgid "~No"
 msgstr "~Non"
 
-#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1085
-#: src/viewer/text/search.c:1093 src/viewer/text/search.c:1109
-#: src/viewer/text/search.c:1685
+#: src/bfu/hierbox.c:939 src/bfu/hierbox.c:970 src/viewer/text/search.c:1088
+#: src/viewer/text/search.c:1096 src/viewer/text/search.c:1112
+#: src/viewer/text/search.c:1688
 msgid "Search"
 msgstr "Chercher"
 
-#: src/bfu/hierbox.c:941 src/viewer/text/search.c:1086
+#: src/bfu/hierbox.c:941 src/viewer/text/search.c:1089
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Chaîne recherchée '%s' introuvable"
@@ -180,7 +180,7 @@ msgstr "Chaîne vide non autorisée"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
 #: src/session/download.c:637 src/session/download.c:1243
-#: src/viewer/text/search.c:1667
+#: src/viewer/text/search.c:1670
 msgid "~Cancel"
 msgstr "~Annuler"
 
@@ -1851,8 +1851,8 @@ msgstr "Description"
 
 #: src/config/dialogs.c:288 src/protocol/bittorrent/dialogs.c:599
 #: src/protocol/protocol.c:230 src/session/session.c:285
-#: src/session/session.c:970 src/viewer/text/textarea.c:571
-#: src/viewer/text/textarea.c:578
+#: src/session/session.c:970 src/viewer/text/textarea.c:590
+#: src/viewer/text/textarea.c:597
 msgid "Error"
 msgstr "Erreur"
 
@@ -7559,19 +7559,19 @@ msgid "Finger"
 msgstr "Finger"
 
 #. name:
-#: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp.c:45 src/protocol/fsp/fsp.c:57
 msgid "FSP"
 msgstr "FSP"
 
-#: src/protocol/fsp/fsp.c:46
+#: src/protocol/fsp/fsp.c:47
 msgid "FSP specific options."
 msgstr "Options du protocole FSP."
 
-#: src/protocol/fsp/fsp.c:48
+#: src/protocol/fsp/fsp.c:49
 msgid "Sort entries"
 msgstr "Trier les entrées"
 
-#: src/protocol/fsp/fsp.c:50
+#: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
 msgstr "Trier ou non les entrées des répertoires."
 
@@ -7648,7 +7648,7 @@ msgstr "Erreur HTTP %03d"
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested. However, the server did not send back any explanation of what\n"
-"  happenned, so it is unknown what went wrong. Please contact the web\n"
+"  happened, so it is unknown what went wrong. Please contact the web\n"
 "  server administrator about this, if you believe that this error should\n"
 "  not occur since it is not a nice behaviour from the web server at all\n"
 "  and indicates that there is some much deeper problem with the web server\n"
@@ -8065,39 +8065,49 @@ msgstr ""
 msgid "Default template"
 msgstr "Modèle par défaut"
 
-#: src/protocol/rewrite/rewrite.c:95
+#: src/protocol/rewrite/rewrite.c:96
+#, no-c-format
 msgid ""
 "Default URI template used when the string entered in\n"
 "the goto dialog does not appear to be a URI or a filename\n"
 "(i.e. contains no '.', ':' or '/' characters), and does\n"
 "not match any defined prefixes. Set the value to \"\" to\n"
-"disable use of the default template rewrite rule."
+"disable use of the default template rewrite rule.\n"
+"%c in the template means the current URL\n"
+"%s in the template means the whole string from the goto dialog\n"
+"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s\n"
+"%% in the template means '%'"
 msgstr ""
 "Modèle d'URI utilisé par défaut quand une chaîne entrée dans\n"
 "la dialogue \"Atteindre l'URL\" n'est ni une URI ni un fichier\n"
 "(par exemple, ne contient pas les caractères '.', ':' ou '/'),\n"
 "et ne correspond à aucun des préfixes définis. Mettre la valeur\n"
-"à \"\" pour désactiver l'usage de ce modèle."
+"à \"\" pour désactiver l'usage de ce modèle.\n"
+"%c signifie l'URL courante\n"
+"%s signifie la chaîne complète du dialogue 'Aller à'\n"
+"%0,%1,...,%9 signifient les 1ère, 2ème, ..., parties séparées par des "
+"espaces de %s\n"
+"%% signifie '%'"
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:367
+#: src/protocol/rewrite/rewrite.c:372
 msgid "URI rewrite"
 msgstr "Ré-écriture d'URI"
 
 #. name:
-#: src/protocol/smb/smb2.c:48 src/protocol/smb/smb2.c:61
+#: src/protocol/smb/smb2.c:43 src/protocol/smb/smb2.c:56
 msgid "SMB"
 msgstr "SMB"
 
-#: src/protocol/smb/smb2.c:50
+#: src/protocol/smb/smb2.c:45
 msgid "SAMBA specific options."
 msgstr "Options spécifiques de SAMBA."
 
-#: src/protocol/smb/smb2.c:52
+#: src/protocol/smb/smb2.c:47
 msgid "Credentials"
 msgstr "Authentification"
 
-#: src/protocol/smb/smb2.c:54
+#: src/protocol/smb/smb2.c:49
 msgid "Credentials file passed to smbclient via -A option."
 msgstr "Fichier d'authentification passé à smbclient via l'option -A."
 
@@ -8142,11 +8152,11 @@ msgstr ""
 "%s dans la chaîne insère le sujet (?subject=<this>)\n"
 "%u dans la chaîne insère l'URL complète"
 
-#: src/protocol/user.c:263
+#: src/protocol/user.c:276
 msgid "No program"
 msgstr "Aucun programme"
 
-#: src/protocol/user.c:265
+#: src/protocol/user.c:278
 #, c-format
 msgid "No program specified for protocol %s."
 msgstr "Aucun programme spécifié pour le protocole %s."
@@ -8295,7 +8305,7 @@ msgid "~Open"
 msgstr "~Ouvrir"
 
 #: src/session/session.c:757 src/session/session.c:776 src/session/task.c:270
-#: src/viewer/text/textarea.c:625
+#: src/viewer/text/textarea.c:644
 msgid "Warning"
 msgstr "Avertissement"
 
@@ -8683,83 +8693,83 @@ msgstr "Image"
 msgid "Usemap"
 msgstr "Usemap"
 
-#: src/viewer/text/search.c:1078
+#: src/viewer/text/search.c:1081
 msgid "Search hit top, continuing at bottom."
 msgstr "La recherche a atteint le haut du document, poursuite à partir du bas."
 
-#: src/viewer/text/search.c:1079
+#: src/viewer/text/search.c:1082
 msgid "Search hit bottom, continuing at top."
 msgstr "La recherche a atteint le bas du document, poursuite à partir du haut."
 
-#: src/viewer/text/search.c:1082
+#: src/viewer/text/search.c:1085
 msgid "No previous search"
 msgstr "Aucune clef de recherche"
 
-#: src/viewer/text/search.c:1094
+#: src/viewer/text/search.c:1097
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr "Ne peut compiler l'expression régulière '%s'"
 
-#: src/viewer/text/search.c:1137
+#: src/viewer/text/search.c:1140
 #, c-format
 msgid "No further matches for '%s'."
 msgstr "Aucune autre correspondance pour '%s'."
 
-#: src/viewer/text/search.c:1139
+#: src/viewer/text/search.c:1142
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr "Ne peut trouver un lien avec le texte '%s'."
 
-#: src/viewer/text/search.c:1141 src/viewer/text/search.c:1549
+#: src/viewer/text/search.c:1144 src/viewer/text/search.c:1552
 msgid "Typeahead"
 msgstr "Préfrappe"
 
-#: src/viewer/text/search.c:1551
+#: src/viewer/text/search.c:1554
 msgid "No links in current document"
 msgstr "Aucun lien dans le document courant"
 
-#: src/viewer/text/search.c:1629
+#: src/viewer/text/search.c:1632
 msgid "Search for text"
 msgstr "Recherche du texte"
 
-#: src/viewer/text/search.c:1660
+#: src/viewer/text/search.c:1663
 msgid "Normal search"
 msgstr "Plein texte"
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1664
 msgid "Regexp search"
 msgstr "Expression régulière"
 
-#: src/viewer/text/search.c:1662
+#: src/viewer/text/search.c:1665
 msgid "Extended regexp search"
 msgstr "Expression régulière étendue"
 
-#: src/viewer/text/search.c:1663
+#: src/viewer/text/search.c:1666
 msgid "Case sensitive"
 msgstr "Respecter la casse"
 
-#: src/viewer/text/search.c:1664
+#: src/viewer/text/search.c:1667
 msgid "Case insensitive"
 msgstr "Ignorer la casse"
 
-#: src/viewer/text/search.c:1688
+#: src/viewer/text/search.c:1691
 msgid "Search backward"
 msgstr "Chercher en arrière"
 
 #. name:
-#: src/viewer/text/search.c:1727
+#: src/viewer/text/search.c:1730
 msgid "Search History"
 msgstr "Historique des recherches"
 
-#: src/viewer/text/textarea.c:572
+#: src/viewer/text/textarea.c:591
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr "Vous ne pouvez utiliser un éditeur externe en mode anonyme."
 
-#: src/viewer/text/textarea.c:579
+#: src/viewer/text/textarea.c:598
 msgid "You can do this only on the master terminal"
 msgstr "Vous ne pouvez faire ça que dans le terminal maître"
 
-#: src/viewer/text/textarea.c:628
+#: src/viewer/text/textarea.c:647
 #, c-format
 msgid ""
 "You have exceeded the textarea's size limit: your input is %d bytes, but the "
