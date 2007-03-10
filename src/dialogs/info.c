@@ -131,8 +131,8 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 		N_("Keys"), ALIGN_LEFT,
 		keys.source,
 		info, 2,
-		N_("~OK"), NULL, B_ENTER | B_ESC,
-		N_("~Toggle display"), push_toggle_keys_display_button, B_ENTER);
+		MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC),
+		MSG_BOX_BUTTON(N_("~Toggle display"), push_toggle_keys_display_button, B_ENTER));
 }
 
 void

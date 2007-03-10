@@ -805,7 +805,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 			"Press ESC for menu. Documentation is available in "
 			"Help menu."),
 			ses, 1,
-			N_("~OK"), handler, B_ENTER | B_ESC);
+			MSG_BOX_BUTTON(N_("~OK"), handler, B_ENTER | B_ESC));
 
 		/* If there is no URI the goto dialog will pop up so there is
 		 * no need to call setup_session(). */

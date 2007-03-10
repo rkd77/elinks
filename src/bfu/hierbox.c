@@ -438,7 +438,7 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 		N_("Info"), ALIGN_LEFT,
 		msg,
 		context, 1,
-		N_("~OK"), done_listbox_context, B_ESC | B_ENTER);
+		MSG_BOX_BUTTON(N_("~OK"), done_listbox_context, B_ESC | B_ENTER));
 
 	return EVENT_PROCESSED;
 }
@@ -751,8 +751,8 @@ query_delete_selected_item(void *context_)
 			listbox_message(delete_folder_title), ALIGN_CENTER,
 			msg_text(term, listbox_message(delete_folder), text),
 			context, 2,
-			N_("~Yes"), push_ok_delete_button, B_ENTER,
-			N_("~No"), done_listbox_context, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), done_listbox_context, B_ESC));
 	} else {
 		unsigned char *msg = ops->get_info(item, term);
 
@@ -763,13 +763,19 @@ query_delete_selected_item(void *context_)
 			msg_text(term, listbox_message(delete_item),
 			         text, empty_string_or_(msg)),
 			context, 2,
-			N_("~Yes"), push_ok_delete_button, B_ENTER,
-			N_("~No"), done_listbox_context, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), done_listbox_context, B_ESC));
 		mem_free_if(msg);
 	}
 	mem_free(text);
 
 	return EVENT_PROCESSED;
+}
+
+static void
+dont_delete_marked_items(void *const context_)
+{
+	query_delete_selected_item(context_);
 }
 
 widget_handler_status_T
@@ -805,8 +811,8 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		listbox_message(delete_marked_items_title), ALIGN_CENTER,
 		listbox_message(delete_marked_items),
 		context, 2,
-		N_("~Yes"), push_ok_delete_button, B_ENTER,
-		N_("~No"), query_delete_selected_item, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), dont_delete_marked_items, B_ESC));
 
 	return EVENT_PROCESSED;
 }
@@ -867,8 +873,8 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 		listbox_message(clear_all_items_title), ALIGN_CENTER,
 		listbox_message(clear_all_items),
 		context, 2,
-		N_("~Yes"), do_clear_browser, B_ENTER,
-		N_("~No"), NULL, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), do_clear_browser, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 
 	return EVENT_PROCESSED;
 }

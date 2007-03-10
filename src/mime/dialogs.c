@@ -67,8 +67,8 @@ menu_del_ext(struct terminal *term, void *fcp, void *xxx2)
 		msg_text(term, N_("Delete extension %s -> %s?"),
 			 extension, opt->value.string),
 		extension, 2,
-		N_("~Yes"), really_del_ext, B_ENTER,
-		N_("~No"), NULL, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), really_del_ext, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 }
 
 

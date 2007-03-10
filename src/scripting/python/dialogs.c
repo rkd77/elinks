@@ -83,7 +83,7 @@ python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 		       title, ALIGN_LEFT,
 		       text,
 		       NULL, 1,
-		       N_("~OK"), NULL, B_ENTER | B_ESC);
+		       MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC));
 
 	Py_INCREF(Py_None);
 	return Py_None;

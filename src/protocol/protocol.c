@@ -233,7 +233,7 @@ generic_external_protocol_handler(struct session *ses, struct uri *uri)
 				   "%s protocol support"),
 				protocol_backends[uri->protocol].name),
 			ses, 1,
-			N_("~OK"), NULL, B_ENTER | B_ESC);
+			MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC));
 		return;
 	}
 
