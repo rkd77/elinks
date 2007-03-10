@@ -16,9 +16,13 @@
 
 #include "document/document.h"
 #include "document/view.h"
+#include "intl/charsets.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "protocol/common.h"
+#include "session/session.h"
+#include "terminal/terminal.h"
+#include "terminal/window.h"
 #include "util/box.h"
 #include "util/string.h"
 #include "viewer/action.h"
@@ -66,8 +70,7 @@ static void
 write_to_festival(struct fest *fest)
 {
 	struct string buf;
-	int i, w;
-	int len;
+	int i, w, len;
 	struct document_view *doc_view = fest->doc_view;
 	struct document *doc = NULL;
 	struct screen_char *data;
@@ -91,11 +94,16 @@ write_to_festival(struct fest *fest)
 		return;
 
 	data = doc->data[fest->line].chars;
-	if (festival.speech_system == FESTIVAL_SYSTEM) {
+
+	/* The terminal codepage is used for the speech output. */
+#ifdef CONFIG_UTF8
+	if (!doc_view->session->tab->term->utf8)
+#endif
+	if (fest->speech_system == FESTIVAL_SYSTEM) {
 		/* The string generated here will be at most
 		 * 10+MAX_LINE_LENGTH*2+2+1 bytes long.  */ 
 		add_to_string(&buf, "(SayText \"");
-		/* UTF-8 not supported yet. Does festival support UTF-8? */
+
 		for (i = 0; i < len; i++) {
 			unsigned char ch = (unsigned char)data[i].data;
 
@@ -111,8 +119,39 @@ write_to_festival(struct fest *fest)
 			add_char_to_string(&buf, ch);
 		}
 	}
-	add_char_to_string(&buf, '\n');
+#ifdef CONFIG_UTF8
+	else {
+		if (fest->speech_system == FESTIVAL_SYSTEM) {
+			add_to_string(&buf, "(SayText \"");
+			for (i = 0; i < len; i++) {
+				unsigned char *text = encode_utf8(data[i].data);
+				int old_len = buf.length;
 
+				if (text[0] == '"' || text[0] == '\\')
+					add_char_to_string(&buf, '\\');
+				add_to_string(&buf, text);
+				if (buf.length > PIPE_BUF - 3) {
+					buf.length = old_len;
+					break;
+				}
+			}
+			add_to_string(&buf, "\")");
+		} else {
+			for (i = 0; i < len; i++) {
+				unsigned char *text = encode_utf8(data[i].data);
+				int old_len = buf.length;
+
+				add_to_string(&buf, text);
+				if (buf.length > PIPE_BUF - 1) {
+					buf.length = old_len;
+					break;
+				}
+			}
+		}
+	}
+#endif
+	add_char_to_string(&buf, '\n');
+#if 0
 	/* Cannot allow a short write here.  It would probably cause
 	 * an unpaired quote character to be sent to festival,
 	 * enabling a command injection attack.  If buf.length <=
@@ -120,9 +159,11 @@ write_to_festival(struct fest *fest)
 	 * not at all.  Compare to _POSIX_PIPE_BUF instead, to ensure
 	 * portability to systems with an unusually low PIPE_BUF.
 	 * If this assertion fails, that means MAX_LINE_LENGTH was
-	 * set too high.  */ 
+	 * set too high.  */
 	assert(buf.length <= _POSIX_PIPE_BUF);
 	if_assert_failed { buf.length = 0; }
+#endif
+
 	w = safe_write(fest->out, buf.source, buf.length);
 	if (w >= 0) {
 		assert(w == buf.length);
@@ -136,6 +177,7 @@ write_to_festival(struct fest *fest)
 			close(fest->out);
 			fest->out = -1;
 		}
+
 		if (fest->line >= doc_view->vs->y + doc_view->box.height) {
 			move_page_down(doc_view->session, doc_view);
 			refresh_view(doc_view->session, doc_view, 0);
@@ -204,10 +246,10 @@ init_festival(void)
 			break;
 		}
 		do {
-			char line[1024];
+			char line[2048];
 			FILE *out;
 
-			fgets(line, 1024, stdin);
+			fgets(line, 2048, stdin);
 			out = popen(program, "w");
 			if (out) {
 				fputs(line, out);
