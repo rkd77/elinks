@@ -24,7 +24,6 @@ void free_history_lists(void);
 
 void query_file(struct session *, struct uri *, void *, void (*)(void *, unsigned char *), void (*)(void *), int);
 
-void really_exit_prog(struct session *ses);
 void query_exit(struct session *ses);
 void exit_prog(struct session *ses, int query);
 

@@ -50,6 +50,18 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 			     _(cookie->secure ? N_("yes") : N_("no"), term));
 }
 
+static void
+accept_cookie_in_msg_box(void *cookie_)
+{
+	accept_cookie((struct cookie *) cookie_);
+}
+
+static void
+reject_cookie_in_msg_box(void *cookie_)
+{
+	done_cookie((struct cookie *) cookie_);
+}
+
 /* TODO: Store cookie in data arg. --jonas*/
 void
 accept_cookie_dialog(struct session *ses, void *data)
@@ -78,8 +90,8 @@ accept_cookie_dialog(struct session *ses, void *data)
 		N_("Accept cookie?"), ALIGN_LEFT,
 		string.source,
 		cookie, 2,
-		N_("~Accept"), accept_cookie, B_ENTER,
-		N_("~Reject"), done_cookie, B_ESC);
+		MSG_BOX_BUTTON(N_("~Accept"), accept_cookie_in_msg_box, B_ENTER),
+		MSG_BOX_BUTTON(N_("~Reject"), reject_cookie_in_msg_box, B_ESC));
 }
 
 

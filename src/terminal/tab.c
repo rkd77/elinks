@@ -169,8 +169,9 @@ switch_current_tab(struct session *ses, int direction)
 }
 
 static void
-really_close_tab(struct session *ses)
+really_close_tab(void *ses_)
 {
+	struct session *ses = ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
 
@@ -203,13 +204,14 @@ close_tab(struct terminal *term, struct session *ses)
 		N_("Close tab"), ALIGN_CENTER,
 		N_("Do you really want to close the current tab?"),
 		ses, 2,
-		N_("~Yes"), (void (*)(void *)) really_close_tab, B_ENTER,
-		N_("~No"), NULL, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), really_close_tab, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 }
 
 static void
-really_close_tabs(struct session *ses)
+really_close_tabs(void *ses_)
 {
+	struct session *ses = ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
 	struct window *tab;
@@ -246,8 +248,8 @@ close_all_tabs_but_current(struct session *ses)
 		N_("Close tab"), ALIGN_CENTER,
 		N_("Do you really want to close all except the current tab?"),
 		ses, 2,
-		N_("~Yes"), (void (*)(void *)) really_close_tabs, B_ENTER,
-		N_("~No"), NULL, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), really_close_tabs, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 }
 
 

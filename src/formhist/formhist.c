@@ -330,20 +330,31 @@ forget_forms_with_url(unsigned char *url)
 	return count;
 }
 
-/* Appends form data @form1 (url and submitted_value(s)) to the password file.
- * Returns 1 on success, 0 otherwise. */
-static int
-remember_form(struct formhist_data *form)
+/* Appends form data @form_ (url and submitted_value(s)) to the password file. */
+static void
+remember_form(void *form_)
 {
+	struct formhist_data *form = form_;
+
 	forget_forms_with_url(form->url);
 	add_to_list(saved_forms, form);
 
-	return save_formhist_to_file();
+	save_formhist_to_file();
 }
 
-static int
-never_for_this_site(struct formhist_data *form)
+static void
+dont_remember_form(void *form_)
 {
+	struct formhist_data *form = form_;
+
+	done_formhist_item(form);
+}
+
+static void
+never_for_this_site(void *form_)
+{
+	struct formhist_data *form = form_;
+
 	form->dontsave = 1;
 	return remember_form(form);
 }
@@ -416,9 +427,9 @@ memorize_form(struct session *ses, struct list_head *submit,
 		"obscured (but unencrypted) in a file on your disk.\n\n"
 		"If you are using a valuable password, answer NO."),
 		form, 3,
-		N_("~Yes"), remember_form, B_ENTER,
-		N_("~No"), done_formhist_item, B_ESC,
-		N_("Ne~ver for this site"), never_for_this_site, NULL);
+		MSG_BOX_BUTTON(N_("~Yes"), remember_form, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), dont_remember_form, B_ESC),
+		MSG_BOX_BUTTON(N_("Ne~ver for this site"), never_for_this_site, 0));
 
 	return;
 

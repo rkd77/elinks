@@ -54,8 +54,8 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 			msg_text(term, N_("Options were saved successfully to config file %s."),
 				 config_file),
 			NULL, 2,
-			N_("~OK"), NULL, B_ENTER | B_ESC,
-			N_("~Do not show anymore"), disable_success_msgbox, 0);
+			MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC),
+			MSG_BOX_BUTTON(N_("~Do not show anymore"), disable_success_msgbox, 0));
 		return;
 	}
 
@@ -815,8 +815,8 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 				 canonical.length ? canonical.source : keystroke,
 				 get_action_name(hop->keymap_id, action_id)),
 			new_hop, 2,
-			N_("~Yes"), really_really_add_keybinding, B_ENTER,
-			N_("~No"), NULL, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), really_really_add_keybinding, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 
 		done_string(&canonical); /* safe even if init failed */
 		return;
