@@ -99,8 +99,14 @@ send_post_data(struct connection *conn)
 	 * close_pipe_and_read(). */
 	conn->data_socket->fd = conn->cgi_pipes[1];
 
-	write_to_socket(conn->data_socket, data.source, data.length,
-			S_SENT, close_pipe_and_read);
+	/* If we're submitting a form whose controls do not have
+	 * names, then the POST has a Content-Type but empty data,
+	 * and an assertion would fail in write_to_socket.  */
+	if (data.length)
+		write_to_socket(conn->data_socket, data.source, data.length,
+				S_SENT, close_pipe_and_read);
+	else
+		close_pipe_and_read(conn->data_socket);
 
 	done_string(&data);
 #undef POST_BUFFER_SIZE
