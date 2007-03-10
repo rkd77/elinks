@@ -301,20 +301,20 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 {
 	/* If LEDs ever get more dynamic we might have to change this, but it
 	 * should do for now. --jonas */
-	info_box(term, MSGBOX_SCROLLABLE,
+	info_box(term, MSGBOX_FREE_TEXT | MSGBOX_SCROLLABLE,
 	 	 N_("LED indicators"), ALIGN_LEFT,
-		 N_("What the different LEDs indicate:\n"
-		    "\n"
-		    "[SIJP--]\n"
-		    " |||||`- Unused\n"
-		    " ||||`-- Unused\n"
-		    " |||`--- A JavaScript pop-up window was blocked\n"
-		    " ||`---- A JavaScript error has occured\n"
-		    " |`----- The state of insert mode for text-input form-fields\n"
-		    " |       'i' means modeless, 'I' means insert mode is on\n"
-		    " `------ Whether an SSL connection was used\n"
-		    "\n"
-		    "'-' generally indicates that the LED is off."));
+		 msg_text(term, N_("What the different LEDs indicate:\n"
+		 	"\n"
+			"[SIJP--]\n"
+			" |||||`- Unused\n"
+			" ||||`-- Unused\n"
+			" |||`--- A JavaScript pop-up window was blocked\n"
+			" ||`---- A JavaScript error has occured\n"
+			" |`----- The state of insert mode for text-input form-fields\n"
+			" |       'i' means modeless, 'I' means insert mode is on\n"
+			" `------ Whether an SSL connection was used\n"
+			"\n"
+			"'-' generally indicates that the LED is off.")));
 }
 
 
