@@ -350,7 +350,7 @@ execute_cgi(struct connection *conn)
 		}
 
 		last_slash[-1] = 0; set_cwd(script); last_slash[-1] = '/';
-		if (execl(script, last_slash, NULL)) {
+		if (execl(script, last_slash, (char *) NULL)) {
 			_exit(3);
 		}
 
