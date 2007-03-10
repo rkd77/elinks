@@ -168,7 +168,7 @@ exe(unsigned char *path)
 
 	if (is_xterm()) flags |= P_BACKGROUND;
 
-	pid = spawnlp(flags, shell, shell, "/c", path, NULL);
+	pid = spawnlp(flags, shell, shell, "/c", path, (char *) NULL);
 	if (pid != -1)
 		waitpid(pid, &ret, 0);
 
