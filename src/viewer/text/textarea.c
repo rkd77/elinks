@@ -382,6 +382,10 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 
 		if (file.length > fc_maxlength) {
 			file.source[fc_maxlength] = '\0';
+			/* Casting size_t fc_maxlength to unsigned int
+			 * and formatting it with "%u" is safe,
+			 * because fc_maxlength is smaller than
+			 * file.length, which is an int.  */
 			info_box(term, MSGBOX_FREE_TEXT, N_("Warning"),
 			         ALIGN_CENTER,
 			         msg_text(term,
@@ -393,7 +397,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 					     " but you can still recover the"
 					     " text that you entered from"
 					     " this file: %s"), file.length,
-				             fc_maxlength, fn));
+				             (unsigned int) fc_maxlength, fn));
 		} else {
 			unlink(fn);
 		}
