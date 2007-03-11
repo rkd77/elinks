@@ -34,7 +34,7 @@
 #define string_assert(f, l, x, o) \
 	if ((assert_failed = !(x))) { \
 		errfile = f, errline = l, \
-		elinks_internal("[" o "] assertion " #x " failed!"); \
+		elinks_internal("[%s] assertion %s failed!", o, #x); \
 	}
 
 #ifdef DEBUG_MEMLEAK
