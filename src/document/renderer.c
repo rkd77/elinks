@@ -36,6 +36,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/text/festival.h"
+#include "viewer/text/form.h"
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
@@ -328,6 +329,8 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	if (document) {
 		doc_view->document = document;
 	} else {
+		struct form *form;
+
 		document = init_document(cached, options);
 		if (!document) return;
 		doc_view->document = document;
@@ -359,6 +362,9 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 #ifdef CONFIG_CSS
 		document->css_magic = get_document_css_magic(document);
 #endif
+		foreach (form, document->forms) {
+			do_reset_form(doc_view, form);
+		}
 	}
 #ifdef CONFIG_ECMASCRIPT
 	if (!vs->ecmascript_fragile)
