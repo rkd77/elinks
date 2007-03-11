@@ -86,7 +86,8 @@ open_new_window(struct terminal *term, unsigned char *exe_name,
 		if (twterm) command = twterm;
 	}
 
-	command = straconcat(command, " ", exe_name, " ", param, NULL);
+	command = straconcat(command, " ", exe_name, " ", param,
+			     (unsigned char *) NULL);
 	if (!command) return;
 
 	exec_on_terminal(term, command, "", 2);

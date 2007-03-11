@@ -232,7 +232,8 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 		mem_free(usemap_attr);
 		if (!joined_urls) return;
-		map_url = straconcat("MAP@", joined_urls, NULL);
+		map_url = straconcat("MAP@", joined_urls,
+				     (unsigned char *) NULL);
 		mem_free(joined_urls);
 		if (!map_url) return;
 
@@ -308,7 +309,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 		if (img_link_tag && (img_link_tag == 2 || add_brackets)) {
 			unsigned char *img_link_prefix = options->image_link.prefix;
 			unsigned char *img_link_suffix = options->image_link.suffix;
-			unsigned char *new_label = straconcat(img_link_prefix, label, img_link_suffix, NULL);
+			unsigned char *new_label = straconcat(img_link_prefix, label, img_link_suffix, (unsigned char *) NULL);
 
 			if (new_label) mem_free_set(&label, new_label);
 		}
@@ -327,7 +328,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 				unsigned char *new_link;
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
-				new_link = straconcat(format.link, "?0,0", NULL);
+				new_link = straconcat(format.link, "?0,0", (unsigned char *) NULL);
 				if (new_link)
 					mem_free_set(&format.link, new_link);
 			}

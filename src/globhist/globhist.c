@@ -341,7 +341,8 @@ read_global_history(void)
 		return;
 
 	if (elinks_home) {
-		file_name = straconcat(elinks_home, file_name, NULL);
+		file_name = straconcat(elinks_home, file_name,
+				       (unsigned char *) NULL);
 		if (!file_name) return;
 	}
 	f = fopen(file_name, "rb");
@@ -385,7 +386,8 @@ write_global_history(void)
 	    || get_cmd_opt_bool("anonymous"))
 		return;
 
-	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME, NULL);
+	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME,
+			       (unsigned char *) NULL);
 	if (!file_name) return;
 
 	ssi = secure_open(file_name);

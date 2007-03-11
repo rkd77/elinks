@@ -110,7 +110,8 @@ check_extension_type(unsigned char *extension)
 	if (!trimmed)
 		return NULL;
 
-	content_type = straconcat("application/x-", trimmed + 1, NULL);
+	content_type = straconcat("application/x-", trimmed + 1,
+				  (unsigned char *) NULL);
 	if (!content_type)
 		return NULL;
 

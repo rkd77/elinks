@@ -354,7 +354,8 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	ulongcat(secure, &length, cookie->secure, MAX_STR_LEN, 0);
 
 	dlg_server = cookie->server->host;
-	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n", NULL);
+	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n",
+				(unsigned char *) NULL);
 
 	if (!dlg_server) {
 		mem_free(dlg);

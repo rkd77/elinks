@@ -660,13 +660,13 @@ add_submitted_value_to_list(struct form_control *fc,
 		break;
 
 	case FC_IMAGE:
-	        name = straconcat(fc->name, ".x", NULL);
+	        name = straconcat(fc->name, ".x", (unsigned char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);
 		if (sub) add_to_list(*list, sub);
 
-		name = straconcat(fc->name, ".y", NULL);
+		name = straconcat(fc->name, ".y", (unsigned char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);

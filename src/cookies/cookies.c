@@ -720,7 +720,8 @@ load_cookies(void) {
 	time_t now;
 
 	if (elinks_home) {
-		cookfile = straconcat(elinks_home, cookfile, NULL);
+		cookfile = straconcat(elinks_home, cookfile,
+				      (unsigned char *) NULL);
 		if (!cookfile) return;
 	}
 
@@ -861,7 +862,8 @@ save_cookies(struct terminal *term) {
 		return;
 	}
 
-	cookfile = straconcat(elinks_home, COOKIES_FILENAME, NULL);
+	cookfile = straconcat(elinks_home, COOKIES_FILENAME,
+			      (unsigned char *) NULL);
 	if (!cookfile) {
 		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));
 		return;

@@ -289,7 +289,8 @@ load_input_history(struct input_history *history, unsigned char *filename)
 
 	if (get_cmd_opt_bool("anonymous")) return 0;
 	if (elinks_home) {
-		history_file = straconcat(elinks_home, filename, NULL);
+		history_file = straconcat(elinks_home, filename,
+					  (unsigned char *) NULL);
 		if (!history_file) return 0;
 	}
 
@@ -327,7 +328,8 @@ save_input_history(struct input_history *history, unsigned char *filename)
 	    || get_cmd_opt_bool("anonymous"))
 		return 0;
 
-	history_file = straconcat(elinks_home, filename, NULL);
+	history_file = straconcat(elinks_home, filename,
+				  (unsigned char *) NULL);
 	if (!history_file) return -1;
 
 	ssi = secure_open(history_file);

@@ -177,7 +177,7 @@ menu_labels(struct menu_item *items, unsigned char *base, unsigned char **lbls)
 	foreach_menu_item (item, items) {
 		bs = (item->flags & MENU_FULLNAME) ? (unsigned char *) ""
 						   : base;
-		bs = straconcat(bs, item->text, NULL);
+		bs = straconcat(bs, item->text, (unsigned char *) NULL);
 		if (!bs) continue;
 
 		if (item->func == do_select_submenu) {

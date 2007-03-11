@@ -1415,7 +1415,8 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (name) {
 			unsigned char *new_name;
 
-			new_name = straconcat(name, chars, NULL);
+			new_name = straconcat(name, chars,
+					      (unsigned char *) NULL);
 			if (new_name) {
 				mem_free(name);
 				link->data.name = new_name;

@@ -283,10 +283,10 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			struct uri *uri = get_uri(*action, URI_HTTP_REFERRER_HOST);
 
 			if (uri->protocol == PROTOCOL_FILE) {
-				mem_free_set(action, straconcat(struri(uri), string, NULL));
+				mem_free_set(action, straconcat(struri(uri), string, (unsigned char *) NULL));
 			}
 			else
-				mem_free_set(action, straconcat(struri(uri), string + 1, NULL));
+				mem_free_set(action, straconcat(struri(uri), string + 1, (unsigned char *) NULL));
 			done_uri(uri);
 			mem_free(string);
 		} else { /* relative uri */
@@ -294,7 +294,8 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			unsigned char *new_action;
 
 			if (last_slash) *(last_slash + 1) = '\0';
-			new_action = straconcat(*action, string, NULL);
+			new_action = straconcat(*action, string,
+						(unsigned char *) NULL);
 			mem_free_set(action, new_action);
 			mem_free(string);
 		}

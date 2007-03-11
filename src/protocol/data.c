@@ -73,7 +73,8 @@ init_data_protocol_header(struct cache_entry *cached,
 	if (!type) return NULL;
 
 	/* Set fake content type */
-	head = straconcat("\r\nContent-Type: ", type, "\r\n", NULL);
+	head = straconcat("\r\nContent-Type: ", type, "\r\n",
+			  (unsigned char *) NULL);
 	mem_free(type);
 	if (!head) return NULL;
 

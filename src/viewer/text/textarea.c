@@ -611,7 +611,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			if (!ed || !*ed) ed = "vi";
 		}
 
-		ex = straconcat(ed, " ", fn, NULL);
+		ex = straconcat(ed, " ", fn, (unsigned char *) NULL);
 		if (!ex) {
 			unlink(fn);
 			goto free_and_return;
