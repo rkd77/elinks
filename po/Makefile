@@ -72,6 +72,9 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-acce
 		    --flag=elinks_vsnprintf:3:c-format --flag=elinks_snprintf:3:c-format \
 		    --flag=elinks_vasprintf:2:c-format --flag=elinks_asprintf:2:c-format \
 		    --flag=vasprintfa:1:c-format --flag=asprintfa:1:c-format \
+		    --flag=_:1:pass-c-format --flag=N_:1:pass-c-format \
+		    --flag=n_:1:pass-c-format --flag=n_:2:pass-c-format \
+		    --flag=N__:1:pass-c-format \
 		    -f $(srcdir)$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
 	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl -S"$(top_srcdir)" $(PACKAGE).po \
