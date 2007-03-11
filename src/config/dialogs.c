@@ -362,7 +362,7 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 
 	add_dlg_end(dlg, EDIT_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, name, desc, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) name, (void *) desc, (void *) NULL));
 #undef EDIT_WIDGETS_COUNT
 }
 
@@ -471,7 +471,7 @@ invalid_option:
 	ctx->option = option;
 	ctx->widget_data = dlg_data->widgets_data;
 
-	input_dialog(term, getml(ctx, NULL), N_("Add option"), N_("Name"),
+	input_dialog(term, getml(ctx, (void *) NULL), N_("Add option"), N_("Name"),
 		     ctx, NULL,
 		     MAX_STR_LEN, "", 0, 0, check_option_name,
 		     add_option_to_tree, NULL);
@@ -807,7 +807,7 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 		if (init_string(&canonical))
 			add_keystroke_to_string(&canonical, &hop->kbd, 0);
 
-		msg_box(new_hop->term, getml(new_hop, NULL), MSGBOX_FREE_TEXT,
+		msg_box(new_hop->term, getml(new_hop, (void *) NULL), MSGBOX_FREE_TEXT,
 			N_("Keystroke already used"), ALIGN_CENTER,
 			msg_text(new_hop->term, N_("The keystroke \"%s\" "
 				 "is currently used for \"%s\".\n"
@@ -886,7 +886,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 			get_action_name(hop->keymap_id, hop->action_id),
 			get_keymap_name(hop->keymap_id));
 
-	input_dialog(term, getml(hop, text, NULL),
+	input_dialog(term, getml(hop, (void *) text, (void *) NULL),
 		     N_("Add keybinding"), text,
 		     hop, NULL,
 		     MAX_STR_LEN, "", 0, 0, check_keystroke,

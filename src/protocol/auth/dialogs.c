@@ -117,7 +117,7 @@ do_auth_dialog(struct session *ses, void *data)
 
 	add_dlg_end(dlg, AUTH_WIDGETS_COUNT);
 
-	dlg_data = do_dialog(term, dlg, getml(dlg, NULL));
+	dlg_data = do_dialog(term, dlg, getml(dlg, (void *) NULL));
 	/* When there's some username, but no password, automagically jump at
 	 * the password. */
 	if (dlg_data && a->user[0] && !a->password[0])

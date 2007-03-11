@@ -270,7 +270,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 	add_dlg_end(dlg, DOWNLOAD_WIDGETS_COUNT - !!file_download->external_handler);
 #endif
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 

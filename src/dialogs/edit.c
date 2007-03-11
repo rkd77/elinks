@@ -107,7 +107,7 @@ do_edit_dialog(struct terminal *term, int intl, unsigned char *title,
 
 	add_dlg_end(dlg, EDIT_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 #undef EDIT_WIDGETS_COUNT
 }

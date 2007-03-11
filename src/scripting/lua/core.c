@@ -392,7 +392,7 @@ l_edit_bookmark_dialog(LS)
 
 	add_dlg_end(dlg, L_EDIT_BMK_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	lua_pushnumber(S, 1);
 	return 1;
@@ -473,7 +473,7 @@ l_xdialog(LS)
 
 	add_dlg_end(dlg, nitems);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	lua_pushnumber(S, 1);
 	return 1;

@@ -62,7 +62,7 @@ menu_del_ext(struct terminal *term, void *fcp, void *xxx2)
 		return;
 	}
 
-	msg_box(term, getml(extension, NULL), MSGBOX_FREE_TEXT,
+	msg_box(term, getml(extension, (void *) NULL), MSGBOX_FREE_TEXT,
 		N_("Delete extension"), ALIGN_CENTER,
 		msg_text(term, N_("Delete extension %s -> %s?"),
 			 extension, opt->value.string),
@@ -133,7 +133,7 @@ menu_add_ext(struct terminal *term, void *fcp, void *xxx2)
 
 	add_dlg_end(dlg, MIME_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 
