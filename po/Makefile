@@ -57,7 +57,22 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-acce
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
-		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ -f $(srcdir)$(POTFILES_ABS_LIST) \
+		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ \
+		    --flag=msg_text:2:c-format --flag=die:1:c-format \
+		    --flag=secure_fprintf:2:c-format \
+		    --flag=DBG:1:c-format --flag=elinks_debug:1:c-format \
+		    --flag=WDBG:1:c-format --flag=elinks_wdebug:1:c-format \
+		    --flag=ERROR:1:c-format --flag=elinks_error:1:c-format \
+		    --flag=INTERNAL:1:c-format --flag=elinks_internal:1:c-format \
+		    --flag=usrerror:1:c-format --flag=elinks_log:4:c-format \
+		    --flag=LOG_ERR:1:c-format --flag=LOG_WARN:1:c-format \
+		    --flag=LOG_INFO:1:c-format --flag=LOG_DBG:1:c-format \
+		    --flag=assertm:2:c-format --flag=elinks_assertm:2:c-format \
+		    --flag=add_format_to_string:2:c-format \
+		    --flag=elinks_vsnprintf:3:c-format --flag=elinks_snprintf:3:c-format \
+		    --flag=elinks_vasprintf:2:c-format --flag=elinks_asprintf:2:c-format \
+		    --flag=vasprintfa:1:c-format --flag=asprintfa:1:c-format \
+		    -f $(srcdir)$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
 	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl -S"$(top_srcdir)" $(PACKAGE).po \
 	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
