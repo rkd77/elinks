@@ -184,9 +184,9 @@ print_xml_entities(struct secure_save_info *ssi, const unsigned char *str)
 				 || (x) == '{' || (x) == '%' \
 				 || (x) == '+')
 
-	static int cp = 0;
+	static int cp = -1;
 
-	if (!cp) get_cp_index("us-ascii");
+	if (cp == -1) cp = get_cp_index("us-ascii");
 
 	for (; *str; str++) {
 		if (accept_char(*str))
