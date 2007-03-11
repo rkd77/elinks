@@ -561,7 +561,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 
 	} else if (!strlcasecmp(name, namelen, "/MAP", 4)) {
 		/* This is the only successful return from here! */
-		add_to_ml(ml, *menu, NULL);
+		add_to_ml(ml, (void *) *menu, (void *) NULL);
 		return 0;
 
 	} else {
@@ -644,7 +644,8 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		nm[nmenu].flags = NO_INTL;
 	}
 
-	add_to_ml(ml, ld, ld->link, ld->target, label, NULL);
+	add_to_ml(ml, (void *) ld, (void *) ld->link, (void *) ld->target,
+		  (void *) label, (void *) NULL);
 
 	return 1;
 }

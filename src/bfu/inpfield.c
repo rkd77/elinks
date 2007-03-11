@@ -238,7 +238,7 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 
 	add_dlg_end(dlg, INPUT_WIDGETS_COUNT);
 
-	add_to_ml(&ml, dlg, NULL);
+	add_to_ml(&ml, (void *) dlg, (void *) NULL);
 	do_dialog(term, dlg, ml);
 }
 

@@ -1654,7 +1654,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	dlg->udata = text;
 	dlg->udata2 = hop;
 
-	add_to_ml(&ml, hop, NULL);
+	add_to_ml(&ml, (void *) hop, (void *) NULL);
 
 	/* @field is automatically cleared by calloc() */
 	field = get_dialog_offset(dlg, SEARCH_WIDGETS_COUNT);
@@ -1671,7 +1671,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 
 	add_dlg_end(dlg, SEARCH_WIDGETS_COUNT);
 
-	add_to_ml(&ml, dlg, NULL);
+	add_to_ml(&ml, (void *) dlg, (void *) NULL);
 	do_dialog(term, dlg, ml);
 }
 
