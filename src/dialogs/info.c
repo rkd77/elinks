@@ -127,7 +127,7 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 		add_actions_to_string(&keys, action_ids, KEYMAP_MAIN, term);
 	}
 
-	msg_box(term, getml(info, NULL), MSGBOX_FREE_TEXT | MSGBOX_SCROLLABLE,
+	msg_box(term, getml(info, (void *) NULL), MSGBOX_FREE_TEXT | MSGBOX_SCROLLABLE,
 		N_("Keys"), ALIGN_LEFT,
 		keys.source,
 		info, 2,

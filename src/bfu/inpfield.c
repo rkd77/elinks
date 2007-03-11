@@ -908,5 +908,5 @@ input_field_line(struct session *ses, unsigned char *prompt, void *data,
 	add_dlg_field_float2(dlg, prompt, 0, 0, NULL, INPUT_LINE_BUFFER_SIZE,
 			     buffer, history);
 
-	do_dialog(ses->tab->term, dlg, getml(dlg, NULL));
+	do_dialog(ses->tab->term, dlg, getml(dlg, (void *) NULL));
 }

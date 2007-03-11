@@ -270,7 +270,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 		mem_free_if(uristring);
 	}
 
-	msg_box(ses->tab->term, getml(task, NULL), MSGBOX_FREE_TEXT,
+	msg_box(ses->tab->term, getml(task, (void *) NULL), MSGBOX_FREE_TEXT,
 		N_("Warning"), ALIGN_CENTER,
 		message,
 		task, 2,

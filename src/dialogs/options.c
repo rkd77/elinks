@@ -236,7 +236,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 
 	add_dlg_end(dlg, TERMOPT_WIDGETS_COUNT - anonymous);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 #ifdef CONFIG_NLS
@@ -315,5 +315,5 @@ resize_terminal_dialog(struct terminal *term)
 
 	add_dlg_end(dlg, RESIZE_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }

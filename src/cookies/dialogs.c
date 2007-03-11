@@ -373,7 +373,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 
 	add_dlg_end(dlg, EDIT_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, dlg_server, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) dlg_server, (void *) NULL));
 #undef EDIT_WIDGETS_COUNT
 }
 
@@ -469,7 +469,7 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 	add_dlg_ok_button(dlg, _("~OK", term), B_ENTER, add_server_do, name);
 	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);
 	add_dlg_end(dlg, SERVER_WIDGETS_COUNT);
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	return EVENT_PROCESSED;
 #undef SERVER_WIDGETS_COUNT

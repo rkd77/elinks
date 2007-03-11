@@ -335,7 +335,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	 * have to subtract one. */
 	add_dlg_end(dlg, button + 2 - (anonymous ? anonymous - 1 : 0));
 
-	return do_dialog(term, dlg, getml(dlg, NULL));
+	return do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 
@@ -434,7 +434,7 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 
 	box->ops->lock(item);
 
-	msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT /* | MSGBOX_SCROLLABLE */,
+	msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT /* | MSGBOX_SCROLLABLE */,
 		N_("Info"), ALIGN_LEFT,
 		msg,
 		context, 1,
@@ -747,7 +747,7 @@ query_delete_selected_item(void *context_)
 
 	if (item->type == BI_FOLDER) {
 		ops->lock(item);
-		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
+		msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT,
 			listbox_message(delete_folder_title), ALIGN_CENTER,
 			msg_text(term, listbox_message(delete_folder), text),
 			context, 2,
@@ -758,7 +758,7 @@ query_delete_selected_item(void *context_)
 
 		ops->lock(item);
 
-		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
+		msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT,
 			listbox_message(delete_item_title), ALIGN_LEFT,
 			msg_text(term, listbox_message(delete_item),
 			         text, empty_string_or_(msg)),
@@ -807,7 +807,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		return status;
 	}
 
-	msg_box(term, getml(context, NULL), 0,
+	msg_box(term, getml(context, (void *) NULL), 0,
 		listbox_message(delete_marked_items_title), ALIGN_CENTER,
 		listbox_message(delete_marked_items),
 		context, 2,
@@ -869,7 +869,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	msg_box(term, getml(context, NULL), 0,
+	msg_box(term, getml(context, (void *) NULL), 0,
 		listbox_message(clear_all_items_title), ALIGN_CENTER,
 		listbox_message(clear_all_items),
 		context, 2,

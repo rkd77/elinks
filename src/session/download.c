@@ -1286,7 +1286,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 
 	add_dlg_end(dlg, widgets);
 
-	ml = getml(dlg, NULL);
+	ml = getml(dlg, (void *) NULL);
 	if (!ml) {
 		/* XXX: Assume that the allocated @external_handler will be
 		 * freed when releasing the @type_query. */
