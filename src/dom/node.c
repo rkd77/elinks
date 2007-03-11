@@ -371,7 +371,7 @@ init_dom_node_at(
 		int sort = (type == DOM_NODE_ATTRIBUTE);
 		int index;
 
-		assertm(list, "Adding node %d to bad parent %d",
+		assertm(list != NULL, "Adding node %d to bad parent %d",
 			node->type, parent->type);
 
 		index = *list && (*list)->size > 0 && sort

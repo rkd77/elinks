@@ -455,7 +455,7 @@ connected(struct socket *socket)
 	int err = 0;
 	socklen_t len = sizeof(err);
 
-	assertm(socket->connect_info, "Lost connect_info!");
+	assertm(socket->connect_info != NULL, "Lost connect_info!");
 	if_assert_failed return;
 
 	if (getsockopt(socket->fd, SOL_SOCKET, SO_ERROR, (void *) &err, &len) == 0) {
@@ -672,7 +672,7 @@ write_select(struct socket *socket)
 	struct write_buffer *wb = socket->write_buffer;
 	int wr;
 
-	assertm(wb, "write socket has no buffer");
+	assertm(wb != NULL, "write socket has no buffer");
 	if_assert_failed {
 		socket->ops->done(socket, S_INTERNAL);
 		return;
@@ -802,7 +802,7 @@ read_select(struct socket *socket)
 	struct read_buffer *rb = socket->read_buffer;
 	ssize_t rd;
 
-	assertm(rb, "read socket has no buffer");
+	assertm(rb != NULL, "read socket has no buffer");
 	if_assert_failed {
 		socket->ops->done(socket, S_INTERNAL);
 		return;

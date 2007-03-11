@@ -1015,7 +1015,7 @@ cancel_download(struct download *download, int interrupt)
 	if (is_in_result_state(download->state))
 		return;
 
-	assertm(download->conn, "last state is %d", download->state);
+	assertm(download->conn != NULL, "last state is %d", download->state);
 
 	check_queue_bugs();
 
@@ -1074,7 +1074,7 @@ move_download(struct download *old, struct download *new,
 		return;
 	}
 
-	assertm(old->conn, "last state is %d", old->state);
+	assertm(old->conn != NULL, "last state is %d", old->state);
 
 	conn->pri[new->pri]++;
 	add_to_list(conn->downloads, new);

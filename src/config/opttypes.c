@@ -94,7 +94,7 @@ exec_cmd(struct option *o, unsigned char ***argv, int *argc)
 { \
 	struct option *real = get_opt_rec(config_options, opt->value.string); \
  \
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string); \
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string); \
 	if_assert_failed { return ret_; } \
  \
 	if (option_types[real->type].name_) \
@@ -109,7 +109,7 @@ redir_cmd(struct option *opt, unsigned char ***argv, int *argc)
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	unsigned char * ret = NULL;
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
 
 	if (option_types[real->type].cmdline) {
@@ -131,7 +131,7 @@ redir_wr(struct option *opt, struct string *string)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return; }
 
 	if (option_types[real->type].write)
@@ -144,7 +144,7 @@ redir_set(struct option *opt, unsigned char *str)
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	int ret = 0;
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
 
 	if (option_types[real->type].set) {

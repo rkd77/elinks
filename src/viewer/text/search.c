@@ -1372,7 +1372,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 	int report_errors = action_id == -1;
 	enum find_error error;
 
-	assertm(doc_view, "document not formatted");
+	assertm(doc_view != NULL, "document not formatted");
 	if_assert_failed return INPUT_LINE_CANCEL;
 
 	switch (action_id) {
@@ -1437,7 +1437,7 @@ link_typeahead_handler(struct input_line *line, int action_id)
 	struct document_view *doc_view = current_frame(ses);
 	int offset = 0;
 
-	assertm(doc_view, "document not formatted");
+	assertm(doc_view != NULL, "document not formatted");
 	if_assert_failed return INPUT_LINE_CANCEL;
 
 	/* If there is nothing to match with don't start searching */

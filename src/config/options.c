@@ -197,7 +197,7 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 	if (tree && tree->flags & OPT_AUTOCREATE && !no_autocreate) {
 		struct option *template = get_opt_rec(tree, "_template_");
 
-		assertm(template, "Requested %s should be autocreated but "
+		assertm(template != NULL, "Requested %s should be autocreated but "
 			"%.*s._template_ is missing!", name_, sep - name_,
 			name_);
 		if_assert_failed {
@@ -391,7 +391,7 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 	assert(path && option && tree);
 	if (*path) tree = get_opt_rec(tree, path);
 
-	assertm(tree, "Missing option tree for '%s'", path);
+	assertm(tree != NULL, "Missing option tree for '%s'", path);
 	if (!tree->value.tree) return;
 
 	object_nolock(option, "option");

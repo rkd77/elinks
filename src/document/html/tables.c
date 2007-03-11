@@ -196,7 +196,7 @@ again:
 	}
 
 	if (wanted) {
-		assertm(limits, "bug in distribute_values()");
+		assertm(limits != NULL, "bug in distribute_values()");
 		limits = NULL;
 		sum = 0;
 		goto again;

@@ -602,7 +602,7 @@ bookmark_search_do(void *data)
 	struct listbox_data *box;
 	struct dialog_data *dlg_data;
 
-	assertm(dlg->udata, "Bookmark search with NULL udata in dialog");
+	assertm(dlg->udata != NULL, "Bookmark search with NULL udata in dialog");
 	if_assert_failed return;
 
 	ctx.title = dlg->widgets[0].data;

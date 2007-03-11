@@ -26,7 +26,7 @@
 /* Create a memory list. If p is NULL or allocation fails, it will
  * returns NULL.
  * It always stops at first NULL element. */
-#ifdef DEBUG_MEMLIST
+#if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 struct memory_list *
 debug_getml(unsigned char *file, int line, void *p, ...)
 #else
@@ -69,7 +69,7 @@ getml(void *p, ...)
  * If memory list exists, it enlarges it, else it creates it.
  * if there's no elements or first element is NULL, it does nothing.
  * It always stops at first NULL element. */
-#ifdef DEBUG_MEMLIST
+#if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 void
 debug_add_to_ml(unsigned char *file, int line, struct memory_list **ml, ...)
 #else
@@ -89,7 +89,11 @@ add_to_ml(struct memory_list **ml, ...)
 	/* None, so just return. */
 	if (!n) {
 #ifdef DEBUG_MEMLIST
+#ifdef HAVE_VARIADIC_MACROS
 		errline = line, errfile = file;
+#else
+		errline = 0, errfile = "?";
+#endif 
 		elinks_error("add_to_ml(%p, NULL, ...)", ml);
 #endif
 		return;

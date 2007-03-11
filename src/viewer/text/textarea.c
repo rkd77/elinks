@@ -330,7 +330,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	assert(term && doc_view && doc_view->document && doc_view->vs && link);
 	if_assert_failed return;
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	box = &doc_view->box;
@@ -419,7 +419,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	}
 #endif /* CONFIG_UTF8 */
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	box = &doc_view->box;
@@ -1206,7 +1206,7 @@ set_textarea(struct document_view *doc_view, int direction)
 		return;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link has no form control");
+	assertm(fc != NULL, "link has no form control");
 	if_assert_failed return;
 
 	if (fc->mode == FORM_MODE_DISABLED) return;

@@ -124,7 +124,7 @@ term_send_event(struct terminal *term, struct term_event *ev)
 		win = term->windows.next;
 		if (win->type == WINDOW_TAB) {
 			win = get_current_tab(term);
-			assertm(win, "No tab to send the event to!");
+			assertm(win != NULL, "No tab to send the event to!");
 			if_assert_failed return;
 		}
 
