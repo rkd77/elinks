@@ -124,7 +124,8 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 
 	if (entry->attrib[0] == 'd' && *dircolor) {
 		/* The <b> is for the case when use_document_colors is off. */
-		string_concat(page, "<font color=\"", dircolor, "\"><b>", NULL);
+		string_concat(page, "<font color=\"", dircolor, "\"><b>",
+			      (unsigned char *) NULL);
 	}
 
 	add_string_to_string(page, &html_encoded_name);
