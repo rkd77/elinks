@@ -187,7 +187,7 @@ get_tempdir_filename(unsigned char *name)
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TEMP");
 	if (!tmpdir || !*tmpdir) tmpdir = "/tmp";
 
-	return straconcat(tmpdir, "/", name, NULL);
+	return straconcat(tmpdir, "/", name, (unsigned char *) NULL);
 }
 
 unsigned char *
@@ -541,7 +541,8 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 		/* We allocate the full path because it is used in a few places
 		 * which means less allocation although a bit more short term
 		 * memory usage. */
-		name = straconcat(dirname, entry->d_name, NULL);
+		name = straconcat(dirname, entry->d_name,
+				  (unsigned char *) NULL);
 		if (!name) continue;
 
 		if (!init_string(&attrib)) {

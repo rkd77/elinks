@@ -99,7 +99,8 @@ load_formhist_from_file(void)
 
 	if (!elinks_home) return 0;
 
-	file = straconcat(elinks_home, FORMS_HISTORY_FILENAME, NULL);
+	file = straconcat(elinks_home, FORMS_HISTORY_FILENAME,
+			  (unsigned char *) NULL);
 	if (!file) return 0;
 
 	f = fopen(file, "rb");
@@ -222,7 +223,8 @@ save_formhist_to_file(void)
 	if (!elinks_home || get_cmd_opt_bool("anonymous"))
 		return 0;
 
-	file = straconcat(elinks_home, FORMS_HISTORY_FILENAME, NULL);
+	file = straconcat(elinks_home, FORMS_HISTORY_FILENAME,
+			  (unsigned char *) NULL);
 	if (!file) return 0;
 
 	ssi = secure_open(file);

@@ -940,7 +940,7 @@ bind_act(unsigned char *keymap_str, const unsigned char *keystroke_str)
 		return NULL;
 
 	keybinding->flags |= KBDB_WATERMARK;
-	return straconcat("\"", action, "\"", NULL);
+	return straconcat("\"", action, "\"", (unsigned char *) NULL);
 }
 
 static void

@@ -112,7 +112,7 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 
 		if (readlen > 0 && readlen != MAX_STR_LEN) {
 			buf[readlen] = '\0';
-			lnk = straconcat(" -> ", buf, NULL);
+			lnk = straconcat(" -> ", buf, (unsigned char *) NULL);
 		}
 
 		if (!stat(entry->name, &st) && S_ISDIR(st.st_mode))

@@ -123,7 +123,7 @@ check_link_word(struct document *document, unsigned char *uri, int length,
 	uri[length] = 0;
 
 	if (mailto && mailto > uri && mailto - uri < length - 1) {
-		where = straconcat("mailto:", uri, NULL);
+		where = straconcat("mailto:", uri, (unsigned char *) NULL);
 
 	} else if (parse_uri(&test, uri) == URI_ERRNO_OK
 		   && test.protocol != PROTOCOL_UNKNOWN

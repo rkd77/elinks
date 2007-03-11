@@ -50,11 +50,11 @@ void add_to_strn(unsigned char **str, const unsigned char *src);
 unsigned char *insert_in_string(unsigned char **dst, int pos,
 				const unsigned char *seq, int seqlen);
 
-/* Takes a list of strings where the last parameter _must_ be NULL and
- * concatenates them. */
+/* Takes a list of strings where the last parameter _must_ be
+ * (unsigned char *) NULL and concatenates them. */
 /* Returns the allocated string or NULL on allocation failure. */
 /* Example:
- *	unsigned char *abc = straconcat("A", "B", "C", NULL);
+ *	unsigned char *abc = straconcat("A", "B", "C", (unsigned char *) NULL);
  *	if (abc) return;
  *	printf("%s", abc);	-> print "ABC"
  *	mem_free(abc);		-> free memory used by @abc */

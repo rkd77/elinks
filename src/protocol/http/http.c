@@ -657,7 +657,7 @@ http_send_header(struct socket *socket)
 			if (user[0]) {
 				unsigned char *proxy_data;
 
-				proxy_data = straconcat(user, ":", passwd, NULL);
+				proxy_data = straconcat(user, ":", passwd, (unsigned char *) NULL);
 				if (proxy_data) {
 					unsigned char *proxy_64 = base64_encode(proxy_data);
 
@@ -883,7 +883,8 @@ http_send_header(struct socket *socket)
 			unsigned char *id;
 
 			/* Create base64 encoded string. */
-			id = straconcat(entry->user, ":", entry->password, NULL);
+			id = straconcat(entry->user, ":", entry->password,
+					(unsigned char *) NULL);
 			if (id) {
 				unsigned char *base64 = base64_encode(id);
 

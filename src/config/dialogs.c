@@ -62,7 +62,8 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 	strerr = secsave_strerror(secsave_error, term);
 
 	if (stdio_error > 0)
-		errmsg = straconcat(strerr, " (", strerror(stdio_error), ")", NULL);
+		errmsg = straconcat(strerr, " (", strerror(stdio_error), ")",
+				    (unsigned char *) NULL);
 
 	info_box(term, MSGBOX_FREE_TEXT,
 		 N_("Write config error"), ALIGN_CENTER,
@@ -121,7 +122,8 @@ get_option_text(struct listbox_item *item, struct terminal *term)
 
 	if (option->flags & OPT_TOUCHED)
 		return straconcat(_(desc, term),
-				  " (", _("modified", term), ")", NULL);
+				  " (", _("modified", term), ")",
+				  (unsigned char *) NULL);
 
 	return stracpy(_(desc, term));
 }
@@ -140,7 +142,8 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 	type = _(option_types[option->type].name, term);
 	if (option->type == OPT_TREE) {
 		type = straconcat(type, " ",
-				_("(expand by pressing space)", term), NULL);
+				  _("(expand by pressing space)", term),
+				  (unsigned char *) NULL);
 	}
 
 	add_format_to_string(&info, "\n%s: %s", _("Type", term), type);
@@ -325,17 +328,19 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 
 	name = straconcat(_("Name", term), ": ", option->name, "\n",
 			  _("Type", term), ": ",
-			  _(option_types[option->type].name, term), NULL);
+			  _(option_types[option->type].name, term),
+			  (unsigned char *) NULL);
 	desc = straconcat(_("Description", term), ": \n",
 			  _(option->desc ? option->desc
 				  	 : (unsigned char *) "N/A", term),
-			  NULL);
+			  (unsigned char *) NULL);
 	range = get_range_string(option);
 	if (range) {
 		if (*range) {
 			unsigned char *tmp;
 
-			tmp = straconcat(name, " ", range, NULL);
+			tmp = straconcat(name, " ", range,
+					 (unsigned char *) NULL);
 			if (tmp) {
 				mem_free(name);
 				name = tmp;
