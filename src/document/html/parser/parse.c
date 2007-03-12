@@ -212,7 +212,7 @@ found_endattr:
 			mem_free(saved_attr);
 		}
 
-		set_mem_comment(trim_chars(attr, ' ', NULL), name, strlen(name));
+		set_mem_comment(attr, name, strlen(name));
 		return attr;
 
 	} else {
