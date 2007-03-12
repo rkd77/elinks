@@ -1352,6 +1352,7 @@ EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 EL_ARG_DEPEND(CONFIG_EPOLL, epoll, [HAVE_SYS_EPOLL_H:yes HAVE_EPOLL_CTL:yes], [epoll],
 	      [  --enable-epoll          enable epoll])
 
+EL_LOG_CONFIG(ESPEAK, [espeak], [])
 EL_LOG_CONFIG(FESTIVAL, [festival], [])
 EL_LOG_CONFIG(FLITE, [flite], [])
 
