@@ -60,12 +60,6 @@ read_from_festival(struct fest *fest)
 #define FLITE_SYSTEM	1
 #define ESPEAK_SYSTEM	2
 
-/* How many character cells to speak from each line.  Because
- * write_to_festival currently cannot recover from short writes, this
- * must be set so low that the generated string cannot become more
- * than PIPE_BUF bytes long.  SUSv2 says PIPE_BUF >= 512.  */
-#define MAX_LINE_LENGTH	240
-
 static void
 write_to_festival(struct fest *fest)
 {
@@ -88,7 +82,6 @@ write_to_festival(struct fest *fest)
 		return;
 
 	len = doc->data[fest->line].length;
-	int_upper_bound(&len, MAX_LINE_LENGTH);
 
 	if (!init_string(&buf))
 		return;
@@ -106,13 +99,19 @@ write_to_festival(struct fest *fest)
 
 		for (i = 0; i < len; i++) {
 			unsigned char ch = (unsigned char)data[i].data;
+			int old_len = buf.length;
 
 			if (ch == '"' || ch == '\\')
 				add_char_to_string(&buf, '\\');
 			add_char_to_string(&buf, ch);
+			if (buf.length > PIPE_BUF - 3) {
+				buf.length = old_len;
+				break;
+			}
 		}
 		add_to_string(&buf, "\")");
 	} else { /* flite */
+		int_upper_bound(&len, PIPE_BUF - 1);
 		for (i = 0; i < len; i++) {
 			unsigned char ch = (unsigned char)data[i].data;
 
@@ -273,7 +272,6 @@ init_festival(void)
 #undef FESTIVAL_SYSTEM
 #undef FLITE_SYSTEM
 #undef ESPEAK_SYSTEM
-#undef MAX_LINE_LENGTH
 
 void
 run_festival(struct session *ses, struct document_view *doc_view)
