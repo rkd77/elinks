@@ -810,7 +810,12 @@ subst_file(unsigned char *prog, unsigned char *file)
 			cygwin_conv_to_full_win32_path(file, new_path);
 			add_to_string(&name, new_path);
 #else
-			add_shell_quoted_to_string(&name, file, strlen(file));
+
+			if (p && (prog[-1] == '\'') && (prog[1] == '\'')) {
+				add_to_string(&name, file);
+			} else {
+				add_shell_quoted_to_string(&name, file, strlen(file));
+			}
 #endif
 			prog++;
 		}
