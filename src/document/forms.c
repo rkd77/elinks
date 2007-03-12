@@ -155,6 +155,7 @@ done_form_control(struct form_control *fc)
 	mem_free_if(fc->name);
 	mem_free_if(fc->alt);
 	mem_free_if(fc->default_value);
+	mem_free_if(fc->onchange);
 
 	for (i = 0; i < fc->nvalues; i++) {
 		mem_free_if(fc->values[i]);

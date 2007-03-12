@@ -1169,6 +1169,12 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, format.onmouseout);
 	add_evhook(link->event_hooks, SEVHOOK_ONBLUR, format.onblur);
 
+	if (link->type == LINK_SELECT) {
+		struct form_control *fc = link->data.form_control;
+
+		add_evhook(link->event_hooks, SEVHOOK_ONCHANGE, fc->onchange);
+	}
+
 #undef add_evhook
 }
 

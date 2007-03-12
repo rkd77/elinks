@@ -99,6 +99,12 @@ do { \
 } while (0)
 
 
+int
+select_on_change(struct document_view *doc_view)
+{
+	return current_link_evhook(doc_view, SEVHOOK_ONCHANGE);
+}
+
 void
 set_link(struct document_view *doc_view)
 {

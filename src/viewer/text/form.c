@@ -147,6 +147,7 @@ selected_item(struct terminal *term, void *item_, void *ses_)
 	}
 
 	refresh_view(ses, doc_view, 0);
+	select_on_change(doc_view);
 }
 
 static void

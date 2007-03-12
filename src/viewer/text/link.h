@@ -13,6 +13,8 @@ struct terminal;
 struct uri;
 struct conv_table;
 
+int select_on_change(struct document_view *doc_view);
+
 void set_link(struct document_view *doc_view);
 void clear_link(struct terminal *term, struct document_view *doc_view);
 void draw_current_link(struct session *ses, struct document_view *doc_view);

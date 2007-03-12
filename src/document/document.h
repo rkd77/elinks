@@ -69,6 +69,7 @@ struct script_event_hook {
 		SEVHOOK_ONFOCUS,
 		SEVHOOK_ONMOUSEOUT,
 		SEVHOOK_ONBLUR,
+		SEVHOOK_ONCHANGE,
 	} type;
 	unsigned char *src;
 };

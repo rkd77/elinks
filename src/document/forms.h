@@ -87,6 +87,8 @@ struct form_control {
 	unsigned char *name;
 	unsigned char *alt;
 	unsigned char *default_value;
+	/* For FC_SELECT. I have not found better place for it. --witekfl */
+	unsigned char *onchange;
 	int default_state;
 	int size;
 	int cols, rows;

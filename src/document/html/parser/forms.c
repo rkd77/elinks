@@ -481,6 +481,7 @@ end_parse:
 
 	fc->id = get_attr_val(attr, "id", html_context->options->cp);
 	fc->name = get_attr_val(attr, "name", html_context->options->cp);
+	fc->onchange = get_attr_val(attr, "onchange", html_context->options->cp);
 	fc->default_state = preselect < 0 ? 0 : preselect;
 	fc->default_value = order ? stracpy(values[fc->default_state]) : stracpy("");
 	fc->nvalues = order;
