@@ -311,7 +311,7 @@ read_from_popen(struct session *ses, unsigned char *handler, unsigned char *file
 	if (stream) {
 		int fd = fileno(stream);
 
-		if (fd > 0) {
+		if (fd >= 0) {
 			unsigned char buf[48];
 
 			struct popen_data *data = mem_calloc(1, sizeof(*data));
@@ -321,17 +321,23 @@ read_from_popen(struct session *ses, unsigned char *handler, unsigned char *file
 				fclose(stream);
 				return;
 			}
+			deo = mem_calloc(1, sizeof(*deo));
+			if (!deo) {
+				mem_free(data);
+				fclose(stream);
+				return;
+			}
 			data->fd = fd;
 			data->stream = stream;
 			if (filename) data->filename = stracpy(filename);
 			add_to_list(copiousoutput_data, data);
-
-			deo = mem_calloc(1, sizeof(*deo));
-			if (!deo) return;
 			snprintf(buf, 48, "file:///dev/fd/%d", fd);
 			deo->uri = get_uri(buf, 0);
 			deo->ses = ses;
-			register_bottom_half(delayed_goto_uri, deo);
+			if (ses->task.target.frame && *ses->task.target.frame) {
+				deo->target = stracpy(ses->task.target.frame);
+			}
+			register_bottom_half(delayed_goto_uri_frame, deo);
 		}
 	}
 }
