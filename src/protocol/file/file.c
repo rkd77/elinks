@@ -208,6 +208,7 @@ static void
 read_special(struct connection *conn, int fd)
 {
 	struct read_buffer *rb;
+	struct stat sb;
 
 	if (!init_http_connection_info(conn, 1, 0, 1)) {
 		abort_connection(conn, S_OUT_OF_MEM);
@@ -219,8 +220,26 @@ read_special(struct connection *conn, int fd)
 		return;
 	}
 
-	if (fd != STDIN_FILENO)
-		conn->popen = 1;
+	if (fd != STDIN_FILENO) {
+		struct popen_data *pop;
+		int found = 0;
+
+		foreachback(pop, copiousoutput_data) {
+			if (pop->fd == fd) {
+				found = 1;
+				break;
+			}
+		}
+		if (!found) {
+			abort_connection(conn, S_OK);
+			return;
+		}
+	}
+
+	if (fstat(fd, &sb)) {
+		abort_connection(conn, -errno);
+		return;
+	}
 
 	conn->socket->fd = fd;
 	rb = alloc_read_buffer(conn->socket);
