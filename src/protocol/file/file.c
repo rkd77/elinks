@@ -234,6 +234,7 @@ read_special(struct connection *conn, int fd)
 			abort_connection(conn, S_OK);
 			return;
 		}
+		conn->popen = 1;
 	}
 
 	if (fstat(fd, &sb)) {
