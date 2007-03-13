@@ -213,8 +213,16 @@ read_special(struct connection *conn, int fd)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
+
+	if (isatty(fd)) {
+		abort_connection(conn, S_OK);
+		return;
+	}
+
+	if (fd != STDIN_FILENO)
+		conn->popen = 1;
+
 	conn->socket->fd = fd;
-	if (fd != STDIN_FILENO) conn->popen = 1;
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
 		abort_connection(conn, S_OUT_OF_MEM);
@@ -291,7 +299,7 @@ file_protocol_handler(struct connection *connection)
 		if (!strncmp(name.source, "/dev/fd/", 8)) {
 			int fd = atoi(name.source + 8);
 
-			if (fd > 0) {
+			if (fd >= 0) {
 				done_string(&name);
 				read_special(connection, fd);
 				return;
