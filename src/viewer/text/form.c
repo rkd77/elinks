@@ -1260,6 +1260,72 @@ submit_form(struct session *ses, struct document_view *doc_view, int do_reload)
 	return FRAME_EVENT_OK;
 }
 
+static void
+submit_empty_form(struct session *ses, struct document_view *doc_view,
+		  struct form *form, int do_reload)
+{
+	struct string go;
+	struct uri *uri;
+
+	if (!init_string(&go))
+		return;
+
+	/* This code is duplication of code from get_form_uri. */
+	switch (form->method) {
+	case FORM_METHOD_GET:
+	{
+		unsigned char *pos = strchr(form->action, '#');
+
+		if (pos) {
+			add_bytes_to_string(&go, form->action, pos - form->action);
+		} else {
+			add_to_string(&go, form->action);
+		}
+
+		if (strchr(go.source, '?'))
+			add_char_to_string(&go, '&');
+		else
+			add_char_to_string(&go, '?');
+
+		if (pos) add_to_string(&go, pos);
+		break;
+	}
+	case FORM_METHOD_POST:
+	case FORM_METHOD_POST_MP:
+	case FORM_METHOD_POST_TEXT_PLAIN:
+	{
+		/* Note that we end content type here by a simple '\n',
+		 * replaced later by correct '\r\n' in http_send_header(). */
+		add_to_string(&go, form->action);
+		add_char_to_string(&go, POST_CHAR);
+		if (form->method == FORM_METHOD_POST) {
+			add_to_string(&go, "application/x-www-form-urlencoded\n");
+
+		} else if (form->method == FORM_METHOD_POST_TEXT_PLAIN) {
+			/* Dunno about this one but we don't want the full
+			 * hextcat thingy. --jonas */
+			add_to_string(&go, "text/plain\n");
+			break;
+
+		} else {
+			add_to_string(&go, "multipart/form-data; boundary=");
+			add_char_to_string(&go, '\n');
+		}
+
+	}
+	}
+
+	uri = get_uri(go.source, 0);
+	done_string(&go);
+	if (uri) {
+		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
+
+		uri->form = 1;
+		goto_uri_frame(ses, uri, form->target, mode);
+		done_uri(uri);
+	}
+}
+
 void
 submit_given_form(struct session *ses, struct document_view *doc_view,
 		  struct form *form, int do_reload)
@@ -1292,6 +1358,8 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 		if (!uri) return;
 		goto_uri_frame(ses, uri, form->target, mode);
 		done_uri(uri);
+	} else {
+		submit_empty_form(ses, doc_view, form, do_reload);
 	}
 }
 
