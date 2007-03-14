@@ -210,10 +210,6 @@ read_special(struct connection *conn, int fd)
 	struct read_buffer *rb;
 	struct stat sb;
 
-	if (!init_http_connection_info(conn, 1, 0, 1)) {
-		abort_connection(conn, S_OUT_OF_MEM);
-		return;
-	}
 
 	if (isatty(fd)) {
 		abort_connection(conn, S_OK);
@@ -237,12 +233,17 @@ read_special(struct connection *conn, int fd)
 		conn->popen = 1;
 	}
 
+	conn->socket->fd = fd;
 	if (fstat(fd, &sb)) {
 		abort_connection(conn, -errno);
 		return;
 	}
 
-	conn->socket->fd = fd;
+	if (!init_http_connection_info(conn, 1, 0, 1)) {
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
 		abort_connection(conn, S_OUT_OF_MEM);
