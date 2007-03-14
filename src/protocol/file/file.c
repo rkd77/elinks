@@ -207,8 +207,11 @@ list_directory(struct connection *conn, unsigned char *dirpath,
 static void
 read_special(struct connection *conn, int fd)
 {
-	struct read_buffer *rb;
 	struct stat sb;
+	struct read_buffer *rb;
+	static const unsigned char header[] = "HTTP/1.0 200 OK\r\n"
+	"Content-Type: text/plain\r\nCache-control: no-cache\r\n\r\n";
+	static int length = sizeof(header) - 1;
 
 
 	if (isatty(fd)) {
@@ -249,9 +252,9 @@ read_special(struct connection *conn, int fd)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	memcpy(rb->data, "HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n", 45);
-	rb->length = 45;
-	rb->freespace -= 45;
+	memcpy(rb->data, header, length);
+	rb->length = length;
+	rb->freespace -= length;
 
 	conn->unrestartable = 1;
 	conn->socket->state = SOCKET_END_ONCLOSE;
