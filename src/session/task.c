@@ -668,15 +668,18 @@ void
 delayed_goto_uri_frame(void *data)
 {
 	struct delayed_open *deo = data;
-	struct frame *frame;
+	struct frame *frame = NULL;
 
 	assert(deo);
-	frame = ses_find_frame(deo->ses, deo->target);
+	if (deo->target)
+		frame = ses_find_frame(deo->ses, deo->target);
+
 	if (frame)
 		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
 	else {
 		goto_uri_frame(deo->ses, deo->uri, NULL, CACHE_MODE_NORMAL);
 	}
+
 	done_uri(deo->uri);
 	mem_free_if(deo->target);
 	mem_free(deo);
