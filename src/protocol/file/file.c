@@ -223,7 +223,7 @@ read_special(struct connection *conn, int fd)
 		struct popen_data *pop;
 		int found = 0;
 
-		foreachback(pop, copiousoutput_data) {
+		foreach(pop, copiousoutput_data) {
 			if (pop->fd == fd) {
 				found = 1;
 				break;
