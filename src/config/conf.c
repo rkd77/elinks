@@ -767,7 +767,7 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	smart_config_string(&tmpstring, 2, i18n, options->value.tree, NULL, 0,
 			    smart_config_output_fn);
 	if (tmpstring.length > origlen)
-		add_bytes_to_string(&config, tmpstring.source, tmpstring.length);
+		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
 
 	if (!init_string(&tmpstring)) goto get_me_out;
@@ -778,7 +778,7 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	origlen = tmpstring.length;
 	bind_config_string(&tmpstring);
 	if (tmpstring.length > origlen)
-		add_bytes_to_string(&config, tmpstring.source, tmpstring.length);
+		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
 
 get_me_out:

@@ -73,6 +73,7 @@ static const unsigned char frame_restrict[48] = {
 
 #define TERM_STRING(str) INIT_STRING(str, sizeof(str) - 1)
 
+/* Like add_string_to_string but has fewer checks to slow it down.  */
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
