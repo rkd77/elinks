@@ -274,21 +274,17 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 struct string *
 add_html_to_string(struct string *string, const unsigned char *src, int len)
 {
-
-#define isalphanum(q) (isalnum(q) || (q) == '-' || (q) == '_')
-
 	for (; len; len--, src++) {
-		if (isalphanum(*src) || *src == ' '
-		    || *src == '.' || *src == ':' || *src == ';') {
-			add_bytes_to_string(string, src, 1);
-		} else {
+		if (*src < 0x20 || *src >= 0x7F
+		    || *src == '<' || *src == '>' || *src == '&'
+		    || *src == '\"' || *src == '\'') {
 			add_bytes_to_string(string, "&#", 2);
 			add_long_to_string(string, (long) *src);
 			add_char_to_string(string, ';');
+		} else {
+			add_char_to_string(string, *src);
 		}
 	}
-
-#undef isalphanum
 
 	return string;
 }
