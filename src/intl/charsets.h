@@ -140,7 +140,7 @@ unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
 inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
-inline unicode_val_T utf8_to_unicode(unsigned char **, unsigned char *);
+inline unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
 unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF8 */
 
