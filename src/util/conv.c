@@ -284,6 +284,7 @@ add_html_to_string(struct string *string, const unsigned char *src, int len)
 			    || !add_long_to_string(string, (long) *src)
 			    || !add_char_to_string(string, ';')) {
 				string->length = rollback_length;
+				string->source[rollback_length] = '\0';
 				return NULL;
 			}
 			
