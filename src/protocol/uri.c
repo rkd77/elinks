@@ -47,14 +47,14 @@ end_of_dir(unsigned char c)
 }
 
 static inline int
-is_uri_dir_sep(struct uri *uri, unsigned char pos)
+is_uri_dir_sep(const struct uri *uri, unsigned char pos)
 {
 	return (uri->protocol == PROTOCOL_FILE ? dir_sep(pos) : pos == '/');
 }
 
 
 int
-is_ip_address(unsigned char *address, int addresslen)
+is_ip_address(const unsigned char *address, int addresslen)
 {
 	/* The @address has well defined limits so it would be a shame to
 	 * allocate it. */
@@ -90,7 +90,7 @@ is_ip_address(unsigned char *address, int addresslen)
 
 
 int
-end_with_known_tld(unsigned char *s, int slen)
+end_with_known_tld(const unsigned char *s, int slen)
 {
 	int i;
 	static const unsigned char *const tld[] =
@@ -146,7 +146,7 @@ check_whether_file_exists(unsigned char *name)
 }
 
 static int
-check_uri_file(unsigned char *name)
+check_uri_file(const unsigned char *name)
 {
 	/* Check POST_CHAR etc ... */
 	static const unsigned char chars[] = POST_CHAR_S "#?";
@@ -409,10 +409,10 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 }
 
 int
-get_uri_port(struct uri *uri)
+get_uri_port(const struct uri *uri)
 {
 	if (uri->port && uri->portlen) {
-		unsigned char *end = uri->port;
+		const unsigned char *end = uri->port;
 		int port = strtol(uri->port, (char **) &end, 10);
 
 		if (end != uri->port) {
@@ -427,7 +427,8 @@ get_uri_port(struct uri *uri)
 #define can_compare_uri_components(comp) !(((comp) & (URI_SPECIAL | URI_IDN)))
 
 static inline int
-compare_component(unsigned char *a, int alen, unsigned char *b, int blen)
+compare_component(const unsigned char *a, int alen,
+		  const unsigned char *b, int blen)
 {
 	/* Check that the length and the strings are both set or unset */
 	if (alen != blen || !!a != !!b) return 0;
@@ -442,7 +443,8 @@ compare_component(unsigned char *a, int alen, unsigned char *b, int blen)
 #define wants(x) (components & (x))
 
 int
-compare_uri(struct uri *a, struct uri *b, enum uri_component components)
+compare_uri(const struct uri *a, const struct uri *b,
+	    enum uri_component components)
 {
 	if (a == b) return 1;
 	if (!components) return 0;
@@ -471,7 +473,7 @@ compare_uri(struct uri *a, struct uri *b, enum uri_component components)
 
 /* We might need something more intelligent than this Swiss army knife. */
 struct string *
-add_uri_to_string(struct string *string, struct uri *uri,
+add_uri_to_string(struct string *string, const struct uri *uri,
 		  enum uri_component components)
 {
 	/* Custom or unknown keep the URI untouched. */
@@ -578,8 +580,8 @@ add_uri_to_string(struct string *string, struct uri *uri,
 	/* We can not test uri->datalen here since we need to always
 	 * add '/'. */
 	if (wants(URI_PATH) || wants(URI_FILENAME)) {
-		unsigned char *filename = uri->data;
-		unsigned char *pos;
+		const unsigned char *filename = uri->data;
+		const unsigned char *pos;
 
 		assertm(!wants(URI_FILENAME) || components == URI_FILENAME,
 			"URI_FILENAME should be used alone %d", components);
@@ -602,7 +604,7 @@ add_uri_to_string(struct string *string, struct uri *uri,
 	}
 
 	if (wants(URI_QUERY) && uri->datalen) {
-		unsigned char *query = memchr(uri->data, '?', uri->datalen);
+		const unsigned char *query = memchr(uri->data, '?', uri->datalen);
 
 		assertm(URI_QUERY == components,
 			"URI_QUERY should be used alone %d", components);
@@ -642,7 +644,7 @@ add_uri_to_string(struct string *string, struct uri *uri,
 #undef wants
 
 unsigned char *
-get_uri_string(struct uri *uri, enum uri_component components)
+get_uri_string(const struct uri *uri, enum uri_component components)
 {
 	struct string string;
 
@@ -785,7 +787,7 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
  * backend can understand. No host parts etc, that is what this function is
  * supposed to chew. */
 static struct uri *
-transform_file_url(struct uri *uri, unsigned char *cwd)
+transform_file_url(struct uri *uri, const unsigned char *cwd)
 {
 	unsigned char *path = uri->data;
 
