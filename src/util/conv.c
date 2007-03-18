@@ -278,11 +278,18 @@ add_html_to_string(struct string *string, const unsigned char *src, int len)
 		if (*src < 0x20 || *src >= 0x7F
 		    || *src == '<' || *src == '>' || *src == '&'
 		    || *src == '\"' || *src == '\'') {
-			add_bytes_to_string(string, "&#", 2);
-			add_long_to_string(string, (long) *src);
-			add_char_to_string(string, ';');
+			int rollback_length = string->length;
+
+			if (!add_bytes_to_string(string, "&#", 2)
+			    || !add_long_to_string(string, (long) *src)
+			    || !add_char_to_string(string, ';')) {
+				string->length = rollback_length;
+				return NULL;
+			}
+			
 		} else {
-			add_char_to_string(string, *src);
+			if (!add_char_to_string(string, *src))
+				return NULL;
 		}
 	}
 
