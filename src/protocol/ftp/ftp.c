@@ -665,143 +665,137 @@ is_ftp_pathname_safe(const struct string *s)
 static struct ftp_connection_info *
 add_file_cmd_to_str(struct connection *conn)
 {
-	struct ftp_connection_info *ftp;
-	struct string command, ftp_data_command;
+	int ok = 0;
+	struct ftp_connection_info *ftp = NULL;
+	struct string command = NULL_STRING;
+	struct string ftp_data_command = NULL_STRING;
+	struct string pathname = NULL_STRING;
 
 	if (!conn->uri->data) {
 		INTERNAL("conn->uri->data empty");
 		abort_connection(conn, S_INTERNAL);
-		return NULL;
+		goto ret;
 	}
 
+	/* This will be reallocated below when we know how long the
+	 * command string should be.  Error handling could be
+	 * simplified a little by allocating this initial structure on
+	 * the stack, but it's several kilobytes long so that might be
+	 * risky.  */
 	ftp = mem_calloc(1, sizeof(*ftp));
 	if (!ftp) {
 		abort_connection(conn, S_OUT_OF_MEM);
-		return NULL;
+		goto ret;
 	}
 
 	conn->info = ftp;	/* Freed when connection is destroyed. */
 
-	if (!init_string(&command)) {
+	if (!init_string(&command)
+	    || !init_string(&ftp_data_command)
+	    || !init_string(&pathname)) {
 		abort_connection(conn, S_OUT_OF_MEM);
-		return NULL;
-	}
-
-	if (!init_string(&ftp_data_command)) {
-		done_string(&command);
-		abort_connection(conn, S_OUT_OF_MEM);
-		return NULL;
+		goto ret;
 	}
 
 	if (!get_ftp_data_socket(conn, &ftp_data_command)) {
-		done_string(&command);
-		done_string(&ftp_data_command);
 		INTERNAL("Ftp data socket failure");
 		abort_connection(conn, S_INTERNAL);
-		return NULL;
+		goto ret;
+	}
+
+	if (!add_uri_to_string(&pathname, conn->uri, URI_PATH)) {
+		abort_connection(conn, S_OUT_OF_MEM);
+		goto ret;
+	}
+
+	decode_uri_string(&pathname);
+	if (!is_ftp_pathname_safe(&pathname)) {
+		abort_connection(conn, S_BAD_URL);
+		goto ret;
 	}
 
 	if (!conn->uri->datalen
 	    || conn->uri->data[conn->uri->datalen - 1] == '/') {
-		struct string uri_string;
 		/* Commands to get directory listing. */
 
-		if (!init_string(&uri_string)) {
-			done_string(&command);
-			done_string(&ftp_data_command);
-			abort_connection(conn, S_OUT_OF_MEM);
-			return NULL;
-		}
 		ftp->dir = 1;
 		ftp->pending_commands = 4;
 
-		/* ASCII */
-		add_to_string(&command, "TYPE A");
-		add_crlf_to_string(&command);
+		if (!add_to_string(&command, "TYPE A") /* ASCII */
+		    || !add_crlf_to_string(&command)
 
-		add_string_to_string(&command, &ftp_data_command);
+		    || !add_string_to_string(&command, &ftp_data_command)
+			
+		    || !add_to_string(&command, "CWD ")
+		    || !add_string_to_string(&command, &pathname)
+		    || !add_crlf_to_string(&command)
 
-		add_to_string(&command, "CWD ");
-		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
-		decode_uri_string(&uri_string);
-		if (!is_ftp_pathname_safe(&uri_string)) {
-			done_string(&uri_string);
-			done_string(&command);
-			done_string(&ftp_data_command);
-			abort_connection(conn, S_BAD_URL);
-			return NULL;
+		    || !add_to_string(&command, "LIST")
+		    || !add_crlf_to_string(&command)) {
+			abort_connection(conn, S_OUT_OF_MEM);
+			goto ret;
 		}
-		add_string_to_string(&command, &uri_string);
-		add_crlf_to_string(&command);
-
-		add_to_string(&command, "LIST");
-		add_crlf_to_string(&command);
-		done_string(&uri_string);
 
 		conn->from = 0;
 
 	} else {
-		struct string uri_string;
 		/* Commands to get a file. */
 
-		if (!init_string(&uri_string)) {
-			done_string(&command);
-			done_string(&ftp_data_command);
-			abort_connection(conn, S_OUT_OF_MEM);
-			return NULL;
-		}
 		ftp->dir = 0;
 		ftp->pending_commands = 3;
 
-		/* BINARY */
-		add_to_string(&command, "TYPE I");
-		add_crlf_to_string(&command);
+		if (!add_to_string(&command, "TYPE I") /* BINARY */
+		    || !add_crlf_to_string(&command)
 
-		add_string_to_string(&command, &ftp_data_command);
+		    || !add_string_to_string(&command, &ftp_data_command)) {
+			abort_connection(conn, S_OUT_OF_MEM);
+			goto ret;
+		}
 
 		if (conn->from || conn->progress->start > 0) {
-			add_to_string(&command, "REST ");
-			add_long_to_string(&command, conn->from
-							? conn->from
-							: conn->progress->start);
-			add_crlf_to_string(&command);
+			const off_t offset = conn->from
+				? conn->from
+				: conn->progress->start;
+
+			if (!add_to_string(&command, "REST ")
+			    || !add_long_to_string(&command, offset)
+			    || !add_crlf_to_string(&command)) {
+				abort_connection(conn, S_OUT_OF_MEM);
+				goto ret;
+			}
 
 			ftp->rest_sent = 1;
 			ftp->pending_commands++;
 		}
 
-		add_to_string(&command, "RETR ");
-		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
-		decode_uri_string(&uri_string);
-		if (!is_ftp_pathname_safe(&uri_string)) {
-			done_string(&uri_string);
-			done_string(&command);
-			done_string(&ftp_data_command);
-			abort_connection(conn, S_BAD_URL);
-			return NULL;
+		if (!add_to_string(&command, "RETR ")
+		    || !add_string_to_string(&command, &pathname)
+		    || !add_crlf_to_string(&command)) {
+			abort_connection(conn, S_OUT_OF_MEM);
+			goto ret;
 		}
-		add_string_to_string(&command, &uri_string);
-		add_crlf_to_string(&command);
-		done_string(&uri_string);
 	}
-
-	done_string(&ftp_data_command);
 
 	ftp->opc = ftp->pending_commands;
 
 	/* 1 byte is already reserved for cmd_buffer in struct ftp_connection_info. */
 	ftp = mem_realloc(ftp, sizeof(*ftp) + command.length);
 	if (!ftp) {
-		done_string(&command);
 		abort_connection(conn, S_OUT_OF_MEM);
-		return NULL;
+		goto ret;
 	}
+	conn->info = ftp;   /* in case mem_realloc moved the buffer */
 
 	memcpy(ftp->cmd_buffer, command.source, command.length + 1);
-	done_string(&command);
-	conn->info = ftp;
+	ok = 1;
 
-	return ftp;
+ret:
+	/* If @ok is false here, then abort_connection has already
+	 * freed @ftp, which now is a dangling pointer.  */
+	done_string(&pathname);
+	done_string(&ftp_data_command);
+	done_string(&command);
+	return ok ? ftp : NULL;
 }
 
 static void
