@@ -65,10 +65,8 @@ init_directory_listing(struct string *page, struct uri *uri)
 	    && !add_char_to_string(&dirpath, local ? CHAR_DIR_SEP : '/'))
 		goto out_of_memory;
 
-	/* Decode uri for displaying.  Do not use
-	 * add_string_to_string, because it for some reason returns
-	 * NULL if the second string is empty.  */
-	if (!add_bytes_to_string(&decoded, dirpath.source, dirpath.length))
+	/* Decode uri for displaying.  */
+	if (!add_string_to_string(&decoded, &dirpath))
 		goto out_of_memory;
 	decode_uri_string(&decoded);
 
