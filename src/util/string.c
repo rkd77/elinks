@@ -325,7 +325,7 @@ add_string_to_string(struct string *string, struct string *from)
 	check_string_magic(string);
 	check_string_magic(from);
 
-	if (!*from->source) return NULL;
+	if (!from->length) return string; /* optimization only */
 
 	return add_bytes_to_string(string, from->source, from->length);
 }
