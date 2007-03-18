@@ -632,7 +632,7 @@ unicode_fold_label_case(unicode_val_T c)
 }
 
 inline unicode_val_T
-utf8_to_unicode(unsigned char **string, unsigned char *end)
+utf8_to_unicode(unsigned char **string, const unsigned char *end)
 {
 	unsigned char *str = *string;
 	unicode_val_T u;
