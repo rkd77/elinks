@@ -247,25 +247,28 @@ unsigned char *normalize_uri(struct uri *uri, unsigned char *uristring);
 
 /* Check if two URIs are equal. If @components are 0 simply compare the whole
  * URI else only compare the specific parts. */
-int compare_uri(struct uri *uri1, struct uri *uri2, enum uri_component components);
+int compare_uri(const struct uri *uri1, const struct uri *uri2,
+		enum uri_component components);
 
 /* These functions recreate the URI string part by part. */
 /* The @components bitmask describes the set of URI components used for
  * construction of the URI string. */
 
 /* Adds the components to an already initialized string. */
-struct string *add_uri_to_string(struct string *string, struct uri *uri, enum uri_component components);
+struct string *add_uri_to_string(struct string *string, const struct uri *uri,
+				 enum uri_component components);
 
 /* Takes an uri string, parses it and adds the desired components. Useful if
  * there is no struct uri around. */
 struct string *add_string_uri_to_string(struct string *string, unsigned char *uristring, enum uri_component components);
 
 /* Returns the new URI string or NULL upon an error. */
-unsigned char *get_uri_string(struct uri *uri, enum uri_component components);
+unsigned char *get_uri_string(const struct uri *uri,
+			      enum uri_component components);
 
 /* Returns either the uri's port number if available or the protocol's
  * default port. It is zarro for user protocols. */
-int get_uri_port(struct uri *uri);
+int get_uri_port(const struct uri *uri);
 
 /* Tcp port range */
 #define LOWEST_PORT	0
@@ -304,7 +307,7 @@ unsigned char *join_urls(struct uri *base, unsigned char *relative);
 /* Return position if end of string @s matches a known tld or -1 if not.
  * If @slen < 0, then string length will be obtained by a strlen() call,
  * else @slen is used as @s length. */
-int end_with_known_tld(unsigned char *s, int slen);
+int end_with_known_tld(const unsigned char *s, int slen);
 
 
 static inline int
@@ -314,6 +317,6 @@ get_real_uri_length(struct uri *uri)
 }
 
 /* Checks if @address contains a valid IP address. */
-int is_ip_address(unsigned char *address, int addresslen);
+int is_ip_address(const unsigned char *address, int addresslen);
 
 #endif
