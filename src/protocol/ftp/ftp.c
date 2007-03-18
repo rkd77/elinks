@@ -637,6 +637,26 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
 	return 1;
 }
 
+/* Check if the file or directory name @s can be safely sent to the
+ * FTP server.  To prevent command injection attacks, this function
+ * must reject CR LF sequences.  */
+static int
+is_ftp_pathname_safe(const struct string *s)
+{
+	int i;
+
+	/* RFC 959 says the argument of CWD and RETR is a <pathname>,
+	 * which consists of <char>s, "any of the 128 ASCII characters
+	 * except <CR> and <LF>".  So other control characters, such
+	 * as 0x00 and 0x7F, are allowed here.  Bytes 0x80...0xFF
+	 * should not be allowed, but if we reject them, users will
+	 * probably complain.  */
+	for (i = 0; i < s->length; i++) {
+		if (s->source[i] == 0x0A || s->source[i] == 0x0D)
+			return 0;
+	}
+	return 1;
+}
 
 /* Create passive socket and add appropriate announcing commands to str. Then
  * go and retrieve appropriate object from server.
@@ -703,6 +723,13 @@ add_file_cmd_to_str(struct connection *conn)
 		add_to_string(&command, "CWD ");
 		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
 		decode_uri_string(&uri_string);
+		if (!is_ftp_pathname_safe(&uri_string)) {
+			done_string(&uri_string);
+			done_string(&command);
+			done_string(&ftp_data_command);
+			abort_connection(conn, S_BAD_URL);
+			return NULL;
+		}
 		add_string_to_string(&command, &uri_string);
 		add_crlf_to_string(&command);
 
@@ -745,6 +772,13 @@ add_file_cmd_to_str(struct connection *conn)
 		add_to_string(&command, "RETR ");
 		add_uri_to_string(&uri_string, conn->uri, URI_PATH);
 		decode_uri_string(&uri_string);
+		if (!is_ftp_pathname_safe(&uri_string)) {
+			done_string(&uri_string);
+			done_string(&command);
+			done_string(&ftp_data_command);
+			abort_connection(conn, S_BAD_URL);
+			return NULL;
+		}
 		add_string_to_string(&command, &uri_string);
 		add_crlf_to_string(&command);
 		done_string(&uri_string);
