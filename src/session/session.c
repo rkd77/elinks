@@ -611,7 +611,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 	print_screen_status(ses);
 
 #ifdef CONFIG_GLOBHIST
-	if (download->pri != PRI_CSS) {
+	if (download->pri != PRI_CSS && ses->doc_view->document) {
 		unsigned char *title = ses->doc_view->document->title;
 		struct uri *uri;
 
