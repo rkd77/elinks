@@ -280,11 +280,18 @@ add_html_to_string(struct string *string, unsigned char *src, int len)
 	for (; len; len--, src++) {
 		if (isalphanum(*src) || *src == ' '
 		    || *src == '.' || *src == ':' || *src == ';') {
-			add_bytes_to_string(string, src, 1);
+			if (!add_bytes_to_string(string, src, 1))
+				return NULL;
 		} else {
-			add_bytes_to_string(string, "&#", 2);
-			add_long_to_string(string, (long) *src);
-			add_char_to_string(string, ';');
+			int rollback_length = string->length;
+
+			if (!add_bytes_to_string(string, "&#", 2)
+			    || !add_long_to_string(string, (long) *src)
+			    || !add_char_to_string(string, ';')) {
+				string->length = rollback_length;
+				string->source[rollback_length] = '\0';
+				return NULL;
+			}
 		}
 	}
 
