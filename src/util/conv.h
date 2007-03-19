@@ -86,6 +86,12 @@ add_string_replace(struct string *string, unsigned char *src, int len,
  * know the charset of the input data.)  */
 struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
 
+/* Convert reserved or non-ASCII chars to html &#xx;.  The resulting
+ * string can be correctly parsed in any charset where bytes
+ * 0x20...0x7E match ASCII.  */
+struct string *add_cp_html_to_string(struct string *string, int src_codepage,
+				     const unsigned char *html, int htmllen);
+
 /* Escapes \ and " with a \ */
 struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
 
