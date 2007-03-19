@@ -378,7 +378,6 @@ shutdown_connection_stream(struct connection *conn)
 	if (conn->stream_pipes[1] >= 0)
 		close(conn->stream_pipes[1]);
 	conn->stream_pipes[0] = conn->stream_pipes[1] = -1;
-	conn->stream_pipes_written = 0;
 }
 
 static void
