@@ -99,7 +99,10 @@ write_to_festival(struct fest *fest)
 
 		for (i = 0; i < len; i++) {
 			unsigned char ch = (unsigned char)data[i].data;
+			unsigned char attr = data[i].attr;
 			int old_len = buf.length;
+
+			if (attr & SCREEN_ATTR_FRAME) continue;
 
 			if (ch == '"' || ch == '\\')
 				add_char_to_string(&buf, '\\');
@@ -114,7 +117,9 @@ write_to_festival(struct fest *fest)
 		int_upper_bound(&len, PIPE_BUF - 1);
 		for (i = 0; i < len; i++) {
 			unsigned char ch = (unsigned char)data[i].data;
+			unsigned char attr = data[i].attr;
 
+			if (attr & SCREEN_ATTR_FRAME) continue;
 			add_char_to_string(&buf, ch);
 		}
 	}
@@ -123,9 +128,13 @@ write_to_festival(struct fest *fest)
 		if (fest->speech_system == FESTIVAL_SYSTEM) {
 			add_to_string(&buf, "(SayText \"");
 			for (i = 0; i < len; i++) {
-				unsigned char *text = encode_utf8(data[i].data);
+				unsigned char *text;
+				unsigned char attr = data[i].attr;
 				int old_len = buf.length;
 
+				if (attr & SCREEN_ATTR_FRAME) continue;
+
+				text = encode_utf8(data[i].data);
 				if (text[0] == '"' || text[0] == '\\')
 					add_char_to_string(&buf, '\\');
 				add_to_string(&buf, text);
@@ -137,9 +146,13 @@ write_to_festival(struct fest *fest)
 			add_to_string(&buf, "\")");
 		} else {
 			for (i = 0; i < len; i++) {
-				unsigned char *text = encode_utf8(data[i].data);
+				unsigned char *text;
+				unsigned char attr = data[i].attr;
 				int old_len = buf.length;
 
+				if (attr & SCREEN_ATTR_FRAME) continue;
+
+				text = encode_utf8(data[i].data);
 				add_to_string(&buf, text);
 				if (buf.length > PIPE_BUF - 1) {
 					buf.length = old_len;
