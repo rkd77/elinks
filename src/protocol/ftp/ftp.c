@@ -1095,10 +1095,16 @@ ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 }
 
 
+/* How to format an FTP directory listing in HTML.  */
+struct ftp_dir_html_format {
+	int colorize_dir;
+	unsigned char dircolor[8];
+};
+
 /* Display directory entry formatted in HTML. */
 static int
 display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
-		  int colorize_dir, unsigned char *dircolor,
+		  const struct ftp_dir_html_format *format,
 		  struct ftp_file_info *ftp_info)
 {
 	struct string string;
@@ -1187,9 +1193,9 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 
 	add_char_to_string(&string, ' ');
 
-	if (ftp_info->type == FTP_FILE_DIRECTORY && colorize_dir) {
+	if (ftp_info->type == FTP_FILE_DIRECTORY && format->colorize_dir) {
 		add_to_string(&string, "<font color=\"");
-		add_to_string(&string, dircolor);
+		add_to_string(&string, format->dircolor);
 		add_to_string(&string, "\"><b>");
 	}
 
@@ -1201,7 +1207,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 	add_html_to_string(&string, ftp_info->name.source, ftp_info->name.length);
 	add_to_string(&string, "</a>");
 
-	if (ftp_info->type == FTP_FILE_DIRECTORY && colorize_dir) {
+	if (ftp_info->type == FTP_FILE_DIRECTORY && format->colorize_dir) {
 		add_to_string(&string, "</b></font>");
 	}
 
@@ -1255,7 +1261,7 @@ ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
 static int
 ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    unsigned char *buffer, int buflen, int last,
-		    int *tries, int colorize_dir, unsigned char *dircolor)
+		    int *tries, const struct ftp_dir_html_format *format)
 {
 	int ret = 0;
 
@@ -1282,8 +1288,8 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 				    && ftp_info.name.source[1] == '.')))
 				continue;
 
-			retv = display_dir_entry(cached, pos, tries, colorize_dir,
-						dircolor, &ftp_info);
+			retv = display_dir_entry(cached, pos, tries,
+						 format, &ftp_info);
 			if (retv < 0) {
 				return ret;
 			}
@@ -1329,8 +1335,7 @@ static void
 got_something_from_data_connection(struct connection *conn)
 {
 	struct ftp_connection_info *ftp = conn->info;
-	unsigned char dircolor[8];
-	int colorize_dir = 0;
+	struct ftp_dir_html_format format;
 	ssize_t len;
 
 	/* XXX: This probably belongs rather to connect.c ? */
@@ -1345,11 +1350,11 @@ out_of_mem:
 	}
 
 	if (ftp->dir) {
-		colorize_dir = get_opt_bool("document.browse.links.color_dirs");
+		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs");
 
-		if (colorize_dir) {
+		if (format.colorize_dir) {
 			color_to_string(get_opt_color("document.colors.dirs"),
-					(unsigned char *) &dircolor);
+					format.dircolor);
 		}
 	}
 
@@ -1377,7 +1382,7 @@ out_of_mem:
 			struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO_ROOT;
 
 			display_dir_entry(conn->cached, &conn->from, &conn->tries,
-					  colorize_dir, dircolor, &ftp_info);
+					  &format, &ftp_info);
 		}
 
 		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
@@ -1407,8 +1412,7 @@ out_of_mem:
 							ftp->ftp_buffer,
 							len + ftp->buf_pos,
 							0, &conn->tries,
-							colorize_dir,
-							(unsigned char *) dircolor);
+							&format);
 
 			if (proceeded == -1) goto out_of_mem;
 
@@ -1425,8 +1429,7 @@ out_of_mem:
 
 	if (ftp_process_dirlist(conn->cached, &conn->from,
 				ftp->ftp_buffer, ftp->buf_pos, 1,
-				&conn->tries, colorize_dir,
-				(unsigned char *) dircolor) == -1)
+				&conn->tries, &format) == -1)
 		goto out_of_mem;
 
 #define ADD_CONST(str) { \
