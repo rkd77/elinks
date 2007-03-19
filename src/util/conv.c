@@ -275,7 +275,7 @@ struct string *
 add_html_to_string(struct string *string, const unsigned char *src, int len)
 {
 	for (; len; len--, src++) {
-		if (*src < 0x20 || *src >= 0x7F
+		if (*src < 0x20
 		    || *src == '<' || *src == '>' || *src == '&'
 		    || *src == '\"' || *src == '\'') {
 			int rollback_length = string->length;
