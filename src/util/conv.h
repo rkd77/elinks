@@ -76,7 +76,12 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 #define add_real_optname_to_string(str, src, len) \
 	add_string_replace(str, src, len, '*', '.')
 
-/* Convert reserved chars to html &#xx */
+/* Convert reserved chars to html &#xx;.  This function copies bytes
+ * 0x80...0xFF unchanged, so the caller should ensure that the
+ * resulting HTML will be parsed with the same charset as the original
+ * string.  (This function cannot use the &#160; syntax for non-ASCII,
+ * because HTML wants Unicode numbers there and this function does not
+ * know the charset of the input data.)  */
 struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
 
 /* Escapes \ and " with a \ */
