@@ -1061,26 +1061,21 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			if (!conn->stream) return NULL;
 		}
 
-		do {
-			output = (unsigned char *) mem_realloc(output, *new_len + BIG_READ);
-			if (!output) goto exit;
+		output = (unsigned char *) mem_realloc(output, *new_len + BIG_READ);
+		if (!output) break;
 
-			did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
-			if (did_read > 0) {
-				*new_len += did_read;
-				conn->stream_pipes_written = 0;
-			}
-		} while (did_read == BIG_READ);
+		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
+		conn->stream_pipes_written = 0;
 
-		if (did_read == -1) {
+		if (did_read > 0) *new_len += did_read;
+		else if (did_read == -1) {
 			mem_free_set(&output, NULL);
 			*new_len = 0;
 			state = FINISHING;
 			break; /* Loop prevention (bug 517), is this correct ? --Zas */
 		}
-	} while (len);
+	} while (len || did_read == BIG_READ);
 
-exit:
 	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
