@@ -169,8 +169,21 @@ show_http_error_document(struct session *ses, void *data)
 	if (cache) str = get_http_error_document(term, info->uri, info->code);
 
 	if (str) {
+		/* The codepage that _("foo", term) used when it was
+		 * called by get_http_error_document.  */
+		const int gettext_codepage
+			= get_opt_codepage_tree(term->spec, "charset");
+
 		if (cached) delete_entry_content(cache);
+
+		/* If we run out of memory here, it's perhaps better
+		 * to display a malformatted error message than none
+		 * at all.  */
 		mem_free_set(&cache->content_type, stracpy("text/html"));
+		mem_free_set(&cache->head,
+			     straconcat("\r\nContent-Type: text/html; charset=",
+					get_cp_mime_name(gettext_codepage),
+					"\r\n", (unsigned char *) NULL));
 		add_fragment(cache, 0, str, strlen(str));
 		mem_free(str);
 
