@@ -5,6 +5,9 @@
 #include <stdio.h>
 
 struct directory_entry {
+	/* The strings pointed to by this structure are in the system
+	 * charset (i.e. LC_CTYPE) and must be freed with mem_free.  */
+
 	/* The various attribute info collected with the stat_* functions. */
 	unsigned char *attrib;
 
