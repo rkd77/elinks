@@ -53,7 +53,9 @@ struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
 #ifdef HAVE_STRFTIME
 /* Uses strftime() to add @fmt time format to @string. If @time is NULL
  * time(NULL) will be used. */
-struct string *add_date_to_string(struct string *string, unsigned char *format, time_t *time);
+struct string *add_date_to_string(struct string *string,
+				  const unsigned char *format,
+				  const time_t *time);
 #endif
 
 
