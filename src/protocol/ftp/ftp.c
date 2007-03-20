@@ -1150,7 +1150,10 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 		time_t when = ftp_info->mtime;
 		struct tm *when_tm;
 	       	unsigned char *fmt;
-		unsigned char date[13];
+		/* LC_TIME=fi_FI.UTF_8 can generate "elo___ 31 23:59"
+		 * where each _ denotes U+00A0 encoded as 0xC2 0xA0,
+		 * thus needing a 19-byte buffer.  */
+		unsigned char date[80];
 		int wr;
 
 		if (ftp_info->local_time_zone)
