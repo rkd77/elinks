@@ -579,7 +579,7 @@ l_get_option(LS)
 	{
 		unsigned char *cp_name;
 
-		cp_name = get_cp_mime_name(opt->value.number);
+		cp_name = get_cp_config_name(opt->value.number);
 		lua_pushstring(S, cp_name);
 		break;
 	}

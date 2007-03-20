@@ -106,6 +106,7 @@ unsigned char *convert_string(struct conv_table *convert_table,
 
 int get_cp_index(unsigned char *);
 unsigned char *get_cp_name(int);
+unsigned char *get_cp_config_name(int);
 unsigned char *get_cp_mime_name(int);
 int is_cp_utf8(int);
 void free_conv_table(void);
