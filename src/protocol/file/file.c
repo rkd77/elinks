@@ -77,7 +77,7 @@ struct module file_protocol_module = struct_module(
 /* Directory listing */
 
 /* Based on the @entry attributes and file-/dir-/linkname is added to the @data
- * fragment. */
+ * fragment.  All the strings are in the system charset.  */
 static inline void
 add_dir_entry(struct directory_entry *entry, struct string *page,
 	      int pathlen, unsigned char *dircolor)
@@ -242,7 +242,7 @@ file_protocol_handler(struct connection *connection)
 	unsigned char *redirect_location = NULL;
 	struct string page, name;
 	enum connection_state state;
-	unsigned char *type = NULL;
+	int set_dir_content_type = 0;
 
 	if (get_cmd_opt_bool("anonymous")) {
 		if (strcmp(connection->uri->string, "file:///dev/stdin")
@@ -280,7 +280,7 @@ file_protocol_handler(struct connection *connection)
 			state = S_OK;
 		} else {
 			state = list_directory(connection, name.source, &page);
-			type = "text/html";
+			set_dir_content_type = 1;
 		}
 
 	} else {
@@ -323,17 +323,24 @@ file_protocol_handler(struct connection *connection)
 			add_fragment(cached, 0, page.source, page.length);
 			connection->from += page.length;
 
-			if (!cached->content_type) {
-				unsigned char *ctype = null_or_stracpy(type);
+			if (!cached->head && set_dir_content_type) {
+				unsigned char *head;
+
+				/* If the system charset somehow
+				 * changes after the directory listing
+				 * has been generated, it should be
+				 * parsed with the original charset.  */
+				head = straconcat("\r\nContent-Type: text/html; charset=",
+						  get_cp_mime_name(get_cp_index("System")),
+						  "\r\n", (unsigned char *) NULL);
 
 				/* Not so gracefully handle failed memory
 				 * allocation. */
-				if (type && !ctype)
+				if (!head)
 					state = S_OUT_OF_MEM;
 
-				/* Setup file read or directory listing for
-				 * viewing. */
-				mem_free_set(&cached->content_type, ctype);
+				/* Setup directory listing for viewing. */
+				mem_free_set(&cached->head, head);
 			}
 
 			done_string(&page);
