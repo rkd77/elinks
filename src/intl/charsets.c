@@ -1427,6 +1427,11 @@ free_charsets_lookup(void)
 #endif
 }
 
+/* Get the codepage's name for displaying to the user, or NULL if
+ * @cp_index is one past the end.  In the future, we might want to
+ * localize these with gettext.  So it may be best not to use this
+ * function if the name will have to be converted back to an
+ * index.  */
 unsigned char *
 get_cp_name(int cp_index)
 {
@@ -1436,11 +1441,27 @@ get_cp_name(int cp_index)
 	return codepages[cp_index].name;
 }
 
+/* Get the codepage's name for saving to a configuration file.  These
+ * names can be converted back to indexes, even in future versions of
+ * ELinks.  */
+unsigned char *
+get_cp_config_name(int cp_index)
+{
+	if (cp_index < 0) return "none";
+	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
+	if (!codepages[cp_index].aliases) return NULL;
+
+	return codepages[cp_index].aliases[0];
+}
+
+/* Get the codepage's name for sending to a library or server that
+ * understands MIME charset names.  This function irreversibly maps
+ * the "System" codepage to the underlying charset.  */
 unsigned char *
 get_cp_mime_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
-	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
+	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	if (!codepages[cp_index].aliases) return NULL;
 
 	return codepages[cp_index].aliases[0];

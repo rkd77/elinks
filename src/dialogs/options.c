@@ -64,7 +64,7 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 
 		items++;
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
-			    display_codepage, get_cp_mime_name(i), 0);
+			    display_codepage, get_cp_config_name(i), 0);
 	}
 
 	/* Special codepages are not in the menu and it may cause assertion
