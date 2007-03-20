@@ -1200,6 +1200,8 @@ reload(struct session *ses, enum cache_mode cache_mode)
 		struct file_to_load *ftl;
 		struct document_view *doc_view = current_frame(ses);
 
+		doc_view->reload = 1;
+
 #ifdef CONFIG_ECMASCRIPT
 		loc->vs.ecmascript_fragile = 1;
 #endif
