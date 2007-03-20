@@ -1097,6 +1097,7 @@ ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 
 /* How to format an FTP directory listing in HTML.  */
 struct ftp_dir_html_format {
+	int libc_codepage;
 	int colorize_dir;
 	unsigned char dircolor[8];
 };
@@ -1174,7 +1175,8 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 			fmt = "%b %e %H:%M";
 
 		wr = strftime(date, sizeof(date), fmt, when_tm);
-		add_html_to_string(&string, date, wr);
+		add_cp_html_to_string(&string, format->libc_codepage,
+				      date, wr);
 	} else
 #endif
 	add_to_string(&string, "            ");
@@ -1350,6 +1352,8 @@ out_of_mem:
 	}
 
 	if (ftp->dir) {
+		format.libc_codepage = get_cp_index("System");
+
 		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs");
 
 		if (format.colorize_dir) {
