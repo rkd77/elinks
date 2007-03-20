@@ -240,7 +240,8 @@ add_timeval_to_string(struct string *string, timeval_T *timeval)
 
 #ifdef HAVE_STRFTIME
 struct string *
-add_date_to_string(struct string *string, unsigned char *fmt, time_t *date)
+add_date_to_string(struct string *string, const unsigned char *fmt,
+		   const time_t *date)
 {
 	unsigned char buffer[MAX_STR_LEN];
 	time_t when_time = date ? *date : time(NULL);
