@@ -990,7 +990,7 @@ bind_config_string(struct string *file)
 }
 
 struct module kbdbind_module = struct_module(
-	/* name: */		"Keyboard Bindings",
+	/* name: */		N_("Keyboard Bindings"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
