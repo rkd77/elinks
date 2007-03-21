@@ -21,6 +21,7 @@
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
+#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
 #include "protocol/uri.h"
@@ -342,7 +343,7 @@ done_documents(struct module *module)
 }
 
 struct module document_module = struct_module(
-	/* name: */		"Document",
+	/* name: */		N_("Document"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,

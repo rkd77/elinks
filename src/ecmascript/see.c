@@ -181,7 +181,7 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 }
 
 struct module see_module = struct_module(
-	/* name: */		"SEE",
+	/* name: */		N_("SEE"),
 	/* options: */		NULL,
 	/* events: */		NULL,
 	/* submodules: */	NULL,

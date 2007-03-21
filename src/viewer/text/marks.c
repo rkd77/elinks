@@ -10,6 +10,7 @@
 #include "elinks.h"
 
 #include "document/view.h"
+#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "protocol/uri.h"
 #include "util/memory.h"
@@ -151,7 +152,7 @@ done_marks(struct module *xxx)
 }
 
 struct module viewer_marks_module = struct_module(
-	/* name: */		"Marks",
+	/* name: */		N_("Marks"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,

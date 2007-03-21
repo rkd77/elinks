@@ -8,6 +8,7 @@
 
 #include "config/kbdbind.h"
 #include "config/options.h"
+#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/timer.h"
 #include "terminal/event.h"
@@ -84,7 +85,7 @@ done_timer(struct module *module)
 }
 
 struct module timer_module = struct_module(
-	/* name: */		"Timer",
+	/* name: */		N_("Timer"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
