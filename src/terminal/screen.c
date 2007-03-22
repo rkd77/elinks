@@ -11,6 +11,7 @@
 
 #include "config/options.h"
 #include "intl/charsets.h"
+#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "osdep/ascii.h"
 #include "osdep/osdep.h"
@@ -1125,7 +1126,7 @@ done_screen(struct terminal_screen *screen)
 }
 
 struct module terminal_screen_module = struct_module(
-	/* name: */		"Terminal Screen",
+	/* name: */		N_("Terminal Screen"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,

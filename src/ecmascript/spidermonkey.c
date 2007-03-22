@@ -312,7 +312,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 }
 
 struct module spidermonkey_module = struct_module(
-	/* name: */		"SpiderMonkey",
+	/* name: */		N_("SpiderMonkey"),
 	/* options: */		NULL,
 	/* events: */		NULL,
 	/* submodules: */	NULL,

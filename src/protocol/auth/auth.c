@@ -329,7 +329,7 @@ get_invalid_auth_entry(void)
 }
 
 struct module auth_module = struct_module(
-	/* name: */		"Authentication",
+	/* name: */		N_("Authentication"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,

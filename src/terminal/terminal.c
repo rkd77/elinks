@@ -380,7 +380,7 @@ static struct module *terminal_submodules[] = {
 };
 
 struct module terminal_module = struct_module(
-	/* name: */		"Terminal",
+	/* name: */		N_("Terminal"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	terminal_submodules,
