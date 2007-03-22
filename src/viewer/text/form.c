@@ -1364,6 +1364,13 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 }
 
 void
+delayed_submit_given_form(struct delayed_submit_form *dsf)
+{
+	submit_given_form(dsf->ses, dsf->vs->doc_view, dsf->form, 0);
+	mem_free(dsf);
+}
+
+void
 auto_submit_form(struct session *ses)
 {
 	struct document *document = ses->doc_view->document;

@@ -947,9 +947,16 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 		(struct js_form *)thisobj);
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
+	struct delayed_submit_form *dsf;
 
 	assert(form);
-	submit_given_form(ses, doc_view, form, 0);
+	dsf = mem_calloc(1, sizeof(*dsf));
+	if (dsf) {
+		dsf->ses = ses;
+		dsf->vs = vs;
+		dsf->form = form;
+		register_bottom_half(delayed_submit_given_form, dsf);
+	}
 	SEE_SET_BOOLEAN(res, 0);
 }
 

@@ -1065,6 +1065,7 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct session *ses;
 	struct form_view *fv;
 	struct form *form;
+	struct delayed_submit_form *dsf;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
@@ -1081,7 +1082,13 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	submit_given_form(ses, doc_view, form, 0);
+	dsf = mem_calloc(1, sizeof(*dsf));
+	if (dsf) {
+		dsf->ses = ses;
+		dsf->vs = vs;
+		dsf->form = form;
+		register_bottom_half(delayed_submit_given_form, dsf);
+	}
 
 	boolean_to_jsval(ctx, rval, 0);
 

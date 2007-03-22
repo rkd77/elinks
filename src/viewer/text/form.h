@@ -89,6 +89,12 @@ struct submitted_value {
 	int position;
 };
 
+struct delayed_submit_form {
+	struct session *ses;
+	struct view_state *vs;
+	struct form *form;
+};
+
 struct submitted_value *init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type, struct form_control *fc, int position);
 void done_submitted_value(struct submitted_value *sv);
 void done_submitted_value_list(struct list_head *list);
@@ -114,6 +120,7 @@ void draw_forms(struct terminal *term, struct document_view *doc_view);
 enum frame_event_status reset_form(struct session *ses, struct document_view *doc_view, int a);
 enum frame_event_status submit_form(struct session *ses, struct document_view *doc_view, int do_reload);
 void submit_given_form(struct session *ses, struct document_view *doc_view, struct form *form, int do_reload);
+void delayed_submit_given_form(struct delayed_submit_form *dsf);
 void auto_submit_form(struct session *ses);
 void do_reset_form(struct document_view *doc_view, struct form *form);
 
