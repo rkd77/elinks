@@ -516,6 +516,8 @@ debug_mem_realloc(const unsigned char *file, int line, void *ptr, size_t size)
 		return (void *) ptr;
 	}
 
+	dump_short_info(ah, file, line, "before realloc");
+
 	true_size = SIZE_BASE2AH(size);
 	do {
 #ifdef CONFIG_GC
