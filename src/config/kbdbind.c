@@ -990,7 +990,10 @@ bind_config_string(struct string *file)
 }
 
 struct module kbdbind_module = struct_module(
-	/* name: */		N_("Keyboard Bindings"),
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
+	/* name: */		"Keyboard Bindings",
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,

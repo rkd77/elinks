@@ -11,7 +11,6 @@
 
 #include "config/options.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "osdep/ascii.h"
 #include "osdep/osdep.h"
@@ -1126,7 +1125,11 @@ done_screen(struct terminal_screen *screen)
 }
 
 struct module terminal_screen_module = struct_module(
-	/* name: */		N_("Terminal Screen"),
+	/* Because this module is a submodule of terminal_module,
+	 * which is listed main_modules rather than in builtin_modules,
+	 * its name does not appear in the user interface and
+	 * so need not be translatable.  */
+	/* name: */		"Terminal Screen",
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
