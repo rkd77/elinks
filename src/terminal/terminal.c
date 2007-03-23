@@ -16,7 +16,6 @@
 
 #include "bookmarks/bookmarks.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
 #include "main/main.h"
 #include "main/module.h"
 #include "main/object.h"
@@ -380,7 +379,10 @@ static struct module *terminal_submodules[] = {
 };
 
 struct module terminal_module = struct_module(
-	/* name: */		N_("Terminal"),
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
+	/* name: */		"Terminal",
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	terminal_submodules,

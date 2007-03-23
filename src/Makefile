@@ -39,10 +39,11 @@ elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
 TAGS:
-	find $(srcdir). -name "*.[ch]" -print \
+	find $(srcdir). \( -name "*.[ch]" -o -name "*.inc" \) -print \
 	| etags --regex='{c}/INIT_LIST_HEAD(\([[:alnum:]_]+\))/\1/' \
 		--regex='{c}/struct_hierbox_browser(\n[ \t]*\([[:alnum:]_]+\),/\1/m' \
-		-
+		--regex='{c}/^ACTION_(\([[:alnum:]_]+\),[^,]*,[ \t]*\([[:alnum:]_]+\),/ACT_\1_\2/' \
+		--language=c -
 .PHONY: TAGS
 
 PROGS = elinks

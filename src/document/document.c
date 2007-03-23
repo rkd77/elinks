@@ -21,7 +21,6 @@
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
-#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
 #include "protocol/uri.h"
@@ -343,7 +342,10 @@ done_documents(struct module *module)
 }
 
 struct module document_module = struct_module(
-	/* name: */		N_("Document"),
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
+	/* name: */		"Document",
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
