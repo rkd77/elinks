@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-18 13:56+0100\n"
-"PO-Revision-Date: 2007-03-18 14:10+0100\n"
+"POT-Creation-Date: 2007-03-23 13:49+0100\n"
+"PO-Revision-Date: 2007-03-23 14:10+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2032,6 +2032,11 @@ msgstr "Nierozpoznana akcja (b³±d wewnêtrzny)"
 msgid "Error registering event"
 msgstr "B³±d przy rejestrowaniu zdarzenia"
 
+#. name:
+#: src/config/kbdbind.c:992
+msgid "Keyboard Bindings"
+msgstr "Przypisania klawiszy"
+
 #.
 #: src/config/options.inc:19
 msgid "Configuration system"
@@ -2262,7 +2267,8 @@ msgstr ""
 
 #
 #. Keep options in alphabetical order.
-#: src/config/options.inc:134
+#. name:
+#: src/config/options.inc:134 src/document/document.c:346
 msgid "Document"
 msgstr "Dokument"
 
@@ -5855,6 +5861,11 @@ msgstr ""
 "b³±d i mo¿e to spowodowaæ zastopowanie ca³ego ELinksa.\n"
 "Wykonywanie skryptu zosta³o przerwane."
 
+#. name:
+#: src/ecmascript/see.c:184
+msgid "SEE"
+msgstr "SEE"
+
 #: src/ecmascript/see/window.c:227 src/ecmascript/spidermonkey/window.c:331
 msgid "JavaScript Alert"
 msgstr "Alert JavaScriptu"
@@ -5867,6 +5878,11 @@ msgstr "Skrypt zawarty w bie¿±cym dokumencie spowodowa³%s%s%s%s"
 #: src/ecmascript/spidermonkey.c:104
 msgid "JavaScript Error"
 msgstr "B³±d JavaScriptu"
+
+#. name:
+#: src/ecmascript/spidermonkey.c:315
+msgid "SpiderMonkey"
+msgstr "SpiderMonkey"
 
 #: src/formhist/dialogs.c:67
 msgid "Forms are never saved for this URL."
@@ -6936,6 +6952,11 @@ msgstr "~Pe³ny ekran"
 #: src/osdep/newwin.c:44
 msgid "~BeOS terminal"
 msgstr "Terminal ~BeOS"
+
+#. name:
+#: src/protocol/auth/auth.c:332
+msgid "Authentication"
+msgstr "Autentykacja"
 
 #: src/protocol/auth/dialogs.c:87
 #, c-format
@@ -8327,6 +8348,11 @@ msgstr "Nie okre¶lono programu"
 msgid "No program specified for protocol %s."
 msgstr "Nie okre¶lono programu do obs³ugi protoko³u %s."
 
+#. name:
+#: src/scripting/guile/guile.c:16
+msgid "Guile"
+msgstr "Guile"
+
 #: src/scripting/lua/core.c:312 src/scripting/python/keybinding.c:151
 msgid "Error registering event hook"
 msgstr "B³±d przy rejestrowaniu zaczepienia zdarzenia"
@@ -8347,27 +8373,57 @@ msgstr "Konsola Lua"
 msgid "Enter expression"
 msgstr "Wprowad¼ wyra¿enie"
 
+#. name:
+#: src/scripting/lua/lua.c:16
+msgid "Lua"
+msgstr "Lua"
+
+#. name:
+#: src/scripting/perl/perl.c:16
+msgid "Perl"
+msgstr "Perl"
+
+#. name:
+#: src/scripting/python/python.c:18
+msgid "Python"
+msgstr "Python"
+
 #: src/scripting/ruby/core.c:131 src/scripting/ruby/core.c:184
 msgid "Ruby Message"
 msgstr "Wiadomo¶æ Ruby'ego"
 
-#: src/scripting/scripting.c:59
+#. name:
+#: src/scripting/ruby/ruby.c:16
+msgid "Ruby"
+msgstr "Ruby"
+
+#: src/scripting/scripting.c:44
+#, c-format
+msgid "[%s error] %s"
+msgstr "[B³±d %s] %s"
+
+#: src/scripting/scripting.c:60
 #, c-format
 msgid "An error occurred while running a %s script"
 msgstr "Wyst±pi³ b³±d przy uruchamianiu skryptu %s"
 
-#: src/scripting/scripting.c:65
+#: src/scripting/scripting.c:66
 msgid "Browser scripting error"
 msgstr "B³±d skryptów przegl±darki"
 
 #. name:
-#: src/scripting/scripting.c:93
+#: src/scripting/scripting.c:94
 msgid "Scripting"
 msgstr "Skryptowanie"
 
 #: src/scripting/smjs/elinks_object.c:86
 msgid "User script alert"
 msgstr "B³±d skryptu u¿ytkownika"
+
+#. name:
+#: src/scripting/smjs/smjs.c:16
+msgid "Spidermonkey ECMAScript"
+msgstr "ECMAScript Spidermonkey"
 
 #: src/session/download.c:235 src/session/download.c:359
 #: src/session/download.c:598 src/session/download.c:686
@@ -8605,6 +8661,12 @@ msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
+#
+#. name:
+#: src/terminal/screen.c:1129
+msgid "Terminal Screen"
+msgstr "Ekran terminala"
+
 #: src/terminal/tab.c:205
 msgid "Do you really want to close the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
@@ -8612,6 +8674,12 @@ msgstr "Czy na pewno chcesz zamkn±æ bie¿±c± kartê?"
 #: src/terminal/tab.c:249
 msgid "Do you really want to close all except the current tab?"
 msgstr "Czy na pewno chcesz zamkn±æ wszystkie karty za wyj±tkiem bie¿±cej?"
+
+#
+#. name:
+#: src/terminal/terminal.c:383
+msgid "Terminal"
+msgstr "Terminal"
 
 #: src/util/secsave.c:361
 msgid "Cannot read the file"
@@ -8758,116 +8826,121 @@ msgid "Submit button"
 msgstr "Przycisk wys³ania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1279
+#: src/viewer/text/link.c:1278
 msgid "Display ~usemap"
 msgstr "Poka¿ ~mapê obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1284
+#: src/viewer/text/link.c:1283
 msgid "~Follow link"
 msgstr "Wybierz od~no¶nik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1286
+#: src/viewer/text/link.c:1285
 msgid "Follow link and r~eload"
 msgstr "Wybierz odno¶nik i p~rze³aduj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1290
+#: src/viewer/text/link.c:1289
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1292
+#: src/viewer/text/link.c:1291
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1294
+#: src/viewer/text/link.c:1293
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1299
+#: src/viewer/text/link.c:1298
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1302
+#: src/viewer/text/link.c:1301
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zak³adkê"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1306
+#: src/viewer/text/link.c:1305
 msgid "Pass link URI to e~xternal command"
 msgstr "Przeka¿ URI odno¶nika do z~ewnêtrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1317 src/viewer/text/link.c:1357
+#: src/viewer/text/link.c:1316 src/viewer/text/link.c:1356
 msgid "~Reset form"
 msgstr "Wy~czy¶æ formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1332
+#: src/viewer/text/link.c:1331
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnêtrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1340
+#: src/viewer/text/link.c:1339
 msgid "~Submit form"
 msgstr "~Prze¶lij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1340
 msgid "Submit form and rel~oad"
 msgstr "Prze¶lij fo~rmularz i prze³aduj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1345
+#: src/viewer/text/link.c:1344
 msgid "Submit form and open in new ~window"
 msgstr "Prze¶lij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1347
+#: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~tab"
 msgstr "Prze¶lij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1350
+#: src/viewer/text/link.c:1349
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prze¶lij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1355
+#: src/viewer/text/link.c:1354
 msgid "Submit form and ~download"
 msgstr "Prze¶lij formu~larz i ¶ci±gnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1362
+#: src/viewer/text/link.c:1361
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1369
+#: src/viewer/text/link.c:1368
 msgid "V~iew image"
 msgstr "Poka¿ o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1371
+#: src/viewer/text/link.c:1370
 msgid "Download ima~ge"
 msgstr "Pobierz ~obrazek"
 
-#: src/viewer/text/link.c:1380
+#: src/viewer/text/link.c:1379
 msgid "No link selected"
 msgstr "Nie wybrano ¿adnego odno¶nika"
 
-#: src/viewer/text/link.c:1450
+#: src/viewer/text/link.c:1449
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1455
+#: src/viewer/text/link.c:1454
 msgid "Usemap"
 msgstr "Mapa obrazków"
+
+#. name:
+#: src/viewer/text/marks.c:155
+msgid "Marks"
+msgstr "Zaznaczenia"
 
 #: src/viewer/text/search.c:1081
 msgid "Search hit top, continuing at bottom."
@@ -8976,6 +9049,11 @@ msgstr "B³±d zapisu"
 #: src/viewer/text/view.c:1319
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
+
+#. name:
+#: src/viewer/timer.c:88
+msgid "Timer"
+msgstr "Czasomierz"
 
 #. name:
 #: src/viewer/viewer.c:25
