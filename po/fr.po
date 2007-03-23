@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-21 11:01+0100\n"
-"PO-Revision-Date: 2007-03-21 11:03+0100\n"
+"POT-Creation-Date: 2007-03-23 18:35+0100\n"
+"PO-Revision-Date: 2007-03-23 18:37+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -2022,11 +2022,6 @@ msgstr "Action non reconnue (erreur interne)"
 msgid "Error registering event"
 msgstr "Erreur d'enregistrement d'événement"
 
-#. name:
-#: src/config/kbdbind.c:992
-msgid "Keyboard Bindings"
-msgstr "Association de touches"
-
 #.
 #: src/config/options.inc:19
 msgid "Configuration system"
@@ -2254,8 +2249,7 @@ msgstr ""
 "Délai d'expiration pour les connexions non-redémarrables (en secondes)."
 
 #. Keep options in alphabetical order.
-#. name:
-#: src/config/options.inc:134 src/document/document.c:346
+#: src/config/options.inc:134
 msgid "Document"
 msgstr "Document"
 
@@ -8244,17 +8238,22 @@ msgstr "Message Ruby"
 msgid "Ruby"
 msgstr "Ruby"
 
-#: src/scripting/scripting.c:59
+#: src/scripting/scripting.c:44
+#, c-format
+msgid "[%s error] %s"
+msgstr "[erreur %s] %s"
+
+#: src/scripting/scripting.c:60
 #, c-format
 msgid "An error occurred while running a %s script"
 msgstr "Une erreur s'est produite lors de l'exécution d'un script %s"
 
-#: src/scripting/scripting.c:65
+#: src/scripting/scripting.c:66
 msgid "Browser scripting error"
 msgstr "Erreur de script"
 
 #. name:
-#: src/scripting/scripting.c:93
+#: src/scripting/scripting.c:94
 msgid "Scripting"
 msgstr "Scripting"
 
@@ -8504,11 +8503,6 @@ msgstr "Impossible de lire l'évènement: %d (%s)"
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
 
-#. name:
-#: src/terminal/screen.c:1129
-msgid "Terminal Screen"
-msgstr "Ecran de terminal"
-
 #: src/terminal/tab.c:205
 msgid "Do you really want to close the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
@@ -8516,11 +8510,6 @@ msgstr "Êtes-vous sûr de vouloir fermer l'onglet courant ?"
 #: src/terminal/tab.c:249
 msgid "Do you really want to close all except the current tab?"
 msgstr "Êtes-vous sûr de vouloir fermer tout sauf l'onglet courant ?"
-
-#. name:
-#: src/terminal/terminal.c:383
-msgid "Terminal"
-msgstr "Terminal"
 
 #: src/util/secsave.c:361
 msgid "Cannot read the file"
@@ -8897,6 +8886,3 @@ msgstr "Temporisation"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Visualisateur"
-
-#~ msgid "Delete text from clipboard"
-#~ msgstr "Effacer le texte du tampon"
