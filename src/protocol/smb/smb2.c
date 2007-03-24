@@ -310,7 +310,6 @@ do_smb(struct connection *conn)
 	if (smbc_init(smb_auth, 0)) {
 		smb_error(errno);
 	};
-	decode_uri(url);
 
 	dir = smbc_opendir(url);
 	if (dir >= 0) {
