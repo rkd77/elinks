@@ -295,10 +295,21 @@ do_smb(struct connection *conn)
 		if (!uri_string || !init_string(&string)) {
 			smb_error(-S_OUT_OF_MEM);
 		}
+		/* Must URI-encode the username and password to avoid
+		 * ambiguity if they contain "/:@" characters.
+		 * Libsmbclient then decodes them again, and the
+		 * server gets them as they were in auth->user and
+		 * auth->password, i.e. as the user typed them in the
+		 * auth dialog.  This implies that, if the username or
+		 * password contains some characters or bytes that the
+		 * user cannot directly type, then she cannot enter
+		 * them.  If that becomes an actual problem, it should
+		 * be fixed in the auth dialog, e.g. by providing a
+		 * hexadecimal input mode.  */
 		add_to_string(&string, "smb://");
-		add_to_string(&string, auth->user);
+		encode_uri_string(&string, auth->user, -1, 1);
 		add_char_to_string(&string, ':');
-		add_to_string(&string, auth->password);
+		encode_uri_string(&string, auth->password, -1, 1);
 		add_char_to_string(&string, '@');
 		add_to_string(&string, uri_string);
 		url = string.source;
