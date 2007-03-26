@@ -5,7 +5,7 @@
 #endif
 
 #error SMB protocol support is vulnerable to CVE-2006-5925.  Do not use.
-#error If you want to use SMB, please vote for bug 844 or post a patch.
+#error If you want to use SMB, please wait for ELinks 0.12.0 or see bug 844.
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
