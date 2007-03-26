@@ -8,7 +8,47 @@ file for details.
 ELinks now:
 -----------
 
+* bug 846, 870: fix crashes in web ECMAScripts and SMJS user scripting
+* bug 868: fix segfault in check_timers
+* bug 897, 919: fix crashes on operating systems lacking mremap()
+* Gentoo 121247: fix segfaults in Ruby user scripting
+* fix null pointer crash in XBEL loading
+* bug 937: don't send entire HTTPS request to CONNECT proxy
+* bug 899, Debian 403139: recognize >2GB files in FTP directory listing,
+  if off_t is large enough
+* bug 942: encode/decode file names in FTP URLs, so they can contain spaces
+* bug 741: don't recognize HTML comments inside STYLE elements
+* bug 830: -remote URL may contain parentheses without being a command
+* bug 831: -remote openURL(URL) may contain commas if the URL is quoted
+* fix POST to local CGI
+* Python user scripting: goto_url_hook gets 2 params not 1
+* recognize function keys and backspace/delete on FreeBSD
+* place cursor on listbox rather than button, to help screen readers
+* text wrapping enhancements
+
+ELinks 0.11.2:
+--------------
+
+* bug 841, CVE-2006-5925: prevent enabling the SMB protocol
+* bug 786: fix crash when following a link in frames
+* print off_t with custom OFF_T_FORMAT instead of PRId64
+* build: Minix3 compatibility
+
+ELinks 0.11.1:
+--------------
+
+* work around null pointer crashes in HTTP digest authentication
+* fix assertion failure with document.plain.display_links and
+  uppercase URIs
+* fix Gopher crashes
 * Native FSP protocol support (replaces CGI program in contrib/cgi/)
+* SMJS user scripting: check for hooks.js before trying to load it
+* SMJS user scripting: new view_state object
+* Lua scripting: fix current_document_formatted
+* if given "a?b" in the command line, try to guess whether the
+  question mark is part of the file name or indicates a query part
+* updated character entity list from unicode.org
+* build: use asciidoc -unsafe for AsciiDoc 7.0.4 compatibility
 
 ELinks 0.11.0 (Elated):
 -----------------------
