@@ -25,7 +25,6 @@ struct document_view {
 	int last_x, last_y; /* last pos of window */
 	int depth;
 	unsigned int used:1;
-	unsigned int reload:1;
 };
 
 #define get_old_current_link(doc_view) \

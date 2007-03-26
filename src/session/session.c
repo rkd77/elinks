@@ -1199,8 +1199,13 @@ reload(struct session *ses, enum cache_mode cache_mode)
 		struct location *loc = cur_loc(ses);
 		struct file_to_load *ftl;
 		struct document_view *doc_view = current_frame(ses);
+		struct document *document = doc_view->document;
+		struct form *form;
 
-		doc_view->reload = 1;
+		assert(document);
+		foreach (form, document->forms) {
+			do_reset_form(doc_view, form);
+		}
 
 #ifdef CONFIG_ECMASCRIPT
 		loc->vs.ecmascript_fragile = 1;

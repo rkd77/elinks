@@ -329,8 +329,6 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 	if (document) {
 		doc_view->document = document;
 	} else {
-		struct form *form;
-
 		document = init_document(cached, options);
 		if (!document) return;
 		doc_view->document = document;
@@ -362,12 +360,6 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 #ifdef CONFIG_CSS
 		document->css_magic = get_document_css_magic(document);
 #endif
-		if (doc_view->reload) {
-			foreach (form, document->forms) {
-				do_reset_form(doc_view, form);
-			}
-			doc_view->reload = 0;
-		}
 	}
 #ifdef CONFIG_ECMASCRIPT
 	if (!vs->ecmascript_fragile)
