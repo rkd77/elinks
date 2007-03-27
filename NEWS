@@ -20,7 +20,9 @@ ELinks now:
 * bug 741: don't recognize HTML comments inside STYLE elements
 * bug 830, 831: changes in parsing of -remote arguments
 * fix POST to local CGI
-* Python user scripting: goto_url_hook gets 2 params not 1
+* Python scripting (experimental): changed goto_url_hook(current) to
+  goto_url_hook(current, new).  ELinks 0.12.0 will further change it
+  to goto_url_hook(new).
 * recognize function keys and backspace/delete on FreeBSD
 * place cursor on listbox rather than button, to help screen readers
 * text wrapping enhancements
