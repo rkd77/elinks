@@ -18,8 +18,7 @@ ELinks now:
   if off_t is large enough
 * bug 942: encode/decode file names in FTP URLs, so they can contain spaces
 * bug 741: don't recognize HTML comments inside STYLE elements
-* bug 830: -remote URL may contain parentheses without being a command
-* bug 831: -remote openURL(URL) may contain commas if the URL is quoted
+* bug 830, 831: changes in parsing of -remote arguments
 * fix POST to local CGI
 * Python user scripting: goto_url_hook gets 2 params not 1
 * recognize function keys and backspace/delete on FreeBSD
