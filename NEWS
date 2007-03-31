@@ -13,6 +13,7 @@ ELinks now:
 * bug 897, 919: fix crashes on operating systems lacking mremap()
 * Gentoo 121247: fix segfaults in Ruby user scripting
 * fix null pointer crash in XBEL loading
+* bug 908: fix a write to freed memory when pushing a radio button
 * bug 937: don't send entire HTTPS request to CONNECT proxy
 * bug 899, Debian 403139: recognize >2GB files in FTP directory listing,
   if off_t is large enough
