@@ -18,6 +18,7 @@ ELinks now:
   if off_t is large enough
 * bug 942: encode/decode file names in FTP URLs, so they can contain spaces
 * bug 741: don't recognize HTML comments inside STYLE elements
+* bug 769: fix MD5 computation/formatting in HTTP digest authentification
 * bug 830, 831: changes in parsing of -remote arguments
 * fix POST to local CGI
 * Python scripting (experimental): changed goto_url_hook(current) to
