@@ -22,6 +22,7 @@ ELinks now:
 * bug 769: fix MD5 computation/formatting in HTTP digest authentification
 * bug 830, 831: changes in parsing of -remote arguments
 * fix POST to local CGI
+* bug 886: editing or deleting cookies in the manager should cause a save
 * Python scripting (experimental): changed goto_url_hook(current) to
   goto_url_hook(current, new).  ELinks 0.12.0 will further change it
   to goto_url_hook(new).
