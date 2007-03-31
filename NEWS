@@ -25,6 +25,7 @@ ELinks now:
   goto_url_hook(current, new).  ELinks 0.12.0 will further change it
   to goto_url_hook(new).
 * recognize function keys and backspace/delete on FreeBSD
+* bug 772: recognize Shift-Tab on XTerm
 * place cursor on listbox rather than button, to help screen readers
 * text wrapping enhancements
 
