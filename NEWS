@@ -86,16 +86,11 @@ roughly in decreasing order of importance.
   - (bugfix) Fix crash with empty File extensions menu.
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
-  - (bugfix) Use internal OFF_T_FORMAT instead of PRId64
   - (bugfix) Two small fixes in the authentication dialog.
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
     dialogs.
   - (bugfix 396) Never show empty filename in the what-to-do dialog
 * Changes in support for URI schemes, protocols, caching, and encodings
-  - (workaround 841) SMB is now disabled because of CVE-2006-5925.
-  - (new feature 630) Native FSP protocol support (replaces CGI
-    program in contrib/fsp/)
-  - (experimental, bugfix) Gopher changes, including crash fixes
   - (enhancement) FTP handler parses file sizes better
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
   - (new feature) LZMA decompression
@@ -116,9 +111,6 @@ roughly in decreasing order of importance.
     listings.
   - (bugfix 919) Fixed a buffer overflow when shrinking a cached fragment.
 * Changes in parsing and rendering of HTML (without DOM)
-  - (enhancement) The list of SGML character entities has been updated
-    from unicode.org.  However, it still isn't subsetted per DTD like
-    it probably should be.
   - (new feature) Add support for forcing wrapping at the screen boundary
   - (bugfix 741) HTML comments shouldn't be evaluated inside STYLE elements
   - (bugfix) Use frame->name instead of target avoiding possible segfault.
@@ -154,13 +146,9 @@ roughly in decreasing order of importance.
   - (bugfix, Gentoo 121247) Ruby: Fix segfaults.
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
-  - (bugfix) Lua: current_document_formatted now works.
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
   - (experimental, new feature, bugfix) Python: Many additions and
     bug fixes.
-  - (bugfix) SMJS: Don't complain about a missing hooks.js on startup.
-  - (new feature) SMJS: The elinks.preformat_html hook gets a second
-    argument: a view_state object with .uri and .plain properties.
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
     elinks.vs.
@@ -193,7 +181,6 @@ roughly in decreasing order of importance.
     -lpython.
   - (enhancement) Avoid compilation of vernum.c in 'make install'
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
-  - (bugfix) Fix compilation on Minix3.
   - (bitrot) Fix two warnings on Mac OS X.
 * (experimental) Changes in ECMAScript support
   - (enhancement) Disable ECMAScript by default.
@@ -278,6 +265,32 @@ have already been considered.
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
 //////////////////////////////////////////////////////////////////////
+
+ELinks 0.11.2:
+--------------
+
+* critical bug 841, CVE-2006-5925: prevent enabling the SMB protocol
+* critical bug 786: fix crash when following a link in frames
+* print off_t with custom OFF_T_FORMAT instead of PRId64
+* build: Minix3 compatibility
+
+ELinks 0.11.1:
+--------------
+
+* work around null pointer crashes in HTTP digest authentication
+* fix assertion failure with document.plain.display_links and
+  uppercase URIs
+* fix Gopher crashes
+* enhancement 630: native FSP protocol support (replaces CGI program
+  in contrib/cgi/)
+* SMJS user scripting: check for hooks.js before trying to load it
+* SMJS user scripting: the elinks.preformat_html hook gets a second
+  argument: a view_state object with .uri and .plain properties
+* Lua scripting: fix current_document_formatted
+* if given "a?b" in the command line, try to guess whether the
+  question mark is part of the file name or indicates a query part
+* updated character entity list from unicode.org
+* build: use asciidoc -unsafe for AsciiDoc 7.0.4 compatibility
 
 ELinks 0.11.0 (Elated):
 -----------------------
