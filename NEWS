@@ -24,20 +24,14 @@ roughly in decreasing order of importance.
 * Miscellaneous
   - (bugfix) If ELinks logs debug information to a file, it now opens
     that in binary mode.
-  - (bugfix) Use PF_* instead of AF_* as first parameter of socket(2).
   - (enhancement 752) Documentation updates
   - (enhancement 381) Reduce memory consumption of codepages and some
     other arrays.
   - (bugfix) Secure file saving: restore umask after _all_ failure
     conditions
-  - (bugfix 830) Fix misparsing of -remote URLs containing parenthesis.
-  - (bugfix 868) kill_timer from timer->func can crash check_timers.
-  - (enhancement 831) -remote openURL(URL) can include quoted commas.
   - (enhancement) Reject invalid UTF-8 input from documents and
     terminals.
 * Changes in terminal support
-  - (enhancement) Make ELinks FreeBSD friendly. Defined keys used on
-    FreeBSD console
   - (enhancement) Mouse wheel support on BSD via moused -z 4
   - (enhancement) Support for mouse wheel over GPM
   - (experimental, new feature) UTF-8 as terminal charset: not merely
@@ -57,7 +51,6 @@ roughly in decreasing order of importance.
     increment.
   - (new feature) Support Ctrl+Alt+letter key combinations.
   - (bugfix) Subprocess forked for SIGTSTP calls _exit, not exit.
-  - (new feature 772) Recognize Shift+Tab on Xterm.
   - (enhancement) Turn terminal transparency off by default.
   - (bugfix 871) Lock down the numbering of terminal.*.colors
     regardless of config options.  This change makes elinks.conf
@@ -66,24 +59,16 @@ roughly in decreasing order of importance.
 * Changes in cookies and bookmarks
   - (new feature) "Add server" button in the cookie manager.
   - (enhancement) Tell the user how to move bookmarks.
-  - (bugfix) Fix crash when moving bookmarks out of a folder.
-  - (bugfix) Fixed crash if XBEL bookmark has no title
-  - (bugfix 886, 872) If the user edits or deletes a cookie, mark the
-    cookie list as needing to be saved.
   - (enhancement 887) Save in cookie manager should save cookies even
     if unmodified.
 * Changes in the user interface
   - (new feature 145) Internal clipboard support
-  - (enhancement) Place the cursor on the current listbox item, to
-    help screen readers
   - (enhancement) Localization updates
   - (bugfix 355) Add documents displayed via "What to do" dialog to
     globhist
   - (new feature) Autocreate directories needed to download a file.
   - (new feature) Option ui.show_menu_bar_always
   - (new feature) Option ui.tabs moves the tab bar to the top.
-  - (bugfix 24) Fix searching in menus past unselectable items.
-  - (bugfix) Fix crash with empty File extensions menu.
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
   - (bugfix) Two small fixes in the authentication dialog.
@@ -91,13 +76,11 @@ roughly in decreasing order of importance.
     dialogs.
   - (bugfix 396) Never show empty filename in the what-to-do dialog
 * Changes in support for URI schemes, protocols, caching, and encodings
-  - (enhancement) FTP handler parses file sizes better
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
   - (new feature) LZMA decompression
   - (bugfix) Local files in a directory whose name contained + were
     unreachable.
   - (new feature) HTTP negotiate-auth using GSSAPI
-  - (bugfix 769) HTTP digest auth computed MD5 from insufficient input.
   - (bugfix 770) Download resuming simply restarts the download
   - (bugfix) Fix IPv4 DNS lookup bug
   - (bugfix) Fix null-pointer crash caused by malformed $HTTP_PROXY.
@@ -107,12 +90,7 @@ roughly in decreasing order of importance.
   - (bugfix 729) Fix crashes with various bogus BitTorrent URLs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
     after HTTP proxy was changed
-  - (bugfix 899, Debian 403139) Fix size handling in FTP directory
-    listings.
-  - (bugfix 919) Fixed a buffer overflow when shrinking a cached fragment.
 * Changes in parsing and rendering of HTML (without DOM)
-  - (new feature) Add support for forcing wrapping at the screen boundary
-  - (bugfix 741) HTML comments shouldn't be evaluated inside STYLE elements
   - (bugfix) Use frame->name instead of target avoiding possible segfault.
   - (bugfix 284) Render closing parentheses for HTML elements SUB, SUP
     in the same line; don't let them fall to the next.
@@ -120,9 +98,6 @@ roughly in decreasing order of importance.
     than italics.
   - (enhancement) Add support for parsing space separated CSS class
     attribute values
-  - (enhancement 767) HTML meta refresh finds the URL even without "URL=".
-  - (enhancement 396) If the server doesn't say what the Content-Type is
-    but the data contains "<html>", assume it is text/html.
   - (bugfix 387) Treat &#013; inside <pre>...</pre> as a newline.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature) If a mailcap entry indicates copiousoutput, ELinks
@@ -140,10 +115,7 @@ roughly in decreasing order of importance.
   - (enhancement) Display accesskeys as e.g. (Alt-f), not just (f).
   - (bugfix) Decode the fragment identifier extracted from the URI
     when looking it up
-  - (bugfix 908) radio button writes via a dangling pointer (potential
-    crash)
 * Changes in user scripting
-  - (bugfix, Gentoo 121247) Ruby: Fix segfaults.
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
@@ -156,8 +128,6 @@ roughly in decreasing order of importance.
   - (new feature) SMJS: New method elinks.execute.
   - (enhancement) SMJS: Garbage-collect SMJS objects before flushing
     caches.
-  - (bugfix 870) SMJS: Don't panic if a property ID is unrecognized.
-    (The bug also affected SMJS on web pages, but that's experimental.)
   - (bitrot) Perl: Don't assume POPpx stores the length to n_a.
   - (bugfix) Perl: Fix pre_format_html hook wrt. binary files.
 * Build system and compile-time errors (ignore if you don't build ELinks)
@@ -197,8 +167,6 @@ roughly in decreasing order of importance.
   - (enhancement) input.accessKey can be any Unicode character except
     U+0000.
   - (new feature) window.setTimeout, window.status
-  - (bugfix 846) Fix potentially exploitable crashes if properties
-    were invoked with "this" objects of unexpected types.
 * (experimental) Changes in SGML/DOM implementation
   - (new feature) Minimalistic RSS renderer
   - (enhancement) Source highlighting also recognizes
@@ -264,7 +232,52 @@ have already been considered.
     reverted in 763f03f146cc1391b303c8074556f0ddea1e3c7a
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
+  - (bugfix) Use PF_* instead of AF_* as first parameter of socket(2).
+    (commits 8b7657deaf6037736d0abe88bae1865fec55fe93 in 0.12.GIT
+    and d9b56bad7d528a87376768572c2601c57d8afb02 in 0.11.0.GIT)
 //////////////////////////////////////////////////////////////////////
+
+ELinks 0.11.2.GIT now:
+----------------------
+
+* critical bugs 846, 870: fix crashes in web ECMAScripts and SMJS user
+  scripting
+* critical bug 868: fix segfault in check_timers
+* critical bugs 897, 919: fix crashes on operating systems lacking
+  mremap()
+* critical: fix null pointer crash if XBEL bookmark has no title
+* critical bug 927: fix null pointer crash if META Refresh is in a
+  table cell
+* critical bug 760: fix crash when moving bookmarks out of a folder
+* critical: fix crash in an empty file-extensions menu
+* major Gentoo 121247: fix segfaults in Ruby user scripting
+* major bug 908: don't write to freed memory when the user pushes a
+  radio button
+* major bug 937: don't send the entire HTTPS request to a CONNECT
+  proxy
+* bug 899, Debian 403139: recognize >2GB files in FTP directory
+  listing, if off_t is large enough
+* bug 942: encode/decode file names in FTP URLs, so they can contain
+  spaces
+* bug 741: don't recognize HTML comments inside STYLE elements
+* bug 769: fix MD5 computation/formatting in HTTP digest
+  authentication
+* fix POST to local CGI
+* bugs 872, 886: editing or deleting cookies in the cookie manager
+  should cause a save
+* minor bugs 830, 831: changes in parsing of -remote arguments
+* enhancement 24: fix searching past unselectable elements in menus
+* enhancement in experimental Python scripting: changed
+  goto_url_hook(current) to goto_url_hook(current, new).
+  ELinks 0.12.0 will further change it to goto_url_hook(new).
+* enhancement: recognize function keys and backspace/delete on FreeBSD
+* enhancement 772: recognize Shift-Tab on XTerm
+* enhancement: place cursor on listbox rather than button, to help
+  screen readers
+* enhancements in text wrapping
+* enhancement 767: recognize URL in META Refresh even without "URL="
+* enhancement 396: search for "<html>" if the server doesn't specify a
+  Content-Type
 
 ELinks 0.11.2:
 --------------
