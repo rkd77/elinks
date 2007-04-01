@@ -341,7 +341,7 @@ enum move_bookmark_flags {
 };
 
 /* Traverse all bookmarks and move all marked items
- * _into_ destb or, if destb is NULL, _after_ dest. */
+ * _into_ dest or, if insert_as_child is 0, _after_ dest. */
 static enum move_bookmark_flags
 do_move_bookmark(struct bookmark *dest, int insert_as_child,
 		 struct list_head *src, struct listbox_data *box)
