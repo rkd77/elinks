@@ -8,36 +8,44 @@ file for details.
 ELinks now:
 -----------
 
-* bug 846, 870: fix crashes in web ECMAScripts and SMJS user scripting
-* bug 868: fix segfault in check_timers
-* bug 897, 919: fix crashes on operating systems lacking mremap()
-* Gentoo 121247: fix segfaults in Ruby user scripting
-* fix null pointer crash in XBEL loading
-* bug 908: fix a write to freed memory when pushing a radio button
-* bug 937: don't send entire HTTPS request to CONNECT proxy
-* bug 899, Debian 403139: recognize >2GB files in FTP directory listing,
-  if off_t is large enough
-* bug 942: encode/decode file names in FTP URLs, so they can contain spaces
+* critical bugs 846, 870: fix crashes in web ECMAScripts and SMJS user
+  scripting
+* critical bug 868: fix segfault in check_timers
+* critical bugs 897, 919: fix crashes on operating systems lacking
+  mremap()
+* critical: fix null pointer crash in XBEL loading
+* major Gentoo 121247: fix segfaults in Ruby user scripting
+* major bug 908: don't write to freed memory when the user pushes a
+  radio button
+* major bug 937: don't send the entire HTTPS request to a CONNECT
+  proxy
+* bug 899, Debian 403139: recognize >2GB files in FTP directory
+  listing, if off_t is large enough
+* bug 942: encode/decode file names in FTP URLs, so they can contain
+  spaces
 * bug 741: don't recognize HTML comments inside STYLE elements
-* bug 769: fix MD5 computation/formatting in HTTP digest authentification
-* bug 830, 831: changes in parsing of -remote arguments
+* bug 769: fix MD5 computation/formatting in HTTP digest
+  authentication
 * fix POST to local CGI
-* bug 886: editing or deleting cookies in the manager should cause a save
-* bug 24: fix searching past unselectable elements in menus
-* Python scripting (experimental): changed goto_url_hook(current) to
-  goto_url_hook(current, new).  ELinks 0.12.0 will further change it
-  to goto_url_hook(new).
-* recognize function keys and backspace/delete on FreeBSD
-* bug 772: recognize Shift-Tab on XTerm
-* place cursor on listbox rather than button, to help screen readers
-* text wrapping enhancements
-* bug 767: recognize URL in META Refresh even without "URL="
+* bugs 872, 886: editing or deleting cookies in the cookie manager
+  should cause a save
+* minor bugs 830, 831: changes in parsing of -remote arguments
+* enhancement 24: fix searching past unselectable elements in menus
+* enhancement in experimental Python scripting: changed
+  goto_url_hook(current) to goto_url_hook(current, new).
+  ELinks 0.12.0 will further change it to goto_url_hook(new).
+* enhancement: recognize function keys and backspace/delete on FreeBSD
+* enhancement 772: recognize Shift-Tab on XTerm
+* enhancement: place cursor on listbox rather than button, to help
+  screen readers
+* enhancements in text wrapping
+* enhancement 767: recognize URL in META Refresh even without "URL="
 
 ELinks 0.11.2:
 --------------
 
-* bug 841, CVE-2006-5925: prevent enabling the SMB protocol
-* bug 786: fix crash when following a link in frames
+* critical bug 841, CVE-2006-5925: prevent enabling the SMB protocol
+* critical bug 786: fix crash when following a link in frames
 * print off_t with custom OFF_T_FORMAT instead of PRId64
 * build: Minix3 compatibility
 
