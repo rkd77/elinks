@@ -62,9 +62,11 @@ ELinks 0.11.1:
 * fix assertion failure with document.plain.display_links and
   uppercase URIs
 * fix Gopher crashes
-* Native FSP protocol support (replaces CGI program in contrib/cgi/)
+* enhancement 630: native FSP protocol support (replaces CGI program
+  in contrib/cgi/)
 * SMJS user scripting: check for hooks.js before trying to load it
-* SMJS user scripting: new view_state object
+* SMJS user scripting: the elinks.preformat_html hook gets a second
+  argument: a view_state object with .uri and .plain properties
 * Lua scripting: fix current_document_formatted
 * if given "a?b" in the command line, try to guess whether the
   question mark is part of the file name or indicates a query part
