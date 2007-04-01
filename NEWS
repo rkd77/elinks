@@ -14,6 +14,8 @@ ELinks now:
 * critical bugs 897, 919: fix crashes on operating systems lacking
   mremap()
 * critical: fix null pointer crash in XBEL loading
+* critical bug 927: fix null pointer crash if META Refresh is in a
+  table cell
 * major Gentoo 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
