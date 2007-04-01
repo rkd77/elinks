@@ -44,6 +44,8 @@ ELinks now:
   screen readers
 * enhancements in text wrapping
 * enhancement 767: recognize URL in META Refresh even without "URL="
+* enhancement 396: search for "<html>" if the server doesn't specify a
+  Content-Type
 
 ELinks 0.11.2:
 --------------
