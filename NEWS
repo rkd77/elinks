@@ -31,6 +31,7 @@ ELinks now:
 * bug 772: recognize Shift-Tab on XTerm
 * place cursor on listbox rather than button, to help screen readers
 * text wrapping enhancements
+* bug 767: recognize URL in META Refresh even without "URL="
 
 ELinks 0.11.2:
 --------------
