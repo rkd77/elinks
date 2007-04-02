@@ -33,6 +33,8 @@ ELinks now:
 * fix POST to local CGI
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
+* bug 768 in experimental Python scripting: link with e.g. -lpython2.4
+  rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
 * enhancement 24: fix searching past unselectable elements in menus
 * enhancement in experimental Python scripting: changed
