@@ -36,6 +36,7 @@ ELinks now:
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
   rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
+* minor Debian 313696 and other translation updates
 * enhancement 24: fix searching past unselectable elements in menus
 * enhancement in experimental Python scripting: changed
   goto_url_hook(current) to goto_url_hook(current, new).
@@ -69,7 +70,7 @@ ELinks 0.11.1:
 * SMJS user scripting: check for hooks.js before trying to load it
 * SMJS user scripting: the elinks.preformat_html hook gets a second
   argument: a view_state object with .uri and .plain properties
-* Lua scripting: fix current_document_formatted
+* bug 921 in Lua scripting: fix current_document_formatted
 * if given "a?b" in the command line, try to guess whether the
   question mark is part of the file name or indicates a query part
 * updated character entity list from unicode.org
