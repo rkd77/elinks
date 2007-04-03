@@ -10,7 +10,7 @@ ELinks now:
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (26473f72f59641aa60277f14f703f8a76dda5a82).  The next
+ELinks 0.12.GIT (f0e7bb81df5499583e508302d2f631dd0482ad3c).  The next
 step will be to scan through Bugzilla and look for bug numbers that
 were not mentioned in related commit messages.
 
@@ -75,11 +75,12 @@ roughly in decreasing order of importance.
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
     dialogs.
   - (bugfix 396) Never show empty filename in the what-to-do dialog
+  - (bugfix 930) Refresh status bar when key prefix is eaten.
 * Changes in support for URI schemes, protocols, caching, and encodings
+  - (new feature 844) SMB protocol using libsmbclient
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
   - (new feature) LZMA decompression
-  - (bugfix) Local files in a directory whose name contained + were
-    unreachable.
+  - (bugfix 517) Fixed and enabled HTTP bzip2 decompression
   - (new feature) HTTP negotiate-auth using GSSAPI
   - (bugfix 770) Download resuming simply restarts the download
   - (bugfix) Fix IPv4 DNS lookup bug
@@ -90,6 +91,10 @@ roughly in decreasing order of importance.
   - (bugfix 729) Fix crashes with various bogus BitTorrent URLs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
     after HTTP proxy was changed
+  - (bugfix) Encode and decode filenames in FSP URLs.
+  - (enhancement) FSP progress indicator and password prompt.
+  - (bugfix) Support much longer locale-specific timestamps when
+    formatting a directory listing.  LC_TIME=fi_FI.UTF-8 now works.
 * Changes in parsing and rendering of HTML (without DOM)
   - (bugfix) Use frame->name instead of target avoiding possible segfault.
   - (bugfix 284) Render closing parentheses for HTML elements SUB, SUP
@@ -100,8 +105,10 @@ roughly in decreasing order of importance.
     attribute values
   - (bugfix 387) Treat &#013; inside <pre>...</pre> as a newline.
 * Changes in parsing and rendering of non-HTML content-types
-  - (new feature) If a mailcap entry indicates copiousoutput, ELinks
-    itself acts as a pager.
+  - (new feature 121) If a mailcap entry indicates copiousoutput,
+    ELinks itself acts as a pager.
+  - (new feature 916) If a mailcap entry has no %s, provide the file
+    as stdin.
 * Changes in the document viewer and tabs
   - (new feature) Highlight links as one enters link prefixes.
   - (new feature) Backspace backs out the last digit of the prefix.
@@ -120,7 +127,8 @@ roughly in decreasing order of importance.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
   - (experimental, new feature, bugfix) Python: Many additions and
-    bug fixes.
+    bug fixes.  Changed goto_url_hook(current, new) to goto_url_hook(new);
+    it can call the new function elinks.current_url() if desired.
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
     elinks.vs.
@@ -142,13 +150,13 @@ roughly in decreasing order of importance.
   - (bugfix) Include <sys/types.h> and fix compilation on an old
     PPC/Debian system
   - (bitrot) Fix compilation under gcc 4.x. Backported from gentoo portage.
+    Also, reduce warnings on gcc 4.2 snapshots.
   - (bitrot) Update SpiderMonkey configure check Debian compatibility
   - (new feature) Tiny C Compiler support
+  - (new feature 779) make uninstall
   - (experimental, new feature) Native Win32 port
   - (enhancement) If make -k was used and a sub-Make fails, build the
     rest before propagating.
-  - (experimental, bitrot 768) Look for e.g. -lpython2.4 rather than
-    -lpython.
   - (enhancement) Avoid compilation of vernum.c in 'make install'
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
   - (bitrot) Fix two warnings on Mac OS X.
@@ -188,7 +196,9 @@ have already been considered.
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
   - (bugfix 725) Fixes version checking for Ruby in 'configure'
-  - (new feature 779) make uninstall
+  - (bugfix 890) Change colors 0-15 to match xterm defaults.
+    The bug report also requests asking xterm to report its palette,
+    but that part will be delayed to 0.13 or later.
 * Fixed bugs that were not in previous versions:
   - (bugfix) Fix a crash when adding a server in the cookie manager.
   - (bugfix) cookies: "Add Server" ignores "cookies.accept_policy".
@@ -218,6 +228,10 @@ have already been considered.
   - (bugfix 754) Pressing ESC do not pop up main menu anymore.
   - (bugfix 794) tab-close-all-but-current crashes
   - (bugfix 781) document->buf can overflow with UTF-8 enabled
+  - (bugfix 882) C1 controls pass through to the terminal if written
+    as entity references
+  - (bugfix 935) Yes and No buttons override the bottom border of the
+    dialog.
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -235,6 +249,9 @@ have already been considered.
   - (bugfix) Use PF_* instead of AF_* as first parameter of socket(2).
     (commits 8b7657deaf6037736d0abe88bae1865fec55fe93 in 0.12.GIT
     and d9b56bad7d528a87376768572c2601c57d8afb02 in 0.11.0.GIT)
+  - (bugfix) Better error handling in save_form_data_to_file and
+    save_textarea_file.
+    (commit 6bdc34cfbcade0c25922c1ad96c753cc7d1c9949 and nearby)
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.2.GIT now:
@@ -265,7 +282,10 @@ ELinks 0.11.2.GIT now:
 * fix POST to local CGI
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
+* bug 768 in experimental Python scripting: link with e.g. -lpython2.4
+  rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
+* minor Debian 313696 and other translation updates
 * enhancement 24: fix searching past unselectable elements in menus
 * enhancement in experimental Python scripting: changed
   goto_url_hook(current) to goto_url_hook(current, new).
@@ -299,7 +319,7 @@ ELinks 0.11.1:
 * SMJS user scripting: check for hooks.js before trying to load it
 * SMJS user scripting: the elinks.preformat_html hook gets a second
   argument: a view_state object with .uri and .plain properties
-* Lua scripting: fix current_document_formatted
+* bug 921 in Lua scripting: fix current_document_formatted
 * if given "a?b" in the command line, try to guess whether the
   question mark is part of the file name or indicates a query part
 * updated character entity list from unicode.org
