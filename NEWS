@@ -18,6 +18,7 @@ ELinks now:
   table cell
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
+* critical: fix SMJS null pointer crash on exit
 * major Gentoo 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
