@@ -1,5 +1,5 @@
 Hacking ELinks
---------------
+==============
 
 Welcome, mere mortal, to the realm of evil unindented code, heaps of one or
 two-letter variables, seas of gotos accompanied with 30-letters labels in Czech
@@ -12,7 +12,7 @@ Motto: I didn't expect someone to look at the source, so it's unreadable.
 
 
 Language files
-~~~~~~~~~~~~~~
+--------------
 
 Each UI output should use language files in order to be able to translate the
 messages to a desired language.  Those language files reside in the po/ subdir. If
@@ -22,7 +22,7 @@ your own system, you have to have the gettext tools installed.
 
 
 ELinks philosophy
-~~~~~~~~~~~~~~~~~
+-----------------
 
 ELinks is based on the philosophy of asynchronism.  That means, you pass a
 callback to each function, and when the requested task finishes sometime in the
@@ -55,7 +55,7 @@ directory.
 
 
 HTML parser
-~~~~~~~~~~~
+-----------
 
 The following was found in the mailing list archive - Mikulas wrote it:
 
@@ -86,7 +86,7 @@ functions only calculate size.
 
 
 Documents management
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 Just a few words regarding the document structures. To understand the code, it
 is important to note the difference between rendered documents and document
@@ -114,7 +114,7 @@ those view_states up, you get a session history.
 
 
 Lua support
-~~~~~~~~~~~
+-----------
 
 Peter Wang wrote this on the mailing list:
 
@@ -196,7 +196,7 @@ pressed, we branch off to some Lua code.
 
 
 Coding style
-~~~~~~~~~~~~
+------------
 
 Mikulas once said that 'it was hard to code, so it should be hard to read' -
 and he drove by this when he was writing links.  However, we do NOT drive by
@@ -247,7 +247,7 @@ at the start of block only.
 
 
 Comments
-~~~~~~~~
+--------
 
 Use blank lines frequently to separate chunks of code.  And use magic `/\*` and
 `*/` to give others an idea about what it does and about possible pitfalls.
@@ -313,14 +313,14 @@ place it on the preceding line.
 
 
 More about style
-~~~~~~~~~~~~~~~~
+----------------
 
 Note: We use short variables names and stupid examples here, do not take that
       as a guideline for _REAL_ coding.  Always use descriptive variables
       names and do not write stupid code ;).
 
 General style is:
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 ------------------------------------------------------------------------------
 [blank line]
@@ -346,7 +346,7 @@ func(int a, int b)
 ------------------------------------------------------------------------------
 
 You should observe the following rules:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Always have a blank line before a function declaration or comment.
 
@@ -517,10 +517,10 @@ exception and be prepared to defend your exception at anytime ;).
 
 
 Coding practices
-~~~~~~~~~~~~~~~~
+----------------
 
 Use bitfields to store boolean values
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If speed is not critical and especially if you are messing with some struct
 where size might matter, feel encouraged to use bitfields to store boolean (or
@@ -530,7 +530,7 @@ to reach the top bit in these cases, and with int foo:1, foo would be either 0
 or -1, which is probably not what you want.
 
 Wrap hard initializations of structures with macros
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This should be done if the structure's initializers are going to be spread
 widely (so that we can grep for them easily), there are massive typecasts
@@ -558,7 +558,7 @@ struct example t = NULL_EXAMPLE;
 -------------------------------------------------------------------------------
 
 Please try to keep order of fields
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Please try to keep order of fields from max. to min. of size of each type of
 fields, especially in structures:
@@ -583,7 +583,7 @@ logical composition always takes precedence over this optimization, modulo
 some very rare critical structures.
 
 Please do not use sizeof(struct item_struct_name)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Instead use sizeof(*item) when possible.
 
@@ -616,7 +616,7 @@ The preferred form eases future changes in types, and maintain size vs type
 coherence.
 
 Please postfix defined types with _T
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -------------------------------------------------------------------------------
 typedef int (some_func_T)(void *);
@@ -624,7 +624,7 @@ typedef long long our_long_T;
 -------------------------------------------------------------------------------
 
 Please use mode_t and S_I???? macros instead of numeric modes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .Use:
 -------------------------------------------------------------------------------
@@ -641,7 +641,7 @@ S_IWUSR, S_IXUSR instead.
 
 
 Patches
-~~~~~~~
+-------
 
 Please send unified patches only.
 
@@ -678,7 +678,7 @@ sufficiently self-contained.
 
 
 Advantages of `--enable-debug` configure option
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------
 
 Since ELinks 0.4pre11, a memory debugger can be enabled using the
 `--enable-debug` configure script option.  It may help to find memleaks and more
