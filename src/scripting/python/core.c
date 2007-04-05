@@ -39,8 +39,12 @@ cleanup_python(struct module *module)
 void
 init_python(struct module *module)
 {
-	unsigned char *python_path = straconcat(elinks_home, ":", CONFDIR, NULL);
+	unsigned char *python_path;
 
+	if (elinks_home)
+		python_path = straconcat(elinks_home, ":", CONFDIR, NULL);
+	else
+		python_path = stracpy(CONFDIR);
 	if (!python_path) return;
 	env_set("PYTHONPATH", python_path, -1);
 	mem_free(python_path);
