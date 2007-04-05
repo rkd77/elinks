@@ -5,8 +5,8 @@ You can see the complete list of recent changes, bugfixes and new features in
 the link:http://pasky.or.cz/gitweb.cgi[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks now:
------------
+ELinks 0.12.GIT now, to be released as 0.12.0:
+----------------------------------------------
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
@@ -252,8 +252,8 @@ have already been considered.
     (commit 6bdc34cfbcade0c25922c1ad96c753cc7d1c9949 and nearby)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.2.GIT now:
-----------------------
+ELinks 0.11.2.GIT now, to be released as 0.11.3:
+------------------------------------------------
 
 * critical bugs 846, 870: fix crashes in web ECMAScripts and SMJS user
   scripting
