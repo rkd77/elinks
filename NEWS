@@ -168,7 +168,6 @@ roughly in decreasing order of importance.
     reopen them when incremental rendering reruns the onload script.
   - (enhancement) Recognize document.location.href for SMJS.
   - (enhancement) Better handling of form.action assignments
-  - (bugfix) SMJS: fix segfault on exit.
   - (enhancement) form[x] looks up controls also by id, not only name.
   - (new feature) New property input.selectedIndex.
   - (new feature) Activate link only when onClick returns true.
@@ -215,7 +214,6 @@ have already been considered.
   - (bugfix 821) I cannot enter national characters in dialog boxes
   - (bugfix 834) Gzip decompression doesn't work
   - (bugfix) Fix out-of-bound access to the quote_char buffer
-  - (bugfix 880) Prevent SIGSEGV in init_python when -no-home is used.
   - (bugfix 788) compile error with --enable-perl
   - (bugfix 827) Crash with term charset set to Unicode and UTF-8 I/O
     disabled
@@ -267,6 +265,9 @@ ELinks 0.11.2.GIT now:
   table cell
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
+* critical: fix SMJS null pointer crash on exit
+* critical bug 880 in experimental Python scripting: fix null pointer
+  crash with -no-home
 * major Gentoo 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
