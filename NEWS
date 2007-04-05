@@ -19,6 +19,8 @@ ELinks now:
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
 * critical: fix SMJS null pointer crash on exit
+* critical bug 880 in experimental Python scripting: fix null pointer
+  crash with -no-home
 * major Gentoo 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
