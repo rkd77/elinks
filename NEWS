@@ -21,41 +21,48 @@ do list all bug numbers).  It might be a good idea to sort the entries
 roughly in decreasing order of importance.
 //////////////////////////////////////////////////////////////////////
 
+* Notable new features
+  - (unfinished enhancement 822) UTF-8 as terminal charset: not
+    merely UTF-8 I/O of a unibyte codepage as in previous versions.
+    Double-cell (aka fullwidth) and non-BMP characters work too, but
+    combining characters and right-to-left text do not.  The only
+    multibyte charset ELinks can decode is still UTF-8, so if the
+    server outputs e.g. Shift-JIS, you'd better recode with a proxy.
+  - (enhancement 844) SMB protocol using libsmbclient.  This replaces
+    the smbclient-based code that was disabled in ELinks 0.11.2.
+* Incompatibilities
+  - ECMAScript support is now disabled by default.  It has known bugs
+    (548, 755, 771) with which malicious web pages can crash or hang
+    ELinks, and its security goals are undocumented.  If you must
+    enable ECMAScript support, it would be prudent to restrict the
+    ELinks process with a sandbox of some kind.
+  - (bug 871) The numbering of terminal.*.colors no longer depends on
+    config options.  This change makes elinks.conf portable between
+    different configurations but unfortunately not between this and
+    previous versions.
+  - Changed Python goto_url_hook(current) to goto_url_hook(new).  The
+    hook can call the new function elinks.current_url() if desired.
+    The Python scripting back-end is much more featureful than in
+    previous releases, but it is still considered experimental.
 * Miscellaneous
-  - (bugfix) If ELinks logs debug information to a file, it now opens
-    that in binary mode.
   - (enhancement 752) Documentation updates
   - (enhancement 381) Reduce memory consumption of codepages and some
     other arrays.
-  - (bugfix) Secure file saving: restore umask after _all_ failure
-    conditions
   - (enhancement) Reject invalid UTF-8 input from documents and
     terminals.
 * Changes in terminal support
   - (enhancement) Mouse wheel support on BSD via moused -z 4
   - (enhancement) Support for mouse wheel over GPM
-  - (experimental, new feature) UTF-8 as terminal charset: not merely
-    UTF-8 I/O of a unibyte codepage as in previous versions.
-    Double-cell (aka fullwidth) and non-BMP characters work too, but
-    combining characters and right-to-left text do not.  The only
-    multibyte charset ELinks can decode is still UTF-8, so if the
-    server outputs e.g. Shift-JIS, you'd better recode with a proxy.
-  - (bugfix) Kill the ESC timer when blocking the terminal.
   - (bugfix 724) Better parsing of escape sequences and control
     sequences from the terminal.
   - (bugfix) Decode UTF-8 only from bytes, not from codes of special
     keys.
-  - (bugfix) Do not call toupper with potentially out-of-range values.
   - (new feature) 24-bit truecolor mode
   - (enhancement) "Resize terminal" tries to use the window size
     increment.
   - (new feature) Support Ctrl+Alt+letter key combinations.
   - (bugfix) Subprocess forked for SIGTSTP calls _exit, not exit.
   - (enhancement) Turn terminal transparency off by default.
-  - (bugfix 871) Lock down the numbering of terminal.*.colors
-    regardless of config options.  This change makes elinks.conf
-    portable between different configurations but unfortunately not
-    between this and previous versions.
 * Changes in cookies and bookmarks
   - (new feature) "Add server" button in the cookie manager.
   - (enhancement) Tell the user how to move bookmarks.
@@ -71,13 +78,11 @@ roughly in decreasing order of importance.
   - (new feature) Option ui.tabs moves the tab bar to the top.
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
-  - (bugfix) Two small fixes in the authentication dialog.
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
     dialogs.
   - (bugfix 396) Never show empty filename in the what-to-do dialog
   - (bugfix 930) Refresh status bar when key prefix is eaten.
 * Changes in support for URI schemes, protocols, caching, and encodings
-  - (new feature 844) SMB protocol using libsmbclient
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
   - (new feature) LZMA decompression
   - (bugfix 517) Fixed and enabled HTTP bzip2 decompression
@@ -126,9 +131,6 @@ roughly in decreasing order of importance.
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
-  - (experimental, new feature, bugfix) Python: Many additions and
-    bug fixes.  Changed goto_url_hook(current) to goto_url_hook(new);
-    it can call the new function elinks.current_url() if desired.
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
     elinks.vs.
@@ -161,7 +163,6 @@ roughly in decreasing order of importance.
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
   - (bitrot) Fix two warnings on Mac OS X.
 * (experimental) Changes in ECMAScript support
-  - (enhancement) Disable ECMAScript by default.
   - (new feature) SEE ECMAScript backend, an alternative to SpiderMonkey.
   - (new feature) Handling onsubmit
   - (workaround) window.open remembers the last few URLs and doesn't
@@ -250,6 +251,14 @@ have already been considered.
   - (bugfix) Better error handling in save_form_data_to_file and
     save_textarea_file.
     (commit 6bdc34cfbcade0c25922c1ad96c753cc7d1c9949 and nearby)
+  - (bugfix) Do not call toupper with potentially out-of-range values.
+    (commit 9e30ee631ced843f26a264c351cfa1716e7e1941)
+  - (bugfix) If ELinks logs debug information to a file, it now opens
+    that in binary mode.  (commit 4ced25779dca68c0e15ce1e695ce191b536bb05d)
+  - (bugfix) Kill the ESC timer when blocking the terminal.
+    (commit 539f756438fca4264ab937b2ccfba2351e916a16)
+  - (bugfix) Don't claim that the authentication is for HTTP.
+    (commit ef2f6383c6f0bed576e6f69030eacc4931b42a27)
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.2.GIT now, to be released as 0.11.3:
@@ -281,8 +290,10 @@ ELinks 0.11.2.GIT now, to be released as 0.11.3:
 * bug 769: fix MD5 computation/formatting in HTTP digest
   authentication
 * fix POST to local CGI
+* remove a garbage character from the end of the authentication prompt
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
+* secure file saving: restore umask after _all_ failure conditions
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
   rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
