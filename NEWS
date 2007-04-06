@@ -127,7 +127,7 @@ roughly in decreasing order of importance.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
   - (experimental, new feature, bugfix) Python: Many additions and
-    bug fixes.  Changed goto_url_hook(current, new) to goto_url_hook(new);
+    bug fixes.  Changed goto_url_hook(current) to goto_url_hook(new);
     it can call the new function elinks.current_url() if desired.
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
@@ -288,9 +288,6 @@ ELinks 0.11.2.GIT now, to be released as 0.11.3:
 * minor bugs 830, 831: changes in parsing of -remote arguments
 * minor Debian 313696 and other translation updates
 * enhancement 24: fix searching past unselectable elements in menus
-* enhancement in experimental Python scripting: changed
-  goto_url_hook(current) to goto_url_hook(current, new).
-  ELinks 0.12.0 will further change it to goto_url_hook(new).
 * enhancement: recognize function keys and backspace/delete on FreeBSD
 * enhancement 772: recognize Shift-Tab on XTerm
 * enhancement: place cursor on listbox rather than button, to help
