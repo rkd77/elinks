@@ -41,9 +41,6 @@ ELinks now:
 * minor bugs 830, 831: changes in parsing of -remote arguments
 * minor Debian 313696 and other translation updates
 * enhancement 24: fix searching past unselectable elements in menus
-* enhancement in experimental Python scripting: changed
-  goto_url_hook(current) to goto_url_hook(current, new).
-  ELinks 0.12.0 will further change it to goto_url_hook(new).
 * enhancement: recognize function keys and backspace/delete on FreeBSD
 * enhancement 772: recognize Shift-Tab on XTerm
 * enhancement: place cursor on listbox rather than button, to help
