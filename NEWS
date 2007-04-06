@@ -34,6 +34,7 @@ ELinks now:
 * bug 769: fix MD5 computation/formatting in HTTP digest
   authentication
 * fix POST to local CGI
+* remove a garbage character from the end of the authentication prompt
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
 * secure file saving: restore umask after _all_ failure conditions
