@@ -38,6 +38,8 @@ ELinks now:
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
 * secure file saving: restore umask after _all_ failure conditions
+* decode the fragment identifier extracted from the URI when looking
+  it up
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
   rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
