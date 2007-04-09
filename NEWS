@@ -82,6 +82,8 @@ ELinks 0.11.1:
   question mark is part of the file name or indicates a query part
 * updated character entity list from unicode.org
 * build: use asciidoc -unsafe for AsciiDoc 7.0.4 compatibility
+* build bug 738: fix "/config.charset" error triggered by building in
+  the source directory
 
 ELinks 0.11.0 (Elated):
 -----------------------
