@@ -150,7 +150,12 @@ roughly in decreasing order of importance.
   - (bitrot) Fix compilation under gcc 4.x. Backported from gentoo portage.
     Also, reduce warnings on gcc 4.2 snapshots.
   - (bitrot) Update SpiderMonkey configure check Debian compatibility
-  - (new feature) Tiny C Compiler support
+  - (experimental, new feature) Tiny C Compiler support, currently
+    suffering from many problems.  Use --disable-nls to avoid alloca,
+    and do not use CFLAGS=-g.  Perl, Python, and Ruby provide linker
+    options like -export-dynamic that TCC 0.9.23 does not support.
+    Using GNU TLS and Guile together can crash TCC (Debian bug 418360).
+    SEE 2.0.1131 has a syntax error inside #ifndef __GNUC__.
   - (new feature 779) make uninstall
   - (experimental, new feature) Native Win32 port
   - (enhancement) If make -k was used and a sub-Make fails, build the
