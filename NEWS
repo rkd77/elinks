@@ -89,11 +89,9 @@ roughly in decreasing order of importance.
   - (new feature) HTTP negotiate-auth using GSSAPI
   - (bugfix 770) Download resuming simply restarts the download
   - (bugfix) Fix IPv4 DNS lookup bug
-  - (bugfix) Fix null-pointer crash caused by malformed $HTTP_PROXY.
   - (enhancement) If-Modified-Since and If-None-Match
   - (bugfix) gzip_read: always call gzclearerr
   - (bugfix 107) Recognize "localhost" in file: URIs.
-  - (bugfix 729) Fix crashes with various bogus BitTorrent URLs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
     after HTTP proxy was changed
   - (bugfix) Encode and decode filenames in FSP URLs.
@@ -125,8 +123,6 @@ roughly in decreasing order of importance.
   - (bugfix) Take the terminal charset in account when comparing
     accesskeys.
   - (enhancement) Display accesskeys as e.g. (Alt-f), not just (f).
-  - (bugfix) Decode the fragment identifier extracted from the URI
-    when looking it up
 * Changes in user scripting
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
@@ -272,8 +268,11 @@ ELinks 0.11.2.GIT now, to be released as 0.11.3:
 * critical: fix null pointer crash if XBEL bookmark has no title
 * critical bug 927: fix null pointer crash if META Refresh is in a
   table cell
+* critical bug 729 in experimental BitTorrent: fix crashes with
+  various bogus BitTorrent URLs
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
+* critical: fix null pointer crash caused by malformed $HTTP_PROXY
 * critical: fix SMJS null pointer crash on exit
 * critical bug 880 in experimental Python scripting: fix null pointer
   crash with -no-home
@@ -294,6 +293,8 @@ ELinks 0.11.2.GIT now, to be released as 0.11.3:
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
 * secure file saving: restore umask after _all_ failure conditions
+* decode the fragment identifier extracted from the URI when looking
+  it up
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
   rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
@@ -333,6 +334,8 @@ ELinks 0.11.1:
   question mark is part of the file name or indicates a query part
 * updated character entity list from unicode.org
 * build: use asciidoc -unsafe for AsciiDoc 7.0.4 compatibility
+* build bug 738: fix "/config.charset" error triggered by building in
+  the source directory
 
 ELinks 0.11.0 (Elated):
 -----------------------
