@@ -20,7 +20,8 @@ ELinks now:
   various bogus BitTorrent URLs
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
-* critical: fix null pointer crash caused by malformed $HTTP_PROXY
+* critical bug 715: fix null pointer crash caused by malformed proxy
+  setting
 * critical: fix SMJS null pointer crash on exit
 * critical bug 880 in experimental Python scripting: fix null pointer
   crash with -no-home
@@ -99,7 +100,7 @@ ELinks 0.11.0 (Elated):
   history-move-back, and history-move-forward
 * BitTorrent protocol (experimental)
 * FSP protocol via a CGI script (see contrib/cgi/README.FSP) (experimental)
-* sysmouse support on the BSD console
+* enhancement 694: sysmouse support on the BSD console
 * new GNU make based build system (aclocal from automake is still required)
 * move from CVS to GIT
 
