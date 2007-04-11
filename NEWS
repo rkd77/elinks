@@ -12,6 +12,8 @@ ELinks now:
   scripting
 * critical bug 927: fix null pointer crash if META Refresh is in a
   table cell
+* critical bug 941: fix assertion failure or memory corruption if FTP
+  server responds to PASV with status 200
 * critical bug 729 in experimental BitTorrent: fix crashes with
   various bogus BitTorrent URLs
 * critical bug 868: fix segfault in check_timers
