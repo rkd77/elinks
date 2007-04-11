@@ -906,12 +906,21 @@ next:
 	return file_len;
 }
 
+/* Connect to the host and port specified by a passive FTP server.  */
 static int
 ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 		 int size_of_sockaddr)
 {
-	int fd = socket(pf, SOCK_STREAM, 0);
+	int fd;
 
+	if (conn->data_socket->fd != -1) {
+		/* The server maliciously sent multiple 227 or 229
+		 * responses.  Do not leak the previous data_socket.  */
+		abort_connection(conn, S_FTP_ERROR);
+		return -1;
+	}
+
+	fd = socket(pf, SOCK_STREAM, 0);
 	if (fd < 0 || set_nonblocking_fd(fd) < 0) {
 		abort_connection(conn, S_FTP_ERROR);
 		return -1;
@@ -1036,6 +1045,21 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 		}
 	}
 
+	if (conn->data_socket->fd == -1) {
+		/* The passive FTP server did not send a 227 or 229
+		 * response.  We check this down here, rather than
+		 * immediately after getting the response to the PASV
+		 * or EPSV command, to make sure that nothing can
+		 * close the socket between the check and the
+		 * following set_handlers call.
+		 *
+		 * If we were using active FTP, then
+		 * get_ftp_data_socket would have created the
+		 * data_socket without waiting for anything from the
+		 * server.  */
+		abort_connection(conn, S_FTP_ERROR);
+		return;
+	}
 	set_handlers(conn->data_socket->fd, (select_handler_T) ftp_data_accept,
 		     NULL, NULL, conn);
 
@@ -1302,11 +1326,25 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 	}
 }
 
+/* This is the initial read handler for conn->data_socket->fd,
+ * which may be either trying to connect to a passive FTP server or
+ * listening for a connection from an active FTP server.  In active
+ * FTP, this function then accepts the connection and replaces
+ * conn->data_socket->fd with the resulting socket.  In any case,
+ * this function does not read any data from the FTP server, but
+ * rather hands the socket over to got_something_from_data_connection,
+ * which then does the reads.  */
 static void
 ftp_data_accept(struct connection *conn)
 {
 	struct ftp_connection_info *ftp = conn->info;
 	int newsock;
+
+	/* Because this function is called only as a read handler of
+	 * conn->data_socket->fd, the socket must be valid if we get
+	 * here.  */
+	assert(conn->data_socket->fd >= 0);
+	if_assert_failed return;
 
 	set_connection_timeout(conn);
 	clear_handlers(conn->data_socket->fd);
@@ -1333,12 +1371,21 @@ ftp_data_accept(struct connection *conn)
 		     NULL, NULL, conn);
 }
 
+/* A read handler for conn->data_socket->fd.  This function reads
+ * data from the FTP server, reformats it to HTML if it's a directory
+ * listing, and adds the result to the cache entry.  */
 static void
 got_something_from_data_connection(struct connection *conn)
 {
 	struct ftp_connection_info *ftp = conn->info;
 	struct ftp_dir_html_format format;
 	ssize_t len;
+
+	/* Because this function is called only as a read handler of
+	 * conn->data_socket->fd, the socket must be valid if we get
+	 * here.  */
+	assert(conn->data_socket->fd >= 0);
+	if_assert_failed return;
 
 	/* XXX: This probably belongs rather to connect.c ? */
 
