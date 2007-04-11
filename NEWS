@@ -10,7 +10,7 @@ ELinks 0.12.GIT now, to be released as 0.12.0:
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (f0e7bb81df5499583e508302d2f631dd0482ad3c).  The next
+ELinks 0.12.GIT (049cc9c6b37951a739dfd6b20ca92c170188824c).  The next
 step will be to scan through Bugzilla and look for bug numbers that
 were not mentioned in related commit messages.
 
@@ -88,8 +88,8 @@ roughly in decreasing order of importance.
   - (bugfix 517) Fixed and enabled HTTP bzip2 decompression
   - (new feature) HTTP negotiate-auth using GSSAPI
   - (bugfix 770) Download resuming simply restarts the download
-  - (bugfix) Fix IPv4 DNS lookup bug
-  - (enhancement) If-Modified-Since and If-None-Match
+  - (bugfix 691) Fix IPv4 DNS lookup bug
+  - (enhancement 790) If-Modified-Since and If-None-Match
   - (bugfix) gzip_read: always call gzclearerr
   - (bugfix 107) Recognize "localhost" in file: URIs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
@@ -267,17 +267,20 @@ ELinks 0.11.2.GIT now, to be released as 0.11.3:
 
 * critical bugs 846, 870: fix crashes in web ECMAScripts and SMJS user
   scripting
+* critical bug 927: fix null pointer crash if META Refresh is in a
+  table cell
+* critical bug 941: fix assertion failure or memory corruption if FTP
+  server responds to PASV with status 200
+* critical bug 729 in experimental BitTorrent: fix crashes with
+  various bogus BitTorrent URLs
 * critical bug 868: fix segfault in check_timers
 * critical bugs 897, 919: fix crashes on operating systems lacking
   mremap()
 * critical: fix null pointer crash if XBEL bookmark has no title
-* critical bug 927: fix null pointer crash if META Refresh is in a
-  table cell
-* critical bug 729 in experimental BitTorrent: fix crashes with
-  various bogus BitTorrent URLs
 * critical bug 760: fix crash when moving bookmarks out of a folder
 * critical: fix crash in an empty file-extensions menu
-* critical: fix null pointer crash caused by malformed $HTTP_PROXY
+* critical bug 715: fix null pointer crash caused by malformed proxy
+  setting
 * critical: fix SMJS null pointer crash on exit
 * critical bug 880 in experimental Python scripting: fix null pointer
   crash with -no-home
@@ -356,7 +359,7 @@ ELinks 0.11.0 (Elated):
   history-move-back, and history-move-forward
 * BitTorrent protocol (experimental)
 * FSP protocol via a CGI script (see contrib/cgi/README.FSP) (experimental)
-* sysmouse support on the BSD console
+* enhancement 694: sysmouse support on the BSD console
 * new GNU make based build system (aclocal from automake is still required)
 * move from CVS to GIT
 
