@@ -432,8 +432,8 @@ foreach(a, b) if (a == c) ...  else ...
 If you have a chain of if () { .. } else if () { .. } else { .. } with longer
 statements, you can insert a blank line before each else line.
 
-Label names should start on the first column and with have a blank line before
-it.
+Label names should start on the first column and a blank line should be 
+inserted before it.
 
 .Use:
 -------------------------------------------------------------------------------
