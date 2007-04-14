@@ -997,11 +997,11 @@ init_js_forms_object(struct ecmascript_interpreter *interpreter)
 	forms->object.Prototype = NULL;
 
 	SEE_OBJECT_GET(interp, interp->Global, s_document, &document);
-	SEE_SET_OBJECT(&v, (struct SEE_object *)forms);
-	SEE_OBJECT_PUT(interp, document.u.object, s_forms, &v, 0);
 
 	forms->item = SEE_cfunction_make(interp, js_forms_item, s_item, 1);
 	forms->namedItem = SEE_cfunction_make(interp, js_forms_namedItem,
 	 s_namedItem, 1);
 	forms->parent = (struct js_document_object *)document.u.object;
+	SEE_SET_OBJECT(&v, (struct SEE_object *)forms);
+	SEE_OBJECT_PUT(interp, interp->Global, s_forms, &v, 0);
 }

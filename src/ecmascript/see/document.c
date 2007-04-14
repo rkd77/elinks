@@ -138,7 +138,7 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		}
 	} else if (p == s_forms) {
-		SEE_SET_OBJECT(res, doc->forms);
+		SEE_OBJECT_GET(interp, interp->Global, s_forms, res);
 	} else if (p == s_write) {
 		SEE_SET_OBJECT(res, doc->write);
 	} else if (p == s_writeln) {
@@ -171,14 +171,9 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
-	struct js_document_object *doc = (struct js_document_object *)o;
-	struct SEE_value res;
 	unsigned char *string;
 
-	if (p == s_forms) {
-		SEE_ToObject(interp, val, &res);
-		doc->forms = res.u.object;
-	} else if (p == s_title) {
+	if (p == s_title) {
 		string = SEE_value_to_unsigned_char(interp, val);
 		mem_free_set(&document->title, string);
 		print_screen_status(doc_view->session);
