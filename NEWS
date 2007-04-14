@@ -129,6 +129,7 @@ roughly in decreasing order of importance.
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
+  - (bugfix 945) Lua: Don't crash if a script calls e.g. error(nil).
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
     elinks.vs.
