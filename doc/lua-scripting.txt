@@ -173,7 +173,7 @@ lua_console_hook (string)::
 	   `someprogram`.
 	 - `return "eval", "somefunction(1+2)"` will attempt to call the Lua
 	   function `somefunction` with an argument, 3.
-	 - `return "goto-url", "http://www.bogus.com"` will ask Links to visit
+	 - `return "goto_url", "http://www.bogus.com"` will ask Links to visit
 	   the URL "http://www.bogus.com".
 	 - `return nil` will do nothing.
 
