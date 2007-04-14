@@ -10,6 +10,7 @@ ELinks 0.11.3.GIT:
 
 To be released as 0.11.4.
 
+* critical bug 945: don't crash if a Lua script calls e.g. error(nil)
 
 ELinks 0.11.3:
 --------------
