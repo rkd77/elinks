@@ -17,7 +17,7 @@ own bookmarks system with Lua. See also contrib/lua/ for some examples of the
 possibilities of ELinks Lua support.
 
 Please do not confuse Lua scripting with JavaScript, EcmaScript, VBScript and
-similiar. Those are embedded in page, allowing per-document scripting related
+similar. Those are embedded in page, allowing per-document scripting related
 to its presentation and providing some degree of interactivity etc. On the
 contrary, the current Lua support permits scripts to be embedded to the
 browser directly, changing the behaviour of the browser, not the document.
@@ -34,12 +34,12 @@ The Lua scripting support comes with the stock ELinks distribution, no
 additional patches and tweaks should be needed.
 
 The web site of the original Links-Lua is at
-link:http://links.sourceforge.net/links-lua/[]. Some older patches against
+http://links.sourceforge.net/links-lua/[]. Some older patches against
 regular Links are available at
-link:http://www.sourceforge.net/projects/links/[], but they are not being
+http://www.sourceforge.net/projects/links/[], but they are not being
 maintained.
 
-Lua can be found at link:http://www.lua.org/[].
+Lua can be found at http://www.lua.org/[].
 
 What it runs on
 ^^^^^^^^^^^^^^^
@@ -72,6 +72,10 @@ systems should try to enable `popen` support, but this is not necessary
 On systems without shared object support, simply run `make; make install`
 instead.
 
+Since ELinks 0.11.0, only version 5.0 of Lua is supported.
+Future versions of ELinks will probably support Lua 5.1 too;
+see http://bugzilla.elinks.cz/show_bug.cgi?id=742[bug 742].
+
 
 Installing ELinks
 ^^^^^^^^^^^^^^^^^
@@ -85,8 +89,9 @@ Running ELinks with Lua
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Simply start ELinks as you normally would.  To check you have Lua support
-compiled in, open up the "Help | About" dialog box.  It should list "Lua"
-under "Features".  If not, make sure you do not have other copies of ELinks
+compiled in, open up the "Help | About" dialog box.  It should list
+"Scripting (Lua)" under "Features".
+If not, make sure you do not have other copies of ELinks
 running, or start ELinks again with the "-no-connect" option on the
 command-line.
 
@@ -114,7 +119,7 @@ they're more convenient.
 
 Note that this document assumes you have some knowledge of programming in Lua.
 For that, you should refer to the Lua reference manual
-(link:http://www.lua.org/docs.html[]). In fact, the language is relatively
+(http://www.lua.org/docs.html[]). In fact, the language is relatively
 trivial, though. You could already do wonders with simply refactoring the
 example scripts.
 
@@ -152,6 +157,12 @@ pre_format_html_hook (url, html)::
 	should return the modified HTML text, or `nil` if there were no
 	modifications.
 
+proxy_for_hook (url)::
+	This hook is called when ELinks is about to load a resource
+	from a URL.  It should return "PROXY:PORT" (e.g. "localhost:8080")
+	to use the specified proxy, "" to contact the origin server
+	directly, or `nil` to use the default proxy of the protocol.
+
 lua_console_hook (string)::
 	This hook is passed the string that the user entered into the "Lua
 	Console" dialog box.  It should return two values: the type of action
@@ -177,16 +188,11 @@ Functions
 As well as providing hooks, ELinks provides some functions in addition to the
 standard Lua functions.
 
-enable_systems_functions ()::
-Enable some potentially dangerous functions, as well as some other
-functions which were unfortunate enough to be lumped in the same group.
-+
-The functions are: `openfile`, `closefile`, `readfrom`, `writeto`, `appendto`,
-`pipe_read`, `remove`, `rename`, `flush`, `seek`, `tmpname`, `read`, `write`
-`execute`, `exit`, `clock`, `date`, `getenv`, `setlocale`.
-+
-Note: `setlocale` is a standard Lua function and will not affect
-the current ELinks locale.
+Note: The standard Lua function `os.setlocale` affects ELinks' idea of
+the system locale, which ELinks uses for the "System" charset, for the
+"System" language, and for formatting dates.  This may however have to
+be changed in a future version of ELinks, in order to properly support
+terminal-specific system locales.
 
 current_url ()::
 	Returns the URL of the current page being shown (in the ELinks session
@@ -216,16 +222,67 @@ pipe_read (command)::
 	function `read` seems to crash ELinks when used in pipe-reading mode.
 
 execute (string)::
-	Executes shell commands `string` and returns the exit code.  Beware
+	Executes shell commands `string` without waiting for it to exit.  Beware
 	that you must not read or write to stdin and stdout.  And unlike the
 	standard Lua function of the same name, the return value is
 	meaningless.
+
+tmpname ()::
+	Returns a unique name for a temporary file, or `nil` if no
+	such name is available.  The returned string includes the
+	directory name.  This function does not create the file and
+	does not guarantee exclusive access to it: the caller must
+	handle the possibility that another process creates the file
+	and begins using it while this function is returning.
 
 bind_key (keymap, keystroke, function)::
 	Currently, `keymap` must be the string `"main"`.  Keystroke is a
 	keystroke as you would write it in the ELinks config file
 	`~/.elinks/elinks.conf`.  The function `function` should take no
 	arguments, and should return the same values as `lua_console_hook`.
+
+edit_bookmark_dialog (cat, name, url, function)::
+	Displays a dialog for editing a bookmark, and returns without
+	waiting for the user to close the dialog.  The return value is
+	`1` if successful, `nil` if arguments are invalid, or nothing
+	at all if out of memory.  The first three arguments
+	must be strings, and the user can then edit them in input
+	fields.  There are also 'OK' and 'Cancel' buttons in the
+	dialog.  If the user presses 'OK', ELinks calls `function`
+	with the three edited strings as arguments, and it should
+	return similar values as in `lua_console_hook`.
+
+xdialog (string [, more strings...], function)::
+	Displays a generic dialog for editing multiple strings, and
+	returns without waiting for the user to close the dialog.
+	The return value is `1` if successful, `nil` if arguments are
+	invalid, or nothing at all if out of memory.  All arguments
+	except the last one must be strings, and ELinks places them
+	in input fields in the dialog.  There can be at most 5 such
+	strings.  There are also 'OK' and 'Cancel' buttons in the
+	dialog.  If the user presses 'OK', ELinks calls `function`
+	with the edited strings as arguments, and it should return
+	similar values as in `lua_console_hook`.
+
+set_option (option, value)::
+	Sets an ELinks option.  The first argument `option` must be
+	the name of the option as a string.  ELinks then tries to
+	convert the second argument `value` to match the type of the
+	option.  If successful, `set_option` returns `value`, else
+	`nil`.
+
+get_option (option)::
+	Returns the value of an ELinks option.  The argument `option`
+	must be the name of the option as a string.  If the option
+	does not exist, `get_option` returns `nil`.
+
+
+Variables
+^^^^^^^^^
+
+elinks_home::
+	The name of the ELinks home directory, as a string.  Typically
+	this is the .elinks subdirectory of the user's home directory.
 
 
 User protocol
