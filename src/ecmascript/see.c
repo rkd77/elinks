@@ -97,6 +97,54 @@ see_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = NULL;
 }
 
+static void
+see_report_error(struct ecmascript_interpreter *interpreter, struct SEE_value *e)
+{
+	SEE_try_context_t ctx;
+	struct string msg;
+	struct SEE_interpreter *interp = interpreter->backend_data;
+	struct global_object *g = (struct global_object *)interp;
+	struct terminal *term;
+	unsigned char *exception = NULL;
+
+#if 0
+	assert(g &&
+	g->win &&
+	g->win->vs &&
+	g->win->vs->doc_view
+	       && g->win->vs->doc_view->session && g->interp
+	       && g->win->vs->doc_view->session->tab);
+	if_assert_failed return;
+#endif
+
+	term = g->win->vs->doc_view->session->tab->term;
+
+#ifdef CONFIG_LEDS
+	set_led_value(g->win->vs->doc_view->session->status.ecmascript_led, 'J');
+#endif
+
+	if (!get_opt_bool("ecmascript.error_reporting"))
+		return;
+
+	SEE_TRY(interp, ctx) {
+		exception = see_value_to_unsigned_char(interp, e);
+	}
+	if (SEE_CAUGHT(ctx)) {
+		mem_free_if(exception);
+		return;
+	}
+
+	if (!exception || !init_string(&msg)) {
+		mem_free_if(exception);
+		return;
+	}
+	add_format_to_string(&msg, _("A script embedded in the current "
+		"document raised the exception: %s", term), exception);
+	mem_free(exception);
+	info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER,
+		 msg.source);
+}
+
 void
 see_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
@@ -107,6 +155,7 @@ see_eval(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
+	struct SEE_value *e;
 
 	g->exec_start = time(NULL);
 	g->ret = ret;
@@ -115,7 +164,9 @@ see_eval(struct ecmascript_interpreter *interpreter,
 	}
 
 	SEE_INPUT_CLOSE(input);
-	SEE_CAUGHT(try_ctxt);
+	e = SEE_CAUGHT(try_ctxt);
+	if (e)
+		see_report_error(interpreter, e);
 }
 
 
@@ -128,6 +179,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
+	struct SEE_value *e;
 	/* 'volatile' qualifier prevents register allocation which fixes:
 	 *  warning: variable 'xxx' might be clobbered by 'longjmp' or 'vfork'
 	 */
@@ -142,7 +194,9 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 	}
 	SEE_INPUT_CLOSE(input);
-	if (SEE_CAUGHT(try_ctxt)) {
+	e = SEE_CAUGHT(try_ctxt);
+	if (e) {
+		see_report_error(interpreter, e);
 		return NULL;
 	}
 	return string;
@@ -157,6 +211,7 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
+	struct SEE_value *e;
 	/* 'volatile' qualifier prevents register allocation which fixes:
 	 *  warning: variable 'xxx' might be clobbered by 'longjmp' or 'vfork'
 	 */
@@ -174,7 +229,9 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 	}
 
 	SEE_INPUT_CLOSE(input);
-	if (SEE_CAUGHT(try_ctxt)) {
+	e = SEE_CAUGHT(try_ctxt);
+	if (e) {
+		see_report_error(interpreter, e);
 		return -1;
 	}
 	return res;
