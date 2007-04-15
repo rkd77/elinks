@@ -9,7 +9,7 @@ When releasing a new version
  - Go over the changes since the last release. Use git-shortlog as a template.
    Write a small changelog highlighting the most important changes. Changes
    by new contributors are always important!
- - Update NEWS file and commit.
+ - Update NEWS file and commit. Remember to add the new version number!
  - Change VERSION in the top of configure.in to hold the new version number.
  - Commit only this change.
  - Create a signed tag having the version ("ELinks X.X.X") as the subject and
