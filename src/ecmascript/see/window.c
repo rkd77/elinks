@@ -243,7 +243,6 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *frame = "";
 	unsigned char *url;
 	struct uri *uri;
-	struct SEE_value url_value;
 #if 0
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -275,15 +274,11 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 			return;
 	}
 #endif
-	SEE_ToString(interp, argv[0], &url_value);
-	url = see_string_to_unsigned_char(url_value.u.string);
+	url = see_value_to_unsigned_char(interp, argv[0]);
 	if (!url) return;
 	trim_chars(url, ' ', 0);
 	if (argc > 1) {
-		struct SEE_value target_value;
-
-		SEE_ToString(interp, argv[1], &target_value);
-		frame = see_string_to_unsigned_char(target_value.u.string);
+		frame = see_value_to_unsigned_char(interp, argv[1]);
 		if (!frame) {
 			mem_free(url);
 			return;
