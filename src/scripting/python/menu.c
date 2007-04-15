@@ -140,7 +140,7 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 	 * Keep track of all the memory we allocate so we'll be able to free
 	 * it in case any error prevents us from displaying the menu.
 	 */
-	ml = getml(menu, NULL);
+	ml = getml(menu, (void *) NULL);
 	if (!ml) {
 		mem_free(menu);
 		return PyErr_NoMemory();

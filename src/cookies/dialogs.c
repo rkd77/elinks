@@ -50,6 +50,18 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 			     _(cookie->secure ? N_("yes") : N_("no"), term));
 }
 
+static void
+accept_cookie_in_msg_box(void *cookie_)
+{
+	accept_cookie((struct cookie *) cookie_);
+}
+
+static void
+reject_cookie_in_msg_box(void *cookie_)
+{
+	done_cookie((struct cookie *) cookie_);
+}
+
 /* TODO: Store cookie in data arg. --jonas*/
 void
 accept_cookie_dialog(struct session *ses, void *data)
@@ -78,8 +90,8 @@ accept_cookie_dialog(struct session *ses, void *data)
 		N_("Accept cookie?"), ALIGN_LEFT,
 		string.source,
 		cookie, 2,
-		N_("~Accept"), accept_cookie, B_ENTER,
-		N_("~Reject"), done_cookie, B_ESC);
+		MSG_BOX_BUTTON(N_("~Accept"), accept_cookie_in_msg_box, B_ENTER),
+		MSG_BOX_BUTTON(N_("~Reject"), reject_cookie_in_msg_box, B_ESC));
 }
 
 
@@ -219,7 +231,7 @@ static struct listbox_ops_messages cookies_messages = {
 	N_("Do you really want to remove all cookies?"),
 };
 
-static struct listbox_ops cookies_listbox_ops = {
+static const struct listbox_ops cookies_listbox_ops = {
 	lock_cookie,
 	unlock_cookie,
 	is_cookie_used,
@@ -280,6 +292,7 @@ set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 
+	/* Bug 923: Assumes time_t values fit in long.  */
 	errno = 0;
 	number = strtol(value, (char **) &end, 10);
 	if (errno || *end || number < 0) return EVENT_NOT_PROCESSED;
@@ -335,12 +348,14 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	safe_strncpy(name, cookie->name, MAX_STR_LEN);
 	safe_strncpy(value, cookie->value, MAX_STR_LEN);
 	safe_strncpy(domain, cookie->domain, MAX_STR_LEN);
+	/* Bug 923: Assumes time_t values fit in unsigned long.  */
 	ulongcat(expires, &length, cookie->expires, MAX_STR_LEN, 0);
 	length = 0;
 	ulongcat(secure, &length, cookie->secure, MAX_STR_LEN, 0);
 
 	dlg_server = cookie->server->host;
-	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n", NULL);
+	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n",
+				(unsigned char *) NULL);
 
 	if (!dlg_server) {
 		mem_free(dlg);
@@ -359,7 +374,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 
 	add_dlg_end(dlg, EDIT_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, dlg_server, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) dlg_server, (void *) NULL));
 #undef EDIT_WIDGETS_COUNT
 }
 
@@ -455,7 +470,7 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 	add_dlg_ok_button(dlg, _("~OK", term), B_ENTER, add_server_do, name);
 	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);
 	add_dlg_end(dlg, SERVER_WIDGETS_COUNT);
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	return EVENT_PROCESSED;
 #undef SERVER_WIDGETS_COUNT
@@ -469,7 +484,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-static struct hierbox_browser_button cookie_buttons[] = {
+static const struct hierbox_browser_button cookie_buttons[] = {
 	/* [gettext_accelerator_context(.cookie_buttons)] */
 	{ N_("~Info"),		push_hierbox_info_button,	1 },
 	{ N_("~Add"),		push_add_button,		1 },

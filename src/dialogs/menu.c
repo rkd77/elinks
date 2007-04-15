@@ -100,15 +100,19 @@ save_url_as(struct session *ses)
 		     NULL);
 }
 
-void
-really_exit_prog(struct session *ses)
+static void
+really_exit_prog(void *ses_)
 {
+	struct session *ses = ses_;
+
 	register_bottom_half(destroy_terminal, ses->tab->term);
 }
 
 static inline void
-dont_exit_prog(struct session *ses)
+dont_exit_prog(void *ses_)
 {
+	struct session *ses = ses_;
+
 	ses->exit_query = 0;
 }
 
@@ -124,8 +128,8 @@ query_exit(struct session *ses)
 		     "(and terminate all downloads)?")
 		: N_("Do you really want to exit ELinks?"),
 		ses, 2,
-		N_("~Yes"), (void (*)(void *)) really_exit_prog, B_ENTER,
-		N_("~No"), (void (*)(void *)) dont_exit_prog, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), really_exit_prog, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), dont_exit_prog, B_ESC));
 }
 
 void

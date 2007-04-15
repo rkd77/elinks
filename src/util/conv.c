@@ -52,9 +52,9 @@ elinks_ulongcat(unsigned char *s, unsigned int *slen,
 		unsigned char fillchar, unsigned int base,
 		unsigned int upper)
 {
-	static unsigned char unum[]= "0123456789ABCDEF";
-	static unsigned char lnum[]= "0123456789abcdef";
-	unsigned char *to_num = (unsigned char *) (upper ? &unum : &lnum);
+	static const unsigned char unum[]= "0123456789ABCDEF";
+	static const unsigned char lnum[]= "0123456789abcdef";
+	const unsigned char *to_num = (upper ? unum : lnum);
 	unsigned int start = slen ? *slen : 0;
 	unsigned int nlen = 1; /* '0' is one char, we can't have less. */
 	unsigned int pos = start; /* starting position of the number */
@@ -240,7 +240,8 @@ add_timeval_to_string(struct string *string, timeval_T *timeval)
 
 #ifdef HAVE_STRFTIME
 struct string *
-add_date_to_string(struct string *string, unsigned char *fmt, time_t *date)
+add_date_to_string(struct string *string, const unsigned char *fmt,
+		   const time_t *date)
 {
 	unsigned char buffer[MAX_STR_LEN];
 	time_t when_time = date ? *date : time(NULL);
@@ -272,30 +273,77 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 }
 
 struct string *
-add_html_to_string(struct string *string, unsigned char *src, int len)
+add_html_to_string(struct string *string, const unsigned char *src, int len)
 {
-
-#define isalphanum(q) (isalnum(q) || (q) == '-' || (q) == '_')
-
 	for (; len; len--, src++) {
-		if (isalphanum(*src) || *src == ' '
-		    || *src == '.' || *src == ':' || *src == ';') {
-			add_bytes_to_string(string, src, 1);
+		if (*src < 0x20
+		    || *src == '<' || *src == '>' || *src == '&'
+		    || *src == '\"' || *src == '\'') {
+			int rollback_length = string->length;
+
+			if (!add_bytes_to_string(string, "&#", 2)
+			    || !add_long_to_string(string, (long) *src)
+			    || !add_char_to_string(string, ';')) {
+				string->length = rollback_length;
+				string->source[rollback_length] = '\0';
+				return NULL;
+			}
 		} else {
-			add_bytes_to_string(string, "&#", 2);
-			add_long_to_string(string, (long) *src);
-			add_char_to_string(string, ';');
+			if (!add_char_to_string(string, *src))
+				return NULL;
 		}
 	}
 
-#undef isalphanum
+	return string;
+}
+
+struct string *
+add_cp_html_to_string(struct string *string, int src_codepage,
+		      const unsigned char *src, int len)
+{
+	const unsigned char *const end = src + len;
+	unicode_val_T unicode;
+
+	while (src != end) {
+		if (is_cp_utf8(src_codepage)) {
+#ifdef CONFIG_UTF8
+			unicode = utf8_to_unicode((unsigned char **) &src,
+						  end);
+			if (unicode == UCS_NO_CHAR)
+				break;
+#else  /* !CONFIG_UTF8 */
+			/* Cannot parse UTF-8 without CONFIG_UTF8.
+			 * Pretend the input is ISO-8859-1 instead.  */
+			unicode = *src++;
+#endif /* !CONFIG_UTF8 */
+		} else {
+			unicode = cp2u(src_codepage, *src++);
+		}
+
+		if (unicode < 0x20 || unicode >= 0x7F
+		    || unicode == '<' || unicode == '>' || unicode == '&'
+		    || unicode == '\"' || unicode == '\'') {
+			int rollback_length = string->length;
+
+			if (!add_bytes_to_string(string, "&#", 2)
+			    || !add_long_to_string(string, unicode)
+			    || !add_char_to_string(string, ';')) {
+				string->length = rollback_length;
+				string->source[rollback_length] = '\0';
+				return NULL;
+			}
+		} else {
+			if (!add_char_to_string(string, unicode))
+				return NULL;
+		}
+	}
 
 	return string;
 }
 
 /* TODO Optimize later --pasky */
 struct string *
-add_quoted_to_string(struct string *string, unsigned char *src, int len)
+add_quoted_to_string(struct string *string, const unsigned char *src, int len)
 {
 	for (; len; len--, src++) {
 		if (isquote(*src) || *src == '\\')

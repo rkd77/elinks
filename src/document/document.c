@@ -342,6 +342,9 @@ done_documents(struct module *module)
 }
 
 struct module document_module = struct_module(
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
 	/* name: */		"Document",
 	/* options: */		NULL,
 	/* hooks: */		NULL,

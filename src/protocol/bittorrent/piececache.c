@@ -379,7 +379,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 		return NULL;
 	}
 
-	assertm(piece_offset == piece_length);
+	assert(piece_offset == piece_length);
 	assertm(blocks, "Piece was not divided into blocks");
 	assert(!cache->entries[piece].blocks);
 
@@ -1221,7 +1221,7 @@ update_bittorrent_piece_cache_state(struct bittorrent_connection *bittorrent)
 	foreachsafe (entry, next, cache->queue) {
 		uint32_t piece_length, piece;
 
-		assertm(entry->data && entry->completed);
+		assert(entry->data && entry->completed);
 
 		piece = entry - cache->entries;
 

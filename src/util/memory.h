@@ -124,7 +124,7 @@ void *mem_realloc(void *, size_t);
 static inline void *
 mem_align_alloc__(
 #ifdef DEBUG_MEMLEAK
-		  unsigned char *file, int line,
+		  const unsigned char *file, int line,
 #endif
 		  void **ptr, size_t old, size_t new, size_t objsize, size_t mask)
 {

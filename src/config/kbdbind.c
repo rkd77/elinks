@@ -940,7 +940,7 @@ bind_act(unsigned char *keymap_str, const unsigned char *keystroke_str)
 		return NULL;
 
 	keybinding->flags |= KBDB_WATERMARK;
-	return straconcat("\"", action, "\"", NULL);
+	return straconcat("\"", action, "\"", (unsigned char *) NULL);
 }
 
 static void
@@ -989,6 +989,9 @@ bind_config_string(struct string *file)
 }
 
 struct module kbdbind_module = struct_module(
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
 	/* name: */		"Keyboard Bindings",
 	/* options: */		NULL,
 	/* hooks: */		NULL,

@@ -92,11 +92,16 @@ static struct option_info uri_rewrite_options[] = {
 
 	INIT_OPT_STRING("protocol.rewrite", N_("Default template"),
 		"default_template", 0, "",
+		/* xgettext:no-c-format */
 		N_("Default URI template used when the string entered in\n"
 		"the goto dialog does not appear to be a URI or a filename\n"
 		"(i.e. contains no '.', ':' or '/' characters), and does\n"
 		"not match any defined prefixes. Set the value to \"\" to\n"
-		"disable use of the default template rewrite rule.")),
+		"disable use of the default template rewrite rule.\n"
+		"%c in the template means the current URL\n"
+		"%s in the template means the whole string from the goto dialog\n"
+		"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s\n"
+		"%% in the template means '%'")),
 
 #define INIT_OPT_DUMB_PREFIX(prefix, uri) \
 	INIT_OPT_STRING("protocol.rewrite.dumb", NULL, prefix, 0, uri, NULL)

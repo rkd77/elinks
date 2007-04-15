@@ -105,7 +105,19 @@ union option_value {
 	unsigned char *string;
 };
 
-typedef int (*change_hook_T)(struct session *, struct option *current,
+
+/* @session is the session via which the user changed the options,
+ * or NULL if not known.  Because the options are currently not
+ * session-specific, it is best to ignore this parameter.  In a future
+ * version of ELinks, this parameter might mean the session to which
+ * the changed options apply.
+ *
+ * @current is the option whose change hook is being called.  It is
+ * never NULL.
+ *
+ * @changed is the option that was changed, or NULL if multiple
+ * descendants of @current may have been changed.  */
+typedef int (*change_hook_T)(struct session *session, struct option *current,
 			     struct option *changed);
 
 struct option {
@@ -145,7 +157,7 @@ struct change_hook_info {
 	change_hook_T change_hook;
 };
 
-extern void register_change_hooks(struct change_hook_info *change_hooks);
+extern void register_change_hooks(const struct change_hook_info *change_hooks);
 
 
 extern struct list_head *init_options_tree(void);
@@ -180,8 +192,7 @@ void call_change_hooks(struct session *ses, struct option *current,
 
 /* Do proper bookkeeping after an option has changed - call this every time
  * you change an option value. */
-void option_changed(struct session *ses, struct option *current,
-                    struct option *option);
+void option_changed(struct session *ses, struct option *option);
 
 extern int commit_option_values(struct option_resolver *resolvers,
 				struct option *root,
@@ -197,8 +208,8 @@ extern void checkout_option_values(struct option_resolver *resolvers,
  * use get_opt_type() and add_opt_type(). For command line options, you want to
  * use get_opt_type_tree(cmdline_options, "option"). */
 
-extern struct option *get_opt_rec(struct option *, unsigned char *);
-extern struct option *get_opt_rec_real(struct option *, unsigned char *);
+extern struct option *get_opt_rec(struct option *, const unsigned char *);
+extern struct option *get_opt_rec_real(struct option *, const unsigned char *);
 #ifdef CONFIG_DEBUG
 extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *);
 #define get_opt(tree, name, type) get_opt_(__FILE__, __LINE__, type, tree, name)

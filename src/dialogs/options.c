@@ -37,9 +37,7 @@ display_codepage(struct terminal *term, void *name_, void *xxx)
 
 	if (opt->value.number != index) {
 		opt->value.number = index;
-		/* TODO: option_changed() (we need to review the hooks
-		 * to handle NULL ses or properly document that stuff). */
-		opt->flags |= OPT_TOUCHED;
+		option_changed(NULL, opt);
 	}
 
 	cls_redraw_all_terminals();
@@ -50,7 +48,9 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 {
 	struct session *ses = ses_;
 	int i, items;
-	int sel = int_max(0, get_opt_codepage_tree(term->spec, "charset"));
+	int sel = 0;
+	const unsigned char *const sel_mime = get_cp_mime_name(
+		get_opt_codepage_tree(term->spec, "charset"));
 	struct menu_item *mi = new_menu(FREE_LIST);
 
 	if (!mi) return;
@@ -64,15 +64,15 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 		if (is_cp_utf8(i)) continue;
 #endif /* CONFIG_UTF8 */
 
+		/* Map the "System" codepage to the underlying one.
+		 * A pointer comparison might suffice here but this
+		 * code is not time-critical.  */
+		if (strcmp(sel_mime, get_cp_mime_name(i)) == 0)
+			sel = items;
 		items++;
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
-			    display_codepage, get_cp_mime_name(i), 0);
+			    display_codepage, get_cp_config_name(i), 0);
 	}
-
-	/* Special codepages are not in the menu and it may cause assertion
-	 * failures later if the selected item is out of bound. */
-	if (sel >= items)
-		sel = 0;
 
 	do_menu_selected(term, mi, ses, sel, 0);
 }
@@ -238,7 +238,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 
 	add_dlg_end(dlg, TERMOPT_WIDGETS_COUNT - anonymous);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 #ifdef CONFIG_NLS
@@ -317,5 +317,5 @@ resize_terminal_dialog(struct terminal *term)
 
 	add_dlg_end(dlg, RESIZE_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }

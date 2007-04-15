@@ -37,24 +37,24 @@ FUNCTIONS
     follow_url_hook(url)
         Rewrite a URL for a link that's about to be followed.
         
-        This function should return a URL for ELinks to follow, or None if
+        This function should return a string containing a URL for ELinks to
+        follow, or an empty string if no URL should be followed, or None if
         ELinks should follow the original URL.
         
         Arguments:
         
         url -- The URL of the link.
     
-    goto_url_hook(url, current_url)
+    goto_url_hook(url)
         Rewrite a URL that was entered in a "Go to URL" dialog box.
         
-        This function should return a URL for ELinks to follow, or None if
+        This function should return a string containing a URL for ELinks to
+        follow, or an empty string if no URL should be followed, or None if
         ELinks should follow the original URL.
         
         Arguments:
         
         url -- The URL provided by the user.
-        current_url -- The URL of the document being viewed, or None if no
-                document is being viewed.
     
     pre_format_html_hook(url, html)
         Rewrite the body of a document before it's formatted.

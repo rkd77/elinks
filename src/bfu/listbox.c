@@ -452,7 +452,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 
 	} else {
 		unsigned char *text;
-		struct listbox_ops *ops = data->box->ops;
+		const struct listbox_ops *ops = data->box->ops;
 		int len_bytes;
 
 		assert(ops && ops->get_info);
@@ -735,7 +735,7 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_NOT_PROCESSED;
 }
 
-struct widget_ops listbox_ops = {
+const struct widget_ops listbox_ops = {
 	display_listbox,
 	init_listbox,
 	mouse_listbox,

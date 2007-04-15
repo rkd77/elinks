@@ -60,7 +60,8 @@ proxy_uri(struct uri *uri, unsigned char *proxy,
 	struct string string;
 
 	if (init_string(&string)
-	    && string_concat(&string, "proxy://", proxy, "/", NULL)
+	    && string_concat(&string, "proxy://", proxy, "/",
+			     (unsigned char *) NULL)
 	    && add_uri_to_string(&string, uri, URI_BASE)) {
 		/* There is no need to use URI_BASE when calling get_uri()
 		 * because URI_BASE should not add any fragments in the first

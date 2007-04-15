@@ -341,7 +341,8 @@ read_global_history(void)
 		return;
 
 	if (elinks_home) {
-		file_name = straconcat(elinks_home, file_name, NULL);
+		file_name = straconcat(elinks_home, file_name,
+				       (unsigned char *) NULL);
 		if (!file_name) return;
 	}
 	f = fopen(file_name, "rb");
@@ -385,7 +386,8 @@ write_global_history(void)
 	    || get_cmd_opt_bool("anonymous"))
 		return;
 
-	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME, NULL);
+	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME,
+			       (unsigned char *) NULL);
 	if (!file_name) return;
 
 	ssi = secure_open(file_name);
@@ -393,10 +395,11 @@ write_global_history(void)
 	if (!ssi) return;
 
 	foreachback (history_item, global_history.entries) {
-		if (secure_fprintf(ssi, "%s\t%s\t%ld\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%"TIME_PRINT_FORMAT"\n",
 				   history_item->title,
 				   history_item->url,
-				   history_item->last_visit) < 0) break;
+				   (time_print_T) history_item->last_visit) < 0)
+			break;
 	}
 
 	if (!secure_close(ssi)) global_history.dirty = 0;

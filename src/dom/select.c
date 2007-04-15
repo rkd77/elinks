@@ -488,7 +488,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 			int sort = (node->type == DOM_NODE_ATTRIBUTE);
 			int index;
 
-			assertm(list, "Adding node to bad parent [%d -> %d]",
+			assertm(list != NULL, "Adding node to bad parent [%d -> %d]",
 				node->type, parent->type);
 
 			index = *list && (*list)->size > 0 && sort

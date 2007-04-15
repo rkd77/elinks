@@ -16,7 +16,6 @@
 
 #include "bookmarks/bookmarks.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
 #include "main/main.h"
 #include "main/module.h"
 #include "main/object.h"
@@ -40,28 +39,6 @@
 INIT_LIST_HEAD(terminals);
 
 static void check_if_no_terminal(void);
-
-#if 0
-static int
-was_utf8(int in, int out)
-{
-	/* Taken from setedit.
-	 * Set cursor in the up left corner. Write "\357\200\240" == U+F020.
-	 * Read cursor position. For UTF-8 x will be 2.
-	 * For normal mode it will be 4. */
-	static unsigned char *str = "\033[1;1H\357\200\240\033[6n";
-	unsigned char buf[20];
-	int x, y;
-
-	hard_write(out, str, strlen(str));
-	buf[0] = '\0';
-	read(in, buf, 6);
-	if (sscanf(buf,"\033[%d;%dR",&y,&x)==2) {
-		if (x > 2) return 0;
-	}
-	return 1;
-}
-#endif
 
 void
 redraw_terminal(struct terminal *term)
@@ -118,13 +95,6 @@ init_term(int fdin, int fdout)
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
 
-#if 0
-	/* The hack to restore console in the right mode */
-	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
-		term->linux_was_utf8 = was_utf8(get_input_handle(), term->fdout);
-	}
-#endif
-
 	add_to_list(terminals, term);
 
 	set_handlers(fdin, (select_handler_T) in_term, NULL,
@@ -171,17 +141,6 @@ destroy_terminal(struct terminal *term)
 
 	del_from_list(term);
 	close(term->fdin);
-
-#if 0
-	/* This code doesn't work with slave terminals. */
-	if (get_opt_int_tree(term->spec, "type") == TERM_LINUX) {
-		if (term->linux_was_utf8) {
-			hard_write(term->fdout, "\033%G", 3);
-		} else {
-			hard_write(term->fdout, "\033%@", 3);
-		}
-	}
-#endif
 
 	if (term->fdout != 1) {
 		if (term->fdout != term->fdin) close(term->fdout);
@@ -240,7 +199,7 @@ unblock_terminal(struct terminal *term)
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
 		     (select_handler_T) destroy_terminal, term);
-	unblock_itrm(term->fdin);
+	unblock_itrm();
 	redraw_terminal_cls(term);
 	if (textarea_editor)	/* XXX */
 		textarea_edit(1, NULL, NULL, NULL, NULL);
@@ -263,13 +222,13 @@ exec_on_master_terminal(struct terminal *term,
 	memcpy(param + 1, path, plen + 1);
 	memcpy(param + 1 + plen + 1, delete, dlen + 1);
 
-	if (fg == 1) block_itrm(term->fdin);
+	if (fg == 1) block_itrm();
 
 	blockh = start_thread((void (*)(void *, int)) exec_thread,
 			      param, param_size);
 	fmem_free(param);
 	if (blockh == -1) {
-		if (fg == 1) unblock_itrm(term->fdin);
+		if (fg == 1) unblock_itrm();
 		return;
 	}
 
@@ -420,6 +379,9 @@ static struct module *terminal_submodules[] = {
 };
 
 struct module terminal_module = struct_module(
+	/* Because this module is listed in main_modules rather than
+	 * in builtin_modules, its name does not appear in the user
+	 * interface and so need not be translatable.  */
 	/* name: */		"Terminal",
 	/* options: */		NULL,
 	/* hooks: */		NULL,

@@ -238,7 +238,7 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 
 	add_dlg_end(dlg, INPUT_WIDGETS_COUNT);
 
-	add_to_ml(&ml, dlg, NULL);
+	add_to_ml(&ml, (void *) dlg, (void *) NULL);
 	do_dialog(term, dlg, ml);
 }
 
@@ -744,7 +744,7 @@ clear_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_PROCESSED;
 }
 
-struct widget_ops field_ops = {
+const struct widget_ops field_ops = {
 	display_field,
 	init_field,
 	mouse_field,
@@ -753,7 +753,7 @@ struct widget_ops field_ops = {
 	clear_field,
 };
 
-struct widget_ops field_pass_ops = {
+const struct widget_ops field_pass_ops = {
 	display_field_pass,
 	init_field,
 	mouse_field,
@@ -908,5 +908,5 @@ input_field_line(struct session *ses, unsigned char *prompt, void *data,
 	add_dlg_field_float2(dlg, prompt, 0, 0, NULL, INPUT_LINE_BUFFER_SIZE,
 			     buffer, history);
 
-	do_dialog(ses->tab->term, dlg, getml(dlg, NULL));
+	do_dialog(ses->tab->term, dlg, getml(dlg, (void *) NULL));
 }

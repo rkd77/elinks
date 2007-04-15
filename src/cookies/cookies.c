@@ -456,9 +456,9 @@ set_cookie(struct uri *uri, unsigned char *str)
 #ifdef DEBUG_COOKIES
 	{
 		DBG("Got cookie %s = %s from %s, domain %s, "
-		      "expires at %d, secure %d", cookie->name,
+		      "expires at %"TIME_PRINT_FORMAT", secure %d", cookie->name,
 		      cookie->value, cookie->server->host, cookie->domain,
-		      cookie->expires, cookie->secure);
+		      (time_print_T) cookie->expires, cookie->secure);
 	}
 #endif
 
@@ -672,8 +672,8 @@ send_cookies(struct uri *uri)
 
 		if (c->expires && c->expires <= now) {
 #ifdef DEBUG_COOKIES
-			DBG("Cookie %s=%s (exp %d) expired.",
-			    c->name, c->value, c->expires);
+			DBG("Cookie %s=%s (exp %"TIME_PRINT_FORMAT") expired.",
+			    c->name, c->value, (time_print_T) c->expires);
 #endif
 			delete_cookie(c);
 
@@ -720,7 +720,8 @@ load_cookies(void) {
 	time_t now;
 
 	if (elinks_home) {
-		cookfile = straconcat(elinks_home, cookfile, NULL);
+		cookfile = straconcat(elinks_home, cookfile,
+				      (unsigned char *) NULL);
 		if (!cookfile) return;
 	}
 
@@ -861,7 +862,8 @@ save_cookies(struct terminal *term) {
 		return;
 	}
 
-	cookfile = straconcat(elinks_home, COOKIES_FILENAME, NULL);
+	cookfile = straconcat(elinks_home, COOKIES_FILENAME,
+			      (unsigned char *) NULL);
 	if (!cookfile) {
 		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));
 		return;
@@ -878,12 +880,12 @@ save_cookies(struct terminal *term) {
 	now = time(NULL);
 	foreach (c, cookies) {
 		if (!c->expires || c->expires <= now) continue;
-		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%ld\t%d\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%"TIME_PRINT_FORMAT"\t%d\n",
 				   c->name, c->value,
 				   c->server->host,
 				   empty_string_or_(c->path),
 				   empty_string_or_(c->domain),
-				   c->expires, c->secure) < 0)
+				   (time_print_T) c->expires, c->secure) < 0)
 			break;
 	}
 

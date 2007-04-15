@@ -123,7 +123,7 @@ get_dyn_full_version(struct terminal *term, int more)
 		comma, "UTF-8",
 #endif
 		comma,
-		NULL
+		(unsigned char *) NULL
 	);
 
 	add_modules_to_string(&string, term);

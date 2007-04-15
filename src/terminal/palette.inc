@@ -2,7 +2,7 @@
 /* TODO: We should probably autogenerate this using xterm's perl script. */
 
 /* The 16 ANSI colors. */
-static struct rgb palette16[] = {
+static const struct rgb palette16[] = {
 #if defined(PALA)
 	{0x00, 0x00, 0x00},
 	{0x80, 0x00, 0x00},
@@ -59,10 +59,10 @@ static struct rgb palette16[] = {
 
 #ifdef CONFIG_88_COLORS
 /* Regexp'd from Dickey's xterm 88colres.h file. */
-/* Colors  0-16 are the ANSI colors (and the same as palette16[]).
- * Colors 16-79 are 4x4x4 color cubes
+/* Colors  0-15 are the ANSI colors (and the same as palette16[]).
+ * Colors 16-79 are a 4x4x4 color cube
  * Colors 80-91 are a grayscale ramp (with black and white left out). */
-static struct rgb palette88[] = {
+static const struct rgb palette88[] = {
 	{0x00, 0x00, 0x00}, /* 0 */
 	{0x80, 0x00, 0x00}, /* 1 */
 	{0x00, 0x80, 0x00}, /* 2 */
@@ -161,26 +161,55 @@ static struct rgb palette88[] = {
 
 #ifdef CONFIG_256_COLORS
 /* Regexp'd from Dickey's xterm 256colres.h file. */
-/* Colors   0- 16 are the ANSI colors (and the same as palette16[]).
+/* Colors   0- 15 are the ANSI colors (from xterm-215/XTerm-col.ad
+ *                and Xorg's rgb.txt, not the same as palette16[]).
  * Colors  16-231 are a 6x6x6 color cube
- * Colors 231-255 are a grayscale ramp (with black and white left out). */
-static struct rgb palette256[] = {
-	{0x00, 0x00, 0x00}, /* 0 */
-	{0x80, 0x00, 0x00}, /* 1 */
-	{0x00, 0x80, 0x00}, /* 2 */
-	{0xaa, 0x55, 0x00}, /* 3 */
-	{0x00, 0x00, 0x80}, /* 4 */
-	{0x80, 0x00, 0x80}, /* 5 */
-	{0x00, 0x80, 0x80}, /* 6 */
-	{0xaa, 0xaa, 0xaa}, /* 7 */
-	{0x55, 0x55, 0x55}, /* 8 */
-	{0xff, 0x55, 0x55}, /* 9 */
-	{0x55, 0xff, 0x55}, /* 10 */
-	{0xff, 0xff, 0x55}, /* 11 */
-	{0x55, 0x55, 0xff}, /* 12 */
-	{0xff, 0x55, 0xff}, /* 13 */
-	{0x55, 0xff, 0xff}, /* 14 */
-	{0xff, 0xff, 0xff}, /* 15 */
+ * Colors 232-255 are a grayscale ramp (with black and white left out).
+ *
+ * The 6x6x6 color cube of xterm uses brightnesses 00-5f-87-af-d7-ff
+ * whereas the "web-safe" palette uses 00-33-66-99-cc-ff, which then
+ * becomes 00-5f-5f-87-d7-ff when ELinks finds the nearest available
+ * color.  If it is important to preserve distinctions between
+ * "web-safe" colors, you can alter the 6x6x6 cube in palette256[] to
+ * make ELinks imagine the brightnesses are 00-33-66-99-cc-ff, so that
+ * the "web-safe" colors then fall directly on it.  If you do this,
+ * you should also change the other entries of palette256[] in a
+ * similar way, to keep the brightnesses in the correct order.  You
+ * could for instance interpolate the brightnesses with the following
+ * function, which passes through all six points and has a continuous
+ * positive first derivative:
+ *
+ * y = (765/11) - sqrt(585225/121 - (2601/55)*x) when x <= 0x5f
+ * x = (-55/2601)*y^2 + (150/51)*y               when x <= 0x5f
+ * y = (51/40)*x + (-561/8)                      when x >= 0x5f
+ *
+ * If you use Emacs then here is how to do it easily:
+ *
+ * (while (re-search-forward "0x\\([[:xdigit:]]+\\)" nil t)
+     (let* ((x (string-to-number (match-string 1) 16))
+	    (y (if (<= x #x5f)
+		 (- (/ 765.0 11.0)
+		    (sqrt (- (/ 585225.0 121.0) (* (/ 2601.0 55.0) x))))
+		 (+ (* (/ 51.0 40.0) x) (/ -561.0 8.0)))))
+       (replace-match (format "%.2x" (round y)) nil t nil 1)))
+ */
+static const struct rgb palette256[] = {
+	{0x00, 0x00, 0x00}, /* 0 black */
+	{0xcd, 0x00, 0x00}, /* 1 red3 */
+	{0x00, 0xcd, 0x00}, /* 2 green3 */
+	{0xcd, 0xcd, 0x00}, /* 3 yellow3 */
+	{0x00, 0x00, 0xee}, /* 4 blue2 */
+	{0xcd, 0x00, 0xcd}, /* 5 magenta3 */
+	{0x00, 0xcd, 0xcd}, /* 6 cyan3 */
+	{0xe5, 0xe5, 0xe5}, /* 7 gray90 */
+	{0x7f, 0x7f, 0x7f}, /* 8 gray50 */
+	{0xff, 0x00, 0x00}, /* 9 red */
+	{0x00, 0xff, 0x00}, /* 10 green */
+	{0xff, 0xff, 0x00}, /* 11 yellow */
+	{0x5c, 0x5c, 0xff}, /* 12 rgb:5c/5c/ff */
+	{0xff, 0x00, 0xff}, /* 13 magenta */
+	{0x00, 0xff, 0xff}, /* 14 cyan */
+	{0xff, 0xff, 0xff}, /* 15 white */
 
 	{0x00, 0x00, 0x00}, /* 16 */
 	{0x00, 0x00, 0x5f}, /* 17 */

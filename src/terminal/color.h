@@ -40,20 +40,26 @@ enum color_flags {
 	COLOR_ENSURE_INVERTED_CONTRAST = 16,
 };
 
+/* These numbers are used in the terminal._template_.colors and
+ * document.dump.color_mode options.  They should be kept stable so
+ * that configuration files are portable between ELinks versions.
+ * Any unsupported modes should be treated as COLOR_MODE_16.
+ * (Can't fall back to COLOR_MODE_88 from COLOR_MODE_256 because
+ * the palettes are incompatible.)  */
 enum color_mode {
 	COLOR_MODE_DUMP = -1,
-	COLOR_MODE_MONO,
-	COLOR_MODE_16,
+	COLOR_MODE_MONO = 0,
+	COLOR_MODE_16 = 1,
 #ifdef CONFIG_88_COLORS
-	COLOR_MODE_88,
+	COLOR_MODE_88 = 2,
 #endif
 #ifdef CONFIG_256_COLORS
-	COLOR_MODE_256,
+	COLOR_MODE_256 = 3,
 #endif
 #ifdef CONFIG_TRUE_COLOR
-	COLOR_MODE_TRUE_COLOR,
+	COLOR_MODE_TRUE_COLOR = 4,
 #endif
-	COLOR_MODES, /* XXX: Keep last */
+	COLOR_MODES = 5, /* XXX: Keep last */
 };
 
 inline void set_term_color16(struct screen_char *schar, enum color_flags flags,

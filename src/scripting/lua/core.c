@@ -71,7 +71,13 @@ static void handle_ref(LS, struct session *ses, int func_ref,
 static int
 l_alert(LS)
 {
-	alert_lua_error((unsigned char *) lua_tostring(S, 1));
+	unsigned char *msg = (unsigned char *) lua_tostring(S, 1);
+
+	/* Don't crash if a script calls e.g. error(nil) or error(error).  */
+	if (msg == NULL)
+		msg = "(cannot convert the error message to a string)";
+
+	alert_lua_error(msg);
 	return 0;
 }
 
@@ -392,7 +398,7 @@ l_edit_bookmark_dialog(LS)
 
 	add_dlg_end(dlg, L_EDIT_BMK_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	lua_pushnumber(S, 1);
 	return 1;
@@ -473,7 +479,7 @@ l_xdialog(LS)
 
 	add_dlg_end(dlg, nitems);
 
-	do_dialog(term, dlg, getml(dlg, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
 	lua_pushnumber(S, 1);
 	return 1;
@@ -491,7 +497,7 @@ static int
 l_set_option(LS)
 {
 	int nargs;
-	struct option *opt, *current;
+	struct option *opt;
 	const char *name;
 
 	nargs = lua_gettop(S);
@@ -536,11 +542,8 @@ l_set_option(LS)
 		goto lua_error;
 	}
 
-	opt->flags |= OPT_TOUCHED;
-
 	/* Call hook */
-	current = opt;
-	call_change_hooks(lua_ses, current, opt);
+	option_changed(lua_ses, opt);
 	return 1;
 
 lua_error:
@@ -582,7 +585,7 @@ l_get_option(LS)
 	{
 		unsigned char *cp_name;
 
-		cp_name = get_cp_mime_name(opt->value.number);
+		cp_name = get_cp_config_name(opt->value.number);
 		lua_pushstring(S, cp_name);
 		break;
 	}
@@ -602,7 +605,7 @@ l_get_option(LS)
 	{
 		color_T color;
 		unsigned char hexcolor[8];
-		unsigned char *strcolor;
+		const unsigned char *strcolor;
 
 		color = opt->value.color;
 		strcolor = get_color_string(color, hexcolor);
@@ -642,7 +645,8 @@ eval_function(LS, int num_args, int num_results)
 static void
 do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 {
-	unsigned char *file = straconcat(prefix, STRING_DIR_SEP, filename, NULL);
+	unsigned char *file = straconcat(prefix, STRING_DIR_SEP, filename,
+					 (unsigned char *) NULL);
 
 	if (!file) return;
 

@@ -3,6 +3,13 @@
 
 typedef uint32_t unicode_val_T;
 
+/* U+0020 SPACE.  Normally the same as ' ' or L' ' but perhaps ELinks
+ * shouldn't rely on that.  */
+#define UCS_SPACE ((unicode_val_T) 0x0020)
+
+/* U+00A0 NO-BREAK SPACE.  */
+#define UCS_NO_BREAK_SPACE ((unicode_val_T) 0x00A0)
+
 /* U+FFFD REPLACEMENT CHARACTER.  Used when no Unicode mapping is
  * known for a byte in a codepage, or when invalid UTF-8 is received
  * from a terminal.  After generating the character, ELinks then
@@ -27,14 +34,29 @@ typedef uint32_t unicode_val_T;
  * We should fix that if we ever change the value.  */
 #define UCS_ORPHAN_CELL ((unicode_val_T) 0x20)
 
-/* &nbsp; replacement character. See u2cp(). */
+/* &nbsp; replacement character. See u2cp().
+ * UTF-8 strings should use the encoding of U+00A0 instead. */
 #define NBSP_CHAR ((unsigned char) 1)
 #define NBSP_CHAR_STRING "\001"
 
+/* How to convert a byte from a source charset.  This is used in an
+ * array (struct conv_table[256]) indexed by the byte value.  */
 struct conv_table {
+	/* 0 if this is the final byte of a character, or 1 if more
+	 * bytes are needed.  */
 	int t;
 	union {
-		unsigned char *str;
+		/* If @t==0: a null-terminated string that is the
+		 * corresponding character in the target charset.
+		 * Normally, the string is statically allocated.
+		 * However, if the conversion table is to UTF-8, then
+		 * the strings in elements 0x80 to 0xFF are allocated
+		 * with @mem_alloc and owned by the table.  */
+		const unsigned char *str;
+		/* If @t==1: a pointer to a nested conversion table
+		 * (with 256 elements) that describes how to convert
+		 * each possible subsequent byte.  The conversion
+		 * table owns the nested conversion table.  */
 		struct conv_table *tbl;
 	} u;
 };
@@ -46,7 +68,8 @@ enum convert_string_mode {
 	CSM_NONE, /* Convert nothing. */
 };
 
-/* How to translate non-breaking spaces.  */
+/* How to translate U+00A0 NO-BREAK SPACE.  If u2cp_ is converting to
+ * UTF-8, it ignores this choice and just encodes the U+00A0.  */
 enum nbsp_mode {
 	/* Convert to NBSP_CHAR.  This lets the HTML renderer
 	 * recognize nbsp even if the codepage doesn't support
@@ -58,7 +81,8 @@ enum nbsp_mode {
 };
 
 struct conv_table *get_translation_table(int, int);
-unsigned char *get_entity_string(const unsigned char *str, const int strlen, int encoding);
+const unsigned char *get_entity_string(const unsigned char *str,
+				       const int strlen, int encoding);
 
 /* The convert_string() name is also used by Samba (version 3.0.3), which
  * provides libnss_wins.so.2, which is called somewhere inside
@@ -82,6 +106,7 @@ unsigned char *convert_string(struct conv_table *convert_table,
 
 int get_cp_index(unsigned char *);
 unsigned char *get_cp_name(int);
+unsigned char *get_cp_config_name(int);
 unsigned char *get_cp_mime_name(int);
 int is_cp_utf8(int);
 void free_conv_table(void);
@@ -116,14 +141,14 @@ unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
 inline int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
-inline unicode_val_T utf8_to_unicode(unsigned char **, unsigned char *);
+inline unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
 unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
 #endif /* CONFIG_UTF8 */
 
 unicode_val_T cp2u(int, unsigned char);
-unsigned char *cp2utf8(int, int);
+const unsigned char *cp2utf8(int, int);
 
-unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
+const unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
 #define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)
 #define u2cp_no_nbsp(u, to) u2cp_(u, to, NBSP_MODE_ASCII)
 

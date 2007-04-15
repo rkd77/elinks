@@ -217,32 +217,45 @@ static unsigned char *
 save_form_data_to_file(struct uri *uri)
 {
 	unsigned char *filename = get_tempdir_filename("elinks-XXXXXX");
-	int formfd;
-	FILE *formfile;
+	int fd;
+	FILE *fp;
+	size_t nmemb, len;
+	unsigned char *formdata;
 
 	if (!filename) return NULL;
 
-	formfd = safe_mkstemp(filename);
-	if (formfd < 0) {
+	fd = safe_mkstemp(filename);
+	if (fd < 0) {
 		mem_free(filename);
 		return NULL;
 	}
 
-	formfile = fdopen(formfd, "w");
-	if (!formfile) {
+	if (!uri->post) return filename;
+
+	/* Jump the content type */
+	formdata = strchr(uri->post, '\n');
+	formdata = formdata ? formdata + 1 : uri->post;
+	len = strlen(formdata);
+	if (len == 0) return filename;
+
+	fp = fdopen(fd, "w");
+	if (!fp) {
+
+error:
+		unlink(filename);
 		mem_free(filename);
-		close(formfd);
+		close(fd);
 		return NULL;
 	}
 
-	if (uri->post) {
-		/* Jump the content type */
-		unsigned char *formdata = strchr(uri->post, '\n');
-
-		formdata = formdata ? formdata + 1 : uri->post;
-		fwrite(formdata, strlen(formdata), 1, formfile);
+	nmemb = fwrite(formdata, len, 1, fp);
+	if (nmemb != 1) {
+		fclose(fp);
+		goto error;
 	}
-	fclose(formfile);
+	
+	if (fclose(fp) != 0)
+		goto error;
 
 	return filename;
 }
@@ -251,7 +264,7 @@ void
 user_protocol_handler(struct session *ses, struct uri *uri)
 {
 	unsigned char *subj = NULL, *prog;
-	unsigned char *formfilename;
+	unsigned char *filename;
 
 	prog = get_user_program(ses->tab->term, struri(uri), uri->protocollen);
 	if (!prog || !*prog) {
@@ -280,19 +293,19 @@ user_protocol_handler(struct session *ses, struct uri *uri)
 		}
 	}
 
-	formfilename = save_form_data_to_file(uri);
+	filename = save_form_data_to_file(uri);
 
-	prog = subst_cmd(prog, uri, subj, formfilename);
+	prog = subst_cmd(prog, uri, subj, filename);
 	mem_free_if(subj);
 	if (prog) {
-		unsigned char *delete = empty_string_or_(formfilename);
+		unsigned char *delete = empty_string_or_(filename);
 
 		exec_on_terminal(ses->tab->term, prog, delete, 1);
 		mem_free(prog);
 
-	} else if (formfilename) {
-		unlink(formfilename);
+	} else if (filename) {
+		unlink(filename);
 	}
 
-	mem_free_if(formfilename);
+	mem_free_if(filename);
 }

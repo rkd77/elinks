@@ -36,7 +36,7 @@
 
 #ifdef DEBUG_BUTTON_HOTKEY
 void
-add_dlg_button_do(unsigned char *file, int line,
+add_dlg_button_do(const unsigned char *file, int line,
 		  struct dialog *dlg, unsigned char *text, int flags,
 		  widget_handler_T *handler, void *data,
 		  done_handler_T *done, void *done_data)
@@ -331,7 +331,7 @@ select_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return widget_data->widget->handler(dlg_data, widget_data);
 }
 
-struct widget_ops button_ops = {
+const struct widget_ops button_ops = {
 	display_button,
 	NULL,
 	mouse_button,

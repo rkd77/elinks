@@ -60,7 +60,7 @@ struct codepage_desc {
 
  	/* If some byte in the codepage corresponds to multiple Unicode
  	 * characters, then the preferred character is in @highhalf
- 	 * above, and the rest are listed here in @extra.  This table
+ 	 * above, and the rest are listed here in @table.  This table
  	 * is not used for translating from the codepage to Unicode.  */
 	const struct table_entry *table;
 };
@@ -70,7 +70,7 @@ struct codepage_desc {
 #include "intl/entity.inc"
 
 
-static char strings[256][2] = {
+static const char strings[256][2] = {
 	"\000", "\001", "\002", "\003", "\004", "\005", "\006", "\007",
 	"\010", "\011", "\012", "\013", "\014", "\015", "\016", "\017",
 	"\020", "\021", "\022", "\023", "\024", "\025", "\026", "\033",
@@ -117,7 +117,12 @@ free_translation_table(struct conv_table *p)
 	mem_free(p);
 }
 
-static unsigned char *no_str = "*";
+/* A string used in conversion tables when there is no correct
+ * conversion.  This is compared by address and therefore should be a
+ * named array rather than a pointer so that it won't share storage
+ * with any other string literal that happens to have the same
+ * characters.  */
+static const unsigned char no_str[] = "*";
 
 static void
 new_translation_table(struct conv_table *p)
@@ -163,7 +168,7 @@ static const unicode_val_T strange_chars[32] = {
 #define SYSTEM_CHARSET_FLAG 128
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
-unsigned char *
+const unsigned char *
 u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
@@ -178,7 +183,8 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 		return encode_utf8(u);
 #endif /* CONFIG_UTF8 */
 
-	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
+	/* To mark non breaking spaces in non-UTF-8 strings, we use a
+	 * special char NBSP_CHAR. */
 	if (u == 0xa0) {
 		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
 		else /* NBSP_MODE_ASCII */ return " ";
@@ -251,7 +257,7 @@ encode_utf8(unicode_val_T u)
 #ifdef CONFIG_UTF8
 /* Number of bytes utf8 character indexed by first byte. Illegal bytes are
  * equal ones and handled different. */
-static char utf8char_len_tab[256] = {
+static const char utf8char_len_tab[256] = {
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
 	1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,
@@ -626,7 +632,7 @@ unicode_fold_label_case(unicode_val_T c)
 }
 
 inline unicode_val_T
-utf8_to_unicode(unsigned char **string, unsigned char *end)
+utf8_to_unicode(unsigned char **string, const unsigned char *end)
 {
 	unsigned char *str = *string;
 	unicode_val_T u;
@@ -639,40 +645,71 @@ utf8_to_unicode(unsigned char **string, unsigned char *end)
 	}
 
 	switch (length) {
-		case 1:
+		case 1:		/* U+0000 to U+007F */
+			if (str[0] >= 0x80) {
+invalid_utf8:
+				++*string;
+				return UCS_REPLACEMENT_CHARACTER;
+			}
 			u = str[0];
 			break;
-		case 2:
+		case 2:		/* U+0080 to U+07FF */
+			if ((str[1] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x1f) << 6;
 			u += (str[1] & 0x3f);
+			if (u < 0x80)
+				goto invalid_utf8;
 			break;
-		case 3:
+		case 3:		/* U+0800 to U+FFFF, except surrogates */
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 12;
 			u += ((str[1] & 0x3f) << 6);
 			u += (str[2] & 0x3f);
+			if (u < 0x800 || is_utf16_surrogate(u))
+				goto invalid_utf8;
 			break;
-		case 4:
+		case 4:		/* U+10000 to U+1FFFFF */
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 18;
 			u += ((str[1] & 0x3f) << 12);
 			u += ((str[2] & 0x3f) << 6);
 			u += (str[3] & 0x3f);
+			if (u < 0x10000)
+				goto invalid_utf8;
 			break;
-		case 5:
+		case 5:		/* U+200000 to U+3FFFFFF */
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x0f) << 24;
 			u += ((str[1] & 0x3f) << 18);
 			u += ((str[2] & 0x3f) << 12);
 			u += ((str[3] & 0x3f) << 6);
 			u += (str[4] & 0x3f);
+			if (u < 0x200000)
+				goto invalid_utf8;
 			break;
-		case 6:
-		default:
+		case 6:		/* U+4000000 to U+7FFFFFFF */
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
+			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80
+			    || (str[5] & 0xc0) != 0x80)
+				goto invalid_utf8;
 			u = (str[0] & 0x01) << 30;
 			u += ((str[1] & 0x3f) << 24);
 			u += ((str[2] & 0x3f) << 18);
 			u += ((str[3] & 0x3f) << 12);
 			u += ((str[4] & 0x3f) << 6);
 			u += (str[5] & 0x3f);
+			if (u < 0x4000000)
+				goto invalid_utf8;
 			break;
+		default:
+			INTERNAL("utf8char_len_tab out of range");
+			goto invalid_utf8;
 	}
 	*string = str + length;
 	return u;
@@ -705,7 +742,7 @@ cp2u(int from, unsigned char c)
 }
 
 /* This slow and ugly code is used by the terminal utf_8_io */
-unsigned char *
+const unsigned char *
 cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
@@ -736,7 +773,7 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 
 
 static void
-add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
+add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
 {
 	unsigned char *p = encode_utf8(u);
 
@@ -765,6 +802,10 @@ add_utf8(struct conv_table *ct, unicode_val_T u, unsigned char *str)
 		ct[*p].u.str = str;
 }
 
+/* A conversion table from some charset to UTF-8.
+ * If it is from UTF-8 to UTF-8, it converts each byte separately.
+ * Unlike in other translation tables, the strings in elements 0x80 to
+ * 0xFF are allocated dynamically.  */
 struct conv_table utf_table[256];
 int utf_table_init = 1;
 
@@ -773,8 +814,9 @@ free_utf_table(void)
 {
 	int i;
 
+	/* Cast away const.  */
 	for (i = 128; i < 256; i++)
-		mem_free(utf_table[i].u.str);
+		mem_free((unsigned char *) utf_table[i].u.str);
 }
 
 static struct conv_table *
@@ -787,10 +829,10 @@ get_translation_table_to_utf8(int from)
 	from &= ~SYSTEM_CHARSET_FLAG;
 	if (from == lfr) return utf_table;
 	lfr = from;
-	if (utf_table_init)
-		memset(utf_table, 0, sizeof(utf_table)),
+	if (utf_table_init) {
+		memset(utf_table, 0, sizeof(utf_table));
 		utf_table_init = 0;
-	else
+	} else
 		free_utf_table();
 
 	for (i = 0; i < 128; i++)
@@ -826,7 +868,8 @@ get_translation_table_to_utf8(int from)
 	return utf_table;
 }
 
-struct conv_table table[256];
+/* A conversion table between two charsets, where the target is not UTF-8.  */
+static struct conv_table table[256];
 static int first = 1;
 
 void
@@ -886,7 +929,7 @@ get_translation_table(int from, int to)
 
 		for (i = 128; i < 256; i++) {
 			if (codepages[from].highhalf[i - 0x80] != 0xFFFF) {
-				unsigned char *u;
+				const unsigned char *u;
 
 				u = u2cp(codepages[from].highhalf[i - 0x80], to);
 				if (u) table[i].u.str = u;
@@ -922,7 +965,7 @@ struct entity_cache {
 	unsigned int hits;
 	int strlen;
 	int encoding;
-	unsigned char *result;
+	const unsigned char *result;
 	unsigned char str[20]; /* Suffice in any case. */
 };
 
@@ -946,7 +989,7 @@ compare_entities(const void *key_, const void *element_)
 	return xxstrcmp(first, second, length);
 }
 
-unsigned char *
+const unsigned char *
 get_entity_string(const unsigned char *str, const int strlen, int encoding)
 {
 #define ENTITY_CACHE_SIZE 10	/* 10 seems a good value. */
@@ -956,7 +999,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
 	static int first_time = 1;
 	unsigned int slen = 0;
-	unsigned char *result = NULL;
+	const unsigned char *result = NULL;
 
 	if (strlen <= 0) return NULL;
 
@@ -1150,7 +1193,7 @@ convert_string(struct conv_table *convert_table,
 	/* Iterate ;-) */
 
 	while (charspos < charslen) {
-		unsigned char *translit;
+		const unsigned char *translit;
 
 #define PUTC do { \
 		buffer[bufferpos++] = chars[charspos++]; \
@@ -1384,6 +1427,11 @@ free_charsets_lookup(void)
 #endif
 }
 
+/* Get the codepage's name for displaying to the user, or NULL if
+ * @cp_index is one past the end.  In the future, we might want to
+ * localize these with gettext.  So it may be best not to use this
+ * function if the name will have to be converted back to an
+ * index.  */
 unsigned char *
 get_cp_name(int cp_index)
 {
@@ -1393,11 +1441,27 @@ get_cp_name(int cp_index)
 	return codepages[cp_index].name;
 }
 
+/* Get the codepage's name for saving to a configuration file.  These
+ * names can be converted back to indexes, even in future versions of
+ * ELinks.  */
+unsigned char *
+get_cp_config_name(int cp_index)
+{
+	if (cp_index < 0) return "none";
+	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
+	if (!codepages[cp_index].aliases) return NULL;
+
+	return codepages[cp_index].aliases[0];
+}
+
+/* Get the codepage's name for sending to a library or server that
+ * understands MIME charset names.  This function irreversibly maps
+ * the "System" codepage to the underlying charset.  */
 unsigned char *
 get_cp_mime_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
-	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
+	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	if (!codepages[cp_index].aliases) return NULL;
 
 	return codepages[cp_index].aliases[0];

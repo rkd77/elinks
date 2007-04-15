@@ -152,7 +152,8 @@ get_current_link_info_and_title(struct session *ses,
 	if (link_title) {
 		assert(*link_title);
 
-		ret = straconcat(link_info, " - ", link_title, NULL);
+		ret = straconcat(link_info, " - ", link_title,
+				 (unsigned char *) NULL);
 		mem_free(link_info);
 		mem_free(link_title);
 	}
@@ -482,7 +483,8 @@ display_window_title(struct session *ses, struct terminal *term)
 	    && ses->doc_view->document->title[0])
 		doc_title = ses->doc_view->document->title;
 
-	title = doc_title ? straconcat(doc_title, " - ELinks", NULL)
+	title = doc_title ? straconcat(doc_title, " - ELinks",
+				       (unsigned char *) NULL)
 			  : stracpy("ELinks");
 	if (!title) return;
 

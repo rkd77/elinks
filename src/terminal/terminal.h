@@ -132,9 +132,6 @@ struct terminal {
 	unsigned int utf8:1;
 #endif /* CONFIG_UTF8 */
 
-	/* Indicates whether Linux console was in UTF-8 mode on startup */
-	unsigned int linux_was_utf8:1;
-
 	/* The current tab number. */
 	int current_tab;
 
@@ -162,7 +159,7 @@ struct terminal {
 extern struct list_head terminals;
 
 
-extern unsigned char frame_dumb[];
+extern const unsigned char frame_dumb[];
 
 struct terminal *init_term(int, int);
 void destroy_terminal(struct terminal *);

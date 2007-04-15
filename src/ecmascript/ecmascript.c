@@ -43,7 +43,7 @@ static struct option_info ecmascript_options[] = {
 		N_("ECMAScript options.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Enable"),
-		"enable", 0, 1,
+		"enable", 0, 0,
 		N_("Whether to run those scripts inside of documents.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
@@ -285,10 +285,10 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			struct uri *uri = get_uri(*action, URI_HTTP_REFERRER_HOST);
 
 			if (uri->protocol == PROTOCOL_FILE) {
-				mem_free_set(action, straconcat(struri(uri), string, NULL));
+				mem_free_set(action, straconcat(struri(uri), string, (unsigned char *) NULL));
 			}
 			else
-				mem_free_set(action, straconcat(struri(uri), string + 1, NULL));
+				mem_free_set(action, straconcat(struri(uri), string + 1, (unsigned char *) NULL));
 			done_uri(uri);
 			mem_free(string);
 		} else { /* relative uri */
@@ -296,7 +296,8 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			unsigned char *new_action;
 
 			if (last_slash) *(last_slash + 1) = '\0';
-			new_action = straconcat(*action, string, NULL);
+			new_action = straconcat(*action, string,
+						(unsigned char *) NULL);
 			mem_free_set(action, new_action);
 			mem_free(string);
 		}
@@ -311,7 +312,9 @@ ecmascript_timeout_handler(void *i)
 {
 	struct ecmascript_interpreter *interpreter = i;
 
-	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
+	assertm(interpreter->vs->doc_view != NULL,
+		"setTimeout: vs with no document (e_f %d)",
+		interpreter->vs->ecmascript_fragile);
 	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */
 

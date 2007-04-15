@@ -109,6 +109,7 @@ parse_ftp_eplf_response(struct ftp_file_info *info, unsigned char *src, int len)
 
 		case FTP_EPLF_MTIME:
 			if (src >= pos) break;
+			/* Bug 923: Assumes time_t values cannot exceed LONG_MAX.  */
 			info->mtime = (time_t) parse_ftp_number(&src, pos, 0, LONG_MAX);
 			break;
 		case FTP_EPLF_ID:

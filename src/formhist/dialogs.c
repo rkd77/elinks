@@ -142,7 +142,7 @@ static struct listbox_ops_messages formhist_messages = {
 	N_("Do you really want to remove all forms?"),
 };
 
-static struct listbox_ops formhist_listbox_ops = {
+static const struct listbox_ops formhist_listbox_ops = {
 	lock_formhist_data,
 	unlock_formhist_data,
 	is_formhist_data_used,
@@ -204,7 +204,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-static struct hierbox_browser_button formhist_buttons[] = {
+static const struct hierbox_browser_button formhist_buttons[] = {
 	/* [gettext_accelerator_context(.formhist_buttons)] */
 	{ N_("~Login"),         push_login_button,           1 },
 	{ N_("~Info"),          push_hierbox_info_button,    1 },

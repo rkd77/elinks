@@ -500,13 +500,15 @@ load_config_file(unsigned char *prefix, unsigned char *name,
 {
 	unsigned char *config_str, *config_file;
 
-	config_file = straconcat(prefix, STRING_DIR_SEP, name, NULL);
+	config_file = straconcat(prefix, STRING_DIR_SEP, name,
+				 (unsigned char *) NULL);
 	if (!config_file) return 1;
 
 	config_str = read_config_file(config_file);
 	if (!config_str) {
 		mem_free(config_file);
-		config_file = straconcat(prefix, STRING_DIR_SEP, ".", name, NULL);
+		config_file = straconcat(prefix, STRING_DIR_SEP, ".", name,
+					 (unsigned char *) NULL);
 		if (!config_file) return 2;
 
 		config_str = read_config_file(config_file);
@@ -765,7 +767,7 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	smart_config_string(&tmpstring, 2, i18n, options->value.tree, NULL, 0,
 			    smart_config_output_fn);
 	if (tmpstring.length > origlen)
-		add_bytes_to_string(&config, tmpstring.source, tmpstring.length);
+		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
 
 	if (!init_string(&tmpstring)) goto get_me_out;
@@ -776,7 +778,7 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	origlen = tmpstring.length;
 	bind_config_string(&tmpstring);
 	if (tmpstring.length > origlen)
-		add_bytes_to_string(&config, tmpstring.source, tmpstring.length);
+		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
 
 get_me_out:
@@ -802,7 +804,7 @@ write_config_file(unsigned char *prefix, unsigned char *name,
 
 	if (name_has_slash && prefix_has_slash) name++;
 
-	config_file = straconcat(prefix, slash, name, NULL);
+	config_file = straconcat(prefix, slash, name, (unsigned char *) NULL);
 	if (!config_file) goto free_cfg_str;
 
 	ssi = secure_open(config_file);

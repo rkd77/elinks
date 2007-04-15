@@ -17,7 +17,7 @@ int decode_color(unsigned char *str, int slen, color_T *color);
 
 /* Returns a string containing the color info. If no ``English'' name can be
  * found the hex color (#rrggbb) is returned in the given buffer. */
-unsigned char *get_color_string(color_T color, unsigned char hexcolor[8]);
+const unsigned char *get_color_string(color_T color, unsigned char hexcolor[8]);
 
 /* Translate rgb color to string in #rrggbb format. str should be a pointer to
  * a 8 bytes memory space. */

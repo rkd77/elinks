@@ -113,7 +113,8 @@ smjs_load_hooks(void)
 	assert(smjs_ctx);
 
 	if (elinks_home) {
-		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME, NULL);
+		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME,
+				  (unsigned char *) NULL);
 	} else {
 		path = stracpy(CONFDIR STRING_DIR_SEP SMJS_HOOKS_FILENAME);
 	}

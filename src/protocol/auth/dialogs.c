@@ -117,7 +117,7 @@ do_auth_dialog(struct session *ses, void *data)
 
 	add_dlg_end(dlg, AUTH_WIDGETS_COUNT);
 
-	dlg_data = do_dialog(term, dlg, getml(dlg, NULL));
+	dlg_data = do_dialog(term, dlg, getml(dlg, (void *) NULL));
 	/* When there's some username, but no password, automagically jump at
 	 * the password. */
 	if (dlg_data && a->user[0] && !a->password[0])
@@ -241,7 +241,7 @@ static struct listbox_ops_messages http_auth_messages = {
 	N_("Do you really want to remove all auth entries?"),
 };
 
-static struct listbox_ops auth_listbox_ops = {
+static const struct listbox_ops auth_listbox_ops = {
 	lock_auth_entry,
 	unlock_auth_entry,
 	is_auth_entry_used,
@@ -256,7 +256,7 @@ static struct listbox_ops auth_listbox_ops = {
 	&http_auth_messages,
 };
 
-static struct hierbox_browser_button auth_buttons[] = {
+static const struct hierbox_browser_button auth_buttons[] = {
 	/* [gettext_accelerator_context(.auth_buttons)] */
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
 	{ N_("~Info"),   push_hierbox_info_button,   1 },

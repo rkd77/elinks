@@ -124,7 +124,7 @@ term_send_event(struct terminal *term, struct term_event *ev)
 		win = term->windows.next;
 		if (win->type == WINDOW_TAB) {
 			win = get_current_tab(term);
-			assertm(win, "No tab to send the event to!");
+			assertm(win != NULL, "No tab to send the event to!");
 			if_assert_failed return;
 		}
 
@@ -143,7 +143,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 	term_send_event(term, &ev);
 #else  /* !CONFIG_UTF8 */
 	struct term_event ev;
-	unsigned char *recoded;
+	const unsigned char *recoded;
 
 	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
 	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset"));

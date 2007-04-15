@@ -25,17 +25,17 @@
 /* Allocates NUL terminated string with @len bytes from @src.
  * If @src == NULL or @len < 0 only one byte is allocated and set it to 0. */
 /* Returns the string or NULL on allocation failure. */
-unsigned char *memacpy(unsigned char *src, int len);
+unsigned char *memacpy(const unsigned char *src, int len);
 
 /* Allocated NUL terminated string with the content of @src. */
-unsigned char *stracpy(unsigned char *src);
+unsigned char *stracpy(const unsigned char *src);
 
 #else /* DEBUG_MEMLEAK */
 
-unsigned char *debug_memacpy(unsigned char *, int, unsigned char *, int);
+unsigned char *debug_memacpy(const unsigned char *, int, const unsigned char *, int);
 #define memacpy(s, l) debug_memacpy(__FILE__, __LINE__, s, l)
 
-unsigned char *debug_stracpy(unsigned char *, int, unsigned char *);
+unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
 #define stracpy(s) debug_stracpy(__FILE__, __LINE__, s)
 
 #endif /* DEBUG_MEMLEAK */
@@ -43,28 +43,28 @@ unsigned char *debug_stracpy(unsigned char *, int, unsigned char *);
 
 /* Concatenates @src to @str. */
 /* If reallocation of @str fails @str is not touched. */
-void add_to_strn(unsigned char **str, unsigned char *src);
+void add_to_strn(unsigned char **str, const unsigned char *src);
 
 /* Inserts @seqlen chars from @seq at position @pos in the @dst string. */
 /* If reallocation of @dst fails it is not touched and NULL is returned. */
-unsigned char *
-insert_in_string(unsigned char **dst, int pos, unsigned char *seq, int seqlen);
+unsigned char *insert_in_string(unsigned char **dst, int pos,
+				const unsigned char *seq, int seqlen);
 
-/* Takes a list of strings where the last parameter _must_ be NULL and
- * concatenates them. */
+/* Takes a list of strings where the last parameter _must_ be
+ * (unsigned char *) NULL and concatenates them. */
 /* Returns the allocated string or NULL on allocation failure. */
 /* Example:
- *	unsigned char *abc = straconcat("A", "B", "C", NULL);
+ *	unsigned char *abc = straconcat("A", "B", "C", (unsigned char *) NULL);
  *	if (abc) return;
  *	printf("%s", abc);	-> print "ABC"
  *	mem_free(abc);		-> free memory used by @abc */
-unsigned char *straconcat(unsigned char *str, ...);
+unsigned char *straconcat(const unsigned char *str, ...);
 
 
 /* Misc. utility string functions. */
 
 /* Compare two strings, handling correctly @s1 or @s2 being NULL. */
-int xstrcmp(unsigned char *s1, unsigned char *s2);
+int xstrcmp(const unsigned char *s1, const unsigned char *s2);
 
 /* Copies at most @len chars into @dst. Ensures null termination of @dst. */
 unsigned char *safe_strncpy(unsigned char *dst, const unsigned char *src, size_t len);
@@ -109,8 +109,13 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 #define isasciialnum(c)	(isasciialpha(c) || isdigit(c))
 #define isident(c)	(isasciialnum(c) || (c) == '_' || (c) == '-')
 
-/* Char is safe to write to the terminal screen */
+/* Char is safe to write to the terminal screen.  Cannot test for C1
+ * control characters (0x80 to 0x9F) because this is also used for
+ * non-ISO-8859 charsets.  */
 #define isscreensafe(c)	((c) >= ' ' && (c) != ASCII_DEL)
+
+/* Like isscreensafe but takes Unicode values and so can check for C1.  */
+#define isscreensafe_ucs(c) (((c) >= 0x20 && (c) <= 0x7E) || (c) >= 0xA0)
 
 
 /* String debugging using magic number, it may catch some errors. */
@@ -145,7 +150,7 @@ struct string {
 
 /* Initializes the passed string struct by preallocating the @source member. */
 #ifdef DEBUG_MEMLEAK
-struct string *init_string__(unsigned char *file, int line, struct string *string);
+struct string *init_string__(const unsigned char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
 struct string *init_string(struct string *string);
@@ -158,18 +163,19 @@ void done_string(struct string *string);
 struct string *add_to_string(struct string *string,
 			     const unsigned char *source);
 struct string *add_char_to_string(struct string *string, unsigned char character);
-struct string *add_string_to_string(struct string *to, struct string *from);
-struct string *add_file_to_string(struct string *string, unsigned char *filename);
+struct string *add_string_to_string(struct string *to, const struct string *from);
+struct string *add_file_to_string(struct string *string, const unsigned char *filename);
 struct string *add_crlf_to_string(struct string *string);
 
-/* Adds each C string to @string until a terminating NULL is met. */
+/* Adds each C string to @string until a terminating
+ * (unsigned char *) NULL is met. */
 struct string *string_concat(struct string *string, ...);
 
 /* Extends the string with @times number of @character. */
 struct string *add_xchar_to_string(struct string *string, unsigned char character, int times);
 
 /* Add printf-style format string to @string. */
-struct string *add_format_to_string(struct string *string, unsigned char *format, ...);
+struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
 
 /* Get a regular newly allocated stream of bytes from @string. */
 static unsigned char *squeezastring(struct string *string);
@@ -209,7 +215,7 @@ squeezastring(struct string *string)
 static inline struct string *
 add_bytes_to_string__(
 #ifdef DEBUG_MEMLEAK
-		    unsigned char *file, int line,
+		    const unsigned char *file, int line,
 #endif
 		    struct string *string, const unsigned char *bytes,
 		    int length)

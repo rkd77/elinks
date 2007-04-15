@@ -127,14 +127,6 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 }
 
 static unsigned char *
-lzma_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	     int *new_len)
-{
-	*new_len = len;
-	return data;
-}
-
-static unsigned char *
 lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 {
 	CLzmaDecoderState state;
@@ -190,14 +182,13 @@ lzma_close(struct stream_encoded *stream)
 	lzma_cleanup(data);
 }
 
-static unsigned char *lzma_extensions[] = { ".lzma", NULL };
+static const unsigned char *const lzma_extensions[] = { ".lzma", NULL };
 
-struct decoding_backend lzma_decoding_backend = {
+const struct decoding_backend lzma_decoding_backend = {
 	"lzma",
 	lzma_extensions,
 	lzma_open,
 	lzma_read,
-	lzma_decode,
 	lzma_decode_buffer,
 	lzma_close,
 };

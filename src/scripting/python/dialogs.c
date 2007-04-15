@@ -78,12 +78,12 @@ python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	title = stracpy(title);
 	if (!title) goto free_text;
 
-	(void) msg_box(python_ses->tab->term, getml(title, NULL),
+	(void) msg_box(python_ses->tab->term, getml(title, (void *) NULL),
 		       MSGBOX_NO_INTL | MSGBOX_SCROLLABLE | MSGBOX_FREE_TEXT,
 		       title, ALIGN_LEFT,
 		       text,
 		       NULL, 1,
-		       N_("~OK"), NULL, B_ENTER | B_ESC);
+		       MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC));
 
 	Py_INCREF(Py_None);
 	return Py_None;
@@ -206,7 +206,8 @@ python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	hop->callback = callback;
 	Py_INCREF(callback);
 
-	input_dialog(python_ses->tab->term, getml(prompt, title, initial, NULL),
+	input_dialog(python_ses->tab->term,
+		     getml(prompt, (void *) title, (void *) initial, (void *) NULL),
 		     title, prompt,
 		     hop, NULL,
 		     MAX_STR_LEN, initial, 0, 0, NULL,

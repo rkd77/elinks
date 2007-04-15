@@ -456,7 +456,7 @@ change_hook_mailcap(struct session *ses, struct option *current, struct option *
 static void
 init_mailcap(struct module *module)
 {
-	struct change_hook_info mimetypes_change_hooks[] = {
+	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.mailcap",		change_hook_mailcap },
 		{ NULL,				NULL },
 	};
@@ -661,7 +661,7 @@ get_mime_handler_mailcap(unsigned char *type, int options)
 }
 
 
-struct mime_backend mailcap_mime_backend = {
+const struct mime_backend mailcap_mime_backend = {
 	/* get_content_type: */	NULL,
 	/* get_mime_handler: */	get_mime_handler_mailcap,
 };

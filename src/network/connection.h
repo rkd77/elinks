@@ -47,7 +47,7 @@ struct connection {
 	struct socket *socket;
 	/* The data socket. It is used, when @socket is used for the control,
 	 * and the actual data is transmitted through a different channel. */
-	/* The only users now is FTP and SMB. */
+	/* The only users now are FTP, FSP, and SMB. */
 	struct socket *data_socket;
 
 	int tries;

@@ -440,8 +440,9 @@ static int
 check_http_server_bugs(struct uri *uri, struct http_connection_info *http,
 		       unsigned char *head)
 {
-	unsigned char *server, **s;
-	static unsigned char *buggy_servers[] = {
+	unsigned char *server;
+	const unsigned char *const *s;
+	static const unsigned char *const buggy_servers[] = {
 		"mod_czech/3.1.0",
 		"Purveyor",
 		"Netscape-Enterprise",
@@ -580,6 +581,11 @@ http_send_header(struct socket *socket)
 		add_to_string(&header, "TRACE ");
 	} else if (use_connect) {
 		add_to_string(&header, "CONNECT ");
+		/* In CONNECT requests, we send only a subset of the
+		 * headers to the proxy.  See the "CONNECT:" comments
+		 * below.  After the CONNECT request succeeds, we
+		 * negotiate TLS with the real server and make a new
+		 * HTTP request that includes all the headers.  */
 	} else if (uri->post) {
 		add_to_string(&header, "POST ");
 		conn->unrestartable = 1;
@@ -612,10 +618,14 @@ http_send_header(struct socket *socket)
 	add_long_to_string(&header, http->sent_version.minor);
 	add_crlf_to_string(&header);
 
+	/* CONNECT: Sending a Host header seems pointless as the same
+	 * information is already in the CONNECT line.  It's harmless
+	 * though and Mozilla does it too.  */
 	add_to_string(&header, "Host: ");
 	add_uri_to_string(&header, uri, URI_HTTP_HOST);
 	add_crlf_to_string(&header);
 
+	/* CONNECT: Proxy-Authorization is intended to be seen by the proxy.  */
 	if (talking_to_proxy) {
 		unsigned char *user = get_opt_str("protocol.http.proxy.user");
 		unsigned char *passwd = get_opt_str("protocol.http.proxy.passwd");
@@ -647,7 +657,7 @@ http_send_header(struct socket *socket)
 			if (user[0]) {
 				unsigned char *proxy_data;
 
-				proxy_data = straconcat(user, ":", passwd, NULL);
+				proxy_data = straconcat(user, ":", passwd, (unsigned char *) NULL);
 				if (proxy_data) {
 					unsigned char *proxy_64 = base64_encode(proxy_data);
 
@@ -663,6 +673,9 @@ http_send_header(struct socket *socket)
 		}
 	}
 
+	/* CONNECT: User-Agent does not reveal anything about the
+	 * resource we're fetching, and it may help the proxy return
+	 * better error messages.  */
 	optstr = get_opt_str("protocol.http.user_agent");
 	if (*optstr && strcmp(optstr, " ")) {
 		unsigned char *ustr, ts[64] = "";
@@ -688,33 +701,47 @@ http_send_header(struct socket *socket)
 		add_crlf_to_string(&header);
 	}
 
-	switch (get_opt_int("protocol.http.referer.policy")) {
-		case REFERER_NONE:
-			/* oh well */
-			break;
+	/* CONNECT: Referer probably is a secret page in the HTTPS
+	 * server, so don't reveal it to the proxy.  */ 
+	if (!use_connect) {
+		switch (get_opt_int("protocol.http.referer.policy")) {
+			case REFERER_NONE:
+				/* oh well */
+				break;
 
-		case REFERER_FAKE:
-			optstr = get_opt_str("protocol.http.referer.fake");
-			if (!optstr[0]) break;
-			add_to_string(&header, "Referer: ");
-			add_to_string(&header, optstr);
-			add_crlf_to_string(&header);
-			break;
+			case REFERER_FAKE:
+				optstr = get_opt_str("protocol.http.referer.fake");
+				if (!optstr[0]) break;
+				add_to_string(&header, "Referer: ");
+				add_to_string(&header, optstr);
+				add_crlf_to_string(&header);
+				break;
 
-		case REFERER_TRUE:
-			if (!conn->referrer) break;
-			add_to_string(&header, "Referer: ");
-			add_url_to_http_string(&header, conn->referrer, URI_HTTP_REFERRER);
-			add_crlf_to_string(&header);
-			break;
+			case REFERER_TRUE:
+				if (!conn->referrer) break;
+				add_to_string(&header, "Referer: ");
+				add_url_to_http_string(&header, conn->referrer, URI_HTTP_REFERRER);
+				add_crlf_to_string(&header);
+				break;
 
-		case REFERER_SAME_URL:
-			add_to_string(&header, "Referer: ");
-			add_url_to_http_string(&header, uri, URI_HTTP_REFERRER);
-			add_crlf_to_string(&header);
-			break;
+			case REFERER_SAME_URL:
+				add_to_string(&header, "Referer: ");
+				add_url_to_http_string(&header, uri, URI_HTTP_REFERRER);
+				add_crlf_to_string(&header);
+				break;
+		}
 	}
 
+	/* CONNECT: Do send all Accept* headers to the CONNECT proxy,
+	 * because they do not reveal anything about the resource
+	 * we're going to request via TLS, and they may affect the
+	 * error message if the CONNECT request fails.
+	 *
+	 * If ELinks is ever changed to vary its Accept headers based
+	 * on what it intends to do with the returned resource, e.g.
+	 * sending "Accept: text/css" when it wants an external
+	 * stylesheet, then it should do that only in the inner GET
+	 * and not in the outer CONNECT.  */
 	add_to_string(&header, "Accept: */*");
 	add_crlf_to_string(&header);
 
@@ -722,18 +749,14 @@ http_send_header(struct socket *socket)
 #if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2)
 	add_to_string(&header, "Accept-Encoding: ");
 
-#ifdef BUG_517
 #ifdef CONFIG_BZIP2
 	add_to_string(&header, "bzip2");
-#endif
 #endif
 
 #ifdef CONFIG_GZIP
 
-#ifdef BUG_517
 #ifdef CONFIG_BZIP2
 	add_to_string(&header, ", ");
-#endif
 #endif
 
 	add_to_string(&header, "gzip");
@@ -769,6 +792,11 @@ http_send_header(struct socket *socket)
 	}
 #endif
 
+	/* CONNECT: Proxy-Connection is intended to be seen by the
+	 * proxy.  If the CONNECT request succeeds, then the proxy
+	 * will forward the remainder of the TCP connection to the
+	 * origin server, and Proxy-Connection does not matter; but
+	 * if the request fails, then Proxy-Connection may matter.  */
 	/* FIXME: What about post-HTTP/1.1?? --Zas */
 	if (HTTP_1_1(http->sent_version)) {
 		if (!IS_PROXY_URI(conn->uri)) {
@@ -785,7 +813,9 @@ http_send_header(struct socket *socket)
 		add_crlf_to_string(&header);
 	}
 
-	if (conn->cached) {
+	/* CONNECT: Do not tell the proxy anything we have cached
+	 * about the resource.  */
+	if (!use_connect && conn->cached) {
 		if (!conn->cached->incomplete && conn->cached->head
 		    && conn->cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED) {
 			if (conn->cached->last_modified) {
@@ -801,6 +831,8 @@ http_send_header(struct socket *socket)
 		}
 	}
 
+	/* CONNECT: Let's send cache control headers to the proxy too;
+	 * they may affect DNS caching.  */
 	if (conn->cache_mode >= CACHE_MODE_FORCE_RELOAD) {
 		add_to_string(&header, "Pragma: no-cache");
 		add_crlf_to_string(&header);
@@ -808,7 +840,9 @@ http_send_header(struct socket *socket)
 		add_crlf_to_string(&header);
 	}
 
-	if (conn->from || conn->progress->start > 0) {
+	/* CONNECT: Do not reveal byte ranges to the proxy.  It can't
+	 * do anything good with that information anyway.  */
+	if (!use_connect && (conn->from || conn->progress->start > 0)) {
 		/* conn->from takes precedence. conn->progress.start is set only the first
 		 * time, then conn->from gets updated and in case of any retries
 		 * etc we have everything interesting in conn->from already. */
@@ -818,10 +852,13 @@ http_send_header(struct socket *socket)
 		add_crlf_to_string(&header);
 	}
 
+	/* CONNECT: The Authorization header is for the origin server only.  */
+	if (!use_connect) {
 #ifdef CONFIG_GSSAPI
-	if (http_negotiate_output(uri, &header) != 0)
+		if (http_negotiate_output(uri, &header) != 0)
 #endif
-		entry = find_auth(uri);
+			entry = find_auth(uri);
+	}
 
 	if (entry) {
 		if (entry->digest) {
@@ -846,7 +883,8 @@ http_send_header(struct socket *socket)
 			unsigned char *id;
 
 			/* Create base64 encoded string. */
-			id = straconcat(entry->user, ":", entry->password, NULL);
+			id = straconcat(entry->user, ":", entry->password,
+					(unsigned char *) NULL);
 			if (id) {
 				unsigned char *base64 = base64_encode(id);
 
@@ -862,7 +900,8 @@ http_send_header(struct socket *socket)
 		}
 	}
 
-	if (uri->post) {
+	/* CONNECT: Any POST data is for the origin server only.  */
+	if (!use_connect && uri->post) {
 		/* We search for first '\n' in uri->post to get content type
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
@@ -881,7 +920,8 @@ http_send_header(struct socket *socket)
 	}
 
 #ifdef CONFIG_COOKIES
-	{
+	/* CONNECT: Cookies are for the origin server only.  */
+	if (!use_connect) {
 		struct string *cookies = send_cookies(uri);
 
 		if (cookies) {
@@ -895,11 +935,16 @@ http_send_header(struct socket *socket)
 
 	add_crlf_to_string(&header);
 
+	/* CONNECT: Any POST data is for the origin server only.
+	 * This was already checked above and post_data is NULL
+	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
 #define POST_BUFFER_SIZE 4096
 		unsigned char *post = post_data;
 		unsigned char buffer[POST_BUFFER_SIZE];
 		int n = 0;
+
+		assert(!use_connect); /* see comment above */
 
 		while (post[0] && post[1]) {
 			int h1, h2;
@@ -1027,30 +1072,17 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			}
 		}
 		
-		if (state == FINISHING) {
-			/* state is FINISHING. Set to_read to some nice, big
-			 * value to empty the encoded output queue by reading
-			 * big chunks from it. */
-			to_read = BIG_READ;
-		}
-
 		if (!conn->stream) {
 			conn->stream = open_encoded(conn->stream_pipes[0],
 					conn->content_encoding);
 			if (!conn->stream) return NULL;
-			/* On "startup" pipe is treated with care, but if everything
-			 * was already written to the pipe, caution isn't necessary */
-			if (state != FINISHING) {
-				/* on init don't read too much */
-				to_read = PIPE_BUF / 32;
-			}
 		}
 
-		output = (unsigned char *) mem_realloc(output, *new_len + to_read);
+		output = (unsigned char *) mem_realloc(output, *new_len + BIG_READ);
 		if (!output) break;
 
-		did_read = read_encoded(conn->stream, output + *new_len,
-					to_read);
+		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
+
 		if (did_read > 0) *new_len += did_read;
 		else if (did_read == -1) {
 			mem_free_set(&output, NULL);
@@ -1832,13 +1864,13 @@ again:
 		    && (!strcasecmp(d, "gzip") || !strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
 #endif
-#ifdef BUG_517
+
 #ifdef CONFIG_BZIP2
 		if (file_encoding != ENCODING_BZIP2
 		    && (!strcasecmp(d, "bzip2") || !strcasecmp(d, "x-bzip2")))
 			conn->content_encoding = ENCODING_BZIP2;
 #endif
-#endif
+
 		mem_free(d);
 	}
 

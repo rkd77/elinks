@@ -330,7 +330,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 	assert(term && doc_view && doc_view->document && doc_view->vs && link);
 	if_assert_failed return;
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	box = &doc_view->box;
@@ -419,7 +419,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	}
 #endif /* CONFIG_UTF8 */
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	box = &doc_view->box;
@@ -532,21 +532,40 @@ static unsigned char *
 save_textarea_file(unsigned char *value)
 {
 	unsigned char *filename;
-	FILE *file = NULL;
-	int h;
+	FILE *fp = NULL;
+	int fd;
+	size_t nmemb, len;
 
 	filename = get_tempdir_filename("elinks-area-XXXXXX");
 	if (!filename) return NULL;
 
-	h = safe_mkstemp(filename);
-	if (h >= 0) file = fdopen(h, "w");
-
-	if (file) {
-		fwrite(value, strlen(value), 1, file);
-		fclose(file);
-	} else {
+	fd = safe_mkstemp(filename);
+	if (fd < 0) {
 		mem_free(filename);
+		return NULL;
 	}
+
+	len = strlen(value);
+	if (len == 0) return filename;
+
+	fp = fdopen(fd, "w");
+	if (!fp) {
+
+error:
+		unlink(filename);
+		mem_free(filename);
+		close(fd);
+		return NULL;
+	}
+
+	nmemb = fwrite(value, len, 1, fp);
+	if (nmemb != 1) {
+		fclose(fp);
+		goto error;
+	}
+
+	if (fclose(fp) != 0)
+		goto error;
 
 	return filename;
 }
@@ -592,7 +611,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			if (!ed || !*ed) ed = "vi";
 		}
 
-		ex = straconcat(ed, " ", fn, NULL);
+		ex = straconcat(ed, " ", fn, (unsigned char *) NULL);
 		if (!ex) {
 			unlink(fn);
 			goto free_and_return;
@@ -622,6 +641,10 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 
 		if (file.length > fc_maxlength) {
 			file.source[fc_maxlength] = '\0';
+			/* Casting size_t fc_maxlength to unsigned int
+			 * and formatting it with "%u" is safe,
+			 * because fc_maxlength is smaller than
+			 * file.length, which is an int.  */
 			info_box(term, MSGBOX_FREE_TEXT, N_("Warning"),
 			         ALIGN_CENTER,
 			         msg_text(term,
@@ -633,7 +656,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 					     " but you can still recover the"
 					     " text that you entered from"
 					     " this file: %s"), file.length,
-				             fc_maxlength, fn));
+				             (unsigned int) fc_maxlength, fn));
 		} else {
 			unlink(fn);
 		}
@@ -1183,7 +1206,7 @@ set_textarea(struct document_view *doc_view, int direction)
 		return;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link has no form control");
+	assertm(fc != NULL, "link has no form control");
 	if_assert_failed return;
 
 	if (fc->mode == FORM_MODE_DISABLED) return;

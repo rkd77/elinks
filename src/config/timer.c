@@ -63,7 +63,7 @@ periodic_save_change_hook(struct session *ses, struct option *current,
 static void
 init_timer(struct module *module)
 {
-	struct change_hook_info timer_change_hooks[] = {
+	static const struct change_hook_info timer_change_hooks[] = {
 		{ "infofiles.save_interval", periodic_save_change_hook },
 		{ NULL,	NULL },
 	};

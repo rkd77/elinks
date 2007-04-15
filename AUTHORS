@@ -218,6 +218,9 @@ Hugo Haas <hugo@larve.net>
 	Minor random hacking
 	debian/watch file
 
+<incoherent@mail.ru>
+	bzip2 decoding fix and rewrite
+
 Ingo Blechschmidt <iblech@web.de>
 	German translation updates
 

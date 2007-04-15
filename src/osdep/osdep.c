@@ -349,6 +349,26 @@ static unsigned char *clipboard;
 unsigned char *
 get_clipboard_text(void)
 {
+	/* The following support for GNU Screen's clipboard is
+	 * disabled for two reasons:
+	 *
+	 * 1. It does not actually return the string from that
+	 *    clipboard, but rather causes the clipboard contents to
+	 *    appear in stdin.	get_clipboard_text is normally called
+	 *    because the user pressed a Paste key in an input field,
+	 *    so the characters end up being inserted in that field;
+	 *    but if there are newlines in the clipboard, then the
+	 *    field may lose focus, in which case the remaining
+	 *    characters may trigger arbitrary actions in ELinks.
+	 *
+	 * 2. It pastes from both GNU Screen's clipboard and the ELinks
+	 *    internal clipboard.  Because set_clipboard_text also sets
+	 *    them both, the same text would typically get pasted twice.
+	 *
+	 * Users can instead use the GNU Screen key bindings to run the
+	 * paste command.  This method still suffers from problem 1 but
+	 * any user of GNU Screen should know that already.  */
+#if 0
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
 		struct string str;
@@ -359,6 +379,7 @@ get_clipboard_text(void)
 		if (str.length) exe(str.source);
 		if (str.source) done_string(&str);
 	}
+#endif
 
 	return stracpy(empty_string_or_(clipboard));
 }

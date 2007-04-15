@@ -94,7 +94,7 @@ exec_cmd(struct option *o, unsigned char ***argv, int *argc)
 { \
 	struct option *real = get_opt_rec(config_options, opt->value.string); \
  \
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string); \
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string); \
 	if_assert_failed { return ret_; } \
  \
 	if (option_types[real->type].name_) \
@@ -109,7 +109,7 @@ redir_cmd(struct option *opt, unsigned char ***argv, int *argc)
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	unsigned char * ret = NULL;
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
 
 	if (option_types[real->type].cmdline) {
@@ -131,7 +131,7 @@ redir_wr(struct option *opt, struct string *string)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return; }
 
 	if (option_types[real->type].write)
@@ -144,7 +144,7 @@ redir_set(struct option *opt, unsigned char *str)
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	int ret = 0;
 
-	assertm(real, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
 
 	if (option_types[real->type].set) {
@@ -166,7 +166,7 @@ redir_add(struct option *opt, unsigned char *str)
 /* Support functions for config file parsing. */
 
 static void
-add_optstring_to_string(struct string *s, unsigned char *q, int qlen)
+add_optstring_to_string(struct string *s, const unsigned char *q, int qlen)
 {
  	if (!commandline) add_char_to_string(s, '"');
 	add_quoted_to_string(s, q, qlen);
@@ -322,7 +322,7 @@ cp_set(struct option *opt, unsigned char *str)
 static void
 cp_wr(struct option *o, struct string *s)
 {
-	unsigned char *mime_name = get_cp_mime_name(o->value.number);
+	unsigned char *mime_name = get_cp_config_name(o->value.number);
 
 	add_optstring_to_string(s, mime_name, strlen(mime_name));
 }
@@ -364,7 +364,7 @@ color_wr(struct option *opt, struct string *str)
 {
 	color_T color = opt->value.color;
 	unsigned char hexcolor[8];
-	unsigned char *strcolor = get_color_string(color, hexcolor);
+	const unsigned char *strcolor = get_color_string(color, hexcolor);
 
 	add_optstring_to_string(str, strcolor, strlen(strcolor));
 }

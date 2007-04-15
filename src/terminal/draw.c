@@ -46,7 +46,7 @@ void
 draw_border_cross(struct terminal *term, int x, int y,
 		  enum border_cross_direction dir, struct color_pair *color)
 {
-	static unsigned char border_trans[2][4] = {
+	static const unsigned char border_trans[2][4] = {
 		/* Used for BORDER_X_{RIGHT,LEFT}: */
 		{ BORDER_SVLINE, BORDER_SRTEE, BORDER_SLTEE },
 		/* Used for BORDER_X_{DOWN,UP}: */
@@ -155,7 +155,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	if (term->utf8) {
 		struct screen_char *sc;
 
-		if (line->data == UCS_NO_CHAR && x == 0) {
+		if (line[0].data == UCS_NO_CHAR && x == 0) {
 			unicode_val_T data_save;
 
 			sc = line;
@@ -191,7 +191,7 @@ void
 draw_border(struct terminal *term, struct box *box,
 	    struct color_pair *color, int width)
 {
-	static enum border_char p1[] = {
+	static const enum border_char p1[] = {
 		BORDER_SULCORNER,
 		BORDER_SURCORNER,
 		BORDER_SDLCORNER,
@@ -199,7 +199,7 @@ draw_border(struct terminal *term, struct box *box,
 		BORDER_SVLINE,
 		BORDER_SHLINE,
 	};
-	static enum border_char p2[] = {
+	static const enum border_char p2[] = {
 		BORDER_DULCORNER,
 		BORDER_DURCORNER,
 		BORDER_DDLCORNER,
@@ -207,7 +207,7 @@ draw_border(struct terminal *term, struct box *box,
 		BORDER_DVLINE,
 		BORDER_DHLINE,
 	};
-	enum border_char *p = (width > 1) ? p2 : p1;
+	const enum border_char *p = (width > 1) ? p2 : p1;
 	struct box borderbox;
 
 	set_box(&borderbox, box->x - 1, box->y - 1,

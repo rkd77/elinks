@@ -32,11 +32,10 @@
 
 
 static void
-toggle_success_msgbox(void *dummy)
+disable_success_msgbox(void *dummy)
 {
-	/* TODO: option_changed() */
-	get_opt_bool("ui.success_msgbox") = !get_opt_bool("ui.success_msgbox");
-	get_opt_rec(config_options, "ui.success_msgbox")->flags |= OPT_TOUCHED;
+	get_opt_bool("ui.success_msgbox") = 0;
+	option_changed(NULL, get_opt_rec(config_options, "ui.success_msgbox"));
 }
 
 void
@@ -55,15 +54,16 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 			msg_text(term, N_("Options were saved successfully to config file %s."),
 				 config_file),
 			NULL, 2,
-			N_("~OK"), NULL, B_ENTER | B_ESC,
-			N_("~Do not show anymore"), toggle_success_msgbox, 0);
+			MSG_BOX_BUTTON(N_("~OK"), NULL, B_ENTER | B_ESC),
+			MSG_BOX_BUTTON(N_("~Do not show anymore"), disable_success_msgbox, 0));
 		return;
 	}
 
 	strerr = secsave_strerror(secsave_error, term);
 
 	if (stdio_error > 0)
-		errmsg = straconcat(strerr, " (", strerror(stdio_error), ")", NULL);
+		errmsg = straconcat(strerr, " (", strerror(stdio_error), ")",
+				    (unsigned char *) NULL);
 
 	info_box(term, MSGBOX_FREE_TEXT,
 		 N_("Write config error"), ALIGN_CENTER,
@@ -122,7 +122,8 @@ get_option_text(struct listbox_item *item, struct terminal *term)
 
 	if (option->flags & OPT_TOUCHED)
 		return straconcat(_(desc, term),
-				  " (", _("modified", term), ")", NULL);
+				  " (", _("modified", term), ")",
+				  (unsigned char *) NULL);
 
 	return stracpy(_(desc, term));
 }
@@ -141,7 +142,8 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 	type = _(option_types[option->type].name, term);
 	if (option->type == OPT_TREE) {
 		type = straconcat(type, " ",
-				_("(expand by pressing space)", term), NULL);
+				  _("(expand by pressing space)", term),
+				  (unsigned char *) NULL);
 	}
 
 	add_format_to_string(&info, "\n%s: %s", _("Type", term), type);
@@ -243,7 +245,7 @@ delete_option_item(struct listbox_item *item, int last)
 		mark_option_as_deleted(option);
 }
 
-static struct listbox_ops options_listbox_ops = {
+static const struct listbox_ops options_listbox_ops = {
 	lock_option,
 	unlock_option,
 	is_option_used,
@@ -275,9 +277,7 @@ check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data
 	if (chinon) {
 		if (option_types[option->type].set &&
 		    option_types[option->type].set(option, chinon)) {
-			struct option *current = option;
-
-			option_changed(ses, current, option);
+			option_changed(ses, option);
 
 			commandline = 0;
 			mem_free(chinon);
@@ -328,17 +328,19 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 
 	name = straconcat(_("Name", term), ": ", option->name, "\n",
 			  _("Type", term), ": ",
-			  _(option_types[option->type].name, term), NULL);
+			  _(option_types[option->type].name, term),
+			  (unsigned char *) NULL);
 	desc = straconcat(_("Description", term), ": \n",
 			  _(option->desc ? option->desc
 				  	 : (unsigned char *) "N/A", term),
-			  NULL);
+			  (unsigned char *) NULL);
 	range = get_range_string(option);
 	if (range) {
 		if (*range) {
 			unsigned char *tmp;
 
-			tmp = straconcat(name, " ", range, NULL);
+			tmp = straconcat(name, " ", range,
+					 (unsigned char *) NULL);
 			if (tmp) {
 				mem_free(name);
 				name = tmp;
@@ -365,7 +367,7 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 
 	add_dlg_end(dlg, EDIT_WIDGETS_COUNT);
 
-	do_dialog(term, dlg, getml(dlg, name, desc, NULL));
+	do_dialog(term, dlg, getml(dlg, (void *) name, (void *) desc, (void *) NULL));
 #undef EDIT_WIDGETS_COUNT
 }
 
@@ -474,7 +476,7 @@ invalid_option:
 	ctx->option = option;
 	ctx->widget_data = dlg_data->widgets_data;
 
-	input_dialog(term, getml(ctx, NULL), N_("Add option"), N_("Name"),
+	input_dialog(term, getml(ctx, (void *) NULL), N_("Add option"), N_("Name"),
 		     ctx, NULL,
 		     MAX_STR_LEN, "", 0, 0, check_option_name,
 		     add_option_to_tree, NULL);
@@ -495,7 +497,7 @@ push_save_button(struct dialog_data *dlg_data,
 }
 
 
-static struct hierbox_browser_button option_buttons[] = {
+static const struct hierbox_browser_button option_buttons[] = {
 	/* [gettext_accelerator_context(.option_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Edit"),   push_edit_button,           0 },
@@ -730,7 +732,7 @@ delete_keybinding_item(struct listbox_item *item, int last)
 	free_keybinding(keybinding);
 }
 
-static struct listbox_ops keybinding_listbox_ops = {
+static const struct listbox_ops keybinding_listbox_ops = {
 	lock_keybinding,
 	unlock_keybinding,
 	is_keybinding_used,
@@ -810,7 +812,7 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 		if (init_string(&canonical))
 			add_keystroke_to_string(&canonical, &hop->kbd, 0);
 
-		msg_box(new_hop->term, getml(new_hop, NULL), MSGBOX_FREE_TEXT,
+		msg_box(new_hop->term, getml(new_hop, (void *) NULL), MSGBOX_FREE_TEXT,
 			N_("Keystroke already used"), ALIGN_CENTER,
 			msg_text(new_hop->term, N_("The keystroke \"%s\" "
 				 "is currently used for \"%s\".\n"
@@ -818,8 +820,8 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 				 canonical.length ? canonical.source : keystroke,
 				 get_action_name(hop->keymap_id, action_id)),
 			new_hop, 2,
-			N_("~Yes"), really_really_add_keybinding, B_ENTER,
-			N_("~No"), NULL, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), really_really_add_keybinding, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 
 		done_string(&canonical); /* safe even if init failed */
 		return;
@@ -889,7 +891,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 			get_action_name(hop->keymap_id, hop->action_id),
 			get_keymap_name(hop->keymap_id));
 
-	input_dialog(term, getml(hop, text, NULL),
+	input_dialog(term, getml(hop, (void *) text, (void *) NULL),
 		     N_("Add keybinding"), text,
 		     hop, NULL,
 		     MAX_STR_LEN, "", 0, 0, check_keystroke,
@@ -924,7 +926,7 @@ push_kbdbind_save_button(struct dialog_data *dlg_data,
 
 static INIT_LIST_HEAD(keybinding_dialog_list);
 
-static struct hierbox_browser_button keybinding_buttons[] = {
+static const struct hierbox_browser_button keybinding_buttons[] = {
 	/* [gettext_accelerator_context(.keybinding_buttons)] */
 	{ N_("~Add"),            push_kbdbind_add_button,            0 },
 	{ N_("~Delete"),         push_hierbox_delete_button,         0 },

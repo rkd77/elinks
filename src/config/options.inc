@@ -505,11 +505,12 @@ static struct option_info config_options_info[] = {
 	/* FIXME: Write more. */
 	INIT_OPT_INT("document.cache", N_("Revalidation interval"),
 		"revalidation_interval", 0, -1, 86400, -1,
-		N_("Period that a cache entry is considered to be up-to-date.\n"
-		"When a document is loaded and this interval has elapsed since the\n"
-		"document was initially loaded or most recently revalidated\n"
-		"with the server, the server will be checked in case there is\n"
-		"a more up-to-date version of the document.")),
+		N_("Period in seconds that a cache entry is considered to be\n"
+		"up-to-date. When a document is loaded and this interval has elapsed\n"
+		"since the document was initially loaded or most recently\n"
+		"revalidated with the server, the server will be checked in case\n"
+		"there is a more up-to-date version of the document.\n\n"
+		"A value of -1 disables automatic revalidation.")),
 
 	INIT_OPT_TREE("document.cache", N_("Memory cache"),
 		"memory", 0,
@@ -641,80 +642,26 @@ static struct option_info config_options_info[] = {
 		N_("Codepage used in dump output. 'System' stands for\n"
 		"a codepage determined by a selected locale.")),
 
-	/* The #if directives cannot be inside the argument list of
-	 * the INIT_OPT_INT macro; that wouldn't be standard C.
-	 * And they especially cannot be inside the argument list of N_;
-	 * xgettext (GNU gettext-tools) 0.14.3 wouldn't support that. */
-	 /* FIXME: It's totally brainless --witekfl */
-#if defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
 	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode\n"
-		"3 is 256 color mode")),
-#elif defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode")),
-#elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 256 color mode")),
-#elif !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && !defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 1, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode")),
-#elif defined(CONFIG_88_COLORS) && defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 4, -1,
-		N_("Color mode for dumps:\n"
+		"color_mode", 0, -1, COLOR_MODES - 1, -1,
+		/* The list of modes must be at the end of this string
+		 * because AsciiDoc 7.1.2 does not support continuing
+		 * an outer list entry after an inner list.
+		 * TRANSLATORS: This restriction applies only to the
+		 * "en" (English) translation.  (See doc/Makefile.)  */
+		N_("Color mode for dumps.\n"
+		"Some modes may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.\n"
+		"The color modes are:\n"
 		"-1 is standard dump mode\n"
 		"0 is mono mode\n"
 		"1 is 16 color mode\n"
 		"2 is 88 color mode\n"
 		"3 is 256 color mode\n"
 		"4 is true color mode")),
-#elif defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 88 color mode\n"
-		"3 is true color mode")),
-#elif defined(CONFIG_256_COLORS) && !defined(CONFIG_88_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 3, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is 256 color mode\n"
-		"3 is true color mode")),
-#elif !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) && defined(CONFIG_TRUE_COLOR)
-	INIT_OPT_INT("document.dump", N_("Color mode"),
-		"color_mode", 0, -1, 2, -1,
-		N_("Color mode for dumps:\n"
-		"-1 is standard dump mode\n"
-		"0 is mono mode\n"
-		"1 is 16 color mode\n"
-		"2 is true color mode")),
-#endif /* !defined(CONFIG_88_COLORS) && !defined(CONFIG_256_COLORS) */
+
 	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", 0, "",
 		N_("Footer string used in dumps. %u is substituted by URL.")),
@@ -885,14 +832,16 @@ static struct option_info config_options_info[] = {
 		"and lines working at the same time. Makes sense only with linux\n"
 		"terminal.")),
 
+	/* When CONFIG_UTF8 is defined, any code that reads the "utf_8_io"
+	 * option should also check whether the "codepage" option is UTF-8,
+	 * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
+	 * not defined, it should not be possible to set UTF-8 as "codepage";
+	 * please report any such possibilities as bugs.)  */
 	INIT_OPT_BOOL("terminal._template_", N_("UTF-8 I/O"),
 		"utf_8_io", 0, 0,
 		N_("Enable I/O in UTF-8 for Unicode terminals. Note that currently,\n"
 		"only the subset of UTF-8 according to terminal codepage is used.\n"
 		"ELinks ignores this option if the terminal codepage is UTF-8.")),
-		/* When CONFIG_UTF8 is defined, any code that reads the "utf_8_io"
-		 * option should also check whether the "codepage" option is UTF-8,
-		 * and if so, behave as if "utf_8_io" were 1.  */
 
 	INIT_OPT_BOOL("terminal._template_", N_("Restrict frames in cp850/852"),
 		"restrict_852", 0, 0,
@@ -907,12 +856,23 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_INT("terminal._template_", N_("Color mode"),
 		"colors", 0, 0, COLOR_MODES - 1, 0,
-		N_("The color mode controls what colors are used and how they are\n"
-		"output to the terminal. The color modes are:\n"
+		/* The list of modes must be at the end of this string
+		 * because AsciiDoc 7.1.2 does not support continuing
+		 * an outer list entry after an inner list.
+		 * TRANSLATORS: This restriction applies only to the
+		 * "en" (English) translation.  (See doc/Makefile.)  */
+		N_("The color mode controls what colors are used and how they are "
+		"output to the terminal.\n"
+		"Some modes may have been disabled at compile time. "
+		"The Setup -> Terminal options dialog lists the modes "
+		"supported by this executable. If you select an "
+		"unsupported mode, ELinks uses 16 colors.\n"
+		"The color modes are:\n"
 		"0 is mono mode, only 2 colors are used\n"
 		"1 is 16 color mode, uses the common ANSI colors\n"
-		"2 is 256 color mode, uses XTerm RGB codes\n"
-		"3 is true color mode, uses konsole RGB codes.")),
+		"2 is 88 color mode, uses XTerm RGB codes\n"
+		"3 is 256 color mode, uses XTerm RGB codes\n"
+		"4 is true color mode, uses konsole RGB codes")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Transparency"),
 		"transparency", 0, 0,

@@ -206,7 +206,7 @@ get_mime_handler_default(unsigned char *type, int have_x)
 }
 
 
-struct mime_backend default_mime_backend = {
+const struct mime_backend default_mime_backend = {
 	/* get_content_type: */	get_content_type_default,
 	/* get_mime_handler: */	get_mime_handler_default,
 };

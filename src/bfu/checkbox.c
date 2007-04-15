@@ -164,7 +164,7 @@ select_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_PROCESSED;
 }
 
-struct widget_ops checkbox_ops = {
+const struct widget_ops checkbox_ops = {
 	display_checkbox,
 	init_checkbox,
 	mouse_checkbox,

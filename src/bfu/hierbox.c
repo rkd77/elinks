@@ -43,7 +43,7 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 	struct listbox_item *item;
 
 	if (!root) {
-		assertm(browser, "Nowhere to add new list box item");
+		assertm(browser != NULL, "Nowhere to add new list box item");
 		root = &browser->root;
 	}
 
@@ -318,7 +318,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	add_dlg_listbox(dlg, listbox_data);
 
 	for (button = 0; button < browser->buttons_size; button++) {
-		struct hierbox_browser_button *but = &browser->buttons[button];
+		const struct hierbox_browser_button *but = &browser->buttons[button];
 
 		/* Skip buttons that should not be displayed in anonymous mode */
 		if (anonymous && !but->anonymous) {
@@ -335,7 +335,7 @@ hierbox_browser(struct hierbox_browser *browser, struct session *ses)
 	 * have to subtract one. */
 	add_dlg_end(dlg, button + 2 - (anonymous ? anonymous - 1 : 0));
 
-	return do_dialog(term, dlg, getml(dlg, NULL));
+	return do_dialog(term, dlg, getml(dlg, (void *) NULL));
 }
 
 
@@ -434,11 +434,11 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 
 	box->ops->lock(item);
 
-	msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT /* | MSGBOX_SCROLLABLE */,
+	msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT /* | MSGBOX_SCROLLABLE */,
 		N_("Info"), ALIGN_LEFT,
 		msg,
 		context, 1,
-		N_("~OK"), done_listbox_context, B_ESC | B_ENTER);
+		MSG_BOX_BUTTON(N_("~OK"), done_listbox_context, B_ESC | B_ENTER));
 
 	return EVENT_PROCESSED;
 }
@@ -547,7 +547,7 @@ enum delete_error {
 	DELETE_ERRORS,
 };
 
-struct listbox_ops_messages default_listbox_ops_messages = {
+static const struct listbox_ops_messages default_listbox_ops_messages = {
 	/* cant_delete_item */
 	N_("Sorry, but the item \"%s\" cannot be deleted."),
 
@@ -592,7 +592,7 @@ struct listbox_ops_messages default_listbox_ops_messages = {
 
 static void
 print_delete_error(struct listbox_item *item, struct terminal *term,
-		   struct listbox_ops *ops, enum delete_error err)
+		   const struct listbox_ops *ops, enum delete_error err)
 {
 	struct string msg;
 	unsigned char *errmsg;
@@ -647,7 +647,7 @@ static void
 do_delete_item(struct listbox_item *item, struct listbox_context *info,
 	       int last)
 {
-	struct listbox_ops *ops = info->box->ops;
+	const struct listbox_ops *ops = info->box->ops;
 
 	assert(item);
 
@@ -720,7 +720,7 @@ query_delete_selected_item(void *context_)
 	struct listbox_context *context, *oldcontext = context_;
 	struct terminal *term = oldcontext->term;
 	struct listbox_data *box = oldcontext->box;
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	unsigned char *text;
 	enum delete_error delete;
@@ -747,29 +747,35 @@ query_delete_selected_item(void *context_)
 
 	if (item->type == BI_FOLDER) {
 		ops->lock(item);
-		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
+		msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT,
 			listbox_message(delete_folder_title), ALIGN_CENTER,
 			msg_text(term, listbox_message(delete_folder), text),
 			context, 2,
-			N_("~Yes"), push_ok_delete_button, B_ENTER,
-			N_("~No"), done_listbox_context, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), done_listbox_context, B_ESC));
 	} else {
 		unsigned char *msg = ops->get_info(item, term);
 
 		ops->lock(item);
 
-		msg_box(term, getml(context, NULL), MSGBOX_FREE_TEXT,
+		msg_box(term, getml(context, (void *) NULL), MSGBOX_FREE_TEXT,
 			listbox_message(delete_item_title), ALIGN_LEFT,
 			msg_text(term, listbox_message(delete_item),
 			         text, empty_string_or_(msg)),
 			context, 2,
-			N_("~Yes"), push_ok_delete_button, B_ENTER,
-			N_("~No"), done_listbox_context, B_ESC);
+			MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+			MSG_BOX_BUTTON(N_("~No"), done_listbox_context, B_ESC));
 		mem_free_if(msg);
 	}
 	mem_free(text);
 
 	return EVENT_PROCESSED;
+}
+
+static void
+dont_delete_marked_items(void *const context_)
+{
+	query_delete_selected_item(context_);
 }
 
 widget_handler_status_T
@@ -779,7 +785,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 	/* [gettext_accelerator_context(push_hierbox_delete_button)] */
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	struct listbox_context *context;
 
@@ -801,12 +807,12 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 		return status;
 	}
 
-	msg_box(term, getml(context, NULL), 0,
+	msg_box(term, getml(context, (void *) NULL), 0,
 		listbox_message(delete_marked_items_title), ALIGN_CENTER,
 		listbox_message(delete_marked_items),
 		context, 2,
-		N_("~Yes"), push_ok_delete_button, B_ENTER,
-		N_("~No"), query_delete_selected_item, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), dont_delete_marked_items, B_ESC));
 
 	return EVENT_PROCESSED;
 }
@@ -842,7 +848,7 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 {
 	/* [gettext_accelerator_context(push_hierbox_clear_button)] */
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct listbox_ops *ops = box->ops;
+	const struct listbox_ops *ops = box->ops;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
 
@@ -863,12 +869,12 @@ push_hierbox_clear_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	msg_box(term, getml(context, NULL), 0,
+	msg_box(term, getml(context, (void *) NULL), 0,
 		listbox_message(clear_all_items_title), ALIGN_CENTER,
 		listbox_message(clear_all_items),
 		context, 2,
-		N_("~Yes"), do_clear_browser, B_ENTER,
-		N_("~No"), NULL, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), do_clear_browser, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
 
 	return EVENT_PROCESSED;
 }

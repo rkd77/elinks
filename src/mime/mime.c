@@ -110,7 +110,8 @@ check_extension_type(unsigned char *extension)
 	if (!trimmed)
 		return NULL;
 
-	content_type = straconcat("application/x-", trimmed + 1, NULL);
+	content_type = straconcat("application/x-", trimmed + 1,
+				  (unsigned char *) NULL);
 	if (!content_type)
 		return NULL;
 
@@ -130,7 +131,7 @@ static inline unsigned char *
 check_encoding_type(unsigned char *extension)
 {
 	enum stream_encoding encoding = guess_encoding(extension);
-	unsigned char **extension_list;
+	const unsigned char *const *extension_list;
 	unsigned char *last_extension = strrchr(extension, '.');
 
 	if (encoding == ENCODING_NONE || !last_extension)

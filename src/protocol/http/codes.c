@@ -25,11 +25,11 @@
 
 struct http_code {
 	int num;
-	unsigned char *str;
+	const unsigned char *str;
 };
 
 /* Source: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html */
-static struct http_code http_code[] = {
+static const struct http_code http_code[] = {
 	{ 100, "Continue" },
 	{ 101, "Switching Protocols" },
 	{ 200, "OK" },
@@ -77,18 +77,19 @@ static int
 compare_http_codes(const void *key, const void *element)
 {
 	int first = (long) key;
-	int second = ((struct http_code *) element)->num;
+	int second = ((const struct http_code *) element)->num;
 
 	return first - second;
 }
 
-static unsigned char *
+static const unsigned char *
 http_code_to_string(int code)
 {
-	struct http_code *element = bsearch((void *) (long) code, http_code,
-					    sizeof_array(http_code),
-					    sizeof(*element),
-					    compare_http_codes);
+	const struct http_code *element
+		= bsearch((void *) (long) code, http_code,
+			  sizeof_array(http_code),
+			  sizeof(*element),
+			  compare_http_codes);
 
 	if (element) return element->str;
 
@@ -100,7 +101,7 @@ http_code_to_string(int code)
 static unsigned char *
 get_http_error_document(struct terminal *term, struct uri *uri, int code)
 {
-	unsigned char *codestr = http_code_to_string(code);
+	const unsigned char *codestr = http_code_to_string(code);
 	unsigned char *title = asprintfa(_("HTTP error %03d", term), code);
 	struct string string;
 
@@ -126,7 +127,7 @@ get_http_error_document(struct terminal *term, struct uri *uri, int code)
 	add_format_to_string(&string, _(
 		"  An error occurred on the server while fetching the document you\n"
 		"  requested. However, the server did not send back any explanation of what\n"
-		"  happenned, so it is unknown what went wrong. Please contact the web\n"
+		"  happened, so it is unknown what went wrong. Please contact the web\n"
 		"  server administrator about this, if you believe that this error should\n"
 		"  not occur since it is not a nice behaviour from the web server at all\n"
 		"  and indicates that there is some much deeper problem with the web server\n"
@@ -168,8 +169,21 @@ show_http_error_document(struct session *ses, void *data)
 	if (cache) str = get_http_error_document(term, info->uri, info->code);
 
 	if (str) {
+		/* The codepage that _("foo", term) used when it was
+		 * called by get_http_error_document.  */
+		const int gettext_codepage
+			= get_opt_codepage_tree(term->spec, "charset");
+
 		if (cached) delete_entry_content(cache);
+
+		/* If we run out of memory here, it's perhaps better
+		 * to display a malformatted error message than none
+		 * at all.  */
 		mem_free_set(&cache->content_type, stracpy("text/html"));
+		mem_free_set(&cache->head,
+			     straconcat("\r\nContent-Type: text/html; charset=",
+					get_cp_mime_name(gettext_codepage),
+					"\r\n", (unsigned char *) NULL));
 		add_fragment(cache, 0, str, strlen(str));
 		mem_free(str);
 

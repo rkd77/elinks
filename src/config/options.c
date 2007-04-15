@@ -159,7 +159,7 @@ static int no_autocreate = 0;
 
 /* Get record of option of given name, or NULL if there's no such option. */
 struct option *
-get_opt_rec(struct option *tree, unsigned char *name_)
+get_opt_rec(struct option *tree, const unsigned char *name_)
 {
 	struct option *option;
 	unsigned char *aname = stracpy(name_);
@@ -197,7 +197,7 @@ get_opt_rec(struct option *tree, unsigned char *name_)
 	if (tree && tree->flags & OPT_AUTOCREATE && !no_autocreate) {
 		struct option *template = get_opt_rec(tree, "_template_");
 
-		assertm(template, "Requested %s should be autocreated but "
+		assertm(template != NULL, "Requested %s should be autocreated but "
 			"%.*s._template_ is missing!", name_, sep - name_,
 			name_);
 		if_assert_failed {
@@ -231,7 +231,7 @@ get_opt_rec(struct option *tree, unsigned char *name_)
  * do not create the option if it doesn't exist and there's autocreation
  * enabled. */
 struct option *
-get_opt_rec_real(struct option *tree, unsigned char *name)
+get_opt_rec_real(struct option *tree, const unsigned char *name)
 {
 	struct option *opt;
 
@@ -391,7 +391,7 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 	assert(path && option && tree);
 	if (*path) tree = get_opt_rec(tree, path);
 
-	assertm(tree, "Missing option tree for '%s'", path);
+	assertm(tree != NULL, "Missing option tree for '%s'", path);
 	if (!tree->value.tree) return;
 
 	object_nolock(option, "option");
@@ -680,7 +680,7 @@ register_autocreated_options(void)
 
 static struct option_info config_options_info[];
 extern struct option_info cmdline_options_info[];
-static struct change_hook_info change_hooks[];
+static const struct change_hook_info change_hooks[];
 
 void
 init_options(void)
@@ -716,7 +716,7 @@ done_options(void)
 }
 
 void
-register_change_hooks(struct change_hook_info *change_hooks)
+register_change_hooks(const struct change_hook_info *change_hooks)
 {
 	int i;
 
@@ -955,9 +955,8 @@ toggle_option(struct session *ses, struct option *option)
 	assert(option->type == OPT_BOOL || option->type == OPT_INT);
 	assert(option->max);
 
-	/* TODO: call change hooks. --jonas */
 	option->value.number = (number <= option->max) ? number : option->min;
-	option_changed(ses, option, option);
+	option_changed(ses, option);
 }
 
 static int
@@ -976,7 +975,7 @@ change_hook_language(struct session *ses, struct option *current, struct option 
 	return 0;
 }
 
-static struct change_hook_info change_hooks[] = {
+static const struct change_hook_info change_hooks[] = {
 	{ "config.show_template",	change_hook_stemplate },
 	{ "connection",			change_hook_connection },
 	{ "document.browse",		change_hook_html },
@@ -1012,11 +1011,11 @@ call_change_hooks(struct session *ses, struct option *current, struct option *op
 }
 
 void
-option_changed(struct session *ses, struct option *current, struct option *option)
+option_changed(struct session *ses, struct option *option)
 {
 	option->flags |= OPT_TOUCHED;
 	/* Notify everyone out there! */
-	call_change_hooks(ses, current, option);
+	call_change_hooks(ses, option, option);
 }
 
 int

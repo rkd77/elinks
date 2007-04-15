@@ -64,7 +64,7 @@ enum msgbox_flags {
  * @udata	Is a reference to any data that should be passed to
  *		the handlers associated with each button. NULL if none.
  *
- * @buttons	Denotes the number of buttons given as varadic arguments.
+ * @buttons	Denotes the number of buttons given as variadic arguments.
  *		For each button 3 arguments are extracted:
  *			o First the label text. It is automatically localized
  *			  unless MSGBOX_NO_INTL is passed. If NULL, this button
@@ -72,6 +72,10 @@ enum msgbox_flags {
  *			o Second pointer to the handler function (taking
  *			  one (void *), which is incidentally the udata).
  *			o Third any flags.
+ *		Each triple should be wrapped in the MSG_BOX_BUTTON
+ *		macro, which converts the values to the correct types.
+ *		(The compiler can't do that on its own for variadic
+ *		arguments.)
  *
  * Note that you should ALWAYS format the msg_box() call like:
  *
@@ -79,15 +83,30 @@ enum msgbox_flags {
  *         title, align,
  *         text,
  *         udata, M,
- *         label1, handler1, flags1,
+ *         MSG_BOX_BUTTON(label1, handler1, flags1),
  *         ...,
- *         labelM, handlerM, flagsM);
+ *         MSG_BOX_BUTTON(labelM, handlerM, flagsM));
  *
  * ...no matter that it could fit on one line in case of a tiny message box. */
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *mem_list,
 	enum msgbox_flags flags, unsigned char *title, enum format_align align,
 	unsigned char *text, void *udata, int buttons, ...);
+
+/* Cast @value to @type and warn if the conversion is suspicious.
+ * If @value has side effects, this does them only once.
+ * The expression used here is intended to be standard C, but it is
+ * somewhat tricky.  If it causes trouble on some compiler, you can
+ * #ifdef an alternative definition that skips the type check.  */
+#define MSG_BOX_CAST(type, value) \
+	(((void) sizeof(((int (*)(type)) 0)(value))), (type) (value))
+
+/* A button in the variadic arguments of msg_box().
+ * This macro expands into three arguments.  */
+#define MSG_BOX_BUTTON(label, handler, flags) \
+	MSG_BOX_CAST(const unsigned char *, label), \
+	MSG_BOX_CAST(done_handler_T *, handler), \
+	MSG_BOX_CAST(int, flags)
 
 
 /* msg_text() is basically an equivalent to asprintf(), specifically to be used

@@ -27,7 +27,7 @@ void add_dlg_radio_do(struct dialog *dlg, unsigned char *text, int groupid, int 
 #define add_dlg_checkbox(dlg, text, data) \
 	add_dlg_radio_do(dlg, text, 0, 0, data)
 
-extern struct widget_ops checkbox_ops;
+extern const struct widget_ops checkbox_ops;
 
 void
 dlg_format_checkbox(struct terminal *term,

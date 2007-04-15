@@ -12,6 +12,7 @@
 #ifdef HAVE_BZLIB_H
 #include <bzlib.h> /* Everything needs this after stdio.h */
 #endif
+#include <errno.h>
 
 #include "elinks.h"
 
@@ -19,30 +20,55 @@
 #include "encoding/encoding.h"
 #include "util/memory.h"
 
+/* How many bytes of compressed data to read before decompressing.
+ * This is currently defined as BZ_MAX_UNUSED to make the behaviour
+ * similar to BZ2_bzRead; but other values would work too.  */
+#define ELINKS_BZ_BUFFER_LENGTH BZ_MAX_UNUSED
 
 struct bz2_enc_data {
-	FILE *file;
-	BZFILE *bzfile;
-	int last_read; /* If err after last bzRead() was BZ_STREAM_END.. */
-};
+	bz_stream fbz_stream;
 
-/* TODO: When it'll be official, use bzdopen() from Yoshioka Tsuneo. --pasky */
+	/* The file descriptor from which we read.  */
+	int fdread;
+
+	/* Initially 0; set to 1 when BZ2_bzDecompress indicates
+	 * BZ_STREAM_END, which means it has found the bzip2-specific
+	 * end-of-stream marker and all data has been decompressed.
+	 * Then we neither read from the file nor call BZ2_bzDecompress
+	 * any more.  */
+	int last_read;
+
+	/* A buffer for data that has been read from the file but not
+	 * yet decompressed.  fbz_stream.next_in and fbz_stream.avail_in
+	 * refer to this buffer.  */
+	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
+};
 
 static int
 bzip2_open(struct stream_encoded *stream, int fd)
 {
+	/* A zero-initialized bz_stream.  The compiler ensures that all
+	 * pointer members in it are null.  (Can't do this with memset
+	 * because C99 does not require all-bits-zero to be a null
+	 * pointer.)  */
+	static const bz_stream null_bz_stream = {0};
+
 	struct bz2_enc_data *data = mem_alloc(sizeof(*data));
 	int err;
 
+	stream->data = NULL;
 	if (!data) {
 		return -1;
 	}
+
+	/* Initialize all members of *data, except data->buf[], which
+	 * will be initialized on demand by bzip2_read.  */
+	copy_struct(&data->fbz_stream, &null_bz_stream);
+	data->fdread = fd;
 	data->last_read = 0;
-
-	data->file = fdopen(fd, "rb");
-
-	data->bzfile = BZ2_bzReadOpen(&err, data->file, 0, 0, NULL, 0);
-	if (!data->bzfile) {
+	
+	err = BZ2_bzDecompressInit(&data->fbz_stream, 0, 0);
+	if (err != BZ_OK) {
 		mem_free(data);
 		return -1;
 	}
@@ -58,25 +84,45 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 	int err = 0;
 
-	if (data->last_read)
-		return 0;
+	if (!data) return -1;
 
-	len = BZ2_bzRead(&err, data->bzfile, buf, len);
+	assert(len > 0);	
 
-	if (err == BZ_STREAM_END)
-		data->last_read = 1;
-	else if (err)
-		return -1;
+	if (data->last_read) return 0;
 
-	return len;
-}
+	data->fbz_stream.avail_out = len;
+	data->fbz_stream.next_out = buf;
 
-static unsigned char *
-bzip2_decode(struct stream_encoded *stream, unsigned char *data, int len,
-	     int *new_len)
-{
-	*new_len = len;
-	return data;
+	do {	
+		if (data->fbz_stream.avail_in == 0) {
+			int l = safe_read(data->fdread, data->buf,
+			                  ELINKS_BZ_BUFFER_LENGTH);
+
+			if (l == -1) {
+				if (errno == EAGAIN)
+					break;
+				else
+					return -1; /* I/O error */
+			} else if (l == 0) {
+				/* EOF. It is error: we wait for more bytes */
+				return -1;
+			}
+
+			data->fbz_stream.next_in = data->buf;
+			data->fbz_stream.avail_in = l;
+		}
+		
+		err = BZ2_bzDecompress(&data->fbz_stream);
+		if (err == BZ_STREAM_END) { 
+			data->last_read = 1;
+			break;
+		} else if (err != BZ_OK) { 
+			return -1;
+		}
+	} while (data->fbz_stream.avail_out > 0);
+
+	assert(len - data->fbz_stream.avail_out == data->fbz_stream.next_out - (char *) buf);
+	return len - data->fbz_stream.avail_out;
 }
 
 #ifdef CONFIG_SMALL
@@ -148,21 +194,22 @@ static void
 bzip2_close(struct stream_encoded *stream)
 {
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
-	int err;
 
-	BZ2_bzReadClose(&err, data->bzfile);
-	fclose(data->file);
-	mem_free(data);
+	if (data) {
+		BZ2_bzDecompressEnd(&data->fbz_stream);
+		close(data->fdread);
+		mem_free(data);
+		stream->data = 0;
+	}
 }
 
-static unsigned char *bzip2_extensions[] = { ".bz2", ".tbz", NULL };
+static const unsigned char *const bzip2_extensions[] = { ".bz2", ".tbz", NULL };
 
-struct decoding_backend bzip2_decoding_backend = {
+const struct decoding_backend bzip2_decoding_backend = {
 	"bzip2",
 	bzip2_extensions,
 	bzip2_open,
 	bzip2_read,
-	bzip2_decode,
 	bzip2_decode_buffer,
 	bzip2_close,
 };

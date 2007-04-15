@@ -596,7 +596,7 @@ fastfind_search(struct fastfind_index *index, unsigned char *key, int key_len)
 
 	info = index->handle;
 
-	assertm(info, "FastFind index %s not initialized", index->comment);
+	assertm(info != NULL, "FastFind index %s not initialized", index->comment);
 	if_assert_failed return NULL;
 
 	FF_DBG_search_stats(info, key_len);

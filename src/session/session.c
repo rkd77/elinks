@@ -1,10 +1,5 @@
 /* Sessions managment - you'll find things here which you wouldn't expect */
 
-/* stpcpy */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -775,7 +770,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 	if (!get_opt_bool("config.saving_style_w")) {
 		struct option *opt = get_opt_rec(config_options, "config.saving_style_w");
 		opt->value.number = 1;
-		option_changed(ses, opt, opt);
+		option_changed(ses, opt);
 		if (get_opt_int("config.saving_style") != 3) {
 			info_box(term, 0,
 				 N_("Warning"), ALIGN_CENTER,
@@ -809,7 +804,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 			"Press ESC for menu. Documentation is available in "
 			"Help menu."),
 			ses, 1,
-			N_("~OK"), handler, B_ENTER | B_ESC);
+			MSG_BOX_BUTTON(N_("~OK"), handler, B_ENTER | B_ESC));
 
 		/* If there is no URI the goto dialog will pop up so there is
 		 * no need to call setup_session(). */
@@ -1396,5 +1391,7 @@ eat_kbd_repeat_count(struct session *ses)
 
 	ses->kbdprefix.repeat_count = 0;
 
+	/* Clear status bar when prefix is eaten (bug 930) */
+	print_screen_status(ses);
 	return count;
 }

@@ -134,6 +134,8 @@ timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 	return t;
 }
 
+/* Bug 923: Assumes time_t values fit in long.  (This function is used
+ * for both timestamps and durations.)  */
 timeval_T *
 timeval_from_seconds(timeval_T *t, long seconds)
 {
@@ -184,6 +186,8 @@ timeval_to_milliseconds(timeval_T *t)
 	return add_ms_to_ms(a, b);
 }
 
+/* Bug 923: Assumes time_t values fit in long.  (This function is used
+ * for both timestamps and durations.)  */
 long
 timeval_to_seconds(timeval_T *t)
 {
@@ -202,8 +206,10 @@ timeval_limit_to_zero_or_one(timeval_T *t)
 {
 	if (t->sec < 0) t->sec = 0;
 	if (t->usec < 0) t->usec = 0;
+#ifdef CONFIG_OS_WIN32
 /* Under Windows I got 300 seconds timeout, so 1 second should not hurt --witekfl */
 	if (t->sec > 1) t->sec = 1;
+#endif
 }
 
 /* Returns 1 if t1 > t2

@@ -892,7 +892,10 @@ point_intersect(struct point *p1, int l1, struct point *p2, int l2)
 	assert(p2);
 	if_assert_failed return 0;
 
-	if (first_time) memset(hash, 0, HASH_SIZE), first_time = 0;
+	if (first_time) {
+		memset(hash, 0, HASH_SIZE);
+		first_time = 0;
+	}
 
 	for (i = 0; i < l1; i++) hash[HASH(p1[i])] = 1;
 
@@ -1369,7 +1372,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 	int report_errors = action_id == -1;
 	enum find_error error;
 
-	assertm(doc_view, "document not formatted");
+	assertm(doc_view != NULL, "document not formatted");
 	if_assert_failed return INPUT_LINE_CANCEL;
 
 	switch (action_id) {
@@ -1400,7 +1403,7 @@ text_typeahead_handler(struct input_line *line, int action_id)
 
 			opt->value.number = (opt->value.number + 1)
 					    % (opt->max + 1);
-			option_changed(ses, opt, opt);
+			option_changed(ses, opt);
 		}
 		/* Fall thru */
 
@@ -1434,7 +1437,7 @@ link_typeahead_handler(struct input_line *line, int action_id)
 	struct document_view *doc_view = current_frame(ses);
 	int offset = 0;
 
-	assertm(doc_view, "document not formatted");
+	assertm(doc_view != NULL, "document not formatted");
 	if_assert_failed return INPUT_LINE_CANCEL;
 
 	/* If there is nothing to match with don't start searching */
@@ -1651,7 +1654,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	dlg->udata = text;
 	dlg->udata2 = hop;
 
-	add_to_ml(&ml, hop, NULL);
+	add_to_ml(&ml, (void *) hop, (void *) NULL);
 
 	/* @field is automatically cleared by calloc() */
 	field = get_dialog_offset(dlg, SEARCH_WIDGETS_COUNT);
@@ -1668,7 +1671,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 
 	add_dlg_end(dlg, SEARCH_WIDGETS_COUNT);
 
-	add_to_ml(&ml, dlg, NULL);
+	add_to_ml(&ml, (void *) dlg, (void *) NULL);
 	do_dialog(term, dlg, ml);
 }
 

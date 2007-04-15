@@ -46,17 +46,16 @@ dumbprefixes = {
         "sd" : "http://www.slashdot.org/"
 }
 
-def goto_url_hook(url, current_url):
+def goto_url_hook(url):
     """Rewrite a URL that was entered in a "Go to URL" dialog box.
 
-    This function should return a URL for ELinks to follow, or None if
+    This function should return a string containing a URL for ELinks to
+    follow, or an empty string if no URL should be followed, or None if
     ELinks should follow the original URL.
 
     Arguments:
 
     url -- The URL provided by the user.
-    current_url -- The URL of the document being viewed, or None if no
-            document is being viewed.
 
     """
     if url in dumbprefixes:
@@ -65,7 +64,8 @@ def goto_url_hook(url, current_url):
 def follow_url_hook(url):
     """Rewrite a URL for a link that's about to be followed.
 
-    This function should return a URL for ELinks to follow, or None if
+    This function should return a string containing a URL for ELinks to
+    follow, or an empty string if no URL should be followed, or None if
     ELinks should follow the original URL.
 
     Arguments:
@@ -136,13 +136,12 @@ class goto_url_in_new_tab:
     """Prompter that opens a given URL in a new tab."""
     def __init__(self):
         """Prompt for a URL."""
-        self.current_location = elinks.current_url()
         elinks.input_box("Enter URL", self._callback, title="Go to URL")
     def _callback(self, url):
         """Open the given URL in a new tab."""
         if 'goto_url_hook' in globals():
             # Mimic the standard "Go to URL" dialog by calling goto_url_hook().
-            url = goto_url_hook(url, self.current_location) or url
+            url = goto_url_hook(url) or url
         if url:
             elinks.open(url, new_tab=True)
 # The elinks.bind_key() function can be used to create a keystroke binding

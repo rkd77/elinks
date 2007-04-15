@@ -9,8 +9,9 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
+#include "document/document.h"
+#include "document/view.h"
 #include "scripting/python/core.h"
-#include "session/location.h"
 #include "session/session.h"
 
 /* Python interface to get the current document's body. */
@@ -23,8 +24,9 @@ If a document is being viewed, return its body; otherwise return None.\n");
 static PyObject *
 python_current_document(PyObject *self, PyObject *args)
 {
-	if (python_ses && have_location(python_ses)) {
-		struct cache_entry *cached = find_in_cache(cur_loc(python_ses)->vs.uri);
+	if (python_ses && python_ses->doc_view
+	    && python_ses->doc_view->document) {
+		struct cache_entry *cached = python_ses->doc_view->document->cached;
 		struct fragment *f = cached ? cached->frag.next : NULL;
 
 		if (f) return PyString_FromStringAndSize(f->data, f->length);
@@ -45,8 +47,9 @@ otherwise return None.\n");
 static PyObject *
 python_current_header(PyObject *self, PyObject *args)
 {
-	if (python_ses && have_location(python_ses)) {
-		struct cache_entry *cached = find_in_cache(cur_loc(python_ses)->vs.uri);
+	if (python_ses && python_ses->doc_view
+	    && python_ses->doc_view->document) {
+		struct cache_entry *cached = python_ses->doc_view->document->cached;
 
 		if (cached && cached->head)
 			return PyString_FromString(cached->head);

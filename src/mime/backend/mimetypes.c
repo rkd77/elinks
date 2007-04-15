@@ -221,7 +221,7 @@ change_hook_mimetypes(struct session *ses, struct option *current, struct option
 static void
 init_mimetypes(struct module *module)
 {
-	struct change_hook_info mimetypes_change_hooks[] = {
+	static const struct change_hook_info mimetypes_change_hooks[] = {
 		{ "mime.mimetypes",		change_hook_mimetypes },
 		{ NULL,				NULL },
 	};
@@ -270,7 +270,7 @@ get_content_type_mimetypes(unsigned char *extension)
 	return NULL;
 }
 
-struct mime_backend mimetypes_mime_backend = {
+const struct mime_backend mimetypes_mime_backend = {
 	/* get_content_type: */	get_content_type_mimetypes,
 	/* get_mime_handler: */	NULL,
 };

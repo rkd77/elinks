@@ -154,14 +154,16 @@ realloc_line(struct html_context *html_context, struct document *document,
 {
 	struct screen_char *pos, *end;
 	struct line *line;
+	int orig_length;
 
 	if (!realloc_lines(document, y))
 		return -1;
 
 	line = &document->data[y];
-
-	if (length < line->length)
-		return 0;
+	orig_length = line->length;
+	
+	if (length < orig_length)
+		return orig_length;
 
 	if (!ALIGN_LINE(&line->chars, line->length, length + 1))
 		return -1;
@@ -181,7 +183,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 
 	line->length = length + 1;
 
-	return 0;
+	return orig_length;
 }
 
 void
@@ -244,7 +246,7 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	assert(part && part->document && width > 0);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	assert(part->document->data);
@@ -277,7 +279,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	assert(part && part->document && x >= 0 && y >= 0);
 	if_assert_failed return NULL;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 		return NULL;
 
 	assert(part->document->data);
@@ -325,7 +327,7 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 	/* The template char is the first vertical char to be drawn. So
 	 * copy it to the rest. */
 	for (height -= 1, y += 1; height; height--, y++) {
-	    	if (realloc_line(html_context, part->document, Y(y), X(x)))
+	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 			return;
 
 		copy_screen_chars(&POS(x, y), template, 1);
@@ -386,14 +388,15 @@ static inline int
 set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	  enum link_state link_state)
 {
-	struct part *part = html_context->part;
-	struct screen_char *schar = get_format_screen_char(html_context,
-	                                                   link_state);
+	struct part *const part = html_context->part;
+	struct screen_char *const schar = get_format_screen_char(html_context,
+								 link_state);
 	int x = part->cx;
-	int y = part->cy;
-	int x2 = x;
+	const int y = part->cy;
+	const int x2 = x;
 	int len = charslen;
-	int utf8 = html_context->options->utf8;
+	const int utf8 = html_context->options->utf8;
+	int orig_length;
 
 	assert(part);
 	if_assert_failed return len;
@@ -404,8 +407,21 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		return 0;
 
 	if (part->document) {
-		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen - 1))
+		/* Reallocate LINE(y).chars[] to large enough.  The
+		 * last parameter of realloc_line is the index of the
+		 * last element to which we may want to write,
+		 * i.e. one less than the required size of the array.
+		 * Compute the required size by assuming that each
+		 * byte of input will need at most one character cell.
+		 * (All double-cell characters take up at least two
+		 * bytes in UTF-8, and there are no triple-cell or
+		 * wider characters.)  However, if there already is an
+		 * incomplete character in part->document->buf, then
+		 * the first byte of input can result in a double-cell
+		 * character, so we must reserve one extra element.  */
+		orig_length = realloc_line(html_context, part->document,
+					   Y(y), X(x) + charslen);
+		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
 			unsigned char *end = chars + charslen;
@@ -424,61 +440,71 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				part->document->buf[i] = '\0';
 				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
+					/* FIXME: If there was invalid
+					 * UTF-8 in the buffer,
+					 * @utf8_to_unicode may have left
+					 * some bytes unused.  Those
+					 * bytes should be pulled back
+					 * into @chars, rather than
+					 * discarded.  This is not
+					 * trivial to implement because
+					 * each byte may have arrived in
+					 * a separate call.  */
 					part->document->buf_length = 0;
 					goto good_char;
 				} else {
 					/* Still not full char */
+					LINE(y).length = orig_length;
 					return 0;
 				}
 			}
 
 			for (; chars < end; x++) {
-				if (*chars == NBSP_CHAR) {
-					schar->data = ' ';
-					part->spaces[x] = html_context->options->wrap_nbsp;
-					part->char_width[x] = 1;
-					chars++;
-				} else {
-					part->spaces[x] = (*chars == ' ');
-					data = utf8_to_unicode(&chars, end);
-					if (data == UCS_NO_CHAR) {
-						if (charslen == 1) {
-							/* HR */
-							unsigned char attr = schar->attr;
+				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
-							schar->data = *chars++;
-							schar->attr = SCREEN_ATTR_FRAME;
-							copy_screen_chars(&POS(x, y), schar, 1);
-							schar->attr = attr;
-							part->char_width[x] = 0;
-							continue;
-						} else {
-							unsigned char i;
+				data = utf8_to_unicode(&chars, end);
+				if (data == UCS_NO_CHAR) {
+					part->spaces[x] = 0;
+					if (charslen == 1) {
+						/* HR */
+						unsigned char attr = schar->attr;
 
-							for (i = 0; chars < end;i++) {
-								part->document->buf[i] = *chars++;
-							}
-							part->document->buf_length = i;
-							return x - x2;
-						}
+						schar->data = *chars++;
+						schar->attr = SCREEN_ATTR_FRAME;
+						copy_screen_chars(&POS(x, y), schar, 1);
+						schar->attr = attr;
+						part->char_width[x] = 0;
+						continue;
 					} else {
-good_char:
-						if (unicode_to_cell(data) == 2) {
-							schar->data = (unicode_val_T)data;
-							part->char_width[x] = 2;
-							copy_screen_chars(&POS(x++, y), schar, 1);
-							schar->data = UCS_NO_CHAR;
-							part->spaces[x] = 0;
-							part->char_width[x] = 0;
-						} else {
-							part->char_width[x] = unicode_to_cell(data);
-							schar->data = (unicode_val_T)data;
+						unsigned char i;
+
+						for (i = 0; chars < end;i++) {
+							part->document->buf[i] = *chars++;
 						}
+						part->document->buf_length = i;
+						break;
+					}
+				} else {
+good_char:
+					if (data == UCS_NO_BREAK_SPACE
+					    && html_context->options->wrap_nbsp)
+						data = UCS_SPACE;
+					part->spaces[x] = (data == UCS_SPACE);
+					if (unicode_to_cell(data) == 2) {
+						schar->data = (unicode_val_T)data;
+						part->char_width[x] = 2;
+						copy_screen_chars(&POS(x++, y), schar, 1);
+						schar->data = UCS_NO_CHAR;
+						part->spaces[x] = 0;
+						part->char_width[x] = 0;
+					} else {
+						part->char_width[x] = unicode_to_cell(data);
+						schar->data = (unicode_val_T)data;
 					}
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
 				if (*chars == NBSP_CHAR) {
@@ -490,10 +516,24 @@ good_char:
 				}
 				copy_screen_chars(&POS(x, y), schar, 1);
 			}
+		} /* end of UTF-8 check */
 
-		}
+		/* Assert that we haven't written past the end of the
+		 * LINE(y).chars array.  @x here is one greater than
+		 * the last one used in POS(x, y).  Instead of this,
+		 * we could assert(X(x) < LINE(y).length) immediately
+		 * before each @copy_screen_chars call above, but
+		 * those are in an inner loop that should be fast.  */
+		assert(X(x) <= LINE(y).length);
+		/* Some part of the code is apparently using LINE(y).length
+		 * for line-wrapping decisions.  It may currently be too
+		 * large because it was allocated above based on @charslen
+		 * which is the number of bytes, not the number of cells.
+		 * Change the length to the correct size, but don't let it
+		 * get smaller than it was on entry to this function.  */
+		LINE(y).length = int_max(orig_length, X(x));
 		len = x - x2;
-	} else {
+	} else { /* part->document == NULL */
 		if (utf8) {
 			unsigned char *end;
 
@@ -514,13 +554,13 @@ good_char:
 				}
 			}
 			len = x - x2;
-		} else {
+		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->spaces[x] = (*chars == ' ');
 				part->char_width[x] = 1;
 			}
 		}
-	}
+	} /* end of part->document check */
 	return len;
 }
 #else
@@ -545,7 +585,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 
 	if (part->document) {
 		if (realloc_line(html_context, part->document,
-		                 Y(y), X(x) + charslen - 1))
+		                 Y(y), X(x) + charslen - 1) < 0)
 			return;
 
 		for (; charslen > 0; charslen--, x++, chars++) {
@@ -694,7 +734,7 @@ copy_chars(struct html_context *html_context, int x, int y, int width, struct sc
 	assert(width > 0 && part && part->document && part->document->data);
 	if_assert_failed return;
 
-	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1))
+	if (realloc_line(html_context, part->document, Y(y), X(x) + width - 1) < 0)
 		return;
 
 	copy_screen_chars(&POS(x, y), d, width);
@@ -1369,7 +1409,8 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (name) {
 			unsigned char *new_name;
 
-			new_name = straconcat(name, chars, NULL);
+			new_name = straconcat(name, chars,
+					      (unsigned char *) NULL);
 			if (new_name) {
 				mem_free(name);
 				link->data.name = new_name;
@@ -1930,7 +1971,11 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			unsigned long seconds = va_arg(l, unsigned long);
 			unsigned char *t = va_arg(l, unsigned char *);
 
-			document->refresh = init_document_refresh(t, seconds);
+			if (document) {
+				if (document->refresh)
+					done_document_refresh(document->refresh);
+				document->refresh = init_document_refresh(t, seconds);
+			}
 			break;
 		}
 		case SP_COLOR_LINK_LINES:

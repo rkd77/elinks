@@ -85,8 +85,10 @@ ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
 }
 
 static void
-post_yes(struct task *task)
+post_yes(void *task_)
 {
+	struct task *task = task_;
+
 	abort_preloading(task->ses, 0);
 
 	/* XXX: Make the session inherit the URI. */
@@ -96,8 +98,10 @@ post_yes(struct task *task)
 }
 
 static void
-post_no(struct task *task)
+post_no(void *task_)
 {
+	struct task *task = task_;
+
 	reload(task->ses, CACHE_MODE_NORMAL);
 	done_uri(task->uri);
 }
@@ -266,12 +270,12 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 		mem_free_if(uristring);
 	}
 
-	msg_box(ses->tab->term, getml(task, NULL), MSGBOX_FREE_TEXT,
+	msg_box(ses->tab->term, getml(task, (void *) NULL), MSGBOX_FREE_TEXT,
 		N_("Warning"), ALIGN_CENTER,
 		message,
 		task, 2,
-		N_("~Yes"), post_yes, B_ENTER,
-		N_("~No"), post_no, B_ESC);
+		MSG_BOX_BUTTON(N_("~Yes"), post_yes, B_ENTER),
+		MSG_BOX_BUTTON(N_("~No"), post_no, B_ESC));
 }
 
 
@@ -459,7 +463,7 @@ do_move(struct session *ses, struct download **download_p)
 	struct cache_entry *cached;
 
 	assert(download_p && *download_p);
-	assertm(ses->loading_uri, "no ses->loading_uri");
+	assertm(ses->loading_uri != NULL, "no ses->loading_uri");
 	if_assert_failed return DO_MOVE_ABORT;
 
 	if (ses->loading_uri->protocol == PROTOCOL_UNKNOWN)

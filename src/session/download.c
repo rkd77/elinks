@@ -493,16 +493,20 @@ struct cdf_hop {
 };
 
 static void
-lun_alternate(struct lun_hop *lun_hop)
+lun_alternate(void *lun_hop_)
 {
+	struct lun_hop *lun_hop = lun_hop_;
+
 	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data, 0);
 	mem_free_if(lun_hop->ofile);
 	mem_free(lun_hop);
 }
 
 static void
-lun_cancel(struct lun_hop *lun_hop)
+lun_cancel(void *lun_hop_)
 {
+	struct lun_hop *lun_hop = lun_hop_;
+
 	lun_hop->callback(lun_hop->term, NULL, lun_hop->data, 0);
 	mem_free_if(lun_hop->ofile);
 	mem_free_if(lun_hop->file);
@@ -510,8 +514,10 @@ lun_cancel(struct lun_hop *lun_hop)
 }
 
 static void
-lun_overwrite(struct lun_hop *lun_hop)
+lun_overwrite(void *lun_hop_)
 {
+	struct lun_hop *lun_hop = lun_hop_;
+
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 0);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
@@ -520,8 +526,9 @@ lun_overwrite(struct lun_hop *lun_hop)
 static void common_download_do(struct terminal *term, int fd, void *data, int resume);
 
 static void
-lun_resume(struct lun_hop *lun_hop)
+lun_resume(void *lun_hop_)
 {
+	struct lun_hop *lun_hop = lun_hop_;
 	struct cdf_hop *cdf_hop = lun_hop->data;
 
 	int magic = *(int *)cdf_hop->data;
@@ -631,10 +638,10 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 			empty_string_or_(lun_hop->ofile),
 			empty_string_or_(file)),
 		lun_hop, 4,
-		N_("Sa~ve under the alternative name"), lun_alternate, B_ENTER,
-		N_("~Overwrite the original file"), lun_overwrite, 0,
-		N_("~Resume download of the original file"), lun_resume, 0,
-		N_("~Cancel"), lun_cancel, B_ESC);
+		MSG_BOX_BUTTON(N_("Sa~ve under the alternative name"), lun_alternate, B_ENTER),
+		MSG_BOX_BUTTON(N_("~Overwrite the original file"), lun_overwrite, 0),
+		MSG_BOX_BUTTON(N_("~Resume download of the original file"), lun_resume, 0),
+		MSG_BOX_BUTTON(N_("~Cancel"), lun_cancel, B_ESC));
 }
 
 
@@ -778,6 +785,9 @@ static unsigned char *
 subst_file(unsigned char *prog, unsigned char *file)
 {
 	struct string name;
+	/* When there is no %s in the mailcap entry, the handler program reads
+	 * data from stdin instead of a file. */
+	int input = 1;
 
 	if (!init_string(&name)) return NULL;
 
@@ -790,6 +800,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 		prog += p;
 
 		if (*prog == '%') {
+			input = 0;
 #if defined(HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH)
 #ifdef MAX_PATH
 			unsigned char new_path[MAX_PATH];
@@ -806,6 +817,18 @@ subst_file(unsigned char *prog, unsigned char *file)
 		}
 	}
 
+	if (input) {
+		struct string s;
+
+		if (init_string(&s)) {
+			add_to_string(&s, "/bin/cat ");
+			add_shell_quoted_to_string(&s, file, strlen(file));
+			add_to_string(&s, " | ");
+			add_string_to_string(&s, &name);
+			done_string(&name);
+			return s.source;
+		}
+	}
 	return name.source;
 }
 
@@ -1245,7 +1268,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 
 	add_dlg_end(dlg, widgets);
 
-	ml = getml(dlg, NULL);
+	ml = getml(dlg, (void *) NULL);
 	if (!ml) {
 		/* XXX: Assume that the allocated @external_handler will be
 		 * freed when releasing the @type_query. */
@@ -1265,7 +1288,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 struct {
 	unsigned char *type;
 	unsigned int plain:1;
-} static known_types[] = {
+} static const known_types[] = {
 	{ "text/html",			0 },
 	{ "text/plain",			1 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */

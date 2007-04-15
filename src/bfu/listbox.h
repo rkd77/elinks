@@ -100,7 +100,7 @@ struct listbox_ops {
 struct listbox_data {
 	LIST_HEAD(struct listbox_data);
 
-	struct listbox_ops *ops; /* Backend-provided operations */
+	const struct listbox_ops *ops; /* Backend-provided operations */
 	struct listbox_item *sel; /* Item currently selected */
 	struct listbox_item *top; /* Item which is on the top line of the box */
 
@@ -131,7 +131,7 @@ struct listbox_item {
 	void *udata;
 };
 
-extern struct widget_ops listbox_ops;
+extern const struct widget_ops listbox_ops;
 
 void dlg_format_listbox(struct terminal *, struct widget_data *, int, int *, int, int, int *, enum format_align, int format_only);
 

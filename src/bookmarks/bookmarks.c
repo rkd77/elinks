@@ -135,7 +135,7 @@ change_hook_folder_state(struct session *ses, struct option *current,
 static void
 init_bookmarks(struct module *module)
 {
-	struct change_hook_info bookmarks_change_hooks[] = {
+	static const struct change_hook_info bookmarks_change_hooks[] = {
 		{ "bookmarks.folder_state", change_hook_folder_state },
 		{ NULL,			    NULL },
 	};

@@ -6,13 +6,14 @@
 
 #include "elinks.h"
 
+#include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "scripting/perl/core.h"
 #include "scripting/perl/hooks.h"
 
 
 struct module perl_scripting_module = struct_module(
-	/* name: */		"Perl",
+	/* name: */		N_("Perl"),
 	/* options: */		NULL,
 	/* hooks: */		perl_scripting_hooks,
 	/* submodules: */	NULL,

@@ -171,7 +171,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 		return;
 	}
 
-	assertm(func, "No menu function");
+	assertm(func != NULL, "No menu function");
 	if_assert_failed return;
 
 	func(term, it_data, data);
@@ -983,8 +983,8 @@ menu_handler(struct window *win, struct term_event *ev)
 	switch (ev->ev) {
 		case EVENT_INIT:
 		case EVENT_RESIZE:
-		case EVENT_REDRAW:
 			get_parent_ptr(win, &menu->parent_x, &menu->parent_y);
+		case EVENT_REDRAW:
 			count_menu_size(win->term, menu);
 			/* do_menu sets menu->selected = 0.  If that
 			 * item isn't actually selectable, correct

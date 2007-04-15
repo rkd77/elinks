@@ -28,12 +28,12 @@
 
 /* TODO: We must use termcap/terminfo if available! --pasky */
 
-unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
-static unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
+const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
+static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
 #ifndef CONFIG_UTF8
 /* For UTF8 I/O */
-static unsigned char frame_vt100_u[48] = {
+static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
 	192, 193, 194, 195, 196, 197, 195, 195,
@@ -43,7 +43,7 @@ static unsigned char frame_vt100_u[48] = {
 };
 #endif /* CONFIG_UTF8 */
 
-static unsigned char frame_freebsd[48] = {
+static const unsigned char frame_freebsd[48] = {
 	130, 138, 128, 153, 150, 150, 150, 140,
 	140, 150, 153, 140, 139, 139, 139, 140,
 	142, 151, 152, 149, 146, 143, 149, 149,
@@ -52,7 +52,7 @@ static unsigned char frame_freebsd[48] = {
 	143, 139, 141, 128, 128, 128, 128, 128,
 };
 
-static unsigned char frame_koi[48] = {
+static const unsigned char frame_koi[48] = {
 	144, 145, 146, 129, 135, 178, 180, 167,
 	166, 181, 161, 168, 174, 173, 172, 131,
 	132, 137, 136, 134, 128, 138, 175, 176,
@@ -62,7 +62,7 @@ static unsigned char frame_koi[48] = {
 };
 
 /* Most of this table is just 176 + <index in table>. */
-static unsigned char frame_restrict[48] = {
+static const unsigned char frame_restrict[48] = {
 	176, 177, 178, 179, 180, 179, 186, 186,
 	205, 185, 186, 187, 188, 186, 205, 191,
 	192, 193, 194, 195, 196, 197, 179, 186,
@@ -73,27 +73,28 @@ static unsigned char frame_restrict[48] = {
 
 #define TERM_STRING(str) INIT_STRING(str, sizeof(str) - 1)
 
+/* Like add_string_to_string but has fewer checks to slow it down.  */
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
-static struct string m11_hack_frame_seqs[] = {
+static const struct string m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
 
 #ifdef CONFIG_UTF8
-static struct string utf8_linux_frame_seqs[] = {
+static const struct string utf8_linux_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m\033%G"),
 	/* begin border: */	TERM_STRING("\033%@\033[11m"),
 };
 #endif /* CONFIG_UTF8 */
 
-static struct string vt100_frame_seqs[] = {
+static const struct string vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
 	/* begin border: */	TERM_STRING("\x0e"),
 };
 
-static struct string underline_seqs[] = {
+static const struct string underline_seqs[] = {
 	/* begin underline: */	TERM_STRING("\033[24m"),
 	/* end underline: */	TERM_STRING("\033[4m"),
 };
@@ -112,18 +113,18 @@ struct screen_driver {
 #ifndef CONFIG_UTF8
 	/* Charsets when doing UTF8 I/O. */
 	/* [0] is the common charset and [1] is the frame charset.
-	 * Test wether to use UTF8 I/O using the use_utf8_io() macro. */
+	 * Test whether to use UTF8 I/O using the use_utf8_io() macro. */
 	int charsets[2];
 #endif /* CONFIG_UTF8 */
 
 	/* The frame translation table. May be NULL. */
-	unsigned char *frame;
+	const unsigned char *frame;
 
 	/* The frame mode setup and teardown sequences. May be NULL. */
-	struct string *frame_seqs;
+	const struct string *frame_seqs;
 
 	/* The underline mode setup and teardown sequences. May be NULL. */
-	struct string *underline;
+	const struct string *underline;
 
 	/* The color mode */
 	enum color_mode color_mode;
@@ -140,7 +141,7 @@ struct screen_driver {
 	unsigned char name[1]; /* XXX: Keep last! */
 };
 
-static struct screen_driver dumb_screen_driver = {
+static const struct screen_driver dumb_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_DUMB,
 #ifndef CONFIG_UTF8
@@ -156,7 +157,7 @@ static struct screen_driver dumb_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver vt100_screen_driver = {
+static const struct screen_driver vt100_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_VT100,
 #ifndef CONFIG_UTF8
@@ -172,7 +173,7 @@ static struct screen_driver vt100_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver linux_screen_driver = {
+static const struct screen_driver linux_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_LINUX,
 #ifndef CONFIG_UTF8
@@ -188,7 +189,7 @@ static struct screen_driver linux_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver koi8_screen_driver = {
+static const struct screen_driver koi8_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_KOI8,
 #ifndef CONFIG_UTF8
@@ -204,7 +205,7 @@ static struct screen_driver koi8_screen_driver = {
 #endif /* CONFIG_UTF8 */
 };
 
-static struct screen_driver freebsd_screen_driver = {
+static const struct screen_driver freebsd_screen_driver = {
 				NULL_LIST_HEAD,
 	/* type: */		TERM_FREEBSD,
 #ifndef CONFIG_UTF8
@@ -221,7 +222,7 @@ static struct screen_driver freebsd_screen_driver = {
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
-static struct screen_driver *screen_drivers[] = {
+static const struct screen_driver *const screen_drivers[] = {
 	/* TERM_DUMB: */	&dumb_screen_driver,
 	/* TERM_VT100: */	&vt100_screen_driver,
 	/* TERM_LINUX: */	&linux_screen_driver,
@@ -532,10 +533,19 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
 #endif /* CONFIG_UTF8 */
 {
-	if (!isscreensafe(data)) {
-		add_char_to_string(screen, ' ');
-		return;
-	}
+	/* CONFIG_UTF8  use_utf8_io  border  data              add_to_string
+	 * -----------  -----------  ------  ----------------  ----------------
+	 * not defined  0            0       terminal unibyte  terminal unibyte
+	 * not defined  0            1       enum border_char  border unibyte
+	 * not defined  1            0       terminal unibyte  UTF-8
+	 * not defined  1            1       enum border_char  UTF-8
+	 * defined      0            0       terminal unibyte  terminal unibyte
+	 * defined      0            1       enum border_char  border unibyte
+	 * defined      1            0       UTF-32            UTF-8
+	 * defined      1            1       enum border_char  border unibyte
+	 *
+	 * For "UTF-32" above, the data can also be UCS_NO_CHAR.
+	 */
 
 	if (border && driver->frame && data >= 176 && data < 224)
 		data = driver->frame[data - 176];
@@ -544,18 +554,25 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 		if (border)
 			add_char_to_string(screen, (unsigned char)data);
-		else
-			if (data != UCS_NO_CHAR)
-				add_to_string(screen, encode_utf8(data));
+		else if (data != UCS_NO_CHAR) {
+			if (!isscreensafe_ucs(data))
+				data = UCS_SPACE;
+			add_to_string(screen, encode_utf8(data));
+		}
 #else
 		int charset = driver->charsets[!!border];
 
-		add_to_string(screen, cp2utf8(charset, data));
+		if (border || isscreensafe(data))
+			add_to_string(screen, cp2utf8(charset, data));
+		else /* UCS_SPACE <= 0x7F and so fits in one UTF-8 byte */
+			add_char_to_string(screen, UCS_SPACE);
 #endif /* CONFIG_UTF8 */
-		return;
+	} else {
+		if (border || isscreensafe(data))
+			add_char_to_string(screen, (unsigned char)data);
+		else
+			add_char_to_string(screen, ' ');
 	}
-
-	add_char_to_string(screen, (unsigned char)data);
 }
 
 /* Time critical section. */
@@ -612,7 +629,15 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
-		if (driver->color_mode == COLOR_MODE_16) {
+		/* @update_screen_driver has set @driver->color_mode
+		 * according to terminal-type-specific options.
+		 * The caller of @add_char16 has already partially
+		 * checked it, but there are still these possibilities:
+		 * - COLOR_MODE_MONO.  Then don't show colors, but
+		 *   perhaps use the standout attribute.
+		 * - COLOR_MODE_16.  Use 16 colors.
+		 * - An unsupported color mode.  Use 16 colors.  */
+		if (driver->color_mode != COLOR_MODE_MONO) {
 			unsigned char code[6] = ";30;40";
 			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->color);
 
@@ -647,13 +672,13 @@ add_char16(struct string *screen, struct screen_driver *driver,
 }
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-static struct string color256_seqs[] = {
+static const struct string color256_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;5;%dm"),
 	/* background: */	TERM_STRING("\033[48;5;%dm"),
 };
 
 static inline void
-add_char_color(struct string *screen, struct string *seq, unsigned char color)
+add_char_color(struct string *screen, const struct string *seq, unsigned char color)
 {
 	unsigned char color_buf[3];
 	unsigned char *color_pos = color_buf;
@@ -764,14 +789,14 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
-static struct string color_true_seqs[] = {
+static const struct string color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->color[0])
 static inline void
-add_char_true_color(struct string *screen, struct string *seq, unsigned char *colors)
+add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
 	unsigned char color_buf[3];
 	int i;
@@ -956,6 +981,9 @@ redraw_screen(struct terminal *term)
 	if (!init_string(&image)) return;
 
 	switch (driver->color_mode) {
+	default:
+		/* If the desired color mode was not compiled in,
+		 * use 16 colors.  */
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
 		add_chars(&image, term, driver, &state, add_char16, compare_bg_color_16, compare_fg_color_16);
@@ -977,13 +1005,12 @@ redraw_screen(struct terminal *term)
 #endif
 	case COLOR_MODES:
 	case COLOR_MODE_DUMP:
-	default:
 		INTERNAL("Invalid color mode (%d).", driver->color_mode);
 		return;
 	}
 
 	if (image.length) {
-		if (driver->color_mode)
+		if (driver->color_mode != COLOR_MODE_MONO)
 			add_bytes_to_string(&image, "\033[37;40m", 8);
 
 		add_bytes_to_string(&image, "\033[0m", 4);
@@ -1098,6 +1125,10 @@ done_screen(struct terminal_screen *screen)
 }
 
 struct module terminal_screen_module = struct_module(
+	/* Because this module is a submodule of terminal_module,
+	 * which is listed main_modules rather than in builtin_modules,
+	 * its name does not appear in the user interface and
+	 * so need not be translatable.  */
 	/* name: */		"Terminal Screen",
 	/* options: */		NULL,
 	/* hooks: */		NULL,

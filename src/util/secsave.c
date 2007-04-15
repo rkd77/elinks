@@ -151,7 +151,8 @@ secure_open_umask(unsigned char *file_name)
 		 */
 		int fd;
 		unsigned char *randname = straconcat(ssi->file_name,
-						     ".tmp_XXXXXX", NULL);
+						     ".tmp_XXXXXX",
+						     (unsigned char *) NULL);
 
 		if (!randname) {
 			secsave_errno = SS_ERR_OUT_OF_MEM;

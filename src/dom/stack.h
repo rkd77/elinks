@@ -189,7 +189,7 @@ get_dom_stack_state_data(struct dom_stack_context *context,
 
 	if (!object_size) return NULL;
 
-	assertm(context->state_objects);
+	assert(context->state_objects);
 
 	return (void *) &context->state_objects[state->depth * object_size];
 }

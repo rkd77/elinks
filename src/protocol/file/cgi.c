@@ -120,8 +120,14 @@ send_post_data(struct connection *conn)
 		add_bytes_to_string(&data, buffer, n);
 
 
-	write_to_socket(conn->data_socket, data.source, data.length,
-			S_SENT, close_pipe_and_read);
+	/* If we're submitting a form whose controls do not have
+	 * names, then the POST has a Content-Type but empty data,
+	 * and an assertion would fail in write_to_socket.  */
+	if (data.length)
+		write_to_socket(conn->data_socket, data.source, data.length,
+				S_SENT, close_pipe_and_read);
+	else
+		close_pipe_and_read(conn->data_socket);
 
 	done_string(&data);
 #undef POST_BUFFER_SIZE
@@ -368,23 +374,27 @@ execute_cgi(struct connection *conn)
 		close_all_non_term_fd();
 
 		last_slash[-1] = 0; set_cwd(script); last_slash[-1] = '/';
-		if (execl(script, script, NULL)) {
+		if (execl(script, script, (char *) NULL)) {
 			_exit(3);
 		}
 
 	} else { /* ELinks */
-
-		if (!init_http_connection_info(conn, 1, 0, 1))
-			return 0;
-
 		mem_free(script);
+
+		if (!init_http_connection_info(conn, 1, 0, 1)) {
+			close(pipe_read[0]); close(pipe_read[1]);
+			close(pipe_write[0]); close(pipe_write[1]);
+			return 0;
+		}
 
 		close(pipe_read[1]); close(pipe_write[0]);
 		conn->socket->fd = pipe_read[0];
 
 		/* Use data socket for passing the pipe. It will be cleaned up in
 	 	* close_pipe_and_read(). */
-		conn->data_socket->fd = pipe_read[1];
+		conn->data_socket->fd = pipe_write[1];
+		set_nonblocking_fd(conn->socket->fd);
+		set_nonblocking_fd(conn->data_socket->fd);
 
 		send_request(conn);
 		return 0;

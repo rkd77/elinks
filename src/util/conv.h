@@ -53,7 +53,9 @@ struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
 #ifdef HAVE_STRFTIME
 /* Uses strftime() to add @fmt time format to @string. If @time is NULL
  * time(NULL) will be used. */
-struct string *add_date_to_string(struct string *string, unsigned char *format, time_t *time);
+struct string *add_date_to_string(struct string *string,
+				  const unsigned char *format,
+				  const time_t *time);
 #endif
 
 
@@ -76,11 +78,22 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 #define add_real_optname_to_string(str, src, len) \
 	add_string_replace(str, src, len, '*', '.')
 
-/* Convert reserved chars to html &#xx */
-struct string *add_html_to_string(struct string *string, unsigned char *html, int htmllen);
+/* Convert reserved chars to html &#xx;.  This function copies bytes
+ * 0x80...0xFF unchanged, so the caller should ensure that the
+ * resulting HTML will be parsed with the same charset as the original
+ * string.  (This function cannot use the &#160; syntax for non-ASCII,
+ * because HTML wants Unicode numbers there and this function does not
+ * know the charset of the input data.)  */
+struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
+
+/* Convert reserved or non-ASCII chars to html &#xx;.  The resulting
+ * string can be correctly parsed in any charset where bytes
+ * 0x20...0x7E match ASCII.  */
+struct string *add_cp_html_to_string(struct string *string, int src_codepage,
+				     const unsigned char *html, int htmllen);
 
 /* Escapes \ and " with a \ */
-struct string *add_quoted_to_string(struct string *string, unsigned char *q, int qlen);
+struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
 
 /* Adds ', |len| bytes of |src| with all single-quotes converted to '\'',
  * and ' to |string|. */

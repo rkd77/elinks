@@ -41,7 +41,8 @@ report_scripting_error(struct module *module, struct session *ses,
 
 	if (!ses) {
 		if (list_empty(terminals)) {
-			usrerror("[%s error] %s", module->name, msg);
+			usrerror(gettext("[%s error] %s"),
+				 gettext(module->name), msg);
 			sleep(3);
 			return;
 		}
@@ -57,7 +58,7 @@ report_scripting_error(struct module *module, struct session *ses,
 
 	add_format_to_string(&string,
 		_("An error occurred while running a %s script", term),
-		module->name);
+		_(module->name, term));
 
 	add_format_to_string(&string, ":\n\n%s", msg);
 

@@ -322,7 +322,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	if_assert_failed return;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	fs = find_form_state(doc_view, fc);
@@ -659,13 +659,13 @@ add_submitted_value_to_list(struct form_control *fc,
 		break;
 
 	case FC_IMAGE:
-	        name = straconcat(fc->name, ".x", NULL);
+	        name = straconcat(fc->name, ".x", (unsigned char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);
 		if (sub) add_to_list(*list, sub);
 
-		name = straconcat(fc->name, ".y", NULL);
+		name = straconcat(fc->name, ".y", (unsigned char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);
@@ -1358,6 +1358,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
+	const unsigned char *ctext;
 	int utf8 = ses->tab->term->utf8;
 #endif /* CONFIG_UTF8 */
 
@@ -1365,7 +1366,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	if_assert_failed return FRAME_EVENT_OK;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link has no form control");
+	assertm(fc != NULL, "link has no form control");
 	if_assert_failed return FRAME_EVENT_OK;
 
 	if (fc->mode == FORM_MODE_DISABLED || ev->ev != EVENT_KBD
@@ -1748,19 +1749,19 @@ field_op(struct session *ses, struct document_view *doc_view,
 			if (ses->tab->term->utf8) {
 				/* fs->value is in UTF-8 regardless of
 				 * the charset of the terminal.  */
-				text = encode_utf8(get_kbd_key(ev));
+				ctext = encode_utf8(get_kbd_key(ev));
 			} else {
 				/* fs->value is in the charset of the
 				 * terminal.  */
 				int cp = get_opt_codepage_tree(ses->tab->term->spec,
 							       "charset");
 
-				text = u2cp_no_nbsp(get_kbd_key(ev), cp);
+				ctext = u2cp_no_nbsp(get_kbd_key(ev), cp);
 			}
-			length = strlen(text);
+			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength
-			    || !insert_in_string(&fs->value, fs->state, text, length)) {
+			    || !insert_in_string(&fs->value, fs->state, ctext, length)) {
 				status = FRAME_EVENT_OK;
 				break;
 			}
