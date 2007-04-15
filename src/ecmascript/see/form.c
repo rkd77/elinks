@@ -289,14 +289,14 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		SEE_ToString(interp, val, &conv);
 		if (conv.u.string->length)
-			accesskey = SEE_string_to_unicode(interp, conv.u.string);
+			accesskey = see_string_to_unicode(interp, conv.u.string);
 		else
 			accesskey = 0;
 
 		if (link)
 			link->accesskey = accesskey;
 	} else if (p == s_alt) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fc->alt, string);
 	} else if (p == s_checked) {
 		if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
@@ -309,13 +309,13 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		: (fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
 		: FORM_MODE_NORMAL));
 	} else if (p == s_maxLength) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		if (!string)
 			return;
 		fc->maxlength = atol(string);
 		mem_free(string);
 	} else if (p == s_name) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fc->name, string);
 	} else if (p == s_readonly) {
 		SEE_uint32_t boo = SEE_ToUint32(interp, val);
@@ -324,13 +324,13 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	        : FORM_MODE_NORMAL);
 	} else if (p == s_src) {
 		if (link) {
-			string = SEE_value_to_unsigned_char(interp, val);
+			string = see_value_to_unsigned_char(interp, val);
 			mem_free_set(&link->where_img, string);
 		}
 	} else if (p == s_value) {
 		if (fc->type == FC_FILE)
 			return;
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fs->value, string);
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
@@ -534,7 +534,7 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	index = atol(string);
@@ -575,7 +575,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 
@@ -613,7 +613,7 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_namedItem) {
 		SEE_SET_OBJECT(res, jsfe->namedItem);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
+		unsigned char *string = see_string_to_unsigned_char(p);
 		struct SEE_value argv;
 
 		if (!string) {
@@ -661,7 +661,7 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	index = atol(string);
@@ -698,7 +698,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	foreach (form, document->forms) {
@@ -733,7 +733,7 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_namedItem) {
 		SEE_SET_OBJECT(res, fo->namedItem);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
+		unsigned char *string = see_string_to_unsigned_char(p);
 		struct SEE_value argv;
 		struct SEE_value *argv1 = &argv;
 
@@ -831,7 +831,7 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_reset) {
 		SEE_SET_OBJECT(res, js_form->reset);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
+		unsigned char *string = see_string_to_unsigned_char(p);
 		struct form_control *fc;
 
 		if (!string)
@@ -863,7 +863,7 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct js_form *js_form = (struct js_form *)o;
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
-	unsigned char *string = SEE_value_to_unsigned_char(interp, val);
+	unsigned char *string = see_value_to_unsigned_char(interp, val);
 
 	if (!string)
 		return;

@@ -104,7 +104,7 @@ see_eval(struct ecmascript_interpreter *interpreter,
 
 	struct SEE_interpreter *interp = interpreter->backend_data;
 	struct global_object *g = (struct global_object *)interp;
-	struct SEE_input *input = SEE_input_elinks(interp, code->source);
+	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
 
@@ -125,7 +125,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 {
 	struct SEE_interpreter *interp = interpreter->backend_data;
 	struct global_object *g = (struct global_object *)interp;
-	struct SEE_input *input = SEE_input_elinks(interp, code->source);
+	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
 	/* 'volatile' qualifier prevents register allocation which fixes:
@@ -138,7 +138,7 @@ see_eval_stringback(struct ecmascript_interpreter *interpreter,
 	SEE_TRY(interp, try_ctxt) {
 		SEE_Global_eval(interp, input, &result);
 		if (SEE_VALUE_GET_TYPE(&result) == SEE_STRING)
-			string = SEE_value_to_unsigned_char(interp, &result);
+			string = see_value_to_unsigned_char(interp, &result);
 
 	}
 	SEE_INPUT_CLOSE(input);
@@ -154,7 +154,7 @@ see_eval_boolback(struct ecmascript_interpreter *interpreter,
 {
 	struct SEE_interpreter *interp = interpreter->backend_data;
 	struct global_object *g = (struct global_object *)interp;
-	struct SEE_input *input = SEE_input_elinks(interp, code->source);
+	struct SEE_input *input = see_input_elinks(interp, code->source);
 	SEE_try_context_t try_ctxt;
 	struct SEE_value result;
 	/* 'volatile' qualifier prevents register allocation which fixes:

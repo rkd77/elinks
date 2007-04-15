@@ -232,7 +232,7 @@ js_history_go(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	str = SEE_value_to_unsigned_char(interp, argv[0]);
+	str = see_value_to_unsigned_char(interp, argv[0]);
 	if (!str)
 		return;
 
@@ -297,7 +297,7 @@ location_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		struct global_object *g = (struct global_object *)interp;
 		struct view_state *vs = g->win->vs;
 		struct document_view *doc_view = vs->doc_view;
-		unsigned char *url = SEE_value_to_unsigned_char(interp, val);
+		unsigned char *url = see_value_to_unsigned_char(interp, val);
 
 		location_goto(doc_view, url);
 		mem_free(url);

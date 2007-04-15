@@ -145,7 +145,7 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, doc->writeln);
 	} else {
 		struct form *form;
-		unsigned char *string = SEE_string_to_unsigned_char(p);
+		unsigned char *string = see_string_to_unsigned_char(p);
 		struct form_view *form_view;
 		struct js_form *form_object;
 
@@ -174,7 +174,7 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	unsigned char *string;
 
 	if (p == s_title) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&document->title, string);
 		print_screen_status(doc_view->session);
 	} else if (p == s_location || p == s_url) {
@@ -182,12 +182,12 @@ document_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		 * broken sites still assign to it (i.e.
 		 * http://www.e-handelsfonden.dk/validering.asp?URL=www.polyteknisk.dk).
 		 * So emulate window.location. */
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		location_goto(doc_view, string);
 		mem_free_if(string);
 	} else if (p == s_cookie) {
 #ifdef CONFIG_COOKIES
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		set_cookie(vs->uri, string);
 		mem_free_if(string);
 #endif
@@ -213,7 +213,7 @@ js_document_write_do(struct SEE_interpreter *interp, struct SEE_object *self,
 		for (; i < argc; ++i) {
 			unsigned char *code;
 
-			code = SEE_value_to_unsigned_char(interp, argv[i]);
+			code = see_value_to_unsigned_char(interp, argv[i]);
 
 			if (code) {
 				add_to_string(ret, code);
