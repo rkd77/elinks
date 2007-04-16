@@ -259,10 +259,10 @@ have already been considered.
     (commit ef2f6383c6f0bed576e6f69030eacc4931b42a27)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.2.GIT now:
-----------------------
+ELinks 0.11.3:
+--------------
 
-To be released as ELinks 0.11.3.
+Released on 2007-04-15.
 
 * critical bugs 846, 870: fix crashes in web ECMAScripts and SMJS user
   scripting
