@@ -36,12 +36,12 @@ Released on 2007-04-15.
 * critical: fix SMJS null pointer crash on exit
 * critical bug 880 in experimental Python scripting: fix null pointer
   crash with -no-home
-* major Gentoo 121247: fix segfaults in Ruby user scripting
+* major Gentoo bug 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
 * major bug 937: don't send the entire HTTPS request to a CONNECT
   proxy
-* bug 899, Debian 403139: recognize >2GB files in FTP directory
+* bug 899, Debian bug 403139: recognize >2GB files in FTP directory
   listing, if off_t is large enough
 * bug 942: encode/decode file names in FTP URLs, so they can contain
   spaces
@@ -58,7 +58,7 @@ Released on 2007-04-15.
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
   rather than -lpython
 * minor bugs 830, 831: changes in parsing of -remote arguments
-* minor Debian 313696 and other translation updates
+* minor Debian bug 313696 and other translation updates
 * enhancement 24: fix searching past unselectable elements in menus
 * enhancement: recognize function keys and backspace/delete on FreeBSD
 * enhancement 772: recognize Shift-Tab on XTerm
