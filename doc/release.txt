@@ -50,7 +50,7 @@ When releasing a new version
    archived announcement from linuxfromscratch.org and gmane.org using the
    "magic numbers" expanded by the macro. Possibly, move the cut-off markers
    that control which news entries to display on the front page.
- - Rebuild index.html, news.html, and news.rss.
+ - Rebuild index.html, download.html, news.html, and news.rss.
  - Commit the updates HTML and asciidoc files.
  - Push the commits.
 
