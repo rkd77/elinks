@@ -146,7 +146,7 @@ goto_url_hook (url, current_url)::
 	that ELinks should follow, or `nil` to cancel the operation.
 
 follow_url_hook (url)::
-	This hook is passed the URL that Links is about to follow.  It should
+	This hook is passed the URL that ELinks is about to follow.  It should
 	return a string (the URL modified or unmodified), or `nil` to stop
 	ELinks following the URL
 
@@ -173,7 +173,7 @@ lua_console_hook (string)::
 	   `someprogram`.
 	 - `return "eval", "somefunction(1+2)"` will attempt to call the Lua
 	   function `somefunction` with an argument, 3.
-	 - `return "goto_url", "http://www.bogus.com"` will ask Links to visit
+	 - `return "goto_url", "http://www.bogus.com"` will ask ELinks to visit
 	   the URL "http://www.bogus.com".
 	 - `return nil` will do nothing.
 
@@ -188,7 +188,7 @@ Functions
 As well as providing hooks, ELinks provides some functions in addition to the
 standard Lua functions.
 
-Note: The standard Lua function `os.setlocale` affects ELinks' idea of
+NOTE: The standard Lua function `os.setlocale` affects ELinks' idea of
 the system locale, which ELinks uses for the "System" charset, for the
 "System" language, and for formatting dates.  This may however have to
 be changed in a future version of ELinks, in order to properly support
@@ -219,21 +219,28 @@ current_document_formatted ([width])::
 pipe_read (command)::
 	Executes `command` and reads in all the data from stdout, until there
 	is no more.  This is a hack, because for some reason the standard Lua
-	function `read` seems to crash ELinks when used in pipe-reading mode.
+	function `file:read` seems to crash ELinks when used in pipe-reading
+	mode.
 
 execute (string)::
 	Executes shell commands `string` without waiting for it to exit.  Beware
 	that you must not read or write to stdin and stdout.  And unlike the
-	standard Lua function of the same name, the return value is
-	meaningless.
+	standard Lua function `os.execute`, the return value is meaningless.
 
 tmpname ()::
 	Returns a unique name for a temporary file, or `nil` if no
 	such name is available.  The returned string includes the
-	directory name.  This function does not create the file and
-	does not guarantee exclusive access to it: the caller must
-	handle the possibility that another process creates the file
-	and begins using it while this function is returning.
+	directory name.  Unlike the standard Lua function
+	`os.tmpname`, this one generates ELinks-related names
+	(currently with "elinks" at the beginning of the name).
++
+WARNING: The `tmpname` function does not create the file and does not
+	guarantee exclusive access to it: the caller must handle the
+	possibility that another process creates the file and begins
+	using it while this function is returning.  Failing to do this
+	may expose you to symlink attacks by other users.  To avoid
+	the risk, use `io.tmpfile` instead; unfortunately, it does not
+	tell you the name of the file.
 
 bind_key (keymap, keystroke, function)::
 	Currently, `keymap` must be the string `"main"`.  Keystroke is a
@@ -329,49 +336,48 @@ dialog box, and it will convert them to the URL I actually want to visit.  As
 a bonus, it allows me perform some searches on sites like Google without
 loading up the front page first.
 
+TIP: The ``URI rewriting'' feature of ELinks handles many of the same
+tasks as the Lua hook shown here, and you can conveniently configure
+it via the option manager.  It is not quite as versatile, though.
+
 -------------------------------------------------------------------------------
 function match (prefix, url)
-    return strsub (url, 1, strlen (prefix)) == prefix
+    return string.sub (url, 1, string.len (prefix)) == prefix
 end
 
 function strip (str)
-    return gsub (str, "^%s*(.-)%s*$", "%1")
+    return string.gsub (str, "^%s*(.-)%s*$", "%1")
 end
 
 function plusify (str)
-    return gsub (str, "%s", "+")
+    return string.gsub (str, "%s", "+")
 end
 
 function goto_url_hook (url, current_url)
     -- Google search (e.g. ,gg unix browsers).
     if match (",gg", url) then
-	url = plusify (strip (strsub (url, 4)))
+	url = plusify (strip (string.sub (url, 4)))
 	return "http://www.google.com/search?q="..url.."&btnG=Google+Search"
  
     -- Freshmeat search.
     elseif match (",fm", url) then
-	url = plusify (strip (strsub (url, 4)))
+	url = plusify (strip (string.sub (url, 4)))
 	return "http://www.freshmeat.net/search/?q="..url
 
-    -- Appwatch search (e.g. ,aw lynx).
-    elseif match (",aw", url) then
-	url = plusify (strip (strsub (url, 4)))
-	return "http://www.appwatch.com/Linux/Users/find?q="..url
-    
     -- Dictionary.com search (e.g. ,dict congenial).
     elseif match (",dict", url) then
-	url = plusify (strip (strsub (url, 6)))
+	url = plusify (strip (string.sub (url, 6)))
 	return "http://www.dictionary.com/cgi-bin/dict.pl?db=%2A&term="..url
 
     -- RPM search (e.g. ,rpm links).
     elseif match (",rpm", url) then
-	url = plusify (strip (strsub (url, 5)))
+	url = plusify (strip (string.sub (url, 5)))
 	return "http://www.rpmfind.net/linux/rpm2html/search.php?query="
 		..url.."&submit=Search+..."
 	
     -- Netcraft.com search (e.g. ,whatis www.google.com).
     elseif match (",whatis", url) then
-	url = plusify (strip (strsub (url, 8)))
+	url = plusify (strip (string.sub (url, 8)))
 	return "http://uptime.netcraft.com/up/graph/?host="..url
 
     -- LinuxToday home page.
@@ -380,7 +386,7 @@ function goto_url_hook (url, current_url)
 
     -- Weather forecast for Melbourne, Australia.
     elseif match (",forecast", url) then
-	return "http://www.bom.gov.au/cgi-bin/wrap_fwo.pl?IDF02V00.txt"
+	return "http://www.bom.gov.au/cgi-bin/wrap_fwo.pl?IDV10450.txt"
 
     -- Unmatched
     else
@@ -388,9 +394,6 @@ function goto_url_hook (url, current_url)
     end
 end
 -------------------------------------------------------------------------------
-
-(Note that this was noticably enhanced and rewritten in the ELinks standart
-hooks.)
 
 
 Expanding ~ (tilde)
@@ -402,21 +405,16 @@ and `~user/zappo`, like in the shell
 and other Unix programs.
 
 -------------------------------------------------------------------------------
--- Home directory: If you do not enable system functions, you will need
--- to set the following to your home directory.
-
-home_dir = (getenv and getenv ("HOME")) or "/home/MYSELF"
-
 function goto_url_hook (url, current_url)
 		.
 		.
 
     -- Expand ~ to home directories.
     elseif match ("~", url) then
-	if strsub(url, 2, 2) == "/" then    -- ~/foo
-	    return home_dir..strsub(url, 2)
-	else                                -- ~foo/bar
-	    return "/home/"..strsub(url, 2)
+	if string.sub(url, 2, 2) == "/" then    -- ~/foo
+	    return os.getenv ("HOME")..string.sub(url, 2)
+	else                                    -- ~foo/bar
+	    return "/home/"..string.sub(url, 2)
 	end
 
 		.
@@ -436,16 +434,16 @@ use ELinks Lua support to manipulate the HTML before it reaches the parser.
 linuxtoday.com
 ++++++++++++++
 
-Note: This recipe is out of date.
+NOTE: This recipe is out of date for the web site.
 
 Linux Today has two problems when viewed in ELinks: the useless columns on the
 left and the right and all the text appears in cyan.  Here is a quick recipe
 to fix that:
 
 -------------------------------------------------------------------------------
--- Plain strfind (no metacharacters)
+-- Plain string.find (no metacharacters)
 function sstrfind (s, pattern)
-    return strfind (s, pattern, 1, 1)
+    return string.find (s, pattern, 1, true)
 end
 
 function pre_format_html_hook (url, html)
@@ -453,15 +451,15 @@ function pre_format_html_hook (url, html)
     -- and change the font colour to white.
     if sstrfind (url, "linuxtoday.com") then
 	if sstrfind (url, "news_story") then
-	    html = gsub (html, '<TABLE CELLSPACING="0".-</TABLE>', '', 1)
-	    html = gsub (html, '<TR BGCOLOR="#FFF.-</TR></TABLE>', '', 1)
+	    html = string.gsub (html, '<TABLE CELLSPACING="0".-</TABLE>', '', 1)
+	    html = string.gsub (html, '<TR BGCOLOR="#FFF.-</TR></TABLE>', '', 1)
 	else
-	    html = gsub (html, 'WIDTH="120">\n<TR.+</TABLE></TD>', '>', 1)
+	    html = string.gsub (html, 'WIDTH="120">\n<TR.+</TABLE></TD>', '>', 1)
 	end
-	html = gsub (html, '<A HREF="http://www.internet.com.-</A>', '')
-	html = gsub (html, "<IFRAME.-</IFRAME>", "")
+	html = string.gsub (html, '<A HREF="http://www.internet.com.-</A>', '')
+	html = string.gsub (html, "<IFRAME.-</IFRAME>", "")
 	-- emphasis in text is lost
-	return gsub (html, 'text="#002244"', 'text="#001133"', 1)
+	return string.gsub (html, 'text="#002244"', 'text="#001133"', 1)
     end
 
     return nil
@@ -471,6 +469,8 @@ end
 linuxgames.com
 ++++++++++++++
 
+NOTE: This recipe is out of date for the web site.
+
 Here is a simpler example, for link:http://www.linuxgames.com/[].
 
 -------------------------------------------------------------------------------
@@ -478,8 +478,8 @@ function pre_format_html_hook (url, html)
 		.
 		.
 
-    elseif strfind (url, "linuxgames.com", 1, 1) then
-	return gsub (html, "<CENTER>.-</center>", "", 1)
+    elseif string.find (url, "linuxgames.com", 1, true) then
+	return string.gsub (html, "<CENTER>.-</center>", "", 1)
 
 		.
 		.
@@ -489,25 +489,27 @@ function pre_format_html_hook (url, html)
 Reading gzipped files
 ^^^^^^^^^^^^^^^^^^^^^
 
-Note: ELinks already supports gzipped files natively.
+NOTE: ELinks already supports gzipped files natively.
 
 Sometimes documents come gzipped in order to save space, but then you need to
 uncompress them to read them with ELinks.  Here is a recipe to handle gzipped
 files on a Unix system.
 
--------------------------------------------------------------------------------
--- This script requires system functions.
+WARNING: This recipe opens a temporary file insecurely.
 
+-------------------------------------------------------------------------------
 function pre_format_html_hook (url, html)
 		.
 		.
 
     -- Handle gzip'd files within reasonable size.
-    if strfind (url, "%.gz$") and strlen (html) < 65536 then
-	local tmp = tmpname ()
-	writeto (tmp) write (html) writeto ()
-	html = pipe_read ("(gzip -dc "..tmp.." || cat "..tmp..") 2>/dev/null")
-	remove (tmp)
+    if string.find (url, "%.gz$") and string.len (html) < 65536 then
+	local name = tmpname ()
+	local file = io.open (name, "wb")
+	file:write (html)
+	file:close ()
+	html = pipe_read ("(gzip -dc "..name.." || cat "..name..") 2>/dev/null")
+	os.remove (name)
 	return html
     end
 
@@ -530,25 +532,27 @@ using `lpr' or `enscript'.  Type `lpr()` or `enscript()` in the Lua Console to
 run them.  (In the `hooks.lua`, I have also made it so you can just type `lpr`
 or `enscript`.)
 
--------------------------------------------------------------------------------
--- This script requires system functions.
+NOTE: The `io.popen` function is not available on all platforms.
 
-function catto (output)
-    writeto (output)
-    write (current_document_formatted (79))
-    writeto ()
+-------------------------------------------------------------------------------
+function pipe_formatted_to (program)
+    local lp, errmsg = io.popen (program, "w")
+    if lp == nil then
+        error (errmsg)
+    else
+        lp:write (current_document_formatted (79))
+        lp:close ()
+    end
 end
 
 -- Send the current document to `lpr'.
 function lpr ()
-    -- You must compile Lua with `popen' support for pipes to work.
-    -- See `config' in the Lua distribution.
-    catto ("|lpr")
+    pipe_formatted_to ("lpr")
 end
 
 -- Send the current document to `enscript'.
 function enscript ()
-    catto ("|enscript -fCourier8")
+    pipe_formatted_to ("enscript -fCourier8")
 end
 -------------------------------------------------------------------------------
 
@@ -560,9 +564,9 @@ If you come across a brain-dead web page that is totally unreadable with
 ELinks, you'd probably want to open it with a graphical browser.  The
 following function opens the current document in Netscape.
 
--------------------------------------------------------------------------------
--- This function requires `execute', a system function.
+TIP: You can also use the built-in ``URI passing'' feature for this.
 
+-------------------------------------------------------------------------------
 -- When starting Netscape: Set to `nil' if you do not want
 -- to open a new window for each document.
 netscape_new_window = 1
@@ -580,11 +584,10 @@ Alternative bookmark system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Many people would like to have a bookmark system with categories (note that
-ELinks already supports that, marketing name Hiearchical bookmarks), and also
+ELinks already supports that, marketing name Hierarchical bookmarks), and also
 to be able to view them and search for them in an HTML page.  I have written
 an alternative bookmark system (for ELinks), which some people may like better
 than the standard bookmark system.  
-
 
 
 More ideas
