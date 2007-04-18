@@ -204,8 +204,10 @@ l_pipe_read(LS)
 		size_t l = fread(buf, 1, sizeof(buf), fp);
 
 		if (l > 0) {
-			s = mem_realloc(s, len + l);
-			if (!s) goto lua_error;
+			unsigned char *news = mem_realloc(s, len + l);
+
+			if (!news) goto lua_error;
+			s = news;
 			memcpy(s + len, buf, l);
 			len += l;
 
