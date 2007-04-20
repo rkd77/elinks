@@ -107,9 +107,6 @@ static struct module openssl_module = struct_module(
 gnutls_anon_client_credentials_t anon_cred = NULL;
 gnutls_certificate_credentials_t xcred = NULL;
 
-const static int protocol_priority[16] = {
-	GNUTLS_TLS1, GNUTLS_SSL3, 0
-};
 const static int kx_priority[16] = {
 	GNUTLS_KX_RSA, GNUTLS_KX_DHE_DSS, GNUTLS_KX_DHE_RSA, GNUTLS_KX_SRP,
 	/* Do not use anonymous authentication, unless you know what that means */
@@ -119,8 +116,6 @@ const static int cipher_priority[16] = {
 	GNUTLS_CIPHER_RIJNDAEL_128_CBC, GNUTLS_CIPHER_ARCFOUR_128,
 	GNUTLS_CIPHER_3DES_CBC, GNUTLS_CIPHER_AES_256_CBC, GNUTLS_CIPHER_ARCFOUR_40, 0
 };
-const static int comp_priority[16] = { GNUTLS_COMP_ZLIB, GNUTLS_COMP_NULL, 0 };
-const static int mac_priority[16] = { GNUTLS_MAC_SHA, GNUTLS_MAC_MD5, 0 };
 const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
 
 static void
@@ -232,12 +227,10 @@ init_ssl_connection(struct socket *socket)
 		return S_SSL_ERROR;
 	}
 
+	gnutls_set_default_priority(*state);
 	gnutls_handshake_set_private_extensions(*state, 1);
 	gnutls_cipher_set_priority(*state, cipher_priority);
-	gnutls_compression_set_priority(*state, comp_priority);
 	gnutls_kx_set_priority(*state, kx_priority);
-	gnutls_protocol_set_priority(*state, protocol_priority);
-	gnutls_mac_set_priority(*state, mac_priority);
 	gnutls_certificate_type_set_priority(*state, cert_type_priority);
 	gnutls_server_name_set(*state, GNUTLS_NAME_DNS, server_name,
 			       sizeof(server_name) - 1);
