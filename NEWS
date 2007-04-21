@@ -11,6 +11,7 @@ ELinks 0.11.3.GIT:
 To be released as 0.11.4.
 
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
+* bug 712: GnuTLS works on https://www-s.uiuc.edu
 
 ELinks 0.11.3:
 --------------
