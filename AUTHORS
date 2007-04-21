@@ -515,6 +515,9 @@ Sergio R. Velasquez Zeballos <svelasqu@thor.uc.edu.ve>
 Simen Graaten <simeng@slarkware.com>
 	Norwegian translation
 
+Simon Josefsson <simon@josefsson.org>
+	GnuTLS improvements
+
 Simon Wilkinson <simon@sxw.org.uk>
 	Support for X509 client certificates
 
