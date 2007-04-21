@@ -58,11 +58,27 @@
 #endif
 
 
+/* Refuse to negotiate TLS 1.0 and later protocols on @socket->ssl.
+ * Without this, connecting to <https://www-s.uiuc.edu/> with GnuTLS
+ * 1.3.5 would result in an SSL error.  The bug may be in the server
+ * (Netscape-Enterprise/3.6 SP3), in GnuTLS, or in ELinks; please log
+ * your findings to ELinks bug 712.  */
 static void
 ssl_set_no_tls(struct socket *socket)
 {
 #ifdef CONFIG_OPENSSL
 	((ssl_t *) socket->ssl)->options |= SSL_OP_NO_TLSv1;
+#elif defined(CONFIG_GNUTLS)
+	{
+		/* GnuTLS does not support SSLv2 because it is "insecure".
+		 * That leaves only SSLv3.  */
+		static const int protocol_priority[] = {
+			GNUTLS_SSL3,
+			0
+		};
+
+		gnutls_protocol_set_priority(*(ssl_t *) socket->ssl, protocol_priority);
+	}
 #endif
 }
 

@@ -100,6 +100,7 @@ roughly in decreasing order of importance.
   - (enhancement) FSP progress indicator and password prompt.
   - (bugfix) Support much longer locale-specific timestamps when
     formatting a directory listing.  LC_TIME=fi_FI.UTF-8 now works.
+  - (bugfix 712) GnuTLS works on https://www-s.uiuc.edu
 * Changes in parsing and rendering of HTML (without DOM)
   - (bugfix) Use frame->name instead of target avoiding possible segfault.
   - (bugfix 284) Render closing parentheses for HTML elements SUB, SUP
