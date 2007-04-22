@@ -143,7 +143,7 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
 	if (u == UCS_NO_BREAK_SPACE)
 		return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
-	if (u == 0xad) return "";
+	if (u == UCS_SOFT_HYPHEN) return "";
 
 	if (u < 0xa0) {
 		unicode_val_T strange = strange_chars[u - 0x80];
