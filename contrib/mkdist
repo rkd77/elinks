@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# This script can be used by a cron to generate snapshots.
+# For example, use:
+# 35 0 * * * mkdist elinks-0.11 0.11 >>mkdist.log 2>&1
+# 40 0 * * * mkdist HEAD 0.12 >>mkdist.log 2>&1
+#
+# To generate a release (which doesn't have a date in the
+# top-level directory) also pass -r as the third parameter.
+
+# set -x
+
+echo "-------------------------------------------------"
+echo "Date: $(date)"
+echo "Args: $*"
+echo "-------------------------------------------------"
+
+ub=$1
+lb=$2
+
+GIT_DIR="elinks-repo-directory"
+DOC_DIR="" # Leave empty for no doc dir
+TMP_DIR="/tmp/elinks-git.$$"
+TAR_DIR="elinks-snapshot-directory"
+
+[ "$ub" ] || exit 1
+[ "$lb" ] || exit 1
+
+if [ "$3" != "-r" ]; then
+	ver=$lb-`date +%Y%m%d`
+	c="-current";
+else
+	ver=$lb;
+	c="";
+fi
+
+mkdir "$TMP_DIR
+cd "$TMP_DIR"
+
+GIT_DIR="$GIT_DIR" cg-export -r "$ub" "$TMP_DIR"/elinks"
+
+cd elinks
+
+./autogen.sh
+./configure
+
+if [ "$ub" = "REL_0_10" ]; then
+	make dist
+	tar xfz elinks-$lb*.tar.gz
+	cd elinks-$ub*
+else
+	make -C po
+fi
+
+if test -n "$DOC_DIR"; then
+	mkdir doc/html
+	cp -r "$DOC_DIR"/*.html* doc/html
+	# mkdir doc/pdf
+	# cp "$DOC_DIR"/*.pdf doc/pdf
+fi
+
+cd ..
+
+if [ "$c" ]; then
+	dir=`ls .`
+	mv $dir elinks-$ver
+fi
+
+
+tar cfz elinks$c-$lb.tar.gz  elinks-$ver && \
+mv elinks$c-$lb.tar.gz "$TAR_DIR" && \
+(cd "$TAR_DIR" && md5sum elinks$c-$lb.tar.gz > elinks$c-$lb.tar.gz.md5)
+
+tar cfj elinks$c-$lb.tar.bz2 elinks-$ver && \
+mv elinks$c-$lb.tar.bz2 "$TAR_DIR" && \
+(cd "$TAR_DIR" && md5sum elinks$c-$lb.tar.bz2 > elinks$c-$lb.tar.gz.md5)
+
+rm -rf "$TMP_DIR"
