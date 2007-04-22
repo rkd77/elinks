@@ -189,7 +189,7 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
 		else /* NBSP_MODE_ASCII */ return " ";
 	}
-	if (u == 0xad) return "";
+	if (u == UCS_SOFT_HYPHEN) return "";
 
 	if (u < 0xa0) {
 		unicode_val_T strange = strange_chars[u - 0x80];
