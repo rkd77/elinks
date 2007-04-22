@@ -10,6 +10,9 @@ typedef uint32_t unicode_val_T;
 /* U+00A0 NO-BREAK SPACE.  */
 #define UCS_NO_BREAK_SPACE ((unicode_val_T) 0x00A0)
 
+/* U+00AD SOFT HYPHEN.  */
+#define UCS_SOFT_HYPHEN ((unicode_val_T) 0x00AD)
+
 /* U+FFFD REPLACEMENT CHARACTER.  Used when no Unicode mapping is
  * known for a byte in a codepage, or when invalid UTF-8 is received
  * from a terminal.  After generating the character, ELinks then
