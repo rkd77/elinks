@@ -3,6 +3,9 @@
 
 typedef uint32_t unicode_val_T;
 
+/* U+00A0 NO-BREAK SPACE.  */
+#define UCS_NO_BREAK_SPACE ((unicode_val_T) 0x00A0)
+
 /* UCS/Unicode replacement character. */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFD)
 

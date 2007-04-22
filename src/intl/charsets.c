@@ -141,7 +141,8 @@ u2cp_(unicode_val_T u, int to, int no_nbsp_hack)
 
 	if (u < 128) return strings[u];
 	/* To mark non breaking spaces, we use a special char NBSP_CHAR. */
-	if (u == 0xa0) return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
+	if (u == UCS_NO_BREAK_SPACE)
+		return no_nbsp_hack ? " " : NBSP_CHAR_STRING;
 	if (u == 0xad) return "";
 
 	if (u < 0xa0) {
