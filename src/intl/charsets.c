@@ -185,7 +185,7 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 
 	/* To mark non breaking spaces in non-UTF-8 strings, we use a
 	 * special char NBSP_CHAR. */
-	if (u == 0xa0) {
+	if (u == UCS_NO_BREAK_SPACE) {
 		if (nbsp_mode == NBSP_MODE_HACK) return NBSP_CHAR_STRING;
 		else /* NBSP_MODE_ASCII */ return " ";
 	}
