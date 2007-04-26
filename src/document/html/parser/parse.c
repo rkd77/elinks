@@ -615,7 +615,7 @@ count_newline_entities(const unsigned char *html, const unsigned char *eof,
 		if (peek == eof || *peek != ';')
 			break;
 		++peek;
-		
+
 		if (this_is_cr || !prev_was_cr)
 			++newlines;
 		prev_was_cr = this_is_cr;

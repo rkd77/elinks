@@ -66,7 +66,7 @@ bzip2_open(struct stream_encoded *stream, int fd)
 	copy_struct(&data->fbz_stream, &null_bz_stream);
 	data->fdread = fd;
 	data->last_read = 0;
-	
+
 	err = BZ2_bzDecompressInit(&data->fbz_stream, 0, 0);
 	if (err != BZ_OK) {
 		mem_free(data);
@@ -86,14 +86,14 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 	if (!data) return -1;
 
-	assert(len > 0);	
+	assert(len > 0);
 
 	if (data->last_read) return 0;
 
 	data->fbz_stream.avail_out = len;
 	data->fbz_stream.next_out = buf;
 
-	do {	
+	do {
 		if (data->fbz_stream.avail_in == 0) {
 			int l = safe_read(data->fdread, data->buf,
 			                  ELINKS_BZ_BUFFER_LENGTH);
@@ -111,12 +111,12 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 			data->fbz_stream.next_in = data->buf;
 			data->fbz_stream.avail_in = l;
 		}
-		
+
 		err = BZ2_bzDecompress(&data->fbz_stream);
-		if (err == BZ_STREAM_END) { 
+		if (err == BZ_STREAM_END) {
 			data->last_read = 1;
 			break;
-		} else if (err != BZ_OK) { 
+		} else if (err != BZ_OK) {
 			return -1;
 		}
 	} while (data->fbz_stream.avail_out > 0);

@@ -123,7 +123,7 @@ html_quote_close(struct html_context *html_context, unsigned char *a,
 		 unsigned char **xxx5)
 {
 	unsigned char *q;
-	
+
 	if (html_context->quote_level > 0)
 		html_context->quote_level--;
 

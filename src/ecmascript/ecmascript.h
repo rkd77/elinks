@@ -23,7 +23,7 @@ struct ecmascript_interpreter {
 
 	/* The code evaluated by setTimeout() */
 	struct string code;
-	
+
 	time_t exec_start;
 
 	/* This is a cross-rerenderings accumulator of
