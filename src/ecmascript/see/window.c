@@ -73,6 +73,25 @@ struct SEE_objectclass js_window_object_class = {
 	NULL
 };
 
+struct SEE_objectclass js_timeout_object_class = {
+	"timeout",
+	SEE_no_get,
+	SEE_no_put,
+	SEE_no_canput,
+	SEE_no_hasproperty,
+	SEE_no_delete,
+	SEE_no_defaultvalue,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+struct timeout_class {
+	struct SEE_object object;
+	struct timeout_data *td;
+};
+
 static struct js_window_object *
 js_get_global_object(void *data)
 {
@@ -138,6 +157,8 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_OBJECT(res, win->open);
 	} else if (p == s_setTimeout) {
 		SEE_SET_OBJECT(res, win->setTimeout);
+	} else if (p == s_clearTimeout) {
+		SEE_SET_OBJECT(res, win->clearTimeout);
 	} else if (p == s_location) {
 		SEE_OBJECT_GET(interp, interp->Global, s_location, res);
 	} else if (p == s_navigator) {
@@ -330,12 +351,28 @@ end:
 }
 
 static void
+js_clearTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
+	      struct SEE_object *thisobj, int argc, struct SEE_value **argv,
+	      struct SEE_value *res)
+{
+	struct timeout_class *timer;
+
+	if (argc != 1) return;
+	timer = (struct timeout_class *)argv[0]->u.object;
+	see_check_class(interp, (struct SEE_object *)timer, &js_timeout_object_class);
+	ecmascript_clear_timeout(timer->td);
+	
+}
+
+static void
 js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	      struct SEE_object *thisobj, int argc, struct SEE_value **argv,
 	      struct SEE_value *res)
 {
 	struct ecmascript_interpreter *ei;
 	unsigned char *code;
+	struct timeout_data *td;
+	struct timeout_class *timer;
 	int timeout;
 
 	if (thisobj != interp->Global)
@@ -345,7 +382,12 @@ js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	ei = ((struct global_object *)interp)->interpreter;
 	code = see_value_to_unsigned_char(interp, argv[0]);
 	timeout = SEE_ToInt32(interp, argv[1]);
-	ecmascript_set_timeout(ei, code, timeout);
+	td = ecmascript_set_timeout(ei, code, timeout);
+	timer = SEE_NEW(interp, struct timeout_class);
+	timer->object.objectclass = &js_timeout_object_class;
+	timer->object.Prototype = NULL;
+	timer->td = td;
+	SEE_SET_OBJECT(res, (struct SEE_object *)timer);
 }
 
 void
@@ -365,6 +407,7 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 	SEE_OBJECT_PUT(interp, interp->Global, s_window, &v, 0);
 
 	g->win->alert = SEE_cfunction_make(interp, js_window_alert, s_alert, 1);
+	g->win->clearTimeout = SEE_cfunction_make(interp, js_clearTimeout, s_clearTimeout, 1);
 	g->win->open = SEE_cfunction_make(interp, js_window_open, s_open, 3);
 	g->win->setTimeout = SEE_cfunction_make(interp, js_setTimeout, s_setTimeout, 2);
 
@@ -380,6 +423,8 @@ init_js_window_object(struct ecmascript_interpreter *interpreter)
 	SEE_OBJECT_PUT(interp, interp->Global, s_open, &v, 0);
 	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_setTimeout, &v);
 	SEE_OBJECT_PUT(interp, interp->Global, s_setTimeout, &v, 0);
+	SEE_OBJECT_GET(interp, (struct SEE_object *)g->win, s_clearTimeout, &v);
+	SEE_OBJECT_PUT(interp, interp->Global, s_clearTimeout, &v, 0);
 }
 
 void

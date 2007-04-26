@@ -55,6 +55,13 @@ const JSClass window_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+const JSClass timeout_class = {
+	"timeout",
+	JSCLASS_HAS_PRIVATE,
+	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_PropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -300,10 +307,12 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static JSBool window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool window_clearTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 const JSFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
+	{ "clearTimeout",window_clearTimeout,	1 },
 	{ "open",	window_open,		3 },
 	{ "setTimeout",	window_setTimeout,	2 },
 	{ NULL }
@@ -435,12 +444,30 @@ end:
 	return JS_TRUE;
 }
 
+/* @window_funcs{"clearTimeout"} */
+static JSBool
+window_clearTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	JSObject *timeout;
+	struct timeout_data *td;
+
+	if (argc != 1)
+		return JS_TRUE;
+	timeout = JSVAL_TO_OBJECT(argv[0]);
+	if (!JS_InstanceOf(ctx, timeout, (JSClass *) &timeout_class, NULL)) return JS_FALSE;
+	td = JS_GetPrivate(ctx, timeout);
+	ecmascript_clear_timeout(td);
+	return JS_TRUE;
+}
+
 /* @window_funcs{"setTimeout"} */
 static JSBool
 window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	unsigned char *code;
+	struct timeout_data *td;
+	JSObject *timer;
 	int timeout;
 
 	if (argc != 2)
@@ -458,6 +485,9 @@ window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval 
 		mem_free(code);
 		return JS_TRUE;
 	}
-	ecmascript_set_timeout(interpreter, code, timeout);
+	td = ecmascript_set_timeout(interpreter, code, timeout);
+	timer = JS_NewObject(ctx, (JSClass *)&timeout_class, NULL, NULL);
+	JS_SetPrivate(ctx, timer, td);
+	object_to_jsval(ctx, rval, timer);
 	return JS_TRUE;
 }

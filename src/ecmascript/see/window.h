@@ -13,6 +13,7 @@ struct js_window_object {
 	struct view_state *vs;
 	struct SEE_object *alert;
 	struct SEE_object *open;
+	struct SEE_object *clearTimeout;
 	struct SEE_object *setTimeout;
 };
 
