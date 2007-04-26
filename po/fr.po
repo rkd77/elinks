@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-23 18:35+0100\n"
-"PO-Revision-Date: 2007-03-23 18:37+0100\n"
+"POT-Creation-Date: 2007-04-26 10:48+0200\n"
+"PO-Revision-Date: 2007-04-26 11:11+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,10 +34,10 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/bfu/hierbox.c:441 src/bfu/inpfield.c:256 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:372 src/cookies/dialogs.c:470 src/dialogs/edit.c:98
-#: src/dialogs/info.c:134 src/dialogs/options.c:232 src/dialogs/options.c:313
+#: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
-#: src/protocol/protocol.c:236 src/scripting/lua/core.c:390
-#: src/scripting/lua/core.c:471 src/scripting/python/dialogs.c:86
+#: src/protocol/protocol.c:236 src/scripting/lua/core.c:398
+#: src/scripting/lua/core.c:479 src/scripting/python/dialogs.c:86
 #: src/session/session.c:807 src/viewer/text/search.c:1669
 msgid "~OK"
 msgstr "~OK"
@@ -147,8 +147,8 @@ msgstr "Chaîne recherchée '%s' introuvable"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:386
-#: src/scripting/lua/core.c:387 src/scripting/lua/core.c:468
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:394
+#: src/scripting/lua/core.c:395 src/scripting/lua/core.c:476
 msgid "Name"
 msgstr "Nom"
 
@@ -176,9 +176,9 @@ msgstr "Chaîne vide non autorisée"
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
 #: src/cookies/dialogs.c:471 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:235 src/dialogs/options.c:314 src/mime/dialogs.c:132
+#: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
-#: src/scripting/lua/core.c:391 src/scripting/lua/core.c:472
+#: src/scripting/lua/core.c:399 src/scripting/lua/core.c:480
 #: src/session/download.c:644 src/session/download.c:1266
 #: src/viewer/text/search.c:1670
 msgid "~Cancel"
@@ -377,7 +377,7 @@ msgstr "Titre"
 #: src/bookmarks/dialogs.c:73 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:163
-#: src/scripting/lua/core.c:388
+#: src/scripting/lua/core.c:396
 msgid "URL"
 msgstr "URL"
 
@@ -437,7 +437,7 @@ msgstr "Créer dossier"
 msgid "Folder name"
 msgstr "Nom du dossier"
 
-#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:382
+#: src/bookmarks/dialogs.c:310 src/scripting/lua/core.c:390
 msgid "Edit bookmark"
 msgstr "Modifier un signet"
 
@@ -1326,7 +1326,7 @@ msgstr "Erreur interne"
 #.
 #: src/config/cmdline.c:708
 msgid "Restrict to anonymous mode"
-msgstr "Restriction au mode anonyme"
+msgstr "Restreint au mode anonyme"
 
 #: src/config/cmdline.c:710
 msgid ""
@@ -1343,15 +1343,15 @@ msgstr ""
 
 #: src/config/cmdline.c:715
 msgid "Autosubmit first form"
-msgstr "Envoyer automatiquement le premier formulaire"
+msgstr "Envoie automatiquement le premier formulaire"
 
 #: src/config/cmdline.c:717
 msgid "Automatically submit the first form in the given URLs."
-msgstr "Envoyer automatiquement le premier formulaire de l'URL donnée."
+msgstr "Envoie automatiquement le premier formulaire de l'URL donnée."
 
 #: src/config/cmdline.c:719
 msgid "Clone internal session with given ID"
-msgstr "Cloner la session interne ayant l'ID donné"
+msgstr "Clone la session interne ayant l'ID donné"
 
 #: src/config/cmdline.c:721
 msgid ""
@@ -1367,7 +1367,7 @@ msgstr ""
 
 #: src/config/cmdline.c:727
 msgid "Name of directory with configuration file"
-msgstr "Nom du répertoire contenant les fichiers de configuration"
+msgstr "Spécifie le répertoire contenant les fichiers de configuration"
 
 #: src/config/cmdline.c:729
 msgid ""
@@ -1383,19 +1383,19 @@ msgstr ""
 
 #: src/config/cmdline.c:734
 msgid "Print default configuration file to stdout"
-msgstr "Imprimer le fichier de configuration par défaut sur la sortie standart"
+msgstr "Imprime le fichier de configuration par défaut"
 
 #: src/config/cmdline.c:736
 msgid ""
 "Print a configuration file with options set to the built-in\n"
 "defaults to stdout."
 msgstr ""
-"Imprimer un fichier de configuration contenant les options par défaut\n"
+"Imprime un fichier de configuration contenant les options par défaut\n"
 "sur la sortie standart."
 
 #: src/config/cmdline.c:741
 msgid "Name of configuration file"
-msgstr "Nom du fichier de configuration"
+msgstr "Spécifie le nom du fichier de configuration"
 
 #: src/config/cmdline.c:743
 msgid ""
@@ -1403,17 +1403,17 @@ msgid ""
 "options will be read from and written to. It should be\n"
 "relative to config-dir."
 msgstr ""
-"Nom du fichier de configuration dans lequel sont écrites\n"
+"Spécifie le nom du fichier dans lequel sont écrites\n"
 "et lues les options de configuration. Il doit être relatif\n"
 "à config-dir."
 
 #: src/config/cmdline.c:747
 msgid "Print help for configuration options"
-msgstr "Afficher l'aide pour les options de configuration"
+msgstr "Affiche l'aide pour les options de configuration"
 
 #: src/config/cmdline.c:749
 msgid "Print help for configuration options and exit."
-msgstr "Afficher l'aide pour les options de configuration et quitter."
+msgstr "Affiche l'aide pour les options de configuration et quitte."
 
 #: src/config/cmdline.c:751
 msgid "MIME type assumed for unknown document types"
@@ -1422,12 +1422,12 @@ msgstr "Type MIME à supposer pour les documents de type inconnu"
 #: src/config/cmdline.c:753
 msgid "The default MIME type used for documents of unknown type."
 msgstr ""
-"Le type MIME par défaut à utiliser pour les documents dont\n"
+"Le type MIME par défaut utilisé pour les documents dont\n"
 "le type est inconnu."
 
 #: src/config/cmdline.c:755
 msgid "Ignore user-defined keybindings"
-msgstr "Ignorer les associations de touches utilisateur"
+msgstr "Ignore les associations de touches utilisateur"
 
 #: src/config/cmdline.c:757
 msgid ""
@@ -1437,20 +1437,20 @@ msgid ""
 msgstr ""
 "Si activé, les associations de touches définies dans les fichiers\n"
 "de configuration seront ignorées.\n"
-"Cela force l'utilisation des touches par défaut et\n"
+"Cela oblige l'utilisation des touches par défaut et\n"
 "réinitialisera les associations de touches définies par\n"
 "l'utilisateur lors d'une nouvelle sauvegarde."
 
 #: src/config/cmdline.c:761
 msgid "Print formatted versions of given URLs to stdout"
 msgstr ""
-"Imprimer les versions formatées des URLs données sur la sortie standard"
+"Imprime les versions formatées des documents aux URLs données"
 
 #: src/config/cmdline.c:763
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
-"Imprimer les versions plein texte formatées des URLs données sur la \n"
-"sortie standard."
+"Imprime les versions plein texte formatées des documents aux URLs\n"
+"données sur la sortie standard."
 
 #: src/config/cmdline.c:765
 msgid "Codepage to use with -dump"
@@ -1458,7 +1458,7 @@ msgstr "Jeu de caractères à utiliser avec -dump"
 
 #: src/config/cmdline.c:767
 msgid "Codepage used when formatting dump output."
-msgstr "Jeu de caractères utilisé lors du formatage de la sortie (dump)."
+msgstr "Jeu de caractères utilisé lors du formatage (avec -dump)."
 
 #: src/config/cmdline.c:769
 msgid "Color mode used with -dump"
@@ -1474,7 +1474,7 @@ msgstr "Largeur de document formaté à utiliser avec -dump"
 
 #: src/config/cmdline.c:775
 msgid "Width of the dump output."
-msgstr "Largeur de sortie (dump)."
+msgstr "Largeur de sortie (avec -dump)."
 
 #: src/config/cmdline.c:777
 msgid "Evaluate configuration file directive"
@@ -1487,7 +1487,7 @@ msgid ""
 "read. Example usage:\n"
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 msgstr ""
-"Permet de spécifier une directive de fichier de configuation sur la\n"
+"Spécifie une directive de fichier de configuation sur la\n"
 "ligne de commandes qui sera évaluée après que tous les fichiers de \n"
 "configuration aient été lus. Exemple d'utilisation:\n"
 "  -eval 'set protocol.file.allow_special_files = 1'"
@@ -1503,22 +1503,22 @@ msgid ""
 "Useful when using ELinks as an external viewer from MUAs.\n"
 "This is equivalent to -default-mime-type text/html."
 msgstr ""
-"Cela force ELinks à considérer les documents de type inconnu\n"
+"Force ELinks à considérer les documents de type inconnu\n"
 "comme étant au format HTML. Cela est utile lors de l'utilisation\n"
 "d'ELinks comme visualisateur pour les clients mail.\n"
 "C'est équivalent à -default-mime-type text/html."
 
 #: src/config/cmdline.c:797
 msgid "Print usage help and exit"
-msgstr "Afficher l'aide et quitter"
+msgstr "Affiche l'aide et quitte"
 
 #: src/config/cmdline.c:799
 msgid "Print usage help and exit."
-msgstr "Afficher l'aide et quitter."
+msgstr "Affiche l'aide et quitte."
 
 #: src/config/cmdline.c:801
 msgid "Only permit local connections"
-msgstr "Permettre seulement les connexions locales"
+msgstr "Autorise seulement les connexions locales"
 
 #: src/config/cmdline.c:803
 msgid ""
@@ -1532,25 +1532,25 @@ msgstr ""
 
 #: src/config/cmdline.c:807
 msgid "Print detailed usage help and exit"
-msgstr "Afficher l'aide détaillée et quitter"
+msgstr "Affiche l'aide détaillée et quitte"
 
 #: src/config/cmdline.c:809
 msgid "Print detailed usage help and exit."
-msgstr "Afficher l'aide détaillée et quitter."
+msgstr "Affiche l'aide détaillée et quitte."
 
 #: src/config/cmdline.c:811
 msgid "Look up specified host"
-msgstr "Résolution du nom de l'hôte spécifié"
+msgstr "Résoud le nom de l'hôte spécifié"
 
 #: src/config/cmdline.c:813
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
-"Résoudre le nom d'hôte spécifié et imprimer toutes les adresses IP\n"
+"Résoud le nom d'hôte spécifié et imprime toutes les adresses IP\n"
 "correspondantes."
 
 #: src/config/cmdline.c:815
 msgid "Run as separate instance"
-msgstr "Exécuter en tant qu'instance séparée"
+msgstr "Exécute dans une instance séparée"
 
 #: src/config/cmdline.c:817
 msgid ""
@@ -1559,14 +1559,14 @@ msgid ""
 "(bookmarks, history, etc.) are written to the disk when this\n"
 "option is used. See also -touch-files."
 msgstr ""
-"Exécuter ELinks en tant qu'instance séparée au lieu de se connecter\n"
+"Exécute ELinks dans une instance séparée au lieu de se connecter\n"
 "à la session en cours. Notez que normalement aucun fichier d'état\n"
 "(signets, historique, etc.) n'est modifié quand cette option est\n"
 "utilisée. Voir aussi -touch-files."
 
 #: src/config/cmdline.c:822
 msgid "Disable use of files in ~/.elinks"
-msgstr "Ne pas utiliser les fichiers dans ~/.elinks"
+msgstr "Désactive l'usage des fichiers présents dans ~/.elinks"
 
 #: src/config/cmdline.c:824
 msgid ""
@@ -1581,7 +1581,7 @@ msgstr ""
 
 #: src/config/cmdline.c:828
 msgid "Disable link numbering in dump output"
-msgstr "Ne pas numéroter les liens en sortie (dump)"
+msgstr "Désactive la numérotation des liens (avec -dump)"
 
 #: src/config/cmdline.c:830
 msgid ""
@@ -1593,7 +1593,7 @@ msgstr ""
 
 #: src/config/cmdline.c:833
 msgid "Disable printing of link references in dump output"
-msgstr "Ne pas afficher les références des liens dans la sortie (dump)"
+msgstr "Désactive l'impression des références des liens (avec -dump)"
 
 #: src/config/cmdline.c:835
 msgid ""
@@ -1606,7 +1606,7 @@ msgstr ""
 
 #: src/config/cmdline.c:839
 msgid "Control an already running ELinks"
-msgstr "Contrôler une instance préexistante d'ELinks"
+msgstr "Prend le contrôle d'une instance d'ELinks déjà existante"
 
 #: src/config/cmdline.c:841
 msgid ""
@@ -1644,7 +1644,7 @@ msgstr ""
 
 #: src/config/cmdline.c:857
 msgid "Connect to session ring with given ID"
-msgstr "Se connecter au groupe de sessions correspondant à cet ID"
+msgstr "Permet de rejoindre le groupe de session ID"
 
 #: src/config/cmdline.c:859
 msgid ""
@@ -1679,17 +1679,17 @@ msgstr ""
 
 #: src/config/cmdline.c:874
 msgid "Print the source of given URLs to stdout"
-msgstr "Imprimer la source des URLs données sur la sortie standard"
+msgstr "Imprime la source des documents aux URLs données"
 
 #: src/config/cmdline.c:876
 msgid "Print given URLs in source form to stdout."
 msgstr ""
-"Imprimer les URLs données dans leur forme source sur la sortie standard."
+"Imprime les documents aux URLs données dans leur forme source sur la sortie standard."
 
 #: src/config/cmdline.c:880
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr ""
-"Modifier les fichiers dans ~/.elinks avec les options -no-connect/-session-"
+"Modifie les fichiers dans ~/.elinks avec les options -no-connect/-session-"
 "ring"
 
 #: src/config/cmdline.c:882
@@ -1724,11 +1724,11 @@ msgstr ""
 
 #: src/config/cmdline.c:895
 msgid "Print version information and exit"
-msgstr "Afficher la version et quitter"
+msgstr "Affiche la version et quitte"
 
 #: src/config/cmdline.c:897
 msgid "Print ELinks version information and exit."
-msgstr "Afficher la version d'ELinks et quitter."
+msgstr "Affiche la version d'ELinks et quitte."
 
 #: src/config/conf.c:722
 msgid ""
@@ -1895,7 +1895,7 @@ msgstr "Impossible d'ajouter une option ici."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:935 src/cookies/dialogs.c:495
-#: src/dialogs/options.c:234 src/formhist/dialogs.c:214
+#: src/dialogs/options.c:236 src/formhist/dialogs.c:214
 #: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1250
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
@@ -2599,7 +2599,7 @@ msgstr ""
 "Inverser les couleurs de fond et de texte pour mettre le lien en évidence."
 
 #: src/config/options.inc:296 src/config/options.inc:887
-#: src/dialogs/options.c:229
+#: src/dialogs/options.c:231
 msgid "Underline"
 msgstr "Souligné"
 
@@ -3250,11 +3250,11 @@ msgstr ""
 
 #: src/config/options.inc:636
 msgid "Dump output"
-msgstr "Sortie (dump)"
+msgstr "Sortie (-dump)"
 
 #: src/config/options.inc:638
 msgid "Dump output options."
-msgstr "Options de sortie (dump)."
+msgstr "Options de sortie (-dump)."
 
 #: src/config/options.inc:640 src/config/options.inc:891
 #: src/config/opttypes.c:408 src/dialogs/document.c:163
@@ -3266,7 +3266,7 @@ msgid ""
 "Codepage used in dump output. 'System' stands for\n"
 "a codepage determined by a selected locale."
 msgstr ""
-"Jeu de caractères utilisé pour la sortie (dump).\n"
+"Jeu de caractères utilisé pour la sortie (avec -dump).\n"
 "'System' indique que celui-ci sera déterminé par la locale\n"
 "en cours."
 
@@ -3331,7 +3331,7 @@ msgstr "Numérotation"
 
 #: src/config/options.inc:675
 msgid "Whether to print link numbers in dump output."
-msgstr "Numéroter ou non les liens en sortie (dump)."
+msgstr "Numéroter ou non les liens (avec -dump)."
 
 #: src/config/options.inc:677
 msgid "References"
@@ -3341,7 +3341,7 @@ msgstr "Références"
 msgid ""
 "Whether to print references (URIs) of document links\n"
 "in dump output."
-msgstr "Afficher ou non les références (URIs) des liens en sortie (dump)."
+msgstr "Afficher ou non les références (URIs) des liens (avec -dump)."
 
 #: src/config/options.inc:682
 msgid "Separator"
@@ -3623,7 +3623,7 @@ msgstr ""
 "3 KOI-8\n"
 "4 FreeBSD"
 
-#: src/config/options.inc:829 src/dialogs/options.c:225
+#: src/config/options.inc:829 src/dialogs/options.c:227
 msgid "Switch fonts for line drawing"
 msgstr "Echanger les fontes pour dessiner les lignes"
 
@@ -3641,7 +3641,7 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:840 src/dialogs/options.c:230
+#: src/config/options.inc:840 src/dialogs/options.c:232
 msgid "UTF-8 I/O"
 msgstr "E/S UTF-8"
 
@@ -3656,7 +3656,7 @@ msgstr ""
 "avec l'encodage de caractères du terminal. ELinks ignore cette\n"
 "option si l'encodage de caractères utilisé par le terminal est UTF-8."
 
-#: src/config/options.inc:846 src/dialogs/options.c:226
+#: src/config/options.inc:846 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
 msgstr "Limiter les cadres dans cp850/852"
 
@@ -3669,7 +3669,7 @@ msgstr ""
 "N'a du sens que pour les terminaux linux utilisant les jeux de\n"
 "caractères cp850/852."
 
-#: src/config/options.inc:851 src/dialogs/options.c:227
+#: src/config/options.inc:851 src/dialogs/options.c:229
 msgid "Block cursor"
 msgstr "Bloquer le curseur"
 
@@ -3716,7 +3716,7 @@ msgstr ""
 "3 mode 256 couleurs, utilise les codes RVB d'XTerm\n"
 "4 mode vraies couleurs, utilise les codes RVB de konsole"
 
-#: src/config/options.inc:877 src/dialogs/options.c:228
+#: src/config/options.inc:877 src/dialogs/options.c:230
 msgid "Transparency"
 msgstr "Transparence"
 
@@ -5451,7 +5451,7 @@ msgid "Files:"
 msgstr "Fichiers:"
 
 #. 2 '\n' + 1 '\0'
-#: src/dialogs/options.c:171
+#: src/dialogs/options.c:173
 #, c-format
 msgid ""
 "The environmental variable TERM is set to '%s'.\n"
@@ -5468,67 +5468,67 @@ msgstr ""
 "valeur de TERM. Cela vous permet de configurer indépendemment\n"
 "chacun des terminaux où vous utilisez ELinks."
 
-#: src/dialogs/options.c:197
+#: src/dialogs/options.c:199
 msgid "Terminal options"
 msgstr "Options du terminal"
 
-#: src/dialogs/options.c:206
+#: src/dialogs/options.c:208
 msgid "Frame handling:"
 msgstr "Gestion des cadres:"
 
-#: src/dialogs/options.c:207
+#: src/dialogs/options.c:209
 msgid "No frames"
 msgstr "Aucun cadre"
 
-#: src/dialogs/options.c:208
+#: src/dialogs/options.c:210
 msgid "VT 100 frames"
 msgstr "Cadres VT 100"
 
-#: src/dialogs/options.c:209
+#: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
 msgstr "Cadres Linux ou OS/2"
 
-#: src/dialogs/options.c:210
+#: src/dialogs/options.c:212
 msgid "FreeBSD frames"
 msgstr "Cadres FreeBSD"
 
-#: src/dialogs/options.c:211
+#: src/dialogs/options.c:213
 msgid "KOI8-R frames"
 msgstr "Cadres KOI8-R"
 
-#: src/dialogs/options.c:213
+#: src/dialogs/options.c:215
 msgid "Color mode:"
 msgstr "Mode couleurs:"
 
-#: src/dialogs/options.c:214
+#: src/dialogs/options.c:216
 msgid "No colors (mono)"
 msgstr "Monochrome"
 
-#: src/dialogs/options.c:215
+#: src/dialogs/options.c:217
 msgid "16 colors"
 msgstr "16 couleurs"
 
-#: src/dialogs/options.c:217
+#: src/dialogs/options.c:219
 msgid "88 colors"
 msgstr "88 couleurs"
 
-#: src/dialogs/options.c:220
+#: src/dialogs/options.c:222
 msgid "256 colors"
 msgstr "256 couleurs"
 
-#: src/dialogs/options.c:223
+#: src/dialogs/options.c:225
 msgid "true color"
 msgstr "vraies couleurs"
 
-#: src/dialogs/options.c:307
+#: src/dialogs/options.c:309
 msgid "Resize terminal"
 msgstr "Redimensionner le terminal"
 
-#: src/dialogs/options.c:310
+#: src/dialogs/options.c:312
 msgid "Width="
 msgstr "Largeur="
 
-#: src/dialogs/options.c:311
+#: src/dialogs/options.c:313
 msgid "Height="
 msgstr "Hauteur="
 
@@ -6453,7 +6453,7 @@ msgstr ""
 "Type MIME du document par défaut (quand il ne peut être\n"
 "deviner grâce aux informations connues concernant le document)."
 
-#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:156
+#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:151
 msgid "Verify certificates"
 msgstr "Vérification des certificats"
 
@@ -6497,7 +6497,7 @@ msgstr ""
 "indiqué par la variable d'environnement X509_CLIENT_CERT sera\n"
 "utilisé."
 
-#: src/network/ssl/ssl.c:158
+#: src/network/ssl/ssl.c:153
 msgid ""
 "Verify the peer's SSL certificate. Note that this\n"
 "probably doesn't work properly at all with GnuTLS."
@@ -6506,11 +6506,11 @@ msgstr ""
 "probablement pas correctement avec GnuTLS."
 
 #. name:
-#: src/network/ssl/ssl.c:177 src/network/ssl/ssl.c:194
+#: src/network/ssl/ssl.c:172 src/network/ssl/ssl.c:189
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:179
+#: src/network/ssl/ssl.c:174
 msgid "SSL options."
 msgstr "Options SSL."
 
@@ -8194,23 +8194,23 @@ msgstr "Aucun programme spécifié pour le protocole %s."
 msgid "Guile"
 msgstr "Guile"
 
-#: src/scripting/lua/core.c:312 src/scripting/python/keybinding.c:151
+#: src/scripting/lua/core.c:320 src/scripting/python/keybinding.c:151
 msgid "Error registering event hook"
 msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 
-#: src/scripting/lua/core.c:463 src/scripting/python/dialogs.c:171
+#: src/scripting/lua/core.c:471 src/scripting/python/dialogs.c:171
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:740
+#: src/scripting/lua/core.c:748
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:890
+#: src/scripting/lua/core.c:898
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:890
+#: src/scripting/lua/core.c:898
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
