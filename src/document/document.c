@@ -54,6 +54,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
+	init_list(document->timeouts);
 #endif
 
 	object_nolock(document, "document");
@@ -104,6 +105,20 @@ done_link_members(struct link *link)
 	mem_free_if(link->points);
 }
 
+#ifdef CONFIG_ECMASCRIPT
+void
+kill_timeouts(struct document *document)
+{
+	struct timeout_data *td;
+
+	foreach (td, document->timeouts) {
+		kill_timer(&td->timer);
+		mem_free(td->code);
+	}
+	free_list(document->timeouts);
+}
+#endif
+
 void
 done_document(struct document *document)
 {
@@ -153,7 +168,7 @@ done_document(struct document *document)
 #ifdef CONFIG_ECMASCRIPT
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
-	kill_timer(&document->timeout);
+	kill_timeouts(document);
 #endif
 
 	free_list(document->tags);
@@ -175,7 +190,7 @@ release_document(struct document *document)
 
 	if (document->refresh) kill_document_refresh(document->refresh);
 #ifdef CONFIG_ECMASCRIPT
-	kill_timer(&document->timeout);
+	kill_timeouts(document);
 #endif
 	object_unlock(document);
 	move_to_top_of_list(format_cache, document);

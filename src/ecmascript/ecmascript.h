@@ -6,8 +6,11 @@
  * plasm displays for everyone. */
 
 #include "main/module.h"
+#include "main/timer.h"
+#include "util/lists.h"
 #include "util/time.h"
 
+struct document;
 struct string;
 struct terminal;
 struct uri;
@@ -21,9 +24,6 @@ struct ecmascript_interpreter {
 	/* Used by document.write() */
 	struct string *ret;
 
-	/* The code evaluated by setTimeout() */
-	struct string code;
-	
 	time_t exec_start;
 
 	/* This is a cross-rerenderings accumulator of

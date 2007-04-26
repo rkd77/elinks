@@ -156,7 +156,7 @@ struct document {
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
 	/* used by setTimeout */
-	timer_id_T timeout;
+	struct list_head timeouts;
 #endif
 #ifdef CONFIG_CSS
 	/* FIXME: We should externally maybe using cache_entry store the
@@ -203,6 +203,15 @@ struct document {
 	unsigned int links_sorted:1; /* whether links are already sorted */
 };
 
+#ifdef CONFIG_ECMASCRIPT
+struct timeout_data {
+	LIST_HEAD(struct timeout_data);
+	struct ecmascript_interpreter *interpreter;
+	unsigned char *code;
+	timer_id_T timer;
+};
+#endif
+
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)
 
 /* Initializes a document and its canvas. */
@@ -232,6 +241,11 @@ int get_format_cache_used_count(void);
 int get_format_cache_refresh_count(void);
 
 void shrink_format_cache(int);
+
+#ifdef CONFIG_ECMASCRIPT
+void kill_timeouts(struct document *document);
+#endif
+
 
 extern struct module document_module;
 

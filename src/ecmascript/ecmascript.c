@@ -131,7 +131,6 @@ ecmascript_get_interpreter(struct view_state *vs)
 #else
 	spidermonkey_get_interpreter(interpreter);
 #endif
-	init_string(&interpreter->code);
 	return interpreter;
 }
 
@@ -145,10 +144,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	spidermonkey_put_interpreter(interpreter);
 #endif
 	free_string_list(&interpreter->onload_snippets);
-	done_string(&interpreter->code);
 	/* Is it superfluous? */
 	if (interpreter->vs->doc_view)
-		kill_timer(&interpreter->vs->doc_view->document->timeout);
+		kill_timeouts(interpreter->vs->doc_view->document);
 	interpreter->vs->ecmascript = NULL;
 	mem_free(interpreter);
 }
@@ -309,26 +307,42 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 static void
 ecmascript_timeout_handler(void *i)
 {
-	struct ecmascript_interpreter *interpreter = i;
+	struct string code;
+	struct timeout_data *td = i;
+	struct ecmascript_interpreter *interpreter = td->interpreter;
 
 	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
-	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
-	/* The expired timer ID has now been erased.  */
-
-	ecmascript_eval(interpreter, &interpreter->code, NULL);
+	del_from_list(td);
+	if (init_string(&code)) {
+		add_to_string(&code, td->code);
+		ecmascript_eval(interpreter, &code, NULL);
+		done_string(&code);
+	}
+	mem_free(td->code);
+	mem_free(td);
 }
 
 void
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
+	struct timeout_data *td;
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return;
-	done_string(&interpreter->code);
-	init_string(&interpreter->code);
-	add_to_string(&interpreter->code, code);
-	mem_free(code);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
-	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
+
+	td = mem_calloc(1, sizeof(*td));
+	if (!td) {
+		mem_free(code);
+		return;
+	}
+	td->interpreter = interpreter;
+	td->code = code;
+	install_timer(&td->timer, timeout, ecmascript_timeout_handler, td);
+	if (td->timer != TIMER_ID_UNDEF) {
+		add_to_list_end(interpreter->vs->doc_view->document->timeouts, td);
+	} else {
+		mem_free(code);
+		mem_free(td);
+	}
 }
 
 static struct module *ecmascript_modules[] = {
