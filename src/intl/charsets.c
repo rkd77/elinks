@@ -909,6 +909,10 @@ get_translation_table(int from, int to)
 	if (is_cp_ptr_utf8(&codepages[from])) {
 		int i;
 
+		/* Map U+00A0 and U+00AD the same way as u2cp() would.  */
+		add_utf8(table, UCS_NO_BREAK_SPACE, strings[NBSP_CHAR]);
+		add_utf8(table, UCS_SOFT_HYPHEN, "");
+
 		for (i = 0x80; i <= 0xFF; i++)
 			if (codepages[to].highhalf[i - 0x80] != 0xFFFF)
 				add_utf8(table,
