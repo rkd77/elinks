@@ -343,6 +343,10 @@ get_translation_table(int from, int to)
 	if (codepages[from].table == table_utf_8) {
 		int i;
 
+		/* Map U+00A0 and U+00AD the same way as u2cp() would.  */
+		add_utf_8(table, UCS_NO_BREAK_SPACE, strings[NBSP_CHAR]);
+		add_utf_8(table, UCS_SOFT_HYPHEN, "");
+
 		for (i = 0; codepages[to].table[i].c; i++)
 			add_utf_8(table, codepages[to].table[i].u,
 				  strings[codepages[to].table[i].c]);
