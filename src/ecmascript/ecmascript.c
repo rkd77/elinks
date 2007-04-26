@@ -322,27 +322,28 @@ ecmascript_timeout_handler(void *i)
 	mem_free(td);
 }
 
-void
+struct timeout_data *
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
 	struct timeout_data *td;
 	assert(interpreter && interpreter->vs->doc_view->document);
-	if (!code) return;
+	if (!code) return NULL;
 
 	td = mem_calloc(1, sizeof(*td));
 	if (!td) {
 		mem_free(code);
-		return;
+		return NULL;
 	}
 	td->interpreter = interpreter;
 	td->code = code;
 	install_timer(&td->timer, timeout, ecmascript_timeout_handler, td);
 	if (td->timer != TIMER_ID_UNDEF) {
 		add_to_list_end(interpreter->vs->doc_view->document->timeouts, td);
-	} else {
-		mem_free(code);
-		mem_free(td);
+		return td;
 	}
+	mem_free(code);
+	mem_free(td);
+	return NULL;
 }
 
 static struct module *ecmascript_modules[] = {

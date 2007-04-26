@@ -13,6 +13,7 @@
 struct document;
 struct string;
 struct terminal;
+struct timeout_data;
 struct uri;
 struct view_state;
 
@@ -79,7 +80,7 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(unsigned char **action, unsigned char *string);
 
-void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
+struct timeout_data *ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
 
 extern struct module ecmascript_module;
 
