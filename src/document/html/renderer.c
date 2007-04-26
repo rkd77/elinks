@@ -406,6 +406,21 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	if (realloc_spaces(part, x + charslen))
 		return 0;
 
+	/* U+00AD SOFT HYPHEN characters in HTML documents are
+	 * supposed to be displayed only if the word is broken at that
+	 * point.  ELinks currently does not use them, so it should
+	 * not display them.  If the input @chars is in UTF-8, then
+	 * set_hline() discards the characters.  If the input is in
+	 * some other charset, then set_hline() does not know which
+	 * byte that charset uses for U+00AD, so it cannot discard
+	 * the characters; instead, the translation table used by
+	 * convert_string() has already discarded the characters.
+	 *
+	 * Likewise, if the input @chars is in UTF-8, then it may
+	 * contain U+00A0 NO-BREAK SPACE characters; but if the input
+	 * is in some other charset, then the translation table
+	 * has mapped those characters to NBSP_CHAR.  */
+
 	if (part->document) {
 		/* Reallocate LINE(y).chars[] to large enough.  The
 		 * last parameter of realloc_line is the index of the
@@ -424,7 +439,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
-			unsigned char *end = chars + charslen;
+			unsigned char *const end = chars + charslen;
 			unicode_val_T data;
 
 			if (part->document->buf_length) {
@@ -459,7 +474,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				}
 			}
 
-			for (; chars < end; x++) {
+			while (chars < end) {
 				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
 				data = utf8_to_unicode(&chars, end);
@@ -473,7 +488,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						schar->attr = SCREEN_ATTR_FRAME;
 						copy_screen_chars(&POS(x, y), schar, 1);
 						schar->attr = attr;
-						part->char_width[x] = 0;
+						part->char_width[x++] = 0;
 						continue;
 					} else {
 						unsigned char i;
@@ -486,6 +501,8 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					}
 				} else {
 good_char:
+					if (data == UCS_SOFT_HYPHEN)
+						continue;
 					if (data == UCS_NO_BREAK_SPACE
 					    && html_context->options->wrap_nbsp)
 						data = UCS_SPACE;
@@ -502,8 +519,8 @@ good_char:
 						schar->data = (unicode_val_T)data;
 					}
 				}
-				copy_screen_chars(&POS(x, y), schar, 1);
-			}
+				copy_screen_chars(&POS(x++, y), schar, 1);
+			} /* while chars < end */
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
@@ -535,13 +552,15 @@ good_char:
 		len = x - x2;
 	} else { /* part->document == NULL */
 		if (utf8) {
-			unsigned char *end;
+			unsigned char *const end = chars + charslen;
 
-			for (end = chars + charslen; chars < end; x++) {
+			while (chars < end) {
 				unicode_val_T data;
 
-				part->spaces[x] = (*chars == ' ');
 				data = utf8_to_unicode(&chars, end);
+				if (data == UCS_SOFT_HYPHEN)
+					continue;
+				part->spaces[x] = (data == UCS_SPACE);
 				part->char_width[x] = unicode_to_cell(data);
 				if (part->char_width[x] == 2) {
 					x++;
@@ -552,7 +571,8 @@ good_char:
 					/* this is at the end only */
 					return x - x2;
 				}
-			}
+				x++;
+			} /* while chars < end */
 			len = x - x2;
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
