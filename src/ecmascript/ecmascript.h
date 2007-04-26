@@ -81,6 +81,7 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 void ecmascript_set_action(unsigned char **action, unsigned char *string);
 
 struct timeout_data *ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
+void ecmascript_clear_timeout(struct timeout_data *td);
 
 extern struct module ecmascript_module;
 

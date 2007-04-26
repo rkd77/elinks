@@ -322,6 +322,15 @@ ecmascript_timeout_handler(void *i)
 	mem_free(td);
 }
 
+void
+ecmascript_clear_timeout(struct timeout_data *td)
+{
+	del_from_list(td);
+	kill_timer(&td->timer);
+	mem_free(td->code);
+	mem_free(td);
+}
+
 struct timeout_data *
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
