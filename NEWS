@@ -115,6 +115,9 @@ roughly in decreasing order of importance.
   - (enhancement) Add support for parsing space separated CSS class
     attribute values
   - (bugfix 387) Treat &#013; inside <pre>...</pre> as a newline.
+  - (bugfix 928) Properly display no-break spaces in a UTF-8 document
+    if the terminal uses some other charset.
+  - (bugfix 947) document.html.wrap_html also affects text in tables.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature 121) If a mailcap entry indicates copiousoutput,
     ELinks itself acts as a pager.
