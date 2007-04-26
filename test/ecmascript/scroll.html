@@ -1,14 +1,29 @@
-<body onload="scroll()">
+<body>
+<!-- test setTimeout and clearTimeout -->
 <script>
-var tekst = '                                                                                           ELinks';
-function scrollText() {
+var tekst1 = '                ELinks';
+var tekst2 = '                ELinks';
+var h;
+function scrollText(tekst) {
 	var znak = tekst.charAt(0);
 	tekst = tekst.substring(1, tekst.length) + znak;
-	return tekst.substring(0, 80);
+	return tekst.substring(0, 40);
 }
-function scroll () {
-     document.title = scrollText();
-     setTimeout("scroll()", 100);
+function scroll() {
+	tekst1 = scrollText(tekst1);
+	document.title = tekst1 + tekst2;
+	setTimeout("scroll()", 100);
 }
+function scroll2() {
+	tekst2 = scrollText(tekst2);;
+	h = setTimeout("scroll2()", 200);
+}
+function killer() {
+	setTimeout("clearTimeout(h)", 10000);
+}
+
+scroll();
+scroll2();
+killer();
 </script>
 </body>
