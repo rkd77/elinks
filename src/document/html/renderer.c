@@ -584,13 +584,12 @@ good_char:
 			len = x - x2;
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
-				unsigned char c = *chars;
-
-				if (c == NBSP_CHAR
-				    && html_context->options->wrap_nbsp)
-					c = ' ';
-				part->spaces[x] = (c == ' ');
 				part->char_width[x] = 1;
+				if (*chars == NBSP_CHAR) {
+					part->spaces[x] = html_context->options->wrap_nbsp;
+				} else {
+					part->spaces[x] = (*chars == ' ');
+				}
 			}
 		}
 	} /* end of part->document check */
@@ -633,7 +632,11 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		}
 	} else {
 		for (; charslen > 0; charslen--, x++, chars++) {
-			part->spaces[x] = (*chars == ' ');
+			if (*chars == NBSP_CHAR) {
+				part->spaces[x] = html_context->options->wrap_nbsp;
+			} else {
+				part->spaces[x] = (*chars == ' ');
+			}
 		}
 	}
 }
