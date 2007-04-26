@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ELinks 0.12.GIT\n"
+"Project-Id-Version: ELinks 0.13.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-26 10:48+0200\n"
-"PO-Revision-Date: 2007-04-26 11:11+0200\n"
+"POT-Creation-Date: 2007-04-26 14:55+0200\n"
+"PO-Revision-Date: 2007-04-26 14:56+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -1443,8 +1443,7 @@ msgstr ""
 
 #: src/config/cmdline.c:761
 msgid "Print formatted versions of given URLs to stdout"
-msgstr ""
-"Imprime les versions formatées des documents aux URLs données"
+msgstr "Imprime les versions formatées des documents aux URLs données"
 
 #: src/config/cmdline.c:763
 msgid "Print formatted plain-text versions of given URLs to stdout."
@@ -1684,7 +1683,8 @@ msgstr "Imprime la source des documents aux URLs données"
 #: src/config/cmdline.c:876
 msgid "Print given URLs in source form to stdout."
 msgstr ""
-"Imprime les documents aux URLs données dans leur forme source sur la sortie standard."
+"Imprime les documents aux URLs données dans leur forme source sur la sortie "
+"standard."
 
 #: src/config/cmdline.c:880
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
@@ -6156,45 +6156,40 @@ msgstr "Echec de attach_terminal()."
 msgid "%d select() failures."
 msgstr "%d échecs de select()."
 
-#: src/main/version.c:81
+#: src/main/version.c:104
 #, c-format
-msgid "Built on %s %s"
-msgstr "Compilé le %s à %s"
+msgid " (built on %s %s)"
+msgstr " (compilation du %s à %s)"
 
-#: src/main/version.c:84
+#: src/main/version.c:109
 msgid "Text WWW browser"
 msgstr "Navigateur web en mode texte"
 
-#: src/main/version.c:86
-#, c-format
-msgid " (built on %s %s)"
-msgstr "(compilé le %s à %s)"
-
-#: src/main/version.c:92
+#: src/main/version.c:114
 msgid "Features:"
 msgstr "Fonctionnalités:"
 
-#: src/main/version.c:94
+#: src/main/version.c:116
 msgid "Standard"
 msgstr "Standart"
 
-#: src/main/version.c:96
+#: src/main/version.c:118
 msgid "Debug"
 msgstr "Debug"
 
-#: src/main/version.c:99
+#: src/main/version.c:121
 msgid "Fastmem"
 msgstr "Fastmem"
 
-#: src/main/version.c:102
+#: src/main/version.c:124
 msgid "Own Libc Routines"
 msgstr "Routines Libc Internes"
 
-#: src/main/version.c:105
+#: src/main/version.c:127
 msgid "No Backtrace"
 msgstr "Pas de Backtrace"
 
-#: src/main/version.c:120
+#: src/main/version.c:142
 msgid "No mouse"
 msgstr "Sans souris"
 
@@ -8886,3 +8881,6 @@ msgstr "Temporisation"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Visualisateur"
+
+#~ msgid "Built on %s %s"
+#~ msgstr "Compilé le %s à %s"
