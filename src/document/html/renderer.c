@@ -563,7 +563,12 @@ good_char:
 				data = utf8_to_unicode(&chars, end);
 				if (data == UCS_SOFT_HYPHEN)
 					continue;
+
+				if (data == UCS_NO_BREAK_SPACE
+				    && html_context->options->wrap_nbsp)
+					data = UCS_SPACE;
 				part->spaces[x] = (data == UCS_SPACE);
+
 				part->char_width[x] = unicode_to_cell(data);
 				if (part->char_width[x] == 2) {
 					x++;
@@ -579,7 +584,12 @@ good_char:
 			len = x - x2;
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
-				part->spaces[x] = (*chars == ' ');
+				unsigned char c = *chars;
+
+				if (c == NBSP_CHAR
+				    && html_context->options->wrap_nbsp)
+					c = ' ';
+				part->spaces[x] = (c == ' ');
 				part->char_width[x] = 1;
 			}
 		}
