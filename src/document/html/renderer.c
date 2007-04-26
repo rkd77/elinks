@@ -438,7 +438,11 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		}
 	} else {
 		for (; charslen > 0; charslen--, x++, chars++) {
-			part->spaces[x] = (*chars == ' ');
+			if (*chars == NBSP_CHAR) {
+				part->spaces[x] = html_context->options->wrap_nbsp;
+			} else {
+				part->spaces[x] = (*chars == ' ');
+			}
 		}
 	}
 }
