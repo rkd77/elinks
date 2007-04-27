@@ -39,10 +39,10 @@ colspan_is_in_box(struct box *box, int x, int span)
 static inline void
 set_box(struct box *box, int x, int y, int width, int height)
 {
-	box->x = x;
-	box->y = y;
-	box->width = width;
-	box->height = height;
+	box->x = int_max(0, x);
+	box->y = int_max(0, y);
+	box->width = int_max(0, width);
+	box->height = int_max(0, height);
 }
 
 static inline void
