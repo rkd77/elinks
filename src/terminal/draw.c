@@ -503,6 +503,8 @@ draw_text(struct terminal *term, int x, int y,
 	assert(text && length >= 0);
 	if_assert_failed return;
 
+	if (x >= term->width || y >= term->height) return;
+
 #ifdef CONFIG_UTF8
 	if (term->utf8_cp) {
 		draw_text_utf8(term, x, y, text, length, attr, color);
