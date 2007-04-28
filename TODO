@@ -5,8 +5,6 @@ kept here, though, to be more on the developers' eyes ;-).
 
 What yet needs to take its way to Bugzilla:
 
-  Some rules for sane handling of texinfo documentation
-
   Rewrite HTML parser (see the SGML+DOM stuff, src/document/sgml)
 
   Reorganization of user interface (nothing particular at all, just an
@@ -20,5 +18,3 @@ General goals:
   General code cleanup
 
   Speed/memory optimizations
-
-
