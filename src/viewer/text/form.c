@@ -150,10 +150,23 @@ selected_item(struct terminal *term, void *item_, void *ses_)
 }
 
 static void
-init_form_state(struct form_control *fc, struct form_state *fs)
+init_form_state(struct document_view *doc_view,
+		struct form_control *fc, struct form_state *fs)
 {
+	struct terminal *term;
+	int doc_cp, viewer_cp;
+
 	assert(fc && fs);
 	if_assert_failed return;
+
+	doc_cp = doc_view->document->cp;
+	term = doc_view->session->tab->term;
+#ifdef CONFIG_UTF8
+	if (term->utf8)
+		viewer_cp = get_cp_index("UTF-8");
+	else
+#endif
+		viewer_cp = get_opt_codepage_tree(term->spec, "charset");
 
 	mem_free_set(&fs->value, NULL);
 
@@ -167,8 +180,14 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 #endif /* CONFIG_FORMHIST */
 			/* fall through */
 		case FC_TEXTAREA:
-			if (fs->value == NULL)
-				fs->value = stracpy(fc->default_value);
+			if (fs->value == NULL) {
+				fs->value = convert_string(
+					get_translation_table(doc_cp, viewer_cp),
+					fc->default_value,
+					strlen(fc->default_value),
+					viewer_cp, CSM_FORM,
+					&fs->state, NULL, NULL);
+			}
 			fs->state = fs->value ? strlen(fs->value) : 0;
 #ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA)
@@ -182,7 +201,12 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 			fs->vpos = 0;
 			break;
 		case FC_SELECT:
-			fs->value = stracpy(fc->default_value);
+			fs->value = convert_string(
+				get_translation_table(doc_cp, viewer_cp),
+				fc->default_value,
+				strlen(fc->default_value),
+				viewer_cp, CSM_FORM,
+				&fs->state, NULL, NULL);
 			fs->state = fc->default_state;
 			fixup_select_state(fc, fs);
 			break;
@@ -195,6 +219,7 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
+			/* We don't want to recode hidden fields. */
 			fs->value = stracpy(fc->default_value);
 			break;
 	}
@@ -236,7 +261,7 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 	fs->g_ctrl_num = fc->g_ctrl_num;
 	fs->position = fc->position;
 	fs->type = fc->type;
-	init_form_state(fc, fs);
+	init_form_state(doc_view, fc, fs);
 
 	return fs;
 }
@@ -1096,7 +1121,7 @@ do_reset_form(struct document_view *doc_view, struct form *form)
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
 
-		if (fs) init_form_state(fc, fs);
+		if (fs) init_form_state(doc_view, fc, fs);
 	}
 }
 

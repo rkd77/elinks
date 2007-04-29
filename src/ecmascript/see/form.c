@@ -200,6 +200,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_defaultChecked) {
 		SEE_SET_BOOLEAN(res, fc->default_state);
 	} else if (p == s_defaultValue) {
+		/* FIXME (bug 805): convert from the charset of the document */
 		str = string_to_SEE_string(interp, fc->default_value);
 		SEE_SET_STRING(res, str);
 	} else if (p == s_disabled) {

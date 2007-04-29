@@ -206,6 +206,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		boolean_to_jsval(ctx, vp, fc->default_state);
 		break;
 	case JSP_INPUT_DEFAULT_VALUE:
+		/* FIXME (bug 805): convert from the charset of the document */
 		string_to_jsval(ctx, vp, fc->default_value);
 		break;
 	case JSP_INPUT_DISABLED:

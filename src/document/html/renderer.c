@@ -1809,18 +1809,6 @@ html_special_form_control(struct part *part, struct form_control *fc)
 
 	fc->g_ctrl_num = renderer_context.g_ctrl_num++;
 
-	/* We don't want to recode hidden fields. */
-	if (fc->type == FC_TEXT || fc->type == FC_PASSWORD ||
-	    fc->type == FC_TEXTAREA) {
-		unsigned char *dv = convert_string(renderer_context.convert_table,
-						   fc->default_value,
-						   strlen(fc->default_value),
-						   part->document->options.cp,
-						   CSM_FORM, NULL, NULL, NULL);
-
-		if (dv) mem_free_set(&fc->default_value, dv);
-	}
-
 	if (list_empty(part->document->forms)) {
 		/* No forms encountered yet, that means a homeless form
 		 * control. Generate a dummy form for those Flying
