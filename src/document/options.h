@@ -22,6 +22,9 @@ struct active_link_options {
  * whether they satisfy the current state of the document options. */
 struct document_options {
 	enum color_mode color_mode;
+	/* cp is the codepage for which the document is being formatted;
+	 * typically it is the codepage of a terminal.  It is set in
+	 * render_document_frames.  */
 	int cp, assume_cp, hard_assume;
 	int margin;
 	int num_links_key;
