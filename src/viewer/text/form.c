@@ -161,9 +161,16 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 	switch (fc->type) {
 		case FC_TEXT:
 		case FC_PASSWORD:
+#ifdef CONFIG_FORMHIST
+			fs->value = null_or_stracpy(
+				get_form_history_value(
+					fc->form->action, fc->name));
+#endif /* CONFIG_FORMHIST */
+			/* fall through */
 		case FC_TEXTAREA:
-			fs->value = stracpy(fc->default_value);
-			fs->state = strlen(fc->default_value);
+			if (fs->value == NULL)
+				fs->value = stracpy(fc->default_value);
+			fs->state = fs->value ? strlen(fs->value) : 0;
 #ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA)
 				fs->state_cell = 0;
@@ -578,18 +585,6 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 		struct form_control *fc = get_link_form_control(l1);
 
 		if (!fc) continue;
-#ifdef CONFIG_FORMHIST
-		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD) {
-			unsigned char *value;
-
-			assert(fc->form);
-			value = get_form_history_value(fc->form->action, fc->name);
-
-			if (value)
-				mem_free_set(&fc->default_value,
-					     stracpy(value));
-		}
-#endif /* CONFIG_FORMHIST */
 		draw_form_entry(term, doc_view, l1);
 
 	} while (l1++ < l2);
