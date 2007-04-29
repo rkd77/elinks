@@ -70,12 +70,12 @@ get_bordercolor(struct html_context *html_context, unsigned char *a, color_T *rg
 	if (!use_document_fg_colors(html_context->options))
 		return;
 
-	at = get_attr_val(a, "bordercolor", html_context->options->cp);
+	at = get_attr_val(a, "bordercolor", html_context->doc_cp);
 	/* Try some other MSIE-specific attributes if any. */
 	if (!at)
-		at = get_attr_val(a, "bordercolorlight", html_context->options->cp);
+		at = get_attr_val(a, "bordercolorlight", html_context->doc_cp);
 	if (!at)
-		at = get_attr_val(a, "bordercolordark", html_context->options->cp);
+		at = get_attr_val(a, "bordercolordark", html_context->doc_cp);
 	if (!at) return;
 
 	decode_color(at, strlen(at), rgb);
@@ -85,7 +85,7 @@ get_bordercolor(struct html_context *html_context, unsigned char *a, color_T *rg
 static void
 get_align(struct html_context *html_context, unsigned char *attr, int *a)
 {
-	unsigned char *al = get_attr_val(attr, "align", html_context->options->cp);
+	unsigned char *al = get_attr_val(attr, "align", html_context->doc_cp);
 
 	if (!al) return;
 
@@ -100,7 +100,7 @@ get_align(struct html_context *html_context, unsigned char *attr, int *a)
 static void
 get_valign(struct html_context *html_context, unsigned char *attr, int *a)
 {
-	unsigned char *al = get_attr_val(attr, "valign", html_context->options->cp);
+	unsigned char *al = get_attr_val(attr, "valign", html_context->doc_cp);
 
 	if (!al) return;
 
@@ -115,7 +115,7 @@ static void
 get_column_width(unsigned char *attr, int *width, int sh,
                  struct html_context *html_context)
 {
-	unsigned char *al = get_attr_val(attr, "width", html_context->options->cp);
+	unsigned char *al = get_attr_val(attr, "width", html_context->doc_cp);
 	int len;
 
 	if (!al) return;
@@ -151,7 +151,7 @@ set_table_frame(struct html_context *html_context, struct table *table,
 
 	table->frame = TABLE_FRAME_BOX;
 
-	al = get_attr_val(attr, "frame", html_context->options->cp);
+	al = get_attr_val(attr, "frame", html_context->doc_cp);
 	if (!al) return;
 
 	if (!strcasecmp(al, "void")) table->frame = TABLE_FRAME_VOID;
@@ -176,7 +176,7 @@ set_table_rules(struct html_context *html_context, struct table *table,
 
 	table->rules = table->border ? TABLE_RULE_ALL : TABLE_RULE_NONE;
 
-	al = get_attr_val(attr, "rules", html_context->options->cp);
+	al = get_attr_val(attr, "rules", html_context->doc_cp);
 	if (!al) return;
 
 	if (!strcasecmp(al, "none")) table->rules = TABLE_RULE_NONE;
@@ -191,7 +191,7 @@ static void
 parse_table_attributes(struct table *table, unsigned char *attr, int real,
                        struct html_context *html_context)
 {
-	table->fragment_id = get_attr_val(attr, "id", html_context->options->cp);
+	table->fragment_id = get_attr_val(attr, "id", html_context->doc_cp);
 
 	get_bordercolor(html_context, attr, &table->bordercolor);
 
@@ -212,18 +212,18 @@ parse_table_attributes(struct table *table, unsigned char *attr, int real,
 	 * interpreted as the value of the frame attribute. It implies
 	 * rules="all" and some default (non-zero) value for the border
 	 * attribute. */
-	table->border = get_num(attr, "border", html_context->options->cp);
+	table->border = get_num(attr, "border", html_context->doc_cp);
 	if (table->border == -1) {
 		table->border =
-		              has_attr(attr, "border", html_context->options->cp)
-			      || has_attr(attr, "rules", html_context->options->cp)
-			      || has_attr(attr, "frame", html_context->options->cp);
+		              has_attr(attr, "border", html_context->doc_cp)
+			      || has_attr(attr, "rules", html_context->doc_cp)
+			      || has_attr(attr, "frame", html_context->doc_cp);
 	}
 
 	if (table->border) {
 		int_upper_bound(&table->border, 2);
 
-		table->cellspacing = get_num(attr, "cellspacing", html_context->options->cp);
+		table->cellspacing = get_num(attr, "cellspacing", html_context->doc_cp);
 		int_bounds(&table->cellspacing, 1, 2);
 	}
 
@@ -231,7 +231,7 @@ parse_table_attributes(struct table *table, unsigned char *attr, int real,
 
 	/* TODO: cellpadding may be expressed as a percentage, this is not
 	 * handled yet. */
-	table->cellpadding = get_num(attr, "cellpadding", html_context->options->cp);
+	table->cellpadding = get_num(attr, "cellpadding", html_context->doc_cp);
 	if (table->cellpadding == -1) {
 		table->vcellpadding = 0;
 		table->cellpadding = !!table->border;
@@ -650,7 +650,7 @@ see:
 			get_align(html_context, t_attr, &c_al);
 			get_valign(html_context, t_attr, &c_val);
 			get_column_width(t_attr, &c_width, sh, html_context);
-			c_span = get_num(t_attr, "span", html_context->options->cp);
+			c_span = get_num(t_attr, "span", html_context->doc_cp);
 			if (c_span == -1)
 				c_span = 1;
 			else if (c_span > HTML_MAX_COLSPAN)
@@ -668,7 +668,7 @@ see:
 
 		add_table_bad_html_end(table, html);
 
-		sp = get_num(t_attr, "span", html_context->options->cp);
+		sp = get_num(t_attr, "span", html_context->doc_cp);
 		if (sp == -1) sp = 1;
 		else if (sp > HTML_MAX_COLSPAN) sp = HTML_MAX_COLSPAN;
 
@@ -745,7 +745,7 @@ see:
 		get_valign(html_context, t_attr, &l_val);
 		get_bgcolor(html_context, t_attr, &last_bgcolor);
 		mem_free_set(&l_fragment_id,
-		             get_attr_val(t_attr, "id", html_context->options->cp));
+		             get_attr_val(t_attr, "id", html_context->doc_cp));
 		row++;
 		col = 0;
 		goto see;
@@ -788,7 +788,7 @@ see:
 
 	cell->align = l_al;
 	cell->valign = l_val;
-	cell->fragment_id = get_attr_val(t_attr, "id", html_context->options->cp);
+	cell->fragment_id = get_attr_val(t_attr, "id", html_context->doc_cp);
 	if (!cell->fragment_id && l_fragment_id) {
 		cell->fragment_id = l_fragment_id;
 		l_fragment_id = NULL;
@@ -812,12 +812,12 @@ see:
 	get_valign(html_context, t_attr, &cell->valign);
 	get_bgcolor(html_context, t_attr, &cell->bgcolor);
 
-	colspan = get_num(t_attr, "colspan", html_context->options->cp);
+	colspan = get_num(t_attr, "colspan", html_context->doc_cp);
 	if (colspan == -1) colspan = 1;
 	else if (!colspan) colspan = -1;
 	else if (colspan > HTML_MAX_COLSPAN) colspan = HTML_MAX_COLSPAN;
 
-	rowspan = get_num(t_attr, "rowspan", html_context->options->cp);
+	rowspan = get_num(t_attr, "rowspan", html_context->doc_cp);
 	if (rowspan == -1) rowspan = 1;
 	else if (!rowspan) rowspan = -1;
 	else if (rowspan > HTML_MAX_ROWSPAN) rowspan = HTML_MAX_ROWSPAN;

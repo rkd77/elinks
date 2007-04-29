@@ -51,6 +51,10 @@ struct html_context {
 
 	struct document_options *options;
 
+	/* doc_cp is the charset of the document, i.e. part->document->cp.
+	 * It is copied here because part->document is NULL sometimes.  */
+	int doc_cp;
+
 	/* For:
 	 * html/parser/parse.c
 	 * html/parser/stack.c

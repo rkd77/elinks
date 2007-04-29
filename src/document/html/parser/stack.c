@@ -90,7 +90,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	 * any element, executing it when that element is fully loaded. */
 	if (e->options)
 		onload = get_attr_val(e->options, "onLoad",
-		                     html_context->options->cp);
+		                     html_context->doc_cp);
 	if (html_context->part
 	    && html_context->part->document
 	    && onload && *onload && *onload != '^') {
