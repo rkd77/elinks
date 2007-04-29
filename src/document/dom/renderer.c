@@ -138,7 +138,7 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 			/* When someone will get here earlier than at 4am,
 			 * this will be done in some init function, perhaps
 			 * not overriding the user's default stylesheet. */
-			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors) + 1);
+			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
 		}
 
 		if (name)
