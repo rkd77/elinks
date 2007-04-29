@@ -656,7 +656,7 @@ pp:
 		if (p[0] == '\r') {
 			if (p[1] == '\n'
 			    || (p > fc->default_value && p[-1] == '\n')) {
-				memcpy(p, p + 1, strlen(p));
+				memmove(p, p + 1, strlen(p));
 				p--;
 			} else {
 				p[0] = '\n';
