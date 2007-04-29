@@ -2234,6 +2234,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 #ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF8 */
+	html_context->doc_cp = document->cp;
 
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,
