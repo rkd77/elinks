@@ -649,7 +649,9 @@ pp:
 
 	fc->id = get_attr_val(attr, "id", html_context->doc_cp);
 	fc->name = get_attr_val(attr, "name", html_context->doc_cp);
-	fc->default_value = memacpy(html, p - html);
+	fc->default_value = convert_string(NULL, html, p - html,
+					   html_context->doc_cp,
+					   CSM_DEFAULT, NULL, NULL, NULL);
 	for (p = fc->default_value; p && p[0]; p++) {
 		/* FIXME: We don't cope well with entities here. Bugzilla uses
 		 * &#13; inside of textarea and we fail miserably upon that
