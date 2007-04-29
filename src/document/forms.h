@@ -86,6 +86,10 @@ struct form_control {
 	unsigned char *id; /* used by scripts */
 	unsigned char *name;
 	unsigned char *alt;
+	/* For FC_TEXT, FC_PASSWORD, and FC_TEXTAREA: @default_value
+	 * is in the charset of the document.
+	 *
+	 * For FC_FILE: The parser does not set @default_value.  */
 	unsigned char *default_value;
 	/* For FC_SELECT. I have not found a better place for it. --witekfl */
 	unsigned char *onchange;
