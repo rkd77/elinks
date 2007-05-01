@@ -64,10 +64,10 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 		 enum listbox_item_type type, void *data, int add_position);
 
 #define add_listbox_folder(browser, root,data) \
-	add_listbox_item(browser, root, BI_FOLDER, data, 1)
+	add_listbox_item(browser, root, BI_FOLDER, data, -1)
 
 #define add_listbox_leaf(browser, root, data) \
-	add_listbox_item(browser, root, BI_LEAF, data, 1)
+	add_listbox_item(browser, root, BI_LEAF, data, -1)
 
 /* We use hierarchic listbox browsers for the various managers. They consist
  * of a listbox widget and some buttons.

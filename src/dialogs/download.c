@@ -509,9 +509,6 @@ void
 download_manager(struct session *ses)
 {
 	hierbox_browser(&download_browser, ses);
-
-	/* FIXME: It's workaround for bug 397. Real fix is needed. */
-	download_browser.do_not_save_state = 1;
 }
 
 void
