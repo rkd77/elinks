@@ -93,7 +93,7 @@ add_to_ml(struct memory_list **ml, ...)
 		errline = line, errfile = file;
 #else
 		errline = 0, errfile = "?";
-#endif 
+#endif
 		elinks_error("add_to_ml(%p, NULL, ...)", ml);
 #endif
 		return;

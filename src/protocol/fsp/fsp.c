@@ -148,7 +148,7 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 	add_to_string(&string, "\t<a href=\"");
 	/* The result of encode_uri_string does not include '&' or '<'
 	 * which could mess up the HTML.  */
-	encode_uri_string(&string, fentry->name, namelen, 0); 
+	encode_uri_string(&string, fentry->name, namelen, 0);
 	if (fentry->type == FSP_RDTYPE_DIR) {
 		add_to_string(&string, "/\">");
 		if (*dircolor) {

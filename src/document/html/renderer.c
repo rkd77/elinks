@@ -161,7 +161,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 
 	line = &document->data[y];
 	orig_length = line->length;
-	
+
 	if (length < orig_length)
 		return orig_length;
 

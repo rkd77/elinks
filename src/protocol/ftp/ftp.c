@@ -725,7 +725,7 @@ add_file_cmd_to_str(struct connection *conn)
 		    || !add_crlf_to_string(&command)
 
 		    || !add_string_to_string(&command, &ftp_data_command)
-			
+
 		    || !add_to_string(&command, "CWD ")
 		    || !add_string_to_string(&command, &pathname)
 		    || !add_crlf_to_string(&command)
