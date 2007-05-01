@@ -463,7 +463,7 @@ do_move(struct session *ses, struct download **download_p)
 	struct cache_entry *cached;
 
 	assert(download_p && *download_p);
-	assertm(ses->loading_uri, "no ses->loading_uri");
+	assertm(ses->loading_uri != NULL, "no ses->loading_uri");
 	if_assert_failed return DO_MOVE_ABORT;
 
 	if (ses->loading_uri->protocol == PROTOCOL_UNKNOWN)

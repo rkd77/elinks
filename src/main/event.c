@@ -132,7 +132,7 @@ get_event_id(unsigned char *name)
 	if (item) {
 		struct event *event = item->value;
 
-		assertm(event, "Hash item with no value");
+		assertm(event != NULL, "Hash item with no value");
 		if_assert_failed return EVENT_NONE;
 
 		return event->id;

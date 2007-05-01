@@ -194,7 +194,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 	unsigned char *lbracket, *rbracket;
 #endif
 
-	assertm(uristring, "No uri to parse.");
+	assertm(uristring != NULL, "No uri to parse.");
 	memset(uri, 0, sizeof(*uri));
 
 	/* Nothing to do for an empty url. */
@@ -923,7 +923,7 @@ join_urls(struct uri *base, unsigned char *rel)
 		}
 	}
 
-	assertm(base->data, "bad base url");
+	assertm(base->data != NULL, "bad base url");
 	if_assert_failed return NULL;
 
 	path = base->data;
@@ -1201,7 +1201,7 @@ parse_uri:
 			   ? uri.port + uri.portlen - struri(&uri)
 			   : uri.host + uri.hostlen - struri(&uri) + uri.ipv6 /* ']' */;
 
-		assertm(uri.host, "uri.host not set after no host slash error");
+		assertm(uri.host != NULL, "uri.host not set after no host slash error");
 		insert_in_string(&newurl, offset, "/", 1);
 		goto parse_uri;
 	}
@@ -1596,7 +1596,7 @@ done_uri(struct uri *uri)
 	item = get_hash_item(uri_cache.map, string, length);
 	entry = item ? item->value : NULL;
 
-	assertm(entry, "Releasing unknown URI [%s]", string);
+	assertm(entry != NULL, "Releasing unknown URI [%s]", string);
 	del_hash_item(uri_cache.map, item);
 	mem_free(entry);
 

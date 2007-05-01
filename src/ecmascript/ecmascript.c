@@ -311,7 +311,9 @@ ecmascript_timeout_handler(void *i)
 	struct timeout_data *td = i;
 	struct ecmascript_interpreter *interpreter = td->interpreter;
 
-	assertm(interpreter->vs->doc_view, "setTimeout: vs with no document (e_f %d)", interpreter->vs->ecmascript_fragile);
+	assertm(interpreter->vs->doc_view != NULL,
+		"setTimeout: vs with no document (e_f %d)",
+		interpreter->vs->ecmascript_fragile);
 	del_from_list(td);
 	if (init_string(&code)) {
 		add_to_string(&code, td->code);

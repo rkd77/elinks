@@ -171,7 +171,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 		return;
 	}
 
-	assertm(func, "No menu function");
+	assertm(func != NULL, "No menu function");
 	if_assert_failed return;
 
 	func(term, it_data, data);

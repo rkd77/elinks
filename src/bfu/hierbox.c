@@ -43,7 +43,7 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 	struct listbox_item *item;
 
 	if (!root) {
-		assertm(browser, "Nowhere to add new list box item");
+		assertm(browser != NULL, "Nowhere to add new list box item");
 		root = &browser->root;
 	}
 

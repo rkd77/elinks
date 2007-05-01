@@ -139,7 +139,7 @@ straconcat(const unsigned char *str, ...)
 	unsigned char *s;
 	unsigned int len;
 
-	assertm(str, "[straconcat]");
+	assertm(str != NULL, "[straconcat]");
 	if_assert_failed { return NULL; }
 
 	len = strlen(str);
@@ -250,7 +250,7 @@ init_string__(const unsigned char *file, int line, struct string *string)
 init_string(struct string *string)
 #endif
 {
-	assertm(string, "[init_string]");
+	assertm(string != NULL, "[init_string]");
 	if_assert_failed { return NULL; }
 
 	string->length = 0;
@@ -271,7 +271,7 @@ init_string(struct string *string)
 inline void
 done_string(struct string *string)
 {
-	assertm(string, "[done_string]");
+	assertm(string != NULL, "[done_string]");
 	if_assert_failed { return; }
 
 	if (string->source) {
@@ -302,7 +302,7 @@ add_to_string(struct string *string, const unsigned char *source)
 inline struct string *
 add_crlf_to_string(struct string *string)
 {
-	assertm(string, "[add_crlf_to_string]");
+	assertm(string != NULL, "[add_crlf_to_string]");
 	if_assert_failed { return NULL; }
 
 	check_string_magic(string);
@@ -377,7 +377,7 @@ string_concat(struct string *string, ...)
 	va_list ap;
 	const unsigned char *source;
 
-	assertm(string, "[string_concat]");
+	assertm(string != NULL, "[string_concat]");
 	if_assert_failed { return NULL; }
 
 	check_string_magic(string);
@@ -496,7 +496,7 @@ add_to_string_list(struct list_head *list, const unsigned char *source,
 void
 free_string_list(struct list_head *list)
 {
-	assertm(list, "[free_string_list]");
+	assertm(list != NULL, "[free_string_list]");
 	if_assert_failed return;
 
 	while (!list_empty(*list)) {

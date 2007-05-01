@@ -323,7 +323,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	if_assert_failed return;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link %d has no form control", (int) (link - doc_view->document->links));
+	assertm(fc != NULL, "link %d has no form control", (int) (link - doc_view->document->links));
 	if_assert_failed return;
 
 	fs = find_form_state(doc_view, fc);
@@ -1444,7 +1444,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	if_assert_failed return FRAME_EVENT_OK;
 
 	fc = get_link_form_control(link);
-	assertm(fc, "link has no form control");
+	assertm(fc != NULL, "link has no form control");
 	if_assert_failed return FRAME_EVENT_OK;
 
 	if (fc->mode == FORM_MODE_DISABLED || ev->ev != EVENT_KBD
