@@ -16,6 +16,8 @@ To be released as 0.11.4.
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/
+* bug 788: define STRLEN n_a only if needed, to avoid unused-variable
+  warnings with Perl v5.8.8 and later
 * bug 928: properly display no-break spaces in a UTF-8 document if the
   terminal uses some other charset
 * bug 947: document.html.wrap_nbsp also affects text in tables
