@@ -1,8 +1,8 @@
 Release info
 ============
 
-You can see the complete list of recent changes, bugfixes and new features in
-the link:http://pasky.or.cz/gitweb.cgi[gitweb interface]. See the ChangeLog
+You can see the complete list of recent changes, bugfixes and new features
+in the http://pasky.or.cz/gitweb.cgi[gitweb interface]. See the ChangeLog
 file for details.
 
 ELinks 0.13.GIT now:
@@ -87,7 +87,6 @@ roughly in decreasing order of importance.
     move-forward-word
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
     dialogs.
-  - (bugfix 396) Never show empty filename in the what-to-do dialog
   - (bugfix 930) Refresh status bar when key prefix is eaten.
 * Changes in support for URI schemes, protocols, caching, and encodings
   - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
@@ -105,7 +104,6 @@ roughly in decreasing order of importance.
   - (enhancement) FSP progress indicator and password prompt.
   - (bugfix) Support much longer locale-specific timestamps when
     formatting a directory listing.  LC_TIME=fi_FI.UTF-8 now works.
-  - (bugfix 712) GnuTLS works on https://www-s.uiuc.edu
 * Changes in parsing and rendering of HTML (without DOM)
   - (bugfix) Use frame->name instead of target avoiding possible segfault.
   - (bugfix 284) Render closing parentheses for HTML elements SUB, SUP
@@ -115,11 +113,7 @@ roughly in decreasing order of importance.
   - (enhancement) Add support for parsing space separated CSS class
     attribute values
   - (bugfix 387) Treat &#013; inside <pre>...</pre> as a newline.
-  - (bugfix 928) Properly display no-break spaces in a UTF-8 document
-    if the terminal uses some other charset.
-  - (bugfix 947) document.html.wrap_nbsp also affects text in tables.
   - (bugfix 816) Convert entity references in input/@value only once.
-  - (Debian bug 380347) Prevent a buffer overflow in entity_cache.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature 121) If a mailcap entry indicates copiousoutput,
     ELinks itself acts as a pager.
@@ -140,7 +134,6 @@ roughly in decreasing order of importance.
   - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
     (Keep reading user-hooks.scm, too.)
   - (bugfix) Lua: Don't write to the string returned by lua_tostring.
-  - (bugfix 945) Lua: Don't crash if a script calls e.g. error(nil).
   - (enhancement) SMJS: elinks.alert no longer displays as an "error".
   - (new feature) SMJS: New properties elinks.action, elinks.globhist,
     elinks.vs.
@@ -269,6 +262,21 @@ have already been considered.
   - (bugfix) Don't claim that the authentication is for HTTP.
     (commit ef2f6383c6f0bed576e6f69030eacc4931b42a27)
 //////////////////////////////////////////////////////////////////////
+
+ELinks 0.11.3.GIT now:
+----------------------
+
+To be released as 0.11.4.
+
+* critical bug 945: don't crash if a Lua script calls e.g. error(nil)
+* important Debian bug 380347: prevent a buffer overflow in entity_cache
+  and a possible subsequent crash
+* bug 712: GnuTLS works on https://www-s.uiuc.edu/
+* bug 928: properly display no-break spaces in a UTF-8 document if the
+  terminal uses some other charset
+* bug 947: document.html.wrap_nbsp also affects text in tables
+* fix passive FTP over IPv6 when connect() fails with EINPROGRESS
+* minor bug 396: never show empty filename in the what-to-do dialog
 
 ELinks 0.11.3:
 --------------
