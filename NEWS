@@ -119,6 +119,7 @@ roughly in decreasing order of importance.
     if the terminal uses some other charset.
   - (bugfix 947) document.html.wrap_html also affects text in tables.
   - (bugfix 816) Convert entity references in input/@value only once.
+  - (Debian bug 380347) Prevent a buffer overflow in entity_cache.
 * Changes in parsing and rendering of non-HTML content-types
   - (new feature 121) If a mailcap entry indicates copiousoutput,
     ELinks itself acts as a pager.
