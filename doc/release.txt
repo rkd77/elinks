@@ -10,6 +10,8 @@ When releasing a new version
    Write a small changelog highlighting the most important changes. Changes
    by new contributors are always important!
  - Update NEWS file and commit. Remember to add the new version number!
+   Don't add the release date yet though; it will be added after the release,
+   from the date in the mailing list archives. 
  - Change VERSION in the top of configure.in to hold the new version number.
  - Commit only this change.
  - Create a signed tag having the version ("ELinks X.X.X") as the subject and
