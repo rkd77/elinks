@@ -17,9 +17,8 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (049cc9c6b37951a739dfd6b20ca92c170188824c).  The next
-step will be to scan through Bugzilla and look for bug numbers that
-were not mentioned in related commit messages.
+ELinks 0.12.GIT (6b2ef468dce9e289c292f7327056f8c9e70023b5) and related
+bug numbers.
 
 The list no doubt includes several changes that are not really
 important enough.  Please move them to the separate "should be removed
@@ -70,6 +69,9 @@ roughly in decreasing order of importance.
   - (new feature) Support Ctrl+Alt+letter key combinations.
   - (bugfix) Subprocess forked for SIGTSTP calls _exit, not exit.
   - (enhancement) Turn terminal transparency off by default.
+  - (bugfix 776) "elinks -remote http://elinks.cz/" no longer clears
+    the screen.
+  - (bugfix 948) wrong UTF-8 output after using charset menu
 * Changes in cookies and bookmarks
   - (new feature) "Add server" button in the cookie manager.
   - (enhancement) Tell the user how to move bookmarks.
@@ -81,8 +83,8 @@ roughly in decreasing order of importance.
   - (bugfix 355) Add documents displayed via "What to do" dialog to
     globhist
   - (new feature) Autocreate directories needed to download a file.
-  - (new feature) Option ui.show_menu_bar_always
-  - (new feature) Option ui.tabs moves the tab bar to the top.
+  - (new feature 688) Option ui.show_menu_bar_always
+  - (new feature 687) Option ui.tabs.top
   - (new feature) New actions: kill-word-back, move-backward-word,
     move-forward-word
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
@@ -95,7 +97,6 @@ roughly in decreasing order of importance.
   - (new feature) HTTP negotiate-auth using GSSAPI
   - (bugfix 770) Download resuming simply restarts the download
   - (bugfix 691) Fix IPv4 DNS lookup bug
-  - (enhancement 790) If-Modified-Since and If-None-Match
   - (bugfix) gzip_read: always call gzclearerr
   - (bugfix 107) Recognize "localhost" in file: URIs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
@@ -195,12 +196,18 @@ The following changes should be removed from NEWS before ELinks 0.12.0
 is released.  They are currently listed here just to show that they
 have already been considered.
 
+* Not clear whether the bugs have been fixed:
+  - (bugfix 725) Fixes version checking for Ruby in 'configure'
+  - (bugfix 674) Reproduceable crashes while trying to unsubscribe
+    from a community on Orkut
+  - (enhancement 790) If-Modified-Since and If-None-Match
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
-  - (bugfix 725) Fixes version checking for Ruby in 'configure'
   - (bugfix 890) Change colors 0-15 to match xterm defaults.
     The bug report also requests asking xterm to report its palette,
     but that part will be delayed to 0.13 or later.
+  - (bugfix 784) attributes corrupt character entity references if
+    terminal charset != document charset
 * Fixed bugs that were not in previous versions:
   - (bugfix) Fix a crash when adding a server in the cookie manager.
   - (bugfix) cookies: "Add Server" ignores "cookies.accept_policy".
@@ -208,8 +215,6 @@ have already been considered.
   - (bugfix 747) Properly deselect the main menu instead of crashing
   - (bugfix 778) ELinks crashes on binary files when
     document.plain.display_links is set
-  - (bugfix 784) UTF-8 mode misconverts non-ASCII entity in Latin-1
-    document
   - (bugfix 782) UTF-8 buffer overwritten while in use
   - (bugfix) switch_to_tab: Prevent "tab number out of range"
     assertion failure.
