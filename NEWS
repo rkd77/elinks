@@ -22,168 +22,159 @@ do list all bug numbers).  It might be a good idea to sort the entries
 roughly in decreasing order of importance.
 //////////////////////////////////////////////////////////////////////
 
-* Notable new features
-  - (unfinished enhancement 822) UTF-8 as terminal charset: not
-    merely UTF-8 I/O of a unibyte codepage as in previous versions.
-    Double-cell (aka fullwidth) and non-BMP characters work too, but
-    combining characters and right-to-left text do not.  The only
-    multibyte charset ELinks can decode is still UTF-8, so if the
-    server outputs e.g. Shift-JIS, you'd better recode with a proxy.
-  - (enhancement 844) SMB protocol using libsmbclient.  This replaces
-    the smbclient-based code that was disabled in ELinks 0.11.2.
-* Incompatibilities
-  - ECMAScript support is now disabled by default.  It has known
-    bugs (548, 755, 771) with which malicious web pages can crash or
-    hang ELinks, and its security goals are undocumented.  If you must
-    enable ECMAScript support, it would be prudent to restrict the
-    ELinks process with a sandbox of some kind.
-  - (bug 871) The numbering of terminal.*.colors no longer depends on
-    config options.  This change makes elinks.conf portable between
-    different configurations but unfortunately not between this and
-    previous versions.
-  - Changed Python goto_url_hook(current) to goto_url_hook(new).  The
-    hook can call the new function elinks.current_url() if desired.
-    The Python scripting back-end is much more featureful than in
-    previous releases, but it is still considered experimental.
-* Miscellaneous
-  - (enhancement 752) Documentation updates
-  - (enhancement 381) Reduce memory consumption of codepages and some
-    other arrays.
-  - (enhancement) Reject invalid UTF-8 input from documents and
-    terminals.
-* Changes in terminal support
-  - (enhancement) Mouse wheel support on BSD via moused -z 4
-  - (enhancement) Support for mouse wheel over GPM
-  - (bugfix 724) Better parsing of escape sequences and control
-    sequences from the terminal.
-  - (bugfix) Decode UTF-8 only from bytes, not from codes of special
-    keys.
-  - (new feature) 24-bit truecolor mode
-  - (enhancement) "Resize terminal" tries to use the window size
-    increment.
-  - (new feature) Support Ctrl+Alt+letter key combinations.
-  - (bugfix) Subprocess forked for SIGTSTP calls _exit, not exit.
-  - (enhancement) Turn terminal transparency off by default.
-  - (bugfix 776) "elinks -remote http://elinks.cz/" no longer clears
-    the screen.
-  - (bugfix 948) wrong UTF-8 output after using charset menu
-* Changes in cookies and bookmarks
-  - (new feature) "Add server" button in the cookie manager.
-  - (enhancement) Tell the user how to move bookmarks.
-  - (enhancement 887) Save in cookie manager should save cookies even
-    if unmodified.
-* Changes in the user interface
-  - (new feature 145) Internal clipboard support
-  - (enhancement) Localization updates
-  - (bugfix 355) Add documents displayed via "What to do" dialog to
-    globhist
-  - (new feature) Autocreate directories needed to download a file.
-  - (new feature 688) Option ui.show_menu_bar_always
-  - (new feature 687) Option ui.tabs.top
-  - (new feature) New actions: kill-word-back, move-backward-word,
-    move-forward-word
-  - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
-    dialogs.
-  - (bugfix 930) Refresh status bar when key prefix is eaten.
-* Changes in support for URI schemes, protocols, caching, and encodings
-  - (bugfix) Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
-  - (new feature) LZMA decompression
-  - (bugfix 517) Fixed and enabled HTTP bzip2 decompression
-  - (new feature) HTTP negotiate-auth using GSSAPI
-  - (bugfix 770) Download resuming simply restarts the download
-  - (enhancement 790) If-Modified-Since and If-None-Match
-  - (bugfix) gzip_read: always call gzclearerr
-  - (bugfix 107) Recognize "localhost" in file: URIs.
-  - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
-    after HTTP proxy was changed
-  - (bugfix) Encode and decode filenames in FSP URLs.
-  - (enhancement) FSP progress indicator and password prompt.
-  - (bugfix) Support much longer locale-specific timestamps when
-    formatting a directory listing.  LC_TIME=fi_FI.UTF-8 now works.
-* Changes in parsing and rendering of HTML (without DOM)
-  - (bugfix) Use frame->name instead of target avoiding possible segfault.
-  - (bugfix 284) Render closing parentheses for HTML elements SUB, SUP
-    in the same line; don't let them fall to the next.
-  - (enhancement) Show quote characters for HTML element Q, rather
-    than italics.
-  - (enhancement) Add support for parsing space separated CSS class
-    attribute values
-  - (bugfix 387) Treat &#013; inside <pre>...</pre> as a newline.
-  - (bugfix 816) Convert entity references in input/@value only once.
-* Changes in parsing and rendering of non-HTML content-types
-  - (new feature 121) If a mailcap entry indicates copiousoutput,
-    ELinks itself acts as a pager.
-  - (new feature 916) If a mailcap entry has no %s, provide the file
-    as stdin.
-* Changes in the document viewer and tabs
-  - (new feature) Highlight links as one enters link prefixes.
-  - (new feature) Backspace backs out the last digit of the prefix.
-  - (bugfix) Tabs opened by -remote now go behind existing dialogs.
-  - (new feature 622) -dump-color-mode
-  - (bugfix) Fix accesskeys so that they work when priority is 0
-  - (enhancement) Text type-ahead searching: don't follow current link
-    on enter
-  - (bugfix) Take the terminal charset in account when comparing
-    accesskeys.
-  - (enhancement) Display accesskeys as e.g. (Alt-f), not just (f).
-* Changes in user scripting
-  - (enhancement) Guile: Read hooks.scm rather than internal-hooks.scm.
-    (Keep reading user-hooks.scm, too.)
-  - (bugfix) Lua: Don't write to the string returned by lua_tostring.
-  - (enhancement) SMJS: elinks.alert no longer displays as an "error".
-  - (new feature) SMJS: New properties elinks.action, elinks.globhist,
-    elinks.vs.
-  - (new feature) SMJS: New function elinks.load_uri.
-  - (new feature) SMJS: New method elinks.execute.
-  - (enhancement) SMJS: Garbage-collect SMJS objects before flushing
-    caches.
-* Build system and compile-time errors (ignore if you don't build ELinks)
-  - (bugfix) Fixed some bugs about compiling outside the source
-    directory.
-  - (bugfix) Don't use cmp -b, which FreeBSD doesn't support.
-  - (bugfix) Don't include <sys/param.h> for MIN and MAX because it
-    may interfere with CONFIG_IPV6 on Linux.
-  - (bugfix) When the configure script cleans old object files, this
-    no longer causes it to loop.
-  - (experimental, new feature) --with-python=DIRECTORY, --with-gc=DIRECTORY
-  - (bugfix) Include <sys/types.h> and fix compilation on an old
-    PPC/Debian system
-  - (bitrot) Fix compilation under gcc 4.x. Backported from gentoo portage.
-    Also, reduce warnings on gcc 4.2 snapshots.
-  - (bitrot) Update SpiderMonkey configure check Debian compatibility
-  - (new feature 779) make uninstall
-  - (experimental, new feature) Native Win32 port
-  - (enhancement) If make -k was used and a sub-Make fails, build the
-    rest before propagating.
-  - (enhancement) Avoid compilation of vernum.c in 'make install'
-  - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
-  - (bitrot) Fix two warnings on Mac OS X.
-  - (bugfix 725) Fixes version checking for Ruby in 'configure'
-* (experimental) Changes in ECMAScript support
-  - (new feature) SEE ECMAScript backend, an alternative to SpiderMonkey.
-  - (new feature) Handling onsubmit
-  - (workaround) window.open remembers the last few URLs and doesn't
-    reopen them when incremental rendering reruns the onload script.
-  - (enhancement) Recognize document.location.href for SMJS.
-  - (enhancement) Better handling of form.action assignments
-  - (enhancement) form[x] looks up controls also by id, not only name.
-  - (new feature) New property input.selectedIndex.
-  - (new feature) Activate link only when onClick returns true.
-  - (enhancement) input.accessKey can be any Unicode character except
-    U+0000.
-  - (new feature) window.setTimeout, window.status
-* (experimental) Changes in SGML/DOM implementation
-  - (new feature) Minimalistic RSS renderer
-  - (enhancement) Source highlighting also recognizes
-    application/xhtml+xml and application/docbook+xml.  It doesn't yet
-    support arbitrary XML though.
-  - (enhancement) Make it possible to use more CSS properties with the
-    source highlighting
-  - (enhancement) Handle <base href=""> for HTML source rendering
-  - (enhancement) Add support for scanning comment endings such as
-    '--!>' correctly
-  - (new feature) Incremental parsing
-  - And more.
+Notable new features:
+* unfinished enhancement 822: UTF-8 as terminal charset, not
+  merely UTF-8 I/O of a unibyte codepage as in previous versions.
+  Double-cell (aka fullwidth) and non-BMP characters work too, but
+  combining characters and right-to-left text do not.  The only
+  multibyte charset ELinks can decode is still UTF-8, so if the
+  server outputs e.g. Shift-JIS, you'd better recode with a proxy.
+* enhancement 844: SMB protocol using libsmbclient.  This replaces
+  the smbclient-based code that was disabled in ELinks 0.11.2.
+
+Incompatibilities:
+* ECMAScript support is now disabled by default.  It has known
+  bugs (548, 755, 771) with which malicious web pages can crash or
+  hang ELinks, and its security goals are undocumented.  If you must
+  enable ECMAScript support, it would be prudent to restrict the
+  ELinks process with a sandbox of some kind.
+* bug 871: The numbering of terminal.*.colors no longer depends on
+  config options.  This change makes elinks.conf portable between
+  different configurations but unfortunately not between this and
+  previous versions.
+* Changed Python goto_url_hook(current) to goto_url_hook(new).  The
+  hook can call the new function elinks.current_url() if desired.
+  The Python scripting back-end is much more featureful than in
+  previous releases, but it is still considered experimental.
+* Guile scripting reads hooks.scm rather than internal-hooks.scm.
+  (It still reads user-hooks.scm, too.)
+
+Miscellaneous:
+* minor bug 752 and other documentation updates
+* enhancement 381: reduce memory consumption of codepages and some
+  other arrays
+
+Changes in terminal support:
+* bug 724: better parsing of escape sequences and control
+  sequences from the terminal
+* bug 776: "elinks -remote http://elinks.cz/" no longer clears the
+  screen
+* bug 948: fix wrong UTF-8 output after the charset menu was used
+* enhancement: mouse wheel support over GPM, and on BSD via moused -z 4
+* enhancement: 24-bit truecolor mode
+* enhancement: support Ctrl+Alt+letter key combinations
+* enhancement: turn terminal transparency off by default
+
+Changes in cookies:
+* enhancement: "Add server" button in the cookie manager
+* enhancement 887: "Save" in the cookie manager now saves cookies even
+  if unmodified.
+
+Changes in the user interface:
+* bug 355: add documents displayed via "What to do" dialog to the
+  global history
+* trivial bug 930: refresh status bar when key prefix is eaten
+* enhancement 145: internal clipboard support
+* enhancement 687: option ui.tabs.top
+* enhancement 688: option ui.show_menu_bar_always
+* enhancement: new actions kill-word-back, move-backward-word,
+  move-forward-word
+
+Changes in support for URI schemes, protocols, caching, and encodings:
+* critical bug 756: "assertion (cached)->object.refcount >= 0 failed"
+  after HTTP proxy was changed
+* bug 107: recognize "localhost" in file: URIs
+* Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
+* encode and decode filenames in FSP URLs
+* gzip_read: always call gzclearerr
+* support much longer locale-specific timestamps when formatting a
+  directory listing.  LC_TIME=fi_FI.UTF-8 now works.
+* enhancement 517: fixed and enabled HTTP bzip2 decompression
+* enhancement 790: If-Modified-Since and If-None-Match
+* enhancement: autocreate directories needed to download a file
+* enhancement: LZMA decompression
+* enhancement: HTTP negotiate-auth using GSSAPI
+* enhancement: FSP progress indicator and password prompt
+
+Changes in parsing and rendering of HTML (without DOM):
+* bug 284: render closing bracket for HTML element SUB in the same
+  line; don't let it fall to the next
+* bug 387: treat &#013; inside <pre>...</pre> as a newline
+* bug 816: convert entity references in input/@value only once
+* enhancement: show quote characters for HTML element Q, rather than
+  italics
+* enhancement: add support for parsing space separated CSS class
+  attribute values
+
+Changes in parsing and rendering of non-HTML content-types:
+* bug 916: if a mailcap entry has no %s, provide the file as stdin
+* enhancement 121: if a mailcap entry indicates copiousoutput, ELinks
+  itself acts as a pager
+
+Changes in the document viewer and tabs:
+* tabs opened by -remote now go behind existing dialogs
+* several accesskey fixes
+* enhancement 622: -dump-color-mode
+* enhancement: highlight links as one enters link prefixes
+* enhancement: backspace backs out the last digit of the prefix
+* enhancement: in text type-ahead searching, don't follow current link
+  on enter
+
+Changes in user scripting:
+* in Lua: don't write to the string returned by lua_tostring
+* enhancement in SMJS: elinks.alert no longer displays as an "error"
+* enhancement in SMJS: new properties elinks.action, elinks.globhist,
+  elinks.vs
+* enhancement in SMJS: new function elinks.load_uri
+* enhancement in SMJS: new method elinks.execute
+* enhancement in SMJS: garbage-collect SMJS objects on File -> Flush
+  all caches.  This is a workaround to how cache_entry SMJS objects
+  added in ELinks 0.11.0 prevent ELinks from freeing cache entries
+  until SMJS collects them as garbage.
+
+Build system and compile-time errors (ignore if you don't build ELinks):
+* bug 725: fix version checking for Ruby in 'configure'
+* fixed some bugs about compiling outside the source directory
+* don't use cmp -b, which FreeBSD doesn't support
+* don't include <sys/param.h> for MIN and MAX because it may interfere
+  with CONFIG_IPV6 on Linux
+* when the configure script cleans old object files, this no longer
+  causes it to loop
+* use $(CPPFLAGS) rather than $(AM_CFLAGS)
+* fix compilation under gcc 4.x. Backported from gentoo portage.
+* include <sys/types.h> and fix compilation on an old PPC/Debian system
+  (bug 936 may be related)
+* update SpiderMonkey configure check Debian compatibility
+* enhancement: if make -k was used and a sub-Make fails, build the
+  rest before propagating
+* enhancement: avoid compilation of vernum.c in 'make install'
+* enhancement: make uninstall
+* experimental enhancements: --with-python=DIRECTORY, --with-gc=DIRECTORY
+* experimental enhancement: native Win32 port
+
+Changes in the experimental ECMAScript support:
+* disabled by default, as mentioned under "Incompatibilities" above
+* enhancement: SEE ECMAScript backend, an alternative to SpiderMonkey
+* enhancement: handling onsubmit
+* workaround: window.open remembers the last few URLs and doesn't
+  reopen them when incremental rendering reruns the onload script.
+* enhancement: better handling of form.action assignments
+* enhancement: form[x] looks up controls also by id, not only name
+* enhancement: added document.location.href, input.selectedIndex,
+  window.setTimeout, window.status
+
+Changes in the experimental SGML/DOM implementation:
+- enhancement: minimalistic RSS renderer
+- enhancement: source highlighting also recognizes
+  application/xhtml+xml and application/docbook+xml.  It doesn't yet
+  support arbitrary XML though.
+- enhancement: make it possible to use more CSS properties with the
+  source highlighting
+- enhancement: handle <base href=""> for HTML source rendering
+- enhancement: add support for scanning comment endings such as
+  '--!>' correctly
+- enhancement: incremental parsing
+- and more.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.12.0
@@ -193,6 +184,7 @@ have already been considered.
 * Not clear whether the bugs have been fixed:
   - (bugfix 674) Reproduceable crashes while trying to unsubscribe
     from a community on Orkut
+  - (bugfix 770) Download resuming simply restarts the download
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
   - (bugfix 890) Change colors 0-15 to match xterm defaults.
@@ -229,6 +221,11 @@ have already been considered.
     as entity references
   - (bugfix 935) Yes and No buttons override the bottom border of the
     dialog.
+  - (bugfix in SEE) Use frame->name instead of target avoiding
+    possible segfault.
+* Already backported to a previous release:
+  - (enhancement) Activate link only when onClick returns true.
+    Fixed bug 786 in ELinks 0.11.2.
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -257,6 +254,21 @@ have already been considered.
     (commit 539f756438fca4264ab937b2ccfba2351e916a16)
   - (bugfix) Don't claim that the authentication is for HTTP.
     (commit ef2f6383c6f0bed576e6f69030eacc4931b42a27)
+  - (enhancement) Reject invalid UTF-8 input from documents and
+    terminals
+  - (bugfix) Decode UTF-8 only from bytes, not from codes of special
+    keys.
+  - (enhancement) "Resize terminal" tries to use the window size
+    increment.
+  - (bugfix) Subprocess forked for SIGTSTP calls _exit, not exit.
+  - (enhancement) Tell the user how to move bookmarks.
+  - (enhancement) Localization updates.  For this to be important, we
+    should at least list the languages.
+  - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
+    dialogs.
+  - (bitrot) Fix two warnings on Mac OS X.
+  - (enhancement) reduce warnings on gcc 4.2 snapshots
+
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.3.GIT now:
