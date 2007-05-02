@@ -23,6 +23,7 @@ roughly in decreasing order of importance.
 //////////////////////////////////////////////////////////////////////
 
 Notable new features:
+
 * unfinished enhancement 822: UTF-8 as terminal charset, not
   merely UTF-8 I/O of a unibyte codepage as in previous versions.
   Double-cell (aka fullwidth) and non-BMP characters work too, but
@@ -33,6 +34,7 @@ Notable new features:
   the smbclient-based code that was disabled in ELinks 0.11.2.
 
 Incompatibilities:
+
 * ECMAScript support is now disabled by default.  It has known
   bugs (548, 755, 771) with which malicious web pages can crash or
   hang ELinks, and its security goals are undocumented.  If you must
@@ -50,11 +52,13 @@ Incompatibilities:
   (It still reads user-hooks.scm, too.)
 
 Miscellaneous:
+
 * minor bug 752 and other documentation updates
 * enhancement 381: reduce memory consumption of codepages and some
   other arrays
 
 Changes in terminal support:
+
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
 * bug 776: "elinks -remote http://elinks.cz/" no longer clears the
@@ -66,11 +70,13 @@ Changes in terminal support:
 * enhancement: turn terminal transparency off by default
 
 Changes in cookies:
+
 * enhancement: "Add server" button in the cookie manager
 * enhancement 887: "Save" in the cookie manager now saves cookies even
   if unmodified.
 
 Changes in the user interface:
+
 * bug 355: add documents displayed via "What to do" dialog to the
   global history
 * trivial bug 930: refresh status bar when key prefix is eaten
@@ -81,6 +87,7 @@ Changes in the user interface:
   move-forward-word
 
 Changes in support for URI schemes, protocols, caching, and encodings:
+
 * critical bug 756: "assertion (cached)->object.refcount >= 0 failed"
   after HTTP proxy was changed
 * bug 107: recognize "localhost" in file: URIs
@@ -97,6 +104,7 @@ Changes in support for URI schemes, protocols, caching, and encodings:
 * enhancement: FSP progress indicator and password prompt
 
 Changes in parsing and rendering of HTML (without DOM):
+
 * bug 284: render closing bracket for HTML element SUB in the same
   line; don't let it fall to the next
 * bug 387: treat &#013; inside <pre>...</pre> as a newline
@@ -107,11 +115,13 @@ Changes in parsing and rendering of HTML (without DOM):
   attribute values
 
 Changes in parsing and rendering of non-HTML content-types:
+
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
 * enhancement 121: if a mailcap entry indicates copiousoutput, ELinks
   itself acts as a pager
 
 Changes in the document viewer and tabs:
+
 * tabs opened by -remote now go behind existing dialogs
 * several accesskey fixes
 * enhancement 622: -dump-color-mode
@@ -121,6 +131,7 @@ Changes in the document viewer and tabs:
   on enter
 
 Changes in user scripting:
+
 * in Lua: don't write to the string returned by lua_tostring
 * enhancement in SMJS: elinks.alert no longer displays as an "error"
 * enhancement in SMJS: new properties elinks.action, elinks.globhist,
@@ -133,6 +144,7 @@ Changes in user scripting:
   until SMJS collects them as garbage.
 
 Build system and compile-time errors (ignore if you don't build ELinks):
+
 * bug 725: fix version checking for Ruby in 'configure'
 * fixed some bugs about compiling outside the source directory
 * don't use cmp -b, which FreeBSD doesn't support
@@ -153,6 +165,7 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 * experimental enhancement: native Win32 port
 
 Changes in the experimental ECMAScript support:
+
 * disabled by default, as mentioned under "Incompatibilities" above
 * enhancement: SEE ECMAScript backend, an alternative to SpiderMonkey
 * enhancement: handling onsubmit
@@ -164,17 +177,18 @@ Changes in the experimental ECMAScript support:
   window.setTimeout, window.status
 
 Changes in the experimental SGML/DOM implementation:
-- enhancement: minimalistic RSS renderer
-- enhancement: source highlighting also recognizes
+
+* enhancement: minimalistic RSS renderer
+* enhancement: source highlighting also recognizes
   application/xhtml+xml and application/docbook+xml.  It doesn't yet
   support arbitrary XML though.
-- enhancement: make it possible to use more CSS properties with the
+* enhancement: make it possible to use more CSS properties with the
   source highlighting
-- enhancement: handle <base href=""> for HTML source rendering
-- enhancement: add support for scanning comment endings such as
+* enhancement: handle <base href=""> for HTML source rendering
+* enhancement: add support for scanning comment endings such as
   '--!>' correctly
-- enhancement: incremental parsing
-- and more.
+* enhancement: incremental parsing
+* and more.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.12.0
