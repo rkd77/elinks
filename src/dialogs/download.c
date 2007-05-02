@@ -520,8 +520,7 @@ push_abort_button(struct dialog_data *dlg_data, struct widget_data *button)
 	struct file_download *file_download = box->sel ? box->sel->udata : NULL;
 
 	if (!file_download) return EVENT_PROCESSED;
-
-	done_download_display(file_download);
+	object_lock(file_download);
 	return push_delete_button_common(file_download);
 }
 
