@@ -81,10 +81,8 @@ dlg_abort_download(struct dialog_data *dlg_data, struct widget_data *widget_data
 }
 
 static widget_handler_status_T
-push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
+push_delete_button_common(struct file_download *file_download)
 {
-	struct file_download *file_download = dlg_data->dlg->udata;
-
 	file_download->delete = 1;
 #if CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
@@ -93,6 +91,14 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 	object_unlock(file_download);
 	register_bottom_half(do_abort_download, file_download);
 	return EVENT_PROCESSED;
+}
+
+static widget_handler_status_T
+push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
+{
+	struct file_download *file_download = dlg_data->dlg->udata;
+
+	return push_delete_button_common(file_download);
 }
 
 static widget_handler_status_T
@@ -480,6 +486,8 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
+static widget_handler_status_T push_delete_button2(struct dialog_data *, struct widget_data *);
+
 
 /* TODO: Ideas for buttons .. should be pretty trivial most of it
  *
@@ -490,7 +498,7 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 static const struct hierbox_browser_button download_buttons[] = {
 	/* [gettext_accelerator_context(.download_buttons)] */
 	{ N_("~Info"),                  push_info_button           },
-	{ N_("~Abort"),                 push_hierbox_delete_button },
+	{ N_("~Abort"),                 push_delete_button2 },
 #if 0
 	/* This requires more work to make locking work and query the user */
 	{ N_("Abort and delete file"),  push_delete_button         },
@@ -504,6 +512,21 @@ static struct_hierbox_browser(
 	download_buttons,
 	&downloads_listbox_ops
 );
+
+static widget_handler_status_T
+push_delete_button2(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct file_download *file_download = box->sel ? box->sel->udata : NULL;
+
+	if (!file_download) return EVENT_PROCESSED;
+
+	if (file_download->box_item) {
+		done_listbox_item(&download_browser, file_download->box_item);
+		file_download->box_item = NULL;
+	}
+	return push_delete_button_common(file_download);
+}
 
 void
 download_manager(struct session *ses)
