@@ -91,7 +91,7 @@ roughly in decreasing order of importance.
   - (bugfix 517) Fixed and enabled HTTP bzip2 decompression
   - (new feature) HTTP negotiate-auth using GSSAPI
   - (bugfix 770) Download resuming simply restarts the download
-  - (bugfix 691) Fix IPv4 DNS lookup bug
+  - (enhancement 790) If-Modified-Since and If-None-Match
   - (bugfix) gzip_read: always call gzclearerr
   - (bugfix 107) Recognize "localhost" in file: URIs.
   - (bugfix 756) "assertion (cached)->object.refcount >= 0 failed"
@@ -137,8 +137,6 @@ roughly in decreasing order of importance.
   - (new feature) SMJS: New method elinks.execute.
   - (enhancement) SMJS: Garbage-collect SMJS objects before flushing
     caches.
-  - (bitrot) Perl: Don't assume POPpx stores the length to n_a.
-  - (bugfix) Perl: Fix pre_format_html hook wrt. binary files.
 * Build system and compile-time errors (ignore if you don't build ELinks)
   - (bugfix) Fixed some bugs about compiling outside the source
     directory.
@@ -160,6 +158,7 @@ roughly in decreasing order of importance.
   - (enhancement) Avoid compilation of vernum.c in 'make install'
   - (bugfix) Don't use $(AM_CFLAGS) anymore.  Use $(CPPFLAGS) instead.
   - (bitrot) Fix two warnings on Mac OS X.
+  - (bugfix 725) Fixes version checking for Ruby in 'configure'
 * (experimental) Changes in ECMAScript support
   - (new feature) SEE ECMAScript backend, an alternative to SpiderMonkey.
   - (new feature) Handling onsubmit
@@ -192,10 +191,8 @@ is released.  They are currently listed here just to show that they
 have already been considered.
 
 * Not clear whether the bugs have been fixed:
-  - (bugfix 725) Fixes version checking for Ruby in 'configure'
   - (bugfix 674) Reproduceable crashes while trying to unsubscribe
     from a community on Orkut
-  - (enhancement 790) If-Modified-Since and If-None-Match
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
   - (bugfix 890) Change colors 0-15 to match xterm defaults.
@@ -217,7 +214,6 @@ have already been considered.
   - (bugfix 821) I cannot enter national characters in dialog boxes
   - (bugfix 834) Gzip decompression doesn't work
   - (bugfix) Fix out-of-bound access to the quote_char buffer
-  - (bugfix 788) compile error with --enable-perl
   - (bugfix 827) Crash with term charset set to Unicode and UTF-8 I/O
     disabled
   - (bugfix 826) too small table for double-cell characters
@@ -271,7 +267,11 @@ To be released as 0.11.4.
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
 * important Debian bug 380347: prevent a buffer overflow in entity_cache
   and a possible subsequent crash
+* bug 691: don't look up bogus IPv4 addresses based on characters of a
+  hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/
+* bug 788: don't read STRLEN n_a, which isn't initialized by POPpx of
+  Perl v5.8.8 and later
 * bug 928: properly display no-break spaces in a UTF-8 document if the
   terminal uses some other charset
 * bug 947: document.html.wrap_nbsp also affects text in tables
