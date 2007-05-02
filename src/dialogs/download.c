@@ -83,7 +83,6 @@ dlg_abort_download(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 push_delete_button_common(struct file_download *file_download)
 {
-	file_download->delete = 1;
 #if CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_files_for_deletion(&file_download->download);
@@ -98,6 +97,7 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 {
 	struct file_download *file_download = dlg_data->dlg->udata;
 
+	file_download->delete = 1;
 	return push_delete_button_common(file_download);
 }
 
@@ -486,7 +486,7 @@ push_info_button(struct dialog_data *dlg_data, struct widget_data *button)
 	return EVENT_PROCESSED;
 }
 
-static widget_handler_status_T push_delete_button2(struct dialog_data *, struct widget_data *);
+static widget_handler_status_T push_abort_button(struct dialog_data *, struct widget_data *);
 
 
 /* TODO: Ideas for buttons .. should be pretty trivial most of it
@@ -498,7 +498,7 @@ static widget_handler_status_T push_delete_button2(struct dialog_data *, struct 
 static const struct hierbox_browser_button download_buttons[] = {
 	/* [gettext_accelerator_context(.download_buttons)] */
 	{ N_("~Info"),                  push_info_button           },
-	{ N_("~Abort"),                 push_delete_button2 },
+	{ N_("~Abort"),                 push_abort_button },
 #if 0
 	/* This requires more work to make locking work and query the user */
 	{ N_("Abort and delete file"),  push_delete_button         },
@@ -514,7 +514,7 @@ static struct_hierbox_browser(
 );
 
 static widget_handler_status_T
-push_delete_button2(struct dialog_data *dlg_data, struct widget_data *button)
+push_abort_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct file_download *file_download = box->sel ? box->sel->udata : NULL;
