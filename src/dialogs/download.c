@@ -521,10 +521,7 @@ push_abort_button(struct dialog_data *dlg_data, struct widget_data *button)
 
 	if (!file_download) return EVENT_PROCESSED;
 
-	if (file_download->box_item) {
-		done_listbox_item(&download_browser, file_download->box_item);
-		file_download->box_item = NULL;
-	}
+	done_download_display(file_download);
 	return push_delete_button_common(file_download);
 }
 
