@@ -74,7 +74,18 @@ name of your language (in English) so you end up with something like:
 	        {NULL, NULL},
 	};
 
-1.2 Making the new language file part of ELinks:
+1.2 Testing your changes without installing ELinks:
+---------------------------------------------------
+
+It is possible to test translation updates without installing ELinks. After
+building both ELinks and the po files, simply start ELinks from the top-level
+directory in the source tree using:
+
+	$ ./src/elinks
+
+It will then load po files from the po/ directory in the source tree.
+
+1.3 Making the new language file part of ELinks:
 ------------------------------------------------
 
 Finally to make it part of the ELinks distribution send it to one of the
@@ -336,7 +347,7 @@ message strings.
 If the language file is already added finally run make to compile and check the
 language file for errors and fix any warnings you get. Then patch your changes
 and send it to one of the mailinglists or file it as a bug at
-<http://bugzilla.elinks.or.cz>.
+<http://bugzilla.elinks.cz>.
 
 
 3. Statistics:
