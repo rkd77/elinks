@@ -212,6 +212,11 @@ add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 	unsigned char *slash = strrchr(program.path, '/');
 	size_t dirnamelen = (slash ? slash - program.path + 1 : 0);
 
+	/* Check if elinks is being run from the source tree. */
+	if (dirnamelen < 4
+	    || strncmp(program.path + dirnamelen - 4, "src", 3))
+		return NULL;
+
 	if ((dirnamelen && !add_bytes_to_string(str, program.path, dirnamelen))
 	    || !add_to_string(str, "../po/")
 	    || !add_bytes_to_string(str,
