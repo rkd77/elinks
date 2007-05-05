@@ -759,7 +759,7 @@ http_send_header(struct socket *socket)
 	add_to_string(&header, ", ");
 #endif
 
-	add_to_string(&header, "gzip");
+	add_to_string(&header, "gzip, deflate");
 #endif
 	add_crlf_to_string(&header);
 #endif
@@ -1860,7 +1860,9 @@ again:
 		 * if it is implied by the extension, so that saving the URI
 		 * will leave the saved file with the correct encoding. */
 #ifdef CONFIG_GZIP
-		if (file_encoding != ENCODING_GZIP
+		if (!strcasecmp(d, "deflate") || !strcasecmp(d, "x-deflate"))
+			conn->content_encoding = ENCODING_DEFLATE;
+		else if (file_encoding != ENCODING_GZIP
 		    && (!strcasecmp(d, "gzip") || !strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
 #endif

@@ -9,6 +9,7 @@ enum stream_encoding {
 	ENCODING_GZIP,
 	ENCODING_BZIP2,
 	ENCODING_LZMA,
+	ENCODING_DEFLATE,
 
 	/* Max. number of known encoding including ENCODING_NONE. */
 	ENCODINGS_KNOWN,
