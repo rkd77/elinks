@@ -11,18 +11,28 @@ correctly in the DOM tree.
 
 . "$TEST_LIB"
 
-test_output_equals () {
+test_output_equals_file () {
 	desc="$1"; shift
 	src="$1"; shift
-	out="$1"; shift
+	file="$1"; shift
 
 	URI="test:$(normalize "$desc")"
 
 	sgml-parser --uri "$URI" --src "$src" > output
 	echo "#document: $URI" > expected
-	echo "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
+	sed 's/^/  /' < "$file" >> expected
 
 	test_expect_success "$desc" 'cmp output expected' 
+}
+
+test_output_equals () {
+	desc="$1"; shift
+	src="$1"; shift
+	out="$1"; shift
+
+	echo "$out" | sed -n '2,$p' > expected+
+
+	test_output_equals_file "$desc" "$src" "expected+"
 }
 
 
@@ -184,18 +194,21 @@ entity-reference: #
 #text: -
 entity-reference: #xx'
 
-test_output_equals \
+cat > expected2 <<EOF
+proc-instruction: xml -> encoding="UTF8"
+  attribute: encoding -> UTF8
+#text: \\n...\\n
+proc-instruction: ecmascript -> var val=2;\\n
+EOF
+
+test_output_equals_file \
 'Parse processing instructions.' \
 '<?xml encoding="UTF8"?>
 ...
 <?ecmascript
 var val=2;
 ?>' \
-'
-proc-instruction: xml -> encoding="UTF8"
-  attribute: encoding -> UTF8
-#text: \n...\n
-proc-instruction: ecmascript -> var val=2;\n'
+expected2
 
 test_output_equals \
 'Parse XML processing instructions.' \
