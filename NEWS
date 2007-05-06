@@ -57,7 +57,7 @@ Incompatibilities:
 
 Miscellaneous:
 
-* critical bug 756: "assertion (cached)->object.refcount >= 0 failed"
+* critical bug 756: ``assertion (cached)->object.refcount >= 0 failed''
   after HTTP proxy was changed
 * tabs opened by -remote now go behind existing dialogs
 * Debian bug 257762: turn terminal transparency off by default
@@ -67,7 +67,7 @@ Miscellaneous:
 * gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
-* bug 355: add documents displayed via "What to do" dialog to the
+* bug 355: add documents displayed via ``What to do'' dialog to the
   global history
 * encode and decode filenames in FSP URLs
 * don't use a busy cache entry if it has expired or should be
@@ -79,9 +79,9 @@ Miscellaneous:
 * minor: show quote characters for HTML element Q, rather than italics
 * trivial bug 387: treat &#013; inside <pre>...</pre> as a newline
 * trivial bug 930: refresh status bar when key prefix is eaten
-* trivial bug 776: "elinks -remote http://elinks.cz/" no longer clears
+* trivial bug 776: ``elinks -remote http://elinks.cz/'' no longer clears
   the screen
-* enhancement 121: if a mailcap entry indicates copiousoutput, ELinks
+* enhancement 121: if a mailcap entry indicates 'copiousoutput', ELinks
   itself acts as a pager
 * enhancement 790: If-Modified-Since and If-None-Match
 * enhancement: HTTP negotiate-auth using GSSAPI
@@ -89,9 +89,9 @@ Miscellaneous:
 * enhancement: LZMA decompression
 * enhancement: FSP progress indicator and password prompt
 * enhancement: autocreate directories needed to download a file
-* enhancement: "Add server" button in the cookie manager
-* enhancement 887: "Save" in the cookie manager now saves cookies even
-  if unmodified
+* enhancement: ``Add server'' button in the cookie manager
+* enhancement 887: ``Save'' in the cookie manager now saves cookies
+  even if unmodified
 * enhancement 145: internal clipboard support
 * enhancement: new actions kill-word-back, move-backward-word,
   move-forward-word
@@ -109,8 +109,8 @@ Miscellaneous:
 * enhancement: support Ctrl+Alt+letter key combinations
 * enhancement 381: reduce memory consumption of codepages and some
   other arrays
-* enhancement in user SMJS: garbage-collect SMJS objects on File ->
-  Flush all caches.  This is a workaround to how cache_entry SMJS
+* enhancement in user SMJS: garbage-collect SMJS objects on 'File ->
+  Flush all caches'.  This is a workaround to how cache_entry SMJS
   objects added in ELinks 0.11.0 prevent ELinks from freeing cache
   entries until SMJS collects them as garbage.
 * enhancement in user SMJS: new properties/functions elinks.action,
@@ -132,13 +132,13 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 
 Changes in the experimental ECMAScript support:
 
-* disabled by default, as mentioned under "Incompatibilities" above
+* disabled by default, as mentioned under ``Incompatibilities'' above
 * enhancement: SEE ECMAScript backend, an alternative to SpiderMonkey
 * enhancement: handling onsubmit
 * workaround: window.open remembers the last few URLs and doesn't
   reopen them when incremental rendering reruns the onload script
 * enhancement: better handling of form.action assignments
-* enhancement: form[x] looks up controls also by id, not only name
+* enhancement: form[x] looks up controls also by 'id', not only 'name'
 * enhancement: added document.location.href, input.selectedIndex,
   window.setTimeout, window.status
 
@@ -281,7 +281,7 @@ To be released as 0.11.4.
   and a possible subsequent crash
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
-* bug 712: GnuTLS works on https://www-s.uiuc.edu/
+* bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * bug 788: don't read STRLEN n_a, which isn't initialized by POPpx of
   Perl v5.8.8 and later
 * bug 928: properly display no-break spaces in a UTF-8 document if the
@@ -330,7 +330,7 @@ Released on 2007-04-15.
 * remove a garbage character from the end of the authentication prompt
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
-* secure file saving: restore umask after _all_ failure conditions
+* secure file saving: restore umask after *all* failure conditions
 * decode the fragment identifier extracted from the URI when looking
   it up
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
@@ -441,12 +441,12 @@ Released on 2004-12-24.
 * incremental searching (press '#/')
 * Perl scripting back-end (experimental)
 * build-time configurability and feature documentation through features.conf
-* Mozilla-compatible -remote option (http://www.mozilla.org/unix/remote.html)
-* support for specifying IP family as protocol postfix (i.e. http4 or ftp6)
+* Mozilla-compatible -remote option (http://www.mozilla.org/unix/remote.html[])
+* support for specifying IP family as protocol postfix (e.g. http4 or ftp6)
 * internationalized domain names via libidn (RFC 3490)
 * data URI protocol (RFC 2397)
 * gopher protocol (RFC 1436)
-* NNTP protocol (RFC 977 and 2980) (experimental)
+* NNTP protocol (RFC 977 and RFC 2980) (experimental)
 * build system fine-tuned to use automake conditionals
 * -localhost option to block connections to remote hosts
 * -verbose option to control messages printed at startup
