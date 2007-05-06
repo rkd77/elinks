@@ -12,14 +12,13 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (6b2ef468dce9e289c292f7327056f8c9e70023b5) and related
-bug numbers.
+ELinks 0.12.GIT (3f93148c9b131069aa5ee8b655652da40e1a4b70) and related
+bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
 important enough.  Please move them to the separate "should be removed
 from NEWS" list below, or coalesce several changes into one entry (but
-do list all bug numbers).  It might be a good idea to sort the entries
-roughly in decreasing order of importance.
+do list all bug numbers).
 //////////////////////////////////////////////////////////////////////
 
 Notable new features:
@@ -40,8 +39,8 @@ Incompatibilities:
   hang ELinks, and its security goals are undocumented.  If you must
   enable ECMAScript support, it would be prudent to restrict the
   ELinks process with a sandbox of some kind.
-* bug 871: The numbering of terminal.*.colors no longer depends on
-  config options.  This change makes elinks.conf portable between
+* bugs 871, 752: The numbering of terminal.*.colors no longer depends
+  on config options.  This change makes elinks.conf portable between
   different configurations but unfortunately not between this and
   previous versions.
 * Changed Python goto_url_hook(current) to goto_url_hook(new).  The
@@ -53,95 +52,64 @@ Incompatibilities:
 
 Miscellaneous:
 
-* minor bug 752 and other documentation updates
-* enhancement 381: reduce memory consumption of codepages and some
-  other arrays
-
-Changes in terminal support:
-
+* critical bug 756: "assertion (cached)->object.refcount >= 0 failed"
+  after HTTP proxy was changed
+* tabs opened by -remote now go behind existing dialogs
+* Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
-* bug 776: "elinks -remote http://elinks.cz/" no longer clears the
-  screen
 * bug 948: fix wrong UTF-8 output after the charset menu was used
-* enhancement: mouse wheel support over GPM, and on BSD via moused -z 4
-* enhancement: 24-bit truecolor mode
-* enhancement: support Ctrl+Alt+letter key combinations
-* enhancement: turn terminal transparency off by default
-
-Changes in cookies:
-
+* gzip_read: always call gzclearerr
+* bug 816: convert entity references in input/@value only once
+* bug 916: if a mailcap entry has no %s, provide the file as stdin
+* bug 355: add documents displayed via "What to do" dialog to the
+  global history
+* encode and decode filenames in FSP URLs
+* don't use a busy cache entry if it has expired or should be
+  reloaded.  See elinks-users mail from 28 Oct 2005.
+* several accesskey fixes
+* in Lua: don't write to the string returned by lua_tostring
+* minor bug 284: render closing bracket for HTML element SUB in the
+  same line; don't let it fall to the next
+* minor: show quote characters for HTML element Q, rather than italics
+* trivial bug 387: treat &#013; inside <pre>...</pre> as a newline
+* trivial bug 930: refresh status bar when key prefix is eaten
+* trivial bug 776: "elinks -remote http://elinks.cz/" no longer clears
+  the screen
+* enhancement 121: if a mailcap entry indicates copiousoutput, ELinks
+  itself acts as a pager
+* enhancement 790: If-Modified-Since and If-None-Match
+* enhancement: HTTP negotiate-auth using GSSAPI
+* enhancement 517: fixed and enabled HTTP bzip2 decompression
+* enhancement: LZMA decompression
+* enhancement: FSP progress indicator and password prompt
+* enhancement: autocreate directories needed to download a file
 * enhancement: "Add server" button in the cookie manager
 * enhancement 887: "Save" in the cookie manager now saves cookies even
   if unmodified
-
-Changes in the user interface:
-
-* bug 355: add documents displayed via "What to do" dialog to the
-  global history
-* trivial bug 930: refresh status bar when key prefix is eaten
 * enhancement 145: internal clipboard support
-* enhancement 687: option ui.tabs.top
-* enhancement 688: option ui.show_menu_bar_always
 * enhancement: new actions kill-word-back, move-backward-word,
   move-forward-word
-
-Changes in support for URI schemes, protocols, caching, and encodings:
-
-* critical bug 756: "assertion (cached)->object.refcount >= 0 failed"
-  after HTTP proxy was changed
-* bug 107: recognize "localhost" in file: URIs
-* Fixes cache-control issue. See elinks-users mail from 28 Oct 2005
-* encode and decode filenames in FSP URLs
-* gzip_read: always call gzclearerr
-* support much longer locale-specific timestamps when formatting a
-  directory listing.  LC_TIME=fi_FI.UTF-8 now works.
-* enhancement 517: fixed and enabled HTTP bzip2 decompression
-* enhancement 790: If-Modified-Since and If-None-Match
-* enhancement: autocreate directories needed to download a file
-* enhancement: LZMA decompression
-* enhancement: HTTP negotiate-auth using GSSAPI
-* enhancement: FSP progress indicator and password prompt
-
-Changes in parsing and rendering of HTML (without DOM):
-
-* bug 284: render closing bracket for HTML element SUB in the same
-  line; don't let it fall to the next
-* bug 387: treat &#013; inside <pre>...</pre> as a newline
-* bug 816: convert entity references in input/@value only once
-* enhancement: show quote characters for HTML element Q, rather than
-  italics
-* enhancement: add support for parsing space separated CSS class
-  attribute values
-
-Changes in parsing and rendering of non-HTML content-types:
-
-* bug 916: if a mailcap entry has no %s, provide the file as stdin
-* enhancement 121: if a mailcap entry indicates copiousoutput, ELinks
-  itself acts as a pager
-
-Changes in the document viewer and tabs:
-
-* tabs opened by -remote now go behind existing dialogs
-* several accesskey fixes
-* enhancement 622: -dump-color-mode
+* enhancements 687, 688: options ui.tabs.top, ui.show_menu_bar_always
 * enhancement: highlight links as one enters link prefixes
 * enhancement: backspace backs out the last digit of the prefix
 * enhancement: in text type-ahead searching, don't follow current link
   on enter
-
-Changes in user scripting:
-
-* in Lua: don't write to the string returned by lua_tostring
-* enhancement in SMJS: elinks.alert no longer displays as an "error"
-* enhancement in SMJS: new properties elinks.action, elinks.globhist,
-  elinks.vs
-* enhancement in SMJS: new function elinks.load_uri
-* enhancement in SMJS: new method elinks.execute
-* enhancement in SMJS: garbage-collect SMJS objects on File -> Flush
-  all caches.  This is a workaround to how cache_entry SMJS objects
-  added in ELinks 0.11.0 prevent ELinks from freeing cache entries
-  until SMJS collects them as garbage.
+* enhancement: add support for parsing space separated CSS class
+  attribute values
+* enhancement: mouse wheel support over GPM (contrib/gpm-wheel.patch),
+  and on BSD via moused -z 4
+* enhancement: 24-bit truecolor mode
+* enhancement 622: -dump-color-mode
+* enhancement: support Ctrl+Alt+letter key combinations
+* enhancement 381: reduce memory consumption of codepages and some
+  other arrays
+* enhancement in user SMJS: garbage-collect SMJS objects on File ->
+  Flush all caches.  This is a workaround to how cache_entry SMJS
+  objects added in ELinks 0.11.0 prevent ELinks from freeing cache
+  entries until SMJS collects them as garbage.
+* enhancement in user SMJS: new properties/functions elinks.action,
+  elinks.execute, elinks.globhist, elinks.load_uri, elinks.vs
 
 Build system and compile-time errors (ignore if you don't build ELinks):
 
@@ -239,9 +207,11 @@ have already been considered.
   - don't include <sys/param.h> for MIN and MAX because it may interfere with
     CONFIG_IPV6 on Linux.  Commit 63797ae9b331efd91be27512bd9d5b2e2ff74741
     in ELinks 0.11.1.
-  - include <sys/types.h> and fix compilation on an old PPC/Debian
-    system (bug 936 may be related but was reported after the changes).
-    Commit 135a79a3c309af36cf963f1d3c34b07f296fa2f7 in ELinks 0.11.3.
+  - Debian bug 400871: include <sys/types.h> for off_t.  (Bug 936 was
+    reported for GIT (HEAD) after the change and may still exist.)
+    Commit c135a79a3c309af36cf963f1d3c34b07f296fa2f7 in ELinks 0.11.3.
+  - bug 107: recognize "localhost" in file: URIs.  Cannot reproduce in
+    earlier versions.
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -287,7 +257,11 @@ have already been considered.
   * don't use cmp -b, which FreeBSD doesn't support.  This is commit
     7a5f699a88c5fc89c510854b04702c16c30ece5a in src/dom/test/ which
     is run only by "make test" rather than "make".
-
+  * support much longer locale-specific timestamps when formatting a
+    directory listing.  LC_TIME=fi_FI.UTF-8 now works.  Let's treat
+    this as part of the UTF-8 support.
+  * enhancement in user SMJS: elinks.alert no longer displays as an
+    "error"
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.3.GIT now:
@@ -296,6 +270,8 @@ ELinks 0.11.3.GIT now:
 To be released as 0.11.4.
 
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
+* CVE-2007-2027: check if the program path contains "src/" before
+  using ../po files
 * important Debian bug 380347: prevent a buffer overflow in entity_cache
   and a possible subsequent crash
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
