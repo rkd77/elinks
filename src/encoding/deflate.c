@@ -60,7 +60,7 @@ deflate_open(struct stream_encoded *stream, int fd)
 	data->fdread = fd;
 	data->last_read = 0;
 
-	err = inflateInit2(&data->deflate_stream, -15);
+	err = inflateInit2(&data->deflate_stream, -MAX_WBITS);
 	if (err != Z_OK) {
 		mem_free(data);
 		return -1;
