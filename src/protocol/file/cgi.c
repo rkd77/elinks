@@ -138,6 +138,7 @@ send_request(struct connection *conn)
 static int
 set_vars(struct connection *conn, unsigned char *script)
 {
+	struct string encoding;
 	unsigned char *post = conn->uri->post;
 	unsigned char *query = get_uri_string(conn->uri, URI_QUERY);
 	unsigned char *str;
@@ -266,7 +267,18 @@ set_vars(struct connection *conn, unsigned char *script)
 		}
 	}
 #endif
-
+	if (init_string(&encoding)) {
+#ifdef CONFIG_BZIP2
+		add_to_string(&encoding, "bzip2");
+#endif
+#if defined(CONFIG_BZIP2) && defined(CONFIG_GZIP)
+		add_to_string(&encoding, ", ");
+#endif
+#ifdef CONFIG_GZIP
+		add_to_string(&encoding, "gzip, deflate");
+#endif
+		env_set("HTTP_ACCEPT_ENCODING", encoding.source, -1);
+	}
 	return 0;
 }
 
