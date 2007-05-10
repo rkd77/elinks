@@ -8,7 +8,7 @@
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 
 JSBool
-Character_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+CharacterData_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
@@ -26,7 +26,7 @@ Character_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 JSBool
-Character_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+CharacterData_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
