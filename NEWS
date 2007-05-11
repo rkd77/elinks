@@ -17,7 +17,7 @@ To be released as 0.11.4.
   and a possible subsequent crash
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
-* bug 712: GnuTLS works on https://www-s.uiuc.edu/
+* bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * bug 788: don't read STRLEN n_a, which isn't initialized by POPpx of
   Perl v5.8.8 and later
 * bug 928: properly display no-break spaces in a UTF-8 document if the
@@ -67,7 +67,7 @@ Released on 2007-04-15.
 * remove a garbage character from the end of the authentication prompt
 * bugs 872, 886: editing or deleting cookies in the cookie manager
   should cause a save
-* secure file saving: restore umask after _all_ failure conditions
+* secure file saving: restore umask after *all* failure conditions
 * decode the fragment identifier extracted from the URI when looking
   it up
 * bug 768 in experimental Python scripting: link with e.g. -lpython2.4
@@ -178,12 +178,12 @@ Released on 2004-12-24.
 * incremental searching (press '#/')
 * Perl scripting back-end (experimental)
 * build-time configurability and feature documentation through features.conf
-* Mozilla-compatible -remote option (http://www.mozilla.org/unix/remote.html)
-* support for specifying IP family as protocol postfix (i.e. http4 or ftp6)
+* Mozilla-compatible -remote option (http://www.mozilla.org/unix/remote.html[])
+* support for specifying IP family as protocol postfix (e.g. http4 or ftp6)
 * internationalized domain names via libidn (RFC 3490)
 * data URI protocol (RFC 2397)
 * gopher protocol (RFC 1436)
-* NNTP protocol (RFC 977 and 2980) (experimental)
+* NNTP protocol (RFC 977 and RFC 2980) (experimental)
 * build system fine-tuned to use automake conditionals
 * -localhost option to block connections to remote hosts
 * -verbose option to control messages printed at startup
