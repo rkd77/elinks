@@ -47,6 +47,10 @@ const JSPropertySpec DOMLocator_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec DOMLocator_funcs[] = {
+	{ NULL }
+};
+
 const JSClass DOMLocator_class = {
 	"DOMLocator",
 	JSCLASS_HAS_PRIVATE,

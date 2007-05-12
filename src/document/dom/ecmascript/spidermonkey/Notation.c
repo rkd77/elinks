@@ -32,6 +32,10 @@ const JSPropertySpec Notation_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec Notation_funcs[] = {
+	{ NULL }
+};
+
 const JSClass Notation_class = {
 	"Notation",
 	JSCLASS_HAS_PRIVATE,

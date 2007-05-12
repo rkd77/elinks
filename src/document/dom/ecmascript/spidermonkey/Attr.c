@@ -64,6 +64,10 @@ const JSPropertySpec Attr_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec Attr_funcs[] = {
+	{ NULL }
+};
+
 const JSClass Attr_class = {
 	"Attr",
 	JSCLASS_HAS_PRIVATE,

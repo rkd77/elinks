@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass DOMLocator_class;
+extern const JSFunctionSpec DOMLocator_funcs[];
 extern const JSPropertySpec DOMLocator_props[];
 
 #endif

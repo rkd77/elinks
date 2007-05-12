@@ -24,6 +24,10 @@ DOMImplementationRegistry_getDOMImplementationList(JSContext *ctx, JSObject *obj
 	return JS_TRUE;
 }
 
+const JSPropertySpec DOMImplementationRegistry_props[] = {
+	{ NULL }
+};
+
 const JSFunctionSpec DOMImplementationRegistry_funcs[] = {
 	{ "getDOMImplementation",	DOMImplementationRegistry_getDOMImplementation,		1 },
 	{ "getDOMImplementationList",	DOMImplementationRegistry_getDOMImplementationList,	1 },

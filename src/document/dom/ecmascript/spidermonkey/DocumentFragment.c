@@ -7,6 +7,14 @@
 #include "document/dom/ecmascript/spidermonkey/DocumentFragment.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 
+const JSPropertySpec DocumentFragment_props[] = {
+	{ NULL }
+};
+
+const JSFunctionSpec DocumentFragment_funcs[] = {
+	{ NULL }
+};
+
 const JSClass DocumentFragment_class = {
 	"DocumentFragment",
 	JSCLASS_HAS_PRIVATE,

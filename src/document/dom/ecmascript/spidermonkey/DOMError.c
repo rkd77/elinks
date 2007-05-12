@@ -46,6 +46,10 @@ const JSPropertySpec DOMError_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec DOMError_funcs[] = {
+	{ NULL }
+};
+
 const JSClass DOMError_class = {
 	"DOMError",
 	JSCLASS_HAS_PRIVATE,

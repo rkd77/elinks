@@ -5,6 +5,7 @@
 
 extern const JSClass DOMImplementationSource_class;
 extern const JSFunctionSpec DOMImplementationSource_funcs[];
+extern const JSPropertySpec DOMImplementation_props[];
 
 #endif
 

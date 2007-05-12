@@ -4,6 +4,8 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass CDATASection_class;
+extern const JSFunctionSpec CDATASection_funcs[];
+extern const JSPropertySpec CDATASection_props[];
 
 #endif
 

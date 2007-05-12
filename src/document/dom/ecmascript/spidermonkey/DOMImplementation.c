@@ -38,6 +38,10 @@ DOMImplementation_getFeature(JSContext *ctx, JSObject *obj, uintN argc, jsval *a
 	return JS_TRUE;
 }
 
+const JSPropertySpec DOMImplementation_props[] = {
+	{ NULL }
+};
+
 const JSFunctionSpec DOMImplementation_funcs[] = {
 	{ "hasFeature",		DOMImplementation_hasFeature,		2 },
 	{ "createDocumentType",	DOMImplementation_createDocumentType,	3 },

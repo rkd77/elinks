@@ -8,7 +8,7 @@
 #include "document/dom/ecmascript/spidermonkey/Element.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 
-static JSBool
+JSBool
 Element_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))

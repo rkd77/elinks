@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass DOMError_class;
+extern const JSFunctionSpec DOMError_funcs[];
 extern const JSPropertySpec DOMError_props[];
 
 #endif

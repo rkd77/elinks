@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass DocumentType_class;
+extern const JSFunctionSpec DocumentType_funcs[];
 extern const JSPropertySpec DocumentType_props[];
 
 #endif

@@ -48,6 +48,10 @@ const JSPropertySpec DocumentType_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec DocumentType_funcs[] = {
+	{ NULL }
+};
+
 const JSClass DocumentType_class = {
 	"DocumentType",
 	JSCLASS_HAS_PRIVATE,

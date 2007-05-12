@@ -49,6 +49,10 @@ const JSPropertySpec ProcessingInstruction_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec ProcessingInstruction_funcs[] = {
+	{ NULL }
+};
+
 const JSClass ProcessingInstruction_class = {
 	"ProcessingInstruction",
 	JSCLASS_HAS_PRIVATE,

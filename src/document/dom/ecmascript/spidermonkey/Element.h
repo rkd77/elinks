@@ -7,5 +7,7 @@ extern const JSClass Element_class;
 extern const JSFunctionSpec Element_funcs[];
 extern const JSPropertySpec Element_props[];
 
+JSBool Element_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+
 #endif
 

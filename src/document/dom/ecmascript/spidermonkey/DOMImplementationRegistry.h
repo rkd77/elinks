@@ -5,6 +5,7 @@
 
 extern const JSClass DOMImplementationRegistry_class;
 extern const JSFunctionSpec DOMImplementationRegistry_funcs[];
+extern const JSPropertySpec DOMImplementationRegistry_props[];
 
 #endif
 

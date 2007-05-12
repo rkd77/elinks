@@ -4,6 +4,8 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass DocumentFragment_class;
+extern const JSFunctionSpec DocumentFragment_funcs[];
+extern const JSPropertySpec DocumentFragment_props[];
 
 #endif
 

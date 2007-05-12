@@ -23,6 +23,10 @@ DOMImplementationSource_getDOMImplementationList(JSContext *ctx, JSObject *obj, 
 	return JS_TRUE;
 }
 
+const JSPropertySpec DOMImplementationSource_props[] = {
+	{ NULL }
+};
+
 const JSFunctionSpec DOMImplementationSource_funcs[] = {
 	{ "getDOMImplementation",	DOMImplementationSource_getDOMImplementation,		1 },
 	{ "getDOMImplementationList",	DOMImplementationSource_getDOMImplementationList,	1 },

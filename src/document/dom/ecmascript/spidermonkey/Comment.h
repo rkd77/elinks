@@ -4,5 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass Comment_class;
+extern const JSFunctionSpec Comment_funcs[];
+extern const JSPropertySpec Comment_props[];
 
 #endif

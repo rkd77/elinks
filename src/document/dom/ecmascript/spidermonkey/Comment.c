@@ -8,6 +8,14 @@
 #include "document/dom/ecmascript/spidermonkey/CharacterData.h"
 #include "document/dom/ecmascript/spidermonkey/Comment.h"
 
+const JSPropertySpec Comment_props[] = {
+	{ NULL }
+};
+
+const JSFunctionSpec Comment_funcs[] = {
+	{ NULL }
+};
+
 const JSClass Comment_class = {
 	"Comment",
 	JSCLASS_HAS_PRIVATE,

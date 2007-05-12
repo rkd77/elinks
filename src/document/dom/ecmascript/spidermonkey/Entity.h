@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass Entity_class;
+extern const JSFunctionSpec Entity_funcs[];
 extern const JSPropertySpec Entity_props[];
 
 #endif

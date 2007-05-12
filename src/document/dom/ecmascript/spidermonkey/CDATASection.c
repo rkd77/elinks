@@ -8,6 +8,14 @@
 #include "document/dom/ecmascript/spidermonkey/CharacterData.h"
 #include "document/dom/ecmascript/spidermonkey/Text.h"
 
+const JSPropertySpec CDATASection_props[] = {
+	{ NULL }
+};
+
+const JSFunctionSpec CDATASection_funcs[] = {
+	{ NULL }
+};
+
 const JSClass CDATASection_class = {
 	"CDATASection",
 	JSCLASS_HAS_PRIVATE,

@@ -7,7 +7,7 @@
 #include "document/dom/ecmascript/spidermonkey/Document.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 
-static JSBool
+JSBool
 Document_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))
@@ -49,7 +49,7 @@ Document_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-static JSBool
+JSBool
 Document_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))

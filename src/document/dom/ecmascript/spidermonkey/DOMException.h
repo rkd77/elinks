@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass DOMException_class;
+extern const JSFunctionSpec DOMException_funcs[];
 extern const JSPropertySpec DOMException_props[];
 
 #endif

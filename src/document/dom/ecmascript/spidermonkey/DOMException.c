@@ -41,6 +41,10 @@ const JSPropertySpec DOMException_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec DOMException_funcs[] = {
+	{ NULL }
+};
+
 const JSClass DOMException_class = {
 	"DOMException",
 	JSCLASS_HAS_PRIVATE,

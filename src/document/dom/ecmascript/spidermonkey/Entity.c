@@ -47,6 +47,10 @@ const JSPropertySpec Entity_props[] = {
 	{ NULL }
 };
 
+const JSFunctionSpec Entity_funcs[] = {
+	{ NULL }
+};
+
 const JSClass Entity_class = {
 	"Entity",
 	JSCLASS_HAS_PRIVATE,

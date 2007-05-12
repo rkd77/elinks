@@ -7,6 +7,14 @@
 #include "document/dom/ecmascript/spidermonkey/EntityReference.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 
+const JSPropertySpec EntityReference_props[] = {
+	{ NULL }
+};
+
+const JSFunctionSpec EntityReference_funcs[] = {
+	{ NULL }
+};
+
 const JSClass EntityReference_class = {
 	"EntityReference",
 	JSCLASS_HAS_PRIVATE,

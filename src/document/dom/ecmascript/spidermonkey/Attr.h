@@ -4,6 +4,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass Attr_class;
+extern const JSFunctionSpec Attr_funcs[];
 extern const JSPropertySpec Attr_props[];
 
 #endif
