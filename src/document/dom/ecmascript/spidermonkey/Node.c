@@ -12,52 +12,52 @@ Node_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_NODE_NAME:
+	case JSP_NODE_NODE_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_NODE_VALUE:
+	case JSP_NODE_NODE_VALUE:
 		/* Write me! */
 		break;
-	case JSP_DOM_NODE_TYPE:
+	case JSP_NODE_NODE_TYPE:
 		/* Write me! */
 		break;
-	case JSP_DOM_PARENT_NODE:
+	case JSP_NODE_PARENT_NODE:
 		/* Write me! */
 		break;
-	case JSP_DOM_CHILD_NODES:
+	case JSP_NODE_CHILD_NODES:
 		/* Write me! */
 		break;
-	case JSP_DOM_FIRST_CHILD:
+	case JSP_NODE_FIRST_CHILD:
 		/* Write me! */
 		break;
-	case JSP_DOM_LAST_CHILD:
+	case JSP_NODE_LAST_CHILD:
 		/* Write me! */
 		break;
-	case JSP_DOM_PREVIOUS_SIBLING:
+	case JSP_NODE_PREVIOUS_SIBLING:
 		/* Write me! */
 		break;
-	case JSP_DOM_NEXT_SIBLING:
+	case JSP_NODE_NEXT_SIBLING:
 		/* Write me! */
 		break;
-	case JSP_DOM_ATTRIBUTES:
+	case JSP_NODE_ATTRIBUTES:
 		/* Write me! */
 		break;
-	case JSP_DOM_OWNER_DOCUMENT:
+	case JSP_NODE_OWNER_DOCUMENT:
 		/* Write me! */
 		break;
-	case JSP_DOM_NAMESPACE_URI:
+	case JSP_NODE_NAMESPACE_URI:
 		/* Write me! */
 		break;
-	case JSP_DOM_PREFIX:
+	case JSP_NODE_PREFIX:
 		/* Write me! */
 		break;
-	case JSP_DOM_LOCAL_NAME:
+	case JSP_NODE_LOCAL_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_BASE_URI:
+	case JSP_NODE_BASE_URI:
 		/* Write me! */
 		break;
-	case JSP_DOM_TEXT_CONTENT:
+	case JSP_NODE_TEXT_CONTENT:
 		/* Write me! */
 		break;
 	default:
@@ -72,13 +72,13 @@ Node_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_NODE_VALUE:
+	case JSP_NODE_NODE_VALUE:
 		/* Write me! */
 		break;
-	case JSP_DOM_PREFIX:
+	case JSP_NODE_PREFIX:
 		/* Write me! */
 		break;
-	case JSP_DOM_TEXT_CONTENT:
+	case JSP_NODE_TEXT_CONTENT:
 		/* Write me! */
 		break;
 	default:
@@ -232,22 +232,22 @@ Node_getUserData(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 const JSPropertySpec Node_props[] = {
-	{ "nodeName",		JSP_DOM_NODE_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "nodeValue",		JSP_DOM_NODE_VALUE,		JSPROP_ENUMERATE },
-	{ "nodeType",		JSP_DOM_NODE_TYPE,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "parentNode",		JSP_DOM_PARENT_NODE,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "childNodes",		JSP_DOM_CHILD_NODES,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "firstChild",		JSP_DOM_FIRST_CHILD,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "lastChild",		JSP_DOM_LAST_CHILD,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "previousSibling",	JSP_DOM_PREVIOUS_SIBLING,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "nextSibling",	JSP_DOM_NEXT_SIBLING,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "attributes",		JSP_DOM_ATTRIBUTES,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "ownerDocument",	JSP_DOM_OWNER_DOCUMENT,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "namespaceURI",	JSP_DOM_NAMESPACE_URI,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "prefix"	,	JSP_DOM_PREFIX,			JSPROP_ENUMERATE },
-	{ "localName",		JSP_DOM_LOCAL_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "baseURI",		JSP_DOM_BASE_URI,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "textContent",	JSP_DOM_TEXT_CONTENT,		JSPROP_ENUMERATE },
+	{ "nodeName",		JSP_NODE_NODE_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "nodeValue",		JSP_NODE_NODE_VALUE,		JSPROP_ENUMERATE },
+	{ "nodeType",		JSP_NODE_NODE_TYPE,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "parentNode",		JSP_NODE_PARENT_NODE,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "childNodes",		JSP_NODE_CHILD_NODES,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "firstChild",		JSP_NODE_FIRST_CHILD,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "lastChild",		JSP_NODE_LAST_CHILD,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "previousSibling",	JSP_NODE_PREVIOUS_SIBLING,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "nextSibling",	JSP_NODE_NEXT_SIBLING,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "attributes",		JSP_NODE_ATTRIBUTES,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "ownerDocument",	JSP_NODE_OWNER_DOCUMENT,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "namespaceURI",	JSP_NODE_NAMESPACE_URI,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "prefix"	,	JSP_NODE_PREFIX,			JSPROP_ENUMERATE },
+	{ "localName",		JSP_NODE_LOCAL_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "baseURI",		JSP_NODE_BASE_URI,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "textContent",	JSP_NODE_TEXT_CONTENT,		JSPROP_ENUMERATE },
 	{ NULL }
 };
 

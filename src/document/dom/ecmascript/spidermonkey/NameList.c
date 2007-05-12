@@ -13,7 +13,7 @@ NameList_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_LENGTH:
+	case JSP_NAME_LIST_LENGTH:
 		/* Write me! */
 		break;
 	default:
@@ -55,7 +55,7 @@ NameList_containsNS(JSContext *ctx, JSObject *obj, uintN argc,
 }
 
 const JSPropertySpec NameList_props[] = {
-	{ "length",	JSP_DOM_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "length",	JSP_NAME_LIST_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

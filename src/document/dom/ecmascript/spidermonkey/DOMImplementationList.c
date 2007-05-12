@@ -13,7 +13,7 @@ DOMImplementationList_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_LENGTH:
+	case JSP_DOM_IMPLEMENTATION_LIST_LENGTH:
 		/* Write me! */
 		break;
 	default:
@@ -31,7 +31,7 @@ DOMImplementationList_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *arg
 }
 
 const JSPropertySpec DOMImplementationList_props[] = {
-	{ "length",	JSP_DOM_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "length",	JSP_DOM_IMPLEMENTATION_LIST_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

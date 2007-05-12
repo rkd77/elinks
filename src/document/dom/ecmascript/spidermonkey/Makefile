@@ -11,5 +11,6 @@ DOMLocator.o DOMStringList.o Element.o Entity.o \
 EntityReference.o NamedNodeMap.o NameList.o \
 Node.o NodeList.o Notation.o ProcessingInstruction.o \
 Text.o TypeInfo.o UserDataHandler.o
+SUBDIRS = html
 
 include $(top_srcdir)/Makefile.lib

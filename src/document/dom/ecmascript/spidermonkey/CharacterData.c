@@ -13,10 +13,10 @@ CharacterData_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_DATA:
+	case JSP_CHARACTER_DATA_DATA:
 		/* Write me! */
 		break;
-	case JSP_DOM_LENGTH:
+	case JSP_CHARACTER_DATA_LENGTH:
 		/* Write me! */
 		break;
 	default:
@@ -31,7 +31,7 @@ CharacterData_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_DATA:
+	case JSP_CHARACTER_DATA_DATA:
 		/* Write me! */
 		break;
 	default:
@@ -81,8 +81,8 @@ CharacterData_replaceData(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv
 }
 
 const JSPropertySpec CharacterData_props[] = {
-	{ "data",	JSP_DOM_DATA,	JSPROP_ENUMERATE },
-	{ "length",	JSP_DOM_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "data",	JSP_CHARACTER_DATA_DATA,	JSPROP_ENUMERATE },
+	{ "length",	JSP_CHARACTER_DATA_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

@@ -15,10 +15,10 @@ TypeInfo_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_TYPE_NAME:
+	case JSP_TYPE_INFO_TYPE_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_TYPE_NAMESPACE:
+	case JSP_TYPE_INFO_TYPE_NAMESPACE:
 		/* Write me! */
 		break;
 	default:
@@ -36,8 +36,8 @@ TypeInfo_isDerivedFrom(JSContext *ctx, JSObject *obj, uintN argc,
 }
 
 const JSPropertySpec TypeInfo_props[] = {
-	{ "typeName",		JSP_DOM_TYPE_NAME,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "typeNamespace",	JSP_DOM_TYPE_NAMESPACE,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "typeName",		JSP_TYPE_INFO_TYPE_NAME,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "typeNamespace",	JSP_TYPE_INFO_TYPE_NAMESPACE,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

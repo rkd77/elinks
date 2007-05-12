@@ -13,22 +13,22 @@ Entity_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_PUBLIC_ID:
+	case JSP_ENTITY_PUBLIC_ID:
 		/* Write me! */
 		break;
-	case JSP_DOM_SYSTEM_ID:
+	case JSP_ENTITY_SYSTEM_ID:
 		/* Write me! */
 		break;
-	case JSP_DOM_NOTATION_NAME:
+	case JSP_ENTITY_NOTATION_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_INPUT_ENCODING:
+	case JSP_ENTITY_INPUT_ENCODING:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_ENCODING:
+	case JSP_ENTITY_XML_ENCODING:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_VERSION:
+	case JSP_ENTITY_XML_VERSION:
 		/* Write me! */
 		break;
 	default:
@@ -38,12 +38,12 @@ Entity_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 const JSPropertySpec Entity_props[] = {
-	{ "publicId",		JSP_DOM_PUBLIC_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "systemId",		JSP_DOM_SYSTEM_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "notationName",	JSP_DOM_NOTATION_NAME,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "inputEncoding",	JSP_DOM_INPUT_ENCODING,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "xmlEncoding",	JSP_DOM_XML_ENCODING,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "xmlVersion",		JSP_DOM_XML_VERSION,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "publicId",		JSP_ENTITY_PUBLIC_ID,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "systemId",		JSP_ENTITY_SYSTEM_ID,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "notationName",	JSP_ENTITY_NOTATION_NAME,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "inputEncoding",	JSP_ENTITY_INPUT_ENCODING,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "xmlEncoding",	JSP_ENTITY_XML_ENCODING,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "xmlVersion",		JSP_ENTITY_XML_VERSION,		JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

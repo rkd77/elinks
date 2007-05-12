@@ -12,7 +12,7 @@ DOMStringList_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_LENGTH:
+	case JSP_DOM_STRING_LIST_LENGTH:
 		/* Write me! */
 		break;
 	default:
@@ -38,7 +38,7 @@ DOMStringList_contains(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 const JSPropertySpec DOMStringList_props[] = {
-	{ "length",	JSP_DOM_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "length",	JSP_DOM_STRING_LIST_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

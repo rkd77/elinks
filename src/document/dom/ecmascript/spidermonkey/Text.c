@@ -14,10 +14,10 @@ Text_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_IS_ELEMENT_CONTENT_WHITESPACE:
+	case JSP_TEXT_IS_ELEMENT_CONTENT_WHITESPACE:
 		/* Write me! */
 		break;
-	case JSP_DOM_WHOLE_TEXT:
+	case JSP_TEXT_WHOLE_TEXT:
 		/* Write me! */
 		break;
 	default:
@@ -43,8 +43,8 @@ Text_replaceWholeText(JSContext *ctx, JSObject *obj, uintN argc,
 }
 
 const JSPropertySpec Text_props[] = {
-	{ "isElementContentWhitespace",	JSP_DOM_IS_ELEMENT_CONTENT_WHITESPACE,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "wholeText",			JSP_DOM_TYPE_NAMESPACE,			JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "isElementContentWhitespace",	JSP_TEXT_IS_ELEMENT_CONTENT_WHITESPACE,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "wholeText",			JSP_TEXT_WHOLE_TEXT,			JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

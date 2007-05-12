@@ -13,34 +13,34 @@ Document_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_DOCTYPE:
+	case JSP_DOCUMENT_DOCTYPE:
 		/* Write me! */
 		break;
-	case JSP_DOM_IMPLEMENTATION:
+	case JSP_DOCUMENT_IMPLEMENTATION:
 		/* Write me! */
 		break;
-	case JSP_DOM_DOCUMENT_ELEMENT:
+	case JSP_DOCUMENT_DOCUMENT_ELEMENT:
 		/* Write me! */
 		break;
-	case JSP_DOM_INPUT_ENCODING:
+	case JSP_DOCUMENT_INPUT_ENCODING:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_ENCODING:
+	case JSP_DOCUMENT_XML_ENCODING:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_STANDALONE:
+	case JSP_DOCUMENT_XML_STANDALONE:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_VERSION:
+	case JSP_DOCUMENT_XML_VERSION:
 		/* Write me! */
 		break;
-	case JSP_DOM_STRICT_ERROR_CHECKING:
+	case JSP_DOCUMENT_STRICT_ERROR_CHECKING:
 		/* Write me! */
 		break;
-	case JSP_DOM_DOCUMENT_URI:
+	case JSP_DOCUMENT_DOCUMENT_URI:
 		/* Write me! */
 		break;
-	case JSP_DOM_DOM_CONFIG:
+	case JSP_DOCUMENT_DOM_CONFIG:
 		/* Write me! */
 		break;
 	default:
@@ -55,16 +55,16 @@ Document_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_XML_STANDALONE:
+	case JSP_DOCUMENT_XML_STANDALONE:
 		/* Write me! */
 		break;
-	case JSP_DOM_XML_VERSION:
+	case JSP_DOCUMENT_XML_VERSION:
 		/* Write me! */
 		break;
-	case JSP_DOM_STRICT_ERROR_CHECKING:
+	case JSP_DOCUMENT_STRICT_ERROR_CHECKING:
 		/* Write me! */
 		break;
-	case JSP_DOM_DOCUMENT_URI:
+	case JSP_DOCUMENT_DOCUMENT_URI:
 		/* Write me! */
 		break;
 	default:
@@ -210,16 +210,16 @@ Document_renameNode(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 const JSPropertySpec Document_props[] = {
-	{ "doctype",		JSP_DOM_DOCTYPE,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "implementation",	JSP_DOM_IMPLEMENTATION,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "documentElement",	JSP_DOM_DOCUMENT_ELEMENT,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "inputEncoding",	JSP_DOM_INPUT_ENCODING,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "xmlEncoding",	JSP_DOM_XML_ENCODING,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "xmlStandalone",	JSP_DOM_XML_STANDALONE,		JSPROP_ENUMERATE },
-	{ "xmlVersion",		JSP_DOM_XML_VERSION,		JSPROP_ENUMERATE },
-	{ "strictErrorChecking",JSP_DOM_STRICT_ERROR_CHECKING,	JSPROP_ENUMERATE },
-	{ "documentURI",	JSP_DOM_DOCUMENT_URI,		JSPROP_ENUMERATE },
-	{ "domConfig",		JSP_DOM_DOM_CONFIG,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "doctype",		JSP_DOCUMENT_DOCTYPE,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "implementation",	JSP_DOCUMENT_IMPLEMENTATION,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "documentElement",	JSP_DOCUMENT_DOCUMENT_ELEMENT,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "inputEncoding",	JSP_DOCUMENT_INPUT_ENCODING,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "xmlEncoding",	JSP_DOCUMENT_XML_ENCODING,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "xmlStandalone",	JSP_DOCUMENT_XML_STANDALONE,		JSPROP_ENUMERATE },
+	{ "xmlVersion",		JSP_DOCUMENT_XML_VERSION,		JSPROP_ENUMERATE },
+	{ "strictErrorChecking",JSP_DOCUMENT_STRICT_ERROR_CHECKING,	JSPROP_ENUMERATE },
+	{ "documentURI",	JSP_DOCUMENT_DOCUMENT_URI,		JSPROP_ENUMERATE },
+	{ "domConfig",		JSP_DOCUMENT_DOM_CONFIG,		JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

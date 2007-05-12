@@ -12,7 +12,7 @@ DOMConfiguration_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_PARAMETER_NAMES:
+	case JSP_DOM_CONFIGURATION_PARAMETER_NAMES:
 		/* Write me! */
 		break;
 	default:
@@ -46,7 +46,7 @@ DOMConfiguration_canSetParameter(JSContext *ctx, JSObject *obj, uintN argc, jsva
 }
 
 const JSPropertySpec DOMConfiguration_props[] = {
-	{ "parameterNames",	JSP_DOM_PARAMETER_NAMES,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "parameterNames",	JSP_DOM_CONFIGURATION_PARAMETER_NAMES,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

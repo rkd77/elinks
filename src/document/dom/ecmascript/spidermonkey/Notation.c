@@ -14,10 +14,10 @@ Notation_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_PUBLIC_ID:
+	case JSP_NOTATION_PUBLIC_ID:
 		/* Write me! */
 		break;
-	case JSP_DOM_SYSTEM_ID:
+	case JSP_NOTATION_SYSTEM_ID:
 		/* Write me! */
 		break;
 	default:
@@ -27,8 +27,8 @@ Notation_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 const JSPropertySpec Notation_props[] = {
-	{ "publicId",	JSP_DOM_PUBLIC_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "systemId",	JSP_DOM_SYSTEM_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "publicId",	JSP_NOTATION_PUBLIC_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "systemId",	JSP_NOTATION_SYSTEM_ID,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

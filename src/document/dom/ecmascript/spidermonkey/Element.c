@@ -14,10 +14,10 @@ Element_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_TAG_NAME:
+	case JSP_ELEMENT_TAG_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_SCHEMA_TYPE_INFO:
+	case JSP_ELEMENT_SCHEMA_TYPE_INFO:
 		/* Write me! */
 		break;
 	default:
@@ -170,8 +170,8 @@ Element_setIdAttributeNode(JSContext *ctx, JSObject *obj, uintN argc, jsval *arg
 }
 
 const JSPropertySpec Element_props[] = {
-	{ "tagName",		JSP_DOM_TAG_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "schemaTypeInfo",	JSP_DOM_SCHEMA_TYPE_INFO,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "tagName",		JSP_ELEMENT_TAG_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "schemaTypeInfo",	JSP_ELEMENT_SCHEMA_TYPE_INFO,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

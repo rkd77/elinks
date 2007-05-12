@@ -12,7 +12,7 @@ DOMException_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_CODE:
+	case JSP_DOM_EXCEPTION_CODE:
 		/* Write me! */
 		break;
 	default:
@@ -27,7 +27,7 @@ DOMException_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_CODE:
+	case JSP_DOM_EXCEPTION_CODE:
 		/* Write me! */
 		break;
 	default:
@@ -37,7 +37,7 @@ DOMException_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 const JSPropertySpec DOMException_props[] = {
-	{ "code",	JSP_DOM_CODE,	JSPROP_ENUMERATE },
+	{ "code",	JSP_DOM_EXCEPTION_CODE,	JSPROP_ENUMERATE },
 	{ NULL }
 };
 

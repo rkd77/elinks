@@ -13,7 +13,7 @@ NodeList_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_LENGTH:
+	case JSP_NODE_LIST_LENGTH:
 		/* Write me! */
 		break;
 	default:
@@ -30,7 +30,7 @@ NodeList_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rva
 }
 
 const JSPropertySpec NodeList_props[] = {
-	{ "length",	JSP_DOM_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "length",	JSP_NODE_LIST_LENGTH,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

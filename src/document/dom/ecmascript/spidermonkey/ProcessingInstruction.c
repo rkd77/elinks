@@ -15,10 +15,10 @@ ProcessingInstruction_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_TARGET:
+	case JSP_PROCESSING_INSTRUCTION_TARGET:
 		/* Write me! */
 		break;
-	case JSP_DOM_DATA:
+	case JSP_PROCESSING_INSTRUCTION_DATA:
 		/* Write me! */
 		break;
 	default:
@@ -34,7 +34,7 @@ ProcessingInstruction_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_DATA:
+	case JSP_PROCESSING_INSTRUCTION_DATA:
 		/* Write me ! */
 		break;
 	default:
@@ -44,8 +44,8 @@ ProcessingInstruction_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval
 }
 
 const JSPropertySpec ProcessingInstruction_props[] = {
-	{ "data",	JSP_DOM_DATA,	JSPROP_ENUMERATE },
-	{ "target",	JSP_DOM_TARGET,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "data",	JSP_PROCESSING_INSTRUCTION_DATA,	JSPROP_ENUMERATE },
+	{ "target",	JSP_PROCESSING_INSTRUCTION_TARGET,	JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

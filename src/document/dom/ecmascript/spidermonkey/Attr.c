@@ -14,22 +14,22 @@ Attr_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_NAME:
+	case JSP_ATTR_NAME:
 		/* Write me! */
 		break;
-	case JSP_DOM_SPECIFIED:
+	case JSP_ATTR_SPECIFIED:
 		/* Write me! */
 		break;
-	case JSP_DOM_VALUE:
+	case JSP_ATTR_VALUE:
 		/* Write me! */
 		break;
-	case JSP_DOM_OWNER_ELEMENT:
+	case JSP_ATTR_OWNER_ELEMENT:
 		/* Write me! */
 		break;
-	case JSP_DOM_SCHEMA_TYPE_INFO:
+	case JSP_ATTR_SCHEMA_TYPE_INFO:
 		/* Write me! */
 		break;
-	case JSP_DOM_IS_ID:
+	case JSP_ATTR_IS_ID:
 		/* Write me! */
 		break;
 	default:
@@ -45,7 +45,7 @@ Attr_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_VALUE:
+	case JSP_ATTR_VALUE:
 		/* Write me! */
 		break;
 	default:
@@ -55,12 +55,12 @@ Attr_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 const JSPropertySpec Attr_props[] = {
-	{ "name",		JSP_DOM_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "specified",		JSP_DOM_SPECIFIED,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "value",		JSP_DOM_VALUE,		JSPROP_ENUMERATE },
-	{ "ownerElement",	JSP_DOM_OWNER_ELEMENT,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "schemaTypeInfo",	JSP_DOM_SCHEMA_TYPE_INFO,JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "isId",		JSP_DOM_IS_ID,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "name",		JSP_ATTR_NAME,			JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "specified",		JSP_ATTR_SPECIFIED,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "value",		JSP_ATTR_VALUE,			JSPROP_ENUMERATE },
+	{ "ownerElement",	JSP_ATTR_OWNER_ELEMENT,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "schemaTypeInfo",	JSP_ATTR_SCHEMA_TYPE_INFO,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "isId",		JSP_ATTR_IS_ID,			JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 

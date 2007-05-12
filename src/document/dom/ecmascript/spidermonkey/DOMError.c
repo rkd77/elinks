@@ -12,22 +12,22 @@ DOMError_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 	switch (JSVAL_TO_INT(id)) {
-	case JSP_DOM_SEVERITY:
+	case JSP_DOM_ERROR_SEVERITY:
 		/* Write me! */
 		break;
-	case JSP_DOM_MESSAGE:
+	case JSP_DOM_ERROR_MESSAGE:
 		/* Write me! */
 		break;
-	case JSP_DOM_TYPE:
+	case JSP_DOM_ERROR_TYPE:
 		/* Write me! */
 		break;
-	case JSP_DOM_RELATED_EXCEPTION:
+	case JSP_DOM_ERROR_RELATED_EXCEPTION:
 		/* Write me! */
 		break;
-	case JSP_DOM_RELATED_DATA:
+	case JSP_DOM_ERROR_RELATED_DATA:
 		/* Write me! */
 		break;
-	case JSP_DOM_LOCATION:
+	case JSP_DOM_ERROR_LOCATION:
 		/* Write me! */
 		break;
 	default:
@@ -37,12 +37,12 @@ DOMError_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 const JSPropertySpec DOMError_props[] = {
-	{ "severity",		JSP_DOM_SEVERITY,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "message",		JSP_DOM_MESSAGE,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "type",		JSP_DOM_TYPE,			JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "relatedException",	JSP_DOM_RELATED_EXCEPTION,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "relatedData",	JSP_DOM_RELATED_DATA,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "location",		JSP_DOM_LOCATION,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "severity",		JSP_DOM_ERROR_SEVERITY,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "message",		JSP_DOM_ERROR_MESSAGE,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "type",		JSP_DOM_ERROR_TYPE,			JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "relatedException",	JSP_DOM_ERROR_RELATED_EXCEPTION,	JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "relatedData",	JSP_DOM_ERROR_RELATED_DATA,		JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "location",		JSP_DOM_ERROR_LOCATION,		JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ NULL }
 };
 
