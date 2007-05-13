@@ -368,6 +368,14 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	format.link = join_urls(html_context->base_href, link);
 	format.target = stracpy(target);
 	format.style.fg = format.clink;
+	/* FIXME: linkname typically comes from get_attr_val, which
+	 * has already converted it from the document charset to the
+	 * terminal charset and expanded character entity references.
+	 * The following put_chrs call again converts the characters
+	 * and expands entity references.  So if we have
+	 * <meta http-equiv="refresh" content="3; url=foo?&amp;lt" />
+	 * then ELinks will display "foo?<" rather than "foo?&lt".
+	 * This was mentioned in bug 213.  */
 	put_chrs(html_context, linkname, strlen(linkname));
 	ln_break(html_context, 1);
 	pop_html_element(html_context);
