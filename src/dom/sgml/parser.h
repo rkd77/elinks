@@ -69,6 +69,8 @@ struct sgml_parser_state {
 typedef enum dom_code
 (*sgml_error_T)(struct sgml_parser *, struct dom_string *, unsigned int);
 
+typedef void
+(*sgml_callback_T)(struct dom_node *parent, struct dom_node *current);
 
 /** The SGML parser
  *
@@ -88,6 +90,8 @@ struct sgml_parser {
 
 	enum dom_code code;		/**< The latest (error) code */
 	sgml_error_T error_func;	/**< Called for detected errors */
+	sgml_callback_T add_element_callback;	/**< Called for added elements */
+	sgml_callback_T add_attribute_callback;	/**< Called for added attributes */
 
 	struct dom_stack stack;		/**< A stack for tracking parsed nodes */
 	struct dom_stack parsing;	/**< Used for tracking parsing states */

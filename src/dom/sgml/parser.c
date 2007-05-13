@@ -66,6 +66,9 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 	if (push_dom_node(stack, node) != DOM_CODE_OK)
 		return NULL;
 
+	if (parser->add_element_callback)
+		parser->add_element_callback(parent, node);
+
 	state = get_dom_stack_top(stack);
 	assert(node == state->node);
 
@@ -97,8 +100,11 @@ add_sgml_attribute(struct dom_stack *stack,
 	if (valtoken && valtoken->type == SGML_TOKEN_STRING)
 		node->data.attribute.quoted = valtoken->string.string[-1];
 
-	if (!node || push_dom_node(stack, node) != DOM_CODE_OK)
+	if (push_dom_node(stack, node) != DOM_CODE_OK)
 		return NULL;
+
+	if (parser->add_attribute_callback)
+		parser->add_attribute_callback(parent, node);
 
 	pop_dom_node(stack);
 
