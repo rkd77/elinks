@@ -5,6 +5,7 @@
 #include "elinks.h"
 
 #include "document/dom/ecmascript/spidermonkey.h"
+#include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLBaseElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 
@@ -61,6 +62,6 @@ const JSClass HTMLBaseElement_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	HTMLBaseElement_getProperty, HTMLBaseElement_setProperty,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 

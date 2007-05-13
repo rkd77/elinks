@@ -34,3 +34,16 @@
 #include "document/dom/ecmascript/spidermonkey/Text.h"
 #include "document/dom/ecmascript/spidermonkey/TypeInfo.h"
 #include "document/dom/ecmascript/spidermonkey/UserDataHandler.h"
+#include "dom/node.h"
+
+void
+done_dom_node_ecmascript_obj(struct dom_node *node)
+{
+	struct dom_node *root = get_dom_root_node(node);
+	JSContext *ctx = root->data.document.ecmascript_ctx;
+	JSObject *obj = node->ecmascript_obj;
+
+	assert(ctx && obj && JS_GetPrivate(ctx, obj) == node);
+	JS_SetPrivate(ctx, obj, NULL);
+	node->ecmascript_obj = NULL;
+}

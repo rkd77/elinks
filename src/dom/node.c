@@ -9,6 +9,11 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_ECMASCRIPT
+/* FIXME: SEE ? */
+#include "document/dom/ecmascript/spidermonkey.h"
+#endif
+
 #include "dom/node.h"
 #include "dom/string.h"
 #include "util/hash.h"
@@ -457,7 +462,11 @@ done_dom_node(struct dom_node *node)
  			break;
 		}
  	}
-
+#ifdef CONFIG_ECMASCRIPT
+	if (node->ecmascript_obj) {
+		done_dom_node_ecmascript_obj(node);
+	}
+#endif
 	done_dom_node_data(node);
 }
 
@@ -555,3 +564,14 @@ get_dom_node_type_name(enum dom_node_type type)
 
 	return &dom_node_type_names[type];
 }
+
+struct dom_node *
+get_dom_root_node(struct dom_node *node)
+{
+	assert(node);
+
+	while (node->parent)
+		node = node->parent;
+	return node;
+}
+

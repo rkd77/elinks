@@ -5,6 +5,7 @@
 #include "elinks.h"
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "dom/node.h"
 
 JSBool
 Node_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -231,6 +232,19 @@ Node_getUserData(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	return JS_TRUE;
 }
 
+void
+Node_finalize(JSContext *ctx, JSObject *obj)
+{
+	assert(ctx && obj);
+
+	struct dom_node *node = JS_GetPrivate(ctx, obj);
+
+	if (node) {
+		node->ecmascript_obj = NULL;
+		JS_SetPrivate(ctx, obj, NULL);
+	}
+}
+
 const JSPropertySpec Node_props[] = {
 	{ "nodeName",		JSP_NODE_NODE_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
 	{ "nodeValue",		JSP_NODE_NODE_VALUE,		JSPROP_ENUMERATE },
@@ -278,6 +292,6 @@ const JSClass Node_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	Node_getProperty, Node_setProperty,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 

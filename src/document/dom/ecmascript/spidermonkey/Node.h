@@ -9,6 +9,7 @@ extern const JSPropertySpec Node_props[];
 
 JSBool Node_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 JSBool Node_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+void Node_finalize(JSContext *ctx, JSObject *obj);
 
 #endif
 

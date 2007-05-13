@@ -58,6 +58,6 @@ const JSClass ProcessingInstruction_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	ProcessingInstruction_getProperty, ProcessingInstruction_setProperty,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 

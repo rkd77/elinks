@@ -5,6 +5,7 @@
 #include "elinks.h"
 
 #include "document/dom/ecmascript/spidermonkey.h"
+#include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLOptionsCollection.h"
 
 static JSBool
@@ -55,6 +56,6 @@ const JSClass HTMLOptionsCollection_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	HTMLOptionsCollection_getProperty, JS_PropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 

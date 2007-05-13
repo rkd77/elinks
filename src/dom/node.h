@@ -89,6 +89,10 @@ struct dom_document_node {
 	/* The document. */
 	struct dom_document *document;
 
+#ifdef CONFIG_ECMASCRIPT
+	/* The ECMAScript context used by the SpiderMonkey. */
+	void *ecmascript_ctx;
+#endif
 	/* The child nodes. May be NULL. Ordered like they where inserted. */
 	/* FIXME: Should be just one element (root) node reference. */
 	struct dom_node_list *children;
@@ -252,6 +256,11 @@ struct dom_node {
 	/** The parent node. The parent node is NULL for the root node. */
 	struct dom_node *parent;
 
+#ifdef CONFIG_ECMASCRIPT
+	/** The ECMAScript object related to this node.
+	 * NULL when the object was not used yet. */
+	void *ecmascript_obj;
+#endif
 	/** Type specific node data. */
 	union dom_node_data data;
 };
@@ -454,4 +463,7 @@ get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 #define get_dom_node_list(parent, node) \
 	get_dom_node_list_by_type(parent, (node)->type)
 
+/* Return the root node. */
+struct dom_node *get_dom_root_node(struct dom_node *);
 #endif
+

@@ -3,4 +3,7 @@
 
 #include "document/dom/ecmascript/spidermonkey/props.h"
 
+struct dom_node;
+void done_dom_node_ecmascript_obj(struct dom_node *node);
+
 #endif

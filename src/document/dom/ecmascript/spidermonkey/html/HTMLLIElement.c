@@ -5,6 +5,7 @@
 #include "elinks.h"
 
 #include "document/dom/ecmascript/spidermonkey.h"
+#include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLLIElement.h"
 
@@ -61,6 +62,6 @@ const JSClass HTMLLIElement_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	HTMLLIElement_getProperty, HTMLLIElement_setProperty,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 
