@@ -14,6 +14,7 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #endif
 
+#include "document/dom/html.h"
 #include "dom/node.h"
 #include "dom/string.h"
 #include "util/hash.h"
@@ -467,6 +468,9 @@ done_dom_node(struct dom_node *node)
 		done_dom_node_ecmascript_obj(node);
 	}
 #endif
+	if (node->type == DOM_NODE_ELEMENT && node->data.element.html_data) {
+		done_dom_node_html_data(node);
+	}
 	done_dom_node_data(node);
 }
 
