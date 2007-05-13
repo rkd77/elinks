@@ -141,6 +141,10 @@ struct dom_element_node {
 	 * containing an enum value representing the element to reduce string
 	 * comparing and only do one fast find mapping. */
 	uint16_t type;
+
+	/* The pointer to the additonal data for HTML.
+	 * The allocated memory vary in size for different elements. */
+	void *html_data;
 };
 
 /* Attribute nodes are named nodes stored in a node map of an element node. */
