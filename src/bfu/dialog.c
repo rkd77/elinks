@@ -669,7 +669,7 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 #endif /* CONFIG_UTF8 */
 	}
 #ifdef CONFIG_UTF8
-	else if(term->utf8)
+	else if (term->utf8)
 		fix_dwchar_around_box(term, &dlg_data->box, 0, 0, 0);
 #endif /* CONFIG_UTF8 */
 }
