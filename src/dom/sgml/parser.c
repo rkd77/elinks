@@ -41,10 +41,13 @@ add_sgml_document(struct sgml_parser *parser)
 	struct dom_node *node;
 
 	node = init_dom_node(DOM_NODE_DOCUMENT, &parser->uri, allocated);
-	if (node && push_dom_node(&parser->stack, node) == DOM_CODE_OK)
-		return node;
 
-	return NULL;
+	if (!node || push_dom_node(&parser->stack, node) != DOM_CODE_OK)
+		return NULL;
+
+	if (parser->add_document_callback)
+		parser->add_document_callback(node);
+	return node;
 }
 
 static inline struct dom_node *
@@ -67,7 +70,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 		return NULL;
 
 	if (parser->add_element_callback)
-		parser->add_element_callback(parent, node);
+		parser->add_element_callback(parser->root, parent, node);
 
 	state = get_dom_stack_top(stack);
 	assert(node == state->node);
@@ -104,7 +107,8 @@ add_sgml_attribute(struct dom_stack *stack,
 		return NULL;
 
 	if (parser->add_attribute_callback)
-		parser->add_attribute_callback(parent, node);
+		parser->add_attribute_callback(parser->root, parent,
+		&token->string, value);
 
 	pop_dom_node(stack);
 
