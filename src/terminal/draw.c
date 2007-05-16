@@ -392,6 +392,42 @@ draw_box(struct terminal *term, struct box *box,
 	set_screen_dirty(term->screen, box->y, box->y + box->height);
 }
 
+static void
+draw_transparent_box(struct terminal *term, struct box *box,
+		     struct color_pair *color)
+{
+	struct screen_char *line, *pos, *end;
+	int width, height;
+
+	line = get_char(term, box->x, box->y);
+	if (!line) return;
+
+	height = int_min(box->height, term->height - box->y);
+	width = int_min(box->width, term->width - box->x);
+
+	if (height <= 0 || width <= 0) return;
+
+	/* Compose off the ending screen position in the areas first line. */
+	end = &line[width - 1];
+	if (color) {
+		set_term_color(end, color, 0,
+			       get_opt_int_tree(term->spec, "colors"));
+	} else {
+		clear_screen_char_color(end);
+	}
+
+	pos = line;
+	while (height--) {
+		int i;
+
+		for (i = 0; i < width; i++) {
+			memcpy((pos + i)->color, end->color, SCREEN_COLOR_SIZE);
+		}
+		pos += term->width;
+	}
+	set_screen_dirty(term->screen, box->y, box->y + box->height);
+}
+
 void
 draw_shadow(struct terminal *term, struct box *box,
 	    struct color_pair *color, int width, int height)
@@ -402,13 +438,13 @@ draw_shadow(struct terminal *term, struct box *box,
 	set_box(&dbox, box->x + width, box->y + box->height,
 		box->width - width, height);
 
-	draw_box(term, &dbox, ' ', 0, color);
+	draw_transparent_box(term, &dbox, color);
 
 	/* (vertical) */
 	set_box(&dbox, box->x + box->width, box->y + height,
 		width, box->height);
 
-	draw_box(term, &dbox, ' ', 0, color);
+	draw_transparent_box(term, &dbox, color);
 }
 
 #ifdef CONFIG_UTF8
