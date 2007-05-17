@@ -241,14 +241,15 @@ static INIT_LIST_HEAD(active_screen_drivers);
 static void
 update_screen_driver(struct screen_driver *driver, struct option *term_spec)
 {
+	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
+
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
-	driver->utf8 = get_opt_bool_tree(term_spec, "utf_8_io")
-		|| is_cp_utf8(get_opt_codepage_tree(term_spec, "charset"));
-#else
-	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
+	if (is_cp_utf8(get_opt_codepage_tree(term_spec, "charset")))
+		utf8_io = 1;
+	driver->utf8 = utf8_io;
 #endif /* CONFIG_UTF8 */
 
 	driver->color_mode = get_opt_int_tree(term_spec, "colors");
