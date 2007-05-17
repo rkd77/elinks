@@ -241,13 +241,14 @@ static INIT_LIST_HEAD(active_screen_drivers);
 static void
 update_screen_driver(struct screen_driver *driver, struct option *term_spec)
 {
+	const int cp = get_opt_codepage_tree(term_spec, "charset");
 	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
 
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
-	if (is_cp_utf8(get_opt_codepage_tree(term_spec, "charset")))
+	if (is_cp_utf8(cp))
 		utf8_io = 1;
 	driver->utf8 = utf8_io;
 #endif /* CONFIG_UTF8 */
@@ -281,7 +282,7 @@ update_screen_driver(struct screen_driver *driver, struct option *term_spec)
 	}
 #else
 	if (utf8_io) {
-		driver->charsets[0] = get_opt_codepage_tree(term_spec, "charset");
+		driver->charsets[0] = cp;
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->frame = frame_restrict;
