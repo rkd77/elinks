@@ -111,12 +111,10 @@ struct screen_driver {
 	enum term_mode_type type;
 
 	struct screen_driver_opt {
-#ifndef CONFIG_UTF8
 		/* Charsets when doing UTF8 I/O. */
 		/* [0] is the common charset and [1] is the frame charset.
 		 * Test whether to use UTF8 I/O using the use_utf8_io() macro. */
 		int charsets[2];
-#endif /* CONFIG_UTF8 */
 
 		/* The frame translation table. May be NULL. */
 		const unsigned char *frame;
@@ -144,9 +142,7 @@ struct screen_driver {
 };
 
 static const struct screen_driver_opt dumb_screen_driver_opt = {
-#ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_dumb,
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
@@ -158,9 +154,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 };
 
 static const struct screen_driver_opt vt100_screen_driver_opt = {
-#ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_vt100,
 	/* frame_seqs: */	vt100_frame_seqs,
 	/* underline: */	underline_seqs,
@@ -172,9 +166,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 };
 
 static const struct screen_driver_opt linux_screen_driver_opt = {
-#ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		NULL,		/* No restrict_852 */
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
@@ -186,9 +178,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 };
 
 static const struct screen_driver_opt koi8_screen_driver_opt = {
-#ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_koi,
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
@@ -200,9 +190,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 };
 
 static const struct screen_driver_opt freebsd_screen_driver_opt = {
-#ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_freebsd,
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
@@ -261,9 +249,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	}
 
 	if (utf8_io) {
-#ifndef CONFIG_UTF8
 		driver->opt.charsets[0] = cp;
-#endif /* !CONFIG_UTF8 */
 
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
@@ -271,36 +257,28 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 
 #ifdef CONFIG_UTF8
 			driver->opt.frame_seqs = utf8_linux_frame_seqs;
-#else  /* !CONFIG_UTF8 */
+#endif /* CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
-#endif /* !CONFIG_UTF8 */
 		} else if (driver->type == TERM_FREEBSD) {
 #ifdef CONFIG_UTF8
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
-#else  /* !CONFIG_UTF8 */
+#endif /* CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
-#endif /* !CONFIG_UTF8 */
 		} else if (driver->type == TERM_VT100) {
 #ifdef CONFIG_UTF8
 			driver->opt.frame = frame_vt100;
 #else  /* !CONFIG_UTF8 */
 			driver->opt.frame = frame_vt100_u;
+#endif /* !CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
-#endif /* !CONFIG_UTF8 */
 		} else if (driver->type == TERM_KOI8) {
-#ifndef CONFIG_UTF8
 			driver->opt.charsets[1] = get_cp_index("koi8-r");
-#endif /* !CONFIG_UTF8 */
 		} else {
-#ifndef CONFIG_UTF8
 			driver->opt.charsets[1] = driver->opt.charsets[0];
-#endif /* !CONFIG_UTF8 */
 		}
 	} else { /* !utf8_io */
-#ifndef CONFIG_UTF8
 		driver->opt.charsets[0] = -1;
-#endif /* !CONFIG_UTF8 */
 
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
