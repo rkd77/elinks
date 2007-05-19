@@ -286,19 +286,23 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->opt.frame = frame_restrict;
-
 			driver->opt.charsets[1] = get_cp_index("cp437");
+
 		} else if (driver->type == TERM_FREEBSD) {
 			driver->opt.frame = frame_freebsd_u;
 			driver->opt.charsets[1] = get_cp_index("cp437");
+
 		} else if (driver->type == TERM_VT100) {
 			driver->opt.frame = frame_vt100_u;
 			driver->opt.charsets[1] = get_cp_index("cp437");
+
 		} else if (driver->type == TERM_KOI8) {
 			driver->opt.charsets[1] = get_cp_index("koi8-r");
+
 		} else {
 			driver->opt.charsets[1] = driver->opt.charsets[0];
 		}
+
 	} else { /* !utf8_io */
 		driver->opt.charsets[0] = -1;
 
@@ -525,11 +529,11 @@ copy_color_16(unsigned char *a, unsigned char *b)
 static inline void
 add_char_data(struct string *screen, struct screen_driver *driver,
 	      unicode_val_T data, unsigned char border)
-#else
+#else  /* !CONFIG_UTF8 */
 static inline void
 add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
-#endif /* CONFIG_UTF8 */
+#endif /* !CONFIG_UTF8 */
 {
 	/* CONFIG_UTF8  use_utf8_io  border  data              add_to_string
 	 * -----------  -----------  ------  ----------------  ----------------
@@ -561,14 +565,14 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 				data = UCS_SPACE;
 			add_to_string(screen, encode_utf8(data));
 		}
-#else
+#else  /* !CONFIG_UTF8 */
 		int charset = driver->opt.charsets[!!border];
 
 		if (border || isscreensafe(data))
 			add_to_string(screen, cp2utf8(charset, data));
 		else /* UCS_SPACE <= 0x7F and so fits in one UTF-8 byte */
 			add_char_to_string(screen, UCS_SPACE);
-#endif /* CONFIG_UTF8 */
+#endif /* !CONFIG_UTF8 */
 	} else {
 		if (border || isscreensafe(data))
 			add_char_to_string(screen, (unsigned char)data);
