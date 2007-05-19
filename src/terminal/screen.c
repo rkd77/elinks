@@ -31,7 +31,6 @@
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
 static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
-#ifndef CONFIG_UTF8
 /* For UTF8 I/O */
 static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
@@ -41,7 +40,6 @@ static const unsigned char frame_vt100_u[48] = {
 	193, 194, 194, 192, 192, 218, 218, 197,
 	197, 217, 218, 177,  32, 32,  32,  32
 };
-#endif /* CONFIG_UTF8 */
 
 static const unsigned char frame_freebsd[48] = {
 	130, 138, 128, 153, 150, 150, 150, 140,
@@ -231,11 +229,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 #endif /* CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_VT100) {
-#ifdef CONFIG_UTF8
-			driver->opt.frame = frame_vt100;
-#else  /* !CONFIG_UTF8 */
 			driver->opt.frame = frame_vt100_u;
-#endif /* !CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_KOI8) {
 			driver->opt.charsets[1] = get_cp_index("koi8-r");
