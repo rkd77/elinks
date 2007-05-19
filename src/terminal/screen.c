@@ -41,6 +41,54 @@ static const unsigned char frame_vt100_u[48] = {
 	197, 217, 218, 177,  32, 32,  32,  32
 };
 
+/* This is for FreeBSD fonts that place graphics characters in the
+ * 0x80...0x9F range, which ISO 8859 does not use.  The characters are
+ * supposed to be sorted according to the codes used in VT100 or in
+ * the terminfo "acsc" capability:
+ *
+ *	0x80	U+2588	'0'	ACS_BLOCK
+ *	0x81	U+25C6	'`'	ACS_DIAMOND
+ *	0x82	U+2592	'a'	ACS_CKBOARD
+ *	0x83	U+2409	'b'	-
+ *	0x84	U+240C	'c'	-
+ *	0x85	U+240D	'd'	-
+ *	0x86	U+240A	'e'	-
+ *	0x87	U+00B0	'f'	ACS_DEGREE
+ *	0x88	U+00B1	'g'	ACS_PLMINUS
+ *	0x89	U+2424	'h'	-
+ *	0x8A	U+240B	'i'	-
+ *	0x8B	U+2518	'j'	ACS_LRCORNER
+ *	0x8C	U+2510	'k'	ACS_URCORNER
+ *	0x8D	U+250C	'l'	ACS_ULCORNER
+ *	0x8E	U+2514	'm'	ACS_LLCORNER
+ *	0x8F	U+253C	'n'	ACS_PLUS
+ *	0x90	-	'o'	ACS_S1
+ *	0x91	-	'p'	ACS_S3
+ *	0x92	U+2500	'q'	ACS_HLINE
+ *	0x93	-	'r'	ACS_S7
+ *	0x94	-	's'	ACS_S9
+ *	0x95	U+251C	't'	ACS_LTEE
+ *	0x96	U+2524	'u'	ACS_RTEE
+ *	0x97	U+2534	'v'	ACS_BTEE
+ *	0x98	U+252C	'w'	ACS_TTEE
+ *	0x99	U+2502	'x'	ACS_VLINE
+ *	0x9A	U+2264	'y'	ACS_LEQUAL
+ *	0x9B	U+2265	'z'	ACS_GEQUAL
+ *	0x9C	U+03C0	'{'	ACS_PI
+ *	0x9D	U+2260	'|'	ACS_NEQUAL
+ *	0x9E	U+00A3	'}'	ACS_STERLING
+ *	0x9F	U+00B7	'~'	ACS_BULLET
+ *
+ * (Ncurses 5.5 defines ACS_BOARD using 'h' and ACS_LANTERN using 'i',
+ * but those are not the characters meant above.)
+ *
+ * In FreeBSD CVS, src/share/syscons/fonts/iso-8x16.fnt revision 1.1
+ * includes these characters, except it has a space at 0x80.  In
+ * revision 1.2 however, all the characters not defined by ISO 8859-1
+ * have been blanked out.  This change was made on 2001-11-22 and
+ * included in FreeBSD 4.6.0, which was then released in June 2002.
+ * Yet, support for these characters was added to Links on 2003-11-18
+ * and to ELinks on 2003-12-07, so perhaps we should keep it for now.  */
 static const unsigned char frame_freebsd[48] = {
 	130, 138, 128, 153, 150, 150, 150, 140,
 	140, 150, 153, 140, 139, 139, 139, 140,
