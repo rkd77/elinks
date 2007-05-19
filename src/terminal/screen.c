@@ -82,13 +82,6 @@ static const struct string m11_hack_frame_seqs[] = {
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
 
-#ifdef CONFIG_UTF8
-static const struct string utf8_linux_frame_seqs[] = {
-	/* end border: */	TERM_STRING("\033[10m\033%G"),
-	/* begin border: */	TERM_STRING("\033%@\033[11m"),
-};
-#endif /* CONFIG_UTF8 */
-
 static const struct string vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
 	/* begin border: */	TERM_STRING("\x0e"),
@@ -230,9 +223,6 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->opt.frame = frame_restrict;
 
-#ifdef CONFIG_UTF8
-			driver->opt.frame_seqs = utf8_linux_frame_seqs;
-#endif /* CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_FREEBSD) {
 #ifdef CONFIG_UTF8
@@ -493,7 +483,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	 * defined      0            0       terminal unibyte  terminal unibyte
 	 * defined      0            1       enum border_char  border unibyte
 	 * defined      1            0       UTF-32            UTF-8
-	 * defined      1            1       enum border_char  border unibyte
+	 * defined      1            1       enum border_char  UTF-8
 	 *
 	 * For "UTF-32" above, screen_char.data can also be UCS_NO_CHAR,
 	 * but add_char_data() is not called in that case.
@@ -504,9 +494,12 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 
 	if (use_utf8_io(driver)) {
 #ifdef CONFIG_UTF8
-		if (border)
-			add_char_to_string(screen, (unsigned char)data);
-		else if (data != UCS_NO_CHAR) {
+		if (border) {
+			int charset = driver->opt.charsets[!!border];
+
+			add_to_string(screen, cp2utf8(charset,
+						      (unsigned char) data));
+		} else {
 			if (!isscreensafe_ucs(data))
 				data = UCS_SPACE;
 			add_to_string(screen, encode_utf8(data));
