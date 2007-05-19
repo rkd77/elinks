@@ -98,6 +98,19 @@ static const unsigned char frame_freebsd[48] = {
 	143, 139, 141, 128, 128, 128, 128, 128,
 };
 
+/* For UTF-8 I/O.  Derived from frame_freebsd[] by converting the
+ * characters to Unicode and back to CP437.  frame_freebsd[1] = 138 =
+ * 0x8a = U+240B SYMBOL FOR VERTICAL TABULATION does not exist in
+ * CP437, so we substitute U+2592 MEDIUM SHADE.  */
+static const unsigned char frame_freebsd_u[48] = {
+	177, 177, 219, 179, 180, 180, 180, 191,
+	191, 180, 179, 191, 217, 217, 217, 191,
+	192, 193, 194, 195, 196, 197, 195, 195,
+	192, 218, 193, 194, 195, 196, 197, 193,
+	193, 194, 194, 192, 192, 218, 218, 197,
+	197, 217, 218, 219, 219, 219, 219, 219,
+};
+
 static const unsigned char frame_koi[48] = {
 	144, 145, 146, 129, 135, 178, 180, 167,
 	166, 181, 161, 168, 174, 173, 172, 131,
@@ -275,6 +288,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
 #endif /* CONFIG_UTF8 */
+			driver->opt.frame = frame_freebsd_u;
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_VT100) {
 			driver->opt.frame = frame_vt100_u;
