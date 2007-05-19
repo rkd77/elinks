@@ -143,10 +143,7 @@ struct screen_driver {
 	unsigned char name[1]; /* XXX: Keep last! */
 };
 
-static const struct screen_driver dumb_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_DUMB,
-	{
+static const struct screen_driver_opt dumb_screen_driver_opt = {
 #ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 #endif /* CONFIG_UTF8 */
@@ -158,13 +155,9 @@ static const struct screen_driver dumb_screen_driver = {
 #ifdef CONFIG_UTF8
 	/* utf-8: */		0,
 #endif /* CONFIG_UTF8 */
-	}
 };
 
-static const struct screen_driver vt100_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_VT100,
-	{
+static const struct screen_driver_opt vt100_screen_driver_opt = {
 #ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 #endif /* CONFIG_UTF8 */
@@ -176,13 +169,9 @@ static const struct screen_driver vt100_screen_driver = {
 #ifdef CONFIG_UTF8
 	/* utf-8: */		0,
 #endif /* CONFIG_UTF8 */
-	}
 };
 
-static const struct screen_driver linux_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_LINUX,
-	{
+static const struct screen_driver_opt linux_screen_driver_opt = {
 #ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 #endif /* CONFIG_UTF8 */
@@ -194,13 +183,9 @@ static const struct screen_driver linux_screen_driver = {
 #ifdef CONFIG_UTF8
 	/* utf-8: */		0,
 #endif /* CONFIG_UTF8 */
-	}
 };
 
-static const struct screen_driver koi8_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_KOI8,
-	{
+static const struct screen_driver_opt koi8_screen_driver_opt = {
 #ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 #endif /* CONFIG_UTF8 */
@@ -212,13 +197,9 @@ static const struct screen_driver koi8_screen_driver = {
 #ifdef CONFIG_UTF8
 	/* utf-8: */		0,
 #endif /* CONFIG_UTF8 */
-	}
 };
 
-static const struct screen_driver freebsd_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_FREEBSD,
-	{
+static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #ifndef CONFIG_UTF8
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 #endif /* CONFIG_UTF8 */
@@ -230,16 +211,15 @@ static const struct screen_driver freebsd_screen_driver = {
 #ifdef CONFIG_UTF8
 	/* utf-8: */		0,
 #endif /* CONFIG_UTF8 */
-	}
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
-static const struct screen_driver *const screen_drivers[] = {
-	/* TERM_DUMB: */	&dumb_screen_driver,
-	/* TERM_VT100: */	&vt100_screen_driver,
-	/* TERM_LINUX: */	&linux_screen_driver,
-	/* TERM_KOI8: */	&koi8_screen_driver,
-	/* TERM_FREEBSD: */	&freebsd_screen_driver,
+static const struct screen_driver_opt *const screen_driver_opts[] = {
+	/* TERM_DUMB: */	&dumb_screen_driver_opt,
+	/* TERM_VT100: */	&vt100_screen_driver_opt,
+	/* TERM_LINUX: */	&linux_screen_driver_opt,
+	/* TERM_KOI8: */	&koi8_screen_driver_opt,
+	/* TERM_FREEBSD: */	&freebsd_screen_driver_opt,
 };
 
 #ifdef CONFIG_UTF8
@@ -260,7 +240,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 
 	/* Copy all the original options from constants, so that this
 	 * function need not carefully restore options one by one.  */
-	copy_struct(&driver->opt, &screen_drivers[driver->type]->opt);
+	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
 
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
