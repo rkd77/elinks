@@ -276,6 +276,9 @@ struct dom_node {
  * function to find the index of new nodes before inserting them. */
 struct dom_node_list {
 	size_t size;
+#ifdef CONFIG_ECMASCRIPT
+        void *ecmascript_obj;
+#endif
 	struct dom_node *entries[1];
 };
 

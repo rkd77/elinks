@@ -7,59 +7,247 @@
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "dom/node.h"
 
+
+static void
+Node_get_node_value(struct dom_node *node, JSContext *ctx, JSObject *obj, jsval *vp)
+{
+	switch (node->type) {
+	case DOM_NODE_DOCUMENT:
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	default:
+		undef_to_jsval(ctx, vp);
+		break;
+	case DOM_NODE_ATTRIBUTE:
+		JS_GetProperty(ctx, obj, "value", vp);
+		break;
+	case DOM_NODE_TEXT:
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_COMMENT:
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		JS_GetProperty(ctx, obj, "data", vp);
+		break;
+	}
+}
+
+static void
+Node_set_node_value(struct dom_node *node, JSContext *ctx, JSObject *obj, jsval *vp)
+{
+	switch (node->type) {
+	case DOM_NODE_DOCUMENT:
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	default:
+		break;
+	case DOM_NODE_ATTRIBUTE:
+		JS_SetProperty(ctx, obj, "value", vp);
+		break;
+	case DOM_NODE_TEXT:
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_COMMENT:
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		JS_SetProperty(ctx, obj, "data", vp);
+		break;
+	}
+}
+
+static void
+Node_get_node_name(struct dom_node *node, JSContext *ctx, JSObject *obj, jsval *vp)
+{
+	switch (node->type) {
+	case DOM_NODE_DOCUMENT:
+		string_to_jsval(ctx, vp, "#document");
+		break;
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+		string_to_jsval(ctx, vp, "#document-fragment");
+		break;
+	case DOM_NODE_DOCUMENT_TYPE:
+		JS_GetProperty(ctx, obj, "name", vp);
+		break;
+	case DOM_NODE_ELEMENT:
+		JS_GetProperty(ctx, obj, "tagName", vp);
+		break;
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_NOTATION:
+	default:
+		/* I don't know. */
+		undef_to_jsval(ctx, vp);
+		break;
+	case DOM_NODE_ATTRIBUTE:
+		JS_GetProperty(ctx, obj, "name", vp);
+		break;
+	case DOM_NODE_TEXT:
+		string_to_jsval(ctx, vp, "#text");
+		break;
+	case DOM_NODE_CDATA_SECTION:
+		string_to_jsval(ctx, vp, "#cdata-section");
+		break;
+	case DOM_NODE_COMMENT:
+		string_to_jsval(ctx, vp, "#comment");
+		break;
+	case DOM_NODE_PROCESSING_INSTRUCTION:
+		JS_GetProperty(ctx, obj, "target", vp);
+		break;
+	}
+}
+
+static void
+Node_get_text_content(struct dom_node *node, JSContext *ctx, JSObject *obj, jsval *vp)
+{
+	switch (node->type) {
+	case DOM_NODE_TEXT:
+	case DOM_NODE_CDATA_SECTION:
+	case DOM_NODE_COMMENT:
+		JS_GetProperty(ctx, obj, "nodeValue", vp);
+		break;
+	case DOM_NODE_DOCUMENT:
+	case DOM_NODE_DOCUMENT_TYPE:
+	case DOM_NODE_NOTATION:
+	default:
+		undef_to_jsval(ctx, vp);
+		break;
+	case DOM_NODE_ELEMENT:
+	case DOM_NODE_ATTRIBUTE:
+	case DOM_NODE_ENTITY:
+	case DOM_NODE_ENTITY_REFERENCE:
+	case DOM_NODE_DOCUMENT_FRAGMENT:
+		/* Write me! */
+		break;
+	}
+}
+
 JSBool
 Node_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct dom_node_list *ch = NULL;
+	JSObject *ret = NULL;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&Node_class, NULL)))
+		return JS_FALSE;
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_NODE_NODE_NAME:
-		/* Write me! */
+		Node_get_node_name(node, ctx, obj, vp);
 		break;
 	case JSP_NODE_NODE_VALUE:
-		/* Write me! */
+		Node_get_node_value(node, ctx, obj, vp);
 		break;
 	case JSP_NODE_NODE_TYPE:
-		/* Write me! */
+		int_to_jsval(ctx, vp, node->type);
 		break;
 	case JSP_NODE_PARENT_NODE:
-		/* Write me! */
+		node = node->parent;
+		if (node)
+			ret = node->ecmascript_obj;
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_CHILD_NODES:
-		/* Write me! */
+		if (node->type == DOM_NODE_ELEMENT)
+			ch = node->data.element.children;
+		else if (node->type == DOM_NODE_DOCUMENT)
+			ch = node->data.document.children;
+
+		if (ch)
+			ret = ch->ecmascript_obj;
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_FIRST_CHILD:
-		/* Write me! */
+		if (node->type == DOM_NODE_ELEMENT)
+			ch = node->data.element.children;
+		else if (node->type == DOM_NODE_DOCUMENT)
+			ch = node->data.document.children;
+
+		if (ch && (ch->size > 0)) {
+			struct dom_node *child = ch->entries[0];
+
+			if (child)
+				ret = child->ecmascript_obj;
+		}
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_LAST_CHILD:
-		/* Write me! */
+		if (node->type == DOM_NODE_ELEMENT)
+			ch = node->data.element.children;
+		else if (node->type == DOM_NODE_DOCUMENT)
+			ch = node->data.document.children;
+
+		if (ch && (ch->size > 0)) {
+			struct dom_node *child = ch->entries[ch->size - 1];
+
+			if (child)
+				ret = child->ecmascript_obj;
+		}
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_PREVIOUS_SIBLING:
-		/* Write me! */
+		node = get_dom_node_prev(node);
+		if (node)
+			ret = node->ecmascript_obj;
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_NEXT_SIBLING:
-		/* Write me! */
+		node = get_dom_node_next(node);
+		if (node)
+			ret = node->ecmascript_obj;
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_ATTRIBUTES:
-		/* Write me! */
+		if (node->type == DOM_NODE_ELEMENT) {
+			struct dom_node_list *attrs = node->data.element.map;
+
+			if (attrs)
+				ret = attrs->ecmascript_obj;
+		}
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_OWNER_DOCUMENT:
-		/* Write me! */
+		node = get_dom_root_node(node);
+		if (node)
+			ret = node->ecmascript_obj;
+		object_to_jsval(ctx, vp, ret);
 		break;
 	case JSP_NODE_NAMESPACE_URI:
-		/* Write me! */
+		if (node->type == DOM_NODE_ATTRIBUTE || node->type == DOM_NODE_ELEMENT) {
+			/* Write me! */
+			break;
+		}
+		undef_to_jsval(ctx, vp);
 		break;
 	case JSP_NODE_PREFIX:
-		/* Write me! */
+		if (node->type == DOM_NODE_ATTRIBUTE || node->type == DOM_NODE_ELEMENT) {
+			/* Write me! */
+			break;
+		}
+		undef_to_jsval(ctx, vp);
 		break;
 	case JSP_NODE_LOCAL_NAME:
-		/* Write me! */
+		if (node->type == DOM_NODE_ATTRIBUTE || node->type == DOM_NODE_ELEMENT) {
+			/* Write me! */
+			break;
+		}
+		undef_to_jsval(ctx, vp);
 		break;
 	case JSP_NODE_BASE_URI:
 		/* Write me! */
 		break;
 	case JSP_NODE_TEXT_CONTENT:
-		/* Write me! */
+		Node_get_text_content(node, ctx, obj, vp);
 		break;
 	default:
 		break;
@@ -70,14 +258,26 @@ Node_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 JSBool
 Node_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&Node_class, NULL)))
+		return JS_FALSE;
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_NODE_NODE_VALUE:
-		/* Write me! */
+		Node_set_node_value(node, ctx, obj, vp);
 		break;
 	case JSP_NODE_PREFIX:
-		/* Write me! */
+		if (node->type == DOM_NODE_ATTRIBUTE || node->type == DOM_NODE_ELEMENT) {
+			/* Write me! */
+			break;
+		}
 		break;
 	case JSP_NODE_TEXT_CONTENT:
 		/* Write me! */
