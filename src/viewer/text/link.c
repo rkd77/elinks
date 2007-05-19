@@ -916,17 +916,12 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
 			struct ecmascript_interpreter *interpreter;
-			unsigned char *ret = fc->form->onsubmit;
 			int res;
 
 			if (vs->ecmascript_fragile)
 				ecmascript_reset_state(vs);
 			interpreter = vs->ecmascript;
 			assert(interpreter);
-			/* SEE and SpiderMonkey do not like return outside
-			 * functions. */
-			while ((ret = strstr(ret, "return ")))
-				while (*ret != ' ') *ret++ = ' ';
 
 			add_to_string(&code, fc->form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);
