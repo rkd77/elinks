@@ -251,7 +251,7 @@ static const struct screen_driver *const screen_drivers[] = {
 static INIT_LIST_HEAD(active_screen_drivers);
 
 static void
-update_screen_driver(struct screen_driver *driver, struct option *term_spec)
+set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 {
 	const int cp = get_opt_codepage_tree(term_spec, "charset");
 	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
@@ -349,7 +349,7 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 
 	foreach (driver, active_screen_drivers)
 		if (driver->type == type && !memcmp(driver->name, name, len)) {
-			update_screen_driver(driver, term_spec);
+			set_screen_driver_opt(driver, term_spec);
 			break;
 		}
 
@@ -370,7 +370,7 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 
 	add_to_list(active_screen_drivers, driver);
 
-	update_screen_driver(driver, term->spec);
+	set_screen_driver_opt(driver, term->spec);
 
 	term->spec->change_hook = screen_driver_change_hook;
 
@@ -647,7 +647,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
-		/* @update_screen_driver has set @driver->opt.color_mode
+		/* @set_screen_driver_opt has set @driver->opt.color_mode
 		 * according to terminal-type-specific options.
 		 * The caller of @add_char16 has already partially
 		 * checked it, but there are still these possibilities:
