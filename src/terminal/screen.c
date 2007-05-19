@@ -278,16 +278,17 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	if (utf8_io) {
 		driver->opt.charsets[0] = cp;
 
+		/* When we're using UTF-8 I/O, we never need to switch
+		 * charsets or fonts for drawing frames, because the
+		 * characters encoded in UTF-8 are already unambiguous.  */
+		driver->opt.frame_seqs = NULL;
+
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->opt.frame = frame_restrict;
 
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_FREEBSD) {
-#ifdef CONFIG_UTF8
-			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->opt.frame_seqs = m11_hack_frame_seqs;
-#endif /* CONFIG_UTF8 */
 			driver->opt.frame = frame_freebsd_u;
 			driver->opt.charsets[1] = get_cp_index("cp437");
 		} else if (driver->type == TERM_VT100) {
