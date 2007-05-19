@@ -256,6 +256,10 @@ update_screen_driver(struct screen_driver *driver, struct option *term_spec)
 	const int cp = get_opt_codepage_tree(term_spec, "charset");
 	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
 
+	/* Copy all the original options from constants, so that this
+	 * function need not carefully restore options one by one.  */
+	copy_struct(&driver->opt, &screen_drivers[driver->type]->opt);
+
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
