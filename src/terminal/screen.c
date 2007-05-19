@@ -261,48 +261,51 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	}
 
 	if (utf8_io) {
-#ifdef CONFIG_UTF8
+#ifndef CONFIG_UTF8
+		driver->opt.charsets[0] = cp;
+#endif /* !CONFIG_UTF8 */
+
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->opt.frame = frame_restrict;
 
+#ifdef CONFIG_UTF8
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
 
 			if (driver->opt.utf8)
 				driver->opt.frame_seqs = utf8_linux_frame_seqs;
-
+#else  /* !CONFIG_UTF8 */
+			driver->opt.charsets[1] = get_cp_index("cp437");
+#endif /* !CONFIG_UTF8 */
 		} else if (driver->type == TERM_FREEBSD) {
+#ifdef CONFIG_UTF8
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
-
-		} else if (driver->type == TERM_VT100) {
-			driver->opt.frame = frame_vt100;
-		}
 #else  /* !CONFIG_UTF8 */
-		driver->opt.charsets[0] = cp;
-		if (driver->type == TERM_LINUX) {
-			if (get_opt_bool_tree(term_spec, "restrict_852"))
-				driver->opt.frame = frame_restrict;
-
 			driver->opt.charsets[1] = get_cp_index("cp437");
-
-		} else if (driver->type == TERM_FREEBSD) {
-			driver->opt.charsets[1] = get_cp_index("cp437");
-
+#endif /* !CONFIG_UTF8 */
 		} else if (driver->type == TERM_VT100) {
+#ifdef CONFIG_UTF8
+			driver->opt.frame = frame_vt100;
+#else  /* !CONFIG_UTF8 */
 			driver->opt.frame = frame_vt100_u;
 			driver->opt.charsets[1] = get_cp_index("cp437");
-
-		} else if (driver->type == TERM_KOI8) {
-			driver->opt.charsets[1] = get_cp_index("koi8-r");
-
-		} else {
-			driver->opt.charsets[1] = driver->opt.charsets[0];
-		}
 #endif /* !CONFIG_UTF8 */
+		} else if (driver->type == TERM_KOI8) {
+#ifndef CONFIG_UTF8
+			driver->opt.charsets[1] = get_cp_index("koi8-r");
+#endif /* !CONFIG_UTF8 */
+		} else {
+#ifndef CONFIG_UTF8
+			driver->opt.charsets[1] = driver->opt.charsets[0];
+#endif /* !CONFIG_UTF8 */
+		}
 	} else { /* !utf8_io */
-#ifdef CONFIG_UTF8
+#ifndef CONFIG_UTF8
+		driver->opt.charsets[0] = -1;
+#endif /* !CONFIG_UTF8 */
+
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
 				driver->opt.frame = frame_restrict;
@@ -310,32 +313,16 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
 
+#ifdef CONFIG_UTF8
 			if (driver->opt.utf8)
 				driver->opt.frame_seqs = utf8_linux_frame_seqs;
-
-		} else if (driver->type == TERM_FREEBSD) {
-			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->opt.frame_seqs = m11_hack_frame_seqs;
-
-		} else if (driver->type == TERM_VT100) {
-			driver->opt.frame = frame_vt100;
-		}
-#else  /* !CONFIG_UTF8 */
-		driver->opt.charsets[0] = -1;
-		if (driver->type == TERM_LINUX) {
-			if (get_opt_bool_tree(term_spec, "restrict_852"))
-				driver->opt.frame = frame_restrict;
-
-			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->opt.frame_seqs = m11_hack_frame_seqs;
-
-		} else if (driver->type == TERM_FREEBSD) {
-			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->opt.frame_seqs = m11_hack_frame_seqs;
-		} else if (driver->type == TERM_VT100) {
-			driver->opt.frame = frame_vt100;
-		}
 #endif /* CONFIG_UTF8 */
+		} else if (driver->type == TERM_FREEBSD) {
+			if (get_opt_bool_tree(term_spec, "m11_hack"))
+				driver->opt.frame_seqs = m11_hack_frame_seqs;
+		} else if (driver->type == TERM_VT100) {
+			driver->opt.frame = frame_vt100;
+		}
  	} /* !utf8_io */
 }
 
