@@ -250,6 +250,8 @@ static const struct screen_driver *const screen_drivers[] = {
 
 static INIT_LIST_HEAD(active_screen_drivers);
 
+/* Set driver->opt according to driver->type and term_spec.
+ * Other members of *driver need not have been initialized.  */
 static void
 set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 {
@@ -365,12 +367,11 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 	driver = mem_alloc(sizeof(*driver) + env_len);
 	if (!driver) return NULL;
 
-	memcpy(driver, screen_drivers[type], sizeof(*driver) - 1);
-	memcpy(driver->name, term->spec->name, env_len + 1);
-
+	/* These four operations fully initialize *driver.  */
 	add_to_list(active_screen_drivers, driver);
-
+	driver->type = type;
 	set_screen_driver_opt(driver, term->spec);
+	memcpy(driver->name, term->spec->name, env_len + 1);
 
 	term->spec->change_hook = screen_driver_change_hook;
 
