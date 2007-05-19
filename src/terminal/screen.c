@@ -210,11 +210,7 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 	/* TERM_FREEBSD: */	&freebsd_screen_driver_opt,
 };
 
-#ifdef CONFIG_UTF8
-#define use_utf8_io(driver)	((driver)->opt.utf8)
-#else
 #define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
-#endif /* CONFIG_UTF8 */
 
 static INIT_LIST_HEAD(active_screen_drivers);
 
