@@ -495,7 +495,8 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	 * defined      1            0       UTF-32            UTF-8
 	 * defined      1            1       enum border_char  border unibyte
 	 *
-	 * For "UTF-32" above, the data can also be UCS_NO_CHAR.
+	 * For "UTF-32" above, screen_char.data can also be UCS_NO_CHAR,
+	 * but add_char_data() is not called in that case.
 	 */
 
 	if (border && driver->opt.frame && data >= 176 && data < 224)
