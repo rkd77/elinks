@@ -130,11 +130,6 @@ struct screen_driver {
 
 		/* These are directly derived from the terminal options. */
 		unsigned int transparent:1;
-
-#ifdef CONFIG_UTF8
-		/* UTF-8 I/O.  Forced on if the UTF-8 charset is selected.  (bug 827) */
-		unsigned int utf8:1;
-#endif /* CONFIG_UTF8 */
 	} opt;
 
 	/* The terminal._template_ name. */
@@ -148,9 +143,6 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
-#ifdef CONFIG_UTF8
-	/* utf-8: */		0,
-#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt vt100_screen_driver_opt = {
@@ -160,9 +152,6 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
-#ifdef CONFIG_UTF8
-	/* utf-8: */		0,
-#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt linux_screen_driver_opt = {
@@ -172,9 +161,6 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
-#ifdef CONFIG_UTF8
-	/* utf-8: */		0,
-#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt koi8_screen_driver_opt = {
@@ -184,9 +170,6 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
-#ifdef CONFIG_UTF8
-	/* utf-8: */		0,
-#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt freebsd_screen_driver_opt = {
@@ -196,9 +179,6 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
-#ifdef CONFIG_UTF8
-	/* utf-8: */		0,
-#endif /* CONFIG_UTF8 */
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
@@ -232,7 +212,6 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	 * UTF-8 I/O is disabled.  (bug 827) */
 	if (is_cp_utf8(cp))
 		utf8_io = 1;
-	driver->opt.utf8 = utf8_io;
 #endif /* CONFIG_UTF8 */
 
 	driver->opt.color_mode = get_opt_int_tree(term_spec, "colors");
