@@ -270,11 +270,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 				driver->opt.frame = frame_restrict;
 
 #ifdef CONFIG_UTF8
-			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->opt.frame_seqs = m11_hack_frame_seqs;
-
-			if (driver->opt.utf8)
-				driver->opt.frame_seqs = utf8_linux_frame_seqs;
+			driver->opt.frame_seqs = utf8_linux_frame_seqs;
 #else  /* !CONFIG_UTF8 */
 			driver->opt.charsets[1] = get_cp_index("cp437");
 #endif /* !CONFIG_UTF8 */
@@ -313,13 +309,10 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
 
-#ifdef CONFIG_UTF8
-			if (driver->opt.utf8)
-				driver->opt.frame_seqs = utf8_linux_frame_seqs;
-#endif /* CONFIG_UTF8 */
 		} else if (driver->type == TERM_FREEBSD) {
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
 				driver->opt.frame_seqs = m11_hack_frame_seqs;
+
 		} else if (driver->type == TERM_VT100) {
 			driver->opt.frame = frame_vt100;
 		}
