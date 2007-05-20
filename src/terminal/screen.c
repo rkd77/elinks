@@ -546,8 +546,8 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	 * defined      1            0       UTF-32            UTF-8
 	 * defined      1            1       enum border_char  UTF-8
 	 *
-	 * For "UTF-32" above, screen_char.data can also be UCS_NO_CHAR,
-	 * but add_char_data() is not called in that case.
+	 * For "UTF-32" above, data can also be UCS_NO_CHAR,
+	 * in which case this function must not alter *screen.
 	 */
 
 	if (border && driver->opt.frame && data >= 176 && data < 224)
@@ -561,6 +561,9 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 			add_to_string(screen, cp2utf8(charset,
 						      (unsigned char) data));
 		} else {
+			if (data == UCS_NO_CHAR)
+				return;
+
 			if (!isscreensafe_ucs(data))
 				data = UCS_SPACE;
 			add_to_string(screen, encode_utf8(data));
