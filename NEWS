@@ -28,12 +28,12 @@ do list all bug numbers).
 
 Notable new features:
 
-* unfinished enhancement 822: UTF-8 as terminal charset, not
-  merely UTF-8 I/O of a unibyte codepage as in previous versions.
-  Double-cell (aka fullwidth) and non-BMP characters work too, but
-  combining characters and right-to-left text do not.  The only
-  multibyte charset ELinks can decode is still UTF-8, so if the
-  server outputs e.g. Shift-JIS, you'd better recode with a proxy.
+* enhancement 822: UTF-8 as terminal charset, not merely UTF-8 I/O
+  of a unibyte codepage as in previous versions.  Double-cell (aka
+  fullwidth) and non-BMP characters work too, but combining characters
+  and right-to-left text do not.  The only multibyte charset ELinks
+  can decode is still UTF-8, so if the server outputs e.g. Shift-JIS,
+  you'd better recode with a proxy.  See more notes in features.conf.
 * enhancement 844: SMB protocol using libsmbclient.  This replaces
   the smbclient-based code that was disabled in ELinks 0.11.2.
 
