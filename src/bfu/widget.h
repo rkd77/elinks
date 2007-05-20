@@ -52,11 +52,10 @@ struct widget {
 struct widget_data {
 	struct widget *widget;
 
-	/* For WIDGET_FIELD: If CONFIG_UTF8 is defined and UTF-8 I/O
-	 * is enabled for the terminal, then @cdata is in UTF-8;
-	 * otherwise, @cdata is in the charset of the terminal, and
-	 * the charset is assumed to be unibyte.  (Thus, if you choose
-	 * UTF-8 as the charset but disable UTF-8 I/O, you lose.)
+	/* For WIDGET_FIELD: @cdata is in the charset of the terminal.
+	 * (That charset can be UTF-8 only if CONFIG_UTF8 is defined,
+	 * and is assumed to be unibyte otherwise.)  The UTF-8 I/O
+	 * option has no effect here.
 	 *
 	 * For WIDGET_TEXT: @cdata is cast from/to an unsigned char **
 	 * that points to the first element of an array.  Each element

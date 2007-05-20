@@ -44,12 +44,11 @@ struct form_state {
 	 * string always requires calling realloc().  The string is
 	 * not normally allowed to grow past @form_control.maxlength
 	 * bytes (not counting the null), but there may be ways to get
-	 * longer strings.  If CONFIG_UTF8 is defined and UTF-8 I/O is
-	 * enabled for the terminal, then @value is in UTF-8;
-	 * otherwise, @value is in the charset of the terminal, and
-	 * the charset is assumed to be unibyte.  (Thus, if you choose
-	 * UTF-8 as the charset but disable UTF-8 I/O, you lose.)
-	 * The charset of the document has no effect here.  */
+	 * longer strings.  The string is in the charset of the
+	 * terminal (which can be UTF-8 only if CONFIG_UTF8 is
+	 * defined, and is assumed to be unibyte otherwise).  The
+	 * charset of the document and the UTF-8 I/O option have no
+	 * effect here.  */
 	unsigned char *value;
 	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state is the byte
 	 * position of the insertion point in @value.

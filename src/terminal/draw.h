@@ -33,11 +33,11 @@ struct screen_char {
 	/* Contains either character value or frame data.
 	 * If @attr includes SCREEN_ATTR_FRAME, then @data is enum
 	 * border_char; otherwise, @data is a character value.
-	 * If CONFIG_UTF8 is defined, and UTF-8 I/O is enabled for the
-	 * terminal, then the character value is in UCS-4; otherwise,
-	 * it is in the charset of the terminal, and the charset is
-	 * assumed to be unibyte.  (Thus, if you choose UTF-8 as the
-	 * charset but disable UTF-8 I/O, you lose.)  */
+	 * If the charset of the terminal is UTF-8 (which is possible
+	 * only if CONFIG_UTF8 is defined), then the character value
+	 * is in UCS-4; otherwise, the charset is assumed to be
+	 * unibyte, and the character value is a byte in that
+	 * charset.  */
 #ifdef CONFIG_UTF8
 	unicode_val_T data;
 #else

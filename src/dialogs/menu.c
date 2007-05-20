@@ -586,7 +586,7 @@ query_file(struct session *ses, struct uri *uri, void *data,
 
 	/* Remove the %-ugliness for display */
 #ifdef CONFIG_UTF8
-	if (ses->tab->term->utf8)
+	if (ses->tab->term->utf8_cp)
 		decode_uri_string(&def);
 	else
 #endif /* CONFIG_UTF8 */

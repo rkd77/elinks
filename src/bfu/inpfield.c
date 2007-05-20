@@ -271,7 +271,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 #endif /* CONFIG_UTF8 */
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		unsigned char *t = widget_data->cdata;
 		int p = widget_data->info.field.cpos;
 
@@ -298,9 +298,9 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int len, w;
 
 #ifdef CONFIG_UTF8
-		if (term->utf8 && !hide)
+		if (term->utf8_cp && !hide)
 			len = utf8_ptr2cells(text, NULL);
-		else if (term->utf8)
+		else if (term->utf8_cp)
 			len = utf8_ptr2chars(text, NULL);
 		else
 #endif /* CONFIG_UTF8 */
@@ -309,7 +309,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 
 		if (!hide) {
 #ifdef CONFIG_UTF8
-			if (term->utf8)
+			if (term->utf8_cp)
 				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF8 */
 			draw_text(term, widget_data->box.x, widget_data->box.y,
@@ -328,7 +328,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int x;
 
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			x = widget_data->box.x + len - left;
 		else
 #endif /* CONFIG_UTF8 */
@@ -474,7 +474,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case ACT_EDIT_RIGHT:
 			if (widget_data->info.field.cpos < strlen(widget_data->cdata)) {
 #ifdef CONFIG_UTF8
-				if (term->utf8) {
+				if (term->utf8_cp) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *end = strchr(next, '\0');
 
@@ -492,7 +492,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			if (widget_data->info.field.cpos > 0)
 				widget_data->info.field.cpos--;
 #ifdef CONFIG_UTF8
-			if (widget_data->info.field.cpos && term->utf8) {
+			if (widget_data->info.field.cpos && term->utf8_cp) {
 				unsigned char *t = widget_data->cdata;
 				unsigned char *t2 = t;
 				int p = widget_data->info.field.cpos;
@@ -517,7 +517,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 		case ACT_EDIT_BACKSPACE:
 #ifdef CONFIG_UTF8
-			if (widget_data->info.field.cpos && term->utf8) {
+			if (widget_data->info.field.cpos && term->utf8_cp) {
 				/* XXX: stolen from src/viewer/text/form.c */
 				/* FIXME: This isn't nice. We remove last byte
 				 *        from UTF-8 character to detect
@@ -559,7 +559,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				if (widget_data->info.field.cpos >= cdata_len) goto display_field;
 
 #ifdef CONFIG_UTF8
-				if (term->utf8) {
+				if (term->utf8_cp) {
 					unsigned char *end = widget_data->cdata + cdata_len;
 					unsigned char *text = widget_data->cdata + widget_data->info.field.cpos;
 					unsigned char *old = text;
@@ -688,22 +688,11 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				const unsigned char *ins;
 				int inslen;
 
-				if (term->utf8) {
-					/* get_kbd_key(ev) is in UCS-4,
-					 * and @text is in UTF-8.  */
-					ins = encode_utf8(get_kbd_key(ev));
-					/* get_kbd_key(ev) cannot be L'\0'
-					 * because @check_kbd_textinput_key
-					 * would have rejected it.  So it
-					 * is OK to use @strlen below.  */
-				} else {
-					/* get_kbd_key(ev) is UCS-4, and @text
-					 * is in the terminal's charset.  */
-					int cp = get_opt_codepage_tree(term->spec,
-								       "charset");
-
-					ins = u2cp_no_nbsp(get_kbd_key(ev), cp);
-				}
+				/* get_kbd_key(ev) is UCS-4, and @text
+				 * is in the terminal's charset.  */
+				ins = u2cp_no_nbsp(get_kbd_key(ev),
+						   get_opt_codepage_tree(term->spec,
+									 "charset"));
 				inslen = strlen(ins);
 #endif /* CONFIG_UTF8 */
 

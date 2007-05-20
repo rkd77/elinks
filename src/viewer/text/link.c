@@ -124,7 +124,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 #ifdef CONFIG_UTF8
 	/* The encoding of form fields depends on the terminal,
 	 * rather than on the document.  */
-	int utf8 = doc_view->session->tab->term->utf8;
+	int utf8 = doc_view->session->tab->term->utf8_cp;
 #endif /* CONFIG_UTF8 */
 
 	switch (link->type) {
@@ -1470,7 +1470,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 		}
 
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			decode_uri_string(&str);
 		else
 #endif /* CONFIG_UTF8 */

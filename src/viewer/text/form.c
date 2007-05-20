@@ -162,12 +162,7 @@ init_form_state(struct document_view *doc_view,
 
 	doc_cp = doc_view->document->cp;
 	term = doc_view->session->tab->term;
-#ifdef CONFIG_UTF8
-	if (term->utf8)
-		viewer_cp = get_cp_index("UTF-8");
-	else
-#endif
-		viewer_cp = get_opt_codepage_tree(term->spec, "charset");
+	viewer_cp = get_opt_codepage_tree(term->spec, "charset");
 
 	mem_free_set(&fs->value, NULL);
 
@@ -385,7 +380,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 
 			x = link->points[0].x + dx;
 #ifdef CONFIG_UTF8
-			if (term->utf8) goto utf8;
+			if (term->utf8_cp) goto utf8;
 #endif /* CONFIG_UTF8 */
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			len = strlen(fs->value) - fs->vpos;
@@ -541,7 +536,7 @@ drew_char:
 				/* XXX: when can this happen? --pasky */
 				s = "";
 #ifdef CONFIG_UTF8
-			if (term->utf8) goto utf8_select;
+			if (term->utf8_cp) goto utf8_select;
 #endif /* CONFIG_UTF8 */
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
@@ -1457,7 +1452,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
 	const unsigned char *ctext;
-	int utf8 = ses->tab->term->utf8;
+	int utf8 = ses->tab->term->utf8_cp;
 #endif /* CONFIG_UTF8 */
 
 	assert(ses && doc_view && link && ev);
@@ -1844,18 +1839,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 #ifdef CONFIG_UTF8
-			if (ses->tab->term->utf8) {
-				/* fs->value is in UTF-8 regardless of
-				 * the charset of the terminal.  */
-				ctext = encode_utf8(get_kbd_key(ev));
-			} else {
-				/* fs->value is in the charset of the
-				 * terminal.  */
-				int cp = get_opt_codepage_tree(ses->tab->term->spec,
-							       "charset");
-
-				ctext = u2cp_no_nbsp(get_kbd_key(ev), cp);
-			}
+			/* fs->value is in the charset of the terminal.  */
+			ctext = u2cp_no_nbsp(get_kbd_key(ev),
+					     get_opt_codepage_tree(ses->tab->term->spec,
+								   "charset"));
 			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength

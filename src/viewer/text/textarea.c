@@ -413,7 +413,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 	if_assert_failed return;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		draw_textarea_utf8(term, fs, doc_view, link);
 		return;
 	}
