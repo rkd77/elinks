@@ -175,7 +175,8 @@ realloc_line(struct html_context *html_context, struct document *document,
 	end->data = ' ';
 	end->attr = 0;
 	set_screen_char_color(end, par_format.bgcolor, 0x0,
-			      0, document->options.color_mode);
+			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
+			      document->options.color_mode);
 
 	for (pos = &line->chars[line->length]; pos < end; pos++) {
 		copy_screen_chars(pos, end, 1);
@@ -257,7 +258,8 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end->data = ' ';
 	end->attr = 0;
 	set_screen_char_color(end, par_format.bgcolor, 0x0,
-			      0, part->document->options.color_mode);
+			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
+			      part->document->options.color_mode);
 
 	while (pos < end)
 		copy_screen_chars(pos++, end, 1);
