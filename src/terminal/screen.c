@@ -31,7 +31,7 @@
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
 static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
-/* For UTF8 I/O */
+/* For UTF-8 I/O */
 static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
@@ -136,6 +136,9 @@ static const unsigned char frame_restrict[48] = {
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
+/* ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
+ * Ps = 10 = primary (default) font
+ * Ps = 11 = first alternative font */
 static const struct string m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
@@ -165,7 +168,7 @@ struct screen_driver {
 	struct screen_driver_opt {
 		/* Charsets when doing UTF8 I/O. */
 		/* [0] is the common charset and [1] is the frame charset.
-		 * Test whether to use UTF8 I/O using the use_utf8_io() macro. */
+		 * Test whether to use UTF8 I/O using the use_utf8_io() macro.  */
 		int charsets[2];
 
 		/* The frame translation table. May be NULL. */
@@ -203,7 +206,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -215,7 +218,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -227,7 +230,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -239,7 +242,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -251,7 +254,7 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -269,7 +272,10 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 static INIT_LIST_HEAD(active_screen_drivers);
 
 /* Set driver->opt according to driver->type and term_spec.
- * Other members of *driver need not have been initialized.  */
+ * Other members of *driver need not have been initialized.
+ *
+ * If you modify anything here, check whether option descriptions
+ * should be updated.  */
 static void
 set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 {
@@ -393,8 +399,8 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 	term->spec->change_hook = screen_driver_change_hook;
 
 #ifdef CONFIG_UTF8
-	term->utf8_io = use_utf8_io(driver);
 	term->utf8_cp = driver->opt.utf8_cp;
+	term->utf8_io = use_utf8_io(driver);
 #endif /* CONFIG_UTF8 */
 
 	return driver;
@@ -416,8 +422,8 @@ get_screen_driver(struct terminal *term)
 		move_to_top_of_list(active_screen_drivers, driver);
 
 #ifdef CONFIG_UTF8
-		term->utf8_io = use_utf8_io(driver);
 		term->utf8_cp = driver->opt.utf8_cp;
+		term->utf8_io = use_utf8_io(driver);
 #endif /* CONFIG_UTF8 */
 		return driver;
 	}
