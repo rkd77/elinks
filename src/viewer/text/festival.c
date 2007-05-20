@@ -90,7 +90,7 @@ write_to_festival(struct fest *fest)
 
 	/* The terminal codepage is used for the speech output. */
 #ifdef CONFIG_UTF8
-	if (!doc_view->session->tab->term->utf8)
+	if (!doc_view->session->tab->term->utf8_cp)
 #endif
 	if (fest->speech_system == FESTIVAL_SYSTEM) {
 		/* The string generated here will be at most
