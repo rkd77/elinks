@@ -137,6 +137,11 @@ Element_setAttributeNode(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&Element_class, NULL))
 	 || argc != 1)
 		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+
 	attr = JSVAL_TO_OBJECT(argv[0]);
 	if (!JS_InstanceOf(ctx, attr, (JSClass *)&Attr_class, NULL))
 		return JS_FALSE;
@@ -172,6 +177,11 @@ Element_removeAttributeNode(JSContext *ctx, JSObject *obj, uintN argc, jsval *ar
 	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&Element_class, NULL))
 	 || argc != 1)
 		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+
 	attr = JSVAL_TO_OBJECT(argv[0]);
 	if (!JS_InstanceOf(ctx, attr, (JSClass *)&Attr_class, NULL))
 		return JS_FALSE;
