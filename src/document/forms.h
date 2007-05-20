@@ -98,12 +98,11 @@ struct form_control {
 	int maxlength;
 	int nvalues;
 	unsigned char **values;
-	/* For FC_SELECT: If CONFIG_UTF8 is defined and UTF-8 I/O is
-	 * enabled for the terminal, then @labels is in UTF-8;
-	 * otherwise, @labels is in the charset of the terminal, and
-	 * the charset is assumed to be unibyte.  (Thus, if you choose
-	 * UTF-8 as the charset but disable UTF-8 I/O, you lose.)  The
-	 * charset of the document has no effect here.  */
+	/* For FC_SELECT: @labels are in the charset of the terminal.
+	 * (That charset can be UTF-8 only if CONFIG_UTF8 is defined,
+	 * and is assumed to be unibyte otherwise.)  The charset of
+	 * the document and the UTF-8 I/O option have no effect
+	 * here.  */
 	unsigned char **labels;
 	struct menu_item *menu;
 };

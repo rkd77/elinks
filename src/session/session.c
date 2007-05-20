@@ -267,7 +267,7 @@ print_error_dialog(struct session *ses, enum connection_state state,
 	uristring = uri ? get_uri_string(uri, URI_PUBLIC) : NULL;
 	if (uristring) {
 #ifdef CONFIG_UTF8
-		if (ses->tab->term->utf8)
+		if (ses->tab->term->utf8_cp)
 			decode_uri(uristring);
 		else
 #endif /* CONFIG_UTF8 */

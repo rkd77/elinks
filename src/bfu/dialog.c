@@ -102,7 +102,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 			int x, y;
 
 #ifdef CONFIG_UTF8
-			if (term->utf8)
+			if (term->utf8_cp)
 				titlecells = utf8_ptr2cells(title,
 							    &title[titlelen]);
 #endif /* CONFIG_UTF8 */
@@ -110,7 +110,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 			titlecells = int_min(box.width - 2, titlecells);
 
 #ifdef CONFIG_UTF8
-			if (term->utf8)
+			if (term->utf8_cp)
 				titlelen = utf8_cells2bytes(title, titlecells,
 							    NULL);
 #endif /* CONFIG_UTF8 */
@@ -619,7 +619,7 @@ generic_dialog_layouter(struct dialog_data *dlg_data)
 	int x = 0, y, rw;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8)
+	if (term->utf8_cp)
 		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
 	else
 #endif /* CONFIG_UTF8 */
@@ -664,12 +664,12 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 		draw_shadow(term, &dlg_data->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			fix_dwchar_around_box(term, &dlg_data->box, 0, 2, 1);
 #endif /* CONFIG_UTF8 */
 	}
 #ifdef CONFIG_UTF8
-	else if (term->utf8)
+	else if (term->utf8_cp)
 		fix_dwchar_around_box(term, &dlg_data->box, 0, 0, 0);
 #endif /* CONFIG_UTF8 */
 }

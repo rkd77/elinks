@@ -231,7 +231,7 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 		if (!*text) break;
 
 #ifdef CONFIG_UTF8
-		line_width = split_line(text, width, &cells, term->utf8);
+		line_width = split_line(text, width, &cells, term->utf8_cp);
 #else
 		line_width = split_line(text, width, &cells);
 #endif /* CONFIG_UTF8 */
@@ -290,7 +290,7 @@ dlg_format_text(struct terminal *term, struct widget_data *widget_data,
 		 * split if we don't have to */
 #ifdef CONFIG_UTF8
 		if (widget_data->box.width != width
-		    && !split_lines(widget_data, width, term->utf8))
+		    && !split_lines(widget_data, width, term->utf8_cp))
 			return;
 #else
 		if (widget_data->box.width != width

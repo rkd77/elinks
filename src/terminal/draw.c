@@ -104,6 +104,9 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 	set_screen_dirty(term->screen, y, y);
 }
 
+/* The data parameter here is like screen_char.data: UCS-4 if the
+ * charset of the terminal is UTF-8 (possible only if CONFIG_UTF8 is
+ * defined), and a byte otherwise.  */
 void
 #ifdef CONFIG_UTF8
 draw_char_data(struct terminal *term, int x, int y, unicode_val_T data)
@@ -120,10 +123,10 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 #ifdef CONFIG_UTF8
 #ifdef CONFIG_DEBUG
 	/* Detect attempt to draw double-width char on the last
-	 * column of terminal.  The unicode_to_cell(data) call
-	 * is in principle wrong if CONFIG_UTF8 is defined but
-	 * UTF-8 I/O is disabled, because @data is then a byte
-	 * in the charset of the terminal; but unicode_to_cell
+	 * column of terminal.  The unicode_to_cell(data) call is
+	 * in principle wrong if CONFIG_UTF8 is defined but the
+	 * charset of the terminal is not UTF-8, because @data
+	 * is then a byte in that charset; but unicode_to_cell
 	 * returns 1 for U+0000...U+00FF so it's not a problem.  */
 	if (unicode_to_cell(data) == 2 && x + 1 > term->width)
 		INTERNAL("Attempt to draw double-width glyph on last column!");
@@ -152,7 +155,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 	if (size == 0) return;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		struct screen_char *sc;
 
 		if (line[0].data == UCS_NO_CHAR && x == 0) {
@@ -272,7 +275,7 @@ fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 	struct screen_char *schar;
 	int height, x, y;
 
-	if (!term->utf8)
+	if (!term->utf8_cp)
 		return;
 
 	/* 1 */
@@ -497,7 +500,7 @@ draw_text(struct terminal *term, int x, int y,
 	if_assert_failed return;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		draw_text_utf8(term, x, y, text, length, attr, color);
 		return;
 	}
