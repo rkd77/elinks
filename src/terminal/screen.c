@@ -182,6 +182,13 @@ struct screen_driver {
 
 		/* These are directly derived from the terminal options. */
 		unsigned int transparent:1;
+
+#ifdef CONFIG_UTF8
+		/* Whether the charset of the terminal is UTF-8.  This
+		 * is the same as is_cp_utf8(charsets[0]), except the
+		 * latter might crash if UTF-8 I/O is disabled.  */
+		unsigned int utf8_cp:1;
+#endif /* CONFIG_UTF8 */
 	} opt;
 
 	/* The terminal._template_ name. */
@@ -195,6 +202,9 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8: */		0,
+#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt vt100_screen_driver_opt = {
@@ -204,6 +214,9 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8: */		0,
+#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt linux_screen_driver_opt = {
@@ -213,6 +226,9 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8: */		0,
+#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt koi8_screen_driver_opt = {
@@ -222,6 +238,9 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8: */		0,
+#endif /* CONFIG_UTF8 */
 };
 
 static const struct screen_driver_opt freebsd_screen_driver_opt = {
@@ -231,6 +250,9 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8: */		0,
+#endif /* CONFIG_UTF8 */
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
@@ -262,8 +284,12 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
-	if (is_cp_utf8(cp))
+	if (is_cp_utf8(cp)) {
+		driver->opt.utf8_cp = 1;
 		utf8_io = 1;
+	} else {
+		driver->opt.utf8_cp = 0;
+	}
 #endif /* CONFIG_UTF8 */
 
 	driver->opt.color_mode = get_opt_int_tree(term_spec, "colors");
