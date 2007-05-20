@@ -182,11 +182,13 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	/* Probably not best place for set this. But now we finally have
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
+	term->utf8_cp = is_cp_utf8(get_opt_codepage_tree(term->spec,
+							 "charset"));
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
-	term->utf8 = get_opt_bool_tree(term->spec, "utf_8_io")
-		|| is_cp_utf8(get_opt_codepage_tree(term->spec, "charset"));
+	term->utf8 = term->utf8_cp
+		|| get_opt_bool_tree(term->spec, "utf_8_io");
 #endif /* CONFIG_UTF8 */
 }
 

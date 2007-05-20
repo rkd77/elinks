@@ -386,6 +386,7 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 
 #ifdef CONFIG_UTF8
 	term->utf8 = use_utf8_io(driver);
+	term->utf8_cp = driver->opt.utf8_cp;
 #endif /* CONFIG_UTF8 */
 
 	return driver;
@@ -408,6 +409,7 @@ get_screen_driver(struct terminal *term)
 
 #ifdef CONFIG_UTF8
 		term->utf8 = use_utf8_io(driver);
+		term->utf8_cp = driver->opt.utf8_cp;
 #endif /* CONFIG_UTF8 */
 		return driver;
 	}

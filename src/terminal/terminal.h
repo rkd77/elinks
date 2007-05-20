@@ -127,6 +127,9 @@ struct terminal {
 	unsigned int master:1;
 
 #ifdef CONFIG_UTF8
+	/* Indicates whether the charset of the terminal is UTF-8.  */
+	unsigned int utf8_cp:1;
+
 	/* Indicates whether UTF-8 I/O is used.  Forced on if the
 	 * UTF-8 charset is selected.  (bug 827) */
 	unsigned int utf8:1;
