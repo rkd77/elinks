@@ -76,6 +76,7 @@ Miscellaneous:
 * in Lua: don't write to the string returned by lua_tostring
 * minor bug 284: render closing bracket for HTML element SUB in the
   same line; don't let it fall to the next
+* minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor: show quote characters for HTML element Q, rather than italics
 * trivial bug 387: treat &#013; inside <pre>...</pre> as a newline
 * trivial bug 930: refresh status bar when key prefix is eaten
