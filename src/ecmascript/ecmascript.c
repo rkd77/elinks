@@ -148,6 +148,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	if (interpreter->vs->doc_view)
 		kill_timeouts(interpreter->vs->doc_view->document);
 	interpreter->vs->ecmascript = NULL;
+	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);
 }
 
