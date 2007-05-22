@@ -121,6 +121,15 @@ static const JSFunctionSpec input_funcs[] = {
 	{ NULL }
 };
 
+
+static struct form_state *
+input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
+{
+	int n = (int)(long)JS_GetPrivate(ctx, obj);
+
+	return &vs->form_info[n];
+}
+
 /* @input_class.getProperty */
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -154,7 +163,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -293,7 +302,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -400,7 +409,7 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -452,7 +461,7 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -479,7 +488,7 @@ input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 }
 
 static JSObject *
-get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
+get_input_object(JSContext *ctx, JSObject *jsform, long number)
 {
 #if 0
 	if (fs->ecmascript_obj)
@@ -492,14 +501,13 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-	JS_SetPrivate(ctx, jsinput, fs); /* to @input_class */
-	fs->ecmascript_obj = jsinput;
-	return fs->ecmascript_obj;
+	JS_SetPrivate(ctx, jsinput, (void *)number); /* to @input_class */
+	return jsinput;;
 }
 
 
 static JSObject *
-get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, struct form_state *fs)
+get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, int number)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -512,7 +520,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, s
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
-			return get_input_object(ctx, jsform, fs);
+			return get_input_object(ctx, jsform, (long)number);
 
 		case FC_TEXTAREA:
 		case FC_SELECT:
@@ -655,10 +663,13 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	foreach (fc, form->items) {
 		counter++;
 		if (counter == index) {
-			JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				object_to_jsval(ctx, rval, fcobj);
+			if (fs) {
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					object_to_jsval(ctx, rval, fcobj);
 			}
 			break;
 		}
@@ -710,10 +721,13 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 
 	foreach (fc, form->items) {
 		if (fc->name && !strcasecmp(string, fc->name)) {
-			JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				object_to_jsval(ctx, rval, fcobj);
+			if (fs) {
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					object_to_jsval(ctx, rval, fcobj);
 			}
 			break;
 		}
@@ -804,15 +818,17 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string = jsval_to_string(ctx, &id);
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
+			struct form_state *fs;
 
 			if (!fc->name || strcasecmp(string, fc->name))
 				continue;
 
-			fcobj = get_form_control_object(ctx, obj, fc->type, find_form_state(doc_view, fc));
-			if (fcobj) {
-				object_to_jsval(ctx, vp, fcobj);
-			} else {
-				undef_to_jsval(ctx, vp);
+			undef_to_jsval(ctx, vp);
+			fs = find_form_state(doc_view, fc);
+			if (fs) {
+				fcobj = get_form_control_object(ctx, obj, fc->type, fc->g_ctrl_num);
+				if (fcobj)
+					object_to_jsval(ctx, vp, fcobj);
 			}
 			break;
 		}
