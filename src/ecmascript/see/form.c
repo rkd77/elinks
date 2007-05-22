@@ -616,18 +616,19 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else {
 		unsigned char *string = see_string_to_unsigned_char(p);
 		struct SEE_value argv;
+		struct SEE_value *pargv = &argv;
 
 		if (!string) {
 			SEE_SET_UNDEFINED(res);
 			return;
 		}
-		SEE_SET_STRING(&argv, p);
-		if (string[0] >= '0' && string[1] <= '9') {
+		SEE_SET_STRING(pargv, p);
+		if (string[0] >= '0' && string[0] <= '9') {
 			js_form_elems_item(interp, jsfe->item, o, 1,
-			 (struct SEE_value **)&argv, res);
+			 &pargv, res);
 		} else {
 			js_form_elems_namedItem(interp, jsfe->namedItem, o, 1,
-			 (struct SEE_value **)&argv, res);
+			 &pargv, res);
 		}
 		mem_free(string);
 	}
@@ -744,11 +745,9 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		}
 		SEE_SET_STRING(argv1, p);
 		if (string[0] >= '0' && string[0] <= '9') {
-			js_forms_item(interp, fo->item, o, 1,
-			 (struct SEE_value **)&argv1, res);
+			js_forms_item(interp, fo->item, o, 1, &argv1, res);
 		} else {
-			js_forms_namedItem(interp, fo->namedItem, o, 1,
-			 (struct SEE_value **)&argv1, res);
+			js_forms_namedItem(interp, fo->namedItem, o, 1, &argv1, res);
 		}
 		mem_free(string);
 	}
