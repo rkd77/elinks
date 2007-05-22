@@ -56,8 +56,8 @@ static void js_input_focus(struct SEE_interpreter *, struct SEE_object *, struct
 static void js_input_select(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static int input_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static int input_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
-static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, struct form_state *);
-static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type,  struct form_state *);
+static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, int);
+static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type, int);
 
 static void js_form_elems_item(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_form_elems_namedItem(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
@@ -136,11 +136,11 @@ struct SEE_objectclass js_form_class = {
 struct js_input {
 	struct SEE_object object;
 	struct js_form *parent;
-	struct form_state *fs;
 	struct SEE_object *blur;
 	struct SEE_object *click;
 	struct SEE_object *focus;
 	struct SEE_object *select;
+	int form_number;
 };
 
 struct js_forms_object {
@@ -168,7 +168,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
 	struct js_form *parent = input->parent;
-	struct form_state *fs = input->fs;
+	struct form_state *fs = &vs->form_info[input->form_number];
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -271,7 +271,7 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
-	struct form_state *fs = input->fs;
+	struct form_state *fs = &vs->form_info[input->form_number];
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -371,7 +371,7 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = input->fs;
+	struct form_state *fs = &vs->form_info[input->form_number];
 	struct form_control *fc;
 	int linknum;
 
@@ -406,7 +406,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = input->fs;
+	struct form_state *fs = &vs->form_info[input->form_number];
 	struct form_control *fc;
 	int linknum;
 
@@ -451,8 +451,7 @@ input_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 }
 
 static struct js_input *
-js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
-	struct form_state *fs)
+js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform, int num)
 {
 	struct js_input *jsinput;
 
@@ -474,16 +473,14 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	jsinput->focus = SEE_cfunction_make(interp, js_input_focus, s_focus, 0);
 	jsinput->select = SEE_cfunction_make(interp, js_input_select, s_select, 0);
 
-	jsinput->fs = fs;
+	jsinput->form_number = num;
 	jsinput->parent = jsform;
-
-	fs->ecmascript_obj = jsinput;
 	return jsinput;
 }
 
 static struct js_input *
 js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsform,
-	enum form_type type,  struct form_state *fs)
+	enum form_type type, int num)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -497,7 +494,7 @@ js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsfor
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return js_get_input_object(interp, jsform, fs);
+			return js_get_input_object(interp, jsform, num);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -544,10 +541,13 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	foreach (fc, form->items) {
 		counter++;
 		if (counter == index) {
-			struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+			if (fs) {
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
@@ -582,10 +582,13 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	foreach (fc, form->items) {
 		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
-			struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+			if (fs) {
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
@@ -839,13 +842,16 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		foreach(fc, form->items) {
 			struct js_input *fcobj = NULL;
+			struct form_state *fs;
 
 			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
 				continue;
-			fcobj = js_get_form_control_object(interp, js_form, fc->type, find_form_state(doc_view, fc));
+			fs = find_form_state(doc_view, fc);
+			if (fs) {
+				fcobj = js_get_form_control_object(interp, js_form, fc->type, fc->g_ctrl_num);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
