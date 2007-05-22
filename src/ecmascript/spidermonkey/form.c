@@ -349,7 +349,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		fc->maxlength = atol(jsval_to_string(ctx, vp));
+		JS_ValueToInt32(ctx, *vp, &fc->maxlength);
 		break;
 	case JSP_INPUT_NAME:
 		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
@@ -374,7 +374,9 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 	case JSP_INPUT_SELECTED_INDEX:
 		if (fc->type == FC_SELECT) {
-			int item = atoi(jsval_to_string(ctx, vp));
+			int item;
+
+			JS_ValueToInt32(ctx, *vp, &item);
 
 			if (item >= 0 && item < fc->nvalues) {
 				fs->state = item;
@@ -685,8 +687,7 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	if (argc != 1)
 		return JS_TRUE;
 
-	index = atol(jsval_to_string(ctx, &argv[0]));
-
+	JS_ValueToInt32(ctx, argv[0], &index);
 	undef_to_jsval(ctx, rval);
 
 	foreach (fc, form->items) {
@@ -1217,8 +1218,7 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	if (argc != 1)
 		return JS_TRUE;
 
-	index = atol(jsval_to_string(ctx, &argv[0]));
-
+	JS_ValueToInt32(ctx, argv[0], &index);
 	undef_to_jsval(ctx, rval);
 
 	foreach (fv, vs->forms) {
