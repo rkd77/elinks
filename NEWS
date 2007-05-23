@@ -290,7 +290,8 @@ To be released as 0.11.4.
 * bug 947: document.html.wrap_nbsp also affects text in tables
 * fix passive FTP over IPv6 when connect() fails with EINPROGRESS
 * minor bug 396: never show empty filename in the what-to-do dialog
-* build: fix ``config/install-sh: No such file or directory'' on SunOS
+* build bug 950: fix ``config/install-sh: No such file or directory''
+  on SunOS
 
 ELinks 0.11.3:
 --------------
