@@ -6,21 +6,34 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFrameSetElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLFrameSetElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FRAMESET_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFrameSetElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FRAME_SET_ELEMENT_COLS:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cols);
 		break;
 	case JSP_HTML_FRAME_SET_ELEMENT_ROWS:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->rows);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -31,15 +44,28 @@ HTMLFrameSetElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 static JSBool
 HTMLFrameSetElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FRAMESET_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFrameSetElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FRAME_SET_ELEMENT_COLS:
-		/* Write me! */
+		mem_free_set(&html->cols, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_SET_ELEMENT_ROWS:
-		/* Write me! */
+		mem_free_set(&html->rows, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -64,4 +90,3 @@ const JSClass HTMLFrameSetElement_class = {
 	HTMLFrameSetElement_getProperty, HTMLFrameSetElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

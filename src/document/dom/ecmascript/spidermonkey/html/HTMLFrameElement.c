@@ -6,41 +6,55 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFrameElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLFrameElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FRAME_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFrameElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FRAME_ELEMENT_FRAME_BORDER:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->frame_border);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_LONG_DESC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->long_desc);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_MARGIN_HEIGHT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->margin_height);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_MARGIN_WIDTH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->margin_width);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NO_RESIZE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->no_resize);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SCROLLING:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->scrolling);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SRC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->src);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_CONTENT_DOCUMENT:
+		string_to_jsval(ctx, vp, html->content_document);
 		/* Write me! */
 		break;
 	default:
@@ -52,33 +66,46 @@ HTMLFrameElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLFrameElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FRAME_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFrameElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FRAME_ELEMENT_FRAME_BORDER:
-		/* Write me! */
+		mem_free_set(&html->frame_border, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_LONG_DESC:
-		/* Write me! */
+		mem_free_set(&html->long_desc, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_MARGIN_HEIGHT:
-		/* Write me! */
+		mem_free_set(&html->margin_height, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_MARGIN_WIDTH:
-		/* Write me! */
+		mem_free_set(&html->margin_width, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NAME:
-		/* Write me! */
+		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NO_RESIZE:
-		/* Write me! */
+		mem_free_set(&html->no_resize, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SCROLLING:
-		/* Write me! */
+		mem_free_set(&html->scrolling, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SRC:
-		/* Write me! */
+		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -110,4 +137,3 @@ const JSClass HTMLFrameElement_class = {
 	HTMLFrameElement_getProperty, HTMLFrameElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

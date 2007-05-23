@@ -8,28 +8,41 @@
 #include "document/dom/ecmascript/spidermonkey/Element.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "dom/node.h"
 
 JSBool
 HTMLElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct HTMLElement_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_ELEMENT_ID:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->id);
 		break;
 	case JSP_HTML_ELEMENT_TITLE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->title);
 		break;
 	case JSP_HTML_ELEMENT_LANG:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->lang);
 		break;
 	case JSP_HTML_ELEMENT_DIR:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->dir);
 		break;
 	case JSP_HTML_ELEMENT_CLASS_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->class_name);
 		break;
 	default:
 		return Element_getProperty(ctx, obj, id, vp);
@@ -40,24 +53,37 @@ HTMLElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 JSBool
 HTMLElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct HTMLElement_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_ELEMENT_ID:
-		/* Write me! */
+		mem_free_set(&html->id, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_ELEMENT_TITLE:
-		/* Write me! */
+		mem_free_set(&html->title, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_ELEMENT_LANG:
-		/* Write me! */
+		mem_free_set(&html->lang, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_ELEMENT_DIR:
-		/* Write me! */
+		mem_free_set(&html->dir, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_ELEMENT_CLASS_NAME:
-		/* Write me! */
+		mem_free_set(&html->class_name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return Node_setProperty(ctx, obj, id, vp);
@@ -85,4 +111,3 @@ const JSClass HTMLElement_class = {
 	HTMLElement_getProperty, HTMLElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

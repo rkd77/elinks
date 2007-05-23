@@ -6,33 +6,46 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableColElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLTableColElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct COL_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableColElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_COL_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_CH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->ch);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_CH_OFF:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->ch_off);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_SPAN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->span);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_VALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->valign);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_WIDTH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->width);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -43,27 +56,40 @@ HTMLTableColElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 static JSBool
 HTMLTableColElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct COL_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableColElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_COL_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_CH:
-		/* Write me! */
+		mem_free_set(&html->ch, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_CH_OFF:
-		/* Write me! */
+		mem_free_set(&html->ch_off, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_SPAN:
-		/* Write me! */
+		mem_free_set(&html->span, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_VALIGN:
-		/* Write me! */
+		mem_free_set(&html->valign, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_WIDTH:
-		/* Write me! */
+		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -92,4 +118,3 @@ const JSClass HTMLTableColElement_class = {
 	HTMLTableColElement_getProperty, HTMLTableColElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

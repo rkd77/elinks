@@ -6,51 +6,64 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLImageElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLImageElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct IMAGE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLImageElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_IMAGE_ELEMENT_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_ALT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->alt);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_BORDER:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->border);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HEIGHT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->height);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HSPACE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->hspace);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_IS_MAP:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->is_map);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_LONG_DESC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->long_desc);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_SRC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->src);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_USE_MAP:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->use_map);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_VSPACE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->vspace);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_WIDTH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->width);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -61,45 +74,58 @@ HTMLImageElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLImageElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct IMAGE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLImageElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_IMAGE_ELEMENT_NAME:
-		/* Write me! */
+		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_ALT:
-		/* Write me! */
+		mem_free_set(&html->alt, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_BORDER:
-		/* Write me! */
+		mem_free_set(&html->border, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HEIGHT:
-		/* Write me! */
+		mem_free_set(&html->height, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HSPACE:
-		/* Write me! */
+		mem_free_set(&html->hspace, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_IS_MAP:
-		/* Write me! */
+		mem_free_set(&html->is_map, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_LONG_DESC:
-		/* Write me! */
+		mem_free_set(&html->long_desc, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_SRC:
-		/* Write me! */
+		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_USE_MAP:
-		/* Write me! */
+		mem_free_set(&html->use_map, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_VSPACE:
-		/* Write me! */
+		mem_free_set(&html->vspace, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_WIDTH:
-		/* Write me! */
+		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -134,4 +160,3 @@ const JSClass HTMLImageElement_class = {
 	HTMLImageElement_getProperty, HTMLImageElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

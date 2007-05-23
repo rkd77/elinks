@@ -6,48 +6,63 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLSelectElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct SELECT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLSelectElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_SELECT_ELEMENT_TYPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->type);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SELECTED_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->selected_index);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_VALUE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->value);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_LENGTH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->length);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_FORM:
+		string_to_jsval(ctx, vp, html->form);
 		/* Write me! */
 		break;
 	case JSP_HTML_SELECT_ELEMENT_OPTIONS:
+		string_to_jsval(ctx, vp, html->options);
 		/* Write me! */
 		break;
 	case JSP_HTML_SELECT_ELEMENT_DISABLED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_MULTIPLE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->multiple);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SIZE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->size);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->tab_index);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -58,33 +73,46 @@ HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 static JSBool
 HTMLSelectElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct SELECT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLSelectElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_SELECT_ELEMENT_SELECTED_INDEX:
-		/* Write me! */
+		mem_free_set(&html->selected_index, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_VALUE:
-		/* Write me! */
+		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_LENGTH:
-		/* Write me! */
+		mem_free_set(&html->length, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_DISABLED:
-		/* Write me! */
+		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_MULTIPLE:
-		/* Write me! */
+		mem_free_set(&html->multiple, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_NAME:
-		/* Write me! */
+		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SIZE:
-		/* Write me! */
+		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -154,4 +182,3 @@ const JSClass HTMLSelectElement_class = {
 	HTMLSelectElement_getProperty, HTMLSelectElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

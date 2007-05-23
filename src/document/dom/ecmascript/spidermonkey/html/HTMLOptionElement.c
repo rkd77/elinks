@@ -6,39 +6,53 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLOptionElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLOptionElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct OPTION_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLOptionElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_OPTION_ELEMENT_FORM:
+		string_to_jsval(ctx, vp, html->form);
 		/* Write me! */
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DEFAULT_SELECTED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->default_selected);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_TEXT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->text);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->index);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DISABLED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_LABEL:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->label);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_SELECTED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->selected);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_VALUE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->value);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -49,24 +63,37 @@ HTMLOptionElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 static JSBool
 HTMLOptionElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct OPTION_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLOptionElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_OPTION_ELEMENT_DEFAULT_SELECTED:
-		/* Write me! */
+		mem_free_set(&html->default_selected, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DISABLED:
-		/* Write me! */
+		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_OPTION_ELEMENT_LABEL:
-		/* Write me! */
+		mem_free_set(&html->label, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_OPTION_ELEMENT_SELECTED:
-		/* Write me! */
+		mem_free_set(&html->selected, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_OPTION_ELEMENT_VALUE:
-		/* Write me! */
+		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -97,4 +124,3 @@ const JSClass HTMLOptionElement_class = {
 	HTMLOptionElement_getProperty, HTMLOptionElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

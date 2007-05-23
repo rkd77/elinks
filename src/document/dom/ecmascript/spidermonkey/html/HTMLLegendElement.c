@@ -6,24 +6,38 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLLegendElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLLegendElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct LEGEND_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLLegendElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_LEGEND_ELEMENT_FORM:
+		string_to_jsval(ctx, vp, html->form);
 		/* Write me! */
 		break;
 	case JSP_HTML_LEGEND_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->access_key);
 		break;
 	case JSP_HTML_LEGEND_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -34,15 +48,28 @@ HTMLLegendElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 static JSBool
 HTMLLegendElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct LEGEND_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLLegendElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_LEGEND_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		mem_free_set(&html->access_key, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_LEGEND_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -68,4 +95,3 @@ const JSClass HTMLLegendElement_class = {
 	HTMLLegendElement_getProperty, HTMLLegendElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

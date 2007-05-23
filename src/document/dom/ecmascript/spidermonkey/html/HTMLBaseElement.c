@@ -7,20 +7,33 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLBaseElement.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLBaseElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct BASE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLBaseElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_BASE_ELEMENT_HREF:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->href);
 		break;
 	case JSP_HTML_BASE_ELEMENT_TARGET:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->target);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -31,15 +44,28 @@ HTMLBaseElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLBaseElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct BASE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLBaseElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_BASE_ELEMENT_HREF:
-		/* Write me! */
+		mem_free_set(&html->href, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BASE_ELEMENT_TARGET:
-		/* Write me! */
+		mem_free_set(&html->target, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -64,4 +90,3 @@ const JSClass HTMLBaseElement_class = {
 	HTMLBaseElement_getProperty, HTMLBaseElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

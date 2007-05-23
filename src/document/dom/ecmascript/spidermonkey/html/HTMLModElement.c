@@ -6,21 +6,34 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLModElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLModElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct MOD_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLModElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_MOD_ELEMENT_CITE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cite);
 		break;
 	case JSP_HTML_MOD_ELEMENT_DATE_TIME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->date_time);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -31,15 +44,28 @@ HTMLModElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLModElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct MOD_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLModElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_MOD_ELEMENT_CITE:
-		/* Write me! */
+		mem_free_set(&html->cite, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_MOD_ELEMENT_DATE_TIME:
-		/* Write me! */
+		mem_free_set(&html->date_time, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -64,4 +90,3 @@ const JSClass HTMLModElement_class = {
 	HTMLModElement_getProperty, HTMLModElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

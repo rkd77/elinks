@@ -6,36 +6,49 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLScriptElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLScriptElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct SCRIPT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLScriptElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_SCRIPT_ELEMENT_TEXT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->text);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_HTML_FOR:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->html_for);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_EVENT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->event);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_CHARSET:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->charset);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_DEFER:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->defer);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_SRC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->src);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_TYPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->type);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -46,30 +59,43 @@ HTMLScriptElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 static JSBool
 HTMLScriptElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct SCRIPT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLScriptElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_SCRIPT_ELEMENT_TEXT:
-		/* Write me! */
+		mem_free_set(&html->text, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_HTML_FOR:
-		/* Write me! */
+		mem_free_set(&html->html_for, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_EVENT:
-		/* Write me! */
+		mem_free_set(&html->event, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_CHARSET:
-		/* Write me! */
+		mem_free_set(&html->charset, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_DEFER:
-		/* Write me! */
+		mem_free_set(&html->defer, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_SRC:
-		/* Write me! */
+		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_TYPE:
-		/* Write me! */
+		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -99,4 +125,3 @@ const JSClass HTMLScriptElement_class = {
 	HTMLScriptElement_getProperty, HTMLScriptElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

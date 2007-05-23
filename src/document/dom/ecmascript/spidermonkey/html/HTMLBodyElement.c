@@ -7,32 +7,45 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLBodyElement.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLBodyElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct BODY_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLBodyElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_BODY_ELEMENT_ALINK:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->alink);
 		break;
 	case JSP_HTML_BODY_ELEMENT_BACKGROUND:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->background);
 		break;
 	case JSP_HTML_BODY_ELEMENT_BGCOLOR:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->bgcolor);
 		break;
 	case JSP_HTML_BODY_ELEMENT_LINK:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->link);
 		break;
 	case JSP_HTML_BODY_ELEMENT_TEXT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->text);
 		break;
 	case JSP_HTML_BODY_ELEMENT_VLINK:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->vlink);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -43,27 +56,40 @@ HTMLBodyElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLBodyElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct BODY_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLBodyElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_BODY_ELEMENT_ALINK:
-		/* Write me! */
+		mem_free_set(&html->alink, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BODY_ELEMENT_BACKGROUND:
-		/* Write me! */
+		mem_free_set(&html->background, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BODY_ELEMENT_BGCOLOR:
-		/* Write me! */
+		mem_free_set(&html->bgcolor, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BODY_ELEMENT_LINK:
-		/* Write me! */
+		mem_free_set(&html->link, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BODY_ELEMENT_TEXT:
-		/* Write me! */
+		mem_free_set(&html->text, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BODY_ELEMENT_VLINK:
-		/* Write me! */
+		mem_free_set(&html->vlink, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -92,4 +118,3 @@ const JSClass HTMLBodyElement_class = {
 	HTMLBodyElement_getProperty, HTMLBodyElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

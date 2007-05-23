@@ -6,24 +6,37 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLStyleElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLStyleElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct STYLE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLStyleElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_STYLE_ELEMENT_DISABLED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_STYLE_ELEMENT_MEDIA:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->media);
 		break;
 	case JSP_HTML_STYLE_ELEMENT_TYPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->type);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -34,18 +47,31 @@ HTMLStyleElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLStyleElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct STYLE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLStyleElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_STYLE_ELEMENT_DISABLED:
-		/* Write me! */
+		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_STYLE_ELEMENT_MEDIA:
-		/* Write me! */
+		mem_free_set(&html->media, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_STYLE_ELEMENT_TYPE:
-		/* Write me! */
+		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -71,4 +97,3 @@ const JSClass HTMLStyleElement_class = {
 	HTMLStyleElement_getProperty, HTMLStyleElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

@@ -10,4 +10,12 @@ extern const JSPropertySpec HTMLElement_props[];
 JSBool HTMLElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 JSBool HTMLElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+struct HTMLElement_struct {
+	unsigned char *id;
+	unsigned char *title;
+	unsigned char *lang;
+	unsigned char *dir;
+	unsigned char *class_name;
+};
+
 #endif

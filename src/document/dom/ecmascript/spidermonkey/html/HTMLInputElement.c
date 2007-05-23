@@ -6,69 +6,85 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLInputElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLInputElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct INPUT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLInputElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_VALUE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->default_value);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_CHECKED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->default_checked);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_FORM:
+		string_to_jsval(ctx, vp, html->form);
 		/* Write me! */
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCEPT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->accept);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->access_key);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ALT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->alt);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_CHECKED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->checked);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DISABLED:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_MAX_LENGTH:
+		string_to_jsval(ctx, vp, html->max_length);
 		/* Write me! */
 		break;
 	case JSP_HTML_INPUT_ELEMENT_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_READ_ONLY:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->read_only);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SIZE:
+		string_to_jsval(ctx, vp, html->size);
 		/* Write me! */
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SRC:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->src);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TYPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->type);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_USE_MAP:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->use_map);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_VALUE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->value);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -79,60 +95,73 @@ HTMLInputElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLInputElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct INPUT_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLInputElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_VALUE:
-		/* Write me! */
+		mem_free_set(&html->default_value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_CHECKED:
-		/* Write me! */
+		mem_free_set(&html->default_checked, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCEPT:
-		/* Write me! */
+		mem_free_set(&html->accept, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		mem_free_set(&html->access_key, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ALT:
-		/* Write me! */
+		mem_free_set(&html->alt, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_CHECKED:
-		/* Write me! */
+		mem_free_set(&html->checked, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DISABLED:
-		/* Write me! */
+		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_MAX_LENGTH:
-		/* Write me! */
+		mem_free_set(&html->max_length, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_NAME:
-		/* Write me! */
+		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_READ_ONLY:
-		/* Write me! */
+		mem_free_set(&html->read_only, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SIZE:
-		/* Write me! */
+		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SRC:
-		/* Write me! */
+		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TYPE:
-		/* Write me! */
+		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_USE_MAP:
-		/* Write me! */
+		mem_free_set(&html->use_map, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_VALUE:
-		/* Write me! */
+		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -209,4 +238,3 @@ const JSClass HTMLInputElement_class = {
 	HTMLInputElement_getProperty, HTMLInputElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

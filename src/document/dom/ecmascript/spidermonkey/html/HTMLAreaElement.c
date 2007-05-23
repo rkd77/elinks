@@ -7,38 +7,51 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLAreaElement.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLAreaElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct AREA_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLAreaElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_AREA_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->access_key);
 		break;
 	case JSP_HTML_AREA_ELEMENT_ALT:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->alt);
 		break;
 	case JSP_HTML_AREA_ELEMENT_COORDS:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->coords);
 		break;
 	case JSP_HTML_AREA_ELEMENT_HREF:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->href);
 		break;
 	case JSP_HTML_AREA_ELEMENT_NO_HREF:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->no_href);
 		break;
 	case JSP_HTML_AREA_ELEMENT_SHAPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->shape);
 		break;
 	case JSP_HTML_AREA_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_AREA_ELEMENT_TARGET:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->target);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -49,33 +62,46 @@ HTMLAreaElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLAreaElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct AREA_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLAreaElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_AREA_ELEMENT_ACCESS_KEY:
-		/* Write me! */
+		mem_free_set(&html->access_key, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_ALT:
-		/* Write me! */
+		mem_free_set(&html->alt, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_COORDS:
-		/* Write me! */
+		mem_free_set(&html->coords, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_HREF:
-		/* Write me! */
+		mem_free_set(&html->href, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_NO_HREF:
-		/* Write me! */
+		mem_free_set(&html->no_href, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_SHAPE:
-		/* Write me! */
+		mem_free_set(&html->shape, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_TAB_INDEX:
-		/* Write me! */
+		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_TARGET:
-		/* Write me! */
+		mem_free_set(&html->target, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -106,4 +132,3 @@ const JSClass HTMLAreaElement_class = {
 	HTMLAreaElement_getProperty, HTMLAreaElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

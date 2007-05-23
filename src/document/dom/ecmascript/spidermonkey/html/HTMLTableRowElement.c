@@ -6,39 +6,52 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableRowElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLTableRowElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct TR_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableRowElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ROW_ELEMENT_ROW_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->row_index);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_SECTION_ROW_INDEX:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->section_row_index);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CELLS:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cells);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_BGCOLOR:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->bgcolor);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->ch);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CH_OFF:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->ch_off);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_VALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->valign);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -49,24 +62,37 @@ HTMLTableRowElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 static JSBool
 HTMLTableRowElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct TR_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableRowElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ROW_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_BGCOLOR:
-		/* Write me! */
+		mem_free_set(&html->bgcolor, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CH:
-		/* Write me! */
+		mem_free_set(&html->ch, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CH_OFF:
-		/* Write me! */
+		mem_free_set(&html->ch_off, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_VALIGN:
-		/* Write me! */
+		mem_free_set(&html->valign, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -115,4 +141,3 @@ const JSClass HTMLTableRowElement_class = {
 	HTMLTableRowElement_getProperty, HTMLTableRowElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

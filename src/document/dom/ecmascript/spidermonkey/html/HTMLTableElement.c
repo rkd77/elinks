@@ -6,57 +6,75 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
-#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct TABLE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ELEMENT_CAPTION:
+		string_to_jsval(ctx, vp, html->caption);
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_THEAD:
+		string_to_jsval(ctx, vp, html->thead);
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TFOOT:
+		string_to_jsval(ctx, vp, html->tfoot);
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ROWS:
+		string_to_jsval(ctx, vp, html->rows);
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TBODIES:
+		string_to_jsval(ctx, vp, html->tbodies);
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ALIGN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_BGCOLOR:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->bgcolor);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_BORDER:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->border);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_CELL_PADDING:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cell_padding);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_CELL_SPACING:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cell_spacing);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_FRAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->frame);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_RULES:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->rules);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_SUMMARY:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->summary);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_WIDTH:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->width);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -67,45 +85,61 @@ HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLTableElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct TABLE_struct *html;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLTableElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ELEMENT_CAPTION:
+		mem_free_set(&html->caption, stracpy(jsval_to_string(ctx, vp)));
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_THEAD:
+		mem_free_set(&html->thead, stracpy(jsval_to_string(ctx, vp)));
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TFOOT:
+		mem_free_set(&html->tfoot, stracpy(jsval_to_string(ctx, vp)));
 		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ALIGN:
-		/* Write me! */
+		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_BGCOLOR:
-		/* Write me! */
+		mem_free_set(&html->bgcolor, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_BORDER:
-		/* Write me! */
+		mem_free_set(&html->border, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_CELL_PADDING:
-		/* Write me! */
+		mem_free_set(&html->cell_padding, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_CELL_SPACING:
-		/* Write me! */
+		mem_free_set(&html->cell_spacing, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_FRAME:
-		/* Write me! */
+		mem_free_set(&html->frame, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_RULES:
-		/* Write me! */
+		mem_free_set(&html->rules, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_SUMMARY:
-		/* Write me! */
+		mem_free_set(&html->summary, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_ELEMENT_WIDTH:
-		/* Write me! */
+		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
@@ -214,4 +248,3 @@ const JSClass HTMLTableElement_class = {
 	HTMLTableElement_getProperty, HTMLTableElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-
