@@ -256,6 +256,7 @@ read_special(struct connection *conn, int fd)
 	memcpy(rb->data, header, length);
 	rb->length = length;
 	rb->freespace -= length;
+	set_nonblocking_fd(fd);
 
 	conn->unrestartable = 1;
 	conn->socket->state = SOCKET_END_ONCLOSE;
