@@ -628,7 +628,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 {
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
-	unsigned char bold = (ch->attr & SCREEN_ATTR_BOLD);
+	unsigned char bold = (ch->attr & SCREEN_ATTR_BOLD) | (ch->color[0] & 0x08);
 
 	if (
 #ifdef CONFIG_UTF8
