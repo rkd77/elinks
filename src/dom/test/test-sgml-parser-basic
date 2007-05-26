@@ -20,7 +20,7 @@ test_output_equals () {
 
 	sgml-parser --uri "$URI" --src "$src" > output
 	echo "#document: $URI" > expected
-	echo "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
+	printf "%s\n" "$out" | sed -n '2,$p' | sed 's/^/  /' >> expected
 
 	test_expect_success "$desc" 'cmp output expected' 
 }
