@@ -8,11 +8,6 @@ TEST_PROGS = \
  sgml-parser
 
 TESTDEPS = \
- $(top_builddir)/src/dom/$(LIB_O_NAME) \
- $(top_builddir)/src/util/error.o \
- $(top_builddir)/src/osdep/stub.o \
- $(top_builddir)/src/util/hash.o \
- $(top_builddir)/src/util/string.o \
- $(top_builddir)/src/util/memory.o
+ $(top_builddir)/src/dom/$(LIB_O_NAME)
 
 include $(top_srcdir)/Makefile.lib
