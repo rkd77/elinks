@@ -116,7 +116,6 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 
 * bug 725: fix version checking for Ruby in 'configure'
 * use $(CPPFLAGS) rather than $(AM_CFLAGS)
-* fix compilation under gcc 4.x. Backported from gentoo portage.
 * update SpiderMonkey configure check Debian compatibility
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
@@ -209,9 +208,11 @@ have already been considered.
     in ELinks 0.11.1.
   - Debian bug 400871: include <sys/types.h> for off_t.  (Bug 936 was
     reported for GIT (HEAD) after the change and may still exist.)
-    Commit c135a79a3c309af36cf963f1d3c34b07f296fa2f7 in ELinks 0.11.3.
+    Commit 135a79a3c309af36cf963f1d3c34b07f296fa2f7 in ELinks 0.11.3.
   - bug 107: recognize "localhost" in file: URIs.  Cannot reproduce in
     earlier versions.
+  - fix compilation under gcc 4.x. Backported from gentoo portage.
+    Commit bcabd8b7951f3319199811088e607501296ee573 in ELinks 0.11.3.
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
