@@ -3,10 +3,6 @@ include $(top_builddir)/Makefile.config
 
 INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)
 
-# Reverse a CONFIG_* string
-# Usage $(call not,$(CONFIG_FOO))
-not = $(if $(findstring yes,$(1)),no,yes)
-
 OBJS-$(call not,$(CONFIG_SMALL))	 += fastfind.o
 OBJS-$(CONFIG_CSS)			 += scanner.o
 OBJS-$(CONFIG_DEBUG)			 += memdebug.o
