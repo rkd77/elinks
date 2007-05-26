@@ -468,11 +468,11 @@ done_dom_node(struct dom_node *node)
 	if (node->ecmascript_obj) {
 		done_dom_node_ecmascript_obj(node);
 	}
-#endif
-#endif
 	if (node->type == DOM_NODE_ELEMENT && node->data.element.html_data) {
 		done_dom_node_html_data(node);
 	}
+#endif
+#endif
 	done_dom_node_data(node);
 }
 
