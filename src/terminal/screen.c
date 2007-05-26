@@ -370,10 +370,9 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 	enum term_mode_type type = get_opt_int_tree(term_spec, "type");
 	struct screen_driver *driver;
 	unsigned char *name = term_spec->name;
-	int len = strlen(name);
 
 	foreach (driver, active_screen_drivers)
-		if (driver->type == type && !memcmp(driver->name, name, len)) {
+		if (driver->type == type && !strcmp(driver->name, name)) {
 			set_screen_driver_opt(driver, term_spec);
 			break;
 		}
@@ -416,7 +415,7 @@ get_screen_driver(struct terminal *term)
 
 	foreach (driver, active_screen_drivers) {
 		if (driver->type != type) continue;
-		if (memcmp(driver->name, name, len + 1)) continue;
+		if (strcmp(driver->name, name)) continue;
 
 		/* Some simple probably useless MRU ;) */
 		move_to_top_of_list(active_screen_drivers, driver);
