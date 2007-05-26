@@ -9,6 +9,7 @@ OBJS = common.o default.o
 TEST_PROGS = \
  mailcap-cache
 
+not = $(if $(findstring yes,$(1)),no,yes)
 # The dependencies are a bit funny here! I don't know why. Just remember to
 # make clean before making the test. --jonas
 mailcap-cache.o: mailcap.c
@@ -16,6 +17,7 @@ mailcap-cache.o: mailcap.c
 
 TESTDEPS = \
  common.o \
+ $(top_builddir)/src/intl/charsets.o \
  $(top_builddir)/src/osdep/osdep.o \
  $(top_builddir)/src/osdep/stub.o \
  $(top_builddir)/src/util/conv.o \
@@ -27,6 +29,7 @@ TESTDEPS = \
  $(top_builddir)/src/util/time.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
+TESTDEPS-$(call not,$(CONFIG_SMALL))	+= $(top_builddir)/src/util/fastfind.o
 TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 
 include $(top_srcdir)/Makefile.lib
