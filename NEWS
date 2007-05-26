@@ -120,7 +120,6 @@ Miscellaneous:
 Build system and compile-time errors (ignore if you don't build ELinks):
 
 * bug 725: fix version checking for Ruby in 'configure'
-* fixed some bugs about compiling outside the source directory
 * use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * fix compilation under gcc 4.x. Backported from gentoo portage.
 * update SpiderMonkey configure check Debian compatibility
