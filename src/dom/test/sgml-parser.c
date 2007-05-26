@@ -242,7 +242,8 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	return DOM_CODE_OK;
 }
 
-void die(const char *msg, ...)
+static void
+die(const char *msg, ...)
 {
 	va_list args;
 
