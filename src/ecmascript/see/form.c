@@ -158,6 +158,15 @@ struct js_form_elems {
 };
 
 
+static inline struct form_state *
+form_state_of_js_input(struct view_state *vs, const struct js_input *input)
+{
+	assert(input->form_number >= 0);
+	assert(input->form_number < vs->form_info_len);
+	if_assert_failed return NULL;
+	return &vs->form_info[input->form_number];
+}
+
 static void
 input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *res)
@@ -168,7 +177,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
 	struct js_form *parent = input->parent;
-	struct form_state *fs = &vs->form_info[input->form_number];
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -271,7 +280,7 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
-	struct form_state *fs = &vs->form_info[input->form_number];
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -371,7 +380,7 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = &vs->form_info[input->form_number];
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc;
 	int linknum;
 
@@ -406,7 +415,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = &vs->form_info[input->form_number];
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc;
 	int linknum;
 
