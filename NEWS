@@ -40,7 +40,7 @@ Notable new features:
 Incompatibilities:
 
 * ECMAScript support is now disabled by default.  It has known
-  bugs (548, 755, 771) with which malicious web pages can crash or
+  bugs (548, 771) with which malicious web pages can crash or
   hang ELinks, and its security goals are undocumented.  If you must
   enable ECMAScript support, it would be prudent to restrict the
   ELinks process with a sandbox of some kind.
@@ -130,6 +130,8 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 Changes in the experimental ECMAScript support:
 
 * disabled by default, as mentioned under ``Incompatibilities'' above
+* critical bug 755: fix crashes due to dangling pointers to struct
+  form_state
 * enhancement: SEE ECMAScript backend, an alternative to SpiderMonkey
 * enhancement: handling onsubmit
 * workaround: window.open remembers the last few URLs and doesn't
