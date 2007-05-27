@@ -35,10 +35,10 @@ Notable new features:
 Incompatibilities:
 
 * ECMAScript support is now disabled by default.  It has known
-  bugs (548, 771) with which malicious web pages can crash or
-  hang ELinks, and its security goals are undocumented.  If you must
-  enable ECMAScript support, it would be prudent to restrict the
-  ELinks process with a sandbox of some kind.
+  bugs 548 and 771 with which malicious web pages can hang ELinks,
+  and its security goals are undocumented.  If you must enable
+  ECMAScript support, it would be prudent to restrict the ELinks
+  process with a sandbox of some kind.
 * bugs 871, 752: The numbering of terminal.*.colors no longer depends
   on config options.  This change makes elinks.conf portable between
   different configurations but unfortunately not between this and
