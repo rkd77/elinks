@@ -49,7 +49,8 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
 		return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
+	vs = JS_GetInstancePrivate(ctx, obj,
+				   (JSClass *) &view_state_class, NULL);
 
 	undef_to_jsval(ctx, vp);
 
@@ -89,7 +90,8 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
 		return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, obj); /* from @view_state_class */
+	vs = JS_GetInstancePrivate(ctx, obj,
+				   (JSClass *) &view_state_class, NULL);
 
 	if (!JSVAL_IS_INT(id))
 		return JS_FALSE;

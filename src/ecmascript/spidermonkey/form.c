@@ -134,7 +134,9 @@ static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 static struct form_state *
 input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
 {
-	int n = (int)(long)JS_GetPrivate(ctx, obj);
+	int n = (int)(long)JS_GetInstancePrivate(ctx, obj,
+						 (JSClass *) &input_class,
+						 NULL);
 
 	return &vs->form_info[n];
 }
@@ -169,7 +171,8 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, obj, vs);
@@ -319,7 +322,8 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, obj, vs);
@@ -442,7 +446,8 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
@@ -494,7 +499,8 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
@@ -632,10 +638,12 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (JSVAL_IS_STRING(id)) {
@@ -688,10 +696,12 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
@@ -745,10 +755,12 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
@@ -849,9 +861,10 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -981,9 +994,10 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1060,9 +1074,10 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1096,10 +1111,11 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1188,7 +1204,8 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
@@ -1232,7 +1249,8 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 
 	if (argc != 1)
 		return JS_TRUE;
@@ -1272,7 +1290,8 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
