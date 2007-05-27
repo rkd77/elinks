@@ -45,7 +45,8 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
 		return JS_FALSE;
 
-	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	cached = JS_GetInstancePrivate(ctx, obj, 
+				       (JSClass *) &cache_entry_class, NULL);
 
 	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
@@ -108,7 +109,8 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
 		return JS_FALSE;
 
-	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
 
 	if (!cache_entry_is_valid(cached)) return JS_FALSE;
 
@@ -160,7 +162,8 @@ cache_entry_finalize(JSContext *ctx, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
 	if_assert_failed return;
 
-	cached = JS_GetPrivate(ctx, obj); /* from @cache_entry_class */
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
 
 	if (!cached) return;
 
