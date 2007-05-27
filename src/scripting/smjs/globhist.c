@@ -105,8 +105,8 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 
 		return JS_TRUE;
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
@@ -163,8 +163,8 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		return JS_TRUE;
 	}
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case.
 		 * Do the same here.  */
 		return JS_TRUE;
