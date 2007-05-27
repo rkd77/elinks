@@ -90,7 +90,8 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
 		return JS_FALSE;
 
-	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
+	bookmark = JS_GetInstancePrivate(ctx, obj,
+					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return JS_FALSE;
 
@@ -137,7 +138,8 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
 		return JS_FALSE;
 
-	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class */
+	bookmark = JS_GetInstancePrivate(ctx, obj,
+					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return JS_FALSE;
 
@@ -211,7 +213,8 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL))
 		return JS_FALSE;
 
-	folder = JS_GetPrivate(ctx, obj); /* from @bookmark_folder_class */
+	folder = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &bookmark_folder_class, NULL);
 
 	*vp = JSVAL_NULL;
 

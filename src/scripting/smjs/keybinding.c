@@ -29,7 +29,8 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL))
 		return JS_FALSE;
 
-	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
+	data = JS_GetInstancePrivate(ctx, obj,
+				     (JSClass *) &keymap_class, NULL);
 
 	keystroke_str = JS_GetStringBytes(JS_ValueToString(ctx, id));
 	if (!keystroke_str) goto ret_null;
@@ -83,7 +84,8 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL))
 		return JS_FALSE;
 
-	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
+	data = JS_GetInstancePrivate(ctx, obj,
+				     (JSClass *) &keymap_class, NULL);
 
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
 	 * which will of course then convert the string back to an id... */
@@ -155,7 +157,8 @@ keymap_finalize(JSContext *ctx, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
 	if_assert_failed return;
 
-	data = JS_GetPrivate(ctx, obj); /* from @keymap_class */
+	data = JS_GetInstancePrivate(ctx, obj,
+				     (JSClass *) &keymap_class, NULL);
 
 	mem_free(data);
 }
