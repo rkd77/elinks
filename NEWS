@@ -73,6 +73,8 @@ Miscellaneous:
   same line; don't let it fall to the next
 * minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor: show quote characters for HTML element Q, rather than italics
+* minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
+  Flush all caches' to work around their holding cache entries busy.
 * trivial bug 387: treat &#013; inside <pre>...</pre> as a newline
 * trivial bug 930: refresh status bar when key prefix is eaten
 * trivial bug 776: ``elinks -remote http://elinks.cz/'' no longer clears
@@ -105,10 +107,6 @@ Miscellaneous:
 * enhancement: support Ctrl+Alt+letter key combinations
 * enhancement 381: reduce memory consumption of codepages and some
   other arrays
-* enhancement in user SMJS: garbage-collect SMJS objects on 'File ->
-  Flush all caches'.  This is a workaround to how cache_entry SMJS
-  objects added in ELinks 0.11.0 prevent ELinks from freeing cache
-  entries until SMJS collects them as garbage.
 * enhancement in user SMJS: new properties/functions elinks.action,
   elinks.execute, elinks.globhist, elinks.load_uri, elinks.vs
 
