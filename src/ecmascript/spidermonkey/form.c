@@ -138,6 +138,9 @@ input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
 						 (JSClass *) &input_class,
 						 NULL);
 
+	assert(n >= 0);
+	assert(n < vs->form_info_len);
+	if_assert_failed return NULL;
 	return &vs->form_info[n];
 }
 
