@@ -11,7 +11,6 @@ struct option_type_info {
 	void (*write)(struct option *, struct string *);
 	void (*dup)(struct option *, struct option *);
 	int (*set)(struct option *, unsigned char *);
-	int (*add)(struct option *, unsigned char *);
 	unsigned char *help_str;
 };
 
