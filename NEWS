@@ -25,6 +25,7 @@ To be released as 0.11.4.
 * bug 947: document.html.wrap_nbsp also affects text in tables
 * fix passive FTP over IPv6 when connect() fails with EINPROGRESS
 * minor bug 396: never show empty filename in the what-to-do dialog
+* minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
 * build: update SpiderMonkey configure check Debian compatibility
