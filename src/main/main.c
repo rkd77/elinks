@@ -315,13 +315,6 @@ terminate_all_subsystems(void)
 void
 shrink_memory(int whole)
 {
-#ifdef CONFIG_SCRIPTING
-	/* The SMJS pre-format-html hook constructs an SMJS object for
-	 * each cache entry.  Give all scripting modules a cue to garbage
-	 * collect any such objects so that the entries can be freed.  */
-	if (whole)
-		trigger_event_name("flush-caches");
-#endif
 	shrink_dns_cache(whole);
 	shrink_format_cache(whole);
 	garbage_collection(whole);
