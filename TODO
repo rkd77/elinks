@@ -1,24 +1,16 @@
-The ELinks TODO items are kept in Bugzilla (http://bugzilla.elinks.cz/),
-look for the bugs with 'enhancement' severity. Some generic goals are still
-kept here, though, to be more on the developers' eyes ;-).
+TODO list
+=========
 
-
-What yet needs to take its way to Bugzilla:
-
-  Some rules for sane handling of texinfo documentation
-
-  Rewrite HTML parser (see the SGML+DOM stuff, src/document/sgml)
-
-  Reorganization of user interface (nothing particular at all, just an
-uncertain feel that it could be better and bear a look of some UI designer ;)
-
+The ELinks TODO items are kept in Bugzilla <http://bugzilla.elinks.cz/>;
+look for the bugs with 'enhancement' severity. More general goals are
+still kept here, though, to be more visible to developers. ;-) Finally,
+the code contains several (greppable) "FIXME" and "TODO" notes regarding
+smaller fixes and enhancements.
 
 General goals:
 
-  Write some more documentation.. docs, a lot of docs!
+ - Write more documentation; docs, a lot of docs!
 
-  General code cleanup
+ - General code cleanup
 
-  Speed/memory optimizations
-
-
+ - Speed/memory optimizations
