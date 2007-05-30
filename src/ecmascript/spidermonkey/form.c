@@ -365,7 +365,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		if (JS_ValueToInt32(ctx, *vp, &fc->maxlength))
+		if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
 			return JS_FALSE;
 		break;
 	case JSP_INPUT_NAME:
