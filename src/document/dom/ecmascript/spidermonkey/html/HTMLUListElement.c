@@ -30,7 +30,7 @@ HTMLUListElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_ULIST_ELEMENT_COMPACT:
-		string_to_jsval(ctx, vp, html->compact);
+		boolean_to_jsval(ctx, vp, html->compact);
 		break;
 	case JSP_HTML_ULIST_ELEMENT_TYPE:
 		string_to_jsval(ctx, vp, html->type);
@@ -62,7 +62,7 @@ HTMLUListElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_ULIST_ELEMENT_COMPACT:
-		mem_free_set(&html->compact, stracpy(jsval_to_string(ctx, vp)));
+		html->compact = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_ULIST_ELEMENT_TYPE:
 		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));

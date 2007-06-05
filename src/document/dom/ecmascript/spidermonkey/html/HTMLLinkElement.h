@@ -10,7 +10,6 @@ extern const JSPropertySpec HTMLLinkElement_props[];
 
 struct LINK_struct {
 	struct HTMLElement_struct html;
-	unsigned char *disabled;
 	unsigned char *charset;
 	unsigned char *href;
 	unsigned char *hreflang;
@@ -19,6 +18,7 @@ struct LINK_struct {
 	unsigned char *rev;
 	unsigned char *target;
 	unsigned char *type;
+	unsigned int disabled:1;
 };
 
 #endif

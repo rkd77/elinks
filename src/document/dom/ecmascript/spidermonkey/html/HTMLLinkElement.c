@@ -30,7 +30,7 @@ HTMLLinkElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_LINK_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_LINK_ELEMENT_CHARSET:
 		string_to_jsval(ctx, vp, html->charset);
@@ -83,7 +83,7 @@ HTMLLinkElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_LINK_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_LINK_ELEMENT_CHARSET:
 		mem_free_set(&html->charset, stracpy(jsval_to_string(ctx, vp)));

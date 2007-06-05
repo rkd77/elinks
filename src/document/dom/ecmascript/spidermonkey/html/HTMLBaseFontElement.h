@@ -12,7 +12,7 @@ struct BASEFONT_struct {
 	struct HTMLElement_struct html;
 	unsigned char *color;
 	unsigned char *face;
-	unsigned char *size;
+	int size;
 };
 
 #endif

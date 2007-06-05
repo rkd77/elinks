@@ -39,7 +39,7 @@ HTMLTableColElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		string_to_jsval(ctx, vp, html->ch_off);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_SPAN:
-		string_to_jsval(ctx, vp, html->span);
+		int_to_jsval(ctx, vp, html->span);
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_VALIGN:
 		string_to_jsval(ctx, vp, html->valign);
@@ -83,8 +83,7 @@ HTMLTableColElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		mem_free_set(&html->ch_off, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_COL_ELEMENT_SPAN:
-		mem_free_set(&html->span, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->span);
 	case JSP_HTML_TABLE_COL_ELEMENT_VALIGN:
 		mem_free_set(&html->valign, stracpy(jsval_to_string(ctx, vp)));
 		break;

@@ -16,11 +16,11 @@ struct APPLET_struct {
 	unsigned char *code;
 	unsigned char *code_base;
 	unsigned char *height;
-	unsigned char *hspace;
 	unsigned char *name;
 	unsigned char *object;
-	unsigned char *vspace;
 	unsigned char *width;
+	int hspace;
+	int vspace;
 };
 
 #endif

@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLDListElement_props[];
 
 struct DL_struct {
 	struct HTMLElement_struct html;
-	unsigned char *compact;
+	unsigned int compact:1;
 };
 
 #endif

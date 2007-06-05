@@ -42,13 +42,13 @@ HTMLImageElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->border);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HEIGHT:
-		string_to_jsval(ctx, vp, html->height);
+		int_to_jsval(ctx, vp, html->height);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HSPACE:
-		string_to_jsval(ctx, vp, html->hspace);
+		int_to_jsval(ctx, vp, html->hspace);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_IS_MAP:
-		string_to_jsval(ctx, vp, html->is_map);
+		boolean_to_jsval(ctx, vp, html->is_map);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_LONG_DESC:
 		string_to_jsval(ctx, vp, html->long_desc);
@@ -60,10 +60,10 @@ HTMLImageElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->use_map);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_VSPACE:
-		string_to_jsval(ctx, vp, html->vspace);
+		int_to_jsval(ctx, vp, html->vspace);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_WIDTH:
-		string_to_jsval(ctx, vp, html->width);
+		int_to_jsval(ctx, vp, html->width);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -104,13 +104,11 @@ HTMLImageElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->border, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_HEIGHT:
-		mem_free_set(&html->height, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->height);
 	case JSP_HTML_IMAGE_ELEMENT_HSPACE:
-		mem_free_set(&html->hspace, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->hspace);
 	case JSP_HTML_IMAGE_ELEMENT_IS_MAP:
-		mem_free_set(&html->is_map, stracpy(jsval_to_string(ctx, vp)));
+		html->is_map = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_LONG_DESC:
 		mem_free_set(&html->long_desc, stracpy(jsval_to_string(ctx, vp)));
@@ -122,11 +120,9 @@ HTMLImageElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->use_map, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_IMAGE_ELEMENT_VSPACE:
-		mem_free_set(&html->vspace, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->vspace);
 	case JSP_HTML_IMAGE_ELEMENT_WIDTH:
-		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->width);
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
 	}

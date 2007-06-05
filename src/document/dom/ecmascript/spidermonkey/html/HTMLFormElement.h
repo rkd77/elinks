@@ -8,17 +8,16 @@ extern const JSClass HTMLFormElement_class;
 extern const JSFunctionSpec HTMLFormElement_funcs[];
 extern const JSPropertySpec HTMLFormElement_props[];
 
-struct FRAME_struct {
+struct FORM_struct {
 	struct HTMLElement_struct html;
-	unsigned char *frame_border;
-	unsigned char *long_desc;
-	unsigned char *margin_height;
-	unsigned char *margin_width;
+	unsigned char *elements; /* FIXME: proper type */
 	unsigned char *name;
-	unsigned char *no_resize;
-	unsigned char *scrolling;
-	unsigned char *src;
-	unsigned char *content_document; /* FIXME: proper type */
+	unsigned char *accept_charset;
+	unsigned char *action;
+	unsigned char *enctype;
+	unsigned char *method;
+	unsigned char *target;
+	int length;
 };
 
 #endif

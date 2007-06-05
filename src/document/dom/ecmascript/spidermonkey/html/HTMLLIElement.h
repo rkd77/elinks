@@ -11,7 +11,7 @@ extern const JSPropertySpec HTMLLIElement_props[];
 struct LI_struct {
 	struct HTMLElement_struct html;
 	unsigned char *type;
-	unsigned char *value;
+	int value;
 };
 
 #endif

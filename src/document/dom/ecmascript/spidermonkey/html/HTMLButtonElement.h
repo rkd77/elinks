@@ -12,11 +12,11 @@ struct BUTTON_struct {
 	struct HTMLElement_struct html;
 	unsigned char *form; /* TODO: proper type */
 	unsigned char *access_key;
-	unsigned char *disabled;
 	unsigned char *name;
-	unsigned char *tab_index;
 	unsigned char *type;
 	unsigned char *value;
+	int tab_index;
+	unsigned char disabled:1;
 };
 
 #endif

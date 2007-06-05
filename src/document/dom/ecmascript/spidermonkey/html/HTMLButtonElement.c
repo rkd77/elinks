@@ -37,13 +37,13 @@ HTMLButtonElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		string_to_jsval(ctx, vp, html->access_key);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_NAME:
 		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_TAB_INDEX:
-		string_to_jsval(ctx, vp, html->tab_index);
+		int_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_TYPE:
 		string_to_jsval(ctx, vp, html->type);
@@ -81,14 +81,13 @@ HTMLButtonElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		mem_free_set(&html->access_key, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_NAME:
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_TAB_INDEX:
-		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->tab_index);
 	case JSP_HTML_BUTTON_ELEMENT_VALUE:
 		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;

@@ -33,7 +33,7 @@ HTMLInputElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->default_value);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_CHECKED:
-		string_to_jsval(ctx, vp, html->default_checked);
+		boolean_to_jsval(ctx, vp, html->default_checked);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_FORM:
 		string_to_jsval(ctx, vp, html->form);
@@ -52,30 +52,28 @@ HTMLInputElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->alt);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_CHECKED:
-		string_to_jsval(ctx, vp, html->checked);
+		boolean_to_jsval(ctx, vp, html->checked);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_MAX_LENGTH:
-		string_to_jsval(ctx, vp, html->max_length);
-		/* Write me! */
+		int_to_jsval(ctx, vp, html->max_length);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_NAME:
 		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_READ_ONLY:
-		string_to_jsval(ctx, vp, html->read_only);
+		boolean_to_jsval(ctx, vp, html->read_only);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SIZE:
-		string_to_jsval(ctx, vp, html->size);
-		/* Write me! */
+		int_to_jsval(ctx, vp, html->size);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SRC:
 		string_to_jsval(ctx, vp, html->src);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TAB_INDEX:
-		string_to_jsval(ctx, vp, html->tab_index);
+		int_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TYPE:
 		string_to_jsval(ctx, vp, html->type);
@@ -116,7 +114,7 @@ HTMLInputElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->default_value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DEFAULT_CHECKED:
-		mem_free_set(&html->default_checked, stracpy(jsval_to_string(ctx, vp)));
+		html->default_checked = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCEPT:
 		mem_free_set(&html->accept, stracpy(jsval_to_string(ctx, vp)));
@@ -131,29 +129,26 @@ HTMLInputElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->alt, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_CHECKED:
-		mem_free_set(&html->checked, stracpy(jsval_to_string(ctx, vp)));
+		html->checked = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_MAX_LENGTH:
-		mem_free_set(&html->max_length, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->max_length);
 	case JSP_HTML_INPUT_ELEMENT_NAME:
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_READ_ONLY:
-		mem_free_set(&html->read_only, stracpy(jsval_to_string(ctx, vp)));
+		html->read_only = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_SIZE:
-		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->size);
 	case JSP_HTML_INPUT_ELEMENT_SRC:
 		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_INPUT_ELEMENT_TAB_INDEX:
-		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->tab_index);
 	case JSP_HTML_INPUT_ELEMENT_TYPE:
 		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));
 		break;

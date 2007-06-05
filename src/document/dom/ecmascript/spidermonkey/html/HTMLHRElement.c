@@ -33,7 +33,7 @@ HTMLHRElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->align);
 		break;
 	case JSP_HTML_HR_ELEMENT_NO_SHADE:
-		string_to_jsval(ctx, vp, html->no_shade);
+		boolean_to_jsval(ctx, vp, html->no_shade);
 		break;
 	case JSP_HTML_HR_ELEMENT_SIZE:
 		string_to_jsval(ctx, vp, html->size);
@@ -71,7 +71,7 @@ HTMLHRElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_HR_ELEMENT_NO_SHADE:
-		mem_free_set(&html->no_shade, stracpy(jsval_to_string(ctx, vp)));
+		html->no_shade = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_HR_ELEMENT_SIZE:
 		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));

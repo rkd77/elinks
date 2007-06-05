@@ -40,22 +40,22 @@ HTMLTextAreaElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		string_to_jsval(ctx, vp, html->access_key);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_COLS:
-		string_to_jsval(ctx, vp, html->cols);
+		int_to_jsval(ctx, vp, html->cols);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_NAME:
 		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_READ_ONLY:
-		string_to_jsval(ctx, vp, html->read_only);
+		boolean_to_jsval(ctx, vp, html->read_only);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_ROWS:
-		string_to_jsval(ctx, vp, html->rows);
+		int_to_jsval(ctx, vp, html->rows);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_TAB_INDEX:
-		string_to_jsval(ctx, vp, html->tab_index);
+		int_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_TYPE:
 		string_to_jsval(ctx, vp, html->type);
@@ -96,23 +96,20 @@ HTMLTextAreaElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		mem_free_set(&html->access_key, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_COLS:
-		mem_free_set(&html->cols, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->cols);
 	case JSP_HTML_TEXT_AREA_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_NAME:
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_READ_ONLY:
-		mem_free_set(&html->read_only, stracpy(jsval_to_string(ctx, vp)));
+		html->read_only = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_ROWS:
-		mem_free_set(&html->rows, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->rows);
 	case JSP_HTML_TEXT_AREA_ELEMENT_TAB_INDEX:
-		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->tab_index);
 	case JSP_HTML_TEXT_AREA_ELEMENT_VALUE:
 		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;

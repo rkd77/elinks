@@ -10,8 +10,8 @@ extern const JSPropertySpec HTMLOptGroupElement_props[];
 
 struct OPTGROUP_struct {
 	struct HTMLElement_struct html;
-	unsigned char *disabled;
 	unsigned char *label;
+	unsigned int disabled:1;
 };
 
 #endif

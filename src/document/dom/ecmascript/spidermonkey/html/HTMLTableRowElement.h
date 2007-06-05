@@ -10,14 +10,14 @@ extern const JSPropertySpec HTMLTableRowElement_props[];
 
 struct TR_struct {
 	struct HTMLElement_struct html;
-	unsigned char *row_index;
-	unsigned char *section_row_index;
-	unsigned char *cells;
+	unsigned char *cells; /* FIXME: proper type */
 	unsigned char *align;
 	unsigned char *bgcolor;
 	unsigned char *ch;
 	unsigned char *ch_off;
 	unsigned char *valign;
+	int row_index;
+	int section_row_index;
 };
 
 #endif

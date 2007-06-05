@@ -30,7 +30,7 @@ HTMLOptGroupElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_OPT_GROUP_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_OPT_GROUP_ELEMENT_LABEL:
 		string_to_jsval(ctx, vp, html->label);
@@ -62,7 +62,7 @@ HTMLOptGroupElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_OPT_GROUP_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_OPT_GROUP_ELEMENT_LABEL:
 		mem_free_set(&html->label, stracpy(jsval_to_string(ctx, vp)));

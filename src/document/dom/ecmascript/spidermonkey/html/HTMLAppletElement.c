@@ -48,7 +48,7 @@ HTMLAppletElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		string_to_jsval(ctx, vp, html->height);
 		break;
 	case JSP_HTML_APPLET_ELEMENT_HSPACE:
-		string_to_jsval(ctx, vp, html->hspace);
+		int_to_jsval(ctx, vp, html->hspace);
 		break;
 	case JSP_HTML_APPLET_ELEMENT_NAME:
 		string_to_jsval(ctx, vp, html->name);
@@ -57,7 +57,7 @@ HTMLAppletElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		string_to_jsval(ctx, vp, html->object);
 		break;
 	case JSP_HTML_APPLET_ELEMENT_VSPACE:
-		string_to_jsval(ctx, vp, html->vspace);
+		int_to_jsval(ctx, vp, html->vspace);
 		break;
 	case JSP_HTML_APPLET_ELEMENT_WIDTH:
 		string_to_jsval(ctx, vp, html->width);
@@ -107,8 +107,7 @@ HTMLAppletElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		mem_free_set(&html->height, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_APPLET_ELEMENT_HSPACE:
-		mem_free_set(&html->hspace, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->hspace);
 	case JSP_HTML_APPLET_ELEMENT_NAME:
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
@@ -116,8 +115,7 @@ HTMLAppletElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		mem_free_set(&html->object, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_APPLET_ELEMENT_VSPACE:
-		mem_free_set(&html->vspace, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->vspace);
 	case JSP_HTML_APPLET_ELEMENT_WIDTH:
 		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
 		break;

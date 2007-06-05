@@ -30,7 +30,7 @@ HTMLPreElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_PRE_ELEMENT_WIDTH:
-		string_to_jsval(ctx, vp, html->width);
+		int_to_jsval(ctx, vp, html->width);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -59,8 +59,7 @@ HTMLPreElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_PRE_ELEMENT_WIDTH:
-		mem_free_set(&html->width, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->width);
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
 	}

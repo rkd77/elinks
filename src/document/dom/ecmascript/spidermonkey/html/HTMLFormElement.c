@@ -7,37 +7,54 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLFormElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FORM_struct *html;
+
+	if (!JSVAL_IS_INT(id))
+		return JS_TRUE;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFormElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FORM_ELEMENT_ELEMENTS:
+		string_to_jsval(ctx, vp, html->elements);
 		/* Write me! */
 		break;
 	case JSP_HTML_FORM_ELEMENT_LENGTH:
-		/* Write me! */
+		int_to_jsval(ctx, vp, html->length);
 		break;
 	case JSP_HTML_FORM_ELEMENT_NAME:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_FORM_ELEMENT_ACCEPT_CHARSET:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->accept_charset);
 		break;
 	case JSP_HTML_FORM_ELEMENT_ACTION:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->action);
 		break;
 	case JSP_HTML_FORM_ELEMENT_ENCTYPE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->enctype);
 		break;
 	case JSP_HTML_FORM_ELEMENT_METHOD:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->method);
 		break;
 	case JSP_HTML_FORM_ELEMENT_TARGET:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->target);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -48,27 +65,42 @@ HTMLFormElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLFormElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct FORM_struct *html;
+
+	if (!JSVAL_IS_INT(id))
+		return JS_TRUE;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLFormElement_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.element.html_data;
+	if (!html)
+		return JS_FALSE;
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FORM_ELEMENT_NAME:
-		/* Write me! */
+		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FORM_ELEMENT_ACCEPT_CHARSET:
-		/* Write me! */
+		mem_free_set(&html->accept_charset, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FORM_ELEMENT_ACTION:
-		/* Write me! */
+		mem_free_set(&html->action, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FORM_ELEMENT_ENCTYPE:
-		/* Write me! */
+		mem_free_set(&html->enctype, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FORM_ELEMENT_METHOD:
-		/* Write me! */
+		mem_free_set(&html->method, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FORM_ELEMENT_TARGET:
-		/* Write me! */
+		mem_free_set(&html->target, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);

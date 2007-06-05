@@ -14,9 +14,9 @@ struct SCRIPT_struct {
 	unsigned char *html_for;
 	unsigned char *event;
 	unsigned char *charset;
-	unsigned char *defer;
 	unsigned char *src;
 	unsigned char *type;
+	unsigned int defer:1;
 };
 
 #endif

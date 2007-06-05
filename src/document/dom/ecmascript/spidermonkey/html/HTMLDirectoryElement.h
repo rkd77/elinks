@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLDirectoryElement_props[];
 
 struct DIR_struct {
 	struct HTMLElement_struct html;
-	unsigned char *compact;
+	unsigned int compact:1;
 };
 
 #endif

@@ -45,7 +45,7 @@ HTMLFrameElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NO_RESIZE:
-		string_to_jsval(ctx, vp, html->no_resize);
+		boolean_to_jsval(ctx, vp, html->no_resize);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SCROLLING:
 		string_to_jsval(ctx, vp, html->scrolling);
@@ -99,7 +99,7 @@ HTMLFrameElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_FRAME_ELEMENT_NO_RESIZE:
-		mem_free_set(&html->no_resize, stracpy(jsval_to_string(ctx, vp)));
+		html->no_resize = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_FRAME_ELEMENT_SCROLLING:
 		mem_free_set(&html->scrolling, stracpy(jsval_to_string(ctx, vp)));

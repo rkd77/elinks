@@ -36,7 +36,7 @@ HTMLBaseFontElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		string_to_jsval(ctx, vp, html->face);
 		break;
 	case JSP_HTML_BASE_FONT_ELEMENT_SIZE:
-		string_to_jsval(ctx, vp, html->size);
+		int_to_jsval(ctx, vp, html->size);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -71,8 +71,7 @@ HTMLBaseFontElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		mem_free_set(&html->face, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_BASE_FONT_ELEMENT_SIZE:
-		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->size);
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
 	}

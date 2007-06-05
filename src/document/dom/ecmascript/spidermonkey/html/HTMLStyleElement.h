@@ -10,9 +10,9 @@ extern const JSPropertySpec HTMLStyleElement_props[];
 
 struct STYLE_struct {
 	struct HTMLElement_struct html;
-	unsigned char *disabled;
 	unsigned char *media;
 	unsigned char *type;
+	unsigned int disabled:1;
 };
 
 #endif

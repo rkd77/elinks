@@ -15,10 +15,10 @@ struct FRAME_struct {
 	unsigned char *margin_height;
 	unsigned char *margin_width;
 	unsigned char *name;
-	unsigned char *no_resize;
 	unsigned char *scrolling;
 	unsigned char *src;
 	unsigned char *content_document; /* FIXME: proper type */
+	unsigned int no_resize:1;
 };
 
 #endif

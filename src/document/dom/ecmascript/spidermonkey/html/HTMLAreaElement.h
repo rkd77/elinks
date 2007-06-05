@@ -14,10 +14,10 @@ struct AREA_struct {
 	unsigned char *alt;
 	unsigned char *coords;
 	unsigned char *href;
-	unsigned char *no_href;
 	unsigned char *shape;
-	unsigned char *tab_index;
 	unsigned char *target;
+	int tab_index;
+	unsigned int no_href:1;
 };
 
 #endif

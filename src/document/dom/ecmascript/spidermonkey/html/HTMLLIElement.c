@@ -33,7 +33,7 @@ HTMLLIElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->type);
 		break;
 	case JSP_HTML_LI_ELEMENT_VALUE:
-		string_to_jsval(ctx, vp, html->value);
+		int_to_jsval(ctx, vp, html->value);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -65,8 +65,7 @@ HTMLLIElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->type, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_LI_ELEMENT_VALUE:
-		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->value);
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
 	}

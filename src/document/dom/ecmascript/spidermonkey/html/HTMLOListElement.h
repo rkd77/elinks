@@ -10,9 +10,9 @@ extern const JSPropertySpec HTMLOListElement_props[];
 
 struct OL_struct {
 	struct HTMLElement_struct html;
-	unsigned char *compact;
-	unsigned char *start;
 	unsigned char *type;
+	int start;
+	unsigned int compact:1;
 };
 
 #endif

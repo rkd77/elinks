@@ -42,13 +42,13 @@ HTMLAreaElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string_to_jsval(ctx, vp, html->href);
 		break;
 	case JSP_HTML_AREA_ELEMENT_NO_HREF:
-		string_to_jsval(ctx, vp, html->no_href);
+		boolean_to_jsval(ctx, vp, html->no_href);
 		break;
 	case JSP_HTML_AREA_ELEMENT_SHAPE:
 		string_to_jsval(ctx, vp, html->shape);
 		break;
 	case JSP_HTML_AREA_ELEMENT_TAB_INDEX:
-		string_to_jsval(ctx, vp, html->tab_index);
+		int_to_jsval(ctx, vp, html->tab_index);
 		break;
 	case JSP_HTML_AREA_ELEMENT_TARGET:
 		string_to_jsval(ctx, vp, html->target);
@@ -92,14 +92,13 @@ HTMLAreaElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		mem_free_set(&html->href, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_NO_HREF:
-		mem_free_set(&html->no_href, stracpy(jsval_to_string(ctx, vp)));
+		html->no_href = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_AREA_ELEMENT_SHAPE:
 		mem_free_set(&html->shape, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_AREA_ELEMENT_TAB_INDEX:
-		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->tab_index);
 	case JSP_HTML_AREA_ELEMENT_TARGET:
 		mem_free_set(&html->target, stracpy(jsval_to_string(ctx, vp)));
 		break;

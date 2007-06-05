@@ -18,17 +18,17 @@ struct OBJECT_struct {
 	unsigned char *code_base;
 	unsigned char *code_type;
 	unsigned char *data;
-	unsigned char *declare;
 	unsigned char *height;
-	unsigned char *hspace;
 	unsigned char *name;
 	unsigned char *standby;
-	unsigned char *tab_index;
 	unsigned char *type;
 	unsigned char *use_map;
-	unsigned char *vspace;
 	unsigned char *width;
 	unsigned char *content_document; /* FIXME: proper type */
+	int hspace;
+	int tab_index;
+	int vspace;
+	unsigned int declare:1;
 };
 
 #endif

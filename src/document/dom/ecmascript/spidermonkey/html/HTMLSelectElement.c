@@ -33,13 +33,13 @@ HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		string_to_jsval(ctx, vp, html->type);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SELECTED_INDEX:
-		string_to_jsval(ctx, vp, html->selected_index);
+		int_to_jsval(ctx, vp, html->selected_index);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_VALUE:
 		string_to_jsval(ctx, vp, html->value);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_LENGTH:
-		string_to_jsval(ctx, vp, html->length);
+		int_to_jsval(ctx, vp, html->length);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_FORM:
 		string_to_jsval(ctx, vp, html->form);
@@ -50,19 +50,19 @@ HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		/* Write me! */
 		break;
 	case JSP_HTML_SELECT_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_MULTIPLE:
-		string_to_jsval(ctx, vp, html->multiple);
+		boolean_to_jsval(ctx, vp, html->multiple);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_NAME:
 		string_to_jsval(ctx, vp, html->name);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SIZE:
-		string_to_jsval(ctx, vp, html->size);
+		int_to_jsval(ctx, vp, html->size);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_TAB_INDEX:
-		string_to_jsval(ctx, vp, html->tab_index);
+		int_to_jsval(ctx, vp, html->tab_index);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -91,29 +91,25 @@ HTMLSelectElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_SELECT_ELEMENT_SELECTED_INDEX:
-		mem_free_set(&html->selected_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->selected_index);
 	case JSP_HTML_SELECT_ELEMENT_VALUE:
 		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_LENGTH:
-		mem_free_set(&html->length, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->length);
 	case JSP_HTML_SELECT_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_MULTIPLE:
-		mem_free_set(&html->multiple, stracpy(jsval_to_string(ctx, vp)));
+		html->multiple = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_NAME:
 		mem_free_set(&html->name, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SELECT_ELEMENT_SIZE:
-		mem_free_set(&html->size, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->size);
 	case JSP_HTML_SELECT_ELEMENT_TAB_INDEX:
-		mem_free_set(&html->tab_index, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->tab_index);
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);
 	}

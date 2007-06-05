@@ -30,7 +30,7 @@ HTMLTableCellElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval 
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_CELL_ELEMENT_CELL_INDEX:
-		string_to_jsval(ctx, vp, html->cell_index);
+		int_to_jsval(ctx, vp, html->cell_index);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_ABBR:
 		string_to_jsval(ctx, vp, html->abbr);
@@ -51,7 +51,7 @@ HTMLTableCellElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval 
 		string_to_jsval(ctx, vp, html->ch_off);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_COL_SPAN:
-		string_to_jsval(ctx, vp, html->col_span);
+		int_to_jsval(ctx, vp, html->col_span);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_HEADERS:
 		string_to_jsval(ctx, vp, html->headers);
@@ -60,10 +60,10 @@ HTMLTableCellElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval 
 		string_to_jsval(ctx, vp, html->height);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_NO_WRAP:
-		string_to_jsval(ctx, vp, html->no_wrap);
+		boolean_to_jsval(ctx, vp, html->no_wrap);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_ROW_SPAN:
-		string_to_jsval(ctx, vp, html->row_span);
+		int_to_jsval(ctx, vp, html->row_span);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_SCOPE:
 		string_to_jsval(ctx, vp, html->scope);
@@ -119,8 +119,7 @@ HTMLTableCellElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval 
 		mem_free_set(&html->ch_off, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_COL_SPAN:
-		mem_free_set(&html->col_span, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->col_span);
 	case JSP_HTML_TABLE_CELL_ELEMENT_HEADERS:
 		mem_free_set(&html->headers, stracpy(jsval_to_string(ctx, vp)));
 		break;
@@ -128,11 +127,10 @@ HTMLTableCellElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval 
 		mem_free_set(&html->height, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_NO_WRAP:
-		mem_free_set(&html->no_wrap, stracpy(jsval_to_string(ctx, vp)));
+		html->no_wrap = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_TABLE_CELL_ELEMENT_ROW_SPAN:
-		mem_free_set(&html->row_span, stracpy(jsval_to_string(ctx, vp)));
-		break;
+		return JS_ValueToInt32(ctx, *vp, &html->row_span);
 	case JSP_HTML_TABLE_CELL_ELEMENT_SCOPE:
 		mem_free_set(&html->scope, stracpy(jsval_to_string(ctx, vp)));
 		break;

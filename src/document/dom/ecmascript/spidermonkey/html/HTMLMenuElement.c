@@ -30,7 +30,7 @@ HTMLMenuElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_MENU_ELEMENT_COMPACT:
-		string_to_jsval(ctx, vp, html->compact);
+		boolean_to_jsval(ctx, vp, html->compact);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);
@@ -59,7 +59,7 @@ HTMLMenuElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_MENU_ELEMENT_COMPACT:
-		mem_free_set(&html->compact, stracpy(jsval_to_string(ctx, vp)));
+		html->compact = jsval_to_boolean(ctx, vp);
 		break;
 	default:
 		return HTMLElement_setProperty(ctx, obj, id, vp);

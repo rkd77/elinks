@@ -14,14 +14,14 @@ struct IMAGE_struct {
 	unsigned char *align;
 	unsigned char *alt;
 	unsigned char *border;
-	unsigned char *height;
-	unsigned char *hspace;
-	unsigned char *is_map;
 	unsigned char *long_desc;
 	unsigned char *src;
 	unsigned char *use_map;
-	unsigned char *vspace;
-	unsigned char *width;
+	int height;
+	int hspace;
+	int vspace;
+	int width;
+	unsigned int is_map:1;
 };
 
 #endif

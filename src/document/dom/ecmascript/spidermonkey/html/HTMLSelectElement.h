@@ -11,16 +11,16 @@ extern const JSPropertySpec HTMLSelectElement_props[];
 struct SELECT_struct {
 	struct HTMLElement_struct html;
 	unsigned char *type;
-	unsigned char *selected_index;
 	unsigned char *value;
-	unsigned char *length;
 	unsigned char *form; /* FIXME: proper type */
 	unsigned char *options; /* FIXME: proper type */
-	unsigned char *disabled;
-	unsigned char *multiple;
 	unsigned char *name;
-	unsigned char *size;
-	unsigned char *tab_index;
+	int selected_index;
+	int length;
+	int size;
+	int tab_index;
+	unsigned int disabled:1;
+	unsigned int multiple:1;
 };
 
 #endif

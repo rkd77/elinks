@@ -11,9 +11,9 @@ extern const JSPropertySpec HTMLHRElement_props[];
 struct HR_struct {
 	struct HTMLElement_struct html;
 	unsigned char *align;
-	unsigned char *no_shade;
 	unsigned char *size;
 	unsigned char *width;
+	unsigned int no_shade:1;
 };
 
 #endif

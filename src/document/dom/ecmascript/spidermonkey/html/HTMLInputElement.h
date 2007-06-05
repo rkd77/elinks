@@ -11,23 +11,23 @@ extern const JSPropertySpec HTMLInputElement_props[];
 struct INPUT_struct {
 	struct HTMLElement_struct html;
 	unsigned char *default_value;
-	unsigned char *default_checked;
 	unsigned char *form; /* FIXME: proper type */
 	unsigned char *accept;
 	unsigned char *access_key;
 	unsigned char *align;
 	unsigned char *alt;
-	unsigned char *checked;
-	unsigned char *disabled;
-	unsigned char *max_length;
 	unsigned char *name;
-	unsigned char *read_only;
-	unsigned char *size;
 	unsigned char *src;
-	unsigned char *tab_index;
 	unsigned char *type;
 	unsigned char *use_map;
 	unsigned char *value;
+	int max_length;
+	int size;
+	int tab_index;
+	unsigned int default_checked:1;
+	unsigned int checked:1;
+	unsigned int disabled:1;
+	unsigned int read_only:1;
 };
 
 #endif

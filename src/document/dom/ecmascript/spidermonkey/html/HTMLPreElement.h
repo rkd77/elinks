@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLPreElement_props[];
 
 struct PRE_struct {
 	struct HTMLElement_struct html;
-	unsigned char *width;
+	int width;
 };
 
 #endif

@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLMenuElement_props[];
 
 struct MENU_struct {
 	struct HTMLElement_struct html;
-	unsigned char *compact;
+	unsigned int compact:1;
 };
 
 #endif

@@ -34,22 +34,22 @@ HTMLOptionElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		/* Write me! */
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DEFAULT_SELECTED:
-		string_to_jsval(ctx, vp, html->default_selected);
+		boolean_to_jsval(ctx, vp, html->default_selected);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_TEXT:
 		string_to_jsval(ctx, vp, html->text);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_INDEX:
-		string_to_jsval(ctx, vp, html->index);
+		int_to_jsval(ctx, vp, html->index);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_LABEL:
 		string_to_jsval(ctx, vp, html->label);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_SELECTED:
-		string_to_jsval(ctx, vp, html->selected);
+		boolean_to_jsval(ctx, vp, html->selected);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_VALUE:
 		string_to_jsval(ctx, vp, html->value);
@@ -81,16 +81,16 @@ HTMLOptionElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_OPTION_ELEMENT_DEFAULT_SELECTED:
-		mem_free_set(&html->default_selected, stracpy(jsval_to_string(ctx, vp)));
+		html->default_selected = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_LABEL:
 		mem_free_set(&html->label, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_OPTION_ELEMENT_SELECTED:
-		mem_free_set(&html->selected, stracpy(jsval_to_string(ctx, vp)));
+		html->selected = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_OPTION_ELEMENT_VALUE:
 		mem_free_set(&html->value, stracpy(jsval_to_string(ctx, vp)));

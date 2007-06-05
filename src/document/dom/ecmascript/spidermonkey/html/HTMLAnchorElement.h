@@ -19,9 +19,9 @@ struct A_struct {
 	unsigned char *rel;
 	unsigned char *rev;
 	unsigned char *shape;
-	unsigned char *tab_index;
 	unsigned char *target;
 	unsigned char *type;
+	int tab_index;
 };
 
 #endif

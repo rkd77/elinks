@@ -30,13 +30,14 @@ HTMLTableRowElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ROW_ELEMENT_ROW_INDEX:
-		string_to_jsval(ctx, vp, html->row_index);
+		int_to_jsval(ctx, vp, html->row_index);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_SECTION_ROW_INDEX:
-		string_to_jsval(ctx, vp, html->section_row_index);
+		int_to_jsval(ctx, vp, html->section_row_index);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CELLS:
 		string_to_jsval(ctx, vp, html->cells);
+		/* Write me! */
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_ALIGN:
 		string_to_jsval(ctx, vp, html->align);

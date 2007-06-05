@@ -30,7 +30,7 @@ HTMLStyleElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_STYLE_ELEMENT_DISABLED:
-		string_to_jsval(ctx, vp, html->disabled);
+		boolean_to_jsval(ctx, vp, html->disabled);
 		break;
 	case JSP_HTML_STYLE_ELEMENT_MEDIA:
 		string_to_jsval(ctx, vp, html->media);
@@ -65,7 +65,7 @@ HTMLStyleElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_STYLE_ELEMENT_DISABLED:
-		mem_free_set(&html->disabled, stracpy(jsval_to_string(ctx, vp)));
+		html->disabled = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_STYLE_ELEMENT_MEDIA:
 		mem_free_set(&html->media, stracpy(jsval_to_string(ctx, vp)));

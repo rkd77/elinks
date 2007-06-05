@@ -10,8 +10,8 @@ extern const JSPropertySpec HTMLUListElement_props[];
 
 struct UL_struct {
 	struct HTMLElement_struct html;
-	unsigned char *compact;
 	unsigned char *type;
+	unsigned int compact:1;
 };
 
 #endif

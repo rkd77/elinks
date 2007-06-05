@@ -13,15 +13,14 @@ struct TEXTAREA_struct {
 	unsigned char *default_value;
 	unsigned char *form; /* FIXME: proper type */
 	unsigned char *access_key;
-	unsigned char *cols;
-	unsigned char *disabled;
 	unsigned char *name;
-	unsigned char *read_only;
-	unsigned char *rows;
-	unsigned char *tab_index;
 	unsigned char *type;
 	unsigned char *value;
-
+	int cols;
+	int rows;
+	int tab_index;
+	unsigned int disabled:1;
+	unsigned int read_only:1;
 };
 
 #endif

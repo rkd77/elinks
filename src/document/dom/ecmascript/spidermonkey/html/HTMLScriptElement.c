@@ -42,7 +42,7 @@ HTMLScriptElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		string_to_jsval(ctx, vp, html->charset);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_DEFER:
-		string_to_jsval(ctx, vp, html->defer);
+		boolean_to_jsval(ctx, vp, html->defer);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_SRC:
 		string_to_jsval(ctx, vp, html->src);
@@ -89,7 +89,7 @@ HTMLScriptElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		mem_free_set(&html->charset, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_DEFER:
-		mem_free_set(&html->defer, stracpy(jsval_to_string(ctx, vp)));
+		html->defer = jsval_to_boolean(ctx, vp);
 		break;
 	case JSP_HTML_SCRIPT_ELEMENT_SRC:
 		mem_free_set(&html->src, stracpy(jsval_to_string(ctx, vp)));

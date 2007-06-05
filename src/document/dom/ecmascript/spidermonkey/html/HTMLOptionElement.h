@@ -11,13 +11,13 @@ extern const JSPropertySpec HTMLOptionElement_props[];
 struct OPTION_struct {
 	struct HTMLElement_struct html;
 	unsigned char *form; /* FIXME: proper type */
-	unsigned char *default_selected;
 	unsigned char *text;
-	unsigned char *index;
-	unsigned char *disabled;
 	unsigned char *label;
-	unsigned char *selected;
 	unsigned char *value;
+	int index;
+	unsigned int default_selected:1;
+	unsigned int disabled:1;
+	unsigned int selected:1;
 };
 
 #endif

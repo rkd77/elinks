@@ -13,9 +13,9 @@ struct COL_struct {
 	unsigned char *align;
 	unsigned char *ch;
 	unsigned char *ch_off;
-	unsigned char *span;
 	unsigned char *valign;
 	unsigned char *width;
+	int span;
 };
 
 #endif
