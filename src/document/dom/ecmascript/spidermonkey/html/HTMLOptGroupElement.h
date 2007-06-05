@@ -14,4 +14,5 @@ struct OPTGROUP_struct {
 	unsigned int disabled:1;
 };
 
+void make_OPTGROUP_object(JSContext *ctx, struct dom_node *node);
 #endif

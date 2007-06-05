@@ -13,4 +13,5 @@ struct CAPTION_struct {
 	unsigned char *align;
 };
 
+void make_CAPTION_object(JSContext *ctx, struct dom_node *node);
 #endif

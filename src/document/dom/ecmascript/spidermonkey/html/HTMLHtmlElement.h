@@ -13,4 +13,5 @@ struct HTML_struct {
 	unsigned char *version;
 };
 
+void make_HTML_object(JSContext *ctx, struct dom_node *node);
 #endif

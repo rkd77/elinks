@@ -20,4 +20,5 @@ struct FORM_struct {
 	int length;
 };
 
+void make_FORM_object(JSContext *ctx, struct dom_node *node);
 #endif

@@ -20,4 +20,5 @@ struct OPTION_struct {
 	unsigned int selected:1;
 };
 
+void make_OPTION_object(JSContext *ctx, struct dom_node *node);
 #endif

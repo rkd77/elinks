@@ -13,4 +13,5 @@ struct DL_struct {
 	unsigned int compact:1;
 };
 
+void make_DL_object(JSContext *ctx, struct dom_node *node);
 #endif

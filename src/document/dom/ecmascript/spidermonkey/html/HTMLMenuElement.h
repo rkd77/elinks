@@ -13,4 +13,5 @@ struct MENU_struct {
 	unsigned int compact:1;
 };
 
+void make_MENU_object(JSContext *ctx, struct dom_node *node);
 #endif

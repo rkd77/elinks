@@ -14,4 +14,5 @@ struct MOD_struct {
 	unsigned char *date_time;
 };
 
+void make_MOD_object(JSContext *ctx, struct dom_node *node);
 #endif

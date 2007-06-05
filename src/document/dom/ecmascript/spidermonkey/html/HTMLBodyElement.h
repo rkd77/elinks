@@ -18,4 +18,5 @@ struct BODY_struct {
 	unsigned char *vlink;
 };
 
+void make_BODY_object(JSContext *ctx, struct dom_node *node);
 #endif

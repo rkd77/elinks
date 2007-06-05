@@ -13,4 +13,5 @@ struct TITLE_struct {
 	unsigned char *text;
 };
 
+void make_TITLE_object(JSContext *ctx, struct dom_node *node);
 #endif

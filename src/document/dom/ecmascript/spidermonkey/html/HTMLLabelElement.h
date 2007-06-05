@@ -15,4 +15,5 @@ struct LABEL_struct {
 	unsigned char *html_for;
 };
 
+void make_LABEL_object(JSContext *ctx, struct dom_node *node);
 #endif

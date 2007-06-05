@@ -20,4 +20,5 @@ struct TR_struct {
 	int section_row_index;
 };
 
+void make_TR_object(JSContext *ctx, struct dom_node *node);
 #endif

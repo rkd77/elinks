@@ -156,3 +156,15 @@ const JSClass HTMLImageElement_class = {
 	HTMLImageElement_getProperty, HTMLImageElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
+
+void
+make_IMAGE_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct IMAGE_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLImageElement_class, o->HTMLElement_object, NULL);
+	}
+}
+

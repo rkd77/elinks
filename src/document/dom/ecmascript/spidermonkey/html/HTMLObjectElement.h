@@ -31,4 +31,5 @@ struct OBJECT_struct {
 	unsigned int declare:1;
 };
 
+void make_OBJECT_object(JSContext *ctx, struct dom_node *node);
 #endif

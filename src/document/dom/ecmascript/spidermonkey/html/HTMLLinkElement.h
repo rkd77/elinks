@@ -21,4 +21,5 @@ struct LINK_struct {
 	unsigned int disabled:1;
 };
 
+void make_LINK_object(JSContext *ctx, struct dom_node *node);
 #endif

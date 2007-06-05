@@ -23,4 +23,5 @@ struct TEXTAREA_struct {
 	unsigned int read_only:1;
 };
 
+void make_TEXTAREA_object(JSContext *ctx, struct dom_node *node);
 #endif

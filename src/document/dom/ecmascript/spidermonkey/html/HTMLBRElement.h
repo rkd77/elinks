@@ -13,4 +13,5 @@ struct BR_struct {
 	unsigned char *clear;
 };
 
+void make_BR_object(JSContext *ctx, struct dom_node *node);
 #endif

@@ -14,4 +14,5 @@ struct MAP_struct {
 	unsigned char *name; 
 };
 
+void make_MAP_object(JSContext *ctx, struct dom_node *node);
 #endif

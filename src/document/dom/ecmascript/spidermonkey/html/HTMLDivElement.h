@@ -13,4 +13,5 @@ struct DIV_struct {
 	unsigned char *align;
 };
 
+void make_DIV_object(JSContext *ctx, struct dom_node *node);
 #endif

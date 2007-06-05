@@ -23,4 +23,5 @@ struct APPLET_struct {
 	int vspace;
 };
 
+void make_APPLET_object(JSContext *ctx, struct dom_node *node);
 #endif

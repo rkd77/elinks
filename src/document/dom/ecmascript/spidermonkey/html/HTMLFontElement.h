@@ -15,4 +15,5 @@ struct FONT_struct {
 	unsigned char *size;
 };
 
+void make_FONT_object(JSContext *ctx, struct dom_node *node);
 #endif

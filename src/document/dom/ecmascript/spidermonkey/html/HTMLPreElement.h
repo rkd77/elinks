@@ -13,4 +13,5 @@ struct PRE_struct {
 	int width;
 };
 
+void make_PRE_object(JSContext *ctx, struct dom_node *node);
 #endif

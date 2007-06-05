@@ -13,4 +13,5 @@ struct H1_struct {
 	unsigned char *align;
 };
 
+void make_H1_object(JSContext *ctx, struct dom_node *node);
 #endif

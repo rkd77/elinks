@@ -16,4 +16,5 @@ struct PARAM_struct {
 	unsigned char *value_type;
 };
 
+void make_PARAM_object(JSContext *ctx, struct dom_node *node);
 #endif

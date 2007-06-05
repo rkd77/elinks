@@ -150,3 +150,14 @@ const JSClass HTMLFormElement_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 
+void
+make_FORM_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct FORM_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLFormElement_class, o->HTMLElement_object, NULL);
+	}
+}
+

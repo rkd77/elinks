@@ -83,3 +83,15 @@ const JSClass HTMLHeadElement_class = {
 	HTMLHeadElement_getProperty, HTMLHeadElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
+
+void
+make_HEAD_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct HEAD_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLHeadElement_class, o->HTMLElement_object, NULL);
+	}
+}
+

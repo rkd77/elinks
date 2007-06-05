@@ -24,4 +24,5 @@ struct IMAGE_struct {
 	unsigned int is_map:1;
 };
 
+void make_IMAGE_object(JSContext *ctx, struct dom_node *node);
 #endif

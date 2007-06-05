@@ -26,4 +26,5 @@ struct TABLE_struct {
 	unsigned char *width;
 };
 
+void make_TABLE_object(JSContext *ctx, struct dom_node *node);
 #endif

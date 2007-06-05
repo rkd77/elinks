@@ -19,4 +19,5 @@ struct BUTTON_struct {
 	unsigned char disabled:1;
 };
 
+void make_BUTTON_object(JSContext *ctx, struct dom_node *node);
 #endif

@@ -14,4 +14,5 @@ struct ISINDEX_struct {
 	unsigned char *prompt;
 };
 
+void make_ISINDEX_object(JSContext *ctx, struct dom_node *node);
 #endif

@@ -27,4 +27,5 @@ struct TD_struct {
 	unsigned int no_wrap:1;
 };
 
+void make_TD_object(JSContext *ctx, struct dom_node *node);
 #endif

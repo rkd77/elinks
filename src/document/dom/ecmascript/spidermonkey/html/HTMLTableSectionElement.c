@@ -100,4 +100,3 @@ const JSClass HTMLTableSectionElement_class = {
 	HTMLTableSectionElement_getProperty, HTMLTableSectionElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
-

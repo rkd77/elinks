@@ -14,4 +14,5 @@ struct LI_struct {
 	int value;
 };
 
+void make_LI_object(JSContext *ctx, struct dom_node *node);
 #endif

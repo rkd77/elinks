@@ -84,3 +84,14 @@ const JSClass HTMLBRElement_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 
+void
+make_BR_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct BR_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLBRElement_class, o->HTMLElement_object, NULL);
+	}
+}
+

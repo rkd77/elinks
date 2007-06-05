@@ -14,4 +14,5 @@ struct FRAMESET_struct {
 	unsigned char *rows;
 };
 
+void make_FRAMESET_object(JSContext *ctx, struct dom_node *node);
 #endif

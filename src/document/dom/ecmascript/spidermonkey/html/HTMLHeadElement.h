@@ -13,4 +13,5 @@ struct HEAD_struct {
 	unsigned char *profile;
 };
 
+void make_HEAD_object(JSContext *ctx, struct dom_node *node);
 #endif

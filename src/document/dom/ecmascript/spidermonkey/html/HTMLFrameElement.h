@@ -21,4 +21,5 @@ struct FRAME_struct {
 	unsigned int no_resize:1;
 };
 
+void make_FRAME_object(JSContext *ctx, struct dom_node *node);
 #endif

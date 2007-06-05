@@ -13,4 +13,5 @@ struct QUOTE_struct {
 	unsigned char *cite;
 };
 
+void make_QUOTE_object(JSContext *ctx, struct dom_node *node);
 #endif

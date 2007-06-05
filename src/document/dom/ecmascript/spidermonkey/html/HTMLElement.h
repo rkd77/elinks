@@ -18,4 +18,7 @@ struct HTMLElement_struct {
 	unsigned char *class_name;
 };
 
+struct html_objects { /* FIXME: Better name for this type. */
+	JSObject *HTMLElement_object;
+};
 #endif

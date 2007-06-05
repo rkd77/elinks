@@ -23,4 +23,5 @@ struct IFRAME_struct {
 	unsigned char *content_document; /* FIXME: proper type */
 };
 
+void make_IFRAME_object(JSContext *ctx, struct dom_node *node);
 #endif

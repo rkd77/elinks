@@ -15,4 +15,5 @@ struct OL_struct {
 	unsigned int compact:1;
 };
 
+void make_OL_object(JSContext *ctx, struct dom_node *node);
 #endif

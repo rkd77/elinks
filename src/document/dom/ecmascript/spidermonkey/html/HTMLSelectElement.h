@@ -23,4 +23,5 @@ struct SELECT_struct {
 	unsigned int multiple:1;
 };
 
+void make_SELECT_object(JSContext *ctx, struct dom_node *node);
 #endif

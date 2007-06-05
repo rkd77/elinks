@@ -16,4 +16,5 @@ struct HR_struct {
 	unsigned int no_shade:1;
 };
 
+void make_HR_object(JSContext *ctx, struct dom_node *node);
 #endif

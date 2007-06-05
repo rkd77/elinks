@@ -24,4 +24,5 @@ struct A_struct {
 	int tab_index;
 };
 
+void make_A_object(JSContext *ctx, struct dom_node *node);
 #endif

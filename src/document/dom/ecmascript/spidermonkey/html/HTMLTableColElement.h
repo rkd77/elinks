@@ -18,4 +18,5 @@ struct COL_struct {
 	int span;
 };
 
+void make_COL_object(JSContext *ctx, struct dom_node *node);
 #endif

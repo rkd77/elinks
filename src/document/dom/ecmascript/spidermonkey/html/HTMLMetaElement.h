@@ -16,4 +16,5 @@ struct META_struct {
 	unsigned char *scheme;
 };
 
+void make_META_object(JSContext *ctx, struct dom_node *node);
 #endif

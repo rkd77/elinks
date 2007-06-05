@@ -15,4 +15,5 @@ struct BASEFONT_struct {
 	int size;
 };
 
+void make_BASEFONT_object(JSContext *ctx, struct dom_node *node);
 #endif

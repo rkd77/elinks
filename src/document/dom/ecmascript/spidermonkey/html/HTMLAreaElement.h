@@ -20,4 +20,5 @@ struct AREA_struct {
 	unsigned int no_href:1;
 };
 
+void make_AREA_object(JSContext *ctx, struct dom_node *node);
 #endif

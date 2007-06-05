@@ -13,4 +13,5 @@ struct DIR_struct {
 	unsigned int compact:1;
 };
 
+void make_DIR_object(JSContext *ctx, struct dom_node *node);
 #endif

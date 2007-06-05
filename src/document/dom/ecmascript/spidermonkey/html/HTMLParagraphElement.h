@@ -13,4 +13,5 @@ struct P_struct {
 	unsigned char *align;
 };
 
+void make_P_object(JSContext *ctx, struct dom_node *node);
 #endif

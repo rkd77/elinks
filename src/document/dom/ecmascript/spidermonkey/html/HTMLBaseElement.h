@@ -14,4 +14,5 @@ struct BASE_struct {
 	unsigned char *target;
 };
 
+void make_BASE_object(JSContext *ctx, struct dom_node *node);
 #endif

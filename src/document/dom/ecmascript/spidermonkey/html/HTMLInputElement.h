@@ -30,4 +30,5 @@ struct INPUT_struct {
 	unsigned int read_only:1;
 };
 
+void make_INPUT_object(JSContext *ctx, struct dom_node *node);
 #endif

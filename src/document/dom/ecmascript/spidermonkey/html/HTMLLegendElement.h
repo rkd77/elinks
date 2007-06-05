@@ -15,4 +15,5 @@ struct LEGEND_struct {
 	unsigned char *align;
 };
 
+void make_LEGEND_object(JSContext *ctx, struct dom_node *node);
 #endif

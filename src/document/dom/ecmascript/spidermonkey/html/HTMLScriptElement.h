@@ -19,4 +19,5 @@ struct SCRIPT_struct {
 	unsigned int defer:1;
 };
 
+void make_SCRIPT_object(JSContext *ctx, struct dom_node *node);
 #endif

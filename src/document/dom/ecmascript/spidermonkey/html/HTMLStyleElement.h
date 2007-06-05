@@ -15,4 +15,5 @@ struct STYLE_struct {
 	unsigned int disabled:1;
 };
 
+void make_STYLE_object(JSContext *ctx, struct dom_node *node);
 #endif

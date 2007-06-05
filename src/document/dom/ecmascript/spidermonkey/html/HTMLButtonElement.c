@@ -119,3 +119,15 @@ const JSClass HTMLButtonElement_class = {
 	HTMLButtonElement_getProperty, HTMLButtonElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
+
+void
+make_BUTTON_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct BUTTON_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLButtonElement_class, o->HTMLElement_object, NULL);
+	}
+}
+

@@ -176,3 +176,15 @@ const JSClass HTMLTableCellElement_class = {
 	HTMLTableCellElement_getProperty, HTMLTableCellElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
+
+void
+make_TD_object(JSContext *ctx, struct dom_node *node)
+{
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+
+	node->data.element.html_data = mem_calloc(1, sizeof(struct TD_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTableCellElement_class, o->HTMLElement_object, NULL);
+	}
+}
+
