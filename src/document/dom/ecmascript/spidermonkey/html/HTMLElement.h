@@ -21,4 +21,6 @@ struct HTMLElement_struct {
 struct html_objects { /* FIXME: Better name for this type. */
 	JSObject *HTMLElement_object;
 };
+
+void done_HTMLElement(void *data);
 #endif

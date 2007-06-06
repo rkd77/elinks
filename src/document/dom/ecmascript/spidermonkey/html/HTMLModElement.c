@@ -102,3 +102,11 @@ make_MOD_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_MOD_object(void *data)
+{
+	struct MOD_struct *d = data;
+
+	mem_free_if(d->cite);
+	mem_free_if(d->date_time);
+}

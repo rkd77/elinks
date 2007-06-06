@@ -116,3 +116,13 @@ make_PARAM_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_PARAM_object(void *data)
+{
+	struct PARAM_struct *d = data;
+
+	mem_free_if(d->name);
+	mem_free_if(d->type);
+	mem_free_if(d->value);
+	mem_free_if(d->value_type);
+}

@@ -143,3 +143,15 @@ make_AREA_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_AREA_object(void *data)
+{
+	struct AREA_struct *d = data;
+
+	mem_free_if(d->access_key);
+	mem_free_if(d->alt);
+	mem_free_if(d->coords);
+	mem_free_if(d->href);
+	mem_free_if(d->shape);
+	mem_free_if(d->target);
+}

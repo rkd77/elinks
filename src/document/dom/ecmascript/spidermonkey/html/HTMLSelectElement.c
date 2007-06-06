@@ -190,3 +190,13 @@ make_SELECT_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_SELECT_object(void *data)
+{
+	struct SELECT_struct *d = data;
+
+	mem_free_if(d->type);
+	mem_free_if(d->value);
+	/* form, options ? */
+	mem_free_if(d->name);
+}

@@ -95,3 +95,10 @@ make_P_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_P_object(void *data)
+{
+	struct P_struct *d = data;
+
+	mem_free_if(d->align);
+}

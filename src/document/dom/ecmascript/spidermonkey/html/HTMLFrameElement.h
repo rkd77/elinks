@@ -22,4 +22,5 @@ struct FRAME_struct {
 };
 
 void make_FRAME_object(JSContext *ctx, struct dom_node *node);
+void done_FRAME_object(void *data);
 #endif

@@ -15,4 +15,5 @@ struct LI_struct {
 };
 
 void make_LI_object(JSContext *ctx, struct dom_node *node);
+void done_LI_object(void *data);
 #endif

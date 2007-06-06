@@ -24,4 +24,5 @@ struct SELECT_struct {
 };
 
 void make_SELECT_object(JSContext *ctx, struct dom_node *node);
+void done_SELECT_object(void *data);
 #endif

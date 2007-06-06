@@ -136,3 +136,13 @@ make_OPTION_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_OPTION_object(void *data)
+{
+	struct OPTION_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->text);
+	mem_free_if(d->label);
+	mem_free_if(d->value);
+}

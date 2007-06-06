@@ -149,3 +149,17 @@ make_FRAME_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_FRAME_object(void *data)
+{
+	struct FRAME_struct *d = data;
+
+	mem_free_if(d->frame_border);
+	mem_free_if(d->long_desc);
+	mem_free_if(d->margin_height);
+	mem_free_if(d->margin_width);
+	mem_free_if(d->name);
+	mem_free_if(d->scrolling);
+	mem_free_if(d->src);
+	/* content_document ? */
+}

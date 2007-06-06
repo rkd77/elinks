@@ -151,3 +151,17 @@ make_LINK_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_LINK_object(void *data)
+{
+	struct LINK_struct *d = data;
+
+	mem_free_if(d->charset);
+	mem_free_if(d->href);
+	mem_free_if(d->hreflang);
+	mem_free_if(d->media);
+	mem_free_if(d->rel);
+	mem_free_if(d->rev);
+	mem_free_if(d->target);
+	mem_free_if(d->type);
+}

@@ -15,4 +15,5 @@ struct BASE_struct {
 };
 
 void make_BASE_object(JSContext *ctx, struct dom_node *node);
+void done_BASE_object(void *data);
 #endif

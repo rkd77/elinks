@@ -15,4 +15,5 @@ struct ISINDEX_struct {
 };
 
 void make_ISINDEX_object(JSContext *ctx, struct dom_node *node);
+void done_ISINDEX_object(void *data);
 #endif

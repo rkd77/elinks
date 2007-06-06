@@ -14,4 +14,5 @@ struct MENU_struct {
 };
 
 void make_MENU_object(JSContext *ctx, struct dom_node *node);
+void done_MENU_object(void *data);
 #endif

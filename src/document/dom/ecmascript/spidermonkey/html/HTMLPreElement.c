@@ -94,3 +94,7 @@ make_PRE_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_PRE_object(void *data)
+{
+}

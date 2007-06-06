@@ -95,3 +95,10 @@ make_HTML_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_HTML_object(void *data)
+{
+	struct HTML_struct *d = data;
+
+	mem_free_if(d->version);
+}

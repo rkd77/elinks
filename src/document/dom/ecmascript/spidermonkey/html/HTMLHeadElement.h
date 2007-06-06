@@ -14,4 +14,5 @@ struct HEAD_struct {
 };
 
 void make_HEAD_object(JSContext *ctx, struct dom_node *node);
+void done_HEAD_object(void *data);
 #endif

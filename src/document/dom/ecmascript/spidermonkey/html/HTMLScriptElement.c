@@ -137,3 +137,15 @@ make_SCRIPT_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_SCRIPT_object(void *data)
+{
+	struct SCRIPT_struct *d = data;
+
+	mem_free_if(d->text);
+	mem_free_if(d->html_for);
+	mem_free_if(d->event);
+	mem_free_if(d->charset);
+	mem_free_if(d->src);
+	mem_free_if(d->type);
+}

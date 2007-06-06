@@ -21,4 +21,5 @@ struct FORM_struct {
 };
 
 void make_FORM_object(JSContext *ctx, struct dom_node *node);
+void done_FORM_object(void *data);
 #endif

@@ -109,3 +109,12 @@ make_FONT_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_FONT_object(void *data)
+{
+	struct FONT_struct *d = data;
+
+	mem_free_if(d->color);
+	mem_free_if(d->face);
+	mem_free_if(d->size);
+}

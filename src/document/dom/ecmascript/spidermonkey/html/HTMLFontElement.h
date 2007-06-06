@@ -16,4 +16,5 @@ struct FONT_struct {
 };
 
 void make_FONT_object(JSContext *ctx, struct dom_node *node);
+void done_FONT_object(void *data);
 #endif

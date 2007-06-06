@@ -131,3 +131,15 @@ make_BUTTON_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_BUTTON_object(void *data)
+{
+	struct BUTTON_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->access_key);
+	mem_free_if(d->name);
+	mem_free_if(d->type);
+	mem_free_if(d->value);
+	
+}

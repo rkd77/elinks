@@ -95,3 +95,10 @@ make_QUOTE_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_QUOTE_object(void *data)
+{
+	struct QUOTE_struct *d = data;
+
+	mem_free_if(d->cite);
+}

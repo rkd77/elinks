@@ -168,3 +168,16 @@ make_IMAGE_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_IMAGE_object(void *data)
+{
+	struct IMAGE_struct *d = data;
+
+	mem_free_if(d->name);
+	mem_free_if(d->align);
+	mem_free_if(d->alt);
+	mem_free_if(d->border);
+	mem_free_if(d->long_desc);
+	mem_free_if(d->src);
+	mem_free_if(d->use_map);
+}

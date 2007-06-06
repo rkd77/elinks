@@ -245,3 +245,20 @@ make_INPUT_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_INPUT_object(void *data)
+{
+	struct INPUT_struct *d = data;
+
+	mem_free_if(d->default_value);
+	/* form ? */
+	mem_free_if(d->accept);
+	mem_free_if(d->access_key);
+	mem_free_if(d->align);
+	mem_free_if(d->alt);
+	mem_free_if(d->name);
+	mem_free_if(d->src);
+	mem_free_if(d->type);
+	mem_free_if(d->use_map);
+	mem_free_if(d->value);
+}

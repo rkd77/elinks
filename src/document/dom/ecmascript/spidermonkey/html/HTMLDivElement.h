@@ -14,4 +14,5 @@ struct DIV_struct {
 };
 
 void make_DIV_object(JSContext *ctx, struct dom_node *node);
+void done_DIV_object(void *data);
 #endif

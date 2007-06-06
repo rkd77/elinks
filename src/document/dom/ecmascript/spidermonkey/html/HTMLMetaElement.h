@@ -17,4 +17,5 @@ struct META_struct {
 };
 
 void make_META_object(JSContext *ctx, struct dom_node *node);
+void done_META_object(void *data);
 #endif

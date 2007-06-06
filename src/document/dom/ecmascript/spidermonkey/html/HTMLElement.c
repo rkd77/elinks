@@ -111,3 +111,15 @@ const JSClass HTMLElement_class = {
 	HTMLElement_getProperty, HTMLElement_setProperty,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
+
+void
+done_HTMLElement(void *data)
+{
+	struct HTMLElement_struct *d = data;
+
+	mem_free_if(d->id);
+	mem_free_if(d->title);
+	mem_free_if(d->lang);
+	mem_free_if(d->dir);
+	mem_free_if(d->class_name);
+}

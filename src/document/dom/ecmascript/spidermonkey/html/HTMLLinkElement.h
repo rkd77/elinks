@@ -22,4 +22,5 @@ struct LINK_struct {
 };
 
 void make_LINK_object(JSContext *ctx, struct dom_node *node);
+void done_LINK_object(void *data);
 #endif

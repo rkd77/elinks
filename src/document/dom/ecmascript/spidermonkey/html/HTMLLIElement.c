@@ -101,3 +101,10 @@ make_LI_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_LI_object(void *data)
+{
+	struct LI_struct *d = data;
+
+	mem_free_if(d->type);
+}

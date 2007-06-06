@@ -21,4 +21,5 @@ struct TR_struct {
 };
 
 void make_TR_object(JSContext *ctx, struct dom_node *node);
+void done_TR_object(void *data);
 #endif

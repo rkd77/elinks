@@ -95,3 +95,10 @@ make_BR_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_BR_object(void *data)
+{
+	struct BR_struct *d = data;
+
+	mem_free_if(d->clear);
+}

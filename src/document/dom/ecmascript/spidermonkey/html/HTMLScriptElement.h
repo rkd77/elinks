@@ -20,4 +20,5 @@ struct SCRIPT_struct {
 };
 
 void make_SCRIPT_object(JSContext *ctx, struct dom_node *node);
+void done_SCRIPT_object(void *data);
 #endif

@@ -16,4 +16,5 @@ struct LEGEND_struct {
 };
 
 void make_LEGEND_object(JSContext *ctx, struct dom_node *node);
+void done_LEGEND_object(void *data);
 #endif

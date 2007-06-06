@@ -15,4 +15,5 @@ struct UL_struct {
 };
 
 void make_UL_object(JSContext *ctx, struct dom_node *node);
+void done_UL_object(void *data);
 #endif

@@ -95,3 +95,7 @@ make_DL_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_DL_object(void *data)
+{
+}

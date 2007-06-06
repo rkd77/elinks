@@ -163,3 +163,18 @@ make_APPLET_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_APPLET_object(void *data)
+{
+	struct APPLET_struct *d = data;
+
+	mem_free_if(d->align);
+	mem_free_if(d->alt);
+	mem_free_if(d->archive);
+	mem_free_if(d->code);
+	mem_free_if(d->code_base);
+	mem_free_if(d->height);
+	mem_free_if(d->name);
+	mem_free_if(d->object);
+	mem_free_if(d->width);
+}

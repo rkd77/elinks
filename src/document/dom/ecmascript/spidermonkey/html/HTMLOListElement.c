@@ -108,3 +108,10 @@ make_OL_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_OL_object(void *data)
+{
+	struct OL_struct *d = data;
+
+	mem_free_if(d->type);
+}

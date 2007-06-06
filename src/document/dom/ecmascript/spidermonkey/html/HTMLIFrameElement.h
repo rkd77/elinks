@@ -24,4 +24,5 @@ struct IFRAME_struct {
 };
 
 void make_IFRAME_object(JSContext *ctx, struct dom_node *node);
+void done_IFRAME_object(void *data);
 #endif

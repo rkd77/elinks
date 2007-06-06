@@ -17,4 +17,5 @@ struct PARAM_struct {
 };
 
 void make_PARAM_object(JSContext *ctx, struct dom_node *node);
+void done_PARAM_object(void *data);
 #endif

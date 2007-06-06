@@ -100,3 +100,11 @@ make_ISINDEX_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_ISINDEX_object(void *data)
+{
+	struct ISINDEX_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->prompt);
+}

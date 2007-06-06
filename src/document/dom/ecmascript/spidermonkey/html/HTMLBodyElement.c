@@ -130,3 +130,15 @@ make_BODY_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_BODY_object(void *data)
+{
+	struct BODY_struct *d = data;
+
+	mem_free_if(d->alink);
+	mem_free_if(d->background);
+	mem_free_if(d->bgcolor);
+	mem_free_if(d->link);
+	mem_free_if(d->text);
+	mem_free_if(d->vlink);
+}

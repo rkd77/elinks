@@ -260,3 +260,23 @@ make_TABLE_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_TABLE_object(void *data)
+{
+	struct TABLE_struct *d = data;
+
+	/* caption ?
+	 * thead ?
+	 * tfoot ?
+	 * rows ?
+	 * tbodies ? */
+	mem_free_if(d->align);
+	mem_free_if(d->bgcolor);
+	mem_free_if(d->border);
+	mem_free_if(d->cell_padding);
+	mem_free_if(d->cell_spacing);
+	mem_free_if(d->frame);
+	mem_free_if(d->rules);
+	mem_free_if(d->summary);
+	mem_free_if(d->width);
+}

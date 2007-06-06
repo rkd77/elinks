@@ -25,4 +25,5 @@ struct IMAGE_struct {
 };
 
 void make_IMAGE_object(JSContext *ctx, struct dom_node *node);
+void done_IMAGE_object(void *data);
 #endif

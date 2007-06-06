@@ -107,3 +107,12 @@ make_LABEL_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_LABEL_object(void *data)
+{
+	struct LABEL_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->access_key);
+	mem_free_if(d->html_for);
+}

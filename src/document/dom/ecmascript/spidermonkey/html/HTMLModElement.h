@@ -15,4 +15,5 @@ struct MOD_struct {
 };
 
 void make_MOD_object(JSContext *ctx, struct dom_node *node);
+void done_MOD_object(void *data);
 #endif

@@ -161,3 +161,16 @@ make_FORM_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_FORM_object(void *data)
+{
+	struct FORM_struct *d = data;
+
+	/* elements */
+	mem_free_if(d->name);
+	mem_free_if(d->accept_charset);
+	mem_free_if(d->action);
+	mem_free_if(d->enctype);
+	mem_free_if(d->method);
+	mem_free_if(d->target);
+}

@@ -100,3 +100,11 @@ make_MAP_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_MAP_object(void *data)
+{
+	struct MAP_struct *d = data;
+
+	/* areas ? */
+	mem_free_if(d->name);
+}

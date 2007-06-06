@@ -97,3 +97,11 @@ make_UL_object(JSContext *ctx, struct dom_node *node)
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLUListElement_class, o->HTMLElement_object, NULL);
 	}
 }
+
+void
+done_UL_object(void *data)
+{
+	struct UL_struct *d = data;
+
+	mem_free_if(d->type);
+}

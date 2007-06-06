@@ -188,3 +188,20 @@ make_TD_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_TD_object(void *data)
+{
+	struct TD_struct *d = data;
+
+	mem_free_if(d->abbr);
+	mem_free_if(d->align);
+	mem_free_if(d->axis);
+	mem_free_if(d->bgcolor);
+	mem_free_if(d->ch);
+	mem_free_if(d->ch_off);
+	mem_free_if(d->headers);
+	mem_free_if(d->height);
+	mem_free_if(d->scope);
+	mem_free_if(d->valign);
+	mem_free_if(d->width);
+}

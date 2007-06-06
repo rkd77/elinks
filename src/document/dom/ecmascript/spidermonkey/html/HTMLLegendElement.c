@@ -107,3 +107,12 @@ make_LEGEND_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_LEGEND_object(void *data)
+{
+	struct LEGEND_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->access_key);
+	mem_free_if(d->align);
+}

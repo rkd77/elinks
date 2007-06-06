@@ -154,3 +154,15 @@ make_TR_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_TR_object(void *data)
+{
+	struct TR_struct *d = data;
+
+	/* d->cells ? */
+	mem_free_if(d->align);
+	mem_free_if(d->bgcolor);
+	mem_free_if(d->ch);
+	mem_free_if(d->ch_off);
+	mem_free_if(d->valign);
+}

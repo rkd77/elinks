@@ -14,4 +14,5 @@ struct TITLE_struct {
 };
 
 void make_TITLE_object(JSContext *ctx, struct dom_node *node);
+void done_TITLE_object(void *data);
 #endif

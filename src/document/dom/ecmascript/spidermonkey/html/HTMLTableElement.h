@@ -27,4 +27,5 @@ struct TABLE_struct {
 };
 
 void make_TABLE_object(JSContext *ctx, struct dom_node *node);
+void done_TABLE_object(void *data);
 #endif

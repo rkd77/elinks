@@ -19,4 +19,5 @@ struct COL_struct {
 };
 
 void make_COL_object(JSContext *ctx, struct dom_node *node);
+void done_COL_object(void *data);
 #endif

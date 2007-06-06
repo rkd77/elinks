@@ -16,4 +16,5 @@ struct BASEFONT_struct {
 };
 
 void make_BASEFONT_object(JSContext *ctx, struct dom_node *node);
+void done_BASEFONT_object(void *data);
 #endif

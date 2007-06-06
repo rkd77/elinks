@@ -163,3 +163,20 @@ make_IFRAME_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_IFRAME_object(void *data)
+{
+	struct IFRAME_struct *d = data;
+
+	mem_free_if(d->align);
+	mem_free_if(d->frame_border);
+	mem_free_if(d->height);
+	mem_free_if(d->long_desc);
+	mem_free_if(d->margin_height);
+	mem_free_if(d->margin_width);
+	mem_free_if(d->name);
+	mem_free_if(d->scrolling);
+	mem_free_if(d->src);
+	mem_free_if(d->width);
+	/* content_document ? */
+}

@@ -24,4 +24,6 @@ struct TEXTAREA_struct {
 };
 
 void make_TEXTAREA_object(JSContext *ctx, struct dom_node *node);
+void done_TEXTAREA_object(void *data);
+
 #endif

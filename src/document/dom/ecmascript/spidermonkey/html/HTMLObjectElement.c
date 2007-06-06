@@ -213,3 +213,23 @@ make_OBJECT_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_OBJECT_object(void *data)
+{
+	struct OBJECT_struct *d = data;
+
+	/* form ? */
+	mem_free_if(d->code);
+	mem_free_if(d->align);
+	mem_free_if(d->archive);
+	mem_free_if(d->border);
+	mem_free_if(d->code_base);
+	mem_free_if(d->data);
+	mem_free_if(d->height);
+	mem_free_if(d->name);
+	mem_free_if(d->standby);
+	mem_free_if(d->type);
+	mem_free_if(d->use_map);
+	mem_free_if(d->width);
+	/* content_document ? */
+}

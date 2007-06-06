@@ -95,3 +95,10 @@ make_CAPTION_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_CAPTION_object(void *data)
+{
+	struct CAPTION_struct *d = data;
+
+	mem_free_if(d->align);
+}

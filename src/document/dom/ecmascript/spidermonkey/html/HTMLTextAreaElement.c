@@ -183,3 +183,16 @@ make_TEXTAREA_object(JSContext *ctx, struct dom_node *node)
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTextAreaElement_class, o->HTMLElement_object, NULL);
 	}
 }
+
+void
+done_TEXTAREA_object(void *data)
+{
+	struct TEXTAREA_struct *d = data;
+
+	mem_free_if(d->default_value);
+	/* What to do with d->form? */
+	mem_free_if(d->access_key);
+	mem_free_if(d->name);
+	mem_free_if(d->type);
+	mem_free_if(d->value);
+}

@@ -116,3 +116,12 @@ make_HR_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_HR_object(void *data)
+{
+	struct HR_struct *d = data;
+
+	mem_free_if(d->align);
+	mem_free_if(d->size);
+	mem_free_if(d->width);
+}

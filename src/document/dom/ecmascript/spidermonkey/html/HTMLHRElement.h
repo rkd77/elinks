@@ -17,4 +17,5 @@ struct HR_struct {
 };
 
 void make_HR_object(JSContext *ctx, struct dom_node *node);
+void done_HR_object(void *data);
 #endif

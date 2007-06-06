@@ -21,4 +21,5 @@ struct OPTION_struct {
 };
 
 void make_OPTION_object(JSContext *ctx, struct dom_node *node);
+void done_OPTION_object(void *data);
 #endif

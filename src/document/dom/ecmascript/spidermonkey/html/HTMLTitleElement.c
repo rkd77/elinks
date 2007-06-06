@@ -90,3 +90,11 @@ make_TITLE_object(JSContext *ctx, struct dom_node *node)
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTitleElement_class, o->HTMLElement_object, NULL);
 	}
 }
+
+void
+done_TITLE_object(void *data)
+{
+	struct TITLE_struct *d = data;
+
+	mem_free_if(d->text);
+}

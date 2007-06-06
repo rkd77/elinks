@@ -15,4 +15,5 @@ struct FRAMESET_struct {
 };
 
 void make_FRAMESET_object(JSContext *ctx, struct dom_node *node);
+void done_FRAMESET_object(void *data);
 #endif

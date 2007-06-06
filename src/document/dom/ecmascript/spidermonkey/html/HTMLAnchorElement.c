@@ -190,3 +190,20 @@ make_A_object(JSContext *ctx, struct dom_node *node)
 	}
 }
 
+void
+done_A_object(void *data)
+{
+	struct A_struct *d = data;
+
+	mem_free_if(d->access_key);
+	mem_free_if(d->charset);
+	mem_free_if(d->coords);
+	mem_free_if(d->href);
+	mem_free_if(d->hreflang);
+	mem_free_if(d->name);
+	mem_free_if(d->rel);
+	mem_free_if(d->rev);
+	mem_free_if(d->shape);
+	mem_free_if(d->target);
+	mem_free_if(d->type);
+}
