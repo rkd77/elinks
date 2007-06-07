@@ -74,13 +74,13 @@ struct http_connection_info {
 
 #define LEN_CHUNKED -2 /* == we get data in unknown number of chunks */
 #define LEN_FINISHED 0
-	int length;
+	off_t length;
 
 	/* Either bytes coming in this chunk yet or "parser state". */
 #define CHUNK_DATA_END	-3
 #define CHUNK_ZERO_SIZE	-2
 #define CHUNK_SIZE	-1
-	int chunk_remaining;
+	off_t chunk_remaining;
 
 	int code;
 };
@@ -1007,7 +1007,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	 * early otherwise)). */
 	enum { NORMAL, FINISHING } state = NORMAL;
 	int did_read = 0;
-	int *length_of_block;
+	off_t *length_of_block;
 	unsigned char *output = NULL;
 
 	length_of_block = (http->length == LEN_CHUNKED ? &http->chunk_remaining
@@ -1761,10 +1761,10 @@ again:
 	d = parse_header(conn->cached->head, "Content-Length", NULL);
 	if (d) {
 		unsigned char *ep;
-		int l;
+		off_t l;
 
 		errno = 0;
-		l = strtol(d, (char **) &ep, 10);
+		l = strtoll(d, (char **) &ep, 10);
 
 		if (!errno && !*ep && l >= 0) {
 			if (!http->close || POST_HTTP_1_0(version))
