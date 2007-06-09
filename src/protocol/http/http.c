@@ -1224,9 +1224,13 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 			if (zero) http->chunk_remaining = 0;
 			len = http->chunk_remaining;
 
-			/* Maybe everything necessary didn't come yet.. */
-			int_upper_bound(&len, rb->length);
-			conn->received += len;
+			if (http->chunk_remaining) {
+				/* Maybe everything necessary didn't come yet..
+				 * This handle unlikely case when len < 0
+				 * or http->chunk_remaining > 4GB and len == 0 */
+				int_bounds(&len, 1, rb->length);
+				conn->received += len;
+			}
 
 			data = decompress_data(conn, rb->data, len, &data_len);
 
