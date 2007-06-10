@@ -1185,6 +1185,29 @@ const JSPropertySpec forms_props[] = {
 	{ NULL }
 };
 
+/* Find the form whose name is @name, which should normally be a
+ * string (but might not be).  If found, set *rval = the DOM
+ * object.  If not found, leave *rval unchanged.  */
+static void
+find_form_by_name(JSContext *ctx, JSObject *jsdoc,
+		  struct document_view *doc_view,
+		  jsval name, jsval *rval)
+{
+	unsigned char *string = jsval_to_string(ctx, &name);
+	struct form *form;
+
+	if (!*string)
+		return;
+
+	foreach (form, doc_view->document->forms) {
+		if (form->name && !strcasecmp(string, form->name)) {
+			object_to_jsval(ctx, rval, get_form_object(ctx, jsdoc,
+					find_form_view(doc_view, form)));
+			break;
+		}
+	}
+}
+
 /* @forms_class.getProperty */
 static JSBool
 forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -1213,7 +1236,13 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	document = doc_view->document;
 
 	if (JSVAL_IS_STRING(id)) {
-		forms_namedItem(ctx, obj, 1, &id, vp);
+		/* When SMJS evaluates forms.namedItem("foo"), it first
+		 * calls forms_get_property with id = JSString "namedItem"
+		 * and *vp = JSObject JSFunction forms_namedItem.
+		 * If we don't find a form whose name is id,
+		 * we must leave *vp unchanged here, to avoid
+		 * "TypeError: forms.namedItem is not a function".  */
+		find_form_by_name(ctx, parent_doc, doc_view, id, vp);
 		return JS_TRUE;
 	}
 
@@ -1281,9 +1310,6 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct document *document;
-	struct form *form;
-	unsigned char *string;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
@@ -1296,25 +1322,12 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	document = doc_view->document;
 
 	if (argc != 1)
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, rval);
-
-	string = jsval_to_string(ctx, &argv[0]);
-	if (!*string)
-		return JS_TRUE;
-
-	foreach (form, document->forms) {
-		if (form->name && !strcasecmp(string, form->name)) {
-			object_to_jsval(ctx, rval, get_form_object(ctx, parent_doc,
-					find_form_view(doc_view, form)));
-			break;
-		}
-	}
-
+	find_form_by_name(ctx, parent_doc, doc_view, argv[0], rval);
 	return JS_TRUE;
 }
 

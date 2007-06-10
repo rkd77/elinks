@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<TITLE>forms.namedItem variations</TITLE>
+</HEAD>
+<BODY>
+<FORM name="f" action="#">
+<P><BUTTON name="b" type="button">dummy</BUTTON></P>
+</FORM>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: [object HTMLFormElement]
+// ELinks 0.11.3: [object form]
+window.alert("window.document.forms.f=" + window.document.forms.f);
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: [object HTMLFormElement]
+// ELinks 0.11.3: [object form]
+window.alert("window.document.forms[\"f\"]=" + window.document.forms["f"]);
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: [object HTMLFormElement]
+// ELinks 0.11.3: TypeError: window.document.forms.namedItem is not a function
+window.alert("window.document.forms.namedItem(\"f\")=" + window.document.forms.namedItem("f"));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: undefined
+// ELinks 0.11.3: null
+window.alert("window.document.forms.notfound=" + window.document.forms.notfound);
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: undefined
+// ELinks 0.11.3: null
+window.alert("window.document.forms[\"notfound\"]=" + window.document.forms["notfound"]);
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: null
+// ELinks 0.11.3: TypeError: window.document.forms.namedItem is not a function
+window.alert("window.document.forms.namedItem(\"notfound\")=" + window.document.forms.namedItem("notfound"));
+</SCRIPT>
+</BODY>
+</HTML>
