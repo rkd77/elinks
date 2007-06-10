@@ -67,7 +67,7 @@ struct SEE_objectclass js_window_object_class = {
 	window_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL

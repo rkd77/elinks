@@ -64,7 +64,7 @@ struct SEE_objectclass js_document_object_class = {
 	document_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL

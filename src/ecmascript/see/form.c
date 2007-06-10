@@ -85,7 +85,7 @@ struct SEE_objectclass js_input_object_class = {
 	input_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -99,7 +99,7 @@ struct SEE_objectclass js_form_elems_class = {
 	form_elems_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -113,7 +113,7 @@ struct SEE_objectclass js_forms_object_class = {
 	forms_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -127,7 +127,7 @@ struct SEE_objectclass js_form_class = {
 	form_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
