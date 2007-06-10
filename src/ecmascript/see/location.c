@@ -88,7 +88,7 @@ struct SEE_objectclass js_history_object_class = {
 	history_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -102,7 +102,7 @@ struct SEE_objectclass js_location_object_class = {
 	location_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL

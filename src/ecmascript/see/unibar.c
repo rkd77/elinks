@@ -64,7 +64,7 @@ struct SEE_objectclass js_menubar_object_class = {
 	unibar_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -78,7 +78,7 @@ struct SEE_objectclass js_statusbar_object_class = {
 	unibar_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
