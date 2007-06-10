@@ -290,7 +290,7 @@ redraw_leds(void *xxx)
 	foreach (ses, sessions) {
 		if (!sync_leds(ses))
 			continue;
-		redraw_terminal(ses->tab->term);
+		/* redraw_terminal(ses->tab->term); */
 		draw_leds(ses);
 	}
 	drawing = 0;
