@@ -8,7 +8,7 @@ extern const JSClass HTMLImageElement_class;
 extern const JSFunctionSpec HTMLImageElement_funcs[];
 extern const JSPropertySpec HTMLImageElement_props[];
 
-struct IMAGE_struct {
+struct IMG_struct {
 	struct HTMLElement_struct html;
 	unsigned char *name;
 	unsigned char *align;
@@ -24,6 +24,6 @@ struct IMAGE_struct {
 	unsigned int is_map:1;
 };
 
-void make_IMAGE_object(JSContext *ctx, struct dom_node *node);
-void done_IMAGE_object(void *data);
+void make_IMG_object(JSContext *ctx, struct dom_node *node);
+void done_IMG_object(void *data);
 #endif

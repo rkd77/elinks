@@ -2,7 +2,7 @@ top_builddir=../../../../../..
 include $(top_builddir)/Makefile.config
 
 INCLUDES += $(SPIDERMONKEY_CFLAGS)
-OBJS = HTMLAnchorElement.o HTMLAppletElement.o HTMLAreaElement.o \
+OBJS = html.o HTMLAnchorElement.o HTMLAppletElement.o HTMLAreaElement.o \
 HTMLBaseElement.o HTMLBaseFontElement.o HTMLBodyElement.o \
 HTMLBRElement.o HTMLButtonElement.o HTMLCollection.o \
 HTMLDirectoryElement.o HTMLDivElement.o HTMLDListElement.o \

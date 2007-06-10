@@ -12,9 +12,9 @@
 #ifdef CONFIG_ECMASCRIPT
 /* FIXME: SEE ? */
 #include "document/dom/ecmascript/spidermonkey.h"
+#include "document/dom/ecmascript/spidermonkey/html/html.h"
 #endif
 
-#include "document/dom/html.h"
 #include "dom/node.h"
 #include "dom/string.h"
 #include "util/hash.h"
@@ -465,11 +465,10 @@ done_dom_node(struct dom_node *node)
  	}
 #ifdef CONFIG_ECMASCRIPT
 #ifdef CONFIG_SPIDERMONKEY
-	if (node->ecmascript_obj) {
-		done_dom_node_ecmascript_obj(node);
-	}
 	if (node->type == DOM_NODE_ELEMENT && node->data.element.html_data) {
 		done_dom_node_html_data(node);
+	if (node->ecmascript_obj)
+		done_dom_node_ecmascript_obj(node);
 	}
 #endif
 #endif

@@ -113,6 +113,15 @@ const JSClass HTMLElement_class = {
 };
 
 void
+make_HTMLElement(JSContext *ctx, struct dom_node *node)
+{
+	node->data.element.html_data = mem_calloc(1, sizeof(struct HTMLElement_struct));
+	if (node->data.element.html_data) {
+		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLElement_class, NULL, NULL);
+	}
+}
+
+void
 done_HTMLElement(void *data)
 {
 	struct HTMLElement_struct *d = data;
