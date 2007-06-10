@@ -917,7 +917,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	 * explicitly tell the ECMAScript code which of them was
 	 * pressed.  W3C DOM Level 3 doesn't seem to include such a
 	 * feature.  */
-	if (fc->type != FC_RESET && fc->form->onsubmit) {
+	if (fc->type != FC_RESET && fc->type != FC_BUTTON && fc->form->onsubmit) {
 		struct string code;
 
 		if (init_string(&code)) {

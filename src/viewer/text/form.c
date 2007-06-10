@@ -1383,7 +1383,21 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 void
 delayed_submit_given_form(struct delayed_submit_form *dsf)
 {
+	int button = 0;
+	struct form_control *fc;
+
+	/* Stupid workaround for button's onclick="submit();" */
+	if (!list_empty(dsf->form->items)) {
+		fc = (struct form_control *)dsf->form->items.next;
+
+		if (fc->type == FC_BUTTON) {
+			fc->type = FC_SUBMIT;
+			button = 1;
+		}
+	}
 	submit_given_form(dsf->ses, dsf->vs->doc_view, dsf->form, 0);
+	if (button)
+		fc->type = FC_BUTTON;
 	mem_free(dsf);
 }
 
