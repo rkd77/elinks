@@ -42,7 +42,6 @@ void done_HTMLElement(void *data);
 #define make_DFN_object make_HTMLElement
 #define make_DT_object make_HTMLElement
 #define make_EM_object make_HTMLElement
-#define make_FIELDSET_object make_HTMLElement
 #define make_I_object make_HTMLElement
 #define make_INS_object make_HTMLElement
 #define make_KBD_object make_HTMLElement
@@ -82,7 +81,6 @@ void done_HTMLElement(void *data);
 #define done_DFN_object NULL
 #define done_DT_object NULL
 #define done_EM_object NULL
-#define done_FIELDSET_object NULL
 #define done_I_object NULL
 #define done_INS_object NULL
 #define done_KBD_object NULL

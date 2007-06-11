@@ -7,4 +7,12 @@ extern const JSClass HTMLFieldSetElement_class;
 extern const JSFunctionSpec HTMLFieldSetElement_funcs[];
 extern const JSPropertySpec HTMLFieldSetElement_props[];
 
+struct FIELDSET_struct {
+	struct HTMLElement_struct html;
+	unsigned char *form; /* FIXME: proper type */
+};
+
+void make_FIELDSET_object(JSContext *ctx, struct dom_node *node);
+void done_FIELDSET_object(void *data);
+
 #endif
