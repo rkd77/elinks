@@ -41,7 +41,7 @@ ifndef::installation-webpage[]
 			See <<lua-scripting,the Elinks - Lua interface>>    \
 endif::installation-webpage[]
 			for more info.
-GNU zip			For handling compressed documents both locally and  \
+zlib 1.2.0.2 or later	For handling compressed documents both locally and  \
 			sent from server.
 bzip2			For handling local compressed documents.
 OpenSSL or GNU TLS	For handling secure HTTP browsing.
