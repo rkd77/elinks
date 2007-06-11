@@ -477,7 +477,7 @@ AC_DEFUN([EL_CONFIG_OPTIONAL_LIBRARY],
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 	[  --without-gpm           disable gpm (mouse) support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzdopen,
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 	[  --without-zlib          disable zlib support])
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
