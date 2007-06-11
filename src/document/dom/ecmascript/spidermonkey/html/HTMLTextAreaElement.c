@@ -33,8 +33,10 @@ HTMLTextAreaElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		string_to_jsval(ctx, vp, html->default_value);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_FORM:
-		string_to_jsval(ctx, vp, html->form);
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_TEXT_AREA_ELEMENT_ACCESS_KEY:
 		string_to_jsval(ctx, vp, html->access_key);

@@ -30,8 +30,10 @@ HTMLButtonElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_BUTTON_ELEMENT_FORM:
-		string_to_jsval(ctx, vp, html->form);
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_BUTTON_ELEMENT_ACCESS_KEY:
 		string_to_jsval(ctx, vp, html->access_key);
@@ -136,7 +138,7 @@ done_BUTTON_object(void *data)
 {
 	struct BUTTON_struct *d = data;
 
-	/* form ? */
+	/* form musn't be freed */
 	mem_free_if(d->access_key);
 	mem_free_if(d->name);
 	mem_free_if(d->type);

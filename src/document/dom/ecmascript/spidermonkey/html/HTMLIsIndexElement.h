@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLIsIndexElement_props[];
 
 struct ISINDEX_struct {
 	struct HTMLElement_struct html;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 	unsigned char *prompt;
 };
 

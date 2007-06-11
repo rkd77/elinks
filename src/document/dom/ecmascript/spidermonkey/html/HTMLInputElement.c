@@ -36,8 +36,10 @@ HTMLInputElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		boolean_to_jsval(ctx, vp, html->default_checked);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_FORM:
-		string_to_jsval(ctx, vp, html->form);
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_INPUT_ELEMENT_ACCEPT:
 		string_to_jsval(ctx, vp, html->accept);

@@ -42,8 +42,10 @@ HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 		int_to_jsval(ctx, vp, html->length);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_FORM:
-		string_to_jsval(ctx, vp, html->form);
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_OPTIONS:
 		string_to_jsval(ctx, vp, html->options);

@@ -11,7 +11,7 @@ extern const JSPropertySpec HTMLTextAreaElement_props[];
 struct TEXTAREA_struct {
 	struct HTMLElement_struct html;
 	unsigned char *default_value;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 	unsigned char *access_key;
 	unsigned char *name;
 	unsigned char *type;

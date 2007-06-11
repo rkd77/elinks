@@ -9,7 +9,7 @@ extern const JSPropertySpec HTMLFieldSetElement_props[];
 
 struct FIELDSET_struct {
 	struct HTMLElement_struct html;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 };
 
 void make_FIELDSET_object(JSContext *ctx, struct dom_node *node);

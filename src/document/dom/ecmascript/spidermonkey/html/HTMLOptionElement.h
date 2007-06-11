@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLOptionElement_props[];
 
 struct OPTION_struct {
 	struct HTMLElement_struct html;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 	unsigned char *text;
 	unsigned char *label;
 	unsigned char *value;

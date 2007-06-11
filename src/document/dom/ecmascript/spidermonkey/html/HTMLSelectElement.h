@@ -12,7 +12,7 @@ struct SELECT_struct {
 	struct HTMLElement_struct html;
 	unsigned char *type;
 	unsigned char *value;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 	unsigned char *options; /* FIXME: proper type */
 	unsigned char *name;
 	int selected_index;

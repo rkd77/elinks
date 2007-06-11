@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLButtonElement_props[];
 
 struct BUTTON_struct {
 	struct HTMLElement_struct html;
-	unsigned char *form; /* TODO: proper type */
+	struct dom_node *form;
 	unsigned char *access_key;
 	unsigned char *name;
 	unsigned char *type;

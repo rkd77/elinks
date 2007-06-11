@@ -31,7 +31,10 @@ HTMLFieldSetElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FIELD_SET_ELEMENT_FORM:
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	default:
 		return HTMLElement_getProperty(ctx, obj, id, vp);

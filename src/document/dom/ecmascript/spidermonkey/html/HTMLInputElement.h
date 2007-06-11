@@ -11,7 +11,7 @@ extern const JSPropertySpec HTMLInputElement_props[];
 struct INPUT_struct {
 	struct HTMLElement_struct html;
 	unsigned char *default_value;
-	unsigned char *form; /* FIXME: proper type */
+	struct dom_node *form;
 	unsigned char *accept;
 	unsigned char *access_key;
 	unsigned char *align;

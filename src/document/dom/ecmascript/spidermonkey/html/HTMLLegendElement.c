@@ -30,8 +30,10 @@ HTMLLegendElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_LEGEND_ELEMENT_FORM:
-		string_to_jsval(ctx, vp, html->form);
-		/* Write me! */
+		if (html->form)
+			object_to_jsval(ctx, vp, html->form->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_LEGEND_ELEMENT_ACCESS_KEY:
 		string_to_jsval(ctx, vp, html->access_key);
