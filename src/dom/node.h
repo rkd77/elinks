@@ -277,7 +277,8 @@ struct dom_node {
 struct dom_node_list {
 	size_t size;
 #ifdef CONFIG_ECMASCRIPT
-        void *ecmascript_obj;
+	void *ctx;
+	void *ecmascript_obj;
 #endif
 	struct dom_node *entries[1];
 };
