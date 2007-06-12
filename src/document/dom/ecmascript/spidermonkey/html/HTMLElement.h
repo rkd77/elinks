@@ -56,10 +56,7 @@ void done_HTMLElement(struct dom_node *node);
 #define make_STRONG_object make_HTMLElement
 #define make_SUB_object make_HTMLElement
 #define make_SUP_object make_HTMLElement
-#define make_TBODY_object make_HTMLElement
-#define make_TFOOT_object make_HTMLElement
 #define make_TH_object make_HTMLElement
-#define make_THEAD_object make_HTMLElement
 #define make_TT_object make_HTMLElement
 #define make_U_object make_HTMLElement
 #define make_VAR_object make_HTMLElement
@@ -95,10 +92,7 @@ void done_HTMLElement(struct dom_node *node);
 #define done_STRONG_object NULL
 #define done_SUB_object NULL
 #define done_SUP_object NULL
-#define done_TBODY_object NULL
-#define done_TFOOT_object NULL
 #define done_TH_object NULL
-#define done_THEAD_object NULL
 #define done_TT_object NULL
 #define done_U_object NULL
 #define done_VAR_object NULL

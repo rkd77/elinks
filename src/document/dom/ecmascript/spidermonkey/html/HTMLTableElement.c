@@ -8,6 +8,7 @@
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableElement.h"
 #include "dom/node.h"
+#include "dom/sgml/html/html.h"
 
 static JSBool
 HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -30,24 +31,54 @@ HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ELEMENT_CAPTION:
-		string_to_jsval(ctx, vp, html->caption);
-		/* Write me! */
+		if (html->caption)
+			object_to_jsval(ctx, vp, html->caption->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_THEAD:
-		string_to_jsval(ctx, vp, html->thead);
-		/* Write me! */
+		if (html->thead)
+			object_to_jsval(ctx, vp, html->thead->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TFOOT:
-		string_to_jsval(ctx, vp, html->tfoot);
-		/* Write me! */
+		if (html->tfoot)
+			object_to_jsval(ctx, vp, html->tfoot->ecmascript_obj);
+		else
+			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ROWS:
-		string_to_jsval(ctx, vp, html->rows);
-		/* Write me! */
+		if (!html->rows)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->rows->ctx == ctx)
+				object_to_jsval(ctx, vp, html->rows->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->rows);
+				html->rows->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TBODIES:
-		string_to_jsval(ctx, vp, html->tbodies);
-		/* Write me! */
+		if (!html->tbodies)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->tbodies->ctx == ctx)
+				object_to_jsval(ctx, vp, html->tbodies->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->tbodies);
+				html->tbodies->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ALIGN:
 		string_to_jsval(ctx, vp, html->align);
@@ -87,6 +118,7 @@ HTMLTableElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct dom_node *node;
 	struct TABLE_struct *html;
+	JSObject *value;
 
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
@@ -103,16 +135,28 @@ HTMLTableElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_TABLE_ELEMENT_CAPTION:
-		mem_free_set(&html->caption, stracpy(jsval_to_string(ctx, vp)));
-		/* Write me! */
+		value = JSVAL_TO_OBJECT(*vp);
+		if (value) {
+			struct dom_node *caption = JS_GetPrivate(ctx, value);
+
+			html->caption = caption;
+		}
 		break;
 	case JSP_HTML_TABLE_ELEMENT_THEAD:
-		mem_free_set(&html->thead, stracpy(jsval_to_string(ctx, vp)));
-		/* Write me! */
+		value = JSVAL_TO_OBJECT(*vp);
+		if (value) {
+			struct dom_node *thead = JS_GetPrivate(ctx, value);
+
+			html->thead = thead;
+		}
 		break;
 	case JSP_HTML_TABLE_ELEMENT_TFOOT:
-		mem_free_set(&html->tfoot, stracpy(jsval_to_string(ctx, vp)));
-		/* Write me! */
+		value = JSVAL_TO_OBJECT(*vp);
+		if (value) {
+			struct dom_node *tfoot = JS_GetPrivate(ctx, value);
+
+			html->tfoot = tfoot;
+		}
 		break;
 	case JSP_HTML_TABLE_ELEMENT_ALIGN:
 		mem_free_set(&html->align, stracpy(jsval_to_string(ctx, vp)));
@@ -265,11 +309,16 @@ done_TABLE_object(struct dom_node *node)
 {
 	struct TABLE_struct *d = node->data.element.html_data;
 
-	/* caption ?
-	 * thead ?
-	 * tfoot ?
-	 * rows ?
-	 * tbodies ? */
+	if (d->rows) {
+		if (d->rows->ecmascript_obj)
+			JS_SetPrivate(d->rows->ctx, d->rows->ecmascript_obj, NULL);
+		mem_free(d->rows);
+	}
+	if (d->tbodies) {
+		if (d->tbodies->ecmascript_obj)
+			JS_SetPrivate(d->tbodies->ctx, d->tbodies->ecmascript_obj, NULL);
+		mem_free(d->tbodies);
+	}
 	mem_free_if(d->align);
 	mem_free_if(d->bgcolor);
 	mem_free_if(d->border);
@@ -279,4 +328,61 @@ done_TABLE_object(struct dom_node *node)
 	mem_free_if(d->rules);
 	mem_free_if(d->summary);
 	mem_free_if(d->width);
+}
+
+struct dom_node *
+find_parent_table(struct dom_node *node)
+{
+	while (1) {
+		node = node->parent;
+		if (!node)
+			break;
+		if (node->type == DOM_NODE_ELEMENT && node->data.element.type == HTML_ELEMENT_TABLE)
+			break;
+	}
+	return node;
+}
+
+void
+register_row(struct dom_node *node)
+{
+	struct dom_node *table = find_parent_table(node);
+
+	if (table) {
+		struct TABLE_struct *d = table->data.element.html_data;
+
+		d->rows = add_to_dom_node_list(&d->rows, node, -1);
+	}
+}
+
+void
+unregister_row(struct dom_node *node)
+{
+	struct dom_node *table = find_parent_table(node);
+
+	if (table) {
+		struct TABLE_struct *d = table->data.element.html_data;
+
+		del_from_dom_node_list(d->rows, node);
+	}
+}
+
+void
+register_tbody(struct dom_node *table, struct dom_node *node)
+{
+		struct TABLE_struct *d = table->data.element.html_data;
+
+		d->rows = add_to_dom_node_list(&d->rows, node, -1);
+}
+
+void
+unregister_tbody(struct dom_node *node)
+{
+	struct dom_node *table = find_parent_table(node);
+
+	if (table) {
+		struct TABLE_struct *d = table->data.element.html_data;
+
+		del_from_dom_node_list(d->tbodies, node);
+	}
 }

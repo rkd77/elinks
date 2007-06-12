@@ -46,9 +46,8 @@ HTMLFormElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				html->elements->ctx = ctx;
 				new_obj = JS_NewObject(ctx,
 				 (JSClass *)&HTMLCollection_class, NULL, NULL);
-				if (new_obj) {
+				if (new_obj)
 					JS_SetPrivate(ctx, new_obj, html->elements);
-				}
 				html->elements->ecmascript_obj = new_obj;
 				object_to_jsval(ctx, vp, new_obj);
 			}

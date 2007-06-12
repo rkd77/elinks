@@ -10,11 +10,11 @@ extern const JSPropertySpec HTMLTableElement_props[];
 
 struct TABLE_struct {
 	struct HTMLElement_struct html;
-	unsigned char *caption; /* FIXME: proper type */
-	unsigned char *thead; /* FIXME: proper type */
-	unsigned char *tfoot; /* FIXME: proper type */
-	unsigned char *rows; /* FIXME: proper type */
-	unsigned char *tbodies; /* FIXME: proper type */
+	struct dom_node *caption;
+	struct dom_node *thead;
+	struct dom_node *tfoot;
+	struct dom_node_list *rows;
+	struct dom_node_list *tbodies;
 	unsigned char *align;
 	unsigned char *bgcolor;
 	unsigned char *border;
@@ -28,4 +28,10 @@ struct TABLE_struct {
 
 void make_TABLE_object(JSContext *ctx, struct dom_node *node);
 void done_TABLE_object(struct dom_node *node);
+struct dom_node *find_parent_table(struct dom_node *node);
+void register_row(struct dom_node *node);
+void unregister_row(struct dom_node *node);
+void register_tbody(struct dom_node *table, struct dom_node *node);
+void unregister_tbody(struct dom_node *node);
+
 #endif
