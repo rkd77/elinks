@@ -15,5 +15,5 @@ struct OPTGROUP_struct {
 };
 
 void make_OPTGROUP_object(JSContext *ctx, struct dom_node *node);
-void done_OPTGROUP_object(void *data);
+void done_OPTGROUP_object(struct dom_node *node);
 #endif

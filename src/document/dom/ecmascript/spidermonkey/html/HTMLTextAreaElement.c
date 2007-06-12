@@ -187,9 +187,9 @@ make_TEXTAREA_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_TEXTAREA_object(void *data)
+done_TEXTAREA_object(struct dom_node *node)
 {
-	struct TEXTAREA_struct *d = data;
+	struct TEXTAREA_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->default_value);
 	/* What to do with d->form? */

@@ -110,9 +110,9 @@ make_STYLE_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_STYLE_object(void *data)
+done_STYLE_object(struct dom_node *node)
 {
-	struct STYLE_struct *d = data;
+	struct STYLE_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->media);
 	mem_free_if(d->type);

@@ -131,9 +131,9 @@ make_BODY_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_BODY_object(void *data)
+done_BODY_object(struct dom_node *node)
 {
-	struct BODY_struct *d = data;
+	struct BODY_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->alink);
 	mem_free_if(d->background);

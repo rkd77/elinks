@@ -130,9 +130,9 @@ make_COL_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_COL_object(void *data)
+done_COL_object(struct dom_node *node)
 {
-	struct COL_struct *d = data;
+	struct COL_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->align);
 	mem_free_if(d->ch);

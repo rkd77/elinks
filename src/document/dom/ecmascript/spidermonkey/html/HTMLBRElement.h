@@ -14,5 +14,5 @@ struct BR_struct {
 };
 
 void make_BR_object(JSContext *ctx, struct dom_node *node);
-void done_BR_object(void *data);
+void done_BR_object(struct dom_node *node);
 #endif

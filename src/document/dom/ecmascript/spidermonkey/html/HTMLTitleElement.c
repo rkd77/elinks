@@ -92,9 +92,9 @@ make_TITLE_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_TITLE_object(void *data)
+done_TITLE_object(struct dom_node *node)
 {
-	struct TITLE_struct *d = data;
+	struct TITLE_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->text);
 }

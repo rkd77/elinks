@@ -32,5 +32,5 @@ struct OBJECT_struct {
 };
 
 void make_OBJECT_object(JSContext *ctx, struct dom_node *node);
-void done_OBJECT_object(void *data);
+void done_OBJECT_object(struct dom_node *node);
 #endif

@@ -20,5 +20,5 @@ struct BUTTON_struct {
 };
 
 void make_BUTTON_object(JSContext *ctx, struct dom_node *node);
-void done_BUTTON_object(void *data);
+void done_BUTTON_object(struct dom_node *node);
 #endif

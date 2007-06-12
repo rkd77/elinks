@@ -103,9 +103,9 @@ make_FRAMESET_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_FRAMESET_object(void *data)
+done_FRAMESET_object(struct dom_node *node)
 {
-	struct FRAMESET_struct *d = data;
+	struct FRAMESET_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->cols);
 	mem_free_if(d->rows);

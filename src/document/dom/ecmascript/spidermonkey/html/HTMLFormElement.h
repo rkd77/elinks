@@ -21,7 +21,7 @@ struct FORM_struct {
 };
 
 void make_FORM_object(JSContext *ctx, struct dom_node *node);
-void done_FORM_object(void *data);
+void done_FORM_object(struct dom_node *node);
 void register_form_element(struct dom_node *form, struct dom_node *node);
 void unregister_form_element(struct dom_node *form, struct dom_node *node);
 struct dom_node *find_parent_form(struct dom_node *node);

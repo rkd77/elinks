@@ -28,5 +28,5 @@ struct TD_struct {
 };
 
 void make_TD_object(JSContext *ctx, struct dom_node *node);
-void done_TD_object(void *data);
+void done_TD_object(struct dom_node *node);
 #endif

@@ -25,6 +25,6 @@ struct A_struct {
 };
 
 void make_A_object(JSContext *ctx, struct dom_node *node);
-void done_A_object(void *data);
+void done_A_object(struct dom_node *node);
 
 #endif

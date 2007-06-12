@@ -16,5 +16,5 @@ struct LABEL_struct {
 };
 
 void make_LABEL_object(JSContext *ctx, struct dom_node *node);
-void done_LABEL_object(void *data);
+void done_LABEL_object(struct dom_node *node);
 #endif

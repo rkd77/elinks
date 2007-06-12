@@ -164,9 +164,9 @@ make_APPLET_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_APPLET_object(void *data)
+done_APPLET_object(struct dom_node *node)
 {
-	struct APPLET_struct *d = data;
+	struct APPLET_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->align);
 	mem_free_if(d->alt);

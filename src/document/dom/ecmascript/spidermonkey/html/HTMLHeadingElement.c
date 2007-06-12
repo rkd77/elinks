@@ -96,9 +96,9 @@ make_H1_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_H1_object(void *data)
+done_H1_object(struct dom_node *node)
 {
-	struct H1_struct *d = data;
+	struct H1_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->align);
 }

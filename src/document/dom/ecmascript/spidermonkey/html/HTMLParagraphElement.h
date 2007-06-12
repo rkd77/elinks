@@ -14,5 +14,5 @@ struct P_struct {
 };
 
 void make_P_object(JSContext *ctx, struct dom_node *node);
-void done_P_object(void *data);
+void done_P_object(struct dom_node *node);
 #endif

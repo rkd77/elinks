@@ -14,5 +14,5 @@ struct DL_struct {
 };
 
 void make_DL_object(JSContext *ctx, struct dom_node *node);
-void done_DL_object(void *data);
+void done_DL_object(struct dom_node *node);
 #endif

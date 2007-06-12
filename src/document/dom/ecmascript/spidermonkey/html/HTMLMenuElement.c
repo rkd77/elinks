@@ -96,6 +96,6 @@ make_MENU_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_MENU_object(void *data)
+done_MENU_object(struct dom_node *node)
 {
 }

@@ -109,9 +109,9 @@ make_BASEFONT_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_BASEFONT_object(void *data)
+done_BASEFONT_object(struct dom_node *node)
 {
-	struct BASEFONT_struct *d = data;
+	struct BASEFONT_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->color);
 	mem_free_if(d->face);

@@ -96,6 +96,6 @@ make_DIR_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_DIR_object(void *data)
+done_DIR_object(struct dom_node *node)
 {
 }

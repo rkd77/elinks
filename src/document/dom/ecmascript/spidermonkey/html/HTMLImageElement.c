@@ -169,9 +169,9 @@ make_IMG_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_IMG_object(void *data)
+done_IMG_object(struct dom_node *node)
 {
-	struct IMG_struct *d = data;
+	struct IMG_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->name);
 	mem_free_if(d->align);

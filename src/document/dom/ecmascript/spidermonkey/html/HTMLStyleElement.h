@@ -16,5 +16,5 @@ struct STYLE_struct {
 };
 
 void make_STYLE_object(JSContext *ctx, struct dom_node *node);
-void done_STYLE_object(void *data);
+void done_STYLE_object(struct dom_node *node);
 #endif

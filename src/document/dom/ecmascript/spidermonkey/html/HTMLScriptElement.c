@@ -138,9 +138,9 @@ make_SCRIPT_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_SCRIPT_object(void *data)
+done_SCRIPT_object(struct dom_node *node)
 {
-	struct SCRIPT_struct *d = data;
+	struct SCRIPT_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->text);
 	mem_free_if(d->html_for);

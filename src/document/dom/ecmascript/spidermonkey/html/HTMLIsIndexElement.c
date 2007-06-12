@@ -103,9 +103,9 @@ make_ISINDEX_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_ISINDEX_object(void *data)
+done_ISINDEX_object(struct dom_node *node)
 {
-	struct ISINDEX_struct *d = data;
+	struct ISINDEX_struct *d = node->data.element.html_data;
 
 	/* form ? */
 	mem_free_if(d->prompt);

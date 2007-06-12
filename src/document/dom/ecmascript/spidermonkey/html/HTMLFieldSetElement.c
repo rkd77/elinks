@@ -71,6 +71,6 @@ make_FIELDSET_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_FIELDSET_object(void *data)
+done_FIELDSET_object(struct dom_node *node)
 {
 }

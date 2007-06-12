@@ -96,9 +96,9 @@ make_QUOTE_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_QUOTE_object(void *data)
+done_QUOTE_object(struct dom_node *node)
 {
-	struct QUOTE_struct *d = data;
+	struct QUOTE_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->cite);
 }

@@ -216,9 +216,9 @@ make_OBJECT_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_OBJECT_object(void *data)
+done_OBJECT_object(struct dom_node *node)
 {
-	struct OBJECT_struct *d = data;
+	struct OBJECT_struct *d = node->data.element.html_data;
 
 	/* form ? */
 	mem_free_if(d->code);

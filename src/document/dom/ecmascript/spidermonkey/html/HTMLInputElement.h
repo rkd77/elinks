@@ -31,5 +31,5 @@ struct INPUT_struct {
 };
 
 void make_INPUT_object(JSContext *ctx, struct dom_node *node);
-void done_INPUT_object(void *data);
+void done_INPUT_object(struct dom_node *node);
 #endif

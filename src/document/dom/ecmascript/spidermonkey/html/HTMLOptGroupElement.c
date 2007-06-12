@@ -103,9 +103,9 @@ make_OPTGROUP_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_OPTGROUP_object(void *data)
+done_OPTGROUP_object(struct dom_node *node)
 {
-	struct OPTGROUP_struct *d = data;
+	struct OPTGROUP_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->label);
 }

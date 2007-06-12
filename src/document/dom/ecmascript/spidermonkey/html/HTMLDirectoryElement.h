@@ -14,5 +14,5 @@ struct DIR_struct {
 };
 
 void make_DIR_object(JSContext *ctx, struct dom_node *node);
-void done_DIR_object(void *data);
+void done_DIR_object(struct dom_node *node);
 #endif

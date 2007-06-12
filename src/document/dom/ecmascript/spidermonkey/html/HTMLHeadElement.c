@@ -96,9 +96,9 @@ make_HEAD_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_HEAD_object(void *data)
+done_HEAD_object(struct dom_node *node)
 {
-	struct HEAD_struct *d = data;
+	struct HEAD_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->profile);
 }

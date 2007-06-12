@@ -24,5 +24,5 @@ struct APPLET_struct {
 };
 
 void make_APPLET_object(JSContext *ctx, struct dom_node *node);
-void done_APPLET_object(void *data);
+void done_APPLET_object(struct dom_node *node);
 #endif

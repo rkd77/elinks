@@ -14,5 +14,5 @@ struct PRE_struct {
 };
 
 void make_PRE_object(JSContext *ctx, struct dom_node *node);
-void done_PRE_object(void *data);
+void done_PRE_object(struct dom_node *node);
 #endif

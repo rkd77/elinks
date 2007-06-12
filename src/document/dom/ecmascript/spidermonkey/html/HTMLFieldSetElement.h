@@ -13,6 +13,6 @@ struct FIELDSET_struct {
 };
 
 void make_FIELDSET_object(JSContext *ctx, struct dom_node *node);
-void done_FIELDSET_object(void *data);
+void done_FIELDSET_object(struct dom_node *node);
 
 #endif

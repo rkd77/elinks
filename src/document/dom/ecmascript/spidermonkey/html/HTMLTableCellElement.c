@@ -189,9 +189,9 @@ make_TD_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_TD_object(void *data)
+done_TD_object(struct dom_node *node)
 {
-	struct TD_struct *d = data;
+	struct TD_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->abbr);
 	mem_free_if(d->align);

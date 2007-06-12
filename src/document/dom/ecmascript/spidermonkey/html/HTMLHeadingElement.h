@@ -14,7 +14,7 @@ struct H1_struct {
 };
 
 void make_H1_object(JSContext *ctx, struct dom_node *node);
-void done_H1_object(void *data);
+void done_H1_object(struct dom_node *node);
 
 #define make_H2_object	make_H1_object
 #define make_H3_object	make_H1_object

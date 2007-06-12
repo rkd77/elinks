@@ -144,9 +144,9 @@ make_AREA_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_AREA_object(void *data)
+done_AREA_object(struct dom_node *node)
 {
-	struct AREA_struct *d = data;
+	struct AREA_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->access_key);
 	mem_free_if(d->alt);

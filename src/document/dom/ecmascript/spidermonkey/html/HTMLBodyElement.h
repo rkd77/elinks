@@ -19,5 +19,5 @@ struct BODY_struct {
 };
 
 void make_BODY_object(JSContext *ctx, struct dom_node *node);
-void done_BODY_object(void *data);
+void done_BODY_object(struct dom_node *node);
 #endif

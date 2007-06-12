@@ -155,9 +155,9 @@ make_TR_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_TR_object(void *data)
+done_TR_object(struct dom_node *node)
 {
-	struct TR_struct *d = data;
+	struct TR_struct *d = node->data.element.html_data;
 
 	/* d->cells ? */
 	mem_free_if(d->align);

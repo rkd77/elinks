@@ -242,9 +242,9 @@ done_elements(struct dom_node_list *list)
 }
 
 void
-done_FORM_object(void *data)
+done_FORM_object(struct dom_node *node)
 {
-	struct FORM_struct *d = data;
+	struct FORM_struct *d = node->data.element.html_data;
 
 	if (d->elements)
 		done_elements(d->elements);

@@ -96,9 +96,9 @@ make_BR_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_BR_object(void *data)
+done_BR_object(struct dom_node *node)
 {
-	struct BR_struct *d = data;
+	struct BR_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->clear);
 }

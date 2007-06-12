@@ -164,9 +164,9 @@ make_IFRAME_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_IFRAME_object(void *data)
+done_IFRAME_object(struct dom_node *node)
 {
-	struct IFRAME_struct *d = data;
+	struct IFRAME_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->align);
 	mem_free_if(d->frame_border);

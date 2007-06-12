@@ -261,9 +261,9 @@ make_TABLE_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_TABLE_object(void *data)
+done_TABLE_object(struct dom_node *node)
 {
-	struct TABLE_struct *d = data;
+	struct TABLE_struct *d = node->data.element.html_data;
 
 	/* caption ?
 	 * thead ?

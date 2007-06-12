@@ -15,5 +15,5 @@ struct MAP_struct {
 };
 
 void make_MAP_object(JSContext *ctx, struct dom_node *node);
-void done_MAP_object(void *data);
+void done_MAP_object(struct dom_node *node);
 #endif

@@ -102,9 +102,9 @@ make_LI_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_LI_object(void *data)
+done_LI_object(struct dom_node *node)
 {
-	struct LI_struct *d = data;
+	struct LI_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->type);
 }

@@ -103,9 +103,9 @@ make_BASE_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_BASE_object(void *data)
+done_BASE_object(struct dom_node *node)
 {
-	struct BASE_struct *d = data;
+	struct BASE_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->href);
 	mem_free_if(d->target);

@@ -110,9 +110,9 @@ make_LEGEND_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_LEGEND_object(void *data)
+done_LEGEND_object(struct dom_node *node)
 {
-	struct LEGEND_struct *d = data;
+	struct LEGEND_struct *d = node->data.element.html_data;
 
 	/* form ? */
 	mem_free_if(d->access_key);

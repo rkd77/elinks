@@ -96,9 +96,9 @@ make_DIV_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_DIV_object(void *data)
+done_DIV_object(struct dom_node *node)
 {
-	struct DIV_struct *d = data;
+	struct DIV_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->align);
 }

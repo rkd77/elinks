@@ -24,7 +24,7 @@ struct html_objects { /* FIXME: Better name for this type. */
 };
 
 void make_HTMLElement(JSContext *ctx, struct dom_node *node);
-void done_HTMLElement(void *data);
+void done_HTMLElement(struct dom_node *node);
 
 #define make_ABBR_object make_HTMLElement
 #define make_ACRONYM_object make_HTMLElement

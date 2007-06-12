@@ -122,9 +122,9 @@ make_HTMLElement(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_HTMLElement(void *data)
+done_HTMLElement(struct dom_node *node)
 {
-	struct HTMLElement_struct *d = data;
+	struct HTMLElement_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->id);
 	mem_free_if(d->title);

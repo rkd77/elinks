@@ -193,9 +193,9 @@ make_SELECT_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_SELECT_object(void *data)
+done_SELECT_object(struct dom_node *node)
 {
-	struct SELECT_struct *d = data;
+	struct SELECT_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->type);
 	mem_free_if(d->value);

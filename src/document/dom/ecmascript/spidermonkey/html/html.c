@@ -66,7 +66,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 typedef void (make_function_T)(JSContext *ctx, struct dom_node *node);
-typedef void (done_function_T)(void *data);
+typedef void (done_function_T)(struct dom_node *node);
 
 struct HTML_functions {
 	make_function_T *make;
@@ -87,8 +87,8 @@ done_dom_node_html_data(struct dom_node *node)
 	void *data = node->data.element.html_data;
 
 	if (func[type].done)
-		func[type].done(data);
-	done_HTMLElement(data);
+		func[type].done(node);
+	done_HTMLElement(node);
 	mem_free(data);
 }
 

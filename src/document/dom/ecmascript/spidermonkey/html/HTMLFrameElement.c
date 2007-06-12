@@ -150,9 +150,9 @@ make_FRAME_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_FRAME_object(void *data)
+done_FRAME_object(struct dom_node *node)
 {
-	struct FRAME_struct *d = data;
+	struct FRAME_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->frame_border);
 	mem_free_if(d->long_desc);

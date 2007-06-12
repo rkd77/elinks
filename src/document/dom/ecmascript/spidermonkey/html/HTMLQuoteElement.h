@@ -14,5 +14,5 @@ struct QUOTE_struct {
 };
 
 void make_QUOTE_object(JSContext *ctx, struct dom_node *node);
-void done_QUOTE_object(void *data);
+void done_QUOTE_object(struct dom_node *node);
 #endif

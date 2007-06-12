@@ -21,5 +21,5 @@ struct AREA_struct {
 };
 
 void make_AREA_object(JSContext *ctx, struct dom_node *node);
-void done_AREA_object(void *data);
+void done_AREA_object(struct dom_node *node);
 #endif

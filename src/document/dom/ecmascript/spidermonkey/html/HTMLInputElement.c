@@ -248,9 +248,9 @@ make_INPUT_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_INPUT_object(void *data)
+done_INPUT_object(struct dom_node *node)
 {
-	struct INPUT_struct *d = data;
+	struct INPUT_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->default_value);
 	/* form ? */

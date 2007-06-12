@@ -14,5 +14,5 @@ struct HTML_struct {
 };
 
 void make_HTML_object(JSContext *ctx, struct dom_node *node);
-void done_HTML_object(void *data);
+void done_HTML_object(struct dom_node *node);
 #endif

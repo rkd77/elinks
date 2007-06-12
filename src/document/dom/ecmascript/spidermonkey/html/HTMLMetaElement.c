@@ -117,9 +117,9 @@ make_META_object(JSContext *ctx, struct dom_node *node)
 }
 
 void
-done_META_object(void *data)
+done_META_object(struct dom_node *node)
 {
-	struct META_struct *d = data;
+	struct META_struct *d = node->data.element.html_data;
 
 	mem_free_if(d->content);
 	mem_free_if(d->http_equiv);
