@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLFormElement_props[];
 
 struct FORM_struct {
 	struct HTMLElement_struct html;
-	unsigned char *elements; /* FIXME: proper type */
+	struct dom_node_list *elements;
 	unsigned char *name;
 	unsigned char *accept_charset;
 	unsigned char *action;
@@ -22,4 +22,8 @@ struct FORM_struct {
 
 void make_FORM_object(JSContext *ctx, struct dom_node *node);
 void done_FORM_object(void *data);
+void register_form_element(struct dom_node *form, struct dom_node *node);
+void unregister_form_element(struct dom_node *form, struct dom_node *node);
+struct dom_node *find_parent_form(struct dom_node *node);
+
 #endif

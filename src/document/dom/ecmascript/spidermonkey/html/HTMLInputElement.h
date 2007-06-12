@@ -10,8 +10,8 @@ extern const JSPropertySpec HTMLInputElement_props[];
 
 struct INPUT_struct {
 	struct HTMLElement_struct html;
+	struct dom_node *form; /* Must be first! */
 	unsigned char *default_value;
-	struct dom_node *form;
 	unsigned char *accept;
 	unsigned char *access_key;
 	unsigned char *align;

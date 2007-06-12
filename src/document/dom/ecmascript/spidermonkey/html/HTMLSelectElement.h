@@ -10,9 +10,9 @@ extern const JSPropertySpec HTMLSelectElement_props[];
 
 struct SELECT_struct {
 	struct HTMLElement_struct html;
+	struct dom_node *form; /* Must be first! */
 	unsigned char *type;
 	unsigned char *value;
-	struct dom_node *form;
 	unsigned char *options; /* FIXME: proper type */
 	unsigned char *name;
 	int selected_index;

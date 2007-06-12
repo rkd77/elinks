@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLObjectElement_props[];
 
 struct OBJECT_struct {
 	struct HTMLElement_struct html;
-	struct dom_node *form;
+	struct dom_node *form; /* Must be first! */
 	unsigned char *code;
 	unsigned char *align;
 	unsigned char *archive;

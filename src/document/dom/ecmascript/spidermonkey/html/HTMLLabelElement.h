@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLLabelElement_props[];
 
 struct LABEL_struct {
 	struct HTMLElement_struct html;
-	struct dom_node *form;
+	struct dom_node *form; /* Must be first! */
 	unsigned char *access_key;
 	unsigned char *html_for;
 };

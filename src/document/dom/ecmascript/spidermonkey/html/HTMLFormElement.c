@@ -6,8 +6,11 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLInputElement.h"
 #include "dom/node.h"
+#include "dom/sgml/html/html.h"
 
 static JSBool
 HTMLFormElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -32,8 +35,24 @@ HTMLFormElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_FORM_ELEMENT_ELEMENTS:
-		string_to_jsval(ctx, vp, html->elements);
-		/* Write me! */
+		if (!html->elements)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->elements->ctx == ctx)
+				object_to_jsval(ctx, vp, html->elements->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->elements->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj) {
+					JS_SetPrivate(ctx, new_obj, html->elements);
+				}
+				html->elements->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_FORM_ELEMENT_LENGTH:
 		int_to_jsval(ctx, vp, html->length);
@@ -154,11 +173,72 @@ void
 make_FORM_object(JSContext *ctx, struct dom_node *node)
 {
 	struct html_objects *o = JS_GetContextPrivate(ctx);
+	struct FORM_struct *form;
 
 	node->data.element.html_data = mem_calloc(1, sizeof(struct FORM_struct));
-	if (node->data.element.html_data) {
+	form = node->data.element.html_data;
+	if (form) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLFormElement_class, o->HTMLElement_object, NULL);
 	}
+}
+
+static void
+del_from_elements(struct dom_node_list *list, struct dom_node *node)
+{
+	struct INPUT_struct *html = node->data.element.html_data;
+
+	if (html) {
+		html->form = NULL;
+	}
+	del_from_dom_node_list(list, node);
+}
+
+void
+register_form_element(struct dom_node *form, struct dom_node *node)
+{
+	struct INPUT_struct *html = node->data.element.html_data;
+	struct FORM_struct *data = form->data.element.html_data;
+
+	if (html) {
+		html->form = form;
+		data->elements = add_to_dom_node_list(&data->elements, node, -1);
+	}
+}
+
+void
+unregister_form_element(struct dom_node *form, struct dom_node *node)
+{
+	struct FORM_struct *data = form->data.element.html_data;
+	struct dom_node_list *list = data->elements;
+
+	del_from_elements(list, node);
+}
+
+struct dom_node *
+find_parent_form(struct dom_node *node)
+{
+	if (!node)
+		return NULL;
+
+	while (1) {
+		node = node->parent;
+		if (!node)
+			break;
+		if (node->type == DOM_NODE_ELEMENT && node->data.element.type == HTML_ELEMENT_FORM)
+			break;
+	}
+	return node;
+}
+
+static void
+done_elements(struct dom_node_list *list)
+{
+	while (list->size)
+		del_from_elements(list, list->entries[0]);
+	if (list->ecmascript_obj) {
+		JS_SetPrivate(list->ctx, list->ecmascript_obj, NULL);
+	}
+	mem_free(list);
 }
 
 void
@@ -166,7 +246,8 @@ done_FORM_object(void *data)
 {
 	struct FORM_struct *d = data;
 
-	/* elements */
+	if (d->elements)
+		done_elements(d->elements);
 	mem_free_if(d->name);
 	mem_free_if(d->accept_charset);
 	mem_free_if(d->action);
