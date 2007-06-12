@@ -472,5 +472,7 @@ get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 
 /* Return the root node. */
 struct dom_node *get_dom_root_node(struct dom_node *);
+void del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node);
+
 #endif
 

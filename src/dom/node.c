@@ -89,7 +89,7 @@ add_to_dom_node_list(struct dom_node_list **list_ptr,
 	return list;
 }
 
-static void
+void
 del_from_dom_node_list(struct dom_node_list *list, struct dom_node *node)
 {
 	struct dom_node *entry;
