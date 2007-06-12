@@ -7,6 +7,7 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLOptionsCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLSelectElement.h"
 #include "dom/node.h"
 
@@ -49,8 +50,24 @@ HTMLSelectElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp
 			undef_to_jsval(ctx, vp);
 		break;
 	case JSP_HTML_SELECT_ELEMENT_OPTIONS:
-		string_to_jsval(ctx, vp, html->options);
-		/* Write me! */
+		if (!html->options)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->options->ctx == ctx)
+				object_to_jsval(ctx, vp, html->options->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->options->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLOptionsCollection_class, NULL, NULL);
+				if (new_obj) {
+					JS_SetPrivate(ctx, new_obj, html->options);
+				}
+				html->options->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_SELECT_ELEMENT_DISABLED:
 		boolean_to_jsval(ctx, vp, html->disabled);

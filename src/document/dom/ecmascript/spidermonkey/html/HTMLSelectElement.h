@@ -11,9 +11,9 @@ extern const JSPropertySpec HTMLSelectElement_props[];
 struct SELECT_struct {
 	struct HTMLElement_struct html;
 	struct dom_node *form; /* Must be first! */
+	struct dom_node_list *options;
 	unsigned char *type;
 	unsigned char *value;
-	unsigned char *options; /* FIXME: proper type */
 	unsigned char *name;
 	int selected_index;
 	int length;
@@ -25,4 +25,5 @@ struct SELECT_struct {
 
 void make_SELECT_object(JSContext *ctx, struct dom_node *node);
 void done_SELECT_object(struct dom_node *node);
+
 #endif
