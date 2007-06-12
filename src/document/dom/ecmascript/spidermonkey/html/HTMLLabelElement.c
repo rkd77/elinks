@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLLabelElement.h"
 #include "dom/node.h"
 
@@ -106,6 +107,7 @@ make_LABEL_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct LABEL_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLLabelElement_class, o->HTMLElement_object, NULL);
+		register_form_element(node);
 	}
 }
 
@@ -114,7 +116,7 @@ done_LABEL_object(struct dom_node *node)
 {
 	struct LABEL_struct *d = node->data.element.html_data;
 
-	/* form ? */
+	unregister_form_element(d->form, node);
 	mem_free_if(d->access_key);
 	mem_free_if(d->html_for);
 }

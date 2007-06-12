@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLInputElement.h"
 #include "dom/node.h"
 
@@ -244,6 +245,7 @@ make_INPUT_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct INPUT_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLInputElement_class, o->HTMLElement_object, NULL);
+		register_form_element(node);
 	}
 }
 
@@ -252,8 +254,8 @@ done_INPUT_object(struct dom_node *node)
 {
 	struct INPUT_struct *d = node->data.element.html_data;
 
+	unregister_form_element(d->form, node);
 	mem_free_if(d->default_value);
-	/* form ? */
 	mem_free_if(d->accept);
 	mem_free_if(d->access_key);
 	mem_free_if(d->align);

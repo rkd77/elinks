@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLIsIndexElement.h"
 #include "dom/node.h"
 
@@ -99,6 +100,7 @@ make_ISINDEX_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct ISINDEX_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLIsIndexElement_class, o->HTMLElement_object, NULL);
+		register_form_element(node);
 	}
 }
 
@@ -107,6 +109,6 @@ done_ISINDEX_object(struct dom_node *node)
 {
 	struct ISINDEX_struct *d = node->data.element.html_data;
 
-	/* form ? */
+	unregister_form_element(d->form, node);
 	mem_free_if(d->prompt);
 }

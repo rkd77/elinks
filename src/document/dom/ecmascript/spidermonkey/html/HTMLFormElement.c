@@ -193,33 +193,9 @@ del_from_elements(struct dom_node_list *list, struct dom_node *node)
 	del_from_dom_node_list(list, node);
 }
 
-void
-register_form_element(struct dom_node *form, struct dom_node *node)
-{
-	struct INPUT_struct *html = node->data.element.html_data;
-	struct FORM_struct *data = form->data.element.html_data;
-
-	if (html) {
-		html->form = form;
-		data->elements = add_to_dom_node_list(&data->elements, node, -1);
-	}
-}
-
-void
-unregister_form_element(struct dom_node *form, struct dom_node *node)
-{
-	struct FORM_struct *data = form->data.element.html_data;
-	struct dom_node_list *list = data->elements;
-
-	del_from_elements(list, node);
-}
-
-struct dom_node *
+static struct dom_node *
 find_parent_form(struct dom_node *node)
 {
-	if (!node)
-		return NULL;
-
 	while (1) {
 		node = node->parent;
 		if (!node)
@@ -229,6 +205,37 @@ find_parent_form(struct dom_node *node)
 	}
 	return node;
 }
+
+void
+register_form_element(struct dom_node *node)
+{
+	struct dom_node *form;
+
+	if (!node)
+		return;
+	form = find_parent_form(node);
+	if (form) {
+		struct INPUT_struct *html = node->data.element.html_data;
+		struct FORM_struct *data = form->data.element.html_data;
+
+		if (html) {
+			html->form = form;
+			data->elements = add_to_dom_node_list(&data->elements, node, -1);
+		}
+	}
+}
+
+void
+unregister_form_element(struct dom_node *form, struct dom_node *node)
+{
+	if (form) {
+		struct FORM_struct *data = form->data.element.html_data;
+		struct dom_node_list *list = data->elements;
+
+		del_from_elements(list, node);
+	}
+}
+
 
 static void
 done_elements(struct dom_node_list *list)

@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLOptionElement.h"
 #include "dom/node.h"
 
@@ -135,6 +136,7 @@ make_OPTION_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct OPTION_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLOptionElement_class, o->HTMLElement_object, NULL);
+		register_form_element(node);
 	}
 }
 
@@ -143,7 +145,7 @@ done_OPTION_object(struct dom_node *node)
 {
 	struct OPTION_struct *d = node->data.element.html_data;
 
-	/* form ? */
+	unregister_form_element(d->form, node);
 	mem_free_if(d->text);
 	mem_free_if(d->label);
 	mem_free_if(d->value);

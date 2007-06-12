@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTextAreaElement.h"
 #include "dom/node.h"
 
@@ -183,6 +184,7 @@ make_TEXTAREA_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct TEXTAREA_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTextAreaElement_class, o->HTMLElement_object, NULL);
+		register_form_element(node);
 	}
 }
 
@@ -191,8 +193,8 @@ done_TEXTAREA_object(struct dom_node *node)
 {
 	struct TEXTAREA_struct *d = node->data.element.html_data;
 
+	unregister_form_element(d->form, node);
 	mem_free_if(d->default_value);
-	/* What to do with d->form? */
 	mem_free_if(d->access_key);
 	mem_free_if(d->name);
 	mem_free_if(d->type);
