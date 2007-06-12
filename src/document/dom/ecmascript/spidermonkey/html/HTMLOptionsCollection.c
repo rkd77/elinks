@@ -6,37 +6,35 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLOptionsCollection.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLOptionsCollection_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
-	if (!JSVAL_IS_INT(id))
-		return JS_TRUE;
+	struct dom_node_list *list;
 
-	switch (JSVAL_TO_INT(id)) {
-	case JSP_HTML_OPTIONS_COLLECTION_LENGTH:
-		/* Write me! */
-		break;
-	default:
-		break;
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLOptionsCollection_class, NULL)))
+		return JS_FALSE;
+
+	list = JS_GetPrivate(ctx, obj);
+	if (!list)
+		return JS_FALSE;
+
+	if (JSVAL_IS_STRING(id))
+		return HTMLCollection_namedItem(ctx, obj, 1, &id, vp);
+
+	if (JSVAL_IS_INT(id)) {
+		switch (JSVAL_TO_INT(id)) {
+		case JSP_HTML_OPTIONS_COLLECTION_LENGTH:
+			int_to_jsval(ctx, vp, list->size);
+			break;
+		default:
+			return HTMLCollection_item(ctx, obj, 1, &id, vp);
+			break;
+		}
 	}
-	return JS_TRUE;
-}
-
-static JSBool
-HTMLOptionsCollection_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
-		jsval *rval)
-{
-	/* Write me! */
-	return JS_TRUE;
-}
-
-static JSBool
-HTMLOptionsCollection_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
-		jsval *rval)
-{
-	/* Write me! */
 	return JS_TRUE;
 }
 
@@ -46,8 +44,8 @@ const JSPropertySpec HTMLOptionsCollection_props[] = {
 };
 
 const JSFunctionSpec HTMLOptionsCollection_funcs[] = {
-	{ "item",	HTMLOptionsCollection_item,		1 },
-	{ "namedItem",	HTMLOptionsCollection_namedItem,	1 },
+	{ "item",	HTMLCollection_item,		1 },
+	{ "namedItem",	HTMLCollection_namedItem,	1 },
 	{ NULL }
 };
 

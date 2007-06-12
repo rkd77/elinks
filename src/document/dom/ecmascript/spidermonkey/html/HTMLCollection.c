@@ -9,7 +9,7 @@
 #include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "dom/node.h"
 
-static JSBool
+JSBool
 HTMLCollection_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 		jsval *rval)
 {
@@ -36,7 +36,7 @@ HTMLCollection_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	return JS_TRUE;
 }
 
-static JSBool
+JSBool
 HTMLCollection_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 		jsval *rval)
 {
