@@ -6,6 +6,8 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLTableSectionElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableElement.h"
 #include "dom/node.h"
 #include "dom/sgml/html/html.h"
@@ -57,6 +59,9 @@ HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 			else {
 				JSObject *new_obj;
 
+				html->rows->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
 				if (new_obj)
 					JS_SetPrivate(ctx, new_obj, html->rows);
 				html->rows->ecmascript_obj = new_obj;
@@ -72,6 +77,10 @@ HTMLTableElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				object_to_jsval(ctx, vp, html->tbodies->ecmascript_obj);
 			else {
 				JSObject *new_obj;
+
+				html->tbodies->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
 
 				if (new_obj)
 					JS_SetPrivate(ctx, new_obj, html->tbodies);
@@ -297,10 +306,21 @@ void
 make_TABLE_object(JSContext *ctx, struct dom_node *node)
 {
 	struct html_objects *o = JS_GetContextPrivate(ctx);
+	struct TABLE_struct *t = mem_calloc(1, sizeof(struct TABLE_struct));
+	struct dom_node *tbody;
 
-	node->data.element.html_data = mem_calloc(1, sizeof(struct TABLE_struct));
-	if (node->data.element.html_data) {
-		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTableElement_class, o->HTMLElement_object, NULL);
+	if (!t)
+		return;
+
+	node->data.element.html_data = t;
+	node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTableElement_class, o->HTMLElement_object, NULL);
+	/* Alloc node for implicit tbody element. */
+	tbody = mem_calloc(1, sizeof(*tbody));
+	if (tbody) {
+		t->tbodies = add_to_dom_node_list(&t->tbodies, tbody, -1);
+		if (!t->tbodies)
+			mem_free(tbody);
+		tbody->parent = node;
 	}
 }
 
@@ -317,6 +337,7 @@ done_TABLE_object(struct dom_node *node)
 	if (d->tbodies) {
 		if (d->tbodies->ecmascript_obj)
 			JS_SetPrivate(d->tbodies->ctx, d->tbodies->ecmascript_obj, NULL);
+		mem_free_if(d->tbodies->entries[0]);
 		mem_free(d->tbodies);
 	}
 	mem_free_if(d->align);
@@ -346,8 +367,45 @@ find_parent_table(struct dom_node *node)
 void
 register_row(struct dom_node *node)
 {
-	struct dom_node *table = find_parent_table(node);
+	struct dom_node *table;
+	struct dom_node *cur = node;
+	int found = 0;
 
+	while (!found) {
+		cur = cur->parent;
+		if (!cur)
+			return;
+		if (cur->type == DOM_NODE_ELEMENT) {
+			switch (cur->data.element.type) {
+			case HTML_ELEMENT_TBODY:
+			case HTML_ELEMENT_TFOOT:
+			case HTML_ELEMENT_THEAD:
+				{
+					struct THEAD_struct *d = cur->data.element.html_data;
+
+					d->rows = add_to_dom_node_list(&d->rows, node, -1);
+					found = 1;
+				}
+				break;
+			case HTML_ELEMENT_TABLE:
+				{
+					struct dom_node *tbody;
+					struct TABLE_struct *t;
+					struct THEAD_struct *tb;
+
+					table = cur;
+					t = table->data.element.html_data;
+					tbody = t->tbodies->entries[0];
+					tb = tbody->data.element.html_data;
+
+					tb->rows = add_to_dom_node_list(&tb->rows, node, -1);
+					goto fin;
+				}
+			}
+		}
+	}
+	table = find_parent_table(cur);
+fin:
 	if (table) {
 		struct TABLE_struct *d = table->data.element.html_data;
 
@@ -358,8 +416,45 @@ register_row(struct dom_node *node)
 void
 unregister_row(struct dom_node *node)
 {
-	struct dom_node *table = find_parent_table(node);
+	struct dom_node *table;
+	struct dom_node *cur = node;
+	int found = 0;
 
+	while (!found) {
+		cur = cur->parent;
+		if (!cur)
+			return;
+		if (cur->type == DOM_NODE_ELEMENT) {
+			switch (cur->data.element.type) {
+			case HTML_ELEMENT_TBODY:
+			case HTML_ELEMENT_TFOOT:
+			case HTML_ELEMENT_THEAD:
+				{
+					struct THEAD_struct *d = cur->data.element.html_data;
+
+					del_from_dom_node_list(d->rows, node);
+					found = 1;
+				}
+				break;
+			case HTML_ELEMENT_TABLE:
+				{
+					struct dom_node *tbody;
+					struct TABLE_struct *t;
+					struct THEAD_struct *tb;
+
+					table = cur;
+					t = table->data.element.html_data;
+					tbody = t->tbodies->entries[0];
+					tb = tbody->data.element.html_data;
+
+					del_from_dom_node_list(tb->rows, node);
+					goto fin;
+				}
+			}
+		}
+	}
+	table = find_parent_table(cur);
+fin:
 	if (table) {
 		struct TABLE_struct *d = table->data.element.html_data;
 
