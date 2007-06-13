@@ -433,6 +433,16 @@ done_dom_node_data(struct dom_node *node)
 
 	if (node->allocated)
 		done_dom_string(&node->string);
+#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_SPIDERMONKEY
+	if (node->type == DOM_NODE_ELEMENT && node->data.element.html_data) {
+		done_dom_node_html_data(node);
+	if (node->ecmascript_obj)
+		done_dom_node_ecmascript_obj(node);
+	}
+#endif
+#endif
+
 	mem_free(node);
 }
 
@@ -459,19 +469,10 @@ done_dom_node(struct dom_node *node)
 			del_from_dom_node_list(data->proc_instruction.map, node);
 			break;
 
- 		default:
- 			break;
+		default:
+			break;
 		}
- 	}
-#ifdef CONFIG_ECMASCRIPT
-#ifdef CONFIG_SPIDERMONKEY
-	if (node->type == DOM_NODE_ELEMENT && node->data.element.html_data) {
-		done_dom_node_html_data(node);
-	if (node->ecmascript_obj)
-		done_dom_node_ecmascript_obj(node);
 	}
-#endif
-#endif
 	done_dom_node_data(node);
 }
 
