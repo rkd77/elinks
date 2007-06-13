@@ -10,7 +10,7 @@ extern const JSPropertySpec HTMLTableRowElement_props[];
 
 struct TR_struct {
 	struct HTMLElement_struct html;
-	unsigned char *cells; /* FIXME: proper type */
+	struct dom_node_list *cells;
 	unsigned char *align;
 	unsigned char *bgcolor;
 	unsigned char *ch;
@@ -22,4 +22,6 @@ struct TR_struct {
 
 void make_TR_object(JSContext *ctx, struct dom_node *node);
 void done_TR_object(struct dom_node *node);
+void register_cell(struct dom_node *node);
+void unregister_cell(struct dom_node *node);
 #endif

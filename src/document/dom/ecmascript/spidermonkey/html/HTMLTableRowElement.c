@@ -6,9 +6,11 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableRowElement.h"
 #include "dom/node.h"
+#include "dom/sgml/html/html.h"
 
 static JSBool
 HTMLTableRowElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -37,8 +39,23 @@ HTMLTableRowElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		int_to_jsval(ctx, vp, html->section_row_index);
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_CELLS:
-		string_to_jsval(ctx, vp, html->cells);
-		/* Write me! */
+		if (!html->cells)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->cells->ctx == ctx)
+				object_to_jsval(ctx, vp, html->cells->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->cells->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->cells);
+				html->cells->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_TABLE_ROW_ELEMENT_ALIGN:
 		string_to_jsval(ctx, vp, html->align);
@@ -144,6 +161,49 @@ const JSClass HTMLTableRowElement_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 
+static struct dom_node *
+find_parent_row(struct dom_node *node)
+{
+	struct dom_node *row = node;
+
+	while (1) {
+		row = row->parent;
+		if (!row)
+			break;
+		if (row->type == DOM_NODE_ELEMENT && row->data.element.type == HTML_ELEMENT_TR)
+			break;
+	}
+	return row;
+}
+
+void
+register_cell(struct dom_node *node)
+{
+	struct dom_node *row = find_parent_row(node);
+
+	if (row) {
+		struct TR_struct *html = row->data.element.html_data;
+
+		if (html) {
+			html->cells = add_to_dom_node_list(&html->cells, node, -1);
+		}
+	}
+}
+
+void
+unregister_cell(struct dom_node *node)
+{
+	struct dom_node *row = find_parent_row(node);
+
+	if (row) {
+		struct TR_struct *html = row->data.element.html_data;
+
+		if (html) {
+			del_from_dom_node_list(html->cells, node);
+		}
+	}
+}
+
 void
 make_TR_object(JSContext *ctx, struct dom_node *node)
 {
@@ -162,7 +222,10 @@ done_TR_object(struct dom_node *node)
 	struct TR_struct *d = node->data.element.html_data;
 
 	unregister_row(node);
-	/* d->cells ? */
+	if (d->cells) {
+		JS_SetPrivate(d->cells->ctx, d->cells->ecmascript_obj, NULL);
+		mem_free(d->cells);
+	}
 	mem_free_if(d->align);
 	mem_free_if(d->bgcolor);
 	mem_free_if(d->ch);

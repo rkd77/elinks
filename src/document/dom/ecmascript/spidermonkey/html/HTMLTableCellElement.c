@@ -7,6 +7,7 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLTableCellElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLTableRowElement.h"
 #include "dom/node.h"
 
 static JSBool
@@ -185,6 +186,7 @@ make_TD_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct TD_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLTableCellElement_class, o->HTMLElement_object, NULL);
+		register_cell(node);
 	}
 }
 
@@ -193,6 +195,7 @@ done_TD_object(struct dom_node *node)
 {
 	struct TD_struct *d = node->data.element.html_data;
 
+	unregister_cell(node);
 	mem_free_if(d->abbr);
 	mem_free_if(d->align);
 	mem_free_if(d->axis);
