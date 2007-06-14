@@ -39,7 +39,7 @@ prev(void)
 	
 	track = getCurrentTrack();
 	if (track > disc.disc_first_track)
-		cd_play_track(drive, --track, disc.disc_total_tracks);
+		cd_play(drive, --track);
 }
 
 static void
@@ -49,7 +49,7 @@ next(void)
 	
 	track = getCurrentTrack();
 	if (track < disc.disc_total_tracks)
-		cd_play_track(drive, ++track, disc.disc_total_tracks);
+		cd_play(drive, ++track);
 }
 	
 static
@@ -73,7 +73,7 @@ main(int argc, char **argv)
 			if (t) {
 				switch ((char)*++t) {
 				case 'F': /* First */
-					cd_play_track(drive, disc.disc_first_track, disc.disc_total_tracks);
+					cd_play(drive, disc.disc_first_track);
 					break;
 				case 'L': /* Last */
 					cd_play(drive, disc.disc_total_tracks);
@@ -91,7 +91,7 @@ main(int argc, char **argv)
 				return cd_finish(drive);
 			    }
 			}
-		cd_play_track(drive, disc.disc_first_track, disc.disc_total_tracks);
+		cd_play(drive, disc.disc_first_track);
 		return cd_finish(drive);
 	}
 	return 1;
