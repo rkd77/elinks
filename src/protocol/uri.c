@@ -145,17 +145,14 @@ check_whether_file_exists(unsigned char *name)
 	return -1;
 }
 
-#if 0
-/* unused */
 static int
 check_uri_file(const unsigned char *name)
 {
 	/* Check POST_CHAR etc ... */
-	static const unsigned char chars[] = POST_CHAR_S "#?";
+	static const unsigned char chars[] = POST_CHAR_S "#";
 
 	return strcspn(name, chars);
 }
-#endif
 
 /* Encodes URIs without encoding stuff like fragments and query separators. */
 static void
@@ -243,8 +240,6 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 		return URI_ERRNO_OK;
 
 	} else if (uri->protocol == PROTOCOL_FILE) {
-#if 0
-		/* CGI script using GET method didn't work, so I commented this code. --witekfl */
 		int datalen = check_uri_file(prefix_end);
 		unsigned char *frag_or_post = prefix_end + datalen;
 
@@ -261,8 +256,6 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 		} else {
 			datalen = strlen(prefix_end);
 		}
-#endif
-		int datalen = strlen(prefix_end);
 		/* A bit of a special case, but using the "normal" host
 		 * parsing seems a bit scary at this point. (see bug 107). */
 		if (datalen > 9 && !strncasecmp(prefix_end, "localhost/", 10)) {
