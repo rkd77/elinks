@@ -1047,6 +1047,7 @@ scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head,
 {
 	unsigned char *name, *attr, *he, *c;
 	int namelen;
+	int was_content_type = 0;
 
 	if (title && !init_string(title)) return;
 
@@ -1107,18 +1108,27 @@ xsp:
 	he = get_attr_val(attr, "http-equiv", options->cp);
 	if (!he) goto se;
 
-	add_to_string(head, he);
-	mem_free(he);
-
 	/* FIXME (bug 784): options->cp is the terminal charset;
 	 * should use the document charset instead.  */
 	c = get_attr_val(attr, "content", options->cp);
 	if (c) {
+		if (!strcasecmp(he, "Content-Type") && was_content_type) {
+			mem_free(he);
+			mem_free(c);
+			goto se;
+		}
+		was_content_type = 1;
+		add_to_string(head, he);
 		add_to_string(head, ": ");
 		add_to_string(head, c);
-	        mem_free(c);
+		mem_free(he);
+		mem_free(c);
+		goto next;
 	}
+	add_to_string(head, he);
+	mem_free(he);
 
+next:
 	add_crlf_to_string(head);
 	goto se;
 }
