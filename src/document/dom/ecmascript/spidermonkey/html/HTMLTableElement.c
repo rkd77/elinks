@@ -317,7 +317,7 @@ make_TABLE_object(JSContext *ctx, struct dom_node *node)
 	/* Alloc node for implicit tbody element. */
 	tbody = mem_calloc(1, sizeof(*tbody));
 	if (tbody) {
-		t->tbodies = add_to_dom_node_list(&t->tbodies, tbody, -1);
+		add_to_dom_node_list(&t->tbodies, tbody, -1);
 		if (!t->tbodies)
 			mem_free(tbody);
 		tbody->parent = node;
@@ -383,7 +383,7 @@ register_row(struct dom_node *node)
 				{
 					struct THEAD_struct *d = cur->data.element.html_data;
 
-					d->rows = add_to_dom_node_list(&d->rows, node, -1);
+					add_to_dom_node_list(&d->rows, node, -1);
 					found = 1;
 				}
 				break;
@@ -398,7 +398,7 @@ register_row(struct dom_node *node)
 					tbody = t->tbodies->entries[0];
 					tb = tbody->data.element.html_data;
 
-					tb->rows = add_to_dom_node_list(&tb->rows, node, -1);
+					add_to_dom_node_list(&tb->rows, node, -1);
 					goto fin;
 				}
 			}
@@ -409,7 +409,7 @@ fin:
 	if (table) {
 		struct TABLE_struct *d = table->data.element.html_data;
 
-		d->rows = add_to_dom_node_list(&d->rows, node, -1);
+		add_to_dom_node_list(&d->rows, node, -1);
 	}
 }
 
@@ -467,7 +467,7 @@ register_tbody(struct dom_node *table, struct dom_node *node)
 {
 		struct TABLE_struct *d = table->data.element.html_data;
 
-		d->rows = add_to_dom_node_list(&d->rows, node, -1);
+		add_to_dom_node_list(&d->rows, node, -1);
 }
 
 void

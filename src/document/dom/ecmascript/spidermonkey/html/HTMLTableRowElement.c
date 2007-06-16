@@ -185,7 +185,7 @@ register_cell(struct dom_node *node)
 		struct TR_struct *html = row->data.element.html_data;
 
 		if (html) {
-			html->cells = add_to_dom_node_list(&html->cells, node, -1);
+			add_to_dom_node_list(&html->cells, node, -1);
 		}
 	}
 }

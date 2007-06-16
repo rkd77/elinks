@@ -219,7 +219,7 @@ register_form_element(struct dom_node *node)
 
 		if (html) {
 			html->form = form;
-			data->elements = add_to_dom_node_list(&data->elements, node, -1);
+			add_to_dom_node_list(&data->elements, node, -1);
 		}
 	}
 }
