@@ -17,7 +17,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (3f93148c9b131069aa5ee8b655652da40e1a4b70) and related
+ELinks 0.12.GIT (0cf15ca9d9dbc00c10f23440674fcdb832dffd75) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -30,10 +30,11 @@ Notable new features:
 
 * enhancement 822: UTF-8 as terminal charset, not merely UTF-8 I/O
   of a unibyte codepage as in previous versions.  Double-cell (aka
-  fullwidth) and non-BMP characters work too, but combining characters
-  and right-to-left text do not.  The only multibyte charset ELinks
-  can decode is still UTF-8, so if the server outputs e.g. Shift-JIS,
-  you'd better recode with a proxy.  See more notes in features.conf.
+  fullwidth) and supplementary characters work too, but combining
+  characters and right-to-left text do not.  The only multibyte
+  charset ELinks can decode is still UTF-8, so if the server outputs
+  e.g. Shift-JIS, you'd better recode with a proxy.  See more notes
+  in features.conf.
 * enhancement 844: SMB protocol using libsmbclient.  This replaces
   the smbclient-based code that was disabled in ELinks 0.11.2.
 
@@ -77,7 +78,6 @@ Miscellaneous:
 * in Lua: don't write to the string returned by lua_tostring
 * minor bug 284: render closing bracket for HTML element SUB in the
   same line; don't let it fall to the next
-* minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor: show quote characters for HTML element Q, rather than italics
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy.
@@ -119,8 +119,6 @@ Miscellaneous:
 Build system and compile-time errors (ignore if you don't build ELinks):
 
 * bug 725: fix version checking for Ruby in 'configure'
-* use $(CPPFLAGS) rather than $(AM_CFLAGS)
-* update SpiderMonkey configure check Debian compatibility
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
 * enhancement: avoid compilation of vernum.c in 'make install'
@@ -133,6 +131,9 @@ Changes in the experimental ECMAScript support:
 * disabled by default, as mentioned under ``Incompatibilities'' above
 * critical bug 755: fix crashes due to dangling pointers to struct
   form_state
+* execute event-handler scripts as function bodies, so ``return''
+  statements work as intended
+* fix error ``forms.namedItem is not a function''
 * enhancement: SEE ECMAScript backend, an alternative to SpiderMonkey
 * enhancement: handling onsubmit
 * workaround: window.open remembers the last few URLs and doesn't
@@ -281,18 +282,22 @@ To be released as 0.11.4.
   using ../po files
 * important Debian bug 380347: prevent a buffer overflow in entity_cache
   and a possible subsequent crash
+* major bug 788: don't read STRLEN n_a, which isn't initialized by
+  POPpx of Perl v5.8.8 and later
+* fix query parsing in file: URIs for local CGI (was broken in 0.11.3)
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
-* bug 788: don't read STRLEN n_a, which isn't initialized by POPpx of
-  Perl v5.8.8 and later
-* bug 928: properly display no-break spaces in a UTF-8 document if the
-  terminal uses some other charset
-* bug 947: document.html.wrap_nbsp also affects text in tables
 * fix passive FTP over IPv6 when connect() fails with EINPROGRESS
 * minor bug 396: never show empty filename in the what-to-do dialog
+* minor bug 461: ensure contrast in blank areas, to keep the cursor visible
+* minor bug 928: properly display no-break spaces in a UTF-8 document
+  if the terminal uses some other charset
+* trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
+* build: update SpiderMonkey configure check Debian compatibility
+* build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 
 ELinks 0.11.3:
 --------------
