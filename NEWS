@@ -30,7 +30,7 @@ To be released as 0.11.4.
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
 * build: update SpiderMonkey configure check Debian compatibility
-* build: use ${CPPFLAGS} rather than ${AM_CFLAGS}
+* build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 
 ELinks 0.11.3:
 --------------
@@ -169,6 +169,7 @@ ELinks 0.10.0 (Thelma):
 
 Released on 2004-12-24.
 
+* licensed under GPLv2 only
 * simple CSS
 * simple JavaScript/ECMAScript support by the SpiderMonkey Mozilla JS engine
 * plain-text mark-up (_^Hx to underline, x^Hx to embolden)
