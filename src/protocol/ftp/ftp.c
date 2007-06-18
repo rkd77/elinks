@@ -1194,9 +1194,9 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 
 		if (current_time > when + 6L * 30L * 24L * 60L * 60L
 		    || current_time < when - 60L * 60L)
-			fmt = "%b %e  %Y";
+			fmt = "%4b %e  %Y";
 		else
-			fmt = "%b %e %H:%M";
+			fmt = "%4b %e %H:%M";
 
 		wr = strftime(date, sizeof(date), fmt, when_tm);
 		add_cp_html_to_string(&string, format->libc_codepage,
