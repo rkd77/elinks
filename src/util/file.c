@@ -473,7 +473,7 @@ stat_date(struct string *string, struct stat *stp)
 		return;
 	}
 #endif
-	add_to_string(string, "             ");
+	add_to_string(string, "              ");
 }
 
 
