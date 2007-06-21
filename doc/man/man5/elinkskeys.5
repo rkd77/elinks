@@ -17,10 +17,10 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKSKEYS" 5 "ELinks keybindings" "2007-01-06" "ELinks keybindings"
+.TH "ELINKSKEYS" 5 "ELinks keybindings" "2007-06-21" "ELinks keybindings"
 .SH NAME
 elinkskeys \- keybindings for ELinks
-.SH "OVERVIEW"
+.SH "SYNOPSIS"
 
 
 Information on how to configure keybinding and overview of the default keybindings\&.
@@ -46,7 +46,7 @@ is \fImain\fR, \fIedit\fR, or \fImenu\fR\&. The main keymap is used for general 
 
 .TP
 <keystroke>
-is a case sensitive key, which you can prefix with \fICtrl\-\fR or \fIAlt\-\fR\&. \fICtrl\-\fR must be followed by an uppercase key\&. See below for a list of valid keys\&.
+is a case sensitive key, which you can prefix with \fICtrl\-\fR, \fIAlt\-\fR, or both\&. \fICtrl\-\fR must be followed by an uppercase key\&. See below for a list of valid keys\&.
 
 .TP
 <action>
@@ -87,7 +87,7 @@ bind "main" "," = "lua\-console"
 Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\fR, \fITab\fR, \fIEscape\fR, \fILeft\fR, \fIRight\fR, \fIUp\fR, \fIDown\fR, \fIInsert\fR, \fIDelete\fR, \fIHome\fR, \fIEnd\fR, \fIPageUp\fR, \fIPageDown\fR, \fIF1\fR to \fIF12\fR\&.
 
 
-Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \\" (backslash quote)\&. Backslash can be written as \e\e (double backslash)\&.
+Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \\" (backslash quote)\&. Backslash can be written as \\\\ (double backslash)\&.
 
 .SH "KEYMAP ACTIONS"
 
@@ -573,7 +573,7 @@ Copy text to clipboard\&.
 
 .TP
 cut\-clipboard
-Delete text from clipboard\&.
+Cut text to clipboard\&.
 
 .TP
 delete
@@ -893,7 +893,7 @@ Scroll left (\fIscroll\-left\fR)
 Go at a specified mark (\fImark\-goto\fR)
 
 .TP
-\fI\e\fR
+\fI\\\fR
 Toggle rendering page as HTML / plain text (\fItoggle\-html\-plain\fR)
 
 .TP
@@ -1152,7 +1152,7 @@ Attempt to auto\-complete the input (\fIauto\-complete\fR)
 
 .TP
 \fICtrl\-X\fR
-Delete text from clipboard (\fIcut\-clipboard\fR)
+Cut text to clipboard (\fIcut\-clipboard\fR)
 
 .TP
 \fIAlt\-Backspace\fR
