@@ -99,6 +99,7 @@ void
 ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
+	assert(interpreter->backend_nesting == 0);
 	spidermonkey_put_interpreter(interpreter);
 	free_string_list(&interpreter->onload_snippets);
 	mem_free(interpreter);
@@ -132,7 +133,9 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 	if (!get_ecmascript_enable())
 		return;
 	assert(interpreter);
+	interpreter->backend_nesting++;
 	spidermonkey_eval(interpreter, code);
+	interpreter->backend_nesting--;
 }
 
 
@@ -140,10 +143,15 @@ unsigned char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+	unsigned char *result;
+
 	if (!get_ecmascript_enable())
 		return NULL;
 	assert(interpreter);
-	return spidermonkey_eval_stringback(interpreter, code);
+	interpreter->backend_nesting++;
+	result = spidermonkey_eval_stringback(interpreter, code);
+	interpreter->backend_nesting--;
+	return result;
 }
 
 
@@ -151,10 +159,15 @@ int
 ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 			 struct string *code)
 {
+	int result;
+
 	if (!get_ecmascript_enable())
 		return -1;
 	assert(interpreter);
-	return spidermonkey_eval_boolback(interpreter, code);
+	interpreter->backend_nesting++;
+	result = spidermonkey_eval_boolback(interpreter, code);
+	interpreter->backend_nesting--;
+	return result;
 }
 
 

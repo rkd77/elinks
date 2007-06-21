@@ -15,6 +15,12 @@ struct view_state;
 struct ecmascript_interpreter {
 	struct view_state *vs;
 	void *backend_data;
+
+	/* Nesting level of calls to backend functions.  When this is
+	 * nonzero, there are references to backend_data in the C
+	 * stack, so it is not safe to free the data yet.  */
+	int backend_nesting;
+
 	time_t exec_start;
 
 	/* This is a cross-rerenderings accumulator of
