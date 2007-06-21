@@ -125,6 +125,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 		return NULL;
 
 	interpreter->vs = vs;
+	interpreter->vs->ecmascript_fragile = 0;
 	init_list(interpreter->onload_snippets);
 #ifdef CONFIG_ECMASCRIPT_SEE
 	see_get_interpreter(interpreter);
