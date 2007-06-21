@@ -139,6 +139,7 @@ void
 ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
+	assert(interpreter->backend_nesting == 0);
 #ifdef CONFIG_ECMASCRIPT_SEE
 	see_put_interpreter(interpreter);
 #else
@@ -161,39 +162,51 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 	if (!get_ecmascript_enable())
 		return;
 	assert(interpreter);
+	interpreter->backend_nesting++;
 #ifdef CONFIG_ECMASCRIPT_SEE
 	see_eval(interpreter, code, ret);
 #else
 	spidermonkey_eval(interpreter, code, ret);
 #endif
+	interpreter->backend_nesting--;
 }
 
 unsigned char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+	unsigned char *result;
+
 	if (!get_ecmascript_enable())
 		return NULL;
 	assert(interpreter);
+	interpreter->backend_nesting++;
 #ifdef CONFIG_ECMASCRIPT_SEE
-	return see_eval_stringback(interpreter, code);
+	result = see_eval_stringback(interpreter, code);
 #else
-	return spidermonkey_eval_stringback(interpreter, code);
+	result = spidermonkey_eval_stringback(interpreter, code);
 #endif
+	interpreter->backend_nesting--;
+	return result;
 }
 
 int
 ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 			 struct string *code)
 {
+	int result;
+
 	if (!get_ecmascript_enable())
 		return -1;
 	assert(interpreter);
+	interpreter->backend_nesting++;
 #ifdef CONFIG_ECMASCRIPT_SEE
-	return see_eval_boolback(interpreter, code);
+	result = see_eval_boolback(interpreter, code);
 #else
-	return spidermonkey_eval_boolback(interpreter, code);
+	result = spidermonkey_eval_boolback(interpreter, code);
 #endif
+	interpreter->backend_nesting--;
+	return result;
 }
 
 
