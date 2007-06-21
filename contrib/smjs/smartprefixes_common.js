@@ -55,7 +55,7 @@ function cvsweb (base, project, url)
 	return base + project + "/" + file
 }
 
-/* javascript:gitweb("http://pasky.or.cz/gitweb.cgi", "elinks.git", "%s"); */
+/* javascript:gitweb("http://repo.or.cz/gitweb.cgi", "elinks.git", "%s"); */
 function gitweb(base, project, url)
 {
 	var parts = url.match(/^(search|summary|shortlog|log|blob|commit|commitdiff|history|tree|tag)(\s(.*))?/);
