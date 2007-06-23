@@ -67,7 +67,7 @@ struct connection {
 	 * the struct download it got to the connection, _and_ updates its @pri
 	 * array by the priority it has thus, sum of values in all fields of
 	 * @pri is also kinda refcount of the connection. */
-	enum connection_priority pri[PRIORITIES];
+	int pri[PRIORITIES];
 
 	/* Private protocol specific info. If non-NULL it is free()d when
 	 * stopping the connection. */
