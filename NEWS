@@ -204,6 +204,8 @@ have already been considered.
     dialog.
   - (bugfix in SEE) Use frame->name instead of target avoiding
     possible segfault.
+  - (bugfix 957) crash within js_Interpret: cx->fp points to freed
+    memory
 * Already backported to a previous release but not listed there:
   - (enhancement) Activate link only when onClick returns true.
     Fixed bug 786 in ELinks 0.11.2.
