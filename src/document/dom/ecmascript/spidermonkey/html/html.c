@@ -92,13 +92,11 @@ done_dom_node_html_data(struct dom_node *node)
 	mem_free(data);
 }
 
-#if 0
 void
-make_dom_node_html_data(, struct dom_node *node)
+make_dom_node_html_data(JSContext *ctx, struct dom_node *node)
 {
 	int type = node->data.element.type;
 
 	if (func[type].make)
 		func[type].make(ctx, node);
 }
-#endif

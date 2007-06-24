@@ -20,6 +20,8 @@ struct HTMLElement_struct {
 };
 
 struct html_objects { /* FIXME: Better name for this type. */
+	JSObject *Node_object;
+	JSObject *Element_object;
 	JSObject *HTMLElement_object;
 };
 

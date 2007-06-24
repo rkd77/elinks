@@ -34,7 +34,11 @@
 #include "document/dom/ecmascript/spidermonkey/Text.h"
 #include "document/dom/ecmascript/spidermonkey/TypeInfo.h"
 #include "document/dom/ecmascript/spidermonkey/UserDataHandler.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/html.h"
 #include "dom/node.h"
+
+extern JSRuntime *jsrt;
 
 void
 done_dom_node_ecmascript_obj(struct dom_node *node)
@@ -45,22 +49,8 @@ done_dom_node_ecmascript_obj(struct dom_node *node)
 
 	assert(ctx && obj && JS_GetPrivate(ctx, obj) == node);
 	JS_SetPrivate(ctx, obj, NULL);
+	JS_RemoveRoot(ctx, obj);
 	node->ecmascript_obj = NULL;
-}
-
-JSObject *
-make_new_object(JSContext *ctx, struct dom_node *node)
-{
-#if 0
-	JSObject *obj = create_new_object[node->data.element.type](ctx);
-
-	if (obj) {
-		JS_SetPrivate(ctx, obj, node);
-		node->ecmascript_obj = obj;
-	}
-	return obj;
-#endif
-	return NULL;
 }
 
 void
@@ -73,7 +63,8 @@ dom_add_attribute(struct dom_node *root, struct dom_node *node, struct dom_strin
 	unsigned char tmp;
 
 	if (!obj) {
-		obj = make_new_object(ctx, node);
+		make_dom_node_html_data(ctx, node);
+		obj = node->ecmascript_obj;
 		if (!obj) return;
 	}
 	if (value) {
@@ -86,4 +77,21 @@ dom_add_attribute(struct dom_node *root, struct dom_node *node, struct dom_strin
 	attr->string[attr->length] = '\0';
 	JS_SetProperty(ctx, obj, attr->string, &vp);
 	attr->string[attr->length] = tmp;
+}
+
+void
+dom_add_document(struct dom_node *root)
+{
+	JSContext *ctx = JS_NewContext(jsrt, 8192);
+	struct html_objects *o;
+
+	if (!ctx)
+		return;
+	o = mem_calloc(1, sizeof(*o));
+	if (!o) {
+		JS_DestroyContext(ctx);
+		return;
+	}
+	JS_SetContextPrivate(ctx, o);
+	/* Write me! */
 }

@@ -55,7 +55,7 @@
 
 /* TODO? Are there any which need to be implemented? */
 
-static JSRuntime *jsrt;
+JSRuntime *jsrt;
 
 static void
 error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)

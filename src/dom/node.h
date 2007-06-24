@@ -261,6 +261,7 @@ struct dom_node {
 	struct dom_node *parent;
 
 #ifdef CONFIG_ECMASCRIPT
+	void *ctx;
 	/** The ECMAScript object related to this node.
 	 * NULL when the object was not used yet. */
 	void *ecmascript_obj;
