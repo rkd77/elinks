@@ -60,7 +60,23 @@ static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval 
 /* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
+	/* In instances of @input_class, the private data is not
+	 * actually a pointer, although SMJS assumes so.  Rather, it
+	 * is an integer used as an index to view_state.form_info[].
+	 * This allows ELinks to reallocate form_info[] without
+	 * keeping track of SMJS objects that refer to its elements.
+	 *
+	 * JS_SetPrivate converts private pointers to jsval, and
+	 * JS_GetPrivate converts back.  These conversions assume that
+	 * private pointers are aligned.  Therefore, ELinks must not
+	 * cast the integer directly to void *.  Instead, ELinks takes
+	 * advantage of the fact that the jsval format for private
+	 * pointers is the same as for integers (presumably to make GC
+	 * ignore the pointers).  So when ELinks is initializing the
+	 * private data, it converts the integer to a jsval and from
+	 * there to a pointer, which SMJS then converts back to the
+	 * same jsval.  */
+	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -125,9 +141,10 @@ static const JSFunctionSpec input_funcs[] = {
 static struct form_state *
 input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
 {
-	int n = (int)(long)JS_GetInstancePrivate(ctx, obj,
-						 (JSClass *) &input_class,
-						 NULL);
+	void *private = JS_GetInstancePrivate(ctx, obj,
+					      (JSClass *) &input_class,
+					      NULL);
+	int n = JSVAL_TO_INT(PRIVATE_TO_JSVAL(private));
 
 	return &vs->form_info[n];
 }
@@ -504,10 +521,11 @@ get_input_object(JSContext *ctx, JSObject *jsform, long number)
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
 	JSObject *jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
+	void *private = JSVAL_TO_PRIVATE(INT_TO_JSVAL(number));
 
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-	JS_SetPrivate(ctx, jsinput, (void *)number); /* to @input_class */
+	JS_SetPrivate(ctx, jsinput, private); /* to @input_class */
 	return jsinput;;
 }
 
