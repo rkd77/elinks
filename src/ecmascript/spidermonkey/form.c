@@ -57,10 +57,24 @@ static const JSClass form_class;	     /* defined below */
 static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Indexes of reserved slots in instances of @input_class.  */
+enum {
+	/* The slot contains an integer used as an index to
+	 * view_state.form_info[].  This allows ELinks to reallocate
+	 * form_info[] without keeping track of SMJS objects that
+	 * refer to its elements.  We do not use JSCLASS_HAS_PRIVATE
+	 * for that because SMJS expects the private data to be an
+	 * aligned pointer.  */
+	JSRS_INPUT_FSINDEX,
+
+	/* Number of reserved slots.  */
+	JSRS_INPUT_COUNT
+};
+
 /* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
+	JSCLASS_HAS_RESERVED_SLOTS(JSRS_INPUT_COUNT),
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -134,13 +148,20 @@ static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 static struct form_state *
 input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
 {
-	int n = (int)(long)JS_GetInstancePrivate(ctx, obj,
-						 (JSClass *) &input_class,
-						 NULL);
+	jsval val;
+	int n;
+	JSBool ok;
 
+	ok = JS_GetReservedSlot(ctx, obj, JSRS_INPUT_FSINDEX, &val);
+	assert(ok);
+	assert(JSVAL_IS_INT(val));
+	if_assert_failed return NULL;
+
+	n = JSVAL_TO_INT(val);
 	assert(n >= 0);
 	assert(n < vs->form_info_len);
 	if_assert_failed return NULL;
+
 	return &vs->form_info[n];
 }
 
@@ -547,7 +568,7 @@ get_input_object(JSContext *ctx, JSObject *jsform, long number)
 
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-	JS_SetPrivate(ctx, jsinput, (void *)number); /* to @input_class */
+	JS_SetReservedSlot(ctx, jsinput, JSRS_INPUT_FSINDEX, INT_TO_JSVAL(number));
 	return jsinput;;
 }
 
