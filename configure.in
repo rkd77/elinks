@@ -653,7 +653,7 @@ if test -z "$disable_spidermonkey"; then
 
 					AC_TRY_LINK([#define XP_UNIX
 						     #include <jsapi.h>],
-						     [JS_GetImplementationVersion()],
+						     [JS_GetReservedSlot(NULL, NULL, 0, NULL)],
 						     cf_result=yes, cf_result=no)
 				fi
 			done
