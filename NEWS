@@ -40,6 +40,8 @@ Incompatibilities:
   and its security goals are undocumented.  If you must enable
   ECMAScript support, it would be prudent to restrict the ELinks
   process with a sandbox of some kind.
+* ECMAScript support no longer works with SpiderMonkey versions
+  earlier than JS1.5 RC3a.
 * Gzip decompression support now requires zlib 1.2.0.2 or later.
 * bugs 871, 752: The numbering of terminal.*.colors no longer depends
   on config options.  This change makes elinks.conf portable between

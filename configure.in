@@ -615,7 +615,7 @@ dnl ===================================================================
 
 AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
             [if test "$withval" = no; then disable_spidermonkey=yes; fi])
-AC_MSG_CHECKING([for SpiderMonkey])
+AC_MSG_CHECKING([for SpiderMonkey (1.5 RC3a or later)])
 
 EL_SAVE_FLAGS
 cf_result=no
