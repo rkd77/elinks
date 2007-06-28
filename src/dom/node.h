@@ -89,10 +89,6 @@ struct dom_document_node {
 	/* The document. */
 	struct dom_document *document;
 
-#ifdef CONFIG_ECMASCRIPT
-	/* The ECMAScript context used by the SpiderMonkey. */
-	void *ecmascript_ctx;
-#endif
 	/* The child nodes. May be NULL. Ordered like they where inserted. */
 	/* FIXME: Should be just one element (root) node reference. */
 	struct dom_node_list *children;
@@ -261,7 +257,7 @@ struct dom_node {
 	struct dom_node *parent;
 
 #ifdef CONFIG_ECMASCRIPT
-	void *ctx;
+	void *ecmascript_ctx;
 	/** The ECMAScript object related to this node.
 	 * NULL when the object was not used yet. */
 	void *ecmascript_obj;

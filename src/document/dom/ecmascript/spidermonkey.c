@@ -43,8 +43,7 @@ extern JSRuntime *jsrt;
 void
 done_dom_node_ecmascript_obj(struct dom_node *node)
 {
-	struct dom_node *root = get_dom_root_node(node);
-	JSContext *ctx = root->data.document.ecmascript_ctx;
+	JSContext *ctx = node->ecmascript_ctx;
 	JSObject *obj = node->ecmascript_obj;
 
 	assert(ctx && obj && JS_GetPrivate(ctx, obj) == node);
@@ -56,7 +55,7 @@ done_dom_node_ecmascript_obj(struct dom_node *node)
 void
 dom_add_attribute(struct dom_node *root, struct dom_node *node, struct dom_string *attr, struct dom_string *value)
 {
-	JSContext *ctx = root->data.document.ecmascript_ctx;
+	JSContext *ctx = node->ecmascript_ctx;
 	JSObject *obj = node->ecmascript_obj;
 	JSString *string;
 	jsval vp;
@@ -73,7 +72,7 @@ dom_add_attribute(struct dom_node *root, struct dom_node *node, struct dom_strin
 	} else {
 		vp = JSVAL_NULL;
 	}
-	tmp = attr->length;
+	tmp = attr->string[attr->length];
 	attr->string[attr->length] = '\0';
 	JS_SetProperty(ctx, obj, attr->string, &vp);
 	attr->string[attr->length] = tmp;

@@ -97,6 +97,9 @@ make_dom_node_html_data(JSContext *ctx, struct dom_node *node)
 {
 	int type = node->data.element.type;
 
-	if (func[type].make)
+	if (func[type].make) {
 		func[type].make(ctx, node);
+		if (node->ecmascript_obj)
+			node->ecmascript_ctx = ctx;
+	}
 }
