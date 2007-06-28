@@ -92,6 +92,9 @@ struct dom_document_node {
 	/* The child nodes. May be NULL. Ordered like they where inserted. */
 	/* FIXME: Should be just one element (root) node reference. */
 	struct dom_node_list *children;
+
+	/* Data used by ECMAScript engine. */
+	void *html_data;
 };
 
 struct dom_id {

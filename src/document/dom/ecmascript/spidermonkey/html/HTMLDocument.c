@@ -7,47 +7,145 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/Document.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
+#include "dom/node.h"
 
 static JSBool
 HTMLDocument_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct HTMLDocument_struct *html;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLDocument_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.document.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_DOCUMENT_TITLE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->title);
 		break;
 	case JSP_HTML_DOCUMENT_REFERER:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->referrer);
 		break;
 	case JSP_HTML_DOCUMENT_DOMAIN:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->domain);
 		break;
 	case JSP_HTML_DOCUMENT_URL:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->URL);
 		break;
 	case JSP_HTML_DOCUMENT_BODY:
-		/* Write me! */
+		if (html->body) {
+			if (ctx == html->body->ecmascript_ctx)
+				object_to_jsval(ctx, vp, html->body->ecmascript_obj);
+		}
 		break;
 	case JSP_HTML_DOCUMENT_IMAGES:
-		/* Write me! */
+		if (!html->images)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->images->ctx == ctx)
+				object_to_jsval(ctx, vp, html->images->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->images->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->images);
+				html->images->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_DOCUMENT_APPLETS:
-		/* Write me! */
+		if (!html->applets)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->images->ctx == ctx)
+				object_to_jsval(ctx, vp, html->applets->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->applets->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->applets);
+				html->applets->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_DOCUMENT_LINKS:
-		/* Write me! */
+		if (!html->links)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->links->ctx == ctx)
+				object_to_jsval(ctx, vp, html->links->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->links->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->links);
+				html->links->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_DOCUMENT_FORMS:
-		/* Write me! */
+		if (!html->forms)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->forms->ctx == ctx)
+				object_to_jsval(ctx, vp, html->forms->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->forms->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->forms);
+				html->forms->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_DOCUMENT_ANCHORS:
-		/* Write me! */
+		if (!html->anchors)
+			undef_to_jsval(ctx, vp);
+		else {
+			if (html->anchors->ctx == ctx)
+				object_to_jsval(ctx, vp, html->anchors->ecmascript_obj);
+			else {
+				JSObject *new_obj;
+
+				html->anchors->ctx = ctx;
+				new_obj = JS_NewObject(ctx,
+				 (JSClass *)&HTMLCollection_class, NULL, NULL);
+				if (new_obj)
+					JS_SetPrivate(ctx, new_obj, html->anchors);
+				html->anchors->ecmascript_obj = new_obj;
+				object_to_jsval(ctx, vp, new_obj);
+			}
+		}
 		break;
 	case JSP_HTML_DOCUMENT_COOKIE:
-		/* Write me! */
+		string_to_jsval(ctx, vp, html->cookie);
 		break;
 	default:
 		return Document_getProperty(ctx, obj, id, vp);
@@ -58,18 +156,37 @@ HTMLDocument_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool
 HTMLDocument_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
+	struct dom_node *node;
+	struct HTMLDocument_struct *html;
+	JSObject *value;
+
+	if (!obj || (!JS_InstanceOf(ctx, obj, (JSClass *)&HTMLDocument_class, NULL)))
+		return JS_FALSE;
+
+	node = JS_GetPrivate(ctx, obj);
+	if (!node)
+		return JS_FALSE;
+	html = node->data.document.html_data;
+	if (!html)
+		return JS_FALSE;
+
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_DOCUMENT_TITLE:
-		/* Write me! */
+		mem_free_set(&html->title, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	case JSP_HTML_DOCUMENT_BODY:
-		/* Write me! */
+		value = JSVAL_TO_OBJECT(*vp);
+		if (value) {
+			struct dom_node *body = JS_GetPrivate(ctx, value);
+
+			html->body = body;
+		}
 		break;
 	case JSP_HTML_DOCUMENT_COOKIE:
-		/* Write me! */
+		mem_free_set(&html->cookie, stracpy(jsval_to_string(ctx, vp)));
 		break;
 	default:
 		return Document_setProperty(ctx, obj, id, vp);
