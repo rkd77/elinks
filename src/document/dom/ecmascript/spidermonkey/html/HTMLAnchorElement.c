@@ -7,6 +7,7 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLAnchorElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
 #include "dom/node.h"
 
 static JSBool
@@ -187,6 +188,10 @@ make_A_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct A_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLAnchorElement_class, o->HTMLElement_object, NULL);
+		/* It must be here, because ctx is used by register functions. */
+		node->ecmascript_ctx = ctx;
+		register_anchor(node);
+		register_link(node);
 	}
 }
 
@@ -195,6 +200,8 @@ done_A_object(struct dom_node *node)
 {
 	struct A_struct *d = node->data.element.html_data;
 
+	unregister_anchor(node);
+	unregister_link(node);
 	mem_free_if(d->access_key);
 	mem_free_if(d->charset);
 	mem_free_if(d->coords);

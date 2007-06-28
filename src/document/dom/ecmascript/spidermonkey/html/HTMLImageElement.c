@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLImageElement.h"
 #include "dom/node.h"
 
@@ -165,6 +166,8 @@ make_IMG_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct IMG_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLImageElement_class, o->HTMLElement_object, NULL);
+		node->ecmascript_ctx = ctx;
+		register_image(node);
 	}
 }
 
@@ -173,6 +176,7 @@ done_IMG_object(struct dom_node *node)
 {
 	struct IMG_struct *d = node->data.element.html_data;
 
+	unregister_image(node);
 	mem_free_if(d->name);
 	mem_free_if(d->align);
 	mem_free_if(d->alt);

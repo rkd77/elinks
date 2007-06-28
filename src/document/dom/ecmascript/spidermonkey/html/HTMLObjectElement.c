@@ -6,6 +6,7 @@
 
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLFormElement.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLObjectElement.h"
 #include "dom/node.h"
@@ -213,7 +214,9 @@ make_OBJECT_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct OBJECT_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLObjectElement_class, o->HTMLElement_object, NULL);
+		node->ecmascript_ctx = ctx;
 		register_form_element(node);
+		register_applet(node);
 	}
 }
 
@@ -222,6 +225,7 @@ done_OBJECT_object(struct dom_node *node)
 {
 	struct OBJECT_struct *d = node->data.element.html_data;
 
+	unregister_applet(node);
 	unregister_form_element(d->form, node);
 	mem_free_if(d->code);
 	mem_free_if(d->align);

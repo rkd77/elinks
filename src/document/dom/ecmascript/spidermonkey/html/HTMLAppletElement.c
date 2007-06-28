@@ -7,6 +7,7 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLAppletElement.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
 #include "dom/node.h"
 
 static JSBool
@@ -160,6 +161,8 @@ make_APPLET_object(JSContext *ctx, struct dom_node *node)
 	node->data.element.html_data = mem_calloc(1, sizeof(struct APPLET_struct));
 	if (node->data.element.html_data) {
 		node->ecmascript_obj = JS_NewObject(ctx, (JSClass *)&HTMLAppletElement_class, o->HTMLElement_object, NULL);
+		node->ecmascript_ctx = ctx;
+		register_applet(node);
 	}
 }
 
@@ -168,6 +171,7 @@ done_APPLET_object(struct dom_node *node)
 {
 	struct APPLET_struct *d = node->data.element.html_data;
 
+	unregister_applet(node);
 	mem_free_if(d->align);
 	mem_free_if(d->alt);
 	mem_free_if(d->archive);

@@ -24,4 +24,15 @@ struct HTMLDocument_struct {
 	struct dom_node_list *anchors;
 };
 
+void register_image(struct dom_node *node);
+void unregister_image(struct dom_node *node);
+void register_applet(struct dom_node *node);
+void unregister_applet(struct dom_node *node);
+void register_link(struct dom_node *node);
+void unregister_link(struct dom_node *node);
+void register_form(struct dom_node *node);
+void unregister_form(struct dom_node *node);
+void register_anchor(struct dom_node *node);
+void unregister_anchor(struct dom_node *node);
+
 #endif

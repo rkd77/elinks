@@ -9,6 +9,7 @@
 #include "document/dom/ecmascript/spidermonkey/Document.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLCollection.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLDocument.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "dom/node.h"
 
 static JSBool
@@ -266,3 +267,131 @@ const JSClass HTMLDocument_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, Node_finalize
 };
 
+static struct dom_node *
+get_document(struct dom_node *node)
+{
+	JSContext *ctx = node->ecmascript_ctx;
+	struct html_objects *o;
+
+	if (!ctx)
+		return NULL;
+	o = JS_GetContextPrivate(ctx);
+	if (!o)
+		return NULL;
+	return o->document;
+}
+
+void
+register_image(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+		add_to_dom_node_list(&d->images, node, -1);
+	}
+}
+
+void
+unregister_image(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+
+		del_from_dom_node_list(d->images, node);
+	}
+}
+
+void
+register_applet(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+		add_to_dom_node_list(&d->applets, node, -1);
+	}
+}
+
+void
+unregister_applet(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+
+		del_from_dom_node_list(d->applets, node);
+	}
+}
+
+void
+register_link(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+		add_to_dom_node_list(&d->links, node, -1);
+	}
+}
+
+void
+unregister_link(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+
+		del_from_dom_node_list(d->links, node);
+	}
+}
+
+void
+register_form(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+		add_to_dom_node_list(&d->forms, node, -1);
+	}
+}
+
+void
+unregister_form(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+
+		del_from_dom_node_list(d->forms, node);
+	}
+}
+
+void
+register_anchor(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+		add_to_dom_node_list(&d->anchors, node, -1);
+	}
+}
+
+void
+unregister_anchor(struct dom_node *node)
+{
+	struct dom_node *doc = get_document(node);
+
+	if (doc) {
+		struct HTMLDocument_struct *d = doc->data.document.html_data;
+
+		del_from_dom_node_list(d->anchors, node);
+	}
+}
