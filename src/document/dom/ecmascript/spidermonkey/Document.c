@@ -6,6 +6,9 @@
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/Document.h"
 #include "document/dom/ecmascript/spidermonkey/Node.h"
+#include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
+#include "dom/node.h"
+#include "util/hash.h"
 
 JSBool
 Document_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -181,7 +184,20 @@ static JSBool
 Document_getElementById(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 		jsval *rval)
 {
-	/* Write me! */
+	struct html_objects *o = JS_GetContextPrivate(ctx);
+	unsigned char *key;
+	struct hash_item *item;
+
+	if (argc != 1)
+		return JS_FALSE;
+	key = jsval_to_string(ctx, &argv[0]);
+	item = get_hash_item(o->ids, key, strlen(key));
+	if (item) {
+		struct dom_node *node = item->value;
+
+		assert(node);
+		object_to_jsval(ctx, rval, node->ecmascript_obj);
+	}
 	return JS_TRUE;
 }
 

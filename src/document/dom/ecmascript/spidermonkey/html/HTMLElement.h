@@ -3,6 +3,7 @@
 
 #include "ecmascript/spidermonkey/util.h"
 struct dom_node;
+struct hash;
 
 extern const JSClass HTMLElement_class;
 extern const JSFunctionSpec HTMLElement_funcs[];
@@ -24,6 +25,7 @@ struct html_objects { /* FIXME: Better name for this type. */
 	JSObject *Node_object;
 	JSObject *Element_object;
 	JSObject *HTMLElement_object;
+	struct hash *ids;
 };
 
 void make_HTMLElement(JSContext *ctx, struct dom_node *node);

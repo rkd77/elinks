@@ -9,6 +9,7 @@
 #include "document/dom/ecmascript/spidermonkey/Node.h"
 #include "document/dom/ecmascript/spidermonkey/html/HTMLElement.h"
 #include "dom/node.h"
+#include "util/hash.h"
 
 JSBool
 HTMLElement_getProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -55,6 +56,7 @@ HTMLElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct dom_node *node;
 	struct HTMLElement_struct *html;
+	struct html_objects *o;
 
 	if (!JSVAL_IS_INT(id))
 		return JS_TRUE;
@@ -71,7 +73,16 @@ HTMLElement_setProperty(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case JSP_HTML_ELEMENT_ID:
+		o = JS_GetContextPrivate(ctx);
+		if (html->id) {
+			struct hash_item *item = get_hash_item(o->ids, html->id, strlen(html->id));
+
+			if (item)
+				del_hash_item(o->ids, item);
+		}
 		mem_free_set(&html->id, stracpy(jsval_to_string(ctx, vp)));
+		if (html->id)
+			add_hash_item(o->ids, html->id, strlen(html->id), node);
 		break;
 	case JSP_HTML_ELEMENT_TITLE:
 		mem_free_set(&html->title, stracpy(jsval_to_string(ctx, vp)));
@@ -128,8 +139,16 @@ void
 done_HTMLElement(struct dom_node *node)
 {
 	struct HTMLElement_struct *d = node->data.element.html_data;
+	JSContext *ctx = node->ecmascript_ctx;
+	struct html_objects *o = JS_GetContextPrivate(ctx);
 
-	mem_free_if(d->id);
+	if (d->id) {
+		struct hash_item *item = get_hash_item(o->ids, d->id, strlen(d->id));
+
+		if (item)
+			del_hash_item(o->ids, item);
+		mem_free(d->id);
+	}
 	mem_free_if(d->title);
 	mem_free_if(d->lang);
 	mem_free_if(d->dir);
