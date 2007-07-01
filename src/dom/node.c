@@ -9,7 +9,7 @@
 
 #include "elinks.h"
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 /* FIXME: SEE ? */
 #include "document/dom/ecmascript/spidermonkey.h"
 #include "document/dom/ecmascript/spidermonkey/html/html.h"
