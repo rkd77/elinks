@@ -575,8 +575,6 @@ AC_ARG_WITH(see, [  --with-see              enable Simple Ecmascript Engine (SEE
 CONFIG_ECMASCRIPT_SEE=no
 
 if test "$enable_see" = "yes"; then
-	## Based on the SEE_FLAGS macro.
-
 	if test -d "$withval"; then
 		SEE_PATH="$withval:$PATH"
 	else
@@ -592,7 +590,7 @@ if test "$enable_see" = "yes"; then
 		CPPFLAGS="$SEE_CFLAGS $CPPFLAGS"
 		LIBS="$SEE_LIBS $LIBS_X"
 		AC_TRY_LINK([#include <see/see.h>],[#if SEE_VERSION_API_MAJOR < 2
-			choke_on_see();
+			#error SEE too old
 			#endif
 		], cf_result=yes, cf_result=no)
 		EL_RESTORE_FLAGS
@@ -609,9 +607,6 @@ if test "$enable_see" = "yes"; then
 			AC_MSG_WARN([SEE support disabled])
 		fi
 	fi
-else
-	AC_MSG_CHECKING([for SEE (2.0.1131 or later)])
-	AC_MSG_RESULT(no);
 fi
 
 dnl ===================================================================
