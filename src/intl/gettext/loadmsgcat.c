@@ -15,6 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+/* Modified on 2007-07-02 by Kalle Olavi Niemitalo.  */
+
 /* Tell glibc's <string.h> to provide a prototype for mempcpy().
    This must come before <config.h> because <config.h> may include
    <features.h>, and once <features.h> has been included, it's too late.  */
@@ -41,10 +43,15 @@
 
 #if (defined HAVE_MMAP && defined HAVE_MUNMAP && !defined DISALLOW_MMAP)
 #include <sys/mman.h>
-#undef HAVE_MMAP
-#define HAVE_MMAP	1
+/* Use a custom macro instead of overloading HAVE_MMAP, because the
+ * following #include directives may cause "config.h" to be included
+ * again (bug 960).  It might be good to remove #include "config.h"
+ * directives from header files and keep them in *.c files only, but
+ * that seems too risky for the stable elinks-0.11 branch.  */
+#undef LOADMSGCAT_USE_MMAP
+#define LOADMSGCAT_USE_MMAP	1
 #else
-#undef HAVE_MMAP
+#undef LOADMSGCAT_USE_MMAP
 #endif
 
 #include "elinks.h"
@@ -285,7 +292,7 @@ source_success:
 		close(fd);
 		return;
 	}
-#ifdef HAVE_MMAP
+#ifdef LOADMSGCAT_USE_MMAP
 	/* Now we are ready to load the file.  If mmap() is available we try
 	   this first.  If not available or it failed we try to load it.  */
 	data = (struct mo_file_header *) mmap(NULL, size, PROT_READ,
@@ -328,7 +335,7 @@ source_success:
 	   catalog file.  */
 	if (data->magic != _MAGIC && data->magic != _MAGIC_SWAPPED) {
 		/* The magic number is wrong: not a message catalog file.  */
-#ifdef HAVE_MMAP
+#ifdef LOADMSGCAT_USE_MMAP
 		if (use_mmap)
 			munmap((void *) data, size);
 		else
@@ -365,7 +372,7 @@ source_success:
 			break;
 default:
 			/* This is an invalid revision.  */
-#ifdef HAVE_MMAP
+#ifdef LOADMSGCAT_USE_MMAP
 			if (use_mmap)
 				munmap((void *) data, size);
 			else
