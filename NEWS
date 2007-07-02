@@ -35,6 +35,8 @@ To be released as 0.11.4.
   on SunOS
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
+* minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
+  munmap() doesn't
 
 ELinks 0.11.3:
 --------------
