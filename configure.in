@@ -1,9 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Autoconf 2.13 generates an incomplete config.h.in; see ELinks bug 936.
-dnl Autoconf 2.61 is known to be compatible with ELinks, so that's what we
-dnl specify here.
-AC_PREREQ(2.61)
+dnl Autoconf 2.59 is installed in the computer that generates our daily
+dnl snapshots, so we need to be compatible with that.
+AC_PREREQ(2.59)
 AC_INIT(src/main/main.c)
 AC_CONFIG_AUX_DIR(config)
 
