@@ -12,6 +12,11 @@ aclocal
 
 echo autoheader...
 autoheader
+# The timestamp of stamp-h.in indicates when config.h.in was last
+# generated or found to be already correct.  Create stamp-h.in so
+# that it gets included in elinks-*.tar.gz and Makefile won't try
+# to run a possibly incompatible version of autoheader (bug 936).
+echo timestamp > stamp-h.in
 
 echo autoconf...
 autoconf
