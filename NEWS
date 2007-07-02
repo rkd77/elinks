@@ -76,8 +76,6 @@ Miscellaneous:
 * minor bug 284: render closing bracket for HTML element SUB in the
   same line; don't let it fall to the next
 * minor: show quote characters for HTML element Q, rather than italics
-* minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
-  Flush all caches' to work around their holding cache entries busy.
 * trivial bug 387: treat &#013; inside <pre>...</pre> as a newline
 * trivial bug 930: refresh status bar when key prefix is eaten
 * trivial bug 776: ``elinks -remote http://elinks.cz/'' no longer clears
@@ -116,7 +114,6 @@ Miscellaneous:
 Build system and compile-time errors (ignore if you don't build ELinks):
 
 * bug 725: fix version checking for Ruby in 'configure'
-* bug 936: fix errors about undefined off_t (autoheader incompatibility)
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
 * enhancement: avoid compilation of vernum.c in 'make install'
@@ -127,8 +124,6 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 Changes in the experimental ECMAScript support:
 
 * disabled by default, as mentioned under ``Incompatibilities'' above
-* critical bug 755: fix crashes due to dangling pointers to struct
-  form_state
 * execute event-handler scripts as function bodies, so ``return''
   statements work as intended
 * fix error ``forms.namedItem is not a function''
@@ -215,8 +210,8 @@ have already been considered.
   - don't include <sys/param.h> for MIN and MAX because it may interfere with
     CONFIG_IPV6 on Linux.  Commit 63797ae9b331efd91be27512bd9d5b2e2ff74741
     in ELinks 0.11.1.
-  - Debian bug 400871: include <sys/types.h> for off_t.  (Bug 936 was
-    reported for GIT (HEAD) after the change and may still exist.)
+  - Debian bug 400872: include <sys/types.h> for off_t.
+    (Related to bug 936 but not the same.)
     Commit 135a79a3c309af36cf963f1d3c34b07f296fa2f7 in ELinks 0.11.3.
   - bug 107: recognize "localhost" in file: URIs.  Cannot reproduce in
     earlier versions.
@@ -279,7 +274,11 @@ ELinks 0.11.3.GIT now:
 
 To be released as 0.11.4.
 
+* critical bug 755: fix crashes due to dangling pointers to struct
+  form_state
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
+* major bug 956: don't reuse pointers to SpiderMonkey objects that may
+  have been collected as garbage.  This fix causes bug 954.
 * CVE-2007-2027: check if the program path contains "src/" before
   using ../po files
 * important Debian bug 380347: prevent a buffer overflow in entity_cache
@@ -291,6 +290,8 @@ To be released as 0.11.4.
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * fix passive FTP over IPv6 when connect() fails with EINPROGRESS
+* minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
+  Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
 * minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor bug 928: properly display no-break spaces in a UTF-8 document
@@ -298,6 +299,8 @@ To be released as 0.11.4.
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
+* build bug 936: fix errors about undefined off_t (autoheader
+  incompatibility)
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
