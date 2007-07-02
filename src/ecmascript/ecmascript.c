@@ -141,6 +141,10 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
 	assert(interpreter->backend_nesting == 0);
+	/* If the assertion fails, it is better to leak the
+	 * interpreter than to corrupt memory.  */
+	if_assert_failed return;
+
 #ifdef CONFIG_ECMASCRIPT_SEE
 	see_put_interpreter(interpreter);
 #else
