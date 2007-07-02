@@ -26,6 +26,8 @@ To be released as 0.11.4.
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * fix passive FTP over IPv6 when connect() fails with EINPROGRESS
+* bug 951 in user SMJS: garbage-collect SMJS objects on 'File -> Flush
+  all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
 * minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor bug 928: properly display no-break spaces in a UTF-8 document
