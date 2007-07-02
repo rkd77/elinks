@@ -35,6 +35,8 @@ To be released as 0.11.4.
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
+* build bug 936: fix errors about undefined off_t (autoheader
+  incompatibility)
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
