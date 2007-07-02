@@ -116,6 +116,7 @@ Miscellaneous:
 Build system and compile-time errors (ignore if you don't build ELinks):
 
 * bug 725: fix version checking for Ruby in 'configure'
+* bug 936: fix errors about undefined off_t (autoheader incompatibility)
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
 * enhancement: avoid compilation of vernum.c in 'make install'
