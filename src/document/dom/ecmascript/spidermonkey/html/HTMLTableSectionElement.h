@@ -19,8 +19,6 @@ struct THEAD_struct {
 
 void make_THEAD_object(JSContext *ctx, struct dom_node *node);
 void done_THEAD_object(struct dom_node *node);
-void register_section_row(struct dom_node *node);
-void unregister_section_row(struct dom_node *node);
 
 #define make_TBODY_object	make_THEAD_object
 #define make_TFOOT_object	make_THEAD_object

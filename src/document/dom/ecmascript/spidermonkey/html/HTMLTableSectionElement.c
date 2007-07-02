@@ -198,15 +198,3 @@ done_THEAD_object(struct dom_node *node)
 	mem_free_if(d->chOff);
 	mem_free_if(d->vAlign);
 }
-
-void
-register_section_row(struct dom_node *node)
-{
-	/* Write me! */
-}
-
-void
-unregister_section_row(struct dom_node *node)
-{
-	/* Write me! */
-}
