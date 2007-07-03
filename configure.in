@@ -630,7 +630,8 @@ if test -z "$disable_spidermonkey"; then
 	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
 		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs" "/include/mozjs"; do
 			for spidermonkeylib in js smjs mozjs; do
-				if test "$cf_result" = no; then
+				if test "$cf_result" = no &&
+				   test -f "$spidermonkeydir$spidermonkeyinclude/jsapi.h"; then
 					SPIDERMONKEY_LIBS="-l$spidermonkeylib"
 
 					if test ! -z "$spidermonkeydir"; then
