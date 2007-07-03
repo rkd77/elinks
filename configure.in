@@ -907,7 +907,8 @@ if test -z "$disable_lua"; then
 	fi
 	for luadir in "$withval" "" /usr /usr/local; do
 		for suffix in "" 50 51; do
-			if test "$cf_result" = no; then
+			if test "$cf_result" = no && ( test -f "$luadir/include/lua.h" || \
+			   test -f "$luadir/include/lua$suffix/lua.h" ) ; then
 				LUA_LIBS="-llua$suffix -llualib$suffix -lm"
 
 				if test ! -z "$luadir"; then
