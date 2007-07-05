@@ -6,8 +6,7 @@ AC_DEFUN([EL_CONFIG_OS_OS2],
 	EL_SAVE_FLAGS
 	CFLAGS="$CFLAGS -Zmt"
 
-	AC_TRY_LINK([#include <stdlib.h>],
-	            [_beginthread(NULL, NULL, 0, NULL)], cf_result=yes, cf_result=no)
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>]], [[_beginthread(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
 	AC_MSG_RESULT($cf_result)
 
 	if test "$cf_result" = yes; then
@@ -28,14 +27,10 @@ AC_DEFUN([EL_CONFIG_OS_OS2],
 	if test -n "$X11ROOT"; then
 		CFLAGS="$CFLAGS_X -I$X11ROOT/XFree86/include"
 		LIBS="$LIBS_X -L$X11ROOT/XFree86/lib -lxf86_gcc"
-		AC_TRY_LINK([#include <pty.h>],
-			    [struct winsize win;ptioctl(1, TIOCGWINSZ, &win)],
-			    cf_result=yes, cf_result=no)
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <pty.h>]], [[struct winsize win;ptioctl(1, TIOCGWINSZ, &win)]])],[cf_result=yes],[cf_result=no])
 		if test "$cf_result" = no; then
 			LIBS="$LIBS_X -L$X11ROOT/XFree86/lib -lxf86"
-			AC_TRY_LINK([#include <pty.h>],
-				    [struct winsize win;ptioctl(1, TIOCGWINSZ, &win)],
-				    cf_result=yes, cf_result=no)
+			AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <pty.h>]], [[struct winsize win;ptioctl(1, TIOCGWINSZ, &win)]])],[cf_result=yes],[cf_result=no])
 		fi
 	fi
 

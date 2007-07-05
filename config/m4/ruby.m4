@@ -78,9 +78,7 @@ if test "$CONFIG_SCRIPTING_RUBY" = "yes"; then
 				CFLAGS="$RUBY_CFLAGS $CFLAGS"
 				CPPFLAGS="$CPPFLAGS $RUBY_CFLAGS"
 
-				AC_TRY_LINK([#include <ruby.h>],
-					    [ruby_init();],
-					    CONFIG_SCRIPTING_RUBY=yes, CONFIG_SCRIPTING_RUBY=no)
+				AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <ruby.h>]], [[ruby_init();]])],[CONFIG_SCRIPTING_RUBY=yes],[CONFIG_SCRIPTING_RUBY=no])
 			else
 				AC_MSG_RESULT([Ruby header files not found])
 			fi
