@@ -4,7 +4,8 @@ dnl Autoconf 2.13 generates an incomplete config.h.in; see ELinks bug 936.
 dnl Autoconf 2.59 is installed in the computer that generates our daily
 dnl snapshots, so we need to be compatible with that.
 AC_PREREQ(2.59)
-AC_INIT(src/main/main.c)
+AC_INIT
+AC_CONFIG_SRCDIR([src/main/main.c])
 AC_CONFIG_AUX_DIR(config)
 
 PACKAGE=elinks
@@ -117,7 +118,7 @@ EL_CONFIG_DEPENDS(CONFIG_MANUAL, [MANUAL_ASCIIDOC MANUAL_XMLTO MANUAL_JW], [Manu
 EL_CONFIG_DEPENDS(CONFIG_MANPAGE, [MAN_ASCIIDOC MAN_XMLTO], [Man Page Formats])
 
 dnl gcc specific options (to be continued at the bottom of configure)
-if test "x$ac_cv_prog_gcc" = "xyes"; then
+if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
   dnl We want to see all warnings and live with none.
   dnl We can't set up -Werror here as there may be some warnings in test
   dnl suite of configure, and we don't want to fail them.
@@ -134,9 +135,9 @@ AC_DEFUN([EL_CHECK_COMPILER_MACROS],
 	AC_MSG_CHECKING([for $2])
 
 	for flag in $3; do
-		AC_TRY_COMPILE(, [#ifndef $flag
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[#ifndef $flag
 kill me!
-#endif ], $1=yes, $1=no)
+#endif ]])],[$1=yes],[$1=no])
 		if test "[$]$1" = yes; then
 			EL_CONFIG([$1], [$2])
 			break
@@ -273,7 +274,7 @@ dnl happily ignoring it and stderr not being checked for error messages.
 AC_MSG_CHECKING([for -rdynamic])
 LDFLAGS_X="$LDFLAGS"
 LDFLAGS="$LDFLAGS -rdynamic"
-AC_TRY_LINK([], [], have_rdynamic=yes, have_rdynamic=no)
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[have_rdynamic=yes],[have_rdynamic=no])
 test "$have_rdynamic" = no && LDFLAGS="$LDFLAGS_X"
 AC_MSG_RESULT($have_rdynamic)
 
@@ -300,7 +301,7 @@ AC_CHECK_FUNCS(getifaddrs getpwnam inet_pton inet_ntop)
 AC_CHECK_FUNCS(fflush fork fsync fseeko ftello sigaction)
 AC_CHECK_FUNCS(gettimeofday clock_gettime)
 
-AC_HAVE_FUNCS(cygwin_conv_to_full_win32_path)
+AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
 
 AC_CHECK_FUNCS(setenv putenv, HAVE_SETENV_OR_PUTENV=yes)
 AC_CHECK_FUNCS(getuid, HAVE_GETUID=yes)
@@ -317,28 +318,26 @@ AC_CHECK_FUNCS(kill, HAVE_KILL=yes)
 
 if test x"$HAVE_RAISE" = x; then
 	if test x"$HAVE_KILL" = x || test x"$HAVE_GETPID" = x; then
-		AC_ERROR([Unable to emulate raise()])
+		AC_MSG_ERROR([Unable to emulate raise()])
 	fi
 fi
 
 AC_CACHE_CHECK([for __va_copy],el_cv_HAVE_VA_COPY,[
-AC_TRY_LINK([#include <stdarg.h>
-va_list ap1,ap2;], [__va_copy(ap1,ap2);],
-el_cv_HAVE_VA_COPY=yes,el_cv_HAVE_VA_COPY=no)])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdarg.h>
+va_list ap1,ap2;]], [[__va_copy(ap1,ap2);]])],[el_cv_HAVE_VA_COPY=yes],[el_cv_HAVE_VA_COPY=no])])
 if test x"$el_cv_HAVE_VA_COPY" = x"yes"; then
 	EL_DEFINE(HAVE_VA_COPY, __va_copy)
 fi
 
 AC_CACHE_CHECK([for sysconf(_SC_PAGE_SIZE)],el_cv_HAVE_SC_PAGE_SIZE,[
-AC_TRY_LINK([#include <unistd.h>
-], [int page_size = sysconf(_SC_PAGE_SIZE);],
-el_cv_HAVE_SC_PAGE_SIZE=yes,el_cv_HAVE_SC_PAGE_SIZE=no)])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <unistd.h>
+]], [[int page_size = sysconf(_SC_PAGE_SIZE);]])],[el_cv_HAVE_SC_PAGE_SIZE=yes],[el_cv_HAVE_SC_PAGE_SIZE=no])])
 if test x"$el_cv_HAVE_SC_PAGE_SIZE" = x"yes"; then
 	EL_DEFINE(HAVE_SC_PAGE_SIZE, _SC_PAGE_SIZE)
 fi
 
 AC_CACHE_CHECK([for C99 vsnprintf],el_cv_HAVE_C99_VSNPRINTF,[
-AC_TRY_RUN([
+AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -370,8 +369,7 @@ void foo(const char *format, ...) {
        exit(0);
 }
 main() { foo("hello\n"); }
-],
-el_cv_HAVE_C99_VSNPRINTF=yes,el_cv_HAVE_C99_VSNPRINTF=no,el_cv_HAVE_C99_VSNPRINTF=cross)])
+]])],[el_cv_HAVE_C99_VSNPRINTF=yes],[el_cv_HAVE_C99_VSNPRINTF=no],[el_cv_HAVE_C99_VSNPRINTF=cross])])
 if test x"$el_cv_HAVE_C99_VSNPRINTF" = x"yes"; then
 	EL_DEFINE(HAVE_C99_VSNPRINTF, [C99 compliant vsnprintf()])
 fi
@@ -604,10 +602,10 @@ if test "$enable_see" = "yes"; then
 		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
 		CPPFLAGS="$SEE_CFLAGS $CPPFLAGS"
 		LIBS="$SEE_LIBS $LIBS_X"
-		AC_TRY_LINK([#include <see/see.h>],[#if SEE_VERSION_API_MAJOR < 2
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <see/see.h>]], [[#if SEE_VERSION_API_MAJOR < 2
 			#error SEE too old
 			#endif
-		], cf_result=yes, cf_result=no)
+		]])],[cf_result=yes],[cf_result=no])
 		EL_RESTORE_FLAGS
 		if test "$cf_result" = yes; then
 			LIBS="$SEE_LIBS $LIBS"
@@ -655,10 +653,8 @@ if test -z "$disable_spidermonkey"; then
 					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 
-					AC_TRY_LINK([#define XP_UNIX
-						     #include <jsapi.h>],
-						     [JS_GetReservedSlot(NULL, NULL, 0, NULL)],
-						     cf_result=yes, cf_result=no)
+					AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
+						     #include <jsapi.h>]], [[JS_GetReservedSlot(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
 				fi
 			done
 		done
@@ -789,29 +785,24 @@ if test "$enable_perl" = "yes"; then
 	LIBS="$PERL_LIBS $LIBS"
 	CFLAGS="$PERL_CFLAGS $CFLAGS"
 	CPPFLAGS="$CPPFLAGS $PERL_CFLAGS"
-	AC_TRY_LINK([
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <EXTERN.h>
 #include <perl.h>
 #include <perlapi.h>
-],
-		    [PerlInterpreter *my_perl = perl_alloc();],
-		    cf_result=yes, cf_result=no)
+]], [[PerlInterpreter *my_perl = perl_alloc();]])],[cf_result=yes],[cf_result=no])
 fi
 
 if test "$cf_result"; then AC_MSG_RESULT($cf_result); fi
 
 AC_MSG_CHECKING([whether POPpx works without an n_a variable])
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <EXTERN.h>
 #include <perl.h>
 extern PerlInterpreter *my_perl;
-],
-	[dSP; (void) POPpx;],
-	[AC_MSG_RESULT([yes])
+]], [[dSP; (void) POPpx;]])],[AC_MSG_RESULT([yes])
 AC_DEFINE([CONFIG_PERL_POPPX_WITHOUT_N_A], [1],
 		[Define if using Perl 5.8.8 or later, where the "POPpx" macro
-no longer needs an "n_a" variable like it did in 5.8.7])],
-	[AC_MSG_RESULT([no])])
+no longer needs an "n_a" variable like it did in 5.8.7])],[AC_MSG_RESULT([no])])
 
 if test "$cf_result" != "yes"; then
 	EL_RESTORE_FLAGS
@@ -855,9 +846,7 @@ if test "$enable_python" = "yes"; then
 		PYTHON_LIBS="`$PYTHON -c 'from distutils import sysconfig; var = sysconfig.get_config_var; print "%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION"))'`"
 		LIBS="$PYTHON_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
-		AC_TRY_LINK([#include <Python.h>],
-		    [Py_Initialize();],
-		    cf_result=yes, cf_result=no)
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <Python.h>]], [[Py_Initialize();]])],[cf_result=yes],[cf_result=no])
 
 		if test "$cf_result" != "yes"; then
 			EL_RESTORE_FLAGS
@@ -921,17 +910,15 @@ if test -z "$disable_lua"; then
 				CPPFLAGS="$CPPFLAGS_X $LUA_CFLAGS"
 
 				# Check that it is a compatible Lua version
-				AC_TRY_LINK([	#include <lua.h>
-						#include <lualib.h>],
-					    [	lua_State *L = lua_open();
+				AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lua.h>
+						#include <lualib.h>]], [[	lua_State *L = lua_open();
 						luaopen_base(L);
 						luaopen_table(L);
 						luaopen_io(L);
 						luaopen_string(L);
 						luaopen_math(L);
 						lua_pushboolean(L, 1);
-						lua_close(L);],
-					    cf_result=yes, cf_result=no)
+						lua_close(L);]])],[cf_result=yes],[cf_result=no])
 			fi
 		done
 	done
@@ -1029,13 +1016,9 @@ else
 			else
 				LIBS="-lssl -lcrypto $LIBS_X"
 			fi
-			AC_TRY_LINK([#include <openssl/ssl.h>],
-				    [OpenSSL_add_all_algorithms()],
-				    cf_result=yes, cf_result=no)
+			AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <openssl/ssl.h>]], [[OpenSSL_add_all_algorithms()]])],[cf_result=yes],[cf_result=no])
 			if test "$cf_result" != yes; then
-				AC_TRY_LINK([#include <openssl/ssl.h>],
-					    [SSLeay_add_ssl_algorithms()],
-					    cf_result=yes, cf_result=no)
+				AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <openssl/ssl.h>]], [[SSLeay_add_ssl_algorithms()]])],[cf_result=yes],[cf_result=no])
 			fi
 		fi
 	done
@@ -1093,10 +1076,8 @@ else
 			# Verify if it's really usable.  gnutls_session was
 			# renamed to gnutls_session_t before GNU TLS 1.2.0
 			# (on 2004-06-13); ELinks now requires this.
-			AC_TRY_LINK([#include <gnutls/gnutls.h>],
-				    [gnutls_session_t dummy;
-				     gnutls_check_version(NULL)],
-				    cf_result=yes, cf_result=no)
+			AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <gnutls/gnutls.h>]], [[gnutls_session_t dummy;
+				     gnutls_check_version(NULL)]])],[cf_result=yes],[cf_result=no])
 		fi
 
 		if test "$cf_result" = yes; then
@@ -1168,8 +1149,7 @@ if test x"$no_x" != xyes; then
 		LDFLAGS="$LDFLAGS -L$x_libraries"
 	fi
 	LIBS="-lX11 $LIBS"
-	AC_TRY_LINK([#include <X11/Xlib.h>],[XrmInitialize()],
-		cf_result=yes, cf_result=no)
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <X11/Xlib.h>]], [[XrmInitialize()]])],[cf_result=yes],[cf_result=no])
 	EL_RESTORE_FLAGS
 	if test "$cf_result" = yes; then
 		if test -n "$x_libraries"; then
@@ -1433,7 +1413,7 @@ dnl ===================================================================
 dnl A little fine tuning of gcc specific options (continued)
 dnl ===================================================================
 
-if test "x$ac_cv_prog_gcc" = "xyes"; then
+if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
   if test "$CONFIG_DEBUG" = "yes"; then
     dnl We want to see all warnings and live with none (in debug mode).
     CFLAGS="$CFLAGS -Werror"
@@ -1470,9 +1450,7 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
   AC_MSG_CHECKING([whether $CC accepts -Wno-always-true])
   EL_SAVE_FLAGS
   CFLAGS="$CFLAGS -Wno-always-true"
-  AC_TRY_COMPILE([], [],
-    [AC_MSG_RESULT([yes])],
-    [EL_RESTORE_FLAGS
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[AC_MSG_RESULT([yes])],[EL_RESTORE_FLAGS
      AC_MSG_RESULT([no])])
 fi
 
@@ -1494,7 +1472,7 @@ dnl ===================================================================
 dnl Generated files
 dnl ===================================================================
 
-AC_OUTPUT([ \
+AC_CONFIG_FILES([ \
  Makefile.config \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
@@ -1503,6 +1481,7 @@ AC_OUTPUT([ \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed
 ])
+AC_OUTPUT
 
 abs_srcdir="$(cd "$srcdir" && pwd)"
 # builddir is always absolute!
