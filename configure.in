@@ -1008,6 +1008,7 @@ dnl ===================================================================
 
 AC_PATH_X
 if test x"$no_x" != xyes; then
+	EL_SAVE_FLAGS
 	if test -n "$x_includes"; then
 		X_CFLAGS="-I$x_includes"
 		CPPFLAGS="$CPPFLAGS -I$x_includes"
@@ -1016,8 +1017,17 @@ if test x"$no_x" != xyes; then
 		LDFLAGS="$LDFLAGS -L$x_libraries"
 	fi
 	LIBS="-lX11 $LIBS"
-	EL_DEFINE(HAVE_X11, [X11 for restoring window titles])
-	AC_SUBST(X_CFLAGS)
+	AC_TRY_LINK([#include <X11/Xlib.h>],[XrmInitialize()],
+		cf_result=yes, cf_result=no)
+	EL_RESTORE_FLAGS
+	if test "$cf_result" = yes; then
+		if test -n "$x_libraries"; then
+			LDFLAGS="$LDFLAGS -L$x_libraries"
+		fi
+		LIBS="-lX11 $LIBS"
+		EL_DEFINE(HAVE_X11, [X11 for restoring window titles])
+		AC_SUBST(X_CFLAGS)
+	fi
 fi
 
 
