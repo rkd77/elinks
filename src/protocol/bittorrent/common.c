@@ -21,6 +21,8 @@
 #include "util/string.h"
 #include "util/snprintf.h"
 
+const bittorrent_id_T BITTORRENT_NULL_ID;
+
 /* Debug function which returns printable peer ID. */
 unsigned char *
 get_peer_id(bittorrent_id_T peer_id)

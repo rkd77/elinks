@@ -45,7 +45,7 @@ struct terminal;
 typedef sha1_digest_bin_T bittorrent_id_T;
 
 /* Special peer ID used for determining whether an ID has been set. */
-const bittorrent_id_T BITTORRENT_NULL_ID;
+extern const bittorrent_id_T BITTORRENT_NULL_ID;
 
 #define bittorrent_id_is_empty(id) \
 	(!memcmp(id, BITTORRENT_NULL_ID, sizeof(bittorrent_id_T)))
