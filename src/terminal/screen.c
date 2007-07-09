@@ -31,8 +31,7 @@
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
 static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
-#ifndef CONFIG_UTF8
-/* For UTF8 I/O */
+/* For UTF-8 I/O */
 static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
@@ -41,8 +40,55 @@ static const unsigned char frame_vt100_u[48] = {
 	193, 194, 194, 192, 192, 218, 218, 197,
 	197, 217, 218, 177,  32, 32,  32,  32
 };
-#endif /* CONFIG_UTF8 */
 
+/* This is for FreeBSD fonts that place graphics characters in the
+ * 0x80...0x9F range, which ISO 8859 does not use.  The characters are
+ * supposed to be sorted according to the codes used in VT100 or in
+ * the terminfo "acsc" capability:
+ *
+ *	0x80	U+2588	'0'	ACS_BLOCK
+ *	0x81	U+25C6	'`'	ACS_DIAMOND
+ *	0x82	U+2592	'a'	ACS_CKBOARD
+ *	0x83	U+2409	'b'	-
+ *	0x84	U+240C	'c'	-
+ *	0x85	U+240D	'd'	-
+ *	0x86	U+240A	'e'	-
+ *	0x87	U+00B0	'f'	ACS_DEGREE
+ *	0x88	U+00B1	'g'	ACS_PLMINUS
+ *	0x89	U+2424	'h'	-
+ *	0x8A	U+240B	'i'	-
+ *	0x8B	U+2518	'j'	ACS_LRCORNER
+ *	0x8C	U+2510	'k'	ACS_URCORNER
+ *	0x8D	U+250C	'l'	ACS_ULCORNER
+ *	0x8E	U+2514	'm'	ACS_LLCORNER
+ *	0x8F	U+253C	'n'	ACS_PLUS
+ *	0x90	-	'o'	ACS_S1
+ *	0x91	-	'p'	ACS_S3
+ *	0x92	U+2500	'q'	ACS_HLINE
+ *	0x93	-	'r'	ACS_S7
+ *	0x94	-	's'	ACS_S9
+ *	0x95	U+251C	't'	ACS_LTEE
+ *	0x96	U+2524	'u'	ACS_RTEE
+ *	0x97	U+2534	'v'	ACS_BTEE
+ *	0x98	U+252C	'w'	ACS_TTEE
+ *	0x99	U+2502	'x'	ACS_VLINE
+ *	0x9A	U+2264	'y'	ACS_LEQUAL
+ *	0x9B	U+2265	'z'	ACS_GEQUAL
+ *	0x9C	U+03C0	'{'	ACS_PI
+ *	0x9D	U+2260	'|'	ACS_NEQUAL
+ *	0x9E	U+00A3	'}'	ACS_STERLING
+ *	0x9F	U+00B7	'~'	ACS_BULLET
+ *
+ * (Ncurses 5.5 defines ACS_BOARD using 'h' and ACS_LANTERN using 'i',
+ * but those are not the characters meant above.)
+ *
+ * In FreeBSD CVS, src/share/syscons/fonts/iso-8x16.fnt revision 1.1
+ * includes these characters, except it has a space at 0x80.  In
+ * revision 1.2 however, all the characters not defined by ISO 8859-1
+ * have been blanked out.  This change was made on 2001-11-22 and
+ * included in FreeBSD 4.6.0, which was then released in June 2002.
+ * Yet, support for these characters was added to Links on 2003-11-18
+ * and to ELinks on 2003-12-07, so perhaps we should keep it for now.  */
 static const unsigned char frame_freebsd[48] = {
 	130, 138, 128, 153, 150, 150, 150, 140,
 	140, 150, 153, 140, 139, 139, 139, 140,
@@ -50,6 +96,19 @@ static const unsigned char frame_freebsd[48] = {
 	142, 141, 151, 152, 149, 146, 143, 151,
 	151, 152, 152, 142, 142, 141, 141, 143,
 	143, 139, 141, 128, 128, 128, 128, 128,
+};
+
+/* For UTF-8 I/O.  Derived from frame_freebsd[] by converting the
+ * characters to Unicode and back to CP437.  frame_freebsd[1] = 138 =
+ * 0x8a = U+240B SYMBOL FOR VERTICAL TABULATION does not exist in
+ * CP437, so we substitute U+2592 MEDIUM SHADE.  */
+static const unsigned char frame_freebsd_u[48] = {
+	177, 177, 219, 179, 180, 180, 180, 191,
+	191, 180, 179, 191, 217, 217, 217, 191,
+	192, 193, 194, 195, 196, 197, 195, 195,
+	192, 218, 193, 194, 195, 196, 197, 193,
+	193, 194, 194, 192, 192, 218, 218, 197,
+	197, 217, 218, 219, 219, 219, 219, 219,
 };
 
 static const unsigned char frame_koi[48] = {
@@ -77,17 +136,13 @@ static const unsigned char frame_restrict[48] = {
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
+/* ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
+ * Ps = 10 = primary (default) font
+ * Ps = 11 = first alternative font */
 static const struct string m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
-
-#ifdef CONFIG_UTF8
-static const struct string utf8_linux_frame_seqs[] = {
-	/* end border: */	TERM_STRING("\033[10m\033%G"),
-	/* begin border: */	TERM_STRING("\033%@\033[11m"),
-};
-#endif /* CONFIG_UTF8 */
 
 static const struct string vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
@@ -110,214 +165,202 @@ struct screen_driver {
 	 * uniquely identify the screen_driver. */
 	enum term_mode_type type;
 
-#ifndef CONFIG_UTF8
-	/* Charsets when doing UTF8 I/O. */
-	/* [0] is the common charset and [1] is the frame charset.
-	 * Test whether to use UTF8 I/O using the use_utf8_io() macro. */
-	int charsets[2];
-#endif /* CONFIG_UTF8 */
+	struct screen_driver_opt {
+		/* Charsets when doing UTF8 I/O. */
+		/* [0] is the common charset and [1] is the frame charset.
+		 * Test whether to use UTF8 I/O using the use_utf8_io() macro.  */
+		int charsets[2];
 
-	/* The frame translation table. May be NULL. */
-	const unsigned char *frame;
+		/* The frame translation table. May be NULL. */
+		const unsigned char *frame;
 
-	/* The frame mode setup and teardown sequences. May be NULL. */
-	const struct string *frame_seqs;
+		/* The frame mode setup and teardown sequences. May be NULL. */
+		const struct string *frame_seqs;
 
-	/* The underline mode setup and teardown sequences. May be NULL. */
-	const struct string *underline;
+		/* The underline mode setup and teardown sequences. May be NULL. */
+		const struct string *underline;
 
-	/* The color mode */
-	enum color_mode color_mode;
+		/* The color mode */
+		enum color_mode color_mode;
 
-	/* These are directly derived from the terminal options. */
-	unsigned int transparent:1;
+		/* These are directly derived from the terminal options. */
+		unsigned int transparent:1;
 
 #ifdef CONFIG_UTF8
-	/* UTF-8 I/O.  Forced on if the UTF-8 charset is selected.  (bug 827) */
-	unsigned int utf8:1;
+		/* Whether the charset of the terminal is UTF-8.  This
+		 * is the same as is_cp_utf8(charsets[0]), except the
+		 * latter might crash if UTF-8 I/O is disabled.  */
+		unsigned int utf8_cp:1;
 #endif /* CONFIG_UTF8 */
+	} opt;
 
 	/* The terminal._template_ name. */
 	unsigned char name[1]; /* XXX: Keep last! */
 };
 
-static const struct screen_driver dumb_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_DUMB,
-#ifndef CONFIG_UTF8
+static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_dumb,
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf-8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
-static const struct screen_driver vt100_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_VT100,
-#ifndef CONFIG_UTF8
+static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_vt100,
 	/* frame_seqs: */	vt100_frame_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf-8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
-static const struct screen_driver linux_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_LINUX,
-#ifndef CONFIG_UTF8
+static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		NULL,		/* No restrict_852 */
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf-8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
-static const struct screen_driver koi8_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_KOI8,
-#ifndef CONFIG_UTF8
+static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_koi,
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf-8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
-static const struct screen_driver freebsd_screen_driver = {
-				NULL_LIST_HEAD,
-	/* type: */		TERM_FREEBSD,
-#ifndef CONFIG_UTF8
+static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
-#endif /* CONFIG_UTF8 */
 	/* frame: */		frame_freebsd,
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
-	/* utf-8: */		0,
+	/* utf8_cp: */		0,
 #endif /* CONFIG_UTF8 */
 };
 
 /* XXX: Keep in sync with enum term_mode_type. */
-static const struct screen_driver *const screen_drivers[] = {
-	/* TERM_DUMB: */	&dumb_screen_driver,
-	/* TERM_VT100: */	&vt100_screen_driver,
-	/* TERM_LINUX: */	&linux_screen_driver,
-	/* TERM_KOI8: */	&koi8_screen_driver,
-	/* TERM_FREEBSD: */	&freebsd_screen_driver,
+static const struct screen_driver_opt *const screen_driver_opts[] = {
+	/* TERM_DUMB: */	&dumb_screen_driver_opt,
+	/* TERM_VT100: */	&vt100_screen_driver_opt,
+	/* TERM_LINUX: */	&linux_screen_driver_opt,
+	/* TERM_KOI8: */	&koi8_screen_driver_opt,
+	/* TERM_FREEBSD: */	&freebsd_screen_driver_opt,
 };
 
-#ifdef CONFIG_UTF8
-#define use_utf8_io(driver)	((driver)->utf8)
-#else
-#define use_utf8_io(driver)	((driver)->charsets[0] != -1)
-#endif /* CONFIG_UTF8 */
+#define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
 
 static INIT_LIST_HEAD(active_screen_drivers);
 
+/* Set driver->opt according to driver->type and term_spec.
+ * Other members of *driver need not have been initialized.
+ *
+ * If you modify anything here, check whether option descriptions
+ * should be updated.  */
 static void
-update_screen_driver(struct screen_driver *driver, struct option *term_spec)
+set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 {
+	const int cp = get_opt_codepage_tree(term_spec, "charset");
+	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
+
+	/* Copy all the original options from constants, so that this
+	 * function need not carefully restore options one by one.  */
+	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
+
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
-	driver->utf8 = get_opt_bool_tree(term_spec, "utf_8_io")
-		|| is_cp_utf8(get_opt_codepage_tree(term_spec, "charset"));
-#else
-	int utf8_io = get_opt_bool_tree(term_spec, "utf_8_io");
+	if (is_cp_utf8(cp)) {
+		driver->opt.utf8_cp = 1;
+		utf8_io = 1;
+	} else {
+		driver->opt.utf8_cp = 0;
+	}
 #endif /* CONFIG_UTF8 */
 
-	driver->color_mode = get_opt_int_tree(term_spec, "colors");
-	driver->transparent = get_opt_bool_tree(term_spec, "transparency");
+	driver->opt.color_mode = get_opt_int_tree(term_spec, "colors");
+	driver->opt.transparent = get_opt_bool_tree(term_spec, "transparency");
 
 	if (get_opt_bool_tree(term_spec, "underline")) {
-		driver->underline = underline_seqs;
+		driver->opt.underline = underline_seqs;
 	} else {
-		driver->underline = NULL;
+		driver->opt.underline = NULL;
 	}
 
-#ifdef CONFIG_UTF8
-	if (driver->type == TERM_LINUX) {
-		if (get_opt_bool_tree(term_spec, "restrict_852"))
-			driver->frame = frame_restrict;
-
-		if (get_opt_bool_tree(term_spec, "m11_hack"))
-			driver->frame_seqs = m11_hack_frame_seqs;
-
-		if (driver->utf8)
-			driver->frame_seqs = utf8_linux_frame_seqs;
-
-	} else if (driver->type == TERM_FREEBSD) {
-		if (get_opt_bool_tree(term_spec, "m11_hack"))
-			driver->frame_seqs = m11_hack_frame_seqs;
-
-	} else if (driver->type == TERM_VT100) {
-		driver->frame = frame_vt100;
-	}
-#else
 	if (utf8_io) {
-		driver->charsets[0] = get_opt_codepage_tree(term_spec, "charset");
+		driver->opt.charsets[0] = cp;
+
+		/* When we're using UTF-8 I/O, we never need to switch
+		 * charsets or fonts for drawing frames, because the
+		 * characters encoded in UTF-8 are already unambiguous.  */
+		driver->opt.frame_seqs = NULL;
+
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
-				driver->frame = frame_restrict;
-
-			driver->charsets[1] = get_cp_index("cp437");
+				driver->opt.frame = frame_restrict;
+			driver->opt.charsets[1] = get_cp_index("cp437");
 
 		} else if (driver->type == TERM_FREEBSD) {
-			driver->charsets[1] = get_cp_index("cp437");
+			driver->opt.frame = frame_freebsd_u;
+			driver->opt.charsets[1] = get_cp_index("cp437");
 
 		} else if (driver->type == TERM_VT100) {
-			driver->frame = frame_vt100_u;
-			driver->charsets[1] = get_cp_index("cp437");
+			driver->opt.frame = frame_vt100_u;
+			driver->opt.charsets[1] = get_cp_index("cp437");
 
 		} else if (driver->type == TERM_KOI8) {
-			driver->charsets[1] = get_cp_index("koi8-r");
+			driver->opt.charsets[1] = get_cp_index("koi8-r");
 
 		} else {
-			driver->charsets[1] = driver->charsets[0];
+#ifdef CONFIG_UTF8
+			/* Don't let driver->opt.charsets[1] become
+			 * UTF-8, because it is passed to cp2u(),
+			 * which supports only unibyte characters.  */
+			if (driver->opt.utf8_cp)
+				driver->opt.charsets[1] = get_cp_index("US-ASCII");
+			else
+#endif	/* CONFIG_UTF8 */
+				driver->opt.charsets[1] = driver->opt.charsets[0];
 		}
 
-	} else {
-		driver->charsets[0] = -1;
+	} else { /* !utf8_io */
+		driver->opt.charsets[0] = -1;
+
 		if (driver->type == TERM_LINUX) {
 			if (get_opt_bool_tree(term_spec, "restrict_852"))
-				driver->frame = frame_restrict;
+				driver->opt.frame = frame_restrict;
 
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->frame_seqs = m11_hack_frame_seqs;
+				driver->opt.frame_seqs = m11_hack_frame_seqs;
 
 		} else if (driver->type == TERM_FREEBSD) {
 			if (get_opt_bool_tree(term_spec, "m11_hack"))
-				driver->frame_seqs = m11_hack_frame_seqs;
+				driver->opt.frame_seqs = m11_hack_frame_seqs;
+
 		} else if (driver->type == TERM_VT100) {
-			driver->frame = frame_vt100;
+			driver->opt.frame = frame_vt100;
 		}
- 	}
-#endif /* CONFIG_UTF8 */
+ 	} /* !utf8_io */
 }
 
 static int
@@ -327,11 +370,10 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 	enum term_mode_type type = get_opt_int_tree(term_spec, "type");
 	struct screen_driver *driver;
 	unsigned char *name = term_spec->name;
-	int len = strlen(name);
 
 	foreach (driver, active_screen_drivers)
-		if (driver->type == type && !memcmp(driver->name, name, len)) {
-			update_screen_driver(driver, term_spec);
+		if (driver->type == type && !strcmp(driver->name, name)) {
+			set_screen_driver_opt(driver, term_spec);
 			break;
 		}
 
@@ -347,17 +389,17 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 	driver = mem_alloc(sizeof(*driver) + env_len);
 	if (!driver) return NULL;
 
-	memcpy(driver, screen_drivers[type], sizeof(*driver) - 1);
-	memcpy(driver->name, term->spec->name, env_len + 1);
-
+	/* These four operations fully initialize *driver.  */
 	add_to_list(active_screen_drivers, driver);
-
-	update_screen_driver(driver, term->spec);
+	driver->type = type;
+	set_screen_driver_opt(driver, term->spec);
+	memcpy(driver->name, term->spec->name, env_len + 1);
 
 	term->spec->change_hook = screen_driver_change_hook;
 
 #ifdef CONFIG_UTF8
-	term->utf8 = use_utf8_io(driver);
+	term->utf8_cp = driver->opt.utf8_cp;
+	term->utf8_io = use_utf8_io(driver);
 #endif /* CONFIG_UTF8 */
 
 	return driver;
@@ -373,13 +415,14 @@ get_screen_driver(struct terminal *term)
 
 	foreach (driver, active_screen_drivers) {
 		if (driver->type != type) continue;
-		if (memcmp(driver->name, name, len + 1)) continue;
+		if (strcmp(driver->name, name)) continue;
 
 		/* Some simple probably useless MRU ;) */
 		move_to_top_of_list(active_screen_drivers, driver);
 
 #ifdef CONFIG_UTF8
-		term->utf8 = use_utf8_io(driver);
+		term->utf8_cp = driver->opt.utf8_cp;
+		term->utf8_io = use_utf8_io(driver);
 #endif /* CONFIG_UTF8 */
 		return driver;
 	}
@@ -527,46 +570,48 @@ copy_color_16(unsigned char *a, unsigned char *b)
 static inline void
 add_char_data(struct string *screen, struct screen_driver *driver,
 	      unicode_val_T data, unsigned char border)
-#else
+#else  /* !CONFIG_UTF8 */
 static inline void
 add_char_data(struct string *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
-#endif /* CONFIG_UTF8 */
+#endif /* !CONFIG_UTF8 */
 {
-	/* CONFIG_UTF8  use_utf8_io  border  data              add_to_string
-	 * -----------  -----------  ------  ----------------  ----------------
-	 * not defined  0            0       terminal unibyte  terminal unibyte
-	 * not defined  0            1       enum border_char  border unibyte
-	 * not defined  1            0       terminal unibyte  UTF-8
-	 * not defined  1            1       enum border_char  UTF-8
-	 * defined      0            0       terminal unibyte  terminal unibyte
-	 * defined      0            1       enum border_char  border unibyte
-	 * defined      1            0       UTF-32            UTF-8
-	 * defined      1            1       enum border_char  border unibyte
+	/* charset  use_utf8_io  border  data              add_to_string
+	 * -------  -----------  ------  ----------------  ----------------
+	 * unibyte  0            0       terminal unibyte  terminal unibyte
+	 * unibyte  0            1       enum border_char  border unibyte
+	 * unibyte  1            0       terminal unibyte  UTF-8
+	 * unibyte  1            1       enum border_char  UTF-8
+	 * UTF-8    1            0       UTF-32 (*)        UTF-8
+	 * UTF-8    1            1       enum border_char  UTF-8
 	 *
-	 * For "UTF-32" above, the data can also be UCS_NO_CHAR.
+	 * (*) For "UTF-32" above, data can also be UCS_NO_CHAR,
+	 * in which case this function must not alter *screen.
 	 */
 
-	if (border && driver->frame && data >= 176 && data < 224)
-		data = driver->frame[data - 176];
+	if (border && driver->opt.frame && data >= 176 && data < 224)
+		data = driver->opt.frame[data - 176];
 
-	if (use_utf8_io(driver)) {
 #ifdef CONFIG_UTF8
-		if (border)
-			add_char_to_string(screen, (unsigned char)data);
-		else if (data != UCS_NO_CHAR) {
-			if (!isscreensafe_ucs(data))
-				data = UCS_SPACE;
-			add_to_string(screen, encode_utf8(data));
+	if (driver->opt.utf8_cp) {
+		if (border) {
+			data = cp2u(driver->opt.charsets[1],
+				    (unsigned char) data);
 		}
-#else
-		int charset = driver->charsets[!!border];
+		if (data == UCS_NO_CHAR)
+			return;
+		if (!isscreensafe_ucs(data))
+			data = UCS_SPACE;
+		add_to_string(screen, encode_utf8(data));
+	} else
+#endif /* CONFIG_UTF8 */
+	if (use_utf8_io(driver)) {
+		int charset = driver->opt.charsets[!!border];
 
 		if (border || isscreensafe(data))
 			add_to_string(screen, cp2utf8(charset, data));
 		else /* UCS_SPACE <= 0x7F and so fits in one UTF-8 byte */
 			add_char_to_string(screen, UCS_SPACE);
-#endif /* CONFIG_UTF8 */
 	} else {
 		if (border || isscreensafe(data))
 			add_char_to_string(screen, (unsigned char)data);
@@ -586,27 +631,27 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    border != state->border && driver->frame_seqs
+	    border != state->border && driver->opt.frame_seqs
 	   ) {
 		state->border = border;
-		add_term_string(screen, driver->frame_seqs[!!border]);
+		add_term_string(screen, driver->opt.frame_seqs[!!border]);
 	}
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    underline != state->underline && driver->underline
+	    underline != state->underline && driver->opt.underline
 	   ) {
 		state->underline = underline;
-		add_term_string(screen, driver->underline[!!underline]);
+		add_term_string(screen, driver->opt.underline[!!underline]);
 	}
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    bold != state->bold
 	   ) {
@@ -621,7 +666,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    !compare_color_16(ch->color, state->color)
 	   ) {
@@ -629,7 +674,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
-		/* @update_screen_driver has set @driver->color_mode
+		/* @set_screen_driver_opt has set @driver->opt.color_mode
 		 * according to terminal-type-specific options.
 		 * The caller of @add_char16 has already partially
 		 * checked it, but there are still these possibilities:
@@ -637,13 +682,13 @@ add_char16(struct string *screen, struct screen_driver *driver,
 		 *   perhaps use the standout attribute.
 		 * - COLOR_MODE_16.  Use 16 colors.
 		 * - An unsupported color mode.  Use 16 colors.  */
-		if (driver->color_mode != COLOR_MODE_MONO) {
+		if (driver->opt.color_mode != COLOR_MODE_MONO) {
 			unsigned char code[6] = ";30;40";
 			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->color);
 
 			code[2] += TERM_COLOR_FOREGROUND_16(ch->color);
 
-			if (!driver->transparent || bgcolor != 0) {
+			if (!driver->opt.transparent || bgcolor != 0) {
 				code[5] += bgcolor;
 				add_bytes_to_string(screen, code, 6);
 			} else {
@@ -656,7 +701,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			add_bytes_to_string(screen, ";7", 2);
 		}
 
-		if (underline && driver->underline) {
+		if (underline && driver->opt.underline) {
 			add_bytes_to_string(screen, ";4", 2);
 		}
 
@@ -736,18 +781,18 @@ add_char256(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    attr_delta
 	   ) {
-		if ((attr_delta & SCREEN_ATTR_FRAME) && driver->frame_seqs) {
+		if ((attr_delta & SCREEN_ATTR_FRAME) && driver->opt.frame_seqs) {
 			state->border = !!(ch->attr & SCREEN_ATTR_FRAME);
-			add_term_string(screen, driver->frame_seqs[state->border]);
+			add_term_string(screen, driver->opt.frame_seqs[state->border]);
 		}
 
-		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->underline) {
+		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
-			add_term_string(screen, driver->underline[state->underline]);
+			add_term_string(screen, driver->opt.underline[state->underline]);
 		}
 
 		if (attr_delta & SCREEN_ATTR_BOLD) {
@@ -764,23 +809,23 @@ add_char256(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    !compare_color_256(ch->color, state->color)
 	   ) {
 		copy_color_256(state->color, ch->color);
 
 		add_foreground_color(screen, color256_seqs, ch);
-		if (!driver->transparent || ch->color[1] != 0) {
+		if (!driver->opt.transparent || ch->color[1] != 0) {
 			add_background_color(screen, color256_seqs, ch);
 		}
 
 		if (ch->attr & SCREEN_ATTR_BOLD)
 			add_bytes_to_string(screen, "\033[1m", 4);
 
-		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->underline) {
+		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
-			add_term_string(screen, driver->underline[state->underline]);
+			add_term_string(screen, driver->opt.underline[state->underline]);
 		}
 	}
 
@@ -851,18 +896,18 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    attr_delta
 	   ) {
-		if ((attr_delta & SCREEN_ATTR_FRAME) && driver->frame_seqs) {
+		if ((attr_delta & SCREEN_ATTR_FRAME) && driver->opt.frame_seqs) {
 			state->border = !!(ch->attr & SCREEN_ATTR_FRAME);
-			add_term_string(screen, driver->frame_seqs[state->border]);
+			add_term_string(screen, driver->opt.frame_seqs[state->border]);
 		}
 
-		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->underline) {
+		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
-			add_term_string(screen, driver->underline[state->underline]);
+			add_term_string(screen, driver->opt.underline[state->underline]);
 		}
 
 		if (attr_delta & SCREEN_ATTR_BOLD) {
@@ -879,23 +924,23 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 
 	if (
 #ifdef CONFIG_UTF8
-	    (!use_utf8_io(driver) || ch->data != UCS_NO_CHAR) &&
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
 	    !compare_color_true(ch->color, state->color)
 	   ) {
 		copy_color_true(state->color, ch->color);
 
 		add_true_foreground_color(screen, color_true_seqs, ch);
-		if (!driver->transparent || !background_is_black(ch->color)) {
+		if (!driver->opt.transparent || !background_is_black(ch->color)) {
 			add_true_background_color(screen, color_true_seqs, ch);
 		}
 
 		if (ch->attr & SCREEN_ATTR_BOLD)
 			add_bytes_to_string(screen, "\033[1m", 4);
 
-		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->underline) {
+		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
-			add_term_string(screen, driver->underline[state->underline]);
+			add_term_string(screen, driver->opt.underline[state->underline]);
 		}
 	}
 
@@ -980,7 +1025,7 @@ redraw_screen(struct terminal *term)
 
 	if (!init_string(&image)) return;
 
-	switch (driver->color_mode) {
+	switch (driver->opt.color_mode) {
 	default:
 		/* If the desired color mode was not compiled in,
 		 * use 16 colors.  */
@@ -1005,19 +1050,19 @@ redraw_screen(struct terminal *term)
 #endif
 	case COLOR_MODES:
 	case COLOR_MODE_DUMP:
-		INTERNAL("Invalid color mode (%d).", driver->color_mode);
+		INTERNAL("Invalid color mode (%d).", driver->opt.color_mode);
 		return;
 	}
 
 	if (image.length) {
-		if (driver->color_mode != COLOR_MODE_MONO)
+		if (driver->opt.color_mode != COLOR_MODE_MONO)
 			add_bytes_to_string(&image, "\033[37;40m", 8);
 
 		add_bytes_to_string(&image, "\033[0m", 4);
 
 		/* If we ended in border state end the frame mode. */
-		if (state.border && driver->frame_seqs)
-			add_term_string(&image, driver->frame_seqs[0]);
+		if (state.border && driver->opt.frame_seqs)
+			add_term_string(&image, driver->opt.frame_seqs[0]);
 
 	}
 

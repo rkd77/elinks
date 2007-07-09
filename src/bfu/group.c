@@ -40,7 +40,7 @@ dlg_format_group(struct terminal *term,
 		int label_padding;
 
 #ifdef CONFIG_UTF8
-		if (term->utf8) {
+		if (term->utf8_cp) {
 			if (text && *text)
 				label_length = utf8_ptr2cells(text, NULL);
 			else
@@ -55,7 +55,7 @@ dlg_format_group(struct terminal *term,
 			width = CHECKBOX_LEN;
 		} else if (widget_is_textfield(widget_data)) {
 #ifdef CONFIG_UTF8
-			if (term->utf8) {
+			if (term->utf8_cp) {
 				width = utf8_ptr2cells(widget_data->widget->data,
 						       NULL);
 			} else
@@ -82,7 +82,7 @@ dlg_format_group(struct terminal *term,
 				/* Draw text at right of checkbox. */
 				if (label_length) {
 #ifdef CONFIG_UTF8
-					if (term->utf8) {
+					if (term->utf8_cp) {
 						int lb = utf8_cells2bytes(
 								text,
 								label_length,
@@ -108,7 +108,7 @@ dlg_format_group(struct terminal *term,
 				/* Draw label at left of widget. */
 				if (label_length) {
 #ifdef CONFIG_UTF8
-					if (term->utf8) {
+					if (term->utf8_cp) {
 						int lb = utf8_cells2bytes(
 								text,
 								label_length,
@@ -149,7 +149,7 @@ group_layouter(struct dialog_data *dlg_data)
 	int n = dlg_data->number_of_widgets - 2;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8)
+	if (term->utf8_cp)
 		rw = int_min(w, utf8_ptr2cells(dlg_data->dlg->title, NULL));
 	else
 #endif /* CONFIG_UTF8 */

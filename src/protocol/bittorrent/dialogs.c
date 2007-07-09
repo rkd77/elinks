@@ -575,7 +575,7 @@ bittorrent_message_dialog(struct session *ses, void *data)
 	uristring = get_uri_string(message->uri, URI_PUBLIC);
 	if (uristring) {
 #ifdef CONFIG_UTF8
-		if (ses->tab->term->utf8)
+		if (ses->tab->term->utf8_cp)
 			decode_uri(uristring);
 		else
 #endif /* CONFIG_UTF8 */
@@ -725,7 +725,7 @@ bittorrent_query_callback(void *data, enum connection_state state,
 		/* Let's make the filename pretty for display & save */
 		/* TODO: The filename can be the empty string here. See bug 396. */
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			decode_uri_string(&filename);
 		else
 #endif /* CONFIG_UTF8 */

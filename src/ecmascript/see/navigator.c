@@ -57,7 +57,7 @@ struct SEE_objectclass js_navigator_object_class = {
 	navigator_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL

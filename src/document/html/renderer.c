@@ -175,7 +175,8 @@ realloc_line(struct html_context *html_context, struct document *document,
 	end->data = ' ';
 	end->attr = 0;
 	set_screen_char_color(end, par_format.bgcolor, 0x0,
-			      0, document->options.color_mode);
+			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
+			      document->options.color_mode);
 
 	for (pos = &line->chars[line->length]; pos < end; pos++) {
 		copy_screen_chars(pos, end, 1);
@@ -257,7 +258,8 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end->data = ' ';
 	end->attr = 0;
 	set_screen_char_color(end, par_format.bgcolor, 0x0,
-			      0, part->document->options.color_mode);
+			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
+			      part->document->options.color_mode);
 
 	while (pos < end)
 		copy_screen_chars(pos++, end, 1);
@@ -406,6 +408,21 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	if (realloc_spaces(part, x + charslen))
 		return 0;
 
+	/* U+00AD SOFT HYPHEN characters in HTML documents are
+	 * supposed to be displayed only if the word is broken at that
+	 * point.  ELinks currently does not use them, so it should
+	 * not display them.  If the input @chars is in UTF-8, then
+	 * set_hline() discards the characters.  If the input is in
+	 * some other charset, then set_hline() does not know which
+	 * byte that charset uses for U+00AD, so it cannot discard
+	 * the characters; instead, the translation table used by
+	 * convert_string() has already discarded the characters.
+	 *
+	 * Likewise, if the input @chars is in UTF-8, then it may
+	 * contain U+00A0 NO-BREAK SPACE characters; but if the input
+	 * is in some other charset, then the translation table
+	 * has mapped those characters to NBSP_CHAR.  */
+
 	if (part->document) {
 		/* Reallocate LINE(y).chars[] to large enough.  The
 		 * last parameter of realloc_line is the index of the
@@ -424,7 +441,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
-			unsigned char *end = chars + charslen;
+			unsigned char *const end = chars + charslen;
 			unicode_val_T data;
 
 			if (part->document->buf_length) {
@@ -459,7 +476,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 				}
 			}
 
-			for (; chars < end; x++) {
+			while (chars < end) {
 				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
 				data = utf8_to_unicode(&chars, end);
@@ -473,7 +490,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						schar->attr = SCREEN_ATTR_FRAME;
 						copy_screen_chars(&POS(x, y), schar, 1);
 						schar->attr = attr;
-						part->char_width[x] = 0;
+						part->char_width[x++] = 0;
 						continue;
 					} else {
 						unsigned char i;
@@ -484,26 +501,31 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						part->document->buf_length = i;
 						break;
 					}
-				} else {
-good_char:
-					if (data == UCS_NO_BREAK_SPACE
-					    && html_context->options->wrap_nbsp)
-						data = UCS_SPACE;
-					part->spaces[x] = (data == UCS_SPACE);
-					if (unicode_to_cell(data) == 2) {
-						schar->data = (unicode_val_T)data;
-						part->char_width[x] = 2;
-						copy_screen_chars(&POS(x++, y), schar, 1);
-						schar->data = UCS_NO_CHAR;
-						part->spaces[x] = 0;
-						part->char_width[x] = 0;
-					} else {
-						part->char_width[x] = unicode_to_cell(data);
-						schar->data = (unicode_val_T)data;
-					}
+					/* not reached */
 				}
-				copy_screen_chars(&POS(x, y), schar, 1);
-			}
+
+good_char:
+				if (data == UCS_SOFT_HYPHEN)
+					continue;
+
+				if (data == UCS_NO_BREAK_SPACE
+				    && html_context->options->wrap_nbsp)
+					data = UCS_SPACE;
+				part->spaces[x] = (data == UCS_SPACE);
+
+				if (unicode_to_cell(data) == 2) {
+					schar->data = (unicode_val_T)data;
+					part->char_width[x] = 2;
+					copy_screen_chars(&POS(x++, y), schar, 1);
+					schar->data = UCS_NO_CHAR;
+					part->spaces[x] = 0;
+					part->char_width[x] = 0;
+				} else {
+					part->char_width[x] = unicode_to_cell(data);
+					schar->data = (unicode_val_T)data;
+				}
+				copy_screen_chars(&POS(x++, y), schar, 1);
+			} /* while chars < end */
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
@@ -535,13 +557,20 @@ good_char:
 		len = x - x2;
 	} else { /* part->document == NULL */
 		if (utf8) {
-			unsigned char *end;
+			unsigned char *const end = chars + charslen;
 
-			for (end = chars + charslen; chars < end; x++) {
+			while (chars < end) {
 				unicode_val_T data;
 
-				part->spaces[x] = (*chars == ' ');
 				data = utf8_to_unicode(&chars, end);
+				if (data == UCS_SOFT_HYPHEN)
+					continue;
+
+				if (data == UCS_NO_BREAK_SPACE
+				    && html_context->options->wrap_nbsp)
+					data = UCS_SPACE;
+				part->spaces[x] = (data == UCS_SPACE);
+
 				part->char_width[x] = unicode_to_cell(data);
 				if (part->char_width[x] == 2) {
 					x++;
@@ -552,12 +581,17 @@ good_char:
 					/* this is at the end only */
 					return x - x2;
 				}
-			}
+				x++;
+			} /* while chars < end */
 			len = x - x2;
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
-				part->spaces[x] = (*chars == ' ');
 				part->char_width[x] = 1;
+				if (*chars == NBSP_CHAR) {
+					part->spaces[x] = html_context->options->wrap_nbsp;
+				} else {
+					part->spaces[x] = (*chars == ' ');
+				}
 			}
 		}
 	} /* end of part->document check */
@@ -600,7 +634,11 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		}
 	} else {
 		for (; charslen > 0; charslen--, x++, chars++) {
-			part->spaces[x] = (*chars == ' ');
+			if (*chars == NBSP_CHAR) {
+				part->spaces[x] = html_context->options->wrap_nbsp;
+			} else {
+				part->spaces[x] = (*chars == ' ');
+			}
 		}
 	}
 }
@@ -1773,18 +1811,6 @@ html_special_form_control(struct part *part, struct form_control *fc)
 
 	fc->g_ctrl_num = renderer_context.g_ctrl_num++;
 
-	/* We don't want to recode hidden fields. */
-	if (fc->type == FC_TEXT || fc->type == FC_PASSWORD ||
-	    fc->type == FC_TEXTAREA) {
-		unsigned char *dv = convert_string(renderer_context.convert_table,
-						   fc->default_value,
-						   strlen(fc->default_value),
-						   part->document->options.cp,
-						   CSM_QUERY, NULL, NULL, NULL);
-
-		if (dv) mem_free_set(&fc->default_value, dv);
-	}
-
 	if (list_empty(part->document->forms)) {
 		/* No forms encountered yet, that means a homeless form
 		 * control. Generate a dummy form for those Flying
@@ -2210,6 +2236,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 #ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF8 */
+	html_context->doc_cp = document->cp;
 
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,

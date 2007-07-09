@@ -15,7 +15,7 @@ var smartprefixes = {
     // If you want to add a smartprefix for another project's CVSweb,
     // just create a lambda like this. Aren't high-level languages fun?
     cvs:         function (x) { return cvsweb ("http://cvsweb.elinks.cz/cvsweb.cgi/", "elinks", x) },
-    gitweb:      function (x) { return gitweb("http://pasky.or.cz/gitweb.cgi", "elinks.git", x) },
+    gitweb:      function (x) { return gitweb("http://repo.or.cz/gitweb.cgi", "elinks.git", x) },
     d:           "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query",
     debcontents: debian_contents,
     debfile:     debian_file,

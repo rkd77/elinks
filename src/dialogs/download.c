@@ -146,7 +146,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		return;
 	}
 #ifdef CONFIG_UTF8
-	if (term->utf8)
+	if (term->utf8_cp)
 		decode_uri(url);
 	else
 #endif /* CONFIG_UTF8 */
@@ -303,7 +303,7 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 	uristring = get_uri_string(file_download->uri, URI_PUBLIC);
 	if (uristring) {
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			decode_uri(uristring);
 		else
 #endif /* CONFIG_UTF8 */

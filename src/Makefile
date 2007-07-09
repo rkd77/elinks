@@ -38,8 +38,13 @@ vernum.o: $(LIB_O_NAME)
 elinks: $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
+# Place the TAGS file in the source directory so that, if the same
+# source is built for different configurations in different build
+# directories, one doesn't have to remember which of those build
+# directories has the most recent TAGS.
 TAGS:
-	find $(srcdir). \( -name "*.[ch]" -o -name "*.inc" \) -print \
+	cd $(srcdir) \
+	&& find . \( -name "*.[ch]" -o -name "*.inc" \) -print \
 	| etags --regex='{c}/INIT_LIST_HEAD(\([[:alnum:]_]+\))/\1/' \
 		--regex='{c}/struct_hierbox_browser(\n[ \t]*\([[:alnum:]_]+\),/\1/m' \
 		--regex='{c}/^ACTION_(\([[:alnum:]_]+\),[^,]*,[ \t]*\([[:alnum:]_]+\),/ACT_\1_\2/' \

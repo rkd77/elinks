@@ -56,8 +56,8 @@ static void js_input_focus(struct SEE_interpreter *, struct SEE_object *, struct
 static void js_input_select(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static int input_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static int input_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
-static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, struct form_state *);
-static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type,  struct form_state *);
+static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, int);
+static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type, int);
 
 static void js_form_elems_item(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_form_elems_namedItem(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
@@ -85,7 +85,7 @@ struct SEE_objectclass js_input_object_class = {
 	input_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -99,7 +99,7 @@ struct SEE_objectclass js_form_elems_class = {
 	form_elems_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -113,7 +113,7 @@ struct SEE_objectclass js_forms_object_class = {
 	forms_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -127,7 +127,7 @@ struct SEE_objectclass js_form_class = {
 	form_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -136,11 +136,11 @@ struct SEE_objectclass js_form_class = {
 struct js_input {
 	struct SEE_object object;
 	struct js_form *parent;
-	struct form_state *fs;
 	struct SEE_object *blur;
 	struct SEE_object *click;
 	struct SEE_object *focus;
 	struct SEE_object *select;
+	int form_number;
 };
 
 struct js_forms_object {
@@ -158,6 +158,15 @@ struct js_form_elems {
 };
 
 
+static inline struct form_state *
+form_state_of_js_input(struct view_state *vs, const struct js_input *input)
+{
+	assert(input->form_number >= 0);
+	assert(input->form_number < vs->form_info_len);
+	if_assert_failed return NULL;
+	return &vs->form_info[input->form_number];
+}
+
 static void
 input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	   struct SEE_string *p, struct SEE_value *res)
@@ -168,7 +177,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
 	struct js_form *parent = input->parent;
-	struct form_state *fs = input->fs;
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -200,6 +209,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_defaultChecked) {
 		SEE_SET_BOOLEAN(res, fc->default_state);
 	} else if (p == s_defaultValue) {
+		/* FIXME (bug 805): convert from the charset of the document */
 		str = string_to_SEE_string(interp, fc->default_value);
 		SEE_SET_STRING(res, str);
 	} else if (p == s_disabled) {
@@ -270,7 +280,7 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
-	struct form_state *fs = input->fs;
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -289,14 +299,14 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		SEE_ToString(interp, val, &conv);
 		if (conv.u.string->length)
-			accesskey = SEE_string_to_unicode(interp, conv.u.string);
+			accesskey = see_string_to_unicode(interp, conv.u.string);
 		else
 			accesskey = 0;
 
 		if (link)
 			link->accesskey = accesskey;
 	} else if (p == s_alt) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fc->alt, string);
 	} else if (p == s_checked) {
 		if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
@@ -309,13 +319,13 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		: (fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
 		: FORM_MODE_NORMAL));
 	} else if (p == s_maxLength) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		if (!string)
 			return;
 		fc->maxlength = atol(string);
 		mem_free(string);
 	} else if (p == s_name) {
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fc->name, string);
 	} else if (p == s_readonly) {
 		SEE_uint32_t boo = SEE_ToUint32(interp, val);
@@ -324,13 +334,13 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	        : FORM_MODE_NORMAL);
 	} else if (p == s_src) {
 		if (link) {
-			string = SEE_value_to_unsigned_char(interp, val);
+			string = see_value_to_unsigned_char(interp, val);
 			mem_free_set(&link->where_img, string);
 		}
 	} else if (p == s_value) {
 		if (fc->type == FC_FILE)
 			return;
-		string = SEE_value_to_unsigned_char(interp, val);
+		string = see_value_to_unsigned_char(interp, val);
 		mem_free_set(&fs->value, string);
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
@@ -370,7 +380,7 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = input->fs;
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc;
 	int linknum;
 
@@ -405,7 +415,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = input->fs;
+	struct form_state *fs = form_state_of_js_input(vs, input);
 	struct form_control *fc;
 	int linknum;
 
@@ -450,8 +460,7 @@ input_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 }
 
 static struct js_input *
-js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
-	struct form_state *fs)
+js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform, int num)
 {
 	struct js_input *jsinput;
 
@@ -473,16 +482,14 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
 	jsinput->focus = SEE_cfunction_make(interp, js_input_focus, s_focus, 0);
 	jsinput->select = SEE_cfunction_make(interp, js_input_select, s_select, 0);
 
-	jsinput->fs = fs;
+	jsinput->form_number = num;
 	jsinput->parent = jsform;
-
-	fs->ecmascript_obj = jsinput;
 	return jsinput;
 }
 
 static struct js_input *
 js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsform,
-	enum form_type type,  struct form_state *fs)
+	enum form_type type, int num)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -496,7 +503,7 @@ js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsfor
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return js_get_input_object(interp, jsform, fs);
+			return js_get_input_object(interp, jsform, num);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -534,7 +541,7 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	index = atol(string);
@@ -543,10 +550,13 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	foreach (fc, form->items) {
 		counter++;
 		if (counter == index) {
-			struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+			if (fs) {
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
@@ -575,16 +585,19 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	SEE_SET_UNDEFINED(res);
 	if (argc < 1)
 		return;
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 
 	foreach (fc, form->items) {
 		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
-			struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+			if (fs) {
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
@@ -613,20 +626,21 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_namedItem) {
 		SEE_SET_OBJECT(res, jsfe->namedItem);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
-		struct SEE_value argv;
+		unsigned char *string = see_string_to_unsigned_char(p);
+		struct SEE_value arg0;
+		struct SEE_value *argv[1] = { &arg0 };
 
 		if (!string) {
 			SEE_SET_UNDEFINED(res);
 			return;
 		}
-		SEE_SET_STRING(&argv, p);
-		if (string[0] >= '0' && string[1] <= '9') {
+		SEE_SET_STRING(&arg0, p);
+		if (string[0] >= '0' && string[0] <= '9') {
 			js_form_elems_item(interp, jsfe->item, o, 1,
-			 (struct SEE_value **)&argv, res);
+					   argv, res);
 		} else {
 			js_form_elems_namedItem(interp, jsfe->namedItem, o, 1,
-			 (struct SEE_value **)&argv, res);
+						argv, res);
 		}
 		mem_free(string);
 	}
@@ -661,7 +675,7 @@ js_forms_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	index = atol(string);
@@ -698,7 +712,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string)
 		return;
 	foreach (form, document->forms) {
@@ -733,21 +747,19 @@ forms_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_namedItem) {
 		SEE_SET_OBJECT(res, fo->namedItem);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
-		struct SEE_value argv;
-		struct SEE_value *argv1 = &argv;
+		unsigned char *string = see_string_to_unsigned_char(p);
+		struct SEE_value arg0;
+		struct SEE_value *argv[1] = { &arg0 };
 
 		if (!string) {
 			SEE_SET_UNDEFINED(res);
 			return;
 		}
-		SEE_SET_STRING(argv1, p);
+		SEE_SET_STRING(&arg0, p);
 		if (string[0] >= '0' && string[0] <= '9') {
-			js_forms_item(interp, fo->item, o, 1,
-			 (struct SEE_value **)&argv1, res);
+			js_forms_item(interp, fo->item, o, 1, argv, res);
 		} else {
-			js_forms_namedItem(interp, fo->namedItem, o, 1,
-			 (struct SEE_value **)&argv1, res);
+			js_forms_namedItem(interp, fo->namedItem, o, 1, argv, res);
 		}
 		mem_free(string);
 	}
@@ -831,7 +843,7 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_reset) {
 		SEE_SET_OBJECT(res, js_form->reset);
 	} else {
-		unsigned char *string = SEE_string_to_unsigned_char(p);
+		unsigned char *string = see_string_to_unsigned_char(p);
 		struct form_control *fc;
 
 		if (!string)
@@ -839,13 +851,16 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 
 		foreach(fc, form->items) {
 			struct js_input *fcobj = NULL;
+			struct form_state *fs;
 
 			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
 				continue;
-			fcobj = js_get_form_control_object(interp, js_form, fc->type, find_form_state(doc_view, fc));
+			fs = find_form_state(doc_view, fc);
+			if (fs) {
+				fcobj = js_get_form_control_object(interp, js_form, fc->type, fc->g_ctrl_num);
 
-			if (fcobj) {
-				SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
+				if (fcobj)
+					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
 			}
 			break;
 		}
@@ -863,7 +878,7 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct js_form *js_form = (struct js_form *)o;
 	struct form_view *fv = js_form->fv;
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
-	unsigned char *string = SEE_value_to_unsigned_char(interp, val);
+	unsigned char *string = see_value_to_unsigned_char(interp, val);
 
 	if (!string)
 		return;

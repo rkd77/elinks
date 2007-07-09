@@ -145,15 +145,6 @@ check_whether_file_exists(unsigned char *name)
 	return -1;
 }
 
-static int
-check_uri_file(const unsigned char *name)
-{
-	/* Check POST_CHAR etc ... */
-	static const unsigned char chars[] = POST_CHAR_S "#?";
-
-	return strcspn(name, chars);
-}
-
 /* Encodes URIs without encoding stuff like fragments and query separators. */
 static void
 encode_file_uri_string(struct string *string, unsigned char *uristring)
@@ -240,7 +231,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 		return URI_ERRNO_OK;
 
 	} else if (uri->protocol == PROTOCOL_FILE) {
-		int datalen = check_uri_file(prefix_end);
+		int datalen = strcspn(prefix_end, "#" POST_CHAR_S);
 		unsigned char *frag_or_post = prefix_end + datalen;
 
 		/* Extract the fragment part. */

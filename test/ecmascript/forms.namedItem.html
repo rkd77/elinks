@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<TITLE>forms.namedItem variations</TITLE>
+</HEAD>
+<BODY>
+<FORM name="f" action="#">
+<P><BUTTON name="b" type="button">dummy</BUTTON></P>
+</FORM>
+<SCRIPT type="application/ecmascript">
+function stringify(val)
+{
+	var str = typeof(val);
+	var first = true;
+	if (str != "object" || val === null) {
+		str += " " + val;
+	} else {
+		str += " {";
+		for (var prop in val) {
+			if (!first) str += ", ";
+			first = false;
+			str += prop;
+		}
+		str += "}";
+	}
+	return str;
+}
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: object {b, nodeName, nodeValue, nodeType, parentNode, childNodes...
+// ELinks 0.11.3: object {action, elements, encoding, length, method, name, target}
+window.alert("document.forms.f=" + stringify(document.forms.f));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: object {b, nodeName, nodeValue, nodeType, parentNode, childNodes...
+// ELinks 0.11.3: object {action, elements, encoding, length, method, name, target}
+window.alert("document.forms[\"f\"]=" + stringify(document.forms["f"]));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: object {b, nodeName, nodeValue, nodeType, parentNode, childNodes...
+// ELinks 0.11.3: TypeError: document.forms.namedItem is not a function
+window.alert("document.forms.namedItem(\"f\")=" + stringify(document.forms.namedItem("f")));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: undefined undefined
+// ELinks 0.11.3: object null
+window.alert("document.forms.notfound=" + stringify(document.forms.notfound));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: undefined undefined
+// ELinks 0.11.3: object null
+window.alert("document.forms[\"notfound\"]=" + stringify(document.forms["notfound"]));
+</SCRIPT>
+<SCRIPT type="application/ecmascript">
+// iceweasel 2.0+dfsg-1: object null
+// ELinks 0.11.3: TypeError: document.forms.namedItem is not a function
+window.alert("document.forms.namedItem(\"notfound\")=" + stringify(document.forms.namedItem("notfound")));
+</SCRIPT>
+</BODY>
+</HTML>

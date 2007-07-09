@@ -150,19 +150,40 @@ selected_item(struct terminal *term, void *item_, void *ses_)
 }
 
 static void
-init_form_state(struct form_control *fc, struct form_state *fs)
+init_form_state(struct document_view *doc_view,
+		struct form_control *fc, struct form_state *fs)
 {
+	struct terminal *term;
+	int doc_cp, viewer_cp;
+
 	assert(fc && fs);
 	if_assert_failed return;
+
+	doc_cp = doc_view->document->cp;
+	term = doc_view->session->tab->term;
+	viewer_cp = get_opt_codepage_tree(term->spec, "charset");
 
 	mem_free_set(&fs->value, NULL);
 
 	switch (fc->type) {
 		case FC_TEXT:
 		case FC_PASSWORD:
+#ifdef CONFIG_FORMHIST
+			fs->value = null_or_stracpy(
+				get_form_history_value(
+					fc->form->action, fc->name));
+#endif /* CONFIG_FORMHIST */
+			/* fall through */
 		case FC_TEXTAREA:
-			fs->value = stracpy(fc->default_value);
-			fs->state = strlen(fc->default_value);
+			if (fs->value == NULL) {
+				fs->value = convert_string(
+					get_translation_table(doc_cp, viewer_cp),
+					fc->default_value,
+					strlen(fc->default_value),
+					viewer_cp, CSM_FORM,
+					&fs->state, NULL, NULL);
+			}
+			fs->state = fs->value ? strlen(fs->value) : 0;
 #ifdef CONFIG_UTF8
 			if (fc->type == FC_TEXTAREA)
 				fs->state_cell = 0;
@@ -175,7 +196,12 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 			fs->vpos = 0;
 			break;
 		case FC_SELECT:
-			fs->value = stracpy(fc->default_value);
+			fs->value = convert_string(
+				get_translation_table(doc_cp, viewer_cp),
+				fc->default_value,
+				strlen(fc->default_value),
+				viewer_cp, CSM_FORM,
+				&fs->state, NULL, NULL);
 			fs->state = fc->default_state;
 			fixup_select_state(fc, fs);
 			break;
@@ -188,6 +214,7 @@ init_form_state(struct form_control *fc, struct form_state *fs)
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
+			/* We don't want to recode hidden fields. */
 			fs->value = stracpy(fc->default_value);
 			break;
 	}
@@ -229,7 +256,7 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 	fs->g_ctrl_num = fc->g_ctrl_num;
 	fs->position = fc->position;
 	fs->type = fc->type;
-	init_form_state(fc, fs);
+	init_form_state(doc_view, fc, fs);
 
 	return fs;
 }
@@ -352,7 +379,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 
 			x = link->points[0].x + dx;
 #ifdef CONFIG_UTF8
-			if (term->utf8) goto utf8;
+			if (term->utf8_cp) goto utf8;
 #endif /* CONFIG_UTF8 */
 			int_bounds(&fs->vpos, fs->state - fc->size + 1, fs->state);
 			len = strlen(fs->value) - fs->vpos;
@@ -508,7 +535,7 @@ drew_char:
 				/* XXX: when can this happen? --pasky */
 				s = "";
 #ifdef CONFIG_UTF8
-			if (term->utf8) goto utf8_select;
+			if (term->utf8_cp) goto utf8_select;
 #endif /* CONFIG_UTF8 */
 			len = s ? strlen(s) : 0;
 			for (i = 0; i < link->npoints; i++) {
@@ -577,18 +604,6 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 		struct form_control *fc = get_link_form_control(l1);
 
 		if (!fc) continue;
-#ifdef CONFIG_FORMHIST
-		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD) {
-			unsigned char *value;
-
-			assert(fc->form);
-			value = get_form_history_value(fc->form->action, fc->name);
-
-			if (value)
-				mem_free_set(&fc->default_value,
-					     stracpy(value));
-		}
-#endif /* CONFIG_FORMHIST */
 		draw_form_entry(term, doc_view, l1);
 
 	} while (l1++ < l2);
@@ -1101,7 +1116,7 @@ do_reset_form(struct document_view *doc_view, struct form *form)
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
 
-		if (fs) init_form_state(fc, fs);
+		if (fs) init_form_state(doc_view, fc, fs);
 	}
 }
 
@@ -1359,7 +1374,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
 	const unsigned char *ctext;
-	int utf8 = ses->tab->term->utf8;
+	int utf8 = ses->tab->term->utf8_cp;
 #endif /* CONFIG_UTF8 */
 
 	assert(ses && doc_view && link && ev);
@@ -1746,18 +1761,10 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 #ifdef CONFIG_UTF8
-			if (ses->tab->term->utf8) {
-				/* fs->value is in UTF-8 regardless of
-				 * the charset of the terminal.  */
-				ctext = encode_utf8(get_kbd_key(ev));
-			} else {
-				/* fs->value is in the charset of the
-				 * terminal.  */
-				int cp = get_opt_codepage_tree(ses->tab->term->spec,
-							       "charset");
-
-				ctext = u2cp_no_nbsp(get_kbd_key(ev), cp);
-			}
+			/* fs->value is in the charset of the terminal.  */
+			ctext = u2cp_no_nbsp(get_kbd_key(ev),
+					     get_opt_codepage_tree(ses->tab->term->spec,
+								   "charset"));
 			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength

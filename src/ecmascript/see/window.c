@@ -67,7 +67,7 @@ struct SEE_objectclass js_window_object_class = {
 	window_hasproperty,
 	SEE_no_delete,
 	SEE_no_defaultvalue,
-	NULL,
+	SEE_no_enumerator,
 	NULL,
 	NULL,
 	NULL
@@ -143,7 +143,7 @@ window_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_navigator) {
 		SEE_OBJECT_GET(interp, interp->Global, s_navigator, res);
 	} else {
-		unsigned char *frame = SEE_string_to_unsigned_char(p);
+		unsigned char *frame = see_string_to_unsigned_char(p);
 		struct document_view *doc_view = vs->doc_view;
 		struct js_window_object *obj;
 
@@ -164,7 +164,7 @@ window_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		struct js_window_object *win = (struct js_window_object *)o;
 		struct view_state *vs = win->vs;
 		struct document_view *doc_view = vs->doc_view;
-		unsigned char *str = SEE_value_to_unsigned_char(interp, val);
+		unsigned char *str = see_value_to_unsigned_char(interp, val);
 
 		if (str) {
 			location_goto(doc_view, str);
@@ -176,7 +176,7 @@ window_put(struct SEE_interpreter *interp, struct SEE_object *o,
 		struct view_state *vs = win->vs;
 		struct document_view *doc_view = vs->doc_view;
 		struct session *ses = doc_view->session;
-		unsigned char *stat = SEE_value_to_unsigned_char(interp, val);
+		unsigned char *stat = see_value_to_unsigned_char(interp, val);
 
 		mem_free_set(&ses->status.window_status, stat);
 		print_screen_status(ses);
@@ -217,7 +217,7 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc < 1)
 		return;
 
-	string = SEE_value_to_unsigned_char(interp, argv[0]);
+	string = see_value_to_unsigned_char(interp, argv[0]);
 	if (!string || !*string) {
 		mem_free_if(string);
 		return;
@@ -274,14 +274,14 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 #endif
 	SEE_ToString(interp, argv[0], &url_value);
-	url = SEE_string_to_unsigned_char(url_value.u.string);
+	url = see_string_to_unsigned_char(url_value.u.string);
 	if (!url) return;
 	trim_chars(url, ' ', 0);
 	if (argc > 1) {
 		struct SEE_value target_value;
 
 		SEE_ToString(interp, argv[1], &target_value);
-		frame = SEE_string_to_unsigned_char(target_value.u.string);
+		frame = see_string_to_unsigned_char(target_value.u.string);
 		if (!frame) {
 			mem_free(url);
 			return;
@@ -345,7 +345,7 @@ js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 
 	if (argc != 2) return;
 	ei = ((struct global_object *)interp)->interpreter;
-	code = SEE_value_to_unsigned_char(interp, argv[0]);
+	code = see_value_to_unsigned_char(interp, argv[0]);
 	timeout = SEE_ToInt32(interp, argv[1]);
 	ecmascript_set_timeout(ei, code, timeout);
 }

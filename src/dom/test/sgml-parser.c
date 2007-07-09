@@ -242,7 +242,8 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	return DOM_CODE_OK;
 }
 
-void die(const char *msg, ...)
+static void
+die(const char *msg, ...)
 {
 	va_list args;
 
@@ -254,6 +255,29 @@ void die(const char *msg, ...)
 	}
 
 	exit(!!NULL);
+}
+
+static int
+get_opt(char **argref, const char *name, int *argi, int argc, char *argv[],
+	const char *expect_msg)
+{
+	char *arg = *argref;
+	int namelen = strlen(name);
+
+	if (strncmp(arg, name, namelen))
+		return 0;
+
+	arg += namelen;
+	if (*arg == '=') {
+		(*argref) = arg + 1;
+	} else {
+		(*argi)++;
+		if ((*argi) >= argc)
+			die("--%s expects %s", name, expect_msg);
+		(*argref) = argv[(*argi)];
+	}
+
+	return 1;
 }
 
 int
@@ -281,54 +305,17 @@ main(int argc, char *argv[])
 
 		arg += 2;
 
-		if (!strncmp(arg, "uri", 3)) {
-			arg += 3;
-			if (*arg == '=') {
-				arg++;
-				set_dom_string(&uri, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--uri expects a URI");
-				set_dom_string(&uri, argv[i], strlen(argv[i]));
-			}
+		if (get_opt(&arg, "uri", &i, argc, argv, "a URI")) {
+			set_dom_string(&uri, arg, strlen(arg));
 
-		} else if (!strncmp(arg, "src", 3)) {
-			arg += 3;
-			if (*arg == '=') {
-				arg++;
-				set_dom_string(&source, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--src expects a string");
-				set_dom_string(&source, argv[i], strlen(argv[i]));
-			}
+		} else if (get_opt(&arg, "src", &i, argc, argv, "a string")) {
+			set_dom_string(&source, arg, strlen(arg));
 
-		} else if (!strncmp(arg, "stdin", 5)) {
-			arg += 5;
-			if (*arg == '=') {
-				arg++;
-				read_stdin = atoi(arg);
-				set_dom_string(&source, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--stdin expects a number");
-				read_stdin = atoi(argv[i]);
-			}
+		} else if (get_opt(&arg, "stdin", &i, argc, argv, "a number")) {
+			read_stdin = atoi(arg);
 			flags |= SGML_PARSER_INCREMENTAL;
 
-		} else if (!strncmp(arg, "normalize", 9)) {
-			arg += 9;
-			if (*arg == '=') {
-				arg++;
-			} else {
-				i++;
-				if (i >= argc)
-					die("--normalize expects a string");
-				arg = argv[i];
-			}
+		} else if (get_opt(&arg, "normalize", &i, argc, argv, "a string")) {
 			normalize = 1;
 			normalize_flags = parse_dom_config(arg, ',');
 			type = SGML_PARSER_TREE;

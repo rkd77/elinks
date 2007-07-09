@@ -130,7 +130,7 @@ dlg_format_buttons(struct terminal *term,
 			mw = 0;
 #ifdef CONFIG_UTF8
 			buttons_width(widget_data1, i2 - i1 + 1, NULL, &mw,
-				      term->utf8);
+				      term->utf8_cp);
 #else
 			buttons_width(widget_data1, i2 - i1 + 1, NULL, &mw);
 #endif /* CONFIG_UTF8 */
@@ -140,7 +140,7 @@ dlg_format_buttons(struct terminal *term,
 
 		mw = 0;
 #ifdef CONFIG_UTF8
-		buttons_width(widget_data1, i2 - i1, NULL, &mw, term->utf8);
+		buttons_width(widget_data1, i2 - i1, NULL, &mw, term->utf8_cp);
 #else
 		buttons_width(widget_data1, i2 - i1, NULL, &mw);
 #endif /* CONFIG_UTF8 */
@@ -156,7 +156,7 @@ dlg_format_buttons(struct terminal *term,
 
 			for (i = i1; i < i2; i++) {
 #ifdef CONFIG_UTF8
-				if (term->utf8)
+				if (term->utf8_cp)
 					set_box(&widget_data[i].box,
 						p, *y,
 						utf8_ptr2cells(widget_data[i].widget->text, NULL)
@@ -196,7 +196,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	if (!color || !shortcut_color) return EVENT_PROCESSED;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		int button_left_len = utf8_ptr2cells(BUTTON_LEFT, NULL);
 		int button_right_len = utf8_ptr2cells(BUTTON_RIGHT, NULL);
 
@@ -222,7 +222,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		     ? SCREEN_ATTR_UNDERLINE : 0;
 
 #ifdef CONFIG_UTF8
-		if (term->utf8) {
+		if (term->utf8_cp) {
 			if (hk_pos >= 0) {
 				int hk_bytes = utf8charlen(&text[hk_pos+1]);
 				int cells_to_hk = utf8_ptr2cells(text,
@@ -286,7 +286,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		}
 	}
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		int text_cells = utf8_ptr2cells(widget_data->widget->text, NULL);
 		int hk = (widget_data->widget->info.button.hotkey_pos >= 0);
 

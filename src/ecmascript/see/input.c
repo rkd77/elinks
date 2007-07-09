@@ -49,7 +49,7 @@ input_elinks_close(struct SEE_input *inp)
 }
 
 struct SEE_input *
-SEE_input_elinks(struct SEE_interpreter *interp, unsigned char *s)
+see_input_elinks(struct SEE_interpreter *interp, unsigned char *s)
 {
 	struct input_elinks *input;
 
@@ -64,7 +64,7 @@ SEE_input_elinks(struct SEE_interpreter *interp, unsigned char *s)
 }
 
 unsigned char *
-SEE_string_to_unsigned_char(struct SEE_string *S)
+see_string_to_unsigned_char(struct SEE_string *S)
 {
 	int i;
 	unsigned char *str = mem_alloc(S->length + 1);
@@ -79,12 +79,12 @@ SEE_string_to_unsigned_char(struct SEE_string *S)
 }
 
 unsigned char *
-SEE_value_to_unsigned_char(struct SEE_interpreter *interp, struct SEE_value *val)
+see_value_to_unsigned_char(struct SEE_interpreter *interp, struct SEE_value *val)
 {
 	struct SEE_value result;
 
 	SEE_ToString(interp, val, &result);
-	return SEE_string_to_unsigned_char(result.u.string);
+	return see_string_to_unsigned_char(result.u.string);
 }
 
 struct SEE_string *
@@ -127,7 +127,7 @@ append_unicode_to_SEE_string(struct SEE_interpreter *interp,
 }
 
 unicode_val_T
-SEE_string_to_unicode(struct SEE_interpreter *interp, struct SEE_string *S)
+see_string_to_unicode(struct SEE_interpreter *interp, struct SEE_string *S)
 {
 	/* This implementation ignores extra characters in the string.  */
 	if (S->length < 1) {

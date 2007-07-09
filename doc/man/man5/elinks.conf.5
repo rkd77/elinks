@@ -17,7 +17,7 @@
 .el .ne 3
 .IP "\\$1" \\$2
 ..
-.TH "ELINKS.CONF" 5 "ELinks configuration file" "2007-01-06" "ELinks configuration file"
+.TH "ELINKS.CONF" 5 "ELinks configuration file" "2007-06-21" "ELinks configuration file"
 .SH NAME
 elinks.conf \- ELinks configuration file
 .SH "SYNOPSIS"
@@ -636,7 +636,7 @@ Ignore Cache\-Control and Pragma server headers\&. When set, the document is cac
 
 .TP
 document\&.cache\&.revalidation_interval <num> (default: \-1)
-Period that a cache entry is considered to be up\-to\-date\&. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document\&.
+Period in seconds that a cache entry is considered to be up\-to\-date\&. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document\&.
 
 .TP
 document\&.codepage
@@ -1378,7 +1378,7 @@ Replacement URI for this smartprefix: %c in the string means the current URL %s 
 
 .TP
 protocol\&.rewrite\&.default_template <str> (default: "")
-Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i\&.e\&. contains no '\&.', \fI:\fR or \fI/\fR characters), and does not match any defined prefixes\&. Set the value to "" to disable use of the default template rewrite rule\&.
+Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i\&.e\&. contains no '\&.', \fI:\fR or \fI/\fR characters), and does not match any defined prefixes\&. Set the value to "" to disable use of the default template rewrite rule\&. %c in the template means the current URL %s in the template means the whole string from the goto dialog %0,%1,...,%9 mean the 1st,2nd,...,10th space\-delimited part of %s %% in the template means '%'
 
 .TP
 protocol\&.rewrite\&.enable\-dumb [0|1] (default: 1)
@@ -1438,7 +1438,7 @@ Terminal type; matters mostly only when drawing frames and dialog box borders:
 
 .TP
 terminal\&._template_\&.m11_hack [0|1] (default: 0)
-Switch fonts when drawing lines, enabling both local characters and lines working at the same time\&. Makes sense only with linux terminal\&.
+Switch fonts when drawing lines, enabling both local characters and lines working at the same time\&. \fIELinks\fR uses this option only if UTF\-8 I/O is disabled and the terminal type is Linux or FreeBSD\&.
 
 .TP
 terminal\&._template_\&.utf_8_io [0|1] (default: 0)

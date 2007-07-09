@@ -186,7 +186,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_PSEUDO, base);
 	}
 
-	code = get_attr_val(element->options, "class", html_context->options->cp);
+	code = get_attr_val(element->options, "class", html_context->doc_cp);
 	if (code && seltype <= CST_CLASS) {
 		unsigned char *class = code;
 
@@ -203,7 +203,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 	}
 	mem_free_if(code);
 
-	code = get_attr_val(element->options, "id", html_context->options->cp);
+	code = get_attr_val(element->options, "id", html_context->doc_cp);
 	if (code && seltype <= CST_ID) {
 		selector = find_css_selector(selectors, CST_ID, rel, code, -1);
 		process_found_selector(selector, CST_ID, base);
@@ -240,7 +240,7 @@ get_css_selector_for_element(struct html_context *html_context,
 	DBG("Element %.*s applied.", element->namelen, element->name);
 #endif
 
-	code = get_attr_val(element->options, "style", html_context->options->cp);
+	code = get_attr_val(element->options, "style", html_context->doc_cp);
 	if (code) {
 		struct css_selector *stylesel;
 		struct scanner scanner;

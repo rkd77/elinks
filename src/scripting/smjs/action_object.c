@@ -32,7 +32,8 @@ smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &action_fn_class, NULL));
 	if_assert_failed return;
 
-	hop = JS_GetPrivate(ctx, obj); /* from @action_fn_class */
+	hop = JS_GetInstancePrivate(ctx, obj,
+				    (JSClass *) &action_fn_class, NULL);
 
 	if (hop) mem_free(hop);
 }
@@ -55,7 +56,8 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	assert(JS_InstanceOf(ctx, fn_obj, (JSClass *) &action_fn_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	hop = JS_GetPrivate(ctx, fn_obj); /* from @action_fn_class */
+	hop = JS_GetInstancePrivate(ctx, fn_obj,
+				    (JSClass *) &action_fn_class, NULL);
 	if (!hop) return JS_TRUE;
 
 	if (argc >= 1) {

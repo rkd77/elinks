@@ -816,6 +816,27 @@ static struct option_info config_options_info[] = {
 		"_template_", 0,
 		N_("Options specific to this terminal type (according to $TERM value).")),
 
+	/* TODO: Incorporate some of the following to the option text.
+	 *
+	 * When UTF-8 I/O is disabled:
+	 * 0 (TERM_DUMB) outputs ASCII -+| characters.
+	 * 1 (TERM_VT100) switches charsets with ^N and ^O.
+	 * 2 (TERM_LINUX) outputs CP437 characters without switching
+	 *   charsets, so it works correctly only if the terminal uses
+	 *   CP437.  Can also be made CP850 and CP852 compatible with
+	 *   the restrict_852 option.
+	 * 3 (TERM_KOI8) outputs KOI8-R characters without switching
+	 *   charsets, so it works correctly only if the terminal uses
+	 *   KOI8-R and the user has selected either KOI8-R or ASCII
+	 *   in ELinks.  It is also mostly compatible with KOI8-U.
+	 * 4 (TERM_FREEBSD) outputs characters in the 0x80...0x9F
+	 *   range, which FreeBSD 4.0 (but not 5.0) treated as
+	 *   graphical.
+	 *
+	 * When UTF-8 I/O is enabled, ELinks outputs (almost) the same
+	 * characters as above but encodes them in UTF-8 and does not
+	 * switch charsets.  So, it will work in any terminal that
+	 * understands UTF-8 and has the characters in its font.  */
 	INIT_OPT_INT("terminal._template_", N_("Type"),
 		"type", 0, 0, 4, 0,
 		N_("Terminal type; matters mostly only when drawing frames and\n"
@@ -829,8 +850,8 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_BOOL("terminal._template_", N_("Switch fonts for line drawing"),
 		"m11_hack", 0, 0,
 		N_("Switch fonts when drawing lines, enabling both local characters\n"
-		"and lines working at the same time. Makes sense only with linux\n"
-		"terminal.")),
+		"and lines working at the same time. ELinks uses this option only if\n"
+		"UTF-8 I/O is disabled and the terminal type is Linux or FreeBSD.")),
 
 	/* When CONFIG_UTF8 is defined, any code that reads the "utf_8_io"
 	 * option should also check whether the "codepage" option is UTF-8,

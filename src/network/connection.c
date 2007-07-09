@@ -1078,6 +1078,10 @@ move_download(struct download *old, struct download *new,
 
 	conn->pri[new->pri]++;
 	add_to_list(conn->downloads, new);
+	/* In principle, we need to sort_queue() only if conn->pri[new->pri]
+	 * just changed from 0 to 1.  But the risk of bugs is smaller if we
+	 * sort every time.  */
+	sort_queue();
 
 	cancel_download(old, 0);
 }

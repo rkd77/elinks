@@ -25,7 +25,9 @@ smjs_globhist_item_finalize(JSContext *ctx, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
 	if_assert_failed return;
 
-	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	history_item = JS_GetInstancePrivate(ctx, obj,
+					     (JSClass *) &smjs_globhist_item_class,
+					     NULL);
 
 	if (history_item) object_unlock(history_item);
 }
@@ -60,7 +62,9 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return JS_FALSE;
 
-	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	history_item = JS_GetInstancePrivate(ctx, obj,
+					     (JSClass *) &smjs_globhist_item_class,
+					     NULL);
 
 	if (!history_item) return JS_FALSE;
 
@@ -101,8 +105,8 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 
 		return JS_TRUE;
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
@@ -123,7 +127,9 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return JS_FALSE;
 
-	history_item = JS_GetPrivate(ctx, obj); /* from @smjs_globhist_item_class */
+	history_item = JS_GetInstancePrivate(ctx, obj,
+					     (JSClass *) &smjs_globhist_item_class,
+					     NULL);
 
 	if (!history_item) return JS_FALSE;
 
@@ -157,8 +163,8 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 		return JS_TRUE;
 	}
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case.
 		 * Do the same here.  */
 		return JS_TRUE;

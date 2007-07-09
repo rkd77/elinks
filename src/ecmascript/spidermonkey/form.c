@@ -57,10 +57,24 @@ static const JSClass form_class;	     /* defined below */
 static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
+/* Indexes of reserved slots in instances of @input_class.  */
+enum {
+	/* The slot contains an integer used as an index to
+	 * view_state.form_info[].  This allows ELinks to reallocate
+	 * form_info[] without keeping track of SMJS objects that
+	 * refer to its elements.  We do not use JSCLASS_HAS_PRIVATE
+	 * for that because SMJS expects the private data to be an
+	 * aligned pointer.  */
+	JSRS_INPUT_FSINDEX,
+
+	/* Number of reserved slots.  */
+	JSRS_INPUT_COUNT
+};
+
 /* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,	/* struct form_state * */
+	JSCLASS_HAS_RESERVED_SLOTS(JSRS_INPUT_COUNT),
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -130,6 +144,27 @@ static const JSFunctionSpec input_funcs[] = {
 static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
 static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 
+
+static struct form_state *
+input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
+{
+	jsval val;
+	int n;
+	JSBool ok;
+
+	ok = JS_GetReservedSlot(ctx, obj, JSRS_INPUT_FSINDEX, &val);
+	assert(ok);
+	assert(JSVAL_IS_INT(val));
+	if_assert_failed return NULL;
+
+	n = JSVAL_TO_INT(val);
+	assert(n >= 0);
+	assert(n < vs->form_info_len);
+	if_assert_failed return NULL;
+
+	return &vs->form_info[n];
+}
+
 /* @input_class.getProperty */
 static JSBool
 input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -160,10 +195,11 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -206,6 +242,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		boolean_to_jsval(ctx, vp, fc->default_state);
 		break;
 	case JSP_INPUT_DEFAULT_VALUE:
+		/* FIXME (bug 805): convert from the charset of the document */
 		string_to_jsval(ctx, vp, fc->default_value);
 		break;
 	case JSP_INPUT_DISABLED:
@@ -266,8 +303,8 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
 		break;
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
@@ -309,10 +346,11 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -348,7 +386,8 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		fc->maxlength = atol(jsval_to_string(ctx, vp));
+		if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
+			return JS_FALSE;
 		break;
 	case JSP_INPUT_NAME:
 		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
@@ -373,7 +412,10 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 	case JSP_INPUT_SELECTED_INDEX:
 		if (fc->type == FC_SELECT) {
-			int item = atoi(jsval_to_string(ctx, vp));
+			int item;
+
+			if (!JS_ValueToInt32(ctx, *vp, &item))
+				return JS_FALSE;
 
 			if (item >= 0 && item < fc->nvalues) {
 				fs->state = item;
@@ -383,8 +425,8 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case.
 		 * Do the same here.  */
 		return JS_TRUE;
@@ -428,11 +470,12 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -480,11 +523,12 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = JS_GetPrivate(ctx, obj); /* from @input_class */
+	fs = input_get_form_state(ctx, obj, vs);
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -511,7 +555,7 @@ input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 }
 
 static JSObject *
-get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
+get_input_object(JSContext *ctx, JSObject *jsform, long number)
 {
 #if 0
 	if (fs->ecmascript_obj)
@@ -524,14 +568,13 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
-	JS_SetPrivate(ctx, jsinput, fs); /* to @input_class */
-	fs->ecmascript_obj = jsinput;
-	return fs->ecmascript_obj;
+	JS_SetReservedSlot(ctx, jsinput, JSRS_INPUT_FSINDEX, INT_TO_JSVAL(number));
+	return jsinput;;
 }
 
 
 static JSObject *
-get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, struct form_state *fs)
+get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, int number)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -545,7 +588,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, s
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return get_input_object(ctx, jsform, fs);
+			return get_input_object(ctx, jsform, (long)number);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -619,10 +662,12 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (JSVAL_IS_STRING(id)) {
@@ -675,26 +720,31 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
 		return JS_TRUE;
 
-	index = atol(jsval_to_string(ctx, &argv[0]));
-
+	if (!JS_ValueToInt32(ctx, argv[0], &index))
+		return JS_FALSE;
 	undef_to_jsval(ctx, rval);
 
 	foreach (fc, form->items) {
 		counter++;
 		if (counter == index) {
-			JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				object_to_jsval(ctx, rval, fcobj);
+			if (fs) {
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					object_to_jsval(ctx, rval, fcobj);
 			}
 			break;
 		}
@@ -729,10 +779,12 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetPrivate(ctx, parent_form); /* from @form_class */
+	form_view = JS_GetInstancePrivate(ctx, parent_form,
+					  (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
@@ -746,10 +798,13 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 
 	foreach (fc, form->items) {
 		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
-			JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, find_form_state(doc_view, fc));
+			struct form_state *fs = find_form_state(doc_view, fc);
 
-			if (fcobj) {
-				object_to_jsval(ctx, rval, fcobj);
+			if (fs) {
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+
+				if (fcobj)
+					object_to_jsval(ctx, rval, fcobj);
 			}
 			break;
 		}
@@ -830,9 +885,10 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -844,15 +900,17 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		string = jsval_to_string(ctx, &id);
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
+			struct form_state *fs;
 
 			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
 				continue;
 
-			fcobj = get_form_control_object(ctx, obj, fc->type, find_form_state(doc_view, fc));
-			if (fcobj) {
-				object_to_jsval(ctx, vp, fcobj);
-			} else {
-				undef_to_jsval(ctx, vp);
+			undef_to_jsval(ctx, vp);
+			fs = find_form_state(doc_view, fc);
+			if (fs) {
+				fcobj = get_form_control_object(ctx, obj, fc->type, fc->g_ctrl_num);
+				if (fcobj)
+					object_to_jsval(ctx, vp, fcobj);
 			}
 			break;
 		}
@@ -924,8 +982,8 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
@@ -960,9 +1018,10 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1010,8 +1069,8 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 
 	default:
-		/* Unrecognized property ID; someone is using the
-		 * object as an array.  SMJS builtin classes (e.g.
+		/* Unrecognized integer property ID; someone is using
+		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case.
 		 * Do the same here.  */
 		break;
@@ -1039,9 +1098,10 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1074,10 +1134,11 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
-	fv = JS_GetPrivate(ctx, obj); /* from @form_class */
+	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1138,6 +1199,29 @@ const JSPropertySpec forms_props[] = {
 	{ NULL }
 };
 
+/* Find the form whose name is @name, which should normally be a
+ * string (but might not be).  If found, set *rval = the DOM
+ * object.  If not found, leave *rval unchanged.  */
+static void
+find_form_by_name(JSContext *ctx, JSObject *jsdoc,
+		  struct document_view *doc_view,
+		  jsval name, jsval *rval)
+{
+	unsigned char *string = jsval_to_string(ctx, &name);
+	struct form *form;
+
+	if (!*string)
+		return;
+
+	foreach (form, doc_view->document->forms) {
+		if (form->name && !strcasecmp(string, form->name)) {
+			object_to_jsval(ctx, rval, get_form_object(ctx, jsdoc,
+					find_form_view(doc_view, form)));
+			break;
+		}
+	}
+}
+
 /* @forms_class.getProperty */
 static JSBool
 forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -1160,12 +1244,19 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
 	if (JSVAL_IS_STRING(id)) {
-		forms_namedItem(ctx, obj, 1, &id, vp);
+		/* When SMJS evaluates forms.namedItem("foo"), it first
+		 * calls forms_get_property with id = JSString "namedItem"
+		 * and *vp = JSObject JSFunction forms_namedItem.
+		 * If we don't find a form whose name is id,
+		 * we must leave *vp unchanged here, to avoid
+		 * "TypeError: forms.namedItem is not a function".  */
+		find_form_by_name(ctx, parent_doc, doc_view, id, vp);
 		return JS_TRUE;
 	}
 
@@ -1204,13 +1295,14 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 
 	if (argc != 1)
 		return JS_TRUE;
 
-	index = atol(jsval_to_string(ctx, &argv[0]));
-
+	if (!JS_ValueToInt32(ctx, argv[0], &index))
+		return JS_FALSE;
 	undef_to_jsval(ctx, rval);
 
 	foreach (fv, vs->forms) {
@@ -1232,9 +1324,6 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct document *document;
-	struct form *form;
-	unsigned char *string;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &forms_class, argv)) return JS_FALSE;
 	parent_doc = JS_GetParent(ctx, obj);
@@ -1244,27 +1333,15 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	vs = JS_GetPrivate(ctx, parent_win); /* from @window_class */
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	document = doc_view->document;
 
 	if (argc != 1)
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, rval);
-
-	string = jsval_to_string(ctx, &argv[0]);
-	if (!*string)
-		return JS_TRUE;
-
-	foreach (form, document->forms) {
-		if (form->name && !strcasecmp(string, form->name)) {
-			object_to_jsval(ctx, rval, get_form_object(ctx, parent_doc,
-					find_form_view(doc_view, form)));
-			break;
-		}
-	}
-
+	find_form_by_name(ctx, parent_doc, doc_view, argv[0], rval);
 	return JS_TRUE;
 }
 

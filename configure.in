@@ -1,6 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.13)
+dnl Autoconf 2.13 generates an incomplete config.h.in; see ELinks bug 936.
+dnl Autoconf 2.59 is installed in the computer that generates our daily
+dnl snapshots, so we need to be compatible with that.
+AC_PREREQ(2.59)
 AC_INIT(src/main/main.c)
 AC_CONFIG_AUX_DIR(config)
 
@@ -465,7 +468,7 @@ AC_DEFUN([EL_CONFIG_OPTIONAL_LIBRARY],
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 	[  --without-gpm           disable gpm (mouse) support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzdopen,
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 	[  --without-zlib          disable zlib support])
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
@@ -572,14 +575,9 @@ AC_ARG_WITH(see, [  --with-see              enable Simple Ecmascript Engine (SEE
 # to compile CVS. Also, the macro seems to be really stupid regarding searching
 # for Guile in $PATH etc. --pasky
 
-AC_MSG_CHECKING([for SEE])
-
 CONFIG_ECMASCRIPT_SEE=no
 
 if test "$enable_see" = "yes"; then
-	AC_MSG_RESULT(yes);
-	## Based on the SEE_FLAGS macro.
-
 	if test -d "$withval"; then
 		SEE_PATH="$withval:$PATH"
 	else
@@ -587,16 +585,24 @@ if test "$enable_see" = "yes"; then
 	fi
 
 	AC_PATH_PROG(SEE_CONFIG, libsee-config, no, $SEE_PATH)
-
-	## First, let's just see if we can find Guile at all.
+	AC_MSG_CHECKING([for SEE (2.0.1131 or later)])
 	if test "$SEE_CONFIG" != no; then
-		cf_result="yes";
-
+		EL_SAVE_FLAGS
 		SEE_LIBS="`$SEE_CONFIG --libs`"
 		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
-		LIBS="$SEE_LIBS $LIBS"
-		EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
-		AC_SUBST(SEE_CFLAGS)
+		CPPFLAGS="$SEE_CFLAGS $CPPFLAGS"
+		LIBS="$SEE_LIBS $LIBS_X"
+		AC_TRY_LINK([#include <see/see.h>],[#if SEE_VERSION_API_MAJOR < 2
+			#error SEE too old
+			#endif
+		], cf_result=yes, cf_result=no)
+		EL_RESTORE_FLAGS
+		if test "$cf_result" = yes; then
+			LIBS="$SEE_LIBS $LIBS"
+			EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
+			AC_SUBST(SEE_CFLAGS)
+		fi
+		AC_MSG_RESULT($cf_result)
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
 			AC_MSG_ERROR([SEE not found])
@@ -604,10 +610,7 @@ if test "$enable_see" = "yes"; then
 			AC_MSG_WARN([SEE support disabled])
 		fi
 	fi
-else
-	AC_MSG_RESULT(no);
 fi
-
 
 dnl ===================================================================
 dnl Check for SpiderMonkey, optional even if installed.
@@ -615,7 +618,7 @@ dnl ===================================================================
 
 AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
             [if test "$withval" = no; then disable_spidermonkey=yes; fi])
-AC_MSG_CHECKING([for SpiderMonkey])
+AC_MSG_CHECKING([for SpiderMonkey (1.5 RC3a or later)])
 
 EL_SAVE_FLAGS
 cf_result=no
@@ -641,7 +644,7 @@ if test -z "$disable_spidermonkey"; then
 
 					AC_TRY_LINK([#define XP_UNIX
 						     #include <jsapi.h>],
-						     [JS_GetImplementationVersion()],
+						     [JS_GetReservedSlot(NULL, NULL, 0, NULL)],
 						     cf_result=yes, cf_result=no)
 				fi
 			done

@@ -288,6 +288,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
 	JSContext *ctx;
+	JSFunction *fun;
 	jsval rval;
 	int ret;
 
@@ -295,8 +296,12 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ctx = interpreter->backend_data;
 	setup_safeguard(interpreter, ctx);
 	interpreter->ret = NULL;
-	ret = JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
-			  code->source, code->length, "", 0, &rval);
+	fun = JS_CompileFunction(ctx, NULL, "", 0, NULL, code->source,
+				 code->length, "", 0);
+	if (!fun)
+		return -1;
+
+	ret = JS_CallFunction(ctx, NULL, fun, 0, NULL, &rval);
 	if (ret == 2) { /* onClick="history.back()" */
 		return 0;
 	}

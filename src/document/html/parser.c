@@ -57,7 +57,7 @@ get_color(struct html_context *html_context, unsigned char *a,
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
 
-	at = get_attr_val(a, c, html_context->options->cp);
+	at = get_attr_val(a, c, html_context->doc_cp);
 	if (!at) return -1;
 
 	r = decode_color(at, strlen(at), rgb);
@@ -78,6 +78,8 @@ get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
 unsigned char *
 get_target(struct document_options *options, unsigned char *a)
 {
+	/* FIXME (bug 784): options->cp is the terminal charset;
+	 * should use the document charset instead.  */
 	unsigned char *v = get_attr_val(a, "target", options->cp);
 
 	if (!v) return NULL;
@@ -154,7 +156,7 @@ set_fragment_identifier(struct html_context *html_context,
 {
 	unsigned char *id_attr;
 
-	id_attr = get_attr_val(attr_name, attr, html_context->options->cp);
+	id_attr = get_attr_val(attr_name, attr, html_context->doc_cp);
 
 	if (id_attr) {
 		html_context->special_f(html_context, SP_TAG, id_attr);
@@ -235,7 +237,7 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 	if (!a) return;
 
 	options = html_context->options;
-	cp = options->cp;
+	cp = html_context->doc_cp;
 
 	accesskey = get_attr_val(a, "accesskey", cp);
 	if (accesskey) {
@@ -243,7 +245,7 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 		mem_free(accesskey);
 	}
 
-	tabindex = get_num(a, "tabindex", options->cp);
+	tabindex = get_num(a, "tabindex", html_context->doc_cp);
 	if (0 < tabindex && tabindex < 32767) {
 		format.tabindex = (tabindex & 0x7fff) << 16;
 	}
@@ -450,6 +452,8 @@ look_for_map(unsigned char **pos, unsigned char *eof, struct uri *uri,
 	if (strlcasecmp(name, namelen, "MAP", 3)) return 1;
 
 	if (uri && uri->fragment) {
+		/* FIXME (bug 784): options->cp is the terminal charset;
+		 * should use the document charset instead.  */
 		al = get_attr_val(attr, "name", options->cp);
 		if (!al) return 1;
 
@@ -548,6 +552,8 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		if (*pos >= eof) return 0;
 
 	} else if (!strlcasecmp(name, namelen, "AREA", 4)) {
+		/* FIXME (bug 784): options->cp is the terminal charset;
+		 * should use the document charset instead.  */
 		unsigned char *alt = get_attr_val(attr, "alt", options->cp);
 
 		if (alt) {
@@ -582,6 +588,8 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		return 1;
 	}
 
+	/* FIXME (bug 784): options->cp is the terminal charset;
+	 * should use the document charset instead.  */
 	href = get_url_val(attr, "href", options->cp);
 	if (!href) {
 		mem_free_if(label);
@@ -741,6 +749,9 @@ done_html_parser_state(struct html_context *html_context,
 
 }
 
+/* This function does not set html_context.doc_cp = document.cp,
+ * because it does not know the document, and because the codepage has
+ * not even been decided when it is called.  */
 struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
 		 unsigned char *start, unsigned char *end,

@@ -201,7 +201,7 @@ get_menuitem_text_width(struct terminal *term, struct menu_item *mi)
 	if (!text[0]) return 0;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8)
+	if (term->utf8_cp)
 		return L_TEXT_SPACE + utf8_ptr2cells(text, NULL)
 		       - !!mi->hotkey_pos + R_TEXT_SPACE;
 	else
@@ -383,7 +383,7 @@ draw_menu_left_text(struct terminal *term, unsigned char *text, int len,
 	if (!len) return;
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) {
+	if (term->utf8_cp) {
 		max_len = utf8_cells2bytes(text, w, NULL);
 		if (max_len <= 0)
 			return;
@@ -431,7 +431,7 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 	}
 
 #ifdef CONFIG_UTF8
-	if (term->utf8) goto utf8;
+	if (term->utf8_cp) goto utf8;
 #endif /* CONFIG_UTF8 */
 
 	for (x = 0; x - !!hk_state < w && (c = text[x]); x++) {
@@ -561,12 +561,12 @@ display_menu(struct terminal *term, struct menu *menu)
 		draw_shadow(term, &menu->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			fix_dwchar_around_box(term, &box, 1, 2, 1);
 #endif /* CONFIG_UTF8 */
 	}
 #ifdef CONFIG_UTF8
-	else if(term->utf8)
+	else if (term->utf8_cp)
 		fix_dwchar_around_box(term, &box, 1, 0, 0);
 #endif /* CONFIG_UTF8 */
 
@@ -1115,7 +1115,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 
 		textlen = strlen(text) - !!l;
 #ifdef CONFIG_UTF8
-		if (term->utf8)
+		if (term->utf8_cp)
 			screencnt = utf8_ptr2cells(text, NULL) - !!l;
 		else
 #endif /* CONFIG_UTF8 */
@@ -1125,7 +1125,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 			color = selected_color;
 			box.x = p;
 #ifdef CONFIG_UTF8
-			if (term->utf8)
+			if (term->utf8_cp)
 				box.width = L_MAINTEXT_SPACE + L_TEXT_SPACE
 					+ screencnt
 					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
@@ -1164,7 +1164,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	int_lower_bound(&menu->last, menu->first);
 	if (menu->last < menu->size - 1) {
 #ifdef CONFIG_UTF8
-		if (term->utf8) {
+		if (term->utf8_cp) {
 			struct screen_char *schar;
 
 			schar = get_char(term, term->width - R_MAINMENU_SPACE, 0);

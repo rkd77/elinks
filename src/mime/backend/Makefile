@@ -16,17 +16,8 @@ mailcap-cache.o: mailcap.c
 
 TESTDEPS = \
  common.o \
- $(top_builddir)/src/osdep/osdep.o \
- $(top_builddir)/src/osdep/stub.o \
- $(top_builddir)/src/util/conv.o \
- $(top_builddir)/src/util/error.o \
- $(top_builddir)/src/util/file.o \
- $(top_builddir)/src/util/hash.o \
- $(top_builddir)/src/util/memory.o \
- $(top_builddir)/src/util/string.o \
- $(top_builddir)/src/util/time.o
+ $(top_builddir)/src/osdep/osdep.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
-TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
 
 include $(top_srcdir)/Makefile.lib

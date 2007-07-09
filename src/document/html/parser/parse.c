@@ -273,7 +273,7 @@ int
 get_width(unsigned char *a, unsigned char *name, int limited,
           struct html_context *html_context)
 {
-	unsigned char *value = get_attr_val(a, name, html_context->options->cp);
+	unsigned char *value = get_attr_val(a, name, html_context->doc_cp);
 	unsigned char *str = value;
 	unsigned char *end;
 	int percentage = 0;
@@ -809,7 +809,7 @@ start_element(struct element_info *ei,
 {
 #define ELEMENT_RENDER_PROLOGUE \
 	ln_break(html_context, ei->linebreak); \
-	a = get_attr_val(attr, "id", html_context->options->cp); \
+	a = get_attr_val(attr, "id", html_context->doc_cp); \
 	if (a) { \
 		html_context->special_f(html_context, SP_TAG, a); \
 		mem_free(a); \
@@ -883,7 +883,7 @@ start_element(struct element_info *ei,
 		html_top->linebreak = ei->linebreak;
 
 #ifdef CONFIG_ECMASCRIPT
-		if (has_attr(attr, "onClick", html_context->options->cp)) {
+		if (has_attr(attr, "onClick", html_context->doc_cp)) {
 			/* XXX: Put something better to format.link. --pasky */
 			mem_free_set(&format.link, stracpy("javascript:void(0);"));
 			mem_free_set(&format.target, stracpy(html_context->base_target));
@@ -1093,6 +1093,8 @@ xsp:
 	}
 	if (strlcasecmp(name, namelen, "META", 4)) goto se;
 
+	/* FIXME (bug 784): options->cp is the terminal charset;
+	 * should use the document charset instead.  */
 	he = get_attr_val(attr, "charset", options->cp);
 	if (he) {
 		add_to_string(head, "Charset: ");
@@ -1100,12 +1102,16 @@ xsp:
 		mem_free(he);
 	}
 
+	/* FIXME (bug 784): options->cp is the terminal charset;
+	 * should use the document charset instead.  */
 	he = get_attr_val(attr, "http-equiv", options->cp);
 	if (!he) goto se;
 
 	add_to_string(head, he);
 	mem_free(he);
 
+	/* FIXME (bug 784): options->cp is the terminal charset;
+	 * should use the document charset instead.  */
 	c = get_attr_val(attr, "content", options->cp);
 	if (c) {
 		add_to_string(head, ": ");

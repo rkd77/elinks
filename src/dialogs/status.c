@@ -427,7 +427,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 		int titlelen, titlewidth;
 
 #ifdef CONFIG_UTF8
-		if (term->utf8) {
+		if (term->utf8_cp) {
 			titlewidth = utf8_ptr2cells(document->title, NULL);
 			titlewidth = int_min(titlewidth, maxlen);
 
@@ -452,7 +452,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 	if (title.length) {
 		int x;
 #ifdef CONFIG_UTF8
-		if (term->utf8) {
+		if (term->utf8_cp) {
 			x = int_max(term->width - 1
 				    - utf8_ptr2cells(title.source,
 						     title.source

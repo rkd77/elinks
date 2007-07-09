@@ -580,23 +580,24 @@ connect_socket(struct socket *csocket, enum connection_state state)
 		 * will fail, as we will use it only when it will be successfully
 		 * established. At least I hope that noone else will want to do
 		 * something else ;-). --pasky */
+		/* And in fact we must set it early, because of EINPROGRESS.  */
 
 #ifdef CONFIG_IPV6
 		if (family == AF_INET6) {
+			csocket->protocol_family = EL_PF_INET6;
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in6)) == 0) {
 				/* Success */
-				csocket->protocol_family = EL_PF_INET6;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}
 		} else
 #endif
 		{
+			csocket->protocol_family = EL_PF_INET;
 			if (connect(sock, (struct sockaddr *) &addr,
 					sizeof(struct sockaddr_in)) == 0) {
 				/* Success */
-				csocket->protocol_family = EL_PF_INET;
 				complete_connect_socket(csocket, NULL, NULL);
 				return;
 			}
