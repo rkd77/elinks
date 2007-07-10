@@ -17,7 +17,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (0cf15ca9d9dbc00c10f23440674fcdb832dffd75) and related
+ELinks 0.12.GIT (c862cf2bce71e414f4e438ec85dc9b29ba3a6def) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -63,8 +63,6 @@ Miscellaneous:
 
 * critical bug 756: ``assertion (cached)->object.refcount >= 0 failed''
   after HTTP proxy was changed
-* critical bugs 613, 714, 961: ``assertion list_empty(form_controls)
-  failed''
 * tabs opened by -remote now go behind existing dialogs
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
@@ -283,6 +281,8 @@ To be released as 0.11.4.
 
 * critical bug 755: fix crashes due to dangling pointers to struct
   form_state
+* critical bugs 613, 714, 961: ``assertion list_empty(form_controls)
+  failed''
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
 * major bug 956: don't reuse pointers to SpiderMonkey objects that may
   have been collected as garbage.  This fix causes bug 954.
@@ -308,6 +308,7 @@ To be released as 0.11.4.
   on SunOS
 * build bug 936: fix errors about undefined off_t (autoheader
   incompatibility)
+* build bug 959: test in configure whether -lX11 works
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
