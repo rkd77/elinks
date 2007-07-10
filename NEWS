@@ -58,6 +58,8 @@ Miscellaneous:
 
 * critical bug 756: ``assertion (cached)->object.refcount >= 0 failed''
   after HTTP proxy was changed
+* critical bugs 613, 714, 961: ``assertion list_empty(form_controls)
+  failed''
 * tabs opened by -remote now go behind existing dialogs
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
