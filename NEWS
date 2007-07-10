@@ -39,6 +39,7 @@ To be released as 0.11.4.
   on SunOS
 * build bug 936: fix errors about undefined off_t (autoheader
   incompatibility)
+* build bug 959: test in configure whether -lX11 works
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
