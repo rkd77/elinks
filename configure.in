@@ -630,12 +630,8 @@ if test -z "$disable_spidermonkey"; then
 			for spidermonkeylib in js smjs mozjs; do
 				if test "$cf_result" = no &&
 				   test -f "$spidermonkeydir$spidermonkeyinclude/jsapi.h"; then
-					SPIDERMONKEY_LIBS="-l$spidermonkeylib"
-
-					if test ! -z "$spidermonkeydir"; then
-						SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib $SPIDERMONKEY_LIBS"
-						SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
-					fi
+					SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib -l$spidermonkeylib"
+					SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
 
 					LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
@@ -886,12 +882,8 @@ if test -z "$disable_lua"; then
 		for suffix in "" 50 51; do
 			if test "$cf_result" = no && ( test -f "$luadir/include/lua.h" || \
 			   test -f "$luadir/include/lua$suffix/lua.h" ) ; then
-				LUA_LIBS="-llua$suffix -llualib$suffix -lm"
-
-				if test ! -z "$luadir"; then
-					LUA_LIBS="-L$luadir/lib $LUA_LIBS"
-					LUA_CFLAGS="-I$luadir/include -I$luadir/include/lua$suffix"
-				fi
+				LUA_LIBS="-L$luadir/lib -llua$suffix -llualib$suffix -lm"
+				LUA_CFLAGS="-I$luadir/include -I$luadir/include/lua$suffix"
 
 				LIBS="$LUA_LIBS $LIBS_X"
 				CFLAGS="$CFLAGS_X $LUA_CFLAGS"
