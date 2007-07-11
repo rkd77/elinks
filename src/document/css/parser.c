@@ -90,12 +90,23 @@ ride_on:
 	}
 }
 
+static void
+skip_css_block(struct scanner *scanner)
+{
+	if (skip_css_tokens(scanner, '{')) {
+		const int preclimit = get_css_precedence('}');
+		int depth = 1;
+		struct scanner_token *token = get_scanner_token(scanner);
 
-/* TODO: We should handle support for skipping blocks better like "{ { } }"
- * will be handled correctly. --jonas */
-#define skip_css_block(scanner) \
-	if (skip_css_tokens(scanner, '{')) skip_css_tokens(scanner, '}');
-
+		while (token && token->precedence <= preclimit && depth > 0) {
+			if (token->type == '{')
+				++depth;
+			else if (token->type == '}')
+				--depth;
+			token = get_next_scanner_token(scanner);
+		}
+	}
+}
 
 /* Atrules grammer:
  *
