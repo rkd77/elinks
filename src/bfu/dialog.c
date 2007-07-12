@@ -460,6 +460,8 @@ dialog_func(struct window *win, struct term_event *ev)
 		case EVENT_ABORT:
 			dialog_ev_abort(dlg_data);
 			break;
+		case EVENT_TEXTAREA:
+			break;
 	}
 }
 

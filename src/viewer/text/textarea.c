@@ -29,6 +29,7 @@
 #include "terminal/window.h"
 #include "util/error.h"
 #include "util/file.h"
+#include "util/lists.h"
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/action.h"
@@ -46,6 +47,18 @@ struct line_info {
 	int split_next:1;
 #endif /* CONFIG_UTF8 */
 };
+
+struct textarea_data {
+	LIST_HEAD(struct textarea_data);
+	size_t fc_maxlength;
+	struct form_state *fs;
+	struct terminal *term;
+	struct document_view *doc_view;
+	struct link *link;
+	unsigned char *fn;
+};
+
+static INIT_LIST_HEAD(textarea_list); /* struct textarea_data */
 
 /* We add two extra entries to the table so the ending info can be added
  * without reallocating. */
@@ -574,16 +587,9 @@ void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
 {
-	static size_t fc_maxlength;
-	static struct form_state *fs;
-	static struct terminal *term;
-	static struct document_view *doc_view;
-	static struct link *link;
-	static unsigned char *fn;
+	struct textarea_data *td;
 
-	assert (op == 0 || op == 1);
-	if_assert_failed return;
-	assert (op == 1 || term_);
+	assert ((op == 0 || op == 1) && term_);
 	if_assert_failed return;
 
 	if (op == 0 && get_cmd_opt_bool("anonymous")) {
@@ -593,61 +599,70 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		return;
 	}
 
-	if (op == 0 && !term_->master) {
-		info_box(term_, 0, N_("Error"), ALIGN_CENTER,
-			 N_("You can do this only on the master terminal"));
-		return;
-	}
-
-	if (op == 0 && !textarea_editor) {
+	if (op == 0) {
 		unsigned char *ed = get_opt_str("document.browse.forms.editor");
 		unsigned char *ex;
 
-		fn = save_textarea_file(fs_->value);
-		if (!fn) return;
+		td = mem_calloc(1, sizeof(*td));
+		if (!td) return;
+
+		td->fn = save_textarea_file(fs_->value);
+		if (!td->fn) {
+			mem_free(td);
+			return;
+		}
 
 		if (!ed || !*ed) {
 			ed = getenv("EDITOR");
 			if (!ed || !*ed) ed = "vi";
 		}
 
-		ex = straconcat(ed, " ", fn, (unsigned char *) NULL);
+		ex = straconcat(ed, " ", td->fn, (unsigned char *) NULL);
 		if (!ex) {
-			unlink(fn);
+			unlink(td->fn);
 			goto free_and_return;
 		}
 
-		if (fs_) fs = fs_;
-		if (doc_view_) doc_view = doc_view_;
+		if (fs_) td->fs = fs_;
+		if (doc_view_) td->doc_view = doc_view_;
 		if (link_) {
-			link = link_;
-			fc_maxlength = get_link_form_control(link_)->maxlength;
+			td->link = link_;
+			td->fc_maxlength = get_link_form_control(link_)->maxlength;
 		}
-		if (term_) term = term_;
+		if (term_) td->term = term_;
+		add_to_list(textarea_list, td);
 
-		exec_on_terminal(term, ex, "", 1);
+		exec_on_terminal(td->term, ex, "", 1);
 		mem_free(ex);
 
-		textarea_editor = 1;
+		textarea_editor++;
+		return;
 
-	} else if (op == 1 && fs) {
+	} else if (op == 1) {
+		int found = 0;
 		struct string file;
 
-		if (!init_string(&file)
-		     || !add_file_to_string(&file, fn)) {
-			textarea_editor = 0;
-			goto free_and_return;
+		foreach (td, textarea_list) {
+			if (td->term == term_) {
+				found = 1;
+				break;
+			}
 		}
+		if (!found) return;
 
-		if (file.length > fc_maxlength) {
-			file.source[fc_maxlength] = '\0';
+		if (!td->fs || !init_string(&file)
+		    || !add_file_to_string(&file, td->fn))
+			goto end;
+
+		if (file.length > td->fc_maxlength) {
+			file.source[td->fc_maxlength] = '\0';
 			/* Casting size_t fc_maxlength to unsigned int
 			 * and formatting it with "%u" is safe,
 			 * because fc_maxlength is smaller than
 			 * file.length, which is an int.  */
-			info_box(term, MSGBOX_FREE_TEXT, N_("Warning"),
+			info_box(td->term, MSGBOX_FREE_TEXT, N_("Warning"),
 			         ALIGN_CENTER,
-			         msg_text(term,
+			         msg_text(td->term,
 				          N_("You have exceeded the textarea's"
 				             " size limit: your input is %d"
 					     " bytes, but the maximum is %u"
@@ -656,27 +671,24 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 					     " but you can still recover the"
 					     " text that you entered from"
 					     " this file: %s"), file.length,
-				             (unsigned int) fc_maxlength, fn));
+				             (unsigned int) td->fc_maxlength, td->fn));
 		} else {
-			unlink(fn);
+			unlink(td->fn);
 		}
 
-		mem_free(fs->value);
-		fs->value = file.source;
-		fs->state = file.length;
+		mem_free(td->fs->value);
+		td->fs->value = file.source;
+		td->fs->state = file.length;
 
-		if (doc_view && link)
-			draw_form_entry(term, doc_view, link);
-
-		textarea_editor = 0;
-		goto free_and_return;
+		if (td->doc_view && td->link)
+			draw_form_entry(td->term, td->doc_view, td->link);
 	}
-
-	return;
-
+end:
+	del_from_list(td);
+	textarea_editor--;
 free_and_return:
-	mem_free_set(&fn, NULL);
-	fs = NULL;
+	mem_free(td->fn);
+	mem_free(td);
 }
 
 /* menu_func_T */

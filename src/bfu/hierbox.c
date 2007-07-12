@@ -281,6 +281,7 @@ hierbox_dialog_event_handler(struct dialog_data *dlg_data)
 		case EVENT_RESIZE:
 		case EVENT_REDRAW:
 		case EVENT_MOUSE:
+		case EVENT_TEXTAREA:
 			return EVENT_NOT_PROCESSED;
 
 		case EVENT_ABORT:

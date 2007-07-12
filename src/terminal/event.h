@@ -19,6 +19,7 @@ enum term_event_type {
 	EVENT_REDRAW,
 	EVENT_RESIZE,
 	EVENT_ABORT,
+	EVENT_TEXTAREA,
 };
 
 struct term_event {
@@ -51,6 +52,9 @@ struct interlink_event {
 		/* EVENT_INIT, EVENT_RESIZE, EVENT_REDRAW */
 #define interlink_event_size term_event_size
 		struct interlink_event_size size;
+
+		/* EVENT_TEXTAREA */
+		struct terminal *textarea;
 	} info;
 };
 

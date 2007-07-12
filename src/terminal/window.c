@@ -151,6 +151,7 @@ empty_window_handler(struct window *win, struct term_event *ev)
 			return;
 		case EVENT_KBD:
 		case EVENT_MOUSE:
+		case EVENT_TEXTAREA:
 			/* Silence compiler warnings */
 			break;
 	}
