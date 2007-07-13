@@ -447,7 +447,7 @@ invalid_utf8_start_byte:
 		return 0;
 	case EVENT_TEXTAREA:
 		if (textarea_editor)
-			textarea_edit(1, ilev->info.textarea, NULL, NULL, NULL);
+			textarea_edit(1, term, NULL, NULL, NULL);
 		break;
 
 	default:

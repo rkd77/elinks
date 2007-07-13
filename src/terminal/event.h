@@ -59,9 +59,6 @@ struct interlink_event {
 		/* ::EVENT_INIT, ::EVENT_RESIZE, ::EVENT_REDRAW */
 #define interlink_event_size term_event_size
 		struct interlink_event_size size;
-
-		/* EVENT_TEXTAREA */
-		struct terminal *textarea;
 	} info;
 };
 
