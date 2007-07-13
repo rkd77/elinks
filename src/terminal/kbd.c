@@ -40,8 +40,6 @@
 /* TODO: move stuff from here to itrm.{c,h} and mouse.{c,h} */
 
 struct itrm *ditrm = NULL;
-static struct terminal *slave_term;
-static unsigned char *term_addr = (unsigned char *)&slave_term;
 
 static void free_itrm(struct itrm *);
 static void in_kbd(struct itrm *);
@@ -359,7 +357,6 @@ unblock_itrm_x(void *h)
 
 	memset(&ev, 0, sizeof(ev));
 	ev.ev = EVENT_TEXTAREA;
-	ev.info.textarea = slave_term;
 	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
@@ -554,9 +551,6 @@ has_nul_byte:
 	}
 
 	RD(fg);
-	for (i = 0; i < sizeof(slave_term); i++) {
-		RD(term_addr[i]);
-	}
 
 	if (!init_string(&path)) goto free_and_return;
 
