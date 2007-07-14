@@ -34,6 +34,7 @@
 #include "mime/mime.h"
 #include "osdep/osdep.h"		/* For exe() */
 #include "session/session.h"
+#include "terminal/terminal.h"
 #include "util/file.h"
 #include "util/hash.h"
 #include "util/lists.h"
@@ -633,7 +634,7 @@ get_mailcap_entry(unsigned char *type)
 }
 
 static struct mime_handler *
-get_mime_handler_mailcap(unsigned char *type, int options)
+get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 {
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;

@@ -188,10 +188,11 @@ get_mime_handler_option(struct option *type_opt, int xwin)
 }
 
 static struct mime_handler *
-get_mime_handler_default(unsigned char *type, int have_x)
+get_mime_handler_default(unsigned char *type, struct terminal *term)
 {
 	struct option *type_opt = get_mime_type_option(type);
 	struct option *handler_opt;
+	int have_x = term ? (term->environment & ENV_XWIN) : 1;
 
 	if (!type_opt) return NULL;
 
