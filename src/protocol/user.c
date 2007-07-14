@@ -300,7 +300,7 @@ user_protocol_handler(struct session *ses, struct uri *uri)
 	if (prog) {
 		unsigned char *delete = empty_string_or_(filename);
 
-		exec_on_terminal(ses->tab->term, prog, delete, 1);
+		exec_on_terminal(ses->tab->term, prog, delete, TERM_EXEC_FG);
 		mem_free(prog);
 
 	} else if (filename) {
