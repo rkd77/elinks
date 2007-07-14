@@ -110,7 +110,7 @@ enum addr_type {
  * It returns 0 on error (in this case, there's no need
  * to free anything).
  * It returns 1 on success. */
-static int
+int
 get_sun_path(struct string *sun_path)
 {
 	assert(sun_path);
