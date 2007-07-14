@@ -231,7 +231,8 @@ static int
 l_execute(LS)
 {
 	if (lua_isstring(S, 1)) {
-		exec_on_terminal(lua_ses->tab->term, (unsigned char *) lua_tostring(S, 1), "", 0);
+		exec_on_terminal(lua_ses->tab->term, (unsigned char *) lua_tostring(S, 1), "",
+				 TERM_EXEC_BG);
 		lua_pushnumber(S, 0);
 		return 1;
 	}
@@ -795,7 +796,7 @@ handle_ret_run(struct session *ses)
 	unsigned char *cmd = (unsigned char *) lua_tostring(L, -1);
 
 	if (cmd) {
-		exec_on_terminal(ses->tab->term, cmd, "", 1);
+		exec_on_terminal(ses->tab->term, cmd, "", TERM_EXEC_FG);
 		return;
 	}
 

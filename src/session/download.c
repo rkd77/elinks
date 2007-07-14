@@ -388,7 +388,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
 				 file_download->file,
-				 !!file_download->block);
+				 file_download->block ? TERM_EXEC_FG : TERM_EXEC_BG);
 			file_download->delete = 0;
 			abort_download_and_beep(file_download, term);
 		}
@@ -1118,7 +1118,8 @@ tp_open(struct type_query *type_query)
 				read_from_popen(type_query->ses, handler, NULL);
 			else
 				exec_on_terminal(type_query->ses->tab->term,
-					 handler, "", !!type_query->block);
+					 handler, "",
+					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
 			mem_free(handler);
 		}
 

@@ -517,7 +517,7 @@ in_sock(struct itrm *itrm)
 	struct string path;
 	struct string delete;
 	char ch;
-	int fg;
+	int fg; /* enum term_exec */
 	ssize_t bytes_read, i, p;
 	unsigned char buf[ITRM_OUT_QUEUE_SIZE];
 
@@ -590,7 +590,7 @@ has_nul_byte:
 		unsigned char *param;
 		int path_len, del_len, param_len;
 
-		if (is_blocked() && fg) {
+		if (is_blocked() && fg != TERM_EXEC_BG) {
 			if (*delete.source) unlink(delete.source);
 			goto nasty_thing;
 		}
@@ -606,20 +606,20 @@ has_nul_byte:
 		memcpy(param + 1, path.source, path_len + 1);
 		memcpy(param + 1 + path_len + 1, delete.source, del_len + 1);
 
-		if (fg == 1) block_itrm();
+		if (fg == TERM_EXEC_FG) block_itrm();
 
 		blockh = start_thread((void (*)(void *, int)) exec_thread,
 				      param, param_len);
 		mem_free(param);
 
 		if (blockh == -1) {
-			if (fg == 1)
+			if (fg == TERM_EXEC_FG)
 				unblock_itrm();
 
 			goto nasty_thing;
 		}
 
-		if (fg == 1) {
+		if (fg == TERM_EXEC_FG) {
 			set_handlers(blockh, (select_handler_T) unblock_itrm_x,
 				     NULL, (select_handler_T) unblock_itrm_x,
 				     (void *) (long) blockh);
