@@ -25,6 +25,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "main/timer.h"
+#include "mime/backend/mailcap.h"
 #include "osdep/ascii.h"
 #include "osdep/osdep.h"
 #include "terminal/hardio.h"
@@ -560,6 +561,12 @@ has_nul_byte:
 		add_char_to_string(&path, ch);
 	}
 
+	if (fg == 3) {
+		/* Mailcap */
+		get_slave_mailcap(path.source);
+		goto next_round;
+	}
+
 	if (!init_string(&delete)) {
 		done_string(&path);
 		goto free_and_return;
@@ -622,8 +629,9 @@ has_nul_byte:
 	}
 
 nasty_thing:
-	done_string(&path);
 	done_string(&delete);
+next_round:
+	done_string(&path);
 	assert(ITRM_OUT_QUEUE_SIZE - p > 0);
 	memmove(buf, buf + p, ITRM_OUT_QUEUE_SIZE - p);
 	bytes_read -= p;

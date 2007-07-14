@@ -1,3 +1,4 @@
+#define _GNU_SOURCE /* stpcpy */
 /* RFC1524 (mailcap file) implementation */
 
 /* This file contains various functions for implementing a fair subset of
@@ -34,12 +35,18 @@
 #include "mime/mime.h"
 #include "osdep/osdep.h"		/* For exe() */
 #include "session/session.h"
+#include "terminal/hardio.h"
 #include "terminal/terminal.h"
 #include "util/file.h"
 #include "util/hash.h"
 #include "util/lists.h"
 #include "util/memory.h"
+#include "util/sem.h"
 #include "util/string.h"
+
+extern int master_sem;
+extern int slave_sem;
+extern unsigned char *shared_mem;
 
 struct mailcap_hash_item {
 	/* The entries associated with the type */
@@ -634,7 +641,7 @@ get_mailcap_entry(unsigned char *type)
 }
 
 static struct mime_handler *
-get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
+get_mime_handler_mailcap_common(unsigned char *type)
 {
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;
@@ -661,6 +668,87 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	return handler;
 }
 
+static struct mime_handler *
+get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
+{
+	struct mime_handler *handler;
+	unsigned char *desc, *data;
+	int block, len;
+
+	if (!term || term->master)
+		return get_mime_handler_mailcap_common(type);
+
+	len = strlen(type) + 1;
+	data = fmem_alloc(2 + len);
+	if (!data)
+		return NULL;
+	data[0] = 0;
+	data[1] = 3; /* Mailcap */
+	memcpy(data + 2, type, len);
+	hard_write(term->fdout, data, len + 2);
+	fmem_free(data);
+
+	sem_signal(slave_sem);
+	sem_wait(master_sem);
+	if (!shared_mem || !*shared_mem)
+		return NULL;
+	desc = strchr(shared_mem, '\0') + 1;
+	block = (shared_mem[4095] > 0);
+	handler = init_mime_handler(shared_mem, desc, mailcap_mime_module.name,
+				    get_mailcap_ask(), block);
+	if (handler) handler->copiousoutput = shared_mem[4095] & 1;
+	return handler;
+}
+
+/* Called by slaves. */
+void
+get_slave_mailcap(unsigned char *type)
+{
+	sem_wait(slave_sem);
+	if (shared_mem) {
+		struct mailcap_entry *entry;
+		unsigned char *program;
+		unsigned char *current;
+		int len;
+
+		if (!get_mailcap_enable()
+	    	|| (!mailcap_map && !init_mailcap_map())) {
+			shared_mem[0] = '\0';
+			goto end;
+		}
+
+		entry = get_mailcap_entry(type);
+		if (!entry) {
+			shared_mem[0] = '\0';
+			goto end;
+		}
+
+		program = format_command(entry->command, type, entry->copiousoutput);
+		if (!program) {
+			shared_mem[0] = '\0';
+			goto end;
+		}
+		len = strlen(program) + 1;
+		if (entry->description)
+			len += strlen(entry->description);
+		len++;
+		if (len > 4095) { /* size of the shared memory block */
+			mem_free(program);
+			shared_mem[0] = '\0';
+			goto end;
+		}
+		current = stpcpy(shared_mem, program);
+		mem_free(program);
+		if (entry->description)
+			current = stpcpy(current, entry->description);
+		else
+			*++current = '\0';
+		shared_mem[4095] = (entry->needsterminal << 1) | (entry->copiousoutput << 0);
+		done_mailcap(NULL);
+	}
+end:
+	sem_signal(master_sem);
+}
 
 const struct mime_backend mailcap_mime_backend = {
 	/* get_content_type: */	NULL,
