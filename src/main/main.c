@@ -54,12 +54,17 @@
 #include "util/file.h"
 #include "util/memdebug.h"
 #include "util/memory.h"
+#include "util/sem.h"
 #include "viewer/dump/dump.h"
 #include "viewer/text/festival.h"
 #include "viewer/text/marks.h"
 
 struct program program;
 int epoll_fd;
+int master_sem = -1;
+int slave_sem = -1;
+int shared_mem_ipc = -1;
+unsigned char *shared_mem = NULL;
 
 static int ac;
 static unsigned char **av;
@@ -105,6 +110,60 @@ check_cwd(void)
 	}
 
 	mem_free_if(cwd);
+}
+
+static void
+init_master_ipc(void)
+{
+	struct string filename;
+	key_t k1, k2, k3;
+
+	if (!get_sun_path(&filename))
+		return;
+	k1 = ftok(filename.source, 1);
+	k2 = ftok(filename.source, 2);
+	k3 = ftok(filename.source, 3);
+	master_sem = sem_create(k1, 0);
+	slave_sem = sem_create(k2, 0);
+	shared_mem_ipc = shmget(k3, 4096, 0600 | IPC_CREAT | IPC_EXCL);
+	if (shared_mem_ipc == -1 && errno == EEXIST)
+		shared_mem_ipc = shmget(k3, 4096, 0600);
+	if (shared_mem_ipc >= 0) {
+		shared_mem = shmat(shared_mem_ipc, NULL, 0);
+	}
+	done_string(&filename);
+}
+
+static void
+init_slave_ipc(void)
+{
+	struct string filename;
+	key_t k1, k2, k3;
+
+	if (!get_sun_path(&filename))
+		return;
+	k1 = ftok(filename.source, 1);
+	k2 = ftok(filename.source, 2);
+	k3 = ftok(filename.source, 3);
+	master_sem = sem_open(k1);
+	slave_sem = sem_open(k2);
+	shared_mem_ipc = shmget(k3, 4096, 0600);
+	if (shared_mem_ipc >= 0) {
+		shared_mem = shmat(shared_mem_ipc, NULL, 0);
+	}
+	done_string(&filename);
+}
+
+static void
+done_ipc(void)
+{
+	if (shared_mem)
+		shmdt(shared_mem);
+	if (master_sem >= 0)
+		sem_close(master_sem);
+	if (slave_sem >= 0)
+		sem_close(slave_sem);
+	/* shared_mem_ipc will be automatically done by sem_close() */
 }
 
 static void
@@ -251,6 +310,7 @@ init(void)
 			handle_trm(get_input_handle(), get_output_handle(),
 				   fd, fd, get_ctl_handle(), info.source, info.length,
 				   remote_session_flags);
+			init_slave_ipc();
 		} else {
 			/* Setup a master terminal */
 			term = attach_terminal(get_input_handle(), get_output_handle(),
@@ -259,6 +319,8 @@ init(void)
 				ERROR(gettext("Unable to attach_terminal()."));
 				program.retval = RET_FATAL;
 				program.terminate = 1;
+			} else {
+				init_master_ipc();
 			}
 		}
 
@@ -277,6 +339,7 @@ static void
 terminate_all_subsystems(void)
 {
 	done_interlink();
+	done_ipc();
 	check_bottom_halves();
 	abort_all_downloads();
 	check_bottom_halves();
