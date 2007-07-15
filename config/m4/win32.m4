@@ -5,8 +5,7 @@ AC_DEFUN([EL_CONFIG_OS_WIN32],
 
 	EL_SAVE_FLAGS
 
-	AC_TRY_LINK([#include <stdlib.h>],
-	            [_beginthread(NULL, NULL, 0, NULL)], cf_result=yes, cf_result=no)
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>]], [[_beginthread(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
 	AC_MSG_RESULT($cf_result)
 
 	if test "$cf_result" = yes; then

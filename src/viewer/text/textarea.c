@@ -625,7 +625,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		}
 		if (term_) term = term_;
 
-		exec_on_terminal(term, ex, "", 1);
+		exec_on_terminal(term, ex, "", TERM_EXEC_FG);
 		mem_free(ex);
 
 		textarea_editor = 1;

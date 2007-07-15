@@ -1858,8 +1858,8 @@ check_html_form_hierarchy(struct part *part)
 	foreachsafe (fc, next, form_controls) {
 
 		foreach (form, document->forms) {
-			if (fc->position < form->form_num
-			    || form->form_end < fc->position)
+			if (form->form_num <= fc->position
+			    && fc->position <= form->form_end)
 				continue;
 
 			fc->form = form;

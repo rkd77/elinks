@@ -103,7 +103,7 @@ elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 	if (!*string)
 		return JS_TRUE;
 
-	exec_on_terminal(smjs_ses->tab->term, string, "", 0);
+	exec_on_terminal(smjs_ses->tab->term, string, "", TERM_EXEC_BG);
 	undef_to_jsval(ctx, rval);
 
 	return JS_TRUE;

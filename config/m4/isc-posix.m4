@@ -4,8 +4,8 @@
 # because gettext's gettext.m4 (distributed in the automake package)
 # still uses it.  Otherwise, the use in gettext.m4 makes autoheader
 # give these diagnostics:
-#   configure.in:556: AC_TRY_COMPILE was called before AC_ISC_POSIX
-#   configure.in:556: AC_TRY_RUN was called before AC_ISC_POSIX
+#   configure.in:556: AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[],[]) was called before AC_ISC_POSIX
+#   configure.in:556: AC_RUN_IFELSE([AC_LANG_SOURCE([[]])],[],[],[]) was called before AC_ISC_POSIX
 
 undefine([AC_ISC_POSIX])
 

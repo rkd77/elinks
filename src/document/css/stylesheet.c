@@ -27,7 +27,7 @@
 struct css_selector *
 find_css_selector(struct list_head *sels, enum css_selector_type type,
                   enum css_selector_relation rel,
-                  unsigned char *name, int namelen)
+                  const unsigned char *name, int namelen)
 {
 	struct css_selector *selector;
 

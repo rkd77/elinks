@@ -759,7 +759,7 @@ do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 {
 	unsigned char *command = command_;
 
-	exec_on_terminal(term, command, "", 0);
+	exec_on_terminal(term, command, "", TERM_EXEC_BG);
 	mem_free(command);
 }
 

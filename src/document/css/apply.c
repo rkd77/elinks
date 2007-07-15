@@ -27,8 +27,6 @@
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
 
-/* #define DEBUG_CSS */
-
 
 /* TODO: A way to disable CSS completely, PLUS a way to stop various property
  * groups from taking effect. (Ie. way to turn out effect of 'display: none'
@@ -122,12 +120,18 @@ examine_element(struct html_context *html_context, struct css_selector *base,
                 struct list_head *selectors, struct html_element *element)
 {
 	struct css_selector *selector;
-	unsigned char *code;
 
 #ifdef DEBUG_CSS
+	/* Cannot use list_empty() inside the arglist of DBG() because
+	 * GCC 4.1 "warning: operation on `errfile' may be undefined"
+	 * breaks the build with -Werror.  */
+	int dbg_has_leaves, dbg_has_properties;
+
  	DBG("examine_element(%p, %s, %d, %d, %p, %.*s);", html_context, base->name, seltype, rel, selectors, element->namelen, element->name);
 #define dbginfo(sel, type_, base) \
-	DBG("Matched selector %s (rel %d type %d [m%d])! Children %p !!%d, props !!%d", sel->name, sel->relation, sel->type, sel->type == type_, &sel->leaves, !list_empty(sel->leaves), !list_empty(sel->properties))
+	dbg_has_leaves = !list_empty(sel->leaves), \
+	dbg_has_properties = !list_empty(sel->properties), \
+	DBG("Matched selector %s (rel %d type %d [m%d])! Children %p !!%d, props !!%d", sel->name, sel->relation, sel->type, sel->type == type_, &sel->leaves, dbg_has_leaves, dbg_has_properties)
 #else
 #define dbginfo(sel, type, base)
 #endif
@@ -186,29 +190,27 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_PSEUDO, base);
 	}
 
-	code = get_attr_val(element->options, "class", html_context->doc_cp);
-	if (code && seltype <= CST_CLASS) {
-		unsigned char *class = code;
+	if (element->attr.class && seltype <= CST_CLASS) {
+		const unsigned char *class = element->attr.class;
 
-		while (class) {
-			unsigned char *end = strchr(class, ' ');
+		for (;;) {
+			const unsigned char *begin;
 
-			if (end)
-				*end++ = 0;
+			while (*class == ' ') ++class;
+			if (*class == '\0') break;
+			begin = class;
+			while (*class != ' ' && *class != '\0') ++class;
 
-			selector = find_css_selector(selectors, CST_CLASS, rel, class, -1);
+			selector = find_css_selector(selectors, CST_CLASS, rel,
+						     begin, class - begin);
 			process_found_selector(selector, CST_CLASS, base);
-			class = end;
 		}
 	}
-	mem_free_if(code);
 
-	code = get_attr_val(element->options, "id", html_context->doc_cp);
-	if (code && seltype <= CST_ID) {
-		selector = find_css_selector(selectors, CST_ID, rel, code, -1);
+	if (element->attr.id && seltype <= CST_ID) {
+		selector = find_css_selector(selectors, CST_ID, rel, element->attr.id, -1);
 		process_found_selector(selector, CST_ID, base);
 	}
-	if (code) mem_free(code);
 
 #undef process_found_selector
 #undef dbginfo

@@ -90,6 +90,6 @@ open_new_window(struct terminal *term, unsigned char *exe_name,
 			     (unsigned char *) NULL);
 	if (!command) return;
 
-	exec_on_terminal(term, command, "", 2);
+	exec_on_terminal(term, command, "", TERM_EXEC_NEWWIN);
 	mem_free(command);
 }

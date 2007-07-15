@@ -125,7 +125,7 @@ AC_DEFUN([EL_CHECK_CODE],
 [
 	$2=yes;
 	AC_MSG_CHECKING([for $1])
-	AC_TRY_COMPILE([$3], [$4], [EL_DEFINE($2, [$1])], $2=no)
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[$3]], [[$4]])],[EL_DEFINE($2, [$1])],[$2=no])
 	AC_MSG_RESULT([$]$2)
 ])
 
@@ -134,10 +134,9 @@ AC_DEFUN([EL_CHECK_TYPE],
 [
         EL_CHECK_TYPE_LOCAL=yes;
         AC_MSG_CHECKING([for $1])
-        AC_TRY_COMPILE([
+        AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/types.h>
-        ], [int a = sizeof($1);],
-        [EL_CHECK_TYPE_LOCAL=yes], [EL_CHECK_TYPE_LOCAL=no])
+        ]], [[int a = sizeof($1);]])],[EL_CHECK_TYPE_LOCAL=yes],[EL_CHECK_TYPE_LOCAL=no])
         AC_MSG_RESULT([$]EL_CHECK_TYPE_LOCAL)
         if test "x[$]EL_CHECK_TYPE_LOCAL" != "xyes"; then
                 AC_DEFINE($1, $2, [Define to $2 if <sys/types.h> doesn't define.])

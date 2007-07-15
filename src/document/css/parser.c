@@ -21,8 +21,6 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-/* #define DEBUG_CSS */
-
 
 void
 css_parse_properties(struct list_head *props, struct scanner *scanner)
@@ -172,7 +170,20 @@ struct selector_pkg {
 	struct css_selector *selector;
 };
 
-struct css_selector *
+/** Move a CSS selector and its leaves into a new list.  If a similar
+ * selector already exists in the list, merge them.
+ *
+ * \param sels
+ *   The list to which \a selector should be moved.  Must not be NULL.
+ * \param selector
+ *   The selector that should be moved.  Must not be NULL.  If it is
+ *   already in some list, this function removes it from there.
+ * \param watch
+ *   This function updates \a *watch if it merges that selector into
+ *   another one.  \a watch must not be NULL but \a *watch may be.
+ *
+ * \return \a selector or the one into which it was merged.  */
+static struct css_selector *
 reparent_selector(struct list_head *sels, struct css_selector *selector,
                   struct css_selector **watch)
 {
@@ -481,11 +492,17 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 	/* Mirror the properties to all the selectors. */
 	foreach (pkg, selectors) {
 #ifdef DEBUG_CSS
+		/* Cannot use list_empty() inside the arglist of DBG()
+		 * because GCC 4.1 "warning: operation on `errfile'
+		 * may be undefined" breaks the build with -Werror.  */
+		int dbg_has_properties = !list_empty(properties);
+		int dbg_has_leaves = !list_empty(pkg->selector->leaves);
+
 		DBG("Binding properties (!!%d) to selector %s (type %d, relation %d, children %d)",
-			!list_empty(properties),
+			dbg_has_properties,
 			pkg->selector->name, pkg->selector->type,
 			pkg->selector->relation,
-			!list_empty(pkg->selector->leaves));
+			dbg_has_leaves);
 #endif
 		add_selector_properties(pkg->selector, &properties);
 	}

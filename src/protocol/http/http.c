@@ -193,7 +193,7 @@ static struct option_info http_options[] = {
 		"is sent to HTTP server when a document is requested. The 'textmode'\n"
 		"token in the first field is our silent attempt to establish this as\n"
 		"a standard for new textmode user agents, so that the webmasters can\n"
-		"have just a single uniform test for these if they are ie. pushing\n"
+		"have just a single uniform test for these if they are e.g. pushing\n"
 		"some lite version to them automagically.\n"
 		"%v in the string means ELinks version\n"
 		"%s in the string means system identification\n"

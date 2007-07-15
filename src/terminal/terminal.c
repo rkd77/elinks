@@ -179,7 +179,7 @@ exec_thread(unsigned char *path, int p)
 	int plen = strlen(path + 1) + 2;
 
 #if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
-	if (path[0] == 2) setpgid(0, 0);
+	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
 #endif
 	exe(path + 1);
 	if (path[plen]) unlink(path + plen);
@@ -210,7 +210,7 @@ static void
 exec_on_master_terminal(struct terminal *term,
 			unsigned char *path, int plen,
 		 	unsigned char *delete, int dlen,
-			int fg)
+			enum term_exec fg)
 {
 	int blockh;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
@@ -222,17 +222,17 @@ exec_on_master_terminal(struct terminal *term,
 	memcpy(param + 1, path, plen + 1);
 	memcpy(param + 1 + plen + 1, delete, dlen + 1);
 
-	if (fg == 1) block_itrm();
+	if (fg == TERM_EXEC_FG) block_itrm();
 
 	blockh = start_thread((void (*)(void *, int)) exec_thread,
 			      param, param_size);
 	fmem_free(param);
 	if (blockh == -1) {
-		if (fg == 1) unblock_itrm();
+		if (fg == TERM_EXEC_FG) unblock_itrm();
 		return;
 	}
 
-	if (fg == 1) {
+	if (fg == TERM_EXEC_FG) {
 		term->blocked = blockh;
 		set_handlers(blockh,
 			     (select_handler_T) unblock_terminal,
@@ -253,7 +253,7 @@ static void
 exec_on_slave_terminal( struct terminal *term,
 		 	unsigned char *path, int plen,
 		 	unsigned char *delete, int dlen,
-			int fg)
+			enum term_exec fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
 	unsigned char *data = fmem_alloc(data_size);
@@ -270,7 +270,7 @@ exec_on_slave_terminal( struct terminal *term,
 
 void
 exec_on_terminal(struct terminal *term, unsigned char *path,
-		 unsigned char *delete, int fg)
+		 unsigned char *delete, enum term_exec fg)
 {
 	if (path) {
 		if (!*path) return;
@@ -279,7 +279,7 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 	}
 
 #ifdef NO_FG_EXEC
-	fg = 0;
+	fg = TERM_EXEC_BG;
 #endif
 
 	if (term->master) {
@@ -288,7 +288,7 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 			return;
 		}
 
-		if (fg && is_blocked()) {
+		if (fg != TERM_EXEC_BG && is_blocked()) {
 			unlink(delete);
 			return;
 		}
@@ -314,7 +314,7 @@ exec_shell(struct terminal *term)
 
 	sh = get_shell();
 	if (sh && *sh)
-		exec_on_terminal(term, sh, "", 1);
+		exec_on_terminal(term, sh, "", TERM_EXEC_FG);
 }
 
 
@@ -328,7 +328,7 @@ do_terminal_function(struct terminal *term, unsigned char code,
 	if (!x_data) return;
 	x_data[0] = code;
 	memcpy(x_data + 1, data, data_len + 1);
-	exec_on_terminal(term, NULL, x_data, 0);
+	exec_on_terminal(term, NULL, x_data, TERM_EXEC_BG);
 	fmem_free(x_data);
 }
 

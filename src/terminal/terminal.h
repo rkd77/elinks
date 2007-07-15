@@ -175,10 +175,28 @@ void destroy_all_terminals(void);
 void exec_thread(unsigned char *, int);
 void close_handle(void *);
 
+/* Operations that can be requested with do_terminal_function().
+ * The interlink protocol passes these values as one byte in a
+ * null-terminated string, so zero cannot be used.  */
 #define TERM_FN_TITLE	1
 #define TERM_FN_RESIZE	2
 
-void exec_on_terminal(struct terminal *, unsigned char *, unsigned char *, int);
+/* How to execute a program in a terminal.  These values are used in
+ * the interlink protocol and must fit in one byte.  */
+enum term_exec {
+	/* Execute in the background.  ELinks keeps using the terminal
+	 * and the program should not use it.  */
+	TERM_EXEC_BG = 0,
+
+	/* Execute in the foreground.  The program may use the terminal.
+	 * ELinks will redraw when the program exits.  */
+	TERM_EXEC_FG = 1,
+
+	/* Execute in the background and in a new process group.  */
+	TERM_EXEC_NEWWIN = 2
+};
+
+void exec_on_terminal(struct terminal *, unsigned char *, unsigned char *, enum term_exec);
 void exec_shell(struct terminal *term);
 
 void set_terminal_title(struct terminal *, unsigned char *);

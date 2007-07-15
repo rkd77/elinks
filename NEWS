@@ -17,7 +17,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (0cf15ca9d9dbc00c10f23440674fcdb832dffd75) and related
+ELinks 0.12.GIT (98260f7970bcd940f2d2146ac7b5a980a7586082) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -71,6 +71,7 @@ Miscellaneous:
 * gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
+* bug 766: speed up CSS
 * bug 355: add documents displayed via ``What to do'' dialog to the
   global history
 * encode and decode filenames in FSP URLs
@@ -281,6 +282,8 @@ To be released as 0.11.4.
 
 * critical bug 755: fix crashes due to dangling pointers to struct
   form_state
+* critical bugs 613, 714, 961: ``assertion list_empty(form_controls)
+  failed''
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
 * major bug 956: don't reuse pointers to SpiderMonkey objects that may
   have been collected as garbage.  This fix causes bug 954.
@@ -306,6 +309,7 @@ To be released as 0.11.4.
   on SunOS
 * build bug 936: fix errors about undefined off_t (autoheader
   incompatibility)
+* build bug 959: test in configure whether -lX11 works
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
