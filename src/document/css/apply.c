@@ -27,8 +27,6 @@
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
 
-/* #define DEBUG_CSS */
-
 
 /* TODO: A way to disable CSS completely, PLUS a way to stop various property
  * groups from taking effect. (Ie. way to turn out effect of 'display: none'

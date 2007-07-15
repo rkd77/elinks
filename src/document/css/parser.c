@@ -21,8 +21,6 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-/* #define DEBUG_CSS */
-
 
 void
 css_parse_properties(struct list_head *props, struct scanner *scanner)

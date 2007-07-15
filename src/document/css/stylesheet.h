@@ -4,6 +4,8 @@
 
 #include "util/lists.h"
 
+/* #define DEBUG_CSS */
+
 /* TODO: We need a memory efficient and fast way to define how properties
  * cascade. What we are interested in is making it fast and easy to find
  * all properties we need.
