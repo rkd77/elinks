@@ -84,8 +84,8 @@ void
 set_css_selector_relation(struct css_selector *selector,
 			  enum css_selector_relation relation)
 {
-	/* Changing the relation after the selector is in a set might
-	 * require setting css_relation_set.may_contain_rel_ancestor,
+	/* Changing the relation after the selector is in a set might require
+	 * setting css_relation_set.may_contain_rel_ancestor_or_parent,
 	 * but we don't have a pointer to the set here.  */
 	assert(!css_selector_is_in_set(selector));
 	selector->relation = relation;
@@ -194,7 +194,7 @@ done_css_selector(struct css_selector *selector)
 void
 init_css_selector_set(struct css_selector_set *set)
 {
-	set->may_contain_rel_ancestor = 0;
+	set->may_contain_rel_ancestor_or_parent = 0;
 	init_list(set->list);
 }
 
@@ -213,8 +213,9 @@ add_css_selector_to_set(struct css_selector *selector,
 	assert(!css_selector_is_in_set(selector));
 
 	add_to_list(set->list, selector);
-	if (selector->relation == CSR_ANCESTOR)
-		set->may_contain_rel_ancestor = 1;
+	if (selector->relation == CSR_ANCESTOR
+	    || selector->relation == CSR_PARENT)
+		set->may_contain_rel_ancestor_or_parent = 1;
 }
 
 void

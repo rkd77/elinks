@@ -141,7 +141,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		dbginfo(sel, type, base); \
 		merge_css_selectors(base, sel); \
 		/* Ancestor matches? */ \
-		if (sel->leaves.may_contain_rel_ancestor \
+		if (sel->leaves.may_contain_rel_ancestor_or_parent \
 		    && (struct list_head *) element->next \
 		     != &html_context->stack) { \
 			struct html_element *ancestor; \

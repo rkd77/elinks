@@ -41,7 +41,7 @@
  * because all rules for the same selector have already been merged
  * into one struct css_selector.  */
 struct css_selector_set {
-	unsigned char may_contain_rel_ancestor;
+	unsigned char may_contain_rel_ancestor_or_parent;
 
 	/* Keep this away from the beginning of the structure,
 	 * so that nobody can cast the struct css_selector_set *
