@@ -127,7 +127,7 @@ init_master_ipc(void)
 	k2 = ftok(filename.source, 2);
 	k3 = ftok(filename.source, 3);
 	master_sem = sem_create(k1, 0);
-	slave_sem = sem_create(k2, 1);
+	slave_sem = sem_create(k2, 0);
 	shared_mem_ipc = shmget(k3, 4096, 0600 | IPC_CREAT | IPC_EXCL);
 	if (shared_mem_ipc == -1 && errno == EEXIST)
 		shared_mem_ipc = shmget(k3, 4096, 0600);
