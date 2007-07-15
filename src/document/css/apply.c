@@ -123,9 +123,16 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 	unsigned char *code;
 
 #ifdef DEBUG_CSS
+	/* Cannot use list_empty() inside the arglist of DBG() because
+	 * GCC 4.1 "warning: operation on `errfile' may be undefined"
+	 * breaks the build with -Werror.  */
+	int dbg_has_leaves, dbg_has_properties;
+
  	DBG("examine_element(%p, %s, %d, %d, %p, %.*s);", html_context, base->name, seltype, rel, selectors, element->namelen, element->name);
 #define dbginfo(sel, type_, base) \
-	DBG("Matched selector %s (rel %d type %d [m%d])! Children %p !!%d, props !!%d", sel->name, sel->relation, sel->type, sel->type == type_, &sel->leaves, !list_empty(sel->leaves), !list_empty(sel->properties))
+	dbg_has_leaves = !list_empty(sel->leaves), \
+	dbg_has_properties = !list_empty(sel->properties), \
+	DBG("Matched selector %s (rel %d type %d [m%d])! Children %p !!%d, props !!%d", sel->name, sel->relation, sel->type, sel->type == type_, &sel->leaves, dbg_has_leaves, dbg_has_properties)
 #else
 #define dbginfo(sel, type, base)
 #endif

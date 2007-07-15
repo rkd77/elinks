@@ -479,11 +479,17 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 	/* Mirror the properties to all the selectors. */
 	foreach (pkg, selectors) {
 #ifdef DEBUG_CSS
+		/* Cannot use list_empty() inside the arglist of DBG()
+		 * because GCC 4.1 "warning: operation on `errfile'
+		 * may be undefined" breaks the build with -Werror.  */
+		int dbg_has_properties = !list_empty(properties);
+		int dbg_has_leaves = !list_empty(pkg->selector->leaves);
+
 		DBG("Binding properties (!!%d) to selector %s (type %d, relation %d, children %d)",
-			!list_empty(properties),
+			dbg_has_properties,
 			pkg->selector->name, pkg->selector->type,
 			pkg->selector->relation,
-			!list_empty(pkg->selector->leaves));
+			dbg_has_leaves);
 #endif
 		add_selector_properties(pkg->selector, &properties);
 	}
