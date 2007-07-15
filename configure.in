@@ -201,6 +201,7 @@ AC_CHECK_HEADERS(sys/utsname.h)
 AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(locale.h pwd.h)
 AC_CHECK_HEADERS(termios.h)
+AC_CHECK_HEADERS(sys/ipc.h sys/sem.h sys/shm.h)
 
 AC_CHECK_HEADERS(sys/epoll.h, [HAVE_SYS_EPOLL_H=yes])
 

@@ -41,7 +41,9 @@
 #include "util/hash.h"
 #include "util/lists.h"
 #include "util/memory.h"
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 #include "util/sem.h"
+#endif
 #include "util/string.h"
 
 extern int master_sem;
@@ -671,11 +673,11 @@ get_mime_handler_mailcap_common(unsigned char *type)
 static struct mime_handler *
 get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 {
-	struct mime_handler *handler;
+	struct mime_handler *handler = NULL;
 	unsigned char *desc, *data;
 	int block, len;
 
-	if (!term || term->master)
+	if (!term || term->master || slave_sem == -1)
 		return get_mime_handler_mailcap_common(type);
 
 	len = strlen(type) + 1;
@@ -687,16 +689,20 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	memcpy(data + 2, type, len);
 	hard_write(term->fdout, data, len + 2);
 	fmem_free(data);
-
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
+	if (!shared_mem)
+		return NULL;
+	shared_mem[0] = '\0'; /* For unexpected death of slave. */
 	sem_signal(slave_sem);
 	sem_wait(master_sem);
-	if (!shared_mem || !*shared_mem)
+	if (!*shared_mem)
 		return NULL;
 	desc = strchr(shared_mem, '\0') + 1;
 	block = (shared_mem[4095] > 0);
 	handler = init_mime_handler(shared_mem, desc, mailcap_mime_module.name,
 				    get_mailcap_ask(), block);
 	if (handler) handler->copiousoutput = shared_mem[4095] & 1;
+#endif
 	return handler;
 }
 
@@ -704,6 +710,7 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 void
 get_slave_mailcap(unsigned char *type)
 {
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	sem_wait(slave_sem);
 	if (shared_mem) {
 		struct mailcap_entry *entry;
@@ -748,6 +755,7 @@ get_slave_mailcap(unsigned char *type)
 	}
 end:
 	sem_signal(master_sem);
+#endif
 }
 
 const struct mime_backend mailcap_mime_backend = {

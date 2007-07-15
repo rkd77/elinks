@@ -54,7 +54,9 @@
 #include "util/file.h"
 #include "util/memdebug.h"
 #include "util/memory.h"
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 #include "util/sem.h"
+#endif
 #include "viewer/dump/dump.h"
 #include "viewer/text/festival.h"
 #include "viewer/text/marks.h"
@@ -115,6 +117,7 @@ check_cwd(void)
 static void
 init_master_ipc(void)
 {
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	struct string filename;
 	key_t k1, k2, k3;
 
@@ -132,11 +135,13 @@ init_master_ipc(void)
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
 	}
 	done_string(&filename);
+#endif
 }
 
 static void
 init_slave_ipc(void)
 {
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	struct string filename;
 	key_t k1, k2, k3;
 
@@ -152,11 +157,13 @@ init_slave_ipc(void)
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
 	}
 	done_string(&filename);
+#endif
 }
 
 static void
 done_ipc(void)
 {
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	if (shared_mem)
 		shmdt(shared_mem);
 	if (master_sem >= 0)
@@ -164,6 +171,7 @@ done_ipc(void)
 	if (slave_sem >= 0)
 		sem_close(slave_sem);
 	/* shared_mem_ipc will be automatically done by sem_close() */
+#endif
 }
 
 static void

@@ -26,6 +26,7 @@ or use of these programs.
 
 #include "elinks.h"
 
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 #include "util/sem.h"
 
 extern int shared_mem_ipc;
@@ -311,3 +312,4 @@ sem_op(int id, int value)
 	semop(id, &op_op[0], 1);
 		/* err_sys("sem_op error"); */
 }
+#endif

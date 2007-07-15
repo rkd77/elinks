@@ -563,7 +563,9 @@ has_nul_byte:
 
 	if (fg == 3) {
 		/* Mailcap */
+#ifdef CONFIG_MAILCAP
 		get_slave_mailcap(path.source);
+#endif
 		goto next_round;
 	}
 
