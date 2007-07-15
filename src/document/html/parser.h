@@ -52,6 +52,16 @@ struct text_attrib {
 #endif
 	color_T image_link;
 
+#ifdef CONFIG_CSS
+	/* Bug 766: CSS speedup.  56% of CPU time was going to
+	 * get_attr_value().  Of those calls, 97% were asking for "id"
+	 * or "class".  So cache the results.  start_element() sets up
+	 * these pointers if html_context->options->css_enable;
+	 * otherwise they remain NULL. */
+	unsigned char *id;
+	unsigned char *class;
+#endif
+
 	unsigned char *select;
 	int select_disabled;
 	unsigned int tabindex;

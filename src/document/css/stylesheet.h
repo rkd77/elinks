@@ -120,7 +120,7 @@ struct css_selector *get_css_selector(struct list_head *selector_list,
 struct css_selector *find_css_selector(struct list_head *selector_list,
                                        enum css_selector_type type,
                                        enum css_selector_relation rel,
-                                       unsigned char *name, int namelen);
+                                       const unsigned char *name, int namelen);
 
 #define find_css_base_selector(stylesheet, type, rel, name, namelen) \
 	find_css_selector(&stylesheet->selectors, rel, type, name, namelen)
