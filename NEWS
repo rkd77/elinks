@@ -12,7 +12,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (c862cf2bce71e414f4e438ec85dc9b29ba3a6def) and related
+ELinks 0.12.GIT (98260f7970bcd940f2d2146ac7b5a980a7586082) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -66,6 +66,7 @@ Miscellaneous:
 * gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
+* bug 766: speed up CSS
 * bug 355: add documents displayed via ``What to do'' dialog to the
   global history
 * encode and decode filenames in FSP URLs
