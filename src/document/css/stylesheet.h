@@ -31,6 +31,29 @@
  * in particular. Is it obsolete now when we grok 'td.foo p#x>a:hover' without
  * hesitation? --pasky */
 
+/* A set of struct css_selector.  This is currently represented as a
+ * list but that may be changed later.  Therefore please try not to
+ * access the contents directly; instead define new wrapper macros.
+ *
+ * According to CSS2 section 7.1 "Cascading order", if two rules have
+ * the same weight, then the latter specified wins.  Regardless, the
+ * order of rules need not be represented in struct css_selector_set,
+ * because all rules for the same selector have already been merged
+ * into one struct css_selector.  */
+struct css_selector_set {
+#ifdef CONFIG_DEBUG
+	/* Cause a crash if struct css_selector_set * is cast to
+	 * struct list_head *.  */
+	char dummy;
+#endif
+	
+	struct list_head list;	/* -> struct css_selector */
+};
+#ifdef CONFIG_DEBUG
+# define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD(set.list) } }
+#else
+# define INIT_CSS_SELECTOR_SET(set) { { D_LIST_HEAD(set.list) } }
+#endif
 
 /* The {struct css_selector} is used for mapping elements (or nodes) in the
  * document structure to properties. See README for some hints about how the
@@ -49,7 +72,7 @@ struct css_selector {
 		CSR_ANCESTOR, /* Ancestor, i.e. the "p" in "p a". */
 		CSR_PARENT, /* Direct parent, i.e. the "div" in "div>img". */
 	} relation;
-	struct list_head leaves; /* -> struct css_selector */
+	struct css_selector_set leaves;
 
 	enum css_selector_type {
 		CST_ELEMENT,
@@ -79,16 +102,16 @@ struct css_stylesheet {
 	/* The import callback's data. */
 	void *import_data;
 
-	/* The list of basic element selectors (which can then somehow
+	/* The set of basic element selectors (which can then somehow
 	 * tree up on inside). */
-	struct list_head selectors; /* -> struct css_selector */
+	struct css_selector_set selectors;
 
 	/* How deeply nested are we. Limited by MAX_REDIRECTS. */
 	int import_level;
 };
 
 #define INIT_CSS_STYLESHEET(css, import) \
-	{ import, NULL, { D_LIST_HEAD(css.selectors) } }
+	{ import, NULL, INIT_CSS_SELECTOR_SET(css.selectors) }
 
 /* Dynamically allocates a stylesheet. */
 struct css_stylesheet *init_css_stylesheet(css_stylesheet_importer_T importer,
@@ -105,8 +128,8 @@ void done_css_stylesheet(struct css_stylesheet *css);
 
 
 /* Returns a new freshly made selector adding it to the given selector
- * list, or NULL. */
-struct css_selector *get_css_selector(struct list_head *selector_list,
+ * set, or NULL. */
+struct css_selector *get_css_selector(struct css_selector_set *set,
                                       enum css_selector_type type,
                                       enum css_selector_relation rel,
                                       unsigned char *name, int namelen);
@@ -116,8 +139,8 @@ struct css_selector *get_css_selector(struct list_head *selector_list,
 	                 type, rel, name, namelen)
 
 /* Looks up the selector of the name @name and length @namelen in the
- * given list of selectors. */
-struct css_selector *find_css_selector(struct list_head *selector_list,
+ * given set of selectors. */
+struct css_selector *find_css_selector(struct css_selector_set *set,
                                        enum css_selector_type type,
                                        enum css_selector_relation rel,
                                        const unsigned char *name, int namelen);
@@ -127,7 +150,7 @@ struct css_selector *find_css_selector(struct list_head *selector_list,
 
 /* Initialize the selector structure. This is a rather low-level function from
  * your POV. */
-struct css_selector *init_css_selector(struct list_head *selector_list,
+struct css_selector *init_css_selector(struct css_selector_set *set,
                                        enum css_selector_type type,
                                        unsigned char *name, int namelen);
 
@@ -141,9 +164,18 @@ void merge_css_selectors(struct css_selector *sel1, struct css_selector *sel2);
 /* Destroy a selector. done_css_stylesheet() normally does that for you. */
 void done_css_selector(struct css_selector *selector);
 
+#define init_css_selector_set(set) init_list((set)->list)
+void done_css_selector_set(struct css_selector_set *set);
+#define css_selector_set_empty(set) list_empty((set)->list)
+#define css_selector_set_front(set) ((struct css_selector *) ((set)->list.next))
+#define del_css_selector_from_set(selector) del_from_list(selector)
+#define add_css_selector_to_set(selector, set) add_to_list((set)->list, (selector))
+#define css_selector_is_in_set(selector) ((selector)->next != NULL)
+#define foreach_css_selector(selector, set) foreach (selector, (set)->list)
+
 #ifdef DEBUG_CSS
 /* Dumps the selector tree to stderr. */
-void dump_css_selector_tree(struct list_head *selector_list);
+void dump_css_selector_tree(struct css_selector_set *set);
 #endif
 
 #endif

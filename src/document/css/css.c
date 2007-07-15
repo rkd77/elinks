@@ -112,7 +112,7 @@ import_default_css(void)
 {
 	unsigned char *url = get_opt_str("document.css.stylesheet");
 
-	if (!list_empty(default_stylesheet.selectors))
+	if (!css_selector_set_empty(&default_stylesheet.selectors))
 		done_css_stylesheet(&default_stylesheet);
 
 	if (!*url) return;

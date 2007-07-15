@@ -170,21 +170,21 @@ struct selector_pkg {
 	struct css_selector *selector;
 };
 
-/** Move a CSS selector and its leaves into a new list.  If a similar
- * selector already exists in the list, merge them.
+/** Move a CSS selector and its leaves into a new set.  If a similar
+ * selector already exists in the set, merge them.
  *
  * \param sels
- *   The list to which \a selector should be moved.  Must not be NULL.
+ *   The set to which \a selector should be moved.  Must not be NULL.
  * \param selector
  *   The selector that should be moved.  Must not be NULL.  If it is
- *   already in some list, this function removes it from there.
+ *   already in some set, this function removes it from there.
  * \param watch
  *   This function updates \a *watch if it merges that selector into
  *   another one.  \a watch must not be NULL but \a *watch may be.
  *
  * \return \a selector or the one into which it was merged.  */
 static struct css_selector *
-reparent_selector(struct list_head *sels, struct css_selector *selector,
+reparent_selector(struct css_selector_set *sels, struct css_selector *selector,
                   struct css_selector **watch)
 {
 	struct css_selector *twin = find_css_selector(sels, selector->type,
@@ -194,8 +194,8 @@ reparent_selector(struct list_head *sels, struct css_selector *selector,
 	if (twin) {
 		merge_css_selectors(twin, selector);
 		/* Reparent leaves. */
-		while (selector->leaves.next != &selector->leaves) {
-			struct css_selector *leaf = selector->leaves.next;
+		while (!css_selector_set_empty(&selector->leaves)) {
+			struct css_selector *leaf = css_selector_set_front(&selector->leaves);
 
 			reparent_selector(&twin->leaves, leaf, watch);
 		}
@@ -203,8 +203,9 @@ reparent_selector(struct list_head *sels, struct css_selector *selector,
 			*watch = twin;
 		done_css_selector(selector);
 	} else {
-		if (selector->next) del_from_list(selector);
-		add_to_list(*sels, selector);
+		if (css_selector_is_in_set(selector))
+			del_css_selector_from_set(selector);
+		add_css_selector_to_set(selector, sels);
 	}
 
 	return twin ? twin : selector;
@@ -368,9 +369,9 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 				/* The situation is like: 'div p#x', now it was
 				 * 'p -> div', but we need to redo that as
 				 * '(p ->) #x -> div'. */
-				del_from_list(last_chained_selector);
-				add_to_list(selector->leaves,
-				            last_chained_selector);
+				del_css_selector_from_set(last_chained_selector);
+				add_css_selector_to_set(last_chained_selector,
+							&selector->leaves);
 			}
 
 			if (pkg->selector == base_sel) {
@@ -403,7 +404,8 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 			if (!selector) continue;
 
 			assert(prev_element_selector);
-			add_to_list(selector->leaves, prev_element_selector);
+			add_css_selector_to_set(prev_element_selector,
+						&selector->leaves);
 			last_chained_selector = prev_element_selector;
 
 			prev_element_selector->relation = reltype;
@@ -496,7 +498,7 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 		 * because GCC 4.1 "warning: operation on `errfile'
 		 * may be undefined" breaks the build with -Werror.  */
 		int dbg_has_properties = !list_empty(properties);
-		int dbg_has_leaves = !list_empty(pkg->selector->leaves);
+		int dbg_has_leaves = !css_selector_set_empty(&pkg->selector->leaves);
 
 		DBG("Binding properties (!!%d) to selector %s (type %d, relation %d, children %d)",
 			dbg_has_properties,

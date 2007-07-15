@@ -117,7 +117,7 @@ static css_applier_T css_appliers[CSS_PT_LAST] = {
 static void
 examine_element(struct html_context *html_context, struct css_selector *base,
 		enum css_selector_type seltype, enum css_selector_relation rel,
-                struct list_head *selectors, struct html_element *element)
+		struct css_selector_set *selectors, struct html_element *element)
 {
 	struct css_selector *selector;
 
@@ -129,7 +129,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 
  	DBG("examine_element(%p, %s, %d, %d, %p, %.*s);", html_context, base->name, seltype, rel, selectors, element->namelen, element->name);
 #define dbginfo(sel, type_, base) \
-	dbg_has_leaves = !list_empty(sel->leaves), \
+	dbg_has_leaves = !css_selector_set_empty(&sel->leaves), \
 	dbg_has_properties = !list_empty(sel->properties), \
 	DBG("Matched selector %s (rel %d type %d [m%d])! Children %p !!%d, props !!%d", sel->name, sel->relation, sel->type, sel->type == type_, &sel->leaves, dbg_has_leaves, dbg_has_properties)
 #else

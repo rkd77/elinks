@@ -771,7 +771,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 #ifdef CONFIG_CSS
 	html_context->css_styles.import = import_css_stylesheet;
-	init_list(html_context->css_styles.selectors);
+	init_css_selector_set(&html_context->css_styles.selectors);
 #endif
 
 	init_list(html_context->stack);
