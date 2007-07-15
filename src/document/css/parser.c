@@ -386,7 +386,7 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 				 * wasn't marked so and thus wasn't bound to
 				 * the stylesheet. Let's do that now. */
 				assert(prev_element_selector);
-				prev_element_selector->relation = CSR_ROOT;
+				set_css_selector_relation(prev_element_selector, CSR_ROOT);
 				prev_element_selector =
 					reparent_selector(&css->selectors,
 					                 prev_element_selector,
@@ -404,11 +404,11 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 			if (!selector) continue;
 
 			assert(prev_element_selector);
+			set_css_selector_relation(prev_element_selector, reltype);
 			add_css_selector_to_set(prev_element_selector,
 						&selector->leaves);
 			last_chained_selector = prev_element_selector;
 
-			prev_element_selector->relation = reltype;
 		}
 
 

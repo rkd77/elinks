@@ -41,19 +41,14 @@
  * because all rules for the same selector have already been merged
  * into one struct css_selector.  */
 struct css_selector_set {
-#ifdef CONFIG_DEBUG
-	/* Cause a crash if struct css_selector_set * is cast to
-	 * struct list_head *.  */
-	char dummy;
-#endif
-	
+	unsigned char may_contain_rel_ancestor;
+
+	/* Keep this away from the beginning of the structure,
+	 * so that nobody can cast the struct css_selector_set *
+	 * to struct list_head * and get away with it.  */
 	struct list_head list;	/* -> struct css_selector */
 };
-#ifdef CONFIG_DEBUG
-# define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD(set.list) } }
-#else
-# define INIT_CSS_SELECTOR_SET(set) { { D_LIST_HEAD(set.list) } }
-#endif
+#define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD(set.list) } }
 
 /* The {struct css_selector} is used for mapping elements (or nodes) in the
  * document structure to properties. See README for some hints about how the
@@ -65,7 +60,8 @@ struct css_selector {
 	LIST_HEAD(struct css_selector);
 
 	/* This defines relation between this selector fragment and its
-	 * parent in the selector tree. */
+	 * parent in the selector tree.
+	 * Update with set_css_selector_relation().  */
 	enum css_selector_relation {
 		CSR_ROOT, /* First class stylesheet member. */
 		CSR_SPECIFITY, /* Narrowing-down, i.e. the "x" in "foo#x". */
@@ -152,6 +148,7 @@ struct css_selector *find_css_selector(struct css_selector_set *set,
  * your POV. */
 struct css_selector *init_css_selector(struct css_selector_set *set,
                                        enum css_selector_type type,
+                                       enum css_selector_relation relation,
                                        unsigned char *name, int namelen);
 
 /* Add all properties from the list to the given @selector. */
@@ -161,15 +158,19 @@ void add_selector_properties(struct css_selector *selector,
 /* Join @sel2 to @sel1, @sel1 taking precedence in all conflicts. */
 void merge_css_selectors(struct css_selector *sel1, struct css_selector *sel2);
 
+/* Use this function instead of modifying css_selector.relation directly.  */
+void set_css_selector_relation(struct css_selector *,
+			       enum css_selector_relation);
+
 /* Destroy a selector. done_css_stylesheet() normally does that for you. */
 void done_css_selector(struct css_selector *selector);
 
-#define init_css_selector_set(set) init_list((set)->list)
+void init_css_selector_set(struct css_selector_set *set);
 void done_css_selector_set(struct css_selector_set *set);
 #define css_selector_set_empty(set) list_empty((set)->list)
 #define css_selector_set_front(set) ((struct css_selector *) ((set)->list.next))
-#define del_css_selector_from_set(selector) del_from_list(selector)
-#define add_css_selector_to_set(selector, set) add_to_list((set)->list, (selector))
+void add_css_selector_to_set(struct css_selector *, struct css_selector_set *);
+void del_css_selector_from_set(struct css_selector *);
 #define css_selector_is_in_set(selector) ((selector)->next != NULL)
 #define foreach_css_selector(selector, set) foreach (selector, (set)->list)
 

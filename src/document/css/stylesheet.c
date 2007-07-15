@@ -45,7 +45,9 @@ find_css_selector(struct css_selector_set *sels, enum css_selector_type type,
 }
 
 struct css_selector *
-init_css_selector(struct css_selector_set *sels, enum css_selector_type type,
+init_css_selector(struct css_selector_set *sels,
+		  enum css_selector_type type,
+		  enum css_selector_relation relation,
                   unsigned char *name, int namelen)
 {
 	struct css_selector *selector;
@@ -53,7 +55,7 @@ init_css_selector(struct css_selector_set *sels, enum css_selector_type type,
 	selector = mem_calloc(1, sizeof(*selector));
 	if (!selector) return NULL;
 
-	selector->relation = CSR_ROOT; /* Default */
+	selector->relation = relation;
 	init_css_selector_set(&selector->leaves);
 
 	selector->type = type;
@@ -78,6 +80,17 @@ init_css_selector(struct css_selector_set *sels, enum css_selector_type type,
 	return selector;
 }
 
+void
+set_css_selector_relation(struct css_selector *selector,
+			  enum css_selector_relation relation)
+{
+	/* Changing the relation after the selector is in a set might
+	 * require setting css_relation_set.may_contain_rel_ancestor,
+	 * but we don't have a pointer to the set here.  */
+	assert(!css_selector_is_in_set(selector));
+	selector->relation = relation;
+}
+
 struct css_selector *
 get_css_selector(struct css_selector_set *sels, enum css_selector_type type,
                  enum css_selector_relation rel,
@@ -91,13 +104,7 @@ get_css_selector(struct css_selector_set *sels, enum css_selector_type type,
 			return selector;
 	}
 
-	selector = init_css_selector(sels, type, name, namelen);
-	if (selector) {
-		selector->relation = rel;
-		return selector;
-	}
-
-	return NULL;
+	return init_css_selector(sels, type, rel, name, namelen);
 }
 
 static struct css_selector *
@@ -106,8 +113,9 @@ copy_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 	struct css_selector *copy;
 
 	assert(css && orig);
+	assert(orig->relation == CSR_ROOT);
 
-	copy = init_css_selector(&css->selectors, orig->type,
+	copy = init_css_selector(&css->selectors, orig->type, CSR_ROOT,
 	                         orig->name, strlen(orig->name));
 	if (!copy)
 		return NULL;
@@ -184,11 +192,37 @@ done_css_selector(struct css_selector *selector)
 }
 
 void
+init_css_selector_set(struct css_selector_set *set)
+{
+	set->may_contain_rel_ancestor = 0;
+	init_list(set->list);
+}
+
+void
 done_css_selector_set(struct css_selector_set *set)
 {
 	while (!css_selector_set_empty(set)) {
 		done_css_selector(css_selector_set_front(set));
 	}
+}
+
+void
+add_css_selector_to_set(struct css_selector *selector,
+			struct css_selector_set *set)
+{
+	assert(!css_selector_is_in_set(selector));
+
+	add_to_list(set->list, selector);
+	if (selector->relation == CSR_ANCESTOR)
+		set->may_contain_rel_ancestor = 1;
+}
+
+void
+del_css_selector_from_set(struct css_selector *selector)
+{
+	del_from_list(selector);
+	selector->next = NULL;
+	selector->prev = NULL;
 }
 
 #ifdef DEBUG_CSS

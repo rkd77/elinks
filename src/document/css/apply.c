@@ -141,7 +141,8 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		dbginfo(sel, type, base); \
 		merge_css_selectors(base, sel); \
 		/* Ancestor matches? */ \
-		if ((struct list_head *) element->next \
+		if (sel->leaves.may_contain_rel_ancestor \
+		    && (struct list_head *) element->next \
 		     != &html_context->stack) { \
 			struct html_element *ancestor; \
 			/* This is less effective than doing reverse iterations,
@@ -227,7 +228,7 @@ get_css_selector_for_element(struct html_context *html_context,
 
 	assert(element && element->options && css);
 
-	selector = init_css_selector(NULL, CST_ELEMENT, NULL, 0);
+	selector = init_css_selector(NULL, CST_ELEMENT, CSR_ROOT, NULL, 0);
 	if (!selector)
 		return NULL;
 
@@ -247,7 +248,7 @@ get_css_selector_for_element(struct html_context *html_context,
 		struct css_selector *stylesel;
 		struct scanner scanner;
 
-		stylesel = init_css_selector(NULL, CST_ELEMENT, NULL, 0);
+		stylesel = init_css_selector(NULL, CST_ELEMENT, CSR_ROOT, NULL, 0);
 
 		if (stylesel) {
 			init_scanner(&scanner, &css_scanner_info, code, NULL);
