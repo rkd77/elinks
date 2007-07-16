@@ -65,7 +65,7 @@ struct program program;
 int epoll_fd;
 int master_sem = -1;
 int shared_mem_ipc = -1;
-unsigned char *shared_mem = NULL;
+char *shared_mem = NULL;
 
 static int ac;
 static unsigned char **av;
@@ -124,12 +124,14 @@ init_master_ipc(void)
 		return;
 	k1 = ftok(filename.source, 1);
 	k2 = ftok(filename.source, 2);
-	master_sem = sem_create(k1, 0);
+	master_sem = mysem_create(k1, 0);
 	shared_mem_ipc = shmget(k2, 4096, 0600 | IPC_CREAT | IPC_EXCL);
 	if (shared_mem_ipc == -1 && errno == EEXIST)
 		shared_mem_ipc = shmget(k2, 4096, 0600);
 	if (shared_mem_ipc >= 0) {
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
+		if (shared_mem == (char *)-1)
+			shared_mem = NULL;
 	}
 	done_string(&filename);
 #endif
@@ -146,10 +148,12 @@ init_slave_ipc(void)
 		return;
 	k1 = ftok(filename.source, 1);
 	k2 = ftok(filename.source, 2);
-	master_sem = sem_open(k1);
+	master_sem = mysem_open(k1);
 	shared_mem_ipc = shmget(k2, 4096, 0600);
 	if (shared_mem_ipc >= 0) {
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
+		if (shared_mem == (char *)-1)
+			shared_mem = NULL;
 	}
 	done_string(&filename);
 #endif
@@ -162,7 +166,7 @@ done_ipc(void)
 	if (shared_mem)
 		shmdt(shared_mem);
 	if (master_sem >= 0)
-		sem_close(master_sem);
+		mysem_close(master_sem);
 	/* shared_mem_ipc will be automatically done by sem_close() */
 #endif
 }

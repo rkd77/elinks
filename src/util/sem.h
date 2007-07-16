@@ -6,12 +6,12 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 
-int sem_create(key_t key, int initval);
-int sem_open(key_t key);
-void sem_rm(int id);
-void sem_close(int id);
-void sem_wait(int id);
-void sem_signal(int id);
-void sem_op(int id, int value);
+int mysem_create(key_t key, int initval);
+int mysem_open(key_t key);
+void mysem_rm(int id);
+void mysem_close(int id);
+void mysem_wait(int id);
+void mysem_signal(int id);
+void mysem_op(int id, int value);
 
 #endif

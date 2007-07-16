@@ -106,7 +106,7 @@ static struct sembuf	op_op[1] = {
  */
 
 int
-sem_create(key_t key, int initval /* used if we create the semaphore */)
+mysem_create(key_t key, int initval /* used if we create the semaphore */)
 {
 	int id, semval;
 	union semun {
@@ -191,7 +191,7 @@ again:
  */
 
 int
-sem_open(key_t key)
+mysem_open(key_t key)
 {
 	int id;
 
@@ -224,7 +224,7 @@ sem_open(key_t key)
  */
 
 void
-sem_rm(int id)
+mysem_rm(int id)
 {
 	semctl(id, 0, IPC_RMID, 0);
 		/* err_sys("can't IPC_RMID"); */
@@ -244,7 +244,7 @@ sem_rm(int id)
  */
 
 void
-sem_close(int id)
+mysem_close(int id)
 {
 	int semval;
 
@@ -271,7 +271,7 @@ sem_close(int id)
 /*	if (semval > BIGCOUNT)
 		err_dump("sem[1] > BIGCOUNT"); */
 	if (semval == BIGCOUNT)
-		sem_rm(id);
+		mysem_rm(id);
 	else
 		semop(id, &op_unlock[0], 1);
 			/* err_sys("can't unlock"); */	/* unlock */
@@ -284,9 +284,9 @@ sem_close(int id)
  */
 
 void
-sem_wait(int id)
+mysem_wait(int id)
 {
-	sem_op(id, -1);
+	mysem_op(id, -1);
 }
 
 /****************************************************************************
@@ -294,9 +294,9 @@ sem_wait(int id)
  * Dijkstra's V operation.  Tanenbaum's UP operation.
  */
 void
-sem_signal(int id)
+mysem_signal(int id)
 {
-	sem_op(id, 1);
+	mysem_op(id, 1);
 }
 
 /****************************************************************************
@@ -304,7 +304,7 @@ sem_signal(int id)
  * amount (positive or negative; amount can't be zero).
  */
 void
-sem_op(int id, int value)
+mysem_op(int id, int value)
 {
 	op_op[0].sem_op = value;
 		/* err_sys("can't have value == 0"); */
