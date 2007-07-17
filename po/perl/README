@@ -21,21 +21,21 @@ When a programmer adds a translatable string to the C source code of
 ELinks, and the string contains an accelerator, he should also add a
 special "gettext_accelerator_context" comment that names the menu or
 dialog box in which the string will be used.  See the documentation of
-gather-accelerator-contexts.pl for the details.
+msgaccel-prepare for the details.
 
-When a programmer or translator runs "make update-po" in the
-elinks/po directory, gather-accelerator-contexts.pl reads the
-"gettext_accelerator_context" comments in the source files and
-generates "accelerator_context" comments in elinks.pot.  Then,
-msgmerge copies them from elinks.pot to *.po.
+When a programmer or translator runs "make update-po" in the elinks/po
+directory, msgaccel-prepare reads the "gettext_accelerator_context"
+comments in the source files and generates "accelerator_context"
+comments in elinks.pot.  Then, msgmerge copies them from elinks.pot to
+*.po.
 
 When a translator edits a *.po file, she does not alter the
 "accelerator_context" comments.
 
 When a translator runs "make check-po" in the elinks/po directory,
-check-accelerator-conflicts.pl reads the "accelerator_context"
-comments in the *.po file, checks the accelerators in the
-translations, and displays any conflicts it finds.
+msgaccel-check reads the "accelerator_context" comments in the *.po
+file, checks the accelerators in the translations, and displays any
+conflicts it finds.
 
 
 FILES
@@ -43,12 +43,12 @@ FILES
 
 See each file for copying conditions.
 
-gather-accelerator-contexts.pl reads elinks.pot and the source files
-to which it refers, and writes a new elinks.pot with information from
+msgaccel-prepare reads elinks.pot and the source files to which it
+refers, and writes a new elinks.pot with information from
 "gettext_accelerator_context" comments.
 
-check-accelerator-conflicts.pl reads just one *.po file and scans it
-for conflicts.  It does not access the C source files.
+msgaccel-check reads just one *.po file and scans it for conflicts.
+It does not access the C source files.
 
 Locale/PO.pm was originally imported from Locale-PO-0.16 on CPAN, and
 has since been patched to make it more suitable for these scripts.
