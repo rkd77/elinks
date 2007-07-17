@@ -102,7 +102,7 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 	add_string_to_string(page, &uri_encoded_name);
 
 	if (entry->attrib[0] == 'd') {
-		add_char_to_string(page, CHAR_DIR_SEP);
+		add_char_to_string(page, '/');
 
 #ifdef FS_UNIX_SOFTLINKS
 	} else if (entry->attrib[0] == 'l') {
