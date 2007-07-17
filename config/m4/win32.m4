@@ -14,7 +14,7 @@ AC_DEFUN([EL_CONFIG_OS_WIN32],
 		EL_RESTORE_FLAGS
 	fi
 
-	AC_CHECK_HEADERS(windows.h)
+	AC_CHECK_HEADERS(windows.h ws2tcpip.h)
 
 	# TODO: Check this?
 	# TODO: Check -lws2_32 for IPv6 support
