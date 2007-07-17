@@ -46,8 +46,8 @@ HTML_DOCS-$(CONFIG_POD2HTML) += \
 # Don't install these documents, because the corresponding scripts
 # are not installed either.  However, generating them may be useful.
 HTML_DOCS_NOINSTALL-$(CONFIG_POD2HTML) += \
- perl-check-accelerator-conflicts.html \
- perl-gather-accelerator-contexts.html
+ perl-msgaccel-check.html \
+ perl-msgaccel-prepare.html
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.1 \

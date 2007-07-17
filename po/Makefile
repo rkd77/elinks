@@ -53,7 +53,7 @@ $(srcdir)$(POTFILES_ABS_LIST): $(POTFILES_REL)
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(srcdir)$(POTFILES_ABS_LIST)
 
-$(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-accelerator-contexts.pl
+$(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
@@ -77,7 +77,7 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/gather-acce
 		    --flag=N__:1:pass-c-format \
 		    -f $(srcdir)$(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
-	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/gather-accelerator-contexts.pl -S"$(top_srcdir)" $(PACKAGE).po \
+	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-prepare -S"$(top_srcdir)" $(PACKAGE).po \
 	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
 
 
@@ -111,7 +111,7 @@ check-po:
 	@-$(foreach lang,$(basename $(if $(strip $(PO)),$(PO),$(GMOFILES))), \
 	  echo -n "$(lang): "; \
 	  $(GMSGFMT) --check --check-accelerators="~" --verbose --statistics -o /dev/null $(srcdir)$(lang).po; \
-	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/check-accelerator-conflicts.pl $(srcdir)$(lang).po; \
+	  $(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-check $(srcdir)$(lang).po; \
 	)
 
 ### Installation and distribution
