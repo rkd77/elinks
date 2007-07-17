@@ -120,7 +120,7 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 * enhancement: avoid compilation of vernum.c in 'make install'
 * enhancement: make uninstall
 * experimental enhancements: --with-python=DIRECTORY, --with-gc=DIRECTORY
-* experimental enhancement: native Win32 port
+* experimental enhancement: Win32 port (build with MinGW MSYS)
 
 Changes in the experimental ECMAScript support:
 
