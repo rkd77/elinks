@@ -4,7 +4,7 @@ include $(top_builddir)/Makefile.config
 SUBDIRS = man
 
 # A little trick to simplify some of the rules.
-VPATH = $(builddir):$(srcdir):$(top_srcdir)/contrib/perl:$(top_srcdir)/po/perl
+VPATH = $(builddir):$(srcdir):$(top_srcdir)/contrib/perl
 
 docdir = $(datadir)/doc
 
@@ -43,11 +43,9 @@ HTML_DOCS-$(CONFIG_POD2HTML) += \
  perl.html \
  perl-hooks.html
 
-# Don't install these documents, because the corresponding scripts
-# are not installed either.  However, generating them may be useful.
-HTML_DOCS_NOINSTALL-$(CONFIG_POD2HTML) += \
- perl-msgaccel-check.html \
- perl-msgaccel-prepare.html
+# We don't nowadays run pod2html on the po/perl/ scripts, because
+# "make install" does not install them and they do not have the .pl
+# suffix expected by the pod2html rule below.
 
 MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.1 \
@@ -64,11 +62,10 @@ PDF_DOCS-$(CONFIG_JW) += \
 
 MAN_DOCS  = $(MAN_DOCS-yes)
 HTML_DOCS = $(HTML_DOCS-yes)
-HTML_DOCS_NOINSTALL = $(HTML_DOCS_NOINSTALL-yes)
 PDF_DOCS  = $(PDF_DOCS-yes)
 
 txt:  $(TXT_DOCS_NOINSTALL)
-html: txt $(HTML_DOCS) $(HTML_DOCS_NOINSTALL)
+html: txt $(HTML_DOCS)
 pdf:  txt $(PDF_DOCS)
 man:  txt $(MAN_DOCS)
 
@@ -97,7 +94,7 @@ update-man: man
 		$(call ncmd,installdata,elinks.conf.5,$(srcdir)man/man5/))
 
 clean-local:
-	@$(RM) -r api $(TXT_DOCS_NOINSTALL) $(MAN_DOCS) $(HTML_DOCS) $(HTML_DOCS_NOINSTALL) $(PDF_DOCS) *.tmp *.xml
+	@$(RM) -r api $(TXT_DOCS_NOINSTALL) $(MAN_DOCS) $(HTML_DOCS) $(PDF_DOCS) *.tmp *.xml
 
 # TODO: perl.pod should be pod2ized during make install. --pasky
 install-local:
