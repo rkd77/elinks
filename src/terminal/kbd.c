@@ -590,6 +590,9 @@ has_nul_byte:
 		unsigned char *param;
 		int path_len, del_len, param_len;
 
+		/* TODO: Should this be changed to allow TERM_EXEC_NEWWIN
+		 * in a blocked terminal?  There is similar code in
+		 * exec_on_terminal().  --KON, 2007 */
 		if (is_blocked() && fg != TERM_EXEC_BG) {
 			if (*delete.source) unlink(delete.source);
 			goto nasty_thing;
