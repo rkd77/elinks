@@ -9,6 +9,8 @@ TESTDEPS = \
  $(top_builddir)/src/protocol/uri.o \
  stub.o
 
+CLEAN = stub.o
+
 test_uri:: stub.o
 
 include $(top_srcdir)/Makefile.lib
