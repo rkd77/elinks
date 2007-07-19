@@ -66,6 +66,7 @@ Miscellaneous:
 * gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
+* bug 744: don't change ``//'' to ``/'' in URIs
 * bug 766: speed up CSS
 * bug 355: add documents displayed via ``What to do'' dialog to the
   global history
