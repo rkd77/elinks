@@ -2,11 +2,21 @@
 #
 # This script can be used by a cron to generate snapshots.
 # For example, use:
-# 35 0 * * * mkdist elinks-0.11 0.11 >>mkdist.log 2>&1
-# 40 0 * * * mkdist HEAD 0.12 >>mkdist.log 2>&1
+# 35 0 * * * mkdist -r elinks-0.11 -l 0.11 -s >>mkdist.log 2>&1
+# 40 0 * * * mkdist -r HEAD -l 0.12 -s >>mkdist.log 2>&1
 #
-# To generate a release (which doesn't have a date in the
-# top-level directory) also pass -r as the third parameter.
+# Options:
+#   -g GIT_DIR   Git repository from which this script exports ELinks.
+#                May be given in the environment instead.
+#   -r REVISION  Git revision to be exported from the repository.
+#   -l LABEL     User-friendly name of the branch or release.
+#                This ends up in the name of the tar file, and in the
+#                name of the directory it contains.
+#   -s           Generate a snapshot (which has a date in the top-level
+#                directory).
+#   -d DOCDIR    Copy prebuilt documentation from DOCDIR.
+#   -o OUTDIR    Place the output files in OUTDIR.  Defaults to the
+#                current directory.
 
 # set -x
 
@@ -15,64 +25,118 @@ echo "Date: $(date)"
 echo "Args: $*"
 echo "-------------------------------------------------"
 
-ub=$1
-lb=$2
+# Variables used in this script:
+# $GIT_DIR     = option -g GIT_DIR; passed in environment to Git
+# $OPTARG      = Bash special: argument of the option being parsed
+# $OPTIND      = Bash special: index of argument to be parsed next
+# $commit      = commit ID corresponding to $rev
+# $docdir      = option -d DOCDIR
+# $label       = option -l LABEL
+# $opt         = option letter being parsed, or '?' on error
+# $outdir      = option -o OUTDIR
+# $rev         = option -r REVISION
+# $snap        = option -s
+# $tarbasename = name of the tar file without .tar.* extensions
+# $tartopdir   = name of the top directory within the tar file
+# $tmpdir      = temporary directory created by this script
 
-GIT_DIR="elinks-repo-directory"
-DOC_DIR="" # Leave empty for no doc dir
-TMP_DIR="/tmp/elinks-git.$$"
-TAR_DIR="elinks-snapshot-directory"
+rev=
+label=
+snap=
+docdir=
+outdir=.
+while getopts "g:r:l:sd:o:" opt
+do
+    case "$opt" in
+	(g)	GIT_DIR=$OPTARG ;;
+	(r)	rev=$OPTARG ;;
+	(l)	label=$OPTARG ;;
+	(s)     snap=1 ;;
+	(d)	docdir=$OPTARG ;;
+	(o)	outdir=$OPTARG ;;
+	("?")	exit 1 ;;
+	(*)	echo >&2 "$0:$LINENO: bug found"
+		exit 1 ;;
+    esac
+done
 
-[ "$ub" ] || exit 1
-[ "$lb" ] || exit 1
-
-if [ "$3" != "-r" ]; then
-	ver=$lb-`date +%Y%m%d`
-	c="-current";
-else
-	ver=$lb;
-	c="";
+if [ $OPTIND -le $# ]
+then
+    echo >&2 "$0: too many non-option arguments"
+    exit 1
 fi
 
-mkdir "$TMP_DIR
-cd "$TMP_DIR"
-
-GIT_DIR="$GIT_DIR" cg-export -r "$ub" "$TMP_DIR"/elinks"
-
-cd elinks
-
-./autogen.sh
-./configure
-
-if [ "$ub" = "REL_0_10" ]; then
-	make dist
-	tar xfz elinks-$lb*.tar.gz
-	cd elinks-$ub*
-else
-	make -C po
+if [ -z "$GIT_DIR" ]
+then
+    echo >&2 "$0: Must specify -g GIT_DIR option"
+    exit 1
+fi
+if [ -z "$outdir" ]
+then
+    echo >&2 "$0: Must specify -o OUTDIR option"
+    exit 1
+fi
+if [ -z "$rev" ]
+then
+    echo >&2 "$0: Must specify -r REVISION option"
+    exit 1
+fi
+if [ -z "$label" ]
+then
+    label=$rev
 fi
 
-if test -n "$DOC_DIR"; then
-	mkdir doc/html
-	cp -r "$DOC_DIR"/*.html* doc/html
+commit=$(GIT_DIR=$GIT_DIR cg-object-id -c "$rev") || exit 1
+
+if [ "$snap" ]
+then
+    tartopdir=elinks-$label-$(date +%Y%m%d)
+    tarbasename=elinks-current-$label
+else
+    tartopdir=elinks-$label
+    tarbasename=elinks-$label
+fi
+
+tmpdir=$(mktemp -d -t elinks-dist-XXXXXXXX) || exit 1
+
+# To make it easier to compare build logs, put the source first in an
+# "elinks" directory, and only move to "$tartopdir" when finished.
+
+GIT_DIR=$GIT_DIR cg-export -r "$rev" -- "$tmpdir/elinks"
+mkdir -- "$tmpdir/elinks/.git"
+printf "%s\n" "$commit" > "$tmpdir/elinks/.git/HEAD"
+
+(set -e
+ cd -- "$tmpdir/elinks"
+ ./autogen.sh
+ mkdir build
+ cd build
+ ../configure
+ make -C po
+ mv po/*.gmo ../po/
+ mv contrib/elinks.spec ../contrib/
+) || exit 1
+
+if [ -n "$docdir" ]; then
+	mkdir -- "$tmpdir/elinks/doc/html"
+	cp -r -- "$docdir"/*.html* "$tmpdir/elinks/doc/html/"
 	# mkdir doc/pdf
-	# cp "$DOC_DIR"/*.pdf doc/pdf
+	# cp "$docdir"/*.pdf doc/pdf
 fi
 
-cd ..
+rm -rf -- "$tmpdir/elinks/build"
+mv -- "$tmpdir/elinks" "$tmpdir/$tartopdir"
 
-if [ "$c" ]; then
-	dir=`ls .`
-	mv $dir elinks-$ver
-fi
-
-
-tar cfz elinks$c-$lb.tar.gz  elinks-$ver && \
-mv elinks$c-$lb.tar.gz "$TAR_DIR" && \
-(cd "$TAR_DIR" && md5sum elinks$c-$lb.tar.gz > elinks$c-$lb.tar.gz.md5)
-
-tar cfj elinks$c-$lb.tar.bz2 elinks-$ver && \
-mv elinks$c-$lb.tar.bz2 "$TAR_DIR" && \
-(cd "$TAR_DIR" && md5sum elinks$c-$lb.tar.bz2 > elinks$c-$lb.tar.gz.md5)
-
-rm -rf "$TMP_DIR"
+(set -e
+ cd -- "$tmpdir"
+ tar cf "$tarbasename.tar" "$tartopdir"
+ md5sum --binary -- "$tarbasename.tar" > "$tarbasename.md5"
+ bzip2 --keep -- "$tarbasename.tar"
+ gzip -9 -- "$tarbasename.tar"
+ md5sum --binary -- "$tarbasename.tar.gz" "$tarbasename.tar.bz2" >> "$tarbasename.md5"
+) || exit 1
+ 
+mv -- "$tmpdir/$tarbasename.tar.gz"	"$outdir"
+mv -- "$tmpdir/$tarbasename.tar.bz2"	"$outdir"
+mv -- "$tmpdir/$tarbasename.md5"	"$outdir"
+rm -rf -- "$tmpdir"
