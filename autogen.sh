@@ -21,7 +21,8 @@ echo timestamp > stamp-h.in
 echo autoconf...
 autoconf
 
-echo config.cache...
+echo config.cache, autom4te.cache...
 rm -f config.cache
+rm -rf autom4te.cache
 
 echo done
