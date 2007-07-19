@@ -108,6 +108,7 @@ struct itrm {
 	 * and windows should not be displayed on the terminal of the
 	 * itrm; thus the terminal init and done strings are not sent.  */
 	unsigned int remote:1;		/**< Whether it is a remote session */
+	unsigned int bracketed_pasting:1;/**< Received bracketed-paste escape*/
 };
 
 #endif

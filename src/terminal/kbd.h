@@ -32,7 +32,8 @@ typedef enum {
 	KBD_MOD_NONE	= 0,
 	KBD_MOD_SHIFT	= 1,
 	KBD_MOD_CTRL	= 2,
-	KBD_MOD_ALT	= 4
+	KBD_MOD_ALT	= 4,
+	KBD_MOD_PASTE   = 8,
 } term_event_modifier_T;
 
 /** A key received from a terminal, with modifiers.  */

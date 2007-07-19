@@ -148,6 +148,9 @@ kbd_ctrl_c(void)
 	struct interlink_event ev;
 
 	if (!ditrm) return;
+	/* This is called because of a signal, and there may be input
+	 * pending from the terminal, so do not reset
+	 * ditrm->bracketed_pasting.  */
 	set_kbd_interlink_event(&ev, KBD_CTRL_C, KBD_MOD_NONE);
 	itrm_queue_event(ditrm, (unsigned char *) &ev, sizeof(ev));
 }
@@ -158,6 +161,7 @@ kbd_ctrl_c(void)
 
 #define INIT_TERMINAL_SEQ	"\033)0\0337"	/**< Special Character and Line Drawing Set, Save Cursor */
 #define INIT_ALT_SCREEN_SEQ	"\033[?47h"	/**< Use Alternate Screen Buffer */
+#define INIT_BRACKETED_PASTE_SEQ "\033[?2004h"	/**< Enable XTerm bracketed paste mode */
 
 static void
 send_init_sequence(int h, int altscreen)
@@ -171,15 +175,18 @@ send_init_sequence(int h, int altscreen)
 #ifdef CONFIG_MOUSE
 	send_mouse_init_sequence(h);
 #endif
+	write_sequence(h, INIT_BRACKETED_PASTE_SEQ);
 }
 
 #define DONE_CLS_SEQ		"\033[2J"	/**< Erase in Display, Clear All */
 #define DONE_TERMINAL_SEQ	"\0338\r \b"	/**< Restore Cursor (DECRC) + ??? */
 #define DONE_ALT_SCREEN_SEQ	"\033[?47l"	/**< Use Normal Screen Buffer */
+#define DONE_BRACKETED_PASTE_SEQ "\033[?2004l"	/**< Disable XTerm bracketed paste mode */
 
 static void
 send_done_sequence(int h, int altscreen)
 {
+	write_sequence(h, DONE_BRACKETED_PASTE_SEQ);
 	write_sequence(h, DONE_CLS_SEQ);
 
 #ifdef CONFIG_MOUSE
@@ -863,6 +870,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 		case 33: kbd.key = KBD_F9; kbd.modifier = KBD_MOD_SHIFT; break;
 		case 34: kbd.key = KBD_F10; kbd.modifier = KBD_MOD_SHIFT; break;
 
+		case 200: itrm->bracketed_pasting = 1; break;    /* xterm */
+		case 201: itrm->bracketed_pasting = 0; break;    /* xterm */
+
 		} break;
 
 	case 'R': resize_terminal(); break;	/*    CPR  u6 */
@@ -1006,6 +1016,7 @@ kbd_timeout(struct itrm *itrm)
 		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
 		el = 1;
 	}
+	itrm->bracketed_pasting = 0;
 	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
 
 	itrm->in.queue.len -= el;
@@ -1121,13 +1132,18 @@ process_queue(struct itrm *itrm)
 
 	if (el == 0) {
 		el = 1;
-		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
+		set_kbd_event(&ev, itrm->in.queue.data[0],
+			      itrm->bracketed_pasting ? KBD_MOD_PASTE : KBD_MOD_NONE);
 	}
 
 	/* The call to decode_terminal_escape_sequence() might have changed the
 	 * keyboard event to a mouse event. */
-	if (ev.ev == EVENT_MOUSE || ev.info.keyboard.key != KBD_UNDEF)
+	if (ev.ev == EVENT_MOUSE || ev.info.keyboard.key != KBD_UNDEF) {
 		itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
+		itrm->bracketed_pasting = 
+			(ev.ev == EVENT_KBD
+			 && (ev.info.keyboard.modifier & KBD_MOD_PASTE));
+	}
 
 return_without_event:
 	if (el == -1) {

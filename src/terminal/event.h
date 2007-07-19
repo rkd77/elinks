@@ -181,7 +181,7 @@ void in_term(struct terminal *);
 #define get_kbd_modifier(event)		(kbd_get_modifier(&(event)->info.keyboard))
 #define check_kbd_modifier(event, mod)	(kbd_modifier_is(&(event)->info.keyboard, (mod)))
 
-#define check_kbd_textinput_key(event)	(get_kbd_key(event) >= ' ' && check_kbd_modifier(event, KBD_MOD_NONE))
+#define check_kbd_textinput_key(event)	(get_kbd_key(event) >= ' ' && (check_kbd_modifier(event, KBD_MOD_NONE) || check_kbd_modifier(event, KBD_MOD_PASTE)))
 #define check_kbd_label_key(event)	(get_kbd_key(event) > ' ' && (check_kbd_modifier(event, KBD_MOD_NONE) || check_kbd_modifier(event, KBD_MOD_ALT)))
 /** @} */
 

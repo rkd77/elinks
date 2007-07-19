@@ -999,7 +999,9 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 	if (digit < 0 || digit > 9)
 		return FRAME_EVENT_IGNORED;
 
-	if (get_kbd_modifier(ev)
+	if ((get_kbd_modifier(ev) != KBD_MOD_NONE
+	     && (get_kbd_modifier(ev) & ~(KBD_MOD_ALT | KBD_MOD_CTRL))
+		 == KBD_MOD_NONE)
 	    || ses->kbdprefix.repeat_count /* The user has already begun
 	                                    * entering a prefix. */
 	    || !doc_opts->num_links_key
@@ -1027,7 +1029,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 		return FRAME_EVENT_OK;
 	}
 
-	if (digit >= 1 && !get_kbd_modifier(ev)) {
+	if (digit >= 1 && get_kbd_modifier(ev) == KBD_MOD_NONE) {
 		int nlinks = document->nlinks, length;
 		unsigned char d[2] = { get_kbd_key(ev), 0 };
 
@@ -1063,7 +1065,9 @@ try_form_insert_mode(struct session *ses, struct document_view *doc_view,
 	action_id = kbd_action(KEYMAP_EDIT, ev, NULL);
 
 	if (ses->insert_mode == INSERT_MODE_OFF) {
-		if (action_id == ACT_EDIT_ENTER) {
+		if (action_id == ACT_EDIT_ENTER
+		    || (action_id == -1
+			&& check_kbd_modifier(ev, KBD_MOD_PASTE))) {
 			ses->insert_mode = INSERT_MODE_ON;
 			status = FRAME_EVENT_REFRESH;
 		}
