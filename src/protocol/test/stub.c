@@ -21,11 +21,15 @@
 		/* done: */		NULL		\
 	)
 STUB_MODULE(auth_module);
+STUB_MODULE(bittorrent_protocol_module);
 STUB_MODULE(cgi_protocol_module);
 STUB_MODULE(file_protocol_module);
+STUB_MODULE(finger_protocol_module);
 STUB_MODULE(fsp_protocol_module);
 STUB_MODULE(ftp_protocol_module);
+STUB_MODULE(gopher_protocol_module);
 STUB_MODULE(http_protocol_module);
+STUB_MODULE(nntp_protocol_module);
 STUB_MODULE(smb_protocol_module);
 STUB_MODULE(uri_rewrite_module);
 STUB_MODULE(user_protocol_module);
@@ -44,12 +48,17 @@ stub_called(const unsigned char *fun)
 		stub_called(#name);			\
 	}
 STUB_PROTOCOL_HANDLER(about_protocol_handler)
+STUB_PROTOCOL_HANDLER(bittorrent_protocol_handler);
 STUB_PROTOCOL_HANDLER(data_protocol_handler)
 STUB_PROTOCOL_HANDLER(ecmascript_protocol_handler)
 STUB_PROTOCOL_HANDLER(file_protocol_handler)
+STUB_PROTOCOL_HANDLER(finger_protocol_handler);
 STUB_PROTOCOL_HANDLER(fsp_protocol_handler)
 STUB_PROTOCOL_HANDLER(ftp_protocol_handler)
+STUB_PROTOCOL_HANDLER(gopher_protocol_handler);
 STUB_PROTOCOL_HANDLER(http_protocol_handler)
+STUB_PROTOCOL_HANDLER(news_protocol_handler);
+STUB_PROTOCOL_HANDLER(nntp_protocol_handler);
 STUB_PROTOCOL_HANDLER(proxy_protocol_handler)
 STUB_PROTOCOL_HANDLER(smb_protocol_handler)
 STUB_PROTOCOL_HANDLER(user_protocol_handler)
