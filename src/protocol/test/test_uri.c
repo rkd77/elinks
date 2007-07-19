@@ -79,6 +79,10 @@ test_normalize_uri(void)
 		  "http://example.org/baz?a=1&b=2#frag" },
 		{ "http://example.org/foo/bar/..",
 		  "http://example.org/foo/" },
+		{ "http://example.org/foo/bar;a=1/..",
+		  "http://example.org/foo/" },
+		{ "http://example.org/foo/bar..",
+		  "http://example.org/foo/bar.." },
 
 		/* Bug 744 - ELinks changes "//" to "/" in path
 		 * component of URI */
@@ -116,6 +120,12 @@ test_normalize_uri(void)
 		  "http://example.org///" },
 		{ "http://example.org/foo/..//bar/baz",
 		  "http://example.org//bar/baz" },
+		{ "http://example.org//.//foo",
+		  "http://example.org///foo" },
+		{ "http://example.org//./../foo",
+		  "http://example.org/foo" },
+		{ "http://example.org/gag///./../..",
+		  "http://example.org/gag/" },
 	};
 	size_t i;
 
