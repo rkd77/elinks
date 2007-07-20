@@ -1108,7 +1108,13 @@ justify_line(struct html_context *html_context, int y)
 		int prev_end = 0;
 		int word;
 
-		clear_hchars(html_context, 0, y, overlap(par_format));
+		/* Allocate enough memory for the justified line.
+		 * If the memory is not available, then leave the
+		 * line unchanged, rather than halfway there.  The
+		 * following loop assumes the allocation succeeded.  */
+		if (!realloc_line(html_context, html_context->part->document,
+				  Y(y), X(overlap(par_format))))
+			goto out_of_memory;
 
 		for (word = 0; word < spaces; word++) {
 			/* We have to increase line length by 'diff' num. of
@@ -1122,14 +1128,40 @@ justify_line(struct html_context *html_context, int y)
 
 			assert(word_len >= 0);
 			if_assert_failed continue;
-			if (!word_len) continue;
 
 			word_shift = (word * diff) / (spaces - 1);
 			new_start = word_start + word_shift;
 
+			/* Copy the original word, without any spaces.  */
 			copy_chars(html_context, new_start, y, word_len,
 				   &line[word_start]);
 
+			/* Copy the space that preceded the word,
+			 * duplicating it as many times as necessary.
+			 * This preserves its attributes, such as
+			 * background color and underlining.  If this
+			 * is the first word, then skip the copy
+			 * because there might not be a space there
+			 * and anyway it need not be duplicated.  */
+			if (word) {
+				int spacex;
+
+				/* realloc_line() was called above.  */
+				assert(LEN(y) >= new_start);
+				if_assert_failed continue;
+
+				for (spacex = prev_end; spacex < new_start;
+				     ++spacex) {
+					copy_screen_chars(&POS(spacex, y),
+							  &line[word_start - 1],
+							  1);
+				}
+			}
+
+			/* Remember that any links at the right side
+			 * of the added spaces have moved, and the
+			 * spaces themselves may also belong to a
+			 * link.  */
 			new_spaces = new_start - prev_end - 1;
 			if (word && new_spaces) {
 				move_links(html_context, prev_end + 1, y, new_start, y);
@@ -1141,6 +1173,7 @@ justify_line(struct html_context *html_context, int y)
 		}
 	}
 
+out_of_memory:
 	fmem_free(space_list);
 	fmem_free(line);
 }
