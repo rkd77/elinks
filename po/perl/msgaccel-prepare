@@ -8,11 +8,11 @@ use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 use autouse 'File::Spec::Functions' => qw(catfile);
 
-my $VERSION = "1.1";
+my $VERSION = "1.2";
 
 sub show_version
 {
-    print "gather-accelerator-contexts.pl $VERSION\n";
+    print "msgaccel-prepare $VERSION\n";
     pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
 	       -exitval => 0});
 }
@@ -168,24 +168,24 @@ __END__
 
 =head1 NAME
 
-gather-accelerator-contexts.pl - Augment a PO file with information
-for detecting accelerator conflicts.
+msgaccel-prepare - Augment a PO file with information for detecting
+accelerator conflicts.
 
 =head1 SYNOPSIS
 
-B<gather-accelerator-contexts.pl> [I<option> ...] F<I<program>.pot>
+B<msgaccel-prepare> [I<option> ...] F<I<program>.pot>
 
 =head1 DESCRIPTION
 
-B<gather-accelerator-contexts.pl> is part of a framework that detects
-conflicting accelerator keys in Gettext PO files.  A conflict is when
-two items in the same menu or two buttons in the same dialog box use
-the same accelerator key.
+B<msgaccel-prepare> is part of a framework that detects conflicting
+accelerator keys in Gettext PO files.  A conflict is when two items in
+the same menu or two buttons in the same dialog box use the same
+accelerator key.
 
-The PO file format does not normally include any information on which
-strings will be used in the same menu or dialog box.
-B<gather-accelerator-contexts.pl> adds this information in the form of
-"accelerator_context" comments, which B<check-accelerator-conflicts.pl>
+The PO file format does not normally include any information
+on which strings will be used in the same menu or dialog box.
+B<msgaccel-prepare> adds this information in the form of
+"accelerator_context" comments, which B<msgaccel-check>
 then parses in order to detect the conflicts.
 
 The PO file format also does not directly support definitions of
@@ -194,17 +194,17 @@ strings, by placing a tilde in front of the character that should be
 used as the accelerator key.  That is also the syntax supported by
 this framework and by B<msgfmt --check-accelerators> of GNU Gettext.
 
-B<gather-accelerator-contexts.pl> first reads the F<I<program>.pot>
-file named on the command line.  This file must include "#:" comments
-that point to the source files from which B<xgettext> extracted each
-C<msgid>.  B<gather-accelerator-contexts.pl> then scans those source
-files for context information and rewrites F<I<program>.pot> to
-include the "accelerator_context" comments.  Finally, the standard
-tool B<msgmerge> can be used to copy the added comments to all the
+B<msgaccel-prepare> first reads the F<I<program>.pot> file named on
+the command line.  This file must include "#:" comments that point
+to the source files from which B<xgettext> extracted each C<msgid>.
+B<msgaccel-prepare> then scans those source files for context
+information and rewrites F<I<program>.pot> to include the
+"accelerator_context" comments.  Finally, the standard tool
+B<msgmerge> can be used to copy the added comments to all the
 F<I<language>.po> files.
 
-It is best to run B<gather-accelerator-contexts.pl> immediately after
-B<xgettext> so that the source references will be up to date.
+It is best to run B<msgaccel-prepare> immediately after B<xgettext>
+so that the source references will be up to date.
 
 =head2 Contexts
 
@@ -249,17 +249,16 @@ formatted like this:
      [gettext_accelerator_context()]
        ends the region.  */
 
-B<gather-accelerator-contexts.pl> removes from F<I<program>.pot> any
+B<msgaccel-prepare> removes from F<I<program>.pot> any
 "gettext_accelerator_context" comments that B<xgettext --add-comments>
-may have copied there.  
+may have copied there.
 
-B<gather-accelerator-contexts.pl> warns if it does not find any
-contexts for some use of an C<msgid> that contains the character
-specified with the B<--accelerator-tag> option.  If the character does
-not actually indicate an accelerator in that C<msgid> (e.g. "~" in
-"~/.bashrc"), the warning can be silenced by specifying the special
-context "IGNORE", which B<gather-accelerator-contexts.pl> otherwise
-ignores.
+B<msgaccel-prepare> warns if it does not find any contexts for some
+use of an C<msgid> that contains the character specified with the
+B<--accelerator-tag> option.  If the character does not actually
+indicate an accelerator in that C<msgid> (e.g. "~" in "~/.bashrc"),
+the warning can be silenced by specifying the special context
+"IGNORE", which B<msgaccel-prepare> otherwise ignores.
 
 =head1 OPTIONS
 
@@ -270,15 +269,14 @@ B<--source-directory=>F<I<srcdir>>
 
 The directory to which the source references in "#:" lines are
 relative.  Each use of this option adds one directory to the search
-path.  If you do not specify this option,
-B<gather-accelerator-contexts.pl> implicitly searches the current
-directory.
+path.  If you do not specify this option, B<msgaccel-prepare>
+implicitly searches the current directory.
 
 =item B<--accelerator-tag=>I<character>
 
 Specify the character that marks accelerators in C<msgid> strings.
-B<gather-accelerator-contexts.pl> looks up accelerator contexts for
-any C<msgid> that contains this character.
+B<msgaccel-prepare> looks up accelerator contexts for any C<msgid>
+that contains this character.
 
 Omitting the B<--accelerator-tag> option implies
 B<--accelerator-tag="~">.  The option must be given to each program
@@ -293,24 +291,23 @@ in the PO file.
 
 =item F<I<program>.pot>
 
-The file to augment with context information.
-B<gather-accelerator-contexts.pl> first reads this file and then
-overwrites it.
+The file to augment with context information.  B<msgaccel-prepare>
+first reads this file and then overwrites it.
 
 Although this documentation keeps referring to F<I<program>.pot>,
-you can also use B<gather-accelerator-contexts.pl> on an already
-translated F<I<language>.po>.  However, that will only work correctly
-if the source references in the "#:" lines are still up to date.
+you can also use B<msgaccel-prepare> on an already translated
+F<I<language>.po>.  However, that will only work correctly if the
+source references in the "#:" lines are still up to date.
 
 =back
 
 =head1 BUGS
 
-B<gather-accelerator-contexts.pl> assumes that source files are in
-the C programming language: specifically, that a closing brace at
-the beginning of a line marks the end of a function.
+B<msgaccel-prepare> assumes that source files are in the C programming
+language: specifically, that a closing brace at the beginning of a
+line marks the end of a function.
 
-B<gather-accelerator-contexts.pl> doesn't check whether the
+B<msgaccel-prepare> doesn't check whether the
 "gettext_accelerator_context" comments actually are comments.
 
 =head1 AUTHOR
@@ -348,4 +345,4 @@ DEALINGS IN THE SOFTWARE.
 
 =head1 SEE ALSO
 
-L<check-accelerator-conflicts.pl>, C<xgettext(1)>, C<msgmerge(1)>
+L<msgaccel-check>, C<xgettext(1)>, C<msgmerge(1)>

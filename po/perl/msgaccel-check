@@ -7,11 +7,11 @@ use Locale::PO qw();
 use Getopt::Long qw(GetOptions :config bundling gnu_compat);
 use autouse 'Pod::Usage' => qw(pod2usage);
 
-my $VERSION = "1.5";
+my $VERSION = "1.6";
 
 sub show_version
 {
-    print "check-accelerator-conflicts.pl $VERSION\n";
+    print "msgaccel-check $VERSION\n";
     pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
 	       -exitval => 0});
 }
@@ -208,32 +208,31 @@ __END__
 
 =head1 NAME
 
-check-accelerator-conflicts.pl - Scan a PO file for conflicting
-accelerator keys.
+msgaccel-check - Scan a PO file for conflicting accelerator keys.
 
 =head1 SYNOPSIS
 
-B<check-accelerator-conflicts.pl> [I<option> ...] F<I<language>.po> [...]
+B<msgaccel-check> [I<option> ...] F<I<language>.po> [...]
 
 =head1 DESCRIPTION
 
-B<check-accelerator-conflicts.pl> is part of a framework that detects
-conflicting accelerator keys in Gettext PO files.  A conflict is when
-two items in the same menu or two buttons in the same dialog box use
-the same accelerator key.
+B<msgaccel-check> is part of a framework that detects conflicting
+accelerator keys in Gettext PO files.  A conflict is when two items in
+the same menu or two buttons in the same dialog box use the same
+accelerator key.
 
 The PO file format does not normally include any information on which
 strings will be used in the same menu or dialog box.
-B<check-accelerator-conflicts.pl> can only be used on PO files to which
-this information has been added with B<gather-accelerator-contexts.pl>
-or merged with B<msgmerge>.
+B<msgaccel-check> can only be used on PO files to which this
+information has been added with B<msgaccel-prepare> or merged with
+B<msgmerge>.
 
-B<check-accelerator-conflicts.pl> reads the F<I<language>.po> file
-named on the command line and reports any conflicts to standard error.
-It also tries to suggest replacements for the conflicting accelerators.
+B<msgaccel-check> reads the F<I<language>.po> file named on the
+command line and reports any conflicts to standard error.  It also
+tries to suggest replacements for the conflicting accelerators.
 
-B<check-accelerator-conflicts.pl> does not access the source files to
-which F<I<language>.po> refers.  Thus, it does not matter if the line
+B<msgaccel-check> does not access the source files to which
+F<I<language>.po> refers.  Thus, it does not matter if the line
 numbers in "#:" lines are out of date.
 
 =head1 OPTIONS
@@ -243,10 +242,9 @@ numbers in "#:" lines are out of date.
 =item B<--accelerator-tag=>I<character>
 
 Specify the character that marks accelerators in C<msgstr> strings.
-Whenever this character occurs in a C<msgstr>,
-B<check-accelerator-conflicts.pl> treats the next character as an
-accelerator and checks that it is unique in each of the contexts in
-which the C<msgstr> is used.
+Whenever this character occurs in a C<msgstr>, B<msgaccel-check>
+treats the next character as an accelerator and checks that it is
+unique in each of the contexts in which the C<msgstr> is used.
 
 Omitting the B<--accelerator-tag> option implies
 B<--accelerator-tag="~">.  The option must be given to each program
@@ -258,14 +256,13 @@ in the PO file.
 =item B<--no-msgid-fallback>
 
 Select how to check entries where the C<msgstr> is missing or fuzzy.
-The default is B<--msgid-fallback>, which makes
-B<check-accelerator-conflicts.pl> use the C<msgid> instead, and report
-any conflicts between C<msgid> and C<msgstr> strings.  The alternative
-is B<--no-msgid-fallback>, which makes B<check-accelerator-conflicts.pl>
-completely ignore such entries.
+The default is B<--msgid-fallback>, which makes B<msgaccel-check> use
+the C<msgid> instead, and report any conflicts between C<msgid> and
+C<msgstr> strings.  The alternative is B<--no-msgid-fallback>, which
+makes B<msgaccel-check> completely ignore such entries.
 
-Regardless of these options, B<check-accelerator-conflicts.pl> will
-suggest accelerators that would conflict with ones defined in C<msgid>
+Regardless of these options, B<msgaccel-check> will suggest
+accelerators that would conflict with ones defined in C<msgid>
 strings.  Those strings will be eventually shadowed by C<msgstr>
 strings, so their accelerators should not affect which accelerators
 the translator chooses for C<msgstr> strings.
@@ -278,8 +275,8 @@ the translator chooses for C<msgstr> strings.
 
 =item F<I<language>.po> [...]
 
-The PO files to be scanned for conflicts.  These files must include the
-"accelerator_context" comments added by B<gather-accelerator-contexts.pl>.
+The PO files to be scanned for conflicts.  These files must include
+the "accelerator_context" comments added by B<msgaccel-prepare>.
 If the special comments are missing, no conflicts will be found.
 
 =back
@@ -296,9 +293,9 @@ If the special comments are missing, no conflicts will be found.
 
 =head2 Waiting for Locale::PO fixes
 
-When B<check-accelerator-conflicts.pl> includes C<msgstr> strings in
-warnings, it should transcode them from the charset of the PO file to
-the one specified by the user's locale.
+When B<msgaccel-check> includes C<msgstr> strings in warnings, it
+should transcode them from the charset of the PO file to the one
+specified by the user's locale.
 
 =head1 AUTHOR
 
@@ -335,4 +332,4 @@ DEALINGS IN THE SOFTWARE.
 
 =head1 SEE ALSO
 
-L<gather-accelerator-contexts.pl>, C<xgettext(1)>, C<msgmerge(1)>
+L<msgaccel-prepare>, C<xgettext(1)>, C<msgmerge(1)>

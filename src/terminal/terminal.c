@@ -288,6 +288,9 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 			return;
 		}
 
+		/* TODO: Should this be changed to allow TERM_EXEC_NEWWIN
+		 * in a blocked terminal?  There is similar code in
+		 * in_sock().  --KON, 2007 */
 		if (fg != TERM_EXEC_BG && is_blocked()) {
 			unlink(delete);
 			return;

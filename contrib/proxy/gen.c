@@ -121,10 +121,10 @@ dicts(FILE *f)
 
 	fprintf(f, "slownik = {\n");
 	for (i = 0; i < counter - 1; i++) {
-		fprintf(f, "\t'http://%s%s' : '%d.txt',\n", tab[i].host, tab[i].string, i);
+		fprintf(f, "\t'http://%s%s' : '%d.http',\n", tab[i].host, tab[i].string, i);
 	}
 	for (; i < counter; i++) {
-		fprintf(f, "\t'http://%s%s' : '%d.txt'\n", tab[i].host, tab[i].string, i);
+		fprintf(f, "\t'http://%s%s' : '%d.http'\n", tab[i].host, tab[i].string, i);
 	}
 	fprintf(f, "}\n\n");
 }
@@ -138,7 +138,7 @@ save(void)
 	for (i = 0; i < counter; i++) {
 		char buf[12];
 
-		snprintf(buf, 12, "%d.txt", i);
+		snprintf(buf, 12, "%d.http", i);
 		f = fopen(buf, "w");
 		if (!f)
 			return;

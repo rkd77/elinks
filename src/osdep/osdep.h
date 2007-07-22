@@ -75,4 +75,8 @@ unsigned char *get_shell(void);
  * available at all. Face it, we are just cool. */
 void elinks_cfmakeraw(struct termios *t);
 
+#ifndef user_appdata_directory
+#define user_appdata_directory() NULL
+#endif
+
 #endif

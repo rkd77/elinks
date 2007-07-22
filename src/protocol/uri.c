@@ -43,7 +43,11 @@
 static inline int
 end_of_dir(unsigned char c)
 {
-	return c == POST_CHAR || c == '#' || c == ';' || c == '?';
+	/* This used to check for c == ';' as well.  But section 3.3
+	 * of RFC 2396 explicitly says that parameters in a path
+	 * segment "are not significant to the parsing of relative
+	 * references."  */
+	return c == POST_CHAR || c == '#' || c == '?';
 }
 
 static inline int
@@ -700,16 +704,14 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 	if (uri->protocol != PROTOCOL_UNKNOWN)
 		need_slash = get_protocol_need_slash_after_host(uri->protocol);
 
-	/* We want to start at the first slash to also reduce URIs like
-	 * http://host//index.html to http://host/index.html */
 	path = uri->data - need_slash;
 	dest = src = path;
 
-	/* This loop mangles the URI string by removing directory elevators and
-	 * other cruft. Example: /.././etc////..//usr/ -> /usr/ */
+	/* This loop mangles the URI string by removing ".." and "." segments.
+	 * However it must not alter "//" without reason; see bug 744.  */
 	while (*dest) {
 		/* If the following pieces are the LAST parts of URL, we remove
-		 * them as well. See RFC 1808 for details. */
+		 * them as well. See RFC 2396 section 5.2 for details. */
 
 		if (end_of_dir(src[0])) {
 			/* URL data contains no more path. */
@@ -734,20 +736,25 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 
 			} else if (src[2] == '.'
 				   && (is_uri_dir_sep(uri, src[3]) || !src[3])) {
-				/* /../ or /.. - skip it and preceding element. */
+				/* /../ or /.. - skip it and preceding element.
+				 *
+				 * <path> "/foo/bar" <dest> ...
+				 * <src> ("/../" or "/..\0") ...
+				 *
+				 * Remove "bar" and the directory
+				 * separator that precedes it.  The
+				 * separator will be added back in the
+				 * next iteration unless another ".."
+				 * follows, in which case it will be
+				 * added later.  "bar" may be empty.  */
 
-				/* First back out the last incrementation of
-				 * @dest (dest++) to get the position that was
-				 * last asigned to. */
-				if (dest > path) dest--;
-
-				/* @dest might be pointing to a dir separator
-				 * so we decrement before any testing. */
 				while (dest > path) {
 					dest--;
 					if (is_uri_dir_sep(uri, *dest)) break;
 				}
 
+				/* <path> "/foo" <dest> "/bar" ...
+				 * <src> ("/../" or "/..\0") ... */
 				if (!src[3]) {
 					/* /.. - add ending slash and stop */
 					*dest++ = *src;
@@ -759,10 +766,6 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 				continue;
 			}
 
-		} else if (is_uri_dir_sep(uri, src[1])) {
-			/* // - ignore first '/'. */
-			src += 1;
-			continue;
 		}
 
 		/* We don't want to access memory past the NUL char. */

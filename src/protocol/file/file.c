@@ -102,7 +102,7 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 	add_string_to_string(page, &uri_encoded_name);
 
 	if (entry->attrib[0] == 'd') {
-		add_char_to_string(page, CHAR_DIR_SEP);
+		add_char_to_string(page, '/');
 
 #ifdef FS_UNIX_SOFTLINKS
 	} else if (entry->attrib[0] == 'l') {
@@ -271,7 +271,10 @@ file_protocol_handler(struct connection *connection)
 
 	decode_uri_string(&name);
 
-	if (file_is_dir(name.source)) {
+	/* In Win32, file_is_dir seems to always return 0 if the name
+	 * ends with a directory separator.  */
+	if ((name.length > 0 && dir_sep(name.source[name.length - 1]))
+	    || file_is_dir(name.source)) {
 		/* In order for global history and directory listing to
 		 * function properly the directory url must end with a
 		 * directory separator. */
