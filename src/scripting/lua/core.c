@@ -49,6 +49,9 @@
 
 #define LUA_HOOKS_FILENAME		"hooks.lua"
 
+#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM >= 501
+#define ELINKS_LUA_51
+#endif
 
 lua_State *lua_state;
 
@@ -657,8 +660,11 @@ do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 	 * Fixes debian bug #231760 ('dbug 231760' using URI rewrite) */
 	if (file_can_read(file)) {
 		int oldtop = lua_gettop(S);
-
+#ifdef ELINKS_LUA_51
+		if (luaL_dofile(S, file) != 0)
+#else
 		if (lua_dofile(S, file) != 0)
+#endif
 			sleep(3); /* Let some time to see error messages. */
 		lua_settop(S, oldtop);
 	}
@@ -671,11 +677,15 @@ init_lua(struct module *module)
 {
 	L = lua_open();
 
+#ifdef ELINKS_LUA_51
+	luaL_openlibs(L);
+#else
 	luaopen_base(L);
 	luaopen_table(L);
 	luaopen_io(L);
 	luaopen_string(L);
 	luaopen_math(L);
+#endif
 
 	lua_register(L, LUA_ALERT, l_alert);
 	lua_register(L, "current_url", l_current_url);
@@ -780,7 +790,11 @@ handle_ret_eval(struct session *ses)
 		int oldtop = lua_gettop(L);
 
 		if (prepare_lua(ses) == 0) {
+#ifdef ELINKS_LUA_51
+			if (luaL_dostring(L, expr));
+#else
 			lua_dostring(L, expr);
+#endif
 			lua_settop(L, oldtop);
 			finish_lua();
 		}

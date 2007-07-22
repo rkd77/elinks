@@ -15,6 +15,9 @@
 #include "session/session.h"
 #include "util/string.h"
 
+#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM >= 501
+#define ELINKS_LUA_51
+#endif
 
 /* The events that will trigger the functions below and what they are expected
  * to do is explained in doc/events.txt */
@@ -200,7 +203,11 @@ static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
 	if (!prepare_lua(NULL)) {
+#ifdef ELINKS_LUA_51
+		if (luaL_dostring(lua_state, "if quit_hook then quit_hook() end"));
+#else
 		lua_dostring(lua_state, "if quit_hook then quit_hook() end");
+#endif
 		finish_lua();
 	}
 
