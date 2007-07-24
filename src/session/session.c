@@ -700,9 +700,9 @@ request_additional_file(struct session *ses, unsigned char *name, struct uri *ur
 }
 
 static void
-load_additional_file(struct file_to_load *ftl, struct document_view *doc_view,
-		     enum cache_mode cache_mode)
+load_additional_file(struct file_to_load *ftl, enum cache_mode cache_mode)
 {
+	struct document_view *doc_view = current_frame(ftl->ses);
 	struct uri *referrer = doc_view && doc_view->document
 			     ? doc_view->document->uri : NULL;
 
@@ -720,15 +720,12 @@ process_file_requests(struct session *ses)
 		int more = 0;
 
 		foreach (ftl, ses->more_files) {
-			struct document_view *doc_view;
-
 			if (ftl->req_sent)
 				continue;
 
 			ftl->req_sent = 1;
 
-			doc_view = current_frame(ses);
-			load_additional_file(ftl, doc_view, CACHE_MODE_NORMAL);
+			load_additional_file(ftl, CACHE_MODE_NORMAL);
 			more = 1;
 		}
 
@@ -1228,7 +1225,7 @@ reload(struct session *ses, enum cache_mode cache_mode)
 			ftl->download.data = ftl;
 			ftl->download.callback = (download_callback_T *) file_loading_callback;
 
-			load_additional_file(ftl, doc_view, cache_mode);
+			load_additional_file(ftl, cache_mode);
 		}
 	}
 }
