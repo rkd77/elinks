@@ -11,6 +11,7 @@ ELinks 0.11.7.GIT now:
 To be released as 0.11.8.
 
 * serious Debian bug 464384: fix cast warning in alignof
+* bug 869: fix a buffer overflow segfault in do_type_query
 * minor bug 1113: fix a small memory leak if a mailcap file is malformed
 
 ELinks 0.11.7:

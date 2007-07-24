@@ -1090,10 +1090,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 		}
 
 		if (handler && handler->program) {
-			int programlen = strlen(handler->program);
-
-			programlen = int_max(programlen, MAX_STR_LEN);
-			memcpy(field, handler->program, programlen);
+			safe_strncpy(field, handler->program, MAX_STR_LEN);
 		}
 
 		/* xgettext:no-c-format */
