@@ -12,7 +12,7 @@ struct input_history_entry {
 };
 
 struct input_history {
-	struct list_head entries;
+	LIST_OF(struct input_history_entry) entries;
 	int size;
 	unsigned int dirty:1;
 	unsigned int nosave:1;
@@ -42,9 +42,12 @@ struct input_history {
 
 void add_to_input_history(struct input_history *, unsigned char *, int);
 
-void do_tab_compl(struct dialog_data *, struct list_head *);
-void do_tab_compl_file(struct dialog_data *, struct list_head *);
-void do_tab_compl_unambiguous(struct dialog_data *, struct list_head *);
+void do_tab_compl(struct dialog_data *,
+		  LIST_OF(struct input_history_entry) *);
+void do_tab_compl_file(struct dialog_data *,
+		       LIST_OF(struct input_history_entry) *);
+void do_tab_compl_unambiguous(struct dialog_data *,
+			      LIST_OF(struct input_history_entry) *);
 
 /* Load history file from elinks home. */
 int load_input_history(struct input_history *history, unsigned char *filename);

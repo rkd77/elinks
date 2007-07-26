@@ -36,7 +36,7 @@
 #include "viewer/text/textarea.h"
 
 
-INIT_LIST_HEAD(terminals);
+INIT_LIST_OF(struct terminal, terminals);
 
 static void check_if_no_terminal(void);
 

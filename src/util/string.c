@@ -467,8 +467,8 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 }
 
 struct string *
-add_to_string_list(struct list_head *list, const unsigned char *source,
-		   int length)
+add_to_string_list(LIST_OF(struct string_list_item) *list,
+		   const unsigned char *source, int length)
 {
 	struct string_list_item *item;
 	struct string *string;
@@ -494,7 +494,7 @@ add_to_string_list(struct list_head *list, const unsigned char *source,
 }
 
 void
-free_string_list(struct list_head *list)
+free_string_list(LIST_OF(struct string_list_item) *list)
 {
 	assertm(list != NULL, "[free_string_list]");
 	if_assert_failed return;

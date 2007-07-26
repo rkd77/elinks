@@ -43,12 +43,12 @@
 static int bittorrent_socket = -1;
 
 /* The active BitTorrent connections sharing the above listening port. */
-static INIT_LIST_HEAD(bittorrent_connections);
+static INIT_LIST_OF(struct bittorrent_connection, bittorrent_connections);
 
 /* The incoming (and pending anonymous) peer connections which has not yet been
  * assigned to a BitTorrent connection because the info hash has not been read
  * from the handshake.  */
-static INIT_LIST_HEAD(bittorrent_peer_connections);
+static INIT_LIST_OF(struct bittorrent_peer_connection, bittorrent_peer_connections);
 
 
 /* Loop the bittorrent connection list and return matching connection

@@ -407,7 +407,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 					str[1] = BORDER_SDLCORNER;
 				}
 			} else {
-				struct list_head *p = data->box->items;
+				LIST_OF(struct listbox_item) *p = data->box->items;
 
 				if (p->next == item) {
 					str[1] = BORDER_SULCORNER;

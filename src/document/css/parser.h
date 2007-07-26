@@ -15,7 +15,8 @@ struct uri;
  * css_property}es to the specified list. The function returns positive value
  * in case it recognized a property in the given string, or zero in case of an
  * error. */
-void css_parse_properties(struct list_head *props, struct scanner *scanner);
+void css_parse_properties(LIST_OF(struct css_property) *props,
+			  struct scanner *scanner);
 
 
 /* Parses the @string and adds any recognized selectors + properties to the

@@ -24,7 +24,7 @@
 #include "util/time.h"
 
 /* The list of cache entries */
-static INIT_LIST_HEAD(cache_entries);
+static INIT_LIST_OF(struct cache_entry, cache_entries);
 
 static unsigned longlong cache_size;
 static int id_counter = 1;

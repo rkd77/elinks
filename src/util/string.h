@@ -250,10 +250,10 @@ struct string_list_item {
 /* Adds @string with @length chars to the list. If length is -1 it will be set
  * to the return value of strlen(). */
 struct string *
-add_to_string_list(struct list_head *list, const unsigned char *string,
-		   int length);
+add_to_string_list(LIST_OF(struct string_list_item) *list,
+		   const unsigned char *string, int length);
 
-void free_string_list(struct list_head *list);
+void free_string_list(LIST_OF(struct string_list_item) *list);
 
 
 /* Returns an empty C string or @str if different from NULL. */

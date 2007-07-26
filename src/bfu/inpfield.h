@@ -30,7 +30,7 @@ struct widget_info_field {
 struct widget_data_info_field {
 	int vpos;
 	int cpos;
-	struct list_head history;
+	LIST_OF(struct input_history_entry) history;
 	struct input_history_entry *cur_hist;
 };
 

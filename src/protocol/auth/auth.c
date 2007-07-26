@@ -26,7 +26,7 @@
 #define DEBUG_HTTP_AUTH
 #endif
 
-static INIT_LIST_HEAD(auth_entry_list);
+static INIT_LIST_OF(struct auth_entry, auth_entry_list);
 
 
 /* Find if url/realm is in auth list. If a matching url is found, but realm is

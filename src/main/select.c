@@ -82,7 +82,7 @@ struct bottom_half {
 	void *data;
 };
 
-static INIT_LIST_HEAD(bottom_halves);
+static INIT_LIST_OF(struct bottom_half, bottom_halves);
 
 int
 register_bottom_half_do(select_handler_T fn, void *data)

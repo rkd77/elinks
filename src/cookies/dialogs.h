@@ -6,7 +6,7 @@
 #include "terminal/terminal.h"
 #include "util/lists.h"
 
-extern struct list_head cookie_queries;
+extern LIST_OF(struct cookie) cookie_queries;
 
 void accept_cookie_dialog(struct session *ses, void *data);
 extern struct hierbox_browser cookie_browser;

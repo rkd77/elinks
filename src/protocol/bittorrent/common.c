@@ -463,7 +463,7 @@ struct bittorrent_blacklist_item {
 	bittorrent_id_T id;
 };
 
-static INIT_LIST_HEAD(bittorrent_blacklist);
+static INIT_LIST_OF(struct bittorrent_blacklist_item, bittorrent_blacklist);
 
 
 static struct bittorrent_blacklist_item *

@@ -74,7 +74,7 @@ bookmarks_read(void)
 }
 
 void
-bookmarks_write(struct list_head *bookmarks_list)
+bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 {
 	int backend_num = get_opt_int("bookmarks.file_format");
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];

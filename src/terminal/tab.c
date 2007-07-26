@@ -106,7 +106,7 @@ get_tab_by_number(struct terminal *term, int num)
 
 	/* Ensure that the return value actually points to a struct
 	 * window.  */
-	assertm((struct list_head *) win != &term->windows,
+	assertm((LIST_OF(struct window) *) win != &term->windows,
 	        "tab number out of range");
 	if_assert_failed return term->windows.next;
 

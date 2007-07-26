@@ -33,7 +33,7 @@
 #include "viewer/text/link.h"
 
 
-static INIT_LIST_HEAD(format_cache);
+static INIT_LIST_OF(struct document, format_cache);
 
 struct document *
 init_document(struct cache_entry *cached, struct document_options *options)

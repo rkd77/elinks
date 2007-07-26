@@ -24,7 +24,7 @@ struct timer {
 
 /* @timers.next points to the timer with the smallest interval,
  * @timers.next->next to the second smallest, and so on.  */
-static INIT_LIST_HEAD(timers);
+static INIT_LIST_OF(struct timer, timers);
 
 int
 get_timers_count(void)

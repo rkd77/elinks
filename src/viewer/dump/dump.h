@@ -12,6 +12,6 @@ struct string *
 add_document_to_string(struct string *string, struct document *document);
 
 int dump_to_file(struct document *, int);
-void dump_next(struct list_head *);
+void dump_next(LIST_OF(struct string_list_item) *);
 
 #endif

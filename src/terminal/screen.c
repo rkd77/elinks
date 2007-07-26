@@ -269,7 +269,7 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 #define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
 
-static INIT_LIST_HEAD(active_screen_drivers);
+static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
 /* Set driver->opt according to driver->type and term_spec.
  * Other members of *driver need not have been initialized.
