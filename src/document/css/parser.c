@@ -184,16 +184,16 @@ struct selector_pkg {
 /** Move a CSS selector and its leaves into a new list.  If a similar
  * selector already exists in the list, merge them.
  *
- * \param sels
- *   The list to which \a selector should be moved.  Must not be NULL.
- * \param selector
+ * @param sels
+ *   The list to which @a selector should be moved.  Must not be NULL.
+ * @param selector
  *   The selector that should be moved.  Must not be NULL.  If it is
  *   already in some list, this function removes it from there.
- * \param watch
- *   This function updates \a *watch if it merges that selector into
- *   another one.  \a watch must not be NULL but \a *watch may be.
+ * @param watch
+ *   This function updates @a *watch if it merges that selector into
+ *   another one.  @a watch must not be NULL but @a *watch may be.
  *
- * \return \a selector or the one into which it was merged.  */
+ * @returns @a selector or the one into which it was merged.  */
 static struct css_selector *
 reparent_selector(struct list_head *sels, struct css_selector *selector,
                   struct css_selector **watch)
