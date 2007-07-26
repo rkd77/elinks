@@ -67,8 +67,8 @@ struct dom_stack_state {
 	 * The depth of the state in the stack. This is amongst other things
 	 * used to get the state object data. */
 	unsigned int depth;
-	/** Whether this stack state can be popped with #pop_dom_node,
-	 * #pop_dom_nodes, or #pop_dom_state. */
+	/** Whether this stack state can be popped with pop_dom_node(),
+	 * pop_dom_nodes(), or pop_dom_state(). */
 	unsigned int immutable:1;
 };
 
@@ -112,7 +112,7 @@ enum dom_stack_flag {
 	/** No flag needed. */
 	DOM_STACK_FLAG_NONE = 0,
 
-	/** Free nodes when popping by calling #done_dom_node. */
+	/** Free nodes when popping by calling done_dom_node(). */
 	DOM_STACK_FLAG_FREE_NODES = 1,
 };
 
