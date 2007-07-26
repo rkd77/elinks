@@ -145,7 +145,7 @@ struct session {
 
 	/* The current document */
 
-	struct list_head more_files; /* -> struct file_to_load */
+	LIST_OF(struct file_to_load) more_files;
 
 	struct download loading;
 	struct uri *loading_uri;
@@ -154,7 +154,7 @@ struct session {
 	int redirect_cnt;
 
 	struct document_view *doc_view;
-	struct list_head scrn_frames; /* -> struct document_view */
+	LIST_OF(struct document_view) scrn_frames;
 
 	struct uri *download_uri;
 
@@ -192,13 +192,13 @@ struct session {
 
 
 	/* The possibly running type queries (what-to-do-with-that-file?) */
-	struct list_head type_queries; /* -> struct type_query */
+	LIST_OF(struct type_query) type_queries;
 
 	/* The info for status displaying */
 	struct session_status status;
 };
 
-extern struct list_head sessions; /* -> struct session */
+extern LIST_OF(struct session) sessions;
 extern enum remote_session_flags remote_session_flags;
 
 /* This returns a pointer to the current location inside of the given session.

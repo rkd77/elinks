@@ -67,7 +67,7 @@ static void write_bookmarks_xbel(struct secure_save_info *ssi,
 struct tree_node {
 	unsigned char *name;		/* Name of the element */
 	unsigned char *text;		/* Text inside the element */
-	struct list_head attrs;		/* {struct attributes} */
+	LIST_OF(struct attributes) attrs;
 	struct tree_node *parent;
 	struct tree_node *children;
 

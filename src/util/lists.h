@@ -56,7 +56,6 @@ struct xlist_head {
 #define LIST_HEAD(x) x *next; x *prev
 #define LIST_SET_MAGIC(x) list_magic_set(*(x))
 
-
 #else /* LISTDEBUG */
 
 #define LISTMAGIC1 ((void *) 0xdadababa)
@@ -117,6 +116,12 @@ struct xlist_head {
 #endif /* LISTDEBUG */
 
 #define INIT_LIST_HEAD(x) struct list_head x = { D_LIST_HEAD(x) }
+
+/** A list intended to contain elements of a specific type.  The
+ * parameter currently serves as documentation only.  Doxyfile defines
+ * this macro differently in order to get better collaboration
+ * diagrams.  */
+#define LIST_OF(element_T) struct list_head
 
 #ifdef HAVE_TYPEOF
 #define list_typeof(x) typeof(x)

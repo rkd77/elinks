@@ -36,7 +36,7 @@ struct form {
 	unsigned char *target;
 	enum form_method method;
 
-	struct list_head items; /* -> struct form_control */
+	LIST_OF(struct form_control) items;
 };
 
 

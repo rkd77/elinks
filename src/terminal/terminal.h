@@ -90,7 +90,7 @@ struct terminal {
 	 *   tab numbers explicitly, rather than computing them from the
 	 *   stack order as is done now.  Also, what should be done with the
 	 *   inactive main menu?  --KON */
-	struct list_head windows; /* {struct window} */
+	LIST_OF(struct window) windows;
 
 	/* The specification of terminal in terms of terminal options. */
 	struct option *spec;
@@ -159,7 +159,7 @@ struct terminal {
 	memset(&(term)->prev_mouse_event, 0, sizeof((term)->prev_mouse_event))
 
 /* We keep track about all the terminals in this list. */
-extern struct list_head terminals;
+extern LIST_OF(struct terminal) terminals;
 
 
 extern const unsigned char frame_dumb[];

@@ -97,7 +97,7 @@ struct link {
 	/* XXX: They don't neccessary need to be link-specific, but we just
 	 * don't support them for any other elements for now. Well, we don't
 	 * even have a good place where to store them in that case. */
-	struct list_head *event_hooks; /* -> struct script_event_hook */
+	LIST_OF(struct script_event_hook) *event_hooks;
 
 	union {
 		unsigned char *name;
@@ -138,9 +138,9 @@ struct document {
 
 	struct document_options options;
 
-	struct list_head forms; /* -> struct form */
-	struct list_head tags; /* -> struct tag */
-	struct list_head nodes; /* -> struct node */
+	LIST_OF(struct form) forms;
+	LIST_OF(struct tag) tags;
+	LIST_OF(struct node) nodes;
 
 #ifdef CONFIG_ECMASCRIPT
 	/* ECMAScript snippets to be executed during loading the document into
@@ -149,7 +149,7 @@ struct document {
 	 * by an external reference - you must wait with processing other items
 	 * until it gets resolved and loaded. New items are guaranteed to
 	 * always appear at the list end. */
-	struct list_head onload_snippets; /* -> struct string_list_item */
+	LIST_OF(struct string_list_item) onload_snippets;
 	/* FIXME: We should externally maybe using cache_entry store the
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */

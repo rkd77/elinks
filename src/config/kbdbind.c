@@ -27,7 +27,7 @@
 
 static struct action_list action_table[KEYMAP_MAX];
 static struct keymap keymap_table[KEYMAP_MAX];
-static struct list_head keymaps[KEYMAP_MAX]; /* struct keybinding */
+static LIST_OF(struct keybinding) keymaps[KEYMAP_MAX];
 
 static void add_default_keybindings(void);
 

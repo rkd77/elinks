@@ -14,7 +14,7 @@ struct view_state {
 	struct document_view *doc_view;
 	struct uri *uri;
 
-	struct list_head forms; /* -> struct form_view */
+	LIST_OF(struct form_view) forms;
 	struct form_state *form_info;
 	int form_info_len;
 
