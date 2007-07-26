@@ -1105,6 +1105,7 @@ xsp:
 		add_to_string(head, "Charset: ");
 		add_to_string(head, he);
 		mem_free(he);
+		add_crlf_to_string(head);
 	}
 
 	/* FIXME (bug 784): options->cp is the terminal charset;
