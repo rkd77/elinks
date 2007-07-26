@@ -106,7 +106,7 @@ void done_css_stylesheet(struct css_stylesheet *css);
 
 /* Returns a new freshly made selector adding it to the given selector
  * list, or NULL. */
-struct css_selector *get_css_selector(struct list_head *selector_list,
+struct css_selector *get_css_selector(LIST_OF(struct css_selector) *selector_list,
                                       enum css_selector_type type,
                                       enum css_selector_relation rel,
                                       unsigned char *name, int namelen);
@@ -117,7 +117,7 @@ struct css_selector *get_css_selector(struct list_head *selector_list,
 
 /* Looks up the selector of the name @name and length @namelen in the
  * given list of selectors. */
-struct css_selector *find_css_selector(struct list_head *selector_list,
+struct css_selector *find_css_selector(LIST_OF(struct css_selector) *selector_list,
                                        enum css_selector_type type,
                                        enum css_selector_relation rel,
                                        const unsigned char *name, int namelen);
@@ -127,13 +127,13 @@ struct css_selector *find_css_selector(struct list_head *selector_list,
 
 /* Initialize the selector structure. This is a rather low-level function from
  * your POV. */
-struct css_selector *init_css_selector(struct list_head *selector_list,
+struct css_selector *init_css_selector(LIST_OF(struct css_selector) *selector_list,
                                        enum css_selector_type type,
                                        unsigned char *name, int namelen);
 
 /* Add all properties from the list to the given @selector. */
 void add_selector_properties(struct css_selector *selector,
-                             struct list_head *properties);
+                             LIST_OF(struct css_property) *properties);
 
 /* Join @sel2 to @sel1, @sel1 taking precedence in all conflicts. */
 void merge_css_selectors(struct css_selector *sel1, struct css_selector *sel2);
@@ -143,7 +143,7 @@ void done_css_selector(struct css_selector *selector);
 
 #ifdef DEBUG_CSS
 /* Dumps the selector tree to stderr. */
-void dump_css_selector_tree(struct list_head *selector_list);
+void dump_css_selector_tree(LIST_OF(struct css_selector) *selector_list);
 #endif
 
 #endif

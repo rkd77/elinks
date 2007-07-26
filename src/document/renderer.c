@@ -53,7 +53,8 @@
  * But I want to take no risk by reworking that now. --pasky */
 static void
 add_snippets(struct ecmascript_interpreter *interpreter,
-             struct list_head *doc_snippets, struct list_head *queued_snippets)
+             LIST_OF(struct string_list_item) *doc_snippets,
+             LIST_OF(struct string_list_item) *queued_snippets)
 {
 	struct string_list_item *doc_current = doc_snippets->next;
 
@@ -112,7 +113,8 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 
 static void
 process_snippets(struct ecmascript_interpreter *interpreter,
-                 struct list_head *snippets, struct string_list_item **current)
+                 LIST_OF(struct string_list_item) *snippets,
+                 struct string_list_item **current)
 {
 	if (!*current)
 		*current = snippets->next;

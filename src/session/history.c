@@ -24,7 +24,7 @@
 
 
 static inline void
-free_history(struct list_head *history)
+free_history(LIST_OF(struct location) *history)
 {
 	while (!list_empty(*history)) {
 		struct location *loc = history->next;

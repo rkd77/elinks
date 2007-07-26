@@ -73,7 +73,7 @@ static int init_b = 0;
 
 /* Check if either stdin or stdout are pipes */
 static void
-check_stdio(struct list_head *url_list)
+check_stdio(LIST_OF(struct string_list_item) *url_list)
 {
 	assert(!remote_session_flags);
 
@@ -174,7 +174,7 @@ done_ipc(void)
 static void
 init(void)
 {
-	INIT_LIST_HEAD(url_list);
+	INIT_LIST_OF(struct string_list_item, url_list);
 	int fd = -1;
 	enum retval ret;
 

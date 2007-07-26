@@ -1869,7 +1869,7 @@ void
 check_html_form_hierarchy(struct part *part)
 {
 	struct document *document = part->document;
-	INIT_LIST_HEAD(form_controls);
+	INIT_LIST_OF(struct form_control, form_controls);
 	struct form *form;
 	struct form_control *fc, *next;
 

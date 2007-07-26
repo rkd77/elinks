@@ -812,7 +812,7 @@ enum frame_event_status
 pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 		    int which_type)
 {
-	struct list_head *tree = get_opt_tree("document.uri_passing");
+	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing");
 	enum pass_uri_type type = which_type;
 	struct menu_item *items;
 	struct option *option;
@@ -887,7 +887,7 @@ void
 add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type,
 			unsigned char *text)
 {
-	struct list_head *tree = get_opt_tree("document.uri_passing");
+	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing");
 	struct option *option;
 	int commands = 0;
 	enum menu_item_flags flags = NO_FLAG;

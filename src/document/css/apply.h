@@ -17,7 +17,7 @@ struct css_selector *
 get_css_selector_for_element(struct html_context *html_context,
 			     struct html_element *element,
 			     struct css_stylesheet *css,
-			     struct list_head *html_stack);
+			     LIST_OF(struct html_element) *html_stack);
 
 
 /* Apply properties from an existing selector. */
@@ -30,6 +30,7 @@ apply_css_selector_style(struct html_context *html_context,
  * attributes (if it contains such an attribute). */
 void
 css_apply(struct html_context *html_context, struct html_element *element,
-	  struct css_stylesheet *css, struct list_head *html_stack);
+	  struct css_stylesheet *css,
+	  LIST_OF(struct html_element) *html_stack);
 
 #endif

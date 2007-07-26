@@ -8,7 +8,7 @@
 struct location {
 	LIST_HEAD(struct location);
 
-	struct list_head frames;
+	LIST_OF(struct frame) frames;
 	struct download download;
 	struct view_state vs;
 };

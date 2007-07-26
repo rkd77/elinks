@@ -4,6 +4,7 @@
 #include "main/main.h"
 #include "util/lists.h"
 
-enum retval parse_options(int, unsigned char *[], struct list_head *);
+enum retval parse_options(int, unsigned char *[],
+			  LIST_OF(struct string_list_item) *);
 
 #endif

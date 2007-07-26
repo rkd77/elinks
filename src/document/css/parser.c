@@ -23,7 +23,8 @@
 
 
 void
-css_parse_properties(struct list_head *props, struct scanner *scanner)
+css_parse_properties(LIST_OF(struct css_property) *props,
+		     struct scanner *scanner)
 {
 	assert(props && scanner);
 
@@ -195,7 +196,8 @@ struct selector_pkg {
  *
  * @returns @a selector or the one into which it was merged.  */
 static struct css_selector *
-reparent_selector(struct list_head *sels, struct css_selector *selector,
+reparent_selector(LIST_OF(struct css_selector) *sels,
+                  struct css_selector *selector,
                   struct css_selector **watch)
 {
 	struct css_selector *twin = find_css_selector(sels, selector->type,
@@ -230,7 +232,7 @@ reparent_selector(struct list_head *sels, struct css_selector *selector,
  */
 static void
 css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
-		   struct list_head *selectors)
+		   LIST_OF(struct selector_pkg) *selectors)
 {
 	/* Shell for the last selector (the whole selector chain, that is). */
 	struct selector_pkg *pkg = NULL;
@@ -470,8 +472,8 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 static void
 css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 {
-	INIT_LIST_HEAD(selectors);
-	INIT_LIST_HEAD(properties);
+	INIT_LIST_OF(struct selector_pkg, selectors);
+	INIT_LIST_OF(struct css_property, properties);
 	struct selector_pkg *pkg;
 
 	css_parse_selector(css, scanner, &selectors);

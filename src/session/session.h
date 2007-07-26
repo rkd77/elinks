@@ -221,7 +221,8 @@ print_error_dialog(struct session *ses, enum connection_state state,
 
 void process_file_requests(struct session *);
 
-struct string *encode_session_info(struct string *info, struct list_head *url_list);
+struct string *encode_session_info(struct string *info,
+				   LIST_OF(struct string_list_item) *url_list);
 
 /* Returns zero if the info was remote sessions or if it failed to create any
  * sessions. */
@@ -262,7 +263,7 @@ struct link *get_current_link_in_view(struct document_view *doc_view);
 unsigned char *get_current_link_url(struct session *, unsigned char *, size_t);
 unsigned char *get_current_link_name(struct session *, unsigned char *, size_t);
 
-extern struct list_head questions_queue;
+extern LIST_OF(struct questions_entry) questions_queue;
 void add_questions_entry(void (*callback)(struct session *, void *), void *data);
 void check_questions_queue(struct session *ses);
 

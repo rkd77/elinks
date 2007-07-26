@@ -62,9 +62,9 @@
 /* TODO: tp_*() should be in separate file, I guess? --pasky */
 
 
-INIT_LIST_HEAD(downloads);
+INIT_LIST_OF(struct file_download, downloads);
 
-INIT_LIST_HEAD(copiousoutput_data);
+INIT_LIST_OF(struct popen_data, copiousoutput_data);
 
 int
 download_is_progressing(struct download *download)

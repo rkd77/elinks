@@ -228,7 +228,7 @@ get_bittorrent_peerwire_max_request_length(void)
 
 
 /* File selection store. */
-static INIT_LIST_HEAD(bittorrent_selections);
+static INIT_LIST_OF(struct bittorrent_selection_info, bittorrent_selections);
 
 struct bittorrent_selection_info {
 	LIST_HEAD(struct bittorrent_selection_info);
@@ -291,7 +291,7 @@ add_bittorrent_selection(struct uri *uri, int *selection, size_t size)
 
 
 /* Message queue. */
-static INIT_LIST_HEAD(bittorrent_messages);
+static INIT_LIST_OF(struct bittorrent_message, bittorrent_messages);
 
 void
 add_bittorrent_message(struct uri *uri, enum connection_state state,

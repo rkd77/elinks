@@ -61,7 +61,7 @@ struct active_thread {
 	void *data;
 };
 
-INIT_LIST_HEAD(active_threads);
+INIT_LIST_OF(struct active_thread, active_threads);
 
 int32
 started_thr(void *data)
@@ -114,12 +114,14 @@ rel:
 void
 terminate_osdep(void)
 {
-	struct list_head *p;
+	LIST_OF(struct active_thread) *p;
 	struct active_thread *thrd;
 
 	if (acquire_sem(thr_sem) < B_NO_ERROR) return;
 	foreach (thrd, active_threads) kill_thread(thrd->tid);
 
+	/* Cannot use free_list(active_threads) because it would call
+	 * mem_free(p) and we need free(p).  */
 	while ((p = active_threads.next) != &active_threads) {
 		del_from_list(p);
 		free(p);

@@ -368,8 +368,8 @@ color_wr(struct option *opt, struct string *str)
 static void
 tree_dup(struct option *opt, struct option *template)
 {
-	struct list_head *new = init_options_tree();
-	struct list_head *tree = template->value.tree;
+	LIST_OF(struct option) *new = init_options_tree();
+	LIST_OF(struct option) *tree = template->value.tree;
 	struct option *option;
 
 	if (!new) return;

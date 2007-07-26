@@ -163,7 +163,7 @@ struct alloc_header {
 
 struct mem_stats mem_stats;
 
-INIT_LIST_HEAD(memory_list);
+INIT_LIST_OF(struct alloc_header, memory_list);
 
 #ifdef LOG_MEMORY_ALLOC
 static void

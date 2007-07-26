@@ -85,7 +85,7 @@ struct file_download {
 };
 
 /* Stack of all running downloads */
-extern struct list_head downloads;
+extern LIST_OF(struct file_download) downloads;
 
 static inline int
 is_in_downloads_list(struct file_download *file_download)

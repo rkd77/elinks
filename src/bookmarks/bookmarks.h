@@ -20,7 +20,7 @@ struct bookmark {
 	unsigned char *title;   /* title of bookmark */
 	unsigned char *url;     /* Location of bookmarked item */
 
-	struct list_head child;
+	LIST_OF(struct bookmark) child;
 };
 
 /* Bookmark lists */

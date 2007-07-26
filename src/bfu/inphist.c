@@ -58,7 +58,8 @@ menu_tab_compl(struct terminal *term, void *item_, void *dlg_data_)
 /* Complete to last unambiguous character, and display menu for all possible
  * further completions. */
 void
-do_tab_compl(struct dialog_data *dlg_data, struct list_head *history)
+do_tab_compl(struct dialog_data *dlg_data,
+	     LIST_OF(struct input_history_entry) *history)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct widget_data *widget_data = selected_widget(dlg_data);
@@ -104,7 +105,8 @@ strcommonlen(unsigned char *a, unsigned char *b)
  * completes `go' to `google.com' and `google.com/' to `google.com/search?q='.
  */
 void
-do_tab_compl_unambiguous(struct dialog_data *dlg_data, struct list_head *history)
+do_tab_compl_unambiguous(struct dialog_data *dlg_data,
+			 LIST_OF(struct input_history_entry) *history)
 {
 	struct string completion;
 	struct widget_data *widget_data = selected_widget(dlg_data);
@@ -188,7 +190,8 @@ tab_complete_file_menu(struct terminal *term, void *path_, void *dlg_data_)
 }
 
 void
-do_tab_compl_file(struct dialog_data *dlg_data, struct list_head *history)
+do_tab_compl_file(struct dialog_data *dlg_data,
+		  LIST_OF(struct input_history_entry) *history)
 {
 	struct widget_data *widget_data = selected_widget(dlg_data);
 

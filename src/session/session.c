@@ -85,7 +85,7 @@ struct session_info {
 #define file_to_load_is_active(ftl) ((ftl)->req_sent && is_in_progress_state((ftl)->download.state))
 
 
-INIT_LIST_HEAD(sessions);
+INIT_LIST_OF(struct session, sessions);
 
 enum remote_session_flags remote_session_flags;
 
@@ -97,7 +97,7 @@ static struct file_to_load *request_additional_file(struct session *,
 static window_handler_T tabwin_func;
 
 
-static INIT_LIST_HEAD(session_info);
+static INIT_LIST_OF(struct session_info, session_info);
 static int session_info_id = 1;
 
 static struct session_info *
@@ -475,7 +475,7 @@ struct questions_entry {
 	void *data;
 };
 
-INIT_LIST_HEAD(questions_queue);
+INIT_LIST_OF(struct questions_entry, questions_queue);
 
 
 void
@@ -976,7 +976,8 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 
 struct string *
-encode_session_info(struct string *info, struct list_head *url_list)
+encode_session_info(struct string *info,
+		    LIST_OF(struct string_list_item) *url_list)
 {
 	struct string_list_item *url;
 

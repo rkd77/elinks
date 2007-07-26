@@ -16,7 +16,7 @@ struct uri;
 struct connection {
 	LIST_HEAD(struct connection);
 
-	struct list_head downloads;
+	LIST_OF(struct download) downloads;
 	struct progress *progress;
 
 	/* If no proxy is used uri and proxied_uri are the same. */
@@ -82,7 +82,7 @@ struct popen_data {
 	unsigned char *filename;
 };
 
-extern struct list_head copiousoutput_data;
+extern LIST_OF(struct popen_data) copiousoutput_data;
 
 int register_check_queue(void);
 

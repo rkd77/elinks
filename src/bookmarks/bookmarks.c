@@ -32,7 +32,7 @@
 #include "util/string.h"
 
 /* The list of bookmarks */
-INIT_LIST_HEAD(bookmarks);
+INIT_LIST_OF(struct bookmark, bookmarks);
 
 /* Set to 1, if bookmarks have changed. */
 static int bookmarks_dirty = 0;
@@ -147,8 +147,8 @@ init_bookmarks(struct module *module)
 
 /* Clears the bookmark list */
 static void
-free_bookmarks(struct list_head *bookmarks_list,
-	       struct list_head *box_items)
+free_bookmarks(LIST_OF(struct bookmark) *bookmarks_list,
+	       LIST_OF(struct listbox_item) *box_items)
 {
 	struct bookmark *bm;
 
@@ -441,7 +441,7 @@ struct bookmark *
 get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
 {
 	struct bookmark *bookmark;
-	struct list_head *lh;
+	LIST_OF(struct bookmark) *lh;
 
 	lh = folder ? &folder->child : &bookmarks;
 

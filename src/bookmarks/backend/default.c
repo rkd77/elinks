@@ -128,7 +128,7 @@ read_bookmarks_default(FILE *f)
 /* Saves the bookmarks to file */
 static void
 write_bookmarks_default(struct secure_save_info *ssi,
-		        struct list_head *bookmarks_list)
+		        LIST_OF(struct bookmark) *bookmarks_list)
 {
 	int folder_state = get_opt_bool("bookmarks.folder_state");
 	struct bookmark *bm;

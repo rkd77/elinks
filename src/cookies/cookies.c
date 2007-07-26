@@ -51,7 +51,7 @@
 
 static int cookies_nosave = 0;
 
-static INIT_LIST_HEAD(cookies);
+static INIT_LIST_OF(struct cookie, cookies);
 
 struct c_domain {
 	LIST_HEAD(struct c_domain);
@@ -64,11 +64,10 @@ struct c_domain {
  * struct c_domain.  No other data structures have pointers to these
  * objects.  Currently the domains remain in the list until
  * @done_cookies clears the whole list.  */
-static INIT_LIST_HEAD(c_domains);
+static INIT_LIST_OF(struct c_domain, c_domains);
 
-/* List of servers for which there are cookies.  Each element is a
- * struct cookie_server.  */
-static INIT_LIST_HEAD(cookie_servers);
+/* List of servers for which there are cookies.  */
+static INIT_LIST_OF(struct cookie_server, cookie_servers);
 
 /* Only @set_cookies_dirty may make this nonzero.  */
 static int cookies_dirty = 0;
@@ -908,7 +907,7 @@ init_cookies(struct module *module)
 /* Like @delete_cookie, this function does not set @cookies_dirty.
  * The caller must do that if appropriate.  */
 static void
-free_cookies_list(struct list_head *list)
+free_cookies_list(LIST_OF(struct cookie) *list)
 {
 	while (!list_empty(*list)) {
 		struct cookie *cookie = list->next;

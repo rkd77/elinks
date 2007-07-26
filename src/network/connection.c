@@ -59,9 +59,9 @@ static unsigned int connection_id = 0;
 static int active_connections = 0;
 static timer_id_T keepalive_timeout = TIMER_ID_UNDEF;
 
-static INIT_LIST_HEAD(connection_queue);
-static INIT_LIST_HEAD(host_connections);
-static INIT_LIST_HEAD(keepalive_connections);
+static INIT_LIST_OF(struct connection, connection_queue);
+static INIT_LIST_OF(struct host_connection, host_connections);
+static INIT_LIST_OF(struct keepalive_connection, keepalive_connections);
 
 /* Prototypes */
 static void notify_connection_callbacks(struct connection *conn);

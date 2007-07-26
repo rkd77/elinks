@@ -39,7 +39,7 @@
 
 
 INIT_INPUT_HISTORY(global_history);
-INIT_LIST_HEAD(global_history_reap_list);
+INIT_LIST_OF(struct global_history_item, global_history_reap_list);
 
 
 /* GUI stuff. Declared here because done_global_history() frees it. */

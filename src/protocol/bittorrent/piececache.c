@@ -341,7 +341,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 {
 	struct bittorrent_peer_request *request, *next;
 	uint32_t request_length, piece_length, piece_offset;
-	INIT_LIST_HEAD(requests);
+	INIT_LIST_OF(struct bittorrent_peer_request, requests);
 	uint16_t blocks = 0;
 
 	assert(piece <= bittorrent->meta.pieces);

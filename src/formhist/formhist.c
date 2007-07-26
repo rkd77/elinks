@@ -42,7 +42,7 @@ static struct option_info forms_history_options[] = {
 	NULL_OPTION_INFO,
 };
 
-INIT_LIST_HEAD(saved_forms);
+INIT_LIST_OF(struct formhist_data, saved_forms);
 
 static struct formhist_data *
 new_formhist_item(unsigned char *url)
@@ -386,7 +386,7 @@ get_form_history_value(unsigned char *url, unsigned char *name)
 }
 
 void
-memorize_form(struct session *ses, struct list_head *submit,
+memorize_form(struct session *ses, LIST_OF(struct submitted_value) *submit,
 	      struct form *forminfo)
 {
 	/* [gettext_accelerator_context(memorize_form)] */

@@ -45,7 +45,7 @@ static unsigned char *remote_url;
 
 static enum retval
 parse_options_(int argc, unsigned char *argv[], struct option *opt,
-               struct list_head *url_list)
+               LIST_OF(struct string_list_item) *url_list)
 {
 	while (argc) {
 		argv++, argc--;
@@ -116,7 +116,8 @@ unknown_option:
 }
 
 enum retval
-parse_options(int argc, unsigned char *argv[], struct list_head *url_list)
+parse_options(int argc, unsigned char *argv[],
+	      LIST_OF(struct string_list_item) *url_list)
 {
 	return parse_options_(argc, argv, cmdline_options, url_list);
 }

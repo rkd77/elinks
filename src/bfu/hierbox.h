@@ -21,8 +21,8 @@ struct hierbox_browser {
 	const struct hierbox_browser_button *buttons;
 	size_t buttons_size;
 
-	struct list_head boxes;
-	struct list_head dialogs;
+	LIST_OF(struct listbox_data) boxes;
+	LIST_OF(struct hierbox_dialog_list_item) dialogs;
 	struct listbox_item root;
 	const struct listbox_ops *ops;
 

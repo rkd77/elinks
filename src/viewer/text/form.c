@@ -612,7 +612,7 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 
 
 void
-done_submitted_value_list(struct list_head *list)
+done_submitted_value_list(LIST_OF(struct submitted_value) *list)
 {
 	struct submitted_value *sv, *svtmp;
 
@@ -630,7 +630,7 @@ done_submitted_value_list(struct list_head *list)
 static void
 add_submitted_value_to_list(struct form_control *fc,
 		            struct form_state *fs,
-		            struct list_head *list)
+		            LIST_OF(struct submitted_value) *list)
 {
 	struct submitted_value *sub;
 	unsigned char *name;
@@ -693,7 +693,7 @@ add_submitted_value_to_list(struct form_control *fc,
 }
 
 static void
-sort_submitted_values(struct list_head *list)
+sort_submitted_values(LIST_OF(struct submitted_value) *list)
 {
 	while (1) {
 		struct submitted_value *sub;
@@ -725,7 +725,8 @@ sort_submitted_values(struct list_head *list)
 
 static void
 get_successful_controls(struct document_view *doc_view,
-			struct form_control *fc, struct list_head *list)
+			struct form_control *fc,
+			LIST_OF(struct submitted_value) *list)
 {
 	struct form_control *fc2;
 
@@ -750,7 +751,7 @@ get_successful_controls(struct document_view *doc_view,
 }
 
 static void
-encode_controls(struct list_head *l, struct string *data,
+encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 		int cp_from, int cp_to)
 {
 	struct submitted_value *sv;
@@ -899,7 +900,8 @@ check_boundary(struct string *data, struct boundary_info *boundary)
 
 /* FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
-encode_multipart(struct session *ses, struct list_head *l, struct string *data,
+encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
+		 struct string *data,
 		 struct boundary_info *boundary, int cp_from, int cp_to)
 {
 	struct conv_table *convert_table = NULL;
@@ -1062,7 +1064,7 @@ encode_newlines(struct string *string, unsigned char *data)
 }
 
 static void
-encode_text_plain(struct list_head *l, struct string *data,
+encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 		  int cp_from, int cp_to)
 {
 	struct submitted_value *sv;
@@ -1142,7 +1144,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	     struct form_control *fc)
 {
 	struct boundary_info boundary;
-	INIT_LIST_HEAD(submit);
+	INIT_LIST_OF(struct submitted_value, submit);
 	struct string data;
 	struct string go;
 	int cp_from, cp_to;

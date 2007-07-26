@@ -44,7 +44,7 @@ struct negotiate {
 	gss_buffer_desc input_token;
 };
 
-static INIT_LIST_HEAD(negotiate_list);
+static INIT_LIST_OF(struct negotiate, negotiate_list);
 
 static struct negotiate *
 http_negotiate_get(struct uri *uri, int *isnew, int alloc)
