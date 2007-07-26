@@ -84,7 +84,7 @@ struct session; /* session/session.h */
 union option_value {
 	/* XXX: Keep first to make @options_root initialization possible. */
 	/* The OPT_TREE list_head is allocated. */
-	struct list_head *tree;
+	LIST_OF(struct option) *tree;
 
 	/* Used by OPT_BOOL, OPT_INT, OPT_CODEPAGE and OPT_LANGUAGE */
 	int number;

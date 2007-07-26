@@ -26,7 +26,7 @@
 
 
 struct bittorrent_download_info {
-	struct list_head labels;	/* -> struct string_list_item */
+	LIST_OF(struct string_list_item) labels;
 	unsigned char *name;
 	int *selection;
 	size_t size;

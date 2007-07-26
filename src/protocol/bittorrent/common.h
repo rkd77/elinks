@@ -117,7 +117,7 @@ struct bittorrent_peer_request {
 
 struct bittorrent_peer_status {
 	/* FIFO-like recording of requests. */
-	struct list_head requests; /* -> struct bittorrent_peer_request */
+	LIST_OF(struct bittorrent_peer_request) requests;
 
 	/* Flags for scheduling updating of the peer state. */
 	unsigned int choked:1;		/* The peer was choked. */
@@ -170,7 +170,7 @@ struct bittorrent_peer_connection {
 
 	/* Outgoing message queue. Note piece messages are maintained entirely
 	 * in the request list in the bittorrent_peer_status struct. */
-	struct list_head queue; /* -> struct bittorrent_peer_request */
+	LIST_OF(struct bittorrent_peer_request) queue;
 
 	/* A bitfield of the available pieces from the peer. */
 	/* The size depends on the number of pieces. */
@@ -270,7 +270,7 @@ struct bittorrent_meta {
 
 	/* A list with information about files in the torrent. */
 	/* The list is a singleton for single-file torrents. */
-	struct list_head files;	/* -> struct bittorrent_file */
+	LIST_OF(struct bittorrent_file) files;
 };
 
 enum bittorrent_connection_mode {
@@ -304,11 +304,11 @@ struct bittorrent_connection {
 	/* Active peer list */
 	/* The size is controlled by the protocol.bittorrent.max_active_peers
 	 * option. */
-	struct list_head peers; 	/* -> struct bittorrent_peer_connection */
+	LIST_OF(struct bittorrent_peer_connection) peers;
 
 	/* List of information about potential peers. */
 	/* TODO: Use hash. */
-	struct list_head peer_pool;	/* -> struct bittorrent_peer */
+	LIST_OF(struct bittorrent_peer) peer_pool;
 
 	/* The peer ID of the client. */
 	bittorrent_id_T peer_id;

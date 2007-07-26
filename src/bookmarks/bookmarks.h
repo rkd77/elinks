@@ -25,7 +25,7 @@ struct bookmark {
 
 /* Bookmark lists */
 
-extern struct list_head bookmarks; /* struct bookmark */
+extern LIST_OF(struct bookmark) bookmarks;
 
 /* The bookmarks module */
 

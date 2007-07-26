@@ -8,7 +8,7 @@ struct ses_history {
 	/* The first list item is the first visited location. The last list
 	 * item is the last location in the unhistory. The @current location is
 	 * included in this list. */
-	struct list_head history; /* -> struct location */
+	LIST_OF(struct location) history;
 
 	/* The current location. This is moveable pivot pointing somewhere at
 	 * the middle of @history. */

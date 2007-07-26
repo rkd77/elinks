@@ -40,7 +40,7 @@ struct ecmascript_interpreter {
 	 * any new snippets in document.onload_snippets). Instead, as we
 	 * go through the list we maintain a pointer to the last processed
 	 * entry. */
-	struct list_head onload_snippets; /* -> struct string_list_item */
+	LIST_OF(struct string_list_item) onload_snippets;
 	struct string_list_item *current_onload_snippet;
 
 	/* ID of the {struct document} where those onload_snippets belong to.

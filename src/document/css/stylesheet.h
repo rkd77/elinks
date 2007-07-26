@@ -49,7 +49,7 @@ struct css_selector {
 		CSR_ANCESTOR, /* Ancestor, i.e. the "p" in "p a". */
 		CSR_PARENT, /* Direct parent, i.e. the "div" in "div>img". */
 	} relation;
-	struct list_head leaves; /* -> struct css_selector */
+	LIST_OF(struct css_selector) leaves;
 
 	enum css_selector_type {
 		CST_ELEMENT,
@@ -60,7 +60,7 @@ struct css_selector {
 	} type;
 	unsigned char *name;
 
-	struct list_head properties; /* -> struct css_property */
+	LIST_OF(struct css_property) properties;
 };
 
 
@@ -81,7 +81,7 @@ struct css_stylesheet {
 
 	/* The list of basic element selectors (which can then somehow
 	 * tree up on inside). */
-	struct list_head selectors; /* -> struct css_selector */
+	LIST_OF(struct css_selector) selectors;
 
 	/* How deeply nested are we. Limited by MAX_REDIRECTS. */
 	int import_level;
