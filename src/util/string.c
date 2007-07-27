@@ -1,4 +1,5 @@
-/* String handling functions */
+/** String handling functions
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -432,7 +433,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 	return string;
 }
 
-/* Add printf-like format string to @string. */
+/** Add printf()-style format string to @a string. */
 struct string *
 add_format_to_string(struct string *string, const unsigned char *format, ...)
 {

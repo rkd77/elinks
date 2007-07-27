@@ -3,7 +3,7 @@
 
 #include "util/lists.h"
 
-/* This should be hopefully always 32bit at least. I'm not sure what will
+/** This should be hopefully always 32bit at least. I'm not sure what will
  * happen when this will be of other length, but it should still work ok.
  * --pasky */
 typedef unsigned long hash_value_T;
@@ -18,9 +18,9 @@ struct hash_item {
 };
 
 struct hash {
-	unsigned int width; /* Number of bits - hash array must be 2^width long. */
+	unsigned int width; /**< Number of bits - hash array must be 2^width long. */
 	hash_func_T func;
-	struct list_head hash[1]; /* Must be at end ! */
+	struct list_head hash[1]; /**< Must be at end ! */
 };
 
 struct hash *init_hash8(void);

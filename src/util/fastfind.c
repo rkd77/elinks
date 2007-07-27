@@ -1,4 +1,57 @@
-/* Very fast search_keyword_in_list. */
+/** Very fast search_keyword_in_list.
+ * @file
+ *
+ *
+ * It replaces bsearch() + strcasecmp() + callback + ...
+ *
+ * Following conditions should be met:
+ *
+ * - list keys are C strings.
+ * - keys should not be greater than 255 characters, and optimally < 20
+ *   characters. It can work with greater keys but then memory usage will
+ *   grow a lot.
+ * - each key must be unique and non empty.
+ * - list do not have to be ordered.
+ * - total number of unique characters used in all keys should be <= 128
+ * - idealy total number of keys should be <= 512 (but see below)
+ *
+ *  (c) 2003 Laurent MONIN (aka Zas)
+ * Feel free to do whatever you want with that code.
+ *
+ *
+ * These routines use a tree search. First, a big tree is composed from the
+ * keys on input. Then, when searching we just go through the tree. If we will
+ * end up on an 'ending' node, we've got it.
+ *
+ * Hm, okay. For keys { 'head', 'h1', 'body', 'bodyrock', 'bodyground' }, it
+ * would look like:
+ *
+ * @verbatim
+ *             [root]
+ *          b          h
+ *          o        e   1
+ *          d        a
+ *          Y        D
+ *        g   r
+ *        r   o
+ *        o   c
+ *        u   K
+ *        D
+ * @endverbatim
+ *
+ * (the ending nodes are upcased just for this drawing, not in real)
+ *
+ * To optimize this for speed, leafs of nodes are organized in per-node arrays
+ * (so-called 'leafsets'), indexed by symbol value of the key's next character.
+ * But to optimize that for memory, we first compose own alphabet consisting
+ * only from the chars we ever use in the key strings. fastfind_info.uniq_chars
+ * holds that alphabet and fastfind_info.idxtab is used to translate between it
+ * and ASCII.
+ *
+ * Tree building: O((L+M)*N)
+ * 			(L: mean key length, M: alphabet size,
+ * 			 N: number of items).
+ * String lookup: O(N) (N: string length). */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -17,61 +70,12 @@
 
 #ifdef USE_FASTFIND
 
-/* It replaces bsearch() + strcasecmp() + callback + ...
- *
- * Following conditions should be met:
- *
- * - list keys are C strings.
- * - keys should not be greater than 255 characters, and optimally < 20
- *   characters. It can work with greater keys but then memory usage will
- *   grow a lot.
- * - each key must be unique and non empty.
- * - list do not have to be ordered.
- * - total number of unique characters used in all keys should be <= 128
- * - idealy total number of keys should be <= 512 (but see below)
- *
- *  (c) 2003 Laurent MONIN (aka Zas)
- * Feel free to do whatever you want with that code. */
-
-
-/* These routines use a tree search. First, a big tree is composed from the
- * keys on input. Then, when searching we just go through the tree. If we will
- * end up on an 'ending' node, we've got it.
- *
- * Hm, okay. For keys { 'head', 'h1', 'body', 'bodyrock', 'bodyground' }, it
- * would look like:
- *
- *             [root]
- *          b          h
- *          o        e   1
- *          d        a
- *          Y        D
- *        g   r
- *        r   o
- *        o   c
- *        u   K
- *        D
- *
- * (the ending nodes are upcased just for this drawing, not in real)
- *
- * To optimize this for speed, leafs of nodes are organized in per-node arrays
- * (so-called 'leafsets'), indexed by symbol value of the key's next character.
- * But to optimize that for memory, we first compose own alphabet consisting
- * only from the chars we ever use in the key strings. @uniq_chars holds that
- * alphabet and @idxtab is used to translate between it and ASCII.
- *
- * Tree building: O((L+M)*N)
- * 			(L: mean key length, M: alphabet size,
- * 			 N: number of items).
- * String lookup: O(N) (N: string length). */
-
-
-/* Define it to generate performance and memory usage statistics to stderr. */
+/** Define it to generate performance and memory usage statistics to stderr. */
 #if 0
 #define DEBUG_FASTFIND
 #endif
 
-/* Define whether to use 32 or 64 bits per compressed element. */
+/** Define whether to use 32 or 64 bits per compressed element. */
 #if 1
 #define USE_32_BITS
 #endif
@@ -114,16 +118,16 @@
 #endif
 
 struct ff_node {
-	/* End leaf -> p is significant */
+	/** End leaf -> p is significant */
 	unsigned int e:END_LEAF_BITS;
 
-	/* Compressed */
+	/** Compressed */
 	unsigned int c:COMPRESSED_BITS;
 
-	/* Index in pointers */
+	/** Index in pointers */
 	unsigned int p:POINTER_INDEX_BITS;
 
-	/* Index in leafsets */
+	/** Index in leafsets */
 	unsigned int l:LEAFSET_INDEX_BITS;
 };
 
@@ -141,7 +145,7 @@ struct ff_node_c {
 	unsigned int p:POINTER_INDEX_BITS;
 	unsigned int l:LEAFSET_INDEX_BITS;
 
-	/* Index of char when compressed. */
+	/** Index of char when compressed. */
 	unsigned int ch:COMP_CHAR_INDEX_BITS;
 };
 
@@ -212,7 +216,7 @@ struct fastfind_info {
 	} while (0)
 #define FF_DBG_comment(x, str) do { (x)->debug.comment = empty_string_or_(str); } while (0)
 
-/* Update search stats. */
+/** Update search stats. */
 static void
 FF_DBG_search_stats(struct fastfind_info *info, int key_len)
 {
@@ -222,7 +226,7 @@ FF_DBG_search_stats(struct fastfind_info *info, int key_len)
 	info->debug.itertmp = info->debug.iterations;
 }
 
-/* Dump all stats. */
+/** Dump all stats. */
 static void
 FF_DBG_dump_stats(struct fastfind_info *info)
 {
@@ -296,7 +300,7 @@ init_fastfind(struct fastfind_index *index, enum fastfind_flags flags)
 	return info;
 }
 
-/* Return 1 on success, 0 on allocation failure */
+/** @returns 1 on success, 0 on allocation failure */
 static int
 alloc_ff_data(struct fastfind_info *info)
 {
@@ -315,7 +319,7 @@ alloc_ff_data(struct fastfind_info *info)
 	return 1;
 }
 
-/* Add pointer and its key length to correspondant arrays, incrementing
+/** Add pointer and its key length to correspondant arrays, incrementing
  * internal counter. */
 static void
 add_to_ff_data(void *p, int key_len, struct fastfind_info *info)
@@ -327,7 +331,7 @@ add_to_ff_data(void *p, int key_len, struct fastfind_info *info)
 	data->keylen = key_len;
 }
 
-/* Return 1 on success, 0 on allocation failure */
+/** @returns 1 on success, 0 on allocation failure */
 static int
 alloc_leafset(struct fastfind_info *info)
 {
@@ -542,7 +546,7 @@ return_error:
 #undef ifcase
 
 
-/* This macro searchs for the key in indexed list */
+/** This macro searchs for the key in indexed list */
 #define FF_SEARCH(what) do {							\
 	int i;									\
 										\
@@ -729,14 +733,14 @@ struct list list[] = {
 
 struct list *internal_pointer;
 
-/* Reset internal list pointer */
+/** Reset internal list pointer */
 void
 reset_list(void)
 {
 	internal_pointer = list;
 }
 
-/* Returns a pointer to a struct that contains
+/** Returns a pointer to a struct that contains
  * current key and data pointers and increment
  * internal pointer.
  * It returns NULL when key is NULL. */

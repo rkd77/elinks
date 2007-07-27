@@ -436,9 +436,9 @@ resize_window(int x, int y, int old_width, int old_height)
 #if 0
 	unsigned char cmdline[16];
 	sprintf(cmdline, "mode ");
-	snprint(cmdline + 5, 5, x);
+	ulongcat(cmdline + 5, NULL, x, 5, 0);
 	strcat(cmdline, ",");
-	snprint(cmdline + strlen(cmdline), 5, y);
+	ulongcat(cmdline + strlen(cmdline), NULL, y, 5, 0);
 #endif
 	return 0;
 }

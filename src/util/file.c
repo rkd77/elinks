@@ -1,4 +1,5 @@
-/* File utilities */
+/** File utilities
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -283,7 +284,8 @@ safe_mkstemp(unsigned char *template)
 }
 
 
-/* The stat_* functions set the various attributes for directory entries. */
+/** @name The stat_* functions set the various attributes for directory entries.
+ * @{ */
 
 static inline void
 stat_type(struct string *string, struct stat *stp)
@@ -476,6 +478,8 @@ stat_date(struct string *string, struct stat *stp)
 	add_to_string(string, "              ");
 }
 
+/** @} */
+
 
 static int
 compare_dir_entries(struct directory_entry *d1, struct directory_entry *d2)
@@ -488,8 +492,8 @@ compare_dir_entries(struct directory_entry *d1, struct directory_entry *d2)
 }
 
 
-/* This function decides whether a file should be shown in directory listing or
- * not. Returns according boolean value. */
+/** This function decides whether a file should be shown in directory
+ * listing or not. @returns according boolean value. */
 static inline int
 file_visible(unsigned char *name, int get_hidden_files, int is_root_directory)
 {
@@ -510,9 +514,8 @@ file_visible(unsigned char *name, int get_hidden_files, int is_root_directory)
 	return get_hidden_files;
 }
 
-/* First information such as permissions is gathered for each directory entry.
- * All entries are then sorted and finally the sorted entries are added to the
- * @data->fragment one by one. */
+/** First information such as permissions is gathered for each directory entry.
+ * All entries are then sorted. */
 struct directory_entry *
 get_directory_entries(unsigned char *dirname, int get_hidden)
 {
@@ -585,7 +588,7 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 	return entries;
 }
 
-/* Recursively create directories in a path. The last element in the path is
+/** Recursively create directories in @a path. The last element in the path is
  * taken to be a filename, and simply ignored */
 int
 mkalldirs(const unsigned char *path)
