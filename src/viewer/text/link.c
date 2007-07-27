@@ -883,6 +883,8 @@ struct uri *
 get_link_uri(struct session *ses, struct document_view *doc_view,
 	     struct link *link)
 {
+	struct form_control *fc;
+
 	assert(ses && doc_view && link);
 	if_assert_failed return NULL;
 
@@ -894,8 +896,10 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 
 		case LINK_BUTTON:
 		case LINK_FIELD:
-			return get_form_uri(ses, doc_view,
-					    get_link_form_control(link));
+			fc = get_link_form_control(link);
+			if (!fc || fc->type == FC_BUTTON)
+				return NULL;
+			return get_form_uri(ses, doc_view, fc);
 
 		default:
 			return NULL;
@@ -912,12 +916,14 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	assert(fc->form); /* regardless of whether there is a FORM element */
 	if_assert_failed return 0;
 
+	if (fc->type == FC_BUTTON) return 0;
+
 #ifdef CONFIG_ECMASCRIPT
 	/* If the form has multiple submit buttons, this does not
 	 * explicitly tell the ECMAScript code which of them was
 	 * pressed.  W3C DOM Level 3 doesn't seem to include such a
 	 * feature.  */
-	if (fc->type != FC_RESET && fc->type != FC_BUTTON && fc->form->onsubmit) {
+	if (fc->type != FC_RESET && fc->form->onsubmit) {
 		struct string code;
 
 		if (init_string(&code)) {

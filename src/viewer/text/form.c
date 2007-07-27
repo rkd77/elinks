@@ -660,7 +660,6 @@ add_submitted_value_to_list(struct form_control *fc,
 	case FC_SUBMIT:
 	case FC_HIDDEN:
 	case FC_RESET:
-	case FC_BUTTON:
 		sub = init_submitted_value(name, fs->value, type, fc,
 					   position);
 		if (sub) add_to_list(*list, sub);
@@ -687,6 +686,8 @@ add_submitted_value_to_list(struct form_control *fc,
 		mem_free(name);
 		if (sub) add_to_list(*list, sub);
 
+		break;
+	case FC_BUTTON:
 		break;
 	}
 }
@@ -1158,8 +1159,6 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	if (fc->type == FC_RESET) {
 		do_reset_form(doc_view, form);
 		return NULL;
-	} else if (fc->type == FC_BUTTON) {
-		return NULL;
 	}
 
 	if (!form->action
@@ -1383,21 +1382,7 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 void
 delayed_submit_given_form(struct delayed_submit_form *dsf)
 {
-	int button = 0;
-	struct form_control *fc;
-
-	/* Stupid workaround for button's onclick="submit();" */
-	if (!list_empty(dsf->form->items)) {
-		fc = (struct form_control *)dsf->form->items.next;
-
-		if (fc->type == FC_BUTTON) {
-			fc->type = FC_SUBMIT;
-			button = 1;
-		}
-	}
 	submit_given_form(dsf->ses, dsf->vs->doc_view, dsf->form, 0);
-	if (button)
-		fc->type = FC_BUTTON;
 	mem_free(dsf);
 }
 
