@@ -1,7 +1,10 @@
-/* Terminal color palettes. */
-/* TODO: We should probably autogenerate this using xterm's perl script. */
+/** Terminal color palettes.
+ * @file
+ *
+ * \todo TODO: We should probably autogenerate this using xterm's perl
+ * script. */
 
-/* The 16 ANSI colors. */
+/** The 16 ANSI colors. */
 static const struct rgb palette16[] = {
 #if defined(PALA)
 	{0x00, 0x00, 0x00},
@@ -58,10 +61,11 @@ static const struct rgb palette16[] = {
 };
 
 #ifdef CONFIG_88_COLORS
-/* Regexp'd from Dickey's xterm 88colres.h file. */
-/* Colors  0-15 are the ANSI colors (and the same as palette16[]).
- * Colors 16-79 are a 4x4x4 color cube
- * Colors 80-91 are a grayscale ramp (with black and white left out). */
+/** The 88 xterm colors.
+ * Regexp'd from Dickey's xterm 88colres.h file.
+ * - Colors  0-15 are the ANSI colors (and the same as palette16[]).
+ * - Colors 16-79 are a 4x4x4 color cube
+ * - Colors 80-91 are a grayscale ramp (with black and white left out). */
 static const struct rgb palette88[] = {
 	{0x00, 0x00, 0x00}, /* 0 */
 	{0x80, 0x00, 0x00}, /* 1 */
@@ -160,11 +164,12 @@ static const struct rgb palette88[] = {
 #endif
 
 #ifdef CONFIG_256_COLORS
-/* Regexp'd from Dickey's xterm 256colres.h file. */
-/* Colors   0- 15 are the ANSI colors (from xterm-215/XTerm-col.ad
- *                and Xorg's rgb.txt, not the same as palette16[]).
- * Colors  16-231 are a 6x6x6 color cube
- * Colors 232-255 are a grayscale ramp (with black and white left out).
+/** The 256 xterm colors.
+ * Regexp'd from Dickey's xterm 256colres.h file.
+ * - Colors   0- 15 are the ANSI colors (from xterm-215/XTerm-col.ad
+ *                  and Xorg's rgb.txt, not the same as palette16[]).
+ * - Colors  16-231 are a 6x6x6 color cube
+ * - Colors 232-255 are a grayscale ramp (with black and white left out).
  *
  * The 6x6x6 color cube of xterm uses brightnesses 00-5f-87-af-d7-ff
  * whereas the "web-safe" palette uses 00-33-66-99-cc-ff, which then
@@ -179,19 +184,21 @@ static const struct rgb palette88[] = {
  * function, which passes through all six points and has a continuous
  * positive first derivative:
  *
+ * @verbatim
  * y = (765/11) - sqrt(585225/121 - (2601/55)*x) when x <= 0x5f
  * x = (-55/2601)*y^2 + (150/51)*y               when x <= 0x5f
  * y = (51/40)*x + (-561/8)                      when x >= 0x5f
+ * @endverbatim
+ */
+/* If you use Emacs, just run eval-last-sexp (C-x C-e) on the following:
  *
- * If you use Emacs then here is how to do it easily:
- *
- * (while (re-search-forward "0x\\([[:xdigit:]]+\\)" nil t)
-     (let* ((x (string-to-number (match-string 1) 16))
-	    (y (if (<= x #x5f)
-		 (- (/ 765.0 11.0)
-		    (sqrt (- (/ 585225.0 121.0) (* (/ 2601.0 55.0) x))))
-		 (+ (* (/ 51.0 40.0) x) (/ -561.0 8.0)))))
-       (replace-match (format "%.2x" (round y)) nil t nil 1)))
+ * (while (re-search-forward "0x\\([[:xdigit:]]+\\)" nil t)		#@3
+ *   (let* ((x (string-to-number (match-string 1) 16))			#@3
+ *	    (y (if (<= x #x5f)						#@3
+ *		 (- (/ 765.0 11.0)					#@3
+ *		    (sqrt (- (/ 585225.0 121.0) (* (/ 2601.0 55.0) x))))#@3
+ *		 (+ (* (/ 51.0 40.0) x) (/ -561.0 8.0)))))		#@3
+ *     (replace-match (format "%.2x" (round y)) nil t nil 1)))
  */
 static const struct rgb palette256[] = {
 	{0x00, 0x00, 0x00}, /* 0 black */

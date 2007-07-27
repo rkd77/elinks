@@ -1,4 +1,5 @@
-/* Terminal interface - low-level displaying implementation. */
+/** Terminal interface - low-level displaying implementation.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -7,6 +7,7 @@ struct color_pair;
 struct box;
 struct terminal;
 
+/** How many bytes we need for the colors of one character cell.  */
 #if defined(CONFIG_TRUE_COLOR)
 /* 0, 1, 2 - rgb foreground; 3, 4, 5 - rgb background */
 #define SCREEN_COLOR_SIZE	6
@@ -17,8 +18,10 @@ struct terminal;
 #define SCREEN_COLOR_SIZE	1
 #endif
 
-/* All attributes should fit inside an unsigned char. */
-/* XXX: The bold mask is used as part of the color encoding. */
+/** Attributes of a character on the screen.
+ * All attributes should fit inside an unsigned char.
+ *
+ * XXX: The bold mask is used as part of the color encoding. */
 enum screen_char_attr {
 	SCREEN_ATTR_UNSEARCHABLE = 0x01,
 	SCREEN_ATTR_BOLD	= 0x08,
@@ -28,41 +31,44 @@ enum screen_char_attr {
 	SCREEN_ATTR_FRAME	= 0x80,
 };
 
-/* One position in the terminal screen's image. */
+/** One position in the terminal screen's image. */
 struct screen_char {
-	/* Contains either character value or frame data.
-	 * If @attr includes SCREEN_ATTR_FRAME, then @data is enum
-	 * border_char; otherwise, @data is a character value.
-	 * If the charset of the terminal is UTF-8 (which is possible
-	 * only if CONFIG_UTF8 is defined), then the character value
-	 * is in UCS-4; otherwise, the charset is assumed to be
-	 * unibyte, and the character value is a byte in that
-	 * charset.  */
+	/** Contains either character value or frame data.
+	 * - If #attr includes ::SCREEN_ATTR_FRAME, then @c data is
+	 *   enum border_char.
+	 * - Otherwise, if the charset of the terminal is UTF-8, then
+	 *   @c data is a character value in UCS-4.  This is possible
+	 *   only if CONFIG_UTF8 is defined.
+	 * - Otherwise, the charset of the terminal is assumed to be
+	 *   unibyte, and @c data is a byte in that charset.  */
 #ifdef CONFIG_UTF8
 	unicode_val_T data;
 #else
 	unsigned char data;
 #endif /* CONFIG_UTF8 */
 
-	/* Attributes are screen_char_attr bits. */
+	/** Attributes are ::screen_char_attr bits. */
 	unsigned char attr;
 
-	/* The fore- and background color. */
+	/** The fore- and background color. */
 	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
+/** @relates screen_char */ 
 #define copy_screen_chars(to, from, amount) \
 	do { memcpy(to, from, (amount) * sizeof(struct screen_char)); } while (0)
 
-/* Linux frame symbols table (it's magically converted to other terminals when
- * needed). */
-/* In the screen image, they have attribute SCREEN_ATTR_FRAME; you should drop them
- * to the image using draw_border_char(). */
-/* TODO: When we'll support internal Unicode, this should be changed to some
- * Unicode sequences. --pasky */
-
-/* Codes extracted from twin-0.4.6 GPL project, a Textmode WINdow environment,
- * by Massimiliano Ghilardi http://linuz.sns.it/~max/ */
+/** @name Linux frame symbols table.
+ * It is magically converted to other terminals when needed.
+ * In the screen image, they have attribute SCREEN_ATTR_FRAME;
+ * you should drop them to the image using draw_border_char().
+ *
+ * \todo TODO: When we'll support internal Unicode, this should be
+ * changed to some Unicode sequences. --pasky
+ *
+ * Codes extracted from twin-0.4.6 GPL project, a Textmode WINdow environment,
+ * by Massimiliano Ghilardi http://linuz.sns.it/~max/
+ * @{ */
 
 /* Not yet used
 #define T_UTF_16_BOX_DRAWINGS_LIGHT_VERTICAL	0x2502
@@ -149,6 +155,9 @@ struct screen_char {
 #define T_CP437_BOX_DRAWINGS_LIGHT_UP_AND_LEFT	0x00D9
 #define T_CP437_BOX_DRAWINGS_LIGHT_DOWN_AND_RIGHT	0x00DA
 
+/** @} */
+
+
 #define BD_LIGHT(XXX)  T_CP437_BOX_DRAWINGS_LIGHT_##XXX
 #define BD_DOUBLE(XXX) T_CP437_BOX_DRAWINGS_DOUBLE_##XXX
 #define BD_MIXED(XXX) 	T_CP437_BOX_DRAWINGS_##XXX
@@ -213,29 +222,29 @@ enum border_cross_direction {
 	BORDER_X_UP
 };
 
-/* Extracts a char from the screen. */
+/** Extracts a char from the screen. */
 struct screen_char *get_char(struct terminal *, int x, int y);
 
-/* Sets the color of a screen position. */
+/** Sets the color of a screen position. */
 void draw_char_color(struct terminal *term, int x, int y,
 		     struct color_pair *color);
 
-/* Sets the data of a screen position. */
+/** Sets the data of a screen position. */
 #ifdef CONFIG_UTF8
 void draw_char_data(struct terminal *term, int x, int y, unicode_val_T data);
 #else
 void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
 #endif /* CONFIG_UTF8 */
 
-/* Sets the data to @border and of a screen position. */
+/** Sets the data to @a border and of a screen position. */
 void draw_border_char(struct terminal *term, int x, int y,
 		      enum border_char border, struct color_pair *color);
 
-/* Sets the cross position of two borders. */
+/** Sets the cross position of two borders. */
 void draw_border_cross(struct terminal *, int x, int y,
 		       enum border_cross_direction, struct color_pair *color);
 
-/* Draws a char. */
+/** Draws a char. */
 #ifdef CONFIG_UTF8
 void draw_char(struct terminal *term, int x, int y,
 	       unicode_val_T data, enum screen_char_attr attr,
@@ -246,16 +255,17 @@ void draw_char(struct terminal *term, int x, int y,
 	       struct color_pair *color);
 #endif /* CONFIG_UTF8 */
 
-/* Draws area defined by @box using the same colors and attributes. */
+/** Draws area defined by @a box using the same colors and attributes. */
 void draw_box(struct terminal *term, struct box *box,
 	      unsigned char data, enum screen_char_attr attr,
 	      struct color_pair *color);
 
-/* Draws a shadow of @width and @height with color @color around @box. */
+/** Draws a shadow of @a width and @a height with color @a color
+ * around @a box. */
 void draw_shadow(struct terminal *term, struct box *box,
 		 struct color_pair *color, int width, int height);
 
-/* Draw borders. */
+/** Draw borders. */
 void draw_border(struct terminal *term, struct box *box,
 		 struct color_pair *color, int width);
 
@@ -264,23 +274,22 @@ void fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
 			   int shadow_width, int shadow_height);
 #endif /* CONFIG_UTF8 */
 
-/* Draws @length chars from @text. */
+/** Draws @a length chars from @a text. */
 void draw_text(struct terminal *term, int x, int y,
 	       unsigned char *text, int length,
 	       enum screen_char_attr attr,
 	       struct color_pair *color);
 
-/* Draws @length chars from @line on the screen. */
-/* Used by viewer to copy over a document. */
+/** Draws @a length chars from @a line on the screen.  */
 void draw_line(struct terminal *term, int x, int y, int length,
 	       struct screen_char *line);
 
-/* Updates the terminals cursor position. When @blockable is set the
+/** Updates the terminals cursor position. When @a blockable is set the
  * block_cursor terminal option decides whether the cursor should be put at the
  * bottom right corner of the screen. */
 void set_cursor(struct terminal *term, int x, int y, int blockable);
 
-/* Blanks the screen. */
+/** Blanks the screen. */
 void clear_terminal(struct terminal *);
 
 #endif

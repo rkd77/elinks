@@ -1,4 +1,5 @@
-/* Public terminal drawing API. Frontend for the screen image in memory. */
+/** Public terminal drawing API. Frontend for the screen image in memory.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -15,7 +16,7 @@
 #include "util/color.h"
 #include "util/box.h"
 
-/* Makes sure that @x and @y are within the dimensions of the terminal. */
+/** Makes sure that @a x and @a y are within the dimensions of the terminal. */
 #define check_range(term, x, y) \
 	do { \
 		int_bounds(&(x), 0, (term)->width - 1); \
@@ -104,7 +105,7 @@ draw_char_color(struct terminal *term, int x, int y, struct color_pair *color)
 	set_screen_dirty(term->screen, y, y);
 }
 
-/* The data parameter here is like screen_char.data: UCS-4 if the
+/*! The @a data parameter here is like screen_char.data: UCS-4 if the
  * charset of the terminal is UTF-8 (possible only if CONFIG_UTF8 is
  * defined), and a byte otherwise.  */
 void
@@ -139,8 +140,8 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 	set_screen_dirty(term->screen, y, y);
 }
 
-/* Updates a line in the terms screen. */
-/* When doing frame drawing @x can be different than 0. */
+/*! Used by viewer to copy over a document.
+ * When doing frame drawing @a x can be different than 0. */
 void
 draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 {
@@ -258,8 +259,10 @@ draw_border(struct terminal *term, struct box *box,
 }
 
 #ifdef CONFIG_UTF8
-/* Checks cells left and right to the box for broken double-width chars.
+/** Checks cells left and right to the box for broken double-width chars.
  * Replace it with UCS_ORPHAN_CELL.
+ *
+ * @verbatim
  * 1+---+3
  * 1|box|##4
  * 1|   |##4
@@ -267,6 +270,7 @@ draw_border(struct terminal *term, struct box *box,
  * 1+---+##4
  *   2#####4
  * 1,2,3,4 - needs to be checked, # - shadow , +,-,| - border
+ * @endverbatim
  */
 void
 fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
