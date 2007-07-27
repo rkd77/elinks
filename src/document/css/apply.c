@@ -102,7 +102,7 @@ css_apply_text_align(struct html_context *html_context,
 }
 
 /*! XXX: Sort like the css_property_type */
-static css_applier_T css_appliers[CSS_PT_LAST] = {
+static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_NONE */		NULL,
 	/* CSS_PT_BACKGROUND */		css_apply_background_color,
 	/* CSS_PT_BACKGROUND_COLOR */	css_apply_background_color,
