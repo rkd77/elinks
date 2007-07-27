@@ -112,14 +112,14 @@ FILTER_SOURCE_FILES    = NO
 # configuration options related to source browsing
 #---------------------------------------------------------------------------
 
-SOURCE_BROWSER         = YES
+SOURCE_BROWSER         = NO
 INLINE_SOURCES         = NO
 STRIP_CODE_COMMENTS    = YES
-REFERENCED_BY_RELATION = YES
-REFERENCES_RELATION    = YES
-REFERENCES_LINK_SOURCE = YES
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION    = NO
+REFERENCES_LINK_SOURCE = NO
 USE_HTAGS              = NO
-VERBATIM_HEADERS       = YES
+VERBATIM_HEADERS       = NO
 
 #---------------------------------------------------------------------------
 # configuration options related to the alphabetical class index
@@ -223,7 +223,9 @@ EXPAND_ONLY_PREDEF     = YES
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS  = 
-PREDEFINED             = "LIST_OF(element_T)=element_T list"
+PREDEFINED             = "LIST_OF(element_T)=element_T list" \
+                         CONFIG_DEBUG \
+                         HAVE_VARIADIC_MACROS
 EXPAND_AS_DEFINED      = 
 SKIP_FUNCTION_MACROS   = YES
 
@@ -252,7 +254,7 @@ UML_LOOK               = NO
 TEMPLATE_RELATIONS     = NO
 INCLUDE_GRAPH          = YES
 INCLUDED_BY_GRAPH      = YES
-CALL_GRAPH             = YES
+CALL_GRAPH             = NO
 CALLER_GRAPH           = NO
 GRAPHICAL_HIERARCHY    = YES
 DIRECTORY_GRAPH        = YES
