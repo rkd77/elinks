@@ -56,6 +56,7 @@ struct line_info {
 #ifdef CONFIG_UTF8
 /** Allocates a line_info table describing the layout of the textarea buffer.
  *
+ * @param text		the text to format; must be in UTF-8
  * @param width		is max width and the offset at which @a text will be
  *			wrapped
  * @param wrap		controls how the wrapping of @a text is performed
@@ -142,6 +143,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 
 /** Allocates a line_info table describing the layout of the textarea buffer.
  *
+ * @param text		the text to format; must be in a unibyte charset
  * @param width		is max width and the offset at which @a text will be
  *			wrapped
  * @param wrap		controls how the wrapping of @a text is performed
