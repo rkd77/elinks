@@ -1,4 +1,5 @@
-/* Document options/setup workshop */
+/** Document options/setup workshop
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
