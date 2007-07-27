@@ -1,4 +1,5 @@
-/* Low-level terminal-suitable I/O routines */
+/** Low-level terminal-suitable I/O routines
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

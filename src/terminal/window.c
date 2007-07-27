@@ -1,4 +1,5 @@
-/* Terminal windows stuff. */
+/** Terminal windows stuff.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -175,7 +176,7 @@ add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 }
 
 #if CONFIG_DEBUG
-/* Check that term->windows are in the documented order.  */
+/** Check that terminal.windows are in the documented order.  */
 void
 assert_window_stacking(struct terminal *term)
 {

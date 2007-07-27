@@ -1,4 +1,5 @@
-/* Support for mouse interface */
+/** Support for mouse interface
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -45,8 +46,8 @@ extern struct itrm *ditrm;
 	hard_write(fd, seq, sizeof(seq) - 1)
 
 
-#define INIT_TWIN_MOUSE_SEQ	"\033[?9h"	/* Send MIT Mouse Row & Column on Button Press */
-#define INIT_XWIN_MOUSE_SEQ	"\033[?1000h"	/* Send Mouse X & Y on button press and release */
+#define INIT_TWIN_MOUSE_SEQ	"\033[?9h"	/**< Send MIT Mouse Row & Column on Button Press */
+#define INIT_XWIN_MOUSE_SEQ	"\033[?1000h"	/**< Send Mouse X & Y on button press and release */
 
 void
 send_mouse_init_sequence(int h)
@@ -55,8 +56,8 @@ send_mouse_init_sequence(int h)
 	write_sequence(h, INIT_XWIN_MOUSE_SEQ);
 }
 
-#define DONE_TWIN_MOUSE_SEQ	"\033[?9l"	/* Don't Send MIT Mouse Row & Column on Button Press */
-#define DONE_XWIN_MOUSE_SEQ	"\033[?1000l"	/* Don't Send Mouse X & Y on button press and release */
+#define DONE_TWIN_MOUSE_SEQ	"\033[?9l"	/**< Don't Send MIT Mouse Row & Column on Button Press */
+#define DONE_XWIN_MOUSE_SEQ	"\033[?1000l"	/**< Don't Send Mouse X & Y on button press and release */
 
 void
 send_mouse_done_sequence(int h)
@@ -123,7 +124,7 @@ decode_mouse_position(struct itrm *itrm, int from)
 #define TW_BUTT_MIDDLE	2
 #define TW_BUTT_RIGHT	4
 
-/* Returns length of the escape sequence or -1 if the caller needs to set up
+/** @returns length of the escape sequence or -1 if the caller needs to set up
  * the ESC delay timer. */
 int
 decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev,

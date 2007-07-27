@@ -8,13 +8,13 @@ struct terminal;
 struct window;
 
 enum window_type {
-	/* Normal windows: */
-	/* Used for things like dialogs. The default type when adding windows
+	/** Normal windows.
+	 * Used for things like dialogs. The default type when adding windows
 	 * with add_window(). */
 	WINDOW_NORMAL,
 
-	/* Tab windows: */
-	/* Tabs are a separate session and has separate history, current
+	/** Tab windows.
+	 * Tabs are a separate session and has separate history, current
 	 * document and action-in-progress .. basically a separate browsing
 	 * state. */
 	WINDOW_TAB,
@@ -23,26 +23,26 @@ enum window_type {
 typedef void (window_handler_T)(struct window *, struct term_event *);
 
 struct window {
-	LIST_HEAD(struct window);
+	LIST_HEAD(struct window); /*!< terminal.windows is the sentinel.  */
 
 	enum window_type type;
 
-	/* The window event handler */
+	/** The window event handler */
 	window_handler_T *handler;
 
-	/* For tab windows the session is stored in @data. For normal windows
-	 * it can contain dialog data. */
-	/* It is free()'d by delete_window() */
+	/** For tab windows the session is stored in @c data.
+	 * For normal windows it can contain dialog data.
+	 * It is free()'d by delete_window() */
 	void *data;
 
-	/* The terminal (and screen) that hosts the window */
+	/** The terminal (and screen) that hosts the window */
 	struct terminal *term;
 
-	/* Used for tabs focus detection. */
+	/** Used for tabs focus detection. */
 	int xpos, width;
 	int x, y;
 
-	/* For delayed tab resizing */
+	/** For delayed tab resizing */
 	unsigned int resize:1;
 };
 

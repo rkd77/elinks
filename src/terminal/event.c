@@ -1,4 +1,5 @@
-/* Event system support routines. */
+/** Event system support routines.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -34,18 +35,19 @@
 #include "viewer/timer.h"
 
 
-/* Information used for communication between ELinks instances */
+/** Information used for communication between ELinks instances */
 struct terminal_interlink {
-	/* How big the input queue is and how much is free */
+	/** How big the input queue is */
 	int qlen;
+	/** How much is free */
 	int qfreespace;
 
-	/* UTF8 input key value decoding data. */
+	/** UTF-8 input key value decoding data. */
 	struct {
 		unicode_val_T ucs;
 		int len;
 		unicode_val_T min;
-		/* Modifier keys from the key event that carried the
+		/** Modifier keys from the key event that carried the
 		 * first byte of the character.  We need this because
 		 * ELinks sees e.g. ESC U+00F6 as 0x1B 0xC3 0xB6 and
 		 * converts it to Alt-0xC3 0xB6, attaching the
@@ -53,8 +55,8 @@ struct terminal_interlink {
 		term_event_modifier_T modifier;
 	} utf8;
 
-	/* This is the queue of events as coming from the other ELinks instance
-	 * owning the hosting terminal. */
+	/** This is the queue of events as coming from the other
+	 * ELinks instance owning the hosting terminal. */
 	unsigned char input_queue[1];
 };
 

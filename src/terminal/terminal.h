@@ -11,7 +11,7 @@ struct terminal_screen;
 struct terminal_interlink;
 
 
-/* The terminal type, meaningful for frames (lines) drawing. */
+/** The terminal type, meaningful for frames (lines) drawing. */
 enum term_mode_type {
 	TERM_DUMB = 0,
 	TERM_VT100,
@@ -20,71 +20,72 @@ enum term_mode_type {
 	TERM_FREEBSD,
 };
 
-/* This is a bitmask describing the environment we are living in,
+/** This is a bitmask describing the environment we are living in,
  * terminal-wise. We can then conditionally use various features available
  * in such an environment. */
 enum term_env_type {
-	/* This basically means that we can use the text i/o :). Always set. */
+	/** This basically means that we can use the text i/o :). Always set. */
 	ENV_CONSOLE = 1,
-	/* We are running in a xterm-compatible box in some windowing
+	/** We are running in a xterm-compatible box in some windowing
 	 * environment. */
 	ENV_XWIN = 2,
-	/* We are running under a screen. */
+	/** We are running under a screen. */
 	ENV_SCREEN = 4,
-	/* We are running in a OS/2 VIO terminal. */
+	/** We are running in a OS/2 VIO terminal. */
 	ENV_OS2VIO = 8,
-	/* BeOS text terminal. */
+	/** BeOS text terminal. */
 	ENV_BE = 16,
-	/* We live in a TWIN text-mode windowing environment. */
+	/** We live in a TWIN text-mode windowing environment. */
 	ENV_TWIN = 32,
-	/* Microsoft Windows cmdline thing. */
+	/** Microsoft Windows cmdline thing. */
 	ENV_WIN32 = 64,
-	/* Match all terminal environments */
+	/** Match all terminal environments */
 	ENV_ANY = ~0,
 };
 
 enum term_redrawing_state {
-	TREDRAW_READY = 0,	/* Can redraw */
-	TREDRAW_BUSY = 1,	/* Redrawing already in progress */
-	TREDRAW_DELAYED = 2,	/* Do not redraw for now */
+	TREDRAW_READY = 0,	/**< Can redraw */
+	TREDRAW_BUSY = 1,	/**< Redrawing already in progress */
+	TREDRAW_DELAYED = 2,	/**< Do not redraw for now */
 };
 
-/* This is one of the axis of ELinks' user interaction. {struct terminal}
+/** This is one of the axis of ELinks' user interaction. struct terminal
  * defines the terminal ELinks is running on --- each ELinks instance has
  * one. It contains the basic terminal attributes, the settings associated
  * with this terminal, screen content (and more abstract description of what
  * is currently displayed on it) etc. It also maintains some runtime
- * information about the actual ELinks instance owning this terminal. */
-/* TODO: Regroup the following into logical chunks. --pasky */
+ * information about the actual ELinks instance owning this terminal.
+ *
+ * \todo TODO: Regroup the following into logical chunks. --pasky */
 struct terminal {
-	LIST_HEAD(struct terminal); /* {terminals} */
+	LIST_HEAD(struct terminal); /*!< ::terminals is the sentinel.  */
 
-	/* This is (at least partially) a stack of all the windows living in
+	/** This is (at least partially) a stack of all the windows living in
 	 * this terminal. A window can be wide range of stuff, from a menu box
 	 * through classical dialog window to a tab. See terminal/window.h for
 	 * more on windows.
 	 *
 	 * Tabs are special windows, though, and you never want to display them
-	 * all, but only one of them. ALWAYS check {inactive_tab} during
+	 * all, but only one of them. ALWAYS check inactive_tab() during
 	 * iterations through this list (unless it is really useless or you
 	 * are sure what are you doing) to make sure that you don't distribute
 	 * events etc to inactive tabs.
 	 *
-	 * The stack is top-down, thus .next is the stack's top, the
-	 * current window; and .prev is the bottom, covered by others.
+	 * The stack is top-down, thus @c .next is the stack's top, the
+	 * current window; and @c .prev is the bottom, covered by others.
 	 * - Dialogs or active menus are at the top.
-	 * - Next come all tabs (window.type == WINDOW_TAB).  The tab
+	 * - Next come all tabs (window.type == ::WINDOW_TAB).  The tab
 	 *   listed leftmost in the tab bar is at the top, and the tab
-	 *   listed rightmost is at the bottom; but current_tab controls
+	 *   listed rightmost is at the bottom; but #current_tab controls
 	 *   which tab is actually displayed.
 	 * - If the main menu is inactive, then it is at the very bottom,
 	 *   hidden under the tabs.
-	 * Call assert_window_stacking to verify this.
+	 * Call assert_window_stacking() to verify this.
 	 *
-	 * FIXME: Tabs violate the stack nature of this list, they appear there
-	 * randomly but always in the order in which they were inserted there.
-	 * Eventually, they should all live at the stack bottom, with the
-	 * actual tab living on the VERY bottom. --pasky
+	 * @todo FIXME: Tabs violate the stack nature of this list, they
+	 * appear there randomly but always in the order in which they were
+	 * inserted there.  Eventually, they should all live at the stack
+	 * bottom, with the actual tab living on the VERY bottom. --pasky
 	 *
 	 *   Keeping the current tab at the very bottom would require storing
 	 *   tab numbers explicitly, rather than computing them from the
@@ -92,64 +93,66 @@ struct terminal {
 	 *   inactive main menu?  --KON */
 	LIST_OF(struct window) windows;
 
-	/* The specification of terminal in terms of terminal options. */
+	/** The specification of terminal in terms of terminal options. */
 	struct option *spec;
 
-	/* This is the terminal's current title, as perhaps displayed somewhere
-	 * in the X window frame or so. */
+	/** This is the terminal's current title, as perhaps displayed
+	 * somewhere in the X window frame or so. */
 	unsigned char *title;
 
-	/* This is the screen. See terminal/screen.h */
+	/** This is the screen. See terminal/screen.h */
 	struct terminal_screen *screen;
 
-	/* This is for displaying main menu */
+	/** This is for displaying main menu */
 	struct menu *main_menu;
-	/* These are pipes for communication with the ELinks instance owning
-	 * this terminal. */
+
+	/** These are pipes for communication with the ELinks instance owning
+	 * this terminal.
+	 * @see struct itrm */
 	int fdin, fdout;
 
-	/* This indicates that the terminal is blocked, that is nothing should
+	/** This indicates that the terminal is blocked, that is nothing should
 	 * be drawn on it etc. Typically an external program is running on it
 	 * right now. This is a file descriptor. */
 	int blocked;
 
-	/* Terminal dimensions. */
+	/** Terminal dimensions. */
 	int width, height;
 
-	/* Indicates whether we are currently in the process of redrawing the
+	/** Indicates whether we are currently in the process of redrawing the
 	 * stuff being displayed on the terminal. It is typically used to
 	 * prevent redrawing inside of redrawing. */
 	enum term_redrawing_state redrawing;
 
-	/* Indicates the master terminal, that is the terminal under
+	/** Indicates the master terminal, that is the terminal under
 	 * supervision of the master ELinks instance (the one doing all the
 	 * work and even maintaining these structures ;-). */
 	unsigned int master:1;
 
 #ifdef CONFIG_UTF8
-	/* Indicates whether the charset of the terminal is UTF-8.  */
+	/** Indicates whether the charset of the terminal is UTF-8.  */
 	unsigned int utf8_cp:1;
 
-	/* Indicates whether UTF-8 I/O is used.  Forced on if the
+	/** Indicates whether UTF-8 I/O is used.  Forced on if the
 	 * UTF-8 charset is selected.  (bug 827) */
 	unsigned int utf8_io:1;
 #endif /* CONFIG_UTF8 */
 
-	/* The current tab number. */
+	/** The current tab number. */
 	int current_tab;
 
 #ifdef CONFIG_LEDS
-	/* Current length of leds part of status bar. */
+	/** Current length of leds part of status bar. */
 	int leds_length;
 #endif
 
-	/* The type of environment this terminal lives in. */
+	/** The type of environment this terminal lives in. */
 	enum term_env_type environment;
 
-	/* The current working directory for this terminal / ELinks instance. */
+	/** The current working directory for this terminal / ELinks instance. */
 	unsigned char cwd[MAX_CWD_LEN];
 
-	/* For communication between instances */
+	/** For communication between instances */
 	struct terminal_interlink *interlink;
 
 	struct term_event_mouse prev_mouse_event;
@@ -158,7 +161,7 @@ struct terminal {
 #define do_not_ignore_next_mouse_event(term) \
 	memset(&(term)->prev_mouse_event, 0, sizeof((term)->prev_mouse_event))
 
-/* We keep track about all the terminals in this list. */
+/** We keep track about all the terminals in this list. */
 extern LIST_OF(struct terminal) terminals;
 
 
@@ -175,24 +178,26 @@ void destroy_all_terminals(void);
 void exec_thread(unsigned char *, int);
 void close_handle(void *);
 
-/* Operations that can be requested with do_terminal_function().
+/** Operations that can be requested with do_terminal_function().
  * The interlink protocol passes these values as one byte in a
  * null-terminated string, so zero cannot be used.  */
-#define TERM_FN_TITLE	1
-#define TERM_FN_RESIZE	2
+enum {
+	TERM_FN_TITLE	= 1,
+	TERM_FN_RESIZE	= 2
+};
 
-/* How to execute a program in a terminal.  These values are used in
+/** How to execute a program in a terminal.  These values are used in
  * the interlink protocol and must fit in one byte.  */
 enum term_exec {
-	/* Execute in the background.  ELinks keeps using the terminal
+	/** Execute in the background.  ELinks keeps using the terminal
 	 * and the program should not use it.  */
 	TERM_EXEC_BG = 0,
 
-	/* Execute in the foreground.  The program may use the terminal.
+	/** Execute in the foreground.  The program may use the terminal.
 	 * ELinks will redraw when the program exits.  */
 	TERM_EXEC_FG = 1,
 
-	/* Execute in the background and in a new process group.  */
+	/** Execute in the background and in a new process group.  */
 	TERM_EXEC_NEWWIN = 2
 };
 

@@ -21,26 +21,27 @@ struct screen_char;
 #define TERM_COLOR_FOREGROUND_16(color) ((color)[0] & TERM_COLOR_MASK)
 #define TERM_COLOR_BACKGROUND_16(color) (((color)[0] >> 4) & TERM_COLOR_MASK)
 
-/* Bit flags to control how the colors are handled. */
+/** Bit flags to control how the colors are handled. */
 enum color_flags {
-	/* Use a decreased color range. */
+	/** Use a decreased color range. */
 	COLOR_DECREASE_LIGHTNESS = 1,
 
-	/* Mangle the color to stand out if attributes like underline are set.
-	 * Useful for terminals that doesn't support these attributes.  */
+	/** Mangle the color to stand out if attributes like underline are set.
+	 * Useful for terminals that don't support these attributes.  */
 	COLOR_ENHANCE_UNDERLINE = 2,
 
-	/* Adjust the forground color to be more readable by increasing the
+	/** Adjust the foreground color to be more readable by increasing the
 	 * contrast. */
 	COLOR_INCREASE_CONTRAST = 4,
 
-	/* Adjust the contrast if the back- and foregroundcolor is equal.
+	/** Adjust the contrast if the back- and foregroundcolor is equal.
 	 * If inverting should be done also pass the latter flag. */
 	COLOR_ENSURE_CONTRAST = 8,
 	COLOR_ENSURE_INVERTED_CONTRAST = 16,
 };
 
-/* These numbers are used in the terminal._template_.colors and
+/** How many colors the terminal supports.
+ * These numbers are used in the terminal._template_.colors and
  * document.dump.color_mode options.  They should be kept stable so
  * that configuration files are portable between ELinks versions.
  * Any unsupported modes should be treated as COLOR_MODE_16.
@@ -65,10 +66,12 @@ enum color_mode {
 inline void set_term_color16(struct screen_char *schar, enum color_flags flags,
 			     unsigned char fg, unsigned char bg);
 
-/* Mixes the color pair and attributes to a terminal text color. */
-/* If @flags has masked in the COLOR_INCREASE_CONTRAST the foreground color will
- * be adjusted. */
-/* XXX: @schar may not be NULL and is modified adding stuff like boldness. */
+/** Mixes the color pair and attributes to a terminal text color.
+ * If @a flags has masked in the ::COLOR_INCREASE_CONTRAST the
+ * foreground color will be adjusted.
+ *
+ * XXX: @a schar may not be NULL and is modified adding stuff like
+ * boldness. */
 void set_term_color(struct screen_char *schar, struct color_pair *pair,
 		    enum color_flags flags, enum color_mode mode);
 
