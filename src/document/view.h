@@ -21,8 +21,8 @@ struct document_view {
 	struct document *document;
 	struct view_state *vs;
 
-	struct box box;	/* pos and size of window */
-	int last_x, last_y; /* last pos of window */
+	struct box box;	/**< pos and size of window */
+	int last_x, last_y; /**< last pos of window */
 	int depth;
 	unsigned int used:1;
 };

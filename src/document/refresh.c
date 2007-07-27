@@ -1,4 +1,5 @@
-/* Document (meta) refresh. */
+/** Document (meta) refresh.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -59,8 +60,9 @@ done_document_refresh(struct document_refresh *refresh)
 	mem_free(refresh);
 }
 
-/* Timer callback for @refresh->timer.  As explained in @install_timer,
- * this function must erase the expired timer ID from all variables.  */
+/** Timer callback for document_refresh.timer.  As explained in
+ * install_timer(), this function must erase the expired timer ID from
+ * all variables.  */
 static void
 do_document_refresh(void *data)
 {

@@ -1,4 +1,5 @@
-/* The document->data tools */
+/** The document->data tools
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

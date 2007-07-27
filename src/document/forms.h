@@ -18,17 +18,18 @@ enum form_method {
 struct form {
 	LIST_HEAD(struct form);
 
-	/* The value of @form_num serves both as a unique ID of the form.
-	 * However @form_num and @form_end also stores information about where
+	/** The value of @c form_num serves both as a unique ID of the form.
+	 * However @c form_num and #form_end also stores information about where
 	 * in the source the form is positioned. Combined they are used to
 	 * figured which form items belong to which forms after rendering
 	 * tables.
 	 *
-	 * Initially the range between @form_num and @form_end will stretch from
-	 * 0 to INT_MAX. When a new form is added the range is partitioned so
-	 * the forms each has unique source ranges. */
+	 * Initially the range between @c form_num and #form_end will
+	 * stretch from 0 to INT_MAX. When a new form is added the
+	 * range is partitioned so the forms each has unique source
+	 * ranges. */
 	int form_num;
-	int form_end;
+	int form_end;		/**< @see #form_num */
 
 	unsigned char *action;
 	unsigned char *name;
@@ -76,20 +77,20 @@ struct form_control {
 	struct form *form;
 	int g_ctrl_num;
 
-	/* The value of @position is relative to the place of the form item in
-	 * the source. */
+	/** The value of @c position is relative to the place of the
+	 * form item in the source. */
 	int position;
 
 	enum form_type type;
 	enum form_mode mode;
 
-	unsigned char *id; /* used by scripts */
+	unsigned char *id; /**< used by scripts */
 	unsigned char *name;
 	unsigned char *alt;
-	/* For FC_TEXT, FC_PASSWORD, and FC_TEXTAREA: @default_value
-	 * is in the charset of the document.
-	 *
-	 * For FC_FILE: The parser does not set @default_value.  */
+	/** Default value, cannot be changed by document scripts.
+	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_TEXTAREA:
+	 *   @c default_value is in the charset of the document.
+	 * - For ::FC_FILE: The parser does not set @c default_value.  */
 	unsigned char *default_value;
 	/* For FC_SELECT. I have not found a better place for it. --witekfl */
 	unsigned char *onchange;
@@ -100,11 +101,11 @@ struct form_control {
 	int maxlength;
 	int nvalues;
 	unsigned char **values;
-	/* For FC_SELECT: @labels are in the charset of the terminal.
-	 * (That charset can be UTF-8 only if CONFIG_UTF8 is defined,
-	 * and is assumed to be unibyte otherwise.)  The charset of
-	 * the document and the UTF-8 I/O option have no effect
-	 * here.  */
+	/** Labels in a selection menu.
+	 * - For ::FC_SELECT: @c labels are in the charset of the terminal.
+	 *   (That charset can be UTF-8 only if CONFIG_UTF8 is defined,
+	 *   and is assumed to be unibyte otherwise.)  The charset of
+	 *   the document and the UTF-8 I/O option have no effect here.  */
 	unsigned char **labels;
 	struct menu_item *menu;
 };
