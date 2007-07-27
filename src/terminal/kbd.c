@@ -245,7 +245,7 @@ setraw(int fd, struct termios *p)
 	return 0;
 }
 
-/** Construct the struct itrm of this process, make ditrm point to it,
+/** Construct the struct itrm of this process, make ::ditrm point to it,
  * set up select() handlers, and send the initial interlink packet.
  *
  * The first five parameters are file descriptors that this function
@@ -271,7 +271,7 @@ setraw(int fd, struct termios *p)
  * @param init_len	The length of init_string, in bytes.
  * @param remote	= 0 if asking the master to start a new session
  *			and display it via this process.  Otherwise,
- *			enum remote_session_flags.  */
+ *			enum ::remote_session_flags.  */
 void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	   void *init_string, int init_len, int remote)
