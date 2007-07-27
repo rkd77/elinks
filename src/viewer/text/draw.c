@@ -1,4 +1,5 @@
-/* Text mode drawing functions */
+/** Text mode drawing functions
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -176,7 +177,7 @@ draw_view_status(struct session *ses, struct document_view *doc_view, int active
 	}
 }
 
-/* Checks if there is a link under the cursor so it can become the current
+/** Checks if there is a link under the cursor so it can become the current
  * highlighted link. */
 static void
 check_link_under_cursor(struct session *ses, struct document_view *doc_view)
@@ -192,8 +193,8 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
 	}
 }
 
-/* Puts the formatted document on the given terminal's screen. */
-/* @active indicates whether the document is focused -- i.e.,
+/** Puts the formatted document on the given terminal's screen.
+ * @a active indicates whether the document is focused -- i.e.,
  * whether it is displayed in the selected frame or document. */
 static void
 draw_doc(struct session *ses, struct document_view *doc_view, int active)
@@ -336,7 +337,7 @@ draw_frames(struct session *ses)
 	};
 }
 
-/* @rerender is ridiciously wound-up. */
+/** @todo @a rerender is ridiciously wound-up. */
 void
 draw_formatted(struct session *ses, int rerender)
 {

@@ -164,7 +164,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 	return 0;
 }
 
-/* Initialise a static template character with the colour and attributes
+/** Initialise a static template character with the colour and attributes
  * appropriate for an active link and return that character. */
 static inline struct screen_char *
 init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
@@ -224,7 +224,7 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 	return &template;
 }
 
-/* Give the current link the appropriate colour and attributes. */
+/** Give the current link the appropriate colour and attributes. */
 void
 draw_current_link(struct session *ses, struct document_view *doc_view)
 {
@@ -309,7 +309,7 @@ draw_link(struct terminal *term, struct document_view *doc_view,
 	}
 }
 
-/* Restore the colours and attributes that the active link had
+/** Restore the colours and attributes that the active link had
  * before it was selected. */
 void
 clear_link(struct terminal *term, struct document_view *doc_view)
@@ -472,7 +472,7 @@ current_link_is_visible(struct document_view *doc_view)
 	return (link && link_in_view(doc_view, link));
 }
 
-/* Look for the first and the last link currently visible in our
+/** Look for the first and the last link currently visible in our
  * viewport. */
 static void
 get_visible_links_range(struct document_view *doc_view, int *first, int *last)
@@ -543,7 +543,8 @@ next_link_in_view_y(struct document_view *doc_view, int current, int direction)
 	return next_link_in_view_(doc_view, current, direction, link_in_view_y, set_pos_x);
 }
 
-/* Get the bounding columns of @link at line @y (or all lines if @y == -1). */
+/** Get the bounding columns of @a link at line @a y (or all lines if
+ * @a y == -1). */
 static void
 get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x)
 {
@@ -560,8 +561,8 @@ get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x)
 	}
 }
 
-/* Check whether there is any point between @min_x and @max_x at the line @y
- * in link @link. */
+/** Check whether there is any point between @a min_x and @a max_x at
+ * the line @a y in link @a link. */
 static int
 get_link_x_intersect(struct link *link, int y, int min_x, int max_x)
 {
@@ -578,8 +579,8 @@ get_link_x_intersect(struct link *link, int y, int min_x, int max_x)
 	return 0;
 }
 
-/* Check whether there is any point between @min_y and @max_y in the column @x
- * in link @link. */
+/** Check whether there is any point between @a min_y and @a max_y in
+ * the column @a x in link @a link. */
 static int
 get_link_y_intersect(struct link *link, int x, int min_y, int max_y)
 {
@@ -777,8 +778,9 @@ set_pos_y(struct document_view *doc_view, struct link *link)
 		   doc_view->document->height - doc_view->box.height);
 }
 
-/* direction == 1 -> DOWN
- * direction == -1 -> UP */
+/** Focus the next link in the specified direction.
+ * @a direction == 1 -> DOWN;
+ * @a direction == -1 -> UP */
 static void
 find_link(struct document_view *doc_view, int direction, int page_mode)
 {
@@ -1129,7 +1131,7 @@ get_link_at_coordinates(struct document_view *doc_view, int x, int y)
 	return NULL;
 }
 
-/* This is backend of the backend goto_link_number_do() below ;)). */
+/** This is backend of the backend goto_link_number_do() below ;)). */
 void
 jump_to_link_number(struct session *ses, struct document_view *doc_view, int n)
 {
@@ -1156,7 +1158,7 @@ jump_to_link_number(struct session *ses, struct document_view *doc_view, int n)
 	current_link_hover(doc_view);
 }
 
-/* This is common backend for goto_link_number() and try_document_key(). */
+/** This is common backend for goto_link_number() and try_document_key(). */
 static void
 goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 {
@@ -1186,7 +1188,7 @@ goto_link_number(struct session *ses, unsigned char *num)
 	goto_link_number_do(ses, doc_view, atoi(num) - 1);
 }
 
-/* See if this document is interested in the key user pressed. */
+/** See if this document is interested in the key user pressed. */
 enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
@@ -1242,8 +1244,8 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 	return FRAME_EVENT_IGNORED;
 }
 
-/* Open a contextual menu on a link, form or image element. */
-/* TODO: This should be completely configurable. */
+/** Open a contextual menu on a link, form or image element.
+ * @todo TODO: This should be completely configurable. */
 void
 link_menu(struct terminal *term, void *xxx, void *ses_)
 {
@@ -1366,8 +1368,8 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 		/* [gettext_accelerator_context()] */
 	}
 
-	/* TODO: Make it possible to trigger any script event hooks associated
-	 * to the link. --pasky */
+	/** @todo TODO: Make it possible to trigger any script event
+	 * hooks associated to the link. --pasky */
 
 end:
 	if (!mi->text) {
@@ -1378,7 +1380,7 @@ end:
 	do_menu(term, mi, ses, 1);
 }
 
-/* Return current link's title. */
+/** Return current link's title. */
 unsigned char *
 get_current_link_title(struct document_view *doc_view)
 {
@@ -1431,7 +1433,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 	link = get_current_link(doc_view);
 	if (!link) return NULL;
 
-	/* TODO: Provide info about script event hooks too. --pasky */
+	/** @todo TODO: Provide info about script event hooks too. --pasky */
 
 	if (!link_is_form(link)) {
 		struct terminal *term = ses->tab->term;

@@ -1,4 +1,5 @@
-/* View state manager */
+/** View state manager
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -23,6 +24,7 @@
 #include "viewer/text/vs.h"
 
 
+/** @relates view_state */
 void
 init_vs(struct view_state *vs, struct uri *uri, int plain)
 {
@@ -39,6 +41,7 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 	init_list(vs->forms);
 }
 
+/** @relates view_state */
 void
 destroy_vs(struct view_state *vs, int blast_ecmascript)
 {
@@ -60,6 +63,7 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 	}
 }
 
+/** @relates view_state */
 void
 copy_vs(struct view_state *dst, struct view_state *src)
 {

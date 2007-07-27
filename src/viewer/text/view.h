@@ -10,7 +10,8 @@ struct session;
 struct term_event;
 struct terminal;
 
-/* Releases the document view's resources. But doesn't free() the @view. */
+/** Releases the document view's resources.
+ * But doesn't free() the @a doc_view. */
 void detach_formatted(struct document_view *doc_view);
 
 enum frame_event_status move_page_down(struct session *ses, struct document_view *doc_view);
@@ -40,7 +41,7 @@ enum frame_event_status move_document_end(struct session *ses, struct document_v
 enum frame_event_status set_frame(struct session *ses, struct document_view *doc_view, int xxxx);
 struct document_view *current_frame(struct session *);
 
-/* Used for changing between formatted and source (plain) view. */
+/** Used for changing between formatted and source (plain) view. */
 void toggle_plain_html(struct session *ses, struct document_view *doc_view, int xxxx);
 
 enum frame_event_status move_cursor_left(struct session *ses,
@@ -56,28 +57,34 @@ enum frame_event_status move_cursor(struct session *ses,
 				    struct document_view *doc_view,
 				    int x, int y);
 
-/* Used for changing wrapping of text */
+/** Used for changing wrapping of text */
 void toggle_wrap_text(struct session *ses, struct document_view *doc_view, int xxxx);
 
 enum frame_event_status copy_current_link_to_clipboard(struct session *ses,
 						struct document_view *doc_view,
 						int xxx);
 
-/* If the user has provided a numeric prefix, jump to the link
+/** If the user has provided a numeric prefix, jump to the link
  * with that number as its index. */
 int try_jump_to_link_number(struct session *ses,
 			    struct document_view *doc_view);
 
-/* File menu handlers. */
+/** @name File menu handlers.
+ * @{ */
 
 enum frame_event_status save_as(struct session *ses, struct document_view *doc_view, int magic);
 
-/* Various event emitters and link menu handlers. */
+/** @} */
+
+/** @name Various event emitters and link menu handlers.
+ * @{ */
 
 void send_event(struct session *, struct term_event *);
 
 enum frame_event_status save_formatted_dlg(struct session *ses, struct document_view *doc_view, int xxxx);
 enum frame_event_status view_image(struct session *ses, struct document_view *doc_view, int xxxx);
 enum frame_event_status download_link(struct session *ses, struct document_view *doc_view, action_id_T action_id);
+
+/** @}  */
 
 #endif

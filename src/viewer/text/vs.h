@@ -27,8 +27,8 @@ struct view_state {
 	unsigned int did_fragment:1;
 
 #ifdef CONFIG_ECMASCRIPT
-	/* If set, we reset the interpreter state the next time we are going to
-	 * render document attached to this view state. This means a real
+	/** If set, we reset the interpreter state the next time we are going
+	 * to render document attached to this view state. This means a real
 	 * document (not just struct document_view, which randomly appears and
 	 * disappears during gradual rendering) is getting replaced. So set this
 	 * always when you replace the view_state URI, but also when reloading

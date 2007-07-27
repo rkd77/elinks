@@ -1,4 +1,5 @@
-/* Searching in the HTML document */
+/** Searching in the HTML document
+ * @file */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
@@ -212,13 +213,14 @@ get_search_data(struct document *document)
 	sort_srch(document);
 }
 
-/* Assign s1 and s2 the first search node and the last search node needed to
- * form the region starting at line y and ending at the greater of y + height
- * and the end of the document, with allowance at the start to allow for
- * multi-line matches that would otherwise be partially outside of the region.
+/** Assign @a s1 and @a s2 the first search node and the last search
+ * node needed to form the region starting at line @a y and ending at
+ * the greater of @a y + @a height and the end of the document, with
+ * allowance at the start to allow for multi-line matches that would
+ * otherwise be partially outside of the region.
  *
- * Returns -1 on assertion failure, 1 if s1 and s2 are not found,
- * and 0 if they are found. */
+ * @returns -1 on assertion failure, 1 if @a s1 and @a s2 are not
+ * found, and 0 if they are found. */
 static int
 get_range(struct document *document, int y, int height, int l,
 	  struct search **s1, struct search **s2)
@@ -260,9 +262,9 @@ get_range(struct document *document, int y, int height, int l,
 	return 0;
 }
 
-/* Returns a string |doc| that is a copy of the text in the search nodes
- * from |s1| to |s1 + doclen - 1| with the space at the end of each line
- * converted to a new-line character (LF). */
+/** Returns a string @c doc that is a copy of the text in the search
+ * nodes from @a s1 to (@a s1 + @a doclen - 1) with the space at the
+ * end of each line converted to a new-line character (LF). */
 static unsigned char *
 get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 				    int pattern_len, int *doclen)
@@ -489,7 +491,7 @@ strlen_u(unsigned char *text, int utf8)
 
 }
 
-/* Returns an allocated string which is a lowered copy of passed one. */
+/** Returns an allocated string which is a lowered copy of passed one. */
 static UCHAR *
 lowered_string(unsigned char *text, int textlen, int utf8)
 {
@@ -763,7 +765,7 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf
 		get_searched_plain(doc_view, pt, pl, l, s1, s2, utf8);
 }
 
-/* Highlighting of searched strings. */
+/** Highlighting of searched strings. */
 void
 draw_searched(struct terminal *term, struct document_view *doc_view)
 {
@@ -1122,7 +1124,8 @@ find_next(struct session *ses, struct document_view *doc_view, int direction)
 }
 
 
-/* Link typeahead */
+/** @name Link typeahead
+ * @{ */
 
 enum typeahead_code {
 	TYPEAHEAD_MATCHED,
@@ -1359,8 +1362,11 @@ search_hit_boundary:
 	return TYPEAHEAD_MATCHED;
 }
 
+/** @} */
 
-/* Typeahead */
+
+/** @name Typeahead
+ * @{ */
 
 static enum input_line_code
 text_typeahead_handler(struct input_line *line, int action_id)
@@ -1559,6 +1565,8 @@ search_typeahead(struct session *ses, struct document_view *doc_view,
 	input_field_line(ses, prompt, data, history, handler);
 	return FRAME_EVENT_OK;
 }
+
+/** @} */
 
 
 /* The dialog functions are clones of input_field() ones. Gross code
