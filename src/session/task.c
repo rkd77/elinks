@@ -1,4 +1,5 @@
-/* Sessions task management */
+/** Sessions task management
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -106,7 +107,7 @@ post_no(void *task_)
 	done_uri(task->uri);
 }
 
-/* Check if the URI is obfuscated (bug 382). The problem is said to occur when
+/** Check if the URI is obfuscated (bug 382). The problem is said to occur when
  * a URI designed to pass access a specific location with a supplied username,
  * contains misleading chars prior to the @ symbol.
  *
@@ -279,13 +280,13 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 }
 
 
-/* If @loaded_in_frame is set, this was called just to indicate a move inside a
- * frameset, and we basically just reset the appropriate frame's view_state in
+/** If @a loaded_in_frame is set, this was called just to indicate a move inside
+ * a frameset, and we basically just reset the appropriate frame's view_state in
  * that case. When clicking on a link inside a frame, the frame URI is somehow
  * updated and added to the files-to-load queue, then ses_forward() is called
- * with @loaded_in_frame unset, duplicating the whole frameset's location, then
- * later the file-to-load callback calls it for the particular frame with
- * @loaded_in_frame set. */
+ * with @a loaded_in_frame unset, duplicating the whole frameset's location,
+ * then later the file-to-load callback calls it for the particular frame with
+ * @a loaded_in_frame set. */
 struct view_state *
 ses_forward(struct session *ses, int loaded_in_frame)
 {

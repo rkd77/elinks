@@ -5,13 +5,13 @@ struct location;
 struct session;
 
 struct ses_history {
-	/* The first list item is the first visited location. The last list
-	 * item is the last location in the unhistory. The @current location is
+	/** The first list item is the first visited location. The last list
+	 * item is the last location in the unhistory. The #current location is
 	 * included in this list. */
 	LIST_OF(struct location) history;
 
-	/* The current location. This is moveable pivot pointing somewhere at
-	 * the middle of @history. */
+	/** The current location. This is moveable pivot pointing somewhere at
+	 * the middle of #history. */
 	struct location *current;
 };
 
@@ -24,7 +24,7 @@ void add_to_history(struct ses_history *history, struct location *loc);
 void del_from_history(struct ses_history *history, struct location *loc);
 
 
-/* Note that this function is dangerous, and its results are sort of
+/** Note that this function is dangerous, and its results are sort of
  * unpredictable. If the document is cached and is permitted to be fetched from
  * the cache, the effect of this function is immediate and you end up with the
  * new location being cur_loc(). BUT if the cache entry cannot be used, the
@@ -34,7 +34,8 @@ void del_from_history(struct ses_history *history, struct location *loc);
  * after call to this function (or the regents go_(un)back(), of course). */
 void go_history(struct session *ses, struct location *loc);
 
-/* Move back -n times if n is negative, forward n times if positive. */
+/** Move back -@a n times if @a n is negative, forward @a n times if
+ * positive. */
 void go_history_by_n(struct session *ses, int n);
 
 void go_back(struct session *ses);

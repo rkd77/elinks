@@ -1,4 +1,5 @@
-/* Visited URL history managment - NOT goto_url_dialog history! */
+/** Visited URL history managment - NOT dialog_goto_url() history!
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -175,16 +176,16 @@ go_history_by_n(struct session *ses, int n)
 	go_history(ses, loc);
 }
 
-/* See go_history() description regarding unpredictable effects on cur_loc()
- * by this function. */
+/** Go backward in the history.  See go_history() description regarding
+ * unpredictable effects on cur_loc() by this function. */
 void
 go_back(struct session *ses)
 {
 	go_history_by_n(ses, -1);
 }
 
-/* See go_history() description regarding unpredictable effects on cur_loc()
- * by this function. */
+/** Go forward in the history.  See go_history() description regarding
+ * unpredictable effects on cur_loc() by this function. */
 void
 go_unback(struct session *ses)
 {
