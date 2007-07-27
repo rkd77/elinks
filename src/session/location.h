@@ -16,7 +16,7 @@ struct location {
 
 void copy_location(struct location *, struct location *);
 
-/* You probably want to call del_from_history() first! */
+/** You probably want to call del_from_history() first! */
 void destroy_location(struct location *);
 
 #endif

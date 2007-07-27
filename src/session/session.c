@@ -1,4 +1,5 @@
-/* Sessions managment - you'll find things here which you wouldn't expect */
+/** Sessions managment - you'll find things here which you wouldn't expect
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -64,7 +65,7 @@ struct file_to_load {
 	struct download download;
 };
 
-/* This structure and related functions are used to maintain information
+/** This structure and related functions are used to maintain information
  * for instances opened in new windows. We store all related session info like
  * URI and base session to clone from so that when the new instance connects
  * we can look up this information. In case of failure the session information
@@ -139,7 +140,7 @@ done_saved_session_info(void)
 		done_session_info(session_info.next);
 }
 
-/* Timer callback for @info->timer.  As explained in @install_timer,
+/** Timer callback for session_info.timer.  As explained in install_timer(),
  * this function must erase the expired timer ID from all variables.  */
 static void
 session_info_timeout(int id)
@@ -440,7 +441,7 @@ load_frames(struct session *ses, struct document_view *doc_view)
 	}
 }
 
-/* Timer callback for @ses->display_timer.  As explained in @install_timer,
+/** Timer callback for session.display_timer.  As explained in install_timer(),
  * this function must erase the expired timer ID from all variables.  */
 void
 display_timer(struct session *ses)
@@ -741,7 +742,7 @@ dialog_goto_url_open(void *data)
 	dialog_goto_url((struct session *) data, NULL);
 }
 
-/* Returns 0 if the first session was not properly initialized and
+/** @returns 0 if the first session was not properly initialized and
  * setup_session() should be called on the session as well. */
 static int
 setup_first_session(struct session *ses, struct uri *uri)
@@ -821,7 +822,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 	return 0;
 }
 
-/* First load the current URI of the base session. In most cases it will just
+/** First load the current URI of the base session. In most cases it will just
  * be fetched from the cache so that the new tab will not appear ``empty' while
  * loading the real URI or showing the goto URL dialog. */
 static void
@@ -991,7 +992,7 @@ encode_session_info(struct string *info,
 	return info;
 }
 
-/* Older elinks versions (up to and including 0.9.1) sends no magic variable and if
+/** Older elinks versions (up to and including 0.9.1) sends no magic variable and if
  * this is detected we fallback to the old session info format. For this format
  * the magic member of terminal_info hold the length of the URI string. The
  * old format is handled by the default label in the switch.
@@ -1000,12 +1001,11 @@ encode_session_info(struct string *info,
  * terminal_info data member. The magic variable controls how to interpret
  * the fields:
  *
- *	INTERLINK_NORMAL_MAGIC means use the terminal_info session_info
+ *    -	INTERLINK_NORMAL_MAGIC means use the terminal_info session_info
  *	variable as an id for a saved session.
  *
- *	INTERLINK_REMOTE_MAGIC means use the terminal_info session_info
+ *    -	INTERLINK_REMOTE_MAGIC means use the terminal_info session_info
  *	variable as the remote session flags. */
-
 int
 decode_session_info(struct terminal *term, struct terminal_info *info)
 {
@@ -1279,9 +1279,9 @@ tabwin_func(struct window *tab, struct term_event *ev)
 	}
 }
 
-/*
- * Gets the url being viewed by this session. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the url being viewed by this session. Writes it into @a str.
+ * A maximum of @a str_size bytes (including null) will be written.
  */
 unsigned char *
 get_current_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1304,9 +1304,9 @@ get_current_url(struct session *ses, unsigned char *str, size_t str_size)
 	return safe_strncpy(str, struri(uri), length + 1);
 }
 
-/*
- * Gets the title of the page being viewed by this session. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the title of the page being viewed by this session. Writes it into
+ * @a str.  A maximum of @a str_size bytes (including null) will be written.
  */
 unsigned char *
 get_current_title(struct session *ses, unsigned char *str, size_t str_size)
@@ -1323,9 +1323,9 @@ get_current_title(struct session *ses, unsigned char *str, size_t str_size)
 	return NULL;
 }
 
-/*
- * Gets the url of the link currently selected. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the url of the link currently selected. Writes it into @a str.
+ * A maximum of @a str_size bytes (including null) will be written.
  */
 unsigned char *
 get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1339,9 +1339,9 @@ get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
 	return safe_strncpy(str, link->where ? link->where : link->where_img, str_size);
 }
 
-/* get_current_link_name: returns the name of the current link
- * (the text between <A> and </A>), str is a preallocated string,
- * str_size includes the null char. */
+/** get_current_link_name: returns the name of the current link
+ * (the text between <A> and </A>), @a str is a preallocated string,
+ * @a str_size includes the null char. */
 unsigned char *
 get_current_link_name(struct session *ses, unsigned char *str, size_t str_size)
 {
