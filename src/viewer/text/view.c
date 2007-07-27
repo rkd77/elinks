@@ -1,4 +1,5 @@
-/* HTML viewer (and much more) */
+/** HTML viewer (and much more)
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -83,8 +84,8 @@ detach_formatted(struct document_view *doc_view)
 	mem_free_set(&doc_view->name, NULL);
 }
 
-/* type == 0 -> PAGE_DOWN
- * type == 1 -> DOWN */
+/*! @a type == 0 -> PAGE_DOWN;
+ * @a type == 1 -> DOWN */
 static void
 move_down(struct session *ses, struct document_view *doc_view, int type)
 {
@@ -123,8 +124,8 @@ move_page_down(struct session *ses, struct document_view *doc_view)
 	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
-/* type == 0 -> PAGE_UP
- * type == 1 -> UP */
+/*! @a type == 0 -> PAGE_UP;
+ * @a type == 1 -> UP */
 static void
 move_up(struct session *ses, struct document_view *doc_view, int type)
 {
@@ -262,7 +263,7 @@ move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, in
 	return FRAME_EVENT_REFRESH;
 }
 
-/* @steps > 0 -> down */
+/*! @a steps > 0 -> down */
 static enum frame_event_status
 vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
@@ -297,7 +298,7 @@ vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 	return FRAME_EVENT_REFRESH;
 }
 
-/* @steps > 0 -> right */
+/*! @a steps > 0 -> right */
 static enum frame_event_status
 horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
@@ -494,9 +495,10 @@ toggle_wrap_text(struct session *ses, struct document_view *doc_view, int xxxx)
 	draw_formatted(ses, 1);
 }
 
-/* Move the cursor to the document view co-ordinates provided as @x and @y,
- * scroll the document if necessary, put us in cursor-routing navigation mode if
- * that is not the current mode, and select any link under the cursor. */
+/** Move the cursor to the document view co-ordinates provided
+ * as @a x and @a y, scroll the document if necessary, put us in
+ * cursor-routing navigation mode if that is not the current mode,
+ * and select any link under the cursor. */
 enum frame_event_status
 move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 {
@@ -1036,8 +1038,8 @@ is_mouse_on_tab_bar(struct session *ses, struct term_event_mouse *mouse)
 
 	return mouse->y == y;
 }
-/* Returns the session if event cleanup should be done or NULL if no cleanup is
- * needed. */
+/** @returns the session if event cleanup should be done or NULL if no
+ * cleanup is needed. */
 static struct session *
 send_mouse_event(struct session *ses, struct document_view *doc_view,
 		 struct term_event *ev)
@@ -1136,8 +1138,8 @@ try_typeahead(struct session *ses, struct document_view *doc_view,
 	term_send_event(ses->tab->term, ev);
 }
 
-/* Returns the session if event cleanup should be done or NULL if no cleanup is
- * needed. */
+/** @returns the session if event cleanup should be done or NULL if no
+ * cleanup is needed. */
 static struct session *
 send_kbd_event(struct session *ses, struct document_view *doc_view,
 	       struct term_event *ev)

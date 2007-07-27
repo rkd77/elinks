@@ -1,4 +1,5 @@
-/* Forms viewing/manipulation handling */
+/** Forms viewing/manipulation handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -58,6 +59,7 @@
 /* TODO: Some of these (particulary those encoding routines) would feel better
  * in viewer/common/. --pasky */
 
+/** @relates submitted_value */
 struct submitted_value *
 init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type,
 		     struct form_control *fc, int position)
@@ -80,6 +82,7 @@ init_submitted_value(unsigned char *name, unsigned char *value, enum form_type t
 	return sv;
 }
 
+/** @relates submitted_value */
 void
 done_submitted_value(struct submitted_value *sv)
 {
@@ -611,6 +614,7 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 }
 
 
+/** @relates submitted_value */
 void
 done_submitted_value_list(LIST_OF(struct submitted_value) *list)
 {
@@ -816,6 +820,7 @@ struct boundary_info {
 	unsigned char string[BOUNDARY_LENGTH];
 };
 
+/** @relates boundary_info */
 static inline void
 init_boundary(struct boundary_info *boundary)
 {
@@ -823,7 +828,8 @@ init_boundary(struct boundary_info *boundary)
 	memset(boundary->string, '0', BOUNDARY_LENGTH);
 }
 
-/* Add boundary to string and save the offset */
+/** Add boundary to string and save the offset
+ * @relates boundary_info */
 static inline void
 add_boundary(struct string *data, struct boundary_info *boundary)
 {
@@ -835,6 +841,7 @@ add_boundary(struct string *data, struct boundary_info *boundary)
 	add_bytes_to_string(data, boundary->string, BOUNDARY_LENGTH);
 }
 
+/** @relates boundary_info */
 static inline unsigned char *
 increment_boundary_counter(struct boundary_info *boundary)
 {
@@ -853,6 +860,7 @@ increment_boundary_counter(struct boundary_info *boundary)
 	return NULL;
 }
 
+/** @relates boundary_info */
 static inline void
 check_boundary(struct string *data, struct boundary_info *boundary)
 {
@@ -898,7 +906,7 @@ check_boundary(struct string *data, struct boundary_info *boundary)
 		memcpy(data->source + boundary->offsets[i], bound, BOUNDARY_LENGTH);
 }
 
-/* FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
+/** @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
 encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		 struct string *data,
@@ -916,7 +924,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		add_boundary(data, boundary);
 		add_crlf_to_string(data);
 
-		/* FIXME: name is not encoded.
+		/** @bug FIXME: name is not encoded.
 		 * from RFC 1867:
 		 * multipart/form-data contains a series of parts.
 		 * Each part is expected to contain a content-disposition
@@ -1864,7 +1872,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	return status;
 }
 
-unsigned char *
+static unsigned char *
 get_form_label(struct form_control *fc)
 {
 	assert(fc->form);
