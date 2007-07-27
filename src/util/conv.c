@@ -127,6 +127,7 @@ elinks_longcat(unsigned char *s, unsigned int *slen,
 }
 
 
+/** @relates string */
 struct string *
 add_long_to_string(struct string *string, long number)
 {
@@ -143,6 +144,7 @@ add_long_to_string(struct string *string, long number)
 	return add_bytes_to_string(string, buffer, length);
 }
 
+/** @relates string */
 struct string *
 add_knum_to_string(struct string *string, long num)
 {
@@ -169,6 +171,7 @@ add_knum_to_string(struct string *string, long num)
 	return string;
 }
 
+/** @relates string */
 struct string *
 add_xnum_to_string(struct string *string, off_t xnum)
 {
@@ -202,6 +205,7 @@ add_xnum_to_string(struct string *string, off_t xnum)
 	return string;
 }
 
+/** @relates string */
 struct string *
 add_duration_to_string(struct string *string, long seconds)
 {
@@ -236,6 +240,7 @@ add_duration_to_string(struct string *string, long seconds)
 	return string;
 }
 
+/** @relates string */
 struct string *
 add_timeval_to_string(struct string *string, timeval_T *timeval)
 {

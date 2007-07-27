@@ -31,6 +31,7 @@ struct hash_item *add_hash_item(struct hash *hash, unsigned char *key, unsigned 
 struct hash_item *get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen);
 void del_hash_item(struct hash *hash, struct hash_item *item);
 
+/** @relates hash */
 #define foreach_hash_item(item, hash_table, iterator) \
 	for (iterator = 0; iterator < (1 << (hash_table).width); iterator++) \
 		foreach (item, (hash_table).hash[iterator])

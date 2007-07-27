@@ -27,7 +27,8 @@
 
 /** Create a memory list. If @a p is NULL or allocation fails, it will
  * return NULL.
- * It always stops at first NULL element. */
+ * It always stops at first NULL element.
+ * @relates memory_list */
 #if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 struct memory_list *
 debug_getml(unsigned char *file, int line, void *p, ...)
@@ -70,7 +71,8 @@ getml(void *p, ...)
 /** Add elements to a memory list.
  * If memory list exists, it enlarges it, else it creates it.
  * if there's no elements or first element is NULL, it does nothing.
- * It always stops at first NULL element. */
+ * It always stops at first NULL element.
+ * @relates memory_list */
 #if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 void
 debug_add_to_ml(unsigned char *file, int line, struct memory_list **ml, ...)
@@ -124,6 +126,7 @@ add_to_ml(struct memory_list **ml, ...)
 	va_end(ap);
 }
 
+/** @relates memory_list */
 #ifdef DEBUG_MEMLIST
 void
 debug_add_one_to_ml(unsigned char *file, int line, struct memory_list **ml, void *p)
@@ -164,7 +167,8 @@ add_one_to_ml(struct memory_list **ml, void *p)
 
 
 /** Free elements and memory list.
- * It returns safely if passed a NULL pointer. */
+ * It returns safely if passed a NULL pointer.
+ * @relates memory_list */
 void
 freeml(struct memory_list *ml)
 {

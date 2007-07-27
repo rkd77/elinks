@@ -9,6 +9,7 @@ struct box {
 	int height;
 };
 
+/** @relates box */
 static inline int
 is_in_box(struct box *box, int x, int y)
 {
@@ -17,12 +18,14 @@ is_in_box(struct box *box, int x, int y)
 		&& y < box->y + box->height);
 }
 
+/** @relates box */
 static inline int
 row_is_in_box(struct box *box, int y)
 {
 	return (y >= box->y && y < box->y + box->height);
 }
 
+/** @relates box */
 static inline int
 col_is_in_box(struct box *box, int x)
 {
@@ -30,7 +33,8 @@ col_is_in_box(struct box *box, int x)
 }
 
 /** Check whether a span of columns is in @a box.
- * Mainly intended for use with double-width characters.  */
+ * Mainly intended for use with double-width characters.
+ * @relates box */
 static inline int
 colspan_is_in_box(struct box *box, int x, int span)
 {
@@ -38,6 +42,7 @@ colspan_is_in_box(struct box *box, int x, int span)
 }
 
 
+/** @relates box */
 static inline void
 set_box(struct box *box, int x, int y, int width, int height)
 {
@@ -47,6 +52,7 @@ set_box(struct box *box, int x, int y, int width, int height)
 	box->height = height;
 }
 
+/** @relates box */
 static inline void
 copy_box(struct box *dst, struct box *src)
 {

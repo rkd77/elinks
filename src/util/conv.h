@@ -53,7 +53,8 @@ struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
 #ifdef HAVE_STRFTIME
 /** Uses strftime() to format @a time according to @a format and adds
  * the result to @a string. If @a time is NULL, time(NULL) will be
- * used. */
+ * used.
+ * @relates string */
 struct string *add_date_to_string(struct string *string,
 				  const unsigned char *format,
 				  const time_t *time);
@@ -67,16 +68,19 @@ struct string *add_date_to_string(struct string *string,
  * @{ */
 
 /** A simple generic encoder. Should maybe take @a replaceable as a
- * string so we could also use it for adding shell safe strings. */
+ * string so we could also use it for adding shell safe strings.
+ * @relates string */
 struct string *
 add_string_replace(struct string *string, unsigned char *src, int len,
 		   unsigned char replaceable, unsigned char replacement);
 
+/** @relates string */
 #define add_optname_to_string(str, src, len) \
 	add_string_replace(str, src, len, '.', '*')
 
 /** Maybe a bad name but it is actually the real name, but you may
- * also think of it as adding the decoded option name. */
+ * also think of it as adding the decoded option name.
+ * @relates string */
 #define add_real_optname_to_string(str, src, len) \
 	add_string_replace(str, src, len, '*', '.')
 
@@ -85,24 +89,29 @@ add_string_replace(struct string *string, unsigned char *src, int len,
  * resulting HTML will be parsed with the same charset as the original
  * string.  (This function cannot use the @&@#160; syntax for non-ASCII,
  * because HTML wants Unicode numbers there and this function does not
- * know the charset of the input data.)  */
+ * know the charset of the input data.)
+ * @relates string */
 struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
 
 /** Convert reserved or non-ASCII chars to html @&@#xx;.  The resulting
  * string can be correctly parsed in any charset where bytes
- * 0x20...0x7E match ASCII.  */
+ * 0x20...0x7E match ASCII.
+ * @relates string */
 struct string *add_cp_html_to_string(struct string *string, int src_codepage,
 				     const unsigned char *html, int htmllen);
 
-/** Escapes @\ and " with a @\ */
+/** Escapes @\ and " with a @\
+ * @relates string */
 struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
 
 /** Adds ', @a len bytes of @a src with all single-quotes converted to '\'',
- * and ' to @a string. */
+ * and ' to @a string.
+ * @relates string */
 struct string *add_shell_quoted_to_string(struct string *string,
 					  unsigned char *src, int len);
 
-/* Escapes non shell safe chars with '_'. */
+/* Escapes non shell safe chars with '_'.
+ * @relates string */
 struct string *add_shell_safe_to_string(struct string *string, unsigned char *cmd, int cmdlen);
 
 /** @} */

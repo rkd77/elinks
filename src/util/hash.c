@@ -51,12 +51,14 @@ init_hash(unsigned int width, hash_func_T func)
 	return hash;
 }
 
+/** @relates hash */
 struct hash *
 init_hash8(void)
 {
 	return init_hash(8, &strhash);
 }
 
+/** @relates hash */
 void
 free_hash(struct hash **hashp)
 {
@@ -77,7 +79,8 @@ free_hash(struct hash **hashp)
  * anyway.. ;) --pasky */
 #define HASH_MAGIC 0xdeadbeef
 
-/** @returns hash_item if ok, NULL if error. */
+/** @returns hash_item if ok, NULL if error.
+ * @relates hash */
 struct hash_item *
 add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen,
 	      void *value)
@@ -98,6 +101,7 @@ add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen,
 	return item;
 }
 
+/** @relates hash */
 struct hash_item *
 get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen)
 {
@@ -127,7 +131,8 @@ get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen)
 
 /** Delete @a item from @a hash.
  * If key and/or value were dynamically allocated, think about freeing them.
- * This function doesn't do that. */
+ * This function doesn't do that.
+ * @relates hash */
 void
 del_hash_item(struct hash *hash, struct hash_item *item)
 {

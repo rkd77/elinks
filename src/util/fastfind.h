@@ -41,16 +41,19 @@ struct fastfind_index {
  * @param flags 	control case sensitivity, compression
  *
  * This function must be called once and only once per list.
- * Failure is not an option, so call it at startup. */
+ * Failure is not an option, so call it at startup.
+ * @relates fastfind_index */
 struct fastfind_index *fastfind_index(struct fastfind_index *index, enum fastfind_flags flags);
 
 /* The main reason of all that stuff is here. */
 /** Search the index for @a key with length @a key_len using the
- * @a index' handle created with fastfind_index(). */
+ * @a index' handle created with fastfind_index().
+ * @relates fastfind_index */
 void *fastfind_search(struct fastfind_index *index, unsigned char *key, int key_len);
 
 /** Fastfind cleanup. It frees the given @a index.
- * Must be called once per list. */
+ * Must be called once per list.
+ * @relates fastfind_index */
 void fastfind_done(struct fastfind_index *index);
 
 #endif

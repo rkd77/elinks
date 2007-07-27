@@ -53,6 +53,7 @@ timeval_T *timeval_sub_interval(timeval_T *t, timeval_T *interval);
 timeval_T *timeval_add_interval(timeval_T *t, timeval_T *interval);
 int timeval_div_off_t(off_t n, timeval_T *t);
 
+/** @relates timeval_T */
 #define timeval_copy(dst, src) copy_struct(dst, src)
 
 #endif

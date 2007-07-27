@@ -84,7 +84,8 @@ struct scanner_info {
 };
 
 
-/** Initializes the scanner. */
+/** Initializes the scanner.
+ * @relates scanner */
 void init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
 		  unsigned char *string, unsigned char *end);
 
@@ -129,12 +130,14 @@ struct scanner {
 	struct scanner_token table[SCANNER_TOKENS];
 };
 
+/** @relates scanner  */
 #define scanner_has_tokens(scanner) \
 	((scanner)->tokens > 0 && (scanner)->current < (scanner)->table + (scanner)->tokens)
 
 /** This macro checks if the current scanner state is valid. Meaning if the
  * scanners table is full the last token skipping or get_next_scanner_token()
- * call made it possible to get the type of the next token. */
+ * call made it possible to get the type of the next token.
+ * @relates scanner */
 #define check_scanner(scanner) \
 	(scanner->tokens < SCANNER_TOKENS \
 	 || scanner->current + 1 < scanner->table + scanner->tokens)
@@ -143,7 +146,8 @@ struct scanner {
 /** @name Scanner table accessors and mutators
  * @{ */
 
-/** Checks the type of the next token */
+/** Checks the type of the next token
+ * @relates scanner */
 #define check_next_scanner_token(scanner, token_type)				\
 	(scanner_has_tokens(scanner)					\
 	 && ((scanner)->current + 1 < (scanner)->table + (scanner)->tokens)	\
@@ -151,14 +155,16 @@ struct scanner {
 
 /** Access current and next token. Getting the next token might cause
  * a rescan so any token pointers that has been stored in a local variable
- * might not be valid after the call. */
+ * might not be valid after the call.
+ * @relates scanner */
 static inline struct scanner_token *
 get_scanner_token(struct scanner *scanner)
 {
 	return scanner_has_tokens(scanner) ? scanner->current : NULL;
 }
 
-/** Do a scanning if we do not have also have access to next token. */
+/** Do a scanning if we do not have also have access to next token.
+ * @relates scanner */
 static inline struct scanner_token *
 get_next_scanner_token(struct scanner *scanner)
 {
@@ -167,30 +173,35 @@ get_next_scanner_token(struct scanner *scanner)
 		? scanner->info->scan(scanner) : get_scanner_token(scanner));
 }
 
-/** This should just make the code more understandable .. hopefully */
+/** This should just make the code more understandable .. hopefully
+ * @relates scanner */
 #define skip_scanner_token(scanner) get_next_scanner_token(scanner)
 
 /** Removes tokens from the scanner until it meets a token of the given type.
- * This token will then also be skipped. */
+ * This token will then also be skipped.
+ * @relates scanner */
 struct scanner_token *
 skip_scanner_tokens(struct scanner *scanner, int skipto, int precedence);
 
 /** @} */
 
 /** Looks up the string from @a ident to @a end to in the scanners
- * string mapping table */
+ * string mapping table
+ * @relates scanner */
 int
 map_scanner_string(struct scanner *scanner,
 		   unsigned char *ident, unsigned char *end, int base_type);
 
 #ifdef DEBUG_SCANNER
+/** @relates scanner */
 void dump_scanner(struct scanner *scanner);
 #endif
 
 /* The begin_token_scanning() and end_token_scanning() functions provide the
  * basic setup and teardown for the rescan function made public via the
  * scanner_info->scan member.
- * @returns NULL if it is not necessary to try to scan for more tokens */
+ * @returns NULL if it is not necessary to try to scan for more tokens
+ * @relates scanner */
 static inline struct scanner_token *
 begin_token_scanning(struct scanner *scanner)
 {
@@ -228,7 +239,8 @@ begin_token_scanning(struct scanner *scanner)
  * _after_ the last valid token is taken as the @a end argument.
  *
  * It is ok for @a end to be < scanner->table since scanner->tokens
- * will become <= 0 anyway. */
+ * will become <= 0 anyway.
+ * @relates scanner */
 static inline struct scanner_token *
 end_token_scanning(struct scanner *scanner, struct scanner_token *end)
 {
