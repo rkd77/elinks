@@ -59,7 +59,7 @@ struct textarea_data {
 	unsigned char *fn;
 };
 
-static INIT_LIST_HEAD(textarea_list); /* struct textarea_data */
+static INIT_LIST_OF(struct textarea_data, textarea_list);
 
 /** We add two extra entries to the table so the ending info can be added
  * without reallocating. */
