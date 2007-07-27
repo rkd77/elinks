@@ -201,6 +201,7 @@ end:
 	return NULL;
 }
 
+/* @relates secure_save_info */
 struct secure_save_info *
 secure_open(unsigned char *file_name)
 {
@@ -221,7 +222,8 @@ secure_open(unsigned char *file_name)
 }
 
 /** Close a file opened with secure_open(). @returns 0 on success,
- * errno or -1 on failure. */
+ * errno or -1 on failure.
+ * @relates secure_save_info */
 int
 secure_close(struct secure_save_info *ssi)
 {
@@ -300,7 +302,8 @@ free:
 
 
 /** fputs() wrapper, set ssi->err to errno on error. If ssi->err is set when
- * called, it immediatly returns EOF. */
+ * called, it immediatly returns EOF.
+ * @relates secure_save_info */
 int
 secure_fputs(struct secure_save_info *ssi, const char *s)
 {
@@ -319,7 +322,8 @@ secure_fputs(struct secure_save_info *ssi, const char *s)
 
 
 /** fputc() wrapper, set ssi->err to errno on error. If ssi->err is set when
- * called, it immediatly returns EOF. */
+ * called, it immediatly returns EOF.
+ * @relates secure_save_info */
 int
 secure_fputc(struct secure_save_info *ssi, int c)
 {
@@ -337,7 +341,8 @@ secure_fputc(struct secure_save_info *ssi, int c)
 }
 
 /** fprintf() wrapper, set ssi->err to errno on error and return a negative
- * value. If ssi->err is set when called, it immediatly returns -1. */
+ * value. If ssi->err is set when called, it immediatly returns -1.
+ * @relates secure_save_info */
 int
 secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
 {

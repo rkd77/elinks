@@ -229,6 +229,7 @@ get_master_session(void)
 	return NULL;
 }
 
+/** @relates session */
 struct download *
 get_current_download(struct session *ses)
 {
@@ -850,6 +851,7 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 	}
 }
 
+/** @relates session  */
 struct session *
 init_session(struct session *base_session, struct terminal *term,
 	     struct uri *uri, int in_background)
@@ -1296,6 +1298,7 @@ tabwin_func(struct window *tab, struct term_event *ev)
 /**
  * Gets the url being viewed by this session. Writes it into @a str.
  * A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1321,6 +1324,7 @@ get_current_url(struct session *ses, unsigned char *str, size_t str_size)
 /**
  * Gets the title of the page being viewed by this session. Writes it into
  * @a str.  A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_title(struct session *ses, unsigned char *str, size_t str_size)
@@ -1340,6 +1344,7 @@ get_current_title(struct session *ses, unsigned char *str, size_t str_size)
 /**
  * Gets the url of the link currently selected. Writes it into @a str.
  * A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1355,7 +1360,8 @@ get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
 
 /** get_current_link_name: returns the name of the current link
  * (the text between <A> and </A>), @a str is a preallocated string,
- * @a str_size includes the null char. */
+ * @a str_size includes the null char.
+ * @relates session */
 unsigned char *
 get_current_link_name(struct session *ses, unsigned char *str, size_t str_size)
 {
@@ -1389,12 +1395,14 @@ get_current_link_in_view(struct document_view *doc_view)
 	return link && !link_is_form(link) ? link : NULL;
 }
 
+/** @relates session */
 struct link *
 get_current_session_link(struct session *ses)
 {
 	return get_current_link_in_view(current_frame(ses));
 }
 
+/** @relates session */
 int
 eat_kbd_repeat_count(struct session *ses)
 {

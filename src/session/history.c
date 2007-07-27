@@ -36,6 +36,7 @@ free_history(LIST_OF(struct location) *history)
 }
 
 
+/** @relates ses_history */
 void
 create_history(struct ses_history *history)
 {
@@ -43,6 +44,7 @@ create_history(struct ses_history *history)
 	history->current = NULL;
 }
 
+/** @relates ses_history */
 void
 destroy_history(struct ses_history *history)
 {
@@ -50,6 +52,7 @@ destroy_history(struct ses_history *history)
 	history->current = NULL;
 }
 
+/** @relates ses_history */
 void
 clean_unhistory(struct ses_history *history)
 {
@@ -63,6 +66,7 @@ clean_unhistory(struct ses_history *history)
 	}
 }
 
+/** @relates ses_history */
 void
 add_to_history(struct ses_history *history, struct location *loc)
 {
@@ -75,6 +79,7 @@ add_to_history(struct ses_history *history, struct location *loc)
 	history->current = loc;
 }
 
+/** @relates ses_history */
 void
 del_from_history(struct ses_history *history, struct location *loc)
 {

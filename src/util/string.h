@@ -162,7 +162,8 @@ struct string {
 /** Initializes the passed string struct by preallocating the
  * string.source member.
  * @returns @a string if successful, or NULL if out of memory.
- * @post done_string(@a string) is safe, even if this returned NULL. */
+ * @post done_string(@a string) is safe, even if this returned NULL.
+ * @relates string */
 #ifdef DEBUG_MEMLEAK
 struct string *init_string__(const unsigned char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
@@ -170,7 +171,8 @@ struct string *init_string__(const unsigned char *file, int line, struct string 
 struct string *init_string(struct string *string);
 #endif
 
-/** Resets @a string and free()s the string.source member. */
+/** Resets @a string and free()s the string.source member.
+ * @relates string */
 void done_string(struct string *string);
 
 
@@ -182,16 +184,20 @@ struct string *add_file_to_string(struct string *string, const unsigned char *fi
 struct string *add_crlf_to_string(struct string *string);
 
 /** Adds each C string to @a string until a terminating
- * (unsigned char *) NULL is met. */
+ * (unsigned char *) NULL is met.
+ * @relates string */
 struct string *string_concat(struct string *string, ...);
 
-/** Extends the string with @a times number of @a character. */
+/** Extends the string with @a times number of @a character.
+ * @relates string */
 struct string *add_xchar_to_string(struct string *string, unsigned char character, int times);
 
-/** Add printf()-style format string to @a string. */
+/** Add printf()-style format string to @a string.
+ * @relates string */
 struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
 
-/** Get a regular newly allocated stream of bytes from @a string. */
+/** Get a regular newly allocated stream of bytes from @a string.
+ * @relates string */
 static unsigned char *squeezastring(struct string *string);
 
 
@@ -262,7 +268,8 @@ struct string_list_item {
 };
 
 /** Adds @a string with @a length chars to the list. If @a length is -1
- * it will be set to the return value of strlen(). */
+ * it will be set to the return value of strlen().
+ * @relates string_list_item */
 struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const unsigned char *string, int length);

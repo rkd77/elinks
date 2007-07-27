@@ -213,14 +213,16 @@ extern enum remote_session_flags remote_session_flags;
  * That's nice for encapsulation and already paid out once ;-). */
 #define cur_loc(x) ((x)->history.current)
 
-/** Return if we have anything being loaded in this session already. */
+/** Return if we have anything being loaded in this session already.
+ * @relates session */
 static inline int
 have_location(struct session *ses) {
 	return !!cur_loc(ses);
 }
 
 /** Swaps the current session referrer with the new one passed as @a referrer.
- * @a referrer may be NULL. */
+ * @a referrer may be NULL.
+ * @relates session */
 void set_session_referrer(struct session *ses, struct uri *referrer);
 
 void
@@ -258,7 +260,8 @@ void free_files(struct session *);
 void display_timer(struct session *ses);
 
 /** session_is_loading() is like !!get_current_download() but doesn't take
- * session.req_sent into account. */
+ * session.req_sent into account.
+ * @relates session */
 int session_is_loading(struct session *ses);
 struct download *get_current_download(struct session *ses);
 

@@ -15,6 +15,7 @@
 #include "util/string.h"
 
 
+/** @relates location */
 void
 copy_location(struct location *dst, struct location *src)
 {

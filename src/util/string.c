@@ -287,6 +287,7 @@ done_string(struct string *string)
 	memset(string, 0, sizeof(*string));
 }
 
+/** @relates string */
 inline struct string *
 add_to_string(struct string *string, const unsigned char *source)
 {
@@ -300,6 +301,7 @@ add_to_string(struct string *string, const unsigned char *source)
 	return add_bytes_to_string(string, source, strlen(source));
 }
 
+/** @relates string */
 inline struct string *
 add_crlf_to_string(struct string *string)
 {
@@ -318,6 +320,7 @@ add_crlf_to_string(struct string *string)
 	return string;
 }
 
+/** @relates string */
 inline struct string *
 add_string_to_string(struct string *string, const struct string *from)
 {
@@ -332,6 +335,7 @@ add_string_to_string(struct string *string, const struct string *from)
 	return add_bytes_to_string(string, from->source, from->length);
 }
 
+/** @relates string */
 struct string *
 add_file_to_string(struct string *string, const unsigned char *filename)
 {
@@ -393,6 +397,7 @@ string_concat(struct string *string, ...)
 	return string;
 }
 
+/** @relates string */
 inline struct string *
 add_char_to_string(struct string *string, unsigned char character)
 {
@@ -494,6 +499,7 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 	return string;
 }
 
+/** @relates string_list_item */
 void
 free_string_list(LIST_OF(struct string_list_item) *list)
 {

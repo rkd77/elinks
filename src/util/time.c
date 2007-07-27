@@ -20,7 +20,8 @@
 
 /** Get the current time.
  * It attempts to use available functions, granularity
- * may be as worse as 1 second if time() is used. */
+ * may be as worse as 1 second if time() is used.
+ * @relates timeval_T */
 timeval_T *
 timeval_now(timeval_T *t)
 {
@@ -47,7 +48,8 @@ timeval_now(timeval_T *t)
 }
 
 /** Subtract an interval to a timeval, it ensures that
- * result is never negative. */
+ * result is never negative.
+ * @relates timeval_T */
 timeval_T *
 timeval_sub_interval(timeval_T *t, timeval_T *interval)
 {
@@ -73,6 +75,7 @@ timeval_sub_interval(timeval_T *t, timeval_T *interval)
 	return t;
 }
 
+/** @relates timeval_T */
 timeval_T *
 timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer)
 {
@@ -87,6 +90,7 @@ timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer)
 	return res;
 }
 
+/** @relates timeval_T */
 timeval_T *
 timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
 {
@@ -101,6 +105,7 @@ timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
 	return res;
 }
 
+/** @relates timeval_T */
 timeval_T *
 timeval_add_interval(timeval_T *t, timeval_T *interval)
 {
@@ -115,6 +120,7 @@ timeval_add_interval(timeval_T *t, timeval_T *interval)
 	return t;
 }
 
+/** @relates timeval_T */
 timeval_T *
 timeval_from_double(timeval_T *t, double x)
 {
@@ -124,6 +130,7 @@ timeval_from_double(timeval_T *t, double x)
 	return t;
 }
 
+/** @relates timeval_T */
 timeval_T *
 timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 {
@@ -136,7 +143,8 @@ timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 }
 
 /** @bug 923: Assumes time_t values fit in long.  (This function is used
- * for both timestamps and durations.)  */
+ * for both timestamps and durations.)
+ * @relates timeval_T */
 timeval_T *
 timeval_from_seconds(timeval_T *t, long seconds)
 {
@@ -178,6 +186,7 @@ mult_ms(milliseconds_T a, long lb)
 	return (milliseconds_T) (la * lb);
 }
 
+/** @relates timeval_T */
 milliseconds_T
 timeval_to_milliseconds(timeval_T *t)
 {
@@ -188,20 +197,23 @@ timeval_to_milliseconds(timeval_T *t)
 }
 
 /** @bug 923: Assumes time_t values fit in long.  (This function is used
- * for both timestamps and durations.)  */
+ * for both timestamps and durations.)
+ * @relates timeval_T */
 long
 timeval_to_seconds(timeval_T *t)
 {
 	return t->sec + t->usec / 1000000L;
 }
 
+/** @relates timeval_T */
 int
 timeval_is_positive(timeval_T *t)
 {
 	return (t->sec > 0 || (t->sec == 0 && t->usec > 0));
 }
 
-/** Be sure timeval is not negative. */
+/** Be sure timeval is not negative.
+ * @relates timeval_T */
 void
 timeval_limit_to_zero_or_one(timeval_T *t)
 {
@@ -216,7 +228,8 @@ timeval_limit_to_zero_or_one(timeval_T *t)
 /** Compare time values.
  * @returns 1 if t1 > t2;
  * -1 if t1 < t2;
- * 0 if t1 == t2. */
+ * 0 if t1 == t2.
+ * @relates timeval_T */
 int
 timeval_cmp(timeval_T *t1, timeval_T *t2)
 {
@@ -226,6 +239,7 @@ timeval_cmp(timeval_T *t1, timeval_T *t2)
 	return t1->usec - t2->usec;
 }
 
+/** @relates timeval_T */
 int
 timeval_div_off_t(off_t n, timeval_T *t)
 {

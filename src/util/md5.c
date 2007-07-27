@@ -44,7 +44,8 @@ reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 }
 
 /** Start MD5 accumulation. Set bit count to 0 and buffer to mysterious
- * initialization constants. */
+ * initialization constants.
+ * @relates md5_context */
 void
 init_md5(struct md5_context *ctx)
 {
@@ -58,7 +59,8 @@ init_md5(struct md5_context *ctx)
 }
 
 /** Update context to reflect the concatenation of another buffer full
- * of bytes. */
+ * of bytes.
+ * @relates md5_context */
 void
 update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
 {
@@ -106,7 +108,8 @@ update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
 }
 
 /** Final wrapup - pad to 64-byte boundary with the bit pattern 1 0* (64-bit
- * count of bits processed, MSB-first) */
+ * count of bits processed, MSB-first)
+ * @relates md5_context */
 void
 done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 {
