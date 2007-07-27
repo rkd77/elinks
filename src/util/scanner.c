@@ -1,4 +1,5 @@
-/* A pretty generic scanner */
+/** A pretty generic scanner
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -116,7 +117,8 @@ get_scanner_token_debug(struct scanner *scanner)
 #endif
 
 
-/* Initializers */
+/** @name Initializers
+ * @{ */
 
 static inline void
 init_scanner_info(struct scanner_info *scanner_info)
@@ -170,3 +172,5 @@ init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
 	scanner->info = scanner_info;
 	scanner->info->scan(scanner);
 }
+
+/** @} */

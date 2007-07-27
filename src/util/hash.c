@@ -1,4 +1,5 @@
-/* Hashing infrastructure */
+/** Hashing infrastructure
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -71,11 +72,12 @@ free_hash(struct hash **hashp)
 }
 
 
-/* I've no much idea about what to set here.. I think it doesn't matter much
+/** Initialization vector for the hash function.
+ * I've no much idea about what to set here.. I think it doesn't matter much
  * anyway.. ;) --pasky */
 #define HASH_MAGIC 0xdeadbeef
 
-/* Returns hash_item if ok, NULL if error. */
+/** @returns hash_item if ok, NULL if error. */
 struct hash_item *
 add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen,
 	      void *value)
@@ -123,7 +125,8 @@ get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen)
 
 #undef HASH_MAGIC
 
-/* If key and/or value were dynamically allocated, think about freeing them.
+/** Delete @a item from @a hash.
+ * If key and/or value were dynamically allocated, think about freeing them.
  * This function doesn't do that. */
 void
 del_hash_item(struct hash *hash, struct hash_item *item)
@@ -138,11 +141,14 @@ del_hash_item(struct hash *hash, struct hash_item *item)
 
 #ifdef X31_HASH
 
-/* Fast string hashing. */
+/** Fast string hashing.
+ * @param k		the key
+ * @param length	the length of the key
+ * @param initval	the previous hash, or an arbitrary value */
 static hash_value_T
-strhash(unsigned char *k, /* the key */
-	unsigned int length, /* the length of the key */
-	hash_value_T initval /* the previous hash, or an arbitrary value */)
+strhash(unsigned char *k,
+	unsigned int length,
+	hash_value_T initval)
 {
 	const unsigned char *p = (const unsigned char *) k;
 	hash_value_T h = initval;
@@ -260,10 +266,14 @@ strhash(unsigned char *k, /* the key */
 			+ ((hash_value_T) (k[(a)+2])<<16) \
 			+ ((hash_value_T) (k[(a)+3])<<24))
 
+/** Hash an array of bytes.
+ * @param k		the key
+ * @param length	the length of the key
+ * @param initval	the previous hash, or an arbitrary value */
 static hash_value_T
-strhash(unsigned char *k, /* the key */
-	unsigned int length, /* the length of the key */
-	hash_value_T initval /* the previous hash, or an arbitrary value */)
+strhash(unsigned char *k,
+	unsigned int length,
+	hash_value_T initval)
 {
 	int len;
 	hash_value_T a, b, c;

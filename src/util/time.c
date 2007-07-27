@@ -1,4 +1,5 @@
-/* Time operations */
+/** Time operations
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -17,7 +18,7 @@
 #include "util/error.h"
 #include "util/time.h"
 
-/* Get the current time.
+/** Get the current time.
  * It attempts to use available functions, granularity
  * may be as worse as 1 second if time() is used. */
 timeval_T *
@@ -45,7 +46,7 @@ timeval_now(timeval_T *t)
 	return t;
 }
 
-/* Subtract an interval to a timeval, it ensures that
+/** Subtract an interval to a timeval, it ensures that
  * result is never negative. */
 timeval_T *
 timeval_sub_interval(timeval_T *t, timeval_T *interval)
@@ -134,7 +135,7 @@ timeval_from_milliseconds(timeval_T *t, milliseconds_T milliseconds)
 	return t;
 }
 
-/* Bug 923: Assumes time_t values fit in long.  (This function is used
+/** @bug 923: Assumes time_t values fit in long.  (This function is used
  * for both timestamps and durations.)  */
 timeval_T *
 timeval_from_seconds(timeval_T *t, long seconds)
@@ -186,7 +187,7 @@ timeval_to_milliseconds(timeval_T *t)
 	return add_ms_to_ms(a, b);
 }
 
-/* Bug 923: Assumes time_t values fit in long.  (This function is used
+/** @bug 923: Assumes time_t values fit in long.  (This function is used
  * for both timestamps and durations.)  */
 long
 timeval_to_seconds(timeval_T *t)
@@ -200,7 +201,7 @@ timeval_is_positive(timeval_T *t)
 	return (t->sec > 0 || (t->sec == 0 && t->usec > 0));
 }
 
-/* Be sure timeval is not negative. */
+/** Be sure timeval is not negative. */
 void
 timeval_limit_to_zero_or_one(timeval_T *t)
 {
@@ -212,9 +213,10 @@ timeval_limit_to_zero_or_one(timeval_T *t)
 #endif
 }
 
-/* Returns 1 if t1 > t2
- * -1 if t1 < t2
- * 0 if t1 == t2 */
+/** Compare time values.
+ * @returns 1 if t1 > t2;
+ * -1 if t1 < t2;
+ * 0 if t1 == t2. */
 int
 timeval_cmp(timeval_T *t1, timeval_T *t2)
 {

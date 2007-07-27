@@ -1,6 +1,7 @@
-/* MD5 implementation (RFC 1321) */
-
-/* This code implements the MD5 message-digest algorithm. The algorithm is due
+/** MD5 implementation (RFC 1321)
+ * @file
+ *
+ * This code implements the MD5 message-digest algorithm. The algorithm is due
  * to Ron Rivest.
  *
  * This code was written by Colin Plumb in 1993, no copyright is claimed.  This
@@ -26,8 +27,9 @@
 
 static void transform_md5(uint32_t buf[4], uint32_t const in[16]);
 
-/* This code is harmless on little-endian machines. */
-/* FIXME: Optimize it away on little-endian machines. */
+/** Swap the bytes of each uint32_t, if necessary.
+ * This code is harmless on little-endian machines.
+ * \todo FIXME: Optimize it away on little-endian machines. */
 static void
 reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 {
@@ -41,7 +43,7 @@ reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 	} while (--longs);
 }
 
-/* Start MD5 accumulation. Set bit count to 0 and buffer to mysterious
+/** Start MD5 accumulation. Set bit count to 0 and buffer to mysterious
  * initialization constants. */
 void
 init_md5(struct md5_context *ctx)
@@ -55,7 +57,7 @@ init_md5(struct md5_context *ctx)
 	ctx->bits[1] = 0;
 }
 
-/* Update context to reflect the concatenation of another buffer full
+/** Update context to reflect the concatenation of another buffer full
  * of bytes. */
 void
 update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
@@ -103,10 +105,10 @@ update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
 	memmove(ctx->in, buf, len);
 }
 
-/* Final wrapup - pad to 64-byte boundary with the bit pattern 1 0* (64-bit
+/** Final wrapup - pad to 64-byte boundary with the bit pattern 1 0* (64-bit
  * count of bits processed, MSB-first) */
 void
-done_md5(struct md5_context *ctx, unsigned char digest[16])
+done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 {
 	unsigned int count;
 	unsigned char *p;
@@ -150,7 +152,7 @@ done_md5(struct md5_context *ctx, unsigned char digest[16])
 
 unsigned char *
 digest_md5(const unsigned char *data, unsigned long length,
-	   unsigned char digest[16])
+	   md5_digest_bin_T digest)
 {
 	struct md5_context ctx;
 
@@ -172,11 +174,11 @@ digest_md5(const unsigned char *data, unsigned long length,
 #define F3(x, y, z) (x ^ y ^ z)
 #define F4(x, y, z) (y ^ (x | ~z))
 
-/* This is the central step in the MD5 algorithm. */
+/** This is the central step in the MD5 algorithm. */
 #define MD5STEP(f, w, x, y, z, data, s) \
 	( w += f(x, y, z) + data,  w = w<<s | w>>(32-s),  w += x )
 
-/* The core of the MD5 algorithm, this alters an existing MD5 hash to reflect
+/** The core of the MD5 algorithm, this alters an existing MD5 hash to reflect
  * the addition of 16 longwords of new data. md5_update() blocks the data and
  * converts bytes into longwords for this routine. */
 static void

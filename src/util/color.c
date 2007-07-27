@@ -1,4 +1,5 @@
-/* Color parser */
+/** Color parser
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -40,7 +41,7 @@ colors_list_reset(void)
 	internal_pointer = color_specs;
 }
 
-/* Returns a pointer to a struct that contains
+/** Returns a pointer to a struct that contains
  * current key and data pointers and increment
  * internal pointer.
  * It returns NULL when key is NULL. */

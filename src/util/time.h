@@ -16,19 +16,19 @@ typedef long milliseconds_T;
 #define ms_max(a, b) ((a) < (b) ? (b) : (a))
 #define ms_min(a, b) ((a) < (b) ? (a) : (b))
 
-/* Bug 923: Assumes time_t values fit in long.  */
+/** @bug 923: Assumes time_t values fit in @c long.  */
 #define str_to_time_t(s) ((time_t) atol(s))
-/* When formatting time_t values to be parsed with str_to_time_t,
- * we first cast to time_print_T and then printf the result with
- * TIME_PRINT_FORMAT.
- * Bug 923: Assumes time_t values fit in long.  */
+/** When formatting time_t values to be parsed with str_to_time_t(),
+ * we first cast to @c time_print_T and then printf() the result with
+ * ::TIME_PRINT_FORMAT.
+ * @bug 923: Assumes time_t values fit in @c long.  */
 typedef long time_print_T;
-#define TIME_PRINT_FORMAT "ld"
+#define TIME_PRINT_FORMAT "ld"	/**< @see time_print_T */
 
-/* Redefine a timeval that has all fields signed so calculations
+/** Redefine a timeval that has all fields signed so calculations
  * will be simplified on rare systems that define timeval with
  * unsigned fields.
- * Bug 923: Assumes time_t values fit in long.  (This structure is
+ * @bug 923: Assumes time_t values fit in long.  (This structure is
  * used for both timestamps and durations.)  */
 typedef struct { long sec; long usec; } timeval_T;
 

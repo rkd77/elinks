@@ -1,6 +1,7 @@
 #ifndef EL__UTIL_BOX_H
 #define EL__UTIL_BOX_H
 
+/** A rectangular part of a drawing surface, such as the screen.  */
 struct box {
 	int x;
 	int y;
@@ -28,7 +29,8 @@ col_is_in_box(struct box *box, int x)
 	return (x >= box->x && x < box->x + box->width);
 }
 
-/* Mainly intended for use with double-width characters.  */
+/** Check whether a span of columns is in @a box.
+ * Mainly intended for use with double-width characters.  */
 static inline int
 colspan_is_in_box(struct box *box, int x, int span)
 {

@@ -38,22 +38,22 @@ int_max(register int x, register int y)
 }
 
 
-/* Limit @what pointed value to upper bound @limit. */
+/** Limit @a what pointed value to upper bound @a limit. */
 static inline void
 int_upper_bound(register int *what, register int limit)
 {
 	if (*what > limit) *what = limit;
 }
 
-/* Limit @what pointed value to lower bound @limit. */
+/** Limit @a what pointed value to lower bound @a limit. */
 static inline void
 int_lower_bound(register int *what, register int limit)
 {
 	if (*what < limit) *what = limit;
 }
 
-/* Limit @what pointed value to lower bound @lower_limit and to upper bound
- * @upper_limit. */
+/** Limit @a what pointed value to lower bound @a lower_limit and to
+ * upper bound @a upper_limit. */
 static inline void
 int_bounds(register int *what, register int lower_limit,
 	   register int upper_limit)
@@ -65,7 +65,8 @@ int_bounds(register int *what, register int lower_limit,
 }
 
 
-/* This is supposed to evaluate at compile time, giving no performance hit. */
+/** Swap values @a a and @a b, both of type @a type.
+ * This is supposed to evaluate at compile time, giving no performance hit. */
 #define swap_values(type, a, b)			\
 	do {					\
 		type swap_register_ = (a);	\

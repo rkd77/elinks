@@ -14,7 +14,7 @@
  *
  * Fixing this would be a nice and needed janitorial project. */
 
-/* Lists debugging
+/** Lists debugging.
  * Two unsigned int magic number will be put before and after the next and
  * prev pointers, these will be check on list operations.
  * Some pointers are set to specific values after action. */
@@ -81,7 +81,7 @@ do { \
 } while (0)
 
 
-/* Backend for list_magic_check() and list_magic_chkbool(). */
+/** Backend for list_magic_check() and list_magic_chkbool(). */
 #define list_magic_correct(x) ((x).magic1 == LISTMAGIC1 && (x).magic2 == LISTMAGIC2)
 
 #define list_magic_check(x, where) \

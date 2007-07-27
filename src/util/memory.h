@@ -5,17 +5,17 @@
  * if not defined, we'll try to continue. */
 /* #define CRASH_IF_ALLOC_MAXTRIES */
 
-/* Max. number of retry in case of memory allocation failure. */
+/** Max. number of retry in case of memory allocation failure. */
 #define ALLOC_MAXTRIES 3
 
-/* Delay in seconds between each alloc try. */
+/** Delay in seconds between each alloc try. */
 #define ALLOC_DELAY 3
 
 #define fmem_alloc(x) mem_alloc(x)
 #define fmem_free(x) mem_free(x)
 
 
-/* Cygwin wants some size_t definition here... let's try to make it happy
+/** Cygwin wants some size_t definition here... let's try to make it happy
  * then. Hrmpf. */
 #include <sys/types.h>
 #include <stddef.h>
@@ -108,16 +108,16 @@ void *mem_realloc(void *, size_t);
 #endif /* DEBUG_MEMLEAK */
 
 
-/* Granular memory allocation. */
+/** @name Granular memory allocation.
+ * The granularity used by the aligned memory functions below must be a mask
+ * with all bits set from but not including the most significant bit and down.
+ * So if an alignment of 256 is wanted use 0xFF.
+ * @{ */
 
-/* The ``old'' style granularity. XXX: Must be power of 2 */
+/** The 'old' style granularity. XXX: Must be power of 2 */
 #define ALLOC_GR 0x100
 
 #include <string.h> /* for memset() */
-
-/* The granularity used by the aligned memory functions below must be a mask
- * with all bits set from but not including the most significant bit and down.
- * So if an alignment of 256 is wanted use 0xFF. */
 
 #define ALIGN_MEMORY_SIZE(x, gr) (((x) + (gr)) & ~(gr))
 
@@ -159,10 +159,14 @@ mem_align_alloc__(
 	mem_align_alloc__((void **) ptr, old, new, sizeof(**ptr), mask)
 #endif
 
+/** @} */
 
-/* Maybe-free macros */
-/* TODO: Think about making what they do more obvious in their identifier, they
- * could be obfuscating their users a little for the newcomers otherwise. */
+
+/** @name Maybe-free macros
+ * \todo TODO: Think about making what they do more obvious in their
+ * identifier, they could be obfuscating their users a little for the
+ * newcomers otherwise.
+ * @{ */
 
 #define mem_free_set(x, v) do { if (*(x)) mem_free(*(x)); *(x) = (v); } while (0)
 #define mem_free_if(x) do { register void *p = (x); if (p) mem_free(p); } while (0)
@@ -172,6 +176,7 @@ mem_align_alloc__(
 #undef mem_free_if
 #define mem_free_if(x) mem_free_set(&x, NULL)
 #endif
+/** @} */
 
 
 /* This is out of place, but there is no better place. */

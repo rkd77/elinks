@@ -1,4 +1,5 @@
-/* Environment variables handling */
+/** Environment variables handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -16,11 +17,11 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-/* Set @name environment variable to @value or a substring of it:
+/** Set @a name environment variable to @a value or a substring of it:
  * On success, it returns 0.
- * If @value is NULL and on error, it returns -1.
- * If @length >= 0 and smaller than true @value length, it will
- * set @name to specified substring of @value.
+ * If @a value is NULL and on error, it returns -1.
+ * If @a length >= 0 and smaller than true @a value length, it will
+ * set @a name to specified substring of @a value.
  */
 int
 env_set(unsigned char *name, unsigned char *value, int length)

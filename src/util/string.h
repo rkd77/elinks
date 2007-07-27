@@ -16,19 +16,21 @@
 
 #ifndef DEBUG_MEMLEAK
 
-/* Autoallocation string constructors: */
-
-/* Note that, contrary to the utilities using the string struct, these
+/** @name Autoallocation string constructors:
+ * Note that, contrary to the utilities using the string struct, these
  * functions are NOT granular, thus you can't simply reuse strings allocated by
- * these in add_to_string()-style functions. */
+ * these in add_to_string()-style functions.
+ * @{ */
 
-/* Allocates NUL terminated string with @len bytes from @src.
- * If @src == NULL or @len < 0 only one byte is allocated and set it to 0. */
-/* Returns the string or NULL on allocation failure. */
+/** Allocates NUL terminated string with @a len bytes from @a src.
+ * If @a src == NULL or @a len < 0 only one byte is allocated and set it to 0.
+ * @returns the string or NULL on allocation failure. */
 unsigned char *memacpy(const unsigned char *src, int len);
 
-/* Allocated NUL terminated string with the content of @src. */
+/** Allocated NUL terminated string with the content of @a src. */
 unsigned char *stracpy(const unsigned char *src);
+
+/** @} */
 
 #else /* DEBUG_MEMLEAK */
 
@@ -41,59 +43,68 @@ unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
 #endif /* DEBUG_MEMLEAK */
 
 
-/* Concatenates @src to @str. */
-/* If reallocation of @str fails @str is not touched. */
+/** Concatenates @a src to @a str.
+ * If reallocation of @a str fails @a str is not touched. */
 void add_to_strn(unsigned char **str, const unsigned char *src);
 
-/* Inserts @seqlen chars from @seq at position @pos in the @dst string. */
-/* If reallocation of @dst fails it is not touched and NULL is returned. */
+/** Inserts @a seqlen chars from @a seq at position @a pos in the @a
+ * dst string.
+ * If reallocation of @a dst fails it is not touched and NULL is returned. */
 unsigned char *insert_in_string(unsigned char **dst, int pos,
 				const unsigned char *seq, int seqlen);
 
-/* Takes a list of strings where the last parameter _must_ be
- * (unsigned char *) NULL and concatenates them. */
-/* Returns the allocated string or NULL on allocation failure. */
-/* Example:
+/** Takes a list of strings where the last parameter _must_ be
+ * (unsigned char *) NULL and concatenates them.
+ *
+ * @returns the allocated string or NULL on allocation failure.
+ *
+ * Example: @code
  *	unsigned char *abc = straconcat("A", "B", "C", (unsigned char *) NULL);
  *	if (abc) return;
  *	printf("%s", abc);	-> print "ABC"
- *	mem_free(abc);		-> free memory used by @abc */
+ *	mem_free(abc);		-> free memory used by @abc
+ * @endcode */
 unsigned char *straconcat(const unsigned char *str, ...);
 
 
-/* Misc. utility string functions. */
+/** @name Misc. utility string functions.
+ * @{ */
 
-/* Compare two strings, handling correctly @s1 or @s2 being NULL. */
+/** Compare two strings, handling correctly @a s1 or @a s2 being NULL. */
 int xstrcmp(const unsigned char *s1, const unsigned char *s2);
 
-/* Copies at most @len chars into @dst. Ensures null termination of @dst. */
+/** Copies at most @a len chars into @a dst. Ensures null termination of @a dst. */
 unsigned char *safe_strncpy(unsigned char *dst, const unsigned char *src, size_t len);
 
 /* strlcmp() is the middle child of history, everyone is using it differently.
  * On some weird *systems* it seems to be defined (equivalent to strcasecmp()),
  * so we'll better use our #define redir. */
 
-/* This routine compares string @s1 of length @n1 with string @s2 of length
- * @n2.
+/** This routine compares string @a s1 of length @a n1 with string @a s2
+ * of length @a n2.
  *
  * This acts identically to strcmp() but for non-zero-terminated strings,
- * rather than being similiar to strncmp(). That means, it fails if @n1 != @n2,
- * thus you may use it for testing whether @s2 matches *full* @s1, not only its
- * start (which can be a security hole, ie. in the cookies domain checking).
+ * rather than being similiar to strncmp(). That means, it fails if @a n1
+ * != @a n2, thus you may use it for testing whether @a s2 matches *full*
+ * @a s1, not only its start (which can be a security hole, e.g. in the
+ * cookies domain checking).
  *
- * @n1 or @n2 may be -1, which is same as strlen(@s[12]) but possibly more
- * effective (in the future ;-). */
-/* Returns zero if the strings match or undefined non-zero value if they
+ * @a n1 or @a n2 may be -1, which is same as strlen(@a s1 or @a s2) but
+ * possibly more effective (in the future ;-).
+ *
+ * @returns zero if the strings match or undefined non-zero value if they
  * differ.  (The non-zero return value is _not_ same as for the standard
  * strcmp() family.) */
 #define strlcmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcmp(a,b,c,d))
 int elinks_strlcmp(const unsigned char *s1, size_t n1,
 		   const unsigned char *s2, size_t n2);
 
-/* Acts identically to strlcmp(), except for being case insensitive. */
+/** Acts identically to strlcmp(), except for being case insensitive. */
 #define strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d))
 int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 		       const unsigned char *s2, size_t n2);
+
+/** @} */
 
 
 #define skip_space(S) \
@@ -109,16 +120,16 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 #define isasciialnum(c)	(isasciialpha(c) || isdigit(c))
 #define isident(c)	(isasciialnum(c) || (c) == '_' || (c) == '-')
 
-/* Char is safe to write to the terminal screen.  Cannot test for C1
+/** Char is safe to write to the terminal screen.  Cannot test for C1
  * control characters (0x80 to 0x9F) because this is also used for
  * non-ISO-8859 charsets.  */
 #define isscreensafe(c)	((c) >= ' ' && (c) != ASCII_DEL)
 
-/* Like isscreensafe but takes Unicode values and so can check for C1.  */
+/** Like isscreensafe() but takes Unicode values and so can check for C1.  */
 #define isscreensafe_ucs(c) (((c) >= 0x20 && (c) <= 0x7E) || (c) >= 0xA0)
 
 
-/* String debugging using magic number, it may catch some errors. */
+/** String debugging using magic number, it may catch some errors. */
 #ifdef CONFIG_DEBUG
 #define DEBUG_STRING
 #endif
@@ -132,7 +143,7 @@ struct string {
 };
 
 
-/* The granularity used for the struct string based utilities. */
+/** The granularity used for the struct string based utilities. */
 #define STRING_GRANULARITY 0xFF
 
 #ifdef DEBUG_STRING
@@ -148,7 +159,10 @@ struct string {
 #define INIT_STRING(s, l) { s, l }
 #endif
 
-/* Initializes the passed string struct by preallocating the @source member. */
+/** Initializes the passed string struct by preallocating the
+ * string.source member.
+ * @returns @a string if successful, or NULL if out of memory.
+ * @post done_string(@a string) is safe, even if this returned NULL. */
 #ifdef DEBUG_MEMLEAK
 struct string *init_string__(const unsigned char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
@@ -156,7 +170,7 @@ struct string *init_string__(const unsigned char *file, int line, struct string 
 struct string *init_string(struct string *string);
 #endif
 
-/* Resets @string and free()s the @source member. */
+/** Resets @a string and free()s the string.source member. */
 void done_string(struct string *string);
 
 
@@ -167,17 +181,17 @@ struct string *add_string_to_string(struct string *to, const struct string *from
 struct string *add_file_to_string(struct string *string, const unsigned char *filename);
 struct string *add_crlf_to_string(struct string *string);
 
-/* Adds each C string to @string until a terminating
+/** Adds each C string to @a string until a terminating
  * (unsigned char *) NULL is met. */
 struct string *string_concat(struct string *string, ...);
 
-/* Extends the string with @times number of @character. */
+/** Extends the string with @a times number of @a character. */
 struct string *add_xchar_to_string(struct string *string, unsigned char character, int times);
 
-/* Add printf-style format string to @string. */
+/** Add printf()-style format string to @a string. */
 struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
 
-/* Get a regular newly allocated stream of bytes from @string. */
+/** Get a regular newly allocated stream of bytes from @a string. */
 static unsigned char *squeezastring(struct string *string);
 
 
@@ -247,8 +261,8 @@ struct string_list_item {
 	struct string string;
 };
 
-/* Adds @string with @length chars to the list. If length is -1 it will be set
- * to the return value of strlen(). */
+/** Adds @a string with @a length chars to the list. If @a length is -1
+ * it will be set to the return value of strlen(). */
 struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const unsigned char *string, int length);
@@ -256,10 +270,10 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 void free_string_list(LIST_OF(struct string_list_item) *list);
 
 
-/* Returns an empty C string or @str if different from NULL. */
+/** Returns an empty C string or @a str if different from NULL. */
 #define empty_string_or_(str) ((str) ? (unsigned char *) (str) : (unsigned char *) "")
 
-/* Allocated copy if not NULL or returns NULL. */
+/** Allocated copy if not NULL or returns NULL. */
 #define null_or_stracpy(str) ((str) ? stracpy(str) : NULL)
 
 #endif /* EL__UTIL_STRING_H */

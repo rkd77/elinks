@@ -1,4 +1,5 @@
-/* Secure file saving handling */
+/** Secure file saving handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -67,8 +68,8 @@
 enum secsave_errno secsave_errno = SS_ERR_NONE;
 
 
-/* Open a file for writing in a secure way. It returns a pointer to a structure
- * secure_save_info on success, or NULL on failure. */
+/** Open a file for writing in a secure way. @returns a pointer to a
+ * structure secure_save_info on success, or NULL on failure. */
 static struct secure_save_info *
 secure_open_umask(unsigned char *file_name)
 {
@@ -219,8 +220,8 @@ secure_open(unsigned char *file_name)
 	return ssi;
 }
 
-/* Close a file opened with secure_open, and return 0 on success, errno
- * or -1 on failure. */
+/** Close a file opened with secure_open(). @returns 0 on success,
+ * errno or -1 on failure. */
 int
 secure_close(struct secure_save_info *ssi)
 {
@@ -298,7 +299,7 @@ free:
 }
 
 
-/* fputs() wrapper, set ssi->err to errno on error. If ssi->err is set when
+/** fputs() wrapper, set ssi->err to errno on error. If ssi->err is set when
  * called, it immediatly returns EOF. */
 int
 secure_fputs(struct secure_save_info *ssi, const char *s)
@@ -317,7 +318,7 @@ secure_fputs(struct secure_save_info *ssi, const char *s)
 }
 
 
-/* fputc() wrapper, set ssi->err to errno on error. If ssi->err is set when
+/** fputc() wrapper, set ssi->err to errno on error. If ssi->err is set when
  * called, it immediatly returns EOF. */
 int
 secure_fputc(struct secure_save_info *ssi, int c)
@@ -335,7 +336,7 @@ secure_fputc(struct secure_save_info *ssi, int c)
 	return ret;
 }
 
-/* fprintf() wrapper, set ssi->err to errno on error and return a negative
+/** fprintf() wrapper, set ssi->err to errno on error and return a negative
  * value. If ssi->err is set when called, it immediatly returns -1. */
 int
 secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
