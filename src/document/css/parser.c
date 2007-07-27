@@ -1,4 +1,5 @@
-/* CSS main parser */
+/** CSS main parser
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -109,8 +110,11 @@ skip_css_block(struct scanner *scanner)
 	}
 }
 
-/* Atrules grammer:
+/** Parse an atrule from @a scanner and update @a css accordingly.
  *
+ * Atrules grammar:
+ *
+ * @verbatim
  * media_types:
  *	  <empty>
  *	| <ident>
@@ -123,6 +127,7 @@ skip_css_block(struct scanner *scanner)
  *	| '@media' media_types '{' ruleset* '}'
  *	| '@page' <ident>? [':' <ident>]? '{' properties '}'
  *	| '@font-face' '{' properties '}'
+ * @endverbatim
  */
 static void
 css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
@@ -223,12 +228,18 @@ reparent_selector(LIST_OF(struct css_selector) *sels,
 	return twin ? twin : selector;
 }
 
-/* Our selector grammar:
+/** Parse a comma-separated list of CSS selectors from @a scanner.
+ * Register the selectors in @a css so that get_css_selector_for_element()
+ * will find them, and add them to @a selectors so that the caller can
+ * attach properties to them.
  *
+ * Our selector grammar:
+ *
+ * @verbatim
  * selector:
  *	  element_name? ('#' id)? ('.' class)? (':' pseudo_class)? \
  *		  ((' ' | '>') selector)?
- *
+ * @endverbatim
  */
 static void
 css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
@@ -464,10 +475,14 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 }
 
 
-/* Ruleset grammar:
+/** Parse a ruleset from @a scanner to @a css.
  *
+ * Ruleset grammar:
+ *
+ * @verbatim
  * ruleset:
  *	  selector [ ',' selector ]* '{' properties '}'
+ * @endverbatim
  */
 static void
 css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)

@@ -1,4 +1,10 @@
-/* CSS style applier */
+/** CSS style applier
+ * @file
+ *
+ * @todo TODO: A way to disable CSS completely, PLUS a way to stop
+ * various property groups from taking effect. (Ie. way to turn out
+ * effect of 'display: none' or aligning or colors but keeping all the
+ * others.) --pasky */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -26,11 +32,6 @@
 
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
-
-
-/* TODO: A way to disable CSS completely, PLUS a way to stop various property
- * groups from taking effect. (Ie. way to turn out effect of 'display: none'
- * or aligning or colors but keeping all the others.) --pasky */
 
 
 typedef void (*css_applier_T)(struct html_context *html_context,
@@ -89,8 +90,9 @@ css_apply_font_attribute(struct html_context *html_context,
 	element->attr.style.attr &= ~prop->value.font_attribute.rem;
 }
 
-/* FIXME: Because the current CSS doesn't provide reasonable defaults for each
- * HTML element this applier will cause bad rendering of <pre> tags. */
+/** @bug FIXME: Because the current CSS doesn't provide reasonable
+ * defaults for each HTML element this applier will cause bad
+ * rendering of @<pre> tags. */
 static void
 css_apply_text_align(struct html_context *html_context,
 		     struct html_element *element, struct css_property *prop)
@@ -99,7 +101,7 @@ css_apply_text_align(struct html_context *html_context,
 	element->parattr.align = prop->value.text_align;
 }
 
-/* XXX: Sort like the css_property_type */
+/*! XXX: Sort like the css_property_type */
 static css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_NONE */		NULL,
 	/* CSS_PT_BACKGROUND */		css_apply_background_color,
@@ -113,7 +115,7 @@ static css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,
 };
 
-/* This looks for a match in list of selectors. */
+/** This looks for a match in list of selectors. */
 static void
 examine_element(struct html_context *html_context, struct css_selector *base,
 		enum css_selector_type seltype, enum css_selector_relation rel,

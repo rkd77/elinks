@@ -1,4 +1,5 @@
-/* CSS property value parser */
+/** CSS property value parser
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,4 +1,5 @@
-/* CSS stylesheet handling */
+/** CSS stylesheet handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
