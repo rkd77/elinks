@@ -1,4 +1,5 @@
-/* CSS token scanner utilities */
+/** CSS token scanner utilities
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -15,8 +16,7 @@
 #include "util/string.h"
 
 
-/* Bitmap entries for the CSS character groups used in the scanner table */
-
+/** Bitmap entries for the CSS character groups used in the scanner table */
 enum css_char_group {
 	CSS_CHAR_ALPHA		= (1 << 0),
 	CSS_CHAR_DIGIT		= (1 << 1),

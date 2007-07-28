@@ -301,10 +301,10 @@ terminate:
 }
 
 void
-dump_next(struct list_head *url_list)
+dump_next(LIST_OF(struct string_list_item) *url_list)
 {
-	static INIT_LIST_HEAD(todo_list);
-	static INIT_LIST_HEAD(done_list);
+	static INIT_LIST_OF(struct string_list_item, todo_list);
+	static INIT_LIST_OF(struct string_list_item, done_list);
 	struct string_list_item *item;
 
 	if (url_list) {

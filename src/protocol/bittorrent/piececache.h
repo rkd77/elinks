@@ -60,7 +60,7 @@ struct bittorrent_piece_cache {
 	/* A list of completed and saved entries which has been loaded into
 	 * memory. The allocated memory for all these entries is disposable. The
 	 * entries are sorted in a LRU-manner. */
-	struct list_head queue;	/* -> struct bittorrent_piece_cache_entry */
+	LIST_OF(struct bittorrent_piece_cache_entry) queue;
 
 	/* Remaining pieces are tracked using the remaining_blocks member of the
 	 * piece cache entry and a free list of piece blocks to be requested.
@@ -84,7 +84,7 @@ struct bittorrent_piece_cache {
 	 * cloned flag. The flag is set when piece block requests are cloned. If
 	 * the cloned flag is set when receiving a block then the peer-list is
 	 * searched and requests for the same piece is canceled. */
-	struct list_head free_list;	/* -> struct bittorrent_piece_request */
+	LIST_OF(struct bittorrent_piece_request) free_list;
 	struct bittorrent_piece_cache_entry entries[1];
 };
 

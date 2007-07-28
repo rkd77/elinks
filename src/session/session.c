@@ -1,4 +1,5 @@
-/* Sessions managment - you'll find things here which you wouldn't expect */
+/** Sessions managment - you'll find things here which you wouldn't expect
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -64,7 +65,7 @@ struct file_to_load {
 	struct download download;
 };
 
-/* This structure and related functions are used to maintain information
+/** This structure and related functions are used to maintain information
  * for instances opened in new windows. We store all related session info like
  * URI and base session to clone from so that when the new instance connects
  * we can look up this information. In case of failure the session information
@@ -84,7 +85,7 @@ struct session_info {
 #define file_to_load_is_active(ftl) ((ftl)->req_sent && is_in_progress_state((ftl)->download.state))
 
 
-INIT_LIST_HEAD(sessions);
+INIT_LIST_OF(struct session, sessions);
 
 enum remote_session_flags remote_session_flags;
 
@@ -96,7 +97,7 @@ static struct file_to_load *request_additional_file(struct session *,
 static window_handler_T tabwin_func;
 
 
-static INIT_LIST_HEAD(session_info);
+static INIT_LIST_OF(struct session_info, session_info);
 static int session_info_id = 1;
 
 static struct session_info *
@@ -139,7 +140,7 @@ done_saved_session_info(void)
 		done_session_info(session_info.next);
 }
 
-/* Timer callback for @info->timer.  As explained in @install_timer,
+/** Timer callback for session_info.timer.  As explained in install_timer(),
  * this function must erase the expired timer ID from all variables.  */
 static void
 session_info_timeout(int id)
@@ -227,6 +228,7 @@ get_master_session(void)
 	return NULL;
 }
 
+/** @relates session */
 struct download *
 get_current_download(struct session *ses)
 {
@@ -440,7 +442,7 @@ load_frames(struct session *ses, struct document_view *doc_view)
 	}
 }
 
-/* Timer callback for @ses->display_timer.  As explained in @install_timer,
+/** Timer callback for session.display_timer.  As explained in install_timer(),
  * this function must erase the expired timer ID from all variables.  */
 void
 display_timer(struct session *ses)
@@ -474,7 +476,7 @@ struct questions_entry {
 	void *data;
 };
 
-INIT_LIST_HEAD(questions_queue);
+INIT_LIST_OF(struct questions_entry, questions_queue);
 
 
 void
@@ -699,9 +701,9 @@ request_additional_file(struct session *ses, unsigned char *name, struct uri *ur
 }
 
 static void
-load_additional_file(struct file_to_load *ftl, struct document_view *doc_view,
-		     enum cache_mode cache_mode)
+load_additional_file(struct file_to_load *ftl, enum cache_mode cache_mode)
 {
+	struct document_view *doc_view = current_frame(ftl->ses);
 	struct uri *referrer = doc_view && doc_view->document
 			     ? doc_view->document->uri : NULL;
 
@@ -719,15 +721,12 @@ process_file_requests(struct session *ses)
 		int more = 0;
 
 		foreach (ftl, ses->more_files) {
-			struct document_view *doc_view;
-
 			if (ftl->req_sent)
 				continue;
 
 			ftl->req_sent = 1;
 
-			doc_view = current_frame(ses);
-			load_additional_file(ftl, doc_view, CACHE_MODE_NORMAL);
+			load_additional_file(ftl, CACHE_MODE_NORMAL);
 			more = 1;
 		}
 
@@ -744,7 +743,7 @@ dialog_goto_url_open(void *data)
 	dialog_goto_url((struct session *) data, NULL);
 }
 
-/* Returns 0 if the first session was not properly initialized and
+/** @returns 0 if the first session was not properly initialized and
  * setup_session() should be called on the session as well. */
 static int
 setup_first_session(struct session *ses, struct uri *uri)
@@ -824,7 +823,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 	return 0;
 }
 
-/* First load the current URI of the base session. In most cases it will just
+/** First load the current URI of the base session. In most cases it will just
  * be fetched from the cache so that the new tab will not appear ``empty' while
  * loading the real URI or showing the goto URL dialog. */
 static void
@@ -851,6 +850,7 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 	}
 }
 
+/** @relates session  */
 struct session *
 init_session(struct session *base_session, struct terminal *term,
 	     struct uri *uri, int in_background)
@@ -978,7 +978,8 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 
 struct string *
-encode_session_info(struct string *info, struct list_head *url_list)
+encode_session_info(struct string *info,
+		    LIST_OF(struct string_list_item) *url_list)
 {
 	struct string_list_item *url;
 
@@ -993,7 +994,7 @@ encode_session_info(struct string *info, struct list_head *url_list)
 	return info;
 }
 
-/* Older elinks versions (up to and including 0.9.1) sends no magic variable and if
+/** Older elinks versions (up to and including 0.9.1) sends no magic variable and if
  * this is detected we fallback to the old session info format. For this format
  * the magic member of terminal_info hold the length of the URI string. The
  * old format is handled by the default label in the switch.
@@ -1002,12 +1003,11 @@ encode_session_info(struct string *info, struct list_head *url_list)
  * terminal_info data member. The magic variable controls how to interpret
  * the fields:
  *
- *	INTERLINK_NORMAL_MAGIC means use the terminal_info session_info
+ *    -	INTERLINK_NORMAL_MAGIC means use the terminal_info session_info
  *	variable as an id for a saved session.
  *
- *	INTERLINK_REMOTE_MAGIC means use the terminal_info session_info
+ *    -	INTERLINK_REMOTE_MAGIC means use the terminal_info session_info
  *	variable as the remote session flags. */
-
 int
 decode_session_info(struct terminal *term, struct terminal_info *info)
 {
@@ -1194,7 +1194,6 @@ reload(struct session *ses, enum cache_mode cache_mode)
 	if (have_location(ses)) {
 		struct location *loc = cur_loc(ses);
 		struct file_to_load *ftl;
-		struct document_view *doc_view = current_frame(ses);
 
 #ifdef CONFIG_ECMASCRIPT
 		loc->vs.ecmascript_fragile = 1;
@@ -1217,7 +1216,7 @@ reload(struct session *ses, enum cache_mode cache_mode)
 			ftl->download.data = ftl;
 			ftl->download.callback = (download_callback_T *) file_loading_callback;
 
-			load_additional_file(ftl, doc_view, cache_mode);
+			load_additional_file(ftl, cache_mode);
 		}
 	}
 }
@@ -1282,9 +1281,10 @@ tabwin_func(struct window *tab, struct term_event *ev)
 	}
 }
 
-/*
- * Gets the url being viewed by this session. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the url being viewed by this session. Writes it into @a str.
+ * A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1307,9 +1307,10 @@ get_current_url(struct session *ses, unsigned char *str, size_t str_size)
 	return safe_strncpy(str, struri(uri), length + 1);
 }
 
-/*
- * Gets the title of the page being viewed by this session. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the title of the page being viewed by this session. Writes it into
+ * @a str.  A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_title(struct session *ses, unsigned char *str, size_t str_size)
@@ -1326,9 +1327,10 @@ get_current_title(struct session *ses, unsigned char *str, size_t str_size)
 	return NULL;
 }
 
-/*
- * Gets the url of the link currently selected. Writes it into str.
- * A maximum of str_size bytes (including null) will be written.
+/**
+ * Gets the url of the link currently selected. Writes it into @a str.
+ * A maximum of @a str_size bytes (including null) will be written.
+ * @relates session
  */
 unsigned char *
 get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
@@ -1342,9 +1344,10 @@ get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
 	return safe_strncpy(str, link->where ? link->where : link->where_img, str_size);
 }
 
-/* get_current_link_name: returns the name of the current link
- * (the text between <A> and </A>), str is a preallocated string,
- * str_size includes the null char. */
+/** get_current_link_name: returns the name of the current link
+ * (the text between <A> and </A>), @a str is a preallocated string,
+ * @a str_size includes the null char.
+ * @relates session */
 unsigned char *
 get_current_link_name(struct session *ses, unsigned char *str, size_t str_size)
 {
@@ -1378,12 +1381,14 @@ get_current_link_in_view(struct document_view *doc_view)
 	return link && !link_is_form(link) ? link : NULL;
 }
 
+/** @relates session */
 struct link *
 get_current_session_link(struct session *ses)
 {
 	return get_current_link_in_view(current_frame(ses));
 }
 
+/** @relates session */
 int
 eat_kbd_repeat_count(struct session *ses)
 {

@@ -1,4 +1,10 @@
-/* CSS style applier */
+/** CSS style applier
+ * @file
+ *
+ * @todo TODO: A way to disable CSS completely, PLUS a way to stop
+ * various property groups from taking effect. (Ie. way to turn out
+ * effect of 'display: none' or aligning or colors but keeping all the
+ * others.) --pasky */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -26,11 +32,6 @@
 
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
-
-
-/* TODO: A way to disable CSS completely, PLUS a way to stop various property
- * groups from taking effect. (Ie. way to turn out effect of 'display: none'
- * or aligning or colors but keeping all the others.) --pasky */
 
 
 typedef void (*css_applier_T)(struct html_context *html_context,
@@ -89,8 +90,9 @@ css_apply_font_attribute(struct html_context *html_context,
 	element->attr.style.attr &= ~prop->value.font_attribute.rem;
 }
 
-/* FIXME: Because the current CSS doesn't provide reasonable defaults for each
- * HTML element this applier will cause bad rendering of <pre> tags. */
+/** @bug FIXME: Because the current CSS doesn't provide reasonable
+ * defaults for each HTML element this applier will cause bad
+ * rendering of @<pre> tags. */
 static void
 css_apply_text_align(struct html_context *html_context,
 		     struct html_element *element, struct css_property *prop)
@@ -99,8 +101,8 @@ css_apply_text_align(struct html_context *html_context,
 	element->parattr.align = prop->value.text_align;
 }
 
-/* XXX: Sort like the css_property_type */
-static css_applier_T css_appliers[CSS_PT_LAST] = {
+/*! XXX: Sort like the css_property_type */
+static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_NONE */		NULL,
 	/* CSS_PT_BACKGROUND */		css_apply_background_color,
 	/* CSS_PT_BACKGROUND_COLOR */	css_apply_background_color,
@@ -113,11 +115,12 @@ static css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,
 };
 
-/* This looks for a match in list of selectors. */
+/** This looks for a match in list of selectors. */
 static void
 examine_element(struct html_context *html_context, struct css_selector *base,
 		enum css_selector_type seltype, enum css_selector_relation rel,
-		struct css_selector_set *selectors, struct html_element *element)
+		struct css_selector_set *selectors,
+		struct html_element *element)
 {
 	struct css_selector *selector;
 
@@ -142,7 +145,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		merge_css_selectors(base, sel); \
 		/* Ancestor matches? */ \
 		if (sel->leaves.may_contain_rel_ancestor_or_parent \
-		    && (struct list_head *) element->next \
+		    && (LIST_OF(struct html_element) *) element->next \
 		     != &html_context->stack) { \
 			struct html_element *ancestor; \
 			/* This is less effective than doing reverse iterations,
@@ -152,7 +155,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 			 * have to duplicate the whole examine_element(), so if
 			 * profiles won't show it really costs... */ \
 			for (ancestor = element->next; \
-			     (struct list_head *) ancestor \
+			     (LIST_OF(struct html_element) *) ancestor	\
 			      != &html_context->stack;\
 			     ancestor = ancestor->next) \
 				examine_element(html_context, base, \
@@ -221,7 +224,7 @@ struct css_selector *
 get_css_selector_for_element(struct html_context *html_context,
 			     struct html_element *element,
 			     struct css_stylesheet *css,
-			     struct list_head *html_stack)
+			     LIST_OF(struct html_element) *html_stack)
 {
 	unsigned char *code;
 	struct css_selector *selector;
@@ -281,7 +284,7 @@ apply_css_selector_style(struct html_context *html_context,
 
 void
 css_apply(struct html_context *html_context, struct html_element *element,
-	  struct css_stylesheet *css, struct list_head *html_stack)
+	  struct css_stylesheet *css, LIST_OF(struct html_element) *html_stack)
 {
 	struct css_selector *selector;
 

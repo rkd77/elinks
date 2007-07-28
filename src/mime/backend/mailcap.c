@@ -42,7 +42,7 @@
 
 struct mailcap_hash_item {
 	/* The entries associated with the type */
-	struct list_head entries; /* -> struct mailcap_entry */
+	LIST_OF(struct mailcap_entry) entries;
 
 	/* The content type of all @entries. Must be last! */
 	unsigned char type[1];
@@ -683,7 +683,7 @@ int default_mime_backend,
     install_signal_handler,
     mimetypes_mime_backend,
     program;
-struct list_head terminals;
+LIST_OF(struct terminal) terminals;
 
 void die(const char *msg, ...)
 {

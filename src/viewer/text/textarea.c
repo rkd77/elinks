@@ -1,4 +1,5 @@
-/* Textarea form item handlers */
+/** Textarea form item handlers
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -47,18 +48,20 @@ struct line_info {
 #endif /* CONFIG_UTF8 */
 };
 
-/* We add two extra entries to the table so the ending info can be added
+/** We add two extra entries to the table so the ending info can be added
  * without reallocating. */
 #define realloc_line_info(info, size) \
 	mem_align_alloc(info, size, (size) + 3, 0xFF)
 
 #ifdef CONFIG_UTF8
-/* Allocates a line_info table describing the layout of the textarea buffer.
+/** Allocates a line_info table describing the layout of the textarea buffer.
  *
- * @width	is max width and the offset at which text will be wrapped
- * @wrap	controls how the wrapping of text is performed
- * @format	is non zero the @text will be modified to make it suitable for
- *		encoding it for form posting
+ * @param text		the text to format; must be in UTF-8
+ * @param width		is max width and the offset at which @a text will be
+ *			wrapped
+ * @param wrap		controls how the wrapping of @a text is performed
+ * @param format	is non zero the @a text will be modified to make it
+ *			suitable for encoding it for form posting
  */
 static struct line_info *
 format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
@@ -138,12 +141,14 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
 }
 #endif /* CONFIG_UTF8 */
 
-/* Allocates a line_info table describing the layout of the textarea buffer.
+/** Allocates a line_info table describing the layout of the textarea buffer.
  *
- * @width	is max width and the offset at which text will be wrapped
- * @wrap	controls how the wrapping of text is performed
- * @format	is non zero the @text will be modified to make it suitable for
- *		encoding it for form posting
+ * @param text		the text to format; must be in a unibyte charset
+ * @param width		is max width and the offset at which @a text will be
+ *			wrapped
+ * @param wrap		controls how the wrapping of @a text is performed
+ * @param format	is non zero the @a text will be modified to make it
+ *			suitable for encoding it for form posting
  */
 static struct line_info *
 format_text(unsigned char *text, int width, enum form_wrap wrap, int format)
@@ -204,9 +209,9 @@ format_text(unsigned char *text, int width, enum form_wrap wrap, int format)
 	return line;
 }
 
-/* Searches for @cursor_position (aka. position in the fs->value string) for
- * the corresponding entry in the @line info. Returns the index or -1 if
- * position is not found. */
+/** Searches for @a cursor_position (aka. position in the
+ * form_state.value string) for the corresponding entry in the @a line
+ * info. Returns the index or -1 if position is not found. */
 static int
 get_textarea_line_number(struct line_info *line, int cursor_position)
 {
@@ -226,8 +231,8 @@ get_textarea_line_number(struct line_info *line, int cursor_position)
 	return -1;
 }
 
-/* Fixes up the vpos and vypos members of the form_state. Returns the
- * logical position in the textarea view. */
+/** Fixes up the form_state.vpos and form_state.vypos members.
+ * @returns the logical position in the textarea view. */
 #ifdef CONFIG_UTF8
 int
 area_cursor(struct form_control *fc, struct form_state *fs, int utf8)
@@ -513,10 +518,10 @@ encode_textarea(struct submitted_value *sv)
 }
 
 
-/* We use some evil hacking in order to make external textarea editor working.
+/** We use some evil hacking in order to make external textarea editor working.
  * We need to have some way how to be notified that the editor finished and we
  * should reload content of the textarea.  So we use global variable
- * textarea_editor as a flag whether we have one running, and if we have, we
+ * @c textarea_editor as a flag whether we have one running, and if we have, we
  * just call textarea_edit(1, ...).  Then we recover our state from static
  * variables, reload content of textarea back from file and clean up.
  *
@@ -525,7 +530,6 @@ encode_textarea(struct submitted_value *sv)
  * the content of it back to master somehow, add special flags for not deleting
  * of 'delete' etc) and I'm not going to do that now. Inter-links communication
  * *NEEDS* rewrite, as it looks just like quick messy hack now. --pasky */
-
 int textarea_editor = 0;
 
 static unsigned char *
@@ -1070,7 +1074,7 @@ textarea_op_bob(struct form_state *fs, struct form_control *fc)
 }
 #endif /* CONFIG_UTF8 */
 
-/* Set the form state so the cursor is on the last line of the buffer. Preserve
+/** Set the form state so the cursor is on the last line of the buffer. Preserve
  * the column if possible. This is done by getting current and last line and
  * then shifting the state by the delta of both lines start position bounding
  * the whole thing to the end of the last line. */

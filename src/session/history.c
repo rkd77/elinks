@@ -1,4 +1,5 @@
-/* Visited URL history managment - NOT goto_url_dialog history! */
+/** Visited URL history managment - NOT dialog_goto_url() history!
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -24,7 +25,7 @@
 
 
 static inline void
-free_history(struct list_head *history)
+free_history(LIST_OF(struct location) *history)
 {
 	while (!list_empty(*history)) {
 		struct location *loc = history->next;
@@ -35,6 +36,7 @@ free_history(struct list_head *history)
 }
 
 
+/** @relates ses_history */
 void
 create_history(struct ses_history *history)
 {
@@ -42,6 +44,7 @@ create_history(struct ses_history *history)
 	history->current = NULL;
 }
 
+/** @relates ses_history */
 void
 destroy_history(struct ses_history *history)
 {
@@ -49,6 +52,7 @@ destroy_history(struct ses_history *history)
 	history->current = NULL;
 }
 
+/** @relates ses_history */
 void
 clean_unhistory(struct ses_history *history)
 {
@@ -62,6 +66,7 @@ clean_unhistory(struct ses_history *history)
 	}
 }
 
+/** @relates ses_history */
 void
 add_to_history(struct ses_history *history, struct location *loc)
 {
@@ -74,6 +79,7 @@ add_to_history(struct ses_history *history, struct location *loc)
 	history->current = loc;
 }
 
+/** @relates ses_history */
 void
 del_from_history(struct ses_history *history, struct location *loc)
 {
@@ -175,16 +181,16 @@ go_history_by_n(struct session *ses, int n)
 	go_history(ses, loc);
 }
 
-/* See go_history() description regarding unpredictable effects on cur_loc()
- * by this function. */
+/** Go backward in the history.  See go_history() description regarding
+ * unpredictable effects on cur_loc() by this function. */
 void
 go_back(struct session *ses)
 {
 	go_history_by_n(ses, -1);
 }
 
-/* See go_history() description regarding unpredictable effects on cur_loc()
- * by this function. */
+/** Go forward in the history.  See go_history() description regarding
+ * unpredictable effects on cur_loc() by this function. */
 void
 go_unback(struct session *ses)
 {

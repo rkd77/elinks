@@ -344,7 +344,7 @@ enum move_bookmark_flags {
  * _into_ dest or, if insert_as_child is 0, _after_ dest. */
 static enum move_bookmark_flags
 do_move_bookmark(struct bookmark *dest, int insert_as_child,
-		 struct list_head *src, struct listbox_data *box)
+		 LIST_OF(struct bookmark) *src, struct listbox_data *box)
 {
 	static int move_bookmark_event_id = EVENT_NONE;
 	struct bookmark *bm, *next;

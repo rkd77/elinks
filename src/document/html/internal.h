@@ -59,7 +59,7 @@ struct html_context {
 	 * html/parser/parse.c
 	 * html/parser/stack.c
 	 * html/parser.c */
-	struct list_head stack;
+	LIST_OF(struct html_element) stack;
 
 	/* For parser/parse.c: */
 	unsigned char *eoff; /* For parser/forms.c too */

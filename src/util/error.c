@@ -1,4 +1,5 @@
-/* Error handling and debugging stuff */
+/** Error handling and debugging stuff
+ * @file */
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* Needed for vasprintf() */

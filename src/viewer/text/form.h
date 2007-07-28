@@ -13,16 +13,18 @@ struct session;
 struct term_event;
 struct terminal;
 
-/* This struct looks a little embarrassing, yeah. */
+/*! This struct looks a little embarrassing, yeah. */
 struct form_view {
 	LIST_HEAD(struct form_view);
 
-	/* We can't just reference to {struct form} since we can potentially
-	 * live much longer than that. */
+	/** The corresponding form.form_num within the document.
+	 * We can't just reference to struct form since we can potentially
+	 * live much longer than that.
+	 * @see find_form_by_form_view() */
 	int form_num;
 
 #ifdef CONFIG_ECMASCRIPT
-	/* This holds the ECMAScript object attached to this structure. It can
+	/** This holds the ECMAScript object attached to this structure. It can
 	 * be NULL since the object is created on-demand at the first time some
 	 * ECMAScript code accesses it. It is freed automatically by the
 	 * garbage-collecting code when the ECMAScript context is over (usually
@@ -37,38 +39,43 @@ struct form_state {
 	int position;
 	enum form_type type;
 
-	/* For FC_TEXT, FC_PASSWORD, FC_FILE, and FC_TEXTAREA, @value
-	 * is the text string that the user can edit.  The string is
-	 * null-terminated; its length is not stored separately.  The
-	 * size of the buffer is not stored anywhere; extending the
-	 * string always requires calling realloc().  The string is
-	 * not normally allowed to grow past @form_control.maxlength
-	 * bytes (not counting the null), but there may be ways to get
-	 * longer strings.  The string is in the charset of the
-	 * terminal (which can be UTF-8 only if CONFIG_UTF8 is
-	 * defined, and is assumed to be unibyte otherwise).  The
-	 * charset of the document and the UTF-8 I/O option have no
-	 * effect here.  */
+	/* Editable string.
+	 * - For ::FC_TEXT, ::FC_PASSWORD, ::FC_FILE, and
+	 *   ::FC_TEXTAREA, @c value is the text string that the user
+	 *   can edit.  The string is null-terminated; its length is
+	 *   not stored separately.  The size of the buffer is not
+	 *   stored anywhere; extending the string always requires
+	 *   calling realloc().  The string is not normally allowed to
+	 *   grow past form_control.maxlength bytes (not counting the
+	 *   null), but there may be ways to get longer strings.  The
+	 *   string is in the charset of the terminal (which can be
+	 *   UTF-8 only if CONFIG_UTF8 is defined, and is assumed to
+	 *   be unibyte otherwise).  The charset of the document and
+	 *   the UTF-8 I/O option have no effect here.  */
 	unsigned char *value;
-	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state is the byte
-	 * position of the insertion point in @value.
-	 * For FC_CHECKBOX and FC_RADIO, @state is 1 or 0.
-	 * For FC_SELECT, @state is the index of the selected item
-	 * in @form_control.labels.  */
+	/** Position in #value, or an editable integer.
+	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_FILE, @c state is
+	 *   the byte position of the insertion point in #value.
+	 * - For ::FC_CHECKBOX and ::FC_RADIO, @c state is 1 or 0.
+	 * - For ::FC_SELECT, @c state is the index of the selected item
+	 *   in form_control.labels.  */
 	int state;
 #ifdef CONFIG_UTF8
-	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @state_cell is not
-	 * used.  */
+	/** Position in the screen.
+	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_FILE, @c
+	 *   state_cell is not used.  */
 	int state_cell;
 #endif /* CONFIG_UTF8 */
-	/* For FC_TEXT, FC_PASSWORD, and FC_FILE, @vpos is the index
-	 * of the first displayed byte in @value.  It should never be
-	 * in the middle of a character.  */
+	/** Horizontal scrolling.
+	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_FILE, @c vpos is
+	 *   the index of the first displayed byte in #value.  It
+	 *   should never be in the middle of a character.  */
 	int vpos;
+	/** Vertical scrolling.  */
 	int vypos;
 
 #ifdef CONFIG_ECMASCRIPT
-	/* This holds the ECMAScript object attached to this structure. It can
+	/** This holds the ECMAScript object attached to this structure. It can
 	 * be NULL since the object is created on-demand at the first time some
 	 * ECMAScript code accesses it. It is freed automatically by the
 	 * garbage-collecting code when the ECMAScript context is over (usually
@@ -91,7 +98,7 @@ struct submitted_value {
 
 struct submitted_value *init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type, struct form_control *fc, int position);
 void done_submitted_value(struct submitted_value *sv);
-void done_submitted_value_list(struct list_head *list);
+void done_submitted_value_list(LIST_OF(struct submitted_value) *list);
 
 struct uri *get_form_uri(struct session *ses, struct document_view *doc_view, struct form_control *fc);
 

@@ -27,7 +27,7 @@ struct download {
 
 	struct connection *conn;
 	struct cache_entry *cached;
-	/* The callback is called when connection gets into a progress state,
+	/** The callback is called when connection gets into a progress state,
 	 * after it's over (in a result state), and also periodically after
 	 * the download starts receiving some data. */
 	download_callback_T *callback;
@@ -67,25 +67,25 @@ struct file_download {
 	int notify;
 	struct download download;
 
-	/* Should the file be deleted when destroying the structure */
+	/** Should the file be deleted when destroying the structure */
 	unsigned int delete:1;
 
-	/* Should the download be stopped/interrupted when destroying the structure */
+	/** Should the download be stopped/interrupted when destroying the structure */
 	unsigned int stop:1;
 
-	/* Whether to block the terminal when running the external handler. */
+	/** Whether to block the terminal when running the external handler. */
 	unsigned int block:1;
 
-	/* Whether copiousoutput mode is used by the mailcap entry */
+	/** Whether copiousoutput mode is used by the mailcap entry */
 	unsigned int copiousoutput:1;
 
-	/* The current dialog for this download. Can be NULL. */
+	/** The current dialog for this download. Can be NULL. */
 	struct dialog_data *dlg_data;
 	struct listbox_item *box_item;
 };
 
-/* Stack of all running downloads */
-extern struct list_head downloads;
+/** Stack of all running downloads */
+extern LIST_OF(struct file_download) downloads;
 
 static inline int
 is_in_downloads_list(struct file_download *file_download)

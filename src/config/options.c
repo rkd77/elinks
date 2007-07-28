@@ -52,7 +52,7 @@
  * (struct option *) instead. This applies to bookmarks, global history and
  * listbox items as well, though. --pasky */
 
-static INIT_LIST_HEAD(options_root_tree);
+static INIT_LIST_OF(struct option, options_root_tree);
 
 static struct option options_root = INIT_OPTION(
 	/* name: */	"",
@@ -68,7 +68,7 @@ struct option *config_options;
 struct option *cmdline_options;
 
 static void add_opt_rec(struct option *, unsigned char *, struct option *);
-static void free_options_tree(struct list_head *, int recursive);
+static void free_options_tree(LIST_OF(struct option) *, int recursive);
 
 #ifdef CONFIG_DEBUG
 /* Detect ending '.' (and some others) in options captions.
@@ -305,8 +305,8 @@ get_opt_(
 static void
 add_opt_sort(struct option *tree, struct option *option, int abi)
 {
-	struct list_head *cat = tree->value.tree;
-	struct list_head *bcat = &tree->box_item->child;
+	LIST_OF(struct option) *cat = tree->value.tree;
+	LIST_OF(struct listbox_item) *bcat = &tree->box_item->child;
 	struct option *pos;
 
 	/* The list is empty, just add it there. */
@@ -477,7 +477,7 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 				mem_free(option);
 				return NULL;
 			}
-			option->value.tree = (struct list_head *) value;
+			option->value.tree = (LIST_OF(struct option) *) value;
 			break;
 		case OPT_STRING:
 			if (!value) {
@@ -642,10 +642,10 @@ copy_option(struct option *template)
 	return option;
 }
 
-struct list_head *
+LIST_OF(struct option) *
 init_options_tree(void)
 {
-	struct list_head *ptr = mem_alloc(sizeof(*ptr));
+	LIST_OF(struct option) *ptr = mem_alloc(sizeof(*ptr));
 
 	if (ptr) init_list(*ptr);
 	return ptr;
@@ -700,7 +700,7 @@ init_options(void)
 }
 
 static void
-free_options_tree(struct list_head *tree, int recursive)
+free_options_tree(LIST_OF(struct option) *tree, int recursive)
 {
 	while (!list_empty(*tree))
 		delete_option_do(tree->next, recursive);
@@ -730,7 +730,7 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 }
 
 void
-unmark_options_tree(struct list_head *tree)
+unmark_options_tree(LIST_OF(struct option) *tree)
 {
 	struct option *option;
 
@@ -742,7 +742,7 @@ unmark_options_tree(struct list_head *tree)
 }
 
 void
-watermark_deleted_options(struct list_head *tree)
+watermark_deleted_options(LIST_OF(struct option) *tree)
 {
 	struct option *option;
 
@@ -755,7 +755,7 @@ watermark_deleted_options(struct list_head *tree)
 }
 
 static int
-check_nonempty_tree(struct list_head *options)
+check_nonempty_tree(LIST_OF(struct option) *options)
 {
 	struct option *opt;
 
@@ -773,7 +773,8 @@ check_nonempty_tree(struct list_head *options)
 
 void
 smart_config_string(struct string *str, int print_comment, int i18n,
-		    struct list_head *options, unsigned char *path, int depth,
+		    LIST_OF(struct option) *options,
+		    unsigned char *path, int depth,
 		    void (*fn)(struct string *, struct option *,
 			       unsigned char *, int, int, int, int))
 {
@@ -917,7 +918,7 @@ change_hook_ui(struct session *ses, struct option *current, struct option *chang
 /* Bit 2 of show means we should always set visibility, otherwise we set it
  * only on templates. */
 static void
-update_visibility(struct list_head *tree, int show)
+update_visibility(LIST_OF(struct option) *tree, int show)
 {
 	struct option *opt;
 

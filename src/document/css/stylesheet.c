@@ -1,4 +1,5 @@
-/* CSS stylesheet handling */
+/** CSS stylesheet handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -25,7 +26,8 @@
 
 
 struct css_selector *
-find_css_selector(struct css_selector_set *sels, enum css_selector_type type,
+find_css_selector(struct css_selector_set *sels,
+                  enum css_selector_type type,
                   enum css_selector_relation rel,
                   const unsigned char *name, int namelen)
 {
@@ -46,8 +48,8 @@ find_css_selector(struct css_selector_set *sels, enum css_selector_type type,
 
 struct css_selector *
 init_css_selector(struct css_selector_set *sels,
-		  enum css_selector_type type,
-		  enum css_selector_relation relation,
+                  enum css_selector_type type,
+                  enum css_selector_relation relation,
                   unsigned char *name, int namelen)
 {
 	struct css_selector *selector;
@@ -92,7 +94,8 @@ set_css_selector_relation(struct css_selector *selector,
 }
 
 struct css_selector *
-get_css_selector(struct css_selector_set *sels, enum css_selector_type type,
+get_css_selector(struct css_selector_set *sels,
+                 enum css_selector_type type,
                  enum css_selector_relation rel,
                  unsigned char *name, int namelen)
 {
@@ -136,7 +139,7 @@ add_selector_property(struct css_selector *selector, struct css_property *prop)
 
 void
 add_selector_properties(struct css_selector *selector,
-                        struct list_head *properties)
+                        LIST_OF(struct css_property) *properties)
 {
 	struct css_property *prop;
 

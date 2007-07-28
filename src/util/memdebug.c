@@ -1,6 +1,7 @@
-/* Memory debugging (leaks, overflows & co) */
-
-/* Wrappers for libc memory managment providing protection against common
+/** Memory debugging (leaks, overflows & co)
+ * @file
+ *
+ * Wrappers for libc memory managment providing protection against common
  * pointers manipulation mistakes - bad realloc()/free() pointers, double
  * free() problem, using uninitialized/freed memory, underflow/overflow
  * protection, leaks tracking...
@@ -52,49 +53,49 @@
 
 #ifdef DEBUG_MEMLEAK
 
-/* Eat less memory, but sacrifice speed?
+/** Eat less memory, but sacrifice speed?
  * Default is defined. */
 #define LESS_MEMORY_SPEED
 
-/* Fill memory on alloc() ?
+/** Fill memory on alloc() ?
  * Default is defined. */
 #define FILL_ON_ALLOC
 #define FILL_ON_ALLOC_VALUE 'X'
 
-/* Fill memory on realloc() ?
+/** Fill memory on realloc() ?
  * Default is defined. */
 #define FILL_ON_REALLOC
 #define FILL_ON_REALLOC_VALUE 'Y'
 
-/* Fill memory before free() ?
+/** Fill memory before free() ?
  * Default is undef. */
 #undef FILL_ON_FREE
 #define FILL_ON_FREE_VALUE 'Z'
 
-/* Check alloc_header block sanity ?
+/** Check alloc_header block sanity ?
  * Default is defined. */
 #define CHECK_AH_SANITY
 #define AH_SANITY_MAGIC 0xD3BA110C
 
-/* Check for useless reallocation ?
+/** Check for useless reallocation ?
  * If oldsize is equal to newsize, print a message to stderr.
  * It may help to find inefficient code.
  * Default is undefined.
  */
 #undef CHECK_USELESS_REALLOC
 
-/* Check for validity of address passed to free() ?
+/** Check for validity of address passed to free() ?
  * Note that this is VERY slow, as we iterate through whole memory_list each
  * time. We can't check magics etc, as it would break double free() check.
  * Default is undef. */
 #undef CHECK_INVALID_FREE
 
-/* Check for double free ?
+/** Check for double free ?
  * Default is defined. */
 #define CHECK_DOUBLE_FREE
 #define AH_FREE_MAGIC 0xD3BF110C
 
-/* Check for overflows and underflows ?
+/** Check for overflows and underflows ?
  * Default is defined. */
 #define CHECK_XFLOWS
 #define XFLOW_MAGIC (char) 0xFA
@@ -118,7 +119,7 @@ struct alloc_header {
 	unsigned char *comment;
 
 #ifdef CHECK_XFLOWS
-	/* This is a little magic. We want to keep the main pointer aligned,
+	/** This is a little magic. We want to keep the main pointer aligned,
 	 * that means we want to have the xflow underflow mark in the
 	 * alloc_header space, but at the _end_ of the aligned reserved space.
 	 * This means we in fact live at [SIZE_AH_ALIGNED - 1], not here. (Of
@@ -163,7 +164,7 @@ struct alloc_header {
 
 struct mem_stats mem_stats;
 
-INIT_LIST_HEAD(memory_list);
+INIT_LIST_OF(struct alloc_header, memory_list);
 
 #ifdef LOG_MEMORY_ALLOC
 static void

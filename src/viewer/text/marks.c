@@ -1,4 +1,5 @@
-/* Marks registry */
+/** Marks registry
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -51,7 +52,9 @@
  * --pasky */
 
 
-/* The @marks array is indexed by ASCII code of the mark. */
+/** Number of possible mark characters: upper-case and lower-case
+ * ASCII letters.  The ::marks array is indexed by ASCII code of the
+ * mark. */
 #define MARKS_SIZE 26 * 2
 static struct view_state *marks[MARKS_SIZE];
 

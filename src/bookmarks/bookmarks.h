@@ -20,12 +20,12 @@ struct bookmark {
 	unsigned char *title;   /* title of bookmark */
 	unsigned char *url;     /* Location of bookmarked item */
 
-	struct list_head child;
+	LIST_OF(struct bookmark) child;
 };
 
 /* Bookmark lists */
 
-extern struct list_head bookmarks; /* struct bookmark */
+extern LIST_OF(struct bookmark) bookmarks;
 
 /* The bookmarks module */
 

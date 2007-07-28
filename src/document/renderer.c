@@ -1,4 +1,5 @@
-/* HTML renderer */
+/** HTML renderer
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -40,18 +41,19 @@
 
 
 #ifdef CONFIG_ECMASCRIPT
-/* XXX: This function is de facto obsolete, since we do not need to copy
+/** @todo XXX: This function is de facto obsolete, since we do not need to copy
  * snippets around anymore (we process them in one go after the document is
  * loaded; gradual processing was practically impossible because the snippets
  * could reorder randomly during the loading - consider i.e.
- * <body onLoad><script></body>: first just <body> is loaded, but then the
- * rest of the document is loaded and <script> gets before <body>; do not even
+ * @<body onLoad>@<script>@</body>: first just @<body> is loaded, but then the
+ * rest of the document is loaded and @<script> gets before @<body>; do not even
  * imagine the trouble with rewritten (through scripting hooks) documents;
  * besides, implementing document.write() will be much simpler).
  * But I want to take no risk by reworking that now. --pasky */
 static void
 add_snippets(struct ecmascript_interpreter *interpreter,
-             struct list_head *doc_snippets, struct list_head *queued_snippets)
+             LIST_OF(struct string_list_item) *doc_snippets,
+             LIST_OF(struct string_list_item) *queued_snippets)
 {
 	struct string_list_item *doc_current = doc_snippets->next;
 
@@ -110,7 +112,8 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 
 static void
 process_snippets(struct ecmascript_interpreter *interpreter,
-                 struct list_head *snippets, struct string_list_item **current)
+                 LIST_OF(struct string_list_item) *snippets,
+                 struct string_list_item **current)
 {
 	if (!*current)
 		*current = snippets->next;

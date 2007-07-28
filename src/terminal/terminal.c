@@ -1,4 +1,5 @@
-/* Terminal interface - low-level displaying implementation. */
+/** Terminal interface - low-level displaying implementation.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -36,7 +37,7 @@
 #include "viewer/text/textarea.h"
 
 
-INIT_LIST_HEAD(terminals);
+INIT_LIST_OF(struct terminal, terminals);
 
 static void check_if_no_terminal(void);
 

@@ -105,7 +105,7 @@ struct listbox_data {
 	struct listbox_item *top; /* Item which is on the top line of the box */
 
 	int sel_offset; /* Offset of selected item against the box top */
-	struct list_head *items; /* The list being displayed */
+	LIST_OF(struct listbox_item) *items; /* The list being displayed */
 };
 
 enum listbox_item_type {
@@ -119,7 +119,7 @@ struct listbox_item {
 	LIST_HEAD(struct listbox_item);
 
 	/* The list may be empty for leaf nodes or non-hiearchic listboxes */
-	struct list_head child;
+	LIST_OF(struct listbox_item) child;
 
 	enum listbox_item_type type;
 	int depth;

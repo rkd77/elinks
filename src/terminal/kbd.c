@@ -1,4 +1,8 @@
-/* Support for keyboard interface */
+/** Support for keyboard interface
+ * @file
+ *
+ * \todo TODO: move stuff from here to itrm.{c,h} and mouse.{c,h}
+ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -37,8 +41,6 @@
 #include "util/string.h"
 #include "util/time.h"
 
-/* TODO: move stuff from here to itrm.{c,h} and mouse.{c,h} */
-
 struct itrm *ditrm = NULL;
 
 static void free_itrm(struct itrm *);
@@ -49,7 +51,7 @@ static void handle_itrm_stdin(struct itrm *);
 static void unhandle_itrm_stdin(struct itrm *);
 
 #ifdef CONFIG_DEBUG
-/* This hack makes GCC put enum term_event_special_key in the debug
+/** This hack makes GCC put enum term_event_special_key in the debug
  * information even though it is not otherwise used.  The const
  * prevents an unused-variable warning.  */
 static const enum term_event_special_key dummy_term_event_special_key;
@@ -70,9 +72,9 @@ free_all_itrms(void)
 }
 
 
-/* A select_handler_T write_func for itrm->out.sock.  This is called
- * when there is data in itrm->out.queue and it is possible to write
- * it to itrm->out.sock.  When itrm->out.queue becomes empty, this
+/** A select_handler_T write_func for itrm_out.sock.  This is called
+ * when there is data in \c itrm->out.queue and it is possible to write
+ * it to \c itrm->out.sock.  When \c itrm->out.queue becomes empty, this
  * handler is temporarily removed.  */
 static void
 itrm_queue_write(struct itrm *itrm)
@@ -154,8 +156,8 @@ kbd_ctrl_c(void)
 	hard_write(fd, seq, sizeof(seq) - 1)
 
 
-#define INIT_TERMINAL_SEQ	"\033)0\0337"	/* Special Character and Line Drawing Set, Save Cursor */
-#define INIT_ALT_SCREEN_SEQ	"\033[?47h"	/* Use Alternate Screen Buffer */
+#define INIT_TERMINAL_SEQ	"\033)0\0337"	/**< Special Character and Line Drawing Set, Save Cursor */
+#define INIT_ALT_SCREEN_SEQ	"\033[?47h"	/**< Use Alternate Screen Buffer */
 
 static void
 send_init_sequence(int h, int altscreen)
@@ -171,9 +173,9 @@ send_init_sequence(int h, int altscreen)
 #endif
 }
 
-#define DONE_CLS_SEQ		"\033[2J"	/* Erase in Display, Clear All */
-#define DONE_TERMINAL_SEQ	"\0338\r \b"	/* Restore Cursor (DECRC) + ??? */
-#define DONE_ALT_SCREEN_SEQ	"\033[?47l"	/* Use Normal Screen Buffer */
+#define DONE_CLS_SEQ		"\033[2J"	/**< Erase in Display, Clear All */
+#define DONE_TERMINAL_SEQ	"\0338\r \b"	/**< Restore Cursor (DECRC) + ??? */
+#define DONE_ALT_SCREEN_SEQ	"\033[?47l"	/**< Use Normal Screen Buffer */
 
 static void
 send_done_sequence(int h, int altscreen)
@@ -242,7 +244,7 @@ setraw(int fd, struct termios *p)
 	return 0;
 }
 
-/* Construct the struct itrm of this process, make ditrm point to it,
+/** Construct the struct itrm of this process, make ::ditrm point to it,
  * set up select() handlers, and send the initial interlink packet.
  *
  * The first five parameters are file descriptors that this function
@@ -250,23 +252,25 @@ setraw(int fd, struct termios *p)
  * set select() handlers.  Please see the definitions of struct
  * itrm_in and struct itrm_out for further explanations.
  *
- * param     member    file if process is master    file if process is slave
- * ------    ------    -------------------------    ------------------------
- * std_in    in.std    read tty device (or pipe)    read tty device (or pipe)
- * std_out   out.std   write tty device (or pipe)   write tty device (or pipe)
- * sock_in   in.sock   ==std_out (masterhood flag)  read socket from master
- * sock_out  out.sock  write pipe to same process   write socket to master
- * ctl_in    in.ctl    control tty device           control tty device
+ * @param std_in	itrm_in.std: read tty device (or pipe)
+ * @param std_out	itrm_out.std: write tty device (or pipe)
+ * @param sock_in	itrm_in.sock
+ *			- If master: == @a std_out (masterhood flag)
+ *			- If slave: read socket from master
+ * @param sock_out	itrm_out.sock
+ *			- If master: write pipe to same process
+ *			- If slave: write socket to master
+ * @param ctl_in	itrm_in.ctl: control tty device
  *
  * The remaining three parameters control the initial interlink packet.
  *
- * init_string = A string to be passed to the master process.  Need
- *               not be null-terminated.  If remote==0, this is a URI.
- *               Otherwise, this is a remote command.
- * init_len    = The length of init_string, in bytes.
- * remote      = 0 if asking the master to start a new session
- *               and display it via this process.  Otherwise,
- *               enum remote_session_flags.  */
+ * @param init_string	A string to be passed to the master process.  Need
+ *			not be null-terminated.  If @a remote == 0, this is
+ *			a URI.  Otherwise, this is a remote command.
+ * @param init_len	The length of init_string, in bytes.
+ * @param remote	= 0 if asking the master to start a new session
+ *			and display it via this process.  Otherwise,
+ *			enum ::remote_session_flags.  */
 void
 handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	   void *init_string, int init_len, int remote)
@@ -342,7 +346,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 }
 
 
-/* A select_handler_T read_func and error_func for the pipe (long) h.
+/** A select_handler_T read_func and error_func for the pipe (long) @a h.
  * This is called when the subprocess started on the terminal of this
  * ELinks process exits.  ELinks then resumes using the terminal.  */
 static void
@@ -435,9 +439,9 @@ free_itrm(struct itrm *itrm)
 	mem_free(itrm);
 }
 
-/* Resize terminal to dimensions specified by @text string.
- * @text should look like "width,height,old-width,old-height" where width and
- * height are integers. */
+/** Resize terminal to dimensions specified by @a text string.
+ * @a text should look like "width,height,old-width,old-height"
+ * where width and height are integers. */
 static inline void
 resize_terminal_from_str(unsigned char *text)
 {
@@ -501,7 +505,7 @@ safe_hard_write(int fd, unsigned char *buf, int len)
 	done_draw();
 }
 
-/* A select_handler_T read_func for itrm->in.sock.  A slave process
+/** A select_handler_T read_func for itrm_in.sock.  A slave process
  * calls this when the master sends it data to be displayed.  The
  * master process never calls this.  */
 static void
@@ -632,7 +636,7 @@ free_and_return:
 }
 
 
-/* Parse an ECMA-48 control sequence that was received from a
+/** Parse an ECMA-48 control sequence that was received from a
  * terminal.  Extract the Final Byte (if there are no Intermediate
  * Bytes) and the value of the first parameter (if it is an integer).
  *
@@ -640,10 +644,10 @@ free_and_return:
  * CONTROL SEQUENCE INTRODUCER encoded as ESC [.  (ECMA-48 also allows
  * 0x9B as a single-byte CSI, but we don't support that here.)
  *
- * Return one of:
- *   -1 if the control sequence is not yet complete; the caller sets a timer.
- *   0 if the control sequence does not comply with ECMA-48.
- *   The length of the control sequence otherwise.  */
+ * @returns one of:
+ * - -1 if the control sequence is not yet complete; the caller sets a timer.
+ * - 0 if the control sequence does not comply with ECMA-48.
+ * - The length of the control sequence otherwise.  */
 static inline int
 get_esc_code(unsigned char *str, int len, unsigned char *final_byte,
 	     int *first_param_value)
@@ -706,16 +710,16 @@ get_esc_code(unsigned char *str, int len, unsigned char *final_byte,
 #include <ctype.h>	/* isprint() isspace() */
 #endif
 
-/* Decode a control sequence that begins with CSI (CONTROL SEQUENCE
- * INTRODUCER) encoded as ESC [, and set *@ev accordingly.
+/** Decode a control sequence that begins with CSI (CONTROL SEQUENCE
+ * INTRODUCER) encoded as ESC [, and set @a *ev accordingly.
  * (ECMA-48 also allows 0x9B as a single-byte CSI, but we don't
  * support that here.)
  *
- * Return one of:
- *   -1 if the control sequence is not yet complete; the caller sets a timer.
- *   0 if the control sequence should be parsed by some other function.
- *   The length of the control sequence otherwise.
- * Returning >0 does not imply this function has altered *ev.  */
+ * @returns one of:
+ * - -1 if the control sequence is not yet complete; the caller sets a timer.
+ * - 0 if the control sequence should be parsed by some other function.
+ * - The length of the control sequence otherwise.
+ * Returning >0 does not imply this function has altered @a *ev.  */
 static int
 decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
@@ -874,13 +878,13 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	return el;
 }
 
-/* Decode an escape sequence that begins with SS3 (SINGLE SHIFT 3).
+/** Decode an escape sequence that begins with SS3 (SINGLE SHIFT 3).
  * These are used for application cursor keys and the application keypad.
- * Return one of:
- *   -1 if the escape sequence is not yet complete; the caller sets a timer.
- *   0 if the escape sequence should be parsed by some other function.
- *   The length of the escape sequence otherwise.
- * Returning >0 does not imply this function has altered *ev.  */
+ * @returns one of:
+ * - -1 if the escape sequence is not yet complete; the caller sets a timer.
+ * - 0 if the escape sequence should be parsed by some other function.
+ * - The length of the escape sequence otherwise.
+ * Returning >0 does not imply this function has altered @a *ev.  */
 static int
 decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 {
@@ -930,11 +934,8 @@ decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 }
 
 
-/* Initialize *@ev to match the byte @key received from the terminal.
- * Actually, @key could also be a value from enum term_event_special_key;
- * but callers that use those values generally don't need the mapping
- * provided by this function, so they call set_kbd_interlink_event()
- * directly.  */
+/** Initialize @a *ev to match the byte @a key received from the terminal.
+ * @a key must not be a value from enum term_event_special_key.  */
 static void
 set_kbd_event(struct interlink_event *ev,
 	      int key, term_event_modifier_T modifier)
@@ -975,7 +976,7 @@ set_kbd_event(struct interlink_event *ev,
 	set_kbd_interlink_event(ev, key, modifier);
 }
 
-/* Timer callback for @itrm->timer.  As explained in @install_timer,
+/** Timer callback for itrm.timer.  As explained in install_timer(),
  * this function must erase the expired timer ID from all variables.  */
 static void
 kbd_timeout(struct itrm *itrm)
@@ -1012,11 +1013,12 @@ kbd_timeout(struct itrm *itrm)
 	while (process_queue(itrm));
 }
 
-/* Parse one event from itrm->in.queue and append to itrm->out.queue.
- * Return the number of bytes removed from itrm->in.queue; at least 0.
- * If this function leaves the queue not full, it also reenables reading
- * from itrm->in.std.  (Because it does not add to the queue, it never
- * need disable reading.)  On entry, the itrm must not be blocked.  */
+/** Parse one event from itrm_in.queue and append to itrm_out.queue.
+ * @pre On entry, @a *itrm must not be blocked.
+ * @returns the number of bytes removed from itrm->in.queue; at least 0.
+ * @post If this function leaves the queue not full, it also reenables
+ * reading from itrm->in.std.  (Because it does not add to the queue,
+ * it never need disable reading.)  */
 static int
 process_queue(struct itrm *itrm)
 {
@@ -1146,7 +1148,7 @@ return_without_event:
 }
 
 
-/* A select_handler_T read_func for itrm->in.std.  This is called when
+/** A select_handler_T read_func for itrm_in.std.  This is called when
  * characters typed by the user arrive from the terminal. */
 static void
 in_kbd(struct itrm *itrm)
@@ -1179,7 +1181,7 @@ in_kbd(struct itrm *itrm)
 	while (process_queue(itrm));
 }
 
-/* Enable reading from itrm->in.std.  ELinks will read any available
+/** Enable reading from itrm_in.std.  ELinks will read any available
  * bytes from the tty into itrm->in.queue and then parse them.
  * Reading should be enabled whenever itrm->in.queue is not full and
  * itrm->blocked is 0.  */
@@ -1190,7 +1192,7 @@ handle_itrm_stdin(struct itrm *itrm)
 		     (select_handler_T) free_itrm, itrm);
 }
 
-/* Disable reading from itrm->in.std.  Reading should be disabled
+/** Disable reading from itrm_in.std.  Reading should be disabled
  * whenever itrm->in.queue is full (there is no room for the data)
  * or itrm->blocked is 1 (other processes may read the data).  */
 static void

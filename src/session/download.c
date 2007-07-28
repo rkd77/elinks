@@ -1,4 +1,5 @@
-/* Downloads managment */
+/** Downloads managment
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -62,9 +63,9 @@
 /* TODO: tp_*() should be in separate file, I guess? --pasky */
 
 
-INIT_LIST_HEAD(downloads);
+INIT_LIST_OF(struct file_download, downloads);
 
-INIT_LIST_HEAD(copiousoutput_data);
+INIT_LIST_OF(struct popen_data, copiousoutput_data);
 
 int
 download_is_progressing(struct download *download)
@@ -1032,7 +1033,7 @@ tp_save(struct type_query *type_query)
 	query_file(type_query->ses, type_query->uri, type_query, continue_download, tp_cancel, 1);
 }
 
-/* This button handler uses the add_dlg_button() interface so that pressing
+/** This button handler uses the add_dlg_button() interface so that pressing
  * 'Show header' will not close the type query dialog. */
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
@@ -1045,9 +1046,10 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 
-/* FIXME: We need to modify this function to take frame data instead, as we
- * want to use this function for frames as well (now, when frame has content
- * type text/plain, it is ignored and displayed as HTML). */
+/** @bug FIXME: We need to modify this function to take frame data
+ * instead, as we want to use this function for frames as well (now,
+ * when frame has content type text/plain, it is ignored and displayed
+ * as HTML). */
 void
 tp_display(struct type_query *type_query)
 {
@@ -1197,10 +1199,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 		}
 
 		if (handler && handler->program) {
-			int programlen = strlen(handler->program);
-
-			programlen = int_min(programlen, MAX_STR_LEN);
-			memcpy(field, handler->program, programlen);
+			safe_strncpy(field, handler->program, MAX_STR_LEN);
 		}
 
 		/* xgettext:no-c-format */

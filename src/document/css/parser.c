@@ -1,4 +1,5 @@
-/* CSS main parser */
+/** CSS main parser
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -23,7 +24,8 @@
 
 
 void
-css_parse_properties(struct list_head *props, struct scanner *scanner)
+css_parse_properties(LIST_OF(struct css_property) *props,
+		     struct scanner *scanner)
 {
 	assert(props && scanner);
 
@@ -108,8 +110,11 @@ skip_css_block(struct scanner *scanner)
 	}
 }
 
-/* Atrules grammer:
+/** Parse an atrule from @a scanner and update @a css accordingly.
  *
+ * Atrules grammar:
+ *
+ * @verbatim
  * media_types:
  *	  <empty>
  *	| <ident>
@@ -122,6 +127,7 @@ skip_css_block(struct scanner *scanner)
  *	| '@media' media_types '{' ruleset* '}'
  *	| '@page' <ident>? [':' <ident>]? '{' properties '}'
  *	| '@font-face' '{' properties '}'
+ * @endverbatim
  */
 static void
 css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
@@ -184,18 +190,19 @@ struct selector_pkg {
 /** Move a CSS selector and its leaves into a new set.  If a similar
  * selector already exists in the set, merge them.
  *
- * \param sels
- *   The set to which \a selector should be moved.  Must not be NULL.
- * \param selector
+ * @param sels
+ *   The set to which @a selector should be moved.  Must not be NULL.
+ * @param selector
  *   The selector that should be moved.  Must not be NULL.  If it is
  *   already in some set, this function removes it from there.
- * \param watch
- *   This function updates \a *watch if it merges that selector into
- *   another one.  \a watch must not be NULL but \a *watch may be.
+ * @param watch
+ *   This function updates @a *watch if it merges that selector into
+ *   another one.  @a watch must not be NULL but @a *watch may be.
  *
- * \return \a selector or the one into which it was merged.  */
+ * @returns @a selector or the one into which it was merged.  */
 static struct css_selector *
-reparent_selector(struct css_selector_set *sels, struct css_selector *selector,
+reparent_selector(struct css_selector_set *sels,
+                  struct css_selector *selector,
                   struct css_selector **watch)
 {
 	struct css_selector *twin = find_css_selector(sels, selector->type,
@@ -222,16 +229,22 @@ reparent_selector(struct css_selector_set *sels, struct css_selector *selector,
 	return twin ? twin : selector;
 }
 
-/* Our selector grammar:
+/** Parse a comma-separated list of CSS selectors from @a scanner.
+ * Register the selectors in @a css so that get_css_selector_for_element()
+ * will find them, and add them to @a selectors so that the caller can
+ * attach properties to them.
  *
+ * Our selector grammar:
+ *
+ * @verbatim
  * selector:
  *	  element_name? ('#' id)? ('.' class)? (':' pseudo_class)? \
  *		  ((' ' | '>') selector)?
- *
+ * @endverbatim
  */
 static void
 css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
-		   struct list_head *selectors)
+		   LIST_OF(struct selector_pkg) *selectors)
 {
 	/* Shell for the last selector (the whole selector chain, that is). */
 	struct selector_pkg *pkg = NULL;
@@ -464,16 +477,20 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 }
 
 
-/* Ruleset grammar:
+/** Parse a ruleset from @a scanner to @a css.
  *
+ * Ruleset grammar:
+ *
+ * @verbatim
  * ruleset:
  *	  selector [ ',' selector ]* '{' properties '}'
+ * @endverbatim
  */
 static void
 css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 {
-	INIT_LIST_HEAD(selectors);
-	INIT_LIST_HEAD(properties);
+	INIT_LIST_OF(struct selector_pkg, selectors);
+	INIT_LIST_OF(struct css_property, properties);
 	struct selector_pkg *pkg;
 
 	css_parse_selector(css, scanner, &selectors);

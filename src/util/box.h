@@ -1,6 +1,7 @@
 #ifndef EL__UTIL_BOX_H
 #define EL__UTIL_BOX_H
 
+/** A rectangular part of a drawing surface, such as the screen.  */
 struct box {
 	int x;
 	int y;
@@ -8,6 +9,7 @@ struct box {
 	int height;
 };
 
+/** @relates box */
 static inline int
 is_in_box(struct box *box, int x, int y)
 {
@@ -16,19 +18,23 @@ is_in_box(struct box *box, int x, int y)
 		&& y < box->y + box->height);
 }
 
+/** @relates box */
 static inline int
 row_is_in_box(struct box *box, int y)
 {
 	return (y >= box->y && y < box->y + box->height);
 }
 
+/** @relates box */
 static inline int
 col_is_in_box(struct box *box, int x)
 {
 	return (x >= box->x && x < box->x + box->width);
 }
 
-/* Mainly intended for use with double-width characters.  */
+/** Check whether a span of columns is in @a box.
+ * Mainly intended for use with double-width characters.
+ * @relates box */
 static inline int
 colspan_is_in_box(struct box *box, int x, int span)
 {
@@ -36,6 +42,7 @@ colspan_is_in_box(struct box *box, int x, int span)
 }
 
 
+/** @relates box */
 static inline void
 set_box(struct box *box, int x, int y, int width, int height)
 {
@@ -45,6 +52,7 @@ set_box(struct box *box, int x, int y, int width, int height)
 	box->height = int_max(0, height);
 }
 
+/** @relates box */
 static inline void
 copy_box(struct box *dst, struct box *src)
 {

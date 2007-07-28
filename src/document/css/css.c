@@ -1,4 +1,5 @@
-/* CSS module management */
+/** CSS module management
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -124,7 +125,8 @@ static int
 change_hook_css(struct session *ses, struct option *current, struct option *changed)
 {
 	if (!strcmp(changed->name, "stylesheet")) {
-		/* TODO: We need to update all entries in format cache. --jonas */
+		/** @todo TODO: We need to update all entries in
+		 * format cache. --jonas */
 		import_default_css();
 	}
 

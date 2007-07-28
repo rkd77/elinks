@@ -14,7 +14,7 @@
  *
  * Fixing this would be a nice and needed janitorial project. */
 
-/* Lists debugging
+/** Lists debugging.
  * Two unsigned int magic number will be put before and after the next and
  * prev pointers, these will be check on list operations.
  * Some pointers are set to specific values after action. */
@@ -56,7 +56,6 @@ struct xlist_head {
 #define LIST_HEAD(x) x *next; x *prev
 #define LIST_SET_MAGIC(x) list_magic_set(*(x))
 
-
 #else /* LISTDEBUG */
 
 #define LISTMAGIC1 ((void *) 0xdadababa)
@@ -82,7 +81,7 @@ do { \
 } while (0)
 
 
-/* Backend for list_magic_check() and list_magic_chkbool(). */
+/** Backend for list_magic_check() and list_magic_chkbool(). */
 #define list_magic_correct(x) ((x).magic1 == LISTMAGIC1 && (x).magic2 == LISTMAGIC2)
 
 #define list_magic_check(x, where) \
@@ -116,7 +115,17 @@ struct xlist_head {
 
 #endif /* LISTDEBUG */
 
-#define INIT_LIST_HEAD(x) struct list_head x = { D_LIST_HEAD(x) }
+/** Define and initialize a list variable.  The @a element_T parameter
+ * currently serves as documentation only; the compiler does not check
+ * that it matches.  */
+#define INIT_LIST_OF(element_T, x) struct list_head x = { D_LIST_HEAD(x) }
+
+/** A list intended to contain elements of a specific type.  The
+ * @a element_T parameter currently serves as documentation only;
+ * the compiler does not check that it matches.  Doxyfile defines
+ * this macro differently in order to get better collaboration
+ * diagrams.  */
+#define LIST_OF(element_T) struct list_head
 
 #ifdef HAVE_TYPEOF
 #define list_typeof(x) typeof(x)

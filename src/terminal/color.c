@@ -1,4 +1,5 @@
-/* Terminal color composing. */
+/** Terminal color composing.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -51,11 +52,12 @@ color_distance(const struct rgb *c1, const struct rgb *c2)
 #define RGB_HASH_SIZE		4096
 #define HASH_RGB(color, l)	((RGBCOLOR(color) + (l)) & (RGB_HASH_SIZE - 1))
 
-/* Initialize a rgb struct from a color_T */
+/** Initialize a rgb struct from a color_T
+ * @relates rgb */
 #define INIT_RGB(color) \
 	{ RED_COLOR(color), GREEN_COLOR(color), BLUE_COLOR(color) }
 
-/* Locates the nearest terminal color. */
+/** Locates the nearest terminal color. */
 static inline unsigned char
 get_color(color_T color, const struct rgb *palette, int level)
 {
@@ -109,9 +111,9 @@ get_color(color_T color, const struct rgb *palette, int level)
 #undef GREEN_COLOR_MASK
 #undef BLUE_COLOR_MASK
 
-/* Controls what color ranges to use when setting the terminal color. */
-/* TODO: Part of the 256 color palette is gray scale, maybe we could experiment
- * with a grayscale mode. ;) --jonas */
+/** Controls what color ranges to use when setting the terminal color.
+ * @todo TODO: Part of the 256 color palette is gray scale, maybe we
+ * could experiment with a grayscale mode. ;) --jonas */
 enum palette_range {
        PALETTE_FULL = 0,
        PALETTE_HALF,
@@ -173,7 +175,8 @@ static const struct color_mode_info *const color_modes[] = {
 	 * only if CONFIG_TRUE_COLOR is not defined.  */
 	/* COLOR_MODE_TRUE_COLOR */ &color_mode_16,
 };
-/* Get a compile-time error if the array has the wrong size.  */
+/** Get a compile-time error if the ::color_modes array has the wrong
+ * size.  */
 typedef int assert_enough_color_modes[
 	(sizeof(color_modes) / sizeof(color_modes[0]) == COLOR_MODES)
 	? 1 : -1];
@@ -191,9 +194,11 @@ typedef int assert_enough_color_modes[
  *
  * Bright colors will be rendered bold. */
 
-/* This table is based mostly on wild guesses of mine. Feel free to
+/** Map foreground colors to more visible ones on various backgrounds.
+ * Use like: fg = fg_color[fg][bg];
+ *
+ * This table is based mostly on wild guesses of mine. Feel free to
  * correct it. --pasky */
-/* Indexed by [fg][bg]->fg: */
 static const unsigned char fg_color[16][8] = {
 	/* bk  r  gr  br  bl   m   c   w */
 
@@ -231,7 +236,7 @@ static const unsigned char fg_color[16][8] = {
 	{ 15, 15, 15, 15, 15, 15, 15, 15 },
 };
 
-/* When determining wether to use negative image we make the most significant
+/* When determining whether to use negative image we make the most significant
  * be least significant. */
 #define CMPCODE(c) (((c) << 1 | (c) >> 2) & TERM_COLOR_MASK)
 #define use_inverse(bg, fg) CMPCODE(fg & TERM_COLOR_MASK) < CMPCODE(bg)

@@ -1,4 +1,5 @@
-/* Terminal screen drawing routines. */
+/** Terminal screen drawing routines.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -28,10 +29,17 @@
 
 /* TODO: We must use termcap/terminfo if available! --pasky */
 
+/** Mapping from (enum border_char - 0xB0) to ASCII characters.  */
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
+
+/** Mapping from (enum border_char - 0xB0) to VT100 line-drawing
+ * characters.  */
 static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
-/* For UTF-8 I/O */
+/** Mapping from (enum border_char - 0xB0) to VT100 line-drawing
+ * characters encoded in CP437.
+ * When UTF-8 I/O is enabled, ELinks uses this array instead of
+ * frame_vt100[], and converts the characters from CP437 to UTF-8.  */
 static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
@@ -41,11 +49,15 @@ static const unsigned char frame_vt100_u[48] = {
 	197, 217, 218, 177,  32, 32,  32,  32
 };
 
-/* This is for FreeBSD fonts that place graphics characters in the
+/** Mapping from (enum border_char - 0xB0) to obsolete FreeBSD ACS
+ * graphics.
+ *
+ * This is for FreeBSD fonts that place graphics characters in the
  * 0x80...0x9F range, which ISO 8859 does not use.  The characters are
  * supposed to be sorted according to the codes used in VT100 or in
  * the terminfo "acsc" capability:
  *
+ * @verbatim
  *	0x80	U+2588	'0'	ACS_BLOCK
  *	0x81	U+25C6	'`'	ACS_DIAMOND
  *	0x82	U+2592	'a'	ACS_CKBOARD
@@ -78,6 +90,7 @@ static const unsigned char frame_vt100_u[48] = {
  *	0x9D	U+2260	'|'	ACS_NEQUAL
  *	0x9E	U+00A3	'}'	ACS_STERLING
  *	0x9F	U+00B7	'~'	ACS_BULLET
+ * @endverbatim
  *
  * (Ncurses 5.5 defines ACS_BOARD using 'h' and ACS_LANTERN using 'i',
  * but those are not the characters meant above.)
@@ -98,10 +111,15 @@ static const unsigned char frame_freebsd[48] = {
 	143, 139, 141, 128, 128, 128, 128, 128,
 };
 
-/* For UTF-8 I/O.  Derived from frame_freebsd[] by converting the
- * characters to Unicode and back to CP437.  frame_freebsd[1] = 138 =
- * 0x8a = U+240B SYMBOL FOR VERTICAL TABULATION does not exist in
- * CP437, so we substitute U+2592 MEDIUM SHADE.  */
+/** Mapping from (enum border_char - 0xB0) to obsolete FreeBSD ACS
+ * graphics encoded in CP437.
+ * When UTF-8 I/O is enabled, ELinks uses this array instead of
+ * frame_freebsd[], and converts the characters from CP437 to UTF-8.
+ *
+ * Derived from frame_freebsd[] by converting the characters to
+ * Unicode and back to CP437.  frame_freebsd[1] = 138 = 0x8a = U+240B
+ * SYMBOL FOR VERTICAL TABULATION does not exist in CP437, so we
+ * substitute U+2592 MEDIUM SHADE.  */
 static const unsigned char frame_freebsd_u[48] = {
 	177, 177, 219, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
@@ -111,6 +129,7 @@ static const unsigned char frame_freebsd_u[48] = {
 	197, 217, 218, 219, 219, 219, 219, 219,
 };
 
+/** Mapping from (enum border_char - 0xB0) to KOI8-R.  */
 static const unsigned char frame_koi[48] = {
 	144, 145, 146, 129, 135, 178, 180, 167,
 	166, 181, 161, 168, 174, 173, 172, 131,
@@ -120,7 +139,10 @@ static const unsigned char frame_koi[48] = {
 	188, 133, 130, 141, 140, 142, 143, 139,
 };
 
-/* Most of this table is just 176 + <index in table>. */
+/** Mapping from (enum border_char - 0xB0) to CP850 or CP852.  Most of
+ * this table is just 0xB0 + @<index in table>, because these codepages
+ * are quite similar to CP437.  However, they lack some line-drawing
+ * characters, so we must use others instead.  */
 static const unsigned char frame_restrict[48] = {
 	176, 177, 178, 179, 180, 179, 186, 186,
 	205, 185, 186, 187, 188, 186, 205, 191,
@@ -132,58 +154,67 @@ static const unsigned char frame_restrict[48] = {
 
 #define TERM_STRING(str) INIT_STRING(str, sizeof(str) - 1)
 
-/* Like add_string_to_string but has fewer checks to slow it down.  */
+/** Like add_string_to_string but has fewer checks to slow it down.  */
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
-/* ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
- * Ps = 10 = primary (default) font
- * Ps = 11 = first alternative font */
+/** Frame begin/end sequences that switch fonts with ECMA-48 SGR.
+ * ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
+ * - Ps = 10 = primary (default) font
+ * - Ps = 11 = first alternative font */
 static const struct string m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
 
+/** Frame begin/end sequences for VT100.  */
 static const struct string vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
 	/* begin border: */	TERM_STRING("\x0e"),
 };
 
+/** Underline begin/end sequences using ECMA-48 SGR.
+ * ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
+ * - Ps =  4 = singly underlined
+ * - Ps = 21 = doubly underlined
+ * - Ps = 24 = not underlined (neither singly nor doubly) */
 static const struct string underline_seqs[] = {
-	/* begin underline: */	TERM_STRING("\033[24m"),
-	/* end underline: */	TERM_STRING("\033[4m"),
+	/* end underline: */	TERM_STRING("\033[24m"),
+	/* begin underline: */	TERM_STRING("\033[4m"),
 };
 
-/* Used in {add_char*()} and {redraw_screen()} to reduce the logic. It is
- * updated from terminal._template_.* using option change_hooks. */
-/* TODO: termcap/terminfo can maybe gradually be introduced via this
- *	 structure. We'll see. --jonas */
+/** Used in @c add_char*() and @c redraw_screen() to reduce the logic.
+ * It is updated from terminal._template_.* using option.change_hook.
+ *
+ * @todo TODO: termcap/terminfo can maybe gradually be introduced via
+ *	       this structure. We'll see. --jonas */
 struct screen_driver {
 	LIST_HEAD(struct screen_driver);
 
-	/* The terminal._template_.type. Together with the @name member the
+	/** The terminal._template_.type. Together with the #name member they
 	 * uniquely identify the screen_driver. */
 	enum term_mode_type type;
 
+	/** set_screen_driver_opt() sets these.  */
 	struct screen_driver_opt {
-		/* Charsets when doing UTF8 I/O. */
-		/* [0] is the common charset and [1] is the frame charset.
-		 * Test whether to use UTF8 I/O using the use_utf8_io() macro.  */
+		/** Charsets when doing UTF-8 I/O.
+		 * [0] is the common charset and [1] is the frame charset.
+		 * Test whether to use UTF-8 I/O using the use_utf8_io() macro.  */
 		int charsets[2];
 
-		/* The frame translation table. May be NULL. */
+		/** The frame translation table. May be NULL. */
 		const unsigned char *frame;
 
-		/* The frame mode setup and teardown sequences. May be NULL. */
+		/** The frame mode setup and teardown sequences. May be NULL. */
 		const struct string *frame_seqs;
 
-		/* The underline mode setup and teardown sequences. May be NULL. */
+		/** The underline mode setup and teardown sequences. May be NULL. */
 		const struct string *underline;
 
-		/* The color mode */
+		/** The color mode */
 		enum color_mode color_mode;
 
-		/* These are directly derived from the terminal options. */
+		/** These are directly derived from the terminal options. */
 		unsigned int transparent:1;
 
 #ifdef CONFIG_UTF8
@@ -198,6 +229,7 @@ struct screen_driver {
 	unsigned char name[1]; /* XXX: Keep last! */
 };
 
+/** Default options for ::TERM_DUMB.  */
 static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_dumb,
@@ -210,6 +242,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 };
 
+/** Default options for ::TERM_VT100.  */
 static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_vt100,
@@ -222,6 +255,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 };
 
+/** Default options for ::TERM_LINUX.  */
 static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		NULL,		/* No restrict_852 */
@@ -234,6 +268,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 };
 
+/** Default options for ::TERM_KOI8.  */
 static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_koi,
@@ -246,6 +281,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 };
 
+/** Default options for ::TERM_FREEBSD.  */
 static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_freebsd,
@@ -258,7 +294,8 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #endif /* CONFIG_UTF8 */
 };
 
-/* XXX: Keep in sync with enum term_mode_type. */
+/** Default options for all the different types of terminals.
+ * XXX: Keep in sync with enum term_mode_type. */
 static const struct screen_driver_opt *const screen_driver_opts[] = {
 	/* TERM_DUMB: */	&dumb_screen_driver_opt,
 	/* TERM_VT100: */	&vt100_screen_driver_opt,
@@ -269,10 +306,10 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 #define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
 
-static INIT_LIST_HEAD(active_screen_drivers);
+static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
-/* Set driver->opt according to driver->type and term_spec.
- * Other members of *driver need not have been initialized.
+/** Set screen_driver.opt according to screen_driver.type and \a term_spec.
+ * Other members of \a *driver need not have been initialized.
  *
  * If you modify anything here, check whether option descriptions
  * should be updated.  */
@@ -430,7 +467,7 @@ get_screen_driver(struct terminal *term)
 	return add_screen_driver(type, term, len);
 }
 
-/* Release private screen drawing utilities. */
+/** Release private screen drawing utilities. */
 void
 done_screen_drivers(struct module *xxx)
 {
@@ -438,8 +475,8 @@ done_screen_drivers(struct module *xxx)
 }
 
 
-/* Adds the term code for positioning the cursor at @x and @y to @string.
- * The template term code is: "\033[<@y>;<@x>H" */
+/** Adds the term code for positioning the cursor at @a x and @a y to
+ * @a string.  The template term code is: "\033[<@a y>;<@a x>H" */
 static inline struct string *
 add_cursor_move_to_string(struct string *screen, int y, int x)
 {
@@ -469,7 +506,7 @@ struct screen_state {
 	unsigned char underline;
 	unsigned char bold;
 	unsigned char attr;
-	/* Following should match struct screen_char color field. */
+	/** Following should match the screen_char.color field. */
 	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
@@ -620,7 +657,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	}
 }
 
-/* Time critical section. */
+/** Time critical section. */
 static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
@@ -772,7 +809,7 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->color[1])
 #define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->color[0])
 
-/* Time critical section. */
+/** Time critical section. */
 static inline void
 add_char256(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
@@ -887,7 +924,7 @@ add_char_true_color(struct string *screen, const struct string *seq, unsigned ch
 	add_char_to_string(screen, 'm');
 }
 
-/* Time critical section. */
+/** Time critical section. */
 static inline void
 add_char_true(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
@@ -1007,8 +1044,8 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	}									\
 }
 
-/* Updating of the terminal screen is done by checking what needs to be updated
- * using the last screen. */
+/*! Updating of the terminal screen is done by checking what needs to
+ * be updated using the last screen. */
 void
 redraw_screen(struct terminal *term)
 {
@@ -1127,8 +1164,9 @@ init_screen(void)
 	return screen;
 }
 
-/* The two images are allocated in one chunk. */
-/* TODO: It seems allocation failure here is fatal. We should do something! */
+/*! The two images are allocated in one chunk.
+ * \todo TODO: It seems allocation failure here is fatal.
+ *             We should do something! */
 void
 resize_screen(struct terminal *term, int width, int height)
 {
@@ -1171,7 +1209,7 @@ done_screen(struct terminal_screen *screen)
 
 struct module terminal_screen_module = struct_module(
 	/* Because this module is a submodule of terminal_module,
-	 * which is listed main_modules rather than in builtin_modules,
+	 * which is listed in main_modules rather than in builtin_modules,
 	 * its name does not appear in the user interface and
 	 * so need not be translatable.  */
 	/* name: */		"Terminal Screen",

@@ -25,7 +25,7 @@
 #include "util/string.h"
 
 
-INIT_LIST_HEAD(cookie_queries);
+INIT_LIST_OF(struct cookie, cookie_queries);
 
 static void
 add_cookie_info_to_string(struct string *string, struct cookie *cookie,

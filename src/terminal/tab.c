@@ -1,4 +1,5 @@
-/* Tab-style (those containing real documents) windows infrastructure. */
+/** Tab-style (those containing real documents) windows infrastructure.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -60,7 +61,7 @@ found_pos:
 	return win;
 }
 
-/* Number of tabs at the terminal (in term->windows) */
+/** Number of tabs at the terminal (in term->windows) */
 inline int
 number_of_tabs(struct terminal *term)
 {
@@ -73,7 +74,7 @@ number_of_tabs(struct terminal *term)
 	return result;
 }
 
-/* Number of tab */
+/** Number of tab */
 int
 get_tab_number(struct window *window)
 {
@@ -93,7 +94,7 @@ get_tab_number(struct window *window)
 	return num;
 }
 
-/* Get tab of an according index */
+/** Get tab of an according index */
 struct window *
 get_tab_by_number(struct terminal *term, int num)
 {
@@ -106,14 +107,14 @@ get_tab_by_number(struct terminal *term, int num)
 
 	/* Ensure that the return value actually points to a struct
 	 * window.  */
-	assertm((struct list_head *) win != &term->windows,
+	assertm((LIST_OF(struct window) *) win != &term->windows,
 	        "tab number out of range");
 	if_assert_failed return term->windows.next;
 
 	return win;
 }
 
-/* Returns number of the tab at @xpos, or -1 if none. */
+/** Returns number of the tab at @a xpos, or -1 if none. */
 int
 get_tab_number_by_xpos(struct terminal *term, int xpos)
 {
@@ -130,7 +131,7 @@ get_tab_number_by_xpos(struct terminal *term, int xpos)
 	return -1;
 }
 
-/* if @tabs_count > 0, then it is taken as the result of a recent
+/*! If @a tabs_count > 0, then it is taken as the result of a recent
  * call to number_of_tabs() so it just uses this value. */
 void
 switch_to_tab(struct terminal *term, int tab, int tabs_count)

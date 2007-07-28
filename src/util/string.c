@@ -1,4 +1,5 @@
-/* String handling functions */
+/** String handling functions
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -286,6 +287,7 @@ done_string(struct string *string)
 	memset(string, 0, sizeof(*string));
 }
 
+/** @relates string */
 inline struct string *
 add_to_string(struct string *string, const unsigned char *source)
 {
@@ -299,6 +301,7 @@ add_to_string(struct string *string, const unsigned char *source)
 	return add_bytes_to_string(string, source, strlen(source));
 }
 
+/** @relates string */
 inline struct string *
 add_crlf_to_string(struct string *string)
 {
@@ -317,6 +320,7 @@ add_crlf_to_string(struct string *string)
 	return string;
 }
 
+/** @relates string */
 inline struct string *
 add_string_to_string(struct string *string, const struct string *from)
 {
@@ -331,6 +335,7 @@ add_string_to_string(struct string *string, const struct string *from)
 	return add_bytes_to_string(string, from->source, from->length);
 }
 
+/** @relates string */
 struct string *
 add_file_to_string(struct string *string, const unsigned char *filename)
 {
@@ -392,6 +397,7 @@ string_concat(struct string *string, ...)
 	return string;
 }
 
+/** @relates string */
 inline struct string *
 add_char_to_string(struct string *string, unsigned char character)
 {
@@ -432,7 +438,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 	return string;
 }
 
-/* Add printf-like format string to @string. */
+/** Add printf()-style format string to @a string. */
 struct string *
 add_format_to_string(struct string *string, const unsigned char *format, ...)
 {
@@ -467,8 +473,8 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 }
 
 struct string *
-add_to_string_list(struct list_head *list, const unsigned char *source,
-		   int length)
+add_to_string_list(LIST_OF(struct string_list_item) *list,
+		   const unsigned char *source, int length)
 {
 	struct string_list_item *item;
 	struct string *string;
@@ -493,8 +499,9 @@ add_to_string_list(struct list_head *list, const unsigned char *source,
 	return string;
 }
 
+/** @relates string_list_item */
 void
-free_string_list(struct list_head *list)
+free_string_list(LIST_OF(struct string_list_item) *list)
 {
 	assertm(list != NULL, "[free_string_list]");
 	if_assert_failed return;

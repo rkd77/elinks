@@ -20,7 +20,7 @@ struct terminal;
 struct uri;
 struct window;
 
-/* Used by delayed_open and delayed_goto_uri_frame. */
+/** Used by delayed_open() and delayed_goto_uri_frame(). */
 struct delayed_open {
 	struct session *ses;
 	struct uri *uri;
@@ -37,7 +37,7 @@ enum remote_session_flags {
 	SES_REMOTE_INFO_BOX = 64,
 };
 
-/* This is generic frame descriptor, meaningful mainly for ses_*_frame*(). */
+/** This is generic frame descriptor, meaningful mainly for ses_*_frame*(). */
 struct frame {
 	LIST_HEAD(struct frame);
 
@@ -47,22 +47,22 @@ struct frame {
 	struct view_state vs;
 };
 
-/* Use for keyboard prefixes. */
+/** Use for keyboard prefixes. */
 struct kbdprefix {
-	/* This is the repeat count being inserted by user so far. It is stored
-	 * intermediately per-session. */
+	/** This is the repeat count being inserted by user so far.
+	 * It is stored intermediately per-session. */
 	int repeat_count;
 
 #ifdef CONFIG_MARKS
-	/* If the previous key was a mark prefix, this describes what kind of
-	 * action are we supposed to do when we receive the next key. */
+	/** If the previous key was a mark prefix, this describes what kind
+	 * of action are we supposed to do when we receive the next key. */
 	enum { KP_MARK_NOTHING, KP_MARK_SET, KP_MARK_GOTO } mark;
 #endif
 };
 
 struct session;
 
-/* This describes, what are we trying to do right now. We pass this around so
+/** This describes, what are we trying to do right now. We pass this around so
  * that we can use generic scheduler routines and when the control will get
  * back to our subsystem, we will know what are we up to. */
 enum task_type {
@@ -104,10 +104,10 @@ struct session_status {
 	struct led *ecmascript_led;
 	struct led *popup_led;
 #endif
-	/* Has the tab been visited yet. */
+	/** Has the tab been visited yet. */
 	unsigned int visited:1;
 
-	/* Is processing file requests. */
+	/** Is processing file requests. */
 	unsigned int processing_file_requests:1;
 	unsigned int show_tabs_bar_at_top:1;
 };
@@ -123,7 +123,7 @@ enum navigate_mode {
 	NAVIGATE_CURSOR_ROUTING,
 };
 
-/* This is one of the building stones of ELinks architecture --- this structure
+/** This is one of the building stones of ELinks architecture --- this structure
  * carries information about the specific ELinks session. Each tab (thus, at
  * least one per terminal, in the normal case) has its own session. Session
  * describes mainly the current browsing and control state, from the currently
@@ -133,19 +133,22 @@ struct session {
 	LIST_HEAD(struct session);
 
 
-	/* The vital session data */
+	/** @name The vital session data
+	 * @{ */
 
 	struct window *tab;
 
 
-	/* Browsing history */
+	/** @} @name Browsing history
+	 * @{ */
 
 	struct ses_history history;
 
 
-	/* The current document */
+	/** @} @name The current document
+	 * @{ */
 
-	struct list_head more_files; /* -> struct file_to_load */
+	LIST_OF(struct file_to_load) more_files;
 
 	struct download loading;
 	struct uri *loading_uri;
@@ -154,35 +157,38 @@ struct session {
 	int redirect_cnt;
 
 	struct document_view *doc_view;
-	struct list_head scrn_frames; /* -> struct document_view */
+	LIST_OF(struct document_view) scrn_frames;
 
 	struct uri *download_uri;
 
-	/* The URI which is the referrer to the current loaded document or NULL
-	 * if there are no referrer. */
-	/* The @referrer members sole purpose is to have the information handy
-	 * when loading URIs. It is not 'filtered' in anyway at this level only
-	 * at the lower ones. */
+	/** The URI which is the referrer to the current loaded document
+	 * or NULL if there are no referrer.
+	 *
+	 * The @c referrer member's sole purpose is to have the information
+	 * handy when loading URIs. It is not 'filtered' in anyway at this
+	 * level only at the lower ones. */
 	struct uri *referrer;
 
 
-	/* The current action-in-progress selector */
+	/** @} @name The current action-in-progress selector
+	 * @{ */
 
 	struct session_task task;
 
 
-	/* The current browsing state */
+	/** @} @name The current browsing state
+	 * @{ */
 
 	int search_direction;
 	struct kbdprefix kbdprefix;
 	int exit_query;
 	timer_id_T display_timer;
 
-	/* The text input form insert mode. It is a tristate controlled by the
+	/** The text input form insert mode. It is a tristate controlled by the
 	 * boolean document.browse.forms.insert_mode option. When disabled we
-	 * use mode less insertion and we always insert stuff into the text
+	 * use modeless insertion and we always insert stuff into the text
 	 * input field. When enabled it is possible to switch insertion on and
-	 * off using ACT_EDIT_ENTER and *_CANCEL. */
+	 * off using ::ACT_EDIT_ENTER and *_CANCEL. */
 	enum insert_mode insert_mode;
 
 	enum navigate_mode navigate_mode;
@@ -191,28 +197,32 @@ struct session {
 	unsigned char *last_search_word;
 
 
-	/* The possibly running type queries (what-to-do-with-that-file?) */
-	struct list_head type_queries; /* -> struct type_query */
+	/** The possibly running type queries (what-to-do-with-that-file?) */
+	LIST_OF(struct type_query) type_queries;
 
-	/* The info for status displaying */
+	/** The info for status displaying */
 	struct session_status status;
+
+	/** @} */
 };
 
-extern struct list_head sessions; /* -> struct session */
+extern LIST_OF(struct session) sessions;
 extern enum remote_session_flags remote_session_flags;
 
-/* This returns a pointer to the current location inside of the given session.
- * That's nice for encapsulation and alrady paid out once ;-). */
+/** This returns a pointer to the current location inside of the given session.
+ * That's nice for encapsulation and already paid out once ;-). */
 #define cur_loc(x) ((x)->history.current)
 
-/* Return if we have anything being loaded in this session already. */
+/** Return if we have anything being loaded in this session already.
+ * @relates session */
 static inline int
 have_location(struct session *ses) {
 	return !!cur_loc(ses);
 }
 
-/* Swaps the current session referrer with the new one passed as @referrer */
-/* @referrer may be NULL */
+/** Swaps the current session referrer with the new one passed as @a referrer.
+ * @a referrer may be NULL.
+ * @relates session */
 void set_session_referrer(struct session *ses, struct uri *referrer);
 
 void
@@ -221,13 +231,14 @@ print_error_dialog(struct session *ses, enum connection_state state,
 
 void process_file_requests(struct session *);
 
-struct string *encode_session_info(struct string *info, struct list_head *url_list);
+struct string *encode_session_info(struct string *info,
+				   LIST_OF(struct string_list_item) *url_list);
 
-/* Returns zero if the info was remote sessions or if it failed to create any
- * sessions. */
+/** @returns zero if the info was remote sessions or if it failed to
+ * create any sessions. */
 int decode_session_info(struct terminal *term, struct terminal_info *info);
 
-/* Registers a base session and returns it's id. Value <= 0 means error. */
+/** Registers a base session and returns its id. Value <= 0 means error. */
 int
 add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
 		 enum cache_mode cache_mode, enum task_type task);
@@ -248,12 +259,13 @@ struct frame *ses_find_frame(struct session *, unsigned char *);
 void free_files(struct session *);
 void display_timer(struct session *ses);
 
-/* session_is_loading() is like !!get_current_download() but doesn't take
- * @req_sent into account. */
-struct download *get_current_download(struct session *ses);
+/** session_is_loading() is like !!get_current_download() but doesn't take
+ * session.req_sent into account.
+ * @relates session */
 int session_is_loading(struct session *ses);
+struct download *get_current_download(struct session *ses);
 
-/* Information about the current document */
+/** Information about the current document */
 unsigned char *get_current_url(struct session *, unsigned char *, size_t);
 unsigned char *get_current_title(struct session *, unsigned char *, size_t);
 
@@ -262,13 +274,13 @@ struct link *get_current_link_in_view(struct document_view *doc_view);
 unsigned char *get_current_link_url(struct session *, unsigned char *, size_t);
 unsigned char *get_current_link_name(struct session *, unsigned char *, size_t);
 
-extern struct list_head questions_queue;
+extern LIST_OF(struct questions_entry) questions_queue;
 void add_questions_entry(void (*callback)(struct session *, void *), void *data);
 void check_questions_queue(struct session *ses);
 
 unsigned char *get_homepage_url(void);
 
-/* Returns current keyboard repeat count and reset it. */
+/** Returns current keyboard repeat count and reset it. */
 int eat_kbd_repeat_count(struct session *ses);
 
 #endif

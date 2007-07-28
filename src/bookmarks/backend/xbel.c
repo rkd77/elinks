@@ -58,16 +58,16 @@ static unsigned char * filename_bookmarks_xbel(int writing);
 static int xbeltree_to_bookmarks_list(struct tree_node *root,
 				      struct bookmark *current_parent);
 static void write_bookmarks_list(struct secure_save_info *ssi,
-				 struct list_head *bookmarks_list,
+				 LIST_OF(struct bookmark) *bookmarks_list,
 				 int n, int folder_state);
 static void write_bookmarks_xbel(struct secure_save_info *ssi,
-				 struct list_head *bookmarks_list);
+				 LIST_OF(struct bookmark) *bookmarks_list);
 
 /* Element */
 struct tree_node {
 	unsigned char *name;		/* Name of the element */
 	unsigned char *text;		/* Text inside the element */
-	struct list_head attrs;		/* {struct attributes} */
+	LIST_OF(struct attributes) attrs;
 	struct tree_node *parent;
 	struct tree_node *children;
 
@@ -134,7 +134,7 @@ read_bookmarks_xbel(FILE *f)
 
 static void
 write_bookmarks_xbel(struct secure_save_info *ssi,
-		     struct list_head *bookmarks_list)
+		     LIST_OF(struct bookmarks) *bookmarks_list)
 {
 	int folder_state = get_opt_bool("bookmarks.folder_state");
 	/* We check for readok in filename_bookmarks_xbel(). */
@@ -208,7 +208,7 @@ print_xml_entities(struct secure_save_info *ssi, const unsigned char *str)
 
 static void
 write_bookmarks_list(struct secure_save_info *ssi,
-		     struct list_head *bookmarks_list,
+		     LIST_OF(struct bookmark) *bookmarks_list,
 		     int n, int folder_state)
 {
 	struct bookmark *bm;

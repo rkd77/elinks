@@ -84,7 +84,7 @@ struct session; /* session/session.h */
 union option_value {
 	/* XXX: Keep first to make @options_root initialization possible. */
 	/* The OPT_TREE list_head is allocated. */
-	struct list_head *tree;
+	LIST_OF(struct option) *tree;
 
 	/* Used by OPT_BOOL, OPT_INT, OPT_CODEPAGE and OPT_LANGUAGE */
 	int number;
@@ -142,7 +142,7 @@ struct option {
 };
 
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
-	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (struct list_head *) (value) }, desc, capt }
+	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
 
 extern struct option *config_options;
 extern struct option *cmdline_options;
@@ -160,12 +160,14 @@ struct change_hook_info {
 extern void register_change_hooks(const struct change_hook_info *change_hooks);
 
 
-extern struct list_head *init_options_tree(void);
-extern void unmark_options_tree(struct list_head *);
-void watermark_deleted_options(struct list_head *);
+extern LIST_OF(struct option) *init_options_tree(void);
+extern void unmark_options_tree(LIST_OF(struct option) *);
+void watermark_deleted_options(LIST_OF(struct option) *);
 
-extern void smart_config_string(struct string *, int, int, struct list_head *, unsigned char *, int,
-				void (*)(struct string *, struct option *, unsigned char *, int, int, int, int));
+extern void smart_config_string(struct string *, int, int,
+				LIST_OF(struct option) *, unsigned char *, int,
+				void (*)(struct string *, struct option *,
+					 unsigned char *, int, int, int, int));
 
 extern struct option *copy_option(struct option *);
 extern void delete_option(struct option *);

@@ -22,7 +22,7 @@ struct blacklist_entry {
 	unsigned char host[1]; /* Must be last. */
 };
 
-static INIT_LIST_HEAD(blacklist);
+static INIT_LIST_OF(struct blacklist_entry, blacklist);
 
 
 static struct blacklist_entry *

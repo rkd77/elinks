@@ -1,4 +1,5 @@
-/* Base64 encode/decode implementation. */
+/** Base64 encode/decode implementation.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -75,8 +76,13 @@ base64_decode(register unsigned char *in)
 	return base64_decode_bin(in, strlen(in), NULL);
 }
 
-/* base64_decode:  @in string to decode
- *		   returns the string decoded (must be freed by the caller) */
+/** Decode a Base64 string.
+ * @param in		Input Base64 string
+ * @param inlen		Length of @a in, in bytes
+ * @param[out] outlen	Length of decoded string
+ *
+ * @returns the string decoded (must be freed by the caller)
+ * or NULL if an error occurred (syntax error or out of memory) */
 unsigned char *
 base64_decode_bin(register unsigned char *in, int inlen, int *outlen)
 {

@@ -27,7 +27,7 @@
 
 static struct action_list action_table[KEYMAP_MAX];
 static struct keymap keymap_table[KEYMAP_MAX];
-static struct list_head keymaps[KEYMAP_MAX]; /* struct keybinding */
+static LIST_OF(struct keybinding) keymaps[KEYMAP_MAX];
 
 static void add_default_keybindings(void);
 
@@ -318,12 +318,12 @@ get_keymap_name(enum keymap_id keymap_id)
 }
 
 
-struct key {
-	unsigned char *str;
-	int num;
+struct named_key {
+	const unsigned char *str;
+	term_event_key_T num;
 };
 
-static struct key key_table[] = {
+static const struct named_key key_table[] = {
 	{ "Enter",	KBD_ENTER },
 	{ "Space",	' ' },
 	{ "Backspace",	KBD_BS },
@@ -351,13 +351,13 @@ static struct key key_table[] = {
 	{ "F10",	KBD_F10 },
 	{ "F11",	KBD_F11 },
 	{ "F12",	KBD_F12 },
-	{ NULL, 0 }
+	{ NULL, KBD_UNDEF }
 };
 
 term_event_key_T
 read_key(const unsigned char *key_str)
 {
-	struct key *key;
+	const struct named_key *key;
 
 	if (key_str[0] && !key_str[1])
 		return key_str[0];
@@ -438,8 +438,8 @@ add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
                         int escape)
 {
 	unsigned char key_buffer[3] = "\\x";
-	unsigned char *key_string = NULL;
-	struct key *key;
+	const unsigned char *key_string = NULL;
+	const struct named_key *key;
 
 	if (kbd->key == KBD_UNDEF) return;
 
@@ -459,7 +459,7 @@ add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
 
 	if (!key_string) {
 		key_string = key_buffer + 1;
-		*key_string = (unsigned char) kbd->key;
+		key_buffer[1] = (unsigned char) kbd->key;
 		if (escape && strchr("'\"\\", kbd->key))
 			key_string--;
 	}

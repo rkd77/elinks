@@ -1,4 +1,5 @@
-/* Locations handling */
+/** Locations handling
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -14,6 +15,7 @@
 #include "util/string.h"
 
 
+/** @relates location */
 void
 copy_location(struct location *dst, struct location *src)
 {

@@ -76,7 +76,7 @@ struct dnsquery {
 static struct dnsquery *dns_queue = NULL;
 #endif
 
-static INIT_LIST_HEAD(dns_cache);
+static INIT_LIST_OF(struct dnsentry, dns_cache);
 
 static void done_dns_lookup(struct dnsquery *query, enum dns_result res);
 
