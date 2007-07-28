@@ -134,6 +134,15 @@ struct search {
 };
 #endif
 
+#ifdef CONFIG_ECMASCRIPT
+struct timeout_data {
+	LIST_HEAD(struct timeout_data);
+	struct ecmascript_interpreter *interpreter;
+	unsigned char *code;
+	timer_id_T timer;
+};
+#endif
+
 struct document {
 	OBJECT_HEAD(struct document);
 
@@ -156,7 +165,7 @@ struct document {
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
 	/* used by setTimeout */
-	struct list_head timeouts;
+	LIST_OF(struct timeout_data) timeouts;
 #endif
 #ifdef CONFIG_CSS
 	/* FIXME: We should externally maybe using cache_entry store the
@@ -203,14 +212,6 @@ struct document {
 	unsigned int links_sorted:1; /* whether links are already sorted */
 };
 
-#ifdef CONFIG_ECMASCRIPT
-struct timeout_data {
-	LIST_HEAD(struct timeout_data);
-	struct ecmascript_interpreter *interpreter;
-	unsigned char *code;
-	timer_id_T timer;
-};
-#endif
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)
 
