@@ -45,7 +45,7 @@ elinks: $(LIB_O_NAME) vernum.o
 TAGS:
 	cd $(srcdir) \
 	&& find . \( -name "*.[ch]" -o -name "*.inc" \) -print \
-	| etags --regex='{c}/INIT_LIST_OF([^,]*,[ \t]*\([[:alnum:]_]+\))/\1/' \
+	| etags --regex='{c}/\(?:static \)?INIT_LIST_OF([^,]*,[ \t]*\([[:alnum:]_]+\))/\1/' \
 		--regex='{c}/struct_hierbox_browser(\n[ \t]*\([[:alnum:]_]+\),/\1/m' \
 		--regex='{c}/^ACTION_(\([[:alnum:]_]+\),[^,]*,[ \t]*\([[:alnum:]_]+\),/ACT_\1_\2/' \
 		--language=c -
