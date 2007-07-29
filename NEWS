@@ -12,7 +12,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (98260f7970bcd940f2d2146ac7b5a980a7586082) and related
+ELinks 0.12.GIT (21052fafb0be0b87b7f376fb4edfa70304e365cc) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -56,8 +56,12 @@ Incompatibilities:
 
 Miscellaneous:
 
+* critical bug 723: fix dangling pointer crash when following a link
+  in a frame
 * critical bug 756: ``assertion (cached)->object.refcount >= 0 failed''
   after HTTP proxy was changed
+* critical bug 869: long mailcap entry buffer overflow (non-security)
+  when downloading
 * tabs opened by -remote now go behind existing dialogs
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
