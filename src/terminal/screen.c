@@ -29,17 +29,17 @@
 
 /* TODO: We must use termcap/terminfo if available! --pasky */
 
-/** Mapping from (enum border_char - 0xB0) to ASCII characters.  */
+/** Mapping from (enum ::border_char - 0xB0) to ASCII characters.  */
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
 
-/** Mapping from (enum border_char - 0xB0) to VT100 line-drawing
+/** Mapping from (enum ::border_char - 0xB0) to VT100 line-drawing
  * characters.  */
 static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
 
-/** Mapping from (enum border_char - 0xB0) to VT100 line-drawing
+/** Mapping from (enum ::border_char - 0xB0) to VT100 line-drawing
  * characters encoded in CP437.
  * When UTF-8 I/O is enabled, ELinks uses this array instead of
- * frame_vt100[], and converts the characters from CP437 to UTF-8.  */
+ * ::frame_vt100[], and converts the characters from CP437 to UTF-8.  */
 static const unsigned char frame_vt100_u[48] = {
 	177, 177, 177, 179, 180, 180, 180, 191,
 	191, 180, 179, 191, 217, 217, 217, 191,
@@ -49,7 +49,7 @@ static const unsigned char frame_vt100_u[48] = {
 	197, 217, 218, 177,  32, 32,  32,  32
 };
 
-/** Mapping from (enum border_char - 0xB0) to obsolete FreeBSD ACS
+/** Mapping from (enum ::border_char - 0xB0) to obsolete FreeBSD ACS
  * graphics.
  *
  * This is for FreeBSD fonts that place graphics characters in the
@@ -111,12 +111,12 @@ static const unsigned char frame_freebsd[48] = {
 	143, 139, 141, 128, 128, 128, 128, 128,
 };
 
-/** Mapping from (enum border_char - 0xB0) to obsolete FreeBSD ACS
+/** Mapping from (enum ::border_char - 0xB0) to obsolete FreeBSD ACS
  * graphics encoded in CP437.
  * When UTF-8 I/O is enabled, ELinks uses this array instead of
- * frame_freebsd[], and converts the characters from CP437 to UTF-8.
+ * ::frame_freebsd[], and converts the characters from CP437 to UTF-8.
  *
- * Derived from frame_freebsd[] by converting the characters to
+ * Derived from ::frame_freebsd[] by converting the characters to
  * Unicode and back to CP437.  frame_freebsd[1] = 138 = 0x8a = U+240B
  * SYMBOL FOR VERTICAL TABULATION does not exist in CP437, so we
  * substitute U+2592 MEDIUM SHADE.  */
@@ -129,7 +129,7 @@ static const unsigned char frame_freebsd_u[48] = {
 	197, 217, 218, 219, 219, 219, 219, 219,
 };
 
-/** Mapping from (enum border_char - 0xB0) to KOI8-R.  */
+/** Mapping from (enum ::border_char - 0xB0) to KOI8-R.  */
 static const unsigned char frame_koi[48] = {
 	144, 145, 146, 129, 135, 178, 180, 167,
 	166, 181, 161, 168, 174, 173, 172, 131,
@@ -139,7 +139,7 @@ static const unsigned char frame_koi[48] = {
 	188, 133, 130, 141, 140, 142, 143, 139,
 };
 
-/** Mapping from (enum border_char - 0xB0) to CP850 or CP852.  Most of
+/** Mapping from (enum ::border_char - 0xB0) to CP850 or CP852.  Most of
  * this table is just 0xB0 + @<index in table>, because these codepages
  * are quite similar to CP437.  However, they lack some line-drawing
  * characters, so we must use others instead.  */
@@ -154,7 +154,7 @@ static const unsigned char frame_restrict[48] = {
 
 #define TERM_STRING(str) INIT_STRING(str, sizeof(str) - 1)
 
-/** Like add_string_to_string but has fewer checks to slow it down.  */
+/** Like add_string_to_string() but has fewer checks to slow it down.  */
 #define add_term_string(str, tstr) \
 	add_bytes_to_string(str, (tstr).source, (tstr).length)
 
@@ -476,7 +476,7 @@ done_screen_drivers(struct module *xxx)
 
 
 /** Adds the term code for positioning the cursor at @a x and @a y to
- * @a string.  The template term code is: "\033[<@a y>;<@a x>H" */
+ * @a string.  The template term code is: "\033[<y>;<x>H" */
 static inline struct string *
 add_cursor_move_to_string(struct string *screen, int y, int x)
 {
