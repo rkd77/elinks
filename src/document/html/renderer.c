@@ -1133,9 +1133,8 @@ justify_line(struct html_context *html_context, int y)
 			new_start = word_start + word_shift;
 
 			/* Copy the original word, without any spaces.  */
-			if (word_len)
-				copy_chars(html_context, new_start, y,
-					   word_len, &line[word_start]);
+			copy_chars(html_context, new_start, y, word_len,
+				   &line[word_start]);
 
 			/* Copy the space that preceded the word,
 			 * duplicating it as many times as necessary.
