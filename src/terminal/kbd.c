@@ -1,7 +1,7 @@
 /** Support for keyboard interface
  * @file
  *
- * \todo TODO: move stuff from here to itrm.{c,h} and mouse.{c,h}
+ * @todo TODO: move stuff from here to itrm.{c,h} and mouse.{c,h}
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,8 +74,8 @@ free_all_itrms(void)
 
 
 /** A select_handler_T write_func for itrm_out.sock.  This is called
- * when there is data in \c itrm->out.queue and it is possible to write
- * it to \c itrm->out.sock.  When \c itrm->out.queue becomes empty, this
+ * when there is data in @c itrm->out.queue and it is possible to write
+ * it to @c itrm->out.sock.  When @c itrm->out.queue becomes empty, this
  * handler is temporarily removed.  */
 static void
 itrm_queue_write(struct itrm *itrm)

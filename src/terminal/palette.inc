@@ -1,7 +1,7 @@
 /** Terminal color palettes.
  * @file
  *
- * \todo TODO: We should probably autogenerate this using xterm's perl
+ * @todo TODO: We should probably autogenerate this using xterm's perl
  * script. */
 
 /** The 16 ANSI colors. */

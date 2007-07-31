@@ -56,7 +56,7 @@ enum term_redrawing_state {
  * is currently displayed on it) etc. It also maintains some runtime
  * information about the actual ELinks instance owning this terminal.
  *
- * \todo TODO: Regroup the following into logical chunks. --pasky */
+ * @todo TODO: Regroup the following into logical chunks. --pasky */
 struct terminal {
 	LIST_HEAD(struct terminal); /*!< ::terminals is the sentinel.  */
 
