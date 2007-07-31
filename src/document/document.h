@@ -150,7 +150,7 @@ struct document {
 	 * until it gets resolved and loaded. New items are guaranteed to
 	 * always appear at the list end. */
 	LIST_OF(struct string_list_item) onload_snippets;
-	/** \todo FIXME: We should externally maybe using cache_entry store the
+	/** @todo FIXME: We should externally maybe using cache_entry store the
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
@@ -158,7 +158,7 @@ struct document {
 	timer_id_T timeout;
 #endif
 #ifdef CONFIG_CSS
-	/** \todo FIXME: We should externally maybe using cache_entry store the
+	/** @todo FIXME: We should externally maybe using cache_entry store the
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list css_imports;
@@ -172,7 +172,7 @@ struct document {
 	struct cache_entry *cached;
 
 	struct frame_desc *frame;
-	struct frameset_desc *frame_desc; /**< \todo RENAME ME */
+	struct frameset_desc *frame_desc; /**< @todo RENAME ME */
 	struct document_refresh *refresh;
 
 	struct line *data;
@@ -239,7 +239,7 @@ void shrink_format_cache(int);
 
 extern struct module document_module;
 
-/** \todo FIXME: support for entities and all Unicode characters.
+/** @todo FIXME: support for entities and all Unicode characters.
  * (Unpaired surrogates should be rejected, so that the ECMAScript
  * interface can convert the access key to UTF-16.)
  * For now, we only support simple printable character.  */

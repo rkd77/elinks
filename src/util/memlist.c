@@ -16,7 +16,7 @@
 
 
 /**
- * \struct memory_list
+ * @struct memory_list
  * memory_list is used to track information about all allocated memory
  * belonging to something. Then we can free it when we won't need it
  * anymore, but the one who allocated it won't be able to get control

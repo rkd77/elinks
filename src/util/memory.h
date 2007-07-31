@@ -163,7 +163,7 @@ mem_align_alloc__(
 
 
 /** @name Maybe-free macros
- * \todo TODO: Think about making what they do more obvious in their
+ * @todo TODO: Think about making what they do more obvious in their
  * identifier, they could be obfuscating their users a little for the
  * newcomers otherwise.
  * @{ */

@@ -308,8 +308,8 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
-/** Set screen_driver.opt according to screen_driver.type and \a term_spec.
- * Other members of \a *driver need not have been initialized.
+/** Set screen_driver.opt according to screen_driver.type and @a term_spec.
+ * Other members of @a *driver need not have been initialized.
  *
  * If you modify anything here, check whether option descriptions
  * should be updated.  */
@@ -1165,7 +1165,7 @@ init_screen(void)
 }
 
 /*! The two images are allocated in one chunk.
- * \todo TODO: It seems allocation failure here is fatal.
+ * @todo TODO: It seems allocation failure here is fatal.
  *             We should do something! */
 void
 resize_screen(struct terminal *term, int width, int height)

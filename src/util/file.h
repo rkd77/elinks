@@ -32,7 +32,7 @@ unsigned char *get_filename_position(unsigned char *filename);
  * The returned file name is allocated. */
 unsigned char *expand_tilde(unsigned char *filename);
 
-/*! \brief Generate a unique file name by trial and error based on the
+/*! @brief Generate a unique file name by trial and error based on the
  * @a fileprefix by adding suffix counter (e.g. '.42').
  *
  * The returned file name is allocated if @a fileprefix is not unique. */
