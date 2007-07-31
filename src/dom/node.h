@@ -164,8 +164,7 @@ struct dom_attribute_node {
 	/* Has the node->string been converted to internal charset. */
 	unsigned int converted:1;
 
-	/* Is the attribute a unique identifier meaning the owner (element)
-	 * should be added to the document nodes @element_id hash. */
+	/* Is the attribute a unique identifier. */
 	unsigned int id:1;
 
 	/* The attribute value references some other resource */
