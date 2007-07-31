@@ -106,8 +106,7 @@ struct itrm {
 	/*! The @c remote flag is not set in regular slave terminals.
 	 * Instead, it means the itrm controls a preexisting terminal,
 	 * and windows should not be displayed on the terminal of the
-	 * itrm (but see bug 776: the master clears the terminal anyway);
-	 * thus the terminal init and done strings are not sent.  */
+	 * itrm; thus the terminal init and done strings are not sent.  */
 	unsigned int remote:1;		/**< Whether it is a remote session */
 };
 
