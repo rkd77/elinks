@@ -1345,7 +1345,7 @@ get_current_link_url(struct session *ses, unsigned char *str, size_t str_size)
 }
 
 /** get_current_link_name: returns the name of the current link
- * (the text between <A> and </A>), @a str is a preallocated string,
+ * (the text between @<A> and @</A>), @a str is a preallocated string,
  * @a str_size includes the null char.
  * @relates session */
 unsigned char *

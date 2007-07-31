@@ -144,7 +144,7 @@ struct document {
 
 #ifdef CONFIG_ECMASCRIPT
 	/** ECMAScript snippets to be executed during loading the document into
-	 * a window.  This currently involves <script>s and onLoad handlers.
+	 * a window.  This currently involves @<script>s and onLoad handlers.
 	 * Note that if you hit a string beginning by '^' here, it is followed
 	 * by an external reference - you must wait with processing other items
 	 * until it gets resolved and loaded. New items are guaranteed to
