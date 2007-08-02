@@ -1010,13 +1010,18 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	off_t *length_of_block;
 	unsigned char *output = NULL;
 
-	length_of_block = (http->length == LEN_CHUNKED ? &http->chunk_remaining
-						       : &http->length);
-
 #define BIG_READ 65536
-	if (!*length_of_block) {
-		/* Going to finish this decoding bussiness. */
-		state = FINISHING;
+	if (http->length == LEN_CHUNKED) {
+		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
+			state = FINISHING;
+		else
+			length_of_block = &http->chunk_remaining;
+	} else {
+		length_of_block = &http->length;
+		if (!*length_of_block) {
+			/* Going to finish this decoding bussiness. */
+			state = FINISHING;
+		}
 	}
 
 	if (conn->content_encoding == ENCODING_NONE) {
@@ -1221,8 +1226,8 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 			int len;
 			int zero = (http->chunk_remaining == CHUNK_ZERO_SIZE);
 
-			if (zero) http->chunk_remaining = 0;
-			len = http->chunk_remaining;
+			if (zero) len = 0;
+			else len = http->chunk_remaining;
 
 			if (http->chunk_remaining > INT_MAX)
 				int_lower_bound(&len, rb->length);
