@@ -1051,7 +1051,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			written = safe_write(conn->stream_pipes[1], data,
 						 len > to_read ? to_read : len);
 
-			if (written > 0) {
+			if (written >= 0) {
 				data += written;
 				len -= written;
 
@@ -1096,7 +1096,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		}
 	} while (len || did_read == BIG_READ);
 
-	shutdown_connection_stream(conn);
+	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
 
