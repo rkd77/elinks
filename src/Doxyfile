@@ -7,7 +7,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = ELinks
 PROJECT_NUMBER         = 0.12.GIT
-OUTPUT_DIRECTORY       = ../doc/api
+OUTPUT_DIRECTORY       = api
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
@@ -26,7 +26,7 @@ ABBREVIATE_BRIEF       = "The $name class" \
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = .
+STRIP_FROM_PATH        = @api_srcdir@
 STRIP_FROM_INC_PATH    = 
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = YES
@@ -90,7 +90,7 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = .
+INPUT                  = @api_srcdir@
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.h \

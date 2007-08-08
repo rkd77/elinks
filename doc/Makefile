@@ -56,6 +56,8 @@ MAN_DOCS-$(CONFIG_XMLTO) += \
 PDF_DOCS-$(CONFIG_JW) += \
  manual.pdf
 
+API_DOCS-$(CONFIG_DOXYGEN) += \
+ api/doxygen
 
 #############################################################################
 ## Set the default doc rules
@@ -63,11 +65,13 @@ PDF_DOCS-$(CONFIG_JW) += \
 MAN_DOCS  = $(MAN_DOCS-yes)
 HTML_DOCS = $(HTML_DOCS-yes)
 PDF_DOCS  = $(PDF_DOCS-yes)
+API_DOCS  = $(API_DOCS-yes)
 
 txt:  $(TXT_DOCS_NOINSTALL)
 html: txt $(HTML_DOCS)
 pdf:  txt $(PDF_DOCS)
 man:  txt $(MAN_DOCS)
+api:  $(API_DOCS)
 
 all-docs: man html pdf
 
@@ -98,7 +102,6 @@ clean-local:
 
 # TODO: perl.pod should be pod2ized during make install. --pasky
 install-local:
-
 
 #############################################################################
 # Generated asciidoc files
@@ -151,6 +154,9 @@ quiet_cmd_pod2html = ' [$(LINK_COLOR)POD2HTML$(END_COLOR)]   $(RELPATH)$@'
 quiet_cmd_asciidoc = ' [$(LINK_COLOR)ASCIIDOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_asciidoc = $(ASCIIDOC) $(ASCIIDOC_FLAGS) -b $(call backend) -d $(call doctype) -o $@ $<
 
+ quiet_cmd_doxygen = ' [$(LINK_COLOR)DOXYGEN$(END_COLOR)]   $(RELPATH)$@'
+       cmd_doxygen = $(DOXYGEN) $(2)
+
 # Based on $@ find out asciidoc doctype or backend + xmlto output dir.
 doctype = $(if $(findstring .1.,$@)$(findstring .5.,$@),manpage,book)
 backend = $(if $(findstring .xml,$@),docbook,xhtml11)
@@ -199,5 +205,11 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 perl-%.html: %.pl
 	$(call cmd,pod2html)
 
+Doxyfile: $(srcdir)Doxyfile.in $(top_srcdir)/configure.in
+	cd $(top_builddir) && \
+	CONFIG_FILES="$(RELPATH)$@" CONFIG_HEADERS= $(SHELL) ./config.status
+
+api/doxygen: Doxyfile $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+	$(call cmd,doxygen,$<)
 
 include $(top_srcdir)/Makefile.lib
