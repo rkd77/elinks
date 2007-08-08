@@ -59,7 +59,7 @@ enum bittorrent_state {
 	BITTORRENT_STATE_REQUEST_FAILURE,	/**< Failure from tracker.  */
 	BITTORRENT_STATE_OUT_OF_MEM,		/**< Allocation failure. */
 	BITTORRENT_STATE_CACHE_FAILURE,		/**< Cache data access failed. */
-	BITTORRENT_STATE_CACHE_RESUME,		/**< Resume state from disk.. */
+	BITTORRENT_STATE_CACHE_RESUME,		/**< Resume state from disk. */
 	BITTORRENT_STATE_FILE_MISSING,		/**< File does not exist. */
 };
 
