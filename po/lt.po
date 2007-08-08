@@ -5118,12 +5118,11 @@ msgstr "dab."
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Likæs laikas"
+msgstr "Praëjæs laikas"
 
 #: src/dialogs/progress.c:66
-#, fuzzy
 msgid "elapsed time"
-msgstr "Likæs laikas"
+msgstr "praëjæs laikas"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5140,7 +5139,7 @@ msgstr "Greitis"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
-msgstr "numatytas laikas"
+msgstr "likæs laikas"
 
 #: src/dialogs/progress.c:84
 msgid "ETA"
