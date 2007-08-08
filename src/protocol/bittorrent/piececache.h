@@ -11,7 +11,8 @@ struct string;
 struct bittorrent_piece_cache_entry {
 	LIST_HEAD(struct bittorrent_piece_cache_entry);
 
-	/* To keep track of the client's view of the swarm in regards to pieces a
+	/** Piece rarity index
+	 * To keep track of the client's view of the swarm in regards to pieces a
 	 * piece rarity index for neighboring peers is maintained for each piece
 	 * in the torrent. It keeps track of how many neighboring peers have the
 	 * piece. The smaller the value the more rare the piece is. The table is
@@ -19,50 +20,51 @@ struct bittorrent_piece_cache_entry {
 	 * indicates that no neightboring peer has the piece. */
 	uint16_t rarity;
 
-	unsigned int completed:1;	/* All blocks was downloaded. */
-	unsigned int remaining:1;	/* Nothing has been even requested. */
-	unsigned int locked:1;		/* Edge piece from partial downloads. */
-	unsigned int selected:1;	/* Piece is part of partial download. */
+	unsigned int completed:1;	/**< All blocks was downloaded. */
+	unsigned int remaining:1;	/**< Nothing has been even requested. */
+	unsigned int locked:1;		/**< Edge piece from partial downloads. */
+	unsigned int selected:1;	/**< Piece is part of partial download. */
 
-	/* A bitfield of the blocks which remains to be downloaded for this
+	/** A bitfield of the blocks which remains to be downloaded for this
 	 * piece. May be NULL if downloading is not in progress. */
 	struct bitfield *blocks;
 
-	/* The data of the piece. May be NULL if data has not been downloaded
-	 * or the piece has been written to disk. */
-	/* XXX: This memory is mmaped using the mem_mmap_*() functions. */
+	/** The data of the piece.
+	 * May be NULL if data has not been downloaded
+	 * or the piece has been written to disk.
+	 * XXX: This memory is mmaped using the mem_mmap_*() functions. */
 	unsigned char *data;
 };
 
 struct bittorrent_piece_cache {
 	/* The following is mostly maintained for making it easy to display in
 	 * dialogs. */
-	unsigned int remaining_pieces;	/* Number of untouched pieces */
-	unsigned int completed_pieces;	/* Number of downloaded pieces */
-	unsigned int loading_pieces;	/* Number of pieces in progress */
-	unsigned int rejected_pieces;	/* Number of hash check rejects */
-	unsigned int unavailable_pieces;/* Number of unavailable pieces */
-	unsigned int partial_pieces;	/* Number of selected file pieces */
-	unsigned int locked_pieces;	/* Pieces locked due to partial download */
+	unsigned int remaining_pieces;	/**< Number of untouched pieces */
+	unsigned int completed_pieces;	/**< Number of downloaded pieces */
+	unsigned int loading_pieces;	/**< Number of pieces in progress */
+	unsigned int rejected_pieces;	/**< Number of hash check rejects */
+	unsigned int unavailable_pieces;/**< Number of unavailable pieces */
+	unsigned int partial_pieces;	/**< Number of selected file pieces */
+	unsigned int locked_pieces;	/**< Pieces locked due to partial download */
 
 	/* Flags set from the download dialog. */
-	unsigned int delete_files:1;	/* Unlink files on shutdown? */
-	unsigned int notify_complete:1;	/* Notify upon completion? */
-	unsigned int partial:1;		/* Dealing with a partial download? */
+	unsigned int delete_files:1;	/**< Unlink files on shutdown? */
+	unsigned int notify_complete:1;	/**< Notify upon completion? */
+	unsigned int partial:1;		/**< Dealing with a partial download? */
 
-	/* The pipe descripter used for communicating with the resume thread. */
+	/** The pipe descripter used for communicating with the resume thread. */
 	int resume_fd;
 	uint32_t resume_pos;
 
-	/* A bitfield of the available pieces. */
+	/** A bitfield of the available pieces. */
 	struct bitfield *bitfield;
 
-	/* A list of completed and saved entries which has been loaded into
+	/** A list of completed and saved entries which has been loaded into
 	 * memory. The allocated memory for all these entries is disposable. The
 	 * entries are sorted in a LRU-manner. */
 	LIST_OF(struct bittorrent_piece_cache_entry) queue;
 
-	/* Remaining pieces are tracked using the remaining_blocks member of the
+	/** Remaining pieces are tracked using the remaining_blocks member of the
 	 * piece cache entry and a free list of piece blocks to be requested.
 	 * Requests are taken from the free list every time a peer queries which
 	 * piece block to request next. If the piece list is empty (or if the
