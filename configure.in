@@ -95,10 +95,18 @@ if test "x$CONFIG_DOC" != xno; then
       	if test "x$POD2HTML" != "x"; then
 		EL_CONFIG(CONFIG_POD2HTML, [Pod2HTML])
 	fi
+
+	AC_PATH_PROGS(DOXYGEN, "doxygen")
+	if test "x$DOXYGEN" != "x"; then
+		EL_CONFIG(CONFIG_DOXYGEN, [Doxygen])
+		api_srcdir="$(cd "$srcdir" && pwd)/src"
+		AC_SUBST(api_srcdir)
+	fi
 fi
 
 AC_SUBST(ASCIIDOC_FLAGS)
 AC_SUBST(CONFIG_ASCIIDOC)
+AC_SUBST(CONFIG_DOXYGEN)
 AC_SUBST(CONFIG_POD2HTML)
 AC_SUBST(CONFIG_XMLTO)
 AC_SUBST(CONFIG_JW)
@@ -106,6 +114,7 @@ AC_SUBST(CONFIG_JW)
 EL_CONFIG_DEPENDS(CONFIG_DOC, [CONFIG_ASCIIDOC CONFIG_XMLTO CONFIG_JW CONFIG_POD2HTML], [Documentation Tools])
 EL_CONFIG_DEPENDS(CONFIG_MANUAL, [MANUAL_ASCIIDOC MANUAL_XMLTO MANUAL_JW], [Manual Formats])
 EL_CONFIG_DEPENDS(CONFIG_MANPAGE, [MAN_ASCIIDOC MAN_XMLTO], [Man Page Formats])
+EL_CONFIG_DEPENDS(CONFIG_APIDOCS, [CONFIG_DOXYGEN], [API Documentation])
 
 dnl gcc specific options (to be continued at the bottom of configure)
 if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
@@ -1451,6 +1460,7 @@ AC_CONFIG_FILES([ \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
  contrib/conv/w3m2links.awk \
+ doc/Doxyfile \
  doc/man/man1/elinks.1 \
  src/intl/gettext/ref-add.sed \
  src/intl/gettext/ref-del.sed
