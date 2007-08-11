@@ -30,6 +30,13 @@ enum frame_event_status move_link_dir(struct session *ses, struct document_view 
 #define move_link_left(ses, doc_view) move_link_dir(ses, doc_view, -1,  0)
 #define move_link_right(ses, doc_view) move_link_dir(ses, doc_view,  1,  0)
 
+enum frame_event_status move_link_prev_line(struct session *ses, struct document_view *doc_view);
+enum frame_event_status move_link_next_line(struct session *ses, struct document_view *doc_view);
+enum frame_event_status move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_y);
+
+#define move_link_up_line(ses, doc_view) move_link_vertical(ses, doc_view, -1)
+#define move_link_down_line(ses, doc_view) move_link_vertical(ses, doc_view, 1)
+
 enum frame_event_status scroll_up(struct session *ses, struct document_view *doc_view);
 enum frame_event_status scroll_down(struct session *ses, struct document_view *doc_view);
 enum frame_event_status scroll_left(struct session *ses, struct document_view *doc_view);

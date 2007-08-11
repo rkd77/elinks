@@ -61,6 +61,7 @@
 #include "viewer/text/vs.h"
 
 
+static enum frame_event_status move_cursor_rel(struct session *ses, struct document_view *view, int rx, int ry);
 
 void
 detach_formatted(struct document_view *doc_view)
@@ -161,6 +162,91 @@ move_page_up(struct session *ses, struct document_view *doc_view)
 	do move_up(ses, doc_view, 0); while (--count > 0);
 
 	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
+}
+
+enum frame_event_status
+move_link_prev_line(struct session *ses, struct document_view *doc_view)
+{
+	struct view_state *vs;
+	struct document *document;
+	struct link *link, *last = NULL;
+	int y1, y, min_x, max_x, x1;
+
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	vs = doc_view->vs;
+	document = doc_view->document;
+	if (!document->lines1) return FRAME_EVENT_OK;
+
+	y = y1 = vs->y + ses->tab->y - ses->status.show_title_bar
+		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
+	x1 = vs->x + ses->tab->x;
+
+	link = get_current_link(doc_view);
+	if (link) {
+		get_link_x_bounds(link, y1, &min_x, &max_x);		
+	} else {
+		min_x = max_x = x1;
+		int_upper_bound(&y, document->height - 1);
+	}
+
+	for (; y >= 0; y--, min_x = INT_MAX) {
+		link = document->lines1[y];
+		if (!link) continue;
+		for (; link <= document->lines2[y]; link++) {
+			if (link->points[0].y != y) continue;
+			if (link->points[0].x >= min_x) continue;
+			if (!last) last = link;
+			else if (link->points[0].x > last->points[0].x) last = link;
+		}
+		if (last)
+			return move_cursor_rel(ses, doc_view, last->points[0].x - x1, last->points[0].y - y1);
+	}
+	return FRAME_EVENT_OK;
+}
+
+
+enum frame_event_status
+move_link_next_line(struct session *ses, struct document_view *doc_view)
+{
+	struct view_state *vs;
+	struct document *document;
+	struct link *link, *last = NULL;
+	int y1, y, min_x, max_x, x1;
+
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	vs = doc_view->vs;
+	document = doc_view->document;
+	if (!document->lines1) return FRAME_EVENT_OK;
+
+	y = y1 = vs->y + ses->tab->y - ses->status.show_title_bar
+		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
+	x1 = vs->x + ses->tab->x;
+
+	link = get_current_link(doc_view);
+	if (link) {
+		get_link_x_bounds(link, y1, &min_x, &max_x);		
+	} else {
+		min_x = max_x = x1;
+		int_upper_bound(&y, document->height - 1);
+	}
+
+	for (; y < document->height; y++, min_x = -1) {
+		link = document->lines1[y];
+		if (!link) continue;
+		for (; link <= document->lines2[y]; link++) {
+			if (link->points[0].y != y) continue;
+			if (link->points[0].x <= min_x) continue;
+			if (!last) last = link;
+			else if (link->points[0].x < last->points[0].x) last = link;
+		}
+		if (last)
+			return move_cursor_rel(ses, doc_view, last->points[0].x - x1, last->points[0].y - y1);
+	}
+	return FRAME_EVENT_OK;
 }
 
 enum frame_event_status
@@ -555,7 +641,7 @@ move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 	return status;
 }
 
-enum frame_event_status
+static enum frame_event_status
 move_cursor_rel(struct session *ses, struct document_view *view,
 	        int rx, int ry)
 {
@@ -593,6 +679,38 @@ move_cursor_down(struct session *ses, struct document_view *view)
 	return move_cursor_rel(ses, view, 0, 1);
 }
 
+enum frame_event_status
+move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_y)
+{
+	struct document *document;
+	struct view_state *vs;
+	int y, y1;
+
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+	vs = doc_view->vs;
+	document = doc_view->document;
+	if (!document->lines1) return FRAME_EVENT_OK;
+
+	y1 = vs->y + ses->tab->y - ses->status.show_status_bar
+		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
+	y = y1 + dir_y;
+	if (dir_y < 0)
+		int_upper_bound(&y, document->height - 1);
+	else
+		int_lower_bound(&y, 0);
+	for (; dir_y > 0 ? y < document->height : y >= 0; y += dir_y) {
+		struct link *link = document->lines1[y];
+
+		if (!link) continue;
+		for (; link <= document->lines2[y]; link++) {
+			if (link->points[0].y == y) {
+				return move_cursor_rel(ses, doc_view, 0, y - y1);
+			}
+		}
+	}
+	return FRAME_EVENT_OK;
+}
 
 enum frame_event_status
 copy_current_link_to_clipboard(struct session *ses,

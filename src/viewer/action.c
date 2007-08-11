@@ -361,8 +361,16 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			status = move_link_down(ses, doc_view);
 			break;
 
+		case ACT_MAIN_MOVE_LINK_DOWN_LINE:
+			status = move_link_down_line(ses, doc_view);
+			break;
+
 		case ACT_MAIN_MOVE_LINK_LEFT:
 			status = move_link_left(ses, doc_view);
+			break;
+
+		case ACT_MAIN_MOVE_LINK_LEFT_LINE:
+			status = move_link_prev_line(ses, doc_view);
 			break;
 
 		case ACT_MAIN_MOVE_LINK_NEXT:
@@ -377,8 +385,16 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			status = move_link_right(ses, doc_view);
 			break;
 
+		case ACT_MAIN_MOVE_LINK_RIGHT_LINE:
+			status = move_link_next_line(ses, doc_view);
+			break;
+
 		case ACT_MAIN_MOVE_LINK_UP:
 			status = move_link_up(ses, doc_view);
+			break;
+
+		case ACT_MAIN_MOVE_LINK_UP_LINE:
+			status = move_link_up_line(ses, doc_view);
 			break;
 
 		case ACT_MAIN_MOVE_PAGE_DOWN:
