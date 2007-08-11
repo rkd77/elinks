@@ -545,7 +545,7 @@ next_link_in_view_y(struct document_view *doc_view, int current, int direction)
 
 /** Get the bounding columns of @a link at line @a y (or all lines if
  * @a y == -1). */
-static void
+void
 get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x)
 {
 	int point;
