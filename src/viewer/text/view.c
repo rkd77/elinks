@@ -169,6 +169,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 {
 	struct view_state *vs;
 	struct document *document;
+	struct box *box;
 	struct link *link, *last = NULL;
 	int y1, y, min_x, max_x, x1;
 
@@ -178,10 +179,10 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 	vs = doc_view->vs;
 	document = doc_view->document;
 	if (!document->lines1) return FRAME_EVENT_OK;
+	box = &doc_view->box;
 
-	y = y1 = vs->y + ses->tab->y - ses->status.show_title_bar
-		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
-	x1 = vs->x + ses->tab->x;
+	y = y1 = vs->y + ses->tab->y - box->y;
+	x1 = vs->x + ses->tab->x - box->x;
 
 	link = get_current_link(doc_view);
 	if (link) {
@@ -212,6 +213,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 {
 	struct view_state *vs;
 	struct document *document;
+	struct box *box;
 	struct link *link, *last = NULL;
 	int y1, y, min_x, max_x, x1;
 
@@ -221,10 +223,10 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 	vs = doc_view->vs;
 	document = doc_view->document;
 	if (!document->lines1) return FRAME_EVENT_OK;
+	box = &doc_view->box;
 
-	y = y1 = vs->y + ses->tab->y - ses->status.show_title_bar
-		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
-	x1 = vs->x + ses->tab->x;
+	y = y1 = vs->y + ses->tab->y - box->y;
+	x1 = vs->x + ses->tab->x - box->x;
 
 	link = get_current_link(doc_view);
 	if (link) {
@@ -684,6 +686,7 @@ move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_
 {
 	struct document *document;
 	struct view_state *vs;
+	struct box *box;
 	int y, y1;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -692,8 +695,8 @@ move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_
 	document = doc_view->document;
 	if (!document->lines1) return FRAME_EVENT_OK;
 
-	y1 = vs->y + ses->tab->y - ses->status.show_status_bar
-		- (ses->status.show_tabs_bar && ses->status.show_tabs_bar_at_top);
+	box = &doc_view->box;
+	y1 = vs->y + ses->tab->y - box->y;
 	y = y1 + dir_y;
 	if (dir_y < 0)
 		int_upper_bound(&y, document->height - 1);
