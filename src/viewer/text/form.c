@@ -1007,7 +1007,8 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			add_crlf_to_string(data);
 
 			/* Convert back to original encoding (see
-			 * html_form_control() for the original recoding). */
+			 * html_special_form_control() for the original
+			 * recoding). */
 			if (sv->type == FC_TEXT || sv->type == FC_PASSWORD ||
 			    sv->type == FC_TEXTAREA) {
 				unsigned char *p;
