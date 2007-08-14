@@ -721,7 +721,7 @@ move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_
 				enum frame_event_status status = move_cursor_rel(ses,
 					doc_view, 0, y - y1);
 
-				if (vs->current_link != -1)
+				if (link == get_current_link(doc_view))
 					ses->navigate_mode = NAVIGATE_LINKWISE;
 				return status;
 			}
