@@ -201,8 +201,13 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 			if (!last) last = link;
 			else if (link->points[0].x > last->points[0].x) last = link;
 		}
-		if (last)
-			return move_cursor_rel(ses, doc_view, last->points[0].x - x1, last->points[0].y - y1);
+		if (last) {
+			enum frame_event_status status = move_cursor_rel(ses, doc_view,
+				last->points[0].x - x1, last->points[0].y - y1);
+
+			ses->navigate_mode = NAVIGATE_LINKWISE;
+			return status;
+		}
 	}
 	return FRAME_EVENT_OK;
 }
@@ -245,8 +250,13 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 			if (!last) last = link;
 			else if (link->points[0].x < last->points[0].x) last = link;
 		}
-		if (last)
-			return move_cursor_rel(ses, doc_view, last->points[0].x - x1, last->points[0].y - y1);
+		if (last) {
+			enum frame_event_status status = move_cursor_rel(ses, doc_view,
+				last->points[0].x - x1, last->points[0].y - y1);
+
+			ses->navigate_mode = NAVIGATE_LINKWISE;
+			return status;
+		}
 	}
 	return FRAME_EVENT_OK;
 }
@@ -708,7 +718,12 @@ move_link_vertical(struct session *ses, struct document_view *doc_view, int dir_
 		if (!link) continue;
 		for (; link <= document->lines2[y]; link++) {
 			if (link->points[0].y == y) {
-				return move_cursor_rel(ses, doc_view, 0, y - y1);
+				enum frame_event_status status = move_cursor_rel(ses,
+					doc_view, 0, y - y1);
+
+				if (vs->current_link != -1)
+					ses->navigate_mode = NAVIGATE_LINKWISE;
+				return status;
 			}
 		}
 	}
