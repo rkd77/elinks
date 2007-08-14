@@ -189,8 +189,8 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 		get_link_x_bounds(link, y1, &min_x, &max_x);		
 	} else {
 		min_x = max_x = x1;
-		int_upper_bound(&y, document->height - 1);
 	}
+	int_upper_bound(&y, document->height - 1);
 
 	for (; y >= 0; y--, min_x = INT_MAX) {
 		link = document->lines1[y];
@@ -238,8 +238,8 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 		get_link_x_bounds(link, y1, &min_x, &max_x);		
 	} else {
 		min_x = max_x = x1;
-		int_upper_bound(&y, document->height - 1);
 	}
+	int_upper_bound(&y, document->height - 1);
 
 	for (; y < document->height; y++, min_x = -1) {
 		link = document->lines1[y];
