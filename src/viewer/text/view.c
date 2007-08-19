@@ -708,9 +708,15 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 
 	vs = doc_view->vs;
 	document = doc_view->document;
-	if (!document->lines1) return FRAME_EVENT_OK;
 	box = &doc_view->box;
-
+	if (!document->lines1) {
+		if (vs->y) {
+			vs->y -= box->height;
+			int_lower_bound(&vs->y, 0);
+			return FRAME_EVENT_REFRESH;
+		}
+		return FRAME_EVENT_OK;
+	}
 	y = y1 = vs->y + ses->tab->y - box->y;
 	x1 = vs->x + ses->tab->x - box->x;
 
@@ -721,7 +727,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 		min_x = max_x = x1;
 	}
 	int_upper_bound(&y, document->height - 1);
-	min_y = int_min(0, vs->y - box->height);
+	min_y = int_max(0, vs->y - box->height);
 
 	for (; y >= min_y; y--, min_x = INT_MAX) {
 		link = document->lines1[y];
@@ -770,9 +776,14 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 
 	vs = doc_view->vs;
 	document = doc_view->document;
-	if (!document->lines1) return FRAME_EVENT_OK;
 	box = &doc_view->box;
-
+	if (!document->lines1) {
+		if (vs->y + box->height < document->height) {
+			vs->y += box->height;
+			return FRAME_EVENT_REFRESH;
+		}
+		return FRAME_EVENT_OK;
+	}
 	y = y1 = vs->y + ses->tab->y - box->y;
 	x1 = vs->x + ses->tab->x - box->x;
 
