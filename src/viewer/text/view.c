@@ -750,7 +750,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 				y += mini;
 			}
 			status = move_cursor_rel(ses, doc_view, last->points[0].x - x1, y - y1);
-			if (link == get_current_link(doc_view))
+			if (last == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
 		}
@@ -817,7 +817,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 				y -= mini;
 			}
 			status = move_cursor_rel(ses, doc_view, last->points[0].x - x1, y - y1);
-			if (link == get_current_link(doc_view))
+			if (last == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
 		}
