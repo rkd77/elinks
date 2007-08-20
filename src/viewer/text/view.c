@@ -616,6 +616,7 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 	min_y = vs->y - box->height;
 	int_lower_bound(&min_y, 0);
 	y1 = y = vs->y + ses->tab->y - box->y;
+	int_upper_bound(&y, document->height - 1);
 	for (y--; y >= min_y; y--) {
 		struct link *link = document->lines1[y];
 
