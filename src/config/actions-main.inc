@@ -55,6 +55,7 @@ ACTION_(MAIN, "mark-set", MARK_SET, N__("Set a mark"), ACTION_REQUIRE_VIEW_STATE
 ACTION_(MAIN, "menu", MENU, N__("Activate the menu"), 0),
 ACTION_(MAIN, "move-cursor-down", MOVE_CURSOR_DOWN, N__("Move cursor down"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-left", MOVE_CURSOR_LEFT, N__("Move cursor left"), ACTION_REQUIRE_VIEW_STATE),
+ACTION_(MAIN, "move-cursor-line-start", MOVE_CURSOR_LINE_START, N__("Move cursor to the start of the line"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-right", MOVE_CURSOR_RIGHT, N__("Move cursor right"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-up", MOVE_CURSOR_UP, N__("Move cursor up"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-document-end", MOVE_DOCUMENT_END, N__("Move to the end of the document"), ACTION_REQUIRE_VIEW_STATE),
