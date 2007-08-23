@@ -830,6 +830,22 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 }
 
 enum frame_event_status
+move_cursor_line_start(struct session *ses, struct document_view *doc_view)
+{
+	struct view_state *vs;
+	struct box *box;
+	int x;
+
+	assert(ses && doc_view && doc_view->vs);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	vs = doc_view->vs;
+	box = &doc_view->box;
+	x = vs->x + ses->tab->x - box->x;
+	return move_cursor_rel(ses, doc_view, -x, 0);
+}
+
+enum frame_event_status
 copy_current_link_to_clipboard(struct session *ses,
 			       struct document_view *doc_view,
 			       int xxx)

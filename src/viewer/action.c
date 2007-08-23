@@ -357,6 +357,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			status = move_cursor_right(ses, doc_view);
 			break;
 
+		case ACT_MAIN_MOVE_CURSOR_LINE_START:
+			status = move_cursor_line_start(ses, doc_view);
+			break;
+
 		case ACT_MAIN_MOVE_LINK_DOWN:
 			status = move_link_down(ses, doc_view);
 			break;

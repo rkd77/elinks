@@ -58,6 +58,8 @@ enum frame_event_status move_cursor_up(struct session *ses,
 enum frame_event_status move_cursor_down(struct session *ses,
 					 struct document_view *view);
 
+enum frame_event_status move_cursor_line_start(struct session *ses, struct document_view *doc_view);
+
 enum frame_event_status move_cursor(struct session *ses,
 				    struct document_view *doc_view,
 				    int x, int y);
