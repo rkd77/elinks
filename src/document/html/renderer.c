@@ -1128,6 +1128,7 @@ justify_line(struct html_context *html_context, int y)
 
 			assert(word_len >= 0);
 			if_assert_failed continue;
+			if (!word_len) continue;
 
 			word_shift = (word * diff) / (spaces - 1);
 			new_start = word_start + word_shift;
