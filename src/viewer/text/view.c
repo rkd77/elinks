@@ -640,6 +640,7 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 	if (vs->y) {
 		vs->y -= box->height;
 		int_lower_bound(&vs->y, 0);
+		ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 		return FRAME_EVENT_REFRESH;
 	}
 	return FRAME_EVENT_OK;
@@ -690,6 +691,7 @@ move_link_down_line(struct session *ses, struct document_view *doc_view)
 	}
 	if (vs->y + box->height < document->height) {
 		vs->y += box->height;
+		ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 		return FRAME_EVENT_REFRESH;
 	}
 	return FRAME_EVENT_OK;
@@ -758,6 +760,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 	if (vs->y) {
 		vs->y -= box->height;
 		int_lower_bound(&vs->y, 0);
+		ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 		return FRAME_EVENT_REFRESH;
 	}
 	return FRAME_EVENT_OK;
@@ -824,6 +827,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 	}
 	if (vs->y + box->height < document->height) {
 		vs->y += box->height;
+		ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 		return FRAME_EVENT_REFRESH;
 	}
 	return FRAME_EVENT_OK;
