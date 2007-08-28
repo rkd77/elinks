@@ -34,20 +34,8 @@ struct dom_renderer {
 	unsigned char *position;
 	int canvas_x, canvas_y;
 
-#ifdef HAVE_REGEX_H
-	regex_t url_regex;
-	unsigned int find_url:1;
-#endif
-	/* DOM_NODES is just an arbitrary size to fit everything for all the
-	 * renderers. */
-	struct screen_char styles[DOM_NODES];
-
-	/* RSS renderer variables */
-	struct dom_node *channel;
-	struct dom_node_list *items;
-	struct dom_node *item;
-	struct dom_node *node;
-	struct dom_string text;
+	/* Renderer-specific data */
+	void *data;
 };
 
 #define X(renderer)		((renderer)->canvas_x)

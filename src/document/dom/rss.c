@@ -26,11 +26,22 @@ enum rss_style {
 	RSS_STYLES,
 };
 
+struct rss_renderer {
+	struct screen_char styles[RSS_STYLES];
+
+	struct dom_node *channel;
+	struct dom_node_list *items;
+	struct dom_node *item;
+	struct dom_node *node;
+	struct dom_string text;
+};
+
 
 static enum dom_code
-dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
+dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
+	struct rss_renderer *data = renderer->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -40,8 +51,8 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 		if (stack->depth != 3)
 			break;
 
-		if (!renderer->channel) {
-			renderer->channel = node;
+		if (!data->channel) {
+			data->channel = node;
 		}
 		break;
 
@@ -53,10 +64,10 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 			break;
 #endif
 		/* ... but be exclusive. */
-		if (renderer->item)
+		if (data->item)
 			break;
-		add_to_dom_node_list(&renderer->items, node, -1);
-		renderer->item = node;
+		add_to_dom_node_list(&data->items, node, -1);
+		data->item = node;
 		break;
 
 	case RSS_ELEMENT_LINK:
@@ -64,28 +75,29 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	case RSS_ELEMENT_TITLE:
 	case RSS_ELEMENT_AUTHOR:
 	case RSS_ELEMENT_PUBDATE:
-		if (!node->parent || renderer->node != node->parent)
+		if (!node->parent || data->node != node->parent)
 			break;
 
-		renderer->node = node;
+		data->node = node;
 	}
 
 	return DOM_CODE_OK;
 }
 
 static enum dom_code
-dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
+dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
+	struct rss_renderer *data = renderer->data;
 	struct dom_node_list **list;
 
 	assert(node && renderer && renderer->document);
 
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_ITEM:
-		if (is_dom_string_set(&renderer->text))
-			done_dom_string(&renderer->text);
-		renderer->item = NULL;
+		if (is_dom_string_set(&data->text))
+			done_dom_string(&data->text);
+		data->item = NULL;
 		break;
 
 	case RSS_ELEMENT_LINK:
@@ -93,21 +105,21 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	case RSS_ELEMENT_TITLE:
 	case RSS_ELEMENT_AUTHOR:
 	case RSS_ELEMENT_PUBDATE:
-		if (!is_dom_string_set(&renderer->text)
+		if (!is_dom_string_set(&data->text)
 		    || !node->parent
-		    || renderer->item != node->parent
-		    || renderer->node != node)
+		    || data->item != node->parent
+		    || data->node != node)
 			break;
 
 		/* Replace any child nodes with the normalized text node.
 		 * We are getting rid of "inner HTML". */
 		list = get_dom_node_list(node->parent, node);
 		done_dom_node_list(*list);
-		if (is_dom_string_set(&renderer->text)) {
-			if (!add_dom_node(node, DOM_NODE_TEXT, &renderer->text))
-				done_dom_string(&renderer->text);
+		if (is_dom_string_set(&data->text)) {
+			if (!add_dom_node(node, DOM_NODE_TEXT, &data->text))
+				done_dom_string(&data->text);
 		}
-		renderer->node = NULL;
+		data->node = NULL;
 		break;
 
 	default:
@@ -133,13 +145,14 @@ get_rss_text(struct dom_node *node, enum rss_element_type type)
 static void
 render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 {
+	struct rss_renderer *data = renderer->data;
 	struct dom_string *title  = get_rss_text(item, RSS_ELEMENT_TITLE);
 	struct dom_string *link   = get_rss_text(item, RSS_ELEMENT_LINK);
 	struct dom_string *author = get_rss_text(item, RSS_ELEMENT_AUTHOR);
 	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
 
 	if (title && is_dom_string_set(title)) {
-		if (item == renderer->channel) {
+		if (item == data->channel) {
 			unsigned char *str;
 
 			str = convert_string(renderer->convert_table,
@@ -149,7 +162,7 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 			if (str)
 				renderer->document->title = str;
 		}
-		render_dom_text(renderer, &renderer->styles[RSS_STYLE_TITLE],
+		render_dom_text(renderer, &data->styles[RSS_STYLE_TITLE],
 				title->string, title->length);
 	}
 
@@ -163,17 +176,17 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	X(renderer) = 0;
 
 	if (author && is_dom_string_set(author)) {
-		render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
+		render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
 				author->string, author->length);
 	}
 
 	if (date && is_dom_string_set(date)) {
 		if (author && is_dom_string_set(author)) {
-			render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
+			render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
 					" - ", 3);
 		}
 
-		render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
+		render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
 				date->string, date->length);
 	}
 
@@ -187,17 +200,20 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 
 
 static enum dom_code
-dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *data)
+dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct css_stylesheet *css = &default_stylesheet;
 	struct document *document = renderer->document;
+	struct rss_renderer *data;
 	enum rss_style type;
+
+	data = renderer->data = mem_calloc(1, sizeof(*data));
 
 	/* Initialize styles. */
 
 	for (type = 0; type < RSS_STYLES; type++) {
-		struct screen_char *template = &renderer->styles[type];
+		struct screen_char *template = &data->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
 		enum screen_char_attr attr = 0;
@@ -230,31 +246,34 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *data
 }
 
 static enum dom_code
-dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
+dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
+	struct rss_renderer *data = renderer->data;
 
-	if (!renderer->channel)
+	if (!data->channel)
 		return DOM_CODE_OK;
 
-	render_rss_item(renderer, renderer->channel);
+	render_rss_item(renderer, data->channel);
 
-	if (renderer->items) {
+	if (data->items) {
 		struct dom_node *node;
 		int index;
 
-		foreach_dom_node (renderer->items, node, index) {
+		foreach_dom_node (data->items, node, index) {
 			Y(renderer)++;
 			X(renderer) = 0;
 			render_rss_item(renderer, node);
 		}
 	}
 
-	if (is_dom_string_set(&renderer->text))
-		done_dom_string(&renderer->text);
-	mem_free_if(renderer->items);
+	if (is_dom_string_set(&data->text))
+		done_dom_string(&data->text);
+	mem_free_if(data->items);
 
 	done_dom_node(root);
+
+	mem_free(data);
 
 	return DOM_CODE_OK;
 }
