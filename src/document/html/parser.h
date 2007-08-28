@@ -17,6 +17,7 @@ struct menu_item;
 struct part;
 struct string;
 struct uri;
+enum html_special_type;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML
  * files - there's lack of any well defined interface and it's all randomly
@@ -135,23 +136,6 @@ struct html_element {
 };
 #define is_inline_element(e) (e->linebreak == 0)
 #define is_block_element(e) (e->linebreak > 0)
-
-enum html_special_type {
-	SP_TAG,
-	SP_FORM,
-	SP_CONTROL,
-	SP_TABLE,
-	SP_USED,
-	SP_FRAMESET,
-	SP_FRAME,
-	SP_NOWRAP,
-	SP_CACHE_CONTROL,
-	SP_CACHE_EXPIRES,
-	SP_REFRESH,
-	SP_STYLESHEET,
-	SP_COLOR_LINK_LINES,
-	SP_SCRIPT,
-};
 
 /* Interface for the renderer */
 
