@@ -17,4 +17,5 @@ stamp-h1
 elinks
 *.swp
 *.patch
+*.o
 features.log
