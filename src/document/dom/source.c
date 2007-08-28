@@ -367,8 +367,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
-		if (name)
-		if (is_dom_string_set(name))
+		if (name && is_dom_string_set(name))
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
 						     name->string, name->length);
