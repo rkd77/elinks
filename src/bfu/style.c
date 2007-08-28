@@ -1,4 +1,5 @@
-/* BFU display helpers. */
+/** BFU style/color cache
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1128,14 +1128,20 @@ justify_line(struct html_context *html_context, int y)
 
 			assert(word_len >= 0);
 			if_assert_failed continue;
-			if (!word_len) continue;
 
 			word_shift = (word * diff) / (spaces - 1);
 			new_start = word_start + word_shift;
 
-			/* Copy the original word, without any spaces.  */
-			copy_chars(html_context, new_start, y, word_len,
-				   &line[word_start]);
+			/* Assert that the realloc_line() above
+			 * allocated enough memory for the word
+			 * and the preceding spaces.  */
+			assert(LEN(y) >= new_start + word_len);
+			if_assert_failed continue;
+
+			/* Copy the original word, without any spaces.
+			 * word_len may be 0 here.  */
+			copy_screen_chars(&POS(new_start, y),
+					  &line[word_start], word_len);
 
 			/* Copy the space that preceded the word,
 			 * duplicating it as many times as necessary.
@@ -1146,10 +1152,6 @@ justify_line(struct html_context *html_context, int y)
 			 * and anyway it need not be duplicated.  */
 			if (word) {
 				int spacex;
-
-				/* realloc_line() was called above.  */
-				assert(LEN(y) >= new_start);
-				if_assert_failed continue;
 
 				for (spacex = prev_end; spacex < new_start;
 				     ++spacex) {

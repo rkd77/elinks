@@ -18,7 +18,16 @@ struct view_state {
 	struct form_state *form_info;
 	int form_info_len;
 
-	int x, y;
+	/** Horizontal scrolling.  If @c x is e.g. 2, then the
+	 * leftmost two columns of the document have been scrolled out
+	 * of sight.  @c x should never be negative.  */
+	int x;
+
+	/** Vertical scrolling.  If @c y is e.g. 1, then the first
+	 * line of the document has been scrolled out of sight.  @c y
+	 * should never be negative.  */
+	int y;
+
 	int current_link;
 	int old_current_link;
 

@@ -196,7 +196,7 @@ static struct option_info uri_rewrite_options[] = {
 	INIT_OPT_SMART_PREFIX("mw", "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=%s"),
 	INIT_OPT_SMART_PREFIX("mwt", "http://www.m-w.com/cgi-bin/thesaurus?book=Thesaurus&va=%s"),
 	INIT_OPT_SMART_PREFIX("whatis", "http://uptime.netcraft.com/up/graph/?host=%s"),
-	INIT_OPT_SMART_PREFIX("wiki", "http://www.wikipedia.org/w/wiki.phtml?search=%s"),
+	INIT_OPT_SMART_PREFIX("wiki", "http://en.wikipedia.org/w/wiki.phtml?search=%s"),
 	INIT_OPT_SMART_PREFIX("wn", "http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=%s"),
 	/* Search the Free Software Directory */
 	INIT_OPT_SMART_PREFIX("fsd", "http://directory.fsf.org/search/fsd-search.py?q=%s"),

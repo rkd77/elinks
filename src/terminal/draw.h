@@ -63,7 +63,7 @@ struct screen_char {
  * In the screen image, they have attribute SCREEN_ATTR_FRAME;
  * you should drop them to the image using draw_border_char().
  *
- * \todo TODO: When we'll support internal Unicode, this should be
+ * @todo TODO: When we'll support internal Unicode, this should be
  * changed to some Unicode sequences. --pasky
  *
  * Codes extracted from twin-0.4.6 GPL project, a Textmode WINdow environment,

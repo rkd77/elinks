@@ -2,7 +2,7 @@ top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
 TEST_PROGS = \
- test_uri
+ uri-test
 
 TESTDEPS = \
  $(top_builddir)/src/protocol/protocol.o \
@@ -11,6 +11,6 @@ TESTDEPS = \
 
 CLEAN = stub.o
 
-test_uri:: stub.o
+uri-test:: stub.o
 
 include $(top_srcdir)/Makefile.lib

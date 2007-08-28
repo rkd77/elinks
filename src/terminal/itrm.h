@@ -8,8 +8,8 @@
  * longer than ITRM_IN_QUEUE_SIZE bytes.  So it should be defined
  * as greater than the length of any control sequence that ELinks
  * is expected to receive.  These are the longest so far:
- * VT420: "\E[?64;1;2;6;7;8;9;15;18;19;21c"
- * VT510: "\E[?64;1;2;7;8;9;12;15;18;21;23;24;42;44;45;46c" */
+ * - VT420: "\E[?64;1;2;6;7;8;9;15;18;19;21c"
+ * - VT510: "\E[?64;1;2;7;8;9;12;15;18;21;23;24;42;44;45;46c" */
 #define ITRM_IN_QUEUE_SIZE	64
 
 struct itrm_queue {
@@ -59,7 +59,7 @@ struct itrm_in {
 	struct itrm_queue queue;
 };
 
-/* Things going out from an itrm, whether to the terminal or to the
+/** Things going out from an itrm, whether to the terminal or to the
  * master.  */
 struct itrm_out {
 	/** A file descriptor for the standard output.  In some ports,
@@ -106,8 +106,7 @@ struct itrm {
 	/*! The @c remote flag is not set in regular slave terminals.
 	 * Instead, it means the itrm controls a preexisting terminal,
 	 * and windows should not be displayed on the terminal of the
-	 * itrm (but see bug 776: the master clears the terminal anyway);
-	 * thus the terminal init and done strings are not sent.  */
+	 * itrm; thus the terminal init and done strings are not sent.  */
 	unsigned int remote:1;		/**< Whether it is a remote session */
 };
 
