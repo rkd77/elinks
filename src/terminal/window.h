@@ -22,9 +22,18 @@ enum window_type {
 
 typedef void (window_handler_T)(struct window *, struct term_event *);
 
+/** A window in the terminal screen.  This structure does not know the
+ * position and size of the window, and no functions are provided for
+ * drawing into a window.  Instead, when window.handler draws the
+ * window, it should decide the position and size of the window, and
+ * then draw directly to the terminal, taking care not to draw outside
+ * the window.  Windows generally do not have their own coordinate
+ * systems; they get mouse events in the coordinate system of the
+ * terminal.  */
 struct window {
 	LIST_HEAD(struct window); /*!< terminal.windows is the sentinel.  */
 
+	/** Whether this is a normal window or a tab window.  */
 	enum window_type type;
 
 	/** The window event handler */

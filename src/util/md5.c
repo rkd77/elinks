@@ -29,7 +29,7 @@ static void transform_md5(uint32_t buf[4], uint32_t const in[16]);
 
 /** Swap the bytes of each uint32_t, if necessary.
  * This code is harmless on little-endian machines.
- * \todo FIXME: Optimize it away on little-endian machines. */
+ * @todo FIXME: Optimize it away on little-endian machines. */
 static void
 reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 {

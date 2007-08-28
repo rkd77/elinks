@@ -115,17 +115,17 @@ struct xlist_head {
 
 #endif /* LISTDEBUG */
 
-/** Define and initialize a list variable.  The @a element_T parameter
- * currently serves as documentation only; the compiler does not check
- * that it matches.  */
-#define INIT_LIST_OF(element_T, x) struct list_head x = { D_LIST_HEAD(x) }
-
 /** A list intended to contain elements of a specific type.  The
  * @a element_T parameter currently serves as documentation only;
  * the compiler does not check that it matches.  Doxyfile defines
  * this macro differently in order to get better collaboration
  * diagrams.  */
 #define LIST_OF(element_T) struct list_head
+
+/** Define and initialize a list variable.  The @a element_T parameter
+ * currently serves as documentation only; the compiler does not check
+ * that it matches.  */
+#define INIT_LIST_OF(element_T, x) LIST_OF(element_T) x = { D_LIST_HEAD(x) }
 
 #ifdef HAVE_TYPEOF
 #define list_typeof(x) typeof(x)

@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+
+test_description='Test URI normalizing'
+
+. "$TEST_LIB"
+
+test_uri_equals () {
+	before="$1"; shift
+	expected="$1"; shift
+	normalized="$(uri-test "$before")"
+
+	test_expect_success "Normalize $before" "test \"$normalized\" = \"$expected\""
+}
+
+
+################################################################
+
+test_uri_equals "http://example.org/foo/bar/baz?a=1&b=2#frag" \
+		"http://example.org/foo/bar/baz?a=1&b=2#frag"
+
+test_uri_equals "http://example.org/foo/bar/../?a=1&b=2#frag" \
+		"http://example.org/foo/?a=1&b=2#frag"
+
+test_uri_equals "http://example.org/foo/bar/../../baz?a=1&b=2#frag" \
+		"http://example.org/baz?a=1&b=2#frag"
+
+test_uri_equals "http://example.org/foo/bar/.." \
+		"http://example.org/foo/"
+
+test_uri_equals "http://example.org/foo/bar;a=1/.." \
+		"http://example.org/foo/"
+
+test_uri_equals "http://example.org/foo/bar.." \
+		"http://example.org/foo/bar.."
+
+# Bug 744 - ELinks changes "//" to "/" in path component of URI
+test_uri_equals "http://example.org/foo/bar/baz" \
+		"http://example.org/foo/bar/baz"
+
+test_uri_equals "http://example.org/foo/bar/" \
+		"http://example.org/foo/bar/"
+
+test_uri_equals "http://example.org/foo//baz" \
+		"http://example.org/foo//baz"
+
+test_uri_equals "http://example.org/foo//" \
+		"http://example.org/foo//"
+
+test_uri_equals "http://example.org//bar/baz" \
+		"http://example.org//bar/baz"
+
+test_uri_equals "http://example.org//bar/" \
+		"http://example.org//bar/"
+
+test_uri_equals "http://example.org///baz" \
+		"http://example.org///baz"
+
+test_uri_equals "http://example.org///" \
+		"http://example.org///"
+
+test_uri_equals "http://example.org/foo/bar/baz/.." \
+		"http://example.org/foo/bar/"
+
+test_uri_equals "http://example.org/foo/bar//.." \
+		"http://example.org/foo/bar/"
+
+test_uri_equals "http://example.org/foo//baz/.." \
+		"http://example.org/foo//"
+
+test_uri_equals "http://example.org/foo///.." \
+		"http://example.org/foo//"
+
+test_uri_equals "http://example.org//bar/baz/.." \
+		"http://example.org//bar/"
+
+test_uri_equals "http://example.org//bar//.." \
+		"http://example.org//bar/"
+
+test_uri_equals "http://example.org///baz/.." \
+		"http://example.org///"
+
+test_uri_equals "http://example.org////.." \
+		"http://example.org///"
+
+test_uri_equals "http://example.org/foo/..//bar/baz" \
+		"http://example.org//bar/baz"
+
+test_uri_equals "http://example.org//.//foo" \
+		"http://example.org///foo"
+
+test_uri_equals "http://example.org//./../foo" \
+		"http://example.org/foo"
+
+test_uri_equals "http://example.org/gag///./../.." \
+		"http://example.org/gag/"
+
+test_done

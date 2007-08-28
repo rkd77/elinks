@@ -43,15 +43,21 @@ elinks: $(LIB_O_NAME) vernum.o
 # directories, one doesn't have to remember which of those build
 # directories has the most recent TAGS.
 TAGS:
-	cd $(srcdir) \
+	cd $(firstword $(srcdir) .) \
 	&& find . \( -name "*.[ch]" -o -name "*.inc" \) -print \
-	| etags --regex='{c}/INIT_LIST_OF([^,]*,[ \t]*\([[:alnum:]_]+\))/\1/' \
+	| etags --regex='{c}/\(?:static \)?INIT_LIST_OF([^,]*,[ \t]*\([[:alnum:]_]+\))/\1/' \
 		--regex='{c}/struct_hierbox_browser(\n[ \t]*\([[:alnum:]_]+\),/\1/m' \
 		--regex='{c}/^ACTION_(\([[:alnum:]_]+\),[^,]*,[ \t]*\([[:alnum:]_]+\),/ACT_\1_\2/' \
 		--language=c -
-.PHONY: TAGS
+
+tags:
+	cd $(firstword $(srcdir) .) \
+	&& find . \( -name "*.[ch]" -o -name "*.inc" \) -print \
+	| ctags -L -
+
+.PHONY: TAGS tags
 
 PROGS = elinks
-CLEAN = vernum.o
+CLEAN = vernum.o TAGS tags
 
 include $(top_srcdir)/Makefile.lib

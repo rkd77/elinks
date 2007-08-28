@@ -7,30 +7,91 @@
 
 struct session;
 
+/** BFU hierbox browser button */
 struct hierbox_browser_button {
+	/** The button label text
+	 * It is automatically localized. */
 	unsigned char *label;
+
+	/** The button handler
+	 * The handler gets called when the button is activated */
 	widget_handler_T *handler;
 
-	/* Should the button be displayed in anonymous mode */
+	/** Allow this button in anonymous mode
+	 * Should the button be displayed in anonymous mode or not? This
+	 * can be used to disable actions that are not safe in anonymous
+	 * mode. */
 	unsigned int anonymous:1;
 };
 
+/** BFU hierbox browser
+ *
+ * Hierarchic listbox browsers are used for the various (subsystem)
+ * managers. They basically consist of some state data maintained
+ * throughout the life of the dialog (i.e. the listbox widget),
+ * manager specific operations (for modifying the underlying data
+ * structures), and some buttons.
+ */
 struct hierbox_browser {
+	/** The title of the browser
+	 * Note, it is automatically localized. */
 	unsigned char *title;
+
+	/** Callback for (un)expansion of the listboxes
+	 * Can be used by subsystems to install a handler to be called
+	 * when listboxes are expanded and unexpanded. */
 	void (*expansion_callback)(void);
+
+	/** Array of browser buttons
+	 *
+	 * Each button represents an action for modifying or interacting
+	 * with the items in the manager.
+	 *
+	 * A close button will be installed by default. */
 	const struct hierbox_browser_button *buttons;
+	/** The number of browser buttons */
 	size_t buttons_size;
 
+	/** List of active listbox containers
+	 *
+	 * Several instantiations of a manager can exist at the same
+	 * time, if the user has more than one terminal open. This list
+	 * contains all the listbox contains for this particular manager
+	 * that are currently open. */
 	LIST_OF(struct listbox_data) boxes;
+	/** List of active dialogs
+	 *
+	 * Several instantiations of a manager can exist at the same
+	 * time, if the user has more than one terminal open. This list
+	 * contains all the manager dialogs for this particular manager
+	 * that are currently open. */
 	LIST_OF(struct hierbox_dialog_list_item) dialogs;
+
+	/** The root listbox
+	 * The ancestor of all listboxes in this listbox browser. */
 	struct listbox_item root;
+
+	/** Browser specific listbox operations
+	 * The operations for managing the underlying data structures of
+	 * the listboxes. */
 	const struct listbox_ops *ops;
 
-	/* For saving state */
-	unsigned int do_not_save_state:1;
+	/** State saved between invocations
+	 * Each time the browser is closed, its current state is saved
+	 * in this member so it can be restored when the browser is
+	 * opened again. This way the currently selected item can be
+	 * preserved across several interactions with the browser. */
 	struct listbox_data box_data;
+	/** Option for not saving the state
+	 * Some browsers with highly dynamic content should not have
+	 * their state restored. This member can be used to mark such
+	 * browsers. */
+	unsigned int do_not_save_state:1;
 };
 
+/** Define a hierbox browser
+ * This macro takes care of initializing all the fields of a hierbox
+ * browser so it is ready to use. */
 #define struct_hierbox_browser(name, title, buttons, ops)		\
 	struct hierbox_browser name = {					\
 		title,							\
@@ -69,32 +130,13 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 #define add_listbox_leaf(browser, root, data) \
 	add_listbox_item(browser, root, BI_LEAF, data, 1)
 
-/* We use hierarchic listbox browsers for the various managers. They consist
- * of a listbox widget and some buttons.
+/** Open a hierbox browser
+ * Opens an instantiation of a hierbox browser
  *
- * @term	The terminal where the browser should appear.
- *
- * @title	The title of the browser. It is automatically localized.
- *
- * @add_size	The size of extra data to be allocated with the dialog.
- *
- * @browser	The browser structure that contains info to setup listbox data
- *		and manage the dialog list to keep instances of the browser in
- *		sync on various terminals.
- *
- * @udata	Is a reference to any data that the dialog could use.
- *
- * @buttons	Denotes the number of buttons given as varadic arguments.
- *		For each button 4 arguments are extracted:
- *			o First the label text. It is automatically localized.
- *			  If NULL, this button is skipped.
- *			o Second a pointer to a widget handler.
- *		XXX: A close button will be installed by default.
- *
- * XXX: Note that the @listbox_data is detached and freed by the dialog handler.
- *	Any other requirements should be handled by installing a specific
- *	dlg->abort handler. */
-
+ * @param browser	The browser to open.
+ * @param ses		The session (and terminal) on which it should appear.
+ * @return		A reference to the dialog that was created or NULL.
+ */
 struct dialog_data *
 hierbox_browser(struct hierbox_browser *browser, struct session *ses);
 
