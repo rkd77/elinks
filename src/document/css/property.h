@@ -2,7 +2,8 @@
 #ifndef EL__DOCUMENT_CSS_PROPERTY_H
 #define EL__DOCUMENT_CSS_PROPERTY_H
 
-#include "document/html/parser.h"
+#include "document/format.h"
+#include "util/align.h"
 #include "util/color.h"
 #include "util/lists.h"
 

@@ -2,6 +2,7 @@
 #ifndef EL__DOCUMENT_CSS_STYLESHEET_H
 #define EL__DOCUMENT_CSS_STYLESHEET_H
 
+#include "protocol/uri.h"
 #include "util/lists.h"
 
 /* #define DEBUG_CSS */

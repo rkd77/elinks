@@ -17,6 +17,7 @@
 #include "document/docdata.h"
 #include "document/document.h"
 #include "document/dom/util.h"
+#include "document/format.h"
 #include "intl/charsets.h"
 #include "globhist/globhist.h"		/* get_global_history_item() */
 #include "protocol/uri.h"

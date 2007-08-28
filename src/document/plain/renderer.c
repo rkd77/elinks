@@ -14,6 +14,7 @@
 #include "config/options.h"
 #include "document/docdata.h"
 #include "document/document.h"
+#include "document/format.h"
 #include "document/options.h"
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
