@@ -1,0 +1,2 @@
+This is DOM document renderer. The DOM "engine" itself (parsers, selectors,
+...) lives directly in src/dom/.
