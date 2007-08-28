@@ -44,8 +44,6 @@ struct dom_renderer {
 
 void init_template_by_style(struct screen_char *template,
 		            struct document_options *options,
-	                    color_T background, color_T foreground,
-			    enum screen_char_attr attr,
 	                    LIST_OF(struct css_property) *properties);
 
 void render_dom_text(struct dom_renderer *renderer, struct screen_char *template,

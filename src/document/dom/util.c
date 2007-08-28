@@ -38,9 +38,9 @@ init_template(struct screen_char *template, struct document_options *options,
 
 void
 init_template_by_style(struct screen_char *template, struct document_options *options,
-	               color_T background, color_T foreground, enum screen_char_attr attr,
-	               LIST_OF(struct css_property) *properties)
+		       LIST_OF(struct css_property) *properties)
 {
+	struct text_style style = options->default_style;
 	struct css_property *property;
 
 	if (properties) {
@@ -50,19 +50,19 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 			case CSS_PT_BACKGROUND_COLOR:
 			case CSS_PT_BACKGROUND:
 				if (property->value_type == CSS_VT_COLOR)
-					background = property->value.color;
+					style.bg = property->value.color;
 				break;
 			case CSS_PT_COLOR:
-				foreground = property->value.color;
+				style.fg = property->value.color;
 				break;
 			case CSS_PT_FONT_WEIGHT:
-				attr |= property->value.font_attribute.add;
+				style.attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_FONT_STYLE:
-				attr |= property->value.font_attribute.add;
+				style.attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_TEXT_DECORATION:
-				attr |= property->value.font_attribute.add;
+				style.attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_DISPLAY:
 			case CSS_PT_NONE:
@@ -74,7 +74,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 		}
 	}
 
-	init_template(template, options, attr, foreground, background);
+	get_screen_char_template(template, options, style);
 }
 
 
