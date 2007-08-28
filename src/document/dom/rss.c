@@ -203,21 +203,13 @@ static enum dom_code
 dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct css_stylesheet *css = &default_stylesheet;
 	struct document *document = renderer->document;
 	struct rss_renderer *data;
 	enum rss_style type;
 
-	data = renderer->data = mem_calloc(1, sizeof(*data));
-
-	/* Initialize styles. */
-
-	for (type = 0; type < RSS_STYLES; type++) {
-		struct screen_char *template = &data->styles[type];
+	struct css_stylesheet *css = &default_stylesheet;
+	{
 		static int i_want_struct_module_for_dom;
-
-		static unsigned char *names[RSS_STYLES] = { "title", "aux" };
-		struct css_selector *selector = NULL;
 
 		if (!i_want_struct_module_for_dom) {
 			static const unsigned char default_colors[] =
@@ -231,6 +223,16 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 			 * not overriding the user's default stylesheet. */
 			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
 		}
+	}
+
+	data = renderer->data = mem_calloc(1, sizeof(*data));
+
+	/* Initialize styles. */
+
+	for (type = 0; type < RSS_STYLES; type++) {
+		struct screen_char *template = &data->styles[type];
+		static const unsigned char *names[RSS_STYLES] = { "title", "aux" };
+		struct css_selector *selector = NULL;
 
 		selector = find_css_selector(&css->selectors,
 					     CST_ELEMENT, CSR_ROOT,

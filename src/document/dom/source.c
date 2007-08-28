@@ -331,20 +331,13 @@ static enum dom_code
 render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct css_stylesheet *css = &default_stylesheet;
 	struct document *document = renderer->document;
 	struct source_renderer *data;
 	enum dom_node_type type;
 
-	data = renderer->data = mem_calloc(1, sizeof(*data));
-
-	/* Initialize styles for all the DOM node types. */
-
-	for (type = 0; type < DOM_NODES; type++) {
-		struct screen_char *template = &data->styles[type];
+	struct css_stylesheet *css = &default_stylesheet;
+	{
 		static int i_want_struct_module_for_dom;
-		struct dom_string *name = get_dom_node_type_name(type);
-		struct css_selector *selector = NULL;
 
 		if (!i_want_struct_module_for_dom) {
 			static const unsigned char default_colors[] =
@@ -363,6 +356,16 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 			 * not overriding the user's default stylesheet. */
 			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
 		}
+	}
+
+	data = renderer->data = mem_calloc(1, sizeof(*data));
+
+	/* Initialize styles for all the DOM node types. */
+
+	for (type = 0; type < DOM_NODES; type++) {
+		struct screen_char *template = &data->styles[type];
+		struct dom_string *name = get_dom_node_type_name(type);
+		struct css_selector *selector = NULL;
 
 		if (name)
 		if (is_dom_string_set(name))
