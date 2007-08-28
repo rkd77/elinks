@@ -340,7 +340,7 @@ static inline struct screen_char *
 get_format_screen_char(struct html_context *html_context,
                        enum link_state link_state)
 {
-	static struct text_attrib_style ta_cache = { -1, 0x0, 0x0 };
+	static struct text_style ta_cache = { -1, 0x0, 0x0 };
 	static struct screen_char schar_cache;
 
 	if (memcmp(&ta_cache, &format.style, sizeof(ta_cache))) {

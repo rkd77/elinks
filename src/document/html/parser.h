@@ -30,14 +30,14 @@ enum format_attr {
 	AT_PREFORMATTED = 32,
 };
 
-struct text_attrib_style {
+struct text_style {
 	enum format_attr attr;
 	color_T fg;
 	color_T bg;
 };
 
 struct text_attrib {
-	struct text_attrib_style style;
+	struct text_style style;
 
 	int fontsize;
 	unsigned char *link;
