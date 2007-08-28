@@ -16,6 +16,7 @@
 #include "dom/sgml/dump.h"
 #include "dom/sgml/parser.h"
 #include "dom/stack.h"
+#include "util/test.h"
 
 
 unsigned int number_of_lines = 0;
@@ -240,21 +241,6 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	       line_number, string->length, string->string);
 
 	return DOM_CODE_OK;
-}
-
-static void
-die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
 }
 
 static int

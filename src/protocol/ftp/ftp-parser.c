@@ -13,21 +13,7 @@
 
 #include "osdep/stat.h"
 #include "protocol/ftp/parse.h"
-
-
-void die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
-}
+#include "util/test.h"
 
 int
 main(int argc, char *argv[])
