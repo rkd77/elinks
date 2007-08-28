@@ -92,7 +92,8 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 		    || renderer->node != node)
 			break;
 
-		/* Replace any child nodes with the normalized text node. */
+		/* Replace any child nodes with the normalized text node.
+		 * We are getting rid of "inner HTML". */
 		list = get_dom_node_list(node->parent, node);
 		done_dom_node_list(*list);
 		if (is_dom_string_set(&renderer->text)) {
