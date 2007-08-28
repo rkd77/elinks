@@ -138,6 +138,10 @@ struct session {
 
 	struct window *tab;
 
+	/* Session-specific options */
+
+	struct option *option;
+
 
 	/** @} @name Browsing history
 	 * @{ */

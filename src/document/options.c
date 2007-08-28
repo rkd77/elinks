@@ -30,7 +30,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->assume_cp = get_opt_codepage("document.codepage.assume", NULL);
 	doo->hard_assume = get_opt_bool("document.codepage.force_assumed", NULL);
 
-	doo->use_document_colors = get_opt_int("document.colors.use_document_colors", NULL);
+	doo->use_document_colors = get_opt_int("document.colors.use_document_colors", ses);
 	doo->margin = get_opt_int("document.browse.margin_width", NULL);
 	doo->num_links_key = get_opt_int("document.browse.links.number_keys_select_link", NULL);
 	doo->meta_link_display = get_opt_int("document.html.link_display", NULL);
@@ -57,16 +57,16 @@ init_document_options(struct session *ses, struct document_options *doo)
 
 	/* Boolean options. */
 #ifdef CONFIG_CSS
-	doo->css_enable = get_opt_bool("document.css.enable", NULL);
+	doo->css_enable = get_opt_bool("document.css.enable", ses);
 	doo->css_import = get_opt_bool("document.css.import", NULL);
 #endif
 
 	doo->plain_display_links = get_opt_bool("document.plain.display_links", NULL);
-	doo->plain_compress_empty_lines = get_opt_bool("document.plain.compress_empty_lines", NULL);
+	doo->plain_compress_empty_lines = get_opt_bool("document.plain.compress_empty_lines", ses);
 	doo->underline_links = get_opt_bool("document.html.underline_links", NULL);
 	doo->wrap_nbsp = get_opt_bool("document.html.wrap_nbsp", NULL);
 	doo->use_tabindex = get_opt_bool("document.browse.links.use_tabindex", NULL);
-	doo->links_numbering = get_opt_bool("document.browse.links.numbering", NULL);
+	doo->links_numbering = get_opt_bool("document.browse.links.numbering", ses);
 
 	doo->active_link.color = get_opt_bool("document.browse.links.active_link.enable_color", NULL);
 	doo->active_link.invert = get_opt_bool("document.browse.links.active_link.invert", NULL);
@@ -74,9 +74,9 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->active_link.bold = get_opt_bool("document.browse.links.active_link.bold", NULL);
 
 	doo->table_order = get_opt_bool("document.browse.table_move_order", NULL);
-	doo->tables = get_opt_bool("document.html.display_tables", NULL);
+	doo->tables = get_opt_bool("document.html.display_tables", ses);
 	doo->frames = get_opt_bool("document.html.display_frames", NULL);
-	doo->images = get_opt_bool("document.browse.images.show_as_links", NULL);
+	doo->images = get_opt_bool("document.browse.images.show_as_links", ses);
 	doo->display_subs = get_opt_bool("document.html.display_subs", NULL);
 	doo->display_sups = get_opt_bool("document.html.display_sups", NULL);
 
@@ -135,8 +135,13 @@ toggle_document_option(struct session *ses, unsigned char *option_name)
 	}
 
 	option = get_opt_rec(config_options, option_name);
+	assert(option);
+	if_assert_failed return;
 
-	/* TODO: toggle per document. --Zas */
+	if (ses->option)
+		option = get_option_shadow(option, config_options, ses->option);
+	if (!option) return;
+
 	toggle_option(ses, option);
 
 	draw_formatted(ses, 1);

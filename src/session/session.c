@@ -865,6 +865,8 @@ init_session(struct session *base_session, struct terminal *term,
 		return NULL;
 	}
 
+	ses->option = copy_option(config_options,
+	                          CO_SHALLOW | CO_NO_LISTBOX_ITEM);
 	create_history(&ses->history);
 	init_list(ses->scrn_frames);
 	init_list(ses->more_files);
@@ -1175,6 +1177,10 @@ destroy_session(struct session *ses)
 #ifdef CONFIG_ECMASCRIPT
 	mem_free_if(ses->status.window_status);
 #endif
+	if (ses->option) {
+		delete_option(ses->option);
+		ses->option = NULL;
+	}
 	del_from_list(ses);
 }
 

@@ -252,7 +252,10 @@ get_opt_(
 {
 	struct option *opt = NULL;
 
-	/* TODO: Look for a session-specific option. */
+	/* If given a session and the option is shadowed in that session's
+	 * options tree, return the shadow. */
+	if (ses && ses->option)
+		opt = get_opt_rec_real(ses->option, name);
 
 	/* TODO: Look for a domain-specific option. */
 
