@@ -17,8 +17,9 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/html/frames.h"
-#include "document/html/parser.h"
+#ifndef CONFIG_DOM_HTML
 #include "document/html/parser/parse.h"
+#endif
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
@@ -332,13 +333,17 @@ get_format_cache_refresh_count(void)
 static void
 init_documents(struct module *module)
 {
+#ifndef CONFIG_DOM_HTML
 	init_tags_lookup();
+#endif
 }
 
 static void
 done_documents(struct module *module)
 {
+#ifndef CONFIG_DOM_HTML
 	free_tags_lookup();
+#endif
 	free_table_cache();
 }
 

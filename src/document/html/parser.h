@@ -8,6 +8,12 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+#ifndef INSIDE_INTERNAL_H
+#ifdef CONFIG_DOM_HTML
+#error html/parser.h included even though DOM parser is configured to use!
+#endif
+#endif
+
 struct document_options;
 struct form_control;
 struct frameset_desc;
@@ -112,6 +118,12 @@ enum html_element_mortality_type {
 	ELEMENT_WEAK,
 };
 
+#ifdef CONFIG_DOM_HTML
+
+struct html_element;
+
+#else
+
 struct html_element {
 	LIST_HEAD(struct html_element);
 
@@ -181,5 +193,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 void ln_break(struct html_context *html_context, int n);
 
 int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
+
+#endif
 
 #endif

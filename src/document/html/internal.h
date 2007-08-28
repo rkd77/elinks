@@ -3,17 +3,38 @@
 #define EL__DOCUMENT_HTML_INTERNAL_H
 
 #include "document/css/stylesheet.h"
+#define INSIDE_INTERNAL_H
 #include "document/html/parser.h"
+#undef INSIDE_INTERNAL_H
 #include "util/lists.h"
 
 struct document_options;
 struct uri;
+
+#ifndef CONFIG_DOM_CSS
 
 /* For parser/parse.c: */
 
 void process_head(struct html_context *html_context, unsigned char *head);
 void put_chrs(struct html_context *html_context, unsigned char *start, int len);
 
+/* For parser/link.c: */
+
+void html_focusable(struct html_context *html_context, unsigned char *a);
+void html_skip(struct html_context *html_context, unsigned char *a);
+unsigned char *get_target(struct document_options *options, unsigned char *a);
+
+void
+import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
+		      unsigned char *url, int len);
+
+#endif
+
+
+/* The HTML parser context. It is also heavily used by the renderer so DOM
+ * parser must use it as well. */
+
+#ifndef CONFIG_DOM_CSS
 enum html_whitespace_state {
 	/* Either we are starting a new "block" or the last segment of the
 	 * current "block" is ending with whitespace and we should eat any
@@ -35,6 +56,7 @@ enum html_whitespace_state {
 	 * put_chrs(" "). That needs more investigation yet. --pasky */
 	HTML_SPACE_ADD,
 };
+#endif
 
 struct html_context {
 #ifdef CONFIG_CSS
@@ -55,6 +77,10 @@ struct html_context {
 	 * It is copied here because part->document is NULL sometimes.  */
 	int doc_cp;
 
+#ifdef CONFIG_DOM_HTML
+	struct text_attrib attr;
+	struct par_attrib parattr;
+#else
 	/* For:
 	 * html/parser/parse.c
 	 * html/parser/stack.c
@@ -80,11 +106,12 @@ struct html_context {
 	unsigned int was_body:1; /* For META refresh inside <body>. */
 	unsigned int was_body_background:1; /* For <HTML> with style. */
 
-	/* For html/parser.c, html/renderer.c */
-	int margin;
-
 	/* For parser/forms.c: */
 	unsigned char *startf;
+#endif
+
+	/* For html/parser.c, html/renderer.c */
+	int margin;
 
 	/* For:
 	 * html/parser/parse.c
@@ -98,14 +125,17 @@ struct html_context {
 	 * html/parser/link.c
 	 * html/parser/parse.c
 	 * html/parser/stack.c
-	 * html/parser.c */
+	 * html/parser.c
+	 * html/dom.c
+	 * html/renderer.c */
 	struct part *part;
 
 	/* For:
 	 * html/parser/forms.c
 	 * html/parser/link.c
 	 * html/parser/parse.c
-	 * html/parser.c */
+	 * html/parser.c
+	 * html/dom.c */
 	/* Note that this is for usage by put_chrs only; anywhere else in
 	 * the parser, one should use put_chrs. */
 	void (*put_chars_f)(struct html_context *, unsigned char *, int);
@@ -115,34 +145,33 @@ struct html_context {
 	 * html/parser/link.c
 	 * html/parser/parse.c
 	 * html/parser/stack.c
-	 * html/parser.c */
+	 * html/parser.c
+	 * html/dom.c */
 	void (*line_break_f)(struct html_context *);
 
 	/* For:
 	 * html/parser/forms.c
 	 * html/parser/parse.c
-	 * html/parser.c */
+	 * html/parser.c
+	 * html/dom.c */
 	void *(*special_f)(struct html_context *, enum html_special_type, ...);
 };
 
+#ifdef CONFIG_DOM_HTML
+#define format		(html_context->attr)
+#define par_format	(html_context->parattr)
+#else
 #define html_top	((struct html_element *) html_context->stack.next)
 #define html_bottom	((struct html_element *) html_context->stack.prev)
 #define format		(html_top->attr)
 #define par_format	(html_top->parattr)
+#endif
 
 #define html_is_preformatted() (format.style.attr & AT_PREFORMATTED)
 
+#ifndef CONFIG_DOM_HTML
 #define get_html_max_width() \
 	int_max(par_format.width - (par_format.leftmargin + par_format.rightmargin), 0)
-
-/* For parser/link.c: */
-
-void html_focusable(struct html_context *html_context, unsigned char *a);
-void html_skip(struct html_context *html_context, unsigned char *a);
-unsigned char *get_target(struct document_options *options, unsigned char *a);
-
-void
-import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      unsigned char *url, int len);
+#endif
 
 #endif

@@ -15,10 +15,14 @@
 #include "document/docdata.h"
 #include "document/document.h"
 #include "document/html/frames.h"
+#ifdef CONFIG_DOM_HTML
+#include "document/html/dom.h"
+#else
 #include "document/html/parser.h"
 #include "document/html/parser/parse.h"
-#include "document/html/renderer.h"
 #include "document/html/tables.h"
+#endif
+#include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
 #include "document/renderer.h"

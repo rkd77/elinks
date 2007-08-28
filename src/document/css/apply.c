@@ -22,7 +22,9 @@
 #include "document/css/scanner.h"
 #include "document/css/stylesheet.h"
 #include "document/format.h"
+#ifndef CONFIG_DOM_HTML
 #include "document/html/parser/parse.h"
+#endif
 #include "document/options.h"
 #include "util/align.h"
 #include "util/color.h"
@@ -34,6 +36,8 @@
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
 
+
+#ifndef CONFIG_DOM_HTML
 
 typedef void (*css_applier_T)(struct html_context *html_context,
 			      struct html_element *element,
@@ -297,3 +301,34 @@ css_apply(struct html_context *html_context, struct html_element *element,
 
 	done_css_selector(selector);
 }
+
+
+#else
+
+
+struct css_selector *
+get_css_selector_for_element(struct html_context *html_context,
+			     struct html_element *element,
+			     struct css_stylesheet *css,
+			     LIST_OF(struct html_element) *html_stack)
+{
+	INTERNAL("Cannot get CSS selector for DOM HTML engine yet");
+	return NULL;
+}
+
+void
+apply_css_selector_style(struct html_context *html_context,
+			 struct html_element *element,
+			 struct css_selector *selector)
+{
+	INTERNAL("Cannot apply CSS selector for DOM HTML engine yet");
+}
+
+void
+css_apply(struct html_context *html_context, struct html_element *element,
+	  struct css_stylesheet *css, LIST_OF(struct html_element) *html_stack)
+{
+	INTERNAL("Cannot apply CSS for DOM HTML engine yet");
+}
+
+#endif

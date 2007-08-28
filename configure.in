@@ -1310,9 +1310,12 @@ EL_ARG_ENABLE(CONFIG_CSS, css, [Cascading Style Sheets],
 EL_ARG_DEPEND(CONFIG_HTML_HIGHLIGHT, html-highlight, [CONFIG_CSS:yes], [HTML highlighting],
 	      [  --enable-html-highlight HTML highlighting using DOM engine])
 
+EL_ARG_DEPEND(CONFIG_DOM_HTML, dom-html, [CONFIG_CSS:yes], [DOM-based HTML parser],
+	      [  --enable-dom-html       enable highly experimental DOM-based HTML parser])
+
 dnl Everything in the tree already uses CONFIG_DOM
-dnl so resolve CONFIG_HTML_HIGHLIGHT to CONFIG_DOM
-EL_CONFIG_DEPENDS(CONFIG_DOM, [CONFIG_HTML_HIGHLIGHT], [DOM engine])
+dnl so resolve the DOM-dependend options to CONFIG_DOM
+EL_CONFIG_DEPENDS(CONFIG_DOM, [CONFIG_HTML_HIGHLIGHT CONFIG_DOM_HTML], [DOM engine])
 
 EL_ARG_DEPEND(CONFIG_BACKTRACE, backtrace, [HAVE_EXECINFO:yes], [Backtrace],
 	      [  --disable-backtrace     disable backtrace support])
