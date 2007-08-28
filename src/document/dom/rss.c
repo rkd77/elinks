@@ -4,12 +4,6 @@
 #include "config.h"
 #endif
 
-#include <sys/types.h> /* FreeBSD needs this before regex.h */
-#ifdef HAVE_REGEX_H
-#include <regex.h>
-#endif
-#include <string.h>
-
 #include "elinks.h"
 
 #include "document/document.h"
@@ -26,7 +20,7 @@
 /* DOM RSS Renderer */
 
 
-enum dom_code
+static enum dom_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -72,7 +66,7 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 	return DOM_CODE_OK;
 }
 
-enum dom_code
+static enum dom_code
 dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -183,7 +177,7 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	}
 }
 
-enum dom_code
+static enum dom_code
 dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;

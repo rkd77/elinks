@@ -160,7 +160,7 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 	return DOM_CODE_OK;
 }
 
-enum dom_code
+static enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -207,7 +207,7 @@ set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuele
 	renderer->base_uri = uri;
 }
 
-enum dom_code
+static enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -282,7 +282,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 	return DOM_CODE_OK;
 }
 
-enum dom_code
+static enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
@@ -303,7 +303,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *da
 	return DOM_CODE_OK;
 }
 
-enum dom_code
+static enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
