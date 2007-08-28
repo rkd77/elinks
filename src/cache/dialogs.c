@@ -123,7 +123,7 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 		time_t expires = timeval_to_seconds(&cached->max_age);
 
 		add_format_to_string(&msg, "\n%s: ", _("Expires", term));
-		add_date_to_string(&msg, get_opt_str("ui.date_format"), &expires);
+		add_date_to_string(&msg, get_opt_str("ui.date_format", NULL), &expires);
 	}
 #endif
 #ifdef CONFIG_DEBUG

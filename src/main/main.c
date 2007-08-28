@@ -71,7 +71,8 @@ check_stdio(LIST_OF(struct string_list_item) *url_list)
 		/* Only start reading from stdin if no URL was given on the
 		 * command line. */
 		if (url_list && list_empty(*url_list)) {
-			get_opt_bool("protocol.file.allow_special_files") = 1;
+			get_opt_bool("protocol.file.allow_special_files",
+			             NULL) = 1;
 			add_to_string_list(url_list, "file:///dev/stdin", 17);
 		}
 		get_cmd_opt_bool("no-connect") = 1;
@@ -191,7 +192,7 @@ init(void)
 		/* The ECMAScript code is not good at coping with this. And it
 		 * makes currently no sense to evaluate ECMAScript in this
 		 * context anyway. */
-		get_opt_bool("ecmascript.enable") = 0;
+		get_opt_bool("ecmascript.enable", NULL) = 0;
 #endif
 		if (!list_empty(url_list)) {
 			dump_next(&url_list);

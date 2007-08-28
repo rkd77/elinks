@@ -111,7 +111,7 @@ struct css_stylesheet default_stylesheet = INIT_CSS_STYLESHEET(default_styleshee
 static void
 import_default_css(void)
 {
-	unsigned char *url = get_opt_str("document.css.stylesheet");
+	unsigned char *url = get_opt_str("document.css.stylesheet", NULL);
 
 	if (!css_selector_set_empty(&default_stylesheet.selectors))
 		done_css_stylesheet(&default_stylesheet);

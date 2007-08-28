@@ -404,7 +404,7 @@ draw_menu_left_text_hk(struct terminal *term, unsigned char *text,
 {
 	struct color_pair *hk_color = get_bfu_color(term, "menu.hotkey.normal");
 	struct color_pair *hk_color_sel = get_bfu_color(term, "menu.hotkey.selected");
-	enum screen_char_attr hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys")
+	enum screen_char_attr hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys", NULL)
 				      ? SCREEN_ATTR_UNDERLINE : 0;
 	unsigned char c;
 	int xbase = x + L_TEXT_SPACE;
@@ -556,7 +556,7 @@ display_menu(struct terminal *term, struct menu *menu)
 	draw_box(term, &box, ' ', 0, normal_color);
 	draw_border(term, &box, frame_color, 1);
 
-	if (get_opt_bool("ui.dialogs.shadows")) {
+	if (get_opt_bool("ui.dialogs.shadows", NULL)) {
 		/* Draw shadow */
 		draw_shadow(term, &menu->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);

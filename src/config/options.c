@@ -248,9 +248,17 @@ get_opt_(
 #ifdef CONFIG_DEBUG
 	 unsigned char *file, int line, enum option_type option_type,
 #endif
-	 struct option *tree, unsigned char *name)
+	 struct option *tree, unsigned char *name, struct session *ses)
 {
-	struct option *opt = get_opt_rec(tree, name);
+	struct option *opt = NULL;
+
+	/* TODO: Look for a session-specific option. */
+
+	/* TODO: Look for a domain-specific option. */
+
+	/* Else, return the real option. */
+	if (!opt)
+		opt = get_opt_rec(tree, name);
 
 #ifdef CONFIG_DEBUG
 	errfile = file;
@@ -397,7 +405,7 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 	object_nolock(option, "option");
 
 	if (option->box_item && option->name && !strcmp(option->name, "_template_"))
-		option->box_item->visible = get_opt_bool("config.show_template");
+		option->box_item->visible = get_opt_bool("config.show_template", NULL);
 
 	if (tree->flags & OPT_AUTOCREATE && !option->desc) {
 		struct option *template = get_opt_rec(tree, "_template_");
@@ -656,25 +664,25 @@ static inline void
 register_autocreated_options(void)
 {
 	/* TODO: Use table-driven initialization. --jonas */
-	get_opt_int("terminal.linux.type") = 2;
-	get_opt_int("terminal.linux.colors") = 1;
-	get_opt_bool("terminal.linux.m11_hack") = 1;
-	get_opt_int("terminal.vt100.type") = 1;
-	get_opt_int("terminal.vt110.type") = 1;
-	get_opt_int("terminal.xterm.type") = 1;
-	get_opt_bool("terminal.xterm.underline") = 1;
-	get_opt_int("terminal.xterm-color.type") = 1;
-	get_opt_int("terminal.xterm-color.colors") = COLOR_MODE_16;
-	get_opt_bool("terminal.xterm-color.underline") = 1;
+	get_opt_int("terminal.linux.type", NULL) = 2;
+	get_opt_int("terminal.linux.colors", NULL) = 1;
+	get_opt_bool("terminal.linux.m11_hack", NULL) = 1;
+	get_opt_int("terminal.vt100.type", NULL) = 1;
+	get_opt_int("terminal.vt110.type", NULL) = 1;
+	get_opt_int("terminal.xterm.type", NULL) = 1;
+	get_opt_bool("terminal.xterm.underline", NULL) = 1;
+	get_opt_int("terminal.xterm-color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-color.colors", NULL) = COLOR_MODE_16;
+	get_opt_bool("terminal.xterm-color.underline", NULL) = 1;
 #ifdef CONFIG_88_COLORS
-	get_opt_int("terminal.xterm-88color.type") = 1;
-	get_opt_int("terminal.xterm-88color.colors") = COLOR_MODE_88;
-	get_opt_bool("terminal.xterm-88color.underline") = 1;
+	get_opt_int("terminal.xterm-88color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-88color.colors", NULL) = COLOR_MODE_88;
+	get_opt_bool("terminal.xterm-88color.underline", NULL) = 1;
 #endif
 #ifdef CONFIG_256_COLORS
-	get_opt_int("terminal.xterm-256color.type") = 1;
-	get_opt_int("terminal.xterm-256color.colors") = COLOR_MODE_256;
-	get_opt_bool("terminal.xterm-256color.underline") = 1;
+	get_opt_int("terminal.xterm-256color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;
+	get_opt_bool("terminal.xterm-256color.underline", NULL) = 1;
 #endif
 }
 
@@ -945,7 +953,7 @@ void
 update_options_visibility(void)
 {
 	update_visibility(config_options->value.tree,
-			  get_opt_bool("config.show_template"));
+			  get_opt_bool("config.show_template", NULL));
 }
 
 void

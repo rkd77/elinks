@@ -76,7 +76,7 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 
-	if (!get_opt_bool("ecmascript.error_reporting")
+	if (!get_opt_bool("ecmascript.error_reporting", NULL)
 	    || !init_string(&msg))
 		goto reported;
 
@@ -113,7 +113,7 @@ static JSBool
 safeguard(JSContext *ctx, JSScript *script)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	int max_exec_time = get_opt_int("ecmascript.max_exec_time");
+	int max_exec_time = get_opt_int("ecmascript.max_exec_time", NULL);
 
 	if (time(NULL) - interpreter->exec_start > max_exec_time) {
 		struct terminal *term = interpreter->vs->doc_view->session->tab->term;

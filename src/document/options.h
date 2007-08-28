@@ -139,7 +139,7 @@ struct document_options {
 
 /** Fills the structure with values from the option system.
  * @relates document_options */
-void init_document_options(struct document_options *doo);
+void init_document_options(struct session *ses, struct document_options *doo);
 
 /** Free allocated document options.
  * @relates document_options */

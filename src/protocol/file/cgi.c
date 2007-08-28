@@ -185,7 +185,7 @@ set_vars(struct connection *conn, unsigned char *script)
 	 * standard, so we already filled our environment with we have to have
 	 * there and we won't fail anymore if it won't work out. */
 
-	str = get_opt_str("protocol.http.user_agent");
+	str = get_opt_str("protocol.http.user_agent", NULL);
 	if (*str && strcmp(str, " ")) {
 		unsigned char *ustr, ts[64] = "";
 
@@ -205,13 +205,13 @@ set_vars(struct connection *conn, unsigned char *script)
 		}
 	}
 
-	switch (get_opt_int("protocol.http.referer.policy")) {
+	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 	case REFERER_NONE:
 		/* oh well */
 		break;
 
 	case REFERER_FAKE:
-		str = get_opt_str("protocol.http.referer.fake");
+		str = get_opt_str("protocol.http.referer.fake", NULL);
 		env_set("HTTP_REFERER", str, -1);
 		break;
 
@@ -236,12 +236,12 @@ set_vars(struct connection *conn, unsigned char *script)
 	/* We do not set HTTP_ACCEPT_ENCODING. Yeah, let's let the CGI script
 	 * gzip the stuff so that the CPU doesn't at least sit idle. */
 
-	str = get_opt_str("protocol.http.accept_language");
+	str = get_opt_str("protocol.http.accept_language", NULL);
 	if (*str) {
 		env_set("HTTP_ACCEPT_LANGUAGE", str, -1);
 	}
 #ifdef CONFIG_NLS
-	else if (get_opt_bool("protocol.http.accept_ui_language")) {
+	else if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
 		env_set("HTTP_ACCEPT_LANGUAGE",
 			language_to_iso639(current_language), -1);
 	}
@@ -279,7 +279,7 @@ set_vars(struct connection *conn, unsigned char *script)
 static int
 test_path(unsigned char *path)
 {
-	unsigned char *cgi_path = get_opt_str("protocol.file.cgi.path");
+	unsigned char *cgi_path = get_opt_str("protocol.file.cgi.path", NULL);
 	unsigned char **path_ptr;
 	unsigned char *filename;
 
@@ -312,7 +312,7 @@ execute_cgi(struct connection *conn)
 	enum connection_state state = S_OK;
 	int pipe_read[2], pipe_write[2];
 
-	if (!get_opt_bool("protocol.file.cgi.policy")) return 1;
+	if (!get_opt_bool("protocol.file.cgi.policy", NULL)) return 1;
 
 	/* Not file referrer */
 	if (conn->referrer && conn->referrer->protocol != PROTOCOL_FILE) {

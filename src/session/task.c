@@ -170,7 +170,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	int referrer_incomplete = 0;
 	int malicious_uri = 0;
 	int confirm_submit = uri->form && get_opt_bool("document.browse.forms"
-	                                               ".confirm_submit");
+	                                               ".confirm_submit", NULL);
 	unsigned char *m1 = NULL, *message = NULL;
 
 	if (ses->doc_view
@@ -194,7 +194,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	 * posting form data so this should be more correct. */
 
 	if (uri->user && uri->userlen
-	    && get_opt_bool("document.browse.links.warn_malicious")
+	    && get_opt_bool("document.browse.links.warn_malicious", NULL)
 	    && check_malicious_uri(uri)) {
 		malicious_uri = 1;
 		confirm_submit = 1;
@@ -388,9 +388,9 @@ ses_imgmap(struct session *ses)
 			  &menu, &ml, ses->loading_uri,
 			  &doc_view->document->options,
 			  ses->task.target.frame,
-			  get_opt_codepage_tree(ses->tab->term->spec, "charset"),
-			  get_opt_codepage("document.codepage.assume"),
-			  get_opt_bool("document.codepage.force_assumed")))
+			  get_opt_codepage_tree(ses->tab->term->spec, "charset", NULL),
+			  get_opt_codepage("document.codepage.assume", NULL),
+			  get_opt_bool("document.codepage.force_assumed", NULL)))
 		return;
 
 	add_empty_window(ses->tab->term, (void (*)(void *)) freeml, ml);
@@ -582,7 +582,8 @@ do_follow_url(struct session *ses, struct uri *uri, unsigned char *target,
 	}
 
 	if (target && !strcmp(target, "_blank")) {
-		int mode = get_opt_int("document.browse.links.target_blank");
+		int mode = get_opt_int("document.browse.links.target_blank",
+		                       NULL);
 
 		if (mode == 3
 		    && !get_cmd_opt_bool("anonymous")
@@ -753,7 +754,7 @@ goto_url_with_hook(struct session *ses, unsigned char *url)
 int
 goto_url_home(struct session *ses)
 {
-	unsigned char *homepage = get_opt_str("ui.sessions.homepage");
+	unsigned char *homepage = get_opt_str("ui.sessions.homepage", NULL);
 
 	if (!*homepage) homepage = getenv("WWW_HOME");
 	if (!homepage || !*homepage) homepage = WWW_HOME_URL;

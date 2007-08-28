@@ -102,7 +102,7 @@ navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		break;
 	case JSP_NAVIGATOR_LANGUAGE:
 #ifdef CONFIG_NLS
-		if (get_opt_bool("protocol.http.accept_ui_language"))
+		if (get_opt_bool("protocol.http.accept_ui_language", NULL))
 			string_to_jsval(ctx, vp, language_to_iso639(current_language));
 
 #endif
@@ -113,7 +113,8 @@ navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	case JSP_NAVIGATOR_USER_AGENT:
 	{
 		/* FIXME: Code duplication. */
-		unsigned char *optstr = get_opt_str("protocol.http.user_agent");
+		unsigned char *optstr = get_opt_str("protocol.http.user_agent",
+		                                    NULL);
 
 		if (*optstr && strcmp(optstr, " ")) {
 			unsigned char *ustr, ts[64] = "";

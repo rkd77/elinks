@@ -42,7 +42,7 @@ static void
 set_bittorrent_connection_timer(struct connection *conn)
 {
 	struct bittorrent_connection *bittorrent = conn->info;
-	milliseconds_T interval = sec_to_ms(get_opt_int("protocol.bittorrent.choke_interval"));
+	milliseconds_T interval = sec_to_ms(get_opt_int("protocol.bittorrent.choke_interval", NULL));
 
 	install_timer(&bittorrent->timer, interval,
 		      (void (*)(void *)) update_bittorrent_connection_state,
@@ -93,15 +93,15 @@ update_bittorrent_connection_state(struct connection *conn)
 	struct bittorrent_connection *bittorrent = conn->info;
 	struct bittorrent_peer_connection *peer, *next_peer;
 	int peer_conns, max_peer_conns;
-	int min_uploads = get_opt_int("protocol.bittorrent.min_uploads");
-	int max_uploads = get_opt_int("protocol.bittorrent.max_uploads");
+	int min_uploads = get_opt_int("protocol.bittorrent.min_uploads", NULL);
+	int max_uploads = get_opt_int("protocol.bittorrent.max_uploads", NULL);
 
 	set_bittorrent_connection_timer(conn);
 	/* The expired timer ID has now been erased.  */
 	set_connection_timeout(conn);
 
 	peer_conns = list_size(&bittorrent->peers);
-	max_peer_conns = get_opt_int("protocol.bittorrent.peerwire.connections");
+	max_peer_conns = get_opt_int("protocol.bittorrent.peerwire.connections", NULL);
 
 	/* First ``age'' the peer rates _before_ the sorting. */
 	foreach (peer, bittorrent->peers)
@@ -168,7 +168,7 @@ update_bittorrent_connection_state(struct connection *conn)
 	/* Shrink the peer pool. */
 	if (!list_empty(bittorrent->peers)) {
 		struct bittorrent_peer *peer_info, *next_peer_info;
-		int pool_size = get_opt_int("protocol.bittorrent.peerwire.pool_size");
+		int pool_size = get_opt_int("protocol.bittorrent.peerwire.pool_size", NULL);
 		int pool_peers = 0;
 
 		foreachsafe (peer_info, next_peer_info, bittorrent->peer_pool) {

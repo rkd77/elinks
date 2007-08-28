@@ -293,7 +293,7 @@ read_encoded_file(struct string *filename, struct string *page)
 	int fd = open(filename->source, O_RDONLY | O_NOCTTY);
 	enum connection_state state = -errno;
 
-	if (fd == -1 && get_opt_bool("protocol.file.try_encoding_extensions")) {
+	if (fd == -1 && get_opt_bool("protocol.file.try_encoding_extensions", NULL)) {
 		encoding = try_encoding_extensions(filename, &fd);
 
 	} else if (fd != -1) {
@@ -316,7 +316,7 @@ read_encoded_file(struct string *filename, struct string *page)
 		/* Leave @state being the saved errno */
 
 	} else if (!S_ISREG(stt.st_mode) && !is_stdin_pipe(&stt, filename)
-	           && !get_opt_bool("protocol.file.allow_special_files")) {
+	           && !get_opt_bool("protocol.file.allow_special_files", NULL)) {
 		state = S_FILE_TYPE;
 
 	} else if (!(stream = open_encoded(fd, encoding))) {

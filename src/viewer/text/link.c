@@ -1171,7 +1171,7 @@ goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 
 	link = &doc_view->document->links[n];
 	if (!link_is_textinput(link)
-	    && get_opt_bool("document.browse.accesskey.auto_follow"))
+	    && get_opt_bool("document.browse.accesskey.auto_follow", NULL))
 		enter(ses, doc_view, 0);
 }
 
@@ -1211,7 +1211,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 	key = get_kbd_key(ev);
 #else  /* !CONFIG_UTF8 */
 	key = cp2u(get_opt_codepage_tree(ses->tab->term->spec,
-					 "charset"),
+					 "charset", NULL),
 		   get_kbd_key(ev));
 #endif /* !CONFIG_UTF8 */
 	/* If @key now is 0 (which is used in link.accesskey if there
@@ -1455,7 +1455,8 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 		/* Add the uri with password and post info stripped */
 		add_string_uri_to_string(&str, uristring, URI_PUBLIC);
 		if (link->accesskey > 0
-		    && get_opt_bool("document.browse.accesskey.display")) {
+		    && get_opt_bool("document.browse.accesskey.display",
+		                    NULL)) {
 			add_to_string(&str, " (");
 			add_accesskey_to_string(&str, link->accesskey);
 			add_char_to_string(&str, ')');

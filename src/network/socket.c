@@ -492,9 +492,9 @@ connect_socket(struct socket *csocket, enum connection_state state)
 	int saved_errno = 0;
 	int at_least_one_remote_ip = 0;
 #ifdef CONFIG_IPV6
-	int try_ipv6 = get_opt_bool("connection.try_ipv6");
+	int try_ipv6 = get_opt_bool("connection.try_ipv6", NULL);
 #endif
-	int try_ipv4 = get_opt_bool("connection.try_ipv4");
+	int try_ipv4 = get_opt_bool("connection.try_ipv4", NULL);
 	/* We tried something but we failed in such a way that we would rather
 	 * prefer the connection to retain the information about previous
 	 * failures.  That is, we i.e. decided we are forbidden to even think

@@ -112,13 +112,14 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	} else if (p == s_location) {
 		SEE_OBJECT_GET(interp, interp->Global, s_location, res);
 	} else if (p == s_referrer) {
-		switch (get_opt_int("protocol.http.referer.policy")) {
+		switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 			case REFERER_NONE:
 				SEE_SET_UNDEFINED(res);
 				break;
 			case REFERER_FAKE:
 				str = string_to_SEE_string(interp,
-				 get_opt_str("protocol.http.referer.fake"));
+				 get_opt_str("protocol.http.referer.fake",
+				             NULL));
 				SEE_SET_STRING(res, str);
 				break;
 			case REFERER_TRUE:

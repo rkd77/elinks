@@ -216,14 +216,14 @@ uint32_t
 get_bittorrent_peerwire_max_message_length(void)
 {
 	return get_opt_int_tree(&bittorrent_protocol_options[0].option,
-				"peerwire.max_message_length");
+				"peerwire.max_message_length", NULL);
 }
 
 uint32_t
 get_bittorrent_peerwire_max_request_length(void)
 {
 	return get_opt_int_tree(&bittorrent_protocol_options[0].option,
-				"peerwire.max_request_length");
+				"peerwire.max_request_length", NULL);
 }
 
 

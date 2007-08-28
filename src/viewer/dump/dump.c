@@ -114,15 +114,15 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	memset(&formatted, 0, sizeof(formatted));
 
-	init_document_options(&o);
-	width = get_opt_int("document.dump.width");
+	init_document_options(NULL, &o);
+	width = get_opt_int("document.dump.width", NULL);
 	set_box(&o.box, 0, 1, width, DEFAULT_TERMINAL_HEIGHT);
 
-	o.cp = get_opt_codepage("document.dump.codepage");
-	o.color_mode = get_opt_int("document.dump.color_mode");
+	o.cp = get_opt_codepage("document.dump.codepage", NULL);
+	o.color_mode = get_opt_int("document.dump.color_mode", NULL);
 	o.plain = 0;
 	o.frames = 0;
-	o.links_numbering = get_opt_bool("document.dump.numbering");
+	o.links_numbering = get_opt_bool("document.dump.numbering", NULL);
 
 	init_vs(&vs, cached->uri, -1);
 
@@ -217,7 +217,7 @@ subst_url(unsigned char *str, struct string *url)
 static void
 dump_print(unsigned char *option, struct string *url)
 {
-	unsigned char *str = get_opt_str(option);
+	unsigned char *str = get_opt_str(option, NULL);
 
 	if (str) {
 		unsigned char *realstr = subst_url(str, url);
@@ -479,7 +479,7 @@ dump_to_file_16(struct document *document, int fd)
 	int bptr = 0;
 	unsigned char *buf = mem_alloc(D_BUF);
 	unsigned char color = 0;
-	int width = get_opt_int("document.dump.width");
+	int width = get_opt_int("document.dump.width", NULL);
 
 	if (!buf) return -1;
 
@@ -538,7 +538,8 @@ fail:
 		return -1;
 	}
 
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
+	if (document->nlinks
+	    && get_opt_bool("document.dump.references", NULL)) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
 		int headlen = strlen(header);
@@ -603,7 +604,7 @@ dump_to_file_256(struct document *document, int fd)
 	unsigned char *buf = mem_alloc(D_BUF);
 	unsigned char foreground = 0;
 	unsigned char background = 0;
-	int width = get_opt_int("document.dump.width");
+	int width = get_opt_int("document.dump.width", NULL);
 
 	if (!buf) return -1;
 
@@ -670,7 +671,8 @@ fail:
 		return -1;
 	}
 
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
+	if (document->nlinks
+	    && get_opt_bool("document.dump.references", NULL)) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
 		int headlen = strlen(header);
@@ -735,7 +737,7 @@ dump_to_file_true_color(struct document *document, int fd)
 	unsigned char *buf = mem_alloc(D_BUF);
 	unsigned char *foreground = &color[0];
 	unsigned char *background = &color[3];
-	int width = get_opt_int("document.dump.width");
+	int width = get_opt_int("document.dump.width", NULL);
 
 	if (!buf) return -1;
 
@@ -802,7 +804,8 @@ fail:
 		return -1;
 	}
 
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
+	if (document->nlinks
+	    && get_opt_bool("document.dump.references", NULL)) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
 		int headlen = strlen(header);
@@ -949,7 +952,8 @@ fail:
 		return -1;
 	}
 
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
+	if (document->nlinks
+	    && get_opt_bool("document.dump.references", NULL)) {
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
 		int headlen = strlen(header);

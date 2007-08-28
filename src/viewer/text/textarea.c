@@ -604,7 +604,8 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	}
 
 	if (op == 0 && !textarea_editor) {
-		unsigned char *ed = get_opt_str("document.browse.forms.editor");
+		unsigned char *ed = get_opt_str("document.browse.forms.editor",
+		                                NULL);
 		unsigned char *ex;
 
 		fn = save_textarea_file(fs_->value);

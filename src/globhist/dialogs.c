@@ -44,7 +44,7 @@ get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 	struct global_history_item *item = box_item->udata;
 	struct string info;
 
-	if (get_opt_int("document.history.global.display_type")
+	if (get_opt_int("document.history.global.display_type", NULL)
 	    && *item->title)
 		return stracpy(item->title);
 
@@ -186,7 +186,8 @@ push_toggle_display_button(struct dialog_data *dlg_data, struct widget_data *wid
 {
 	int *display_type;
 
-	display_type = &get_opt_int("document.history.global.display_type");
+	display_type = &get_opt_int("document.history.global.display_type",
+	                            NULL);
 	*display_type = !*display_type;
 
 	update_hierbox_browser(&globhist_browser);

@@ -692,8 +692,8 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	/* Don't write headers if nothing will be added anyway. */
 	struct string tmpstring;
 	int origlen;
-	int savestyle = get_opt_int("config.saving_style");
-	int i18n = get_opt_bool("config.i18n");
+	int savestyle = get_opt_int("config.saving_style", NULL);
+	int i18n = get_opt_bool("config.i18n", NULL);
 
 	if (!init_string(&config)) return NULL;
 
@@ -755,8 +755,8 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 
 	if (savestyle == 0) goto get_me_out;
 
-	indentation = get_opt_int("config.indentation");
-	comments = get_opt_int("config.comments");
+	indentation = get_opt_int("config.indentation", NULL);
+	comments = get_opt_int("config.comments", NULL);
 
 	if (!init_string(&tmpstring)) goto get_me_out;
 

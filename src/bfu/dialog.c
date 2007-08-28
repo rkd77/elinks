@@ -297,7 +297,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 
 #ifdef CONFIG_UTF8
 	key = unicode_fold_label_case(get_kbd_key(ev));
-	codepage = get_opt_codepage_tree(dlg_data->win->term->spec, "charset");
+	codepage = get_opt_codepage_tree(dlg_data->win->term->spec, "charset", NULL);
 #else
 	key = toupper(get_kbd_key(ev));
 #endif
@@ -659,7 +659,7 @@ draw_dialog(struct dialog_data *dlg_data, int width, int height)
 	draw_box(term, &dlg_data->box, ' ', 0,
 		 get_bfu_color(term, "dialog.generic"));
 
-	if (get_opt_bool("ui.dialogs.shadows")) {
+	if (get_opt_bool("ui.dialogs.shadows", NULL)) {
 		/* Draw shadow */
 		draw_shadow(term, &dlg_data->box,
 			    get_bfu_color(term, "dialog.shadow"), 2, 1);

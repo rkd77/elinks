@@ -148,7 +148,8 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 	const unsigned char *recoded;
 
 	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
-	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset"));
+	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset",
+	                                                NULL));
 	if (!recoded) recoded = "*";
 	while (*recoded) {
 		ev.info.keyboard.key = *recoded;
@@ -185,12 +186,12 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
 	term->utf8_cp = is_cp_utf8(get_opt_codepage_tree(term->spec,
-							 "charset"));
+							 "charset", NULL));
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
 	term->utf8_io = term->utf8_cp
-		|| get_opt_bool_tree(term->spec, "utf_8_io");
+		|| get_opt_bool_tree(term->spec, "utf_8_io", NULL);
 #endif /* CONFIG_UTF8 */
 }
 
@@ -323,7 +324,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 *   this codepage cannot be UTF-8.
 		 * - Otherwise, handle_interlink_event() passes the
 		 *   bytes straight through.  */
-		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io");
+		utf8_io = get_opt_bool_tree(term->spec, "utf_8_io", NULL);
 #endif /* CONFIG_UTF8 */
 
 		/* In UTF-8 byte sequences that have more than one byte, the
@@ -381,7 +382,8 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				 * recode from the terminal charset to UCS-4. */
 
 				key = cp2u(get_opt_codepage_tree(term->spec,
-								 "charset"),
+								 "charset",
+								 NULL),
 					   key);
 				term_send_ucs(term, key, modifier);
 				break;

@@ -34,7 +34,7 @@
 static void
 disable_success_msgbox(void *dummy)
 {
-	get_opt_bool("ui.success_msgbox") = 0;
+	get_opt_bool("ui.success_msgbox", NULL) = 0;
 	option_changed(NULL, get_opt_rec(config_options, "ui.success_msgbox"));
 }
 
@@ -47,7 +47,7 @@ write_config_dialog(struct terminal *term, unsigned char *config_file,
 	unsigned char *strerr;
 
 	if (secsave_error == SS_ERR_NONE && !stdio_error) {
-		if (!get_opt_bool("ui.success_msgbox")) return;
+		if (!get_opt_bool("ui.success_msgbox", NULL)) return;
 
 		msg_box(term, NULL, MSGBOX_FREE_TEXT,
 			N_("Write config success"), ALIGN_CENTER,

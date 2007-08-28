@@ -198,11 +198,11 @@ get_mime_handler_default(unsigned char *type, int have_x)
 	handler_opt = get_mime_handler_option(type_opt, have_x);
 	if (!handler_opt) return NULL;
 
-	return init_mime_handler(get_opt_str_tree(handler_opt, "program"),
+	return init_mime_handler(get_opt_str_tree(handler_opt, "program", NULL),
 				 type_opt->value.string,
 				 default_mime_module.name,
-				 get_opt_bool_tree(handler_opt, "ask"),
-				 get_opt_bool_tree(handler_opt, "block"));
+				 get_opt_bool_tree(handler_opt, "ask", NULL),
+				 get_opt_bool_tree(handler_opt, "block", NULL));
 }
 
 

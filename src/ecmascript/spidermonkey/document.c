@@ -145,14 +145,14 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		JS_GetProperty(ctx, parent_win, "location", vp);
 		break;
 	case JSP_DOC_REF:
-		switch (get_opt_int("protocol.http.referer.policy")) {
+		switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 		case REFERER_NONE:
 			/* oh well */
 			undef_to_jsval(ctx, vp);
 			break;
 
 		case REFERER_FAKE:
-			string_to_jsval(ctx, vp, get_opt_str("protocol.http.referer.fake"));
+			string_to_jsval(ctx, vp, get_opt_str("protocol.http.referer.fake", NULL));
 			break;
 
 		case REFERER_TRUE:

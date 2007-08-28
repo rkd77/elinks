@@ -208,41 +208,41 @@ extern void checkout_option_values(struct option_resolver *resolvers,
 
 /* Basically, for main hiearchy addressed from root (almost always) you want to
  * use get_opt_type() and add_opt_type(). For command line options, you want to
- * use get_opt_type_tree(cmdline_options, "option"). */
+ * use get_opt_type_tree(cmdline_options, "option", NULL). */
 
 extern struct option *get_opt_rec(struct option *, const unsigned char *);
 extern struct option *get_opt_rec_real(struct option *, const unsigned char *);
 #ifdef CONFIG_DEBUG
-extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *);
-#define get_opt(tree, name, type) get_opt_(__FILE__, __LINE__, type, tree, name)
+extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *, struct session *);
+#define get_opt(tree, name, ses, type) get_opt_(__FILE__, __LINE__, type, tree, name, ses)
 #else
-extern union option_value *get_opt_(struct option *, unsigned char *);
-#define get_opt(tree, name, type) get_opt_(tree, name)
+extern union option_value *get_opt_(struct option *, unsigned char *, struct session *);
+#define get_opt(tree, name, ses, type) get_opt_(tree, name, ses)
 #endif
 
-#define get_opt_bool_tree(tree, name)	get_opt(tree, name, OPT_BOOL)->number
-#define get_opt_int_tree(tree, name)	get_opt(tree, name, OPT_INT)->number
-#define get_opt_long_tree(tree, name)	get_opt(tree, name, OPT_LONG)->big_number
-#define get_opt_str_tree(tree, name)	get_opt(tree, name, OPT_STRING)->string
-#define get_opt_codepage_tree(tree, name)	get_opt(tree, name, OPT_CODEPAGE)->number
-#define get_opt_color_tree(tree, name)	get_opt(tree, name, OPT_COLOR)->color
-#define get_opt_tree_tree(tree_, name)	get_opt(tree_, name, OPT_TREE)->tree
+#define get_opt_bool_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_BOOL)->number
+#define get_opt_int_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_INT)->number
+#define get_opt_long_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_LONG)->big_number
+#define get_opt_str_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_STRING)->string
+#define get_opt_codepage_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_CODEPAGE)->number
+#define get_opt_color_tree(tree, name, ses)	get_opt(tree, name, ses, OPT_COLOR)->color
+#define get_opt_tree_tree(tree_, name, ses)	get_opt(tree_, name, ses, OPT_TREE)->tree
 
-#define get_opt_bool(name) get_opt_bool_tree(config_options, name)
-#define get_opt_int(name) get_opt_int_tree(config_options, name)
-#define get_opt_long(name) get_opt_long_tree(config_options, name)
-#define get_opt_str(name) get_opt_str_tree(config_options, name)
-#define get_opt_codepage(name) get_opt_codepage_tree(config_options, name)
-#define get_opt_color(name) get_opt_color_tree(config_options, name)
-#define get_opt_tree(name) get_opt_tree_tree(config_options, name)
+#define get_opt_bool(name, ses) get_opt_bool_tree(config_options, name, ses)
+#define get_opt_int(name, ses) get_opt_int_tree(config_options, name, ses)
+#define get_opt_long(name, ses) get_opt_long_tree(config_options, name, ses)
+#define get_opt_str(name, ses) get_opt_str_tree(config_options, name, ses)
+#define get_opt_codepage(name, ses) get_opt_codepage_tree(config_options, name, ses)
+#define get_opt_color(name, ses) get_opt_color_tree(config_options, name, ses)
+#define get_opt_tree(name, ses) get_opt_tree_tree(config_options, name, ses)
 
-#define get_cmd_opt_bool(name) get_opt_bool_tree(cmdline_options, name)
-#define get_cmd_opt_int(name) get_opt_int_tree(cmdline_options, name)
-#define get_cmd_opt_long(name) get_opt_long_tree(cmdline_options, name)
-#define get_cmd_opt_str(name) get_opt_str_tree(cmdline_options, name)
-#define get_cmd_opt_codepage(name) get_opt_codepage_tree(cmdline_options, name)
-#define get_cmd_opt_color(name) get_opt_color_tree(cmdline_options, name)
-#define get_cmd_opt_tree(name) get_opt_tree_tree(cmdline_options, name)
+#define get_cmd_opt_bool(name) get_opt_bool_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_int(name) get_opt_int_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_long(name) get_opt_long_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_str(name) get_opt_str_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_codepage(name) get_opt_codepage_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_color(name) get_opt_color_tree(cmdline_options, name, NULL)
+#define get_cmd_opt_tree(name) get_opt_tree_tree(cmdline_options, name, NULL)
 
 extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 			      unsigned char *, enum option_flags, enum option_type,

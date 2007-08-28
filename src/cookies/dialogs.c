@@ -42,7 +42,7 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 #ifdef HAVE_STRFTIME
 	} else {
 		add_format_to_string(string, "\n%s: ", _("Expires", term));
-		add_date_to_string(string, get_opt_str("ui.date_format"), &cookie->expires);
+		add_date_to_string(string, get_opt_str("ui.date_format", NULL), &cookie->expires);
 #endif
 	}
 

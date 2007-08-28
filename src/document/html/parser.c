@@ -360,7 +360,7 @@ process_head(struct html_context *html_context, unsigned char *head)
 
 	mem_free(refresh);
 
-	if (!get_opt_bool("document.cache.ignore_cache_control")) {
+	if (!get_opt_bool("document.cache.ignore_cache_control", NULL)) {
 		unsigned char *d;
 		int no_cache = 0;
 		time_t expires = 0;

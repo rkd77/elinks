@@ -171,7 +171,7 @@ static void
 check_if_no_terminal(void)
 {
 	program.terminate = list_empty(terminals)
-			    && !get_opt_bool("ui.sessions.keep_session_active");
+			    && !get_opt_bool("ui.sessions.keep_session_active", NULL);
 }
 
 void

@@ -220,12 +220,12 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 
 	puts(buf.source);
 
-	if (get_opt_bool("document.browse.links.color_dirs")) {
-		color_to_string(get_opt_color("document.colors.dirs"),
+	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
+		color_to_string(get_opt_color("document.colors.dirs", NULL),
 				dircolor);
 	}
 
-	if (get_opt_bool("protocol.fsp.sort")) {
+	if (get_opt_bool("protocol.fsp.sort", NULL)) {
 		sort_and_display_entries(dir, dircolor);
 	} else {
 		FSP_RDENTRY fentry, *fresult;

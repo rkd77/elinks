@@ -13,7 +13,7 @@ struct terminal;
 struct uri;
 struct view_state;
 
-#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable")
+#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable", NULL)
 
 struct ecmascript_interpreter {
 	struct view_state *vs;

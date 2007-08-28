@@ -164,7 +164,7 @@ init_form_state(struct document_view *doc_view,
 
 	doc_cp = doc_view->document->cp;
 	term = doc_view->session->tab->term;
-	viewer_cp = get_opt_codepage_tree(term->spec, "charset");
+	viewer_cp = get_opt_codepage_tree(term->spec, "charset", NULL);
 
 	mem_free_set(&fs->value, NULL);
 
@@ -1176,7 +1176,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 
 	get_successful_controls(doc_view, fc, &submit);
 
-	cp_from = get_opt_codepage_tree(ses->tab->term->spec, "charset");
+	cp_from = get_opt_codepage_tree(ses->tab->term->spec, "charset", NULL);
 	cp_to = doc_view->document->cp;
 	switch (form->method) {
 	case FORM_METHOD_GET:
@@ -1198,7 +1198,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	 * a file that is to be uploaded. TODO: Distinguish between
 	 * these two classes of errors (is it worth it?). -- Miciah */
 	if (data.source
-	    && get_opt_bool("document.browse.forms.show_formhist"))
+	    && get_opt_bool("document.browse.forms.show_formhist", NULL))
 		memorize_form(ses, &submit, form);
 #endif
 
@@ -1562,7 +1562,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			 * submit the form or the posting fails. */
 			/* FIXME: We should maybe have ACT_EDIT_ENTER_RELOAD */
 			if ((has_form_submit(fc->form)
-			      && !get_opt_bool("document.browse.forms.auto_submit"))
+			      && !get_opt_bool("document.browse.forms.auto_submit", NULL))
 			    || goto_current_link(ses, doc_view, 0)) {
 				if (ses->insert_mode == INSERT_MODE_ON)
 					ses->insert_mode = INSERT_MODE_OFF;
@@ -1775,7 +1775,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 			/* fs->value is in the charset of the terminal.  */
 			ctext = u2cp_no_nbsp(get_kbd_key(ev),
 					     get_opt_codepage_tree(ses->tab->term->spec,
-								   "charset"));
+								   "charset",
+								   NULL));
 			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength
@@ -1920,7 +1921,8 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 
 		if (!fc->form->action
 		    || (has_form_submit(fc->form)
-		        && !get_opt_bool("document.browse.forms.auto_submit")))
+		        && !get_opt_bool("document.browse.forms.auto_submit",
+			                 NULL)))
 			break;
 
 		uri = get_uri(fc->form->action, 0);
@@ -1968,7 +1970,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	}
 
 	if (link->accesskey
-	    && get_opt_bool("document.browse.accesskey.display")) {
+	    && get_opt_bool("document.browse.accesskey.display", NULL)) {
 		add_to_string(&str, " (");
 		add_accesskey_to_string(&str, link->accesskey);
 		add_char_to_string(&str, ')');

@@ -34,7 +34,7 @@ periodic_save_handler(void *xxx)
 	else
 		trigger_event(periodic_save_event_id);
 
-	interval = sec_to_ms(get_opt_int("infofiles.save_interval"));
+	interval = sec_to_ms(get_opt_int("infofiles.save_interval", NULL));
 	if (!interval) {
 		/* We should get here only if @periodic_save_handler
 		 * is being called from @periodic_save_change_hook or

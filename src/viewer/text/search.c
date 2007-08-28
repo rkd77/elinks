@@ -310,10 +310,10 @@ init_regex(regex_t *regex, unsigned char *pattern)
 	int regex_flags = REG_NEWLINE;
 	int reg_err;
 
-	if (get_opt_int("document.browse.search.regex") == 2)
+	if (get_opt_int("document.browse.search.regex", NULL) == 2)
 		regex_flags |= REG_EXTENDED;
 
-	if (!get_opt_bool("document.browse.search.case"))
+	if (!get_opt_bool("document.browse.search.case", NULL))
 		regex_flags |= REG_ICASE;
 
 	reg_err = regcomp(regex, pattern, regex_flags);
@@ -522,7 +522,7 @@ is_in_range_plain(struct document *document, int y, int height,
 	int yy = y + height;
 	UCHAR *txt;
 	int found = 0;
-	int case_sensitive = get_opt_bool("document.browse.search.case");
+	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
 
 	txt = case_sensitive ? memacpy_u(text, textlen, utf8) : lowered_string(text, textlen, utf8);
 	if (!txt) return -1;
@@ -591,7 +591,7 @@ is_in_range(struct document *document, int y, int height,
 		return 0;
 
 #ifdef HAVE_REGEX_H
-	if (get_opt_int("document.browse.search.regex"))
+	if (get_opt_int("document.browse.search.regex", NULL))
 		return is_in_range_regex(document, y, height, text, textlen,
 					 min, max, s1, s2);
 #endif
@@ -611,7 +611,7 @@ get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,
 	struct box *box;
 	int xoffset, yoffset;
 	int len = 0;
-	int case_sensitive = get_opt_bool("document.browse.search.case");
+	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
 
 	txt = case_sensitive ? memacpy_u(*doc_view->search_word, l, utf8)
 			     : lowered_string(*doc_view->search_word, l, utf8);
@@ -758,7 +758,7 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf
 	}
 
 #ifdef HAVE_REGEX_H
-	if (get_opt_int("document.browse.search.regex"))
+	if (get_opt_int("document.browse.search.regex", NULL))
 		get_searched_regex(doc_view, pt, pl, l, s1, s2);
 	else
 #endif
@@ -1049,7 +1049,7 @@ static void
 print_find_error_not_found(struct session *ses, unsigned char *title,
 			   unsigned char *message, unsigned char *search_string)
 {
-	switch (get_opt_int("document.browse.search.show_not_found")) {
+	switch (get_opt_int("document.browse.search.show_not_found", NULL)) {
 		case 2:
 			info_box(ses->tab->term, MSGBOX_FREE_TEXT,
 				 title, ALIGN_CENTER,
@@ -1076,7 +1076,7 @@ print_find_error(struct session *ses, enum find_error find_error)
 			hit_top = 1;
 		case FIND_ERROR_HIT_BOTTOM:
 			if (!get_opt_bool("document.browse.search"
-					  ".show_hit_top_bottom"))
+					  ".show_hit_top_bottom", NULL))
 				break;
 
 			message = hit_top
@@ -1187,8 +1187,9 @@ search_link_text(struct document *document, int current_link, int i,
 		 unsigned char *text, int direction, int *offset)
 {
 	int upper_link, lower_link;
-	int case_sensitive = get_opt_bool("document.browse.search.case");
-	int wraparound = get_opt_bool("document.browse.search.wraparound");
+	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
+	int wraparound = get_opt_bool("document.browse.search.wraparound",
+	                              NULL);
 	int textlen = strlen(text);
 
 	assert(textlen && direction && offset);
@@ -1307,14 +1308,15 @@ do_typeahead(struct session *ses, struct document_view *doc_view,
 			direction = -1;
 			i--;
 			if (i >= 0) break;
-			if (!get_opt_bool("document.browse.search.wraparound")) {
+			if (!get_opt_bool("document.browse.search.wraparound", NULL)) {
 search_hit_boundary:
 				if (match_link_text(&document->links[current],
 						    text, strlen(text),
 						    get_opt_bool("document"
 								 ".browse"
 								 ".search"
-								 ".case"))
+								 ".case",
+								 NULL))
 				     >= 0) {
 					return TYPEAHEAD_ERROR_NO_FURTHER;
 				}
@@ -1330,7 +1332,8 @@ search_hit_boundary:
 			direction = 1;
 			i++;
 			if (i < doc_view->document->nlinks) break;
-			if (!get_opt_bool("document.browse.search.wraparound"))
+			if (!get_opt_bool("document.browse.search.wraparound",
+			                  NULL))
 				goto search_hit_boundary;
 
 			i = 0;
@@ -1464,7 +1467,7 @@ link_typeahead_handler(struct input_line *line, int action_id)
 		offset = match_link_text(&doc_view->document->links[current],
 					 buffer, bufferlen,
 					 get_opt_bool("document.browse"
-						      ".search.case"));
+						      ".search.case", NULL));
 
 		if (offset >= 0) {
 			draw_typeahead_match(ses->tab->term, doc_view,
