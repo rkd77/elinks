@@ -6,6 +6,9 @@
 
 #include "elinks.h"
 
+#include "document/css/css.h"
+#include "document/css/parser.h"
+#include "document/css/stylesheet.h"
 #include "document/document.h"
 #include "document/dom/util.h"
 #include "document/dom/rss.h"
@@ -17,7 +20,11 @@
 #include "util/memory.h"
 
 
-/* DOM RSS Renderer */
+enum rss_style {
+	RSS_STYLE_TITLE,
+	RSS_STYLE_AUX,
+	RSS_STYLES,
+};
 
 
 static enum dom_code
@@ -142,7 +149,7 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 			if (str)
 				renderer->document->title = str;
 		}
-		render_dom_text(renderer, &renderer->styles[DOM_NODE_ELEMENT],
+		render_dom_text(renderer, &renderer->styles[RSS_STYLE_TITLE],
 				title->string, title->length);
 	}
 
@@ -156,17 +163,17 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	X(renderer) = 0;
 
 	if (author && is_dom_string_set(author)) {
-		render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+		render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
 				author->string, author->length);
 	}
 
 	if (date && is_dom_string_set(date)) {
 		if (author && is_dom_string_set(author)) {
-			render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+			render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
 					" - ", 3);
 		}
 
-		render_dom_text(renderer, &renderer->styles[DOM_NODE_COMMENT],
+		render_dom_text(renderer, &renderer->styles[RSS_STYLE_AUX],
 				date->string, date->length);
 	}
 
@@ -176,6 +183,50 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 		Y(renderer)++;
 		X(renderer) = 0;
 	}
+}
+
+
+static enum dom_code
+dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	struct css_stylesheet *css = &default_stylesheet;
+	struct document *document = renderer->document;
+	enum rss_style type;
+
+	/* Initialize styles. */
+
+	for (type = 0; type < RSS_STYLES; type++) {
+		struct screen_char *template = &renderer->styles[type];
+		color_T background = document->options.default_bg;
+		color_T foreground = document->options.default_fg;
+		enum screen_char_attr attr = 0;
+		static int i_want_struct_module_for_dom;
+
+		static unsigned char *names[RSS_STYLES] = { "title", "aux" };
+		struct css_selector *selector = NULL;
+
+		if (!i_want_struct_module_for_dom) {
+			static const unsigned char default_colors[] =
+				"title		{ color: lightgreen } "
+				"aux		{ color: aquA} // author, title ";
+			unsigned char *styles = (unsigned char *) default_colors;
+
+			i_want_struct_module_for_dom = 1;
+			/* When someone will get here earlier than at 4am,
+			 * this will be done in some init function, perhaps
+			 * not overriding the user's default stylesheet. */
+			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
+		}
+
+		selector = find_css_selector(&css->selectors,
+					     CST_ELEMENT, CSR_ROOT,
+					     names[type], strlen(names[type]));
+		init_template_by_style(template, &document->options, background, foreground, attr,
+				       selector ? &selector->properties : NULL);
+	}
+
+	return DOM_CODE_OK;
 }
 
 static enum dom_code
@@ -222,7 +273,7 @@ struct dom_stack_context_info dom_rss_renderer_context_info = {
 		/* DOM_NODE_ENTITY		*/ NULL,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
 		/* DOM_NODE_COMMENT		*/ NULL,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ dom_rss_push_document,
 		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
 		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
 		/* DOM_NODE_NOTATION		*/ NULL,

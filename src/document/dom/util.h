@@ -38,6 +38,8 @@ struct dom_renderer {
 	regex_t url_regex;
 	unsigned int find_url:1;
 #endif
+	/* DOM_NODES is just an arbitrary size to fit everything for all the
+	 * renderers. */
 	struct screen_char styles[DOM_NODES];
 
 	/* RSS renderer variables */
@@ -56,6 +58,12 @@ void init_template(struct screen_char *template,
 		   struct document_options *options,
                    color_T background, color_T foreground,
 		   enum screen_char_attr attr);
+void init_template_by_style(struct screen_char *template,
+		            struct document_options *options,
+	                    color_T background, color_T foreground,
+			    enum screen_char_attr attr,
+	                    LIST_OF(struct css_property) *properties);
+
 void render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
                      unsigned char *string, int length);
 struct link *add_dom_link(struct dom_renderer *renderer, unsigned char *string,

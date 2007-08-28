@@ -13,10 +13,6 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
-#include "document/css/css.h"
-#include "document/css/parser.h"
-#include "document/css/property.h"
-#include "document/css/stylesheet.h"
 #include "document/document.h"
 #include "document/dom/renderer.h"
 #include "document/dom/rss.h"
@@ -32,7 +28,6 @@
 #include "dom/stack.h"
 #include "intl/charsets.h"
 #include "protocol/uri.h"
-#include "terminal/draw.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -42,14 +37,10 @@
 #define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
 
 
-/* Checks the user CSS for properties for each DOM node type name */
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		  struct string *buffer, struct conv_table *convert_table)
 {
-	enum dom_node_type type;
-	struct css_stylesheet *css = &default_stylesheet;
-
 	memset(renderer, 0, sizeof(*renderer));
 
 	renderer->document	= document;
@@ -69,81 +60,6 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		}
 	}
 #endif
-
-	for (type = 0; type < DOM_NODES; type++) {
-		struct screen_char *template = &renderer->styles[type];
-		color_T background = document->options.default_bg;
-		color_T foreground = document->options.default_fg;
-		enum screen_char_attr attr = 0;
-		static int i_want_struct_module_for_dom;
-
-		struct dom_string *name = get_dom_node_type_name(type);
-		struct css_selector *selector = NULL;
-
-		if (!i_want_struct_module_for_dom) {
-			static const unsigned char default_colors[] =
-				"document	{ color: yellow } "
-				"element	{ color: lightgreen } "
-				"entity-reference { color: red } "
-				"proc-instruction { color: red } "
-				"attribute	{ color: magenta } "
-				"comment	{ color: aqua } "
-				"cdata-section	{ color: orange2 } ";
-			unsigned char *styles = (unsigned char *) default_colors;
-
-			i_want_struct_module_for_dom = 1;
-			/* When someone will get here earlier than at 4am,
-			 * this will be done in some init function, perhaps
-			 * not overriding the user's default stylesheet. */
-			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
-		}
-
-		if (name)
-		if (is_dom_string_set(name))
-			selector = find_css_selector(&css->selectors,
-						     CST_ELEMENT, CSR_ROOT,
-						     name->string, name->length);
-
-		if (selector) {
-			struct css_property *property;
-
-			foreach (property, selector->properties) {
-				switch (property->type) {
-				case CSS_PT_BACKGROUND_COLOR:
-				case CSS_PT_BACKGROUND:
-					if (property->value_type == CSS_VT_COLOR)
-						background = property->value.color;
-					break;
-				case CSS_PT_COLOR:
-					foreground = property->value.color;
-					break;
-				case CSS_PT_FONT_WEIGHT:
-					if (property->value.font_attribute.add & AT_BOLD)
-						attr |= SCREEN_ATTR_BOLD;
-					break;
-				case CSS_PT_FONT_STYLE:
-					if (property->value.font_attribute.add & AT_UNDERLINE)
-						attr |= SCREEN_ATTR_UNDERLINE;
-
-					if (property->value.font_attribute.add & AT_ITALIC)
-						attr |= SCREEN_ATTR_ITALIC;
-					break;
-				case CSS_PT_TEXT_DECORATION:
-					if (property->value.font_attribute.add & AT_UNDERLINE)
-						attr |= SCREEN_ATTR_UNDERLINE;
-					break;
-				case CSS_PT_DISPLAY:
-				case CSS_PT_NONE:
-				case CSS_PT_TEXT_ALIGN:
-				case CSS_PT_WHITE_SPACE:
-				case CSS_PT_LAST:
-					break;
-				}
-			}
-		}
-
-		init_template(template, &document->options, background, foreground, attr);
-	}
 }
 
 static inline void

@@ -13,6 +13,7 @@
 #include "elinks.h"
 
 #include "bookmarks/bookmarks.h"	/* get_bookmark() */
+#include "document/css/property.h"
 #include "document/docdata.h"
 #include "document/document.h"
 #include "document/dom/util.h"
@@ -35,6 +36,53 @@ init_template(struct screen_char *template, struct document_options *options,
 	template->data = ' ';
 	set_term_color(template, &colors,
 		       options->color_flags, options->color_mode);
+}
+
+
+inline void
+init_template_by_style(struct screen_char *template, struct document_options *options,
+	               color_T background, color_T foreground, enum screen_char_attr attr,
+	               LIST_OF(struct css_property) *properties)
+{
+	struct css_property *property;
+
+	if (properties) {
+		foreach (property, *properties) {
+			switch (property->type) {
+			case CSS_PT_BACKGROUND_COLOR:
+			case CSS_PT_BACKGROUND:
+				if (property->value_type == CSS_VT_COLOR)
+					background = property->value.color;
+				break;
+			case CSS_PT_COLOR:
+				foreground = property->value.color;
+				break;
+			case CSS_PT_FONT_WEIGHT:
+				if (property->value.font_attribute.add & AT_BOLD)
+					attr |= SCREEN_ATTR_BOLD;
+				break;
+			case CSS_PT_FONT_STYLE:
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+
+				if (property->value.font_attribute.add & AT_ITALIC)
+					attr |= SCREEN_ATTR_ITALIC;
+				break;
+			case CSS_PT_TEXT_DECORATION:
+				if (property->value.font_attribute.add & AT_UNDERLINE)
+					attr |= SCREEN_ATTR_UNDERLINE;
+				break;
+			case CSS_PT_DISPLAY:
+			case CSS_PT_NONE:
+			case CSS_PT_TEXT_ALIGN:
+			case CSS_PT_WHITE_SPACE:
+			case CSS_PT_LAST:
+				break;
+			}
+		}
+	}
+
+	init_template(template, options, background, foreground, attr);
 }
 
 

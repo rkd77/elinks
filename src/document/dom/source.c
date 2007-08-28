@@ -303,6 +303,57 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *da
 	return DOM_CODE_OK;
 }
 
+
+static enum dom_code
+render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *data)
+{
+	struct dom_renderer *renderer = stack->current->data;
+	struct css_stylesheet *css = &default_stylesheet;
+	struct document *document = renderer->document;
+	enum dom_node_type type;
+
+	/* Initialize styles for all the DOM node types. */
+
+	for (type = 0; type < DOM_NODES; type++) {
+		struct screen_char *template = &renderer->styles[type];
+		color_T background = document->options.default_bg;
+		color_T foreground = document->options.default_fg;
+		enum screen_char_attr attr = 0;
+		static int i_want_struct_module_for_dom;
+
+		struct dom_string *name = get_dom_node_type_name(type);
+		struct css_selector *selector = NULL;
+
+		if (!i_want_struct_module_for_dom) {
+			static const unsigned char default_colors[] =
+				"document	{ color: yellow } "
+				"element	{ color: lightgreen } "
+				"entity-reference { color: red } "
+				"proc-instruction { color: red } "
+				"attribute	{ color: magenta } "
+				"comment	{ color: aqua } "
+				"cdata-section	{ color: orange2 } ";
+			unsigned char *styles = (unsigned char *) default_colors;
+
+			i_want_struct_module_for_dom = 1;
+			/* When someone will get here earlier than at 4am,
+			 * this will be done in some init function, perhaps
+			 * not overriding the user's default stylesheet. */
+			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
+		}
+
+		if (name)
+		if (is_dom_string_set(name))
+			selector = find_css_selector(&css->selectors,
+						     CST_ELEMENT, CSR_ROOT,
+						     name->string, name->length);
+		init_template_by_style(template, &document->options, background, foreground, attr,
+				       selector ? &selector->properties : NULL);
+	}
+
+	return DOM_CODE_OK;
+}
+
 static enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
@@ -318,6 +369,7 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 	return DOM_CODE_OK;
 }
 
+
 struct dom_stack_context_info dom_source_renderer_context_info = {
 	/* Object size: */			0,
 	/* Push: */
@@ -331,7 +383,7 @@ struct dom_stack_context_info dom_source_renderer_context_info = {
 		/* DOM_NODE_ENTITY		*/ render_dom_node_source,
 		/* DOM_NODE_PROC_INSTRUCTION	*/ render_dom_element_source,
 		/* DOM_NODE_COMMENT		*/ render_dom_node_source,
-		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ render_dom_document_start,
 		/* DOM_NODE_DOCUMENT_TYPE	*/ render_dom_node_source,
 		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ render_dom_node_source,
 		/* DOM_NODE_NOTATION		*/ render_dom_node_source,
