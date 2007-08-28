@@ -256,11 +256,15 @@ get_test_opt(char **argref, const char *name, int *argi, int argc, char *argv[],
 	arg += namelen;
 	if (*arg == '=') {
 		(*argref) = arg + 1;
-	} else {
+
+	} else if (!*arg) {
 		(*argi)++;
 		if ((*argi) >= argc)
 			die("--%s expects %s", name, expect_msg);
 		(*argref) = argv[(*argi)];
+
+	} else {
+		return 0;
 	}
 
 	return 1;
