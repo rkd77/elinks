@@ -774,26 +774,15 @@ struct module mailcap_mime_module = struct_module(
 );
 
 #ifdef TEST_MAILCAP
+
+#include "util/test.h"
+
 /* Some ugly shortcuts for getting defined symbols to work. */
 int default_mime_backend,
     install_signal_handler,
     mimetypes_mime_backend,
     program;
 LIST_OF(struct terminal) terminals;
-
-void die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(1);
-}
 
 int
 main(int argc, char *argv[])
