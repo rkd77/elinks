@@ -22,7 +22,9 @@
 
 enum rss_style {
 	RSS_STYLE_TITLE,
-	RSS_STYLE_AUX,
+	RSS_STYLE_AUTHOR,
+	RSS_STYLE_AUTHOR_DATE_SEP,
+	RSS_STYLE_DATE,
 	RSS_STYLES,
 };
 
@@ -176,17 +178,17 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	X(renderer) = 0;
 
 	if (author && is_dom_string_set(author)) {
-		render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
+		render_dom_text(renderer, &data->styles[RSS_STYLE_AUTHOR],
 				author->string, author->length);
 	}
 
 	if (date && is_dom_string_set(date)) {
 		if (author && is_dom_string_set(author)) {
-			render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
+			render_dom_text(renderer, &data->styles[RSS_STYLE_AUTHOR_DATE_SEP],
 					" - ", 3);
 		}
 
-		render_dom_text(renderer, &data->styles[RSS_STYLE_AUX],
+		render_dom_text(renderer, &data->styles[RSS_STYLE_DATE],
 				date->string, date->length);
 	}
 
@@ -214,7 +216,9 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 		if (!i_want_struct_module_for_dom) {
 			static const unsigned char default_colors[] =
 				"title		{ color: lightgreen } "
-				"aux		{ color: aquA} // author, title ";
+				"author		{ color: aqua }"
+				"author-date-sep{ color: aqua }"
+				"date		{ color: aqua }";
 			unsigned char *styles = (unsigned char *) default_colors;
 
 			i_want_struct_module_for_dom = 1;
@@ -231,7 +235,8 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 
 	for (type = 0; type < RSS_STYLES; type++) {
 		struct screen_char *template = &data->styles[type];
-		static const unsigned char *names[RSS_STYLES] = { "title", "aux" };
+		static const unsigned char *names[RSS_STYLES] =
+			{ "title", "author", "author-date-sep", "date" };
 		struct css_selector *selector = NULL;
 
 		selector = find_css_selector(&css->selectors,
