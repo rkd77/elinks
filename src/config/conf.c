@@ -105,8 +105,8 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 	bin = **file;
 	**file = '\0';
 	optname = stracpy(optname);
-	if (!optname) return ERROR_NOMEM;
 	**file = bin;
+	if (!optname) return ERROR_NOMEM;
 
 	*file = skip_white(*file, line);
 
@@ -180,8 +180,8 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 	bin = **file;
 	**file = '\0';
 	optname = stracpy(optname);
-	if (!optname) return ERROR_NOMEM;
 	**file = bin;
+	if (!optname) return ERROR_NOMEM;
 
 	/* Mirror what we have */
 	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
