@@ -169,7 +169,17 @@ extern void smart_config_string(struct string *, int, int,
 				void (*)(struct string *, struct option *,
 					 unsigned char *, int, int, int, int));
 
-extern struct option *copy_option(struct option *);
+enum copy_option_flags {
+	/* Do not create a listbox option for the new option. */
+	CO_NO_LISTBOX_ITEM = (1 << 0),
+
+	/* Do not copy children. */
+	CO_SHALLOW         = (1 << 1),
+};
+
+extern struct option *copy_option(struct option *, int);
+struct option *get_option_shadow(struct option *, struct option *,
+                                 struct option *);
 extern void delete_option(struct option *);
 void mark_option_as_deleted(struct option *);
 

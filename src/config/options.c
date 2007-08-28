@@ -210,7 +210,7 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 		 * option. By having _template_ OPT_AUTOCREATE and _template_
 		 * inside, you can have even multi-level autocreating. */
 
-		option = copy_option(template);
+		option = copy_option(template, 0);
 		if (!option) {
 			mem_free(aname);
 			return NULL;
@@ -618,7 +618,7 @@ delete_option(struct option *option)
 }
 
 struct option *
-copy_option(struct option *template)
+copy_option(struct option *template, int flags)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
@@ -633,7 +633,8 @@ copy_option(struct option *template)
 	option->desc = template->desc;
 	option->change_hook = template->change_hook;
 
-	option->box_item = init_option_listbox_item(option);
+	if (!(flags & CO_NO_LISTBOX_ITEM))
+		option->box_item = init_option_listbox_item(option);
 	if (option->box_item) {
 		if (template->box_item) {
 			option->box_item->type = template->box_item->type;
@@ -642,12 +643,54 @@ copy_option(struct option *template)
 	}
 
 	if (option_types[template->type].dup) {
-		option_types[template->type].dup(option, template);
+		option_types[template->type].dup(option, template, flags);
 	} else {
 		option->value = template->value;
 	}
 
 	return option;
+}
+
+/* Return the shadow option in @shadow_tree of @option in @tree. If @option
+ * isn't yet shadowed in @shadow_tree, shadow it (i.e. create a copy
+ * in @shadow_tree) along with any ancestors that aren't shadowed. */
+struct option *
+get_option_shadow(struct option *option, struct option *tree,
+                  struct option *shadow_tree)
+{
+
+	struct option *shadow_option = NULL;
+
+	assert(option);
+	assert(tree);
+	assert(shadow_tree);
+
+	if (option == tree) {
+		shadow_option = shadow_tree;
+	} else if (option->root && option->name) {
+		struct option *shadow_root;
+
+		shadow_root = get_option_shadow(option->root, tree,
+		                                shadow_tree);
+		if (!shadow_root) return NULL;
+
+		shadow_option = get_opt_rec_real(shadow_root, option->name);
+		if (!shadow_option) {
+			shadow_option = copy_option(option,
+			                            CO_SHALLOW
+			                             | CO_NO_LISTBOX_ITEM);
+			if (shadow_option) {
+				shadow_option->root = shadow_root;
+				/* No need to sort, is there? It isn't shown
+				 * in the options manager. -- Miciah */
+				add_to_list_end(*shadow_root->value.tree,
+				                shadow_option);
+			}
+
+		}
+	}
+
+	return shadow_option;
 }
 
 LIST_OF(struct option) *
