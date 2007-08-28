@@ -19,7 +19,6 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
-#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/refresh.h"
 #include "document/view.h"

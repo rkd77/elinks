@@ -29,7 +29,6 @@
 #include "dialogs/menu.h"
 #include "document/document.h"
 #include "document/forms.h"
-#include "document/html/parser.h"
 #include "document/view.h"
 #include "intl/gettext/libintl.h"
 #include "formhist/formhist.h"

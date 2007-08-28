@@ -13,7 +13,6 @@
 #include "document/css/property.h"
 #include "document/css/scanner.h"
 #include "document/css/value.h"
-#include "document/html/parser.h"
 #include "util/color.h"
 #include "util/error.h"
 #include "util/memory.h"

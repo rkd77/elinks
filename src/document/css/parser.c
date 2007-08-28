@@ -15,7 +15,6 @@
 #include "document/css/scanner.h"
 #include "document/css/stylesheet.h"
 #include "document/css/value.h"
-#include "document/html/parser.h"
 #include "util/color.h"
 #include "util/lists.h"
 #include "util/error.h"
