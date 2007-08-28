@@ -42,10 +42,6 @@ struct dom_renderer {
 #define Y(renderer)		((renderer)->canvas_y)
 
 
-void init_template(struct screen_char *template,
-		   struct document_options *options,
-                   color_T background, color_T foreground,
-		   enum screen_char_attr attr);
 void init_template_by_style(struct screen_char *template,
 		            struct document_options *options,
 	                    color_T background, color_T foreground,

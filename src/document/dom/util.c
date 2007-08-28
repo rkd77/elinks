@@ -26,7 +26,7 @@
 #include "util/box.h"
 
 
-inline void
+static inline void
 init_template(struct screen_char *template, struct document_options *options,
 	      color_T background, color_T foreground, enum screen_char_attr attr)
 {
