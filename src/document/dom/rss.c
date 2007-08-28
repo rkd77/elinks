@@ -214,8 +214,8 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 
 	for (type = 0; type < RSS_STYLES; type++) {
 		struct screen_char *template = &data->styles[type];
-		color_T background = document->options.default_bg;
-		color_T foreground = document->options.default_fg;
+		color_T background = document->options.default_style.bg;
+		color_T foreground = document->options.default_style.fg;
 		static int i_want_struct_module_for_dom;
 
 		static unsigned char *names[RSS_STYLES] = { "title", "aux" };

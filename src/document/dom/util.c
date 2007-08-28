@@ -292,7 +292,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
 	link->where = where;
-	link->color.background = document->options.default_bg;
+	link->color.background = document->options.default_style.bg;
 	link->color.foreground = fgcolor;
 	link->number = document->nlinks;
 

@@ -342,8 +342,8 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 
 	for (type = 0; type < DOM_NODES; type++) {
 		struct screen_char *template = &data->styles[type];
-		color_T background = document->options.default_bg;
-		color_T foreground = document->options.default_fg;
+		color_T background = document->options.default_style.bg;
+		color_T foreground = document->options.default_style.fg;
 		static int i_want_struct_module_for_dom;
 
 		struct dom_string *name = get_dom_node_type_name(type);

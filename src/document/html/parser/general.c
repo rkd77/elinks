@@ -197,7 +197,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.bgcolor != html_context->options->default_bg
+	    && par_format.bgcolor != html_context->options->default_style.bg
 	    && !search_html_stack(html_context, "BODY")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
