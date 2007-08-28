@@ -31,6 +31,7 @@
 #include "protocol/uri.h"
 #include "session/location.h"
 #include "session/session.h"
+#include "terminal/draw.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/error.h"
@@ -623,4 +624,37 @@ get_convert_table(unsigned char *head, int to_cp,
 	if (from_cp) *from_cp = cp_index;
 
 	return get_translation_table(cp_index, to_cp);
+}
+
+
+void
+get_screen_char_template(struct screen_char *template,
+			 struct document_options *options,
+			 struct text_style style)
+{
+	template->attr = 0;
+	template->data = ' ';
+
+	if (style.attr) {
+		if (style.attr & AT_UNDERLINE) {
+			template->attr |= SCREEN_ATTR_UNDERLINE;
+		}
+
+		if (style.attr & AT_BOLD) {
+			template->attr |= SCREEN_ATTR_BOLD;
+		}
+
+		if (style.attr & AT_ITALIC) {
+			template->attr |= SCREEN_ATTR_ITALIC;
+		}
+
+		if (style.attr & AT_GRAPHICS) {
+			template->attr |= SCREEN_ATTR_FRAME;
+		}
+	}
+
+	{
+		struct color_pair colors = INIT_COLOR_PAIR(style.bg, style.fg);
+		set_term_color(template, &colors, options->color_flags, options->color_mode);
+	}
 }

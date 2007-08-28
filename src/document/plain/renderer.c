@@ -478,14 +478,9 @@ next:
 static void
 init_template(struct screen_char *template, struct document_options *options)
 {
-	color_T background = options->default_bg;
-	color_T foreground = options->default_fg;
-	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
+	struct text_style style = { 0, options->default_fg, options->default_bg };
 
-	template->attr = 0;
-	template->data = ' ';
-	set_term_color(template, &colors,
-		       options->color_flags, options->color_mode);
+	get_screen_char_template(template, options, style);
 }
 
 static struct node *

@@ -344,7 +344,6 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 		struct screen_char *template = &data->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
-		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
 		struct dom_string *name = get_dom_node_type_name(type);
@@ -373,7 +372,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
 						     name->string, name->length);
-		init_template_by_style(template, &document->options, background, foreground, attr,
+		init_template_by_style(template, &document->options, 0, foreground, background,
 				       selector ? &selector->properties : NULL);
 	}
 

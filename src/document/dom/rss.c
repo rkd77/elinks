@@ -216,7 +216,6 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 		struct screen_char *template = &data->styles[type];
 		color_T background = document->options.default_bg;
 		color_T foreground = document->options.default_fg;
-		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
 		static unsigned char *names[RSS_STYLES] = { "title", "aux" };
@@ -238,7 +237,7 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 		selector = find_css_selector(&css->selectors,
 					     CST_ELEMENT, CSR_ROOT,
 					     names[type], strlen(names[type]));
-		init_template_by_style(template, &document->options, background, foreground, attr,
+		init_template_by_style(template, &document->options, 0, foreground, background,
 				       selector ? &selector->properties : NULL);
 	}
 

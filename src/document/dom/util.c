@@ -28,18 +28,14 @@
 
 static inline void
 init_template(struct screen_char *template, struct document_options *options,
-	      color_T background, color_T foreground, enum screen_char_attr attr)
+	      enum screen_char_attr attr, color_T foreground, color_T background)
 {
-	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
+	struct text_style style = { attr, foreground, background };
 
-	template->attr = attr;
-	template->data = ' ';
-	set_term_color(template, &colors,
-		       options->color_flags, options->color_mode);
+	get_screen_char_template(template, options, style);
 }
 
-
-inline void
+void
 init_template_by_style(struct screen_char *template, struct document_options *options,
 	               color_T background, color_T foreground, enum screen_char_attr attr,
 	               LIST_OF(struct css_property) *properties)
@@ -47,6 +43,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 	struct css_property *property;
 
 	if (properties) {
+		/* TODO: Use the CSS appliers. */
 		foreach (property, *properties) {
 			switch (property->type) {
 			case CSS_PT_BACKGROUND_COLOR:
@@ -58,19 +55,13 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 				foreground = property->value.color;
 				break;
 			case CSS_PT_FONT_WEIGHT:
-				if (property->value.font_attribute.add & AT_BOLD)
-					attr |= SCREEN_ATTR_BOLD;
+				attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_FONT_STYLE:
-				if (property->value.font_attribute.add & AT_UNDERLINE)
-					attr |= SCREEN_ATTR_UNDERLINE;
-
-				if (property->value.font_attribute.add & AT_ITALIC)
-					attr |= SCREEN_ATTR_ITALIC;
+				attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_TEXT_DECORATION:
-				if (property->value.font_attribute.add & AT_UNDERLINE)
-					attr |= SCREEN_ATTR_UNDERLINE;
+				attr |= property->value.font_attribute.add;
 				break;
 			case CSS_PT_DISPLAY:
 			case CSS_PT_NONE:
@@ -82,7 +73,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 		}
 	}
 
-	init_template(template, options, background, foreground, attr);
+	init_template(template, options, attr, foreground, background);
 }
 
 
@@ -305,7 +296,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->number = document->nlinks;
 
 	init_template(&template, &document->options,
-		      link->color.background, link->color.foreground, 0);
+		      0, link->color.foreground, link->color.background);
 
 	render_dom_text(renderer, &template, string, length);
 

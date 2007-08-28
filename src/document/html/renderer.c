@@ -345,34 +345,14 @@ get_format_screen_char(struct html_context *html_context,
 
 	if (memcmp(&ta_cache, &format.style, sizeof(ta_cache))) {
 		copy_struct(&ta_cache, &format.style);
-
-		schar_cache.attr = 0;
-		if (format.style.attr) {
-			if (format.style.attr & AT_UNDERLINE) {
-				schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
-			}
-
-			if (format.style.attr & AT_BOLD) {
-				schar_cache.attr |= SCREEN_ATTR_BOLD;
-			}
-
-			if (format.style.attr & AT_ITALIC) {
-				schar_cache.attr |= SCREEN_ATTR_ITALIC;
-			}
-
-			if (format.style.attr & AT_GRAPHICS) {
-				schar_cache.attr |= SCREEN_ATTR_FRAME;
-			}
-		}
+		struct text_style final_style = format.style;
 
 		if (link_state != LINK_STATE_NONE
 		    && html_context->options->underline_links) {
-			schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
+			final_style.attr |= AT_UNDERLINE;
 		}
 
-		set_screen_char_color(&schar_cache, format.style.bg, format.style.fg,
-				      html_context->options->color_flags,
-				      html_context->options->color_mode);
+		get_screen_char_template(&schar_cache, html_context->options, final_style);
 	}
 
 	if (!!(schar_cache.attr & SCREEN_ATTR_UNSEARCHABLE)
