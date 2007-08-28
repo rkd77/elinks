@@ -75,7 +75,7 @@ quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(n
 # Special handling of conditional variables
 
 SUBDIRS += $(SUBDIRS-yes) $(SUBDIRS-unlessno) $(SUBDIRS-unless)
-OBJS	+= $(OBJS-yes) $(OBJS-unlessno) $(SUBDIRS-unless)
+OBJS	+= $(OBJS-yes) $(OBJS-unlessno) $(OBJS-unless)
 
 ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-) $(SUBDIRS-unlessyes)
 ALTOBJS  = $(OBJS-no) $(OBJS-) $(OBJS-unlessyes)
