@@ -243,33 +243,6 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	return DOM_CODE_OK;
 }
 
-static int
-get_test_opt(char **argref, const char *name, int *argi, int argc, char *argv[],
-	     const char *expect_msg)
-{
-	char *arg = *argref;
-	int namelen = strlen(name);
-
-	if (strncmp(arg, name, namelen))
-		return 0;
-
-	arg += namelen;
-	if (*arg == '=') {
-		(*argref) = arg + 1;
-
-	} else if (!*arg) {
-		(*argi)++;
-		if ((*argi) >= argc)
-			die("--%s expects %s", name, expect_msg);
-		(*argref) = argv[(*argi)];
-
-	} else {
-		return 0;
-	}
-
-	return 1;
-}
-
 int
 main(int argc, char *argv[])
 {
