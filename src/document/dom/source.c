@@ -43,6 +43,11 @@
 	assertm(check_dom_node_source(renderer, str, len), "renderer[%p : %p] str[%p : %p]", \
 		(renderer)->source, (renderer)->end, (str), (str) + (len))
 
+
+#define URL_REGEX "(file://|((f|ht|nt)tp(s)?|smb)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?)(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
+#define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
+
+
 static inline void
 render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
 {
@@ -351,6 +356,16 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 				       selector ? &selector->properties : NULL);
 	}
 
+#ifdef HAVE_REGEX_H
+	if (renderer->document->options.plain_display_links) {
+		if (regcomp(&renderer->url_regex, URL_REGEX, URL_REGFLAGS)) {
+			regfree(&renderer->url_regex);
+		} else {
+			renderer->find_url = 1;
+		}
+	}
+#endif
+
 	return DOM_CODE_OK;
 }
 
@@ -365,6 +380,11 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 	if (check_dom_node_source(renderer, renderer->position, 0)) {
 		render_dom_flush(renderer, renderer->end);
 	}
+
+#ifdef HAVE_REGEX_H
+	if (renderer->find_url)
+		regfree(&renderer->url_regex);
+#endif
 
 	return DOM_CODE_OK;
 }

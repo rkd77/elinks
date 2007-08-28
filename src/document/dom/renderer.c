@@ -4,10 +4,6 @@
 #include "config.h"
 #endif
 
-#include <sys/types.h> /* FreeBSD needs this before regex.h */
-#ifdef HAVE_REGEX_H
-#include <regex.h>
-#endif
 #include <string.h>
 
 #include "elinks.h"
@@ -33,10 +29,6 @@
 #include "util/string.h"
 
 
-#define URL_REGEX "(file://|((f|ht|nt)tp(s)?|smb)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?)(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
-#define URL_REGFLAGS (REG_ICASE | REG_EXTENDED)
-
-
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 		  struct string *buffer, struct conv_table *convert_table)
@@ -50,25 +42,11 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 	renderer->end		= buffer->source + buffer->length;
 	renderer->position	= renderer->source;
 	renderer->base_uri	= get_uri_reference(document->uri);
-
-#ifdef HAVE_REGEX_H
-	if (renderer->document->options.plain_display_links) {
-		if (regcomp(&renderer->url_regex, URL_REGEX, URL_REGFLAGS)) {
-			regfree(&renderer->url_regex);
-		} else {
-			renderer->find_url = 1;
-		}
-	}
-#endif
 }
 
 static inline void
 done_dom_renderer(struct dom_renderer *renderer)
 {
-#ifdef HAVE_REGEX_H
-	if (renderer->find_url)
-		regfree(&renderer->url_regex);
-#endif
 	done_uri(renderer->base_uri);
 }
 
