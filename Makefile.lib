@@ -74,11 +74,11 @@ quiet_cmd_uninstall = "     [$(UNINSTALL_COLOR)UNINSTALL$(END_COLOR)]   $(3)/$(n
 #############################################################################
 # Special handling of conditional variables
 
-SUBDIRS += $(SUBDIRS-yes)
-OBJS	+= $(OBJS-yes)
+SUBDIRS += $(SUBDIRS-yes) $(SUBDIRS-unlessno) $(SUBDIRS-unless)
+OBJS	+= $(OBJS-yes) $(OBJS-unlessno) $(SUBDIRS-unless)
 
-ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-)
-ALTOBJS  = $(OBJS-no) $(OBJS-)
+ALTDIRS  = $(SUBDIRS-no) $(SUBDIRS-) $(SUBDIRS-unlessyes)
+ALTOBJS  = $(OBJS-no) $(OBJS-) $(OBJS-unlessyes)
 
 ifneq ($(findstring cleanall,$(MAKECMDGOALS)),)
 INCLUDE_ALL=1
@@ -206,7 +206,7 @@ TESTDEPS += \
  $(top_builddir)/src/util/string.o \
  $(top_builddir)/src/util/time.o
 
-TESTDEPS += $(TESTDEPS-yes)
+TESTDEPS += $(TESTDEPS-yes) $(TESTDEPS-unlessno)
 
 TEST_LIB=$(top_srcdir)/test/libtest.sh
 export TEST_LIB
