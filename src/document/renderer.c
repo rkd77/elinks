@@ -1,4 +1,4 @@
-/** HTML renderer
+/** Generic renderer multiplexer
  * @file */
 
 #ifdef HAVE_CONFIG_H
