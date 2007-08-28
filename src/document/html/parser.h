@@ -147,11 +147,10 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type,
 		                  ...));
-
 void done_html_parser(struct html_context *html_context);
-struct html_element *init_html_parser_state(struct html_context *html_context, enum html_element_mortality_type type, int align, int margin, int width);
-void done_html_parser_state(struct html_context *html_context,
-                            struct html_element *element);
+
+void *init_html_parser_state(struct html_context *html_context, enum html_element_mortality_type type, int align, int margin, int width);
+void done_html_parser_state(struct html_context *html_context, void *state);
 
 /* Interface for the table handling */
 

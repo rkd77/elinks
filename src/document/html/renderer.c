@@ -2074,7 +2074,7 @@ format_html_part(struct html_context *html_context,
 		 int link_num)
 {
 	struct part *part;
-	struct html_element *html_state;
+	void *html_state;
 	int llm = renderer_context.last_link_to_move;
 	struct tag *ltm = renderer_context.last_tag_to_move;
 	int ef = renderer_context.empty_format;
