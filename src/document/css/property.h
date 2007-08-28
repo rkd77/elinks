@@ -48,7 +48,7 @@ struct css_property {
 			CSS_DISP_BLOCK,
 		} display;
 		struct {
-			enum format_attr add, rem;
+			enum text_style_format add, rem;
 		} font_attribute;
 		enum format_align text_align;
 		/* TODO:

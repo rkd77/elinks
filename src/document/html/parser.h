@@ -21,7 +21,7 @@ struct uri;
  * files - there's lack of any well defined interface and it's all randomly
  * mixed up :/. */
 
-enum format_attr {
+enum text_style_format {
 	AT_BOLD = 1,
 	AT_ITALIC = 2,
 	AT_UNDERLINE = 4,
@@ -31,7 +31,7 @@ enum format_attr {
 };
 
 struct text_style {
-	enum format_attr attr;
+	enum text_style_format attr;
 	color_T fg;
 	color_T bg;
 };
