@@ -799,43 +799,15 @@ main(int argc, char *argv[])
 
 		arg += 2;
 
-		if (!strncmp(arg, "path", 4)) {
-			arg += 4;
-			if (*arg == '=') {
-				arg++;
-				get_mailcap_path() = arg;
-			} else {
-				i++;
-				if (i >= argc)
-					die("--path expects a parameter");
-				get_mailcap_path() = argv[i];
-			}
+		if (get_test_opt(&arg, "path", &i, argc, argv, "a string")) {
+			get_mailcap_path() = arg;
 			done_mailcap(NULL);
 
-		} else if (!strncmp(arg, "format", 6)) {
-			arg += 6;
-			if (*arg == '=') {
-				arg++;
-				format = arg;
-			} else {
-				i++;
-				if (i >= argc)
-					die("--format expects a parameter");
-				format = argv[i];
-			}
+		} else if (get_test_opt(&arg, "format", &i, argc, argv, "a string")) {
+			format = arg;
 
-		} else if (!strncmp(arg, "get", 3)) {
+		} else if (get_test_opt(&arg, "get", &i, argc, argv, "a string")) {
 			struct mime_handler *handler;
-
-			arg += 3;
-			if (*arg == '=') {
-				arg++;
-			} else {
-				i++;
-				if (i >= argc)
-					die("--get expects a parameter");
-				arg = argv[i];
-			}
 
 			if (has_gotten)
 				printf("\n");
