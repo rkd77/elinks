@@ -31,8 +31,6 @@ enum rss_style {
 struct rss_renderer {
 	struct screen_char styles[RSS_STYLES];
 
-	struct dom_node *channel;
-	struct dom_node_list *items;
 	struct dom_node *item;
 	struct dom_node *node;
 	struct dom_string text;
@@ -60,8 +58,13 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	struct dom_string *author = get_rss_text(item, RSS_ELEMENT_AUTHOR);
 	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
 
+	if (item->data.element.type == RSS_ELEMENT_ITEM) {
+		Y(renderer)++;
+		X(renderer) = 0;
+	}
+
 	if (title && is_dom_string_set(title)) {
-		if (item == rss->channel) {
+		if (item->data.element.type == RSS_ELEMENT_CHANNEL) {
 			unsigned char *str;
 
 			str = convert_string(renderer->convert_table,
@@ -107,6 +110,15 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	}
 }
 
+static void
+flush_rss_item(struct dom_renderer *renderer, struct rss_renderer *rss)
+{
+	if (rss->item) {
+		render_rss_item(renderer, rss->item);
+		rss->item = NULL;
+	}
+}
+
 
 static enum dom_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
@@ -119,22 +131,13 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_CHANNEL:
 		/* The stack should have: #document * channel */
-		if (stack->depth == 3 && !rss->channel)
-			rss->channel = node;
+		if (stack->depth == 3)
+			rss->item = node;
 		break;
 
 	case RSS_ELEMENT_ITEM:
-		/* The stack should have: #document * channel item */
-#if 0
-		/* Don't be so strict ... */
-		if (stack->depth != 4)
-			break;
-#endif
-		/* ... but be exclusive. */
-		if (!rss->item) {
-			add_to_dom_node_list(&rss->items, node, -1);
-			rss->item = node;
-		}
+		flush_rss_item(renderer, rss);
+		rss->item = node;
 		break;
 
 	case RSS_ELEMENT_LINK:
@@ -159,10 +162,13 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	assert(node && node->parent && renderer && renderer->document);
 
 	switch (node->data.element.type) {
+	case RSS_ELEMENT_CHANNEL:
+		flush_rss_item(renderer, rss);
+		break;
+
 	case RSS_ELEMENT_ITEM:
 		if (is_dom_string_set(&rss->text))
 			done_dom_string(&rss->text);
-		rss->item = NULL;
 		break;
 
 	case RSS_ELEMENT_LINK:
@@ -243,25 +249,8 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 	struct dom_renderer *renderer = stack->current->data;
 	struct rss_renderer *rss = renderer->data;
 
-	if (!rss->channel)
-		return DOM_CODE_OK;
-
-	render_rss_item(renderer, rss->channel);
-
-	if (rss->items) {
-		struct dom_node *node;
-		int index;
-
-		foreach_dom_node (rss->items, node, index) {
-			Y(renderer)++;
-			X(renderer) = 0;
-			render_rss_item(renderer, node);
-		}
-	}
-
 	if (is_dom_string_set(&rss->text))
 		done_dom_string(&rss->text);
-	mem_free_if(rss->items);
 
 	done_dom_node(root);
 
