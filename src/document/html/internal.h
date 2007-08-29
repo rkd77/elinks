@@ -14,7 +14,7 @@ enum html_special_type;
 /* The HTML parser context. It is also heavily used by the renderer so DOM
  * parser must use it as well. */
 
-#ifndef CONFIG_DOM_CSS
+#ifndef CONFIG_DOM_HTML
 enum html_whitespace_state {
 	/* Either we are starting a new "block" or the last segment of the
 	 * current "block" is ending with whitespace and we should eat any
