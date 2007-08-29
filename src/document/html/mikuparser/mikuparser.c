@@ -706,7 +706,7 @@ void *
 init_html_parser_state(struct html_context *html_context, int is_root,
                        int align, int margin, int width)
 {
-	html_stack_dup(html_context, is_root ? ELEMENT_IMMORTAL : ELEMENT_DONTKILL);
+	html_stack_dup(html_context, is_root ? ELEMENT_IMMORTAL : ELEMENT_DONT_KILL);
 
 	par_format.align = align;
 
