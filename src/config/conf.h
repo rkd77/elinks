@@ -24,7 +24,6 @@ void parse_config_file(struct option *options, unsigned char *name,
 int write_config(struct terminal *);
 
 unsigned char *
-create_config_string(unsigned char *prefix, unsigned char *name,
-		     struct option *options);
+create_config_string(unsigned char *prefix, unsigned char *name);
 
 #endif

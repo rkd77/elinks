@@ -693,9 +693,9 @@ add_cfg_header_to_string(struct string *string, unsigned char *text)
 }
 
 unsigned char *
-create_config_string(unsigned char *prefix, unsigned char *name,
-		     struct option *options)
+create_config_string(unsigned char *prefix, unsigned char *name)
 {
+	struct option *options = config_options;
 	struct string config;
 	/* Don't write headers if nothing will be added anyway. */
 	struct string tmpstring;
@@ -797,12 +797,12 @@ get_me_out:
 
 static int
 write_config_file(unsigned char *prefix, unsigned char *name,
-		  struct option *options, struct terminal *term)
+                  struct terminal *term)
 {
 	int ret = -1;
 	struct secure_save_info *ssi;
 	unsigned char *config_file = NULL;
-	unsigned char *cfg_str = create_config_string(prefix, name, options);
+	unsigned char *cfg_str = create_config_string(prefix, name);
 	int prefixlen = strlen(prefix);
 	int prefix_has_slash = (prefixlen && dir_sep(prefix[prefixlen - 1]));
 	int name_has_slash = dir_sep(name[0]);
@@ -842,5 +842,5 @@ write_config(struct terminal *term)
 	}
 
 	return write_config_file(elinks_home, get_cmd_opt_str("config-file"),
-				 config_options, term);
+	                         term);
 }

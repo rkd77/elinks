@@ -687,7 +687,7 @@ printconfigdump_cmd(struct option *option, unsigned char ***argv, int *argc)
 	/* Print all. */
 	get_opt_int("config.saving_style", NULL) = 2;
 
-	config_string = create_config_string("", "", config_options);
+	config_string = create_config_string("", "");
 	if (config_string) {
 		printf("%s", config_string);
 		mem_free(config_string);
