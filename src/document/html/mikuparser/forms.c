@@ -522,7 +522,7 @@ do_html_select_multiple(struct html_context *html_context, unsigned char *a,
 
 	if (!al) return;
 	html_focusable(html_context, a);
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 	mem_free_set(&format.select, al);
 	format.select_disabled = has_attr(a, "disabled", html_context->doc_cp)
 	                         ? FORM_MODE_DISABLED

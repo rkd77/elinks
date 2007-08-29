@@ -82,14 +82,14 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	if_assert_failed return;
 	assertm((void *) e != &miku(html_context)->stack, "trying to free bad html element");
 	if_assert_failed return;
-	assertm(e->type != ELEMENT_IMMORTAL, "trying to kill unkillable element");
+	assertm(miku_el(e)->type != ELEMENT_IMMORTAL, "trying to kill unkillable element");
 	if_assert_failed return;
 
 #ifdef CONFIG_ECMASCRIPT
 	/* As our another tiny l33t extension, we allow the onLoad attribute for
 	 * any element, executing it when that element is fully loaded. */
-	if (e->options)
-		onload = get_attr_val(e->options, "onLoad",
+	if (miku_el(e)->options)
+		onload = get_attr_val(miku_el(e)->options, "onLoad",
 		                     html_context->doc_cp);
 	if (html_context->part
 	    && html_context->part->document
@@ -120,6 +120,8 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	mem_free_if(e->attr.onmouseout);
 	mem_free_if(e->attr.onblur);
 
+	mem_free(miku_el(e));
+
 	del_from_list(e);
 	mem_free(e);
 #if 0
@@ -142,8 +144,10 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 
 	e = mem_alloc(sizeof(*e));
 	if (!e) return;
+	e->data = mem_alloc(sizeof(*e));
 
 	copy_struct(e, ep);
+	copy_struct(miku_el(e), miku_el(ep));
 
 	if (ep->attr.link) e->attr.link = stracpy(ep->attr.link);
 	if (ep->attr.target) e->attr.target = stracpy(ep->attr.target);
@@ -168,9 +172,9 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	}
 #endif
 
-	e->name = e->options = NULL;
+	e->name = miku_el(e)->options = NULL;
 	e->namelen = 0;
-	e->type = type;
+	miku_el(e)->type = type;
 
 	add_to_list(miku(html_context)->stack, e);
 }
@@ -221,7 +225,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 				continue;
 
 			if (!sk) {
-				if (e->type < ELEMENT_KILLABLE) break;
+				if (miku_el(e)->type < ELEMENT_KILLABLE) break;
 				va_end(arg);
 				kill_element(html_context, ls, e);
 				return;
@@ -238,7 +242,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 		}
 		va_end(arg);
 
-		if (e->type < ELEMENT_KILLABLE
+		if (miku_el(e)->type < ELEMENT_KILLABLE
 		    || (!strlcasecmp(e->name, e->namelen, "TABLE", 5)))
 			break;
 

@@ -237,7 +237,7 @@ html_script(struct html_context *html_context, unsigned char *a,
 			mem_free(type);
 not_processed:
 			/* Permit nested scripts and retreat. */
-			html_top->invisible++;
+			miku_el(html_top)->invisible++;
 			return;
 		}
 
@@ -424,7 +424,7 @@ void
 html_html_close(struct html_context *html_context, unsigned char *a,
                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	if (html_top->type >= ELEMENT_KILLABLE
+	if (miku_el(html_top)->type >= ELEMENT_KILLABLE
 	    && !miku(html_context)->was_body_background)
 		html_apply_canvas_bgcolor(html_context);
 }
@@ -462,8 +462,8 @@ void
 html_title(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	html_top->invisible = 1;
-	html_top->type = ELEMENT_WEAK;
+	miku_el(html_top)->invisible = 1;
+	miku_el(html_top)->type = ELEMENT_WEAK;
 }
 
 void
@@ -756,7 +756,7 @@ html_ul(struct html_context *html_context, unsigned char *a,
 		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
 
 	par_format.align = ALIGN_LEFT;
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 }
 
 void
@@ -791,7 +791,7 @@ html_ol(struct html_context *html_context, unsigned char *a,
 		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
 
 	par_format.align = ALIGN_LEFT;
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 }
 
 static struct {
@@ -939,7 +939,7 @@ html_dl(struct html_context *html_context, unsigned char *a,
 	par_format.list_number = 0;
 	par_format.align = ALIGN_LEFT;
 	par_format.dd_margin = par_format.leftmargin;
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 	if (!(par_format.flags & P_COMPACT)) {
 		ln_break(html_context, 2);
 		html_top->linebreak = 2;

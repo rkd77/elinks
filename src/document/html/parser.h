@@ -96,6 +96,37 @@ struct par_attrib {
 	color_T bgcolor;
 };
 
+
+/* Structure representing an HTML element; a stack of these is kept in
+ * HTML context. */
+
+struct html_element {
+	LIST_HEAD(struct html_element);
+
+	/* "inline" attributes */
+	struct text_attrib attr;
+	/* "block" attributes */
+	struct par_attrib parattr;
+
+	unsigned char *name;
+	int namelen;
+	/* See document/html/mikuparser/parse.c's element_info.linebreak
+	 * description. */
+	int linebreak;
+	struct frameset_desc *frameset;
+
+	/* For the needs of CSS engine. A wannabe bitmask. */
+	enum html_element_pseudo_class {
+		ELEMENT_LINK = 1,
+		ELEMENT_VISITED = 2,
+	} pseudo_class;
+
+	void *data;
+};
+#define is_inline_element(e) (e->linebreak == 0)
+#define is_block_element(e) (e->linebreak > 0)
+
+
 /* The HTML parser context. */
 
 struct html_context {

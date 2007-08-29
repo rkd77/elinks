@@ -40,30 +40,14 @@ enum html_element_mortality_type {
 	ELEMENT_WEAK,
 };
 
-struct html_element {
-	LIST_HEAD(struct html_element);
-
+struct mikuparser_element {
 	enum html_element_mortality_type type;
 
-	struct text_attrib attr;
-	struct par_attrib parattr;
 	int invisible;
-	unsigned char *name;
-	int namelen;
 	unsigned char *options;
-	/* See document/html/mikuparser/parse.c's element_info.linebreak
-	 * description. */
-	int linebreak;
-	struct frameset_desc *frameset;
-
-	/* For the needs of CSS engine. A wannabe bitmask. */
-	enum html_element_pseudo_class {
-		ELEMENT_LINK = 1,
-		ELEMENT_VISITED = 2,
-	} pseudo_class;
 };
-#define is_inline_element(e) (e->linebreak == 0)
-#define is_block_element(e) (e->linebreak > 0)
+
+#define miku_el(html_element) ((struct mikuparser_element *) html_context->data)
 
 
 /* Mikuparser-specific part of html_context */

@@ -96,7 +96,7 @@ get_target(struct document_options *options, unsigned char *a)
 void
 ln_break(struct html_context *html_context, int n)
 {
-	if (!n || html_top->invisible) return;
+	if (!n || miku_el(html_top)->invisible) return;
 	while (n > miku(html_context)->line_breax) {
 		miku(html_context)->line_breax++;
 		html_context->line_break_f(html_context);
@@ -111,7 +111,7 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 	if (html_is_preformatted())
 		miku(html_context)->putsp = HTML_SPACE_NORMAL;
 
-	if (!len || html_top->invisible)
+	if (!len || miku_el(html_top)->invisible)
 		return;
 
 	switch (miku(html_context)->putsp) {
@@ -223,8 +223,8 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 void
 html_skip(struct html_context *html_context, unsigned char *a)
 {
-	html_top->invisible = 1;
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->invisible = 1;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 }
 
 /* Parse meta refresh without URL= in it:
@@ -703,7 +703,7 @@ done_html_parser_state(struct html_context *html_context, void *state)
 #endif
 	}
 
-	html_top->type = ELEMENT_KILLABLE;
+	miku_el(html_top)->type = ELEMENT_KILLABLE;
 	pop_html_element(html_context);
 }
 
@@ -743,6 +743,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	e = mem_calloc(1, sizeof(*e));
 	if (!e) return NULL;
+	e->data = mem_calloc(1, sizeof(*miku_el(e)));
 	add_to_list(miku(html_context)->stack, e);
 
 	format.style.attr = 0;
@@ -773,12 +774,12 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	par_format.bgcolor = options->default_style.bg;
 
-	html_top->invisible = 0;
+	miku_el(html_top)->invisible = 0;
 	html_top->name = NULL;
    	html_top->namelen = 0;
-	html_top->options = NULL;
+	miku_el(html_top)->options = NULL;
 	html_top->linebreak = 1;
-	html_top->type = ELEMENT_DONT_KILL;
+	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 
 	miku(html_context)->has_link_lines = 0;
 

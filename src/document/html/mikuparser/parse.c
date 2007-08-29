@@ -772,7 +772,7 @@ next_break:
 
 element:
 		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
-		if (!endingtag && miku(html_context)->putsp == HTML_SPACE_ADD && !html_top->invisible)
+		if (!endingtag && miku(html_context)->putsp == HTML_SPACE_ADD && !miku_el(html_top)->invisible)
 			put_chrs(html_context, " ", 1);
 		put_chrs(html_context, base_pos, html - base_pos);
 		if (!html_is_preformatted() && !endingtag && miku(html_context)->putsp == HTML_SPACE_NORMAL) {
@@ -823,14 +823,14 @@ start_element(struct element_info *ei,
 	struct css_selector *selector = NULL;
 #endif
 
-	if (html_top->type == ELEMENT_WEAK) {
+	if (miku_el(html_top)->type == ELEMENT_WEAK) {
 		pop_html_element(html_context);
 	}
 
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. */
-	if (html_top->invisible
-	    && (ei->open != html_script || html_top->invisible < 2)) {
+	if (miku_el(html_top)->invisible
+	    && (ei->open != html_script || miku_el(html_top)->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
@@ -856,13 +856,13 @@ start_element(struct element_info *ei,
 
 		if (ei->type == ET_NON_NESTABLE) {
 			foreach (e, miku(html_context)->stack) {
-				if (e->type < ELEMENT_KILLABLE) break;
+				if (miku_el(e)->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
 		} else {
 			foreach (e, miku(html_context)->stack) {
 				if (is_block_element(e) && is_inline_element(ei)) break;
-				if (e->type < ELEMENT_KILLABLE) break;
+				if (miku_el(e)->type < ELEMENT_KILLABLE) break;
 				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
 			}
 		}
@@ -871,7 +871,7 @@ start_element(struct element_info *ei,
 			while (e->prev != (void *) &miku(html_context)->stack)
 				kill_html_stack_item(html_context, e->prev);
 
-			if (e->type > ELEMENT_IMMORTAL)
+			if (miku_el(e)->type > ELEMENT_IMMORTAL)
 				kill_html_stack_item(html_context, e);
 		}
 	}
@@ -880,7 +880,7 @@ start_element(struct element_info *ei,
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
 		html_top->name = name;
 		html_top->namelen = namelen;
-		html_top->options = attr;
+		miku_el(html_top)->options = attr;
 		html_top->linebreak = ei->linebreak;
 
 #ifdef CONFIG_ECMASCRIPT
@@ -899,7 +899,7 @@ start_element(struct element_info *ei,
 	}
 
 #ifdef CONFIG_CSS
-	if (html_top->options && html_context->options->css_enable) {
+	if (miku_el(html_top)->options && html_context->options->css_enable) {
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
 		 * Probably just applying CSS from more places, since we
@@ -931,7 +931,7 @@ start_element(struct element_info *ei,
 	ELEMENT_RENDER_PROLOGUE
 	if (ei->open) ei->open(html_context, attr, html, eof, &html);
 #ifdef CONFIG_CSS
-	if (selector && html_top->options) {
+	if (selector && miku_el(html_top)->options) {
 		/* Call it now to override default colors of the elements. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
@@ -973,7 +973,7 @@ end_element(struct element_info *ei,
 	foreach (e, miku(html_context)->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
-			if (e->type < ELEMENT_KILLABLE)
+			if (miku_el(e)->type < ELEMENT_KILLABLE)
 				break;
 			else
 				continue;

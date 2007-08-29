@@ -186,7 +186,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_ELEMENT, base);
 	}
 
-	if (!element->options)
+	if (!miku_el(element)->options)
 		return;
 
 	/* TODO: More pseudo-classess. --pasky */
@@ -234,7 +234,7 @@ get_css_selector_for_element(struct html_context *html_context,
 	unsigned char *code;
 	struct css_selector *selector;
 
-	assert(element && element->options && css);
+	assert(element && miku_el(element)->options && css);
 
 	selector = init_css_selector(NULL, CST_ELEMENT, CSR_ROOT, NULL, 0);
 	if (!selector)
@@ -251,7 +251,7 @@ get_css_selector_for_element(struct html_context *html_context,
 	DBG("Element %.*s applied.", element->namelen, element->name);
 #endif
 
-	code = get_attr_val(element->options, "style", html_context->doc_cp);
+	code = get_attr_val(miku_el(element)->options, "style", html_context->doc_cp);
 	if (code) {
 		struct css_selector *stylesel;
 		struct scanner scanner;
