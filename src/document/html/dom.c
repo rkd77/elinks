@@ -27,6 +27,56 @@
 #include "document/html/internal.h"
 
 
+static enum dom_code
+dom_html_pop_text(struct dom_stack *stack, struct dom_node *node, void *xxx)
+{
+	struct html_context *html_context = stack->current->data;
+
+	if (is_dom_string_set(&node->string)) {
+		html_context->put_chars_f(html_context,
+				node->string.string, node->string.length);
+	}
+	return DOM_CODE_OK;
+}
+
+
+struct dom_stack_context_info dom_html_renderer_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ dom_html_pop_text,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
+
 #ifdef CONFIG_CSS
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
@@ -78,12 +128,20 @@ init_html_parser(struct uri *uri, struct document_options *options,
 			          enum html_special_type, ...))
 {
 	struct html_context *html_context;
-
-	assert(uri && options);
-	if_assert_failed return NULL;
+	struct dom_string dom_uri = INIT_DOM_STRING(struri(uri), strlen(struri(uri)));
 
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
+
+	html_context->parser = init_sgml_parser(SGML_PARSER_TREE, SGML_DOCTYPE_HTML, &dom_uri, 0);
+	if (!html_context->parser) {
+		mem_free(html_context);
+		return NULL;
+	}
+
+	add_dom_stack_context(&html_context->parser->stack, html_context,
+			      &dom_html_renderer_context_info);
+	add_dom_config_normalizer(&html_context->parser->stack, DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS);
 
 	init_string(title);
 
@@ -125,6 +183,8 @@ done_html_parser(struct html_context *html_context)
 	mem_free(html_context->base_target);
 	done_uri(html_context->base_href);
 
+	done_sgml_parser(html_context->parser);
+
 	mem_free(html_context);
 }
 
@@ -133,6 +193,9 @@ init_html_parser_state(struct html_context *html_context,
                        enum html_element_mortality_type type,
 	               int align, int margin, int width)
 {
+	html_context->parattr.align = align;
+	html_context->parattr.leftmargin = margin;
+	html_context->parattr.width = width;
 	return NULL;
 }
 
@@ -146,4 +209,17 @@ void
 parse_html(unsigned char *html, unsigned char *eof, struct part *part,
            unsigned char *head, struct html_context *html_context)
 {
+	struct sgml_parser *parser = html_context->parser;
+
+	html_context->part = part;
+
+	parse_sgml(parser, html, eof - html, 1);
+	if (parser->root) {
+		assert(parser->stack.depth == 1);
+
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		/* For SGML_PARSER_STREAM this will free the DOM
+		 * root node. */
+		pop_dom_node(&parser->stack);
+	}
 }

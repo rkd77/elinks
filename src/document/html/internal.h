@@ -9,6 +9,7 @@
 #include "util/lists.h"
 
 struct document_options;
+struct sgml_parser;
 struct uri;
 
 #ifndef CONFIG_DOM_CSS
@@ -80,6 +81,8 @@ struct html_context {
 #ifdef CONFIG_DOM_HTML
 	struct text_attrib attr;
 	struct par_attrib parattr;
+
+	struct sgml_parser *parser;
 #else
 	/* For:
 	 * html/parser/parse.c
