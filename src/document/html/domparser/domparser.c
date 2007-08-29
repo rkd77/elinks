@@ -10,6 +10,7 @@
 
 #include "document/css/apply.h"
 #include "document/css/css.h"
+#include "document/css/parser.h"
 #include "document/css/stylesheet.h"
 #include "document/html/domparser/domparser.h"
 #include "document/html/parser.h"
@@ -27,6 +28,76 @@
 #include "util/string.h"
 
 #include "document/html/internal.h"
+
+
+/* Comes from http://www.w3.org/TR/REC-CSS2/sample.html */
+static const unsigned char default_style[] =
+"	ADDRESS,"
+"	BLOCKQUOTE,"
+"	BODY, DD, DIV,"
+"	DL, DT,"
+"	FIELDSET, FORM,"
+"	FRAME, FRAMESET,"
+"	H1, H2, H3, H4,"
+"	H5, H6, IFRAME,"
+"	NOFRAMES,"
+"	OBJECT, OL, P,"
+"	UL, APPLET,"
+"	CENTER, DIR,"
+"	HR, MENU, PRE   { display: block }"
+"	LI              { display: list-item }"
+"	HEAD            { display: none }"
+"	TABLE           { display: table }"
+"	TR              { display: table-row }"
+"	THEAD           { display: table-header-group }"
+"	TBODY           { display: table-row-group }"
+"	TFOOT           { display: table-footer-group }"
+"	COL             { display: table-column }"
+"	COLGROUP        { display: table-column-group }"
+"	TD, TH          { display: table-cell }"
+"	CAPTION         { display: table-caption }"
+"	TH              { font-weight: bolder; text-align: center }"
+"	CAPTION         { text-align: center }"
+"	BODY            { padding: 8px; line-height: 1.33 }"
+"	H1              { font-size: 2em; margin: .67em 0 }"
+"	H2              { font-size: 1.5em; margin: .83em 0 }"
+"	H3              { font-size: 1.17em; margin: 1em 0 }"
+"	H4, P,"
+"	BLOCKQUOTE, UL,"
+"	FIELDSET, FORM,"
+"	OL, DL, DIR,"
+"	MENU            { margin: 1.33em 0 }"
+"	H5              { font-size: .83em; line-height: 1.17em; margin: 1.67em 0 }"
+"	H6              { font-size: .67em; margin: 2.33em 0 }"
+"	H1, H2, H3, H4,"
+"	H5, H6, B,"
+"	STRONG          { font-weight: bolder }"
+"	BLOCKQUOTE      { margin-left: 40px; margin-right: 40px }"
+"	I, CITE, EM,"
+"	VAR, ADDRESS    { font-style: italic }"
+"	PRE, TT, CODE,"
+"	KBD, SAMP       { font-family: monospace }"
+"	PRE             { white-space: pre }"
+"	BIG             { font-size: 1.17em }"
+"	SMALL, SUB, SUP { font-size: .83em }"
+"	SUB             { vertical-align: sub }"
+"	SUP             { vertical-align: super }"
+"	S, STRIKE, DEL  { text-decoration: line-through }"
+"	HR              { border: 1px inset }"
+"	OL, UL, DIR,"
+"	MENU, DD        { margin-left: 40px }"
+"	OL              { list-style-type: decimal }"
+"	OL UL, UL OL,"
+"	UL UL, OL OL    { margin-top: 0; margin-bottom: 0 }"
+"	U, INS          { text-decoration: underline }"
+"	CENTER          { text-align: center }"
+/* "	BR:before       { content: \"\A\" }" */
+
+"	/* An example of style for HTML 4.0's ABBR/ACRONYM elements */"
+
+"	ABBR, ACRONYM   { font-variant: small-caps; letter-spacing: 0.1em }"
+"	A[href]         { text-decoration: underline }"
+"	:focus          { outline: thin dotted invert }";
 
 
 #ifdef CONFIG_CSS
@@ -203,6 +274,12 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	add_dom_config_normalizer(&parser->stack, DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS);
 
 	init_string(title);
+
+#ifdef CONFIG_CSS
+	css_parse_stylesheet(&html_context->css_styles, uri,
+	                     (unsigned char *) default_style,
+			     (unsigned char *) default_style + sizeof(default_style));
+#endif
 
 	return html_context;
 }
