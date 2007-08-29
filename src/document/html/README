@@ -1,6 +1,15 @@
 This is the "Mikulas' HTML Processor". The parser and renderer we actually use.
 It's scary, yes.
 
+The Mikulas renderer lives in renderer.c, frames.c (just small frameset support
+stuff) and tables.c.
+
+The Mikulas parser lives in parser/* and parser.*.
+
+There is also new experimental parser that is based on the DOM engine but uses
+the Mikulas renderer. It lives in dom.c.
+
+
 
 Parser - renderer interaction
 =============================
