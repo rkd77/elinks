@@ -2149,7 +2149,7 @@ format_html_part(struct html_context *html_context,
 	part->cy = 0;
 	part->link_num = link_num;
 
-	html_state = init_html_parser_state(html_context, ELEMENT_IMMORTAL, align, margin, width);
+	html_state = init_html_parser_state(html_context, 1, align, margin, width);
 
 	parse_html(start, end, part, head, html_context);
 

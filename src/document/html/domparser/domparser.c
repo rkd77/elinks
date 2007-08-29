@@ -189,8 +189,7 @@ done_html_parser(struct html_context *html_context)
 }
 
 void *
-init_html_parser_state(struct html_context *html_context,
-                       enum html_element_mortality_type type,
+init_html_parser_state(struct html_context *html_context, int is_root,
 	               int align, int margin, int width)
 {
 	html_context->parattr.align = align;

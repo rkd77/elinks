@@ -12,7 +12,6 @@ struct memory_list;
 struct menu_item;
 struct string;
 enum html_special_type;
-enum html_element_mortality_type;
 
 
 /* Major lifetime of the parser for the whole document */
@@ -31,11 +30,10 @@ void done_html_parser(struct html_context *html_context);
 
 /* Set up parser "sub-state"; the parser may be invoked on various
  * segments of the document repeatedly (in practice it is used for
- * re-parsing table contents) */
+ * re-parsing table contents); is_root is set for the "main" invocation. */
 
 void *init_html_parser_state(struct html_context *html_context,
-                             enum html_element_mortality_type type,
-	   	             int align, int margin, int width);
+                             int is_root, int align, int margin, int width);
 void done_html_parser_state(struct html_context *html_context,
 		            void *state);
 

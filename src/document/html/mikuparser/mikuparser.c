@@ -703,15 +703,14 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 
 void *
-init_html_parser_state(struct html_context *html_context,
-                       enum html_element_mortality_type type,
+init_html_parser_state(struct html_context *html_context, int is_root,
                        int align, int margin, int width)
 {
-	html_stack_dup(html_context, type);
+	html_stack_dup(html_context, is_root ? ELEMENT_IMMORTAL : ELEMENT_DONTKILL);
 
 	par_format.align = align;
 
-	if (type <= ELEMENT_IMMORTAL) {
+	if (is_root) {
 		par_format.leftmargin = margin;
 		par_format.rightmargin = margin;
 		par_format.width = width;
