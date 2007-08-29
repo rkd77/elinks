@@ -29,9 +29,12 @@ enum rss_style {
 };
 
 struct rss_renderer {
-	struct screen_char styles[RSS_STYLES];
-
+	/* The current item being processed; can be either a channel or
+	 * item element. */
 	struct dom_node *item;
+
+	/* One style per node type. */
+	struct screen_char styles[RSS_STYLES];
 };
 
 
