@@ -89,19 +89,26 @@ init_html_parser(struct uri *uri, struct document_options *options,
 {
 	struct html_context *html_context;
 	struct dom_string dom_uri = INIT_DOM_STRING(struri(uri), strlen(struri(uri)));
+	struct sgml_parser *parser;
 
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
-
-	html_context->parser = init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML, &dom_uri, 0);
-	if (!html_context->parser) {
+	html_context->data = mem_calloc(1, sizeof(*domctx(html_context)));
+	if (!domctx(html_context)) {
 		mem_free(html_context);
 		return NULL;
 	}
 
-	add_dom_stack_context(&html_context->parser->stack, html_context,
+	domctx(html_context)->parser = parser =
+		init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML, &dom_uri, 0);
+	if (!parser) {
+		mem_free(html_context);
+		return NULL;
+	}
+
+	add_dom_stack_context(&parser->stack, html_context,
 			      &dom_html_renderer_context_info);
-	add_dom_config_normalizer(&html_context->parser->stack, DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS);
+	add_dom_config_normalizer(&parser->stack, DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS);
 
 	init_string(title);
 
@@ -143,8 +150,9 @@ done_html_parser(struct html_context *html_context)
 	mem_free(html_context->base_target);
 	done_uri(html_context->base_href);
 
-	done_sgml_parser(html_context->parser);
+	done_sgml_parser(domctx(html_context)->parser);
 
+	mem_free(domctx(html_context));
 	mem_free(html_context);
 }
 
@@ -152,9 +160,9 @@ void *
 init_html_parser_state(struct html_context *html_context, int is_root,
 	               int align, int margin, int width)
 {
-	html_context->parattr.align = align;
-	html_context->parattr.leftmargin = margin;
-	html_context->parattr.width = width;
+	par_format.align = align;
+	par_format.leftmargin = margin;
+	par_format.width = width;
 	return NULL;
 }
 
@@ -168,7 +176,7 @@ void
 parse_html(unsigned char *html, unsigned char *eof, struct part *part,
            unsigned char *head, struct html_context *html_context)
 {
-	struct sgml_parser *parser = html_context->parser;
+	struct sgml_parser *parser = domctx(html_context)->parser;
 
 	html_context->part = part;
 

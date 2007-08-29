@@ -635,15 +635,15 @@ parse_html(unsigned char *html, unsigned char *eof,
 	unsigned char *base_pos = html;
 	int noupdate = 0;
 
-	html_context->putsp = HTML_SPACE_SUPPRESS;
-	html_context->line_breax = html_context->table_level ? 2 : 1;
-	html_context->position = 0;
-	html_context->was_br = 0;
-	html_context->was_li = 0;
-	html_context->was_body = 0;
-/*	html_context->was_body_background = 0; */
+	miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
+	miku(html_context)->line_breax = html_context->table_level ? 2 : 1;
+	miku(html_context)->position = 0;
+	miku(html_context)->was_br = 0;
+	miku(html_context)->was_li = 0;
+	miku(html_context)->was_body = 0;
+/*	miku(html_context)->was_body_background = 0; */
 	html_context->part = part;
-	html_context->eoff = eof;
+	miku(html_context)->eoff = eof;
 	if (head) process_head(html_context, head);
 
 main_loop:
@@ -654,7 +654,7 @@ main_loop:
 
 		if (!noupdate) {
 			html_context->part = part;
-			html_context->eoff = eof;
+			miku(html_context)->eoff = eof;
 			base_pos = html;
 		} else {
 			noupdate = 0;
@@ -669,12 +669,12 @@ main_loop:
 				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
 					put_chrs(html_context, base_pos, html - base_pos);
 					base_pos = html = h;
-					html_context->putsp = HTML_SPACE_ADD;
+					miku(html_context)->putsp = HTML_SPACE_ADD;
 					goto element;
 				}
 			}
 			html++;
-			if (!(html_context->position + (html - base_pos - 1)))
+			if (!(miku(html_context)->position + (html - base_pos - 1)))
 				goto skip_w; /* ??? */
 			if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
 				/* BIG performance win; not sure if it doesn't cause any bug */
@@ -695,18 +695,18 @@ skip_w:
 		}
 
 		if (html_is_preformatted()) {
-			html_context->putsp = HTML_SPACE_NORMAL;
+			miku(html_context)->putsp = HTML_SPACE_NORMAL;
 			if (*html == ASCII_TAB) {
 				put_chrs(html_context, base_pos, html - base_pos);
 				put_chrs(html_context, "        ",
-				         8 - (html_context->position % 8));
+				         8 - (miku(html_context)->position % 8));
 				html++;
 				continue;
 
 			} else if (*html == ASCII_CR || *html == ASCII_LF) {
 				put_chrs(html_context, base_pos, html - base_pos);
-				if (html - base_pos == 0 && html_context->line_breax > 0)
-					html_context->line_breax--;
+				if (html - base_pos == 0 && miku(html_context)->line_breax > 0)
+					miku(html_context)->line_breax--;
 next_break:
 				if (*html == ASCII_CR && html < eof - 1
 				    && html[1] == ASCII_LF)
@@ -714,7 +714,7 @@ next_break:
 				ln_break(html_context, 1);
 				html++;
 				if (*html == ASCII_CR || *html == ASCII_LF) {
-					html_context->line_breax = 0;
+					miku(html_context)->line_breax = 0;
 					goto next_break;
 				}
 				continue;
@@ -758,7 +758,7 @@ next_break:
 		}
 
 		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
-		    && !(html_context->was_xmp || html_context->was_style)) {
+		    && !(miku(html_context)->was_xmp || miku(html_context)->was_style)) {
 			put_chrs(html_context, base_pos, html - base_pos);
 			html = skip_comment(html, eof);
 			continue;
@@ -772,10 +772,10 @@ next_break:
 
 element:
 		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
-		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
+		if (!endingtag && miku(html_context)->putsp == HTML_SPACE_ADD && !html_top->invisible)
 			put_chrs(html_context, " ", 1);
 		put_chrs(html_context, base_pos, html - base_pos);
-		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
+		if (!html_is_preformatted() && !endingtag && miku(html_context)->putsp == HTML_SPACE_NORMAL) {
 			unsigned char *ee = end;
 			unsigned char *nm;
 
@@ -796,9 +796,9 @@ ng:
 	 * iteration so that when destroying the stack in the caller we still
 	 * get the right part pointer. */
 	html_context->part = part;
-	html_context->putsp = HTML_SPACE_SUPPRESS;
-	html_context->position = 0;
-	html_context->was_br = 0;
+	miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
+	miku(html_context)->position = 0;
+	miku(html_context)->was_br = 0;
 }
 
 static unsigned char *
@@ -839,9 +839,9 @@ start_element(struct element_info *ei,
 	old_format = par_format;
 
 	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
-	if (ei->open == html_meta && html_context->was_body) {
+	if (ei->open == html_meta && miku(html_context)->was_body) {
 		html_handle_body_meta(html_context, name - 1, eof);
-		html_context->was_body = 0;
+		miku(html_context)->was_body = 0;
 	}
 
 #ifdef CONFIG_CSS
@@ -855,12 +855,12 @@ start_element(struct element_info *ei,
 		struct html_element *e;
 
 		if (ei->type == ET_NON_NESTABLE) {
-			foreach (e, html_context->stack) {
+			foreach (e, miku(html_context)->stack) {
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
 		} else {
-			foreach (e, html_context->stack) {
+			foreach (e, miku(html_context)->stack) {
 				if (is_block_element(e) && is_inline_element(ei)) break;
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
@@ -868,7 +868,7 @@ start_element(struct element_info *ei,
 		}
 
 		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
-			while (e->prev != (void *) &html_context->stack)
+			while (e->prev != (void *) &miku(html_context)->stack)
 				kill_html_stack_item(html_context, e->prev);
 
 			if (e->type > ELEMENT_IMMORTAL)
@@ -917,7 +917,7 @@ start_element(struct element_info *ei,
 		 * disabled for now. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
-							&html_context->stack);
+							&miku(html_context)->stack);
 
 		if (selector) {
 			apply_css_selector_style(html_context, html_top, selector);
@@ -935,7 +935,7 @@ start_element(struct element_info *ei,
 		/* Call it now to override default colors of the elements. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
-							&html_context->stack);
+							&miku(html_context)->stack);
 
 		if (selector) {
 			apply_css_selector_style(html_context, html_top, selector);
@@ -944,7 +944,7 @@ start_element(struct element_info *ei,
 	}
 #endif
 
-	if (ei->open != html_br) html_context->was_br = 0;
+	if (ei->open != html_br) miku(html_context)->was_br = 0;
 
 	if (restore_format) par_format = old_format;
 
@@ -963,14 +963,14 @@ end_element(struct element_info *ei,
 	int lnb = 0;
 	int kill = 0;
 
-	html_context->was_br = 0;
+	miku(html_context)->was_br = 0;
 	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
 		return html;
 
 	if (ei->close) ei->close(html_context, attr, html, eof, &html);
 
 	/* dump_html_stack(html_context); */
-	foreach (e, html_context->stack) {
+	foreach (e, miku(html_context)->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (e->type < ELEMENT_KILLABLE)
@@ -983,7 +983,7 @@ end_element(struct element_info *ei,
 			break;
 		}
 		for (elt = e;
-		     elt != (void *) &html_context->stack;
+		     elt != (void *) &miku(html_context)->stack;
 		     elt = elt->prev)
 			if (elt->linebreak > lnb)
 				lnb = elt->linebreak;
@@ -992,11 +992,11 @@ end_element(struct element_info *ei,
 		 * when ending a list with the last <li> having no text the
 		 * line_breax is 2 so the ending list's linebreak will be
 		 * ignored when calling ln_break(). */
-		if (html_context->was_li)
-			html_context->line_breax = 0;
+		if (miku(html_context)->was_li)
+			miku(html_context)->line_breax = 0;
 
 		ln_break(html_context, lnb);
-		while (e->prev != (void *) &html_context->stack)
+		while (e->prev != (void *) &miku(html_context)->stack)
 			kill_html_stack_item(html_context, e->prev);
 		kill_html_stack_item(html_context, e);
 		break;
@@ -1030,7 +1030,7 @@ process_element(unsigned char *name, int namelen, int endingtag,
 #else
 	ei = (struct element_info *) fastfind_search(&ff_tags_index, name, namelen);
 #endif
-	if (html_context->was_xmp || html_context->was_style) {
+	if (miku(html_context)->was_xmp || miku(html_context)->was_style) {
 		if (!ei || (ei->open != html_xmp && ei->open != html_style) || !endingtag) {
 			put_chrs(html_context, "<", 1);
 			return prev_html + 1;

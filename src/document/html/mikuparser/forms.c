@@ -42,13 +42,13 @@ html_form(struct html_context *html_context, unsigned char *a,
 	unsigned char *al;
 	struct form *form;
 
-	html_context->was_br = 1;
+	miku(html_context)->was_br = 1;
 
 	form = init_form();
 	if (!form) return;
 
 	form->method = FORM_METHOD_GET;
-	form->form_num = a - html_context->startf;
+	form->form_num = a - miku(html_context)->startf;
 
 	al = get_attr_val(a, "method", html_context->doc_cp);
 	if (al) {
@@ -133,7 +133,7 @@ init_form_control(enum form_type type, unsigned char *attr,
 	if (!fc) return NULL;
 
 	fc->type = type;
-	fc->position = attr - html_context->startf;
+	fc->position = attr - miku(html_context)->startf;
 	fc->mode = get_form_mode(html_context, attr);
 
 	return fc;
@@ -559,15 +559,15 @@ html_option(struct html_context *html_context, unsigned char *a,
 		for (p = a - 1; *p != '<'; p--);
 
 		if (!init_string(&str)) goto end_parse;
-		if (parse_element(p, html_context->eoff, NULL, NULL, NULL, &p)) {
+		if (parse_element(p, miku(html_context)->eoff, NULL, NULL, NULL, &p)) {
 			INTERNAL("parse element failed");
 			val = str.source;
 			goto end_parse;
 		}
 
 se:
-		while (p < html_context->eoff && isspace(*p)) p++;
-		while (p < html_context->eoff && !isspace(*p) && *p != '<') {
+		while (p < miku(html_context)->eoff && isspace(*p)) p++;
+		while (p < miku(html_context)->eoff && !isspace(*p) && *p != '<') {
 
 sp:
 			add_char_to_string(&str, *p ? *p : ' '), p++;
@@ -576,13 +576,13 @@ sp:
 		r = p;
 		val = str.source; /* Has to be before the possible 'goto end_parse' */
 
-		while (r < html_context->eoff && isspace(*r)) r++;
-		if (r >= html_context->eoff) goto end_parse;
-		if (r - 2 <= html_context->eoff && (r[1] == '!' || r[1] == '?')) {
-			p = skip_comment(r, html_context->eoff);
+		while (r < miku(html_context)->eoff && isspace(*r)) r++;
+		if (r >= miku(html_context)->eoff) goto end_parse;
+		if (r - 2 <= miku(html_context)->eoff && (r[1] == '!' || r[1] == '?')) {
+			p = skip_comment(r, miku(html_context)->eoff);
 			goto se;
 		}
-		if (parse_element(r, html_context->eoff, &name, &namelen, NULL, &p)) goto sp;
+		if (parse_element(r, miku(html_context)->eoff, &name, &namelen, NULL, &p)) goto sp;
 
 		if (namelen < 6) goto se;
 		if (name[0] == '/') name++, namelen--;

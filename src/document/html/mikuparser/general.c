@@ -112,7 +112,7 @@ html_quote(struct html_context *html_context, unsigned char *a,
 	 * won't let the quote level wrap back, so it will render the
 	 * quotes incorrectly, but such a document probably doesn't
 	 * make sense anyway.  */
-	unsigned char *q = quote_char[html_context->quote_level++ % 2];
+	unsigned char *q = quote_char[miku(html_context)->quote_level++ % 2];
 
 	put_chrs(html_context, q, 1);
 }
@@ -124,10 +124,10 @@ html_quote_close(struct html_context *html_context, unsigned char *a,
 {
 	unsigned char *q;
 
-	if (html_context->quote_level > 0)
-		html_context->quote_level--;
+	if (miku(html_context)->quote_level > 0)
+		miku(html_context)->quote_level--;
 
-	q = quote_char[html_context->quote_level % 2];
+	q = quote_char[miku(html_context)->quote_level % 2];
 
 	put_chrs(html_context, q, 1);
 }
@@ -170,9 +170,9 @@ html_body(struct html_context *html_context, unsigned char *a,
 	get_color(html_context, a, "vlink", &format.vlink);
 
 	if (get_bgcolor(html_context, a, &format.style.bg) != -1)
-		html_context->was_body_background = 1;
+		miku(html_context)->was_body_background = 1;
 
-	html_context->was_body = 1; /* this will be used by "meta inside body" */
+	miku(html_context)->was_body = 1; /* this will be used by "meta inside body" */
 	html_apply_canvas_bgcolor(html_context);
 }
 
@@ -184,7 +184,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 	 * it _and_ prefer it over bgcolor attribute. */
 	if (html_context->options->css_enable)
 		css_apply(html_context, html_top, &html_context->css_styles,
-		          &html_context->stack);
+		          &miku(html_context)->stack);
 #endif
 
 	if (par_format.bgcolor != format.style.bg) {
@@ -192,11 +192,11 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
-		html_context->was_body_background = 1;
+		miku(html_context)->was_body_background = 1;
 		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
 	}
 
-	if (html_context->has_link_lines
+	if (miku(html_context)->has_link_lines
 	    && par_format.bgcolor != html_context->options->default_style.bg
 	    && !search_html_stack(html_context, "BODY")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
@@ -395,7 +395,7 @@ void
 html_style(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	html_context->was_style = 1;
+	miku(html_context)->was_style = 1;
 	html_skip(html_context, a);
 }
 
@@ -403,7 +403,7 @@ void
 html_style_close(struct html_context *html_context, unsigned char *a,
                  unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	html_context->was_style = 0;
+	miku(html_context)->was_style = 0;
 }
 
 void
@@ -425,7 +425,7 @@ html_html_close(struct html_context *html_context, unsigned char *a,
                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	if (html_top->type >= ELEMENT_KILLABLE
-	    && !html_context->was_body_background)
+	    && !miku(html_context)->was_body_background)
 		html_apply_canvas_bgcolor(html_context);
 }
 
@@ -498,10 +498,10 @@ html_br(struct html_context *html_context, unsigned char *a,
         unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	html_linebrk(html_context, a, html, eof, end);
-	if (html_context->was_br)
+	if (miku(html_context)->was_br)
 		ln_break(html_context, 2);
 	else
-		html_context->was_br = 1;
+		miku(html_context)->was_br = 1;
 }
 
 void
@@ -615,7 +615,7 @@ void
 html_xmp(struct html_context *html_context, unsigned char *a,
          unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_context->was_xmp = 1;
+	miku(html_context)->was_xmp = 1;
 	html_pre(html_context, a, html, eof, end);
 }
 
@@ -623,7 +623,7 @@ void
 html_xmp_close(struct html_context *html_context, unsigned char *a,
                unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	html_context->was_xmp = 0;
+	miku(html_context)->was_xmp = 0;
 }
 
 void
@@ -853,8 +853,8 @@ html_li(struct html_context *html_context, unsigned char *a,
 	/* When handling the code <li><li> @was_li will be 1 and it means we
 	 * have to insert a line break since no list item content has done it
 	 * for us. */
-	if (html_context->was_li) {
-		html_context->line_breax = 0;
+	if (miku(html_context)->was_li) {
+		miku(html_context)->line_breax = 0;
 		ln_break(html_context, 1);
 	}
 
@@ -922,9 +922,9 @@ html_li(struct html_context *html_context, unsigned char *a,
 		par_format.list_number = 0;
 	}
 
-	html_context->putsp = HTML_SPACE_SUPPRESS;
-	html_context->line_breax = 2;
-	html_context->was_li = 1;
+	miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
+	miku(html_context)->line_breax = 2;
+	miku(html_context)->was_li = 1;
 }
 
 void

@@ -357,7 +357,7 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	      unsigned char *link, unsigned char *target,
 	      struct html_context *html_context)
 {
-	html_context->has_link_lines = 1;
+	miku(html_context)->has_link_lines = 1;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	ln_break(html_context, 1);
 	mem_free_set(&format.link, NULL);

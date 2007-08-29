@@ -35,7 +35,7 @@ dump_html_stack(struct html_context *html_context)
 	struct html_element *element;
 
 	DBG("HTML stack debug:");
-	foreach (element, html_context->stack) {
+	foreach (element, miku(html_context)->stack) {
 		DBG("&name/len:%p:%d name:%.*s type:%d",
 		    element->name, element->namelen,
 		    element->namelen, element->name,
@@ -59,7 +59,7 @@ search_html_stack(struct html_context *html_context, unsigned char *name)
 	dump_html_stack(html_context);
 #endif
 
-	foreach (element, html_context->stack) {
+	foreach (element, miku(html_context)->stack) {
 		if (element == html_top)
 			continue; /* skip the top element */
 		if (strlcasecmp(element->name, element->namelen, name, namelen))
@@ -80,7 +80,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 
 	assert(e);
 	if_assert_failed return;
-	assertm((void *) e != &html_context->stack, "trying to free bad html element");
+	assertm((void *) e != &miku(html_context)->stack, "trying to free bad html element");
 	if_assert_failed return;
 	assertm(e->type != ELEMENT_IMMORTAL, "trying to kill unkillable element");
 	if_assert_failed return;
@@ -123,8 +123,8 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	del_from_list(e);
 	mem_free(e);
 #if 0
-	if (list_empty(html_context->stack)
-	    || !html_context->stack.next) {
+	if (list_empty(miku(html_context)->stack)
+	    || !miku(html_context)->stack.next) {
 		DBG("killing last element");
 	}
 #endif
@@ -135,9 +135,9 @@ void
 html_stack_dup(struct html_context *html_context, enum html_element_mortality_type type)
 {
 	struct html_element *e;
-	struct html_element *ep = html_context->stack.next;
+	struct html_element *ep = miku(html_context)->stack.next;
 
-	assertm(ep && (void *) ep != &html_context->stack, "html stack empty");
+	assertm(ep && (void *) ep != &miku(html_context)->stack, "html stack empty");
 	if_assert_failed return;
 
 	e = mem_alloc(sizeof(*e));
@@ -172,7 +172,7 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	e->namelen = 0;
 	e->type = type;
 
-	add_to_list(html_context->stack, e);
+	add_to_list(miku(html_context)->stack, e);
 }
 
 static void
@@ -180,8 +180,8 @@ kill_element(struct html_context *html_context, int ls, struct html_element *e)
 {
 	int l = 0;
 
-	while ((void *) e != &html_context->stack) {
-		if (ls && e == html_context->stack.next)
+	while ((void *) e != &miku(html_context)->stack) {
+		if (ls && e == miku(html_context)->stack.next)
 			break;
 
 		if (e->linebreak > l)
@@ -200,7 +200,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 
 	if (ls) e = e->next;
 
-	while ((void *) e != &html_context->stack) {
+	while ((void *) e != &miku(html_context)->stack) {
 		int sk = 0;
 		va_list arg;
 

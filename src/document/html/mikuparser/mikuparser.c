@@ -97,41 +97,41 @@ void
 ln_break(struct html_context *html_context, int n)
 {
 	if (!n || html_top->invisible) return;
-	while (n > html_context->line_breax) {
-		html_context->line_breax++;
+	while (n > miku(html_context)->line_breax) {
+		miku(html_context)->line_breax++;
 		html_context->line_break_f(html_context);
 	}
-	html_context->position = 0;
-	html_context->putsp = HTML_SPACE_SUPPRESS;
+	miku(html_context)->position = 0;
+	miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
 }
 
 void
 put_chrs(struct html_context *html_context, unsigned char *start, int len)
 {
 	if (html_is_preformatted())
-		html_context->putsp = HTML_SPACE_NORMAL;
+		miku(html_context)->putsp = HTML_SPACE_NORMAL;
 
 	if (!len || html_top->invisible)
 		return;
 
-	switch (html_context->putsp) {
+	switch (miku(html_context)->putsp) {
 	case HTML_SPACE_NORMAL:
 		break;
 
 	case HTML_SPACE_ADD:
 		html_context->put_chars_f(html_context, " ", 1);
-		html_context->position++;
-		html_context->putsp = HTML_SPACE_SUPPRESS;
+		miku(html_context)->position++;
+		miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
 
 		/* Fall thru. */
 
 	case HTML_SPACE_SUPPRESS:
-		html_context->putsp = HTML_SPACE_NORMAL;
+		miku(html_context)->putsp = HTML_SPACE_NORMAL;
 		if (isspace(start[0])) {
 			start++, len--;
 
 			if (!len) {
-				html_context->putsp = HTML_SPACE_SUPPRESS;
+				miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
 				return;
 			}
 		}
@@ -140,15 +140,15 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 	}
 
 	if (isspace(start[len - 1]) && !html_is_preformatted())
-		html_context->putsp = HTML_SPACE_SUPPRESS;
-	html_context->was_br = 0;
+		miku(html_context)->putsp = HTML_SPACE_SUPPRESS;
+	miku(html_context)->was_br = 0;
 
 	html_context->put_chars_f(html_context, start, len);
 
-	html_context->position += len;
-	html_context->line_breax = 0;
-	if (html_context->was_li > 0)
-		html_context->was_li--;
+	miku(html_context)->position += len;
+	miku(html_context)->line_breax = 0;
+	if (miku(html_context)->was_li > 0)
+		miku(html_context)->was_li--;
 }
 
 void
@@ -689,7 +689,7 @@ void
 done_html_parser_state(struct html_context *html_context, void *state)
 {
 	struct html_element *element = state;
-	html_context->line_breax = 1;
+	miku(html_context)->line_breax = 1;
 
 	while (html_top != element) {
 		pop_html_element(html_context);
@@ -728,15 +728,20 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
+	html_context->data = mem_calloc(1, sizeof(*miku(html_context)));
+	if (!miku(html_context)) {
+		mem_free(html_context);
+		return NULL;
+	}
 
 #ifdef CONFIG_CSS
 	html_context->css_styles.import = import_css_stylesheet;
 	init_css_selector_set(&html_context->css_styles.selectors);
 #endif
 
-	init_list(html_context->stack);
+	init_list(miku(html_context)->stack);
 
-	html_context->startf = start;
+	miku(html_context)->startf = start;
 	html_context->put_chars_f = put_chars;
 	html_context->line_break_f = line_break;
 	html_context->special_f = special;
@@ -750,7 +755,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	e = mem_calloc(1, sizeof(*e));
 	if (!e) return NULL;
-	add_to_list(html_context->stack, e);
+	add_to_list(miku(html_context)->stack, e);
 
 	format.style.attr = 0;
 	format.fontsize = 3;
@@ -787,7 +792,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	html_top->linebreak = 1;
 	html_top->type = ELEMENT_DONT_KILL;
 
-	html_context->has_link_lines = 0;
+	miku(html_context)->has_link_lines = 0;
 	html_context->table_level = 0;
 
 #ifdef CONFIG_CSS
@@ -812,11 +817,12 @@ done_html_parser(struct html_context *html_context)
 	mem_free(html_context->base_target);
 	done_uri(html_context->base_href);
 
-	kill_html_stack_item(html_context, html_context->stack.next);
+	kill_html_stack_item(html_context, miku(html_context)->stack.next);
 
-	assertm(list_empty(html_context->stack),
+	assertm(list_empty(miku(html_context)->stack),
 		"html stack not empty after operation");
-	if_assert_failed init_list(html_context->stack);
+	if_assert_failed init_list(miku(html_context)->stack);
 
+	mem_free(miku(html_context));
 	mem_free(html_context);
 }
