@@ -218,7 +218,9 @@ int get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 /*********************************************************************/
 /* Follows interface for functions common for all parser engines, mostly
- * implemented in parser.c. */
+ * implemented in parser.c. They are also meant to be called only by
+ * the parser engines themselves, not from the outside, unless specified
+ * otherwise. */
 
 /* Generic html_context lifetime; called from *_html_parser(). */
 struct html_context *init_html_context(struct uri *uri, struct document_options *options,
@@ -228,6 +230,12 @@ struct html_context *init_html_context(struct uri *uri, struct document_options 
                                        void *(*special)(struct html_context *,
 				                        enum html_special_type, ...));
 void done_html_context(struct html_context *html_context);
+
+/* Create new HTML element on top of the stack by duplicating the element
+ * below it. */
+struct html_element *dup_html_element(struct html_context *html_context);
+/* Delete an HTML element from the stack and free it. */
+void done_html_element(struct html_context *html_context, struct html_element *e);
 
 #ifdef CONFIG_CSS
 void import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,

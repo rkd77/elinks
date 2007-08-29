@@ -722,7 +722,6 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		 void *(*special)(struct html_context *, enum html_special_type, ...))
 {
 	struct html_context *html_context;
-	struct html_element *e;
 
 	assert(uri && options);
 	if_assert_failed return NULL;
@@ -736,14 +735,11 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		return NULL;
 	}
 
+	html_top->data = mem_calloc(1, sizeof(*miku_el(html_top)));
+
 	miku(html_context)->startf = start;
 
 	scan_http_equiv(start, end, head, title, options);
-
-	e = mem_calloc(1, sizeof(*e));
-	if (!e) return NULL;
-	e->data = mem_calloc(1, sizeof(*miku_el(e)));
-	add_to_list(html_context->stack, e);
 
 	format.style.attr = 0;
 	format.fontsize = 3;
@@ -788,11 +784,5 @@ init_html_parser(struct uri *uri, struct document_options *options,
 void
 done_html_parser(struct html_context *html_context)
 {
-	kill_html_stack_item(html_context, html_context->stack.next);
-
-	assertm(list_empty(html_context->stack),
-		"html stack not empty after operation");
-	if_assert_failed init_list(html_context->stack);
-
 	done_html_context(html_context);
 }

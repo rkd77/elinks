@@ -15,6 +15,7 @@
 #include "document/html/mikuparser/stack.h"
 #include "document/html/mikuparser/parse.h"
 #include "document/html/mikuparser/mikuparser.h"
+#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
@@ -74,62 +75,12 @@ search_html_stack(struct html_context *html_context, unsigned char *name)
 void
 kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 {
-#ifdef CONFIG_ECMASCRIPT
-	unsigned char *onload = NULL;
-#endif
-
 	assert(e);
-	if_assert_failed return;
-	assertm((void *) e != &html_context->stack, "trying to free bad html element");
 	if_assert_failed return;
 	assertm(miku_el(e)->type != ELEMENT_IMMORTAL, "trying to kill unkillable element");
 	if_assert_failed return;
 
-#ifdef CONFIG_ECMASCRIPT
-	/* As our another tiny l33t extension, we allow the onLoad attribute for
-	 * any element, executing it when that element is fully loaded. */
-	if (miku_el(e)->options)
-		onload = get_attr_val(miku_el(e)->options, "onLoad",
-		                     html_context->doc_cp);
-	if (html_context->part
-	    && html_context->part->document
-	    && onload && *onload && *onload != '^') {
-		/* XXX: The following expression alone amounts two #includes. */
-		add_to_string_list(&html_context->part->document->onload_snippets,
-		                   onload, -1);
-	}
-	if (onload) mem_free(onload);
-#endif
-
-	mem_free_if(e->attr.link);
-	mem_free_if(e->attr.target);
-	mem_free_if(e->attr.image);
-	mem_free_if(e->attr.title);
-	mem_free_if(e->attr.select);
-
-#ifdef CONFIG_CSS
-	mem_free_if(e->attr.id);
-	mem_free_if(e->attr.class);
-#endif
-
-	mem_free_if(e->attr.onclick);
-	mem_free_if(e->attr.ondblclick);
-	mem_free_if(e->attr.onmouseover);
-	mem_free_if(e->attr.onhover);
-	mem_free_if(e->attr.onfocus);
-	mem_free_if(e->attr.onmouseout);
-	mem_free_if(e->attr.onblur);
-
-	mem_free(miku_el(e));
-
-	del_from_list(e);
-	mem_free(e);
-#if 0
-	if (list_empty(html_context->stack)
-	    || !html_context->stack.next) {
-		DBG("killing last element");
-	}
-#endif
+	done_html_element(html_context, e);
 }
 
 
@@ -139,44 +90,14 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	struct html_element *e;
 	struct html_element *ep = html_context->stack.next;
 
-	assertm(ep && (void *) ep != &html_context->stack, "html stack empty");
-	if_assert_failed return;
-
-	e = mem_alloc(sizeof(*e));
+	e = dup_html_element(html_context);
 	if (!e) return;
-	e->data = mem_alloc(sizeof(*e));
 
-	copy_struct(e, ep);
+	e->data = mem_alloc(sizeof(*e));
 	copy_struct(miku_el(e), miku_el(ep));
 
-	if (ep->attr.link) e->attr.link = stracpy(ep->attr.link);
-	if (ep->attr.target) e->attr.target = stracpy(ep->attr.target);
-	if (ep->attr.image) e->attr.image = stracpy(ep->attr.image);
-	if (ep->attr.title) e->attr.title = stracpy(ep->attr.title);
-	if (ep->attr.select) e->attr.select = stracpy(ep->attr.select);
-
-	e->attr.id = e->attr.class = NULL;
-
-	/* We don't want to propagate these. */
-	/* XXX: For sure? --pasky */
-	e->attr.onclick = e->attr.ondblclick = e->attr.onmouseover = e->attr.onhover
-		= e->attr.onfocus = e->attr.onmouseout = e->attr.onblur = NULL;
-
-#if 0
-	if (e->name) {
-		if (e->attr.link) set_mem_comment(e->attr.link, e->name, e->namelen);
-		if (e->attr.target) set_mem_comment(e->attr.target, e->name, e->namelen);
-		if (e->attr.image) set_mem_comment(e->attr.image, e->name, e->namelen);
-		if (e->attr.title) set_mem_comment(e->attr.title, e->name, e->namelen);
-		if (e->attr.select) set_mem_comment(e->attr.select, e->name, e->namelen);
-	}
-#endif
-
-	e->name = miku_el(e)->options = NULL;
-	e->namelen = 0;
+	miku_el(e)->options = NULL;
 	miku_el(e)->type = type;
-
-	add_to_list(html_context->stack, e);
 }
 
 static void

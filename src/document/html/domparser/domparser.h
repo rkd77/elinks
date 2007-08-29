@@ -9,9 +9,6 @@
 /* Domparser-specific part of html_context */
 
 struct domparser_context {
-	struct text_attrib attr;
-	struct par_attrib parattr;
-
 	struct sgml_parser *parser;
 };
 
