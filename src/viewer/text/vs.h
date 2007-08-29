@@ -28,6 +28,8 @@ struct view_state {
 	 * should never be negative.  */
 	int y;
 
+	/** The index of the focused link in the document.links array,
+	 * or -1 of none.  */
 	int current_link;
 	int old_current_link;
 

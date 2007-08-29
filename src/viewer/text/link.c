@@ -1096,6 +1096,11 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 	return activate_link(ses, doc_view, link, do_reload);
 }
 
+/** Get the link at the coordinates @a x and @a y, or NULL if none.
+ * The coordinates are relative to the document view; not to the
+ * terminal, nor to the document.  So (0, 0) means whatever part of
+ * the document has been scrolled to the top left corner of the
+ * document view.  */
 struct link *
 get_link_at_coordinates(struct document_view *doc_view, int x, int y)
 {
