@@ -87,8 +87,8 @@ skip_white(unsigned char *start, int *line)
  * will only possibly set OPT_WATERMARK flag to the option (if enabled). */
 
 static enum parse_error
-parse_set(struct option *opt_tree, unsigned char **file, int *line,
-	  struct string *mirror, int is_system_conf)
+parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
+                 struct string *mirror, int is_system_conf)
 {
 	unsigned char *orig_pos = *file;
 	unsigned char *optname;
@@ -157,6 +157,14 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 
 	return ERROR_NONE;
 }
+
+static enum parse_error
+parse_set(struct option *opt_tree, unsigned char **file, int *line,
+          struct string *mirror, int is_system_conf)
+{
+	return parse_set_common(opt_tree, file, line, mirror, is_system_conf);
+}
+
 
 static enum parse_error
 parse_unset(struct option *opt_tree, unsigned char **file, int *line,
