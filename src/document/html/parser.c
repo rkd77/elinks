@@ -32,11 +32,6 @@ init_html_context(struct uri *uri, struct document_options *options,
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
 
-#ifdef CONFIG_CSS
-	html_context->css_styles.import = import_css_stylesheet;
-	init_css_selector_set(&html_context->css_styles.selectors);
-#endif
-
 	init_list(html_context->stack);
 	e = mem_calloc(1, sizeof(*e));
 	if (!e) {
@@ -57,7 +52,10 @@ init_html_context(struct uri *uri, struct document_options *options,
 	html_context->table_level = 0;
 
 #ifdef CONFIG_CSS
+	html_context->css_styles.import = import_css_stylesheet;
 	html_context->css_styles.import_data = html_context;
+
+	init_css_selector_set(&html_context->css_styles.selectors);
 
 	if (options->css_enable)
 		mirror_css_stylesheet(&default_stylesheet,
