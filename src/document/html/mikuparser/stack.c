@@ -93,7 +93,7 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	e = dup_html_element(html_context);
 	if (!e) return;
 
-	e->data = mem_alloc(sizeof(*e));
+	e->data = mem_alloc(sizeof(*miku_el(e)));
 	copy_struct(miku_el(e), miku_el(ep));
 
 	miku_el(e)->options = NULL;
