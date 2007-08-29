@@ -47,7 +47,7 @@ struct mikuparser_element {
 	unsigned char *options;
 };
 
-#define miku_el(html_element) ((struct mikuparser_element *) html_context->data)
+#define miku_el(html_element) ((struct mikuparser_element *) html_element->data)
 
 
 /* Mikuparser-specific part of html_context */
