@@ -29,6 +29,50 @@
 
 
 static enum dom_code
+dom_html_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
+{
+	struct html_context *html_context = stack->current->data;
+
+	if (!is_dom_string_set(&node->string))
+		return DOM_CODE_OK;
+
+	dup_html_element(html_context);
+	html_top->name = node->string.string;
+	html_top->namelen = node->string.length;
+	return DOM_CODE_OK;
+}
+
+static enum dom_code
+dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
+{
+	struct html_context *html_context = stack->current->data;
+
+	done_html_element(html_context, html_top);
+	return DOM_CODE_OK;
+}
+
+static enum dom_code
+dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xxx)
+{
+	struct html_context *html_context = stack->current->data;
+	struct dom_attribute_node *attr = &node->data.attribute;
+
+	/* See /src/dom/sgml/html/attribute.inc for the possible values. */
+	switch (attr->type) {
+		case HTML_ATTRIBUTE_CLASS:
+			mem_free_set(&format.class, memacpy(attr->value.string, attr->value.length));
+			break;
+
+		case HTML_ATTRIBUTE_ID:
+			mem_free_set(&format.id, memacpy(attr->value.string, attr->value.length));
+			html_context->special_f(html_context, SP_TAG,
+			                        attr->value);
+			break;
+	}
+	return DOM_CODE_OK;
+}
+
+static enum dom_code
 dom_html_pop_text(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct html_context *html_context = stack->current->data;
@@ -46,8 +90,8 @@ struct dom_stack_context_info dom_html_renderer_context_info = {
 	/* Push: */
 	{
 		/*				*/ NULL,
-		/* DOM_NODE_ELEMENT		*/ NULL,
-		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ dom_html_push_element,
+		/* DOM_NODE_ATTRIBUTE		*/ dom_html_push_attribute,
 		/* DOM_NODE_TEXT		*/ NULL,
 		/* DOM_NODE_CDATA_SECTION	*/ NULL,
 		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
@@ -62,7 +106,7 @@ struct dom_stack_context_info dom_html_renderer_context_info = {
 	/* Pop: */
 	{
 		/*				*/ NULL,
-		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ dom_html_pop_element,
 		/* DOM_NODE_ATTRIBUTE		*/ NULL,
 		/* DOM_NODE_TEXT		*/ dom_html_pop_text,
 		/* DOM_NODE_CDATA_SECTION	*/ NULL,
