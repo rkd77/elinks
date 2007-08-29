@@ -133,7 +133,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
 
-	html_context->parser = init_sgml_parser(SGML_PARSER_TREE, SGML_DOCTYPE_HTML, &dom_uri, 0);
+	html_context->parser = init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML, &dom_uri, 0);
 	if (!html_context->parser) {
 		mem_free(html_context);
 		return NULL;
