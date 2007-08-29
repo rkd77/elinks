@@ -2,6 +2,9 @@
 #ifndef EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
 #define EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
 
+/* This is internal header for the Mikuparser engine. It should not be included
+ * from anywhere outside, ideally. */
+
 #include "util/color.h"
 #include "util/lists.h"
 
