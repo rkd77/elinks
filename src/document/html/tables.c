@@ -12,6 +12,7 @@
 #include "document/html/mikuparser/parse.h"
 #include "document/html/mikuparser/table.h"
 #include "document/html/mikuparser/mikuparser.h"
+#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/html/tables.h"
 #include "document/options.h"

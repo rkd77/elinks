@@ -15,13 +15,7 @@
 #include "document/docdata.h"
 #include "document/document.h"
 #include "document/html/frames.h"
-#ifdef CONFIG_DOM_HTML
-#include "document/html/domparser/domparser.h"
-#else
-#include "document/html/mikuparser/mikuparser.h"
-#include "document/html/mikuparser/parse.h"
-#include "document/html/tables.h"
-#endif
+#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"

@@ -42,6 +42,7 @@ unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, in
 
 
 /* Interface for both the renderer and the table handling */
+/* This is also declared in document/html/parser.h */
 
 void parse_html(unsigned char *html, unsigned char *eof, struct part *part, unsigned char *head, struct html_context *html_context);
 
