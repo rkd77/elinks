@@ -10,6 +10,7 @@
 #include "util/align.h"
 #include "util/color.h"
 
+struct css_stylesheet;
 struct document_options;
 struct form_control;
 struct html_context;
@@ -130,5 +131,16 @@ int get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
                   struct menu_item **menu, struct memory_list **ml,
 		  struct uri *uri, struct document_options *options,
 		  unsigned char *target_base, int to, int def, int hdef);
+
+
+
+/*********************************************************************/
+/* Follows interface for functions common for all parser engines, mostly
+ * implemented in parser.c. */
+
+#ifdef CONFIG_CSS
+void import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
+		           unsigned char *url, int len);
+#endif
 
 #endif

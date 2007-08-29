@@ -22,6 +22,7 @@
 #include "document/html/mikuparser/stack.h"
 #include "document/html/mikuparser/parse.h"
 #include "document/html/mikuparser/mikuparser.h"
+#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/renderer.h"
@@ -174,46 +175,6 @@ add_fragment_identifier(struct html_context *html_context,
 	html_context->special_f(html_context, SP_TAG, attr);
 	html_context->part = saved_part;
 }
-
-#ifdef CONFIG_CSS
-void
-import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      unsigned char *url, int len)
-{
-	struct html_context *html_context = css->import_data;
-	unsigned char *import_url;
-	struct uri *uri;
-
-	assert(html_context);
-	assert(base_uri);
-
-	if (!html_context->options->css_enable
-	    || !html_context->options->css_import)
-		return;
-
-	url = memacpy(url, len);
-	if (!url) return;
-
-	/* HTML <head> urls should already be fine but we can.t detect them. */
-	import_url = join_urls(base_uri, url);
-	mem_free(url);
-
-	if (!import_url) return;
-
-	uri = get_uri(import_url, URI_BASE);
-	mem_free(import_url);
-
-	if (!uri) return;
-
-	/* Request the imported stylesheet as part of the document ... */
-	html_context->special_f(html_context, SP_STYLESHEET, uri);
-
-	/* ... and then attempt to import from the cache. */
-	import_css(css, uri);
-
-	done_uri(uri);
-}
-#endif
 
 /* Extract the extra information that is available for elements which can
  * receive focus. Call this from each element which supports tabindex or
