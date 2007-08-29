@@ -6,6 +6,16 @@
  * from anywhere outside, ideally. */
 
 
+/* Domparser-specific part of html_element */
+
+struct domparser_element {
+	/* Did the element already really begin? */
+	int element_began:1;
+};
+
+#define domelem(html_element) ((struct domparser_element *) html_element->data)
+
+
 /* Domparser-specific part of html_context */
 
 struct domparser_context {

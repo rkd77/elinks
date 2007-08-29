@@ -8,6 +8,7 @@
 
 #include "elinks.h"
 
+#include "document/css/apply.h"
 #include "document/css/css.h"
 #include "document/css/stylesheet.h"
 #include "document/html/domparser/domparser.h"
@@ -28,15 +29,52 @@
 #include "document/html/internal.h"
 
 
+#ifdef CONFIG_CSS
+static void
+apply_style(struct html_context *html_context)
+{
+	struct css_selector *selector;
+
+	selector = get_css_selector_for_element(html_context, html_top,
+						&html_context->css_styles,
+						&html_context->stack);
+	if (!selector) return;
+
+	apply_css_selector_style(html_context, html_top, selector);
+	done_css_selector(selector);
+}
+#endif
+
+/* This should be called after we are through all the element attributes but
+ * before we hit the actual element contents. */
+static void
+element_begins(struct html_context *html_context)
+{
+	assert(!domelem(html_top)->element_began);
+	domelem(html_top)->element_began = 1;
+
+#ifdef CONFIG_CSS
+	apply_style(html_context);
+#endif
+}
+
+#define element_beginning_guard	\
+	if (!domelem(html_top)->element_began) \
+		element_begins(html_context)
+
+
 static enum dom_code
 dom_html_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct html_context *html_context = stack->current->data;
 
+	element_beginning_guard;
+
 	if (!is_dom_string_set(&node->string))
 		return DOM_CODE_OK;
 
 	dup_html_element(html_context);
+	html_top->data = mem_calloc(1, sizeof(*domelem(html_top)));
 	html_top->name = node->string.string;
 	html_top->namelen = node->string.length;
 	return DOM_CODE_OK;
@@ -46,6 +84,9 @@ static enum dom_code
 dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct html_context *html_context = stack->current->data;
+
+	/* In theory we should guard for element_begins() here but it would be
+	 * useless work. */
 
 	done_html_element(html_context, html_top);
 	return DOM_CODE_OK;
@@ -76,6 +117,8 @@ static enum dom_code
 dom_html_pop_text(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct html_context *html_context = stack->current->data;
+
+	element_beginning_guard;
 
 	if (is_dom_string_set(&node->string)) {
 		html_context->put_chars_f(html_context,
