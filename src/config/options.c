@@ -688,6 +688,8 @@ get_option_shadow(struct option *option, struct option *tree,
 				 * in the options manager. -- Miciah */
 				add_to_list_end(*shadow_root->value.tree,
 				                shadow_option);
+
+				shadow_option->flags |= OPT_TOUCHED;
 			}
 
 		}
