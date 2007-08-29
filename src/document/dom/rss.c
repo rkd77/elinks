@@ -39,6 +39,75 @@ struct rss_renderer {
 };
 
 
+static struct dom_string *
+get_rss_text(struct dom_node *node, enum rss_element_type type)
+{
+	node = get_dom_node_child(node, DOM_NODE_ELEMENT, type);
+
+	if (!node) return NULL;
+
+	node = get_dom_node_child(node, DOM_NODE_TEXT, 0);
+
+	return node ? &node->string: NULL;
+}
+
+static void
+render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
+{
+	struct rss_renderer *rss = renderer->data;
+	struct dom_string *title  = get_rss_text(item, RSS_ELEMENT_TITLE);
+	struct dom_string *link   = get_rss_text(item, RSS_ELEMENT_LINK);
+	struct dom_string *author = get_rss_text(item, RSS_ELEMENT_AUTHOR);
+	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
+
+	if (title && is_dom_string_set(title)) {
+		if (item == rss->channel) {
+			unsigned char *str;
+
+			str = convert_string(renderer->convert_table,
+					     title->string, title->length,
+					     renderer->document->options.cp,
+					     CSM_DEFAULT, NULL, NULL, NULL);
+			if (str)
+				renderer->document->title = str;
+		}
+		render_dom_text(renderer, &rss->styles[RSS_STYLE_TITLE],
+				title->string, title->length);
+	}
+
+	if (link && is_dom_string_set(link)) {
+		X(renderer)++;
+		add_dom_link(renderer, "[link]", 6, link->string, link->length);
+	}
+
+	/* New line, and indent */
+	Y(renderer)++;
+	X(renderer) = 0;
+
+	if (author && is_dom_string_set(author)) {
+		render_dom_text(renderer, &rss->styles[RSS_STYLE_AUTHOR],
+				author->string, author->length);
+	}
+
+	if (date && is_dom_string_set(date)) {
+		if (author && is_dom_string_set(author)) {
+			render_dom_text(renderer, &rss->styles[RSS_STYLE_AUTHOR_DATE_SEP],
+					" - ", 3);
+		}
+
+		render_dom_text(renderer, &rss->styles[RSS_STYLE_DATE],
+				date->string, date->length);
+	}
+
+	if ((author && is_dom_string_set(author))
+	    || (date && is_dom_string_set(date))) {
+		/* New line, and indent */
+		Y(renderer)++;
+		X(renderer) = 0;
+	}
+}
+
+
 static enum dom_code
 dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
@@ -117,75 +186,6 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	}
 
 	return DOM_CODE_OK;
-}
-
-
-static struct dom_string *
-get_rss_text(struct dom_node *node, enum rss_element_type type)
-{
-	node = get_dom_node_child(node, DOM_NODE_ELEMENT, type);
-
-	if (!node) return NULL;
-
-	node = get_dom_node_child(node, DOM_NODE_TEXT, 0);
-
-	return node ? &node->string: NULL;
-}
-
-static void
-render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
-{
-	struct rss_renderer *rss = renderer->data;
-	struct dom_string *title  = get_rss_text(item, RSS_ELEMENT_TITLE);
-	struct dom_string *link   = get_rss_text(item, RSS_ELEMENT_LINK);
-	struct dom_string *author = get_rss_text(item, RSS_ELEMENT_AUTHOR);
-	struct dom_string *date   = get_rss_text(item, RSS_ELEMENT_PUBDATE);
-
-	if (title && is_dom_string_set(title)) {
-		if (item == rss->channel) {
-			unsigned char *str;
-
-			str = convert_string(renderer->convert_table,
-					     title->string, title->length,
-					     renderer->document->options.cp,
-					     CSM_DEFAULT, NULL, NULL, NULL);
-			if (str)
-				renderer->document->title = str;
-		}
-		render_dom_text(renderer, &rss->styles[RSS_STYLE_TITLE],
-				title->string, title->length);
-	}
-
-	if (link && is_dom_string_set(link)) {
-		X(renderer)++;
-		add_dom_link(renderer, "[link]", 6, link->string, link->length);
-	}
-
-	/* New line, and indent */
-	Y(renderer)++;
-	X(renderer) = 0;
-
-	if (author && is_dom_string_set(author)) {
-		render_dom_text(renderer, &rss->styles[RSS_STYLE_AUTHOR],
-				author->string, author->length);
-	}
-
-	if (date && is_dom_string_set(date)) {
-		if (author && is_dom_string_set(author)) {
-			render_dom_text(renderer, &rss->styles[RSS_STYLE_AUTHOR_DATE_SEP],
-					" - ", 3);
-		}
-
-		render_dom_text(renderer, &rss->styles[RSS_STYLE_DATE],
-				date->string, date->length);
-	}
-
-	if ((author && is_dom_string_set(author))
-	    || (date && is_dom_string_set(date))) {
-		/* New line, and indent */
-		Y(renderer)++;
-		X(renderer) = 0;
-	}
 }
 
 
