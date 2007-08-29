@@ -18,6 +18,62 @@
 #include "document/html/internal.h"
 
 
+struct html_context *
+init_html_context(struct uri *uri, struct document_options *options,
+	          void (*put_chars)(struct html_context *,
+	                            unsigned char *, int),
+	          void (*line_break)(struct html_context *),
+	          void *(*special)(struct html_context *,
+	                           enum html_special_type, ...))
+{
+	struct html_context *html_context;
+
+	html_context = mem_calloc(1, sizeof(*html_context));
+	if (!html_context) return NULL;
+
+#ifdef CONFIG_CSS
+	html_context->css_styles.import = import_css_stylesheet;
+	init_css_selector_set(&html_context->css_styles.selectors);
+#endif
+
+	html_context->put_chars_f = put_chars;
+	html_context->line_break_f = line_break;
+	html_context->special_f = special;
+
+	html_context->base_href = get_uri_reference(uri);
+	html_context->base_target = null_or_stracpy(options->framename);
+
+	html_context->options = options;
+
+	html_context->table_level = 0;
+
+#ifdef CONFIG_CSS
+	html_context->css_styles.import_data = html_context;
+
+	if (options->css_enable)
+		mirror_css_stylesheet(&default_stylesheet,
+				      &html_context->css_styles);
+#endif
+
+	return html_context;
+}
+
+void
+done_html_context(struct html_context *html_context)
+{
+#ifdef CONFIG_CSS
+	if (html_context->options->css_enable)
+		done_css_stylesheet(&html_context->css_styles);
+#endif
+
+	mem_free(html_context->base_target);
+	done_uri(html_context->base_href);
+
+	if (html_context->data)
+		mem_free(html_context->data);
+	mem_free(html_context);
+}
+
 
 #ifdef CONFIG_CSS
 void

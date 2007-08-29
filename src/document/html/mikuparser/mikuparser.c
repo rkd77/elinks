@@ -726,30 +726,18 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	assert(uri && options);
 	if_assert_failed return NULL;
 
-	html_context = mem_calloc(1, sizeof(*html_context));
+	html_context = init_html_context(uri, options,
+	                                 put_chars, line_break, special);
 	if (!html_context) return NULL;
 	html_context->data = mem_calloc(1, sizeof(*miku(html_context)));
 	if (!miku(html_context)) {
-		mem_free(html_context);
+		done_html_context(html_context);
 		return NULL;
 	}
-
-#ifdef CONFIG_CSS
-	html_context->css_styles.import = import_css_stylesheet;
-	init_css_selector_set(&html_context->css_styles.selectors);
-#endif
 
 	init_list(miku(html_context)->stack);
 
 	miku(html_context)->startf = start;
-	html_context->put_chars_f = put_chars;
-	html_context->line_break_f = line_break;
-	html_context->special_f = special;
-
-	html_context->base_href = get_uri_reference(uri);
-	html_context->base_target = null_or_stracpy(options->framename);
-
-	html_context->options = options;
 
 	scan_http_equiv(start, end, head, title, options);
 
@@ -793,15 +781,6 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	html_top->type = ELEMENT_DONT_KILL;
 
 	miku(html_context)->has_link_lines = 0;
-	html_context->table_level = 0;
-
-#ifdef CONFIG_CSS
-	html_context->css_styles.import_data = html_context;
-
-	if (options->css_enable)
-		mirror_css_stylesheet(&default_stylesheet,
-				      &html_context->css_styles);
-#endif
 
 	return html_context;
 }
@@ -809,20 +788,11 @@ init_html_parser(struct uri *uri, struct document_options *options,
 void
 done_html_parser(struct html_context *html_context)
 {
-#ifdef CONFIG_CSS
-	if (html_context->options->css_enable)
-		done_css_stylesheet(&html_context->css_styles);
-#endif
-
-	mem_free(html_context->base_target);
-	done_uri(html_context->base_href);
-
 	kill_html_stack_item(html_context, miku(html_context)->stack.next);
 
 	assertm(list_empty(miku(html_context)->stack),
 		"html stack not empty after operation");
 	if_assert_failed init_list(miku(html_context)->stack);
 
-	mem_free(miku(html_context));
-	mem_free(html_context);
+	done_html_context(html_context);
 }

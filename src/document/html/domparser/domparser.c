@@ -91,18 +91,19 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	struct dom_string dom_uri = INIT_DOM_STRING(struri(uri), strlen(struri(uri)));
 	struct sgml_parser *parser;
 
-	html_context = mem_calloc(1, sizeof(*html_context));
+	html_context = init_html_context(uri, options,
+	                                 put_chars, line_break, special);
 	if (!html_context) return NULL;
 	html_context->data = mem_calloc(1, sizeof(*domctx(html_context)));
 	if (!domctx(html_context)) {
-		mem_free(html_context);
+		done_html_context(html_context);
 		return NULL;
 	}
 
 	domctx(html_context)->parser = parser =
 		init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML, &dom_uri, 0);
 	if (!parser) {
-		mem_free(html_context);
+		done_html_context(html_context);
 		return NULL;
 	}
 
@@ -112,48 +113,14 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	init_string(title);
 
-#ifdef CONFIG_CSS
-	html_context->css_styles.import = import_css_stylesheet;
-	init_css_selector_set(&html_context->css_styles.selectors);
-#endif
-
-	html_context->put_chars_f = put_chars;
-	html_context->line_break_f = line_break;
-	html_context->special_f = special;
-
-	html_context->base_href = get_uri_reference(uri);
-	html_context->base_target = null_or_stracpy(options->framename);
-
-	html_context->options = options;
-
-	html_context->table_level = 0;
-
-#ifdef CONFIG_CSS
-	html_context->css_styles.import_data = html_context;
-
-	if (options->css_enable)
-		mirror_css_stylesheet(&default_stylesheet,
-				      &html_context->css_styles);
-#endif
-
 	return html_context;
 }
 
 void
 done_html_parser(struct html_context *html_context)
 {
-#ifdef CONFIG_CSS
-	if (html_context->options->css_enable)
-		done_css_stylesheet(&html_context->css_styles);
-#endif
-
-	mem_free(html_context->base_target);
-	done_uri(html_context->base_href);
-
 	done_sgml_parser(domctx(html_context)->parser);
-
-	mem_free(domctx(html_context));
-	mem_free(html_context);
+	done_html_context(html_context);
 }
 
 void *

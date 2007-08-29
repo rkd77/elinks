@@ -183,6 +183,15 @@ int get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 /* Follows interface for functions common for all parser engines, mostly
  * implemented in parser.c. */
 
+/* Generic html_context lifetime; called from *_html_parser(). */
+struct html_context *init_html_context(struct uri *uri, struct document_options *options,
+                                       void (*put_chars)(struct html_context *,
+                                                         unsigned char *, int),
+                                       void (*line_break)(struct html_context *),
+                                       void *(*special)(struct html_context *,
+				                        enum html_special_type, ...));
+void done_html_context(struct html_context *html_context);
+
 #ifdef CONFIG_CSS
 void import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		           unsigned char *url, int len);
