@@ -45,7 +45,7 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	struct dom_renderer *renderer = stack->current->data;
 	struct rss_renderer *data = renderer->data;
 
-	assert(node && renderer && renderer->document);
+	assert(node && node->parent && renderer && renderer->document);
 
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_CHANNEL:
@@ -77,7 +77,7 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	case RSS_ELEMENT_TITLE:
 	case RSS_ELEMENT_AUTHOR:
 	case RSS_ELEMENT_PUBDATE:
-		if (!node->parent || data->node != node->parent)
+		if (data->node != node->parent)
 			break;
 
 		data->node = node;
@@ -93,7 +93,7 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	struct rss_renderer *data = renderer->data;
 	struct dom_node_list **list;
 
-	assert(node && renderer && renderer->document);
+	assert(node && node->parent && renderer && renderer->document);
 
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_ITEM:
@@ -108,7 +108,6 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	case RSS_ELEMENT_AUTHOR:
 	case RSS_ELEMENT_PUBDATE:
 		if (!is_dom_string_set(&data->text)
-		    || !node->parent
 		    || data->item != node->parent
 		    || data->node != node)
 			break;
