@@ -8,6 +8,8 @@
 struct document_options;
 struct html_context;
 struct part;
+struct memory_list;
+struct menu_item;
 struct string;
 enum html_special_type;
 enum html_element_mortality_type;
@@ -43,5 +45,15 @@ void done_html_parser_state(struct html_context *html_context,
 
 void parse_html(unsigned char *html, unsigned char *eof, struct part *part,
 		unsigned char *head, struct html_context *html_context);
+
+
+/* This examines imgmap in the given document and produces a BFU-ish menu
+ * for it. */
+
+int
+get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
+	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,
+	      struct document_options *options, unsigned char *target_base,
+	      int to, int def, int hdef);
 
 #endif

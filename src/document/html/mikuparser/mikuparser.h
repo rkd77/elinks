@@ -18,8 +18,6 @@ struct document_options;
 struct form_control;
 struct frameset_desc;
 struct html_context;
-struct memory_list;
-struct menu_item;
 struct part;
 struct string;
 struct uri;
@@ -156,14 +154,6 @@ void set_fragment_identifier(struct html_context *html_context,
                              unsigned char *attr_name, unsigned char *attr);
 void add_fragment_identifier(struct html_context *html_context,
                              struct part *, unsigned char *attr);
-
-/* Interface for the viewer */
-
-int
-get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
-	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,
-	      struct document_options *options, unsigned char *target_base,
-	      int to, int def, int hdef);
 
 /* For html/parser/forms.c,general.c,link.c,parse.c,stack.c */
 

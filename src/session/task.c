@@ -17,9 +17,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/document.h"
-#ifndef CONFIG_DOM_HTML
-#include "document/html/mikuparser/mikuparser.h"
-#endif
+#include "document/html/parser.h"
 #include "document/refresh.h"
 #include "document/view.h"
 #include "intl/gettext/libintl.h"
@@ -369,9 +367,6 @@ x:
 static void
 ses_imgmap(struct session *ses)
 {
-#ifdef CONFIG_DOM_HTML
-	INTERNAL("Image maps not supported with DOM HTML parser");
-#else
 	struct cache_entry *cached = find_in_cache(ses->loading_uri);
 	struct document_view *doc_view = current_frame(ses);
 	struct fragment *fragment;
@@ -400,7 +395,6 @@ ses_imgmap(struct session *ses)
 
 	add_empty_window(ses->tab->term, (void (*)(void *)) freeml, ml);
 	do_menu(ses->tab->term, menu, ses, 0);
-#endif
 }
 
 enum do_move {

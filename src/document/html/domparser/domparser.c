@@ -223,3 +223,14 @@ parse_html(unsigned char *html, unsigned char *eof, struct part *part,
 		pop_dom_node(&parser->stack);
 	}
 }
+
+
+int
+get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
+	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,
+	      struct document_options *options, unsigned char *target_base,
+	      int to, int def, int hdef)
+{
+	INTERNAL("IMGMAPs not supported for DOM HTML parser");
+	return 1;
+}
