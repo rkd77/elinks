@@ -32,8 +32,6 @@ struct rss_renderer {
 	struct screen_char styles[RSS_STYLES];
 
 	struct dom_node *item;
-	struct dom_node *node;
-	struct dom_string text;
 };
 
 
@@ -138,15 +136,6 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	case RSS_ELEMENT_ITEM:
 		flush_rss_item(renderer, rss);
 		rss->item = node;
-		break;
-
-	case RSS_ELEMENT_LINK:
-	case RSS_ELEMENT_DESCRIPTION:
-	case RSS_ELEMENT_TITLE:
-	case RSS_ELEMENT_AUTHOR:
-	case RSS_ELEMENT_PUBDATE:
-		if (rss->node == node->parent)
-			rss->node = node;
 	}
 
 	return DOM_CODE_OK;
@@ -157,37 +146,12 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct rss_renderer *rss = renderer->data;
-	struct dom_node_list **list;
 
 	assert(node && node->parent && renderer && renderer->document);
 
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_CHANNEL:
 		flush_rss_item(renderer, rss);
-		break;
-
-	case RSS_ELEMENT_ITEM:
-		if (is_dom_string_set(&rss->text))
-			done_dom_string(&rss->text);
-		break;
-
-	case RSS_ELEMENT_LINK:
-	case RSS_ELEMENT_DESCRIPTION:
-	case RSS_ELEMENT_TITLE:
-	case RSS_ELEMENT_AUTHOR:
-	case RSS_ELEMENT_PUBDATE:
-		if (!is_dom_string_set(&rss->text)
-		    || rss->item != node->parent
-		    || rss->node != node)
-			break;
-
-		/* Replace any child nodes with the normalized text node.
-		 * We are getting rid of "inner HTML". */
-		list = get_dom_node_list(node->parent, node);
-		done_dom_node_list(*list);
-		if (!add_dom_node(node, DOM_NODE_TEXT, &rss->text))
-			done_dom_string(&rss->text);
-		rss->node = NULL;
 		break;
 	}
 
@@ -249,11 +213,7 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 	struct dom_renderer *renderer = stack->current->data;
 	struct rss_renderer *rss = renderer->data;
 
-	if (is_dom_string_set(&rss->text))
-		done_dom_string(&rss->text);
-
 	done_dom_node(root);
-
 	mem_free(rss);
 
 	return DOM_CODE_OK;
