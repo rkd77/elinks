@@ -203,6 +203,10 @@ void parse_html(unsigned char *html, unsigned char *eof, struct part *part,
 		unsigned char *head, struct html_context *html_context);
 
 
+/* Query for HTML attribute of given element */
+unsigned char *get_attr_value(struct html_context *html_context,
+                              struct html_element *elem, unsigned char *name);
+
 /* This examines imgmap in the given document and produces a BFU-ish menu
  * for it. */
 int get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,

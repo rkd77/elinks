@@ -135,9 +135,9 @@ end:
 		(s)[(l)++] = (c);					\
 	} while (0)
 
-unsigned char *
-get_attr_value(register unsigned char *e, unsigned char *name,
-	       int cp, enum html_attr_flags flags)
+inline unsigned char *
+miku_get_attr_value(register unsigned char *e, unsigned char *name,
+	            int cp, enum html_attr_flags flags)
 {
 	unsigned char *n;
 	unsigned char *name_start;
@@ -240,6 +240,14 @@ parse_error:
 }
 
 #undef add_chr
+
+unsigned char *
+get_attr_value(struct html_context *html_context, struct html_element *elem,
+               unsigned char *name)
+{
+	return miku_get_attr_value(miku_el(elem)->options, name,
+	                           html_context->doc_cp, HTML_ATTR_NONE);
+}
 
 
 /* Extract numerical value of attribute @name.

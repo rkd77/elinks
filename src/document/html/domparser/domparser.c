@@ -159,6 +159,13 @@ parse_html(unsigned char *html, unsigned char *eof, struct part *part,
 }
 
 
+unsigned char *
+get_attr_value(struct html_context *html_context,
+               struct html_element *elem, unsigned char *name)
+{
+	return NULL;
+}
+
 int
 get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,

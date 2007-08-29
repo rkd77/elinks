@@ -33,12 +33,14 @@ enum html_attr_flags {
  * - name is searched attribute
  *
  * Returns allocated string containing the attribute, or NULL on unsuccess. */
-unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, int cp, enum html_attr_flags flags);
+unsigned char *miku_get_attr_value(register unsigned char *e, unsigned char *name, int cp, enum html_attr_flags flags);
 
 /* Wrappers for get_attr_value(). */
-#define get_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_NONE)
-#define get_url_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_EAT_NL)
-#define has_attr(e, name, cp) (!!get_attr_value(e, name, cp, HTML_ATTR_TEST))
+#define get_attr_val(e, name, cp) miku_get_attr_value(e, name, cp, HTML_ATTR_NONE)
+#define get_url_val(e, name, cp) miku_get_attr_value(e, name, cp, HTML_ATTR_EAT_NL)
+#define has_attr(e, name, cp) (!!miku_get_attr_value(e, name, cp, HTML_ATTR_TEST))
+/* Another wrapper get_attr_value() for generic parser interface is declared
+ * in parser.h. */
 
 
 /* Interface for both the renderer and the table handling */
