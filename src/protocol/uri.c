@@ -58,6 +58,25 @@ is_uri_dir_sep(const struct uri *uri, unsigned char pos)
 
 
 int
+is_in_domain(unsigned char *domain, unsigned char *server, int server_len)
+{
+	int domain_len = strlen(domain);
+	int len;
+
+	if (domain_len > server_len)
+		return 0;
+
+	if (domain_len == server_len)
+		return !strncasecmp(domain, server, server_len);
+
+	len = server_len - domain_len;
+	if (server[len - 1] != '.')
+		return 0;
+
+	return !strncasecmp(domain, server + len, domain_len);
+}
+
+int
 is_ip_address(const unsigned char *address, int addresslen)
 {
 	/* The @address has well defined limits so it would be a shame to
