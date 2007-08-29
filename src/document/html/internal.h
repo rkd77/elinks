@@ -57,6 +57,26 @@ struct html_context {
 	 * It is copied here because part->document is NULL sometimes.  */
 	int doc_cp;
 
+	/* For html/parser.c, html/renderer.c */
+	int margin;
+
+	/* For:
+	 * html/parser/parse.c
+	 * html/parser.c
+	 * html/renderer.c
+	 * html/tables.c */
+	int table_level;
+
+	struct part *part;
+
+	/* Note that for Mikuparser, this is for usage by put_chrs only;
+	 * anywhere else in the parser, one should use put_chrs. */
+	void (*put_chars_f)(struct html_context *, unsigned char *, int);
+
+	void (*line_break_f)(struct html_context *);
+
+	void *(*special_f)(struct html_context *, enum html_special_type, ...);
+
 #ifdef CONFIG_DOM_HTML
 	struct text_attrib attr;
 	struct par_attrib parattr;
@@ -91,52 +111,6 @@ struct html_context {
 	/* For parser/forms.c: */
 	unsigned char *startf;
 #endif
-
-	/* For html/parser.c, html/renderer.c */
-	int margin;
-
-	/* For:
-	 * html/parser/parse.c
-	 * html/parser.c
-	 * html/renderer.c
-	 * html/tables.c */
-	int table_level;
-
-	/* For:
-	 * html/parser/forms.c
-	 * html/parser/link.c
-	 * html/parser/parse.c
-	 * html/parser/stack.c
-	 * html/parser.c
-	 * html/dom.c
-	 * html/renderer.c */
-	struct part *part;
-
-	/* For:
-	 * html/parser/forms.c
-	 * html/parser/link.c
-	 * html/parser/parse.c
-	 * html/parser.c
-	 * html/dom.c */
-	/* Note that this is for usage by put_chrs only; anywhere else in
-	 * the parser, one should use put_chrs. */
-	void (*put_chars_f)(struct html_context *, unsigned char *, int);
-
-	/* For:
-	 * html/parser/forms.c
-	 * html/parser/link.c
-	 * html/parser/parse.c
-	 * html/parser/stack.c
-	 * html/parser.c
-	 * html/dom.c */
-	void (*line_break_f)(struct html_context *);
-
-	/* For:
-	 * html/parser/forms.c
-	 * html/parser/parse.c
-	 * html/parser.c
-	 * html/dom.c */
-	void *(*special_f)(struct html_context *, enum html_special_type, ...);
 };
 
 #ifdef CONFIG_DOM_HTML
