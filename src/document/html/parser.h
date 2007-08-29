@@ -28,7 +28,13 @@ enum html_special_type; /* Gateway to the renderer. Defined in renderer.h. */
 struct text_attrib {
 	struct text_style style;
 
+	/* Corresponds to the font-size CSS property. Uses the unit of 1/100
+	 * of em. Thus, 100 is the default value, "normal" size. CSS units
+	 * em and ex are relative to this value for the current element. */
+	/* This is also touched by <font size="...">, where each unit is
+	 * 1/3em. */
 	int fontsize;
+
 	unsigned char *link;
 	unsigned char *target;
 	unsigned char *image;

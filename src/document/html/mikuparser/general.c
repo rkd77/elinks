@@ -151,10 +151,19 @@ html_font(struct html_context *html_context, unsigned char *a,
 		s = strtoul(nn, (char **) &end, 10);
 		if (!errno && *nn && !*end) {
 			if (s > 7) s = 7;
+			/* Transpose from scale 1..7 (with 3 as "normal")
+			 * to fontsize which has 100 as "normal" aka 1em. */
+			s = 100 + (s - 3) * 33;
 			if (!p) format.fontsize = s;
 			else format.fontsize += p * s;
 			if (format.fontsize < 1) format.fontsize = 1;
+#if 0
+			/* I think that restricting this is not that useful
+			 * and could get hairy when interacting with font-size
+			 * CSS property.
+			 * --pasky */
 			else if (format.fontsize > 7) format.fontsize = 7;
+#endif
 		}
 		mem_free(al);
 	}

@@ -53,7 +53,7 @@ init_html_context(struct uri *uri, struct document_options *options,
 	}
 	add_to_list(html_context->stack, e);
 
-	format.fontsize = 3;
+	format.fontsize = 100;
 	format.style = options->default_style;
 	format.clink = options->default_link;
 	format.vlink = options->default_vlink;
