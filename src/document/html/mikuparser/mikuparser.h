@@ -1,6 +1,6 @@
 
-#ifndef EL__DOCUMENT_HTML_PARSER_H
-#define EL__DOCUMENT_HTML_PARSER_H
+#ifndef EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
+#define EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
 
 #include "document/format.h"
 #include "intl/charsets.h" /* unicode_val_T */
@@ -10,7 +10,7 @@
 
 #ifndef INSIDE_INTERNAL_H
 #ifdef CONFIG_DOM_HTML
-#error html/parser.h included even though DOM parser is configured to use!
+#error html/mikuparser/mikuparser.h included even though DOM parser is configured to use!
 #endif
 #endif
 
@@ -135,7 +135,7 @@ struct html_element {
 	unsigned char *name;
 	int namelen;
 	unsigned char *options;
-	/* See document/html/parser/parse.c's element_info.linebreak
+	/* See document/html/mikuparser/parse.c's element_info.linebreak
 	 * description. */
 	int linebreak;
 	struct frameset_desc *frameset;

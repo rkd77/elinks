@@ -18,7 +18,7 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #ifndef CONFIG_DOM_HTML
-#include "document/html/parser.h"
+#include "document/html/mikuparser/mikuparser.h"
 #endif
 #include "document/refresh.h"
 #include "document/view.h"

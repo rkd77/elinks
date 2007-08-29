@@ -4,7 +4,7 @@ It's scary, yes.
 The Mikulas renderer lives in renderer.c, frames.c (just small frameset support
 stuff) and tables.c.
 
-The Mikulas parser lives in parser/* and parser.*.
+The Mikulas parser lives in mikuparser/*.
 
 There is also new experimental parser that is based on the DOM engine but uses
 the Mikulas renderer. It lives in dom.c.

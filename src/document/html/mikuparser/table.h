@@ -1,6 +1,6 @@
 
-#ifndef EL__DOCUMENT_HTML_PARSER_TABLE_H
-#define EL__DOCUMENT_HTML_PARSER_TABLE_H
+#ifndef EL__DOCUMENT_HTML_TABLE_H
+#define EL__DOCUMENT_HTML_TABLE_H
 
 #include "util/color.h"
 

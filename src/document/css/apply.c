@@ -23,7 +23,7 @@
 #include "document/css/stylesheet.h"
 #include "document/format.h"
 #ifndef CONFIG_DOM_HTML
-#include "document/html/parser/parse.h"
+#include "document/html/mikuparser/parse.h"
 #endif
 #include "document/options.h"
 #include "util/align.h"

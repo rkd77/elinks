@@ -12,9 +12,9 @@
 #include "elinks.h"
 
 #include "document/document.h"
-#include "document/html/parser/stack.h"
-#include "document/html/parser/parse.h"
-#include "document/html/parser.h"
+#include "document/html/mikuparser/stack.h"
+#include "document/html/mikuparser/parse.h"
+#include "document/html/mikuparser/mikuparser.h"
 #include "document/html/renderer.h"
 #include "protocol/uri.h"
 #include "util/conv.h"

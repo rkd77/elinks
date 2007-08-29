@@ -18,8 +18,8 @@
 #ifdef CONFIG_DOM_HTML
 #include "document/html/dom.h"
 #else
-#include "document/html/parser.h"
-#include "document/html/parser/parse.h"
+#include "document/html/mikuparser/mikuparser.h"
+#include "document/html/mikuparser/parse.h"
 #include "document/html/tables.h"
 #endif
 #include "document/html/renderer.h"

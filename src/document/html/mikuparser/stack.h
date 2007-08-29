@@ -1,8 +1,8 @@
 
-#ifndef EL__DOCUMENT_HTML_PARSER_STACK_H
-#define EL__DOCUMENT_HTML_PARSER_STACK_H
+#ifndef EL__DOCUMENT_HTML_MIKUPARSER_STACK_H
+#define EL__DOCUMENT_HTML_MIKUPARSER_STACK_H
 
-#include "document/html/parser.h"
+#include "document/html/mikuparser/mikuparser.h"
 
 struct html_context;
 

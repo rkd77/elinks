@@ -18,7 +18,7 @@
 #include "document/forms.h"
 #include "document/html/frames.h"
 #ifndef CONFIG_DOM_HTML
-#include "document/html/parser/parse.h"
+#include "document/html/mikuparser/parse.h"
 #endif
 #include "document/html/renderer.h"
 #include "document/options.h"

@@ -4,7 +4,7 @@
 
 #include "document/css/stylesheet.h"
 #define INSIDE_INTERNAL_H
-#include "document/html/parser.h"
+#include "document/html/mikuparser/mikuparser.h"
 #undef INSIDE_INTERNAL_H
 #include "util/lists.h"
 

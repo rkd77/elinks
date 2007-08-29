@@ -1,8 +1,8 @@
 
-#ifndef EL__DOCUMENT_HTML_PARSER_GENERAL_H
-#define EL__DOCUMENT_HTML_PARSER_GENERAL_H
+#ifndef EL__DOCUMENT_HTML_MIKUPARSER_GENERAL_H
+#define EL__DOCUMENT_HTML_MIKUPARSER_GENERAL_H
 
-#include "document/html/parser/parse.h"
+#include "document/html/mikuparser/parse.h"
 
 element_handler_T html_address;
 element_handler_T html_base;

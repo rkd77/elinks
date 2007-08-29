@@ -1,6 +1,6 @@
 
-#ifndef EL__DOCUMENT_HTML_PARSER_PARSE_H
-#define EL__DOCUMENT_HTML_PARSER_PARSE_H
+#ifndef EL__DOCUMENT_HTML_MIKUPARSER_PARSE_H
+#define EL__DOCUMENT_HTML_MIKUPARSER_PARSE_H
 
 struct html_context;
 struct document_options;
