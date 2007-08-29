@@ -116,10 +116,8 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 		 * We are getting rid of "inner HTML". */
 		list = get_dom_node_list(node->parent, node);
 		done_dom_node_list(*list);
-		if (is_dom_string_set(&data->text)) {
-			if (!add_dom_node(node, DOM_NODE_TEXT, &data->text))
-				done_dom_string(&data->text);
-		}
+		if (!add_dom_node(node, DOM_NODE_TEXT, &data->text))
+			done_dom_string(&data->text);
 		data->node = NULL;
 		break;
 
