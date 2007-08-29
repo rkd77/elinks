@@ -5,16 +5,20 @@
 /* This is internal header for the Mikuparser engine. It should not be included
  * from anywhere outside, ideally. */
 
-#include "util/color.h"
-#include "util/lists.h"
-
 #ifdef CONFIG_DOM_HTML
 #error html/mikuparser/mikuparser.h included even though DOM parser is configured to use!
 #endif
 
+#include "document/html/parser.h"
+#include "util/color.h"
+#include "util/lists.h"
+
+struct css_stylesheet;
+struct document_options;
 struct frameset_desc;
 struct html_context;
 struct part;
+struct uri;
 enum html_special_type;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML
@@ -91,6 +95,21 @@ void add_fragment_identifier(struct html_context *html_context,
 void ln_break(struct html_context *html_context, int n);
 
 int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
+
+/* For parser/parse.c: */
+
+void process_head(struct html_context *html_context, unsigned char *head);
+void put_chrs(struct html_context *html_context, unsigned char *start, int len);
+
+/* For parser/link.c: */
+
+void html_focusable(struct html_context *html_context, unsigned char *a);
+void html_skip(struct html_context *html_context, unsigned char *a);
+unsigned char *get_target(struct document_options *options, unsigned char *a);
+
+void
+import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
+		      unsigned char *url, int len);
 
 #endif
 

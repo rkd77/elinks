@@ -8,25 +8,7 @@
 struct document_options;
 struct sgml_parser;
 struct uri;
-
-#ifndef CONFIG_DOM_CSS
-
-/* For parser/parse.c: */
-
-void process_head(struct html_context *html_context, unsigned char *head);
-void put_chrs(struct html_context *html_context, unsigned char *start, int len);
-
-/* For parser/link.c: */
-
-void html_focusable(struct html_context *html_context, unsigned char *a);
-void html_skip(struct html_context *html_context, unsigned char *a);
-unsigned char *get_target(struct document_options *options, unsigned char *a);
-
-void
-import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      unsigned char *url, int len);
-
-#endif
+enum html_special_type;
 
 
 /* The HTML parser context. It is also heavily used by the renderer so DOM
@@ -158,20 +140,25 @@ struct html_context {
 };
 
 #ifdef CONFIG_DOM_HTML
+
 #define format		(html_context->attr)
 #define par_format	(html_context->parattr)
+
 #else
+
+#include "document/html/mikuparser/mikuparser.h" /* struct html_element */
+
 #define html_top	((struct html_element *) html_context->stack.next)
 #define html_bottom	((struct html_element *) html_context->stack.prev)
 #define format		(html_top->attr)
 #define par_format	(html_top->parattr)
+
+#define get_html_max_width() \
+	int_max(par_format.width - (par_format.leftmargin + par_format.rightmargin), 0)
+
 #endif
 
 #define html_is_preformatted() (format.style.attr & AT_PREFORMATTED)
 
-#ifndef CONFIG_DOM_HTML
-#define get_html_max_width() \
-	int_max(par_format.width - (par_format.leftmargin + par_format.rightmargin), 0)
-#endif
 
 #endif
