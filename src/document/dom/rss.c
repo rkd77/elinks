@@ -191,6 +191,8 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 	}
 
 	rss = renderer->data = mem_calloc(1, sizeof(*rss));
+	if (rss)
+		return DOM_CODE_ALLOC_ERR;
 
 	/* Initialize styles. */
 
