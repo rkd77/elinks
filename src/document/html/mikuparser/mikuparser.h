@@ -21,9 +21,6 @@ struct part;
 struct uri;
 enum html_special_type;
 
-/* XXX: This is just terible - this interface is from 75% only for other HTML
- * files - there's lack of any well defined interface and it's all randomly
- * mixed up :/. */
 
 /* HTML parser stack mortality info */
 enum html_element_mortality_type {
