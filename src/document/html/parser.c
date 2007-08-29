@@ -36,6 +36,8 @@ init_html_context(struct uri *uri, struct document_options *options,
 	init_css_selector_set(&html_context->css_styles.selectors);
 #endif
 
+	init_list(html_context->stack);
+
 	html_context->put_chars_f = put_chars;
 	html_context->line_break_f = line_break;
 	html_context->special_f = special;

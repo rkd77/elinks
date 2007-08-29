@@ -151,7 +151,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		/* Ancestor matches? */ \
 		if (sel->leaves.may_contain_rel_ancestor_or_parent \
 		    && (LIST_OF(struct html_element) *) element->next \
-		     != &miku(html_context)->stack) { \
+		     != &html_context->stack) { \
 			struct html_element *ancestor; \
 			/* This is less effective than doing reverse iterations,
 			 * first over sel->leaves and then over the HTML stack,
@@ -161,7 +161,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 			 * profiles won't show it really costs... */ \
 			for (ancestor = element->next; \
 			     (LIST_OF(struct html_element) *) ancestor	\
-			      != &miku(html_context)->stack;\
+			      != &html_context->stack;\
 			     ancestor = ancestor->next) \
 				examine_element(html_context, base, \
 						CST_ELEMENT, CSR_ANCESTOR, \

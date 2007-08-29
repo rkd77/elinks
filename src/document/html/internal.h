@@ -20,8 +20,8 @@
 
 #include "document/html/mikuparser/mikuparser.h"
 
-#define html_top	((struct html_element *) miku(html_context)->stack.next)
-#define html_bottom	((struct html_element *) miku(html_context)->stack.prev)
+#define html_top	((struct html_element *) html_context->stack.next)
+#define html_bottom	((struct html_element *) html_context->stack.prev)
 #define format		(html_top->attr)
 #define par_format	(html_top->parattr)
 

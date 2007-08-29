@@ -855,12 +855,12 @@ start_element(struct element_info *ei,
 		struct html_element *e;
 
 		if (ei->type == ET_NON_NESTABLE) {
-			foreach (e, miku(html_context)->stack) {
+			foreach (e, html_context->stack) {
 				if (miku_el(e)->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
 		} else {
-			foreach (e, miku(html_context)->stack) {
+			foreach (e, html_context->stack) {
 				if (is_block_element(e) && is_inline_element(ei)) break;
 				if (miku_el(e)->type < ELEMENT_KILLABLE) break;
 				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
@@ -868,7 +868,7 @@ start_element(struct element_info *ei,
 		}
 
 		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
-			while (e->prev != (void *) &miku(html_context)->stack)
+			while (e->prev != (void *) &html_context->stack)
 				kill_html_stack_item(html_context, e->prev);
 
 			if (miku_el(e)->type > ELEMENT_IMMORTAL)
@@ -917,7 +917,7 @@ start_element(struct element_info *ei,
 		 * disabled for now. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
-							&miku(html_context)->stack);
+							&html_context->stack);
 
 		if (selector) {
 			apply_css_selector_style(html_context, html_top, selector);
@@ -935,7 +935,7 @@ start_element(struct element_info *ei,
 		/* Call it now to override default colors of the elements. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
-							&miku(html_context)->stack);
+							&html_context->stack);
 
 		if (selector) {
 			apply_css_selector_style(html_context, html_top, selector);
@@ -970,7 +970,7 @@ end_element(struct element_info *ei,
 	if (ei->close) ei->close(html_context, attr, html, eof, &html);
 
 	/* dump_html_stack(html_context); */
-	foreach (e, miku(html_context)->stack) {
+	foreach (e, html_context->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (miku_el(e)->type < ELEMENT_KILLABLE)
@@ -983,7 +983,7 @@ end_element(struct element_info *ei,
 			break;
 		}
 		for (elt = e;
-		     elt != (void *) &miku(html_context)->stack;
+		     elt != (void *) &html_context->stack;
 		     elt = elt->prev)
 			if (elt->linebreak > lnb)
 				lnb = elt->linebreak;
@@ -996,7 +996,7 @@ end_element(struct element_info *ei,
 			miku(html_context)->line_breax = 0;
 
 		ln_break(html_context, lnb);
-		while (e->prev != (void *) &miku(html_context)->stack)
+		while (e->prev != (void *) &html_context->stack)
 			kill_html_stack_item(html_context, e->prev);
 		kill_html_stack_item(html_context, e);
 		break;

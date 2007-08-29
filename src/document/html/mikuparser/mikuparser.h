@@ -75,8 +75,6 @@ enum html_whitespace_state {
 };
 
 struct mikuparser_context {
-	LIST_OF(struct html_element) stack;
-
 	/* For parser/parse.c: */
 	unsigned char *eoff; /* For parser/forms.c too */
 	int line_breax; /* This is for ln_break. */

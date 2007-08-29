@@ -184,7 +184,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 	 * it _and_ prefer it over bgcolor attribute. */
 	if (html_context->options->css_enable)
 		css_apply(html_context, html_top, &html_context->css_styles,
-		          &miku(html_context)->stack);
+		          &html_context->stack);
 #endif
 
 	if (par_format.bgcolor != format.style.bg) {

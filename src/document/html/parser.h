@@ -130,6 +130,8 @@ struct html_element {
 /* The HTML parser context. */
 
 struct html_context {
+	LIST_OF(struct html_element) stack;
+
 #ifdef CONFIG_CSS
 	/* The default stylesheet is initially merged into it. When parsing CSS
 	 * from <style>-tags and external stylesheets if enabled is merged
