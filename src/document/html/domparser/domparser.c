@@ -108,7 +108,7 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 		case HTML_ATTRIBUTE_ID:
 			mem_free_set(&format.id, dom_string_acpy(&attr->value));
 			html_context->special_f(html_context, SP_TAG,
-			                        attr->value);
+			                        attr->value.string);
 			break;
 	}
 	return DOM_CODE_OK;
