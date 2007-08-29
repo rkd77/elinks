@@ -689,6 +689,7 @@ void
 done_html_parser_state(struct html_context *html_context, void *state)
 {
 	struct html_element *element = state;
+
 	miku(html_context)->line_breax = 1;
 
 	while (html_top != element) {
