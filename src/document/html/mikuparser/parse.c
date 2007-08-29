@@ -245,6 +245,8 @@ unsigned char *
 get_attr_value(struct html_context *html_context, struct html_element *elem,
                unsigned char *name)
 {
+	if (!miku_el(elem)->options)
+		return NULL;
 	return miku_get_attr_value(miku_el(elem)->options, name,
 	                           html_context->doc_cp, HTML_ATTR_NONE);
 }
