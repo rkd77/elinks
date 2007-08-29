@@ -54,7 +54,8 @@ element_begins(struct html_context *html_context)
 	domelem(html_top)->element_began = 1;
 
 #ifdef CONFIG_CSS
-	apply_style(html_context);
+	if (html_top->name) /* No styles for the root element */
+		apply_style(html_context);
 #endif
 }
 
@@ -187,6 +188,8 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		done_html_context(html_context);
 		return NULL;
 	}
+
+	html_top->data = mem_calloc(1, sizeof(*domelem(html_top)));
 
 	domctx(html_context)->parser = parser =
 		init_sgml_parser(SGML_PARSER_STREAM, SGML_DOCTYPE_HTML, &dom_uri, 0);
