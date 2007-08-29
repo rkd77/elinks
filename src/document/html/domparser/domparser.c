@@ -60,11 +60,11 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 	/* See /src/dom/sgml/html/attribute.inc for the possible values. */
 	switch (attr->type) {
 		case HTML_ATTRIBUTE_CLASS:
-			mem_free_set(&format.class, memacpy(attr->value.string, attr->value.length));
+			mem_free_set(&format.class, dom_string_acpy(&attr->value));
 			break;
 
 		case HTML_ATTRIBUTE_ID:
-			mem_free_set(&format.id, memacpy(attr->value.string, attr->value.length));
+			mem_free_set(&format.id, dom_string_acpy(&attr->value));
 			html_context->special_f(html_context, SP_TAG,
 			                        attr->value);
 			break;

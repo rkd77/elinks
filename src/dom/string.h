@@ -64,6 +64,8 @@ add_to_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 	return string;
 }
 
+#define dom_string_acpy(s) memacpy((s)->string, (s)->length)
+
 #define init_dom_string(string, str, len) add_to_dom_string(string, str, len)
 
 #define is_dom_string_set(str) ((str)->string && (str)->length)
