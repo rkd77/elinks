@@ -2,60 +2,12 @@
 #ifndef EL__DOCUMENT_HTML_INTERNAL_H
 #define EL__DOCUMENT_HTML_INTERNAL_H
 
-#include "document/css/stylesheet.h"
-#include "util/lists.h"
+/* Internal HTML engine (parsers + renderer) usage. Currently hides only some
+ * hairy parser-specific accessors. */
 
-struct document_options;
-struct sgml_parser;
-struct uri;
-enum html_special_type;
+/* This file must be included as the last one in the include list precisely
+ * because of the hairy macros. */
 
-
-/* The HTML parser context. It is also heavily used by the renderer so DOM
- * parser must use it as well. */
-
-struct html_context {
-#ifdef CONFIG_CSS
-	/* The default stylesheet is initially merged into it. When parsing CSS
-	 * from <style>-tags and external stylesheets if enabled is merged
-	 * added to it. */
-	struct css_stylesheet css_styles;
-#endif
-
-	/* These are global per-document base values, alterable by the <base>
-	 * element. */
-	struct uri *base_href;
-	unsigned char *base_target;
-
-	struct document_options *options;
-
-	/* doc_cp is the charset of the document, i.e. part->document->cp.
-	 * It is copied here because part->document is NULL sometimes.  */
-	int doc_cp;
-
-	/* For html/parser.c, html/renderer.c */
-	int margin;
-
-	/* For:
-	 * html/parser/parse.c
-	 * html/parser.c
-	 * html/renderer.c
-	 * html/tables.c */
-	int table_level;
-
-	struct part *part;
-
-	/* Note that for Mikuparser, this is for usage by put_chrs only;
-	 * anywhere else in the parser, one should use put_chrs. */
-	void (*put_chars_f)(struct html_context *, unsigned char *, int);
-
-	void (*line_break_f)(struct html_context *);
-
-	void *(*special_f)(struct html_context *, enum html_special_type, ...);
-
-	/* Engine-specific data */
-	void *data;
-};
 
 #ifdef CONFIG_DOM_HTML
 

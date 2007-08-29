@@ -5,6 +5,7 @@
  * renderer. Both Mikuparser and DOM parser must conform to this. These
  * prototypes are only here, not repeated in parser-specific headers. */
 
+#include "document/css/stylesheet.h"
 #include "document/format.h"
 #include "intl/charsets.h" /* unicode_val_T */
 #include "util/align.h"
@@ -13,7 +14,6 @@
 struct css_stylesheet;
 struct document_options;
 struct form_control;
-struct html_context;
 struct memory_list;
 struct menu_item;
 struct part;
@@ -94,6 +94,51 @@ struct par_attrib {
 	int dd_margin;
 	enum format_list_flag flags;
 	color_T bgcolor;
+};
+
+/* The HTML parser context. */
+
+struct html_context {
+#ifdef CONFIG_CSS
+	/* The default stylesheet is initially merged into it. When parsing CSS
+	 * from <style>-tags and external stylesheets if enabled is merged
+	 * added to it. */
+	struct css_stylesheet css_styles;
+#endif
+
+	/* These are global per-document base values, alterable by the <base>
+	 * element. */
+	struct uri *base_href;
+	unsigned char *base_target;
+
+	struct document_options *options;
+
+	/* doc_cp is the charset of the document, i.e. part->document->cp.
+	 * It is copied here because part->document is NULL sometimes.  */
+	int doc_cp;
+
+	/* For html/parser.c, html/renderer.c */
+	int margin;
+
+	/* For:
+	 * html/parser/parse.c
+	 * html/parser.c
+	 * html/renderer.c
+	 * html/tables.c */
+	int table_level;
+
+	struct part *part;
+
+	/* Note that for Mikuparser, this is for usage by put_chrs only;
+	 * anywhere else in the parser, one should use put_chrs. */
+	void (*put_chars_f)(struct html_context *, unsigned char *, int);
+
+	void (*line_break_f)(struct html_context *);
+
+	void *(*special_f)(struct html_context *, enum html_special_type, ...);
+
+	/* Engine-specific data */
+	void *data;
 };
 
 
