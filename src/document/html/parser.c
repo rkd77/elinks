@@ -53,15 +53,7 @@ init_html_context(struct uri *uri, struct document_options *options,
 	}
 	add_to_list(html_context->stack, e);
 
-	format.style.attr = 0;
 	format.fontsize = 3;
-	format.link = format.target = format.image = NULL;
-	format.onclick = format.ondblclick = format.onmouseover = format.onhover
-		= format.onfocus = format.onmouseout = format.onblur = NULL;
-	format.select = NULL;
-	format.form = NULL;
-	format.title = NULL;
-
 	format.style = options->default_style;
 	format.clink = options->default_link;
 	format.vlink = options->default_vlink;
@@ -75,7 +67,6 @@ init_html_context(struct uri *uri, struct document_options *options,
 	par_format.rightmargin = options->margin;
 
 	par_format.width = options->box.width;
-	par_format.list_level = par_format.list_number = 0;
 	par_format.dd_margin = options->margin;
 	par_format.flags = P_NONE;
 

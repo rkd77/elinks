@@ -742,14 +742,8 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	scan_http_equiv(start, end, head, title, options);
 
 
-	miku_el(html_top)->invisible = 0;
-	html_top->name = NULL;
-   	html_top->namelen = 0;
-	miku_el(html_top)->options = NULL;
 	html_top->linebreak = 1;
 	miku_el(html_top)->type = ELEMENT_DONT_KILL;
-
-	miku(html_context)->has_link_lines = 0;
 
 	return html_context;
 }
