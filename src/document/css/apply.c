@@ -22,9 +22,7 @@
 #include "document/css/scanner.h"
 #include "document/css/stylesheet.h"
 #include "document/format.h"
-#ifndef CONFIG_DOM_HTML
-#include "document/html/mikuparser/parse.h"
-#endif
+#include "document/html/parser.h"
 #include "document/options.h"
 #include "util/align.h"
 #include "util/color.h"
@@ -36,8 +34,6 @@
 /* XXX: Some strange dependency makes it necessary to this include last. */
 #include "document/html/internal.h"
 
-
-#ifndef CONFIG_DOM_HTML
 
 typedef void (*css_applier_T)(struct html_context *html_context,
 			      struct html_element *element,
@@ -186,9 +182,6 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_ELEMENT, base);
 	}
 
-	if (!miku_el(element)->options)
-		return;
-
 	/* TODO: More pseudo-classess. --pasky */
 	if (element->pseudo_class & ELEMENT_LINK) {
 		selector = find_css_selector(selectors, CST_PSEUDO, rel, "link", -1);
@@ -234,7 +227,7 @@ get_css_selector_for_element(struct html_context *html_context,
 	unsigned char *code;
 	struct css_selector *selector;
 
-	assert(element && miku_el(element)->options && css);
+	assert(element && css);
 
 	selector = init_css_selector(NULL, CST_ELEMENT, CSR_ROOT, NULL, 0);
 	if (!selector)
@@ -251,7 +244,7 @@ get_css_selector_for_element(struct html_context *html_context,
 	DBG("Element %.*s applied.", element->namelen, element->name);
 #endif
 
-	code = get_attr_val(miku_el(element)->options, "style", html_context->doc_cp);
+	code = get_attr_value(html_context, element, "style");
 	if (code) {
 		struct css_selector *stylesel;
 		struct scanner scanner;
@@ -301,34 +294,3 @@ css_apply(struct html_context *html_context, struct html_element *element,
 
 	done_css_selector(selector);
 }
-
-
-#else
-
-
-struct css_selector *
-get_css_selector_for_element(struct html_context *html_context,
-			     struct html_element *element,
-			     struct css_stylesheet *css,
-			     LIST_OF(struct html_element) *html_stack)
-{
-	INTERNAL("Cannot get CSS selector for DOM HTML engine yet");
-	return NULL;
-}
-
-void
-apply_css_selector_style(struct html_context *html_context,
-			 struct html_element *element,
-			 struct css_selector *selector)
-{
-	INTERNAL("Cannot apply CSS selector for DOM HTML engine yet");
-}
-
-void
-css_apply(struct html_context *html_context, struct html_element *element,
-	  struct css_stylesheet *css, LIST_OF(struct html_element) *html_stack)
-{
-	INTERNAL("Cannot apply CSS for DOM HTML engine yet");
-}
-
-#endif
