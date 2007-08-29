@@ -6,7 +6,7 @@ SUBDIRS-unless$(CONFIG_DOM_HTML) = mikuparser
 OBJS-unless$(CONFIG_DOM_HTML)	 = tables.o
 
 # The DOM-based HTML parser
-OBJS-$(CONFIG_DOM_HTML) = dom.o
+SUBDIRS-$(CONFIG_DOM_HTML) = domparser
 
 OBJS	= frames.o renderer.o
 

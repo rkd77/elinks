@@ -7,7 +7,7 @@ stuff) and tables.c.
 The Mikulas parser lives in mikuparser/*.
 
 There is also new experimental parser that is based on the DOM engine but uses
-the Mikulas renderer. It lives in dom.c.
+the Mikulas renderer. It lives in domparser/*.
 
 
 

@@ -16,7 +16,7 @@
 #include "document/document.h"
 #include "document/html/frames.h"
 #ifdef CONFIG_DOM_HTML
-#include "document/html/dom.h"
+#include "document/html/domparser/domparser.h"
 #else
 #include "document/html/mikuparser/mikuparser.h"
 #include "document/html/mikuparser/parse.h"

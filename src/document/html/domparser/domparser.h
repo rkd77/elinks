@@ -1,5 +1,5 @@
-#ifndef EL__DOCUMENT_HTML_DOM_H
-#define EL__DOCUMENT_HTML_DOM_H
+#ifndef EL__DOCUMENT_HTML_DOMPARSER_DOMPARSER_H
+#define EL__DOCUMENT_HTML_DOMPARSER_DOMPARSER_H
 
 struct document_options;
 struct html_context;

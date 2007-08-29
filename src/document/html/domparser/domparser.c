@@ -10,7 +10,7 @@
 
 #include "document/css/css.h"
 #include "document/css/stylesheet.h"
-#include "document/html/dom.h"
+#include "document/html/domparser/domparser.h"
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "dom/configuration.h"
