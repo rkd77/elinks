@@ -2,101 +2,21 @@
 #ifndef EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
 #define EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
 
-#include "document/format.h"
-#include "intl/charsets.h" /* unicode_val_T */
-#include "util/align.h"
 #include "util/color.h"
 #include "util/lists.h"
 
-#ifndef INSIDE_INTERNAL_H
 #ifdef CONFIG_DOM_HTML
 #error html/mikuparser/mikuparser.h included even though DOM parser is configured to use!
 #endif
-#endif
 
-struct document_options;
-struct form_control;
 struct frameset_desc;
 struct html_context;
 struct part;
-struct string;
-struct uri;
 enum html_special_type;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML
  * files - there's lack of any well defined interface and it's all randomly
  * mixed up :/. */
-
-struct text_attrib {
-	struct text_style style;
-
-	int fontsize;
-	unsigned char *link;
-	unsigned char *target;
-	unsigned char *image;
-	unsigned char *title;
-	struct form_control *form;
-	color_T clink;
-	color_T vlink;
-#ifdef CONFIG_BOOKMARKS
-	color_T bookmark_link;
-#endif
-	color_T image_link;
-
-#ifdef CONFIG_CSS
-	/* Bug 766: CSS speedup.  56% of CPU time was going to
-	 * get_attr_value().  Of those calls, 97% were asking for "id"
-	 * or "class".  So cache the results.  start_element() sets up
-	 * these pointers if html_context->options->css_enable;
-	 * otherwise they remain NULL. */
-	unsigned char *id;
-	unsigned char *class;
-#endif
-
-	unsigned char *select;
-	int select_disabled;
-	unsigned int tabindex;
-	unicode_val_T accesskey;
-
-	unsigned char *onclick;
-	unsigned char *ondblclick;
-	unsigned char *onmouseover;
-	unsigned char *onhover;
-	unsigned char *onfocus;
-	unsigned char *onmouseout;
-	unsigned char *onblur;
-};
-
-/* This enum is pretty ugly, yes ;). */
-enum format_list_flag {
-	P_NONE = 0,
-
-	P_NUMBER = 1,
-	P_alpha = 2,
-	P_ALPHA = 3,
-	P_roman = 4,
-	P_ROMAN = 5,
-
-	P_STAR = 1,
-	P_O = 2,
-	P_PLUS = 3,
-
-	P_LISTMASK = 7,
-
-	P_COMPACT = 8,
-};
-
-struct par_attrib {
-	enum format_align align;
-	int leftmargin;
-	int rightmargin;
-	int width;
-	int list_level;
-	unsigned list_number;
-	int dd_margin;
-	enum format_list_flag flags;
-	color_T bgcolor;
-};
 
 /* HTML parser stack mortality info */
 enum html_element_mortality_type {

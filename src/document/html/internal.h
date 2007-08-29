@@ -3,9 +3,6 @@
 #define EL__DOCUMENT_HTML_INTERNAL_H
 
 #include "document/css/stylesheet.h"
-#define INSIDE_INTERNAL_H
-#include "document/html/mikuparser/mikuparser.h"
-#undef INSIDE_INTERNAL_H
 #include "util/lists.h"
 
 struct document_options;
