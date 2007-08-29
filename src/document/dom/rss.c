@@ -50,12 +50,8 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	switch (node->data.element.type) {
 	case RSS_ELEMENT_CHANNEL:
 		/* The stack should have: #document * channel */
-		if (stack->depth != 3)
-			break;
-
-		if (!data->channel) {
+		if (stack->depth == 3 && !data->channel)
 			data->channel = node;
-		}
 		break;
 
 	case RSS_ELEMENT_ITEM:
@@ -66,10 +62,10 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 			break;
 #endif
 		/* ... but be exclusive. */
-		if (data->item)
-			break;
-		add_to_dom_node_list(&data->items, node, -1);
-		data->item = node;
+		if (!data->item) {
+			add_to_dom_node_list(&data->items, node, -1);
+			data->item = node;
+		}
 		break;
 
 	case RSS_ELEMENT_LINK:
@@ -77,10 +73,8 @@ dom_rss_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	case RSS_ELEMENT_TITLE:
 	case RSS_ELEMENT_AUTHOR:
 	case RSS_ELEMENT_PUBDATE:
-		if (data->node != node->parent)
-			break;
-
-		data->node = node;
+		if (data->node == node->parent)
+			data->node = node;
 	}
 
 	return DOM_CODE_OK;
@@ -119,9 +113,6 @@ dom_rss_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 		if (!add_dom_node(node, DOM_NODE_TEXT, &data->text))
 			done_dom_string(&data->text);
 		data->node = NULL;
-		break;
-
-	default:
 		break;
 	}
 
