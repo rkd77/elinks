@@ -128,6 +128,11 @@ element_begins(struct html_context *html_context)
 	if (html_top->name) /* No styles for the root element */
 		apply_style(html_context);
 #endif
+
+	if (is_block_element(html_top)) {
+		/* Break line before. */
+		html_context->line_break_f(html_context);
+	}
 }
 
 #define element_beginning_guard	\
@@ -159,6 +164,11 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 
 	/* In theory we should guard for element_begins() here but it would be
 	 * useless work. */
+
+	if (is_block_element(html_top)) {
+		/* Break line after. */
+		html_context->line_break_f(html_context);
+	}
 
 	done_html_element(html_context, html_top);
 	return DOM_CODE_OK;
