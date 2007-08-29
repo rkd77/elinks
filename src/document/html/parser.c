@@ -32,13 +32,6 @@ init_html_context(struct uri *uri, struct document_options *options,
 	html_context = mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
 
-	init_list(html_context->stack);
-	e = mem_calloc(1, sizeof(*e));
-	if (!e) {
-		mem_free(html_context);
-		return NULL;
-	}
-	add_to_list(html_context->stack, e);
 
 	html_context->put_chars_f = put_chars;
 	html_context->line_break_f = line_break;
@@ -50,6 +43,44 @@ init_html_context(struct uri *uri, struct document_options *options,
 	html_context->options = options;
 
 	html_context->table_level = 0;
+
+
+	init_list(html_context->stack);
+	e = mem_calloc(1, sizeof(*e));
+	if (!e) {
+		mem_free(html_context);
+		return NULL;
+	}
+	add_to_list(html_context->stack, e);
+
+	format.style.attr = 0;
+	format.fontsize = 3;
+	format.link = format.target = format.image = NULL;
+	format.onclick = format.ondblclick = format.onmouseover = format.onhover
+		= format.onfocus = format.onmouseout = format.onblur = NULL;
+	format.select = NULL;
+	format.form = NULL;
+	format.title = NULL;
+
+	format.style = options->default_style;
+	format.clink = options->default_link;
+	format.vlink = options->default_vlink;
+#ifdef CONFIG_BOOKMARKS
+	format.bookmark_link = options->default_bookmark_link;
+#endif
+	format.image_link = options->default_image_link;
+
+	par_format.align = ALIGN_LEFT;
+	par_format.leftmargin = options->margin;
+	par_format.rightmargin = options->margin;
+
+	par_format.width = options->box.width;
+	par_format.list_level = par_format.list_number = 0;
+	par_format.dd_margin = options->margin;
+	par_format.flags = P_NONE;
+
+	par_format.bgcolor = options->default_style.bg;
+
 
 #ifdef CONFIG_CSS
 	html_context->css_styles.import = import_css_stylesheet;

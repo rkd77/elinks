@@ -741,33 +741,6 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	scan_http_equiv(start, end, head, title, options);
 
-	format.style.attr = 0;
-	format.fontsize = 3;
-	format.link = format.target = format.image = NULL;
-	format.onclick = format.ondblclick = format.onmouseover = format.onhover
-		= format.onfocus = format.onmouseout = format.onblur = NULL;
-	format.select = NULL;
-	format.form = NULL;
-	format.title = NULL;
-
-	format.style = options->default_style;
-	format.clink = options->default_link;
-	format.vlink = options->default_vlink;
-#ifdef CONFIG_BOOKMARKS
-	format.bookmark_link = options->default_bookmark_link;
-#endif
-	format.image_link = options->default_image_link;
-
-	par_format.align = ALIGN_LEFT;
-	par_format.leftmargin = options->margin;
-	par_format.rightmargin = options->margin;
-
-	par_format.width = options->box.width;
-	par_format.list_level = par_format.list_number = 0;
-	par_format.dd_margin = options->margin;
-	par_format.flags = P_NONE;
-
-	par_format.bgcolor = options->default_style.bg;
 
 	miku_el(html_top)->invisible = 0;
 	html_top->name = NULL;
