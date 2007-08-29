@@ -47,8 +47,20 @@ struct window {
 	/** The terminal (and screen) that hosts the window */
 	struct terminal *term;
 
-	/** Used for tabs focus detection. */
+	/** For ::WINDOW_TAB, the position and size in the tab bar.
+	 * Updated while the tab bar is being drawn, and read if the
+	 * user clicks there with the mouse.  */
 	int xpos, width;
+
+	/** The position of something that has focus in the window.
+	 * Any popup menus are drawn near this position.
+	 * In tab windows, during ::NAVIGATE_CURSOR_ROUTING, this is
+	 * also the position of the cursor that the user can move;
+	 * there is no separate cursor position for each frame.
+	 * In dialog boxes, this is typically the top left corner of
+	 * the focused widget, while the cursor is somewhere within
+	 * the widget.
+	 * @see set_window_ptr, get_parent_ptr, set_cursor */
 	int x, y;
 
 	/** For delayed tab resizing */
