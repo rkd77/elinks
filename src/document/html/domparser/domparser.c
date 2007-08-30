@@ -300,6 +300,17 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 			html_context->base_href = uri;
 			break;
 		}
+
+		case HTML_ELEMENT_TITLE:
+		{
+			struct dom_node *title = get_dom_node_child(node, DOM_NODE_TEXT, 0);
+
+			if (title && !domctx(html_context)->title->length)
+				add_bytes_to_string(domctx(html_context)->title,
+						    title->string.string,
+						    title->string.length);
+			break;
+		}
 	}
 
 
@@ -423,6 +434,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	html_top->data = mem_calloc(1, sizeof(*domelem(html_top)));
 
+	domctx(html_context)->title = title;
 	domctx(html_context)->parser = parser =
 		init_sgml_parser(SGML_PARSER_TREE, SGML_DOCTYPE_HTML, &dom_uri, 0);
 	if (!parser) {

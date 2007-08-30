@@ -6,6 +6,7 @@
  * from anywhere outside, ideally. */
 
 struct dom_node;
+struct string;
 
 
 /* Domparser-specific part of html_element */
@@ -25,6 +26,7 @@ struct domparser_element {
 
 struct domparser_context {
 	struct sgml_parser *parser;
+	struct string *title;
 };
 
 #define domctx(html_context) ((struct domparser_context *) html_context->data)
