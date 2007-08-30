@@ -114,13 +114,13 @@ get_dom_element_attr(struct dom_node *elem, int type)
 }
 
 static unsigned char *
-get_dom_attr_uri(struct dom_string *attr, struct uri *base, int codepage)
+get_dom_attr_uri(struct dom_string *attr, struct html_context *html_context)
 {
 	unsigned char *uristring;
 
 	if (memchr(attr->string, '&', attr->length)) {
 		uristring = convert_string(NULL, attr->string, attr->length,
-					   codepage, CSM_QUERY,
+					   html_context->doc_cp, CSM_QUERY,
 					   NULL, NULL, NULL);
 	} else {
 		uristring = dom_string_acpy(attr);
@@ -130,10 +130,10 @@ get_dom_attr_uri(struct dom_string *attr, struct uri *base, int codepage)
 		return NULL;
 	sanitize_url(uristring);
 
-	if (base) {
+	if (html_context->base_href) {
 		unsigned char *tmp = uristring;
 
-		uristring = join_urls(base, uristring);
+		uristring = join_urls(html_context->base_href, uristring);
 		mem_free(tmp);
 	}
 
@@ -141,11 +141,11 @@ get_dom_attr_uri(struct dom_string *attr, struct uri *base, int codepage)
 }
 
 static unsigned char *
-get_dom_element_attr_uri(struct dom_node *elem, int type, struct uri *base, int codepage)
+get_dom_element_attr_uri(struct dom_node *elem, int type, struct html_context *html_context)
 {
 	struct dom_string *attr = get_dom_element_attr(elem, type);
 
-	return attr ? get_dom_attr_uri(attr, base, codepage) : NULL;
+	return attr ? get_dom_attr_uri(attr, html_context) : NULL;
 }
 
 #ifdef CONFIG_CSS
@@ -289,9 +289,7 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 			unsigned char *href;
 			struct uri *uri;
 
-			href = get_dom_element_attr_uri(node, HTML_ATTRIBUTE_HREF,
-							html_context->base_href,
-							html_context->doc_cp);
+			href = get_dom_element_attr_uri(node, HTML_ATTRIBUTE_HREF, html_context);
 			if (!href) break;
 
 			uri = get_uri(href, 0);
@@ -339,9 +337,7 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 			if (node->parent->data.element.type != HTML_ELEMENT_A)
 				break;
 
-			href = get_dom_attr_uri(&attr->value,
-						html_context->base_href,
-						html_context->doc_cp);
+			href = get_dom_attr_uri(&attr->value, html_context);
 			if (href)
 				mem_free_set(&format.link, href);
 			break;
