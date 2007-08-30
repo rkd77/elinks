@@ -612,7 +612,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		if (!fn) return;
 
 		ed = get_opt_str("document.browse.forms.editor",
-		                 doc_view->session);
+		                 doc_view_->session);
 		if (!ed || !*ed) {
 			ed = getenv("EDITOR");
 			if (!ed || !*ed) ed = "vi";
