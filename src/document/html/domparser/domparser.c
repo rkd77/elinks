@@ -211,6 +211,41 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 		}
 #endif
 			break;
+
+		case HTML_ELEMENT_STYLE:
+#ifdef CONFIG_CSS
+		{
+			struct dom_node_list **list;
+			struct dom_node *child;
+			int index;
+
+			if (!html_context->options->css_enable)
+				break;
+
+			/* We are interested in anything but attributes ... */
+			list = get_dom_node_list_by_type(node, DOM_NODE_CDATA_SECTION);
+			if (!list || !*list)
+				break;
+
+			foreach_dom_node (*list, child, index) {
+				struct dom_string *value;
+
+				switch (child->type) {
+				case DOM_NODE_CDATA_SECTION:
+				case DOM_NODE_COMMENT:
+				case DOM_NODE_TEXT:
+					value = get_dom_node_value(child);
+					if (!value)
+						continue;
+					css_parse_stylesheet(&html_context->css_styles,
+							     html_context->base_href,
+							     value->string,
+							     value->string + value->length);
+				}
+			}
+		}
+#endif
+			break;
 	}
 
 
