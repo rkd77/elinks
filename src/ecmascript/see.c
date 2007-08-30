@@ -75,7 +75,8 @@ see_get_interpreter(struct ecmascript_interpreter *interpreter)
 	struct SEE_interpreter *interp = &g->interp;
 
 	interpreter->backend_data = g;
-	g->max_exec_time = get_opt_int("ecmascript.max_exec_time", NULL);
+	g->max_exec_time = get_opt_int("ecmascript.max_exec_time",
+	                               interpreter->vs->doc_view->session);
 	g->exec_start = time(NULL);
 	/* used by setTimeout */
 	g->interpreter = interpreter;

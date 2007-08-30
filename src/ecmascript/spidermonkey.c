@@ -61,22 +61,22 @@ static void
 error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	unsigned char *strict, *exception, *warning, *error;
 	struct string msg;
 
 	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
-	       && interpreter->vs->doc_view->session
-	       && interpreter->vs->doc_view->session->tab);
+	       && ses && ses->tab);
 	if_assert_failed goto reported;
 
-	term = interpreter->vs->doc_view->session->tab->term;
+	term = ses->tab->term;
 
 #ifdef CONFIG_LEDS
-	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
+	set_led_value(ses->status.ecmascript_led, 'J');
 #endif
 
-	if (!get_opt_bool("ecmascript.error_reporting", NULL)
+	if (!get_opt_bool("ecmascript.error_reporting", ses)
 	    || !init_string(&msg))
 		goto reported;
 
@@ -113,10 +113,11 @@ static JSBool
 safeguard(JSContext *ctx, JSScript *script)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	int max_exec_time = get_opt_int("ecmascript.max_exec_time", NULL);
+	struct session *ses = interpreter->vs->doc_view->session;
+	int max_exec_time = get_opt_int("ecmascript.max_exec_time", ses);
 
 	if (time(NULL) - interpreter->exec_start > max_exec_time) {
-		struct terminal *term = interpreter->vs->doc_view->session->tab->term;
+		struct terminal *term = ses->tab->term;
 
 		/* A killer script! Alert! */
 		ecmascript_timeout_dialog(term, max_exec_time);

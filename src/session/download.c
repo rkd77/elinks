@@ -296,7 +296,8 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 static void
 abort_download_and_beep(struct file_download *file_download, struct terminal *term)
 {
-	if (term && get_opt_int("document.download.notify_bell", NULL)
+	if (term && get_opt_int("document.download.notify_bell",
+	                        file_download->ses)
 		    + file_download->notify >= 2) {
 		beep_terminal(term);
 	}
@@ -403,7 +404,8 @@ download_data_store(struct download *download, struct file_download *file_downlo
 	}
 
 	if (file_download->remotetime
-	    && get_opt_bool("document.download.set_original_time", NULL)) {
+	    && get_opt_bool("document.download.set_original_time",
+	                    file_download->ses)) {
 		struct utimbuf foo;
 
 		foo.actime = foo.modtime = file_download->remotetime;

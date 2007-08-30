@@ -592,7 +592,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		if (ses->doc_view
 		    && ses->doc_view->document
 		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh", NULL)) {
+		    && get_opt_bool("document.browse.refresh", ses)) {
 			start_document_refresh(ses->doc_view->document->refresh,
 					       ses);
 		}

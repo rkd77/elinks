@@ -74,7 +74,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 		}
 
 		if (get_opt_bool("document.browse.links.missing_fragment",
-		                 NULL)) {
+		                 ses)) {
 			info_box(ses->tab->term, MSGBOX_FREE_TEXT,
 			 N_("Missing fragment"), ALIGN_CENTER,
 			 msg_text(ses->tab->term, N_("The requested fragment "
@@ -228,10 +228,10 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		}
 	}
 
-	color.foreground = get_opt_color("document.colors.text", NULL);
+	color.foreground = get_opt_color("document.colors.text", ses);
 	color.background = doc_view->document->height
 			 ? doc_view->document->bgcolor
-			 : get_opt_color("document.colors.background", NULL);
+			 : get_opt_color("document.colors.background", ses);
 
 	vs = doc_view->vs;
 	if (!vs) {
@@ -355,7 +355,7 @@ draw_formatted(struct session *ses, int rerender)
 		if (ses->doc_view
 		    && ses->doc_view->document
 		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh", NULL)) {
+		    && get_opt_bool("document.browse.refresh", ses)) {
 			start_document_refresh(ses->doc_view->document->refresh,
 					       ses);
 		}

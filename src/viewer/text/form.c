@@ -1198,7 +1198,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	 * a file that is to be uploaded. TODO: Distinguish between
 	 * these two classes of errors (is it worth it?). -- Miciah */
 	if (data.source
-	    && get_opt_bool("document.browse.forms.show_formhist", NULL))
+	    && get_opt_bool("document.browse.forms.show_formhist", ses))
 		memorize_form(ses, &submit, form);
 #endif
 
@@ -1562,7 +1562,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			 * submit the form or the posting fails. */
 			/* FIXME: We should maybe have ACT_EDIT_ENTER_RELOAD */
 			if ((has_form_submit(fc->form)
-			      && !get_opt_bool("document.browse.forms.auto_submit", NULL))
+			      && !get_opt_bool("document.browse.forms.auto_submit", ses))
 			    || goto_current_link(ses, doc_view, 0)) {
 				if (ses->insert_mode == INSERT_MODE_ON)
 					ses->insert_mode = INSERT_MODE_OFF;
@@ -1922,7 +1922,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 		if (!fc->form->action
 		    || (has_form_submit(fc->form)
 		        && !get_opt_bool("document.browse.forms.auto_submit",
-			                 NULL)))
+			                 ses)))
 			break;
 
 		uri = get_uri(fc->form->action, 0);
@@ -1970,7 +1970,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	}
 
 	if (link->accesskey
-	    && get_opt_bool("document.browse.accesskey.display", NULL)) {
+	    && get_opt_bool("document.browse.accesskey.display", ses)) {
 		add_to_string(&str, " (");
 		add_accesskey_to_string(&str, link->accesskey);
 		add_char_to_string(&str, ')');

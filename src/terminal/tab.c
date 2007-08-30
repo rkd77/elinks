@@ -139,7 +139,8 @@ switch_to_tab(struct terminal *term, int tab, int tabs_count)
 	if (tabs_count < 0) tabs_count = number_of_tabs(term);
 
 	if (tabs_count > 1) {
-		if (get_opt_bool("ui.tabs.wraparound", NULL)) {
+		if (get_opt_bool("ui.tabs.wraparound",
+		                 get_current_tab(term)->data)) {
 			tab %= tabs_count;
 			if (tab < 0) tab += tabs_count;
 		} else
@@ -196,7 +197,7 @@ close_tab(struct terminal *term, struct session *ses)
 		return;
 	}
 
-	if (!get_opt_bool("ui.tabs.confirm_close", NULL)) {
+	if (!get_opt_bool("ui.tabs.confirm_close", ses)) {
 		really_close_tab(ses);
 		return;
 	}
@@ -240,7 +241,7 @@ close_all_tabs_but_current(struct session *ses)
 	assert(ses);
 	if_assert_failed return;
 
-	if (!get_opt_bool("ui.tabs.confirm_close", NULL)) {
+	if (!get_opt_bool("ui.tabs.confirm_close", ses)) {
 		really_close_tabs(ses);
 		return;
 	}
@@ -309,7 +310,7 @@ move_current_tab(struct session *ses, int direction)
 
 	new_pos = term->current_tab + direction;
 
-	if (get_opt_bool("ui.tabs.wraparound", NULL)) {
+	if (get_opt_bool("ui.tabs.wraparound", ses)) {
 		new_pos %= tabs;
 		if (new_pos < 0) new_pos = tabs + new_pos;
 	} else {

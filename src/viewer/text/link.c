@@ -1171,7 +1171,7 @@ goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 
 	link = &doc_view->document->links[n];
 	if (!link_is_textinput(link)
-	    && get_opt_bool("document.browse.accesskey.auto_follow", NULL))
+	    && get_opt_bool("document.browse.accesskey.auto_follow", ses))
 		enter(ses, doc_view, 0);
 }
 
@@ -1456,7 +1456,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 		add_string_uri_to_string(&str, uristring, URI_PUBLIC);
 		if (link->accesskey > 0
 		    && get_opt_bool("document.browse.accesskey.display",
-		                    NULL)) {
+		                    ses)) {
 			add_to_string(&str, " (");
 			add_accesskey_to_string(&str, link->accesskey);
 			add_char_to_string(&str, ')');
