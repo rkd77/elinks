@@ -246,7 +246,7 @@ html_script(struct html_context *html_context, unsigned char *a,
 			mem_free(type);
 not_processed:
 			/* Permit nested scripts and retreat. */
-			miku_el(html_top)->invisible++;
+			html_top->invisible++;
 			return;
 		}
 
@@ -471,7 +471,7 @@ void
 html_title(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	miku_el(html_top)->invisible = 1;
+	html_top->invisible = 1;
 	miku_el(html_top)->type = ELEMENT_WEAK;
 }
 

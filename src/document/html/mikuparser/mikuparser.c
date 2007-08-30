@@ -96,7 +96,7 @@ get_target(struct document_options *options, unsigned char *a)
 void
 ln_break(struct html_context *html_context, int n)
 {
-	if (!n || miku_el(html_top)->invisible) return;
+	if (!n || html_top->invisible) return;
 	while (n > miku(html_context)->line_breax) {
 		miku(html_context)->line_breax++;
 		html_context->line_break_f(html_context);
@@ -111,7 +111,7 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 	if (html_is_preformatted())
 		miku(html_context)->putsp = HTML_SPACE_NORMAL;
 
-	if (!len || miku_el(html_top)->invisible)
+	if (!len || html_top->invisible)
 		return;
 
 	switch (miku(html_context)->putsp) {
@@ -223,7 +223,7 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 void
 html_skip(struct html_context *html_context, unsigned char *a)
 {
-	miku_el(html_top)->invisible = 1;
+	html_top->invisible = 1;
 	miku_el(html_top)->type = ELEMENT_DONT_KILL;
 }
 

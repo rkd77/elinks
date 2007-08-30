@@ -782,7 +782,7 @@ next_break:
 
 element:
 		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
-		if (!endingtag && miku(html_context)->putsp == HTML_SPACE_ADD && !miku_el(html_top)->invisible)
+		if (!endingtag && miku(html_context)->putsp == HTML_SPACE_ADD && !html_top->invisible)
 			put_chrs(html_context, " ", 1);
 		put_chrs(html_context, base_pos, html - base_pos);
 		if (!html_is_preformatted() && !endingtag && miku(html_context)->putsp == HTML_SPACE_NORMAL) {
@@ -839,8 +839,8 @@ start_element(struct element_info *ei,
 
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. */
-	if (miku_el(html_top)->invisible
-	    && (ei->open != html_script || miku_el(html_top)->invisible < 2)) {
+	if (html_top->invisible
+	    && (ei->open != html_script || html_top->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}

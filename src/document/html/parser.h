@@ -116,9 +116,12 @@ struct html_element {
 
 	unsigned char *name;
 	int namelen;
+
 	/* See document/html/mikuparser/parse.c's element_info.linebreak
-	 * description. */
+	 * description. DOM uses only 0 or 2. */
 	int linebreak;
+	int invisible;
+
 	struct frameset_desc *frameset;
 
 	/* For the needs of CSS engine. A wannabe bitmask. */

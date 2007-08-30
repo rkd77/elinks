@@ -42,8 +42,6 @@ enum html_element_mortality_type {
 
 struct mikuparser_element {
 	enum html_element_mortality_type type;
-
-	int invisible;
 	unsigned char *options;
 };
 
