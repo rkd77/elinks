@@ -244,7 +244,8 @@ get_opt_rec_real(struct option *tree, const unsigned char *name)
 	return opt;
 }
 
-static struct option *get_domain_option(unsigned char *, int, unsigned char *);
+static struct option *get_domain_option_from_session(unsigned char *,
+                                                     struct session *);
 
 /* Fetch pointer to value of certain option. It is guaranteed to never return
  * NULL. Note that you are supposed to use wrapper get_opt(). */
@@ -262,14 +263,10 @@ get_opt_(
 	if (ses && ses->option)
 		opt = get_opt_rec_real(ses->option, name);
 
-	/* If given a session, the session has a location, and we can find
-	 * an options tree for the location's domain, return the shadow. */
-	if (ses && have_location(ses)) {
-		struct uri *uri = cur_loc(ses)->vs.uri;
-
-		if (uri->host && uri->hostlen)
-			opt = get_domain_option(uri->host, uri->hostlen, name);
-	}
+	/* If given a session and the option has a shadow in the domain tree
+	 * that matches the current document in that session, return the shadow. */
+	if (ses)
+		opt = get_domain_option_from_session(name, ses);
 
 	/* Else, return the real option. */
 	if (!opt)
@@ -735,6 +732,24 @@ get_domain_option(unsigned char *domain_name, int domain_len,
 		}
 
 	return longest_match_opt;
+}
+
+static struct option *
+get_domain_option_from_session(unsigned char *name, struct session *ses)
+{
+	struct uri *uri;
+
+	assert(ses);
+	assert(name);
+
+	if (!have_location(ses))
+		return NULL;
+
+	uri = cur_loc(ses)->vs.uri;
+	if (!uri->host || !uri->hostlen)
+		return NULL;
+
+	return get_domain_option(uri->host, uri->hostlen, name);
 }
 
 /* Return the shadow shadow tree for the given domain name, and
