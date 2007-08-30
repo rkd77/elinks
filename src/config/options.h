@@ -178,8 +178,23 @@ enum copy_option_flags {
 };
 
 extern struct option *copy_option(struct option *, int);
+
 struct option *get_option_shadow(struct option *, struct option *,
                                  struct option *);
+
+struct domain_tree {
+	LIST_HEAD(struct domain_tree);
+
+	struct option *tree;
+
+	int len;
+
+	unsigned char name[1]; /* Must be at end of struct. */
+};
+
+extern LIST_OF(struct domain_tree) domain_trees;
+struct option *get_domain_tree(unsigned char *);
+
 extern void delete_option(struct option *);
 void mark_option_as_deleted(struct option *);
 

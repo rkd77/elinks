@@ -88,14 +88,29 @@ skip_white(unsigned char *start, int *line)
 
 static enum parse_error
 parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
-                 struct string *mirror, int is_system_conf)
+                 struct string *mirror, int is_system_conf, int want_domain)
 {
 	unsigned char *orig_pos = *file;
+	unsigned char *domain_name;
 	unsigned char *optname;
 	unsigned char bin;
 
 	*file = skip_white(*file, line);
 	if (!**file) return ERROR_PARSE;
+
+	if (want_domain) {
+		domain_name = *file;
+		while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
+			(*file)++;
+
+		bin = **file;
+		**file = '\0';
+		domain_name = stracpy(domain_name);
+		**file = bin;
+		if (!domain_name) return ERROR_NOMEM;
+
+		*file = skip_white(*file, line);
+	}
 
 	/* Option name */
 	optname = *file;
@@ -124,7 +139,35 @@ parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
 		struct option *opt;
 		unsigned char *val;
 
-		opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
+		if (want_domain && *domain_name) {
+			struct option *domain_tree;
+			
+			domain_tree = get_domain_tree(domain_name);
+			if (!domain_tree) {
+				mem_free(domain_name);
+				mem_free(optname);
+				return ERROR_NOMEM;
+			}
+
+			if (mirror) {
+				opt = get_opt_rec_real(domain_tree, optname);
+			} else {
+				opt = get_opt_rec(opt_tree, optname);
+				if (opt) {
+					opt = get_option_shadow(opt, opt_tree,
+								domain_tree);
+					if (!opt) {
+						mem_free(domain_name);
+						mem_free(optname);
+						return ERROR_NOMEM;
+					}
+				}
+			}
+		} else {
+			opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
+		}
+		if (want_domain)
+			mem_free(domain_name);
 		mem_free(optname);
 
 		if (!opt || (opt->flags & OPT_HIDDEN))
@@ -159,10 +202,17 @@ parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
+parse_set_domain(struct option *opt_tree, unsigned char **file, int *line,
+                 struct string *mirror, int is_system_conf)
+{
+	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 1);
+}
+
+static enum parse_error
 parse_set(struct option *opt_tree, unsigned char **file, int *line,
           struct string *mirror, int is_system_conf)
 {
-	return parse_set_common(opt_tree, file, line, mirror, is_system_conf);
+	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 0);
 }
 
 
@@ -344,6 +394,7 @@ struct parse_handler {
 };
 
 static struct parse_handler parse_handlers[] = {
+	{ "set_domain", parse_set_domain },
 	{ "set", parse_set },
 	{ "unset", parse_unset },
 	{ "bind", parse_bind },
@@ -570,6 +621,8 @@ add_indent_to_string(struct string *string, int depth)
 	add_xchar_to_string(string, ' ', depth * indentation);
 }
 
+static unsigned char *smart_config_output_fn_domain;
+
 static void
 smart_config_output_fn(struct string *string, struct option *option,
 		       unsigned char *path, int depth, int do_print_comment,
@@ -652,7 +705,13 @@ split:
 			if (option->flags & OPT_DELETED) {
 				add_to_string(string, "un");
 			}
-			add_to_string(string, "set ");
+			if (smart_config_output_fn_domain) {
+				add_to_string(string, "set_domain ");
+				add_to_string(string, smart_config_output_fn_domain);
+				add_char_to_string(string, ' ');
+			} else {
+				add_to_string(string, "set ");
+			}
 			if (path) {
 				add_to_string(string, path);
 				add_char_to_string(string, '.');
@@ -774,6 +833,22 @@ create_config_string(unsigned char *prefix, unsigned char *name)
 	origlen = tmpstring.length;
 	smart_config_string(&tmpstring, 2, i18n, options->value.tree, NULL, 0,
 			    smart_config_output_fn);
+
+	{
+		struct domain_tree *domain;
+
+		foreach (domain, domain_trees) {
+			smart_config_output_fn_domain = domain->name;
+			smart_config_string(&tmpstring, 2, i18n,
+					    domain->tree->value.tree,
+					    NULL, 0,
+					    smart_config_output_fn);
+			unmark_options_tree(domain->tree->value.tree);
+		}
+
+		smart_config_output_fn_domain = NULL;
+	}
+
 	if (tmpstring.length > origlen)
 		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
