@@ -2262,6 +2262,13 @@ render_html_document(struct cache_entry *cached, struct document *document,
 #endif /* CONFIG_UTF8 */
 	html_context->doc_cp = document->cp;
 
+	part = format_html_part(html_context, start, end, par_format.align,
+			        par_format.leftmargin,
+				document->options.box.width, document,
+			        0, 0, head.source, 1);
+
+	/* Should be after the parsing has been performed so
+	 * the DOM HTML parser can fill it. */
 	if (title.length) {
 		document->title = convert_string(renderer_context.convert_table,
 						 title.source, title.length,
@@ -2269,11 +2276,6 @@ render_html_document(struct cache_entry *cached, struct document *document,
 						 CSM_DEFAULT, NULL, NULL, NULL);
 	}
 	done_string(&title);
-
-	part = format_html_part(html_context, start, end, par_format.align,
-			        par_format.leftmargin,
-				document->options.box.width, document,
-			        0, 0, head.source, 1);
 
 	/* Drop empty allocated lines at end of document if any
 	 * and adjust document height. */
