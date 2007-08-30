@@ -211,18 +211,18 @@ get_document_css_magic(struct document *document)
 #endif
 
 void
-update_cached_document_options(void)
+update_cached_document_options(struct session *ses)
 {
 	struct document *document;
 	struct active_link_options active_link;
 
 	memset(&active_link, 0, sizeof(active_link));	/* Safer. */
-	active_link.fg = get_opt_color("document.browse.links.active_link.colors.text", NULL);
-	active_link.bg = get_opt_color("document.browse.links.active_link.colors.background", NULL);
-	active_link.color = get_opt_bool("document.browse.links.active_link.enable_color", NULL);
-	active_link.invert = get_opt_bool("document.browse.links.active_link.invert", NULL);
-	active_link.underline = get_opt_bool("document.browse.links.active_link.underline", NULL);
-	active_link.bold = get_opt_bool("document.browse.links.active_link.bold", NULL);
+	active_link.fg = get_opt_color("document.browse.links.active_link.colors.text", ses);
+	active_link.bg = get_opt_color("document.browse.links.active_link.colors.background", ses);
+	active_link.color = get_opt_bool("document.browse.links.active_link.enable_color", ses);
+	active_link.invert = get_opt_bool("document.browse.links.active_link.invert", ses);
+	active_link.underline = get_opt_bool("document.browse.links.active_link.underline", ses);
+	active_link.bold = get_opt_bool("document.browse.links.active_link.bold", ses);
 
 	foreach (document, format_cache) {
 		copy_struct(&document->options.active_link, &active_link);

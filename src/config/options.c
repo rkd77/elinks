@@ -953,7 +953,7 @@ change_hook_insert_mode(struct session *ses, struct option *current, struct opti
 static int
 change_hook_active_link(struct session *ses, struct option *current, struct option *changed)
 {
-	update_cached_document_options();
+	update_cached_document_options(ses);
 	return 0;
 }
 
