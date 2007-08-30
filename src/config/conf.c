@@ -91,7 +91,7 @@ parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
                  struct string *mirror, int is_system_conf, int want_domain)
 {
 	unsigned char *orig_pos = *file;
-	unsigned char *domain_name;
+	unsigned char *domain_name = NULL;
 	unsigned char *optname;
 	unsigned char bin;
 
