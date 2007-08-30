@@ -608,6 +608,8 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		                                NULL);
 		unsigned char *ex;
 
+		assert(fs_ && doc_view_ && link_ && term_);
+
 		fn = save_textarea_file(fs_->value);
 		if (!fn) return;
 
@@ -622,13 +624,11 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			goto free_and_return;
 		}
 
-		if (fs_) fs = fs_;
-		if (doc_view_) doc_view = doc_view_;
-		if (link_) {
-			link = link_;
-			fc_maxlength = get_link_form_control(link_)->maxlength;
-		}
-		if (term_) term = term_;
+		fs = fs_;
+		doc_view = doc_view_;
+		link = link_;
+		fc_maxlength = get_link_form_control(link_)->maxlength;
+		term = term_;
 
 		exec_on_terminal(term, ex, "", TERM_EXEC_FG);
 		mem_free(ex);
