@@ -100,6 +100,17 @@ static const unsigned char default_style[] =
 "	:focus          { outline: thin dotted invert }";
 
 
+static struct dom_string *
+get_dom_element_attr(struct dom_node *elem, int type)
+{
+	struct dom_node *attrn;
+
+	attrn = get_dom_node_child(elem, DOM_NODE_ATTRIBUTE, type);
+	if (!attrn)
+		return NULL;
+	return &attrn->data.attribute.value;
+}
+
 #ifdef CONFIG_CSS
 static void
 apply_style(struct html_context *html_context)
@@ -154,6 +165,7 @@ dom_html_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	html_top->data = mem_calloc(1, sizeof(*domelem(html_top)));
 	html_top->name = node->string.string;
 	html_top->namelen = node->string.length;
+
 	return DOM_CODE_OK;
 }
 
@@ -161,9 +173,34 @@ static enum dom_code
 dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct html_context *html_context = stack->current->data;
+	struct dom_element_node *elem = &node->data.element;
 
 	/* In theory we should guard for element_begins() here but it would be
 	 * useless work. */
+
+
+	/* See /src/dom/sgml/html/element.inc for the possible values. */
+	switch (elem->type) {
+		case HTML_ELEMENT_LINK:
+#ifdef CONFIG_CSS
+		{
+			struct dom_string *ds;
+
+			ds = get_dom_element_attr(node, HTML_ATTRIBUTE_REL);
+			if (!ds || strlcmp(ds->string, ds->length, "stylesheet", 10))
+				break;
+
+			ds = get_dom_element_attr(node, HTML_ATTRIBUTE_HREF);
+			if (!ds)
+				break;
+
+			import_css_stylesheet(&html_context->css_styles,
+					      html_context->base_href, ds->string, ds->length);
+		}
+#endif
+			break;
+	}
+
 
 	if (is_block_element(html_top)) {
 		/* Break line after. */
