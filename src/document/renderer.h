@@ -8,6 +8,7 @@ struct document_options;
 struct document_view;
 struct session;
 struct view_state;
+struct screen_char;
 
 void render_document(struct view_state *, struct document_view *, struct document_options *);
 void render_document_frames(struct session *ses, int no_cache);

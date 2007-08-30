@@ -12,6 +12,27 @@ struct string;
 
 void render_html_document(struct cache_entry *cached, struct document *document, struct string *buffer);
 
+
+/* Interface with parser.c */
+
+enum html_special_type {
+	SP_TAG,
+	SP_FORM,
+	SP_CONTROL,
+	SP_TABLE,
+	SP_USED,
+	SP_FRAMESET,
+	SP_FRAME,
+	SP_NOWRAP,
+	SP_CACHE_CONTROL,
+	SP_CACHE_EXPIRES,
+	SP_REFRESH,
+	SP_STYLESHEET,
+	SP_COLOR_LINK_LINES,
+	SP_SCRIPT,
+};
+
+
 /* Interface with tables.c */
 
 /* This holds some context about what we're currently rendering. We only need

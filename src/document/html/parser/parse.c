@@ -20,6 +20,7 @@
 #include "document/html/parser/parse.h"
 #include "document/html/parser/stack.h"
 #include "document/html/parser.h"
+#include "document/html/renderer.h"
 #include "document/options.h"
 #include "intl/charsets.h"
 #include "util/conv.h"

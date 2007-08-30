@@ -702,7 +702,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 
 
-struct html_element *
+void *
 init_html_parser_state(struct html_context *html_context,
                        enum html_element_mortality_type type,
                        int align, int margin, int width)
@@ -728,8 +728,10 @@ init_html_parser_state(struct html_context *html_context,
 
 void
 done_html_parser_state(struct html_context *html_context,
-                       struct html_element *element)
+                       void *state)
 {
+	struct html_element *element = state;
+
 	html_context->line_breax = 1;
 
 	while (html_top != element) {
@@ -801,8 +803,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	format.form = NULL;
 	format.title = NULL;
 
-	format.style.fg = options->default_fg;
-	format.style.bg = options->default_bg;
+	format.style = options->default_style;
 	format.clink = options->default_link;
 	format.vlink = options->default_vlink;
 #ifdef CONFIG_BOOKMARKS
@@ -819,7 +820,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	par_format.dd_margin = options->margin;
 	par_format.flags = P_NONE;
 
-	par_format.bgcolor = options->default_bg;
+	par_format.bgcolor = options->default_style.bg;
 
 	html_top->invisible = 0;
 	html_top->name = NULL;

@@ -16,7 +16,6 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/forms.h"
-#include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/view.h"
