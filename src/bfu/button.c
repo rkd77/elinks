@@ -218,7 +218,8 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		int hk_pos = widget_data->widget->info.button.hotkey_pos;
 		int attr;
 
-		attr = get_opt_bool("ui.dialogs.underline_button_shortcuts")
+		attr = get_opt_bool("ui.dialogs.underline_button_shortcuts",
+		                    NULL)
 		     ? SCREEN_ATTR_UNDERLINE : 0;
 
 #ifdef CONFIG_UTF8

@@ -64,15 +64,16 @@ get_download_msg(struct download *download, struct terminal *term,
 void
 update_status(void)
 {
-	int show_title_bar = get_opt_bool("ui.show_title_bar");
-	int show_status_bar = get_opt_bool("ui.show_status_bar");
-	int show_tabs_bar = get_opt_int("ui.tabs.show_bar");
-	int show_tabs_bar_at_top = get_opt_bool("ui.tabs.top");
+	int show_title_bar = get_opt_bool("ui.show_title_bar", NULL);
+	int show_status_bar = get_opt_bool("ui.show_status_bar", NULL);
+	int show_tabs_bar = get_opt_int("ui.tabs.show_bar", NULL);
+	int show_tabs_bar_at_top = get_opt_bool("ui.tabs.top", NULL);
 #ifdef CONFIG_LEDS
-	int show_leds = get_opt_bool("ui.leds.enable");
+	int show_leds = get_opt_bool("ui.leds.enable", NULL);
 #endif
-	int set_window_title = get_opt_bool("ui.window_title");
-	int insert_mode = get_opt_bool("document.browse.forms.insert_mode");
+	int set_window_title = get_opt_bool("ui.window_title", NULL);
+	int insert_mode = get_opt_bool("document.browse.forms.insert_mode",
+	                               NULL);
 	struct session *ses;
 	int tabs_count = 1;
 	struct terminal *term = NULL;
@@ -390,7 +391,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 	int height;
 
 	/* Clear the old title */
-	if (!get_opt_bool("ui.show_menu_bar_always")) {
+	if (!get_opt_bool("ui.show_menu_bar_always", NULL)) {
 		struct box box;
 
 		set_box(&box, 0, 0, term->width, 1);

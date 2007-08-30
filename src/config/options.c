@@ -23,6 +23,8 @@
 #include "main/main.h" /* shrink_memory() */
 #include "main/select.h"
 #include "network/connection.h"
+#include "protocol/uri.h"
+#include "session/location.h"
 #include "session/session.h"
 #include "terminal/color.h"
 #include "terminal/screen.h"
@@ -32,6 +34,7 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/text/draw.h"
+#include "viewer/text/vs.h"
 
 
 /* TODO? In the past, covered by shadow and legends, remembered only by the
@@ -210,7 +213,7 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 		 * option. By having _template_ OPT_AUTOCREATE and _template_
 		 * inside, you can have even multi-level autocreating. */
 
-		option = copy_option(template);
+		option = copy_option(template, 0);
 		if (!option) {
 			mem_free(aname);
 			return NULL;
@@ -241,6 +244,8 @@ get_opt_rec_real(struct option *tree, const unsigned char *name)
 	return opt;
 }
 
+static struct option *get_domain_option(unsigned char *, int, unsigned char *);
+
 /* Fetch pointer to value of certain option. It is guaranteed to never return
  * NULL. Note that you are supposed to use wrapper get_opt(). */
 union option_value *
@@ -248,9 +253,27 @@ get_opt_(
 #ifdef CONFIG_DEBUG
 	 unsigned char *file, int line, enum option_type option_type,
 #endif
-	 struct option *tree, unsigned char *name)
+	 struct option *tree, unsigned char *name, struct session *ses)
 {
-	struct option *opt = get_opt_rec(tree, name);
+	struct option *opt = NULL;
+
+	/* If given a session and the option is shadowed in that session's
+	 * options tree, return the shadow. */
+	if (ses && ses->option)
+		opt = get_opt_rec_real(ses->option, name);
+
+	/* If given a session, the session has a location, and we can find
+	 * an options tree for the location's domain, return the shadow. */
+	if (ses && have_location(ses)) {
+		struct uri *uri = cur_loc(ses)->vs.uri;
+
+		if (uri->host && uri->hostlen)
+			opt = get_domain_option(uri->host, uri->hostlen, name);
+	}
+
+	/* Else, return the real option. */
+	if (!opt)
+		opt = get_opt_rec(tree, name);
 
 #ifdef CONFIG_DEBUG
 	errfile = file;
@@ -397,7 +420,7 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 	object_nolock(option, "option");
 
 	if (option->box_item && option->name && !strcmp(option->name, "_template_"))
-		option->box_item->visible = get_opt_bool("config.show_template");
+		option->box_item->visible = get_opt_bool("config.show_template", NULL);
 
 	if (tree->flags & OPT_AUTOCREATE && !option->desc) {
 		struct option *template = get_opt_rec(tree, "_template_");
@@ -610,7 +633,7 @@ delete_option(struct option *option)
 }
 
 struct option *
-copy_option(struct option *template)
+copy_option(struct option *template, int flags)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
@@ -625,7 +648,8 @@ copy_option(struct option *template)
 	option->desc = template->desc;
 	option->change_hook = template->change_hook;
 
-	option->box_item = init_option_listbox_item(option);
+	if (!(flags & CO_NO_LISTBOX_ITEM))
+		option->box_item = init_option_listbox_item(option);
 	if (option->box_item) {
 		if (template->box_item) {
 			option->box_item->type = template->box_item->type;
@@ -634,13 +658,133 @@ copy_option(struct option *template)
 	}
 
 	if (option_types[template->type].dup) {
-		option_types[template->type].dup(option, template);
+		option_types[template->type].dup(option, template, flags);
 	} else {
 		option->value = template->value;
 	}
 
 	return option;
 }
+
+/* Return the shadow option in @shadow_tree of @option in @tree. If @option
+ * isn't yet shadowed in @shadow_tree, shadow it (i.e. create a copy
+ * in @shadow_tree) along with any ancestors that aren't shadowed. */
+struct option *
+get_option_shadow(struct option *option, struct option *tree,
+                  struct option *shadow_tree)
+{
+
+	struct option *shadow_option = NULL;
+
+	assert(option);
+	assert(tree);
+	assert(shadow_tree);
+
+	if (option == tree) {
+		shadow_option = shadow_tree;
+	} else if (option->root && option->name) {
+		struct option *shadow_root;
+
+		shadow_root = get_option_shadow(option->root, tree,
+		                                shadow_tree);
+		if (!shadow_root) return NULL;
+
+		shadow_option = get_opt_rec_real(shadow_root, option->name);
+		if (!shadow_option) {
+			shadow_option = copy_option(option,
+			                            CO_SHALLOW
+			                             | CO_NO_LISTBOX_ITEM);
+			if (shadow_option) {
+				shadow_option->root = shadow_root;
+				/* No need to sort, is there? It isn't shown
+				 * in the options manager. -- Miciah */
+				add_to_list_end(*shadow_root->value.tree,
+				                shadow_option);
+
+				shadow_option->flags |= OPT_TOUCHED;
+			}
+
+		}
+	}
+
+	return shadow_option;
+}
+
+INIT_LIST_OF(struct domain_tree, domain_trees);
+
+/* Look for the option with the given name in all domain shadow-trees that
+ * match the given domain-name.  Return the option from the the shadow tree
+ * that best matches the given domain name. */
+static struct option *
+get_domain_option(unsigned char *domain_name, int domain_len,
+                  unsigned char *name)
+{
+	struct option *opt, *longest_match_opt = NULL;
+	struct domain_tree *longest_match = NULL;
+	struct domain_tree *domain;
+
+	assert(domain_name);
+	assert(*domain_name);
+
+	foreach (domain, domain_trees)
+		if ((!longest_match || domain->len > longest_match->len)
+		    && is_in_domain(domain->name, domain_name, domain_len)
+		    && (opt = get_opt_rec_real(domain->tree, name))) {
+			longest_match = domain;
+			longest_match_opt = opt;
+		}
+
+	return longest_match_opt;
+}
+
+/* Return the shadow shadow tree for the given domain name, and
+ * if the domain does not yet have a shadow tree, create it. */
+struct option *
+get_domain_tree(unsigned char *domain_name)
+{
+	struct domain_tree *domain;
+	int domain_len;
+
+	assert(domain_name);
+	assert(*domain_name);
+
+	foreach (domain, domain_trees)
+		if (!strcasecmp(domain->name, domain_name))
+			return domain->tree;
+
+	domain_len = strlen(domain_name);
+	/* One byte is reserved for domain in struct domain_tree. */
+	domain = mem_alloc(sizeof(*domain) + domain_len);
+	if (!domain) return NULL;
+
+	domain->tree = copy_option(config_options, CO_SHALLOW
+	                                            | CO_NO_LISTBOX_ITEM);
+	if (!domain->tree) {
+		mem_free(domain);
+		return NULL;
+	}
+
+	memcpy(domain->name, domain_name, domain_len + 1);
+	domain->len = domain_len;
+
+	add_to_list(domain_trees, domain);
+
+	return domain->tree;
+}
+
+void
+done_domain_trees(void)
+{
+	struct domain_tree *domain, *next;
+
+	foreachsafe (domain, next, domain_trees) {
+		delete_option(domain->tree);
+		domain->tree = NULL;
+		del_from_list(domain);
+		mem_free(domain);
+	}
+}
+
 
 LIST_OF(struct option) *
 init_options_tree(void)
@@ -656,25 +800,25 @@ static inline void
 register_autocreated_options(void)
 {
 	/* TODO: Use table-driven initialization. --jonas */
-	get_opt_int("terminal.linux.type") = 2;
-	get_opt_int("terminal.linux.colors") = 1;
-	get_opt_bool("terminal.linux.m11_hack") = 1;
-	get_opt_int("terminal.vt100.type") = 1;
-	get_opt_int("terminal.vt110.type") = 1;
-	get_opt_int("terminal.xterm.type") = 1;
-	get_opt_bool("terminal.xterm.underline") = 1;
-	get_opt_int("terminal.xterm-color.type") = 1;
-	get_opt_int("terminal.xterm-color.colors") = COLOR_MODE_16;
-	get_opt_bool("terminal.xterm-color.underline") = 1;
+	get_opt_int("terminal.linux.type", NULL) = 2;
+	get_opt_int("terminal.linux.colors", NULL) = 1;
+	get_opt_bool("terminal.linux.m11_hack", NULL) = 1;
+	get_opt_int("terminal.vt100.type", NULL) = 1;
+	get_opt_int("terminal.vt110.type", NULL) = 1;
+	get_opt_int("terminal.xterm.type", NULL) = 1;
+	get_opt_bool("terminal.xterm.underline", NULL) = 1;
+	get_opt_int("terminal.xterm-color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-color.colors", NULL) = COLOR_MODE_16;
+	get_opt_bool("terminal.xterm-color.underline", NULL) = 1;
 #ifdef CONFIG_88_COLORS
-	get_opt_int("terminal.xterm-88color.type") = 1;
-	get_opt_int("terminal.xterm-88color.colors") = COLOR_MODE_88;
-	get_opt_bool("terminal.xterm-88color.underline") = 1;
+	get_opt_int("terminal.xterm-88color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-88color.colors", NULL) = COLOR_MODE_88;
+	get_opt_bool("terminal.xterm-88color.underline", NULL) = 1;
 #endif
 #ifdef CONFIG_256_COLORS
-	get_opt_int("terminal.xterm-256color.type") = 1;
-	get_opt_int("terminal.xterm-256color.colors") = COLOR_MODE_256;
-	get_opt_bool("terminal.xterm-256color.underline") = 1;
+	get_opt_int("terminal.xterm-256color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;
+	get_opt_bool("terminal.xterm-256color.underline", NULL) = 1;
 #endif
 }
 
@@ -709,6 +853,7 @@ free_options_tree(LIST_OF(struct option) *tree, int recursive)
 void
 done_options(void)
 {
+	done_domain_trees();
 	unregister_options(config_options_info, config_options);
 	unregister_options(cmdline_options_info, cmdline_options);
 	config_options->box_item = NULL;
@@ -897,7 +1042,7 @@ change_hook_insert_mode(struct session *ses, struct option *current, struct opti
 static int
 change_hook_active_link(struct session *ses, struct option *current, struct option *changed)
 {
-	update_cached_document_options();
+	update_cached_document_options(ses);
 	return 0;
 }
 
@@ -945,7 +1090,7 @@ void
 update_options_visibility(void)
 {
 	update_visibility(config_options->value.tree,
-			  get_opt_bool("config.show_template"));
+			  get_opt_bool("config.show_template", NULL));
 }
 
 void

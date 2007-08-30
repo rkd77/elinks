@@ -150,7 +150,7 @@ add_bittorrent_meta_to_string(struct string *msg, struct bittorrent_meta *meta,
 		add_format_to_string(msg, "\n%s: ",
 			_("Creation date", term));
 		add_date_to_string(msg,
-			get_opt_str("ui.date_format"),
+			get_opt_str("ui.date_format", NULL),
 			&meta->creation_date);
 	}
 #endif

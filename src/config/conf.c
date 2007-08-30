@@ -87,15 +87,30 @@ skip_white(unsigned char *start, int *line)
  * will only possibly set OPT_WATERMARK flag to the option (if enabled). */
 
 static enum parse_error
-parse_set(struct option *opt_tree, unsigned char **file, int *line,
-	  struct string *mirror, int is_system_conf)
+parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
+                 struct string *mirror, int is_system_conf, int want_domain)
 {
 	unsigned char *orig_pos = *file;
+	unsigned char *domain_name;
 	unsigned char *optname;
 	unsigned char bin;
 
 	*file = skip_white(*file, line);
 	if (!**file) return ERROR_PARSE;
+
+	if (want_domain) {
+		domain_name = *file;
+		while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
+			(*file)++;
+
+		bin = **file;
+		**file = '\0';
+		domain_name = stracpy(domain_name);
+		**file = bin;
+		if (!domain_name) return ERROR_NOMEM;
+
+		*file = skip_white(*file, line);
+	}
 
 	/* Option name */
 	optname = *file;
@@ -105,8 +120,8 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 	bin = **file;
 	**file = '\0';
 	optname = stracpy(optname);
-	if (!optname) return ERROR_NOMEM;
 	**file = bin;
+	if (!optname) return ERROR_NOMEM;
 
 	*file = skip_white(*file, line);
 
@@ -124,7 +139,35 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 		struct option *opt;
 		unsigned char *val;
 
-		opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
+		if (want_domain && *domain_name) {
+			struct option *domain_tree;
+			
+			domain_tree = get_domain_tree(domain_name);
+			if (!domain_tree) {
+				mem_free(domain_name);
+				mem_free(optname);
+				return ERROR_NOMEM;
+			}
+
+			if (mirror) {
+				opt = get_opt_rec_real(domain_tree, optname);
+			} else {
+				opt = get_opt_rec(opt_tree, optname);
+				if (opt) {
+					opt = get_option_shadow(opt, opt_tree,
+								domain_tree);
+					if (!opt) {
+						mem_free(domain_name);
+						mem_free(optname);
+						return ERROR_NOMEM;
+					}
+				}
+			}
+		} else {
+			opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
+		}
+		if (want_domain)
+			mem_free(domain_name);
 		mem_free(optname);
 
 		if (!opt || (opt->flags & OPT_HIDDEN))
@@ -159,6 +202,21 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
+parse_set_domain(struct option *opt_tree, unsigned char **file, int *line,
+                 struct string *mirror, int is_system_conf)
+{
+	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 1);
+}
+
+static enum parse_error
+parse_set(struct option *opt_tree, unsigned char **file, int *line,
+          struct string *mirror, int is_system_conf)
+{
+	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 0);
+}
+
+
+static enum parse_error
 parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 	    struct string *mirror, int is_system_conf)
 {
@@ -180,8 +238,8 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 	bin = **file;
 	**file = '\0';
 	optname = stracpy(optname);
-	if (!optname) return ERROR_NOMEM;
 	**file = bin;
+	if (!optname) return ERROR_NOMEM;
 
 	/* Mirror what we have */
 	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
@@ -336,6 +394,7 @@ struct parse_handler {
 };
 
 static struct parse_handler parse_handlers[] = {
+	{ "set_domain", parse_set_domain },
 	{ "set", parse_set },
 	{ "unset", parse_unset },
 	{ "bind", parse_bind },
@@ -562,6 +621,8 @@ add_indent_to_string(struct string *string, int depth)
 	add_xchar_to_string(string, ' ', depth * indentation);
 }
 
+static unsigned char *smart_config_output_fn_domain;
+
 static void
 smart_config_output_fn(struct string *string, struct option *option,
 		       unsigned char *path, int depth, int do_print_comment,
@@ -644,7 +705,13 @@ split:
 			if (option->flags & OPT_DELETED) {
 				add_to_string(string, "un");
 			}
-			add_to_string(string, "set ");
+			if (smart_config_output_fn_domain) {
+				add_to_string(string, "set_domain ");
+				add_to_string(string, smart_config_output_fn_domain);
+				add_char_to_string(string, ' ');
+			} else {
+				add_to_string(string, "set ");
+			}
 			if (path) {
 				add_to_string(string, path);
 				add_char_to_string(string, '.');
@@ -685,15 +752,15 @@ add_cfg_header_to_string(struct string *string, unsigned char *text)
 }
 
 unsigned char *
-create_config_string(unsigned char *prefix, unsigned char *name,
-		     struct option *options)
+create_config_string(unsigned char *prefix, unsigned char *name)
 {
+	struct option *options = config_options;
 	struct string config;
 	/* Don't write headers if nothing will be added anyway. */
 	struct string tmpstring;
 	int origlen;
-	int savestyle = get_opt_int("config.saving_style");
-	int i18n = get_opt_bool("config.i18n");
+	int savestyle = get_opt_int("config.saving_style", NULL);
+	int i18n = get_opt_bool("config.i18n", NULL);
 
 	if (!init_string(&config)) return NULL;
 
@@ -755,8 +822,8 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 
 	if (savestyle == 0) goto get_me_out;
 
-	indentation = get_opt_int("config.indentation");
-	comments = get_opt_int("config.comments");
+	indentation = get_opt_int("config.indentation", NULL);
+	comments = get_opt_int("config.comments", NULL);
 
 	if (!init_string(&tmpstring)) goto get_me_out;
 
@@ -766,6 +833,22 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	origlen = tmpstring.length;
 	smart_config_string(&tmpstring, 2, i18n, options->value.tree, NULL, 0,
 			    smart_config_output_fn);
+
+	{
+		struct domain_tree *domain;
+
+		foreach (domain, domain_trees) {
+			smart_config_output_fn_domain = domain->name;
+			smart_config_string(&tmpstring, 2, i18n,
+					    domain->tree->value.tree,
+					    NULL, 0,
+					    smart_config_output_fn);
+			unmark_options_tree(domain->tree->value.tree);
+		}
+
+		smart_config_output_fn_domain = NULL;
+	}
+
 	if (tmpstring.length > origlen)
 		add_string_to_string(&config, &tmpstring);
 	done_string(&tmpstring);
@@ -789,12 +872,12 @@ get_me_out:
 
 static int
 write_config_file(unsigned char *prefix, unsigned char *name,
-		  struct option *options, struct terminal *term)
+                  struct terminal *term)
 {
 	int ret = -1;
 	struct secure_save_info *ssi;
 	unsigned char *config_file = NULL;
-	unsigned char *cfg_str = create_config_string(prefix, name, options);
+	unsigned char *cfg_str = create_config_string(prefix, name);
 	int prefixlen = strlen(prefix);
 	int prefix_has_slash = (prefixlen && dir_sep(prefix[prefixlen - 1]));
 	int name_has_slash = dir_sep(name[0]);
@@ -834,5 +917,5 @@ write_config(struct terminal *term)
 	}
 
 	return write_config_file(elinks_home, get_cmd_opt_str("config-file"),
-				 config_options, term);
+	                         term);
 }

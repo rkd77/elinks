@@ -295,7 +295,7 @@ str_wr(struct option *o, struct string *s)
 }
 
 static void
-str_dup(struct option *opt, struct option *template)
+str_dup(struct option *opt, struct option *template, int flags)
 {
 	unsigned char *new = mem_alloc(MAX_STR_LEN);
 
@@ -366,7 +366,7 @@ color_wr(struct option *opt, struct string *str)
 }
 
 static void
-tree_dup(struct option *opt, struct option *template)
+tree_dup(struct option *opt, struct option *template, int flags)
 {
 	LIST_OF(struct option) *new = init_options_tree();
 	LIST_OF(struct option) *tree = template->value.tree;
@@ -375,18 +375,21 @@ tree_dup(struct option *opt, struct option *template)
 	if (!new) return;
 	opt->value.tree = new;
 
+	if (flags & CO_SHALLOW) return;
+
 	foreachback (option, *tree) {
-		struct option *new_opt = copy_option(option);
+		struct option *new_opt = copy_option(option, flags);
 
 		if (!new_opt) continue;
 		object_nolock(new_opt, "option");
 		add_to_list_end(*new, new_opt);
+		object_lock(new_opt);
 		new_opt->root = opt;
 
 		if (!new_opt->box_item) continue;
 
 		if (new_opt->name && !strcmp(new_opt->name, "_template_"))
-			new_opt->box_item->visible = get_opt_bool("config.show_template");
+			new_opt->box_item->visible = get_opt_bool("config.show_template", NULL);
 
 		if (opt->box_item) {
 			add_to_list(opt->box_item->child,

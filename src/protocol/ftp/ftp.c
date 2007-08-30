@@ -466,7 +466,8 @@ ftp_pass(struct connection *conn)
 		add_to_string(&cmd, auth->password);
 
 	} else {
-		add_to_string(&cmd, get_opt_str("protocol.ftp.anon_passwd"));
+		add_to_string(&cmd, get_opt_str("protocol.ftp.anon_passwd",
+		                                NULL));
 	}
 	add_crlf_to_string(&cmd);
 
@@ -588,10 +589,10 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
 {
 	struct ftp_connection_info *ftp = conn->info;
 
-	ftp->use_pasv = get_opt_bool("protocol.ftp.use_pasv");
+	ftp->use_pasv = get_opt_bool("protocol.ftp.use_pasv", NULL);
 
 #ifdef CONFIG_IPV6
-	ftp->use_epsv = get_opt_bool("protocol.ftp.use_epsv");
+	ftp->use_epsv = get_opt_bool("protocol.ftp.use_epsv", NULL);
 
 	if (conn->socket->protocol_family == EL_PF_INET6) {
 		if (ftp->use_epsv) {
@@ -1401,10 +1402,10 @@ out_of_mem:
 	if (ftp->dir) {
 		format.libc_codepage = get_cp_index("System");
 
-		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs");
+		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs", NULL);
 
 		if (format.colorize_dir) {
-			color_to_string(get_opt_color("document.colors.dirs"),
+			color_to_string(get_opt_color("document.colors.dirs", NULL),
 					format.dircolor);
 		}
 	}

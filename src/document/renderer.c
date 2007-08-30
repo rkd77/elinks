@@ -62,7 +62,8 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 		unset_led_value(interpreter->vs->doc_view->session->status.ecmascript_led);
 #endif
 
-	if (list_empty(*doc_snippets) || !get_opt_bool("ecmascript.enable"))
+	if (list_empty(*doc_snippets)
+	    || !get_opt_bool("ecmascript.enable", NULL))
 		return;
 
 	/* We do this all only once per view_state now. */
@@ -429,7 +430,7 @@ render_document_frames(struct session *ses, int no_cache)
 
 	if (have_location(ses)) vs = &cur_loc(ses)->vs;
 
-	init_document_options(&doc_opts);
+	init_document_options(ses, &doc_opts);
 
 	set_box(&doc_opts.box, 0, 0,
 		ses->tab->term->width, ses->tab->term->height);
@@ -444,11 +445,13 @@ render_document_frames(struct session *ses, int no_cache)
 		if (ses->status.show_tabs_bar_at_top) doc_opts.box.y++;
 	}
 
-	doc_opts.color_mode = get_opt_int_tree(ses->tab->term->spec, "colors");
-	if (!get_opt_bool_tree(ses->tab->term->spec, "underline"))
+	doc_opts.color_mode = get_opt_int_tree(ses->tab->term->spec, "colors",
+	                                       NULL);
+	if (!get_opt_bool_tree(ses->tab->term->spec, "underline", NULL))
 		doc_opts.color_flags |= COLOR_ENHANCE_UNDERLINE;
 
-	doc_opts.cp = get_opt_codepage_tree(ses->tab->term->spec, "charset");
+	doc_opts.cp = get_opt_codepage_tree(ses->tab->term->spec, "charset",
+	                                    NULL);
 	doc_opts.no_cache = no_cache & 1;
 	doc_opts.gradual_rerendering = !!(no_cache & 2);
 

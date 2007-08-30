@@ -79,7 +79,7 @@ navigator_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_STRING(res, str);
 	} else if (p == s_language) {
 #ifdef CONFIG_NLS
-		if (get_opt_bool("protocol.http.accept_ui_language")) {
+		if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
 			str = string_to_SEE_string(interp,
 			 language_to_iso639(current_language));
 			SEE_SET_STRING(res, str);
@@ -90,7 +90,8 @@ navigator_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		SEE_SET_STRING(res, str);
 	} else if (p == s_userAgent) {
 		/* FIXME: Code duplication. */
-		unsigned char *optstr = get_opt_str("protocol.http.user_agent");
+		unsigned char *optstr = get_opt_str("protocol.http.user_agent",
+		                                    NULL);
 
 		if (*optstr && strcmp(optstr, " ")) {
 			unsigned char *ustr, ts[64] = "";

@@ -75,7 +75,7 @@ do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buf
 static void
 queue_bittorrent_peer_connection_requests(struct bittorrent_peer_connection *peer)
 {
-	int size = get_opt_int("protocol.bittorrent.request_queue_size");
+	int size = get_opt_int("protocol.bittorrent.request_queue_size", NULL);
 	int queue_size = list_size(&peer->local.requests);
 
 	for ( ; queue_size < size; queue_size++) {

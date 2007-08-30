@@ -223,7 +223,7 @@ void done_link_members(struct link *link);
  * validity of formatted documents in the cache. */
 unsigned long get_document_css_magic(struct document *document);
 
-void update_cached_document_options(void);
+void update_cached_document_options(struct session *ses);
 
 struct document *get_cached_document(struct cache_entry *cached, struct document_options *options);
 

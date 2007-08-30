@@ -136,7 +136,7 @@ static void
 write_bookmarks_xbel(struct secure_save_info *ssi,
 		     LIST_OF(struct bookmarks) *bookmarks_list)
 {
-	int folder_state = get_opt_bool("bookmarks.folder_state");
+	int folder_state = get_opt_bool("bookmarks.folder_state", NULL);
 	/* We check for readok in filename_bookmarks_xbel(). */
 
 	secure_fputs(ssi,

@@ -156,8 +156,8 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 	int i;
 
 	/* Setup @dircolor so it's easy to check if we should color dirs. */
-	if (get_opt_bool("document.browse.links.color_dirs")) {
-		color_to_string(get_opt_color("document.colors.dirs"),
+	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
+		color_to_string(get_opt_color("document.colors.dirs", NULL),
 				(unsigned char *) &dircolor);
 	} else {
 		dircolor[0] = 0;
@@ -180,7 +180,8 @@ static inline enum connection_state
 list_directory(struct connection *conn, unsigned char *dirpath,
 	       struct string *page)
 {
-	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files");
+	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files",
+	                                     NULL);
 	struct directory_entry *entries;
 	enum connection_state state;
 

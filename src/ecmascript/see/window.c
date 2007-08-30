@@ -251,7 +251,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	see_check_class(interp, thisobj, &js_window_object_class);
 
 	SEE_SET_OBJECT(res, (struct SEE_object *)win);
-	if (get_opt_bool("ecmascript.block_window_opening")) {
+	if (get_opt_bool("ecmascript.block_window_opening", ses)) {
 #ifdef CONFIG_LEDS
 		set_led_value(ses->status.popup_led, 'P');
 #endif

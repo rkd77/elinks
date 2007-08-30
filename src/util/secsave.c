@@ -94,7 +94,7 @@ secure_open_umask(unsigned char *file_name)
 		goto end;
 	}
 
-	ssi->secure_save = get_opt_bool("infofiles.secure_save");
+	ssi->secure_save = get_opt_bool("infofiles.secure_save", NULL);
 
 	ssi->file_name = stracpy(file_name);
 	if (!ssi->file_name) {
@@ -252,7 +252,7 @@ secure_close(struct secure_save_info *ssi)
 #endif
 
 #ifdef HAVE_FSYNC
-		if (!fail && get_opt_bool("infofiles.secure_save_fsync"))
+		if (!fail && get_opt_bool("infofiles.secure_save_fsync", NULL))
 			fail = fsync(fileno(ssi->fp));
 #endif
 

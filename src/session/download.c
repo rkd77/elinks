@@ -296,7 +296,8 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 static void
 abort_download_and_beep(struct file_download *file_download, struct terminal *term)
 {
-	if (term && get_opt_int("document.download.notify_bell")
+	if (term && get_opt_int("document.download.notify_bell",
+	                        file_download->ses)
 		    + file_download->notify >= 2) {
 		beep_terminal(term);
 	}
@@ -403,7 +404,8 @@ download_data_store(struct download *download, struct file_download *file_downlo
 	}
 
 	if (file_download->remotetime
-	    && get_opt_bool("document.download.set_original_time")) {
+	    && get_opt_bool("document.download.set_original_time",
+	                    file_download->ses)) {
 		struct utimbuf foo;
 
 		foo.actime = foo.modtime = file_download->remotetime;
@@ -585,7 +587,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 
 	/* !overwrite means always silently overwrite, which may be admitelly
 	 * indeed a little confusing ;-) */
-	overwrite = get_opt_int("document.download.overwrite");
+	overwrite = get_opt_int("document.download.overwrite", NULL);
 	if (!overwrite) {
 		/* Nothing special to do... */
 		callback(term, ofile, data, resume);
@@ -695,7 +697,7 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 		set_bin(h);
 
 		if (!cdf_hop->safe) {
-			unsigned char *download_dir = get_opt_str("document.download.directory");
+			unsigned char *download_dir = get_opt_str("document.download.directory", NULL);
 			int i;
 
 			safe_strncpy(download_dir, file, MAX_STR_LEN);

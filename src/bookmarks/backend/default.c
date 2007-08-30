@@ -130,7 +130,7 @@ static void
 write_bookmarks_default(struct secure_save_info *ssi,
 		        LIST_OF(struct bookmark) *bookmarks_list)
 {
-	int folder_state = get_opt_bool("bookmarks.folder_state");
+	int folder_state = get_opt_bool("bookmarks.folder_state", NULL);
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {

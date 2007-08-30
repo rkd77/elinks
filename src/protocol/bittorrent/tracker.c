@@ -37,7 +37,8 @@ static void
 set_bittorrent_tracker_interval(struct connection *conn)
 {
 	struct bittorrent_connection *bittorrent = conn->info;
-	int interval = get_opt_int("protocol.bittorrent.tracker.interval");
+	int interval = get_opt_int("protocol.bittorrent.tracker.interval",
+	                           NULL);
 
 	/* The default HTTP_KEEPALIVE_TIMEOUT is set to 60 seconds so it
 	 * probably makes sense to have a default tracker interval that is below
@@ -190,13 +191,13 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	/* Sending no IP-address is valid. The tracker figures it out
 	 * automatically which is much easier. However, the user might want to
 	 * configure a specific IP-address to send. */
-	ip = get_opt_str("protocol.bittorrent.tracker.ip_address");
+	ip = get_opt_str("protocol.bittorrent.tracker.ip_address", NULL);
 	if (*ip) add_format_to_string(&request, "&ip=%s", ip);
 
 	/* This one is required for each request. */
 	add_format_to_string(&request, "&port=%u", bittorrent->port);
 
-	key = get_opt_str("protocol.bittorrent.tracker.key");
+	key = get_opt_str("protocol.bittorrent.tracker.key", NULL);
 	if (*key) {
 		add_to_string(&request, "&key=");
 		encode_uri_string(&request, key, strlen(key), 1);
@@ -226,9 +227,11 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 		add_format_to_string(&request, "&event=%s", event);
 	}
 
-	min_size = get_opt_int("protocol.bittorrent.tracker.min_skip_size");
+	min_size = get_opt_int("protocol.bittorrent.tracker.min_skip_size",
+	                       NULL);
 	if (!min_size || list_size(&bittorrent->peer_pool) < min_size) {
-		numwant = get_opt_int("protocol.bittorrent.tracker.numwant");
+		numwant = get_opt_int("protocol.bittorrent.tracker.numwant",
+		                      NULL);
 		/* Should the server default be used? */
 		if (numwant == 0)
 			numwant = -1;
@@ -239,7 +242,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	if (numwant >= 0)
 		add_format_to_string(&request, "&numwant=%d", numwant);
 
-	if (get_opt_bool("protocol.bittorrent.tracker.compact"))
+	if (get_opt_bool("protocol.bittorrent.tracker.compact", NULL))
 		add_to_string(&request, "&compact=1");
 
 	uri = get_uri(request.source, 0);

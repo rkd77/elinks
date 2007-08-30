@@ -939,7 +939,8 @@ search_hierbox_browser(void *data, unsigned char *text)
 				    scan_for_matches, context);
 
 	if (!context->item && *text) {
-		switch (get_opt_int("document.browse.search.show_not_found")) {
+		switch (get_opt_int("document.browse.search.show_not_found",
+		                    NULL)) {
 		case 2:
 			info_box(term, MSGBOX_FREE_TEXT,
 				 N_("Search"), ALIGN_CENTER,

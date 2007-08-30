@@ -164,7 +164,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_COOKIES_LOAD:
 #ifdef CONFIG_COOKIES
-			if (!get_opt_bool("cookies.save")) break;
+			if (!get_opt_bool("cookies.save", NULL)) break;
 			load_cookies();
 #endif
 			break;

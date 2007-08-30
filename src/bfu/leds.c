@@ -193,7 +193,7 @@ draw_leds(struct session *ses)
 
 	/* This should be done elsewhere, but this is very nice place where we
 	 * could do that easily. */
-	if (get_opt_int("ui.timer.enable") == 2) {
+	if (get_opt_int("ui.timer.enable", NULL) == 2) {
 		led_color = get_bfu_color(term, "status.status-text");
 		if (!led_color) goto end;
 
@@ -276,7 +276,7 @@ redraw_leds(void *xxx)
 	struct session *ses;
 
 	if (!get_leds_panel_enable()
-	    && get_opt_int("ui.timer.enable") != 2) {
+	    && get_opt_int("ui.timer.enable", NULL) != 2) {
 		redraw_timer = TIMER_ID_UNDEF;
 		return;
 	}

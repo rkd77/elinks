@@ -109,7 +109,7 @@ static void bookmark_snapshot();
 static enum evhook_status
 bookmark_write_hook(va_list ap, void *data)
 {
-	if (get_opt_bool("ui.sessions.snapshot")
+	if (get_opt_bool("ui.sessions.snapshot", NULL)
 	    && !get_cmd_opt_bool("anonymous"))
 		bookmark_snapshot();
 
@@ -534,10 +534,10 @@ bookmark_auto_save_tabs(struct terminal *term)
 	unsigned char *foldername;
 
 	if (get_cmd_opt_bool("anonymous")
-	    || !get_opt_bool("ui.sessions.auto_save"))
+	    || !get_opt_bool("ui.sessions.auto_save", NULL))
 		return;
 
-	foldername = get_opt_str("ui.sessions.auto_save_foldername");
+	foldername = get_opt_str("ui.sessions.auto_save_foldername", NULL);
 	if (!*foldername) return;
 
 	/* Ensure uniqueness of the auto save folder, so it is possible to
@@ -559,7 +559,8 @@ bookmark_snapshot(void)
 
 #ifdef HAVE_STRFTIME
 	add_to_string(&folderstring, " - ");
-	add_date_to_string(&folderstring, get_opt_str("ui.date_format"), NULL);
+	add_date_to_string(&folderstring, get_opt_str("ui.date_format", NULL),
+	                   NULL);
 #endif
 
 	folder = add_bookmark(NULL, 1, folderstring.source, NULL);

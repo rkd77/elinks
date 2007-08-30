@@ -601,32 +601,6 @@ accept_cookie_never(void *idp)
 }
 #endif
 
-/* Check whether domain is matching server
- * Ie.
- * example.com matches www.example.com/
- * example.com doesn't match www.example.com.org/
- * example.com doesn't match www.example.comm/
- * example.com doesn't match example.co
- */
-static int
-is_in_domain(unsigned char *domain, unsigned char *server, int server_len)
-{
-	int domain_len = strlen(domain);
-	int len;
-
-	if (domain_len > server_len)
-		return 0;
-
-	if (domain_len == server_len)
-		return !strncasecmp(domain, server, server_len);
-
-	len = server_len - domain_len;
-	if (server[len - 1] != '.')
-		return 0;
-
-	return !strncasecmp(domain, server + len, domain_len);
-}
-
 
 static inline int
 is_path_prefix(unsigned char *d, unsigned char *s)

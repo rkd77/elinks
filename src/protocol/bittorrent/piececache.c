@@ -95,7 +95,8 @@ handle_bittorrent_mode_changes(struct bittorrent_connection *bittorrent)
 	} else if (bittorrent->mode == BITTORRENT_MODE_PIECELESS) {
 		int cutoff;
 
-		cutoff = get_opt_int("protocol.bittorrent.rarest_first_cutoff");
+		cutoff = get_opt_int("protocol.bittorrent.rarest_first_cutoff",
+		                     NULL);
 		if (cache->completed_pieces >= cutoff)
 			bittorrent->mode = BITTORRENT_MODE_NORMAL;
 	}
@@ -348,7 +349,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 
 	piece_offset	= 0;
 	piece_length	= get_bittorrent_piece_length(&bittorrent->meta, piece);
-	request_length	= get_opt_int("protocol.bittorrent.peerwire.request_length");
+	request_length	= get_opt_int("protocol.bittorrent.peerwire.request_length", NULL);
 
 	if (request_length > piece_length)
 		request_length = piece_length;
@@ -624,7 +625,7 @@ get_bittorrent_file_name(struct bittorrent_meta *meta, struct bittorrent_file *f
 {
 	unsigned char *name;
 
-	name = expand_tilde(get_opt_str("document.download.directory"));
+	name = expand_tilde(get_opt_str("document.download.directory", NULL));
 	if (!name) return NULL;
 
 	add_to_strn(&name, "/");
@@ -1213,7 +1214,8 @@ update_bittorrent_piece_cache_state(struct bittorrent_connection *bittorrent)
 {
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct bittorrent_piece_cache_entry *entry, *next;
-	off_t cache_size = get_opt_int("protocol.bittorrent.piece_cache_size");
+	off_t cache_size = get_opt_int("protocol.bittorrent.piece_cache_size",
+	                               NULL);
 	off_t current_size = 0;
 
 	if (!cache_size) return;

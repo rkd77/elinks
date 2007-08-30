@@ -449,7 +449,7 @@ check_http_server_bugs(struct uri *uri, struct http_connection_info *http,
 		NULL
 	};
 
-	if (!get_opt_bool("protocol.http.bugs.allow_blacklist")
+	if (!get_opt_bool("protocol.http.bugs.allow_blacklist", NULL)
 	    || HTTP_1_0(http->sent_version))
 		return 0;
 
@@ -476,7 +476,7 @@ http_end_request(struct connection *conn, enum connection_state state,
 
 	if (conn->info && !((struct http_connection_info *) conn->info)->close
 	    && (!conn->socket->ssl) /* We won't keep alive ssl connections */
-	    && (!get_opt_bool("protocol.http.bugs.post_no_keepalive")
+	    && (!get_opt_bool("protocol.http.bugs.post_no_keepalive", NULL)
 		|| !conn->uri->post)) {
 		if (state == S_OK && conn->cached)
 			normalize_cache_entry(conn->cached, !notrunc ? conn->from : -1);
@@ -533,7 +533,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 		http->bl_flags = get_blacklist_flags(conn->proxied_uri);
 
 	if (http->bl_flags & SERVER_BLACKLIST_HTTP10
-	    || get_opt_bool("protocol.http.bugs.http10")) {
+	    || get_opt_bool("protocol.http.bugs.http10", NULL)) {
 		http->sent_version.major = 1;
 		http->sent_version.minor = 0;
 	}
@@ -550,7 +550,7 @@ http_send_header(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http;
-	int trace = get_opt_bool("protocol.http.trace");
+	int trace = get_opt_bool("protocol.http.trace", NULL);
 	struct string header;
 	unsigned char *post_data = NULL;
 	struct auth_entry *entry = NULL;
@@ -627,8 +627,8 @@ http_send_header(struct socket *socket)
 
 	/* CONNECT: Proxy-Authorization is intended to be seen by the proxy.  */
 	if (talking_to_proxy) {
-		unsigned char *user = get_opt_str("protocol.http.proxy.user");
-		unsigned char *passwd = get_opt_str("protocol.http.proxy.passwd");
+		unsigned char *user = get_opt_str("protocol.http.proxy.user", NULL);
+		unsigned char *passwd = get_opt_str("protocol.http.proxy.passwd", NULL);
 
 		if (proxy_auth.digest) {
 			unsigned char *response;
@@ -676,7 +676,7 @@ http_send_header(struct socket *socket)
 	/* CONNECT: User-Agent does not reveal anything about the
 	 * resource we're fetching, and it may help the proxy return
 	 * better error messages.  */
-	optstr = get_opt_str("protocol.http.user_agent");
+	optstr = get_opt_str("protocol.http.user_agent", NULL);
 	if (*optstr && strcmp(optstr, " ")) {
 		unsigned char *ustr, ts[64] = "";
 
@@ -704,13 +704,13 @@ http_send_header(struct socket *socket)
 	/* CONNECT: Referer probably is a secret page in the HTTPS
 	 * server, so don't reveal it to the proxy.  */
 	if (!use_connect) {
-		switch (get_opt_int("protocol.http.referer.policy")) {
+		switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 			case REFERER_NONE:
 				/* oh well */
 				break;
 
 			case REFERER_FAKE:
-				optstr = get_opt_str("protocol.http.referer.fake");
+				optstr = get_opt_str("protocol.http.referer.fake", NULL);
 				if (!optstr[0]) break;
 				add_to_string(&header, "Referer: ");
 				add_to_string(&header, optstr);
@@ -769,19 +769,19 @@ http_send_header(struct socket *socket)
 	}
 
 	if (!(http->bl_flags & SERVER_BLACKLIST_NO_CHARSET)
-	    && !get_opt_bool("protocol.http.bugs.accept_charset")
+	    && !get_opt_bool("protocol.http.bugs.accept_charset", NULL)
 	    && accept_charset) {
 		add_to_string(&header, accept_charset);
 	}
 
-	optstr = get_opt_str("protocol.http.accept_language");
+	optstr = get_opt_str("protocol.http.accept_language", NULL);
 	if (optstr[0]) {
 		add_to_string(&header, "Accept-Language: ");
 		add_to_string(&header, optstr);
 		add_crlf_to_string(&header);
 	}
 #ifdef CONFIG_NLS
-	else if (get_opt_bool("protocol.http.accept_ui_language")) {
+	else if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
 		unsigned char *code = language_to_iso639(current_language);
 
 		if (code) {
@@ -805,7 +805,7 @@ http_send_header(struct socket *socket)
 			add_to_string(&header, "Proxy-Connection: ");
 		}
 
-		if (!uri->post || !get_opt_bool("protocol.http.bugs.post_no_keepalive")) {
+		if (!uri->post || !get_opt_bool("protocol.http.bugs.post_no_keepalive", NULL)) {
 			add_to_string(&header, "Keep-Alive");
 		} else {
 			add_to_string(&header, "close");
@@ -1576,7 +1576,7 @@ again:
 	}
 	mem_free_set(&conn->cached->head, head);
 
-	if (!get_opt_bool("document.cache.ignore_cache_control")) {
+	if (!get_opt_bool("document.cache.ignore_cache_control", NULL)) {
 		struct cache_entry *cached = conn->cached;
 
 		/* I am not entirely sure in what order we should process these
@@ -1653,7 +1653,7 @@ again:
 			/* So POST must not be redirected to GET, but some
 			 * BUGGY message boards rely on it :-( */
 	    		if (h == 302
-			    && get_opt_bool("protocol.http.bugs.broken_302_redirect"))
+			    && get_opt_bool("protocol.http.bugs.broken_302_redirect", NULL))
 				use_get_method = 1;
 
 			redirect_cache(conn->cached, d, use_get_method, -1);

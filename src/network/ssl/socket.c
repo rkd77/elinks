@@ -91,7 +91,7 @@ ssl_want_read(struct socket *socket)
 	switch (ssl_do_connect(socket)) {
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
-			if (get_opt_bool("connection.ssl.cert_verify")
+			if (get_opt_bool("connection.ssl.cert_verify", NULL)
 			    && gnutls_certificate_verify_peers(*((ssl_t *) socket->ssl))) {
 				socket->ops->retry(socket, S_SSL_ERROR);
 				return;
@@ -129,15 +129,16 @@ ssl_connect(struct socket *socket)
 #ifdef CONFIG_OPENSSL
 	SSL_set_fd(socket->ssl, socket->fd);
 
-	if (get_opt_bool("connection.ssl.cert_verify"))
+	if (get_opt_bool("connection.ssl.cert_verify", NULL))
 		SSL_set_verify(socket->ssl, SSL_VERIFY_PEER
 					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
 				NULL);
 
-	if (get_opt_bool("connection.ssl.client_cert.enable")) {
+	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
 		unsigned char *client_cert;
 
-		client_cert = get_opt_str("connection.ssl.client_cert.file");
+		client_cert = get_opt_str("connection.ssl.client_cert.file",
+		                          NULL);
 		if (!*client_cert) {
 			client_cert = getenv("X509_CLIENT_CERT");
 			if (client_cert && !*client_cert)
@@ -172,7 +173,7 @@ ssl_connect(struct socket *socket)
 
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
-			if (!get_opt_bool("connection.ssl.cert_verify"))
+			if (!get_opt_bool("connection.ssl.cert_verify", NULL))
 				break;
 
 			if (!gnutls_certificate_verify_peers(*((ssl_t *) socket->ssl)))

@@ -45,7 +45,7 @@ static int loaded_backend_num = -1;
 void
 bookmarks_read(void)
 {
-	int backend_num = get_opt_int("bookmarks.file_format");
+	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	unsigned char *file_name;
 	FILE *f;
@@ -76,7 +76,7 @@ bookmarks_read(void)
 void
 bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 {
-	int backend_num = get_opt_int("bookmarks.file_format");
+	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	struct secure_save_info *ssi;
 	unsigned char *file_name;

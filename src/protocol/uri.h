@@ -319,4 +319,13 @@ get_real_uri_length(struct uri *uri)
 /* Checks if @address contains a valid IP address. */
 int is_ip_address(const unsigned char *address, int addresslen);
 
+/* Check whether domain is matching server
+ * Ie.
+ * example.com matches www.example.com/
+ * example.com doesn't match www.example.com.org/
+ * example.com doesn't match www.example.comm/
+ * example.com doesn't match example.co
+ */
+int is_in_domain(unsigned char *domain, unsigned char *server, int server_len);
+
 #endif

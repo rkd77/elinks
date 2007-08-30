@@ -38,7 +38,7 @@ get_bfu_color(struct terminal *term, unsigned char *stylename)
 
 	if (!term) return NULL;
 
-	color_mode = get_opt_int_tree(term->spec, "colors");
+	color_mode = get_opt_int_tree(term->spec, "colors", NULL);
 
 	if (!bfu_colors) {
 		/* Initialize the style hash. */
@@ -86,8 +86,8 @@ get_bfu_color(struct terminal *term, unsigned char *stylename)
 			return NULL;
 		}
 
-		entry->foreground = &get_opt_color_tree(opt, "text");
-		entry->background = &get_opt_color_tree(opt, "background");
+		entry->foreground = &get_opt_color_tree(opt, "text", NULL);
+		entry->background = &get_opt_color_tree(opt, "background", NULL);
 	}
 
 	/* Always update the color pair. */

@@ -591,7 +591,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		if (ses->doc_view
 		    && ses->doc_view->document
 		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh")) {
+		    && get_opt_bool("document.browse.refresh", ses)) {
 			start_document_refresh(ses->doc_view->document->refresh,
 					       ses);
 		}
@@ -750,7 +750,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 	/* [gettext_accelerator_context(setup_first_session)] */
 	struct terminal *term = ses->tab->term;
 
-	if (!*get_opt_str("protocol.http.user_agent")) {
+	if (!*get_opt_str("protocol.http.user_agent", NULL)) {
 		info_box(term, 0,
 			 N_("Warning"), ALIGN_CENTER,
 			 N_("You have empty string in protocol.http.user_agent - "
@@ -765,11 +765,11 @@ setup_first_session(struct session *ses, struct uri *uri)
 			 "any inconvience caused."));
 	}
 
-	if (!get_opt_bool("config.saving_style_w")) {
+	if (!get_opt_bool("config.saving_style_w", NULL)) {
 		struct option *opt = get_opt_rec(config_options, "config.saving_style_w");
 		opt->value.number = 1;
 		option_changed(ses, opt);
-		if (get_opt_int("config.saving_style") != 3) {
+		if (get_opt_int("config.saving_style", NULL) != 3) {
 			info_box(term, 0,
 				 N_("Warning"), ALIGN_CENTER,
 				 N_("You have option config.saving_style set to "
@@ -809,10 +809,10 @@ setup_first_session(struct session *ses, struct uri *uri)
 		if (!uri) return 1;
 
 #ifdef CONFIG_BOOKMARKS
-	} else if (!uri && get_opt_bool("ui.sessions.auto_restore")) {
+	} else if (!uri && get_opt_bool("ui.sessions.auto_restore", NULL)) {
 		unsigned char *folder;
 
-		folder = get_opt_str("ui.sessions.auto_save_foldername");
+		folder = get_opt_str("ui.sessions.auto_save_foldername", NULL);
 		open_bookmark_folder(ses, folder);
 		return 1;
 #endif
@@ -843,7 +843,7 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 		goto_uri(ses, uri);
 
 	} else if (!goto_url_home(ses)) {
-		if (get_opt_bool("ui.startup_goto_dialog")) {
+		if (get_opt_bool("ui.startup_goto_dialog", NULL)) {
 			dialog_goto_url_open(ses);
 		}
 	}
@@ -864,6 +864,8 @@ init_session(struct session *base_session, struct terminal *term,
 		return NULL;
 	}
 
+	ses->option = copy_option(config_options,
+	                          CO_SHALLOW | CO_NO_LISTBOX_ITEM);
 	create_history(&ses->history);
 	init_list(ses->scrn_frames);
 	init_list(ses->more_files);
@@ -1174,6 +1176,10 @@ destroy_session(struct session *ses)
 #ifdef CONFIG_ECMASCRIPT
 	mem_free_if(ses->status.window_status);
 #endif
+	if (ses->option) {
+		delete_option(ses->option);
+		ses->option = NULL;
+	}
 	del_from_list(ses);
 }
 

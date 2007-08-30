@@ -97,7 +97,7 @@ do_document_refresh(void *data)
 void
 start_document_refresh(struct document_refresh *refresh, struct session *ses)
 {
-	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time");
+	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time", ses);
 	milliseconds_T refresh_delay = sec_to_ms(refresh->seconds);
 	milliseconds_T time = ms_max(refresh_delay, minimum);
 	struct type_query *type_query;

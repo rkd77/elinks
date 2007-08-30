@@ -51,7 +51,7 @@ dlg_format_listbox(struct terminal *term, struct widget_data *widget_data,
 
 	/* This is only weird heuristic, it could scale well I hope. */
 	optimal_h = max_height * 7 / 10 - VERTICAL_LISTBOX_MARGIN;
-	min = get_opt_int("ui.dialogs.listbox_min_height");
+	min = get_opt_int("ui.dialogs.listbox_min_height", NULL);
 
 	if (max_height - VERTICAL_LISTBOX_MARGIN < min) {
 		/* Big trouble: can't satisfy even the minimum :-(. */

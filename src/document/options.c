@@ -22,73 +22,73 @@
 
 
 void
-init_document_options(struct document_options *doo)
+init_document_options(struct session *ses, struct document_options *doo)
 {
 	/* Ensure that any padding bytes are cleared. */
 	memset(doo, 0, sizeof(*doo));
 
-	doo->assume_cp = get_opt_codepage("document.codepage.assume");
-	doo->hard_assume = get_opt_bool("document.codepage.force_assumed");
+	doo->assume_cp = get_opt_codepage("document.codepage.assume", ses);
+	doo->hard_assume = get_opt_bool("document.codepage.force_assumed", ses);
 
-	doo->use_document_colors = get_opt_int("document.colors.use_document_colors");
-	doo->margin = get_opt_int("document.browse.margin_width");
-	doo->num_links_key = get_opt_int("document.browse.links.number_keys_select_link");
-	doo->meta_link_display = get_opt_int("document.html.link_display");
-	doo->default_form_input_size = get_opt_int("document.browse.forms.input_size");
+	doo->use_document_colors = get_opt_int("document.colors.use_document_colors", ses);
+	doo->margin = get_opt_int("document.browse.margin_width", ses);
+	doo->num_links_key = get_opt_int("document.browse.links.number_keys_select_link", ses);
+	doo->meta_link_display = get_opt_int("document.html.link_display", ses);
+	doo->default_form_input_size = get_opt_int("document.browse.forms.input_size", ses);
 
 	/* Color options. */
-	doo->default_style.fg = get_opt_color("document.colors.text");
-	doo->default_style.bg = get_opt_color("document.colors.background");
-	doo->default_link = get_opt_color("document.colors.link");
-	doo->default_vlink = get_opt_color("document.colors.vlink");
+	doo->default_style.fg = get_opt_color("document.colors.text", ses);
+	doo->default_style.bg = get_opt_color("document.colors.background", ses);
+	doo->default_link = get_opt_color("document.colors.link", ses);
+	doo->default_vlink = get_opt_color("document.colors.vlink", ses);
 #ifdef CONFIG_BOOKMARKS
-	doo->default_bookmark_link = get_opt_color("document.colors.bookmark");
+	doo->default_bookmark_link = get_opt_color("document.colors.bookmark", ses);
 #endif
-	doo->default_image_link = get_opt_color("document.colors.image");
+	doo->default_image_link = get_opt_color("document.colors.image", ses);
 
-	doo->active_link.fg = get_opt_color("document.browse.links.active_link.colors.text");
-	doo->active_link.bg = get_opt_color("document.browse.links.active_link.colors.background");
+	doo->active_link.fg = get_opt_color("document.browse.links.active_link.colors.text", ses);
+	doo->active_link.bg = get_opt_color("document.browse.links.active_link.colors.background", ses);
 
-	if (get_opt_bool("document.colors.increase_contrast"))
+	if (get_opt_bool("document.colors.increase_contrast", ses))
 		doo->color_flags |= COLOR_INCREASE_CONTRAST;
 
-	if (get_opt_bool("document.colors.ensure_contrast"))
+	if (get_opt_bool("document.colors.ensure_contrast", ses))
 		doo->color_flags |= COLOR_ENSURE_CONTRAST;
 
 	/* Boolean options. */
 #ifdef CONFIG_CSS
-	doo->css_enable = get_opt_bool("document.css.enable");
-	doo->css_import = get_opt_bool("document.css.import");
+	doo->css_enable = get_opt_bool("document.css.enable", ses);
+	doo->css_import = get_opt_bool("document.css.import", ses);
 #endif
 
-	doo->plain_display_links = get_opt_bool("document.plain.display_links");
-	doo->plain_compress_empty_lines = get_opt_bool("document.plain.compress_empty_lines");
-	doo->underline_links = get_opt_bool("document.html.underline_links");
-	doo->wrap_nbsp = get_opt_bool("document.html.wrap_nbsp");
-	doo->use_tabindex = get_opt_bool("document.browse.links.use_tabindex");
-	doo->links_numbering = get_opt_bool("document.browse.links.numbering");
+	doo->plain_display_links = get_opt_bool("document.plain.display_links", ses);
+	doo->plain_compress_empty_lines = get_opt_bool("document.plain.compress_empty_lines", ses);
+	doo->underline_links = get_opt_bool("document.html.underline_links", ses);
+	doo->wrap_nbsp = get_opt_bool("document.html.wrap_nbsp", ses);
+	doo->use_tabindex = get_opt_bool("document.browse.links.use_tabindex", ses);
+	doo->links_numbering = get_opt_bool("document.browse.links.numbering", ses);
 
-	doo->active_link.color = get_opt_bool("document.browse.links.active_link.enable_color");
-	doo->active_link.invert = get_opt_bool("document.browse.links.active_link.invert");
-	doo->active_link.underline = get_opt_bool("document.browse.links.active_link.underline");
-	doo->active_link.bold = get_opt_bool("document.browse.links.active_link.bold");
+	doo->active_link.color = get_opt_bool("document.browse.links.active_link.enable_color", ses);
+	doo->active_link.invert = get_opt_bool("document.browse.links.active_link.invert", ses);
+	doo->active_link.underline = get_opt_bool("document.browse.links.active_link.underline", ses);
+	doo->active_link.bold = get_opt_bool("document.browse.links.active_link.bold", ses);
 
-	doo->table_order = get_opt_bool("document.browse.table_move_order");
-	doo->tables = get_opt_bool("document.html.display_tables");
-	doo->frames = get_opt_bool("document.html.display_frames");
-	doo->images = get_opt_bool("document.browse.images.show_as_links");
-	doo->display_subs = get_opt_bool("document.html.display_subs");
-	doo->display_sups = get_opt_bool("document.html.display_sups");
+	doo->table_order = get_opt_bool("document.browse.table_move_order", ses);
+	doo->tables = get_opt_bool("document.html.display_tables", ses);
+	doo->frames = get_opt_bool("document.html.display_frames", ses);
+	doo->images = get_opt_bool("document.browse.images.show_as_links", ses);
+	doo->display_subs = get_opt_bool("document.html.display_subs", ses);
+	doo->display_sups = get_opt_bool("document.html.display_sups", ses);
 
 	doo->framename = "";
 
 	doo->image_link.prefix = "";
 	doo->image_link.suffix = "";
-	doo->image_link.filename_maxlen = get_opt_int("document.browse.images.filename_maxlen");
-	doo->image_link.label_maxlen = get_opt_int("document.browse.images.label_maxlen");
-	doo->image_link.display_style = get_opt_int("document.browse.images.display_style");
-	doo->image_link.tagging = get_opt_int("document.browse.images.image_link_tagging");
-	doo->image_link.show_any_as_links = get_opt_bool("document.browse.images.show_any_as_links");
+	doo->image_link.filename_maxlen = get_opt_int("document.browse.images.filename_maxlen", ses);
+	doo->image_link.label_maxlen = get_opt_int("document.browse.images.label_maxlen", ses);
+	doo->image_link.display_style = get_opt_int("document.browse.images.display_style", ses);
+	doo->image_link.tagging = get_opt_int("document.browse.images.image_link_tagging", ses);
+	doo->image_link.show_any_as_links = get_opt_bool("document.browse.images.show_any_as_links", ses);
 }
 
 int
@@ -109,8 +109,8 @@ copy_opt(struct document_options *o1, struct document_options *o2)
 {
 	copy_struct(o1, o2);
 	o1->framename = stracpy(o2->framename);
-	o1->image_link.prefix = stracpy(get_opt_str("document.browse.images.image_link_prefix"));
-	o1->image_link.suffix = stracpy(get_opt_str("document.browse.images.image_link_suffix"));
+	o1->image_link.prefix = stracpy(get_opt_str("document.browse.images.image_link_prefix", NULL));
+	o1->image_link.suffix = stracpy(get_opt_str("document.browse.images.image_link_suffix", NULL));
 }
 
 void
@@ -135,8 +135,13 @@ toggle_document_option(struct session *ses, unsigned char *option_name)
 	}
 
 	option = get_opt_rec(config_options, option_name);
+	assert(option);
+	if_assert_failed return;
 
-	/* TODO: toggle per document. --Zas */
+	if (ses->option)
+		option = get_option_shadow(option, config_options, ses->option);
+	if (!option) return;
+
 	toggle_option(ses, option);
 
 	draw_formatted(ses, 1);

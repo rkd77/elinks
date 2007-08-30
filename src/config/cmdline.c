@@ -144,7 +144,7 @@ eval_cmd(struct option *o, unsigned char ***argv, int *argc)
 static unsigned char *
 forcehtml_cmd(struct option *o, unsigned char ***argv, int *argc)
 {
-	safe_strncpy(get_opt_str("mime.default_type"), "text/html", MAX_STR_LEN);
+	safe_strncpy(get_opt_str("mime.default_type", NULL), "text/html", MAX_STR_LEN);
 	return NULL;
 }
 
@@ -685,9 +685,9 @@ printconfigdump_cmd(struct option *option, unsigned char ***argv, int *argc)
 	unsigned char *config_string;
 
 	/* Print all. */
-	get_opt_int("config.saving_style") = 2;
+	get_opt_int("config.saving_style", NULL) = 2;
 
-	config_string = create_config_string("", "", config_options);
+	config_string = create_config_string("", "");
 	if (config_string) {
 		printf("%s", config_string);
 		mem_free(config_string);
