@@ -13,6 +13,7 @@
 #include "document/css/parser.h"
 #include "document/css/stylesheet.h"
 #include "document/html/domparser/domparser.h"
+#include "document/html/domparser/elements.h"
 #include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/options.h"
@@ -20,7 +21,6 @@
 #include "dom/scanner.h"
 #include "dom/sgml/parser.h"
 #include "dom/sgml/html/html.h"
-#include "dom/sgml/rss/rss.h"
 #include "dom/node.h"
 #include "dom/stack.h"
 #include "util/conv.h"
@@ -102,7 +102,7 @@ static const unsigned char default_style[] =
 "	:focus          { outline: thin dotted invert }";
 
 
-static struct dom_string *
+struct dom_string *
 get_dom_element_attr(struct dom_node *elem, int type)
 {
 	struct dom_node *attrn;
@@ -140,7 +140,7 @@ get_dom_attr_uri(struct dom_string *attr, struct html_context *html_context)
 	return uristring;
 }
 
-static unsigned char *
+unsigned char *
 get_dom_element_attr_uri(struct dom_node *elem, int type, struct html_context *html_context)
 {
 	struct dom_string *attr = get_dom_element_attr(elem, type);
@@ -178,32 +178,8 @@ element_begins(struct html_context *html_context)
 #endif
 
 	if (domelem(html_top)->node) {
-		struct dom_element_node *elem;
-
 		assert(domelem(html_top)->node->type == DOM_NODE_ELEMENT);
-		elem = &domelem(html_top)->node->data.element;
-
-		switch (elem->type) {
-		case HTML_ELEMENT_HTML:
-		case HTML_ELEMENT_BODY:
-			/* Totally ugly hack. We just need box model. */
-			html_context->special_f(html_context, SP_DEFAULT_BACKGROUND, format.style.bg);
-			break;
-
-		case HTML_ELEMENT_A:
-		{
-			unsigned char *href;
-
-			href = get_dom_element_attr_uri(domelem(html_top)->node, HTML_ATTRIBUTE_HREF, html_context);
-			if (href)
-				mem_free_set(&format.link, href);
-		}
-			break;
-
-		default:
-			/* Nothing to do. Always the best. */
-			break;
-		}
+		dom_element_handle(domelem(html_top)->node->data.element.type, begins, html_context);
 	}
 
 	if (is_block_element(html_top)) {
@@ -245,92 +221,7 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	/* In theory we should guard for element_begins() here but it would be
 	 * useless work. */
 
-
-	/* See /src/dom/sgml/html/element.inc for the possible values. */
-	switch (elem->type) {
-		case HTML_ELEMENT_LINK:
-#ifdef CONFIG_CSS
-		{
-			struct dom_string *ds;
-
-			ds = get_dom_element_attr(node, HTML_ATTRIBUTE_REL);
-			if (!ds || strlcmp(ds->string, ds->length, "stylesheet", 10))
-				break;
-
-			ds = get_dom_element_attr(node, HTML_ATTRIBUTE_HREF);
-			if (!ds)
-				break;
-
-			import_css_stylesheet(&html_context->css_styles,
-					      html_context->base_href, ds->string, ds->length);
-		}
-#endif
-			break;
-
-		case HTML_ELEMENT_STYLE:
-#ifdef CONFIG_CSS
-		{
-			struct dom_node_list **list;
-			struct dom_node *child;
-			int index;
-
-			if (!html_context->options->css_enable)
-				break;
-
-			/* We are interested in anything but attributes ... */
-			list = get_dom_node_list_by_type(node, DOM_NODE_CDATA_SECTION);
-			if (!list || !*list)
-				break;
-
-			foreach_dom_node (*list, child, index) {
-				struct dom_string *value;
-
-				switch (child->type) {
-				case DOM_NODE_CDATA_SECTION:
-				case DOM_NODE_COMMENT:
-				case DOM_NODE_TEXT:
-					value = get_dom_node_value(child);
-					if (!value)
-						continue;
-					css_parse_stylesheet(&html_context->css_styles,
-							     html_context->base_href,
-							     value->string,
-							     value->string + value->length);
-				}
-			}
-		}
-#endif
-			break;
-
-		case HTML_ELEMENT_BASE:
-		{
-			unsigned char *href;
-			struct uri *uri;
-
-			href = get_dom_element_attr_uri(node, HTML_ATTRIBUTE_HREF, html_context);
-			if (!href) break;
-
-			uri = get_uri(href, 0);
-			mem_free(href);
-			if (!uri) break;
-
-			done_uri(html_context->base_href);
-			html_context->base_href = uri;
-			break;
-		}
-
-		case HTML_ELEMENT_TITLE:
-		{
-			struct dom_node *title = get_dom_node_child(node, DOM_NODE_TEXT, 0);
-
-			if (title && !domctx(html_context)->title->length)
-				add_bytes_to_string(domctx(html_context)->title,
-						    title->string.string,
-						    title->string.length);
-			break;
-		}
-	}
-
+	dom_element_handle(elem->type, pop, html_context);
 
 	if (is_block_element(html_top)) {
 		/* Break line after. */
@@ -430,6 +321,8 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	struct html_context *html_context;
 	struct dom_string dom_uri = INIT_DOM_STRING(struri(uri), strlen(struri(uri)));
 	struct sgml_parser *parser;
+
+	dom_setup_element_handlers();
 
 	html_context = init_html_context(uri, options,
 	                                 put_chars, line_break, special);

@@ -6,6 +6,8 @@
  * from anywhere outside, ideally. */
 
 struct dom_node;
+struct dom_string;
+struct html_context;
 struct string;
 
 
@@ -30,5 +32,12 @@ struct domparser_context {
 };
 
 #define domctx(html_context) ((struct domparser_context *) html_context->data)
+
+
+/* Interface for other parts of HTML DOM */
+
+/* These should really belong to /src/dom/... */
+struct dom_string *get_dom_element_attr(struct dom_node *elem, int type);
+unsigned char *get_dom_element_attr_uri(struct dom_node *elem, int type, struct html_context *html_context);
 
 #endif
