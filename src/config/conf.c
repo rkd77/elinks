@@ -20,6 +20,7 @@
 
 #include "config/conf.h"
 #include "config/dialogs.h"
+#include "config/domain.h"
 #include "config/home.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
