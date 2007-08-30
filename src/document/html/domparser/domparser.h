@@ -1,6 +1,6 @@
 
-#ifndef EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
-#define EL__DOCUMENT_HTML_MIKUPARSER_MIKUPARSER_H
+#ifndef EL__DOCUMENT_HTML_DOMPARSER_DOMPARSER_H
+#define EL__DOCUMENT_HTML_DOMPARSER_DOMPARSER_H
 
 /* This is internal header for the Domparser engine. It should not be included
  * from anywhere outside, ideally. */
