@@ -114,14 +114,9 @@ get_dom_element_attr(struct dom_node *elem, int type)
 }
 
 static unsigned char *
-get_dom_element_attr_uri(struct dom_node *elem, int type, struct uri *base, int codepage)
+get_dom_attr_uri(struct dom_string *attr, struct uri *base, int codepage)
 {
-	struct dom_string *attr;
 	unsigned char *uristring;
-
-	attr = get_dom_element_attr(elem, type);
-	if (!attr)
-		return NULL;
 
 	if (memchr(attr->string, '&', attr->length)) {
 		uristring = convert_string(NULL, attr->string, attr->length,
@@ -143,6 +138,14 @@ get_dom_element_attr_uri(struct dom_node *elem, int type, struct uri *base, int 
 	}
 
 	return uristring;
+}
+
+static unsigned char *
+get_dom_element_attr_uri(struct dom_node *elem, int type, struct uri *base, int codepage)
+{
+	struct dom_string *attr = get_dom_element_attr(elem, type);
+
+	return attr ? get_dom_attr_uri(attr, base, codepage) : NULL;
 }
 
 #ifdef CONFIG_CSS
@@ -328,6 +331,21 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 			html_context->special_f(html_context, SP_TAG,
 			                        attr->value.string);
 			break;
+
+		case HTML_ATTRIBUTE_HREF:
+		{
+			unsigned char *href;
+
+			if (node->parent->data.element.type != HTML_ELEMENT_A)
+				break;
+
+			href = get_dom_attr_uri(&attr->value,
+						html_context->base_href,
+						html_context->doc_cp);
+			if (href)
+				mem_free_set(&format.link, href);
+			break;
+		}
 	}
 	return DOM_CODE_OK;
 }
