@@ -1198,11 +1198,17 @@ reload(struct session *ses, enum cache_mode cache_mode)
 	if (have_location(ses)) {
 		struct location *loc = cur_loc(ses);
 		struct file_to_load *ftl;
+		int i;
 
 #ifdef CONFIG_ECMASCRIPT
 		loc->vs.ecmascript_fragile = 1;
 #endif
-
+		/* Forget forms. */
+		for (i = 0; i < loc->vs.form_info_len; i++)
+			mem_free_if(loc->vs.form_info[i].value);
+		mem_free_set(&loc->vs.form_info, NULL);
+		loc->vs.form_info_len = 0;
+		free_list(loc->vs.forms);
 		/* FIXME: When reloading use loading_callback and set up a
 		 * session task so that the reloading will work even when the
 		 * reloaded document contains redirects. This is needed atleast
