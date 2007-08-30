@@ -130,6 +130,7 @@ dup_html_element(struct html_context *html_context)
 	if (ep->attr.select) e->attr.select = stracpy(ep->attr.select);
 
 	e->attr.id = e->attr.class = NULL;
+	e->linebreak = 0;
 
 	/* We don't want to propagate these. */
 	/* XXX: For sure? --pasky */

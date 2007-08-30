@@ -98,6 +98,7 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 
 	miku_el(e)->options = NULL;
 	miku_el(e)->type = type;
+	e->linebreak = ep->linebreak;
 }
 
 static void
