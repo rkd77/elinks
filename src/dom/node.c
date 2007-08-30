@@ -295,7 +295,7 @@ get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
 	int index;
 
 	list = get_dom_node_list_by_type(parent, type);
-	if (!list) return NULL;
+	if (!list || !*list) return NULL;
 
 	foreach_dom_node (*list, node, index) {
 		if (node->type != type)
