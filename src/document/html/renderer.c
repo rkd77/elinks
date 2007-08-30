@@ -2040,6 +2040,16 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			}
 #endif
 			break;
+		case SP_DEFAULT_BACKGROUND:
+		{
+			color_T bgcolor = va_arg(l, color_T);
+
+#ifndef CONFIG_DOM_HTML
+			INTERNAL("Mikuparser doesn't know about SP_DEFAULT_BACKGROUND");
+#endif
+			document->bgcolor = bgcolor;
+		}
+			break;
 	}
 
 	va_end(l);
@@ -2289,7 +2299,9 @@ render_html_document(struct cache_entry *cached, struct document *document,
 				 >= document->options.width));
 #endif
 
+#ifndef CONFIG_DOM_HTML
 	document->bgcolor = par_format.bgcolor;
+#endif
 
 	done_html_parser(html_context);
 

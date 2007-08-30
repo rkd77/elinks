@@ -140,6 +140,17 @@ element_begins(struct html_context *html_context)
 		apply_style(html_context);
 #endif
 
+	if (domelem(html_top)->node) {
+		struct dom_element_node *elem;
+
+		assert(domelem(html_top)->node->type == DOM_NODE_ELEMENT);
+		elem = &domelem(html_top)->node->data.element;
+
+		/* Totally ugly hack. We just need box model. */
+		if (elem->type == HTML_ELEMENT_HTML || elem->type == HTML_ELEMENT_BODY)
+			html_context->special_f(html_context, SP_DEFAULT_BACKGROUND, format.style.bg);
+	}
+
 	if (is_block_element(html_top)) {
 		/* Break line before. */
 		html_context->line_break_f(html_context);
@@ -165,6 +176,7 @@ dom_html_push_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 	html_top->data = mem_calloc(1, sizeof(*domelem(html_top)));
 	html_top->name = node->string.string;
 	html_top->namelen = node->string.length;
+	domelem(html_top)->node = node;
 
 	return DOM_CODE_OK;
 }
