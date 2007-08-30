@@ -379,9 +379,8 @@ parse_html(unsigned char *html, unsigned char *eof, struct part *part,
 		assert(parser->stack.depth == 1);
 
 		get_dom_stack_top(&parser->stack)->immutable = 0;
-		/* For SGML_PARSER_STREAM this will free the DOM
-		 * root node. */
 		pop_dom_node(&parser->stack);
+		done_dom_node(parser->root);
 	}
 }
 
