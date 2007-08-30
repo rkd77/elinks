@@ -603,8 +603,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	}
 
 	if (op == 0 && !textarea_editor) {
-		unsigned char *ed = get_opt_str("document.browse.forms.editor",
-		                                NULL);
+		unsigned char *ed;
 		unsigned char *ex;
 
 		assert(fs_ && doc_view_ && link_ && term_);
@@ -612,6 +611,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		fn = save_textarea_file(fs_->value);
 		if (!fn) return;
 
+		ed = get_opt_str("document.browse.forms.editor", ses);
 		if (!ed || !*ed) {
 			ed = getenv("EDITOR");
 			if (!ed || !*ed) ed = "vi";
