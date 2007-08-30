@@ -389,6 +389,24 @@ unsigned char *
 get_attr_value(struct html_context *html_context,
                struct html_element *elem, unsigned char *name)
 {
+	struct dom_node_list **attrs;
+	struct dom_node *attr;
+	int index;
+	int namelen = strlen(name);
+
+	if (!domelem(html_top)->node)
+		return NULL;
+
+	attrs = get_dom_node_list_by_type(domelem(html_top)->node, DOM_NODE_ATTRIBUTE);
+	if (!attrs || !*attrs)
+		return NULL;
+
+	foreach_dom_node (*attrs, attr, index) {
+		if (!strlcmp(attr->string.string, attr->string.length, name, namelen)) {
+			return dom_string_acpy(&attr->data.attribute.value);
+		}
+	}
+
 	return NULL;
 }
 
