@@ -183,9 +183,27 @@ element_begins(struct html_context *html_context)
 		assert(domelem(html_top)->node->type == DOM_NODE_ELEMENT);
 		elem = &domelem(html_top)->node->data.element;
 
-		/* Totally ugly hack. We just need box model. */
-		if (elem->type == HTML_ELEMENT_HTML || elem->type == HTML_ELEMENT_BODY)
+		switch (elem->type) {
+		case HTML_ELEMENT_HTML:
+		case HTML_ELEMENT_BODY:
+			/* Totally ugly hack. We just need box model. */
 			html_context->special_f(html_context, SP_DEFAULT_BACKGROUND, format.style.bg);
+			break;
+
+		case HTML_ELEMENT_A:
+		{
+			unsigned char *href;
+
+			href = get_dom_element_attr_uri(domelem(html_top)->node, HTML_ATTRIBUTE_HREF, html_context);
+			if (href)
+				mem_free_set(&format.link, href);
+		}
+			break;
+
+		default:
+			/* Nothing to do. Always the best. */
+			break;
+		}
 	}
 
 	if (is_block_element(html_top)) {
@@ -330,6 +348,9 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 	struct dom_attribute_node *attr = &node->data.attribute;
 
 	/* See /src/dom/sgml/html/attribute.inc for the possible values. */
+	/* This should cover only "generic" attributes applicable to all or
+	 * most elements. Element-specific attributes should be handled from
+	 * the "element side". */
 	switch (attr->type) {
 		case HTML_ATTRIBUTE_CLASS:
 			mem_free_set(&format.class, dom_string_acpy(&attr->value));
@@ -340,19 +361,6 @@ dom_html_push_attribute(struct dom_stack *stack, struct dom_node *node, void *xx
 			html_context->special_f(html_context, SP_TAG,
 			                        attr->value.string);
 			break;
-
-		case HTML_ATTRIBUTE_HREF:
-		{
-			unsigned char *href;
-
-			if (node->parent->data.element.type != HTML_ELEMENT_A)
-				break;
-
-			href = get_dom_attr_uri(&attr->value, html_context);
-			if (href)
-				mem_free_set(&format.link, href);
-			break;
-		}
 	}
 	return DOM_CODE_OK;
 }
