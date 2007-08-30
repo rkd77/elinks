@@ -251,7 +251,7 @@ dom_html_pop_text(struct dom_stack *stack, struct dom_node *node, void *xxx)
 
 	element_beginning_guard;
 
-	if (is_dom_string_set(&node->string)) {
+	if (!html_top->invisible && is_dom_string_set(&node->string)) {
 		html_context->put_chars_f(html_context,
 				node->string.string, node->string.length);
 	}
@@ -327,6 +327,9 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		done_html_context(html_context);
 		return NULL;
 	}
+
+	/* Enable it by default, *we* want full CSS powa'. */
+	options->css_display_none = 1;
 
 	add_dom_stack_context(&parser->stack, html_context,
 			      &dom_html_renderer_context_info);

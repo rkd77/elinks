@@ -66,7 +66,14 @@ css_apply_display(struct html_context *html_context, struct html_element *elemen
 {
 	assert(prop->value_type == CSS_VT_DISPLAY);
 
+	if (html_context->options->css_display_none)
+		element->invisible = 0; /* By default element is visible */
+
 	switch (prop->value.display) {
+		case CSS_DISP_NONE:
+			if (html_context->options->css_display_none)
+				element->invisible = 1;
+			break;
 		case CSS_DISP_INLINE:
 			element->linebreak = 0;
 			break;

@@ -45,6 +45,7 @@ struct css_property {
 		void *none;
 		color_T color;
 		enum css_display {
+			CSS_DISP_NONE,
 			CSS_DISP_INLINE,
 			CSS_DISP_BLOCK,
 		} display;
