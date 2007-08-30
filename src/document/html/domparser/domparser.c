@@ -23,6 +23,7 @@
 #include "dom/sgml/rss/rss.h"
 #include "dom/node.h"
 #include "dom/stack.h"
+#include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -110,6 +111,38 @@ get_dom_element_attr(struct dom_node *elem, int type)
 	if (!attrn)
 		return NULL;
 	return &attrn->data.attribute.value;
+}
+
+static unsigned char *
+get_dom_element_attr_uri(struct dom_node *elem, int type, struct uri *base, int codepage)
+{
+	struct dom_string *attr;
+	unsigned char *uristring;
+
+	attr = get_dom_element_attr(elem, type);
+	if (!attr)
+		return NULL;
+
+	if (memchr(attr->string, '&', attr->length)) {
+		uristring = convert_string(NULL, attr->string, attr->length,
+					   codepage, CSM_QUERY,
+					   NULL, NULL, NULL);
+	} else {
+		uristring = dom_string_acpy(attr);
+	}
+
+	if (!uristring)
+		return NULL;
+	sanitize_url(uristring);
+
+	if (base) {
+		unsigned char *tmp = uristring;
+
+		uristring = join_urls(base, uristring);
+		mem_free(tmp);
+	}
+
+	return uristring;
 }
 
 #ifdef CONFIG_CSS
@@ -247,6 +280,25 @@ dom_html_pop_element(struct dom_stack *stack, struct dom_node *node, void *xxx)
 		}
 #endif
 			break;
+
+		case HTML_ELEMENT_BASE:
+		{
+			unsigned char *href;
+			struct uri *uri;
+
+			href = get_dom_element_attr_uri(node, HTML_ATTRIBUTE_HREF,
+							html_context->base_href,
+							html_context->doc_cp);
+			if (!href) break;
+
+			uri = get_uri(href, 0);
+			mem_free(href);
+			if (!uri) break;
+
+			done_uri(html_context->base_href);
+			html_context->base_href = uri;
+			break;
+		}
 	}
 
 
