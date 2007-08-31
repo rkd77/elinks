@@ -197,6 +197,18 @@ release_document(struct document *document)
 	move_to_top_of_list(format_cache, document);
 }
 
+int
+find_tag(struct document *document, unsigned char *name, int namelen)
+{
+	struct tag *tag;
+
+	foreach (tag, document->tags)
+		if (!strlcasecmp(tag->name, -1, name, namelen))
+			return tag->y;
+
+	return -1;
+}
+
 /* Formatted document cache management */
 
 /* ECMAScript doesn't like anything like CSS since it doesn't modify the

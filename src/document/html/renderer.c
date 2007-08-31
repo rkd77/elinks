@@ -45,17 +45,6 @@
 
 /* Types and structs */
 
-/* Tags are used for ``id''s or anchors in the document referenced by the
- * fragment part of the URI. */
-/* FIXME: This and find_tag() should be part of the general infrastructure
- * in document/document.*. --pasky */
-struct tag {
-	LIST_HEAD(struct tag);
-
-	int x, y;
-	unsigned char name[1]; /* must be last of struct. --Zas */
-};
-
 enum link_state {
 	LINK_STATE_NONE,
 	LINK_STATE_NEW,
@@ -2338,16 +2327,4 @@ render_html_document(struct cache_entry *cached, struct document *document,
 		fclose(f);
 	}
 #endif
-}
-
-int
-find_tag(struct document *document, unsigned char *name, int namelen)
-{
-	struct tag *tag;
-
-	foreach (tag, document->tags)
-		if (!strlcasecmp(tag->name, -1, name, namelen))
-			return tag->y;
-
-	return -1;
 }

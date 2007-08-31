@@ -48,6 +48,16 @@ struct point {
 };
 
 
+/* Tags are used for ``id''s or anchors in the document referenced by the
+ * fragment part of the URI. */
+struct tag {
+	LIST_HEAD(struct tag);
+
+	int x, y;
+	unsigned char name[1]; /* must be last of struct. --Zas */
+};
+
+
 enum link_type {
 	LINK_HYPERTEXT,
 	LINK_MAP,
@@ -259,5 +269,7 @@ extern struct module document_module;
  * interface can convert the access key to UTF-16.)
  * For now, we only support simple printable character.  */
 #define accesskey_string_to_unicode(s) (((s)[0] && !(s)[1] && isprint((s)[0])) ? (s)[0] : 0)
+
+int find_tag(struct document *document, unsigned char *name, int namelen);
 
 #endif
