@@ -258,9 +258,10 @@ get_opt_(
 	if (ses && ses->option)
 		opt = get_opt_rec_real(ses->option, name);
 
-	/* If given a session and the option has a shadow in the domain tree
-	 * that matches the current document in that session, return the shadow. */
-	if (ses)
+	/* If given a session, no session-specific option was found, and the
+	 * option has a shadow in the domain tree that matches the current
+	 * document in that session, return that shadow. */
+	if (!opt && ses)
 		opt = get_domain_option_from_session(name, ses);
 
 	/* Else, return the real option. */
