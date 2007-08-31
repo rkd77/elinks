@@ -13,6 +13,7 @@
 #include "cache/cache.h"
 #include "config/conf.h"
 #include "config/dialogs.h"
+#include "config/domain.h"
 #include "config/options.h"
 #include "config/opttypes.h"
 #include "dialogs/status.h"
@@ -23,8 +24,6 @@
 #include "main/main.h" /* shrink_memory() */
 #include "main/select.h"
 #include "network/connection.h"
-#include "protocol/uri.h"
-#include "session/location.h"
 #include "session/session.h"
 #include "terminal/color.h"
 #include "terminal/screen.h"
@@ -34,7 +33,6 @@
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/text/draw.h"
-#include "viewer/text/vs.h"
 
 
 /* TODO? In the past, covered by shadow and legends, remembered only by the
@@ -244,8 +242,6 @@ get_opt_rec_real(struct option *tree, const unsigned char *name)
 	return opt;
 }
 
-static struct option *get_domain_option(unsigned char *, int, unsigned char *);
-
 /* Fetch pointer to value of certain option. It is guaranteed to never return
  * NULL. Note that you are supposed to use wrapper get_opt(). */
 union option_value *
@@ -262,14 +258,11 @@ get_opt_(
 	if (ses && ses->option)
 		opt = get_opt_rec_real(ses->option, name);
 
-	/* If given a session, the session has a location, and we can find
-	 * an options tree for the location's domain, return the shadow. */
-	if (ses && have_location(ses)) {
-		struct uri *uri = cur_loc(ses)->vs.uri;
-
-		if (uri->host && uri->hostlen)
-			opt = get_domain_option(uri->host, uri->hostlen, name);
-	}
+	/* If given a session, no session-specific option was found, and the
+	 * option has a shadow in the domain tree that matches the current
+	 * document in that session, return that shadow. */
+	if (!opt && ses)
+		opt = get_domain_option_from_session(name, ses);
 
 	/* Else, return the real option. */
 	if (!opt)
@@ -708,81 +701,6 @@ get_option_shadow(struct option *option, struct option *tree,
 	}
 
 	return shadow_option;
-}
-
-INIT_LIST_OF(struct domain_tree, domain_trees);
-
-/* Look for the option with the given name in all domain shadow-trees that
- * match the given domain-name.  Return the option from the the shadow tree
- * that best matches the given domain name. */
-static struct option *
-get_domain_option(unsigned char *domain_name, int domain_len,
-                  unsigned char *name)
-{
-	struct option *opt, *longest_match_opt = NULL;
-	struct domain_tree *longest_match = NULL;
-	struct domain_tree *domain;
-
-	assert(domain_name);
-	assert(*domain_name);
-
-	foreach (domain, domain_trees)
-		if ((!longest_match || domain->len > longest_match->len)
-		    && is_in_domain(domain->name, domain_name, domain_len)
-		    && (opt = get_opt_rec_real(domain->tree, name))) {
-			longest_match = domain;
-			longest_match_opt = opt;
-		}
-
-	return longest_match_opt;
-}
-
-/* Return the shadow shadow tree for the given domain name, and
- * if the domain does not yet have a shadow tree, create it. */
-struct option *
-get_domain_tree(unsigned char *domain_name)
-{
-	struct domain_tree *domain;
-	int domain_len;
-
-	assert(domain_name);
-	assert(*domain_name);
-
-	foreach (domain, domain_trees)
-		if (!strcasecmp(domain->name, domain_name))
-			return domain->tree;
-
-	domain_len = strlen(domain_name);
-	/* One byte is reserved for domain in struct domain_tree. */
-	domain = mem_alloc(sizeof(*domain) + domain_len);
-	if (!domain) return NULL;
-
-	domain->tree = copy_option(config_options, CO_SHALLOW
-	                                            | CO_NO_LISTBOX_ITEM);
-	if (!domain->tree) {
-		mem_free(domain);
-		return NULL;
-	}
-
-	memcpy(domain->name, domain_name, domain_len + 1);
-	domain->len = domain_len;
-
-	add_to_list(domain_trees, domain);
-
-	return domain->tree;
-}
-
-void
-done_domain_trees(void)
-{
-	struct domain_tree *domain, *next;
-
-	foreachsafe (domain, next, domain_trees) {
-		delete_option(domain->tree);
-		domain->tree = NULL;
-		del_from_list(domain);
-		mem_free(domain);
-	}
 }
 
 

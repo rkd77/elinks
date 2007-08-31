@@ -69,6 +69,4 @@ void free_table_cache(void);
 
 struct part *format_html_part(struct html_context *html_context, unsigned char *, unsigned char *, int, int, int, struct document *, int, int, unsigned char *, int);
 
-int find_tag(struct document *document, unsigned char *name, int namelen);
-
 #endif

@@ -56,11 +56,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 				style.fg = property->value.color;
 				break;
 			case CSS_PT_FONT_WEIGHT:
-				style.attr |= property->value.font_attribute.add;
-				break;
 			case CSS_PT_FONT_STYLE:
-				style.attr |= property->value.font_attribute.add;
-				break;
 			case CSS_PT_TEXT_DECORATION:
 				style.attr |= property->value.font_attribute.add;
 				break;
