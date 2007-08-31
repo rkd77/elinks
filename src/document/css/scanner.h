@@ -34,8 +34,9 @@ enum css_token_type {
 	/* High level string tokens: */
 
 	/* The various number values; dimension being the most generic */
-	CSS_TOKEN_ANGLE,	/**< @<number>rad, @<number>grad or @<number>deg */
+	/* The particular unit will be yielded as separate CSS_TOKEN_IDENT. */
 	CSS_TOKEN_DIMENSION,	/**< @<number>@<ident> */
+	CSS_TOKEN_ANGLE,	/**< @<number>rad, @<number>grad or @<number>deg */
 	CSS_TOKEN_FREQUENCY,	/**< @<number>Hz or @<number>kHz */
 	CSS_TOKEN_LENGTH,	/**< @<number>{em,ex,px,cm,mm,in,pt,pc} */
 	CSS_TOKEN_TIME,		/**< @<number>ms or @<number>s */

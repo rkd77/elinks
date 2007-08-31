@@ -163,6 +163,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 			scan_css(scanner, string, CSS_CHAR_IDENT);
 			type = map_scanner_string(scanner, ident, string,
 						  CSS_TOKEN_DIMENSION);
+			string = ident; /* Unit will be in separate token. */
 		}
 
 	} else if (is_css_ident_start(first_char)) {
