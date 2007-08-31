@@ -36,10 +36,8 @@ enum css_token_type {
 	/* The various number values; dimension being the most generic */
 	CSS_TOKEN_ANGLE,	/**< @<number>rad, @<number>grad or @<number>deg */
 	CSS_TOKEN_DIMENSION,	/**< @<number>@<ident> */
-	CSS_TOKEN_EM,		/**< @<number>em */
-	CSS_TOKEN_EX,		/**< @<number>ex */
 	CSS_TOKEN_FREQUENCY,	/**< @<number>Hz or @<number>kHz */
-	CSS_TOKEN_LENGTH,	/**< @<number>{px,cm,mm,in,pt,pc} */
+	CSS_TOKEN_LENGTH,	/**< @<number>{em,ex,px,cm,mm,in,pt,pc} */
 	CSS_TOKEN_TIME,		/**< @<number>ms or @<number>s */
 
 	/*! XXX: @c CSS_TOKEN_HASH conflicts with #CSS_TOKEN_HEX_COLOR.
