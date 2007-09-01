@@ -599,11 +599,20 @@ init_textarea_data(struct terminal *term, struct form_state *fs,
 	return td;
 }
 
-void
+static void
 done_textarea_data(struct textarea_data *td)
 {
 	mem_free(td->fn);
 	mem_free(td);
+}
+
+void
+free_textarea_data(struct terminal *term)
+{
+	assert(term);
+
+	if (term->textarea_data)
+		done_textarea_data(term->textarea_data);
 }
 
 void
