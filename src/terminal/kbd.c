@@ -352,16 +352,12 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 static void
 unblock_itrm_x(void *h)
 {
-	struct interlink_event ev;
-
 	close_handle(h);
 	if (!ditrm) return;
 	unblock_itrm();
-	resize_terminal();
 
-	memset(&ev, 0, sizeof(ev));
-	ev.ev = EVENT_TEXTAREA;
-	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
+	/* Note: External editor support depends on this resize event. */
+	resize_terminal();
 }
 
 

@@ -1006,8 +1006,6 @@ menu_handler(struct window *win, struct term_event *ev)
 		case EVENT_ABORT:
 			free_menu_items(menu->items);
 			break;
-		case EVENT_TEXTAREA:
-			break;
 	}
 }
 
@@ -1345,7 +1343,6 @@ mainmenu_handler(struct window *win, struct term_event *ev)
 			break;
 
 		case EVENT_ABORT:
-		case EVENT_TEXTAREA:
 			break;
 	}
 }

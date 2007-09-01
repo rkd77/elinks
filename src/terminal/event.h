@@ -20,7 +20,6 @@ enum term_event_type {
 	EVENT_REDRAW,
 	EVENT_RESIZE,
 	EVENT_ABORT,
-	EVENT_TEXTAREA,
 };
 
 /** An event received from a terminal.  This type can be changed

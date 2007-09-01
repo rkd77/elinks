@@ -119,7 +119,6 @@ term_send_event(struct terminal *term, struct term_event *ev)
 	case EVENT_MOUSE:
 	case EVENT_KBD:
 	case EVENT_ABORT:
-	case EVENT_TEXTAREA:
 		assert(!list_empty(term->windows));
 		if_assert_failed break;
 
@@ -273,6 +272,13 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				  ilev->info.size.width,
 				  ilev->info.size.height);
 		term_send_event(term, &tev);
+
+		/* If textarea_data is set and the terminal is not blocked,
+		 * then this resize event must be the result of exiting the
+		 * external editor. */
+		if (term->textarea_data && term->blocked == -1)
+			textarea_edit(1, term, NULL, NULL, NULL);
+
 		break;
 
 	case EVENT_MOUSE:
@@ -445,10 +451,6 @@ invalid_utf8_start_byte:
 	case EVENT_ABORT:
 		destroy_terminal(term);
 		return 0;
-	case EVENT_TEXTAREA:
-		if (term->textarea_data)
-			textarea_edit(1, term, NULL, NULL, NULL);
-		break;
 
 	default:
 		ERROR(gettext("Bad event %d"), ilev->ev);

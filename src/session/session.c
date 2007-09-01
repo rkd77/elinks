@@ -1283,8 +1283,6 @@ tabwin_func(struct window *tab, struct term_event *ev)
 			assert(ses->tab == get_current_tab(ses->tab->term));
 			send_event(ses, ev);
 			break;
-		case EVENT_TEXTAREA:
-			break;
 	}
 }
 

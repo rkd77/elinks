@@ -729,7 +729,6 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case EVENT_REDRAW:
 		case EVENT_MOUSE:
 		case EVENT_ABORT:
-		case EVENT_TEXTAREA:
 			break;
 	}
 
