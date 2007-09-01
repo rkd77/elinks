@@ -657,6 +657,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		struct string file;
 
 		td = term_->textarea_data;
+		term_->textarea_data = NULL;
 		assert(td);
 
 		if (!td->fs || !init_string(&file)
