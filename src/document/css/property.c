@@ -16,6 +16,7 @@
 /** @todo TODO: Use fastfind when we get a lot of properties.
  * XXX: But only _WHEN_ we get _A LOT_ of properties, zas! ;-) --pasky */
 struct css_property_info css_property_info[CSS_PT_LAST] = {
+	{ "font-size",          CSS_PT_FONT_SIZE,        CSS_VT_LENGTH,		css_parse_length_value },
 	{ "background",		CSS_PT_BACKGROUND,	 CSS_VT_COLOR,		css_parse_background_value },
 	{ "background-color",	CSS_PT_BACKGROUND_COLOR, CSS_VT_COLOR,		css_parse_color_value },
 	{ "color",		CSS_PT_COLOR,		 CSS_VT_COLOR,		css_parse_color_value },

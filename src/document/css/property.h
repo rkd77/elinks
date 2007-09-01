@@ -17,6 +17,7 @@ struct css_property {
 	 * property name, just uppercase it and tr/-/_/. */
 	enum css_property_type {
 		CSS_PT_NONE,
+		CSS_PT_FONT_SIZE, /* XXX: Must be first */
 		CSS_PT_BACKGROUND,
 		CSS_PT_BACKGROUND_COLOR,
 		CSS_PT_COLOR,

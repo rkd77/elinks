@@ -39,6 +39,51 @@ typedef void (*css_applier_T)(struct html_context *html_context,
 			      struct html_element *element,
 			      struct css_property *prop);
 
+static int
+length_absolute(struct html_element *element, struct css_length *len)
+{
+	int base = element->attr.fontsize;
+
+	switch (len->unit_type) {
+		case CSS_LEN_RELTOEM:
+			/* This is the simple case. M is just the font size. */
+			return base * len->value.emsize / 100;
+
+		case CSS_LEN_RELTOEX:
+			/* We assume that x is half the M size in our virtual font. */
+			return base * len->value.exsize / 200;
+
+		case CSS_LEN_RELTODISP:
+			/* Our base 1em size is
+			 * 	HTML_CHAR_HEIGHT x HTML_CHAR_HEIGHT
+			 * in pixels. */
+			return len->value.pxsize * 100 / HTML_CHAR_HEIGHT;
+
+		case CSS_LEN_ABSOLUTE:
+			/* CSS2 says that
+			 * 	For reading [from computer display] at arm's
+			 * 	length, 1px thus corresponds to about 0.28 mm
+			 * 	(1/90 inch).
+			 * pc -> px is thus 12 * 72 / 90 = 9.6
+			 * Then we just convert from pixels to "base-ems". */
+			return len->value.pcsize * 1000 / 96 / HTML_CHAR_HEIGHT;
+
+		default:
+			INTERNAL("Unknown unit type: %d", len->unit_type);
+			return base;
+	}
+}
+
+static void
+css_apply_font_size(struct html_context *html_context,
+                    struct html_element *element,
+                    struct css_property *prop)
+{
+	assert(prop->value_type == CSS_VT_LENGTH);
+
+	element->attr.fontsize = length_absolute(element->prev, &prop->value.length);
+}
+
 static void
 css_apply_color(struct html_context *html_context, struct html_element *element,
 		struct css_property *prop)
@@ -112,6 +157,7 @@ css_apply_text_align(struct html_context *html_context,
 /*! XXX: Sort like the css_property_type */
 static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_NONE */		NULL,
+	/* CSS_PT_FONT_SIZE */          css_apply_font_size,
 	/* CSS_PT_BACKGROUND */		css_apply_background_color,
 	/* CSS_PT_BACKGROUND_COLOR */	css_apply_background_color,
 	/* CSS_PT_COLOR */		css_apply_color,
