@@ -48,18 +48,6 @@ struct line_info {
 #endif /* CONFIG_UTF8 */
 };
 
-struct textarea_data {
-	LIST_HEAD(struct textarea_data);
-	size_t fc_maxlength;
-	struct form_state *fs;
-	struct terminal *term;
-	struct document_view *doc_view;
-	struct link *link;
-	unsigned char *fn;
-};
-
-static INIT_LIST_HEAD(textarea_list); /* struct textarea_data */
-
 /** We add two extra entries to the table so the ending info can be added
  * without reallocating. */
 #define realloc_line_info(info, size) \
@@ -635,7 +623,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		td->link = link_;
 		td->fc_maxlength = get_link_form_control(link_)->maxlength;
 		td->term = term_;
-		add_to_list(textarea_list, td);
+		td->term->textarea_data = td;
 
 		exec_on_terminal(td->term, ex, "", TERM_EXEC_FG);
 		mem_free(ex);
@@ -647,13 +635,9 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		int found = 0;
 		struct string file;
 
-		foreach (td, textarea_list) {
-			if (td->term == term_) {
-				found = 1;
-				break;
-			}
-		}
-		if (!found) return;
+		td = term_->textarea_data;
+		if (!td)
+			return;
 
 		if (!td->fs || !init_string(&file)
 		    || !add_file_to_string(&file, td->fn))
@@ -689,7 +673,6 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			draw_form_entry(td->term, td->doc_view, td->link);
 	}
 end:
-	del_from_list(td);
 	textarea_editor--;
 free_and_return:
 	mem_free(td->fn);
