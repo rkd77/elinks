@@ -310,6 +310,66 @@ css_parse_display_value(struct css_property_info *propinfo,
 	return 1;
 }
 
+int
+css_parse_length_value(struct css_property_info *propinfo,
+		       union css_property_value *value,
+		       struct scanner *scanner)
+{
+	struct scanner_token *token = get_scanner_token(scanner);
+	unsigned char *nstring = token->string;
+	double len;
+
+	assert(propinfo->value_type == CSS_VT_LENGTH);
+
+	/* TODO: Support for percentages */
+	if (token->type != CSS_TOKEN_LENGTH) return 0;
+
+	token = get_next_scanner_token(scanner);
+
+	/* Parse the digit */
+	/* XXX: Possible locale trouble because of radix separator char? --pasky */
+	len = strtod(token->string, (char **) &nstring);
+	if (token->string == nstring)
+		return 0;
+
+	token = skip_css_tokens(scanner, CSS_TOKEN_LENGTH);
+	assert(token->type == CSS_TOKEN_IDENT);
+
+	if (!strcasecmp(token->string, "em")) {
+		value->length.unit_type = CSS_LEN_RELTOEM;
+		value->length.value.emsize = len * 100;
+	} else if (!strcasecmp(token->string, "ex")) {
+		value->length.unit_type = CSS_LEN_RELTOEX;
+		value->length.value.exsize = len * 100;
+
+	} else if (!strcasecmp(token->string, "px")) {
+		value->length.unit_type = CSS_LEN_RELTODISP;
+		value->length.value.pxsize = len;
+
+	} else if (!strcasecmp(token->string, "pc")) {
+		value->length.unit_type = CSS_LEN_ABSOLUTE;
+		value->length.value.pcsize = len;
+	} else if (!strcasecmp(token->string, "pt")) {
+		value->length.unit_type = CSS_LEN_ABSOLUTE;
+		value->length.value.pcsize = len * 12;
+	} else if (!strcasecmp(token->string, "mm")) {
+		value->length.unit_type = CSS_LEN_ABSOLUTE;
+		value->length.value.pcsize = len * 34;
+	} else if (!strcasecmp(token->string, "cm")) {
+		value->length.unit_type = CSS_LEN_ABSOLUTE;
+		value->length.value.pcsize = len * 340; /* 340.15748031496063047836 */
+	} else if (!strcasecmp(token->string, "in")) {
+		value->length.unit_type = CSS_LEN_ABSOLUTE;
+		value->length.value.pcsize = len * 12 * 72;
+
+	} else {
+		return 0;
+	}
+
+	skip_css_tokens(scanner, CSS_TOKEN_IDENT);
+	return 1;
+}
+
 
 int
 css_parse_value(struct css_property_info *propinfo,

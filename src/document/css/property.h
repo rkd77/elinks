@@ -34,6 +34,7 @@ struct css_property {
 		CSS_VT_NONE,
 		CSS_VT_COLOR,
 		CSS_VT_DISPLAY,
+		CSS_VT_LENGTH,
 		CSS_VT_FONT_ATTRIBUTE,
 		CSS_VT_TEXT_ALIGN,
 		CSS_VT_LAST,
@@ -58,7 +59,20 @@ struct css_property {
 		 * Percentages
 		 * URL
 		 * Align (struct format_align) */
-		/* TODO: The size units will be fun yet. --pasky */
+		struct css_length {
+			enum css_length_type {
+				CSS_LEN_RELTOEM, /* emsize */
+				CSS_LEN_RELTOEX, /* exsize */
+				CSS_LEN_RELTODISP, /* pxsize */
+				CSS_LEN_ABSOLUTE,  /* pcsize */
+			} unit_type;
+			union css_length_value {
+				int emsize; /* In 1/100 of em; that is, 100 = 1em */
+				int exsize; /* In 1/100 of ex; that is, 100 = 1ex */
+				int pxsize; /* In pixels */
+				int pcsize; /* In picas */
+			} value;
+		} length;
 	} value;
 };
 

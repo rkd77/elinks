@@ -61,4 +61,10 @@ int css_parse_text_align_value(struct css_property_info *propinfo,
 int css_parse_white_space_value(struct css_property_info *propinfo,
 				union css_property_value *value,
 				struct scanner *scanner);
+
+/*! Takes no parser_data. */
+int css_parse_length_value(struct css_property_info *propinfo,
+			   union css_property_value *value,
+			   struct scanner *scanner);
+
 #endif
