@@ -599,6 +599,13 @@ init_textarea_data(struct terminal *term, struct form_state *fs,
 	return td;
 }
 
+static void
+done_textarea_data(struct textarea_data *td)
+{
+	mem_free(td->fn);
+	mem_free(td);
+}
+
 void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
@@ -635,7 +642,8 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		ex = straconcat(ed, " ", td->fn, (unsigned char *) NULL);
 		if (!ex) {
 			unlink(td->fn);
-			goto free_and_return;
+			done_textarea_data(td);
+			return;
 		}
 
 		td->term->textarea_data = td;
@@ -652,8 +660,10 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		assert(td);
 
 		if (!td->fs || !init_string(&file)
-		    || !add_file_to_string(&file, td->fn))
-			goto free_and_return;
+		    || !add_file_to_string(&file, td->fn)) {
+			done_textarea_data(td);
+			return;
+		}
 
 		if (file.length > td->fc_maxlength) {
 			file.source[td->fc_maxlength] = '\0';
@@ -684,9 +694,8 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		if (td->doc_view && td->link)
 			draw_form_entry(td->term, td->doc_view, td->link);
 	}
-free_and_return:
-	mem_free(td->fn);
-	mem_free(td);
+
+	done_textarea_data(td);
 }
 
 /* menu_func_T */
