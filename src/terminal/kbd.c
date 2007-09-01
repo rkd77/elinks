@@ -42,6 +42,8 @@
 #include "util/time.h"
 
 struct itrm *ditrm = NULL;
+static struct terminal *slave_term;
+static unsigned char *term_addr = (unsigned char *)&slave_term;
 
 static void free_itrm(struct itrm *);
 static void in_kbd(struct itrm *);
@@ -352,10 +354,17 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 static void
 unblock_itrm_x(void *h)
 {
+	struct interlink_event ev;
+
 	close_handle(h);
 	if (!ditrm) return;
 	unblock_itrm();
 	resize_terminal();
+
+	memset(&ev, 0, sizeof(ev));
+	ev.ev = EVENT_TEXTAREA;
+	ev.info.textarea = slave_term;
+	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
 
@@ -549,6 +558,9 @@ has_nul_byte:
 	}
 
 	RD(fg);
+	for (i = 0; i < sizeof(slave_term); i++) {
+		RD(term_addr[i]);
+	}
 
 	if (!init_string(&path)) goto free_and_return;
 

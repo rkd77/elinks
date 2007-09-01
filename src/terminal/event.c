@@ -31,6 +31,7 @@
 #include "util/memory.h"
 #include "util/snprintf.h"
 #include "util/string.h"
+#include "viewer/text/textarea.h"
 #include "viewer/timer.h"
 
 
@@ -118,6 +119,7 @@ term_send_event(struct terminal *term, struct term_event *ev)
 	case EVENT_MOUSE:
 	case EVENT_KBD:
 	case EVENT_ABORT:
+	case EVENT_TEXTAREA:
 		assert(!list_empty(term->windows));
 		if_assert_failed break;
 
@@ -443,6 +445,10 @@ invalid_utf8_start_byte:
 	case EVENT_ABORT:
 		destroy_terminal(term);
 		return 0;
+	case EVENT_TEXTAREA:
+		if (textarea_editor)
+			textarea_edit(1, ilev->info.textarea, NULL, NULL, NULL);
+		break;
 
 	default:
 		ERROR(gettext("Bad event %d"), ilev->ev);
