@@ -28,7 +28,6 @@
 #include "terminal/window.h"
 #include "util/error.h"
 #include "util/file.h"
-#include "util/lists.h"
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/action.h"
