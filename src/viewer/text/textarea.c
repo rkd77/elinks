@@ -573,6 +573,32 @@ error:
 	return filename;
 }
 
+static struct textarea_data *
+init_textarea_data(struct terminal *term, struct form_state *fs,
+                   struct document_view *doc_view, struct link *link)
+{
+	struct textarea_data *td;
+
+	assert(fs && doc_view && link && term);
+
+	td = mem_calloc(1, sizeof(*td));
+	if (!td) return NULL;
+
+	td->fn = save_textarea_file(fs->value);
+	if (!td->fn) {
+		mem_free(td);
+		return NULL;
+	}
+
+	td->fs = fs;
+	td->doc_view = doc_view;
+	td->link = link;
+	td->fc_maxlength = get_link_form_control(link)->maxlength;
+	td->term = term;
+
+	return td;
+}
+
 void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
@@ -595,14 +621,9 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 
 		assert(fs_ && doc_view_ && link_ && term_);
 
-		td = mem_calloc(1, sizeof(*td));
-		if (!td) return;
-
-		td->fn = save_textarea_file(fs_->value);
-		if (!td->fn) {
-			mem_free(td);
+		td = init_textarea_data(term_, fs_, doc_view_, link_);
+		if (!td)
 			return;
-		}
 
 		ed = get_opt_str("document.browse.forms.editor",
 		                 doc_view_->session);
@@ -617,11 +638,6 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			goto free_and_return;
 		}
 
-		td->fs = fs_;
-		td->doc_view = doc_view_;
-		td->link = link_;
-		td->fc_maxlength = get_link_form_control(link_)->maxlength;
-		td->term = term_;
 		td->term->textarea_data = td;
 
 		exec_on_terminal(td->term, ex, "", TERM_EXEC_FG);
