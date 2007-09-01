@@ -573,6 +573,16 @@ error:
 	return filename;
 }
 
+struct textarea_data {
+	LIST_HEAD(struct textarea_data);
+	size_t fc_maxlength;
+	struct form_state *fs;
+	struct terminal *term;
+	struct document_view *doc_view;
+	struct link *link;
+	unsigned char *fn;
+};
+
 static struct textarea_data *
 init_textarea_data(struct terminal *term, struct form_state *fs,
                    struct document_view *doc_view, struct link *link)

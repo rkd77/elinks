@@ -49,16 +49,6 @@ enum term_redrawing_state {
 	TREDRAW_DELAYED = 2,	/**< Do not redraw for now */
 };
 
-struct textarea_data {
-	LIST_HEAD(struct textarea_data);
-	size_t fc_maxlength;
-	struct form_state *fs;
-	struct terminal *term;
-	struct document_view *doc_view;
-	struct link *link;
-	unsigned char *fn;
-};
-
 /** This is one of the axis of ELinks' user interaction. struct terminal
  * defines the terminal ELinks is running on --- each ELinks instance has
  * one. It contains the basic terminal attributes, the settings associated
@@ -165,7 +155,8 @@ struct terminal {
 	/** For communication between instances */
 	struct terminal_interlink *interlink;
 
-	struct textarea_data *textarea_data;
+	/* Data for textarea_edit(). */
+	void *textarea_data;
 
 	struct term_event_mouse prev_mouse_event;
 };
