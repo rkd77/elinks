@@ -610,6 +610,8 @@ init_textarea_data(struct terminal *term, struct form_state *fs,
 static void
 done_textarea_data(struct textarea_data *td)
 {
+	assert(td);
+
 	mem_free(td->fn);
 	mem_free(td);
 }
@@ -629,7 +631,7 @@ void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
 {
-	struct textarea_data *td;
+	struct textarea_data *td = NULL;
 
 	assert ((op == 0 || op == 1) && term_);
 	if_assert_failed return;
