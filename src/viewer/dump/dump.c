@@ -915,6 +915,9 @@ utf8:
 					if (write_char(*utf8_buf++,
 						fd, buf, &bptr)) goto fail;
 				}
+
+				x += unicode_to_cell(c) - 1;
+
 				continue;
 			}
 
