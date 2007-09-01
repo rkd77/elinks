@@ -623,6 +623,8 @@ free_textarea_data(struct terminal *term)
 
 	if (term->textarea_data)
 		done_textarea_data(term->textarea_data);
+
+	term->textarea_data = NULL;
 }
 
 void
