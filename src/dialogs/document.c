@@ -17,7 +17,6 @@
 #include "cache/cache.h"
 #include "dialogs/document.h"
 #include "document/document.h"
-#include "document/html/renderer.h"
 #include "document/view.h"
 #include "globhist/globhist.h"
 #include "intl/gettext/libintl.h"

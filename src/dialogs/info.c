@@ -18,7 +18,7 @@
 #include "config/kbdbind.h"
 #include "config/options.h"
 #include "dialogs/info.h"
-#include "document/html/renderer.h"
+#include "document/renderer.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "main/timer.h"

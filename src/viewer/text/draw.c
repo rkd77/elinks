@@ -17,7 +17,6 @@
 #include "cache/cache.h"
 #include "document/document.h"
 #include "document/html/frames.h"
-#include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
 #include "document/renderer.h"
