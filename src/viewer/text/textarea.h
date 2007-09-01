@@ -21,7 +21,6 @@ int area_cursor(struct form_control *fc, struct form_state *fs);
 void draw_textarea(struct terminal *term, struct form_state *fs, struct document_view *doc_view, struct link *link);
 unsigned char *encode_textarea(struct submitted_value *sv);
 
-extern int textarea_editor;
 void textarea_edit(int, struct terminal *, struct form_state *, struct document_view *, struct link *);
 void menu_textarea_edit(struct terminal *term, void *xxx, void *ses_);
 

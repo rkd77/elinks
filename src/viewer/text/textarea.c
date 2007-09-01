@@ -530,7 +530,6 @@ encode_textarea(struct submitted_value *sv)
  * the content of it back to master somehow, add special flags for not deleting
  * of 'delete' etc) and I'm not going to do that now. Inter-links communication
  * *NEEDS* rewrite, as it looks just like quick messy hack now. --pasky */
-int textarea_editor = 0;
 
 static unsigned char *
 save_textarea_file(unsigned char *value)
@@ -628,20 +627,17 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		exec_on_terminal(td->term, ex, "", TERM_EXEC_FG);
 		mem_free(ex);
 
-		textarea_editor++;
 		return;
 
 	} else if (op == 1) {
-		int found = 0;
 		struct string file;
 
 		td = term_->textarea_data;
-		if (!td)
-			return;
+		assert(td);
 
 		if (!td->fs || !init_string(&file)
 		    || !add_file_to_string(&file, td->fn))
-			goto end;
+			goto free_and_return;
 
 		if (file.length > td->fc_maxlength) {
 			file.source[td->fc_maxlength] = '\0';
@@ -672,8 +668,6 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 		if (td->doc_view && td->link)
 			draw_form_entry(td->term, td->doc_view, td->link);
 	}
-end:
-	textarea_editor--;
 free_and_return:
 	mem_free(td->fn);
 	mem_free(td);

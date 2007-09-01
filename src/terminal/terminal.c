@@ -202,7 +202,7 @@ unblock_terminal(struct terminal *term)
 		     (select_handler_T) destroy_terminal, term);
 	unblock_itrm();
 	redraw_terminal_cls(term);
-	if (textarea_editor)	/* XXX */
+	if (term->textarea_data)	/* XXX */
 		textarea_edit(1, term, NULL, NULL, NULL);
 }
 

@@ -446,7 +446,7 @@ invalid_utf8_start_byte:
 		destroy_terminal(term);
 		return 0;
 	case EVENT_TEXTAREA:
-		if (textarea_editor)
+		if (term->textarea_data)
 			textarea_edit(1, term, NULL, NULL, NULL);
 		break;
 
