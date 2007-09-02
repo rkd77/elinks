@@ -34,6 +34,7 @@
 #include "mime/mime.h"
 #include "osdep/osdep.h"		/* For exe() */
 #include "session/session.h"
+#include "util/env.h"
 #include "util/file.h"
 #include "util/hash.h"
 #include "util/lists.h"
@@ -633,18 +634,29 @@ get_mailcap_entry(unsigned char *type)
 }
 
 static struct mime_handler *
-get_mime_handler_mailcap(unsigned char *type, int options)
+get_mime_handler_mailcap(unsigned char *type, int x_win)
 {
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;
 	unsigned char *program;
+	unsigned char *display;
 	int block;
 
 	if (!get_mailcap_enable()
 	    || (!mailcap_map && !init_mailcap_map()))
 		return NULL;
 
+	/* Test for DISPLAY. */
+	display = getenv("DISPLAY");
+	if (x_win) env_set("DISPLAY", ":0", -1);
+	else unsetenv("DISPLAY");
+
 	entry = get_mailcap_entry(type);
+
+	/* Restore DISPLAY. */
+	if (display) env_set("DISPLAY", display, -1);
+	else unsetenv("DISPLAY");
+	
 	if (!entry) return NULL;
 
 	program = format_command(entry->command, type, entry->copiousoutput);
