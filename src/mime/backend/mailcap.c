@@ -47,7 +47,7 @@
 #include "util/string.h"
 
 extern int master_sem;
-extern char *shared_mem;
+extern unsigned char *shared_mem;
 
 struct mailcap_hash_item {
 	/* The entries associated with the type */
@@ -694,7 +694,7 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	hard_write(term->fdout, data, len + 2);
 	fmem_free(data);
 
-	mysem_wait(master_sem);
+	sem_wait(master_sem);
 	if (!*shared_mem)
 		return NULL;
 	desc = strchr(shared_mem, '\0') + 1;
@@ -753,7 +753,7 @@ get_slave_mailcap(unsigned char *type)
 	}
 end:
 	done_mailcap(NULL);
-	mysem_signal(master_sem);
+	sem_signal(master_sem);
 #endif
 }
 
