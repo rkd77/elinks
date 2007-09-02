@@ -33,7 +33,6 @@ OBJS = \
  memlist.o \
  memory.o \
  secsave.o \
- sem.o \
  snprintf.o \
  string.o \
  time.o
