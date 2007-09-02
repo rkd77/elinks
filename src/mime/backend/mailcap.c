@@ -47,6 +47,7 @@
 #include "util/string.h"
 
 extern int master_sem;
+extern int slave_sem;
 extern unsigned char *shared_mem;
 
 struct mailcap_hash_item {
@@ -677,12 +678,10 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	unsigned char *desc, *data;
 	int block, len;
 #endif
-	if (!term || term->master || master_sem == -1)
+	if (!term || term->master || slave_sem == -1)
 		return get_mime_handler_mailcap_common(type);
 
 #if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
-	if (!shared_mem)
-		return NULL;
 	len = strlen(type) + 1;
 	data = fmem_alloc(2 + len);
 	if (!data)
@@ -693,7 +692,10 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	hard_write(term->fdout, data, len + 2);
 	fmem_free(data);
 
+	if (!shared_mem)
+		return NULL;
 	shared_mem[0] = '\0'; /* For unexpected death of slave. */
+	sem_signal(slave_sem);
 	sem_wait(master_sem);
 	if (!*shared_mem)
 		return NULL;
@@ -711,6 +713,7 @@ void
 get_slave_mailcap(unsigned char *type)
 {
 #if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
+	sem_wait(slave_sem);
 	if (shared_mem) {
 		struct mailcap_entry *entry;
 		unsigned char *program;

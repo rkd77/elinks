@@ -64,6 +64,7 @@
 struct program program;
 int epoll_fd;
 int master_sem = -1;
+int slave_sem = -1;
 int shared_mem_ipc = -1;
 unsigned char *shared_mem = NULL;
 
@@ -118,16 +119,18 @@ init_master_ipc(void)
 {
 #if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	struct string filename;
-	key_t k1, k2;
+	key_t k1, k2, k3;
 
 	if (!get_sun_path(&filename))
 		return;
 	k1 = ftok(filename.source, 1);
 	k2 = ftok(filename.source, 2);
+	k3 = ftok(filename.source, 3);
 	master_sem = sem_create(k1, 0);
-	shared_mem_ipc = shmget(k2, 4096, 0600 | IPC_CREAT | IPC_EXCL);
+	slave_sem = sem_create(k2, 0);
+	shared_mem_ipc = shmget(k3, 4096, 0600 | IPC_CREAT | IPC_EXCL);
 	if (shared_mem_ipc == -1 && errno == EEXIST)
-		shared_mem_ipc = shmget(k2, 4096, 0600);
+		shared_mem_ipc = shmget(k3, 4096, 0600);
 	if (shared_mem_ipc >= 0) {
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
 	}
@@ -140,14 +143,16 @@ init_slave_ipc(void)
 {
 #if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	struct string filename;
-	key_t k1, k2;
+	key_t k1, k2, k3;
 
 	if (!get_sun_path(&filename))
 		return;
 	k1 = ftok(filename.source, 1);
 	k2 = ftok(filename.source, 2);
+	k3 = ftok(filename.source, 3);
 	master_sem = sem_open(k1);
-	shared_mem_ipc = shmget(k2, 4096, 0600);
+	slave_sem = sem_open(k2);
+	shared_mem_ipc = shmget(k3, 4096, 0600);
 	if (shared_mem_ipc >= 0) {
 		shared_mem = shmat(shared_mem_ipc, NULL, 0);
 	}
@@ -163,6 +168,8 @@ done_ipc(void)
 		shmdt(shared_mem);
 	if (master_sem >= 0)
 		sem_close(master_sem);
+	if (slave_sem >= 0)
+		sem_close(slave_sem);
 	/* shared_mem_ipc will be automatically done by sem_close() */
 #endif
 }
