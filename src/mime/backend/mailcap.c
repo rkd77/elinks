@@ -750,9 +750,9 @@ get_slave_mailcap(unsigned char *type)
 		else
 			*++current = '\0';
 		shared_mem[4095] = (entry->needsterminal << 1) | (entry->copiousoutput << 0);
+		done_mailcap(NULL);
 	}
 end:
-	done_mailcap(NULL);
 	sem_signal(master_sem);
 #endif
 }
