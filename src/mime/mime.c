@@ -21,7 +21,6 @@
 #include "mime/mime.h"
 #include "protocol/header.h"	/* For parse_header() */
 #include "protocol/uri.h"
-#include "terminal/terminal.h"
 #include "util/conv.h"
 #include "util/file.h"
 #include "util/memory.h"
@@ -116,7 +115,7 @@ check_extension_type(unsigned char *extension)
 	if (!content_type)
 		return NULL;
 
-	handler = get_mime_type_handler(content_type, NULL);
+	handler = get_mime_type_handler(content_type, 1);
 	if (handler) {
 		mem_free(handler);
 		return content_type;
@@ -318,9 +317,9 @@ get_content_type(struct cache_entry *cached)
 }
 
 struct mime_handler *
-get_mime_type_handler(unsigned char *content_type, struct terminal *term)
+get_mime_type_handler(unsigned char *content_type, int xwin)
 {
-	return get_mime_handler_backends(content_type, term);
+	return get_mime_handler_backends(content_type, xwin);
 }
 
 struct string *

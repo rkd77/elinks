@@ -13,7 +13,6 @@
 #include "main/module.h"
 #include "mime/backend/common.h"
 #include "mime/mime.h"
-#include "terminal/terminal.h"
 #include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -56,7 +55,7 @@ get_content_type_backends(unsigned char *extension)
 }
 
 struct mime_handler *
-get_mime_handler_backends(unsigned char *ctype, struct terminal *term)
+get_mime_handler_backends(unsigned char *ctype, int have_x)
 {
 	const struct mime_backend *backend;
 	int i;
@@ -65,7 +64,7 @@ get_mime_handler_backends(unsigned char *ctype, struct terminal *term)
 		if (backend->get_mime_handler) {
 			struct mime_handler *handler;
 
-			handler = backend->get_mime_handler(ctype, term);
+			handler = backend->get_mime_handler(ctype, have_x);
 			if (handler) return handler;
 		}
 	}

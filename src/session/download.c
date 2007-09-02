@@ -1330,7 +1330,7 @@ setup_download_handler(struct session *ses, struct download *loading,
 	unsigned char *ctype = get_content_type(cached);
 	int plaintext = 1;
 	int ret = 0;
-	int i;
+	int xwin, i;
 
 	if (!ctype || !*ctype)
 		goto plaintext_follow;
@@ -1343,7 +1343,8 @@ setup_download_handler(struct session *ses, struct download *loading,
 		goto plaintext_follow;
 	}
 
-	handler = get_mime_type_handler(ctype, ses->tab->term);
+	xwin = ses->tab->term->environment & ENV_XWIN;
+	handler = get_mime_type_handler(ctype, xwin);
 
 	if (!handler && strlen(ctype) >= 4 && !strncasecmp(ctype, "text", 4))
 		goto plaintext_follow;

@@ -2,7 +2,6 @@
 #ifndef EL__MIME_BACKEND_COMMON_H
 #define EL__MIME_BACKEND_COMMON_H
 
-struct terminal;
 #include "mime/mime.h"
 
 struct mime_backend {
@@ -11,7 +10,7 @@ struct mime_backend {
 
 	/* Given a mime type find a associated handler. The handler can
 	 * be given options such */
-	struct mime_handler *(*get_mime_handler)(unsigned char *type, struct terminal *term);
+	struct mime_handler *(*get_mime_handler)(unsigned char *type, int have_x);
 };
 
 /* Multiplexor functions for the backends. */
@@ -19,7 +18,7 @@ struct mime_backend {
 unsigned char *get_content_type_backends(unsigned char *extension);
 
 struct mime_handler *
-get_mime_handler_backends(unsigned char *content_type, struct terminal *term);
+get_mime_handler_backends(unsigned char *content_type, int have_x);
 
 /* Extracts a filename from @path separated by @separator. Targeted for use
  * with the general unix PATH style strings. */
