@@ -28,7 +28,6 @@ or use of these programs.
 
 #include "util/sem.h"
 
-extern int shared_mem_ipc;
 /*
  * Provide an simpler and easier to understand interface to the System V
  * semaphore system calls.  There are 7 routines available to the user:
@@ -227,11 +226,6 @@ sem_rm(int id)
 {
 	semctl(id, 0, IPC_RMID, 0);
 		/* err_sys("can't IPC_RMID"); */
-	/* Stupid, but this is the best place. */
-	if (shared_mem_ipc >= 0) {
-		shmctl(shared_mem_ipc, IPC_RMID, NULL);
-		shared_mem_ipc = -1;
-	}
 }
 
 /****************************************************************************

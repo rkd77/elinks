@@ -4,7 +4,6 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-#include <sys/shm.h>
 
 int sem_create(key_t key, int initval);
 int sem_open(key_t key);
