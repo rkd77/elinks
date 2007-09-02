@@ -8,6 +8,4 @@
 extern const struct mime_backend mailcap_mime_backend;
 extern struct module mailcap_mime_module;
 
-void get_slave_mailcap(unsigned char *type);
-
 #endif
