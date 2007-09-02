@@ -674,14 +674,12 @@ static struct mime_handler *
 get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 {
 	struct mime_handler *handler = NULL;
-#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	unsigned char *desc, *data;
 	int block, len;
-#endif
+
 	if (!term || term->master || slave_sem == -1)
 		return get_mime_handler_mailcap_common(type);
 
-#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	len = strlen(type) + 1;
 	data = fmem_alloc(2 + len);
 	if (!data)
@@ -691,7 +689,7 @@ get_mime_handler_mailcap(unsigned char *type, struct terminal *term)
 	memcpy(data + 2, type, len);
 	hard_write(term->fdout, data, len + 2);
 	fmem_free(data);
-
+#if defined(HAVE_SYS_IPC_H) && defined(HAVE_SYS_SEM_H) && defined(HAVE_SYS_SHM_H)
 	if (!shared_mem)
 		return NULL;
 	shared_mem[0] = '\0'; /* For unexpected death of slave. */
