@@ -27,7 +27,8 @@
 #include "util/string.h"
 
 
-/* TODO: We must use termcap/terminfo if available! --pasky */
+/* TODO: We must use termcap/terminfo if available! --pasky
+ * Please mention ELinks bug 96 in commit logs.  --KON */
 
 /** Mapping from (enum ::border_char - 0xB0) to ASCII characters.  */
 const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
