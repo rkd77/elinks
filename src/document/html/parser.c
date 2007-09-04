@@ -442,12 +442,11 @@ check_head_for_refresh(struct html_context *html_context, unsigned char *head)
 	mem_free(refresh);
 }
 
-void
-process_head(struct html_context *html_context, unsigned char *head)
+static void
+check_head_for_cache_control(struct html_context *html_context,
+                             unsigned char *head)
 {
-	check_head_for_refresh(html_context, head);
-
-	if (!get_opt_bool("document.cache.ignore_cache_control")) {
+	if (!get_opt_bool("document.cache.ignore_cache_control", NULL)) {
 		unsigned char *d;
 		int no_cache = 0;
 		time_t expires = 0;
@@ -508,6 +507,14 @@ process_head(struct html_context *html_context, unsigned char *head)
 			html_context->special_f(html_context,
 					       SP_CACHE_EXPIRES, expires);
 	}
+}
+
+void
+process_head(struct html_context *html_context, unsigned char *head)
+{
+	check_head_for_refresh(html_context, head);
+
+	check_head_for_cache_control(html_context, head);
 }
 
 
