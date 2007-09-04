@@ -383,7 +383,7 @@ process_head(struct html_context *html_context, unsigned char *head)
 	unsigned char *refresh, *url;
 
 	refresh = parse_header(head, "Refresh", NULL);
-	if (!refresh) return;
+	if (refresh) {
 
 	search_for_url_param(refresh, &url);
 	if (!url) {
@@ -440,6 +440,7 @@ process_head(struct html_context *html_context, unsigned char *head)
 	}
 
 	mem_free(refresh);
+	}
 
 	if (!get_opt_bool("document.cache.ignore_cache_control")) {
 		unsigned char *d;
