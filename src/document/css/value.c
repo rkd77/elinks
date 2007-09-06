@@ -324,8 +324,6 @@ css_parse_length_value(struct css_property_info *propinfo,
 	/* TODO: Support for percentages */
 	if (token->type != CSS_TOKEN_LENGTH) return 0;
 
-	token = get_next_scanner_token(scanner);
-
 	/* Parse the digit */
 	/* XXX: Possible locale trouble because of radix separator char? --pasky */
 	len = strtod(token->string, (char **) &nstring);
@@ -335,30 +333,35 @@ css_parse_length_value(struct css_property_info *propinfo,
 	token = skip_css_tokens(scanner, CSS_TOKEN_LENGTH);
 	assert(token->type == CSS_TOKEN_IDENT);
 
-	if (!strcasecmp(token->string, "em")) {
+	if (scanner_token_contains(token, "em")) {
 		value->length.unit_type = CSS_LEN_RELTOEM;
 		value->length.value.emsize = len * 100;
-	} else if (!strcasecmp(token->string, "ex")) {
+
+	} else if (scanner_token_contains(token, "ex")) {
 		value->length.unit_type = CSS_LEN_RELTOEX;
 		value->length.value.exsize = len * 100;
 
-	} else if (!strcasecmp(token->string, "px")) {
+	} else if (scanner_token_contains(token, "px")) {
 		value->length.unit_type = CSS_LEN_RELTODISP;
 		value->length.value.pxsize = len;
 
-	} else if (!strcasecmp(token->string, "pc")) {
+	} else if (scanner_token_contains(token, "pc")) {
 		value->length.unit_type = CSS_LEN_ABSOLUTE;
 		value->length.value.pcsize = len;
-	} else if (!strcasecmp(token->string, "pt")) {
+
+	} else if (scanner_token_contains(token, "pt")) {
 		value->length.unit_type = CSS_LEN_ABSOLUTE;
 		value->length.value.pcsize = len * 12;
-	} else if (!strcasecmp(token->string, "mm")) {
+
+	} else if (scanner_token_contains(token, "mm")) {
 		value->length.unit_type = CSS_LEN_ABSOLUTE;
 		value->length.value.pcsize = len * 34;
-	} else if (!strcasecmp(token->string, "cm")) {
+
+	} else if (scanner_token_contains(token, "cm")) {
 		value->length.unit_type = CSS_LEN_ABSOLUTE;
 		value->length.value.pcsize = len * 340; /* 340.15748031496063047836 */
-	} else if (!strcasecmp(token->string, "in")) {
+
+	} else if (scanner_token_contains(token, "in")) {
 		value->length.unit_type = CSS_LEN_ABSOLUTE;
 		value->length.value.pcsize = len * 12 * 72;
 
