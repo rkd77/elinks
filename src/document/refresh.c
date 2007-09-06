@@ -94,7 +94,7 @@ do_document_refresh(void *data)
 	}
 }
 
-void
+static void
 start_document_refresh(struct document_refresh *refresh, struct session *ses)
 {
 	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time");
@@ -119,4 +119,18 @@ start_document_refresh(struct document_refresh *refresh, struct session *ses)
 			return;
 
 	install_timer(&refresh->timer, time, do_document_refresh, ses);
+}
+
+void
+start_document_refreshes(struct session *ses)
+{
+	assert(ses);
+
+	if (!ses->doc_view
+	    || !ses->doc_view->document
+	    || !ses->doc_view->document->refresh
+	    || !get_opt_bool("document.browse.refresh"))
+		return;
+
+	start_document_refresh(ses->doc_view->document->refresh, ses);
 }
