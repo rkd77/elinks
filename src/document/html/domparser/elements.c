@@ -29,11 +29,16 @@
 static void
 a_begins(struct html_context *html_context)
 {
+	struct dom_node *node = domelem(html_top)->node;
 	unsigned char *href;
 
-	href = get_dom_element_attr_uri(domelem(html_top)->node, HTML_ATTRIBUTE_HREF, html_context);
-	if (href)
-		mem_free_set(&format.link, href);
+	href = get_dom_element_attr_uri(node, HTML_ATTRIBUTE_HREF, html_context);
+	if (!href)
+		return;
+
+	mem_free_set(&format.link, href);
+	apply_focusable(html_context, node);
+	/* FIXME: apply pseudo classes and target attributes */
 }
 
 static void

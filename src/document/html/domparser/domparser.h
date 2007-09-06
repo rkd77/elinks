@@ -36,6 +36,8 @@ struct domparser_context {
 
 /* Interface for other parts of HTML DOM */
 
+void apply_focusable(struct html_context *html_context, struct dom_node *node);
+
 /* These should really belong to /src/dom/... */
 struct dom_string *get_dom_element_attr(struct dom_node *elem, int type);
 unsigned char *get_dom_element_attr_uri(struct dom_node *elem, int type, struct html_context *html_context);

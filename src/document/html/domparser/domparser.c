@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#include <errno.h>
 #include <string.h>
 
 #include "elinks.h"
@@ -114,20 +115,53 @@ get_dom_element_attr(struct dom_node *elem, int type)
 }
 
 static unsigned char *
-get_dom_attr_uri(struct dom_string *attr, struct html_context *html_context)
+get_dom_conv_str(struct dom_string *attr, int codepage)
 {
 	unsigned char *uristring;
 
 	if (memchr(attr->string, '&', attr->length)) {
 		uristring = convert_string(NULL, attr->string, attr->length,
-					   html_context->doc_cp, CSM_QUERY,
+					   codepage, CSM_QUERY,
 					   NULL, NULL, NULL);
 	} else {
 		uristring = dom_string_acpy(attr);
 	}
 
+	return uristring;
+}
+
+/* Extract numerical value of attribute @name.
+ * It will return a positive integer value on success,
+ * or -1 on error. */
+static int
+get_dom_attr_num(struct dom_string *attr, int codepage)
+{
+	unsigned char *value = get_dom_conv_str(attr, codepage);
+	int result = -1;
+
+	if (value) {
+		unsigned char *end;
+		long num;
+
+		errno = 0;
+		num = strtol(value, (char **) &end, 10);
+		if (!errno && *value && !*end && num >= 0 && num <= INT_MAX)
+			result = (int) num;
+
+		mem_free(value);
+	}
+
+	return result;
+}
+
+static unsigned char *
+get_dom_attr_uri(struct dom_string *attr, struct html_context *html_context)
+{
+	unsigned char *uristring = get_dom_conv_str(attr, html_context->doc_cp);
+
 	if (!uristring)
 		return NULL;
+
 	sanitize_url(uristring);
 
 	if (html_context->base_href) {
@@ -163,6 +197,89 @@ apply_style(struct html_context *html_context)
 	done_css_selector(selector);
 }
 #endif
+
+/* Extract the extra information that is available for elements which can
+ * receive focus. Call this from each element which supports tabindex or
+ * accesskey. */
+/* Note that in ELinks, we support those attributes (I mean, we call this
+ * function) while processing any focusable element (otherwise it'd have zero
+ * tabindex, thus messing up navigation between links), thus we support these
+ * attributes even near tags where we're not supposed to (like IFRAME, FRAME or
+ * LINK). I think this doesn't make any harm ;). --pasky */
+void
+apply_focusable(struct html_context *html_context, struct dom_node *node)
+{
+	struct dom_node_list **attrs;
+	struct dom_node *attr;
+	int cp = html_context->doc_cp;
+	int index;
+
+	format.accesskey = 0;
+	format.tabindex = 0x80000000;
+
+	//options = html_context->options;
+	attrs = get_dom_node_list_by_type(node, DOM_NODE_ATTRIBUTE);
+	if (!attrs || !*attrs)
+		return;
+
+	mem_free_set(&format.onclick, NULL);
+	mem_free_set(&format.ondblclick, NULL);
+	mem_free_set(&format.onmouseover, NULL);
+	mem_free_set(&format.onhover, NULL);
+	mem_free_set(&format.onfocus, NULL);
+	mem_free_set(&format.onmouseout, NULL);
+	mem_free_set(&format.onblur, NULL);
+
+	foreach_dom_node (*attrs, attr, index) {
+		struct dom_string *value = &attr->data.attribute.value;
+
+		switch (attr->data.attribute.type) {
+		case HTML_ATTRIBUTE_ACCESSKEY:
+		{
+			unsigned char *accesskey = get_dom_conv_str(value, cp);
+
+			if (!accesskey)
+				break;
+
+			format.accesskey = accesskey_string_to_unicode(accesskey);
+			mem_free(accesskey);
+			break;
+		}
+		case HTML_ATTRIBUTE_TABINDEX:
+		{
+			int tabindex;
+
+			tabindex = get_dom_attr_num(value, html_context->doc_cp);
+			if (0 < tabindex && tabindex < 32767) {
+				format.tabindex = (unsigned int) (tabindex & 0x7fff) << 16;
+			}
+			break;
+		}
+		case HTML_ATTRIBUTE_ONBLUR:
+			format.onblur = get_dom_conv_str(value, cp);
+			break;
+		case HTML_ATTRIBUTE_ONCLICK:
+			format.onclick = get_dom_conv_str(value, cp);
+			break;
+
+		case HTML_ATTRIBUTE_ONFOCUS:
+			format.onfocus = get_dom_conv_str(value, cp);
+			break;
+
+		case HTML_ATTRIBUTE_ONHOVER:
+			format.onhover = get_dom_conv_str(value, cp);
+			break;
+
+		case HTML_ATTRIBUTE_ONMOUSEOUT:
+			format.onmouseout = get_dom_conv_str(value, cp);
+			break;
+
+		case HTML_ATTRIBUTE_ONMOUSEOVER:
+			format.onmouseover = get_dom_conv_str(value, cp);
+			break;
+		}
+	}
+}
 
 /* This should be called after we are through all the element attributes but
  * before we hit the actual element contents. */
