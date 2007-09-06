@@ -55,7 +55,9 @@ length_absolute(int base, struct css_length *len)
 			/* Our base 1em size is
 			 * 	HTML_CHAR_HEIGHT x HTML_CHAR_HEIGHT
 			 * in pixels. */
-			return len->value.pxsize * 100 / HTML_CHAR_HEIGHT;
+			/* FIXME: Disabled the 100 since 40px turns up
+			 * as a biiiig value. */
+			return len->value.pxsize /* * 100 */ / HTML_CHAR_HEIGHT;
 
 		case CSS_LEN_ABSOLUTE:
 			/* CSS2 says that
