@@ -66,8 +66,8 @@ done_document_refresh(struct document_refresh *refresh)
 static void
 do_document_refresh(void *data)
 {
-	struct session *ses = data;
-	struct document_refresh *refresh = ses->doc_view->document->refresh;
+	struct document_view *doc_view = data;
+	struct document_refresh *refresh = doc_view->document->refresh;
 	struct type_query *type_query;
 
 	assert(refresh);
@@ -78,16 +78,16 @@ do_document_refresh(void *data)
 	/* When refreshing documents that will trigger a download (like
 	 * sourceforge's download pages) make sure that we do not endlessly
 	 * trigger the download (bug 289). */
-	foreach (type_query, ses->type_queries)
+	foreach (type_query, doc_view->session->type_queries)
 		if (compare_uri(refresh->uri, type_query->uri, URI_BASE))
 			return;
 
-	if (compare_uri(refresh->uri, ses->doc_view->document->uri, 0)) {
+	if (compare_uri(refresh->uri, doc_view->document->uri, 0)) {
 		/* If the refreshing is for the current URI, force a reload. */
-		reload(ses, CACHE_MODE_FORCE_RELOAD);
+		reload(doc_view->session, CACHE_MODE_FORCE_RELOAD);
 	} else {
 		/* This makes sure that we send referer. */
-		goto_uri_frame(ses, refresh->uri, NULL, CACHE_MODE_NORMAL);
+		goto_uri_frame(doc_view->session, refresh->uri, NULL, CACHE_MODE_NORMAL);
 		/* XXX: A possible very wrong work-around for refreshing used when
 		 * downloading files. */
 		refresh->restart = 0;
@@ -119,7 +119,7 @@ start_document_refresh(struct document_refresh *refresh,
 		if (compare_uri(refresh->uri, type_query->uri, URI_BASE))
 			return;
 
-	install_timer(&refresh->timer, time, do_document_refresh, doc_view->session);
+	install_timer(&refresh->timer, time, do_document_refresh, doc_view);
 }
 
 void
