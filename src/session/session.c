@@ -589,13 +589,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		load_ecmascript_imports(ses, ses->doc_view);
 		process_file_requests(ses);
 
-		if (ses->doc_view
-		    && ses->doc_view->document
-		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh")) {
-			start_document_refresh(ses->doc_view->document->refresh,
-					       ses);
-		}
+		start_document_refreshes(ses);
 
 		if (download->state != S_OK) {
 			print_error_dialog(ses, download->state,

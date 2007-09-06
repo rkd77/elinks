@@ -350,13 +350,7 @@ draw_formatted(struct session *ses, int rerender)
 		render_document_frames(ses, rerender);
 
 		/* Rerendering kills the document refreshing so restart it. */
-		if (ses->doc_view
-		    && ses->doc_view->document
-		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh")) {
-			start_document_refresh(ses->doc_view->document->refresh,
-					       ses);
-		}
+		start_document_refreshes(ses);
 	}
 
 	if (ses->tab != get_current_tab(ses->tab->term))
