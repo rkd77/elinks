@@ -355,6 +355,8 @@ unblock_itrm_x(void *h)
 	close_handle(h);
 	if (!ditrm) return;
 	unblock_itrm();
+
+	/* Note: External editor support depends on this resize event. */
 	resize_terminal();
 }
 

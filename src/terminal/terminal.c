@@ -119,6 +119,8 @@ destroy_terminal(struct terminal *term)
 	bookmark_auto_save_tabs(term);
 #endif
 
+	free_textarea_data(term);
+
 	/* delete_window doesn't update term->current_tab, but it
 	   calls redraw_terminal, which requires term->current_tab
 	   to be valid if there are any tabs left.  So set a value
@@ -202,8 +204,8 @@ unblock_terminal(struct terminal *term)
 		     (select_handler_T) destroy_terminal, term);
 	unblock_itrm();
 	redraw_terminal_cls(term);
-	if (textarea_editor)	/* XXX */
-		textarea_edit(1, NULL, NULL, NULL, NULL);
+	if (term->textarea_data)	/* XXX */
+		textarea_edit(1, term, NULL, NULL, NULL);
 }
 
 

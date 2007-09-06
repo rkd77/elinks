@@ -31,6 +31,7 @@
 #include "util/memory.h"
 #include "util/snprintf.h"
 #include "util/string.h"
+#include "viewer/text/textarea.h"
 #include "viewer/timer.h"
 
 
@@ -271,6 +272,13 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				  ilev->info.size.width,
 				  ilev->info.size.height);
 		term_send_event(term, &tev);
+
+		/* If textarea_data is set and the terminal is not blocked,
+		 * then this resize event must be the result of exiting the
+		 * external editor. */
+		if (term->textarea_data && term->blocked == -1)
+			textarea_edit(1, term, NULL, NULL, NULL);
+
 		break;
 
 	case EVENT_MOUSE:

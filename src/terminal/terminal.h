@@ -155,6 +155,9 @@ struct terminal {
 	/** For communication between instances */
 	struct terminal_interlink *interlink;
 
+	/* Data for textarea_edit(). */
+	void *textarea_data;
+
 	struct term_event_mouse prev_mouse_event;
 };
 

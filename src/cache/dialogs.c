@@ -126,6 +126,24 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 		add_date_to_string(&msg, get_opt_str("ui.date_format", NULL), &expires);
 	}
 #endif
+
+	add_format_to_string(&msg, "\n%s: ", _("Cache mode", term));
+	switch (cached->cache_mode) {
+	case CACHE_MODE_NEVER:
+		add_to_string(&msg, _("never use cache entry", term));
+		break;
+	case CACHE_MODE_ALWAYS:
+		add_to_string(&msg, _("always use cache entry", term));
+		break;
+	case CACHE_MODE_INCREMENT:
+	case CACHE_MODE_NORMAL:
+	case CACHE_MODE_CHECK_IF_MODIFIED:
+	case CACHE_MODE_FORCE_RELOAD:
+		/* Cache entries only use two values of enum cache_mode. */
+		INTERNAL("cached->cache_mode = %d", cached->cache_mode);
+		break;
+	}
+
 #ifdef CONFIG_DEBUG
 	add_format_to_string(&msg, "\n%s: %d", "Refcount", get_object_refcount(cached));
 	add_format_to_string(&msg, "\n%s: %u", _("ID", term), cached->id);
