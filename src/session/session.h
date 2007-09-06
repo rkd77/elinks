@@ -255,6 +255,7 @@ struct session *init_session(struct session *ses, struct terminal *term,
 void doc_loading_callback(struct download *, struct session *);
 
 void abort_loading(struct session *, int);
+void reload_frame(struct session *, unsigned char *, enum cache_mode);
 void reload(struct session *, enum cache_mode);
 void load_frames(struct session *, struct document_view *);
 

@@ -84,10 +84,11 @@ do_document_refresh(void *data)
 
 	if (compare_uri(refresh->uri, doc_view->document->uri, 0)) {
 		/* If the refreshing is for the current URI, force a reload. */
-		reload(doc_view->session, CACHE_MODE_FORCE_RELOAD);
+		reload_frame(doc_view->session, doc_view->name,
+		             CACHE_MODE_FORCE_RELOAD);
 	} else {
 		/* This makes sure that we send referer. */
-		goto_uri_frame(doc_view->session, refresh->uri, NULL, CACHE_MODE_NORMAL);
+		goto_uri_frame(doc_view->session, refresh->uri, doc_view->name, CACHE_MODE_NORMAL);
 		/* XXX: A possible very wrong work-around for refreshing used when
 		 * downloading files. */
 		refresh->restart = 0;
@@ -130,8 +131,23 @@ start_document_refreshes(struct session *ses)
 
 	if (!ses->doc_view
 	    || !ses->doc_view->document
-	    || !ses->doc_view->document->refresh
 	    || !get_opt_bool("document.browse.refresh", ses))
+		return;
+
+	if (document_has_frames(ses->doc_view->document)) {
+		struct document_view *doc_view;
+
+		foreach (doc_view, ses->scrn_frames) {
+			if (!doc_view->document
+			    || !doc_view->document->refresh)
+				continue;
+
+			start_document_refresh(doc_view->document->refresh,
+			                       doc_view);
+		}
+	}
+
+	if (!ses->doc_view->document->refresh)
 		return;
 
 	start_document_refresh(ses->doc_view->document->refresh, ses->doc_view);
