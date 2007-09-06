@@ -40,10 +40,8 @@ typedef void (*css_applier_T)(struct html_context *html_context,
 			      struct css_property *prop);
 
 static int
-length_absolute(struct html_element *element, struct css_length *len)
+length_absolute(int base, struct css_length *len)
 {
-	int base = element->attr.fontsize;
-
 	switch (len->unit_type) {
 		case CSS_LEN_RELTOEM:
 			/* This is the simple case. M is just the font size. */
@@ -79,9 +77,11 @@ css_apply_font_size(struct html_context *html_context,
                     struct html_element *element,
                     struct css_property *prop)
 {
+	int base = element->attr.fontsize;
+
 	assert(prop->value_type == CSS_VT_LENGTH);
 
-	element->attr.fontsize = length_absolute(element->prev, &prop->value.length);
+	element->attr.fontsize = length_absolute(base, &prop->value.length);
 }
 
 static void
