@@ -65,6 +65,8 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 			case CSS_PT_TEXT_ALIGN:
 			case CSS_PT_WHITE_SPACE:
 			case CSS_PT_FONT_SIZE:
+			case CSS_PT_MARGIN_LEFT:
+			case CSS_PT_MARGIN_RIGHT:
 			case CSS_PT_LAST:
 				break;
 			}

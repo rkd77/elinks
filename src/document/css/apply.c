@@ -154,6 +154,25 @@ css_apply_text_align(struct html_context *html_context,
 	element->parattr.align = prop->value.text_align;
 }
 
+void
+css_apply_margin(struct html_context *html_context,
+                 struct html_element *element,
+                    struct css_property *prop)
+{
+	struct par_attrib *parattr = &element->parattr;
+
+	assert(prop->value_type == CSS_VT_LENGTH);
+
+	if (prop->type == CSS_PT_MARGIN_LEFT) {
+		parattr->leftmargin = length_absolute(parattr->leftmargin,
+						      &prop->value.length);
+
+	} else if (prop->type == CSS_PT_MARGIN_RIGHT) {
+		parattr->rightmargin = length_absolute(parattr->rightmargin,
+						       &prop->value.length);
+	}
+}
+
 /*! XXX: Sort like the css_property_type */
 static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_NONE */		NULL,
@@ -164,6 +183,8 @@ static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_DISPLAY */		css_apply_display,
 	/* CSS_PT_FONT_STYLE */		css_apply_font_attribute,
 	/* CSS_PT_FONT_WEIGHT */	css_apply_font_attribute,
+	/* CSS_PT_MARGIN_LEFT */	css_apply_margin,
+	/* CSS_PT_MARGIN_RIGHT */	css_apply_margin,
 	/* CSS_PT_TEXT_ALIGN */		css_apply_text_align,
 	/* CSS_PT_TEXT_DECORATION */	css_apply_font_attribute,
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,
