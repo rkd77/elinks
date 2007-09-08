@@ -1,5 +1,9 @@
 /* HTML parser */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE /* XXX: we _WANT_ strcasestr() ! */
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -296,6 +300,81 @@ parse_old_meta_refresh(unsigned char *str, unsigned char **ret)
 	if (len) *ret = memacpy(p, len);
 }
 
+/* Search for the url part in the content attribute and returns
+ * it if found.
+ * It searches the first occurence of 'url' marker somewhere ignoring
+ * anything before it.
+ * It should cope with most situations including:
+ * content="0; URL='http://www.site.com/path/xxx.htm'"
+ * content="0  url=http://www.site.com/path/xxx.htm"
+ * content="anything ; some url  ===   ''''http://www.site.com/path/xxx.htm''''
+ *
+ * The return value is one of:
+ *
+ * - HEADER_PARAM_FOUND: the parameter was found, copied, and stored in *@ret.
+ * - HEADER_PARAM_NOT_FOUND: the parameter is not there.  *@ret is now NULL.
+ * - HEADER_PARAM_OUT_OF_MEMORY: error. *@ret is now NULL.
+ *
+ * If @ret is NULL, then this function doesn't actually access *@ret,
+ * and cannot fail with HEADER_PARAM_OUT_OF_MEMORY.  Some callers may
+ * rely on this. */
+static enum parse_header_param
+search_for_url_param(unsigned char *str, unsigned char **ret)
+{
+#define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
+	unsigned char *p;
+	int plen = 0;
+
+	if (ret) *ret = NULL;	/* default in case of early return */
+
+	assert(str);
+	if_assert_failed return HEADER_PARAM_NOT_FOUND;
+
+	/* Returns now if string @str is empty. */
+	if (!*str) return HEADER_PARAM_NOT_FOUND;
+
+	p = strcasestr(str, "url");
+	if (!p) return HEADER_PARAM_NOT_FOUND;
+	p += 3;
+
+	while (*p && (*p <= ' ' || *p == '=')) p++;
+	if (!*p) {
+		if (ret) {
+			*ret = stracpy("");
+			if (!*ret)
+				return HEADER_PARAM_OUT_OF_MEMORY;
+		}
+		return HEADER_PARAM_FOUND;
+	}
+
+	while ((p[plen] > ' ' || LWS(p[plen])) && p[plen] != ';') plen++;
+
+	/* Trim ending spaces */
+	while (plen > 0 && LWS(p[plen - 1])) plen--;
+
+	/* XXX: Drop enclosing single quotes if there's some.
+	 *
+	 * Some websites like newsnow.co.uk are using single quotes around url
+	 * in URL field in meta tag content attribute like this:
+	 * <meta http-equiv="Refresh" content="0; URL='http://www.site.com/path/xxx.htm'">
+	 *
+	 * This is an attempt to handle that, but it may break something else.
+	 * We drop all pair of enclosing quotes found (eg. '''url''' => url).
+	 * Please report any issue related to this. --Zas */
+	while (plen > 1 && *p == '\'' && p[plen - 1] == '\'') {
+		p++;
+		plen -= 2;
+	}
+
+	if (ret) {
+		*ret = memacpy(p, plen);
+		if (!*ret)
+			return HEADER_PARAM_OUT_OF_MEMORY;
+	}
+	return HEADER_PARAM_FOUND;
+#undef LWS
+}
+
 void
 process_head(struct html_context *html_context, unsigned char *head)
 {
@@ -304,7 +383,7 @@ process_head(struct html_context *html_context, unsigned char *head)
 	refresh = parse_header(head, "Refresh", NULL);
 	if (!refresh) return;
 
-	parse_header_param(refresh, "URL", &url);
+	search_for_url_param(refresh, &url);
 	if (!url) {
 		/* Let's try a more tolerant parsing. */
 		parse_old_meta_refresh(refresh, &url);
