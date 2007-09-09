@@ -66,8 +66,8 @@ done_document_refresh(struct document_refresh *refresh)
 static void
 do_document_refresh(void *data)
 {
-	struct session *ses = data;
-	struct document_refresh *refresh = ses->doc_view->document->refresh;
+	struct document_view *doc_view = data;
+	struct document_refresh *refresh = doc_view->document->refresh;
 	struct type_query *type_query;
 
 	assert(refresh);
@@ -78,26 +78,28 @@ do_document_refresh(void *data)
 	/* When refreshing documents that will trigger a download (like
 	 * sourceforge's download pages) make sure that we do not endlessly
 	 * trigger the download (bug 289). */
-	foreach (type_query, ses->type_queries)
+	foreach (type_query, doc_view->session->type_queries)
 		if (compare_uri(refresh->uri, type_query->uri, URI_BASE))
 			return;
 
-	if (compare_uri(refresh->uri, ses->doc_view->document->uri, 0)) {
+	if (compare_uri(refresh->uri, doc_view->document->uri, 0)) {
 		/* If the refreshing is for the current URI, force a reload. */
-		reload(ses, CACHE_MODE_FORCE_RELOAD);
+		reload_frame(doc_view->session, doc_view->name,
+		             CACHE_MODE_FORCE_RELOAD);
 	} else {
 		/* This makes sure that we send referer. */
-		goto_uri_frame(ses, refresh->uri, NULL, CACHE_MODE_NORMAL);
+		goto_uri_frame(doc_view->session, refresh->uri, doc_view->name, CACHE_MODE_NORMAL);
 		/* XXX: A possible very wrong work-around for refreshing used when
 		 * downloading files. */
 		refresh->restart = 0;
 	}
 }
 
-void
-start_document_refresh(struct document_refresh *refresh, struct session *ses)
+static void
+start_document_refresh(struct document_refresh *refresh,
+                       struct document_view *doc_view)
 {
-	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time", ses);
+	milliseconds_T minimum = (milliseconds_T) get_opt_int("document.browse.minimum_refresh_time", doc_view->session);
 	milliseconds_T refresh_delay = sec_to_ms(refresh->seconds);
 	milliseconds_T time = ms_max(refresh_delay, minimum);
 	struct type_query *type_query;
@@ -114,9 +116,39 @@ start_document_refresh(struct document_refresh *refresh, struct session *ses)
 	/* Like bug 289 another sourceforge download thingy this time with
 	 * number 434. It should take care when refreshing to the same URI or
 	 * what ever the cause is. */
-	foreach (type_query, ses->type_queries)
+	foreach (type_query, doc_view->session->type_queries)
 		if (compare_uri(refresh->uri, type_query->uri, URI_BASE))
 			return;
 
-	install_timer(&refresh->timer, time, do_document_refresh, ses);
+	install_timer(&refresh->timer, time, do_document_refresh, doc_view);
+}
+
+void
+start_document_refreshes(struct session *ses)
+{
+
+	assert(ses);
+
+	if (!ses->doc_view
+	    || !ses->doc_view->document
+	    || !get_opt_bool("document.browse.refresh", ses))
+		return;
+
+	if (document_has_frames(ses->doc_view->document)) {
+		struct document_view *doc_view;
+
+		foreach (doc_view, ses->scrn_frames) {
+			if (!doc_view->document
+			    || !doc_view->document->refresh)
+				continue;
+
+			start_document_refresh(doc_view->document->refresh,
+			                       doc_view);
+		}
+	}
+
+	if (!ses->doc_view->document->refresh)
+		return;
+
+	start_document_refresh(ses->doc_view->document->refresh, ses->doc_view);
 }

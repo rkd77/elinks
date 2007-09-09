@@ -15,21 +15,7 @@
 #include "dom/select.h"
 #include "dom/sgml/parser.h"
 #include "dom/stack.h"
-
-
-void die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
-}
+#include "util/test.h"
 
 int
 main(int argc, char *argv[])
@@ -51,41 +37,14 @@ main(int argc, char *argv[])
 
 		arg += 2;
 
-		if (!strncmp(arg, "uri", 3)) {
-			arg += 3;
-			if (*arg == '=') {
-				arg++;
-				set_dom_string(&uri, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--uri expects a URI");
-				set_dom_string(&uri, argv[i], strlen(argv[i]));
-			}
+		if (get_test_opt(&arg, "uri", &i, argc, argv, "a URI")) {
+			set_dom_string(&uri, arg, strlen(arg));
 
-		} else if (!strncmp(arg, "src", 3)) {
-			arg += 3;
-			if (*arg == '=') {
-				arg++;
-				set_dom_string(&source, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--src expects a string");
-				set_dom_string(&source, argv[i], strlen(argv[i]));
-			}
+		} else if (get_test_opt(&arg, "src", &i, argc, argv, "a string")) {
+			set_dom_string(&source, arg, strlen(arg));
 
-		} else if (!strncmp(arg, "selector", 3)) {
-			arg += 8;
-			if (*arg == '=') {
-				arg++;
-				set_dom_string(&selector, arg, strlen(arg));
-			} else {
-				i++;
-				if (i >= argc)
-					die("--selector expects a string");
-				set_dom_string(&selector, argv[i], strlen(argv[i]));
-			}
+		} else if (get_test_opt(&arg, "selector", &i, argc, argv, "a string")) {
+			set_dom_string(&selector, arg, strlen(arg));
 
 		} else if (!strcmp(arg, "help")) {
 			die(NULL);

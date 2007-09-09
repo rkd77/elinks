@@ -13,21 +13,7 @@
 
 #include "osdep/stat.h"
 #include "protocol/ftp/parse.h"
-
-
-void die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
-}
+#include "util/test.h"
 
 int
 main(int argc, char *argv[])
@@ -45,17 +31,8 @@ main(int argc, char *argv[])
 
 		arg += 2;
 
-		if (!strncmp(arg, "response", 8)) {
-			arg += 8;
-			if (*arg == '=') {
-				arg++;
-				response = arg;
-			} else {
-				i++;
-				if (i >= argc)
-					die("--response expects a string");
-				response = argv[i];
-			}
+		if (get_test_opt(&arg, "response", &i, argc, argv, "a string")) {
+			response = arg;
 			responselen = strlen(response);
 
 		} else {

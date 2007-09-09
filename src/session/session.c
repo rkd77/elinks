@@ -588,13 +588,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 		load_ecmascript_imports(ses, ses->doc_view);
 		process_file_requests(ses);
 
-		if (ses->doc_view
-		    && ses->doc_view->document
-		    && ses->doc_view->document->refresh
-		    && get_opt_bool("document.browse.refresh", ses)) {
-			start_document_refresh(ses->doc_view->document->refresh,
-					       ses);
-		}
+		start_document_refreshes(ses);
 
 		if (download->state != S_OK) {
 			print_error_dialog(ses, download->state,
@@ -1186,6 +1180,13 @@ destroy_session(struct session *ses)
 void
 reload(struct session *ses, enum cache_mode cache_mode)
 {
+	reload_frame(ses, NULL, cache_mode);
+}
+
+void
+reload_frame(struct session *ses, unsigned char *name,
+             enum cache_mode cache_mode)
+{
 	abort_loading(ses, 0);
 
 	if (cache_mode == CACHE_MODE_INCREMENT) {
@@ -1211,6 +1212,8 @@ reload(struct session *ses, enum cache_mode cache_mode)
 		 * credentials. */
 		loc->download.data = ses;
 		loc->download.callback = (download_callback_T *) doc_loading_callback;
+
+		ses->task.target.frame = name;
 
 		load_uri(loc->vs.uri, ses->referrer, &loc->download, PRI_MAIN, cache_mode, -1);
 
