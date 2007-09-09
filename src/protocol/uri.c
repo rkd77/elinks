@@ -766,6 +766,11 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 				continue;
 			}
 
+		} else if (is_uri_dir_sep(uri, src[1]) &&
+			   uri->protocol == PROTOCOL_FILE) {
+			/* // - ignore first '/'. */
+			src += 1;
+			continue;
 		}
 
 		/* We don't want to access memory past the NUL char. */
