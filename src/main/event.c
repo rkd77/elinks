@@ -177,6 +177,7 @@ trigger_event(int id, ...)
 
 	va_start(ap, id);
 	trigger_event_va(id, ap);
+	va_end(ap);
 }
 
 void
@@ -187,6 +188,7 @@ trigger_event_name(unsigned char *name, ...)
 
 	va_start(ap, name);
 	trigger_event_va(id, ap);
+	va_end(ap);
 }
 
 static inline void

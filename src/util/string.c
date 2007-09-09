@@ -445,7 +445,6 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 	int newlength;
 	int width;
 	va_list ap;
-	va_list ap2;
 
 	assertm(string && format, "[add_format_to_string]");
 	if_assert_failed { return NULL; }
@@ -453,17 +452,16 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 	check_string_magic(string);
 
 	va_start(ap, format);
-	VA_COPY(ap2, ap);
-
-	width = vsnprintf(NULL, 0, format, ap2);
+	width = vsnprintf(NULL, 0, format, ap);
+	va_end(ap);
 	if (width <= 0) return NULL;
 
 	newlength = string->length + width;
 	if (!realloc_string(string, newlength))
 		return NULL;
 
+	va_start(ap, format);
 	vsnprintf(&string->source[string->length], width + 1, format, ap);
-
 	va_end(ap);
 
 	string->length = newlength;

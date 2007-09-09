@@ -13,6 +13,7 @@
 #include "main/module.h"
 #include "protocol/user.h"
 #include "session/session.h"
+#include "util/test.h"
 
 #define STUB_MODULE(name)				\
 	struct module name = struct_module(		\
@@ -37,21 +38,6 @@ STUB_MODULE(nntp_protocol_module);
 STUB_MODULE(smb_protocol_module);
 STUB_MODULE(uri_rewrite_module);
 STUB_MODULE(user_protocol_module);
-
-static void
-die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
-}
 
 static void
 stub_called(const unsigned char *fun)

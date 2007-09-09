@@ -16,6 +16,7 @@
 #include "dom/sgml/dump.h"
 #include "dom/sgml/parser.h"
 #include "dom/stack.h"
+#include "util/test.h"
 
 
 unsigned int number_of_lines = 0;
@@ -242,44 +243,6 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	return DOM_CODE_OK;
 }
 
-static void
-die(const char *msg, ...)
-{
-	va_list args;
-
-	if (msg) {
-		va_start(args, msg);
-		vfprintf(stderr, msg, args);
-		fputs("\n", stderr);
-		va_end(args);
-	}
-
-	exit(!!NULL);
-}
-
-static int
-get_opt(char **argref, const char *name, int *argi, int argc, char *argv[],
-	const char *expect_msg)
-{
-	char *arg = *argref;
-	int namelen = strlen(name);
-
-	if (strncmp(arg, name, namelen))
-		return 0;
-
-	arg += namelen;
-	if (*arg == '=') {
-		(*argref) = arg + 1;
-	} else {
-		(*argi)++;
-		if ((*argi) >= argc)
-			die("--%s expects %s", name, expect_msg);
-		(*argref) = argv[(*argi)];
-	}
-
-	return 1;
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -305,17 +268,17 @@ main(int argc, char *argv[])
 
 		arg += 2;
 
-		if (get_opt(&arg, "uri", &i, argc, argv, "a URI")) {
+		if (get_test_opt(&arg, "uri", &i, argc, argv, "a URI")) {
 			set_dom_string(&uri, arg, strlen(arg));
 
-		} else if (get_opt(&arg, "src", &i, argc, argv, "a string")) {
+		} else if (get_test_opt(&arg, "src", &i, argc, argv, "a string")) {
 			set_dom_string(&source, arg, strlen(arg));
 
-		} else if (get_opt(&arg, "stdin", &i, argc, argv, "a number")) {
+		} else if (get_test_opt(&arg, "stdin", &i, argc, argv, "a number")) {
 			read_stdin = atoi(arg);
 			flags |= SGML_PARSER_INCREMENTAL;
 
-		} else if (get_opt(&arg, "normalize", &i, argc, argv, "a string")) {
+		} else if (get_test_opt(&arg, "normalize", &i, argc, argv, "a string")) {
 			normalize = 1;
 			normalize_flags = parse_dom_config(arg, ',');
 			type = SGML_PARSER_TREE;
