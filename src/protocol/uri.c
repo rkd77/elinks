@@ -811,11 +811,13 @@ transform_file_url(struct uri *uri, const unsigned char *cwd)
 			return NULL;
 
 		encode_uri_string(&dir, cwd, -1, 0);
-
+#if 0
 		/* Either we will end up with '//' and translate_directories()
 		 * will shorten it or the '/' will mark the inserted cwd as a
 		 * directory. */
 		if (*path == '.') *path = '/';
+#endif
+		if (*path == '.') memmove(uri->data, path + 1, strlen(path));
 
 		/* Insert the current working directory. */
 		/* The offset is 7 == sizeof("file://") - 1. */
