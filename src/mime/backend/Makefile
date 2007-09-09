@@ -16,7 +16,8 @@ mailcap-cache.o: mailcap.c
 
 TESTDEPS = \
  common.o \
- $(top_builddir)/src/osdep/osdep.o
+ $(top_builddir)/src/osdep/osdep.o \
+ $(top_builddir)/src/util/env.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
 
