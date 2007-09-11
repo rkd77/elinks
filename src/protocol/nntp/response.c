@@ -312,7 +312,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 			desc = "";
 		}
 
-		add_format_to_string(html, "<dt><a href=\"%s/%s\">%s</a></dt><dd>%s</dd>\n",
+		add_format_to_string(html, "<dt><a href=\"%s%s\">%s</a></dt><dd>%s</dd>\n",
 			struri(conn->uri), line, line, desc);
 		break;
 	}
