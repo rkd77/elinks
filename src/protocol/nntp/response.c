@@ -373,7 +373,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 		add_format_to_string(html,
 			"<h2>%s</h2>\n"
 			"<hr />\n"
-			"<dl>",
+			"<ol>",
 			empty_string_or_(title));
 		break;
 
@@ -399,7 +399,7 @@ add_nntp_html_end(struct string *html, struct connection *conn)
 	case NNTP_TARGET_ARTICLE_RANGE:
 	case NNTP_TARGET_GROUP:
 	case NNTP_TARGET_GROUPS:
-		add_to_string(html, "</dl>");
+		add_to_string(html, "</ol>");
 		break;
 
 	case NNTP_TARGET_QUIT:
@@ -426,16 +426,33 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 	case NNTP_TARGET_GROUP:
 	case NNTP_TARGET_GROUPS:
 	{
-		unsigned char *desc = strchr(line, '\t');
+		unsigned char *field = line;
 
-		if (desc) {
-			*desc++ = 0;
-		} else {
-			desc = "";
+		line = strchr(line, '\t');
+		if (!line)
+			field = "";
+		else
+			*line++ = 0;
+		add_format_to_string(html, "<li value=\"%s\"><a href=\"%s/%s\">",
+				     field, struri(conn->uri), field);
+
+		field = line;
+		line = strchr(line, '\t');
+		if (line)
+			*line++ = 0;
+
+		add_header_to_string(html, field);
+		add_to_string(html, "</a> ");
+
+		if (line) {
+			field = line;
+			line = strchr(line, '\t');
+			if (line)
+				*line++ = 0;
+
+			add_header_to_string(html, field);
 		}
-
-		add_format_to_string(html, "<dt><a href=\"%s%s\">%s</a></dt><dd>%s</dd>\n",
-			struri(conn->uri), line, line, desc);
+		add_to_string(html, "</li>");
 		break;
 	}
 	case NNTP_TARGET_QUIT:
