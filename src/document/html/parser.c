@@ -270,6 +270,8 @@ html_skip(struct html_context *html_context, unsigned char *a)
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
+#define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
+
 /* Parse meta refresh without URL= in it:
  *  <meta http-equiv="refresh" content="3,http://elinks.or.cz/">
  *  <meta http-equiv="refresh" content="3; http://elinks.or.cz/">
@@ -285,18 +287,18 @@ parse_old_meta_refresh(unsigned char *str, unsigned char **ret)
 	if_assert_failed return;
 
 	*ret = NULL;
-	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	while (*p && LWS(*p)) p++;
 	if (!*p) return;
 	while (*p && *p >= '0' && *p <= '9') p++;
 	if (!*p) return;
-	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	while (*p && LWS(*p)) p++;
 	if (!*p) return;
 	if (*p == ';' || *p == ',') p++; else return;
-	while (*p && (*p == ' ' || *p == ASCII_TAB)) p++;
+	while (*p && LWS(*p)) p++;
 	if (!*p) return;
 
 	len = strlen(p);
-	while (len && (p[len] == ' ' || p[len] == ASCII_TAB)) len--;
+	while (len && LWS(p[len])) len--;
 	if (len) *ret = memacpy(p, len);
 }
 
@@ -321,7 +323,6 @@ parse_old_meta_refresh(unsigned char *str, unsigned char **ret)
 static enum parse_header_param
 search_for_url_param(unsigned char *str, unsigned char **ret)
 {
-#define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
 	unsigned char *p;
 	int plen = 0;
 
@@ -372,8 +373,9 @@ search_for_url_param(unsigned char *str, unsigned char **ret)
 			return HEADER_PARAM_OUT_OF_MEMORY;
 	}
 	return HEADER_PARAM_FOUND;
-#undef LWS
 }
+
+#undef LWS
 
 static void
 check_head_for_refresh(struct html_context *html_context, unsigned char *head)
