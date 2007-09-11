@@ -235,7 +235,9 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 				continue;
 			}
 
-			add_format_to_string(html, "<b>%s</b>: %s\n", entry, value);
+			add_format_to_string(html, "<b>%s</b>: ", entry);
+			add_html_to_string(html, value, strlen(value));
+			add_char_to_string(html, '\n');
 			mem_free(value);
 			mem_free(entry);
 		}
