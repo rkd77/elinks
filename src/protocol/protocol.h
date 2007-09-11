@@ -44,6 +44,7 @@ typedef void (protocol_external_handler_T)(struct session *, struct uri *);
 
 int get_protocol_port(enum protocol protocol);
 int get_protocol_need_slashes(enum protocol protocol);
+int get_protocol_keep_double_slashes(enum protocol protocol);
 int get_protocol_need_slash_after_host(enum protocol protocol);
 int get_protocol_free_syntax(enum protocol protocol);
 int get_protocol_need_ssl(enum protocol protocol);
