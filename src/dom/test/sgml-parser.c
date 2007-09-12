@@ -13,6 +13,7 @@
 
 #include "dom/configuration.h"
 #include "dom/node.h"
+#include "dom/select.h"
 #include "dom/sgml/dump.h"
 #include "dom/sgml/parser.h"
 #include "dom/stack.h"
@@ -315,6 +316,7 @@ main(int argc, char *argv[])
 	size_t read_stdin = 0;
 	struct dom_string uri = STATIC_DOM_STRING("dom://test");
 	struct dom_string source = STATIC_DOM_STRING("(no source)");
+	struct dom_string selector = STATIC_DOM_STRING("");
 	int i;
 
 	for (i = 1; i < argc; i++) {
@@ -338,6 +340,10 @@ main(int argc, char *argv[])
 		} else if (get_test_opt(&arg, "normalize", &i, argc, argv, "a string")) {
 			normalize = 1;
 			normalize_flags = parse_dom_config(arg, ',');
+			type = SGML_PARSER_TREE;
+
+		} else if (get_test_opt(&arg, "selector", &i, argc, argv, "a string")) {
+			set_dom_string(&selector, arg, strlen(arg));
 			type = SGML_PARSER_TREE;
 
 		} else if (!strcmp(arg, "stats")) {
@@ -436,10 +442,35 @@ main(int argc, char *argv[])
 				add_sgml_file_dumper(&stack, stdout);
 			walk_dom_nodes(&stack, parser->root);
 			done_dom_stack(&stack);
-			done_dom_node(parser->root);
 		}
+
+		if (selector.length) {
+			struct dom_select *select;
+
+			select = init_dom_select(DOM_SELECT_SYNTAX_CSS, &selector);
+			if (select) {
+				struct dom_node_list *list;
+
+				list = select_dom_nodes(select, parser->root);
+				if (list) {
+					struct dom_node *node;
+					int index;
+
+					foreach_dom_node (list, node, index) {
+						DBG("Match");
+					}
+
+					mem_free(list);
+				}
+
+				done_dom_select(select);
+			}
+		}
+
 	}
 
+	if (type == SGML_PARSER_TREE)
+		done_dom_node(parser->root);
 	done_sgml_parser(parser);
 #ifdef DEBUG_MEMLEAK
 	check_memory_leaks();
