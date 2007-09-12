@@ -56,16 +56,21 @@ get_doctype(struct cache_entry *cached)
 
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
-		  struct conv_table *convert_table, struct cache_entry *cached)
+		  struct cache_entry *cached)
 {
+	unsigned char *head = empty_string_or_(cached->head);
+
 	memset(renderer, 0, sizeof(*renderer));
 
 	renderer->document	= document;
-	renderer->convert_table = convert_table;
 	renderer->convert_mode	= document->options.plain ? CSM_NONE : CSM_DEFAULT;
 	renderer->base_uri	= get_uri_reference(document->uri);
 	renderer->doctype	= get_doctype(cached);
-
+	renderer->convert_table	= get_convert_table(head, document->options.cp,
+						    document->options.assume_cp,
+						    &document->cp,
+						    &document->cp_status,
+						    document->options.hard_assume);
 }
 
 static inline void
@@ -80,9 +85,7 @@ void
 render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
-	unsigned char *head = empty_string_or_(cached->head);
 	struct dom_renderer renderer;
-	struct conv_table *convert_table;
 	struct sgml_parser *parser;
  	enum sgml_parser_type parser_type;
 	unsigned char *string = struri(cached->uri);
@@ -90,13 +93,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	struct dom_string uri = INIT_DOM_STRING(string, length);
 	enum dom_code code;
 
-	convert_table = get_convert_table(head, document->options.cp,
-					  document->options.assume_cp,
-					  &document->cp,
-					  &document->cp_status,
-					  document->options.hard_assume);
-
-	init_dom_renderer(&renderer, document, convert_table, cached);
+	init_dom_renderer(&renderer, document, cached);
 
 	document->bgcolor = document->options.default_style.bg;
 #ifdef CONFIG_UTF8
