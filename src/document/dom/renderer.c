@@ -29,25 +29,6 @@
 #include "util/string.h"
 
 
-static inline void
-init_dom_renderer(struct dom_renderer *renderer, struct document *document,
-		  struct conv_table *convert_table)
-{
-	memset(renderer, 0, sizeof(*renderer));
-
-	renderer->document	= document;
-	renderer->convert_table = convert_table;
-	renderer->convert_mode	= document->options.plain ? CSM_NONE : CSM_DEFAULT;
-	renderer->base_uri	= get_uri_reference(document->uri);
-}
-
-static inline void
-done_dom_renderer(struct dom_renderer *renderer)
-{
-	done_uri(renderer->base_uri);
-}
-
-
 static enum sgml_document_type
 get_doctype(struct cache_entry *cached)
 {
@@ -73,6 +54,27 @@ get_doctype(struct cache_entry *cached)
 	}
 }
 
+static inline void
+init_dom_renderer(struct dom_renderer *renderer, struct document *document,
+		  struct conv_table *convert_table, struct cache_entry *cached)
+{
+	memset(renderer, 0, sizeof(*renderer));
+
+	renderer->document	= document;
+	renderer->convert_table = convert_table;
+	renderer->convert_mode	= document->options.plain ? CSM_NONE : CSM_DEFAULT;
+	renderer->base_uri	= get_uri_reference(document->uri);
+	renderer->doctype	= get_doctype(cached);
+
+}
+
+static inline void
+done_dom_renderer(struct dom_renderer *renderer)
+{
+	done_uri(renderer->base_uri);
+}
+
+
 /* Shared multiplexor between renderers */
 void
 render_dom_document(struct cache_entry *cached, struct document *document,
@@ -94,7 +96,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  &document->cp_status,
 					  document->options.hard_assume);
 
-	init_dom_renderer(&renderer, document, convert_table);
+	init_dom_renderer(&renderer, document, convert_table, cached);
 
 	document->bgcolor = document->options.default_style.bg;
 #ifdef CONFIG_UTF8
@@ -105,8 +107,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 		parser_type = SGML_PARSER_STREAM;
 	else
 		parser_type = SGML_PARSER_TREE;
-
-	renderer.doctype = get_doctype(cached);
 
 	parser = init_sgml_parser(parser_type, renderer.doctype, &uri, 0);
 	if (!parser) return;
