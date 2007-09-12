@@ -36,12 +36,12 @@
 #include "util/string.h"
 
 
-#define check_dom_node_source(renderer, str, len)	\
-	((renderer)->source <= (str) && (str) + (len) <= (renderer)->end)
+#define check_dom_node_source(src_renderer, str, len)	\
+	((src_renderer)->start <= (str) && (str) + (len) <= (src_renderer)->end)
 
-#define assert_source(renderer, str, len) \
-	assertm(check_dom_node_source(renderer, str, len), "renderer[%p : %p] str[%p : %p]", \
-		(renderer)->source, (renderer)->end, (str), (str) + (len))
+#define assert_source(src_renderer, str, len) \
+	assertm(check_dom_node_source(src_renderer, str, len), "renderer[%p : %p] str[%p : %p]", \
+		(src_renderer)->start, (src_renderer)->end, (str), (str) + (len))
 
 
 #define URL_REGEX "(file://|((f|ht|nt)tp(s)?|smb)://[[:alnum:]]+([-@:.]?[[:alnum:]])*\\.[[:alpha:]]{2,4}(:[[:digit:]]+)?)(/(%[[:xdigit:]]{2}|[-_~&=;?.a-z0-9])*)*"
@@ -54,6 +54,10 @@ struct source_renderer {
 	unsigned int find_url:1;
 #endif
 
+	unsigned char *start;
+	unsigned char *end;
+	unsigned char *position;
+
 	/* One style per node type. */
 	struct screen_char styles[DOM_NODES];
 };
@@ -61,8 +65,10 @@ struct source_renderer {
 static inline void
 set_source_position(struct dom_renderer *renderer, unsigned char *string)
 {
-	renderer->position = string;
-	assert_source(renderer, renderer->position, 0);
+	struct source_renderer *source = renderer->data;
+
+	source->position = string;
+	assert_source(source, source->position, 0);
 }
 
 static inline void
@@ -70,13 +76,13 @@ render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
 {
 	struct source_renderer *source = renderer->data;
 	struct screen_char *template = &source->styles[DOM_NODE_TEXT];
-	int length = string - renderer->position;
+	int length = string - source->position;
 
-	assert_source(renderer, renderer->position, 0);
-	assert_source(renderer, string, 0);
+	assert_source(source, source->position, 0);
+	assert_source(source, string, 0);
 
 	if (length <= 0) return;
-	render_dom_text(renderer, template, renderer->position, length);
+	render_dom_text(renderer, template, source->position, length);
 	set_source_position(renderer, string);
 }
 
@@ -84,6 +90,7 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template,
 		     struct dom_node *node)
 {
+	struct source_renderer *source = renderer->data;
 	unsigned char *string = node->string.string;
 	int length = node->string.length;
 
@@ -92,7 +99,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 		length += 2;
 	}
 
-	if (check_dom_node_source(renderer, string, length)) {
+	if (check_dom_node_source(source, string, length)) {
 		render_dom_flush(renderer, string);
 		set_source_position(renderer, string + length);
 	}
@@ -112,7 +119,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 	struct screen_char *template = &source->styles[node->type];
 	unsigned char *alloc_string;
 
-	if (check_dom_node_source(renderer, string, length)) {
+	if (check_dom_node_source(source, string, length)) {
 		render_dom_flush(renderer, string);
 		set_source_position(renderer, string + length);
 	}
@@ -198,7 +205,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	if (!string || !length)
 		return DOM_CODE_OK;
 
-	if (check_dom_node_source(renderer, string, length)) {
+	if (check_dom_node_source(source, string, length)) {
 		render_dom_flush(renderer, string);
 		set_source_position(renderer, string + length);
 	}
@@ -245,7 +252,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 		unsigned char *value = node->data.attribute.value.string - quoted;
 		int valuelen = node->data.attribute.value.length + quoted * 2;
 
-		if (check_dom_node_source(renderer, value, 0)) {
+		if (check_dom_node_source(source, value, 0)) {
 			render_dom_flush(renderer, value);
 			set_source_position(renderer, value + valuelen);
 		}
@@ -314,7 +321,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 	assert(node && renderer && renderer->document);
 
 	/* Highlight the 'CDATA' part of <![CDATA[ if it is there. */
-	if (check_dom_node_source(renderer, string - 6, 6)) {
+	if (check_dom_node_source(source, string - 6, 6)) {
 		render_dom_flush(renderer, string - 6);
 		render_dom_text(renderer, &source->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
 		set_source_position(renderer, string - 1);
@@ -394,8 +401,8 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xx
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including
 	 * the '>' of the last element tag if it has one. (bug 519) */
-	if (check_dom_node_source(renderer, renderer->position, 0)) {
-		render_dom_flush(renderer, renderer->end);
+	if (check_dom_node_source(source, source->position, 0)) {
+		render_dom_flush(renderer, source->end);
 	}
 
 #ifdef HAVE_REGEX_H
@@ -446,11 +453,19 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 };
 
 void
-init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer)
+init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer,
+			 struct string *buffer)
 {
+	struct source_renderer *source;
+
 	renderer->data = mem_calloc(1, sizeof(struct source_renderer));
 	if (!renderer->data)
 		return;
+
+	source = renderer->data;
+	source->start = buffer->source;
+	source->end = buffer->source + buffer->length;
+	source->position = source->start;
 
 	add_dom_stack_context(stack, renderer, &dom_source_renderer_context_info);
 }

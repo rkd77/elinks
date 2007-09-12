@@ -28,10 +28,6 @@ struct dom_renderer {
 
 	struct uri *base_uri;
 
-	unsigned char *source;
-	unsigned char *end;
-
-	unsigned char *position;
 	int canvas_x, canvas_y;
 
 	/* Renderer-specific data */

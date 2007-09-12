@@ -3,7 +3,9 @@
 
 struct dom_renderer;
 struct dom_stack;
+struct string;
 
-void init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer);
+void init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer,
+			      struct string *buffer);
 
 #endif

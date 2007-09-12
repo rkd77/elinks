@@ -31,16 +31,13 @@
 
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
-		  struct string *buffer, struct conv_table *convert_table)
+		  struct conv_table *convert_table)
 {
 	memset(renderer, 0, sizeof(*renderer));
 
 	renderer->document	= document;
 	renderer->convert_table = convert_table;
 	renderer->convert_mode	= document->options.plain ? CSM_NONE : CSM_DEFAULT;
-	renderer->source	= buffer->source;
-	renderer->end		= buffer->source + buffer->length;
-	renderer->position	= renderer->source;
 	renderer->base_uri	= get_uri_reference(document->uri);
 }
 
@@ -97,7 +94,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 					  &document->cp_status,
 					  document->options.hard_assume);
 
-	init_dom_renderer(&renderer, document, buffer, convert_table);
+	init_dom_renderer(&renderer, document, convert_table);
 
 	document->bgcolor = document->options.default_style.bg;
 #ifdef CONFIG_UTF8
@@ -115,7 +112,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	if (!parser) return;
 
 	if (document->options.plain) {
-		init_dom_source_renderer(&parser->stack, &renderer);
+		init_dom_source_renderer(&parser->stack, &renderer, buffer);
 
 	} else if (renderer.doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,
