@@ -58,6 +58,12 @@ struct source_renderer {
 	struct screen_char styles[DOM_NODES];
 };
 
+static inline void
+set_source_position(struct dom_renderer *renderer, unsigned char *string)
+{
+	renderer->position = string;
+	assert_source(renderer, renderer->position, 0);
+}
 
 static inline void
 render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
@@ -71,9 +77,7 @@ render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
 
 	if (length <= 0) return;
 	render_dom_text(renderer, template, renderer->position, length);
-	renderer->position = string;
-
-	assert_source(renderer, renderer->position, 0);
+	set_source_position(renderer, string);
 }
 
 static inline void
@@ -90,8 +94,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
-		renderer->position = string + length;
-		assert_source(renderer, renderer->position, 0);
+		set_source_position(renderer, string + length);
 	}
 
 	render_dom_text(renderer, template, string, length);
@@ -111,8 +114,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
-		renderer->position = string + length;
-		assert_source(renderer, renderer->position, 0);
+		set_source_position(renderer, string + length);
 	}
 
 	alloc_string = memacpy(string, length);
@@ -198,8 +200,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
-		renderer->position = string + length;
-		assert_source(renderer, renderer->position, 0);
+		set_source_position(renderer, string + length);
 	}
 
 	render_dom_text(renderer, &data->styles[node->type], string, length);
@@ -246,8 +247,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 
 		if (check_dom_node_source(renderer, value, 0)) {
 			render_dom_flush(renderer, value);
-			renderer->position = value + valuelen;
-			assert_source(renderer, renderer->position, 0);
+			set_source_position(renderer, value + valuelen);
 		}
 
 		if (node->data.attribute.reference
@@ -317,8 +317,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 	if (check_dom_node_source(renderer, string - 6, 6)) {
 		render_dom_flush(renderer, string - 6);
 		render_dom_text(renderer, &data->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
-		renderer->position = string - 1;
-		assert_source(renderer, renderer->position, 0);
+		set_source_position(renderer, string - 1);
 	}
 
 	render_dom_node_text(renderer, &data->styles[node->type], node);
