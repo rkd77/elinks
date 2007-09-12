@@ -450,7 +450,7 @@ check_head_for_cache_control(struct html_context *html_context,
 	int no_cache = 0;
 	time_t expires = 0;
 
-	if (get_opt_bool("document.cache.ignore_cache_control", NULL))
+	if (get_opt_bool("document.cache.ignore_cache_control"))
 		return;
 
 	/* XXX: Code duplication with HTTP protocol backend. */
