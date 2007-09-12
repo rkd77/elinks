@@ -48,20 +48,20 @@ done_dom_renderer(struct dom_renderer *renderer)
 }
 
 
-static void
-get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
+static enum sgml_document_type
+get_doctype(struct cache_entry *cached)
 {
 	if (!strcasecmp("application/rss+xml", cached->content_type)) {
-		renderer->doctype = SGML_DOCTYPE_RSS;
+		return SGML_DOCTYPE_RSS;
 
 	} else if (!strcasecmp("application/docbook+xml",
 	                       cached->content_type)) {
-		renderer->doctype = SGML_DOCTYPE_DOCBOOK;
+		return SGML_DOCTYPE_DOCBOOK;
 
 	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
 		   || !strcasecmp("application/x-xbel", cached->content_type)
 		   || !strcasecmp("application/xbel", cached->content_type)) {
-		renderer->doctype = SGML_DOCTYPE_XBEL;
+		return SGML_DOCTYPE_XBEL;
 
 	} else {
 		assertm(!strcasecmp("text/html", cached->content_type)
@@ -69,7 +69,7 @@ get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
 		                       cached->content_type),
 			"Couldn't resolve doctype '%s'", cached->content_type);
 
-		renderer->doctype = SGML_DOCTYPE_HTML;
+		return SGML_DOCTYPE_HTML;
 	}
 }
 
@@ -106,7 +106,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	else
 		parser_type = SGML_PARSER_TREE;
 
-	get_doctype(&renderer, cached);
+	renderer.doctype = get_doctype(cached);
 
 	parser = init_sgml_parser(parser_type, renderer.doctype, &uri, 0);
 	if (!parser) return;
