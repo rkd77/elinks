@@ -1,10 +1,9 @@
-
 #ifndef EL__DOCUMENT_DOM_SOURCE_H
 #define EL__DOCUMENT_DOM_SOURCE_H
 
-#include "dom/stack.h"
+struct dom_renderer;
+struct dom_stack;
 
-
-extern struct dom_stack_context_info dom_source_renderer_context_info;
+void init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer);
 
 #endif

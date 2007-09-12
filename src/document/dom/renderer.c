@@ -115,8 +115,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	if (!parser) return;
 
 	if (document->options.plain) {
-		add_dom_stack_context(&parser->stack, &renderer,
-				      &dom_source_renderer_context_info);
+		init_dom_source_renderer(&parser->stack, &renderer);
 
 	} else if (renderer.doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,

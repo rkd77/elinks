@@ -411,7 +411,7 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xx
 }
 
 
-struct dom_stack_context_info dom_source_renderer_context_info = {
+static struct dom_stack_context_info dom_source_renderer_context_info = {
 	/* Object size: */			0,
 	/* Push: */
 	{
@@ -447,3 +447,8 @@ struct dom_stack_context_info dom_source_renderer_context_info = {
 	}
 };
 
+void
+init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer)
+{
+	add_dom_stack_context(stack, renderer, &dom_source_renderer_context_info);
+}
