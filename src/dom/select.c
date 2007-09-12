@@ -167,28 +167,6 @@ parse_dom_select_attribute(struct dom_select_node *sel, struct dom_scanner *scan
  *   0n+0
  */
 
-/* FIXME: Move somewhere else? dom/scanner.h? */
-static size_t
-get_scanner_token_number(struct dom_scanner_token *token)
-{
-	size_t number = 0;
-
-	while (token->string.length > 0 && isdigit(token->string.string[0])) {
-		size_t old_number = number;
-
-		number *= 10;
-
-		/* -E2BIG */
-		if (old_number > number)
-			return -1;
-
-		number += token->string.string[0] - '0';
-		skip_dom_scanner_token_char(token);
-	}
-
-	return number;
-}
-
 /* Parses the '(...)' part of ':nth-of-type(...)' and ':nth-child(...)'. */
 static enum dom_code
 parse_dom_select_nth_arg(struct dom_select_nth_match *nth, struct dom_scanner *scanner)

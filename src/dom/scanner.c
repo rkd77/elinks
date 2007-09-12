@@ -115,6 +115,27 @@ get_dom_scanner_token_debug(struct dom_scanner *scanner)
 }
 #endif
 
+long
+get_scanner_token_number(struct dom_scanner_token *token)
+{
+	long number = 0;
+
+	while (token->string.length > 0 && isdigit(token->string.string[0])) {
+		long old_number = number;
+
+		number *= 10;
+
+		/* -E2BIG */
+		if (old_number > number)
+			return -1;
+
+		number += token->string.string[0] - '0';
+		skip_dom_scanner_token_char(token);
+	}
+
+	return number;
+}
+
 
 /* Initializers */
 

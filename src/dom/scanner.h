@@ -37,6 +37,10 @@ struct dom_scanner_token {
 	((token)->string.length == (sizeof(str) - 1) \
 	 && !strncasecmp((token)->string.string, str, sizeof(str) - 1))
 
+/** Get unsigned number from token string.
+ * Returns -1 if overflow was detected. */
+long get_scanner_token_number(struct dom_scanner_token *token);
+
 
 struct dom_scan_table_info {
 	enum { DOM_SCAN_RANGE, DOM_SCAN_STRING, DOM_SCAN_END } type;
