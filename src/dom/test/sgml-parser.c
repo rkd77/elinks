@@ -21,6 +21,9 @@
 
 unsigned int number_of_lines = 0;
 
+unsigned int save_stats;
+unsigned int node_count;
+
 static int
 update_number_of_lines(struct dom_stack *stack)
 {
@@ -234,6 +237,60 @@ struct dom_stack_context_info sgml_parser_test_context_info = {
 };
 
 static enum dom_code
+sgml_parser_stats_inc_node_count(struct dom_stack *stack,
+                                 struct dom_node *node, void *data)
+{
+	++node_count;
+
+	return DOM_CODE_OK;
+}
+
+static enum dom_code
+sgml_parser_stats_print_node_count(struct dom_stack *stack,
+                                   struct dom_node *node, void *data)
+{
+	printf("%d\n", node_count);
+
+	return DOM_CODE_OK;
+}
+
+struct dom_stack_context_info sgml_parser_stats_context_info = {
+	/* Object size: */			0,
+	/* Push: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_ATTRIBUTE		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_TEXT		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_CDATA_SECTION	*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_ENTITY		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_COMMENT		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_DOCUMENT		*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ sgml_parser_stats_inc_node_count,
+		/* DOM_NODE_NOTATION		*/ sgml_parser_stats_inc_node_count,
+	},
+	/* Pop: */
+	{
+		/*				*/ NULL,
+		/* DOM_NODE_ELEMENT		*/ NULL,
+		/* DOM_NODE_ATTRIBUTE		*/ NULL,
+		/* DOM_NODE_TEXT		*/ NULL,
+		/* DOM_NODE_CDATA_SECTION	*/ NULL,
+		/* DOM_NODE_ENTITY_REFERENCE	*/ NULL,
+		/* DOM_NODE_ENTITY		*/ NULL,
+		/* DOM_NODE_PROC_INSTRUCTION	*/ NULL,
+		/* DOM_NODE_COMMENT		*/ NULL,
+		/* DOM_NODE_DOCUMENT		*/ sgml_parser_stats_print_node_count,
+		/* DOM_NODE_DOCUMENT_TYPE	*/ NULL,
+		/* DOM_NODE_DOCUMENT_FRAGMENT	*/ NULL,
+		/* DOM_NODE_NOTATION		*/ NULL,
+	}
+};
+
+static enum dom_code
 sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 		    unsigned int line_number)
 {
@@ -283,6 +340,9 @@ main(int argc, char *argv[])
 			normalize_flags = parse_dom_config(arg, ',');
 			type = SGML_PARSER_TREE;
 
+		} else if (!strcmp(arg, "stats")) {
+			save_stats = 1;
+
 		} else if (!strcmp(arg, "print-lines")) {
 			flags |= SGML_PARSER_COUNT_LINES;
 
@@ -313,6 +373,8 @@ main(int argc, char *argv[])
 		add_dom_config_normalizer(&parser->stack, normalize_flags);
 	else if (!dump)
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
+	if (save_stats)
+		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_stats_context_info);
 
 	if (read_stdin > 0) {
 		unsigned char *buffer;
