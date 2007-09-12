@@ -301,6 +301,42 @@ sgml_error_function(struct sgml_parser *parser, struct dom_string *string,
 	return DOM_CODE_OK;
 }
 
+static enum dom_code
+parse_sgml_from_stdin(struct sgml_parser *parser, size_t read_size)
+{
+	enum dom_code code = DOM_CODE_OK;
+	unsigned char *buffer;
+	int complete = 0;
+
+	buffer = mem_alloc(read_size);
+	if (!buffer)
+		die("Cannot allocate buffer");
+
+	while (!complete) {
+		size_t size = fread(buffer, 1, read_size, stdin);
+
+		if (ferror(stdin))
+			die("error reading from stdin");
+
+		complete = feof(stdin);
+
+		code = parse_sgml(parser, buffer, size, complete);
+		switch (code) {
+		case DOM_CODE_OK:
+			break;
+
+		case DOM_CODE_INCOMPLETE:
+			if (!complete) break;
+			/* Error */
+		default:
+			complete = 1;
+		}
+	}
+
+	mem_free(buffer);
+	return code;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -383,37 +419,7 @@ main(int argc, char *argv[])
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_stats_context_info);
 
 	if (read_stdin > 0) {
-		unsigned char *buffer;
-
-		buffer = mem_alloc(read_stdin);
-		if (!buffer)
-			die("Cannot allocate buffer");
-
-		complete = 0;
-
-		while (!complete) {
-			size_t size = fread(buffer, 1, read_stdin, stdin);
-
-			if (ferror(stdin))
-				die("error reading from stdin");
-
-			complete = feof(stdin);
-
-			code = parse_sgml(parser, buffer, size, complete);
-			switch (code) {
-			case DOM_CODE_OK:
-				break;
-
-			case DOM_CODE_INCOMPLETE:
-				if (!complete) break;
-				/* Error */
-			default:
-				complete = 1;
-			}
-		}
-
-		mem_free(buffer);
-
+		code = parse_sgml_from_stdin(parser, read_stdin);
 	} else {
 		code = parse_sgml(parser, source.string, source.length, complete);
 	}
