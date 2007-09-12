@@ -330,8 +330,8 @@ static enum dom_code
 render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
+	struct source_renderer *source = renderer->data;
 	struct document *document = renderer->document;
-	struct source_renderer *source;
 	enum dom_node_type type;
 
 	struct css_stylesheet *css = &default_stylesheet;
@@ -356,8 +356,6 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
 		}
 	}
-
-	source = renderer->data = mem_calloc(1, sizeof(*source));
 
 	/* Initialize styles for all the DOM node types. */
 
@@ -450,5 +448,9 @@ static struct dom_stack_context_info dom_source_renderer_context_info = {
 void
 init_dom_source_renderer(struct dom_stack *stack, struct dom_renderer *renderer)
 {
+	renderer->data = mem_calloc(1, sizeof(struct source_renderer));
+	if (!renderer->data)
+		return;
+
 	add_dom_stack_context(stack, renderer, &dom_source_renderer_context_info);
 }
