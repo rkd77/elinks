@@ -68,8 +68,8 @@ set_source_position(struct dom_renderer *renderer, unsigned char *string)
 static inline void
 render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
 {
-	struct source_renderer *data = renderer->data;
-	struct screen_char *template = &data->styles[DOM_NODE_TEXT];
+	struct source_renderer *source = renderer->data;
+	struct screen_char *template = &source->styles[DOM_NODE_TEXT];
 	int length = string - renderer->position;
 
 	assert_source(renderer, renderer->position, 0);
@@ -104,12 +104,12 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 static inline void
 render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *node)
 {
-	struct source_renderer *data = renderer->data;
-	regex_t *regex = &data->url_regex;
+	struct source_renderer *source = renderer->data;
+	regex_t *regex = &source->url_regex;
 	regmatch_t regmatch;
 	unsigned char *string = node->string.string;
 	int length = node->string.length;
-	struct screen_char *template = &data->styles[node->type];
+	struct screen_char *template = &source->styles[node->type];
 	unsigned char *alloc_string;
 
 	if (check_dom_node_source(renderer, string, length)) {
@@ -151,19 +151,19 @@ static enum dom_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *source = renderer->data;
 
 	assert(node && renderer && renderer->document);
 
 #ifdef HAVE_REGEX_H
-	if (data->find_url
+	if (source->find_url
 	    && (node->type == DOM_NODE_TEXT
 		|| node->type == DOM_NODE_CDATA_SECTION
 		|| node->type == DOM_NODE_COMMENT)) {
 		render_dom_node_enhanced_text(renderer, node);
 	} else
 #endif
-		render_dom_node_text(renderer, &data->styles[node->type], node);
+		render_dom_node_text(renderer, &source->styles[node->type], node);
 
 	return DOM_CODE_OK;
 }
@@ -173,11 +173,11 @@ static enum dom_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *source = renderer->data;
 
 	assert(node && renderer && renderer->document);
 
-	render_dom_node_text(renderer, &data->styles[node->type], node);
+	render_dom_node_text(renderer, &source->styles[node->type], node);
 
 	return DOM_CODE_OK;
 }
@@ -186,7 +186,7 @@ static enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *source = renderer->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
 	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
 	struct dom_scanner_token *token = &pstate->end_token;
@@ -203,7 +203,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 		set_source_position(renderer, string + length);
 	}
 
-	render_dom_text(renderer, &data->styles[node->type], string, length);
+	render_dom_text(renderer, &source->styles[node->type], string, length);
 
 	return DOM_CODE_OK;
 }
@@ -233,8 +233,8 @@ static enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
-	struct screen_char *template = &data->styles[node->type];
+	struct source_renderer *source = renderer->data;
+	struct screen_char *template = &source->styles[node->type];
 
 	assert(node && renderer->document);
 
@@ -308,7 +308,7 @@ static enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *source = renderer->data;
 	unsigned char *string = node->string.string;
 
 	assert(node && renderer && renderer->document);
@@ -316,11 +316,11 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 	/* Highlight the 'CDATA' part of <![CDATA[ if it is there. */
 	if (check_dom_node_source(renderer, string - 6, 6)) {
 		render_dom_flush(renderer, string - 6);
-		render_dom_text(renderer, &data->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
+		render_dom_text(renderer, &source->styles[DOM_NODE_ATTRIBUTE], string - 6, 5);
 		set_source_position(renderer, string - 1);
 	}
 
-	render_dom_node_text(renderer, &data->styles[node->type], node);
+	render_dom_node_text(renderer, &source->styles[node->type], node);
 
 	return DOM_CODE_OK;
 }
@@ -331,7 +331,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
-	struct source_renderer *data;
+	struct source_renderer *source;
 	enum dom_node_type type;
 
 	struct css_stylesheet *css = &default_stylesheet;
@@ -357,12 +357,12 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 		}
 	}
 
-	data = renderer->data = mem_calloc(1, sizeof(*data));
+	source = renderer->data = mem_calloc(1, sizeof(*source));
 
 	/* Initialize styles for all the DOM node types. */
 
 	for (type = 0; type < DOM_NODES; type++) {
-		struct screen_char *template = &data->styles[type];
+		struct screen_char *template = &source->styles[type];
 		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
@@ -376,10 +376,10 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 
 #ifdef HAVE_REGEX_H
 	if (document->options.plain_display_links) {
-		if (regcomp(&data->url_regex, URL_REGEX, URL_REGFLAGS)) {
-			regfree(&data->url_regex);
+		if (regcomp(&source->url_regex, URL_REGEX, URL_REGFLAGS)) {
+			regfree(&source->url_regex);
 		} else {
-			data->find_url = 1;
+			source->find_url = 1;
 		}
 	}
 #endif
@@ -391,7 +391,7 @@ static enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
 	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *source = renderer->data;
 
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including
@@ -401,11 +401,11 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xx
 	}
 
 #ifdef HAVE_REGEX_H
-	if (data->find_url)
-		regfree(&data->url_regex);
+	if (source->find_url)
+		regfree(&source->url_regex);
 #endif
 
-	mem_free(data);
+	mem_free(source);
 
 	return DOM_CODE_OK;
 }
