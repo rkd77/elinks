@@ -194,26 +194,6 @@ get_dom_stack_state_data(struct dom_stack_context *context,
 	return (void *) &context->state_objects[state->depth * object_size];
 }
 
-/*#define DOM_STACK_TRACE*/
-
-/** Get debug info from the DOM stack
- *
- * Define `DOM_STACK_TRACE` to have debug info about the nodes added printed to
- * the log. It will define add_dom_stack_tracer() to not be a no-op.
- *
- * Run as:
- *
- *	ELINKS_LOG=/tmp/dom-dump.txt ./elinks -no-connect URL
- *
- * to have the debug dumped into a file. */
-#ifdef DOM_STACK_TRACE
-#define add_dom_stack_tracer(stack, name) \
-	add_dom_stack_context(stack, name, &dom_stack_trace_context_info)
-extern struct dom_stack_context_info dom_stack_trace_context_info;
-#else
-#define add_dom_stack_tracer(stack, name) /* Nada */
-#endif
-
 /** The state iterators
  *
  * To safely iterate through the stack state iterators. */
