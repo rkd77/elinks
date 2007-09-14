@@ -2064,10 +2064,10 @@ format_html_part(struct html_context *html_context,
 {
 	struct part *part;
 	void *html_state;
-	int llm = renderer_context.last_link_to_move;
-	struct tag *ltm = renderer_context.last_tag_to_move;
-	int ef = renderer_context.empty_format;
-	int lm = html_context->margin;
+	int saved_last_link_to_move = renderer_context.last_link_to_move;
+	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
+	int saved_empty_format = renderer_context.empty_format;
+	int saved_margin = html_context->margin;
 
 	/* Hash creation if needed. */
 	if (!table_cache) {
@@ -2163,11 +2163,11 @@ format_html_part(struct html_context *html_context,
 	}
 
 ret:
-	renderer_context.last_link_to_move = llm;
-	renderer_context.last_tag_to_move = ltm;
-	renderer_context.empty_format = ef;
+	renderer_context.last_link_to_move = saved_last_link_to_move;
+	renderer_context.last_tag_to_move = saved_last_tag_to_move;
+	renderer_context.empty_format = saved_empty_format;
 
-	html_context->margin = lm;
+	html_context->margin = saved_margin;
 
 	if (html_context->table_level > 1 && !document
 	    && table_cache
