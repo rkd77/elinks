@@ -14,6 +14,7 @@
 #include "config/options.h"
 #include "document/docdata.h"
 #include "document/document.h"
+#include "document/format.h"
 #include "document/options.h"
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
@@ -92,7 +93,7 @@ add_document_link(struct document *document, unsigned char *uri, int length,
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
 	link->where = uri;
-	link->color.background = document->options.default_bg;
+	link->color.background = document->options.default_style.bg;
 	link->color.foreground = document->options.default_link;
 	link->number = document->nlinks;
 
@@ -213,7 +214,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 
 	line[link_end] = saved_char;
 
-	new_link->color.background = doc_opts->default_bg;
+	new_link->color.background = doc_opts->default_style.bg;
 
 	set_term_color(&template, &new_link->color,
 		       doc_opts->color_flags, doc_opts->color_mode);
@@ -478,14 +479,7 @@ next:
 static void
 init_template(struct screen_char *template, struct document_options *options)
 {
-	color_T background = options->default_bg;
-	color_T foreground = options->default_fg;
-	struct color_pair colors = INIT_COLOR_PAIR(background, foreground);
-
-	template->attr = 0;
-	template->data = ' ';
-	set_term_color(template, &colors,
-		       options->color_flags, options->color_mode);
+	get_screen_char_template(template, options, options->default_style);
 }
 
 static struct node *
@@ -643,7 +637,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	renderer.max_width = document->options.wrap ? document->options.box.width
 						    : INT_MAX;
 
-	document->bgcolor = document->options.default_bg;
+	document->bgcolor = document->options.default_style.bg;
 	document->width = 0;
 #ifdef CONFIG_UTF8
 	document->options.utf8 = is_cp_utf8(document->options.cp);

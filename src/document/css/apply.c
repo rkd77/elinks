@@ -21,6 +21,7 @@
 #include "document/css/property.h"
 #include "document/css/scanner.h"
 #include "document/css/stylesheet.h"
+#include "document/format.h"
 #include "document/html/parser/parse.h"
 #include "document/options.h"
 #include "util/align.h"
