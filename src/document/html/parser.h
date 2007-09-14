@@ -2,6 +2,7 @@
 #ifndef EL__DOCUMENT_HTML_PARSER_H
 #define EL__DOCUMENT_HTML_PARSER_H
 
+#include "document/format.h"
 #include "intl/charsets.h" /* unicode_val_T */
 #include "util/align.h"
 #include "util/color.h"
@@ -21,23 +22,8 @@ struct uri;
  * files - there's lack of any well defined interface and it's all randomly
  * mixed up :/. */
 
-enum format_attr {
-	AT_BOLD = 1,
-	AT_ITALIC = 2,
-	AT_UNDERLINE = 4,
-	AT_FIXED = 8,
-	AT_GRAPHICS = 16,
-	AT_PREFORMATTED = 32,
-};
-
-struct text_attrib_style {
-	enum format_attr attr;
-	color_T fg;
-	color_T bg;
-};
-
 struct text_attrib {
-	struct text_attrib_style style;
+	struct text_style style;
 
 	int fontsize;
 	unsigned char *link;

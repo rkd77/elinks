@@ -896,8 +896,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	format.form = NULL;
 	format.title = NULL;
 
-	format.style.fg = options->default_fg;
-	format.style.bg = options->default_bg;
+	format.style = options->default_style;
 	format.clink = options->default_link;
 	format.vlink = options->default_vlink;
 #ifdef CONFIG_BOOKMARKS
@@ -914,7 +913,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	par_format.dd_margin = options->margin;
 	par_format.flags = P_NONE;
 
-	par_format.bgcolor = options->default_bg;
+	par_format.bgcolor = options->default_style.bg;
 
 	html_top->invisible = 0;
 	html_top->name = NULL;

@@ -1,6 +1,7 @@
 #ifndef EL__DOCUMENT_OPTIONS_H
 #define EL__DOCUMENT_OPTIONS_H
 
+#include "document/format.h"
 #include "terminal/color.h"
 #include "util/color.h"
 #include "util/box.h"
@@ -34,8 +35,7 @@ struct document_options {
 
 	/** @name The default (fallback) colors.
 	 * @{ */
-	color_T default_fg;
-	color_T default_bg;
+	struct text_style default_style;
 	color_T default_link;
 	color_T default_vlink;
 #ifdef CONFIG_BOOKMARKS
