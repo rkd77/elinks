@@ -702,7 +702,7 @@ http_send_header(struct socket *socket)
 	}
 
 	/* CONNECT: Referer probably is a secret page in the HTTPS
-	 * server, so don't reveal it to the proxy.  */ 
+	 * server, so don't reveal it to the proxy.  */
 	if (!use_connect) {
 		switch (get_opt_int("protocol.http.referer.policy")) {
 			case REFERER_NONE:
@@ -1042,7 +1042,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
 			int written;
-			
+
 			written = safe_write(conn->stream_pipes[1], data,
 						 len > to_read ? to_read : len);
 
@@ -1071,7 +1071,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 				}
 			}
 		}
-		
+
 		if (!conn->stream) {
 			conn->stream = open_encoded(conn->stream_pipes[0],
 					conn->content_encoding);

@@ -213,7 +213,7 @@ secure_open(unsigned char *file_name)
 #else
 	const mode_t mask = S_IXUSR | S_IRWXG | S_IRWXO;
 #endif
-	
+
 	saved_mask = umask(mask);
 	ssi = secure_open_umask(file_name);
 	umask(saved_mask);

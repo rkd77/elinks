@@ -253,7 +253,7 @@ error:
 		fclose(fp);
 		goto error;
 	}
-	
+
 	if (fclose(fp) != 0)
 		goto error;
 

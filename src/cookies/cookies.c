@@ -835,7 +835,7 @@ save_cookies(struct terminal *term) {
 	time_t now;
 
 #ifdef CONFIG_SMALL
-# define CANNOT_SAVE_COOKIES(flags, message) 
+# define CANNOT_SAVE_COOKIES(flags, message)
 #else
 # define CANNOT_SAVE_COOKIES(flags, message)				\
 	do {								\
@@ -894,7 +894,7 @@ save_cookies(struct terminal *term) {
 		CANNOT_SAVE_COOKIES(MSGBOX_NO_TEXT_INTL,
 				    secsave_strerror(secsave_errno, term));
 	}
-#undef CANNOT_SAVE_COOKIES	
+#undef CANNOT_SAVE_COOKIES
 }
 
 static void
