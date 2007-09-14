@@ -2213,29 +2213,26 @@ ret:
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
 		struct table_cache_entry *tce = mem_calloc(1, sizeof(*tce));
-		/* A goto is used here to prevent a test or code
-		 * redundancy. */
-		if (!tce) goto end;
 
-		tce->key.start = start;
-		tce->key.end = end;
-		tce->key.align = align;
-		tce->key.margin = margin;
-		tce->key.width = width;
-		tce->key.x = x;
-		tce->key.link_num = link_num;
-		copy_struct(&tce->part, part);
+		if (tce) {
+			tce->key.start = start;
+			tce->key.end = end;
+			tce->key.align = align;
+			tce->key.margin = margin;
+			tce->key.width = width;
+			tce->key.x = x;
+			tce->key.link_num = link_num;
+			copy_struct(&tce->part, part);
 
-		if (!add_hash_item(table_cache,
-				   (unsigned char *) &tce->key,
-				   sizeof(tce->key), tce)) {
-			mem_free(tce);
-		} else {
-			table_cache_entries++;
+			if (!add_hash_item(table_cache,
+					   (unsigned char *) &tce->key,
+					   sizeof(tce->key), tce)) {
+				mem_free(tce);
+			} else {
+				table_cache_entries++;
+			}
 		}
 	}
-
-end:
 
 	return part;
 }
