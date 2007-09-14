@@ -48,19 +48,39 @@ static void
 add_modules_to_string(struct string *string, struct terminal *term)
 {
 	struct module *module;
-	int i, last_split = 0;
-	unsigned char *last_newline = strrchr(string->source, '\n');
-
-	if (last_newline)
-		last_split = last_newline - string->source;
+	int i;
 
 	foreach_module (module, builtin_modules, i) {
 		if (i > 0) add_to_string(string, ", ");
-		if (string->length - last_split > 70) {
-			add_char_to_string(string, '\n');
-			last_split = string->length;
-		}
 		add_module_to_string(string, module, term);
+	}
+}
+
+/* Wrap string on spaces starting at position @start_at, trying
+ * to keep lines undex @maxlen length */
+static void
+wrap_string(struct string *string, int start_at, int maxlen)
+{
+	unsigned char *pos, *start_pos;
+	unsigned char *last_pos = NULL;
+
+	assert(string && string->source && start_at < string->length);
+	if_assert_failed return;
+
+	if (maxlen <= 0) return;
+
+	pos = start_pos = &string->source[start_at];
+	while ((pos = strchr(pos, ' '))) {
+		int len = pos - start_pos;
+
+		if (len < maxlen) {
+			last_pos = pos;
+			pos++;
+		} else {
+			if (last_pos) *last_pos = '\n';
+			pos = start_pos = last_pos + 1;
+		}
+		if (!*pos) break;
 	}
 }
 
@@ -74,17 +94,18 @@ get_dyn_full_version(struct terminal *term, int more)
 	if (!init_string(&string)) return NULL;
 
 	add_format_to_string(&string, "ELinks %s", VERSION_STRING);
-	if (*build_id)
-		add_format_to_string(&string, " (%s)", build_id);
+	if (*build_id) {
+		add_char_to_string(&string, more ? '\n' : ' ');
+		add_format_to_string(&string, "%s", build_id);
+	}
+
+	add_char_to_string(&string, '\n');
+	add_format_to_string(&string, _("Built on %s %s", term),
+			     build_date, build_time);
+
 	if (more) {
-		add_to_string(&string, "\n");
-		add_format_to_string(&string, _("Built on %s %s", term),
-					build_date, build_time);
 		add_to_string(&string, "\n\n");
 		add_to_string(&string, _("Text WWW browser", term));
-	} else {
-		add_format_to_string(&string, _(" (built on %s %s)", term),
-					build_date, build_time);
 	}
 
 	string_concat(&string,
@@ -127,6 +148,17 @@ get_dyn_full_version(struct terminal *term, int more)
 	);
 
 	add_modules_to_string(&string, term);
+
+	if (!more) {
+		int start_at = 0;
+		unsigned char *last_newline = strrchr(string.source, '\n');
+
+		if (last_newline) {
+			start_at = last_newline - string.source + 1;
+		}
+
+		wrap_string(&string, start_at, 72);
+	}
 
 	return string.source;
 }
