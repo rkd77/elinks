@@ -1,4 +1,4 @@
-/** Process' CPU time utilities 
+/** Process' CPU time utilities
  * @file*/
 
 #ifndef EL__UTIL_PROFILE_H

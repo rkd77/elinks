@@ -142,7 +142,7 @@ parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
 
 		if (want_domain && *domain_name) {
 			struct option *domain_tree;
-			
+
 			domain_tree = get_domain_tree(domain_name);
 			if (!domain_tree) {
 				mem_free(domain_name);
