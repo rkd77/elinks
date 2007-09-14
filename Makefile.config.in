@@ -185,6 +185,10 @@ MAKE_COLOR = @MAKE_COLOR@
 
 LIB_O_NAME = lib.o
 
+# Reverse a CONFIG_* string
+# Usage $(call not,$(CONFIG_FOO))
+not = $(if $(findstring yes,$(1)),no,yes)
+
 ### This is here because Makefile.config is usually the first thing
 ### we get and sometimes the all rule can be implicit, yet we want
 ### it always as the default one. So this should make sure it always
