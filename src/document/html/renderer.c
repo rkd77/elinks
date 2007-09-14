@@ -2101,11 +2101,11 @@ format_html_part(struct html_context *html_context,
 {
 	struct part *part;
 	struct html_element *html_state;
-	int saved_last_link_to_move = renderer_context.last_link_to_move;
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
 	struct tag *saved_last_tag_for_newline = renderer_context.last_tag_for_newline;
 	int saved_empty_format = renderer_context.empty_format;
 	int saved_margin = html_context->margin;
+	int saved_last_link_to_move = renderer_context.last_link_to_move;
 
 	/* Hash creation if needed. */
 	if (!table_cache) {
