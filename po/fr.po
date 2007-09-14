@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-11 14:58+0200\n"
-"PO-Revision-Date: 2007-09-11 15:00+0200\n"
+"POT-Creation-Date: 2007-09-14 10:35+0200\n"
+"PO-Revision-Date: 2007-09-14 10:37+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -6179,45 +6179,40 @@ msgstr "Echec de attach_terminal()."
 msgid "%d select() failures."
 msgstr "%d échecs de select()."
 
-#: src/main/version.c:81
+#: src/main/version.c:103
 #, c-format
 msgid "Built on %s %s"
 msgstr "Compilé le %s à %s"
 
-#: src/main/version.c:84
+#: src/main/version.c:108
 msgid "Text WWW browser"
 msgstr "Navigateur web en mode texte"
 
-#: src/main/version.c:86
-#, c-format
-msgid " (built on %s %s)"
-msgstr "(compilé le %s à %s)"
-
-#: src/main/version.c:92
+#: src/main/version.c:113
 msgid "Features:"
 msgstr "Fonctionnalités:"
 
-#: src/main/version.c:94
+#: src/main/version.c:115
 msgid "Standard"
 msgstr "Standart"
 
-#: src/main/version.c:96
+#: src/main/version.c:117
 msgid "Debug"
 msgstr "Debug"
 
-#: src/main/version.c:99
+#: src/main/version.c:120
 msgid "Fastmem"
 msgstr "Fastmem"
 
-#: src/main/version.c:102
+#: src/main/version.c:123
 msgid "Own Libc Routines"
 msgstr "Routines Libc Internes"
 
-#: src/main/version.c:105
+#: src/main/version.c:126
 msgid "No Backtrace"
 msgstr "Pas de Backtrace"
 
-#: src/main/version.c:120
+#: src/main/version.c:141
 msgid "No mouse"
 msgstr "Sans souris"
 
