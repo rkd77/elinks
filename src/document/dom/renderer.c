@@ -115,8 +115,8 @@ init_dom_renderer(struct dom_renderer *renderer, struct document *document,
 
 	for (type = 0; type < DOM_NODES; type++) {
 		struct screen_char *template = &renderer->styles[type];
-		color_T background = document->options.default_bg;
-		color_T foreground = document->options.default_fg;
+		color_T background = document->options.default_style.bg;
+		color_T foreground = document->options.default_style.fg;
 		enum screen_char_attr attr = 0;
 		static int i_want_struct_module_for_dom;
 
@@ -418,7 +418,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
 	link->where = where;
-	link->color.background = document->options.default_bg;
+	link->color.background = document->options.default_style.bg;
 	link->color.foreground = fgcolor;
 	link->number = document->nlinks;
 
