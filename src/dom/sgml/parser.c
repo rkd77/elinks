@@ -719,9 +719,15 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 void
 done_sgml_parser(struct sgml_parser *parser)
 {
+	while (!dom_stack_is_empty(&parser->stack)) {
+		get_dom_stack_top(&parser->stack)->immutable = 0;
+		pop_dom_node(&parser->stack);
+	}
+
 	while (!dom_stack_is_empty(&parser->parsing))
 		pop_dom_node(&parser->parsing);
 	done_dom_stack(&parser->parsing);
+
 	done_dom_stack(&parser->stack);
 	done_dom_string(&parser->uri);
 	mem_free(parser);

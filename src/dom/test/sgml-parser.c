@@ -425,13 +425,6 @@ main(int argc, char *argv[])
 	}
 
 	if (parser->root) {
-		assert(!complete || parser->stack.depth > 0);
-
-		while (!dom_stack_is_empty(&parser->stack)) {
-			get_dom_stack_top(&parser->stack)->immutable = 0;
-			pop_dom_node(&parser->stack);
-		}
-
 		if (normalize || dump) {
 			struct dom_stack stack;
 
