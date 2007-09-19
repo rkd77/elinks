@@ -2071,7 +2071,6 @@ format_html_part(struct html_context *html_context,
 	struct part *part;
 	void *html_state;
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
-	struct tag *saved_last_tag_for_newline = renderer_context.last_tag_for_newline;
 	int saved_empty_format = renderer_context.empty_format;
 	int saved_margin = html_context->margin;
 	int saved_last_link_to_move = renderer_context.last_link_to_move;
@@ -2173,7 +2172,6 @@ ret:
 	renderer_context.last_link_to_move = saved_last_link_to_move;
 	renderer_context.last_tag_to_move = saved_last_tag_to_move;
 	renderer_context.empty_format = saved_empty_format;
-	renderer_context.last_tag_for_newline = saved_last_tag_for_newline;
 
 	html_context->margin = saved_margin;
 
