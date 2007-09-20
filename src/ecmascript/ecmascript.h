@@ -11,13 +11,21 @@
 #include "util/time.h"
 
 struct document;
+struct ecmascript_interpreter;
 struct string;
 struct terminal;
-struct timeout_data;
 struct uri;
 struct view_state;
 
+
 #define get_ecmascript_enable()		get_opt_bool("ecmascript.enable")
+
+struct timeout_data {
+	LIST_HEAD(struct timeout_data);
+	struct ecmascript_interpreter *interpreter;
+	unsigned char *code;
+	timer_id_T timer;
+};
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -41,6 +49,9 @@ struct ecmascript_interpreter {
 	 * go through the list we maintain a pointer to the last processed
 	 * entry. */
 	LIST_OF(struct string_list_item) onload_snippets;
+
+	/* The list of snippets used by setTimeout. */
+	LIST_OF(struct timeout_data) timeouts;
 	struct string_list_item *current_onload_snippet;
 
 	/* ID of the {struct document} where those onload_snippets belong to.
