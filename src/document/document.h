@@ -144,6 +144,15 @@ struct search {
 };
 #endif
 
+#ifdef CONFIG_ECMASCRIPT
+struct timeout_data {
+	LIST_HEAD(struct timeout_data);
+	struct ecmascript_interpreter *interpreter;
+	unsigned char *code;
+	timer_id_T timer;
+};
+#endif
+
 struct document {
 	OBJECT_HEAD(struct document);
 
@@ -165,6 +174,8 @@ struct document {
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
+	/** used by setTimeout */
+	LIST_OF(struct timeout_data) timeouts;
 #endif
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the
@@ -245,6 +256,11 @@ int get_format_cache_used_count(void);
 int get_format_cache_refresh_count(void);
 
 void shrink_format_cache(int);
+
+#ifdef CONFIG_ECMASCRIPT
+void kill_timeouts(struct document *document);
+#endif
+
 
 extern struct module document_module;
 

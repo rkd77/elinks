@@ -127,7 +127,6 @@ ecmascript_get_interpreter(struct view_state *vs)
 	interpreter->vs = vs;
 	interpreter->vs->ecmascript_fragile = 0;
 	init_list(interpreter->onload_snippets);
-	init_list(interpreter->timeouts);
 #ifdef CONFIG_ECMASCRIPT_SEE
 	see_get_interpreter(interpreter);
 #else
@@ -135,19 +134,6 @@ ecmascript_get_interpreter(struct view_state *vs)
 #endif
 	return interpreter;
 }
-
-static void
-kill_timeouts(struct ecmascript_interpreter *interpreter)
-{
-	struct timeout_data *td;
-
-	foreach (td, interpreter->timeouts) {
-		kill_timer(&td->timer);
-		mem_free(td->code);
-	}
-	free_list(interpreter->timeouts);
-}
-
 
 void
 ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
@@ -164,7 +150,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	spidermonkey_put_interpreter(interpreter);
 #endif
 	free_string_list(&interpreter->onload_snippets);
-	kill_timeouts(interpreter);
+	/* Is it superfluous? */
+	if (interpreter->vs->doc_view)
+		kill_timeouts(interpreter->vs->doc_view->document);
 	interpreter->vs->ecmascript = NULL;
 	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);
@@ -369,7 +357,7 @@ struct timeout_data *
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
 	struct timeout_data *td;
-	assert(interpreter);
+	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return NULL;
 
 	td = mem_calloc(1, sizeof(*td));
@@ -381,7 +369,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char
 	td->code = code;
 	install_timer(&td->timer, timeout, ecmascript_timeout_handler, td);
 	if (td->timer != TIMER_ID_UNDEF) {
-		add_to_list_end(interpreter->timeouts, td);
+		add_to_list_end(interpreter->vs->doc_view->document->timeouts, td);
 		return td;
 	}
 	mem_free(code);
