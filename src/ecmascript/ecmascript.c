@@ -327,7 +327,6 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 static void
 ecmascript_timeout_handler(void *i)
 {
-	struct string code;
 	struct timeout_data *td = i;
 	struct ecmascript_interpreter *interpreter = td->interpreter;
 
@@ -335,10 +334,10 @@ ecmascript_timeout_handler(void *i)
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
 	del_from_list(td);
-	if (init_string(&code)) {
-		add_to_string(&code, td->code);
+	{
+		struct string code = INIT_STRING(td->code, strlen(td->code));
+
 		ecmascript_eval(interpreter, &code, NULL);
-		done_string(&code);
 	}
 	mem_free(td->code);
 	mem_free(td);
