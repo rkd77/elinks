@@ -151,8 +151,9 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	if (ep->attr.title) e->attr.title = stracpy(ep->attr.title);
 	if (ep->attr.select) e->attr.select = stracpy(ep->attr.select);
 
+#ifdef CONFIG_CSS
 	e->attr.id = e->attr.class = NULL;
-
+#endif
 	/* We don't want to propagate these. */
 	/* XXX: For sure? --pasky */
 	e->attr.onclick = e->attr.ondblclick = e->attr.onmouseover = e->attr.onhover
