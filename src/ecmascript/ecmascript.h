@@ -87,7 +87,8 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 void ecmascript_set_action(unsigned char **action, unsigned char *string);
 
 struct timeout_data *ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
-void ecmascript_clear_timeout(struct timeout_data *td);
+void ecmascript_clear_timeout(struct timeout_data *td); /* the same for both SpiderMonkey and SEE */
+void ecmascript_clear_timeout2(struct timeout_data *td); /* engine dependent */
 
 extern struct module ecmascript_module;
 

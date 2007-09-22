@@ -150,6 +150,7 @@ struct timeout_data {
 	struct ecmascript_interpreter *interpreter;
 	unsigned char *code;
 	timer_id_T timer;
+	void *object;
 };
 #endif
 

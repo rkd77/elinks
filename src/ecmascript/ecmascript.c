@@ -333,12 +333,13 @@ ecmascript_timeout_handler(void *i)
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
 		interpreter->vs->ecmascript_fragile);
-	del_from_list(td);
 	{
 		struct string code = INIT_STRING(td->code, strlen(td->code));
 
+		ecmascript_clear_timeout2(td);
 		ecmascript_eval(interpreter, &code, NULL);
 	}
+	del_from_list(td);
 	mem_free(td->code);
 	mem_free(td);
 }

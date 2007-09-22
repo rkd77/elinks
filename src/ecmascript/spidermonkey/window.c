@@ -448,16 +448,29 @@ end:
 static JSBool
 window_clearTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	JSObject *timeout;
+	JSObject *timer;
 	struct timeout_data *td;
 
 	if (argc != 1)
 		return JS_TRUE;
-	timeout = JSVAL_TO_OBJECT(argv[0]);
-	if (!JS_InstanceOf(ctx, timeout, (JSClass *) &timeout_class, NULL)) return JS_FALSE;
-	td = JS_GetPrivate(ctx, timeout);
-	ecmascript_clear_timeout(td);
+	timer = JSVAL_TO_OBJECT(argv[0]);
+	if (!JS_InstanceOf(ctx, timer, (JSClass *) &timeout_class, NULL)) return JS_FALSE;
+	td = JS_GetPrivate(ctx, timer);
+	if (td)	ecmascript_clear_timeout(td);
 	return JS_TRUE;
+}
+
+void
+ecmascript_clear_timeout2(struct timeout_data *td)
+{
+	struct ecmascript_interpreter *interpreter = td->interpreter;
+	JSContext *ctx = interpreter->backend_data;
+	JSObject *timer = td->object;
+
+	if (timer) {
+		JS_SetPrivate(ctx, timer, NULL);
+		td->object = NULL;
+	}
 }
 
 /* @window_funcs{"setTimeout"} */
@@ -487,7 +500,10 @@ window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval 
 	}
 	td = ecmascript_set_timeout(interpreter, code, timeout);
 	timer = JS_NewObject(ctx, (JSClass *)&timeout_class, NULL, NULL);
-	JS_SetPrivate(ctx, timer, td);
+	if (timer) {
+		JS_SetPrivate(ctx, timer, td);
+		td->object = timer;
+	}
 	object_to_jsval(ctx, rval, timer);
 	return JS_TRUE;
 }

@@ -350,6 +350,17 @@ end:
 	done_uri(uri);
 }
 
+void
+ecmascript_clear_timeout2(struct timeout_data *td)
+{
+	struct timeout_class *timer = td->object;
+
+	if (timer) {
+		timer->td = NULL;
+		td->object = NULL;
+	}
+}
+
 static void
 js_clearTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	      struct SEE_object *thisobj, int argc, struct SEE_value **argv,
@@ -360,7 +371,7 @@ js_clearTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (argc != 1) return;
 	timer = (struct timeout_class *)argv[0]->u.object;
 	see_check_class(interp, (struct SEE_object *)timer, &js_timeout_object_class);
-	ecmascript_clear_timeout(timer->td);
+	if (timer && timer->td) ecmascript_clear_timeout(timer->td);
 	
 }
 
@@ -384,9 +395,12 @@ js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	timeout = SEE_ToInt32(interp, argv[1]);
 	td = ecmascript_set_timeout(ei, code, timeout);
 	timer = SEE_NEW(interp, struct timeout_class);
-	timer->object.objectclass = &js_timeout_object_class;
-	timer->object.Prototype = NULL;
-	timer->td = td;
+	if (timer) {
+		timer->object.objectclass = &js_timeout_object_class;
+		timer->object.Prototype = NULL;
+		timer->td = td;
+		td->object = timer;
+	}
 	SEE_SET_OBJECT(res, (struct SEE_object *)timer);
 }
 
