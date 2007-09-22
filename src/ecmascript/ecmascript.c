@@ -347,6 +347,7 @@ ecmascript_timeout_handler(void *i)
 void
 ecmascript_clear_timeout(struct timeout_data *td)
 {
+	ecmascript_clear_timeout2(td);
 	del_from_list(td);
 	kill_timer(&td->timer);
 	mem_free(td->code);
