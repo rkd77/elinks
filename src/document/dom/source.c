@@ -57,9 +57,14 @@ struct source_renderer {
 	unsigned char *start;
 	unsigned char *end;
 	unsigned char *position;
+	unsigned int element_level;
 
 	/* One style per node type. */
 	struct screen_char styles[DOM_NODES];
+};
+
+struct source_renderer_state {
+	int prev_y;
 };
 
 static inline void
@@ -177,20 +182,37 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx
 
 /* This callback is also used for rendering processing instruction nodes.  */
 static enum dom_code
-render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
+render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct source_renderer *source = renderer->data;
 
 	assert(node && renderer && renderer->document);
 
+	if (node->type == DOM_NODE_ELEMENT
+	    && renderer->document->options.wrap) {
+		struct source_renderer_state *src_state = data;
+		unsigned char *string = node->string.string;
+
+		while (string > source->start && *string != '<')
+			string--;
+
+		if (check_dom_node_source(source, string, 1)) {
+			render_dom_flush(renderer, string);
+			set_source_position(renderer, string);
+			X(renderer) = source->element_level * 2;
+			Y(renderer)++;
+			source->element_level++;
+			src_state->prev_y = Y(renderer);
+		}
+	}
 	render_dom_node_text(renderer, &source->styles[node->type], node);
 
 	return DOM_CODE_OK;
 }
 
 static enum dom_code
-render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
+render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *data)
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct source_renderer *source = renderer->data;
@@ -201,6 +223,27 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	int length = token->string.length;
 
 	assert(node && renderer && renderer->document);
+
+	if (node->type == DOM_NODE_ELEMENT
+	    && renderer->document->options.wrap) {
+		struct source_renderer_state *src_state = data;
+
+		source->element_level--;
+
+		if (string && length && src_state->prev_y < Y(renderer)) {
+			unsigned char *tag = string;
+
+			while (tag > source->start && *tag != '<')
+				tag--;
+
+			if (check_dom_node_source(source, tag, 1)) {
+				render_dom_flush(renderer, tag);
+				set_source_position(renderer, tag);
+				X(renderer) = source->element_level * 2;
+				Y(renderer)++;
+			}
+		}
+	}
 
 	if (!string || !length)
 		return DOM_CODE_OK;
@@ -417,7 +460,7 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xx
 
 
 static struct dom_stack_context_info dom_source_renderer_context_info = {
-	/* Object size: */			0,
+	/* Object size: */			sizeof(struct source_renderer_state),
 	/* Push: */
 	{
 		/*				*/ NULL,
