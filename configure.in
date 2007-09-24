@@ -1456,18 +1456,24 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
       ;;
   esac
 
-  # GCC 4.2 snapshots warn that comparisons like &object != NULL
-  # always return true.  Some macros in ELinks check whether pointer
-  # arguments are NULL, and giving them addresses of named objects
-  # triggers the warning.  These warnings have not revealed any real
-  # bugs, so shut them up instead of complicating the code.  GCC 4.1
-  # does not recognize -Wno-always-true and exits with code 1 if it is
-  # given.
-  AC_MSG_CHECKING([whether $CC accepts -Wno-always-true])
-  EL_SAVE_FLAGS
-  CFLAGS="$CFLAGS -Wno-always-true"
-  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[AC_MSG_RESULT([yes])],[EL_RESTORE_FLAGS
-     AC_MSG_RESULT([no])])
+  # GCC 4.2.1 warns if we use the address of an object in Boolean context:
+  # warning: the address of `builtin_modules' will always evaluate as `true'
+  # This hits the object_lock and foreach_module macros in particular.
+  # It would be okay to put something in the macros to avoid the warning,
+  # but currently this seems to require defining parallel macros that skip
+  # the NULL check, and that's too ugly.  So we instead disable the warning.
+  # GCC 4.2.1 needs -Wno-address, but GCC 4.2 snapshots need -Wno-always-true.
+  # GCC 4.1.3 recognizes neither and exits with code 1 if they are given.
+  for warning_flag in -Wno-address -Wno-always-true; do
+    AC_MSG_CHECKING([whether $CC accepts $warning_flag])
+    EL_SAVE_FLAGS
+    CFLAGS="$CFLAGS $warning_flag"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],
+      [AC_MSG_RESULT([yes])
+       break],
+      [AC_MSG_RESULT([no])])
+    EL_RESTORE_FLAGS
+  done
 fi
 
 EL_LOG_CONFIG(CFLAGS, [Compiler flags (CFLAGS)], [])
