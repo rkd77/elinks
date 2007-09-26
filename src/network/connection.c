@@ -767,7 +767,7 @@ retry_connection(struct connection *conn, enum connection_state state)
 	set_connection_state(conn, state);
 
 	interrupt_connection(conn);
-	if (conn->uri->post || !max_tries || ++conn->tries >= max_tries) {
+	if (conn->uri->post || (max_tries && ++conn->tries >= max_tries)) {
 		done_connection(conn);
 		register_check_queue();
 	} else {
