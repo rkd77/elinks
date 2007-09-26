@@ -2064,10 +2064,10 @@ format_html_part(struct html_context *html_context,
 {
 	struct part *part;
 	void *html_state;
-	int llm = renderer_context.last_link_to_move;
-	struct tag *ltm = renderer_context.last_tag_to_move;
-	int ef = renderer_context.empty_format;
-	int lm = html_context->margin;
+	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
+	int saved_empty_format = renderer_context.empty_format;
+	int saved_margin = html_context->margin;
+	int saved_last_link_to_move = renderer_context.last_link_to_move;
 
 	/* Hash creation if needed. */
 	if (!table_cache) {
@@ -2163,11 +2163,11 @@ format_html_part(struct html_context *html_context,
 	}
 
 ret:
-	renderer_context.last_link_to_move = llm;
-	renderer_context.last_tag_to_move = ltm;
-	renderer_context.empty_format = ef;
+	renderer_context.last_link_to_move = saved_last_link_to_move;
+	renderer_context.last_tag_to_move = saved_last_tag_to_move;
+	renderer_context.empty_format = saved_empty_format;
 
-	html_context->margin = lm;
+	html_context->margin = saved_margin;
 
 	if (html_context->table_level > 1 && !document
 	    && table_cache
@@ -2176,29 +2176,26 @@ ret:
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
 		struct table_cache_entry *tce = mem_calloc(1, sizeof(*tce));
-		/* A goto is used here to prevent a test or code
-		 * redundancy. */
-		if (!tce) goto end;
 
-		tce->key.start = start;
-		tce->key.end = end;
-		tce->key.align = align;
-		tce->key.margin = margin;
-		tce->key.width = width;
-		tce->key.x = x;
-		tce->key.link_num = link_num;
-		copy_struct(&tce->part, part);
+		if (tce) {
+			tce->key.start = start;
+			tce->key.end = end;
+			tce->key.align = align;
+			tce->key.margin = margin;
+			tce->key.width = width;
+			tce->key.x = x;
+			tce->key.link_num = link_num;
+			copy_struct(&tce->part, part);
 
-		if (!add_hash_item(table_cache,
-				   (unsigned char *) &tce->key,
-				   sizeof(tce->key), tce)) {
-			mem_free(tce);
-		} else {
-			table_cache_entries++;
+			if (!add_hash_item(table_cache,
+					   (unsigned char *) &tce->key,
+					   sizeof(tce->key), tce)) {
+				mem_free(tce);
+			} else {
+				table_cache_entries++;
+			}
 		}
 	}
-
-end:
 
 	return part;
 }

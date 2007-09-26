@@ -54,7 +54,7 @@ struct screen_char {
 	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
-/** @relates screen_char */ 
+/** @relates screen_char */
 #define copy_screen_chars(to, from, amount) \
 	do { memcpy(to, from, (amount) * sizeof(struct screen_char)); } while (0)
 

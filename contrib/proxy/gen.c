@@ -95,7 +95,7 @@ parse(void)
 		space = strchr(current, ' ');
 		if (!space)
 			return;
-		
+
 		host = find(space + 1, "Host: ");
 		if (!host)
 			return;
