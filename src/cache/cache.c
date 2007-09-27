@@ -195,7 +195,7 @@ get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
 	}
 
 	if (cached->cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED
-	    && cache_mode <= CACHE_MODE_CHECK_IF_MODIFIED
+	    && cache_mode != CACHE_MODE_ALWAYS
 	    && (cached->last_modified || cached->etag)
 	    && get_opt_int("document.cache.revalidation_interval") >= 0) {
 		if (cached->seconds + get_opt_int("document.cache.revalidation_interval") < time(NULL))
