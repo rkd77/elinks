@@ -10,7 +10,7 @@
  * startup_goto_dialog. */
 #define WWW_HOME_URL			""
 
-#define ELINKS_HOMEPAGE			"http://elinks.cz/"
+#define ELINKS_WEBSITE_URL		"http://elinks.cz/"
 #define ELINKS_AUTHORS_URL		"http://elinks.cz/authors.html"
 #define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
 #define ELINKS_BUGS_URL			"http://bugzilla.elinks.cz/"
