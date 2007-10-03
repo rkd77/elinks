@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-14 10:35+0200\n"
+"POT-Creation-Date: 2007-10-03 11:53+0200\n"
 "PO-Revision-Date: 2007-09-14 10:37+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
@@ -38,7 +38,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:245 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:806 src/viewer/text/search.c:1677
+#: src/session/session.c:800 src/viewer/text/search.c:1677
 msgid "~OK"
 msgstr "~OK"
 
@@ -487,14 +487,14 @@ msgstr "~Modifier"
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
 #: src/config/dialogs.c:505 src/config/dialogs.c:930 src/cookies/dialogs.c:493
-#: src/dialogs/menu.c:461 src/formhist/dialogs.c:211
+#: src/dialogs/menu.c:462 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
 msgstr "~Supprimer"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:490 src/config/dialogs.c:504
-#: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:459
+#: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:460
 msgid "~Add"
 msgstr "~Ajouter"
 
@@ -1262,7 +1262,7 @@ msgstr "Hôte introuvable"
 msgid "Resolver error"
 msgstr "Erreur du résolveur"
 
-#: src/config/cmdline.c:256 src/cookies/cookies.c:867 src/network/state.c:47
+#: src/config/cmdline.c:256 src/cookies/cookies.c:841 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
 msgstr "Mémoire saturée"
@@ -1876,7 +1876,7 @@ msgstr "Description"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:599
 #: src/protocol/protocol.c:239 src/session/session.c:287
-#: src/session/session.c:970 src/viewer/text/textarea.c:594
+#: src/session/session.c:964 src/viewer/text/textarea.c:594
 #: src/viewer/text/textarea.c:601
 msgid "Error"
 msgstr "Erreur"
@@ -2155,7 +2155,7 @@ msgstr ""
 "configuration."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:71 src/dialogs/info.c:182
+#: src/config/options.inc:71 src/dialogs/info.c:180
 msgid "Connections"
 msgstr "Connexions"
 
@@ -3065,7 +3065,7 @@ msgstr ""
 "\n"
 "Une valeur de -1 désactive la revalidation automatique."
 
-#: src/config/options.inc:515 src/dialogs/info.c:201
+#: src/config/options.inc:515 src/dialogs/info.c:199
 msgid "Memory cache"
 msgstr "Cache mémoire"
 
@@ -4541,7 +4541,7 @@ msgid "Goto URL History"
 msgstr "Historique Aller à"
 
 #. name:
-#: src/cookies/cookies.c:88 src/cookies/cookies.c:937
+#: src/cookies/cookies.c:88 src/cookies/cookies.c:911
 msgid "Cookies"
 msgstr "Cookies"
 
@@ -4625,15 +4625,15 @@ msgstr ""
 "Sauvegarde des cookies après chaque modification ?\n"
 "Aucun effet si la sauvegarde (cookies.save) est désactivée."
 
-#: src/cookies/cookies.c:843
+#: src/cookies/cookies.c:817
 msgid "Cannot save cookies"
 msgstr "Ne peut sauvegarder les cookies"
 
-#: src/cookies/cookies.c:854
+#: src/cookies/cookies.c:828
 msgid "ELinks was started without a home directory."
 msgstr "ELinks a été démarré sans répertoire personnel."
 
-#: src/cookies/cookies.c:860
+#: src/cookies/cookies.c:834
 msgid "ELinks was started with the -anonymous option."
 msgstr "ELinks a été démarré avec l'option -anonymous."
 
@@ -4831,7 +4831,7 @@ msgstr "Info. en-têtes internes"
 msgid "No header info."
 msgstr "Aucune information d'en-tête."
 
-#: src/dialogs/download.c:243 src/dialogs/menu.c:597
+#: src/dialogs/download.c:243 src/dialogs/menu.c:598
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:399
 msgid "Download"
 msgstr "Téléchargement"
@@ -4926,14 +4926,11 @@ msgid "Copying"
 msgstr "Licence"
 
 #: src/dialogs/info.c:143
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
-"(C) 1999 - 2002 Mikulas Patocka\n"
-"(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
-"and others\n"
+"%set al.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
@@ -4950,129 +4947,129 @@ msgstr ""
 "modifier selon les termes de la GNU General Public License publiée par la  "
 "Free Software Foundation, spécifiquement la version 2 de la licence."
 
-#: src/dialogs/info.c:171 src/dialogs/info.c:276
+#: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
 msgstr "Ressources"
 
-#: src/dialogs/info.c:175
+#: src/dialogs/info.c:173
 #, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
 msgstr[0] "%ld descripteur"
 msgstr[1] "%ld descripteurs"
 
-#: src/dialogs/info.c:179
+#: src/dialogs/info.c:177
 #, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
 msgstr[0] "%ld chrono"
 msgstr[1] "%ld chronos"
 
-#: src/dialogs/info.c:186
+#: src/dialogs/info.c:184
 #, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
 msgstr[0] "%ld connexion"
 msgstr[1] "%ld connexions"
 
-#: src/dialogs/info.c:190
+#: src/dialogs/info.c:188
 #, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
 msgstr[0] "%ld en cours"
 msgstr[1] "%ld en cours"
 
-#: src/dialogs/info.c:194
+#: src/dialogs/info.c:192
 #, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
 msgstr[0] "%ld en transfert"
 msgstr[1] "%ld en transfert"
 
-#: src/dialogs/info.c:198
+#: src/dialogs/info.c:196
 #, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
 msgstr[0] "%ld en maintien"
 msgstr[1] "%ld en maintien"
 
-#: src/dialogs/info.c:206 src/dialogs/info.c:258
+#: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
 msgstr[0] "%ld octet"
 msgstr[1] "%ld octets"
 
-#: src/dialogs/info.c:210
+#: src/dialogs/info.c:208
 #, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
 msgstr[0] "%ld fichier"
 msgstr[1] "%ld fichiers"
 
-#: src/dialogs/info.c:214 src/dialogs/info.c:229
+#: src/dialogs/info.c:212 src/dialogs/info.c:227
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
 msgstr[0] "%ld utilisé"
 msgstr[1] "%ld utilisés"
 
-#: src/dialogs/info.c:218
+#: src/dialogs/info.c:216
 #, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
 msgstr[0] "%ld en chargement"
 msgstr[1] "%ld en chargement"
 
-#: src/dialogs/info.c:221
+#: src/dialogs/info.c:219
 msgid "Document cache"
 msgstr "Cache des documents"
 
-#: src/dialogs/info.c:225
+#: src/dialogs/info.c:223
 #, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
 msgstr[0] "%ld formaté"
 msgstr[1] "%ld formatés"
 
-#: src/dialogs/info.c:233
+#: src/dialogs/info.c:231
 #, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
 msgstr[0] "%ld en rafraîchissement"
 msgstr[1] "%ld en rafraîchissement"
 
-#: src/dialogs/info.c:236
+#: src/dialogs/info.c:234
 msgid "Interlinking"
 msgstr "Communication interne"
 
-#: src/dialogs/info.c:239
+#: src/dialogs/info.c:237
 msgid "master terminal"
 msgstr "terminal maître"
 
-#: src/dialogs/info.c:241
+#: src/dialogs/info.c:239
 msgid "slave terminal"
 msgstr "terminal esclave"
 
-#: src/dialogs/info.c:245
+#: src/dialogs/info.c:243
 #, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
 msgstr[0] "%ld terminal"
 msgstr[1] "%ld terminaux"
 
-#: src/dialogs/info.c:249
+#: src/dialogs/info.c:247
 #, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
 msgstr[0] "%ld session"
 msgstr[1] "%ld sessions"
 
-#: src/dialogs/info.c:254
+#: src/dialogs/info.c:252
 msgid "Memory allocated"
 msgstr "Mémoire allouée"
 
-#: src/dialogs/info.c:262
+#: src/dialogs/info.c:260
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -5083,7 +5080,7 @@ msgstr[1] "%ld octets surconsommés"
 msgid "Save URL"
 msgstr "Enregistrer l'URL"
 
-#: src/dialogs/menu.c:96 src/dialogs/menu.c:541
+#: src/dialogs/menu.c:96 src/dialogs/menu.c:542
 msgid "Enter URL"
 msgstr "Entrez l'URL"
 
@@ -5345,131 +5342,136 @@ msgstr "~Licence"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
+msgid "Autho~rs"
+msgstr ""
+
+#. accelerator_context(src/dialogs/menu.c:help_menu)
+#: src/dialogs/menu.c:453
 msgid "~About"
 msgstr "~Info"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
-#: src/dialogs/menu.c:460
+#: src/dialogs/menu.c:461
 msgid "~Modify"
 msgstr "~Modifier"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:468 src/dialogs/menu.c:482
+#: src/dialogs/menu.c:469 src/dialogs/menu.c:483
 msgid "~Language"
 msgstr "~Langue"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:470 src/dialogs/menu.c:483
+#: src/dialogs/menu.c:471 src/dialogs/menu.c:484
 msgid "C~haracter set"
 msgstr "~Jeu de caractères"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:471 src/dialogs/menu.c:484
+#: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "~Terminal options"
 msgstr "Options du ~terminal"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:472
+#: src/dialogs/menu.c:473
 msgid "File ~extensions"
 msgstr "E~xtensions de fichiers"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:474
+#: src/dialogs/menu.c:475
 msgid "~Options manager"
 msgstr "Gestionnaire d'~options"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:475
+#: src/dialogs/menu.c:476
 msgid "~Keybinding manager"
 msgstr "~Gestionnaire d'assoc. de touches"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:476
+#: src/dialogs/menu.c:477
 msgid "~Save options"
 msgstr "~Enregistrer les options"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:491
+#: src/dialogs/menu.c:492
 msgid "Global ~history"
 msgstr "~Historique global"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:494
+#: src/dialogs/menu.c:495
 msgid "~Bookmarks"
 msgstr "~Signets"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:496
+#: src/dialogs/menu.c:497
 msgid "~Cache"
 msgstr "~Cache"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:497
+#: src/dialogs/menu.c:498
 msgid "~Downloads"
 msgstr "~Téléchargements"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:499
+#: src/dialogs/menu.c:500
 msgid "Coo~kies"
 msgstr "Coo~kies"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:502
+#: src/dialogs/menu.c:503
 msgid "~Form history"
 msgstr "Historique formu~laires"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:504
+#: src/dialogs/menu.c:505
 msgid "~Authentication"
 msgstr "~Authentification"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:521
+#: src/dialogs/menu.c:522
 msgid "~File"
 msgstr "~Fichier"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:522
+#: src/dialogs/menu.c:523
 msgid "~View"
 msgstr "~Affichage"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:523
+#: src/dialogs/menu.c:524
 msgid "~Link"
 msgstr "~Lien"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:524
+#: src/dialogs/menu.c:525
 msgid "~Tools"
 msgstr "~Outils"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:525
+#: src/dialogs/menu.c:526
 msgid "~Setup"
 msgstr "~Configuration"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:526
+#: src/dialogs/menu.c:527
 msgid "~Help"
 msgstr "A~ide"
 
-#: src/dialogs/menu.c:541
+#: src/dialogs/menu.c:542
 msgid "Go to URL"
 msgstr "Atteindre l'URL"
 
-#: src/dialogs/menu.c:597
+#: src/dialogs/menu.c:598
 msgid "Save to file"
 msgstr "Enregistrer dans le fichier"
 
-#: src/dialogs/menu.c:932
+#: src/dialogs/menu.c:933
 msgid "Empty directory"
 msgstr "Répertoire vide"
 
-#: src/dialogs/menu.c:976
+#: src/dialogs/menu.c:977
 msgid "Directories:"
 msgstr "Répertoires:"
 
-#: src/dialogs/menu.c:989
+#: src/dialogs/menu.c:990
 msgid "Files:"
 msgstr "Fichiers:"
 
@@ -8389,12 +8391,12 @@ msgstr "~Ouvrir"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:756 src/session/session.c:775 src/session/task.c:275
+#: src/session/session.c:750 src/session/session.c:769 src/session/task.c:275
 #: src/viewer/text/textarea.c:652
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:757
+#: src/session/session.c:751
 msgid ""
 "You have empty string in protocol.http.user_agent - this was a default value "
 "in the past, substituted by default ELinks User-Agent string. However, "
@@ -8413,7 +8415,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:776
+#: src/session/session.c:770
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8434,11 +8436,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:801
+#: src/session/session.c:795
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:802
+#: src/session/session.c:796
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8576,11 +8578,11 @@ msgstr "Ne peut écrire sur la sortie standard."
 msgid "URL protocol not supported (%s)."
 msgstr "Protocole de l'URL non supporté (%s)."
 
-#: src/viewer/text/draw.c:78
+#: src/viewer/text/draw.c:77
 msgid "Missing fragment"
 msgstr "Ancre manquante"
 
-#: src/viewer/text/draw.c:79
+#: src/viewer/text/draw.c:78
 #, c-format
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr "L'ancre demandée \"%s\" n'existe pas."
