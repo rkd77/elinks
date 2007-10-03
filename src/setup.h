@@ -4,6 +4,10 @@
 
 #define VERSION_STRING			VERSION
 
+#define COPYRIGHT_STRING		"(C) 1999 - 2002 Mikulas Patocka\n" \
+			 		"(C) 2001 - 2004 Petr Baudis\n"	\
+			 		"(C) 2002 - 2007 Jonas Fonseca\n"
+
 /* This option will take effect when WWW_HOME environment variable is NOT
  * set - you'll go automatically to this URL. If the value is just "",
  * you'll get either goto dialog or empty page, depending on the value of
