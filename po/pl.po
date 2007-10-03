@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-03 11:53+0200\n"
-"PO-Revision-Date: 2007-06-07 12:40+0200\n"
+"PO-Revision-Date: 2007-10-03 15:40+0200\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -5020,7 +5020,7 @@ msgid "Copying"
 msgstr "Kopiowanie"
 
 #: src/dialogs/info.c:143
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
@@ -5032,11 +5032,7 @@ msgid ""
 msgstr ""
 "ELinks %s\n"
 "\n"
-"\n"
-"(C) 1999 - 2002 Mikulas Patocka\n"
-"(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
-"i inni\n"
+"%si inni\n"
 "\n"
 "Niniejszy program jest oprogramowaniem wolnodostępnym; można go rozprowadzać "
 "dalej i/lub modyfikować na warunkach GPL GNU, wydanej przez Free Software "
@@ -5458,7 +5454,7 @@ msgstr "Ko~piowanie"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "Autho~rs"
-msgstr ""
+msgstr "Auto~rzy"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -8045,7 +8041,6 @@ msgid "User-agent identification"
 msgstr "Identyfikacja przeglądarki"
 
 #: src/protocol/http/http.c:192
-#, fuzzy
 msgid ""
 "Change the User Agent ID. That means identification string, which\n"
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
