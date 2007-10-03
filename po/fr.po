@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-03 11:53+0200\n"
-"PO-Revision-Date: 2007-09-14 10:37+0200\n"
+"PO-Revision-Date: 2007-10-03 14:20+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -4915,7 +4915,7 @@ msgstr "Exmode"
 
 #: src/dialogs/info.c:41
 msgid "About"
-msgstr "Info"
+msgstr "A propos"
 
 #: src/dialogs/info.c:131
 msgid "Keys"
@@ -4926,7 +4926,7 @@ msgid "Copying"
 msgstr "Licence"
 
 #: src/dialogs/info.c:143
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
@@ -4938,10 +4938,7 @@ msgid ""
 msgstr ""
 "ELinks %s\n"
 "\n"
-"(C) 1999 - 2002 Mikulas Patocka\n"
-"(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
-"et d'autres\n"
+"%set d'autres\n"
 "\n"
 "Ce programme est un logiciel libre; vous pouvez le redistribuer et/ou le "
 "modifier selon les termes de la GNU General Public License publiée par la  "
@@ -5308,7 +5305,7 @@ msgstr "R~edessiner le document"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:439
 msgid "~ELinks homepage"
-msgstr "~Site web ELinks"
+msgstr "Site web ~ELinks"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5323,7 +5320,7 @@ msgstr "~Touches"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:443
 msgid "LED ~indicators"
-msgstr "I~ndicateurs LED"
+msgstr "Ind~icateurs LED"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:446
@@ -5333,7 +5330,7 @@ msgstr "~Bogues"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:448
 msgid "ELinks ~GITWeb"
-msgstr "~ELinks GITWeb"
+msgstr "ELinks ~GITWeb"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:451
@@ -5343,12 +5340,12 @@ msgstr "~Licence"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "Autho~rs"
-msgstr ""
+msgstr "Auteu~rs"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
 msgid "~About"
-msgstr "~Info"
+msgstr "~A propos"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:461
