@@ -101,7 +101,7 @@ static struct option_info uri_rewrite_options[] = {
 #define INIT_OPT_DUMB_PREFIX(prefix, uri) \
 	INIT_OPT_STRING("protocol.rewrite.dumb", NULL, prefix, 0, uri, NULL)
 
-	INIT_OPT_DUMB_PREFIX("elinks", ELINKS_HOMEPAGE),
+	INIT_OPT_DUMB_PREFIX("elinks", ELINKS_WEBSITE_URL),
 	INIT_OPT_DUMB_PREFIX("documentation", ELINKS_DOC_URL),
 	INIT_OPT_DUMB_PREFIX("bz", ELINKS_BUGS_URL),
 	INIT_OPT_DUMB_PREFIX("bug", ELINKS_BUGS_URL),
