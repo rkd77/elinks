@@ -142,16 +142,14 @@ menu_copying(struct terminal *term, void *xxx, void *xxxx)
 		 N_("Copying"), ALIGN_CENTER,
 		 msg_text(term, N_("ELinks %s\n"
 		 	 "\n"
-			 "(C) 1999 - 2002 Mikulas Patocka\n"
-			 "(C) 2001 - 2004 Petr Baudis\n"
-			 "(C) 2002 - 2006 Jonas Fonseca\n"
-			 "and others\n"
+			 "%s"
+			  "et al.\n"
 			 "\n"
 			 "This program is free software; you can redistribute it "
 			 "and/or modify it under the terms of the GNU General Public "
 			 "License as published by the Free Software Foundation, "
 			 "specifically version 2 of the License."),
-			 VERSION_STRING));
+			 VERSION_STRING, COPYRIGHT_STRING));
 }
 
 
