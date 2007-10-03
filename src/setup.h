@@ -11,6 +11,7 @@
 #define WWW_HOME_URL			""
 
 #define ELINKS_HOMEPAGE			"http://elinks.cz/"
+#define ELINKS_AUTHORS_URL		"http://elinks.cz/authors.html"
 #define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
 #define ELINKS_BUGS_URL			"http://bugzilla.elinks.cz/"
 #define ELINKS_GITWEB_URL		"http://repo.or.cz/w/elinks.git"

@@ -449,6 +449,7 @@ static struct menu_item help_menu[] = {
 #endif
 	BAR_MENU_ITEM,
 	INIT_MENU_ITEM(N_("~Copying"), NULL, ACT_MAIN_NONE, menu_copying, NULL, 0),
+	INIT_MENU_ITEM(N_("Autho~rs"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_AUTHORS_URL, 0),
 	INIT_MENU_ITEM(N_("~About"), NULL, ACT_MAIN_NONE, menu_about, NULL, 0),
 	NULL_MENU_ITEM
 };
