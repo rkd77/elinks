@@ -973,9 +973,12 @@ struct entity_cache {
 	unsigned char str[20]; /* Suffice in any case. */
 };
 
+/* comparison function for qsort() */
 static int
-hits_cmp(struct entity_cache *a, struct entity_cache *b)
+hits_cmp(const void *v1, const void *v2)
 {
+	const struct entity_cache *a = v1, *b = v2;
+
 	if (a->hits == b->hits) return 0;
 	if (a->hits > b->hits) return -1;
 	else return 1;
@@ -1134,7 +1137,7 @@ end:
 		/* Sort entries by hit order. */
 		if (nb_entity_cache[slen] > 1)
 			qsort(&entity_cache[slen][0], nb_entity_cache[slen],
-			      sizeof(entity_cache[slen][0]), (void *) hits_cmp);
+			      sizeof(entity_cache[slen][0]), hits_cmp);
 
 		/* Increment number of cache entries if possible.
 		 * Else, just replace the least used entry.  */
