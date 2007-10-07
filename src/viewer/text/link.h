@@ -43,7 +43,6 @@ int current_link_is_visible(struct document_view *doc_view);
 int next_link_in_view(struct document_view *doc_view, int current, int direction);
 int next_link_in_view_y(struct document_view *doc_view, int current, int direction);
 int next_link_in_dir(struct document_view *doc_view, int dir_x, int dir_y);
-int next_link_vertical(struct session *ses, struct document_view *doc_view, int dir_y);
 
 void jump_to_link_number(struct session *ses, struct document_view *doc_view, int);
 
