@@ -555,17 +555,25 @@ move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 }
 
 static enum frame_event_status
-move_cursor_rel(struct session *ses, struct document_view *view,
-	        int rx, int ry)
+move_cursor_rel_count(struct session *ses, struct document_view *view,
+		      int rx, int ry, int count)
 {
-	int count = eat_kbd_repeat_count(ses);
 	int x, y;
-
-	int_lower_bound(&count, 1);
 
 	x = ses->tab->x + rx*count;
 	y = ses->tab->y + ry*count;
 	return move_cursor(ses, view, x, y);
+}
+
+static enum frame_event_status
+move_cursor_rel(struct session *ses, struct document_view *view,
+	        int rx, int ry)
+{
+	int count = eat_kbd_repeat_count(ses);
+
+	int_lower_bound(&count, 1);
+
+	return move_cursor_rel_count(ses, view, rx, ry, count);
 }
 
 enum frame_event_status
@@ -631,7 +639,7 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 				vs->y -= mini;
 				y += mini;
 			}
-			status = move_cursor_rel(ses, doc_view, 0, y - y1);
+			status = move_cursor_rel_count(ses, doc_view, 0, y - y1, 1);
 			if (link == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
@@ -683,7 +691,7 @@ move_link_down_line(struct session *ses, struct document_view *doc_view)
 				vs->y += mini;
 				y -= mini;
 			}
-			status = move_cursor_rel(ses, doc_view, 0, y - y1);
+			status = move_cursor_rel_count(ses, doc_view, 0, y - y1, 1);
 			if (link == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
@@ -751,7 +759,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 				vs->y -= mini;
 				y += mini;
 			}
-			status = move_cursor_rel(ses, doc_view, last->points[0].x - x1, y - y1);
+			status = move_cursor_rel_count(ses, doc_view, last->points[0].x - x1, y - y1, 1);
 			if (last == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
@@ -819,7 +827,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 				vs->y += mini;
 				y -= mini;
 			}
-			status = move_cursor_rel(ses, doc_view, last->points[0].x - x1, y - y1);
+			status = move_cursor_rel_count(ses, doc_view, last->points[0].x - x1, y - y1, 1);
 			if (last == get_current_link(doc_view))
 				ses->navigate_mode = NAVIGATE_LINKWISE;
 			return status;
