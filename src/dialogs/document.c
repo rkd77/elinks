@@ -201,6 +201,13 @@ document_info_dialog(struct session *ses)
 					     cached->last_modified);
 		}
 
+		if (!cached->incomplete) {
+			add_format_to_string(&msg, "\n%s: ",
+					     _("Time since loading", term));
+			add_duration_to_string(&msg,
+			                       time(NULL) - cached->seconds);
+		}
+
 	}
 
 #ifdef CONFIG_GLOBHIST
