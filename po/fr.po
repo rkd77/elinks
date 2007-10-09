@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-09 21:25+0200\n"
-"PO-Revision-Date: 2007-10-09 21:27+0200\n"
+"POT-Creation-Date: 2007-10-09 21:50+0200\n"
+"PO-Revision-Date: 2007-10-09 21:52+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
@@ -1338,7 +1338,7 @@ msgstr ""
 "Restreint ELinks de manière à permettre de l'exécuter sur un\n"
 "compte anonyme. La navigation dans les fichiers locaux, les\n"
 "téléchargements de fichiers, et la modification d'options sont\n"
-"désactivés. L'utilisation de visualisateurs externes reste \n"
+"désactivés. L'utilisation de visionneurs externes reste \n"
 "possible, mais les associations ne peuvent être modifiées."
 
 #: src/config/cmdline.c:716
@@ -1505,7 +1505,7 @@ msgid ""
 msgstr ""
 "Cela force ELinks à considérer les documents de type inconnu\n"
 "comme étant au format HTML. Cela est utile lors de l'utilisation\n"
-"d'ELinks comme visualisateur pour les clients mail.\n"
+"d'ELinks comme visionneur pour les clients mail.\n"
 "C'est équivalent à -default-mime-type text/html."
 
 #: src/config/cmdline.c:798
@@ -4210,7 +4210,7 @@ msgstr ""
 
 #: src/config/options.inc:1193
 msgid "Timer options"
-msgstr "Options des timers"
+msgstr "Options des chronomètres"
 
 #: src/config/options.inc:1195
 msgid ""
@@ -4227,10 +4227,10 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs"
 msgstr ""
-"Activer le timer:\n"
+"Activer le chronomètre:\n"
 "0 non\n"
-"1 oui, mais ne pas montrer le timer\n"
-"2 oui et montrer le timer près des LEDs"
+"1 oui, mais ne pas montrer le chronomètre\n"
+"2 oui et montrer le chronomètre près des LEDs"
 
 #: src/config/options.inc:1208
 msgid ""
@@ -4239,10 +4239,10 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs (DISABLED)"
 msgstr ""
-"Activer le timer:\n"
+"Activer le chronomètre:\n"
 "0 non\n"
-"1 oui, mais ne pas montrer le timer\n"
-"2 oui et montrer le timer près des LEDs (DÉSACTIVÉ)"
+"1 oui, mais ne pas montrer le chronomètre\n"
+"2 oui et montrer le chronomètre près des LEDs (DÉSACTIVÉ)"
 
 #: src/config/options.inc:1214
 msgid "Duration"
@@ -4258,7 +4258,7 @@ msgstr ""
 
 #: src/config/options.inc:1221
 msgid "Keybinding action to be triggered when timer reaches zero."
-msgstr "Action à déclencher lorsque le timer atteint zéro."
+msgstr "Action à déclencher lorsque le chronomètre atteint zéro."
 
 #: src/config/options.inc:1224
 msgid "Window tabs"
@@ -4959,8 +4959,8 @@ msgstr[1] "%ld descripteurs"
 #, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "%ld chrono"
-msgstr[1] "%ld chronos"
+msgstr[0] "%ld chronomètre"
+msgstr[1] "%ld chronomètres"
 
 #: src/dialogs/info.c:184
 #, c-format
@@ -6311,7 +6311,7 @@ msgid ""
 "External viewer for this file type. '%' in this string will be\n"
 "substituted by a file name."
 msgstr ""
-"Visualisateur externe pour ce type de fichier. '%' dans la chaîne sera\n"
+"Visionneur externe pour ce type de fichier. '%' dans la chaîne sera\n"
 "remplacé par un nom de fichier."
 
 #: src/mime/backend/default.c:78
@@ -8897,7 +8897,7 @@ msgstr "Erreur lors de l'écriture du fichier"
 #. name:
 #: src/viewer/timer.c:88
 msgid "Timer"
-msgstr "Temporisation"
+msgstr "Chronomètre"
 
 #. name:
 #: src/viewer/viewer.c:25
