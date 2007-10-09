@@ -876,27 +876,25 @@ start_element(struct element_info *ei,
 		}
 	}
 
-	if (ei->type != ET_NON_PAIRABLE) {
-		html_stack_dup(html_context, ELEMENT_KILLABLE);
-		html_top->name = name;
-		html_top->namelen = namelen;
-		html_top->options = attr;
-		html_top->linebreak = ei->linebreak;
+	html_stack_dup(html_context, ELEMENT_KILLABLE);
+	html_top->name = name;
+	html_top->namelen = namelen;
+	html_top->options = attr;
+	html_top->linebreak = ei->linebreak;
 
 #ifdef CONFIG_ECMASCRIPT
-		if (has_attr(attr, "onClick", html_context->doc_cp)) {
-			/* XXX: Put something better to format.link. --pasky */
-			mem_free_set(&format.link, stracpy("javascript:void(0);"));
-			mem_free_set(&format.target, stracpy(html_context->base_target));
-			format.style.fg = format.clink;
-			html_top->pseudo_class = ELEMENT_LINK;
-			mem_free_set(&format.title, stracpy("onClick placeholder"));
-			/* Er. I know. Well, double html_focusable()s shouldn't
-			 * really hurt. */
-			html_focusable(html_context, attr);
-		}
-#endif
+	if (has_attr(attr, "onClick", html_context->doc_cp)) {
+		/* XXX: Put something better to format.link. --pasky */
+		mem_free_set(&format.link, stracpy("javascript:void(0);"));
+		mem_free_set(&format.target, stracpy(html_context->base_target));
+		format.style.fg = format.clink;
+		html_top->pseudo_class = ELEMENT_LINK;
+		mem_free_set(&format.title, stracpy("onClick placeholder"));
+		/* Er. I know. Well, double html_focusable()s shouldn't
+		 * really hurt. */
+		html_focusable(html_context, attr);
 	}
+#endif
 
 #ifdef CONFIG_CSS
 	if (html_top->options && html_context->options->css_enable) {
@@ -945,6 +943,9 @@ start_element(struct element_info *ei,
 #endif
 
 	if (ei->open != html_br) html_context->was_br = 0;
+
+	if (ei->type == ET_NON_PAIRABLE)
+		kill_html_stack_item(html_context, html_top);
 
 	if (restore_format) par_format = old_format;
 
