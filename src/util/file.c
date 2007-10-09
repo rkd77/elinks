@@ -481,9 +481,12 @@ stat_date(struct string *string, struct stat *stp)
 /** @} */
 
 
+/* comparison function for qsort() */
 static int
-compare_dir_entries(struct directory_entry *d1, struct directory_entry *d2)
+compare_dir_entries(const void *v1, const void *v2)
 {
+	const struct directory_entry *d1 = v1, *d2 = v2;
+
 	if (d1->name[0] == '.' && d1->name[1] == '.' && !d1->name[2]) return -1;
 	if (d2->name[0] == '.' && d2->name[1] == '.' && !d2->name[2]) return 1;
 	if (d1->attrib[0] == 'd' && d2->attrib[0] != 'd') return -1;
@@ -580,8 +583,7 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 		return NULL;
 	}
 
-	qsort(entries, size, sizeof(*entries),
-	      (int (*)(const void *, const void *)) compare_dir_entries);
+	qsort(entries, size, sizeof(*entries), compare_dir_entries);
 
 	memset(&entries[size], 0, sizeof(*entries));
 

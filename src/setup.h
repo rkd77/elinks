@@ -4,13 +4,18 @@
 
 #define VERSION_STRING			VERSION
 
+#define COPYRIGHT_STRING		"(C) 1999 - 2002 Mikulas Patocka\n" \
+			 		"(C) 2001 - 2004 Petr Baudis\n"	\
+			 		"(C) 2002 - 2007 Jonas Fonseca\n"
+
 /* This option will take effect when WWW_HOME environment variable is NOT
  * set - you'll go automatically to this URL. If the value is just "",
  * you'll get either goto dialog or empty page, depending on the value of
  * startup_goto_dialog. */
 #define WWW_HOME_URL			""
 
-#define ELINKS_HOMEPAGE			"http://elinks.cz/"
+#define ELINKS_WEBSITE_URL		"http://elinks.cz/"
+#define ELINKS_AUTHORS_URL		"http://elinks.cz/authors.html"
 #define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
 #define ELINKS_BUGS_URL			"http://bugzilla.elinks.cz/"
 #define ELINKS_GITWEB_URL		"http://repo.or.cz/w/elinks.git"

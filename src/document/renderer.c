@@ -497,9 +497,12 @@ render_document_frames(struct session *ses, int no_cache)
 	}
 }
 
+/* comparison function for qsort() */
 static int
-comp_links(struct link *l1, struct link *l2)
+comp_links(const void *v1, const void *v2)
 {
+	const struct link *l1 = v1, *l2 = v2;
+
 	assert(l1 && l2);
 	if_assert_failed return 0;
 	return (l1->number - l2->number);
@@ -519,7 +522,7 @@ sort_links(struct document *document)
 	if_assert_failed return;
 
 	qsort(document->links, document->nlinks, sizeof(*document->links),
-	      (void *) comp_links);
+	      comp_links);
 
 	if (!document->height) return;
 

@@ -436,7 +436,7 @@ static struct menu_item view_menu[] = {
 
 static struct menu_item help_menu[] = {
 	/* [gettext_accelerator_context(.help_menu)] */
-	INIT_MENU_ITEM(N_("~ELinks homepage"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_HOMEPAGE, 0),
+	INIT_MENU_ITEM(N_("~ELinks homepage"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_WEBSITE_URL, 0),
 	INIT_MENU_ITEM(N_("~Documentation"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_DOC_URL, 0),
 	INIT_MENU_ITEM(N_("~Keys"), NULL, ACT_MAIN_NONE, menu_keys, NULL, 0),
 #ifdef CONFIG_LEDS
@@ -449,6 +449,7 @@ static struct menu_item help_menu[] = {
 #endif
 	BAR_MENU_ITEM,
 	INIT_MENU_ITEM(N_("~Copying"), NULL, ACT_MAIN_NONE, menu_copying, NULL, 0),
+	INIT_MENU_ITEM(N_("Autho~rs"), NULL, ACT_MAIN_NONE, menu_url_shortcut, ELINKS_AUTHORS_URL, 0),
 	INIT_MENU_ITEM(N_("~About"), NULL, ACT_MAIN_NONE, menu_about, NULL, 0),
 	NULL_MENU_ITEM
 };

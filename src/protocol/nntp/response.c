@@ -199,6 +199,128 @@ get_nntp_title(struct connection *conn)
 	return title.source;
 }
 
+
+static void
+decode_q_segment(struct string *str, unsigned char *in, unsigned char *end)
+{
+	int c;
+
+	while ((c = *in++) != 0 && (in <= end)) {
+		if (c == '=') {
+			int d = *in++;
+
+			if (d == '\n' || !d)
+				break; /* drop trailing newline */
+			d = (unhx(d) << 4) | unhx(*in++);
+			add_format_to_string(str, "&#%d;", d);
+			continue;
+		}
+
+		if (c == '_') /* rfc2047 4.2 (2) */
+			c = 0x20;
+		add_char_to_string(str, c);
+	}
+}
+
+static void
+decode_b_segment(struct string *str, unsigned char *in, unsigned char *end)
+{
+	/* Decode in..ep, possibly in-place to ot */
+	int c, pos = 0, acc = 0;
+
+	while ((c = *in++) != 0 && (in <= end)) {
+		if (c == '+')
+			c = 62;
+		else if (c == '/')
+			c = 63;
+		else if ('A' <= c && c <= 'Z')
+			c -= 'A';
+		else if ('a' <= c && c <= 'z')
+			c -= 'a' - 26;
+		else if ('0' <= c && c <= '9')
+			c -= '0' - 52;
+		else if (c == '=') {
+			/* padding is almost like (c == 0), except we do
+			 * not output NUL resulting only from it;
+			 * for now we just trust the data.
+			 */
+			c = 0;
+		}
+		else
+			continue; /* garbage */
+
+		switch (pos++) {
+		case 0:
+			acc = (c << 2);
+			break;
+		case 1:
+			add_format_to_string(str, "&#%d;", (acc | (c >> 4)));
+			acc = (c & 15) << 4;
+			break;
+		case 2:
+			add_format_to_string(str, "&#%d;", (acc | (c >> 2)));
+			acc = (c & 3) << 6;
+			break;
+		case 3:
+			add_format_to_string(str, "&#%d;", (acc | c));
+			acc = pos = 0;
+			break;
+		}
+	}
+}
+
+static void
+add_header_to_string(struct string *str, unsigned char *header)
+{
+	unsigned char *end;
+	int rfc2047 = 0;
+
+	while ((end = strstr(header, "=?")) != NULL) {
+		int encoding;
+		unsigned char charset_q[256];
+		unsigned char *cp, *sp;
+
+		rfc2047 = 1;
+
+		if (header != end) {
+			add_html_to_string(str, header, end - header);
+			header = end;
+		}
+
+		/* E.g.
+		 * ep : "=?iso-2022-jp?B?GyR...?= foo"
+		 * ep : "=?ISO-8859-1?Q?Foo=FCbar?= baz"
+		 */
+		end += 2;
+		cp = strchr(end, '?');
+		if (!cp)
+			break;
+
+		for (sp = end; sp < cp; sp++)
+			charset_q[sp - end] = tolower(*sp);
+		charset_q[cp - end] = 0;
+		encoding = tolower(cp[1]);
+
+		if (!encoding || cp[2] != '?')
+			break;
+		cp += 3;
+		end = strstr(cp + 3, "?=");
+		if (!end)
+			break;
+		if (encoding == 'b')
+			decode_b_segment(str, cp, end);
+		else if (encoding == 'q')
+			decode_q_segment(str, cp, end);
+		else
+			break;
+
+		header = end + 2;
+	}
+
+	add_html_to_string(str, header, strlen(header));
+}
+
+
 static void
 add_nntp_html_start(struct string *html, struct connection *conn)
 {
@@ -235,7 +357,9 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 				continue;
 			}
 
-			add_format_to_string(html, "<b>%s</b>: %s\n", entry, value);
+			add_format_to_string(html, "<b>%s</b>: ", entry);
+			add_header_to_string(html, value);
+			add_char_to_string(html, '\n');
 			mem_free(value);
 			mem_free(entry);
 		}
@@ -249,7 +373,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 		add_format_to_string(html,
 			"<h2>%s</h2>\n"
 			"<hr />\n"
-			"<dl>",
+			"<ol>",
 			empty_string_or_(title));
 		break;
 
@@ -275,7 +399,7 @@ add_nntp_html_end(struct string *html, struct connection *conn)
 	case NNTP_TARGET_ARTICLE_RANGE:
 	case NNTP_TARGET_GROUP:
 	case NNTP_TARGET_GROUPS:
-		add_to_string(html, "</dl>");
+		add_to_string(html, "</ol>");
 		break;
 
 	case NNTP_TARGET_QUIT:
@@ -302,16 +426,33 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 	case NNTP_TARGET_GROUP:
 	case NNTP_TARGET_GROUPS:
 	{
-		unsigned char *desc = strchr(line, '\t');
+		unsigned char *field = line;
 
-		if (desc) {
-			*desc++ = 0;
-		} else {
-			desc = "";
+		line = strchr(line, '\t');
+		if (!line)
+			field = "";
+		else
+			*line++ = 0;
+		add_format_to_string(html, "<li value=\"%s\"><a href=\"%s/%s\">",
+				     field, struri(conn->uri), field);
+
+		field = line;
+		line = strchr(line, '\t');
+		if (line)
+			*line++ = 0;
+
+		add_header_to_string(html, field);
+		add_to_string(html, "</a> ");
+
+		if (line) {
+			field = line;
+			line = strchr(line, '\t');
+			if (line)
+				*line++ = 0;
+
+			add_header_to_string(html, field);
 		}
-
-		add_format_to_string(html, "<dt><a href=\"%s/%s\">%s</a></dt><dd>%s</dd>\n",
-			struri(conn->uri), line, line, desc);
+		add_to_string(html, "</li>");
 		break;
 	}
 	case NNTP_TARGET_QUIT:

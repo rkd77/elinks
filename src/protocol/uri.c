@@ -692,7 +692,7 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 {
 	unsigned char *parse_string = uristring;
 	unsigned char *src, *dest, *path;
-	int need_slash = 0;
+	int need_slash = 0, keep_dslash = 1;
 	int parse = (uri == NULL);
 	struct uri uri_struct;
 
@@ -720,8 +720,10 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 	if (get_protocol_free_syntax(uri->protocol))
 		return uristring;
 
-	if (uri->protocol != PROTOCOL_UNKNOWN)
+	if (uri->protocol != PROTOCOL_UNKNOWN) {
 		need_slash = get_protocol_need_slash_after_host(uri->protocol);
+		keep_dslash = get_protocol_keep_double_slashes(uri->protocol);
+	}
 
 	path = uri->data - need_slash;
 	dest = src = path;
@@ -785,8 +787,7 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 				continue;
 			}
 
-		} else if (is_uri_dir_sep(uri, src[1]) &&
-			   uri->protocol == PROTOCOL_FILE) {
+		} else if (is_uri_dir_sep(uri, src[1]) && !keep_dslash) {
 			/* // - ignore first '/'. */
 			src += 1;
 			continue;

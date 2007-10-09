@@ -1,0 +1,55 @@
+#! /bin/sh
+
+test_description='Test URI translation'
+
+. "$TEST_LIB"
+
+test_uri_translation () {
+	before="$1"; shift
+	cwd="$1"; shift
+	translated="$(uri-test "$before" "$cwd")"
+	cond=""
+	for expected; do
+		cond="${cond:+$cond ||
+}test \"$translated\" = \"$expected\""
+	done
+
+	test_expect_success "Translate $before in $cwd" "$cond"
+}
+
+################################################################
+
+# RFC 1738 section 3.10 says "localhost" and "" as <host> mean
+# the same thing.  So we disregard the spelling in these tests.
+
+test_uri_translation "/usr/bin/elinks" "/srv/git" \
+	"file://localhost/usr/bin/elinks" \
+	"file:///usr/bin/elinks"
+
+test_uri_translation "index.html" "/var/www" \
+	"file://localhost/var/www/index.html" \
+	"file:///var/www/index.html"
+
+test_uri_translation "../" "/usr/share/doc" \
+	"file://localhost/usr/share/" \
+	"file:///usr/share/"
+
+test_uri_translation "../../lib/libc.so" "/usr/include/rpc" \
+	"file://localhost/usr/lib/libc.so" \
+	"file:///usr/lib/libc.so"
+
+test_uri_translation "etc/issue" "/" \
+	"file://localhost/etc/issue" \
+	"file:///etc/issue"
+
+# SUSv2: "A pathname that begins with two successive slashes may be
+# interpreted in an implementation-defined manner."  Domain/OS and
+# Cygwin are said to do so.
+test_uri_translation "apollo_logo" "//melchior/sys" \
+	"file://melchior/sys/apollo_logo" \
+	"file://localhost//melchior/sys/apollo_logo" \
+	"file://localhost/%2Fmelchior/sys/apollo_logo" \
+	"file:////melchior/sys/apollo_logo" \
+	"file:///%2Fmelchior/sys/apollo_logo"
+
+test_done
