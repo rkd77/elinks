@@ -166,8 +166,8 @@ html_body(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	get_color(html_context, a, "text", &format.style.fg);
-	get_color(html_context, a, "link", &format.clink);
-	get_color(html_context, a, "vlink", &format.vlink);
+	get_color(html_context, a, "link", &format.color.clink);
+	get_color(html_context, a, "vlink", &format.color.vlink);
 
 	if (get_bgcolor(html_context, a, &format.style.bg) != -1)
 		html_context->was_body_background = 1;

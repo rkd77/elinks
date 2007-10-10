@@ -32,12 +32,15 @@ struct text_attrib {
 	unsigned char *image;
 	unsigned char *title;
 	struct form_control *form;
-	color_T clink;
-	color_T vlink;
+
+	struct {
+		color_T clink;
+		color_T vlink;
 #ifdef CONFIG_BOOKMARKS
-	color_T bookmark_link;
+		color_T bookmark_link;
 #endif
-	color_T image_link;
+		color_T image_link;
+	} color;
 
 #ifdef CONFIG_CSS
 	/* Bug 766: CSS speedup.  56% of CPU time was going to

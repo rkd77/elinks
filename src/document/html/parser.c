@@ -899,12 +899,12 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	format.title = NULL;
 
 	format.style = options->default_style;
-	format.clink = options->default_link;
-	format.vlink = options->default_vlink;
+	format.color.clink = options->default_link;
+	format.color.vlink = options->default_vlink;
 #ifdef CONFIG_BOOKMARKS
-	format.bookmark_link = options->default_bookmark_link;
+	format.color.bookmark_link = options->default_bookmark_link;
 #endif
-	format.image_link = options->default_image_link;
+	format.color.image_link = options->default_image_link;
 
 	par_format.align = ALIGN_LEFT;
 	par_format.leftmargin = options->margin;

@@ -1306,7 +1306,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 
 	link->color.background = format.style.bg;
 	link->color.foreground = link_is_textinput(link)
-				? format.style.fg : format.clink;
+				? format.style.fg : format.color.clink;
 
 	init_link_event_hooks(html_context, link);
 
@@ -1896,7 +1896,7 @@ color_link_lines(struct html_context *html_context)
 			/* XXX: Entering hack zone! Change to clink color after
 			 * link text has been recolored. */
 			if (schar->data == ':' && colors.foreground == 0x0)
-				colors.foreground = format.clink;
+				colors.foreground = format.color.clink;
 		}
 
 		colors.foreground = 0x0;

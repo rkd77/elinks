@@ -66,19 +66,19 @@ html_a(struct html_context *html_context, unsigned char *a,
 			; /* Shut up compiler */
 #ifdef CONFIG_GLOBHIST
 		} else if (get_global_history_item(format.link)) {
-			format.style.fg = format.vlink;
+			format.style.fg = format.color.vlink;
 			html_top->pseudo_class &= ~ELEMENT_LINK;
 			html_top->pseudo_class |= ELEMENT_VISITED;
 #endif
 #ifdef CONFIG_BOOKMARKS
 		} else if (get_bookmark(format.link)) {
-			format.style.fg = format.bookmark_link;
+			format.style.fg = format.color.bookmark_link;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			/* XXX: Really set ELEMENT_LINK? --pasky */
 			html_top->pseudo_class |= ELEMENT_LINK;
 #endif
 		} else {
-			format.style.fg = format.clink;
+			format.style.fg = format.color.clink;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			html_top->pseudo_class |= ELEMENT_LINK;
 		}
@@ -199,7 +199,7 @@ put_image_label(unsigned char *a, unsigned char *label,
 	html_focusable(html_context, a);
 
 	fg = format.style.fg;
-	format.style.fg = format.image_link;
+	format.style.fg = format.color.image_link;
 	put_chrs(html_context, label, strlen(label));
 	format.style.fg = fg;
 }
@@ -367,7 +367,7 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	put_chrs(html_context, prefix, strlen(prefix));
 	format.link = join_urls(html_context->base_href, link);
 	format.target = stracpy(target);
-	format.style.fg = format.clink;
+	format.style.fg = format.color.clink;
 	/* FIXME: linkname typically comes from get_attr_val, which
 	 * has already converted it from the document charset to the
 	 * terminal charset and expanded character entity references.
