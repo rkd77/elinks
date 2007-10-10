@@ -305,6 +305,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			status = enter(ses, doc_view, 1);
 			break;
 
+		case ACT_MAIN_LINK_INFO:
+			link_info_dialog(ses);
+			break;
+			
 		case ACT_MAIN_LINK_MENU:
 			link_menu(term, NULL, ses);
 			break;

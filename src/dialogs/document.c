@@ -113,6 +113,28 @@ add_link_info_to_string(struct string *msg, struct session *ses)
 	}
 }
 
+/* Link info message box. */
+void
+link_info_dialog(struct session *ses)
+{
+	struct terminal *term = ses->tab->term;
+	struct location *location = cur_loc(ses);
+	struct string msg;
+
+	if (!location) {
+		nowhere_box(term, NULL);
+		return;
+	}
+
+	if (!init_string(&msg)) return;
+
+	add_link_info_to_string(&msg, ses);
+
+	info_box(term, MSGBOX_FREE_TEXT | MSGBOX_SCROLLABLE,
+		 N_("Info"), ALIGN_LEFT, msg.source);
+}
+
+
 /* Location info. message box. */
 void
 document_info_dialog(struct session *ses)

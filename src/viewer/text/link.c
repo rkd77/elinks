@@ -1284,6 +1284,8 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 
 			add_menu_action(&mi, N_("Follow link and r~eload"), ACT_MAIN_LINK_FOLLOW_RELOAD);
 
+			add_menu_action(&mi, N_("~Link info"), ACT_MAIN_LINK_INFO);
+
 			add_menu_separator(&mi);
 
 			add_new_win_to_menu(&mi, N_("Open in new ~window"), term);
