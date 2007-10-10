@@ -40,7 +40,7 @@ get_screen_char_template(struct screen_char *template,
 	}
 
 	{
-		struct color_pair colors = INIT_COLOR_PAIR(style.bg, style.fg);
+		struct color_pair colors = INIT_COLOR_PAIR(style.color.bg, style.color.fg);
 		set_term_color(template, &colors, options->color_flags, options->color_mode);
 	}
 }

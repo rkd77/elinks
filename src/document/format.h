@@ -18,9 +18,13 @@ enum text_style_format {
 
 struct text_style {
 	enum text_style_format attr;
-	color_T fg;
-	color_T bg;
+	struct {
+		color_T fg;
+		color_T bg;
+	} color;
 };
+
+#define INIT_TEXT_STYLE(attr, fg, bg)  { attr, {fg, bg}}
 
 void get_screen_char_template(struct screen_char *template, struct document_options *options, struct text_style style);
 

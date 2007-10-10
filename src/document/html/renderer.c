@@ -329,7 +329,7 @@ static inline struct screen_char *
 get_format_screen_char(struct html_context *html_context,
                        enum link_state link_state)
 {
-	static struct text_style ta_cache = { -1, 0x0, 0x0 };
+	static struct text_style ta_cache = INIT_TEXT_STYLE(-1, 0x0, 0x0);
 	static struct screen_char schar_cache;
 
 	if (memcmp(&ta_cache, &format.style, sizeof(ta_cache))) {
@@ -1304,9 +1304,9 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 		link->target = null_or_stracpy(form ? form->target : NULL);
 	}
 
-	link->color.background = format.style.bg;
+	link->color.background = format.style.color.bg;
 	link->color.foreground = link_is_textinput(link)
-				? format.style.fg : format.color.clink;
+				? format.style.color.fg : format.color.clink;
 
 	init_link_event_hooks(html_context, link);
 

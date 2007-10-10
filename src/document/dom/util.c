@@ -31,7 +31,7 @@ static inline void
 init_template(struct screen_char *template, struct document_options *options,
 	      enum screen_char_attr attr, color_T foreground, color_T background)
 {
-	struct text_style style = { attr, foreground, background };
+	struct text_style style = INIT_TEXT_STYLE(attr, foreground, background);
 
 	get_screen_char_template(template, options, style);
 }
@@ -50,10 +50,10 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 			case CSS_PT_BACKGROUND_COLOR:
 			case CSS_PT_BACKGROUND:
 				if (property->value_type == CSS_VT_COLOR)
-					style.bg = property->value.color;
+					style.color.bg = property->value.color;
 				break;
 			case CSS_PT_COLOR:
-				style.fg = property->value.color;
+				style.color.fg = property->value.color;
 				break;
 			case CSS_PT_FONT_WEIGHT:
 			case CSS_PT_FONT_STYLE:
@@ -288,7 +288,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
 	link->where = where;
-	link->color.background = document->options.default_style.bg;
+	link->color.background = document->options.default_style.color.bg;
 	link->color.foreground = fgcolor;
 	link->number = document->nlinks;
 

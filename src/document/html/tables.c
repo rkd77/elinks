@@ -872,7 +872,7 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 
 	if (cell->is_header) format.style.attr |= AT_BOLD;
 
-	format.style.bg = cell->bgcolor;
+	format.style.color.bg = cell->bgcolor;
 	par_format.bgcolor = cell->bgcolor;
 
 	if (cell->valign == VALIGN_MIDDLE)

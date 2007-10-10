@@ -158,18 +158,18 @@ html_font(struct html_context *html_context, unsigned char *a,
 		}
 		mem_free(al);
 	}
-	get_color(html_context, a, "color", &format.style.fg);
+	get_color(html_context, a, "color", &format.style.color.fg);
 }
 
 void
 html_body(struct html_context *html_context, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	get_color(html_context, a, "text", &format.style.fg);
+	get_color(html_context, a, "text", &format.style.color.fg);
 	get_color(html_context, a, "link", &format.color.clink);
 	get_color(html_context, a, "vlink", &format.color.vlink);
 
-	if (get_bgcolor(html_context, a, &format.style.bg) != -1)
+	if (get_bgcolor(html_context, a, &format.style.color.bg) != -1)
 		html_context->was_body_background = 1;
 
 	html_context->was_body = 1; /* this will be used by "meta inside body" */
@@ -187,17 +187,17 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 		          &html_context->stack);
 #endif
 
-	if (par_format.bgcolor != format.style.bg) {
+	if (par_format.bgcolor != format.style.color.bg) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
-		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
+		e->parattr.bgcolor = e->attr.style.color.bg = par_format.bgcolor = format.style.color.bg;
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.bgcolor != html_context->options->default_style.bg
+	    && par_format.bgcolor != html_context->options->default_style.color.bg
 	    && !search_html_stack(html_context, "BODY")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
@@ -416,8 +416,8 @@ html_html(struct html_context *html_context, unsigned char *a,
 	 * this from there. */
 	struct html_element *e = html_bottom;
 
-	if (par_format.bgcolor != format.style.bg)
-		e->parattr.bgcolor = e->attr.style.bg = par_format.bgcolor = format.style.bg;
+	if (par_format.bgcolor != format.style.color.bg)
+		e->parattr.bgcolor = e->attr.style.color.bg = par_format.bgcolor = format.style.color.bg;
 }
 
 void
