@@ -16,12 +16,14 @@ enum text_style_format {
 	AT_PREFORMATTED = 32,
 };
 
+struct text_style_color {
+	color_T fg;
+	color_T bg;
+};
+
 struct text_style {
 	enum text_style_format attr;
-	struct {
-		color_T fg;
-		color_T bg;
-	} color;
+	struct text_style_color color;
 };
 
 #define INIT_TEXT_STYLE(attr, fg, bg)  { attr, {fg, bg}}

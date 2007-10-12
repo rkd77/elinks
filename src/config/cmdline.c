@@ -198,20 +198,22 @@ lookup_cmd(struct option *o, unsigned char ***argv, int *argc)
 #define skipback_whitespace(start, S) \
 	while ((start) < (S) && isspace((S)[-1])) (S)--;
 
+struct remote_method {
+	unsigned char *name;
+	enum {
+		REMOTE_METHOD_OPENURL,
+		REMOTE_METHOD_PING,
+		REMOTE_METHOD_XFEDOCOMMAND,
+		REMOTE_METHOD_ADDBOOKMARK,
+		REMOTE_METHOD_INFOBOX,
+		REMOTE_METHOD_NOT_SUPPORTED,
+	} type;
+};
+
 static unsigned char *
 remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 {
-	struct {
-		unsigned char *name;
-		enum {
-			REMOTE_METHOD_OPENURL,
-			REMOTE_METHOD_PING,
-			REMOTE_METHOD_XFEDOCOMMAND,
-			REMOTE_METHOD_ADDBOOKMARK,
-			REMOTE_METHOD_INFOBOX,
-			REMOTE_METHOD_NOT_SUPPORTED,
-		} type;
-	} remote_methods[] = {
+	struct remote_method remote_methods[] = {
 		{ "openURL",	  REMOTE_METHOD_OPENURL },
 		{ "ping",	  REMOTE_METHOD_PING },
 		{ "addBookmark",  REMOTE_METHOD_ADDBOOKMARK },

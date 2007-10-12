@@ -23,6 +23,14 @@ enum html_special_type;
 /* XXX: This is just terible - this interface is from 75% only for other HTML
  * files - there's lack of any well defined interface and it's all randomly
  * mixed up :/. */
+struct text_attrib_color {
+	color_T clink;
+	color_T vlink;
+#ifdef CONFIG_BOOKMARKS
+	color_T bookmark_link;
+#endif
+	color_T image_link;
+};
 
 struct text_attrib {
 	struct text_style style;
@@ -34,14 +42,7 @@ struct text_attrib {
 	unsigned char *title;
 	struct form_control *form;
 
-	struct {
-		color_T clink;
-		color_T vlink;
-#ifdef CONFIG_BOOKMARKS
-		color_T bookmark_link;
-#endif
-		color_T image_link;
-	} color;
+	struct text_attrib_color color;
 
 #ifdef CONFIG_CSS
 	/* Bug 766: CSS speedup.  56% of CPU time was going to
