@@ -3,6 +3,7 @@
 #define EL__DOCUMENT_HTML_PARSER_H
 
 #include "document/format.h"
+#include "document/forms.h"
 #include "intl/charsets.h" /* unicode_val_T */
 #include "util/align.h"
 #include "util/color.h"
@@ -53,7 +54,7 @@ struct text_attrib {
 #endif
 
 	unsigned char *select;
-	int select_disabled;
+	enum form_mode select_disabled;
 	unsigned int tabindex;
 	unicode_val_T accesskey;
 
