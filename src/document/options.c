@@ -46,8 +46,8 @@ init_document_options(struct session *ses, struct document_options *doo)
 #endif
 	doo->default_color.image_link = get_opt_color("document.colors.image", ses);
 
-	doo->active_link.fg = get_opt_color("document.browse.links.active_link.colors.text", ses);
-	doo->active_link.bg = get_opt_color("document.browse.links.active_link.colors.background", ses);
+	doo->active_link.color.foreground = get_opt_color("document.browse.links.active_link.colors.text", ses);
+	doo->active_link.color.background = get_opt_color("document.browse.links.active_link.colors.background", ses);
 
 	if (get_opt_bool("document.colors.increase_contrast", ses))
 		doo->color_flags |= COLOR_INCREASE_CONTRAST;

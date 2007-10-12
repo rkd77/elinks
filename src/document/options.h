@@ -14,8 +14,10 @@ struct active_link_options {
 	unsigned int underline:1;
 	unsigned int bold:1;
 	unsigned int invert:1;
-	color_T fg;
-	color_T bg;
+	struct {
+		color_T foreground;
+		color_T background;
+	} color;
 };
 
 /** This mostly acts as a option cache so rendering will be faster. However it
