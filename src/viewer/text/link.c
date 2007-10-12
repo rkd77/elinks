@@ -186,7 +186,7 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 	if (doc_opts->active_link.bold)
 		template.attr |= SCREEN_ATTR_BOLD;
 
-	if (doc_opts->active_link.color) {
+	if (doc_opts->active_link.enable_color) {
 		colors.foreground = doc_opts->active_link.fg;
 		colors.background = doc_opts->active_link.bg;
 	} else {

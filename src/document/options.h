@@ -10,7 +10,7 @@ struct session;
 
 /** Active link coloring options */
 struct active_link_options {
-	unsigned int color:1;
+	unsigned int enable_color:1;
 	unsigned int underline:1;
 	unsigned int bold:1;
 	unsigned int invert:1;
