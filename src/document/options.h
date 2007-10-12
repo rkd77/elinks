@@ -9,20 +9,41 @@
 struct session;
 
 /** Active link coloring options */
+struct active_link_options_colors {
+	color_T foreground;
+	color_T background;
+};
+
 struct active_link_options {
 	unsigned int enable_color:1;
 	unsigned int underline:1;
 	unsigned int bold:1;
 	unsigned int invert:1;
-	struct {
-		color_T foreground;
-		color_T background;
-	} color;
+	struct active_link_options_colors color;
 };
 
 /** This mostly acts as a option cache so rendering will be faster. However it
  * is also used to validate and invalidate documents in the format cache as to
  * whether they satisfy the current state of the document options. */
+struct document_options_colors {
+	color_T link;
+	color_T vlink;
+#ifdef CONFIG_BOOKMARKS
+	color_T bookmark_link;
+#endif
+	color_T image_link;
+};
+
+struct document_options_image_link {
+	unsigned char *prefix;
+	unsigned char *suffix;
+	int filename_maxlen;
+	int label_maxlen;
+	int display_style;
+	int tagging;
+	unsigned int show_any_as_links:1;
+};
+
 struct document_options {
 	enum color_mode color_mode;
 	/** cp is the codepage for which the document is being formatted;
@@ -38,14 +59,7 @@ struct document_options {
 	/** @name The default (fallback) colors.
 	 * @{ */
 	struct text_style default_style;
-	struct {
-		color_T link;
-		color_T vlink;
-#ifdef CONFIG_BOOKMARKS
-		color_T bookmark_link;
-#endif
-		color_T image_link;
-	} default_color;
+	struct document_options_colors default_color;
 	/** @} */
 
 	/** Color model/optimizations */
@@ -130,15 +144,7 @@ struct document_options {
 	struct active_link_options active_link;
 
 	/** Options related with IMG tag */
-	struct {
-		unsigned char *prefix;
-		unsigned char *suffix;
-		int filename_maxlen;
-		int label_maxlen;
-		int display_style;
-		int tagging;
-		unsigned int show_any_as_links:1;
-	} image_link;
+	struct document_options_image_link image_link;
 };
 
 /** Fills the structure with values from the option system.
