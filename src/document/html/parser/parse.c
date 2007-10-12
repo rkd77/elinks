@@ -887,7 +887,7 @@ start_element(struct element_info *ei,
 		/* XXX: Put something better to format.link. --pasky */
 		mem_free_set(&format.link, stracpy("javascript:void(0);"));
 		mem_free_set(&format.target, stracpy(html_context->base_target));
-		format.style.color.fg = format.color.clink;
+		format.style.color.foreground = format.color.clink;
 		html_top->pseudo_class = ELEMENT_LINK;
 		mem_free_set(&format.title, stracpy("onClick placeholder"));
 		/* Er. I know. Well, double html_focusable()s shouldn't

@@ -50,10 +50,10 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 			case CSS_PT_BACKGROUND_COLOR:
 			case CSS_PT_BACKGROUND:
 				if (property->value_type == CSS_VT_COLOR)
-					style.color.bg = property->value.color;
+					style.color.background = property->value.color;
 				break;
 			case CSS_PT_COLOR:
-				style.color.fg = property->value.color;
+				style.color.foreground = property->value.color;
 				break;
 			case CSS_PT_FONT_WEIGHT:
 			case CSS_PT_FONT_STYLE:
@@ -288,7 +288,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
 	link->where = where;
-	link->color.background = document->options.default_style.color.bg;
+	link->color.background = document->options.default_style.color.background;
 	link->color.foreground = fgcolor;
 	link->number = document->nlinks;
 

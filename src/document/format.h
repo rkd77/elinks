@@ -17,8 +17,8 @@ enum text_style_format {
 };
 
 struct text_style_color {
-	color_T fg;
-	color_T bg;
+	color_T foreground;
+	color_T background;
 };
 
 struct text_style {

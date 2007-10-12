@@ -46,7 +46,7 @@ css_apply_color(struct html_context *html_context, struct html_element *element,
 	assert(prop->value_type == CSS_VT_COLOR);
 
 	if (use_document_fg_colors(html_context->options))
-		element->attr.style.color.fg = prop->value.color;
+		element->attr.style.color.foreground = prop->value.color;
 }
 
 static void
@@ -57,7 +57,7 @@ css_apply_background_color(struct html_context *html_context,
 	assert(prop->value_type == CSS_VT_COLOR);
 
 	if (use_document_bg_colors(html_context->options))
-		element->attr.style.color.bg = prop->value.color;
+		element->attr.style.color.background = prop->value.color;
 }
 
 static void

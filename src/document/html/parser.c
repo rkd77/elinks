@@ -915,7 +915,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	par_format.dd_margin = options->margin;
 	par_format.flags = P_NONE;
 
-	par_format.bgcolor = options->default_style.color.bg;
+	par_format.bgcolor = options->default_style.color.background;
 
 	html_top->invisible = 0;
 	html_top->name = NULL;

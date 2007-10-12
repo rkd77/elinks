@@ -37,8 +37,8 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->default_form_input_size = get_opt_int("document.browse.forms.input_size", ses);
 
 	/* Color options. */
-	doo->default_style.color.fg = get_opt_color("document.colors.text", ses);
-	doo->default_style.color.bg = get_opt_color("document.colors.background", ses);
+	doo->default_style.color.foreground = get_opt_color("document.colors.text", ses);
+	doo->default_style.color.background = get_opt_color("document.colors.background", ses);
 	doo->default_color.link = get_opt_color("document.colors.link", ses);
 	doo->default_color.vlink = get_opt_color("document.colors.vlink", ses);
 #ifdef CONFIG_BOOKMARKS

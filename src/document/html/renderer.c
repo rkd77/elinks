@@ -1304,9 +1304,10 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 		link->target = null_or_stracpy(form ? form->target : NULL);
 	}
 
-	link->color.background = format.style.color.bg;
+	link->color.background = format.style.color.background;
 	link->color.foreground = link_is_textinput(link)
-				? format.style.color.fg : format.color.clink;
+				? format.style.color.foreground
+				: format.color.clink;
 
 	init_link_event_hooks(html_context, link);
 
