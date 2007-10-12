@@ -2278,7 +2278,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 				 >= document->options.width));
 #endif
 
-	document->bgcolor = par_format.bgcolor;
+	document->color.background = par_format.bgcolor;
 
 	done_html_parser(html_context);
 

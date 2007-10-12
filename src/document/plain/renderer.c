@@ -637,7 +637,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	renderer.max_width = document->options.wrap ? document->options.box.width
 						    : INT_MAX;
 
-	document->bgcolor = document->options.default_style.color.background;
+	document->color.background = document->options.default_style.color.background;
 	document->width = 0;
 #ifdef CONFIG_UTF8
 	document->options.utf8 = is_cp_utf8(document->options.cp);

@@ -229,7 +229,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	color.foreground = get_opt_color("document.colors.text", ses);
 	color.background = doc_view->document->height
-			 ? doc_view->document->bgcolor
+			 ? doc_view->document->color.background
 			 : get_opt_color("document.colors.background", ses);
 
 	vs = doc_view->vs;

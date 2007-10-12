@@ -99,7 +99,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	init_dom_renderer(&renderer, document, buffer, convert_table);
 
-	document->bgcolor = document->options.default_style.color.background;
+	document->color.background = document->options.default_style.color.background;
 #ifdef CONFIG_UTF8
 	document->options.utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF8 */

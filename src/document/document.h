@@ -208,7 +208,10 @@ struct document {
 	int width, height; /**< size of document */
 	int nlinks;
 	int nsearch;
-	color_T bgcolor;
+
+	struct {
+		color_T background;
+	} color;
 
 	enum cp_status cp_status;
 	unsigned int links_sorted:1; /**< whether links are already sorted */
