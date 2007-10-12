@@ -187,17 +187,17 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 		          &html_context->stack);
 #endif
 
-	if (par_format.bgcolor != format.style.color.background) {
+	if (par_format.color.background != format.style.color.background) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
-		e->parattr.bgcolor = e->attr.style.color.background = par_format.bgcolor = format.style.color.background;
+		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.bgcolor != html_context->options->default_style.color.background
+	    && par_format.color.background != html_context->options->default_style.color.background
 	    && !search_html_stack(html_context, "BODY")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
@@ -416,8 +416,8 @@ html_html(struct html_context *html_context, unsigned char *a,
 	 * this from there. */
 	struct html_element *e = html_bottom;
 
-	if (par_format.bgcolor != format.style.color.background)
-		e->parattr.bgcolor = e->attr.style.color.background = par_format.bgcolor = format.style.color.background;
+	if (par_format.color.background != format.style.color.background)
+		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
 }
 
 void

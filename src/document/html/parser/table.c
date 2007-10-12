@@ -245,7 +245,7 @@ parse_table_attributes(struct table *table, unsigned char *attr, int real,
 	table->align = par_format.align;
 	get_align(html_context, attr, &table->align);
 
-	table->bgcolor = par_format.bgcolor;
+	table->bgcolor = par_format.color.background;
 	get_bgcolor(html_context, attr, &table->bgcolor);
 }
 

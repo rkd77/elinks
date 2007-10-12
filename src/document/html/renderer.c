@@ -163,7 +163,7 @@ realloc_line(struct html_context *html_context, struct document *document,
 	end = &line->chars[length];
 	end->data = ' ';
 	end->attr = 0;
-	set_screen_char_color(end, par_format.bgcolor, 0x0,
+	set_screen_char_color(end, par_format.color.background, 0x0,
 			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
 			      document->options.color_mode);
 
@@ -188,7 +188,7 @@ expand_lines(struct html_context *html_context, struct part *part,
 	if (!use_document_bg_colors(&part->document->options))
 		return;
 
-	par_format.bgcolor = bgcolor;
+	par_format.color.background = bgcolor;
 
 	for (line = 0; line < lines; line++)
 		realloc_line(html_context, part->document, Y(y + line), X(x));
@@ -246,7 +246,7 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end = pos + width - 1;
 	end->data = ' ';
 	end->attr = 0;
-	set_screen_char_color(end, par_format.bgcolor, 0x0,
+	set_screen_char_color(end, par_format.color.background, 0x0,
 			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
 			      part->document->options.color_mode);
 
@@ -1881,7 +1881,7 @@ static inline void
 color_link_lines(struct html_context *html_context)
 {
 	struct document *document = html_context->part->document;
-	struct color_pair colors = INIT_COLOR_PAIR(par_format.bgcolor, 0x0);
+	struct color_pair colors = INIT_COLOR_PAIR(par_format.color.background, 0x0);
 	enum color_mode color_mode = document->options.color_mode;
 	enum color_flags color_flags = document->options.color_flags;
 	int y;
@@ -2278,7 +2278,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 				 >= document->options.width));
 #endif
 
-	document->color.background = par_format.bgcolor;
+	document->color.background = par_format.color.background;
 
 	done_html_parser(html_context);
 

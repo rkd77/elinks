@@ -96,7 +96,9 @@ struct par_attrib {
 	unsigned list_number;
 	int dd_margin;
 	enum format_list_flag flags;
-	color_T bgcolor;
+	struct {
+		color_T background;
+	} color;
 };
 
 /* HTML parser stack mortality info */

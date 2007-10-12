@@ -873,7 +873,7 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 	if (cell->is_header) format.style.attr |= AT_BOLD;
 
 	format.style.color.background = cell->bgcolor;
-	par_format.bgcolor = cell->bgcolor;
+	par_format.color.background = cell->bgcolor;
 
 	if (cell->valign == VALIGN_MIDDLE)
 		tmpy += (height - cell->height) / 2;
@@ -908,7 +908,7 @@ draw_table_cells(struct table *table, int x, int y,
 {
 	int col, row;
 	int xp;
-	color_T bgcolor = par_format.bgcolor;
+	color_T bgcolor = par_format.color.background;
 	struct table_frames table_frames;
 
 	get_table_frames(table, &table_frames);
@@ -1033,7 +1033,8 @@ draw_frame_point(struct table *table, signed char *frame[2], int x, int y,
 	    + 27 * int_max(bottom, 0);
 
 	draw_frame_hchars(table->part, x, y, 1, border_chars[pos],
-			  par_format.bgcolor, table->bordercolor, html_context);
+			  par_format.color.background, table->bordercolor,
+			  html_context);
 }
 
 static inline void
@@ -1049,7 +1050,7 @@ draw_frame_hline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->cols_widths[col] <= 0) return;
 
 	draw_frame_hchars(table->part, x, y, table->cols_widths[col], hltable[pos],
-			  par_format.bgcolor, table->bordercolor, html_context);
+			  par_format.color.background, table->bordercolor, html_context);
 }
 
 static inline void
@@ -1065,7 +1066,7 @@ draw_frame_vline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->rows_heights[row] <= 0) return;
 
 	draw_frame_vchars(table->part, x, y, table->rows_heights[row], vltable[pos],
-			  par_format.bgcolor, table->bordercolor, html_context);
+			  par_format.color.background, table->bordercolor, html_context);
 }
 
 static inline int
