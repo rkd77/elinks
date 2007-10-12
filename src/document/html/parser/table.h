@@ -68,12 +68,16 @@ struct table_column {
 	int width;
 };
 
+struct table_colors {
+	color_T background;
+	color_T border;
+};
+
 struct table {
 	struct part *part;
 	struct table_cell *cells;
 	unsigned char *fragment_id;
-	color_T bgcolor;
-	color_T bordercolor;
+	struct table_colors color;
 	int align;
 
 	struct table_column *columns;

@@ -193,7 +193,7 @@ parse_table_attributes(struct table *table, unsigned char *attr, int real,
 {
 	table->fragment_id = get_attr_val(attr, "id", html_context->doc_cp);
 
-	get_bordercolor(html_context, attr, &table->bordercolor);
+	get_bordercolor(html_context, attr, &table->color.border);
 
 	table->width = get_width(attr, "width", real, html_context);
 	if (table->width == -1) {
@@ -245,8 +245,8 @@ parse_table_attributes(struct table *table, unsigned char *attr, int real,
 	table->align = par_format.align;
 	get_align(html_context, attr, &table->align);
 
-	table->bgcolor = par_format.color.background;
-	get_bgcolor(html_context, attr, &table->bgcolor);
+	table->color.background = par_format.color.background;
+	get_bgcolor(html_context, attr, &table->color.background);
 }
 
 
@@ -567,7 +567,7 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 	if (!table) return NULL;
 
 	parse_table_attributes(table, attr, sh, html_context);
-	last_bgcolor = table->bgcolor;
+	last_bgcolor = table->color.background;
 
 se:
 	en = html;
@@ -740,7 +740,7 @@ see:
 		if (group) group--;
 		l_al = ALIGN_LEFT;
 		l_val = VALIGN_MIDDLE;
-		last_bgcolor = table->bgcolor;
+		last_bgcolor = table->color.background;
 		get_align(html_context, t_attr, &l_al);
 		get_valign(html_context, t_attr, &l_val);
 		get_bgcolor(html_context, t_attr, &last_bgcolor);

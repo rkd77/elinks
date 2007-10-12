@@ -942,7 +942,7 @@ draw_table_cells(struct table *table, int x, int y,
 	/* Finish the table drawing by aligning the right and bottom edge of
 	 * the table */
 	x += table->real_width - 1;
-	expand_lines(html_context, table->part, x, y, table->real_height, table->bgcolor);
+	expand_lines(html_context, table->part, x, y, table->real_height, table->color.background);
 
 	/* Tables are renderer column-wise which breaks forms where the
 	 * form items appears in a column before the actual form tag is
@@ -1033,7 +1033,7 @@ draw_frame_point(struct table *table, signed char *frame[2], int x, int y,
 	    + 27 * int_max(bottom, 0);
 
 	draw_frame_hchars(table->part, x, y, 1, border_chars[pos],
-			  par_format.color.background, table->bordercolor,
+			  par_format.color.background, table->color.border,
 			  html_context);
 }
 
@@ -1050,7 +1050,7 @@ draw_frame_hline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->cols_widths[col] <= 0) return;
 
 	draw_frame_hchars(table->part, x, y, table->cols_widths[col], hltable[pos],
-			  par_format.color.background, table->bordercolor, html_context);
+			  par_format.color.background, table->color.border, html_context);
 }
 
 static inline void
@@ -1066,7 +1066,7 @@ draw_frame_vline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->rows_heights[row] <= 0) return;
 
 	draw_frame_vchars(table->part, x, y, table->rows_heights[row], vltable[pos],
-			  par_format.color.background, table->bordercolor, html_context);
+			  par_format.color.background, table->color.border, html_context);
 }
 
 static inline int
