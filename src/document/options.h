@@ -36,12 +36,14 @@ struct document_options {
 	/** @name The default (fallback) colors.
 	 * @{ */
 	struct text_style default_style;
-	color_T default_link;
-	color_T default_vlink;
+	struct {
+		color_T link;
+		color_T vlink;
 #ifdef CONFIG_BOOKMARKS
-	color_T default_bookmark_link;
+		color_T bookmark_link;
 #endif
-	color_T default_image_link;
+		color_T image_link;
+	} default_color;
 	/** @} */
 
 	/** Color model/optimizations */

@@ -94,7 +94,7 @@ add_document_link(struct document *document, unsigned char *uri, int length,
 	link->type = LINK_HYPERTEXT;
 	link->where = uri;
 	link->color.background = document->options.default_style.color.bg;
-	link->color.foreground = document->options.default_link;
+	link->color.foreground = document->options.default_color.link;
 	link->number = document->nlinks;
 
 	for (point = link->points; length > 0; length--, point++, x++) {
@@ -203,14 +203,14 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 		; /* Shut up compiler */
 #ifdef CONFIG_GLOBHIST
 	else if (get_global_history_item(start))
-		new_link->color.foreground = doc_opts->default_vlink;
+		new_link->color.foreground = doc_opts->default_color.vlink;
 #endif
 #ifdef CONFIG_BOOKMARKS
 	else if (get_bookmark(start))
-		new_link->color.foreground = doc_opts->default_bookmark_link;
+		new_link->color.foreground = doc_opts->default_color.bookmark_link;
 #endif
 	else
-		new_link->color.foreground = doc_opts->default_link;
+		new_link->color.foreground = doc_opts->default_color.link;
 
 	line[link_end] = saved_char;
 

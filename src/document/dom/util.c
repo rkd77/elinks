@@ -276,14 +276,14 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 		return NULL;
 #ifdef CONFIG_GLOBHIST
 	else if (get_global_history_item(where))
-		fgcolor = document->options.default_vlink;
+		fgcolor = document->options.default_color.link;
 #endif
 #ifdef CONFIG_BOOKMARKS
 	else if (get_bookmark(where))
-		fgcolor = document->options.default_bookmark_link;
+		fgcolor = document->options.default_color.bookmark_link;
 #endif
 	else
-		fgcolor = document->options.default_link;
+		fgcolor = document->options.default_color.link;
 
 	link->npoints = length;
 	link->type = LINK_HYPERTEXT;
