@@ -52,28 +52,28 @@
 
 static int
 extract_color(struct html_context *html_context, unsigned char *a,
-	      unsigned char *c, color_T *rgb)
+	      unsigned char *attribute, color_T *rgb)
 {
-	unsigned char *at;
-	int r;
+	unsigned char *value;
+	int retval;
 
-	at = get_attr_val(a, c, html_context->doc_cp);
-	if (!at) return -1;
+	value = get_attr_val(a, attribute, html_context->doc_cp);
+	if (!value) return -1;
 
-	r = decode_color(at, strlen(at), rgb);
-	mem_free(at);
+	retval = decode_color(value, strlen(value), rgb);
+	mem_free(value);
 
-	return r;
+	return retval;
 }
 
 int
 get_color(struct html_context *html_context, unsigned char *a,
-	  unsigned char *c, color_T *rgb)
+	  unsigned char *attribute, color_T *rgb)
 {
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
 
-	return extract_color(html_context, a, c, rgb);
+	return extract_color(html_context, a, attribute, rgb);
 }
 
 int
