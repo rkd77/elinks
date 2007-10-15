@@ -50,16 +50,12 @@
 
 /* TODO: This needs rewrite. Yes, no kidding. */
 
-
-int
-get_color(struct html_context *html_context, unsigned char *a,
-	  unsigned char *c, color_T *rgb)
+static int
+extract_color(struct html_context *html_context, unsigned char *a,
+	      unsigned char *c, color_T *rgb)
 {
 	unsigned char *at;
 	int r;
-
-	if (!use_document_fg_colors(html_context->options))
-		return -1;
 
 	at = get_attr_val(a, c, html_context->doc_cp);
 	if (!at) return -1;
@@ -68,6 +64,16 @@ get_color(struct html_context *html_context, unsigned char *a,
 	mem_free(at);
 
 	return r;
+}
+
+int
+get_color(struct html_context *html_context, unsigned char *a,
+	  unsigned char *c, color_T *rgb)
+{
+	if (!use_document_fg_colors(html_context->options))
+		return -1;
+
+	return extract_color(html_context, a, c, rgb);
 }
 
 int
