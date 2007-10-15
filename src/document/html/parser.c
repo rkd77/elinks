@@ -233,7 +233,6 @@ import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 void
 html_focusable(struct html_context *html_context, unsigned char *a)
 {
-	struct document_options *options;
 	unsigned char *accesskey;
 	int cp;
 	int tabindex;
@@ -243,7 +242,6 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 
 	if (!a) return;
 
-	options = html_context->options;
 	cp = html_context->doc_cp;
 
 	accesskey = get_attr_val(a, "accesskey", cp);
