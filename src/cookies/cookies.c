@@ -312,6 +312,7 @@ init_cookie(unsigned char *name, unsigned char *value,
 	    struct cookie_server *server)
 {
 	struct cookie *cookie = mem_calloc(1, sizeof(*cookie));
+
 	if (!cookie || !name || !value || !path || !domain || !server) {
 		mem_free_if(cookie);
 		mem_free_if(name);
