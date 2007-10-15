@@ -253,7 +253,7 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 		mem_free(accesskey);
 	}
 
-	tabindex = get_num(a, "tabindex", html_context->doc_cp);
+	tabindex = get_num(a, "tabindex", cp);
 	if (0 < tabindex && tabindex < 32767) {
 		format.tabindex = (tabindex & 0x7fff) << 16;
 	}
