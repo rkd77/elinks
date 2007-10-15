@@ -82,7 +82,7 @@ get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
 	if (!use_document_bg_colors(html_context->options))
 		return -1;
 
-	return get_color(html_context, a, "bgcolor", rgb);
+	return extract_color(html_context, a, "bgcolor", rgb);
 }
 
 unsigned char *
