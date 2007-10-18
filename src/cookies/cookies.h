@@ -1,6 +1,15 @@
 #ifndef EL__COOKIES_COOKIES_H
 #define EL__COOKIES_COOKIES_H
 
+/* ELinks cookies file format:
+ * NAME\tVALUE\tSERVER\tPATH\tDOMAIN\tEXPIRES\tSECURE\n
+ *
+ * \t is a tabulator
+ * \n is a newline
+ * EXPIRES is the number of seconds since 1970-01-01 00:00:00 UTC.
+ * SECURE is 0 for http and 1 for https.
+ */
+
 #include "main/module.h"
 #include "main/object.h"
 #include "protocol/uri.h"
