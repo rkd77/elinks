@@ -383,6 +383,9 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		 *
 		 * XXX: What happens if a document is still loading in the
 		 * other tab when we press ^L here? */
+		if (list_empty(document->onload_snippets) && !vs->ecmascript)
+			goto out;
+
 		if (vs->ecmascript_fragile
 		    || (vs->ecmascript && vs->ecmascript->onload_snippets_owner
 		       && document->id != vs->ecmascript->onload_snippets_owner))
@@ -400,7 +403,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		                 &vs->ecmascript->current_onload_snippet);
 	}
 #endif
-
+out:
 	/* If we do not care about the height and width of the document
 	 * just use the setup values. */
 
