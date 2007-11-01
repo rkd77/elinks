@@ -185,7 +185,7 @@ static struct option_info http_options[] = {
 #define COMP_NOTE
 #endif
 	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression (experimental)"),
-		"compression", 0, 1,
+		"compression", 0, 0,
 		N_("If enabled, the capability to receive compressed content (gzip and/or\n"
 		"bzip2) is announced to the server, which usually sends the reply\n"
 		"compressed, thus saving some bandwidth at slight CPU expense.\n"
