@@ -591,7 +591,7 @@ void
 textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	      struct document_view *doc_view_, struct link *link_)
 {
-	struct textarea_data *td;
+	struct textarea_data *td = NULL;
 
 	assert ((op == 0 || op == 1) && term_);
 	if_assert_failed return;
