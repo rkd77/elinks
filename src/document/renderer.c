@@ -402,8 +402,8 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		process_snippets(vs->ecmascript, &vs->ecmascript->onload_snippets,
 		                 &vs->ecmascript->current_onload_snippet);
 	}
-#endif
 out:
+#endif
 	/* If we do not care about the height and width of the document
 	 * just use the setup values. */
 
