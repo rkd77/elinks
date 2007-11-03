@@ -1309,7 +1309,7 @@ read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 
 	kill_buffer_data(rb, len);
 
-	if (!http->length && conn->socket->state == SOCKET_RETRY_ONCLOSE) {
+	if (!http->length) {
 		return 2;
 	}
 
@@ -1324,7 +1324,7 @@ read_http_data(struct socket *socket, struct read_buffer *rb)
 	int ret;
 
 	if (socket->state == SOCKET_CLOSED) {
-		if (conn->content_encoding && http->length == -1) {
+		if (conn->content_encoding) {
 			/* Flush decompression first. */
 			http->length = 0;
 		} else {
@@ -1889,8 +1889,7 @@ again:
 		conn->cached->encoding_info = stracpy(get_encoding_name(conn->content_encoding));
 	}
 
-	if (http->length == -1
-	    || (PRE_HTTP_1_1(http->recv_version) && http->close))
+	if (http->close)
 		socket->state = SOCKET_END_ONCLOSE;
 
 	read_http_data(socket, rb);
