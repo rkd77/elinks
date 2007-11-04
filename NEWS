@@ -72,8 +72,8 @@ Released on 2007-04-15.
 * major Gentoo bug 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
-* major bug 937: don't send the entire HTTPS request to a CONNECT
-  proxy
+* major bug 937, CVE-2007-5034: don't send the entire HTTPS request to
+  a CONNECT proxy
 * bug 899, Debian bug 403139: recognize >2GB files in FTP directory
   listing, if off_t is large enough
 * bug 942: encode/decode file names in FTP URLs, so they can contain
