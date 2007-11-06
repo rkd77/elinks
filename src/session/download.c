@@ -136,6 +136,10 @@ abort_download(struct file_download *file_download)
 	 * download dialog code potentially could access free()d memory. */
 	assert(!is_object_used(file_download));
 #endif
+	struct session *ses = file_download->ses;
+	struct session_status *status = &ses->status;
+
+	status->downloads_in_progress = 0;
 
 	done_download_display(file_download);
 
@@ -336,18 +340,24 @@ static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
 	struct terminal *term = file_download->term;
+	struct session *ses = file_download->ses;
+	struct session_status *status = &ses->status;
 
 	if (!term) {
 		/* No term here, so no beep. --Zas */
 		abort_download(file_download);
 		return;
 	}
-
+	
 	if (is_in_progress_state(download->state)) {
+		status->downloads_in_progress = 1;
+	
 		if (file_download->dlg_data)
 			redraw_dialog(file_download->dlg_data, 1);
 		return;
 	}
+
+	status->downloads_in_progress = 0;
 
 	if (download->state != S_OK) {
 		unsigned char *url = get_uri_string(file_download->uri, URI_PUBLIC);

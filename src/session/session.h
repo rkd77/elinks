@@ -103,6 +103,7 @@ struct session_status {
 	struct led *insert_mode_led;
 	struct led *ecmascript_led;
 	struct led *popup_led;
+	struct led *download_led;
 #endif
 	/** Has the tab been visited yet. */
 	unsigned int visited:1;
@@ -110,6 +111,7 @@ struct session_status {
 	/** Is processing file requests. */
 	unsigned int processing_file_requests:1;
 	unsigned int show_tabs_bar_at_top:1;
+	unsigned int downloads_in_progress:1;
 };
 
 enum insert_mode {

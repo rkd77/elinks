@@ -46,6 +46,7 @@ void menu_leds_info(struct terminal *term, void *xxx, void *xxxx);
 struct led *register_led(struct session *ses, int number);
 void unregister_led(struct led *);
 void set_led_value(struct led *led, unsigned char value);
+unsigned char get_led_value(struct led *led);
 void unset_led_value(struct led *led);
 
 #endif

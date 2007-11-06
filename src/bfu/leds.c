@@ -38,7 +38,7 @@
  * 2 - JavaScript Error indicator
  * 3 - JavaScript pop-up blocking indicator
  * 4 - unused, reserved for Lua
- * 5 - unused */
+ * 5 - download in progress */
 
 /* XXX: Currently, the leds toggling is quite hackish, some more work should go
  * to it (ie. some led hooks called in sync_leds() to light the leds
@@ -127,6 +127,12 @@ set_led_value(struct led *led, unsigned char value)
 		led->value__ = value;
 		led->value_changed__ = 1;
 	}
+}
+
+unsigned char
+get_led_value(struct led *led)
+{
+	return led->value__;
 }
 
 void
@@ -268,6 +274,25 @@ sync_leds(struct session *ses)
 	return 0;
 }
 
+static void
+update_download_led(struct session *ses)
+{
+	struct session_status *status = &ses->status;
+
+	if (status->downloads_in_progress) {
+		unsigned char led = get_led_value(status->download_led);
+
+		switch (led) {
+			case '-' : led = '\\'; break;
+			case '\\': led = '|'; break;
+			case '|' : led = '/'; break;
+			default: led = '-';
+		}
+
+		set_led_value(status->download_led, led);
+	}
+}
+
 /* Timer callback for @redraw_timer.  As explained in @install_timer,
  * this function must erase the expired timer ID from all variables.  */
 static void
@@ -288,6 +313,7 @@ redraw_leds(void *xxx)
 	drawing = 1;
 
 	foreach (ses, sessions) {
+		update_download_led(ses);
 		if (!sync_leds(ses))
 			continue;
 		redraw_terminal(ses->tab->term);
@@ -306,7 +332,7 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 		 msg_text(term, N_("What the different LEDs indicate:\n"
 		 	"\n"
 			"[SIJP--]\n"
-			" |||||`- Unused\n"
+			" |||||`- Download in progress\n"
 			" ||||`-- Unused\n"
 			" |||`--- A JavaScript pop-up window was blocked\n"
 			" ||`---- A JavaScript error has occured\n"

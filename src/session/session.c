@@ -873,6 +873,8 @@ init_session(struct session *base_session, struct terminal *term,
 	ses->status.insert_mode_led = register_led(ses, 1);
 	ses->status.ecmascript_led = register_led(ses, 2);
 	ses->status.popup_led = register_led(ses, 3);
+
+	ses->status.download_led = register_led(ses, 5);
 #endif
 	ses->status.force_show_status_bar = -1;
 	ses->status.force_show_title_bar = -1;
