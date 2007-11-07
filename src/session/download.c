@@ -348,16 +348,13 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		abort_download(file_download);
 		return;
 	}
-	
-	if (is_in_progress_state(download->state)) {
-		status->downloads_in_progress = 1;
-	
+
+	status->downloads_in_progress = is_in_progress_state(download->state);
+	if (status->downloads_in_progress) {
 		if (file_download->dlg_data)
 			redraw_dialog(file_download->dlg_data, 1);
 		return;
 	}
-
-	status->downloads_in_progress = 0;
 
 	if (download->state != S_OK) {
 		unsigned char *url = get_uri_string(file_download->uri, URI_PUBLIC);
