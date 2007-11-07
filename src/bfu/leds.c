@@ -290,6 +290,8 @@ update_download_led(struct session *ses)
 		}
 
 		set_led_value(status->download_led, led);
+	} else {
+		unset_led_value(status->download_led);
 	}
 }
 
