@@ -330,7 +330,7 @@ read_from_popen(struct session *ses, unsigned char *handler, unsigned char *file
 			data->stream = stream;
 			if (filename) data->filename = stracpy(filename);
 			add_to_list(copiousoutput_data, data);
-			snprintf(buf, 48, "file:///dev/fd/%d", fd);
+			snprintf(buf, sizeof(buf), "file:///dev/fd/%d", fd);
 			goto_url(ses, buf);
 		}
 	}
