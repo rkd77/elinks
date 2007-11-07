@@ -1308,7 +1308,7 @@ save_as(struct session *ses, struct document_view *doc_view, int magic)
 }
 
 static void
-save_formatted_finish(struct terminal *term, int h, void *data, int resume)
+save_formatted_finish(struct terminal *term, int h, void *data, download_flags_T flags)
 {
 	struct document *document = data;
 

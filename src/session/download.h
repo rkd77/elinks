@@ -20,6 +20,12 @@ struct download;
 
 typedef void (download_callback_T)(struct download *, void *);
 
+typedef uint32_t download_flags_T;
+enum download_flag {
+	DOWNLOAD_START = 0,
+	DOWNLOAD_RESUME = 1
+};
+
 struct download {
 	/* XXX: order matters there, there's some hard initialization in
 	 * src/session/session.c and src/viewer/text/view.c */
@@ -105,8 +111,8 @@ int are_there_downloads(void);
 void start_download(void *, unsigned char *);
 void resume_download(void *, unsigned char *);
 void create_download_file(struct terminal *, unsigned char *, unsigned char **,
-			  int, int,
-			  void (*)(struct terminal *, int, void *, int),
+			  int, download_flags_T,
+			  void (*)(struct terminal *, int, void *, download_flags_T),
 			  void *);
 
 void abort_all_downloads(void);
