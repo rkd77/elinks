@@ -380,15 +380,13 @@ download_data_store(struct download *download, struct file_download *file_downlo
 			read_from_popen(file_download->ses,
 					file_download->external_handler,
 					file_download->file);
-			file_download->delete = 0;
-			abort_download_and_beep(file_download, term);
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
 				 file_download->file,
 				 file_download->block ? TERM_EXEC_FG : TERM_EXEC_BG);
-			file_download->delete = 0;
-			abort_download_and_beep(file_download, term);
 		}
+		file_download->delete = 0;
+		abort_download_and_beep(file_download, term);
 		return;
 	}
 
