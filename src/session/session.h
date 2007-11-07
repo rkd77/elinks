@@ -111,7 +111,6 @@ struct session_status {
 	/** Is processing file requests. */
 	unsigned int processing_file_requests:1;
 	unsigned int show_tabs_bar_at_top:1;
-	unsigned int downloads_in_progress:1;
 };
 
 enum insert_mode {

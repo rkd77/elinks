@@ -279,7 +279,7 @@ update_download_led(struct session *ses)
 {
 	struct session_status *status = &ses->status;
 
-	if (status->downloads_in_progress) {
+	if (are_there_downloads()) {
 		unsigned char led = get_led_value(status->download_led);
 
 		switch (led) {
