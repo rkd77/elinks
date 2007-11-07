@@ -494,8 +494,6 @@ struct codw_hop {
 
 struct cdf_hop {
 	unsigned char **real_file;
-	int safe;
-
 	void (*callback)(struct terminal *, int, void *, download_flags_T);
 	void *data;
 };
@@ -665,7 +663,7 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 #ifdef NO_FILE_SECURITY
 	int sf = 0;
 #else
-	int sf = cdf_hop->safe;
+	int sf = flags & DOWNLOAD_EXTERNAL;
 #endif
 
 	if (!file) goto finish;
@@ -701,7 +699,7 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 	} else {
 		set_bin(h);
 
-		if (!cdf_hop->safe) {
+		if (!(flags & DOWNLOAD_EXTERNAL)) {
 			unsigned char *download_dir = get_opt_str("document.download.directory", NULL);
 			int i;
 
@@ -727,7 +725,7 @@ finish:
 
 void
 create_download_file(struct terminal *term, unsigned char *fi,
-		     unsigned char **real_file, int safe, download_flags_T flags,
+		     unsigned char **real_file, download_flags_T flags,
 		     void (*callback)(struct terminal *, int, void *, download_flags_T),
 		     void *data)
 {
@@ -740,7 +738,6 @@ create_download_file(struct terminal *term, unsigned char *fi,
 	}
 
 	cdf_hop->real_file = real_file;
-	cdf_hop->safe = safe;
 	cdf_hop->callback = callback;
 	cdf_hop->data = data;
 
@@ -880,8 +877,8 @@ common_download(struct session *ses, unsigned char *file, download_flags_T flags
 
 	kill_downloads_to_file(file);
 
-	create_download_file(ses->tab->term, file, &cmdw_hop->real_file, 0,
-			     flags, common_download_do, cmdw_hop);
+	create_download_file(ses->tab->term, file, &cmdw_hop->real_file, flags,
+			     common_download_do, cmdw_hop);
 }
 
 void
@@ -973,7 +970,9 @@ continue_download(void *data, unsigned char *file)
 
 	create_download_file(type_query->ses->tab->term, file,
 			     &codw_hop->real_file,
-			     !!type_query->external_handler, 0,
+			     type_query->external_handler
+			     ? DOWNLOAD_START | DOWNLOAD_EXTERNAL
+			     : DOWNLOAD_START,
 			     continue_download_do, codw_hop);
 }
 
