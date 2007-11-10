@@ -74,6 +74,7 @@ Miscellaneous:
 * bug 766: speed up CSS
 * bug 355: add documents displayed via ``What to do'' dialog to the
   global history
+* bug 975: fix int/size_t pointer type mismatch in Perl interface
 * encode and decode filenames in FSP URLs
 * don't use a busy cache entry if it has expired or should be
   reloaded.  See elinks-users mail from 28 Oct 2005.
