@@ -74,7 +74,6 @@ Miscellaneous:
 * bug 766: speed up CSS
 * bug 355: add documents displayed via ``What to do'' dialog to the
   global history
-* bug 975: fix int/size_t pointer type mismatch in Perl interface
 * encode and decode filenames in FSP URLs
 * don't use a busy cache entry if it has expired or should be
   reloaded.  See elinks-users mail from 28 Oct 2005.
@@ -267,7 +266,6 @@ have already been considered.
   - (enhancement) Ctrl+characters don't trigger hotkeys in menus and
     dialogs.
   - (bitrot) Fix two warnings on Mac OS X.
-  - (enhancement) reduce warnings on gcc 4.2 snapshots
   * don't use cmp -b, which FreeBSD doesn't support.  This is commit
     7a5f699a88c5fc89c510854b04702c16c30ece5a in src/dom/test/ which
     is run only by "make test" rather than "make".
@@ -297,6 +295,7 @@ To be released as 0.11.4.
 * major bug 788: don't read STRLEN n_a, which isn't initialized by
   POPpx of Perl v5.8.8 and later
 * fix query parsing in file: URIs for local CGI (was broken in 0.11.3)
+* bug 975: fix int/size_t pointer type mismatch in Perl interface
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
@@ -315,6 +314,7 @@ To be released as 0.11.4.
 * build bug 959: test in configure whether -lX11 works
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
+* build: disable GCC 4.2 warning about builtin_modules
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
 
@@ -345,8 +345,8 @@ Released on 2007-04-15.
 * major Gentoo bug 121247: fix segfaults in Ruby user scripting
 * major bug 908: don't write to freed memory when the user pushes a
   radio button
-* major bug 937: don't send the entire HTTPS request to a CONNECT
-  proxy
+* major bug 937, CVE-2007-5034: don't send the entire HTTPS request to
+  a CONNECT proxy
 * bug 899, Debian bug 403139: recognize >2GB files in FTP directory
   listing, if off_t is large enough
 * bug 942: encode/decode file names in FTP URLs, so they can contain
