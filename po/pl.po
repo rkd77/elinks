@@ -9091,7 +9091,7 @@ msgstr "Błąd zapisu do pliku"
 #. name:
 #: src/viewer/timer.c:89
 msgid "Timer"
-msgstr "Czasomierz"
+msgstr "Stoper"
 
 #. name:
 #: src/viewer/viewer.c:25

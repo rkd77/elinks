@@ -142,7 +142,7 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 	SPAGAIN;
 	if (count == 1) {
 		SV *new_html_sv = POPs;
-		int new_html_len;
+		STRLEN new_html_len;
 		unsigned char *new_html = SvPV(new_html_sv, new_html_len);
 
 		if (new_html) {
