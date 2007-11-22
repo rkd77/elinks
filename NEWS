@@ -321,6 +321,7 @@ To be released as 0.11.4.
 * build: disable GCC 4.2 warning about builtin_modules
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
+* bug 978: Python's webbrowser.open_new_tab(URL) works since now
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.11.4

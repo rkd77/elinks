@@ -301,9 +301,12 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 		} else {
 			end = strchr(start, ',');
-			if (!end)
+			if (!end) {
 				end = start + strlen(start);
-			arg = end;
+				arg = end;
+			} else {
+				arg = end + 1;
+			}
 			skipback_whitespace(start, end);
 
 			if (start != end)
