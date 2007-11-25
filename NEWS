@@ -10,6 +10,9 @@ ELinks 0.13.GIT now:
 
 To be released as ELinks 0.13.0.
 
+* enhancement: New actions move-cursor-line-start, move-link-down-line,
+  move-link-left-line, move-link-right-line, move-link-up-line.
+
 ELinks 0.12.GIT now:
 --------------------
 
