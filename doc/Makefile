@@ -13,7 +13,7 @@ HTML_DIR = $(DESTDIR)$(docdir)/$(PACKAGE)/html
 PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
 
 ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
-ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/"
+ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/" -a asciidoc7compatible
 
 #############################################################################
 # Build files
