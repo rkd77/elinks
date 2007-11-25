@@ -100,7 +100,10 @@ Miscellaneous:
 * enhancement 887: ``Save'' in the cookie manager now saves cookies
   even if unmodified
 * enhancement 145: internal clipboard support
-* enhancement: new actions kill-word-back, move-backward-word,
+* enhancement: new main actions move-cursor-line-start,
+  move-link-down-line, move-link-left-line, move-link-right-line,
+  move-link-up-line
+* enhancement: new edit actions kill-word-back, move-backward-word,
   move-forward-word
 * enhancements 687, 688: options ui.tabs.top, ui.show_menu_bar_always
 * enhancement: highlight links as one enters link prefixes
