@@ -634,8 +634,19 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 
 			if (link->points[0].y != y) continue;
 			if (y < vs->y) {
+				/* The line is above the visible part
+				 * of the document.  Scroll it by one
+				 * page, but not at all past the
+				 * beginning of the document.  */
 				int mini = int_min(box->height, vs->y);
 
+				/* Before this update, y is the line
+				 * number in the document, and y - y1
+				 * is the number of lines the cursor
+				 * must move in the document.
+				 * Afterwards, y does not make sense,
+				 * but y - y1 is the number of lines
+				 * the cursor must move on the screen.  */
 				vs->y -= mini;
 				y += mini;
 			}
@@ -686,8 +697,19 @@ move_link_down_line(struct session *ses, struct document_view *doc_view)
 
 			if (link->points[0].y != y) continue;
 			if (y >= vs->y + box->height) {
+				/* The line is below the visible part
+				 * of the document.  Scroll it by one
+				 * page, but keep at least one line of
+				 * the document on the screen.  */
 				int mini = int_min(box->height, document->height - vs->y - 1);
 
+				/* Before this update, y is the line
+				 * number in the document, and y - y1
+				 * is the number of lines the cursor
+				 * must move in the document.
+				 * Afterwards, y does not make sense,
+				 * but y - y1 is the number of lines
+				 * the cursor must move on the screen.  */
 				vs->y += mini;
 				y -= mini;
 			}
@@ -754,8 +776,19 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 
 			y = last->points[0].y;
 			if (y < vs->y) {
+				/* The line is above the visible part
+				 * of the document.  Scroll it by one
+				 * page, but not at all past the
+				 * beginning of the document.  */
 				int mini = int_min(box->height, vs->y);
 
+				/* Before this update, y is the line
+				 * number in the document, and y - y1
+				 * is the number of lines the cursor
+				 * must move in the document.
+				 * Afterwards, y does not make sense,
+				 * but y - y1 is the number of lines
+				 * the cursor must move on the screen.  */
 				vs->y -= mini;
 				y += mini;
 			}
@@ -822,8 +855,19 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 
 			y = last->points[0].y;
 			if (y >= vs->y + box->height) {
+				/* The line is below the visible part
+				 * of the document.  Scroll it by one
+				 * page, but keep at least one line of
+				 * the document on the screen.  */
 				int mini = int_min(box->height, document->height - vs->y - 1);
 
+				/* Before this update, y is the line
+				 * number in the document, and y - y1
+				 * is the number of lines the cursor
+				 * must move in the document.
+				 * Afterwards, y does not make sense,
+				 * but y - y1 is the number of lines
+				 * the cursor must move on the screen.  */
 				vs->y += mini;
 				y -= mini;
 			}
