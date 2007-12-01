@@ -142,7 +142,6 @@ document_info_dialog(struct session *ses)
 	struct terminal *term = ses->tab->term;
 	struct location *location = cur_loc(ses);
 	struct document_view *doc_view;
-	struct cache_entry *cached;
 	struct string msg;
 
 	if (!location) {
@@ -169,8 +168,8 @@ document_info_dialog(struct session *ses)
 
 	add_char_to_string(&msg, '\n');
 
-	cached = doc_view->document->cached;
-	if (cached) {
+	if (doc_view && doc_view->document->cached) {
+		struct cache_entry *cached = doc_view->document->cached;
 		unsigned char *a;
 
 		add_format_to_string(&msg, "\n%s: %" OFF_T_FORMAT,
