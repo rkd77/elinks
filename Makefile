@@ -4,6 +4,7 @@ top_builddir=.
 SUBDIRS = doc src
 SUBDIRS-$(CONFIG_NLS) += po
 CLEAN	= features.log
+calltest = $1-$1
 
 all-recursive: config.h
 
@@ -49,10 +50,21 @@ $(top_srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	@echo timestamp > $(top_srcdir)/stamp-h.in 2> /dev/null
 
 
+# Makefile.lib heavily uses $(call ...), which was added in GNU Make 3.78.
+# An elinks-users post on 2007-12-04 reported trouble with GNU Make 3.68.
+# Detect this situation and give an error message.  $(MAKECMDGOALS) is
+# only defined by 3.76 and later, so specify the "all" target as well.
+# This check has been tested with GNU Make 3.68, 3.77, 3.78.1, and 3.81.
+ifneq ($(call calltest,ok),ok-ok)
+$(MAKECMDGOALS) default all:
+	@echo >&2 "You need GNU Make 3.78 or later"
+	@false
+else
 ifeq ($(wildcard Makefile.config),)
 # Catch all
 $(MAKECMDGOALS) default:
 	@echo "You need to first run ./configure"
 else
 include $(top_srcdir)/Makefile.lib
+endif
 endif
