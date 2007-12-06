@@ -19,9 +19,10 @@ required or recommended that you install.
 Requirements
 ~~~~~~~~~~~~
 
-To successfully install ELinks all that is required is GNU make and a C
-compiler. If you want to install directly from GIT it is also required that
-automake and autoconf is installed on your system.
+To successfully install ELinks all that is required is GNU make
+(version 3.78 or later) and a C compiler. If you want to install
+directly from GIT it is also required that automake and autoconf
+is installed on your system.
 
 Recommended Libraries and Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
