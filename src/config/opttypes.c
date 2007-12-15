@@ -395,20 +395,31 @@ tree_dup(struct option *opt, struct option *template)
 }
 
 const struct option_type_info option_types[] = {
+	/* The OPT_ comments below are here to be found by grep.  */
+
+	/* OPT_BOOL */
 	{ N_("Boolean"),  bool_cmd,  num_rd,   num_wr,   NULL,     num_set,   N_("[0|1]") },
+	/* OPT_INT */
 	{ N_("Integer"),  gen_cmd,   num_rd,   num_wr,   NULL,     num_set,   N_("<num>") },
+	/* OPT_LONG */
 	{ N_("Longint"),  gen_cmd,   num_rd,   long_wr,  NULL,     long_set,  N_("<num>") },
+	/* OPT_STRING */
 	{ N_("String"),   gen_cmd,   str_rd,   str_wr,   str_dup,  str_set,   N_("<str>") },
 
+	/* OPT_CODEPAGE */
 	{ N_("Codepage"), gen_cmd,   str_rd,   cp_wr,    NULL,     cp_set,    N_("<codepage>") },
+	/* OPT_LANGUAGE */
 	{ N_("Language"), gen_cmd,   str_rd,   lang_wr,  NULL,     lang_set,  N_("<language>") },
+	/* OPT_COLOR */
 	{ N_("Color"),    gen_cmd,   str_rd,   color_wr, NULL,     color_set, N_("<color|#rrggbb>") },
 
+	/* OPT_COMMAND */
 	{ N_("Special"),  exec_cmd,  NULL,     NULL,     NULL,     NULL,      "" },
 
+	/* OPT_ALIAS */
 	{ N_("Alias"),    redir_cmd, redir_rd, redir_wr, NULL,     redir_set, "" },
 
-	/* tree */
+	/* OPT_TREE */
 	{ N_("Folder"),   NULL,      NULL,     NULL,     tree_dup, NULL,      "" },
 };
 
