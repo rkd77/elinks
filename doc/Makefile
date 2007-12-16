@@ -14,7 +14,7 @@ PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
 TXT_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/txt
 
 ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
-ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/"
+ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/" -a asciidoc7compatible
 
 #############################################################################
 # Build files
