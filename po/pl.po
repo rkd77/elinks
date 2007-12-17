@@ -1,7 +1,7 @@
 # Polish ELinks translation.
 # Arkadiusz Sochala <jojoro@priv2.onet.pl>
 # Grzegorz Golawski <grzegol@pld.org.pl>
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2006
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
 # Wojtek Bojdo/l <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
 # Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
@@ -738,7 +738,7 @@ msgstr "Zapisz informacje o wszystkich otwartych kartach"
 
 #: src/config/actions-main.inc:12
 msgid "Open authentication manager"
-msgstr "Otwórz menad¿era autentykacji"
+msgstr "Otwórz menad¿era uwierzytelniania"
 
 #: src/config/actions-main.inc:13
 msgid "Open bookmark manager"
@@ -5192,7 +5192,7 @@ msgstr "Historia ~formularzy"
 
 #: src/dialogs/menu.c:484
 msgid "~Authentication"
-msgstr "~Autentykacja"
+msgstr "~Uwierzytelnianie"
 
 #: src/dialogs/menu.c:500
 msgid "~File"
@@ -6621,34 +6621,34 @@ msgstr "poprawny"
 #: src/protocol/auth/dialogs.c:214
 #, c-format
 msgid "Sorry, but auth entry \"%s\" cannot be deleted."
-msgstr "Przykro mi, ale pozycja autentykacji \"%s\" nie mo¿e byæ usuniêta."
+msgstr "Przykro mi, ale pozycja uwierzytelniania \"%s\" nie mo¿e byæ usuniêta."
 
 #. cant_delete_used_item
 #: src/protocol/auth/dialogs.c:216
 #, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
 msgstr ""
-"Przykro mi, ale pozycja autentykacji \"%s\" jest u¿ywana przez co¶ innego."
+"Przykro mi, ale pozycja uwierzytelniania \"%s\" jest u¿ywana przez co¶ innego."
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:222
 msgid "Delete marked auth entries"
-msgstr "Usuwanie zaznaczonych pozycji autentykacji"
+msgstr "Usuwanie zaznaczonych pozycji uwierzytelniania"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:224
 msgid "Delete marked auth entries?"
-msgstr "Czy usun±æ zaznaczone pozycje autentykacji?"
+msgstr "Czy usun±æ zaznaczone pozycje uwierzytelniania?"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:230
 msgid "Delete auth entry"
-msgstr "Usuwanie pozycji autentykacji"
+msgstr "Usuwanie pozycji uwierzytelniania"
 
 #. delete_item
 #: src/protocol/auth/dialogs.c:232
 msgid "Delete this auth entry?"
-msgstr "Czy usun±æ tê pozycjê autentykacji?"
+msgstr "Czy usun±æ tê pozycjê uwierzytelniania?"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:234
@@ -6658,11 +6658,11 @@ msgstr "Skasowanie wszystkich pozycji"
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:236
 msgid "Do you really want to remove all auth entries?"
-msgstr "Czy na pewno chcesz skasowaæ wszystkie pozycje autentykacji?"
+msgstr "Czy na pewno chcesz skasowaæ wszystkie pozycje uwierzytelniania?"
 
 #: src/protocol/auth/dialogs.c:263
 msgid "Authentication manager"
-msgstr "Zarz±dca autentykacji"
+msgstr "Zarz±dca uwierzytelniania"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
