@@ -6562,7 +6562,7 @@ msgstr "Nieznany b³±d"
 
 #: src/osdep/newwin.c:26
 msgid "~Xterm"
-msgstr "Xterm"
+msgstr "~Xterm"
 
 #: src/osdep/newwin.c:27
 msgid "T~wterm"
