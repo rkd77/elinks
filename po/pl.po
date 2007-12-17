@@ -1,9 +1,9 @@
 # Polish ELinks translation.
 # Arkadiusz Sochala <jojoro@priv2.onet.pl>
 # Grzegorz Golawski <grzegol@pld.org.pl>
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2006
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
 # Wojtek Bojdoł <wojboj@lp.net.pl>
-# Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2006
+# Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2007
 # Adam Gołębiowski <adamg@pld-linux.org>, 2003-2006
 # Mikołaj Machowski <mikmach@wp.pl>, 2003
 #
@@ -822,7 +822,7 @@ msgstr "Zapisz informacje o wszystkich otwartych kartach"
 
 #: src/config/actions-main.inc:12
 msgid "Open authentication manager"
-msgstr "Otwórz menadżera autentykacji"
+msgstr "Otwórz menadżera uwierzytelniania"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -5556,7 +5556,7 @@ msgstr "Historia ~formularzy"
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:505
 msgid "~Authentication"
-msgstr "~Autentykacja"
+msgstr "~Uwierzytelnianie"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:522
@@ -6985,7 +6985,7 @@ msgstr "Terminal ~BeOS"
 #. name:
 #: src/protocol/auth/auth.c:332
 msgid "Authentication"
-msgstr "Autentykacja"
+msgstr "Uwierzytelnianie"
 
 #: src/protocol/auth/dialogs.c:87
 #, c-format
@@ -7027,34 +7027,34 @@ msgstr "poprawny"
 #: src/protocol/auth/dialogs.c:219
 #, c-format
 msgid "Sorry, but auth entry \"%s\" cannot be deleted."
-msgstr "Przykro mi, ale pozycja autentykacji \"%s\" nie może być usunięta."
+msgstr "Przykro mi, ale pozycja uwierzytelniania \"%s\" nie może być usunięta."
 
 #. cant_delete_used_item
 #: src/protocol/auth/dialogs.c:221
 #, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
 msgstr ""
-"Przykro mi, ale pozycja autentykacji \"%s\" jest używana przez coś innego."
+"Przykro mi, ale pozycja uwierzytelniania \"%s\" jest używana przez coś innego."
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:227
 msgid "Delete marked auth entries"
-msgstr "Usuwanie zaznaczonych pozycji autentykacji"
+msgstr "Usuwanie zaznaczonych pozycji uwierzytelniania"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 msgid "Delete marked auth entries?"
-msgstr "Czy usunąć zaznaczone pozycje autentykacji?"
+msgstr "Czy usunąć zaznaczone pozycje uwierzytelniania?"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 msgid "Delete auth entry"
-msgstr "Usuwanie pozycji autentykacji"
+msgstr "Usuwanie pozycji uwierzytelniania"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
 msgid "Delete this auth entry?"
-msgstr "Czy usunąć tę pozycję autentykacji?"
+msgstr "Czy usunąć tę pozycję uwierzytelniania?"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:239
@@ -7064,11 +7064,11 @@ msgstr "Skasowanie wszystkich pozycji"
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
 msgid "Do you really want to remove all auth entries?"
-msgstr "Czy na pewno chcesz skasować wszystkie pozycje autentykacji?"
+msgstr "Czy na pewno chcesz skasować wszystkie pozycje uwierzytelniania?"
 
 #: src/protocol/auth/dialogs.c:269
 msgid "Authentication manager"
-msgstr "Zarządca autentykacji"
+msgstr "Zarządca uwierzytelniania"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -9072,19 +9072,19 @@ msgstr ""
 "Wejście zostało obcięte, ale można nadal odzyskać wpisany tekst z tego "
 "pliku: %s"
 
-#: src/viewer/text/view.c:735
+#: src/viewer/text/view.c:1042
 msgid "Go to link"
 msgstr "Przejdź do odnośnika"
 
-#: src/viewer/text/view.c:735
+#: src/viewer/text/view.c:1042
 msgid "Enter link number"
 msgstr "Wprowadź numer odnośnika"
 
-#: src/viewer/text/view.c:1320
+#: src/viewer/text/view.c:1627
 msgid "Save error"
 msgstr "Błąd zapisu"
 
-#: src/viewer/text/view.c:1321
+#: src/viewer/text/view.c:1628
 msgid "Error writing to file"
 msgstr "Błąd zapisu do pliku"
 
