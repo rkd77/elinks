@@ -116,6 +116,7 @@ get_content_type_default(unsigned char *extension)
 	if (extend < extension)	return NULL;
 
 	opt_tree = get_opt_rec_real(config_options, "mime.extension");
+	assert(opt_tree);
 
 	foreach (opt, *opt_tree->value.tree) {
 		unsigned char *namepos = opt->name + strlen(opt->name) - 1;

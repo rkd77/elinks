@@ -1096,6 +1096,8 @@ commit_option_values(struct option_resolver *resolvers,
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
 
+		assertm(option, "Bad option '%s' in options resolver", name);
+
 		if (memcmp(&option->value, &values[id], sizeof(union option_value))) {
 			option->value = values[id];
 			option->flags |= OPT_TOUCHED;
@@ -1129,6 +1131,8 @@ checkout_option_values(struct option_resolver *resolvers,
 		unsigned char *name = resolvers[i].name;
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
+
+		assertm(option, "Bad option '%s' in options resolver", name);
 
 		values[id] = option->value;
 	}
