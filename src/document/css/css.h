@@ -23,4 +23,7 @@ extern struct module css_module;
 /** This function will try to import the given @a url from the cache. */
 void import_css(struct css_stylesheet *css, struct uri *uri);
 
+int supports_css_media_type(const unsigned char *optstr,
+			    const unsigned char *token, size_t token_length);
+
 #endif

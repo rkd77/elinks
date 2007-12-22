@@ -103,7 +103,8 @@ typedef void (*css_stylesheet_importer_T)(struct css_stylesheet *, struct uri *,
  * stylesheet so it can contain stuff from both @<style> tags and @@import'ed
  * CSS documents. */
 struct css_stylesheet {
-	/** The import callback function. */
+	/** The import callback function.  The caller must check the
+	 * media types first.  */
 	css_stylesheet_importer_T import;
 
 	/** The import callback's data. */

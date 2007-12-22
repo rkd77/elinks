@@ -801,7 +801,8 @@ html_link(struct html_context *html_context, unsigned char *a,
 	if (!link.href) goto free_and_return;
 
 #ifdef CONFIG_CSS
-	if (link.type == LT_STYLESHEET) {
+	if (link.type == LT_STYLESHEET
+	    && supports_html_media_attr(link.media)) {
 		int len = strlen(link.href);
 
 		import_css_stylesheet(&html_context->css_styles,

@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "config/options.h"
+#include "document/css/css.h"
 #include "document/css/parser.h"
 #include "document/css/property.h"
 #include "document/css/scanner.h"
@@ -20,6 +22,9 @@
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
+
+static void css_parse_ruleset(struct css_stylesheet *css,
+			      struct scanner *scanner);
 
 
 void
@@ -109,16 +114,53 @@ skip_css_block(struct scanner *scanner)
 	}
 }
 
-/** Parse an atrule from @a scanner and update @a css accordingly.
+/* Parse a list of media types.
  *
- * Atrules grammar:
+ * Media types grammar:
  *
  * @verbatim
  * media_types:
  *	  <empty>
  *	| <ident>
  *	| media_types ',' <ident>
+ * @endverbatim
  *
+ * This does not entirely match appendix D of CSS2: ELinks allows any
+ * list of media types to be empty, whereas CSS2 allows that only in
+ * @@import and not in @@media.
+ *
+ * @return nonzero if the directive containing this list should take
+ * effect, zero if not.
+ */
+static int
+css_parse_media_types(struct scanner *scanner)
+{
+	int matched = 0;
+	int empty = 1;
+	const unsigned char *const optstr = get_opt_str("document.css.media", NULL);
+	struct scanner_token *token = get_scanner_token(scanner);
+
+	while (token && token->type == CSS_TOKEN_IDENT) {
+		empty = 0;
+		if (!matched) /* Skip string ops if already matched. */
+			matched = supports_css_media_type(
+				optstr, token->string, token->length);
+
+		token = get_next_scanner_token(scanner);
+		if (!token || token->type != ',')
+			break;
+
+		token = get_next_scanner_token(scanner);
+	}
+
+	return matched || empty;
+}
+
+/** Parse an atrule from @a scanner and update @a css accordingly.
+ *
+ * Atrules grammar:
+ *
+ * @verbatim
  * atrule:
  * 	  '@charset' <string> ';'
  *	| '@import' <string> media_types ';'
@@ -133,38 +175,81 @@ css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
 		 struct uri *base_uri)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
+	struct string import_uri;
 
 	/* Skip skip skip that code */
 	switch (token->type) {
 		case CSS_TOKEN_AT_IMPORT:
 			token = get_next_scanner_token(scanner);
 			if (!token) break;
+			if (token->type != CSS_TOKEN_STRING
+			    && token->type != CSS_TOKEN_URL)
+				goto skip_rest_of_atrule;
 
-			if (token->type == CSS_TOKEN_STRING
-			    || token->type == CSS_TOKEN_URL) {
-				assert(css->import);
-				css->import(css, base_uri, token->string, token->length);
+			/* As of 2007-07, token->string points into the
+			 * original CSS text, so the pointer will remain
+			 * valid even if we parse more tokens.  But this
+			 * may have to change when backslash escapes are
+			 * properly supported.  So play it safe and make
+			 * a copy of the string.  */
+			if (!init_string(&import_uri))
+				goto skip_rest_of_atrule;
+			if (!add_bytes_to_string(&import_uri,
+						 token->string,
+						 token->length)) {
+				done_string(&import_uri);
+				goto skip_rest_of_atrule;
 			}
-			skip_css_tokens(scanner, ';');
+
+			skip_scanner_token(scanner);
+			if (!css_parse_media_types(scanner)) {
+				done_string(&import_uri);
+				goto skip_rest_of_atrule;
+			}
+
+			token = get_scanner_token(scanner);
+			if (!token || token->type != ';') {
+				done_string(&import_uri);
+				goto skip_rest_of_atrule;
+			}
+			skip_scanner_token(scanner);
+
+			assert(css->import);
+			css->import(css, base_uri,
+				    import_uri.source, import_uri.length);
+			done_string(&import_uri);
 			break;
 
 		case CSS_TOKEN_AT_CHARSET:
 			skip_css_tokens(scanner, ';');
 			break;
 
-		case CSS_TOKEN_AT_FONT_FACE:
 		case CSS_TOKEN_AT_MEDIA:
+			skip_scanner_token(scanner);
+			if (!css_parse_media_types(scanner))
+				goto skip_rest_of_atrule;
+			token = get_scanner_token(scanner);
+			if (!token || token->type != '{')
+				goto skip_rest_of_atrule;
+			token = get_next_scanner_token(scanner);
+			while (token && token->type != '}') {
+				css_parse_ruleset(css, scanner);
+				token = get_scanner_token(scanner);
+			}
+			if (token && token->type == '}')
+				skip_scanner_token(scanner);
+			break;
+
+		case CSS_TOKEN_AT_FONT_FACE:
 		case CSS_TOKEN_AT_PAGE:
 			skip_css_block(scanner);
 			break;
 
+skip_rest_of_atrule:
 		case CSS_TOKEN_AT_KEYWORD:
 			/* TODO: Unkown @-rule so either skip til ';' or next block. */
-			while (scanner_has_tokens(scanner)) {
-				token = get_next_scanner_token(scanner);
-
-				if (!token) break;
-
+			token = get_scanner_token(scanner);
+			while (token) {
 				if (token->type == ';') {
 					skip_scanner_token(scanner);
 					break;
@@ -173,6 +258,8 @@ css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
 					skip_css_block(scanner);
 					break;
 				}
+
+				token = get_next_scanner_token(scanner);
 			}
 			break;
 		default:

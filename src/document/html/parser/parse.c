@@ -12,7 +12,9 @@
 
 #include "elinks.h"
 
+#include "config/options.h"
 #include "document/css/apply.h"
+#include "document/css/css.h"
 #include "document/css/parser.h"
 #include "document/html/parser/forms.h"
 #include "document/html/parser/general.h"
@@ -846,8 +848,15 @@ start_element(struct element_info *ei,
 
 #ifdef CONFIG_CSS
 	if (ei->open == html_style && html_context->options->css_enable) {
-		css_parse_stylesheet(&html_context->css_styles,
-				     html_context->base_href, html, eof);
+		unsigned char *media
+			= get_attr_val(attr, "media", html_context->doc_cp);
+		int support = supports_html_media_attr(media);
+		mem_free_if(media);
+
+		if (support)
+			css_parse_stylesheet(&html_context->css_styles,
+					     html_context->base_href,
+					     html, eof);
 	}
 #endif
 
@@ -1127,4 +1136,36 @@ xsp:
 
 	add_crlf_to_string(head);
 	goto se;
+}
+
+/** Check whether ELinks claims to support any of the media types
+ * listed in the media attribute of an HTML STYLE or LINK element.  */
+int
+supports_html_media_attr(const unsigned char *media)
+{
+	const unsigned char *const optstr = get_opt_str("document.css.media", NULL);
+	const unsigned char *beg, *end;
+
+	/* According to HTML 4.01 section 14.2.3 (the STYLE element),
+	 * the default value of the media attribute is "screen".
+	 * Section 12.3 (the LINK element) also refers to that
+	 * attribute definition.  */
+	if (media == NULL || *media == '\0')
+		media = "screen";
+
+	while (*media != '\0') {
+		while (*media == ' ')
+			++media;
+		beg = media;
+		media += strcspn(media, ",");
+		end = media;
+		if (*media == ',')
+			++media;
+		while (end > beg && end[-1] == ' ')
+			--end;
+		if (end > beg
+		    && supports_css_media_type(optstr, beg, end - beg))
+			return 1;
+	}
+	return 0;
 }

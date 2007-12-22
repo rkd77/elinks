@@ -49,9 +49,61 @@ struct option_info css_options_info[] = {
 		"to ELinks' home directory.\n"
 		"Leave as \"\" to use built-in document styling.")),
 
+	INIT_OPT_STRING("document.css", N_("Media types"),
+		"media", 0, "tty",
+		N_("CSS media types that ELinks claims to support, separated with\n"
+		"commas.  The \"all\" type is implied.  Currently, only ASCII\n"
+		"characters work reliably here.  See CSS2 section 7:\n"
+		"http://www.w3.org/TR/1998/REC-CSS2-19980512/media.html")),
+
 	NULL_OPTION_INFO,
 };
 
+
+/** Check whether ELinks claims to support a specific CSS media type.
+ *
+ * @param optstr
+ *   Null-terminated value of the document.css.media option.
+ * @param token
+ *   A name parsed from a CSS file.  Need not be null-terminated.
+ * @param token_length
+ *   Length of @a token, in bytes.
+ *
+ * Both strings should be in the ASCII charset.
+ *
+ * @return nonzero if the media type is supported, 0 if not.  */
+int
+supports_css_media_type(const unsigned char *optstr,
+			const unsigned char *token, size_t token_length)
+{
+	/* Split @optstr into comma-delimited strings, strip leading
+	 * and trailing spaces from each, and compare them to the
+	 * token.  */
+	while (*optstr != '\0') {
+		const unsigned char *beg, *end;
+
+		while (*optstr == ' ')
+			++optstr;
+
+		beg = optstr;
+		optstr += strcspn(optstr, ",");
+		end = optstr;
+		while (end > beg && end[-1] == ' ')
+			--end;
+
+		if (!strlcasecmp(token, token_length, beg, end - beg))
+			return 1;
+
+		while (*optstr == ',')
+			++optstr;
+	}
+
+	/* An explicit "all" is probably rarer than e.g. "tty".  */
+	if (!strlcasecmp(token, token_length, "all", 3))
+		return 1;
+
+	return 0;
+}
 
 void
 import_css(struct css_stylesheet *css, struct uri *uri)
@@ -124,7 +176,8 @@ import_default_css(void)
 static int
 change_hook_css(struct session *ses, struct option *current, struct option *changed)
 {
-	if (!strcmp(changed->name, "stylesheet")) {
+	if (!strcmp(changed->name, "stylesheet")
+	    || !strcmp(changed->name, "media")) {
 		/** @todo TODO: We need to update all entries in
 		 * format cache. --jonas */
 		import_default_css();

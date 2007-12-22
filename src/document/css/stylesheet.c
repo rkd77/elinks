@@ -257,6 +257,7 @@ dump_css_selector_tree(struct css_selector_set *sels)
 #endif
 
 
+#if 0 /* used only by clone_css_stylesheet */
 struct css_stylesheet *
 init_css_stylesheet(css_stylesheet_importer_T importer, void *import_data)
 {
@@ -270,6 +271,7 @@ init_css_stylesheet(css_stylesheet_importer_T importer, void *import_data)
 	init_css_selector_set(&css->selectors);
 	return css;
 }
+#endif
 
 void
 mirror_css_stylesheet(struct css_stylesheet *css1, struct css_stylesheet *css2)
