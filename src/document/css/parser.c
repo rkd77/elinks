@@ -236,7 +236,7 @@ css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
 				css_parse_ruleset(css, scanner);
 				token = get_scanner_token(scanner);
 			}
-			if (token && token->type == '}')
+			if (token)
 				skip_scanner_token(scanner);
 			break;
 
