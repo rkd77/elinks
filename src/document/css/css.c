@@ -183,17 +183,21 @@ import_default_css(void)
 static int
 change_hook_css(struct session *ses, struct option *current, struct option *changed)
 {
-	if (!strcmp(changed->name, "stylesheet")
-	    || !strcmp(changed->name, "media")) {
+	int reload_css = 0;
+
+	if (!strcmp(changed->name, "stylesheet")) {
 		/** @todo TODO: We need to update all entries in
 		 * format cache. --jonas */
 		import_default_css();
 	}
 
+	if (!strcmp(changed->name, "media"))
+		reload_css = 1;
+
 	/* Instead of using the value of the @ses parameter, iterate
 	 * through the @sessions list.  The parameter may be NULL and
 	 * anyway we don't support session-specific options yet.  */
-	foreach (ses, sessions) draw_formatted(ses, 1);
+	foreach (ses, sessions) draw_formatted(ses, 1 + reload_css);
 
 	return 0;
 }
