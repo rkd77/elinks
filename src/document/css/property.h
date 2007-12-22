@@ -47,6 +47,7 @@ struct css_property {
 		enum css_display {
 			CSS_DISP_INLINE,
 			CSS_DISP_BLOCK,
+			CSS_DISP_NONE,
 		} display;
 		struct {
 			enum text_style_format add, rem;

@@ -35,6 +35,13 @@ struct option_info css_options_info[] = {
 		"enable", 0, 1,
 		N_("Enable adding of CSS style info to documents.")),
 
+	INIT_OPT_BOOL("document.css", N_("Ignore \"display: none\""),
+		"ignore_display_none", 0, 1,
+		N_("When enabled, elements are rendered, even when their display\n"
+		"property has the value \"none\". Because ELinks's CSS support is\n"
+		"still very incomplete, this setting can improve the way that some\n"
+		"documents are rendered.")),
+
 	INIT_OPT_BOOL("document.css", N_("Import external style sheets"),
 		"import", 0, 1,
 		N_("When enabled any external style sheets that are imported from\n"

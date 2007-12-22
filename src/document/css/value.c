@@ -300,6 +300,8 @@ css_parse_display_value(struct css_property_info *propinfo,
 		value->display = CSS_DISP_INLINE; /* XXX */
 	} else if (scanner_token_contains(token, "block")) {
 		value->display = CSS_DISP_BLOCK;
+	} else if (scanner_token_contains(token, "none")) {
+		value->display = CSS_DISP_NONE;
 	} else {
 		return 0;
 	}

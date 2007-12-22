@@ -71,6 +71,7 @@ struct document_options {
 	 * @{ */
 	unsigned int css_enable:1;
 	unsigned int css_import:1;
+	unsigned int css_ignore_display_none:1;
 	/** @} */
 #endif
 
