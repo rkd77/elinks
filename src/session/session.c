@@ -830,6 +830,8 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 
 			destroy_vs(vs, 1);
 			copy_vs(vs, base->doc_view->vs);
+
+			ses->doc_view->vs = vs;
 		}
 	}
 
