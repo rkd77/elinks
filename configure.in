@@ -181,7 +181,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 
-AC_CHECK_HEADERS(wctype.h)
+AC_CHECK_HEADERS(wchar.h wctype.h)
 AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
@@ -304,6 +304,8 @@ AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
 AC_CHECK_FUNCS(setenv putenv, HAVE_SETENV_OR_PUTENV=yes)
 AC_CHECK_FUNCS(getuid, HAVE_GETUID=yes)
 AC_CHECK_FUNCS(geteuid, HAVE_GETEUID=yes)
+
+AC_CHECK_FUNCS(wcwidth)
 
 dnl These aren't probably needed now, as they are commented in links.h.
 dnl I've no idea about their historical background, but I keep them here
