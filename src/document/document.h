@@ -201,6 +201,12 @@ struct document {
 #ifdef CONFIG_UTF8
 	unsigned char buf[7];
 	unsigned char buf_length;
+	/* base char + 5 combining chars = 6 */
+	unicode_val_T combi[UCS_MAX_LENGTH_COMBINED];
+	/* the number of combining characters. The base char is not counted. */
+	unsigned int combi_length;
+	/* Positions of the last base character.*/
+	int comb_x, comb_y;
 #endif
 	unsigned int id; /**< Used to check cache entries. */
 

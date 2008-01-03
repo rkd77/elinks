@@ -8,6 +8,11 @@
 #include <stdarg.h>
 #include <string.h>
 
+#if defined(HAVE_WCHAR_H) && defined(HAVE_WCWIDTH)
+#define __USE_XOPEN
+#include <wchar.h>
+#endif
+
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -393,6 +398,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 	 * has mapped those characters to NBSP_CHAR.  */
 
 	if (part->document) {
+		struct document *const document = part->document;
 		/* Reallocate LINE(y).chars[] to large enough.  The
 		 * last parameter of realloc_line is the index of the
 		 * last element to which we may want to write,
@@ -402,10 +408,10 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		 * (All double-cell characters take up at least two
 		 * bytes in UTF-8, and there are no triple-cell or
 		 * wider characters.)  However, if there already is an
-		 * incomplete character in part->document->buf, then
+		 * incomplete character in document->buf, then
 		 * the first byte of input can result in a double-cell
 		 * character, so we must reserve one extra element.  */
-		orig_length = realloc_line(html_context, part->document,
+		orig_length = realloc_line(html_context, document,
 					   Y(y), X(x) + charslen);
 		if (orig_length < 0) /* error */
 			return 0;
@@ -413,17 +419,17 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 			unsigned char *const end = chars + charslen;
 			unicode_val_T data;
 
-			if (part->document->buf_length) {
+			if (document->buf_length) {
 				/* previous char was broken in the middle */
-				int length = utf8charlen(part->document->buf);
+				int length = utf8charlen(document->buf);
 				unsigned char i;
-				unsigned char *buf_ptr = part->document->buf;
+				unsigned char *buf_ptr = document->buf;
 
-				for (i = part->document->buf_length; i < length && chars < end;) {
-					part->document->buf[i++] = *chars++;
+				for (i = document->buf_length; i < length && chars < end;) {
+					document->buf[i++] = *chars++;
 				}
-				part->document->buf_length = i;
-				part->document->buf[i] = '\0';
+				document->buf_length = i;
+				document->buf[i] = '\0';
 				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
 				if (data != UCS_NO_CHAR) {
 					/* FIXME: If there was invalid
@@ -436,7 +442,7 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 					 * trivial to implement because
 					 * each byte may have arrived in
 					 * a separate call.  */
-					part->document->buf_length = 0;
+					document->buf_length = 0;
 					goto good_char;
 				} else {
 					/* Still not full char */
@@ -465,9 +471,9 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 						unsigned char i;
 
 						for (i = 0; chars < end;i++) {
-							part->document->buf[i] = *chars++;
+							document->buf[i] = *chars++;
 						}
-						part->document->buf_length = i;
+						document->buf_length = i;
 						break;
 					}
 					/* not reached */
@@ -480,6 +486,27 @@ good_char:
 				if (data == UCS_NO_BREAK_SPACE
 				    && html_context->options->wrap_nbsp)
 					data = UCS_SPACE;
+#ifdef HAVE_WCWIDTH
+				if (wcwidth((wchar_t)data)) {
+					if (document->combi_length) {
+						if (document->comb_x != -1) {
+							unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
+
+							if (prev != UCS_NO_CHAR) {
+								schar->data = prev;
+								copy_screen_chars(&POS(document->comb_x, document->comb_y), schar, 1);
+							}
+						}
+						document->combi_length = 0;
+					}
+					document->combi[0] = data;
+				} else {
+					if (document->combi_length < (UCS_MAX_LENGTH_COMBINED - 1)) {
+						document->combi[++document->combi_length] = data;
+					}
+					continue;
+				}
+#endif
 				part->spaces[x] = (data == UCS_SPACE);
 
 				if (unicode_to_cell(data) == 2) {
@@ -493,6 +520,10 @@ good_char:
 					part->char_width[x] = unicode_to_cell(data);
 					schar->data = (unicode_val_T)data;
 				}
+#ifdef HAVE_WCWIDTH
+				document->comb_x = x;
+				document->comb_y = y;
+#endif
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
 		} else { /* not UTF-8 */
