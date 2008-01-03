@@ -223,6 +223,9 @@ struct screen_driver {
 		 * is the same as is_cp_utf8(charsets[0]), except the
 		 * latter might crash if UTF-8 I/O is disabled.  */
 		unsigned int utf8_cp:1;
+
+		/* Whether the terminal supports combining characters. */
+		unsigned int combine:1;
 #endif /* CONFIG_UTF8 */
 	} opt;
 
@@ -240,6 +243,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
+	/* combine */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -253,6 +257,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
+	/* combine */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -266,6 +271,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
+	/* combine */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -279,6 +285,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
+	/* combine */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -292,6 +299,7 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
+	/* combine */		0,
 #endif /* CONFIG_UTF8 */
 };
 
@@ -325,6 +333,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	copy_struct(&driver->opt, screen_driver_opts[driver->type]);
 
 #ifdef CONFIG_UTF8
+	driver->opt.combine = get_opt_bool_tree(term_spec, "combine", NULL);
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */
@@ -639,6 +648,21 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 		}
 		if (data == UCS_NO_CHAR)
 			return;
+		if (data >= UCS_BEGIN_COMBINED && data <= last_combined) {
+			unicode_val_T *text = combined[data - UCS_BEGIN_COMBINED];
+
+			if (driver->opt.combine) {
+				/* XTerm */
+				while (*text != UCS_END_COMBINED) {
+					add_to_string(screen, encode_utf8(*text));
+					text++;
+				}
+				return;
+			} else {
+				/* Others */
+				data = *text;
+			}
+		}
 		if (!isscreensafe_ucs(data))
 			data = UCS_SPACE;
 		add_to_string(screen, encode_utf8(data));

@@ -1,6 +1,7 @@
 #ifndef EL__INTL_CHARSETS_H
 #define EL__INTL_CHARSETS_H
 
+struct hash;
 typedef uint32_t unicode_val_T;
 
 /* U+0020 SPACE.  Normally the same as ' ' or L' ' but perhaps ELinks
@@ -25,6 +26,13 @@ typedef uint32_t unicode_val_T;
  * this if the input is too short.  This is also used as a placeholder
  * for the second cell of a double-cell character.  */
 #define UCS_NO_CHAR ((unicode_val_T) 0xFFFFFFFD)
+
+#define UCS_END_COMBINED ((unicode_val_T) 0xFFFFFFFC)
+
+#define UCS_BEGIN_COMBINED ((unicode_val_T) (UCS_END_COMBINED - (unicode_val_T) 10000))
+
+/* Base character and up to 5 combining characters. */
+#define UCS_MAX_LENGTH_COMBINED 6
 
 /* If ELinks should display a double-cell character but there is only
  * one cell available, it displays this character instead.  This must
@@ -146,6 +154,14 @@ unicode_val_T unicode_fold_label_case(unicode_val_T);
 inline int strlen_utf8(unsigned char **);
 inline unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
 unicode_val_T cp_to_unicode(int, unsigned char **, unsigned char *);
+
+
+extern unicode_val_T last_combined;
+extern unicode_val_T **combined;
+extern struct hash *combined_hash;
+unicode_val_T get_combined(unicode_val_T *, int);
+void free_combined();
+
 #endif /* CONFIG_UTF8 */
 
 unicode_val_T cp2u(int, unsigned char);

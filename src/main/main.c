@@ -49,6 +49,7 @@
 #include "util/color.h"
 #include "util/error.h"
 #include "util/file.h"
+#include "util/hash.h"
 #include "util/memdebug.h"
 #include "util/memory.h"
 #include "viewer/dump/dump.h"
@@ -302,6 +303,9 @@ terminate_all_subsystems(void)
 	done_options();
 	done_event();
 	terminate_osdep();
+#ifdef CONFIG_UTF8
+	free_combined();
+#endif
 }
 
 void

@@ -91,6 +91,7 @@ enum termopt {
 	TERM_OPT_UTF_8_IO,
 	TERM_OPT_TRANSPARENCY,
 	TERM_OPT_UNDERLINE,
+	TERM_OPT_COMBINE,
 
 	TERM_OPTIONS,
 };
@@ -104,6 +105,7 @@ static struct option_resolver resolvers[] = {
 	{ TERM_OPT_TRANSPARENCY, "transparency"	},
 	{ TERM_OPT_UTF_8_IO,	 "utf_8_io"	},
 	{ TERM_OPT_UNDERLINE,	 "underline"	},
+	{ TERM_OPT_COMBINE,	 "combine"	},
 };
 
 static widget_handler_status_T
@@ -149,7 +151,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 #define	RADIO_TRUE 0
 #endif
 
-#define TERMOPT_WIDGETS_COUNT (19 + RADIO_88 + RADIO_256 + RADIO_TRUE)
+#define TERMOPT_WIDGETS_COUNT (20 + RADIO_88 + RADIO_256 + RADIO_TRUE)
 
 #define TERM_OPTION_VALUE_SIZE (sizeof(union option_value) * TERM_OPTIONS)
 
@@ -230,6 +232,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	add_dlg_checkbox(dlg, _("Transparency", term), &values[TERM_OPT_TRANSPARENCY].number);
 	add_dlg_checkbox(dlg, _("Underline", term), &values[TERM_OPT_UNDERLINE].number);
 	add_dlg_checkbox(dlg, _("UTF-8 I/O", term), &values[TERM_OPT_UTF_8_IO].number);
+	add_dlg_checkbox(dlg, _("Combining characters", term), &values[TERM_OPT_COMBINE].number);
 
 	add_dlg_button(dlg, _("~OK", term), B_ENTER, push_ok_button, NULL);
 	if (!anonymous)

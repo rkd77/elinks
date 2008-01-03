@@ -25,6 +25,7 @@
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/fastfind.h"
+#include "util/hash.h"
 #include "util/memory.h"
 #include "util/string.h"
 
@@ -769,8 +770,67 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 	++*string;
 	return ret;
 }
-#endif	/* CONFIG_UTF8 */
 
+
+unicode_val_T last_combined = UCS_BEGIN_COMBINED - 1;
+unicode_val_T **combined;
+struct hash *combined_hash;
+
+unicode_val_T
+get_combined(unicode_val_T *data, int length)
+{
+	struct hash_item *item;
+	unicode_val_T *key;
+	int i, indeks;
+
+	assert(length >= 1 && length <= UCS_MAX_LENGTH_COMBINED);
+	if_assert_failed return UCS_NO_CHAR;
+
+	if (!combined_hash) combined_hash = init_hash8();
+	if (!combined_hash) return UCS_NO_CHAR;
+	item = get_hash_item(combined_hash, (unsigned char *)data, length * sizeof(*data));
+
+	if (item) return (unicode_val_T)(long)item->value;
+	if (last_combined >= UCS_END_COMBINED) return UCS_NO_CHAR;
+
+	key = mem_alloc((length + 1) * sizeof(*key));
+	if (!key) return UCS_NO_CHAR;
+	for (i = 0; i < length; i++)
+		key[i] = data[i];
+	key[i] = UCS_END_COMBINED;
+
+	last_combined++;
+	indeks = last_combined - UCS_BEGIN_COMBINED;
+
+	combined = mem_realloc(combined, sizeof(*combined) * (indeks + 1));
+	if (!combined) {
+		mem_free(key);
+		last_combined--;
+		return UCS_NO_CHAR;
+	}
+	combined[indeks] = key;
+	item = add_hash_item(combined_hash, (unsigned char *)key,
+			     length * sizeof(*data), (void *)(long)(last_combined));
+	if (!item) {
+		last_combined--;
+		mem_free(key);
+		return UCS_NO_CHAR;
+	}
+	return last_combined;
+}
+
+void
+free_combined()
+{
+	int i, end = last_combined - UCS_BEGIN_COMBINED + 1; 
+
+	if (combined_hash)
+		free_hash(&combined_hash);
+	for (i = 0; i < end; i++)
+		mem_free(combined[i]);
+	mem_free_if(combined);
+}
+#endif	/* CONFIG_UTF8 */
 
 static void
 add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
@@ -1480,3 +1540,4 @@ is_cp_utf8(int cp_index)
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	return is_cp_ptr_utf8(&codepages[cp_index]);
 }
+
