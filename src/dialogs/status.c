@@ -117,7 +117,6 @@ update_status(void)
 #ifdef CONFIG_LEDS
 		if (status->show_leds != show_leds) {
 			status->show_leds = show_leds;
-			dirty = 1;
 		}
 #endif
 
