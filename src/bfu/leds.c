@@ -23,6 +23,7 @@
 #include "main/timer.h"
 #include "session/session.h"
 #include "terminal/draw.h"
+#include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/color.h"
@@ -300,7 +301,7 @@ update_download_led(struct session *ses)
 static void
 redraw_leds(void *xxx)
 {
-	struct session *ses;
+	struct terminal *term;
 
 	if (!get_leds_panel_enable()
 	    && get_opt_int("ui.timer.enable", NULL) != 2) {
@@ -314,11 +315,20 @@ redraw_leds(void *xxx)
 	if (drawing) return;
 	drawing = 1;
 
-	foreach (ses, sessions) {
+	foreach (term, terminals) {
+		struct session *ses;
+		struct window *win;
+		
+		if (list_empty(term->windows)) continue;
+		
+		win = get_current_tab(term);
+		assert(win);
+		ses = win->data;
+
 		update_download_led(ses);
 		if (!sync_leds(ses))
 			continue;
-		redraw_terminal(ses->tab->term);
+		redraw_terminal(term);
 		draw_leds(ses);
 	}
 	drawing = 0;
