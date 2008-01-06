@@ -43,6 +43,7 @@ To be released as 0.11.4.
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * build: disable GCC 4.2 warning about builtin_modules
+* build: move debian/ to contrib/debian/
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
