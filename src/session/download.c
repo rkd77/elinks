@@ -812,7 +812,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 			cygwin_conv_to_full_win32_path(file, new_path);
 			add_to_string(&name, new_path);
 #else
-			add_to_string(&name, file);
+			add_shell_quoted_to_string(&name, file, strlen(file));
 #endif
 			prog++;
 		}
@@ -1093,6 +1093,7 @@ tp_open(struct type_query *type_query)
 		unsigned char *handler = NULL;
 
 		if (file) {
+			decode_uri(file);
 			handler = subst_file(type_query->external_handler, file);
 			mem_free(file);
 		}
