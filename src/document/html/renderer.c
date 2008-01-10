@@ -492,10 +492,8 @@ good_char:
 						if (document->comb_x != -1) {
 							unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
 
-							if (prev != UCS_NO_CHAR) {
-								schar->data = prev;
-								copy_screen_chars(&POS(document->comb_x, document->comb_y), schar, 1);
-							}
+							if (prev != UCS_NO_CHAR)
+								POS(document->comb_x, document->comb_y).data = prev;
 						}
 						document->combi_length = 0;
 					}
