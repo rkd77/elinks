@@ -1144,7 +1144,6 @@ int
 supports_html_media_attr(const unsigned char *media)
 {
 	const unsigned char *optstr;
-	const unsigned char *beg, *end;
 
 	/* The 1999-12-24 edition of HTML 4.01 is inconsistent on what
 	 * it means if a STYLE or LINK element has no media attribute:
@@ -1175,15 +1174,25 @@ supports_html_media_attr(const unsigned char *media)
 	optstr = get_opt_str("document.css.media", NULL);
 
 	while (*media != '\0') {
+		const unsigned char *beg, *end;
+
 		while (*media == ' ')
 			++media;
 		beg = media;
 		media += strcspn(media, ",");
-		end = media;
 		if (*media == ',')
 			++media;
-		while (end > beg && end[-1] == ' ')
-			--end;
+
+		/* HTML 4.01 section 6.13 says each entry in the list
+		 * must be truncated before the first character that
+		 * is not in the allowed set.  */
+		end = beg;
+		while ((*end >= 0x41 && *end <= 0x5a)
+		       || (*end >= 0x61 && *end <= 0x7a)
+		       || (*end >= 0x30 && *end <= 0x39)
+		       || *end == 0x29)
+			++end;
+
 		if (end > beg
 		    && supports_css_media_type(optstr, beg, end - beg))
 			return 1;
