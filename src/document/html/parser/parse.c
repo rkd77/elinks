@@ -1143,7 +1143,7 @@ xsp:
 int
 supports_html_media_attr(const unsigned char *media)
 {
-	const unsigned char *const optstr = get_opt_str("document.css.media", NULL);
+	const unsigned char *optstr;
 	const unsigned char *beg, *end;
 
 	/* The 1999-12-24 edition of HTML 4.01 is inconsistent on what
@@ -1171,6 +1171,8 @@ supports_html_media_attr(const unsigned char *media)
 	 * style sheets.  */
 	if (media == NULL || *media == '\0')
 		return 1;
+
+	optstr = get_opt_str("document.css.media", NULL);
 
 	while (*media != '\0') {
 		while (*media == ' ')
