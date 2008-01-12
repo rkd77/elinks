@@ -72,7 +72,8 @@ struct option_info css_options_info[] = {
  * @param optstr
  *   Null-terminated value of the document.css.media option.
  * @param token
- *   A name parsed from a CSS file.  Need not be null-terminated.
+ *   A name parsed from a CSS file or from an HTML media attribute.
+ *   Need not be null-terminated.
  * @param token_length
  *   Length of @a token, in bytes.
  *
@@ -98,6 +99,17 @@ supports_css_media_type(const unsigned char *optstr,
 		while (end > beg && end[-1] == ' ')
 			--end;
 
+		/* W3C REC-html401-19991224 section 6.13:
+		 *   "3. A case-sensitive match is then made with
+		 *    the set of media types defined above."
+		 * W3C REC-html401-19991224 section 14.2.3:
+		 *   "media = media-descriptors [CI]"
+		 *   where CI stands for case-insensitive.
+		 * This mismatch has been reported to the
+		 * www-html-editor@w3.org mailing list on 2000-11-16.
+		 *
+		 * W3C REC-CSS2-19980512 section 7.3:
+		 *  "Media type names are case-insensitive."  */
 		if (!strlcasecmp(token, token_length, beg, end - beg))
 			return 1;
 
