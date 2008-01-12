@@ -1146,12 +1146,31 @@ supports_html_media_attr(const unsigned char *media)
 	const unsigned char *const optstr = get_opt_str("document.css.media", NULL);
 	const unsigned char *beg, *end;
 
-	/* According to HTML 4.01 section 14.2.3 (the STYLE element),
-	 * the default value of the media attribute is "screen".
-	 * Section 12.3 (the LINK element) also refers to that
-	 * attribute definition.  */
+	/* The 1999-12-24 edition of HTML 4.01 is inconsistent on what
+	 * it means if a STYLE or LINK element has no media attribute:
+	 *
+	 * - According to section 14.2.3 (the STYLE element),
+	 *   the default value of the media attribute is "screen".
+	 *   Section 12.3 (the LINK element) also refers to that
+	 *   attribute definition.
+	 *
+	 * - Section 14.4.1 (Media-dependent cascades) however
+	 *   demonstrates a LINK without a media attribute,
+	 *   and explains that it then applies to all media.
+	 *
+	 * This was not in the HTML 4 Errata list as of 2008-01-12
+	 * (error 17 was most recent).  The problem has been reported
+	 * to the www-html-editor@w3.org mailing list on 2000-11-18,
+	 * 2000-11-20, 2006-01-23, 2007-10-06, and 2008-01-12.
+	 *
+	 * In section 29.1 of the 2006-07-26 draft of XHTML 2.0, the
+	 * media attribute defaults to "all".  Also, web authors often
+	 * omit the attribute (perhaps they don't even consider that
+	 * there are browsers with media types other than "screen"),
+	 * and we'd like ELinks to use the applicable parts of those
+	 * style sheets.  */
 	if (media == NULL || *media == '\0')
-		media = "screen";
+		return 1;
 
 	while (*media != '\0') {
 		while (*media == ' ')
