@@ -224,14 +224,25 @@ get_terminal_name(unsigned char name[MAX_TERM_LEN])
 
 
 static int
-setraw(int fd, struct termios *p)
+setraw(struct itrm *itrm, int save_orig)
 {
 	struct termios t;
+	long vdisable;
 
 	memset(&t, 0, sizeof(t));
-	if (tcgetattr(fd, &t)) return -1;
+	if (tcgetattr(itrm->in.ctl, &t)) return -1;
 
-	if (p) copy_struct(p, &t);
+	if (save_orig) copy_struct(&itrm->t, &t);
+
+#ifdef _POSIX_VDISABLE
+	vdisable = _POSIX_VDISABLE;
+#else
+	vdisable = fpathconf(itrm->in.ctl, _PC_VDISABLE);
+#endif
+	if (vdisable != -1 && t.c_cc[VERASE] == vdisable)
+		itrm->verase = -1;
+	else
+		itrm->verase = (unsigned char) t.c_cc[VERASE];
 
 	elinks_cfmakeraw(&t);
 	t.c_lflag |= ISIG;
@@ -239,7 +250,7 @@ setraw(int fd, struct termios *p)
 	t.c_lflag |= TOSTOP;
 #endif
 	t.c_oflag |= OPOST;
-	if (tcsetattr(fd, TCSANOW, &t)) return -1;
+	if (tcsetattr(itrm->in.ctl, TCSANOW, &t)) return -1;
 
 	return 0;
 }
@@ -319,7 +330,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 		itrm->altscreen = 1;
 
 	if (!remote) {
-		if (ctl_in >= 0) setraw(ctl_in, &itrm->t);
+		if (ctl_in >= 0) setraw(itrm, 1);
 		send_init_sequence(std_out, itrm->altscreen);
 		handle_terminal_resize(ctl_in, resize_terminal);
 #ifdef CONFIG_MOUSE
@@ -364,7 +375,7 @@ unblock_itrm(void)
 {
 	if (!ditrm) return -1;
 
-	if (ditrm->in.ctl >= 0 && setraw(ditrm->in.ctl, NULL)) return -1;
+	if (ditrm->in.ctl >= 0 && setraw(ditrm, 0)) return -1;
 	ditrm->blocked = 0;
 	send_init_sequence(ditrm->out.std, ditrm->altscreen);
 
@@ -937,26 +948,18 @@ decode_terminal_application_key(struct itrm *itrm, struct interlink_event *ev)
 /** Initialize @a *ev to match the byte @a key received from the terminal.
  * @a key must not be a value from enum term_event_special_key.  */
 static void
-set_kbd_event(struct interlink_event *ev,
+set_kbd_event(const struct itrm *itrm, struct interlink_event *ev,
 	      int key, term_event_modifier_T modifier)
 {
-	switch (key) {
+	if (key == itrm->verase)
+		key = KBD_BS;
+	else switch (key) {
 	case ASCII_TAB:
 		key = KBD_TAB;
 		break;
-#if defined(HAVE_SYS_CONSIO_H) || defined(HAVE_MACHINE_CONSOLE_H) /* BSD */
-	case ASCII_BS:
-		key = KBD_BS;
-		break;
-	case ASCII_DEL:
+	case ASCII_DEL:	/* often overridden by itrm->verase above */
 		key = KBD_DEL;
 		break;
-#else
-	case ASCII_BS:
-	case ASCII_DEL:
-		key = KBD_BS;
-		break;
-#endif
 	case ASCII_LF:
 	case ASCII_CR:
 		key = KBD_ENTER;
@@ -966,6 +969,7 @@ set_kbd_event(struct interlink_event *ev,
 		key = KBD_ESC;
 		break;
 
+	case ASCII_BS:	/* often overridden by itrm->verase above */
 	default:
 		if (key < ' ') {
 			key += 'A' - 1;
@@ -998,10 +1002,10 @@ kbd_timeout(struct itrm *itrm)
 
 	if (itrm->in.queue.len >= 2 && itrm->in.queue.data[0] == ASCII_ESC) {
 		/* This is used for ESC [ and ESC O.  */
-		set_kbd_event(&ev, itrm->in.queue.data[1], KBD_MOD_ALT);
+		set_kbd_event(itrm, &ev, itrm->in.queue.data[1], KBD_MOD_ALT);
 		el = 2;
 	} else {
-		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
+		set_kbd_event(itrm, &ev, itrm->in.queue.data[0], KBD_MOD_NONE);
 		el = 1;
 	}
 	itrm_queue_event(itrm, (char *) &ev, sizeof(ev));
@@ -1085,20 +1089,22 @@ process_queue(struct itrm *itrm)
 				 * by an escape sequence.  Treat it as
 				 * a standalone Esc.  */
 				el = 1;
-				set_kbd_event(&ev, itrm->in.queue.data[0],
+				set_kbd_event(itrm, &ev,
+					      itrm->in.queue.data[0],
 					      KBD_MOD_NONE);
 			} else {
 				/* The second ESC of ESC ESC is not the
 				 * beginning of any known escape sequence.
 				 * This must be Alt-Esc, then.  */
 				el = 2;
-				set_kbd_event(&ev, itrm->in.queue.data[1],
+				set_kbd_event(itrm, &ev,
+					      itrm->in.queue.data[1],
 					      KBD_MOD_ALT);
 			}
 		}
 		if (el == 0) {	/* Begins with ESC, but none of the above */
 			el = 2;
-			set_kbd_event(&ev, itrm->in.queue.data[1],
+			set_kbd_event(itrm, &ev, itrm->in.queue.data[1],
 				      KBD_MOD_ALT);
 		}
 
@@ -1119,7 +1125,7 @@ process_queue(struct itrm *itrm)
 
 	if (el == 0) {
 		el = 1;
-		set_kbd_event(&ev, itrm->in.queue.data[0], KBD_MOD_NONE);
+		set_kbd_event(itrm, &ev, itrm->in.queue.data[0], KBD_MOD_NONE);
 	}
 
 	/* The call to decode_terminal_escape_sequence() might have changed the

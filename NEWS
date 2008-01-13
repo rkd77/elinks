@@ -119,6 +119,7 @@ Miscellaneous:
   and on BSD via moused -z 4
 * enhancement: 24-bit truecolor mode
 * enhancement 622: -dump-color-mode
+* enhancement 994: treat only termios.c_cc[VERASE] as "Backspace"
 * enhancement: support Ctrl+Alt+letter key combinations
 * enhancement 381: reduce memory consumption of codepages and some
   other arrays
