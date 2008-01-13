@@ -745,20 +745,16 @@ unblock_stdin(void)
 void
 elinks_cfmakeraw(struct termios *t)
 {
-#ifdef HAVE_CFMAKERAW
-	cfmakeraw(t);
-#ifdef VMIN
-	t->c_cc[VMIN] = 1; /* cfmakeraw() is broken on AIX --mikulas */
-#endif
-#else
+	/* Bug 54: Do not alter the character-size and parity bits in
+	 * t->c_cflag.  If they have unusual values, the terminal
+	 * probably requires those and won't work if ELinks changes
+	 * the flags.  The cfmakeraw function would set 8-bit characters
+	 * and no parity, so don't use that.  */
 	t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
 	t->c_oflag &= ~OPOST;
 	t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-	t->c_cflag &= ~(CSIZE|PARENB);
-	t->c_cflag |= CS8;
 	t->c_cc[VMIN] = 1;
 	t->c_cc[VTIME] = 0;
-#endif
 }
 
 #if !defined(CONFIG_MOUSE) || (!defined(CONFIG_GPM) && !defined(CONFIG_SYSMOUSE) && !defined(OS2_MOUSE))
