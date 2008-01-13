@@ -10,6 +10,9 @@ ELinks 0.13.GIT now:
 
 To be released as ELinks 0.13.0.
 
+* Bug 54, Debian bug 338402: Don't force the terminal to 8 bits with
+  no parity.
+
 ELinks 0.12.GIT now:
 --------------------
 
