@@ -80,6 +80,8 @@ Miscellaneous:
   reloaded.  See elinks-users mail from 28 Oct 2005.
 * several accesskey fixes
 * in Lua: don't write to the string returned by lua_tostring
+* minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
+  with no parity
 * minor bug 972: preserve the background color and underlining in
   spaces when justifying
 * minor bug 284: render closing bracket for HTML element SUB in the
