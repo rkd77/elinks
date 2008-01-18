@@ -90,7 +90,8 @@ compare(FSP_RDENTRY *a, FSP_RDENTRY *b)
 static void
 sort_and_display_entries(FSP_DIR *dir)
 {
-	FSP_RDENTRY fentry, *fresult, *table = NULL;
+	FSP_RDENTRY fentry, tmp, *table = NULL;
+	FSP_RDENTRY *fresult = &tmp;
 	int size = 0;
 	int i;
 	unsigned char dircolor[8];
@@ -156,7 +157,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	if (get_opt_bool("protocol.fsp.sort")) {
 		sort_and_display_entries(dir);
 	} else {
-		FSP_RDENTRY fentry, *fresult;
+		FSP_RDENTRY fentry, tmp;
+		FSP_RDENTRY *fresult = &tmp;
 		unsigned char dircolor[8];
 
 		if (get_opt_bool("document.browse.links.color_dirs")) {
@@ -218,10 +220,18 @@ do_fsp(struct connection *conn)
 		fprintf(stderr, "%c", '\0');
 		fclose(stderr);
 
-		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
-			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
-				break;
+		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0) {
+			int off = 0;
 
+			while (r) {
+				int w = safe_write(STDOUT_FILENO, buf + off, r);
+
+				if (w == -1) goto out;
+				off += w;
+				r -= w;
+			}
+		}
+out:
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
