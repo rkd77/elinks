@@ -171,7 +171,8 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 static void
 sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 {
-	FSP_RDENTRY fentry, *fresult, *table = NULL;
+	FSP_RDENTRY fentry, tmp, *table = NULL;
+	FSP_RDENTRY *fresult = &tmp;
 	int size = 0;
 	int i;
 
@@ -228,7 +229,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	if (get_opt_bool("protocol.fsp.sort", NULL)) {
 		sort_and_display_entries(dir, dircolor);
 	} else {
-		FSP_RDENTRY fentry, *fresult;
+		FSP_RDENTRY fentry, tmp;
+		FSP_RDENTRY *fresult = &tmp;
 
 		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
 			if (!fresult) break;
@@ -317,10 +319,18 @@ do_fsp(struct connection *conn)
 		fprintf(stderr, "%" OFF_T_FORMAT "\n", (off_t)(sb.st_size));
 		fclose(stderr);
 
-		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)
-			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
-				break;
+		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0) {
+			int off = 0;
 
+			while (r) {
+				int w = safe_write(STDOUT_FILENO, buf + off, r);
+
+				if (w == -1) goto out;
+				off += w;
+				r -= w;
+			}
+		}
+out:
 		fsp_fclose(file);
 		fsp_close_session(ses);
 		exit(0);
