@@ -33,6 +33,11 @@ typedef enum {
 	KBD_MOD_SHIFT	= 1,
 	KBD_MOD_CTRL	= 2,
 	KBD_MOD_ALT	= 4,
+
+	/** The character is part of a string being pasted from the
+	 * terminal.  parse_keystroke() does not support this flag, so
+	 * keystrokes that include it cannot be bound to any actions,
+	 * and ELinks will instead insert the characters if possible.  */
 	KBD_MOD_PASTE   = 8,
 } term_event_modifier_T;
 

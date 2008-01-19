@@ -369,9 +369,12 @@ read_key(const unsigned char *key_str)
 	return KBD_UNDEF;
 }
 
-/* Parse the string @s as the name of a keystroke.
- * Write the parsed key and modifiers to *@kbd.
- * Return >=0 on success, <0 on error.  */
+/** Parse the string @a s as the name of a keystroke.
+ * Write the parsed key and modifiers to *@a kbd.
+ * @return >=0 on success, <0 on error.
+ *
+ * This function does not support ::KBD_MOD_PASTE, because keystrokes
+ * that include it should never be bound to actions.  */
 int
 parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
@@ -443,6 +446,8 @@ add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
 
 	if (kbd->key == KBD_UNDEF) return;
 
+	/* Don't map KBD_MOD_PASTE to "Paste-" because parse_keystroke
+	 * would not understand the result.  */
 	if (kbd->modifier & KBD_MOD_SHIFT)
 		add_to_string(str, "Shift-");
 	if (kbd->modifier & KBD_MOD_CTRL)
