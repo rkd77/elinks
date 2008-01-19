@@ -10,6 +10,12 @@ ELinks 0.13.GIT now:
 
 To be released as ELinks 0.13.0.
 
+Incompatibilities:
+
+* The protocol.fsp.sort option has been removed.  ELinks always sorts.
+
+Miscellaneous:
+
 * bug 939: Fix FSP directory listing on FreeBSD.
 * minor bug 54, Debian bug 338402: Don't force the terminal to 8 bits
   with no parity.
