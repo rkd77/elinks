@@ -305,7 +305,7 @@ AC_CHECK_FUNCS(setenv putenv, HAVE_SETENV_OR_PUTENV=yes)
 AC_CHECK_FUNCS(getuid, HAVE_GETUID=yes)
 AC_CHECK_FUNCS(geteuid, HAVE_GETEUID=yes)
 
-AC_CHECK_FUNCS(wcwidth)
+AC_CHECK_FUNCS(wcwidth, HAVE_WCWIDTH=yes)
 
 dnl These aren't probably needed now, as they are commented in links.h.
 dnl I've no idea about their historical background, but I keep them here
@@ -1337,6 +1337,9 @@ EL_ARG_ENABLE(CONFIG_SMALL, small, [Small binary],
 
 EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 	      [  --disable-utf-8         disable UTF-8 support])
+
+EL_ARG_DEPEND(CONFIG_COMBINE, combining, [CONFIG_UTF8:yes HAVE_WCWIDTH:yes], [Combining characters],
+	      [  --enable-combining      support Unicode combining characters (experimental)])
 
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,

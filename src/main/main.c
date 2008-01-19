@@ -303,7 +303,7 @@ terminate_all_subsystems(void)
 	done_options();
 	done_event();
 	terminate_osdep();
-#ifdef CONFIG_UTF8
+#ifdef CONFIG_COMBINE
 	free_combined();
 #endif
 }

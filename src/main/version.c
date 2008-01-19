@@ -143,6 +143,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_UTF8
 		comma, "UTF-8",
 #endif
+#ifdef CONFIG_COMBINE
+		comma, _("Combining characters", term),
+#endif
 		comma,
 		(unsigned char *) NULL
 	);

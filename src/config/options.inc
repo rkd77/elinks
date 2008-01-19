@@ -864,10 +864,12 @@ static struct option_info config_options_info[] = {
 		"only the subset of UTF-8 according to terminal codepage is used.\n"
 		"ELinks ignores this option if the terminal codepage is UTF-8.")),
 
+#ifdef CONFIG_COMBINE
 	INIT_OPT_BOOL("terminal._template_", N_("Combining characters"),
 		"combine", 0, 0,
 		N_("Enable combining characters. It works only with "
 		"the xterm in UTF-8 mode.")),
+#endif
 
 	INIT_OPT_BOOL("terminal._template_", N_("Restrict frames in cp850/852"),
 		"restrict_852", 0, 0,

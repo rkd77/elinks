@@ -57,7 +57,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	init_list(document->onload_snippets);
 #endif
 
-#ifdef CONFIG_UTF8
+#ifdef CONFIG_COMBINE
 	document->comb_x = -1;
 	document->comb_y = -1;
 #endif

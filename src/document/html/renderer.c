@@ -4,15 +4,18 @@
 #include "config.h"
 #endif
 
-#if defined(HAVE_WCHAR_H) && defined(HAVE_WCWIDTH)
-#define _XOPEN_SOURCE 500
+/* Our current implementation of combining characters requires
+ * wcwidth().  Therefore the configure script should have disabled
+ * CONFIG_COMBINE if wcwidth() doesn't exist.  */
+#ifdef CONFIG_COMBINE
+#define _XOPEN_SOURCE 500	/* for wcwidth */
 #endif
 
 #include <ctype.h>
 #include <stdarg.h>
 #include <string.h>
 
-#if defined(HAVE_WCHAR_H) && defined(HAVE_WCWIDTH)
+#ifdef HAVE_WCHAR_H
 #include <wchar.h>
 #endif
 
@@ -489,7 +492,8 @@ good_char:
 				if (data == UCS_NO_BREAK_SPACE
 				    && html_context->options->wrap_nbsp)
 					data = UCS_SPACE;
-#ifdef HAVE_WCWIDTH
+
+#ifdef CONFIG_COMBINE
 				if (wcwidth((wchar_t)data)) {
 					if (document->combi_length) {
 						if (document->comb_x != -1) {
@@ -521,7 +525,7 @@ good_char:
 					part->char_width[x] = unicode_to_cell(data);
 					schar->data = (unicode_val_T)data;
 				}
-#ifdef HAVE_WCWIDTH
+#ifdef CONFIG_COMBINE
 				document->comb_x = x;
 				document->comb_y = y;
 #endif

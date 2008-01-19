@@ -770,8 +770,10 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 	++*string;
 	return ret;
 }
+#endif	/* CONFIG_UTF8 */
 
 
+#ifdef CONFIG_COMBINE
 unicode_val_T last_combined = UCS_BEGIN_COMBINED - 1;
 unicode_val_T **combined;
 struct hash *combined_hash;
@@ -830,7 +832,8 @@ free_combined()
 		mem_free(combined[i]);
 	mem_free_if(combined);
 }
-#endif	/* CONFIG_UTF8 */
+#endif /* CONFIG_COMBINE */
+
 
 static void
 add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
@@ -1540,4 +1543,3 @@ is_cp_utf8(int cp_index)
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	return is_cp_ptr_utf8(&codepages[cp_index]);
 }
-
