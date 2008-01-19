@@ -865,9 +865,8 @@ msgid "Open the link context menu"
 msgstr "Åbn link-kontekst-menu"
 
 #: src/config/actions-main.inc:49
-#, fuzzy
 msgid "Open the form fields menu"
-msgstr "Åbn Fil-menuen"
+msgstr "Åbn formularfeltsmenuen"
 
 #: src/config/actions-main.inc:50
 msgid "Open a Lua console"
@@ -2276,7 +2275,6 @@ msgid "External editor"
 msgstr "Ekstern editor"
 
 #: src/config/options.inc:195
-#, fuzzy
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
@@ -2284,7 +2282,7 @@ msgid ""
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
 msgstr ""
-"Sti til programmet som ELinks skal start når brugeren ønsker\n"
+"Sti til programmet som ELinks skal starte når brugeren ønsker\n"
 "at redigere et tekstfelt (angivet med textarea-elementet)\n"
 "med en ekstern editor.\n"
 "\n"
@@ -3344,7 +3342,6 @@ msgid "Rules for passing URIs to external commands."
 msgstr "Regler for håndtering af adresser af eksterne kommandoer."
 
 #: src/config/options.inc:730
-#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
@@ -4665,7 +4662,7 @@ msgid "Copying"
 msgstr "Licens"
 
 #: src/dialogs/info.c:142
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
@@ -4682,7 +4679,7 @@ msgstr ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
+"(C) 2002 - 2006 Jonas Fonseca\n"
 "med flere\n"
 "\n"
 "Dette program er fri software. Du kan distribuere det og/eller ændre det i "
@@ -5389,7 +5386,6 @@ msgid "Ignore <noscript> content"
 msgstr "Ignorer <noscript> indhold"
 
 #: src/ecmascript/ecmascript.c:50
-#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -6638,9 +6634,8 @@ msgid ""
 msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:73
-#, fuzzy
 msgid "User identification string"
-msgstr "Identifikation af brugeragent"
+msgstr "Streng til identifikation af brugeragent"
 
 #: src/protocol/bittorrent/bittorrent.c:75
 msgid ""
@@ -7164,24 +7159,20 @@ msgstr "Finger"
 
 #. name:
 #: src/protocol/fsp/fsp.c:44 src/protocol/fsp/fsp.c:56
-#, fuzzy
 msgid "FSP"
-msgstr "FTP"
+msgstr "FSP"
 
 #: src/protocol/fsp/fsp.c:46
-#, fuzzy
 msgid "FSP specific options."
-msgstr "FTP-specifikke indstillinger."
+msgstr "FSP-specifikke indstillinger."
 
 #: src/protocol/fsp/fsp.c:48
-#, fuzzy
 msgid "Sort entries"
-msgstr "Smarte præfikser"
+msgstr "Sorteret katalogoversigter"
 
 #: src/protocol/fsp/fsp.c:50
-#, fuzzy
 msgid "Whether to sort entries in directory listings."
-msgstr "Vis skjulte filer i katalogoversigter"
+msgstr "Om mapper og filer skal sorteres i katalogoversigter"
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
@@ -7598,7 +7589,6 @@ msgid "Enable dumb prefixes"
 msgstr "Aktivér simple præfikser"
 
 #: src/protocol/rewrite/rewrite.c:55
-#, fuzzy
 msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
@@ -7608,7 +7598,7 @@ msgstr ""
 "Anvend simple præfikser - simple URI forkortelser som skrives\n"
 "i Gå til adresse dialogvinduet i stedet for de egentlige adresser.\n"
 "Eksempelvis kan du skrive 'elinks' og blive omdirigeret til\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 
 #: src/protocol/rewrite/rewrite.c:60
 msgid "Enable smart prefixes"
@@ -8117,14 +8107,12 @@ msgid "press %s to post to %s"
 msgstr "tast %s for at sende til %s"
 
 #: src/viewer/text/form.c:1686
-#, fuzzy
 msgid "Useless button"
-msgstr "Harmløs knap"
+msgstr "Ubrugelig knap"
 
 #: src/viewer/text/form.c:1688
-#, fuzzy
 msgid "Submit button"
-msgstr "Send formular til"
+msgstr "Indsendelsesknap"
 
 #: src/viewer/text/link.c:1166
 msgid "Display ~usemap"
@@ -8191,9 +8179,8 @@ msgid "Submit form and ~download"
 msgstr "Indsend formular og ~overfør fil"
 
 #: src/viewer/text/link.c:1238
-#, fuzzy
 msgid "Form f~ields"
-msgstr "Adgangskodefelt"
+msgstr "Formularfe~lter"
 
 #: src/viewer/text/link.c:1243
 msgid "V~iew image"
