@@ -1395,7 +1395,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 	if_assert_failed return FRAME_EVENT_OK;
 
 	if (fc->mode == FORM_MODE_DISABLED || ev->ev != EVENT_KBD
-	    || ses->insert_mode == INSERT_MODE_OFF)
+	    || (ses->insert_mode == INSERT_MODE_OFF
+		&& !(get_kbd_modifier(ev) & KBD_MOD_PASTE)))
 		return FRAME_EVENT_IGNORED;
 
 	action_id = kbd_action(KEYMAP_EDIT, ev, NULL);

@@ -1065,9 +1065,7 @@ try_form_insert_mode(struct session *ses, struct document_view *doc_view,
 	action_id = kbd_action(KEYMAP_EDIT, ev, NULL);
 
 	if (ses->insert_mode == INSERT_MODE_OFF) {
-		if (action_id == ACT_EDIT_ENTER
-		    || (action_id == -1
-			&& check_kbd_modifier(ev, KBD_MOD_PASTE))) {
+		if (action_id == ACT_EDIT_ENTER) {
 			ses->insert_mode = INSERT_MODE_ON;
 			status = FRAME_EVENT_REFRESH;
 		}
