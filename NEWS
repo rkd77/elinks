@@ -31,6 +31,7 @@ To be released as 0.11.4.
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * fix active and passive FTP over IPv6
 * bug 938: elinks -remote no longer needs a controlling tty
+* bug 939: fix FSP directory listing (some compiler options left it empty)
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
   with no parity, and don't disable XON/XOFF flow control either
