@@ -21,6 +21,8 @@ Miscellaneous:
   with no parity.
 * enhancement 867: Use bracketed paste mode on xterm.  This requires
   xterm patch #228 or later configured with --enable-readline-mouse.
+* enhancement 824: Experimental support for combining characters.
+  See features.conf for details.
 
 ELinks 0.12.GIT now:
 --------------------
