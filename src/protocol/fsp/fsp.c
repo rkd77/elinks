@@ -171,6 +171,13 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 static void
 sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 {
+	/* fsp_readdir_native in fsplib 0.9 and earlier requires
+	 * the third parameter to point to a non-null pointer
+	 * even though it does not dereference that pointer
+	 * and overwrites it with another one anyway.
+	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1875210&group_id=93841&atid=605738
+	 * Work around the bug by using non-null &tmp.
+	 * Nothing will actually read or write tmp.  */
 	FSP_RDENTRY fentry, tmp, *table = NULL;
 	FSP_RDENTRY *fresult = &tmp;
 	int size = 0;
@@ -229,6 +236,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	if (get_opt_bool("protocol.fsp.sort", NULL)) {
 		sort_and_display_entries(dir, dircolor);
 	} else {
+		/* &tmp works around a bug in fsplib 0.9 or earlier.
+		 * See sort_and_display_entries for details.  */
 		FSP_RDENTRY fentry, tmp;
 		FSP_RDENTRY *fresult = &tmp;
 
