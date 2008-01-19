@@ -40,22 +40,9 @@
 #include "util/snprintf.h"
 #include "util/string.h"
 
-
-struct option_info fsp_options[] = {
-	INIT_OPT_TREE("protocol", N_("FSP"),
-		"fsp", 0,
-		N_("FSP specific options.")),
-
-	INIT_OPT_BOOL("protocol.fsp", N_("Sort entries"),
-		"sort", 0, 1,
-		N_("Whether to sort entries in directory listings.")),
-
-	NULL_OPTION_INFO,
-};
-
 struct module fsp_protocol_module = struct_module(
 	/* name: */		N_("FSP"),
-	/* options: */		fsp_options,
+	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
@@ -233,19 +220,7 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 				dircolor);
 	}
 
-	if (get_opt_bool("protocol.fsp.sort", NULL)) {
-		sort_and_display_entries(dir, dircolor);
-	} else {
-		/* &tmp works around a bug in fsplib 0.9 or earlier.
-		 * See sort_and_display_entries for details.  */
-		FSP_RDENTRY fentry, tmp;
-		FSP_RDENTRY *fresult = &tmp;
-
-		while (!fsp_readdir_native(dir, &fentry, &fresult)) {
-			if (!fresult) break;
-			display_entry(&fentry, dircolor);
-		}
-	}
+	sort_and_display_entries(dir, dircolor);
 	fsp_closedir(dir);
 	puts("</pre><hr/></body></html>");
 	fsp_close_session(ses);
