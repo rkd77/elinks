@@ -4,12 +4,15 @@
 #include "config.h"
 #endif
 
+#if defined(HAVE_WCHAR_H) && defined(HAVE_WCWIDTH)
+#define _XOPEN_SOURCE 500
+#endif
+
 #include <ctype.h>
 #include <stdarg.h>
 #include <string.h>
 
 #if defined(HAVE_WCHAR_H) && defined(HAVE_WCWIDTH)
-#define __USE_XOPEN
 #include <wchar.h>
 #endif
 
