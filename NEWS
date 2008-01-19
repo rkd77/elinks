@@ -10,11 +10,11 @@ ELinks 0.13.GIT now:
 
 To be released as ELinks 0.13.0.
 
+* bug 939: Fix FSP directory listing on FreeBSD.
 * minor bug 54, Debian bug 338402: Don't force the terminal to 8 bits
   with no parity.
 * enhancement 867: Use bracketed paste mode on xterm.  This requires
   xterm patch #228 or later configured with --enable-readline-mouse.
-* bug 939: Fix FSP directory listing on FreeBSD.
 
 ELinks 0.12.GIT now:
 --------------------
