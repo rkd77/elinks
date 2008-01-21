@@ -299,8 +299,8 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 		syspf     = PF_INET;
 	}
 
-	memset(pasv_addr, 0, sizeof(addrlen));
-	memset(bind_addr, 0, sizeof(addrlen));
+	memset(pasv_addr, 0, addrlen);
+	memset(bind_addr, 0, addrlen);
 
 	/* Get our endpoint of the control socket */
 	len = addrlen;
