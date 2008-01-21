@@ -302,6 +302,7 @@ To be released as 0.11.4.
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * fix active and passive FTP over IPv6
+* bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
@@ -318,9 +319,10 @@ To be released as 0.11.4.
 * build: update SpiderMonkey configure check Debian compatibility
 * build: use $(CPPFLAGS) rather than $(AM_CFLAGS)
 * build: disable GCC 4.2 warning about builtin_modules
+* build: move debian/ to contrib/debian/
+* minor build bug 989: AsciiDoc 8.2.2 compatibility
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
-* bug 978: Python's webbrowser.open_new_tab(URL) works since now
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.11.4
