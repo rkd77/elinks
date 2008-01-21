@@ -27,7 +27,7 @@ To be released as 0.11.4.
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
-* fix passive FTP over IPv6 when connect() fails with EINPROGRESS
+* fix active and passive FTP over IPv6
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog

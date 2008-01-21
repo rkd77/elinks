@@ -279,6 +279,7 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 	struct sockaddr *pasv_addr = (struct sockaddr *) addr;
 	size_t addrlen;
 	int sock = -1;
+	int syspf; /* Protocol Family given to system, not EL_PF_... */
 	socklen_t len;
 #ifdef CONFIG_IPV6
 	struct sockaddr_in6 bind_addr6;
@@ -286,11 +287,13 @@ get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr)
 	if (ctrl_socket->protocol_family == EL_PF_INET6) {
 		bind_addr = (struct sockaddr *) &bind_addr6;
 		addrlen   = sizeof(bind_addr6);
+		syspf     = PF_INET6;
 	} else
 #endif
 	{
 		bind_addr = (struct sockaddr *) &bind_addr4;
 		addrlen   = sizeof(bind_addr4);
+		syspf     = PF_INET;
 	}
 
 	memset(pasv_addr, 0, sizeof(addrlen));
@@ -307,7 +310,7 @@ sock_error:
 
 	/* Get a passive socket */
 
-	sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sock = socket(syspf, SOCK_STREAM, IPPROTO_TCP);
 	if (sock < 0)
 		goto sock_error;
 
