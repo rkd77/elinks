@@ -59,7 +59,7 @@ key-binding configuration) use Space to open and close the folders.
 Why are there so many Links flavors?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please refer to the link:http://elinks.or.cz/history.html[history page] to read
+Please refer to the link:http://elinks.cz/history.html[history page] to read
 about the various flavors and the differences between them.
 
 
