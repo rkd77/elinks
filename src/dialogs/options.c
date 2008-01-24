@@ -155,7 +155,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 #define	RADIO_TRUE 0
 #endif
 
-#define TERMOPT_WIDGETS_COUNT (12 + TERM_OPTIONS + RADIO_88 + RADIO_256 + RADIO_TRUE)
+#define TERMOPT_WIDGETS_COUNT (11 + TERM_OPTIONS + RADIO_88 + RADIO_256 + RADIO_TRUE)
 
 #define TERM_OPTION_VALUE_SIZE (sizeof(union option_value) * TERM_OPTIONS)
 
