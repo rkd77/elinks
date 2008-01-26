@@ -13,7 +13,7 @@ struct color_pair {
 /* Decode the color string. */
 /* The color string can either contain '#FF0044' style declarations or
  * color names. */
-int decode_color(unsigned char *str, int slen, color_T *color);
+int decode_color(const unsigned char *str, int slen, color_T *color);
 
 /* Returns a string containing the color info. If no ``English'' name can be
  * found the hex color (#rrggbb) is returned in the given buffer. */

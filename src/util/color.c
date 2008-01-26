@@ -80,7 +80,7 @@ free_colors_lookup(void)
 }
 
 int
-decode_color(unsigned char *str, int slen, color_T *color)
+decode_color(const unsigned char *str, int slen, color_T *color)
 {
 	if (*str == '#' && (slen == 7 || slen == 4)) {
 		unsigned char buffer[7];
