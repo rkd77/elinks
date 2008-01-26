@@ -6,7 +6,6 @@
 #include "util/lists.h"
 
 struct bitfield;
-struct string;
 
 struct bittorrent_piece_cache_entry {
 	LIST_HEAD(struct bittorrent_piece_cache_entry);
@@ -92,7 +91,7 @@ struct bittorrent_piece_cache {
 
 enum bittorrent_state
 init_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
-			    struct string *metafile);
+			    struct bittorrent_const_string *metafile);
 
 void done_bittorrent_piece_cache(struct bittorrent_connection *bittorrent);
 

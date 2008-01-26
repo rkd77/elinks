@@ -691,7 +691,8 @@ check_bittorrent_metafile(struct bittorrent_meta *meta)
 }
 
 enum bittorrent_state
-parse_bittorrent_metafile(struct bittorrent_meta *meta, struct string *metafile)
+parse_bittorrent_metafile(struct bittorrent_meta *meta,
+			  struct bittorrent_const_string *metafile)
 {
 	struct scanner scanner;
 
@@ -917,7 +918,7 @@ parse_bencoding_peers_string(struct bittorrent_connection *bittorrent,
 
 enum bittorrent_state
 parse_bittorrent_tracker_response(struct bittorrent_connection *bittorrent,
-				  struct string *response)
+				  struct bittorrent_const_string *response)
 {
 	struct scanner scanner;
 

@@ -317,7 +317,7 @@ bittorrent_resume_callback(struct bittorrent_connection *bittorrent)
 /* Metainfo file download callback */
 static void
 bittorrent_metainfo_callback(void *data, enum connection_state state,
-			     struct string *response)
+			     struct bittorrent_const_string *response)
 {
 	struct connection *conn = data;
 	struct bittorrent_connection *bittorrent = conn->info;

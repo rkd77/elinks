@@ -5,7 +5,7 @@
 #include "main/module.h"
 #include "network/state.h"
 
-struct string;
+struct bittorrent_const_string;
 struct uri;
 
 extern struct module bittorrent_protocol_module;
@@ -17,6 +17,6 @@ int *get_bittorrent_selection(struct uri *uri, size_t size);
 void add_bittorrent_selection(struct uri *uri, int *selection, size_t size);
 
 void add_bittorrent_message(struct uri *uri, enum connection_state state,
-			    struct string *);
+			    struct bittorrent_const_string *);
 
 #endif

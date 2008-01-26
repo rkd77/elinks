@@ -295,7 +295,7 @@ static INIT_LIST_OF(struct bittorrent_message, bittorrent_messages);
 
 void
 add_bittorrent_message(struct uri *uri, enum connection_state state,
-		       struct string *string)
+		       struct bittorrent_const_string *string)
 {
 	struct bittorrent_message *message;
 	int length = string ? string->length : 0;

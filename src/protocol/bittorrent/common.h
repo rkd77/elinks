@@ -344,6 +344,15 @@ struct bittorrent_connection {
 	struct terminal *term;
 };
 
+/** Like struct string, except the data is const and not freed via
+ * this structure.  So it is okay to make @c source point to data that
+ * is part of a larger buffer.  Also, there is no @c magic member here.  */
+struct bittorrent_const_string {
+	/** @todo This is not yet actually const because that will
+	 * require changes in the scanner too.  */
+	unsigned char *source;
+	int length;
+};
 
 static inline uint32_t
 get_bittorrent_piece_length(struct bittorrent_meta *meta, uint32_t piece)
@@ -406,7 +415,8 @@ del_bittorrent_peer_request(struct bittorrent_peer_status *status,
 /* URI fetching: */
 /* ************************************************************************** */
 
-typedef void (*bittorrent_fetch_callback_T)(void *, enum connection_state, struct string *);
+typedef void (*bittorrent_fetch_callback_T)(void *, enum connection_state,
+					    struct bittorrent_const_string *);
 
 struct bittorrent_fetcher *
 init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,

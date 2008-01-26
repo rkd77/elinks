@@ -331,7 +331,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 {
 	struct bittorrent_fetcher *fetcher = data;
 	struct fragment *fragment;
-	struct string response;
+	struct bittorrent_const_string response;
 	struct cache_entry *cached = download->cached;
 
 	/* If the callback was removed we should shutdown ASAP. */

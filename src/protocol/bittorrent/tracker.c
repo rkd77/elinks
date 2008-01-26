@@ -62,7 +62,7 @@ set_bittorrent_tracker_interval(struct connection *conn)
  * connection is attached anymore. */
 static void
 bittorrent_tracker_callback(void *data, enum connection_state state,
-			    struct string *response)
+			    struct bittorrent_const_string *response)
 {
 	struct connection *conn = data;
 	struct bittorrent_connection *bittorrent = conn ? conn->info : NULL;

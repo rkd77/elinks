@@ -687,7 +687,7 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 /* Build a dialog querying the user on how to handle a .torrent file. */
 static void
 bittorrent_query_callback(void *data, enum connection_state state,
-			    struct string *response)
+			  struct bittorrent_const_string *response)
 {
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
 	struct type_query *type_query = data;

@@ -1076,7 +1076,7 @@ bittorrent_resume_writer(void *data, int fd)
 {
 	struct bittorrent_piece_cache cache;
 	struct bittorrent_meta meta;
-	struct string metafile;
+	struct bittorrent_const_string metafile;
 	uint32_t piece;
 
 	memcpy(&metafile.length, data, sizeof(metafile.length));
@@ -1171,7 +1171,7 @@ bittorrent_resume_reader(struct bittorrent_connection *bittorrent)
 
 static void
 start_bittorrent_resume(struct bittorrent_connection *bittorrent,
-			struct string *meta)
+			struct bittorrent_const_string *meta)
 {
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	struct string info;
@@ -1245,7 +1245,7 @@ update_bittorrent_piece_cache_state(struct bittorrent_connection *bittorrent)
 
 enum bittorrent_state
 init_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
-			    struct string *metafile)
+			    struct bittorrent_const_string *metafile)
 {
 	struct bittorrent_piece_cache *cache;
 	uint32_t pieces = bittorrent->meta.pieces;
