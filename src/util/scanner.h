@@ -190,7 +190,8 @@ skip_scanner_tokens(struct scanner *scanner, int skipto, int precedence);
  * @relates scanner */
 int
 map_scanner_string(struct scanner *scanner,
-		   unsigned char *ident, unsigned char *end, int base_type);
+		   const unsigned char *ident, const unsigned char *end,
+		   int base_type);
 
 #ifdef DEBUG_SCANNER
 /** @relates scanner */

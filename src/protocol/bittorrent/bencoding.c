@@ -327,7 +327,7 @@ check_bencoding_dictionary_entry(struct scanner *scanner,
 static off_t
 parse_bencoding_integer(struct scanner_token *token)
 {
-	unsigned char *string = token->string;
+	const unsigned char *string = token->string;
 	int pos = 0, length = token->length;
 	off_t integer = 0;
 	int sign = 1;
@@ -340,9 +340,13 @@ parse_bencoding_integer(struct scanner_token *token)
 	}
 
 	for (; pos < length && isdigit(string[pos]); pos++) {
-		if (integer > (off_t) integer * 10)
+		off_t newint = integer * 10 + string[pos] - '0';
+
+		/* Check for overflow.  This assumes wraparound,
+		 * even though C does not guarantee that.  */
+		if (newint / 10 != integer)
 			return 0;
-		integer = (off_t) integer * 10 + string[pos] - '0';
+		integer = newint;
 	}
 
 	if (sign == -1)
@@ -352,7 +356,8 @@ parse_bencoding_integer(struct scanner_token *token)
 }
 
 static unsigned char *
-normalize_bencoding_path(unsigned char *path, int pathlen, int *malicious)
+normalize_bencoding_path(const unsigned char *path, int pathlen,
+			 int *malicious)
 {
 	struct string string;
 
@@ -735,7 +740,7 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta, struct string *metafile)
 
 		case BENCODING_TOKEN_INFO:
 		{
-			unsigned char *start = value->string;
+			const unsigned char *start = value->string;
 			struct scanner_token *token;
 			enum bittorrent_state state;
 
@@ -881,8 +886,9 @@ parse_bencoding_peers_string(struct bittorrent_connection *bittorrent,
 			     struct scanner *scanner)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
-	unsigned char *pos;
-	unsigned char *last_peer_info_start = token->string + token->length - 6;
+	const unsigned char *pos;
+	const unsigned char *last_peer_info_start
+		= token->string + token->length - 6;
 	enum bittorrent_state state = BITTORRENT_STATE_OK;
 
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_STRING);

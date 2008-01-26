@@ -590,7 +590,8 @@ return_error:
 } while (0)
 
 void *
-fastfind_search(struct fastfind_index *index, unsigned char *key, int key_len)
+fastfind_search(struct fastfind_index *index,
+		const unsigned char *key, int key_len)
 {
 	struct ff_node *current;
 	struct fastfind_info *info;

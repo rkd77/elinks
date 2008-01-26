@@ -188,9 +188,10 @@ add_fragment_identifier(struct html_context *html_context,
 #ifdef CONFIG_CSS
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      unsigned char *url, int len)
+		      const unsigned char *unterminated_url, int len)
 {
 	struct html_context *html_context = css->import_data;
+	unsigned char *url;
 	unsigned char *import_url;
 	struct uri *uri;
 
@@ -201,7 +202,9 @@ import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 	    || !html_context->options->css_import)
 		return;
 
-	url = memacpy(url, len);
+	/* unterminated_url might not end with '\0', but join_urls
+	 * requires that, so make a copy.  */
+	url = memacpy(unterminated_url, len);
 	if (!url) return;
 
 	/* HTML <head> urls should already be fine but we can.t detect them. */

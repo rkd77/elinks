@@ -143,6 +143,6 @@ unsigned char *get_target(struct document_options *options, unsigned char *a);
 
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      unsigned char *url, int len);
+		      const unsigned char *unterminated_url, int len);
 
 #endif
