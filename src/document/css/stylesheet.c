@@ -49,7 +49,7 @@ find_css_selector(LIST_OF(struct css_selector) *sels,
 struct css_selector *
 init_css_selector(LIST_OF(struct css_selector) *sels,
                   enum css_selector_type type,
-                  unsigned char *name, int namelen)
+                  const unsigned char *name, int namelen)
 {
 	struct css_selector *selector;
 
@@ -84,7 +84,7 @@ struct css_selector *
 get_css_selector(LIST_OF(struct css_selector) *sels,
                  enum css_selector_type type,
                  enum css_selector_relation rel,
-                 unsigned char *name, int namelen)
+                 const unsigned char *name, int namelen)
 {
 	struct css_selector *selector = NULL;
 

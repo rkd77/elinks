@@ -79,7 +79,7 @@ import_css(struct css_stylesheet *css, struct uri *uri)
 
 static void
 import_css_file(struct css_stylesheet *css, struct uri *base_uri,
-		unsigned char *url, int urllen)
+		const unsigned char *url, int urllen)
 {
 	struct string string, filename;
 
