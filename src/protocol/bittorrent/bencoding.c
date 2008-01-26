@@ -340,9 +340,13 @@ parse_bencoding_integer(struct scanner_token *token)
 	}
 
 	for (; pos < length && isdigit(string[pos]); pos++) {
-		if (integer > (off_t) integer * 10)
+		off_t newint = integer * 10 + string[pos] - '0';
+
+		/* Check for overflow.  This assumes wraparound,
+		 * even though C does not guarantee that.  */
+		if (newint / 10 != integer)
 			return 0;
-		integer = (off_t) integer * 10 + string[pos] - '0';
+		integer = newint;
 	}
 
 	if (sign == -1)
