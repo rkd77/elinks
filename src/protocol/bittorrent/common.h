@@ -368,7 +368,7 @@ bittorrent_id_is_known(struct bittorrent_connection *bittorrent,
 enum bittorrent_state
 add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 			    bittorrent_id_T id, int port,
-			    unsigned char *ip, int iplen);
+			    const unsigned char *ip, int iplen);
 
 struct bittorrent_peer *
 get_peer_from_bittorrent_pool(struct bittorrent_connection *bittorrent,
