@@ -17,7 +17,8 @@
 
 int
 map_scanner_string(struct scanner *scanner,
-		   unsigned char *ident, unsigned char *end, int base_type)
+		   const unsigned char *ident, const unsigned char *end,
+		   int base_type)
 {
 	const struct scanner_string_mapping *mappings = scanner->info->mappings;
 	int length = end - ident;
