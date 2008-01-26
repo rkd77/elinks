@@ -46,7 +46,8 @@ struct fastfind_index *fastfind_index(struct fastfind_index *index, enum fastfin
 /* The main reason of all that stuff is here. */
 /* Search the index for @key with length @key_len using the
  * @index' handle created with fastfind_index(). */
-void *fastfind_search(struct fastfind_index *index, unsigned char *key, int key_len);
+void *fastfind_search(struct fastfind_index *index,
+		      const unsigned char *key, int key_len);
 
 /* Fastfind cleanup. It frees the index given by the @fastfind_handle. */
 /* Must be called once per list. */
