@@ -329,13 +329,13 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 
 
 struct parse_handler {
-	unsigned char *command;
+	const unsigned char *command;
 	enum parse_error (*handler)(struct option *opt_tree,
 				    unsigned char **file, int *line,
 				    struct string *mirror, int is_system_conf);
 };
 
-static struct parse_handler parse_handlers[] = {
+static const struct parse_handler parse_handlers[] = {
 	{ "set", parse_set },
 	{ "unset", parse_unset },
 	{ "bind", parse_bind },
@@ -348,7 +348,7 @@ enum parse_error
 parse_config_command(struct option *options, unsigned char **file, int *line,
 		     struct string *mirror, int is_system_conf)
 {
-	struct parse_handler *handler;
+	const struct parse_handler *handler;
 
 	for (handler = parse_handlers; handler->command;
 	     handler++) {
@@ -390,7 +390,7 @@ parse_config_file(struct option *options, unsigned char *name,
 	int error_occurred = 0;
 	enum parse_error err = 0;
 	enum verbose_level verbose = get_cmd_opt_int("verbose");
-	unsigned char error_msg[][40] = {
+	static const unsigned char error_msg[][40] = {
 		"no error",
 		"parse error",
 		"unknown command",
