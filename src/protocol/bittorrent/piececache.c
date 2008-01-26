@@ -1080,7 +1080,7 @@ bittorrent_resume_writer(void *data, int fd)
 	uint32_t piece;
 
 	memcpy(&metafile.length, data, sizeof(metafile.length));
-	metafile.source = (unsigned char *) data + sizeof(metafile.length);
+	metafile.source = (const unsigned char *) data + sizeof(metafile.length);
 
 	if (parse_bittorrent_metafile(&meta, &metafile) != BITTORRENT_STATE_OK) {
 		done_bittorrent_meta(&meta);

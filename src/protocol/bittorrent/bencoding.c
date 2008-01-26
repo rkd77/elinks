@@ -105,7 +105,7 @@ enum bencoding_token {
 static inline void
 scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 {
-	unsigned char *string = scanner->position;
+	const unsigned char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum bencoding_token type = BENCODING_TOKEN_NONE;
 	int real_length = -1;
@@ -136,7 +136,7 @@ scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 		type = BENCODING_TOKEN_END;
 
 	} else if (is_bencoding_integer(first_char)) {
-		unsigned char *integer_start = string;
+		const unsigned char *integer_start = string;
 
 		/* Signedness. */
 		if (*string == '-') string++;

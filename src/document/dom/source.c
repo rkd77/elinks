@@ -348,13 +348,13 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 				"attribute	{ color: magenta } "
 				"comment	{ color: aqua } "
 				"cdata-section	{ color: orange2 } ";
-			unsigned char *styles = (unsigned char *) default_colors;
 
 			i_want_struct_module_for_dom = 1;
 			/* When someone will get here earlier than at 4am,
 			 * this will be done in some init function, perhaps
 			 * not overriding the user's default stylesheet. */
-			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
+			css_parse_stylesheet(css, NULL, default_colors,
+					     default_colors + sizeof(default_colors));
 		}
 	}
 

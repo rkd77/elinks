@@ -348,9 +348,7 @@ struct bittorrent_connection {
  * this structure.  So it is okay to make @c source point to data that
  * is part of a larger buffer.  Also, there is no @c magic member here.  */
 struct bittorrent_const_string {
-	/** @todo This is not yet actually const because that will
-	 * require changes in the scanner too.  */
-	unsigned char *source;
+	const unsigned char *source;
 	int length;
 };
 

@@ -629,7 +629,7 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 
 void
 css_parse_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		     unsigned char *string, unsigned char *end)
+		     const unsigned char *string, const unsigned char *end)
 {
 	struct scanner scanner;
 

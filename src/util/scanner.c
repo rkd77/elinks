@@ -157,7 +157,7 @@ init_scanner_info(struct scanner_info *scanner_info)
 
 void
 init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
-	     unsigned char *string, unsigned char *end)
+	     const unsigned char *string, const unsigned char *end)
 {
 	if (!scanner_info->initialized) {
 		init_scanner_info(scanner_info);

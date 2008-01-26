@@ -124,7 +124,7 @@ struct scanner_info css_scanner_info = {
 static inline void
 scan_css_token(struct scanner *scanner, struct scanner_token *token)
 {
-	unsigned char *string = scanner->position;
+	const unsigned char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum css_token_type type = CSS_TOKEN_GARBAGE;
 	int real_length = -1;
@@ -169,7 +169,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 		scan_css(scanner, string, CSS_CHAR_IDENT);
 
 		if (*string == '(') {
-			unsigned char *function_end = string + 1;
+			const unsigned char *function_end = string + 1;
 
 			/* Make sure that we have an ending ')' */
 			skip_css(scanner, function_end, ')');
@@ -193,8 +193,8 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 					 * we should of course handle escape
 					 * sequences .. but that will have to
 					 * be fixed later.  */
-					unsigned char *from = string + 1;
-					unsigned char *to = function_end - 1;
+					const unsigned char *from = string + 1;
+					const unsigned char *to = function_end - 1;
 
 					scan_css(scanner, from, CSS_CHAR_WHITESPACE);
 					scan_back_css(scanner, to, CSS_CHAR_WHITESPACE);
@@ -313,7 +313,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 			type = CSS_TOKEN_NONE;
 
 		} else {
-			unsigned char *sgml = string;
+			const unsigned char *sgml = string;
 
 			/* Skip anything looking like SGML "<!--" and "-->"
 			 * comments + <![CDATA[ and ]]> notations. */

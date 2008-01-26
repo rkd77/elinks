@@ -23,6 +23,6 @@ void css_parse_properties(LIST_OF(struct css_property) *props,
  * given stylesheet @a css. If the selector is already in the stylesheet it
  * properties are added to the that selector. */
 void css_parse_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-			  unsigned char *string, unsigned char *end);
+			  const unsigned char *string, const unsigned char *end);
 
 #endif
