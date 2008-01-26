@@ -49,7 +49,8 @@ struct fastfind_index *fastfind_index(struct fastfind_index *index, enum fastfin
 /** Search the index for @a key with length @a key_len using the
  * @a index' handle created with fastfind_index().
  * @relates fastfind_index */
-void *fastfind_search(struct fastfind_index *index, unsigned char *key, int key_len);
+void *fastfind_search(struct fastfind_index *index,
+		      const unsigned char *key, int key_len);
 
 /** Fastfind cleanup. It frees the given @a index.
  * Must be called once per list.
