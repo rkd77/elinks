@@ -101,7 +101,7 @@ static struct option_info config_options_info[] = {
 		"it takes precedence. And better do not touch this\n"
 		"at all unless you are sure what are you doing.\n"
 		"Note that you can also force a given protocol\n"
-		"to be used on a per-connection basis by using an URL\n"
+		"to be used on a per-connection basis by using a URL\n"
 		"in the style of i.e. http4://elinks.cz/.")),
 #else
 	INIT_OPT_BOOL("connection", N_("Try IPv4 when connecting"),
@@ -109,7 +109,7 @@ static struct option_info config_options_info[] = {
 		N_("Whether to try to connect to a host over IPv4.\n"
 		"Do not touch this option.\n"
 		"Note that you can also force a given protocol\n"
-		"to be used on a per-connection basis by using an URL\n"
+		"to be used on a per-connection basis by using a URL\n"
 		"in the style of i.e. http4://elinks.cz/.")),
 #endif
 
@@ -118,7 +118,7 @@ static struct option_info config_options_info[] = {
 		"try_ipv6", 0, 1,
 		N_("Whether to try to connect to a host over IPv6.\n"
 		"Note that you can also force a given protocol\n"
-		"to be used on a per-connection basis by using an URL\n"
+		"to be used on a per-connection basis by using a URL\n"
 		"in the style of i.e. http6://elinks.cz/.")),
 #endif
 
@@ -325,7 +325,7 @@ static struct option_info config_options_info[] = {
 		N_("Whether to navigate links using tabindex specified ordering.\n"
 		"The TABINDEX attribute in HTML elements specifies the order\n"
 		"in which links should receive focus when using the keyboard\n"
-		"to navigating the document.")),
+		"to navigate the document.")),
 
 	INIT_OPT_BOOL("document.browse.links", N_("Missing fragment reporting"),
 		"missing_fragment", 0, 1,
@@ -349,7 +349,7 @@ static struct option_info config_options_info[] = {
 	 * for now as it doesn't work. */
 	INIT_OPT_BOOL("document.browse.links", N_("Wrap-around links cycling"),
 		"wraparound", /* 0 */ 0, 0,
-		N_("When pressing 'down' on the last link, jump at the first one, and\n"
+		N_("When pressing 'down' on the last link, jump to the first one, and\n"
 		"vice versa.")),
 
 
@@ -399,7 +399,7 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.browse.search", N_("Show search hit top or bottom dialogs"),
 		"show_hit_top_bottom", 0, 1,
-		N_("Whether to show a dialog when the search hits top or bottom of the\n"
+		N_("Whether to show a dialog when the search hits the top or bottom of the\n"
 		"document.")),
 
 	INIT_OPT_BOOL("document.browse.search", N_("Wraparound"),
@@ -460,9 +460,9 @@ static struct option_info config_options_info[] = {
 		"cache_redirects", 0, 0,
 		N_("Cache even redirects sent by server (usually thru HTTP by a 302\n"
 		"HTTP code and a Location header). This was the original behaviour\n"
-		"for a quite some time, but it causes problems in a situation very\n"
+		"for quite some time, but it causes problems in a situation very\n"
 		"common to various web login systems - frequently, when accessing\n"
-		"certain location, they will redirect you to a login page if they\n"
+		"a certain location, they will redirect you to a login page if they\n"
 		"don't receive an auth cookie, the login page then gives you the\n"
 		"cookie and redirects you back to the original page, but there you\n"
 		"have already cached redirect back to the login page! If this\n"
@@ -472,7 +472,7 @@ static struct option_info config_options_info[] = {
 		"still workaround it by clever combination of usage of reload,\n"
 		"jumping around in session history and hitting ctrl+enter.\n"
 		"Note that this option is checked when retrieving the information\n"
-		"from cache, not when saving it to cache - thus if you will enable\n"
+		"from cache, not when saving it to cache - thus if you enable\n"
 		"it, even previous redirects will be taken from cache instead of\n"
 		"asking the server.")),
 
@@ -573,7 +573,7 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("document.colors", N_("Ensure contrast"),
 		"ensure_contrast", 0, 1,
-		N_("Makes sure that the back- and foreground color are never "
+		N_("Makes sure that the back- and foreground colors are never "
 		"equal.")),
 
 	/* If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
@@ -687,7 +687,7 @@ static struct option_info config_options_info[] = {
 		"display_sups", 0, 1,
 		N_("Display superscripts (as ^thing).")),
 
-	INIT_OPT_INT("document.html", N_("Rendering of html link element"),
+	INIT_OPT_INT("document.html", N_("Rendering of HTML link element"),
 		"link_display", 0, 0, 5, 2,
 		N_("How to render <link> tags from the HTML header:\n"
 		"0 is nothing\n"
@@ -753,7 +753,7 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_INT("infofiles", N_("Save interval"),
 		"save_interval", 0, 0, INT_MAX, 300,
 		N_("Interval at which to trigger information files in ~/.elinks\n"
-		"to be saved to disk if they has changed (seconds; 0 to disable)")),
+		"to be saved to disk if they have changed (seconds; 0 to disable)")),
 
 	INIT_OPT_BOOL("infofiles", N_("Use secure file saving"),
 		"secure_save", 0, 1,
@@ -1110,12 +1110,12 @@ static struct option_info config_options_info[] = {
 	INIT_OPT_BOOL("ui.dialogs", N_("Underline menu hotkeys"),
 		"underline_hotkeys", 0, 0,
 		N_("Whether to underline hotkeys in menus to make them more\n"
-		"visible. Requires the underlining is enabled for the terminal.")),
+		"visible. Requires that underlining is enabled for the terminal.")),
 
 	INIT_OPT_BOOL("ui.dialogs", N_("Underline button shortcuts"),
 		"underline_button_shortcuts", 0, 0,
 		N_("Whether to underline button shortcuts to make them more\n"
-		"visible. Requires the underlining is enabled for the terminal.")),
+		"visible. Requires that underlining is enabled for the terminal.")),
 
 
 	INIT_OPT_TREE("ui", N_("Timer options"),
@@ -1162,7 +1162,7 @@ static struct option_info config_options_info[] = {
 
 	INIT_OPT_BOOL("ui.tabs", N_("Wrap-around tabs cycling"),
 		"wraparound", 0, 1,
-		N_("When moving right from the last tab, jump at the first one, and\n"
+		N_("When moving right from the last tab, jump to the first one, and\n"
 		"vice versa.")),
 
 	INIT_OPT_BOOL("ui.tabs", N_("Confirm tab closing"),

@@ -104,10 +104,10 @@ struct par_attrib {
 /* HTML parser stack mortality info */
 enum html_element_mortality_type {
 	/* Elements of this type can not be removed from the stack. This type
-	 * is created by the renderer when formatting a HTML part. */
+	 * is created by the renderer when formatting an HTML part. */
 	ELEMENT_IMMORTAL,
 	/* Elements of this type can only be removed by elements of the start
-	 * type. This type is created whenever a HTML state is created using
+	 * type. This type is created whenever an HTML state is created using
 	 * init_html_parser_state(). */
 	/* The element has been created by*/
 	ELEMENT_DONT_KILL,

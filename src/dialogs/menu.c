@@ -240,7 +240,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 		}
 #endif
 
-		add_menu_action(&menu, N_("Toggle ~html/plain"), ACT_MAIN_TOGGLE_HTML_PLAIN);
+		add_menu_action(&menu, N_("Toggle ~HTML/plain"), ACT_MAIN_TOGGLE_HTML_PLAIN);
 		add_menu_action(&menu, N_("~Reload"), ACT_MAIN_RELOAD);
 
 		if (ses->doc_view && document_has_frames(ses->doc_view->document)) {
@@ -400,7 +400,7 @@ static struct menu_item view_menu[] = {
 	INIT_MENU_ACTION(N_("Find ~previous"), ACT_MAIN_FIND_NEXT_BACK),
 	INIT_MENU_ACTION(N_("T~ypeahead search"), ACT_MAIN_SEARCH_TYPEAHEAD),
 	BAR_MENU_ITEM,
-	INIT_MENU_ACTION(N_("Toggle ~html/plain"), ACT_MAIN_TOGGLE_HTML_PLAIN),
+	INIT_MENU_ACTION(N_("Toggle ~HTML/plain"), ACT_MAIN_TOGGLE_HTML_PLAIN),
 	INIT_MENU_ACTION(N_("Toggle i~mages"), ACT_MAIN_TOGGLE_DISPLAY_IMAGES),
 	INIT_MENU_ACTION(N_("Toggle ~link numbering"), ACT_MAIN_TOGGLE_NUMBERED_LINKS),
 	INIT_MENU_ACTION(N_("Toggle ~document colors"), ACT_MAIN_TOGGLE_DOCUMENT_COLORS),

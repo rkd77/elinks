@@ -172,7 +172,7 @@ Symbol		Description
 'S'		Whether an SSL connection was used.
 'i'/'I'		The state of insert mode for text-input form-fields: 'i'     \
 		means modeless, 'I' means insert mode is on.
-'J'		A JavaScript error has occured.
+'J'		A JavaScript error has occurred.
 'P'		A JavaScript pop-up window was blocked.
 -		Unused.
 -		Unused.

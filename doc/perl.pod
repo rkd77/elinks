@@ -12,7 +12,7 @@ documents.
 
 The interface consists of two largely separate and independent parts. The first
 one is where ELinks is the active party, calling Perl I<hooks> upon certain
-events (going to an URL, about to render an HTML document, exiting) and
+events (going to a URL, about to render an HTML document, exiting) and
 conniving the hook results. This part of the interface is not subject of this
 document, however. There is no document dedicated to this so far, however the
 example Perl hooks file (I<contrib/perl/hooks.pl> in the source distribution)

@@ -46,9 +46,9 @@ struct socket_operations {
 	socket_operation_T set_state;
 	/* Reset the timeout for the socket. */
 	socket_operation_T set_timeout;
-	/* Some system related error occured; advise to reconnect. */
+	/* Some system related error occurred; advise to reconnect. */
 	socket_operation_T retry;
-	/* A fatal error occured, like a memory allocation failure; advise to
+	/* A fatal error occurred, like a memory allocation failure; advise to
 	 * abort the connection. */
 	socket_operation_T done;
 };

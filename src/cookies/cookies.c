@@ -110,7 +110,7 @@ static struct option_info cookies_options[] = {
 
 	INIT_OPT_BOOL("cookies", N_("Saving"),
 		"save", 0, 1,
-		N_("Whether cookies should be loaded from and save to disk.")),
+		N_("Whether cookies should be loaded from and saved to disk.")),
 
 	INIT_OPT_BOOL("cookies", N_("Resaving"),
 		"resave", 0, 1,
