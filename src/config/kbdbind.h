@@ -14,6 +14,7 @@ struct module;
 typedef long action_id_T;
 
 enum keymap_id {
+	KEYMAP_INVALID = -1,
 	KEYMAP_MAIN,
 	KEYMAP_EDIT,
 	KEYMAP_MENU,
