@@ -10,7 +10,7 @@ SYNOPSIS
 --------
 [verse]
 set     "<option>" = <value>
-unset   "<option>" = <value>
+unset   "<option>"
 bind    "<keymap>" "<key>" = "<action>"
 include "<file>"
 
