@@ -98,7 +98,7 @@ static const struct s_msg_dsc msg_dsc[] = {
 	{S_NNTP_NEWS_SERVER,	N_("Unable to handle news: URI because no news server has been\n"
 				"been configured. Either set the option protocol.nntp.server\n"
 				"or set the NNTPSERVER environment variable.")},
-	{S_NNTP_SERVER_HANG_UP,	N_("Server hang up for some reason")},
+	{S_NNTP_SERVER_HANG_UP,	N_("Server hung up for some reason")},
 	{S_NNTP_GROUP_UNKNOWN,	N_("No such newsgroup")},
 	{S_NNTP_ARTICLE_UNKNOWN,N_("No such article")},
 	{S_NNTP_TRANSFER_ERROR,	N_("Transfer failed")},

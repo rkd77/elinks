@@ -138,7 +138,7 @@ Name:		follow-url
 Managed By:	The scripting subsystem/backends
 Triggered When:
 
- The user decides to load some document by following a link, entering an URL
+ The user decides to load some document by following a link, entering a URL
  in the goto URL dialog, loading frames from a frameset (?) etc.
 
 Arguments:

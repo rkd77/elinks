@@ -164,7 +164,7 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 		if (!selected) return EVENT_PROCESSED;
 
 		/* Special trick: if the folder is already
-		 * folded, jump at the parent folder, so the
+		 * folded, jump to the parent folder, so the
 		 * next time when user presses the key, the
 		 * whole parent folder will be closed. */
 		if (list_empty(selected->child)

@@ -194,11 +194,11 @@ Number of tries to establish a connection\&. Zero means try forever\&.
 
 .TP
 connection\&.try_ipv4 [0|1] (default: 1)
-Whether to try to connect to a host over IPv4\&. Note that if connection\&.try_ipv6 is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&. Note that you can also force a given protocol to be used on a per\-connection basis by using an URL in the style of e\&.g\&. http4://elinks\&.cz/\&.
+Whether to try to connect to a host over IPv4\&. Note that if connection\&.try_ipv6 is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&. http4://elinks\&.cz/\&.
 
 .TP
 connection\&.try_ipv6 [0|1] (default: 1)
-Whether to try to connect to a host over IPv6\&. Note that you can also force a given protocol to be used on a per\-connection basis by using an URL in the style of e\&.g\&. http6://elinks\&.cz/\&.
+Whether to try to connect to a host over IPv6\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&. http6://elinks\&.cz/\&.
 
 .TP
 connection\&.unrestartable_receive_timeout <num> (default: 600)
@@ -250,7 +250,7 @@ When enabled, we'll require three dots in cookies domain for all non\-internatio
 
 .TP
 cookies\&.save [0|1] (default: 1)
-Whether cookies should be loaded from and save to disk\&.
+Whether cookies should be loaded from and saved to disk\&.
 
 .TP
 cookies\&.resave [0|1] (default: 1)
@@ -478,7 +478,7 @@ Define how to handle links having target=_blank set:
 
 .TP
 document\&.browse\&.links\&.use_tabindex [0|1] (default: 1)
-Whether to navigate links using tabindex specified ordering\&. The TABINDEX attribute in HTML elements specifies the order in which links should receive focus when using the keyboard to navigating the document\&.
+Whether to navigate links using tabindex specified ordering\&. The TABINDEX attribute in HTML elements specifies the order in which links should receive focus when using the keyboard to navigate the document\&.
 
 .TP
 document\&.browse\&.links\&.missing_fragment [0|1] (default: 1)
@@ -508,7 +508,7 @@ When following a link the user ID part of the URI is checked and if a maliciousl
 
 .TP
 document\&.browse\&.links\&.wraparound [0|1] (default: 0)
-When pressing 'down' on the last link, jump at the first one, and vice versa\&.
+When pressing 'down' on the last link, jump to the first one, and vice versa\&.
 
 .TP
 document\&.browse\&.scrolling
@@ -558,7 +558,7 @@ Enable searching with regular expressions:
 
 .TP
 document\&.browse\&.search\&.show_hit_top_bottom [0|1] (default: 1)
-Whether to show a dialog when the search hits top or bottom of the document\&.
+Whether to show a dialog when the search hits the top or bottom of the document\&.
 
 .TP
 document\&.browse\&.search\&.wraparound [0|1] (default: 1)
@@ -628,7 +628,7 @@ Memory cache size (in bytes)\&.
 
 .TP
 document\&.cache\&.cache_redirects [0|1] (default: 0)
-Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for a quite some time, but it causes problems in a situation very common to various web login systems \- frequently, when accessing certain location, they will redirect you to a login page if they don't receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&. Note that this option is checked when retrieving the information from cache, not when saving it to cache \- thus if you will enable it, even previous redirects will be taken from cache instead of asking the server\&.
+Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \- frequently, when accessing a certain location, they will redirect you to a login page if they don't receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&. Note that this option is checked when retrieving the information from cache, not when saving it to cache \- thus if you enable it, even previous redirects will be taken from cache instead of asking the server\&.
 
 .TP
 document\&.cache\&.ignore_cache_control [0|1] (default: 1)
@@ -688,7 +688,7 @@ Increase the contrast between the foreground and background colors to ensure rea
 
 .TP
 document\&.colors\&.ensure_contrast [0|1] (default: 1)
-Makes sure that the back\- and foreground color are never equal\&.
+Makes sure that the back\- and foreground colors are never equal\&.
 
 .TP
 document\&.colors\&.use_document_colors <num> (default: 2)
@@ -967,7 +967,7 @@ Options for information files in ~/\&.elinks\&.
 
 .TP
 infofiles\&.save_interval <num> (default: 300)
-Interval at which to trigger information files in ~/\&.elinks to be saved to disk if they has changed (seconds; 0 to disable)
+Interval at which to trigger information files in ~/\&.elinks to be saved to disk if they have changed (seconds; 0 to disable)
 
 .TP
 infofiles\&.secure_save [0|1] (default: 1)
@@ -1053,7 +1053,7 @@ Prioritize entries by the order of the files in the mailcap path\&. This means t
 
 .TP
 mime\&.mimetypes
-Options for the support of mime\&.types files\&. These files can be used to find the content type of an URL by looking at the extension of the file name\&.
+Options for the support of mime\&.types files\&. These files can be used to find the content type of a URL by looking at the extension of the file name\&.
 
 .TP
 mime\&.mimetypes\&.enable [0|1] (default: 1)
@@ -1193,7 +1193,7 @@ Whether to allow reading from non\-regular files\&. Note this can be dangerous; 
 
 .TP
 protocol\&.file\&.show_hidden_files [0|1] (default: 1)
-When set to false, files with name starting with a dot will be hidden in local directories listing\&.
+When set to false, files with name starting with a dot will be hidden in local directory listings\&.
 
 .TP
 protocol\&.file\&.try_encoding_extensions [0|1] (default: 1)
@@ -2482,11 +2482,11 @@ Make dialogs drop shadows (the shadows are solid, you can adjust their color by 
 
 .TP
 ui\&.dialogs\&.underline_hotkeys [0|1] (default: 0)
-Whether to underline hotkeys in menus to make them more visible\&. Requires the underlining is enabled for the terminal\&.
+Whether to underline hotkeys in menus to make them more visible\&. Requires that underlining is enabled for the terminal\&.
 
 .TP
 ui\&.dialogs\&.underline_button_shortcuts [0|1] (default: 0)
-Whether to underline button shortcuts to make them more visible\&. Requires the underlining is enabled for the terminal\&.
+Whether to underline button shortcuts to make them more visible\&. Requires that underlining is enabled for the terminal\&.
 
 .TP
 ui\&.leds
@@ -2552,7 +2552,7 @@ Whether display tab bar at top like other browsers do\&.
 
 .TP
 ui\&.tabs\&.wraparound [0|1] (default: 1)
-When moving right from the last tab, jump at the first one, and vice versa\&.
+When moving right from the last tab, jump to the first one, and vice versa\&.
 
 .TP
 ui\&.tabs\&.confirm_close [0|1] (default: 0)

@@ -251,7 +251,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 		if (!label)
 			label = get_attr_val(a, "title", html_context->doc_cp);
 
-		/* Little hack to preserve rendering of [   ], in directories listing,
+		/* Little hack to preserve rendering of [   ], in directory listings,
 		 * but we still want to drop extra spaces in alt or title attribute
 		 * to limit display width on certain websites. --Zas */
 		if (label && strlen(label) > 5) clr_spaces(label);

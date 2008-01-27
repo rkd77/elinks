@@ -50,7 +50,7 @@ end
 
 
 # Called when the user decides to load some document by following a link,
-# entering an URL in the goto URL dialog, loading frames from a frameset (?)
+# entering a URL in the goto URL dialog, loading frames from a frameset (?)
 # etc.
 #
 # Arguments:
@@ -63,7 +63,7 @@ def ELinks::follow_url_hook(url)
 end
 
 
-# Called when a HTML document has been loaded - before the document rendering
+# Called when an HTML document has been loaded - before the document rendering
 # begins. Makes it possible to fix up bad HTML code, remove tags etc.
 #
 # Arguments:

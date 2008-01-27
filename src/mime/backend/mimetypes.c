@@ -46,7 +46,7 @@ static struct option_info mimetypes_options[] = {
 	INIT_OPT_TREE("mime", N_("Mimetypes files"),
 		"mimetypes", 0,
 		N_("Options for the support of mime.types files. These files\n"
-		"can be used to find the content type of an URL by looking at\n"
+		"can be used to find the content type of a URL by looking at\n"
 		"the extension of the file name.")),
 
 	INIT_OPT_BOOL("mime.mimetypes", N_("Enable"),
