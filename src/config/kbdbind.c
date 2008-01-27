@@ -551,7 +551,7 @@ bind_key_to_event(unsigned char *ckmap, unsigned char *ckey, int event)
 	action_id_T action_id;
 	enum keymap_id keymap_id = get_keymap_id(ckmap);
 
-	if (keymap_id < 0)
+	if (keymap_id == KEYMAP_INVALID)
 		return gettext("Unrecognised keymap");
 
 	if (parse_keystroke(ckey, &kbd) < 0)
@@ -870,7 +870,7 @@ bind_do(unsigned char *keymap_str, unsigned char *keystroke_str,
 	struct keybinding *keybinding;
 
 	keymap_id = get_keymap_id(keymap_str);
-	if (keymap_id < 0) return 1;
+	if (keymap_id == KEYMAP_INVALID) return 1;
 
 	if (parse_keystroke(keystroke_str, &kbd) < 0) return 2;
 
@@ -892,7 +892,7 @@ bind_act(unsigned char *keymap_str, unsigned char *keystroke_str)
 	struct keybinding *keybinding;
 
 	keymap_id = get_keymap_id(keymap_str);
-	if (keymap_id < 0)
+	if (keymap_id == KEYMAP_INVALID)
 		return NULL;
 
 	keybinding = kbd_stroke_lookup(keymap_id, keystroke_str);
