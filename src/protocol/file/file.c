@@ -52,7 +52,7 @@ static struct option_info file_options[] = {
 	INIT_OPT_BOOL("protocol.file", N_("Show hidden files in directory listing"),
 		"show_hidden_files", 0, 1,
 		N_("When set to false, files with name starting with a dot will be\n"
-		   "hidden in local directories listing.")),
+		   "hidden in local directory listings.")),
 
 	INIT_OPT_BOOL("protocol.file", N_("Try encoding extensions"),
 		"try_encoding_extensions", 0, 1,
@@ -173,7 +173,7 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 	mem_free_if(entries);
 }
 
-/* Generates a HTML page listing the content of @directory with the path
+/* Generates an HTML page listing the content of @directory with the path
  * @dirpath. */
 /* Returns a connection state. S_OK if all is well. */
 static inline enum connection_state

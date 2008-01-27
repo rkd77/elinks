@@ -27,7 +27,7 @@
  *
  * * Make it possible to go at marks which are set in a different document than
  * the active one. This will basically need some clever hacking in the
- * KP_MARK_GOTO handler, which first needs to load the URL and *then* jump at
+ * KP_MARK_GOTO handler, which first needs to load the URL and *then* jump to
  * the exact location and just overally restore the rest of view_state. Perhaps
  * this could also be somehow nicely unified with session.goto_position? --pasky
  *

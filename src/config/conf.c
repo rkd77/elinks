@@ -447,7 +447,7 @@ parse_config_file(struct option *options, unsigned char *name,
 		  int is_system_conf)
 {
 	int line = 1;
-	int error_occured = 0;
+	int error_occurred = 0;
 	enum parse_error err = 0;
 	enum verbose_level verbose = get_cmd_opt_int("verbose");
 	unsigned char error_msg[][40] = {
@@ -493,13 +493,13 @@ parse_config_file(struct option *options, unsigned char *name,
 			if (verbose >= VERBOSE_WARNINGS) {
 				fprintf(stderr, "%s:%d: %s\n",
 					name, line, error_msg[err]);
-				error_occured = 1;
+				error_occurred = 1;
 			}
 			err = 0;
 		}
 	}
 
-	if (!error_occured) return;
+	if (!error_occurred) return;
 
 	/* If an error occurred make sure that the user is notified and is able
 	 * to see it. First sound the bell. Then, if the text viewer is going to

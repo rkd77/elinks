@@ -347,7 +347,7 @@ menu_leds_info(struct terminal *term, void *xxx, void *xxxx)
 			" |||||`- Download in progress\n"
 			" ||||`-- Unused\n"
 			" |||`--- A JavaScript pop-up window was blocked\n"
-			" ||`---- A JavaScript error has occured\n"
+			" ||`---- A JavaScript error has occurred\n"
 			" |`----- The state of insert mode for text-input form-fields\n"
 			" |       'i' means modeless, 'I' means insert mode is on\n"
 			" `------ Whether an SSL connection was used\n"

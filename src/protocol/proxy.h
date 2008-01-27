@@ -7,7 +7,7 @@ struct uri;
 /* Checks if the passed URI has been configured to go through a proxy. The
  * fragment is removed from the returned URI. */
 /* If @connection_state is non-NULL it will be set to indicate what error
- * occured if the function returns NULL. */
+ * occurred if the function returns NULL. */
 struct uri *get_proxy_uri(struct uri *uri, enum connection_state *connection_state);
 
 /* ``Translates'' the passed URI into the URI being proxied. If it is not a

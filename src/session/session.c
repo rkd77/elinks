@@ -747,15 +747,15 @@ setup_first_session(struct session *ses, struct uri *uri)
 	if (!*get_opt_str("protocol.http.user_agent", NULL)) {
 		info_box(term, 0,
 			 N_("Warning"), ALIGN_CENTER,
-			 N_("You have empty string in protocol.http.user_agent - "
+			 N_("You have an empty string in protocol.http.user_agent - "
 			 "this was a default value in the past, substituted by "
 			 "default ELinks User-Agent string. However, currently "
 			 "this means that NO User-Agent HEADER "
 		 	 "WILL BE SENT AT ALL - if this is really what you want, "
-			 "set its value to \" \", otherwise please delete line "
-			 "with this settings from your configuration file (if you "
+			 "set its value to \" \", otherwise please delete the line "
+			 "with this setting from your configuration file (if you "
 			 "have no idea what I'm talking about, just do this), so "
-			 "that correct default setting will be used. Apologies for "
+			 "that the correct default setting will be used. Apologies for "
 			 "any inconvience caused."));
 	}
 
@@ -772,11 +772,11 @@ setup_first_session(struct session *ses, struct uri *uri)
 				 "the last time you upgraded ELinks. Now, only "
 				 "those options which you actually changed are "
 				 "saved to the configuration file, instead of "
-				 "just all the options. This simplifies our "
+				 "all the options. This simplifies our "
 				 "situation greatly when we see that some option "
-				 "has inappropriate default value or we need to "
-				 "change semantic of some option in a subtle way. "
-				 "Thus, we recommend you to change the value of "
+				 "has an inappropriate default value or we need to "
+				 "change the semantics of some option in a subtle way. "
+				 "Thus, we recommend you change the value of "
 				 "config.saving_style option to 3 in order to get "
 				 "the \"right\" behaviour. Apologies for any "
 				 "inconvience caused."));
