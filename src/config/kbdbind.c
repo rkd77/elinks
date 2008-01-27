@@ -308,7 +308,7 @@ get_keymap_id(unsigned char *keymap_str)
 		if (!strcmp(keymap_table[keymap_id].str, keymap_str))
 			return keymap_id;
 
-	return -1;
+	return KEYMAP_INVALID;
 }
 
 unsigned char *
