@@ -3,7 +3,7 @@
 # Grzegorz Golawski <grzegol@pld.org.pl>
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
 # Wojtek Bojdoł <wojboj@lp.net.pl>
-# Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2007
+# Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2008
 # Adam Gołębiowski <adamg@pld-linux.org>, 2003-2006
 # Mikołaj Machowski <mikmach@wp.pl>, 2003
 #
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-17 18:49+0100\n"
-"PO-Revision-Date: 2007-12-17 19:20+0200\n"
+"POT-Creation-Date: 2008-01-29 18:58+0100\n"
+"PO-Revision-Date: 2008-01-29 19:30+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -252,7 +252,7 @@ msgid ""
 " |||||`- Unused\n"
 " ||||`-- Unused\n"
 " |||`--- A JavaScript pop-up window was blocked\n"
-" ||`---- A JavaScript error has occured\n"
+" ||`---- A JavaScript error has occurred\n"
 " |`----- The state of insert mode for text-input form-fields\n"
 " |       'i' means modeless, 'I' means insert mode is on\n"
 " `------ Whether an SSL connection was used\n"
@@ -1014,7 +1014,8 @@ msgstr "Przejdź w lewo o jeden odnośnik"
 
 #: src/config/actions-main.inc:65
 msgid "Move one link left or to the previous link"
-msgstr "Przejdź do odnośnika na lewo, jeśli jest, lub do poprzedzającego odnośnika"
+msgstr ""
+"Przejdź do odnośnika na lewo, jeśli jest, lub do poprzedzającego odnośnika"
 
 #: src/config/actions-main.inc:66
 msgid "Move to the next link"
@@ -2254,7 +2255,7 @@ msgid ""
 "it takes precedence. And better do not touch this\n"
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbować połączyć się z serwerem przy pomocy IPv4?\n"
@@ -2268,7 +2269,7 @@ msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbować połączyć się z serwerem przy pomocy IPv4?\n"
@@ -2284,7 +2285,7 @@ msgstr "Próbuj IPv6 przy połączeniu"
 msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Czy próbować połączyć się z serwerem przy pomocy IPv6?\n"
@@ -2714,7 +2715,7 @@ msgid ""
 "Whether to navigate links using tabindex specified ordering.\n"
 "The TABINDEX attribute in HTML elements specifies the order\n"
 "in which links should receive focus when using the keyboard\n"
-"to navigating the document."
+"to navigate the document."
 msgstr ""
 "Czy nawigować pomiędzy odnośnikami używając podanego\n"
 "porządku? Atrybut TABINDEX elementu HTML podaje porządek\n"
@@ -2773,7 +2774,7 @@ msgstr "Cykliczność odnośników"
 #. 0
 #: src/config/options.inc:353
 msgid ""
-"When pressing 'down' on the last link, jump at the first one, and\n"
+"When pressing 'down' on the last link, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 "Gdy wciśnięty jest 'dół' na ostatnim odnośniku, skocz\n"
@@ -2879,7 +2880,7 @@ msgstr ""
 
 #: src/config/options.inc:403
 msgid ""
-"Whether to show a dialog when the search hits top or bottom of the\n"
+"Whether to show a dialog when the search hits the top or bottom of the\n"
 "document."
 msgstr ""
 "Czy pokazywać okienko dialogowe, gdy przeszukiwanie osiągnie\n"
@@ -3014,9 +3015,9 @@ msgstr "Informacje pamięci podręcznej na temat przekierowań"
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302\n"
 "HTTP code and a Location header). This was the original behaviour\n"
-"for a quite some time, but it causes problems in a situation very\n"
+"for quite some time, but it causes problems in a situation very\n"
 "common to various web login systems - frequently, when accessing\n"
-"certain location, they will redirect you to a login page if they\n"
+"a certain location, they will redirect you to a login page if they\n"
 "don't receive an auth cookie, the login page then gives you the\n"
 "cookie and redirects you back to the original page, but there you\n"
 "have already cached redirect back to the login page! If this\n"
@@ -3026,7 +3027,7 @@ msgid ""
 "still workaround it by clever combination of usage of reload,\n"
 "jumping around in session history and hitting ctrl+enter.\n"
 "Note that this option is checked when retrieving the information\n"
-"from cache, not when saving it to cache - thus if you will enable\n"
+"from cache, not when saving it to cache - thus if you enable\n"
 "it, even previous redirects will be taken from cache instead of\n"
 "asking the server."
 msgstr ""
@@ -3249,7 +3250,7 @@ msgid "Ensure contrast"
 msgstr "Gwarancja kontrastu"
 
 #: src/config/options.inc:587
-msgid "Makes sure that the back- and foreground color are never equal."
+msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Zapewnia, że kolor tła i pierwszoplanowy nigdy nie są identyczne."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
@@ -3518,7 +3519,7 @@ msgid "Display superscripts (as ^thing)."
 msgstr "Pokazuj indeks górny (jako ^coś)."
 
 #: src/config/options.inc:721
-msgid "Rendering of html link element"
+msgid "Rendering of HTML link element"
 msgstr "Wyświetlanie elementu odnośnika html"
 
 #: src/config/options.inc:723
@@ -3646,7 +3647,7 @@ msgstr "Przedział czasu pomiędzy automatycznymi zapisami"
 #: src/config/options.inc:786
 msgid ""
 "Interval at which to trigger information files in ~/.elinks\n"
-"to be saved to disk if they has changed (seconds; 0 to disable)"
+"to be saved to disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 "Przedział czasu po krórym w razie potrzeby następuje zapis\n"
 "plików informacyjnych w ~/.elinks (w sekundach: 0 aby wyłączyć)"
@@ -4291,7 +4292,7 @@ msgstr "Podkreślanie klawiszy skrótu menu"
 #: src/config/options.inc:1184
 msgid ""
 "Whether to underline hotkeys in menus to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Czy podkreślać klawisze skrótu w menu, by były bardziej\n"
 "widoczne? Wymaga włączenia podkreślania dla terminala."
@@ -4303,7 +4304,7 @@ msgstr "Podkreślanie klawiszy skrótu przycisku"
 #: src/config/options.inc:1189
 msgid ""
 "Whether to underline button shortcuts to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Czy podkreślać klawisze skrótu przycisku, by były bardziej\n"
 "widoczne? Wymaga włączenia podkreślania dla terminala."
@@ -4404,7 +4405,7 @@ msgstr "Cykliczność kart"
 
 #: src/config/options.inc:1241
 msgid ""
-"When moving right from the last tab, jump at the first one, and\n"
+"When moving right from the last tab, jump to the first one, and\n"
 "vice versa."
 msgstr "Przeskakiwanie z ostatniej karty do pierwszej i na odwrót."
 
@@ -4733,7 +4734,7 @@ msgid "Saving"
 msgstr "Zapis"
 
 #: src/cookies/cookies.c:119
-msgid "Whether cookies should be loaded from and save to disk."
+msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Czy ciasteczka powinny być wczytywane i zapisywane na dysk."
 
 #: src/cookies/cookies.c:121
@@ -5256,7 +5257,7 @@ msgstr "Dodaj doku~ment do zakładek"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:249 src/dialogs/menu.c:418
-msgid "Toggle ~html/plain"
+msgid "Toggle ~HTML/plain"
 msgstr "Przełącz ~html/plain"
 
 #. accelerator_context(tab_menu)
@@ -6562,7 +6563,7 @@ msgstr "Pliki typu MIME"
 #: src/mime/backend/mimetypes.c:48
 msgid ""
 "Options for the support of mime.types files. These files\n"
-"can be used to find the content type of an URL by looking at\n"
+"can be used to find the content type of a URL by looking at\n"
 "the extension of the file name."
 msgstr ""
 "Opcje do obsługi plików mime.types. Pliki te mogą być użyte\n"
@@ -6895,7 +6896,7 @@ msgstr ""
 "protocol.nntp.server albo ustaw zmienną środowiskową NNTPSERVER."
 
 #: src/network/state.c:101
-msgid "Server hang up for some reason"
+msgid "Server hung up for some reason"
 msgstr "Serwer rozłączył się z nieznanego powodu"
 
 #: src/network/state.c:102
@@ -7044,7 +7045,8 @@ msgstr "Przykro mi, ale pozycja uwierzytelniania \"%s\" nie może być usunięta
 #, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
 msgstr ""
-"Przykro mi, ale pozycja uwierzytelniania \"%s\" jest używana przez coś innego."
+"Przykro mi, ale pozycja uwierzytelniania \"%s\" jest używana przez coś "
+"innego."
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:227
@@ -7750,7 +7752,7 @@ msgstr "Pokazuj ukryte pliki przy wyświetlaniu katalogów"
 #: src/protocol/file/file.c:54
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
-"hidden in local directories listing."
+"hidden in local directory listings."
 msgstr ""
 "Jeśli ustawione na 0, pliki zaczynające się od kropki\n"
 "nie będą pokazywane."
@@ -8578,13 +8580,13 @@ msgstr "Ostrzeżenie"
 
 #: src/session/session.c:751
 msgid ""
-"You have empty string in protocol.http.user_agent - this was a default value "
-"in the past, substituted by default ELinks User-Agent string. However, "
+"You have an empty string in protocol.http.user_agent - this was a default "
+"value in the past, substituted by default ELinks User-Agent string. However, "
 "currently this means that NO User-Agent HEADER WILL BE SENT AT ALL - if this "
-"is really what you want, set its value to \" \", otherwise please delete "
-"line with this settings from your configuration file (if you have no idea "
-"what I'm talking about, just do this), so that correct default setting will "
-"be used. Apologies for any inconvience caused."
+"is really what you want, set its value to \" \", otherwise please delete the "
+"line with this setting from your configuration file (if you have no idea "
+"what I'm talking about, just do this), so that the correct default setting "
+"will be used. Apologies for any inconvience caused."
 msgstr ""
 "Masz pusty łańcuch w protocol.http.user_agent - to było domyślne w "
 "przeszłości, zamienione przez łańcuch ELinks User-Agent. Aczkolwiek, teraz "
@@ -8599,12 +8601,12 @@ msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
 "you upgraded ELinks. Now, only those options which you actually changed are "
-"saved to the configuration file, instead of just all the options. This "
-"simplifies our situation greatly when we see that some option has "
-"inappropriate default value or we need to change semantic of some option in "
-"a subtle way. Thus, we recommend you to change the value of config."
-"saving_style option to 3 in order to get the \"right\" behaviour. Apologies "
-"for any inconvience caused."
+"saved to the configuration file, instead of all the options. This simplifies "
+"our situation greatly when we see that some option has an inappropriate "
+"default value or we need to change the semantics of some option in a subtle "
+"way. Thus, we recommend you change the value of config.saving_style option "
+"to 3 in order to get the \"right\" behaviour. Apologies for any inconvience "
+"caused."
 msgstr ""
 "Opcja config.saving_style jest ustawiona na przestarzałą wartość. Algorytm "
 "zapisu konfiguracji ELinksa zmieniła się od poprzedniego uaktualnienia "
