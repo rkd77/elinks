@@ -248,9 +248,9 @@ str_rd(struct option *opt, unsigned char **file, int *line)
 			 * thus we will never test for it in while () condition
 			 * and we will treat it just as '"', ignoring the
 			 * backslash itself. */
-			if (isquote(str[1])) str++;
+			else if (isquote(str[1])) str++;
 			/* \\ means \. */
-			if (str[1] == '\\') str++;
+			else if (str[1] == '\\') str++;
 		}
 
 		if (*str == '\n') (*line)++;
