@@ -391,12 +391,12 @@ parse_config_file(struct option *options, unsigned char *name,
 	enum parse_error err = 0;
 	enum verbose_level verbose = get_cmd_opt_int("verbose");
 	static const unsigned char error_msg[][40] = {
-		"no error",
-		"parse error",
-		"unknown command",
-		"unknown option",
-		"bad value",
-		"no memory left",
+		"no error",        /* ERROR_NONE */
+		"unknown command", /* ERROR_COMMAND */
+		"parse error",     /* ERROR_PARSE */
+		"unknown option",  /* ERROR_OPTION */
+		"bad value",       /* ERROR_VALUE */
+		"no memory left",  /* ERROR_NOMEM */
 	};
 
 	while (file && *file) {
