@@ -229,7 +229,7 @@ parse_bind(struct option *opt_tree, unsigned char **file, int *line,
 	keystroke = option_types[OPT_STRING].read(NULL, file, line);
 	*file = skip_white(*file, line);
 	if (!keystroke || !**file) {
-		mem_free(keymap);
+		mem_free(keymap); mem_free(keystroke);
 		return ERROR_OPTION;
 	}
 
@@ -251,7 +251,7 @@ parse_bind(struct option *opt_tree, unsigned char **file, int *line,
 	next_pos = *file;
 	action = option_types[OPT_STRING].read(NULL, file, line);
 	if (!action) {
-		mem_free(keymap);
+		mem_free(keymap); mem_free(keystroke);
 		return ERROR_VALUE;
 	}
 
@@ -295,7 +295,10 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 	if (!init_string(&dumbstring)) return ERROR_NOMEM;
 
 	*file = skip_white(*file, line);
-	if (!*file) return ERROR_PARSE;
+	if (!*file) {
+		done_string(&dumbstring);
+		return ERROR_PARSE;
+	}
 
 	/* File name */
 	fname = option_types[OPT_STRING].read(NULL, file, line);
