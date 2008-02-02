@@ -69,6 +69,13 @@ struct conf_parsing_state {
 		 * shown in error messages.  */
 		int line;
 	} pos;
+
+	/** When ELinks is rewriting the configuration file, @c mirrored
+	 * indicates the end of the part that has already been copied
+	 * to the mirror string.  Otherwise, @c mirrored is not used.
+	 *
+	 * @invariant @c mirrored @<= @c pos.look */
+	unsigned char *mirrored;
 };
 
 /** Skip comments and whitespace.  */
@@ -106,7 +113,6 @@ static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	  struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = state->pos.look;
 	unsigned char *optname;
 
 	skip_white(&state->pos);
@@ -130,7 +136,11 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	if (!*state->pos.look) { mem_free(optname); return ERROR_VALUE; }
 
 	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, state->pos.look - orig_pos);
+	if (mirror) {
+		add_bytes_to_string(mirror, state->mirrored,
+				    state->pos.look - state->mirrored);
+		state->mirrored = state->pos.look;
+	}
 
 	/* Option value */
 	{
@@ -157,6 +167,7 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 				opt->flags |= OPT_WATERMARK;
 			if (option_types[opt->type].write) {
 				option_types[opt->type].write(opt, mirror);
+				state->mirrored = state->pos.look;
 			}
 		} else if (!option_types[opt->type].set
 			   || !option_types[opt->type].set(opt, val)) {
@@ -176,7 +187,6 @@ static enum parse_error
 parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = state->pos.look;
 	unsigned char *optname;
 
 	/* XXX: This does not handle the autorewriting well and is mostly a
@@ -195,7 +205,11 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	if (!optname) return ERROR_NOMEM;
 
 	/* Mirror what we have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, state->pos.look - orig_pos);
+	if (mirror) {
+		add_bytes_to_string(mirror, state->mirrored,
+				    state->pos.look - state->mirrored);
+		state->mirrored = state->pos.look;
+	}
 
 	{
 		struct option *opt;
@@ -223,7 +237,7 @@ static enum parse_error
 parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = state->pos.look, *next_pos;
+	unsigned char *next_pos;
 	unsigned char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
 
@@ -274,10 +288,11 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 		unsigned char *act_str = bind_act(keymap, keystroke);
 
 		if (act_str) {
-			add_bytes_to_string(mirror, orig_pos,
-					    next_pos - orig_pos);
+			add_bytes_to_string(mirror, state->mirrored,
+					    next_pos - state->mirrored);
 			add_to_string(mirror, act_str);
 			mem_free(act_str);
+			state->mirrored = state->pos.look;
 		} else {
 			err = ERROR_VALUE;
 		}
@@ -302,7 +317,6 @@ static enum parse_error
 parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = state->pos.look;
 	unsigned char *fname;
 	struct string dumbstring;
 
@@ -321,10 +335,6 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 		done_string(&dumbstring);
 		return ERROR_VALUE;
 	}
-
-	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos,
-					state->pos.look - orig_pos);
 
 	/* We want load_config_file() to watermark stuff, but not to load
 	 * anything, polluting our beloved options tree - thus, we will feed it
@@ -369,6 +379,11 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 {
 	const struct parse_handler *handler;
 
+	/* If we're mirroring, then everything up to this point must
+	 * have already been mirrored.  */
+	assert(mirror == NULL || state->mirrored == state->pos.look);
+	if_assert_failed return ERROR_PARSE;
+
 	for (handler = parse_handlers; handler->command;
 	     handler++) {
 		int cmdlen = strlen(handler->command);
@@ -376,23 +391,17 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 		if (!strncmp(state->pos.look, handler->command, cmdlen)
 		    && isspace(state->pos.look[cmdlen])) {
 			enum parse_error err;
-			struct string mirror2 = NULL_STRING;
-			struct string *m2 = NULL;
-
-			/* Mirror what we already have */
-			if (mirror && init_string(&mirror2)) {
-				m2 = &mirror2;
-				add_bytes_to_string(m2, state->pos.look, cmdlen);
-			}
-
 
 			state->pos.look += cmdlen;
-			err = handler->handler(options, state, m2,
+			err = handler->handler(options, state, mirror,
 			                       is_system_conf);
-			if (!err && mirror && m2) {
-				add_string_to_string(mirror, m2);
+			if (mirror) {
+				/* Mirror any characters that the handler
+				 * consumed but did not already mirror.  */
+				add_bytes_to_string(mirror, state->mirrored,
+						    state->pos.look - state->mirrored);
+				state->mirrored = state->pos.look;
 			}
-			if (m2)	done_string(m2);
 			return err;
 		}
 	}
@@ -408,6 +417,7 @@ parse_config_exmode_command(unsigned char *cmd)
 
 	state.pos.look = cmd;
 	state.pos.line = 0;
+	state.mirrored = NULL; /* not read because mirror is NULL too */
 
 	return parse_config_command(config_options, &state, NULL, 0);
 }
@@ -433,17 +443,18 @@ parse_config_file(struct option *options, unsigned char *name,
 
 	state.pos.look = file;
 	state.pos.line = 1;
+	state.mirrored = file;
 
 	while (state.pos.look && *state.pos.look) {
-		unsigned char *orig_pos = state.pos.look;
-
 		/* Skip all possible comments and whitespace. */
 		skip_white(&state.pos);
 
 		/* Mirror what we already have */
-		if (mirror)
-			add_bytes_to_string(mirror, orig_pos,
-					    state.pos.look - orig_pos);
+		if (mirror) {
+			add_bytes_to_string(mirror, state.mirrored,
+					    state.pos.look - state.mirrored);
+			state.mirrored = state.pos.look;
+		}
 
 		/* Second chance to escape from the hell. */
 		if (!*state.pos.look) break;
@@ -452,15 +463,17 @@ parse_config_file(struct option *options, unsigned char *name,
 		                           is_system_conf);
 
 		if (err == ERROR_COMMAND) {
-			orig_pos = state.pos.look;
 			/* Jump over this crap we can't understand. */
 			while (!isspace(*state.pos.look)
 			       && *state.pos.look != '#' && *state.pos.look)
 				state.pos.look++;
 
 			/* Mirror what we already have */
-			if (mirror) add_bytes_to_string(mirror, orig_pos,
-							state.pos.look - orig_pos);
+			if (mirror) {
+				add_bytes_to_string(mirror, state.mirrored,
+						    state.pos.look - state.mirrored);
+				state.mirrored = state.pos.look;
+			}
 		}
 
 		if (!mirror && err) {
