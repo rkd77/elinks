@@ -339,7 +339,7 @@ static const struct parse_handler parse_handlers[] = {
 };
 
 
-enum parse_error
+static enum parse_error
 parse_config_command(struct option *options, unsigned char **file, int *line,
 		     struct string *mirror, int is_system_conf)
 {
@@ -375,6 +375,16 @@ parse_config_command(struct option *options, unsigned char **file, int *line,
 
 	return ERROR_COMMAND;
 }
+
+#ifdef CONFIG_EXMODE
+enum parse_error
+parse_config_exmode_command(unsigned char *cmd)
+{
+	int dummyline = 0;
+
+	return parse_config_command(config_options, &cmd, &dummyline, NULL, 0);
+}
+#endif /* CONFIG_EXMODE */
 
 void
 parse_config_file(struct option *options, unsigned char *name,

@@ -63,7 +63,6 @@ static int
 exmode_confcmd_handler(struct session *ses, unsigned char *command,
 			unsigned char *args)
 {
-	int dummyline = 0;
 	enum parse_error err;
 
 	assert(ses && command && args);
@@ -74,8 +73,7 @@ exmode_confcmd_handler(struct session *ses, unsigned char *command,
 	/* Undo the arguments separation. */
 	if (*args) *(--args) = ' ';
 
-	err = parse_config_command(config_options, &command, &dummyline, NULL,
-	                           0);
+	err = parse_config_exmode_command(command);
 	return err;
 }
 
