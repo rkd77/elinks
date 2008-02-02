@@ -56,16 +56,31 @@
  * value to an option, but sometimes you may want to first create the option
  * ;). Then this will come handy. */
 
+struct conf_parsing_state {
+	/** This part may be copied to a local variable as a bookmark
+	 * and restored later.  So it must not contain any pointers
+	 * that would have to be freed in that situation.  */
+	struct conf_parsing_pos {
+		/** Points to the next character to be parsed from the
+		 * configuration file.  */
+		unsigned char *look;
 
-/* Skip comments and whitespace,
- * setting *@line to the number of lines skipped. */
-static unsigned char *
-skip_white(unsigned char *start, int *line)
+		/** The line number corresponding to #look.  This is
+		 * shown in error messages.  */
+		int line;
+	} pos;
+};
+
+/** Skip comments and whitespace.  */
+static void
+skip_white(struct conf_parsing_pos *pos)
 {
+	unsigned char *start = pos->look;
+
 	while (*start) {
 		while (isspace(*start)) {
 			if (*start == '\n') {
-				(*line)++;
+				pos->line++;
 			}
 			start++;
 		}
@@ -73,11 +88,12 @@ skip_white(unsigned char *start, int *line)
 		if (*start == '#') {
 			start += strcspn(start, "\n");
 		} else {
-			return start;
+			pos->look = start;
+			return;
 		}
 	}
 
-	return start;
+	pos->look = start;
 }
 
 /* Parse a command. Returns error code. */
@@ -87,33 +103,34 @@ skip_white(unsigned char *start, int *line)
  * will only possibly set OPT_WATERMARK flag to the option (if enabled). */
 
 static enum parse_error
-parse_set(struct option *opt_tree, unsigned char **file, int *line,
+parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	  struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file;
+	unsigned char *orig_pos = state->pos.look;
 	unsigned char *optname;
 
-	*file = skip_white(*file, line);
-	if (!**file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return ERROR_PARSE;
 
 	/* Option name */
-	optname = *file;
-	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
-		(*file)++;
+	optname = state->pos.look;
+	while (isident(*state->pos.look) || *state->pos.look == '*'
+	       || *state->pos.look == '.' || *state->pos.look == '+')
+		state->pos.look++;
 
-	optname = memacpy(optname, *file - optname);
+	optname = memacpy(optname, state->pos.look - optname);
 	if (!optname) return ERROR_NOMEM;
 
-	*file = skip_white(*file, line);
+	skip_white(&state->pos);
 
 	/* Equal sign */
-	if (**file != '=') { mem_free(optname); return ERROR_PARSE; }
-	(*file)++; /* '=' */
-	*file = skip_white(*file, line);
-	if (!**file) { mem_free(optname); return ERROR_VALUE; }
+	if (*state->pos.look != '=') { mem_free(optname); return ERROR_PARSE; }
+	state->pos.look++; /* '=' */
+	skip_white(&state->pos);
+	if (!*state->pos.look) { mem_free(optname); return ERROR_VALUE; }
 
 	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	if (mirror) add_bytes_to_string(mirror, orig_pos, state->pos.look - orig_pos);
 
 	/* Option value */
 	{
@@ -129,7 +146,8 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 		if (!option_types[opt->type].read)
 			return ERROR_VALUE;
 
-		val = option_types[opt->type].read(opt, file, line);
+		val = option_types[opt->type].read(opt, &state->pos.look,
+						   &state->pos.line);
 		if (!val) return ERROR_VALUE;
 
 		if (mirror) {
@@ -155,28 +173,29 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
-parse_unset(struct option *opt_tree, unsigned char **file, int *line,
+parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file;
+	unsigned char *orig_pos = state->pos.look;
 	unsigned char *optname;
 
 	/* XXX: This does not handle the autorewriting well and is mostly a
 	 * quick hack than anything now. --pasky */
 
-	*file = skip_white(*file, line);
-	if (!**file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return ERROR_PARSE;
 
 	/* Option name */
-	optname = *file;
-	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
-		(*file)++;
+	optname = state->pos.look;
+	while (isident(*state->pos.look) || *state->pos.look == '*'
+	       || *state->pos.look == '.' || *state->pos.look == '+')
+		state->pos.look++;
 
-	optname = memacpy(optname, *file - optname);
+	optname = memacpy(optname, state->pos.look - optname);
 	if (!optname) return ERROR_NOMEM;
 
 	/* Mirror what we have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	if (mirror) add_bytes_to_string(mirror, orig_pos, state->pos.look - orig_pos);
 
 	{
 		struct option *opt;
@@ -201,47 +220,50 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
-parse_bind(struct option *opt_tree, unsigned char **file, int *line,
+parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file, *next_pos;
+	unsigned char *orig_pos = state->pos.look, *next_pos;
 	unsigned char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
 
-	*file = skip_white(*file, line);
-	if (!**file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return ERROR_PARSE;
 
 	/* Keymap */
-	keymap = option_types[OPT_STRING].read(NULL, file, line);
-	*file = skip_white(*file, line);
-	if (!keymap || !**file)
+	keymap = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					       &state->pos.line);
+	skip_white(&state->pos);
+	if (!keymap || !*state->pos.look)
 		return ERROR_OPTION;
 
 	/* Keystroke */
-	keystroke = option_types[OPT_STRING].read(NULL, file, line);
-	*file = skip_white(*file, line);
-	if (!keystroke || !**file) {
+	keystroke = option_types[OPT_STRING].read(NULL, &state->pos.look,
+						  &state->pos.line);
+	skip_white(&state->pos);
+	if (!keystroke || !*state->pos.look) {
 		mem_free(keymap); mem_free_if(keystroke);
 		return ERROR_OPTION;
 	}
 
 	/* Equal sign */
-	*file = skip_white(*file, line);
-	if (**file != '=') {
+	skip_white(&state->pos);
+	if (*state->pos.look != '=') {
 		mem_free(keymap); mem_free(keystroke);
 		return ERROR_PARSE;
 	}
-	(*file)++; /* '=' */
+	state->pos.look++; /* '=' */
 
-	*file = skip_white(*file, line);
-	if (!**file) {
+	skip_white(&state->pos);
+	if (!*state->pos.look) {
 		mem_free(keymap); mem_free(keystroke);
 		return ERROR_PARSE;
 	}
 
 	/* Action */
-	next_pos = *file;
-	action = option_types[OPT_STRING].read(NULL, file, line);
+	next_pos = state->pos.look;
+	action = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					       &state->pos.line);
 	if (!action) {
 		mem_free(keymap); mem_free(keystroke);
 		return ERROR_VALUE;
@@ -277,30 +299,32 @@ static int load_config_file(unsigned char *, unsigned char *, struct option *,
 			    struct string *, int);
 
 static enum parse_error
-parse_include(struct option *opt_tree, unsigned char **file, int *line,
+parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file;
+	unsigned char *orig_pos = state->pos.look;
 	unsigned char *fname;
 	struct string dumbstring;
 
 	if (!init_string(&dumbstring)) return ERROR_NOMEM;
 
-	*file = skip_white(*file, line);
-	if (!**file) {
+	skip_white(&state->pos);
+	if (!*state->pos.look) {
 		done_string(&dumbstring);
 		return ERROR_PARSE;
 	}
 
 	/* File name */
-	fname = option_types[OPT_STRING].read(NULL, file, line);
+	fname = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					      &state->pos.line);
 	if (!fname) {
 		done_string(&dumbstring);
 		return ERROR_VALUE;
 	}
 
 	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	if (mirror) add_bytes_to_string(mirror, orig_pos,
+					state->pos.look - orig_pos);
 
 	/* We want load_config_file() to watermark stuff, but not to load
 	 * anything, polluting our beloved options tree - thus, we will feed it
@@ -326,7 +350,7 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 struct parse_handler {
 	const unsigned char *command;
 	enum parse_error (*handler)(struct option *opt_tree,
-				    unsigned char **file, int *line,
+				    struct conf_parsing_state *state,
 				    struct string *mirror, int is_system_conf);
 };
 
@@ -340,7 +364,7 @@ static const struct parse_handler parse_handlers[] = {
 
 
 static enum parse_error
-parse_config_command(struct option *options, unsigned char **file, int *line,
+parse_config_command(struct option *options, struct conf_parsing_state *state,
 		     struct string *mirror, int is_system_conf)
 {
 	const struct parse_handler *handler;
@@ -349,8 +373,8 @@ parse_config_command(struct option *options, unsigned char **file, int *line,
 	     handler++) {
 		int cmdlen = strlen(handler->command);
 
-		if (!strncmp(*file, handler->command, cmdlen)
-		    && isspace((*file)[cmdlen])) {
+		if (!strncmp(state->pos.look, handler->command, cmdlen)
+		    && isspace(state->pos.look[cmdlen])) {
 			enum parse_error err;
 			struct string mirror2 = NULL_STRING;
 			struct string *m2 = NULL;
@@ -358,12 +382,12 @@ parse_config_command(struct option *options, unsigned char **file, int *line,
 			/* Mirror what we already have */
 			if (mirror && init_string(&mirror2)) {
 				m2 = &mirror2;
-				add_bytes_to_string(m2, *file, cmdlen);
+				add_bytes_to_string(m2, state->pos.look, cmdlen);
 			}
 
 
-			*file += cmdlen;
-			err = handler->handler(options, file, line, m2,
+			state->pos.look += cmdlen;
+			err = handler->handler(options, state, m2,
 			                       is_system_conf);
 			if (!err && mirror && m2) {
 				add_string_to_string(mirror, m2);
@@ -380,9 +404,12 @@ parse_config_command(struct option *options, unsigned char **file, int *line,
 enum parse_error
 parse_config_exmode_command(unsigned char *cmd)
 {
-	int dummyline = 0;
+	struct conf_parsing_state state = {{ 0 }};
 
-	return parse_config_command(config_options, &cmd, &dummyline, NULL, 0);
+	state.pos.look = cmd;
+	state.pos.line = 0;
+
+	return parse_config_command(config_options, &state, NULL, 0);
 }
 #endif /* CONFIG_EXMODE */
 
@@ -391,7 +418,7 @@ parse_config_file(struct option *options, unsigned char *name,
 		  unsigned char *file, struct string *mirror,
 		  int is_system_conf)
 {
-	int line = 1;
+	struct conf_parsing_state state = {{ 0 }};
 	int error_occurred = 0;
 	enum parse_error err = 0;
 	enum verbose_level verbose = get_cmd_opt_int("verbose");
@@ -404,31 +431,36 @@ parse_config_file(struct option *options, unsigned char *name,
 		"no memory left",  /* ERROR_NOMEM */
 	};
 
-	while (file && *file) {
-		unsigned char *orig_pos = file;
+	state.pos.look = file;
+	state.pos.line = 1;
+
+	while (state.pos.look && *state.pos.look) {
+		unsigned char *orig_pos = state.pos.look;
 
 		/* Skip all possible comments and whitespace. */
-		file = skip_white(file, &line);
+		skip_white(&state.pos);
 
 		/* Mirror what we already have */
 		if (mirror)
-			add_bytes_to_string(mirror, orig_pos, file - orig_pos);
+			add_bytes_to_string(mirror, orig_pos,
+					    state.pos.look - orig_pos);
 
 		/* Second chance to escape from the hell. */
-		if (!*file) break;
+		if (!*state.pos.look) break;
 
-		err = parse_config_command(options, &file, &line, mirror,
+		err = parse_config_command(options, &state, mirror,
 		                           is_system_conf);
 
 		if (err == ERROR_COMMAND) {
-			orig_pos = file;
+			orig_pos = state.pos.look;
 			/* Jump over this crap we can't understand. */
-			while (!isspace(*file) && *file != '#' && *file)
-				file++;
+			while (!isspace(*state.pos.look)
+			       && *state.pos.look != '#' && *state.pos.look)
+				state.pos.look++;
 
 			/* Mirror what we already have */
 			if (mirror) add_bytes_to_string(mirror, orig_pos,
-							file - orig_pos);
+							state.pos.look - orig_pos);
 		}
 
 		if (!mirror && err) {
@@ -437,7 +469,7 @@ parse_config_file(struct option *options, unsigned char *name,
 			 * anymore now (?). --pasky */
 			if (verbose >= VERBOSE_WARNINGS) {
 				fprintf(stderr, "%s:%d: %s\n",
-					name, line, error_msg[err]);
+					name, state.pos.line, error_msg[err]);
 				error_occurred = 1;
 			}
 			err = 0;
