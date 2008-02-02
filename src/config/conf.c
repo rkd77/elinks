@@ -92,7 +92,6 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 {
 	unsigned char *orig_pos = *file;
 	unsigned char *optname;
-	unsigned char bin;
 
 	*file = skip_white(*file, line);
 	if (!**file) return ERROR_PARSE;
@@ -102,11 +101,8 @@ parse_set(struct option *opt_tree, unsigned char **file, int *line,
 	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
 		(*file)++;
 
-	bin = **file;
-	**file = '\0';
-	optname = stracpy(optname);
+	optname = memacpy(optname, *file - optname);
 	if (!optname) return ERROR_NOMEM;
-	**file = bin;
 
 	*file = skip_white(*file, line);
 
@@ -164,7 +160,6 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 {
 	unsigned char *orig_pos = *file;
 	unsigned char *optname;
-	unsigned char bin;
 
 	/* XXX: This does not handle the autorewriting well and is mostly a
 	 * quick hack than anything now. --pasky */
@@ -177,11 +172,8 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
 		(*file)++;
 
-	bin = **file;
-	**file = '\0';
-	optname = stracpy(optname);
+	optname = memacpy(optname, *file - optname);
 	if (!optname) return ERROR_NOMEM;
-	**file = bin;
 
 	/* Mirror what we have */
 	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
