@@ -157,7 +157,14 @@ debug_check_option_syntax(struct option *option)
 /* Ugly kludge */
 static int no_autocreate = 0;
 
-/* Get record of option of given name, or NULL if there's no such option. */
+/** Get record of option of given name, or NULL if there's no such option.
+ *
+ * If the specified option is an ::OPT_ALIAS, this function returns the
+ * alias, rather than the option to which the alias refers.  It must
+ * work this way because the alias may have the ::OPT_ALIAS_NEGATE flag.
+ * Instead, if the caller tries to read or set the value of the alias,
+ * the functions associated with ::OPT_ALIAS will forward the operation
+ * to the underlying option.  */
 struct option *
 get_opt_rec(struct option *tree, const unsigned char *name_)
 {
