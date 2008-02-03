@@ -737,14 +737,22 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 }
 
 void
-unmark_options_tree(LIST_OF(struct option) *tree)
+prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 {
 	struct option *option;
 
 	foreach (option, *tree) {
-		option->flags &= ~OPT_WATERMARK;
+		/* XXX: OPT_LANGUAGE shouldn't have any bussiness
+		 * here, but we're just weird in that area. */
+		if (set_all
+		    || (option->flags & (OPT_TOUCHED | OPT_DELETED))
+		    || option->type == OPT_LANGUAGE)
+			option->flags |= OPT_MUST_SAVE;
+		else
+			option->flags &= ~OPT_MUST_SAVE;
+
 		if (option->type == OPT_TREE)
-			unmark_options_tree(option->value.tree);
+			prepare_mustsave_flags(option->value.tree, set_all);
 	}
 }
 
@@ -770,7 +778,7 @@ check_nonempty_tree(LIST_OF(struct option) *options)
 		if (opt->type == OPT_TREE) {
 			if (check_nonempty_tree(opt->value.tree))
 				return 1;
-		} else if (!(opt->flags & OPT_WATERMARK)) {
+		} else if (opt->flags & OPT_MUST_SAVE) {
 			return 1;
 		}
 	}
@@ -791,14 +799,14 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 		int do_print_comment = 1;
 
 		if (option->flags & OPT_HIDDEN ||
-		    option->flags & OPT_WATERMARK ||
 		    option->type == OPT_ALIAS ||
 		    !strcmp(option->name, "_template_"))
 			continue;
 
 		/* Is there anything to be printed anyway? */
 		if (option->type == OPT_TREE
-		    && !check_nonempty_tree(option->value.tree))
+		    ? !check_nonempty_tree(option->value.tree)
+		    : !(option->flags & OPT_MUST_SAVE))
 			continue;
 
 		/* We won't pop out the description when we're in autocreate
