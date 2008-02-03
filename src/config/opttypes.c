@@ -148,10 +148,13 @@ redir_set(struct option *opt, unsigned char *str)
 	if_assert_failed { return ret; }
 
 	if (option_types[real->type].set) {
-		ret = option_types[real->type].set(real, str);
+		long negated;
+
 		if ((opt->flags & OPT_ALIAS_NEGATE) && real->type == OPT_BOOL) {
-			real->value.number = !real->value.number;
+			negated = !*(long *) str;
+			str = (unsigned char *) &negated;
 		}
+		ret = option_types[real->type].set(real, str);
 	}
 
 	return ret;
