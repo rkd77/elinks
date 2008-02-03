@@ -151,7 +151,6 @@ extern void register_change_hooks(struct change_hook_info *change_hooks);
 
 extern struct list_head *init_options_tree(void);
 extern void unmark_options_tree(struct list_head *);
-void watermark_deleted_options(struct list_head *);
 
 extern void smart_config_string(struct string *, int, int, struct list_head *, unsigned char *, int,
 				void (*)(struct string *, struct option *, unsigned char *, int, int, int, int));
