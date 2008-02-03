@@ -345,6 +345,7 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 
 		if (!mirror) {
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
+			else mark_option_as_deleted(opt);
 		} else {
 			if (opt->flags & OPT_DELETED)
 				opt->flags |= OPT_WATERMARK;
