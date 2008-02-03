@@ -192,8 +192,8 @@ skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
 /* Parse a command. Returns error code. */
 /* If dynamic string credentials are supplied, we will mirror the command at
  * the end of the string; however, we won't load the option value to the tree,
- * and we will even write option value from the tree to the output string. We
- * will only possibly set OPT_WATERMARK flag to the option (if enabled). */
+ * and we will even write option value from the tree to the output string.
+ * We will only possibly clear OPT_MUST_SAVE flag in the option.  */
 
 static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
@@ -242,6 +242,24 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			show_parse_error(state, ERROR_OPTION);
 			skip_option_value(&state->pos);
 			return ERROR_OPTION;
+			/* TODO: Distinguish between two scenarios:
+			 * - A newer version of ELinks has saved an
+			 *   option that this version does not recognize.
+			 *   The option must be preserved.  (This works.)
+			 * - The user has added an option, saved
+			 *   elinks.conf, restarted ELinks, deleted the
+			 *   option, and is now saving elinks.conf again.
+			 *   The option should be rewritten to "unset".
+			 *   (This does not work yet.)
+			 * In both cases, ELinks has no struct option
+			 * for that name.  Possible fixes:
+			 * - If the tree has OPT_AUTOCREATE, then
+			 *   assume the user had created that option,
+			 *   and rewrite it to "unset".  Otherwise,
+			 *   keep it.
+			 * - When the user deletes an option, just mark
+			 *   it with OPT_DELETED, and keep it in memory
+			 *   as long as OPT_TOUCHED is set.  */
 		}
 
 		if (!option_types[opt->type].read) {
@@ -274,21 +292,24 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			}
 		} else {
 			/* rewriting a configuration file */
-			if (opt->flags & OPT_DELETED)
-				opt->flags &= ~OPT_WATERMARK;
-			else
-				opt->flags |= OPT_WATERMARK;
-			if (option_types[opt->type].write) {
+			if (opt->flags & OPT_DELETED) {
+				/* Replace the "set" command with an
+				 * "unset" command.  */
+				add_to_string(mirror, "unset ");
+				add_bytes_to_string(mirror, optname_orig,
+						    optname_len);
+				state->mirrored = state->pos.look;
+			} else if (option_types[opt->type].write) {
 				add_bytes_to_string(mirror, state->mirrored,
 						    pos_before_value.look
 						    - state->mirrored);
 				option_types[opt->type].write(opt, mirror);
 				state->mirrored = state->pos.look;
 			}
+			/* Remember that the option need not be
+			 * written to the end of the file.  */
+			opt->flags &= ~OPT_MUST_SAVE;
 		}
-		/* This is not needed since this will be WATERMARK'd when
-		 * saving it. We won't need to save it as touched. */
-		/* if (!str) opt->flags |= OPT_TOUCHED; */
 		mem_free(val);
 	}
 
@@ -302,9 +323,6 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	const unsigned char *optname_orig;
 	size_t optname_len;
 	unsigned char *optname_copy;
-
-	/* XXX: This does not handle the autorewriting well and is mostly a
-	 * quick hack than anything now. --pasky */
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
@@ -342,10 +360,23 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 			else mark_option_as_deleted(opt);
 		} else {
 			/* rewriting a configuration file */
-			if (opt->flags & OPT_DELETED)
-				opt->flags |= OPT_WATERMARK;
-			else
-				opt->flags &= ~OPT_WATERMARK;
+			if (opt->flags & OPT_DELETED) {
+				/* The "unset" command is already in the file,
+				 * and unlike with "set", there is no value
+				 * to be updated.  */
+			} else if (option_types[opt->type].write) {
+				/* Replace the "unset" command with a
+				 * "set" command.  */
+				add_to_string(mirror, "set ");
+				add_bytes_to_string(mirror, optname_orig,
+						    optname_len);
+				add_to_string(mirror, " = ");
+				option_types[opt->type].write(opt, mirror);
+				state->mirrored = state->pos.look;
+			}
+			/* Remember that the option need not be
+			 * written to the end of the file.  */
+			opt->flags &= ~OPT_MUST_SAVE;
 		}
 	}
 
@@ -716,7 +747,6 @@ load_config(void)
 static int indentation = 2;
 /* 0 -> none, 1 -> only option full name+type, 2 -> only desc, 3 -> both */
 static int comments = 3;
-static int touching = 0;
 
 static inline unsigned char *
 conf_i18n(unsigned char *s, int i18n)
@@ -741,12 +771,6 @@ smart_config_output_fn(struct string *string, struct option *option,
 	unsigned char *desc_i18n;
 
 	if (option->type == OPT_ALIAS)
-		return;
-
-	/* XXX: OPT_LANGUAGE shouldn't have any bussiness here, but we're just
-	 * weird in that area. */
-	if (touching && !(option->flags & OPT_TOUCHED)
-	    && option->type != OPT_LANGUAGE)
 		return;
 
 	switch (action) {
@@ -868,23 +892,18 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 
 	if (!init_string(&config)) return NULL;
 
-	if (savestyle == 3) {
-		touching = 1;
-		savestyle = 1;
-	} else {
-		touching = 0;
-	}
+	prepare_mustsave_flags(options->value.tree,
+			       savestyle == 1 || savestyle == 2);
 
 	/* Scaring. */
 	if (savestyle == 2
-	    || (savestyle < 2
-		&& (load_config_file(prefix, name, options, &config, 0)
-		    || !config.length))) {
+	    || load_config_file(prefix, name, options, &config, 0)
+	    || !config.length) {
 		/* At first line, and in English, write ELinks version, may be
 		 * of some help in future. Please keep that format for it.
 		 * --Zas */
 		add_to_string(&config, "## ELinks " VERSION " configuration file\n\n");
-		assert(savestyle >= 0  && savestyle <= 2);
+		assert(savestyle >= 0  && savestyle <= 3);
 		switch (savestyle) {
 		case 0:
 			add_to_string(&config, conf_i18n(N_(
@@ -894,7 +913,7 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 			"## and all your formatting, own comments etc will be kept as-is.\n"),
 			i18n));
 			break;
-		case 1:
+		case 1: case 3:
 			add_to_string(&config, conf_i18n(N_(
 			"## This is ELinks configuration file. You can edit it manually,\n"
 			"## if you wish so; this file is edited by ELinks when you save\n"
@@ -951,8 +970,6 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 	done_string(&tmpstring);
 
 get_me_out:
-	unmark_options_tree(options->value.tree);
-
 	return config.source;
 }
 
