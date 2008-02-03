@@ -14,10 +14,9 @@ enum parse_error {
 };
 
 void load_config(void);
-enum parse_error parse_config_command(struct option *options,
-				      unsigned char **file, int *line,
-				      struct string *mirror,
-				      int is_system_conf);
+#ifdef CONFIG_EXMODE
+enum parse_error parse_config_exmode_command(unsigned char *cmd);
+#endif
 void parse_config_file(struct option *options, unsigned char *name,
 		       unsigned char *file, struct string *mirror,
 		       int is_system_conf);

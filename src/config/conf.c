@@ -57,16 +57,63 @@
  * value to an option, but sometimes you may want to first create the option
  * ;). Then this will come handy. */
 
+struct conf_parsing_state {
+	/** This part may be copied to a local variable as a bookmark
+	 * and restored later.  So it must not contain any pointers
+	 * that would have to be freed in that situation.  */
+	struct conf_parsing_pos {
+		/** Points to the next character to be parsed from the
+		 * configuration file.  */
+		unsigned char *look;
 
-/* Skip comments and whitespace,
- * setting *@line to the number of lines skipped. */
-static unsigned char *
-skip_white(unsigned char *start, int *line)
+		/** The line number corresponding to #look.  This is
+		 * shown in error messages.  */
+		int line;
+	} pos;
+
+	/** When ELinks is rewriting the configuration file, @c mirrored
+	 * indicates the end of the part that has already been copied
+	 * to the mirror string.  Otherwise, @c mirrored is not used.
+	 *
+	 * @invariant @c mirrored @<= @c pos.look */
+	unsigned char *mirrored;
+
+	/** File name for error messages.  If NULL then do not display
+	 * error messages.  */
+	const unsigned char *filename;
+};
+
+/** Tell the user about an error in the configuration file.
+ * @return @a err, for convenience.  */
+static enum parse_error
+show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
 {
+	static const unsigned char error_msg[][40] = {
+		"no error",        /* ERROR_NONE */
+		"unknown command", /* ERROR_COMMAND */
+		"parse error",     /* ERROR_PARSE */
+		"unknown option",  /* ERROR_OPTION */
+		"bad value",       /* ERROR_VALUE */
+		"no memory left",  /* ERROR_NOMEM */
+	};
+
+	if (state->filename) {
+		fprintf(stderr, "%s:%d: %s\n",
+			state->filename, state->pos.line, error_msg[err]);
+	}
+	return err;
+}
+
+/** Skip comments and whitespace.  */
+static void
+skip_white(struct conf_parsing_pos *pos)
+{
+	unsigned char *start = pos->look;
+
 	while (*start) {
 		while (isspace(*start)) {
 			if (*start == '\n') {
-				(*line)++;
+				pos->line++;
 			}
 			start++;
 		}
@@ -74,128 +121,261 @@ skip_white(unsigned char *start, int *line)
 		if (*start == '#') {
 			start += strcspn(start, "\n");
 		} else {
-			return start;
+			pos->look = start;
+			return;
 		}
 	}
 
-	return start;
+	pos->look = start;
+}
+
+/** Skip a quoted string.
+ * This function allows "mismatching quotes' because str_rd() does so.  */
+static void
+skip_quoted(struct conf_parsing_pos *pos)
+{
+	assert(isquote(*pos->look));
+	if_assert_failed return;
+	pos->look++;
+
+	for (;;) {
+		if (!*pos->look)
+			return;
+		if (isquote(*pos->look)) {
+			pos->look++;
+			return;
+		}
+		if (*pos->look == '\\' && pos->look[1])
+			pos->look++;
+		if (*pos->look == '\n')
+			pos->line++;
+		pos->look++;
+	}
+}
+
+/** Skip the value of an option.
+ *
+ * This job is normally done by the reader function that corresponds
+ * to the type of the option.  However, if ELinks does not recognize
+ * the name of the option, it cannot look up the type and has to use
+ * this function instead.  */
+static void
+skip_option_value(struct conf_parsing_pos *pos)
+{
+	if (isquote(*pos->look)) {
+		/* Looks like OPT_STRING, OPT_CODEPAGE, OPT_LANGUAGE,
+		 * or OPT_COLOR.  */
+		skip_quoted(pos);
+	} else {
+		/* Looks like OPT_BOOL, OPT_INT, or OPT_LONG.  */
+		while (isasciialnum(*pos->look) || *pos->look == '.'
+		       || *pos->look == '+' || *pos->look == '-')
+			pos->look++;
+	}
+}
+
+/** Skip to the next newline or comment that is not part of a quoted
+ * string.  When ELinks hits a parse error in the configuration file,
+ * it calls this in order to find the place where is should resume
+ * parsing.  This is intended to prevent ELinks from treating words
+ * in strings as commands.  */
+static void
+skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
+{
+	while (*pos->look && *pos->look != '#' && *pos->look != '\n') {
+		if (isquote(*pos->look))
+			skip_quoted(pos);
+		else
+			pos->look++;
+	}
 }
 
 /* Parse a command. Returns error code. */
 /* If dynamic string credentials are supplied, we will mirror the command at
  * the end of the string; however, we won't load the option value to the tree,
- * and we will even write option value from the tree to the output string. We
- * will only possibly set OPT_WATERMARK flag to the option (if enabled). */
+ * and we will even write option value from the tree to the output string.
+ * We will only possibly set or clear OPT_MUST_SAVE flag in the option.  */
 
 static enum parse_error
-parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
-                 struct string *mirror, int is_system_conf, int want_domain)
+parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
+		 struct string *mirror, int is_system_conf, int want_domain)
 {
-	unsigned char *orig_pos = *file;
-	unsigned char *domain_name = NULL;
-	unsigned char *optname;
-	unsigned char bin;
+	const unsigned char *domain_orig = NULL;
+	size_t domain_len = 0;
+	unsigned char *domain_copy = NULL;
+	const unsigned char *optname_orig;
+	size_t optname_len;
+	unsigned char *optname_copy;
 
-	*file = skip_white(*file, line);
-	if (!**file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	if (want_domain) {
-		domain_name = *file;
-		while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
-			(*file)++;
+		domain_orig = state->pos.look;
+		while (isident(*state->pos.look) || *state->pos.look == '*'
+		       || *state->pos.look == '.' || *state->pos.look == '+')
+			state->pos.look++;
+		domain_len = state->pos.look - domain_orig;
 
-		bin = **file;
-		**file = '\0';
-		domain_name = stracpy(domain_name);
-		**file = bin;
-		if (!domain_name) return ERROR_NOMEM;
-
-		*file = skip_white(*file, line);
+		skip_white(&state->pos);
 	}
 
 	/* Option name */
-	optname = *file;
-	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
-		(*file)++;
+	optname_orig = state->pos.look;
+	while (isident(*state->pos.look) || *state->pos.look == '*'
+	       || *state->pos.look == '.' || *state->pos.look == '+')
+		state->pos.look++;
+	optname_len = state->pos.look - optname_orig;
 
-	bin = **file;
-	**file = '\0';
-	optname = stracpy(optname);
-	**file = bin;
-	if (!optname) return ERROR_NOMEM;
-
-	*file = skip_white(*file, line);
+	skip_white(&state->pos);
 
 	/* Equal sign */
-	if (**file != '=') { mem_free(optname); return ERROR_PARSE; }
-	(*file)++; /* '=' */
-	*file = skip_white(*file, line);
-	if (!**file) { mem_free(optname); return ERROR_VALUE; }
+	if (*state->pos.look != '=')
+		return show_parse_error(state, ERROR_PARSE);
+	state->pos.look++; /* '=' */
+	skip_white(&state->pos);
+	if (!*state->pos.look)
+		return show_parse_error(state, ERROR_VALUE);
 
-	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	optname_copy = memacpy(optname_orig, optname_len);
+	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
+	if (want_domain) {
+		domain_copy = memacpy(domain_orig, domain_len);
+		if (!domain_copy) {
+			mem_free(optname_copy);
+			return show_parse_error(state, ERROR_NOMEM);
+		}
+	}
 
 	/* Option value */
 	{
 		struct option *opt;
 		unsigned char *val;
+		const struct conf_parsing_pos pos_before_value = state->pos;
 
-		if (want_domain && *domain_name) {
+		if (want_domain && *domain_copy) {
 			struct option *domain_tree;
 
-			domain_tree = get_domain_tree(domain_name);
+			domain_tree = get_domain_tree(domain_copy);
 			if (!domain_tree) {
-				mem_free(domain_name);
-				mem_free(optname);
-				return ERROR_NOMEM;
+				mem_free(domain_copy);
+				mem_free(optname_copy);
+				skip_option_value(&state->pos);
+				return show_parse_error(state, ERROR_NOMEM);
 			}
 
 			if (mirror) {
-				opt = get_opt_rec_real(domain_tree, optname);
+				opt = get_opt_rec_real(domain_tree,
+						       optname_copy);
 			} else {
-				opt = get_opt_rec(opt_tree, optname);
+				opt = get_opt_rec(opt_tree, optname_copy);
 				if (opt) {
 					opt = get_option_shadow(opt, opt_tree,
 								domain_tree);
 					if (!opt) {
-						mem_free(domain_name);
-						mem_free(optname);
-						return ERROR_NOMEM;
+						mem_free(domain_copy);
+						mem_free(optname_copy);
+						skip_option_value(&state->pos);
+						return show_parse_error(state,
+									ERROR_NOMEM);
 					}
 				}
 			}
 		} else {
-			opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
+			opt = mirror
+				? get_opt_rec_real(opt_tree, optname_copy)
+				: get_opt_rec(opt_tree, optname_copy);
 		}
 		if (want_domain)
-			mem_free(domain_name);
-		mem_free(optname);
+			mem_free(domain_copy);
+		domain_copy = NULL;
+		mem_free(optname_copy);
+		optname_copy = NULL;
 
-		if (!opt || (opt->flags & OPT_HIDDEN))
+		if (!opt || (opt->flags & OPT_HIDDEN)) {
+			show_parse_error(state, ERROR_OPTION);
+			skip_option_value(&state->pos);
 			return ERROR_OPTION;
+			/* TODO: Distinguish between two scenarios:
+			 * - A newer version of ELinks has saved an
+			 *   option that this version does not recognize.
+			 *   The option must be preserved.  (This works.)
+			 * - The user has added an option, saved
+			 *   elinks.conf, restarted ELinks, deleted the
+			 *   option, and is now saving elinks.conf again.
+			 *   The option should be rewritten to "unset".
+			 *   (This does not work yet.)
+			 * In both cases, ELinks has no struct option
+			 * for that name.  Possible fixes:
+			 * - If the tree has OPT_AUTOCREATE, then
+			 *   assume the user had created that option,
+			 *   and rewrite it to "unset".  Otherwise,
+			 *   keep it.
+			 * - When the user deletes an option, just mark
+			 *   it with OPT_DELETED, and keep it in memory
+			 *   as long as OPT_TOUCHED is set.  */
+		}
 
-		if (!option_types[opt->type].read)
-			return ERROR_VALUE;
-
-		val = option_types[opt->type].read(opt, file, line);
-		if (!val) return ERROR_VALUE;
-
-		if (mirror) {
-			if (opt->flags & OPT_DELETED)
-				opt->flags &= ~OPT_WATERMARK;
-			else
-				opt->flags |= OPT_WATERMARK;
-			if (option_types[opt->type].write) {
-				option_types[opt->type].write(opt, mirror);
-			}
-		} else if (!option_types[opt->type].set
-			   || !option_types[opt->type].set(opt, val)) {
-			mem_free(val);
+		if (!option_types[opt->type].read) {
+			show_parse_error(state, ERROR_VALUE);
+			skip_option_value(&state->pos);
 			return ERROR_VALUE;
 		}
-		/* This is not needed since this will be WATERMARK'd when
-		 * saving it. We won't need to save it as touched. */
-		/* if (!str) opt->flags |= OPT_TOUCHED; */
+
+		val = option_types[opt->type].read(opt, &state->pos.look,
+						   &state->pos.line);
+		if (!val) {
+			/* The reader function failed.  Jump back to
+			 * the beginning of the value and skip it with
+			 * the generic code.  For the error message,
+			 * use the line number at the beginning of the
+			 * value, because the ending position is not
+			 * interesting if there is an unclosed quote.  */
+			state->pos = pos_before_value;
+			show_parse_error(state, ERROR_VALUE);
+			skip_option_value(&state->pos);
+			return ERROR_VALUE;
+		}
+
+		if (!mirror) {
+			/* loading a configuration file */
+			if (!option_types[opt->type].set
+			    || !option_types[opt->type].set(opt, val)) {
+				mem_free(val);
+				return show_parse_error(state, ERROR_VALUE);
+			}
+		} else if (is_system_conf) {
+			/* scanning a file that will not be rewritten */
+			struct option *flagsite = indirect_option(opt);
+
+			if (!(flagsite->flags & OPT_DELETED)
+			    && option_types[opt->type].equals
+			    && option_types[opt->type].equals(opt, val))
+				flagsite->flags &= ~OPT_MUST_SAVE;
+			else
+				flagsite->flags |= OPT_MUST_SAVE;
+		} else {
+			/* rewriting a configuration file */
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED) {
+				/* Replace the "set" command with an
+				 * "unset" command.  */
+				add_to_string(mirror, "unset ");
+				add_bytes_to_string(mirror, optname_orig,
+						    optname_len);
+				state->mirrored = state->pos.look;
+			} else if (option_types[opt->type].write) {
+				add_bytes_to_string(mirror, state->mirrored,
+						    pos_before_value.look
+						    - state->mirrored);
+				option_types[opt->type].write(opt, mirror);
+				state->mirrored = state->pos.look;
+			}
+			/* Remember that the option need not be
+			 * written to the end of the file.  */
+			flagsite->flags &= ~OPT_MUST_SAVE;
+		}
 		mem_free(val);
 	}
 
@@ -203,64 +383,91 @@ parse_set_common(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
-parse_set_domain(struct option *opt_tree, unsigned char **file, int *line,
+parse_set_domain(struct option *opt_tree, struct conf_parsing_state *state,
                  struct string *mirror, int is_system_conf)
 {
-	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 1);
+	return parse_set_common(opt_tree, state, mirror, is_system_conf, 1);
 }
 
 static enum parse_error
-parse_set(struct option *opt_tree, unsigned char **file, int *line,
+parse_set(struct option *opt_tree, struct conf_parsing_state *state,
           struct string *mirror, int is_system_conf)
 {
-	return parse_set_common(opt_tree, file, line, mirror, is_system_conf, 0);
+	return parse_set_common(opt_tree, state, mirror, is_system_conf, 0);
 }
 
 
 static enum parse_error
-parse_unset(struct option *opt_tree, unsigned char **file, int *line,
+parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file;
-	unsigned char *optname;
-	unsigned char bin;
+	const unsigned char *optname_orig;
+	size_t optname_len;
+	unsigned char *optname_copy;
 
-	/* XXX: This does not handle the autorewriting well and is mostly a
-	 * quick hack than anything now. --pasky */
-
-	*file = skip_white(*file, line);
-	if (!**file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Option name */
-	optname = *file;
-	while (isident(**file) || **file == '*' || **file == '.' || **file == '+')
-		(*file)++;
+	optname_orig = state->pos.look;
+	while (isident(*state->pos.look) || *state->pos.look == '*'
+	       || *state->pos.look == '.' || *state->pos.look == '+')
+		state->pos.look++;
+	optname_len = state->pos.look - optname_orig;
 
-	bin = **file;
-	**file = '\0';
-	optname = stracpy(optname);
-	**file = bin;
-	if (!optname) return ERROR_NOMEM;
-
-	/* Mirror what we have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	optname_copy = memacpy(optname_orig, optname_len);
+	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
 
 	{
 		struct option *opt;
 
-		opt = get_opt_rec_real(opt_tree, optname);
-		mem_free(optname);
+		opt = get_opt_rec_real(opt_tree, optname_copy);
+		mem_free(optname_copy);
+		optname_copy = NULL;
 
-		if (!opt || (opt->flags & OPT_HIDDEN))
-			return ERROR_OPTION;
+		if (!opt || (opt->flags & OPT_HIDDEN)) {
+			/* The user wanted to delete the option, and
+			 * it has already been deleted; this is not an
+			 * error.  This might happen if a version of
+			 * ELinks has a built-in URL rewriting rule,
+			 * the user disables it, and a later version
+			 * no longer has it.  */
+			return ERROR_NONE;
+		}
 
 		if (!mirror) {
+			/* loading a configuration file */
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
-		} else {
-			if (opt->flags & OPT_DELETED)
-				opt->flags |= OPT_WATERMARK;
+			else mark_option_as_deleted(opt);
+		} else if (is_system_conf) {
+			/* scanning a file that will not be rewritten */
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED)
+				flagsite->flags &= ~OPT_MUST_SAVE;
 			else
-				opt->flags &= ~OPT_WATERMARK;
+				flagsite->flags |= OPT_MUST_SAVE;
+		} else {
+			/* rewriting a configuration file */
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED) {
+				/* The "unset" command is already in the file,
+				 * and unlike with "set", there is no value
+				 * to be updated.  */
+			} else if (option_types[opt->type].write) {
+				/* Replace the "unset" command with a
+				 * "set" command.  */
+				add_to_string(mirror, "set ");
+				add_bytes_to_string(mirror, optname_orig,
+						    optname_len);
+				add_to_string(mirror, " = ");
+				option_types[opt->type].write(opt, mirror);
+				state->mirrored = state->pos.look;
+			}
+			/* Remember that the option need not be
+			 * written to the end of the file.  */
+			flagsite->flags &= ~OPT_MUST_SAVE;
 		}
 	}
 
@@ -268,72 +475,89 @@ parse_unset(struct option *opt_tree, unsigned char **file, int *line,
 }
 
 static enum parse_error
-parse_bind(struct option *opt_tree, unsigned char **file, int *line,
+parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file, *next_pos;
 	unsigned char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
+	struct conf_parsing_pos before_error;
 
-	*file = skip_white(*file, line);
-	if (!*file) return ERROR_PARSE;
+	skip_white(&state->pos);
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Keymap */
-	keymap = option_types[OPT_STRING].read(NULL, file, line);
-	*file = skip_white(*file, line);
-	if (!keymap || !**file)
-		return ERROR_OPTION;
+	before_error = state->pos;
+	keymap = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					       &state->pos.line);
+	skip_white(&state->pos);
+	if (!keymap || !*state->pos.look) {
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
+	}
 
 	/* Keystroke */
-	keystroke = option_types[OPT_STRING].read(NULL, file, line);
-	*file = skip_white(*file, line);
-	if (!keystroke || !**file) {
-		mem_free(keymap);
-		return ERROR_OPTION;
+	before_error = state->pos;
+	keystroke = option_types[OPT_STRING].read(NULL, &state->pos.look,
+						  &state->pos.line);
+	skip_white(&state->pos);
+	if (!keystroke || !*state->pos.look) {
+		mem_free(keymap); mem_free_if(keystroke);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* Equal sign */
-	*file = skip_white(*file, line);
-	if (**file != '=') {
+	skip_white(&state->pos);
+	if (*state->pos.look != '=') {
 		mem_free(keymap); mem_free(keystroke);
-		return ERROR_PARSE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
-	(*file)++; /* '=' */
+	state->pos.look++; /* '=' */
 
-	*file = skip_white(*file, line);
-	if (!**file) {
+	skip_white(&state->pos);
+	if (!*state->pos.look) {
 		mem_free(keymap); mem_free(keystroke);
-		return ERROR_PARSE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* Action */
-	next_pos = *file;
-	action = option_types[OPT_STRING].read(NULL, file, line);
+	before_error = state->pos;
+	action = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					       &state->pos.line);
 	if (!action) {
-		mem_free(keymap);
-		return ERROR_VALUE;
+		mem_free(keymap); mem_free(keystroke);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
-	if (mirror) {
-		/* Mirror what we already have */
-		unsigned char *act_str = bind_act(keymap, keystroke);
-
-		if (act_str) {
-			add_bytes_to_string(mirror, orig_pos,
-					    next_pos - orig_pos);
-			add_to_string(mirror, act_str);
-			mem_free(act_str);
-		} else {
-			err = ERROR_VALUE;
-		}
-	} else {
+	if (!mirror) {
+		/* loading a configuration file */
 		/* We don't bother to bind() if -default-keys. */
 		if (!get_cmd_opt_bool("default-keys")
 		    && bind_do(keymap, keystroke, action, is_system_conf)) {
 			/* bind_do() tried but failed. */
-			err = ERROR_VALUE;
+			err = show_parse_error(state, ERROR_VALUE);
 		} else {
 			err = ERROR_NONE;
+		}
+	} else if (is_system_conf) {
+		/* scanning a file that will not be rewritten */
+		/* TODO */
+	} else {
+		/* rewriting a configuration file */
+		/* Mirror what we already have.  If the keystroke has
+		 * been unbound, then act_str is simply "none" and
+		 * this does not require special handling.  */
+		unsigned char *act_str = bind_act(keymap, keystroke);
+
+		if (act_str) {
+			add_bytes_to_string(mirror, state->mirrored,
+					    before_error.look - state->mirrored);
+			add_to_string(mirror, act_str);
+			mem_free(act_str);
+			state->mirrored = state->pos.look;
+		} else {
+			err = show_parse_error(state, ERROR_VALUE);
 		}
 	}
 	mem_free(keymap); mem_free(keystroke); mem_free(action);
@@ -344,27 +568,31 @@ static int load_config_file(unsigned char *, unsigned char *, struct option *,
 			    struct string *, int);
 
 static enum parse_error
-parse_include(struct option *opt_tree, unsigned char **file, int *line,
+parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
-	unsigned char *orig_pos = *file;
 	unsigned char *fname;
 	struct string dumbstring;
+	struct conf_parsing_pos before_error;
 
-	if (!init_string(&dumbstring)) return ERROR_NOMEM;
+	if (!init_string(&dumbstring))
+		return show_parse_error(state, ERROR_NOMEM);
 
-	*file = skip_white(*file, line);
-	if (!*file) return ERROR_PARSE;
-
-	/* File name */
-	fname = option_types[OPT_STRING].read(NULL, file, line);
-	if (!fname) {
+	skip_white(&state->pos);
+	if (!*state->pos.look) {
 		done_string(&dumbstring);
-		return ERROR_VALUE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
-	/* Mirror what we already have */
-	if (mirror) add_bytes_to_string(mirror, orig_pos, *file - orig_pos);
+	/* File name */
+	before_error = state->pos;
+	fname = option_types[OPT_STRING].read(NULL, &state->pos.look,
+					      &state->pos.line);
+	if (!fname) {
+		done_string(&dumbstring);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
+	}
 
 	/* We want load_config_file() to watermark stuff, but not to load
 	 * anything, polluting our beloved options tree - thus, we will feed it
@@ -375,10 +603,11 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 	 * CONFDIR/<otherfile> ;). --pasky */
 	if (load_config_file(fname[0] == '/' ? (unsigned char *) ""
 					     : elinks_home,
-			     fname, opt_tree, &dumbstring, is_system_conf)) {
+			     fname, opt_tree, 
+			     mirror ? &dumbstring : NULL, 1)) {
 		done_string(&dumbstring);
 		mem_free(fname);
-		return ERROR_VALUE;
+		return show_parse_error(state, ERROR_VALUE);
 	}
 
 	done_string(&dumbstring);
@@ -388,13 +617,13 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 
 
 struct parse_handler {
-	unsigned char *command;
+	const unsigned char *command;
 	enum parse_error (*handler)(struct option *opt_tree,
-				    unsigned char **file, int *line,
+				    struct conf_parsing_state *state,
 				    struct string *mirror, int is_system_conf);
 };
 
-static struct parse_handler parse_handlers[] = {
+static const struct parse_handler parse_handlers[] = {
 	{ "set_domain", parse_set_domain },
 	{ "set", parse_set },
 	{ "unset", parse_unset },
@@ -404,102 +633,113 @@ static struct parse_handler parse_handlers[] = {
 };
 
 
-enum parse_error
-parse_config_command(struct option *options, unsigned char **file, int *line,
+static enum parse_error
+parse_config_command(struct option *options, struct conf_parsing_state *state,
 		     struct string *mirror, int is_system_conf)
 {
-	struct parse_handler *handler;
+	const struct parse_handler *handler;
+
+	/* If we're mirroring, then everything up to this point must
+	 * have already been mirrored.  */
+	assert(mirror == NULL || state->mirrored == state->pos.look);
+	if_assert_failed return show_parse_error(state, ERROR_PARSE);
 
 	for (handler = parse_handlers; handler->command;
 	     handler++) {
 		int cmdlen = strlen(handler->command);
 
-		if (!strncmp(*file, handler->command, cmdlen)
-		    && isspace((*file)[cmdlen])) {
+		if (!strncmp(state->pos.look, handler->command, cmdlen)
+		    && isspace(state->pos.look[cmdlen])) {
 			enum parse_error err;
-			struct string mirror2 = NULL_STRING;
-			struct string *m2 = NULL;
 
-			/* Mirror what we already have */
-			if (mirror && init_string(&mirror2)) {
-				m2 = &mirror2;
-				add_bytes_to_string(m2, *file, cmdlen);
-			}
-
-
-			*file += cmdlen;
-			err = handler->handler(options, file, line, m2,
+			state->pos.look += cmdlen;
+			err = handler->handler(options, state, mirror,
 			                       is_system_conf);
-			if (!err && mirror && m2) {
-				add_string_to_string(mirror, m2);
+			if (mirror) {
+				/* Mirror any characters that the handler
+				 * consumed but did not already mirror.  */
+				add_bytes_to_string(mirror, state->mirrored,
+						    state->pos.look - state->mirrored);
+				state->mirrored = state->pos.look;
 			}
-			if (m2)	done_string(m2);
 			return err;
 		}
 	}
 
-	return ERROR_COMMAND;
+	return show_parse_error(state, ERROR_COMMAND);
 }
+
+#ifdef CONFIG_EXMODE
+enum parse_error
+parse_config_exmode_command(unsigned char *cmd)
+{
+	struct conf_parsing_state state = {{ 0 }};
+
+	state.pos.look = cmd;
+	state.pos.line = 0;
+	state.mirrored = NULL; /* not read because mirror is NULL too */
+	state.filename = NULL; /* prevent error messages */
+
+	return parse_config_command(config_options, &state, NULL, 0);
+}
+#endif /* CONFIG_EXMODE */
 
 void
 parse_config_file(struct option *options, unsigned char *name,
 		  unsigned char *file, struct string *mirror,
 		  int is_system_conf)
 {
-	int line = 1;
+	struct conf_parsing_state state = {{ 0 }};
 	int error_occurred = 0;
-	enum parse_error err = 0;
-	enum verbose_level verbose = get_cmd_opt_int("verbose");
-	unsigned char error_msg[][40] = {
-		"no error",
-		"parse error",
-		"unknown command",
-		"unknown option",
-		"bad value",
-		"no memory left",
-	};
 
-	while (file && *file) {
-		unsigned char *orig_pos = file;
+	state.pos.look = file;
+	state.pos.line = 1;
+	state.mirrored = file;
+	if (!mirror && get_cmd_opt_int("verbose") >= VERBOSE_WARNINGS)
+		state.filename = name;
+
+	while (state.pos.look && *state.pos.look) {
+		enum parse_error err = ERROR_NONE;
 
 		/* Skip all possible comments and whitespace. */
-		file = skip_white(file, &line);
+		skip_white(&state.pos);
 
 		/* Mirror what we already have */
-		if (mirror)
-			add_bytes_to_string(mirror, orig_pos, file - orig_pos);
-
-		/* Second chance to escape from the hell. */
-		if (!*file) break;
-
-		err = parse_config_command(options, &file, &line, mirror,
-		                           is_system_conf);
-
-		if (err == ERROR_COMMAND) {
-			orig_pos = file;
-			/* Jump over this crap we can't understand. */
-			while (!isspace(*file) && *file != '#' && *file)
-				file++;
-
-			/* Mirror what we already have */
-			if (mirror) add_bytes_to_string(mirror, orig_pos,
-							file - orig_pos);
+		if (mirror) {
+			add_bytes_to_string(mirror, state.mirrored,
+					    state.pos.look - state.mirrored);
+			state.mirrored = state.pos.look;
 		}
 
-		if (!mirror && err) {
-			/* TODO: Make this a macro and report error directly
-			 * as it's stumbled upon; line info may not be accurate
-			 * anymore now (?). --pasky */
-			if (verbose >= VERBOSE_WARNINGS) {
-				fprintf(stderr, "%s:%d: %s\n",
-					name, line, error_msg[err]);
-				error_occurred = 1;
+		/* Second chance to escape from the hell. */
+		if (!*state.pos.look) break;
+
+		err = parse_config_command(options, &state, mirror,
+		                           is_system_conf);
+		switch (err) {
+		case ERROR_NONE:
+			break;
+
+		case ERROR_COMMAND:
+		case ERROR_PARSE:
+			/* Jump over this crap we can't understand. */
+			skip_to_unquoted_newline_or_comment(&state.pos);
+
+			/* Mirror what we already have */
+			if (mirror) {
+				add_bytes_to_string(mirror, state.mirrored,
+						    state.pos.look - state.mirrored);
+				state.mirrored = state.pos.look;
 			}
-			err = 0;
+
+			/* fall through */
+		default:
+			error_occurred = 1;
+			break;
 		}
 	}
 
-	if (!error_occurred) return;
+	if (!error_occurred || !state.filename) return;
 
 	/* If an error occurred make sure that the user is notified and is able
 	 * to see it. First sound the bell. Then, if the text viewer is going to
@@ -605,7 +845,6 @@ load_config(void)
 static int indentation = 2;
 /* 0 -> none, 1 -> only option full name+type, 2 -> only desc, 3 -> both */
 static int comments = 3;
-static int touching = 0;
 
 static inline unsigned char *
 conf_i18n(unsigned char *s, int i18n)
@@ -632,12 +871,6 @@ smart_config_output_fn(struct string *string, struct option *option,
 	unsigned char *desc_i18n;
 
 	if (option->type == OPT_ALIAS)
-		return;
-
-	/* XXX: OPT_LANGUAGE shouldn't have any bussiness here, but we're just
-	 * weird in that area. */
-	if (touching && !(option->flags & OPT_TOUCHED)
-	    && option->type != OPT_LANGUAGE)
 		return;
 
 	switch (action) {
@@ -765,25 +998,26 @@ create_config_string(unsigned char *prefix, unsigned char *name)
 
 	if (!init_string(&config)) return NULL;
 
-	if (savestyle == 3) {
-		touching = 1;
-		savestyle = 1;
-	} else {
-		touching = 0;
+	{
+		int set_all = (savestyle == 1 || savestyle == 2);
+		struct domain_tree *domain;
+		
+		prepare_mustsave_flags(options->value.tree, set_all);
+		foreach (domain, domain_trees) {
+			prepare_mustsave_flags(domain->tree->value.tree,
+					       set_all);
+		}
 	}
-
-	if (savestyle == 2) watermark_deleted_options(options->value.tree);
 
 	/* Scaring. */
 	if (savestyle == 2
-	    || (savestyle < 2
-		&& (load_config_file(prefix, name, options, &config, 0)
-		    || !config.length))) {
+	    || load_config_file(prefix, name, options, &config, 0)
+	    || !config.length) {
 		/* At first line, and in English, write ELinks version, may be
 		 * of some help in future. Please keep that format for it.
 		 * --Zas */
 		add_to_string(&config, "## ELinks " VERSION " configuration file\n\n");
-		assert(savestyle >= 0  && savestyle <= 2);
+		assert(savestyle >= 0  && savestyle <= 3);
 		switch (savestyle) {
 		case 0:
 			add_to_string(&config, conf_i18n(N_(
@@ -793,7 +1027,7 @@ create_config_string(unsigned char *prefix, unsigned char *name)
 			"## and all your formatting, own comments etc will be kept as-is.\n"),
 			i18n));
 			break;
-		case 1:
+		case 1: case 3:
 			add_to_string(&config, conf_i18n(N_(
 			"## This is ELinks configuration file. You can edit it manually,\n"
 			"## if you wish so; this file is edited by ELinks when you save\n"
@@ -844,7 +1078,6 @@ create_config_string(unsigned char *prefix, unsigned char *name)
 					    domain->tree->value.tree,
 					    NULL, 0,
 					    smart_config_output_fn);
-			unmark_options_tree(domain->tree->value.tree);
 		}
 
 		smart_config_output_fn_domain = NULL;
@@ -866,8 +1099,6 @@ create_config_string(unsigned char *prefix, unsigned char *name)
 	done_string(&tmpstring);
 
 get_me_out:
-	unmark_options_tree(options->value.tree);
-
 	return config.source;
 }
 
@@ -895,6 +1126,13 @@ write_config_file(unsigned char *prefix, unsigned char *name,
 	if (ssi) {
 		secure_fputs(ssi, cfg_str);
 		ret = secure_close(ssi);
+		if (!ret) {
+			struct domain_tree *domain;
+
+			untouch_options(config_options->value.tree);
+			foreach (domain, domain_trees)
+				untouch_options(domain->tree->value.tree);
+		}
 	}
 
 	write_config_dialog(term, config_file, secsave_errno, ret);

@@ -31,7 +31,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (21052fafb0be0b87b7f376fb4edfa70304e365cc) and related
+ELinks 0.12.GIT (054852ae234342765ab69da0eb95a18f96bd6028) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -82,6 +82,7 @@ Miscellaneous:
 * critical bug 869: long mailcap entry buffer overflow (non-security)
   when downloading
 * tabs opened by -remote now go behind existing dialogs
+* major bug 503: various fixes in parsing and updating of elinks.conf
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
@@ -131,10 +132,14 @@ Miscellaneous:
   on enter
 * enhancement: add support for parsing space separated CSS class
   attribute values
+* enhancement: make meta refresh content attribute parsing more tolerant
+* enhancement: recognize meta http-equiv="cache-control" even if no
+  refresh
 * enhancement: mouse wheel support over GPM (contrib/gpm-wheel.patch),
   and on BSD via moused -z 4
 * enhancement: 24-bit truecolor mode
 * enhancement 622: -dump-color-mode
+* enhancement 994: treat only termios.c_cc[VERASE] as "Backspace"
 * enhancement: support Ctrl+Alt+letter key combinations
 * enhancement 381: reduce memory consumption of codepages and some
   other arrays
@@ -165,6 +170,12 @@ Changes in the experimental ECMAScript support:
 * enhancement: form[x] looks up controls also by 'id', not only 'name'
 * enhancement: added document.location.href, input.selectedIndex,
   window.setTimeout, window.status
+
+Changes in the experimental NNTP client:
+
+* HTML escape header field values
+* Add support for handling RFC2047 encoded words
+* Improve listing of articles for groups
 
 Changes in the experimental SGML/DOM implementation:
 
@@ -231,6 +242,8 @@ have already been considered.
     memory
   - (bugfix 920) assertion priority >= prev_priority failed: queue is
     not sorted
+  - (bugfix 968) assertion width > 0 failed in copy_chars called from
+    justify_line
 * Already backported to a previous release but not listed there:
   - (enhancement) Activate link only when onClick returns true.
     Fixed bug 786 in ELinks 0.11.2.
@@ -296,6 +309,7 @@ have already been considered.
     this as part of the UTF-8 support.
   * enhancement in user SMJS: elinks.alert no longer displays as an
     "error"
+  * Really retry forever when connection.retries = 0
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.3.GIT now:

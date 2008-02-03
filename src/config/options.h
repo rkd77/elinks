@@ -24,15 +24,33 @@ enum option_flags {
 	 * this category when adding an option. The 'template' for the added
 	 * hiearchy piece (category) is stored as "_template_" category. */
 	OPT_AUTOCREATE = 2,
-	/* This is used just for marking various options for some very dark,
-	 * nasty and dirty purposes. This watermarking should be kept inside
-	 * some very closed and clearly bounded piece of ELinks module, not
-	 * spreaded along whole ELinks code, and you should clear it everytime
-	 * when sneaking outside of the module (except some trivial common
-	 * utility functions). Basically, you don't want to use this flag
-	 * normally ;). It doesn't affect how the option is handled by common
-	 * option handling functions in any way. */
-	OPT_WATERMARK = 4,
+	/* The option has been modified in some way and must be saved
+	 * to elinks.conf.  ELinks uses this flag only while it is
+	 * saving the options.  When the config.saving_style option
+	 * has value 3, saving works like this:
+	 * - First, ELinks sets OPT_MUST_SAVE in the options that have
+	 *   OPT_TOUCHED or OPT_DELETED, and clears it in the rest.
+	 * - ELinks then parses the old configuration file and any
+	 *   files named in "include" commands.
+	 * - If the old configuration file contains a "set" or "unset"
+	 *   command for this option, ELinks rewrites the command and
+	 *   clears OPT_MUST_SAVE.
+	 * - If an included file contains a "set" or "unset" command
+	 *   for this option, ELinks compares the value of the option
+	 *   to the value given in the command.  ELinks clears
+	 *   OPT_MUST_SAVE if the values match, or sets it if they
+	 *   differ.
+	 * - After ELinks has rewritten the configuration file and
+	 *   parsed the included files, it appends the options that
+	 *   still have the OPT_MUST_SAVE flag.
+	 * Other saving styles are variants of this:
+	 * - 0: ELinks does not append any options to the
+	 *   configuration file.  So OPT_MUST_SAVE has no effect.
+	 * - 1: ELinks initially sets OPT_MUST_SAVE in all options,
+	 *   regardless of OPT_TOUCHED and OPT_DELETED.
+	 * - 2: ELinks initially sets OPT_MUST_SAVE in all options,
+	 *   and does not read any configuration files.  */
+	OPT_MUST_SAVE = 4,
 	/* This is used to mark options modified after the last save. That's
 	 * being useful if you want to save only the options whose value
 	 * changed. */
@@ -161,8 +179,8 @@ extern void register_change_hooks(const struct change_hook_info *change_hooks);
 
 
 extern LIST_OF(struct option) *init_options_tree(void);
-extern void unmark_options_tree(LIST_OF(struct option) *);
-void watermark_deleted_options(LIST_OF(struct option) *);
+extern void prepare_mustsave_flags(LIST_OF(struct option) *, int set_all);
+extern void untouch_options(LIST_OF(struct option) *);
 
 extern void smart_config_string(struct string *, int, int,
 				LIST_OF(struct option) *, unsigned char *, int,
@@ -224,6 +242,7 @@ extern void checkout_option_values(struct option_resolver *resolvers,
 
 extern struct option *get_opt_rec(struct option *, const unsigned char *);
 extern struct option *get_opt_rec_real(struct option *, const unsigned char *);
+struct option *indirect_option(struct option *);
 #ifdef CONFIG_DEBUG
 extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *, struct session *);
 #define get_opt(tree, name, ses, type) get_opt_(__FILE__, __LINE__, type, tree, name, ses)

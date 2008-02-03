@@ -158,7 +158,14 @@ debug_check_option_syntax(struct option *option)
 /* Ugly kludge */
 static int no_autocreate = 0;
 
-/* Get record of option of given name, or NULL if there's no such option. */
+/** Get record of option of given name, or NULL if there's no such option.
+ *
+ * If the specified option is an ::OPT_ALIAS, this function returns the
+ * alias, rather than the option to which the alias refers.  It must
+ * work this way because the alias may have the ::OPT_ALIAS_NEGATE flag.
+ * Instead, if the caller tries to read or set the value of the alias,
+ * the functions associated with ::OPT_ALIAS will forward the operation
+ * to the underlying option.  However, see indirect_option().  */
 struct option *
 get_opt_rec(struct option *tree, const unsigned char *name_)
 {
@@ -240,6 +247,27 @@ get_opt_rec_real(struct option *tree, const unsigned char *name)
 	opt = get_opt_rec(tree, name);
 	no_autocreate = 0;
 	return opt;
+}
+
+/** If @a opt is an alias, return the option to which it refers.
+ *
+ * @warning Because the alias may have the ::OPT_ALIAS_NEGATE flag,
+ * the caller must not access the value of the returned option as if
+ * it were also the value of the alias.  However, it is safe to access
+ * flags such as ::OPT_MUST_SAVE and ::OPT_DELETED.  */
+struct option *
+indirect_option(struct option *alias)
+{
+	struct option *real;
+
+	if (alias->type != OPT_ALIAS) return alias; /* not an error */
+
+	real = get_opt_rec(config_options, alias->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!",
+		alias->name, alias->value.string);
+	if_assert_failed return alias;
+
+	return real;
 }
 
 /* Fetch pointer to value of certain option. It is guaranteed to never return
@@ -793,27 +821,35 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 }
 
 void
-unmark_options_tree(LIST_OF(struct option) *tree)
+prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 {
 	struct option *option;
 
 	foreach (option, *tree) {
-		option->flags &= ~OPT_WATERMARK;
+		/* XXX: OPT_LANGUAGE shouldn't have any bussiness
+		 * here, but we're just weird in that area. */
+		if (set_all
+		    || (option->flags & (OPT_TOUCHED | OPT_DELETED))
+		    || option->type == OPT_LANGUAGE)
+			option->flags |= OPT_MUST_SAVE;
+		else
+			option->flags &= ~OPT_MUST_SAVE;
+
 		if (option->type == OPT_TREE)
-			unmark_options_tree(option->value.tree);
+			prepare_mustsave_flags(option->value.tree, set_all);
 	}
 }
 
 void
-watermark_deleted_options(LIST_OF(struct option) *tree)
+untouch_options(LIST_OF(struct option) *tree)
 {
 	struct option *option;
 
 	foreach (option, *tree) {
-		if (option->flags & OPT_DELETED)
-			option->flags |= OPT_WATERMARK;
-		else if (option->type == OPT_TREE)
-			watermark_deleted_options(option->value.tree);
+		option->flags &= ~OPT_TOUCHED;
+
+		if (option->type == OPT_TREE)
+			untouch_options(option->value.tree);
 	}
 }
 
@@ -826,7 +862,7 @@ check_nonempty_tree(LIST_OF(struct option) *options)
 		if (opt->type == OPT_TREE) {
 			if (check_nonempty_tree(opt->value.tree))
 				return 1;
-		} else if (!(opt->flags & OPT_WATERMARK)) {
+		} else if (opt->flags & OPT_MUST_SAVE) {
 			return 1;
 		}
 	}
@@ -847,14 +883,14 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 		int do_print_comment = 1;
 
 		if (option->flags & OPT_HIDDEN ||
-		    option->flags & OPT_WATERMARK ||
 		    option->type == OPT_ALIAS ||
 		    !strcmp(option->name, "_template_"))
 			continue;
 
 		/* Is there anything to be printed anyway? */
 		if (option->type == OPT_TREE
-		    && !check_nonempty_tree(option->value.tree))
+		    ? !check_nonempty_tree(option->value.tree)
+		    : !(option->flags & OPT_MUST_SAVE))
 			continue;
 
 		/* We won't pop out the description when we're in autocreate
@@ -920,10 +956,6 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 
 			fn(str, option, path, depth, /*pc*/1, 3, i18n);
 		}
-
-		/* TODO: We should maybe clear the touched flag only when really
-		 * saving the stuff...? --pasky */
-		option->flags &= ~OPT_TOUCHED;
 	}
 }
 
