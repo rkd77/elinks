@@ -333,8 +333,15 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 		mem_free(optname_copy);
 		optname_copy = NULL;
 
-		if (!opt || (opt->flags & OPT_HIDDEN))
-			return show_parse_error(state, ERROR_OPTION);
+		if (!opt || (opt->flags & OPT_HIDDEN)) {
+			/* The user wanted to delete the option, and
+			 * it has already been deleted; this is not an
+			 * error.  This might happen if a version of
+			 * ELinks has a built-in URL rewriting rule,
+			 * the user disables it, and a later version
+			 * no longer has it.  */
+			return ERROR_NONE;
+		}
 
 		if (!mirror) {
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
