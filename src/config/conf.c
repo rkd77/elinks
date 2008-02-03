@@ -229,7 +229,7 @@ parse_bind(struct option *opt_tree, unsigned char **file, int *line,
 	keystroke = option_types[OPT_STRING].read(NULL, file, line);
 	*file = skip_white(*file, line);
 	if (!keystroke || !**file) {
-		mem_free(keymap); mem_free(keystroke);
+		mem_free(keymap); mem_free_if(keystroke);
 		return ERROR_OPTION;
 	}
 
