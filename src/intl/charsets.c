@@ -1308,7 +1308,7 @@ flush:
 
 #ifndef USE_FASTFIND
 int
-get_cp_index(unsigned char *name)
+get_cp_index(const unsigned char *name)
 {
 	int i, a;
 	int syscp = 0;
@@ -1389,7 +1389,7 @@ static struct fastfind_index ff_charsets_index
 /* It searchs for a charset named @name or one of its aliases and
  * returns index for it or -1 if not found. */
 int
-get_cp_index(unsigned char *name)
+get_cp_index(const unsigned char *name)
 {
 	const struct codepage_desc *codepage;
 	int syscp = 0;

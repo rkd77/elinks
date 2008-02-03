@@ -107,7 +107,7 @@ unsigned char *convert_string(struct conv_table *convert_table,
 			      void (*callback)(void *data, unsigned char *buf, int buflen),
 			      void *callback_data);
 
-int get_cp_index(unsigned char *);
+int get_cp_index(const unsigned char *);
 unsigned char *get_cp_name(int);
 unsigned char *get_cp_config_name(int);
 unsigned char *get_cp_mime_name(int);
