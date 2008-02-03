@@ -217,7 +217,7 @@ parse_bind(struct option *opt_tree, unsigned char **file, int *line,
 	enum parse_error err = ERROR_NONE;
 
 	*file = skip_white(*file, line);
-	if (!*file) return ERROR_PARSE;
+	if (!**file) return ERROR_PARSE;
 
 	/* Keymap */
 	keymap = option_types[OPT_STRING].read(NULL, file, line);
@@ -295,7 +295,7 @@ parse_include(struct option *opt_tree, unsigned char **file, int *line,
 	if (!init_string(&dumbstring)) return ERROR_NOMEM;
 
 	*file = skip_white(*file, line);
-	if (!*file) {
+	if (!**file) {
 		done_string(&dumbstring);
 		return ERROR_PARSE;
 	}
