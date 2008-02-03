@@ -173,6 +173,22 @@ skip_option_value(struct conf_parsing_pos *pos)
 	}
 }
 
+/** Skip to the next newline or comment that is not part of a quoted
+ * string.  When ELinks hits a parse error in the configuration file,
+ * it calls this in order to find the place where is should resume
+ * parsing.  This is intended to prevent ELinks from treating words
+ * in strings as commands.  */
+static void
+skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
+{
+	while (*pos->look && *pos->look != '#' && *pos->look != '\n') {
+		if (isquote(*pos->look))
+			skip_quoted(pos);
+		else
+			pos->look++;
+	}
+}
+
 /* Parse a command. Returns error code. */
 /* If dynamic string credentials are supplied, we will mirror the command at
  * the end of the string; however, we won't load the option value to the tree,
@@ -331,27 +347,32 @@ static enum parse_error
 parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
-	unsigned char *next_pos;
 	unsigned char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
+	struct conf_parsing_pos before_error;
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Keymap */
+	before_error = state->pos;
 	keymap = option_types[OPT_STRING].read(NULL, &state->pos.look,
 					       &state->pos.line);
 	skip_white(&state->pos);
-	if (!keymap || !*state->pos.look)
-		return show_parse_error(state, ERROR_OPTION);
+	if (!keymap || !*state->pos.look) {
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
+	}
 
 	/* Keystroke */
+	before_error = state->pos;
 	keystroke = option_types[OPT_STRING].read(NULL, &state->pos.look,
 						  &state->pos.line);
 	skip_white(&state->pos);
 	if (!keystroke || !*state->pos.look) {
 		mem_free(keymap); mem_free_if(keystroke);
-		return show_parse_error(state, ERROR_OPTION);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* Equal sign */
@@ -369,12 +390,13 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	}
 
 	/* Action */
-	next_pos = state->pos.look;
+	before_error = state->pos;
 	action = option_types[OPT_STRING].read(NULL, &state->pos.look,
 					       &state->pos.line);
 	if (!action) {
 		mem_free(keymap); mem_free(keystroke);
-		return show_parse_error(state, ERROR_VALUE);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	if (mirror) {
@@ -383,7 +405,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 
 		if (act_str) {
 			add_bytes_to_string(mirror, state->mirrored,
-					    next_pos - state->mirrored);
+					    before_error.look - state->mirrored);
 			add_to_string(mirror, act_str);
 			mem_free(act_str);
 			state->mirrored = state->pos.look;
@@ -413,6 +435,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 {
 	unsigned char *fname;
 	struct string dumbstring;
+	struct conf_parsing_pos before_error;
 
 	if (!init_string(&dumbstring))
 		return show_parse_error(state, ERROR_NOMEM);
@@ -424,11 +447,13 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	}
 
 	/* File name */
+	before_error = state->pos;
 	fname = option_types[OPT_STRING].read(NULL, &state->pos.look,
 					      &state->pos.line);
 	if (!fname) {
 		done_string(&dumbstring);
-		return show_parse_error(state, ERROR_VALUE);
+		state->pos = before_error;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* We want load_config_file() to watermark stuff, but not to load
@@ -551,12 +576,14 @@ parse_config_file(struct option *options, unsigned char *name,
 
 		err = parse_config_command(options, &state, mirror,
 		                           is_system_conf);
+		switch (err) {
+		case ERROR_NONE:
+			break;
 
-		if (err == ERROR_COMMAND) {
+		case ERROR_COMMAND:
+		case ERROR_PARSE:
 			/* Jump over this crap we can't understand. */
-			while (!isspace(*state.pos.look)
-			       && *state.pos.look != '#' && *state.pos.look)
-				state.pos.look++;
+			skip_to_unquoted_newline_or_comment(&state.pos);
 
 			/* Mirror what we already have */
 			if (mirror) {
@@ -564,10 +591,12 @@ parse_config_file(struct option *options, unsigned char *name,
 						    state.pos.look - state.mirrored);
 				state.mirrored = state.pos.look;
 			}
-		}
 
-		if (err != ERROR_NONE)
+			/* fall through */
+		default:
 			error_occurred = 1;
+			break;
+		}
 	}
 
 	if (!error_occurred || !state.filename) return;
