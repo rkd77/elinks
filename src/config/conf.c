@@ -193,7 +193,7 @@ skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
 /* If dynamic string credentials are supplied, we will mirror the command at
  * the end of the string; however, we won't load the option value to the tree,
  * and we will even write option value from the tree to the output string.
- * We will only possibly clear OPT_MUST_SAVE flag in the option.  */
+ * We will only possibly set or clear OPT_MUST_SAVE flag in the option.  */
 
 static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
@@ -290,6 +290,16 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 				mem_free(val);
 				return show_parse_error(state, ERROR_VALUE);
 			}
+		} else if (is_system_conf) {
+			/* scanning a file that will not be rewritten */
+			struct option *flagsite = indirect_option(opt);
+
+			if (!(flagsite->flags & OPT_DELETED)
+			    && option_types[opt->type].equals
+			    && option_types[opt->type].equals(opt, val))
+				flagsite->flags &= ~OPT_MUST_SAVE;
+			else
+				flagsite->flags |= OPT_MUST_SAVE;
 		} else {
 			/* rewriting a configuration file */
 			struct option *flagsite = indirect_option(opt);
@@ -360,6 +370,14 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 			/* loading a configuration file */
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
 			else mark_option_as_deleted(opt);
+		} else if (is_system_conf) {
+			/* scanning a file that will not be rewritten */
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED)
+				flagsite->flags &= ~OPT_MUST_SAVE;
+			else
+				flagsite->flags |= OPT_MUST_SAVE;
 		} else {
 			/* rewriting a configuration file */
 			struct option *flagsite = indirect_option(opt);
@@ -453,6 +471,9 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 		} else {
 			err = ERROR_NONE;
 		}
+	} else if (is_system_conf) {
+		/* scanning a file that will not be rewritten */
+		/* TODO */
 	} else {
 		/* rewriting a configuration file */
 		/* Mirror what we already have.  If the keystroke has
@@ -513,7 +534,8 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	 * CONFDIR/<otherfile> ;). --pasky */
 	if (load_config_file(fname[0] == '/' ? (unsigned char *) ""
 					     : elinks_home,
-			     fname, opt_tree, &dumbstring, is_system_conf)) {
+			     fname, opt_tree, 
+			     mirror ? &dumbstring : NULL, 1)) {
 		done_string(&dumbstring);
 		mem_free(fname);
 		return show_parse_error(state, ERROR_VALUE);

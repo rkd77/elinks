@@ -162,6 +162,28 @@ redir_set(struct option *opt, unsigned char *str)
 	return ret;
 }
 
+static int
+redir_eq(struct option *opt, const unsigned char *str)
+{
+	struct option *real = get_opt_rec(config_options, opt->value.string);
+	int ret = 0;
+
+	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
+	if_assert_failed { return ret; }
+
+	if (option_types[real->type].equals) {
+		long negated;
+
+		if ((opt->flags & OPT_ALIAS_NEGATE) && real->type == OPT_BOOL) {
+			negated = !*(const long *) str;
+			str = (unsigned char *) &negated;
+		}
+		ret = option_types[real->type].equals(real, str);
+	}
+
+	return ret;
+}
+
 
 
 /* Support functions for config file parsing. */
@@ -207,6 +229,12 @@ num_set(struct option *opt, unsigned char *str)
 	return 1;
 }
 
+static int
+num_eq(struct option *opt, const unsigned char *str)
+{
+	return str && opt->value.number == *(const long *) str;
+}
+
 static void
 num_wr(struct option *option, struct string *string)
 {
@@ -219,6 +247,12 @@ long_set(struct option *opt, unsigned char *str)
 {
 	opt->value.big_number = *((long *) str);
 	return 1;
+}
+
+static int
+long_eq(struct option *opt, const unsigned char *str)
+{
+	return str && opt->value.big_number == *(const long *) str;
 }
 
 static void
@@ -290,6 +324,12 @@ str_set(struct option *opt, unsigned char *str)
 	return 1;
 }
 
+static int
+str_eq(struct option *opt, const unsigned char *str)
+{
+	return str && strcmp(opt->value.string, str) == 0;
+}
+
 static void
 str_wr(struct option *o, struct string *s)
 {
@@ -320,6 +360,12 @@ cp_set(struct option *opt, unsigned char *str)
 	return 1;
 }
 
+static int
+cp_eq(struct option *opt, const unsigned char *str)
+{
+	return str && get_cp_index(str) == opt->value.number;
+}
+
 static void
 cp_wr(struct option *o, struct string *s)
 {
@@ -337,6 +383,16 @@ lang_set(struct option *opt, unsigned char *str)
 	set_language(opt->value.number);
 #endif
 	return 1;
+}
+
+static int
+lang_eq(struct option *opt, const unsigned char *str)
+{
+#ifdef CONFIG_NLS
+	return str && name_to_language(str) == opt->value.number;
+#else
+	return 1;		/* All languages are the same.  */
+#endif
 }
 
 static void
@@ -358,6 +414,15 @@ static int
 color_set(struct option *opt, unsigned char *str)
 {
 	return !decode_color(str, strlen(str), &opt->value.color);
+}
+
+static int
+color_eq(struct option *opt, const unsigned char *str)
+{
+	color_T color;
+
+	return str && !decode_color(str, strlen(str), &color)
+		&& color == opt->value.color;
 }
 
 static void
@@ -403,29 +468,29 @@ const struct option_type_info option_types[] = {
 	/* The OPT_ comments below are here to be found by grep.  */
 
 	/* OPT_BOOL */
-	{ N_("Boolean"),  bool_cmd,  num_rd,   num_wr,   NULL,     num_set,   N_("[0|1]") },
+	{ N_("Boolean"),  bool_cmd,  num_rd,   num_wr,   NULL,     num_set,   num_eq,   N_("[0|1]") },
 	/* OPT_INT */
-	{ N_("Integer"),  gen_cmd,   num_rd,   num_wr,   NULL,     num_set,   N_("<num>") },
+	{ N_("Integer"),  gen_cmd,   num_rd,   num_wr,   NULL,     num_set,   num_eq,   N_("<num>") },
 	/* OPT_LONG */
-	{ N_("Longint"),  gen_cmd,   num_rd,   long_wr,  NULL,     long_set,  N_("<num>") },
+	{ N_("Longint"),  gen_cmd,   num_rd,   long_wr,  NULL,     long_set,  long_eq,  N_("<num>") },
 	/* OPT_STRING */
-	{ N_("String"),   gen_cmd,   str_rd,   str_wr,   str_dup,  str_set,   N_("<str>") },
+	{ N_("String"),   gen_cmd,   str_rd,   str_wr,   str_dup,  str_set,   str_eq,   N_("<str>") },
 
 	/* OPT_CODEPAGE */
-	{ N_("Codepage"), gen_cmd,   str_rd,   cp_wr,    NULL,     cp_set,    N_("<codepage>") },
+	{ N_("Codepage"), gen_cmd,   str_rd,   cp_wr,    NULL,     cp_set,    cp_eq,    N_("<codepage>") },
 	/* OPT_LANGUAGE */
-	{ N_("Language"), gen_cmd,   str_rd,   lang_wr,  NULL,     lang_set,  N_("<language>") },
+	{ N_("Language"), gen_cmd,   str_rd,   lang_wr,  NULL,     lang_set,  lang_eq,  N_("<language>") },
 	/* OPT_COLOR */
-	{ N_("Color"),    gen_cmd,   str_rd,   color_wr, NULL,     color_set, N_("<color|#rrggbb>") },
+	{ N_("Color"),    gen_cmd,   str_rd,   color_wr, NULL,     color_set, color_eq, N_("<color|#rrggbb>") },
 
 	/* OPT_COMMAND */
-	{ N_("Special"),  exec_cmd,  NULL,     NULL,     NULL,     NULL,      "" },
+	{ N_("Special"),  exec_cmd,  NULL,     NULL,     NULL,     NULL,      NULL,     "" },
 
 	/* OPT_ALIAS */
-	{ N_("Alias"),    redir_cmd, redir_rd, redir_wr, NULL,     redir_set, "" },
+	{ N_("Alias"),    redir_cmd, redir_rd, redir_wr, NULL,     redir_set, redir_eq, "" },
 
 	/* OPT_TREE */
-	{ N_("Folder"),   NULL,      NULL,     NULL,     tree_dup, NULL,      "" },
+	{ N_("Folder"),   NULL,      NULL,     NULL,     tree_dup, NULL,      NULL,      "" },
 };
 
 unsigned char *

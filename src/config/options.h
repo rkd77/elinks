@@ -30,12 +30,19 @@ enum option_flags {
 	 * has value 3, saving works like this:
 	 * - First, ELinks sets OPT_MUST_SAVE in the options that have
 	 *   OPT_TOUCHED or OPT_DELETED, and clears it in the rest.
-	 * - ELinks then parses the old configuration file.  If it
-	 *   contains a "set" or "unset" command for this option,
-	 *   ELinks rewrites the command and clears OPT_MUST_SAVE.
-	 * - After ELinks has rewritten the configuration file, it
-	 *   appends the options that still have the OPT_MUST_SAVE
-	 *   flag.
+	 * - ELinks then parses the old configuration file and any
+	 *   files named in "include" commands.
+	 * - If the old configuration file contains a "set" or "unset"
+	 *   command for this option, ELinks rewrites the command and
+	 *   clears OPT_MUST_SAVE.
+	 * - If an included file contains a "set" or "unset" command
+	 *   for this option, ELinks compares the value of the option
+	 *   to the value given in the command.  ELinks clears
+	 *   OPT_MUST_SAVE if the values match, or sets it if they
+	 *   differ.
+	 * - After ELinks has rewritten the configuration file and
+	 *   parsed the included files, it appends the options that
+	 *   still have the OPT_MUST_SAVE flag.
 	 * Other saving styles are variants of this:
 	 * - 0: ELinks does not append any options to the
 	 *   configuration file.  So OPT_MUST_SAVE has no effect.
