@@ -748,6 +748,19 @@ unmark_options_tree(LIST_OF(struct option) *tree)
 	}
 }
 
+void
+untouch_options(LIST_OF(struct option) *tree)
+{
+	struct option *option;
+
+	foreach (option, *tree) {
+		option->flags &= ~OPT_TOUCHED;
+
+		if (option->type == OPT_TREE)
+			untouch_options(option->value.tree);
+	}
+}
+
 static int
 check_nonempty_tree(LIST_OF(struct option) *options)
 {
@@ -851,10 +864,6 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 
 			fn(str, option, path, depth, /*pc*/1, 3, i18n);
 		}
-
-		/* TODO: We should maybe clear the touched flag only when really
-		 * saving the stuff...? --pasky */
-		option->flags &= ~OPT_TOUCHED;
 	}
 }
 
