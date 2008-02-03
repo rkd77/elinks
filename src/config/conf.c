@@ -226,13 +226,6 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	optname_copy = memacpy(optname_orig, optname_len);
 	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
 
-	/* Mirror what we already have */
-	if (mirror) {
-		add_bytes_to_string(mirror, state->mirrored,
-				    state->pos.look - state->mirrored);
-		state->mirrored = state->pos.look;
-	}
-
 	/* Option value */
 	{
 		struct option *opt;
@@ -286,6 +279,9 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			else
 				opt->flags |= OPT_WATERMARK;
 			if (option_types[opt->type].write) {
+				add_bytes_to_string(mirror, state->mirrored,
+						    pos_before_value.look
+						    - state->mirrored);
 				option_types[opt->type].write(opt, mirror);
 				state->mirrored = state->pos.look;
 			}
@@ -322,13 +318,6 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 
 	optname_copy = memacpy(optname_orig, optname_len);
 	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
-
-	/* Mirror what we have */
-	if (mirror) {
-		add_bytes_to_string(mirror, state->mirrored,
-				    state->pos.look - state->mirrored);
-		state->mirrored = state->pos.look;
-	}
 
 	{
 		struct option *opt;
