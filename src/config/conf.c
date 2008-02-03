@@ -199,33 +199,32 @@ static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	  struct string *mirror, int is_system_conf)
 {
-	unsigned char *optname;
+	const unsigned char *optname_orig;
+	size_t optname_len;
+	unsigned char *optname_copy;
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Option name */
-	optname = state->pos.look;
+	optname_orig = state->pos.look;
 	while (isident(*state->pos.look) || *state->pos.look == '*'
 	       || *state->pos.look == '.' || *state->pos.look == '+')
 		state->pos.look++;
-
-	optname = memacpy(optname, state->pos.look - optname);
-	if (!optname) return show_parse_error(state, ERROR_NOMEM);
+	optname_len = state->pos.look - optname_orig;
 
 	skip_white(&state->pos);
 
 	/* Equal sign */
-	if (*state->pos.look != '=') {
-		mem_free(optname);
+	if (*state->pos.look != '=')
 		return show_parse_error(state, ERROR_PARSE);
-	}
 	state->pos.look++; /* '=' */
 	skip_white(&state->pos);
-	if (!*state->pos.look) {
-		mem_free(optname);
+	if (!*state->pos.look)
 		return show_parse_error(state, ERROR_VALUE);
-	}
+
+	optname_copy = memacpy(optname_orig, optname_len);
+	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
 
 	/* Mirror what we already have */
 	if (mirror) {
@@ -240,8 +239,11 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 		unsigned char *val;
 		const struct conf_parsing_pos pos_before_value = state->pos;
 
-		opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
-		mem_free(optname);
+		opt = mirror
+			? get_opt_rec_real(opt_tree, optname_copy)
+			: get_opt_rec(opt_tree, optname_copy);
+		mem_free(optname_copy);
+		optname_copy = NULL;
 
 		if (!opt || (opt->flags & OPT_HIDDEN)) {
 			show_parse_error(state, ERROR_OPTION);
@@ -297,7 +299,9 @@ static enum parse_error
 parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
-	unsigned char *optname;
+	const unsigned char *optname_orig;
+	size_t optname_len;
+	unsigned char *optname_copy;
 
 	/* XXX: This does not handle the autorewriting well and is mostly a
 	 * quick hack than anything now. --pasky */
@@ -306,13 +310,14 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Option name */
-	optname = state->pos.look;
+	optname_orig = state->pos.look;
 	while (isident(*state->pos.look) || *state->pos.look == '*'
 	       || *state->pos.look == '.' || *state->pos.look == '+')
 		state->pos.look++;
+	optname_len = state->pos.look - optname_orig;
 
-	optname = memacpy(optname, state->pos.look - optname);
-	if (!optname) return show_parse_error(state, ERROR_NOMEM);
+	optname_copy = memacpy(optname_orig, optname_len);
+	if (!optname_copy) return show_parse_error(state, ERROR_NOMEM);
 
 	/* Mirror what we have */
 	if (mirror) {
@@ -324,8 +329,9 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	{
 		struct option *opt;
 
-		opt = get_opt_rec_real(opt_tree, optname);
-		mem_free(optname);
+		opt = get_opt_rec_real(opt_tree, optname_copy);
+		mem_free(optname_copy);
+		optname_copy = NULL;
 
 		if (!opt || (opt->flags & OPT_HIDDEN))
 			return show_parse_error(state, ERROR_OPTION);
