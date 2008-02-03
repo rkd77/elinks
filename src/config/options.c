@@ -748,19 +748,6 @@ unmark_options_tree(LIST_OF(struct option) *tree)
 	}
 }
 
-void
-watermark_deleted_options(LIST_OF(struct option) *tree)
-{
-	struct option *option;
-
-	foreach (option, *tree) {
-		if (option->flags & OPT_DELETED)
-			option->flags |= OPT_WATERMARK;
-		else if (option->type == OPT_TREE)
-			watermark_deleted_options(option->value.tree);
-	}
-}
-
 static int
 check_nonempty_tree(LIST_OF(struct option) *options)
 {

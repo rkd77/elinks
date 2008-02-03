@@ -877,8 +877,6 @@ create_config_string(unsigned char *prefix, unsigned char *name,
 		touching = 0;
 	}
 
-	if (savestyle == 2) watermark_deleted_options(options->value.tree);
-
 	/* Scaring. */
 	if (savestyle == 2
 	    || (savestyle < 2
