@@ -76,7 +76,32 @@ struct conf_parsing_state {
 	 *
 	 * @invariant @c mirrored @<= @c pos.look */
 	unsigned char *mirrored;
+
+	/** File name for error messages.  If NULL then do not display
+	 * error messages.  */
+	const unsigned char *filename;
 };
+
+/** Tell the user about an error in the configuration file.
+ * @return @a err, for convenience.  */
+static enum parse_error
+show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
+{
+	static const unsigned char error_msg[][40] = {
+		"no error",        /* ERROR_NONE */
+		"unknown command", /* ERROR_COMMAND */
+		"parse error",     /* ERROR_PARSE */
+		"unknown option",  /* ERROR_OPTION */
+		"bad value",       /* ERROR_VALUE */
+		"no memory left",  /* ERROR_NOMEM */
+	};
+
+	if (state->filename) {
+		fprintf(stderr, "%s:%d: %s\n",
+			state->filename, state->pos.line, error_msg[err]);
+	}
+	return err;
+}
 
 /** Skip comments and whitespace.  */
 static void
@@ -116,7 +141,7 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	unsigned char *optname;
 
 	skip_white(&state->pos);
-	if (!*state->pos.look) return ERROR_PARSE;
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Option name */
 	optname = state->pos.look;
@@ -125,15 +150,21 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 		state->pos.look++;
 
 	optname = memacpy(optname, state->pos.look - optname);
-	if (!optname) return ERROR_NOMEM;
+	if (!optname) return show_parse_error(state, ERROR_NOMEM);
 
 	skip_white(&state->pos);
 
 	/* Equal sign */
-	if (*state->pos.look != '=') { mem_free(optname); return ERROR_PARSE; }
+	if (*state->pos.look != '=') {
+		mem_free(optname);
+		return show_parse_error(state, ERROR_PARSE);
+	}
 	state->pos.look++; /* '=' */
 	skip_white(&state->pos);
-	if (!*state->pos.look) { mem_free(optname); return ERROR_VALUE; }
+	if (!*state->pos.look) {
+		mem_free(optname);
+		return show_parse_error(state, ERROR_VALUE);
+	}
 
 	/* Mirror what we already have */
 	if (mirror) {
@@ -151,14 +182,14 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 		mem_free(optname);
 
 		if (!opt || (opt->flags & OPT_HIDDEN))
-			return ERROR_OPTION;
+			return show_parse_error(state, ERROR_OPTION);
 
 		if (!option_types[opt->type].read)
-			return ERROR_VALUE;
+			return show_parse_error(state, ERROR_VALUE);
 
 		val = option_types[opt->type].read(opt, &state->pos.look,
 						   &state->pos.line);
-		if (!val) return ERROR_VALUE;
+		if (!val) return show_parse_error(state, ERROR_VALUE);
 
 		if (mirror) {
 			if (opt->flags & OPT_DELETED)
@@ -172,7 +203,7 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 		} else if (!option_types[opt->type].set
 			   || !option_types[opt->type].set(opt, val)) {
 			mem_free(val);
-			return ERROR_VALUE;
+			return show_parse_error(state, ERROR_VALUE);
 		}
 		/* This is not needed since this will be WATERMARK'd when
 		 * saving it. We won't need to save it as touched. */
@@ -193,7 +224,7 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	 * quick hack than anything now. --pasky */
 
 	skip_white(&state->pos);
-	if (!*state->pos.look) return ERROR_PARSE;
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Option name */
 	optname = state->pos.look;
@@ -202,12 +233,12 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 		state->pos.look++;
 
 	optname = memacpy(optname, state->pos.look - optname);
-	if (!optname) return ERROR_NOMEM;
+	if (!optname) return show_parse_error(state, ERROR_NOMEM);
 
 	/* Mirror what we have */
 	if (mirror) {
 		add_bytes_to_string(mirror, state->mirrored,
-				    state->pos.look - state->mirrored))
+				    state->pos.look - state->mirrored);
 		state->mirrored = state->pos.look;
 	}
 
@@ -218,7 +249,7 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 		mem_free(optname);
 
 		if (!opt || (opt->flags & OPT_HIDDEN))
-			return ERROR_OPTION;
+			return show_parse_error(state, ERROR_OPTION);
 
 		if (!mirror) {
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
@@ -242,14 +273,14 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	enum parse_error err = ERROR_NONE;
 
 	skip_white(&state->pos);
-	if (!*state->pos.look) return ERROR_PARSE;
+	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
 
 	/* Keymap */
 	keymap = option_types[OPT_STRING].read(NULL, &state->pos.look,
 					       &state->pos.line);
 	skip_white(&state->pos);
 	if (!keymap || !*state->pos.look)
-		return ERROR_OPTION;
+		return show_parse_error(state, ERROR_OPTION);
 
 	/* Keystroke */
 	keystroke = option_types[OPT_STRING].read(NULL, &state->pos.look,
@@ -257,21 +288,21 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	skip_white(&state->pos);
 	if (!keystroke || !*state->pos.look) {
 		mem_free(keymap); mem_free_if(keystroke);
-		return ERROR_OPTION;
+		return show_parse_error(state, ERROR_OPTION);
 	}
 
 	/* Equal sign */
 	skip_white(&state->pos);
 	if (*state->pos.look != '=') {
 		mem_free(keymap); mem_free(keystroke);
-		return ERROR_PARSE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 	state->pos.look++; /* '=' */
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) {
 		mem_free(keymap); mem_free(keystroke);
-		return ERROR_PARSE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* Action */
@@ -280,7 +311,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 					       &state->pos.line);
 	if (!action) {
 		mem_free(keymap); mem_free(keystroke);
-		return ERROR_VALUE;
+		return show_parse_error(state, ERROR_VALUE);
 	}
 
 	if (mirror) {
@@ -294,14 +325,14 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 			mem_free(act_str);
 			state->mirrored = state->pos.look;
 		} else {
-			err = ERROR_VALUE;
+			err = show_parse_error(state, ERROR_VALUE);
 		}
 	} else {
 		/* We don't bother to bind() if -default-keys. */
 		if (!get_cmd_opt_bool("default-keys")
 		    && bind_do(keymap, keystroke, action, is_system_conf)) {
 			/* bind_do() tried but failed. */
-			err = ERROR_VALUE;
+			err = show_parse_error(state, ERROR_VALUE);
 		} else {
 			err = ERROR_NONE;
 		}
@@ -320,12 +351,13 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	unsigned char *fname;
 	struct string dumbstring;
 
-	if (!init_string(&dumbstring)) return ERROR_NOMEM;
+	if (!init_string(&dumbstring))
+		return show_parse_error(state, ERROR_NOMEM);
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) {
 		done_string(&dumbstring);
-		return ERROR_PARSE;
+		return show_parse_error(state, ERROR_PARSE);
 	}
 
 	/* File name */
@@ -333,7 +365,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 					      &state->pos.line);
 	if (!fname) {
 		done_string(&dumbstring);
-		return ERROR_VALUE;
+		return show_parse_error(state, ERROR_VALUE);
 	}
 
 	/* We want load_config_file() to watermark stuff, but not to load
@@ -348,7 +380,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 			     fname, opt_tree, &dumbstring, is_system_conf)) {
 		done_string(&dumbstring);
 		mem_free(fname);
-		return ERROR_VALUE;
+		return show_parse_error(state, ERROR_VALUE);
 	}
 
 	done_string(&dumbstring);
@@ -382,7 +414,7 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 	/* If we're mirroring, then everything up to this point must
 	 * have already been mirrored.  */
 	assert(mirror == NULL || state->mirrored == state->pos.look);
-	if_assert_failed return ERROR_PARSE;
+	if_assert_failed return show_parse_error(state, ERROR_PARSE);
 
 	for (handler = parse_handlers; handler->command;
 	     handler++) {
@@ -406,7 +438,7 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 		}
 	}
 
-	return ERROR_COMMAND;
+	return show_parse_error(state, ERROR_COMMAND);
 }
 
 #ifdef CONFIG_EXMODE
@@ -418,6 +450,7 @@ parse_config_exmode_command(unsigned char *cmd)
 	state.pos.look = cmd;
 	state.pos.line = 0;
 	state.mirrored = NULL; /* not read because mirror is NULL too */
+	state.filename = NULL; /* prevent error messages */
 
 	return parse_config_command(config_options, &state, NULL, 0);
 }
@@ -430,22 +463,16 @@ parse_config_file(struct option *options, unsigned char *name,
 {
 	struct conf_parsing_state state = {{ 0 }};
 	int error_occurred = 0;
-	enum parse_error err = 0;
-	enum verbose_level verbose = get_cmd_opt_int("verbose");
-	static const unsigned char error_msg[][40] = {
-		"no error",        /* ERROR_NONE */
-		"unknown command", /* ERROR_COMMAND */
-		"parse error",     /* ERROR_PARSE */
-		"unknown option",  /* ERROR_OPTION */
-		"bad value",       /* ERROR_VALUE */
-		"no memory left",  /* ERROR_NOMEM */
-	};
 
 	state.pos.look = file;
 	state.pos.line = 1;
 	state.mirrored = file;
+	if (!mirror && get_cmd_opt_int("verbose") >= VERBOSE_WARNINGS)
+		state.filename = name;
 
 	while (state.pos.look && *state.pos.look) {
+		enum parse_error err = ERROR_NONE;
+
 		/* Skip all possible comments and whitespace. */
 		skip_white(&state.pos);
 
@@ -476,20 +503,11 @@ parse_config_file(struct option *options, unsigned char *name,
 			}
 		}
 
-		if (!mirror && err) {
-			/* TODO: Make this a macro and report error directly
-			 * as it's stumbled upon; line info may not be accurate
-			 * anymore now (?). --pasky */
-			if (verbose >= VERBOSE_WARNINGS) {
-				fprintf(stderr, "%s:%d: %s\n",
-					name, state.pos.line, error_msg[err]);
-				error_occurred = 1;
-			}
-			err = 0;
-		}
+		if (err != ERROR_NONE)
+			error_occurred = 1;
 	}
 
-	if (!error_occurred) return;
+	if (!error_occurred || !state.filename) return;
 
 	/* If an error occurred make sure that the user is notified and is able
 	 * to see it. First sound the bell. Then, if the text viewer is going to
