@@ -292,7 +292,9 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			}
 		} else {
 			/* rewriting a configuration file */
-			if (opt->flags & OPT_DELETED) {
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED) {
 				/* Replace the "set" command with an
 				 * "unset" command.  */
 				add_to_string(mirror, "unset ");
@@ -308,7 +310,7 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			}
 			/* Remember that the option need not be
 			 * written to the end of the file.  */
-			opt->flags &= ~OPT_MUST_SAVE;
+			flagsite->flags &= ~OPT_MUST_SAVE;
 		}
 		mem_free(val);
 	}
@@ -360,7 +362,9 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 			else mark_option_as_deleted(opt);
 		} else {
 			/* rewriting a configuration file */
-			if (opt->flags & OPT_DELETED) {
+			struct option *flagsite = indirect_option(opt);
+
+			if (flagsite->flags & OPT_DELETED) {
 				/* The "unset" command is already in the file,
 				 * and unlike with "set", there is no value
 				 * to be updated.  */
@@ -376,7 +380,7 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 			}
 			/* Remember that the option need not be
 			 * written to the end of the file.  */
-			opt->flags &= ~OPT_MUST_SAVE;
+			flagsite->flags &= ~OPT_MUST_SAVE;
 		}
 	}
 

@@ -164,7 +164,7 @@ static int no_autocreate = 0;
  * work this way because the alias may have the ::OPT_ALIAS_NEGATE flag.
  * Instead, if the caller tries to read or set the value of the alias,
  * the functions associated with ::OPT_ALIAS will forward the operation
- * to the underlying option.  */
+ * to the underlying option.  However, see indirect_option().  */
 struct option *
 get_opt_rec(struct option *tree, unsigned char *name_)
 {
@@ -246,6 +246,27 @@ get_opt_rec_real(struct option *tree, unsigned char *name)
 	opt = get_opt_rec(tree, name);
 	no_autocreate = 0;
 	return opt;
+}
+
+/** If @a opt is an alias, return the option to which it refers.
+ *
+ * @warning Because the alias may have the ::OPT_ALIAS_NEGATE flag,
+ * the caller must not access the value of the returned option as if
+ * it were also the value of the alias.  However, it is safe to access
+ * flags such as ::OPT_MUST_SAVE and ::OPT_DELETED.  */
+struct option *
+indirect_option(struct option *alias)
+{
+	struct option *real;
+
+	if (alias->type != OPT_ALIAS) return alias; /* not an error */
+
+	real = get_opt_rec(config_options, alias->value.string);
+	assertm(real != NULL, "%s aliased to unknown option %s!",
+		alias->name, alias->value.string);
+	if_assert_failed return alias;
+
+	return real;
 }
 
 /* Fetch pointer to value of certain option. It is guaranteed to never return
