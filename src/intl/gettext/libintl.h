@@ -170,7 +170,7 @@ struct language {
 extern struct language languages[];
 
 /* These two calls return 1 (english) if the code/name wasn't found. */
-extern int name_to_language(unsigned char *name);
+extern int name_to_language(const unsigned char *name);
 extern int iso639_to_language(unsigned char *iso639);
 
 extern unsigned char *language_to_name(int language);

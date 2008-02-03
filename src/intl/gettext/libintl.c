@@ -146,7 +146,7 @@ language_to_iso639(int language)
 }
 
 int
-name_to_language(unsigned char *name)
+name_to_language(const unsigned char *name)
 {
 	int i;
 
