@@ -128,6 +128,51 @@ skip_white(struct conf_parsing_pos *pos)
 	pos->look = start;
 }
 
+/** Skip a quoted string.
+ * This function allows "mismatching quotes' because str_rd() does so.  */
+static void
+skip_quoted(struct conf_parsing_pos *pos)
+{
+	assert(isquote(*pos->look));
+	if_assert_failed return;
+	pos->look++;
+
+	for (;;) {
+		if (!*pos->look)
+			return;
+		if (isquote(*pos->look)) {
+			pos->look++;
+			return;
+		}
+		if (*pos->look == '\\' && pos->look[1])
+			pos->look++;
+		if (*pos->look == '\n')
+			pos->line++;
+		pos->look++;
+	}
+}
+
+/** Skip the value of an option.
+ *
+ * This job is normally done by the reader function that corresponds
+ * to the type of the option.  However, if ELinks does not recognize
+ * the name of the option, it cannot look up the type and has to use
+ * this function instead.  */
+static void
+skip_option_value(struct conf_parsing_pos *pos)
+{
+	if (isquote(*pos->look)) {
+		/* Looks like OPT_STRING, OPT_CODEPAGE, OPT_LANGUAGE,
+		 * or OPT_COLOR.  */
+		skip_quoted(pos);
+	} else {
+		/* Looks like OPT_BOOL, OPT_INT, or OPT_LONG.  */
+		while (isasciialnum(*pos->look) || *pos->look == '.'
+		       || *pos->look == '+' || *pos->look == '-')
+			pos->look++;
+	}
+}
+
 /* Parse a command. Returns error code. */
 /* If dynamic string credentials are supplied, we will mirror the command at
  * the end of the string; however, we won't load the option value to the tree,
@@ -177,19 +222,37 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 	{
 		struct option *opt;
 		unsigned char *val;
+		const struct conf_parsing_pos pos_before_value = state->pos;
 
 		opt = mirror ? get_opt_rec_real(opt_tree, optname) : get_opt_rec(opt_tree, optname);
 		mem_free(optname);
 
-		if (!opt || (opt->flags & OPT_HIDDEN))
-			return show_parse_error(state, ERROR_OPTION);
+		if (!opt || (opt->flags & OPT_HIDDEN)) {
+			show_parse_error(state, ERROR_OPTION);
+			skip_option_value(&state->pos);
+			return ERROR_OPTION;
+		}
 
-		if (!option_types[opt->type].read)
-			return show_parse_error(state, ERROR_VALUE);
+		if (!option_types[opt->type].read) {
+			show_parse_error(state, ERROR_VALUE);
+			skip_option_value(&state->pos);
+			return ERROR_VALUE;
+		}
 
 		val = option_types[opt->type].read(opt, &state->pos.look,
 						   &state->pos.line);
-		if (!val) return show_parse_error(state, ERROR_VALUE);
+		if (!val) {
+			/* The reader function failed.  Jump back to
+			 * the beginning of the value and skip it with
+			 * the generic code.  For the error message,
+			 * use the line number at the beginning of the
+			 * value, because the ending position is not
+			 * interesting if there is an unclosed quote.  */
+			state->pos = pos_before_value;
+			show_parse_error(state, ERROR_VALUE);
+			skip_option_value(&state->pos);
+			return ERROR_VALUE;
+		}
 
 		if (mirror) {
 			if (opt->flags & OPT_DELETED)
