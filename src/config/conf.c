@@ -980,6 +980,8 @@ write_config_file(unsigned char *prefix, unsigned char *name,
 	if (ssi) {
 		secure_fputs(ssi, cfg_str);
 		ret = secure_close(ssi);
+		if (!ret)
+			untouch_options(options->value.tree);
 	}
 
 	write_config_dialog(term, config_file, secsave_errno, ret);
