@@ -272,7 +272,15 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 			return ERROR_VALUE;
 		}
 
-		if (mirror) {
+		if (!mirror) {
+			/* loading a configuration file */
+			if (!option_types[opt->type].set
+			    || !option_types[opt->type].set(opt, val)) {
+				mem_free(val);
+				return show_parse_error(state, ERROR_VALUE);
+			}
+		} else {
+			/* rewriting a configuration file */
 			if (opt->flags & OPT_DELETED)
 				opt->flags &= ~OPT_WATERMARK;
 			else
@@ -281,10 +289,6 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 				option_types[opt->type].write(opt, mirror);
 				state->mirrored = state->pos.look;
 			}
-		} else if (!option_types[opt->type].set
-			   || !option_types[opt->type].set(opt, val)) {
-			mem_free(val);
-			return show_parse_error(state, ERROR_VALUE);
 		}
 		/* This is not needed since this will be WATERMARK'd when
 		 * saving it. We won't need to save it as touched. */
@@ -344,9 +348,11 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 		}
 
 		if (!mirror) {
+			/* loading a configuration file */
 			if (opt->flags & OPT_ALLOC) delete_option(opt);
 			else mark_option_as_deleted(opt);
 		} else {
+			/* rewriting a configuration file */
 			if (opt->flags & OPT_DELETED)
 				opt->flags |= OPT_WATERMARK;
 			else
@@ -413,8 +419,21 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 		return show_parse_error(state, ERROR_PARSE);
 	}
 
-	if (mirror) {
-		/* Mirror what we already have */
+	if (!mirror) {
+		/* loading a configuration file */
+		/* We don't bother to bind() if -default-keys. */
+		if (!get_cmd_opt_bool("default-keys")
+		    && bind_do(keymap, keystroke, action, is_system_conf)) {
+			/* bind_do() tried but failed. */
+			err = show_parse_error(state, ERROR_VALUE);
+		} else {
+			err = ERROR_NONE;
+		}
+	} else {
+		/* rewriting a configuration file */
+		/* Mirror what we already have.  If the keystroke has
+		 * been unbound, then act_str is simply "none" and
+		 * this does not require special handling.  */
 		unsigned char *act_str = bind_act(keymap, keystroke);
 
 		if (act_str) {
@@ -425,15 +444,6 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 			state->mirrored = state->pos.look;
 		} else {
 			err = show_parse_error(state, ERROR_VALUE);
-		}
-	} else {
-		/* We don't bother to bind() if -default-keys. */
-		if (!get_cmd_opt_bool("default-keys")
-		    && bind_do(keymap, keystroke, action, is_system_conf)) {
-			/* bind_do() tried but failed. */
-			err = show_parse_error(state, ERROR_VALUE);
-		} else {
-			err = ERROR_NONE;
 		}
 	}
 	mem_free(keymap); mem_free(keystroke); mem_free(action);
