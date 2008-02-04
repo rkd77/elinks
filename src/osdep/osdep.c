@@ -805,12 +805,21 @@ unblock_stdin(void)
 void
 elinks_cfmakeraw(struct termios *t)
 {
-	/* Bug 54: Do not alter the character-size and parity bits in
-	 * t->c_cflag.  If they have unusual values, the terminal
-	 * probably requires those and won't work if ELinks changes
-	 * the flags.  The cfmakeraw function would set 8-bit characters
-	 * and no parity, so don't use that.  */
-	t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+	/* This elinks_cfmakeraw() intentionally leaves the following
+	 * settings unchanged, even though the standard cfmakeraw()
+	 * would change some of them:
+	 *
+	 * - c_cflag & CSIZE: number of bits per character.
+	 *   Bug 54 asked ELinks not to change this.
+	 * - c_cflag & (PARENB | PARODD): parity bit in characters.
+	 *   Bug 54 asked ELinks not to change this.
+	 * - c_iflag & (IXON | IXOFF | IXANY): XON/XOFF flow control.
+	 *
+	 * The reasoning is, if the user has set up unusual values for
+	 * those settings before starting ELinks, then the terminal
+	 * probably expects those values and ELinks should not mess
+	 * with them.  */
+	t->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL);
 	t->c_oflag &= ~OPOST;
 	t->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
 	t->c_cc[VMIN] = 1;
