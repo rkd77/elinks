@@ -143,7 +143,7 @@ menu_copying(struct terminal *term, void *xxx, void *xxxx)
 		 	 "\n"
 			 "(C) 1999 - 2002 Mikulas Patocka\n"
 			 "(C) 2001 - 2004 Petr Baudis\n"
-			 "(C) 2002 - 2006 Jonas Fonseca\n"
+			 "(C) 2002 - 2008 Jonas Fonseca\n"
 			 "and others\n"
 			 "\n"
 			 "This program is free software; you can redistribute it "
