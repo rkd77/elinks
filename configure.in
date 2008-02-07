@@ -1275,7 +1275,9 @@ AC_DEFINE_UNQUOTED(CONFDIR, "$CONFDIR", [Directory containing default config])
 AC_SUBST(CONFDIR)
 
 # Create LOCALEDIR #define for config.h
-LOCALEDIR=`eval echo "$datadir/locale"`
+test -z "$localedir" && localedir="$datadir/locale"
+localedir0=`eval echo "$localedir"`
+LOCALEDIR=`eval echo "$localedir0"`
 AC_DEFINE_UNQUOTED(LOCALEDIR, "$LOCALEDIR", [Directory containing locales])
 AC_SUBST(LOCALEDIR)
 
