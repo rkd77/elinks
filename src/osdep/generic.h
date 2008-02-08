@@ -102,7 +102,7 @@ safe_write(int fd, const void *buf, size_t count) {
 
 /* Alignment of types.  */
 #define alignof(TYPE) \
-    ((int) &((struct { unsigned char dummy1; TYPE dummy2; } *) 0)->dummy2)
+    offsetof(struct { unsigned char dummy1; TYPE dummy2; }, dummy2)
 
 /* Using this macro to copy structs is both faster and safer than
  * memcpy(destination, source, sizeof(source)). Please, use this macro instead
