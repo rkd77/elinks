@@ -5,6 +5,13 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.11.7.GIT now:
+----------------------
+
+To be released as 0.11.8.
+
+* serious Debian bug 464384: fix cast warning in alignof
+
 ELinks 0.11.7:
 --------------
 
