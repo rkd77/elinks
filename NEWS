@@ -80,8 +80,6 @@ Miscellaneous:
   reloaded.  See elinks-users mail from 28 Oct 2005.
 * several accesskey fixes
 * in Lua: don't write to the string returned by lua_tostring
-* minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
-  with no parity, and don't disable XON/OFF flow control either
 * minor bug 972: preserve the background color and underlining in
   spaces when justifying
 * minor bug 284: render closing bracket for HTML element SUB in the
@@ -135,7 +133,6 @@ Build system and compile-time errors (ignore if you don't build ELinks):
 * bug 725: fix version checking for Ruby in 'configure'
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
-* enhancement: avoid compilation of vernum.c in 'make install'
 * enhancement: make uninstall
 * experimental enhancements: --with-python=DIRECTORY, --with-gc=DIRECTORY
 * experimental enhancement: Win32 port (build with MinGW MSYS)
@@ -244,6 +241,7 @@ have already been considered.
     earlier versions.
   - fix compilation under gcc 4.x. Backported from gentoo portage.
     Commit bcabd8b7951f3319199811088e607501296ee573 in ELinks 0.11.3.
+  - enhancement: avoid compilation of vernum.c in 'make install'
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -296,8 +294,8 @@ have already been considered.
   * Really retry forever when connection.retries = 0
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.3.GIT now:
-----------------------
+ELinks 0.11.4rc0.GIT now:
+-------------------------
 
 To be released as 0.11.4.
 
@@ -321,6 +319,8 @@ To be released as 0.11.4.
 * fix active and passive FTP over IPv6
 * bug 938: elinks -remote no longer needs a controlling tty
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
+* minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
+  with no parity, and don't disable XON/OFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
