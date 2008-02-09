@@ -154,8 +154,15 @@ ssl_connect(struct socket *socket)
 	}
 
 #elif defined(CONFIG_GNUTLS)
+	/* GnuTLS uses function pointers for network I/O.  The default
+	 * functions take a file descriptor, but it must be passed in
+	 * as a pointer.  GnuTLS uses the GNUTLS_INT_TO_POINTER and
+	 * GNUTLS_POINTER_TO_INT macros for these conversions, but
+	 * those are unfortunately not in any public header.  So
+	 * ELinks must just cast the pointer the best it can and hope
+	 * that the conversions match.  */
 	gnutls_transport_set_ptr(*((ssl_t *) socket->ssl),
-				 (gnutls_transport_ptr) socket->fd);
+				 (gnutls_transport_ptr) (longptr_T) socket->fd);
 
 	/* TODO: Some certificates fuss. --pasky */
 #endif

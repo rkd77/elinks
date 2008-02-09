@@ -129,7 +129,7 @@ Miscellaneous:
 
 Build system and compile-time errors (ignore if you don't build ELinks):
 
-* serious Debian bug 464384: fix cast warning in alignof
+* serious Debian bug 464384: fix cast warnings in alignof and ssl_connect
 * bug 725: fix version checking for Ruby in 'configure'
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
