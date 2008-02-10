@@ -41,6 +41,8 @@ To be released as 0.11.4.
 * minor: don't assume sizeof(int)==4 in bittorrent
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * trivial bug 997: fix unlikely stack corruption in active FTP
+* build bug 1002: fix ``comparison is always true due to limited range
+  of data type'' warning on PowerPC and s390
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
 * build bug 936: fix errors about undefined off_t (autoheader

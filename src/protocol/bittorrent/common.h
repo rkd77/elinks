@@ -107,9 +107,7 @@ struct bittorrent_peer_request {
 
 	uint16_t block;			/* The block index in the piece. */
 
-	/* This holds the message id when the request struct is used for queuing
-	 * pending messages. */
-	char id;			/* -> enum bittorrent_message_id */
+	enum bittorrent_message_id id;	/* ID of queued pending message. */
 
 	unsigned int cloned:1;		/* The request was cloned. */
 	unsigned int requested:1;	/* Whether it has been requested. */
