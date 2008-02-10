@@ -146,12 +146,24 @@ typedef unsigned long long uint32_t;
  */
 typedef long longptr_T;
 
-/* Define internal off_t format macro for printing variables. */
-#if HAVE_OFF_T == 1 && SIZEOF_OFF_T == 8
-#define OFF_T_FORMAT "lld"
+/* To print off_t offset, ELinks does:
+ *
+ * printf("%" OFF_PRINT_FORMAT, (off_print_T) offset);
+ *
+ * The cast is necessary because it is not possible to guess
+ * a printf format for off_t itself based on what we have here.
+ * The off_t type might be either long or long long, and the format
+ * string must match even if both types have the same representation,
+ * because GCC warns about mismatches and --enable-debug adds -Werror
+ * to $CFLAGS.  */
+#if !HAVE_OFF_T || SIZEOF_OFF_T <= SIZEOF_LONG
+typedef long off_print_T;
+# define OFF_PRINT_FORMAT "ld"
+#elif HAVE_LONG_LONG && SIZEOF_OFF_T <= SIZEOF_LONG_LONG
+typedef long long off_print_T;
+# define OFF_PRINT_FORMAT "lld"
 #else
-/* For ELinks, off_t defaults to long. */
-#define OFF_T_FORMAT "ld"
+# error "cannot figure out how to print off_t values"
 #endif
 
 #endif

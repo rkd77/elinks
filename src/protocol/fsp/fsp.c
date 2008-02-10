@@ -314,7 +314,8 @@ do_fsp(struct connection *conn)
 #endif
 
 		/* Send filesize */
-		fprintf(stderr, "%" OFF_T_FORMAT "\n", (off_t)(sb.st_size));
+		fprintf(stderr, "%" OFF_PRINT_FORMAT "\n",
+			(off_print_T) sb.st_size);
 		fclose(stderr);
 
 		while ((r = fsp_fread(buf, 1, READ_SIZE, file)) > 0)

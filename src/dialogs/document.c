@@ -152,8 +152,9 @@ document_info_dialog(struct session *ses)
 	if (cached) {
 		unsigned char *a;
 
-		add_format_to_string(&msg, "\n%s: %" OFF_T_FORMAT,
-				     _("Size", term), cached->length);
+		add_format_to_string(&msg, "\n%s: %" OFF_PRINT_FORMAT,
+				     _("Size", term),
+				     (off_print_T) cached->length);
 
 		if (cached->incomplete) {
 			add_format_to_string(&msg, " (%s)", _("incomplete", term));

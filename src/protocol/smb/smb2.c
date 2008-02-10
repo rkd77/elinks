@@ -349,7 +349,8 @@ do_smb(struct connection *conn)
 			smb_error(res);
 		}
 		/* filesize */
-		fprintf(stderr, "%" OFF_T_FORMAT, sb.st_size);
+		fprintf(stderr, "%" OFF_PRINT_FORMAT,
+			(off_print_T) sb.st_size);
 		fclose(stderr);
 
 		while ((r = smbc_read(file, buf, READ_SIZE)) > 0) {
