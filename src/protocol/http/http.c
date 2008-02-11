@@ -759,7 +759,7 @@ http_send_header(struct socket *socket)
 	add_to_string(&header, ", ");
 #endif
 
-	add_to_string(&header, "gzip");
+	add_to_string(&header, "deflate, gzip");
 #endif
 	add_crlf_to_string(&header);
 #endif
@@ -995,28 +995,23 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		int *new_len)
 {
 	struct http_connection_info *http = conn->info;
-	/* to_read is number of bytes to be read from the decoder. It is 65536
-	 * (then we are just emptying the decoder buffer as we finished the walk
-	 * through the incoming stream already) or PIPE_BUF / 2 (when we are
-	 * still walking through the stream - then we write PIPE_BUF / 2 to the
-	 * pipe and read it back to the decoder ASAP; the point is that we can't
-	 * write more than PIPE_BUF to the pipe at once, but we also have to
-	 * never let read_encoded() (gzread(), in fact) to empty the pipe - that
-	 * causes further malfunction of zlib :[ ... so we will make sure that
-	 * we will always have at least PIPE_BUF / 2 + 1 in the pipe (returning
-	 * early otherwise)). */
 	enum { NORMAL, FINISHING } state = NORMAL;
 	int did_read = 0;
 	int *length_of_block;
 	unsigned char *output = NULL;
 
-	length_of_block = (http->length == LEN_CHUNKED ? &http->chunk_remaining
-						       : &http->length);
-
 #define BIG_READ 65536
-	if (!*length_of_block) {
-		/* Going to finish this decoding bussiness. */
-		state = FINISHING;
+
+	if (http->length == LEN_CHUNKED) {
+		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
+			state = FINISHING;
+		length_of_block = &http->chunk_remaining;
+	} else {
+		length_of_block = &http->length;
+		if (!*length_of_block) {
+			/* Going to finish this decoding bussiness. */
+			state = FINISHING;
+		}
 	}
 
 	if (conn->content_encoding == ENCODING_NONE) {
@@ -1035,16 +1030,9 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	}
 
 	do {
-		/* The initial value is used only when state == NORMAL.
-		 * Unconditional initialization avoids a GCC warning.  */
-		int to_read = PIPE_BUF / 2;
-
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
-			int written;
-
-			written = safe_write(conn->stream_pipes[1], data,
-						 len > to_read ? to_read : len);
+			int written = safe_write(conn->stream_pipes[1], data, len);
 
 			if (written > 0) {
 				data += written;
@@ -1084,14 +1072,13 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
 
 		if (did_read > 0) *new_len += did_read;
-		else if (did_read == -1) {
-			mem_free_set(&output, NULL);
-			*new_len = 0;
-			break; /* Loop prevention (bug 517), is this correct ? --Zas */
+		else {
+			if (did_read < 0) state = FINISHING;
+			break;
 		}
-	} while (len || did_read == BIG_READ);
+	} while (len || (did_read == BIG_READ));
 
-	shutdown_connection_stream(conn);
+	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
 
@@ -1218,11 +1205,8 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 		} else {
 			unsigned char *data;
 			int data_len;
-			int len;
 			int zero = (http->chunk_remaining == CHUNK_ZERO_SIZE);
-
-			if (zero) http->chunk_remaining = 0;
-			len = http->chunk_remaining;
+			int len = zero ? 0 : http->chunk_remaining;
 
 			/* Maybe everything necessary didn't come yet.. */
 			int_upper_bound(&len, rb->length);
@@ -1863,6 +1847,8 @@ again:
 		if (file_encoding != ENCODING_GZIP
 		    && (!strcasecmp(d, "gzip") || !strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
+		if (!strcasecmp(d, "deflate") || !strcasecmp(d, "x-deflate"))
+			conn->content_encoding = ENCODING_DEFLATE;
 #endif
 
 #ifdef CONFIG_BZIP2
@@ -1879,8 +1865,7 @@ again:
 		conn->cached->encoding_info = stracpy(get_encoding_name(conn->content_encoding));
 	}
 
-	if (http->length == -1
-	    || (PRE_HTTP_1_1(http->recv_version) && http->close))
+	if (http->length == -1 || http->close)
 		socket->state = SOCKET_END_ONCLOSE;
 
 	read_http_data(socket, rb);
