@@ -2291,7 +2291,7 @@ msgid ""
 msgstr ""
 "Czy próbować połączyć się z serwerem przy pomocy IPv4?\n"
 "Nie dotykaj tej opcji.\n"
-"Pamiętaj, żę możesz wymusić dany protokół przy połączeniu\n"
+"Pamiętaj, że możesz wymusić dany protokół przy połączeniu\n"
 "używając URL-a w stylu np. http4://elinks.cz/."
 
 #: src/config/options.inc:118
