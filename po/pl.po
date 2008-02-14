@@ -2145,7 +2145,7 @@ msgid ""
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv4?\n"
 "Nie dotykaj tej opcji.\n"
-"Pamiêtaj, ¿ê mo¿esz wymusiæ dany protokó³ przy po³±czeniu\n"
+"Pamiêtaj, ¿e mo¿esz wymusiæ dany protokó³ przy po³±czeniu\n"
 "u¿ywaj±c URL-a w stylu np. http4://elinks.cz/."
 
 #: src/config/options.inc:117
