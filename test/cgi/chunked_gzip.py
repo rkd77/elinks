@@ -1,17 +1,16 @@
 #!/usr/bin/env python
-import gzip, os, time
+import gzip, os, time, StringIO
+
+output = StringIO.StringIO()
 
 data1 = '<html><body>Two lines should be visible.<br/>The second line.</body></html>'
 
-f1 = gzip.GzipFile("/tmp/1.gz", mode = "wb")
+f1 = gzip.GzipFile("/tmp/1.gz", mode = "wb", fileobj=output)
 f1.write(data1)
 f1.close()
 
-f = open("/tmp/1.gz")
-cd1 = f.read()
-f.close()
-
-os.unlink("/tmp/1.gz")
+cd1 = output.getvalue()
+output.close()
 
 length = len(cd1)
 next_chunk = hex(length - 10)[2:]
