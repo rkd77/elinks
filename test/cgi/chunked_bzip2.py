@@ -2,16 +2,7 @@
 import bz2, os, time
 
 data1 = '<html><body>Two lines should be visible.<br/>The second line.</body></html>'
-
-f1 = bz2.BZ2File("/tmp/1.bz2", mode = "wb")
-f1.write(data1)
-f1.close()
-
-f = open("/tmp/1.bz2")
-cd1 = f.read()
-f.close()
-
-os.unlink("/tmp/1.bz2")
+cd1 = bz2.compress(data1)
 
 length = len(cd1)
 next_chunk = hex(length - 10)[2:]
