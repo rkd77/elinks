@@ -123,6 +123,8 @@ deflate_decode_buffer(unsigned char *data, int len, int *new_len)
 	unsigned char *buffer = NULL;
 	int error;
 
+	*new_len = 0;	  /* default, left there if an error occurs */
+
 	if (!len) return NULL;
 	memset(&stream, 0, sizeof(z_stream));
 	stream.next_in = data;
@@ -147,7 +149,6 @@ deflate_decode_buffer(unsigned char *data, int len, int *new_len)
 
 		error = inflate(&stream, Z_SYNC_FLUSH);
 		if (error == Z_STREAM_END) {
-			*new_len = stream.total_out;
 			error = Z_OK;
 			break;
 		}
@@ -155,13 +156,13 @@ deflate_decode_buffer(unsigned char *data, int len, int *new_len)
 
 	inflateEnd(&stream);
 
-	if (error != Z_OK) {
+	if (error == Z_OK) {
+		*new_len = stream.total_out;
+		return buffer;
+	} else {
 		if (buffer) mem_free(buffer);
-		*new_len = 0;
 		return NULL;
 	}
-
-	return buffer;
 }
 
 static void

@@ -138,6 +138,8 @@ bzip2_decode_buffer(unsigned char *data, int len, int *new_len)
 	unsigned char *buffer = NULL;
 	int error;
 
+	*new_len = 0;	  /* default, left there if an error occurs */
+
 	memset(&stream, 0, sizeof(bz_stream));
 	stream.next_in = data;
 	stream.avail_in = len;
@@ -168,7 +170,6 @@ bzip2_decode_buffer(unsigned char *data, int len, int *new_len)
 
 		error = BZ2_bzDecompress(&stream);
 		if (error == BZ_STREAM_END) {
-			*new_len = stream.total_out_lo32;
 			error = BZ_OK;
 			break;
 		}
@@ -181,13 +182,13 @@ bzip2_decode_buffer(unsigned char *data, int len, int *new_len)
 
 	BZ2_bzDecompressEnd(&stream);
 
-	if (error != BZ_OK) {
+	if (error == BZ_OK) {
+		*new_len = stream.total_out_lo32;
+		return buffer;
+	} else {
 		if (buffer) mem_free(buffer);
-		*new_len = 0;
 		return NULL;
 	}
-
-	return buffer;
 }
 
 static void
