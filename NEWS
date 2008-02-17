@@ -31,7 +31,7 @@ To be released as 0.11.4.
 * bug 938: elinks -remote no longer needs a controlling tty
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
-  with no parity, and don't disable XON/OFF flow control either
+  with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
