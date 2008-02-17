@@ -480,6 +480,11 @@ AC_DEFUN([EL_CONFIG_OPTIONAL_LIBRARY],
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 	[  --without-gpm           disable gpm (mouse) support])
 
+# ELinks calls deflateInit2 with windowBits = MAX_WBITS | 32, to
+# enable automatic decoding of both zlib and gzip headers.  This
+# feature was added in zlib 1.2.0.2; earlier versions return an error.
+# The gzclearerr function was also added in zlib 1.2.0.2, so check for
+# that, even though ELinks does not actually call gzclearerr.
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 	[  --without-zlib          disable zlib support])
 
