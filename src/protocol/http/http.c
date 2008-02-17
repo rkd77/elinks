@@ -1034,7 +1034,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			/* ... we aren't finishing yet. */
 			int written = safe_write(conn->stream_pipes[1], data, len);
 
-			if (written > 0) {
+			if (written >= 0) {
 				data += written;
 				len -= written;
 
