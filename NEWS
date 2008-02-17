@@ -12,7 +12,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (054852ae234342765ab69da0eb95a18f96bd6028) and related
+ELinks 0.12.GIT (4672bad9c73321019c1a2a7695761b8188bd1a8f) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -129,7 +129,8 @@ Miscellaneous:
 
 Build system and compile-time errors (ignore if you don't build ELinks):
 
-* serious Debian bug 464384: fix cast warnings in alignof and ssl_connect
+* serious Debian bug 464384: fix warnings in alignof, ssl_connect, and
+  printing of off_t values
 * bug 725: fix version checking for Ruby in 'configure'
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
@@ -320,13 +321,14 @@ To be released as 0.11.4.
 * bug 938: elinks -remote no longer needs a controlling tty
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
-  with no parity, and don't disable XON/OFF flow control either
+  with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
 * minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor bug 928: properly display no-break spaces in a UTF-8 document
   if the terminal uses some other charset
+* minor bug 987: English spelling and grammar corrections
 * minor: don't assume sizeof(int)==4 in bittorrent
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * trivial bug 997: fix unlikely stack corruption in active FTP
