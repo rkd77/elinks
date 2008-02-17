@@ -63,12 +63,13 @@ Miscellaneous:
 * critical bug 869: long mailcap entry buffer overflow (non-security)
   when downloading
 * tabs opened by -remote now go behind existing dialogs
+* major bug 534, enhancement 517: fix HTTP gzip and bzip2
+  decompression, and add deflate and LZMA
 * major bug 503: various fixes in parsing and updating of elinks.conf
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
 * bug 948: fix wrong UTF-8 output after the charset menu was used
-* gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
 * bug 744: don't change ``//'' to ``/'' in URIs
@@ -93,8 +94,6 @@ Miscellaneous:
   itself acts as a pager
 * enhancement 790: If-Modified-Since and If-None-Match
 * enhancement: HTTP negotiate-auth using GSSAPI
-* enhancement 517: fixed and enabled HTTP bzip2 decompression
-* enhancement: LZMA decompression
 * enhancement: FSP progress indicator and password prompt
 * enhancement: autocreate directories needed to download a file
 * enhancement: ``Add server'' button in the cookie manager
