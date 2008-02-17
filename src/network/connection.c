@@ -374,6 +374,10 @@ shutdown_connection_stream(struct connection *conn)
 	if (conn->stream) {
 		close_encoded(conn->stream);
 		conn->stream = NULL;
+	} else if (conn->stream_pipes[0] >= 0) {
+		/* close_encoded() usually closes this end of the pipe,
+		 * but open_encoded() apparently failed this time.  */
+		close(conn->stream_pipes[0]);
 	}
 	if (conn->stream_pipes[1] >= 0)
 		close(conn->stream_pipes[1]);
