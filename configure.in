@@ -377,7 +377,6 @@ dnl ===================================================================
 dnl Checks for libraries.
 dnl ===================================================================
 
-dnl Replace `main' with a function in -lsocket:
 AC_CHECK_FUNC(socket, cf_result=yes, cf_result=no)
 if test "$cf_result" = no; then
 	AC_CHECK_LIB(socket, socket)
