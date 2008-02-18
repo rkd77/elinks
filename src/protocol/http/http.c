@@ -23,6 +23,7 @@
 #include "cache/cache.h"
 #include "config/options.h"
 #include "cookies/cookies.h"
+#include "encoding/encoding.h"
 #include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
@@ -745,24 +746,7 @@ http_send_header(struct socket *socket)
 	add_to_string(&header, "Accept: */*");
 	add_crlf_to_string(&header);
 
-	/* TODO: Make this encoding.c function. */
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2)
-	add_to_string(&header, "Accept-Encoding: ");
-
-#ifdef CONFIG_BZIP2
-	add_to_string(&header, "bzip2");
-#endif
-
-#ifdef CONFIG_GZIP
-
-#ifdef CONFIG_BZIP2
-	add_to_string(&header, ", ");
-#endif
-
-	add_to_string(&header, "deflate, gzip");
-#endif
-	add_crlf_to_string(&header);
-#endif
+	accept_encoding_header(&header);
 
 	if (!accept_charset) {
 		init_accept_charset();

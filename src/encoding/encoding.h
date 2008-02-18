@@ -45,4 +45,6 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page);
 /* Reads the file with the given @filename into the string @source. */
 enum connection_state read_encoded_file(struct string *filename, struct string *source);
 
+void accept_encoding_header(struct string *header);
+
 #endif
