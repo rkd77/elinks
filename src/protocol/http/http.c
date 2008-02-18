@@ -1857,6 +1857,11 @@ again:
 			conn->content_encoding = ENCODING_BZIP2;
 #endif
 
+#ifdef CONFIG_LZMA
+		if (file_encoding != ENCODING_LZMA
+		    && (!strcasecmp(d, "lzma") || !strcasecmp(d, "x-lzma")))
+			conn->content_encoding = ENCODING_LZMA;
+#endif
 		mem_free(d);
 	}
 

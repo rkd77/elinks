@@ -11,101 +11,45 @@
 #include <unistd.h>
 #endif
 
+#include <lzma.h>
+#include <errno.h>
+
 #include "elinks.h"
 
-#include "encoding/LzmaDecode.h"
 #include "encoding/encoding.h"
 #include "encoding/lzma.h"
 #include "util/memory.h"
 
-#define LZMAMAXOUTPUT 2097152
+#define ELINKS_BZ_BUFFER_LENGTH 5000
 
 struct lzma_enc_data {
-	unsigned char *output;
-	off_t current;
-	off_t outSize;
+	lzma_stream flzma_stream;
+	int fdread;
+	int last_read;
+	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
-
-static void
-lzma_cleanup(struct lzma_enc_data *data)
-{
-	mem_free_if(data->output);
-	mem_free(data);
-}
 
 static int
 lzma_open(struct stream_encoded *stream, int fd)
 {
-	CLzmaDecoderState state;
-	struct stat buf;
-	struct lzma_enc_data *data;
-	ssize_t nb;
-	size_t inSize, inProcessed, outProcessed;
-	int res;
-	unsigned char *input, *inData;
-	unsigned int i;
+	struct lzma_enc_data *data = mem_alloc(sizeof(*data));
+	int err;
 
-	if (fstat(fd, &buf)) return -1;
-	if (!S_ISREG(buf.st_mode)) return -1;
-	if (buf.st_size < LZMA_PROPERTIES_SIZE + 8) return -1;
-	data = mem_calloc(1, sizeof(*data));
-	if (!data) return -1;
-	input = mem_alloc(buf.st_size);
-	if (!input) {
+	stream->data = NULL;
+	if (!data) {
+		return -1;
+	}
+	
+	copy_struct(&data->flzma_stream, &LZMA_STREAM_INIT_VAR);
+	data->fdread = fd;
+	data->last_read = 0;
+
+	err = lzma_auto_decoder(&data->flzma_stream, NULL, NULL);
+	if (err != LZMA_OK) {
 		mem_free(data);
 		return -1;
 	}
-	nb = safe_read(fd, input, buf.st_size);
-	close(fd);
-	if (nb != buf.st_size) {
-		mem_free(input);
-		lzma_cleanup(data);
-		return -1;
-	}
-	if (LzmaDecodeProperties(&state.Properties, input,
-	    LZMA_PROPERTIES_SIZE) != LZMA_RESULT_OK) {
-	    mem_free(input);
-	    lzma_cleanup(data);
-	    return -1;
-	}
-	state.Probs = (CProb *)mem_alloc(LzmaGetNumProbs(
-		             &state.Properties) * sizeof(CProb));
-	if (!state.Probs) {
-		mem_free(input);
-		lzma_cleanup(data);
-		return -1;
-	}
-	inSize = buf.st_size - LZMA_PROPERTIES_SIZE - 8;
-	inData = input + LZMA_PROPERTIES_SIZE;
-	data->outSize = 0;
 
-	/* The size is 8 bytes long, but who wants such big files */
-	for (i = 0; i < 4; i++) {
-		unsigned char b = inData[i];
-		data->outSize += (unsigned int)(b) << (i * 8);
-	}
-	if (data->outSize == 0xffffffff) data->outSize = LZMAMAXOUTPUT;
-
-	data->output = mem_alloc(data->outSize);
-	if (!data->output) {
-		mem_free(state.Probs);
-		mem_free(input);
-		lzma_cleanup(data);
-		return -1;
-	}
-	inData += 8;
-	res = LzmaDecode(&state, inData, inSize, &inProcessed,
-		data->output, data->outSize, &outProcessed);
-	if (res) {
-		mem_free(state.Probs);
-		mem_free(input);
-		lzma_cleanup(data);
-		return -1;
-	}
-	data->outSize = outProcessed;
-	data->current = 0;
-	mem_free(input);
-	mem_free(state.Probs);
 	stream->data = data;
 
 	return 0;
@@ -115,63 +59,93 @@ static int
 lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
+	int err = 0;
 
-	if (data->current + len > data->outSize)
-		len = data->outSize - data->current;
+	if (!data) return -1;
 
-	if (len < 0) return -1;
-	memcpy(buf, data->output + data->current, len);
-	data->current += len;
+	assert(len > 0);
 
-	return len;
+	if (data->last_read) return 0;
+
+	data->flzma_stream.avail_out = len;
+	data->flzma_stream.next_out = buf;
+
+	do {
+		if (data->flzma_stream.avail_in == 0) {
+			int l = safe_read(data->fdread, data->buf,
+			                  ELINKS_BZ_BUFFER_LENGTH);
+
+			if (l == -1) {
+				if (errno == EAGAIN)
+					break;
+				else
+					return -1; /* I/O error */
+			} else if (l == 0) {
+				/* EOF. It is error: we wait for more bytes */
+				return -1;
+			}
+
+			data->flzma_stream.next_in = data->buf;
+			data->flzma_stream.avail_in = l;
+		}
+
+		err = lzma_code(&data->flzma_stream, LZMA_RUN);
+		if (err == LZMA_STREAM_END) {
+			data->last_read = 1;
+			break;
+		} else if (err != LZMA_OK) {
+			return -1;
+		}
+	} while (data->flzma_stream.avail_out > 0);
+
+	assert(len - data->flzma_stream.avail_out == data->flzma_stream.next_out - buf);
+	return len - data->flzma_stream.avail_out;
 }
 
 static unsigned char *
 lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 {
-	CLzmaDecoderState state;
-	size_t inSize, inProcessed, outProcessed;
-	int res, outSize;
-	unsigned char *inData;
-	unsigned char *output;
-	unsigned int i;
+	lzma_stream stream = LZMA_STREAM_INIT;
+	unsigned char *buffer = NULL;
+	int error;
 
-	if (len < LZMA_PROPERTIES_SIZE + 8) return NULL;
-	if (LzmaDecodeProperties(&state.Properties, data,
-	    LZMA_PROPERTIES_SIZE) != LZMA_RESULT_OK) {
-	    return NULL;
-	}
-	state.Probs = (CProb *)mem_alloc(LzmaGetNumProbs(
-		             &state.Properties) * sizeof(CProb));
-	if (!state.Probs) {
+	stream.next_in = data;
+	stream.avail_in = len;
+
+	if (lzma_auto_decoder(&stream, NULL, NULL) != LZMA_OK)
+		return NULL;
+
+	do {
+		unsigned char *new_buffer;
+		size_t size = stream.total_out + MAX_STR_LEN;
+
+		new_buffer = mem_realloc(buffer, size);
+		if (!new_buffer) {
+			error = LZMA_MEM_ERROR;
+			break;
+		}
+
+		buffer		 = new_buffer;
+		stream.next_out  = buffer + stream.total_out;
+		stream.avail_out = MAX_STR_LEN;
+
+		error = lzma_code(&stream, LZMA_RUN);
+		if (error == LZMA_STREAM_END) {
+			*new_len = stream.total_out;
+			error = LZMA_OK;
+			break;
+		}
+	} while (error == LZMA_OK && stream.avail_in > 0);
+
+	lzma_end(&stream);
+
+	if (error != LZMA_OK) {
+		if (buffer) mem_free(buffer);
+		*new_len = 0;
 		return NULL;
 	}
-	inSize = len - LZMA_PROPERTIES_SIZE - 8;
-	inData = data + LZMA_PROPERTIES_SIZE;
-	outSize = 0;
 
-	for (i = 0; i < 4; i++) {
-		unsigned char b = inData[i];
-		outSize += (unsigned int)(b) << (i * 8);
-	}
-	if (outSize == 0xffffffff) outSize = LZMAMAXOUTPUT;
-
-	output = mem_alloc(outSize);
-	if (!output) {
-		mem_free(state.Probs);
-		return NULL;
-	}
-	inData += 8;
-	res = LzmaDecode(&state, inData, inSize, &inProcessed, output,
-		outSize, &outProcessed);
-	if (res) {
-		mem_free(state.Probs);
-		mem_free(output);
-		return NULL;
-	}
-	*new_len = outProcessed;
-
-	return output;
+	return buffer;
 }
 
 static void
@@ -179,7 +153,12 @@ lzma_close(struct stream_encoded *stream)
 {
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 
-	lzma_cleanup(data);
+	if (data) {
+		lzma_end(&data->flzma_stream);
+		close(data->fdread);
+		mem_free(data);
+		stream->data = 0;
+	}
 }
 
 static const unsigned char *const lzma_extensions[] = { ".lzma", NULL };
