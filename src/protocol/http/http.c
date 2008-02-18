@@ -1014,6 +1014,8 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	}
 
 	do {
+		unsigned char *tmp;
+
 		if (state == NORMAL) {
 			/* ... we aren't finishing yet. */
 			int written = safe_write(conn->stream_pipes[1], data, len);
@@ -1050,8 +1052,9 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 			if (!conn->stream) return NULL;
 		}
 
-		output = (unsigned char *) mem_realloc(output, *new_len + BIG_READ);
-		if (!output) break;
+		tmp = mem_realloc(output, *new_len + BIG_READ);
+		if (!tmp) break;
+		output = tmp;
 
 		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
 
