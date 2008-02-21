@@ -5237,7 +5237,7 @@ msgstr[2] "%ld sesji"
 
 #: src/dialogs/info.c:252
 msgid "Memory allocated"
-msgstr "Pamięć zaalokowana"
+msgstr "Przydzielona pamięć"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -6639,7 +6639,7 @@ msgstr "Włącz obsługę mime.types."
 
 #: src/mime/backend/mimetypes.c:58
 msgid "The search path for mime.types files. Colon-separated list of files."
-msgstr "Odzielona dwukropkami lista ścieżek do plików mime.types."
+msgstr "Oddzielona dwukropkami lista ścieżek do plików mime.types."
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
@@ -6879,9 +6879,9 @@ msgid ""
 "programs for handling it. Downloading URLs using external\n"
 "programs is not supported."
 msgstr ""
-"Ten URL zawiera protokół nie obsługiwany natywnie przez\n"
-"ELinks co oznacza iż ELinks będzie polegał na zewnętrznym\n"
-"programie do jego obsługi. Ściąganie URLi za pomocą\n"
+"Ten URL zawiera protokół nie obsługiwany bezpośrednio przez\n"
+"ELinksa co oznacza iż ELinks będzie polegał na zewnętrznym\n"
+"programie do jego obsługi. Ściąganie URL-i za pomocą\n"
 "zewnętrznych programów nie jest w tej chwili wspierane."
 
 #: src/network/state.c:71
@@ -6938,7 +6938,7 @@ msgstr "Błąd SSL"
 
 #: src/network/state.c:91
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Ta wersja ELinksa nie zawiera wsparcia dla SSL/TSL"
+msgstr "Ta wersja ELinksa nie zawiera wsparcia dla SSL/TLS"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -7012,7 +7012,7 @@ msgstr "Błąd BitTorrenta"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
-msgstr "Plik metainformacji BitTorrent zawiera błędy"
+msgstr "Plik metainformacji BitTorrenta zawiera błędy"
 
 #: src/network/state.c:125
 msgid "The tracker requesting failed"
@@ -7181,7 +7181,7 @@ msgstr "Maksymalny numer portu"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
-msgstr "Maksymalny numer portu do nasłychiwania."
+msgstr "Maksymalny numer portu do nasłuchiwania."
 
 #. ******************************************************************
 #. Tracker connection options:
@@ -8407,7 +8407,7 @@ msgstr "Dane uwierzytelniające"
 msgid "Credentials file passed to smbclient via -A option."
 msgstr ""
 "Plik z danymi uwierzytelniającymi przekazywany\n"
-"do smbclient-a przy użyciu opcji -A."
+"do smbclienta przy użyciu opcji -A."
 
 #
 #. name:
