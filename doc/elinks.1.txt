@@ -78,7 +78,7 @@ HOME::
 
 WWW_HOME::
 
-	Homepage location (as in man:lynx[1]).
+	Homepage location (as in otherman:lynx[1]).
 
 FILES
 -----
@@ -167,8 +167,8 @@ was done by Jonas Fonseca mailto:fonseca@diku.dk[].
 SEE ALSO
 --------
 
-man:elinkskeys[5], man:elinks.conf[5], man:links[1], man:lynx[1], man:w3m[1],
-man:wget[1]
+man:elinkskeys[5], man:elinks.conf[5], otherman:links[1], otherman:lynx[1],
+otherman:w3m[1], otherman:wget[1]
 
 ////////////////////////////////////////////////////////////////////////////
 # vim: tabstop=4 shiftwidth=4 textwidth=76
