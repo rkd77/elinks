@@ -109,6 +109,8 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 	unsigned char *buffer = NULL;
 	int error;
 
+	*new_len = 0;	  /* default, left there if an error occurs */
+
 	stream.next_in = data;
 	stream.avail_in = len;
 
@@ -131,7 +133,6 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 
 		error = lzma_code(&stream, LZMA_RUN);
 		if (error == LZMA_STREAM_END) {
-			*new_len = stream.total_out;
 			error = LZMA_OK;
 			break;
 		}
@@ -139,13 +140,13 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 
 	lzma_end(&stream);
 
-	if (error != LZMA_OK) {
+	if (error == LZMA_OK) {
+		*new_len = stream.total_out;
+		return buffer;
+	} else {
 		if (buffer) mem_free(buffer);
-		*new_len = 0;
 		return NULL;
 	}
-
-	return buffer;
 }
 
 static void
