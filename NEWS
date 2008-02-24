@@ -64,7 +64,7 @@ Miscellaneous:
   when downloading
 * tabs opened by -remote now go behind existing dialogs
 * major bug 534, enhancement 517: fix HTTP gzip and bzip2
-  decompression, and add deflate and LZMA
+  decompression, and add deflate and LZMA (requires LZMA Utils)
 * major bug 503: various fixes in parsing and updating of elinks.conf
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control

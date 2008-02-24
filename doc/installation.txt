@@ -42,9 +42,11 @@ ifndef::installation-webpage[]
 			See <<lua-scripting,the Elinks - Lua interface>>    \
 endif::installation-webpage[]
 			for more info.
-zlib 1.2.0.2 or later	For handling compressed documents both locally and  \
-			sent from server.
-bzip2			For handling local compressed documents.
+zlib 1.2.0.2 or later	For handling gzip or deflate compressed documents   \
+			both locally and sent from server.
+bzip2			Likewise, for bzip2 compressed documents.
+LZMA Utils		Likewise, for LZMA compressed documents.            \
+			Version 4.32.5 should work.
 OpenSSL or GNU TLS	For handling secure HTTP browsing.
 GPM			'General Purpose Mouse' for mouse support.
 expat			'XML Parser Toolkit' needed for XBEL support.
