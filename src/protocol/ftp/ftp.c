@@ -1171,7 +1171,8 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 	add_to_string(&string, "   1 ftp      ftp ");
 
 	if (ftp_info->size != FTP_SIZE_UNKNOWN) {
-		add_format_to_string(&string, "%12" OFF_T_FORMAT " ", ftp_info->size);
+		add_format_to_string(&string, "%12" OFF_PRINT_FORMAT " ",
+				     (off_print_T) ftp_info->size);
 	} else {
 		add_to_string(&string, "           - ");
 	}

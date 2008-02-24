@@ -29,7 +29,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (054852ae234342765ab69da0eb95a18f96bd6028) and related
+ELinks 0.12.GIT (4672bad9c73321019c1a2a7695761b8188bd1a8f) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -80,12 +80,13 @@ Miscellaneous:
 * critical bug 869: long mailcap entry buffer overflow (non-security)
   when downloading
 * tabs opened by -remote now go behind existing dialogs
+* major bug 534, enhancement 517: fix HTTP gzip and bzip2
+  decompression, and add deflate and LZMA (requires LZMA Utils)
 * major bug 503: various fixes in parsing and updating of elinks.conf
 * Debian bug 257762: turn terminal transparency off by default
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
 * bug 948: fix wrong UTF-8 output after the charset menu was used
-* gzip_read: always call gzclearerr
 * bug 816: convert entity references in input/@value only once
 * bug 916: if a mailcap entry has no %s, provide the file as stdin
 * bug 744: don't change ``//'' to ``/'' in URIs
@@ -97,8 +98,6 @@ Miscellaneous:
   reloaded.  See elinks-users mail from 28 Oct 2005.
 * several accesskey fixes
 * in Lua: don't write to the string returned by lua_tostring
-* minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
-  with no parity, and don't disable XON/OFF flow control either
 * minor bug 972: preserve the background color and underlining in
   spaces when justifying
 * minor bug 284: render closing bracket for HTML element SUB in the
@@ -112,8 +111,6 @@ Miscellaneous:
   itself acts as a pager
 * enhancement 790: If-Modified-Since and If-None-Match
 * enhancement: HTTP negotiate-auth using GSSAPI
-* enhancement 517: fixed and enabled HTTP bzip2 decompression
-* enhancement: LZMA decompression
 * enhancement: FSP progress indicator and password prompt
 * enhancement: autocreate directories needed to download a file
 * enhancement: ``Add server'' button in the cookie manager
@@ -148,10 +145,11 @@ Miscellaneous:
 
 Build system and compile-time errors (ignore if you don't build ELinks):
 
+* serious Debian bug 464384: fix warnings in alignof, ssl_connect, and
+  printing of off_t values
 * bug 725: fix version checking for Ruby in 'configure'
 * enhancement: if make -k was used and a sub-Make fails, build the
   rest before propagating
-* enhancement: avoid compilation of vernum.c in 'make install'
 * enhancement: make uninstall
 * experimental enhancements: --with-python=DIRECTORY, --with-gc=DIRECTORY
 * experimental enhancement: Win32 port (build with MinGW MSYS)
@@ -260,6 +258,7 @@ have already been considered.
     earlier versions.
   - fix compilation under gcc 4.x. Backported from gentoo portage.
     Commit bcabd8b7951f3319199811088e607501296ee573 in ELinks 0.11.3.
+  - enhancement: avoid compilation of vernum.c in 'make install'
 * Reverted changes:
   - (new feature) document.write, reverted in
     2c087e52e74528a720621186b91880463e039d50
@@ -312,8 +311,8 @@ have already been considered.
   * Really retry forever when connection.retries = 0
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.3.GIT now:
-----------------------
+ELinks 0.11.4rc0.GIT now:
+-------------------------
 
 To be released as 0.11.4.
 
@@ -335,16 +334,22 @@ To be released as 0.11.4.
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
 * fix active and passive FTP over IPv6
+* bug 938: elinks -remote no longer needs a controlling tty
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
+* minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
+  with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
   Flush all caches' to work around their holding cache entries busy
 * minor bug 396: never show empty filename in the what-to-do dialog
 * minor bug 461: ensure contrast in blank areas, to keep the cursor visible
 * minor bug 928: properly display no-break spaces in a UTF-8 document
   if the terminal uses some other charset
+* minor bug 987: English spelling and grammar corrections
 * minor: don't assume sizeof(int)==4 in bittorrent
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * trivial bug 997: fix unlikely stack corruption in active FTP
+* build bug 1002: fix ``comparison is always true due to limited range
+  of data type'' warning on PowerPC and s390
 * build bug 950: fix ``config/install-sh: No such file or directory''
   on SunOS
 * build bug 936: fix errors about undefined off_t (autoheader

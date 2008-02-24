@@ -282,7 +282,7 @@ str_rd(struct option *opt, unsigned char **file, int *line)
 	while (*str && (commandline || !isquote(*str))) {
 		if (*str == '\\') {
 			/* FIXME: This won't work on crlf systems. */
-			if (str[1] == '\n') { str[1] = ' '; str++; }
+			if (str[1] == '\n') { str[1] = ' '; str++; (*line)++; }
 			/* When there's quote char, we will just move on there,
 			 * thus we will never test for it in while () condition
 			 * and we will treat it just as '"', ignoring the

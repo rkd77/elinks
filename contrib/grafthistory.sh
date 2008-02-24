@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 #
 # Graft the ELinks development history to the current tree.
 #
@@ -19,6 +19,9 @@ cd "$GIT_DIR"
 echo "[grafthistory] Downloading the history"
 mkdir -p objects/pack
 cd objects/pack
+# pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx is 3163784 bytes long.
+# Downloading it takes less than 6 seconds here, whereas generating it
+# with git index-pack takes over 4 minutes (750 MHz Duron, git 1.5.4.1).
 wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
 wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
 
@@ -32,4 +35,4 @@ echo 43a9a406737fd22a8558c47c74b4ad04d4c92a2b 730242dcf2cdeed13eae7e8b0c5f47bb03
 
 echo "[grafthistory] Refreshing the dumb server info wrt. new packs"
 cd ..
-git-update-server-info
+git update-server-info

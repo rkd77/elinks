@@ -40,9 +40,11 @@ static void truncate_entry(struct cache_entry *cached, off_t offset, int final);
 
 #define dump_frag(frag, count) \
 do { \
-	DBG(" [%d] f=%p offset=%" OFF_T_FORMAT " length=%" OFF_T_FORMAT \
-	    " real_length=%" OFF_T_FORMAT, \
-	    count, frag, frag->offset, frag->length, frag->real_length); \
+	DBG(" [%d] f=%p offset=%" OFF_PRINT_FORMAT \
+	    " length=%" OFF_PRINT_FORMAT \
+	    " real_length=%" OFF_PRINT_FORMAT, \
+	    count, frag, (off_print_T) frag->offset, \
+	    (off_print_T) frag->length, (off_print_T) frag->real_length); \
 } while (0)
 
 #define dump_frags(entry, comment) \

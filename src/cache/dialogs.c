@@ -82,10 +82,10 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 		}
 	}
 
-	add_format_to_string(&msg, "\n%s: %" OFF_T_FORMAT, _("Size", term),
-	                     cached->length);
-	add_format_to_string(&msg, "\n%s: %" OFF_T_FORMAT, _("Loaded size", term),
-						cached->data_size);
+	add_format_to_string(&msg, "\n%s: %" OFF_PRINT_FORMAT, _("Size", term),
+			     (off_print_T) cached->length);
+	add_format_to_string(&msg, "\n%s: %" OFF_PRINT_FORMAT, _("Loaded size", term),
+			     (off_print_T) cached->data_size);
 	if (cached->content_type) {
 		add_format_to_string(&msg, "\n%s: %s", _("Content type", term),
 				     cached->content_type);

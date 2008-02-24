@@ -17,13 +17,14 @@ When releasing a new version
  - Create a signed tag having the version ("ELinks X.X.X") as the subject and
    using the changelog create above as the body. Use something like:
 
-	$ cg-tag -s -M changelog.file elinks-X.X.X
+	$ git tag -s -F changelog.file elinks-X.X.X
 
  - Append ".GIT" to the VERSION variable in the top of configure.in.
  - Commit only this change.
  - Push these changes plus tag using:
 
-	$ cg-push -t elinks-X.X.X
+	$ git push
+	$ git push --tags
 
 2. Tasks on http://elinks.cz/ (part 1):
 

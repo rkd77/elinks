@@ -343,9 +343,11 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 #ifdef CONFIG_MOUSE
 		enable_mouse();
 #endif
+		handle_itrm_stdin(itrm);
+	} else {
+		/* elinks -remote may not have a valid stdin if not run from a tty (bug 938) */
+		if (std_in >= 0) handle_itrm_stdin(itrm);
 	}
-
-	handle_itrm_stdin(itrm);
 
 	if (sock_in != std_out)
 		set_handlers(sock_in, (select_handler_T) in_sock,
@@ -446,7 +448,8 @@ free_itrm(struct itrm *itrm)
 
 	mem_free_set(&itrm->orig_title, NULL);
 
-	clear_handlers(itrm->in.std);
+	/* elinks -remote may not have a valid stdin if not run from a tty (bug 938) */
+	if (!itrm->remote || itrm->in.std >= 0) clear_handlers(itrm->in.std);
 	clear_handlers(itrm->in.sock);
 	clear_handlers(itrm->out.std);
 	clear_handlers(itrm->out.sock);
@@ -1212,6 +1215,9 @@ in_kbd(struct itrm *itrm)
 static void
 handle_itrm_stdin(struct itrm *itrm)
 {
+	assert(itrm->in.std >= 0);
+	if_assert_failed return;
+
 	set_handlers(itrm->in.std, (select_handler_T) in_kbd, NULL,
 		     (select_handler_T) free_itrm, itrm);
 }
@@ -1222,6 +1228,9 @@ handle_itrm_stdin(struct itrm *itrm)
 static void
 unhandle_itrm_stdin(struct itrm *itrm)
 {
+	assert(itrm->in.std >= 0);
+	if_assert_failed return;
+
 	set_handlers(itrm->in.std, (select_handler_T) NULL, NULL,
 		     (select_handler_T) free_itrm, itrm);
 }
