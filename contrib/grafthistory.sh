@@ -32,4 +32,4 @@ echo 43a9a406737fd22a8558c47c74b4ad04d4c92a2b 730242dcf2cdeed13eae7e8b0c5f47bb03
 
 echo "[grafthistory] Refreshing the dumb server info wrt. new packs"
 cd ..
-git-update-server-info
+git update-server-info
