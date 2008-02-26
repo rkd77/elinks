@@ -38,7 +38,7 @@ struct deflate_enc_data {
 };
 
 static int
-deflate_open(struct stream_encoded *stream, int fd)
+deflate_open(int window_size, struct stream_encoded *stream, int fd)
 {
 	/* A zero-initialized z_stream.  The compiler ensures that all
 	 * pointer members in it are null.  (Can't do this with memset
@@ -60,7 +60,7 @@ deflate_open(struct stream_encoded *stream, int fd)
 	data->fdread = fd;
 	data->last_read = 0;
 
-	err = inflateInit2(&data->deflate_stream, MAX_WBITS | 32);
+	err = inflateInit2(&data->deflate_stream, window_size);
 	if (err != Z_OK) {
 		mem_free(data);
 		return -1;
@@ -68,6 +68,20 @@ deflate_open(struct stream_encoded *stream, int fd)
 	stream->data = data;
 
 	return 0;
+}
+
+static int
+deflate_raw_open(struct stream_encoded *stream, int fd)
+{
+	/* raw DEFLATE with neither zlib nor gzip header */
+	return deflate_open(-MAX_WBITS, stream, fd);
+}
+
+static int
+deflate_gzip_open(struct stream_encoded *stream, int fd)
+{
+	/* detect gzip header, else assume zlib header */
+	return deflate_open(MAX_WBITS + 32, stream, fd);
 }
 
 static int
@@ -117,7 +131,7 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 }
 
 static unsigned char *
-deflate_decode_buffer(unsigned char *data, int len, int *new_len)
+deflate_decode_buffer(int window_size, unsigned char *data, int len, int *new_len)
 {
 	z_stream stream;
 	unsigned char *buffer = NULL;
@@ -130,7 +144,7 @@ deflate_decode_buffer(unsigned char *data, int len, int *new_len)
 	stream.next_in = data;
 	stream.avail_in = len;
 
-	if (inflateInit2(&stream, MAX_WBITS | 32) != Z_OK)
+	if (inflateInit2(&stream, window_size) != Z_OK)
 		return NULL;
 
 	do {
@@ -165,6 +179,20 @@ deflate_decode_buffer(unsigned char *data, int len, int *new_len)
 	}
 }
 
+static unsigned char *
+deflate_raw_decode_buffer(unsigned char *data, int len, int *new_len)
+{
+	/* raw DEFLATE with neither zlib nor gzip header */
+	return deflate_decode_buffer(-MAX_WBITS, data, len, new_len);
+}
+
+static unsigned char *
+deflate_gzip_decode_buffer(unsigned char *data, int len, int *new_len)
+{
+	/* detect gzip header, else assume zlib header */
+	return deflate_decode_buffer(MAX_WBITS + 32, data, len, new_len);
+}
+
 static void
 deflate_close(struct stream_encoded *stream)
 {
@@ -183,9 +211,9 @@ static const unsigned char *const deflate_extensions[] = { NULL };
 const struct decoding_backend deflate_decoding_backend = {
 	"deflate",
 	deflate_extensions,
-	deflate_open,
+	deflate_raw_open,
 	deflate_read,
-	deflate_decode_buffer,
+	deflate_raw_decode_buffer,
 	deflate_close,
 };
 
@@ -194,8 +222,8 @@ static const unsigned char *const gzip_extensions[] = { ".gz", ".tgz", NULL };
 const struct decoding_backend gzip_decoding_backend = {
 	"gzip",
 	gzip_extensions,
-	deflate_open,
+	deflate_gzip_open,
 	deflate_read,
-	deflate_decode_buffer,
+	deflate_gzip_decode_buffer,
 	deflate_close,
 };
