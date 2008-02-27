@@ -345,7 +345,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 						break;
 					}
 
-					pos = memchr(pos, ' ', end - pos);
+					pos = memchr(pos + 1, ' ', end - pos);
 				}
 
 				if (!info->symlink.source)
