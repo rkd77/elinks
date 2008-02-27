@@ -34,7 +34,6 @@ main(int argc, char *argv[])
 {
 	struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
 	unsigned char *response = "";
-	int responselen = 0;
 	int i;
 
 	for (i = 1; i < argc; i++) {
@@ -56,18 +55,30 @@ main(int argc, char *argv[])
 					die("--response expects a string");
 				response = argv[i];
 			}
-			responselen = strlen(response);
 
 		} else {
 			die("Unknown argument '%s'", arg - 2);
 		}
 	}
 
-	if (!responselen)
+	if (!*response)
 		die("Usage: %s --response \"string\"", argv[0]);
 
-	if (parse_ftp_file_info(&ftp_info, response, responselen))
-		return 0;
+	while (*response) {
+		unsigned char *start = response;
 
-	return 1;
+		response = strchr(response, '\n');
+		if (!response) {
+			response = start + strlen(start);
+		} else {
+			if (response > start && response[-1] == '\r')
+				response[-1] = 0;
+			*response++ = 0;
+		}
+
+		if (!parse_ftp_file_info(&ftp_info, start, strlen(start)))
+			return 1;
+	}
+
+	return 0;
 }
