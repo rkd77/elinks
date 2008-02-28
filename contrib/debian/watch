@@ -4,8 +4,8 @@ version=2
 # Line continuations are performed with \
 
 # The master download directory
-http://elinks.or.cz/download/elinks-([\d]+.*).tar.bz2
+http://elinks.cz/download/elinks-([\d]+.*).tar.bz2
 
 # This is a variant HTTP format with more possibilities:
 # Homepage Pattern  [Version  [Action]]
-#http://elinks.or.cz/download/ elinks-([\d]+.*).tar.bz2 debian uupdate
+#http://elinks.cz/download/ elinks-([\d]+.*).tar.bz2 debian uupdate
