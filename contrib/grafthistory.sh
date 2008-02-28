@@ -19,6 +19,8 @@ cd "$GIT_DIR"
 echo "[grafthistory] Downloading the history"
 mkdir -p objects/pack
 cd objects/pack
+echo "ELinks history converted from CVS.  Keep this pack separate to speed up git gc." \
+     > pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.keep
 # pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx is 3163784 bytes long.
 # Downloading it takes less than 6 seconds here, whereas generating it
 # with git index-pack takes over 4 minutes (750 MHz Duron, git 1.5.4.1).
