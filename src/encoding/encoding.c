@@ -344,30 +344,3 @@ read_encoded_file(struct string *filename, struct string *page)
 	close(fd);
 	return state;
 }
-
-void
-accept_encoding_header(struct string *header)
-{
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA)
-	int comma = 0;
-
-	add_to_string(header, "Accept-Encoding: ");
-
-#ifdef CONFIG_BZIP2
-	add_to_string(header, "bzip2");
-	comma = 1;
-#endif
-
-#ifdef CONFIG_GZIP
-	if (comma) add_to_string(header, ", ");
-	add_to_string(header, "deflate, gzip");
-	comma = 1;
-#endif
-
-#ifdef CONFIG_LZMA
-	if (comma) add_to_string(header, ", ");
-	add_to_string(header, "lzma");
-#endif
-	add_crlf_to_string(header);
-#endif
-}
