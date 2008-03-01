@@ -29,7 +29,7 @@ SUBDIRS = \
 
 # Get the GIT HEAD ID if possible
 ifdef GIT
-GITDESC  = $(shell $(GIT) --git-dir=$(top_srcdir)/.git describe 2>/dev/null)
+GITDESC  = $(shell $(GIT) --git-dir=$(top_srcdir)/.git rev-parse HEAD 2>/dev/null)
 WTDIRTY  = $(shell $(GIT) --git-dir=$(top_srcdir)/.git diff-index HEAD 2>/dev/null)
 BUILD_ID = $(subst elinks-,,$(GITDESC))$(if $(WTDIRTY),-dirty)
 endif
