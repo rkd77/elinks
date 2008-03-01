@@ -178,20 +178,20 @@ static struct option_info http_options[] = {
 		"security risk because it tells web-masters and the FBI sniffers about\n"
 		"your language preference.")),
 
-#if !(defined(CONFIG_GZIP) || defined(CONFIG_BZIP2))
-#define COMP_NOTE "\nNote that this ELinks version has been compiled without compression\n" \
-		"support anyway. This option will have no effect.\n"
-#else
-#define COMP_NOTE
-#endif
-	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression (experimental)"),
-		"compression", 0, 0,
+	/* After the compression support has been tested enough,
+	 * we might wrap this option in #if CFG_DEBUG.  */
+	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression"),
+		"compression", 0, 1,
 		N_("If enabled, the capability to receive compressed content (gzip and/or\n"
 		"bzip2) is announced to the server, which usually sends the reply\n"
 		"compressed, thus saving some bandwidth at slight CPU expense.\n"
-		"HOWEVER, please note that the ELinks implementation is unfortunately very\n"
-		"buggy and you may see incomplete pages, pages with garbage instead of\n"
-		"content, etc.!" COMP_NOTE)),
+	        "\n"
+		"If ELinks displays a incomplete page or garbage, try disabling this\n"
+		"option. If that helps, there may be a bug in the decompression part\n"
+		"of ELinks. Please report such bugs.\n"
+		"\n"
+		"If ELinks has been compiled without compression support, this option\n"
+		"has no effect. To check the supported features, see Help -> About.")),
 
 	INIT_OPT_BOOL("protocol.http", N_("Activate HTTP TRACE debugging"),
 		"trace", 0, 0,
