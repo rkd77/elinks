@@ -284,7 +284,7 @@ rewrite_uri(unsigned char *url, struct uri *current_uri, unsigned char *arg)
 			case '8':
 			case '9':
 				value = *url - '0';
-				if (value > argc) break;
+				if (value >= argc) break;
 				encode_uri_string(&n, args[value],
 						  argslen[value], 1);
 				break;
