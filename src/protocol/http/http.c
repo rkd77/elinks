@@ -23,7 +23,6 @@
 #include "cache/cache.h"
 #include "config/options.h"
 #include "cookies/cookies.h"
-#include "encoding/encoding.h"
 #include "intl/charsets.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
@@ -559,6 +558,33 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 	mem_free_set(&conn->info, http);
 
 	return http;
+}
+
+static void
+accept_encoding_header(struct string *header)
+{
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA)
+	int comma = 0;
+
+	add_to_string(header, "Accept-Encoding: ");
+
+#ifdef CONFIG_BZIP2
+	add_to_string(header, "bzip2");
+	comma = 1;
+#endif
+
+#ifdef CONFIG_GZIP
+	if (comma) add_to_string(header, ", ");
+	add_to_string(header, "deflate, gzip");
+	comma = 1;
+#endif
+
+#ifdef CONFIG_LZMA
+	if (comma) add_to_string(header, ", ");
+	add_to_string(header, "lzma");
+#endif
+	add_crlf_to_string(header);
+#endif
 }
 
 static void

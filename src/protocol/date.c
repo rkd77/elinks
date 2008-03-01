@@ -128,6 +128,7 @@ parse_time(const unsigned char **time, struct tm *tm, unsigned char *end)
 
 	tm->tm_hour = (h1 - '0') * 10 + h2 - '0';
 	tm->tm_min  = (m1 - '0') * 10 + m2 - '0';
+	tm->tm_sec = 0;
 
 	/* Eat :SS or [PA]M or nothing */
 	if (end && date + 2 >= end) {
