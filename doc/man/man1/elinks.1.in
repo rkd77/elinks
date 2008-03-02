@@ -299,7 +299,7 @@ ELINKS_TWTERM, LINKS_TWTERM
 The command to run when selecting File \-> New window and if
 TWDISPLAY
 is defined (default
-twterm \-e)
+twterm \-e).
 .RE
 .PP
 ELINKS_XTERM, LINKS_XTERM
@@ -307,7 +307,7 @@ ELINKS_XTERM, LINKS_XTERM
 The command to run when selecting File \-> New window and if
 DISPLAY
 is defined (default
-xterm \-e)
+xterm \-e).
 .RE
 .PP
 FTP_PROXY, HTTP_PROXY, HTTPS_PROXY
@@ -332,6 +332,8 @@ Homepage location (as in
 \fBlynx\fR(1)).
 .RE
 .SH "FILES"
+Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/.elinks/\fR. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument.css.stylesheet\fR option.
+.sp
 .PP
 @sysconfdir@/elinks.conf
 .RS 4
@@ -390,20 +392,15 @@ Internal
 socket for communication between its instances.
 .RE
 .PP
-~/.mailcap
+~/.mailcap, /etc/mailcap
 .RS 4
 Mappings of MIME types to external handlers.
 .RE
 .PP
-~/.mime.types
+~/.mime.types, /etc/mime.types
 .RS 4
 Mappings of file extensions to MIME types.
 .RE
-Other files that ELinks uses from \fI~/.elinks/\fR includes the user defined CSS stylesheet. The name of the file can set in the \fIdocument.css.stylesheet\fR option.
-.sp
-.SH "PLATFORMS"
-\fIELinks\fR is known to work on \fILinux\fR, \fIFreeBSD\fR, \fIOpenBSD\fR, \fISolaris\fR, \fIIRIX\fR, \fIHPUX\fR, \fIDigital Unix\fR, \fIAIX\fR, \fIOS/2\fR, \fIBeOS\fR and \fIRISC OS\fR. Port for \fIWin32\fR is in state of beta testing.
-.sp
 .SH "BUGS"
 Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch.org> or if you prefer enter them into the bug tracking system <http://bugzilla.elinks.cz/>. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks.cz/community.html>.
 .sp
