@@ -13,7 +13,10 @@ HTML_DIR = $(DESTDIR)$(docdir)/$(PACKAGE)/html
 PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
 
 ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
-ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) -a "builddir=$(CURDIR)/" -a asciidoc7compatible
+ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) \
+		  -a "builddir=$(CURDIR)/" \
+		  -a asciidoc7compatible \
+		  -a elinks_version=$(VERSION)
 
 #############################################################################
 # Build files
@@ -153,12 +156,6 @@ asciidoc_dep = sed -n 's/[{]builddir}//g;s@include::\(.*\)\[.*@$@: $< \1@p' < $<
 
 -include .deps/*.asciidoc
 
-# Do a little post-processing of man pages. Inserting title headers and date.
-MAN_DATE = $(shell date -I)
-man_desc = `sed -n 's/:Description:\s*\(.*\)/\1/p' < $(srcdir)$(subst .xml,.txt,$(<F))`
-man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\" \"$(1)\"/" < $@ | \
-	   sed "s/@squote@/\\\\'/g" > $@.tmp && mv $@.tmp $@
-
 
 #############################################################################
 # Build recipies
@@ -173,11 +170,9 @@ man_hack = sed "s/^\(\.TH \"ELINKS[^\"]*\" [0-9] \).*/\1\"$(1)\" \"$(MAN_DATE)\"
 
 %.1: %.1.xml
 	$(call cmd,xmlto,man)
-	@$(call man_hack,$(call man_desc))
 
 %.5: %.5.xml
 	$(call cmd,xmlto,man)
-	@$(call man_hack,$(call man_desc))
 
 %.html-chunked: %.xml
 	$(call cmd,xmlto,html)
