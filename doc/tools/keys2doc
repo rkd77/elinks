@@ -79,6 +79,7 @@ print_keymap_defaults()
 		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
 		action=$(grep " $action," "$CONFIGDIR/actions-$keymap.inc" \
 			| sed "s/.*\"\([^\"]*\)\".*N__(\"\(.*\)\").*/\2 ('\1')/")
+		q=
 
 		case "$key" in
 		KBD_*)
@@ -92,6 +93,7 @@ print_keymap_defaults()
 		*)
 			key=$(echo "$key" | sed "s/^'\(.*\)'$/\1/" \
 			    | sed "s/'/{squote}/")
+			q='"'
 			;;
 		esac
 
@@ -103,7 +105,7 @@ print_keymap_defaults()
 		esac
 
 		echo 'ifdef::backend-docbook[]'
-		echo "'$modifier$key'::"
+		echo "'$modifier$q$key$q'::"
 		echo "	$action"
 		echo
 		echo 'endif::backend-docbook[]'
