@@ -190,13 +190,13 @@ static struct option_info http_options[] = {
 		"is sent to HTTP server when a document is requested. The 'textmode'\n"
 		"token in the first field is our silent attempt to establish this as\n"
 		"a standard for new textmode user agents, so that the webmasters can\n"
-		"have just a single uniform test for these if they are ie. pushing\n"
+		"have just a single uniform test for these if they are e.g. pushing\n"
 		"some lite version to them automagically.\n"
-		"%v in the string means ELinks version\n"
-		"%s in the string means system identification\n"
-		"%t in the string means size of the terminal\n"
-		"%b in the string means number of bars displayed by ELinks\n"
-		"Use \" \" if you don't want any User-Agent header to be sent at all.")),
+		"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+		"%v in the string means ELinks version,\n"
+		"%s in the string means system identification,\n"
+		"%t in the string means size of the terminal,\n"
+		"%b in the string means number of bars displayed by ELinks.")),
 
 
 	INIT_OPT_TREE("protocol", N_("HTTPS"),

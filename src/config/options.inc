@@ -102,7 +102,7 @@ static struct option_info config_options_info[] = {
 		"at all unless you are sure what are you doing.\n"
 		"Note that you can also force a given protocol\n"
 		"to be used on a per-connection basis by using a URL\n"
-		"in the style of i.e. http4://elinks.cz/.")),
+		"in the style of e.g. http4://elinks.cz/.")),
 #else
 	INIT_OPT_BOOL("connection", N_("Try IPv4 when connecting"),
 		"try_ipv4", 0, 1,
@@ -110,7 +110,7 @@ static struct option_info config_options_info[] = {
 		"Do not touch this option.\n"
 		"Note that you can also force a given protocol\n"
 		"to be used on a per-connection basis by using a URL\n"
-		"in the style of i.e. http4://elinks.cz/.")),
+		"in the style of e.g. http4://elinks.cz/.")),
 #endif
 
 #ifdef CONFIG_IPV6
@@ -119,7 +119,7 @@ static struct option_info config_options_info[] = {
 		N_("Whether to try to connect to a host over IPv6.\n"
 		"Note that you can also force a given protocol\n"
 		"to be used on a per-connection basis by using a URL\n"
-		"in the style of i.e. http6://elinks.cz/.")),
+		"in the style of e.g. http6://elinks.cz/.")),
 #endif
 
 	INIT_OPT_INT("connection", N_("Timeout for non-restartable connections"),
@@ -729,7 +729,7 @@ static struct option_info config_options_info[] = {
 		"an external command. If several rules are defined the link and\n"
 		"tab menu will have a submenu of items for each rule. Note, this\n"
 		"is mostly useful for launching graphical viewers, since there\n"
-		"is not support for releasing the terminal while the command runs.\n"
+		"is no support for releasing the terminal while the command runs.\n"
 		"The action and submenus are also available by binding keys to\n"
 		"the frame-external-command, the link-external-command, and\n"
 		"the tab-external-command actions.")),

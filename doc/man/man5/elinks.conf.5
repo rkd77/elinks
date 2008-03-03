@@ -207,12 +207,12 @@ Number of tries to establish a connection. Zero means try forever.
 .PP
 connection.try_ipv4 [0|1] (default: 1)
 .RS 4
-Whether to try to connect to a host over IPv4. Note that if connection.try_ipv6 is enabled too, it takes precedence. And better do not touch this at all unless you are sure what are you doing. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of i.e. http4://elinks.cz/.
+Whether to try to connect to a host over IPv4. Note that if connection.try_ipv6 is enabled too, it takes precedence. And better do not touch this at all unless you are sure what are you doing. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e.g. http4://elinks.cz/.
 .RE
 .PP
 connection.try_ipv6 [0|1] (default: 1)
 .RS 4
-Whether to try to connect to a host over IPv6. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of i.e. http6://elinks.cz/.
+Whether to try to connect to a host over IPv6. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e.g. http6://elinks.cz/.
 .RE
 .PP
 connection.unrestartable_receive_timeout <num> (default: 600)
@@ -1012,7 +1012,7 @@ Compress successive empty lines to only one in displayed text.
 .PP
 document.uri_passing
 .RS 4
-Rules for passing URIs to external commands. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command. If several rules are defined the link and tab menu will have a submenu of items for each rule. Note, this is mostly useful for launching graphical viewers, since there is not support for releasing the terminal while the command runs. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions.
+Rules for passing URIs to external commands. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command. If several rules are defined the link and tab menu will have a submenu of items for each rule. Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions.
 .RE
 .PP
 document.uri_passing._template_ <str> (default: "")
@@ -1506,10 +1506,10 @@ and various server\-side scripts \-\-\- the server only returns the client's req
 .PP
 protocol.http.user_agent <str> (default: "ELinks/%v (textmode; %s; %t\-%b)")
 .RS 4
-Change the User Agent ID. That means identification string, which is sent to HTTP server when a document is requested. The 'textmode' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are ie. pushing some lite version to them automagically. Use " " if you don't want any User\-Agent header to be sent at all: %v in the string means
+Change the User Agent ID. That means identification string, which is sent to HTTP server when a document is requested. The 'textmode' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e.g. pushing some lite version to them automagically. Use " " if you don't want any User\-Agent header to be sent at all. %v in the string means
 \fIELinks\fR
-version %s in the string means system identification %t in the string means size of the terminal %b in the string means number of bars displayed by
-\fIELinks\fR
+version, %s in the string means system identification, %t in the string means size of the terminal, %b in the string means number of bars displayed by
+\fIELinks\fR.
 .RE
 .PP
 protocol.https
@@ -1574,7 +1574,7 @@ Default URI template used when the string entered in the goto dialog does not ap
 \fI:\fR
 or
 \fI/\fR
-characters), and does not match any defined prefixes. Set the value to "" to disable use of the default template rewrite rule.
+characters), and does not match any defined prefixes. Set the value to "" to disable use of the default template rewrite rule. %c in the template means the current URL, %s in the template means the whole string from the goto dialog, %0,%1,\&...,%9 mean the 1st,2nd,\&...,10th space\-delimited part of %s, %% in the template means '%'.
 .RE
 .PP
 protocol.rewrite.enable\-dumb [0|1] (default: 1)
