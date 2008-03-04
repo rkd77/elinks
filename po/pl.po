@@ -4,7 +4,7 @@
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
 # Wojtek Bojdo³ <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
-# Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
+# Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2008
 # Miko³aj Machowski <mikmach@wp.pl>, 2003
 #
 msgid ""
@@ -5082,7 +5082,7 @@ msgstr "P~ow³oka systemowa"
 
 #: src/dialogs/menu.c:381
 msgid "Resize t~erminal"
-msgstr "Zmieñ rozmiar ~terminala"
+msgstr "Zmieñ rozmiar te~rminala"
 
 #: src/dialogs/menu.c:398
 msgid "Search ~backward"
