@@ -13,7 +13,9 @@ When releasing a new version
    Don't add the release date yet though; it will be added after the release,
    from the date in the mailing list archives. 
  - Change VERSION in the top of configure.in to hold the new version number.
- - Commit only this change.
+ - Update the manpages so the will have the new release number by first
+   building the source, followed by making the `update-man' target in doc/.
+ - Commit these changes.
  - Create a signed tag having the version ("ELinks X.X.X") as the subject and
    using the changelog create above as the body. Use something like:
 
