@@ -81,6 +81,7 @@ static void
 add_mime_extension(void *data)
 {
 	struct extension *ext = data;
+	struct option *option;
 	struct string name;
 
 	if (!ext || !init_string(&name)) return;
@@ -90,6 +91,8 @@ add_mime_extension(void *data)
 
 	really_del_ext(ext->ext_orig); /* ..or rename ;) */
 	safe_strncpy(get_opt_str(name.source), ext->ct, MAX_STR_LEN);
+	option = get_opt_rec(config_options, name.source);
+	option_changed(NULL, option, option);
 	done_string(&name);
 }
 
