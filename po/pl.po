@@ -2,7 +2,7 @@
 # Arkadiusz Sochala <jojoro@priv2.onet.pl>
 # Grzegorz Golawski <grzegol@pld.org.pl>
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
-# Wojtek Bojdo/l <wojboj@lp.net.pl>
+# Wojtek Bojdo³ <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2001 - 2004
 # Adam Go³êbiowski <adamg@pld-linux.org>, 2003-2006
 # Miko³aj Machowski <mikmach@wp.pl>, 2003
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-29 18:30+0100\n"
-"PO-Revision-Date: 2008-01-29 19:30+0100\n"
+"POT-Creation-Date: 2008-03-04 13:00+0000\n"
+"PO-Revision-Date: 2008-03-04 15:20+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/bfu/hierbox.c:429 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:355 src/dialogs/edit.c:97 src/dialogs/info.c:133
-#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:129
+#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
 #: src/session/session.c:792 src/viewer/text/search.c:1593
@@ -167,7 +167,7 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 
 #: src/bfu/inpfield.c:254 src/config/dialogs.c:392 src/cookies/dialogs.c:356
 #: src/dialogs/edit.c:101 src/dialogs/edit.c:104 src/dialogs/options.c:220
-#: src/dialogs/options.c:298 src/mime/dialogs.c:130
+#: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
 #: src/session/download.c:544 src/session/download.c:1128
@@ -2127,7 +2127,7 @@ msgid ""
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using a URL\n"
-"in the style of i.e. http4://elinks.cz/."
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv4?\n"
 "Je¶li connection.try_ipv6 jest tak¿e w³±czone, to ma\n"
@@ -2141,7 +2141,7 @@ msgid ""
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using a URL\n"
-"in the style of i.e. http4://elinks.cz/."
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv4?\n"
 "Nie dotykaj tej opcji.\n"
@@ -2157,7 +2157,7 @@ msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
 "to be used on a per-connection basis by using a URL\n"
-"in the style of i.e. http6://elinks.cz/."
+"in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Czy próbowaæ po³±czyæ siê z serwerem przy pomocy IPv6?\n"
 "Pamiêtaj, ¿e mo¿esz tak¿e wymusiæ dany protokó³ przy\n"
@@ -3413,7 +3413,7 @@ msgid ""
 "an external command. If several rules are defined the link and\n"
 "tab menu will have a submenu of items for each rule. Note, this\n"
 "is mostly useful for launching graphical viewers, since there\n"
-"is not support for releasing the terminal while the command runs.\n"
+"is no support for releasing the terminal while the command runs.\n"
 "The action and submenus are also available by binding keys to\n"
 "the frame-external-command, the link-external-command, and\n"
 "the tab-external-command actions."
@@ -3428,6 +3428,7 @@ msgstr ""
 "dzia³ania polecenia. Akcje i podmenu s± dostêpne tak¿e przez\n"
 "przypisania klawiszy do akcji: frame-external-command,\n"
 "link-external-command i tab-external-command."
+
 #: src/config/options.inc:739
 msgid ""
 "A rule for passing URI to an external command.\n"
@@ -4784,7 +4785,7 @@ msgid ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
+"(C) 2002 - 2008 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -4796,7 +4797,7 @@ msgstr ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
+"(C) 2002 - 2008 Jonas Fonseca\n"
 "i inni\n"
 "\n"
 "Niniejszy program jest oprogramowaniem wolnodostêpnym; mo¿na go rozprowadzaæ "
@@ -5182,7 +5183,7 @@ msgstr "Opcje ~terminala"
 
 #: src/dialogs/menu.c:454
 msgid "File ~extensions"
-msgstr "~Rozszerzenia"
+msgstr "~Rozszerzenia plików"
 
 #: src/dialogs/menu.c:456
 msgid "~Options manager"
@@ -6224,19 +6225,19 @@ msgstr "Usuñ rozszerzenie"
 msgid "Delete extension %s -> %s?"
 msgstr "Czy usun±æ rozszerzenie %s -> %s?"
 
-#: src/mime/dialogs.c:123
+#: src/mime/dialogs.c:126
 msgid "Extension"
 msgstr "Rozszerzenie"
 
-#: src/mime/dialogs.c:126
+#: src/mime/dialogs.c:129
 msgid "Extension(s)"
 msgstr "Rozszerzenie"
 
-#: src/mime/dialogs.c:127
+#: src/mime/dialogs.c:130
 msgid "Content-Type"
 msgstr "Typ zawarto¶ci"
 
-#: src/mime/dialogs.c:139
+#: src/mime/dialogs.c:142
 msgid "No extensions"
 msgstr "Brak rozszerzeñ"
 
@@ -7687,13 +7688,13 @@ msgid ""
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
 "token in the first field is our silent attempt to establish this as\n"
 "a standard for new textmode user agents, so that the webmasters can\n"
-"have just a single uniform test for these if they are ie. pushing\n"
+"have just a single uniform test for these if they are e.g. pushing\n"
 "some lite version to them automagically.\n"
-"%v in the string means ELinks version\n"
-"%s in the string means system identification\n"
-"%t in the string means size of the terminal\n"
-"%b in the string means number of bars displayed by ELinks\n"
-"Use \" \" if you don't want any User-Agent header to be sent at all."
+"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+"%v in the string means ELinks version,\n"
+"%s in the string means system identification,\n"
+"%t in the string means size of the terminal,\n"
+"%b in the string means number of bars displayed by ELinks."
 msgstr ""
 "Zmienia identyfikator przegl±darki. To znaczy ³añcuch, który\n"
 "jest wysy³any do serwera HTTP przy ka¿dym ¿±daniu dokumentu.\n"
@@ -7904,17 +7905,25 @@ msgid ""
 "the goto dialog does not appear to be a URI or a filename\n"
 "(i.e. contains no '.', ':' or '/' characters), and does\n"
 "not match any defined prefixes. Set the value to \"\" to\n"
-"disable use of the default template rewrite rule."
+"disable use of the default template rewrite rule.\n"
+"%c in the template means the current URL,\n"
+"%s in the template means the whole string from the goto dialog,\n"
+"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s,\n"
+"%% in the template means '%'."
 msgstr ""
 "Domy¶lny szablon URI u¿ywany, kiedy ³añcuch wprowadzony\n"
 "w okienku \"Przejd¼ do URL-a\" nie jest ani URI ani nazw±\n"
 "pliku (np. nie zawiera znaków: '.', ':' czy '/')\n"
 "i nie pasuje do ¿adnego ze zdefiniowanych przedrostków.\n"
 "Ustaw warto¶æ na \"\", ¿eby wy³±czyæ u¿ycie domy¶lnego\n"
-"szablonu regu³y przepisywania."
+"szablonu regu³ przepisywania.\n"
+"%c w szablonie oznacza bie¿±cy URL,\n"
+"%s - ca³y wprowadzony tekst w okienku dialogowym,\n"
+"%0,%1,...,%9 - pierwsza, druga, ..., dziesi±ta czê¶æ %s,\n"
+"%% w szablonie oznacza '%'." 
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:367
+#: src/protocol/rewrite/rewrite.c:371
 msgid "URI rewrite"
 msgstr "Przepisywanie URI"
 
@@ -8248,7 +8257,7 @@ msgstr "B³êdne zdarzenie %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 
-#: src/terminal/kbd.c:922
+#: src/terminal/kbd.c:925
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
