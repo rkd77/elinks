@@ -74,15 +74,15 @@ print_keymap_defaults()
 	grep ACT_$KEYMAP $KBDBIND | grep '^[[:space:]]{' | grep -v '{ "' \
 	| while read entry
 	do
-		entry=$(echo "$entry" | sed 's/.*{ { //' | sed 's/ }//')
+		entry=$(echo "$entry" | sed 's/.*{ { //')
 		key=$(echo "$entry" | sed "s/\(KBD_[^,]*\|'.*'\),.*/\1/")
-		modifier=$(echo "$entry" | sed "s/.*KBD_MOD_\([A-Z_]*\).*/\1/")
 		action=$(echo "$entry" | sed "s/.*,.*\(ACT_$KEYMAP\)_\([A-Z_]*\).*/\2/")
 		# If there are backslashed quotes, remove the backslashes.
 		# (This is not needed in print_keymap_actions because
 		# there the "read" command consumes the backslashes.)
 		action=$(grep " $action," "$CONFIGDIR/actions-$keymap.inc" \
 			| sed "s/.*\"\([^\"]*\)\".*N__(\"\(.*\)\").*/\2 ('\1')/;s/\\\\\"/\"/g")
+		q=
 
 		case "$key" in
 		KBD_*)
@@ -96,17 +96,19 @@ print_keymap_defaults()
 		*)
 			key=$(echo "$key" | sed "s/^'\(.*\)'$/\1/" \
 			    | sed "s/'/{squote}/")
+			q='"'
 			;;
 		esac
 
-		case "$modifier" in
-		ALT) 	modifier="Alt-"	 ;;
-		CTRL)	modifier="Ctrl-" ;;
-		*)	modifier=""	 ;;
+		case "$entry" in
+		*KBD_MOD_ALT*) 	 modifier="Alt-"   ;;
+		*KBD_MOD_CTRL*)	 modifier="Ctrl-"  ;;
+		*KBD_MOD_SHIFT*) modifier="Shift-" ;;
+		*)		 modifier=""	   ;;
 		esac
 
 		echo 'ifdef::backend-docbook[]'
-		echo "'$modifier$key'::"
+		echo "'$modifier$q$key$q'::"
 		echo "	$action"
 		echo
 		echo 'endif::backend-docbook[]'

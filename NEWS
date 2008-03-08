@@ -347,6 +347,8 @@ To be released as 0.11.4.
 * minor bug 928: properly display no-break spaces in a UTF-8 document
   if the terminal uses some other charset
 * minor bug 987: English spelling and grammar corrections
+* minor bug 1000: preserve any query and fragment when converting a
+  file name to a file:// URL
 * minor: don't assume sizeof(int)==4 in bittorrent
 * trivial bug 947: document.html.wrap_nbsp also affects text in tables
 * trivial bug 997: fix unlikely stack corruption in active FTP

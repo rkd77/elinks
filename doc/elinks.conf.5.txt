@@ -9,8 +9,8 @@ elinks.conf - ELinks configuration file
 SYNOPSIS
 --------
 [verse]
-set     "<option>" = <value>
-unset   "<option>"
+set     <option> = <value>
+unset   <option>
 bind    "<keymap>" "<key>" = "<action>"
 include "<file>"
 
@@ -52,7 +52,7 @@ Some sample settings:
 	# Default document codepage.
 	set document.codepage.assume = "ISO-8859-1"
 	# User defined protocol handlers
-	set protocol.user.mailto.unix = "mutt %h -s \e\*(lq%s\e\*(rq"
+	set protocol.user.mailto.unix = "mutt %h -s \"%s\""
 
 OPTIONS
 -------
