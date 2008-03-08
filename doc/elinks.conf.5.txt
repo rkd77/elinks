@@ -9,10 +9,11 @@ elinks.conf - ELinks configuration file
 SYNOPSIS
 --------
 [verse]
-set     <option> = <value>
-unset   <option>
-bind    "<keymap>" "<key>" = "<action>"
-include "<file>"
+set        <option> = <value>
+set_domain <domain> <option> = <value>
+unset      <option>
+bind       "<keymap>" "<key>" = "<action>"
+include    "<file>"
 
 DESCRIPTION
 -----------
