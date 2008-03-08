@@ -1088,30 +1088,6 @@ tp_open(struct type_query *type_query)
 		return;
 	}
 
-	if (type_query->uri->protocol == PROTOCOL_FILE) {
-		unsigned char *file = get_uri_string(type_query->uri, URI_PATH);
-		unsigned char *handler = NULL;
-
-		if (file) {
-			decode_uri(file);
-			handler = subst_file(type_query->external_handler, file);
-			mem_free(file);
-		}
-
-		if (handler) {
-			if (type_query->copiousoutput)
-				read_from_popen(type_query->ses, handler, NULL);
-			else
-				exec_on_terminal(type_query->ses->tab->term,
-					 handler, "",
-					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
-			mem_free(handler);
-		}
-
-		done_type_query(type_query);
-		return;
-	}
-
 	continue_download(type_query, "");
 }
 
