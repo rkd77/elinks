@@ -975,6 +975,9 @@ init_type_query(struct session *ses, struct download *download,
 {
 	struct type_query *type_query;
 
+	assert(download && download->conn);
+	if_assert_failed return NULL;
+
 	/* There can be only one ... */
 	foreach (type_query, ses->type_queries)
 		if (compare_uri(type_query->uri, ses->loading_uri, 0))
@@ -988,6 +991,7 @@ init_type_query(struct session *ses, struct download *download,
 	type_query->target_frame = null_or_stracpy(ses->task.target.frame);
 
 	type_query->cached = cached;
+	type_query->cgi = download->conn->cgi;
 	object_lock(type_query->cached);
 
 	move_download(download, &type_query->download, PRI_MAIN);
@@ -1083,6 +1087,30 @@ tp_open(struct type_query *type_query)
 {
 	if (!type_query->external_handler || !*type_query->external_handler) {
 		tp_display(type_query);
+		return;
+	}
+
+	if (type_query->uri->protocol == PROTOCOL_FILE && !type_query->cgi) {
+		unsigned char *file = get_uri_string(type_query->uri, URI_PATH);
+		unsigned char *handler = NULL;
+
+		if (file) {
+			decode_uri(file);
+			handler = subst_file(type_query->external_handler, file);
+			mem_free(file);
+		}
+
+		if (handler) {
+			if (type_query->copiousoutput)
+				read_from_popen(type_query->ses, handler, NULL);
+			else
+				exec_on_terminal(type_query->ses->tab->term,
+					 handler, "",
+					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
+			mem_free(handler);
+		}
+
+		done_type_query(type_query);
 		return;
 	}
 

@@ -56,6 +56,7 @@ struct type_query {
 	unsigned char *external_handler;
 	int block;
 	unsigned int copiousoutput:1;
+	unsigned int cgi:1;
 	/* int frame; */
 };
 
