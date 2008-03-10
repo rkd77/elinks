@@ -91,6 +91,7 @@ add_mime_extension(void *data)
 
 	really_del_ext(ext->ext_orig); /* ..or rename ;) */
 	safe_strncpy(get_opt_str(name.source, NULL), ext->ct, MAX_STR_LEN);
+	option_changed(NULL, get_opt_rec(config_options, name.source));
 	done_string(&name);
 }
 

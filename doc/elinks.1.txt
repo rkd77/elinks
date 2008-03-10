@@ -57,12 +57,12 @@ ELINKS_CONFDIR::
 ELINKS_TWTERM, LINKS_TWTERM::
 
 	The command to run when selecting File -> New window and if
-	`TWDISPLAY` is defined (default `twterm -e`)
+	`TWDISPLAY` is defined (default `twterm -e`).
 
 ELINKS_XTERM, LINKS_XTERM::
 
 	The command to run when selecting File -> New window and if `DISPLAY`
-	is defined (default `xterm -e`)
+	is defined (default `xterm -e`).
 
 FTP_PROXY, HTTP_PROXY, HTTPS_PROXY::
 
@@ -82,6 +82,11 @@ WWW_HOME::
 
 FILES
 -----
+
+Configuration files controlled by ELinks are located in the user
+configuration directory, defaulting to '~/.elinks/'. In addition to the
+files listed below, a user defined CSS stylesheet can be defined using
+the 'document.css.stylesheet' option.
 
 @sysconfdir@/elinks.conf::
 	Site-wide configuration file.
@@ -116,15 +121,14 @@ FILES
 ~/.elinks/socket::
 	Internal 'ELinks' socket for communication between its instances.
 
-~/.mailcap::
+~/.mailcap, /etc/mailcap::
 	Mappings of MIME types to external handlers.
 
-~/.mime.types::
+~/.mime.types, /etc/mime.types::
 	Mappings of file extensions to MIME types.
 
-Other files that ELinks uses from '~/.elinks/' includes the user defined CSS
-stylesheet. The name of the file can set in the 'document.css.stylesheet'
-option.
+//////////////////////////////////////////////////////////////////////////////
+// Commented out since it's neither super useful nor manpage material. --jonas
 
 PLATFORMS
 ---------
@@ -132,6 +136,7 @@ PLATFORMS
 'ELinks' is known to work on 'Linux', 'FreeBSD', 'OpenBSD', 'Solaris', 'IRIX',
 'HPUX', 'Digital Unix', 'AIX', 'OS/2', 'BeOS' and 'RISC OS'. Port for 'Win32'
 is in state of beta testing.
+//////////////////////////////////////////////////////////////////////////////
 
 BUGS
 ----
