@@ -4,7 +4,7 @@
 # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2007
 # Wojtek Bojdoł <wojboj@lp.net.pl>
 # Witold Filipczyk <witekfl@pld-linux.org>, 2002 - 2008
-# Adam Gołębiowski <adamg@pld-linux.org>, 2003-2006
+# Adam Gołębiowski <adamg@pld-linux.org>, 2003-2008
 # Mikołaj Machowski <mikmach@wp.pl>, 2003
 #
 msgid ""
@@ -5415,7 +5415,7 @@ msgstr "P~owłoka systemowa"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:395
 msgid "Resize t~erminal"
-msgstr "Zmień rozmiar ~terminala"
+msgstr "Zmień rozmiar te~rinala"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:413
