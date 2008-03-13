@@ -63,6 +63,7 @@ struct cache_entry {
 	 * the cache_entry should be busted or not. You are not likely to see
 	 * an entry with this set to 1 in wild nature ;-). */
 	unsigned int gc_target:1;	/* The GC touch of death */
+	unsigned int cgi:1;		/* Is a CGI output? */
 
 	enum cache_mode cache_mode;	/* Reload condition */
 };

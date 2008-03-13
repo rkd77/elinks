@@ -975,9 +975,6 @@ init_type_query(struct session *ses, struct download *download,
 {
 	struct type_query *type_query;
 
-	assert(download && download->conn);
-	if_assert_failed return NULL;
-
 	/* There can be only one ... */
 	foreach (type_query, ses->type_queries)
 		if (compare_uri(type_query->uri, ses->loading_uri, 0))
@@ -991,7 +988,7 @@ init_type_query(struct session *ses, struct download *download,
 	type_query->target_frame = null_or_stracpy(ses->task.target.frame);
 
 	type_query->cached = cached;
-	type_query->cgi = download->conn->cgi;
+	type_query->cgi = cached->cgi;
 	object_lock(type_query->cached);
 
 	move_download(download, &type_query->download, PRI_MAIN);
