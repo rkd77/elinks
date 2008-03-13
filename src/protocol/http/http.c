@@ -1577,6 +1577,7 @@ again:
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
+	conn->cached->cgi = conn->cgi;
 	mem_free_set(&conn->cached->head, head);
 
 	if (!get_opt_bool("document.cache.ignore_cache_control")) {
