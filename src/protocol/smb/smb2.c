@@ -62,6 +62,8 @@ struct module smb_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
+static FILE *header_out, *data_out;
+
 /* The child process generally does not bother to free the memory it
  * allocates.  When the process exits, the operating system will free
  * the memory anyway.  There is no point in changing this, because the
@@ -71,8 +73,8 @@ struct module smb_protocol_module = struct_module(
 static void
 smb_error(int error)
 {
-	fprintf(stderr, "text/x-error");
-	printf("%d\n", error);
+	fputs("text/x-error", header_out);
+	fprintf(data_out, "%d\n", error);
 	exit(1);
 }
 
@@ -168,7 +170,8 @@ display_entry(const struct smbc_dirent *entry, const unsigned char dircolor[])
 		/* unknown type */
 		break;
 	}
-	puts(string.source);
+	fputs(string.source, data_out);
+	fputc('\n', data_out);
 	done_string(&string);
 }
 
@@ -253,10 +256,11 @@ smb_directory(int dir, struct uri *uri)
 		smb_error(-S_OUT_OF_MEM);
 	}
 
-	fprintf(stderr, "text/html");
-	fclose(stderr);
+	fputs("text/html", header_out);
+	fclose(header_out);
 
-	puts(buf.source);
+	fputs(buf.source, data_out);
+	fputc('\n', data_out);
 
 	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
 		color_to_string(get_opt_color("document.colors.dirs", NULL),
@@ -264,7 +268,7 @@ smb_directory(int dir, struct uri *uri)
 	}
 
 	sort_and_display_entries(dir, dircolor);
-	puts("</pre><hr/></body></html>");
+	fputs("</pre><hr/></body></html>\n", data_out);
 	smbc_closedir(dir);
 	exit(0);
 }
@@ -329,7 +333,7 @@ do_smb(struct connection *conn)
 		const int errno_from_opendir = errno;
 		char buf[READ_SIZE];
 		struct stat sb;
-		int r, res;
+		int r, res, fdout;
 		int file = smbc_open(url, O_RDONLY, 0);
 
 		if (file < 0) {
@@ -349,12 +353,13 @@ do_smb(struct connection *conn)
 			smb_error(res);
 		}
 		/* filesize */
-		fprintf(stderr, "%" OFF_PRINT_FORMAT,
+		fprintf(header_out, "%" OFF_PRINT_FORMAT,
 			(off_print_T) sb.st_size);
-		fclose(stderr);
+		fclose(header_out);
 
+		fdout = fileno(data_out);
 		while ((r = smbc_read(file, buf, READ_SIZE)) > 0) {
-			if (safe_write(STDOUT_FILENO, buf, r) <= 0)
+			if (safe_write(fdout, buf, r) <= 0)
 					break;
 		}
 		smbc_close(file);
@@ -498,6 +503,24 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 	}
 }
 
+static void
+close_all_fds_but_two(int header, int data)
+{
+	int n;
+	int max = 1024;
+#ifdef RLIMIT_NOFILE
+	struct rlimit lim;
+
+	if (!getrlimit(RLIMIT_NOFILE, &lim))
+		max = lim.rlim_max;
+#endif
+	for (n = 3; n < max; n++) {
+		if (n != header && n != data) close(n);
+	}
+}
+
+
+
 void
 smb_protocol_handler(struct connection *conn)
 {
@@ -532,9 +555,14 @@ smb_protocol_handler(struct connection *conn)
 	}
 
 	if (!cpid) {
-		dup2(smb_pipe[1], 1);
 		dup2(open("/dev/null", O_RDONLY), 0);
-		dup2(header_pipe[1], 2);
+		close(1);
+		close(2);
+		data_out = fdopen(smb_pipe[1], "w");
+		header_out = fdopen(header_pipe[1], "w");
+
+		if (!data_out || !header_out) exit(1);
+
 		close(smb_pipe[0]);
 		close(header_pipe[0]);
 
@@ -549,7 +577,8 @@ smb_protocol_handler(struct connection *conn)
 		 * before exit(), then stdio may attempt to write the
 		 * buffers to the wrong files.  This might happen for
 		 * example if libsmbclient calls syslog().  */
-		close_all_non_term_fd();
+
+		close_all_fds_but_two(smb_pipe[1], header_pipe[1]);
 		do_smb(conn);
 
 	} else {

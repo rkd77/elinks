@@ -15,6 +15,7 @@ When releasing a new version
  - Change VERSION in the top of configure.in to hold the new version number.
  - Update the manpages so the will have the new release number by first
    building the source, followed by making the `update-man' target in doc/.
+ - Update po files by running `make update-po` in po/`.
  - Commit these changes.
  - Create a signed tag having the version ("ELinks X.X.X") as the subject and
    using the changelog create above as the body. Use something like:

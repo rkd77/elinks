@@ -6,7 +6,7 @@
 
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = ELinks
-PROJECT_NUMBER         = 0.13.GIT
+PROJECT_NUMBER         = @VERSION@
 OUTPUT_DIRECTORY       = api
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English

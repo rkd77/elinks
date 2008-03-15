@@ -72,7 +72,8 @@ static struct option_info default_mime_options[] = {
 		"program", 0, "",
 		/* xgettext:no-c-format */
 		N_("External viewer for this file type. '%' in this string will be\n"
-		"substituted by a file name.")),
+		"substituted by a file name.\n"
+		"Do _not_ put single- or double-quotes around the % sign.")),
 
 
 	INIT_OPT_TREE("mime", N_("File extension associations"),

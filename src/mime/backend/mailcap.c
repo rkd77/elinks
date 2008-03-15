@@ -498,13 +498,24 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 	while (*command) {
 		unsigned char *start = command;
 
-		while (*command && *command != '%' && *command != '\\')
+		while (*command && *command != '%' && *command != '\\' && *command != '\'')
 			command++;
 
 		if (start < command)
 			add_bytes_to_string(&cmd, start, command - start);
 
-		if (*command == '%') {
+		switch (*command) {
+		case '\'': /* Debian's '%s' */
+			command++;
+			if (!strncmp(command, "%s'", 3)) {
+				command += 3;
+				add_char_to_string(&cmd, '%');
+			} else {
+				add_char_to_string(&cmd, '\'');
+			}
+			break;
+
+		case '%':
 			command++;
 			if (!*command) {
 				done_string(&cmd);
@@ -522,13 +533,16 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 				add_to_string(&cmd, type);
 			}
 			command++;
+			break;
 
-		} else if (*command == '\\') {
+		case '\\':
 			command++;
 			if (*command) {
 				add_char_to_string(&cmd, *command);
 				command++;
 			}
+		default:
+			break;
 		}
 	}
 #if 0
