@@ -1,11 +1,11 @@
 .\"     Title: elinks.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 03/08/2008
+.\"      Date: 03/23/2008
 .\"    Manual: ELinks configuration file
 .\"    Source: ELinks 0.12.GIT
 .\"
-.TH "ELINKS.CONF" "5" "03/08/2008" "ELinks 0.12.GIT" "ELinks configuration file"
+.TH "ELINKS.CONF" "5" "03/23/2008" "ELinks 0.12.GIT" "ELinks configuration file"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -156,31 +156,6 @@ connection
 Connection options.
 .RE
 .PP
-connection.ssl
-.RS 4
-SSL options.
-.RE
-.PP
-connection.ssl.client_cert
-.RS 4
-X509 client certificate options.
-.RE
-.PP
-connection.ssl.client_cert.enable [0|1] (default: 0)
-.RS 4
-Enable or not the sending of X509 client certificates to servers which request them.
-.RE
-.PP
-connection.ssl.client_cert.file <str> (default: "")
-.RS 4
-The location of a file containing the client certificate and unencrypted private key in PEM format. If unset, the file pointed to by the X509_CLIENT_CERT variable is used instead.
-.RE
-.PP
-connection.ssl.cert_verify [0|1] (default: 0)
-.RS 4
-Verify the peer's SSL certificate. Note that this needs extensive configuration of OpenSSL by the user.
-.RE
-.PP
 connection.async_dns [0|1] (default: 1)
 .RS 4
 Whether to use asynchronous DNS resolving.
@@ -219,6 +194,31 @@ Whether to try to connect to a host over IPv6. Note that you can also force a gi
 connection.unrestartable_receive_timeout <num> (default: 600)
 .RS 4
 Timeout for non\-restartable connections (in seconds).
+.RE
+.PP
+connection.ssl
+.RS 4
+SSL options.
+.RE
+.PP
+connection.ssl.cert_verify [0|1] (default: 0)
+.RS 4
+Verify the peer's SSL certificate. Note that this needs extensive configuration of OpenSSL by the user.
+.RE
+.PP
+connection.ssl.client_cert
+.RS 4
+X509 client certificate options.
+.RE
+.PP
+connection.ssl.client_cert.enable [0|1] (default: 0)
+.RS 4
+Enable or not the sending of X509 client certificates to servers which request them.
+.RE
+.PP
+connection.ssl.client_cert.file <str> (default: "")
+.RS 4
+The location of a file containing the client certificate and unencrypted private key in PEM format. If unset, the file pointed to by the X509_CLIENT_CERT variable is used instead.
 .RE
 .PP
 cookies
@@ -283,6 +283,27 @@ Document options.
 document.browse
 .RS 4
 Document browsing options (mainly interactivity).
+.RE
+.PP
+document.browse.margin_width <num> (default: 3)
+.RS 4
+Horizontal text margin.
+.RE
+.PP
+document.browse.refresh [0|1] (default: 1)
+.RS 4
+Automatically follow document\-specified refresh directives (\fI<meta> refresh\fR
+tags). Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page. Regardless of the value the refresh URI is accessible as a link. Use the document.browse.minimum_refresh_time to control the minimum number of seconds a refresh will wait.
+.RE
+.PP
+document.browse.minimum_refresh_time <num> (default: 1000)
+.RS 4
+The minimum number of milliseconds that should pass before refreshing. If set to zero the document refresh time is used unchanged. It can fix going back in history for some sites that use refreshing with zero values.
+.RE
+.PP
+document.browse.table_move_order [0|1] (default: 0)
+.RS 4
+Move by columns in table, instead of rows.
 .RE
 .PP
 document.browse.accesskey
@@ -452,46 +473,6 @@ document.browse.links
 Options for handling of links to other documents.
 .RE
 .PP
-document.browse.links.active_link
-.RS 4
-Options for the active link.
-.RE
-.PP
-document.browse.links.active_link.colors
-.RS 4
-Active link colors.
-.RE
-.PP
-document.browse.links.active_link.colors.background <color|#rrggbb> (default: blue)
-.RS 4
-Default background color.
-.RE
-.PP
-document.browse.links.active_link.colors.text <color|#rrggbb> (default: black)
-.RS 4
-Default text color.
-.RE
-.PP
-document.browse.links.active_link.enable_color [0|1] (default: 0)
-.RS 4
-Enable use of the active link background and text color settings instead of the link colors from the document.
-.RE
-.PP
-document.browse.links.active_link.bold [0|1] (default: 0)
-.RS 4
-Make the active link text bold.
-.RE
-.PP
-document.browse.links.active_link.invert [0|1] (default: 1)
-.RS 4
-Invert the fore\- and background color so the link stands out.
-.RE
-.PP
-document.browse.links.active_link.underline [0|1] (default: 0)
-.RS 4
-Underline the active link.
-.RE
-.PP
 document.browse.links.color_dirs [0|1] (default: 1)
 .RS 4
 Highlight links to directories in FTP and local directory listing.
@@ -558,6 +539,46 @@ When following a link the user ID part of the URI is checked and if a maliciousl
 document.browse.links.wraparound [0|1] (default: 0)
 .RS 4
 When pressing 'down' on the last link, jump to the first one, and vice versa.
+.RE
+.PP
+document.browse.links.active_link
+.RS 4
+Options for the active link.
+.RE
+.PP
+document.browse.links.active_link.enable_color [0|1] (default: 0)
+.RS 4
+Enable use of the active link background and text color settings instead of the link colors from the document.
+.RE
+.PP
+document.browse.links.active_link.bold [0|1] (default: 0)
+.RS 4
+Make the active link text bold.
+.RE
+.PP
+document.browse.links.active_link.invert [0|1] (default: 1)
+.RS 4
+Invert the fore\- and background color so the link stands out.
+.RE
+.PP
+document.browse.links.active_link.underline [0|1] (default: 0)
+.RS 4
+Underline the active link.
+.RE
+.PP
+document.browse.links.active_link.colors
+.RS 4
+Active link colors.
+.RE
+.PP
+document.browse.links.active_link.colors.background <color|#rrggbb> (default: blue)
+.RS 4
+Default background color.
+.RE
+.PP
+document.browse.links.active_link.colors.text <color|#rrggbb> (default: black)
+.RS 4
+Default text color.
 .RE
 .PP
 document.browse.scrolling
@@ -656,30 +677,26 @@ Start typeahead searching when an unbound key is pressed without any modifiers. 
 .RE
 .RE
 .PP
-document.browse.margin_width <num> (default: 3)
-.RS 4
-Horizontal text margin.
-.RE
-.PP
-document.browse.refresh [0|1] (default: 1)
-.RS 4
-Automatically follow document\-specified refresh directives (\fI<meta> refresh\fR
-tags). Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page. Regardless of the value the refresh URI is accessible as a link. Use the document.browse.minimum_refresh_time to control the minimum number of seconds a refresh will wait.
-.RE
-.PP
-document.browse.minimum_refresh_time <num> (default: 1000)
-.RS 4
-The minimum number of milliseconds that should pass before refreshing. If set to zero the document refresh time is used unchanged. It can fix going back in history for some sites that use refreshing with zero values.
-.RE
-.PP
-document.browse.table_move_order [0|1] (default: 0)
-.RS 4
-Move by columns in table, instead of rows.
-.RE
-.PP
 document.cache
 .RS 4
 Cache options.
+.RE
+.PP
+document.cache.cache_redirects [0|1] (default: 0)
+.RS 4
+Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header). This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \- frequently, when accessing a certain location, they will redirect you to a login page if they don't receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter. Note that this option is checked when retrieving the information from cache, not when saving it to cache \- thus if you enable it, even previous redirects will be taken from cache instead of asking the server.
+.RE
+.PP
+document.cache.ignore_cache_control [0|1] (default: 1)
+.RS 4
+Ignore Cache\-Control and Pragma server headers. When set, the document is cached even with 'Cache\-Control: no\-cache'.
+.RE
+.PP
+document.cache.revalidation_interval <num> (default: \-1)
+.RS 4
+Period in seconds that a cache entry is considered to be up\-to\-date. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document.
+.sp
+A value of \-1 disables automatic revalidation.
 .RE
 .PP
 document.cache.format
@@ -702,23 +719,6 @@ Memory cache options.
 document.cache.memory.size <num> (default: 1048576)
 .RS 4
 Memory cache size (in bytes).
-.RE
-.PP
-document.cache.cache_redirects [0|1] (default: 0)
-.RS 4
-Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header). This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \- frequently, when accessing a certain location, they will redirect you to a login page if they don't receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter. Note that this option is checked when retrieving the information from cache, not when saving it to cache \- thus if you enable it, even previous redirects will be taken from cache instead of asking the server.
-.RE
-.PP
-document.cache.ignore_cache_control [0|1] (default: 1)
-.RS 4
-Ignore Cache\-Control and Pragma server headers. When set, the document is cached even with 'Cache\-Control: no\-cache'.
-.RE
-.PP
-document.cache.revalidation_interval <num> (default: \-1)
-.RS 4
-Period in seconds that a cache entry is considered to be up\-to\-date. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document.
-.sp
-A value of \-1 disables automatic revalidation.
 .RE
 .PP
 document.codepage
@@ -949,6 +949,11 @@ document.history
 History options.
 .RE
 .PP
+document.history.keep_unhistory [0|1] (default: 1)
+.RS 4
+Keep unhistory ("forward history").
+.RE
+.PP
 document.history.global
 .RS 4
 Global history options.
@@ -975,11 +980,6 @@ What to display in global history dialog:
 .RS 4
 \h'-04'\(bu\h'+03'1: is page titles
 .RE
-.RE
-.PP
-document.history.keep_unhistory [0|1] (default: 1)
-.RS 4
-Keep unhistory ("forward history").
 .RE
 .PP
 document.html
@@ -1129,6 +1129,11 @@ mime
 MIME\-related options (handlers of various MIME types).
 .RE
 .PP
+mime.default_type <str> (default: "application/octet\-stream")
+.RS 4
+Document MIME\-type to assume by default (when we are unable to guess it properly from known information about the document).
+.RE
+.PP
 mime.extension
 .RS 4
 Extension <\-> MIME type association.
@@ -1166,7 +1171,7 @@ Block the terminal when the handler is running.
 .PP
 mime.handler._template_._template_.program <str> (default: "")
 .RS 4
-External viewer for this file type. '%' in this string will be substituted by a file name.
+External viewer for this file type. '%' in this string will be substituted by a file name. Do _not_ put single\- or double\-quotes around the % sign.
 .RE
 .PP
 mime.mailcap
@@ -1241,19 +1246,54 @@ mime.type._template_._template_ <str> (default: "")
 Handler matching this MIME\-type name ('*' is used here in place of '.').
 .RE
 .PP
-mime.default_type <str> (default: "application/octet\-stream")
-.RS 4
-Document MIME\-type to assume by default (when we are unable to guess it properly from known information about the document).
-.RE
-.PP
 protocol
 .RS 4
 Protocol specific options.
 .RE
 .PP
+protocol.no_proxy <str> (default: "")
+.RS 4
+Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled. Optionally, a port can be specified for some domains as well. If it's blank, NO_PROXY environment variable is checked as well.
+.RE
+.PP
 protocol.bittorrent
 .RS 4
 BitTorrent specific options.
+.RE
+.PP
+protocol.bittorrent.piece_cache_size <num> (default: 1048576)
+.RS 4
+The maximum amount of memory used to hold recently downloaded pieces. Set to 0 to have unlimited size.
+.RE
+.PP
+protocol.bittorrent.max_uploads <num> (default: 7)
+.RS 4
+The maximum number of uploads to allow at once.
+.RE
+.PP
+protocol.bittorrent.min_uploads <num> (default: 2)
+.RS 4
+The minimum number of uploads which should at least be used for new connections.
+.RE
+.PP
+protocol.bittorrent.request_queue_size <num> (default: 5)
+.RS 4
+How many piece requests to continuously keep in queue. Pipelining of requests is essential to saturate connections and get a good connection performance and thus a faster download. However, a very big queue size can lead to wasting bandwidth near the end of the connection since remaining piece blocks will be requested from multiple peers.
+.RE
+.PP
+protocol.bittorrent.choke_interval <num> (default: 10)
+.RS 4
+The number of seconds between updating the connection state and most importantly choke and unchoke peer connections. The choke period should be big enough for newly unchoked connections to get started but small enough to not allow freeriders too much room for stealing bandwidth.
+.RE
+.PP
+protocol.bittorrent.rarest_first_cutoff <num> (default: 4)
+.RS 4
+The number of pieces to obtain before switching piece selection strategy from random to rarest first.
+.RE
+.PP
+protocol.bittorrent.allow_blacklist [0|1] (default: 1)
+.RS 4
+Allow blacklisting of buggy peers.
 .RE
 .PP
 protocol.bittorrent.ports
@@ -1341,41 +1381,6 @@ protocol.bittorrent.peerwire.pool_size <num> (default: 55)
 Maximum number of items in the peer pool. The peer pool contains information used for establishing connections to new peers. Set to 0 to have unlimited size.
 .RE
 .PP
-protocol.bittorrent.piece_cache_size <num> (default: 1048576)
-.RS 4
-The maximum amount of memory used to hold recently downloaded pieces. Set to 0 to have unlimited size.
-.RE
-.PP
-protocol.bittorrent.max_uploads <num> (default: 7)
-.RS 4
-The maximum number of uploads to allow at once.
-.RE
-.PP
-protocol.bittorrent.min_uploads <num> (default: 2)
-.RS 4
-The minimum number of uploads which should at least be used for new connections.
-.RE
-.PP
-protocol.bittorrent.request_queue_size <num> (default: 5)
-.RS 4
-How many piece requests to continuously keep in queue. Pipelining of requests is essential to saturate connections and get a good connection performance and thus a faster download. However, a very big queue size can lead to wasting bandwidth near the end of the connection since remaining piece blocks will be requested from multiple peers.
-.RE
-.PP
-protocol.bittorrent.choke_interval <num> (default: 10)
-.RS 4
-The number of seconds between updating the connection state and most importantly choke and unchoke peer connections. The choke period should be big enough for newly unchoked connections to get started but small enough to not allow freeriders too much room for stealing bandwidth.
-.RE
-.PP
-protocol.bittorrent.rarest_first_cutoff <num> (default: 4)
-.RS 4
-The number of pieces to obtain before switching piece selection strategy from random to rarest first.
-.RE
-.PP
-protocol.bittorrent.allow_blacklist [0|1] (default: 1)
-.RS 4
-Allow blacklisting of buggy peers.
-.RE
-.PP
 protocol.file
 .RS 4
 Options specific to local browsing.
@@ -1426,16 +1431,6 @@ protocol.ftp
 FTP specific options.
 .RE
 .PP
-protocol.ftp.proxy
-.RS 4
-FTP proxy configuration.
-.RE
-.PP
-protocol.ftp.proxy.host <str> (default: "")
-.RS 4
-Host and port\-number (host:port) of the FTP proxy, or blank. If it's blank, FTP_PROXY environment variable is checked as well.
-.RE
-.PP
 protocol.ftp.anon_passwd <str> (default: "some@host.domain")
 .RS 4
 FTP anonymous password to be sent.
@@ -1451,9 +1446,45 @@ protocol.ftp.use_epsv [0|1] (default: 0)
 Use EPSV instead of EPRT (passive vs active mode, IPv6 only).
 .RE
 .PP
+protocol.ftp.proxy
+.RS 4
+FTP proxy configuration.
+.RE
+.PP
+protocol.ftp.proxy.host <str> (default: "")
+.RS 4
+Host and port\-number (host:port) of the FTP proxy, or blank. If it's blank, FTP_PROXY environment variable is checked as well.
+.RE
+.PP
 protocol.http
 .RS 4
 HTTP\-specific options.
+.RE
+.PP
+protocol.http.accept_language <str> (default: "")
+.RS 4
+Send Accept\-Language header.
+.RE
+.PP
+protocol.http.accept_ui_language [0|1] (default: 1)
+.RS 4
+Request localised versions of documents from web\-servers (using the Accept\-Language header) using the language you have configured for
+\fIELinks\fR' user\-interface (this also affects navigator.language ECMAScript value available to scripts). Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference.
+.RE
+.PP
+protocol.http.trace [0|1] (default: 0)
+.RS 4
+If active, all HTTP requests are sent with TRACE as their method rather than GET or POST. This is useful for debugging of both
+\fIELinks\fR
+and various server\-side scripts \-\-\- the server only returns the client's request back to the client verbatim. Note that this type of request may not be enabled on all servers.
+.RE
+.PP
+protocol.http.user_agent <str> (default: "ELinks/%v (textmode; %s; %t\-%b)")
+.RS 4
+Change the User Agent ID. That means identification string, which is sent to HTTP server when a document is requested. The 'textmode' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e.g. pushing some lite version to them automagically. Use " " if you don't want any User\-Agent header to be sent at all. %v in the string means
+\fIELinks\fR
+version, %s in the string means system identification, %t in the string means size of the terminal, %b in the string means number of bars displayed by
+\fIELinks\fR.
 .RE
 .PP
 protocol.http.bugs
@@ -1537,32 +1568,6 @@ protocol.http.referer.fake <str> (default: "")
 Fake referer to be sent when policy is 2.
 .RE
 .PP
-protocol.http.accept_language <str> (default: "")
-.RS 4
-Send Accept\-Language header.
-.RE
-.PP
-protocol.http.accept_ui_language [0|1] (default: 1)
-.RS 4
-Request localised versions of documents from web\-servers (using the Accept\-Language header) using the language you have configured for
-\fIELinks\fR' user\-interface (this also affects navigator.language ECMAScript value available to scripts). Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference.
-.RE
-.PP
-protocol.http.trace [0|1] (default: 0)
-.RS 4
-If active, all HTTP requests are sent with TRACE as their method rather than GET or POST. This is useful for debugging of both
-\fIELinks\fR
-and various server\-side scripts \-\-\- the server only returns the client's request back to the client verbatim. Note that this type of request may not be enabled on all servers.
-.RE
-.PP
-protocol.http.user_agent <str> (default: "ELinks/%v (textmode; %s; %t\-%b)")
-.RS 4
-Change the User Agent ID. That means identification string, which is sent to HTTP server when a document is requested. The 'textmode' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e.g. pushing some lite version to them automagically. Use " " if you don't want any User\-Agent header to be sent at all. %v in the string means
-\fIELinks\fR
-version, %s in the string means system identification, %t in the string means size of the terminal, %b in the string means number of bars displayed by
-\fIELinks\fR.
-.RE
-.PP
 protocol.https
 .RS 4
 HTTPS\-specific options.
@@ -1598,6 +1603,21 @@ protocol.rewrite
 Rules for rewriting URIs entered in the goto dialog. It makes it possible to define a set of prefixes that will be expanded if they match a string entered in the goto dialog. The prefixes can be dumb, meaning that they work only like URI abbreviations, or smart ones, making it possible to pass arguments to them like search engine keywords.
 .RE
 .PP
+protocol.rewrite.default_template <str> (default: "")
+.RS 4
+Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i.e. contains no '.', ':' or '/' characters), and does not match any defined prefixes. Set the value to "" to disable use of the default template rewrite rule. %c in the template means the current URL, %s in the template means the whole string from the goto dialog, %0,%1,\&...,%9 mean the 1st,2nd,\&...,10th space\-delimited part of %s, %% in the template means '%'.
+.RE
+.PP
+protocol.rewrite.enable\-dumb [0|1] (default: 1)
+.RS 4
+Enable dumb prefixes \- simple URI abbreviations which can be written to the Goto URL dialog instead of actual URIs \- i.e. if you write 'elinks' there, you are directed to http://elinks.cz/.
+.RE
+.PP
+protocol.rewrite.enable\-smart [0|1] (default: 1)
+.RS 4
+Enable smart prefixes \- URI templates triggered by writing given abbreviation to the Goto URL dialog followed by a list of arguments from which the actual URI is composed \- i.e. 'gg:search keywords' or 'gn search keywords for news'.
+.RE
+.PP
 protocol.rewrite.dumb
 .RS 4
 Dumb prefixes, see enable\-dumb description for details.
@@ -1618,21 +1638,6 @@ protocol.rewrite.smart._template_ <str> (default: "")
 Replacement URI for this smartprefix: %c in the string means the current URL %s in the string means the whole argument to smartprefix %0,%1,\&...,%9 means argument 0, 1, \&..., 9 %% in the string means '%'
 .RE
 .PP
-protocol.rewrite.default_template <str> (default: "")
-.RS 4
-Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i.e. contains no '.', ':' or '/' characters), and does not match any defined prefixes. Set the value to "" to disable use of the default template rewrite rule. %c in the template means the current URL, %s in the template means the whole string from the goto dialog, %0,%1,\&...,%9 mean the 1st,2nd,\&...,10th space\-delimited part of %s, %% in the template means '%'.
-.RE
-.PP
-protocol.rewrite.enable\-dumb [0|1] (default: 1)
-.RS 4
-Enable dumb prefixes \- simple URI abbreviations which can be written to the Goto URL dialog instead of actual URIs \- i.e. if you write 'elinks' there, you are directed to http://elinks.cz/.
-.RE
-.PP
-protocol.rewrite.enable\-smart [0|1] (default: 1)
-.RS 4
-Enable smart prefixes \- URI templates triggered by writing given abbreviation to the Goto URL dialog followed by a list of arguments from which the actual URI is composed \- i.e. 'gg:search keywords' or 'gn search keywords for news'.
-.RE
-.PP
 protocol.user
 .RS 4
 User protocols. Options in this tree specify external handlers for the appropriate protocols. Ie. protocol.user.mailto.unix.
@@ -1646,11 +1651,6 @@ Handler (external program) for this protocol. Name the options in this tree afte
 protocol.user._template_._template_ <str> (default: "")
 .RS 4
 Handler (external program) for this protocol and system. %f in the string means file name to include form data from %h in the string means hostname (or email address) %p in the string means port %d in the string means path (everything after the port) %s in the string means subject (?subject=<this>) %u in the string means the whole URL
-.RE
-.PP
-protocol.no_proxy <str> (default: "")
-.RS 4
-Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled. Optionally, a port can be specified for some domains as well. If it's blank, NO_PROXY environment variable is checked as well.
 .RE
 .PP
 terminal
@@ -1761,6 +1761,46 @@ Codepage of charset used for displaying content on terminal. 'System' stands for
 ui
 .RS 4
 User interface options.
+.RE
+.PP
+ui.date_format <str> (default: "%b %e %H:%M")
+.RS 4
+Date format to use in dialogs. See strftime(3).
+.RE
+.PP
+ui.language <language> (default: "System")
+.RS 4
+Language of user interface. 'System' means that the language will be extracted from the environment dynamically.
+.RE
+.PP
+ui.show_menu_bar_always [0|1] (default: 0)
+.RS 4
+Always show menu bar on the screen.
+.RE
+.PP
+ui.show_status_bar [0|1] (default: 1)
+.RS 4
+Show status bar on the screen.
+.RE
+.PP
+ui.show_title_bar [0|1] (default: 1)
+.RS 4
+Show title bar on the screen.
+.RE
+.PP
+ui.startup_goto_dialog [0|1] (default: 1)
+.RS 4
+Pop up goto dialog in newly created tabs when there's no homepage set. This means also showing goto dialog on startup.
+.RE
+.PP
+ui.success_msgbox [0|1] (default: 1)
+.RS 4
+When you pressed a [ Save ] button in some manager, this option will make sure that a box confirming success of the operation will pop up.
+.RE
+.PP
+ui.window_title [0|1] (default: 1)
+.RS 4
+Set the window title when running in a windowing environment in an xterm\-like terminal. This way the document's title is shown on the window titlebar.
 .RE
 .PP
 ui.clock
@@ -3124,46 +3164,6 @@ Inactivity timeout in seconds. The maximum of one day should be enough for just 
 ui.timer.action <str> (default: "")
 .RS 4
 Keybinding action to be triggered when timer reaches zero.
-.RE
-.PP
-ui.date_format <str> (default: "%b %e %H:%M")
-.RS 4
-Date format to use in dialogs. See strftime(3).
-.RE
-.PP
-ui.language <language> (default: "System")
-.RS 4
-Language of user interface. 'System' means that the language will be extracted from the environment dynamically.
-.RE
-.PP
-ui.show_menu_bar_always [0|1] (default: 0)
-.RS 4
-Always show menu bar on the screen.
-.RE
-.PP
-ui.show_status_bar [0|1] (default: 1)
-.RS 4
-Show status bar on the screen.
-.RE
-.PP
-ui.show_title_bar [0|1] (default: 1)
-.RS 4
-Show title bar on the screen.
-.RE
-.PP
-ui.startup_goto_dialog [0|1] (default: 1)
-.RS 4
-Pop up goto dialog in newly created tabs when there's no homepage set. This means also showing goto dialog on startup.
-.RE
-.PP
-ui.success_msgbox [0|1] (default: 1)
-.RS 4
-When you pressed a [ Save ] button in some manager, this option will make sure that a box confirming success of the operation will pop up.
-.RE
-.PP
-ui.window_title [0|1] (default: 1)
-.RS 4
-Set the window title when running in a windowing environment in an xterm\-like terminal. This way the document's title is shown on the window titlebar.
 .RE
 Generated using output from ELinks version 0.12.GIT.
 .sp
