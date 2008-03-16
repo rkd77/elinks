@@ -307,6 +307,7 @@ AC_CHECK_FUNCS(gettimeofday clock_gettime)
 AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
 
 AC_CHECK_FUNCS(setenv putenv, HAVE_SETENV_OR_PUTENV=yes)
+AC_CHECK_FUNCS(unsetenv)
 AC_CHECK_FUNCS(getuid, HAVE_GETUID=yes)
 AC_CHECK_FUNCS(geteuid, HAVE_GETEUID=yes)
 

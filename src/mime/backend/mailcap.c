@@ -646,8 +646,57 @@ get_mailcap_entry(unsigned char *type)
 	return entry;
 }
 
+#if defined(HAVE_SETENV) || defined(HAVE_PUTENV)
+/* restore == 0 set DISPLAY
+ * restore == 1 restore DISPLAY
+ */
+static void
+set_display(int xwin, int restore)
+{
+	static unsigned char *display = NULL;
+
+	if (!restore) {
+		display = getenv("DISPLAY");
+		if (display) display = stracpy(display);
+		if (xwin) {
+#ifdef HAVE_SETENV
+			setenv("DISPLAY", ":0", 1);
+#else
+			putenv("DISPLAY=:0");
+#endif
+		} else {
+#ifdef HAVE_UNSETENV
+			unsetenv("DISPLAY");
+#else
+			putenv("DISPLAY");
+#endif
+		}
+	} else { /* restore DISPLAY */
+		if (display) {
+#ifdef HAVE_SETENV
+			setenv("DISPLAY", display, 1);
+#else
+			{
+				static unsigned char DISPLAY[1024] = { 'D','I','S','P','L','A','Y','=' };
+
+				strncpy(DISPLAY + 8, display, 1023 - 8);
+				putenv(DISPLAY);
+			}
+#endif
+			mem_free(display);
+		} else {
+#ifdef HAVE_UNSETENV
+			unsetenv("DISPLAY");
+#else
+			putenv("DISPLAY");
+#endif
+		}
+	}
+}
+#endif
+
 static struct mime_handler *
-get_mime_handler_mailcap(unsigned char *type, int options)
+get_mime_handler_mailcap(unsigned char *type, int xwin)
 {
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;
@@ -658,7 +707,14 @@ get_mime_handler_mailcap(unsigned char *type, int options)
 	    || (!mailcap_map && !init_mailcap_map()))
 		return NULL;
 
+#if defined(HAVE_SETENV) || defined(HAVE_PUTENV)
+	set_display(xwin, 0);
+#endif
 	entry = get_mailcap_entry(type);
+
+#if defined(HAVE_SETENV) || defined(HAVE_PUTENV)
+	set_display(xwin, 1);
+#endif
 	if (!entry) return NULL;
 
 	program = format_command(entry->command, type, entry->copiousoutput);
