@@ -5546,7 +5546,7 @@ msgstr "Opcje ~terminala"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473
 msgid "File ~extensions"
-msgstr "~Rozszerzenia"
+msgstr "~Rozszerzenia plików"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:475
