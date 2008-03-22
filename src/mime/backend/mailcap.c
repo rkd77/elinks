@@ -647,15 +647,56 @@ get_mailcap_entry(unsigned char *type)
 }
 
 #if defined(HAVE_SETENV) || defined(HAVE_PUTENV)
-/* restore == 0 set DISPLAY
- * restore == 1 restore DISPLAY
- */
+/** Set or unset the DISPLAY environment variable before a mailcap
+ * check, or restore it afterwards.
+ *
+ * In a mailcap file, each entry can specify a test command that
+ * checks whether the entry is applicable to the user's environment.
+ * For example:
+ *
+ * @verbatim
+ * audio/mpegurl; xmms %s; test=test "$DISPLAY" != ""
+ * @endverbatim
+ *
+ * This means the entry should be used only if the DISPLAY environment
+ * variable is not empty, i.e. there is an X display.  In ELinks,
+ * check_entries() runs these test commands, so they inherit the
+ * environment variables of the master ELinks process.  However, if
+ * the user is running ELinks on multiple terminals, then each slave
+ * ELinks process has its own environment variables, which may or may
+ * not include DISPLAY.  Because the actual mailcap command may be run
+ * from a slave ELinks process and inherit the environment from it,
+ * any test command should also be run in the same environment.
+ *
+ * This function does not fully implement the ideal described above.
+ * Instead, it only sets the DISPLAY environment variable as ":0" if
+ * the terminal has any X display at all, or unsets DISPLAY if not.
+ * This should be enough for most test commands seen in practice.
+ * After the test commands of mailcap entries have been run, this
+ * function must be called again to restore DISPLAY.
+ *
+ * @todo Retrieve all environment variables from the slave process and
+ *   propagate them to the test commands.  Actually, it might be best
+ *   to fork the test commands from the slave process, so that they
+ *   would also inherit the controlling tty.  However, that would
+ *   require changing the interlink protocol and might risk deadlocks
+ *   or memory leaks if a slave terminates without responding.
+ *
+ * @param xwin
+ *   Whether the terminal has an associated X display.
+ * @param restore
+ *   If this is 0, the function sets or clears DISPLAY, as described above.
+ *   If this is 1, the function restores the original value of DISPLAY.
+ *   There is only room for one saved value; do not nest calls.  */
 static void
 set_display(int xwin, int restore)
 {
 	static unsigned char *display = NULL;
 
 	if (!restore) {
+		assert(display == NULL);
+		if_assert_failed mem_free(display);
+
 		display = getenv("DISPLAY");
 		if (display) display = stracpy(display);
 		if (xwin) {
@@ -677,13 +718,16 @@ set_display(int xwin, int restore)
 			setenv("DISPLAY", display, 1);
 #else
 			{
-				static unsigned char DISPLAY[1024] = { 'D','I','S','P','L','A','Y','=' };
+				static unsigned char DISPLAY[1024] = "DISPLAY=";
 
+				/* DISPLAY[1023] == '\0' and we don't let
+				 * strncpy write that far, so putenv always
+				 * gets a null-terminated string.  */
 				strncpy(DISPLAY + 8, display, 1023 - 8);
 				putenv(DISPLAY);
 			}
 #endif
-			mem_free(display);
+			mem_free_set(&display, NULL);
 		} else {
 #ifdef HAVE_UNSETENV
 			unsetenv("DISPLAY");
