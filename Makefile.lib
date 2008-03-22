@@ -23,22 +23,33 @@ SPARSE_FLAGS = -D__BIG_ENDIAN__ -D__powerpc__
 # If we are verbose, we will show the "real" cmds instead of
 # their quiet versions (which are used in the non-verbose mode).
 # Inspired by the Linux kernel build system.
+#
+# If real cmds are to be shown, then quoteverbose quotes each as
+# a shell word, so that it can be accurately displayed with echo.
+# If the quiet versions are to be shown, then they should already
+# be sufficiently quoted, so quoteverbose does nothing.
 ifdef V
 	quiet =
 	mquiet = masq_
+	quoteverbose = '$(subst ','\'',$(1))'
+	#'# This line fixes syntax highlighting in Emacs' makefile-mode.
 	Q =
 else
 	quiet = quiet_
 	mquiet = quiet_
+	quoteverbose = $(1)
 	Q = @
 endif
 
 # Show the command (quiet or non-quiet version based on the assignment
 # just above) and then execute it.
-ncmd = $(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
-cmd = @$(if $($(quiet)cmd_$(1)),echo $($(quiet)cmd_$(1)) &&) $(cmd_$(1))
-mcmd = @$(if $($(mquiet)cmd_$(1)),echo $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
-ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $($(mquiet)cmd_$(1)) &&) $(cmd_$(1))
+#
+# Because $(cmd_$(1)) and related variables may contain references to $(2),
+# they must be expanded right here; that cannot be delegated to quoteverbose.
+ncmd = $(if $($(quiet)cmd_$(1)),echo $(call quoteverbose,$($(quiet)cmd_$(1))) &&) $(cmd_$(1))
+cmd = @$(if $($(quiet)cmd_$(1)),echo $(call quoteverbose,$($(quiet)cmd_$(1))) &&) $(cmd_$(1))
+mcmd = @$(if $($(mquiet)cmd_$(1)),echo $(call quoteverbose,$($(mquiet)cmd_$(1))) &&) $(cmd_$(1))
+ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $(call quoteverbose,$($(mquiet)cmd_$(1))) &&) $(cmd_$(1))
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -o $(@) -c $< $(2)
