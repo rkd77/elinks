@@ -619,8 +619,10 @@ mkalldirs(const unsigned char *path)
 
 		p[pos] = separator;
 
-		if (ret < 0 && errno != EEXIST)
-			break;
+		if (ret < 0) {
+			if (errno != EEXIST) break;
+			ret = 0;
+		}
 	}
 
 	fmem_free(p);
