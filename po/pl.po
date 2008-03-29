@@ -5340,7 +5340,7 @@ msgstr "~Przekaż URI karty do zewnętrznego polecenia"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:310
 msgid "Open new ~tab"
-msgstr "Otwó~rz w nowej karcie"
+msgstr "O~twórz w nowej karcie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:311
@@ -5415,7 +5415,7 @@ msgstr "P~owłoka systemowa"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:395
 msgid "Resize t~erminal"
-msgstr "Zmień rozmiar te~rinala"
+msgstr "Zmień ~rozmiar terminala"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:413
@@ -7615,7 +7615,7 @@ msgstr[2] "%u karmiących"
 #, c-format
 msgid "%u available"
 msgid_plural "%u available"
-msgstr[0] "%u dostępny"
+msgstr[0] "%u dostępni"
 msgstr[1] "%u dostępne"
 msgstr[2] "%u dostępnych"
 
@@ -7647,7 +7647,7 @@ msgstr "1:1 w"
 #. Sharing:
 #: src/protocol/bittorrent/dialogs.c:378
 msgid "Sharing"
-msgstr "Dzielenie"
+msgstr "Dzielenie się"
 
 #: src/protocol/bittorrent/dialogs.c:387
 msgid "uploaded"
