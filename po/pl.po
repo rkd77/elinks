@@ -7347,33 +7347,34 @@ msgid ""
 "Set to 1.0 to atleast upload a complete copy of all data and\n"
 "set to 0.0 to have unlimited sharing rate."
 msgstr ""
-"Maksymalny współczynnik dzielenia do osiągnięcia przed zakończeniem\n"
-"karmienia. Współczynnik dzielenia jest obliczany jako liczba bajtów\n"
-"wysłanych podzielona przez liczbę bajtów pobranych. Wartość powinna\n"
-"być wartością double pomiędzy 0.0 a 1.0 włącznie.\n"
-"Należy ustawić na 1.0 aby przynajmniej wysłać pełną kopię wszystkich\n"
-"danych, a na 0.0 aby mieć nieograniczony współczynnik dzielenia."
+"Minimalny współczynnik dzielenia się do osiągnięcia przed\n"
+"zakończeniem karmienia. Współczynnik dzielenia się jest\n"
+"obliczany jako liczba bajtów wysłanych podzielona przez liczbę\n"
+"bajtów pobranych. Wartość powinna być wartością double pomiędzy\n"
+"0.0 a 1.0 włącznie. Należy ustawić na 1.0 aby przynajmniej wysłać\n"
+"pełną kopię wszystkich danych, a na 0.0 aby mieć nieograniczony\n"
+"współczynnik dzielenia się."
 
 #: src/protocol/bittorrent/bittorrent.c:163
 msgid "Maximum number of uploads"
-msgstr "Maksymalna liczba ściąganych plików"
+msgstr "Maksymalna liczba połączeń wysyłających"
 
 #: src/protocol/bittorrent/bittorrent.c:165
 msgid "The maximum number of uploads to allow at once."
-msgstr "Maksymalna liczba dozwolonych plików do wysyłania jednocześnie."
+msgstr "Maksymalna liczba połączeń wysyłających dozwolonych natychmiast."
 
 #. The number of uploads to fill out to with extra optimistic unchokes
 #: src/protocol/bittorrent/bittorrent.c:168
 msgid "Minimum number of uploads"
-msgstr "Maksymalna liczba wysyłanych plików"
+msgstr "Minimalna liczba połączeń wysyłających"
 
 #: src/protocol/bittorrent/bittorrent.c:170
 msgid ""
 "The minimum number of uploads which should at least\n"
 "be used for new connections."
 msgstr ""
-"Maksymalna liczba wysyłanych plików, które powinny przynajmniej\n"
-"być używane dla nowych połączeń."
+"Minimalna liczba połączeń wysyłających, która powinna\n"
+"być użyta dla nowych połączeń."
 
 #: src/protocol/bittorrent/bittorrent.c:174
 msgid "Keepalive interval"
@@ -8807,7 +8808,7 @@ msgstr "Pole tekstowe"
 
 #: src/viewer/text/form.c:1827
 msgid "File upload"
-msgstr "Ładowanie pliku"
+msgstr "Wysyłanie pliku"
 
 #: src/viewer/text/form.c:1829
 msgid "Password field"
