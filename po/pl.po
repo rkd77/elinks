@@ -7552,7 +7552,7 @@ msgstr[2] "%u karmiących"
 #, c-format
 msgid "%u available"
 msgid_plural "%u available"
-msgstr[0] "%u dostępny"
+msgstr[0] "%u dostępni"
 msgstr[1] "%u dostępne"
 msgstr[2] "%u dostępnych"
 
@@ -7584,7 +7584,7 @@ msgstr "1:1 w"
 #. Sharing:
 #: src/protocol/bittorrent/dialogs.c:378
 msgid "Sharing"
-msgstr "Dzielenie"
+msgstr "Dzielenie się"
 
 #: src/protocol/bittorrent/dialogs.c:387
 msgid "uploaded"
