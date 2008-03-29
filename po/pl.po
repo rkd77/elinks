@@ -5309,7 +5309,7 @@ msgstr "~Przekaż URI karty do zewnętrznego polecenia"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:310
 msgid "Open new ~tab"
-msgstr "Otwó~rz w nowej karcie"
+msgstr "O~twórz w nowej karcie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:311
@@ -5384,7 +5384,7 @@ msgstr "P~owłoka systemowa"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:395
 msgid "Resize t~erminal"
-msgstr "Zmień rozmiar ~terminala"
+msgstr "Zmień ~rozmiar terminala"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:413
