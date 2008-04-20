@@ -67,7 +67,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 		struct cache_entry *cached = document->cached;
 
 		assert(cached);
-		if (cached->incomplete || cached->id != document->id) {
+		if (cached->incomplete || cached->cache_id != document->cache_id) {
 			done_string(&fragment);
 			return -2;
 		}

@@ -166,6 +166,7 @@ struct document {
 	struct uri_list ecmascript_imports;
 	/** used by setTimeout */
 	timer_id_T timeout;
+	unsigned int document_id;
 #endif
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the
@@ -210,7 +211,7 @@ struct document {
 	/* Positions of the last base character.*/
 	int comb_x, comb_y;
 #endif
-	unsigned int id; /**< Used to check cache entries. */
+	unsigned int cache_id; /**< Used to check cache entries. */
 
 	int cp;
 	int width, height; /**< size of document */

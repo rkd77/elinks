@@ -146,7 +146,7 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 
 #ifdef CONFIG_DEBUG
 	add_format_to_string(&msg, "\n%s: %d", "Refcount", get_object_refcount(cached));
-	add_format_to_string(&msg, "\n%s: %u", _("ID", term), cached->id);
+	add_format_to_string(&msg, "\n%s: %u", _("ID", term), cached->cache_id);
 
 	if (cached->head && *cached->head) {
 		add_format_to_string(&msg, "\n%s:\n\n%s", _("Header", term),

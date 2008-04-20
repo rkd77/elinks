@@ -33,6 +33,7 @@
 #include "util/string.h"
 #include "viewer/text/link.h"
 
+static int document_init_counter = 0;
 
 static INIT_LIST_OF(struct document, format_cache);
 
@@ -46,7 +47,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	document->uri = get_uri_reference(cached->uri);
 
 	object_lock(cached);
-	document->id = cached->id;
+	document->cache_id = cached->cache_id;
 	document->cached = cached;
 
 	init_list(document->forms);
@@ -55,6 +56,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
+	document->document_id = ++document_init_counter;
 #endif
 
 #ifdef CONFIG_COMBINE
@@ -214,7 +216,7 @@ get_document_css_magic(struct document *document)
 	foreach_uri (uri, index, &document->css_imports) {
 		struct cache_entry *cached = find_in_cache(uri);
 
-		if (cached) css_magic += cached->id + cached->data_size;
+		if (cached) css_magic += cached->cache_id + cached->data_size;
 	}
 
 	return css_magic;
@@ -256,7 +258,7 @@ get_cached_document(struct cache_entry *cached, struct document_options *options
 			continue;
 
 		if (options->no_cache
-		    || cached->id != document->id
+		    || cached->cache_id != document->cache_id
 		    || !check_document_css_magic(document)) {
 			if (!is_object_used(document)) {
 				done_document(document);
@@ -289,7 +291,7 @@ shrink_format_cache(int whole)
 
 		/* Destroy obsolete renderer documents which are already
 		 * out-of-sync. */
-		if (document->cached->id == document->id)
+		if (document->cached->cache_id == document->cache_id)
 			continue;
 
 		done_document(document);

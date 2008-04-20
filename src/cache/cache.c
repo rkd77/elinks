@@ -150,7 +150,7 @@ get_cache_entry(struct uri *uri)
 	cached->valid = 1;
 
 	init_list(cached->frag);
-	cached->id = id_counter++;
+	cached->cache_id = id_counter++;
 	object_nolock(cached, "cache_entry"); /* Debugging purpose. */
 
 	cached->box_item = add_listbox_leaf(&cache_browser, NULL, cached);
@@ -385,7 +385,7 @@ add_fragment(struct cache_entry *cached, off_t offset,
 
 	/* id marks each entry, and change each time it's modified,
 	 * used in HTML renderer. */
-	cached->id = id_counter++;
+	cached->cache_id = id_counter++;
 
 	/* Possibly insert the new data in the middle of existing fragment. */
 	foreach (f, cached->frag) {
@@ -639,7 +639,7 @@ delete_entry_content(struct cache_entry *cached)
 		del_from_list(f);
 		frag_free(f);
 	}
-	cached->id = id_counter++;
+	cached->cache_id = id_counter++;
 	cached->length = 0;
 	cached->incomplete = 1;
 
