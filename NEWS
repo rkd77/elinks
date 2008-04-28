@@ -16,10 +16,37 @@ Incompatibilities:
 
 Miscellaneous:
 
+* major bug 181: Slave ELinks processes can now run an external editor.
+  This used to work in the master process only.
+* major bug 722: Filter CSS according to media types.  New option
+  document.css.media.
+* bug 638: Propagate the existence of $DISPLAY from slave terminals to
+  mailcap test commands.
+* bug 963: New option document.css.ignore_display_none.
+* bug 977: Fixed crash when opening in new tab a non link with onclick
+  attribute.
+* Really retry forever when connection.retries = 0.
+* enhancement: Session-specific options.  Any options changed with
+  toggle-* actions no longer affect other tabs or other terminals.
+* enhancement: Domain-specific options.  Use set_domain in elinks.conf
+  to e.g. disable cookies for google.com.  The option manager window
+  does not yet support this.
 * enhancement 867: Use bracketed paste mode on xterm.  This requires
   xterm patch #228 or later configured with --enable-readline-mouse.
 * enhancement 824: Experimental support for combining characters.
   See features.conf for details.
+* enhancement: Add a new entry Link Info under Link main menu.
+* enhancement: New option protocol.http.compression.
+* enhancement: Indicate backgrounded downloads using an unused led.
+
+//////////////////////////////////////////////////////////////////////
+The following changes should be removed from NEWS before ELinks 0.13.0
+is released.  They are currently listed here just to show that they
+have already been considered.
+
+* Fixed bugs that were not in previous versions:
+  - critical bug 1009: assertion failure in add_snippets()
+//////////////////////////////////////////////////////////////////////
 
 ELinks 0.12.GIT now:
 --------------------
