@@ -421,8 +421,11 @@ version_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 #define gettext_nonempty(x) (*(x) ? gettext(x) : (x))
 
+static void print_full_help_outer(struct option *tree, unsigned char *path);
+
 static void
-print_full_help(struct option *tree, unsigned char *path)
+print_full_help_inner(struct option *tree, unsigned char *path,
+		      int trees)
 {
 	struct option *option;
 	unsigned char saved[MAX_STR_LEN];
@@ -437,6 +440,9 @@ print_full_help(struct option *tree, unsigned char *path)
 		unsigned char *desc = (option->desc && *option->desc)
 				      ? (unsigned char *) gettext(option->desc)
 				      : (unsigned char *) "N/A";
+
+		if (trees != (type == OPT_TREE))
+			continue;
 
 		/* Don't print deprecated aliases (if we don't walk command
 		 * line options which use aliases for legitimate options). */
@@ -549,12 +555,19 @@ print_full_help(struct option *tree, unsigned char *path)
 
 		if (option->type == OPT_TREE) {
 			memcpy(savedpos, ".", 2);
-			print_full_help(option, saved);
+			print_full_help_outer(option, saved);
 		}
 
 		savedpos = saved;
 		*savedpos = 0;
 	}
+}
+
+static void
+print_full_help_outer(struct option *tree, unsigned char *path)
+{
+	print_full_help_inner(tree, path, 0);
+	print_full_help_inner(tree, path, 1);
 }
 
 static void
@@ -629,13 +642,13 @@ printhelp_cmd(struct option *option, unsigned char ***argv, int *argc)
 
 	if (!strcmp(option->name, "config-help")) {
 		printf("%s:\n", gettext("Configuration options"));
-		print_full_help(config_options, "");
+		print_full_help_outer(config_options, "");
 	} else {
 		printf("%s\n\n%s:\n",
 		       gettext("Usage: elinks [OPTION]... [URL]..."),
 		       gettext("Options"));
 		if (!strcmp(option->name, "long-help")) {
-			print_full_help(cmdline_options, "-");
+			print_full_help_outer(cmdline_options, "-");
 		} else {
 			print_short_help();
 		}
