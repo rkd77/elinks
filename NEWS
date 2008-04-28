@@ -294,7 +294,7 @@ have already been considered.
   * Really retry forever when connection.retries = 0
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.4rc0.GIT now:
+ELinks 0.11.4rc1.GIT now:
 -------------------------
 
 To be released as 0.11.4.
