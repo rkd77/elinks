@@ -477,7 +477,7 @@ http_end_request(struct connection *conn, enum connection_state state,
 		if (http->post_fd != -1) {
 			close(http->post_fd);
 			http->post_fd = -1;
-		}		
+		}
 	}
 
 	if (conn->info && !((struct http_connection_info *) conn->info)->close
@@ -580,7 +580,7 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-/* This sets the Content-Length of POST data and counts big files. */ 
+/* This sets the Content-Length of POST data and counts big files. */
 static size_t
 post_length(unsigned char *post_data, unsigned int *count)
 {
@@ -608,7 +608,7 @@ post_length(unsigned char *post_data, unsigned int *count)
 		end++;
 	}
 	size += (length / 2);
-	return size;		
+	return size;
 }
 
 #define POST_BUFFER_SIZE 4096
@@ -657,8 +657,9 @@ send_big_files(struct socket *socket)
 		}
 	}
 	if (n) add_bytes_to_string(&data, buffer, n);
-		
+
 	if (finish) {
+		http->uploaded += data.length;
 		request_from_socket(socket, data.source, data.length, S_SENT,
 		    SOCKET_END_ONCLOSE, http_got_header);
 	} else {
@@ -670,6 +671,7 @@ send_big_files(struct socket *socket)
 		*end = BIG_FILE_CHAR;
 		http->post_data = end + 1;
 		socket->state = SOCKET_END_ONCLOSE;
+		http->uploaded += data.length;
 		write_to_socket(socket, data.source, data.length, S_TRANS,
 				send_big_files2);
 	}
@@ -686,6 +688,7 @@ send_big_files2(struct socket *socket)
 
 	if (n > 0) {
 		socket->state = SOCKET_END_ONCLOSE;
+		http->uploaded += n;
 		write_to_socket(socket, buffer, n, S_TRANS,
 			send_big_files2);
 	} else {
@@ -1054,6 +1057,7 @@ http_send_header(struct socket *socket)
 		post_data = postend ? postend + 1 : uri->post;
 		add_to_string(&header, "Content-Length: ");
 		size = post_length(post_data, &big_files);
+		http->total_upload_length = size;
 		add_long_to_string(&header, size);
 		add_crlf_to_string(&header);
 	}
