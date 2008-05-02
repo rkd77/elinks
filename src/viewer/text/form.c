@@ -59,6 +59,7 @@
  * in viewer/common/. --pasky */
 
 /** @relates submitted_value */
+
 struct submitted_value *
 init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type,
 		     struct form_control *fc, int position)
@@ -906,8 +907,8 @@ check_boundary(struct string *data, struct boundary_info *boundary)
 /** @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
 encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
-		 struct string *data,
-		 struct boundary_info *boundary, int cp_from, int cp_to)
+		 struct string *data, struct boundary_info *boundary,
+		 LIST_OF(struct big_files_offset) *bfs, int cp_from, int cp_to)
 {
 	struct conv_table *convert_table = NULL;
 	struct submitted_value *sv;
@@ -967,6 +968,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			add_crlf_to_string(data);
 
 			if (*sv->value) {
+				struct stat stat_buf;
 				unsigned char *filename;
 
 				if (get_cmd_opt_bool("anonymous")) {
@@ -979,9 +981,30 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 				if (!filename) goto encode_error;
 
 				fh = open(filename, O_RDONLY);
+				if (fh == -1) {
+					mem_free(filename);
+					goto encode_error;
+				}
+				fstat(fh, &stat_buf);
+				if (stat_buf.st_size > (1L << 16)) { /* 65536 bytes */
+					struct big_files_offset *bfs_new = mem_calloc(1, sizeof(*bfs_new));
+
+					if (!bfs_new) {
+						mem_free(filename);
+						close(fh);
+						goto encode_error;
+					}
+					bfs_new->begin = data->length;
+					add_char_to_string(data, BIG_FILE_CHAR);
+					add_to_string(data, filename);
+					add_char_to_string(data, BIG_FILE_CHAR);
+					bfs_new->end = data->length;
+					add_to_list_end(*bfs, bfs_new);
+					mem_free(filename);
+					goto close_handle;
+				}
 				mem_free(filename);
 
-				if (fh == -1) goto encode_error;
 				set_bin(fh);
 				while (1) {
 					ssize_t rd = safe_read(fh, buffer, F_BUFLEN);
@@ -998,6 +1021,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 						break;
 					}
 				};
+close_handle:
 				close(fh);
 			}
 #undef F_BUFLEN
@@ -1151,6 +1175,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 {
 	struct boundary_info boundary;
 	INIT_LIST_OF(struct submitted_value, submit);
+	INIT_LIST_OF(struct big_files_offset, bfs);
 	struct string data;
 	struct string go;
 	int cp_from, cp_to;
@@ -1184,7 +1209,8 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 		break;
 
 	case FORM_METHOD_POST_MP:
-		encode_multipart(ses, &submit, &data, &boundary, cp_from, cp_to);
+		encode_multipart(ses, &submit, &data, &boundary,
+			&bfs, cp_from, cp_to);
 		break;
 
 	case FORM_METHOD_POST_TEXT_PLAIN:
@@ -1236,7 +1262,6 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	{
 		/* Note that we end content type here by a simple '\n',
 		 * replaced later by correct '\r\n' in http_send_header(). */
-		int i;
 
 		add_to_string(&go, form->action);
 		add_char_to_string(&go, POST_CHAR);
@@ -1256,11 +1281,35 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 			add_char_to_string(&go, '\n');
 		}
 
-		for (i = 0; i < data.length; i++) {
-			unsigned char p[3];
+		if (list_empty(bfs)) {
+			int i;
 
-			ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
-			add_to_string(&go, p);
+			for (i = 0; i < data.length; i++) {
+				unsigned char p[3];
+
+				ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
+				add_to_string(&go, p);
+			}
+		} else {
+			struct big_files_offset *b;
+			int i = 0;
+
+			foreach (b, bfs) {
+				for (; i < b->begin; i++) {
+					unsigned char p[3];
+
+					ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
+					add_to_string(&go, p);
+				}
+				add_bytes_to_string(&go, data.source + i, b->end - b->begin);
+				i = b->end;
+			}
+			for (; i < data.length; i++) {
+				unsigned char p[3];
+
+				ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
+				add_to_string(&go, p);
+			}
 		}
 	}
 	}
@@ -1269,7 +1318,10 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 
 	uri = get_uri(go.source, 0);
 	done_string(&go);
-	if (uri) uri->form = 1;
+	if (uri) {
+		uri->form = 1;
+	}
+	free_list(bfs);
 
 	return uri;
 }

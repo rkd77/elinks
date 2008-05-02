@@ -80,22 +80,120 @@ close_pipe_and_read(struct socket *data_socket)
 	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
 }
 
+
+#define POST_BUFFER_SIZE 4096
+#define BIG_READ 65536
+static void send_big_files2(struct socket *socket);
+
+static void
+send_big_files(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char *post = http->post_data;
+	unsigned char buffer[POST_BUFFER_SIZE];
+	unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+	struct string data;
+	int n = 0;
+	int finish = 0;
+
+	if (!init_string(&data)) {
+		abort_connection(conn, S_OUT_OF_MEM);
+		return;
+	}
+
+	if (!big_file) {
+		finish = 1;
+		big_file = strchr(post, '\0');
+	}
+
+	while (post < big_file) {
+		int h1, h2;
+
+		h1 = unhx(post[0]);
+		assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
+		if_assert_failed h1 = 0;
+
+		h2 = unhx(post[1]);
+		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
+		if_assert_failed h2 = 0;
+
+		buffer[n++] = (h1<<4) + h2;
+		post += 2;
+		if (n == POST_BUFFER_SIZE) {
+			add_bytes_to_string(&data, buffer, n);
+			n = 0;
+		}
+	}
+	if (n) add_bytes_to_string(&data, buffer, n);
+		
+	if (finish) {
+		write_to_socket(socket, data.source, data.length, S_SENT,
+			close_pipe_and_read);
+	} else {
+		unsigned char *end = strchr(big_file + 1, BIG_FILE_CHAR);
+
+		assert(end);
+		*end = '\0';
+		http->post_fd = open(big_file + 1, O_RDONLY);
+		*end = BIG_FILE_CHAR;
+		http->post_data = end + 1;
+		socket->state = SOCKET_END_ONCLOSE;
+		write_to_socket(socket, data.source, data.length, S_TRANS,
+				send_big_files2);
+	}
+	done_string(&data);
+}
+
+static void
+send_big_files2(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char buffer[BIG_READ];
+	int n = safe_read(http->post_fd, buffer, BIG_READ);
+
+	if (n > 0) {
+		socket->state = SOCKET_END_ONCLOSE;
+		write_to_socket(socket, buffer, n, S_TRANS,
+			send_big_files2);
+	} else {
+		close(http->post_fd);
+		http->post_fd = -1;
+		send_big_files(socket);
+	}
+}
+
+
 static void
 send_post_data(struct connection *conn)
 {
-#define POST_BUFFER_SIZE 4096
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
 	unsigned char buffer[POST_BUFFER_SIZE];
 	struct string data;
 	int n = 0;
 
+	postend = strchr(post, '\n');
+	if (postend) post = postend + 1;
+
+	if (post) {
+		unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+
+		if (big_file) {
+			struct http_connection_info *http = conn->info;
+
+			http->post_data = post;
+			send_big_files(conn->data_socket);
+			return;
+		}
+	}
+
+
 	if (!init_string(&data)) {
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
-	postend = strchr(post, '\n');
-	if (postend) post = postend + 1;
 
 	/* FIXME: Code duplication with protocol/http/http.c! --witekfl */
 	while (post[0] && post[1]) {
@@ -130,8 +228,9 @@ send_post_data(struct connection *conn)
 		close_pipe_and_read(conn->data_socket);
 
 	done_string(&data);
-#undef POST_BUFFER_SIZE
 }
+#undef POST_BUFFER_SIZE
+#undef BIG_READ
 
 static void
 send_request(struct connection *conn)

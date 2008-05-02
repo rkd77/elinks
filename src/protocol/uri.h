@@ -7,6 +7,7 @@ struct string;
 
 #define POST_CHAR 1
 #define POST_CHAR_S "\001"
+#define BIG_FILE_CHAR '\002'
 
 /* The uri structure is used to store the start position and length of commonly
  * used uri fields. It is initialized by parse_uri(). It is possible that the
@@ -53,6 +54,9 @@ struct uri {
 	unsigned int portlen:8;
 	unsigned int datalen:16;
 	unsigned int fragmentlen:16;
+
+	/* Number of files bigger than 1M */
+	unsigned int big_files:8;
 
 	/* Flags */
 	unsigned int ipv6:1;	/* URI contains IPv6 host */
@@ -187,6 +191,13 @@ enum uri_component {
 struct uri_list {
 	int size;
 	struct uri **uris;
+};
+
+/* I don't know where to put it. */
+struct big_files_offset {
+	LIST_HEAD(struct big_files_offset);
+	int begin;
+	int end;
 };
 
 #define foreach_uri(uri, index, list) \

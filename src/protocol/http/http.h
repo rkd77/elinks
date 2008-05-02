@@ -3,12 +3,35 @@
 #define EL__PROTOCOL_HTTP_HTTP_H
 
 #include "main/module.h"
+#include "protocol/http/blacklist.h"
 #include "protocol/protocol.h"
 
 struct connection;
-struct http_connection_info;
 struct read_buffer;
 struct socket;
+
+
+struct http_version {
+	int major;
+	int minor;
+};
+
+struct http_connection_info {
+	enum blacklist_flags bl_flags;
+	struct http_version recv_version;
+	struct http_version sent_version;
+
+	int close;
+	int length;
+	int chunk_remaining;
+	int code;
+
+	/* Used by big files upload. */
+	unsigned char *post_data;
+	int post_fd;
+};
+
+
 
 extern struct module http_protocol_module;
 

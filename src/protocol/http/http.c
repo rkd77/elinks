@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -51,11 +52,6 @@
 #include "http_negotiate.h"
 #endif
 
-struct http_version {
-	int major;
-	int minor;
-};
-
 #define HTTP_0_9(x)	 ((x).major == 0 && (x).minor == 9)
 #define HTTP_1_0(x)	 ((x).major == 1 && (x).minor == 0)
 #define HTTP_1_1(x)	 ((x).major == 1 && (x).minor == 1)
@@ -65,26 +61,13 @@ struct http_version {
 #define POST_HTTP_1_1(x) ((x).major > 1 || ((x).major == 1 && (x).minor > 1))
 
 
-struct http_connection_info {
-	enum blacklist_flags bl_flags;
-	struct http_version recv_version;
-	struct http_version sent_version;
-
-	int close;
-
 #define LEN_CHUNKED -2 /* == we get data in unknown number of chunks */
 #define LEN_FINISHED 0
-	int length;
 
 	/* Either bytes coming in this chunk yet or "parser state". */
 #define CHUNK_DATA_END	-3
 #define CHUNK_ZERO_SIZE	-2
 #define CHUNK_SIZE	-1
-	int chunk_remaining;
-
-	int code;
-};
-
 
 static struct auth_entry proxy_auth;
 
@@ -488,6 +471,14 @@ http_end_request(struct connection *conn, enum connection_state state,
 		 int notrunc)
 {
 	shutdown_connection_stream(conn);
+	if (conn->info) {
+		struct http_connection_info *http = conn->info;
+
+		if (http->post_fd != -1) {
+			close(http->post_fd);
+			http->post_fd = -1;
+		}		
+	}
 
 	if (conn->info && !((struct http_connection_info *) conn->info)->close
 	    && (!conn->socket->ssl) /* We won't keep alive ssl connections */
@@ -543,6 +534,8 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 	http->sent_version.minor = minor;
 	http->close = close;
 
+	http->post_fd = -1;
+
 	/* The CGI code uses this too and blacklisting expects a host name. */
 	if (conn->proxied_uri->protocol != PROTOCOL_FILE)
 		http->bl_flags = get_blacklist_flags(conn->proxied_uri);
@@ -587,6 +580,123 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
+/* This sets the Content-Length of POST data and counts big files. */ 
+static size_t
+post_length(unsigned char *post_data, unsigned int *count)
+{
+	size_t size = 0;
+	size_t length = strlen(post_data);
+	unsigned char *end = post_data;
+
+	*count = 0;
+	while (1) {
+		struct stat sb;
+		unsigned char *begin;
+		int res;
+
+		begin = strchr(end, BIG_FILE_CHAR);
+		if (!begin) break;
+		end = strchr(begin + 1, BIG_FILE_CHAR);
+		if (!end) break;
+		*end = '\0';
+		res = stat(begin + 1, &sb);
+		*end = BIG_FILE_CHAR;
+		if (res) break;
+		(*count)++;
+		size += sb.st_size;
+		length -= (end - begin + 1);
+		end++;
+	}
+	size += (length / 2);
+	return size;		
+}
+
+#define POST_BUFFER_SIZE 4096
+#define BIG_READ 655360
+
+static void send_big_files2(struct socket *socket);
+
+static void
+send_big_files(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char *post = http->post_data;
+	unsigned char buffer[POST_BUFFER_SIZE];
+	unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+	struct string data;
+	int n = 0;
+	int finish = 0;
+
+	if (!init_string(&data)) {
+		http_end_request(conn, S_OUT_OF_MEM, 0);
+		return;
+	}
+
+	if (!big_file) {
+		finish = 1;
+		big_file = strchr(post, '\0');
+	}
+
+	while (post < big_file) {
+		int h1, h2;
+
+		h1 = unhx(post[0]);
+		assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
+		if_assert_failed h1 = 0;
+
+		h2 = unhx(post[1]);
+		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
+		if_assert_failed h2 = 0;
+
+		buffer[n++] = (h1<<4) + h2;
+		post += 2;
+		if (n == POST_BUFFER_SIZE) {
+			add_bytes_to_string(&data, buffer, n);
+			n = 0;
+		}
+	}
+	if (n) add_bytes_to_string(&data, buffer, n);
+		
+	if (finish) {
+		request_from_socket(socket, data.source, data.length, S_SENT,
+		    SOCKET_END_ONCLOSE, http_got_header);
+	} else {
+		unsigned char *end = strchr(big_file + 1, BIG_FILE_CHAR);
+
+		assert(end);
+		*end = '\0';
+		http->post_fd = open(big_file + 1, O_RDONLY);
+		*end = BIG_FILE_CHAR;
+		http->post_data = end + 1;
+		socket->state = SOCKET_END_ONCLOSE;
+		write_to_socket(socket, data.source, data.length, S_TRANS,
+				send_big_files2);
+	}
+	done_string(&data);
+}
+
+static void
+send_big_files2(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char buffer[BIG_READ];
+	int n = safe_read(http->post_fd, buffer, BIG_READ);
+
+	if (n > 0) {
+		socket->state = SOCKET_END_ONCLOSE;
+		write_to_socket(socket, buffer, n, S_TRANS,
+			send_big_files2);
+	} else {
+		close(http->post_fd);
+		http->post_fd = -1;
+		send_big_files(socket);
+	}
+}
+
+
+
 static void
 http_send_header(struct socket *socket)
 {
@@ -599,6 +709,7 @@ http_send_header(struct socket *socket)
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
+	int big_files = 0;
 
 	/* Sanity check for a host */
 	if (!uri || !uri->host || !*uri->host || !uri->hostlen) {
@@ -932,6 +1043,7 @@ http_send_header(struct socket *socket)
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
 		unsigned char *postend = strchr(uri->post, '\n');
+		size_t size;
 
 		if (postend) {
 			add_to_string(&header, "Content-Type: ");
@@ -941,7 +1053,8 @@ http_send_header(struct socket *socket)
 
 		post_data = postend ? postend + 1 : uri->post;
 		add_to_string(&header, "Content-Length: ");
-		add_long_to_string(&header, strlen(post_data) / 2);
+		size = post_length(post_data, &big_files);
+		add_long_to_string(&header, size);
 		add_crlf_to_string(&header);
 	}
 
@@ -961,11 +1074,20 @@ http_send_header(struct socket *socket)
 
 	add_crlf_to_string(&header);
 
+	if (big_files) {
+		assert(!use_connect && post_data);
+		assert(http->post_fd == -1);
+		http->post_data = post_data;
+		socket->state = SOCKET_END_ONCLOSE;
+		write_to_socket(socket, header.source, header.length, S_TRANS,
+			send_big_files);
+		done_string(&header);
+		return;
+	}
 	/* CONNECT: Any POST data is for the origin server only.
 	 * This was already checked above and post_data is NULL
 	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
-#define POST_BUFFER_SIZE 4096
 		unsigned char *post = post_data;
 		unsigned char buffer[POST_BUFFER_SIZE];
 		int n = 0;
@@ -993,13 +1115,14 @@ http_send_header(struct socket *socket)
 
 		if (n)
 			add_bytes_to_string(&header, buffer, n);
-#undef POST_BUFFER_SIZE
 	}
 
 	request_from_socket(socket, header.source, header.length, S_SENT,
 			    SOCKET_END_ONCLOSE, http_got_header);
 	done_string(&header);
 }
+
+#undef POST_BUFFER_SIZE
 
 
 /* This function decompresses the data block given in @data (if it was
@@ -1026,7 +1149,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	int *length_of_block;
 	unsigned char *output = NULL;
 
-#define BIG_READ 65536
 
 	if (http->length == LEN_CHUNKED) {
 		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
@@ -1110,6 +1232,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
+#undef BIG_READ
 
 static int
 is_line_in_buffer(struct read_buffer *rb)
