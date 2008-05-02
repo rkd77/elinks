@@ -470,6 +470,8 @@ done_connection(struct connection *conn)
 	mem_free(conn->socket);
 	mem_free(conn->data_socket);
 	done_progress(conn->progress);
+	if (conn->upload_progress)
+		done_progress(conn->upload_progress);
 	mem_free(conn);
 	check_queue_bugs();
 }

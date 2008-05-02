@@ -611,6 +611,18 @@ post_length(unsigned char *post_data, unsigned int *count)
 	return size;
 }
 
+static void
+update_upload_progress(struct connection *conn)
+{
+	struct http_connection_info *http = conn->info;
+
+	assert(conn->upload_progress && http);
+	if_assert_failed return;
+
+	update_progress(conn->upload_progress, http->uploaded,
+		http->total_upload_length, http->uploaded);
+}
+
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 655360
 
@@ -1083,6 +1095,10 @@ http_send_header(struct socket *socket)
 		assert(http->post_fd == -1);
 		http->post_data = post_data;
 		socket->state = SOCKET_END_ONCLOSE;
+		if (!conn->upload_progress)
+			conn->upload_progress = init_progress(0);
+		start_update_progress(conn->upload_progress,
+			(void (*)(void *))update_upload_progress, conn);
 		write_to_socket(socket, header.source, header.length, S_TRANS,
 			send_big_files);
 		done_string(&header);

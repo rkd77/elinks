@@ -18,6 +18,7 @@ struct connection {
 
 	LIST_OF(struct download) downloads;
 	struct progress *progress;
+	struct progress *upload_progress;
 
 	/* If no proxy is used uri and proxied_uri are the same. */
 	struct uri *uri;
