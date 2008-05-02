@@ -15,10 +15,9 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-
-unsigned char *
-get_progress_msg(struct progress *progress, struct terminal *term,
-		 int wide, int full, unsigned char *separator)
+static unsigned char *
+get_progress_msg_2(struct progress *progress, struct terminal *term,
+		 int wide, int full, unsigned char *separator, unsigned char *type)
 {
 	struct string msg;
 	int newlines = separator[strlen(separator) - 1] == '\n';
@@ -29,7 +28,7 @@ get_progress_msg(struct progress *progress, struct terminal *term,
 	 * one, _("of")-like pearls are a nightmare. Format strings need to
 	 * be introduced to this fuggy corner of code as well. --pasky */
 
-	add_to_string(&msg, _("Received", term));
+	add_to_string(&msg, type);
 	add_char_to_string(&msg, ' ');
 	add_xnum_to_string(&msg, progress->pos);
 	if (progress->size >= 0) {
@@ -88,6 +87,20 @@ get_progress_msg(struct progress *progress, struct terminal *term,
 	}
 
 	return msg.source;
+}
+
+unsigned char *
+get_upload_progress_msg(struct progress *progress, struct terminal *term,
+			int wide, int full, unsigned char *separator)
+{
+	return get_progress_msg_2(progress, term, wide, full, separator, _("Sent", term));
+}
+
+unsigned char *
+get_progress_msg(struct progress *progress, struct terminal *term,
+			int wide, int full, unsigned char *separator)
+{
+	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }
 
 void

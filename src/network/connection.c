@@ -26,6 +26,7 @@
 #include "network/progress.h"
 #include "network/socket.h"
 #include "network/ssl/ssl.h"
+#include "protocol/http/http.h"
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
@@ -64,9 +65,8 @@ static INIT_LIST_OF(struct host_connection, host_connections);
 static INIT_LIST_OF(struct keepalive_connection, keepalive_connections);
 
 /* Prototypes */
-static void notify_connection_callbacks(struct connection *conn);
 static void check_keepalive_connections(void);
-
+static void notify_connection_callbacks(struct connection *conn);
 
 static /* inline */ enum connection_priority
 get_priority(struct connection *conn)
@@ -338,17 +338,38 @@ stat_timer(struct connection *conn)
 	notify_connection_callbacks(conn);
 }
 
+static void
+upload_stat_timer(struct connection *conn)
+{
+	struct http_connection_info *http = conn->info;
+
+	assert(conn->upload_progress && http);
+	if_assert_failed return;
+
+	update_progress(conn->upload_progress, http->uploaded,
+		http->total_upload_length, http->uploaded);
+	notify_connection_callbacks(conn);
+}
+
 void
 set_connection_state(struct connection *conn, enum connection_state state)
 {
 	struct download *download;
 	struct progress *progress = conn->progress;
+	struct progress *upload_progress = conn->upload_progress;
 
 	if (is_in_result_state(conn->state) && is_in_progress_state(state))
 		conn->prev_error = conn->state;
 
 	conn->state = state;
 	if (conn->state == S_TRANS) {
+		if (upload_progress && upload_progress->timer == TIMER_ID_UNDEF) {
+			start_update_progress(upload_progress,
+				(void (*)(void *)) upload_stat_timer, conn);
+			upload_stat_timer(conn);
+			if (connection_disappeared(conn))
+				return;
+		}
 		if (progress->timer == TIMER_ID_UNDEF) {
 			start_update_progress(progress, (void (*)(void *)) stat_timer, conn);
 			update_connection_progress(conn);
@@ -358,6 +379,7 @@ set_connection_state(struct connection *conn, enum connection_state state)
 
 	} else {
 		kill_timer(&progress->timer);
+		if (upload_progress) kill_timer(&upload_progress->timer);
 	}
 
 	foreach (download, conn->downloads) {
@@ -437,7 +459,7 @@ free_connection_data(struct connection *conn)
 		done_host_connection(conn);
 }
 
-void
+static void
 notify_connection_callbacks(struct connection *conn)
 {
 	enum connection_state state = conn->state;
