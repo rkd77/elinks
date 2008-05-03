@@ -35,7 +35,14 @@ Most options can be set in the user interface or config file, so usually you
 do not need to care about them. Note that this list is roughly equivalent to
 the output of running ELinks with the option `--long-help`.
 
-include::{builddir}option-command.txt[]
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ifdef::backend-docbook[]
+include1::{builddir}option-command.frag.xml[]
+endif::backend-docbook[]
+ifdef::backend-xhtml11[]
+include1::{builddir}option-command.frag.xhtml[]
+endif::backend-xhtml11[]
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ENVIRONMENT VARIABLES
 ---------------------

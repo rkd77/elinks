@@ -26,8 +26,6 @@ TXT_DOCS_NOINSTALL = \
  features.txt \
  keymap-actions.txt \
  keymap-defaults.txt \
- option-command.txt \
- option-config.txt
 
 TXT_DOCS_ASIS = \
  python.txt
@@ -110,7 +108,7 @@ install-local:
 # Generated asciidoc files
 
 # Scripts and Dependencies
-HELP2DOC = $(srcdir)tools/help2doc
+HELP2XML = $(srcdir)tools/help2xml
 CONF2DOC = $(srcdir)tools/conf2doc
 KEYS2DOC = $(srcdir)tools/keys2doc
 ELINKS	 = $(top_builddir)/src/elinks
@@ -123,8 +121,8 @@ LOCALES = LC_ALL=C LANGUAGE=en
 
 # FIXME: Keep generated .txt files relative to the source directory and files
 # they are included in.
-quiet_cmd_help2doc = ' [$(LINK_COLOR)HELP2DOC$(END_COLOR)]   $(RELPATH)$@'
-      cmd_help2doc = $(LOCALES) $(HELP2DOC) $(ELINKS) $@ > $@
+quiet_cmd_help2xml = ' [$(LINK_COLOR)HELP2XML$(END_COLOR)]   $(RELPATH)$@'
+      cmd_help2xml = $(LOCALES) $(HELP2XML) $(ELINKS) $@
 
 quiet_cmd_conf2doc = ' [$(LINK_COLOR)CONF2DOC$(END_COLOR)]   $(RELPATH)$@'
       cmd_conf2doc = $(LOCALES) $(CONF2DOC) $(FEATURES) > $@
@@ -138,9 +136,11 @@ features.txt: $(FEATURES) $(CONF2DOC)
 keymap-%.txt: $(KBDBIND) $(KEYS2DOC)
 	$(call cmd,keys2doc)
 
-option-%.txt: $(ELINKS) $(HELP2DOC)
-	$(call cmd,help2doc)
+option-%.frag.xml: $(ELINKS) $(HELP2XML)
+	$(call cmd,help2xml)
 
+option-%.frag.xhtml: $(ELINKS) $(HELP2XML)
+	$(call cmd,help2xml)
 
 #############################################################################
 # Build commands and macros
@@ -166,7 +166,7 @@ backend = $(if $(findstring .xml,$@),docbook,xhtml11)
 outdir  = $(if $(findstring -chunked,$@),$@,.)
 
 # Loosely track dependencies via asciidoc includes.
-asciidoc_dep = sed -n 's/[{]builddir}//g;s@include::\(.*\)\[.*@$@: $< \1@p' < $< > .deps/$(@F).asciidoc
+asciidoc_dep = sed -n 's/[{]builddir}//g;s@include1\{0,1\}::\(.*\)\[.*@$@: $< \1@p' < $< > .deps/$(@F).asciidoc
 
 -include .deps/*.asciidoc
 
@@ -181,6 +181,14 @@ asciidoc_dep = sed -n 's/[{]builddir}//g;s@include::\(.*\)\[.*@$@: $< \1@p' < $<
 %.xml: %.txt $(ASCIIDOC_CONF)
 	$(call cmd,asciidoc,docbook)
 	@-$(call asciidoc_dep)
+
+# asciidoc_dep above also generates these dependencies, but it runs
+# only after asciidoc has succeeded, which won't happen if the files
+# are missing.
+elinks.1.xml: option-command.frag.xml
+elinks.conf.5.xml: option-config.frag.xml
+elinks.1.html: option-command.frag.xhtml
+elinks.conf.5.html: option-config.frag.xhtml
 
 %.1: %.1.xml
 	$(call cmd,xmlto,man)
