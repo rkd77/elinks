@@ -1,11 +1,11 @@
 .\"     Title: elinks
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 03/08/2008
+.\"      Date: 05/03/2008
 .\"    Manual: The Elinks text-browser
 .\"    Source: ELinks 0.12.GIT
 .\"
-.TH "ELINKS" "1" "03/08/2008" "ELinks 0.12.GIT" "The Elinks text\-browser"
+.TH "ELINKS" "1" "05/03/2008" "ELinks 0.12.GIT" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -28,221 +28,210 @@ The homepage of \fIELinks\fR can be found at <http://elinks.cz/>, where the ELin
 Most options can be set in the user interface or config file, so usually you do not need to care about them. Note that this list is roughly equivalent to the output of running ELinks with the option \-\-long\-help.
 .sp
 .PP
-\-anonymous [0|1] (default: 0)
+\fB\-anonymous\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Restricts
-\fIELinks\fR
+ELinks
 so it can run on an anonymous account. Local file browsing, downloads, and modification of options will be disabled. Execution of viewers is allowed, but entries in the association table can't be added or modified.
 .RE
 .PP
-\-auto\-submit [0|1] (default: 0)
+\fB\-auto\-submit\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Automatically submit the first form in the given URLs.
 .RE
 .PP
-\-base\-session <num> (default: 0)
+\fB\-base\-session\fR \fI<num>\fR (default: 0)
 .RS 4
 Used internally when opening
-\fIELinks\fR
+ELinks
 instances in new windows. The ID maps to information that will be used when creating the new instance. You don't want to use it.
 .RE
 .PP
-\-config\-dir <str> (default: "")
+\fB\-config\-dir\fR \fI<str>\fR (default: "")
 .RS 4
 Path of the directory
-\fIELinks\fR
+ELinks
 will read and write its config and runtime state files to instead of
-~/.elinks. If the path does not begin with a '/' it is assumed to be relative to your
-\fIHOME\fR
+\fI~/.elinks\fR. If the path does not begin with a '/' it is assumed to be relative to your
+\fBHOME\fR
 directory.
 .RE
 .PP
-\-config\-dump
+\fB\-config\-dump\fR
 .RS 4
 Print a configuration file with options set to the built\-in defaults to stdout.
 .RE
 .PP
-\-config\-file <str> (default: "elinks.conf")
+\fB\-config\-file\fR \fI<str>\fR (default: "elinks.conf")
 .RS 4
-Name of the configuration file that all configuration options will be read from and written to. It should be relative to config\-dir.
+Name of the configuration file that all configuration options will be read from and written to. It should be relative to
+config\-dir.
 .RE
 .PP
-\-config\-help
+\fB\-config\-help\fR
 .RS 4
 Print help for configuration options and exit.
 .RE
 .PP
-\-default\-mime\-type (alias for mime.default_type)
+\fB\-default\-mime\-type\fR (alias for mime.default_type)
 .RS 4
 The default MIME type used for documents of unknown type.
 .RE
 .PP
-\-default\-keys [0|1] (default: 0)
+\fB\-default\-keys\fR \fI[0|1]\fR (default: 0)
 .RS 4
 When set, all keybindings from configuration files will be ignored. It forces use of default keybindings and will reset user\-defined ones on save.
 .RE
 .PP
-\-dump [0|1] (default: 0)
+\fB\-dump\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Print formatted plain\-text versions of given URLs to stdout.
 .RE
 .PP
-\-dump\-charset (alias for document.dump.codepage)
+\fB\-dump\-charset\fR (alias for document.dump.codepage)
 .RS 4
 Codepage used when formatting dump output.
 .RE
 .PP
-\-dump\-color\-mode (alias for document.dump.color_mode)
+\fB\-dump\-color\-mode\fR (alias for document.dump.color_mode)
 .RS 4
 Color mode used with
 \-dump.
 .RE
 .PP
-\-dump\-width (alias for document.dump.width)
+\fB\-dump\-width\fR (alias for document.dump.width)
 .RS 4
 Width of the dump output.
 .RE
 .PP
-\-eval
+\fB\-eval\fR
 .RS 4
 Specify configuration file directives on the command\-line which will be evaluated after all configuration files has been read. Example usage:
-.sp
-.RS 4
-.nf
-\-eval 'set protocol.file.allow_special_files = 1'
-.fi
-.RE
+\fB\-eval 'set protocol.file.allow_special_files = 1'\fR
 .RE
 .PP
-\-force\-html
+\fB\-force\-html\fR
 .RS 4
 Makes
-\fIELinks\fR
+ELinks
 assume documents of unknown types are HTML. Useful when using
-\fIELinks\fR
+ELinks
 as an external viewer from MUAs. This is equivalent to
-\-default\-mime\-type
-text/html.
+\fB\-default\-mime\-type\fR\fB text/html\fR.
 .RE
 .PP
-\-?, \-h, \-help
+\fB\-?\fR, \fB\-h\fR, \fB\-help\fR
 .RS 4
 Print usage help and exit.
 .RE
 .PP
-\-localhost [0|1] (default: 0)
+\fB\-localhost\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Restricts
-\fIELinks\fR
+ELinks
 to work offline and only connect to servers with local addresses (ie. 127.0.0.1). No connections to remote servers will be permitted.
 .RE
 .PP
-\-long\-help
+\fB\-long\-help\fR
 .RS 4
 Print detailed usage help and exit.
 .RE
 .PP
-\-lookup
+\fB\-lookup\fR
 .RS 4
 Look up specified host and print all DNS resolved IP addresses.
 .RE
 .PP
-\-no\-connect [0|1] (default: 0)
+\fB\-no\-connect\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Run
-\fIELinks\fR
+ELinks
 as a separate instance instead of connecting to an existing instance. Note that normally no runtime state files (bookmarks, history, etc.) are written to the disk when this option is used. See also
 \-touch\-files.
 .RE
 .PP
-\-no\-home [0|1] (default: 0)
+\fB\-no\-home\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Disables creation and use of files in the user specific home configuration directory (~/.elinks). It forces default configuration values to be used and disables saving of runtime state files.
+Disables creation and use of files in the user specific home configuration directory (\fI~/.elinks\fR). It forces default configuration values to be used and disables saving of runtime state files.
 .RE
 .PP
-\-no\-numbering (alias for document.dump.numbering)
+\fB\-no\-numbering\fR (alias for document.dump.numbering)
 .RS 4
 Prevents printing of link number in dump output. Note that this really affects only
 \-dump, nothing else.
 .RE
 .PP
-\-no\-references (alias for document.dump.references)
+\fB\-no\-references\fR (alias for document.dump.references)
 .RS 4
 Prevents printing of references (URIs) of document links in dump output. Note that this really affects only
 \-dump, nothing else.
 .RE
 .PP
-\-remote
+\fB\-remote\fR
 .RS 4
 Control a remote
-\fIELinks\fR
+ELinks
 instance by passing commands to it. The option takes an additional argument containing the method which should be invoked and any parameters that should be passed to it. For ease of use, the additional method argument can be omitted in which case any URL arguments will be opened in new tabs in the remote instance. Following is a list of the supported methods:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-ping(): look for a remote instance
+\h'-04'\(bu\h'+03'\fBping()\fR: look for a remote instance
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-openURL(): prompt URL in current tab
+\h'-04'\(bu\h'+03'\fBopenURL()\fR: prompt URL in current tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-openURL(URL): open URL in current tab
+\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB)\fR: open URL in current tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-openURL(URL, new\-tab): open URL in new tab
+\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-tab\fR\fB)\fR: open URL in new tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-openURL(URL, new\-window): open URL in new window
+\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-window\fR\fB)\fR: open URL in new window
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-addBookmark(URL): bookmark URL
+\h'-04'\(bu\h'+03'\fBaddBookmark(\fR\fB\fIURL\fR\fR\fB)\fR: bookmark URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-infoBox(text): show text in a message box
+\h'-04'\(bu\h'+03'\fBinfoBox(\fR\fB\fItext\fR\fR\fB)\fR: show text in a message box
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'
-xfeDoCommand(openBrowser): open new window
+\h'-04'\(bu\h'+03'\fBxfeDoCommand(\fR\fBopenBrowser\fR\fB)\fR: open new window
 .RE
 .RE
 .PP
-\-session\-ring <num> (default: 0)
+\fB\-session\-ring\fR \fI<num>\fR (default: 0)
 .RS 4
 ID of session ring this
-\fIELinks\fR
+ELinks
 session should connect to.
-\fIELinks\fR
+ELinks
 works in so\-called session rings, whereby all instances of
-\fIELinks\fR
+ELinks
 are interconnected and share state (cache, bookmarks, cookies, and so on). By default, all
-\fIELinks\fR
-instances connect to session ring 0. You can change that behaviour with this switch and form as many session rings as you want. Obviously, if the session\-ring with this number doesn't exist yet, it's created and this 'ELinks' instance will become the master instance (that usually doesn't matter for you as a user much). Note that you usually don't want to use this unless you're a developer and you want to do some testing \- if you want the
-\fIELinks\fR
+ELinks
+instances connect to session ring 0. You can change that behaviour with this switch and form as many session rings as you want. Obviously, if the session\-ring with this number doesn't exist yet, it's created and this
+ELinks
+instance will become the master instance (that usually doesn't matter for you as a user much). Note that you usually don't want to use this unless you're a developer and you want to do some testing \- if you want the
+ELinks
 instances each running standalone, rather use the
 \-no\-connect
 command\-line option. Also note that normally no runtime state files are written to the disk when this option is used. See also
 \-touch\-files.
 .RE
 .PP
-\-source [0|1] (default: 0)
+\fB\-source\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Print given URLs in source form to stdout.
 .RE
 .PP
-\-touch\-files [0|1] (default: 0)
+\fB\-touch\-files\fR \fI[0|1]\fR (default: 0)
 .RS 4
 When enabled, runtime state files (bookmarks, history, etc.) are written to disk, even when
 \-no\-connect
@@ -251,27 +240,27 @@ or
 is used. The option has no effect if not used in conjunction with any of these options.
 .RE
 .PP
-\-verbose <num> (default: 1)
+\fB\-verbose\fR \fI<num>\fR (default: 1)
 .RS 4
 The verbose level controls what messages are shown at start up and while running:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0: means only show serious errors
+\h'-04'\(bu\h'+03'0 means only show serious errors
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1: means show serious errors and warnings
+\h'-04'\(bu\h'+03'1 means show serious errors and warnings
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2: means show all messages
+\h'-04'\(bu\h'+03'2 means show all messages
 .RE
 .RE
 .PP
-\-version
+\fB\-version\fR
 .RS 4
 Print
-\fIELinks\fR
+ELinks
 version information and exit.
 .RE
 Generated using output from ELinks version 0.12.GIT.
