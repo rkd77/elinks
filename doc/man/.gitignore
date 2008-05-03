@@ -1,3 +1,9 @@
 index.bt
 manpage.links
 manpage.refs
+
+# elinks.conf.5 and elinkskeys.5 are first built in $(top_builddir)/doc/,
+# where they should be ignored, but then "make update-man" can copy them
+# to $(top_srcdir)/doc/man/man5/, where they should not be ignored.
+# Override the "*.5" pattern listed in $(top_srcdir)/doc/.gitignore.
+!*.5
