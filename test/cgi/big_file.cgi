@@ -2,7 +2,7 @@
 import md5
 import cgi
 
-print "Content-Type: text/plain\r\n\r\n"
+print "Content-Type: text/plain\r\n"
 form = cgi.FieldStorage()
 if form.has_key("file"):
 	plik = form["file"]
@@ -16,5 +16,6 @@ if form.has_key("file"):
 			length += len(data)
 			dig.update(data)
 
+		print "Filename = " + plik.filename
 		print "Size = %d" % length
-		print "MD5=" + dig.hexdigest()
+		print "MD5 = " + dig.hexdigest()
