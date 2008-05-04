@@ -1338,6 +1338,61 @@ if test "x$ac_cv_prog_gcc" = "xyes"; then
       [AC_MSG_RESULT([no])])
     EL_RESTORE_FLAGS
   done
+
+  # Bug 1012: Some parts of ELinks do arithmetic with signed integers
+  # in such a way that an overflow is possible.  GCC 4.2.1 warns
+  # "warning: assuming signed overflow does not occur when assuming
+  # that (X + c) > X is always true", which may be an incorrect
+  # optimization (although allowed by the standard), and breaks the
+  # build with -Werror.
+  #
+  # All of the following tests included -S -Wall -Wextra:
+  #
+  # GCC: (GNU) 4.0.4 20060507 (prerelease) (Debian 4.0.3-3)
+  # * gcc-4.0 -O0: OK, compares the values
+  # * gcc-4.0 -O2: assumes no overflow, does not warn
+  # * gcc-4.0 -O0 -fno-strict-overflow: unrecognized command line option
+  # * gcc-4.0 -O0 -fwrapv: OK, compares the values
+  # * gcc-4.0 -O2 -fwrapv: OK, compares the values
+  # * gcc-4.0 -O0 -ftrapv: OK, calls __addvsi3
+  # * gcc-4.0 -O2 -ftrapv: assumes no overflow, does not warn
+  # * gcc-4.0 -O0 -fwrapv -ftrapv: OK, calls __addvsi3
+  # * gcc-4.0 -O2 -fwrapv -ftrapv: compares the values
+  #
+  # GCC: (GNU) 4.1.3 20070812 (prerelease) (Debian 4.1.2-15)
+  # * gcc-4.1 -O0: assumes no overflow, does not warn
+  # * gcc-4.1 -O2: assumes no overflow, does not warn
+  # * gcc-4.1 -O0 -fno-strict-overflow: unrecognized command line option
+  # * gcc-4.1 -O0 -fwrapv: OK, compares the values
+  # * gcc-4.1 -O2 -fwrapv: OK, compares the values
+  # * gcc-4.1 -O0 -ftrapv: OK, calls __addvsi3
+  # * gcc-4.1 -O2 -ftrapv: compares the values
+  # * gcc-4.1 -O0 -fwrapv -ftrapv: OK, calls __addvsi3
+  # * gcc-4.1 -O2 -fwrapv -ftrapv: compares the values
+  #
+  # GCC: (GNU) 4.2.1 (Debian 4.2.1-5)
+  # * gcc-4.2 -O0: OK, compares the values
+  # * gcc-4.2 -O2: assumes no overflow, warns about it
+  # * gcc-4.2 -O0 -fno-strict-overflow: OK, compares the values
+  # * gcc-4.2 -O2 -fno-strict-overflow: OK, compares the values
+  # * gcc-4.2 -O0 -fwrapv: OK, compares the values
+  # * gcc-4.2 -O2 -fwrapv: OK, compares the values
+  # * gcc-4.2 -O0 -ftrapv: OK, calls __addvsi3
+  # * gcc-4.2 -O2 -ftrapv: compares the values
+  # * gcc-4.2 -O0 -fwrapv -ftrapv: OK, calls __addvsi3
+  # * gcc-4.2 -O2 -fwrapv -ftrapv: compares the values
+  #
+  # Apparently, -ftrapv does not work reliably at all.
+  for overflow_flag in -fno-strict-overflow -fwrapv; do
+    AC_MSG_CHECKING([whether $CC accepts $overflow_flag])
+    EL_SAVE_FLAGS
+    CFLAGS="$CFLAGS $overflow_flag"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],
+      [AC_MSG_RESULT([yes])
+       break],
+      [AC_MSG_RESULT([no])])
+    EL_RESTORE_FLAGS
+  done
 fi
 
 # CFLAGS doesn't contain all compile flags. Some will be added only when
