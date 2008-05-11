@@ -712,7 +712,7 @@ http_send_header(struct socket *socket)
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
-	int big_files = 0;
+	unsigned int big_files = 0;
 
 	/* Sanity check for a host */
 	if (!uri || !uri->host || !*uri->host || !uri->hostlen) {
