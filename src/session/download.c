@@ -970,15 +970,22 @@ continue_download(void *data, unsigned char *file)
 
 
 static struct type_query *
+find_type_query(struct session *ses)
+{
+	struct type_query *type_query;
+
+	foreach (type_query, ses->type_queries)
+		if (compare_uri(type_query->uri, ses->loading_uri, 0))
+			return type_query;
+
+	return NULL;
+}
+
+static struct type_query *
 init_type_query(struct session *ses, struct download *download,
 	struct cache_entry *cached)
 {
 	struct type_query *type_query;
-
-	/* There can be only one ... */
-	foreach (type_query, ses->type_queries)
-		if (compare_uri(type_query->uri, ses->loading_uri, 0))
-			return NULL;
 
 	type_query = mem_calloc(1, sizeof(*type_query));
 	if (!type_query) return NULL;
@@ -1331,20 +1338,25 @@ setup_download_handler(struct session *ses, struct download *loading,
 	if (!handler && strlen(ctype) >= 4 && !strncasecmp(ctype, "text", 4))
 		goto plaintext_follow;
 
-	type_query = init_type_query(ses, loading, cached);
+	type_query = find_type_query(ses);
 	if (type_query) {
 		ret = 1;
-		if (handler) type_query->copiousoutput = handler->copiousoutput;
+	} else {
+		type_query = init_type_query(ses, loading, cached);
+		if (type_query) {
+			ret = 1;
+			if (handler) type_query->copiousoutput = handler->copiousoutput;
 #ifdef CONFIG_BITTORRENT
-		/* A terrible waste of a good MIME handler here, but we want
-		 * to use the type_query this is easier. */
-		if ((!strcasecmp(ctype, "application/x-bittorrent")
-			|| !strcasecmp(ctype, "application/x-torrent"))
-		    && !get_cmd_opt_bool("anonymous"))
-			query_bittorrent_dialog(type_query);
-		else
+			/* A terrible waste of a good MIME handler here, but we want
+			 * to use the type_query this is easier. */
+			if ((!strcasecmp(ctype, "application/x-bittorrent")
+				|| !strcasecmp(ctype, "application/x-torrent"))
+			    && !get_cmd_opt_bool("anonymous"))
+				query_bittorrent_dialog(type_query);
+			else
 #endif
-			do_type_query(type_query, ctype, handler);
+				do_type_query(type_query, ctype, handler);
+		}
 	}
 
 	mem_free_if(handler);
