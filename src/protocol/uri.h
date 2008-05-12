@@ -7,7 +7,7 @@ struct string;
 
 #define POST_CHAR 1
 #define POST_CHAR_S "\001"
-#define BIG_FILE_CHAR '\002'
+#define FILE_CHAR '\002'
 
 /* The uri structure is used to store the start position and length of commonly
  * used uri fields. It is initialized by parse_uri(). It is possible that the

@@ -58,8 +58,8 @@
 /* TODO: Some of these (particulary those encoding routines) would feel better
  * in viewer/common/. --pasky */
 
-struct big_files_offset {
-	LIST_HEAD(struct big_files_offset);
+struct files_offset {
+	LIST_HEAD(struct files_offset);
 	int begin;
 	int end;
 };
@@ -915,7 +915,7 @@ check_boundary(struct string *data, struct boundary_info *boundary)
 static void
 encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		 struct string *data, struct boundary_info *boundary,
-		 LIST_OF(struct big_files_offset) *bfs, int cp_from, int cp_to)
+		 LIST_OF(struct files_offset) *bfs, int cp_from, int cp_to)
 {
 	struct conv_table *convert_table = NULL;
 	struct submitted_value *sv;
@@ -973,7 +973,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 
 			if (*sv->value) {
 				unsigned char *filename;
-				struct big_files_offset *bfs_new;
+				struct files_offset *bfs_new;
 
 				if (get_cmd_opt_bool("anonymous")) {
 					errno = EPERM;
@@ -993,9 +993,9 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 					goto encode_error;
 				}
 				bfs_new->begin = data->length;
-				add_char_to_string(data, BIG_FILE_CHAR);
+				add_char_to_string(data, FILE_CHAR);
 				add_to_string(data, filename);
-				add_char_to_string(data, BIG_FILE_CHAR);
+				add_char_to_string(data, FILE_CHAR);
 				bfs_new->end = data->length;
 				add_to_list_end(*bfs, bfs_new);
 				mem_free(filename);
@@ -1151,7 +1151,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 {
 	struct boundary_info boundary;
 	INIT_LIST_OF(struct submitted_value, submit);
-	INIT_LIST_OF(struct big_files_offset, bfs);
+	INIT_LIST_OF(struct files_offset, bfs);
 	struct string data;
 	struct string go;
 	int cp_from, cp_to;
@@ -1267,7 +1267,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 				add_to_string(&go, p);
 			}
 		} else {
-			struct big_files_offset *b;
+			struct files_offset *b;
 			int i = 0;
 
 			foreach (b, bfs) {

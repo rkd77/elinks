@@ -83,16 +83,16 @@ close_pipe_and_read(struct socket *data_socket)
 
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 65536
-static void send_big_files2(struct socket *socket);
+static void send_files2(struct socket *socket);
 
 static void
-send_big_files(struct socket *socket)
+send_files(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
 	unsigned char *post = http->post_data;
 	unsigned char buffer[POST_BUFFER_SIZE];
-	unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+	unsigned char *file = strchr(post, FILE_CHAR);
 	struct string data;
 	int n = 0;
 	int finish = 0;
@@ -102,12 +102,12 @@ send_big_files(struct socket *socket)
 		return;
 	}
 
-	if (!big_file) {
+	if (!file) {
 		finish = 1;
-		big_file = strchr(post, '\0');
+		file = strchr(post, '\0');
 	}
 
-	while (post < big_file) {
+	while (post < file) {
 		int h1, h2;
 
 		h1 = unhx(post[0]);
@@ -131,12 +131,12 @@ send_big_files(struct socket *socket)
 		write_to_socket(socket, data.source, data.length, S_SENT,
 			close_pipe_and_read);
 	} else {
-		unsigned char *end = strchr(big_file + 1, BIG_FILE_CHAR);
+		unsigned char *end = strchr(file + 1, FILE_CHAR);
 
 		assert(end);
 		*end = '\0';
-		conn->post_fd = open(big_file + 1, O_RDONLY);
-		*end = BIG_FILE_CHAR;
+		conn->post_fd = open(file + 1, O_RDONLY);
+		*end = FILE_CHAR;
 		if (conn->post_fd < 0) {
 			done_string(&data);
 			/* FIXME: proper error code */
@@ -146,13 +146,13 @@ send_big_files(struct socket *socket)
 		http->post_data = end + 1;
 		socket->state = SOCKET_END_ONCLOSE;
 		write_to_socket(socket, data.source, data.length, S_TRANS,
-				send_big_files2);
+				send_files2);
 	}
 	done_string(&data);
 }
 
 static void
-send_big_files2(struct socket *socket)
+send_files2(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	unsigned char buffer[BIG_READ];
@@ -161,11 +161,11 @@ send_big_files2(struct socket *socket)
 	if (n > 0) {
 		socket->state = SOCKET_END_ONCLOSE;
 		write_to_socket(socket, buffer, n, S_TRANS,
-			send_big_files2);
+			send_files2);
 	} else {
 		close(conn->post_fd);
 		conn->post_fd = -1;
-		send_big_files(socket);
+		send_files(socket);
 	}
 }
 
@@ -183,13 +183,13 @@ send_post_data(struct connection *conn)
 	if (postend) post = postend + 1;
 
 	if (post) {
-		unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+		unsigned char *file = strchr(post, FILE_CHAR);
 
-		if (big_file) {
+		if (file) {
 			struct http_connection_info *http = conn->info;
 
 			http->post_data = post;
-			send_big_files(conn->data_socket);
+			send_files(conn->data_socket);
 			return;
 		}
 	}

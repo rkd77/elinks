@@ -579,7 +579,7 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-/* This sets the Content-Length of POST data and counts big files. */
+/* This sets the Content-Length of POST data and counts files. */
 static size_t
 post_length(unsigned char *post_data, unsigned int *count)
 {
@@ -593,13 +593,13 @@ post_length(unsigned char *post_data, unsigned int *count)
 		unsigned char *begin;
 		int res;
 
-		begin = strchr(end, BIG_FILE_CHAR);
+		begin = strchr(end, FILE_CHAR);
 		if (!begin) break;
-		end = strchr(begin + 1, BIG_FILE_CHAR);
+		end = strchr(begin + 1, FILE_CHAR);
 		if (!end) break;
 		*end = '\0';
 		res = stat(begin + 1, &sb);
-		*end = BIG_FILE_CHAR;
+		*end = FILE_CHAR;
 		if (res) break;
 		(*count)++;
 		size += sb.st_size;
@@ -613,16 +613,16 @@ post_length(unsigned char *post_data, unsigned int *count)
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 655360
 
-static void send_big_files2(struct socket *socket);
+static void send_files2(struct socket *socket);
 
 static void
-send_big_files(struct socket *socket)
+send_files(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
 	unsigned char *post = http->post_data;
 	unsigned char buffer[POST_BUFFER_SIZE];
-	unsigned char *big_file = strchr(post, BIG_FILE_CHAR);
+	unsigned char *file = strchr(post, FILE_CHAR);
 	struct string data;
 	int n = 0;
 	int finish = 0;
@@ -632,12 +632,12 @@ send_big_files(struct socket *socket)
 		return;
 	}
 
-	if (!big_file) {
+	if (!file) {
 		finish = 1;
-		big_file = strchr(post, '\0');
+		file = strchr(post, '\0');
 	}
 
-	while (post < big_file) {
+	while (post < file) {
 		int h1, h2;
 
 		h1 = unhx(post[0]);
@@ -662,12 +662,12 @@ send_big_files(struct socket *socket)
 		request_from_socket(socket, data.source, data.length, S_SENT,
 		    SOCKET_END_ONCLOSE, http_got_header);
 	} else {
-		unsigned char *end = strchr(big_file + 1, BIG_FILE_CHAR);
+		unsigned char *end = strchr(file + 1, FILE_CHAR);
 
 		assert(end);
 		*end = '\0';
-		conn->post_fd = open(big_file + 1, O_RDONLY);
-		*end = BIG_FILE_CHAR;
+		conn->post_fd = open(file + 1, O_RDONLY);
+		*end = FILE_CHAR;
 		if (conn->post_fd < 0) {
 			done_string(&data);
 			/* FIXME: proper error code */
@@ -678,13 +678,13 @@ send_big_files(struct socket *socket)
 		socket->state = SOCKET_END_ONCLOSE;
 		http->uploaded += data.length;
 		write_to_socket(socket, data.source, data.length, S_TRANS,
-				send_big_files2);
+				send_files2);
 	}
 	done_string(&data);
 }
 
 static void
-send_big_files2(struct socket *socket)
+send_files2(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
@@ -695,11 +695,11 @@ send_big_files2(struct socket *socket)
 		socket->state = SOCKET_END_ONCLOSE;
 		http->uploaded += n;
 		write_to_socket(socket, buffer, n, S_TRANS,
-			send_big_files2);
+			send_files2);
 	} else {
 		close(conn->post_fd);
 		conn->post_fd = -1;
-		send_big_files(socket);
+		send_files(socket);
 	}
 }
 
@@ -717,7 +717,7 @@ http_send_header(struct socket *socket)
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
-	unsigned int big_files = 0;
+	unsigned int files = 0;
 
 	/* Sanity check for a host */
 	if (!uri || !uri->host || !*uri->host || !uri->hostlen) {
@@ -1061,7 +1061,7 @@ http_send_header(struct socket *socket)
 
 		post_data = postend ? postend + 1 : uri->post;
 		add_to_string(&header, "Content-Length: ");
-		size = post_length(post_data, &big_files);
+		size = post_length(post_data, &files);
 		http->total_upload_length = size;
 		add_long_to_string(&header, size);
 		add_crlf_to_string(&header);
@@ -1083,7 +1083,7 @@ http_send_header(struct socket *socket)
 
 	add_crlf_to_string(&header);
 
-	if (big_files) {
+	if (files) {
 		assert(!use_connect && post_data);
 		assert(conn->post_fd == -1);
 		http->post_data = post_data;
@@ -1091,7 +1091,7 @@ http_send_header(struct socket *socket)
 		if (!conn->upload_progress)
 			conn->upload_progress = init_progress(0);
 		write_to_socket(socket, header.source, header.length, S_TRANS,
-			send_big_files);
+			send_files);
 		done_string(&header);
 		return;
 	}
