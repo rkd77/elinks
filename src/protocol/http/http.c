@@ -472,11 +472,9 @@ http_end_request(struct connection *conn, enum connection_state state,
 {
 	shutdown_connection_stream(conn);
 	if (conn->info) {
-		struct http_connection_info *http = conn->info;
-
-		if (http->post_fd != -1) {
-			close(http->post_fd);
-			http->post_fd = -1;
+		if (conn->post_fd != -1) {
+			close(conn->post_fd);
+			conn->post_fd = -1;
 		}
 	}
 
@@ -534,7 +532,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 	http->sent_version.minor = minor;
 	http->close = close;
 
-	http->post_fd = -1;
+	conn->post_fd = -1;
 
 	/* The CGI code uses this too and blacklisting expects a host name. */
 	if (conn->proxied_uri->protocol != PROTOCOL_FILE)
@@ -667,7 +665,7 @@ send_big_files(struct socket *socket)
 
 		assert(end);
 		*end = '\0';
-		http->post_fd = open(big_file + 1, O_RDONLY);
+		conn->post_fd = open(big_file + 1, O_RDONLY);
 		*end = BIG_FILE_CHAR;
 		http->post_data = end + 1;
 		socket->state = SOCKET_END_ONCLOSE;
@@ -684,7 +682,7 @@ send_big_files2(struct socket *socket)
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
 	unsigned char buffer[BIG_READ];
-	int n = safe_read(http->post_fd, buffer, BIG_READ);
+	int n = safe_read(conn->post_fd, buffer, BIG_READ);
 
 	if (n > 0) {
 		socket->state = SOCKET_END_ONCLOSE;
@@ -692,8 +690,8 @@ send_big_files2(struct socket *socket)
 		write_to_socket(socket, buffer, n, S_TRANS,
 			send_big_files2);
 	} else {
-		close(http->post_fd);
-		http->post_fd = -1;
+		close(conn->post_fd);
+		conn->post_fd = -1;
 		send_big_files(socket);
 	}
 }
@@ -1080,7 +1078,7 @@ http_send_header(struct socket *socket)
 
 	if (big_files) {
 		assert(!use_connect && post_data);
-		assert(http->post_fd == -1);
+		assert(conn->post_fd == -1);
 		http->post_data = post_data;
 		socket->state = SOCKET_END_ONCLOSE;
 		if (!conn->upload_progress)

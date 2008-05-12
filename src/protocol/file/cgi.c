@@ -126,7 +126,7 @@ send_big_files(struct socket *socket)
 		}
 	}
 	if (n) add_bytes_to_string(&data, buffer, n);
-		
+
 	if (finish) {
 		write_to_socket(socket, data.source, data.length, S_SENT,
 			close_pipe_and_read);
@@ -135,7 +135,7 @@ send_big_files(struct socket *socket)
 
 		assert(end);
 		*end = '\0';
-		http->post_fd = open(big_file + 1, O_RDONLY);
+		conn->post_fd = open(big_file + 1, O_RDONLY);
 		*end = BIG_FILE_CHAR;
 		http->post_data = end + 1;
 		socket->state = SOCKET_END_ONCLOSE;
@@ -149,17 +149,16 @@ static void
 send_big_files2(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
 	unsigned char buffer[BIG_READ];
-	int n = safe_read(http->post_fd, buffer, BIG_READ);
+	int n = safe_read(conn->post_fd, buffer, BIG_READ);
 
 	if (n > 0) {
 		socket->state = SOCKET_END_ONCLOSE;
 		write_to_socket(socket, buffer, n, S_TRANS,
 			send_big_files2);
 	} else {
-		close(http->post_fd);
-		http->post_fd = -1;
+		close(conn->post_fd);
+		conn->post_fd = -1;
 		send_big_files(socket);
 	}
 }

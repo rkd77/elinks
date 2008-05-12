@@ -30,7 +30,6 @@ struct http_connection_info {
 	size_t total_upload_length;
 	size_t uploaded;
 	unsigned char *post_data;
-	int post_fd;
 };
 
 

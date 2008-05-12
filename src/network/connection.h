@@ -54,6 +54,7 @@ struct connection {
 	int tries;
 	timer_id_T timer;
 	int stream_pipes[2];
+	int post_fd; /* used when POSTing files */
 
 	unsigned int running:1;
 	unsigned int unrestartable:1;
