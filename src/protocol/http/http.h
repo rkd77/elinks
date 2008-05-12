@@ -10,7 +10,7 @@ struct connection;
 struct read_buffer;
 struct socket;
 
-
+/* Macros related to this struct are defined in the http.c. */
 struct http_version {
 	int major;
 	int minor;
