@@ -937,9 +937,6 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		add_char_to_string(data, '"');
 
 		if (sv->type == FC_FILE) {
-#define F_BUFLEN 1024
-			int fh;
-			unsigned char buffer[F_BUFLEN];
 			unsigned char *extension;
 
 			add_to_string(data, "; filename=\"");
@@ -968,63 +965,34 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			add_crlf_to_string(data);
 
 			if (*sv->value) {
-				struct stat stat_buf;
 				unsigned char *filename;
+				struct big_files_offset *bfs_new;
 
 				if (get_cmd_opt_bool("anonymous")) {
 					errno = EPERM;
 					goto encode_error;
 				}
 
-				/* FIXME: DO NOT COPY FILE IN MEMORY !! --Zas */
 				filename = expand_tilde(sv->value);
 				if (!filename) goto encode_error;
 
-				fh = open(filename, O_RDONLY);
-				if (fh == -1) {
+				if (access(filename, R_OK)) {
 					mem_free(filename);
 					goto encode_error;
 				}
-				fstat(fh, &stat_buf);
-				if (stat_buf.st_size > (1L << 16)) { /* 65536 bytes */
-					struct big_files_offset *bfs_new = mem_calloc(1, sizeof(*bfs_new));
-
-					if (!bfs_new) {
-						mem_free(filename);
-						close(fh);
-						goto encode_error;
-					}
-					bfs_new->begin = data->length;
-					add_char_to_string(data, BIG_FILE_CHAR);
-					add_to_string(data, filename);
-					add_char_to_string(data, BIG_FILE_CHAR);
-					bfs_new->end = data->length;
-					add_to_list_end(*bfs, bfs_new);
+				bfs_new = mem_calloc(1, sizeof(*bfs_new));
+				if (!bfs_new) {
 					mem_free(filename);
-					goto close_handle;
+					goto encode_error;
 				}
+				bfs_new->begin = data->length;
+				add_char_to_string(data, BIG_FILE_CHAR);
+				add_to_string(data, filename);
+				add_char_to_string(data, BIG_FILE_CHAR);
+				bfs_new->end = data->length;
+				add_to_list_end(*bfs, bfs_new);
 				mem_free(filename);
-
-				set_bin(fh);
-				while (1) {
-					ssize_t rd = safe_read(fh, buffer, F_BUFLEN);
-
-					if (rd) {
-						if (rd == -1) {
-							close(fh);
-							goto encode_error;
-						}
-
-						add_bytes_to_string(data, buffer, rd);
-
-					} else {
-						break;
-					}
-				};
-close_handle:
-				close(fh);
 			}
-#undef F_BUFLEN
 		} else {
 			add_crlf_to_string(data);
 			add_crlf_to_string(data);
@@ -1065,6 +1033,7 @@ close_handle:
 	return;
 
 encode_error:
+	free_list(*bfs);
 	mem_free_if(boundary->offsets);
 	done_string(data);
 
