@@ -55,7 +55,7 @@ struct uri {
 	unsigned int datalen:16;
 	unsigned int fragmentlen:16;
 
-	/* Number of files bigger than 1M */
+	/* Number of POSTED files */
 	unsigned int big_files:8;
 
 	/* Flags */
