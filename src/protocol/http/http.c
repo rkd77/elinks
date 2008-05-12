@@ -667,6 +667,12 @@ send_big_files(struct socket *socket)
 		*end = '\0';
 		conn->post_fd = open(big_file + 1, O_RDONLY);
 		*end = BIG_FILE_CHAR;
+		if (conn->post_fd < 0) {
+			done_string(&data);
+			/* FIXME: proper error code */
+			http_end_request(conn, S_OUT_OF_MEM, 0);
+			return;
+		}
 		http->post_data = end + 1;
 		socket->state = SOCKET_END_ONCLOSE;
 		http->uploaded += data.length;
