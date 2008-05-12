@@ -193,13 +193,6 @@ struct uri_list {
 	struct uri **uris;
 };
 
-/* I don't know where to put it. */
-struct big_files_offset {
-	LIST_HEAD(struct big_files_offset);
-	int begin;
-	int end;
-};
-
 #define foreach_uri(uri, index, list) \
 	for (index = 0; index < (list)->size; index++) \
 		if ((uri = (list)->uris[index]))

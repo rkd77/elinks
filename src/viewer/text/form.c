@@ -58,6 +58,13 @@
 /* TODO: Some of these (particulary those encoding routines) would feel better
  * in viewer/common/. --pasky */
 
+struct big_files_offset {
+	LIST_HEAD(struct big_files_offset);
+	int begin;
+	int end;
+};
+
+
 /** @relates submitted_value */
 
 struct submitted_value *
