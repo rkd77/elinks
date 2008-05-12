@@ -52,6 +52,7 @@
 #include "http_negotiate.h"
 #endif
 
+/* These macros concern the struct http_version defined in the http.h */
 #define HTTP_0_9(x)	 ((x).major == 0 && (x).minor == 9)
 #define HTTP_1_0(x)	 ((x).major == 1 && (x).minor == 0)
 #define HTTP_1_1(x)	 ((x).major == 1 && (x).minor == 1)
