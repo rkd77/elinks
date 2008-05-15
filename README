@@ -44,7 +44,7 @@ the original Links, but Mikulas wasn't around to integrate them, so I started
 releasing my fork. When he came back, a significant number of them got refused
 because Mikulas did not like them as he just wouldn't have any use for them
 himself.  He aims to keep Links at a relatively closed feature set and merge
-only new features which he himself needs.  It has advantages that the tree is
+only new features which he himself needs.  It has the advantage that the tree is
 very narrow and the code is small and contains very little bloat.
 
 ELinks, on the contrary, aims to provide a full-featured web browser, superior
