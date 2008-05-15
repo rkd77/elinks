@@ -42,8 +42,8 @@ features, but still provide good rock-solid releases inside stable branches.
 Why not contribute to Links instead?  Well, first I made a bunch of patches for
 the original Links, but Mikulas wasn't around to integrate them, so I started
 releasing my fork. When he came back, a significant number of them got refused
-because Mikulas did not like them, as he just wouldn't have any use for them
-himself.  He wants to keep Links with a relatively closed feature set and merge
+because Mikulas did not like them as he just wouldn't have any use for them
+himself.  He aims to keep Links at a relatively closed feature set and merge
 only new features which he himself needs.  It has advantages that the tree is
 very narrow and the code is small and contains very little bloat.
 
