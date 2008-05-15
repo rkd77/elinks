@@ -2830,7 +2830,7 @@ msgid ""
 msgstr ""
 "Czy zezwolić na poziome przewijanie w przypadku, gdy\n"
 "dokument nie jest większy niż szerokość ekranu. Przydatne\n"
-"przy operacjach kopiowania/wklejania."
+"przy operacjach kopiowania/wklejania?"
 
 #: src/config/options.inc:372
 msgid "Margin"
