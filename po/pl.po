@@ -193,7 +193,7 @@ msgstr "W³±cz"
 
 #: src/bfu/leds.c:79
 msgid "Whether to display a digital clock in the status bar."
-msgstr "Czy wy¶wietlaæ cyfrowy zegar w pasku statusu."
+msgstr "Czy wy¶wietlaæ cyfrowy zegar w pasku statusu?"
 
 #: src/bfu/leds.c:81
 msgid "Format"
