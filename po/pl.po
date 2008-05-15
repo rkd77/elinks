@@ -2219,7 +2219,7 @@ msgstr "Asynchroniczne DNS"
 
 #: src/config/options.inc:78
 msgid "Whether to use asynchronous DNS resolving."
-msgstr "Czy używać asynchronicznego resolwera DNS."
+msgstr "Czy używać asynchronicznego resolwera DNS?"
 
 #
 #: src/config/options.inc:80
