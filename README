@@ -14,8 +14,8 @@ Please see the SITES file for mirrors or other recommended sites.  If you
 want to install ELinks on your computer, see the INSTALL file for further
 instructions.
 
-A good start point is documentation files available in doc/, especially the
-file named index.txt.
+A good starting point is documentation files available in doc/, especially the
+file index.txt.
 
 If you want to request features or report bugs, see community information at
 http://elinks.cz/community.html and feedback information available at
@@ -42,9 +42,9 @@ features, but still provide good rock-solid releases inside stable branches.
 Why not contribute to Links instead?  Well, first I made a bunch of patches for
 the original Links, but Mikulas wasn't around to integrate them, so I started
 releasing my fork. When he came back, a significant number of them got refused
-because Mikulas did not like them, as he just wouldn't have any use for them
-himself.  He wants to keep Links with a relatively closed feature set and merge
-only new features which he himself needs.  It has advantages that the tree is
+because Mikulas did not like them as he just wouldn't have any use for them
+himself.  He aims to keep Links at a relatively closed feature set and merge
+only new features which he himself needs.  It has the advantage that the tree is
 very narrow and the code is small and contains very little bloat.
 
 ELinks, on the contrary, aims to provide a full-featured web browser, superior
