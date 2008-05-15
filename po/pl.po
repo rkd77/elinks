@@ -2872,7 +2872,7 @@ msgstr "Rozróżnianie wielkości liter"
 msgid ""
 "Whether the search should match the document text while maintaining\n"
 "case sensitivity."
-msgstr "Czy rozróżniać wielkość liter przy szukaniu."
+msgstr "Czy rozróżniać wielkość liter przy szukaniu?"
 
 #: src/config/options.inc:393
 msgid "Regular expressions"
