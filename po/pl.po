@@ -2073,7 +2073,7 @@ msgstr "Asynchroniczne DNS"
 
 #: src/config/options.inc:77
 msgid "Whether to use asynchronous DNS resolving."
-msgstr "Czy u¿ywaæ asynchronicznego resolwera DNS."
+msgstr "Czy u¿ywaæ asynchronicznego resolwera DNS?"
 
 #
 #: src/config/options.inc:79
