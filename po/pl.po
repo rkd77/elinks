@@ -209,7 +209,7 @@ msgstr "Włącz"
 
 #: src/bfu/leds.c:80
 msgid "Whether to display a digital clock in the status bar."
-msgstr "Czy wyświetlać cyfrowy zegar w pasku statusu."
+msgstr "Czy wyświetlać cyfrowy zegar w pasku statusu?"
 
 #: src/bfu/leds.c:82
 msgid "Format"
