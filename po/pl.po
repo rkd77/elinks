@@ -2684,7 +2684,7 @@ msgid ""
 "operations."
 msgstr ""
 "Czy zezwoliæ na poziome przewijanie w przypadku, gdy\n"
-"dokument nie jest wiêkszy ni¿ szeroko¶æ ekranu. Przydatne\n"
+"dokument nie jest wiêkszy ni¿ szeroko¶æ ekranu? Przydatne\n"
 "przy operacjach kopiowania/wklejania."
 
 #: src/config/options.inc:371
@@ -3235,7 +3235,7 @@ msgstr "Numerowanie"
 
 #: src/config/options.inc:644
 msgid "Whether to print link numbers in dump output."
-msgstr "Czy wypisywaæ numery odno¶ników przy zrzutach."
+msgstr "Czy wypisywaæ numery odno¶ników przy zrzutach?"
 
 #: src/config/options.inc:646
 msgid "References"
@@ -3247,7 +3247,7 @@ msgid ""
 "in dump output."
 msgstr ""
 "Czy wypisywaæ referencje (URI) odno¶ników dokumentu\n"
-"przy zrzutach."
+"przy zrzutach?"
 
 #: src/config/options.inc:651
 msgid "Separator"
@@ -4117,7 +4117,7 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs"
 msgstr ""
-"W³±czyæ stoper czy nie:\n"
+"W³±czyæ stoper czy nie?\n"
 "0 - nie zliczaj niczego\n"
 "1 - odlicza, ale nie pokazuje stopera\n"
 "2 - odlicza i pokazuje stoper w pobli¿u LEDów"
@@ -4129,7 +4129,7 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs (DISABLED)"
 msgstr ""
-"W³±czyæ stoper czy nie:\n"
+"W³±czyæ stoper czy nie?\n"
 "0 - nie zliczaj niczego\n"
 "1 - odlicza, ale nie pokazuje stopera\n"
 "2 - odlicza i pokazuje stoper w pobli¿u LEDów (WY£¡CZONE)"
@@ -4495,7 +4495,7 @@ msgstr "Zapis"
 
 #: src/cookies/cookies.c:113
 msgid "Whether cookies should be loaded from and saved to disk."
-msgstr "Czy ciasteczka powinny byæ wczytywane i zapisywane na dysk."
+msgstr "Czy ciasteczka powinny byæ wczytywane i zapisywane na dysk?"
 
 #: src/cookies/cookies.c:115
 msgid "Resaving"
@@ -5508,7 +5508,7 @@ msgstr "Ustawienia ECMAScript."
 
 #: src/ecmascript/ecmascript.c:42
 msgid "Whether to run those scripts inside of documents."
-msgstr "Czy wykonywaæ skrypty zawarte w dokumentach."
+msgstr "Czy wykonywaæ skrypty zawarte w dokumentach?"
 
 #: src/ecmascript/ecmascript.c:44
 msgid "Script error reporting"
@@ -5528,7 +5528,7 @@ msgid ""
 "when ECMAScript is enabled."
 msgstr ""
 "Czy ignorowaæ tre¶æ zawart± w znaczniku <noscript> w przypadku, gdy\n"
-"ECMAScript jest w³±czony."
+"ECMAScript jest w³±czony?"
 
 #: src/ecmascript/ecmascript.c:53
 msgid "Maximum execution time"
@@ -5544,7 +5544,7 @@ msgstr "Blokowanie okienek pop-up"
 
 #: src/ecmascript/ecmascript.c:59
 msgid "Whether to disallow scripts to open new windows or tabs."
-msgstr "Czy zabroniæ skryptom otwieranie nowych okien lub kart."
+msgstr "Czy zabroniæ skryptom otwieranie nowych okien lub kart?"
 
 #: src/ecmascript/spidermonkey.c:92
 #, c-format
@@ -6762,7 +6762,7 @@ msgid ""
 "in compact format. Note, the compact format only supports\n"
 "IPv4 addresses."
 msgstr ""
-"Czy ¿±daæ zwrócenia informacji o partnerze w krótkim formacie.\n"
+"Czy ¿±daæ zwrócenia informacji o partnerze w krótkim formacie?\n"
 "Uwaga, krótki format obs³uguje tylko adresy IPv4."
 
 #: src/protocol/bittorrent/bittorrent.c:61
@@ -7340,7 +7340,7 @@ msgstr "Pozwolenie na wykonywanie skryptów CGI"
 
 #: src/protocol/file/file.c:53
 msgid "Whether to execute local CGI scripts."
-msgstr "Czy uruchamiaæ lokalne skrypty CGI."
+msgstr "Czy uruchamiaæ lokalne skrypty CGI?"
 
 #: src/protocol/file/file.c:56
 msgid "Allow reading special files"
@@ -7408,7 +7408,7 @@ msgstr "Sortowanie wpisów"
 
 #: src/protocol/fsp/fsp.c:50
 msgid "Whether to sort entries in directory listings."
-msgstr "Czy sortowaæ wpisy przy wy¶wietlania katalogu."
+msgstr "Czy sortowaæ wpisy przy wy¶wietlaniu katalogu?"
 
 #. name:
 #: src/protocol/ftp/ftp.c:55 src/protocol/ftp/ftp.c:85
