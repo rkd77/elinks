@@ -308,7 +308,6 @@ execute_cgi(struct connection *conn)
 {
 	unsigned char *last_slash;
 	unsigned char *script;
-	int scriptlen;
 	struct stat buf;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);
@@ -327,7 +326,6 @@ execute_cgi(struct connection *conn)
 		goto end2;
 	}
 	decode_uri(script);
-	scriptlen = strlen(script);
 
 	if (stat(script, &buf) || !(S_ISREG(buf.st_mode))
 		|| !(buf.st_mode & S_IXUSR)) {
