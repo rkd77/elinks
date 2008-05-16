@@ -4356,7 +4356,7 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs"
 msgstr ""
-"Włączyć stoper czy nie:\n"
+"Włączyć stoper czy nie?\n"
 "0 - nie zliczaj niczego\n"
 "1 - odlicza, ale nie pokazuje stopera\n"
 "2 - odlicza i pokazuje stoper w pobliżu LEDów"
@@ -4368,7 +4368,7 @@ msgid ""
 "1 is count down, but don't show the timer\n"
 "2 is count down and show the timer near LEDs (DISABLED)"
 msgstr ""
-"Włączyć stoper czy nie:\n"
+"Włączyć stoper czy nie?\n"
 "0 - nie zliczaj niczego\n"
 "1 - odlicza, ale nie pokazuje stopera\n"
 "2 - odlicza i pokazuje stoper w pobliżu LEDów (WYŁĄCZONE)"
@@ -4424,7 +4424,7 @@ msgstr "Pasek kart u góry"
 msgid "Whether display tab bar at top like other browsers do."
 msgstr ""
 "Czy wyświetlać pasek kart u góry strony, tak jak w innych\n"
-"przeglądarkach."
+"przeglądarkach?"
 
 #: src/config/options.inc:1246
 msgid "Wrap-around tabs cycling"
@@ -4762,7 +4762,7 @@ msgstr "Zapis"
 
 #: src/cookies/cookies.c:119
 msgid "Whether cookies should be loaded from and saved to disk."
-msgstr "Czy ciasteczka powinny być wczytywane i zapisywane na dysk."
+msgstr "Czy ciasteczka powinny być wczytywane i zapisywane na dysk?"
 
 #: src/cookies/cookies.c:121
 msgid "Resaving"
@@ -5914,7 +5914,7 @@ msgstr "Ustawienia ECMAScript."
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
-msgstr "Czy wykonywać skrypty zawarte w dokumentach."
+msgstr "Czy wykonywać skrypty zawarte w dokumentach?"
 
 #: src/ecmascript/ecmascript.c:49
 msgid "Script error reporting"
@@ -5934,7 +5934,7 @@ msgid ""
 "when ECMAScript is enabled."
 msgstr ""
 "Czy ignorować treść zawartą w znaczniku <noscript> w przypadku, gdy\n"
-"ECMAScript jest włączony."
+"ECMAScript jest włączony?"
 
 #: src/ecmascript/ecmascript.c:58
 msgid "Maximum execution time"
@@ -5950,7 +5950,7 @@ msgstr "Blokowanie okienek pop-up"
 
 #: src/ecmascript/ecmascript.c:64
 msgid "Whether to disallow scripts to open new windows or tabs."
-msgstr "Czy zabronić skryptom otwieranie nowych okien lub kart."
+msgstr "Czy zabronić skryptom otwieranie nowych okien lub kart?"
 
 #: src/ecmascript/ecmascript.c:281
 msgid "JavaScript Emergency"
@@ -7205,7 +7205,7 @@ msgid ""
 "in compact format. Note, the compact format only supports\n"
 "IPv4 addresses."
 msgstr ""
-"Czy zapytać o informację o partnerze w krótkim formacie.\n"
+"Czy zapytać o informację o partnerze w krótkim formacie?\n"
 "Uwaga, krótki format obsługuje tylko adresy IPv4."
 
 #: src/protocol/bittorrent/bittorrent.c:61
@@ -7779,7 +7779,7 @@ msgstr "Pozwolenie na wykonywanie skryptów CGI"
 
 #: src/protocol/file/cgi.c:49
 msgid "Whether to execute local CGI scripts."
-msgstr "Czy uruchamiać lokalne skrypty CGI."
+msgstr "Czy uruchamiać lokalne skrypty CGI?"
 
 #. name:
 #: src/protocol/file/cgi.c:54
