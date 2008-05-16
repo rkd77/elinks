@@ -3440,7 +3440,7 @@ msgstr "Numerowanie"
 
 #: src/config/options.inc:675
 msgid "Whether to print link numbers in dump output."
-msgstr "Czy wypisywać numery odnośników przy zrzutach."
+msgstr "Czy wypisywać numery odnośników przy zrzutach?"
 
 #: src/config/options.inc:677
 msgid "References"
