@@ -3452,7 +3452,7 @@ msgid ""
 "in dump output."
 msgstr ""
 "Czy wypisywać referencje (URI) odnośników dokumentu\n"
-"przy zrzutach."
+"przy zrzutach?"
 
 #: src/config/options.inc:682
 msgid "Separator"
