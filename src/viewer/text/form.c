@@ -830,11 +830,34 @@ struct boundary_info {
 };
 
 /** @relates boundary_info */
+static void
+randomize_boundary(unsigned char *data, int length)
+{
+	int i;
+	FILE *f = fopen("/dev/urandom", "rb");
+
+	if (!f) f = fopen("/dev/prandom", "rb"); /* OpenBSD */
+	if (f) {
+		fread(data, 1, length, f);
+		fclose(f);
+	}
+	/* FIXME. What if both fails */
+	for (i = 0; i < length; i++) {
+		/* Only [0-9A-Za-z]. */
+		data[i] = data[i] & 63;
+		if (data[i] < 10) data[i] += '0';
+		else if (data[i] < 36) data[i] = data[i] - 10 + 'A';
+		else if (data[i] < 62) data[i] = data[i] - 36 + 'a';
+		else data[i] = '0';
+	}
+}
+
+/** @relates boundary_info */
 static inline void
 init_boundary(struct boundary_info *boundary)
 {
 	memset(boundary, 0, sizeof(*boundary));
-	memset(boundary->string, '0', BOUNDARY_LENGTH);
+	randomize_boundary(boundary->string, BOUNDARY_LENGTH);
 }
 
 /** Add boundary to string and save the offset
@@ -850,70 +873,6 @@ add_boundary(struct string *data, struct boundary_info *boundary)
 	add_bytes_to_string(data, boundary->string, BOUNDARY_LENGTH);
 }
 
-/** @relates boundary_info */
-static inline unsigned char *
-increment_boundary_counter(struct boundary_info *boundary)
-{
-	int j;
-
-	/* This is just a decimal string incrementation */
-	for (j = BOUNDARY_LENGTH - 1; j >= 0; j--) {
-		if (boundary->string[j]++ < '9')
-			return boundary->string;
-
-		boundary->string[j] = '0';
-	}
-
-	INTERNAL("Form data boundary counter overflow");
-
-	return NULL;
-}
-
-/** @relates boundary_info */
-static inline void
-check_boundary(struct string *data, struct boundary_info *boundary)
-{
-	unsigned char *bound = boundary->string;
-	int i;
-
-	/* Search between all boundaries. There is a starting and an ending
-	 * boundary so only check the range of chars after the current offset
-	 * and before the next offset. If some string in the form data matches
-	 * the boundary string it is changed. */
-	for (i = 0; i < boundary->count - 1; i++) {
-		/* Start after the boundary string and also jump past the
-		 * "\r\nContent-Disposition: form-data; name=\"" string added
-		 * before any form data. */
-		int start_offset = boundary->offsets[i] + BOUNDARY_LENGTH + 40;
-
-		/* End so that there is atleast BOUNDARY_LENGTH chars to
-		 * compare. Subtract 2 char because there is no need to also
-		 * compare the '--' prefix that is part of the boundary. */
-		int end_offset = boundary->offsets[i + 1] - BOUNDARY_LENGTH - 2;
-		unsigned char *pos = data->source + start_offset;
-		unsigned char *end = data->source + end_offset;
-
-		for (; pos <= end; pos++) {
-			if (memcmp(pos, bound, BOUNDARY_LENGTH))
-				continue;
-
-			/* If incrementing causes overflow bail out. There is
-			 * no need to reset the boundary string with '0' since
-			 * that is already done when incrementing. */
-			if (!increment_boundary_counter(boundary))
-				return;
-
-			/* Else start checking all boundaries using the new
-			 * boundary string */
-			i = 0;
-			break;
-		}
-	}
-
-	/* Now update all the boundaries with the unique boundary string */
-	for (i = 0; i < boundary->count; i++)
-		memcpy(data->source + boundary->offsets[i], bound, BOUNDARY_LENGTH);
-}
 
 /** @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
@@ -1037,8 +996,6 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 	/* End-boundary */
 	add_boundary(data, boundary);
 	add_to_string(data, "--\r\n");
-
-	check_boundary(data, boundary);
 
 	mem_free_if(boundary->offsets);
 	return;
