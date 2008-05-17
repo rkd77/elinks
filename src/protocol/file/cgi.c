@@ -138,9 +138,10 @@ send_files(struct socket *socket)
 		conn->post_fd = open(file + 1, O_RDONLY);
 		*end = FILE_CHAR;
 		if (conn->post_fd < 0) {
+			int errno_from_open = errno;
+
 			done_string(&data);
-			/* FIXME: proper error code */
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, -errno_from_open);
 			return;
 		}
 		http->post_data = end + 1;

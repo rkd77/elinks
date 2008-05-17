@@ -669,9 +669,10 @@ send_files(struct socket *socket)
 		conn->post_fd = open(file + 1, O_RDONLY);
 		*end = FILE_CHAR;
 		if (conn->post_fd < 0) {
+			int errno_from_open = errno;
+
 			done_string(&data);
-			/* FIXME: proper error code */
-			http_end_request(conn, S_OUT_OF_MEM, 0);
+			http_end_request(conn, -errno_from_open, 0);
 			return;
 		}
 		http->post_data = end + 1;
