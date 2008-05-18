@@ -40,7 +40,8 @@ struct http_connection_info {
 	unsigned char *post_data;
 };
 
-
+int http_read_post_data(struct socket *socket,
+			unsigned char buffer[], int max);
 
 extern struct module http_protocol_module;
 

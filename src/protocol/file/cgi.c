@@ -82,161 +82,42 @@ close_pipe_and_read(struct socket *data_socket)
 
 
 #define POST_BUFFER_SIZE 4096
-#define BIG_READ 65536
-static void send_files2(struct socket *socket);
 
 static void
-send_files(struct socket *socket)
+send_more_post_data(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
-	unsigned char *post = http->post_data;
 	unsigned char buffer[POST_BUFFER_SIZE];
-	unsigned char *file = strchr(post, FILE_CHAR);
-	struct string data;
-	int n = 0;
-	int finish = 0;
+	int got;
 
-	if (!init_string(&data)) {
-		abort_connection(conn, S_OUT_OF_MEM);
-		return;
-	}
-
-	if (!file) {
-		finish = 1;
-		file = strchr(post, '\0');
-	}
-
-	while (post < file) {
-		int h1, h2;
-
-		h1 = unhx(post[0]);
-		assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
-		if_assert_failed h1 = 0;
-
-		h2 = unhx(post[1]);
-		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
-		if_assert_failed h2 = 0;
-
-		buffer[n++] = (h1<<4) + h2;
-		post += 2;
-		if (n == POST_BUFFER_SIZE) {
-			add_bytes_to_string(&data, buffer, n);
-			n = 0;
-		}
-	}
-	if (n) add_bytes_to_string(&data, buffer, n);
-
-	if (finish) {
-		write_to_socket(socket, data.source, data.length, S_SENT,
-			close_pipe_and_read);
-	} else {
-		unsigned char *end = strchr(file + 1, FILE_CHAR);
-
-		assert(end);
-		*end = '\0';
-		conn->post_fd = open(file + 1, O_RDONLY);
-		*end = FILE_CHAR;
-		if (conn->post_fd < 0) {
-			int errno_from_open = errno;
-
-			done_string(&data);
-			abort_connection(conn, -errno_from_open);
-			return;
-		}
-		http->post_data = end + 1;
-		socket->state = SOCKET_END_ONCLOSE;
-		write_to_socket(socket, data.source, data.length, S_TRANS,
-				send_files2);
-	}
-	done_string(&data);
-}
-
-static void
-send_files2(struct socket *socket)
-{
-	struct connection *conn = socket->conn;
-	unsigned char buffer[BIG_READ];
-	int n = safe_read(conn->post_fd, buffer, BIG_READ);
-
-	if (n > 0) {
-		socket->state = SOCKET_END_ONCLOSE;
-		write_to_socket(socket, buffer, n, S_TRANS,
-			send_files2);
-	} else {
-		close(conn->post_fd);
-		conn->post_fd = -1;
-		send_files(socket);
+	got = http_read_post_data(socket, buffer, POST_BUFFER_SIZE);
+	if (got < 0) {
+		abort_connection(conn, -errno);
+	} else if (got > 0) {
+		write_to_socket(socket, buffer, got, S_TRANS,
+				send_more_post_data);
+		http->uploaded += got;
+	} else {		/* got == 0, meaning end of data */
+		close_pipe_and_read(socket);
 	}
 }
 
+#undef POST_BUFFER_SIZE
 
 static void
 send_post_data(struct connection *conn)
 {
+	struct http_connection_info *http = conn->info;
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
-	unsigned char buffer[POST_BUFFER_SIZE];
-	struct string data;
-	int n = 0;
 
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
-	if (post) {
-		unsigned char *file = strchr(post, FILE_CHAR);
-
-		if (file) {
-			struct http_connection_info *http = conn->info;
-
-			http->post_data = post;
-			send_files(conn->data_socket);
-			return;
-		}
-	}
-
-
-	if (!init_string(&data)) {
-		abort_connection(conn, S_OUT_OF_MEM);
-		return;
-	}
-
-	/* FIXME: Code duplication with protocol/http/http.c! --witekfl */
-	while (post[0] && post[1]) {
-		int h1, h2;
-
-		h1 = unhx(post[0]);
-		assert(h1 >= 0 && h1 < 16);
-		if_assert_failed h1 = 0;
-
-		h2 = unhx(post[1]);
-		assert(h2 >= 0 && h2 < 16);
-		if_assert_failed h2 = 0;
-
-		buffer[n++] = (h1<<4) + h2;
-		post += 2;
-		if (n == POST_BUFFER_SIZE) {
-			add_bytes_to_string(&data, buffer, n);
-			n = 0;
-		}
-	}
-	if (n)
-		add_bytes_to_string(&data, buffer, n);
-
-
-	/* If we're submitting a form whose controls do not have
-	 * names, then the POST has a Content-Type but empty data,
-	 * and an assertion would fail in write_to_socket.  */
-	if (data.length)
-		write_to_socket(conn->data_socket, data.source, data.length,
-				S_SENT, close_pipe_and_read);
-	else
-		close_pipe_and_read(conn->data_socket);
-
-	done_string(&data);
+	http->post_data = post;
+	send_more_post_data(conn->data_socket);
 }
-#undef POST_BUFFER_SIZE
-#undef BIG_READ
 
 static void
 send_request(struct connection *conn)

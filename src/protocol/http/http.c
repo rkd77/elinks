@@ -613,31 +613,23 @@ post_length(unsigned char *post_data, unsigned int *count)
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 655360
 
-static void send_files2(struct socket *socket);
-
-static void
-send_files(struct socket *socket)
+static int
+http_read_post_data_inline(struct socket *socket,
+			   unsigned char buffer[], int max)
 {
-	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
+	struct connection *const conn = socket->conn;
+	struct http_connection_info *const http = conn->info;
 	unsigned char *post = http->post_data;
-	unsigned char buffer[POST_BUFFER_SIZE];
-	unsigned char *file = strchr(post, FILE_CHAR);
-	struct string data;
-	int n = 0;
-	int finish = 0;
+	unsigned char *end = strchr(post, FILE_CHAR);
+	int total = 0;
 
-	if (!init_string(&data)) {
-		http_end_request(conn, S_OUT_OF_MEM, 0);
-		return;
-	}
+	assert(conn->post_fd < 0);
+	if_assert_failed { errno = EINVAL; return -1; }
 
-	if (!file) {
-		finish = 1;
-		file = strchr(post, '\0');
-	}
+	if (!end)
+		end = strchr(post, '\0');
 
-	while (post < file) {
+	while (post < end && total < max) {
 		int h1, h2;
 
 		h1 = unhx(post[0]);
@@ -645,62 +637,127 @@ send_files(struct socket *socket)
 		if_assert_failed h1 = 0;
 
 		h2 = unhx(post[1]);
-		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
+		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[0], post[0]);
 		if_assert_failed h2 = 0;
 
-		buffer[n++] = (h1<<4) + h2;
+		buffer[total++] = (h1<<4) + h2;
 		post += 2;
-		if (n == POST_BUFFER_SIZE) {
-			add_bytes_to_string(&data, buffer, n);
-			n = 0;
-		}
 	}
-	if (n) add_bytes_to_string(&data, buffer, n);
-
-	if (finish) {
-		http->uploaded += data.length;
-		request_from_socket(socket, data.source, data.length, S_SENT,
-		    SOCKET_END_ONCLOSE, http_got_header);
-	} else {
-		unsigned char *end = strchr(file + 1, FILE_CHAR);
-
-		assert(end);
-		*end = '\0';
-		conn->post_fd = open(file + 1, O_RDONLY);
-		*end = FILE_CHAR;
-		if (conn->post_fd < 0) {
-			int errno_from_open = errno;
-
-			done_string(&data);
-			http_end_request(conn, -errno_from_open, 0);
-			return;
-		}
-		http->post_data = end + 1;
-		socket->state = SOCKET_END_ONCLOSE;
-		http->uploaded += data.length;
-		write_to_socket(socket, data.source, data.length, S_TRANS,
-				send_files2);
+	if (post != end || *end != FILE_CHAR) {
+		http->post_data = post;
+		return total;
 	}
-	done_string(&data);
+
+	end = strchr(post + 1, FILE_CHAR);
+	assert(end);
+	*end = '\0';
+	conn->post_fd = open(post + 1, O_RDONLY);
+	/* Be careful not to change errno here.  */
+	*end = FILE_CHAR;
+	if (conn->post_fd < 0) {
+		http->post_data = post;
+		if (total > 0)
+			return total; /* retry the open on the next call */
+		else
+			return -1; /* caller gets errno from open() */
+	}
+	http->post_data = end + 1;
+	return total;
+}
+
+static int
+http_read_post_data_fd(struct socket *socket,
+		       unsigned char buffer[], int max)
+{
+	struct connection *const conn = socket->conn;
+	int ret;
+
+	/* safe_read() would set errno = EBADF anyway, but check this
+	 * explicitly to make any such bugs easier to detect.  */
+	assert(conn->post_fd >= 0);
+	if_assert_failed { errno = EBADF; return -1; }
+
+	ret = safe_read(conn->post_fd, buffer, max);
+	if (ret <= 0) {
+		const int errno_from_read = errno;
+
+		close(conn->post_fd);
+		conn->post_fd = -1;
+
+		errno = errno_from_read;
+	}
+	return ret;
+}
+
+/** Read data from socket->conn->uri->post or from the files to which
+ * it refers.
+ *
+ * @return >0 if read that many bytes; 0 if EOF; -1 on error and set
+ * errno.  */
+int
+http_read_post_data(struct socket *socket,
+		    unsigned char buffer[], int max)
+{
+	struct connection *const conn = socket->conn;
+	int total = 0;
+
+	while (total < max) {
+		int chunk;
+		int post_fd = conn->post_fd;
+
+		if (post_fd < 0)
+			chunk = http_read_post_data_inline(socket,
+							   buffer + total,
+							   max - total);
+		else
+			chunk = http_read_post_data_fd(socket,
+						       buffer + total,
+						       max - total);
+		/* Be careful not to change errno here.  */
+
+		if (chunk == 0 && conn->post_fd == post_fd)
+			return total; /* EOF */
+		if (chunk < 0) {
+			/* If some data has already been successfully
+			 * read to buffer[], tell the caller about
+			 * that and forget about the error.  The next
+			 * http_read_post_data() call will retry the
+			 * operation that failed.  */
+			if (total != 0)
+				return total;
+			else
+				return chunk; /* caller gets errno from above */
+		}
+		total += chunk;
+	}
+	return total;
 }
 
 static void
-send_files2(struct socket *socket)
+send_more_post_data(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
-	unsigned char buffer[BIG_READ];
-	int n = safe_read(conn->post_fd, buffer, BIG_READ);
+	unsigned char buffer[POST_BUFFER_SIZE];
+	int got;
 
-	if (n > 0) {
+	got = http_read_post_data(socket, buffer, POST_BUFFER_SIZE);
+	if (got < 0) {
+		http_end_request(conn, -errno, 0);
+	} else if (got > 0) {
+		write_to_socket(socket, buffer, got, S_TRANS,
+				send_more_post_data);
+		http->uploaded += got;
+	} else {		/* got == 0, meaning end of data */
+		/* Can't use request_from_socket() because there's no
+		 * more data to write.  */
+		struct read_buffer *rb = alloc_read_buffer(socket);
+		
 		socket->state = SOCKET_END_ONCLOSE;
-		http->uploaded += n;
-		write_to_socket(socket, buffer, n, S_TRANS,
-			send_files2);
-	} else {
-		close(conn->post_fd);
-		conn->post_fd = -1;
-		send_files(socket);
+		if (rb)
+			read_from_socket(socket, rb, S_SENT, http_got_header);
+		else
+			http_end_request(conn, S_OUT_OF_MEM, 0);
 	}
 }
 
@@ -1084,53 +1141,22 @@ http_send_header(struct socket *socket)
 
 	add_crlf_to_string(&header);
 
-	if (files) {
-		assert(!use_connect && post_data);
-		assert(conn->post_fd == -1);
-		http->post_data = post_data;
-		socket->state = SOCKET_END_ONCLOSE;
-		if (!conn->upload_progress)
-			conn->upload_progress = init_progress(0);
-		write_to_socket(socket, header.source, header.length, S_TRANS,
-			send_files);
-		done_string(&header);
-		return;
-	}
 	/* CONNECT: Any POST data is for the origin server only.
 	 * This was already checked above and post_data is NULL
 	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
-		unsigned char *post = post_data;
-		unsigned char buffer[POST_BUFFER_SIZE];
-		int n = 0;
-
 		assert(!use_connect); /* see comment above */
+		assert(conn->post_fd == -1);
 
-		while (post[0] && post[1]) {
-			int h1, h2;
-
-			h1 = unhx(post[0]);
-			assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
-			if_assert_failed h1 = 0;
-
-			h2 = unhx(post[1]);
-			assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
-			if_assert_failed h2 = 0;
-
-			buffer[n++] = (h1<<4) + h2;
-			post += 2;
-			if (n == POST_BUFFER_SIZE) {
-				add_bytes_to_string(&header, buffer, n);
-				n = 0;
-			}
-		}
-
-		if (n)
-			add_bytes_to_string(&header, buffer, n);
-	}
-
-	request_from_socket(socket, header.source, header.length, S_SENT,
-			    SOCKET_END_ONCLOSE, http_got_header);
+		http->post_data = post_data;
+		socket->state = SOCKET_END_ONCLOSE;
+		if (!conn->upload_progress && files)
+			conn->upload_progress = init_progress(0);
+		write_to_socket(socket, header.source, header.length, S_TRANS,
+				send_more_post_data);
+	} else
+		request_from_socket(socket, header.source, header.length, S_SENT,
+				    SOCKET_END_ONCLOSE, http_got_header);
 	done_string(&header);
 }
 
