@@ -16,6 +16,7 @@ struct http_version {
 	int minor;
 };
 
+/** connection.info points to this in HTTP and local CGI connections. */
 struct http_connection_info {
 	enum blacklist_flags bl_flags;
 	struct http_version recv_version;
@@ -26,9 +27,16 @@ struct http_connection_info {
 	int chunk_remaining;
 	int code;
 
-	/* Used by big files upload. */
+	/** Total size of the POST body to be uploaded */
 	size_t total_upload_length;
+
+	/** Amount of POST body data uploaded so far */
 	size_t uploaded;
+
+	/** Points to the next byte to be read from connection.uri->post.
+	 * Does not point to const because http_read_post() momentarily
+	 * substitutes a null character for the FILE_CHAR at the end of
+	 * each file name.  */
 	unsigned char *post_data;
 };
 
