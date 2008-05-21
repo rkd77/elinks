@@ -28,10 +28,10 @@ struct http_connection_info {
 	int code;
 
 	/** Total size of the POST body to be uploaded */
-	size_t total_upload_length;
+	off_t total_upload_length;
 
 	/** Amount of POST body data uploaded so far */
-	size_t uploaded;
+	off_t uploaded;
 
 	/** Points to the next byte to be read from connection.uri->post.
 	 * Does not point to const because http_read_post() momentarily

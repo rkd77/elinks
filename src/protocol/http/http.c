@@ -580,10 +580,10 @@ accept_encoding_header(struct string *header)
 }
 
 /* This sets the Content-Length of POST data and counts files. */
-static size_t
+static off_t
 post_length(unsigned char *post_data, unsigned int *count)
 {
-	size_t size = 0;
+	off_t size = 0;
 	size_t length = strlen(post_data);
 	unsigned char *end = post_data;
 
@@ -1109,7 +1109,7 @@ http_send_header(struct socket *socket)
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
 		unsigned char *postend = strchr(uri->post, '\n');
-		size_t size;
+		off_t size;
 
 		if (postend) {
 			add_to_string(&header, "Content-Type: ");
@@ -1118,11 +1118,11 @@ http_send_header(struct socket *socket)
 		}
 
 		post_data = postend ? postend + 1 : uri->post;
-		add_to_string(&header, "Content-Length: ");
 		size = post_length(post_data, &files);
 		http->total_upload_length = size;
-		add_long_to_string(&header, size);
-		add_crlf_to_string(&header);
+		add_format_to_string(&header, "Content-Length: "
+				     "%" OFF_PRINT_FORMAT "\x0D\x0A",
+				     (off_print_T) size);
 	}
 
 #ifdef CONFIG_COOKIES
