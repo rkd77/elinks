@@ -305,7 +305,7 @@ save_textarea_file(unsigned char *value)
 		fwrite(value, strlen(value), 1, file);
 		fclose(file);
 	} else {
-		mem_free(filename);
+		mem_free_set(&filename, NULL);
 	}
 
 	return filename;
