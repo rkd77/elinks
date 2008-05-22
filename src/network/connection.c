@@ -452,6 +452,15 @@ free_connection_data(struct connection *conn)
 	shutdown_connection_stream(conn);
 
 	mem_free_set(&conn->info, NULL);
+	/* If conn->done is not NULL, it probably points to a function
+	 * that expects conn->info to be a specific kind of structure.
+	 * Such a function should not be called if a different pointer
+	 * is later assigned to conn->info.  Actually though, each
+	 * free_connection_data() call seems to be soon followed by
+	 * done_connection() so that conn->done would not be called
+	 * again in any case.  However, this assignment costs little
+	 * and may make things a bit safer.  */
+	conn->done = NULL;
 
 	kill_timer(&conn->timer);
 

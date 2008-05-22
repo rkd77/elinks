@@ -103,6 +103,13 @@ init_nntp_connection_info(struct connection *conn)
 	unsigned char *data;
 	int datalen;
 
+	assert(conn->info == NULL);
+	assert(conn->done == NULL);
+	if_assert_failed {
+		abort_connection(conn, S_INTERNAL);
+		return NULL;
+	}
+
 	nntp = mem_calloc(1, sizeof(*nntp));
 	if (!nntp) {
 		abort_connection(conn, S_OUT_OF_MEM);
@@ -193,6 +200,13 @@ static void
 nntp_quit(struct connection *conn)
 {
 	struct nntp_connection_info *info;
+
+	assert(conn->info == NULL);
+	assert(conn->done == NULL);
+	if_assert_failed {
+		abort_connection(conn, S_INTERNAL);
+		return;
+	}
 
 	info = mem_calloc(1, sizeof(*info));
 	if (!info) {

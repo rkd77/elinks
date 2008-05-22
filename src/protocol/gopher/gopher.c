@@ -310,6 +310,13 @@ init_gopher_connection_info(struct connection *conn)
 	 * wazzup! */
 	assert(command.length >= 2);
 
+	assert(conn->info == NULL);
+	assert(conn->done == NULL);
+	if_assert_failed {
+		done_string(&command);
+		return S_INTERNAL;
+	}
+
 	size = sizeof(*gopher) + command.length;
 	gopher = mem_calloc(1, size);
 	if (!gopher) {
