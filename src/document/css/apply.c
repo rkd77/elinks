@@ -77,7 +77,7 @@ css_apply_display(struct html_context *html_context, struct html_element *elemen
 			element->linebreak = 2;
 			break;
 		case CSS_DISP_NONE:
-			if (html_context->options->css_ignore_display_none)
+			if (!html_context->options->css_ignore_display_none)
 				element->invisible = 1;
 			break;
 		default:
