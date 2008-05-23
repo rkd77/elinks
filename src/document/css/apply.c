@@ -78,7 +78,7 @@ css_apply_display(struct html_context *html_context, struct html_element *elemen
 			break;
 		case CSS_DISP_NONE:
 			if (!html_context->options->css_ignore_display_none)
-				element->invisible = 1;
+				element->invisible = 2;
 			break;
 		default:
 			INTERNAL("Bad prop->value.display %d", prop->value.display);
