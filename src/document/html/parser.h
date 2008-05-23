@@ -126,9 +126,18 @@ struct html_element {
 
 	struct text_attrib attr;
 	struct par_attrib parattr;
+
+	/* invisible is a flag using which element handlers can control
+	 * processing in start_element. 0 indicates that start_element should
+	 * process tags, 1 indicates that it should not, and 2 or greater
+	 * indicates that it should process only script tags. */
 	int invisible;
+
+	/* The name of the element without NUL termination. name is a pointer
+	 * into the actual document source. */
 	unsigned char *name;
 	int namelen;
+
 	unsigned char *options;
 	/* See document/html/parser/parse.c's element_info.linebreak
 	 * description. */
