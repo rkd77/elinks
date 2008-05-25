@@ -523,13 +523,6 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 {
 	struct http_connection_info *http;
 
-	assert(conn->info == NULL);
-	assert(conn->done == NULL);
-	if_assert_failed {
-		http_end_request(conn, S_INTERNAL, 0);
-		return NULL;
-	}
-
 	http = mem_calloc(1, sizeof(*http));
 	if (!http) {
 		http_end_request(conn, S_OUT_OF_MEM, 0);
