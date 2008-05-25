@@ -15,6 +15,7 @@
 #include "util/conv.h"
 #include "util/md5.h"
 #include "util/memory.h"
+#include "util/random.h"
 
 
 /* Hexes a binary md5 digest. Taken from RFC 2617 */
@@ -31,18 +32,14 @@ convert_to_md5_digest_hex_T(md5_digest_bin_T bin, md5_digest_hex_T hex)
 	}
 }
 
-/* Initializes a random cnonce that is also a hexed md5 digest. */
+/* Initializes a random cnonce that has the same format as a hexed md5
+ * digest. */
 static void
 init_cnonce_digest(md5_digest_hex_T cnonce)
 {
 	md5_digest_bin_T md5;
-	int random;
 
-	srand(time(NULL));
-
-	random = rand();
-	MD5((const unsigned char *) &random, sizeof(random), md5);
-
+	random_nonce(md5, MD5_DIGEST_LENGTH);
 	convert_to_md5_digest_hex_T(md5, cnonce);
 }
 

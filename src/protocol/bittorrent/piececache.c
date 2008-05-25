@@ -35,6 +35,7 @@
 #include "util/file.h"
 #include "util/lists.h"
 #include "util/memory.h"
+#include "util/random.h"
 #include "util/string.h"
 
 
@@ -165,7 +166,7 @@ find_random_in_bittorrent_piece_cache(struct bittorrent_piece_cache *cache,
 
 	assert(peer->bitfield->bitsize == peer->bittorrent->meta.pieces);
 
-	srand(time(NULL));
+	seed_rand_once();
 
 	foreachback_bitfield_set (piece, peer->bitfield) {
 		assertm(cache->entries[piece].rarity,
@@ -238,7 +239,7 @@ find_rarest_in_bittorrent_piece_cache(struct bittorrent_piece_cache *cache,
 
 	assert(peer->bitfield->bitsize == peer->bittorrent->meta.pieces);
 
-	srand(time(NULL));
+	seed_rand_once();
 
 	/* Try to randomize the piece picking using the strategy from the random
 	 * piece selection. */

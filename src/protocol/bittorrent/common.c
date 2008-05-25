@@ -17,6 +17,7 @@
 #include "util/error.h"
 #include "util/lists.h"
 #include "util/memory.h"
+#include "util/random.h"
 #include "util/sha1.h"
 #include "util/string.h"
 #include "util/snprintf.h"
@@ -167,13 +168,10 @@ init_bittorrent_peer_id(bittorrent_id_T peer_id)
 	}
 
 	/* Hmm, sizeof(peer_id) don't work here. */
+	random_nonce(peer_id + i, sizeof(bittorrent_id_T) - i);
 	while (i < sizeof(bittorrent_id_T)) {
-		int random = rand();
-
-		while (i < sizeof(bittorrent_id_T) && (random & 0xF)) {
-			peer_id[i++] = hx(random & 0xF);
-			random >>= 4;
-		}
+		peer_id[i] = hx(peer_id[i] & 0xF);
+		i++;
 	}
 }
 

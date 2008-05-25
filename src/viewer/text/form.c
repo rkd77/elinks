@@ -45,6 +45,7 @@
 #include "util/error.h"
 #include "util/file.h"
 #include "util/memory.h"
+#include "util/random.h"
 #include "util/string.h"
 #include "viewer/action.h"
 #include "viewer/text/draw.h"
@@ -834,14 +835,8 @@ static void
 randomize_boundary(unsigned char *data, int length)
 {
 	int i;
-	FILE *f = fopen("/dev/urandom", "rb");
 
-	if (!f) f = fopen("/dev/prandom", "rb"); /* OpenBSD */
-	if (f) {
-		fread(data, 1, length, f);
-		fclose(f);
-	}
-	/* FIXME. What if both fails */
+	random_nonce(data, length);
 	for (i = 0; i < length; i++) {
 		/* Only [0-9A-Za-z]. */
 		data[i] = data[i] & 63;
