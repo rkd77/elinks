@@ -471,15 +471,17 @@ static void
 http_end_request(struct connection *conn, enum connection_state state,
 		 int notrunc)
 {
-	shutdown_connection_stream(conn);
-	if (conn->info) {
-		if (conn->post_fd != -1) {
-			close(conn->post_fd);
-			conn->post_fd = -1;
-		}
-	}
+	struct http_connection_info *http;
 
-	if (conn->info && !((struct http_connection_info *) conn->info)->close
+	shutdown_connection_stream(conn);
+
+	/* shutdown_connection_stream() should not change conn->info,
+	 * but in case it does, read conn->info only after the call.  */
+	http = conn->info;
+	if (http)
+		done_http_post(&http->post);
+
+	if (http && !http->close
 	    && (!conn->socket->ssl) /* We won't keep alive ssl connections */
 	    && (!get_opt_bool("protocol.http.bugs.post_no_keepalive", NULL)
 		|| !conn->uri->post)) {
@@ -518,6 +520,19 @@ proxy_protocol_handler(struct connection *conn)
 #define connection_is_https_proxy(conn) \
 	(IS_PROXY_URI((conn)->uri) && (conn)->proxied_uri->protocol == PROTOCOL_HTTPS)
 
+/** connection.done points to this function if connection.info points
+ * to a struct http_connection_info.  */
+static void
+done_http_connection(struct connection *conn)
+{
+	struct http_connection_info *http = conn->info;
+
+	done_http_post(&http->post);
+	mem_free(http);
+	conn->info = NULL;
+	conn->done = NULL;
+}
+
 struct http_connection_info *
 init_http_connection_info(struct connection *conn, int major, int minor, int close)
 {
@@ -533,7 +548,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 	http->sent_version.minor = minor;
 	http->close = close;
 
-	conn->post_fd = -1;
+	init_http_post(&http->post);
 
 	/* The CGI code uses this too and blacklisting expects a host name. */
 	if (conn->proxied_uri->protocol != PROTOCOL_FILE)
@@ -552,6 +567,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 		conn->done = NULL;
 	}
 	mem_free_set(&conn->info, http);
+	conn->done = done_http_connection;
 
 	return http;
 }
@@ -581,6 +597,35 @@ accept_encoding_header(struct string *header)
 #endif
 	add_crlf_to_string(header);
 #endif
+}
+
+/** Initialize *@a http_post so that done_http_post() can be safely
+ * called.
+ *
+ * @relates http_post */
+void
+init_http_post(struct http_post *http_post)
+{
+	http_post->total_upload_length = 0;
+	http_post->uploaded = 0;
+	http_post->post_data = NULL;
+	http_post->post_fd = -1;
+}
+
+/** Free all resources owned by *@a http_post, but do not free the
+ * structure itself.  It is safe to call this multiple times.
+ *
+ * @relates http_post */
+void
+done_http_post(struct http_post *http_post)
+{
+	http_post->total_upload_length = 0;
+	http_post->uploaded = 0;
+	http_post->post_data = NULL;
+	if (http_post->post_fd != -1) {
+		close(http_post->post_fd);
+		http_post->post_fd = -1;
+	}
 }
 
 /* This sets the Content-Length of POST data and counts files. */
@@ -617,17 +662,16 @@ post_length(unsigned char *post_data, unsigned int *count)
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 655360
 
+/** @relates http_post */
 static int
-http_read_post_data_inline(struct socket *socket,
+http_read_post_data_inline(struct http_post *http_post,
 			   unsigned char buffer[], int max)
 {
-	struct connection *const conn = socket->conn;
-	struct http_connection_info *const http = conn->info;
-	unsigned char *post = http->post_data;
+	unsigned char *post = http_post->post_data;
 	unsigned char *end = strchr(post, FILE_CHAR);
 	int total = 0;
 
-	assert(conn->post_fd < 0);
+	assert(http_post->post_fd < 0);
 	if_assert_failed { errno = EINVAL; return -1; }
 
 	if (!end)
@@ -648,78 +692,79 @@ http_read_post_data_inline(struct socket *socket,
 		post += 2;
 	}
 	if (post != end || *end != FILE_CHAR) {
-		http->post_data = post;
+		http_post->post_data = post;
 		return total;
 	}
 
 	end = strchr(post + 1, FILE_CHAR);
 	assert(end);
 	*end = '\0';
-	conn->post_fd = open(post + 1, O_RDONLY);
+	http_post->post_fd = open(post + 1, O_RDONLY);
 	/* Be careful not to change errno here.  */
 	*end = FILE_CHAR;
-	if (conn->post_fd < 0) {
-		http->post_data = post;
+	if (http_post->post_fd < 0) {
+		http_post->post_data = post;
 		if (total > 0)
 			return total; /* retry the open on the next call */
 		else
 			return -1; /* caller gets errno from open() */
 	}
-	http->post_data = end + 1;
+	http_post->post_data = end + 1;
 	return total;
 }
 
+/** @relates http_post */
 static int
-http_read_post_data_fd(struct socket *socket,
+http_read_post_data_fd(struct http_post *http_post,
 		       unsigned char buffer[], int max)
 {
-	struct connection *const conn = socket->conn;
 	int ret;
 
 	/* safe_read() would set errno = EBADF anyway, but check this
 	 * explicitly to make any such bugs easier to detect.  */
-	assert(conn->post_fd >= 0);
+	assert(http_post->post_fd >= 0);
 	if_assert_failed { errno = EBADF; return -1; }
 
-	ret = safe_read(conn->post_fd, buffer, max);
+	ret = safe_read(http_post->post_fd, buffer, max);
 	if (ret <= 0) {
 		const int errno_from_read = errno;
 
-		close(conn->post_fd);
-		conn->post_fd = -1;
+		close(http_post->post_fd);
+		http_post->post_fd = -1;
 
 		errno = errno_from_read;
 	}
 	return ret;
 }
 
-/** Read data from socket->conn->uri->post or from the files to which
- * it refers.
+/** Read data from connection.uri->post or from the files to which it
+ * refers.
  *
  * @return >0 if read that many bytes; 0 if EOF; -1 on error and set
- * errno.  */
+ * errno.
+ *
+ * @relates http_post */
 int
-http_read_post_data(struct socket *socket,
+http_read_post_data(struct http_post *http_post,
 		    unsigned char buffer[], int max)
 {
-	struct connection *const conn = socket->conn;
 	int total = 0;
 
 	while (total < max) {
 		int chunk;
-		int post_fd = conn->post_fd;
+		int post_fd = http_post->post_fd;
 
 		if (post_fd < 0)
-			chunk = http_read_post_data_inline(socket,
+			chunk = http_read_post_data_inline(http_post,
 							   buffer + total,
 							   max - total);
 		else
-			chunk = http_read_post_data_fd(socket,
+			chunk = http_read_post_data_fd(http_post,
 						       buffer + total,
 						       max - total);
 		/* Be careful not to change errno here.  */
 
-		if (chunk == 0 && conn->post_fd == post_fd)
+		if (chunk == 0 && http_post->post_fd == post_fd)
 			return total; /* EOF */
 		if (chunk < 0) {
 			/* If some data has already been successfully
@@ -745,13 +790,13 @@ send_more_post_data(struct socket *socket)
 	unsigned char buffer[POST_BUFFER_SIZE];
 	int got;
 
-	got = http_read_post_data(socket, buffer, POST_BUFFER_SIZE);
+	got = http_read_post_data(&http->post, buffer, POST_BUFFER_SIZE);
 	if (got < 0) {
 		http_end_request(conn, -errno, 0);
 	} else if (got > 0) {
 		write_to_socket(socket, buffer, got, S_TRANS,
 				send_more_post_data);
-		http->uploaded += got;
+		http->post.uploaded += got;
 	} else {		/* got == 0, meaning end of data */
 		/* Can't use request_from_socket() because there's no
 		 * more data to write.  */
@@ -1123,7 +1168,7 @@ http_send_header(struct socket *socket)
 
 		post_data = postend ? postend + 1 : uri->post;
 		size = post_length(post_data, &files);
-		http->total_upload_length = size;
+		http->post.total_upload_length = size;
 		add_format_to_string(&header, "Content-Length: "
 				     "%" OFF_PRINT_FORMAT "\x0D\x0A",
 				     (off_print_T) size);
@@ -1150,9 +1195,9 @@ http_send_header(struct socket *socket)
 	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
 		assert(!use_connect); /* see comment above */
-		assert(conn->post_fd == -1);
+		assert(http->post.post_fd == -1);
 
-		http->post_data = post_data;
+		http->post.post_data = post_data;
 		socket->state = SOCKET_END_ONCLOSE;
 		if (!conn->upload_progress && files)
 			conn->upload_progress = init_progress(0);

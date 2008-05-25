@@ -303,7 +303,7 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 	conn->cache_mode = cache_mode;
 
 	conn->content_encoding = ENCODING_NONE;
-	conn->stream_pipes[0] = conn->stream_pipes[1] = conn->post_fd = -1;
+	conn->stream_pipes[0] = conn->stream_pipes[1] = -1;
 	init_list(conn->downloads);
 	conn->est_length = -1;
 	conn->timer = TIMER_ID_UNDEF;
@@ -346,8 +346,8 @@ upload_stat_timer(struct connection *conn)
 	assert(conn->upload_progress && http);
 	if_assert_failed return;
 
-	update_progress(conn->upload_progress, http->uploaded,
-		http->total_upload_length, http->uploaded);
+	update_progress(conn->upload_progress, http->post.uploaded,
+		http->post.total_upload_length, http->post.uploaded);
 	notify_connection_callbacks(conn);
 }
 
@@ -503,7 +503,6 @@ done_connection(struct connection *conn)
 	done_progress(conn->progress);
 	if (conn->upload_progress)
 		done_progress(conn->upload_progress);
-	if (conn->post_fd != -1) close(conn->post_fd);
 	mem_free(conn);
 	check_queue_bugs();
 }

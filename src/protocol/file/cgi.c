@@ -91,13 +91,13 @@ send_more_post_data(struct socket *socket)
 	unsigned char buffer[POST_BUFFER_SIZE];
 	int got;
 
-	got = http_read_post_data(socket, buffer, POST_BUFFER_SIZE);
+	got = http_read_post_data(&http->post, buffer, POST_BUFFER_SIZE);
 	if (got < 0) {
 		abort_connection(conn, -errno);
 	} else if (got > 0) {
 		write_to_socket(socket, buffer, got, S_TRANS,
 				send_more_post_data);
-		http->uploaded += got;
+		http->post.uploaded += got;
 	} else {		/* got == 0, meaning end of data */
 		close_pipe_and_read(socket);
 	}
@@ -115,7 +115,7 @@ send_post_data(struct connection *conn)
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
-	http->post_data = post;
+	http->post.post_data = post;
 	send_more_post_data(conn->data_socket);
 }
 

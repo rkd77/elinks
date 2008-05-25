@@ -16,17 +16,9 @@ struct http_version {
 	int minor;
 };
 
-/** connection.info points to this in HTTP and local CGI connections. */
-struct http_connection_info {
-	enum blacklist_flags bl_flags;
-	struct http_version recv_version;
-	struct http_version sent_version;
-
-	int close;
-	int length;
-	int chunk_remaining;
-	int code;
-
+/** State of reading POST data from connection.uri->post and related
+ * files.  */
+struct http_post {
 	/** Total size of the POST body to be uploaded */
 	off_t total_upload_length;
 
@@ -38,10 +30,30 @@ struct http_connection_info {
 	 * substitutes a null character for the FILE_CHAR at the end of
 	 * each file name.  */
 	unsigned char *post_data;
+
+	/** File descriptor from which data is being read, or -1 if
+	 * none.  */
+	int post_fd;
 };
 
-int http_read_post_data(struct socket *socket,
+void init_http_post(struct http_post *http_post);
+void done_http_post(struct http_post *http_post);
+int http_read_post_data(struct http_post *http_post,
 			unsigned char buffer[], int max);
+
+/** connection.info points to this in HTTP and local CGI connections. */
+struct http_connection_info {
+	enum blacklist_flags bl_flags;
+	struct http_version recv_version;
+	struct http_version sent_version;
+
+	int close;
+	int length;
+	int chunk_remaining;
+	int code;
+
+	struct http_post post;
+};
 
 extern struct module http_protocol_module;
 
