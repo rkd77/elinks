@@ -664,8 +664,8 @@ post_length(unsigned char *post_data, unsigned int *count)
 
 /** @relates http_post */
 static int
-http_read_post_data_inline(struct http_post *http_post,
-			   unsigned char buffer[], int max)
+read_http_post_inline(struct http_post *http_post,
+		      unsigned char buffer[], int max)
 {
 	unsigned char *post = http_post->post_data;
 	unsigned char *end = strchr(post, FILE_CHAR);
@@ -715,8 +715,8 @@ http_read_post_data_inline(struct http_post *http_post,
 
 /** @relates http_post */
 static int
-http_read_post_data_fd(struct http_post *http_post,
-		       unsigned char buffer[], int max)
+read_http_post_fd(struct http_post *http_post,
+		  unsigned char buffer[], int max)
 {
 	int ret;
 
@@ -745,8 +745,8 @@ http_read_post_data_fd(struct http_post *http_post,
  *
  * @relates http_post */
 int
-http_read_post_data(struct http_post *http_post,
-		    unsigned char buffer[], int max)
+read_http_post(struct http_post *http_post,
+	       unsigned char buffer[], int max)
 {
 	int total = 0;
 
@@ -755,13 +755,13 @@ http_read_post_data(struct http_post *http_post,
 		int post_fd = http_post->post_fd;
 
 		if (post_fd < 0)
-			chunk = http_read_post_data_inline(http_post,
-							   buffer + total,
-							   max - total);
+			chunk = read_http_post_inline(http_post,
+						      buffer + total,
+						      max - total);
 		else
-			chunk = http_read_post_data_fd(http_post,
-						       buffer + total,
-						       max - total);
+			chunk = read_http_post_fd(http_post,
+						  buffer + total,
+						  max - total);
 		/* Be careful not to change errno here.  */
 
 		if (chunk == 0 && http_post->post_fd == post_fd)

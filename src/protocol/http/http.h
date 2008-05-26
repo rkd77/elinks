@@ -38,8 +38,8 @@ struct http_post {
 
 void init_http_post(struct http_post *http_post);
 void done_http_post(struct http_post *http_post);
-int http_read_post_data(struct http_post *http_post,
-			unsigned char buffer[], int max);
+int read_http_post(struct http_post *http_post,
+		   unsigned char buffer[], int max);
 
 /** connection.info points to this in HTTP and local CGI connections. */
 struct http_connection_info {
