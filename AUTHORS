@@ -433,6 +433,9 @@ Omar Khayam <omark@cyentec.com>
 <otte@duke.edu>
 	Fix stdin reading on Mac OS X
 
+Paul B. Mahol <onemda@gmail.com>
+	Recognize Insert key on cons25 (FreeBSD console)
+
 Pavol Babincak <scroolik@gmail.com>
 	Improved UTF-8 support with double-width chars
 
