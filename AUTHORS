@@ -420,6 +420,9 @@ Omar Khayam <omark@cyentec.com>
 <otte@duke.edu>
 	Fix stdin reading on Mac OS X
 
+Paul B. Mahol <onemda@gmail.com>
+	Recognize Insert key on cons25 (FreeBSD console)
+
 Peder Stray <peder@ifi.uio.no>
 	Fix handling of key presses turning up as key prefixes
 
