@@ -76,7 +76,8 @@ init_perl(struct module *module)
 
 	/* PERL_SYS_INIT3 may not be defined, it depends on the system. */
 #ifdef PERL_SYS_INIT3
-	char *my_argv[] = { NULL };
+	char *my_argvec[] = { NULL, NULL };
+	char **my_argv = my_argvec;
 	int my_argc = 0;
 
 	/* A hack to prevent unused variables warnings. */
