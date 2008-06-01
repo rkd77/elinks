@@ -790,7 +790,7 @@ send_more_post_data(struct socket *socket)
 	unsigned char buffer[POST_BUFFER_SIZE];
 	int got;
 
-	got = http_read_post_data(&http->post, buffer, POST_BUFFER_SIZE);
+	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE);
 	if (got < 0) {
 		http_end_request(conn, -errno, 0);
 	} else if (got > 0) {
