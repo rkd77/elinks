@@ -62,6 +62,10 @@ done_http_post(struct http_post *http_post)
  *   pointer remains valid until done_http_post().
  * @param[out] files
  *   The number of files going to be uploaded.
+ * @param[out] error
+ *   If the function fails, it writes the error state here so that
+ *   the caller can pass that on to abort_connection().  If the
+ *   function succeeds, the value of *@a error is undefined.
  *
  * This function does not parse the Content-Type from uri.post; the
  * caller must do that.  This is because in local CGI, the child
@@ -69,10 +73,12 @@ done_http_post(struct http_post *http_post)
  * variable before exec) but the parent process handles the body of
  * the request (feeding it to the child process via a pipe).
  *
+ * @return nonzero on success, zero on error.
+ *
  * @relates http_post */
-void
+int
 open_http_post(struct http_post *http_post, unsigned char *post_data,
-	       unsigned int *files)
+	       unsigned int *files, enum connection_state *error)
 {
 	off_t size = 0;
 	size_t length = strlen(post_data);
@@ -102,6 +108,8 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 	}
 	size += (length / 2);
 	http_post->total_upload_length = size;
+
+	return 1;
 }
 
 /** @relates http_post */

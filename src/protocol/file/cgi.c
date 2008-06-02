@@ -112,12 +112,15 @@ send_post_data(struct connection *conn)
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
 	unsigned int files;
+	enum connection_state error;
 
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
-	open_http_post(&http->post, post, &files);
 
-	send_more_post_data(conn->data_socket);
+	if (!open_http_post(&http->post, post, &files, &error))
+		abort_connection(conn, error);
+	else
+		send_more_post_data(conn->data_socket);
 }
 
 static void

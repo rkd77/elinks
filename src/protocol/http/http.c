@@ -971,6 +971,7 @@ http_send_header(struct socket *socket)
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
 		unsigned char *postend = strchr(uri->post, '\n');
+		enum connection_state error;
 
 		if (postend) {
 			add_to_string(&header, "Content-Type: ");
@@ -979,7 +980,11 @@ http_send_header(struct socket *socket)
 		}
 
 		post_data = postend ? postend + 1 : uri->post;
-		open_http_post(&http->post, post_data, &files);
+		if (!open_http_post(&http->post, post_data, &files, &error)) {
+			http_end_request(conn, error, 0);
+			done_string(&header);
+			return;
+		}
 		add_format_to_string(&header, "Content-Length: "
 				     "%" OFF_PRINT_FORMAT "\x0D\x0A",
 				     (off_print_T)

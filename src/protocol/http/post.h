@@ -4,6 +4,8 @@
 #ifndef EL__PROTOCOL_HTTP_POST_H
 #define EL__PROTOCOL_HTTP_POST_H
 
+#include "network/state.h"
+
 /** State of reading POST data from connection.uri->post and related
  * files.  */
 struct http_post {
@@ -26,9 +28,8 @@ struct http_post {
 
 void init_http_post(struct http_post *http_post);
 void done_http_post(struct http_post *http_post);
-void open_http_post(struct http_post *http_post,
-		    unsigned char *post_data,
-		    unsigned int *files);
+int open_http_post(struct http_post *http_post, unsigned char *post_data,
+		   unsigned int *files, enum connection_state *error);
 int read_http_post(struct http_post *http_post,
 		   unsigned char buffer[], int max);
 
