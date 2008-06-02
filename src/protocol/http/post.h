@@ -26,6 +26,9 @@ struct http_post {
 
 void init_http_post(struct http_post *http_post);
 void done_http_post(struct http_post *http_post);
+void open_http_post(struct http_post *http_post,
+		    unsigned char *post_data,
+		    unsigned int *files);
 int read_http_post(struct http_post *http_post,
 		   unsigned char buffer[], int max);
 

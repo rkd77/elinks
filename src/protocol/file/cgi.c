@@ -111,11 +111,12 @@ send_post_data(struct connection *conn)
 	struct http_connection_info *http = conn->info;
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
+	unsigned int files;
 
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
+	open_http_post(&http->post, post, &files);
 
-	http->post.post_data = post;
 	send_more_post_data(conn->data_socket);
 }
 

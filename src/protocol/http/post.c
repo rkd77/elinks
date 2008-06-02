@@ -7,6 +7,7 @@
 
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -48,6 +49,59 @@ done_http_post(struct http_post *http_post)
 		close(http_post->post_fd);
 		http_post->post_fd = -1;
 	}
+}
+
+/** Prepare to read POST data from a URI and possibly to upload files.
+ *
+ * @param http_post
+ *   Must have been initialized with init_http_post().
+ * @param[in] post_data
+ *   The body of the POST request as formatted by get_form_uri().
+ *   However, unlike uri.post, @a post_data must not contain any
+ *   Content-Type.  The caller must ensure that the @a post_data
+ *   pointer remains valid until done_http_post().
+ * @param[out] files
+ *   The number of files going to be uploaded.
+ *
+ * This function does not parse the Content-Type from uri.post; the
+ * caller must do that.  This is because in local CGI, the child
+ * process handles the Content-Type (saving it to an environment
+ * variable before exec) but the parent process handles the body of
+ * the request (feeding it to the child process via a pipe).
+ *
+ * @relates http_post */
+void
+open_http_post(struct http_post *http_post, unsigned char *post_data,
+	       unsigned int *files)
+{
+	off_t size = 0;
+	size_t length = strlen(post_data);
+	unsigned char *end = post_data;
+
+	done_http_post(http_post);
+	http_post->post_data = end;
+
+	*files = 0;
+	while (1) {
+		struct stat sb;
+		unsigned char *begin;
+		int res;
+
+		begin = strchr(end, FILE_CHAR);
+		if (!begin) break;
+		end = strchr(begin + 1, FILE_CHAR);
+		if (!end) break;
+		*end = '\0';
+		res = stat(begin + 1, &sb);
+		*end = FILE_CHAR;
+		if (res) break;
+		(*files)++;
+		size += sb.st_size;
+		length -= (end - begin + 1);
+		end++;
+	}
+	size += (length / 2);
+	http_post->total_upload_length = size;
 }
 
 /** @relates http_post */

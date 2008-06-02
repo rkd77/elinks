@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -593,37 +592,6 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-/* This sets the Content-Length of POST data and counts files. */
-static off_t
-post_length(unsigned char *post_data, unsigned int *count)
-{
-	off_t size = 0;
-	size_t length = strlen(post_data);
-	unsigned char *end = post_data;
-
-	*count = 0;
-	while (1) {
-		struct stat sb;
-		unsigned char *begin;
-		int res;
-
-		begin = strchr(end, FILE_CHAR);
-		if (!begin) break;
-		end = strchr(begin + 1, FILE_CHAR);
-		if (!end) break;
-		*end = '\0';
-		res = stat(begin + 1, &sb);
-		*end = FILE_CHAR;
-		if (res) break;
-		(*count)++;
-		size += sb.st_size;
-		length -= (end - begin + 1);
-		end++;
-	}
-	size += (length / 2);
-	return size;
-}
-
 #define POST_BUFFER_SIZE 4096
 #define BIG_READ 655360
 
@@ -1003,7 +971,6 @@ http_send_header(struct socket *socket)
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
 		unsigned char *postend = strchr(uri->post, '\n');
-		off_t size;
 
 		if (postend) {
 			add_to_string(&header, "Content-Type: ");
@@ -1012,11 +979,11 @@ http_send_header(struct socket *socket)
 		}
 
 		post_data = postend ? postend + 1 : uri->post;
-		size = post_length(post_data, &files);
-		http->post.total_upload_length = size;
+		open_http_post(&http->post, post_data, &files);
 		add_format_to_string(&header, "Content-Length: "
 				     "%" OFF_PRINT_FORMAT "\x0D\x0A",
-				     (off_print_T) size);
+				     (off_print_T)
+				     http->post.total_upload_length);
 	}
 
 #ifdef CONFIG_COOKIES
@@ -1040,9 +1007,7 @@ http_send_header(struct socket *socket)
 	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
 		assert(!use_connect); /* see comment above */
-		assert(http->post.post_fd == -1);
 
-		http->post.post_data = post_data;
 		socket->state = SOCKET_END_ONCLOSE;
 		if (!conn->upload_progress && files)
 			conn->upload_progress = init_progress(0);
