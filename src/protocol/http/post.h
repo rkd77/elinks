@@ -38,8 +38,13 @@ struct http_post {
 	 * be read next (when post_fd == -1).  */
 	size_t file_index;
 
-	/** Number of elements in the #files array.  */
+	/** Number of files to be uploaded, i.e. the number of
+	 * elements in the #files array.  */
 	size_t file_count;
+
+	/** Number of bytes read from the current file so far.
+	 * The value makes sense only when post_fd != -1.  */
+	off_t file_read;
 
 	/** Array of information about files to be uploaded.  */
 	struct http_post_file *files;

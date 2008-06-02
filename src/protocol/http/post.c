@@ -35,6 +35,7 @@ init_http_post(struct http_post *http_post)
 	http_post->post_fd = -1;
 	http_post->file_index = 0;
 	http_post->file_count = 0;
+	http_post->file_read = 0;
 	http_post->files = NULL;
 }
 
@@ -54,6 +55,7 @@ done_http_post(struct http_post *http_post)
 	}
 	http_post->file_index = 0;
 	http_post->file_count = 0;
+	http_post->file_read = 0;
 	mem_free_set(&http_post->files, NULL);
 }
 
@@ -170,6 +172,7 @@ read_http_post_inline(struct http_post *http_post,
 		return total;
 	}
 
+	http_post->file_read = 0;
 	end = strchr(post + 1, FILE_CHAR);
 	assert(end);
 	*end = '\0';
@@ -199,6 +202,8 @@ read_http_post_fd(struct http_post *http_post,
 		  unsigned char buffer[], int max,
 		  enum connection_state *error)
 {
+	const struct http_post_file *const file
+		= &http_post->files[http_post->file_index];
 	int ret;
 
 	/* safe_read() would set errno = EBADF anyway, but check this
@@ -213,18 +218,42 @@ read_http_post_fd(struct http_post *http_post,
 		close(http_post->post_fd);
 		http_post->post_fd = -1;
 		http_post->file_index++;
+		/* http_post->file_read is used below so don't clear it here.
+		 * It will be cleared when the next file is opened.  */
 
-		if (ret == 0) {
+		if (ret == -1) {
+			*error = -errno_from_read;
+			return -1;
+		} else if (http_post->file_read != file->size) {
+			/* ELinks already sent a Content-Length header
+			 * based on the size of this file, but the
+			 * file has since been shrunk.  Abort the
+			 * connection because ELinks can no longer get
+			 * enough data to fill the Content-Length.
+			 * (Well, it could pad with zeroes, but that
+			 * would be just weird.)  */
+			*error = S_HTTP_UPLOAD_RESIZED;
+			return -1;
+		} else {
 			/* The upload file ended but there may still
 			 * be more data in uri.post.  If not,
 			 * read_http_post_inline() will return 0 to
 			 * indicate the final end of file.  */
 			return -2;
-		} else {
-			*error = -errno_from_read;
-			return -1;
 		}
 	}
+
+	http_post->file_read += ret;
+	if (http_post->file_read > file->size) {
+		/* ELinks already sent a Content-Length header based
+		 * on the size of this file, but the file has since
+		 * been extended.  Abort the connection because ELinks
+		 * can no longer fit the entire file in the original
+		 * Content-Length.  */
+		*error = S_HTTP_UPLOAD_RESIZED;
+		return -1;
+	}
+
 	return ret;
 }
 
