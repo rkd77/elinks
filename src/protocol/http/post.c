@@ -33,6 +33,9 @@ init_http_post(struct http_post *http_post)
 	http_post->uploaded = 0;
 	http_post->post_data = NULL;
 	http_post->post_fd = -1;
+	http_post->file_index = 0;
+	http_post->file_count = 0;
+	http_post->files = NULL;
 }
 
 /** Free all resources owned by *@a http_post, but do not free the
@@ -49,6 +52,9 @@ done_http_post(struct http_post *http_post)
 		close(http_post->post_fd);
 		http_post->post_fd = -1;
 	}
+	http_post->file_index = 0;
+	http_post->file_count = 0;
+	mem_free_set(&http_post->files, NULL);
 }
 
 /** Prepare to read POST data from a URI and possibly to upload files.
@@ -60,8 +66,6 @@ done_http_post(struct http_post *http_post)
  *   However, unlike uri.post, @a post_data must not contain any
  *   Content-Type.  The caller must ensure that the @a post_data
  *   pointer remains valid until done_http_post().
- * @param[out] files
- *   The number of files going to be uploaded.
  * @param[out] error
  *   If the function fails, it writes the error state here so that
  *   the caller can pass that on to abort_connection().  If the
@@ -78,7 +82,7 @@ done_http_post(struct http_post *http_post)
  * @relates http_post */
 int
 open_http_post(struct http_post *http_post, unsigned char *post_data,
-	       unsigned int *files, enum connection_state *error)
+	       enum connection_state *error)
 {
 	off_t size = 0;
 	size_t length = strlen(post_data);
@@ -87,11 +91,11 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 	done_http_post(http_post);
 	http_post->post_data = end;
 
-	*files = 0;
 	while (1) {
 		struct stat sb;
 		unsigned char *begin;
 		int res;
+		struct http_post_file *new_files;
 
 		begin = strchr(end, FILE_CHAR);
 		if (!begin) break;
@@ -101,7 +105,22 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 		res = stat(begin + 1, &sb);
 		*end = FILE_CHAR;
 		if (res) break;
-		(*files)++;
+
+		/* This use of mem_realloc() in a loop consumes O(n^2)
+		 * time but how many files are you really going to
+		 * upload in one request?  */
+		new_files = mem_realloc(http_post->files,
+					(http_post->file_count + 1)
+					* sizeof(*new_files));
+		if (new_files == NULL) {
+			done_http_post(http_post);
+			*error = S_OUT_OF_MEM;
+			return 0;
+		}
+		http_post->files = new_files;
+		new_files[http_post->file_count].size = sb.st_size;
+		http_post->file_count++;
+
 		size += sb.st_size;
 		length -= (end - begin + 1);
 		end++;

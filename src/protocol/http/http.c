@@ -637,7 +637,6 @@ http_send_header(struct socket *socket)
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
 	unsigned char *optstr;
 	int use_connect, talking_to_proxy;
-	unsigned int files = 0;
 
 	/* Sanity check for a host */
 	if (!uri || !uri->host || !*uri->host || !uri->hostlen) {
@@ -980,7 +979,7 @@ http_send_header(struct socket *socket)
 		}
 
 		post_data = postend ? postend + 1 : uri->post;
-		if (!open_http_post(&http->post, post_data, &files, &error)) {
+		if (!open_http_post(&http->post, post_data, &error)) {
 			http_end_request(conn, error, 0);
 			done_string(&header);
 			return;
@@ -1014,7 +1013,7 @@ http_send_header(struct socket *socket)
 		assert(!use_connect); /* see comment above */
 
 		socket->state = SOCKET_END_ONCLOSE;
-		if (!conn->upload_progress && files)
+		if (!conn->upload_progress && http->post.file_count)
 			conn->upload_progress = init_progress(0);
 		write_to_socket(socket, header.source, header.length, S_TRANS,
 				send_more_post_data);

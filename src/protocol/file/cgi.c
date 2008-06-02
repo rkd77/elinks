@@ -111,13 +111,12 @@ send_post_data(struct connection *conn)
 	struct http_connection_info *http = conn->info;
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
-	unsigned int files;
 	enum connection_state error;
 
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
-	if (!open_http_post(&http->post, post, &files, &error))
+	if (!open_http_post(&http->post, post, &error))
 		abort_connection(conn, error);
 	else
 		send_more_post_data(conn->data_socket);
