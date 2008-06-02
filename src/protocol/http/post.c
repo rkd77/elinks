@@ -131,17 +131,22 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 	return 1;
 }
 
-/** @relates http_post */
+/** @return -2 if no data was read but the caller should retry;
+ * -1 if an error occurred and *@a error was set; 0 at end of data;
+ * a positive number if that many bytes were read.
+ *
+ * @relates http_post */
 static int
 read_http_post_inline(struct http_post *http_post,
-		      unsigned char buffer[], int max)
+		      unsigned char buffer[], int max,
+		      enum connection_state *error)
 {
 	unsigned char *post = http_post->post_data;
 	unsigned char *end = strchr(post, FILE_CHAR);
 	int total = 0;
 
 	assert(http_post->post_fd < 0);
-	if_assert_failed { errno = EINVAL; return -1; }
+	if_assert_failed { *error = S_INTERNAL; return -1; }
 
 	if (!end)
 		end = strchr(post, '\0');
@@ -175,24 +180,31 @@ read_http_post_inline(struct http_post *http_post,
 		http_post->post_data = post;
 		if (total > 0)
 			return total; /* retry the open on the next call */
-		else
-			return -1; /* caller gets errno from open() */
+		else {
+			*error = -errno;
+			return -1;
+		}
 	}
 	http_post->post_data = end + 1;
-	return total;
+	return total ? total : -2;
 }
 
-/** @relates http_post */
+/** @return -2 if no data was read but the caller should retry;
+ * -1 if an error occurred and *@a error was set; 0 at end of data;
+ * a positive number if that many bytes were read.
+ *
+ * @relates http_post */
 static int
 read_http_post_fd(struct http_post *http_post,
-		  unsigned char buffer[], int max)
+		  unsigned char buffer[], int max,
+		  enum connection_state *error)
 {
 	int ret;
 
 	/* safe_read() would set errno = EBADF anyway, but check this
 	 * explicitly to make any such bugs easier to detect.  */
 	assert(http_post->post_fd >= 0);
-	if_assert_failed { errno = EBADF; return -1; }
+	if_assert_failed { *error = S_INTERNAL; return -1; }
 
 	ret = safe_read(http_post->post_fd, buffer, max);
 	if (ret <= 0) {
@@ -200,8 +212,18 @@ read_http_post_fd(struct http_post *http_post,
 
 		close(http_post->post_fd);
 		http_post->post_fd = -1;
+		http_post->file_index++;
 
-		errno = errno_from_read;
+		if (ret == 0) {
+			/* The upload file ended but there may still
+			 * be more data in uri.post.  If not,
+			 * read_http_post_inline() will return 0 to
+			 * indicate the final end of file.  */
+			return -2;
+		} else {
+			*error = -errno_from_read;
+			return -1;
+		}
 	}
 	return ret;
 }
@@ -210,43 +232,44 @@ read_http_post_fd(struct http_post *http_post,
  * refers.
  *
  * @return >0 if read that many bytes; 0 if EOF; -1 on error and set
- * errno.
+ * *@a error.
  *
  * @relates http_post */
 int
 read_http_post(struct http_post *http_post,
-	       unsigned char buffer[], int max)
+	       unsigned char buffer[], int max,
+	       enum connection_state *error)
 {
 	int total = 0;
 
 	while (total < max) {
 		int chunk;
-		int post_fd = http_post->post_fd;
 
-		if (post_fd < 0)
+		if (http_post->post_fd < 0)
 			chunk = read_http_post_inline(http_post,
 						      buffer + total,
-						      max - total);
+						      max - total,
+						      error);
 		else
 			chunk = read_http_post_fd(http_post,
 						  buffer + total,
-						  max - total);
-		/* Be careful not to change errno here.  */
+						  max - total,
+						  error);
 
-		if (chunk == 0 && http_post->post_fd == post_fd)
-			return total; /* EOF */
-		if (chunk < 0) {
+		if (chunk > 0)
+			total += chunk;
+		else if (chunk != -2) {
+			assert(chunk == -1 || chunk == 0);
 			/* If some data has already been successfully
 			 * read to buffer[], tell the caller about
 			 * that and forget about the error.  The next
-			 * http_read_post_data() call will retry the
+			 * read_http_post() call will retry the
 			 * operation that failed.  */
 			if (total != 0)
 				return total;
 			else
-				return chunk; /* caller gets errno from above */
+				return chunk;
 		}
-		total += chunk;
 	}
 	return total;
 }

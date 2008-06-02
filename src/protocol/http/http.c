@@ -602,10 +602,11 @@ send_more_post_data(struct socket *socket)
 	struct http_connection_info *http = conn->info;
 	unsigned char buffer[POST_BUFFER_SIZE];
 	int got;
+	enum connection_state error;
 
-	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE);
+	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE, &error);
 	if (got < 0) {
-		http_end_request(conn, -errno, 0);
+		http_end_request(conn, error, 0);
 	} else if (got > 0) {
 		write_to_socket(socket, buffer, got, S_TRANS,
 				send_more_post_data);

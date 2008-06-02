@@ -50,6 +50,7 @@ void done_http_post(struct http_post *http_post);
 int open_http_post(struct http_post *http_post, unsigned char *post_data,
 		   enum connection_state *error);
 int read_http_post(struct http_post *http_post,
-		   unsigned char buffer[], int max);
+		   unsigned char buffer[], int max,
+		   enum connection_state *error);
 
 #endif
