@@ -941,6 +941,32 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 				filename = expand_tilde(sv->value);
 				if (!filename) goto encode_error;
 
+				/* Do not allow FILE_CHAR in file
+				 * names.  It would make the resulting
+				 * *data string ambiguous.
+				 *
+				 * Because FILE_CHAR is a control
+				 * character, the user cannot directly
+				 * type it in a file upload field.
+				 * ELinks also does not let scripts
+				 * modify such fields, for security
+				 * reasons.  It seems impossible to
+				 * get FILE_CHAR here, so use assert.
+				 *
+				 * In uri.post, the first '\n' also
+				 * has special meaning.  However, '\n'
+				 * in a file name does not cause any
+				 * ambiguity, because get_form_uri()
+				 * always adds a content-type and '\n'
+				 * to the beginning of the encoded
+				 * POST data.  */
+				assert(strchr(filename, FILE_CHAR) == NULL);
+				if_assert_failed {
+					mem_free(filename);
+					errno = EINVAL;
+					goto encode_error;
+				}
+
 				if (access(filename, R_OK)) {
 					mem_free(filename);
 					goto encode_error;
