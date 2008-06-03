@@ -285,9 +285,10 @@ read_http_post(struct http_post *http_post,
 						  max - total,
 						  error);
 
-		if (chunk > 0)
+		if (chunk > 0) {
 			total += chunk;
-		else if (chunk != -2) {
+			http_post->uploaded += chunk;
+		} else if (chunk != -2) {
 			assert(chunk == -1 || chunk == 0);
 			/* If some data has already been successfully
 			 * read to buffer[], tell the caller about

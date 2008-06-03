@@ -20,7 +20,8 @@ struct http_post {
 	/** Total size of the POST body to be uploaded */
 	off_t total_upload_length;
 
-	/** Amount of POST body data uploaded so far */
+	/** Amount of POST body data uploaded so far.
+	 * read_http_post() increments this.  */
 	off_t uploaded;
 
 	/** Points to the next byte to be read from connection.uri->post.

@@ -98,7 +98,6 @@ send_more_post_data(struct socket *socket)
 	} else if (got > 0) {
 		write_to_socket(socket, buffer, got, S_TRANS,
 				send_more_post_data);
-		http->post.uploaded += got;
 	} else {		/* got == 0, meaning end of data */
 		close_pipe_and_read(socket);
 	}
