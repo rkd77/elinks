@@ -343,10 +343,10 @@ upload_stat_timer(struct connection *conn)
 {
 	struct http_connection_info *http = conn->info;
 
-	assert(conn->upload_progress && http);
+	assert(conn->http_upload_progress && http);
 	if_assert_failed return;
 
-	update_progress(conn->upload_progress, http->post.uploaded,
+	update_progress(conn->http_upload_progress, http->post.uploaded,
 		http->post.total_upload_length, http->post.uploaded);
 	notify_connection_callbacks(conn);
 }
@@ -356,7 +356,7 @@ set_connection_state(struct connection *conn, enum connection_state state)
 {
 	struct download *download;
 	struct progress *progress = conn->progress;
-	struct progress *upload_progress = conn->upload_progress;
+	struct progress *upload_progress = conn->http_upload_progress;
 
 	if (is_in_result_state(conn->state) && is_in_progress_state(state))
 		conn->prev_error = conn->state;
@@ -501,8 +501,8 @@ done_connection(struct connection *conn)
 	mem_free(conn->socket);
 	mem_free(conn->data_socket);
 	done_progress(conn->progress);
-	if (conn->upload_progress)
-		done_progress(conn->upload_progress);
+	if (conn->http_upload_progress)
+		done_progress(conn->http_upload_progress);
 	mem_free(conn);
 	check_queue_bugs();
 }

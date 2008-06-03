@@ -1013,8 +1013,8 @@ http_send_header(struct socket *socket)
 		assert(!use_connect); /* see comment above */
 
 		socket->state = SOCKET_END_ONCLOSE;
-		if (!conn->upload_progress && http->post.file_count)
-			conn->upload_progress = init_progress(0);
+		if (!conn->http_upload_progress && http->post.file_count)
+			conn->http_upload_progress = init_progress(0);
 		write_to_socket(socket, header.source, header.length, S_TRANS,
 				send_more_post_data);
 	} else
