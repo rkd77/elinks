@@ -327,9 +327,9 @@ update_connection_progress(struct connection *conn)
 	update_progress(conn->progress, conn->received, conn->est_length, conn->from);
 }
 
-/* Progress timer callback for @conn->progress.  As explained in
- * @start_update_progress, this function must erase the expired timer
- * ID from @conn->progress->timer.  */
+/** Progress timer callback for @a conn->progress.  As explained in
+ * start_update_progress(), this function must erase the expired timer
+ * ID from @a conn->progress->timer.  */
 static void
 stat_timer(struct connection *conn)
 {
@@ -338,16 +338,26 @@ stat_timer(struct connection *conn)
 	notify_connection_callbacks(conn);
 }
 
+/** Progress timer callback for @a conn->upload_progress.  As explained
+ * in start_update_progress(), this function must erase the expired timer
+ * ID from @a conn->upload_progress->timer.  */
 static void
 upload_stat_timer(struct connection *conn)
 {
 	struct http_connection_info *http = conn->info;
 
-	assert(conn->http_upload_progress && http);
+	assert(conn->http_upload_progress);
 	if_assert_failed return;
+	assert(http);
+	if_assert_failed {
+		conn->http_upload_progress->timer = TIMER_ID_UNDEF;
+		/* The expired timer ID has now been erased.  */
+		return;
+	}
 
 	update_progress(conn->http_upload_progress, http->post.uploaded,
 		http->post.total_upload_length, http->post.uploaded);
+	/* The expired timer ID has now been erased.  */
 	notify_connection_callbacks(conn);
 }
 
