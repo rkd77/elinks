@@ -1005,7 +1005,8 @@ http_send_header(struct socket *socket)
 /* This function decompresses the data block given in @data (if it was
  * compressed), which is long @len bytes. The decompressed data block is given
  * back to the world as the return value and its length is stored into
- * @new_len.
+ * @new_len. After this function returns, the caller will discard all the @len
+ * input bytes, so this function must use all of them unless an error occurs.
  *
  * In this function, value of either http->chunk_remaining or http->length is
  * being changed (it depends on if chunked mode is used or not).
@@ -1100,11 +1101,16 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
 
-		if (did_read > 0) *new_len += did_read;
-		else {
-			if (did_read < 0) state = FINISHING;
+		/* Do not break from the loop if did_read == 0.  It
+		 * means no decoded data is available yet, but some may
+		 * become available later.  This happens especially with
+		 * the bzip2 decoder, which needs an entire compressed
+		 * block as input before it generates any output.  */
+		if (did_read < 0) {
+			state = FINISHING;
 			break;
 		}
+		*new_len += did_read;
 	} while (len || (did_read == BIG_READ));
 
 	if (state == FINISHING) shutdown_connection_stream(conn);
