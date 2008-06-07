@@ -215,8 +215,14 @@ try_encoding_extensions(struct string *filename, int *fd)
 	return ENCODING_NONE;
 }
 
-/* Reads the file from @stream in chunks of size @readsize. */
-/* Returns a connection state. S_OK if all is well. */
+/** Reads the file from @a stream in chunks of size @a readsize.
+ *
+ * @a stream should be in blocking mode.  If it is in non-blocking
+ * mode, this function can return an empty string in @a page just
+ * because no more data is available yet, and the caller cannot know
+ * whether the true end of the stream has been reached.
+ *
+ * @return a connection state. S_OK if all is well. */
 enum connection_state
 read_file(struct stream_encoded *stream, int readsize, struct string *page)
 {
