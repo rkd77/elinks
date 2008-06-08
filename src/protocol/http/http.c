@@ -592,7 +592,7 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-#define POST_BUFFER_SIZE 4096
+#define POST_BUFFER_SIZE 32768
 #define BIG_READ 655360
 
 static void

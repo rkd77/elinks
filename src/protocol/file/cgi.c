@@ -82,7 +82,7 @@ close_pipe_and_read(struct socket *data_socket)
 }
 
 
-#define POST_BUFFER_SIZE 4096
+#define POST_BUFFER_SIZE 32768
 
 static void
 send_more_post_data(struct socket *socket)
