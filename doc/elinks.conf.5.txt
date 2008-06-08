@@ -57,7 +57,15 @@ Some sample settings:
 
 OPTIONS
 -------
-include::{builddir}option-config.txt[]
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ifdef::backend-docbook[]
+include1::{builddir}option-config.frag.xml[]
+endif::backend-docbook[]
+ifdef::backend-xhtml11[]
+include1::{builddir}option-config.frag.xhtml[]
+endif::backend-xhtml11[]
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SEE ALSO
 --------

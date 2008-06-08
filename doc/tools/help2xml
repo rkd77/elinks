@@ -1,0 +1,603 @@
+#! /usr/bin/perl
+# The copyright notice and license are in the POD at the bottom.
+
+use strict;
+use warnings;
+use Getopt::Long qw(GetOptions :config bundling gnu_compat);
+use autouse 'Pod::Usage' => qw(pod2usage);
+
+sub show_version
+{
+    # This program has no version number, because it is only useful
+    # as part of the ELinks source tree.
+    print "help2xml (ELinks)\n";
+    pod2usage({-verbose => 99, -sections => "COPYRIGHT AND LICENSE",
+	       -exitval => 0});
+}
+
+# This script internally stores XML as nested arrays.  Example:
+#
+# ['element', ['@id', "foo"], ['@dir', "ltr"], "text", ['subelement'], "more"]
+# <element id="foo" dir="ltr">text<subelement/>more</element>
+#
+# A node is one of:
+# - A string.  This is just text and will be properly escaped when output.
+# - A reference to an array where the first array element is a string that
+#   does not begin with '@'.  This array represents an XML element.  The
+#   other array elements are the attributes and content of the XML element.
+#   The current implementation does not require attributes to be listed
+#   before content.
+# - A reference to an array where the first array element is a string that
+#   begins with '@'.  This array represents an attribute of the parent XML
+#   element.  The second array element is the value of the attribute; it
+#   must be a string.  There should be no other array elements.
+#
+# So there is no way to represent XML declarations, processing instructions,
+# comments, doctypes, or general entity references.
+#
+# The names of attributes in these nodes should be written in 'single quotes'
+# because "@foo" would make Perl interpolate the value of the @foo array.
+# The names of elements are also written in single quotes, by convention.
+
+# xml_output($outfh, $node): Write an XML node to a filehandle.
+#
+# $outfh: A reference to the output filehandle.
+#
+# $node: An XML node represented as described above.
+#
+# return: Unspecified.
+sub xml_output
+{
+    no locale;
+    my ($outfh, $node) = @_;
+    if (ref($node) eq "ARRAY") {
+	my $gi = $node->[0];
+	print $outfh "<$gi";
+	my @content;
+	foreach my $child (@{$node}[1..$#$node]) {
+	    if (ref($child) eq "ARRAY" and $child->[0] =~ /^@(.*)/) {
+		my $attrname = $1;
+		my $attrval = $child->[1];
+		$attrval =~ s/([&"]|[^\0-~])/"&#".ord($1).";"/ge;
+		print $outfh " $attrname=\"$attrval\"";
+	    } else {
+		push @content, $child;
+	    }
+	}
+	if (@content) {
+	    print $outfh ">";
+	    foreach my $child (@content) {
+		xml_output($outfh, $child);
+	    }
+	    print $outfh "</$gi>";
+	} else {
+	    print $outfh "/>";
+	}
+    } else {
+	$node =~ s/([&<>]|[^\0-~])/"&#".ord($1).";"/ge;
+	print $outfh $node;
+    }
+}
+
+# xml_node_is_element($node, $gi): Check whether $node is an element
+# that has the general identifier $gi.
+sub xml_node_is_element
+{
+    my ($node, $gi) = @_;
+    return ref($node) eq "ARRAY" && $node->[0] eq $gi;
+}
+
+# xml_element_attrs($node): Return the attributes of an XML element as
+# a list.  In scalar context, return the number of attributes instead.
+sub xml_element_attrs
+{
+    no locale;
+    my ($node) = @_;
+    # $node->[0] is the general identifier of the element, a
+    # string, thus it won't match in the grep.
+    return grep { ref($_) eq "ARRAY" && $_->[0] =~ /^@/ } @$node;
+}
+
+# xml_element_content($node): Return the content of an XML element as
+# a list.  Not recommended for use in scalar context.
+sub xml_element_content
+{
+    no locale;
+    my ($node) = @_;
+    return grep { ref($_) ne "ARRAY" || $_->[0] !~ /^@/ } @$node[1..$#$node];
+}
+
+# apply_rules($node, $rules): Apply a list of transformations to an
+# XML node.
+#
+# $node: An XML node represented as described above.
+#
+# $rules: A reference to an array of rules.  The function applies the
+# rules in order: the output of a rule can be further transformed with
+# later rules but not with the same rule or earlier rules.  Each rule
+# in the array is a reference to a hash that has at least these keys:
+#
+# - FIND: A regular expression.  The function recursively searches for
+#   matches in the content of $node, but not in names of elements,
+#   names of attributes, or contents of attributes.
+# - REPLACE: A reference to a subroutine that returns a replacement for
+#   the match, as a list of nodes.  This subroutine is called with
+#   no arguments, but it can use the $1 etc. variables that are set
+#   according to the regular expression.
+#
+# return: A list of nodes.
+sub apply_rules
+{
+    my ($node, $rules) = @_;
+    my @output;
+    if (ref($node) eq "ARRAY") {
+	if ($node->[0] =~ /^@/) {
+	    return $node;
+	} else {
+	    return [$node->[0],
+		    map({ apply_rules($_, $rules) }
+			@{$node}[1..$#$node])];
+	}
+    } else {
+	my @rules = @$rules;
+	while (@rules) {
+	    my $rule = shift @rules;
+	    if ($node =~ $rule->{FIND}) {
+		# Using $` or $' anywhere in the program slows down all
+		# regexp matches.  So get the values via substr instead.
+		my $pre = substr($node, 0, $-[0]);
+		my $post = substr($node, $+[0]);
+		my @replacement = $rule->{REPLACE}->(); # uses $1 etc.
+		return grep({ $_ ne "" }
+			    map({ apply_rules($_, [@rules]) }
+				$pre, @replacement),
+			    apply_rules($post, [$rule, @rules]));
+	    }
+	}
+	return $node;
+    }
+}
+
+# html_splice_p(@nodes): If the first node in @nodes is a paragraph,
+# replace it with its content.  The idea is to avoid extraneous
+# vertical space in 'dd' and 'li' elements.
+#
+# return: The new list of nodes.
+sub html_splice_p
+{
+    my @nodes = @_;
+    if (@nodes >= 1
+	&& xml_node_is_element($nodes[0], 'p')
+	&& !xml_element_attrs($nodes[0])) {
+	splice(@nodes, 0, 1, xml_element_content($nodes[0]));
+    }
+    return @nodes;
+}
+
+my %TemplatesDocBook = (
+    # named DocBook elements
+    APPLICATION => sub { ['application', @_] },
+    COMMAND => sub { ['command', @_] },
+    ENVAR => sub { ['envar', @_] },
+    FILENAME => sub { ['filename', @_] },
+    GUIBUTTON => sub { ['guibutton', @_] },
+    GUILABEL => sub { ['guilabel', @_] },
+    LINK => sub { my $linkend = shift; ['link', ['@linkend', $linkend], @_] },
+    LITERAL => sub { ['literal', @_] },
+    PARAMETER => sub { ['parameter', @_] },
+    SIMPARA => sub { ['simpara', @_] },
+    ULINK => sub { my $url = shift; ['ulink', ['@url', $url], @_] },
+    USERINPUT => sub { ['userinput', @_] },
+    VARIABLELIST => sub { ['variablelist', @_] },
+
+    # not named after DocBook elements, but pretty simple anyway
+    CMDOPTTYPE => sub { ['replaceable', @_] },
+    MANLINK => sub { my ($title, $volnum) = @_;
+		     ['citerefentry', ['refentrytitle', $title], ['manvolnum', $volnum]] },
+    SGMLATTR => sub { ['sgmltag', ['@class', "attribute"], @_] },
+    SGMLELEMENT => sub { ['sgmltag', ['@class', "element"], @_] },
+    STRONG => sub { ['emphasis', ['@role', "strong"], @_] },
+
+    # not so simple
+    CFGOPTENTRY => sub { my ($name, $type, $default, @children) = @_;
+			 ['varlistentry', ['@id', $name],
+			  ['term', ['literal', $name], " ", ['type', $type], " $default"],
+			  ['listitem', @children]] },
+    CMDOPTINFO => sub { my ($info) = @_; " $info" },
+    CMDOPTNAME => sub { my $id = shift; ['option', ['@id', $id], @_] },
+    CFGOPTTREE => sub { my ($name, $info, @children) = @_;
+			['refsect2', ['@id', $name],
+			 ['title', ['literal', $name], " ($info)"],
+			 "\n", @children] },
+    GUIMENUCHOICE => sub { my $item = pop; ['menuchoice', map(['guimenu', $_], @_), ['guimenuitem', $item]] },
+    ITEMIZELIST => sub { ['itemizedlist', ['@spacing', "compact"],
+			  map { ['listitem', $_], "\n" } @_] },
+    USEREXAMPLE => sub { ['informalexample', ['simpara', ['userinput', @_]]], "\n" },
+    VARLISTENTRY => sub { my ($termchildren, @itemchildren) = @_;
+			  ['varlistentry', ['term', @$termchildren],
+			   ['listitem', @itemchildren]] },
+);
+my %TemplatesHTML = (
+    # named DocBook elements
+    APPLICATION => sub { ['em', @_] },
+    COMMAND => sub { ['kbd', @_] },
+    ENVAR => sub { ['tt', @_] },
+    FILENAME => sub { ['tt', @_] },
+    GUIBUTTON => sub { "[ ", @_, " ]" },
+    GUILABEL => sub { @_ },
+    LINK => sub { my $linkend = shift; ['a', ['@href', "#$linkend"], @_] },
+    LITERAL => sub { @_ },
+    PARAMETER => sub { ['var', @_] },
+    SIMPARA => sub { ['p', @_] },
+    ULINK => sub { my $url = shift; ['a', ['@href', $url], @_] },
+    USERINPUT => sub { ['kbd', @_] },
+    VARIABLELIST => sub { ['dl', @_] },
+
+    # not named after DocBook elements, but pretty simple anyway
+    CMDOPTTYPE => sub { @_ },
+    MANLINK => sub { my ($title, $volnum) = @_;
+		     ['b', "$title($volnum)"] },
+    SGMLATTR => sub { ['code', @_] },
+    SGMLELEMENT => sub { ['code', @_] },
+    STRONG => sub { ['strong', @_] },
+
+    # not so simple
+    CFGOPTENTRY => sub { my ($name, $type, $default, @children) = @_;
+			 ['dt', ['@id', $name], "$name $type $default"],
+			 ['dd', html_splice_p(@children)] },
+    CMDOPTINFO => sub { my ($info) = @_;
+			if ($info =~ /^(\(alias for )([\w.]+)(\))$/) {
+			    return " $1", ['a', ['@href', "elinks.conf.5.html#$2"], $2], $3;
+			} else {
+			    return " $info";
+			} },
+    CMDOPTNAME => sub { my $id = shift; ['span', ['@id', $id], @_] },
+    CFGOPTTREE => sub { my ($name, $info, @children) = @_;
+			['h3', ['@id', $name], "$name ($info)"],
+			"\n", @children },
+    GUIMENUCHOICE => sub { ['em', join(" \x{2192} ", @_)] },
+    ITEMIZELIST => sub { ['ul', map { ['li', html_splice_p($_)], "\n" } @_] },
+    USEREXAMPLE => sub { ['blockquote', ['p', ['kbd', @_]]], "\n" },
+    VARLISTENTRY => sub { my ($termchildren, @itemchildren) = @_;
+			  ['dt', @$termchildren],
+			  ['dd', html_splice_p(@itemchildren)] },
+);
+
+sub optiondesc
+{
+    my ($pipe, $rules, $templates) = @_;
+    my @ret;
+    my $paragraph_text;
+
+    my $end_paragraph = sub {
+	if (defined $paragraph_text) {
+	    push @ret, $templates->{SIMPARA}($paragraph_text);
+	    undef $paragraph_text;
+	}
+    };
+
+    while (defined($_) and /^ {12}/) {
+	# '            Cookie maximum age (in days):'
+	# '            -1 is use cookie's expiration date if any'
+	# '            0  is force expiration at the end of session, ignoring cookie's'
+	# '               expiration date'
+	# '            1+ is use cookie's expiration date, but limit age to the given'
+	# '               number of days'
+	if (/^ {12}((?:%|[+-]?\d).*)$/) {
+	    $end_paragraph->();
+	    my @list_paragraphs;
+	    do {
+		my $paragraph_text = "";
+		do {
+		    $paragraph_text .= "$1\n";
+		    $_ = <$pipe>;
+		} while (defined($_) and /^ {12}(\s+\S.*)$/);
+		chomp $paragraph_text;
+		push @list_paragraphs, $templates->{SIMPARA}($paragraph_text);
+	    } while (defined($_) and /^ {12}((?:%|[+-]?\d).*)$/);
+	    push @ret, $templates->{ITEMIZELIST}(@list_paragraphs);
+	} elsif (/^ {12}\t(\d.*)$/) {
+	    $end_paragraph->();
+	    my @list_paragraphs;
+	    do {
+		push @list_paragraphs, $templates->{SIMPARA}($1);
+		$_ = <$pipe>;
+	    } while (defined($_) and /^ {12}\t(\d.*)$/);
+	    push @ret, $templates->{ITEMIZELIST}(@list_paragraphs);
+	} elsif (/^ {12}\t(-.*)$/) {
+	    $end_paragraph->();
+	    push @ret, $templates->{USEREXAMPLE}($1);
+	    $_ = <$pipe>;
+	} elsif (/^ {12}\t(\w+)(\(.*\))\s+:\s+(\S.*)$/) {
+	    $end_paragraph->();
+	    my @list_paragraphs;
+	    my @remote_param_rules = (
+		{ FIND => qr(\b(URL|text)\b),
+		  REPLACE => sub { $templates->{PARAMETER}($1) } },
+		{ FIND => qr(\b(new-tab|new-window|openBrowser)\b),
+		  REPLACE => sub { $templates->{LITERAL}($1) } },
+		);
+	    do {
+		push @list_paragraphs, $templates->{SIMPARA}(
+		    $templates->{COMMAND}($1, apply_rules($2, \@remote_param_rules)),
+		    ": $3");
+		$_ = <$pipe>;
+	    } while (defined($_) and /^ {12}\t(\w+)(\(.*\))\s+:\s+(\S.*)$/);
+	    push @ret, $templates->{ITEMIZELIST}(@list_paragraphs);
+	} elsif (/^ {12}(.*\S.*)$/) {
+	    $paragraph_text .= "$1\n";
+	    $_ = <$pipe>;
+	} else {
+	    $end_paragraph->();
+	    $_ = <$pipe>;
+	}
+    }
+    $end_paragraph->();
+    return map { apply_rules($_, $rules) } @ret;
+}
+
+sub cmdopt_id
+{
+    no locale;
+    my ($option) = @_;
+    $option =~ s/^-+//;
+    $option =~ s/([^A-Za-z0-9-.])/sprintf('_%u', ord($1))/ge;
+    return "cmdopt:$option";
+}
+
+sub convert_config
+{
+    my ($outfh, $elinks, $option, $templates) = @_;
+    local $_;
+
+    # The rules that apply to most of the output.
+    # See &apply_rules for the format.
+    my @shared_rules = (
+	# files, commands, environment variables
+	{ FIND => qr!"vi"!,
+	  REPLACE => sub { $templates->{COMMAND}("vi") } },
+	{ FIND => qr!\b(xterm)\b!,
+	  REPLACE => sub { $templates->{COMMAND}($1) } },
+	{ FIND => qr!((?:\$|\b)(?:EDITOR|FTP_PROXY|HOME|HTTP_PROXY|HTTPS_PROXY|MAILCAP|NNTPSERVER|NO_PROXY|TERM|WWW_HOME|X509_CLIENT_CERT))\b!,
+	  REPLACE => sub { $templates->{ENVAR}($1) } },
+	{ FIND => qr!(~/\.elinks|/dev/urandom|/dev/zero|\bsetup\.h|\bmime\.types)\b!,
+	  REPLACE => sub { $templates->{FILENAME}($1) } },
+	{ FIND => qr!\b(rename|fsync|strftime)\((\d+)\)!,
+	  REPLACE => sub { $templates->{MANLINK}($1, $2) } },
+
+	# the rest
+	{ FIND => qr!\b(http[46]?://[\w./+-]+?)(\.?)$!,
+	  REPLACE => sub { $templates->{ULINK}($1, $1), $2 } },
+	{ FIND => qr!(ELinks bug (\d+))!,
+	  REPLACE => sub { $templates->{ULINK}("http://bugzilla.elinks.cz/show_bug.cgi?id=$2", $1) } },
+	{ FIND => qr!\b(ELinks)\b!,
+	  REPLACE => sub { $templates->{APPLICATION}($1) } },
+	);
+
+    my @command_rules = (
+	{ FIND => qr!(-default-mime-type text/html)!,
+	  REPLACE => sub { $templates->{USERINPUT}($1) } },
+
+	# This rule cannot be shared because the configuration option
+	# documentation does not have the anchors for the links.
+	{ FIND => qr!(-?config-dir|-dump|-default-mime-type|-touch-files|-no-connect|-session-ring)!,
+	  REPLACE => sub { $templates->{LINK}(cmdopt_id($1), $1) } },
+
+	@shared_rules);
+
+    my @config_rules = (
+	# non-ASCII characters
+	{ FIND => qr!<->!,          REPLACE => sub { "\x{2194}" } },
+	{ FIND => qr!(\s)-(\s)!,    REPLACE => sub { "$1\x{2013}$2" } },
+	{ FIND => qr!(\s)---?(\s)!, REPLACE => sub { "$1\x{2014}$2" } },
+
+	# user interface
+	{ FIND => qr!(Setup) -> (Terminal options)!,
+	  REPLACE => sub { $templates->{GUIMENUCHOICE}($1, $2) } },
+	{ FIND => qr!\[ (Save) \]!,
+	  REPLACE => sub { $templates->{GUIBUTTON}($1) } },
+	{ FIND => qr!\b(Goto URL)\b!,
+	  REPLACE => sub { $templates->{GUILABEL}($1) } },
+
+	# SGML
+	{ FIND => qr!\b(ACCESSKEY|TABINDEX)\b!,
+	  REPLACE => sub { $templates->{SGMLATTR}($1) } },
+	{ FIND => qr!\b(IMG)\b!,
+	  REPLACE => sub { $templates->{SGMLELEMENT}($1) } },
+	{ FIND => qr!\b(alt)/(title)\b!,
+	  REPLACE => sub { $templates->{SGMLATTR}($1), "/", $templates->{SGMLATTR}($2) } },
+	{ FIND => qr!\b(alt)( attribute)!,
+	  REPLACE => sub { $templates->{SGMLATTR}($1), $2 } },
+
+	# typography
+	{ FIND => qr!\b_(not)_\b!,
+	  REPLACE => sub { $templates->{STRONG}($1) } },
+
+	# This rule cannot be shared because the command-line option
+	# documentation does not have the anchors for the links.
+	{ FIND => qr!\b(connection\.try_ipv6|cookies\.save|document\.browse\.minimum_refresh_time|document\.browse\.links\.color_dirs)\b!,
+	  REPLACE => sub { $templates->{LINK}($1, $1) } },
+
+	@shared_rules);
+
+    open my $pipe, "-|", $elinks, $option or die;
+    my $version = <$pipe>;
+    chomp $version;
+    $version =~ s/^ELinks ([-.\w]+).*$/$1/ or die "unusual version: $version";
+    my @nodes;
+    $_ = <$pipe>;
+    while (defined($_)) {
+	if (/^$/) {
+	    $_ = <$pipe>;
+	} elsif (/^Configuration options:$/) {
+	    # The "Generated using" line is here at the top, because
+	    # DocBook XML does not allow anything else to follow a
+	    # refsect2 within a refsect1.
+	    push @nodes, $templates->{SIMPARA}(
+		"Generated using output from ELinks version $version.");
+	    $_ = <$pipe>;
+	    while (defined($_)) {
+		if (/^$/) {
+		    $_ = <$pipe>;
+		} elsif (/^ {2}(\S.*): \(([\w.-]+)\)$/) {
+		    # '  Browsing: (document.browse)'
+		    my ($tree_info, $tree_name) = ($1, $2);
+		    my @tree_nodes;
+		    $_ = <$pipe>;
+		    push @tree_nodes, optiondesc($pipe, \@config_rules, $templates);
+		    my @varlistentries;
+		    while (defined($_)) {
+			if (/^$/) {
+			    $_ = <$pipe>;
+			} elsif (/^ {4}(\S+) (\S+) (\(.*)$/) {
+			    # '    cookies.save [0|1] (default: 1)'
+			    my ($optname, $opttype, $optdefault) = ($1, $2, $3);
+			    while ($optdefault =~ /^\([^"()]*"[^"]*$/s) {
+				# a special hack for document.dump.separator,
+				# which has newlines in the default value
+				my $contline = <$pipe>;
+				last unless defined($contline);
+				chomp $contline;
+				$optdefault .= "\n$contline";
+			    }
+			    $_ = <$pipe>;
+			    push @varlistentries, $templates->{CFGOPTENTRY}(
+				$optname, $opttype, $optdefault,
+				optiondesc($pipe, \@config_rules, $templates));
+			} else {
+			    last;
+			}
+		    }
+		    push @tree_nodes, $templates->{VARIABLELIST}(@varlistentries)
+			if @varlistentries;
+		    push @nodes, $templates->{CFGOPTTREE}(
+			$tree_name, $tree_info, @tree_nodes);
+		} else {
+		    last;
+		}
+	    }
+	} elsif (/^Usage:/) {
+	    $_ = <$pipe>;
+	} elsif (/^Options:$/) {
+	    $_ = <$pipe>;
+	    my @varlistentries;
+	    my $name_rules = [
+		{ FIND => qr/([^,\s]+)/,
+		  REPLACE => sub { $templates->{CMDOPTNAME}(cmdopt_id($1), $1) } },
+		];
+	    while (defined($_)) {
+		if (/^$/) {
+		    $_ = <$pipe>;
+		} elsif (/^ {4}(\S+(?:,\s+\S+)*)(?:\s+([\[<]\S*))?(?:\s+(\(.*\)))?\s*$/) {
+		    my @optnames = apply_rules($1, $name_rules);
+		    my (@opttype, @optinfo);
+		    @opttype = (" ", $templates->{CMDOPTTYPE}($2)) if defined($2);
+		    @optinfo = $templates->{CMDOPTINFO}($3) if defined($3);
+		    $_ = <$pipe>;
+		    push @varlistentries, $templates->{VARLISTENTRY}(
+			[@optnames, @opttype, @optinfo],
+			optiondesc($pipe, \@command_rules, $templates));
+		} else {
+		    last;
+		}
+	    }
+	    push @nodes, $templates->{VARIABLELIST}(@varlistentries)
+		if @varlistentries;
+	    push @nodes, $templates->{SIMPARA}(
+		"Generated using output from ELinks version $version.");
+	} else {
+	    last;
+	}
+    }
+    die "parsing stopped at $.: $_" if defined($_);
+    xml_output($outfh, $_) foreach @nodes;
+}
+
+GetOptions("help" => sub { pod2usage({-verbose => 1, -exitval => 0}) },
+	   "version" => \&show_version)
+    or exit 2;
+print(STDERR "$0: wrong number of operands\n"), exit 2 if @ARGV != 2;
+my ($ELinks, $Outfname) = @ARGV;
+
+my ($Option, $Templates);
+$Option = "--config-help" if $Outfname =~ m(config[^/]*$);
+$Option = "--long-help" if $Outfname =~ m(command[^/]*$);
+$Templates = \%TemplatesDocBook if $Outfname =~ m(xml[^/]*$);
+$Templates = \%TemplatesHTML if $Outfname =~ m(html[^/]*$);
+unless ($Option and $Templates) {
+    print(STDERR "$0: name of output file does not indicate its content: $Outfname\n");
+    exit 2;
+}
+open my $outfh, ">", $Outfname or die "$Outfname: $!\n";
+convert_config $outfh, $ELinks, $Option, $Templates;
+close $outfh or die "$Outfname: $!\n";
+
+__END__
+
+=head1 NAME
+
+help2xml - Convert help output from ELinks to DocBook XML or XHTML.
+
+=head1 SYNOPSIS
+
+B<help2xml> F<.../src/elinks> F<.../option-command.frag.xml>
+
+B<help2xml> F<.../src/elinks> F<.../option-config.frag.xml>
+
+B<help2xml> F<.../src/elinks> F<.../option-command.frag.xhtml>
+
+B<help2xml> F<.../src/elinks> F<.../option-config.frag.xhtml>
+
+=head1 DESCRIPTION
+
+B<help2xml> runs B<elinks --long-help> or B<elinks --config-help> to
+get the documentation of command-line or configuration options from
+the elinks executable, and converts it to a fragment of DocBook XML or
+XHTML.  In the build system, these fragments are then included in the
+DocBook and XHTML versions of the L<elinks(1)> and L<elinks.conf(5)>
+manual pages.
+
+=head1 ARGUMENTS
+
+=over
+
+=item F<.../src/elinks>
+
+The B<elinks> executable file that B<help2xml> runs in order to
+get the documentation.
+
+=item F<.../option-command.frag.xml>
+
+=item F<.../option-config.frag.xml>
+
+=item F<.../option-command.frag.xhtml>
+
+=item F<.../option-config.frag.xhtml>
+
+The output file to which B<help2docbook> writes the DocBook XML or
+XHTML fragment.  The basename of this file must include the word
+"command" for command-line options, or "config" for configuration
+options.  It must also include "xml" for Docbook XML, or "html" for
+XHTML.
+
+=back
+
+=head1 AUTHOR
+
+Kalle Olavi Niemitalo <kon@iki.fi>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2008 Kalle Olavi Niemitalo.
+
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

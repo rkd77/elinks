@@ -816,6 +816,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	case 'H': kbd.key = KBD_HOME; break;	/*    CUP  khome    cons25 */
 	case 'I': kbd.key = KBD_PAGE_UP; break; /*   (CHT) kpp      cons25 */
 	case 'G': kbd.key = KBD_PAGE_DOWN; break; /* (CHA) knp      cons25 */
+	case 'L': kbd.key = KBD_INS; break;	/*   (IL)  kich1    cons25 */
 /* Free BSD (TERM=cons25 etc.) */
 /*	case 'M': kbd.key = KBD_F1; break;*/	/*   (DL)  kf1      cons25 */
 	case 'N': kbd.key = KBD_F2; break;	/*   (EF)  kf2      cons25 */

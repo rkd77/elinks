@@ -365,6 +365,7 @@ To be released as 0.11.4.
 * major bug 788: don't read STRLEN n_a, which isn't initialized by
   POPpx of Perl v5.8.8 and later
 * fix query parsing in file: URIs for local CGI (was broken in 0.11.3)
+* bug 451: fix incompatible pointer type in PERL_SYS_INIT3 call
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
@@ -372,6 +373,7 @@ To be released as 0.11.4.
 * bug 938: elinks -remote no longer needs a controlling tty
 * bug 939: fix FSP directory listing (some compiler options left it empty)
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
+* bug 1012: compile with -fno-strict-overflow or -fwrapv if available
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
   with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
