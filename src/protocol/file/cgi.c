@@ -23,6 +23,7 @@
 #include "intl/gettext/libintl.h"
 #include "mime/backend/common.h"
 #include "network/connection.h"
+#include "network/progress.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
@@ -116,10 +117,13 @@ send_post_data(struct connection *conn)
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
-	if (!open_http_post(&http->post, post, &error))
+	if (!open_http_post(&http->post, post, &error)) 
 		abort_connection(conn, error);
-	else
+	else {
+		if (!conn->http_upload_progress && http->post.file_count)
+			conn->http_upload_progress = init_progress(0);
 		send_more_post_data(conn->data_socket);
+	}
 }
 
 static void
