@@ -32,6 +32,7 @@ OBJS = \
  hash.o \
  memlist.o \
  memory.o \
+ random.o \
  secsave.o \
  snprintf.o \
  string.o \

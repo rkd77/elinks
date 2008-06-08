@@ -55,6 +55,9 @@ get_download_msg(struct download *download, struct terminal *term,
 	    && download->conn->uri->protocol == PROTOCOL_BITTORRENT)
 		return get_bittorrent_message(download, term, wide, full, separator);
 #endif
+	if (download->conn && download->conn->http_upload_progress)
+		return get_upload_progress_msg(download->conn->http_upload_progress,
+						term, wide, full, separator);
 
 	return get_progress_msg(download->progress, term, wide, full, separator);
 }
@@ -228,6 +231,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 				}
 			}
 		}
+
 
 		if (!msg) {
 			int full = term->width > 130;

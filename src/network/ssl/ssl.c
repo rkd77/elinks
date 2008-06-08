@@ -8,6 +8,7 @@
 #include <openssl/ssl.h>
 #include <openssl/rand.h>
 #elif defined(CONFIG_GNUTLS)
+#include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #else
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
@@ -27,6 +28,7 @@
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/string.h"
+#include "util/random.h"
 
 
 /* FIXME: As you can see, SSL is currently implemented in very, erm,
@@ -281,4 +283,18 @@ get_ssl_connection_cipher(struct socket *socket)
 #endif
 
 	return str.source;
+}
+
+/* When CONFIG_SSL is defined, this implementation replaces the one in
+ * src/util/random.c.  */
+void
+random_nonce(unsigned char buf[], size_t size)
+{
+#ifdef CONFIG_OPENSSL
+	RAND_pseudo_bytes(buf, size);
+#elif defined(CONFIG_GNUTLS)
+	gcry_create_nonce(buf, size);
+#else
+# error unsupported SSL library
+#endif
 }

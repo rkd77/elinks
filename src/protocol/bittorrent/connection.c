@@ -250,6 +250,7 @@ done_bittorrent_connection(struct connection *conn)
 	struct bittorrent_peer_connection *peer, *next;
 
 	assert(bittorrent);
+	assert(conn->done == done_bittorrent_connection);
 
 	/* We don't want the tracker to see the fetch. */
 	if (bittorrent->fetch)
@@ -270,6 +271,7 @@ done_bittorrent_connection(struct connection *conn)
 	free_list(bittorrent->peer_pool);
 
 	mem_free_set(&conn->info, NULL);
+	conn->done = NULL;
 }
 
 static struct bittorrent_connection *
@@ -277,12 +279,17 @@ init_bittorrent_connection(struct connection *conn)
 {
 	struct bittorrent_connection *bittorrent;
 
+	assert(conn->info == NULL);
+	assert(conn->done == NULL);
+	if_assert_failed return NULL;
+
 	bittorrent = mem_calloc(1, sizeof(*bittorrent));
 	if (!bittorrent) return NULL;
 
 	init_list(bittorrent->peers);
 	init_list(bittorrent->peer_pool);
 
+	/* conn->info and conn->done were asserted as NULL above.  */
 	conn->info = bittorrent;
 	conn->done = done_bittorrent_connection;
 

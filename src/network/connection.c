@@ -26,6 +26,7 @@
 #include "network/progress.h"
 #include "network/socket.h"
 #include "network/ssl/ssl.h"
+#include "protocol/http/http.h"
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
@@ -64,9 +65,8 @@ static INIT_LIST_OF(struct host_connection, host_connections);
 static INIT_LIST_OF(struct keepalive_connection, keepalive_connections);
 
 /* Prototypes */
-static void notify_connection_callbacks(struct connection *conn);
 static void check_keepalive_connections(void);
-
+static void notify_connection_callbacks(struct connection *conn);
 
 static /* inline */ enum connection_priority
 get_priority(struct connection *conn)
@@ -327,13 +327,36 @@ update_connection_progress(struct connection *conn)
 	update_progress(conn->progress, conn->received, conn->est_length, conn->from);
 }
 
-/* Progress timer callback for @conn->progress.  As explained in
- * @start_update_progress, this function must erase the expired timer
- * ID from @conn->progress->timer.  */
+/** Progress timer callback for @a conn->progress.  As explained in
+ * start_update_progress(), this function must erase the expired timer
+ * ID from @a conn->progress->timer.  */
 static void
 stat_timer(struct connection *conn)
 {
 	update_connection_progress(conn);
+	/* The expired timer ID has now been erased.  */
+	notify_connection_callbacks(conn);
+}
+
+/** Progress timer callback for @a conn->upload_progress.  As explained
+ * in start_update_progress(), this function must erase the expired timer
+ * ID from @a conn->upload_progress->timer.  */
+static void
+upload_stat_timer(struct connection *conn)
+{
+	struct http_connection_info *http = conn->info;
+
+	assert(conn->http_upload_progress);
+	if_assert_failed return;
+	assert(http);
+	if_assert_failed {
+		conn->http_upload_progress->timer = TIMER_ID_UNDEF;
+		/* The expired timer ID has now been erased.  */
+		return;
+	}
+
+	update_progress(conn->http_upload_progress, http->post.uploaded,
+		http->post.total_upload_length, http->post.uploaded);
 	/* The expired timer ID has now been erased.  */
 	notify_connection_callbacks(conn);
 }
@@ -343,12 +366,20 @@ set_connection_state(struct connection *conn, enum connection_state state)
 {
 	struct download *download;
 	struct progress *progress = conn->progress;
+	struct progress *upload_progress = conn->http_upload_progress;
 
 	if (is_in_result_state(conn->state) && is_in_progress_state(state))
 		conn->prev_error = conn->state;
 
 	conn->state = state;
 	if (conn->state == S_TRANS) {
+		if (upload_progress && upload_progress->timer == TIMER_ID_UNDEF) {
+			start_update_progress(upload_progress,
+				(void (*)(void *)) upload_stat_timer, conn);
+			upload_stat_timer(conn);
+			if (connection_disappeared(conn))
+				return;
+		}
 		if (progress->timer == TIMER_ID_UNDEF) {
 			start_update_progress(progress, (void (*)(void *)) stat_timer, conn);
 			update_connection_progress(conn);
@@ -358,6 +389,7 @@ set_connection_state(struct connection *conn, enum connection_state state)
 
 	} else {
 		kill_timer(&progress->timer);
+		if (upload_progress) kill_timer(&upload_progress->timer);
 	}
 
 	foreach (download, conn->downloads) {
@@ -430,6 +462,15 @@ free_connection_data(struct connection *conn)
 	shutdown_connection_stream(conn);
 
 	mem_free_set(&conn->info, NULL);
+	/* If conn->done is not NULL, it probably points to a function
+	 * that expects conn->info to be a specific kind of structure.
+	 * Such a function should not be called if a different pointer
+	 * is later assigned to conn->info.  Actually though, each
+	 * free_connection_data() call seems to be soon followed by
+	 * done_connection() so that conn->done would not be called
+	 * again in any case.  However, this assignment costs little
+	 * and may make things a bit safer.  */
+	conn->done = NULL;
 
 	kill_timer(&conn->timer);
 
@@ -437,7 +478,7 @@ free_connection_data(struct connection *conn)
 		done_host_connection(conn);
 }
 
-void
+static void
 notify_connection_callbacks(struct connection *conn)
 {
 	enum connection_state state = conn->state;
@@ -470,6 +511,8 @@ done_connection(struct connection *conn)
 	mem_free(conn->socket);
 	mem_free(conn->data_socket);
 	done_progress(conn->progress);
+	if (conn->http_upload_progress)
+		done_progress(conn->http_upload_progress);
 	mem_free(conn);
 	check_queue_bugs();
 }

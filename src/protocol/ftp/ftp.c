@@ -678,6 +678,13 @@ add_file_cmd_to_str(struct connection *conn)
 		goto ret;
 	}
 
+	assert(conn->info == NULL);
+	assert(conn->done == NULL);
+	if_assert_failed {
+		abort_connection(conn, S_INTERNAL);
+		goto ret;
+	}
+
 	/* This will be reallocated below when we know how long the
 	 * command string should be.  Error handling could be
 	 * simplified a little by allocating this initial structure on
@@ -689,6 +696,7 @@ add_file_cmd_to_str(struct connection *conn)
 		goto ret;
 	}
 
+	/* conn->info and conn->done were asserted as NULL above.  */
 	conn->info = ftp;	/* Freed when connection is destroyed. */
 
 	if (!init_string(&command)

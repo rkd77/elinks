@@ -72,6 +72,7 @@ enum connection_state {
 
 	S_HTTP_ERROR		= -100100,
 	S_HTTP_204		= -100101,
+	S_HTTP_UPLOAD_RESIZED   = -100102,
 
 	S_FILE_TYPE		= -100200,
 	S_FILE_ERROR		= -100201,

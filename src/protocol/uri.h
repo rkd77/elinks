@@ -7,6 +7,7 @@ struct string;
 
 #define POST_CHAR 1
 #define POST_CHAR_S "\001"
+#define FILE_CHAR '\002'
 
 /* The uri structure is used to store the start position and length of commonly
  * used uri fields. It is initialized by parse_uri(). It is possible that the
@@ -53,6 +54,9 @@ struct uri {
 	unsigned int portlen:8;
 	unsigned int datalen:16;
 	unsigned int fragmentlen:16;
+
+	/* Number of POSTED files */
+	unsigned int big_files:8;
 
 	/* Flags */
 	unsigned int ipv6:1;	/* URI contains IPv6 host */

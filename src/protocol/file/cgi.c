@@ -23,6 +23,7 @@
 #include "intl/gettext/libintl.h"
 #include "mime/backend/common.h"
 #include "network/connection.h"
+#include "network/progress.h"
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
@@ -80,57 +81,49 @@ close_pipe_and_read(struct socket *data_socket)
 	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
 }
 
+
+#define POST_BUFFER_SIZE 32768
+
+static void
+send_more_post_data(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char buffer[POST_BUFFER_SIZE];
+	int got;
+	enum connection_state error;
+
+	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE, &error);
+	if (got < 0) {
+		abort_connection(conn, error);
+	} else if (got > 0) {
+		write_to_socket(socket, buffer, got, S_TRANS,
+				send_more_post_data);
+	} else {		/* got == 0, meaning end of data */
+		close_pipe_and_read(socket);
+	}
+}
+
+#undef POST_BUFFER_SIZE
+
 static void
 send_post_data(struct connection *conn)
 {
-#define POST_BUFFER_SIZE 4096
+	struct http_connection_info *http = conn->info;
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
-	unsigned char buffer[POST_BUFFER_SIZE];
-	struct string data;
-	int n = 0;
+	enum connection_state error;
 
-	if (!init_string(&data)) {
-		abort_connection(conn, S_OUT_OF_MEM);
-		return;
-	}
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
-	/* FIXME: Code duplication with protocol/http/http.c! --witekfl */
-	while (post[0] && post[1]) {
-		int h1, h2;
-
-		h1 = unhx(post[0]);
-		assert(h1 >= 0 && h1 < 16);
-		if_assert_failed h1 = 0;
-
-		h2 = unhx(post[1]);
-		assert(h2 >= 0 && h2 < 16);
-		if_assert_failed h2 = 0;
-
-		buffer[n++] = (h1<<4) + h2;
-		post += 2;
-		if (n == POST_BUFFER_SIZE) {
-			add_bytes_to_string(&data, buffer, n);
-			n = 0;
-		}
+	if (!open_http_post(&http->post, post, &error)) 
+		abort_connection(conn, error);
+	else {
+		if (!conn->http_upload_progress && http->post.file_count)
+			conn->http_upload_progress = init_progress(0);
+		send_more_post_data(conn->data_socket);
 	}
-	if (n)
-		add_bytes_to_string(&data, buffer, n);
-
-
-	/* If we're submitting a form whose controls do not have
-	 * names, then the POST has a Content-Type but empty data,
-	 * and an assertion would fail in write_to_socket.  */
-	if (data.length)
-		write_to_socket(conn->data_socket, data.source, data.length,
-				S_SENT, close_pipe_and_read);
-	else
-		close_pipe_and_read(conn->data_socket);
-
-	done_string(&data);
-#undef POST_BUFFER_SIZE
 }
 
 static void

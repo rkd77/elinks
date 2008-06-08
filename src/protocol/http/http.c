@@ -8,12 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h> /* OS/2 needs this after sys/types.h */
-#endif
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -51,11 +45,7 @@
 #include "http_negotiate.h"
 #endif
 
-struct http_version {
-	int major;
-	int minor;
-};
-
+/* These macros concern the struct http_version defined in the http.h */
 #define HTTP_0_9(x)	 ((x).major == 0 && (x).minor == 9)
 #define HTTP_1_0(x)	 ((x).major == 1 && (x).minor == 0)
 #define HTTP_1_1(x)	 ((x).major == 1 && (x).minor == 1)
@@ -65,26 +55,13 @@ struct http_version {
 #define POST_HTTP_1_1(x) ((x).major > 1 || ((x).major == 1 && (x).minor > 1))
 
 
-struct http_connection_info {
-	enum blacklist_flags bl_flags;
-	struct http_version recv_version;
-	struct http_version sent_version;
-
-	int close;
-
 #define LEN_CHUNKED -2 /* == we get data in unknown number of chunks */
 #define LEN_FINISHED 0
-	int length;
 
 	/* Either bytes coming in this chunk yet or "parser state". */
 #define CHUNK_DATA_END	-3
 #define CHUNK_ZERO_SIZE	-2
 #define CHUNK_SIZE	-1
-	int chunk_remaining;
-
-	int code;
-};
-
 
 static struct auth_entry proxy_auth;
 
@@ -487,9 +464,17 @@ static void
 http_end_request(struct connection *conn, enum connection_state state,
 		 int notrunc)
 {
+	struct http_connection_info *http;
+
 	shutdown_connection_stream(conn);
 
-	if (conn->info && !((struct http_connection_info *) conn->info)->close
+	/* shutdown_connection_stream() should not change conn->info,
+	 * but in case it does, read conn->info only after the call.  */
+	http = conn->info;
+	if (http)
+		done_http_post(&http->post);
+
+	if (http && !http->close
 	    && (!conn->socket->ssl) /* We won't keep alive ssl connections */
 	    && (!get_opt_bool("protocol.http.bugs.post_no_keepalive", NULL)
 		|| !conn->uri->post)) {
@@ -528,6 +513,19 @@ proxy_protocol_handler(struct connection *conn)
 #define connection_is_https_proxy(conn) \
 	(IS_PROXY_URI((conn)->uri) && (conn)->proxied_uri->protocol == PROTOCOL_HTTPS)
 
+/** connection.done points to this function if connection.info points
+ * to a struct http_connection_info.  */
+static void
+done_http_connection(struct connection *conn)
+{
+	struct http_connection_info *http = conn->info;
+
+	done_http_post(&http->post);
+	mem_free(http);
+	conn->info = NULL;
+	conn->done = NULL;
+}
+
 struct http_connection_info *
 init_http_connection_info(struct connection *conn, int major, int minor, int close)
 {
@@ -543,6 +541,8 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 	http->sent_version.minor = minor;
 	http->close = close;
 
+	init_http_post(&http->post);
+
 	/* The CGI code uses this too and blacklisting expects a host name. */
 	if (conn->proxied_uri->protocol != PROTOCOL_FILE)
 		http->bl_flags = get_blacklist_flags(conn->proxied_uri);
@@ -555,7 +555,12 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 
 	/* If called from HTTPS proxy connection the connection info might have
 	 * already been allocated. */
+	if (conn->done) {
+		conn->done(conn);
+		conn->done = NULL;
+	}
 	mem_free_set(&conn->info, http);
+	conn->done = done_http_connection;
 
 	return http;
 }
@@ -586,6 +591,39 @@ accept_encoding_header(struct string *header)
 	add_crlf_to_string(header);
 #endif
 }
+
+#define POST_BUFFER_SIZE 32768
+#define BIG_READ 655360
+
+static void
+send_more_post_data(struct socket *socket)
+{
+	struct connection *conn = socket->conn;
+	struct http_connection_info *http = conn->info;
+	unsigned char buffer[POST_BUFFER_SIZE];
+	int got;
+	enum connection_state error;
+
+	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE, &error);
+	if (got < 0) {
+		http_end_request(conn, error, 0);
+	} else if (got > 0) {
+		write_to_socket(socket, buffer, got, S_TRANS,
+				send_more_post_data);
+	} else {		/* got == 0, meaning end of data */
+		/* Can't use request_from_socket() because there's no
+		 * more data to write.  */
+		struct read_buffer *rb = alloc_read_buffer(socket);
+		
+		socket->state = SOCKET_END_ONCLOSE;
+		if (rb)
+			read_from_socket(socket, rb, S_SENT, http_got_header);
+		else
+			http_end_request(conn, S_OUT_OF_MEM, 0);
+	}
+}
+
+
 
 static void
 http_send_header(struct socket *socket)
@@ -932,6 +970,7 @@ http_send_header(struct socket *socket)
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
 		unsigned char *postend = strchr(uri->post, '\n');
+		enum connection_state error;
 
 		if (postend) {
 			add_to_string(&header, "Content-Type: ");
@@ -940,9 +979,15 @@ http_send_header(struct socket *socket)
 		}
 
 		post_data = postend ? postend + 1 : uri->post;
-		add_to_string(&header, "Content-Length: ");
-		add_long_to_string(&header, strlen(post_data) / 2);
-		add_crlf_to_string(&header);
+		if (!open_http_post(&http->post, post_data, &error)) {
+			http_end_request(conn, error, 0);
+			done_string(&header);
+			return;
+		}
+		add_format_to_string(&header, "Content-Length: "
+				     "%" OFF_PRINT_FORMAT "\x0D\x0A",
+				     (off_print_T)
+				     http->post.total_upload_length);
 	}
 
 #ifdef CONFIG_COOKIES
@@ -965,41 +1010,20 @@ http_send_header(struct socket *socket)
 	 * This was already checked above and post_data is NULL
 	 * in that case.  Verified with an assertion below.  */
 	if (post_data) {
-#define POST_BUFFER_SIZE 4096
-		unsigned char *post = post_data;
-		unsigned char buffer[POST_BUFFER_SIZE];
-		int n = 0;
-
 		assert(!use_connect); /* see comment above */
 
-		while (post[0] && post[1]) {
-			int h1, h2;
-
-			h1 = unhx(post[0]);
-			assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
-			if_assert_failed h1 = 0;
-
-			h2 = unhx(post[1]);
-			assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
-			if_assert_failed h2 = 0;
-
-			buffer[n++] = (h1<<4) + h2;
-			post += 2;
-			if (n == POST_BUFFER_SIZE) {
-				add_bytes_to_string(&header, buffer, n);
-				n = 0;
-			}
-		}
-
-		if (n)
-			add_bytes_to_string(&header, buffer, n);
-#undef POST_BUFFER_SIZE
-	}
-
-	request_from_socket(socket, header.source, header.length, S_SENT,
-			    SOCKET_END_ONCLOSE, http_got_header);
+		socket->state = SOCKET_END_ONCLOSE;
+		if (!conn->http_upload_progress && http->post.file_count)
+			conn->http_upload_progress = init_progress(0);
+		write_to_socket(socket, header.source, header.length, S_TRANS,
+				send_more_post_data);
+	} else
+		request_from_socket(socket, header.source, header.length, S_SENT,
+				    SOCKET_END_ONCLOSE, http_got_header);
 	done_string(&header);
 }
+
+#undef POST_BUFFER_SIZE
 
 
 /* This function decompresses the data block given in @data (if it was
@@ -1027,7 +1051,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	int *length_of_block;
 	unsigned char *output = NULL;
 
-#define BIG_READ 65536
 
 	if (http->length == LEN_CHUNKED) {
 		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
@@ -1116,6 +1139,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
+#undef BIG_READ
 
 static int
 is_line_in_buffer(struct read_buffer *rb)

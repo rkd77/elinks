@@ -70,6 +70,7 @@ static const struct s_msg_dsc msg_dsc[] = {
 
 	{S_HTTP_ERROR,		N_("Bad HTTP response")},
 	{S_HTTP_204,		N_("No content")},
+	{S_HTTP_UPLOAD_RESIZED, N_("File was resized during upload")},
 
 	{S_FILE_TYPE,		N_("Unknown file type")},
 	{S_FILE_ERROR,		N_("Error opening file")},

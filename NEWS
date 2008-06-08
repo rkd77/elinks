@@ -25,6 +25,12 @@ Miscellaneous:
 * bug 963: New option document.css.ignore_display_none.
 * bug 977: Fixed crash when opening in new tab a non link with onclick
   attribute.
+* bug 1008: File upload fields in HTML forms now stream the files to
+  the server, instead of reading them to memory in advance.  This lets
+  you upload larger files.  The downsides are that ELinks may use a
+  cached response even if you have modified a file between requests,
+  and that ELinks can send inconsistent data if you modify a file
+  while it is being uploaded.
 * Really retry forever when connection.retries = 0.
 * enhancement: Session-specific options.  Any options changed with
   toggle-* actions no longer affect other tabs or other terminals.
