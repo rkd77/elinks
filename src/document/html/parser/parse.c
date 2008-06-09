@@ -803,6 +803,9 @@ ng:
 	html_context->was_br = 0;
 }
 
+/* Perform the processing of the element that should take place when its open
+ * tag is encountered.  Viewing the document as a tree of elements, this
+ * routine runs as a callback for pre-order traversal. */
 static unsigned char *
 start_element(struct element_info *ei,
               unsigned char *name, int namelen,
@@ -825,27 +828,41 @@ start_element(struct element_info *ei,
 	struct css_selector *selector = NULL;
 #endif
 
+	/* If the currently top element on the stack cannot contain other
+	 * elements, pop it. */
 	if (html_top->type == ELEMENT_WEAK) {
 		pop_html_element(html_context);
 	}
 
-	/* We try to process nested <script> if we didn't process the parent
-	 * one. */
+	/* If an element handler has temporarily disabled rendering by setting
+	 * the invisible flag, skip all handling for this element.
+	 *
+	 * As a special case, invisible can be set to 2 or greater to indicate
+	 * that processing has been temporarily disabled except when a <script>
+	 * tag is encountered. This special case is necessary for 2 situations:
+	 * 1. A <script> tag is contained by a block with the CSS "display"
+	 * property set to "none"; or 2. one <script> tag is nested inside
+	 * another, but the outer script is not processed, in which case ELinks
+	 * should still run any inner script blocks.  */
 	if (html_top->invisible
 	    && (ei->open != html_script || html_top->invisible < 2)) {
 		ELEMENT_RENDER_PROLOGUE
 		return html;
 	}
 
+	/* Store formatting information for the currently top element on the
+	 * stack before processing the new element. */
 	restore_format = html_is_preformatted();
 	old_format = par_format;
 
-	/* Support for <meta refresh="..."> inside <body>. (bug 700) */
+	/* Check for <meta refresh="..."> and <meta> cache-control directives
+	 * inside <body> (see bug 700). */
 	if (ei->open == html_meta && html_context->was_body) {
 		html_handle_body_meta(html_context, name - 1, eof);
 		html_context->was_body = 0;
 	}
 
+	/* If this is a style tag, parse it. */
 #ifdef CONFIG_CSS
 	if (ei->open == html_style && html_context->options->css_enable) {
 		unsigned char *media
@@ -860,6 +877,24 @@ start_element(struct element_info *ei,
 	}
 #endif
 
+	/* If this element is inline, non-nestable, and not <li>, and the next
+	 * stack item down is the same element, try to pop both elements.
+	 *
+	 * The effect is to close automatically any <a> or <tt> tag that
+	 * encloses the current tag if it is of the same element.
+	 *
+	 * Otherwise, if this element is non-inline or <li> and is
+	 * non-nestable, search down through the stack until 1. we find a
+	 * non-killable element; 2. the element being processed is not <li> and
+	 * we find a block; or 3. the element being processed is <li> and we
+	 * find another <li>.  Then if the element found is the same as the
+	 * current element, try to pop all elements down to and including the
+	 * found element.
+	 *
+	 * The effect is to close automatically any <hN>, <p>, or <li> tag that
+	 * encloses the current tag if it is of the same element, ignoring any
+	 * intervening inline elements.
+	 */
 	if (ei->type == ET_NON_NESTABLE || ei->type == ET_LI) {
 		struct html_element *e;
 
@@ -868,7 +903,7 @@ start_element(struct element_info *ei,
 				if (e->type < ELEMENT_KILLABLE) break;
 				if (is_block_element(e) || is_inline_element(ei)) break;
 			}
-		} else {
+		} else { /* This is an <li>. */
 			foreach (e, html_context->stack) {
 				if (is_block_element(e) && is_inline_element(ei)) break;
 				if (e->type < ELEMENT_KILLABLE) break;
@@ -885,12 +920,15 @@ start_element(struct element_info *ei,
 		}
 	}
 
+	/* Create an item on the stack for the element being processed. */
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_top->name = name;
 	html_top->namelen = namelen;
 	html_top->options = attr;
 	html_top->linebreak = ei->linebreak;
 
+	/* If the element has an onClick handler for scripts, make it
+	 * clickable. */
 #ifdef CONFIG_ECMASCRIPT
 	if (has_attr(attr, "onClick", html_context->doc_cp)) {
 		/* XXX: Put something better to format.link. --pasky */
@@ -905,6 +943,7 @@ start_element(struct element_info *ei,
 	}
 #endif
 
+	/* Apply CSS styles. */
 #ifdef CONFIG_CSS
 	if (html_top->options && html_context->options->css_enable) {
 		/* XXX: We should apply CSS otherwise as well, but that'll need
@@ -931,12 +970,22 @@ start_element(struct element_info *ei,
 			done_css_selector(selector);
 		}
 	}
-	/* Now this was the reason for this whole funny ELEMENT_RENDER_PROLOGUE
-	 * bussiness. Only now we have the definitive linebreak value, since
-	 * that's what the display: property plays with. */
 #endif
+
+	/* 1. Put any linebreaks that the element calls for, and 2. register
+	 * any fragment identifier.  Step 1 cannot be done before applying CSS
+	 * styles because the CSS "display" property may change the element's
+	 * linebreak value.
+	 *
+	 * XXX: The above is wrong: ELEMENT_RENDER_PROLOGUE only looks at the
+	 * linebreak value for the element_info structure, which CSS cannot
+	 * modify.  -- Miciah */
 	ELEMENT_RENDER_PROLOGUE
+
+	/* Call the element's open handler. */
 	if (ei->open) ei->open(html_context, attr, html, eof, &html);
+
+	/* Apply CSS styles again. */
 #ifdef CONFIG_CSS
 	if (selector && html_top->options) {
 		/* Call it now to override default colors of the elements. */
@@ -951,17 +1000,26 @@ start_element(struct element_info *ei,
 	}
 #endif
 
+	/* If this element was not <br>, clear the was_br flag. */
 	if (ei->open != html_br) html_context->was_br = 0;
 
+	/* If this element is not pairable, pop its stack item now. */
 	if (ei->type == ET_NON_PAIRABLE)
 		kill_html_stack_item(html_context, html_top);
 
+	/* If we are rendering preformatted text (see above), restore the
+	 * formatting attributes that were in effect before processing this
+	 * element. */
 	if (restore_format) par_format = old_format;
 
 	return html;
 #undef ELEMENT_RENDER_PROLOGUE
 }
 
+/* Perform the processing of the element that should take place when its close
+ * tag is encountered.  Viewing the document as a tree of elements and assuming
+ * that all tags are properly nested and closed, this routine runs as a
+ * callback for post-order traversal. */
 static unsigned char *
 end_element(struct element_info *ei,
             unsigned char *name, int namelen,
@@ -974,12 +1032,56 @@ end_element(struct element_info *ei,
 	int kill = 0;
 
 	html_context->was_br = 0;
+
+	/* If this was a non-pairable tag or an <li>; perform no further
+	 * processing. */
 	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
 		return html;
 
+	/* Call the element's close handler. */
 	if (ei->close) ei->close(html_context, attr, html, eof, &html);
 
 	/* dump_html_stack(html_context); */
+
+	/* Search down through the stack until we find 1. a different element
+	 * that cannot be killed or 2. the element that is currently being
+	 * processed (NOT necessarily the same instance of that element).
+	 *
+	 * In the first case, we are done.  In the second, if this is an inline
+	 * element and we found a block element while searching, we kill the
+	 * found element; else (either this is inline but no block was found or
+	 * this is a block), output linebreaks for all of the elements down to
+	 * and including the found element and then pop all of these elements.
+	 *
+	 * The effects of the procedure outlined above and implemented below
+	 * are 1. to allow an inline element to close any elements that it
+	 * contains iff the inline element does not contain any blocks and 2.
+	 * to allow blocks to close any elements that they contain.
+	 *
+	 * Two situations in which this behaviour may not match expectations
+	 * are demonstrated by the following HTML:
+	 *
+	 *    <b>a<a href="file:///">b</b>c</a>d
+	 *    <a href="file:///">e<b>f<div>g</a>h</div></b>
+	 *
+	 * ELinks will render "a" as bold text; "b" as bold, hyperlinked text;
+	 * both "c" and "d" as normal (non-bold, non-hyperlinked) text (note
+	 * that "</b>" closed the link because "<b>" enclosed the "<a>" open
+	 * tag); "e" as hyperlinked text; and "f", "g", and "h" all as bold,
+	 * hyperlinked text (note that "</a>" did not close the link because
+	 * "</a>" was enclosed by "<div>", a block tag, while the "<a>" open
+	 * tag was outside of the "<div>" block).
+	 *
+	 * Note also that close handlers are not called, which might also lead
+	 * to unexpected behaviour as illustrated by the following example:
+	 *
+	 *    <b><q>I like fudge,</b> he said. <q>So do I,</q> she said.
+	 *
+	 * ELinks will render "I like fudge," with bold typeface but will only
+	 * place an opening double-quotation mark before the text and no closing
+	 * mark.  "he said." will be rendered normally.  "So do I," will be
+	 * rendered using single-quotation marks (as for a quotation within a
+	 * quotation).  "she said." will be rendered normally.  */
 	foreach (e, html_context->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
 		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
@@ -1011,6 +1113,7 @@ end_element(struct element_info *ei,
 		kill_html_stack_item(html_context, e);
 		break;
 	}
+
 	/* dump_html_stack(html_context); */
 
 	return html;
