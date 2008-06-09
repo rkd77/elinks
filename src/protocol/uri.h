@@ -55,9 +55,6 @@ struct uri {
 	unsigned int datalen:16;
 	unsigned int fragmentlen:16;
 
-	/* Number of POSTED files */
-	unsigned int big_files:8;
-
 	/* Flags */
 	unsigned int ipv6:1;	/* URI contains IPv6 host */
 	unsigned int form:1;	/* URI originated from form */
