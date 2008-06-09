@@ -103,11 +103,16 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	if (result != Py_None) {
 		unsigned char *str;
-		int len;
+		Py_ssize_t len;
 
 		if (PyString_AsStringAndSize(result, (char **) &str, &len) != 0)
 			goto error;
 
+		/* This assumes the Py_ssize_t len is not too large to
+		 * fit in the off_t parameter of normalize_cache_entry().
+		 * add_fragment() itself seems to assume the same thing,
+		 * and there is no standard OFF_MAX macro against which
+		 * ELinks could check the value.  */
 		(void) add_fragment(cached, 0, str, len);
 		normalize_cache_entry(cached, len);
 	}
