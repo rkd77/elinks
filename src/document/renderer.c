@@ -36,6 +36,7 @@
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
+#include "viewer/text/form.h"
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
@@ -334,6 +335,11 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		document = init_document(cached, options);
 		if (!document) return;
 		doc_view->document = document;
+
+		if (doc_view->session
+		    && doc_view->session->reloadlevel > CACHE_MODE_NORMAL)
+			while (vs->form_info_len)
+				mem_free_if(vs->form_info[--vs->form_info_len].value);
 
 		shrink_memory(0);
 
