@@ -22,6 +22,7 @@
 #include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/refresh.h"
+#include "document/renderer.h"
 #include "document/view.h"
 #include "globhist/globhist.h"
 #include "intl/gettext/libintl.h"
@@ -847,15 +848,13 @@ static void
 setup_session(struct session *ses, struct uri *uri, struct session *base)
 {
 	if (base && have_location(base)) {
-		goto_uri(ses, cur_loc(base)->vs.uri);
-		if (ses->doc_view && ses->doc_view->vs
-		    && base->doc_view && base->doc_view->vs) {
-			struct view_state *vs = ses->doc_view->vs;
+		struct location *loc = mem_calloc(1, sizeof(*loc));
 
-			destroy_vs(vs, 1);
-			copy_vs(vs, base->doc_view->vs);
-			ses->doc_view->vs = vs;
-			vs->doc_view = ses->doc_view;
+		if (loc) {
+			loc->download.state = connection_state(S_OK);
+			copy_location(loc, cur_loc(base));
+			add_to_history(&ses->history, loc);
+			render_document_frames(ses, 0);
 		}
 	}
 
