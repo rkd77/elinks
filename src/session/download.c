@@ -32,7 +32,6 @@
 #include "dialogs/menu.h"
 #include "intl/gettext/libintl.h"
 #include "main/object.h"
-#include "main/select.h"
 #include "mime/mime.h"
 #include "network/connection.h"
 #include "network/progress.h"
@@ -1044,24 +1043,6 @@ tp_display(struct type_query *type_query)
 }
 
 static void
-read_from_popen(struct type_query *type_query, unsigned char *handler)
-{
-	FILE *pop = popen(handler, "r");
-
-	if (pop) {
-		int fd = fileno(pop);
-
-		if (fd > 0) {
-			struct session *ses = type_query->ses;
-			unsigned char buf[48];
-
-			snprintf(buf, 48, "file:///dev/fd/%d", fd);
-			goto_url(ses, buf);
-		}
-	}
-}
-
-static void
 tp_open(struct type_query *type_query)
 {
 	if (!type_query->external_handler || !*type_query->external_handler) {
@@ -1080,10 +1061,7 @@ tp_open(struct type_query *type_query)
 		}
 
 		if (handler) {
-			if (type_query->copiousoutput)
-				read_from_popen(type_query, handler);
-			else
-				exec_on_terminal(type_query->ses->tab->term,
+			exec_on_terminal(type_query->ses->tab->term,
 					 handler, "",
 					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
 			mem_free(handler);
@@ -1310,7 +1288,7 @@ setup_download_handler(struct session *ses, struct download *loading,
 	type_query = init_type_query(ses, loading, cached);
 	if (type_query) {
 		ret = 1;
-		if (handler) type_query->copiousoutput = handler->copiousoutput;
+		type_query->copiousoutput = handler->copiousoutput;
 #ifdef CONFIG_BITTORRENT
 		/* A terrible waste of a good MIME handler here, but we want
 		 * to use the type_query this is easier. */
