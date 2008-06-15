@@ -186,9 +186,7 @@ update_bittorrent_connection_state(struct connection *conn)
 	}
 }
 
-/* Progress timer callback for @bittorrent->upload_progress.  As
- * explained in @start_update_progress, this function must erase the
- * expired timer ID from @bittorrent->upload_progress->timer.  */
+/* Progress timer callback for @bittorrent->upload_progress.  */
 static void
 update_bittorrent_connection_upload(void *data)
 {
@@ -198,7 +196,6 @@ update_bittorrent_connection_upload(void *data)
 			bittorrent->uploaded,
 			bittorrent->downloaded,
 			bittorrent->uploaded);
-	/* The expired timer ID has now been erased.  */
 }
 
 void

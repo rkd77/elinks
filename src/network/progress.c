@@ -45,8 +45,20 @@ done_progress(struct progress *progress)
 	mem_free(progress);
 }
 
-/* Called from the timer callback of @progress->timer.  This function
- * erases the expired timer ID on behalf of the actual callback.  */
+/** Timer callback for progress.timer.  As explained in install_timer(),
+ * this function must erase the expired timer ID from all variables.  */
+static void
+progress_timeout(void *progress_voidptr)
+{
+	struct progress *const progress = progress_voidptr;
+
+	progress->timer = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
+
+	progress->timer_func(progress->timer_func_data);
+}
+
+/* Usually called from the timer callback of @progress->timer.  */
 void
 update_progress(struct progress *progress, off_t loaded, off_t size, off_t pos)
 {
@@ -89,13 +101,14 @@ update_progress(struct progress *progress, off_t loaded, off_t size, off_t pos)
 		timeval_from_seconds(&progress->estimated_time,
 				   (progress->size - progress->pos) / progress->average_speed);
 
-	install_timer(&progress->timer, SPD_DISP_TIME, progress->timer_func, progress->timer_func_data);
-	/* The expired timer ID has now been erased.  */
+	install_timer(&progress->timer, SPD_DISP_TIME,
+		      progress_timeout, progress);
 }
 
-/* As in @install_timer, @timer_func should erase the expired timer ID
- * from @progress->timer.  The usual way to ensure this is to make
- * @timer_func call @update_progress, which sets a new timer.  */
+/*! Unlike in install_timer(), @a timer_func need not erase the
+ * expired timer ID from @a progress->timer.  update_progress()
+ * installs the timer with a wrapper function that takes care of
+ * erasing the timer ID.  */
 void
 start_update_progress(struct progress *progress, void (*timer_func)(void *),
 		      void *timer_func_data)
