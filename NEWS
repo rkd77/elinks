@@ -224,6 +224,7 @@ have already been considered.
   - (bugfix 968) assertion width > 0 failed in copy_chars called from
     justify_line
   - bug 1015: incompatible pointer type for PyString_AsStringAndSize
+  - bug 917: Going to unopened /dev/fd/ kills select_loop
 * Already backported to a previous release but not listed there:
   - (enhancement) Activate link only when onClick returns true.
     Fixed bug 786 in ELinks 0.11.2.
