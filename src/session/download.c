@@ -1209,13 +1209,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 			0, 0, NULL, MAX_STR_LEN, field, NULL);
 		type_query->external_handler = field;
 
-		if (type_query->copiousoutput) {
-			add_dlg_text(dlg, _("The output of the program "
-					    "will be shown in the tab", term),
-				     ALIGN_LEFT, 0);
-		} else {
-			add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
-		}
+		add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
 		selected_widget = 3;
 
 	} else if (handler) {
