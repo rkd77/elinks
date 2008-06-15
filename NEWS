@@ -90,8 +90,6 @@ Miscellaneous:
 * trivial bug 930: refresh status bar when key prefix is eaten
 * trivial bug 776: ``elinks -remote http://elinks.cz/'' no longer clears
   the screen
-* enhancement 121: if a mailcap entry indicates 'copiousoutput', ELinks
-  itself acts as a pager
 * enhancement 790: If-Modified-Since and If-None-Match
 * enhancement: HTTP negotiate-auth using GSSAPI
 * enhancement: FSP progress indicator and password prompt
@@ -256,6 +254,8 @@ have already been considered.
     2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
   - (enhancement) Support for pasting from GNU screen clipboard,
     reverted in 763f03f146cc1391b303c8074556f0ddea1e3c7a
+  - enhancement 121: if a mailcap entry indicates 'copiousoutput',
+    ELinks itself acts as a pager
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
   - (bugfix) Use PF_* instead of AF_* as first parameter of socket(2).
