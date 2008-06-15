@@ -215,7 +215,7 @@ read_special(struct connection *conn, int fd)
 		return;
 	}
 	conn->socket->fd = fd;
-	if (fd != STDIN_FILENO) conn->popen = 1;
+	conn->popen = 1;
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
 		abort_connection(conn, S_OUT_OF_MEM);
