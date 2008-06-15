@@ -214,6 +214,7 @@ read_special(struct connection *conn, int fd)
 		abort_connection(conn, S_OUT_OF_MEM);
 		return;
 	}
+	set_nonblocking_fd(fd);
 	conn->socket->fd = fd;
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
