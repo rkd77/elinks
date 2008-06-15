@@ -32,7 +32,6 @@
 #include "dialogs/menu.h"
 #include "intl/gettext/libintl.h"
 #include "main/object.h"
-#include "main/select.h"
 #include "mime/mime.h"
 #include "network/connection.h"
 #include "network/progress.h"
@@ -64,8 +63,6 @@
 
 
 INIT_LIST_OF(struct file_download, downloads);
-
-INIT_LIST_OF(struct popen_data, copiousoutput_data);
 
 int
 download_is_progressing(struct download *download)
@@ -305,33 +302,6 @@ abort_download_and_beep(struct file_download *file_download, struct terminal *te
 }
 
 static void
-read_from_popen(struct session *ses, unsigned char *handler, unsigned char *filename)
-{
-	FILE *stream = popen(handler, "r");
-
-	if (stream) {
-		int fd = fileno(stream);
-
-		if (fd > 0) {
-			unsigned char buf[48];
-
-			struct popen_data *data = mem_calloc(1, sizeof(*data));
-
-			if (!data) {
-				fclose(stream);
-				return;
-			}
-			data->fd = fd;
-			data->stream = stream;
-			if (filename) data->filename = stracpy(filename);
-			add_to_list(copiousoutput_data, data);
-			snprintf(buf, sizeof(buf), "file:///dev/fd/%d", fd);
-			goto_url(ses, buf);
-		}
-	}
-}
-
-static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
 	struct terminal *term = file_download->term;
@@ -368,15 +338,9 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		prealloc_truncate(file_download->handle, file_download->seek);
 		close(file_download->handle);
 		file_download->handle = -1;
-		if (file_download->copiousoutput) {
-			read_from_popen(file_download->ses,
-					file_download->external_handler,
-					file_download->file);
-		} else {
-			exec_on_terminal(term, file_download->external_handler,
+		exec_on_terminal(term, file_download->external_handler,
 				 file_download->file,
 				 file_download->block ? TERM_EXEC_FG : TERM_EXEC_BG);
-		}
 		file_download->delete = 0;
 		abort_download_and_beep(file_download, term);
 		return;
@@ -910,7 +874,6 @@ continue_download_do(struct terminal *term, int fd, void *data, download_flags_T
 		file_download->external_handler = subst_file(type_query->external_handler,
 							     codw_hop->file);
 		file_download->delete = 1;
-		file_download->copiousoutput = type_query->copiousoutput;
 		mem_free(codw_hop->file);
 		mem_free_set(&type_query->external_handler, NULL);
 	}
@@ -1085,7 +1048,6 @@ tp_display(struct type_query *type_query)
 	done_type_query(type_query);
 }
 
-
 static void
 tp_open(struct type_query *type_query)
 {
@@ -1105,10 +1067,7 @@ tp_open(struct type_query *type_query)
 		}
 
 		if (handler) {
-			if (type_query->copiousoutput)
-				read_from_popen(type_query->ses, handler, NULL);
-			else
-				exec_on_terminal(type_query->ses->tab->term,
+			exec_on_terminal(type_query->ses->tab->term,
 					 handler, "",
 					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
 			mem_free(handler);
@@ -1214,13 +1173,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 			0, 0, NULL, MAX_STR_LEN, field, NULL);
 		type_query->external_handler = field;
 
-		if (type_query->copiousoutput) {
-			add_dlg_text(dlg, _("The output of the program "
-					    "will be shown in the tab", term),
-				     ALIGN_LEFT, 0);
-		} else {
-			add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
-		}
+		add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
 		selected_widget = 3;
 
 	} else if (handler) {
@@ -1345,7 +1298,6 @@ setup_download_handler(struct session *ses, struct download *loading,
 		type_query = init_type_query(ses, loading, cached);
 		if (type_query) {
 			ret = 1;
-			if (handler) type_query->copiousoutput = handler->copiousoutput;
 #ifdef CONFIG_BITTORRENT
 			/* A terrible waste of a good MIME handler here, but we want
 			 * to use the type_query this is easier. */

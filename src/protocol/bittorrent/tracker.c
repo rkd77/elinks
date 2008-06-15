@@ -276,8 +276,7 @@ send_bittorrent_tracker_request(struct connection *conn)
 	struct bittorrent_connection *bittorrent = conn->info;
 
 	/* Kill the timer when we are not sending a periodic request to make
-	 * sure that there are only one tracker request at any time. Besides
-	 * it is not possible to call kill_timer() from a timer handler. */
+	 * sure that there are only one tracker request at any time. */
 	kill_timer(&bittorrent->tracker.timer);
 
 	do_send_bittorrent_tracker_request(conn);

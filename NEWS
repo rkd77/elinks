@@ -139,8 +139,6 @@ Miscellaneous:
 * trivial bug 930: refresh status bar when key prefix is eaten
 * trivial bug 776: ``elinks -remote http://elinks.cz/'' no longer clears
   the screen
-* enhancement 121: if a mailcap entry indicates 'copiousoutput', ELinks
-  itself acts as a pager
 * enhancement 790: If-Modified-Since and If-None-Match
 * enhancement: HTTP negotiate-auth using GSSAPI
 * enhancement: FSP progress indicator and password prompt
@@ -274,6 +272,8 @@ have already been considered.
     not sorted
   - (bugfix 968) assertion width > 0 failed in copy_chars called from
     justify_line
+  - bug 1015: incompatible pointer type for PyString_AsStringAndSize
+  - bug 917: Going to unopened /dev/fd/ kills select_loop
 * Already backported to a previous release but not listed there:
   - (enhancement) Activate link only when onClick returns true.
     Fixed bug 786 in ELinks 0.11.2.
@@ -304,6 +304,8 @@ have already been considered.
     2a6125e3d0407b588eb286d4d0ff5c98c23ebda9
   - (enhancement) Support for pasting from GNU screen clipboard,
     reverted in 763f03f146cc1391b303c8074556f0ddea1e3c7a
+  - enhancement 121: if a mailcap entry indicates 'copiousoutput',
+    ELinks itself acts as a pager
 * Unimportant changes: 
   - (enhancement) If select fails, save its errno.
   - (bugfix) Use PF_* instead of AF_* as first parameter of socket(2).

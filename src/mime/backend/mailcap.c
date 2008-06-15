@@ -545,7 +545,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			break;
 		}
 	}
-#if 0
+
 	if (copiousoutput) {
 		unsigned char *pager = getenv("PAGER");
 
@@ -562,7 +562,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			add_to_string(&cmd, pager);
 		}
 	}
-#endif
+
 	return cmd.source;
 }
 
@@ -768,7 +768,6 @@ get_mime_handler_mailcap(unsigned char *type, int xwin)
 	handler = init_mime_handler(program, entry->description,
 				    mailcap_mime_module.name,
 				    get_mailcap_ask(), block);
-	if (handler) handler->copiousoutput = entry->copiousoutput;
 	mem_free(program);
 
 	return handler;

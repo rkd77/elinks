@@ -79,7 +79,8 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	PyObject *items;
 	enum python_menu_type menu_type = PYTHON_MENU_DEFAULT;
-	int length, i;
+	Py_ssize_t length;
+	int i;
 	struct menu_item *menu;
 	struct memory_list *ml = NULL;
 	static char *kwlist[] = {"items", "type", NULL};
@@ -104,7 +105,7 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 		return NULL;
 	}
 	length = PySequence_Length(items);
-	if (length == -1) return NULL;
+	if (length == -1 || length > INT_MAX) return NULL;
 	else if (length == 0) goto success;
 
 	if (menu_type < 0 || menu_type >= PYTHON_MENU_MAX) {
