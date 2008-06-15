@@ -215,7 +215,6 @@ read_special(struct connection *conn, int fd)
 		return;
 	}
 	conn->socket->fd = fd;
-	conn->popen = 1;
 	rb = alloc_read_buffer(conn->socket);
 	if (!rb) {
 		abort_connection(conn, S_OUT_OF_MEM);
@@ -225,7 +224,6 @@ read_special(struct connection *conn, int fd)
 	rb->length = 45;
 	rb->freespace -= 45;
 
-	conn->unrestartable = 1;
 	conn->socket->state = SOCKET_END_ONCLOSE;
 	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
 }

@@ -57,7 +57,6 @@ struct connection {
 	unsigned int running:1;
 	unsigned int unrestartable:1;
 	unsigned int detached:1;
-	unsigned int popen:1;
 	unsigned int cgi:1;
 
 	/* Each document is downloaded with some priority. When downloading a
@@ -74,16 +73,6 @@ struct connection {
 	 * stopping the connection. */
 	void *info;
 };
-
-struct popen_data {
-	LIST_HEAD(struct popen_data);
-
-	int fd;
-	FILE *stream;
-	unsigned char *filename;
-};
-
-extern LIST_OF(struct popen_data) copiousoutput_data;
 
 int register_check_queue(void);
 
