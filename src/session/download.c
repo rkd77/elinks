@@ -876,7 +876,6 @@ continue_download_do(struct terminal *term, int fd, void *data, int resume)
 		file_download->external_handler = subst_file(type_query->external_handler,
 							     codw_hop->file);
 		file_download->delete = 1;
-		file_download->copiousoutput = type_query->copiousoutput;
 		mem_free(codw_hop->file);
 		mem_free_set(&type_query->external_handler, NULL);
 	}
@@ -1288,7 +1287,6 @@ setup_download_handler(struct session *ses, struct download *loading,
 	type_query = init_type_query(ses, loading, cached);
 	if (type_query) {
 		ret = 1;
-		type_query->copiousoutput = handler->copiousoutput;
 #ifdef CONFIG_BITTORRENT
 		/* A terrible waste of a good MIME handler here, but we want
 		 * to use the type_query this is easier. */
