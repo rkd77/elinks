@@ -35,6 +35,7 @@ To be released as 0.11.4.
 * bug 939: fix FSP directory listing (some compiler options left it empty)
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * bug 1012: compile with -fno-strict-overflow or -fwrapv if available
+* bug 1014: fix incompatible pointer type in Perl_sys_init3 call
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
   with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
