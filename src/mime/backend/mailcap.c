@@ -545,7 +545,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			break;
 		}
 	}
-#if 0
+
 	if (copiousoutput) {
 		unsigned char *pager = getenv("PAGER");
 
@@ -562,7 +562,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			add_to_string(&cmd, pager);
 		}
 	}
-#endif
+
 	return cmd.source;
 }
 
