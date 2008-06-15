@@ -668,7 +668,6 @@ get_mime_handler_mailcap(unsigned char *type, int options)
 	handler = init_mime_handler(program, entry->description,
 				    mailcap_mime_module.name,
 				    get_mailcap_ask(), block);
-	if (handler) handler->copiousoutput = entry->copiousoutput;
 	mem_free(program);
 
 	return handler;
