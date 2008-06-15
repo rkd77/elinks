@@ -12,7 +12,7 @@ To be released as ELinks 0.12.0.
 
 //////////////////////////////////////////////////////////////////////
 This list now contains all the important changes from ELinks 0.11.0 to
-ELinks 0.12.GIT (4672bad9c73321019c1a2a7695761b8188bd1a8f) and related
+ELinks 0.12.GIT (0b99fa70ca9d0f976655e61adee1a5eebacc0734) and related
 bug numbers.  Each section is sorted by severity and grouped by topic.
 
 The list no doubt includes several changes that are not really
@@ -225,6 +225,8 @@ have already been considered.
     justify_line
   - bug 1015: incompatible pointer type for PyString_AsStringAndSize
   - bug 917: Going to unopened /dev/fd/ kills select_loop
+  - critical bug 976: ELinks crashes while browsing samba shares if
+    debuglevel = 1 in smb.conf
 * Already backported to a previous release but not listed there:
   - (enhancement) Activate link only when onClick returns true.
     Fixed bug 786 in ELinks 0.11.2.
@@ -327,6 +329,7 @@ To be released as 0.11.4.
 * bug 939: fix FSP directory listing (some compiler options left it empty)
 * bug 978: Python's webbrowser.open_new_tab(URL) works since now
 * bug 1012: compile with -fno-strict-overflow or -fwrapv if available
+* bug 1014: fix incompatible pointer type in Perl_sys_init3 call
 * minor bug 54, Debian bug 338402: don't force the terminal to 8 bits
   with no parity, and don't disable XON/XOFF flow control either
 * minor bug 951 in user SMJS: garbage-collect SMJS objects on 'File ->
