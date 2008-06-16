@@ -7,7 +7,7 @@
 struct form_view;
 
 extern const JSClass forms_class;
-extern const JSFunctionSpec forms_funcs[];
+extern const spidermonkeyFunctionSpec forms_funcs[];
 extern const JSPropertySpec forms_props[];
 
 JSObject *get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv);

@@ -194,32 +194,32 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS_InitStandardClasses(ctx, window_obj);
 	JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props);
-	JS_DefineFunctions(ctx, window_obj, (JSFunctionSpec *) window_funcs);
+	spidermonkey_DefineFunctions(ctx, window_obj, window_funcs);
 	JS_SetPrivate(ctx, window_obj, interpreter->vs); /* to @window_class */
 
-	document_obj = JS_InitClass(ctx, window_obj, NULL,
-				    (JSClass *) &document_class, NULL, 0,
-				    (JSPropertySpec *) document_props,
-				    (JSFunctionSpec *) document_funcs,
-				    NULL, NULL);
+	document_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      (JSClass *) &document_class, NULL, 0,
+					      (JSPropertySpec *) document_props,
+					      document_funcs,
+					      NULL, NULL);
 
-	forms_obj = JS_InitClass(ctx, document_obj, NULL,
-				    (JSClass *) &forms_class, NULL, 0,
-				    (JSPropertySpec *) forms_props,
-				    (JSFunctionSpec *) forms_funcs,
-				    NULL, NULL);
+	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
+					   (JSClass *) &forms_class, NULL, 0,
+					   (JSPropertySpec *) forms_props,
+					   forms_funcs,
+					   NULL, NULL);
 
-	history_obj = JS_InitClass(ctx, window_obj, NULL,
-				    (JSClass *) &history_class, NULL, 0,
-				    (JSPropertySpec *) NULL,
-				    (JSFunctionSpec *) history_funcs,
-				    NULL, NULL);
+	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					     (JSClass *) &history_class, NULL, 0,
+					     (JSPropertySpec *) NULL,
+					     history_funcs,
+					     NULL, NULL);
 
-	location_obj = JS_InitClass(ctx, window_obj, NULL,
-				    (JSClass *) &location_class, NULL, 0,
-				    (JSPropertySpec *) location_props,
-				    (JSFunctionSpec *) location_funcs,
-				    NULL, NULL);
+	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      (JSClass *) &location_class, NULL, 0,
+					      (JSPropertySpec *) location_props,
+					      location_funcs,
+					      NULL, NULL);
 
 	menubar_obj = JS_InitClass(ctx, window_obj, NULL,
 				   (JSClass *) &menubar_class, NULL, 0,

@@ -63,7 +63,7 @@ elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-/* @elinks_funcs{"alert"} */
+/* function "alert" in the object returned by smjs_get_elinks_object() */
 static JSBool
 elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -91,11 +91,6 @@ static const JSClass elinks_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-static const JSFunctionSpec elinks_funcs[] = {
-	{ "alert",	elinks_alert,		1 },
-	{ NULL }
-};
-
 static JSObject *
 smjs_get_elinks_object(void)
 {
@@ -106,7 +101,21 @@ smjs_get_elinks_object(void)
 
 	jsobj = JS_InitClass(smjs_ctx, smjs_global_object, NULL,
 	                     (JSClass *) &elinks_class, NULL, 0, NULL,
-	                     (JSFunctionSpec *) elinks_funcs, NULL, NULL);
+	                     (JSFunctionSpec *) NULL, NULL, NULL);
+
+	/* Bug 1016: In SpiderMonkey 1.7 bundled with XULRunner 1.8,
+	 * jsapi.h defines JSFunctionSpec in different ways depending
+	 * on whether MOZILLA_1_8_BRANCH is defined, and there is no
+	 * obvious way for ELinks to check whether MOZILLA_1_8_BRANCH
+	 * was defined when the library was built.  Avoid the unstable
+	 * JSFunctionSpec definitions and instead use JS_DefineFunction
+	 * directly.
+	 *
+	 * In elinks/src/ecmascript/spidermonkey/, there is an
+	 * ELinks-specific replacement for JSFunctionSpec; however, to
+	 * keep the modules independent, elinks/src/scripting/smjs/
+	 * does not use that.  */
+	JS_DefineFunction(smjs_ctx, jsobj, "alert", elinks_alert, 1, 0);
 
 	JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
 	                  elinks_get_location, elinks_set_location,

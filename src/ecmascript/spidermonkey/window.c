@@ -289,7 +289,7 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 static JSBool window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-const JSFunctionSpec window_funcs[] = {
+const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
 	{ "open",	window_open,		3 },
 	{ NULL }

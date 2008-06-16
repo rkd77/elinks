@@ -17,6 +17,8 @@ To be released as 0.11.4.
 * critical bug 945: don't crash if a Lua script calls e.g. error(nil)
 * critical bug 1003: don't crash if a smart URI rewrite template gets
   too few parameters
+* critical bug 1016: avoid JSFunctionSpec for better compatibility
+  across versions of SpiderMonkey
 * major bug 956: don't reuse pointers to SpiderMonkey objects that may
   have been collected as garbage.  This fix causes bug 954.
 * CVE-2007-2027: check if the program path contains "src/" before

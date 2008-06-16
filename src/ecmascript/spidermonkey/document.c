@@ -231,7 +231,7 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static JSBool document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-const JSFunctionSpec document_funcs[] = {
+const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
 	{ NULL }
 };
