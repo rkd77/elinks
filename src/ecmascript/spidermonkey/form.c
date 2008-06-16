@@ -133,7 +133,7 @@ static JSBool input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv
 static JSBool input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-static const JSFunctionSpec input_funcs[] = {
+static const spidermonkeyFunctionSpec input_funcs[] = {
 	{ "blur",	input_blur,	0 },
 	{ "click",	input_click,	0 },
 	{ "focus",	input_focus,	0 },
@@ -567,7 +567,7 @@ get_input_object(JSContext *ctx, JSObject *jsform, long number)
 	JSObject *jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
 
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
-	JS_DefineFunctions(ctx, jsinput, (JSFunctionSpec *) input_funcs);
+	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
 	JS_SetReservedSlot(ctx, jsinput, JSRS_INPUT_FSINDEX, INT_TO_JSVAL(number));
 	return jsinput;;
 }
@@ -616,7 +616,7 @@ static const JSClass form_elements_class = {
 static JSBool form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-static const JSFunctionSpec form_elements_funcs[] = {
+static const spidermonkeyFunctionSpec form_elements_funcs[] = {
 	{ "item",		form_elements_item,		1 },
 	{ "namedItem",		form_elements_namedItem,	1 },
 	{ NULL }
@@ -855,7 +855,7 @@ static const JSPropertySpec form_props[] = {
 static JSBool form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-static const JSFunctionSpec form_funcs[] = {
+static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ "reset",	form_reset,	0 },
 	{ "submit",	form_submit,	0 },
 	{ NULL }
@@ -933,7 +933,8 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		JSObject *jsform_elems = JS_NewObject(ctx, (JSClass *) &form_elements_class, NULL, obj);
 
 		JS_DefineProperties(ctx, jsform_elems, (JSPropertySpec *) form_elements_props);
-		JS_DefineFunctions(ctx, jsform_elems, (JSFunctionSpec *) form_elements_funcs);
+		spidermonkey_DefineFunctions(ctx, jsform_elems,
+					     form_elements_funcs);
 		object_to_jsval(ctx, vp, jsform_elems);
 		/* SM will cache this property value for us so we create this
 		 * just once per form. */
@@ -1162,7 +1163,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 	JSObject *jsform = JS_NewObject(ctx, (JSClass *) &form_class, NULL, jsdoc);
 
 	JS_DefineProperties(ctx, jsform, (JSPropertySpec *) form_props);
-	JS_DefineFunctions(ctx, jsform, (JSFunctionSpec *) form_funcs);
+	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
 	JS_SetPrivate(ctx, jsform, fv); /* to @form_class */
 	fv->ecmascript_obj = jsform;
 	return fv->ecmascript_obj;
@@ -1181,7 +1182,7 @@ const JSClass forms_class = {
 static JSBool forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-const JSFunctionSpec forms_funcs[] = {
+const spidermonkeyFunctionSpec forms_funcs[] = {
 	{ "item",		forms_item,		1 },
 	{ "namedItem",		forms_namedItem,	1 },
 	{ NULL }

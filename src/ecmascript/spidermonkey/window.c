@@ -302,7 +302,7 @@ static JSBool window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *arg
 static JSBool window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 static JSBool window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-const JSFunctionSpec window_funcs[] = {
+const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
 	{ "open",	window_open,		3 },
 	{ "setTimeout",	window_setTimeout,	2 },
