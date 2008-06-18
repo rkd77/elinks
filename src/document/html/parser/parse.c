@@ -1241,6 +1241,7 @@ xsp:
 	goto se;
 }
 
+#ifdef CONFIG_CSS
 /** Check whether ELinks claims to support any of the media types
  * listed in the media attribute of an HTML STYLE or LINK element.  */
 int
@@ -1302,3 +1303,4 @@ supports_html_media_attr(const unsigned char *media)
 	}
 	return 0;
 }
+#endif /* CONFIG_CSS */
