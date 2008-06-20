@@ -1022,6 +1022,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 {
 	unsigned char *head = empty_string_or_(cached->head);
 	struct dom_renderer renderer;
+	struct dom_config config;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
  	enum sgml_parser_type parser_type;
@@ -1060,7 +1061,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	} else if (renderer.doctype == SGML_DOCTYPE_RSS) {
 		add_dom_stack_context(&parser->stack, &renderer,
 				      &dom_rss_renderer_context_info);
-		add_dom_config_normalizer(&parser->stack, RSS_CONFIG_FLAGS);
+		add_dom_config_normalizer(&parser->stack, &config, RSS_CONFIG_FLAGS);
 	}
 
 	/* FIXME: When rendering this way we don't really care about the code.

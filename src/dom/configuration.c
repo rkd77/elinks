@@ -224,7 +224,6 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 		break;
 
 	case DOM_NODE_DOCUMENT:
-		mem_free(config);
 		break;
 
 	default:
@@ -285,19 +284,14 @@ static struct dom_stack_context_info dom_config_normalizer_context = {
 };
 
 struct dom_config *
-add_dom_config_normalizer(struct dom_stack *stack, enum dom_config_flag flags)
+add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config, 
+			  enum dom_config_flag flags)
 {
-	struct dom_config *config;
-
-	config = mem_calloc(1, sizeof(*config));
-	if (!config) return NULL;
-
+	memset(config, 0, sizeof(*config));
 	config->flags = flags;
 
 	if (add_dom_stack_context(stack, config, &dom_config_normalizer_context))
 		return config;
-
-	mem_free(config);
 
 	return NULL;
 }
