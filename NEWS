@@ -6,7 +6,9 @@ in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
 ELinks 0.11.4:
------------------
+--------------
+
+Released on 2008-06-20.
 
 * critical bug 755: fix crashes due to dangling pointers to struct
   form_state
