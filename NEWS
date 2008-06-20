@@ -67,6 +67,8 @@ Miscellaneous:
   decompression, and add deflate and LZMA (requires LZMA Utils)
 * major bug 503: various fixes in parsing and updating of elinks.conf
 * Debian bug 257762: turn terminal transparency off by default
+* bug 770: when the user chooses to resume an HTTP download, abort the
+  automatically started one and start a new one with the right range
 * bug 724: better parsing of escape sequences and control
   sequences from the terminal
 * bug 948: fix wrong UTF-8 output after the charset menu was used
@@ -175,10 +177,6 @@ The following changes should be removed from NEWS before ELinks 0.12.0
 is released.  They are currently listed here just to show that they
 have already been considered.
 
-* Not clear whether the bugs have been fixed:
-  - (bugfix 674) Reproduceable crashes while trying to unsubscribe
-    from a community on Orkut
-  - (bugfix 770) Download resuming simply restarts the download
 * Only partially fixed bugs:
   - (bugfix 764) int/long type punning in options
   - (bugfix 890) Change colors 0-15 to match xterm defaults.
@@ -299,10 +297,10 @@ have already been considered.
   * Really retry forever when connection.retries = 0
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.11.4rc1.GIT now:
--------------------------
+ELinks 0.11.4:
+--------------
 
-To be released as 0.11.4.
+Released on 2008-06-20.
 
 * critical bug 755: fix crashes due to dangling pointers to struct
   form_state
@@ -313,8 +311,8 @@ To be released as 0.11.4.
   too few parameters
 * critical bug 1016: avoid JSFunctionSpec for better compatibility
   across versions of SpiderMonkey
-* major bug 956: don't reuse pointers to SpiderMonkey objects that may
-  have been collected as garbage.  This fix causes bug 954.
+* critical bugs 674, 956: don't reuse pointers to SpiderMonkey objects
+  that may have been collected as garbage.  This fix causes bug 954.
 * CVE-2007-2027: check if the program path contains "src/" before
   using ../po files
 * important Debian bug 380347: prevent a buffer overflow in entity_cache
@@ -322,7 +320,6 @@ To be released as 0.11.4.
 * major bug 788: don't read STRLEN n_a, which isn't initialized by
   POPpx of Perl v5.8.8 and later
 * fix query parsing in file: URIs for local CGI (was broken in 0.11.3)
-* bug 451: fix incompatible pointer type in PERL_SYS_INIT3 call
 * bug 691: don't look up bogus IPv4 addresses based on characters of a
   hostname
 * bug 712: GnuTLS works on https://www-s.uiuc.edu/[]
@@ -360,15 +357,6 @@ To be released as 0.11.4.
 * minor build bug 989: AsciiDoc 8.2.2 compatibility
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
-
-//////////////////////////////////////////////////////////////////////
-The following changes should be removed from NEWS before ELinks 0.11.4
-is released.  They are currently listed here just to show that they
-have already been considered.
-
-* Fixed bugs that were not in previous versions:
-  - bug 975: fix int/size_t pointer type mismatch in Perl interface
-//////////////////////////////////////////////////////////////////////
 
 ELinks 0.11.3:
 --------------
