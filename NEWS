@@ -67,15 +67,6 @@ To be released as 0.11.4.
 * minor build bug 960: fix errors in loadmsgcat.c if mmap() exists but
   munmap() doesn't
 
-//////////////////////////////////////////////////////////////////////
-The following changes should be removed from NEWS before ELinks 0.11.4
-is released.  They are currently listed here just to show that they
-have already been considered.
-
-* Fixed bugs that were not in previous versions:
-  - bug 975: fix int/size_t pointer type mismatch in Perl interface
-//////////////////////////////////////////////////////////////////////
-
 ELinks 0.11.3:
 --------------
 
