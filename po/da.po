@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-06 15:51+0100\n"
+"POT-Creation-Date: 2008-06-20 21:44+0200\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -5811,29 +5811,29 @@ msgstr "Ukrainsk"
 msgid "The call to %s failed: %d (%s)"
 msgstr "Kaldet til %s fejlede: %d (%s)"
 
-#: src/main/main.c:140
+#: src/main/main.c:139
 msgid "Cannot create a pipe for internal communication."
 msgstr "Kan ikke oprette datakanal til intern kommunikation."
 
-#: src/main/main.c:218
+#: src/main/main.c:203
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Adresse forventes efter -%s."
 
-#: src/main/main.c:226
+#: src/main/main.c:211
 msgid "No running ELinks found."
 msgstr "Ingen eksisterende ELinks blev fundet."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:233
+#: src/main/main.c:218
 msgid "No remote session to connect to."
 msgstr "Ingen fjernsession at forbinde til."
 
-#: src/main/main.c:242
+#: src/main/main.c:227
 msgid "Unable to encode session info."
 msgstr "Kunne ikke indkode sessionsinformation."
 
-#: src/main/main.c:259
+#: src/main/main.c:244
 msgid "Unable to attach_terminal()."
 msgstr "Kunne ikke forbinde til terminal med attach_terminal()."
 
@@ -8037,7 +8037,7 @@ msgstr "Ugyldig hændelse %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Kunne ikke læse hændelse: %d (%s)"
 
-#: src/terminal/kbd.c:925
+#: src/terminal/kbd.c:926
 msgid "Too many bytes read from the itrm!"
 msgstr "Læste for mange bytes fra itrm!"
 

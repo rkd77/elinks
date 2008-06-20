@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.2.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-15 10:29+0300\n"
+"POT-Creation-Date: 2008-06-20 21:44+0200\n"
 "PO-Revision-Date: 2007-04-15 11:52+0300\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -32,9 +32,9 @@ msgstr "Voit laventaa kansion painamalla välilyöntiä."
 #: src/bfu/hierbox.c:429 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:355 src/dialogs/edit.c:97 src/dialogs/info.c:133
-#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:129
+#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
-#: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
+#: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
 #: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
@@ -135,8 +135,8 @@ msgstr "Etsittyä jonoa \"%s\" ei löytynyt"
 
 #: src/bfu/hierbox.c:944 src/config/dialogs.c:168 src/config/dialogs.c:357
 #: src/config/dialogs.c:504 src/cookies/dialogs.c:34 src/cookies/dialogs.c:349
-#: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:373
-#: src/scripting/lua/core.c:374 src/scripting/lua/core.c:454
+#: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:381
+#: src/scripting/lua/core.c:382 src/scripting/lua/core.c:462
 msgid "Name"
 msgstr "Nimi"
 
@@ -166,10 +166,10 @@ msgstr "Tyhjä merkkijono ei sallittu"
 # voisi myöhemmin helposti jatkaakin. Windowsissa OK/Cancel = OK/Hylkää.
 #: src/bfu/inpfield.c:254 src/config/dialogs.c:392 src/cookies/dialogs.c:356
 #: src/dialogs/edit.c:101 src/dialogs/edit.c:104 src/dialogs/options.c:220
-#: src/dialogs/options.c:298 src/mime/dialogs.c:130
+#: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
-#: src/scripting/lua/core.c:378 src/scripting/lua/core.c:458
-#: src/session/download.c:544 src/session/download.c:1121
+#: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
+#: src/session/download.c:544 src/session/download.c:1128
 #: src/viewer/text/search.c:1594
 #, fuzzy
 msgid "~Cancel"
@@ -234,7 +234,7 @@ msgid ""
 " |||||`- Unused\n"
 " ||||`-- Unused\n"
 " |||`--- A JavaScript pop-up window was blocked\n"
-" ||`---- A JavaScript error has occured\n"
+" ||`---- A JavaScript error has occurred\n"
 " |`----- The state of insert mode for text-input form-fields\n"
 " |       'i' means modeless, 'I' means insert mode is on\n"
 " `------ Whether an SSL connection was used\n"
@@ -360,7 +360,7 @@ msgstr "Otsikko"
 #: src/bookmarks/dialogs.c:71 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:95 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:159
-#: src/scripting/lua/core.c:375
+#: src/scripting/lua/core.c:383
 msgid "URL"
 msgstr "URL"
 
@@ -422,7 +422,7 @@ msgstr "Luo kansio"
 msgid "Folder name"
 msgstr "Kansion nimi"
 
-#: src/bookmarks/dialogs.c:326 src/scripting/lua/core.c:369
+#: src/bookmarks/dialogs.c:326 src/scripting/lua/core.c:377
 msgid "Edit bookmark"
 msgstr "Muokkaa kirjanmerkkiä"
 
@@ -1242,58 +1242,58 @@ msgstr "Ei kehyksiä"
 msgid "Garbage after quoted argument"
 msgstr ""
 
-#: src/config/cmdline.c:390
+#: src/config/cmdline.c:393
 msgid "Remote method not supported"
 msgstr ""
 
-#: src/config/cmdline.c:442
+#: src/config/cmdline.c:445
 msgid "Template option folder"
 msgstr ""
 
-#: src/config/cmdline.c:465
+#: src/config/cmdline.c:468
 #, c-format
 msgid "(default: %ld)"
 msgstr "(oletus: %ld)"
 
-#: src/config/cmdline.c:472 src/config/cmdline.c:501
+#: src/config/cmdline.c:475 src/config/cmdline.c:504
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(oletus: \"%s\")"
 
-#: src/config/cmdline.c:477
+#: src/config/cmdline.c:480
 #, c-format
 msgid "(alias for %s)"
 msgstr ""
 
-#: src/config/cmdline.c:482 src/config/cmdline.c:491
+#: src/config/cmdline.c:485 src/config/cmdline.c:494
 #, c-format
 msgid "(default: %s)"
 msgstr "(oletus: %s)"
 
-#: src/config/cmdline.c:625
+#: src/config/cmdline.c:628
 #, fuzzy
 msgid "Configuration options"
 msgstr "Yhteydet"
 
-#: src/config/cmdline.c:629
+#: src/config/cmdline.c:632
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr "Käyttö: elinks [VALITSIN]... [URL]..."
 
-#: src/config/cmdline.c:630
+#: src/config/cmdline.c:633
 #, fuzzy
 msgid "Options"
 msgstr "Asetukset"
 
-#: src/config/cmdline.c:672
+#: src/config/cmdline.c:675
 #, fuzzy
 msgid "Internal consistency error"
 msgstr "Sisäinen virhe"
 
-#: src/config/cmdline.c:707
+#: src/config/cmdline.c:710
 msgid "Restrict to anonymous mode"
 msgstr ""
 
-#: src/config/cmdline.c:709
+#: src/config/cmdline.c:712
 msgid ""
 "Restricts ELinks so it can run on an anonymous account.\n"
 "Local file browsing, downloads, and modification of options\n"
@@ -1302,31 +1302,31 @@ msgid ""
 msgstr ""
 
 # "automaattisesti" olisi kovin pitkä.
-#: src/config/cmdline.c:714
+#: src/config/cmdline.c:717
 msgid "Autosubmit first form"
 msgstr "Lähetä ensimmäinen lomake heti"
 
-#: src/config/cmdline.c:716
+#: src/config/cmdline.c:719
 msgid "Automatically submit the first form in the given URLs."
 msgstr ""
 
-#: src/config/cmdline.c:718
+#: src/config/cmdline.c:721
 #, fuzzy
 msgid "Clone internal session with given ID"
 msgstr "Kloonaa istunto, jolla on annettu ID"
 
-#: src/config/cmdline.c:720
+#: src/config/cmdline.c:723
 msgid ""
 "Used internally when opening ELinks instances in new windows.\n"
 "The ID maps to information that will be used when creating the\n"
 "new instance. You don't want to use it."
 msgstr ""
 
-#: src/config/cmdline.c:726
+#: src/config/cmdline.c:729
 msgid "Name of directory with configuration file"
 msgstr "Asetustiedoston sisältävän hakemiston nimi"
 
-#: src/config/cmdline.c:728
+#: src/config/cmdline.c:731
 msgid ""
 "Path of the directory ELinks will read and write its\n"
 "config and runtime state files to instead of ~/.elinks.\n"
@@ -1334,86 +1334,86 @@ msgid ""
 "relative to your HOME directory."
 msgstr ""
 
-#: src/config/cmdline.c:733
+#: src/config/cmdline.c:736
 msgid "Print default configuration file to stdout"
 msgstr ""
 
-#: src/config/cmdline.c:735
+#: src/config/cmdline.c:738
 msgid ""
 "Print a configuration file with options set to the built-in\n"
 "defaults to stdout."
 msgstr ""
 
-#: src/config/cmdline.c:740
+#: src/config/cmdline.c:743
 msgid "Name of configuration file"
 msgstr "Asetustiedoston nimi"
 
-#: src/config/cmdline.c:742
+#: src/config/cmdline.c:745
 msgid ""
 "Name of the configuration file that all configuration\n"
 "options will be read from and written to. It should be\n"
 "relative to config-dir."
 msgstr ""
 
-#: src/config/cmdline.c:746
+#: src/config/cmdline.c:749
 msgid "Print help for configuration options"
 msgstr ""
 
 # "ja poistu"?
-#: src/config/cmdline.c:748
+#: src/config/cmdline.c:751
 #, fuzzy
 msgid "Print help for configuration options and exit."
 msgstr "Näytä versiotiedot ja lopeta"
 
-#: src/config/cmdline.c:750
+#: src/config/cmdline.c:753
 msgid "MIME type assumed for unknown document types"
 msgstr ""
 
-#: src/config/cmdline.c:752
+#: src/config/cmdline.c:755
 msgid "The default MIME type used for documents of unknown type."
 msgstr ""
 
-#: src/config/cmdline.c:754
+#: src/config/cmdline.c:757
 msgid "Ignore user-defined keybindings"
 msgstr "Sivuuta käyttäjän tekemät näppäinsidonnat"
 
-#: src/config/cmdline.c:756
+#: src/config/cmdline.c:759
 msgid ""
 "When set, all keybindings from configuration files will be\n"
 "ignored. It forces use of default keybindings and will reset\n"
 "user-defined ones on save."
 msgstr ""
 
-#: src/config/cmdline.c:760
+#: src/config/cmdline.c:763
 msgid "Print formatted versions of given URLs to stdout"
 msgstr ""
 
-#: src/config/cmdline.c:762
+#: src/config/cmdline.c:765
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 
-#: src/config/cmdline.c:764
+#: src/config/cmdline.c:767
 msgid "Codepage to use with -dump"
 msgstr ""
 
-#: src/config/cmdline.c:766
+#: src/config/cmdline.c:769
 msgid "Codepage used when formatting dump output."
 msgstr ""
 
-#: src/config/cmdline.c:768
+#: src/config/cmdline.c:771
 msgid "Width of document formatted with -dump"
 msgstr ""
 
-#: src/config/cmdline.c:770
+#: src/config/cmdline.c:773
 msgid "Width of the dump output."
 msgstr ""
 
-#: src/config/cmdline.c:772
+#: src/config/cmdline.c:775
 #, fuzzy
 msgid "Evaluate configuration file directive"
 msgstr "Asetustiedoston nimi"
 
-#: src/config/cmdline.c:774
+#: src/config/cmdline.c:777
 msgid ""
 "Specify configuration file directives on the command-line\n"
 "which will be evaluated after all configuration files has been\n"
@@ -1422,34 +1422,34 @@ msgid ""
 msgstr ""
 
 #. lynx compatibility
-#: src/config/cmdline.c:780
+#: src/config/cmdline.c:783
 #, fuzzy
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Oleta tiedoston olevan HTML:ää"
 
-#: src/config/cmdline.c:782
+#: src/config/cmdline.c:785
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML.\n"
 "Useful when using ELinks as an external viewer from MUAs.\n"
 "This is equivalent to -default-mime-type text/html."
 msgstr ""
 
-#: src/config/cmdline.c:792
+#: src/config/cmdline.c:795
 msgid "Print usage help and exit"
 msgstr ""
 
-#: src/config/cmdline.c:794
+#: src/config/cmdline.c:797
 msgid "Print usage help and exit."
 msgstr ""
 
-#: src/config/cmdline.c:796
+#: src/config/cmdline.c:799
 msgid "Only permit local connections"
 msgstr "Salli vain paikalliset yhteydet"
 
 # src/network/socket.c (check_if_local_address4) sallii yhteyden, jos se
 # on osoitteeseen 127.0.0.0/8 tai jonkin paikallisen verkkosovittimen
 # osoitteeseen.
-#: src/config/cmdline.c:798
+#: src/config/cmdline.c:801
 msgid ""
 "Restricts ELinks to work offline and only connect to servers\n"
 "with local addresses (ie. 127.0.0.1). No connections to remote\n"
@@ -1459,28 +1459,28 @@ msgstr ""
 "paikallisissa osoitteissa (mm. 127.0.0.1) toimiviin palvelimiin.\n"
 "Yhteyksiä etäpalvelimiin ei sallita."
 
-#: src/config/cmdline.c:802
+#: src/config/cmdline.c:805
 msgid "Print detailed usage help and exit"
 msgstr ""
 
-#: src/config/cmdline.c:804
+#: src/config/cmdline.c:807
 msgid "Print detailed usage help and exit."
 msgstr ""
 
-#: src/config/cmdline.c:806
+#: src/config/cmdline.c:809
 #, fuzzy
 msgid "Look up specified host"
 msgstr "Ei ohjelmaa osoitettu"
 
-#: src/config/cmdline.c:808
+#: src/config/cmdline.c:811
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 
-#: src/config/cmdline.c:810
+#: src/config/cmdline.c:813
 msgid "Run as separate instance"
 msgstr ""
 
-#: src/config/cmdline.c:812
+#: src/config/cmdline.c:815
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an\n"
 "existing instance. Note that normally no runtime state files\n"
@@ -1488,12 +1488,12 @@ msgid ""
 "option is used. See also -touch-files."
 msgstr ""
 
-#: src/config/cmdline.c:817
+#: src/config/cmdline.c:820
 msgid "Disable use of files in ~/.elinks"
 msgstr "Estä hakemiston ~/.elinks käyttö"
 
 # <fonseca> You can still alter option values but there is no way to save them.
-#: src/config/cmdline.c:819
+#: src/config/cmdline.c:822
 msgid ""
 "Disables creation and use of files in the user specific home\n"
 "configuration directory (~/.elinks). It forces default configuration\n"
@@ -1503,32 +1503,32 @@ msgstr ""
 "asetushakemistossa (~/.elinks). Pakottaa oletusasetukset käyttöön\n"
 "ja estää tallentamasta ohjelman tilaa tiedostoihin."
 
-#: src/config/cmdline.c:823
+#: src/config/cmdline.c:826
 msgid "Disable link numbering in dump output"
 msgstr "Estä linkkien numerointi dump-tulosteessa"
 
-#: src/config/cmdline.c:825
+#: src/config/cmdline.c:828
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 
-#: src/config/cmdline.c:828
+#: src/config/cmdline.c:831
 msgid "Disable printing of link references in dump output"
 msgstr ""
 
-#: src/config/cmdline.c:830
+#: src/config/cmdline.c:833
 msgid ""
 "Prevents printing of references (URIs) of document links\n"
 "in dump output.\n"
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 
-#: src/config/cmdline.c:834
+#: src/config/cmdline.c:837
 msgid "Control an already running ELinks"
 msgstr "Ohjaa käynnissä olevaa ELinksiä"
 
-#: src/config/cmdline.c:836
+#: src/config/cmdline.c:839
 msgid ""
 "Control a remote ELinks instance by passing commands to it.\n"
 "The option takes an additional argument containing the method\n"
@@ -1547,11 +1547,11 @@ msgid ""
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 
-#: src/config/cmdline.c:852
+#: src/config/cmdline.c:855
 msgid "Connect to session ring with given ID"
 msgstr ""
 
-#: src/config/cmdline.c:854
+#: src/config/cmdline.c:857
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks\n"
 "works in so-called session rings, whereby all instances of ELinks\n"
@@ -1569,19 +1569,19 @@ msgid ""
 "-touch-files."
 msgstr ""
 
-#: src/config/cmdline.c:869
+#: src/config/cmdline.c:872
 msgid "Print the source of given URLs to stdout"
 msgstr ""
 
-#: src/config/cmdline.c:871
+#: src/config/cmdline.c:874
 msgid "Print given URLs in source form to stdout."
 msgstr ""
 
-#: src/config/cmdline.c:875
+#: src/config/cmdline.c:878
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr ""
 
-#: src/config/cmdline.c:877
+#: src/config/cmdline.c:880
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are\n"
 "written to disk, even when -no-connect or -session-ring is used.\n"
@@ -1589,11 +1589,11 @@ msgid ""
 "these options."
 msgstr ""
 
-#: src/config/cmdline.c:882
+#: src/config/cmdline.c:885
 msgid "Verbose level"
 msgstr ""
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:887
 msgid ""
 "The verbose level controls what messages are shown at\n"
 "start up and while running:\n"
@@ -1603,12 +1603,12 @@ msgid ""
 msgstr ""
 
 # "ja poistu"?
-#: src/config/cmdline.c:890
+#: src/config/cmdline.c:893
 msgid "Print version information and exit"
 msgstr "Näytä versiotiedot ja lopeta"
 
 # "ja poistu"?
-#: src/config/cmdline.c:892
+#: src/config/cmdline.c:895
 msgid "Print ELinks version information and exit."
 msgstr "Näytä ELinksin versiotiedot ja lopeta."
 
@@ -1802,7 +1802,7 @@ msgstr ""
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:425
 #: src/dialogs/options.c:219 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1105
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1112
 msgid "Sa~ve"
 msgstr "~Tallenna"
 
@@ -2057,14 +2057,15 @@ msgstr "Yritä yhteyttä IPv4:llä"
 
 # ELinks 0.12.GIT:ssä "i.e." on korjattu "e.g.":ksi.
 #: src/config/options.inc:99
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Note that if connection.try_ipv6 is enabled too,\n"
 "it takes precedence. And better do not touch this\n"
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http4://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Yrittääkö ottaa isäntään yhteyttä IPv4:llä.\n"
 "Huomaa, että jos connection.try_ipv6 on myös päällä,\n"
@@ -2075,12 +2076,13 @@ msgstr ""
 "esim. \"http4://elinks.or.cz/\"-muotoista URL:ää."
 
 #: src/config/options.inc:109
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http4://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Yrittääkö ottaa isäntään yhteyttä IPv4:llä.\n"
 "Älä kajoa tähän asetukseen.\n"
@@ -2093,11 +2095,12 @@ msgid "Try IPv6 when connecting"
 msgstr "Yritä yhteyttä IPv6:lla"
 
 #: src/config/options.inc:119
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http6://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Yrittääkö ottaa isäntään yhteyttä IPv6:lla.\n"
 "Huomaa, että voit myös pakottaa yksittäisen yhteyden\n"
@@ -2461,7 +2464,7 @@ msgid ""
 "Whether to navigate links using tabindex specified ordering.\n"
 "The TABINDEX attribute in HTML elements specifies the order\n"
 "in which links should receive focus when using the keyboard\n"
-"to navigating the document."
+"to navigate the document."
 msgstr ""
 
 #: src/config/options.inc:330
@@ -2507,7 +2510,7 @@ msgstr ""
 #. 0
 #: src/config/options.inc:352
 msgid ""
-"When pressing 'down' on the last link, jump at the first one, and\n"
+"When pressing 'down' on the last link, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 
@@ -2598,7 +2601,7 @@ msgstr ""
 
 #: src/config/options.inc:402
 msgid ""
-"Whether to show a dialog when the search hits top or bottom of the\n"
+"Whether to show a dialog when the search hits the top or bottom of the\n"
 "document."
 msgstr ""
 
@@ -2697,9 +2700,9 @@ msgstr ""
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302\n"
 "HTTP code and a Location header). This was the original behaviour\n"
-"for a quite some time, but it causes problems in a situation very\n"
+"for quite some time, but it causes problems in a situation very\n"
 "common to various web login systems - frequently, when accessing\n"
-"certain location, they will redirect you to a login page if they\n"
+"a certain location, they will redirect you to a login page if they\n"
 "don't receive an auth cookie, the login page then gives you the\n"
 "cookie and redirects you back to the original page, but there you\n"
 "have already cached redirect back to the login page! If this\n"
@@ -2709,7 +2712,7 @@ msgid ""
 "still workaround it by clever combination of usage of reload,\n"
 "jumping around in session history and hitting ctrl+enter.\n"
 "Note that this option is checked when retrieving the information\n"
-"from cache, not when saving it to cache - thus if you will enable\n"
+"from cache, not when saving it to cache - thus if you enable\n"
 "it, even previous redirects will be taken from cache instead of\n"
 "asking the server."
 msgstr ""
@@ -2866,7 +2869,7 @@ msgstr ""
 
 #: src/config/options.inc:576
 #, fuzzy
-msgid "Makes sure that the back- and foreground color are never equal."
+msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Varmistaa etteivät tausta- ja edustavärit koskaan ole samat."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
@@ -3069,7 +3072,7 @@ msgid "Display superscripts (as ^thing)."
 msgstr ""
 
 #: src/config/options.inc:690
-msgid "Rendering of html link element"
+msgid "Rendering of HTML link element"
 msgstr ""
 
 #: src/config/options.inc:692
@@ -3139,7 +3142,7 @@ msgid ""
 "an external command. If several rules are defined the link and\n"
 "tab menu will have a submenu of items for each rule. Note, this\n"
 "is mostly useful for launching graphical viewers, since there\n"
-"is not support for releasing the terminal while the command runs.\n"
+"is no support for releasing the terminal while the command runs.\n"
 "The action and submenus are also available by binding keys to\n"
 "the frame-external-command, the link-external-command, and\n"
 "the tab-external-command actions."
@@ -3170,7 +3173,7 @@ msgstr "Tallennusväli"
 #: src/config/options.inc:755
 msgid ""
 "Interval at which to trigger information files in ~/.elinks\n"
-"to be saved to disk if they has changed (seconds; 0 to disable)"
+"to be saved to disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 
 #: src/config/options.inc:758
@@ -3739,7 +3742,7 @@ msgstr "Alleviivaa pikanäppäimet valikossa"
 #: src/config/options.inc:1112
 msgid ""
 "Whether to underline hotkeys in menus to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 
 #: src/config/options.inc:1115
@@ -3750,7 +3753,7 @@ msgstr "Valitse kenttä"
 #: src/config/options.inc:1117
 msgid ""
 "Whether to underline button shortcuts to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 
 #: src/config/options.inc:1121
@@ -3822,7 +3825,7 @@ msgstr ""
 
 #: src/config/options.inc:1165
 msgid ""
-"When moving right from the last tab, jump at the first one, and\n"
+"When moving right from the last tab, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 
@@ -4091,7 +4094,7 @@ msgid "Saving"
 msgstr "Tallennus"
 
 #: src/cookies/cookies.c:113
-msgid "Whether cookies should be loaded from and save to disk."
+msgid "Whether cookies should be loaded from and saved to disk."
 msgstr ""
 
 #: src/cookies/cookies.c:115
@@ -4381,7 +4384,7 @@ msgid ""
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
+"(C) 2002 - 2008 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -4560,7 +4563,8 @@ msgid "Bookm~ark document"
 msgstr "~Kirjanmerkki dokumentista"
 
 #: src/dialogs/menu.c:243 src/dialogs/menu.c:403
-msgid "Toggle ~html/plain"
+#, fuzzy
+msgid "Toggle ~HTML/plain"
 msgstr "Vaihda ~HTML/tavallinen"
 
 #: src/dialogs/menu.c:244
@@ -5057,7 +5061,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/ecmascript/ecmascript.c:36 src/ecmascript/ecmascript.c:201
+#: src/ecmascript/ecmascript.c:36 src/ecmascript/ecmascript.c:218
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
@@ -5697,7 +5701,7 @@ msgstr ""
 #: src/mime/backend/mimetypes.c:48
 msgid ""
 "Options for the support of mime.types files. These files\n"
-"can be used to find the content type of an URL by looking at\n"
+"can be used to find the content type of a URL by looking at\n"
 "the extension of the file name."
 msgstr ""
 
@@ -5718,19 +5722,19 @@ msgstr "Poista tiedostopääte"
 msgid "Delete extension %s -> %s?"
 msgstr "Poista tiedostopääte"
 
-#: src/mime/dialogs.c:123
+#: src/mime/dialogs.c:126
 msgid "Extension"
 msgstr "Tiedostopääte"
 
-#: src/mime/dialogs.c:126
+#: src/mime/dialogs.c:129
 msgid "Extension(s)"
 msgstr "Tiedostopäätteet"
 
-#: src/mime/dialogs.c:127
+#: src/mime/dialogs.c:130
 msgid "Content-Type"
 msgstr "Sisältötyyppi"
 
-#: src/mime/dialogs.c:139
+#: src/mime/dialogs.c:142
 msgid "No extensions"
 msgstr "Ei tiedostopäätteitä"
 
@@ -5753,7 +5757,7 @@ msgid ""
 "guess it properly from known information about the document)."
 msgstr ""
 
-#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:156
+#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:151
 msgid "Verify certificates"
 msgstr "Tarkista varmenteet"
 
@@ -5790,18 +5794,18 @@ msgid ""
 "instead."
 msgstr ""
 
-#: src/network/ssl/ssl.c:158
+#: src/network/ssl/ssl.c:153
 msgid ""
 "Verify the peer's SSL certificate. Note that this\n"
 "probably doesn't work properly at all with GnuTLS."
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:177 src/network/ssl/ssl.c:194
+#: src/network/ssl/ssl.c:172 src/network/ssl/ssl.c:189
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:179
+#: src/network/ssl/ssl.c:174
 msgid "SSL options."
 msgstr "SSL-asetukset."
 
@@ -6003,7 +6007,7 @@ msgid ""
 msgstr ""
 
 #: src/network/state.c:100
-msgid "Server hang up for some reason"
+msgid "Server hung up for some reason"
 msgstr ""
 
 #: src/network/state.c:101
@@ -6707,11 +6711,11 @@ msgstr "Mitä tehdä?"
 msgid "Down~load"
 msgstr "~Lataa"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1111
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1118
 msgid "~Display"
 msgstr "~Näytä"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1115
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1122
 msgid "Show ~header"
 msgstr "Näytä ~otsake"
 
@@ -6764,7 +6768,7 @@ msgstr "Näytä piilotiedostot hakemistolistauksissa"
 #: src/protocol/file/file.c:64
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
-"hidden in local directories listing."
+"hidden in local directory listings."
 msgstr ""
 
 #: src/protocol/file/file.c:67
@@ -7051,13 +7055,13 @@ msgid ""
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
 "token in the first field is our silent attempt to establish this as\n"
 "a standard for new textmode user agents, so that the webmasters can\n"
-"have just a single uniform test for these if they are ie. pushing\n"
+"have just a single uniform test for these if they are e.g. pushing\n"
 "some lite version to them automagically.\n"
-"%v in the string means ELinks version\n"
-"%s in the string means system identification\n"
-"%t in the string means size of the terminal\n"
-"%b in the string means number of bars displayed by ELinks\n"
-"Use \" \" if you don't want any User-Agent header to be sent at all."
+"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+"%v in the string means ELinks version,\n"
+"%s in the string means system identification,\n"
+"%t in the string means size of the terminal,\n"
+"%b in the string means number of bars displayed by ELinks."
 msgstr ""
 
 #: src/protocol/http/http.c:202
@@ -7222,11 +7226,15 @@ msgid ""
 "the goto dialog does not appear to be a URI or a filename\n"
 "(i.e. contains no '.', ':' or '/' characters), and does\n"
 "not match any defined prefixes. Set the value to \"\" to\n"
-"disable use of the default template rewrite rule."
+"disable use of the default template rewrite rule.\n"
+"%c in the template means the current URL,\n"
+"%s in the template means the whole string from the goto dialog,\n"
+"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s,\n"
+"%% in the template means '%'."
 msgstr ""
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:367
+#: src/protocol/rewrite/rewrite.c:371
 msgid "URI rewrite"
 msgstr ""
 
@@ -7286,24 +7294,24 @@ msgstr "Ei ohjelmaa"
 msgid "No program specified for protocol %s."
 msgstr "Ei ohjelmaa osoitettu"
 
-#: src/scripting/lua/core.c:300
+#: src/scripting/lua/core.c:308
 #, fuzzy
 msgid "Error registering event hook"
 msgstr "Töpseliin kirjoitus ei onnistu"
 
-#: src/scripting/lua/core.c:449
+#: src/scripting/lua/core.c:457
 msgid "User dialog"
 msgstr ""
 
-#: src/scripting/lua/core.c:724
+#: src/scripting/lua/core.c:732
 msgid "Lua Error"
 msgstr "Lua-virhe"
 
-#: src/scripting/lua/core.c:874
+#: src/scripting/lua/core.c:882
 msgid "Lua Console"
 msgstr "Lua-konsoli"
 
-#: src/scripting/lua/core.c:874
+#: src/scripting/lua/core.c:882
 msgid "Enter expression"
 msgstr "Kirjoita lauseke"
 
@@ -7390,27 +7398,32 @@ msgstr "~Jatka alkuperäisen tiedoston latausta"
 msgid "Unknown type"
 msgstr "Tuntematon tyyppi"
 
-#: src/session/download.c:1037
+#: src/session/download.c:1040
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Mitä haluat tehdä tiedostolla \"%s\" (tyyppi: %s%s%s)?"
 
-#: src/session/download.c:1067
+#: src/session/download.c:1043
+#, fuzzy, c-format
+msgid "What would you like to do with the file (type: %s%s%s)?"
+msgstr "Mitä haluat tehdä tiedostolla \"%s\" (tyyppi: %s%s%s)?"
+
+#: src/session/download.c:1074
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Ohjelma (\"%\" korvataan tiedoston nimellä)"
 
-#: src/session/download.c:1071
+#: src/session/download.c:1078
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Varaa pääte"
 
-#: src/session/download.c:1077
+#: src/session/download.c:1084
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Tiedosto avataan ohjelmalla \"%s\"."
 
-#: src/session/download.c:1098
+#: src/session/download.c:1105
 msgid "~Open"
 msgstr "~Avaa"
 
@@ -7425,13 +7438,13 @@ msgstr "Varoitus"
 
 #: src/session/session.c:743
 msgid ""
-"You have empty string in protocol.http.user_agent - this was a default value "
-"in the past, substituted by default ELinks User-Agent string. However, "
+"You have an empty string in protocol.http.user_agent - this was a default "
+"value in the past, substituted by default ELinks User-Agent string. However, "
 "currently this means that NO User-Agent HEADER WILL BE SENT AT ALL - if this "
-"is really what you want, set its value to \" \", otherwise please delete "
-"line with this settings from your configuration file (if you have no idea "
-"what I'm talking about, just do this), so that correct default setting will "
-"be used. Apologies for any inconvience caused."
+"is really what you want, set its value to \" \", otherwise please delete the "
+"line with this setting from your configuration file (if you have no idea "
+"what I'm talking about, just do this), so that the correct default setting "
+"will be used. Apologies for any inconvience caused."
 msgstr ""
 
 #: src/session/session.c:762
@@ -7439,12 +7452,12 @@ msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
 "you upgraded ELinks. Now, only those options which you actually changed are "
-"saved to the configuration file, instead of just all the options. This "
-"simplifies our situation greatly when we see that some option has "
-"inappropriate default value or we need to change semantic of some option in "
-"a subtle way. Thus, we recommend you to change the value of config."
-"saving_style option to 3 in order to get the \"right\" behaviour. Apologies "
-"for any inconvience caused."
+"saved to the configuration file, instead of all the options. This simplifies "
+"our situation greatly when we see that some option has an inappropriate "
+"default value or we need to change the semantics of some option in a subtle "
+"way. Thus, we recommend you change the value of config.saving_style option "
+"to 3 in order to get the \"right\" behaviour. Apologies for any inconvience "
+"caused."
 msgstr ""
 
 #: src/session/session.c:787
@@ -7521,7 +7534,7 @@ msgstr ""
 msgid "Could not read event: %d (%s)"
 msgstr "Tiedostoon kirjoitus epäonnistui"
 
-#: src/terminal/kbd.c:922
+#: src/terminal/kbd.c:926
 msgid "Too many bytes read from the itrm!"
 msgstr ""
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-15 09:56+0200\n"
+"POT-Creation-Date: 2008-06-20 21:44+0200\n"
 "PO-Revision-Date: 2007-04-15 09:20+0200\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
@@ -32,9 +32,9 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/bfu/hierbox.c:429 src/bfu/inpfield.c:254 src/bfu/msgbox.c:172
 #: src/bfu/msgbox.c:189 src/config/dialogs.c:57 src/config/dialogs.c:391
 #: src/cookies/dialogs.c:355 src/dialogs/edit.c:97 src/dialogs/info.c:133
-#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:129
+#: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
-#: src/scripting/lua/core.c:377 src/scripting/lua/core.c:457
+#: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
 #: src/session/session.c:792 src/viewer/text/search.c:1593
 msgid "~OK"
 msgstr "~OK"
@@ -133,8 +133,8 @@ msgstr "Chaîne recherchée '%s' introuvable"
 
 #: src/bfu/hierbox.c:944 src/config/dialogs.c:168 src/config/dialogs.c:357
 #: src/config/dialogs.c:504 src/cookies/dialogs.c:34 src/cookies/dialogs.c:349
-#: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:373
-#: src/scripting/lua/core.c:374 src/scripting/lua/core.c:454
+#: src/dialogs/edit.c:91 src/dialogs/edit.c:93 src/scripting/lua/core.c:381
+#: src/scripting/lua/core.c:382 src/scripting/lua/core.c:462
 msgid "Name"
 msgstr "Nom"
 
@@ -161,10 +161,10 @@ msgstr "Chaîne vide non autorisée"
 
 #: src/bfu/inpfield.c:254 src/config/dialogs.c:392 src/cookies/dialogs.c:356
 #: src/dialogs/edit.c:101 src/dialogs/edit.c:104 src/dialogs/options.c:220
-#: src/dialogs/options.c:298 src/mime/dialogs.c:130
+#: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
-#: src/scripting/lua/core.c:378 src/scripting/lua/core.c:458
-#: src/session/download.c:544 src/session/download.c:1121
+#: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
+#: src/session/download.c:544 src/session/download.c:1128
 #: src/viewer/text/search.c:1594
 msgid "~Cancel"
 msgstr "~Annuler"
@@ -222,6 +222,7 @@ msgid "LED indicators"
 msgstr "Indicateurs LED"
 
 #: src/bfu/leds.c:303
+#, fuzzy
 msgid ""
 "What the different LEDs indicate:\n"
 "\n"
@@ -229,7 +230,7 @@ msgid ""
 " |||||`- Unused\n"
 " ||||`-- Unused\n"
 " |||`--- A JavaScript pop-up window was blocked\n"
-" ||`---- A JavaScript error has occured\n"
+" ||`---- A JavaScript error has occurred\n"
 " |`----- The state of insert mode for text-input form-fields\n"
 " |       'i' means modeless, 'I' means insert mode is on\n"
 " `------ Whether an SSL connection was used\n"
@@ -359,7 +360,7 @@ msgstr "Titre"
 #: src/bookmarks/dialogs.c:71 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:95 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:159
-#: src/scripting/lua/core.c:375
+#: src/scripting/lua/core.c:383
 msgid "URL"
 msgstr "URL"
 
@@ -419,7 +420,7 @@ msgstr "Créer dossier"
 msgid "Folder name"
 msgstr "Nom du dossier"
 
-#: src/bookmarks/dialogs.c:326 src/scripting/lua/core.c:369
+#: src/bookmarks/dialogs.c:326 src/scripting/lua/core.c:377
 msgid "Edit bookmark"
 msgstr "Modifier un signet"
 
@@ -1202,55 +1203,55 @@ msgstr "Guillemet de fin d'argument non correspondant"
 msgid "Garbage after quoted argument"
 msgstr "Contenu inattendu après l'argument entre guillemets"
 
-#: src/config/cmdline.c:390
+#: src/config/cmdline.c:393
 msgid "Remote method not supported"
 msgstr "Méthode remote non supportée"
 
-#: src/config/cmdline.c:442
+#: src/config/cmdline.c:445
 msgid "Template option folder"
 msgstr "Dossier des modèles d'option"
 
-#: src/config/cmdline.c:465
+#: src/config/cmdline.c:468
 #, c-format
 msgid "(default: %ld)"
 msgstr "(défaut: %ld)"
 
-#: src/config/cmdline.c:472 src/config/cmdline.c:501
+#: src/config/cmdline.c:475 src/config/cmdline.c:504
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(défaut: \"%s\")"
 
-#: src/config/cmdline.c:477
+#: src/config/cmdline.c:480
 #, c-format
 msgid "(alias for %s)"
 msgstr "(alias for %s)"
 
-#: src/config/cmdline.c:482 src/config/cmdline.c:491
+#: src/config/cmdline.c:485 src/config/cmdline.c:494
 #, c-format
 msgid "(default: %s)"
 msgstr "(défaut: %s)"
 
-#: src/config/cmdline.c:625
+#: src/config/cmdline.c:628
 msgid "Configuration options"
 msgstr "Options de configuration"
 
-#: src/config/cmdline.c:629
+#: src/config/cmdline.c:632
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr "Usage: elinks [OPTION]... [URL]..."
 
-#: src/config/cmdline.c:630
+#: src/config/cmdline.c:633
 msgid "Options"
 msgstr "Options"
 
-#: src/config/cmdline.c:672
+#: src/config/cmdline.c:675
 msgid "Internal consistency error"
 msgstr "Erreur interne"
 
-#: src/config/cmdline.c:707
+#: src/config/cmdline.c:710
 msgid "Restrict to anonymous mode"
 msgstr "Restriction au mode anonyme"
 
-#: src/config/cmdline.c:709
+#: src/config/cmdline.c:712
 msgid ""
 "Restricts ELinks so it can run on an anonymous account.\n"
 "Local file browsing, downloads, and modification of options\n"
@@ -1263,19 +1264,19 @@ msgstr ""
 "désactivés. L'utilisation de visualisateurs externes reste \n"
 "possible, mais les associations ne peuvent être modifiées."
 
-#: src/config/cmdline.c:714
+#: src/config/cmdline.c:717
 msgid "Autosubmit first form"
 msgstr "Envoyer automatiquement le premier formulaire"
 
-#: src/config/cmdline.c:716
+#: src/config/cmdline.c:719
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Envoyer automatiquement le premier formulaire de l'URL donnée."
 
-#: src/config/cmdline.c:718
+#: src/config/cmdline.c:721
 msgid "Clone internal session with given ID"
 msgstr "Cloner la session interne ayant l'ID donné"
 
-#: src/config/cmdline.c:720
+#: src/config/cmdline.c:723
 msgid ""
 "Used internally when opening ELinks instances in new windows.\n"
 "The ID maps to information that will be used when creating the\n"
@@ -1287,11 +1288,11 @@ msgstr ""
 "nouvelle instance.\n"
 "N'utilisez pas cette option."
 
-#: src/config/cmdline.c:726
+#: src/config/cmdline.c:729
 msgid "Name of directory with configuration file"
 msgstr "Nom du répertoire contenant les fichiers de configuration"
 
-#: src/config/cmdline.c:728
+#: src/config/cmdline.c:731
 msgid ""
 "Path of the directory ELinks will read and write its\n"
 "config and runtime state files to instead of ~/.elinks.\n"
@@ -1303,11 +1304,11 @@ msgstr ""
 "Si le chemin ne commence pas par un '/', il sera considéré\n"
 "relatif à votre répertoire HOME."
 
-#: src/config/cmdline.c:733
+#: src/config/cmdline.c:736
 msgid "Print default configuration file to stdout"
 msgstr "Imprimer le fichier de configuration par défaut sur la sortie standart"
 
-#: src/config/cmdline.c:735
+#: src/config/cmdline.c:738
 msgid ""
 "Print a configuration file with options set to the built-in\n"
 "defaults to stdout."
@@ -1315,11 +1316,11 @@ msgstr ""
 "Imprimer un fichier de configuration contenant les options par défaut\n"
 "sur la sortie standart."
 
-#: src/config/cmdline.c:740
+#: src/config/cmdline.c:743
 msgid "Name of configuration file"
 msgstr "Nom du fichier de configuration"
 
-#: src/config/cmdline.c:742
+#: src/config/cmdline.c:745
 msgid ""
 "Name of the configuration file that all configuration\n"
 "options will be read from and written to. It should be\n"
@@ -1329,29 +1330,29 @@ msgstr ""
 "et lues les options de configuration. Il doit être relatif\n"
 "à config-dir."
 
-#: src/config/cmdline.c:746
+#: src/config/cmdline.c:749
 msgid "Print help for configuration options"
 msgstr "Afficher l'aide pour les options de configuration"
 
-#: src/config/cmdline.c:748
+#: src/config/cmdline.c:751
 msgid "Print help for configuration options and exit."
 msgstr "Afficher l'aide pour les options de configuration et quitter."
 
-#: src/config/cmdline.c:750
+#: src/config/cmdline.c:753
 msgid "MIME type assumed for unknown document types"
 msgstr "Type MIME à supposer pour les documents de type inconnu"
 
-#: src/config/cmdline.c:752
+#: src/config/cmdline.c:755
 msgid "The default MIME type used for documents of unknown type."
 msgstr ""
 "Le type MIME par défaut à utiliser pour les documents dont\n"
 "le type est inconnu."
 
-#: src/config/cmdline.c:754
+#: src/config/cmdline.c:757
 msgid "Ignore user-defined keybindings"
 msgstr "Ignorer les associations de touches utilisateur"
 
-#: src/config/cmdline.c:756
+#: src/config/cmdline.c:759
 msgid ""
 "When set, all keybindings from configuration files will be\n"
 "ignored. It forces use of default keybindings and will reset\n"
@@ -1363,38 +1364,38 @@ msgstr ""
 "réinitialisera les associations de touches définies par\n"
 "l'utilisateur lors d'une nouvelle sauvegarde."
 
-#: src/config/cmdline.c:760
+#: src/config/cmdline.c:763
 msgid "Print formatted versions of given URLs to stdout"
 msgstr ""
 "Imprimer les versions formatées des URLs données sur la sortie standard"
 
-#: src/config/cmdline.c:762
+#: src/config/cmdline.c:765
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Imprimer les versions plein texte formatées des URLs données sur la \n"
 "sortie standard."
 
-#: src/config/cmdline.c:764
+#: src/config/cmdline.c:767
 msgid "Codepage to use with -dump"
 msgstr "Jeu de caractères à utiliser avec -dump"
 
-#: src/config/cmdline.c:766
+#: src/config/cmdline.c:769
 msgid "Codepage used when formatting dump output."
 msgstr "Jeu de caractères utilisé lors du formatage de la sortie (dump)."
 
-#: src/config/cmdline.c:768
+#: src/config/cmdline.c:771
 msgid "Width of document formatted with -dump"
 msgstr "Largeur de document formaté à utiliser avec -dump"
 
-#: src/config/cmdline.c:770
+#: src/config/cmdline.c:773
 msgid "Width of the dump output."
 msgstr "Largeur de sortie (dump)."
 
-#: src/config/cmdline.c:772
+#: src/config/cmdline.c:775
 msgid "Evaluate configuration file directive"
 msgstr "Evalue une directive de fichier de configuration"
 
-#: src/config/cmdline.c:774
+#: src/config/cmdline.c:777
 msgid ""
 "Specify configuration file directives on the command-line\n"
 "which will be evaluated after all configuration files has been\n"
@@ -1407,11 +1408,11 @@ msgstr ""
 "  -eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:780
+#: src/config/cmdline.c:783
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Interprète les documents de type inconnu comme de l'HTML"
 
-#: src/config/cmdline.c:782
+#: src/config/cmdline.c:785
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML.\n"
 "Useful when using ELinks as an external viewer from MUAs.\n"
@@ -1422,19 +1423,19 @@ msgstr ""
 "d'ELinks comme visualisateur pour les clients mail.\n"
 "C'est équivalent à -default-mime-type text/html."
 
-#: src/config/cmdline.c:792
+#: src/config/cmdline.c:795
 msgid "Print usage help and exit"
 msgstr "Afficher l'aide et quitter"
 
-#: src/config/cmdline.c:794
+#: src/config/cmdline.c:797
 msgid "Print usage help and exit."
 msgstr "Afficher l'aide et quitter."
 
-#: src/config/cmdline.c:796
+#: src/config/cmdline.c:799
 msgid "Only permit local connections"
 msgstr "Permettre seulement les connexions locales"
 
-#: src/config/cmdline.c:798
+#: src/config/cmdline.c:801
 msgid ""
 "Restricts ELinks to work offline and only connect to servers\n"
 "with local addresses (ie. 127.0.0.1). No connections to remote\n"
@@ -1444,29 +1445,29 @@ msgstr ""
 "connexions vers des adresses locales (par exemple, 127.0.0.1),\n"
 "cela rend impossible toute connexion vers des sites distants."
 
-#: src/config/cmdline.c:802
+#: src/config/cmdline.c:805
 msgid "Print detailed usage help and exit"
 msgstr "Afficher l'aide détaillée et quitter"
 
-#: src/config/cmdline.c:804
+#: src/config/cmdline.c:807
 msgid "Print detailed usage help and exit."
 msgstr "Afficher l'aide détaillée et quitter."
 
-#: src/config/cmdline.c:806
+#: src/config/cmdline.c:809
 msgid "Look up specified host"
 msgstr "Résolution du nom de l'hôte spécifié"
 
-#: src/config/cmdline.c:808
+#: src/config/cmdline.c:811
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 "Résoudre le nom d'hôte spécifié et imprimer toutes les adresses IP\n"
 "correspondantes."
 
-#: src/config/cmdline.c:810
+#: src/config/cmdline.c:813
 msgid "Run as separate instance"
 msgstr "Exécuter en tant qu'instance séparée"
 
-#: src/config/cmdline.c:812
+#: src/config/cmdline.c:815
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an\n"
 "existing instance. Note that normally no runtime state files\n"
@@ -1478,11 +1479,11 @@ msgstr ""
 "(signets, historique, etc.) n'est modifié quand cette option est\n"
 "utilisée. Voir aussi -touch-files."
 
-#: src/config/cmdline.c:817
+#: src/config/cmdline.c:820
 msgid "Disable use of files in ~/.elinks"
 msgstr "Ne pas utiliser les fichiers dans ~/.elinks"
 
-#: src/config/cmdline.c:819
+#: src/config/cmdline.c:822
 msgid ""
 "Disables creation and use of files in the user specific home\n"
 "configuration directory (~/.elinks). It forces default configuration\n"
@@ -1493,11 +1494,11 @@ msgstr ""
 "Cela force l'utilisation des valeurs de configuration par défaut et\n"
 "désactive la sauvegarde des fichiers d'état lors de l'exécution."
 
-#: src/config/cmdline.c:823
+#: src/config/cmdline.c:826
 msgid "Disable link numbering in dump output"
 msgstr "Ne pas numéroter les liens en sortie (dump)"
 
-#: src/config/cmdline.c:825
+#: src/config/cmdline.c:828
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "Note that this really affects only -dump, nothing else."
@@ -1505,11 +1506,11 @@ msgstr ""
 "Supprime l'affichage des numéros de liens dans la sortie de -dump.\n"
 "Notez que cette option ne concerne que -dump et rien d'autre."
 
-#: src/config/cmdline.c:828
+#: src/config/cmdline.c:831
 msgid "Disable printing of link references in dump output"
 msgstr "Ne pas afficher les références des liens dans la sortie (dump)"
 
-#: src/config/cmdline.c:830
+#: src/config/cmdline.c:833
 msgid ""
 "Prevents printing of references (URIs) of document links\n"
 "in dump output.\n"
@@ -1518,11 +1519,11 @@ msgstr ""
 "Supprime l'affichage des références des liens dans la sortie de -dump.\n"
 "Notez que cette option ne concerne que -dump et rien d'autre."
 
-#: src/config/cmdline.c:834
+#: src/config/cmdline.c:837
 msgid "Control an already running ELinks"
 msgstr "Contrôler une instance préexistante d'ELinks"
 
-#: src/config/cmdline.c:836
+#: src/config/cmdline.c:839
 msgid ""
 "Control a remote ELinks instance by passing commands to it.\n"
 "The option takes an additional argument containing the method\n"
@@ -1556,11 +1557,11 @@ msgstr ""
 "\tinfoBox(text)               : montre un texte dans un boîte de dialogue\n"
 "\txfeDoCommand(openBrowser) : ouvre une nouvelle fenêtre"
 
-#: src/config/cmdline.c:852
+#: src/config/cmdline.c:855
 msgid "Connect to session ring with given ID"
 msgstr "Se connecter au groupe de sessions correspondant à cet ID"
 
-#: src/config/cmdline.c:854
+#: src/config/cmdline.c:857
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks\n"
 "works in so-called session rings, whereby all instances of ELinks\n"
@@ -1591,22 +1592,22 @@ msgstr ""
 "-no-connect. Dans tous les cas, les fichiers d'état ne sont pas modifiés\n"
 "sur le disque, sauf si vous utilisez conjointement l'option -touch-files."
 
-#: src/config/cmdline.c:869
+#: src/config/cmdline.c:872
 msgid "Print the source of given URLs to stdout"
 msgstr "Imprimer la source des URLs données sur la sortie standard"
 
-#: src/config/cmdline.c:871
+#: src/config/cmdline.c:874
 msgid "Print given URLs in source form to stdout."
 msgstr ""
 "Imprimer les URLs données dans leur forme source sur la sortie standard."
 
-#: src/config/cmdline.c:875
+#: src/config/cmdline.c:878
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Modifier les fichiers dans ~/.elinks avec les options -no-connect/-session-"
 "ring"
 
-#: src/config/cmdline.c:877
+#: src/config/cmdline.c:880
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are\n"
 "written to disk, even when -no-connect or -session-ring is used.\n"
@@ -1618,11 +1619,11 @@ msgstr ""
 "sont utilisées. Cette option n'a aucun effet si elle n'est pas\n"
 "utilisée en conjonction avec ces options."
 
-#: src/config/cmdline.c:882
+#: src/config/cmdline.c:885
 msgid "Verbose level"
 msgstr "Niveau de verbosité"
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:887
 msgid ""
 "The verbose level controls what messages are shown at\n"
 "start up and while running:\n"
@@ -1636,11 +1637,11 @@ msgstr ""
 "\t1 pour ne montrer que les erreurs sérieuses et les alertes\n"
 "\t2 pour montrer tous les messages"
 
-#: src/config/cmdline.c:890
+#: src/config/cmdline.c:893
 msgid "Print version information and exit"
 msgstr "Afficher la version et quitter"
 
-#: src/config/cmdline.c:892
+#: src/config/cmdline.c:895
 msgid "Print ELinks version information and exit."
 msgstr "Afficher la version d'ELinks et quitter."
 
@@ -1840,7 +1841,7 @@ msgstr "Impossible d'ajouter une option ici."
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:425
 #: src/dialogs/options.c:219 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1105
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1112
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
 
@@ -2112,14 +2113,15 @@ msgid "Try IPv4 when connecting"
 msgstr "Essayer IPv4 lors des connexions"
 
 #: src/config/options.inc:99
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Note that if connection.try_ipv6 is enabled too,\n"
 "it takes precedence. And better do not touch this\n"
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http4://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Essayer ou non de se connecter en IPv4 à un hôte.\n"
 "Notez que si connection.try_ipv6 est activé aussi,\n"
@@ -2130,12 +2132,13 @@ msgstr ""
 "du style http4://elinks.or.cz/."
 
 #: src/config/options.inc:109
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http4://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Essayer ou non de se connecter en IPv4 à un hôte.\n"
 "Ne touchez pas à ça du tout à moins de savoir ce\n"
@@ -2149,11 +2152,12 @@ msgid "Try IPv6 when connecting"
 msgstr "Essayer IPv6 lors des connexions"
 
 #: src/config/options.inc:119
+#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
-"in the style of i.e. http6://elinks.or.cz/."
+"to be used on a per-connection basis by using a URL\n"
+"in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Essayer ou non de se connecter en IPv6 à un hôte.\n"
 "Vous pouvez toujours forcer l'utilisation d'un\n"
@@ -2567,11 +2571,12 @@ msgid "Use tabindex"
 msgstr "Utiliser tabindex"
 
 #: src/config/options.inc:325
+#, fuzzy
 msgid ""
 "Whether to navigate links using tabindex specified ordering.\n"
 "The TABINDEX attribute in HTML elements specifies the order\n"
 "in which links should receive focus when using the keyboard\n"
-"to navigating the document."
+"to navigate the document."
 msgstr ""
 "Autoriser ou non la navigation dans les liens en utilisant\n"
 "l'ordre spécifiée par l'attribut TABINDEX. Cet attribut indique\n"
@@ -2628,8 +2633,9 @@ msgstr "Sélection cyclique des liens"
 
 #. 0
 #: src/config/options.inc:352
+#, fuzzy
 msgid ""
-"When pressing 'down' on the last link, jump at the first one, and\n"
+"When pressing 'down' on the last link, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 "En pressant la touche BAS sur le dernier lien, sauter au premier, et\n"
@@ -2732,8 +2738,9 @@ msgid "Show search hit top or bottom dialogs"
 msgstr "Montrer les dialogues de limite de recherche"
 
 #: src/config/options.inc:402
+#, fuzzy
 msgid ""
-"Whether to show a dialog when the search hits top or bottom of the\n"
+"Whether to show a dialog when the search hits the top or bottom of the\n"
 "document."
 msgstr ""
 "Montrer un dialogue indiquant que la recherche a atteint le haut ou\n"
@@ -2861,12 +2868,13 @@ msgid "Cache information about redirects"
 msgstr "Cacher les informations concernant les redirections"
 
 #: src/config/options.inc:461
+#, fuzzy
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302\n"
 "HTTP code and a Location header). This was the original behaviour\n"
-"for a quite some time, but it causes problems in a situation very\n"
+"for quite some time, but it causes problems in a situation very\n"
 "common to various web login systems - frequently, when accessing\n"
-"certain location, they will redirect you to a login page if they\n"
+"a certain location, they will redirect you to a login page if they\n"
 "don't receive an auth cookie, the login page then gives you the\n"
 "cookie and redirects you back to the original page, but there you\n"
 "have already cached redirect back to the login page! If this\n"
@@ -2876,7 +2884,7 @@ msgid ""
 "still workaround it by clever combination of usage of reload,\n"
 "jumping around in session history and hitting ctrl+enter.\n"
 "Note that this option is checked when retrieving the information\n"
-"from cache, not when saving it to cache - thus if you will enable\n"
+"from cache, not when saving it to cache - thus if you enable\n"
 "it, even previous redirects will be taken from cache instead of\n"
 "asking the server."
 msgstr ""
@@ -3056,7 +3064,8 @@ msgid "Ensure contrast"
 msgstr "Garantir le contraste"
 
 #: src/config/options.inc:576
-msgid "Makes sure that the back- and foreground color are never equal."
+#, fuzzy
+msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Forcer l'utilisation de couleurs différentes pour le fond et le texte."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
@@ -3277,7 +3286,8 @@ msgid "Display superscripts (as ^thing)."
 msgstr "Afficher superscripts (comme ^chose)."
 
 #: src/config/options.inc:690
-msgid "Rendering of html link element"
+#, fuzzy
+msgid "Rendering of HTML link element"
 msgstr "Rendu des éléments html link"
 
 #: src/config/options.inc:692
@@ -3349,6 +3359,7 @@ msgid "URI passing"
 msgstr "Passage d'URI"
 
 #: src/config/options.inc:726
+#, fuzzy
 msgid ""
 "Rules for passing URIs to external commands. When one rule\n"
 "is defined the link and tab menu will have a menu item that\n"
@@ -3356,7 +3367,7 @@ msgid ""
 "an external command. If several rules are defined the link and\n"
 "tab menu will have a submenu of items for each rule. Note, this\n"
 "is mostly useful for launching graphical viewers, since there\n"
-"is not support for releasing the terminal while the command runs.\n"
+"is no support for releasing the terminal while the command runs.\n"
 "The action and submenus are also available by binding keys to\n"
 "the frame-external-command, the link-external-command, and\n"
 "the tab-external-command actions."
@@ -3401,9 +3412,10 @@ msgid "Save interval"
 msgstr "Intervalle pour la sauvegarde automatique"
 
 #: src/config/options.inc:755
+#, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.elinks\n"
-"to be saved to disk if they has changed (seconds; 0 to disable)"
+"to be saved to disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 "Intervalle pour la sauvegarde des fichiers d'information dans ~/.elinks\n"
 "lorsque ceux-ci ont été modifiés (en secondes; 0 pour désactiver)"
@@ -4000,9 +4012,10 @@ msgid "Underline menu hotkeys"
 msgstr "Souligner les raccourcis des menus"
 
 #: src/config/options.inc:1112
+#, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Souligner ou non les raccourcis des menus pour les rendre\n"
 "plus visibles. Le soulignement doit être activé pour le terminal."
@@ -4012,9 +4025,10 @@ msgid "Underline button shortcuts"
 msgstr "Souligner les raccourcis des boutons"
 
 #: src/config/options.inc:1117
+#, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Souligner ou non les raccourcis des boutons pour les rendre\n"
 "plus visibles. Le soulignement doit être activé pour le terminal."
@@ -4100,8 +4114,9 @@ msgid "Wrap-around tabs cycling"
 msgstr "Navigation cyclique dans les onglets"
 
 #: src/config/options.inc:1165
+#, fuzzy
 msgid ""
-"When moving right from the last tab, jump at the first one, and\n"
+"When moving right from the last tab, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 "En cas de déplacement à droite sur le dernier onglet, saute au premier\n"
@@ -4404,7 +4419,8 @@ msgid "Saving"
 msgstr "Sauvegarde"
 
 #: src/cookies/cookies.c:113
-msgid "Whether cookies should be loaded from and save to disk."
+#, fuzzy
+msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Charger/sauvegarder ou non les cookies sur disque."
 
 #: src/cookies/cookies.c:115
@@ -4688,13 +4704,13 @@ msgid "Copying"
 msgstr "Licence"
 
 #: src/dialogs/info.c:142
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2006 Jonas Fonseca\n"
+"(C) 2002 - 2008 Jonas Fonseca\n"
 "and others\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
@@ -4878,7 +4894,8 @@ msgid "Bookm~ark document"
 msgstr "~Signet pour ce document"
 
 #: src/dialogs/menu.c:243 src/dialogs/menu.c:403
-msgid "Toggle ~html/plain"
+#, fuzzy
+msgid "Toggle ~HTML/plain"
 msgstr "~Bascule html/source"
 
 #: src/dialogs/menu.c:244
@@ -5382,7 +5399,7 @@ msgstr ""
 "Laisser à \"\" pour utiliser le style initial du document."
 
 #. name:
-#: src/ecmascript/ecmascript.c:36 src/ecmascript/ecmascript.c:201
+#: src/ecmascript/ecmascript.c:36 src/ecmascript/ecmascript.c:218
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
@@ -6077,9 +6094,10 @@ msgid "Mimetypes files"
 msgstr "Fichiers mime.types"
 
 #: src/mime/backend/mimetypes.c:48
+#, fuzzy
 msgid ""
 "Options for the support of mime.types files. These files\n"
-"can be used to find the content type of an URL by looking at\n"
+"can be used to find the content type of a URL by looking at\n"
 "the extension of the file name."
 msgstr ""
 "Options pour le support des fichiers mime.types. Ces fichiers\n"
@@ -6105,19 +6123,19 @@ msgstr "Supprimer l'extension"
 msgid "Delete extension %s -> %s?"
 msgstr "Supprimer l'extension %s -> %s ?"
 
-#: src/mime/dialogs.c:123
+#: src/mime/dialogs.c:126
 msgid "Extension"
 msgstr "Extension"
 
-#: src/mime/dialogs.c:126
+#: src/mime/dialogs.c:129
 msgid "Extension(s)"
 msgstr "Extension(s)"
 
-#: src/mime/dialogs.c:127
+#: src/mime/dialogs.c:130
 msgid "Content-Type"
 msgstr "Type de contenu"
 
-#: src/mime/dialogs.c:139
+#: src/mime/dialogs.c:142
 msgid "No extensions"
 msgstr "Aucune extension"
 
@@ -6142,7 +6160,7 @@ msgstr ""
 "Type MIME du document par défaut (quand il ne peut être\n"
 "deviner grâce aux informations connues concernant le document)."
 
-#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:156
+#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:151
 msgid "Verify certificates"
 msgstr "Vérification des certificats"
 
@@ -6186,7 +6204,7 @@ msgstr ""
 "indiqué par la variable d'environnement X509_CLIENT_CERT sera\n"
 "utilisé."
 
-#: src/network/ssl/ssl.c:158
+#: src/network/ssl/ssl.c:153
 msgid ""
 "Verify the peer's SSL certificate. Note that this\n"
 "probably doesn't work properly at all with GnuTLS."
@@ -6195,11 +6213,11 @@ msgstr ""
 "probablement pas correctement avec GnuTLS."
 
 #. name:
-#: src/network/ssl/ssl.c:177 src/network/ssl/ssl.c:194
+#: src/network/ssl/ssl.c:172 src/network/ssl/ssl.c:189
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:179
+#: src/network/ssl/ssl.c:174
 msgid "SSL options."
 msgstr "Options SSL."
 
@@ -6408,7 +6426,8 @@ msgstr ""
 "ou la variable d'environnement NNTPSERVER."
 
 #: src/network/state.c:100
-msgid "Server hang up for some reason"
+#, fuzzy
+msgid "Server hung up for some reason"
 msgstr "Le serveur est bloqué pour une raison inconnue"
 
 #: src/network/state.c:101
@@ -7160,11 +7179,11 @@ msgstr "Que faire ?"
 msgid "Down~load"
 msgstr "Té~lécharger"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1111
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1118
 msgid "~Display"
 msgstr "A~fficher"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1115
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1122
 msgid "Show ~header"
 msgstr "~Montrer les en-têtes"
 
@@ -7216,9 +7235,10 @@ msgid "Show hidden files in directory listing"
 msgstr "Montrer les fichiers cachés"
 
 #: src/protocol/file/file.c:64
+#, fuzzy
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
-"hidden in local directories listing."
+"hidden in local directory listings."
 msgstr ""
 "Si mis à faux, les fichiers dont le nom commencent par un point\n"
 "seront cachés lors de la visualisation du contenu d'un répertoire\n"
@@ -7535,18 +7555,19 @@ msgid "User-agent identification"
 msgstr "Identification du client"
 
 #: src/protocol/http/http.c:189
+#, fuzzy
 msgid ""
 "Change the User Agent ID. That means identification string, which\n"
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
 "token in the first field is our silent attempt to establish this as\n"
 "a standard for new textmode user agents, so that the webmasters can\n"
-"have just a single uniform test for these if they are ie. pushing\n"
+"have just a single uniform test for these if they are e.g. pushing\n"
 "some lite version to them automagically.\n"
-"%v in the string means ELinks version\n"
-"%s in the string means system identification\n"
-"%t in the string means size of the terminal\n"
-"%b in the string means number of bars displayed by ELinks\n"
-"Use \" \" if you don't want any User-Agent header to be sent at all."
+"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+"%v in the string means ELinks version,\n"
+"%s in the string means system identification,\n"
+"%t in the string means size of the terminal,\n"
+"%b in the string means number of bars displayed by ELinks."
 msgstr ""
 "Change l'identification du navigateur.\n"
 "Il s'agit de l'en-tête User-Agent envoyé aux serveurs lors d'une\n"
@@ -7757,12 +7778,17 @@ msgid "Default template"
 msgstr "Modèle par défaut"
 
 #: src/protocol/rewrite/rewrite.c:95
+#, fuzzy
 msgid ""
 "Default URI template used when the string entered in\n"
 "the goto dialog does not appear to be a URI or a filename\n"
 "(i.e. contains no '.', ':' or '/' characters), and does\n"
 "not match any defined prefixes. Set the value to \"\" to\n"
-"disable use of the default template rewrite rule."
+"disable use of the default template rewrite rule.\n"
+"%c in the template means the current URL,\n"
+"%s in the template means the whole string from the goto dialog,\n"
+"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s,\n"
+"%% in the template means '%'."
 msgstr ""
 "Modèle d'URI utilisé par défaut quand une chaîne entrée dans\n"
 "la dialogue \"Atteindre l'URL\" n'est ni une URI ni un fichier\n"
@@ -7771,7 +7797,7 @@ msgstr ""
 "à \"\" pour désactiver l'usage de ce modèle."
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:367
+#: src/protocol/rewrite/rewrite.c:371
 msgid "URI rewrite"
 msgstr "Ré-écriture d'URI"
 
@@ -7842,23 +7868,23 @@ msgstr "Aucun programme"
 msgid "No program specified for protocol %s."
 msgstr "Aucun programme spécifié pour le protocole %s."
 
-#: src/scripting/lua/core.c:300
+#: src/scripting/lua/core.c:308
 msgid "Error registering event hook"
 msgstr "Erreur d'enregistrement d'une fonction de rappel d'événement"
 
-#: src/scripting/lua/core.c:449
+#: src/scripting/lua/core.c:457
 msgid "User dialog"
 msgstr "Dialogue utilisateur"
 
-#: src/scripting/lua/core.c:724
+#: src/scripting/lua/core.c:732
 msgid "Lua Error"
 msgstr "Erreur Lua"
 
-#: src/scripting/lua/core.c:874
+#: src/scripting/lua/core.c:882
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:874
+#: src/scripting/lua/core.c:882
 msgid "Enter expression"
 msgstr "Entrez une expression"
 
@@ -7945,26 +7971,31 @@ msgstr "~Reprendre le téléchargement du fichier original"
 msgid "Unknown type"
 msgstr "Type inconnu"
 
-#: src/session/download.c:1037
+#: src/session/download.c:1040
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Que voulez-vous faire avec le fichier '%s' (type: %s%s%s) ?"
 
-#: src/session/download.c:1067
+#: src/session/download.c:1043
+#, fuzzy, c-format
+msgid "What would you like to do with the file (type: %s%s%s)?"
+msgstr "Que voulez-vous faire avec le fichier '%s' (type: %s%s%s) ?"
+
+#: src/session/download.c:1074
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Programme ('%' sera remplacé par le nom du fichier)"
 
-#: src/session/download.c:1071
+#: src/session/download.c:1078
 msgid "Block the terminal"
 msgstr "Bloquer le terminal"
 
-#: src/session/download.c:1077
+#: src/session/download.c:1084
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Le fichier sera ouvert avec le programme '%s'."
 
-#: src/session/download.c:1098
+#: src/session/download.c:1105
 msgid "~Open"
 msgstr "~Ouvrir"
 
@@ -7978,14 +8009,15 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: src/session/session.c:743
+#, fuzzy
 msgid ""
-"You have empty string in protocol.http.user_agent - this was a default value "
-"in the past, substituted by default ELinks User-Agent string. However, "
+"You have an empty string in protocol.http.user_agent - this was a default "
+"value in the past, substituted by default ELinks User-Agent string. However, "
 "currently this means that NO User-Agent HEADER WILL BE SENT AT ALL - if this "
-"is really what you want, set its value to \" \", otherwise please delete "
-"line with this settings from your configuration file (if you have no idea "
-"what I'm talking about, just do this), so that correct default setting will "
-"be used. Apologies for any inconvience caused."
+"is really what you want, set its value to \" \", otherwise please delete the "
+"line with this setting from your configuration file (if you have no idea "
+"what I'm talking about, just do this), so that the correct default setting "
+"will be used. Apologies for any inconvience caused."
 msgstr ""
 "L'option protocol.http.user_agent contient une chaîne vide - c'était la "
 "valeur qui, dans le passé, était remplacée par la chaîne d'identification de "
@@ -7997,16 +8029,17 @@ msgstr ""
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
 #: src/session/session.c:762
+#, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
 "you upgraded ELinks. Now, only those options which you actually changed are "
-"saved to the configuration file, instead of just all the options. This "
-"simplifies our situation greatly when we see that some option has "
-"inappropriate default value or we need to change semantic of some option in "
-"a subtle way. Thus, we recommend you to change the value of config."
-"saving_style option to 3 in order to get the \"right\" behaviour. Apologies "
-"for any inconvience caused."
+"saved to the configuration file, instead of all the options. This simplifies "
+"our situation greatly when we see that some option has an inappropriate "
+"default value or we need to change the semantics of some option in a subtle "
+"way. Thus, we recommend you change the value of config.saving_style option "
+"to 3 in order to get the \"right\" behaviour. Apologies for any inconvience "
+"caused."
 msgstr ""
 "L'option config.saving_style configurée a une valeur obsolète. Les "
 "algorithmes de sauvegarde de la configuration d'ELinks ont changé depuis la "
@@ -8097,7 +8130,7 @@ msgstr "Mauvais évènement %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
 
-#: src/terminal/kbd.c:922
+#: src/terminal/kbd.c:926
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-04 13:00+0000\n"
+"POT-Creation-Date: 2008-06-20 21:44+0200\n"
 "PO-Revision-Date: 2008-03-04 15:20+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -7920,7 +7920,7 @@ msgstr ""
 "%c w szablonie oznacza bie¿±cy URL,\n"
 "%s - ca³y wprowadzony tekst w okienku dialogowym,\n"
 "%0,%1,...,%9 - pierwsza, druga, ..., dziesi±ta czê¶æ %s,\n"
-"%% w szablonie oznacza '%'." 
+"%% w szablonie oznacza '%'."
 
 #. name:
 #: src/protocol/rewrite/rewrite.c:371
@@ -8257,7 +8257,7 @@ msgstr "B³êdne zdarzenie %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Nie mo¿na odczytaæ zdarzenia: %d (%s)"
 
-#: src/terminal/kbd.c:925
+#: src/terminal/kbd.c:926
 msgid "Too many bytes read from the itrm!"
 msgstr "Zbyt du¿o bajtów przeczytanych z itrm!"
 
