@@ -11,19 +11,14 @@ ECMAScript (that's JavaScript) support.
 
 ##########
 
-  In order to check out the latest tree from GIT (using Cogito):
+  In order to check out the latest tree from GIT:
 
-	$ cg clone check_file_SITES_for_value_of_this
+	$ git clone check_file_SITES_for_value_of_this
 	$ cd elinks
 
   To update your existing tree to the latest GIT version, do:
 
-	$ cg update
-
-  If you downloaded a nightly snapshot, and want to check out the latest tree
-from GIT in it, use the command:
-
-	$ cg clone -s check_file_SITES_for_value_of_this
+	$ git pull
 
   Note that if you obtained the sources directly from GIT, you NEED to run
 ./autogen.sh!  (It should be enough to do it once - however, if you have build
