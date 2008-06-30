@@ -114,7 +114,9 @@ printf "%s\n" "$commit" > "$tmpdir/elinks/.git/HEAD"
  ./autogen.sh
  mkdir build
  cd build
- ../configure
+ # Enable lots of features so that their options will appear in elinks
+ # --config-help and doc/html/elinks.conf.5.html.
+ ../configure --enable-bittorrent --enable-cgi --enable-fsp --enable-nntp
  make -C po
  mv po/*.gmo ../po/
  mv contrib/elinks.spec ../contrib/
@@ -125,6 +127,11 @@ if [ -n "$docdir" ]; then
 	cp -r -- "$docdir"/*.html* "$tmpdir/elinks/doc/html/"
 	# mkdir doc/pdf
 	# cp "$docdir"/*.pdf doc/pdf
+else
+	make -C "$tmpdir/elinks/build"
+	make -C "$tmpdir/elinks/build/doc" html
+	mkdir -- "$tmpdir/elinks/doc/html"
+	mv -- "$tmpdir/elinks/build/doc"/*.html* "$tmpdir/elinks/doc/html/"
 fi
 
 rm -rf -- "$tmpdir/elinks/build"
