@@ -12,6 +12,8 @@ To be released as 0.12pre6 or 0.12rc1.
 
 * major bug 764: Correctly initialize options on big-endian 64-bit
   systems.
+* bug 983: Give preference to the Content-Type specified in the HTTP
+  header over that specified via the HTML meta tag.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 

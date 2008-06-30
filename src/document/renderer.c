@@ -591,17 +591,14 @@ get_convert_table(unsigned char *head, int to_cp,
 
 	while (cp_index == -1) {
 		unsigned char *ct_charset;
-		unsigned char *meta;
+		/* scan_http_equiv() appends the meta http-equiv directives to
+		 * the protocol header before this function is called, but the
+		 * HTTP Content-Type header has precedence, so the HTTP header
+		 * will be used if it exists and the meta header is only used
+		 * as a fallback.  See bug 983.  */
 		unsigned char *a = parse_header(part, "Content-Type", &part);
 
 		if (!a) break;
-		/* Content type info from document meta header.
-		 * scan_http_equiv() appends the meta stuff to the protocol header before
-		 * this function is called. Last Content-Type header field is used. */
-
-		while ((meta = parse_header(part, "Content-Type", &part))) {
-			mem_free_set(&a, meta);
-		}
 
 		parse_header_param(a, "charset", &ct_charset);
 		if (ct_charset) {

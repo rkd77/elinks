@@ -269,6 +269,9 @@ Jon Shapcott <eden@xibalba.demon.co.uk>
 John <martian202002@yahoo.com>
 	Tab browsing initial patch
 
+Johannes Stezenbach <js@sig21.net>
+	Precedence of HTTP vs. HTTP meta tag when setting Content-Type
+
 Johannes Zellner <johannes@zellner.org>
 	Minor misc hacking
 
