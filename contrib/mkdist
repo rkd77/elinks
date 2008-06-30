@@ -20,10 +20,12 @@
 
 # set -x
 
-echo "-------------------------------------------------"
-echo "Date: $(date)"
-echo "Args: $*"
-echo "-------------------------------------------------"
+cat <<EOF
+-------------------------------------------------
+Date: $(date)
+Args: $*
+-------------------------------------------------
+EOF
 
 # Variables used in this script:
 # $GIT_DIR     = option -g GIT_DIR; passed in environment to Git
@@ -55,30 +57,30 @@ do
 	(d)	docdir=$OPTARG ;;
 	(o)	outdir=$OPTARG ;;
 	("?")	exit 1 ;;
-	(*)	echo >&2 "$0:$LINENO: bug found"
+	(*)	printf >&2 "%s:%d: bug found\n" "$0" "$LINENO"
 		exit 1 ;;
     esac
 done
 
 if [ $OPTIND -le $# ]
 then
-    echo >&2 "$0: too many non-option arguments"
+    printf >&2 "%s: too many non-option arguments\n" "$0"
     exit 1
 fi
 
 if [ -z "$GIT_DIR" ]
 then
-    echo >&2 "$0: Must specify -g GIT_DIR option"
+    printf >&2 "%s: Must specify -g GIT_DIR option\n" "$0"
     exit 1
 fi
 if [ -z "$outdir" ]
 then
-    echo >&2 "$0: Must specify -o OUTDIR option"
+    printf >&2 "%s: Must specify -o OUTDIR option\n" "$0"
     exit 1
 fi
 if [ -z "$rev" ]
 then
-    echo >&2 "$0: Must specify -r REVISION option"
+    printf >&2 "%s: Must specify -r REVISION option\n" "$0"
     exit 1
 fi
 if [ -z "$label" ]
