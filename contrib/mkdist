@@ -88,7 +88,7 @@ then
     label=$rev
 fi
 
-commit=$(GIT_DIR=$GIT_DIR cg-object-id -c "$rev") || exit 1
+commit=$(git --git-dir="$GIT_DIR" rev-parse --verify "$rev^{commit}") || exit 1
 
 if [ "$snap" ]
 then
@@ -104,7 +104,8 @@ tmpdir=$(mktemp -d -t elinks-dist-XXXXXXXX) || exit 1
 # To make it easier to compare build logs, put the source first in an
 # "elinks" directory, and only move to "$tartopdir" when finished.
 
-GIT_DIR=$GIT_DIR cg-export -r "$rev" -- "$tmpdir/elinks"
+git --git-dir="$GIT_DIR" archive --format=tar --prefix="elinks/" "$rev" |
+	(cd -- "$tmpdir" && tar -xf -)
 mkdir -- "$tmpdir/elinks/.git"
 printf "%s\n" "$commit" > "$tmpdir/elinks/.git/HEAD"
 
