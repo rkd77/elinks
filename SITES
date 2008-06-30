@@ -5,15 +5,10 @@ Fan sites:
 	http://starshine.org/xteddy/thomas/elinks/ (tips'n'tricks)
 
 DEBs:
-	http://packages.debian.org/testing/web/elinks.html
-	http://packages.debian.org/unstable/web/elinks.html
+	http://packages.debian.org/search?keywords=elinks
 
 RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=elinks
-
-RISC OS binaries:
-	http://www.riscos.info/unix/indexes/browser.html
-
 
 GIT root:
 	http://elinks.cz/elinks.git
@@ -23,7 +18,6 @@ Mailing list:
 	http://elinks.cz/community.html#mailinglist
 	elinks-users@linuxfromscratch.org (user discussion, announcements)
 	elinks-dev@linuxfromscratch.org (weird development and sorcery talks)
-	listar@linuxfromscratch.org (Subject: subscribe elinks-users)
 
 
 If you want to see the original Links as well, try:
@@ -33,11 +27,9 @@ Primary site:
 
 Mirrors:
 	http://links.sourceforge.net/download/
-	ftp://ftp.fu-berlin.de/unix/network/www/links/
 
 DEBs:
-	http://packages.debian.org/stable/web/links.html
-	http://packages.debian.org/unstable/web/links.html
+	http://packages.debian.org/search?keywords=links
 
 RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=links
