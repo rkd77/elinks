@@ -1,11 +1,11 @@
 .\"     Title: elinks
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 05/03/2008
+.\"      Date: 07/01/2008
 .\"    Manual: The Elinks text-browser
-.\"    Source: ELinks 0.12.GIT
+.\"    Source: ELinks 0.12pre1
 .\"
-.TH "ELINKS" "1" "05/03/2008" "ELinks 0.12.GIT" "The Elinks text\-browser"
+.TH "ELINKS" "1" "07/01/2008" "ELinks 0.12pre1" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -263,7 +263,7 @@ Print
 ELinks
 version information and exit.
 .RE
-Generated using output from ELinks version 0.12.GIT.
+Generated using output from ELinks version 0.12pre1.
 .sp
 .SH "ENVIRONMENT VARIABLES"
 .PP

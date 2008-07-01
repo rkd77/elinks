@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-03 11:53+0200\n"
+"POT-Creation-Date: 2008-06-29 22:26+0300\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -19,7 +19,7 @@ msgstr "Затвори"
 #. | MSGBOX_SCROLLABLE
 #.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
-#: src/dialogs/document.c:240 src/scripting/python/dialogs.c:43
+#: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
 msgstr "Обавештење"
 
@@ -32,7 +32,7 @@ msgstr "Притисните размак да бисте проширили ову фасциклу."
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:372 src/cookies/dialogs.c:470 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
-#: src/mime/dialogs.c:131 src/protocol/auth/dialogs.c:115
+#: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:245 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
 #: src/session/session.c:800 src/viewer/text/search.c:1677
@@ -149,7 +149,7 @@ msgstr "Тражена ниска ,,%s`` није пронађена"
 msgid "Name"
 msgstr "Назив"
 
-#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:112
+#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
 msgstr "Лош формат"
 
@@ -173,10 +173,10 @@ msgstr "Празна ниска није дозвољена"
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
 #: src/cookies/dialogs.c:471 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:132
+#: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
-#: src/session/download.c:645 src/session/download.c:1266
+#: src/session/download.c:607 src/session/download.c:1219
 #: src/viewer/text/search.c:1678
 msgid "~Cancel"
 msgstr "~Поништи"
@@ -234,7 +234,7 @@ msgid "LED indicators"
 msgstr "Индикатори диода"
 
 #: src/bfu/leds.c:306
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "What the different LEDs indicate:\n"
 "\n"
@@ -242,7 +242,7 @@ msgid ""
 " |||||`- Unused\n"
 " ||||`-- Unused\n"
 " |||`--- A JavaScript pop-up window was blocked\n"
-" ||`---- A JavaScript error has occured\n"
+" ||`---- A JavaScript error has occurred\n"
 " |`----- The state of insert mode for text-input form-fields\n"
 " |       'i' means modeless, 'I' means insert mode is on\n"
 " `------ Whether an SSL connection was used\n"
@@ -569,15 +569,15 @@ msgstr "Учитано"
 msgid "Content type"
 msgstr "Врста садржаја"
 
-#: src/cache/dialogs.c:94 src/dialogs/document.c:201
+#: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
 msgstr "Последња измена"
 
-#: src/cache/dialogs.c:102 src/dialogs/document.c:183
+#: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
 msgstr "Битност SSL-а"
 
-#: src/cache/dialogs.c:106 src/dialogs/document.c:188
+#: src/cache/dialogs.c:106 src/dialogs/document.c:189
 msgid "Encoding"
 msgstr "Кодирање"
 
@@ -585,7 +585,7 @@ msgstr "Кодирање"
 msgid "Flags"
 msgstr "Прекидачи"
 
-#: src/cache/dialogs.c:115 src/dialogs/document.c:159
+#: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
 msgstr "недовршено"
 
@@ -759,7 +759,7 @@ msgstr "Лепљење текста из клипборда"
 msgid "Move to the previous item"
 msgstr "Померање на претходну ставку"
 
-#: src/config/actions-edit.inc:31 src/config/actions-main.inc:79
+#: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Поновно исцртавање терминала"
@@ -967,248 +967,273 @@ msgid "Move cursor left"
 msgstr "Померање курсора налево"
 
 #: src/config/actions-main.inc:57
+#, fuzzy
+msgid "Move cursor to the start of the line"
+msgstr "Одлазак на почетак странице или реда"
+
+#: src/config/actions-main.inc:58
 msgid "Move cursor right"
 msgstr "Померање курсора надесно"
 
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move cursor up"
 msgstr "Померање курсора навише"
 
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move to the end of the document"
 msgstr "Померање на крај документа"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move to the start of the document"
 msgstr "Померање на почетак документа"
 
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move one link down"
 msgstr "Померање за једну везу наниже"
 
-#: src/config/actions-main.inc:62
-msgid "Move one link left"
-msgstr "Померање за једну везу налево"
-
 #: src/config/actions-main.inc:63
-msgid "Move to the next link"
+#, fuzzy
+msgid "Move to the next line with a link"
 msgstr "Померање на следећу везу"
 
 #: src/config/actions-main.inc:64
+msgid "Move one link left"
+msgstr "Померање за једну везу налево"
+
+#: src/config/actions-main.inc:65
+#, fuzzy
+msgid "Move one link left or to the previous link"
+msgstr "Померање на претходну везу"
+
+#: src/config/actions-main.inc:66
+msgid "Move to the next link"
+msgstr "Померање на следећу везу"
+
+#: src/config/actions-main.inc:67
 msgid "Move to the previous link"
 msgstr "Померање на претходну везу"
 
-#: src/config/actions-main.inc:65
+#: src/config/actions-main.inc:68
 msgid "Move one link right"
 msgstr "Померање за једну везу надесно"
 
-#: src/config/actions-main.inc:66
+#: src/config/actions-main.inc:69
+#, fuzzy
+msgid "Move one link right or to the next link"
+msgstr "Померање на следећу везу"
+
+#: src/config/actions-main.inc:70
 msgid "Move one link up"
 msgstr "Померање за једну везу навише"
 
-#: src/config/actions-main.inc:67 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:71
+#, fuzzy
+msgid "Move to the previous line with a link"
+msgstr "Померање на претходну везу"
+
+#: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Померање за једну страницу наниже"
 
-#: src/config/actions-main.inc:68 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:73 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Померање за једну страницу навише"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:74
 msgid "Open the current link in a new tab"
 msgstr "Отварање текуће везе у новом језичку"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:75
 msgid "Open the current link in a new tab in the background"
 msgstr "Отварање текуће везе у новом позадинском језичку"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:76
 msgid "Open the current link in a new window"
 msgstr "Отварање текуће везе у новом прозору"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:77
 msgid "Open a new tab"
 msgstr "Отварање новог језичка"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:78
 msgid "Open a new tab in the background"
 msgstr "Отварање новог језичка у позадини"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:79
 msgid "Open a new window"
 msgstr "Отварање новог прозора"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:80
 msgid "Open an OS shell"
 msgstr "Отварање љуске ОС-а"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:81
 msgid "Open options manager"
 msgstr "Отварање управљача избора"
 
-#: src/config/actions-main.inc:77
+#: src/config/actions-main.inc:82
 msgid "Open a quit confirmation dialog box"
 msgstr "Отварање дијалога потврде завршетка"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:83
 msgid "Quit without confirmation"
 msgstr "Завршетак без потврде"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:85
 msgid "Reload the current page"
 msgstr "Поновно учитавање текуће странице"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:86
 msgid "Re-render the current page"
 msgstr "Поновно исцртавање текуће странице"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
 msgstr "Поновно постављање ставке обрасца на њихове почетне вредности"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:88
 msgid "Show information about the currently used resources"
 msgstr "Приказивање података о тренутно употребљеним ресурсима"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
 msgstr "Чување текућег документа у изворном облику"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:90
 msgid "Save the current document in formatted form"
 msgstr "Чување текућег документа у форматираном облику"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:91
 msgid "Save options"
 msgstr "Чување избора"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:92
 msgid "Save URL as"
 msgstr "Чување УРЛ-а под другим именом"
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:93
 msgid "Scroll down"
 msgstr "Клизање наниже"
 
-#: src/config/actions-main.inc:89
+#: src/config/actions-main.inc:94
 msgid "Scroll left"
 msgstr "Клизање налево"
 
-#: src/config/actions-main.inc:90
+#: src/config/actions-main.inc:95
 msgid "Scroll right"
 msgstr "Клизање надесно"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:96
 msgid "Scroll up"
 msgstr "Клизање навише"
 
-#: src/config/actions-main.inc:92 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Тражење текстуалног обрасца"
 
-#: src/config/actions-main.inc:93
+#: src/config/actions-main.inc:98
 msgid "Search backwards for a text pattern"
 msgstr "Тражење текстуалног обрасца уназад"
 
-#: src/config/actions-main.inc:94 src/config/actions-main.inc:95
+#: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
 msgstr "Претрага текста везе постепеним уносом"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:101
 msgid "Search document text by typing ahead"
 msgstr "Претрага текста документа постепеним уносом"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:102
 msgid "Search document text backwards by typing ahead"
 msgstr "Претрага текста документа уназад постепеним уносом"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:103
 msgid "Show terminal options dialog"
 msgstr "Приказ дијалога избора терминала"
 
-#: src/config/actions-main.inc:99
+#: src/config/actions-main.inc:104
 msgid "Submit form"
 msgstr "Предавање обрасца"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:105
 msgid "Submit form and reload"
 msgstr "Предавање обрасца и поновно учитавање"
 
-#: src/config/actions-main.inc:101 src/terminal/tab.c:205
+#: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 msgid "Close tab"
 msgstr "Затварање језичка"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:107
 msgid "Close all tabs but the current one"
 msgstr "Затварање свих језичака осим текућег"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
 msgstr "Прослеђивање УРИ-ја текућег језичка спољашњој наредби"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:109
 msgid "Open the tab menu"
 msgstr "Отварање менија језичка"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:110
 msgid "Move the current tab to the left"
 msgstr "Померање текућег језичка налево"
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:111
 msgid "Move the current tab to the right"
 msgstr "Померање текућег језичка надесно"
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:112
 msgid "Next tab"
 msgstr "Следећи језичак"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:113
 msgid "Previous tab"
 msgstr "Претходни језичак"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:114
 msgid "Open the terminal resize dialog"
 msgstr "Отварање дијалога за промену величине терминала"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
 msgstr "Смењивање приказа странице уз употребу CSS-а"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:116
 msgid "Toggle displaying of links to images"
 msgstr "Смењивање приказивања веза ка сликама"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:117
 msgid "Toggle rendering of tables"
 msgstr "Смењивање приказивања табела"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:118
 msgid "Toggle usage of document specific colors"
 msgstr "Смењивање употребе нестандардних боја у документима"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:119
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Смењивање приказивања страница као HTML или чисти текст"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
 msgstr "~Смени чување"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
 msgstr "Смењивање приказивања бројева веза"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:122
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Смењивање компримовања празних редова код чистог приказивања"
 
-#: src/config/actions-main.inc:118
+#: src/config/actions-main.inc:123
 msgid "Toggle wrapping of text"
 msgstr "Смењивање преламања текста"
 
-#: src/config/actions-main.inc:119
+#: src/config/actions-main.inc:124
 msgid "View the current image"
 msgstr "Преглед текуће слике"
 
@@ -1280,56 +1305,56 @@ msgstr "Пријављивање недостајућих делова"
 msgid "Garbage after quoted argument"
 msgstr ""
 
-#: src/config/cmdline.c:391
+#: src/config/cmdline.c:394
 msgid "Remote method not supported"
 msgstr "Удаљени метод није подржан"
 
-#: src/config/cmdline.c:443
+#: src/config/cmdline.c:452
 msgid "Template option folder"
 msgstr "Фасцикла избора шаблона"
 
-#: src/config/cmdline.c:466
+#: src/config/cmdline.c:475
 #, c-format
 msgid "(default: %ld)"
 msgstr "(подразумевано: %ld)"
 
-#: src/config/cmdline.c:473 src/config/cmdline.c:502
+#: src/config/cmdline.c:482 src/config/cmdline.c:511
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(подразумевано: ,,%s``)"
 
-#: src/config/cmdline.c:478
+#: src/config/cmdline.c:487
 #, c-format
 msgid "(alias for %s)"
 msgstr "(псеудоним за %s)"
 
-#: src/config/cmdline.c:483 src/config/cmdline.c:492
+#: src/config/cmdline.c:492 src/config/cmdline.c:501
 #, c-format
 msgid "(default: %s)"
 msgstr "(подразумевано: %s)"
 
-#: src/config/cmdline.c:626
+#: src/config/cmdline.c:642
 msgid "Configuration options"
 msgstr "Избори подешавања"
 
-#: src/config/cmdline.c:630
+#: src/config/cmdline.c:646
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr "Употреба: elinks [ИЗБОР]... [УРЛ]..."
 
-#: src/config/cmdline.c:631
+#: src/config/cmdline.c:647
 msgid "Options"
 msgstr "Избори"
 
-#: src/config/cmdline.c:673
+#: src/config/cmdline.c:689
 msgid "Internal consistency error"
 msgstr "Грешка унутрашње доследности"
 
 #.
-#: src/config/cmdline.c:709
+#: src/config/cmdline.c:725
 msgid "Restrict to anonymous mode"
 msgstr "Ограничавање на анонимни режим"
 
-#: src/config/cmdline.c:711
+#: src/config/cmdline.c:727
 msgid ""
 "Restricts ELinks so it can run on an anonymous account.\n"
 "Local file browsing, downloads, and modification of options\n"
@@ -1342,19 +1367,19 @@ msgstr ""
 "али ставке у табели придруживања неће моћи да се додају\n"
 "или мењају."
 
-#: src/config/cmdline.c:716
+#: src/config/cmdline.c:732
 msgid "Autosubmit first form"
 msgstr "Аутоматско предавање првог обрасца"
 
-#: src/config/cmdline.c:718
+#: src/config/cmdline.c:734
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Аутоматски ће предавати први образац са заданих УРЛ-ова."
 
-#: src/config/cmdline.c:720
+#: src/config/cmdline.c:736
 msgid "Clone internal session with given ID"
 msgstr "Клонирање интерне сесије са заданим ИБ-ом"
 
-#: src/config/cmdline.c:722
+#: src/config/cmdline.c:738
 msgid ""
 "Used internally when opening ELinks instances in new windows.\n"
 "The ID maps to information that will be used when creating the\n"
@@ -1364,11 +1389,11 @@ msgstr ""
 "прозорима. ИБ се односи на информацију која ће се користити\n"
 "при стварању новог примерка. Ово вероватно не желите да мењате."
 
-#: src/config/cmdline.c:728
+#: src/config/cmdline.c:744
 msgid "Name of directory with configuration file"
 msgstr "Назив директоријума у коме је датотека са подешавањима"
 
-#: src/config/cmdline.c:730
+#: src/config/cmdline.c:746
 msgid ""
 "Path of the directory ELinks will read and write its\n"
 "config and runtime state files to instead of ~/.elinks.\n"
@@ -1381,12 +1406,12 @@ msgstr ""
 "посматра у односу на ваш кориснички директоријум (из\n"
 "променљиве HOME)."
 
-#: src/config/cmdline.c:735
+#: src/config/cmdline.c:751
 msgid "Print default configuration file to stdout"
 msgstr ""
 "Исписивање подразумеване датотеке са подешавањима на стандардном излазу"
 
-#: src/config/cmdline.c:737
+#: src/config/cmdline.c:753
 msgid ""
 "Print a configuration file with options set to the built-in\n"
 "defaults to stdout."
@@ -1394,11 +1419,11 @@ msgstr ""
 "Исписиваће датотеку са подешавањима у којој сви избори имају\n"
 "подразумеване вредности на стандардном излазу."
 
-#: src/config/cmdline.c:742
+#: src/config/cmdline.c:758
 msgid "Name of configuration file"
 msgstr "Назив датотеке са подешавањима"
 
-#: src/config/cmdline.c:744
+#: src/config/cmdline.c:760
 msgid ""
 "Name of the configuration file that all configuration\n"
 "options will be read from and written to. It should be\n"
@@ -1409,27 +1434,27 @@ msgstr ""
 "требало да се уноси у односу на директоријум са\n"
 "подешавањима."
 
-#: src/config/cmdline.c:748
+#: src/config/cmdline.c:764
 msgid "Print help for configuration options"
 msgstr "Исписивање помоћи око избора подешавања"
 
-#: src/config/cmdline.c:750
+#: src/config/cmdline.c:766
 msgid "Print help for configuration options and exit."
 msgstr "Исписаће помоћ за изборе подешавања и изаћи."
 
-#: src/config/cmdline.c:752
+#: src/config/cmdline.c:768
 msgid "MIME type assumed for unknown document types"
 msgstr "Подразумевана MIME врста за непознате врсте докумената"
 
-#: src/config/cmdline.c:754
+#: src/config/cmdline.c:770
 msgid "The default MIME type used for documents of unknown type."
 msgstr "Подразумевана MIME врста која се користи за документе непознате врсте."
 
-#: src/config/cmdline.c:756
+#: src/config/cmdline.c:772
 msgid "Ignore user-defined keybindings"
 msgstr "Занемаривање кориснички заданих пречица"
 
-#: src/config/cmdline.c:758
+#: src/config/cmdline.c:774
 msgid ""
 "When set, all keybindings from configuration files will be\n"
 "ignored. It forces use of default keybindings and will reset\n"
@@ -1440,47 +1465,47 @@ msgstr ""
 "подразумеваних пречица и поново ће их поставити на\n"
 "подразумеване вредности при чувању."
 
-#: src/config/cmdline.c:762
+#: src/config/cmdline.c:778
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Исписивање форматираних верзија заданих УРЛ-ова на стандардном излазу"
 
-#: src/config/cmdline.c:764
+#: src/config/cmdline.c:780
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Исписаће форматиране текстуалне верзије заданих УРЛ-ова на\n"
 "стандардном излазу."
 
-#: src/config/cmdline.c:766
+#: src/config/cmdline.c:782
 msgid "Codepage to use with -dump"
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:768
+#: src/config/cmdline.c:784
 msgid "Codepage used when formatting dump output."
 msgstr "Кодна страна за форматирање излаза истовара."
 
-#: src/config/cmdline.c:770
+#: src/config/cmdline.c:786
 #, fuzzy
 msgid "Color mode used with -dump"
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:772
+#: src/config/cmdline.c:788
 #, fuzzy
 msgid "Color mode used with -dump."
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:774
+#: src/config/cmdline.c:790
 msgid "Width of document formatted with -dump"
 msgstr "Ширина документа форматираног прекидачем -dump"
 
-#: src/config/cmdline.c:776
+#: src/config/cmdline.c:792
 msgid "Width of the dump output."
 msgstr "Ширина излаза истовара."
 
-#: src/config/cmdline.c:778
+#: src/config/cmdline.c:794
 msgid "Evaluate configuration file directive"
 msgstr "Обрада директиве датотеке са подешавањима"
 
-#: src/config/cmdline.c:780
+#: src/config/cmdline.c:796
 msgid ""
 "Specify configuration file directives on the command-line\n"
 "which will be evaluated after all configuration files has been\n"
@@ -1492,11 +1517,11 @@ msgstr ""
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:786
+#: src/config/cmdline.c:802
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Интерпретирање докумената непознате врсте као HTML"
 
-#: src/config/cmdline.c:788
+#: src/config/cmdline.c:804
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML.\n"
 "Useful when using ELinks as an external viewer from MUAs.\n"
@@ -1508,19 +1533,19 @@ msgstr ""
 "пошту). Ово је еквивалентно прекидачу\n"
 "-default-mime-type text/html."
 
-#: src/config/cmdline.c:798
+#: src/config/cmdline.c:814
 msgid "Print usage help and exit"
 msgstr "Исписивање помоћи око употребе и излаз"
 
-#: src/config/cmdline.c:800
+#: src/config/cmdline.c:816
 msgid "Print usage help and exit."
 msgstr "Исписаће помоћ око употребе и изаћи."
 
-#: src/config/cmdline.c:802
+#: src/config/cmdline.c:818
 msgid "Only permit local connections"
 msgstr "Дозвољавају се само локална повезивања"
 
-#: src/config/cmdline.c:804
+#: src/config/cmdline.c:820
 msgid ""
 "Restricts ELinks to work offline and only connect to servers\n"
 "with local addresses (ie. 127.0.0.1). No connections to remote\n"
@@ -1530,29 +1555,29 @@ msgstr ""
 "серверима који имају локалне адресе (нпр. 127.0.0.1).\n"
 "Повезивања са удаљеним серверима неће бити дозвољена."
 
-#: src/config/cmdline.c:808
+#: src/config/cmdline.c:824
 msgid "Print detailed usage help and exit"
 msgstr "Исписивање детаљне помоћи око употребе и излаз"
 
-#: src/config/cmdline.c:810
+#: src/config/cmdline.c:826
 msgid "Print detailed usage help and exit."
 msgstr "Исписаће детаљну помоћ око употребе и изаћи."
 
-#: src/config/cmdline.c:812
+#: src/config/cmdline.c:828
 msgid "Look up specified host"
 msgstr "Тражење адресе заданог домаћина"
 
-#: src/config/cmdline.c:814
+#: src/config/cmdline.c:830
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 "Потражиће адресу заданог домаћина и исписати ИП адресе које\n"
 "су разрешене DNS-ом."
 
-#: src/config/cmdline.c:816
+#: src/config/cmdline.c:832
 msgid "Run as separate instance"
 msgstr "Покретање засебног примерка"
 
-#: src/config/cmdline.c:818
+#: src/config/cmdline.c:834
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an\n"
 "existing instance. Note that normally no runtime state files\n"
@@ -1565,11 +1590,11 @@ msgstr ""
 "(обележивачи, историја, итд.) не записује на диск.\n"
 "Погледајте и -touch-files."
 
-#: src/config/cmdline.c:823
+#: src/config/cmdline.c:839
 msgid "Disable use of files in ~/.elinks"
 msgstr "Деактивирање коришћења датотека у директоријуму ~/.elinks"
 
-#: src/config/cmdline.c:825
+#: src/config/cmdline.c:841
 msgid ""
 "Disables creation and use of files in the user specific home\n"
 "configuration directory (~/.elinks). It forces default configuration\n"
@@ -1580,11 +1605,11 @@ msgstr ""
 "користе подразумеване вредности подешавања и деактивираће\n"
 "чување датотека стања извршавања."
 
-#: src/config/cmdline.c:829
+#: src/config/cmdline.c:845
 msgid "Disable link numbering in dump output"
 msgstr "Деактивирање додељивања бројева везама у истоварном излазу"
 
-#: src/config/cmdline.c:831
+#: src/config/cmdline.c:847
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "Note that this really affects only -dump, nothing else."
@@ -1592,11 +1617,11 @@ msgstr ""
 "Спречиће исписивање бројева веза у истоварном излазу.\n"
 "Приметите да ово утиче само на прекидач -dump, и нинашта друго."
 
-#: src/config/cmdline.c:834
+#: src/config/cmdline.c:850
 msgid "Disable printing of link references in dump output"
 msgstr "Деактивирање исписивања упућивања на везе у истоварном излазу"
 
-#: src/config/cmdline.c:836
+#: src/config/cmdline.c:852
 msgid ""
 "Prevents printing of references (URIs) of document links\n"
 "in dump output.\n"
@@ -1606,11 +1631,11 @@ msgstr ""
 "у истоварном излазу. Приметите да ово утиче само на\n"
 "прекидач -dump, и нинашта више."
 
-#: src/config/cmdline.c:840
+#: src/config/cmdline.c:856
 msgid "Control an already running ELinks"
 msgstr "Управљање већ покренутим ЕЛинксом"
 
-#: src/config/cmdline.c:842
+#: src/config/cmdline.c:858
 #, fuzzy
 msgid ""
 "Control a remote ELinks instance by passing commands to it.\n"
@@ -1644,11 +1669,11 @@ msgstr ""
 "\taddBookmark(URL)          : додаје УРЛ у обележиваче\n"
 "\txfeDoCommand(openBrowser) : отвара нови прозор"
 
-#: src/config/cmdline.c:858
+#: src/config/cmdline.c:874
 msgid "Connect to session ring with given ID"
 msgstr "Повезивање са сесијским прстеном са заданим ИБ-ом"
 
-#: src/config/cmdline.c:860
+#: src/config/cmdline.c:876
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks\n"
 "works in so-called session rings, whereby all instances of ELinks\n"
@@ -1681,21 +1706,21 @@ msgstr ""
 "уписује на диск када се користи овај избор. Погледајте и\n"
 "-touch-files."
 
-#: src/config/cmdline.c:875
+#: src/config/cmdline.c:891
 msgid "Print the source of given URLs to stdout"
 msgstr "Штампање изворног кода заданих УРЛ-ова на стандардном излазу"
 
-#: src/config/cmdline.c:877
+#: src/config/cmdline.c:893
 msgid "Print given URLs in source form to stdout."
 msgstr "Одштампаће задане УРЛ-ове у изворном облику на стандардном излазу."
 
-#: src/config/cmdline.c:881
+#: src/config/cmdline.c:897
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Освежавање датотека у дир. ~/.elinks када је задано -no-connect или -session-"
 "ring"
 
-#: src/config/cmdline.c:883
+#: src/config/cmdline.c:899
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are\n"
 "written to disk, even when -no-connect or -session-ring is used.\n"
@@ -1707,11 +1732,11 @@ msgstr ""
 "-no-connect или -session-ring. Овај избор нема утицаја ако\n"
 "се не користи заједно са неким од ових избора."
 
-#: src/config/cmdline.c:888
+#: src/config/cmdline.c:904
 msgid "Verbose level"
 msgstr "Ниво брбљивости"
 
-#: src/config/cmdline.c:890
+#: src/config/cmdline.c:906
 msgid ""
 "The verbose level controls what messages are shown at\n"
 "start up and while running:\n"
@@ -1725,15 +1750,15 @@ msgstr ""
 "\t1 приказиваће озбиљне грешке и упозорења\n"
 "\t2 приказиваће све грешке"
 
-#: src/config/cmdline.c:896
+#: src/config/cmdline.c:912
 msgid "Print version information and exit"
 msgstr "Исписивање података о верзији и излаз"
 
-#: src/config/cmdline.c:898
+#: src/config/cmdline.c:914
 msgid "Print ELinks version information and exit."
 msgstr "Исписаће податке о верзији ЕЛинкса и изаћи."
 
-#: src/config/conf.c:722
+#: src/config/conf.c:938
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1745,7 +1770,7 @@ msgstr ""
 "## кроз КС, али ће онда само вредности избора и њихово форматирање\n"
 "## бити измењени, а ваши коментари, итд. ће бити сачувани.\n"
 
-#: src/config/conf.c:730
+#: src/config/conf.c:946
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1763,7 +1788,7 @@ msgstr ""
 "## датотеке, онда се он НЕ РАЧУНА у недостајуће. Приметите да ће ваше\n"
 "## форматирање, коментари, итд. бити сачувани.\n"
 
-#: src/config/conf.c:740
+#: src/config/conf.c:956
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so, but keep in mind that this file is overwritten\n"
@@ -1775,7 +1800,7 @@ msgstr ""
 "## ЕЛинкс када будете сачували изборе кроз КС, а што се тиче вашег\n"
 "## форматирања и коментара, немате среће, зато пазите.\n"
 
-#: src/config/conf.c:751
+#: src/config/conf.c:967
 msgid ""
 "## Obviously, if you don't like what ELinks is going to do with\n"
 "## this file, you can change it by altering the config.saving_style\n"
@@ -1785,11 +1810,11 @@ msgstr ""
 "## датотеком, можете то да промените мењањем избора\n"
 "## config.saving_style. Зар нисмо прави другари?\n"
 
-#: src/config/conf.c:764
+#: src/config/conf.c:980
 msgid "Automatically saved options\n"
 msgstr "Аутоматски сачувана подешавања\n"
 
-#: src/config/conf.c:776
+#: src/config/conf.c:992
 msgid "Automatically saved keybindings\n"
 msgstr "Аутоматски сачуване пречице\n"
 
@@ -1918,7 +1943,7 @@ msgstr "Овде не могу да додам избор."
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
 #: src/dialogs/options.c:236 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1250
+#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1203
 msgid "Sa~ve"
 msgstr "Сачува~ј"
 
@@ -2217,7 +2242,7 @@ msgid ""
 "it takes precedence. And better do not touch this\n"
 "at all unless you are sure what are you doing.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Да ли да се покуша повезивање са домаћином преко\n"
@@ -2235,7 +2260,7 @@ msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Do not touch this option.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http4://elinks.cz/."
 msgstr ""
 "Да ли да се покуша повезивање са домаћином преко\n"
@@ -2254,7 +2279,7 @@ msgstr "Покушај повезивања преко ИПв6"
 msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
-"to be used on a per-connection basis by using an URL\n"
+"to be used on a per-connection basis by using a URL\n"
 "in the style of e.g. http6://elinks.cz/."
 msgstr ""
 "Да ли да се покуша повезивање са домаћином преко\n"
@@ -2682,11 +2707,12 @@ msgid "Use tabindex"
 msgstr "Употреба ,,tabindex``-а"
 
 #: src/config/options.inc:326
+#, fuzzy
 msgid ""
 "Whether to navigate links using tabindex specified ordering.\n"
 "The TABINDEX attribute in HTML elements specifies the order\n"
 "in which links should receive focus when using the keyboard\n"
-"to navigating the document."
+"to navigate the document."
 msgstr ""
 "Да ли ће пратити везе уз помоћ редоследа који је задан у\n"
 "атрибуту ,,TABINDEX``. Тај атрибут у елементима HTML-а\n"
@@ -2741,8 +2767,9 @@ msgstr "Кружно кретање кроз везе"
 
 #. 0
 #: src/config/options.inc:353
+#, fuzzy
 msgid ""
-"When pressing 'down' on the last link, jump at the first one, and\n"
+"When pressing 'down' on the last link, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 "Када се на последњој вези притисне стрелица надоле, скочиће\n"
@@ -2847,8 +2874,9 @@ msgid "Show search hit top or bottom dialogs"
 msgstr "Приказивање дијалога када се достигне врх или дно странице"
 
 #: src/config/options.inc:403
+#, fuzzy
 msgid ""
-"Whether to show a dialog when the search hits top or bottom of the\n"
+"Whether to show a dialog when the search hits the top or bottom of the\n"
 "document."
 msgstr ""
 "Да ли ће приказивати дијалог када претрага достигне врх или\n"
@@ -2976,12 +3004,13 @@ msgid "Cache information about redirects"
 msgstr "Смештај податке о преусмеравањима"
 
 #: src/config/options.inc:462
+#, fuzzy
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302\n"
 "HTTP code and a Location header). This was the original behaviour\n"
-"for a quite some time, but it causes problems in a situation very\n"
+"for quite some time, but it causes problems in a situation very\n"
 "common to various web login systems - frequently, when accessing\n"
-"certain location, they will redirect you to a login page if they\n"
+"a certain location, they will redirect you to a login page if they\n"
 "don't receive an auth cookie, the login page then gives you the\n"
 "cookie and redirects you back to the original page, but there you\n"
 "have already cached redirect back to the login page! If this\n"
@@ -2991,7 +3020,7 @@ msgid ""
 "still workaround it by clever combination of usage of reload,\n"
 "jumping around in session history and hitting ctrl+enter.\n"
 "Note that this option is checked when retrieving the information\n"
-"from cache, not when saving it to cache - thus if you will enable\n"
+"from cache, not when saving it to cache - thus if you enable\n"
 "it, even previous redirects will be taken from cache instead of\n"
 "asking the server."
 msgstr ""
@@ -3206,7 +3235,8 @@ msgid "Ensure contrast"
 msgstr "Осигуравање контраста"
 
 #: src/config/options.inc:587
-msgid "Makes sure that the back- and foreground color are never equal."
+#, fuzzy
+msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Стараће се да боје текста и позадине никад не буду једнаке."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
@@ -3306,8 +3336,9 @@ msgstr "Истоварни излаз"
 msgid "Dump output options."
 msgstr "Избори истоварног излаза."
 
+#. OPT_CODEPAGE
 #: src/config/options.inc:640 src/config/options.inc:912
-#: src/config/opttypes.c:404 src/dialogs/document.c:163
+#: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
 msgstr "Кодна страна"
 
@@ -3455,7 +3486,8 @@ msgid "Display superscripts (as ^thing)."
 msgstr "Приказиваће степене (нпр. ^нешто)."
 
 #: src/config/options.inc:721
-msgid "Rendering of html link element"
+#, fuzzy
+msgid "Rendering of HTML link element"
 msgstr "Приказивање елемента ,,link``"
 
 #: src/config/options.inc:723
@@ -3573,9 +3605,10 @@ msgid "Save interval"
 msgstr "Интервал чувања"
 
 #: src/config/options.inc:786
+#, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.elinks\n"
-"to be saved to disk if they has changed (seconds; 0 to disable)"
+"to be saved to disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 "Интервал при коме ће чувати информативне датотеке у\n"
 "директоријуму ~/.elinks на диск уколико се оне измене (у\n"
@@ -4198,9 +4231,10 @@ msgid "Underline menu hotkeys"
 msgstr "Подвлачење пречица менија"
 
 #: src/config/options.inc:1184
+#, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Да ли ће подвлачити пречице у менијима како би биле\n"
 "видљивије. Захтева активирање подвлачења на терминалу."
@@ -4210,9 +4244,10 @@ msgid "Underline button shortcuts"
 msgstr "Подвлачење пречица дугмади"
 
 #: src/config/options.inc:1189
+#, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more\n"
-"visible. Requires the underlining is enabled for the terminal."
+"visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Да ли ће подвлачити пречице дугмади како би биле видљивије.\n"
 "Захтева активирање подвлачења на терминалу."
@@ -4310,8 +4345,9 @@ msgid "Wrap-around tabs cycling"
 msgstr "Кружно кретање кроз језичке"
 
 #: src/config/options.inc:1241
+#, fuzzy
 msgid ""
-"When moving right from the last tab, jump at the first one, and\n"
+"When moving right from the last tab, jump to the first one, and\n"
 "vice versa."
 msgstr ""
 "Када се на последњем језичку притисне стрелица надесно,\n"
@@ -4325,7 +4361,8 @@ msgstr "Потврда затварања језичака"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Питаће за потврду пре затварања језичка."
 
-#: src/config/options.inc:1250 src/config/opttypes.c:405
+#. OPT_LANGUAGE
+#: src/config/options.inc:1250 src/config/opttypes.c:483
 msgid "Language"
 msgstr "Језик"
 
@@ -4488,60 +4525,68 @@ msgstr ""
 msgid "Read error"
 msgstr "Грешка при читању"
 
-#: src/config/opttypes.c:399
+#. The OPT_ comments below are here to be found by grep.
+#. OPT_BOOL
+#: src/config/opttypes.c:472
 msgid "Boolean"
 msgstr "Логичка"
 
-#: src/config/opttypes.c:399
+#: src/config/opttypes.c:472
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:400
+#. OPT_INT
+#: src/config/opttypes.c:474
 msgid "Integer"
 msgstr "Цео број"
 
-#: src/config/opttypes.c:400 src/config/opttypes.c:401
+#: src/config/opttypes.c:474 src/config/opttypes.c:476
 msgid "<num>"
 msgstr "<бр>"
 
-#: src/config/opttypes.c:401
+#. OPT_LONG
+#: src/config/opttypes.c:476
 msgid "Longint"
 msgstr "Дугачак цео број"
 
-#: src/config/opttypes.c:402
+#. OPT_STRING
+#: src/config/opttypes.c:478
 msgid "String"
 msgstr "Ниска"
 
-#: src/config/opttypes.c:402
+#: src/config/opttypes.c:478
 msgid "<str>"
 msgstr "<ниска>"
 
-#: src/config/opttypes.c:404
+#: src/config/opttypes.c:481
 msgid "<codepage>"
 msgstr "<коднастрана>"
 
-#: src/config/opttypes.c:405
+#: src/config/opttypes.c:483
 msgid "<language>"
 msgstr "<језик>"
 
-#: src/config/opttypes.c:406
+#. OPT_COLOR
+#: src/config/opttypes.c:485
 msgid "Color"
 msgstr "Боја"
 
-#: src/config/opttypes.c:406
+#: src/config/opttypes.c:485
 msgid "<color|#rrggbb>"
 msgstr "<боја|#ццззпп>"
 
-#: src/config/opttypes.c:408
+#. OPT_COMMAND
+#: src/config/opttypes.c:488
 msgid "Special"
 msgstr "Посебно"
 
-#: src/config/opttypes.c:410
+#. OPT_ALIAS
+#: src/config/opttypes.c:491
 msgid "Alias"
 msgstr "Псеудоним"
 
-#. tree
-#: src/config/opttypes.c:413
+#. OPT_TREE
+#: src/config/opttypes.c:494
 msgid "Folder"
 msgstr "Фасцикла"
 
@@ -4627,7 +4672,8 @@ msgid "Saving"
 msgstr "Чување"
 
 #: src/cookies/cookies.c:119
-msgid "Whether cookies should be loaded from and save to disk."
+#, fuzzy
+msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Да ли би колачиће требало учитавати са и чувати на диск."
 
 #: src/cookies/cookies.c:121
@@ -4701,7 +4747,7 @@ msgid "~Reject"
 msgstr "~Одбаци"
 
 #: src/cookies/dialogs.c:161 src/cookies/dialogs.c:357
-#: src/dialogs/document.c:177
+#: src/dialogs/document.c:178
 msgid "Server"
 msgstr "Сервер"
 
@@ -4820,40 +4866,40 @@ msgstr "Време последње посете везе"
 msgid "Link title (from history)"
 msgstr "Наслов везе (из историје)"
 
-#: src/dialogs/document.c:167
+#: src/dialogs/document.c:168
 msgid "assumed"
 msgstr "претпостављено"
 
-#: src/dialogs/document.c:170
+#: src/dialogs/document.c:171
 msgid "ignoring server setting"
 msgstr "занемарујем поставку сервера"
 
-#: src/dialogs/document.c:195
+#: src/dialogs/document.c:196
 msgid "Date"
 msgstr "Датум"
 
-#: src/dialogs/document.c:213 src/globhist/dialogs.c:67
+#: src/dialogs/document.c:214 src/globhist/dialogs.c:67
 msgid "Last visit time"
 msgstr "Време последње посете"
 
-#: src/dialogs/document.c:232
+#: src/dialogs/document.c:233
 msgid "Unknown"
 msgstr "Непознато"
 
-#: src/dialogs/document.c:247 src/dialogs/document.c:316
+#: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
 msgstr "Подаци о заглављу"
 
-#: src/dialogs/document.c:260
+#: src/dialogs/document.c:261
 msgid "Internal header info"
 msgstr "Интерни подаци о заглављу"
 
-#: src/dialogs/document.c:301
+#: src/dialogs/document.c:302
 msgid "No header info."
 msgstr "Нема података о заглављу."
 
 #: src/dialogs/download.c:243 src/dialogs/menu.c:598
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:399
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:361
 msgid "Download"
 msgstr "Преузимање"
 
@@ -4929,7 +4975,7 @@ msgid "Download manager"
 msgstr "Управљач преузимања"
 
 #. name:
-#: src/dialogs/exmode.c:149
+#: src/dialogs/exmode.c:147
 msgid "Exmode"
 msgstr ""
 
@@ -5140,7 +5186,8 @@ msgstr "Додај документ у ~обележиваче"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:249 src/dialogs/menu.c:418
-msgid "Toggle ~html/plain"
+#, fuzzy
+msgid "Toggle ~HTML/plain"
 msgstr "Смени ~HTML/чист приказ"
 
 #. accelerator_context(tab_menu)
@@ -6335,23 +6382,24 @@ msgid "Program"
 msgstr "Програм"
 
 #: src/mime/backend/default.c:74
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
 "External viewer for this file type. '%' in this string will be\n"
-"substituted by a file name."
+"substituted by a file name.\n"
+"Do _not_ put single- or double-quotes around the % sign."
 msgstr ""
 "Спољашњи прегледач за ову врсту датотека. ,,%`` у овој нисци\n"
 "ће бити замењено називом датотеке."
 
-#: src/mime/backend/default.c:78
+#: src/mime/backend/default.c:79
 msgid "File extension associations"
 msgstr "Придружења наставака датотека"
 
-#: src/mime/backend/default.c:80
+#: src/mime/backend/default.c:81
 msgid "Extension <-> MIME type association."
 msgstr "Придружења наставак <-> врста MIME-а."
 
-#: src/mime/backend/default.c:84
+#: src/mime/backend/default.c:85
 msgid ""
 "MIME-type matching this file extension ('*' is used here in place\n"
 "of '.')."
@@ -6360,12 +6408,12 @@ msgstr ""
 "користи уместо ,,.``)."
 
 #. name:
-#: src/mime/backend/default.c:215
+#: src/mime/backend/default.c:216
 msgid "Option system"
 msgstr "Систем избора"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:671
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:684
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6435,9 +6483,10 @@ msgid "Mimetypes files"
 msgstr "Датотеке ,,mimetypes``"
 
 #: src/mime/backend/mimetypes.c:48
+#, fuzzy
 msgid ""
 "Options for the support of mime.types files. These files\n"
-"can be used to find the content type of an URL by looking at\n"
+"can be used to find the content type of a URL by looking at\n"
 "the extension of the file name."
 msgstr ""
 "Избори подршке за датотеке mime.types. Ове датотеке се могу\n"
@@ -6463,19 +6512,19 @@ msgstr "Брисање врсте"
 msgid "Delete extension %s -> %s?"
 msgstr "Да обришем врсту %s -> %s?"
 
-#: src/mime/dialogs.c:125
+#: src/mime/dialogs.c:126
 msgid "Extension"
 msgstr "Врста"
 
-#: src/mime/dialogs.c:128
+#: src/mime/dialogs.c:129
 msgid "Extension(s)"
 msgstr "Врста(е)"
 
-#: src/mime/dialogs.c:129
+#: src/mime/dialogs.c:130
 msgid "Content-Type"
 msgstr "Врста садржаја"
 
-#: src/mime/dialogs.c:141
+#: src/mime/dialogs.c:142
 msgid "No extensions"
 msgstr "Нема додатака"
 
@@ -6631,7 +6680,7 @@ msgstr "Изузетак утичнице"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
-#: src/scripting/python/load.c:113 src/scripting/python/menu.c:98
+#: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
 msgstr "Интерна грешка"
@@ -6775,7 +6824,8 @@ msgstr ""
 "protocol.nntp.server, или променљиву окружења NNTPSERVER."
 
 #: src/network/state.c:101
-msgid "Server hang up for some reason"
+#, fuzzy
+msgid "Server hung up for some reason"
 msgstr "Закочење сервера, из непознатог разлога"
 
 #: src/network/state.c:102
@@ -7318,7 +7368,7 @@ msgstr "Датотеке:"
 msgid "Comment"
 msgstr "Коментари"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:400
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:362
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7503,7 +7553,7 @@ msgstr "Да ли бисте желели да прикажем датотеку ,,%s`` (врсте %s)?"
 msgid "Information about the torrent"
 msgstr "Приказивање података о текућој страници"
 
-#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1147
+#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1106
 msgid "What to do?"
 msgstr "Шта да радим?"
 
@@ -7514,12 +7564,12 @@ msgid "Down~load"
 msgstr "Преузимање"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1256
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1209
 msgid "~Display"
 msgstr "Прика~жи"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1260
+#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1213
 msgid "Show ~header"
 msgstr "Прикажи ~заглавље"
 
@@ -7550,19 +7600,19 @@ msgstr "Да ли ће извршавати локалне CGI списе."
 msgid "CGI"
 msgstr ""
 
-#: src/protocol/file/file.c:42
+#: src/protocol/file/file.c:40
 msgid "Local files"
 msgstr "Локалне датотеке"
 
-#: src/protocol/file/file.c:44
+#: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
 msgstr "Избори у вези са локалним прегледањем."
 
-#: src/protocol/file/file.c:46
+#: src/protocol/file/file.c:44
 msgid "Allow reading special files"
 msgstr "Дозвољавање читања посебних датотека"
 
-#: src/protocol/file/file.c:48
+#: src/protocol/file/file.c:46
 msgid ""
 "Whether to allow reading from non-regular files.\n"
 "Note this can be dangerous; reading /dev/urandom or\n"
@@ -7572,24 +7622,25 @@ msgstr ""
 "бити опасно: читање из /dev/urandom или из /dev/zero вам\n"
 "може загорчати живот!"
 
-#: src/protocol/file/file.c:52
+#: src/protocol/file/file.c:50
 msgid "Show hidden files in directory listing"
 msgstr "Приказивање сакривених датотека у листинзима директоријума"
 
-#: src/protocol/file/file.c:54
+#: src/protocol/file/file.c:52
+#, fuzzy
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
-"hidden in local directories listing."
+"hidden in local directory listings."
 msgstr ""
 "Када је ово постављено на ,,нетачно``, датотеке чији назив\n"
 "почиње тачком ће бити сакривене у листинзима локалних\n"
 "директоријума."
 
-#: src/protocol/file/file.c:57
+#: src/protocol/file/file.c:55
 msgid "Try encoding extensions"
 msgstr "Пробање кодираних наставака"
 
-#: src/protocol/file/file.c:59
+#: src/protocol/file/file.c:57
 msgid ""
 "When set, if we can't open a file named 'filename', we'll try\n"
 "to open 'filename' with some encoding extension appended\n"
@@ -7601,7 +7652,7 @@ msgstr ""
 "зависи од подржаних кодирања."
 
 #. name:
-#: src/protocol/file/file.c:67
+#: src/protocol/file/file.c:65
 msgid "File"
 msgstr "Датотека"
 
@@ -7919,11 +7970,11 @@ msgid ""
 "a standard for new textmode user agents, so that the webmasters can\n"
 "have just a single uniform test for these if they are e.g. pushing\n"
 "some lite version to them automagically.\n"
-"%v in the string means ELinks version\n"
-"%s in the string means system identification\n"
-"%t in the string means size of the terminal\n"
-"%b in the string means number of bars displayed by ELinks\n"
-"Use \" \" if you don't want any User-Agent header to be sent at all."
+"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+"%v in the string means ELinks version,\n"
+"%s in the string means system identification,\n"
+"%t in the string means size of the terminal,\n"
+"%b in the string means number of bars displayed by ELinks."
 msgstr ""
 "Мењање ИБ-а корисничког агента. То је идентификациона ниска\n"
 "која се шаље HTTP серверу када се тражи документ. Кључна реч\n"
@@ -8146,10 +8197,10 @@ msgid ""
 "(i.e. contains no '.', ':' or '/' characters), and does\n"
 "not match any defined prefixes. Set the value to \"\" to\n"
 "disable use of the default template rewrite rule.\n"
-"%c in the template means the current URL\n"
-"%s in the template means the whole string from the goto dialog\n"
-"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s\n"
-"%% in the template means '%'"
+"%c in the template means the current URL,\n"
+"%s in the template means the whole string from the goto dialog,\n"
+"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s,\n"
+"%% in the template means '%'."
 msgstr ""
 
 #. name:
@@ -8311,12 +8362,12 @@ msgstr "Упозорење ЈаваСписа"
 msgid "Spidermonkey ECMAScript"
 msgstr "ECMAScript"
 
-#: src/session/download.c:236 src/session/download.c:360
-#: src/session/download.c:599 src/session/download.c:687
+#: src/session/download.c:233 src/session/download.c:330
+#: src/session/download.c:561 src/session/download.c:649
 msgid "Download error"
 msgstr "Грешка при преузимању"
 
-#: src/session/download.c:237 src/session/download.c:688
+#: src/session/download.c:234 src/session/download.c:650
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8325,7 +8376,7 @@ msgstr ""
 "Не могу да створим датотеку ,,%s``:\n"
 "%s"
 
-#: src/session/download.c:361
+#: src/session/download.c:331
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8336,16 +8387,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:600
+#: src/session/download.c:562
 #, c-format
 msgid "'%s' is a directory."
 msgstr ",,%s`` је директоријум."
 
-#: src/session/download.c:634
+#: src/session/download.c:596
 msgid "File exists"
 msgstr "Датотека већ постоји"
 
-#: src/session/download.c:635
+#: src/session/download.c:597
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8361,55 +8412,51 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:642
+#: src/session/download.c:604
 msgid "Sa~ve under the alternative name"
 msgstr "Сачувај под а~лтернативним називом"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:643
+#: src/session/download.c:605
 msgid "~Overwrite the original file"
 msgstr "Препи~ши преко првобитне датотеке"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:644
+#: src/session/download.c:606
 msgid "~Resume download of the original file"
 msgstr "Настави преузи~мање оригиналне датотеке"
 
-#: src/session/download.c:1150
+#: src/session/download.c:1109
 msgid "Unknown type"
 msgstr "Непозната врста"
 
-#: src/session/download.c:1175
+#: src/session/download.c:1134
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Да ли бисте желели да прикажем датотеку ,,%s`` (врсте %s)?"
 
-#: src/session/download.c:1178
+#: src/session/download.c:1137
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Да ли бисте желели да прикажем датотеку ,,%s`` (врсте %s)?"
 
-#: src/session/download.c:1206
+#: src/session/download.c:1165
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr ""
 
-#: src/session/download.c:1211
-msgid "The output of the program will be shown in the tab"
-msgstr ""
-
-#: src/session/download.c:1215
+#: src/session/download.c:1169
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Блокирање терминала"
 
-#: src/session/download.c:1222
+#: src/session/download.c:1175
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1243
+#: src/session/download.c:1196
 msgid "~Open"
 msgstr "~Отвори"
 
@@ -8423,14 +8470,15 @@ msgid "Warning"
 msgstr "Упозорење"
 
 #: src/session/session.c:751
+#, fuzzy
 msgid ""
-"You have empty string in protocol.http.user_agent - this was a default value "
-"in the past, substituted by default ELinks User-Agent string. However, "
+"You have an empty string in protocol.http.user_agent - this was a default "
+"value in the past, substituted by default ELinks User-Agent string. However, "
 "currently this means that NO User-Agent HEADER WILL BE SENT AT ALL - if this "
-"is really what you want, set its value to \" \", otherwise please delete "
-"line with this settings from your configuration file (if you have no idea "
-"what I'm talking about, just do this), so that correct default setting will "
-"be used. Apologies for any inconvience caused."
+"is really what you want, set its value to \" \", otherwise please delete the "
+"line with this setting from your configuration file (if you have no idea "
+"what I'm talking about, just do this), so that the correct default setting "
+"will be used. Apologies for any inconvience caused."
 msgstr ""
 "Променљива protocol.http.user_agent је постављена на празну ниску. Ово је "
 "раније била подразумевана вредност, која се замењивала ЕЛинксовом ниском "
@@ -8442,16 +8490,17 @@ msgstr ""
 "Извињавамо се због евентуалних непријатности које су овим проузроковане."
 
 #: src/session/session.c:770
+#, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
 "you upgraded ELinks. Now, only those options which you actually changed are "
-"saved to the configuration file, instead of just all the options. This "
-"simplifies our situation greatly when we see that some option has "
-"inappropriate default value or we need to change semantic of some option in "
-"a subtle way. Thus, we recommend you to change the value of config."
-"saving_style option to 3 in order to get the \"right\" behaviour. Apologies "
-"for any inconvience caused."
+"saved to the configuration file, instead of all the options. This simplifies "
+"our situation greatly when we see that some option has an inappropriate "
+"default value or we need to change the semantics of some option in a subtle "
+"way. Thus, we recommend you change the value of config.saving_style option "
+"to 3 in order to get the \"right\" behaviour. Apologies for any inconvience "
+"caused."
 msgstr ""
 "Променљива config.saving_style вам је подешена на де факто застарелу "
 "вредност. ЕЛинксови алгоритми чувања подешавања су промењени од последњег "
@@ -8541,7 +8590,7 @@ msgstr "Неисправан догађај %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Нисам могао да прочитам догађај: %d (%s)"
 
-#: src/terminal/kbd.c:1177
+#: src/terminal/kbd.c:1187
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr "Прочитано је превише бајтова из itrm-а!"
@@ -8903,19 +8952,19 @@ msgid ""
 "entered from this file: %s"
 msgstr ""
 
-#: src/viewer/text/view.c:735
+#: src/viewer/text/view.c:1042
 msgid "Go to link"
 msgstr "Иди на везу"
 
-#: src/viewer/text/view.c:735
+#: src/viewer/text/view.c:1042
 msgid "Enter link number"
 msgstr "Унесите број везе"
 
-#: src/viewer/text/view.c:1320
+#: src/viewer/text/view.c:1627
 msgid "Save error"
 msgstr "Грешка при чувању"
 
-#: src/viewer/text/view.c:1321
+#: src/viewer/text/view.c:1628
 msgid "Error writing to file"
 msgstr "Грешка при упису у датотеку"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-25 22:26+0100\n"
+"POT-Creation-Date: 2008-06-29 22:26+0300\n"
 "PO-Revision-Date: 2008-03-25 22:30+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
@@ -152,7 +152,7 @@ msgstr "Chaîne recherchée '%s' introuvable"
 msgid "Name"
 msgstr "Nom"
 
-#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:112
+#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
 msgstr "Nombre incorrect"
 
@@ -179,7 +179,7 @@ msgstr "Chaîne vide non autorisée"
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
-#: src/session/download.c:645 src/session/download.c:1243
+#: src/session/download.c:607 src/session/download.c:1219
 #: src/viewer/text/search.c:1678
 msgid "~Cancel"
 msgstr "~Annuler"
@@ -1937,7 +1937,7 @@ msgstr "Impossible d'ajouter une option ici."
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
 #: src/dialogs/options.c:236 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1227
+#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1203
 msgid "Sa~ve"
 msgstr "Enre~gistrer"
 
@@ -4864,7 +4864,7 @@ msgid "No header info."
 msgstr "Aucune information d'en-tête."
 
 #: src/dialogs/download.c:243 src/dialogs/menu.c:598
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:399
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:361
 msgid "Download"
 msgstr "Téléchargement"
 
@@ -6370,7 +6370,7 @@ msgid "Option system"
 msgstr "Système de configuration"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:685
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:684
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6631,7 +6631,7 @@ msgstr "Exception socket"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
-#: src/scripting/python/load.c:113 src/scripting/python/menu.c:98
+#: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
 msgstr "Erreur interne"
@@ -7359,7 +7359,7 @@ msgstr "Fichiers"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:400
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:362
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7532,7 +7532,7 @@ msgstr "Que voulez-vous faire avec le fichier '%s' ?"
 msgid "Information about the torrent"
 msgstr "Informations sur le torrent"
 
-#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1124
+#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1106
 msgid "What to do?"
 msgstr "Que faire ?"
 
@@ -7542,12 +7542,12 @@ msgid "Down~load"
 msgstr "Té~lécharger"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1233
+#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1209
 msgid "~Display"
 msgstr "A~fficher"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1237
+#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1213
 msgid "Show ~header"
 msgstr "~Montrer les en-têtes"
 
@@ -7577,19 +7577,19 @@ msgstr "Exécuter ou non les scripts CGI locaux."
 msgid "CGI"
 msgstr "CGI"
 
-#: src/protocol/file/file.c:42
+#: src/protocol/file/file.c:40
 msgid "Local files"
 msgstr "Fichiers locaux"
 
-#: src/protocol/file/file.c:44
+#: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
 msgstr "Options pour la navigation locale."
 
-#: src/protocol/file/file.c:46
+#: src/protocol/file/file.c:44
 msgid "Allow reading special files"
 msgstr "Autoriser la lecture des fichiers spéciaux"
 
-#: src/protocol/file/file.c:48
+#: src/protocol/file/file.c:46
 msgid ""
 "Whether to allow reading from non-regular files.\n"
 "Note this can be dangerous; reading /dev/urandom or\n"
@@ -7599,11 +7599,11 @@ msgstr ""
 "Notez que cela peut être dangereux; lire /dev/urandom\n"
 "ou /dev/zero peut ruiner votre journée !"
 
-#: src/protocol/file/file.c:52
+#: src/protocol/file/file.c:50
 msgid "Show hidden files in directory listing"
 msgstr "Montrer les fichiers cachés"
 
-#: src/protocol/file/file.c:54
+#: src/protocol/file/file.c:52
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
 "hidden in local directory listings."
@@ -7612,11 +7612,11 @@ msgstr ""
 "seront cachés lors de la visualisation du contenu d'un répertoire\n"
 "local."
 
-#: src/protocol/file/file.c:57
+#: src/protocol/file/file.c:55
 msgid "Try encoding extensions"
 msgstr "Deviner l'extension des fichiers encodés"
 
-#: src/protocol/file/file.c:59
+#: src/protocol/file/file.c:57
 msgid ""
 "When set, if we can't open a file named 'filename', we'll try\n"
 "to open 'filename' with some encoding extension appended\n"
@@ -7627,7 +7627,7 @@ msgstr ""
 "'un_nom.gz'); cela dépend des encodages supportés."
 
 #. name:
-#: src/protocol/file/file.c:67
+#: src/protocol/file/file.c:65
 msgid "File"
 msgstr "File"
 
@@ -8317,12 +8317,12 @@ msgstr "Alerte script utilisateur"
 msgid "Spidermonkey ECMAScript"
 msgstr "Spidermonkey ECMAScript"
 
-#: src/session/download.c:236 src/session/download.c:360
-#: src/session/download.c:599 src/session/download.c:687
+#: src/session/download.c:233 src/session/download.c:330
+#: src/session/download.c:561 src/session/download.c:649
 msgid "Download error"
 msgstr "Erreur de téléchargement"
 
-#: src/session/download.c:237 src/session/download.c:688
+#: src/session/download.c:234 src/session/download.c:650
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8331,7 +8331,7 @@ msgstr ""
 "Impossible de créer le fichier '%s':\n"
 "%s"
 
-#: src/session/download.c:361
+#: src/session/download.c:331
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8342,16 +8342,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:600
+#: src/session/download.c:562
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' est un répertoire."
 
-#: src/session/download.c:634
+#: src/session/download.c:596
 msgid "File exists"
 msgstr "Fichier existant"
 
-#: src/session/download.c:635
+#: src/session/download.c:597
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8367,54 +8367,50 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:642
+#: src/session/download.c:604
 msgid "Sa~ve under the alternative name"
 msgstr "Sau~ver sous un nom alternatif"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:643
+#: src/session/download.c:605
 msgid "~Overwrite the original file"
 msgstr "Ecraser le fichier ~original"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:644
+#: src/session/download.c:606
 msgid "~Resume download of the original file"
 msgstr "~Reprendre le téléchargement du fichier original"
 
-#: src/session/download.c:1127
+#: src/session/download.c:1109
 msgid "Unknown type"
 msgstr "Type inconnu"
 
-#: src/session/download.c:1152
+#: src/session/download.c:1134
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Que voulez-vous faire avec le fichier '%s' (type: %s%s%s) ?"
 
-#: src/session/download.c:1155
+#: src/session/download.c:1137
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Que voulez-vous faire avec le fichier (type: %s%s%s) ?"
 
-#: src/session/download.c:1183
+#: src/session/download.c:1165
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Programme ('%' sera remplacé par le nom du fichier)"
 
-#: src/session/download.c:1188
-msgid "The output of the program will be shown in the tab"
-msgstr "La sortie du programme sera montrée dans l'onglet"
-
-#: src/session/download.c:1192
+#: src/session/download.c:1169
 msgid "Block the terminal"
 msgstr "Bloquer le terminal"
 
-#: src/session/download.c:1199
+#: src/session/download.c:1175
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Le fichier sera ouvert avec le programme '%s'."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1220
+#: src/session/download.c:1196
 msgid "~Open"
 msgstr "~Ouvrir"
 
@@ -8549,7 +8545,7 @@ msgstr "Mauvais évènement %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Impossible de lire l'évènement: %d (%s)"
 
-#: src/terminal/kbd.c:1186
+#: src/terminal/kbd.c:1187
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr "Trop d'octets lus en provenance de itrm!"
@@ -8937,6 +8933,9 @@ msgstr "Chronomètre"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Visionneur"
+
+#~ msgid "The output of the program will be shown in the tab"
+#~ msgstr "La sortie du programme sera montrée dans l'onglet"
 
 #~ msgid ""
 #~ "Whether to try to connect to a host over IPv4.\n"

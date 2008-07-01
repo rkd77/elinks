@@ -5,10 +5,8 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.12.GIT now:
---------------------
-
-To be released as ELinks 0.12.0.
+ELinks 0.12pre1:
+----------------
 
 Notable new features:
 
