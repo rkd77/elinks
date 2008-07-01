@@ -237,7 +237,7 @@ msgid "LED indicators"
 msgstr "LED-indikatorer"
 
 #: src/bfu/leds.c:306
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "What the different LEDs indicate:\n"
 "\n"
@@ -310,7 +310,6 @@ msgid "File format"
 msgstr "Filformat"
 
 #: src/bookmarks/bookmarks.c:55
-#, fuzzy
 msgid ""
 "File format for bookmarks (affects both reading and saving):\n"
 "0 is the default native ELinks format\n"
@@ -319,10 +318,9 @@ msgid ""
 msgstr ""
 "Filformat for bogmærker (påvirker læsning og gemning):\n"
 "0 er ELinks' standardformat\n"
-"1 er det universelle XBEL XML-bogmærkeformat (INGEN NATIONALE TEGN!)"
+"1 er det universelle XBEL XML-bogmærkeformat (ELinks bug 153: INGEN NATIONALE TEGN!)"
 
 #: src/bookmarks/bookmarks.c:61
-#, fuzzy
 msgid ""
 "File format for bookmarks (affects both reading and saving):\n"
 "0 is the default native ELinks format\n"
@@ -331,7 +329,8 @@ msgid ""
 msgstr ""
 "Filformat for bogmærker (påvirker læsning og gemning):\n"
 "0 er ELinks' standardformat\n"
-"1 er det universelle XBEL XML-bogmærkeformat (INGEN NATIONALE TEGN!) \n"
+"1 er det universelle XBEL XML-bogmærkeformat \n"
+"  (ELinks bug 153: INGEN NATIONALE TEGN!) \n"
 "(DEAKTIVERET)"
 
 #: src/bookmarks/bookmarks.c:67
@@ -687,9 +686,8 @@ msgid "Copy text to clipboard"
 msgstr "Kopiér tekst til klippebord"
 
 #: src/config/actions-edit.inc:14
-#, fuzzy
 msgid "Cut text to clipboard"
-msgstr "Kopiér tekst til klippebord"
+msgstr "Klip tekst til klippebord"
 
 #: src/config/actions-edit.inc:15 src/config/actions-menu.inc:9
 msgid "Delete character under cursor"
@@ -733,14 +731,12 @@ msgid "Move the cursor left"
 msgstr "Flyt markør til venstre"
 
 #: src/config/actions-edit.inc:25
-#, fuzzy
 msgid "Move cursor before current word"
-msgstr "Flyt markøren nedad"
+msgstr "Flyt markøren foran det nuværende ord"
 
 #: src/config/actions-edit.inc:26
-#, fuzzy
 msgid "Move cursor after current word"
-msgstr "Flyt markør op"
+msgstr "Flyt markør efter det nuværende ord"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -936,9 +932,8 @@ msgid "Open the link context menu"
 msgstr "Åbn link-kontekst-menu"
 
 #: src/config/actions-main.inc:50
-#, fuzzy
 msgid "Open the form fields menu"
-msgstr "Åbn Fil-menuen"
+msgstr "Åbn Formularfelts-menuen"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -965,9 +960,8 @@ msgid "Move cursor left"
 msgstr "Flyt markør til venstre"
 
 #: src/config/actions-main.inc:57
-#, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Gå til begyndelsen af siden/linjen"
+msgstr "Fly markør til linjestart"
 
 #: src/config/actions-main.inc:58
 msgid "Move cursor right"
@@ -990,18 +984,16 @@ msgid "Move one link down"
 msgstr "Flyt et link ned"
 
 #: src/config/actions-main.inc:63
-#, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Flyt til næste link"
+msgstr "Flyt til næste linje med et link"
 
 #: src/config/actions-main.inc:64
 msgid "Move one link left"
 msgstr "Flyt et link til venstre"
 
 #: src/config/actions-main.inc:65
-#, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Flyt til forrige link"
+msgstr "Flyt et link til venstre eller til forrige link"
 
 #: src/config/actions-main.inc:66
 msgid "Move to the next link"
@@ -1016,18 +1008,16 @@ msgid "Move one link right"
 msgstr "Flyt et link til højre"
 
 #: src/config/actions-main.inc:69
-#, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Flyt til næste link"
+msgstr "Flyt et link til højre eller til næste link"
 
 #: src/config/actions-main.inc:70
 msgid "Move one link up"
 msgstr "Flyt et link op"
 
 #: src/config/actions-main.inc:71
-#, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Flyt til forrige link"
+msgstr "Flyt til forrige linje indeholdende et link"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1289,18 +1279,16 @@ msgid "Out of memory"
 msgstr "Hukommelse opbrugt"
 
 #: src/config/cmdline.c:264
-#, fuzzy
 msgid "Too many arguments"
 msgstr "For mange parametre"
 
 #: src/config/cmdline.c:282
-#, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Rapportering af manglende fragment"
+msgstr "Citationstegn kunne ikke matches for parameter"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
-msgstr ""
+msgstr "Ulæselige tegn efter citeret parameter"
 
 #: src/config/cmdline.c:394
 msgid "Remote method not supported"
@@ -1477,14 +1465,12 @@ msgid "Codepage used when formatting dump output."
 msgstr "Tegnkodningstabel brugt i uddata fra -dump."
 
 #: src/config/cmdline.c:786
-#, fuzzy
 msgid "Color mode used with -dump"
-msgstr "Tegnkodningstabel brugt med -dump"
+msgstr "Farvetilstand brugt med -dump"
 
 #: src/config/cmdline.c:788
-#, fuzzy
 msgid "Color mode used with -dump."
-msgstr "Tegnkodningstabel brugt med -dump"
+msgstr "Farvetilstand brugt med -dump."
 
 #: src/config/cmdline.c:790
 msgid "Width of document formatted with -dump"
@@ -1974,9 +1960,8 @@ msgid "Invalid keystroke."
 msgstr "Ugyldig tastetildeling."
 
 #: src/config/dialogs.c:860
-#, fuzzy
 msgid "Need to select an action."
-msgstr "Det er nødvendigt at vælge en tasteoversigt."
+msgstr "Det er nødvendigt at vælge en handling."
 
 #: src/config/dialogs.c:882
 #, c-format
@@ -2219,7 +2204,6 @@ msgid "Try IPv4 when connecting"
 msgstr "Prøv IPv4 når forbindelse oprettes"
 
 #: src/config/options.inc:100
-#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Note that if connection.try_ipv6 is enabled too,\n"
@@ -2237,7 +2221,6 @@ msgstr ""
 "adresse med en stil såsom http4://elinks.or.cz/."
 
 #: src/config/options.inc:110
-#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv4.\n"
 "Do not touch this option.\n"
@@ -2255,7 +2238,6 @@ msgid "Try IPv6 when connecting"
 msgstr "Prøv IPv6 ved oprettelse af forbindelser"
 
 #: src/config/options.inc:120
-#, fuzzy
 msgid ""
 "Whether to try to connect to a host over IPv6.\n"
 "Note that you can also force a given protocol\n"
@@ -2410,7 +2392,6 @@ msgid "External editor"
 msgstr "Ekstern editor"
 
 #: src/config/options.inc:196
-#, fuzzy
 msgid ""
 "Path to the executable that ELinks should launch when the user\n"
 "requests to edit a textarea with an external editor.\n"
@@ -2418,7 +2399,7 @@ msgid ""
 "variable $EDITOR. If $EDITOR is empty or not set, ELinks will then\n"
 "default to \"vi\"."
 msgstr ""
-"Sti til programmet som ELinks skal start når brugeren ønsker\n"
+"Sti til programmet som ELinks skal starte når brugeren ønsker\n"
 "at redigere et tekstfelt (angivet med textarea-elementet)\n"
 "med en ekstern editor.\n"
 "\n"
@@ -2674,7 +2655,6 @@ msgid "Use tabindex"
 msgstr "Anvend tabindex"
 
 #: src/config/options.inc:326
-#, fuzzy
 msgid ""
 "Whether to navigate links using tabindex specified ordering.\n"
 "The TABINDEX attribute in HTML elements specifies the order\n"
@@ -2735,7 +2715,6 @@ msgstr "Bund/top navigeringscyklus for links"
 
 #. 0
 #: src/config/options.inc:353
-#, fuzzy
 msgid ""
 "When pressing 'down' on the last link, jump to the first one, and\n"
 "vice versa."
@@ -2840,7 +2819,6 @@ msgid "Show search hit top or bottom dialogs"
 msgstr "Vis dialoger hvis søgning rammer top eller bund"
 
 #: src/config/options.inc:403
-#, fuzzy
 msgid ""
 "Whether to show a dialog when the search hits the top or bottom of the\n"
 "document."
@@ -3066,9 +3044,8 @@ msgstr ""
 
 #. FIXME: Write more.
 #: src/config/options.inc:506
-#, fuzzy
 msgid "Revalidation interval"
-msgstr "Keepalive-interval"
+msgstr "Genvalideringsinterval"
 
 #: src/config/options.inc:508
 msgid ""
@@ -3195,7 +3172,6 @@ msgid "Ensure contrast"
 msgstr "Sørg for kontrast"
 
 #: src/config/options.inc:587
-#, fuzzy
 msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Sikrer at bag- og forgrundsfarver aldrig er ens."
 
@@ -3444,9 +3420,8 @@ msgid "Display superscripts (as ^thing)."
 msgstr "Vis matematisk overskrift (<sup> tag) som ^overskrift."
 
 #: src/config/options.inc:721
-#, fuzzy
 msgid "Rendering of HTML link element"
-msgstr "Gengivelse af HTML-links"
+msgstr "Gengivelse af link HTML-elementer"
 
 #: src/config/options.inc:723
 msgid ""
@@ -3536,7 +3511,6 @@ msgid ""
 msgstr ""
 
 #: src/config/options.inc:770
-#, fuzzy
 msgid ""
 "A rule for passing URI to an external command.\n"
 "The format is:\n"
@@ -3565,7 +3539,6 @@ msgid "Save interval"
 msgstr "Gemningsinterval"
 
 #: src/config/options.inc:786
-#, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.elinks\n"
 "to be saved to disk if they have changed (seconds; 0 to disable)"
@@ -3652,15 +3625,15 @@ msgid "Switch fonts for line drawing"
 msgstr "Skift skrifttype ved linjetegning"
 
 #: src/config/options.inc:852
-#, fuzzy
 msgid ""
 "Switch fonts when drawing lines, enabling both local characters\n"
 "and lines working at the same time. ELinks uses this option only if\n"
 "UTF-8 I/O is disabled and the terminal type is Linux or FreeBSD."
 msgstr ""
 "Skift skrifttype ved linjetegning således at både særlige\n"
-"nationale tegn og linjetegn kan bruges samtidig. Giver\n"
-"kun mening med en terminal af typen \"linux\"."
+"nationale tegn og linjetegn kan bruges samtidig. ELinks benytter\n"
+"kun denne indstilling når UTF-8 I/O er deaktiveret og terminalen\n"
+"er af tpen \"linux\" eller \"freebsd\"."
 
 #. When CONFIG_UTF8 is defined, any code that reads the "utf_8_io"
 #. * option should also check whether the "codepage" option is UTF-8,
@@ -3672,7 +3645,6 @@ msgid "UTF-8 I/O"
 msgstr "UTF-8 I/O"
 
 #: src/config/options.inc:863
-#, fuzzy
 msgid ""
 "Enable I/O in UTF-8 for Unicode terminals. Note that currently,\n"
 "only the subset of UTF-8 according to terminal codepage is used.\n"
@@ -3681,7 +3653,8 @@ msgstr ""
 "Aktivér I/O i UTF-8 på Unicode-terminaler. Bemærk at i\n"
 "øjeblikket bruges kun den del af UTF-8 tegntabellen som\n"
 "svarer til de tegn der er indeholdt i terminalens\n"
-"tegnkodningstabel."
+"tegnkodningstabel. ELinks benytter ikke denne indstilling\n"
+"when terminalens tegntabel er UTF-8."
 
 #: src/config/options.inc:867 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
@@ -3716,7 +3689,6 @@ msgstr ""
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
 #: src/config/options.inc:885
-#, fuzzy
 msgid ""
 "The color mode controls what colors are used and how they are output to the "
 "terminal.\n"
@@ -3730,11 +3702,18 @@ msgid ""
 "3 is 256 color mode, uses XTerm RGB codes\n"
 "4 is true color mode, uses konsole RGB codes"
 msgstr ""
-"Farvetilstanden styrer hvilke farver der bruges og hvordan\n"
-"de sendes til skærmen. Farvetilstandene er:\n"
+"Farvetilstanden styrer hvilke farver der bruges og hvordan de sendes\n"
+"skærmen.\n"
+"Nogle farvetilstande er muligvis deaktiveret på oversættelsestidspunktet\n"
+"For mere information se terminalindstillingsdialogen i Opsætnings menuen.\n"
+"Hvis du vælger en farvetilstand som er deaktiveret benyttes tilstanden\n"
+"16-farver.\n"
+"Farvetilstandene er:\n"
 "0 betyder tilstanden monokron, hvor kun 2 farver bruges\n"
 "1 betyder tilstanden 16-farver, som bruger de normale ANSI-farver\n"
-"2 betyder tilstanden 256-farve, som bruger XTerm RGB-farvekoder"
+"2 betyder tilstanden 88-farver, som bruger XTerm RGB-farvekoder\n"
+"3 betyder tilstanden 256-farve, som bruger XTerm RGB-farvekoder\n"
+"4 betyder tilstanden rigtige farver, some bruger konsole RGB-farvekoder"
 
 #: src/config/options.inc:898 src/dialogs/options.c:230
 msgid "Transparency"
@@ -4188,28 +4167,26 @@ msgid "Underline menu hotkeys"
 msgstr "Understreg hurtigtaster i menu"
 
 #: src/config/options.inc:1184
-#, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more\n"
 "visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Vælg om hurtigtaster i menuer skal understreges for at\n"
-"gøre dem mere synlige. Kræver at terminalen understøtter\n"
-"understregning."
+"gøre dem mere synlige. Kræver at understregning er understøttet\n"
+"og aktiveret for terminalen."
 
 #: src/config/options.inc:1187
 msgid "Underline button shortcuts"
 msgstr "Understreg knap-genvejstaster"
 
 #: src/config/options.inc:1189
-#, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more\n"
 "visible. Requires that underlining is enabled for the terminal."
 msgstr ""
 "Vælg om genvejstaster for knapper skal understreges for at\n"
-"gøre dem mere synlige. Kræver at terminalen understøtter\n"
-"understregning."
+"gøre dem mere synlige. Kræver at understregning er understøttet\n"
+"og aktiveret for terminalen."
 
 #: src/config/options.inc:1193
 msgid "Timer options"
@@ -4289,20 +4266,18 @@ msgstr ""
 "2 betyder altid"
 
 #: src/config/options.inc:1235
-#, fuzzy
 msgid "Tab bar at top"
-msgstr "Fanebladsskilletegn"
+msgstr "Placer faneblade i toppen af skærmen"
 
 #: src/config/options.inc:1237
 msgid "Whether display tab bar at top like other browsers do."
-msgstr ""
+msgstr "Om faneblade skal vises i toppen af skærmen, som andre browsere."
 
 #: src/config/options.inc:1239
 msgid "Wrap-around tabs cycling"
 msgstr "Side til side navigeringscyklus for faneblade"
 
 #: src/config/options.inc:1241
-#, fuzzy
 msgid ""
 "When moving right from the last tab, jump to the first one, and\n"
 "vice versa."
@@ -4332,14 +4307,12 @@ msgstr ""
 "sprogindstillinger vil blive anvendt."
 
 #: src/config/options.inc:1255
-#, fuzzy
 msgid "Display menu bar always"
-msgstr "Vis titelbjælke"
+msgstr "Vis altid hovedmenubjælke"
 
 #: src/config/options.inc:1257
-#, fuzzy
 msgid "Always show menu bar on the screen."
-msgstr "Vis titelbjælke på skærmen."
+msgstr "Vis altid hovedmenubjælken på skærmen."
 
 #: src/config/options.inc:1259
 msgid "Display status bar"
@@ -4626,7 +4599,6 @@ msgid "Saving"
 msgstr "Gemning"
 
 #: src/cookies/cookies.c:119
-#, fuzzy
 msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Om cookier skal indlæses fra og gemmes på disken."
 
@@ -4644,17 +4616,16 @@ msgstr ""
 "er deaktiveret."
 
 #: src/cookies/cookies.c:817
-#, fuzzy
 msgid "Cannot save cookies"
-msgstr "Slet alle cookier"
+msgstr "Kan ikke gemme cookier"
 
 #: src/cookies/cookies.c:828
 msgid "ELinks was started without a home directory."
-msgstr ""
+msgstr "ELinks blev startet uden en hjemmemappe."
 
 #: src/cookies/cookies.c:834
 msgid "ELinks was started with the -anonymous option."
-msgstr ""
+msgstr "ELinks blev startet med -anonymous indstillingen."
 
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 msgid "Domain"
@@ -4771,20 +4742,17 @@ msgid "Do you really want to remove all cookies?"
 msgstr "Vil du virkelig slette alle cookier?"
 
 #: src/cookies/dialogs.c:464
-#, fuzzy
 msgid "Add server"
-msgstr "Tilføj s~killetegn"
+msgstr "Tilføj server"
 
 #: src/cookies/dialogs.c:468
-#, fuzzy
 msgid "Server name"
-msgstr "Server"
+msgstr "Servernavn"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
 #: src/cookies/dialogs.c:491
-#, fuzzy
 msgid "Add ~server"
-msgstr "Tilføj s~killetegn"
+msgstr "Tilføj ~server"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cookies/dialogs.c:494 src/dialogs/download.c:498 src/dialogs/edit.c:99
@@ -4946,7 +4914,7 @@ msgid "Copying"
 msgstr "Licens"
 
 #: src/dialogs/info.c:143
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "ELinks %s\n"
 "\n"
@@ -4958,10 +4926,7 @@ msgid ""
 msgstr ""
 "ELinks %s\n"
 "\n"
-"(C) 1999 - 2002 Mikulas Patocka\n"
-"(C) 2001 - 2004 Petr Baudis\n"
-"(C) 2002 - 2005 Jonas Fonseca\n"
-"med flere\n"
+"%smed flere\n"
 "\n"
 "Dette program er fri software. Du kan distribuere det og/eller ændre det i "
 "henhold til GNU General Public License, udgivet af The Free Software "
@@ -5137,7 +5102,6 @@ msgstr "Tilfø~j dokument som bogmærke"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:249 src/dialogs/menu.c:418
-#, fuzzy
 msgid "Toggle ~HTML/plain"
 msgstr "~Skift mellem HTML/tekst"
 
@@ -5566,9 +5530,8 @@ msgid "256 colors"
 msgstr "256 farver"
 
 #: src/dialogs/options.c:225
-#, fuzzy
 msgid "true color"
-msgstr "Tekstfarve"
+msgstr "rigtige farver"
 
 #: src/dialogs/options.c:309
 msgid "Resize terminal"
@@ -5746,7 +5709,6 @@ msgid "Ignore <noscript> content"
 msgstr "Ignorer <noscript> indhold"
 
 #: src/ecmascript/ecmascript.c:55
-#, fuzzy
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag\n"
 "when ECMAScript is enabled."
@@ -6330,14 +6292,15 @@ msgid "Program"
 msgstr "Program"
 
 #: src/mime/backend/default.c:74
-#, fuzzy, no-c-format
+#, no-c-format
 msgid ""
 "External viewer for this file type. '%' in this string will be\n"
 "substituted by a file name.\n"
 "Do _not_ put single- or double-quotes around the % sign."
 msgstr ""
 "Ekstern fremviser for denne filtype. Et '%' i denne tekststreng vil\n"
-"blive erstattet af et filnavn."
+"blive erstattet af et filnavn.\n"
+"Omring _ikke_ % med enkelt- eller dobbelt-citationstegn."
 
 #: src/mime/backend/default.c:79
 msgid "File extension associations"
@@ -6427,7 +6390,6 @@ msgid "Mimetypes files"
 msgstr "Mimetypes-filer"
 
 #: src/mime/backend/mimetypes.c:48
-#, fuzzy
 msgid ""
 "Options for the support of mime.types files. These files\n"
 "can be used to find the content type of a URL by looking at\n"
@@ -6766,7 +6728,6 @@ msgstr ""
 "NNTPSERVER."
 
 #: src/network/state.c:101
-#, fuzzy
 msgid "Server hung up for some reason"
 msgstr "Serveren afbrød forbindelsen af en eller anden grund"
 
@@ -6868,9 +6829,8 @@ msgstr "~BeOS-terminal"
 
 #. name:
 #: src/protocol/auth/auth.c:332
-#, fuzzy
 msgid "Authentication"
-msgstr "~Identitetsbekræftelse"
+msgstr "Autentifikation"
 
 #: src/protocol/auth/dialogs.c:87
 #, c-format
@@ -6881,7 +6841,6 @@ msgstr "Autentifikation påkrævet for %s hos %s"
 #. * name the protocol here.  Consider also what an FTP server
 #. * behind an HTTP proxy should be called.
 #: src/protocol/auth/dialogs.c:102
-#, fuzzy
 msgid "Authentication required"
 msgstr "Autentifikation påkrævet"
 
@@ -7041,9 +7000,8 @@ msgid ""
 msgstr ""
 
 #: src/protocol/bittorrent/bittorrent.c:73
-#, fuzzy
 msgid "User identification string"
-msgstr "Identifikation af brugeragent"
+msgstr "Brugeridentifikationsstreng"
 
 #: src/protocol/bittorrent/bittorrent.c:75
 msgid ""
@@ -7541,7 +7499,6 @@ msgid "Show hidden files in directory listing"
 msgstr "Vis skjulte filer i katalogoversigter"
 
 #: src/protocol/file/file.c:52
-#, fuzzy
 msgid ""
 "When set to false, files with name starting with a dot will be\n"
 "hidden in local directory listings."
@@ -7576,24 +7533,20 @@ msgstr "Finger"
 
 #. name:
 #: src/protocol/fsp/fsp.c:45 src/protocol/fsp/fsp.c:57
-#, fuzzy
 msgid "FSP"
-msgstr "FTP"
+msgstr "FSP"
 
 #: src/protocol/fsp/fsp.c:47
-#, fuzzy
 msgid "FSP specific options."
-msgstr "FTP-specifikke indstillinger."
+msgstr "FSP-specifikke indstillinger."
 
 #: src/protocol/fsp/fsp.c:49
-#, fuzzy
 msgid "Sort entries"
-msgstr "Smarte præfikser"
+msgstr "Sortér filer"
 
 #: src/protocol/fsp/fsp.c:51
-#, fuzzy
 msgid "Whether to sort entries in directory listings."
-msgstr "Vis skjulte filer i katalogoversigter"
+msgstr "Om filer skal sorteres i katalogoversigter."
 
 #. name:
 #: src/protocol/ftp/ftp.c:56 src/protocol/ftp/ftp.c:86
@@ -7869,7 +7822,6 @@ msgid "User-agent identification"
 msgstr "Identifikation af brugeragent"
 
 #: src/protocol/http/http.c:192
-#, fuzzy
 msgid ""
 "Change the User Agent ID. That means identification string, which\n"
 "is sent to HTTP server when a document is requested. The 'textmode'\n"
@@ -7889,12 +7841,12 @@ msgstr ""
 "en standard for nye tekstbaserede brugeragenter, så webredaktører\n"
 "på en nem og ensartet måde kan undersøge dette, hvis de eksempelvis\n"
 "automatisk kan generere en letvægts version.\n"
+"Sæt til \" \" hvis du ikke ønsker at User-Agent bliver sendt i\n"
+"protokolhovedet.\n"
 "%v erstattes med ELinks' versionsnummer\n"
 "%s erstattes med identifikationsstreng for systemet\n"
 "%t erstattes med størrelsen af terminalen\n"
-"%b erstattes med antallet af bjælker der vises af ELinks\n"
-"Sæt til \" \" hvis du ikke ønsker at User-Agent bliver sendt i\n"
-"protokolhovedet."
+"%b erstattes med antallet af bjælker der vises af ELinks."
 
 #: src/protocol/http/http.c:205
 msgid "HTTPS"
@@ -8012,7 +7964,6 @@ msgid "Enable dumb prefixes"
 msgstr "Aktivér simple præfikser"
 
 #: src/protocol/rewrite/rewrite.c:55
-#, fuzzy
 msgid ""
 "Enable dumb prefixes - simple URI abbreviations which can\n"
 "be written to the Goto URL dialog instead of actual URIs - i.e.\n"
@@ -8022,7 +7973,7 @@ msgstr ""
 "Anvend simple præfikser - simple URI forkortelser som skrives\n"
 "i Gå til adresse dialogvinduet i stedet for de egentlige adresser.\n"
 "Eksempelvis kan du skrive 'elinks' og blive omdirigeret til\n"
-"http://elinks.or.cz/."
+"http://elinks.cz/."
 
 #: src/protocol/rewrite/rewrite.c:60
 msgid "Enable smart prefixes"
@@ -8103,7 +8054,11 @@ msgstr ""
 "i \"Gå til\"-dialogboks ikke ligner en URI eller et filnavn (dvs.\n"
 "indeholder ikke tegnene '.', ':' eller '/') og som ikke er en\n"
 "konfigureret omskrivningspræfiks. Sæt til den tomme string (\"\")\n"
-"for at deaktiverer standard omskrivningsreglen."
+"for at deaktiverer standard omskrivningsreglen.\n"
+"%c erstattes med af den aktuelle adresse\n"
+"%s erstattes med hele argumentet fra dialogenboksen\n"
+"%0,%1,...,%9 erstattes med det 0., 1., ..., 9. argument\n"
+"%% erstattes med \"%\"."
 
 #. name:
 #: src/protocol/rewrite/rewrite.c:372
@@ -8180,9 +8135,8 @@ msgstr "Intet program angivet for protokol %s."
 
 #. name:
 #: src/scripting/guile/guile.c:16
-#, fuzzy
 msgid "Guile"
-msgstr "Fil"
+msgstr "Guile"
 
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 msgid "Error registering event hook"
@@ -8211,15 +8165,13 @@ msgstr ""
 
 #. name:
 #: src/scripting/perl/perl.c:16
-#, fuzzy
 msgid "Perl"
-msgstr "Peers"
+msgstr "Perl"
 
 #. name:
 #: src/scripting/python/python.c:18
-#, fuzzy
 msgid "Python"
-msgstr "Sti"
+msgstr "Python"
 
 #: src/scripting/ruby/core.c:131 src/scripting/ruby/core.c:184
 msgid "Ruby Message"
@@ -8228,21 +8180,21 @@ msgstr "Ruby-besked"
 #. name:
 #: src/scripting/ruby/ruby.c:16
 msgid "Ruby"
-msgstr ""
+msgstr "Ruby"
 
 #: src/scripting/scripting.c:44
 #, c-format
 msgid "[%s error] %s"
-msgstr ""
+msgstr "[%s fejl] %s"
 
 #: src/scripting/scripting.c:60
 #, c-format
 msgid "An error occurred while running a %s script"
-msgstr ""
+msgstr "En fejl opstod mens et %s script blev eksekveret"
 
 #: src/scripting/scripting.c:66
 msgid "Browser scripting error"
-msgstr ""
+msgstr "Browser scriptningsfejl"
 
 #. name:
 #: src/scripting/scripting.c:94
@@ -8250,15 +8202,13 @@ msgid "Scripting"
 msgstr "Scriptning"
 
 #: src/scripting/smjs/elinks_object.c:86
-#, fuzzy
 msgid "User script alert"
-msgstr "JavaScript advarsel"
+msgstr "Bruger script advarsel"
 
 #. name:
 #: src/scripting/smjs/smjs.c:16
-#, fuzzy
 msgid "Spidermonkey ECMAScript"
-msgstr "ECMAScript"
+msgstr "Spidermonkey ECMAScript"
 
 #: src/session/download.c:233 src/session/download.c:330
 #: src/session/download.c:561 src/session/download.c:649
@@ -8334,9 +8284,9 @@ msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Hvad vil du gøre med filen \"%s\" (type: %s%s%s)?"
 
 #: src/session/download.c:1137
-#, fuzzy, c-format
+#, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
-msgstr "Hvad vil du gøre med filen \"%s\" (type: %s%s%s)?"
+msgstr "Hvad vil du gøre med filen (type: %s%s%s)?"
 
 #: src/session/download.c:1165
 #, no-c-format
@@ -8549,9 +8499,9 @@ msgid "Missing fragment"
 msgstr "Manglende fragment"
 
 #: src/viewer/text/draw.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "The requested fragment \"%s\" doesn't exist."
-msgstr "Den forespurgte fragment \"#%s\" findes ikke."
+msgstr "Det forespurgte fragment \"%s\" findes ikke."
 
 #: src/viewer/text/form.c:1049
 msgid "Error while posting form"
@@ -8631,14 +8581,12 @@ msgid "press %s to post to %s"
 msgstr "tast %s for at sende til %s"
 
 #: src/viewer/text/form.c:2045
-#, fuzzy
 msgid "Useless button"
 msgstr "Harmløs knap"
 
 #: src/viewer/text/form.c:2047
-#, fuzzy
 msgid "Submit button"
-msgstr "Send formular til"
+msgstr "Sendknap"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
@@ -8727,9 +8675,8 @@ msgstr "Indsend formular og ~overfør fil"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
-#, fuzzy
 msgid "Form f~ields"
-msgstr "Adgangskodefelt"
+msgstr "Form~ularfelter"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
@@ -8863,47 +8810,10 @@ msgstr "Fejl ved skrivning til fil"
 
 #. name:
 #: src/viewer/timer.c:88
-#, fuzzy
 msgid "Timer"
-msgstr "Titel"
+msgstr "Stopur"
 
 #. name:
 #: src/viewer/viewer.c:25
-#, fuzzy
 msgid "Viewer"
-msgstr "~Vis"
-
-#~ msgid "Delete text from clipboard"
-#~ msgstr "Slet tekst fra klippebord"
-
-#~ msgid " (built on %s %s)"
-#~ msgstr " (bygget på %s %s)"
-
-#~ msgid "HTTP Authentication"
-#~ msgstr "HTTP-autentifikation"
-
-#~ msgid "Rules for passing URIs to external commands."
-#~ msgstr "Regler for håndtering af adresser af eksterne kommandoer."
-
-#~ msgid "~Clear"
-#~ msgstr "~Ryd"
-
-#~ msgid "SEE Message"
-#~ msgstr "SEE besked"
-
-#~ msgid "ELinks Cvs ~History"
-#~ msgstr "ELinks CVS ~historik"
-
-#~ msgid "ELinks ~LXR"
-#~ msgstr "ELinks ~LXR"
-
-#~ msgid "HTTP 100 (???)"
-#~ msgstr "HTTP 100 (???)"
-
-#~ msgid "Ruby Error"
-#~ msgstr "Ruby-fejl"
-
-#~ msgid "%d byte"
-#~ msgid_plural "%d bytes"
-#~ msgstr[0] "%d byte"
-#~ msgstr[1] "%d bytes"
+msgstr "Fremviser"
