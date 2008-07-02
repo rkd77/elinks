@@ -252,6 +252,7 @@ main(int argc, char *argv[])
 	enum sgml_parser_type type = SGML_PARSER_STREAM;
 	enum dom_code code = 0;
 	enum dom_config_flag normalize_flags = 0;
+	struct dom_config config;
 	int normalize = 0;
 	int dump = 0;
 	int complete = 1;
@@ -310,7 +311,7 @@ main(int argc, char *argv[])
 
 	parser->error_func = sgml_error_function;
 	if (normalize)
-		add_dom_config_normalizer(&parser->stack, normalize_flags);
+		add_dom_config_normalizer(&parser->stack, &config, normalize_flags);
 	else if (!dump)
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
