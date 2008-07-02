@@ -279,9 +279,11 @@ Julian Kinraid <jkinraid@clear.net.nz>
 	QNX-related fixes
 
 Kalle Olavi Niemitalo <kon@iki.fi>
-	HTTP Accept-Charset header fix
-	Finnish translation update
-	Fixed unnecessary or possibly skipped calls to bind_textdomain_codeset()
+	Scanning PO files for accelerator conflicts (msgaccel)
+	UTF-8 and terminal support enhancements
+	Build system fixes
+	Finnish translation updates
+	Random hacking
 
 Kaloian Doganov <kaloian@europe.com>
 	Bulgarian translation
