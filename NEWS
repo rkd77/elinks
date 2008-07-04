@@ -5,6 +5,13 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.11.4.GIT now:
+----------------------
+
+To be released as 0.11.5.
+
+* build bug 1021: fixed uninitialized variable in http_got_header
+
 ELinks 0.11.4:
 --------------
 
