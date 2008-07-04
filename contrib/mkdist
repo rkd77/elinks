@@ -132,6 +132,13 @@ else
 	make -C "$tmpdir/elinks/build/doc" html
 	mkdir -- "$tmpdir/elinks/doc/html"
 	mv -- "$tmpdir/elinks/build/doc"/*.html* "$tmpdir/elinks/doc/html/"
+	# <http://translationproject.org/html/maintainers.html>:
+	# "this tarball should contain an up to date POT file."
+	# Build that here.  The Makefile also creates potfiles.list
+	# in the source directory; that one we don't need.
+	# Use rm -f so it's not an error if the file is not there.
+	make -C "$tmpdir/elinks/build/po" ../../po/elinks.pot
+	rm -f -- "$tmpdir/elinks/po/potfiles.list"
 fi
 
 rm -rf -- "$tmpdir/elinks/build"
