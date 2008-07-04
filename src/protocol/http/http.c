@@ -1453,7 +1453,7 @@ http_got_header(struct socket *socket, struct read_buffer *rb)
 #endif
 	unsigned char *d;
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
-	struct http_version version;
+	struct http_version version = { 0, 9 };
 	enum connection_state state = (conn->state != S_PROC ? S_GETH : S_PROC);
 	int a, h = 200;
 	int cf;
@@ -1482,6 +1482,9 @@ again:
 		read_from_socket(conn->socket, rb, state, http_got_header);
 		return;
 	}
+	/* a == -2 from get_header means HTTP/0.9.  In that case, skip
+	 * the get_http_code call; @h and @version have already been
+	 * initialized with the right values.  */
 	if (a == -2) a = 0;
 	if ((a && get_http_code(rb, &h, &version))
 	    || h == 101) {
