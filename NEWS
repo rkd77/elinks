@@ -8,7 +8,8 @@ file for details.
 ELinks 0.12pre1.GIT now:
 ------------------------
 
-To be released as 0.12pre2, 0.12rc1, or even 0.12.0.
+To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch
+generally also includes the bug fixes made in ELinks 0.11.4.GIT.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
@@ -19,7 +20,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 ELinks 0.12pre1:
 ----------------
 
-Released on 2008-07-01.
+Released on 2008-07-01.  This release also included all the bug fixes
+of ELinks 0.11.4.
 
 Notable new features:
 
@@ -171,6 +173,13 @@ Changes in the experimental SGML/DOM implementation:
   '--!>' correctly
 * enhancement: incremental parsing
 * and more.
+
+ELinks 0.11.4.GIT now:
+----------------------
+
+To be released as 0.11.5.
+
+* build bug 1021: fixed uninitialized variable in http_got_header
 
 ELinks 0.11.4:
 --------------
