@@ -3,7 +3,7 @@ Frequently Asked Questions
 :Description:	FAQ for the ELinks project
 
 This is an attempt to capture some of the questions that appear once in a
-while on the mailing list.
+while on the mailing list or on IRC.
 
 
 [[instances]]
@@ -142,3 +142,35 @@ The new ELinks versions (from 0.9.0 on) send:
 You should therefore check against something like /^ELinks[\/ ]/, since more
 fields can be added inside the parenthesis in subsequent versions.  Note that
 users can change their User-Agent through the options system.
+
+
+[[droppings]]
+ELinks doesn't erase characters from the screen when it should
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When you scroll a web page, you may see ELinks leave some characters
+on the screen even though it should have erased them.  Pressing Ctrl+L
+usually removes these droppings until you scroll again.  There are
+a few possible reasons:
+
+- ELinks 0.11.* in a UTF-8 locale.  By default, ELinks guesses the
+  charset of the terminal from the environment variables LANG,
+  LC_CTYPE, and LC_ALL.  ELinks 0.11 versions do not support UTF-8
+  as this charset.  To use ELinks 0.11 on a UTF-8 terminal, you
+  should instead enable UTF-8 I/O via the Setup -> Terminal options
+  dialog box, and choose a charset from Setup -> Character set.
+  This limitation has been removed in ELinks 0.12pre1.
+
+- Web pages may use nonspacing combining characters or Unicode control
+  characters, which ELinks does not support.  This happens especially
+  on http://en.wikipedia.org/wiki/Special:Recentchanges[], where the
+  server generates U+200E LEFT-TO-RIGHT MARK characters.
+  ELinks 0.13.GIT now has some support for these characters; see
+  http://bugzilla.elinks.or.cz/show_bug.cgi?id=824[ELinks bug 824].
+
+- Some versions of the Terminal application in Mac OS X appear to
+  have a setting that makes line-drawing characters take up the
+  space of two ASCII letters.  ELinks does not expect this.
+  To avoid the incompatibility, either disable the setting in the
+  Terminal application or select "No frames" in the Terminal options
+  dialog box of ELinks.
