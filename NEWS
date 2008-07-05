@@ -16,6 +16,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 * bug 955: Reset buttons no longer run FORM/@onsubmit, and
   ``harmless'' buttons no longer submit the form.  ELinks 0.12pre1
   was the first release that had these bugs.
+* minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
+  from removing files from the memory cache
 
 ELinks 0.12pre1:
 ----------------
