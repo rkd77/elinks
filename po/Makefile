@@ -48,12 +48,12 @@ all-local: $(CATALOGS)
 # This pulls in _all_ .c and .h files in the src directory. Even files that has
 # not been added to the git repo. Beware of junk entries!
 
-$(srcdir)$(POTFILES_ABS_LIST): $(POTFILES_REL)
+$(POTFILES_ABS_LIST): $(POTFILES_REL)
 	@( cd $(top_srcdir); \
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
-	 > $(srcdir)$(POTFILES_ABS_LIST)
+	 > $(POTFILES_ABS_LIST)
 
-$(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
+$(srcdir)$(PACKAGE).pot: $(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
 		    --add-comments --language=C \
@@ -75,7 +75,7 @@ $(srcdir)$(PACKAGE).pot: $(srcdir)$(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-pr
 		    --flag=_:1:pass-c-format --flag=N_:1:pass-c-format \
 		    --flag=n_:1:pass-c-format --flag=n_:2:pass-c-format \
 		    --flag=N__:1:pass-c-format \
-		    -f $(srcdir)$(POTFILES_ABS_LIST) \
+		    -f $(POTFILES_ABS_LIST) \
 	&& test -f $(PACKAGE).po \
 	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-prepare -S"$(top_srcdir)" $(PACKAGE).po \
 	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
@@ -131,6 +131,6 @@ uninstall-local:
 	)
 
 clean-local:
-	@rm -f $(PACKAGE).po *.new.po $(srcdir)$(POTFILES_ABS_LIST)
+	@rm -f $(PACKAGE).po *.new.po $(POTFILES_ABS_LIST)
 
 include $(top_srcdir)/Makefile.lib
