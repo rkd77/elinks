@@ -53,9 +53,12 @@ $(POTFILES_ABS_LIST): $(POTFILES_REL)
 	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(POTFILES_ABS_LIST)
 
+# xgettext --flag requires GNU gettext 0.13 or later;
+# --msgid-bugs-address requires 0.12 or later.
 $(srcdir)$(PACKAGE).pot: $(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
 	$(XGETTEXT) --default-domain=$(PACKAGE) \
 		    --directory=$(top_srcdir) \
+		    --msgid-bugs-address=elinks-users@linuxfromscratch.org \
 		    --add-comments --language=C \
 		    --keyword=_ --keyword=N_ --keyword=n_:1,2 --keyword=N__ \
 		    --flag=msg_text:2:c-format --flag=die:1:c-format \
