@@ -1,6 +1,13 @@
 top_builddir=..
 include $(top_builddir)/Makefile.config
 
+# We prefer the capitalized name for Project-Id-Version.
+ifeq ($(PACKAGE), elinks)
+PRETTY_PACKAGE = ELinks
+else
+PRETTY_PACKAGE = $(PACKAGE)
+endif
+
 # Where to install the catalog files.
 localedir = $(datadir)/locale
 
@@ -81,6 +88,9 @@ $(srcdir)$(PACKAGE).pot: $(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
 		    -f $(POTFILES_ABS_LIST)
 	test -f $(PACKAGE).po
 	$(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-prepare -S"$(top_srcdir)" $(PACKAGE).po
+# GNU gettext 0.17 supports xgettext --package-version but is GPLv3+.
+# This rule already requires Perl so use that instead.
+	$(PERL) -pi -e 's/(^"Project-Id-Version: )PACKAGE VERSION/$$1$(PRETTY_PACKAGE) $(VERSION)/i and $$found=1 unless $$found' $(PACKAGE).po
 	mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
 
 
