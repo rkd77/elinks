@@ -78,10 +78,10 @@ $(srcdir)$(PACKAGE).pot: $(POTFILES_ABS_LIST) $(srcdir)perl/msgaccel-prepare
 		    --flag=_:1:pass-c-format --flag=N_:1:pass-c-format \
 		    --flag=n_:1:pass-c-format --flag=n_:2:pass-c-format \
 		    --flag=N__:1:pass-c-format \
-		    -f $(POTFILES_ABS_LIST) \
-	&& test -f $(PACKAGE).po \
-	&& $(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-prepare -S"$(top_srcdir)" $(PACKAGE).po \
-	&& mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
+		    -f $(POTFILES_ABS_LIST)
+	test -f $(PACKAGE).po
+	$(PERL) -I"$(srcdir)perl" $(srcdir)perl/msgaccel-prepare -S"$(top_srcdir)" $(PACKAGE).po
+	mv -f $(PACKAGE).po $(srcdir)$(PACKAGE).pot
 
 
 ### Updating po and gmo files
