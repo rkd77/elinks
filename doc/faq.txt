@@ -145,8 +145,8 @@ users can change their User-Agent through the options system.
 
 
 [[droppings]]
-ELinks doesn't erase characters from the screen when it should
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ELinks doesn't erase characters from the screen when it should!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When you scroll a web page, you may see ELinks leave some characters
 on the screen even though it should have erased them.  Pressing Ctrl+L
@@ -162,11 +162,11 @@ a few possible reasons:
   This limitation has been removed in ELinks 0.12pre1.
 
 - Web pages may use nonspacing combining characters or Unicode control
-  characters, which ELinks does not support.  This happens especially
-  on http://en.wikipedia.org/wiki/Special:Recentchanges[], where the
-  server generates U+200E LEFT-TO-RIGHT MARK characters.
+  characters that ELinks does not recognize as such.  This happens
+  especially on http://en.wikipedia.org/wiki/Special:RecentChanges[],
+  where the server generates U+200E LEFT-TO-RIGHT MARK characters.
   ELinks 0.13.GIT now has some support for these characters; see
-  http://bugzilla.elinks.or.cz/show_bug.cgi?id=824[ELinks bug 824].
+  http://bugzilla.elinks.cz/show_bug.cgi?id=824[ELinks bug 824].
 
 - Some versions of the Terminal application in Mac OS X appear to
   have a setting that makes line-drawing characters take up the
