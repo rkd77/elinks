@@ -401,18 +401,26 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 		case BI_LEAF:
 		case BI_SEPARATOR:
 		{
-			struct listbox_item *root = data->box->ops->get_root(item);
+			const struct listbox_item *const prev;
 
-			if (root) {
-				if (item == root->child.prev) {
-					str[1] = BORDER_SDLCORNER;
-				}
+			prev = traverse_listbox_items_list(item, data->box,
+			                                   -1, 1, NULL, NULL);
+
+			if (item == prev) {
+				/* There is no visible item before @item, so it
+				 * must be the first item in the listbox. */
+				str[1] = BORDER_SULCORNER;
 			} else {
-				LIST_OF(struct listbox_item) *p = data->box->items;
+				const struct listbox_item *const next;
 
-				if (p->next == item) {
-					str[1] = BORDER_SULCORNER;
-				} else if (p->prev == item) {
+				next == traverse_listbox_items_list(item,
+				                  data->box, 1, 1, NULL, NULL);
+
+				if (item == next
+				    || item->depth != next->depth) {
+					/* There is no visible item after @item
+					 * at the same depth, so it must be the
+					 * last in its folder. */
 					str[1] = BORDER_SDLCORNER;
 				}
 			}
