@@ -249,6 +249,9 @@ Description:
 	add_fragment(cached, 0, new_string, new_len);
 	normalize_cache_entry(cached, new_len);
 
+ The caller must ensure that there is a reference to cached, so that
+ calling garbage_collection() from the event handler cannot free it.
+
 -------------------------------------------------------------------------------
 Name:		quit
 Managed By:	The scripting subsystem/backends

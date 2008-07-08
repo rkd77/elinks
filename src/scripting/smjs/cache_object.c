@@ -220,6 +220,12 @@ static const JSClass cache_entry_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
 };
 
+/** Return an SMJS object through which scripts can access @a cached.
+ * If there already is such an object, return that; otherwise create a
+ * new one.  The SMJS object holds only a weak reference to @a cached;
+ * so if the caller wants to guarantee that @a cached exists at least
+ * until a script returns, it should use lock_object() and
+ * unlock_object().  */
 JSObject *
 smjs_get_cache_entry_object(struct cache_entry *cached)
 {

@@ -45,6 +45,8 @@ elinks.load_uri(uri, callback)
 
    displays a fortune.
 
+   The cache object will not expire until after the callback returns.
+
 
 Properties
 ----------
@@ -183,6 +185,8 @@ elinks.preformat_html(cached, vs)
    to elinks.preformat_html_hooks rather than to assign it to
    elinks.preformat_html.
 
+   The cache object will not expire until after this function returns.
+
 
 elinks.goto_url_hook(url)
 
@@ -210,7 +214,14 @@ cache
 
   The cache object mentioned in the descriptions of elinks.load_uri and
   elinks.preformat_html is a wrapper for the internal ELinks cache object.
-  Its properties are:
+  ELinks passes the ECMAScript cache object as an argument to your
+  ECMAScript function, and keeps the corresponding document in the
+  cache until the function returns. After that, ELinks may remove the
+  document from the cache, even if the function has saved the cache
+  object to some global variable. Such an expired cache object does
+  not work but it does not crash ELinks either.
+
+  The properties of the cache object are:
 
   cached.content (string)
 
