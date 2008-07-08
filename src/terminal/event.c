@@ -300,11 +300,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 
 		reset_timer();
 
-		if (modifier == KBD_MOD_CTRL && (key == 'l' || key == 'L')) {
-			redraw_terminal_cls(term);
-			break;
-
-		} else if (key == KBD_CTRL_C) {
+		if (key == KBD_CTRL_C) {
 			destroy_terminal(term);
 			return 0;
 		}

@@ -937,6 +937,11 @@ menu_kbd_handler(struct menu *menu, struct term_event *ev)
 			search_menu(menu);
 			break;
 
+		case ACT_MENU_REDRAW:
+			display_menu(win->term, menu);
+			redraw_terminal_cls(win->term);
+			break;
+
 		case ACT_MENU_CANCEL:
 			if (list_has_next(win->term->windows, win)
 			    && win->next->handler == mainmenu_handler)
@@ -1296,7 +1301,8 @@ mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 		break;
 
 	case ACT_MENU_REDRAW:
-		/* Just call display_mainmenu() */
+		display_mainmenu(win->term, menu);
+		redraw_terminal_cls(win->term);
 		break;
 
 	default:

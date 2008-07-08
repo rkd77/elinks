@@ -82,7 +82,7 @@ ACTION_(MAIN, "open-os-shell", OPEN_OS_SHELL, N__("Open an OS shell"), ACTION_RE
 ACTION_(MAIN, "options-manager", OPTIONS_MANAGER, N__("Open options manager"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "quit", QUIT, N__("Open a quit confirmation dialog box"), 0),
 ACTION_(MAIN, "really-quit", REALLY_QUIT, N__("Quit without confirmation"), 0),
-ACTION_(MAIN, "redraw", REDRAW, N__("Redraw the terminal"), ACTION_REQUIRE_VIEW_STATE),
+ACTION_(MAIN, "redraw", REDRAW, N__("Redraw the terminal"), 0),
 ACTION_(MAIN, "reload", RELOAD, N__("Reload the current page"), 0),
 ACTION_(MAIN, "rerender", RERENDER, N__("Re-render the current page"), 0),
 ACTION_(MAIN, "reset-form", RESET_FORM, N__("Reset form items to their initial values"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION),
