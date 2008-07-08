@@ -109,7 +109,7 @@ done_listbox_item(struct hierbox_browser *browser, struct listbox_item *item)
 
 		del_from_list(item);
 
-		update_hierbox_browser(browser);
+		if (item->visible) update_hierbox_browser(browser);
 	}
 
 	mem_free(item);
