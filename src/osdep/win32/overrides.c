@@ -543,7 +543,8 @@ select_dump(int num_fds, const fd_set *rd, const fd_set *wr, const fd_set *ex)
 	      ex ? fd_set_str(buf_ex,sizeof(buf_ex),ex,num_fds) : "<none>");
 }
 
-static int select_read (int fd, struct fd_set *rd)
+static int
+select_read(int fd, struct fd_set *rd)
 {
 	int rc = 0;
 	HANDLE hnd = (HANDLE) fd;

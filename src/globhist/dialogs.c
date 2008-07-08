@@ -23,17 +23,20 @@
 
 /* Implementation of the listbox operations */
 
-static void lock_globhist_item(struct listbox_item *item)
+static void
+lock_globhist_item(struct listbox_item *item)
 {
 	object_lock((struct global_history_item *) item->udata);
 }
 
-static void unlock_globhist_item(struct listbox_item *item)
+static void
+unlock_globhist_item(struct listbox_item *item)
 {
-	object_unlock((struct global_history_item *) item->udata);
+	done_global_history_item((struct global_history_item *) item->udata);
 }
 
-static int is_globhist_item_used(struct listbox_item *item)
+static int
+is_globhist_item_used(struct listbox_item *item)
 {
 	return is_object_used((struct global_history_item *) item->udata);
 }
