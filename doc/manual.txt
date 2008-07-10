@@ -59,3 +59,5 @@ include::exmode.txt[]
 include::bittorrent.txt[]
 
 include::lua-scripting.txt[]
+
+include::smjs-scripting.txt[]
