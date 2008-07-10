@@ -16,7 +16,8 @@ features.conf>>.
 
 WARNING: ECMAScript scripting is still a bit experimental: there seem to be
 ways to crash ELinks with it, and the object model may change.  However, if
-you don't have a `hooks.js` file, the risk is minimal.
+you don't have a `hooks.js` file, there is not much risk in enabling the
+feature at compile time.
 
 When ELinks starts up, it evaluates the ECMAScript file `hooks.js` in
 your ELinks configuration directory (thus normally `~/.elinks/hooks.js`
@@ -50,6 +51,8 @@ do_file("/home/me/.elinks/hooks.js");
 ----------------------------------------------------------------------
 
 will reload your hooks file.
+
+*Compatibility:* ELinks 0.11.0
 --
 
 
@@ -59,6 +62,8 @@ Global Object Properties
 
 [[smjs-global.elinks]] elinks (elinks)::
 	A reference to the <<smjs-elinks-object,ELinks object>>.
++
+*Compatibility:* ELinks 0.11.0
 
 
 [[smjs-elinks-object]]
@@ -81,6 +86,8 @@ elinks.alert("Hello, world!");
 ----------------------------------------------------------------------
 
 will display a friendly greeting.
+
+*Compatibility:* ELinks 0.11.0
 --
 
 [[smjs-elinks.execute]] elinks.execute(command)::
@@ -94,6 +101,8 @@ elinks.execute("firefox " + quoted_uri);
 ----------------------------------------------------------------------
 
 will run Firefox with the URI of the current document.
+
+*Compatibility:* ELinks 0.12pre1
 
 WARNING: One must be very careful with 'elinks.execute', because depending
 on the OS, the command may be subject to interpretation by a command
@@ -117,6 +126,8 @@ displays a fortune.
 
 The <<smjs-cache_entry-object,cache object>> will not expire until after the
 callback returns.
+
+*Compatibility:* ELinks 0.12pre1
 --
 
 
@@ -134,6 +145,8 @@ do_file(elinks.home + "hooks.js");
 ----------------------------------------------------------------------
 
 will reload your hooks file.
+
+*Compatibility:* ELinks 0.11.0
 --
 
 [[smjs-elinks.location]] elinks.location (string)::
@@ -147,6 +160,8 @@ elinks.location = elinks.location + "/..";
 ----------------------------------------------------------------------
 
 will go up a directory (if the URI doesn't end in a file).
+
+*Compatibility:* ELinks 0.11.0
 --
 
 [[smjs-elinks.bookmarks]] elinks.bookmarks (hash)::
@@ -161,6 +176,8 @@ elinks.bookmarks.x.children.y.children.z.children.foo.title
 
 gets the title of the bookmark titled ``foo'' under the folder ``z'',
 which is a subfolder of ``y'', which is a subfolder of ``x''.
+
+*Compatibility:* ELinks 0.11.0
 
 [[smjs-bookmark-properties]]
 A bookmark object has these properties:
@@ -187,6 +204,8 @@ elinks.globhist["file:///"]
 
 will get you the history item for your root directory.
 
+*Compatibility:* ELinks 0.12pre1
+
 [[smjs-global_history_item-properties]]
 A history item has these properties:
 
@@ -212,6 +231,8 @@ A history item has these properties:
 	dashes in order to make them valid ECMAScript identifiers.
 +
 --
+*Compatibility:* ELinks 0.12pre1
+
 NOTE: When you read an action function from this hash, ELinks binds it to the
 current tab; any later calls to the function affect that tab.  This may be
 changed in a future version.  It is safest to call the function right away,
@@ -243,6 +264,8 @@ elinks.keymaps.main["/"] = "search-typeahead-text";
 changes the ``/'' key to use the nice typeahead search function instead of
 opening that ugly old search dialogue box.
 
+*Compatibility:* ELinks 0.11.0
+
 NOTE: Do not read a function from <<smjs-elinks.action,'elinks.action'>>,
 e.g. `elinks.action.search_typeahead_text`, and place it in a keymap.
 ELinks binds such functions to the current tab when the script reads
@@ -253,6 +276,8 @@ Use the name of the action instead.
 [[smjs-elinks.vs]] elinks.vs (view_state)::
 	This property refers to the <<smjs-view_state-object,view-state
 	object>> for the current document, if any.
++
+*Compatibility:* ELinks 0.12pre1
 
 
 [[smjs-elinks-hooks]]
@@ -276,6 +301,9 @@ Please see `contrib/smjs/README` for details.
 --
 The <<smjs-cache_entry-object,cache object>> will not expire until after this
 function returns.
+
+*Compatibility:* ELinks 0.11.1 as described.  ELinks 0.11.0 did not provide
+the 'vs' argument.
 --
 
 [[smjs-elinks.goto_url_hook]] elinks.goto_url_hook(url)::
@@ -284,6 +312,8 @@ function returns.
 	returned string is substituted for what the user entered.  If the
 	value `false` is returned, the URL is not changed and further hooks
 	in ELinks are not run.
++
+*Compatibility:* ELinks 0.11.0
 
 [[smjs-elinks.follow_url_hook]] elinks.follow_url_hook(url)::
 	This function is called every time the user tries to load a document,
@@ -291,6 +321,8 @@ function returns.
 	by setting <<smjs-elinks.location,'elinks.location'>>, or whatever.
 	It behaves the same as <<smjs-elinks.goto_url_hook,'elinks.goto_url_hook'>>
 	above.
++
+*Compatibility:* ELinks 0.11.0
 
 
 [[smjs-cache_entry-object]]
@@ -306,6 +338,8 @@ the cache until the function returns.  After that, ELinks may remove the
 document from the cache, even if the function has saved the cache object to
 some global variable.  Such an expired cache object does not work but it does
 not crash ELinks either.
+
+*Compatibility:* ELinks 0.11.0
 
 
 [[smjs-cache_entry-properties]]
@@ -337,6 +371,8 @@ The view-state object mentioned in the descriptions of
 <<smjs-elinks.vs,'elinks.vs'>> is a wrapper for the internal ELinks view_state
 object.  The view state holds information on how the current document is being
 displayed.
+
+*Compatibility:* ELinks 0.11.1
 
 
 [[smjs-view_state-properties]]
