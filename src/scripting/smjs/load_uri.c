@@ -32,6 +32,13 @@ smjs_loading_callback(struct download *download, void *data)
 
 	if (!download->cached) goto end;
 
+	/* download->cached->object.refcount is typically 0 here
+	 * because no struct document uses the cache entry.  Because
+	 * the connection is no longer using the cache entry either,
+	 * it can be garbage collected.  Don't let that happen while
+	 * the script is using it.  */
+	object_lock(download->cached);
+
 	assert(hop->callback);
 
 	smjs_ses = hop->ses;
@@ -44,6 +51,8 @@ smjs_loading_callback(struct download *download, void *data)
 	JS_CallFunction(smjs_ctx, NULL, hop->callback, 1, args, &rval);
 
 end:
+	if (download->cached)
+		object_unlock(download->cached);
 	mem_free(download->data);
 	mem_free(download);
 

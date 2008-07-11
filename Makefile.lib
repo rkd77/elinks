@@ -229,7 +229,7 @@ export TEST_LIB
 TESTS = $(wildcard $(srcdir)test-*)
 
 $(TESTS): $(addsuffix .o,$(TEST_PROGS)) $(TEST_PROGS)
-	@echo "*** $(notdir $@) ***"; \
+	@-echo "*** $(notdir $@) ***"; \
 	$(call shellquote,$(SHELL)) $@ $(TEST_OPTS)
 
 test-default: $(TESTS)

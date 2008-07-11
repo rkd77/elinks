@@ -6,6 +6,6 @@
 
 extern const JSClass window_class;
 extern const JSPropertySpec window_props[];
-extern const JSFunctionSpec window_funcs[];
+extern const spidermonkeyFunctionSpec window_funcs[];
 
 #endif

@@ -154,6 +154,9 @@ cleanup_smjs(struct module *module)
 {
 	if (!smjs_ctx) return;
 
+	/* These calls also finalize all JSObjects that have been
+	 * allocated in the JSRuntime, so cache_entry_finalize gets
+	 * called and resets each cache_entry.jsobject = NULL.  */
 	JS_DestroyContext(smjs_ctx);
 	JS_DestroyRuntime(smjs_rt);
 }

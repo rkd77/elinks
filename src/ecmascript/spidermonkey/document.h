@@ -5,7 +5,7 @@
 #include "ecmascript/spidermonkey/util.h"
 
 extern const JSClass document_class;
-extern const JSFunctionSpec document_funcs[];
+extern const spidermonkeyFunctionSpec document_funcs[];
 extern const JSPropertySpec document_props[];
 
 #endif

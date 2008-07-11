@@ -1,7 +1,7 @@
 The ChangeLog file has been removed. You can get the equivalent information
 by doing
 
-	$ cg log
+	$ git log
 
 in a checked out GIT tree, or using the gitweb interface available at:
 

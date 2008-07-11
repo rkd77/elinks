@@ -11,6 +11,7 @@
 #include "protocol/uri.h"
 #include "scripting/smjs/cache_object.h"
 #include "scripting/smjs/core.h"
+#include "scripting/smjs/smjs.h"
 #include "util/error.h"
 #include "util/memory.h"
 
@@ -42,6 +43,7 @@ static JSBool
 cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
+	JSBool ret;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -51,15 +53,22 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	cached = JS_GetInstancePrivate(ctx, obj,
 				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
 
-	if (!cache_entry_is_valid(cached)) return JS_FALSE;
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
 
 	undef_to_jsval(ctx, vp);
 
 	if (!JSVAL_IS_INT(id))
-		return JS_FALSE;
-
-	switch (JSVAL_TO_INT(id)) {
+		ret = JS_FALSE;
+	else switch (JSVAL_TO_INT(id)) {
 	case CACHE_ENTRY_CONTENT: {
 		struct fragment *fragment = get_cache_fragment(cached);
 
@@ -69,27 +78,32 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	                                                fragment->data,
 	                                                fragment->length));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
 	case CACHE_ENTRY_TYPE:
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 	                                                cached->content_type));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	case CACHE_ENTRY_HEAD:
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 	                                                cached->head));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	case CACHE_ENTRY_LENGTH:
 		*vp = INT_TO_JSVAL(cached->length);
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	case CACHE_ENTRY_URI:
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                                        struri(cached->uri)));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
@@ -97,8 +111,12 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
+
+	object_unlock(cached);
+	return ret;
 }
 
 /* @cache_entry_class.setProperty */
@@ -106,6 +124,7 @@ static JSBool
 cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct cache_entry *cached;
+	JSBool ret;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -115,13 +134,20 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	cached = JS_GetInstancePrivate(ctx, obj,
 				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
 
-	if (!cache_entry_is_valid(cached)) return JS_FALSE;
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
 
 	if (!JSVAL_IS_INT(id))
-		return JS_FALSE;
-
-	switch (JSVAL_TO_INT(id)) {
+		ret = JS_FALSE;
+	else switch (JSVAL_TO_INT(id)) {
 	case CACHE_ENTRY_CONTENT: {
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
 		unsigned char *str = JS_GetStringBytes(jsstr);
@@ -130,7 +156,8 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		add_fragment(cached, 0, str, len);
 		normalize_cache_entry(cached, len);
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
 	case CACHE_ENTRY_TYPE: {
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
@@ -138,7 +165,8 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 		mem_free_set(&cached->content_type, stracpy(str));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
 	case CACHE_ENTRY_HEAD: {
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
@@ -146,18 +174,25 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 		mem_free_set(&cached->head, stracpy(str));
 
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
 		 * js_RegExpClass) just return JS_TRUE in this case.
 		 * Do the same here.  */
-		return JS_TRUE;
+		ret = JS_TRUE;
+		break;
 	}
+
+	object_unlock(cached);
+	return ret;
 }
 
-/* @cache_entry_class.finalize */
+/** Pointed to by cache_entry_class.finalize.  SpiderMonkey
+ * automatically finalizes all objects before it frees the JSRuntime,
+ * so cache_entry.jsobject won't be left dangling.  */
 static void
 cache_entry_finalize(JSContext *ctx, JSObject *obj)
 {
@@ -169,25 +204,37 @@ cache_entry_finalize(JSContext *ctx, JSObject *obj)
 	cached = JS_GetInstancePrivate(ctx, obj,
 				       (JSClass *) &cache_entry_class, NULL);
 
-	if (!cached) return;
+	if (!cached) return;	/* already detached */
 
-	object_unlock(cached);
+	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	assert(cached->jsobject == obj);
+	if_assert_failed return;
+	cached->jsobject = NULL;
 }
 
 static const JSClass cache_entry_class = {
 	"cache_entry",
-	JSCLASS_HAS_PRIVATE,	/* struct cache_entry * */
+	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
 	JS_PropertyStub, JS_PropertyStub,
 	cache_entry_get_property, cache_entry_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
 };
 
+/** Return an SMJS object through which scripts can access @a cached.
+ * If there already is such an object, return that; otherwise create a
+ * new one.  The SMJS object holds only a weak reference to @a cached;
+ * so if the caller wants to guarantee that @a cached exists at least
+ * until a script returns, it should use lock_object() and
+ * unlock_object().  */
 JSObject *
 smjs_get_cache_entry_object(struct cache_entry *cached)
 {
 	JSObject *cache_entry_object;
 
+	if (cached->jsobject) return cached->jsobject;
+
 	assert(smjs_ctx);
+	if_assert_failed return NULL;
 
 	cache_entry_object = JS_NewObject(smjs_ctx,
 	                                  (JSClass *) &cache_entry_class,
@@ -195,14 +242,39 @@ smjs_get_cache_entry_object(struct cache_entry *cached)
 
 	if (!cache_entry_object) return NULL;
 
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, cache_entry_object, cached)) /* to @cache_entry_class */
-		return NULL;
-
-	object_lock(cached);
-
 	if (JS_FALSE == JS_DefineProperties(smjs_ctx, cache_entry_object,
 	                               (JSPropertySpec *) cache_entry_props))
 		return NULL;
 
+	/* Do this last, so that if any previous step fails, we can
+	 * just forget the object and its finalizer won't attempt to
+	 * access @cached.  */
+	if (JS_FALSE == JS_SetPrivate(smjs_ctx, cache_entry_object, cached)) /* to @cache_entry_class */
+		return NULL;
+
+	cached->jsobject = cache_entry_object;
 	return cache_entry_object;
+}
+
+/** Ensure that no JSObject contains the pointer @a cached.  This is
+ * called when the reference count of the cache entry *@a cached is
+ * already 0 and it is about to be freed.  If a JSObject was
+ * previously attached to the cache entry, the object will remain in
+ * memory but it will no longer be able to access the cache entry. */
+void
+smjs_detach_cache_entry_object(struct cache_entry *cached)
+{
+	assert(smjs_ctx);
+	assert(cached);
+	if_assert_failed return;
+
+	if (!cached->jsobject) return;
+
+	assert(JS_GetInstancePrivate(smjs_ctx, cached->jsobject,
+				     (JSClass *) &cache_entry_class, NULL)
+	       == cached);
+	if_assert_failed {}
+
+	JS_SetPrivate(smjs_ctx, cached->jsobject, NULL);
+	cached->jsobject = NULL;
 }

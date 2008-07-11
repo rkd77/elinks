@@ -86,7 +86,8 @@ struct dom_config {
 };
 
 struct dom_config *
-add_dom_config_normalizer(struct dom_stack *stack, enum dom_config_flag flags);
+add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config,
+			  enum dom_config_flag flags);
 
 enum dom_config_flag
 parse_dom_config(unsigned char *flaglist, unsigned char separator);

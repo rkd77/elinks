@@ -4,8 +4,12 @@
 #
 # Note that this will download about 80M.
 
-if [ -z "`which wget 2>/dev/null`" ]; then
-  echo "Error: You need to have wget installed so that I can fetch the history." >&2
+if [ -n "`which wget 2>/dev/null`" ]; then
+  downloader="wget -c"
+elif [ -n "`which curl 2>/dev/null`" ]; then
+  downloader="curl -C - -O"
+else
+  echo "Error: You need to have wget or curl installed so that I can fetch the history." >&2
   exit 1
 fi
 
@@ -24,8 +28,8 @@ echo "ELinks history converted from CVS.  Keep this pack separate to speed up gi
 # pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx is 3163784 bytes long.
 # Downloading it takes less than 6 seconds here, whereas generating it
 # with git index-pack takes over 4 minutes (750 MHz Duron, git 1.5.4.1).
-wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
-wget -c http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
+$downloader http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.idx
+$downloader http://elinks.cz/elinks-history.git/objects/pack/pack-0d6c5c67aab3b9d5d9b245da5929c15d79124a48.pack
 
 echo "[grafthistory] Setting up the grafts"
 cd ../..

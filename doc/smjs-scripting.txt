@@ -1,0 +1,396 @@
+[[smjs-scripting]]
+Scripting ELinks with ECMAScript
+--------------------------------
+
+As a user of ELinks, you can control its behaviour by writing scripts
+in ECMAScript.  Unlike <<ecmascript,scripts in SCRIPT elements of
+HTML>>, these user scripts run with all the permissions of your user
+account, the same as with <<lua-scripting,Lua>>.  The object model is
+very different too.
+
+Support for ECMAScript user scripts was first added in ELinks 0.11.0.
+The `configure` script enables it by default if the required SpiderMonkey
+library has been installed, but you can disable it with `configure
+\--disable-sm-scripting` or by <<CONFIG-SCRIPTING-SPIDERMONKEY,editing
+features.conf>>.
+
+WARNING: ECMAScript scripting is still a bit experimental: there seem to be
+ways to crash ELinks with it, and the object model may change.  However, if
+you don't have a `hooks.js` file, there is not much risk in enabling the
+feature at compile time.
+
+When ELinks starts up, it evaluates the ECMAScript file `hooks.js` in
+your ELinks configuration directory (thus normally `~/.elinks/hooks.js`
+on Unix-like systems), or if the file does not exist there, then in
+the system-wide ELinks configuration directory (the location depends
+on how ELinks was built, but `/etc/elinks/hooks.js` is typical).
+
+In the ELinks source tree, the `contrib/smjs` directory contains some
+examples about scripting ELinks with ECMAScript.  Please see the
+`README` file in that directory for details.
+
+
+[[smjs-global-object]]
+Global Object
+~~~~~~~~~~~~~
+
+The global object provided to ECMAScript user scripts contains the standard
+ECMAScript classes, as well as the following:
+
+
+[[smjs-global-methods]]
+Global Object Methods
+^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs-global.do_file]] do_file(path)::
+	Load and evaluate the file with the given path (string). For example:
++
+--
+----------------------------------------------------------------------
+do_file("/home/me/.elinks/hooks.js");
+----------------------------------------------------------------------
+
+will reload your hooks file.
+
+*Compatibility:* ELinks 0.11.0
+--
+
+
+[[smjs-global-properties]]
+Global Object Properties
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs-global.elinks]] elinks (elinks)::
+	A reference to the <<smjs-elinks-object,ELinks object>>.
++
+*Compatibility:* ELinks 0.11.0
+
+
+[[smjs-elinks-object]]
+ELinks Object
+~~~~~~~~~~~~~
+
+The global <<smjs-global.elinks,'elinks'>> property refers to this object.
+
+
+[[smjs-elinks-methods]]
+ELinks Object Methods
+^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs-elinks.alert]] elinks.alert(message)::
+	Display the given message (string) in a message box. For example:
++
+--
+----------------------------------------------------------------------
+elinks.alert("Hello, world!");
+----------------------------------------------------------------------
+
+will display a friendly greeting.
+
+*Compatibility:* ELinks 0.11.0
+--
+
+[[smjs-elinks.execute]] elinks.execute(command)::
+	Execute the given command (string) on the current terminal.
+	For example:
++
+--
+----------------------------------------------------------------------
+var quoted_uri = "'" + elinks.location.replace(/'/g, "'\\''") + "'";
+elinks.execute("firefox " + quoted_uri);
+----------------------------------------------------------------------
+
+will run Firefox with the URI of the current document.
+
+*Compatibility:* ELinks 0.12pre1
+
+WARNING: One must be very careful with 'elinks.execute', because depending
+on the OS, the command may be subject to interpretation by a command
+shell language. When constructing the command string, be sure to quote
+any dubious parts (such as the URI of the current document, as above).
+--
+
+[[smjs-elinks.load_uri]] elinks.load_uri(uri, callback)::
+	Load the given URI (string). When the URI completes loading, ELinks
+	calls the given callback (function). The callback is passed the
+	<<smjs-cache_entry-object,cache object>> that corresponds to the URI.
+	For example:
++
+--
+----------------------------------------------------------------------
+elinks.load_uri("http://www.eldar.org/cgi-bin/fortune.pl?text_format=yes",
+                function (cached) { elinks.alert(cached.content); });
+----------------------------------------------------------------------
+
+displays a fortune.
+
+The <<smjs-cache_entry-object,cache object>> will not expire until after the
+callback returns.
+
+*Compatibility:* ELinks 0.12pre1
+--
+
+
+[[smjs-elinks-properties]]
+ELinks Object Properties
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs-elinks.home]] elinks.home (string)::
+	ELinks's ``home'' directory, where it stores its configuration files.
+	Read-only. For example,
++
+--
+----------------------------------------------------------------------
+do_file(elinks.home + "hooks.js");
+----------------------------------------------------------------------
+
+will reload your hooks file.
+
+*Compatibility:* ELinks 0.11.0
+--
+
+[[smjs-elinks.location]] elinks.location (string)::
+	The URI of the currently open document. This can be read to get a
+	string with the URI or set to load a different document.
+	For example,
++
+--
+----------------------------------------------------------------------
+elinks.location = elinks.location + "/..";
+----------------------------------------------------------------------
+
+will go up a directory (if the URI doesn't end in a file).
+
+*Compatibility:* ELinks 0.11.0
+--
+
+[[smjs-elinks.bookmarks]] elinks.bookmarks (hash)::
+	This is a hash, the elements of which correspond to the bookmarks.
+	One can delve into the bookmarks hierarchy in a reasonably nifty
+	fashion, just by using standard ECMAScript syntax:
++
+--
+----------------------------------------------------------------------
+elinks.bookmarks.x.children.y.children.z.children.foo.title
+----------------------------------------------------------------------
+
+gets the title of the bookmark titled ``foo'' under the folder ``z'',
+which is a subfolder of ``y'', which is a subfolder of ``x''.
+
+*Compatibility:* ELinks 0.11.0
+
+[[smjs-bookmark-properties]]
+A bookmark object has these properties:
+
+[[smjs-bookmark.title]] item.title (string)::
+	This is the title of the bookmark. It can be read and set.
+
+[[smjs-bookmark.url]] item.url (string)::
+	This is the URI of the bookmark. It can be read and set.
+
+[[smjs-bookmark.children]] item.children (hash)::
+	This is a hash, the elements of which are the bookmarks that
+	are children to the item. It is read-only.
+--
+
+[[smjs-elinks.globhist]] elinks.globhist (hash)::
+	This is a hash, the elements of which correspond to entries in ELinks's
+	global history. The hash is indexed by URI. For example,
++
+--
+----------------------------------------------------------------------
+elinks.globhist["file:///"]
+----------------------------------------------------------------------
+
+will get you the history item for your root directory.
+
+*Compatibility:* ELinks 0.12pre1
+
+[[smjs-global_history_item-properties]]
+A history item has these properties:
+
+[[smjs-global_history_item.title]] item.title (string)::
+	This is the title of the history item. It can be read and set.
+
+[[smjs-global_history_item.url]] item.url (string)::
+	This is the URI of the history item. It can be read and set.
+
+[[smjs-global_history_item.last_visit]] item.last_visit (number)::
+	This is the UNIX time of the last visit time for the item. UNIX time
+	is the number of seconds that have passed between the UNIX epoch
+	(which is 1970-01-01 00:00:00 UTC) and the represented time. Note that
+	this is 'seconds' since the epoch, whereas ECMAScript likes to use
+	'milliseconds' since the epoch. This property can be set or read.
+--
+
+[[smjs-elinks.action]] elinks.action (hash)::
+	This hash lets you call the built-in actions of ELinks.  For example,
+	you can call `elinks.action.auth_manager()` to open the authentication
+	manager.  The names of the actions are the same as in elinks.conf or
+	in the keybinding manager, except they have underscores instead of
+	dashes in order to make them valid ECMAScript identifiers.
++
+--
+*Compatibility:* ELinks 0.12pre1
+
+NOTE: When you read an action function from this hash, ELinks binds it to the
+current tab; any later calls to the function affect that tab.  This may be
+changed in a future version.  It is safest to call the function right away,
+rather than save it in a variable and call it later.
+--
+
+[[smjs-elinks.keymaps]] elinks.keymaps (hash)::
+	This is a hash, the elements of which correspond to ELinks's keymaps.
+	Currently, there are three: 'elinks.keymaps.main', 'elinks.keymaps.edit',
+	and 'elinks.keymaps.menu'. These elements are also hashes, the elements of
+	which correspond to bindings. For example, `elinks.keymaps.main["q"]` is
+	the binding to the ``q'' key in the main map. These bindings can be read,
+	to get the name of the action to which the key is bound, or set to one of:
++
+--
+- A string with the name of the ELinks action.
+- A function, which will thenceforth be called when the key is pressed.
+- The string `"none"`, to unbind the key.  You can also use the `null`
+  value for this purpose, but that crashes ELinks 0.11.4 and 0.12pre1
+  (http://bugzilla.elinks.cz/show_bug.cgi?id=1027[bug 1027]),
+  so it may be best to use the string for now.
+--
++
+--
+For example,
+
+----------------------------------------------------------------------
+elinks.keymaps.main["!"] = function () { elinks.alert("Hello!"); }
+----------------------------------------------------------------------
+
+binds the ``!'' key in the main map to a function that displays a friendly
+alert.
+
+----------------------------------------------------------------------
+elinks.keymaps.main["/"] = "search-typeahead-text";
+----------------------------------------------------------------------
+
+changes the ``/'' key to use the nice typeahead search function instead of
+opening that ugly old search dialogue box.
+
+*Compatibility:* ELinks 0.11.0, unless you use `null`.
+
+NOTE: Do not read a function from <<smjs-elinks.action,'elinks.action'>>,
+e.g. `elinks.action.search_typeahead_text`, and place it in a keymap.
+ELinks binds such functions to the current tab when the script reads
+them from 'elinks.action', so they will not work right in other tabs.
+Use the name of the action instead.
+--
+
+[[smjs-elinks.vs]] elinks.vs (view_state)::
+	This property refers to the <<smjs-view_state-object,view-state
+	object>> for the current document, if any.
++
+*Compatibility:* ELinks 0.12pre1
+
+
+[[smjs-elinks-hooks]]
+ELinks Object Hooks
+^^^^^^^^^^^^^^^^^^^
+
+These are actually properties, but a special case: one assigns functions
+to them, which functions are called at certain events.
+
+In the ELinks source tree, `contrib/smjs/hooks.js` provides a mechanism
+with which multiple scripts can add their functions to the same hooks.
+Please see `contrib/smjs/README` for details.
+
+[[smjs-elinks.preformat_html]] elinks.preformat_html(cached, vs)::
+	This function is called every time a document is loaded, before the
+	document is actually rendered, to give scripts the opportunity to
+	modify it. The first parameter is the <<smjs-cache_entry-object,cache
+	object>> and the second is the <<smjs-view_state-object,view-state
+	object>>.
++
+--
+The <<smjs-cache_entry-object,cache object>> will not expire until after this
+function returns.
+
+*Compatibility:* ELinks 0.11.1 as described.  ELinks 0.11.0 did not provide
+the 'vs' argument.
+--
+
+[[smjs-elinks.goto_url_hook]] elinks.goto_url_hook(url)::
+	This function is called every time the user enters something in the
+	'Go to URL' box. The url (string) can be modified or not, and the
+	returned string is substituted for what the user entered.  If the
+	value `false` is returned, the URL is not changed and further hooks
+	in ELinks are not run.
++
+*Compatibility:* ELinks 0.11.0
+
+[[smjs-elinks.follow_url_hook]] elinks.follow_url_hook(url)::
+	This function is called every time the user tries to load a document,
+	whether by following a link, by entering a URI in the Go to URL box,
+	by setting <<smjs-elinks.location,'elinks.location'>>, or whatever.
+	It behaves the same as <<smjs-elinks.goto_url_hook,'elinks.goto_url_hook'>>
+	above.
++
+*Compatibility:* ELinks 0.11.0
+
+
+[[smjs-cache_entry-object]]
+Cache Object
+~~~~~~~~~~~~
+
+The cache object mentioned in the descriptions of
+<<smjs-elinks.load_uri,'elinks.load_uri'>> and
+<<smjs-elinks.preformat_html,'elinks.preformat_html'>> is a wrapper for the
+internal ELinks cache object.  ELinks passes the ECMAScript cache object as an
+argument to your ECMAScript function, and keeps the corresponding document in
+the cache until the function returns.  After that, ELinks may remove the
+document from the cache, even if the function has saved the cache object to
+some global variable.  Such an expired cache object does not work but it does
+not crash ELinks either.
+
+*Compatibility:* ELinks 0.11.0
+
+
+[[smjs-cache_entry-properties]]
+Cache Object Properties
+^^^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs-cache_entry.content]] cached.content (string)::
+	This is the content received from the server. It can be read and set.
+
+[[smjs-cache_entry.type]] cached.type (string)::
+	This is the MIME type of the cache entry. It can be read and set.
+
+[[smjs-cache_entry.length]] cached.length (number)::
+	This is the length of cached.content. It is read-only.
+
+[[smjs-cache_entry.head]] cached.head (string)::
+	This is the header received from the server. It can be read and set.
+
+[[smjs-cache_entry.uri]] cached.uri (string)::
+	This is the URI of the cache entry. It is read-only.
+
+
+[[smjs-view_state-object]]
+View-state Object
+~~~~~~~~~~~~~~~~~
+
+The view-state object mentioned in the descriptions of
+<<smjs-elinks.preformat_html,'elinks.preformat_html'>> and
+<<smjs-elinks.vs,'elinks.vs'>> is a wrapper for the internal ELinks view_state
+object.  The view state holds information on how the current document is being
+displayed.
+
+*Compatibility:* ELinks 0.11.1
+
+
+[[smjs-view_state-properties]]
+View-state Object Properties
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[smjs.view_state.plain]] vs.plain (boolean)::
+	Whether the current document is rendered as HTML or displayed
+	as plaintext. This can be read and set.
+
+[[smjs.view_state.uri]] vs.uri (string)::
+	This is the URI of the current document. It is read-only.

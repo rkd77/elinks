@@ -18,6 +18,9 @@
 #include "protocol/protocol.h"
 #include "protocol/proxy.h"
 #include "protocol/uri.h"
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+# include "scripting/smjs/smjs.h"
+#endif
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -656,6 +659,9 @@ done_cache_entry(struct cache_entry *cached)
 	delete_entry_content(cached);
 
 	if (cached->box_item) done_listbox_item(&cache_browser, cached->box_item);
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	if (cached->jsobject) smjs_detach_cache_entry_object(cached);
+#endif
 
 	if (cached->uri) done_uri(cached->uri);
 	if (cached->proxy_uri) done_uri(cached->proxy_uri);

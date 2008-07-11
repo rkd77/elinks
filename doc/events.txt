@@ -114,26 +114,6 @@ Description:
  Open Lua console dialog.
 
 -------------------------------------------------------------------------------
-Name:		flush-caches
-Managed By:	The scripting subsystem/backends
-Triggered When:
-
- Elinks is going to free its caches.  This happens when the user chooses
- ACT_MAIN_CACHE_MINIMIZE, but currently also on ACT_MAIN_FORGET_CREDENTIALS
- and when ELinks is quitting.
-
-Arguments:
-
- None
-
-Description:
-
- If scripting backends hold pointers to cache entries, they should try
- to release those pointers so that ELinks can free the entries.  This
- may involve a full garbage collection.  Also, if backends have some
- caches of their own, they should flush them.
-
--------------------------------------------------------------------------------
 Name:		follow-url
 Managed By:	The scripting subsystem/backends
 Triggered When:
@@ -248,6 +228,9 @@ Description:
 
 	add_fragment(cached, 0, new_string, new_len);
 	normalize_cache_entry(cached, new_len);
+
+ The caller must ensure that there is a reference to cached, so that
+ calling garbage_collection() from the event handler cannot free it.
 
 -------------------------------------------------------------------------------
 Name:		quit

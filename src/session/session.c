@@ -513,6 +513,17 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	if (!cached || cached->preformatted)
 		return;
 
+	/* The script called from here may indirectly call
+	 * garbage_collection().  If the refcount of the cache entry
+	 * were 0, it could then be freed, and the
+	 * cached->preformatted assignment at the end of this function
+	 * would crash.  Normally, the document has a reference to the
+	 * cache entry, and that suffices.  If the following assertion
+	 * ever fails, object_lock(cached) and object_unlock(cached)
+	 * must be added to this function.  */
+	assert(cached->object.refcount > 0);
+	if_assert_failed return;
+
 	fragment = get_cache_fragment(cached);
 	if (!fragment) return;
 

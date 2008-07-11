@@ -57,7 +57,7 @@ const JSClass history_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-const JSFunctionSpec history_funcs[] = {
+const spidermonkeyFunctionSpec history_funcs[] = {
 	{ "back",		history_back,		0 },
 	{ "forward",		history_forward,	0 },
 	{ "go",			history_go,		1 },
@@ -224,7 +224,7 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 static JSBool location_toString(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-const JSFunctionSpec location_funcs[] = {
+const spidermonkeyFunctionSpec location_funcs[] = {
 	{ "toString",		location_toString,	0 },
 	{ "toLocaleString",	location_toString,	0 },
 	{ NULL }
