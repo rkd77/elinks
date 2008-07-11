@@ -869,7 +869,35 @@ add_boundary(struct string *data, struct boundary_info *boundary)
 }
 
 
-/** @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
+/** Format a multipart/form-data body for a POST request.
+ *
+ * @param ses
+ *   Display an info_box() in the terminal of this session if an error
+ *   occurs.
+ * @param[in] l
+ *   List of values to be sent to the server.
+ * @param[out] data
+ *   Append the body here.  This is in the same format as uri.post,
+ *   except this never has a Content-Type at the beginning, and the
+ *   literal parts are not encoded in hexadecimal.  Therefore the
+ *   result would be ambiguous without @a bfs.
+ * @param[out] boundary
+ *   A random boundary %string, and a list of offsets where the
+ *   boundary was used, so that the caller can in principle change the
+ *   %string and update all of its uses if the original one conflicts
+ *   with some of the submitted values.  However, the caller does not
+ *   do that nowadays because reading through the attached files would
+ *   be too expensive.  It just assumes the boundary is random enough.
+ * @param[out] bfs
+ *   List of offsets of names of files to be uploaded.  This is how
+ *   the caller knows which occurrences of ::FILE_CHAR in @a data
+ *   should be encoded and which ones should not.
+ * @param[in] cp_from
+ *   Codepage of the submitted-value strings in @a l.
+ * @param[in] cp_to
+ *   Codepage wanted by the server.
+ *
+ * @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
 encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		 struct string *data, struct boundary_info *boundary,
@@ -888,9 +916,9 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		add_crlf_to_string(data);
 
 		/** @bug FIXME: name is not encoded.
-		 * from RFC 1867:
+		 * From RFC 1867:
 		 * multipart/form-data contains a series of parts.
-		 * Each part is expected to contain a content-disposition
+		 * Each %part is expected to contain a content-disposition
 		 * header where the value is "form-data" and a name attribute
 		 * specifies the field name within the form,
 		 * e.g., 'content-disposition: form-data; name="xxxxx"',

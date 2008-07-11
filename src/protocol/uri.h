@@ -22,7 +22,13 @@ struct string;
 /* TODO: We should probably add path+query members instead of data. */
 
 struct uri {
-	/* The start of the uri (and thus start of the protocol string). */
+	/** The start of the URI (and thus start of the protocol %string).
+	 * The format of the whole %string is like:
+	 * "http6://elinks.cz/dir/file?query#frag" ::POST_CHAR post_data "\0"
+	 *
+	 * The post_data is not really %part of the URI but ELinks keeps it
+	 * in the same %string and can then distinguish between cache entries
+	 * for different POST requests.  See uri.post for its syntax.  */
 	unsigned char *string;
 
 	/* The internal type of protocol. Can _never_ be PROTOCOL_UNKNOWN. */
@@ -40,9 +46,27 @@ struct uri {
 	 * It can never be NULL but can have zero length. */
 	unsigned char *data;
 	unsigned char *fragment;
-	/* @post can contain some special encoded form data, used internally
-	 * to make form data handling more efficient. The data is marked by
-	 * POST_CHAR in the uri string. */
+
+	/** POST data attached to the URI.  If uri.string contains a
+	 * ::POST_CHAR, then @c post points to the following
+	 * character.  Otherwise NULL.  The syntax of the POST data
+	 * is:
+	 *
+	 * [content-type '\\n']
+	 * (hexadecimal-byte | ::FILE_CHAR file-name ::FILE_CHAR)*
+	 *
+	 * - If content-type is present, ELinks sends "Content-Type: ",
+	 *   content-type, and CRLF in the head of the POST request.
+	 *
+	 * - Each hexadecimal-byte is a byte for the body of the POST
+	 *   request.  It is encoded as two lower-case hexadecimal
+	 *   digits, most significant first.  For example, "0a" for
+	 *   ::ASCII_LF.
+	 *
+	 * - file-name is the name of a file that ELinks should send
+	 *   to the server.  It is in the charset accepted by open(),
+	 *   and not encoded.  Therefore, file names that contain
+	 *   ::FILE_CHAR cannot be used.  */
 	unsigned char *post;
 
 	/* @protocollen should only be usable if @protocol is either
