@@ -181,6 +181,8 @@ ELinks 0.11.4.GIT now:
 
 To be released as 0.11.5.
 
+* critical bug 1027 in user SMJS: make elinks.keymaps treat null and
+  "none" as equivalent actions, avoiding a segfault
 * build bug 1021: fixed uninitialized variable in http_got_header
 
 ELinks 0.11.4:

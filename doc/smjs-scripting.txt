@@ -244,12 +244,21 @@ rather than save it in a variable and call it later.
 	Currently, there are three: 'elinks.keymaps.main', 'elinks.keymaps.edit',
 	and 'elinks.keymaps.menu'. These elements are also hashes, the elements of
 	which correspond to bindings. For example, `elinks.keymaps.main["q"]` is
-	the binding to the ``q'' key in the main map. These bindings can be red,
-	to get the name of the action to which the key is bound, or set, either
-	to a string with the name of the ELinks action or to a function, which will
-	thenceforth be called when the key is pressed. For example,
+	the binding to the ``q'' key in the main map. These bindings can be read,
+	to get the name of the action to which the key is bound, or set to one of:
 +
 --
+- A string with the name of the ELinks action.
+- A function, which will thenceforth be called when the key is pressed.
+- The string `"none"`, to unbind the key.  You can also use the `null`
+  value for this purpose, but that crashes ELinks 0.11.4 and 0.12pre1
+  (http://bugzilla.elinks.cz/show_bug.cgi?id=1027[bug 1027]),
+  so it may be best to use the string for now.
+--
++
+--
+For example,
+
 ----------------------------------------------------------------------
 elinks.keymaps.main["!"] = function () { elinks.alert("Hello!"); }
 ----------------------------------------------------------------------
@@ -264,7 +273,7 @@ elinks.keymaps.main["/"] = "search-typeahead-text";
 changes the ``/'' key to use the nice typeahead search function instead of
 opening that ugly old search dialogue box.
 
-*Compatibility:* ELinks 0.11.0
+*Compatibility:* ELinks 0.11.0, unless you use `null`.
 
 NOTE: Do not read a function from <<smjs-elinks.action,'elinks.action'>>,
 e.g. `elinks.action.search_typeahead_text`, and place it in a keymap.
