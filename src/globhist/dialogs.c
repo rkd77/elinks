@@ -32,7 +32,7 @@ lock_globhist_item(struct listbox_item *item)
 static void
 unlock_globhist_item(struct listbox_item *item)
 {
-	done_global_history_item((struct global_history_item *) item->udata);
+	object_unlock((struct global_history_item *) item->udata);
 }
 
 static int
