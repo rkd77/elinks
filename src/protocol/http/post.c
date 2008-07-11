@@ -87,19 +87,19 @@ done_http_post(struct http_post *http_post)
  *
  * @relates http_post */
 int
-open_http_post(struct http_post *http_post, unsigned char *post_data,
+open_http_post(struct http_post *http_post, const unsigned char *post_data,
 	       enum connection_state *error)
 {
 	off_t size = 0;
 	size_t length = strlen(post_data);
-	unsigned char *end = post_data;
+	const unsigned char *end = post_data;
 
 	done_http_post(http_post);
 	http_post->post_data = end;
 
 	while (1) {
 		struct stat sb;
-		unsigned char *begin;
+		const unsigned char *begin;
 		int res;
 		struct http_post_file *new_files;
 		unsigned char *filename;
@@ -159,8 +159,8 @@ read_http_post_inline(struct http_post *http_post,
 		      unsigned char buffer[], int max,
 		      enum connection_state *error)
 {
-	unsigned char *post = http_post->post_data;
-	unsigned char *end = strchr(post, FILE_CHAR);
+	const unsigned char *post = http_post->post_data;
+	const unsigned char *end = strchr(post, FILE_CHAR);
 	int total = 0;
 
 	assert(http_post->post_fd < 0);

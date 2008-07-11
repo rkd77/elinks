@@ -27,11 +27,9 @@ struct http_post {
 	 * read_http_post() increments this.  */
 	off_t uploaded;
 
-	/** Points to the next byte to be read from connection.uri->post.
-	 * Does not point to const because http_read_post() momentarily
-	 * substitutes a null character for the FILE_CHAR at the end of
-	 * each file name.  */
-	unsigned char *post_data;
+	/** Points to the next byte to be read from
+	 * connection.uri->post.  */
+	const unsigned char *post_data;
 
 	/** File descriptor from which data is being read, or -1 if
 	 * none.  */
@@ -56,7 +54,7 @@ struct http_post {
 
 void init_http_post(struct http_post *http_post);
 void done_http_post(struct http_post *http_post);
-int open_http_post(struct http_post *http_post, unsigned char *post_data,
+int open_http_post(struct http_post *http_post, const unsigned char *post_data,
 		   enum connection_state *error);
 int read_http_post(struct http_post *http_post,
 		   unsigned char buffer[], int max,
