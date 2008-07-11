@@ -20,7 +20,9 @@ struct smjs_load_uri_hop {
 
 	/* SpiderMonkey versions earlier than 1.8 cannot properly call
 	 * a closure if given just a JSFunction pointer.  They need a
-	 * jsval that points to the corresponding JSObject.  */
+	 * jsval that points to the corresponding JSObject.  Besides,
+	 * JS_AddNamedRoot is not documented to support JSFunction
+	 * pointers.  */
 	jsval callback;
 };
 
@@ -54,6 +56,7 @@ smjs_loading_callback(struct download *download, void *data)
 end:
 	if (download->cached)
 		object_unlock(download->cached);
+	JS_RemoveRoot(smjs_ctx, &hop->callback);
 	mem_free(download->data);
 	mem_free(download);
 
@@ -93,6 +96,13 @@ smjs_load_uri(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 
 	hop->callback = argv[1];
 	hop->ses = smjs_ses;
+	if (!JS_AddNamedRoot(smjs_ctx, &hop->callback,
+			     "smjs_load_uri_hop.callback")) {
+		mem_free(hop);
+		mem_free(download);
+		done_uri(uri);
+		return JS_FALSE;
+	}
 
 	download->data = hop;
 	download->callback = (download_callback_T *) smjs_loading_callback;
