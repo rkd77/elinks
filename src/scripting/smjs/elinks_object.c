@@ -176,8 +176,6 @@ JSBool
 smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
                                  jsval *rval)
 {
-	JSFunction *func;
-
 	assert(smjs_ctx);
 	assert(smjs_elinks_object);
 	assert(rval);
@@ -190,9 +188,6 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 	if (JSVAL_VOID == *rval)
 		return JS_FALSE;
 
-	func = JS_ValueToFunction(smjs_ctx, *rval);
-	if (!func) return JS_FALSE;
-
-	return JS_CallFunction(smjs_ctx, smjs_elinks_object,
-		               func, argc, argv, rval);
+	return JS_CallFunctionValue(smjs_ctx, smjs_elinks_object,
+				    *rval, argc, argv, rval);
 }
