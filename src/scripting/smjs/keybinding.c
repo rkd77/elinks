@@ -37,7 +37,7 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	action_str = get_action_name_from_keystroke((enum keymap_id) *data,
 						    keystroke_str);
-	if (!action_str) goto ret_null;
+	if (!action_str || !strcmp(action_str, "none")) goto ret_null;
 
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(ctx, action_str));
 
@@ -102,6 +102,12 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		if (!action_str) return JS_FALSE;
 
 		if (bind_do(keymap_str, keystroke_str, action_str, 0))
+			return JS_FALSE;
+
+		return JS_TRUE;
+
+	} else if (JSVAL_IS_NULL(*vp)) { /* before JSVAL_IS_OBJECT */
+		if (bind_do(keymap_str, keystroke_str, "none", 0))
 			return JS_FALSE;
 
 		return JS_TRUE;
