@@ -65,8 +65,8 @@ struct uri {
 	 *
 	 * - file-name is the name of a file that ELinks should send
 	 *   to the server.  It is in the charset accepted by open(),
-	 *   and not encoded.  Therefore, file names that contain
-	 *   ::FILE_CHAR cannot be used.  */
+	 *   and some characters (especially ::FILE_CHAR) are
+	 *   percent-encoded.  */
 	unsigned char *post;
 
 	/* @protocollen should only be usable if @protocol is either

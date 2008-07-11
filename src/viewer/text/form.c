@@ -878,9 +878,10 @@ add_boundary(struct string *data, struct boundary_info *boundary)
  *   List of values to be sent to the server.
  * @param[out] data
  *   Append the body here.  This is in the same format as uri.post,
- *   except this never has a Content-Type at the beginning, and the
- *   literal parts are not encoded in hexadecimal.  Therefore the
- *   result would be ambiguous without @a bfs.
+ *   except this never has a Content-Type at the beginning, the
+ *   literal parts are not encoded in hexadecimal, and the file names
+ *   are not percent-encoded.  Therefore the result would be ambiguous
+ *   without @a bfs.
  * @param[out] boundary
  *   A random boundary %string, and a list of offsets where the
  *   boundary was used, so that the caller can in principle change the
@@ -969,36 +970,11 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 				filename = expand_tilde(sv->value);
 				if (!filename) goto encode_error;
 
-				/* Do not allow FILE_CHAR in file
-				 * names.  It would make the resulting
-				 * *data string ambiguous.
-				 *
-				 * Because FILE_CHAR is a control
-				 * character, the user cannot directly
-				 * type it in a file upload field.
-				 * ELinks also does not let scripts
-				 * modify such fields, for security
-				 * reasons.  It seems impossible to
-				 * get FILE_CHAR here, so use assert.
-				 *
-				 * In uri.post, the first '\n' also
-				 * has special meaning.  However, '\n'
-				 * in a file name does not cause any
-				 * ambiguity, because get_form_uri()
-				 * always adds a content-type and '\n'
-				 * to the beginning of the encoded
-				 * POST data.  */
-				assert(strchr(filename, FILE_CHAR) == NULL);
-				if_assert_failed {
-					mem_free(filename);
-					errno = EINVAL;
-					goto encode_error;
-				}
-
 				if (access(filename, R_OK)) {
 					mem_free(filename);
 					goto encode_error;
 				}
+
 				bfs_new = mem_calloc(1, sizeof(*bfs_new));
 				if (!bfs_new) {
 					mem_free(filename);
@@ -1287,7 +1263,14 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 					ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
 					add_to_string(&go, p);
 				}
-				add_bytes_to_string(&go, data.source + i, b->end - b->begin);
+				assert(i == b->begin);
+				assert(b->end - b->begin >= 2);
+				assert(data.source[b->begin] == FILE_CHAR);
+				assert(data.source[b->end - 1] == FILE_CHAR);
+				add_char_to_string(&go, FILE_CHAR);
+				encode_uri_string(&go, data.source + i + 1,
+						  b->end - b->begin - 2, 0);
+				add_char_to_string(&go, FILE_CHAR);
 				i = b->end;
 			}
 			for (; i < data.length; i++) {

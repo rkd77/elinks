@@ -46,6 +46,8 @@ init_http_post(struct http_post *http_post)
 void
 done_http_post(struct http_post *http_post)
 {
+	size_t i;
+
 	http_post->total_upload_length = 0;
 	http_post->uploaded = 0;
 	http_post->post_data = NULL;
@@ -53,6 +55,8 @@ done_http_post(struct http_post *http_post)
 		close(http_post->post_fd);
 		http_post->post_fd = -1;
 	}
+	for (i = 0; i < http_post->file_count; i++)
+		mem_free(http_post->files[i].name);
 	http_post->file_index = 0;
 	http_post->file_count = 0;
 	http_post->file_read = 0;
@@ -98,15 +102,25 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 		unsigned char *begin;
 		int res;
 		struct http_post_file *new_files;
+		unsigned char *filename;
 
 		begin = strchr(end, FILE_CHAR);
 		if (!begin) break;
 		end = strchr(begin + 1, FILE_CHAR);
 		if (!end) break;
-		*end = '\0';
-		res = stat(begin + 1, &sb);
-		*end = FILE_CHAR;
-		if (res) break;
+		filename = memacpy(begin + 1, end - begin - 1); /* adds '\0' */
+		if (!filename) {
+			done_http_post(http_post);
+			*error = S_OUT_OF_MEM;
+			return 0;
+		}
+		decode_uri(filename);
+		res = stat(filename, &sb);
+		if (res) {
+			*error = -errno;
+			done_http_post(http_post);
+			return 0;
+		}
 
 		/* This use of mem_realloc() in a loop consumes O(n^2)
 		 * time but how many files are you really going to
@@ -115,11 +129,13 @@ open_http_post(struct http_post *http_post, unsigned char *post_data,
 					(http_post->file_count + 1)
 					* sizeof(*new_files));
 		if (new_files == NULL) {
+			mem_free(filename);
 			done_http_post(http_post);
 			*error = S_OUT_OF_MEM;
 			return 0;
 		}
 		http_post->files = new_files;
+		new_files[http_post->file_count].name = filename;
 		new_files[http_post->file_count].size = sb.st_size;
 		http_post->file_count++;
 
@@ -175,10 +191,9 @@ read_http_post_inline(struct http_post *http_post,
 	http_post->file_read = 0;
 	end = strchr(post + 1, FILE_CHAR);
 	assert(end);
-	*end = '\0';
-	http_post->post_fd = open(post + 1, O_RDONLY);
+	http_post->post_fd = open(http_post->files[http_post->file_index].name,
+				  O_RDONLY);
 	/* Be careful not to change errno here.  */
-	*end = FILE_CHAR;
 	if (http_post->post_fd < 0) {
 		http_post->post_data = post;
 		if (total > 0)

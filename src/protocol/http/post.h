@@ -10,6 +10,9 @@
  * open_http_post() collects this information and done_http_post()
  * discards it.  */
 struct http_post_file {
+	/** The name of the file.  Must be freed with mem_free().  */
+	unsigned char *name;
+
 	/** The size of the file.  */
 	off_t size;
 };
