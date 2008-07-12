@@ -1402,6 +1402,16 @@ AC_SUBST(LIBDIR)
 EL_LOG_CONFIG(CONFDIR, [System configuration directory], [])
 EL_LOG_CONFIG(LOCALEDIR, [Locale catalogs directory], [])
 
+
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stddef.h>
+]], [[#if !defined(__TINYC__) || !defined(alloca)
+	#error not tcc
+	#endif ]])],[cf_result=yes],[cf_result=no])
+
+if test "$cf_result" = "yes"; then
+	AC_DEFINE([HAVE_ALLOCA])
+	AC_DEFINE([_ALLOCA_H], [1], [alloca of tcc])
+fi
 # ===================================================================
 # A little fine tuning of gcc specific options (continued)
 # ===================================================================
