@@ -851,10 +851,12 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 		struct location *loc = mem_calloc(1, sizeof(*loc));
 
 		if (loc) {
-			loc->download.state = connection_state(S_OK);
 			copy_location(loc, cur_loc(base));
+			loc->download.data = ses;
+			loc->download.callback = (download_callback_T *) doc_loading_callback;
 			add_to_history(&ses->history, loc);
-			render_document_frames(ses, 0);
+			load_uri(loc->vs.uri, NULL, &loc->download, PRI_MAIN,
+			         CACHE_MODE_ALWAYS, -1);
 		}
 	}
 
