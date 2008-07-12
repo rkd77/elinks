@@ -996,6 +996,19 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 		return 0;
 	}
 
+	if (download && cache_mode == CACHE_MODE_ALWAYS) {
+		cached = find_in_cache(uri);
+		if (cached) {
+			download->cached = cached;
+			download->state = connection_state(S_OK);
+			if (download->callback)
+				download->callback(download, download->data);
+			if (proxy_uri) done_uri(proxy_uri);
+			if (proxied_uri) done_uri(proxied_uri);
+			return 0;
+		}
+	}
+
 	conn = init_connection(proxy_uri, proxied_uri, referrer, start, cache_mode, pri);
 	if (!conn) {
 		if (download) {
