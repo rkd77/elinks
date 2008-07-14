@@ -18,6 +18,8 @@ generally also includes the bug fixes made in ELinks 0.11.4.GIT.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
+* critical: Fix crash after a tab was opened during reload.  This was
+  triggered by the bug 620 fix in ELinks 0.12pre1.
 * major bug 1026 in user SMJS: Protect the callback of elinks.load_uri
   from the garbage collector.  The elinks.load_uri method was added in
   ELinks 0.12pre1.

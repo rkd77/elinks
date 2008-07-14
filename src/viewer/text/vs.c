@@ -79,6 +79,12 @@ copy_vs(struct view_state *dst, struct view_state *src)
 	dst->ecmascript_fragile = 1;
 #endif
 
+	/* destroy_vs(vs) does mem_free_if(vs->form_info), so each
+	 * view_state must have its own form_info.  Normally we make a
+	 * copy below, but not if src->form_info_len is 0, which it
+	 * can be even if src->form_info is not NULL.  */
+	dst->form_info = NULL;
+
 	/* Clean as a baby. */
 	dst->doc_view = NULL;
 
