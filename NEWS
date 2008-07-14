@@ -15,6 +15,8 @@ To be released as 0.11.5.
 * critical bug 1030: an assertion used to fail in the search dialog
   on systems that lack a usable <regex.h>
 * major bug 503: various fixes in parsing and updating of elinks.conf
+* bug 698: Attach controls to the intended form even if it is
+  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * build bug 1021: fixed uninitialized variable in http_got_header
 
 ELinks 0.11.4:
