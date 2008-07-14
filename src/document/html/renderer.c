@@ -1746,7 +1746,11 @@ end:
 static void
 html_special_form(struct part *part, struct form *form)
 {
+	struct form *nform;
+
 	assert(part && form);
+	assert(form->form_num > 0);
+	assert(form->form_end == INT_MAX);
 	if_assert_failed return;
 
 	if (!part->document) {
@@ -1754,50 +1758,60 @@ html_special_form(struct part *part, struct form *form)
 		return;
 	}
 
-	if (!list_empty(part->document->forms)) {
-		struct form *nform;
-
-		/* Make sure the new form ``claims'' its slice of the form range
-		 * maintained in the form_num and form_end variables. */
-		foreach (nform, part->document->forms) {
-			if (form->form_num < nform->form_num
-			    || nform->form_end < form->form_num)
-				continue;
-
-			/* First check if the form has identical form numbers.
-			 * That should only be the case when the form being
-			 * added is in fact the same form in which case it
-			 * should be dropped. The fact that this can happen
-			 * suggests that the table renderering can be confused.
-			 * See bug 647 for a test case. */
-			if (nform->form_num == form->form_num
-			    && nform->form_end == form->form_end) {
-				done_form(form);
-				return;
-			}
-
-			/* The form start is inside an already added form, so
-			 * partition the space of the existing form and get
-			 * |old|new|. */
-			nform->form_end = form->form_num - 1;
-			assertm(nform->form_num <= nform->form_end,
-				"[%d:%d] [%d:%d]", nform->form_num, nform->form_end,
-				form->form_num, form->form_end);
-			break;
+	/* Make a fake form with form_num == 0 so that there is
+	 * something to use if form controls appear above the first
+	 * actual FORM element.  There can never be a real form with
+	 * form_num == 0 because the form_num is the position after the
+	 * "<form" characters and that's already five characters.  The
+	 * fake form does not have a name, and it gets a form_view and
+	 * becomes visible to ECMAScript only if it actually has
+	 * controls in it.  */
+	if (list_empty(part->document->forms)) {
+		nform = init_form();
+		if (!nform) {
+			done_form(form);
+			return;
 		}
-	} else {
-		/* If it is the first form make sure it eats the whole form
-		 * range. */
-#if 0
-		/* Disabled because in tables the parse order may lead to a
-		 * later form being parsed before a preceeding one causing the
-		 * wrong order if we set it to zero. Let's hope it doesn't break
-		 * anything else. */
-		form->form_num = 0;
-#endif
+		nform->form_num = 0;
+		add_to_list(part->document->forms, nform);
 	}
 
-	add_to_list(part->document->forms, form);
+	/* Make sure the new form ``claims'' its slice of the form range
+	 * maintained in the form_num and form_end variables. */
+	foreach (nform, part->document->forms) {
+		if (form->form_num < nform->form_num
+		    || nform->form_end < form->form_num)
+			continue;
+
+		/* First check if the form has identical form numbers.
+		 * That should only be the case when the form being
+		 * added is in fact the same form in which case it
+		 * should be dropped. The fact that this can happen
+		 * suggests that the table renderering can be confused.
+		 * See bug 647 for a test case.
+		 * Do not compare form->form_end here because it is
+		 * normally set by this function and that has obviously
+		 * not yet been done.  */
+		if (nform->form_num == form->form_num) {
+			done_form(form);
+			return;
+		}
+
+		/* The form start is inside an already added form, so
+		 * partition the space of the existing form and get
+		 * |old|new|. */
+		form->form_end = nform->form_end;
+		nform->form_end = form->form_num - 1;
+		assertm(nform->form_num <= nform->form_end,
+			"[%d:%d] [%d:%d]", nform->form_num, nform->form_end,
+			form->form_num, form->form_end);
+		add_to_list(part->document->forms, form);
+		return;
+	}
+
+	ERROR("hole between forms");
+	done_form(form);
+	return;
 }
 
 static void
@@ -1830,6 +1844,51 @@ html_special_form_control(struct part *part, struct form_control *fc)
 	add_to_list(form->items, fc);
 }
 
+#ifdef CONFIG_DEBUG
+/** Assert that each form in the list has a different form.form_num
+ * ... form.form_end range and that the ranges are contiguous and
+ * together cover all numbers from 0 to INT_MAX.  Alternatively, the
+ * whole list may be empty.  This function can be called from a
+ * debugger, or automatically from some places.
+ *
+ * This function may leave assert_failed = 1; the caller must use
+ * if_assert_failed.  */
+static void
+assert_forms_list_ok(LIST_OF(struct form) *forms)
+{
+	int saw_form_num_0 = 0;
+	struct form *outer;
+
+	if (list_empty(*forms)) return;
+
+	/* O(n^2) algorithm, but it's only for debugging.  */
+	foreach (outer, *forms) {
+		int followers = 0;
+		struct form *inner;
+
+		if (outer->form_num == 0)
+			saw_form_num_0++;
+
+		foreach (inner, *forms) {
+			assert(inner == outer
+			       || inner->form_num > outer->form_end
+			       || outer->form_num > inner->form_end);
+			if (outer->form_end == inner->form_num - 1)
+				followers++;
+		}
+
+		if (outer->form_end == INT_MAX)
+			assert(followers == 0);
+		else
+			assert(followers == 1);
+	}
+
+	assert(saw_form_num_0 == 1);
+}
+#else  /* !CONFIG_DEBUG */
+# define assert_forms_list_ok(forms) ((void) 0)
+#endif /* !CONFIG_DEBUG */
+
 /* Reparents form items based on position in the source. */
 void
 check_html_form_hierarchy(struct part *part)
@@ -1841,6 +1900,9 @@ check_html_form_hierarchy(struct part *part)
 
 	if (list_empty(document->forms))
 		return;
+
+	assert_forms_list_ok(&document->forms);
+	if_assert_failed {}
 
 	/* Take out all badly placed form items. */
 
@@ -1863,8 +1925,8 @@ check_html_form_hierarchy(struct part *part)
 	foreachsafe (fc, next, form_controls) {
 
 		foreach (form, document->forms) {
-			if (form->form_num <= fc->position
-			    && fc->position <= form->form_end)
+			if (fc->position < form->form_num
+			    || form->form_end < fc->position)
 				continue;
 
 			fc->form = form;

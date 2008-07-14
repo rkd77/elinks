@@ -21,6 +21,8 @@ generally also includes the bug fixes made in ELinks 0.11.4.GIT.
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
   scripts on web pages, to work around SpiderMonkey bug 378918.
+* bug 698: Attach controls to the intended form even if it is
+  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache
 
