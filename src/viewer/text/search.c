@@ -248,6 +248,7 @@ get_range(struct document *document, int y, int height, int l,
 	return 0;
 }
 
+#ifdef HAVE_REGEX_H
 /* Returns a string |doc| that is a copy of the text in the search nodes
  * from |s1| to |s1 + doclen - 1| with the space at the end of each line
  * converted to a new-line character (LF). */
@@ -279,7 +280,6 @@ get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 	return doc;
 }
 
-#ifdef HAVE_REGEX_H
 struct regex_match_context {
 	struct search *s1;
 	struct search *s2;
