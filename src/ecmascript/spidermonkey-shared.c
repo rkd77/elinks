@@ -1,4 +1,5 @@
-/* Better compatibility across versions of SpiderMonkey. */
+/** SpiderMonkey support for both user scripts and web scripts.
+ * @file */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -6,7 +7,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 
 /** An ELinks-specific replacement for JS_DefineFunctions().
  *
