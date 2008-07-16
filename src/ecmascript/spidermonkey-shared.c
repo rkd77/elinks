@@ -29,11 +29,24 @@ int
 spidermonkey_runtime_addref(void)
 {
 	if (!spidermonkey_runtime) {
+		JSContext *dummy;
+
 		assert(spidermonkey_runtime_refcount == 0);
 		if_assert_failed return 0;
-		spidermonkey_runtime = JS_NewRuntime(1L * 1024L * 1024L);
+
+		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L);
 		if (!spidermonkey_runtime) return 0;
+
+		/* XXX: This is a hack to avoid a crash on exit.
+		 * SMJS will crash on JS_DestroyRuntime if the given
+		 * runtime has never had any context created, which
+		 * will be the case if one closes ELinks without
+		 * having loaded any documents. */
+		dummy = JS_NewContext(spidermonkey_runtime, 0);
+		if (dummy) JS_DestroyContext(dummy);
+		/* Else hope it works anyway. */
 	}
+
 	spidermonkey_runtime_refcount++;
 	assert(spidermonkey_runtime_refcount > 0);
 	if_assert_failed { spidermonkey_runtime_refcount--; return 0; }
@@ -54,6 +67,7 @@ spidermonkey_runtime_release(void)
 	if (spidermonkey_runtime_refcount == 0) {
 		JS_DestroyRuntime(spidermonkey_runtime);
 		spidermonkey_runtime = NULL;
+		JS_ShutDown();
 	}
 }
 
