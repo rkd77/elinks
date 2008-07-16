@@ -28,6 +28,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 * bug 955: Reset buttons no longer run FORM/@onsubmit, and
   ``harmless'' buttons no longer submit the form.  ELinks 0.12pre1
   was the first release that had these bugs.
+* bug 1033: Fix memory leak in ECMAScript window.open.  ELinks 0.12pre1
+  was the first release that had this bug.
 
 ELinks 0.12pre1:
 ----------------
