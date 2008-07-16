@@ -240,7 +240,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
 	unsigned char *frame = "";
-	unsigned char *url;
+	unsigned char *url, *url2;
 	struct uri *uri;
 	struct SEE_value url_value;
 #if 0
@@ -291,10 +291,11 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	url = join_urls(doc_view->document->uri, url);
-	if (!url) return;
-	uri = get_uri(url, 0);
+	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
+	if (!url2) return;
+	uri = get_uri(url2, 0);
+	mem_free(url2);
 	if (!uri) return;
 
 	if (*frame && strcasecmp(frame, "_blank")) {
