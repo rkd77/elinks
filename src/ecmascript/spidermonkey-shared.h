@@ -24,6 +24,10 @@
 
 #include "util/string.h"
 
+extern JSRuntime *spidermonkey_runtime;
+int spidermonkey_runtime_addref(void);
+void spidermonkey_runtime_release(void);
+
 /** An ELinks-specific replacement for JSFunctionSpec.
  *
  * Bug 1016: In SpiderMonkey 1.7 bundled with XULRunner 1.8, jsapi.h
