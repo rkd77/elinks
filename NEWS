@@ -11,6 +11,12 @@ ELinks 0.12pre1.GIT now:
 To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch
 generally also includes the bug fixes made in ELinks 0.11.4.GIT.
 
+* bug 954, enhancement 952: Keep track of ECMAScript form and input
+  objects instead of constructing new ones on every access.  When the
+  corresponding ELinks internal objects are destroyed, detach the
+  ECMAScript objects from them, to prevent crashes.  (Bug 954 was
+  first added in ELinks 0.11.4, and the bug 620 fix in ELinks 0.12pre1
+  made crashes more likely.)
 * critical bug 1029 in user SMJS: Prefer JS_CallFunctionValue over
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
