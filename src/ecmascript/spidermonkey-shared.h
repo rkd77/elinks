@@ -1,12 +1,6 @@
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_SHARED_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_SHARED_H
 
-/* Inconsistently applied conventions for prefixes in identifiers:
- * - "smjs" for user scripts (scripting/smjs/).
- * - "js" for web scripts (ecmascript/spidermonkey/).
- * - "spidermonkey" for common stuff, especially any that replace
- *   similarly named things defined in SpiderMonkey itself.  */
-
 /* For wild SpiderMonkey installations. */
 #ifdef CONFIG_OS_BEOS
 #define XP_BEOS
