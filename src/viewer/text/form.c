@@ -347,6 +347,18 @@ done_form_state(struct form_state *fs)
 	mem_free_if(fs->value);
 }
 
+/** Free @a fv and any data owned by it.  This does not call
+ * del_from_list(fv), so the caller must usually do that first.
+ * @relates form_view */
+void
+done_form_view(struct form_view *fv)
+{
+#ifdef CONFIG_ECMASCRIPT
+	ecmascript_detach_form_view(fv);
+#endif
+	mem_free(fv);
+}
+
 int
 get_current_state(struct session *ses)
 {

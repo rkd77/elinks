@@ -7,6 +7,7 @@ struct string;
 void *spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter);
 void spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter);
 
+#define spidermonkey_detach_form_view(fv) ((fv)->ecmascript_obj = NULL)
 #define spidermonkey_detach_form_state(fs) ((fs)->ecmascript_obj = NULL)
 #define spidermonkey_moved_form_state(fs) ((void) (fs))
 
