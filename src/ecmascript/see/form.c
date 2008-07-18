@@ -22,6 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/see.h"
 #include "ecmascript/see/checktype.h"
 #include "ecmascript/see/document.h"
 #include "ecmascript/see/form.h"
@@ -56,8 +57,9 @@ static void js_input_focus(struct SEE_interpreter *, struct SEE_object *, struct
 static void js_input_select(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static int input_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static int input_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
-static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, int);
-static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type, int);
+static struct js_input *js_get_input_object(struct SEE_interpreter *, struct js_form *, struct form_state *);
+static void input_finalize(struct SEE_interpreter *, void *, void *);
+static struct js_input *js_get_form_control_object(struct SEE_interpreter *, struct js_form *, enum form_type, struct form_state *);
 
 static void js_form_elems_item(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_form_elems_namedItem(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
@@ -140,7 +142,7 @@ struct js_input {
 	struct SEE_object *click;
 	struct SEE_object *focus;
 	struct SEE_object *select;
-	int form_number;
+	struct form_state *fs;
 };
 
 struct js_forms_object {
@@ -159,12 +161,21 @@ struct js_form_elems {
 
 
 static inline struct form_state *
-form_state_of_js_input(struct view_state *vs, const struct js_input *input)
+form_state_of_js_input(struct SEE_interpreter *interp,
+		       const struct js_input *input)
 {
-	assert(input->form_number >= 0);
-	assert(input->form_number < vs->form_info_len);
-	if_assert_failed return NULL;
-	return &vs->form_info[input->form_number];
+	struct form_state *fs = input->fs;
+
+	if (!fs)
+		SEE_error_throw(interp, interp->Error,
+				"Input field has been destroyed");
+
+	assert(fs->ecmascript_obj == input);
+	if_assert_failed
+		SEE_error_throw(interp, interp->Error,
+				"Internal corruption");
+
+	return fs;
 }
 
 static void
@@ -177,7 +188,7 @@ input_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
 	struct js_form *parent = input->parent;
-	struct form_state *fs = form_state_of_js_input(vs, input);
+	struct form_state *fs = form_state_of_js_input(interp, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -280,7 +291,7 @@ input_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document_view *doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
 	struct js_input *input = (struct js_input *)o;
-	struct form_state *fs = form_state_of_js_input(vs, input);
+	struct form_state *fs = form_state_of_js_input(interp, input);
 	struct form_control *fc = find_form_control(document, fs);
 	int linknum;
 	struct link *link = NULL;
@@ -380,7 +391,7 @@ js_input_click(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = form_state_of_js_input(vs, input);
+	struct form_state *fs = form_state_of_js_input(interp, input);
 	struct form_control *fc;
 	int linknum;
 
@@ -415,7 +426,7 @@ js_input_focus(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_input *input = (
 		see_check_class(interp, thisobj, &js_input_object_class),
 		(struct js_input *)thisobj);
-	struct form_state *fs = form_state_of_js_input(vs, input);
+	struct form_state *fs = form_state_of_js_input(interp, input);
 	struct form_control *fc;
 	int linknum;
 
@@ -460,19 +471,23 @@ input_hasproperty(struct SEE_interpreter *interp, struct SEE_object *o,
 }
 
 static struct js_input *
-js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform, int num)
+js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform,
+		    struct form_state *fs)
 {
-	struct js_input *jsinput;
+	struct js_input *jsinput = fs->ecmascript_obj;
 
+	if (jsinput) {
+		assert(jsinput->fs == fs);
+		if_assert_failed return NULL;
 
-#if 0
-	if (fs->ecmascript_obj)
-		return fs->ecmascript_obj;
-#endif
+		return jsinput;
+	}
+
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsinput = SEE_NEW(interp, struct js_input);
+	jsinput = SEE_NEW_FINALIZE(interp, struct js_input,
+				   input_finalize, NULL);
 
 	jsinput->object.objectclass = &js_input_object_class;
 	jsinput->object.Prototype = NULL;
@@ -482,14 +497,15 @@ js_get_input_object(struct SEE_interpreter *interp, struct js_form *jsform, int 
 	jsinput->focus = SEE_cfunction_make(interp, js_input_focus, s_focus, 0);
 	jsinput->select = SEE_cfunction_make(interp, js_input_select, s_select, 0);
 
-	jsinput->form_number = num;
 	jsinput->parent = jsform;
+	jsinput->fs = fs;
+	fs->ecmascript_obj = jsinput;
 	return jsinput;
 }
 
 static struct js_input *
 js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsform,
-	enum form_type type, int num)
+	enum form_type type, struct form_state *fs)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -503,7 +519,7 @@ js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsfor
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return js_get_input_object(interp, jsform, num);
+			return js_get_input_object(interp, jsform, fs);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -515,7 +531,71 @@ js_get_form_control_object(struct SEE_interpreter *interp, struct js_form *jsfor
 	}
 }
 
+static void
+input_finalize(struct SEE_interpreter *interp, void *jsinput_void, void *dummy)
+{
+	struct js_input *jsinput = jsinput_void;
+	struct form_state *fs = jsinput->fs;
 
+	if (fs) {
+		/* Reset jsinput->fs in case some ELinks code uses it
+		 * even after this finalizer has run.  Such use should
+		 * not be possible but the explanation is somewhat
+		 * complex so it seems safest to do this.
+		 *
+		 * Unlike SpiderMonkey, Boehm's GC allows a finalizer
+		 * to resurrect the object by making something point
+		 * to it.  And it's a conservative GC so it can see
+		 * such a pointer where none actually exists.  However
+		 * it also implicitly unregisters the finalizer before
+		 * calling it, so the object becomes just a chunk of
+		 * memory that nothing really uses, even if the GC
+		 * never realizes it is garbage.  */
+		jsinput->fs = NULL;
+
+		/* If this assertion fails, leave fs->ecmascript_obj
+		 * unchanged, because it may point to a different
+		 * structure whose js_input.fs pointer will later have
+		 * to be updated to avoid crashes.
+		 *
+		 * If the assertion fails and we leave jsinput->fs
+		 * unchanged, and something then deletes fs,
+		 * jsinput->fs becomes a dangling pointer because fs
+		 * does not know about jsinput.  So that's why the
+		 * assertion comes after the jsinput->fs assignment
+		 * above.  */
+		assert(fs->ecmascript_obj == jsinput);
+		if_assert_failed return;
+
+		fs->ecmascript_obj = NULL;
+	}
+}
+
+void
+see_detach_form_state(struct form_state *fs)
+{
+	struct js_input *jsinput = fs->ecmascript_obj;
+
+	if (jsinput) {
+		/* If this assertion fails, it is not clear whether
+		 * jsinput->fs should be reset; crashes seem possible
+		 * either way.  Resetting it is easiest.  */
+		assert(jsinput->fs == fs);
+		if_assert_failed {}
+
+		jsinput->fs = NULL;
+		fs->ecmascript_obj = NULL;
+	}
+}
+
+void
+see_moved_form_state(struct form_state *fs)
+{
+	struct js_input *jsinput = fs->ecmascript_obj;
+
+	if (jsinput)
+		jsinput->fs = fs;
+}
 
 
 static void
@@ -553,7 +633,7 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fs);
 
 				if (fcobj)
 					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
@@ -594,7 +674,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fc->g_ctrl_num);
+				struct js_input *fcobj = js_get_form_control_object(interp, parent_form, fc->type, fs);
 
 				if (fcobj)
 					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
@@ -857,7 +937,7 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 				continue;
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
-				fcobj = js_get_form_control_object(interp, js_form, fc->type, fc->g_ctrl_num);
+				fcobj = js_get_form_control_object(interp, js_form, fc->type, fs);
 
 				if (fcobj)
 					SEE_SET_OBJECT(res, (struct SEE_object *)fcobj);
