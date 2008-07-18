@@ -7,7 +7,7 @@ struct string;
 void *see_get_interpreter(struct ecmascript_interpreter *interpreter);
 void see_put_interpreter(struct ecmascript_interpreter *interpreter);
 
-#define see_detach_form_view(fv) ((fv)->ecmascript_obj = NULL)
+void see_detach_form_view(struct form_view *fv);
 void see_detach_form_state(struct form_state *fs);
 void see_moved_form_state(struct form_state *fs);
 

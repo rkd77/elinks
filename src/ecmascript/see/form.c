@@ -77,6 +77,7 @@ static int form_canput(struct SEE_interpreter *, struct SEE_object *, struct SEE
 static int form_hasproperty(struct SEE_interpreter *, struct SEE_object *, struct SEE_string *);
 static void js_form_reset(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_form_submit(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
+static void form_finalize(struct SEE_interpreter *, void *, void *);
 
 
 struct SEE_objectclass js_input_object_class = {
@@ -598,6 +599,24 @@ see_moved_form_state(struct form_state *fs)
 }
 
 
+static inline struct form_view *
+form_view_of_js_form(struct SEE_interpreter *interp,
+		     const struct js_form *jsform)
+{
+	struct form_view *fv = jsform->fv;
+
+	if (!fv)
+		SEE_error_throw(interp, interp->Error,
+				"Form has been destroyed");
+
+	assert(fv->ecmascript_obj == jsform);
+	if_assert_failed
+		SEE_error_throw(interp, interp->Error,
+				"Internal corruption");
+
+	return fv;
+}
+
 static void
 js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 	     struct SEE_object *thisobj, int argc, struct SEE_value **argv,
@@ -611,7 +630,7 @@ js_form_elems_item(struct SEE_interpreter *interp, struct SEE_object *self,
 		see_check_class(interp, thisobj, &js_form_elems_class),
 		(struct js_form_elems *)thisobj);
 	struct js_form *parent_form = jsfe->parent;
-	struct form_view *fv = parent_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, parent_form);
 	struct form *form = find_form_by_form_view(document, fv);
 	struct form_control *fc;
 	unsigned char *string;
@@ -657,7 +676,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 		see_check_class(interp, thisobj, &js_form_elems_class),
 		(struct js_form_elems *)thisobj);
 	struct js_form *parent_form = jsfe->parent;
-	struct form_view *fv = parent_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, parent_form);
 	struct form *form = find_form_by_form_view(document, fv);
 	struct form_control *fc;
 	unsigned char *string;
@@ -695,7 +714,7 @@ form_elems_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct document *document = doc_view->document;
 	struct js_form_elems *jsfe = (struct js_form_elems *)o;
 	struct js_form *parent_form = jsfe->parent;
-	struct form_view *fv = parent_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, parent_form);
 	struct form *form = find_form_by_form_view(document, fv);
 
 	if (p == s_length) {
@@ -863,7 +882,7 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct js_form *js_form = (struct js_form *)o;
-	struct form_view *fv = js_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, js_form);
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	struct SEE_string *str;
 
@@ -956,7 +975,7 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 	struct view_state *vs = g->win->vs;
 	struct document_view *doc_view = vs->doc_view;
 	struct js_form *js_form = (struct js_form *)o;
-	struct form_view *fv = js_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, js_form);
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 	unsigned char *string = see_value_to_unsigned_char(interp, val);
 
@@ -1018,7 +1037,7 @@ js_form_reset(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_form *js_form = (
 		see_check_class(interp, thisobj, &js_form_class),
 		(struct js_form *)thisobj);
-	struct form_view *fv = js_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, js_form);
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1040,7 +1059,7 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct js_form *js_form = (
 		see_check_class(interp, thisobj, &js_form_class),
 		(struct js_form *)thisobj);
-	struct form_view *fv = js_form->fv;
+	struct form_view *fv = form_view_of_js_form(interp, js_form);
 	struct form *form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1051,26 +1070,88 @@ js_form_submit(struct SEE_interpreter *interp, struct SEE_object *self,
 struct js_form *js_get_form_object(struct SEE_interpreter *interp,
 	struct js_document_object *doc, struct form_view *fv)
 {
-	struct js_form *js_form;
+	struct js_form *js_form = fv->ecmascript_obj;
 
-#if 0
-	if (fv->ecmascript_obj)
-		return fv->ecmascript_obj;
-#endif
+	if (js_form) {
+		assert(js_form->fv == fv);
+		if_assert_failed return NULL;
+
+		return js_form;
+	}
+
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	js_form = SEE_NEW(interp, struct js_form);
+	js_form = SEE_NEW_FINALIZE(interp, struct js_form,
+				   form_finalize, NULL);
 	js_form->object.objectclass = &js_form_class;
 	js_form->object.Prototype = NULL; /* TODO: use prototype for form */
 	js_form->parent = doc;
 	js_form->reset = SEE_cfunction_make(interp, js_form_reset, s_reset, 0);
 	js_form->submit = SEE_cfunction_make(interp, js_form_submit, s_submit, 0);
-	js_form->fv = fv;
 
+	js_form->fv = fv;
 	fv->ecmascript_obj = js_form;
 	return js_form;
 }
+
+static void
+form_finalize(struct SEE_interpreter *interp, void *jsform_void, void *dummy)
+{
+	struct js_form *jsform = jsform_void;
+	struct form_view *fv = jsform->fv;
+
+	if (fv) {
+		/* Reset jsform->fv in case some ELinks code uses it
+		 * even after this finalizer has run.  Such use should
+		 * not be possible but the explanation is somewhat
+		 * complex so it seems safest to do this.
+		 *
+		 * Unlike SpiderMonkey, Boehm's GC allows a finalizer
+		 * to resurrect the object by making something point
+		 * to it.  And it's a conservative GC so it can see
+		 * such a pointer where none actually exists.  However
+		 * it also implicitly unregisters the finalizer before
+		 * calling it, so the object becomes just a chunk of
+		 * memory that nothing really uses, even if the GC
+		 * never realizes it is garbage.  */
+		jsform->fv = NULL;
+
+		/* If this assertion fails, leave fv->ecmascript_obj
+		 * unchanged, because it may point to a different
+		 * structure whose js_form.fv pointer will later have
+		 * to be updated to avoid crashes.
+		 *
+		 * If the assertion fails and we leave jsform->fv
+		 * unchanged, and something then deletes fv,
+		 * jsform->fv becomes a dangling pointer because fv
+		 * does not know about jsform.  So that's why the
+		 * assertion comes after the jsform->fv assignment
+		 * above.  */
+		assert(fv->ecmascript_obj == jsform);
+		if_assert_failed return;
+
+		fv->ecmascript_obj = NULL;
+	}
+}
+
+void
+see_detach_form_view(struct form_view *fv)
+{
+	struct js_form *jsform = fv->ecmascript_obj;
+
+	if (jsform) {
+		/* If this assertion fails, it is not clear whether
+		 * jsform->fv should be reset; crashes seem possible
+		 * either way.  Resetting it is easiest.  */
+		assert(jsform->fv == fv);
+		if_assert_failed {}
+
+		jsform->fv = NULL;
+		fv->ecmascript_obj = NULL;
+	}
+}
+
 
 void
 init_js_forms_object(struct ecmascript_interpreter *interpreter)
