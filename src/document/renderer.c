@@ -337,8 +337,8 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 
 		if (doc_view->session
 		    && doc_view->session->reloadlevel > CACHE_MODE_NORMAL)
-			while (vs->form_info_len)
-				mem_free_if(vs->form_info[--vs->form_info_len].value);
+			for (; vs->form_info_len > 0; vs->form_info_len--)
+				done_form_state(&vs->form_info[vs->form_info_len - 1]);
 
 		shrink_memory(0);
 
