@@ -8,7 +8,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 #include "protocol/uri.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/view_state_object.h"

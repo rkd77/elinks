@@ -30,6 +30,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
+#include "ecmascript/ecmascript.h"
 #include "intl/gettext/libintl.h"
 #include "formhist/formhist.h"
 #include "mime/mime.h"
@@ -251,11 +252,30 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 
 	if (n >= vs->form_info_len) {
 		int nn = n + 1;
+#ifdef CONFIG_ECMASCRIPT
+		const struct form_state *const old_form_info = vs->form_info;
+#endif
 
 		fs = mem_align_alloc(&vs->form_info, vs->form_info_len, nn, 0);
 		if (!fs) return NULL;
 		vs->form_info = fs;
 		vs->form_info_len = nn;
+
+#ifdef CONFIG_ECMASCRIPT
+		/* TODO: Standard C does not allow this comparison;
+		 * if the memory to which old_form_info pointed has
+		 * been freed, then the value of the pointer itself is
+		 * indeterminate.  Fixing this would require changing
+		 * mem_align_alloc to tell the caller whether it did
+		 * realloc or not.  */
+		if (vs->form_info != old_form_info) {
+			/* vs->form_info[] was moved to a different address.
+			 * Update all the ECMAScript objects that have
+			 * pointers to its elements.  */
+			for (nn = 0; nn < vs->form_info_len; nn++)
+				ecmascript_moved_form_state(&vs->form_info[nn]);
+		}
+#endif /* CONFIG_ECMASCRIPT */
 	}
 	fs = &vs->form_info[n];
 
@@ -327,6 +347,29 @@ find_form_by_form_view(struct document *document, struct form_view *fv)
 	return NULL;
 }
 
+/** Free any data owned by @a fs, but not the struct form_state
+ * itself, because that is normally allocated as part of an array.
+ * @relates form_state */
+void
+done_form_state(struct form_state *fs)
+{
+#ifdef CONFIG_ECMASCRIPT
+	ecmascript_detach_form_state(fs);
+#endif
+	mem_free_if(fs->value);
+}
+
+/** Free @a fv and any data owned by it.  This does not call
+ * del_from_list(fv), so the caller must usually do that first.
+ * @relates form_view */
+void
+done_form_view(struct form_view *fv)
+{
+#ifdef CONFIG_ECMASCRIPT
+	ecmascript_detach_form_view(fv);
+#endif
+	mem_free(fv);
+}
 
 int
 get_current_state(struct session *ses)

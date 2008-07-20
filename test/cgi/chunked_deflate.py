@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-import os, time
-from zlib import *
+import os, time, zlib
 
 data1 = '<html><body>Two lines should be visible.<br/>The second line.</body></html>'
-ob = compressobj(Z_DEFAULT_COMPRESSION, DEFLATED, -MAX_WBITS)
-cd1 = ob.compress(data1)
-cd1 += ob.flush()
+cd1 = zlib.compress(data1)
+
 length = len(cd1)
 next_chunk = hex(length - 10)[2:]
 

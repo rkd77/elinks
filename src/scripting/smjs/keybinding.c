@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "config/kbdbind.h"
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 #include "main/event.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
@@ -55,15 +55,13 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 	jsval rval;
 	struct session *ses = va_arg(ap, struct session *);
 	JSObject *jsobj = data;
-	JSFunction *func = JS_ValueToFunction(smjs_ctx, OBJECT_TO_JSVAL(jsobj));
 
 	evhook_use_params(ses);
 
-	assert(func);
-
 	smjs_ses = ses;
 
-	JS_CallFunction(smjs_ctx, NULL, func, 0, NULL, &rval);
+	JS_CallFunctionValue(smjs_ctx, NULL, OBJECT_TO_JSVAL(jsobj),
+			     0, NULL, &rval);
 
 	smjs_ses = NULL;
 

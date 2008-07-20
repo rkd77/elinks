@@ -211,7 +211,9 @@ js_window_alert(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct view_state *vs = win->vs;
 	unsigned char *string;
 
-	see_check_class(interp, thisobj, &js_window_object_class);
+	/* Do not check thisobj->objectclass.  ELinks sets this
+	 * function as a property of both the window object and the
+	 * global object, so thisobj may validly refer to either.  */
 
 	SEE_SET_BOOLEAN(res, 1);
 	if (argc < 1)
@@ -240,7 +242,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	struct document_view *doc_view = vs->doc_view;
 	struct session *ses = doc_view->session;
 	unsigned char *frame = "";
-	unsigned char *url;
+	unsigned char *url, *url2;
 	struct uri *uri;
 	struct SEE_value url_value;
 #if 0
@@ -248,7 +250,9 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	static int ratelimit_count;
 #endif
 
-	see_check_class(interp, thisobj, &js_window_object_class);
+	/* Do not check thisobj->objectclass.  ELinks sets this
+	 * function as a property of both the window object and the
+	 * global object, so thisobj may validly refer to either.  */
 
 	SEE_SET_OBJECT(res, (struct SEE_object *)win);
 	if (get_opt_bool("ecmascript.block_window_opening", ses)) {
@@ -291,10 +295,11 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 	}
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	url = join_urls(doc_view->document->uri, url);
-	if (!url) return;
-	uri = get_uri(url, 0);
+	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
+	if (!url2) return;
+	uri = get_uri(url2, 0);
+	mem_free(url2);
 	if (!uri) return;
 
 	if (*frame && strcasecmp(frame, "_blank")) {
@@ -341,7 +346,9 @@ js_setTimeout(struct SEE_interpreter *interp, struct SEE_object *self,
 	unsigned char *code;
 	int timeout;
 
-	see_check_class(interp, thisobj, &js_window_object_class);
+	/* Do not check thisobj->objectclass.  ELinks sets this
+	 * function as a property of both the window object and the
+	 * global object, so thisobj may validly refer to either.  */
 
 	if (argc != 2) return;
 	ei = ((struct global_object *)interp)->interpreter;

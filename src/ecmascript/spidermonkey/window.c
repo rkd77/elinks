@@ -342,7 +342,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct document_view *doc_view;
 	struct session *ses;
 	unsigned char *frame = "";
-	unsigned char *url;
+	unsigned char *url, *url2;
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -387,10 +387,13 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	url = join_urls(doc_view->document->uri, url);
-	if (!url) return JS_TRUE;
-	uri = get_uri(url, 0);
+	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
+	if (!url2) {
+		return JS_TRUE;
+	}
+	uri = get_uri(url2, 0);
+	mem_free(url2);
 	if (!uri) return JS_TRUE;
 
 

@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "config/home.h"
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
 #include "scripting/scripting.h"
@@ -68,8 +68,6 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
-static JSRuntime *smjs_rt;
-
 static int
 smjs_do_file(unsigned char *path)
 {
@@ -127,13 +125,11 @@ smjs_load_hooks(void)
 void
 init_smjs(struct module *module)
 {
-	smjs_rt = JS_NewRuntime(1L * 1024L * 1024L);
-	if (!smjs_rt) return;
+	if (!spidermonkey_runtime_addref()) return;
 
-	smjs_ctx = JS_NewContext(smjs_rt, 8192);
+	smjs_ctx = JS_NewContext(spidermonkey_runtime, 8192);
 	if (!smjs_ctx) {
-		JS_DestroyRuntime(smjs_rt);
-		smjs_rt = NULL;
+		spidermonkey_runtime_release();
 		return;
 	}
 
@@ -154,9 +150,15 @@ cleanup_smjs(struct module *module)
 {
 	if (!smjs_ctx) return;
 
-	/* These calls also finalize all JSObjects that have been
-	 * allocated in the JSRuntime, so cache_entry_finalize gets
-	 * called and resets each cache_entry.jsobject = NULL.  */
+	/* JS_DestroyContext also collects garbage in the JSRuntime.
+	 * Because the JSObjects created in smjs_ctx have not been
+	 * made visible to any other JSContext, and the garbage
+	 * collector of SpiderMonkey is precise, SpiderMonkey
+	 * finalizes all of those objects, so cache_entry_finalize
+	 * gets called and resets each cache_entry.jsobject = NULL.
+	 * If the garbage collector were conservative, ELinks would
+	 * have to call smjs_detach_cache_entry_object on each cache
+	 * entry before it releases the runtime here.  */
 	JS_DestroyContext(smjs_ctx);
-	JS_DestroyRuntime(smjs_rt);
+	spidermonkey_runtime_release();
 }

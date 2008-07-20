@@ -45,14 +45,20 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 void
 destroy_vs(struct view_state *vs, int blast_ecmascript)
 {
-	int i;
+	struct form_view *fv, *next;
 
-	for (i = 0; i < vs->form_info_len; i++)
-		mem_free_if(vs->form_info[i].value);
+	/* form_state contains a pointer to form_view, so it's safest
+	 * to delete the form_state first.  */
+	for (; vs->form_info_len > 0; vs->form_info_len--)
+		done_form_state(&vs->form_info[vs->form_info_len - 1]);
+	mem_free_set(&vs->form_info, NULL);
 
+	foreachsafe (fv, next, vs->forms) {
+		del_from_list(fv);
+		done_form_view(fv);
+	}
+	
 	if (vs->uri) done_uri(vs->uri);
-	mem_free_if(vs->form_info);
-	free_list(vs->forms);
 #ifdef CONFIG_ECMASCRIPT
 	if (blast_ecmascript && vs->ecmascript)
 		ecmascript_put_interpreter(vs->ecmascript);
@@ -78,6 +84,12 @@ copy_vs(struct view_state *dst, struct view_state *src)
 	/* If we ever get to render this vs, give it an interpreter. */
 	dst->ecmascript_fragile = 1;
 #endif
+
+	/* destroy_vs(vs) does mem_free_if(vs->form_info), so each
+	 * view_state must have its own form_info.  Normally we make a
+	 * copy below, but not if src->form_info_len is 0, which it
+	 * can be even if src->form_info is not NULL.  */
+	dst->form_info = NULL;
 
 	/* Clean as a baby. */
 	dst->doc_view = NULL;
@@ -108,6 +120,9 @@ copy_vs(struct view_state *dst, struct view_state *src)
 				struct form_state *srcfs = &src->form_info[i];
 				struct form_state *dstfs = &dst->form_info[i];
 
+#ifdef CONFIG_ECMASCRIPT
+				dstfs->ecmascript_obj = NULL;
+#endif
 				if (srcfs->value)
 					dstfs->value = stracpy(srcfs->value);
 				/* XXX: This makes it O(nm). */

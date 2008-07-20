@@ -113,6 +113,9 @@ struct form_view *find_form_view_in_vs(struct view_state *vs, int form_num);
 struct form_view *find_form_view(struct document_view *doc_view, struct form *form);
 struct form *find_form_by_form_view(struct document *document, struct form_view *fv);
 
+void done_form_state(struct form_state *);
+void done_form_view(struct form_view *);
+
 enum frame_event_status field_op(struct session *ses, struct document_view *doc_view, struct link *link, struct term_event *ev);
 
 void draw_form_entry(struct terminal *term, struct document_view *doc_view, struct link *link);

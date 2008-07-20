@@ -262,6 +262,7 @@ get_range(struct document *document, int y, int height, int l,
 	return 0;
 }
 
+#ifdef HAVE_REGEX_H
 /** Returns a string @c doc that is a copy of the text in the search
  * nodes from @a s1 to (@a s1 + @a doclen - 1) with the space at the
  * end of each line converted to a new-line character (LF). */
@@ -293,7 +294,6 @@ get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 	return doc;
 }
 
-#ifdef HAVE_REGEX_H
 struct regex_match_context {
 	struct search *s1;
 	struct search *s2;
@@ -1579,14 +1579,17 @@ search_typeahead(struct session *ses, struct document_view *doc_view,
  * a nice cleanup target ;-). --pasky */
 
 enum search_option {
+#ifdef HAVE_REGEX_H
 	SEARCH_OPT_REGEX,
+#endif
 	SEARCH_OPT_CASE,
-
 	SEARCH_OPTIONS,
 };
 
 static struct option_resolver resolvers[] = {
+#ifdef HAVE_REGEX_H
 	{ SEARCH_OPT_REGEX,	"regex" },
+#endif
 	{ SEARCH_OPT_CASE,	"case" },
 };
 
@@ -1651,7 +1654,11 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 			       hop->values, SEARCH_OPTIONS);
 	hop->data = data;
 
+#ifdef HAVE_REGEX_H
 #define SEARCH_WIDGETS_COUNT 8
+#else
+#define SEARCH_WIDGETS_COUNT 5
+#endif
 	dlg = calloc_dialog(SEARCH_WIDGETS_COUNT, MAX_STR_LEN);
 	if (!dlg) {
 		mem_free(hop);
@@ -1671,9 +1678,11 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	field = get_dialog_offset(dlg, SEARCH_WIDGETS_COUNT);
 	add_dlg_field(dlg, text, 0, 0, NULL, MAX_STR_LEN, field, history);
 
+#ifdef HAVE_REGEX_H
 	add_dlg_radio(dlg, _("Normal search", term), 1, 0, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Regexp search", term), 1, 1, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Extended regexp search", term), 1, 2, &hop->values[SEARCH_OPT_REGEX].number);
+#endif
 	add_dlg_radio(dlg, _("Case sensitive", term), 2, 1, &hop->values[SEARCH_OPT_CASE].number);
 	add_dlg_radio(dlg, _("Case insensitive", term), 2, 0, &hop->values[SEARCH_OPT_CASE].number);
 

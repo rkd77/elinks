@@ -214,6 +214,33 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 	return result;
 }
 
+void
+ecmascript_detach_form_view(struct form_view *fv)
+{
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_detach_form_view(fv);
+#else
+	spidermonkey_detach_form_view(fv);
+#endif
+}
+
+void ecmascript_detach_form_state(struct form_state *fs)
+{
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_detach_form_state(fs);
+#else
+	spidermonkey_detach_form_state(fs);
+#endif
+}
+
+void ecmascript_moved_form_state(struct form_state *fs)
+{
+#ifdef CONFIG_ECMASCRIPT_SEE
+	see_moved_form_state(fs);
+#else
+	spidermonkey_moved_form_state(fs);
+#endif
+}
 
 void
 ecmascript_reset_state(struct view_state *vs)
@@ -221,14 +248,18 @@ ecmascript_reset_state(struct view_state *vs)
 	struct form_view *fv;
 	int i;
 
+	/* Normally, if vs->ecmascript == NULL, the associated
+	 * ecmascript_obj pointers are also NULL.  However, they might
+	 * be non-NULL if the ECMAScript objects have been lazily
+	 * created because of scripts running in sibling HTML frames.  */
+	foreach (fv, vs->forms)
+		ecmascript_detach_form_view(fv);
+	for (i = 0; i < vs->form_info_len; i++)
+		ecmascript_detach_form_state(&vs->form_info[i]);
+
 	vs->ecmascript_fragile = 0;
 	if (vs->ecmascript)
 		ecmascript_put_interpreter(vs->ecmascript);
-
-	foreach (fv, vs->forms)
-		fv->ecmascript_obj = NULL;
-	for (i = 0; i < vs->form_info_len; i++)
-		vs->form_info[i].ecmascript_obj = NULL;
 
 	vs->ecmascript = ecmascript_get_interpreter(vs);
 	if (!vs->ecmascript)

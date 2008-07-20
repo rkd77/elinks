@@ -1408,6 +1408,25 @@ AC_SUBST(LIBDIR)
 EL_LOG_CONFIG(CONFDIR, [System configuration directory], [])
 EL_LOG_CONFIG(LOCALEDIR, [Locale catalogs directory], [])
 
+
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stddef.h>
+]], [[#if !defined(__TINYC__) || !defined(alloca)
+	#error not tcc
+	#endif ]])],[cf_result=yes],[cf_result=no])
+
+if test "$cf_result" = "yes"; then
+	AC_DEFINE([HAVE_ALLOCA])
+	AC_DEFINE([_ALLOCA_H], [1], [Define as 1 if you are using Tiny C Compiler
+		with the GNU C Library,	and <alloca.h> of glibc would otherwise
+		override the alloca macro defined in <stddef.h> of TCC.
+		If <alloca.h> of glibc sees the _ALLOCA_H macro, it assumes
+		it has already been included, and does not redefine alloca.
+		This might not work in future glibc versions though, because
+		the names of the #include guard macros are not documented.
+		The incompatibility has been reported to the tinycc-devel
+		mailing list on 2008-07-14.  If a future version of TCC provides
+		an <alloca.h> of its own, this hack won't be needed.])
+fi
 # ===================================================================
 # A little fine tuning of gcc specific options (continued)
 # ===================================================================

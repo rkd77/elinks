@@ -20,8 +20,7 @@ Note that if you don't use dietlibc, you definitively want to add `-Os` or
 `-O2` to `CFLAGS`; GCC 2.95 does not know `-Os`, and some say `-O2` gives
 smaller executables even for GCC 3.x.
 
-[NOTE]
-.Warning
+[TIP]
 ===============================================================================
 If you use these `CFLAGS` on Cygwin and you get unresolved symbols (`htons` and
 suite in particular), try removing `-fno-inline` parameter.
@@ -38,8 +37,8 @@ $ ./configure --disable-ipv6 --disable-backtrace --disable-nls \
 
 You can disable bookmarks, globhist and more, too, if you want to.
 
-[NOTE]
-.Notes
+[TIP]
+.Other configure options that can reduce the size
 ===============================================================================
  - \--disable-backtrace disables internal backtrace code.
  - \--disable-nls disables i18n support.

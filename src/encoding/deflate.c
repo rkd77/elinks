@@ -30,6 +30,7 @@ struct deflate_enc_data {
 	int fdread;
 
 	unsigned int last_read:1;
+	unsigned int after_first_read:1;
 
 	/* A buffer for data that has been read from the file but not
 	 * yet decompressed.  z_stream.next_in and z_stream.avail_in
@@ -59,6 +60,7 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	copy_struct(&data->deflate_stream, &null_z_stream);
 	data->fdread = fd;
 	data->last_read = 0;
+	data->after_first_read = 0;
 
 	err = inflateInit2(&data->deflate_stream, window_size);
 	if (err != Z_OK) {
@@ -70,12 +72,14 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	return 0;
 }
 
+#if 0
 static int
 deflate_raw_open(struct stream_encoded *stream, int fd)
 {
 	/* raw DEFLATE with neither zlib nor gzip header */
 	return deflate_open(-MAX_WBITS, stream, fd);
 }
+#endif
 
 static int
 deflate_gzip_open(struct stream_encoded *stream, int fd)
@@ -89,6 +93,7 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
 	int err = 0;
+	int l = 0;
 
 	if (!data) return -1;
 
@@ -101,7 +106,7 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 	do {
 		if (data->deflate_stream.avail_in == 0) {
-			int l = safe_read(data->fdread, data->buf,
+			l = safe_read(data->fdread, data->buf,
 			                  ELINKS_DEFLATE_BUFFER_LENGTH);
 
 			if (l == -1) {
@@ -117,7 +122,39 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 			data->deflate_stream.next_in = data->buf;
 			data->deflate_stream.avail_in = l;
 		}
+restart:
 		err = inflate(&data->deflate_stream, Z_SYNC_FLUSH);
+		if (err == Z_DATA_ERROR && !data->after_first_read) {
+			/* RFC 2616 requires a zlib header for
+			 * "Content-Encoding: deflate", but some HTTP
+			 * servers (Microsoft-IIS/6.0 at blogs.msdn.com,
+			 * and reportedly Apache with mod_deflate) omit
+			 * that, causing Z_DATA_ERROR.  Clarification of
+			 * the term "deflate" has been requested for the
+			 * next version of HTTP:
+			 * http://www3.tools.ietf.org/wg/httpbis/trac/ticket/73
+			 *
+			 * Try to recover by telling zlib not to expect
+			 * the header.  If the error does not happen on
+			 * the first inflate() call, then it is too late
+			 * to recover because ELinks may already have
+			 * discarded part of the input data.
+			 *
+			 * TODO: This fallback to raw DEFLATE is currently
+			 * enabled for "Content-Encoding: gzip" too.  It
+			 * might be better to fall back to no compression
+			 * at all, because Apache can send that header for
+			 * uncompressed *.gz.md5 files.  */
+			data->after_first_read = 1;
+			inflateEnd(&data->deflate_stream);
+			data->deflate_stream.avail_out = len;
+			data->deflate_stream.next_out = buf;
+			data->deflate_stream.next_in = data->buf;
+			data->deflate_stream.avail_in = l;
+			err = inflateInit2(&data->deflate_stream, -MAX_WBITS);
+			if (err == Z_OK) goto restart;
+		}
+		data->after_first_read = 1;
 		if (err == Z_STREAM_END) {
 			data->last_read = 1;
 			break;
@@ -211,7 +248,7 @@ static const unsigned char *const deflate_extensions[] = { NULL };
 const struct decoding_backend deflate_decoding_backend = {
 	"deflate",
 	deflate_extensions,
-	deflate_raw_open,
+	deflate_gzip_open,
 	deflate_read,
 	deflate_raw_decode_buffer,
 	deflate_close,

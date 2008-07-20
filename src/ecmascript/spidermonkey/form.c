@@ -22,6 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/window.h"
@@ -56,28 +57,15 @@ static const JSClass form_class;	     /* defined below */
 
 static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-
-/* Indexes of reserved slots in instances of @input_class.  */
-enum {
-	/* The slot contains an integer used as an index to
-	 * view_state.form_info[].  This allows ELinks to reallocate
-	 * form_info[] without keeping track of SMJS objects that
-	 * refer to its elements.  We do not use JSCLASS_HAS_PRIVATE
-	 * for that because SMJS expects the private data to be an
-	 * aligned pointer.  */
-	JSRS_INPUT_FSINDEX,
-
-	/* Number of reserved slots.  */
-	JSRS_INPUT_COUNT
-};
+static void input_finalize(JSContext *ctx, JSObject *obj);
 
 /* Each @input_class object must have a @form_class parent.  */
 static const JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_RESERVED_SLOTS(JSRS_INPUT_COUNT),
+	JSCLASS_HAS_PRIVATE,	/* struct form_state *, or NULL if detached */
 	JS_PropertyStub, JS_PropertyStub,
 	input_get_property, input_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, input_finalize
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -146,23 +134,18 @@ static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
 
 
 static struct form_state *
-input_get_form_state(JSContext *ctx, JSObject *obj, struct view_state *vs)
+input_get_form_state(JSContext *ctx, JSObject *jsinput)
 {
-	jsval val;
-	int n;
-	JSBool ok;
+	struct form_state *fs = JS_GetInstancePrivate(ctx, jsinput,
+						      (JSClass *) &input_class,
+						      NULL);
 
-	ok = JS_GetReservedSlot(ctx, obj, JSRS_INPUT_FSINDEX, &val);
-	assert(ok);
-	assert(JSVAL_IS_INT(val));
+	if (!fs) return NULL;	/* detached */
+
+	assert(fs->ecmascript_obj == jsinput);
 	if_assert_failed return NULL;
 
-	n = JSVAL_TO_INT(val);
-	assert(n >= 0);
-	assert(n < vs->form_info_len);
-	if_assert_failed return NULL;
-
-	return &vs->form_info[n];
+	return fs;
 }
 
 /* @input_class.getProperty */
@@ -199,7 +182,8 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj, vs);
+	fs = input_get_form_state(ctx, obj);
+	if (!fs) return JS_FALSE; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -350,7 +334,8 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj, vs);
+	fs = input_get_form_state(ctx, obj);
+	if (!fs) return JS_FALSE; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -475,7 +460,8 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = input_get_form_state(ctx, obj, vs);
+	fs = input_get_form_state(ctx, obj);
+	if (!fs) return JS_FALSE; /* detached */
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -528,7 +514,8 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = input_get_form_state(ctx, obj, vs);
+	fs = input_get_form_state(ctx, obj);
+	if (!fs) return JS_FALSE; /* detached */
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -555,26 +542,99 @@ input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 }
 
 static JSObject *
-get_input_object(JSContext *ctx, JSObject *jsform, long number)
+get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 {
-#if 0
-	if (fs->ecmascript_obj)
-		return fs->ecmascript_obj;
-#endif
+	JSObject *jsinput = fs->ecmascript_obj;
+
+	if (jsinput) {
+		/* This assumes JS_GetInstancePrivate cannot GC.  */
+		assert(JS_GetInstancePrivate(ctx, jsinput,
+					     (JSClass *) &input_class, NULL)
+		       == fs);
+		if_assert_failed return NULL;
+
+		return jsinput;
+	}
+
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	JSObject *jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
-
+	jsinput = JS_NewObject(ctx, (JSClass *) &input_class, NULL, jsform);
+	if (!jsinput)
+		return NULL;
 	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
 	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
-	JS_SetReservedSlot(ctx, jsinput, JSRS_INPUT_FSINDEX, INT_TO_JSVAL(number));
-	return jsinput;;
+
+	if (!JS_SetPrivate(ctx, jsinput, fs)) /* to @input_class */
+		return NULL;
+	fs->ecmascript_obj = jsinput;
+	return jsinput;
+}
+
+static void
+input_finalize(JSContext *ctx, JSObject *jsinput)
+{
+	struct form_state *fs = JS_GetInstancePrivate(ctx, jsinput,
+						      (JSClass *) &input_class,
+						      NULL);
+
+	if (fs) {
+		/* If this assertion fails, leave fs->ecmascript_obj
+		 * unchanged, because it may point to a different
+		 * JSObject whose private pointer will later have to
+		 * be updated to avoid crashes.  */
+		assert(fs->ecmascript_obj == jsinput);
+		if_assert_failed return;
+
+		fs->ecmascript_obj = NULL;
+		/* No need to JS_SetPrivate, because jsinput is being
+		 * destroyed.  */
+	}
+}
+
+void
+spidermonkey_detach_form_state(struct form_state *fs)
+{
+	JSObject *jsinput = fs->ecmascript_obj;
+
+	if (jsinput) {
+		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
+		 * cannot GC.  */
+
+		/* If this assertion fails, it is not clear whether
+		 * the private pointer of jsinput should be reset;
+		 * crashes seem possible either way.  Resetting it is
+		 * easiest.  */
+		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
+					     jsinput,
+					     (JSClass *) &input_class, NULL)
+		       == fs);
+		if_assert_failed {}
+
+		JS_SetPrivate(spidermonkey_empty_context, jsinput, NULL);
+		fs->ecmascript_obj = NULL;
+	}
+}
+
+void
+spidermonkey_moved_form_state(struct form_state *fs)
+{
+	JSObject *jsinput = fs->ecmascript_obj;
+
+	if (jsinput) {
+		/* This assumes JS_SetPrivate cannot GC.  If it could,
+		 * then the GC might call input_finalize for some
+		 * other object whose struct form_state has also been
+		 * reallocated, and an assertion would fail in
+		 * input_finalize.  */
+		JS_SetPrivate(spidermonkey_empty_context, jsinput, fs);
+	}
 }
 
 
 static JSObject *
-get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, int number)
+get_form_control_object(JSContext *ctx, JSObject *jsform,
+			enum form_type type, struct form_state *fs)
 {
 	switch (type) {
 		case FC_TEXT:
@@ -588,7 +648,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, i
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return get_input_object(ctx, jsform, (long)number);
+			return get_input_object(ctx, jsform, fs);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -601,7 +661,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform, enum form_type type, i
 }
 
 
-
+static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv);
 static JSBool form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
 /* Each @form_elements_class object must have a @form_class parent.  */
@@ -666,8 +726,8 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetInstancePrivate(ctx, parent_form,
-					  (JSClass *) &form_class, NULL);
+	form_view = form_get_form_view(ctx, parent_form, NULL);
+	if (!form_view) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
 	if (JSVAL_IS_STRING(id)) {
@@ -724,8 +784,8 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetInstancePrivate(ctx, parent_form,
-					  (JSClass *) &form_class, NULL);
+	form_view = form_get_form_view(ctx, parent_form, NULL);
+	if (!form_view) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
@@ -741,7 +801,7 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
 
 				if (fcobj)
 					object_to_jsval(ctx, rval, fcobj);
@@ -783,8 +843,8 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetInstancePrivate(ctx, parent_form,
-					  (JSClass *) &form_class, NULL);
+	form_view = form_get_form_view(ctx, parent_form, NULL);
+	if (!form_view) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
 	if (argc != 1)
@@ -801,7 +861,7 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fc->g_ctrl_num);
+				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
 
 				if (fcobj)
 					object_to_jsval(ctx, rval, fcobj);
@@ -817,14 +877,15 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 
 static JSBool form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static void form_finalize(JSContext *ctx, JSObject *obj);
 
 /* Each @form_class object must have a @document_class parent.  */
 static const JSClass form_class = {
 	"form",
-	JSCLASS_HAS_PRIVATE,	/* struct form_view * */
+	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
 	JS_PropertyStub, JS_PropertyStub,
 	form_get_property, form_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, form_finalize
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -861,6 +922,21 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ NULL }
 };
 
+static struct form_view *
+form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
+{
+	struct form_view *fv = JS_GetInstancePrivate(ctx, jsform,
+						     (JSClass *) &form_class,
+						     argv);
+
+	if (!fv) return NULL;	/* detached */
+
+	assert(fv->ecmascript_obj == jsform);
+	if_assert_failed return NULL;
+	
+	return fv;
+}
+
 /* @form_class.getProperty */
 static JSBool
 form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -888,7 +964,8 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
+	fv = form_get_form_view(ctx, obj, NULL);
+	if (!fv) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -908,7 +985,7 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 			undef_to_jsval(ctx, vp);
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
-				fcobj = get_form_control_object(ctx, obj, fc->type, fc->g_ctrl_num);
+				fcobj = get_form_control_object(ctx, obj, fc->type, fs);
 				if (fcobj)
 					object_to_jsval(ctx, vp, fcobj);
 			}
@@ -1022,7 +1099,8 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, NULL);
+	fv = form_get_form_view(ctx, obj, NULL);
+	if (!fv) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1102,7 +1180,8 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
+	fv = form_get_form_view(ctx, obj, argv);
+	if (!fv) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1139,7 +1218,8 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
-	fv = JS_GetInstancePrivate(ctx, obj, (JSClass *) &form_class, argv);
+	fv = form_get_form_view(ctx, obj, argv);
+	if (!fv) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -1153,21 +1233,79 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 JSObject *
 get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 {
-#if 0
-	if (fv->ecmascript_obj)
-		return fv->ecmascript_obj;
-#endif
+	JSObject *jsform = fv->ecmascript_obj;
+
+	if (jsform) {
+		/* This assumes JS_GetInstancePrivate cannot GC.  */
+		assert(JS_GetInstancePrivate(ctx, jsform,
+					     (JSClass *) &form_class, NULL)
+		       == fv);
+		if_assert_failed return NULL;
+
+		return jsform;
+	}
+
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	JSObject *jsform = JS_NewObject(ctx, (JSClass *) &form_class, NULL, jsdoc);
-
+	jsform = JS_NewObject(ctx, (JSClass *) &form_class, NULL, jsdoc);
+	if (jsform == NULL)
+		return NULL;
 	JS_DefineProperties(ctx, jsform, (JSPropertySpec *) form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
-	JS_SetPrivate(ctx, jsform, fv); /* to @form_class */
+
+	if (!JS_SetPrivate(ctx, jsform, fv)) /* to @form_class */
+		return NULL;
 	fv->ecmascript_obj = jsform;
-	return fv->ecmascript_obj;
+	return jsform;
 }
+
+static void
+form_finalize(JSContext *ctx, JSObject *jsform)
+{
+	struct form_view *fv = JS_GetInstancePrivate(ctx, jsform,
+						     (JSClass *) &form_class,
+						     NULL);
+
+	if (fv) {
+		/* If this assertion fails, leave fv->ecmascript_obj
+		 * unchanged, because it may point to a different
+		 * JSObject whose private pointer will later have to
+		 * be updated to avoid crashes.  */
+		assert(fv->ecmascript_obj == jsform);
+		if_assert_failed return;
+
+		fv->ecmascript_obj = NULL;
+		/* No need to JS_SetPrivate, because the object is
+		 * being destroyed.  */
+	}
+}
+
+void
+spidermonkey_detach_form_view(struct form_view *fv)
+{
+	JSObject *jsform = fv->ecmascript_obj;
+
+	if (jsform) {
+		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
+		 * cannot GC.  */
+
+		/* If this assertion fails, it is not clear whether
+		 * the private pointer of jsform should be reset;
+		 * crashes seem possible either way.  Resetting it is
+		 * easiest.  */
+		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
+					     jsform,
+					     (JSClass *) &form_class, NULL)
+		       == fv);
+		if_assert_failed {}
+
+		JS_SetPrivate(spidermonkey_empty_context, jsform, NULL);
+		fv->ecmascript_obj = NULL;
+	}
+}
+
+
 static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
 
 /* Each @forms_class object must have a @document_class parent.  */

@@ -131,7 +131,7 @@ yet if it does not work in the Mozilla browsers neither ;-).
 Now, I would still like NJS or a new JS engine from scratch...
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-...and you don't fear some coding? That's fine then! ELinks is in no way tied
+\...and you don't fear some coding? That's fine then! ELinks is in no way tied
 to SpiderMonkey, in fact the ECMAScript support was carefully implemented so
 that there are no SpiderMonkey references outside of
 `src/ecmascript/spidermonkey.*`. If you want to implement an alternative

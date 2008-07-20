@@ -6,7 +6,7 @@
 
 #include "elinks.h"
 
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 #include "network/connection.h"
 #include "protocol/uri.h"
 #include "scripting/smjs/core.h"
@@ -17,7 +17,13 @@
 
 struct smjs_load_uri_hop {
 	struct session *ses;
-	JSFunction *callback;
+
+	/* SpiderMonkey versions earlier than 1.8 cannot properly call
+	 * a closure if given just a JSFunction pointer.  They need a
+	 * jsval that points to the corresponding JSObject.  Besides,
+	 * JS_AddNamedRoot is not documented to support JSFunction
+	 * pointers.  */
+	jsval callback;
 };
 
 static void
@@ -39,20 +45,18 @@ smjs_loading_callback(struct download *download, void *data)
 	 * the script is using it.  */
 	object_lock(download->cached);
 
-	assert(hop->callback);
-
 	smjs_ses = hop->ses;
 
 	cache_entry_object = smjs_get_cache_entry_object(download->cached);
 	if (!cache_entry_object) goto end;
 
 	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
-
-	JS_CallFunction(smjs_ctx, NULL, hop->callback, 1, args, &rval);
+	JS_CallFunctionValue(smjs_ctx, NULL, hop->callback, 1, args, &rval);
 
 end:
 	if (download->cached)
 		object_unlock(download->cached);
+	JS_RemoveRoot(smjs_ctx, &hop->callback);
 	mem_free(download->data);
 	mem_free(download);
 
@@ -85,13 +89,20 @@ smjs_load_uri(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 
 	hop = mem_alloc(sizeof(*hop));
 	if (!hop) {
-		done_uri(uri);
 		mem_free(download);
+		done_uri(uri);
 		return JS_FALSE;
 	}
 
-	hop->callback = JS_ValueToFunction(smjs_ctx, argv[1]);
+	hop->callback = argv[1];
 	hop->ses = smjs_ses;
+	if (!JS_AddNamedRoot(smjs_ctx, &hop->callback,
+			     "smjs_load_uri_hop.callback")) {
+		mem_free(hop);
+		mem_free(download);
+		done_uri(uri);
+		return JS_FALSE;
+	}
 
 	download->data = hop;
 	download->callback = (download_callback_T *) smjs_loading_callback;

@@ -22,8 +22,6 @@ Miscellaneous:
   document.css.media.
 * bug 638: Propagate the existence of $DISPLAY from slave terminals to
   mailcap test commands.
-* bug 698: Attach controls to the intended form even if it is
-  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * bug 963: New option document.css.ignore_display_none.
 * bug 977: Fixed crash when opening in new tab a non link with onclick
   attribute.
@@ -64,14 +62,38 @@ ELinks 0.12pre1.GIT now:
 To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch
 generally also includes the bug fixes made in ELinks 0.11.4.GIT.
 
+* bug 954, enhancement 952: Keep track of ECMAScript form and input
+  objects instead of constructing new ones on every access.  When the
+  corresponding ELinks internal objects are destroyed, detach the
+  ECMAScript objects from them, to prevent crashes.  (Bug 954 was
+  first added in ELinks 0.11.4, and the bug 620 fix in ELinks 0.12pre1
+  made crashes more likely.)
+* critical bug 1029 in user SMJS: Prefer JS_CallFunctionValue over
+  JS_CallFunction, which can crash if given a closure.
+* critical bug 1031: Use the same JSRuntime for both user SMJS and
+  scripts on web pages, to work around SpiderMonkey bug 378918.
+* bug 698: Attach controls to the intended form even if it is
+  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
+* critical: Fix crash after a tab was opened during reload.  This was
+  triggered by the bug 620 fix in ELinks 0.12pre1.
+* major bug 1026 in user SMJS: Protect the callback of elinks.load_uri
+  from the garbage collector.  The elinks.load_uri method was added in
+  ELinks 0.12pre1.
 * bug 955: Reset buttons no longer run FORM/@onsubmit, and
   ``harmless'' buttons no longer submit the form.  ELinks 0.12pre1
   was the first release that had these bugs.
+* bug 1033: Fix memory leak in ECMAScript window.open.  ELinks 0.12pre1
+  was the first release that had this bug.
+* bug 1034: ``Content-Encoding: deflate'' allows a zlib header as
+  specified in RFC 2616.
+* Global ECMAScript functions alert, open, and setTimeout again work
+  with SEE.  ELinks 0.12pre1 was the first release that supported SEE
+  at all.
 
 ELinks 0.12pre1:
 ----------------
@@ -237,6 +259,8 @@ To be released as 0.11.5.
 
 * critical bug 1027 in user SMJS: make elinks.keymaps treat null and
   "none" as equivalent actions, avoiding a segfault
+* critical bug 1030: an assertion used to fail in the search dialog
+  on systems that lack a usable <regex.h>
 * major bug 503: various fixes in parsing and updating of elinks.conf
 * build bug 1021: fixed uninitialized variable in http_got_header
 

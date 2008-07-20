@@ -8,7 +8,7 @@
 
 #include "bfu/msgbox.h"
 #include "config/home.h"
-#include "ecmascript/spidermonkey/util.h"
+#include "ecmascript/spidermonkey-shared.h"
 #include "intl/gettext/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
@@ -69,7 +69,7 @@ elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-/* function "alert" in the object returned by smjs_get_elinks_object() */
+/* @elinks_funcs{"alert"} */
 static JSBool
 elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -90,7 +90,7 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	return JS_TRUE;
 }
 
-/* function "execute" in the object returned by smjs_get_elinks_object() */
+/* @elinks_funcs{"execute"} */
 static JSBool
 elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -117,6 +117,12 @@ static const JSClass elinks_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
+static const spidermonkeyFunctionSpec elinks_funcs[] = {
+	{ "alert",	elinks_alert,		1 },
+	{ "execute",	elinks_execute,		1 },
+	{ NULL }
+};
+
 static JSObject *
 smjs_get_elinks_object(void)
 {
@@ -125,24 +131,9 @@ smjs_get_elinks_object(void)
 	assert(smjs_ctx);
 	assert(smjs_global_object);
 
-	jsobj = JS_InitClass(smjs_ctx, smjs_global_object, NULL,
-	                     (JSClass *) &elinks_class, NULL, 0, NULL,
-	                     (JSFunctionSpec *) NULL, NULL, NULL);
-
-	/* Bug 1016: In SpiderMonkey 1.7 bundled with XULRunner 1.8,
-	 * jsapi.h defines JSFunctionSpec in different ways depending
-	 * on whether MOZILLA_1_8_BRANCH is defined, and there is no
-	 * obvious way for ELinks to check whether MOZILLA_1_8_BRANCH
-	 * was defined when the library was built.  Avoid the unstable
-	 * JSFunctionSpec definitions and instead use JS_DefineFunction
-	 * directly.
-	 *
-	 * In elinks/src/ecmascript/spidermonkey/, there is an
-	 * ELinks-specific replacement for JSFunctionSpec; however, to
-	 * keep the modules independent, elinks/src/scripting/smjs/
-	 * does not use that.  */
-	JS_DefineFunction(smjs_ctx, jsobj, "alert", elinks_alert, 1, 0);
-	JS_DefineFunction(smjs_ctx, jsobj, "execute", elinks_execute, 1, 0);
+	jsobj = spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
+				       (JSClass *) &elinks_class, NULL, 0, NULL,
+				       elinks_funcs, NULL, NULL);
 
 	JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
 	                  elinks_get_location, elinks_set_location,
@@ -176,8 +167,6 @@ JSBool
 smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
                                  jsval *rval)
 {
-	JSFunction *func;
-
 	assert(smjs_ctx);
 	assert(smjs_elinks_object);
 	assert(rval);
@@ -190,9 +179,6 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 	if (JSVAL_VOID == *rval)
 		return JS_FALSE;
 
-	func = JS_ValueToFunction(smjs_ctx, *rval);
-	if (!func) return JS_FALSE;
-
-	return JS_CallFunction(smjs_ctx, smjs_elinks_object,
-		               func, argc, argv, rval);
+	return JS_CallFunctionValue(smjs_ctx, smjs_elinks_object,
+				    *rval, argc, argv, rval);
 }
