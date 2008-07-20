@@ -93,7 +93,7 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
 	int err = 0;
-	int l;
+	int l = 0;
 
 	if (!data) return -1;
 
