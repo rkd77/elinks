@@ -36,6 +36,9 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
   was the first release that had these bugs.
 * bug 1033: Fix memory leak in ECMAScript window.open.  ELinks 0.12pre1
   was the first release that had this bug.
+* Global ECMAScript functions alert, open, and setTimeout again work
+  with SEE.  ELinks 0.12pre1 was the first release that supported SEE
+  at all.
 
 ELinks 0.12pre1:
 ----------------
