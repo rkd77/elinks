@@ -125,6 +125,26 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 restart:
 		err = inflate(&data->deflate_stream, Z_SYNC_FLUSH);
 		if (err == Z_DATA_ERROR && !data->after_first_read) {
+			/* RFC 2616 requires a zlib header for
+			 * "Content-Encoding: deflate", but some HTTP
+			 * servers (Microsoft-IIS/6.0 at blogs.msdn.com,
+			 * and reportedly Apache with mod_deflate) omit
+			 * that, causing Z_DATA_ERROR.  Clarification of
+			 * the term "deflate" has been requested for the
+			 * next version of HTTP:
+			 * http://www3.tools.ietf.org/wg/httpbis/trac/ticket/73
+			 *
+			 * Try to recover by telling zlib not to expect
+			 * the header.  If the error does not happen on
+			 * the first inflate() call, then it is too late
+			 * to recover because ELinks may already have
+			 * discarded part of the input data.
+			 *
+			 * TODO: This fallback to raw DEFLATE is currently
+			 * enabled for "Content-Encoding: gzip" too.  It
+			 * might be better to fall back to no compression
+			 * at all, because Apache can send that header for
+			 * uncompressed *.gz.md5 files.  */
 			data->after_first_read = 1;
 			inflateEnd(&data->deflate_stream);
 			data->deflate_stream.avail_out = len;
