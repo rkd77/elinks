@@ -66,53 +66,6 @@ static struct option_info ecmascript_options[] = {
 	NULL_OPTION_INFO,
 };
 
-#define NUMBER_OF_URLS_TO_REMEMBER 8
-static struct {
-	unsigned char *url;
-	unsigned char *frame;
-} u[NUMBER_OF_URLS_TO_REMEMBER];
-static int url_index = 0;
-
-int
-ecmascript_check_url(unsigned char *url, unsigned char *frame)
-{
-	int i;
-	/* Because of gradual rendering window.open is called many
-	 * times with the same arguments.
-	 * This workaround remembers NUMBER_OF_URLS_TO_REMEMBER last
-	 * opened URLs and do not let open them again.
-	 */
-
-	for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
-		if (!u[i].url) break;
-		if (!strcmp(u[i].url, url) && !strcmp(u[i].frame, frame)) {
-			mem_free(url);
-			mem_free(frame);
-			return 0;
-		}
-	}
-	mem_free_if(u[url_index].url);
-	mem_free_if(u[url_index].frame);
-	u[url_index].url = url;
-	u[url_index].frame = frame;
-	url_index++;
-	if (url_index >= NUMBER_OF_URLS_TO_REMEMBER) url_index = 0;
-	return 1;
-}
-
-void
-ecmascript_free_urls(struct module *module)
-{
-	int i;
-
-	for (i = 0; i < NUMBER_OF_URLS_TO_REMEMBER; i++) {
-		mem_free_if(u[i].url);
-		mem_free_if(u[i].frame);
-	}
-}
-
-#undef NUMBER_OF_URLS_TO_REMEMBER
-
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
 {
@@ -401,5 +354,5 @@ struct module ecmascript_module = struct_module(
 	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
 	/* init: */		NULL,
-	/* done: */		ecmascript_free_urls
+	/* done: */		NULL
 );
