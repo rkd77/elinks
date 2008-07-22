@@ -377,7 +377,13 @@ draw_formatted(struct session *ses, int rerender)
 void
 refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 {
-	draw_doc(ses, doc_view, 1);
-	if (frames) draw_frames(ses);
+	/* If refresh_view() is being called because the value of a
+	 * form field has changed, @ses might not be in the current
+	 * tab: consider SELECT pop-ups behind which -remote loads
+	 * another tab, or setTimeout in ECMAScript.  */
+	if (ses->tab == get_current_tab(ses->tab->term)) {
+		draw_doc(ses, doc_view, 1);
+		if (frames) draw_frames(ses);
+	}
 	print_screen_status(ses);
 }

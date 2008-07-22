@@ -30,6 +30,10 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 
 * critical: Fix crash after a tab was opened during reload.  This was
   triggered by the bug 620 fix in ELinks 0.12pre1.
+* critical bug 1018: Avoid an assertion failure when selecting a value
+  from a pop-up menu for an input field in a tab that is no longer
+  current, e.g. because another tab was opened with elinks -remote.
+  This bug was first released in ELinks 0.12pre1.
 * major bug 1026 in user SMJS: Protect the callback of elinks.load_uri
   from the garbage collector.  The elinks.load_uri method was added in
   ELinks 0.12pre1.
