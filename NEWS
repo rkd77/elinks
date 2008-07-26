@@ -21,6 +21,8 @@ includes the changes listed under "ELinks 0.11.4.GIT now" below.
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
   scripts on web pages, to work around SpiderMonkey bug 378918.
+* bug 1040: Blacklist servers that don't support TLS.  This reduces
+  SSL errors especially in HTTP POST requests using GnuTLS.
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache
 

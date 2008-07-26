@@ -107,7 +107,7 @@ ssl_want_read(struct socket *socket)
 			break;
 
 		default:
-			socket->no_tls = 1;
+			socket->no_tls = !socket->no_tls;
 			socket->ops->retry(socket, S_SSL_ERROR);
 	}
 }
@@ -189,7 +189,7 @@ ssl_connect(struct socket *socket)
 		default:
 			if (ret != SSL_ERROR_NONE) {
 				/* DBG("sslerr %s", gnutls_strerror(ret)); */
-				socket->no_tls = 1;
+				socket->no_tls = !socket->no_tls;
 			}
 
 			connect_socket(socket, S_SSL_ERROR);

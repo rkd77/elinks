@@ -49,6 +49,7 @@
 #include "network/ssl/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/getifaddrs.h"
+#include "protocol/http/blacklist.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "util/error.h"
@@ -65,6 +66,7 @@ struct connect_info {
 	void *dnsquery;			 /* Pointer to DNS query info. */
 	int port;			 /* Which port to bind to. */
 	int ip_family;			 /* If non-zero, force to IP version. */
+	struct uri *uri;		 /* For updating the blacklist. */
 };
 
 
@@ -104,6 +106,7 @@ init_connection_info(struct uri *uri, struct socket *socket,
 	connect_info->ip_family = uri->ip_family;
 	connect_info->triedno = -1;
 	connect_info->addr = NULL;
+	connect_info->uri = get_uri_reference(uri);
 
 	return connect_info;
 }
@@ -118,6 +121,7 @@ done_connection_info(struct socket *socket)
 	if (connect_info->dnsquery) kill_dns_request(&connect_info->dnsquery);
 
 	mem_free_if(connect_info->addr);
+	done_uri(connect_info->uri);
 	mem_free_set(&socket->connect_info, NULL);
 }
 
@@ -258,6 +262,11 @@ make_connection(struct socket *socket, struct uri *uri,
 	/* XXX: Keep here and not in init_connection_info() to make
 	 * complete_connect_socket() work from the HTTP implementation. */
 	socket->need_ssl = get_protocol_need_ssl(uri->protocol);
+	if (!socket->set_no_tls) {
+		enum blacklist_flags flags = get_blacklist_flags(uri);
+		socket->no_tls = ((flags & SERVER_BLACKLIST_NO_TLS) != 0);
+		socket->set_no_tls = 1;
+	}
 
 	debug_transfer_log("\nCONNECTION: ", -1);
 	debug_transfer_log(host, -1);
@@ -424,6 +433,20 @@ complete_connect_socket(struct socket *socket, struct uri *uri,
 			socket_connect_T done)
 {
 	struct connect_info *connect_info = socket->connect_info;
+
+	if (connect_info && connect_info->uri) {
+		/* Remember whether the server supported TLS or not.
+		 * Then the next request can immediately use the right
+		 * protocol.  This is important for HTTP POST requests
+		 * because it is not safe to silently retry them.  The
+		 * uri parameter is normally NULL here so don't use it.  */
+		if (socket->no_tls)
+			add_blacklist_entry(connect_info->uri,
+					    SERVER_BLACKLIST_NO_TLS);
+		else
+			del_blacklist_entry(connect_info->uri,
+					    SERVER_BLACKLIST_NO_TLS);
+	}
 
 	/* This is a special case used by the HTTP implementation to acquire an
 	 * SSL link for handling CONNECT requests. */

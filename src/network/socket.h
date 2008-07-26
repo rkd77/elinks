@@ -97,6 +97,7 @@ struct socket {
 	unsigned int protocol_family:1; /* EL_PF_INET, EL_PF_INET6 */
 	unsigned int need_ssl:1;	/* If the socket needs SSL support */
 	unsigned int no_tls:1;		/* Internal SSL flag. */
+	unsigned int set_no_tls:1;	/* Was the blacklist checked yet? */
 	unsigned int duplex:1;		/* Allow simultaneous reads & writes. */
 };
 
