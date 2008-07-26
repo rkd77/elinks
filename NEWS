@@ -8,8 +8,8 @@ file for details.
 ELinks 0.12pre1.GIT now:
 ------------------------
 
-To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch
-generally also includes the bug fixes made in ELinks 0.11.4.GIT.
+To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch also
+includes the changes listed under "ELinks 0.11.4.GIT now" below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -21,8 +21,6 @@ generally also includes the bug fixes made in ELinks 0.11.4.GIT.
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
   scripts on web pages, to work around SpiderMonkey bug 378918.
-* bug 698: Attach controls to the intended form even if it is
-  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache
 
@@ -215,6 +213,8 @@ To be released as 0.11.5.
 * critical bug 1030: an assertion used to fail in the search dialog
   on systems that lack a usable <regex.h>
 * major bug 503: various fixes in parsing and updating of elinks.conf
+* bug 698: Attach controls to the intended form even if it is
+  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * build bug 1021: fixed uninitialized variable in http_got_header
 
 ELinks 0.11.4:
