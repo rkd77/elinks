@@ -9,6 +9,7 @@
 #include <openssl/rand.h>
 #elif defined(CONFIG_GNUTLS)
 #include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 #else
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
@@ -122,6 +123,7 @@ static void
 init_gnutls(struct module *module)
 {
 	int ret = gnutls_global_init();
+	unsigned char *ca_file = get_opt_str("connection.ssl.trusted_ca_file");
 
 	if (ret < 0)
 		INTERNAL("GNUTLS init failed: %s", gnutls_strerror(ret));
@@ -135,8 +137,16 @@ init_gnutls(struct module *module)
 	if (ret < 0)
 		INTERNAL("GNUTLS X509 credentials alloc failed: %s",
 			 gnutls_strerror(ret));
-
 	/* Here, we should load certificate files etc. */
+	if (*ca_file) {
+		/* FIXME: check returned values. --witekfl */
+		gnutls_certificate_set_x509_trust_file(xcred, ca_file,
+			GNUTLS_X509_FMT_PEM);
+		
+		gnutls_certificate_set_verify_flags(xcred,
+				GNUTLS_VERIFY_ALLOW_X509_V1_CA_CRT);
+	}
+
 }
 
 static void
@@ -152,7 +162,10 @@ static struct option_info gnutls_options[] = {
 		"cert_verify", 0, 0,
 		N_("Verify the peer's SSL certificate. Note that this\n"
 		"probably doesn't work properly at all with GnuTLS.")),
-
+/* FIXME: Better description. */
+	INIT_OPT_STRING("connection.ssl", N_("Trusted CA file"),
+		"trusted_ca_file", 0, "/etc/ssl/certs/ca-certificates.crt",
+		 N_("The location of the trusted CA file.")),
 	NULL_OPTION_INFO,
 };
 
