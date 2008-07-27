@@ -12,6 +12,7 @@
 #define USE_OPENSSL
 #elif defined(CONFIG_GNUTLS)
 #include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 #else
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
@@ -26,6 +27,7 @@
 #include "network/socket.h"
 #include "network/ssl/socket.h"
 #include "network/ssl/ssl.h"
+#include "protocol/uri.h"
 #include "util/memory.h"
 
 
@@ -81,13 +83,61 @@ ssl_set_no_tls(struct socket *socket)
 #endif
 }
 
+
+#ifdef CONFIG_GNUTLS
+static int
+verify_certificates(struct socket *socket)
+{
+	gnutls_x509_crt_t cert;
+	gnutls_session_t session = *(ssl_t *)socket->ssl;
+	struct connection *conn = socket->conn;
+	const gnutls_datum_t *cert_list;
+	unsigned char *hostname;
+	int ret;
+	unsigned int cert_list_size, status;
+
+
+	ret = gnutls_certificate_verify_peers2(session, &status);
+	if (ret) return ret;
+	if (status) return status;
+	if (gnutls_certificate_type_get(session) != GNUTLS_CRT_X509)
+		return 0;
+
+	if (gnutls_x509_crt_init(&cert) < 0) {
+		return -1;
+	}
+
+	cert_list = gnutls_certificate_get_peers(session, &cert_list_size);
+	if (!cert_list) {
+		return -2;
+	}
+
+	if (gnutls_x509_crt_import(cert, &cert_list[0],
+		GNUTLS_X509_FMT_DER) < 0) {
+		return -3;
+	}
+	if (gnutls_x509_crt_get_expiration_time(cert) < time(NULL)) {
+		gnutls_x509_crt_deinit(cert);
+		return -4;
+	}
+
+	if (gnutls_x509_crt_get_activation_time(cert) > time(NULL)) {
+		gnutls_x509_crt_deinit(cert);
+		return -5;
+	}
+	hostname = get_uri_string(conn->uri, URI_HOST);
+	if (!hostname) return -6;
+
+	ret = !gnutls_x509_crt_check_hostname(cert, hostname);
+	gnutls_x509_crt_deinit(cert);
+	mem_free(hostname);
+	return ret;
+}
+#endif	/* CONFIG_GNUTLS */
+
 static void
 ssl_want_read(struct socket *socket)
 {
-#ifdef CONFIG_GNUTLS
-	unsigned int status;
-#endif
-
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);
 
@@ -95,8 +145,7 @@ ssl_want_read(struct socket *socket)
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
 			if (get_opt_bool("connection.ssl.cert_verify", NULL)
-			    && (gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)
-				|| status)) {
+			    && verify_certificates(socket)) {
 				socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 				return;
 			}
@@ -121,9 +170,6 @@ int
 ssl_connect(struct socket *socket)
 {
 	int ret;
-#ifdef CONFIG_GNUTLS
-	unsigned int status;
-#endif
 
 	if (init_ssl_connection(socket) == S_SSL_ERROR) {
 		socket->ops->done(socket, connection_state(S_SSL_ERROR));
@@ -201,8 +247,7 @@ ssl_connect(struct socket *socket)
 			if (!get_opt_bool("connection.ssl.cert_verify", NULL))
 				break;
 
-			if (!gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)
-			    && !status)
+			if (!verify_certificates(socket))
 #endif
 				break;
 
