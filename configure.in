@@ -191,7 +191,7 @@ AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
 AC_CHECK_HEADERS(netinet/in_systm.h netinet/in_system.h netinet/ip.h)
-AC_CHECK_HEADERS(net/if.h netdb.h netinet/in.h netinet/in6_var.h)
+AC_CHECK_HEADERS(netdb.h netinet/in.h netinet/in6_var.h)
 AC_CHECK_HEADERS(ifaddrs.h)
 AC_CHECK_HEADERS(sys/cygwin.h io.h)
 AC_CHECK_HEADERS(sys/fmutex.h)
@@ -202,6 +202,11 @@ AC_CHECK_HEADERS(sys/signal.h)
 AC_CHECK_HEADERS(sys/socket.h)
 AC_CHECK_HEADERS(sys/time.h)
 AC_CHECK_HEADERS(sys/utsname.h)
+AC_CHECK_HEADERS([net/if.h], [], [],
+[[#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h> /* <net/if.h> on Mac OS X 10.5.4 needs this */
+#endif
+]])
 AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(locale.h pwd.h)
 AC_CHECK_HEADERS(termios.h)
