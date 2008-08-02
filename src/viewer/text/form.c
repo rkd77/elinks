@@ -1657,7 +1657,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			/* FIXME: We should maybe have ACT_EDIT_ENTER_RELOAD */
 			if ((has_form_submit(fc->form)
 			      && !get_opt_bool("document.browse.forms.auto_submit", ses))
-			    || goto_current_link(ses, doc_view, 0)) {
+			    || goto_link(ses, doc_view, link, 0)) {
 				if (ses->insert_mode == INSERT_MODE_ON)
 					ses->insert_mode = INSERT_MODE_OFF;
 				status = FRAME_EVENT_OK;

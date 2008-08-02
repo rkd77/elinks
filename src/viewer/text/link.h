@@ -47,6 +47,7 @@ int next_link_in_dir(struct document_view *doc_view, int dir_x, int dir_y);
 void jump_to_link_number(struct session *ses, struct document_view *doc_view, int);
 
 struct link *goto_current_link(struct session *ses, struct document_view *, int);
+struct link *goto_link(struct session *ses, struct document_view *, struct link *, int);
 void goto_link_number(struct session *ses, unsigned char *num);
 void get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x);
 
