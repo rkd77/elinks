@@ -31,8 +31,6 @@
 #include "util/time.h"
 #include "viewer/timer.h"
 
-#define LEDS_REFRESH_DELAY	((milliseconds_T) 100)
-
 /* Current leds allocation:
  * 0 - SSL connection indicator
  * 1 - Insert-mode indicator
@@ -187,6 +185,21 @@ draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 }
 #endif
 
+static milliseconds_T
+compute_redraw_interval(void)
+{
+	if (are_there_downloads())
+		return 100;
+
+	/* TODO: Check whether the time format includes seconds.  If not,
+	 * return milliseconds to next minute. */
+
+	if (get_leds_clock_enable())
+		return 1000;
+
+	return 0;
+}
+
 void
 draw_leds(struct session *ses)
 {
@@ -238,8 +251,12 @@ draw_leds(struct session *ses)
 
 end:
 	/* Redraw each 100ms. */
-	if (!drawing && redraw_timer == TIMER_ID_UNDEF)
-		install_timer(&redraw_timer, LEDS_REFRESH_DELAY, redraw_leds, NULL);
+	if (!drawing && redraw_timer == TIMER_ID_UNDEF) {
+		milliseconds_T delay = compute_redraw_interval();
+
+		if (delay)
+			install_timer(&redraw_timer, delay, redraw_leds, NULL);
+	}
 }
 
 /* Determine if leds redrawing is necessary. Returns non-zero if so. */
@@ -302,15 +319,18 @@ static void
 redraw_leds(void *xxx)
 {
 	struct terminal *term;
+	milliseconds_T delay;
+
+	redraw_timer = TIMER_ID_UNDEF;
 
 	if (!get_leds_panel_enable()
 	    && get_opt_int("ui.timer.enable", NULL) != 2) {
-		redraw_timer = TIMER_ID_UNDEF;
 		return;
 	}
 
-	install_timer(&redraw_timer, LEDS_REFRESH_DELAY, redraw_leds, NULL);
-	/* The expired timer ID has now been erased.  */
+	delay = compute_redraw_interval();
+	if (delay)
+		install_timer(&redraw_timer, delay, redraw_leds, NULL);
 
 	if (drawing) return;
 	drawing = 1;
