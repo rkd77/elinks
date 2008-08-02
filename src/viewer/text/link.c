@@ -951,7 +951,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	return 1;
 }
 
-struct link *
+static struct link *
 goto_link(struct session *ses, struct document_view *doc_view, struct link *link, int do_reload)
 {
 	struct uri *uri;
