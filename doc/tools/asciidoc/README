@@ -1,0 +1,14 @@
+The files in this directory, except this README itself,
+have been copied from the AsciiDoc 7.1.2 source package.
+
+In the past, we have hit annoying incompatibilities when
+people have attempted to rebuild ELinks documentation
+with new versions of AsciiDoc:
+
+http://bugzilla.elinks.cz/show_bug.cgi?id=989
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=491820
+
+So now we bundle the configuration files from a known good version
+to let ELinks documentation be built with them regardless of which
+version has been installed on the machine.  This should keep things
+working as long as the configuration file format remains compatible.

@@ -14,7 +14,9 @@ PDF_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/pdf
 TXT_DIR  = $(DESTDIR)$(docdir)/$(PACKAGE)/txt
 
 ASCIIDOC_CONF  = $(srcdir)asciidoc.conf
-ASCIIDOC_FLAGS += -f $(ASCIIDOC_CONF) \
+ASCIIDOC_FLAGS += --no-conf -f $(srcdir)tools/asciidoc/asciidoc.conf \
+		  -f $(srcdir)tools/asciidoc/$(call backend).conf \
+		  -f $(ASCIIDOC_CONF) \
 		  -a "builddir=$(CURDIR)/" \
 		  -a asciidoc7compatible \
 		  -a elinks_version=$(VERSION)
