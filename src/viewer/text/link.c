@@ -943,17 +943,13 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	return 1;
 }
 
-struct link *
-goto_current_link(struct session *ses, struct document_view *doc_view, int do_reload)
+static struct link *
+goto_link(struct session *ses, struct document_view *doc_view, struct link *link, int do_reload)
 {
-	struct link *link;
 	struct uri *uri;
 
-	assert(doc_view && ses);
+	assert(link && doc_view && ses);
 	if_assert_failed return NULL;
-
-	link = get_current_link(doc_view);
-	if (!link) return NULL;
 
 	if (link_is_form(link)) {
 		struct form_control *fc = link->data.form_control;
@@ -983,6 +979,20 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 	return link;
 }
 
+struct link *
+goto_current_link(struct session *ses, struct document_view *doc_view, int do_reload)
+{
+	struct link *link;
+
+	assert(doc_view && ses);
+	if_assert_failed return NULL;
+
+	link = get_current_link(doc_view);
+	if (!link) return NULL;
+
+	return goto_link(ses, doc_view, link, do_reload);
+}
+
 static enum frame_event_status
 activate_link(struct session *ses, struct document_view *doc_view,
               struct link *link, int do_reload)
@@ -997,7 +1007,7 @@ activate_link(struct session *ses, struct document_view *doc_view,
 	case LINK_FIELD:
 	case LINK_AREA:
 	case LINK_BUTTON:
-		if (goto_current_link(ses, doc_view, do_reload))
+		if (goto_link(ses, doc_view, link, do_reload))
 			return FRAME_EVENT_OK;
 		break;
 	case LINK_CHECKBOX:
