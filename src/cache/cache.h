@@ -42,7 +42,7 @@ struct cache_entry {
 	unsigned char *ssl_info;	/* SSL ciphers used during transfer */
 	unsigned char *encoding_info;	/* Encoding used during transfer */
 
-	unsigned int id;		/* Change each time entry is modified. */
+	unsigned int cache_id;		/* Change each time entry is modified. */
 
 	time_t seconds;			/* Access time. Used by 'If-Modified-Since' */
 

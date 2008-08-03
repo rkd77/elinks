@@ -202,7 +202,7 @@ struct document {
 	unsigned char buf[7];
 	unsigned char buf_length;
 #endif
-	unsigned int id; /**< Used to check cache entries. */
+	unsigned int cache_id; /**< Used to check cache entries. */
 
 	int cp;
 	int width, height; /**< size of document */

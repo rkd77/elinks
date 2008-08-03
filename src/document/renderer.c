@@ -388,11 +388,12 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		 * XXX: What happens if a document is still loading in the
 		 * other tab when we press ^L here? */
 		if (vs->ecmascript_fragile
-		    || (vs->ecmascript && vs->ecmascript->onload_snippets_owner
-		       && document->id != vs->ecmascript->onload_snippets_owner))
+		    || (vs->ecmascript
+		       && vs->ecmascript->onload_snippets_cache_id
+		       && document->cache_id != vs->ecmascript->onload_snippets_cache_id))
 			ecmascript_reset_state(vs);
 		assert(vs->ecmascript);
-		vs->ecmascript->onload_snippets_owner = document->id;
+		vs->ecmascript->onload_snippets_cache_id = document->cache_id;
 
 		/* Passing of the onload_snippets pointers gives *_snippets()
 		 * some feeling of universality, shall we ever get any other
