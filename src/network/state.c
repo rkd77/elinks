@@ -126,6 +126,13 @@ static const struct s_msg_dsc msg_dsc[] = {
 	{S_BITTORRENT_BAD_URL,	N_("The BitTorrent URL does not point to a valid URL")},
 #endif
 
+	/* fsp_open_session() failed but did not set errno.
+	 * fsp_open_session() never sends anything to the FSP server,
+	 * so this error does not mean the server itself does not work.
+	 * More likely, there was some problem in asking a DNS server
+	 * about the address of the FSP server.  */
+	{S_FSP_OPEN_SESSION_UNKN, N_("FSP server not found")},
+
 	{0,			NULL}
 };
 

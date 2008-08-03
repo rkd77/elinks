@@ -103,6 +103,8 @@ enum connection_basic_state {
 	S_BITTORRENT_METAINFO	= -100801,
 	S_BITTORRENT_TRACKER	= -100802,
 	S_BITTORRENT_BAD_URL	= -100803,
+
+	S_FSP_OPEN_SESSION_UNKN = -100900,
 };
 
 /** Either an ELinks internal status code or an error code from the

@@ -277,8 +277,18 @@ do_fsp(struct connection *conn)
 		if (auth) password = auth->password;
 	}
 
+	/* fsp_open_session may not set errno if getaddrinfo fails
+	 * https://sourceforge.net/tracker/index.php?func=detail&aid=2036798&group_id=93841&atid=605738
+	 * Try to detect this bug and use an ELinks-specific error
+	 * code instead, so that we can display a message anyway.  */
+	errno = 0;
 	ses = fsp_open_session(host, port, password);
-	if (!ses) fsp_error(connection_state_for_errno(errno));
+	if (!ses) {
+		if (errno)
+			fsp_error(connection_state_for_errno(errno));
+		else
+			fsp_error(connection_state(S_FSP_OPEN_SESSION_UNKN));
+	}
 
 	/* fsplib 0.8 ABI depends on _FILE_OFFSET_BITS
 	 * https://sourceforge.net/tracker/index.php?func=detail&aid=1674729&group_id=93841&atid=605738
