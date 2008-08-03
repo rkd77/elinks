@@ -174,33 +174,33 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 /* Generates an HTML page listing the content of @directory with the path
  * @dirpath. */
 /* Returns a connection state. S_OK if all is well. */
-static inline enum connection_state
+static inline struct connection_state
 list_directory(struct connection *conn, unsigned char *dirpath,
 	       struct string *page)
 {
 	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files");
 	struct directory_entry *entries;
-	enum connection_state state;
+	struct connection_state state;
 
 	errno = 0;
 	entries = get_directory_entries(dirpath, show_hidden_files);
 	if (!entries) {
-		if (errno) return -errno;
-		return S_OUT_OF_MEM;
+		if (errno) return connection_state_for_errno(errno);
+		return connection_state(S_OUT_OF_MEM);
 	}
 
 	state = init_directory_listing(page, conn->uri);
-	if (state != S_OK)
-		return S_OUT_OF_MEM;
+	if (!is_in_state(state, S_OK))
+		return connection_state(S_OUT_OF_MEM);
 
 	add_dir_entries(entries, dirpath, page);
 
 	if (!add_to_string(page, "</pre>\n<hr/>\n</body>\n</html>\n")) {
 		done_string(page);
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 	}
 
-	return S_OK;
+	return connection_state(S_OK);
 }
 
 
@@ -215,13 +215,14 @@ file_protocol_handler(struct connection *connection)
 {
 	unsigned char *redirect_location = NULL;
 	struct string page, name;
-	enum connection_state state;
+	struct connection_state state;
 	int set_dir_content_type = 0;
 
 	if (get_cmd_opt_bool("anonymous")) {
 		if (strcmp(connection->uri->string, "file:///dev/stdin")
 		    || isatty(STDIN_FILENO)) {
-			abort_connection(connection, S_FILE_ANONYMOUS);
+			abort_connection(connection,
+					 connection_state(S_FILE_ANONYMOUS));
 			return;
 		}
 	}
@@ -239,7 +240,7 @@ file_protocol_handler(struct connection *connection)
 	if (!init_string(&name)
 	    || !add_uri_to_string(&name, connection->uri, URI_PATH)) {
 		done_string(&name);
-		abort_connection(connection, S_OUT_OF_MEM);
+		abort_connection(connection, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -254,7 +255,7 @@ file_protocol_handler(struct connection *connection)
 		 * directory separator. */
 		if (name.source[0] && !dir_sep(name.source[name.length - 1])) {
 			redirect_location = STRING_DIR_SEP;
-			state = S_OK;
+			state = connection_state(S_OK);
 		} else {
 			state = list_directory(connection, name.source, &page);
 			set_dir_content_type = 1;
@@ -268,7 +269,7 @@ file_protocol_handler(struct connection *connection)
 
 	done_string(&name);
 
-	if (state == S_OK) {
+	if (is_in_state(state, S_OK)) {
 		struct cache_entry *cached;
 
 		/* Try to add fragment data to the connection cache if either
@@ -276,11 +277,11 @@ file_protocol_handler(struct connection *connection)
 		cached = connection->cached = get_cache_entry(connection->uri);
 		if (!connection->cached) {
 			if (!redirect_location) done_string(&page);
-			state = S_OUT_OF_MEM;
+			state = connection_state(S_OUT_OF_MEM);
 
 		} else if (redirect_location) {
 			if (!redirect_cache(cached, redirect_location, 1, 0))
-				state = S_OUT_OF_MEM;
+				state = connection_state(S_OUT_OF_MEM);
 
 		} else {
 			add_fragment(cached, 0, page.source, page.length);
@@ -300,7 +301,7 @@ file_protocol_handler(struct connection *connection)
 				/* Not so gracefully handle failed memory
 				 * allocation. */
 				if (!head)
-					state = S_OUT_OF_MEM;
+					state = connection_state(S_OUT_OF_MEM);
 
 				/* Setup directory listing for viewing. */
 				mem_free_set(&cached->head, head);

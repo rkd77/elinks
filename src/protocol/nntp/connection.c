@@ -105,7 +105,7 @@ init_nntp_connection_info(struct connection *conn)
 
 	nntp = mem_calloc(1, sizeof(*nntp));
 	if (!nntp) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return NULL;
 	}
 
@@ -143,7 +143,7 @@ init_nntp_connection_info(struct connection *conn)
 			break;
 
 		/* FIXME: Special S_NNTP_BAD_RANGE */
-		abort_connection(conn, S_BAD_URL);
+		abort_connection(conn, connection_state(S_BAD_URL));
 		return NULL;
 
 	case NNTP_TARGET_ARTICLE_NUMBER:
@@ -157,12 +157,12 @@ init_nntp_connection_info(struct connection *conn)
 		/* Map nntp://<server>/<group> to nntp://<server>/<group>/ so
 		 * we get only one cache entry with content. */
 		if (!groupend) {
-			enum connection_state state = S_OK;
+			struct connection_state state = connection_state(S_OK);
 
 			conn->cached = get_cache_entry(conn->uri);
 			if (!conn->cached
 			    || !redirect_cache(conn->cached, "/", 0, 0))
-				state = S_OUT_OF_MEM;
+				state = connection_state(S_OUT_OF_MEM);
 
 			abort_connection(conn, state);
 			return NULL;
@@ -170,7 +170,7 @@ init_nntp_connection_info(struct connection *conn)
 
 		/* Reject nntp://<server>/<group>/<group> */
 		if (nntp->group.source)	{
-			abort_connection(conn, S_BAD_URL);
+			abort_connection(conn, connection_state(S_BAD_URL));
 			return NULL;
 		}
 
@@ -196,7 +196,7 @@ nntp_quit(struct connection *conn)
 
 	info = mem_calloc(1, sizeof(*info));
 	if (!info) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -208,7 +208,7 @@ nntp_quit(struct connection *conn)
 }
 
 static void
-nntp_end_request(struct connection *conn, enum connection_state state)
+nntp_end_request(struct connection *conn, struct connection_state state)
 {
 	struct nntp_connection_info *nntp = conn->info;
 
@@ -217,11 +217,11 @@ nntp_end_request(struct connection *conn, enum connection_state state)
 		return;
 	}
 
-	if (state == S_OK) {
+	if (is_in_state(state, S_OK)) {
 		if (conn->cached) {
 			normalize_cache_entry(conn->cached, conn->from);
 		}
-	} else if (state == S_OUT_OF_MEM) {
+	} else if (is_in_state(state, S_OUT_OF_MEM)) {
 		/* FIXME: Clear the socket buffers before ending so the one
 		 * grabing the keepalive connection will be able to go on. */
 	}
@@ -239,38 +239,39 @@ read_nntp_data(struct socket *socket, struct read_buffer *rb)
 	struct connection *conn = socket->conn;
 
 	if (socket->state == SOCKET_CLOSED) {
-		nntp_end_request(conn, S_OK);
+		nntp_end_request(conn, connection_state(S_OK));
 		return;
 	}
 
-	switch (read_nntp_response_data(conn, rb)) {
+	switch (read_nntp_response_data(conn, rb).basic) {
 	case S_OK:
 		nntp_send_command(conn);
 		break;
 
 	case S_OUT_OF_MEM:
-		nntp_end_request(conn, S_OUT_OF_MEM);
+		nntp_end_request(conn, connection_state(S_OUT_OF_MEM));
 		break;
 
 	case S_TRANS:
 	default:
-		read_from_socket(conn->socket, rb, S_TRANS, read_nntp_data);
+		read_from_socket(conn->socket, rb, connection_state(S_TRANS),
+				 read_nntp_data);
 	}
 }
 
 /* Translate NNTP code to the internal connection state. */
-static enum connection_state
+static struct connection_state
 get_nntp_connection_state(enum nntp_code code)
 {
 	switch (code) {
-	case NNTP_CODE_400_GOODBYE:		return S_NNTP_SERVER_HANG_UP;
-	case NNTP_CODE_411_GROUP_UNKNOWN:	return S_NNTP_GROUP_UNKNOWN;
-	case NNTP_CODE_423_ARTICLE_NONUMBER:	return S_NNTP_ARTICLE_UNKNOWN;
-	case NNTP_CODE_430_ARTICLE_NOID:	return S_NNTP_ARTICLE_UNKNOWN;
-	case NNTP_CODE_436_ARTICLE_TRANSFER:	return S_NNTP_TRANSFER_ERROR;
-	case NNTP_CODE_480_AUTH_REQUIRED:	return S_NNTP_AUTH_REQUIRED;
-	case NNTP_CODE_502_ACCESS_DENIED:	return S_NNTP_ACCESS_DENIED;
-	case NNTP_CODE_503_PROGRAM_FAULT:	return S_NNTP_SERVER_ERROR;
+	case NNTP_CODE_400_GOODBYE:		return connection_state(S_NNTP_SERVER_HANG_UP);
+	case NNTP_CODE_411_GROUP_UNKNOWN:	return connection_state(S_NNTP_GROUP_UNKNOWN);
+	case NNTP_CODE_423_ARTICLE_NONUMBER:	return connection_state(S_NNTP_ARTICLE_UNKNOWN);
+	case NNTP_CODE_430_ARTICLE_NOID:	return connection_state(S_NNTP_ARTICLE_UNKNOWN);
+	case NNTP_CODE_436_ARTICLE_TRANSFER:	return connection_state(S_NNTP_TRANSFER_ERROR);
+	case NNTP_CODE_480_AUTH_REQUIRED:	return connection_state(S_NNTP_AUTH_REQUIRED);
+	case NNTP_CODE_502_ACCESS_DENIED:	return connection_state(S_NNTP_ACCESS_DENIED);
+	case NNTP_CODE_503_PROGRAM_FAULT:	return connection_state(S_NNTP_SERVER_ERROR);
 
 	case NNTP_CODE_412_GROUP_UNSET:
 	case NNTP_CODE_420_ARTICLE_UNSET:
@@ -287,7 +288,7 @@ get_nntp_connection_state(enum nntp_code code)
 	default:
 		/* Notice and error codes for stuff which is either not
 		 * supported or which is not supposed to happen. */
-		return S_NNTP_ERROR;
+		return connection_state(S_NNTP_ERROR);
 	};
 }
 
@@ -298,7 +299,7 @@ nntp_got_response(struct socket *socket, struct read_buffer *rb)
 	struct nntp_connection_info *nntp = conn->info;
 
 	if (socket->state == SOCKET_CLOSED) {
-		nntp_end_request(conn, S_OK);
+		nntp_end_request(conn, connection_state(S_OK));
 		return;
 	}
 
@@ -306,11 +307,12 @@ nntp_got_response(struct socket *socket, struct read_buffer *rb)
 
 	switch (nntp->code) {
 	case NNTP_CODE_NONE:
-		read_from_socket(conn->socket, rb, S_TRANS, nntp_got_response);
+		read_from_socket(conn->socket, rb, connection_state(S_TRANS),
+				 nntp_got_response);
 		break;
 
 	case NNTP_CODE_INVALID:
-		nntp_end_request(conn, S_NNTP_ERROR);
+		nntp_end_request(conn, connection_state(S_NNTP_ERROR));
 		break;
 
 	case NNTP_CODE_200_HELLO:
@@ -320,7 +322,7 @@ nntp_got_response(struct socket *socket, struct read_buffer *rb)
 		break;
 
 	case NNTP_CODE_205_GOODBYE:
-		nntp_end_request(conn, S_OK);
+		nntp_end_request(conn, connection_state(S_OK));
 		break;
 
 	case NNTP_CODE_215_FOLLOW_GROUPS:
@@ -509,19 +511,20 @@ nntp_send_command(struct connection *conn)
 	nntp->command = get_nntp_command(nntp);
 
 	if (nntp->command == NNTP_COMMAND_NONE) {
-		nntp_end_request(conn, S_OK);
+		nntp_end_request(conn, connection_state(S_OK));
 		return;
 	}
 
 	if (!init_string(&req)) {
-		nntp_end_request(conn, S_OUT_OF_MEM);
+		nntp_end_request(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
 	/* FIXME: Check non empty and < NNTP_MAX_COMMAND_LENGTH */
 	add_nntp_command_to_string(&req, nntp);
 
-	request_from_socket(conn->socket, req.source, req.length, S_SENT,
+	request_from_socket(conn->socket, req.source, req.length,
+			    connection_state(S_SENT),
 			    SOCKET_END_ONCLOSE, nntp_got_response);
 	done_string(&req);
 }
@@ -567,13 +570,13 @@ news_protocol_handler(struct connection *conn)
 
 	if (!*server) server = getenv("NNTPSERVER");
 	if (!server || !*server) {
-		abort_connection(conn, S_NNTP_NEWS_SERVER);
+		abort_connection(conn, connection_state(S_NNTP_NEWS_SERVER));
 		return;
 	}
 
 	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached || !init_string(&location)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -586,5 +589,5 @@ news_protocol_handler(struct connection *conn)
 
 	done_string(&location);
 
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }

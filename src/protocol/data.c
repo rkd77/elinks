@@ -120,7 +120,7 @@ data_protocol_handler(struct connection *conn)
 	int base64 = 0;
 
 	if (!cached) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -128,7 +128,7 @@ data_protocol_handler(struct connection *conn)
 
 	data_start = parse_data_protocol_header(conn, &base64);
 	if (!data_start) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -136,7 +136,7 @@ data_protocol_handler(struct connection *conn)
 	 * it. */
 	data = memacpy(data_start, uri->datalen - (data_start - uri->data));
 	if (!data) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -144,7 +144,7 @@ data_protocol_handler(struct connection *conn)
 		unsigned char *decoded = base64_encode(data);
 
 		if (!decoded) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
 
@@ -163,5 +163,5 @@ data_protocol_handler(struct connection *conn)
 
 	mem_free(data);
 
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }

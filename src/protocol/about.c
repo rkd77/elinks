@@ -119,5 +119,5 @@ about_protocol_handler(struct connection *conn)
 	}
 
 	conn->cached = cached;
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }

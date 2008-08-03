@@ -531,7 +531,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 		}
 	}
 
-	if (download->state == S_RESUME) {
+	if (is_in_state(download->state, S_RESUME)) {
 		static unsigned char s[] = "????"; /* Reduce or enlarge at will. */
 		unsigned int slen = 0;
 		int max = int_min(sizeof(s), width) - 1;
@@ -587,9 +587,10 @@ bittorrent_message_dialog(struct session *ses, void *data)
 		add_to_string(&string, ":\n\n");
 	}
 
-	if (message->state != S_OK) {
+	if (!is_in_state(message->state, S_OK)) {
 		add_format_to_string(&string, "%s: %s",
-			get_state_message(S_BITTORRENT_TRACKER, ses->tab->term),
+			get_state_message(connection_state(S_BITTORRENT_TRACKER),
+					  ses->tab->term),
 			get_state_message(message->state, ses->tab->term));
 	} else {
 		add_to_string(&string, message->string);
@@ -686,7 +687,7 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 /* Build a dialog querying the user on how to handle a .torrent file. */
 static void
-bittorrent_query_callback(void *data, enum connection_state state,
+bittorrent_query_callback(void *data, struct connection_state state,
 			    struct string *response)
 {
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
@@ -705,7 +706,7 @@ bittorrent_query_callback(void *data, enum connection_state state,
 	struct string msg;
 	int files;
 
-	if (state != S_OK)
+	if (!is_in_state(state, S_OK))
 		return;
 
 	/* This should never happen, since setup_download_handler() should make
@@ -739,7 +740,8 @@ bittorrent_query_callback(void *data, enum connection_state state,
 	done_string(&filename);
 
 	if (parse_bittorrent_metafile(&meta, response) != BITTORRENT_STATE_OK) {
-		print_error_dialog(type_query->ses, S_BITTORRENT_METAINFO,
+		print_error_dialog(type_query->ses,
+				   connection_state(S_BITTORRENT_METAINFO),
 				   type_query->uri, PRI_CANCEL);
 		tp_cancel(type_query);
 		done_string(&msg);

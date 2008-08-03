@@ -119,7 +119,7 @@ struct ftp_connection_info {
 
 /* Prototypes */
 static void ftp_login(struct socket *);
-static void ftp_send_retr_req(struct connection *, int);
+static void ftp_send_retr_req(struct connection *, struct connection_state);
 static void ftp_got_info(struct socket *, struct read_buffer *);
 static void ftp_got_user_info(struct socket *, struct read_buffer *);
 static void ftp_pass(struct connection *);
@@ -127,7 +127,7 @@ static void ftp_pass_info(struct socket *, struct read_buffer *);
 static void ftp_retr_file(struct socket *, struct read_buffer *);
 static void ftp_got_final_response(struct socket *, struct read_buffer *);
 static void got_something_from_data_connection(struct connection *);
-static void ftp_end_request(struct connection *, enum connection_state);
+static void ftp_end_request(struct connection *, struct connection_state);
 static struct ftp_connection_info *add_file_cmd_to_str(struct connection *);
 static void ftp_data_accept(struct connection *conn);
 
@@ -276,13 +276,14 @@ ftp_protocol_handler(struct connection *conn)
 				conn->cache_mode >= CACHE_MODE_FORCE_RELOAD);
 
 	} else {
-		ftp_send_retr_req(conn, S_SENT);
+		ftp_send_retr_req(conn, connection_state(S_SENT));
 	}
 }
 
 /* Send command, set connection state and free cmd string. */
 static void
-send_cmd(struct connection *conn, struct string *cmd, void *callback, int state)
+send_cmd(struct connection *conn, struct string *cmd, void *callback,
+	 struct connection_state state)
 {
 	request_from_socket(conn->socket, cmd->source, cmd->length, state,
 			    SOCKET_RETRY_ONCLOSE, callback);
@@ -308,20 +309,20 @@ prompt_username_pw(struct connection *conn)
 	if (!conn->cached) {
 		conn->cached = get_cache_entry(conn->uri);
 		if (!conn->cached) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
 	}
 
 	mem_free_set(&conn->cached->content_type, stracpy("text/html"));
 	if (!conn->cached->content_type) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
 	add_auth_entry(conn->uri, "FTP Login", NULL, NULL, 0);
 
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }
 
 /* Send USER command. */
@@ -335,7 +336,7 @@ ftp_login(struct socket *socket)
 	auth = find_auth(conn->uri);
 
 	if (!init_string(&cmd)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -353,7 +354,7 @@ ftp_login(struct socket *socket)
 	}
 	add_crlf_to_string(&cmd);
 
-	send_cmd(conn, &cmd, (void *) ftp_got_info, S_SENT);
+	send_cmd(conn, &cmd, (void *) ftp_got_info, connection_state(S_SENT));
 }
 
 /* Parse connection response. */
@@ -364,7 +365,7 @@ ftp_got_info(struct socket *socket, struct read_buffer *rb)
 	int response = get_ftp_response(conn, rb, 0, NULL);
 
 	if (response == -1) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 
@@ -380,7 +381,7 @@ ftp_got_info(struct socket *socket, struct read_buffer *rb)
 
 	if (response != 220) {
 		/* TODO? Retry in case of ... ?? */
-		retry_connection(conn, S_FTP_UNAVAIL);
+		retry_connection(conn, connection_state(S_FTP_UNAVAIL));
 		return;
 	}
 
@@ -396,7 +397,7 @@ ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 	int response = get_ftp_response(conn, rb, 0, NULL);
 
 	if (response == -1) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 
@@ -426,12 +427,12 @@ ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 	 * non-RFC compliant servers may return even something other than 421.
 	 * --Zas */
 	if (response >= 400) {
-		abort_connection(conn, S_FTP_UNAVAIL);
+		abort_connection(conn, connection_state(S_FTP_UNAVAIL));
 		return;
 	}
 
 	if (response == 230) {
-		ftp_send_retr_req(conn, S_GETH);
+		ftp_send_retr_req(conn, connection_state(S_GETH));
 		return;
 	}
 
@@ -448,7 +449,7 @@ ftp_pass(struct connection *conn)
 	auth = find_auth(conn->uri);
 
 	if (!init_string(&cmd)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -470,7 +471,7 @@ ftp_pass(struct connection *conn)
 	}
 	add_crlf_to_string(&cmd);
 
-	send_cmd(conn, &cmd, (void *) ftp_pass_info, S_LOGIN);
+	send_cmd(conn, &cmd, (void *) ftp_pass_info, connection_state(S_LOGIN));
 }
 
 /* Parse PASS command response. */
@@ -481,12 +482,13 @@ ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 	int response = get_ftp_response(conn, rb, 0, NULL);
 
 	if (response == -1) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 
 	if (!response) {
-		read_from_socket(conn->socket, rb, S_LOGIN, ftp_pass_info);
+		read_from_socket(conn->socket, rb, connection_state(S_LOGIN),
+				 ftp_pass_info);
 		return;
 	}
 
@@ -508,11 +510,11 @@ ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 	}
 
 	if (response >= 400) {
-		abort_connection(conn, S_FTP_UNAVAIL);
+		abort_connection(conn, connection_state(S_FTP_UNAVAIL));
 		return;
 	}
 
-	ftp_send_retr_req(conn, S_GETH);
+	ftp_send_retr_req(conn, connection_state(S_GETH));
 }
 
 /* Construct PORT command. */
@@ -673,7 +675,7 @@ add_file_cmd_to_str(struct connection *conn)
 
 	if (!conn->uri->data) {
 		INTERNAL("conn->uri->data empty");
-		abort_connection(conn, S_INTERNAL);
+		abort_connection(conn, connection_state(S_INTERNAL));
 		goto ret;
 	}
 
@@ -684,7 +686,7 @@ add_file_cmd_to_str(struct connection *conn)
 	 * risky.  */
 	ftp = mem_calloc(1, sizeof(*ftp));
 	if (!ftp) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		goto ret;
 	}
 
@@ -693,24 +695,24 @@ add_file_cmd_to_str(struct connection *conn)
 	if (!init_string(&command)
 	    || !init_string(&ftp_data_command)
 	    || !init_string(&pathname)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		goto ret;
 	}
 
 	if (!get_ftp_data_socket(conn, &ftp_data_command)) {
 		INTERNAL("Ftp data socket failure");
-		abort_connection(conn, S_INTERNAL);
+		abort_connection(conn, connection_state(S_INTERNAL));
 		goto ret;
 	}
 
 	if (!add_uri_to_string(&pathname, conn->uri, URI_PATH)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		goto ret;
 	}
 
 	decode_uri_string(&pathname);
 	if (!is_ftp_pathname_safe(&pathname)) {
-		abort_connection(conn, S_BAD_URL);
+		abort_connection(conn, connection_state(S_BAD_URL));
 		goto ret;
 	}
 
@@ -732,7 +734,7 @@ add_file_cmd_to_str(struct connection *conn)
 
 		    || !add_to_string(&command, "LIST")
 		    || !add_crlf_to_string(&command)) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			goto ret;
 		}
 
@@ -748,7 +750,7 @@ add_file_cmd_to_str(struct connection *conn)
 		    || !add_crlf_to_string(&command)
 
 		    || !add_string_to_string(&command, &ftp_data_command)) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			goto ret;
 		}
 
@@ -760,7 +762,7 @@ add_file_cmd_to_str(struct connection *conn)
 			if (!add_to_string(&command, "REST ")
 			    || !add_long_to_string(&command, offset)
 			    || !add_crlf_to_string(&command)) {
-				abort_connection(conn, S_OUT_OF_MEM);
+				abort_connection(conn, connection_state(S_OUT_OF_MEM));
 				goto ret;
 			}
 
@@ -771,7 +773,7 @@ add_file_cmd_to_str(struct connection *conn)
 		if (!add_to_string(&command, "RETR ")
 		    || !add_string_to_string(&command, &pathname)
 		    || !add_crlf_to_string(&command)) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			goto ret;
 		}
 	}
@@ -781,7 +783,7 @@ add_file_cmd_to_str(struct connection *conn)
 	/* 1 byte is already reserved for cmd_buffer in struct ftp_connection_info. */
 	ftp = mem_realloc(ftp, sizeof(*ftp) + command.length);
 	if (!ftp) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		goto ret;
 	}
 	conn->info = ftp;   /* in case mem_realloc moved the buffer */
@@ -816,12 +818,12 @@ send_it_line_by_line(struct connection *conn, struct string *cmd)
 
 /* Send commands to retrieve file or directory. */
 static void
-ftp_send_retr_req(struct connection *conn, int state)
+ftp_send_retr_req(struct connection *conn, struct connection_state state)
 {
 	struct string cmd;
 
 	if (!init_string(&cmd)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -916,13 +918,13 @@ ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 	if (conn->data_socket->fd != -1) {
 		/* The server maliciously sent multiple 227 or 229
 		 * responses.  Do not leak the previous data_socket.  */
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return -1;
 	}
 
 	fd = socket(pf, SOCK_STREAM, 0);
 	if (fd < 0 || set_nonblocking_fd(fd) < 0) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return -1;
 	}
 
@@ -947,12 +949,14 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 		response = get_ftp_response(conn, rb, 0, &sa);
 
 		if (response == -1) {
-			abort_connection(conn, S_FTP_ERROR);
+			abort_connection(conn, connection_state(S_FTP_ERROR));
 			return;
 		}
 
 		if (!response) {
-			read_from_socket(conn->socket, rb, S_GETH, ftp_retr_file);
+			read_from_socket(conn->socket, rb,
+					 connection_state(S_GETH),
+					 ftp_retr_file);
 			return;
 		}
 
@@ -977,7 +981,8 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 
 			case 2:	/* PORT */
 				if (response >= 400) {
-					abort_connection(conn, S_FTP_PORT);
+					abort_connection(conn,
+							 connection_state(S_FTP_PORT));
 					return;
 				}
 				break;
@@ -986,7 +991,7 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 				if (response >= 400) {
 					if (ftp->dir) {
 						abort_connection(conn,
-								S_FTP_NO_FILE);
+								 connection_state(S_FTP_NO_FILE));
 						return;
 					}
 					conn->from = 0;
@@ -1010,19 +1015,20 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 				INTERNAL("WHAT???");
 		}
 
-		ftp_send_retr_req(conn, S_GETH);
+		ftp_send_retr_req(conn, connection_state(S_GETH));
 		return;
 	}
 
 	response = get_ftp_response(conn, rb, 2, NULL);
 
 	if (response == -1) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 
 	if (!response) {
-		read_from_socket(conn->socket, rb, S_GETH, ftp_retr_file);
+		read_from_socket(conn->socket, rb, connection_state(S_GETH),
+				 ftp_retr_file);
 		return;
 	}
 
@@ -1057,7 +1063,7 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 		 * get_ftp_data_socket would have created the
 		 * data_socket without waiting for anything from the
 		 * server.  */
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 	set_handlers(conn->data_socket->fd, (select_handler_T) ftp_data_accept,
@@ -1075,13 +1081,13 @@ ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 	int response = get_ftp_response(conn, rb, 0, NULL);
 
 	if (response == -1) {
-		abort_connection(conn, S_FTP_ERROR);
+		abort_connection(conn, connection_state(S_FTP_ERROR));
 		return;
 	}
 
 	if (!response) {
-		enum connection_state state = conn->state != S_TRANS
-					    ? S_GETH : conn->state;
+		struct connection_state state = !is_in_state(conn->state, S_TRANS)
+			? connection_state(S_GETH) : conn->state;
 
 		read_from_socket(conn->socket, rb, state, ftp_got_final_response);
 		return;
@@ -1096,25 +1102,25 @@ ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 
 		if (!conn->cached
 		    || !redirect_cache(conn->cached, "/", 1, 0)) {
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
 
-		abort_connection(conn, S_OK);
+		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
 
 	if (response >= 400) {
-		abort_connection(conn, S_FTP_FILE_ERROR);
+		abort_connection(conn, connection_state(S_FTP_FILE_ERROR));
 		return;
 	}
 
 	if (ftp->conn_state == 2) {
-		ftp_end_request(conn, S_OK);
+		ftp_end_request(conn, connection_state(S_OK));
 	} else {
 		ftp->conn_state = 1;
-		if (conn->state != S_TRANS)
-			set_connection_state(conn, S_GETH);
+		if (!is_in_state(conn->state, S_TRANS))
+			set_connection_state(conn, connection_state(S_GETH));
 	}
 }
 
@@ -1359,7 +1365,7 @@ ftp_data_accept(struct connection *conn)
 	} else {
 		newsock = accept(conn->data_socket->fd, NULL, NULL);
 		if (newsock < 0) {
-			retry_connection(conn, -errno);
+			retry_connection(conn, connection_state_for_errno(errno));
 			return;
 		}
 		close(conn->data_socket->fd);
@@ -1395,7 +1401,7 @@ got_something_from_data_connection(struct connection *conn)
 	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
 out_of_mem:
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -1412,15 +1418,15 @@ out_of_mem:
 
 	if (ftp->dir && !conn->from) {
 		struct string string;
-		enum connection_state state;
+		struct connection_state state;
 
 		if (!conn->uri->data) {
-			abort_connection(conn, S_FTP_ERROR);
+			abort_connection(conn, connection_state(S_FTP_ERROR));
 			return;
 		}
 
 		state = init_directory_listing(&string, conn->uri);
-		if (state != S_OK) {
+		if (!is_in_state(state, S_OK)) {
 			abort_connection(conn, state);
 			return;
 		}
@@ -1443,7 +1449,7 @@ out_of_mem:
 	len = safe_read(conn->data_socket->fd, ftp->ftp_buffer + ftp->buf_pos,
 		        FTP_BUF_SIZE - ftp->buf_pos);
 	if (len < 0) {
-		retry_connection(conn, -errno);
+		retry_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
 
@@ -1475,7 +1481,7 @@ out_of_mem:
 
 		}
 
-		set_connection_state(conn, S_TRANS);
+		set_connection_state(conn, connection_state(S_TRANS));
 		return;
 	}
 
@@ -1493,17 +1499,17 @@ out_of_mem:
 	close_socket(conn->data_socket);
 
 	if (ftp->conn_state == 1) {
-		ftp_end_request(conn, S_OK);
+		ftp_end_request(conn, connection_state(S_OK));
 	} else {
 		ftp->conn_state = 2;
-		set_connection_state(conn, S_TRANS);
+		set_connection_state(conn, connection_state(S_TRANS));
 	}
 }
 
 static void
-ftp_end_request(struct connection *conn, enum connection_state state)
+ftp_end_request(struct connection *conn, struct connection_state state)
 {
-	if (state == S_OK && conn->cached) {
+	if (is_in_state(state, S_OK) && conn->cached) {
 		normalize_cache_entry(conn->cached, conn->from);
 	}
 

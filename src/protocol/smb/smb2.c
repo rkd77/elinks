@@ -71,10 +71,13 @@ static FILE *header_out, *data_out;
  * process, and it would be very cumbersome to free those.  */
 
 static void
-smb_error(int error)
+smb_error(struct connection_state error)
 {
+	if (is_system_error(error))
+		fprintf(data_out, "S%d\n", (int) error.syserr);
+	else
+		fprintf(data_out, "I%d\n", (int) error.basic);
 	fputs("text/x-error", header_out);
-	fprintf(data_out, "%d\n", error);
 	exit(1);
 }
 
@@ -252,8 +255,8 @@ smb_directory(int dir, struct uri *uri)
 	struct string buf;
 	unsigned char dircolor[8] = "";
 
-	if (init_directory_listing(&buf, uri) != S_OK) {
-		smb_error(-S_OUT_OF_MEM);
+	if (!is_in_state(init_directory_listing(&buf, uri), S_OK)) {
+		smb_error(connection_state(S_OUT_OF_MEM));
 	}
 
 	fputs("text/html", header_out);
@@ -297,7 +300,7 @@ do_smb(struct connection *conn)
 		unsigned char *uri_string = get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA);
 
 		if (!uri_string || !init_string(&string)) {
-			smb_error(-S_OUT_OF_MEM);
+			smb_error(connection_state(S_OUT_OF_MEM));
 		}
 		/* Must URI-encode the username and password to avoid
 		 * ambiguity if they contain "/:@" characters.
@@ -320,10 +323,10 @@ do_smb(struct connection *conn)
 	}
 
 	if (!url) {
-		smb_error(-S_OUT_OF_MEM);
+		smb_error(connection_state(S_OUT_OF_MEM));
 	}
 	if (smbc_init(smb_auth, 0)) {
-		smb_error(errno);
+		smb_error(connection_state_for_errno(errno));
 	};
 
 	dir = smbc_opendir(url);
@@ -345,12 +348,12 @@ do_smb(struct connection *conn)
 			 * for credentials.  */
 			if (errno == ENOENT && errno_from_opendir == EACCES)
 				errno = errno_from_opendir;
-			smb_error(errno);
+			smb_error(connection_state_for_errno(errno));
 		}
 
 		res = smbc_fstat(file, &sb);
 		if (res) {
-			smb_error(res);
+			smb_error(connection_state_for_errno(res));
 		}
 		/* filesize */
 		fprintf(header_out, "%" OFF_PRINT_FORMAT,
@@ -375,7 +378,7 @@ static void
 prompt_username_pw(struct connection *conn)
 {
 	add_auth_entry(conn->uri, "Samba", NULL, NULL, 0);
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }
 
 static void
@@ -383,10 +386,10 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
 	struct connection *conn = socket->conn;
-	int error;
+	struct connection_state error;
 
 	if (len < 0) {
-		abort_connection(conn, -errno);
+		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
 
@@ -396,20 +399,28 @@ smb_got_error(struct socket *socket, struct read_buffer *rb)
 	 * pipe.  */
 	assert(rb->freespace >= 1);
 	if_assert_failed {
-		abort_connection(conn, S_INTERNAL);
+		abort_connection(conn, connection_state(S_INTERNAL));
 		return;
 	}
 	rb->data[len] = '\0';
-	error = atoi(rb->data);
-	kill_buffer_data(rb, len);
-	switch (error) {
-	case EACCES:
-		prompt_username_pw(conn);
+	switch (rb->data[0]) {
+	case 'S':
+		error = connection_state_for_errno(atoi(rb->data + 1));
+		break;
+	case 'I':
+		error = connection_state(atoi(rb->data + 1));
 		break;
 	default:
-		abort_connection(conn, -error);
+		ERROR("malformed error code: %s", rb->data);
+		error = connection_state(S_INTERNAL);
 		break;
 	}
+	kill_buffer_data(rb, len);
+
+	if (is_system_error(error) && error.syserr == EACCES)
+		prompt_username_pw(conn);
+	else
+		abort_connection(conn, error);
 }
 
 static void
@@ -419,12 +430,12 @@ smb_got_data(struct socket *socket, struct read_buffer *rb)
 	struct connection *conn = socket->conn;
 
 	if (len < 0) {
-		abort_connection(conn, -errno);
+		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
 
 	if (!len) {
-		abort_connection(conn, S_OK);
+		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
 
@@ -435,7 +446,7 @@ smb_got_data(struct socket *socket, struct read_buffer *rb)
 	conn->from += len;
 	kill_buffer_data(rb, len);
 
-	read_from_socket(socket, rb, S_TRANS, smb_got_data);
+	read_from_socket(socket, rb, connection_state(S_TRANS), smb_got_data);
 }
 
 static void
@@ -454,7 +465,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 		 * and assume abort_connection will do them?)  */
 		close_socket(socket);
 		close_socket(conn->data_socket);
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	socket->state = SOCKET_END_ONCLOSE;
@@ -477,7 +488,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 
 					/* avoid error */
 					if (!conn->est_length) {
-						abort_connection(conn, S_OK);
+						abort_connection(conn, connection_state(S_OK));
 						return;
 					}
 				}
@@ -492,14 +503,16 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 	if (!buf) {
 		close_socket(socket);
 		close_socket(conn->data_socket);
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	if (error) {
 		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
-		read_from_socket(conn->data_socket, buf, S_CONN, smb_got_error);
+		read_from_socket(conn->data_socket, buf,
+				 connection_state(S_CONN), smb_got_error);
 	} else {
-		read_from_socket(conn->data_socket, buf, S_CONN, smb_got_data);
+		read_from_socket(conn->data_socket, buf,
+				 connection_state(S_CONN), smb_got_data);
 	}
 }
 
@@ -535,7 +548,7 @@ smb_protocol_handler(struct connection *conn)
 		if (smb_pipe[1] >= 0) close(smb_pipe[1]);
 		if (header_pipe[0] >= 0) close(header_pipe[0]);
 		if (header_pipe[1] >= 0) close(header_pipe[1]);
-		abort_connection(conn, -s_errno);
+		abort_connection(conn, connection_state_for_errno(s_errno));
 		return;
 	}
 	conn->from = 0;
@@ -550,7 +563,7 @@ smb_protocol_handler(struct connection *conn)
 		close(smb_pipe[1]);
 		close(header_pipe[0]);
 		close(header_pipe[1]);
-		retry_connection(conn, -s_errno);
+		retry_connection(conn, connection_state_for_errno(s_errno));
 		return;
 	}
 
@@ -594,9 +607,10 @@ smb_protocol_handler(struct connection *conn)
 		if (!buf2) {
 			close_socket(conn->data_socket);
 			close_socket(conn->socket);
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
-		read_from_socket(conn->socket, buf2, S_CONN, smb_got_header);
+		read_from_socket(conn->socket, buf2,
+				 connection_state(S_CONN), smb_got_header);
 	}
 }

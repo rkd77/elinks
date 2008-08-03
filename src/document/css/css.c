@@ -94,7 +94,7 @@ import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 
 	add_bytes_to_string(&filename, url, urllen);
 
-	if (read_encoded_file(&filename, &string) == S_OK) {
+	if (is_in_state(read_encoded_file(&filename, &string), S_OK)) {
 		unsigned char *end = string.source + string.length;
 
 		css->import_level++;

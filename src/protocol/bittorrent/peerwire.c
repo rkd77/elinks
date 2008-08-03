@@ -349,7 +349,8 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 	}
 
 	write_to_socket(peer->socket, string.source, string.length,
-			S_TRANS, sent_bittorrent_peer_message);
+			connection_state(S_TRANS),
+			sent_bittorrent_peer_message);
 
 	done_string(&string);
 
@@ -658,7 +659,8 @@ read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 			break;
 
 		case BITTORRENT_STATE_OUT_OF_MEM:
-			abort_connection(peer->bittorrent->conn, S_OUT_OF_MEM);
+			abort_connection(peer->bittorrent->conn,
+					 connection_state(S_OUT_OF_MEM));
 			return;
 
 		case BITTORRENT_STATE_ERROR:
@@ -669,7 +671,8 @@ read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 			}
 
 			/* Shutdown on fatal errors! */
-			abort_connection(peer->bittorrent->conn, -write_errno);
+			abort_connection(peer->bittorrent->conn,
+					 connection_state_for_errno(write_errno));
 			return;
 		}
 
@@ -710,7 +713,7 @@ sent_bittorrent_peer_handshake(struct socket *socket)
 		send_bittorrent_peer_message(peer, BITTORRENT_MESSAGE_BITFIELD);
 	}
 
-	read_from_socket(peer->socket, buffer, S_TRANS,
+	read_from_socket(peer->socket, buffer, connection_state(S_TRANS),
 			 read_bittorrent_peer_data);
 }
 
@@ -763,7 +766,8 @@ send_bittorrent_peer_handshake(struct socket *socket)
 	 * and we might want to hold on to the old buffer if the peer ID of the
 	 * handshake was not read. */
 	write_to_socket(peer->socket, handshake, sizeof(handshake),
-			S_TRANS, sent_bittorrent_peer_handshake);
+			connection_state(S_TRANS),
+			sent_bittorrent_peer_handshake);
 }
 
 #if 0
@@ -935,7 +939,8 @@ do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buf
 			break;
 		}
 
-		read_from_socket(peer->socket, buffer, S_TRANS,
+		read_from_socket(peer->socket, buffer,
+				 connection_state(S_TRANS),
 				 read_bittorrent_peer_handshake);
 		break;
 
@@ -945,7 +950,8 @@ do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buf
 
 	case BITTORRENT_PEER_HANDSHAKE_INCOMPLETE:
 		/* The whole handshake was not read so wait for more. */
-		read_from_socket(peer->socket, buffer, S_TRANS,
+		read_from_socket(peer->socket, buffer,
+				 connection_state(S_TRANS),
 				 read_bittorrent_peer_handshake);
 		break;
 	}

@@ -226,7 +226,7 @@ have_location(struct session *ses) {
 void set_session_referrer(struct session *ses, struct uri *referrer);
 
 void
-print_error_dialog(struct session *ses, enum connection_state state,
+print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, enum connection_priority priority);
 
 void process_file_requests(struct session *);

@@ -74,7 +74,8 @@ save_url(struct session *ses, unsigned char *url)
 
 	uri = get_translated_uri(url, ses->tab->term->cwd);
 	if (!uri) {
-		print_error_dialog(ses, S_BAD_URL, uri, PRI_CANCEL);
+		print_error_dialog(ses, connection_state(S_BAD_URL),
+				   uri, PRI_CANCEL);
 		return;
 	}
 
@@ -568,12 +569,14 @@ query_file(struct session *ses, struct uri *uri, void *data,
 	 * the checking? --jonas */
 
 	if (uri->protocol == PROTOCOL_UNKNOWN) {
-		print_error_dialog(ses, S_UNKNOWN_PROTOCOL, uri, PRI_CANCEL);
+		print_error_dialog(ses, connection_state(S_UNKNOWN_PROTOCOL),
+				   uri, PRI_CANCEL);
 		return;
 	}
 
 	if (get_protocol_external_handler(ses->tab->term, uri)) {
-		print_error_dialog(ses, S_EXTERNAL_PROTOCOL, uri, PRI_CANCEL);
+		print_error_dialog(ses, connection_state(S_EXTERNAL_PROTOCOL),
+				   uri, PRI_CANCEL);
 		return;
 	}
 

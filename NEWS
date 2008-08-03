@@ -21,6 +21,7 @@ includes the changes listed under "ELinks 0.11.4.GIT now" below.
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
   scripts on web pages, to work around SpiderMonkey bug 378918.
+* bug 1013: Don't assume errno values are between 0 and 100000
 * bug 1022: Add connection.ssl.trusted_ca_file setting for GnuTLS.
   Before this, ELinks did not trust any certificate authorities when
   it used GnuTLS, so certificate verification always failed if you

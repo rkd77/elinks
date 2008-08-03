@@ -8,7 +8,7 @@
 struct connection;
 
 /* Sets up and tears down the peer listening socket. */
-enum connection_state init_bittorrent_listening_socket(struct connection *conn);
+struct connection_state init_bittorrent_listening_socket(struct connection *conn);
 void done_bittorrent_listening_socket(struct connection *conn);
 
 void done_bittorrent_peer_connection(struct bittorrent_peer_connection *peer);

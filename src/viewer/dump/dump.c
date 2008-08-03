@@ -263,7 +263,7 @@ dump_loading_callback(struct download *download, void *p)
 
 	}
 
-	if (download->state != S_OK) {
+	if (!is_in_state(download->state, S_OK)) {
 		usrerror(get_state_message(download->state, NULL));
 		program.retval = RET_ERROR;
 		goto terminate;

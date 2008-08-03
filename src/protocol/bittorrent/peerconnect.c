@@ -67,7 +67,7 @@ find_bittorrent_connection(bittorrent_id_T info_hash)
 
 static void
 check_bittorrent_peer_blacklisting(struct bittorrent_peer_connection *peer,
-				   enum connection_state state)
+				   struct connection_state state)
 {
 	enum bittorrent_blacklist_flags flags = BITTORRENT_BLACKLIST_NONE;
 
@@ -75,21 +75,25 @@ check_bittorrent_peer_blacklisting(struct bittorrent_peer_connection *peer,
 	    || !get_opt_bool("protocol.http.bugs.allow_blacklist"))
 		return;
 
-	switch (state) {
-	case -ECONNREFUSED:
-	case -ENETUNREACH:
-		flags |= BITTORRENT_BLACKLIST_PEER_POOL;
-		break;
-
-	case S_CANT_WRITE:
-	case S_CANT_READ:
-		if (!peer->local.handshake
-			|| !peer->remote.handshake)
+	if (is_system_error(state)) {
+		switch (state.syserr) {
+		case ECONNREFUSED:
+		case ENETUNREACH:
 			flags |= BITTORRENT_BLACKLIST_PEER_POOL;
-		break;
+			break;
+		}
+	} else {
+		switch (state.basic) {
+		case S_CANT_WRITE:
+		case S_CANT_READ:
+			if (!peer->local.handshake
+			    || !peer->remote.handshake)
+				flags |= BITTORRENT_BLACKLIST_PEER_POOL;
+			break;
 
-	default:
-		break;
+		default:
+			break;
+		}
 	}
 
 	if (flags != BITTORRENT_BLACKLIST_NONE) {
@@ -137,30 +141,30 @@ set_bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
  * S_DMS (while looking up the host) then moves to S_CONN (while connecting),
  * and should hopefully become S_TRANS (while transfering). Note, state can hold
  * both internally defined connection states as described above and errno
- * values, such as ECONNREFUSED. The errno values are passed negative so in the
- * previous example the errno would be passed as -ECONNREFUSED. */
+ * values, such as ECONNREFUSED. */
 static void
-set_bittorrent_socket_state(struct socket *socket, enum connection_state state)
+set_bittorrent_socket_state(struct socket *socket, struct connection_state state)
 {
 	struct bittorrent_peer_connection *peer = socket->conn;
 
-	if (state == S_TRANS && peer->bittorrent)
-		set_connection_state(peer->bittorrent->conn, S_TRANS);
+	if (is_in_state(state, S_TRANS) && peer->bittorrent)
+		set_connection_state(peer->bittorrent->conn,
+				     connection_state(S_TRANS));
 }
 
 /* Called when progress is made such as when the select() loop detects and
  * schedules reads and writes. The state variable must be ignored. */
 static void
-set_bittorrent_socket_timeout(struct socket *socket, enum connection_state state)
+set_bittorrent_socket_timeout(struct socket *socket, struct connection_state state)
 {
-	assert(state == 0);
+	assert(is_in_state(state, 0));
 	set_bittorrent_peer_connection_timeout(socket->conn);
 }
 
 /* Called when a non-fatal  error condition has appeared, i.e. the condition is
  * caused by some internal or local system error or simply a timeout. */
 static void
-retry_bittorrent_socket(struct socket *socket, enum connection_state state)
+retry_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
 	struct bittorrent_peer_connection *peer = socket->conn;
 
@@ -177,7 +181,7 @@ retry_bittorrent_socket(struct socket *socket, enum connection_state state)
 /* Called when a fatal and unrecoverable error condition has appeared, such as a
  * DNS query failed. */
 static void
-done_bittorrent_socket(struct socket *socket, enum connection_state state)
+done_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
 	struct bittorrent_peer_connection *peer = socket->conn;
 
@@ -344,7 +348,7 @@ accept_bittorrent_peer_connection(void *____)
 	buffer = alloc_read_buffer(peer->socket);
 	if (!buffer) return;
 
-	read_from_socket(peer->socket, buffer, S_TRANS,
+	read_from_socket(peer->socket, buffer, connection_state(S_TRANS),
 			 read_bittorrent_peer_handshake);
 
 	add_to_list(bittorrent_peer_connections, peer);
@@ -352,7 +356,7 @@ accept_bittorrent_peer_connection(void *____)
 
 /* Based on network/socket.c:get_pasv_socket() but modified to try and bind to a
  * port range instead of any port. */
-enum connection_state
+struct connection_state
 init_bittorrent_listening_socket(struct connection *conn)
 {
 	struct bittorrent_connection *bittorrent = conn->info;
@@ -366,7 +370,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 
 	/* Has the socket already been initialized? */
 	if (!list_is_singleton(bittorrent_connections))
-		return S_OK;
+		return connection_state(S_OK);
 
 	/* We could have bailed out from an earlier attempt. */
 	if (bittorrent_socket != -1)
@@ -374,12 +378,12 @@ init_bittorrent_listening_socket(struct connection *conn)
 
 	bittorrent_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (bittorrent_socket < 0)
-		return -errno;
+		return connection_state_for_errno(errno);
 
 	/* Set it non-blocking */
 
 	if (set_nonblocking_fd(bittorrent_socket) < 0)
-		return -errno;
+		return connection_state_for_errno(errno);
 
 	/* Bind it to some port */
 
@@ -392,11 +396,11 @@ init_bittorrent_listening_socket(struct connection *conn)
 	/* Repeatedly try the configured port range. */
 	while (bind(bittorrent_socket, (struct sockaddr *) &addr, sizeof(addr))) {
 		if (errno != EADDRINUSE)
-			return -errno;
+			return connection_state_for_errno(errno);
 
 		/* If all ports was in use fail with EADDRINUSE. */
 		if (++port > max_port)
-			return -errno;
+			return connection_state_for_errno(errno);
 
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_port = htons(port);
@@ -407,20 +411,20 @@ init_bittorrent_listening_socket(struct connection *conn)
 	memset(&addr2, 0, sizeof(addr2));
 	len = sizeof(addr2);
 	if (getsockname(bittorrent_socket, (struct sockaddr *) &addr2, &len))
-		return -errno;
+		return connection_state_for_errno(errno);
 
 	bittorrent->port = ntohs(addr2.sin_port);
 
 	/* Go listen */
 
 	if (listen(bittorrent_socket, LISTEN_BACKLOG))
-		return -errno;
+		return connection_state_for_errno(errno);
 
 	set_ip_tos_throughput(bittorrent_socket);
 	set_handlers(bittorrent_socket, accept_bittorrent_peer_connection,
 		     NULL, NULL, NULL);
 
-	return S_OK;
+	return connection_state(S_OK);
 }
 
 void

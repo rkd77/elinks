@@ -142,7 +142,7 @@ static INIT_LIST_OF(struct strerror_val, strerror_buf);
  * It never returns NULL (if one changes that, be warn that
  * callers may not test for this condition) --Zas */
 unsigned char *
-get_state_message(enum connection_state state, struct terminal *term)
+get_state_message(struct connection_state state, struct terminal *term)
 {
 	unsigned char *e;
 	struct strerror_val *s;
@@ -153,13 +153,13 @@ get_state_message(enum connection_state state, struct terminal *term)
 		int i;
 
 		for (i = 0; msg_dsc[i].msg; i++)
-			if (msg_dsc[i].n == state)
+			if (msg_dsc[i].n == state.basic)
 				return _(msg_dsc[i].msg, term);
 
 		return unknown_error;
 	}
 
-	e = (unsigned char *) strerror(-state);
+	e = (unsigned char *) strerror(state.syserr);
 	if (!e || !*e) return unknown_error;
 
 	len = strlen(e);

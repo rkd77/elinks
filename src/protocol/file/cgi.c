@@ -77,7 +77,8 @@ close_pipe_and_read(struct socket *data_socket)
 	data_socket->fd = -1;
 
 	conn->socket->state = SOCKET_END_ONCLOSE;
-	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
+	read_from_socket(conn->socket, rb, connection_state(S_SENT),
+			 http_got_header);
 }
 
 static void
@@ -91,7 +92,7 @@ send_post_data(struct connection *conn)
 	int n = 0;
 
 	if (!init_string(&data)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	postend = strchr(post, '\n');
@@ -125,7 +126,7 @@ send_post_data(struct connection *conn)
 	 * and an assertion would fail in write_to_socket.  */
 	if (data.length)
 		write_to_socket(conn->data_socket, data.source, data.length,
-				S_SENT, close_pipe_and_read);
+				connection_state(S_SENT), close_pipe_and_read);
 	else
 		close_pipe_and_read(conn->data_socket);
 
@@ -309,7 +310,7 @@ execute_cgi(struct connection *conn)
 	int scriptlen;
 	struct stat buf;
 	pid_t pid;
-	enum connection_state state = S_OK;
+	struct connection_state state = connection_state(S_OK);
 	int pipe_read[2], pipe_write[2];
 
 	if (!get_opt_bool("protocol.file.cgi.policy")) return 1;
@@ -321,7 +322,7 @@ execute_cgi(struct connection *conn)
 
 	script = get_uri_string(conn->uri, URI_PATH);
 	if (!script) {
-		state = S_OUT_OF_MEM;
+		state = connection_state(S_OUT_OF_MEM);
 		goto end2;
 	}
 	decode_uri(script);
@@ -353,13 +354,13 @@ execute_cgi(struct connection *conn)
 	}
 
 	if (c_pipe(pipe_read) || c_pipe(pipe_write)) {
-		state = -errno;
+		state = connection_state_for_errno(errno);
 		goto end1;
 	}
 
 	pid = fork();
 	if (pid < 0) {
-		state = -errno;
+		state = connection_state_for_errno(errno);
 		goto end0;
 	}
 	if (!pid) { /* CGI script */

@@ -212,7 +212,7 @@ static void
 generic_external_protocol_handler(struct session *ses, struct uri *uri)
 {
 	/* [gettext_accelerator_context(generic_external_protocol_handler)] */
-	enum connection_state state;
+	struct connection_state state;
 
 	switch (uri->protocol) {
 	case PROTOCOL_JAVASCRIPT:
@@ -220,18 +220,18 @@ generic_external_protocol_handler(struct session *ses, struct uri *uri)
 		ecmascript_protocol_handler(ses, uri);
 		return;
 #else
-		state = S_NO_JAVASCRIPT;
+		state = connection_state(S_NO_JAVASCRIPT);
 #endif
 		break;
 
 	case PROTOCOL_UNKNOWN:
-		state = S_UNKNOWN_PROTOCOL;
+		state = connection_state(S_UNKNOWN_PROTOCOL);
 		break;
 
 	default:
 #ifndef CONFIG_SSL
 		if (get_protocol_need_ssl(uri->protocol)) {
-			state = S_SSL_ERROR;
+			state = connection_state(S_SSL_ERROR);
 			break;
 		}
 #endif

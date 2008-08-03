@@ -1,6 +1,8 @@
 #ifndef EL__NETWORK_STATE_H
 #define EL__NETWORK_STATE_H
 
+#include "util/error.h"		/* assert() */
+
 struct terminal;
 
 enum connection_priority {
@@ -15,23 +17,18 @@ enum connection_priority {
 	PRIORITIES,
 };
 
-/* Numbers < 0 and > -100000 are reserved for system errors reported via
- * errno/strerror(), see session.c and connection.c for further information. */
-/* WARNING: an errno value <= -100000 may cause some bad things... */
-/* NOTE: Winsock errors are in range 10000..11004. Hence our abs. values are
- * above this. */
-
-#define is_system_error(state)		(S_OK < (state) && (state) < S_WAIT)
-#define is_in_result_state(state)	((state) < 0)
-#define is_in_progress_state(state)	((state) >= 0)
-#define is_in_connecting_state(state)	(S_WAIT < (state) && (state) < S_TRANS)
-#define is_in_transfering_state(state)	((state) >= S_TRANS)
-#define is_in_queued_state(state)	(is_in_connecting_state(state) || (state) == S_WAIT)
+#define is_system_error(state)		((state).basic == S_ERRNO)
+#define is_in_state(state,basic_)       ((state).basic == (basic_))
+#define is_in_result_state(state)	((state).basic < 0)
+#define is_in_progress_state(state)	((state).basic >= 0)
+#define is_in_connecting_state(state)	(S_WAIT < (state).basic && (state).basic < S_TRANS)
+#define is_in_transfering_state(state)	((state).basic >= S_TRANS)
+#define is_in_queued_state(state)	(is_in_connecting_state(state) || (state).basic == S_WAIT)
 
 /* FIXME: Namespace clash with Windows headers. */
 #undef S_OK
 
-enum connection_state {
+enum connection_basic_state {
 	/* States >= 0 are used for connections still in progress. */
 	S_WAIT			= 0,
 	S_DNS,
@@ -49,6 +46,7 @@ enum connection_state {
 
 	/* State < 0 are used for the final result of a connection
 	 * (it's finished already and it ended up like this) */
+	S_ERRNO			= -1,
 	S_OK			= -100000,
 	S_INTERRUPTED		= -100001,
 	S_EXCEPT		= -100002,
@@ -107,7 +105,44 @@ enum connection_state {
 	S_BITTORRENT_BAD_URL	= -100803,
 };
 
-unsigned char *get_state_message(enum connection_state state, struct terminal *term);
+/** Either an ELinks internal status code or an error code from the
+ * system.  Use connection_state() or connection_state_for_errno()
+ * to construct objects of this type.  */
+struct connection_state {
+	/** An ELinks internal status code, or ::S_ERRNO if this
+	 * structure holds a system error instead.  */
+	enum connection_basic_state basic;
+
+	/** When #state is ::S_ERRNO, syserr is the saved value of
+	 * errno.  Otherwise, syserr should be 0.  */
+	int syserr;
+};
+
+unsigned char *get_state_message(struct connection_state state, struct terminal *term);
 void done_state_message(void);
+
+static inline struct connection_state
+connection_state(enum connection_basic_state basic)
+{
+	struct connection_state state = {0};
+
+	assert(basic != S_ERRNO);
+	if_assert_failed basic = S_INTERNAL;
+
+	state.basic = basic;
+	return state;
+}
+
+static inline struct connection_state
+connection_state_for_errno(int syserr)
+{
+	struct connection_state state = {0};
+
+	/* read_encoded_file() can pass syserr==0 here, so don't
+	 * assert otherwise.  */
+	state.basic = S_ERRNO;
+	state.syserr = syserr;
+	return state;
+}
 
 #endif
