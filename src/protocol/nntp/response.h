@@ -13,7 +13,7 @@ struct read_buffer;
  * S_TRANS (transferring) means 'end-of-text' not reached yet
  * S_OK 		  means no more text expected
  * S_OUT_OF_MEM		  allocation failure of some sort */
-enum connection_state
+struct connection_state
 read_nntp_response_data(struct connection *conn, struct read_buffer *rb);
 
 /* Reads the first line in the NNTP response from the @rb read buffer and

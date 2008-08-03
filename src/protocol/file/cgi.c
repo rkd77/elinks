@@ -78,7 +78,8 @@ close_pipe_and_read(struct socket *data_socket)
 	data_socket->fd = -1;
 
 	conn->socket->state = SOCKET_END_ONCLOSE;
-	read_from_socket(conn->socket, rb, S_SENT, http_got_header);
+	read_from_socket(conn->socket, rb, connection_state(S_SENT),
+			 http_got_header);
 }
 
 
@@ -91,13 +92,13 @@ send_more_post_data(struct socket *socket)
 	struct http_connection_info *http = conn->info;
 	unsigned char buffer[POST_BUFFER_SIZE];
 	int got;
-	enum connection_state error;
+	struct connection_state error;
 
 	got = read_http_post(&http->post, buffer, POST_BUFFER_SIZE, &error);
 	if (got < 0) {
 		abort_connection(conn, error);
 	} else if (got > 0) {
-		write_to_socket(socket, buffer, got, S_TRANS,
+		write_to_socket(socket, buffer, got, connection_state(S_TRANS),
 				send_more_post_data);
 	} else {		/* got == 0, meaning end of data */
 		close_pipe_and_read(socket);
@@ -112,7 +113,7 @@ send_post_data(struct connection *conn)
 	struct http_connection_info *http = conn->info;
 	unsigned char *post = conn->uri->post;
 	unsigned char *postend;
-	enum connection_state error;
+	struct connection_state error;
 
 	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
@@ -301,7 +302,7 @@ execute_cgi(struct connection *conn)
 	unsigned char *script;
 	struct stat buf;
 	pid_t pid;
-	enum connection_state state = S_OK;
+	struct connection_state state = connection_state(S_OK);
 	int pipe_read[2], pipe_write[2];
 
 	if (!get_opt_bool("protocol.file.cgi.policy", NULL)) return 1;
@@ -313,7 +314,7 @@ execute_cgi(struct connection *conn)
 
 	script = get_uri_string(conn->uri, URI_PATH);
 	if (!script) {
-		state = S_OUT_OF_MEM;
+		state = connection_state(S_OUT_OF_MEM);
 		goto end2;
 	}
 	decode_uri(script);
@@ -344,13 +345,13 @@ execute_cgi(struct connection *conn)
 	}
 
 	if (c_pipe(pipe_read) || c_pipe(pipe_write)) {
-		state = -errno;
+		state = connection_state_for_errno(errno);
 		goto end1;
 	}
 
 	pid = fork();
 	if (pid < 0) {
-		state = -errno;
+		state = connection_state_for_errno(errno);
 		goto end0;
 	}
 	if (!pid) { /* CGI script */

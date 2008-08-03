@@ -333,13 +333,14 @@ bittorrent_fetch_callback(struct download *download, void *data)
 	struct cache_entry *cached = download->cached;
 
 	/* If the callback was removed we should shutdown ASAP. */
-	if (!fetcher->callback || download->state == S_INTERRUPTED) {
-		if (download->state == S_INTERRUPTED)
+	if (!fetcher->callback || is_in_state(download->state, S_INTERRUPTED)) {
+		if (is_in_state(download->state, S_INTERRUPTED))
 			mem_free(fetcher);
 		return;
 	}
 
-	if (is_in_result_state(download->state) && download->state != S_OK) {
+	if (is_in_result_state(download->state)
+	    && !is_in_state(download->state, S_OK)) {
 		fetcher->callback(fetcher->data, download->state, NULL);
 		if (fetcher->ref)
 			*fetcher->ref = NULL;
@@ -353,7 +354,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 	if (cached->redirect && fetcher->redirects++ < MAX_REDIRECTS) {
 		cancel_download(download, 0);
 
-		download->state = S_WAIT_REDIR;
+		download->state = connection_state(S_WAIT_REDIR);
 
 		load_uri(cached->redirect, cached->uri, download,
 			 PRI_DOWNLOAD, CACHE_MODE_NORMAL,
@@ -365,13 +366,13 @@ bittorrent_fetch_callback(struct download *download, void *data)
 	if (is_in_progress_state(download->state))
 		return;
 
-	assert(download->state == S_OK);
+	assert(is_in_state(download->state, S_OK));
 
 	/* If the entry is chunked defragment it and grab the single, remaining
 	 * fragment. */
 	fragment = get_cache_fragment(cached);
 	if (!fragment) {
-		fetcher->callback(fetcher->data, S_OUT_OF_MEM, NULL);
+		fetcher->callback(fetcher->data, connection_state(S_OUT_OF_MEM), NULL);
 		if (fetcher->ref)
 			*fetcher->ref = NULL;
 		mem_free(fetcher);
@@ -381,7 +382,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 	response.source = fragment->data;
 	response.length = fragment->length;
 
-	fetcher->callback(fetcher->data, S_OK, &response);
+	fetcher->callback(fetcher->data, connection_state(S_OK), &response);
 
 	if (fetcher->delete)
 		delete_cache_entry(cached);
@@ -399,7 +400,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 
 	fetcher = mem_calloc(1, sizeof(*fetcher));
 	if (!fetcher) {
-		callback(data, S_OUT_OF_MEM, NULL);
+		callback(data, connection_state(S_OUT_OF_MEM), NULL);
 		return NULL;
 	}
 

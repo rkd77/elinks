@@ -228,28 +228,28 @@ check_queue_bugs(void)
 #endif
 
 static void
-set_connection_socket_state(struct socket *socket, enum connection_state state)
+set_connection_socket_state(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
 	set_connection_state(socket->conn, state);
 }
 
 static void
-set_connection_socket_timeout(struct socket *socket, enum connection_state state)
+set_connection_socket_timeout(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
 	set_connection_timeout(socket->conn);
 }
 
 static void
-retry_connection_socket(struct socket *socket, enum connection_state state)
+retry_connection_socket(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
 	retry_connection(socket->conn, state);
 }
 
 static void
-done_connection_socket(struct socket *socket, enum connection_state state)
+done_connection_socket(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
 	abort_connection(socket->conn, state);
@@ -350,7 +350,7 @@ upload_stat_timer(struct connection *conn)
 }
 
 void
-set_connection_state(struct connection *conn, enum connection_state state)
+set_connection_state(struct connection *conn, struct connection_state state)
 {
 	struct download *download;
 	struct progress *progress = conn->progress;
@@ -360,7 +360,7 @@ set_connection_state(struct connection *conn, enum connection_state state)
 		conn->prev_error = conn->state;
 
 	conn->state = state;
-	if (conn->state == S_TRANS) {
+	if (is_in_state(conn->state, S_TRANS)) {
 		if (upload_progress && upload_progress->timer == TIMER_ID_UNDEF) {
 			start_update_progress(upload_progress,
 				(void (*)(void *)) upload_stat_timer, conn);
@@ -442,14 +442,14 @@ free_connection_data(struct connection *conn)
 
 	kill_timer(&conn->timer);
 
-	if (conn->state != S_WAIT)
+	if (!is_in_state(conn->state, S_WAIT))
 		done_host_connection(conn);
 }
 
 static void
 notify_connection_callbacks(struct connection *conn)
 {
-	enum connection_state state = conn->state;
+	struct connection_state state = conn->state;
 	struct download *download, *next;
 
 	foreachsafe (download, next, conn->downloads) {
@@ -469,7 +469,7 @@ done_connection(struct connection *conn)
 	 * connection is in a result state. If it is not already it is an
 	 * internal bug. This should never happen but it does. ;) --jonas */
 	if (!is_in_result_state(conn->state))
-		set_connection_state(conn, S_INTERNAL);
+		set_connection_state(conn, connection_state(S_INTERNAL));
 
 	del_from_list(conn);
 	notify_connection_callbacks(conn);
@@ -728,7 +728,7 @@ static inline void
 suspend_connection(struct connection *conn)
 {
 	interrupt_connection(conn);
-	set_connection_state(conn, S_WAIT);
+	set_connection_state(conn, connection_state(S_WAIT));
 }
 
 static void
@@ -742,7 +742,7 @@ run_connection(struct connection *conn)
 	if_assert_failed return;
 
 	if (!add_host_connection(conn)) {
-		set_connection_state(conn, S_OUT_OF_MEM);
+		set_connection_state(conn, connection_state(S_OUT_OF_MEM));
 		done_connection(conn);
 		return;
 	}
@@ -755,12 +755,12 @@ run_connection(struct connection *conn)
 
 /* Set certain state on a connection and then abort the connection. */
 void
-abort_connection(struct connection *conn, enum connection_state state)
+abort_connection(struct connection *conn, struct connection_state state)
 {
 	assertm(is_in_result_state(state),
 		"connection didn't end in result state (%d)", state);
 
-	if (state == S_OK && conn->cached)
+	if (is_in_state(state, S_OK) && conn->cached)
 		normalize_cache_entry(conn->cached, conn->from);
 
 	set_connection_state(conn, state);
@@ -772,7 +772,7 @@ abort_connection(struct connection *conn, enum connection_state state)
 
 /* Set certain state on a connection and then retry the connection. */
 void
-retry_connection(struct connection *conn, enum connection_state state)
+retry_connection(struct connection *conn, struct connection_state state)
 {
 	int max_tries = get_opt_int("connection.retries", NULL);
 
@@ -799,7 +799,7 @@ try_to_suspend_connection(struct connection *conn, struct uri *uri)
 
 	foreachback (c, connection_queue) {
 		if (get_priority(c) <= priority) return -1;
-		if (c->state == S_WAIT) continue;
+		if (is_in_state(c->state, S_WAIT)) continue;
 		if (c->uri->post && get_priority(c) < PRI_CANCEL) continue;
 		if (uri && !compare_uri(uri, c->uri, URI_HOST)) continue;
 		suspend_connection(c);
@@ -844,7 +844,8 @@ again:
 			struct connection *cc = c;
 
 			c = c->next;
-			if (cc->state == S_WAIT && get_keepalive_connection(cc)
+			if (is_in_state(cc->state, S_WAIT)
+			    && get_keepalive_connection(cc)
 			    && try_connection(cc, max_conns_to_host, max_conns))
 				goto again;
 		}
@@ -853,7 +854,7 @@ again:
 			struct connection *cc = c;
 
 			c = c->next;
-			if (cc->state == S_WAIT
+			if (is_in_state(cc->state, S_WAIT)
 			    && try_connection(cc, max_conns_to_host, max_conns))
 				goto again;
 		}
@@ -863,8 +864,8 @@ again:
 again2:
 	foreachback (conn, connection_queue) {
 		if (get_priority(conn) < PRI_CANCEL) break;
-		if (conn->state == S_WAIT) {
-			set_connection_state(conn, S_INTERRUPTED);
+		if (is_in_state(conn->state, S_WAIT)) {
+			set_connection_state(conn, connection_state(S_INTERRUPTED));
 			done_connection(conn);
 			goto again2;
 		}
@@ -886,14 +887,14 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	struct cache_entry *cached;
 	struct connection *conn;
 	struct uri *proxy_uri, *proxied_uri;
-	enum connection_state connection_state = S_OK;
+	struct connection_state error_state = connection_state(S_OK);
 
 	if (download) {
 		download->conn = NULL;
 		download->cached = NULL;
 		download->pri = pri;
-		download->state = S_OUT_OF_MEM;
-		download->prev_error = 0;
+		download->state = connection_state(S_OUT_OF_MEM);
+		download->prev_error = connection_state(0);
 	}
 
 #ifdef CONFIG_DEBUG
@@ -903,7 +904,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 		foreach (assigned, conn->downloads) {
 			assertm(assigned != download, "Download assigned to '%s'", struri(conn->uri));
 			if_assert_failed {
-				download->state = S_INTERNAL;
+				download->state = connection_state(S_INTERNAL);
 				if (download->callback)
 					download->callback(download, download->data);
 				return 0;
@@ -917,7 +918,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	if (cached) {
 		if (download) {
 			download->cached = cached;
-			download->state = S_OK;
+			download->state = connection_state(S_OK);
 			/* XXX:
 			 * This doesn't work since sometimes |download->progress|
 			 * is undefined and contains random memory locations.
@@ -934,7 +935,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	}
 
 	proxied_uri = get_proxied_uri(uri);
-	proxy_uri   = get_proxy_uri(uri, &connection_state);
+	proxy_uri   = get_proxy_uri(uri, &error_state);
 
 	if (!proxy_uri
 	    || !proxied_uri
@@ -942,12 +943,13 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 		&& !proxy_uri->hostlen)) {
 
 		if (download) {
-			if (connection_state == S_OK) {
-				connection_state = proxy_uri && proxied_uri
-						 ? S_BAD_URL : S_OUT_OF_MEM;
+			if (is_in_state(error_state, S_OK)) {
+				error_state = proxy_uri && proxied_uri
+					? connection_state(S_BAD_URL)
+					: connection_state(S_OUT_OF_MEM);
 			}
 
-			download->state = connection_state;
+			download->state = error_state;
 			download->callback(download, download->data);
 		}
 		if (proxy_uri) done_uri(proxy_uri);
@@ -987,7 +989,7 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	conn = init_connection(proxy_uri, proxied_uri, referrer, start, cache_mode, pri);
 	if (!conn) {
 		if (download) {
-			download->state = S_OUT_OF_MEM;
+			download->state = connection_state(S_OUT_OF_MEM);
 			download->callback(download, download->data);
 		}
 		if (proxy_uri) done_uri(proxy_uri);
@@ -1003,12 +1005,12 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 		download->progress = conn->progress;
 		download->conn = conn;
 		download->cached = NULL;
-		download->state = S_OK;
+		download->state = connection_state(S_OK);
 		add_to_list(conn->downloads, download);
 	}
 
 	add_to_queue(conn);
-	set_connection_state(conn, S_WAIT);
+	set_connection_state(conn, connection_state(S_WAIT));
 
 	check_queue_bugs();
 
@@ -1034,7 +1036,7 @@ cancel_download(struct download *download, int interrupt)
 
 	check_queue_bugs();
 
-	download->state = S_INTERRUPTED;
+	download->state = connection_state(S_INTERRUPTED);
 	del_from_list(download);
 
 	conn = download->conn;
@@ -1048,7 +1050,7 @@ cancel_download(struct download *download, int interrupt)
 		conn->pri[PRI_CANCEL]++;
 
 		if (conn->detached || interrupt)
-			abort_connection(conn, S_INTERRUPTED);
+			abort_connection(conn, connection_state(S_INTERRUPTED));
 	}
 
 	sort_queue();
@@ -1197,7 +1199,8 @@ void
 abort_all_connections(void)
 {
 	while (!list_empty(connection_queue)) {
-		abort_connection(connection_queue.next, S_INTERRUPTED);
+		abort_connection(connection_queue.next,
+				 connection_state(S_INTERRUPTED));
 	}
 
 	abort_all_keepalive_connections();
@@ -1210,7 +1213,7 @@ abort_background_connections(void)
 
 	foreachsafe (conn, next, connection_queue) {
 		if (get_priority(conn) >= PRI_CANCEL)
-			abort_connection(conn, S_INTERRUPTED);
+			abort_connection(conn, connection_state(S_INTERRUPTED));
 	}
 }
 

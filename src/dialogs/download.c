@@ -132,7 +132,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 			  && download->progress->size >= 0);
 #if CONFIG_BITTORRENT
 	int bittorrent = (file_download->uri->protocol == PROTOCOL_BITTORRENT
-			  && (show_meter || download->state == S_RESUME));
+			  && (show_meter || is_in_state(download->state, S_RESUME)));
 #endif
 
 	redraw_below_window(dlg_data->win);
@@ -402,7 +402,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 
 	if (!download->progress
 	    || download->progress->size < 0
-	    || download->state != S_TRANS
+	    || !is_in_state(download->state, S_TRANS)
 	    || !has_progress(download->progress)) {
 		/* TODO: Show trimmed error message. */
 		return;

@@ -68,7 +68,7 @@ struct bittorrent_message {
 	LIST_HEAD(struct bittorrent_message);
 
 	struct uri *uri;
-	enum connection_state state;
+	struct connection_state state;
 	unsigned char string[1];
 };
 
@@ -411,7 +411,7 @@ del_bittorrent_peer_request(struct bittorrent_peer_status *status,
 /* URI fetching: */
 /* ************************************************************************** */
 
-typedef void (*bittorrent_fetch_callback_T)(void *, enum connection_state,
+typedef void (*bittorrent_fetch_callback_T)(void *, struct connection_state,
 					    struct bittorrent_const_string *);
 
 struct bittorrent_fetcher *

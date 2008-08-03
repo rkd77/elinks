@@ -41,8 +41,8 @@ struct download {
 	void *data;
 	struct progress *progress;
 
-	enum connection_state state;
-	enum connection_state prev_error;
+	struct connection_state state;
+	struct connection_state prev_error;
 	enum connection_priority pri;
 };
 

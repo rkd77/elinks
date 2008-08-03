@@ -16,8 +16,8 @@ struct uri;
 
 /* Use internally for error return values. */
 enum socket_error {
-	SOCKET_SYSCALL_ERROR	= -1,	/* Retry with -errno state. */
-	SOCKET_INTERNAL_ERROR	= -2,	/* Stop with -errno state. */
+	SOCKET_SYSCALL_ERROR	= -1,	/* Retry with connection_state_for_errno(errno). */
+	SOCKET_INTERNAL_ERROR	= -2,	/* Stop with connection_state(errno). */
 	SOCKET_SSL_WANT_READ	= -3,	/* Try to read some more. */
 	SOCKET_CANT_READ	= -4,	/* Retry with S_CANT_READ state. */
 	SOCKET_CANT_WRITE	= -5,	/* Retry with S_CANT_WRITE state. */
@@ -39,7 +39,7 @@ enum socket_state {
 typedef void (*socket_read_T)(struct socket *, struct read_buffer *);
 typedef void (*socket_write_T)(struct socket *);
 typedef void (*socket_connect_T)(struct socket *);
-typedef void (*socket_operation_T)(struct socket *, enum connection_state state);
+typedef void (*socket_operation_T)(struct socket *, struct connection_state);
 
 struct socket_operations {
 	/* Report change in the state of the socket. */
@@ -97,6 +97,7 @@ struct socket {
 	unsigned int protocol_family:1; /* EL_PF_INET, EL_PF_INET6 */
 	unsigned int need_ssl:1;	/* If the socket needs SSL support */
 	unsigned int no_tls:1;		/* Internal SSL flag. */
+	unsigned int set_no_tls:1;	/* Was the blacklist checked yet? */
 	unsigned int duplex:1;		/* Allow simultaneous reads & writes. */
 };
 
@@ -139,7 +140,7 @@ int get_pasv_socket(struct socket *ctrl_socket, struct sockaddr_storage *addr);
 /* Try to connect to the next available address or force the connection to retry
  * if all has already been tried. Updates the connection state to
  * @connection_state. */
-void connect_socket(struct socket *socket, enum connection_state state);
+void connect_socket(struct socket *socket, struct connection_state state);
 
 /* Used by the SSL layer when negotiating. */
 void dns_exception(struct socket *socket);
@@ -150,17 +151,17 @@ void dns_exception(struct socket *socket);
 /* Reads data from @socket into @buffer. Calls @done each time new data is
  * ready. */
 void read_from_socket(struct socket *socket, struct read_buffer *buffer,
-		      enum connection_state state, socket_read_T done);
+		      struct connection_state state, socket_read_T done);
 
 /* Writes @datalen bytes from @data buffer to the passed @socket. When all data
  * is written the @done callback will be called. */
 void write_to_socket(struct socket *socket,
 		     unsigned char *data, int datalen,
-		     enum connection_state state, socket_write_T write_done);
+		     struct connection_state state, socket_write_T write_done);
 
 /* Send request and get response. */
 void request_from_socket(struct socket *socket, unsigned char *data, int datalen,
-			 enum connection_state state, enum socket_state sock_state,
+			 struct connection_state state, enum socket_state sock_state,
 			 socket_read_T read_done);
 
 /* Initialize a read buffer. */

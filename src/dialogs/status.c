@@ -217,12 +217,12 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 			static int last_current_link;
 			int ncl = doc_view->vs->current_link;
 
-			if (download->state == S_INTERRUPTED
+			if (is_in_state(download->state, S_INTERRUPTED)
 			    && ncl != last_current_link)
-				download->state = S_OK;
+				download->state = connection_state(S_OK);
 			last_current_link = ncl;
 
-			if (download->state == S_OK) {
+			if (is_in_state(download->state, S_OK)) {
 				if (get_current_link(doc_view)) {
 					msg = get_current_link_info_and_title(ses, doc_view);
 				} else if (ses->navigate_mode == NAVIGATE_CURSOR_ROUTING) {
@@ -344,7 +344,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 		} else {
 			download = get_current_download(tab_ses);
 
-			if (download && download->state != S_OK) {
+			if (download && !is_in_state(download->state, S_OK)) {
 				color = loading_color;
 			} else if (!tab_ses || !tab_ses->status.visited) {
 				color = fresh_color;

@@ -35,13 +35,13 @@ finger_get_response(struct socket *socket, struct read_buffer *rb)
 	int l;
 
 	if (!cached) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	conn->cached = cached;
 
 	if (socket->state == SOCKET_CLOSED) {
-		abort_connection(conn, S_OK);
+		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
 
@@ -53,7 +53,8 @@ finger_get_response(struct socket *socket, struct read_buffer *rb)
 
 	conn->from += l;
 	kill_buffer_data(rb, l);
-	read_from_socket(conn->socket, rb, S_TRANS, finger_get_response);
+	read_from_socket(conn->socket, rb, connection_state(S_TRANS),
+			 finger_get_response);
 }
 
 static void
@@ -70,7 +71,8 @@ finger_send_request(struct socket *socket)
 		add_bytes_to_string(&req, conn->uri->user, conn->uri->userlen);
 	}
 	add_crlf_to_string(&req);
-	request_from_socket(socket, req.source, req.length, S_SENT,
+	request_from_socket(socket, req.source, req.length,
+			    connection_state(S_SENT),
 			    SOCKET_END_ONCLOSE, finger_get_response);
 	done_string(&req);
 }

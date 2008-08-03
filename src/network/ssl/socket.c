@@ -93,7 +93,7 @@ ssl_want_read(struct socket *socket)
 #ifdef CONFIG_GNUTLS
 			if (get_opt_bool("connection.ssl.cert_verify", NULL)
 			    && gnutls_certificate_verify_peers(*((ssl_t *) socket->ssl))) {
-				socket->ops->retry(socket, S_SSL_ERROR);
+				socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 				return;
 			}
 #endif
@@ -107,8 +107,8 @@ ssl_want_read(struct socket *socket)
 			break;
 
 		default:
-			socket->no_tls = 1;
-			socket->ops->retry(socket, S_SSL_ERROR);
+			socket->no_tls = !socket->no_tls;
+			socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 	}
 }
 
@@ -119,7 +119,7 @@ ssl_connect(struct socket *socket)
 	int ret;
 
 	if (init_ssl_connection(socket) == S_SSL_ERROR) {
-		socket->ops->done(socket, S_SSL_ERROR);
+		socket->ops->done(socket, connection_state(S_SSL_ERROR));
 		return -1;
 	}
 
@@ -173,7 +173,7 @@ ssl_connect(struct socket *socket)
 	switch (ret) {
 		case SSL_ERROR_WANT_READ:
 		case SSL_ERROR_WANT_READ2:
-			socket->ops->set_state(socket, S_SSL_NEG);
+			socket->ops->set_state(socket, connection_state(S_SSL_NEG));
 			set_handlers(socket->fd, (select_handler_T) ssl_want_read,
 				     NULL, (select_handler_T) dns_exception, socket);
 			return -1;
@@ -190,17 +190,17 @@ ssl_connect(struct socket *socket)
 		default:
 			if (ret != SSL_ERROR_NONE) {
 				/* DBG("sslerr %s", gnutls_strerror(ret)); */
-				socket->no_tls = 1;
+				socket->no_tls = !socket->no_tls;
 			}
 
-			connect_socket(socket, S_SSL_ERROR);
+			connect_socket(socket, connection_state(S_SSL_ERROR));
 			return -1;
 	}
 
 	return 0;
 }
 
-/* Return -1 on error, bytes written on success. */
+/* Return enum socket_error on error, bytes written on success. */
 ssize_t
 ssl_write(struct socket *socket, unsigned char *data, int len)
 {
@@ -222,15 +222,14 @@ ssl_write(struct socket *socket, unsigned char *data, int len)
 		if (err == SSL_ERROR_SYSCALL)
 			return SOCKET_SYSCALL_ERROR;
 
-		errno = -S_SSL_ERROR;
-
+		errno = S_SSL_ERROR;
 		return SOCKET_INTERNAL_ERROR;
 	}
 
 	return wr;
 }
 
-/* Return -1 on error, rd or success. */
+/* Return enum socket_error on error, bytes read on success. */
 ssize_t
 ssl_read(struct socket *socket, unsigned char *data, int len)
 {
@@ -258,8 +257,7 @@ ssl_read(struct socket *socket, unsigned char *data, int len)
 		if (err == SSL_ERROR_SYSCALL2)
 			return SOCKET_SYSCALL_ERROR;
 
-		errno = -S_SSL_ERROR;
-
+		errno = S_SSL_ERROR;
 		return SOCKET_INTERNAL_ERROR;
 	}
 

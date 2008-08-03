@@ -55,7 +55,7 @@ proxy_probe_no_proxy(unsigned char *url, unsigned char *no_proxy)
 
 static struct uri *
 proxy_uri(struct uri *uri, unsigned char *proxy,
-          enum connection_state *connection_state)
+          struct connection_state *error_state)
 {
 	struct string string;
 
@@ -70,10 +70,10 @@ proxy_uri(struct uri *uri, unsigned char *proxy,
 		/* XXX: Assume the problem is due to @proxy having bad format.
 		 * This is a lot faster easier than checking the format. */
 		if (!uri)
-			*connection_state = S_PROXY_ERROR;
+			*error_state = connection_state(S_PROXY_ERROR);
 	} else {
 		uri = NULL;
-		*connection_state = S_OUT_OF_MEM;
+		*error_state = connection_state(S_OUT_OF_MEM);
 	}
 
 	done_string(&string);
@@ -118,7 +118,7 @@ get_protocol_proxy(unsigned char *opt,
 
 static struct uri *
 get_proxy_worker(struct uri *uri, unsigned char *proxy,
-                 enum connection_state *connection_state)
+                 struct connection_state *error_state)
 {
 	unsigned char *protocol_proxy = NULL;
 
@@ -126,7 +126,7 @@ get_proxy_worker(struct uri *uri, unsigned char *proxy,
 		if (*proxy) {
 			proxy = strip_proxy_protocol(proxy, "http://", "ftp://");
 
-			return proxy_uri(uri, proxy, connection_state);
+			return proxy_uri(uri, proxy, error_state);
 		}
 
 		/* "" from script_hook_get_proxy() */
@@ -177,14 +177,14 @@ get_proxy_worker(struct uri *uri, unsigned char *proxy,
 		if (!no_proxy || !*no_proxy) no_proxy = getenv("no_proxy");
 
 		if (!proxy_probe_no_proxy(uri->host, no_proxy))
-			return proxy_uri(uri, protocol_proxy, connection_state);
+			return proxy_uri(uri, protocol_proxy, error_state);
 	}
 
 	return get_composed_uri(uri, URI_BASE);
 }
 
 struct uri *
-get_proxy_uri(struct uri *uri, enum connection_state *connection_state)
+get_proxy_uri(struct uri *uri, struct connection_state *error_state)
 {
 	if (uri->protocol == PROTOCOL_PROXY) {
 		return get_composed_uri(uri, URI_BASE);
@@ -196,11 +196,11 @@ get_proxy_uri(struct uri *uri, enum connection_state *connection_state)
 		set_event_id(get_proxy_event_id, "get-proxy");
 		trigger_event(get_proxy_event_id, &tmp, struri(uri));
 
-		uri = get_proxy_worker(uri, tmp, connection_state);
+		uri = get_proxy_worker(uri, tmp, error_state);
 		mem_free_if(tmp);
 		return uri;
 #else
-		return get_proxy_worker(uri, NULL, connection_state);
+		return get_proxy_worker(uri, NULL, error_state);
 #endif
 	}
 }

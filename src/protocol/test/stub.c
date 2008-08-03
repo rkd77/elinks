@@ -85,7 +85,7 @@ get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
 
 /* declared in "session/session.h" */
 void
-print_error_dialog(struct session *ses, enum connection_state state,
+print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, enum connection_priority priority)
 {
 	stub_called("print_error_dialog");

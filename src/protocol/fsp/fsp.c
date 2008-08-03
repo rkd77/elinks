@@ -61,11 +61,11 @@ struct module fsp_protocol_module = struct_module(
  *
  * - If an error occurs, the child process writes "text/x-error"
  *   without newline to stderr, and an error code and a newline to
- *   stdout.  The error code is either from errno or a negated value
- *   from enum connection_state, e.g. -S_OUT_OF_MEM.  In particular,
- *   EPERM causes the parent process to prompt for username and
- *   password.  (In this, fsplib differs from libsmbclient, which uses
- *   EACCES if authentication fails.)
+ *   stdout.  The error code is either "S" followed by errno or "I"
+ *   followed by enum connection_basic_state.  In particular, EPERM
+ *   causes the parent process to prompt for username and password.
+ *   (In this, fsplib differs from libsmbclient, which uses EACCES if
+ *   authentication fails.)
  *
  * - If the resource is a regular file, the child process writes the
  *   estimated length of the file (in bytes) and a newline to stderr,
@@ -90,9 +90,12 @@ struct module fsp_protocol_module = struct_module(
  * stdout fails for directory listing like we do for file fetching. */
 
 static void
-fsp_error(int error)
+fsp_error(struct connection_state error)
 {
-	printf("%d\n", error);
+	if (is_system_error(error))
+		printf("S%d\n", (int) error.syserr);
+	else
+		printf("I%d\n", (int) error.basic);
 	fprintf(stderr, "text/x-error");
 	/* In principle, this should perhaps call fsp_close_session to
 	 * make the server accept any key from the next client process
@@ -202,13 +205,13 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 	unsigned char dircolor[8] = "";
 
 	if (!data)
-		fsp_error(-S_OUT_OF_MEM);
+		fsp_error(connection_state(S_OUT_OF_MEM));
 	decode_uri(data);
-	if (init_directory_listing(&buf, uri) != S_OK)
-		fsp_error(-S_OUT_OF_MEM);
+	if (!is_in_state(init_directory_listing(&buf, uri), S_OK))
+		fsp_error(connection_state(S_OUT_OF_MEM));
 
 	dir = fsp_opendir(ses, data);
-	if (!dir) fsp_error(errno);
+	if (!dir) fsp_error(connection_state_for_errno(errno));
 
 	fprintf(stderr, "text/html");
 	fclose(stderr);
@@ -249,8 +252,18 @@ do_fsp(struct connection *conn)
 		if (auth) password = auth->password;
 	}
 
+	/* fsp_open_session may not set errno if getaddrinfo fails
+	 * https://sourceforge.net/tracker/index.php?func=detail&aid=2036798&group_id=93841&atid=605738
+	 * Try to detect this bug and use an ELinks-specific error
+	 * code instead, so that we can display a message anyway.  */
+	errno = 0;
 	ses = fsp_open_session(host, port, password);
-	if (!ses) fsp_error(errno);
+	if (!ses) {
+		if (errno)
+			fsp_error(connection_state_for_errno(errno));
+		else
+			fsp_error(connection_state(S_FSP_OPEN_SESSION_UNKN));
+	}
 
 	/* fsplib 0.8 ABI depends on _FILE_OFFSET_BITS
 	 * https://sourceforge.net/tracker/index.php?func=detail&aid=1674729&group_id=93841&atid=605738
@@ -270,7 +283,7 @@ do_fsp(struct connection *conn)
 	 * sb.st_size really needs to be filled, but filling the rest
 	 * too helps viewing the data with a debugger.)  */
 	memset(&sb, 0xAA, sizeof(sb));
-	if (fsp_stat(ses, data, &sb)) fsp_error(errno);
+	if (fsp_stat(ses, data, &sb)) fsp_error(connection_state_for_errno(errno));
 
 	if (S_ISDIR(sb.st_mode)) {
 		fsp_directory(ses, uri);
@@ -280,7 +293,7 @@ do_fsp(struct connection *conn)
 		int r;
 
 		if (!file) {
-			fsp_error(errno);
+			fsp_error(connection_state_for_errno(errno));
 		}
 
 #if SIZEOF_OFF_T >= 8
@@ -334,7 +347,7 @@ static void
 prompt_username_pw(struct connection *conn)
 {
 	add_auth_entry(conn->uri, "FSP", NULL, NULL, 0);
-	abort_connection(conn, S_OK);
+	abort_connection(conn, connection_state(S_OK));
 }
 
 static void
@@ -342,10 +355,10 @@ fsp_got_error(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
 	struct connection *conn = socket->conn;
-	int error;
+	struct connection_state error;
 
 	if (len < 0) {
-		abort_connection(conn, -errno);
+		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
 
@@ -355,20 +368,28 @@ fsp_got_error(struct socket *socket, struct read_buffer *rb)
 	 * pipe.  */
 	assert(rb->freespace >= 1);
 	if_assert_failed {
-		abort_connection(conn, S_INTERNAL);
+		abort_connection(conn, connection_state(S_INTERNAL));
 		return;
 	}
 	rb->data[len] = '\0';
-	error = atoi(rb->data);
-	kill_buffer_data(rb, len);
-	switch (error) {
-	case EPERM:
-		prompt_username_pw(conn);
+	switch (rb->data[0]) {
+	case 'S':
+		error = connection_state_for_errno(atoi(rb->data + 1));
+		break;
+	case 'I':
+		error = connection_state(atoi(rb->data + 1));
 		break;
 	default:
-		abort_connection(conn, -error);
+		ERROR("malformed error code: %s", rb->data);
+		error = connection_state(S_INTERNAL);
 		break;
 	}
+	kill_buffer_data(rb, len);
+
+	if (is_system_error(error) && error.syserr == EPERM)
+		prompt_username_pw(conn);
+	else
+		abort_connection(conn, error);
 }
 
 static void
@@ -378,12 +399,12 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 	struct connection *conn = socket->conn;
 
 	if (len < 0) {
-		abort_connection(conn, -errno);
+		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
 
 	if (!len) {
-		abort_connection(conn, S_OK);
+		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
 
@@ -394,7 +415,7 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 	conn->from += len;
 	kill_buffer_data(rb, len);
 
-	read_from_socket(socket, rb, S_TRANS, fsp_got_data);
+	read_from_socket(socket, rb, connection_state(S_TRANS), fsp_got_data);
 }
 
 static void
@@ -413,7 +434,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 		 * and assume abort_connection will do them?)  */
 		close_socket(socket);
 		close_socket(conn->data_socket);
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	socket->state = SOCKET_END_ONCLOSE;
@@ -436,7 +457,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 
 					/* avoid read from socket error */
 					if (!conn->est_length) {
-						abort_connection(conn, S_OK);
+						abort_connection(conn, connection_state(S_OK));
 						return;
 					}
 				}
@@ -451,15 +472,17 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 	if (!buf) {
 		close_socket(socket);
 		close_socket(conn->data_socket);
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
 	if (error) {
 		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
-		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_error);
+		read_from_socket(conn->data_socket, buf,
+				 connection_state(S_CONN), fsp_got_error);
 	} else {
-		read_from_socket(conn->data_socket, buf, S_CONN, fsp_got_data);
+		read_from_socket(conn->data_socket, buf,
+				 connection_state(S_CONN), fsp_got_data);
 	}
 }
 
@@ -478,7 +501,7 @@ fsp_protocol_handler(struct connection *conn)
 		if (fsp_pipe[1] >= 0) close(fsp_pipe[1]);
 		if (header_pipe[0] >= 0) close(header_pipe[0]);
 		if (header_pipe[1] >= 0) close(header_pipe[1]);
-		abort_connection(conn, -s_errno);
+		abort_connection(conn, connection_state_for_errno(s_errno));
 		return;
 	}
 	conn->from = 0;
@@ -493,7 +516,7 @@ fsp_protocol_handler(struct connection *conn)
 		close(fsp_pipe[1]);
 		close(header_pipe[0]);
 		close(header_pipe[1]);
-		retry_connection(conn, -s_errno);
+		retry_connection(conn, connection_state_for_errno(s_errno));
 		return;
 	}
 
@@ -531,9 +554,10 @@ fsp_protocol_handler(struct connection *conn)
 		if (!buf2) {
 			close_socket(conn->data_socket);
 			close_socket(conn->socket);
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
 			return;
 		}
-		read_from_socket(conn->socket, buf2, S_CONN, fsp_got_header);
+		read_from_socket(conn->socket, buf2,
+				 connection_state(S_CONN), fsp_got_header);
 	}
 }

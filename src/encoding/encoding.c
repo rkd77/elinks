@@ -223,10 +223,10 @@ try_encoding_extensions(struct string *filename, int *fd)
  * whether the true end of the stream has been reached.
  *
  * @return a connection state. S_OK if all is well. */
-enum connection_state
+struct connection_state
 read_file(struct stream_encoded *stream, int readsize, struct string *page)
 {
-	if (!init_string(page)) return S_OUT_OF_MEM;
+	if (!init_string(page)) return connection_state(S_OUT_OF_MEM);
 
 	/* We read with granularity of stt.st_size (given as @readsize) - this
 	 * does best job for uncompressed files, and doesn't hurt for
@@ -248,17 +248,17 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page)
 			 * do. Since errno == 0 == S_WAIT and we cannot have
 			 * that. */
 			if (errno)
-				return (enum connection_state) -errno;
+				return connection_state_for_errno(errno);
 
 			/* FIXME: This is indeed an internal error. If readed from a
 			 * corrupted encoded file nothing or only some of the
 			 * data will be read. */
-			return S_ENCODE_ERROR;
+			return connection_state(S_ENCODE_ERROR);
 
 		} else if (readlen == 0) {
 			/* NUL-terminate just in case */
 			page->source[page->length] = '\0';
-			return S_OK;
+			return connection_state(S_OK);
 		}
 
 		page->length += readlen;
@@ -276,7 +276,7 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page)
 	}
 
 	done_string(page);
-	return S_OUT_OF_MEM;
+	return connection_state(S_OUT_OF_MEM);
 }
 
 static inline int
@@ -291,14 +291,14 @@ is_stdin_pipe(struct stat *stt, struct string *filename)
 			S_ISFIFO(stt->st_mode));
 }
 
-enum connection_state
+struct connection_state
 read_encoded_file(struct string *filename, struct string *page)
 {
 	struct stream_encoded *stream;
 	struct stat stt;
 	enum stream_encoding encoding = ENCODING_NONE;
 	int fd = open(filename->source, O_RDONLY | O_NOCTTY);
-	enum connection_state state = -errno;
+	struct connection_state state = connection_state_for_errno(errno);
 
 	if (fd == -1 && get_opt_bool("protocol.file.try_encoding_extensions", NULL)) {
 		encoding = try_encoding_extensions(filename, &fd);
@@ -323,7 +323,7 @@ read_encoded_file(struct string *filename, struct string *page)
 	/* Do all the necessary checks before trying to read the file.
 	 * @state code is used to block further progress. */
 	if (fstat(fd, &stt)) {
-		state = -errno;
+		state = connection_state_for_errno(errno);
 
 	} else if (!S_ISREG(stt.st_mode) && encoding != ENCODING_NONE) {
 		/* We only want to open regular encoded files. */
@@ -331,10 +331,10 @@ read_encoded_file(struct string *filename, struct string *page)
 
 	} else if (!S_ISREG(stt.st_mode) && !is_stdin_pipe(&stt, filename)
 	           && !get_opt_bool("protocol.file.allow_special_files", NULL)) {
-		state = S_FILE_TYPE;
+		state = connection_state(S_FILE_TYPE);
 
 	} else if (!(stream = open_encoded(fd, encoding))) {
-		state = S_OUT_OF_MEM;
+		state = connection_state(S_OUT_OF_MEM);
 
 	} else {
 		int readsize = (int) stt.st_size;
@@ -343,9 +343,9 @@ read_encoded_file(struct string *filename, struct string *page)
 		/* FIXME: See bug 497 for info about support for big files. */
 		if (readsize != stt.st_size || readsize < 0) {
 #ifdef EFBIG
-			state = (enum connection_state) -(EFBIG);
+			state = connection_state_for_errno(EFBIG);
 #else
-			state = S_FILE_ERROR;
+			state = connection_state(S_FILE_ERROR);
 #endif
 
 		} else {

@@ -49,8 +49,8 @@ struct connection {
 
 	unsigned int id;
 
-	enum connection_state state;
-	enum connection_state prev_error;
+	struct connection_state state;
+	struct connection_state prev_error;
 
 	/* The communication socket with the other side. */
 	struct socket *socket;
@@ -90,14 +90,14 @@ int get_keepalive_connections_count(void);
 int get_connections_connecting_count(void);
 int get_connections_transfering_count(void);
 
-void set_connection_state(struct connection *, enum connection_state);
+void set_connection_state(struct connection *, struct connection_state);
 
 int has_keepalive_connection(struct connection *);
 void add_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 			      void (*done)(struct connection *));
 
-void abort_connection(struct connection *, enum connection_state);
-void retry_connection(struct connection *, enum connection_state);
+void abort_connection(struct connection *, struct connection_state);
+void retry_connection(struct connection *, struct connection_state);
 
 void cancel_download(struct download *download, int interrupt);
 void move_download(struct download *old, struct download *new,

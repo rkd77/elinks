@@ -16,7 +16,7 @@ uint32_t get_bittorrent_peerwire_max_request_length(void);
 int *get_bittorrent_selection(struct uri *uri, size_t size);
 void add_bittorrent_selection(struct uri *uri, int *selection, size_t size);
 
-void add_bittorrent_message(struct uri *uri, enum connection_state state,
+void add_bittorrent_message(struct uri *uri, struct connection_state state,
 			    struct bittorrent_const_string *);
 
 #endif

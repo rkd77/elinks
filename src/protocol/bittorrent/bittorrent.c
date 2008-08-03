@@ -294,7 +294,7 @@ add_bittorrent_selection(struct uri *uri, int *selection, size_t size)
 static INIT_LIST_OF(struct bittorrent_message, bittorrent_messages);
 
 void
-add_bittorrent_message(struct uri *uri, enum connection_state state,
+add_bittorrent_message(struct uri *uri, struct connection_state state,
 		       struct bittorrent_const_string *string)
 {
 	struct bittorrent_message *message;

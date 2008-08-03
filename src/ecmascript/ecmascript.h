@@ -52,7 +52,7 @@ struct ecmascript_interpreter {
 	 * ecmascript_fragile, but it can happen i.e. when the urrent document
 	 * is reloaded in another tab and then you just cause the current tab
 	 * to redraw. */
-	unsigned int onload_snippets_document_id;
+	unsigned int onload_snippets_cache_id;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct

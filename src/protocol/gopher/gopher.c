@@ -197,9 +197,9 @@ add_uri_decoded(struct string *command, unsigned char *string, int length,
 	command->length = strlen(command->source);
 }
 
-static enum connection_state init_gopher_index_cache_entry(struct connection *conn);
+static struct connection_state init_gopher_index_cache_entry(struct connection *conn);
 
-static enum connection_state
+static struct connection_state
 add_gopher_command(struct connection *conn, struct string *command,
 		   enum gopher_entity entity,
 		   unsigned char *selector, int selectorlen)
@@ -269,11 +269,11 @@ add_gopher_command(struct connection *conn, struct string *command,
 	return S_CONN;
 }
 
-static enum connection_state
+static struct connection_state
 init_gopher_connection_info(struct connection *conn)
 {
 	struct gopher_connection_info *gopher;
-	enum connection_state state;
+	struct connection_state state;
 	struct string command;
 	enum gopher_entity entity = DEFAULT_GOPHER_ENTITY;
 	unsigned char *selector = conn->uri->data;
@@ -576,15 +576,15 @@ check_gopher_last_line(unsigned char *line, unsigned char *end)
 }
 
 /* Parse a Gopher Menu document */
-static enum connection_state
+static struct connection_state
 read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 {
-	enum connection_state state = S_TRANS;
+	struct connection_state state = connection_state(S_TRANS);
 	struct string buffer;
 	unsigned char *end;
 
 	if (conn->from == 0) {
-		enum connection_state state;
+		struct connection_state state;
 
 		state = init_directory_listing(&buffer, conn->uri);
 		if (state != S_OK)
@@ -645,7 +645,7 @@ init_gopher_cache_entry(struct connection *conn)
 }
 
 /* Display a Gopher Index document. */
-static enum connection_state
+static struct connection_state
 init_gopher_index_cache_entry(struct connection *conn)
 {
 	unsigned char *where;
@@ -695,7 +695,7 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
 	struct gopher_connection_info *gopher = conn->info;
-	enum connection_state state = S_TRANS;
+	struct connection_state state = S_TRANS;
 
 	assert(gopher && gopher->entity);
 
@@ -774,7 +774,7 @@ void
 gopher_protocol_handler(struct connection *conn)
 {
 	struct uri *uri = conn->uri;
-	enum connection_state state = S_CONN;
+	struct connection_state state = S_CONN;
 
 	switch (get_uri_port(uri)) {
 	case 105:

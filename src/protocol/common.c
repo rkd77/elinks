@@ -43,7 +43,7 @@ close_all_non_term_fd(void)
 		close(n);
 }
 
-enum connection_state
+struct connection_state
 init_directory_listing(struct string *page, struct uri *uri)
 {
 	struct string dirpath = NULL_STRING;
@@ -151,5 +151,7 @@ out_of_memory:
 	done_string(&decoded);
 	done_string(&location);
 
-	return page->length > 0 ? S_OK : S_OUT_OF_MEM;
+	return page->length > 0
+		? connection_state(S_OK)
+		: connection_state(S_OUT_OF_MEM);
 }

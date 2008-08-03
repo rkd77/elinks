@@ -89,14 +89,14 @@ get_nntp_message_header_end(unsigned char *data, int datalen)
 	return NULL;
 }
 
-static enum connection_state
+static struct connection_state
 init_nntp_header(struct connection *conn, struct read_buffer *rb)
 {
 	struct nntp_connection_info *nntp = conn->info;
 
 	if (!conn->cached) {
 		conn->cached = get_cache_entry(conn->uri);
-		if (!conn->cached) return S_OUT_OF_MEM;
+		if (!conn->cached) return connection_state(S_OUT_OF_MEM);
 
 	} else if (conn->cached->head || conn->cached->content_type) {
 		/* If the head is set wipe out the content to be sure */
@@ -107,7 +107,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 	/* XXX: Override any Content-Type line in the header */
 	mem_free_set(&conn->cached->content_type, stracpy("text/html"));
 	if (!conn->cached->content_type)
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 
 	switch (nntp->target) {
 	case NNTP_TARGET_ARTICLE_NUMBER:
@@ -119,12 +119,12 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 		end = get_nntp_message_header_end(rb->data, rb->length);
 		if (!end) {
 			/* Redo the whole cache entry thing next time */
-			return S_TRANS;
+			return connection_state(S_TRANS);
 		}
 
 		/* FIXME: Add the NNTP response code line */
 		conn->cached->head = stracpy("FIXME NNTP response code\r\n");
-		if (!conn->cached->head) return S_OUT_OF_MEM;
+		if (!conn->cached->head) return connection_state(S_OUT_OF_MEM);
 
 		add_to_strn(&conn->cached->head, rb->data);
 
@@ -140,7 +140,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 		break;
 	}
 
-	return S_OK;
+	return connection_state(S_OK);
 }
 
 
@@ -462,31 +462,31 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 	add_char_to_string(html, '\n');
 }
 
-enum connection_state
+struct connection_state
 read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 {
 	struct string html;
 	unsigned char *end;
-	enum connection_state state = S_TRANS;
+	struct connection_state state = connection_state(S_TRANS);
 
 	if (conn->from == 0) {
-		switch (init_nntp_header(conn, rb)) {
+		switch (init_nntp_header(conn, rb).basic) {
 		case S_OK:
 			break;
 
 		case S_OUT_OF_MEM:
-			return S_OUT_OF_MEM;
+			return connection_state(S_OUT_OF_MEM);
 
 		case S_TRANS:
-			return S_TRANS;
+			return connection_state(S_TRANS);
 
 		default:
-			return S_NNTP_ERROR;
+			return connection_state(S_NNTP_ERROR);
 		}
 	}
 
 	if (!init_string(&html))
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 
 	if (conn->from == 0)
 		add_nntp_html_start(&html, conn);
@@ -495,7 +495,7 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 		unsigned char *line = check_nntp_line(rb->data, end);
 
 		if (!line) {
-			state = S_OK;
+			state = connection_state(S_OK);
 			break;
 		}
 
@@ -505,7 +505,7 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 		kill_buffer_data(rb, end - rb->data);
 	}
 
-	if (state != S_TRANS)
+	if (!is_in_state(state, S_TRANS))
 		add_nntp_html_end(&html, conn);
 
 	add_fragment(conn->cached, conn->from, html.source, html.length);

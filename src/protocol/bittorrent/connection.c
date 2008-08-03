@@ -305,22 +305,22 @@ init_bittorrent_connection(struct connection *conn)
 void
 bittorrent_resume_callback(struct bittorrent_connection *bittorrent)
 {
-	enum connection_state state;
+	struct connection_state state;
 
 	/* Failing to create the listening socket is fatal. */
 	state = init_bittorrent_listening_socket(bittorrent->conn);
-	if (state != S_OK) {
+	if (!is_in_state(state, S_OK)) {
 		retry_connection(bittorrent->conn, state);
 		return;
 	}
 
-	set_connection_state(bittorrent->conn, S_CONN_TRACKER);
+	set_connection_state(bittorrent->conn, connection_state(S_CONN_TRACKER));
 	send_bittorrent_tracker_request(bittorrent->conn);
 }
 
 /* Metainfo file download callback */
 static void
-bittorrent_metainfo_callback(void *data, enum connection_state state,
+bittorrent_metainfo_callback(void *data, struct connection_state state,
 			     struct bittorrent_const_string *response)
 {
 	struct connection *conn = data;
@@ -328,7 +328,7 @@ bittorrent_metainfo_callback(void *data, enum connection_state state,
 
 	bittorrent->fetch = NULL;
 
-	if (state != S_OK) {
+	if (!is_in_state(state, S_OK)) {
 		abort_connection(conn, state);
 		return;
 	}
@@ -358,21 +358,22 @@ bittorrent_metainfo_callback(void *data, enum connection_state state,
 			return;
 
 		case BITTORRENT_STATE_CACHE_RESUME:
-			set_connection_state(bittorrent->conn, S_RESUME);
+			set_connection_state(bittorrent->conn,
+					     connection_state(S_RESUME));
 			return;
 
 		case BITTORRENT_STATE_OUT_OF_MEM:
-			state = S_OUT_OF_MEM;
+			state = connection_state(S_OUT_OF_MEM);
 			break;
 
 		default:
-			state = S_BITTORRENT_ERROR;
+			state = connection_state(S_BITTORRENT_ERROR);
 		}
 
 		break;
 	}
 	case BITTORRENT_STATE_OUT_OF_MEM:
-		state = S_OUT_OF_MEM;
+		state = connection_state(S_OUT_OF_MEM);
 		break;
 
 	case BITTORRENT_STATE_ERROR:
@@ -382,7 +383,7 @@ bittorrent_metainfo_callback(void *data, enum connection_state state,
 		 * looking at the protocol header, however, direct usage of the
 		 * internal bittorrent: is at your own risk ... at least for
 		 * now. --jonas */
-		state = S_BITTORRENT_METAINFO;
+		state = connection_state(S_BITTORRENT_METAINFO);
 	}
 
 	abort_connection(conn, state);
@@ -397,7 +398,7 @@ bittorrent_protocol_handler(struct connection *conn)
 
 	bittorrent = init_bittorrent_connection(conn);
 	if (!bittorrent) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -405,11 +406,11 @@ bittorrent_protocol_handler(struct connection *conn)
 		uri = get_uri(conn->uri->data, 0);
 
 	if (!uri) {
-		abort_connection(conn, S_BITTORRENT_BAD_URL);
+		abort_connection(conn, connection_state(S_BITTORRENT_BAD_URL));
 		return;
 	}
 
-	set_connection_state(conn, S_CONN);
+	set_connection_state(conn, connection_state(S_CONN));
 	set_connection_timeout(conn);
 	conn->from = 0;
 

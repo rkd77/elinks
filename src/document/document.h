@@ -166,7 +166,6 @@ struct document {
 	struct uri_list ecmascript_imports;
 	/** used by setTimeout */
 	timer_id_T timeout;
-	unsigned int document_id;
 #endif
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the

@@ -543,7 +543,8 @@ loading_callback(struct download *download, struct session *ses)
 		if (d == DO_MOVE_DISPLAY) doc_loading_callback(download, ses);
 	}
 
-	if (is_in_result_state(download->state) && download->state != S_OK) {
+	if (is_in_result_state(download->state)
+	    && !is_in_state(download->state, S_OK)) {
 		print_error_dialog(ses, download->state,
 				   download->conn ? download->conn->uri : NULL,
 				   download->pri);
@@ -564,7 +565,7 @@ do_follow_url(struct session *ses, struct uri *uri, unsigned char *target,
 	protocol_external_handler_T *external_handler;
 
 	if (!uri) {
-		print_error_dialog(ses, S_BAD_URL, uri, PRI_CANCEL);
+		print_error_dialog(ses, connection_state(S_BAD_URL), uri, PRI_CANCEL);
 		return;
 	}
 

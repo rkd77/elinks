@@ -61,7 +61,7 @@ set_bittorrent_tracker_interval(struct connection *conn)
 /* XXX: The data pointer may be NULL when doing event=stopped because no
  * connection is attached anymore. */
 static void
-bittorrent_tracker_callback(void *data, enum connection_state state,
+bittorrent_tracker_callback(void *data, struct connection_state state,
 			    struct bittorrent_const_string *response)
 {
 	struct connection *conn = data;
@@ -76,12 +76,12 @@ bittorrent_tracker_callback(void *data, enum connection_state state,
 
 	/* FIXME: We treat any error as fatal here, however, it might be better
 	 * to relax that and allow a few errors before ending the connection. */
-	if (state != S_OK) {
-		if (state == S_INTERRUPTED)
+	if (!is_in_state(state, S_OK)) {
+		if (is_in_state(state, S_INTERRUPTED))
 			return;
 		bittorrent->tracker.failed = 1;
 		add_bittorrent_message(conn->uri, state, NULL);
-		abort_connection(conn, S_OK);
+		abort_connection(conn, connection_state(S_OK));
 		return;
 	}
 
@@ -103,16 +103,17 @@ bittorrent_tracker_callback(void *data, enum connection_state state,
 		return;
 
 	case BITTORRENT_STATE_OUT_OF_MEM:
-		state = S_OUT_OF_MEM;
+		state = connection_state(S_OUT_OF_MEM);
 		break;
 
 	case BITTORRENT_STATE_REQUEST_FAILURE:
-		add_bittorrent_message(conn->uri, S_OK, response);
-		state = S_OK;
+		add_bittorrent_message(conn->uri, connection_state(S_OK),
+				       response);
+		state = connection_state(S_OK);
 		break;
 
 	default:
-		state = S_BITTORRENT_TRACKER;
+		state = connection_state(S_BITTORRENT_TRACKER);
 	}
 
 	abort_connection(conn, state);
@@ -159,7 +160,8 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	if (!init_string(&request)) {
 		done_string(&request);
 		if (!stopped)
-			abort_connection(conn, S_OUT_OF_MEM);
+			abort_connection(conn,
+					 connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -170,7 +172,8 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	if (!uri) {
 		done_string(&request);
 		if (!stopped)
-			abort_connection(conn, S_BITTORRENT_ERROR);
+			abort_connection(conn,
+					 connection_state(S_BITTORRENT_ERROR));
 		return;
 	}
 
@@ -249,7 +252,8 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	done_string(&request);
 	if (!uri) {
 		if (!stopped)
-			abort_connection(conn, S_BITTORRENT_ERROR);
+			abort_connection(conn,
+					 connection_state(S_BITTORRENT_ERROR));
 		return;
 	}
 

@@ -68,7 +68,7 @@ int
 download_is_progressing(struct download *download)
 {
 	return download
-	    && download->state == S_TRANS
+	    && is_in_state(download->state, S_TRANS)
 	    && has_progress(download->progress);
 }
 
@@ -318,9 +318,9 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		return;
 	}
 
-	if (download->state != S_OK) {
+	if (!is_in_state(download->state, S_OK)) {
 		unsigned char *url = get_uri_string(file_download->uri, URI_PUBLIC);
-		enum connection_state state = download->state;
+		struct connection_state state = download->state;
 
 		abort_download_and_beep(file_download, term);
 
@@ -398,7 +398,7 @@ download_data(struct download *download, struct file_download *file_download)
 		done_uri(file_download->uri);
 
 		file_download->uri = get_uri_reference(cached->redirect);
-		file_download->download.state = S_WAIT_REDIR;
+		file_download->download.state = connection_state(S_WAIT_REDIR);
 
 		if (file_download->dlg_data)
 			redraw_dialog(file_download->dlg_data, 1);
@@ -962,7 +962,7 @@ init_type_query(struct session *ses, struct download *download,
 	object_lock(type_query->cached);
 
 	move_download(download, &type_query->download, PRI_MAIN);
-	download->state = S_OK;
+	download->state = connection_state(S_OK);
 
 	add_to_list(ses->type_queries, type_query);
 

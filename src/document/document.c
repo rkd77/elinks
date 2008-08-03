@@ -33,8 +33,6 @@
 #include "util/string.h"
 #include "viewer/text/link.h"
 
-static int document_init_counter = 0;
-
 static INIT_LIST_OF(struct document, format_cache);
 
 struct document *
@@ -56,7 +54,6 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
-	document->document_id = ++document_init_counter;
 #endif
 
 #ifdef CONFIG_COMBINE

@@ -241,7 +241,7 @@ get_current_download(struct session *ses)
 	else if (have_location(ses))
 		download = &cur_loc(ses)->download;
 
-	if (download && download->state == S_OK) {
+	if (download && is_in_state(download->state, S_OK)) {
 		struct file_to_load *ftl;
 
 		foreach (ftl, ses->more_files)
@@ -255,7 +255,7 @@ get_current_download(struct session *ses)
 }
 
 void
-print_error_dialog(struct session *ses, enum connection_state state,
+print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, enum connection_priority priority)
 {
 	struct string msg;
@@ -602,7 +602,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 
 		start_document_refreshes(ses);
 
-		if (download->state != S_OK) {
+		if (!is_in_state(download->state, S_OK)) {
 			print_error_dialog(ses, download->state,
 					   ses->doc_view->document->uri,
 					   download->pri);
@@ -838,7 +838,7 @@ setup_session(struct session *ses, struct uri *uri, struct session *base)
 		struct location *loc = mem_calloc(1, sizeof(*loc));
 
 		if (loc) {
-			loc->download.state = S_OK;
+			loc->download.state = connection_state(S_OK);
 			copy_location(loc, cur_loc(base));
 			add_to_history(&ses->history, loc);
 			render_document_frames(ses, 0);
@@ -1120,7 +1120,8 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 				/* End loop if initialization fails */
 				len = 0;
 			} else if (bad_url) {
-				print_error_dialog(ses, S_BAD_URL, NULL, PRI_MAIN);
+				print_error_dialog(ses, connection_state(S_BAD_URL),
+						   NULL, PRI_MAIN);
 			}
 
 		}

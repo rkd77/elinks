@@ -341,7 +341,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
-	unsigned char *frame = "";
+	unsigned char *frame = NULL;
 	unsigned char *url, *url2;
 	struct uri *uri;
 	static time_t ratelimit_start;
@@ -362,17 +362,6 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	if (argc < 1) return JS_TRUE;
 
-	url = stracpy(jsval_to_string(ctx, &argv[0]));
-	trim_chars(url, ' ', 0);
-	if (argc > 1) {
-		frame = stracpy(jsval_to_string(ctx, &argv[1]));
-		if (!frame) {
-			mem_free(url);
-			return JS_TRUE;
-		}
-		if (!ecmascript_check_url(url, frame)) return JS_TRUE;
-	}
-
 	/* Ratelimit window opening. Recursive window.open() is very nice.
 	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
 	 * rough but shall suffice against the usual cases. */
@@ -381,23 +370,36 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 		ratelimit_count = 0;
 	} else {
 		ratelimit_count++;
-		if (ratelimit_count > 20)
+		if (ratelimit_count > 20) {
 			return JS_TRUE;
+		}
 	}
 
-	/* TODO: Support for window naming and perhaps some window features? */
-
+	url = stracpy(jsval_to_string(ctx, &argv[0]));
+	trim_chars(url, ' ', 0);
 	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
 	if (!url2) {
 		return JS_TRUE;
 	}
+	if (argc > 1) {
+		frame = stracpy(jsval_to_string(ctx, &argv[1]));
+		if (!frame) {
+			mem_free(url2);
+			return JS_TRUE;
+		}
+	}
+
+	/* TODO: Support for window naming and perhaps some window features? */
+
 	uri = get_uri(url2, 0);
 	mem_free(url2);
-	if (!uri) return JS_TRUE;
+	if (!uri) {
+		mem_free_if(frame);
+		return JS_TRUE;
+	}
 
-
-	if (*frame && strcasecmp(frame, "_blank")) {
+	if (frame && *frame && strcasecmp(frame, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
 
 		if (deo) {
@@ -434,6 +436,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 end:
 	done_uri(uri);
+	mem_free_if(frame);
 
 	return JS_TRUE;
 }

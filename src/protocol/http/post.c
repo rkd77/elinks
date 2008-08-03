@@ -88,7 +88,7 @@ done_http_post(struct http_post *http_post)
  * @relates http_post */
 int
 open_http_post(struct http_post *http_post, const unsigned char *post_data,
-	       enum connection_state *error)
+	       struct connection_state *error)
 {
 	off_t size = 0;
 	size_t length = strlen(post_data);
@@ -111,13 +111,13 @@ open_http_post(struct http_post *http_post, const unsigned char *post_data,
 		filename = memacpy(begin + 1, end - begin - 1); /* adds '\0' */
 		if (!filename) {
 			done_http_post(http_post);
-			*error = S_OUT_OF_MEM;
+			*error = connection_state(S_OUT_OF_MEM);
 			return 0;
 		}
 		decode_uri(filename);
 		res = stat(filename, &sb);
 		if (res) {
-			*error = -errno;
+			*error = connection_state_for_errno(errno);
 			done_http_post(http_post);
 			return 0;
 		}
@@ -131,7 +131,7 @@ open_http_post(struct http_post *http_post, const unsigned char *post_data,
 		if (new_files == NULL) {
 			mem_free(filename);
 			done_http_post(http_post);
-			*error = S_OUT_OF_MEM;
+			*error = connection_state(S_OUT_OF_MEM);
 			return 0;
 		}
 		http_post->files = new_files;
@@ -157,14 +157,14 @@ open_http_post(struct http_post *http_post, const unsigned char *post_data,
 static int
 read_http_post_inline(struct http_post *http_post,
 		      unsigned char buffer[], int max,
-		      enum connection_state *error)
+		      struct connection_state *error)
 {
 	const unsigned char *post = http_post->post_data;
 	const unsigned char *end = strchr(post, FILE_CHAR);
 	int total = 0;
 
 	assert(http_post->post_fd < 0);
-	if_assert_failed { *error = S_INTERNAL; return -1; }
+	if_assert_failed { *error = connection_state(S_INTERNAL); return -1; }
 
 	if (!end)
 		end = strchr(post, '\0');
@@ -199,7 +199,7 @@ read_http_post_inline(struct http_post *http_post,
 		if (total > 0)
 			return total; /* retry the open on the next call */
 		else {
-			*error = -errno;
+			*error = connection_state_for_errno(errno);
 			return -1;
 		}
 	}
@@ -215,7 +215,7 @@ read_http_post_inline(struct http_post *http_post,
 static int
 read_http_post_fd(struct http_post *http_post,
 		  unsigned char buffer[], int max,
-		  enum connection_state *error)
+		  struct connection_state *error)
 {
 	const struct http_post_file *const file
 		= &http_post->files[http_post->file_index];
@@ -224,7 +224,7 @@ read_http_post_fd(struct http_post *http_post,
 	/* safe_read() would set errno = EBADF anyway, but check this
 	 * explicitly to make any such bugs easier to detect.  */
 	assert(http_post->post_fd >= 0);
-	if_assert_failed { *error = S_INTERNAL; return -1; }
+	if_assert_failed { *error = connection_state(S_INTERNAL); return -1; }
 
 	ret = safe_read(http_post->post_fd, buffer, max);
 	if (ret <= 0) {
@@ -237,7 +237,7 @@ read_http_post_fd(struct http_post *http_post,
 		 * It will be cleared when the next file is opened.  */
 
 		if (ret == -1) {
-			*error = -errno_from_read;
+			*error = connection_state_for_errno(errno_from_read);
 			return -1;
 		} else if (http_post->file_read != file->size) {
 			/* ELinks already sent a Content-Length header
@@ -247,7 +247,7 @@ read_http_post_fd(struct http_post *http_post,
 			 * enough data to fill the Content-Length.
 			 * (Well, it could pad with zeroes, but that
 			 * would be just weird.)  */
-			*error = S_HTTP_UPLOAD_RESIZED;
+			*error = connection_state(S_HTTP_UPLOAD_RESIZED);
 			return -1;
 		} else {
 			/* The upload file ended but there may still
@@ -265,7 +265,7 @@ read_http_post_fd(struct http_post *http_post,
 		 * been extended.  Abort the connection because ELinks
 		 * can no longer fit the entire file in the original
 		 * Content-Length.  */
-		*error = S_HTTP_UPLOAD_RESIZED;
+		*error = connection_state(S_HTTP_UPLOAD_RESIZED);
 		return -1;
 	}
 
@@ -282,7 +282,7 @@ read_http_post_fd(struct http_post *http_post,
 int
 read_http_post(struct http_post *http_post,
 	       unsigned char buffer[], int max,
-	       enum connection_state *error)
+	       struct connection_state *error)
 {
 	int total = 0;
 

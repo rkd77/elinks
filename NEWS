@@ -54,13 +54,14 @@ have already been considered.
 
 * Fixed bugs that were not in previous versions:
   - critical bug 1009: assertion failure in add_snippets()
+    (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
 ELinks 0.12pre1.GIT now:
 ------------------------
 
-To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch
-generally also includes the bug fixes made in ELinks 0.11.4.GIT.
+To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch also
+includes the changes listed under "ELinks 0.11.4.GIT now" below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -72,15 +73,24 @@ generally also includes the bug fixes made in ELinks 0.11.4.GIT.
   JS_CallFunction, which can crash if given a closure.
 * critical bug 1031: Use the same JSRuntime for both user SMJS and
   scripts on web pages, to work around SpiderMonkey bug 378918.
-* bug 698: Attach controls to the intended form even if it is
-  incorrectly nested in a table.  (Was broken in 0.11.4.)
+* bug 1013: Don't assume errno values are between 0 and 100000.
+* bug 1022: Add connection.ssl.trusted_ca_file setting for GnuTLS.
+  Before this, ELinks did not trust any certificate authorities when
+  it used GnuTLS, so certificate verification always failed if you
+  enabled it at connection.ssl.cert_verify.
+* bug 1040: Blacklist servers that don't support TLS.  This reduces
+  SSL errors especially in HTTP POST requests using GnuTLS.
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
-  from removing files from the memory cache
+  from removing files from the memory cache.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
 * critical: Fix crash after a tab was opened during reload.  This was
   triggered by the bug 620 fix in ELinks 0.12pre1.
+* critical bug 1018: Avoid an assertion failure when selecting a value
+  from a pop-up menu for an input field in a tab that is no longer
+  current, e.g. because another tab was opened with elinks -remote.
+  This bug was first released in ELinks 0.12pre1.
 * major bug 1026 in user SMJS: Protect the callback of elinks.load_uri
   from the garbage collector.  The elinks.load_uri method was added in
   ELinks 0.12pre1.
@@ -262,6 +272,8 @@ To be released as 0.11.5.
 * critical bug 1030: an assertion used to fail in the search dialog
   on systems that lack a usable <regex.h>
 * major bug 503: various fixes in parsing and updating of elinks.conf
+* bug 698: Attach controls to the intended form even if it is
+  incorrectly nested in a table.  (Was broken in 0.11.4.)
 * build bug 1021: fixed uninitialized variable in http_got_header
 
 ELinks 0.11.4:

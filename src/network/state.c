@@ -127,6 +127,13 @@ static const struct s_msg_dsc msg_dsc[] = {
 	{S_BITTORRENT_BAD_URL,	N_("The BitTorrent URL does not point to a valid URL")},
 #endif
 
+	/* fsp_open_session() failed but did not set errno.
+	 * fsp_open_session() never sends anything to the FSP server,
+	 * so this error does not mean the server itself does not work.
+	 * More likely, there was some problem in asking a DNS server
+	 * about the address of the FSP server.  */
+	{S_FSP_OPEN_SESSION_UNKN, N_("FSP server not found")},
+
 	{0,			NULL}
 };
 
@@ -143,7 +150,7 @@ static INIT_LIST_OF(struct strerror_val, strerror_buf);
  * It never returns NULL (if one changes that, be warn that
  * callers may not test for this condition) --Zas */
 unsigned char *
-get_state_message(enum connection_state state, struct terminal *term)
+get_state_message(struct connection_state state, struct terminal *term)
 {
 	unsigned char *e;
 	struct strerror_val *s;
@@ -154,13 +161,13 @@ get_state_message(enum connection_state state, struct terminal *term)
 		int i;
 
 		for (i = 0; msg_dsc[i].msg; i++)
-			if (msg_dsc[i].n == state)
+			if (msg_dsc[i].n == state.basic)
 				return _(msg_dsc[i].msg, term);
 
 		return unknown_error;
 	}
 
-	e = (unsigned char *) strerror(-state);
+	e = (unsigned char *) strerror(state.syserr);
 	if (!e || !*e) return unknown_error;
 
 	len = strlen(e);
