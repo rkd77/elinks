@@ -1328,7 +1328,14 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			}
 
 		} else {
-			ERROR("Error parsing: [%.*s]", line_length, buf);
+			struct string string;
+
+			if (!init_string(&string)) return ret;
+			add_bytes_to_string(&string, buf, line_length);
+			add_char_to_string(&string, '\n');
+			add_fragment(cached, *pos, string.source, string.length);
+			*pos += string.length;
+			done_string(&string);
 		}
 	}
 }
