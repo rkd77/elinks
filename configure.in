@@ -1090,12 +1090,10 @@ else
 			CFLAGS="$CFLAGS_X"
 			AC_SUBST(GNUTLS_CFLAGS)
 
-			# Verify if the MD5 compatibility layer is usable.
-			CONFIG_GNUTLS_OPENSSL_COMPAT=yes
-			EL_CHECK_OPTIONAL_LIBRARY(CONFIG_GNUTLS_OPENSSL_COMPAT,
-						  [GNU TLS OpenSSL compatibility],
-						  gnutls/openssl.h, gnutls-openssl,
-						  MD5_Init)
+			# GnuTLS 2.2.0 changed libgnutls-openssl from GPLv2+
+			# to GPLv3+.  Don't link that with the GPLv2 ELinks.
+			# ELinks will use its internal MD5 code instead.
+			CONFIG_GNUTLS_OPENSSL_COMPAT=no
 		else
 			if test -n "$gnutls_withval" && test "x$gnutls_withval" != xno; then
 				AC_MSG_ERROR([GNUTLS (1.2 or later) not found.  ELinks no longer supports GNUTLS 1.1.])

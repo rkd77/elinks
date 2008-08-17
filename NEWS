@@ -223,6 +223,8 @@ To be released as 0.11.5.
 * bug 698: Attach controls to the intended form even if it is
   incorrectly nested in a table.  (Was broken in 0.11.4.)
 * build bug 1021: fixed uninitialized variable in http_got_header
+* build: don't use libgnutls-openssl, which is no longer GPLv2
+  compatible in GnuTLS 2.2.0
 
 ELinks 0.11.4:
 --------------
