@@ -250,42 +250,6 @@ EL_CHECK_CODE([variadic macros], HAVE_VARIADIC_MACROS,
 		 #define a(b,c...) printf(b,##c)],
                 [a("foo");a("%s","bar");a("%s%s","baz","quux");])
 
-# Check for -rdynamic
-#
-# gcc -rdynamic calls ld -export-dynamic, which adds all symbols of
-# the executable to its dynamic symbol table.  ELinks uses this for
-# two purposes:
-#
-# 1. If ELinks detects a bug, it can try to display a backtrace by
-#    calling backtrace_symbols_fd() in the GNU libc.  The glibc-2.3.6
-#    manual states users of GNU ld must pass -rdynamic to make the
-#    symbols available to the program.
-#
-# 2. It would eventually be nice to dynamically load shared
-#    libraries as plugins (bug 73).  The plugins must be able to
-#    call ELinks functions.  This can be implemented either by
-#    registering all callable functions in ELinks-specific data
-#    structures, or by letting the dynamic linker handle them.
-#    The latter way requires something equivalent to -rdynamic.
-#
-# Because backtraces are not needed for correct operation, and bug
-# 73 is not yet being fixed, the configure script and makefiles
-# should not complain to the user if they find that -rdynamic does
-# not work.  Besides, it was reported at elinks-users on 2006-09-12
-# that gcc-3.4.2 with "ld: Software Generation Utilities - Solaris
-# Link Editors: 5.8-1.284" on Sun Solaris 8 Sparc does not support
-# -rdynamic but does something equivalent automatically.  (This was
-# tested with "nm -D elinks | grep redraw_from_window".)
-#
-# FIXME: This check doesn't work. Something to do with the compiler
-# happily ignoring it and stderr not being checked for error messages.
-AC_MSG_CHECKING([for -rdynamic])
-LDFLAGS_X="$LDFLAGS"
-LDFLAGS="$LDFLAGS -rdynamic"
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[have_rdynamic=yes],[have_rdynamic=no])
-test "$have_rdynamic" = no && LDFLAGS="$LDFLAGS_X"
-AC_MSG_RESULT($have_rdynamic)
-
 # ===================================================================
 # Check for POSIX <regex.h>
 # ===================================================================
@@ -1357,11 +1321,54 @@ AC_ARG_ENABLE(weehoofooboomookerchoo,
 	      [AC_MSG_ERROR(Are you strange, or what?)])
 
 
+# ===================================================================
+# Further LDFLAGS tweaks
+# ===================================================================
+
 # == EMX hack
 
 test "$CONFIG_OS_OS2" = yes && LDFLAGS="$LDFLAGS -Zexe"
 test "$CONFIG_OS_OS2" = yes && LDFLAGS=`echo "$LDFLAGS" | sed "s/-Zbin-files//g"`
 
+
+# Check for -rdynamic
+#
+# gcc -rdynamic calls ld -export-dynamic, which adds all symbols of
+# the executable to its dynamic symbol table.  ELinks uses this for
+# two purposes:
+#
+# 1. If ELinks detects a bug, it can try to display a backtrace by
+#    calling backtrace_symbols_fd() in the GNU libc.  The glibc-2.3.6
+#    manual states users of GNU ld must pass -rdynamic to make the
+#    symbols available to the program.
+#
+# 2. It would eventually be nice to dynamically load shared
+#    libraries as plugins (bug 73).  The plugins must be able to
+#    call ELinks functions.  This can be implemented either by
+#    registering all callable functions in ELinks-specific data
+#    structures, or by letting the dynamic linker handle them.
+#    The latter way requires something equivalent to -rdynamic.
+#
+# Because backtraces are not needed for correct operation, and bug
+# 73 is not yet being fixed, the configure script and makefiles
+# should not complain to the user if they find that -rdynamic does
+# not work.  Besides, it was reported at elinks-users on 2006-09-12
+# that gcc-3.4.2 with "ld: Software Generation Utilities - Solaris
+# Link Editors: 5.8-1.284" on Sun Solaris 8 Sparc does not support
+# -rdynamic but does something equivalent automatically.  (This was
+# tested with "nm -D elinks | grep redraw_from_window".)
+#
+# With Sun Studio 11 on Solaris 9, we get "cc: Warning: illegal option
+# -dynamic"; then, cc proceeds anyway, but the option can prevent the
+# linker from finding the libraries listed in -l operands.  So this
+# -rdynamic check needs to happen after the libraries have already
+# been added to $LDFLAGS.
+AC_MSG_CHECKING([for -rdynamic])
+LDFLAGS_X="$LDFLAGS"
+LDFLAGS="-rdynamic $LDFLAGS"
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[have_rdynamic=yes],[have_rdynamic=no])
+test "$have_rdynamic" = no && LDFLAGS="$LDFLAGS_X"
+AC_MSG_RESULT($have_rdynamic)
 
 # ===================================================================
 # Export directory paths
