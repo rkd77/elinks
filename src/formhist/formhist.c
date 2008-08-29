@@ -358,7 +358,7 @@ never_for_this_site(void *form_)
 	struct formhist_data *form = form_;
 
 	form->dontsave = 1;
-	return remember_form(form);
+	remember_form(form);
 }
 
 unsigned char *
