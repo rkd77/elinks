@@ -208,7 +208,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 	int querylen;
 
 	if (!init_string(command))
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 
 	/* Look for search string */
 	query = memchr(selector, '?', selectorlen);
@@ -251,7 +251,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 #if 0
 			return init_gopher_cso_cache_entry(conn);
 #endif
-			return S_GOPHER_CSO_ERROR;
+			return connection_state(S_GOPHER_CSO_ERROR);
 		}
 
 		add_uri_decoded(command, selector, selectorlen, 0);
@@ -266,7 +266,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 
 	add_crlf_to_string(command);
 
-	return S_CONN;
+	return connection_state(S_CONN);
 }
 
 static struct connection_state
@@ -303,7 +303,7 @@ init_gopher_connection_info(struct connection *conn)
 	}
 
 	state = add_gopher_command(conn, &command, entity, selector, selectorlen);
-	if (state != S_CONN)
+	if (!is_in_state(state, S_CONN))
 		return state;
 
 	/* Atleast the command should contain \r\n to ask the server
@@ -314,7 +314,7 @@ init_gopher_connection_info(struct connection *conn)
 	gopher = mem_calloc(1, size);
 	if (!gopher) {
 		done_string(&command);
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 	}
 
 	gopher->entity = entity_info;
@@ -325,7 +325,7 @@ init_gopher_connection_info(struct connection *conn)
 
 	conn->info = gopher;
 
-	return S_CONN;
+	return connection_state(S_CONN);
 }
 
 
@@ -580,11 +580,11 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 		struct connection_state state;
 
 		state = init_directory_listing(&buffer, conn->uri);
-		if (state != S_OK)
+		if (!is_in_state(state, S_OK))
 			return state;
 
 	} else if (!init_string(&buffer)) {
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 	}
 
 	while ((end = get_gopher_line_end(rb->data, rb->length))) {
@@ -592,7 +592,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 
 		/* Break on line with a dot by itself */
 		if (!line) {
-			state = S_OK;
+			state = connection_state(S_OK);
 			break;
 		}
 
@@ -601,7 +601,8 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 		kill_buffer_data(rb, end - rb->data);
 	}
 
-	if (state != S_TRANS || conn->socket->state == SOCKET_CLOSED)
+	if (!is_in_state(state, S_TRANS)
+	    || conn->socket->state == SOCKET_CLOSED)
 		add_to_string(&buffer,
 			"</pre>\n"
 			"</body>\n"
@@ -646,7 +647,7 @@ init_gopher_index_cache_entry(struct connection *conn)
 
 	if (!init_gopher_cache_entry(conn)
 	    || !init_string(&buffer))
-		return S_OUT_OF_MEM;
+		return connection_state(S_OUT_OF_MEM);
 
 	where = get_uri_string(conn->uri, URI_PUBLIC);
 
@@ -679,7 +680,9 @@ init_gopher_index_cache_entry(struct connection *conn)
 
 	conn->cached->content_type = stracpy("text/html");
 
-	return conn->cached->content_type ? S_OK : S_OUT_OF_MEM;
+	return conn->cached->content_type
+		? connection_state(S_OK)
+		: connection_state(S_OUT_OF_MEM);
 }
 
 
@@ -688,12 +691,12 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
 	struct gopher_connection_info *gopher = conn->info;
-	struct connection_state state = S_TRANS;
+	struct connection_state state = connection_state(S_TRANS);
 
 	assert(gopher && gopher->entity);
 
 	if (!conn->cached && !init_gopher_cache_entry(conn)) {
-		abort_connection(conn, S_OUT_OF_MEM);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 
@@ -709,7 +712,7 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 		/* FIXME: Merge CSO support */
 		state = read_gopher_cso_data(conn, rb);
 #endif
-		state = S_GOPHER_CSO_ERROR;
+		state = connection_state(S_GOPHER_CSO_ERROR);
 		break;
 
 	case GOPHER_SOUND:
@@ -739,15 +742,16 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 
 	/* Has the transport layer forced a shut down? */
 	if (socket->state == SOCKET_CLOSED) {
-		state = S_OK;
+		state = connection_state(S_OK);
 	}
 
-	if (state != S_TRANS) {
+	if (!is_in_state(state, S_TRANS)) {
 		abort_connection(conn, state);
 		return;
 	}
 
-	read_from_socket(conn->socket, rb, S_TRANS, read_gopher_response_data);
+	read_from_socket(conn->socket, rb, connection_state(S_TRANS),
+			 read_gopher_response_data);
 }
 
 
@@ -758,7 +762,8 @@ send_gopher_command(struct socket *socket)
 	struct gopher_connection_info *gopher = conn->info;
 
 	request_from_socket(socket, gopher->command, gopher->commandlen,
-			    S_SENT, SOCKET_END_ONCLOSE, read_gopher_response_data);
+			    connection_state(S_SENT), SOCKET_END_ONCLOSE,
+			    read_gopher_response_data);
 }
 
 
@@ -767,7 +772,7 @@ void
 gopher_protocol_handler(struct connection *conn)
 {
 	struct uri *uri = conn->uri;
-	struct connection_state state = S_CONN;
+	struct connection_state state = connection_state(S_CONN);
 
 	switch (get_uri_port(uri)) {
 	case 105:
@@ -777,7 +782,8 @@ gopher_protocol_handler(struct connection *conn)
 		 * - FM */
 		if (uri->datalen == 1 && *uri->data == GOPHER_CSO) {
 			/* FIXME: redirect_cache() */
-			abort_connection(conn, S_GOPHER_CSO_ERROR);
+			abort_connection(conn,
+					 connection_state(S_GOPHER_CSO_ERROR));
 		}
 		break;
 
@@ -790,14 +796,14 @@ gopher_protocol_handler(struct connection *conn)
 		 * - FM */
 		if (uri->datalen >= 1 && *uri->data == GOPHER_FILE) {
 			/* FIXME: redirect_cache() */
-			abort_connection(conn, S_OK);
+			abort_connection(conn, connection_state(S_OK));
 		}
 #endif
 		break;
 	}
 
 	state = init_gopher_connection_info(conn);
-	if (state != S_CONN) {
+	if (!is_in_state(state, S_CONN)) {
 		/* FIXME: Handle bad selector ... */
 		abort_connection(conn, state);
 		return;
