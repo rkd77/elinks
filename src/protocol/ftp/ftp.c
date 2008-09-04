@@ -1125,10 +1125,25 @@ ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 }
 
 
-/* How to format an FTP directory listing in HTML.  */
+/** How to format an FTP directory listing in HTML.  */
 struct ftp_dir_html_format {
+	/** Codepage used by C library functions such as strftime().
+	 * If the FTP server sends non-ASCII bytes in file names or
+	 * such, ELinks normally passes them straight through to the
+	 * generated HTML, which will eventually be parsed using the
+	 * codepage specified in the document.codepage.assume option.
+	 * However, when ELinks itself generates strings with
+	 * strftime(), it turns non-ASCII bytes into entity references
+	 * based on libc_codepage, to make sure they become the right
+	 * characters again.  */
 	int libc_codepage;
+
+	/** Nonzero if directories should be displayed in a different
+	 * color.  From the document.browse.links.color_dirs option.  */
 	int colorize_dir;
+
+	/** The color of directories, in "#rrggbb" format.  This is
+	 * initialized and used only if colorize_dir is nonzero.  */
 	unsigned char dircolor[8];
 };
 
@@ -1290,7 +1305,41 @@ ftp_get_line(struct cache_entry *cached, unsigned char *buf, int bufl,
 	return -1;
 }
 
-/* List a directory in html format. */
+/** Generate HTML for a line that was received from the FTP server but
+ * could not be parsed.  The caller is supposed to have added a \<pre>
+ * start tag.  (At the time of writing, init_directory_listing() was
+ * used for that.)
+ *
+ * @return -1 if out of memory, or 0 if successful.  */
+static int
+ftp_add_unparsed_line(struct cache_entry *cached, off_t *pos, int *tries, 
+		      const unsigned char *line, int line_length)
+{
+	int our_ret;
+	struct string string;
+	int frag_ret;
+
+	our_ret = -1;	 /* assume out of memory if returning early */
+	if (!init_string(&string)) goto out;
+	if (!add_html_to_string(&string, line, line_length)) goto out;
+	if (!add_char_to_string(&string, '\n')) goto out;
+
+	frag_ret = add_fragment(cached, *pos, string.source, string.length);
+	if (frag_ret == -1) goto out;
+	*pos += string.length;
+	if (frag_ret == 1) *tries = 0;
+
+	our_ret = 0;		/* success */
+
+out:
+	done_string(&string);	/* safe even if init_string failed */
+	return our_ret;
+}
+
+/** List a directory in html format.
+ *
+ * @return the number of bytes used from the beginning of @a buffer,
+ * or -1 if out of memory.  */
 static int
 ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 		    unsigned char *buffer, int buflen, int last,
@@ -1328,14 +1377,11 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 			}
 
 		} else {
-			struct string string;
+			int retv = ftp_add_unparsed_line(cached, pos, tries,
+							 buf, line_length);
 
-			if (!init_string(&string)) return ret;
-			add_bytes_to_string(&string, buf, line_length);
-			add_char_to_string(&string, '\n');
-			add_fragment(cached, *pos, string.source, string.length);
-			*pos += string.length;
-			done_string(&string);
+			if (retv == -1) /* out of memory; propagate to caller */
+				return retv;
 		}
 	}
 }
