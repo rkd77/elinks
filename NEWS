@@ -80,8 +80,12 @@ includes the changes listed under "ELinks 0.11.4.GIT now" below.
   enabled it at connection.ssl.cert_verify.
 * bug 1040: Blacklist servers that don't support TLS.  This reduces
   SSL errors especially in HTTP POST requests using GnuTLS.
+* bugs 1007, 1041: Display unrecognized lines in FTP directory
+  listings, instead of annoying the user with error messages.
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache.
+* build bug 1044: Check whether -rdynamic works with libraries.
+  With Sun Studio 11 on Solaris 9, it reportedly doesn't.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
@@ -275,6 +279,8 @@ To be released as 0.11.5.
 * bug 698: Attach controls to the intended form even if it is
   incorrectly nested in a table.  (Was broken in 0.11.4.)
 * build bug 1021: fixed uninitialized variable in http_got_header
+* build: don't use libgnutls-openssl, which is no longer GPLv2
+  compatible in GnuTLS 2.2.0
 
 ELinks 0.11.4:
 --------------
