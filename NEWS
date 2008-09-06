@@ -46,6 +46,8 @@ Miscellaneous:
 * enhancement: Add a new entry Link Info under Link main menu.
 * enhancement: New option protocol.http.compression.
 * enhancement: Indicate backgrounded downloads using an unused led.
+* enhancement: Display the number of ECMAScript interpreters that have
+  been allocated for documents in the Resources dialog.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0

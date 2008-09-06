@@ -19,6 +19,7 @@
 #include "config/options.h"
 #include "dialogs/info.h"
 #include "document/renderer.h"
+#include "ecmascript/ecmascript.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
 #include "main/timer.h"
@@ -230,6 +231,15 @@ get_resource_info(struct terminal *term, void *data)
 	val = get_format_cache_refresh_count();
 	val_add(n_("%ld refreshing", "%ld refreshing", val, term));
 	add_to_string(&info, ".\n");
+
+#ifdef CONFIG_ECMASCRIPT
+	add_to_string(&info, _("ECMAScript", term));
+	add_to_string(&info, ": ");
+
+	val = ecmascript_get_interpreter_count();
+	val_add(n_("%ld interpreter", "%ld interpreters", val, term));
+	add_to_string(&info, ".\n");
+#endif
 
 	add_to_string(&info, _("Interlinking", term));
 	add_to_string(&info, ": ");

@@ -66,6 +66,8 @@ static struct option_info ecmascript_options[] = {
 	NULL_OPTION_INFO,
 };
 
+static int interpreter_count;
+
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
 {
@@ -77,6 +79,8 @@ ecmascript_get_interpreter(struct view_state *vs)
 	if (!interpreter)
 		return NULL;
 
+	++interpreter_count;
+
 	interpreter->vs = vs;
 	interpreter->vs->ecmascript_fragile = 0;
 	init_list(interpreter->onload_snippets);
@@ -85,6 +89,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 #else
 	spidermonkey_get_interpreter(interpreter);
 #endif
+
 	init_string(&interpreter->code);
 	return interpreter;
 }
@@ -111,6 +116,13 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->vs->ecmascript = NULL;
 	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);
+	--interpreter_count;
+}
+
+int
+ecmascript_get_interpreter_count(void)
+{
+	return interpreter_count;
 }
 
 void
