@@ -292,6 +292,10 @@ Kaloian Doganov <kaloian@europe.com>
 	Bulgarian translation
 	Bulgarian translation update ;)
 
+Kamil Dudka <kdudka@redhat.com>
+	Allows relicensing under "GNU GPL v2 or later"
+	nss_compat_ossl support
+
 Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 	Czech translation
 	Fixed compile incompatibility
