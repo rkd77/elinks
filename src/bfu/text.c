@@ -399,7 +399,7 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 	/* Hope this is at least a bit reasonable. Set cursor
 	 * and window pointer to start of the first text line. */
-	set_cursor2(win->term, dlg_data, widget_data->box.x, widget_data->box.y, 1);
+	set_dlg_cursor(win->term, dlg_data, widget_data->box.x, widget_data->box.y, 1);
 	set_dlg_window_ptr(dlg_data, win, widget_data->box.x, widget_data->box.y);
 
 	return EVENT_PROCESSED;

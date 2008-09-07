@@ -598,7 +598,7 @@ set_cursor(struct terminal *term, int x, int y, int blockable)
 }
 
 void
-set_cursor2(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable)
+set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable)
 {
 	struct box *box = &dlg_data->real_box;
 

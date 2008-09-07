@@ -297,7 +297,7 @@ void draw_line(struct terminal *term, int x, int y, int length,
 void set_cursor(struct terminal *term, int x, int y, int blockable);
 
 /* set cursor for dialogs */
-void set_cursor2(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable);
+void set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable);
 
 /** Blanks the screen. */
 void clear_terminal(struct terminal *);

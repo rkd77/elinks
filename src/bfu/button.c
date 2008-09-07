@@ -298,7 +298,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		draw_dlg_text(term, dlg_data, x + len, pos->y, BUTTON_RIGHT,
 			  BUTTON_RIGHT_LEN, 0, color);
 	if (sel) {
-		set_cursor2(term, dlg_data, x, pos->y, 1);
+		set_dlg_cursor(term, dlg_data, x, pos->y, 1);
 		set_dlg_window_ptr(dlg_data, dlg_data->win, pos->x, pos->y);
 	}
 	return EVENT_PROCESSED;

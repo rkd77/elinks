@@ -81,7 +81,7 @@ display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	draw_dlg_text(term, dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
 
 	if (selected) {
-		set_cursor2(term, dlg_data, pos->x + 1, pos->y, 1);
+		set_dlg_cursor(term, dlg_data, pos->x + 1, pos->y, 1);
 		set_dlg_window_ptr(dlg_data, dlg_data->win, pos->x, pos->y);
 	}
 
