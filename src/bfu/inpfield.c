@@ -103,10 +103,11 @@ check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 void
-dlg_format_field(struct terminal *term, struct dialog_data *dlg_data,
+dlg_format_field(struct dialog_data *dlg_data,
 		 struct widget_data *widget_data,
 		 int x, int *y, int w, int *rw, enum format_align align, int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
 	unsigned char *label = widget_data->widget->text;
@@ -765,7 +766,7 @@ input_line_layouter(struct dialog_data *dlg_data)
 		- ses->status.show_status_bar
 		- ses->status.show_tabs_bar;
 
-	dlg_format_field(win->term, dlg_data, dlg_data->widgets_data, 0,
+	dlg_format_field(dlg_data, dlg_data->widgets_data, 0,
 			 &y, win->term->width, NULL, ALIGN_LEFT, 0);
 }
 

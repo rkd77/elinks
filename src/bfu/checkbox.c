@@ -36,11 +36,12 @@ add_dlg_radio_do(struct dialog *dlg, unsigned char *text,
 }
 
 void
-dlg_format_checkbox(struct terminal *term, struct dialog_data *dlg_data,
+dlg_format_checkbox(struct dialog_data *dlg_data,
 		    struct widget_data *widget_data,
 		    int x, int *y, int w, int *rw,
 		    enum format_align align, int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	unsigned char *text = widget_data->widget->text;
 
 	set_box(&widget_data->box, x, *y, CHECKBOX_LEN, CHECKBOX_HEIGHT);

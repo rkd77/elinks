@@ -170,7 +170,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 			dialog_text_color, ALIGN_LEFT, 1);
 
 	y++;
-	dlg_format_buttons(term, dlg_data, dlg_data->widgets_data,
+	dlg_format_buttons(dlg_data, dlg_data->widgets_data,
 			   dlg_data->number_of_widgets, 0, &y, w,
 			   &rw, ALIGN_CENTER, 1);
 
@@ -211,7 +211,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 			dialog_text_color, ALIGN_LEFT, 0);
 
 	y++;
-	dlg_format_buttons(term, dlg_data, dlg_data->widgets_data,
+	dlg_format_buttons(dlg_data, dlg_data->widgets_data,
 			   dlg_data->number_of_widgets, x, &y, w,
 			   NULL, ALIGN_CENTER, 0);
 

@@ -581,12 +581,12 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		switch (wdata->widget->type) {
 		case WIDGET_FIELD_PASS:
 		case WIDGET_FIELD:
-			dlg_format_field(term, dlg_data, wdata, x, y, w, rw, ALIGN_LEFT,
+			dlg_format_field(dlg_data, wdata, x, y, w, rw, ALIGN_LEFT,
 					 format_only);
 			break;
 
 		case WIDGET_LISTBOX:
-			dlg_format_listbox(term, dlg_data, wdata, x, y, w, h, rw,
+			dlg_format_listbox(dlg_data, wdata, x, y, w, h, rw,
 					   ALIGN_LEFT, format_only);
 			break;
 
@@ -610,7 +610,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 						break;
 				}
 
-				dlg_format_group(term, dlg_data, wdata, size, x, y, w, rw,
+				dlg_format_group(dlg_data, wdata, size, x, y, w, rw,
 						 format_only);
 				wdata += size - 1;
 
@@ -618,7 +618,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 
 				/* No horizontal space between checkboxes belonging to
 				 * the same group. */
-				dlg_format_checkbox(term, dlg_data, wdata, x, y, w, rw,
+				dlg_format_checkbox(dlg_data, wdata, x, y, w, rw,
 						    ALIGN_LEFT, format_only);
 				if (widgets > 1
 				    && group == widget_has_group(&wdata[1]))
@@ -630,7 +630,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		/* We assume that the buttons are all stuffed at the very end
 		 * of the dialog. */
 		case WIDGET_BUTTON:
-			dlg_format_buttons(term, dlg_data, wdata, widgets,
+			dlg_format_buttons(dlg_data, wdata, widgets,
 					   x, y, w, rw, ALIGN_CENTER, format_only);
 			return;
 		}
