@@ -7,6 +7,7 @@
 
 #include "elinks.h"
 
+#include "bfu/dialog.h"
 #include "bfu/menu.h"
 #include "terminal/event.h"
 #include "terminal/tab.h"
@@ -205,3 +206,17 @@ assert_window_stacking(struct terminal *term)
 	}
 }
 #endif	/* CONFIG_DEBUG */
+
+void
+set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, int y)
+{
+	struct box *box = &dlg_data->real_box;
+
+	if (box->height) {
+		int y_max = box->y + box->height;
+
+		y -= dlg_data->y;
+		if (y < box->y || y >= y_max) return;
+	}
+	set_window_ptr(window, x, y);
+}

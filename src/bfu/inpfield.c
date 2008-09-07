@@ -103,7 +103,7 @@ check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 void
-dlg_format_field(struct terminal *term,
+dlg_format_field(struct terminal *term, struct dialog_data *dlg_data,
 		 struct widget_data *widget_data,
 		 int x, int *y, int w, int *rw, enum format_align align, int format_only)
 {
@@ -132,7 +132,7 @@ dlg_format_field(struct terminal *term,
 	if (label && *label) {
 		if (!format_only) text_color = get_bfu_color(term, "dialog.text");
 
-		dlg_format_text_do(term, label, x, y, w, rw, text_color, ALIGN_LEFT, format_only);
+		dlg_format_text_do(term, dlg_data, label, x, y, w, rw, text_color, ALIGN_LEFT, format_only);
 	}
 
 	/* XXX: We want the field and label on the same line if the terminal
@@ -140,7 +140,7 @@ dlg_format_field(struct terminal *term,
 	if (label && *label && float_label) {
 		if (widget_data->widget->info.field.flags & INPFIELD_FLOAT) {
 			(*y) -= INPUTFIELD_HEIGHT;
-			dlg_format_text_do(term, INPUTFIELD_FLOAT_SEPARATOR,
+			dlg_format_text_do(term, dlg_data, INPUTFIELD_FLOAT_SEPARATOR,
 					   x + label_width, y, w, rw,
 					   text_color, ALIGN_LEFT, format_only);
 			w -= INPUTFIELD_FLOAT_SEPARATOR_LEN + INPUTFIELD_FLOATLABEL_PADDING;
@@ -312,7 +312,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 			if (term->utf8_cp)
 				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF8 */
-			draw_text(term, widget_data->box.x, widget_data->box.y,
+			draw_dlg_text(term, dlg_data, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color);
 		} else {
 			struct box box;
@@ -765,7 +765,7 @@ input_line_layouter(struct dialog_data *dlg_data)
 		- ses->status.show_status_bar
 		- ses->status.show_tabs_bar;
 
-	dlg_format_field(win->term, dlg_data->widgets_data, 0,
+	dlg_format_field(win->term, dlg_data, dlg_data->widgets_data, 0,
 			 &y, win->term->width, NULL, ALIGN_LEFT, 0);
 }
 

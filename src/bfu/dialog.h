@@ -100,6 +100,8 @@ struct dialog_data {
 	struct memory_list *ml;
 
 	struct box box;
+	struct box real_box;
+	int y;
 	int number_of_widgets;
 	int selected_widget_id;
 	struct term_event *term_event;

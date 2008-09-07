@@ -4,6 +4,7 @@
 #include "intl/charsets.h" /* unicode_val_T */
 
 struct color_pair;
+struct dialog_data;
 struct box;
 struct terminal;
 
@@ -280,6 +281,12 @@ void draw_text(struct terminal *term, int x, int y,
 	       enum screen_char_attr attr,
 	       struct color_pair *color);
 
+/** Draws text for dialogs. */
+void draw_dlg_text(struct terminal *term, struct dialog_data *dlg_data, int x, int y,
+	  unsigned char *text, int length,
+	  enum screen_char_attr attr, struct color_pair *color);
+
+
 /** Draws @a length chars from @a line on the screen.  */
 void draw_line(struct terminal *term, int x, int y, int length,
 	       struct screen_char *line);
@@ -288,6 +295,9 @@ void draw_line(struct terminal *term, int x, int y, int length,
  * block_cursor terminal option decides whether the cursor should be put at the
  * bottom right corner of the screen. */
 void set_cursor(struct terminal *term, int x, int y, int blockable);
+
+/* set cursor for dialogs */
+void set_cursor2(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable);
 
 /** Blanks the screen. */
 void clear_terminal(struct terminal *);

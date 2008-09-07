@@ -36,7 +36,7 @@ add_dlg_radio_do(struct dialog *dlg, unsigned char *text,
 }
 
 void
-dlg_format_checkbox(struct terminal *term,
+dlg_format_checkbox(struct terminal *term, struct dialog_data *dlg_data,
 		    struct widget_data *widget_data,
 		    int x, int *y, int w, int *rw,
 		    enum format_align align, int format_only)
@@ -49,7 +49,7 @@ dlg_format_checkbox(struct terminal *term,
 
 	if (text && *text) {
 		if (rw) *rw -= CHECKBOX_LS;
-		dlg_format_text_do(term, text, x + CHECKBOX_LS, y,
+		dlg_format_text_do(term, dlg_data, text, x + CHECKBOX_LS, y,
 				   w - CHECKBOX_LS, rw,
 				   get_bfu_color(term, "dialog.checkbox-label"),
 				   align, format_only);
@@ -78,11 +78,11 @@ display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	else
 		text = widget_data->widget->info.checkbox.gid ? "( )" : "[ ]";
 
-	draw_text(term, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
+	draw_dlg_text(term, dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
 
 	if (selected) {
-		set_cursor(term, pos->x + 1, pos->y, 1);
-		set_window_ptr(dlg_data->win, pos->x, pos->y);
+		set_cursor2(term, dlg_data, pos->x + 1, pos->y, 1);
+		set_dlg_window_ptr(dlg_data, dlg_data->win, pos->x, pos->y);
 	}
 
 	return EVENT_PROCESSED;
@@ -128,7 +128,6 @@ mouse_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 select_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-
 	if (!widget_data->widget->info.checkbox.gid) {
 		/* Checkbox. */
 		int *cdata = (int *) widget_data->cdata;
@@ -159,8 +158,8 @@ select_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		}
 		widget_data->info.checkbox.checked = 1;
 	}
-
 	display_widget(dlg_data, widget_data);
+
 	return EVENT_PROCESSED;
 }
 

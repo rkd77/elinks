@@ -82,20 +82,18 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 	}
 
 	if (!dlg_data->dlg->layout.only_widgets) {
-		struct box box;
-
-		set_box(&box,
+		set_box(&dlg_data->real_box,
 			dlg_data->box.x + (DIALOG_LEFT_BORDER + 1),
 			dlg_data->box.y + (DIALOG_TOP_BORDER + 1),
 			dlg_data->box.width - 2 * (DIALOG_LEFT_BORDER + 1),
 			dlg_data->box.height - 2 * (DIALOG_TOP_BORDER + 1));
 
-		draw_border(term, &box, get_bfu_color(term, "dialog.frame"), DIALOG_FRAME);
+		draw_border(term, &dlg_data->real_box, get_bfu_color(term, "dialog.frame"), DIALOG_FRAME);
 
 		assert(dlg_data->dlg->title);
 
 		title_color = get_bfu_color(term, "dialog.title");
-		if (title_color && box.width > 2) {
+		if (title_color && dlg_data->real_box.width > 2) {
 			unsigned char *title = dlg_data->dlg->title;
 			int titlelen = strlen(title);
 			int titlecells = titlelen;
@@ -107,7 +105,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 							    &title[titlelen]);
 #endif /* CONFIG_UTF8 */
 
-			titlecells = int_min(box.width - 2, titlecells);
+			titlecells = int_min(dlg_data->real_box.width - 2, titlecells);
 
 #ifdef CONFIG_UTF8
 			if (term->utf8_cp)
@@ -115,13 +113,13 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 							    NULL);
 #endif /* CONFIG_UTF8 */
 
-			x = (box.width - titlecells) / 2 + box.x;
-			y = box.y - 1;
+			x = (dlg_data->real_box.width - titlecells) / 2 + dlg_data->real_box.x;
+			y = dlg_data->real_box.y - 1;
 
 
-			draw_text(term, x - 1, y, " ", 1, 0, title_color);
-			draw_text(term, x, y, title, titlelen, 0, title_color);
-			draw_text(term, x + titlecells, y, " ", 1, 0,
+			draw_dlg_text(term, dlg_data, x - 1, y, " ", 1, 0, title_color);
+			draw_dlg_text(term, dlg_data, x, y, title, titlelen, 0, title_color);
+			draw_dlg_text(term, dlg_data, x + titlecells, y, " ", 1, 0,
 				  title_color);
 		}
 	}
@@ -181,6 +179,23 @@ init_widget(struct dialog_data *dlg_data, int i)
 	return widget_data;
 }
 
+static int
+check_range(struct dialog_data *dlg_data, struct widget_data *widget_data)
+{
+	if (!dlg_data->dlg->layout.only_widgets) {
+		struct box *box = &widget_data->box;
+		struct box *dlgbox = &dlg_data->real_box;
+		int y = box->y - dlgbox->y;
+
+		if ((y < dlg_data->y) || (y >= dlg_data->y + dlgbox->height)) {
+			/* This calculates the offset of the window's top. */
+			dlg_data->y = (y / dlgbox->height)  * dlgbox->height;
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void
 select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -189,6 +204,11 @@ select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	previously_selected_widget = selected_widget(dlg_data);
 
 	dlg_data->selected_widget_id = widget_data - dlg_data->widgets_data;
+
+	if (check_range(dlg_data, widget_data)) {
+		redraw_from_window(dlg_data->win);
+		return;
+	}
 
 	display_widget(dlg_data, previously_selected_widget);
 	display_widget(dlg_data, widget_data);
@@ -228,6 +248,11 @@ cycle_widget_focus(struct dialog_data *dlg_data, int direction)
 	} while (!widget_is_focusable(selected_widget(dlg_data))
 		 && dlg_data->selected_widget_id != prev_selected);
 
+	if (check_range(dlg_data, selected_widget(dlg_data))) {
+		redraw_from_window(dlg_data->win);
+		return;
+	}
+
 	display_widget(dlg_data, previously_selected_widget);
 	display_widget(dlg_data, selected_widget(dlg_data));
 	redraw_from_window(dlg_data->win);
@@ -238,6 +263,7 @@ dialog_ev_init(struct dialog_data *dlg_data)
 {
 	int i;
 
+	dlg_data->y = 0;
 	/* TODO: foreachback_widget() */
 	for (i = dlg_data->number_of_widgets - 1; i >= 0; i--) {
 		struct widget_data *widget_data;
@@ -421,6 +447,7 @@ dialog_ev_abort(struct dialog_data *dlg_data)
 	}
 
 	freeml(dlg_data->ml);
+	dlg_data->y = 0;
 }
 
 /* TODO: use EVENT_PROCESSED/EVENT_NOT_PROCESSED. */
@@ -554,17 +581,17 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		switch (wdata->widget->type) {
 		case WIDGET_FIELD_PASS:
 		case WIDGET_FIELD:
-			dlg_format_field(term, wdata, x, y, w, rw, ALIGN_LEFT,
+			dlg_format_field(term, dlg_data, wdata, x, y, w, rw, ALIGN_LEFT,
 					 format_only);
 			break;
 
 		case WIDGET_LISTBOX:
-			dlg_format_listbox(term, wdata, x, y, w, h, rw,
+			dlg_format_listbox(term, dlg_data, wdata, x, y, w, h, rw,
 					   ALIGN_LEFT, format_only);
 			break;
 
 		case WIDGET_TEXT:
-			dlg_format_text(term, wdata, x, y, w, rw, h,
+			dlg_format_text(term, dlg_data, wdata, x, y, w, rw, h,
 					format_only);
 			break;
 
@@ -583,7 +610,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 						break;
 				}
 
-				dlg_format_group(term, wdata, size, x, y, w, rw,
+				dlg_format_group(term, dlg_data, wdata, size, x, y, w, rw,
 						 format_only);
 				wdata += size - 1;
 
@@ -591,7 +618,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 
 				/* No horizontal space between checkboxes belonging to
 				 * the same group. */
-				dlg_format_checkbox(term, wdata, x, y, w, rw,
+				dlg_format_checkbox(term, dlg_data, wdata, x, y, w, rw,
 						    ALIGN_LEFT, format_only);
 				if (widgets > 1
 				    && group == widget_has_group(&wdata[1]))
@@ -603,7 +630,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 		/* We assume that the buttons are all stuffed at the very end
 		 * of the dialog. */
 		case WIDGET_BUTTON:
-			dlg_format_buttons(term, wdata, widgets,
+			dlg_format_buttons(term, dlg_data, wdata, widgets,
 					   x, y, w, rw, ALIGN_CENTER, format_only);
 			return;
 		}

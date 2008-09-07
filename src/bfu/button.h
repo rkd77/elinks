@@ -5,6 +5,7 @@
 #include "util/align.h"
 
 struct dialog;
+struct dialog_data;
 struct terminal;
 struct widget_data;
 
@@ -48,6 +49,6 @@ void add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags, widge
 #endif
 
 extern const struct widget_ops button_ops;
-void dlg_format_buttons(struct terminal *, struct widget_data *, int, int, int *, int, int *, enum format_align, int);
+void dlg_format_buttons(struct terminal *, struct dialog_data *, struct widget_data *, int, int, int *, int, int *, enum format_align, int);
 
 #endif

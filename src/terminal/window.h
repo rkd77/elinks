@@ -3,6 +3,7 @@
 
 #include "util/lists.h"
 
+struct dialog_data;
 struct term_event;
 struct terminal;
 struct window;
@@ -73,6 +74,7 @@ void add_window(struct terminal *, window_handler_T, void *);
 void delete_window(struct window *);
 void delete_window_ev(struct window *, struct term_event *ev);
 #define set_window_ptr(window, x_, y_) do { (window)->x = (x_); (window)->y = (y_); } while (0)
+void set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, int y);
 void get_parent_ptr(struct window *, int *, int *);
 
 void add_empty_window(struct terminal *, void (*)(void *), void *);
