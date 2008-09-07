@@ -56,6 +56,7 @@ spidermonkey_runtime_addref(void)
 			JS_DestroyRuntime(spidermonkey_runtime);
 			spidermonkey_runtime = NULL;
 			JS_ShutDown();
+			return 0;
 		}
 	}
 
