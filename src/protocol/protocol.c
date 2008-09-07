@@ -58,6 +58,7 @@ struct protocol_backend {
 static const struct protocol_backend protocol_backends[] = {
 	{ "about",	   0, about_protocol_handler,		0, 0, 1, 0, 1 },
 	{ "bittorrent",	   0, bittorrent_protocol_handler,	0, 0, 1, 0, 1 },
+	{ "bittorrent-peer",0,bittorrent_peer_protocol_handler, 1, 1, 0, 0, 1 },
 	{ "data",	   0, data_protocol_handler,		0, 0, 1, 0, 1 },
 	{ "file",	   0, file_protocol_handler,		1, 0, 0, 0, 0 },
 	{ "finger",	  79, finger_protocol_handler,		1, 1, 0, 0, 1 },

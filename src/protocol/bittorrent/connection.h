@@ -9,8 +9,10 @@ struct connection;
 
 #ifdef CONFIG_BITTORRENT
 extern protocol_handler_T bittorrent_protocol_handler;
+extern protocol_handler_T bittorrent_peer_protocol_handler;
 #else
 #define bittorrent_protocol_handler NULL
+#define bittorrent_peer_protocol_handler NULL
 #endif
 
 void update_bittorrent_connection_state(struct connection *conn);

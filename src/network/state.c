@@ -124,6 +124,7 @@ static const struct s_msg_dsc msg_dsc[] = {
 	{S_BITTORRENT_METAINFO,	N_("The BitTorrent metainfo file contained errors")},
 	{S_BITTORRENT_TRACKER,	N_("The tracker requesting failed")},
 	{S_BITTORRENT_BAD_URL,	N_("The BitTorrent URL does not point to a valid URL")},
+	{S_BITTORRENT_PEER_URL, N_("The bittorrent-peer URL scheme is for internal use only")},
 #endif
 
 	/* fsp_open_session() failed but did not set errno.
