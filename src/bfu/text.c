@@ -211,12 +211,13 @@ split_lines(struct widget_data *widget_data, int max_width)
 
 /* Format text according to dialog box and alignment. */
 void
-dlg_format_text_do(struct terminal *term, struct dialog_data *dlg_data,
+dlg_format_text_do(struct dialog_data *dlg_data,
 		unsigned char *text,
 		int x, int *y, int width, int *real_width,
 		struct color_pair *color, enum format_align align,
 		int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	int line_width;
 	int firstline = 1;
 
@@ -261,11 +262,12 @@ dlg_format_text_do(struct terminal *term, struct dialog_data *dlg_data,
 }
 
 void
-dlg_format_text(struct terminal *term, struct dialog_data *dlg_data,
+dlg_format_text(struct dialog_data *dlg_data,
 		struct widget_data *widget_data,
 		int x, int *y, int width, int *real_width, int max_height,
 		int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	unsigned char *text = widget_data->widget->text;
 	unsigned char saved = 0;
 	unsigned char *saved_pos = NULL;
@@ -337,7 +339,7 @@ dlg_format_text(struct terminal *term, struct dialog_data *dlg_data,
 		widget_data->info.text.current = 0;
 	}
 
-	dlg_format_text_do(term, dlg_data, text,
+	dlg_format_text_do(dlg_data, text,
 		x, y, width, real_width,
 		get_bfu_color(term, "dialog.text"),
 		widget_data->widget->info.text.align, format_only);
@@ -425,7 +427,7 @@ format_and_display_text(struct widget_data *widget_data,
 	draw_box(term, &widget_data->box, ' ', 0,
 		 get_bfu_color(term, "dialog.generic"));
 
-	dlg_format_text(term, dlg_data, widget_data,
+	dlg_format_text(dlg_data, widget_data,
 			widget_data->box.x, &y, widget_data->box.width, NULL,
 			height, 0);
 

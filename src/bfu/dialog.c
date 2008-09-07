@@ -591,7 +591,7 @@ format_widgets(struct terminal *term, struct dialog_data *dlg_data,
 			break;
 
 		case WIDGET_TEXT:
-			dlg_format_text(term, dlg_data, wdata, x, y, w, rw, h,
+			dlg_format_text(dlg_data, wdata, x, y, w, rw, h,
 					format_only);
 			break;
 

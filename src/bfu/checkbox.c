@@ -49,7 +49,7 @@ dlg_format_checkbox(struct terminal *term, struct dialog_data *dlg_data,
 
 	if (text && *text) {
 		if (rw) *rw -= CHECKBOX_LS;
-		dlg_format_text_do(term, dlg_data, text, x + CHECKBOX_LS, y,
+		dlg_format_text_do(dlg_data, text, x + CHECKBOX_LS, y,
 				   w - CHECKBOX_LS, rw,
 				   get_bfu_color(term, "dialog.checkbox-label"),
 				   align, format_only);

@@ -46,12 +46,12 @@ void add_dlg_text(struct dialog *dlg, unsigned char *text,
 		  enum format_align align, int bottom_pad);
 
 extern const struct widget_ops text_ops;
-void dlg_format_text_do(struct terminal *term, struct dialog_data *dlg_data,
+void dlg_format_text_do(struct dialog_data *dlg_data,
 		    unsigned char *text, int x, int *y, int w, int *rw,
 		    struct color_pair *scolor, enum format_align align, int format_only);
 
 void
-dlg_format_text(struct terminal *term, struct dialog_data *dlg_data, struct widget_data *widget_data,
+dlg_format_text(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int x, int *y, int dlg_width, int *real_width, int height, int format_only);
 
 #define text_is_scrollable(widget_data) \
