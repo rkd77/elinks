@@ -500,7 +500,8 @@ good_char:
 							unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
 
 							if (prev != UCS_NO_CHAR)
-								POS(document->comb_x, document->comb_y).data = prev;
+								document->data[document->comb_y]
+									.chars[document->comb_x].data = prev;
 						}
 						document->combi_length = 0;
 					}
@@ -526,8 +527,8 @@ good_char:
 					schar->data = (unicode_val_T)data;
 				}
 #ifdef CONFIG_COMBINE
-				document->comb_x = x;
-				document->comb_y = y;
+				document->comb_x = X(x);
+				document->comb_y = Y(y);
 #endif
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
