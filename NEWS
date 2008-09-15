@@ -58,6 +58,9 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 * Global ECMAScript functions alert, open, and setTimeout again work
   with SEE.  ELinks 0.12pre1 was the first release that supported SEE
   at all.
+* build bug 1045: Fix ``void function cannot return value'' in
+  never_for_this_site() of src/formhist/formhist.c.  ELinks 0.12pre1
+  was the first release that had this bug.
 
 ELinks 0.12pre1:
 ----------------
