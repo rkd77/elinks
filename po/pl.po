@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-20 21:44+0200\n"
+"POT-Creation-Date: 2008-09-20 23:48+0300\n"
 "PO-Revision-Date: 2008-03-04 15:20+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -41,7 +41,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1602
 msgid "~OK"
 msgstr "~OK"
 
@@ -128,7 +128,7 @@ msgstr "Czy na pewno chcesz skasowaæ wszystkie pozycje?"
 
 #: src/bfu/hierbox.c:913 src/bfu/hierbox.c:944 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
-#: src/viewer/text/search.c:1612
+#: src/viewer/text/search.c:1621
 msgid "Search"
 msgstr "Szukaj"
 
@@ -171,7 +171,7 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
 #: src/session/download.c:544 src/session/download.c:1128
-#: src/viewer/text/search.c:1594
+#: src/viewer/text/search.c:1603
 msgid "~Cancel"
 msgstr "~Anuluj"
 
@@ -1646,7 +1646,7 @@ msgstr "Wypisz informacje o wersji i zakoñcz dzia³anie"
 msgid "Print ELinks version information and exit."
 msgstr "Wypisz informacje o wersji ELinksa i zakoñcz dzia³anie."
 
-#: src/config/conf.c:720
+#: src/config/conf.c:936
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1659,7 +1659,7 @@ msgstr ""
 "## tylko warto¶ci opcji bêd± zmienione a formatowanie, komentarze\n"
 "## i.t.p. pozostan± niezmienione.\n"
 
-#: src/config/conf.c:728
+#: src/config/conf.c:944
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1678,7 +1678,7 @@ msgstr ""
 "## traktowana jako brakuj±ca. Wiedz, ¿e sposób formatowania\n"
 "## i komentarze pozostan± niezmienione.\n"
 
-#: src/config/conf.c:738
+#: src/config/conf.c:954
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so, but keep in mind that this file is overwritten\n"
@@ -1690,7 +1690,7 @@ msgstr ""
 "## przez ELinksa gdy zapiszesz konfiguracjê poprzez menad¿era ustawieñ\n"
 "## Twoje formatowanie i komentarze zostan± utracone.\n"
 
-#: src/config/conf.c:749
+#: src/config/conf.c:965
 msgid ""
 "## Obviously, if you don't like what ELinks is going to do with\n"
 "## this file, you can change it by altering the config.saving_style\n"
@@ -1699,11 +1699,11 @@ msgstr ""
 "## Oczywi¶cie, je¶li nie podoba Ci siê to, co ELinks robi z tym plikiem\n"
 "## mo¿esz to zmieniæ ustawiaj±c odpowiednio zmienn± config.saving_style.\n"
 
-#: src/config/conf.c:762
+#: src/config/conf.c:978
 msgid "Automatically saved options\n"
 msgstr "Automatycznie zapisane ustawienia\n"
 
-#: src/config/conf.c:774
+#: src/config/conf.c:990
 msgid "Automatically saved keybindings\n"
 msgstr "Automatycznie zapisane przypisania klawiszy\n"
 
@@ -3201,8 +3201,9 @@ msgstr "Zrzuty"
 msgid "Dump output options."
 msgstr "Ustawienia dotycz±ce zrzutów."
 
+#. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:394 src/dialogs/document.c:163
+#: src/config/opttypes.c:480 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Strona kodowa"
 
@@ -4195,7 +4196,8 @@ msgstr "Potwierdzenie zamkniêcia karty"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Przy zamykaniu karty pokazuj okienko dialogowe potwierdzania."
 
-#: src/config/options.inc:1174 src/config/opttypes.c:395
+#. OPT_LANGUAGE
+#: src/config/options.inc:1174 src/config/opttypes.c:482
 msgid "Language"
 msgstr "Jêzyk"
 
@@ -4352,62 +4354,70 @@ msgstr ""
 msgid "Read error"
 msgstr "B³±d odczytu"
 
-#: src/config/opttypes.c:389
+#. The OPT_ comments below are here to be found by grep.
+#. OPT_BOOL
+#: src/config/opttypes.c:471
 msgid "Boolean"
 msgstr "Typ boolowski"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:471
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:390
+#. OPT_INT
+#: src/config/opttypes.c:473
 msgid "Integer"
 msgstr "Liczba ca³kowita"
 
-#: src/config/opttypes.c:390 src/config/opttypes.c:391
+#: src/config/opttypes.c:473 src/config/opttypes.c:475
 msgid "<num>"
 msgstr "<liczba>"
 
-#: src/config/opttypes.c:391
+#. OPT_LONG
+#: src/config/opttypes.c:475
 msgid "Longint"
 msgstr "Du¿a liczba ca³kowita"
 
-#: src/config/opttypes.c:392
+#. OPT_STRING
+#: src/config/opttypes.c:477
 msgid "String"
 msgstr "Napis"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:477
 msgid "<str>"
 msgstr "<³añcuch>"
 
 #
-#: src/config/opttypes.c:394
+#: src/config/opttypes.c:480
 msgid "<codepage>"
 msgstr "<strona kodowa>"
 
 #
-#: src/config/opttypes.c:395
+#: src/config/opttypes.c:482
 msgid "<language>"
 msgstr "<jêzyk>"
 
-#: src/config/opttypes.c:396
+#. OPT_COLOR
+#: src/config/opttypes.c:484
 msgid "Color"
 msgstr "Kolor"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:484
 msgid "<color|#rrggbb>"
 msgstr "<kolor|#rrggbb>"
 
-#: src/config/opttypes.c:398
+#. OPT_COMMAND
+#: src/config/opttypes.c:487
 msgid "Special"
 msgstr "Specjalny"
 
-#: src/config/opttypes.c:400
+#. OPT_ALIAS
+#: src/config/opttypes.c:490
 msgid "Alias"
 msgstr "Alias"
 
-#. tree
-#: src/config/opttypes.c:403
+#. OPT_TREE
+#: src/config/opttypes.c:493
 msgid "Folder"
 msgstr "Folder"
 
@@ -4762,7 +4772,7 @@ msgid "Download manager"
 msgstr "Menad¿er pobierania"
 
 #. name:
-#: src/dialogs/exmode.c:149
+#: src/dialogs/exmode.c:147
 msgid "Exmode"
 msgstr "Tryb ex"
 
@@ -8507,36 +8517,36 @@ msgstr "Szukanie z wyprzedzeniem"
 msgid "No links in current document"
 msgstr "Brak odno¶ników w bie¿±cym dokumencie"
 
-#: src/viewer/text/search.c:1557
+#: src/viewer/text/search.c:1560
 msgid "Search for text"
 msgstr "Znajd¼ tekst"
 
-#: src/viewer/text/search.c:1587
+#: src/viewer/text/search.c:1595
 msgid "Normal search"
 msgstr "Zwyk³e szukanie"
 
-#: src/viewer/text/search.c:1588
+#: src/viewer/text/search.c:1596
 msgid "Regexp search"
 msgstr "Szukanie z u¿yciem wyra¿eñ regularnych"
 
-#: src/viewer/text/search.c:1589
+#: src/viewer/text/search.c:1597
 msgid "Extended regexp search"
 msgstr "Szukanie z u¿yciem rozszerzonych wyra¿eñ regularnych"
 
-#: src/viewer/text/search.c:1590
+#: src/viewer/text/search.c:1599
 msgid "Case sensitive"
 msgstr "Rozró¿nianie wielko¶ci liter"
 
-#: src/viewer/text/search.c:1591
+#: src/viewer/text/search.c:1600
 msgid "Case insensitive"
 msgstr "Nierozró¿nianie wielko¶ci liter"
 
-#: src/viewer/text/search.c:1615
+#: src/viewer/text/search.c:1624
 msgid "Search backward"
 msgstr "Szukaj wstecz"
 
 #. name:
-#: src/viewer/text/search.c:1654
+#: src/viewer/text/search.c:1663
 msgid "Search History"
 msgstr "Przeszukaj historiê"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-20 21:44+0200\n"
+"POT-Creation-Date: 2008-09-20 23:48+0300\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Taniel Kirikal <taniel@colleduc.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1602
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -127,7 +127,7 @@ msgstr "Kas te tõesti tahate väljuda Linksist?"
 
 #: src/bfu/hierbox.c:913 src/bfu/hierbox.c:944 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
-#: src/viewer/text/search.c:1612
+#: src/viewer/text/search.c:1621
 msgid "Search"
 msgstr "Otsing"
 
@@ -170,7 +170,7 @@ msgstr "Tühi string pole lubatud"
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
 #: src/session/download.c:544 src/session/download.c:1128
-#: src/viewer/text/search.c:1594
+#: src/viewer/text/search.c:1603
 #, fuzzy
 msgid "~Cancel"
 msgstr "Tühista"
@@ -1622,7 +1622,7 @@ msgstr ""
 msgid "Print ELinks version information and exit."
 msgstr ""
 
-#: src/config/conf.c:720
+#: src/config/conf.c:936
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1630,7 +1630,7 @@ msgid ""
 "## and all your formatting, own comments etc will be kept as-is.\n"
 msgstr ""
 
-#: src/config/conf.c:728
+#: src/config/conf.c:944
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1641,7 +1641,7 @@ msgid ""
 "## own comments and so on will be kept as-is.\n"
 msgstr ""
 
-#: src/config/conf.c:738
+#: src/config/conf.c:954
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so, but keep in mind that this file is overwritten\n"
@@ -1649,18 +1649,18 @@ msgid ""
 "## luck with your formatting and own comments then, so beware.\n"
 msgstr ""
 
-#: src/config/conf.c:749
+#: src/config/conf.c:965
 msgid ""
 "## Obviously, if you don't like what ELinks is going to do with\n"
 "## this file, you can change it by altering the config.saving_style\n"
 "## option. Come on, aren't we friendly guys after all?\n"
 msgstr ""
 
-#: src/config/conf.c:762
+#: src/config/conf.c:978
 msgid "Automatically saved options\n"
 msgstr ""
 
-#: src/config/conf.c:774
+#: src/config/conf.c:990
 msgid "Automatically saved keybindings\n"
 msgstr ""
 
@@ -2934,8 +2934,9 @@ msgstr ""
 msgid "Dump output options."
 msgstr ""
 
+#. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:394 src/dialogs/document.c:163
+#: src/config/opttypes.c:480 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Kooditabel"
 
@@ -3835,7 +3836,8 @@ msgstr ""
 msgid "When closing a tab show confirmation dialog."
 msgstr ""
 
-#: src/config/options.inc:1174 src/config/opttypes.c:395
+#. OPT_LANGUAGE
+#: src/config/options.inc:1174 src/config/opttypes.c:482
 msgid "Language"
 msgstr ""
 
@@ -3970,62 +3972,70 @@ msgstr ""
 msgid "Read error"
 msgstr "Salvestamise viga"
 
-#: src/config/opttypes.c:389
+#. The OPT_ comments below are here to be found by grep.
+#. OPT_BOOL
+#: src/config/opttypes.c:471
 msgid "Boolean"
 msgstr ""
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:471
 msgid "[0|1]"
 msgstr ""
 
-#: src/config/opttypes.c:390
+#. OPT_INT
+#: src/config/opttypes.c:473
 msgid "Integer"
 msgstr ""
 
-#: src/config/opttypes.c:390 src/config/opttypes.c:391
+#: src/config/opttypes.c:473 src/config/opttypes.c:475
 msgid "<num>"
 msgstr ""
 
-#: src/config/opttypes.c:391
+#. OPT_LONG
+#: src/config/opttypes.c:475
 msgid "Longint"
 msgstr ""
 
-#: src/config/opttypes.c:392
+#. OPT_STRING
+#: src/config/opttypes.c:477
 msgid "String"
 msgstr ""
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:477
 msgid "<str>"
 msgstr ""
 
-#: src/config/opttypes.c:394
+#: src/config/opttypes.c:480
 #, fuzzy
 msgid "<codepage>"
 msgstr "Kooditabel"
 
-#: src/config/opttypes.c:395
+#: src/config/opttypes.c:482
 #, fuzzy
 msgid "<language>"
 msgstr "Kee~l"
 
-#: src/config/opttypes.c:396
+#. OPT_COLOR
+#: src/config/opttypes.c:484
 msgid "Color"
 msgstr "Värviline"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:484
 msgid "<color|#rrggbb>"
 msgstr ""
 
-#: src/config/opttypes.c:398
+#. OPT_COMMAND
+#: src/config/opttypes.c:487
 msgid "Special"
 msgstr ""
 
-#: src/config/opttypes.c:400
+#. OPT_ALIAS
+#: src/config/opttypes.c:490
 msgid "Alias"
 msgstr ""
 
-#. tree
-#: src/config/opttypes.c:403
+#. OPT_TREE
+#: src/config/opttypes.c:493
 msgid "Folder"
 msgstr ""
 
@@ -4383,7 +4393,7 @@ msgid "Download manager"
 msgstr "Laadi alla pilt"
 
 #. name:
-#: src/dialogs/exmode.c:149
+#: src/dialogs/exmode.c:147
 msgid "Exmode"
 msgstr ""
 
@@ -7882,37 +7892,37 @@ msgstr ""
 msgid "No links in current document"
 msgstr ""
 
-#: src/viewer/text/search.c:1557
+#: src/viewer/text/search.c:1560
 msgid "Search for text"
 msgstr "Tekstiotsing"
 
-#: src/viewer/text/search.c:1587
+#: src/viewer/text/search.c:1595
 #, fuzzy
 msgid "Normal search"
 msgstr "Eelnev otsing puudub"
 
-#: src/viewer/text/search.c:1588
+#: src/viewer/text/search.c:1596
 msgid "Regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1589
+#: src/viewer/text/search.c:1597
 msgid "Extended regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1590
+#: src/viewer/text/search.c:1599
 msgid "Case sensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1591
+#: src/viewer/text/search.c:1600
 msgid "Case insensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1615
+#: src/viewer/text/search.c:1624
 msgid "Search backward"
 msgstr "Tagurpidi otsing"
 
 #. name:
-#: src/viewer/text/search.c:1654
+#: src/viewer/text/search.c:1663
 #, fuzzy
 msgid "Search History"
 msgstr "Mälu otsas"

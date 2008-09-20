@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-20 21:44+0200\n"
+"POT-Creation-Date: 2008-09-20 23:48+0300\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -32,7 +32,7 @@ msgstr "Притисните размак да бисте проширили ову фасциклу."
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1593
+#: src/session/session.c:792 src/viewer/text/search.c:1602
 msgid "~OK"
 msgstr "~У реду"
 
@@ -119,7 +119,7 @@ msgstr "Да ли заиста желите да уклоните све ставке?"
 
 #: src/bfu/hierbox.c:913 src/bfu/hierbox.c:944 src/viewer/text/search.c:1013
 #: src/viewer/text/search.c:1021 src/viewer/text/search.c:1037
-#: src/viewer/text/search.c:1612
+#: src/viewer/text/search.c:1621
 msgid "Search"
 msgstr "Претрага"
 
@@ -162,7 +162,7 @@ msgstr "Празна ниска није дозвољена"
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
 #: src/session/download.c:544 src/session/download.c:1128
-#: src/viewer/text/search.c:1594
+#: src/viewer/text/search.c:1603
 msgid "~Cancel"
 msgstr "~Поништи"
 
@@ -1650,7 +1650,7 @@ msgstr "Исписивање података о верзији и излаз"
 msgid "Print ELinks version information and exit."
 msgstr "Исписаће податке о верзији ЕЛинкса и изаћи."
 
-#: src/config/conf.c:720
+#: src/config/conf.c:936
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1662,7 +1662,7 @@ msgstr ""
 "## кроз КС, али ће онда само вредности избора и њихово форматирање\n"
 "## бити измењени, а ваши коментари, итд. ће бити сачувани.\n"
 
-#: src/config/conf.c:728
+#: src/config/conf.c:944
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so; this file is edited by ELinks when you save\n"
@@ -1680,7 +1680,7 @@ msgstr ""
 "## датотеке, онда се он НЕ РАЧУНА у недостајуће. Приметите да ће ваше\n"
 "## форматирање, коментари, итд. бити сачувани.\n"
 
-#: src/config/conf.c:738
+#: src/config/conf.c:954
 msgid ""
 "## This is ELinks configuration file. You can edit it manually,\n"
 "## if you wish so, but keep in mind that this file is overwritten\n"
@@ -1692,7 +1692,7 @@ msgstr ""
 "## ЕЛинкс када будете сачували изборе кроз КС, а што се тиче вашег\n"
 "## форматирања и коментара, немате среће, зато пазите.\n"
 
-#: src/config/conf.c:749
+#: src/config/conf.c:965
 msgid ""
 "## Obviously, if you don't like what ELinks is going to do with\n"
 "## this file, you can change it by altering the config.saving_style\n"
@@ -1702,11 +1702,11 @@ msgstr ""
 "## датотеком, можете то да промените мењањем избора\n"
 "## config.saving_style. Зар нисмо прави другари?\n"
 
-#: src/config/conf.c:762
+#: src/config/conf.c:978
 msgid "Automatically saved options\n"
 msgstr "Аутоматски сачувана подешавања\n"
 
-#: src/config/conf.c:774
+#: src/config/conf.c:990
 msgid "Automatically saved keybindings\n"
 msgstr "Аутоматски сачуване пречице\n"
 
@@ -3204,8 +3204,9 @@ msgstr "Истоварни излаз"
 msgid "Dump output options."
 msgstr "Избори истоварног излаза."
 
+#. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:394 src/dialogs/document.c:163
+#: src/config/opttypes.c:480 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Кодна страна"
 
@@ -4175,7 +4176,8 @@ msgstr "Потврда затварања језичака"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Питаће за потврду пре затварања језичка."
 
-#: src/config/options.inc:1174 src/config/opttypes.c:395
+#. OPT_LANGUAGE
+#: src/config/options.inc:1174 src/config/opttypes.c:482
 msgid "Language"
 msgstr "Језик"
 
@@ -4328,60 +4330,68 @@ msgstr ""
 msgid "Read error"
 msgstr "Грешка при читању"
 
-#: src/config/opttypes.c:389
+#. The OPT_ comments below are here to be found by grep.
+#. OPT_BOOL
+#: src/config/opttypes.c:471
 msgid "Boolean"
 msgstr "Логичка"
 
-#: src/config/opttypes.c:389
+#: src/config/opttypes.c:471
 msgid "[0|1]"
 msgstr "[0|1]"
 
-#: src/config/opttypes.c:390
+#. OPT_INT
+#: src/config/opttypes.c:473
 msgid "Integer"
 msgstr "Цео број"
 
-#: src/config/opttypes.c:390 src/config/opttypes.c:391
+#: src/config/opttypes.c:473 src/config/opttypes.c:475
 msgid "<num>"
 msgstr "<бр>"
 
-#: src/config/opttypes.c:391
+#. OPT_LONG
+#: src/config/opttypes.c:475
 msgid "Longint"
 msgstr "Дугачак цео број"
 
-#: src/config/opttypes.c:392
+#. OPT_STRING
+#: src/config/opttypes.c:477
 msgid "String"
 msgstr "Ниска"
 
-#: src/config/opttypes.c:392
+#: src/config/opttypes.c:477
 msgid "<str>"
 msgstr "<ниска>"
 
-#: src/config/opttypes.c:394
+#: src/config/opttypes.c:480
 msgid "<codepage>"
 msgstr "<коднастрана>"
 
-#: src/config/opttypes.c:395
+#: src/config/opttypes.c:482
 msgid "<language>"
 msgstr "<језик>"
 
-#: src/config/opttypes.c:396
+#. OPT_COLOR
+#: src/config/opttypes.c:484
 msgid "Color"
 msgstr "Боја"
 
-#: src/config/opttypes.c:396
+#: src/config/opttypes.c:484
 msgid "<color|#rrggbb>"
 msgstr "<боја|#ццззпп>"
 
-#: src/config/opttypes.c:398
+#. OPT_COMMAND
+#: src/config/opttypes.c:487
 msgid "Special"
 msgstr "Посебно"
 
-#: src/config/opttypes.c:400
+#. OPT_ALIAS
+#: src/config/opttypes.c:490
 msgid "Alias"
 msgstr "Псеудоним"
 
-#. tree
-#: src/config/opttypes.c:403
+#. OPT_TREE
+#: src/config/opttypes.c:493
 msgid "Folder"
 msgstr "Фасцикла"
 
@@ -4734,7 +4744,7 @@ msgid "Download manager"
 msgstr "Управљач преузимања"
 
 #. name:
-#: src/dialogs/exmode.c:149
+#: src/dialogs/exmode.c:147
 msgid "Exmode"
 msgstr ""
 
@@ -8425,36 +8435,36 @@ msgstr "Постепено уношење"
 msgid "No links in current document"
 msgstr "У текућем документу нема веза"
 
-#: src/viewer/text/search.c:1557
+#: src/viewer/text/search.c:1560
 msgid "Search for text"
 msgstr "Тражи текст"
 
-#: src/viewer/text/search.c:1587
+#: src/viewer/text/search.c:1595
 msgid "Normal search"
 msgstr "Обична претрага"
 
-#: src/viewer/text/search.c:1588
+#: src/viewer/text/search.c:1596
 msgid "Regexp search"
 msgstr "Претрага регуларним изразима"
 
-#: src/viewer/text/search.c:1589
+#: src/viewer/text/search.c:1597
 msgid "Extended regexp search"
 msgstr "Проширена претрага регуларним изразима"
 
-#: src/viewer/text/search.c:1590
+#: src/viewer/text/search.c:1599
 msgid "Case sensitive"
 msgstr "Разликовање малих и великих слова"
 
-#: src/viewer/text/search.c:1591
+#: src/viewer/text/search.c:1600
 msgid "Case insensitive"
 msgstr "Неразликовање малих и великих слова"
 
-#: src/viewer/text/search.c:1615
+#: src/viewer/text/search.c:1624
 msgid "Search backward"
 msgstr "Претрага уназад"
 
 #. name:
-#: src/viewer/text/search.c:1654
+#: src/viewer/text/search.c:1663
 #, fuzzy
 msgid "Search History"
 msgstr "Историја претраживања"
