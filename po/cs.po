@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-29 22:26+0300\n"
+"Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
+"POT-Creation-Date: 2008-09-21 11:13+0300\n"
 "PO-Revision-Date: 2005-01-04 00:42+0100\n"
 "Last-Translator: Petr Baudis <pasky@ucw.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.souceforge.net>\n"
@@ -35,9 +35,9 @@ msgstr "Zmáèkni mezeru, jestli chce¹ tuhle slo¾ku rozbalit."
 #: src/cookies/dialogs.c:372 src/cookies/dialogs.c:470 src/dialogs/edit.c:98
 #: src/dialogs/info.c:134 src/dialogs/options.c:234 src/dialogs/options.c:315
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
-#: src/protocol/protocol.c:245 src/scripting/lua/core.c:399
+#: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:800 src/viewer/text/search.c:1677
+#: src/session/session.c:811 src/viewer/text/search.c:1686
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -120,7 +120,7 @@ msgstr "Chyba pøi mazání"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
-#: src/bfu/hierbox.c:876 src/config/dialogs.c:823 src/dialogs/menu.c:131
+#: src/bfu/hierbox.c:876 src/config/dialogs.c:823 src/dialogs/menu.c:132
 #: src/formhist/formhist.c:432 src/mime/dialogs.c:70 src/session/task.c:278
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
@@ -129,7 +129,7 @@ msgstr "Ano"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
-#: src/bfu/hierbox.c:877 src/config/dialogs.c:824 src/dialogs/menu.c:132
+#: src/bfu/hierbox.c:877 src/config/dialogs.c:824 src/dialogs/menu.c:133
 #: src/formhist/formhist.c:433 src/mime/dialogs.c:71 src/session/task.c:279
 #: src/terminal/tab.c:209 src/terminal/tab.c:253
 #, fuzzy
@@ -138,7 +138,7 @@ msgstr "Ne"
 
 #: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1090
 #: src/viewer/text/search.c:1098 src/viewer/text/search.c:1114
-#: src/viewer/text/search.c:1696
+#: src/viewer/text/search.c:1705
 msgid "Search"
 msgstr "Hledat"
 
@@ -179,10 +179,10 @@ msgstr "Napi¹ tam nìco"
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
 #: src/cookies/dialogs.c:471 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:133
-#: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:812
+#: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:814
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
 #: src/session/download.c:607 src/session/download.c:1219
-#: src/viewer/text/search.c:1678
+#: src/viewer/text/search.c:1687
 #, fuzzy
 msgid "~Cancel"
 msgstr "Zru¹it"
@@ -198,7 +198,7 @@ msgstr "Digitální hodiny na stavové li¹tì."
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1199
 #: src/config/options.inc:1206 src/ecmascript/ecmascript.c:45
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
-#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:80
+#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:81
 msgid "Enable"
 msgstr "Zapnout"
 
@@ -463,14 +463,14 @@ msgstr "Editovat"
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:489 src/cache/dialogs.c:231
 #: src/config/dialogs.c:505 src/config/dialogs.c:930 src/cookies/dialogs.c:493
-#: src/dialogs/menu.c:462 src/formhist/dialogs.c:211
+#: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
 msgstr "~Smazat"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:490 src/config/dialogs.c:504
-#: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:460
+#: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
 msgstr "Pøid~at"
 
@@ -494,7 +494,7 @@ msgstr "Pøesunout"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:494 src/cache/dialogs.c:232
-#: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:412
+#: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Hledat"
@@ -1849,9 +1849,9 @@ msgstr "nic"
 msgid "Description"
 msgstr "Popis"
 
-#: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:599
-#: src/protocol/protocol.c:239 src/session/session.c:287
-#: src/session/session.c:964 src/viewer/text/textarea.c:594
+#: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
+#: src/protocol/protocol.c:240 src/session/session.c:287
+#: src/session/session.c:975 src/viewer/text/textarea.c:594
 #: src/viewer/text/textarea.c:601
 msgid "Error"
 msgstr "Chyba"
@@ -1889,7 +1889,7 @@ msgstr "Do této slo¾ky nemù¾u pøidat novou volbu."
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
 #: src/dialogs/options.c:236 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:799 src/session/download.c:1203
+#: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1203
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Ulo¾it"
@@ -3837,7 +3837,7 @@ msgstr "Text"
 msgid "Dialog text colors."
 msgstr "Barvy textu dialogového okna."
 
-#: src/config/options.inc:1059 src/viewer/text/form.c:1819
+#: src/config/options.inc:1059 src/viewer/text/form.c:1862
 msgid "Checkbox"
 msgstr "Za¹krtávací ètvereèek"
 
@@ -3887,7 +3887,7 @@ msgstr "Klávesová zkratka tlaèítka"
 msgid "Selected button shortcut"
 msgstr "Vybraná klávesová zkratka tlaèítka"
 
-#: src/config/options.inc:1087 src/viewer/text/form.c:1823
+#: src/config/options.inc:1087 src/viewer/text/form.c:1866
 msgid "Text field"
 msgstr "Textové políèko"
 
@@ -4730,7 +4730,7 @@ msgstr "Nedostal jsem ¾ádnou hlavièku."
 msgid "No header info."
 msgstr "Nedostal jsem ¾ádnou hlavièku."
 
-#: src/dialogs/download.c:243 src/dialogs/menu.c:598
+#: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:361
 msgid "Download"
 msgstr "Stahování"
@@ -4983,408 +4983,408 @@ msgid_plural "%ld bytes overhead"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/menu.c:96
+#: src/dialogs/menu.c:97
 msgid "Save URL"
 msgstr "Ulo¾ URL"
 
-#: src/dialogs/menu.c:96 src/dialogs/menu.c:542
+#: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
 msgstr "Zadej URL"
 
-#: src/dialogs/menu.c:125
+#: src/dialogs/menu.c:126
 msgid "Exit ELinks"
 msgstr "Ukonèení ELinksu"
 
-#: src/dialogs/menu.c:127
+#: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
 msgstr "Chce¹ skuteènì ukonèit ELinks a zru¹it v¹echna stahování?"
 
-#: src/dialogs/menu.c:129
+#: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
 msgstr "Chce¹ opravdu ukonèit ELinks?"
 
-#: src/dialogs/menu.c:165
+#: src/dialogs/menu.c:166
 msgid "No history"
 msgstr "®ádná historie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
-#: src/dialogs/menu.c:237 src/dialogs/menu.c:313
+#: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
 msgstr "~Zpátky"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:238
+#: src/dialogs/menu.c:239
 msgid "Go for~ward"
 msgstr "~Kupøedu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
-#: src/dialogs/menu.c:245 src/dialogs/menu.c:326
+#: src/dialogs/menu.c:246 src/dialogs/menu.c:327
 msgid "Bookm~ark document"
 msgstr "Bookmark~nout dokument"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:249 src/dialogs/menu.c:418
+#: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
 msgstr "Pøepnout htm~l/plain"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:250
+#: src/dialogs/menu.c:251
 msgid "~Reload"
 msgstr "Nah~raj znova"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:253 src/dialogs/menu.c:428
+#: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
 msgstr "~Rám pøes celou obrazovku"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:255
+#: src/dialogs/menu.c:256
 #, fuzzy
 msgid "~Pass frame URI to external command"
 msgstr "Pøedat URI odkazu externímu pøíkazu"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:263 src/dialogs/menu.c:430
+#: src/dialogs/menu.c:264 src/dialogs/menu.c:431
 msgid "Nex~t tab"
 msgstr "Dal¹í ~tab"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:264 src/dialogs/menu.c:431
+#: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 msgid "Pre~v tab"
 msgstr "Pøedchozí ta~b"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:267 src/dialogs/menu.c:432
+#: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 msgid "~Close tab"
 msgstr "Za~vøít tab"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:270
+#: src/dialogs/menu.c:271
 msgid "C~lose all tabs but the current"
 msgstr "Zavøít v¹e~chny taby kromì tohohle"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:274
+#: src/dialogs/menu.c:275
 msgid "B~ookmark all tabs"
 msgstr "Bookmar~knout v¹echny taby"
 
 #. accelerator_context(tab_menu)
-#: src/dialogs/menu.c:282
+#: src/dialogs/menu.c:283
 #, fuzzy
 msgid "Pass tab URI to e~xternal command"
 msgstr "Pøedat URI odkazu externímu pøíkazu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:310
+#: src/dialogs/menu.c:311
 msgid "Open new ~tab"
 msgstr "Otevøít nový ~tab"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:311
+#: src/dialogs/menu.c:312
 msgid "Open new tab in backgroun~d"
 msgstr "Otevøít nový tab na ~pozadí"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:312
+#: src/dialogs/menu.c:313
 msgid "~Go to URL"
 msgstr "~Bì¾ na URL"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:314
+#: src/dialogs/menu.c:315
 msgid "Go ~forward"
 msgstr "~Kupøedu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:315
+#: src/dialogs/menu.c:316
 msgid "~History"
 msgstr "~Historie"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:316
+#: src/dialogs/menu.c:317
 msgid "~Unhistory"
 msgstr "Antihistori~e"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:322
+#: src/dialogs/menu.c:323
 msgid "~Save as"
 msgstr "Ulo¾ pod ~jménem"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:323
+#: src/dialogs/menu.c:324
 msgid "Save UR~L as"
 msgstr "Ulo¾ ~URL pod jménem"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:324
+#: src/dialogs/menu.c:325
 msgid "Sa~ve formatted document"
 msgstr "Ulo¾it zformátovaný ~dokument"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:333
+#: src/dialogs/menu.c:334
 msgid "~Kill background connections"
 msgstr "Ukonèit v¹echna ~spojení na pozadí"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:334
+#: src/dialogs/menu.c:335
 msgid "Flush all ~caches"
 msgstr "~Vylej v¹echny cache"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:335
+#: src/dialogs/menu.c:336
 msgid "Resource ~info"
 msgstr "~Informace o zdrojích"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:342
+#: src/dialogs/menu.c:343
 msgid "E~xit"
 msgstr "©mite~c"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:369
+#: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
 msgstr "Otevøít nové okno"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:388
+#: src/dialogs/menu.c:389
 msgid "~OS shell"
 msgstr "~OS shell"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:395
+#: src/dialogs/menu.c:396
 msgid "Resize t~erminal"
 msgstr "Zmìò velikost ~terminálu"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:413
+#: src/dialogs/menu.c:414
 msgid "Search ~backward"
 msgstr "Hledat ~zpìt"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:414
+#: src/dialogs/menu.c:415
 msgid "Find ~next"
 msgstr "~Najít dal¹í"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:415
+#: src/dialogs/menu.c:416
 msgid "Find ~previous"
 msgstr "Najít ~pøedchozí"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:416
+#: src/dialogs/menu.c:417
 msgid "T~ypeahead search"
 msgstr "Inter~aktivní vyhledávání"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:419
+#: src/dialogs/menu.c:420
 msgid "Toggle i~mages"
 msgstr "Pøepnout ~obrázky"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:420
+#: src/dialogs/menu.c:421
 msgid "Toggle ~link numbering"
 msgstr "Pøepno~ut èíslování odkazù"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:421
+#: src/dialogs/menu.c:422
 msgid "Toggle ~document colors"
 msgstr "Pou¾ívat barvy ~dokumentu"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:422
+#: src/dialogs/menu.c:423
 msgid "~Wrap text on/off"
 msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:424
+#: src/dialogs/menu.c:425
 msgid "Document ~info"
 msgstr "~Informace o dokumentu"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:425
+#: src/dialogs/menu.c:426
 msgid "H~eader info"
 msgstr "In~formace o hlavièce"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:426
+#: src/dialogs/menu.c:427
 msgid "Rel~oad document"
 msgstr "Obnovit do~kument"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:427
+#: src/dialogs/menu.c:428
 msgid "~Rerender document"
 msgstr "Pø~ekreslit dokument"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:439
+#: src/dialogs/menu.c:440
 msgid "~ELinks homepage"
 msgstr "~Homepage ELinksu"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:440
+#: src/dialogs/menu.c:441
 msgid "~Documentation"
 msgstr "~Dokumentace"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:441
+#: src/dialogs/menu.c:442
 msgid "~Keys"
 msgstr "~Klávesy"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:443
+#: src/dialogs/menu.c:444
 #, fuzzy
 msgid "LED ~indicators"
 msgstr "LED indikátory"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:446
+#: src/dialogs/menu.c:447
 msgid "~Bugs information"
 msgstr "Informace o ~chybách"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:448
+#: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
 msgstr "Cvs~Web ELinksu"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:451
+#: src/dialogs/menu.c:452
 msgid "~Copying"
 msgstr "Ko~pírování"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:452
+#: src/dialogs/menu.c:453
 msgid "Autho~rs"
 msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:453
+#: src/dialogs/menu.c:454
 msgid "~About"
 msgstr "~O programu"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
-#: src/dialogs/menu.c:461
+#: src/dialogs/menu.c:462
 msgid "~Modify"
 msgstr "Z~mìnit"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:469 src/dialogs/menu.c:483
+#: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
 msgstr "~Jazyk"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:471 src/dialogs/menu.c:484
+#: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
 msgstr "~Znaková sada"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:472 src/dialogs/menu.c:485
+#: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
 msgstr "Nastavení ~terminálu"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:473
+#: src/dialogs/menu.c:474
 msgid "File ~extensions"
 msgstr "~Pøípony souborù"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:475
+#: src/dialogs/menu.c:476
 msgid "~Options manager"
 msgstr "Správce ~nastavení"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:476
+#: src/dialogs/menu.c:477
 msgid "~Keybinding manager"
 msgstr "Správce ~kláves"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:477
+#: src/dialogs/menu.c:478
 msgid "~Save options"
 msgstr "Ulo¾it na~stavení"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:492
+#: src/dialogs/menu.c:493
 msgid "Global ~history"
 msgstr "Globální ~historie"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:495
+#: src/dialogs/menu.c:496
 msgid "~Bookmarks"
 msgstr "~Bookmarky"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:497
+#: src/dialogs/menu.c:498
 msgid "~Cache"
 msgstr "~Cache"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:498
+#: src/dialogs/menu.c:499
 msgid "~Downloads"
 msgstr "S~tahování"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:500
+#: src/dialogs/menu.c:501
 msgid "Coo~kies"
 msgstr "Coo~kies"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:503
+#: src/dialogs/menu.c:504
 msgid "~Form history"
 msgstr "~Formuláøová pamì»"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:505
+#: src/dialogs/menu.c:506
 msgid "~Authentication"
 msgstr "HTTP ~Autentikace"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:522
+#: src/dialogs/menu.c:523
 msgid "~File"
 msgstr "~Soubor"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:523
+#: src/dialogs/menu.c:524
 msgid "~View"
 msgstr "~Zobrazení"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:524
+#: src/dialogs/menu.c:525
 msgid "~Link"
 msgstr "~Link"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:525
+#: src/dialogs/menu.c:526
 msgid "~Tools"
 msgstr "Nás~troje"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:526
+#: src/dialogs/menu.c:527
 msgid "~Setup"
 msgstr "~Nastavení"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:527
+#: src/dialogs/menu.c:528
 msgid "~Help"
 msgstr "~Pomoc"
 
-#: src/dialogs/menu.c:542
+#: src/dialogs/menu.c:543
 msgid "Go to URL"
 msgstr "Bì¾ na URL"
 
-#: src/dialogs/menu.c:598
+#: src/dialogs/menu.c:601
 msgid "Save to file"
 msgstr "Ulo¾it do souboru"
 
-#: src/dialogs/menu.c:933
+#: src/dialogs/menu.c:936
 msgid "Empty directory"
 msgstr "Prázdný adresáø"
 
-#: src/dialogs/menu.c:977
+#: src/dialogs/menu.c:980
 msgid "Directories:"
 msgstr "Adresáøe:"
 
-#: src/dialogs/menu.c:990
+#: src/dialogs/menu.c:993
 msgid "Files:"
 msgstr "Soubory:"
 
@@ -5595,7 +5595,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:367
+#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:351
 msgid "ECMAScript"
 msgstr "ECMAScript (JavaScript)"
 
@@ -5641,11 +5641,11 @@ msgstr ""
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:281
+#: src/ecmascript/ecmascript.c:265
 msgid "JavaScript Emergency"
 msgstr "vá¾nou chybu JavaScriptu"
 
-#: src/ecmascript/ecmascript.c:283
+#: src/ecmascript/ecmascript.c:267
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5659,7 +5659,7 @@ msgstr ""
 msgid "SEE"
 msgstr ""
 
-#: src/ecmascript/see/window.c:227 src/ecmascript/spidermonkey/window.c:331
+#: src/ecmascript/see/window.c:229 src/ecmascript/spidermonkey/window.c:331
 msgid "JavaScript Alert"
 msgstr "Varování JavaScriptu"
 
@@ -6037,7 +6037,7 @@ msgstr "Tureètina"
 msgid "Ukrainian"
 msgstr "Ukrajin¹tina"
 
-#: src/main/interlink.c:329 src/main/select.c:261
+#: src/main/interlink.c:329 src/main/select.c:279
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Volání selhalo: %d (%s)"
@@ -6074,7 +6074,7 @@ msgid "Unable to attach_terminal()."
 msgstr "Nelze pøipojit terminál."
 
 #. Infinite loop prevention.
-#: src/main/select.c:264
+#: src/main/select.c:282
 #, c-format
 msgid "%d select() failures."
 msgstr "%d selhání funkce select()."
@@ -6357,11 +6357,11 @@ msgstr ""
 "Výchozí MIME typ pro dokumenty, jejich¾ MIME typ není známý a nelze\n"
 "zjistit z jiných indicií."
 
-#: src/network/ssl/ssl.c:71 src/network/ssl/ssl.c:151
+#: src/network/ssl/ssl.c:72 src/network/ssl/ssl.c:161
 msgid "Verify certificates"
 msgstr "Kontrolovat certifikáty"
 
-#: src/network/ssl/ssl.c:73
+#: src/network/ssl/ssl.c:74
 msgid ""
 "Verify the peer's SSL certificate. Note that this\n"
 "needs extensive configuration of OpenSSL by the user."
@@ -6369,15 +6369,15 @@ msgstr ""
 "Ovìøit SSL certifikát druhé strany. Ke zprovoznìní tohoto nastavení\n"
 "je tøeba odpovídajícím zpùsobem nakonfigurovat OpenSSL."
 
-#: src/network/ssl/ssl.c:76
+#: src/network/ssl/ssl.c:77
 msgid "Client Certificates"
 msgstr "Klientské certifikáty"
 
-#: src/network/ssl/ssl.c:78
+#: src/network/ssl/ssl.c:79
 msgid "X509 client certificate options."
 msgstr "Nastavení klientského certifikátu X509."
 
-#: src/network/ssl/ssl.c:82
+#: src/network/ssl/ssl.c:83
 msgid ""
 "Enable or not the sending of X509 client certificates\n"
 "to servers which request them."
@@ -6385,11 +6385,11 @@ msgstr ""
 "Zapnout posílání klientského certifikátu X509 serverùm, které si ho\n"
 "vy¾ádají."
 
-#: src/network/ssl/ssl.c:85
+#: src/network/ssl/ssl.c:86
 msgid "Certificate File"
 msgstr "Soubor s certifikátem"
 
-#: src/network/ssl/ssl.c:87
+#: src/network/ssl/ssl.c:88
 msgid ""
 "The location of a file containing the client certificate\n"
 "and unencrypted private key in PEM format. If unset, the\n"
@@ -6400,20 +6400,41 @@ msgstr ""
 "klíè ve formátu PEM. Pokud tato volba není nastavena, zkusím alespoò pou¾ít\n"
 "soubor, na který ukazuje promìnná prostøedí X509_CLIENT_CERT."
 
-#: src/network/ssl/ssl.c:153
+#: src/network/ssl/ssl.c:163
 msgid ""
-"Verify the peer's SSL certificate. Note that this\n"
-"probably doesn't work properly at all with GnuTLS."
+"Verify the peer's SSL certificate.  If you enable\n"
+"this, set also \"Trusted CA file\"."
 msgstr ""
-"Ovìøit SSL certifikát druhé strany. Ke zprovoznìní tohoto nastavení\n"
-"je tøeba odpovídajícím zpùsobem nakonfigurovat GnuTLS."
+
+#. The default value of the following option points to a file
+#. * generated by the ca-certificates Debian package.  Don't use
+#. * CONFDIR here: if someone installs ELinks in $HOME and wants
+#. * to have a user-specific trust list, he or she can just
+#. * change the file name via the option manager.  Distributors
+#. * of binary packages should of course change the default to
+#. * suit their systems.
+#. * TODO: If the file name is relative, look in elinks_home?
+#: src/network/ssl/ssl.c:174
+#, fuzzy
+msgid "Trusted CA file"
+msgstr "Pøená¹ím"
+
+#: src/network/ssl/ssl.c:176
+msgid ""
+"The location of a file containing certificates of\n"
+"trusted certification authorities in PEM format.\n"
+"ELinks then trusts certificates issued by these CAs.\n"
+"If you change this option or the file, you must\n"
+"restart ELinks for the changes to take effect.\n"
+"This option affects GnuTLS but not OpenSSL."
+msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:172 src/network/ssl/ssl.c:189
+#: src/network/ssl/ssl.c:199 src/network/ssl/ssl.c:216
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:174
+#: src/network/ssl/ssl.c:201
 msgid "SSL options."
 msgstr "Nastavení SSL."
 
@@ -6679,7 +6700,21 @@ msgstr ""
 msgid "The BitTorrent URL does not point to a valid URL"
 msgstr ""
 
-#: src/network/state.c:150
+#: src/network/state.c:127
+msgid "The bittorrent-peer URL scheme is for internal use only"
+msgstr ""
+
+#. fsp_open_session() failed but did not set errno.
+#. * fsp_open_session() never sends anything to the FSP server,
+#. * so this error does not mean the server itself does not work.
+#. * More likely, there was some problem in asking a DNS server
+#. * about the address of the FSP server.
+#: src/network/state.c:135
+#, fuzzy
+msgid "FSP server not found"
+msgstr "Soubor nenalezen"
+
+#: src/network/state.c:158
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
@@ -7337,34 +7372,34 @@ msgstr ""
 "Nemù¾u zapisovat do konfiguráku %s.\n"
 "%s"
 
-#: src/protocol/bittorrent/dialogs.c:736
+#: src/protocol/bittorrent/dialogs.c:737
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s'?"
 msgstr "Chtìl bys zobrazit soubor '%s' (typ: %s)?"
 
-#: src/protocol/bittorrent/dialogs.c:752
+#: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
 msgstr "Zobrazení informací o souèasné stránce"
 
-#: src/protocol/bittorrent/dialogs.c:774 src/session/download.c:1106
+#: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1106
 msgid "What to do?"
 msgstr "Co mám podle tebe dìlat?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
-#: src/protocol/bittorrent/dialogs.c:796
+#: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
 msgstr "Stahování"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:802 src/session/download.c:1209
+#: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1209
 #, fuzzy
 msgid "~Display"
 msgstr "Zobrazit"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:806 src/session/download.c:1213
+#: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1213
 #, fuzzy
 msgid "Show ~header"
 msgstr "Zobrazit hlavièku"
@@ -7817,24 +7852,24 @@ msgid ""
 "All header entries can be read in the header info dialog."
 msgstr ""
 
-#: src/protocol/protocol.c:241
+#: src/protocol/protocol.c:242
 #, c-format
 msgid "This version of ELinks does not contain %s protocol support"
 msgstr "Tato verze ELinksu nepodporuje protokol %s"
 
-#: src/protocol/protocol.c:272
+#: src/protocol/protocol.c:273
 msgid "Protocols"
 msgstr "Protokoly"
 
-#: src/protocol/protocol.c:274
+#: src/protocol/protocol.c:275
 msgid "Protocol specific options."
 msgstr "Nastavení jednotlivých protokolù."
 
-#: src/protocol/protocol.c:276
+#: src/protocol/protocol.c:277
 msgid "No-proxy domains"
 msgstr "Domény pou¾itelné bez proxy"
 
-#: src/protocol/protocol.c:278
+#: src/protocol/protocol.c:279
 msgid ""
 "Comma separated list of domains for which the proxy (HTTP/FTP)\n"
 "should be disabled. Optionally, a port can be specified for some\n"
@@ -7847,7 +7882,7 @@ msgstr ""
 "prostøedí NO_PROXY."
 
 #. name:
-#: src/protocol/protocol.c:321
+#: src/protocol/protocol.c:322
 msgid "Protocol"
 msgstr "Protokol"
 
@@ -8217,12 +8252,12 @@ msgstr "Otevøít"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:750 src/session/session.c:769 src/session/task.c:275
+#: src/session/session.c:761 src/session/session.c:780 src/session/task.c:275
 #: src/viewer/text/textarea.c:652
 msgid "Warning"
 msgstr "Upozornìní"
 
-#: src/session/session.c:751
+#: src/session/session.c:762
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -8242,7 +8277,7 @@ msgstr ""
 "prostì udìlej tohle), abych mohl pou¾ít správné implicitní nastavení. "
 "Omlouvám se za zpùsobené nepøíjemnosti."
 
-#: src/session/session.c:770
+#: src/session/session.c:781
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -8265,11 +8300,11 @@ msgstr ""
 "pøe¹el na \"správný\" zpùsob chování. Omlouváme se za zpùsobené "
 "nepøíjemnosti."
 
-#: src/session/session.c:795
+#: src/session/session.c:806
 msgid "Welcome"
 msgstr "Vítej"
 
-#: src/session/session.c:796
+#: src/session/session.c:807
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8410,204 +8445,204 @@ msgstr "Chybící fragment"
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr "Vy¾ádaný fragment \"#%s\" neexistuje."
 
-#: src/viewer/text/form.c:1049
+#: src/viewer/text/form.c:1092
 msgid "Error while posting form"
 msgstr "Chyba pøi odesílání formuláøe"
 
-#: src/viewer/text/form.c:1050
+#: src/viewer/text/form.c:1093
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
 msgstr "Nemù¾u dostat soubor %s: %s"
 
-#: src/viewer/text/form.c:1804
+#: src/viewer/text/form.c:1847
 msgid "Reset form"
 msgstr "Vygumovat formuláø"
 
-#: src/viewer/text/form.c:1806
+#: src/viewer/text/form.c:1849
 msgid "Harmless button"
 msgstr "Ne¹kodné tlaèítko"
 
-#: src/viewer/text/form.c:1814
+#: src/viewer/text/form.c:1857
 msgid "Submit form to"
 msgstr "Po¹li formuláø na"
 
-#: src/viewer/text/form.c:1815
+#: src/viewer/text/form.c:1858
 msgid "Post form to"
 msgstr "Po¹li formuláø na"
 
-#: src/viewer/text/form.c:1817
+#: src/viewer/text/form.c:1860
 msgid "Radio button"
 msgstr "Izostaty"
 
-#: src/viewer/text/form.c:1821
+#: src/viewer/text/form.c:1864
 msgid "Select field"
 msgstr "Vybírací políèko"
 
-#: src/viewer/text/form.c:1825
+#: src/viewer/text/form.c:1868
 msgid "Text area"
 msgstr "Textová plocha"
 
-#: src/viewer/text/form.c:1827
+#: src/viewer/text/form.c:1870
 msgid "File upload"
 msgstr "Uploadnutí souboru"
 
-#: src/viewer/text/form.c:1829
+#: src/viewer/text/form.c:1872
 msgid "Password field"
 msgstr "Políèko s heslem"
 
-#: src/viewer/text/form.c:1867
+#: src/viewer/text/form.c:1910
 msgid "name"
 msgstr "jméno"
 
-#: src/viewer/text/form.c:1879
+#: src/viewer/text/form.c:1922
 msgid "value"
 msgstr "hodnota"
 
-#: src/viewer/text/form.c:1892
+#: src/viewer/text/form.c:1935
 msgid "read only"
 msgstr "pouze pro ètení"
 
-#: src/viewer/text/form.c:1903
+#: src/viewer/text/form.c:1946
 #, c-format
 msgid "press %s to navigate"
 msgstr "zmáèkni %s pro navigaci"
 
-#: src/viewer/text/form.c:1905
+#: src/viewer/text/form.c:1948
 #, c-format
 msgid "press %s to edit"
 msgstr "zmáèkni %s pro editaci"
 
-#: src/viewer/text/form.c:1941
+#: src/viewer/text/form.c:1984
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "zmáèkni %s pro odeslání na %s"
 
-#: src/viewer/text/form.c:1943
+#: src/viewer/text/form.c:1986
 #, c-format
 msgid "press %s to post to %s"
 msgstr "zmáèkni %s pro odeslání na %s"
 
-#: src/viewer/text/form.c:2045
+#: src/viewer/text/form.c:2088
 #, fuzzy
 msgid "Useless button"
 msgstr "Ne¹kodné tlaèítko"
 
-#: src/viewer/text/form.c:2047
+#: src/viewer/text/form.c:2090
 #, fuzzy
 msgid "Submit button"
 msgstr "Po¹li formuláø na"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1280
+#: src/viewer/text/link.c:1281
 msgid "Display ~usemap"
 msgstr "Zobrazit map~u"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1286
 msgid "~Follow link"
 msgstr "~Otevøít link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1287
+#: src/viewer/text/link.c:1288
 msgid "Follow link and r~eload"
 msgstr "Otevøít link a obnovit cílovou stránku"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1292
 msgid "Open in new ~window"
 msgstr "Otevøít v ~novém oknì"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1293
+#: src/viewer/text/link.c:1294
 msgid "Open in new ~tab"
 msgstr "Otevøít v novém ~tabu"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1295
+#: src/viewer/text/link.c:1296
 msgid "Open in new tab in ~background"
 msgstr "Otevøít v novém tabu na ~pozadí"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1300
+#: src/viewer/text/link.c:1301
 msgid "~Download link"
 msgstr "~Stáhnout link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1304
 msgid "~Add link to bookmarks"
 msgstr "Pøidat link do bookm~arkù"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1307
+#: src/viewer/text/link.c:1308
 #, fuzzy
 msgid "Pass link URI to e~xternal command"
 msgstr "Pøedat URI odkazu externímu pøíkazu"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1319 src/viewer/text/link.c:1359
 msgid "~Reset form"
 msgstr "~Vygumovat formuláø"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1334
 msgid "Open in ~external editor"
 msgstr "Otevøít v ~externím editoru"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1342
 msgid "~Submit form"
 msgstr "Odeslat formuláø"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1343
 msgid "Submit form and rel~oad"
 msgstr "Odeslat formuláø a obnovit výslednou stránku"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1347
 msgid "Submit form and open in new ~window"
 msgstr "Poslat formuláø a otevøít v ~novém oknì"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1348
+#: src/viewer/text/link.c:1349
 msgid "Submit form and open in new ~tab"
 msgstr "Poslat formuláø a otevøít v novém ~tabu"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1352
 msgid "Submit form and open in new tab in ~background"
 msgstr "Poslat formuláø a otevøít v novém tabu na ~pozadí"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1356
+#: src/viewer/text/link.c:1357
 msgid "Submit form and ~download"
 msgstr "Poslat formuláø a ~stáhnout"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1364
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Políèko s heslem"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1370
+#: src/viewer/text/link.c:1371
 msgid "V~iew image"
 msgstr "Zobraz~it obrázek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1372
+#: src/viewer/text/link.c:1373
 msgid "Download ima~ge"
 msgstr "Stáhnout o~brázek"
 
-#: src/viewer/text/link.c:1381
+#: src/viewer/text/link.c:1382
 msgid "No link selected"
 msgstr "®ádný link"
 
-#: src/viewer/text/link.c:1451
+#: src/viewer/text/link.c:1452
 msgid "Image"
 msgstr "Obrázek"
 
-#: src/viewer/text/link.c:1456
+#: src/viewer/text/link.c:1457
 msgid "Usemap"
 msgstr "Mapa obrázkù"
 
@@ -8652,36 +8687,36 @@ msgstr "Interaktivní vyhledávání"
 msgid "No links in current document"
 msgstr "V dokumentu nejsou ¾ádné odkazy"
 
-#: src/viewer/text/search.c:1640
+#: src/viewer/text/search.c:1643
 msgid "Search for text"
 msgstr "Hledání textu"
 
-#: src/viewer/text/search.c:1671
+#: src/viewer/text/search.c:1679
 msgid "Normal search"
 msgstr "Normální výraz"
 
-#: src/viewer/text/search.c:1672
+#: src/viewer/text/search.c:1680
 msgid "Regexp search"
 msgstr "Regulární výraz"
 
-#: src/viewer/text/search.c:1673
+#: src/viewer/text/search.c:1681
 msgid "Extended regexp search"
 msgstr "Roz¹íøený regulární výraz"
 
-#: src/viewer/text/search.c:1674
+#: src/viewer/text/search.c:1683
 msgid "Case sensitive"
 msgstr "Rozli¹ovat velikost písmen"
 
-#: src/viewer/text/search.c:1675
+#: src/viewer/text/search.c:1684
 msgid "Case insensitive"
 msgstr "Nerozli¹ovat velikost písmen"
 
-#: src/viewer/text/search.c:1699
+#: src/viewer/text/search.c:1708
 msgid "Search backward"
 msgstr "Hledat zpìt"
 
 #. name:
-#: src/viewer/text/search.c:1738
+#: src/viewer/text/search.c:1747
 #, fuzzy
 msgid "Search History"
 msgstr "Hledat v historii"
@@ -8731,6 +8766,13 @@ msgstr "Titulek"
 #, fuzzy
 msgid "Viewer"
 msgstr "~Zobrazení"
+
+#~ msgid ""
+#~ "Verify the peer's SSL certificate. Note that this\n"
+#~ "probably doesn't work properly at all with GnuTLS."
+#~ msgstr ""
+#~ "Ovìøit SSL certifikát druhé strany. Ke zprovoznìní tohoto nastavení\n"
+#~ "je tøeba odpovídajícím zpùsobem nakonfigurovat GnuTLS."
 
 #~ msgid "Delete text from clipboard"
 #~ msgstr "Smazání textu ze schránky"

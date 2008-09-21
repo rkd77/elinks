@@ -1,11 +1,11 @@
 .\"     Title: elinks.conf
 .\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 07/01/2008
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 09/21/2008
 .\"    Manual: ELinks configuration file
-.\"    Source: ELinks 0.12pre1
+.\"    Source: ELinks 0.12pre2
 .\"
-.TH "ELINKS.CONF" "5" "07/01/2008" "ELinks 0.12pre1" "ELinks configuration file"
+.TH "ELINKS\&.CONF" "5" "09/21/2008" "ELinks 0\&.12pre2" "ELinks configuration file"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -23,14 +23,14 @@ include "<file>"
 .fi
 .RE
 .SH "DESCRIPTION"
-The elinks.conf file contains configuration information for ELinks. It can be used to configure the behaviour of ELinks in a wide variety of ways: protocol behaviour, keybindings, colors used for rendering and for the user interface.
+The elinks\&.conf file contains configuration information for ELinks\&. It can be used to configure the behaviour of ELinks in a wide variety of ways: protocol behaviour, keybindings, colors used for rendering and for the user interface\&.
 .sp
-It is read at startup and saved only when requested. All options described in this document can be fully configured from within ELinks so no editing of elinks.conf is needed.
+It is read at startup and saved only when requested\&. All options described in this document can be fully configured from within ELinks so no editing of elinks\&.conf is needed\&.
 .sp
-Note that MIME\-related options used for specifying handlers of various MIME types are NOT described in this document. Documentation for these options can be found at the ELinks homepage. Keybindings can also be specified in elinks.conf. This is described in \fBelinkskeys\fR(5).
+Note that MIME\-related options used for specifying handlers of various MIME types are NOT described in this document\&. Documentation for these options can be found at the ELinks homepage\&. Keybindings can also be specified in elinks\&.conf\&. This is described in \fBelinkskeys\fR(5)\&.
 .sp
 .SH "SYNTAX"
-The syntax of the configuration file is very simple. The elinks.conf file is a free\-form ASCII text file. The file may contain extra tabs and newlines for formatting purposes. Keywords in the file are case\-sensitive. Comments may be placed anywhere within the file (except within quotes). Comments begin with the # character and end at the end of the line.
+The syntax of the configuration file is very simple\&. The elinks\&.conf file is a free\-form ASCII text file\&. The file may contain extra tabs and newlines for formatting purposes\&. Keywords in the file are case\-sensitive\&. Comments may be placed anywhere within the file (except within quotes)\&. Comments begin with the # character and end at the end of the line\&.
 .sp
 .SH "EXAMPLES"
 Some sample settings:
@@ -39,23 +39,22 @@ Some sample settings:
 .RS 4
 .nf
 # Use asynchronous DNS resolver?
-set connection.async_dns = 1
-# horizontal text margin.
-set document.browse.margin_width = 3
-# Default document codepage.
-set document.codepage.assume = "ISO\-8859\-1"
+set connection\&.async_dns = 1
+# horizontal text margin\&.
+set document\&.browse\&.margin_width = 3
+# Default document codepage\&.
+set document\&.codepage\&.assume = "ISO\-8859\-1"
 # User defined protocol handlers
-set protocol.user.mailto.unix = "mutt %h \-s \e"%s\e""
+set protocol\&.user\&.mailto\&.unix = "mutt %h \-s \e"%s\e""
 .fi
 .RE
 .SH "OPTIONS"
-Generated using output from ELinks version 0.12pre1.
+Generated using output from ELinks version 0\&.12pre2\&.
 .sp
 .SS "bookmarks (Bookmarks)"
-Bookmark options.
-.sp
+Bookmark options\&.
 .PP
-bookmarks.file_format \fB<num>\fR (default: 0)
+bookmarks\&.file_format \fB<num>\fR (default: 0)
 .RS 4
 File format for bookmarks (affects both reading and saving):
 .sp
@@ -70,19 +69,18 @@ format
 .RE
 .RE
 .PP
-bookmarks.folder_state \fB[0|1]\fR (default: 1)
+bookmarks\&.folder_state \fB[0|1]\fR (default: 1)
 .RS 4
 When saving bookmarks also store whether folders are expanded or not, so the look of the bookmark dialog is kept across
 ELinks
-sessions. If disabled all folders will appear unexpanded next time
+sessions\&. If disabled all folders will appear unexpanded next time
 ELinks
-is run.
+is run\&.
 .RE
 .SS "config (Configuration system)"
-Configuration handling options.
-.sp
+Configuration handling options\&.
 .PP
-config.comments \fB<num>\fR (default: 3)
+config\&.comments \fB<num>\fR (default: 3)
 .RS 4
 Amount of comments automatically written to the config file:
 .sp
@@ -103,12 +101,12 @@ Amount of comments automatically written to the config file:
 .RE
 .RE
 .PP
-config.indentation \fB<num>\fR (default: 2)
+config\&.indentation \fB<num>\fR (default: 2)
 .RS 4
-Shift width of one indentation level in the configuration file. Zero means that no indentation is performed at all when saving the configuration.
+Shift width of one indentation level in the configuration file\&. Zero means that no indentation is performed at all when saving the configuration\&.
 .RE
 .PP
-config.saving_style \fB<num>\fR (default: 3)
+config\&.saving_style \fB<num>\fR (default: 3)
 .RS 4
 Determines what happens when you tell
 ELinks
@@ -133,95 +131,91 @@ session are added at the end of the file
 .RE
 .RE
 .PP
-config.i18n \fB[0|1]\fR (default: 0)
+config\&.i18n \fB[0|1]\fR (default: 0)
 .RS 4
-If set to 1, comments in the configuration file will be translated to the language used by UI. Note that if you have different language set in different terminals, the language used in the configuration file MAY be the same as on the terminal where you saved the file, but it should be generally considered unpredictable.
+If set to 1, comments in the configuration file will be translated to the language used by UI\&. Note that if you have different language set in different terminals, the language used in the configuration file MAY be the same as on the terminal where you saved the file, but it should be generally considered unpredictable\&.
 .RE
 .PP
-config.saving_style_w \fB[0|1]\fR (default: 0)
+config\&.saving_style_w \fB[0|1]\fR (default: 0)
 .RS 4
-This is internal option used when displaying a warning about obsolete config.saving_style. You shouldn't touch it.
+This is internal option used when displaying a warning about obsolete config\&.saving_style\&. You shouldn\'t touch it\&.
 .RE
 .PP
-config.show_template \fB[0|1]\fR (default: 0)
+config\&.show_template \fB[0|1]\fR (default: 0)
 .RS 4
-Show template options in autocreated trees in the options manager and save them to the configuration file.
+Show template options in autocreated trees in the options manager and save them to the configuration file\&.
 .RE
 .SS "connection (Connections)"
-Connection options.
-.sp
+Connection options\&.
 .PP
-connection.async_dns \fB[0|1]\fR (default: 1)
+connection\&.async_dns \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to use asynchronous DNS resolving.
+Whether to use asynchronous DNS resolving\&.
 .RE
 .PP
-connection.max_connections \fB<num>\fR (default: 10)
+connection\&.max_connections \fB<num>\fR (default: 10)
 .RS 4
-Maximum number of concurrent connections.
+Maximum number of concurrent connections\&.
 .RE
 .PP
-connection.max_connections_to_host \fB<num>\fR (default: 2)
+connection\&.max_connections_to_host \fB<num>\fR (default: 2)
 .RS 4
-Maximum number of concurrent connections to a given host.
+Maximum number of concurrent connections to a given host\&.
 .RE
 .PP
-connection.receive_timeout \fB<num>\fR (default: 120)
+connection\&.receive_timeout \fB<num>\fR (default: 120)
 .RS 4
-Receive timeout (in seconds).
+Receive timeout (in seconds)\&.
 .RE
 .PP
-connection.retries \fB<num>\fR (default: 3)
+connection\&.retries \fB<num>\fR (default: 3)
 .RS 4
-Number of tries to establish a connection. Zero means try forever.
+Number of tries to establish a connection\&. Zero means try forever\&.
 .RE
 .PP
-connection.try_ipv4 \fB[0|1]\fR (default: 1)
+connection\&.try_ipv4 \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to try to connect to a host over IPv4. Note that if
-connection.try_ipv6
-is enabled too, it takes precedence. And better do not touch this at all unless you are sure what are you doing. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e.g.
-\fIhttp4://elinks.cz/\fR.
+Whether to try to connect to a host over IPv4\&. Note that if
+connection\&.try_ipv6
+is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
+\fIhttp4://elinks\&.cz/\fR\&.
 .RE
 .PP
-connection.try_ipv6 \fB[0|1]\fR (default: 1)
+connection\&.try_ipv6 \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to try to connect to a host over IPv6. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e.g.
-\fIhttp6://elinks.cz/\fR.
+Whether to try to connect to a host over IPv6\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
+\fIhttp6://elinks\&.cz/\fR\&.
 .RE
 .PP
-connection.unrestartable_receive_timeout \fB<num>\fR (default: 600)
+connection\&.unrestartable_receive_timeout \fB<num>\fR (default: 600)
 .RS 4
-Timeout for non\-restartable connections (in seconds).
+Timeout for non\-restartable connections (in seconds)\&.
 .RE
-.SS "connection.ssl (SSL)"
-SSL options.
-.sp
+.SS "connection\&.ssl (SSL)"
+SSL options\&.
 .PP
-connection.ssl.cert_verify \fB[0|1]\fR (default: 0)
+connection\&.ssl\&.cert_verify \fB[0|1]\fR (default: 0)
 .RS 4
-Verify the peer's SSL certificate. Note that this needs extensive configuration of OpenSSL by the user.
+Verify the peer\'s SSL certificate\&. Note that this needs extensive configuration of OpenSSL by the user\&.
 .RE
-.SS "connection.ssl.client_cert (Client Certificates)"
-X509 client certificate options.
-.sp
+.SS "connection\&.ssl\&.client_cert (Client Certificates)"
+X509 client certificate options\&.
 .PP
-connection.ssl.client_cert.enable \fB[0|1]\fR (default: 0)
+connection\&.ssl\&.client_cert\&.enable \fB[0|1]\fR (default: 0)
 .RS 4
-Enable or not the sending of X509 client certificates to servers which request them.
+Enable or not the sending of X509 client certificates to servers which request them\&.
 .RE
 .PP
-connection.ssl.client_cert.file \fB<str>\fR (default: "")
+connection\&.ssl\&.client_cert\&.file \fB<str>\fR (default: "")
 .RS 4
-The location of a file containing the client certificate and unencrypted private key in PEM format. If unset, the file pointed to by the
+The location of a file containing the client certificate and unencrypted private key in PEM format\&. If unset, the file pointed to by the
 \fBX509_CLIENT_CERT\fR
-variable is used instead.
+variable is used instead\&.
 .RE
 .SS "cookies (Cookies)"
-Cookies options.
-.sp
+Cookies options\&.
 .PP
-cookies.accept_policy \fB<num>\fR (default: 2)
+cookies\&.accept_policy \fB<num>\fR (default: 2)
 .RS 4
 Cookies accepting policy:
 .sp
@@ -238,82 +232,80 @@ Cookies accepting policy:
 .RE
 .RE
 .PP
-cookies.max_age \fB<num>\fR (default: \-1)
+cookies\&.max_age \fB<num>\fR (default: \-1)
 .RS 4
 Cookie maximum age (in days):
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\-1 is use cookie's expiration date if any
+\h'-04'\(bu\h'+03'\-1 is use cookie\'s expiration date if any
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is force expiration at the end of session, ignoring cookie's expiration date
+\h'-04'\(bu\h'+03'0 is force expiration at the end of session, ignoring cookie\'s expiration date
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1+ is use cookie's expiration date, but limit age to the given number of days
+\h'-04'\(bu\h'+03'1+ is use cookie\'s expiration date, but limit age to the given number of days
 .RE
 .RE
 .PP
-cookies.paranoid_security \fB[0|1]\fR (default: 0)
+cookies\&.paranoid_security \fB[0|1]\fR (default: 0)
 .RS 4
-When enabled, we'll require three dots in cookies domain for all non\-international domains (instead of just two dots). Some countries have generic second level domains (eg. .com.pl, .co.uk) and allowing sites to set cookies for these generic domains could potentially be very bad. Note, it is off by default as it breaks a lot of sites.
+When enabled, we\'ll require three dots in cookies domain for all non\-international domains (instead of just two dots)\&. Some countries have generic second level domains (eg\&. \&.com\&.pl, \&.co\&.uk) and allowing sites to set cookies for these generic domains could potentially be very bad\&. Note, it is off by default as it breaks a lot of sites\&.
 .RE
 .PP
-cookies.save \fB[0|1]\fR (default: 1)
+cookies\&.save \fB[0|1]\fR (default: 1)
 .RS 4
-Whether cookies should be loaded from and saved to disk.
+Whether cookies should be loaded from and saved to disk\&.
 .RE
 .PP
-cookies.resave \fB[0|1]\fR (default: 1)
+cookies\&.resave \fB[0|1]\fR (default: 1)
 .RS 4
-Save cookies after each change in cookies list? No effect when cookie saving (cookies.save) is off.
+Save cookies after each change in cookies list? No effect when cookie saving (cookies\&.save) is off\&.
 .RE
 .SS "document (Document)"
-Document options.
+Document options\&.
 .sp
-.SS "document.browse (Browsing)"
-Document browsing options (mainly interactivity).
-.sp
+.SS "document\&.browse (Browsing)"
+Document browsing options (mainly interactivity)\&.
 .PP
-document.browse.margin_width \fB<num>\fR (default: 3)
+document\&.browse\&.margin_width \fB<num>\fR (default: 3)
 .RS 4
-Horizontal text margin.
+Horizontal text margin\&.
 .RE
 .PP
-document.browse.refresh \fB[0|1]\fR (default: 1)
+document\&.browse\&.refresh \fB[0|1]\fR (default: 1)
 .RS 4
-Automatically follow document\-specified refresh directives ('<meta> refresh' tags). Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page. Regardless of the value the refresh URI is accessible as a link. Use the
-document.browse.minimum_refresh_time
-to control the minimum number of seconds a refresh will wait.
+Automatically follow document\-specified refresh directives (\'<meta> refresh\' tags)\&. Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page\&. Regardless of the value the refresh URI is accessible as a link\&. Use the
+document\&.browse\&.minimum_refresh_time
+to control the minimum number of seconds a refresh will wait\&.
 .RE
 .PP
-document.browse.minimum_refresh_time \fB<num>\fR (default: 1000)
+document\&.browse\&.minimum_refresh_time \fB<num>\fR (default: 1000)
 .RS 4
-The minimum number of milliseconds that should pass before refreshing. If set to zero the document refresh time is used unchanged. It can fix going back in history for some sites that use refreshing with zero values.
+The minimum number of milliseconds that should pass before refreshing\&. If set to zero the document refresh time is used unchanged\&. It can fix going back in history for some sites that use refreshing with zero values\&.
 .RE
 .PP
-document.browse.table_move_order \fB[0|1]\fR (default: 0)
+document\&.browse\&.table_move_order \fB[0|1]\fR (default: 0)
 .RS 4
-Move by columns in table, instead of rows.
+Move by columns in table, instead of rows\&.
 .RE
-.SS "document.browse.accesskey (Access keys)"
-Options for handling of link access keys. An HTML document can use the ACCESSKEY attribute to assign an access key to an element. When an access key is pressed, the corresponding element will be given focus.
-.sp
+.SS "document\&.browse\&.accesskey (Access keys)"
+Options for handling of link access keys\&. An HTML document can use the ACCESSKEY attribute to assign an access key to an element\&. When an access key is pressed, the corresponding element will be given focus\&.
 .PP
-document.browse.accesskey.auto_follow \fB[0|1]\fR (default: 0)
+document\&.browse\&.accesskey\&.auto_follow \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically follow a link or submit a form if appropriate accesskey is pressed \(en this is the standard behaviour, but it's considered dangerous.
-.RE
-.PP
-document.browse.accesskey.display \fB[0|1]\fR (default: 0)
-.RS 4
-Display access key in link info.
+Automatically follow a link or submit a form if appropriate accesskey is pressed \(en this is the standard behaviour, but it\'s considered dangerous\&.
 .RE
 .PP
-document.browse.accesskey.priority \fB<num>\fR (default: 0)
+document\&.browse\&.accesskey\&.display \fB[0|1]\fR (default: 0)
 .RS 4
-Priority of 'accesskey' HTML attribute:
+Display access key in link info\&.
+.RE
+.PP
+document\&.browse\&.accesskey\&.priority \fB<num>\fR (default: 0)
+.RS 4
+Priority of \'accesskey\' HTML attribute:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'0 is first try all normal bindings; if it fails, check accesskey
@@ -327,54 +319,52 @@ Priority of 'accesskey' HTML attribute:
 \h'-04'\(bu\h'+03'2 is first check accesskey (this can be dangerous)
 .RE
 .RE
-.SS "document.browse.forms (Forms)"
-Options for handling of the forms interaction.
-.sp
+.SS "document\&.browse\&.forms (Forms)"
+Options for handling of the forms interaction\&.
 .PP
-document.browse.forms.auto_submit \fB[0|1]\fR (default: 1)
+document\&.browse\&.forms\&.auto_submit \fB[0|1]\fR (default: 1)
 .RS 4
-Automagically submit a form when enter is pressed with a text field selected.
+Automagically submit a form when enter is pressed with a text field selected\&.
 .RE
 .PP
-document.browse.forms.confirm_submit \fB[0|1]\fR (default: 1)
+document\&.browse\&.forms\&.confirm_submit \fB[0|1]\fR (default: 1)
 .RS 4
-Ask for confirmation when submitting a form.
+Ask for confirmation when submitting a form\&.
 .RE
 .PP
-document.browse.forms.input_size \fB<num>\fR (default: 20)
+document\&.browse\&.forms\&.input_size \fB<num>\fR (default: 20)
 .RS 4
-Default form input size if none is specified.
+Default form input size if none is specified\&.
 .RE
 .PP
-document.browse.forms.insert_mode \fB[0|1]\fR (default: 1)
+document\&.browse\&.forms\&.insert_mode \fB[0|1]\fR (default: 1)
 .RS 4
-The setting for this option affects how key presses are handled when one selects a text\-input form\-field. When enabled, one must explicitly 'enter' a selected text\-field to edit it; this prevents text fields from capturing key presses, such as presses of a scroll key, when it is inadvertently selected. When disabled, key presses are always inserted into a selected text field.
+The setting for this option affects how key presses are handled when one selects a text\-input form\-field\&. When enabled, one must explicitly \'enter\' a selected text\-field to edit it; this prevents text fields from capturing key presses, such as presses of a scroll key, when it is inadvertently selected\&. When disabled, key presses are always inserted into a selected text field\&.
 .RE
 .PP
-document.browse.forms.editor \fB<str>\fR (default: "")
+document\&.browse\&.forms\&.editor \fB<str>\fR (default: "")
 .RS 4
 Path to the executable that
 ELinks
-should launch when the user requests to edit a textarea with an external editor. If this is blank,
+should launch when the user requests to edit a textarea with an external editor\&. If this is blank,
 ELinks
 will use the value of the environmental variable
-\fB$EDITOR\fR. If
+\fB$EDITOR\fR\&. If
 \fB$EDITOR\fR
 is empty or not set,
 ELinks
 will then default to
-\fBvi\fR.
+\fBvi\fR\&.
 .RE
 .PP
-document.browse.forms.show_formhist \fB[0|1]\fR (default: 0)
+document\&.browse\&.forms\&.show_formhist \fB[0|1]\fR (default: 0)
 .RS 4
-Ask if a login form should be saved to file or not. This option only disables the dialog, already saved login forms are unaffected.
+Ask if a login form should be saved to file or not\&. This option only disables the dialog, already saved login forms are unaffected\&.
 .RE
-.SS "document.browse.images (Images)"
-Options for handling of images.
-.sp
+.SS "document\&.browse\&.images (Images)"
+Options for handling of images\&.
 .PP
-document.browse.images.display_style \fB<num>\fR (default: 2)
+document\&.browse\&.images\&.display_style \fB<num>\fR (default: 2)
 .RS 4
 Display style for image tags when displayed:
 .sp
@@ -402,7 +392,7 @@ attribute if possible, filename if not
 .RE
 .RE
 .PP
-document.browse.images.filename_maxlen \fB<num>\fR (default: 0)
+document\&.browse\&.images\&.filename_maxlen \fB<num>\fR (default: 0)
 .RS 4
 Maximum length of image filename when displayed:
 .sp
@@ -415,7 +405,7 @@ Maximum length of image filename when displayed:
 .RE
 .RE
 .PP
-document.browse.images.image_link_tagging \fB<num>\fR (default: 1)
+document\&.browse\&.images\&.image_link_tagging \fB<num>\fR (default: 1)
 .RS 4
 When to enclose image links:
 .sp
@@ -432,17 +422,17 @@ When to enclose image links:
 .RE
 .RE
 .PP
-document.browse.images.image_link_prefix \fB<str>\fR (default: "[")
+document\&.browse\&.images\&.image_link_prefix \fB<str>\fR (default: "[")
 .RS 4
-Prefix string to use to mark image links.
+Prefix string to use to mark image links\&.
 .RE
 .PP
-document.browse.images.image_link_suffix \fB<str>\fR (default: "]")
+document\&.browse\&.images\&.image_link_suffix \fB<str>\fR (default: "]")
 .RS 4
-Suffix string to use to mark image links.
+Suffix string to use to mark image links\&.
 .RE
 .PP
-document.browse.images.label_maxlen \fB<num>\fR (default: 0)
+document\&.browse\&.images\&.label_maxlen \fB<num>\fR (default: 0)
 .RS 4
 Maximum length of image label (alt/title):
 .sp
@@ -455,34 +445,33 @@ Maximum length of image label (alt/title):
 .RE
 .RE
 .PP
-document.browse.images.show_as_links \fB[0|1]\fR (default: 0)
+document\&.browse\&.images\&.show_as_links \fB[0|1]\fR (default: 0)
 .RS 4
 Display links to images without an
 alt
-attribute. If this option is off, these images are completely invisible.
+attribute\&. If this option is off, these images are completely invisible\&.
 .RE
 .PP
-document.browse.images.show_any_as_links \fB[0|1]\fR (default: 1)
+document\&.browse\&.images\&.show_any_as_links \fB[0|1]\fR (default: 1)
 .RS 4
 Display links to any images in the document, regardless of them having an
 alt
-attribute or not. If this option is off, the alt attribute contents is shown, but as normal text, not selectable as a link.
+attribute or not\&. If this option is off, the alt attribute contents is shown, but as normal text, not selectable as a link\&.
 .RE
-.SS "document.browse.links (Links)"
-Options for handling of links to other documents.
-.sp
+.SS "document\&.browse\&.links (Links)"
+Options for handling of links to other documents\&.
 .PP
-document.browse.links.color_dirs \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.color_dirs \fB[0|1]\fR (default: 1)
 .RS 4
-Highlight links to directories in FTP and local directory listing.
+Highlight links to directories in FTP and local directory listing\&.
 .RE
 .PP
-document.browse.links.numbering \fB[0|1]\fR (default: 0)
+document\&.browse\&.links\&.numbering \fB[0|1]\fR (default: 0)
 .RS 4
-Display numbers next to the links.
+Display numbers next to the links\&.
 .RE
 .PP
-document.browse.links.target_blank \fB<num>\fR (default: 0)
+document\&.browse\&.links\&.target_blank \fB<num>\fR (default: 0)
 .RS 4
 Define how to handle links having target=_blank set:
 .sp
@@ -503,28 +492,28 @@ Define how to handle links having target=_blank set:
 .RE
 .RE
 .PP
-document.browse.links.use_tabindex \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.use_tabindex \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to navigate links using tabindex specified ordering. The
+Whether to navigate links using tabindex specified ordering\&. The
 TABINDEX
-attribute in HTML elements specifies the order in which links should receive focus when using the keyboard to navigate the document.
+attribute in HTML elements specifies the order in which links should receive focus when using the keyboard to navigate the document\&.
 .RE
 .PP
-document.browse.links.missing_fragment \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.missing_fragment \fB[0|1]\fR (default: 1)
 .RS 4
-Open a message box when document has no tag with given id.
+Open a message box when document has no tag with given id\&.
 .RE
 .PP
-document.browse.links.number_keys_select_link \fB<num>\fR (default: 1)
+document\&.browse\&.links\&.number_keys_select_link \fB<num>\fR (default: 1)
 .RS 4
-Number keys select links rather than specify command prefixes. This is a tristate:
+Number keys select links rather than specify command prefixes\&. This is a tristate:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'0 means never
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means if document.browse.links.numbering = 1
+\h'-04'\(bu\h'+03'1 means if document\&.browse\&.links\&.numbering = 1
 .RE
 .sp
 .RS 4
@@ -532,84 +521,80 @@ Number keys select links rather than specify command prefixes. This is a tristat
 .RE
 .RE
 .PP
-document.browse.links.warn_malicious \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.warn_malicious \fB[0|1]\fR (default: 1)
 .RS 4
-When following a link the user ID part of the URI is checked and if a maliciously crafted URI is detected a warning dialog will ask before following the link.
+When following a link the user ID part of the URI is checked and if a maliciously crafted URI is detected a warning dialog will ask before following the link\&.
 .RE
 .PP
-document.browse.links.wraparound \fB[0|1]\fR (default: 0)
+document\&.browse\&.links\&.wraparound \fB[0|1]\fR (default: 0)
 .RS 4
-When pressing 'down' on the last link, jump to the first one, and vice versa.
+When pressing \'down\' on the last link, jump to the first one, and vice versa\&.
 .RE
-.SS "document.browse.links.active_link (Active link)"
-Options for the active link.
-.sp
+.SS "document\&.browse\&.links\&.active_link (Active link)"
+Options for the active link\&.
 .PP
-document.browse.links.active_link.enable_color \fB[0|1]\fR (default: 0)
+document\&.browse\&.links\&.active_link\&.enable_color \fB[0|1]\fR (default: 0)
 .RS 4
-Enable use of the active link background and text color settings instead of the link colors from the document.
-.RE
-.PP
-document.browse.links.active_link.bold \fB[0|1]\fR (default: 0)
-.RS 4
-Make the active link text bold.
+Enable use of the active link background and text color settings instead of the link colors from the document\&.
 .RE
 .PP
-document.browse.links.active_link.invert \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.active_link\&.bold \fB[0|1]\fR (default: 0)
 .RS 4
-Invert the fore\- and background color so the link stands out.
+Make the active link text bold\&.
 .RE
 .PP
-document.browse.links.active_link.underline \fB[0|1]\fR (default: 0)
+document\&.browse\&.links\&.active_link\&.invert \fB[0|1]\fR (default: 1)
 .RS 4
-Underline the active link.
-.RE
-.SS "document.browse.links.active_link.colors (Colors)"
-Active link colors.
-.sp
-.PP
-document.browse.links.active_link.colors.background \fB<color|#rrggbb>\fR (default: blue)
-.RS 4
-Default background color.
+Invert the fore\- and background color so the link stands out\&.
 .RE
 .PP
-document.browse.links.active_link.colors.text \fB<color|#rrggbb>\fR (default: black)
+document\&.browse\&.links\&.active_link\&.underline \fB[0|1]\fR (default: 0)
 .RS 4
-Default text color.
+Underline the active link\&.
 .RE
-.SS "document.browse.scrolling (Scrolling)"
-Scrolling options.
-.sp
+.SS "document\&.browse\&.links\&.active_link\&.colors (Colors)"
+Active link colors\&.
 .PP
-document.browse.scrolling.horizontal_extended \fB[0|1]\fR (default: 1)
+document\&.browse\&.links\&.active_link\&.colors\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Whether to allow horizontal scrolling when the document does not extend off the screen. Useful for copy/paste operations.
-.RE
-.PP
-document.browse.scrolling.horizontal_step \fB<num>\fR (default: 8)
-.RS 4
-Number of columns to scroll when a key bound to scroll\-left or scroll\- right is pressed and no prefix was given.
+Default background color\&.
 .RE
 .PP
-document.browse.scrolling.margin \fB<num>\fR (default: 3)
+document\&.browse\&.links\&.active_link\&.colors\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Size of the virtual margin \(en when you click inside of that margin, document scrolls in that direction.
+Default text color\&.
+.RE
+.SS "document\&.browse\&.scrolling (Scrolling)"
+Scrolling options\&.
+.PP
+document\&.browse\&.scrolling\&.horizontal_extended \fB[0|1]\fR (default: 1)
+.RS 4
+Whether to allow horizontal scrolling when the document does not extend off the screen\&. Useful for copy/paste operations\&.
 .RE
 .PP
-document.browse.scrolling.vertical_step \fB<num>\fR (default: 2)
+document\&.browse\&.scrolling\&.horizontal_step \fB<num>\fR (default: 8)
 .RS 4
-Number of lines to scroll when a key bound to scroll\-up or scroll\- down is pressed and no prefix was given.
-.RE
-.SS "document.browse.search (Searching)"
-Options for searching.
-.sp
-.PP
-document.browse.search.case \fB[0|1]\fR (default: 0)
-.RS 4
-Whether the search should match the document text while maintaining case sensitivity.
+Number of columns to scroll when a key bound to scroll\-left or scroll\- right is pressed and no prefix was given\&.
 .RE
 .PP
-document.browse.search.regex \fB<num>\fR (default: 0)
+document\&.browse\&.scrolling\&.margin \fB<num>\fR (default: 3)
+.RS 4
+Size of the virtual margin \(en when you click inside of that margin, document scrolls in that direction\&.
+.RE
+.PP
+document\&.browse\&.scrolling\&.vertical_step \fB<num>\fR (default: 2)
+.RS 4
+Number of lines to scroll when a key bound to scroll\-up or scroll\- down is pressed and no prefix was given\&.
+.RE
+.SS "document\&.browse\&.search (Searching)"
+Options for searching\&.
+.PP
+document\&.browse\&.search\&.case \fB[0|1]\fR (default: 0)
+.RS 4
+Whether the search should match the document text while maintaining case sensitivity\&.
+.RE
+.PP
+document\&.browse\&.search\&.regex \fB<num>\fR (default: 0)
 .RS 4
 Enable searching with regular expressions:
 .sp
@@ -626,17 +611,17 @@ Enable searching with regular expressions:
 .RE
 .RE
 .PP
-document.browse.search.show_hit_top_bottom \fB[0|1]\fR (default: 1)
+document\&.browse\&.search\&.show_hit_top_bottom \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to show a dialog when the search hits the top or bottom of the document.
+Whether to show a dialog when the search hits the top or bottom of the document\&.
 .RE
 .PP
-document.browse.search.wraparound \fB[0|1]\fR (default: 1)
+document\&.browse\&.search\&.wraparound \fB[0|1]\fR (default: 1)
 .RS 4
-Wrap around when searching. Currently only used for typeahead.
+Wrap around when searching\&. Currently only used for typeahead\&.
 .RE
 .PP
-document.browse.search.show_not_found \fB<num>\fR (default: 2)
+document\&.browse\&.search\&.show_not_found \fB<num>\fR (default: 2)
 .RS 4
 How to inform the user when nothing is matched:
 .sp
@@ -653,9 +638,9 @@ How to inform the user when nothing is matched:
 .RE
 .RE
 .PP
-document.browse.search.typeahead \fB<num>\fR (default: 0)
+document\&.browse\&.search\&.typeahead \fB<num>\fR (default: 0)
 .RS 4
-Start typeahead searching when an unbound key is pressed without any modifiers. Note that most keys have default bindings, so this feature will not be useful unless you unbind them.
+Start typeahead searching when an unbound key is pressed without any modifiers\&. Note that most keys have default bindings, so this feature will not be useful unless you unbind them\&.
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'0 disables this feature; typeahead searching will only be used when you press a key bound to search\-typeahead or similar
@@ -669,109 +654,104 @@ Start typeahead searching when an unbound key is pressed without any modifiers. 
 \h'-04'\(bu\h'+03'2 automatically starts typeahead searching thru all document text
 .RE
 .RE
-.SS "document.cache (Cache)"
-Cache options.
-.sp
+.SS "document\&.cache (Cache)"
+Cache options\&.
 .PP
-document.cache.cache_redirects \fB[0|1]\fR (default: 0)
+document\&.cache\&.cache_redirects \fB[0|1]\fR (default: 0)
 .RS 4
-Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header). This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don't receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter. Note that this option is checked when retrieving the information from cache, not when saving it to cache \(en thus if you enable it, even previous redirects will be taken from cache instead of asking the server.
+Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don\'t receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&. Note that this option is checked when retrieving the information from cache, not when saving it to cache \(en thus if you enable it, even previous redirects will be taken from cache instead of asking the server\&.
 .RE
 .PP
-document.cache.ignore_cache_control \fB[0|1]\fR (default: 1)
+document\&.cache\&.ignore_cache_control \fB[0|1]\fR (default: 1)
 .RS 4
-Ignore Cache\-Control and Pragma server headers. When set, the document is cached even with 'Cache\-Control: no\-cache'.
+Ignore Cache\-Control and Pragma server headers\&. When set, the document is cached even with \'Cache\-Control: no\-cache\'\&.
 .RE
 .PP
-document.cache.revalidation_interval \fB<num>\fR (default: \-1)
+document\&.cache\&.revalidation_interval \fB<num>\fR (default: \-1)
 .RS 4
-Period in seconds that a cache entry is considered to be up\-to\-date. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document.
+Period in seconds that a cache entry is considered to be up\-to\-date\&. When a document is loaded and this interval has elapsed since the document was initially loaded or most recently revalidated with the server, the server will be checked in case there is a more up\-to\-date version of the document\&.
 .sp
-A value of \-1 disables automatic revalidation.
+A value of \-1 disables automatic revalidation\&.
 .RE
-.SS "document.cache.format (Formatted documents)"
-Format cache options.
-.sp
+.SS "document\&.cache\&.format (Formatted documents)"
+Format cache options\&.
 .PP
-document.cache.format.size \fB<num>\fR (default: 5)
+document\&.cache\&.format\&.size \fB<num>\fR (default: 5)
 .RS 4
-Number of cached formatted pages. Do not get too generous here, 'formatted' means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup. So if you set this to 256 and then you don't like your
+Number of cached formatted pages\&. Do not get too generous here, \'formatted\' means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\'t like your
 ELinks
-eating 90M, don't come complaining to us. ;\-) Also note that the format cache itself is not counted to the memory cache size, but the HTML source of the formatted documents is always cached, even if it is over the memory cache size threshold. (Then of course no other documents can be cached.)
+eating 90M, don\'t come complaining to us\&. ;\-) Also note that the format cache itself is not counted to the memory cache size, but the HTML source of the formatted documents is always cached, even if it is over the memory cache size threshold\&. (Then of course no other documents can be cached\&.)
 .RE
-.SS "document.cache.memory (Memory cache)"
-Memory cache options.
-.sp
+.SS "document\&.cache\&.memory (Memory cache)"
+Memory cache options\&.
 .PP
-document.cache.memory.size \fB<num>\fR (default: 1048576)
+document\&.cache\&.memory\&.size \fB<num>\fR (default: 1048576)
 .RS 4
-Memory cache size (in bytes).
+Memory cache size (in bytes)\&.
 .RE
-.SS "document.codepage (Charset)"
-Charset options.
-.sp
+.SS "document\&.codepage (Charset)"
+Charset options\&.
 .PP
-document.codepage.assume \fB<codepage>\fR (default: System)
+document\&.codepage\&.assume \fB<codepage>\fR (default: System)
 .RS 4
-Default document codepage. 'System' stands for a codepage determined by a selected locale.
+Default document codepage\&. \'System\' stands for a codepage determined by a selected locale\&.
 .RE
 .PP
-document.codepage.force_assumed \fB[0|1]\fR (default: 0)
+document\&.codepage\&.force_assumed \fB[0|1]\fR (default: 0)
 .RS 4
-Ignore charset info sent by server.
+Ignore charset info sent by server\&.
 .RE
-.SS "document.colors (Default color settings)"
-Default document color settings.
-.sp
+.SS "document\&.colors (Default color settings)"
+Default document color settings\&.
 .PP
-document.colors.text \fB<color|#rrggbb>\fR (default: gray75)
+document\&.colors\&.text \fB<color|#rrggbb>\fR (default: gray75)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-document.colors.background \fB<color|#rrggbb>\fR (default: black)
+document\&.colors\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
 .PP
-document.colors.link \fB<color|#rrggbb>\fR (default: blue)
+document\&.colors\&.link \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default link color.
+Default link color\&.
 .RE
 .PP
-document.colors.vlink \fB<color|#rrggbb>\fR (default: yellow)
+document\&.colors\&.vlink \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default visited link color.
+Default visited link color\&.
 .RE
 .PP
-document.colors.image \fB<color|#rrggbb>\fR (default: darkolivegreen)
+document\&.colors\&.image \fB<color|#rrggbb>\fR (default: darkolivegreen)
 .RS 4
-Default image link color.
+Default image link color\&.
 .RE
 .PP
-document.colors.bookmark \fB<color|#rrggbb>\fR (default: hotpink)
+document\&.colors\&.bookmark \fB<color|#rrggbb>\fR (default: hotpink)
 .RS 4
-Default bookmarked link color.
+Default bookmarked link color\&.
 .RE
 .PP
-document.colors.dirs \fB<color|#rrggbb>\fR (default: yellow)
+document\&.colors\&.dirs \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default directory color. See
-document.browse.links.color_dirs
-option.
+Default directory color\&. See
+document\&.browse\&.links\&.color_dirs
+option\&.
 .RE
 .PP
-document.colors.increase_contrast \fB[0|1]\fR (default: 1)
+document\&.colors\&.increase_contrast \fB[0|1]\fR (default: 1)
 .RS 4
-Increase the contrast between the foreground and background colors to ensure readability. For example it disallows dark colors on a black background. Note, this is different from ensuring the contrast with the ensure_contrast option.
+Increase the contrast between the foreground and background colors to ensure readability\&. For example it disallows dark colors on a black background\&. Note, this is different from ensuring the contrast with the ensure_contrast option\&.
 .RE
 .PP
-document.colors.ensure_contrast \fB[0|1]\fR (default: 1)
+document\&.colors\&.ensure_contrast \fB[0|1]\fR (default: 1)
 .RS 4
-Makes sure that the back\- and foreground colors are never equal.
+Makes sure that the back\- and foreground colors are never equal\&.
 .RE
 .PP
-document.colors.use_document_colors \fB<num>\fR (default: 2)
+document\&.colors\&.use_document_colors \fB<num>\fR (default: 2)
 .RS 4
 Use colors specified in document:
 .sp
@@ -784,43 +764,41 @@ Use colors specified in document:
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is use document colors, including background. This can mostly look very impressive, but some sites will appear really ugly. Note, that obviously if the background is not black, it will break the behaviour of transparency.
+\h'-04'\(bu\h'+03'2 is use document colors, including background\&. This can mostly look very impressive, but some sites will appear really ugly\&. Note, that obviously if the background is not black, it will break the behaviour of transparency\&.
 .RE
 .RE
-.SS "document.css (Cascading Style Sheets)"
-Options concerning how to use CSS for styling documents.
-.sp
+.SS "document\&.css (Cascading Style Sheets)"
+Options concerning how to use CSS for styling documents\&.
 .PP
-document.css.enable \fB[0|1]\fR (default: 1)
+document\&.css\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
-Enable adding of CSS style info to documents.
+Enable adding of CSS style info to documents\&.
 .RE
 .PP
-document.css.import \fB[0|1]\fR (default: 1)
+document\&.css\&.import \fB[0|1]\fR (default: 1)
 .RS 4
-When enabled any external style sheets that are imported from either CSS itself using the @import keyword or from the HTML using <link> tags in the document header will also be downloaded.
+When enabled any external style sheets that are imported from either CSS itself using the @import keyword or from the HTML using <link> tags in the document header will also be downloaded\&.
 .RE
 .PP
-document.css.stylesheet \fB<str>\fR (default: "")
+document\&.css\&.stylesheet \fB<str>\fR (default: "")
 .RS 4
-The path to the file containing the default user defined Cascading Style Sheet. It can be used to control the basic layout of HTML documents. The path is assumed to be relative to
-ELinks' home directory. Leave as "" to use built\-in document styling.
+The path to the file containing the default user defined Cascading Style Sheet\&. It can be used to control the basic layout of HTML documents\&. The path is assumed to be relative to
+ELinks\' home directory\&. Leave as "" to use built\-in document styling\&.
 .RE
-.SS "document.download (Downloading)"
-Options regarding files downloading and handling.
-.sp
+.SS "document\&.download (Downloading)"
+Options regarding files downloading and handling\&.
 .PP
-document.download.directory \fB<str>\fR (default: "./")
+document\&.download\&.directory \fB<str>\fR (default: "\&./")
 .RS 4
-Default download directory.
+Default download directory\&.
 .RE
 .PP
-document.download.set_original_time \fB[0|1]\fR (default: 0)
+document\&.download\&.set_original_time \fB[0|1]\fR (default: 0)
 .RS 4
-Set the timestamp of each downloaded file to the timestamp stored on the server.
+Set the timestamp of each downloaded file to the timestamp stored on the server\&.
 .RE
 .PP
-document.download.overwrite \fB<num>\fR (default: 2)
+document\&.download\&.overwrite \fB<num>\fR (default: 2)
 .RS 4
 Prevent overwriting the local files:
 .sp
@@ -829,7 +807,7 @@ Prevent overwriting the local files:
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is add a suffix .{number} (for example '.1') to the name
+\h'-04'\(bu\h'+03'1 is add a suffix \&.{number} (for example \'\&.1\') to the name
 .RE
 .sp
 .RS 4
@@ -837,7 +815,7 @@ Prevent overwriting the local files:
 .RE
 .RE
 .PP
-document.download.notify_bell \fB<num>\fR (default: 0)
+document\&.download\&.notify_bell \fB<num>\fR (default: 0)
 .RS 4
 Audio notification when download is completed:
 .sp
@@ -853,22 +831,21 @@ Audio notification when download is completed:
 \h'-04'\(bu\h'+03'2 is always
 .RE
 .RE
-.SS "document.dump (Dump output)"
-Dump output options.
-.sp
+.SS "document\&.dump (Dump output)"
+Dump output options\&.
 .PP
-document.dump.codepage \fB<codepage>\fR (default: System)
+document\&.dump\&.codepage \fB<codepage>\fR (default: System)
 .RS 4
-Codepage used in dump output. 'System' stands for a codepage determined by a selected locale.
+Codepage used in dump output\&. \'System\' stands for a codepage determined by a selected locale\&.
 .RE
 .PP
-document.dump.color_mode \fB<num>\fR (default: \-1)
+document\&.dump\&.color_mode \fB<num>\fR (default: \-1)
 .RS 4
-Color mode for dumps. Some modes may have been disabled at compile time. The
+Color mode for dumps\&. Some modes may have been disabled at compile time\&. The
 Setup \(-> Terminal options
-dialog lists the modes supported by this executable. If you select an unsupported mode,
+dialog lists the modes supported by this executable\&. If you select an unsupported mode,
 ELinks
-uses 16 colors. The color modes are:
+uses 16 colors\&. The color modes are:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'\-1 is standard dump mode
@@ -895,58 +872,56 @@ uses 16 colors. The color modes are:
 .RE
 .RE
 .PP
-document.dump.footer \fB<str>\fR (default: "")
+document\&.dump\&.footer \fB<str>\fR (default: "")
 .RS 4
-Footer string used in dumps. %u is substituted by URL.
+Footer string used in dumps\&. %u is substituted by URL\&.
 .RE
 .PP
-document.dump.header \fB<str>\fR (default: "")
+document\&.dump\&.header \fB<str>\fR (default: "")
 .RS 4
-Header string used in dumps. %u is substituted by URL.
+Header string used in dumps\&. %u is substituted by URL\&.
 .RE
 .PP
-document.dump.numbering \fB[0|1]\fR (default: 1)
+document\&.dump\&.numbering \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to print link numbers in dump output.
+Whether to print link numbers in dump output\&.
 .RE
 .PP
-document.dump.references \fB[0|1]\fR (default: 1)
+document\&.dump\&.references \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to print references (URIs) of document links in dump output.
+Whether to print references (URIs) of document links in dump output\&.
 .RE
 .PP
-document.dump.separator \fB<str>\fR (default: " ")
+document\&.dump\&.separator \fB<str>\fR (default: " ")
 .RS 4
-String which separates two dumps.
+String which separates two dumps\&.
 .RE
 .PP
-document.dump.width \fB<num>\fR (default: 80)
+document\&.dump\&.width \fB<num>\fR (default: 80)
 .RS 4
-Width of screen in characters when dumping documents.
+Width of screen in characters when dumping documents\&.
 .RE
-.SS "document.history (History)"
-History options.
-.sp
+.SS "document\&.history (History)"
+History options\&.
 .PP
-document.history.keep_unhistory \fB[0|1]\fR (default: 1)
+document\&.history\&.keep_unhistory \fB[0|1]\fR (default: 1)
 .RS 4
-Keep unhistory ("forward history").
+Keep unhistory ("forward history")\&.
 .RE
-.SS "document.history.global (Global history)"
-Global history options.
-.sp
+.SS "document\&.history\&.global (Global history)"
+Global history options\&.
 .PP
-document.history.global.enable \fB[0|1]\fR (default: 1)
+document\&.history\&.global\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
-Enable global history ("history of all pages visited").
+Enable global history ("history of all pages visited")\&.
 .RE
 .PP
-document.history.global.max_items \fB<num>\fR (default: 1024)
+document\&.history\&.global\&.max_items \fB<num>\fR (default: 1024)
 .RS 4
-Maximum number of entries in the global history.
+Maximum number of entries in the global history\&.
 .RE
 .PP
-document.history.global.display_type \fB<num>\fR (default: 0)
+document\&.history\&.global\&.display_type \fB<num>\fR (default: 0)
 .RS 4
 What to display in global history dialog:
 .sp
@@ -958,31 +933,30 @@ What to display in global history dialog:
 \h'-04'\(bu\h'+03'1 is page titles
 .RE
 .RE
-.SS "document.html (HTML rendering)"
-Options concerning the display of HTML pages.
-.sp
+.SS "document\&.html (HTML rendering)"
+Options concerning the display of HTML pages\&.
 .PP
-document.html.display_frames \fB[0|1]\fR (default: 1)
+document\&.html\&.display_frames \fB[0|1]\fR (default: 1)
 .RS 4
-Display frames.
+Display frames\&.
 .RE
 .PP
-document.html.display_tables \fB[0|1]\fR (default: 1)
+document\&.html\&.display_tables \fB[0|1]\fR (default: 1)
 .RS 4
-Display tables.
+Display tables\&.
 .RE
 .PP
-document.html.display_subs \fB[0|1]\fR (default: 1)
+document\&.html\&.display_subs \fB[0|1]\fR (default: 1)
 .RS 4
-Display subscripts (as [thing]).
+Display subscripts (as [thing])\&.
 .RE
 .PP
-document.html.display_sups \fB[0|1]\fR (default: 1)
+document\&.html\&.display_sups \fB[0|1]\fR (default: 1)
 .RS 4
-Display superscripts (as ^thing).
+Display superscripts (as ^thing)\&.
 .RE
 .PP
-document.html.link_display \fB<num>\fR (default: 2)
+document\&.html\&.link_display \fB<num>\fR (default: 2)
 .RS 4
 How to render <link> tags from the HTML header:
 .sp
@@ -1011,163 +985,155 @@ How to render <link> tags from the HTML header:
 .RE
 .RE
 .PP
-document.html.underline_links \fB[0|1]\fR (default: 0)
+document\&.html\&.underline_links \fB[0|1]\fR (default: 0)
 .RS 4
-Underline links.
+Underline links\&.
 .RE
 .PP
-document.html.wrap_nbsp \fB[0|1]\fR (default: 0)
+document\&.html\&.wrap_nbsp \fB[0|1]\fR (default: 0)
 .RS 4
-If set do not honour non breaking space (the nbsp entity) but allow to wrap the text. This can help keeping the width of documents down so no horizontal scrolling is needed.
+If set do not honour non breaking space (the nbsp entity) but allow to wrap the text\&. This can help keeping the width of documents down so no horizontal scrolling is needed\&.
 .RE
-.SS "document.plain (Plain rendering)"
-Options concerning the display of plain text pages.
-.sp
+.SS "document\&.plain (Plain rendering)"
+Options concerning the display of plain text pages\&.
 .PP
-document.plain.display_links \fB[0|1]\fR (default: 0)
+document\&.plain\&.display_links \fB[0|1]\fR (default: 0)
 .RS 4
-Display URIs in the document as links.
+Display URIs in the document as links\&.
 .RE
 .PP
-document.plain.compress_empty_lines \fB[0|1]\fR (default: 0)
+document\&.plain\&.compress_empty_lines \fB[0|1]\fR (default: 0)
 .RS 4
-Compress successive empty lines to only one in displayed text.
+Compress successive empty lines to only one in displayed text\&.
 .RE
-.SS "document.uri_passing (URI passing)"
-Rules for passing URIs to external commands. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command. If several rules are defined the link and tab menu will have a submenu of items for each rule. Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions.
-.sp
+.SS "document\&.uri_passing (URI passing)"
+Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&. Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
 .PP
-document.uri_passing._template_ \fB<str>\fR (default: "")
+document\&.uri_passing\&._template_ \fB<str>\fR (default: "")
 .RS 4
-A rule for passing URI to an external command. The format is:
+A rule for passing URI to an external command\&. The format is:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%c in the string means the current URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means '%'
+\h'-04'\(bu\h'+03'%% in the string means \'%\'
 .RE
 .IP "" 4
 Do
 \fBnot\fR
-put single\- or double\-quotes around %c.
+put single\- or double\-quotes around %c\&.
 .RE
 .SS "ecmascript (ECMAScript)"
-ECMAScript options.
-.sp
+ECMAScript options\&.
 .PP
-ecmascript.enable \fB[0|1]\fR (default: 0)
+ecmascript\&.enable \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to run those scripts inside of documents.
+Whether to run those scripts inside of documents\&.
 .RE
 .PP
-ecmascript.error_reporting \fB[0|1]\fR (default: 0)
+ecmascript\&.error_reporting \fB[0|1]\fR (default: 0)
 .RS 4
-Open a message box when a script reports an error.
+Open a message box when a script reports an error\&.
 .RE
 .PP
-ecmascript.ignore_noscript \fB[0|1]\fR (default: 0)
+ecmascript\&.ignore_noscript \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to ignore content enclosed by the <noscript> tag when ECMAScript is enabled.
+Whether to ignore content enclosed by the <noscript> tag when ECMAScript is enabled\&.
 .RE
 .PP
-ecmascript.max_exec_time \fB<num>\fR (default: 5)
+ecmascript\&.max_exec_time \fB<num>\fR (default: 5)
 .RS 4
-Maximum execution time in seconds for a script.
+Maximum execution time in seconds for a script\&.
 .RE
 .PP
-ecmascript.block_window_opening \fB[0|1]\fR (default: 0)
+ecmascript\&.block_window_opening \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to disallow scripts to open new windows or tabs.
+Whether to disallow scripts to open new windows or tabs\&.
 .RE
 .SS "infofiles (Information files)"
-Options for information files in \fI~/.elinks\fR.
-.sp
+Options for information files in \fI~/\&.elinks\fR\&.
 .PP
-infofiles.save_interval \fB<num>\fR (default: 300)
+infofiles\&.save_interval \fB<num>\fR (default: 300)
 .RS 4
 Interval at which to trigger information files in
-\fI~/.elinks\fR
+\fI~/\&.elinks\fR
 to be saved to disk if they have changed (seconds; 0 to disable)
 .RE
 .PP
-infofiles.secure_save \fB[0|1]\fR (default: 1)
+infofiles\&.secure_save \fB[0|1]\fR (default: 1)
 .RS 4
-First write data to unique temporary file, then rename this file upon successfully finishing this. Note that this relates only to config files, not downloaded files. You may want to disable it if you are using some exotic permissions for concerned files. Secure file saving is automagically disabled if file is symlink. Warning: some systems (ie. OS/2, Win32) require that destination file doesn't exist when
+First write data to unique temporary file, then rename this file upon successfully finishing this\&. Note that this relates only to config files, not downloaded files\&. You may want to disable it if you are using some exotic permissions for concerned files\&. Secure file saving is automagically disabled if file is symlink\&. Warning: some systems (ie\&. OS/2, Win32) require that destination file doesn\'t exist when
 \fBrename\fR(3)
-is called, breaking atomicity, and reducing reliability of this feature.
+is called, breaking atomicity, and reducing reliability of this feature\&.
 .RE
 .PP
-infofiles.secure_save_fsync \fB[0|1]\fR (default: 1)
+infofiles\&.secure_save_fsync \fB[0|1]\fR (default: 1)
 .RS 4
 When using secure file saving, call
-\fBfsync\fR(3), if the OS supports it, to force the OS immediately to write the data to permanent storage. This is optional for those who wish to avoid excessive disk I/O.
+\fBfsync\fR(3), if the OS supports it, to force the OS immediately to write the data to permanent storage\&. This is optional for those who wish to avoid excessive disk I/O\&.
 .RE
 .SS "mime (MIME)"
-MIME\-related options (handlers of various MIME types).
-.sp
+MIME\-related options (handlers of various MIME types)\&.
 .PP
-mime.default_type \fB<str>\fR (default: "application/octet\-stream")
+mime\&.default_type \fB<str>\fR (default: "application/octet\-stream")
 .RS 4
-Document MIME\-type to assume by default (when we are unable to guess it properly from known information about the document).
+Document MIME\-type to assume by default (when we are unable to guess it properly from known information about the document)\&.
 .RE
-.SS "mime.extension (File extension associations)"
-Extension \(<> MIME type association.
-.sp
+.SS "mime\&.extension (File extension associations)"
+Extension \(<> MIME type association\&.
 .PP
-mime.extension._template_ \fB<str>\fR (default: "")
+mime\&.extension\&._template_ \fB<str>\fR (default: "")
 .RS 4
-MIME\-type matching this file extension ('*' is used here in place of '.').
+MIME\-type matching this file extension (\'*\' is used here in place of \'\&.\')\&.
 .RE
-.SS "mime.handler (File type handlers)"
-A file type handler is a set of information about how to use an external program to view a file. It is possible to refer to it for several MIME types \(em e.g., you can define an 'image' handler to which mime.type.image.png, mime.type.image.jpeg, and so on will refer; or one might define a handler for a more specific type of file \(em e.g., PDF files. Note you must define both a MIME handler and a MIME type association for it to work.
+.SS "mime\&.handler (File type handlers)"
+A file type handler is a set of information about how to use an external program to view a file\&. It is possible to refer to it for several MIME types \(em e\&.g\&., you can define an \'image\' handler to which mime\&.type\&.image\&.png, mime\&.type\&.image\&.jpeg, and so on will refer; or one might define a handler for a more specific type of file \(em e\&.g\&., PDF files\&. Note you must define both a MIME handler and a MIME type association for it to work\&.
 .sp
-.SS "mime.handler._template_ (Template option folder)"
-Description of this handler.
+.SS "mime\&.handler\&._template_ (Template option folder)"
+Description of this handler\&.
 .sp
-.SS "mime.handler._template_._template_ (Template option folder)"
-System\-specific handler description (ie. unix, unix\-xwin, ...).
-.sp
+.SS "mime\&.handler\&._template_\&._template_ (Template option folder)"
+System\-specific handler description (ie\&. unix, unix\-xwin, \&.\&.\&.)\&.
 .PP
-mime.handler._template_._template_.ask \fB[0|1]\fR (default: 1)
+mime\&.handler\&._template_\&._template_\&.ask \fB[0|1]\fR (default: 1)
 .RS 4
-Ask before opening.
+Ask before opening\&.
 .RE
 .PP
-mime.handler._template_._template_.block \fB[0|1]\fR (default: 1)
+mime\&.handler\&._template_\&._template_\&.block \fB[0|1]\fR (default: 1)
 .RS 4
-Block the terminal when the handler is running.
+Block the terminal when the handler is running\&.
 .RE
 .PP
-mime.handler._template_._template_.program \fB<str>\fR (default: "")
+mime\&.handler\&._template_\&._template_\&.program \fB<str>\fR (default: "")
 .RS 4
-External viewer for this file type. '%' in this string will be substituted by a file name. Do
+External viewer for this file type\&. \'%\' in this string will be substituted by a file name\&. Do
 \fBnot\fR
-put single\- or double\-quotes around the % sign.
+put single\- or double\-quotes around the % sign\&.
 .RE
-.SS "mime.mailcap (Mailcap)"
-Options for mailcap support.
-.sp
+.SS "mime\&.mailcap (Mailcap)"
+Options for mailcap support\&.
 .PP
-mime.mailcap.enable \fB[0|1]\fR (default: 1)
+mime\&.mailcap\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
-Enable mailcap support.
+Enable mailcap support\&.
 .RE
 .PP
-mime.mailcap.path \fB<str>\fR (default: "~/.mailcap:/etc/mailcap:/usr/etc/mailcap:/usr/local/etc/mailcap:/usr/share/mailcap:/usr/share/misc/mailcap")
+mime\&.mailcap\&.path \fB<str>\fR (default: "~/\&.mailcap:/etc/mailcap:/usr/etc/mailcap:/usr/local/etc/mailcap:/usr/share/mailcap:/usr/share/misc/mailcap")
 .RS 4
-Mailcap search path. Colon\-separated list of files. Leave as "" to use
+Mailcap search path\&. Colon\-separated list of files\&. Leave as "" to use
 \fBMAILCAP\fR
-environment variable instead.
+environment variable instead\&.
 .RE
 .PP
-mime.mailcap.ask \fB[0|1]\fR (default: 1)
+mime\&.mailcap\&.ask \fB[0|1]\fR (default: 1)
 .RS 4
-Ask before using the handlers defined by mailcap.
+Ask before using the handlers defined by mailcap\&.
 .RE
 .PP
-mime.mailcap.description \fB<num>\fR (default: 0)
+mime\&.mailcap\&.description \fB<num>\fR (default: 0)
 .RS 4
 Type of description to show in "what to do with this file" query dialog:
 .sp
@@ -1184,261 +1150,248 @@ Type of description to show in "what to do with this file" query dialog:
 .RE
 .RE
 .PP
-mime.mailcap.prioritize \fB[0|1]\fR (default: 1)
+mime\&.mailcap\&.prioritize \fB[0|1]\fR (default: 1)
 .RS 4
-Prioritize entries by the order of the files in the mailcap path. This means that wildcard entries (like: image/*) will also be checked before deciding the handler.
+Prioritize entries by the order of the files in the mailcap path\&. This means that wildcard entries (like: image/*) will also be checked before deciding the handler\&.
 .RE
-.SS "mime.mimetypes (Mimetypes files)"
-Options for the support of \fImime.types\fR files. These files can be used to find the content type of a URL by looking at the extension of the file name.
-.sp
+.SS "mime\&.mimetypes (Mimetypes files)"
+Options for the support of \fImime\&.types\fR files\&. These files can be used to find the content type of a URL by looking at the extension of the file name\&.
 .PP
-mime.mimetypes.enable \fB[0|1]\fR (default: 1)
+mime\&.mimetypes\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
 Enable
-\fImime.types\fR
-support.
+\fImime\&.types\fR
+support\&.
 .RE
 .PP
-mime.mimetypes.path \fB<str>\fR (default: "~/.mime.types:/etc/mime.types:/usr/etc/mime.types:/usr/local/etc/mime.types:/usr/share/mime.types:/usr/share/misc/mime.types")
+mime\&.mimetypes\&.path \fB<str>\fR (default: "~/\&.mime\&.types:/etc/mime\&.types:/usr/etc/mime\&.types:/usr/local/etc/mime\&.types:/usr/share/mime\&.types:/usr/share/misc/mime\&.types")
 .RS 4
 The search path for
-\fImime.types\fR
-files. Colon\-separated list of files.
+\fImime\&.types\fR
+files\&. Colon\-separated list of files\&.
 .RE
-.SS "mime.type (MIME type associations)"
-Handler \(<> MIME type association. The first sub\-tree is the MIME class while the second sub\-tree is the MIME type (ie. image/gif handler will reside at mime.type.image.gif). Each MIME type option should contain (case\-sensitive) name of the MIME handler (its properties are stored at mime.handler.<name>).
+.SS "mime\&.type (MIME type associations)"
+Handler \(<> MIME type association\&. The first sub\-tree is the MIME class while the second sub\-tree is the MIME type (ie\&. image/gif handler will reside at mime\&.type\&.image\&.gif)\&. Each MIME type option should contain (case\-sensitive) name of the MIME handler (its properties are stored at mime\&.handler\&.<name>)\&.
 .sp
-.SS "mime.type._template_ (Template option folder)"
-Handler matching this MIME\-type class ('*' is used here in place of '.').
-.sp
+.SS "mime\&.type\&._template_ (Template option folder)"
+Handler matching this MIME\-type class (\'*\' is used here in place of \'\&.\')\&.
 .PP
-mime.type._template_._template_ \fB<str>\fR (default: "")
+mime\&.type\&._template_\&._template_ \fB<str>\fR (default: "")
 .RS 4
-Handler matching this MIME\-type name ('*' is used here in place of '.').
+Handler matching this MIME\-type name (\'*\' is used here in place of \'\&.\')\&.
 .RE
 .SS "protocol (Protocols)"
-Protocol specific options.
-.sp
+Protocol specific options\&.
 .PP
-protocol.no_proxy \fB<str>\fR (default: "")
+protocol\&.no_proxy \fB<str>\fR (default: "")
 .RS 4
-Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled. Optionally, a port can be specified for some domains as well. If it's blank,
+Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled\&. Optionally, a port can be specified for some domains as well\&. If it\'s blank,
 \fBNO_PROXY\fR
-environment variable is checked as well.
+environment variable is checked as well\&.
 .RE
-.SS "protocol.bittorrent (BitTorrent)"
-BitTorrent specific options.
-.sp
+.SS "protocol\&.bittorrent (BitTorrent)"
+BitTorrent specific options\&.
 .PP
-protocol.bittorrent.piece_cache_size \fB<num>\fR (default: 1048576)
+protocol\&.bittorrent\&.piece_cache_size \fB<num>\fR (default: 1048576)
 .RS 4
-The maximum amount of memory used to hold recently downloaded pieces. Set to 0 to have unlimited size.
-.RE
-.PP
-protocol.bittorrent.max_uploads \fB<num>\fR (default: 7)
-.RS 4
-The maximum number of uploads to allow at once.
+The maximum amount of memory used to hold recently downloaded pieces\&. Set to 0 to have unlimited size\&.
 .RE
 .PP
-protocol.bittorrent.min_uploads \fB<num>\fR (default: 2)
+protocol\&.bittorrent\&.max_uploads \fB<num>\fR (default: 7)
 .RS 4
-The minimum number of uploads which should at least be used for new connections.
+The maximum number of uploads to allow at once\&.
 .RE
 .PP
-protocol.bittorrent.request_queue_size \fB<num>\fR (default: 5)
+protocol\&.bittorrent\&.min_uploads \fB<num>\fR (default: 2)
 .RS 4
-How many piece requests to continuously keep in queue. Pipelining of requests is essential to saturate connections and get a good connection performance and thus a faster download. However, a very big queue size can lead to wasting bandwidth near the end of the connection since remaining piece blocks will be requested from multiple peers.
+The minimum number of uploads which should at least be used for new connections\&.
 .RE
 .PP
-protocol.bittorrent.choke_interval \fB<num>\fR (default: 10)
+protocol\&.bittorrent\&.request_queue_size \fB<num>\fR (default: 5)
 .RS 4
-The number of seconds between updating the connection state and most importantly choke and unchoke peer connections. The choke period should be big enough for newly unchoked connections to get started but small enough to not allow freeriders too much room for stealing bandwidth.
+How many piece requests to continuously keep in queue\&. Pipelining of requests is essential to saturate connections and get a good connection performance and thus a faster download\&. However, a very big queue size can lead to wasting bandwidth near the end of the connection since remaining piece blocks will be requested from multiple peers\&.
 .RE
 .PP
-protocol.bittorrent.rarest_first_cutoff \fB<num>\fR (default: 4)
+protocol\&.bittorrent\&.choke_interval \fB<num>\fR (default: 10)
 .RS 4
-The number of pieces to obtain before switching piece selection strategy from random to rarest first.
+The number of seconds between updating the connection state and most importantly choke and unchoke peer connections\&. The choke period should be big enough for newly unchoked connections to get started but small enough to not allow freeriders too much room for stealing bandwidth\&.
 .RE
 .PP
-protocol.bittorrent.allow_blacklist \fB[0|1]\fR (default: 1)
+protocol\&.bittorrent\&.rarest_first_cutoff \fB<num>\fR (default: 4)
 .RS 4
-Allow blacklisting of buggy peers.
-.RE
-.SS "protocol.bittorrent.ports (Port range)"
-Port range allowed to be used for listening on.
-.sp
-.PP
-protocol.bittorrent.ports.min \fB<num>\fR (default: 6881)
-.RS 4
-The minimum port to try and listen on.
+The number of pieces to obtain before switching piece selection strategy from random to rarest first\&.
 .RE
 .PP
-protocol.bittorrent.ports.max \fB<num>\fR (default: 6999)
+protocol\&.bittorrent\&.allow_blacklist \fB[0|1]\fR (default: 1)
 .RS 4
-The maximum port to try and listen on.
+Allow blacklisting of buggy peers\&.
 .RE
-.SS "protocol.bittorrent.tracker (Tracker)"
-Tracker options.
-.sp
+.SS "protocol\&.bittorrent\&.ports (Port range)"
+Port range allowed to be used for listening on\&.
 .PP
-protocol.bittorrent.tracker.compact \fB[0|1]\fR (default: 0)
+protocol\&.bittorrent\&.ports\&.min \fB<num>\fR (default: 6881)
 .RS 4
-Whether to request that the tracker returns peer info in compact format. Note, the compact format only supports IPv4 addresses.
-.RE
-.PP
-protocol.bittorrent.tracker.interval \fB<num>\fR (default: 0)
-.RS 4
-The number of seconds to wait between periodically contacting the tracker for announcing progress and requesting more peers. Set to zero to use the interval requested by the tracker.
+The minimum port to try and listen on\&.
 .RE
 .PP
-protocol.bittorrent.tracker.ip_address \fB<str>\fR (default: "")
+protocol\&.bittorrent\&.ports\&.max \fB<num>\fR (default: 6999)
 .RS 4
-What IP address to report to the tracker. If set to "" no IP address will be sent and the tracker will automatically determine an appropriate IP address.
+The maximum port to try and listen on\&.
+.RE
+.SS "protocol\&.bittorrent\&.tracker (Tracker)"
+Tracker options\&.
+.PP
+protocol\&.bittorrent\&.tracker\&.compact \fB[0|1]\fR (default: 0)
+.RS 4
+Whether to request that the tracker returns peer info in compact format\&. Note, the compact format only supports IPv4 addresses\&.
 .RE
 .PP
-protocol.bittorrent.tracker.key \fB<str>\fR (default: "")
+protocol\&.bittorrent\&.tracker\&.interval \fB<num>\fR (default: 0)
 .RS 4
-An additional identification that is not shared with any users. It is intended to allow a client to prove their identity should their IP address change. It is an optional parameter, but some trackers require this parameter. If set to "" no user key will be sent to the tracker.
+The number of seconds to wait between periodically contacting the tracker for announcing progress and requesting more peers\&. Set to zero to use the interval requested by the tracker\&.
 .RE
 .PP
-protocol.bittorrent.tracker.numwant \fB<num>\fR (default: 50)
+protocol\&.bittorrent\&.tracker\&.ip_address \fB<str>\fR (default: "")
 .RS 4
-The maximum number of peers to request from the tracker. Set to 0 to use the server default.
+What IP address to report to the tracker\&. If set to "" no IP address will be sent and the tracker will automatically determine an appropriate IP address\&.
 .RE
 .PP
-protocol.bittorrent.tracker.min_skip_size \fB<num>\fR (default: 20)
+protocol\&.bittorrent\&.tracker\&.key \fB<str>\fR (default: "")
 .RS 4
-The minimum number of peers to have in the current peer info pool before skipping requesting of more peers. I.e. setting numwant to zero. Set to 0 to not have any limit.
-.RE
-.SS "protocol.bittorrent.peerwire (Peer\-wire)"
-Lowlevel peer\-wire options.
-.sp
-.PP
-protocol.bittorrent.peerwire.connections \fB<num>\fR (default: 55)
-.RS 4
-The maximum number of allowed connections to both active and non\-active peers. By increasing the number of allowed connections, the chance of finding good peers to download from is increased. However, too many connections can lead to TCP congestion. If the maximum is reached all new incoming connections will be closed.
+An additional identification that is not shared with any users\&. It is intended to allow a client to prove their identity should their IP address change\&. It is an optional parameter, but some trackers require this parameter\&. If set to "" no user key will be sent to the tracker\&.
 .RE
 .PP
-protocol.bittorrent.peerwire.max_message_length \fB<num>\fR (default: 8388608)
+protocol\&.bittorrent\&.tracker\&.numwant \fB<num>\fR (default: 50)
 .RS 4
-The maximum length of messages to accept over the wire. Larger values will cause the connection to be dropped.
+The maximum number of peers to request from the tracker\&. Set to 0 to use the server default\&.
 .RE
 .PP
-protocol.bittorrent.peerwire.max_request_length \fB<num>\fR (default: 8388608)
+protocol\&.bittorrent\&.tracker\&.min_skip_size \fB<num>\fR (default: 20)
 .RS 4
-The maximum length to allow for incoming requests. Larger requests will cause the connection to be dropped.
+The minimum number of peers to have in the current peer info pool before skipping requesting of more peers\&. I\&.e\&. setting numwant to zero\&. Set to 0 to not have any limit\&.
+.RE
+.SS "protocol\&.bittorrent\&.peerwire (Peer\-wire)"
+Lowlevel peer\-wire options\&.
+.PP
+protocol\&.bittorrent\&.peerwire\&.connections \fB<num>\fR (default: 55)
+.RS 4
+The maximum number of allowed connections to both active and non\-active peers\&. By increasing the number of allowed connections, the chance of finding good peers to download from is increased\&. However, too many connections can lead to TCP congestion\&. If the maximum is reached all new incoming connections will be closed\&.
 .RE
 .PP
-protocol.bittorrent.peerwire.request_length \fB<num>\fR (default: 16384)
+protocol\&.bittorrent\&.peerwire\&.max_message_length \fB<num>\fR (default: 8388608)
 .RS 4
-How many bytes to query for per request. This is complementary to the max_request_length option. If the configured length is bigger than the piece length it will be truncated.
+The maximum length of messages to accept over the wire\&. Larger values will cause the connection to be dropped\&.
 .RE
 .PP
-protocol.bittorrent.peerwire.timeout \fB<num>\fR (default: 300)
+protocol\&.bittorrent\&.peerwire\&.max_request_length \fB<num>\fR (default: 8388608)
 .RS 4
-The number of seconds to wait before closing a socket on which nothing has been received or sent.
+The maximum length to allow for incoming requests\&. Larger requests will cause the connection to be dropped\&.
 .RE
 .PP
-protocol.bittorrent.peerwire.pool_size \fB<num>\fR (default: 55)
+protocol\&.bittorrent\&.peerwire\&.request_length \fB<num>\fR (default: 16384)
 .RS 4
-Maximum number of items in the peer pool. The peer pool contains information used for establishing connections to new peers. Set to 0 to have unlimited size.
+How many bytes to query for per request\&. This is complementary to the max_request_length option\&. If the configured length is bigger than the piece length it will be truncated\&.
 .RE
-.SS "protocol.file (Local files)"
-Options specific to local browsing.
-.sp
 .PP
-protocol.file.allow_special_files \fB[0|1]\fR (default: 0)
+protocol\&.bittorrent\&.peerwire\&.timeout \fB<num>\fR (default: 300)
 .RS 4
-Whether to allow reading from non\-regular files. Note this can be dangerous; reading
+The number of seconds to wait before closing a socket on which nothing has been received or sent\&.
+.RE
+.PP
+protocol\&.bittorrent\&.peerwire\&.pool_size \fB<num>\fR (default: 55)
+.RS 4
+Maximum number of items in the peer pool\&. The peer pool contains information used for establishing connections to new peers\&. Set to 0 to have unlimited size\&.
+.RE
+.SS "protocol\&.file (Local files)"
+Options specific to local browsing\&.
+.PP
+protocol\&.file\&.allow_special_files \fB[0|1]\fR (default: 0)
+.RS 4
+Whether to allow reading from non\-regular files\&. Note this can be dangerous; reading
 \fI/dev/urandom\fR
 or
 \fI/dev/zero\fR
 can ruin your day!
 .RE
 .PP
-protocol.file.show_hidden_files \fB[0|1]\fR (default: 1)
+protocol\&.file\&.show_hidden_files \fB[0|1]\fR (default: 1)
 .RS 4
-When set to false, files with name starting with a dot will be hidden in local directory listings.
+When set to false, files with name starting with a dot will be hidden in local directory listings\&.
 .RE
 .PP
-protocol.file.try_encoding_extensions \fB[0|1]\fR (default: 1)
+protocol\&.file\&.try_encoding_extensions \fB[0|1]\fR (default: 1)
 .RS 4
-When set, if we can't open a file named 'filename', we'll try to open 'filename' with some encoding extension appended (ie. 'filename.gz'); it depends on the supported encodings.
+When set, if we can\'t open a file named \'filename\', we\'ll try to open \'filename\' with some encoding extension appended (ie\&. \'filename\&.gz\'); it depends on the supported encodings\&.
 .RE
-.SS "protocol.file.cgi (Local CGI)"
-Local CGI specific options.
-.sp
+.SS "protocol\&.file\&.cgi (Local CGI)"
+Local CGI specific options\&.
 .PP
-protocol.file.cgi.path \fB<str>\fR (default: "")
+protocol\&.file\&.cgi\&.path \fB<str>\fR (default: "")
 .RS 4
-Colon separated list of directories, where CGI scripts are stored.
-.RE
-.PP
-protocol.file.cgi.policy \fB[0|1]\fR (default: 0)
-.RS 4
-Whether to execute local CGI scripts.
-.RE
-.SS "protocol.fsp (FSP)"
-FSP specific options.
-.sp
-.PP
-protocol.fsp.sort \fB[0|1]\fR (default: 1)
-.RS 4
-Whether to sort entries in directory listings.
-.RE
-.SS "protocol.ftp (FTP)"
-FTP specific options.
-.sp
-.PP
-protocol.ftp.anon_passwd \fB<str>\fR (default: "some@host.domain")
-.RS 4
-FTP anonymous password to be sent.
+Colon separated list of directories, where CGI scripts are stored\&.
 .RE
 .PP
-protocol.ftp.use_pasv \fB[0|1]\fR (default: 1)
+protocol\&.file\&.cgi\&.policy \fB[0|1]\fR (default: 0)
 .RS 4
-Use PASV instead of PORT (passive vs active mode, IPv4 only).
+Whether to execute local CGI scripts\&.
+.RE
+.SS "protocol\&.fsp (FSP)"
+FSP specific options\&.
+.PP
+protocol\&.fsp\&.sort \fB[0|1]\fR (default: 1)
+.RS 4
+Whether to sort entries in directory listings\&.
+.RE
+.SS "protocol\&.ftp (FTP)"
+FTP specific options\&.
+.PP
+protocol\&.ftp\&.anon_passwd \fB<str>\fR (default: "some@host\&.domain")
+.RS 4
+FTP anonymous password to be sent\&.
 .RE
 .PP
-protocol.ftp.use_epsv \fB[0|1]\fR (default: 0)
+protocol\&.ftp\&.use_pasv \fB[0|1]\fR (default: 1)
 .RS 4
-Use EPSV instead of EPRT (passive vs active mode, IPv6 only).
+Use PASV instead of PORT (passive vs active mode, IPv4 only)\&.
 .RE
-.SS "protocol.ftp.proxy (Proxy configuration)"
-FTP proxy configuration.
-.sp
 .PP
-protocol.ftp.proxy.host \fB<str>\fR (default: "")
+protocol\&.ftp\&.use_epsv \fB[0|1]\fR (default: 0)
 .RS 4
-Host and port\-number (host:port) of the FTP proxy, or blank. If it's blank,
+Use EPSV instead of EPRT (passive vs active mode, IPv6 only)\&.
+.RE
+.SS "protocol\&.ftp\&.proxy (Proxy configuration)"
+FTP proxy configuration\&.
+.PP
+protocol\&.ftp\&.proxy\&.host \fB<str>\fR (default: "")
+.RS 4
+Host and port\-number (host:port) of the FTP proxy, or blank\&. If it\'s blank,
 \fBFTP_PROXY\fR
-environment variable is checked as well.
+environment variable is checked as well\&.
 .RE
-.SS "protocol.http (HTTP)"
-HTTP\-specific options.
-.sp
+.SS "protocol\&.http (HTTP)"
+HTTP\-specific options\&.
 .PP
-protocol.http.accept_language \fB<str>\fR (default: "")
+protocol\&.http\&.accept_language \fB<str>\fR (default: "")
 .RS 4
-Send Accept\-Language header.
+Send Accept\-Language header\&.
 .RE
 .PP
-protocol.http.accept_ui_language \fB[0|1]\fR (default: 1)
+protocol\&.http\&.accept_ui_language \fB[0|1]\fR (default: 1)
 .RS 4
 Request localised versions of documents from web\-servers (using the Accept\-Language header) using the language you have configured for
-ELinks' user\-interface (this also affects navigator.language ECMAScript value available to scripts). Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference.
+ELinks\' user\-interface (this also affects navigator\&.language ECMAScript value available to scripts)\&. Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference\&.
 .RE
 .PP
-protocol.http.trace \fB[0|1]\fR (default: 0)
+protocol\&.http\&.trace \fB[0|1]\fR (default: 0)
 .RS 4
-If active, all HTTP requests are sent with TRACE as their method rather than GET or POST. This is useful for debugging of both
+If active, all HTTP requests are sent with TRACE as their method rather than GET or POST\&. This is useful for debugging of both
 ELinks
-and various server\-side scripts \(em the server only returns the client's request back to the client verbatim. Note that this type of request may not be enabled on all servers.
+and various server\-side scripts \(em the server only returns the client\'s request back to the client verbatim\&. Note that this type of request may not be enabled on all servers\&.
 .RE
 .PP
-protocol.http.user_agent \fB<str>\fR (default: "ELinks/%v (textmode; %s; %t\-%b)")
+protocol\&.http\&.user_agent \fB<str>\fR (default: "ELinks/%v (textmode; %s; %t\-%b)")
 .RS 4
-Change the User Agent ID. That means identification string, which is sent to HTTP server when a document is requested. The 'textmode' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e.g. pushing some lite version to them automagically. Use " " if you don't want any User\-Agent header to be sent at all.
+Change the User Agent ID\&. That means identification string, which is sent to HTTP server when a document is requested\&. The \'textmode\' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e\&.g\&. pushing some lite version to them automagically\&. Use " " if you don\'t want any User\-Agent header to be sent at all\&.
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%v in the string means
@@ -1456,62 +1409,59 @@ version,
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%b in the string means number of bars displayed by
-ELinks.
+ELinks\&.
 .RE
 .RE
-.SS "protocol.http.bugs (Server bug workarounds)"
-Server\-side HTTP bugs workarounds.
-.sp
+.SS "protocol\&.http\&.bugs (Server bug workarounds)"
+Server\-side HTTP bugs workarounds\&.
 .PP
-protocol.http.bugs.accept_charset \fB[0|1]\fR (default: 1)
+protocol\&.http\&.bugs\&.accept_charset \fB[0|1]\fR (default: 1)
 .RS 4
-The Accept\-Charset header is quite long and sending it can trigger bugs in some rarely found servers.
-.RE
-.PP
-protocol.http.bugs.allow_blacklist \fB[0|1]\fR (default: 1)
-.RS 4
-Allow blacklisting of buggy servers.
+The Accept\-Charset header is quite long and sending it can trigger bugs in some rarely found servers\&.
 .RE
 .PP
-protocol.http.bugs.broken_302_redirect \fB[0|1]\fR (default: 1)
+protocol\&.http\&.bugs\&.allow_blacklist \fB[0|1]\fR (default: 1)
 .RS 4
-Broken 302 redirect (violates RFC but compatible with Netscape). This is a problem for a lot of web discussion boards and the like. If they will do strange things to you, try to play with this.
+Allow blacklisting of buggy servers\&.
 .RE
 .PP
-protocol.http.bugs.post_no_keepalive \fB[0|1]\fR (default: 0)
+protocol\&.http\&.bugs\&.broken_302_redirect \fB[0|1]\fR (default: 1)
 .RS 4
-Disable keepalive connection after POST request.
+Broken 302 redirect (violates RFC but compatible with Netscape)\&. This is a problem for a lot of web discussion boards and the like\&. If they will do strange things to you, try to play with this\&.
 .RE
 .PP
-protocol.http.bugs.http10 \fB[0|1]\fR (default: 0)
+protocol\&.http\&.bugs\&.post_no_keepalive \fB[0|1]\fR (default: 0)
 .RS 4
-Use HTTP/1.0 protocol instead of HTTP/1.1.
+Disable keepalive connection after POST request\&.
 .RE
-.SS "protocol.http.proxy (Proxy configuration)"
-HTTP proxy configuration.
-.sp
 .PP
-protocol.http.proxy.host \fB<str>\fR (default: "")
+protocol\&.http\&.bugs\&.http10 \fB[0|1]\fR (default: 0)
 .RS 4
-Host and port\-number (host:port) of the HTTP proxy, or blank. If it's blank,
+Use HTTP/1\&.0 protocol instead of HTTP/1\&.1\&.
+.RE
+.SS "protocol\&.http\&.proxy (Proxy configuration)"
+HTTP proxy configuration\&.
+.PP
+protocol\&.http\&.proxy\&.host \fB<str>\fR (default: "")
+.RS 4
+Host and port\-number (host:port) of the HTTP proxy, or blank\&. If it\'s blank,
 \fBHTTP_PROXY\fR
-environment variable is checked as well.
+environment variable is checked as well\&.
 .RE
 .PP
-protocol.http.proxy.user \fB<str>\fR (default: "")
+protocol\&.http\&.proxy\&.user \fB<str>\fR (default: "")
 .RS 4
-Proxy authentication username.
+Proxy authentication username\&.
 .RE
 .PP
-protocol.http.proxy.passwd \fB<str>\fR (default: "")
+protocol\&.http\&.proxy\&.passwd \fB<str>\fR (default: "")
 .RS 4
-Proxy authentication password.
+Proxy authentication password\&.
 .RE
-.SS "protocol.http.referer (Referer sending)"
-HTTP referer sending options. HTTP referer is a special header sent in the HTTP requests, which is supposed to contain the previous page visited by the browser. This way, the server can know what link did you follow when accessing that page. However, this behaviour can unfortunately considerably affect privacy and can lead even to a security problem on some badly designed web pages.
-.sp
+.SS "protocol\&.http\&.referer (Referer sending)"
+HTTP referer sending options\&. HTTP referer is a special header sent in the HTTP requests, which is supposed to contain the previous page visited by the browser\&. This way, the server can know what link did you follow when accessing that page\&. However, this behaviour can unfortunately considerably affect privacy and can lead even to a security problem on some badly designed web pages\&.
 .PP
-protocol.http.referer.policy \fB<num>\fR (default: 3)
+protocol\&.http\&.referer\&.policy \fB<num>\fR (default: 3)
 .RS 4
 Mode of sending HTTP referer:
 .sp
@@ -1532,45 +1482,42 @@ Mode of sending HTTP referer:
 .RE
 .RE
 .PP
-protocol.http.referer.fake \fB<str>\fR (default: "")
+protocol\&.http\&.referer\&.fake \fB<str>\fR (default: "")
 .RS 4
-Fake referer to be sent when policy is 2.
+Fake referer to be sent when policy is 2\&.
 .RE
-.SS "protocol.https (HTTPS)"
-HTTPS\-specific options.
+.SS "protocol\&.https (HTTPS)"
+HTTPS\-specific options\&.
 .sp
-.SS "protocol.https.proxy (Proxy configuration)"
-HTTPS proxy configuration.
-.sp
+.SS "protocol\&.https\&.proxy (Proxy configuration)"
+HTTPS proxy configuration\&.
 .PP
-protocol.https.proxy.host \fB<str>\fR (default: "")
+protocol\&.https\&.proxy\&.host \fB<str>\fR (default: "")
 .RS 4
-Host and port\-number (host:port) of the HTTPS CONNECT proxy, or blank. If it's blank,
+Host and port\-number (host:port) of the HTTPS CONNECT proxy, or blank\&. If it\'s blank,
 \fBHTTPS_PROXY\fR
-environment variable is checked as well.
+environment variable is checked as well\&.
 .RE
-.SS "protocol.nntp (NNTP)"
-NNTP and news specific options.
-.sp
+.SS "protocol\&.nntp (NNTP)"
+NNTP and news specific options\&.
 .PP
-protocol.nntp.server \fB<str>\fR (default: "")
+protocol\&.nntp\&.server \fB<str>\fR (default: "")
 .RS 4
-Used when resolving news: URIs. If set to the empty string the value of the
+Used when resolving news: URIs\&. If set to the empty string the value of the
 \fBNNTPSERVER\fR
-environment variable will be used.
+environment variable will be used\&.
 .RE
 .PP
-protocol.nntp.header_entries \fB<str>\fR (default: "Subject,From,Date,Message\-ID,Newsgroups")
+protocol\&.nntp\&.header_entries \fB<str>\fR (default: "Subject,From,Date,Message\-ID,Newsgroups")
 .RS 4
-Comma separated list of which entries in the article header to show. E.g. 'Subject' and 'From'. All header entries can be read in the header info dialog.
+Comma separated list of which entries in the article header to show\&. E\&.g\&. \'Subject\' and \'From\'\&. All header entries can be read in the header info dialog\&.
 .RE
-.SS "protocol.rewrite (URI rewriting)"
-Rules for rewriting URIs entered in the goto dialog. It makes it possible to define a set of prefixes that will be expanded if they match a string entered in the goto dialog. The prefixes can be dumb, meaning that they work only like URI abbreviations, or smart ones, making it possible to pass arguments to them like search engine keywords.
-.sp
+.SS "protocol\&.rewrite (URI rewriting)"
+Rules for rewriting URIs entered in the goto dialog\&. It makes it possible to define a set of prefixes that will be expanded if they match a string entered in the goto dialog\&. The prefixes can be dumb, meaning that they work only like URI abbreviations, or smart ones, making it possible to pass arguments to them like search engine keywords\&.
 .PP
-protocol.rewrite.default_template \fB<str>\fR (default: "")
+protocol\&.rewrite\&.default_template \fB<str>\fR (default: "")
 .RS 4
-Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i.e. contains no '.', ':' or '/' characters), and does not match any defined prefixes. Set the value to "" to disable use of the default template rewrite rule.
+Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i\&.e\&. contains no \'\&.\', \':\' or \'/\' characters), and does not match any defined prefixes\&. Set the value to "" to disable use of the default template rewrite rule\&.
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%c in the template means the current URL,
@@ -1581,33 +1528,32 @@ Default URI template used when the string entered in the goto dialog does not ap
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%0,%1,...,%9 mean the 1st,2nd,...,10th space\-delimited part of %s,
+\h'-04'\(bu\h'+03'%0,%1,\&.\&.\&.,%9 mean the 1st,2nd,\&.\&.\&.,10th space\-delimited part of %s,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the template means '%'.
+\h'-04'\(bu\h'+03'%% in the template means \'%\'\&.
 .RE
 .RE
 .PP
-protocol.rewrite.enable\-dumb \fB[0|1]\fR (default: 1)
+protocol\&.rewrite\&.enable\-dumb \fB[0|1]\fR (default: 1)
 .RS 4
 Enable dumb prefixes \(en simple URI abbreviations which can be written to the
 Goto URL
-dialog instead of actual URIs \(en i.e. if you write 'elinks' there, you are directed to
-\fIhttp://elinks.cz/\fR.
+dialog instead of actual URIs \(en i\&.e\&. if you write \'elinks\' there, you are directed to
+\fIhttp://elinks\&.cz/\fR\&.
 .RE
 .PP
-protocol.rewrite.enable\-smart \fB[0|1]\fR (default: 1)
+protocol\&.rewrite\&.enable\-smart \fB[0|1]\fR (default: 1)
 .RS 4
 Enable smart prefixes \(en URI templates triggered by writing given abbreviation to the
 Goto URL
-dialog followed by a list of arguments from which the actual URI is composed \(en i.e. 'gg:search keywords' or 'gn search keywords for news'.
+dialog followed by a list of arguments from which the actual URI is composed \(en i\&.e\&. \'gg:search keywords\' or \'gn search keywords for news\'\&.
 .RE
-.SS "protocol.rewrite.dumb (Dumb Prefixes)"
-Dumb prefixes, see enable\-dumb description for details.
-.sp
+.SS "protocol\&.rewrite\&.dumb (Dumb Prefixes)"
+Dumb prefixes, see enable\-dumb description for details\&.
 .PP
-protocol.rewrite.dumb._template_ \fB<str>\fR (default: "")
+protocol\&.rewrite\&.dumb\&._template_ \fB<str>\fR (default: "")
 .RS 4
 Replacement URI for this dumbprefix:
 .sp
@@ -1616,14 +1562,13 @@ Replacement URI for this dumbprefix:
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means '%'
+\h'-04'\(bu\h'+03'%% in the string means \'%\'
 .RE
 .RE
-.SS "protocol.rewrite.smart (Smart Prefixes)"
-Smart prefixes, see enable\-smart description for details.
-.sp
+.SS "protocol\&.rewrite\&.smart (Smart Prefixes)"
+Smart prefixes, see enable\-smart description for details\&.
 .PP
-protocol.rewrite.smart._template_ \fB<str>\fR (default: "")
+protocol\&.rewrite\&.smart\&._template_ \fB<str>\fR (default: "")
 .RS 4
 Replacement URI for this smartprefix:
 .sp
@@ -1636,23 +1581,22 @@ Replacement URI for this smartprefix:
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%0,%1,...,%9 means argument 0, 1, ..., 9
+\h'-04'\(bu\h'+03'%0,%1,\&.\&.\&.,%9 means argument 0, 1, \&.\&.\&., 9
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means '%'
+\h'-04'\(bu\h'+03'%% in the string means \'%\'
 .RE
 .RE
-.SS "protocol.user (User protocols)"
-User protocols. Options in this tree specify external handlers for the appropriate protocols. Ie. protocol.user.mailto.unix.
+.SS "protocol\&.user (User protocols)"
+User protocols\&. Options in this tree specify external handlers for the appropriate protocols\&. Ie\&. protocol\&.user\&.mailto\&.unix\&.
 .sp
-.SS "protocol.user._template_ (Template option folder)"
-Handler (external program) for this protocol. Name the options in this tree after your system (ie. unix, unix\-xwin).
-.sp
+.SS "protocol\&.user\&._template_ (Template option folder)"
+Handler (external program) for this protocol\&. Name the options in this tree after your system (ie\&. unix, unix\-xwin)\&.
 .PP
-protocol.user._template_._template_ \fB<str>\fR (default: "")
+protocol\&.user\&._template_\&._template_ \fB<str>\fR (default: "")
 .RS 4
-Handler (external program) for this protocol and system.
+Handler (external program) for this protocol and system\&.
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%f in the string means file name to include form data from
@@ -1679,13 +1623,12 @@ Handler (external program) for this protocol and system.
 .RE
 .RE
 .SS "terminal (Terminals)"
-Terminal options.
+Terminal options\&.
 .sp
-.SS "terminal._template_ (Template option folder)"
-Options specific to this terminal type (according to \fB$TERM\fR value).
-.sp
+.SS "terminal\&._template_ (Template option folder)"
+Options specific to this terminal type (according to \fB$TERM\fR value)\&.
 .PP
-terminal._template_.type \fB<num>\fR (default: 0)
+terminal\&._template_\&.type \fB<num>\fR (default: 0)
 .RS 4
 Terminal type; matters mostly only when drawing frames and dialog box borders:
 .sp
@@ -1710,37 +1653,37 @@ Terminal type; matters mostly only when drawing frames and dialog box borders:
 .RE
 .RE
 .PP
-terminal._template_.m11_hack \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.m11_hack \fB[0|1]\fR (default: 0)
 .RS 4
-Switch fonts when drawing lines, enabling both local characters and lines working at the same time.
+Switch fonts when drawing lines, enabling both local characters and lines working at the same time\&.
 ELinks
-uses this option only if UTF\-8 I/O is disabled and the terminal type is Linux or FreeBSD.
+uses this option only if UTF\-8 I/O is disabled and the terminal type is Linux or FreeBSD\&.
 .RE
 .PP
-terminal._template_.utf_8_io \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.utf_8_io \fB[0|1]\fR (default: 0)
 .RS 4
-Enable I/O in UTF\-8 for Unicode terminals. Note that currently, only the subset of UTF\-8 according to terminal codepage is used.
+Enable I/O in UTF\-8 for Unicode terminals\&. Note that currently, only the subset of UTF\-8 according to terminal codepage is used\&.
 ELinks
-ignores this option if the terminal codepage is UTF\-8.
+ignores this option if the terminal codepage is UTF\-8\&.
 .RE
 .PP
-terminal._template_.restrict_852 \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.restrict_852 \fB[0|1]\fR (default: 0)
 .RS 4
-Restrict the characters used when drawing lines. Makes sense only with linux terminals using the cp850/852 character sets.
+Restrict the characters used when drawing lines\&. Makes sense only with linux terminals using the cp850/852 character sets\&.
 .RE
 .PP
-terminal._template_.block_cursor \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.block_cursor \fB[0|1]\fR (default: 0)
 .RS 4
-Move cursor to bottom right corner when done drawing. This is particularly useful when we have a block cursor, so that inversed text is displayed correctly.
+Move cursor to bottom right corner when done drawing\&. This is particularly useful when we have a block cursor, so that inversed text is displayed correctly\&.
 .RE
 .PP
-terminal._template_.colors \fB<num>\fR (default: 0)
+terminal\&._template_\&.colors \fB<num>\fR (default: 0)
 .RS 4
-The color mode controls what colors are used and how they are output to the terminal. Some modes may have been disabled at compile time. The
+The color mode controls what colors are used and how they are output to the terminal\&. Some modes may have been disabled at compile time\&. The
 Setup \(-> Terminal options
-dialog lists the modes supported by this executable. If you select an unsupported mode,
+dialog lists the modes supported by this executable\&. If you select an unsupported mode,
 ELinks
-uses 16 colors. The color modes are:
+uses 16 colors\&. The color modes are:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'0 is mono mode, only 2 colors are used
@@ -1763,1179 +1706,1099 @@ uses 16 colors. The color modes are:
 .RE
 .RE
 .PP
-terminal._template_.transparency \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.transparency \fB[0|1]\fR (default: 0)
 .RS 4
-If we should not set the background to black. This is particularly useful when we have a terminal (typically in some windowing environment) with a background image or a transparent background \(en it will be visible in
+If we should not set the background to black\&. This is particularly useful when we have a terminal (typically in some windowing environment) with a background image or a transparent background \(en it will be visible in
 ELinks
 as well (but
 ELinks
-document color handling will still assume the background is black so if you have a bright background you might experience contrast problems). Note that this option makes sense only when colors are enabled.
+document color handling will still assume the background is black so if you have a bright background you might experience contrast problems)\&. Note that this option makes sense only when colors are enabled\&.
 .RE
 .PP
-terminal._template_.underline \fB[0|1]\fR (default: 0)
+terminal\&._template_\&.underline \fB[0|1]\fR (default: 0)
 .RS 4
-If we should use underline or enhance the color instead.
+If we should use underline or enhance the color instead\&.
 .RE
 .PP
-terminal._template_.charset \fB<codepage>\fR (default: System)
+terminal\&._template_\&.charset \fB<codepage>\fR (default: System)
 .RS 4
-Codepage of charset used for displaying content on terminal. 'System' stands for a codepage determined by a selected locale.
+Codepage of charset used for displaying content on terminal\&. \'System\' stands for a codepage determined by a selected locale\&.
 .RE
 .SS "ui (User interface)"
-User interface options.
-.sp
+User interface options\&.
 .PP
-ui.date_format \fB<str>\fR (default: "%b %e %H:%M")
+ui\&.date_format \fB<str>\fR (default: "%b %e %H:%M")
 .RS 4
-Date format to use in dialogs. See
-\fBstrftime\fR(3).
+Date format to use in dialogs\&. See
+\fBstrftime\fR(3)\&.
 .RE
 .PP
-ui.language \fB<language>\fR (default: "System")
+ui\&.language \fB<language>\fR (default: "System")
 .RS 4
-Language of user interface. 'System' means that the language will be extracted from the environment dynamically.
+Language of user interface\&. \'System\' means that the language will be extracted from the environment dynamically\&.
 .RE
 .PP
-ui.show_menu_bar_always \fB[0|1]\fR (default: 0)
+ui\&.show_menu_bar_always \fB[0|1]\fR (default: 0)
 .RS 4
-Always show menu bar on the screen.
+Always show menu bar on the screen\&.
 .RE
 .PP
-ui.show_status_bar \fB[0|1]\fR (default: 1)
+ui\&.show_status_bar \fB[0|1]\fR (default: 1)
 .RS 4
-Show status bar on the screen.
+Show status bar on the screen\&.
 .RE
 .PP
-ui.show_title_bar \fB[0|1]\fR (default: 1)
+ui\&.show_title_bar \fB[0|1]\fR (default: 1)
 .RS 4
-Show title bar on the screen.
+Show title bar on the screen\&.
 .RE
 .PP
-ui.startup_goto_dialog \fB[0|1]\fR (default: 1)
+ui\&.startup_goto_dialog \fB[0|1]\fR (default: 1)
 .RS 4
-Pop up goto dialog in newly created tabs when there's no homepage set. This means also showing goto dialog on startup.
+Pop up goto dialog in newly created tabs when there\'s no homepage set\&. This means also showing goto dialog on startup\&.
 .RE
 .PP
-ui.success_msgbox \fB[0|1]\fR (default: 1)
+ui\&.success_msgbox \fB[0|1]\fR (default: 1)
 .RS 4
 When you pressed a
 Save
-button in some manager, this option will make sure that a box confirming success of the operation will pop up.
+button in some manager, this option will make sure that a box confirming success of the operation will pop up\&.
 .RE
 .PP
-ui.window_title \fB[0|1]\fR (default: 1)
+ui\&.window_title \fB[0|1]\fR (default: 1)
 .RS 4
 Set the window title when running in a windowing environment in an
-\fBxterm\fR\-like terminal. This way the document's title is shown on the window titlebar.
+\fBxterm\fR\-like terminal\&. This way the document\'s title is shown on the window titlebar\&.
 .RE
-.SS "ui.clock (Clock)"
-Digital clock in the status bar.
-.sp
+.SS "ui\&.clock (Clock)"
+Digital clock in the status bar\&.
 .PP
-ui.clock.enable \fB[0|1]\fR (default: 0)
+ui\&.clock\&.enable \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to display a digital clock in the status bar.
+Whether to display a digital clock in the status bar\&.
 .RE
 .PP
-ui.clock.format \fB<str>\fR (default: "[%H:%M]")
+ui\&.clock\&.format \fB<str>\fR (default: "[%H:%M]")
 .RS 4
-Format string for the digital clock. See the
+Format string for the digital clock\&. See the
 \fBstrftime\fR(3)
-manpage for details.
+manpage for details\&.
 .RE
-.SS "ui.colors (Color settings)"
-Default user interface color settings.
+.SS "ui\&.colors (Color settings)"
+Default user interface color settings\&.
 .sp
-.SS "ui.colors.color (Color terminals)"
-Color settings for color terminal.
+.SS "ui\&.colors\&.color (Color terminals)"
+Color settings for color terminal\&.
 .sp
-.SS "ui.colors.color.mainmenu (Main menu bar)"
-Main menu bar colors.
+.SS "ui\&.colors\&.color\&.mainmenu (Main menu bar)"
+Main menu bar colors\&.
 .sp
-.SS "ui.colors.color.mainmenu.normal (Unselected main menu bar item)"
-Unselected main menu bar item colors.
-.sp
+.SS "ui\&.colors\&.color\&.mainmenu\&.normal (Unselected main menu bar item)"
+Unselected main menu bar item colors\&.
 .PP
-ui.colors.color.mainmenu.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.mainmenu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.mainmenu.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.mainmenu\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.mainmenu.selected (Selected main menu bar item)"
-Selected main menu bar item colors.
-.sp
+.SS "ui\&.colors\&.color\&.mainmenu\&.selected (Selected main menu bar item)"
+Selected main menu bar item colors\&.
 .PP
-ui.colors.color.mainmenu.selected.text \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.mainmenu\&.selected\&.text \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.mainmenu.selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.mainmenu\&.selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.mainmenu.hotkey (Hotkey)"
-Main menu hotkey colors.
+.SS "ui\&.colors\&.color\&.mainmenu\&.hotkey (Hotkey)"
+Main menu hotkey colors\&.
 .sp
-.SS "ui.colors.color.mainmenu.hotkey.normal (Unselected hotkey)"
-Main menu unselected hotkey colors.
-.sp
+.SS "ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal (Unselected hotkey)"
+Main menu unselected hotkey colors\&.
 .PP
-ui.colors.color.mainmenu.hotkey.normal.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.mainmenu.hotkey.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.mainmenu.hotkey.selected (Selected hotkey)"
-Main menu selected hotkey colors.
-.sp
+.SS "ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected (Selected hotkey)"
+Main menu selected hotkey colors\&.
 .PP
-ui.colors.color.mainmenu.hotkey.selected.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.mainmenu.hotkey.selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu (Menu bar)"
-Menu bar colors.
+.SS "ui\&.colors\&.color\&.menu (Menu bar)"
+Menu bar colors\&.
 .sp
-.SS "ui.colors.color.menu.normal (Unselected menu item)"
-Unselected menu item colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.normal (Unselected menu item)"
+Unselected menu item colors\&.
 .PP
-ui.colors.color.menu.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.menu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.menu\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu.selected (Selected menu item)"
-Selected menu item colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.selected (Selected menu item)"
+Selected menu item colors\&.
 .PP
-ui.colors.color.menu.selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.menu\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.menu\&.selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu.marked (Marked menu item)"
-Marked menu item colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.marked (Marked menu item)"
+Marked menu item colors\&.
 .PP
-ui.colors.color.menu.marked.text \fB<color|#rrggbb>\fR (default: red)
+ui\&.colors\&.color\&.menu\&.marked\&.text \fB<color|#rrggbb>\fR (default: red)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.marked.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.menu\&.marked\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu.hotkey (Hotkey)"
-Menu item hotkey colors.
+.SS "ui\&.colors\&.color\&.menu\&.hotkey (Hotkey)"
+Menu item hotkey colors\&.
 .sp
-.SS "ui.colors.color.menu.hotkey.normal (Unselected hotkey)"
-Menu item unselected hotkey colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.hotkey\&.normal (Unselected hotkey)"
+Menu item unselected hotkey colors\&.
 .PP
-ui.colors.color.menu.hotkey.normal.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.menu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.hotkey.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.menu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu.hotkey.selected (Selected hotkey)"
-Menu item selected hotkey colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.hotkey\&.selected (Selected hotkey)"
+Menu item selected hotkey colors\&.
 .PP
-ui.colors.color.menu.hotkey.selected.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.menu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.hotkey.selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.menu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.menu.frame (Menu frame)"
-Menu frame colors.
-.sp
+.SS "ui\&.colors\&.color\&.menu\&.frame (Menu frame)"
+Menu frame colors\&.
 .PP
-ui.colors.color.menu.frame.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.menu\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.menu.frame.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.menu\&.frame\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog (Dialog)"
-Dialog colors.
-.sp
-.SS "ui.colors.color.dialog.generic (Generic)"
-Generic dialog colors.
+.SS "ui\&.colors\&.color\&.dialog (Dialog)"
+Dialog colors\&.
 .sp
+.SS "ui\&.colors\&.color\&.dialog\&.generic (Generic)"
+Generic dialog colors\&.
 .PP
-ui.colors.color.dialog.generic.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.generic\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.generic.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.generic\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.frame (Frame)"
-Dialog frame colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.frame (Frame)"
+Dialog frame colors\&.
 .PP
-ui.colors.color.dialog.frame.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.frame.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.frame\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.scrollbar (Scrollbar)"
-Scrollbar colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.scrollbar (Scrollbar)"
+Scrollbar colors\&.
 .PP
-ui.colors.color.dialog.scrollbar.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.scrollbar\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.scrollbar.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.scrollbar\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.scrollbar\-selected (Selected scrollbar)"
-Scrollbar selected colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.scrollbar\-selected (Selected scrollbar)"
+Scrollbar selected colors\&.
 .PP
-ui.colors.color.dialog.scrollbar\-selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.scrollbar\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.scrollbar\-selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.dialog\&.scrollbar\-selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.title (Title)"
-Dialog title colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.title (Title)"
+Dialog title colors\&.
 .PP
-ui.colors.color.dialog.title.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.dialog\&.title\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.title.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.title\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.text (Text)"
-Dialog text colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.text (Text)"
+Dialog text colors\&.
 .PP
-ui.colors.color.dialog.text.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.text\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.text.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.text\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.checkbox (Checkbox)"
-Dialog checkbox colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.checkbox (Checkbox)"
+Dialog checkbox colors\&.
 .PP
-ui.colors.color.dialog.checkbox.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.dialog\&.checkbox\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.checkbox.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.checkbox\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.checkbox\-selected (Selected checkbox)"
-Dialog selected checkbox colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.checkbox\-selected (Selected checkbox)"
+Dialog selected checkbox colors\&.
 .PP
-ui.colors.color.dialog.checkbox\-selected.text \fB<color|#rrggbb>\fR (default: yellow)
+ui\&.colors\&.color\&.dialog\&.checkbox\-selected\&.text \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.checkbox\-selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.dialog\&.checkbox\-selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.checkbox\-label (Checkbox label)"
-Dialog checkbox label colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.checkbox\-label (Checkbox label)"
+Dialog checkbox label colors\&.
 .PP
-ui.colors.color.dialog.checkbox\-label.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.checkbox\-label\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.checkbox\-label.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.checkbox\-label\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.button (Button)"
-Dialog button colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.button (Button)"
+Dialog button colors\&.
 .PP
-ui.colors.color.dialog.button.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.button\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.button.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.button\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.button\-selected (Selected button)"
-Dialog selected button colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.button\-selected (Selected button)"
+Dialog selected button colors\&.
 .PP
-ui.colors.color.dialog.button\-selected.text \fB<color|#rrggbb>\fR (default: yellow)
+ui\&.colors\&.color\&.dialog\&.button\-selected\&.text \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.button\-selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.dialog\&.button\-selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.button\-shortcut (Button shortcut)"
-Dialog button colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.button\-shortcut (Button shortcut)"
+Dialog button colors\&.
 .PP
-ui.colors.color.dialog.button\-shortcut.text \fB<color|#rrggbb>\fR (default: yellow)
+ui\&.colors\&.color\&.dialog\&.button\-shortcut\&.text \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.button\-shortcut.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.button\-shortcut\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.button\-shortcut\-selected (Selected button shortcut)"
-Dialog selected button colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected (Selected button shortcut)"
+Dialog selected button colors\&.
 .PP
-ui.colors.color.dialog.button\-shortcut\-selected.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.button\-shortcut\-selected.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.field (Text field)"
-Dialog text field colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.field (Text field)"
+Dialog text field colors\&.
 .PP
-ui.colors.color.dialog.field.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.field\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.field.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.field\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.field\-text (Text field text)"
-Dialog field text colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.field\-text (Text field text)"
+Dialog field text colors\&.
 .PP
-ui.colors.color.dialog.field\-text.text \fB<color|#rrggbb>\fR (default: yellow)
+ui\&.colors\&.color\&.dialog\&.field\-text\&.text \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.field\-text.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.field\-text\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.meter (Meter)"
-Dialog meter colors.
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.meter (Meter)"
+Dialog meter colors\&.
 .PP
-ui.colors.color.dialog.meter.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.dialog\&.meter\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.meter.background \fB<color|#rrggbb>\fR (default: blue)
+ui\&.colors\&.color\&.dialog\&.meter\&.background \fB<color|#rrggbb>\fR (default: blue)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.dialog.shadow (Shadow)"
-Dialog shadow colors (see ui.shadows option).
-.sp
+.SS "ui\&.colors\&.color\&.dialog\&.shadow (Shadow)"
+Dialog shadow colors (see ui\&.shadows option)\&.
 .PP
-ui.colors.color.dialog.shadow.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.shadow\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.dialog.shadow.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.dialog\&.shadow\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.title (Title bar)"
-Title bar colors.
-.sp
-.SS "ui.colors.color.title.title\-bar (Generic title bar)"
-Generic title bar colors.
+.SS "ui\&.colors\&.color\&.title (Title bar)"
+Title bar colors\&.
 .sp
+.SS "ui\&.colors\&.color\&.title\&.title\-bar (Generic title bar)"
+Generic title bar colors\&.
 .PP
-ui.colors.color.title.title\-bar.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.title\&.title\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.title.title\-bar.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.title\&.title\-bar\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.title.title\-text (Title bar text)"
-Title bar text colors.
-.sp
+.SS "ui\&.colors\&.color\&.title\&.title\-text (Title bar text)"
+Title bar text colors\&.
 .PP
-ui.colors.color.title.title\-text.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.title\&.title\-text\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.title.title\-text.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.title\&.title\-text\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.status (Status bar)"
-Status bar colors.
-.sp
-.SS "ui.colors.color.status.status\-bar (Generic status bar)"
-Generic status bar colors.
+.SS "ui\&.colors\&.color\&.status (Status bar)"
+Status bar colors\&.
 .sp
+.SS "ui\&.colors\&.color\&.status\&.status\-bar (Generic status bar)"
+Generic status bar colors\&.
 .PP
-ui.colors.color.status.status\-bar.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.status\&.status\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.status.status\-bar.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.status\&.status\-bar\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.status.status\-text (Status bar text)"
-Status bar text colors.
-.sp
+.SS "ui\&.colors\&.color\&.status\&.status\-text (Status bar text)"
+Status bar text colors\&.
 .PP
-ui.colors.color.status.status\-text.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.status\&.status\-text\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.status.status\-text.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.status\&.status\-text\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.tabs (Tabs bar)"
-Tabs bar colors.
+.SS "ui\&.colors\&.color\&.tabs (Tabs bar)"
+Tabs bar colors\&.
 .sp
-.SS "ui.colors.color.tabs.unvisited (Unvisited tab)"
-Tab colors for tabs that have not been selected since they completed loading.
-.sp
+.SS "ui\&.colors\&.color\&.tabs\&.unvisited (Unvisited tab)"
+Tab colors for tabs that have not been selected since they completed loading\&.
 .PP
-ui.colors.color.tabs.unvisited.text \fB<color|#rrggbb>\fR (default: darkblue)
+ui\&.colors\&.color\&.tabs\&.unvisited\&.text \fB<color|#rrggbb>\fR (default: darkblue)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.tabs.unvisited.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.tabs\&.unvisited\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.tabs.normal (Unselected tab)"
-Unselected tab colors.
-.sp
+.SS "ui\&.colors\&.color\&.tabs\&.normal (Unselected tab)"
+Unselected tab colors\&.
 .PP
-ui.colors.color.tabs.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.tabs\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.tabs.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.tabs\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.tabs.loading (Loading tab)"
-Tab colors for tabs that are loading in the background.
-.sp
+.SS "ui\&.colors\&.color\&.tabs\&.loading (Loading tab)"
+Tab colors for tabs that are loading in the background\&.
 .PP
-ui.colors.color.tabs.loading.text \fB<color|#rrggbb>\fR (default: darkred)
+ui\&.colors\&.color\&.tabs\&.loading\&.text \fB<color|#rrggbb>\fR (default: darkred)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.tabs.loading.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.tabs\&.loading\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.tabs.selected (Selected tab)"
-Selected tab colors.
-.sp
+.SS "ui\&.colors\&.color\&.tabs\&.selected (Selected tab)"
+Selected tab colors\&.
 .PP
-ui.colors.color.tabs.selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.tabs\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.tabs.selected.background \fB<color|#rrggbb>\fR (default: green)
+ui\&.colors\&.color\&.tabs\&.selected\&.background \fB<color|#rrggbb>\fR (default: green)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.tabs.separator (Tab separator)"
-Tab separator colors.
-.sp
+.SS "ui\&.colors\&.color\&.tabs\&.separator (Tab separator)"
+Tab separator colors\&.
 .PP
-ui.colors.color.tabs.separator.text \fB<color|#rrggbb>\fR (default: brown)
+ui\&.colors\&.color\&.tabs\&.separator\&.text \fB<color|#rrggbb>\fR (default: brown)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.tabs.separator.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.color\&.tabs\&.separator\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.color.searched (Searched strings)"
-Searched string highlight colors.
-.sp
+.SS "ui\&.colors\&.color\&.searched (Searched strings)"
+Searched string highlight colors\&.
 .PP
-ui.colors.color.searched.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.color\&.searched\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.color.searched.background \fB<color|#rrggbb>\fR (default: lime)
+ui\&.colors\&.color\&.searched\&.background \fB<color|#rrggbb>\fR (default: lime)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono (Non\-color terminals)"
-Color settings for non\-color terminal.
-.sp
-.SS "ui.colors.mono.mainmenu (Main menu bar)"
-Main menu bar colors.
+.SS "ui\&.colors\&.mono (Non\-color terminals)"
+Color settings for non\-color terminal\&.
 .sp
-.SS "ui.colors.mono.mainmenu.normal (Unselected main menu bar item)"
-Unselected main menu bar item colors.
+.SS "ui\&.colors\&.mono\&.mainmenu (Main menu bar)"
+Main menu bar colors\&.
 .sp
+.SS "ui\&.colors\&.mono\&.mainmenu\&.normal (Unselected main menu bar item)"
+Unselected main menu bar item colors\&.
 .PP
-ui.colors.mono.mainmenu.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.mainmenu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.mainmenu.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.mainmenu\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.mainmenu.selected (Selected main menu bar item)"
-Selected main menu bar item colors.
-.sp
+.SS "ui\&.colors\&.mono\&.mainmenu\&.selected (Selected main menu bar item)"
+Selected main menu bar item colors\&.
 .PP
-ui.colors.mono.mainmenu.selected.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.mainmenu\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.mainmenu.selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.mainmenu\&.selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.mainmenu.hotkey (Hotkey)"
-Main menu hotkey colors.
-.sp
-.SS "ui.colors.mono.mainmenu.hotkey.normal (Unselected hotkey)"
-Main menu unselected hotkey colors.
+.SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey (Hotkey)"
+Main menu hotkey colors\&.
 .sp
+.SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal (Unselected hotkey)"
+Main menu unselected hotkey colors\&.
 .PP
-ui.colors.mono.mainmenu.hotkey.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.mainmenu.hotkey.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.mainmenu.hotkey.selected (Selected hotkey)"
-Main menu selected hotkey colors.
-.sp
+.SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected (Selected hotkey)"
+Main menu selected hotkey colors\&.
 .PP
-ui.colors.mono.mainmenu.hotkey.selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.mainmenu.hotkey.selected.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu (Menu bar)"
-Menu bar colors.
-.sp
-.SS "ui.colors.mono.menu.normal (Unselected menu item)"
-Unselected menu item colors.
+.SS "ui\&.colors\&.mono\&.menu (Menu bar)"
+Menu bar colors\&.
 .sp
+.SS "ui\&.colors\&.mono\&.menu\&.normal (Unselected menu item)"
+Unselected menu item colors\&.
 .PP
-ui.colors.mono.menu.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.menu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.menu\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu.selected (Selected menu item)"
-Selected menu item colors.
-.sp
+.SS "ui\&.colors\&.mono\&.menu\&.selected (Selected menu item)"
+Selected menu item colors\&.
 .PP
-ui.colors.mono.menu.selected.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.menu\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.menu\&.selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu.marked (Marked menu item)"
-Marked menu item colors.
-.sp
+.SS "ui\&.colors\&.mono\&.menu\&.marked (Marked menu item)"
+Marked menu item colors\&.
 .PP
-ui.colors.mono.menu.marked.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.menu\&.marked\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.marked.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.menu\&.marked\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu.hotkey (Hotkey)"
-Menu item hotkey colors.
+.SS "ui\&.colors\&.mono\&.menu\&.hotkey (Hotkey)"
+Menu item hotkey colors\&.
 .sp
-.SS "ui.colors.mono.menu.hotkey.normal (Unselected hotkey)"
-Menu item unselected hotkey colors.
-.sp
+.SS "ui\&.colors\&.mono\&.menu\&.hotkey\&.normal (Unselected hotkey)"
+Menu item unselected hotkey colors\&.
 .PP
-ui.colors.mono.menu.hotkey.normal.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.menu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.hotkey.normal.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.menu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu.hotkey.selected (Selected hotkey)"
-Menu item selected hotkey colors.
-.sp
+.SS "ui\&.colors\&.mono\&.menu\&.hotkey\&.selected (Selected hotkey)"
+Menu item selected hotkey colors\&.
 .PP
-ui.colors.mono.menu.hotkey.selected.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.menu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.hotkey.selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.menu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.menu.frame (Menu frame)"
-Menu frame colors.
-.sp
+.SS "ui\&.colors\&.mono\&.menu\&.frame (Menu frame)"
+Menu frame colors\&.
 .PP
-ui.colors.mono.menu.frame.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.menu\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.menu.frame.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.menu\&.frame\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog (Dialog)"
-Dialog colors.
+.SS "ui\&.colors\&.mono\&.dialog (Dialog)"
+Dialog colors\&.
 .sp
-.SS "ui.colors.mono.dialog.generic (Generic)"
-Generic dialog colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.generic (Generic)"
+Generic dialog colors\&.
 .PP
-ui.colors.mono.dialog.generic.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.generic\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.generic.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.generic\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.frame (Frame)"
-Dialog frame colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.frame (Frame)"
+Dialog frame colors\&.
 .PP
-ui.colors.mono.dialog.frame.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.frame.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.frame\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.scrollbar (Scrollbar)"
-Scrollbar colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.scrollbar (Scrollbar)"
+Scrollbar colors\&.
 .PP
-ui.colors.mono.dialog.scrollbar.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.scrollbar\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.scrollbar.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.scrollbar\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.scrollbar\-selected (Selected scrollbar)"
-Scrollbar selected colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected (Selected scrollbar)"
+Scrollbar selected colors\&.
 .PP
-ui.colors.mono.dialog.scrollbar\-selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.scrollbar\-selected.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.title (Title)"
-Dialog title colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.title (Title)"
+Dialog title colors\&.
 .PP
-ui.colors.mono.dialog.title.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.dialog\&.title\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.title.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.title\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.text (Text)"
-Dialog text colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.text (Text)"
+Dialog text colors\&.
 .PP
-ui.colors.mono.dialog.text.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.text\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.text.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.text\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.checkbox (Checkbox)"
-Dialog checkbox colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.checkbox (Checkbox)"
+Dialog checkbox colors\&.
 .PP
-ui.colors.mono.dialog.checkbox.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.checkbox\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.checkbox.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.checkbox\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.checkbox\-selected (Selected checkbox)"
-Dialog selected checkbox colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.checkbox\-selected (Selected checkbox)"
+Dialog selected checkbox colors\&.
 .PP
-ui.colors.mono.dialog.checkbox\-selected.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.checkbox\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.checkbox\-selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.checkbox\-selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.checkbox\-label (Checkbox label)"
-Dialog checkbox label colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.checkbox\-label (Checkbox label)"
+Dialog checkbox label colors\&.
 .PP
-ui.colors.mono.dialog.checkbox\-label.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.checkbox\-label\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.checkbox\-label.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.checkbox\-label\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.button (Button)"
-Dialog button colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.button (Button)"
+Dialog button colors\&.
 .PP
-ui.colors.mono.dialog.button.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.button\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.button.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.button\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.button\-selected (Selected button)"
-Dialog selected button colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.button\-selected (Selected button)"
+Dialog selected button colors\&.
 .PP
-ui.colors.mono.dialog.button\-selected.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.button\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.button\-selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.button\-selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.button\-shortcut (Button shortcut)"
-Dialog button colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.button\-shortcut (Button shortcut)"
+Dialog button colors\&.
 .PP
-ui.colors.mono.dialog.button\-shortcut.text \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.button\-shortcut\&.text \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.button\-shortcut.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.button\-shortcut\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.button\-shortcut\-selected (Selected button shortcut)"
-Dialog selected button colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected (Selected button shortcut)"
+Dialog selected button colors\&.
 .PP
-ui.colors.mono.dialog.button\-shortcut\-selected.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.button\-shortcut\-selected.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.field (Text field)"
-Dialog text field colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.field (Text field)"
+Dialog text field colors\&.
 .PP
-ui.colors.mono.dialog.field.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.dialog\&.field\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.field.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.field\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.field\-text (Text field text)"
-Dialog field text colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.field\-text (Text field text)"
+Dialog field text colors\&.
 .PP
-ui.colors.mono.dialog.field\-text.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.dialog\&.field\-text\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.field\-text.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.field\-text\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.meter (Meter)"
-Dialog meter colors.
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.meter (Meter)"
+Dialog meter colors\&.
 .PP
-ui.colors.mono.dialog.meter.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.dialog\&.meter\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.meter.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.meter\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.dialog.shadow (Shadow)"
-Dialog shadow colors (see ui.shadows option).
-.sp
+.SS "ui\&.colors\&.mono\&.dialog\&.shadow (Shadow)"
+Dialog shadow colors (see ui\&.shadows option)\&.
 .PP
-ui.colors.mono.dialog.shadow.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.shadow\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.dialog.shadow.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.dialog\&.shadow\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.title (Title bar)"
-Title bar colors.
+.SS "ui\&.colors\&.mono\&.title (Title bar)"
+Title bar colors\&.
 .sp
-.SS "ui.colors.mono.title.title\-bar (Generic title bar)"
-Generic title bar colors.
-.sp
+.SS "ui\&.colors\&.mono\&.title\&.title\-bar (Generic title bar)"
+Generic title bar colors\&.
 .PP
-ui.colors.mono.title.title\-bar.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.title\&.title\-bar\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.title.title\-bar.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.title\&.title\-bar\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.title.title\-text (Title bar text)"
-Title bar text colors.
-.sp
+.SS "ui\&.colors\&.mono\&.title\&.title\-text (Title bar text)"
+Title bar text colors\&.
 .PP
-ui.colors.mono.title.title\-text.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.title\&.title\-text\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.title.title\-text.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.title\&.title\-text\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.status (Status bar)"
-Status bar colors.
-.sp
-.SS "ui.colors.mono.status.status\-bar (Generic status bar)"
-Generic status bar colors.
+.SS "ui\&.colors\&.mono\&.status (Status bar)"
+Status bar colors\&.
 .sp
+.SS "ui\&.colors\&.mono\&.status\&.status\-bar (Generic status bar)"
+Generic status bar colors\&.
 .PP
-ui.colors.mono.status.status\-bar.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.status\&.status\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.status.status\-bar.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.status\&.status\-bar\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.status.status\-text (Status bar text)"
-Status bar text colors.
-.sp
+.SS "ui\&.colors\&.mono\&.status\&.status\-text (Status bar text)"
+Status bar text colors\&.
 .PP
-ui.colors.mono.status.status\-text.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.status\&.status\-text\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.status.status\-text.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.status\&.status\-text\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.tabs (Tabs bar)"
-Tabs bar colors.
-.sp
-.SS "ui.colors.mono.tabs.unvisited (Unvisited tab)"
-Tab colors for tabs that have not been selected since they completed loading.
+.SS "ui\&.colors\&.mono\&.tabs (Tabs bar)"
+Tabs bar colors\&.
 .sp
+.SS "ui\&.colors\&.mono\&.tabs\&.unvisited (Unvisited tab)"
+Tab colors for tabs that have not been selected since they completed loading\&.
 .PP
-ui.colors.mono.tabs.unvisited.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.tabs\&.unvisited\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.tabs.unvisited.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.tabs\&.unvisited\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.tabs.normal (Unselected tab)"
-Unselected tab colors.
-.sp
+.SS "ui\&.colors\&.mono\&.tabs\&.normal (Unselected tab)"
+Unselected tab colors\&.
 .PP
-ui.colors.mono.tabs.normal.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.tabs\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.tabs.normal.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.tabs\&.normal\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.tabs.loading (Loading tab)"
-Tab colors for tabs that are loading in the background.
-.sp
+.SS "ui\&.colors\&.mono\&.tabs\&.loading (Loading tab)"
+Tab colors for tabs that are loading in the background\&.
 .PP
-ui.colors.mono.tabs.loading.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.tabs\&.loading\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.tabs.loading.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.tabs\&.loading\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.tabs.selected (Selected tab)"
-Selected tab colors.
-.sp
+.SS "ui\&.colors\&.mono\&.tabs\&.selected (Selected tab)"
+Selected tab colors\&.
 .PP
-ui.colors.mono.tabs.selected.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.tabs\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.tabs.selected.background \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.tabs\&.selected\&.background \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.tabs.separator (Tab separator)"
-Tab separator colors.
-.sp
+.SS "ui\&.colors\&.mono\&.tabs\&.separator (Tab separator)"
+Tab separator colors\&.
 .PP
-ui.colors.mono.tabs.separator.text \fB<color|#rrggbb>\fR (default: gray)
+ui\&.colors\&.mono\&.tabs\&.separator\&.text \fB<color|#rrggbb>\fR (default: gray)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.tabs.separator.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.tabs\&.separator\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.colors.mono.searched (Searched strings)"
-Searched string highlight colors.
-.sp
+.SS "ui\&.colors\&.mono\&.searched (Searched strings)"
+Searched string highlight colors\&.
 .PP
-ui.colors.mono.searched.text \fB<color|#rrggbb>\fR (default: black)
+ui\&.colors\&.mono\&.searched\&.text \fB<color|#rrggbb>\fR (default: black)
 .RS 4
-Default text color.
+Default text color\&.
 .RE
 .PP
-ui.colors.mono.searched.background \fB<color|#rrggbb>\fR (default: white)
+ui\&.colors\&.mono\&.searched\&.background \fB<color|#rrggbb>\fR (default: white)
 .RS 4
-Default background color.
+Default background color\&.
 .RE
-.SS "ui.dialogs (Dialog settings)"
-Dialogs\-specific appearance and behaviour settings.
-.sp
+.SS "ui\&.dialogs (Dialog settings)"
+Dialogs\-specific appearance and behaviour settings\&.
 .PP
-ui.dialogs.listbox_min_height \fB<num>\fR (default: 10)
+ui\&.dialogs\&.listbox_min_height \fB<num>\fR (default: 10)
 .RS 4
-Minimal height of the listbox widget (used e.g. for bookmarks or global history).
+Minimal height of the listbox widget (used e\&.g\&. for bookmarks or global history)\&.
 .RE
 .PP
-ui.dialogs.shadows \fB[0|1]\fR (default: 0)
+ui\&.dialogs\&.shadows \fB[0|1]\fR (default: 0)
 .RS 4
-Make dialogs drop shadows (the shadows are solid, you can adjust their color by ui.colors.*.dialog.shadow). You may also want to eliminate the wide borders by adjusting
-\fIsetup.h\fR.
+Make dialogs drop shadows (the shadows are solid, you can adjust their color by ui\&.colors\&.*\&.dialog\&.shadow)\&. You may also want to eliminate the wide borders by adjusting
+\fIsetup\&.h\fR\&.
 .RE
 .PP
-ui.dialogs.underline_hotkeys \fB[0|1]\fR (default: 0)
+ui\&.dialogs\&.underline_hotkeys \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to underline hotkeys in menus to make them more visible. Requires that underlining is enabled for the terminal.
+Whether to underline hotkeys in menus to make them more visible\&. Requires that underlining is enabled for the terminal\&.
 .RE
 .PP
-ui.dialogs.underline_button_shortcuts \fB[0|1]\fR (default: 0)
+ui\&.dialogs\&.underline_button_shortcuts \fB[0|1]\fR (default: 0)
 .RS 4
-Whether to underline button shortcuts to make them more visible. Requires that underlining is enabled for the terminal.
+Whether to underline button shortcuts to make them more visible\&. Requires that underlining is enabled for the terminal\&.
 .RE
-.SS "ui.leds (LEDs)"
-LEDs (visual indicators) options.
-.sp
+.SS "ui\&.leds (LEDs)"
+LEDs (visual indicators) options\&.
 .PP
-ui.leds.enable \fB[0|1]\fR (default: 1)
+ui\&.leds\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
-Enable LEDs. These visual indicators will inform you about various states.
+Enable LEDs\&. These visual indicators will inform you about various states\&.
 .RE
-.SS "ui.sessions (Sessions)"
-Sessions settings.
-.sp
+.SS "ui\&.sessions (Sessions)"
+Sessions settings\&.
 .PP
-ui.sessions.auto_restore \fB[0|1]\fR (default: 0)
+ui\&.sessions\&.auto_restore \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically restore the session at start. This feature requires bookmark support.
+Automatically restore the session at start\&. This feature requires bookmark support\&.
 .RE
 .PP
-ui.sessions.auto_save \fB[0|1]\fR (default: 0)
+ui\&.sessions\&.auto_save \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically save the session when quitting. This feature requires bookmark support.
+Automatically save the session when quitting\&. This feature requires bookmark support\&.
 .RE
 .PP
-ui.sessions.auto_save_foldername \fB<str>\fR (default: "Auto saved session")
+ui\&.sessions\&.auto_save_foldername \fB<str>\fR (default: "Auto saved session")
 .RS 4
-Name of the bookmarks folder used for auto saving and restoring session. The name has to be unique. Any folders with the same name will be deleted. This only makes sense with bookmark support.
+Name of the bookmarks folder used for auto saving and restoring session\&. The name has to be unique\&. Any folders with the same name will be deleted\&. This only makes sense with bookmark support\&.
 .RE
 .PP
-ui.sessions.homepage \fB<str>\fR (default: "")
+ui\&.sessions\&.homepage \fB<str>\fR (default: "")
 .RS 4
-The URI to load either at startup time when no URI was given on the command line or when requested by the goto\-url\-home action. Set to "" if the environment variable
+The URI to load either at startup time when no URI was given on the command line or when requested by the goto\-url\-home action\&. Set to "" if the environment variable
 \fBWWW_HOME\fR
-should be used as homepage URI instead.
+should be used as homepage URI instead\&.
 .RE
 .PP
-ui.sessions.keep_session_active \fB[0|1]\fR (default: 0)
+ui\&.sessions\&.keep_session_active \fB[0|1]\fR (default: 0)
 .RS 4
-Keep the session active even if the last terminal exits.
+Keep the session active even if the last terminal exits\&.
 .RE
 .PP
-ui.sessions.snapshot \fB[0|1]\fR (default: 0)
+ui\&.sessions\&.snapshot \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically save a snapshot of all tabs periodically. This will periodically bookmark the tabs of each terminal in a separate folder for recovery after a crash.
+Automatically save a snapshot of all tabs periodically\&. This will periodically bookmark the tabs of each terminal in a separate folder for recovery after a crash\&.
 .sp
-This feature requires bookmark support.
+This feature requires bookmark support\&.
 .RE
-.SS "ui.tabs (Window tabs)"
-Window tabs settings.
-.sp
+.SS "ui\&.tabs (Window tabs)"
+Window tabs settings\&.
 .PP
-ui.tabs.show_bar \fB<num>\fR (default: 1)
+ui\&.tabs\&.show_bar \fB<num>\fR (default: 1)
 .RS 4
 Show tabs bar on the screen:
 .sp
@@ -2952,34 +2815,33 @@ Show tabs bar on the screen:
 .RE
 .RE
 .PP
-ui.tabs.top \fB[0|1]\fR (default: 0)
+ui\&.tabs\&.top \fB[0|1]\fR (default: 0)
 .RS 4
-Whether display tab bar at top like other browsers do.
+Whether display tab bar at top like other browsers do\&.
 .RE
 .PP
-ui.tabs.wraparound \fB[0|1]\fR (default: 1)
+ui\&.tabs\&.wraparound \fB[0|1]\fR (default: 1)
 .RS 4
-When moving right from the last tab, jump to the first one, and vice versa.
+When moving right from the last tab, jump to the first one, and vice versa\&.
 .RE
 .PP
-ui.tabs.confirm_close \fB[0|1]\fR (default: 0)
+ui\&.tabs\&.confirm_close \fB[0|1]\fR (default: 0)
 .RS 4
-When closing a tab show confirmation dialog.
+When closing a tab show confirmation dialog\&.
 .RE
-.SS "ui.timer (Timer options)"
-Timed action after certain interval of user inactivity. Someone can even find this useful, although you may not believe that.
-.sp
+.SS "ui\&.timer (Timer options)"
+Timed action after certain interval of user inactivity\&. Someone can even find this useful, although you may not believe that\&.
 .PP
-ui.timer.enable \fB<num>\fR (default: 0)
+ui\&.timer\&.enable \fB<num>\fR (default: 0)
 .RS 4
 Whether to enable the timer or not:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is don't count down anything
+\h'-04'\(bu\h'+03'0 is don\'t count down anything
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is count down, but don't show the timer
+\h'-04'\(bu\h'+03'1 is count down, but don\'t show the timer
 .RE
 .sp
 .RS 4
@@ -2987,19 +2849,19 @@ Whether to enable the timer or not:
 .RE
 .RE
 .PP
-ui.timer.duration \fB<num>\fR (default: 86400)
+ui\&.timer\&.duration \fB<num>\fR (default: 86400)
 .RS 4
-Inactivity timeout in seconds. The maximum of one day should be enough for just everyone (TM).
+Inactivity timeout in seconds\&. The maximum of one day should be enough for just everyone (TM)\&.
 .RE
 .PP
-ui.timer.action \fB<str>\fR (default: "")
+ui\&.timer\&.action \fB<str>\fR (default: "")
 .RS 4
-Keybinding action to be triggered when timer reaches zero.
+Keybinding action to be triggered when timer reaches zero\&.
 .RE
 .SH "SEE ALSO"
 \fBelinks\fR(1), \fBelinkskeys\fR(5)
 .sp
-.SH "REFERENCES"
+.SH "NOTES"
 .IP " 1." 4
 ELinks bug 153
 .RS 4

@@ -1,50 +1,49 @@
 .\"     Title: elinks
 .\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 07/01/2008
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 09/21/2008
 .\"    Manual: The Elinks text-browser
-.\"    Source: ELinks 0.12pre1
+.\"    Source: ELinks 0.12pre2
 .\"
-.TH "ELINKS" "1" "07/01/2008" "ELinks 0.12pre1" "The Elinks text\-browser"
+.TH "ELINKS" "1" "09/21/2008" "ELinks 0\&.12pre2" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-elinks \- lynx\-like alternative character mode WWW browser
+elinks \- lynx-like alternative character mode WWW browser
 .SH "SYNOPSIS"
 \fIelinks\fR [OPTION]\&... [URL]\&...
 .sp
 .SH "DESCRIPTION"
-\fIELinks\fR is a text mode WWW browser, supporting colors, table rendering, background downloading, menu driven configuration interface, tabbed browsing and slim code.
+\fIELinks\fR is a text mode WWW browser, supporting colors, table rendering, background downloading, menu driven configuration interface, tabbed browsing and slim code\&.
 .sp
-Frames are supported. You can have different file formats associated with external viewers. mailto: and telnet: are supported via external clients.
+Frames are supported\&. You can have different file formats associated with external viewers\&. mailto: and telnet: are supported via external clients\&.
 .sp
-ELinks can handle both local files and remote URLs. The main supported remote URL protocols are \fIHTTP\fR, \fIHTTPS\fR (with SSL support compiled in) and \fIFTP\fR. Additional protocol support exists for \fIBitTorrent\fR \fIfinger\fR, \fIGopher\fR, \fISMB\fR and \fINNTP\fR.
+ELinks can handle both local files and remote URLs\&. The main supported remote URL protocols are \fIHTTP\fR, \fIHTTPS\fR (with SSL support compiled in) and \fIFTP\fR\&. Additional protocol support exists for \fIBitTorrent\fR \fIfinger\fR, \fIGopher\fR, \fISMB\fR and \fINNTP\fR\&.
 .sp
-The homepage of \fIELinks\fR can be found at <http://elinks.cz/>, where the ELinks manual is also hosted.
+The homepage of \fIELinks\fR can be found at <http://elinks\&.cz/>, where the ELinks manual is also hosted\&.
 .sp
 .SH "OPTIONS"
-Most options can be set in the user interface or config file, so usually you do not need to care about them. Note that this list is roughly equivalent to the output of running ELinks with the option \-\-long\-help.
-.sp
+Most options can be set in the user interface or config file, so usually you do not need to care about them\&. Note that this list is roughly equivalent to the output of running ELinks with the option \-\-long\-help\&.
 .PP
 \fB\-anonymous\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Restricts
 ELinks
-so it can run on an anonymous account. Local file browsing, downloads, and modification of options will be disabled. Execution of viewers is allowed, but entries in the association table can't be added or modified.
+so it can run on an anonymous account\&. Local file browsing, downloads, and modification of options will be disabled\&. Execution of viewers is allowed, but entries in the association table can\'t be added or modified\&.
 .RE
 .PP
 \fB\-auto\-submit\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Automatically submit the first form in the given URLs.
+Automatically submit the first form in the given URLs\&.
 .RE
 .PP
 \fB\-base\-session\fR \fI<num>\fR (default: 0)
 .RS 4
 Used internally when opening
 ELinks
-instances in new windows. The ID maps to information that will be used when creating the new instance. You don't want to use it.
+instances in new windows\&. The ID maps to information that will be used when creating the new instance\&. You don\'t want to use it\&.
 .RE
 .PP
 \fB\-config\-dir\fR \fI<str>\fR (default: "")
@@ -52,126 +51,126 @@ instances in new windows. The ID maps to information that will be used when crea
 Path of the directory
 ELinks
 will read and write its config and runtime state files to instead of
-\fI~/.elinks\fR. If the path does not begin with a '/' it is assumed to be relative to your
+\fI~/\&.elinks\fR\&. If the path does not begin with a \'/\' it is assumed to be relative to your
 \fBHOME\fR
-directory.
+directory\&.
 .RE
 .PP
 \fB\-config\-dump\fR
 .RS 4
-Print a configuration file with options set to the built\-in defaults to stdout.
+Print a configuration file with options set to the built\-in defaults to stdout\&.
 .RE
 .PP
-\fB\-config\-file\fR \fI<str>\fR (default: "elinks.conf")
+\fB\-config\-file\fR \fI<str>\fR (default: "elinks\&.conf")
 .RS 4
-Name of the configuration file that all configuration options will be read from and written to. It should be relative to
-config\-dir.
+Name of the configuration file that all configuration options will be read from and written to\&. It should be relative to
+config\-dir\&.
 .RE
 .PP
 \fB\-config\-help\fR
 .RS 4
-Print help for configuration options and exit.
+Print help for configuration options and exit\&.
 .RE
 .PP
-\fB\-default\-mime\-type\fR (alias for mime.default_type)
+\fB\-default\-mime\-type\fR (alias for mime\&.default_type)
 .RS 4
-The default MIME type used for documents of unknown type.
+The default MIME type used for documents of unknown type\&.
 .RE
 .PP
 \fB\-default\-keys\fR \fI[0|1]\fR (default: 0)
 .RS 4
-When set, all keybindings from configuration files will be ignored. It forces use of default keybindings and will reset user\-defined ones on save.
+When set, all keybindings from configuration files will be ignored\&. It forces use of default keybindings and will reset user\-defined ones on save\&.
 .RE
 .PP
 \fB\-dump\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Print formatted plain\-text versions of given URLs to stdout.
+Print formatted plain\-text versions of given URLs to stdout\&.
 .RE
 .PP
-\fB\-dump\-charset\fR (alias for document.dump.codepage)
+\fB\-dump\-charset\fR (alias for document\&.dump\&.codepage)
 .RS 4
-Codepage used when formatting dump output.
+Codepage used when formatting dump output\&.
 .RE
 .PP
-\fB\-dump\-color\-mode\fR (alias for document.dump.color_mode)
+\fB\-dump\-color\-mode\fR (alias for document\&.dump\&.color_mode)
 .RS 4
 Color mode used with
-\-dump.
+\-dump\&.
 .RE
 .PP
-\fB\-dump\-width\fR (alias for document.dump.width)
+\fB\-dump\-width\fR (alias for document\&.dump\&.width)
 .RS 4
-Width of the dump output.
+Width of the dump output\&.
 .RE
 .PP
 \fB\-eval\fR
 .RS 4
-Specify configuration file directives on the command\-line which will be evaluated after all configuration files has been read. Example usage:
-\fB\-eval 'set protocol.file.allow_special_files = 1'\fR
+Specify configuration file directives on the command\-line which will be evaluated after all configuration files has been read\&. Example usage:
+\fB\-eval \'set protocol\&.file\&.allow_special_files = 1\'\fR
 .RE
 .PP
 \fB\-force\-html\fR
 .RS 4
 Makes
 ELinks
-assume documents of unknown types are HTML. Useful when using
+assume documents of unknown types are HTML\&. Useful when using
 ELinks
-as an external viewer from MUAs. This is equivalent to
-\fB\-default\-mime\-type\fR\fB text/html\fR.
+as an external viewer from MUAs\&. This is equivalent to
+\fB\-default\-mime\-type\fR\fB text/html\fR\&.
 .RE
 .PP
 \fB\-?\fR, \fB\-h\fR, \fB\-help\fR
 .RS 4
-Print usage help and exit.
+Print usage help and exit\&.
 .RE
 .PP
 \fB\-localhost\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Restricts
 ELinks
-to work offline and only connect to servers with local addresses (ie. 127.0.0.1). No connections to remote servers will be permitted.
+to work offline and only connect to servers with local addresses (ie\&. 127\&.0\&.0\&.1)\&. No connections to remote servers will be permitted\&.
 .RE
 .PP
 \fB\-long\-help\fR
 .RS 4
-Print detailed usage help and exit.
+Print detailed usage help and exit\&.
 .RE
 .PP
 \fB\-lookup\fR
 .RS 4
-Look up specified host and print all DNS resolved IP addresses.
+Look up specified host and print all DNS resolved IP addresses\&.
 .RE
 .PP
 \fB\-no\-connect\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Run
 ELinks
-as a separate instance instead of connecting to an existing instance. Note that normally no runtime state files (bookmarks, history, etc.) are written to the disk when this option is used. See also
-\-touch\-files.
+as a separate instance instead of connecting to an existing instance\&. Note that normally no runtime state files (bookmarks, history, etc\&.) are written to the disk when this option is used\&. See also
+\-touch\-files\&.
 .RE
 .PP
 \fB\-no\-home\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Disables creation and use of files in the user specific home configuration directory (\fI~/.elinks\fR). It forces default configuration values to be used and disables saving of runtime state files.
+Disables creation and use of files in the user specific home configuration directory (\fI~/\&.elinks\fR)\&. It forces default configuration values to be used and disables saving of runtime state files\&.
 .RE
 .PP
-\fB\-no\-numbering\fR (alias for document.dump.numbering)
+\fB\-no\-numbering\fR (alias for document\&.dump\&.numbering)
 .RS 4
-Prevents printing of link number in dump output. Note that this really affects only
-\-dump, nothing else.
+Prevents printing of link number in dump output\&. Note that this really affects only
+\-dump, nothing else\&.
 .RE
 .PP
-\fB\-no\-references\fR (alias for document.dump.references)
+\fB\-no\-references\fR (alias for document\&.dump\&.references)
 .RS 4
-Prevents printing of references (URIs) of document links in dump output. Note that this really affects only
-\-dump, nothing else.
+Prevents printing of references (URIs) of document links in dump output\&. Note that this really affects only
+\-dump, nothing else\&.
 .RE
 .PP
 \fB\-remote\fR
 .RS 4
 Control a remote
 ELinks
-instance by passing commands to it. The option takes an additional argument containing the method which should be invoked and any parameters that should be passed to it. For ease of use, the additional method argument can be omitted in which case any URL arguments will be opened in new tabs in the remote instance. Following is a list of the supported methods:
+instance by passing commands to it\&. The option takes an additional argument containing the method which should be invoked and any parameters that should be passed to it\&. For ease of use, the additional method argument can be omitted in which case any URL arguments will be opened in new tabs in the remote instance\&. Following is a list of the supported methods:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'\fBping()\fR: look for a remote instance
@@ -210,34 +209,34 @@ instance by passing commands to it. The option takes an additional argument cont
 .RS 4
 ID of session ring this
 ELinks
-session should connect to.
+session should connect to\&.
 ELinks
 works in so\-called session rings, whereby all instances of
 ELinks
-are interconnected and share state (cache, bookmarks, cookies, and so on). By default, all
+are interconnected and share state (cache, bookmarks, cookies, and so on)\&. By default, all
 ELinks
-instances connect to session ring 0. You can change that behaviour with this switch and form as many session rings as you want. Obviously, if the session\-ring with this number doesn't exist yet, it's created and this
+instances connect to session ring 0\&. You can change that behaviour with this switch and form as many session rings as you want\&. Obviously, if the session\-ring with this number doesn\'t exist yet, it\'s created and this
 ELinks
-instance will become the master instance (that usually doesn't matter for you as a user much). Note that you usually don't want to use this unless you're a developer and you want to do some testing \- if you want the
+instance will become the master instance (that usually doesn\'t matter for you as a user much)\&. Note that you usually don\'t want to use this unless you\'re a developer and you want to do some testing \- if you want the
 ELinks
 instances each running standalone, rather use the
 \-no\-connect
-command\-line option. Also note that normally no runtime state files are written to the disk when this option is used. See also
-\-touch\-files.
+command\-line option\&. Also note that normally no runtime state files are written to the disk when this option is used\&. See also
+\-touch\-files\&.
 .RE
 .PP
 \fB\-source\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Print given URLs in source form to stdout.
+Print given URLs in source form to stdout\&.
 .RE
 .PP
 \fB\-touch\-files\fR \fI[0|1]\fR (default: 0)
 .RS 4
-When enabled, runtime state files (bookmarks, history, etc.) are written to disk, even when
+When enabled, runtime state files (bookmarks, history, etc\&.) are written to disk, even when
 \-no\-connect
 or
 \-session\-ring
-is used. The option has no effect if not used in conjunction with any of these options.
+is used\&. The option has no effect if not used in conjunction with any of these options\&.
 .RE
 .PP
 \fB\-verbose\fR \fI<num>\fR (default: 1)
@@ -261,26 +260,26 @@ The verbose level controls what messages are shown at start up and while running
 .RS 4
 Print
 ELinks
-version information and exit.
+version information and exit\&.
 .RE
-Generated using output from ELinks version 0.12pre1.
+Generated using output from ELinks version 0\&.12pre2\&.
 .sp
 .SH "ENVIRONMENT VARIABLES"
 .PP
 COMSPEC, SHELL
 .RS 4
-The shell used for File \-> OS Shell on DOS/Windows and UNIX, respectively.
+The shell used for File \-> OS Shell on DOS/Windows and UNIX, respectively\&.
 .RE
 .PP
 EDITOR
 .RS 4
-The program to use for external editor (when editing textareas).
+The program to use for external editor (when editing textareas)\&.
 .RE
 .PP
 ELINKS_CONFDIR
 .RS 4
-The location of the directory containing configuration files. If not set the default is
-~/.elinks/.
+The location of the directory containing configuration files\&. If not set the default is
+~/\&.elinks/\&.
 .RE
 .PP
 ELINKS_TWTERM, LINKS_TWTERM
@@ -288,7 +287,7 @@ ELINKS_TWTERM, LINKS_TWTERM
 The command to run when selecting File \-> New window and if
 TWDISPLAY
 is defined (default
-twterm \-e).
+twterm \-e)\&.
 .RE
 .PP
 ELINKS_XTERM, LINKS_XTERM
@@ -296,110 +295,109 @@ ELINKS_XTERM, LINKS_XTERM
 The command to run when selecting File \-> New window and if
 DISPLAY
 is defined (default
-xterm \-e).
+xterm \-e)\&.
 .RE
 .PP
 FTP_PROXY, HTTP_PROXY, HTTPS_PROXY
 .RS 4
-The host to proxy the various protocol traffic through.
+The host to proxy the various protocol traffic through\&.
 .RE
 .PP
 NO_PROXY
 .RS 4
-A comma separated list of URLs which should not be proxied.
+A comma separated list of URLs which should not be proxied\&.
 .RE
 .PP
 HOME
 .RS 4
-The path to the users home directory. Used when expanding
-~/.
+The path to the users home directory\&. Used when expanding
+~/\&.
 .RE
 .PP
 WWW_HOME
 .RS 4
 Homepage location (as in
-\fBlynx\fR(1)).
+\fBlynx\fR(1))\&.
 .RE
 .SH "FILES"
-Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/.elinks/\fR. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument.css.stylesheet\fR option.
-.sp
+Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/\&.elinks/\fR\&. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument\&.css\&.stylesheet\fR option\&.
 .PP
-@sysconfdir@/elinks.conf
+@sysconfdir@/elinks\&.conf
 .RS 4
-Site\-wide configuration file.
+Site\-wide configuration file\&.
 .RE
 .PP
-~/.elinks/elinks.conf
+~/\&.elinks/elinks\&.conf
 .RS 4
-Per\-user config file, loaded after site\-wide configuration.
+Per\-user config file, loaded after site\-wide configuration\&.
 .RE
 .PP
-~/.elinks/bookmarks
+~/\&.elinks/bookmarks
 .RS 4
-Bookmarks file.
+Bookmarks file\&.
 .RE
 .PP
-~/.elinks/cookies
+~/\&.elinks/cookies
 .RS 4
-Cookies file.
+Cookies file\&.
 .RE
 .PP
-~/.elinks/exmodehist
+~/\&.elinks/exmodehist
 .RS 4
-Exmode history file.
+Exmode history file\&.
 .RE
 .PP
-~/.elinks/formhist
+~/\&.elinks/formhist
 .RS 4
-Form history file.
+Form history file\&.
 .RE
 .PP
-~/.elinks/globhist
+~/\&.elinks/globhist
 .RS 4
-History file containing most recently visited URLs.
+History file containing most recently visited URLs\&.
 .RE
 .PP
-~/.elinks/gotohist
+~/\&.elinks/gotohist
 .RS 4
-GoTo URL dialog history file.
+GoTo URL dialog history file\&.
 .RE
 .PP
-~/.elinks/hooks.{js,lua,pl,py,rb,scm}
+~/\&.elinks/hooks\&.{js,lua,pl,py,rb,scm}
 .RS 4
-Browser scripting hooks.
+Browser scripting hooks\&.
 .RE
 .PP
-~/.elinks/searchhist
+~/\&.elinks/searchhist
 .RS 4
-Search history file.
+Search history file\&.
 .RE
 .PP
-~/.elinks/socket
+~/\&.elinks/socket
 .RS 4
 Internal
 \fIELinks\fR
-socket for communication between its instances.
+socket for communication between its instances\&.
 .RE
 .PP
-~/.mailcap, /etc/mailcap
+~/\&.mailcap, /etc/mailcap
 .RS 4
-Mappings of MIME types to external handlers.
+Mappings of MIME types to external handlers\&.
 .RE
 .PP
-~/.mime.types, /etc/mime.types
+~/\&.mime\&.types, /etc/mime\&.types
 .RS 4
-Mappings of file extensions to MIME types.
+Mappings of file extensions to MIME types\&.
 .RE
 .SH "BUGS"
-Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch.org> or if you prefer enter them into the bug tracking system <http://bugzilla.elinks.cz/>. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks.cz/community.html>.
+Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch\&.org> or if you prefer enter them into the bug tracking system <http://bugzilla\&.elinks\&.cz/>\&. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks\&.cz/community\&.html>\&.
 .sp
 .SH "LICENSE"
-\fIELinks\fR is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License <http://www.gnu.org/copyleft/gpl.html> as published by the Free Software Foundation; version 2 of the License.
+\fIELinks\fR is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License <http://www\&.gnu\&.org/copyleft/gpl\&.html> as published by the Free Software Foundation; version 2 of the License\&.
 .sp
 .SH "AUTHORS"
-The \fILinks\fR browser \- on which \fIELinks\fR is based \- was written by Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>. \fIELinks\fR was written by Petr Baudis <pasky@ucw.cz>. See file AUTHORS in the source tree for a list of people contributing to this project.
+The \fILinks\fR browser \- on which \fIELinks\fR is based \- was written by Mikulas Patocka <mikulas@artax\&.karlin\&.mff\&.cuni\&.cz>\&. \fIELinks\fR was written by Petr Baudis <pasky@ucw\&.cz>\&. See file AUTHORS in the source tree for a list of people contributing to this project\&.
 .sp
-This manual page was written by Peter Gervai <grin@tolna.net>, using excerpts from a (yet?) unknown \fILinks\fR fan for the \fIDebian GNU/Linux system\fR (but may be used by others). Contributions from Francis A. Holop. Extended, clarified and made more up\-to\-date by Petr Baudis <pasky@ucw.cz>. Updated by Zas <zas@norz.org>. The conversion to Asciidoc and trimming was done by Jonas Fonseca <fonseca@diku.dk>.
+This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts from a (yet?) unknown \fILinks\fR fan for the \fIDebian GNU/Linux system\fR (but may be used by others)\&. Contributions from Francis A\&. Holop\&. Extended, clarified and made more up\-to\-date by Petr Baudis <pasky@ucw\&.cz>\&. Updated by Zas <zas@norz\&.org>\&. The conversion to Asciidoc and trimming was done by Jonas Fonseca <fonseca@diku\&.dk>\&.
 .sp
 .SH "SEE ALSO"
 \fBelinkskeys\fR(5), \fBelinks.conf\fR(5), \fBlinks\fR(1), \fBlynx\fR(1), \fBw3m\fR(1), \fBwget\fR(1)
