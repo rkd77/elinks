@@ -5,11 +5,10 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.12pre1.GIT now:
-------------------------
+ELinks 0.12pre2:
+----------------
 
-To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under "ELinks 0.11.4.GIT now" below.
+This release also included the changes listed under "ELinks 0.11.5" below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -219,10 +218,8 @@ Changes in the experimental SGML/DOM implementation:
 * enhancement: incremental parsing
 * and more.
 
-ELinks 0.11.4.GIT now:
-----------------------
-
-To be released as 0.11.5.
+ELinks 0.11.5:
+--------------
 
 * critical bug 1027 in user SMJS: make elinks.keymaps treat null and
   "none" as equivalent actions, avoiding a segfault
