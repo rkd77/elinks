@@ -8,7 +8,8 @@ file for details.
 ELinks 0.12pre2:
 ----------------
 
-This release also included the changes listed under "ELinks 0.11.5" below.
+Released on 2008-09-21.  This release also included the changes listed
+under "ELinks 0.11.5" below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -220,6 +221,8 @@ Changes in the experimental SGML/DOM implementation:
 
 ELinks 0.11.5:
 --------------
+
+Released on 2008-09-21.
 
 * critical bug 1027 in user SMJS: make elinks.keymaps treat null and
   "none" as equivalent actions, avoiding a segfault
