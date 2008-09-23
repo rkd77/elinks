@@ -22,7 +22,7 @@ unsigned char *get_ssl_connection_cipher(struct socket *socket);
 
 /* Internal type used in ssl module. */
 
-#ifdef CONFIG_OPENSSL
+#if defined(CONFIG_OPENSSL) || defined(CONFIG_NSS_COMPAT_OSSL)
 #define	ssl_t	SSL
 #elif defined(CONFIG_GNUTLS)
 #define	ssl_t	gnutls_session_t

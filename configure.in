@@ -952,12 +952,44 @@ gnutls_withval="$withval"
 
 if test "$enable_gnutls" = yes; then
 	disable_openssl=yes;
+	with_nss_compat_ossl=no;
 fi
 
 AC_ARG_WITH(openssl, [  --without-openssl       disable OpenSSL support],
 	    [if test "$with_openssl" = no;  then disable_openssl=yes; fi])
 AC_ARG_WITH(openssl, [[  --with-openssl[=DIR]    enable OpenSSL support (default)]])
 openssl_withval="$withval"
+
+AC_ARG_WITH(nss_compat_ossl, [[  --with-nss_compat_ossl[=DIR]
+                          NSS compatibility SSL libraries/include files]])
+
+# nss_compat_ossl
+if test -n "$with_nss_compat_ossl" && test "$with_nss_compat_ossl" != "no"; then
+	EL_SAVE_FLAGS
+	if test "$with_nss_compat_ossl" = yes; then
+		if pkg-config nss; then
+			CFLAGS="$CFLAGS_X `pkg-config --cflags nss`"
+			LIBS="$LIBS_X `pkg-config --libs nss`"
+		else
+			with_nss_compat_ossl=no
+		fi
+	else
+		# Without pkg-config, we'll kludge in some defaults
+		CFLAGS="$CFLAGS_X -I$with_nss_compat_ossl/include -I/usr/include/nss3 -I/usr/include/nspr4"
+		LIBS="$LIBS_X -L$with_nss_compat_ossl/lib -lssl3 -lsmime3 -lnss3 -lplds4 -lplc4 -lnspr4 -lpthread -ldl"
+	fi
+	AC_CHECK_HEADERS(nss_compat_ossl/nss_compat_ossl.h,, [with_nss_compat_ossl=no], [#define NSS_COMPAT_OSSL_H])
+	AC_CHECK_LIB(nss_compat_ossl, X509_free,, [with_nss_compat_ossl=no])
+
+	if test "$with_nss_compat_ossl" = "no"; then
+		EL_RESTORE_FLAGS
+	else
+		LIBS="$LIBS -lnss_compat_ossl"
+		EL_CONFIG(CONFIG_NSS_COMPAT_OSSL, [nss_compat_ossl])
+		disable_openssl="yes"
+		disable_gnutls="yes"
+	fi
+fi
 
 # ---- OpenSSL
 
@@ -1075,10 +1107,11 @@ AC_MSG_RESULT($cf_result)
 
 # Final SSL setup
 
-EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS], [SSL])
+EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS CONFIG_NSS_COMPAT_OSSL], [SSL])
 AC_SUBST(CONFIG_GNUTLS_OPENSSL_COMPAT)
 AC_SUBST(CONFIG_OPENSSL)
 AC_SUBST(CONFIG_GNUTLS)
+AC_SUBST(CONFIG_NSS_COMPAT_OSSL)
 
 #endif
 

@@ -6,6 +6,10 @@
 
 #ifdef CONFIG_OPENSSL
 #include <openssl/ssl.h>
+#define USE_OPENSSL
+#elif defined(CONFIG_NSS_COMPAT_OSSL)
+#include <nss_compat_ossl/nss_compat_ossl.h>
+#define USE_OPENSSL
 #elif defined(CONFIG_GNUTLS)
 #include <gnutls/gnutls.h>
 #else
@@ -26,7 +30,7 @@
 
 
 /* SSL errors */
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 #define	SSL_ERROR_WANT_READ2	9999 /* XXX */
 #define	SSL_ERROR_WANT_WRITE2	SSL_ERROR_WANT_WRITE
 #define	SSL_ERROR_SYSCALL2	SSL_ERROR_SYSCALL
@@ -40,7 +44,7 @@
 #define	SSL_ERROR_SYSCALL2	GNUTLS_E_PULL_ERROR
 #endif
 
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 
 #define ssl_do_connect(socket)		SSL_get_error(socket->ssl, SSL_connect(socket->ssl))
 #define ssl_do_write(socket, data, len)	SSL_write(socket->ssl, data, len)
@@ -126,7 +130,7 @@ ssl_connect(struct socket *socket)
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);
 
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	SSL_set_fd(socket->ssl, socket->fd);
 
 	if (get_opt_bool("connection.ssl.cert_verify", NULL))
@@ -137,8 +141,13 @@ ssl_connect(struct socket *socket)
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
 		unsigned char *client_cert;
 
-		client_cert = get_opt_str("connection.ssl.client_cert.file",
-		                          NULL);
+#ifdef CONFIG_NSS_COMPAT_OSSL
+		client_cert = get_opt_str(
+				"connection.ssl.client_cert.nickname", NULL);
+#else
+		client_cert = get_opt_str(
+				"connection.ssl.client_cert.file", NULL);
+#endif
 		if (!*client_cert) {
 			client_cert = getenv("X509_CLIENT_CERT");
 			if (client_cert && !*client_cert)
@@ -146,11 +155,17 @@ ssl_connect(struct socket *socket)
 		}
 
 		if (client_cert) {
+#ifdef CONFIG_NSS_COMPAT_OSSL
+			SSL_CTX_use_certificate_chain_file(
+					(SSL *) socket->ssl,
+					client_cert);
+#else
 			SSL_CTX *ctx = ((SSL *) socket->ssl)->ctx;
 
 			SSL_CTX_use_certificate_chain_file(ctx, client_cert);
 			SSL_CTX_use_PrivateKey_file(ctx, client_cert,
 						    SSL_FILETYPE_PEM);
+#endif
 		}
 	}
 
@@ -207,7 +222,7 @@ ssl_write(struct socket *socket, unsigned char *data, int len)
 	ssize_t wr = ssl_do_write(socket, data, len);
 
 	if (wr <= 0) {
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 		int err = SSL_get_error(socket->ssl, wr);
 #elif defined(CONFIG_GNUTLS)
 		int err = wr;
@@ -236,7 +251,7 @@ ssl_read(struct socket *socket, unsigned char *data, int len)
 	ssize_t rd = ssl_do_read(socket, data, len);
 
 	if (rd <= 0) {
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 		int err = SSL_get_error(socket->ssl, rd);
 #elif defined(CONFIG_GNUTLS)
 		int err = rd;

@@ -7,6 +7,10 @@
 #ifdef CONFIG_OPENSSL
 #include <openssl/ssl.h>
 #include <openssl/rand.h>
+#define USE_OPENSSL
+#elif defined(CONFIG_NSS_COMPAT_OSSL)
+#include <nss_compat_ossl/nss_compat_ossl.h>
+#define USE_OPENSSL
 #elif defined(CONFIG_GNUTLS)
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
@@ -35,7 +39,7 @@
 /* FIXME: As you can see, SSL is currently implemented in very, erm,
  * decentralized manner. */
 
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 
 #ifndef PATH_MAX
 #define	PATH_MAX	256 /* according to my /usr/include/bits/posix1_lim.h */
@@ -85,12 +89,26 @@ static struct option_info openssl_options[] = {
 		 N_("Enable or not the sending of X509 client certificates\n"
 		    "to servers which request them.")),
 
+#ifdef CONFIG_NSS_COMPAT_OSSL
+	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate nickname"),
+		"nickname", 0, "",
+		 N_("The nickname of the client certificate stored in NSS\n"
+		    "database. If this value is unset, the nickname from\n"
+		    "the X509_CLIENT_CERT variable is used instead. If you\n"
+		    "have a PKCS#12 file containing client certificate, you\n"
+		    "can import it into your NSS database with:\n"
+		    "$ pk12util -i mycert.p12 -d /path/to/database\n\n"
+		    "The NSS database location can be changed by SSL_DIR\n"
+		    "environment variable. The database can be also shared\n"
+		    "with Mozilla browsers.")),
+#else
 	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate File"),
 		"file", 0, "",
 		 N_("The location of a file containing the client certificate\n"
 		    "and unencrypted private key in PEM format. If unset, the\n"
 		    "file pointed to by the X509_CLIENT_CERT variable is used\n"
 		    "instead.")),
+#endif
 
 	NULL_OPTION_INFO,
 };
@@ -196,7 +214,7 @@ static struct module gnutls_module = struct_module(
 	/* done: */		done_gnutls
 );
 
-#endif /* CONFIG_OPENSSL or CONFIG_GNUTLS */
+#endif /* USE_OPENSSL or CONFIG_GNUTLS */
 
 static struct option_info ssl_options[] = {
 	INIT_OPT_TREE("connection", N_("SSL"),
@@ -207,7 +225,7 @@ static struct option_info ssl_options[] = {
 };
 
 static struct module *ssl_modules[] = {
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	&openssl_module,
 #elif defined(CONFIG_GNUTLS)
 	&gnutls_module,
@@ -228,7 +246,7 @@ struct module ssl_module = struct_module(
 int
 init_ssl_connection(struct socket *socket)
 {
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
 #elif defined(CONFIG_GNUTLS)
@@ -277,7 +295,7 @@ done_ssl_connection(struct socket *socket)
 	ssl_t *ssl = socket->ssl;
 
 	if (!ssl) return;
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	SSL_free(ssl);
 #elif defined(CONFIG_GNUTLS)
 	gnutls_deinit(*ssl);
@@ -294,7 +312,7 @@ get_ssl_connection_cipher(struct socket *socket)
 
 	if (!init_string(&str)) return NULL;
 
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	add_format_to_string(&str, "%ld-bit %s %s",
 		SSL_get_cipher_bits(ssl, NULL),
 		SSL_get_cipher_version(ssl),
@@ -318,7 +336,7 @@ get_ssl_connection_cipher(struct socket *socket)
 void
 random_nonce(unsigned char buf[], size_t size)
 {
-#ifdef CONFIG_OPENSSL
+#ifdef USE_OPENSSL
 	RAND_pseudo_bytes(buf, size);
 #elif defined(CONFIG_GNUTLS)
 	gcry_create_nonce(buf, size);

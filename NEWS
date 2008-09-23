@@ -48,6 +48,8 @@ Miscellaneous:
 * enhancement: Indicate backgrounded downloads using an unused led.
 * enhancement: Display the number of ECMAScript interpreters that have
   been allocated for documents in the Resources dialog.
+* Fedora enhancement 346861: Add support for nss_compat_ossl library
+  (OpenSSL replacement).
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0

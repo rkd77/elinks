@@ -5,10 +5,6 @@ We could add also support for:
  format conviently readable for me; however, they say it is damn fast and very
  easy to use)
 
-* NSS (http://www.mozilla.org/projects/security/pki/nss/ - it could be pretty
- widespread and nicely tested by mozilla, however it scares me, it looks to be
- pretty complex and already needing some certificates db generated etc)
-
 Possibly, we should drop support for native GnuTLS and use their OpenSSL
 wrapper instead, since I happen to feel very unsure about GnuTLS interface -
 OpenSSL is not much better, but we can steal code from other applications ;-).
