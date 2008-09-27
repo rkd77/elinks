@@ -418,3 +418,9 @@ bittorrent_protocol_handler(struct connection *conn)
 			      bittorrent_metainfo_callback, conn, 0);
 	done_uri(uri);
 }
+
+void
+bittorrent_peer_protocol_handler(struct connection *conn)
+{
+	abort_connection(conn, connection_state(S_BITTORRENT_PEER_URL));
+}

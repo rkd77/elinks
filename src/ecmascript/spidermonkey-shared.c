@@ -8,6 +8,8 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey-shared.h"
+#include "ecmascript/spidermonkey.h"
+#include "scripting/smjs/core.h"
 
 /** A shared runtime used for both user scripts (scripting/smjs/) and
  * scripts on web pages (ecmascript/spidermonkey/).
@@ -30,6 +32,38 @@ JSContext *spidermonkey_empty_context;
 /** A reference count for ::spidermonkey_runtime so that modules using
  * it can be initialized and shut down in arbitrary order.  */
 static int spidermonkey_runtime_refcount;
+
+static void
+error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
+{
+	/* We have three types of JSContexts.
+	 * - spidermonkey_empty_context never has anything defined or
+	 *   evaluated in it, so this error_reporter() should not be
+	 *   called for it.
+	 * - smjs_ctx for user scripts.
+	 * - many JSContexts for web scripts.
+	 * Check which one ctx is and call the appropriate function.
+	 *
+	 * Instead of the scheme used here, we could:
+	 * (a) make the private pointer of every context point to a
+	 *     structure of known type and put a function pointer or
+	 *     enum in that structure, or
+	 * (b) assume that JS_GetContextPrivate(smjs_ctx) == NULL.  */
+
+	assert(ctx != spidermonkey_empty_context);
+	if_assert_failed return;
+
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	if (ctx == smjs_ctx) {
+		smjs_error_reporter(ctx, message, report);
+		return;
+	}
+#endif
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	spidermonkey_error_reporter(ctx, message, report);
+#endif
+}
 
 /** Initialize ::spidermonkey_runtime and ::spidermonkey_empty_context.
  * If already initialized, just increment the reference count.
@@ -56,7 +90,13 @@ spidermonkey_runtime_addref(void)
 			JS_DestroyRuntime(spidermonkey_runtime);
 			spidermonkey_runtime = NULL;
 			JS_ShutDown();
+			return 0;
 		}
+
+		/* Although JS_SetErrorReporter gets the JSContext as
+		 * a parameter, it affects the whole JSRuntime.  */
+		JS_SetErrorReporter(spidermonkey_empty_context,
+				    error_reporter);
 	}
 
 	assert(spidermonkey_runtime);

@@ -33,8 +33,8 @@ alert_smjs_error(unsigned char *msg)
 	                       smjs_ses, msg);
 }
 
-static void
-error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
+void
+smjs_error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
 	unsigned char *strict, *exception, *warning, *error;
 	struct string msg;
@@ -127,13 +127,14 @@ init_smjs(struct module *module)
 {
 	if (!spidermonkey_runtime_addref()) return;
 
+	/* Set smjs_ctx immediately after creating the JSContext, so
+	 * that any error reports from SpiderMonkey are forwarded to
+	 * smjs_error_reporter().  */
 	smjs_ctx = JS_NewContext(spidermonkey_runtime, 8192);
 	if (!smjs_ctx) {
 		spidermonkey_runtime_release();
 		return;
 	}
-
-	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
 	smjs_init_global_object();
 

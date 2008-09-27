@@ -59,11 +59,11 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.12pre1.GIT now:
-------------------------
+ELinks 0.12pre2:
+----------------
 
-To be released as 0.12pre2, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under "ELinks 0.11.4.GIT now" below.
+Released on 2008-09-21.  This release also included the changes listed
+under "ELinks 0.11.5" below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -84,6 +84,8 @@ includes the changes listed under "ELinks 0.11.4.GIT now" below.
   SSL errors especially in HTTP POST requests using GnuTLS.
 * bugs 1007, 1041: Display unrecognized lines in FTP directory
   listings, instead of annoying the user with error messages.
+* Hurd bug 22861: Work around select() falsely reporting exceptions
+  in pipes.
 * minor bug 951: SpiderMonkey scripting objects used to prevent ELinks
   from removing files from the memory cache.
 * build bug 1044: Check whether -rdynamic works with libraries.
@@ -110,6 +112,9 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 * Global ECMAScript functions alert, open, and setTimeout again work
   with SEE.  ELinks 0.12pre1 was the first release that supported SEE
   at all.
+* build bug 1045: Fix ``void function cannot return value'' in
+  never_for_this_site() of src/formhist/formhist.c.  ELinks 0.12pre1
+  was the first release that had this bug.
 
 ELinks 0.12pre1:
 ----------------
@@ -268,10 +273,10 @@ Changes in the experimental SGML/DOM implementation:
 * enhancement: incremental parsing
 * and more.
 
-ELinks 0.11.4.GIT now:
-----------------------
+ELinks 0.11.5:
+--------------
 
-To be released as 0.11.5.
+Released on 2008-09-21.
 
 * critical bug 1027 in user SMJS: make elinks.keymaps treat null and
   "none" as equivalent actions, avoiding a segfault

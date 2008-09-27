@@ -1,11 +1,11 @@
 .\"     Title: elinkskeys
 .\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
-.\"      Date: 03/08/2008
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 09/27/2008
 .\"    Manual: ELinks keybindings
 .\"    Source: ELinks 0.13.GIT
 .\"
-.TH "ELINKSKEYS" "5" "03/08/2008" "ELinks 0.13.GIT" "ELinks keybindings"
+.TH "ELINKSKEYS" "5" "09/27/2008" "ELinks 0\&.13\&.GIT" "ELinks keybindings"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -13,10 +13,10 @@
 .SH "NAME"
 elinkskeys \- keybindings for ELinks
 .SH "SYNOPSIS"
-Information on how to configure keybinding and overview of the default keybindings.
+Information on how to configure keybinding and overview of the default keybindings\&.
 .sp
 .SH "DESCRIPTION"
-Key binding for elinks should be placed in the file ~/.elinks/elinks.conf. Note that any information regarding their format/structure may not be up\-to\-date. If you will discover that, please feed us with a patch.
+Key binding for elinks should be placed in the file ~/\&.elinks/elinks\&.conf\&. Note that any information regarding their format/structure may not be up\-to\-date\&. If you will discover that, please feed us with a patch\&.
 .sp
 Key binding statements are of the form:
 .sp
@@ -27,32 +27,31 @@ bind <keymap> <keystroke> = <action>
 .fi
 .RE
 where:
-.sp
 .PP
 <keymap>
 .RS 4
 is
 \fImain\fR,
 \fIedit\fR, or
-\fImenu\fR. The main keymap is used for general browsing. The edit keymap is used for editing text fields. The menu keymap is used for navigating menus.
+\fImenu\fR\&. The main keymap is used for general browsing\&. The edit keymap is used for editing text fields\&. The menu keymap is used for navigating menus\&.
 .RE
 .PP
 <keystroke>
 .RS 4
 is a case sensitive key, which you can prefix with
 \fICtrl\-\fR,
-\fIAlt\-\fR, or both.
+\fIAlt\-\fR, or both\&.
 \fICtrl\-\fR
-must be followed by an uppercase key. See below for a list of valid keys.
+must be followed by an uppercase key\&. See below for a list of valid keys\&.
 .RE
 .PP
 <action>
 .RS 4
-is what the key should do. The actions available are dependent on the keymap, and are listed separately below.
+is what the key should do\&. The actions available are dependent on the keymap, and are listed separately below\&.
 .RE
-All words/strings may all be quoted "like so". Backslashes are escape characters, even if not between quotes. Lines beginning with a hash character (#) are comments.
+All words/strings may all be quoted "like so"\&. Backslashes are escape characters, even if not between quotes\&. Lines beginning with a hash character (#) are comments\&.
 .sp
-Keys can be unbound just by binding them to the special \fInone\fR action. It may be of use if you accidentally type a key often.
+Keys can be unbound just by binding them to the special \fInone\fR action\&. It may be of use if you accidentally type a key often\&.
 .sp
 .SH "EXAMPLE BINDINGS"
 Some sample keybindings:
@@ -78,841 +77,841 @@ bind "main" "," = "lua\-console"
 .fi
 .RE
 .SH "KEYS"
-Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\fR, \fITab\fR, \fIEscape\fR, \fILeft\fR, \fIRight\fR, \fIUp\fR, \fIDown\fR, \fIInsert\fR, \fIDelete\fR, \fIHome\fR, \fIEnd\fR, \fIPageUp\fR, \fIPageDown\fR, \fIF1\fR to \fIF12\fR.
+Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\fR, \fITab\fR, \fIEscape\fR, \fILeft\fR, \fIRight\fR, \fIUp\fR, \fIDown\fR, \fIInsert\fR, \fIDelete\fR, \fIHome\fR, \fIEnd\fR, \fIPageUp\fR, \fIPageDown\fR, \fIF1\fR to \fIF12\fR\&.
 .sp
-Some keys will need to be quoted or escaped. For example, space can be written as " " (quote space quote), and the quote itself as \e" (backslash quote). Backslash can be written as \e\e (double backslash).
+Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \e" (backslash quote)\&. Backslash can be written as \e\e (double backslash)\&.
 .sp
 .SH "KEYMAP ACTIONS"
 .SS "MAIN ACTIONS"
 .PP
 abort\-connection
 .RS 4
-Abort connection.
+Abort connection\&.
 .RE
 .PP
 add\-bookmark
 .RS 4
-Add a new bookmark.
+Add a new bookmark\&.
 .RE
 .PP
 add\-bookmark\-link
 .RS 4
-Add a new bookmark using current link.
+Add a new bookmark using current link\&.
 .RE
 .PP
 add\-bookmark\-tabs
 .RS 4
-Bookmark all open tabs.
+Bookmark all open tabs\&.
 .RE
 .PP
 auth\-manager
 .RS 4
-Open authentication manager.
+Open authentication manager\&.
 .RE
 .PP
 backspace\-prefix
 .RS 4
-Backspace the last entered digit of the current prefix.
+Backspace the last entered digit of the current prefix\&.
 .RE
 .PP
 bookmark\-manager
 .RS 4
-Open bookmark manager.
+Open bookmark manager\&.
 .RE
 .PP
 cache\-manager
 .RS 4
-Open cache manager.
+Open cache manager\&.
 .RE
 .PP
 cache\-minimize
 .RS 4
-Free unused cache entries.
+Free unused cache entries\&.
 .RE
 .PP
 cookie\-manager
 .RS 4
-Open cookie manager.
+Open cookie manager\&.
 .RE
 .PP
 cookies\-load
 .RS 4
-Reload cookies file.
+Reload cookies file\&.
 .RE
 .PP
 copy\-clipboard
 .RS 4
-Copy text to clipboard.
+Copy text to clipboard\&.
 .RE
 .PP
 document\-info
 .RS 4
-Show information about the current page.
+Show information about the current page\&.
 .RE
 .PP
 download\-manager
 .RS 4
-Open download manager.
+Open download manager\&.
 .RE
 .PP
 exmode
 .RS 4
-Enter ex\-mode (command line).
+Enter ex\-mode (command line)\&.
 .RE
 .PP
 file\-menu
 .RS 4
-Open the File menu.
+Open the File menu\&.
 .RE
 .PP
 find\-next
 .RS 4
-Find the next occurrence of the current search text.
+Find the next occurrence of the current search text\&.
 .RE
 .PP
 find\-next\-back
 .RS 4
-Find the previous occurrence of the current search text.
+Find the previous occurrence of the current search text\&.
 .RE
 .PP
 forget\-credentials
 .RS 4
-Forget authentication credentials.
+Forget authentication credentials\&.
 .RE
 .PP
 formhist\-manager
 .RS 4
-Open form history manager.
+Open form history manager\&.
 .RE
 .PP
 frame\-external\-command
 .RS 4
-Pass URI of current frame to external command.
+Pass URI of current frame to external command\&.
 .RE
 .PP
 frame\-maximize
 .RS 4
-Maximize the current frame.
+Maximize the current frame\&.
 .RE
 .PP
 frame\-next
 .RS 4
-Move to the next frame.
+Move to the next frame\&.
 .RE
 .PP
 frame\-prev
 .RS 4
-Move to the previous frame.
+Move to the previous frame\&.
 .RE
 .PP
 goto\-url
 .RS 4
-Open "Go to URL" dialog box.
+Open "Go to URL" dialog box\&.
 .RE
 .PP
 goto\-url\-current
 .RS 4
-Open "Go to URL" dialog box containing the current URL.
+Open "Go to URL" dialog box containing the current URL\&.
 .RE
 .PP
 goto\-url\-current\-link
 .RS 4
-Open "Go to URL" dialog box containing the current link URL.
+Open "Go to URL" dialog box containing the current link URL\&.
 .RE
 .PP
 goto\-url\-home
 .RS 4
-Go to the homepage.
+Go to the homepage\&.
 .RE
 .PP
 header\-info
 .RS 4
-Show information about the current page protocol headers.
+Show information about the current page protocol headers\&.
 .RE
 .PP
 history\-manager
 .RS 4
-Open history manager.
+Open history manager\&.
 .RE
 .PP
 history\-move\-back
 .RS 4
-Return to the previous document in history.
+Return to the previous document in history\&.
 .RE
 .PP
 history\-move\-forward
 .RS 4
-Go forward in history.
+Go forward in history\&.
 .RE
 .PP
 jump\-to\-link
 .RS 4
-Jump to link.
+Jump to link\&.
 .RE
 .PP
 keybinding\-manager
 .RS 4
-Open keybinding manager.
+Open keybinding manager\&.
 .RE
 .PP
 kill\-backgrounded\-connections
 .RS 4
-Kill all backgrounded connections.
+Kill all backgrounded connections\&.
 .RE
 .PP
 link\-download
 .RS 4
-Download the current link.
+Download the current link\&.
 .RE
 .PP
 link\-download\-image
 .RS 4
-Download the current image.
+Download the current image\&.
 .RE
 .PP
 link\-download\-resume
 .RS 4
-Attempt to resume download of the current link.
+Attempt to resume download of the current link\&.
 .RE
 .PP
 link\-external\-command
 .RS 4
-Pass URI of current link to external command.
+Pass URI of current link to external command\&.
 .RE
 .PP
 link\-follow
 .RS 4
-Follow the current link.
+Follow the current link\&.
 .RE
 .PP
 link\-follow\-reload
 .RS 4
-Follow the current link, forcing reload of the target.
+Follow the current link, forcing reload of the target\&.
 .RE
 .PP
 link\-info
 .RS 4
-Show information about current link.
+Show information about current link\&.
 .RE
 .PP
 link\-menu
 .RS 4
-Open the link context menu.
+Open the link context menu\&.
 .RE
 .PP
 link\-form\-menu
 .RS 4
-Open the form fields menu.
+Open the form fields menu\&.
 .RE
 .PP
 lua\-console
 .RS 4
-Open a Lua console.
+Open a Lua console\&.
 .RE
 .PP
 mark\-goto
 .RS 4
-Go at a specified mark.
+Go at a specified mark\&.
 .RE
 .PP
 mark\-set
 .RS 4
-Set a mark.
+Set a mark\&.
 .RE
 .PP
 menu
 .RS 4
-Activate the menu.
+Activate the menu\&.
 .RE
 .PP
 move\-cursor\-down
 .RS 4
-Move cursor down.
+Move cursor down\&.
 .RE
 .PP
 move\-cursor\-left
 .RS 4
-Move cursor left.
+Move cursor left\&.
 .RE
 .PP
 move\-cursor\-line\-start
 .RS 4
-Move cursor to the start of the line.
+Move cursor to the start of the line\&.
 .RE
 .PP
 move\-cursor\-right
 .RS 4
-Move cursor right.
+Move cursor right\&.
 .RE
 .PP
 move\-cursor\-up
 .RS 4
-Move cursor up.
+Move cursor up\&.
 .RE
 .PP
 move\-document\-end
 .RS 4
-Move to the end of the document.
+Move to the end of the document\&.
 .RE
 .PP
 move\-document\-start
 .RS 4
-Move to the start of the document.
+Move to the start of the document\&.
 .RE
 .PP
 move\-link\-down
 .RS 4
-Move one link down.
+Move one link down\&.
 .RE
 .PP
 move\-link\-down\-line
 .RS 4
-Move to the next line with a link.
+Move to the next line with a link\&.
 .RE
 .PP
 move\-link\-left
 .RS 4
-Move one link left.
+Move one link left\&.
 .RE
 .PP
 move\-link\-left\-line
 .RS 4
-Move one link left or to the previous link.
+Move one link left or to the previous link\&.
 .RE
 .PP
 move\-link\-next
 .RS 4
-Move to the next link.
+Move to the next link\&.
 .RE
 .PP
 move\-link\-prev
 .RS 4
-Move to the previous link.
+Move to the previous link\&.
 .RE
 .PP
 move\-link\-right
 .RS 4
-Move one link right.
+Move one link right\&.
 .RE
 .PP
 move\-link\-right\-line
 .RS 4
-Move one link right or to the next link.
+Move one link right or to the next link\&.
 .RE
 .PP
 move\-link\-up
 .RS 4
-Move one link up.
+Move one link up\&.
 .RE
 .PP
 move\-link\-up\-line
 .RS 4
-Move to the previous line with a link.
+Move to the previous line with a link\&.
 .RE
 .PP
 move\-page\-down
 .RS 4
-Move downwards by a page.
+Move downwards by a page\&.
 .RE
 .PP
 move\-page\-up
 .RS 4
-Move upwards by a page.
+Move upwards by a page\&.
 .RE
 .PP
 open\-link\-in\-new\-tab
 .RS 4
-Open the current link in a new tab.
+Open the current link in a new tab\&.
 .RE
 .PP
 open\-link\-in\-new\-tab\-in\-background
 .RS 4
-Open the current link in a new tab in the background.
+Open the current link in a new tab in the background\&.
 .RE
 .PP
 open\-link\-in\-new\-window
 .RS 4
-Open the current link in a new window.
+Open the current link in a new window\&.
 .RE
 .PP
 open\-new\-tab
 .RS 4
-Open a new tab.
+Open a new tab\&.
 .RE
 .PP
 open\-new\-tab\-in\-background
 .RS 4
-Open a new tab in the background.
+Open a new tab in the background\&.
 .RE
 .PP
 open\-new\-window
 .RS 4
-Open a new window.
+Open a new window\&.
 .RE
 .PP
 open\-os\-shell
 .RS 4
-Open an OS shell.
+Open an OS shell\&.
 .RE
 .PP
 options\-manager
 .RS 4
-Open options manager.
+Open options manager\&.
 .RE
 .PP
 quit
 .RS 4
-Open a quit confirmation dialog box.
+Open a quit confirmation dialog box\&.
 .RE
 .PP
 really\-quit
 .RS 4
-Quit without confirmation.
+Quit without confirmation\&.
 .RE
 .PP
 redraw
 .RS 4
-Redraw the terminal.
+Redraw the terminal\&.
 .RE
 .PP
 reload
 .RS 4
-Reload the current page.
+Reload the current page\&.
 .RE
 .PP
 rerender
 .RS 4
-Re\-render the current page.
+Re\-render the current page\&.
 .RE
 .PP
 reset\-form
 .RS 4
-Reset form items to their initial values.
+Reset form items to their initial values\&.
 .RE
 .PP
 resource\-info
 .RS 4
-Show information about the currently used resources.
+Show information about the currently used resources\&.
 .RE
 .PP
 save\-as
 .RS 4
-Save the current document in source form.
+Save the current document in source form\&.
 .RE
 .PP
 save\-formatted
 .RS 4
-Save the current document in formatted form.
+Save the current document in formatted form\&.
 .RE
 .PP
 save\-options
 .RS 4
-Save options.
+Save options\&.
 .RE
 .PP
 save\-url\-as
 .RS 4
-Save URL as.
+Save URL as\&.
 .RE
 .PP
 scroll\-down
 .RS 4
-Scroll down.
+Scroll down\&.
 .RE
 .PP
 scroll\-left
 .RS 4
-Scroll left.
+Scroll left\&.
 .RE
 .PP
 scroll\-right
 .RS 4
-Scroll right.
+Scroll right\&.
 .RE
 .PP
 scroll\-up
 .RS 4
-Scroll up.
+Scroll up\&.
 .RE
 .PP
 search
 .RS 4
-Search for a text pattern.
+Search for a text pattern\&.
 .RE
 .PP
 search\-back
 .RS 4
-Search backwards for a text pattern.
+Search backwards for a text pattern\&.
 .RE
 .PP
 search\-typeahead
 .RS 4
-Search link text by typing ahead.
+Search link text by typing ahead\&.
 .RE
 .PP
 search\-typeahead\-link
 .RS 4
-Search link text by typing ahead.
+Search link text by typing ahead\&.
 .RE
 .PP
 search\-typeahead\-text
 .RS 4
-Search document text by typing ahead.
+Search document text by typing ahead\&.
 .RE
 .PP
 search\-typeahead\-text\-back
 .RS 4
-Search document text backwards by typing ahead.
+Search document text backwards by typing ahead\&.
 .RE
 .PP
 show\-term\-options
 .RS 4
-Show terminal options dialog.
+Show terminal options dialog\&.
 .RE
 .PP
 submit\-form
 .RS 4
-Submit form.
+Submit form\&.
 .RE
 .PP
 submit\-form\-reload
 .RS 4
-Submit form and reload.
+Submit form and reload\&.
 .RE
 .PP
 tab\-close
 .RS 4
-Close tab.
+Close tab\&.
 .RE
 .PP
 tab\-close\-all\-but\-current
 .RS 4
-Close all tabs but the current one.
+Close all tabs but the current one\&.
 .RE
 .PP
 tab\-external\-command
 .RS 4
-Pass URI of current tab to external command.
+Pass URI of current tab to external command\&.
 .RE
 .PP
 tab\-menu
 .RS 4
-Open the tab menu.
+Open the tab menu\&.
 .RE
 .PP
 tab\-move\-left
 .RS 4
-Move the current tab to the left.
+Move the current tab to the left\&.
 .RE
 .PP
 tab\-move\-right
 .RS 4
-Move the current tab to the right.
+Move the current tab to the right\&.
 .RE
 .PP
 tab\-next
 .RS 4
-Next tab.
+Next tab\&.
 .RE
 .PP
 tab\-prev
 .RS 4
-Previous tab.
+Previous tab\&.
 .RE
 .PP
 terminal\-resize
 .RS 4
-Open the terminal resize dialog.
+Open the terminal resize dialog\&.
 .RE
 .PP
 toggle\-css
 .RS 4
-Toggle rendering of page using CSS.
+Toggle rendering of page using CSS\&.
 .RE
 .PP
 toggle\-display\-images
 .RS 4
-Toggle displaying of links to images.
+Toggle displaying of links to images\&.
 .RE
 .PP
 toggle\-display\-tables
 .RS 4
-Toggle rendering of tables.
+Toggle rendering of tables\&.
 .RE
 .PP
 toggle\-document\-colors
 .RS 4
-Toggle usage of document specific colors.
+Toggle usage of document specific colors\&.
 .RE
 .PP
 toggle\-html\-plain
 .RS 4
-Toggle rendering page as HTML / plain text.
+Toggle rendering page as HTML / plain text\&.
 .RE
 .PP
 toggle\-mouse
 .RS 4
-Toggle mouse handling.
+Toggle mouse handling\&.
 .RE
 .PP
 toggle\-numbered\-links
 .RS 4
-Toggle displaying of links numbers.
+Toggle displaying of links numbers\&.
 .RE
 .PP
 toggle\-plain\-compress\-empty\-lines
 .RS 4
-Toggle plain renderer compression of empty lines.
+Toggle plain renderer compression of empty lines\&.
 .RE
 .PP
 toggle\-wrap\-text
 .RS 4
-Toggle wrapping of text.
+Toggle wrapping of text\&.
 .RE
 .PP
 view\-image
 .RS 4
-View the current image.
+View the current image\&.
 .RE
 .SS "EDIT ACTIONS"
 .PP
 auto\-complete
 .RS 4
-Attempt to auto\-complete the input.
+Attempt to auto\-complete the input\&.
 .RE
 .PP
 auto\-complete\-file
 .RS 4
-Attempt to auto\-complete a local file.
+Attempt to auto\-complete a local file\&.
 .RE
 .PP
 auto\-complete\-unambiguous
 .RS 4
-Attempt to unambiguously auto\-complete the input.
+Attempt to unambiguously auto\-complete the input\&.
 .RE
 .PP
 backspace
 .RS 4
-Delete character in front of the cursor.
+Delete character in front of the cursor\&.
 .RE
 .PP
 beginning\-of\-buffer
 .RS 4
-Go to the first line of the buffer.
+Go to the first line of the buffer\&.
 .RE
 .PP
 cancel
 .RS 4
-Cancel current state.
+Cancel current state\&.
 .RE
 .PP
 copy\-clipboard
 .RS 4
-Copy text to clipboard.
+Copy text to clipboard\&.
 .RE
 .PP
 cut\-clipboard
 .RS 4
-Cut text to clipboard.
+Cut text to clipboard\&.
 .RE
 .PP
 delete
 .RS 4
-Delete character under cursor.
+Delete character under cursor\&.
 .RE
 .PP
 down
 .RS 4
-Move cursor downwards.
+Move cursor downwards\&.
 .RE
 .PP
 end
 .RS 4
-Go to the end of the page/line.
+Go to the end of the page/line\&.
 .RE
 .PP
 end\-of\-buffer
 .RS 4
-Go to the last line of the buffer.
+Go to the last line of the buffer\&.
 .RE
 .PP
 enter
 .RS 4
-Follow the current link.
+Follow the current link\&.
 .RE
 .PP
 home
 .RS 4
-Go to the start of the page/line.
+Go to the start of the page/line\&.
 .RE
 .PP
 kill\-to\-bol
 .RS 4
-Delete to beginning of line.
+Delete to beginning of line\&.
 .RE
 .PP
 kill\-to\-eol
 .RS 4
-Delete to end of line.
+Delete to end of line\&.
 .RE
 .PP
 kill\-word\-back
 .RS 4
-Delete backwards to start of word.
+Delete backwards to start of word\&.
 .RE
 .PP
 left
 .RS 4
-Move the cursor left.
+Move the cursor left\&.
 .RE
 .PP
 move\-backward\-word
 .RS 4
-Move cursor before current word.
+Move cursor before current word\&.
 .RE
 .PP
 move\-forward\-word
 .RS 4
-Move cursor after current word.
+Move cursor after current word\&.
 .RE
 .PP
 next\-item
 .RS 4
-Move to the next item.
+Move to the next item\&.
 .RE
 .PP
 open\-external
 .RS 4
-Open in external editor.
+Open in external editor\&.
 .RE
 .PP
 paste\-clipboard
 .RS 4
-Paste text from the clipboard.
+Paste text from the clipboard\&.
 .RE
 .PP
 previous\-item
 .RS 4
-Move to the previous item.
+Move to the previous item\&.
 .RE
 .PP
 redraw
 .RS 4
-Redraw the terminal.
+Redraw the terminal\&.
 .RE
 .PP
 right
 .RS 4
-Move the cursor right.
+Move the cursor right\&.
 .RE
 .PP
 search\-toggle\-regex
 .RS 4
-Toggle regex matching (type\-ahead searching).
+Toggle regex matching (type\-ahead searching)\&.
 .RE
 .PP
 up
 .RS 4
-Move cursor upwards.
+Move cursor upwards\&.
 .RE
 .SS "MENU ACTIONS"
 .PP
 cancel
 .RS 4
-Cancel current state.
+Cancel current state\&.
 .RE
 .PP
 delete
 .RS 4
-Delete character under cursor.
+Delete character under cursor\&.
 .RE
 .PP
 down
 .RS 4
-Move cursor downwards.
+Move cursor downwards\&.
 .RE
 .PP
 end
 .RS 4
-Go to the end of the page/line.
+Go to the end of the page/line\&.
 .RE
 .PP
 enter
 .RS 4
-Follow the current link.
+Follow the current link\&.
 .RE
 .PP
 expand
 .RS 4
-Expand item.
+Expand item\&.
 .RE
 .PP
 home
 .RS 4
-Go to the start of the page/line.
+Go to the start of the page/line\&.
 .RE
 .PP
 left
 .RS 4
-Move the cursor left.
+Move the cursor left\&.
 .RE
 .PP
 mark\-item
 .RS 4
-Mark item.
+Mark item\&.
 .RE
 .PP
 next\-item
 .RS 4
-Move to the next item.
+Move to the next item\&.
 .RE
 .PP
 page\-down
 .RS 4
-Move downwards by a page.
+Move downwards by a page\&.
 .RE
 .PP
 page\-up
 .RS 4
-Move upwards by a page.
+Move upwards by a page\&.
 .RE
 .PP
 previous\-item
 .RS 4
-Move to the previous item.
+Move to the previous item\&.
 .RE
 .PP
 redraw
 .RS 4
-Redraw the terminal.
+Redraw the terminal\&.
 .RE
 .PP
 right
 .RS 4
-Move the cursor right.
+Move the cursor right\&.
 .RE
 .PP
 search
 .RS 4
-Search for a text pattern.
+Search for a text pattern\&.
 .RE
 .PP
 select
 .RS 4
-Select current highlighted item.
+Select current highlighted item\&.
 .RE
 .PP
 unexpand
 .RS 4
-Collapse item.
+Collapse item\&.
 .RE
 .PP
 up
 .RS 4
-Move cursor upwards.
+Move cursor upwards\&.
 .RE
 .SH "DEFAULT BINDINGS"
-The default bindings are shown below. Any bindings in ~/.elinks/elinks.conf will override these.
+The default bindings are shown below\&. Any bindings in ~/\&.elinks/elinks\&.conf will override these\&.
 .sp
 .SS "MAIN KEYS"
 .PP
@@ -941,7 +940,7 @@ Toggle displaying of links to images (\fItoggle\-display\-images\fR)
 Open a Lua console (\fIlua\-console\fR)
 .RE
 .PP
-\fI"."\fR
+\fI"\&."\fR
 .RS 4
 Toggle displaying of links numbers (\fItoggle\-numbered\-links\fR)
 .RE
@@ -1101,7 +1100,7 @@ Toggle wrapping of text (\fItoggle\-wrap\-text\fR)
 Scroll left (\fIscroll\-left\fR)
 .RE
 .PP
-\fI"'"\fR
+\fI"\'"\fR
 .RS 4
 Go at a specified mark (\fImark\-goto\fR)
 .RE
@@ -1678,7 +1677,7 @@ Move to the previous item (\fIprevious\-item\fR)
 Move cursor upwards (\fIup\fR)
 .RE
 .SH "AUTHOR"
-This manual page was finally written by Peter Wang (one and a half years after writing the binding code), using excerpts by David Mediavilla. You can thank Petr Baudis for the subtle requests for documentation. Updated by Zas. Moved to asciidoc format and cleaned up by Jonas Fonseca.
+This manual page was finally written by Peter Wang (one and a half years after writing the binding code), using excerpts by David Mediavilla\&. You can thank Petr Baudis for the subtle requests for documentation\&. Updated by Zas\&. Moved to asciidoc format and cleaned up by Jonas Fonseca\&.
 .sp
 .SH "SEE ALSO"
 \fBelinks\fR(1), \fBelinks.conf\fR(5)

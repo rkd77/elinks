@@ -271,12 +271,13 @@ enum bittorrent_state
 make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 				struct bittorrent_peer *peer_info)
 {
-	struct uri uri;
+	enum bittorrent_state result = BITTORRENT_STATE_OUT_OF_MEM;
+	struct uri *uri = NULL;
+	struct string uri_string = NULL_STRING;
 	struct bittorrent_peer_connection *peer;
-	unsigned char port[5];
 
 	peer = init_bittorrent_peer_connection(-1);
-	if (!peer) return BITTORRENT_STATE_OUT_OF_MEM;
+	if (!peer) goto out;
 
 	peer->local.initiater = 1;
 
@@ -284,10 +285,7 @@ make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 	peer->bittorrent = bittorrent;
 
 	peer->bitfield = init_bitfield(bittorrent->meta.pieces);
-	if (!peer->bitfield) {
-		done_bittorrent_peer_connection(peer);
-		return BITTORRENT_STATE_OUT_OF_MEM;
-	}
+	if (!peer->bitfield) goto out;
 
 	memcpy(peer->id, peer_info->id, sizeof(peer->id));
 
@@ -295,17 +293,28 @@ make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 	 * can extract the IP address and port number. */
 	/* FIXME: Rather change the make_connection() interface. This is an ugly
 	 * hack. */
-	/* FIXME: Set the ipv6 flag iff ... */
-	memset(&uri, 0, sizeof(uri));
-	uri.protocol = PROTOCOL_BITTORRENT;
-	uri.host     = peer_info->ip;
-	uri.hostlen  = strlen(peer_info->ip);
-	uri.port     = port;
-	uri.portlen  = snprintf(port, sizeof(port), "%u", peer_info->port);
+	if (!init_string(&uri_string)) goto out;
+	if (!add_format_to_string(&uri_string,
+#ifdef CONFIG_IPV6
+				  strchr(peer_info->ip, ':') ?
+				  "bittorrent-peer://[%s]:%u/" :
+#endif
+				  "bittorrent-peer://%s:%u/",
+				  peer_info->ip, (unsigned) peer_info->port))
+		goto out;
+	uri = get_uri(uri_string.source, 0);
+	if (!uri) goto out;
 
-	make_connection(peer->socket, &uri, send_bittorrent_peer_handshake, 1);
+	make_connection(peer->socket, uri, send_bittorrent_peer_handshake, 1);
+	result = BITTORRENT_STATE_OK;
 
-	return BITTORRENT_STATE_OK;
+out:
+	if (uri)
+		done_uri(uri);
+	done_string(&uri_string);
+	if (peer && result != BITTORRENT_STATE_OK)
+		done_bittorrent_peer_connection(peer);
+	return result;
 }
 
 

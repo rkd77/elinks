@@ -10,6 +10,9 @@
 #ifdef HAVE_SYS_SIGNAL_H
 #include <sys/signal.h>
 #endif
+#ifdef __GNU__ /* For GNU Hurd bug workaround in set_handlers() */
+#include <sys/stat.h> /* OS/2 needs this after sys/types.h */
+#endif
 #include <sys/types.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
@@ -146,6 +149,21 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 		fd, FD_SETSIZE);
 	if_assert_failed return;
 #endif
+#ifdef __GNU__
+	/* GNU Hurd pflocal bug <http://savannah.gnu.org/bugs/?22861>:
+	 * If ELinks does a select() where the initial exceptfds set
+	 * includes a pipe that is not listed in the other fd_sets,
+	 * then select() always reports an exception there.  That
+	 * makes Elinks think the pipe has failed and close it.
+	 * To work around this bug, do not monitor exceptions for
+	 * pipes on the Hurd.  */
+	if (error_func) {
+		struct stat st;
+
+		if (fstat(fd, &st) == 0 && S_ISFIFO(st.st_mode))
+			error_func = NULL;
+	}
+#endif /* __GNU__ */
 	threads[fd].read_func = read_func;
 	threads[fd].write_func = write_func;
 	threads[fd].error_func = error_func;
