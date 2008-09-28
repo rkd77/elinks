@@ -279,6 +279,7 @@ Julian Kinraid <jkinraid@clear.net.nz>
 	QNX-related fixes
 
 Kalle Olavi Niemitalo <kon@iki.fi>
+	I allow relicensing under "GNU GPL v2 or later", or preferably under the ISC licence ("and/or" version).  This applies only to code or other works that I intended to be added to ELinks.
 	Scanning PO files for accelerator conflicts (msgaccel)
 	UTF-8 and terminal support enhancements
 	Build system fixes
