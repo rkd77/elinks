@@ -5,6 +5,14 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.11.5.GIT now:
+----------------------
+
+To be released as 0.11.6.
+
+* critical bug 1053: fix crash if a download finishes after ELinks has
+  closed the terminal from which the download was started
+
 ELinks 0.11.5:
 --------------
 

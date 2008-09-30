@@ -220,6 +220,29 @@ destroy_downloads(struct session *ses)
 	}
 }
 
+void
+detach_downloads_from_terminal(struct terminal *term)
+{
+	struct file_download *file_download, *next;
+
+	assert(term != NULL);
+	if_assert_failed return;
+
+	foreachsafe (file_download, next, downloads) {
+		if (file_download->term != term)
+			continue;
+
+		if (!file_download->external_handler) {
+			file_download->term = NULL;
+			if (file_download->ses
+			    && file_download->ses->tab->term == term)
+				file_download->ses = NULL;
+			continue;
+		}
+
+		abort_download(file_download);
+	}
+}
 
 static void
 download_error_dialog(struct file_download *file_download, int saved_errno)
@@ -306,6 +329,9 @@ static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
 	struct terminal *term = file_download->term;
+
+	assert_terminal_ptr_not_dangling(term);
+	if_assert_failed term = file_download->term = NULL;
 
 	if (!term) {
 		/* No term here, so no beep. --Zas */

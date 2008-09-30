@@ -115,6 +115,7 @@ destroy_terminal(struct terminal *term)
 #ifdef CONFIG_BOOKMARKS
 	bookmark_auto_save_tabs(term);
 #endif
+	detach_downloads_from_terminal(term);
 
 	while (!list_empty(term->windows))
 		delete_window(term->windows.next);
@@ -196,6 +197,24 @@ unblock_terminal(struct terminal *term)
 	if (textarea_editor)	/* XXX */
 		textarea_edit(1, NULL, NULL, NULL, NULL);
 }
+
+#ifndef CONFIG_FASTMEM
+void
+assert_terminal_ptr_not_dangling(const struct terminal *suspect)
+{
+	struct terminal *term;
+
+	if (suspect == NULL)
+		return;
+
+	foreach (term, terminals) {
+		if (term == suspect)
+			return;
+	}
+
+	assertm(0, "Dangling pointer to struct terminal");
+}
+#endif /* !CONFIG_FASTMEM */
 
 void
 exec_on_terminal(struct terminal *term, unsigned char *path,

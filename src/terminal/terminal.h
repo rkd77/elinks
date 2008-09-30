@@ -150,6 +150,12 @@ void destroy_all_terminals(void);
 void exec_thread(unsigned char *, int);
 void close_handle(void *);
 
+#ifdef CONFIG_FASTMEM
+#define assert_terminal_ptr_not_dangling(suspect) ((void) 0)
+#else  /* assert() does something */
+void assert_terminal_ptr_not_dangling(const struct terminal *);
+#endif
+
 #define TERM_FN_TITLE	1
 #define TERM_FN_RESIZE	2
 
