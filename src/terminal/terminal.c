@@ -118,6 +118,7 @@ destroy_terminal(struct terminal *term)
 #ifdef CONFIG_BOOKMARKS
 	bookmark_auto_save_tabs(term);
 #endif
+	detach_downloads_from_terminal(term);
 
 	/* delete_window doesn't update term->current_tab, but it
 	   calls redraw_terminal, which requires term->current_tab
@@ -206,6 +207,23 @@ unblock_terminal(struct terminal *term)
 		textarea_edit(1, NULL, NULL, NULL, NULL);
 }
 
+#ifndef CONFIG_FASTMEM
+void
+assert_terminal_ptr_not_dangling(const struct terminal *suspect)
+{
+	struct terminal *term;
+
+	if (suspect == NULL)
+		return;
+
+	foreach (term, terminals) {
+		if (term == suspect)
+			return;
+	}
+
+	assertm(0, "Dangling pointer to struct terminal");
+}
+#endif /* !CONFIG_FASTMEM */
 
 static void
 exec_on_master_terminal(struct terminal *term,
