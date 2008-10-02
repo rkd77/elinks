@@ -88,6 +88,7 @@ Notable new features:
   in features.conf.
 * enhancement 844: SMB protocol using libsmbclient.  This replaces
   the smbclient-based code that was disabled in ELinks 0.11.2.
+  Unfortunately, Samba 3.2.0 and later seem GPLv2 incompatible.
 
 Incompatibilities:
 
