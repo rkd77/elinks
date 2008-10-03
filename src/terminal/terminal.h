@@ -181,6 +181,12 @@ void destroy_all_terminals(void);
 void exec_thread(unsigned char *, int);
 void close_handle(void *);
 
+#ifdef CONFIG_FASTMEM
+#define assert_terminal_ptr_not_dangling(suspect) ((void) 0)
+#else  /* assert() does something */
+void assert_terminal_ptr_not_dangling(const struct terminal *);
+#endif
+
 /** Operations that can be requested with do_terminal_function().
  * The interlink protocol passes these values as one byte in a
  * null-terminated string, so zero cannot be used.  */

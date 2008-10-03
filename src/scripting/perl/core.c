@@ -15,6 +15,12 @@
 #include "scripting/perl/core.h"
 #include "util/file.h"
 
+/* The configure script runs "perl -MExtUtils::Embed -e ccopts -e ldopts",
+ * which should output the location of the DynaLoader.a where this function
+ * is defined.  This prototype does not appear to be in any public header
+ * file of Perl.  */
+EXTERN_C void boot_DynaLoader (pTHX_ CV* cv);
+
 #define PERL_HOOKS_FILENAME	"hooks.pl"
 
 
@@ -65,6 +71,16 @@ cleanup_perl(struct module *module)
 #endif
 }
 
+/** Tell Perl about XSUBs that were linked into ELinks.  */
+static void
+xs_init(pTHX)
+{
+	/* DynaLoader is the only Perl module whose library is
+	 * statically linked into ELinks.  DynaLoader::bootstrap will
+	 * then load other libraries and register their XSUBs as
+	 * needed.  */
+	newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, __FILE__);
+}
 
 void
 init_perl(struct module *module)
@@ -97,9 +113,9 @@ init_perl(struct module *module)
 
 		perl_construct(my_perl);
 		if (hook_local)
-			err = perl_parse(my_perl, NULL, 2, local_argv, NULL);
+			err = perl_parse(my_perl, xs_init, 2, local_argv, NULL);
 		else if (hook_global)
-			err = perl_parse(my_perl, NULL, 2, global_argv, NULL);
+			err = perl_parse(my_perl, xs_init, 2, global_argv, NULL);
 #ifdef PERL_EXIT_DESTRUCT_END
 		PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
 #endif

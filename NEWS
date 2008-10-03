@@ -61,11 +61,20 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
+ELinks 0.12pre2.GIT now:
+------------------------
+
+To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
+includes the changes listed under ``ELinks 0.11.5.GIT'' below.
+
+* Perl scripts can use modules that dynamically load C libraries, like
+  XML::LibXML::SAX does.
+
 ELinks 0.12pre2:
 ----------------
 
 Released on 2008-09-21.  This release also included the changes listed
-under "ELinks 0.11.5" below.
+under ``ELinks 0.11.5'' below.
 
 * bug 954, enhancement 952: Keep track of ECMAScript form and input
   objects instead of constructing new ones on every access.  When the
@@ -121,8 +130,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 ELinks 0.12pre1:
 ----------------
 
-Released on 2008-07-01.  This release also included all the bug fixes
-of ELinks 0.11.4, but not the ones made in 0.11.4.GIT.
+Released on 2008-07-01.  This release also included the changes listed
+under ``ELinks 0.11.4'' below.
 
 Notable new features:
 
@@ -135,6 +144,7 @@ Notable new features:
   in features.conf.
 * enhancement 844: SMB protocol using libsmbclient.  This replaces
   the smbclient-based code that was disabled in ELinks 0.11.2.
+  Unfortunately, Samba 3.2.0 and later seem GPLv2 incompatible.
 
 Incompatibilities:
 
@@ -274,6 +284,14 @@ Changes in the experimental SGML/DOM implementation:
   '--!>' correctly
 * enhancement: incremental parsing
 * and more.
+
+ELinks 0.11.5.GIT now:
+----------------------
+
+To be released as 0.11.6.
+
+* critical bug 1053: fix crash if a download finishes after ELinks has
+  closed the terminal from which the download was started
 
 ELinks 0.11.5:
 --------------

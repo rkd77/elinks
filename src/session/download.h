@@ -115,6 +115,7 @@ void create_download_file(struct terminal *, unsigned char *, unsigned char **,
 
 void abort_all_downloads(void);
 void destroy_downloads(struct session *);
+void detach_downloads_from_terminal(struct terminal *);
 
 int setup_download_handler(struct session *, struct download *, struct cache_entry *, int);
 
