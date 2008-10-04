@@ -118,13 +118,19 @@ get_connections_transfering_count(void)
 	return i;
 }
 
+/** Check whether the pointer @a conn still points to a connection
+ * with the given @a id.  If the struct connection has already been
+ * freed, this returns 0.  By comparing connection.id, this function
+ * can usually detect even the case where a different connection has
+ * been created at the same address.  For that to work, the caller
+ * must save the connection.id before the connection can be deleted.  */
 static inline int
-connection_disappeared(struct connection *conn)
+connection_disappeared(struct connection *conn, unsigned int id)
 {
 	struct connection *c;
 
 	foreach (c, connection_queue)
-		if (conn == c && conn->id == c->id)
+		if (conn == c && id == c->id)
 			return 0;
 
 	return 1;
@@ -361,17 +367,19 @@ set_connection_state(struct connection *conn, struct connection_state state)
 
 	conn->state = state;
 	if (is_in_state(conn->state, S_TRANS)) {
+		const unsigned int id = conn->id;
+
 		if (upload_progress && upload_progress->timer == TIMER_ID_UNDEF) {
 			start_update_progress(upload_progress,
 				(void (*)(void *)) upload_stat_timer, conn);
 			upload_stat_timer(conn);
-			if (connection_disappeared(conn))
+			if (connection_disappeared(conn, id))
 				return;
 		}
 		if (progress->timer == TIMER_ID_UNDEF) {
 			start_update_progress(progress, (void (*)(void *)) stat_timer, conn);
 			update_connection_progress(conn);
-			if (connection_disappeared(conn))
+			if (connection_disappeared(conn, id))
 				return;
 		}
 
@@ -450,13 +458,15 @@ static void
 notify_connection_callbacks(struct connection *conn)
 {
 	struct connection_state state = conn->state;
+	unsigned int id = conn->id;
 	struct download *download, *next;
 
 	foreachsafe (download, next, conn->downloads) {
 		download->cached = conn->cached;
 		if (download->callback)
 			download->callback(download, download->data);
-		if (is_in_progress_state(state) && connection_disappeared(conn))
+		if (is_in_progress_state(state)
+		    && connection_disappeared(conn, id))
 			return;
 	}
 }
