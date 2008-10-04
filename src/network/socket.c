@@ -64,6 +64,16 @@ struct connect_info {
 	int ip_family;			 /* If non-zero, force to IP version. */
 };
 
+/** For detecting whether a struct socket has been deleted while a
+ * function was using it.  */
+struct socket_weak_ref {
+	LIST_HEAD(struct socket_weak_ref);
+
+	/** done_socket() resets this to NULL.  */
+	struct socket *socket;
+};
+
+static INIT_LIST_HEAD(socket_weak_refs); /* -> struct socket_weak_ref */
 
 /* To enable logging of tranfers, for debugging purposes. */
 #if 0
@@ -136,6 +146,8 @@ init_socket(void *conn, struct socket_operations *ops)
 void
 done_socket(struct socket *socket)
 {
+	struct socket_weak_ref *ref;
+
 	close_socket(socket);
 
 	if (socket->connect_info)
@@ -143,6 +155,11 @@ done_socket(struct socket *socket)
 
 	mem_free_set(&socket->read_buffer, NULL);
 	mem_free_set(&socket->write_buffer, NULL);
+
+	foreach(ref, socket_weak_refs) {
+		if (ref->socket == socket)
+			ref->socket = NULL;
+	}
 }
 
 void
@@ -904,12 +921,25 @@ void
 read_from_socket(struct socket *socket, struct read_buffer *buffer,
 		 enum connection_state state, socket_read_T done)
 {
+	const int is_buffer_new = (buffer != socket->read_buffer);
+	struct socket_weak_ref ref;
 	select_handler_T write_handler;
+
+	ref.socket = socket;
+	add_to_list(socket_weak_refs, &ref);
 
 	buffer->done = done;
 
 	socket->ops->set_timeout(socket, 0);
 	socket->ops->set_state(socket, state);
+
+	del_from_list(&ref);
+	if (ref.socket == NULL) {
+		/* socket->ops->set_state deleted the socket. */
+		if (is_buffer_new)
+			mem_free(buffer);
+		return;
+	}
 
 	if (socket->read_buffer && buffer != socket->read_buffer)
 		mem_free(socket->read_buffer);
