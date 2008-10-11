@@ -79,7 +79,7 @@ display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	else
 		text = widget_data->widget->info.checkbox.gid ? "( )" : "[ ]";
 
-	draw_dlg_text(term, dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
+	draw_dlg_text(dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
 
 	if (selected) {
 		set_dlg_cursor(term, dlg_data, pos->x + 1, pos->y, 1);

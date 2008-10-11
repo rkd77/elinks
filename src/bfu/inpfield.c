@@ -313,7 +313,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 			if (term->utf8_cp)
 				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF8 */
-			draw_dlg_text(term, dlg_data, widget_data->box.x, widget_data->box.y,
+			draw_dlg_text(dlg_data, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color);
 		} else {
 			struct box box;

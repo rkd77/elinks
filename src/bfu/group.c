@@ -88,14 +88,14 @@ dlg_format_group(struct dialog_data *dlg_data,
 								text,
 								label_length,
 								NULL);
-						draw_dlg_text(term, dlg_data, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text, lb, 0,
 							  color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_dlg_text(term, dlg_data, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text,
 							  label_length, 0,
@@ -114,12 +114,12 @@ dlg_format_group(struct dialog_data *dlg_data,
 								text,
 								label_length,
 								NULL);
-						draw_dlg_text(term, dlg_data, xpos, *y,
+						draw_dlg_text(dlg_data, xpos, *y,
 							  text, lb, 0, color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_dlg_text(term, dlg_data, xpos, *y,
+						draw_dlg_text(dlg_data, xpos, *y,
 							  text, label_length,
 							  0, color);
 					}

@@ -257,7 +257,7 @@ dlg_format_text_do(struct dialog_data *dlg_data,
 
 		assert(cells <= width && shift < width);
 
-		draw_dlg_text(term, dlg_data, x + shift, *y, text, line_width, 0, color);
+		draw_dlg_text(dlg_data, x + shift, *y, text, line_width, 0, color);
 	}
 }
 

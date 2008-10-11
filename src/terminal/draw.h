@@ -282,7 +282,7 @@ void draw_text(struct terminal *term, int x, int y,
 	       struct color_pair *color);
 
 /** Draws text for dialogs. */
-void draw_dlg_text(struct terminal *term, struct dialog_data *dlg_data, int x, int y,
+void draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 	  unsigned char *text, int length,
 	  enum screen_char_attr attr, struct color_pair *color);
 
