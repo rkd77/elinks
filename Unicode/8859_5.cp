@@ -1,5 +1,17 @@
 ISO 8859-5
 "ISO-8859-5", "iso8859-5", "8859-5", "ISO_8859-5:1988", "iso-ir-144", "ISO_8859-5", "cyrillic", "csISOLatinCyrillic", "ISO8859_5"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-5-1999.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #	Name:             ISO 8859-5:1999 to Unicode
 #	Unicode version:  3.0

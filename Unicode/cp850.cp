@@ -1,13 +1,25 @@
 CP 850
 "cp850", "850", "IBM850", "csPC850Multilingual"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP850.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #    Name:     cp850_DOSLatin1 to Unicode table
 #    Unicode version: 2.0
 #    Table version: 2.00
 #    Table format:  Format A
 #    Date:          04/24/96
-#    Authors:       Lori Brownell <loribr@microsoft.com>
-#                   K.D. Chang    <a-kchang@microsoft.com>
+#    Contact: Shawn.Steele@microsoft.com
+#                   
 #    General notes: none
 #
 #    Format: Three tab-separated columns
@@ -273,3 +285,4 @@ CP 850
 0xfd	0x00b2	#SUPERSCRIPT TWO
 0xfe	0x25a0	#BLACK SQUARE
 0xff	0x00a0	#NO-BREAK SPACE
+

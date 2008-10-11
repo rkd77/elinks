@@ -1,5 +1,17 @@
 ISO 8859-10
 "ISO-8859-10", "8859-10", "ISO_8859-10:1992", "ISO-IR-157", "LATIN6", "L6", "csISOLatin6", "ISO8859-10"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-10-1998.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #	Name:             ISO/IEC 8859-10:1998 to Unicode
 #	Unicode version:  3.0

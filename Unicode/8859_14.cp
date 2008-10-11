@@ -1,12 +1,24 @@
 ISO 8859-14
 "ISO-8859-14", "8859-14", "ISO_8859-14", "ISO_8859-14:1998", "ISO-IR-199", "LATIN8", "L8"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-14-1998.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #	Name:             ISO/IEC 8859-14:1998 to Unicode
 #	Unicode version:  3.0
 #	Table version:    1.0
 #	Table format:     Format A
 #	Date:             1999 July 27
-#	Authors:          Markus Kuhn <mkuhn@acm.org>
+#	Authors:          Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>
 #			  Ken Whistler <kenw@sybase.com>
 #
 #	Copyright (c) 1998 - 1999 Unicode, Inc.  All Rights reserved.

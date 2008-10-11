@@ -1,5 +1,17 @@
 Window$ 1250
 "windows-1250", "windows1250", "1250", "cp1250", "MS-EE"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1250.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #    Name:     cp1250 to Unicode table
 #    Unicode version: 2.0
@@ -7,7 +19,7 @@ Window$ 1250
 #    Table format:  Format A
 #    Date:          04/15/98
 #
-#    Contact:       cpxlate@microsoft.com
+#    Contact:       Shawn.Steele@microsoft.com
 #
 #    General notes: none
 #

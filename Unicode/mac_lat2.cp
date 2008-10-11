@@ -1,13 +1,27 @@
 Mac latin 2
 "x-mac-ce", "mac-ce", "maclatin2", "10029", "cp10029"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/MAC/LATIN2.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.  (There was a similar mapping at
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/CENTEURO.TXT
+# but that one lacked control characters.)
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #    Name:     cp10029_MacLatin2 to Unicode table
 #    Unicode version: 2.0
 #    Table version: 2.00
 #    Table format:  Format A
 #    Date:          04/24/96
-#    Authors:       Lori Brownell <loribr@microsoft.com>
-#                   K.D. Chang    <a-kchang@microsoft.com>
+#    Contact: Shawn.Steele@microsoft.com
+#                   
 #    General notes: none
 #
 #    Format: Three tab-separated columns
@@ -274,3 +288,4 @@ Mac latin 2
 0xFE	0x0122	#LATIN CAPITAL LETTER G WITH CEDILLA
 0xFF	0x02C7	#CARON
 
+
