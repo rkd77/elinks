@@ -30,7 +30,7 @@ update_hierbox_browser(struct hierbox_browser *browser)
 	struct hierbox_dialog_list_item *item;
 
 	foreach (item, browser->dialogs) {
-		redraw_from_window(item->dlg_data->win->next);
+		redraw_windows(REDRAW_WINDOW_AND_FRONT, item->dlg_data->win);
 	}
 }
 

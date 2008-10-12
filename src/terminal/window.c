@@ -18,36 +18,35 @@
 
 
 void
-redraw_from_window(struct window *win)
+redraw_windows(enum windows_to_redraw which, struct window *win)
 {
 	struct terminal *term = win->term;
 	struct term_event ev;
-	struct window *end = (struct window *) &term->windows;
-
-	if (term->redrawing != TREDRAW_READY) return;
-
-	set_redraw_term_event(&ev, term->width, term->height);
-	term->redrawing = TREDRAW_BUSY;
-	for (win = win->prev; win != end; win = win->prev) {
-		if (!inactive_tab(win))
-			win->handler(win, &ev);
-	}
-	term->redrawing = TREDRAW_READY;
-}
-
-void
-redraw_below_window(struct window *win)
-{
-	struct terminal *term = win->term;
-	struct term_event ev;
-	struct window *end = win;
+	struct window *end;
 	enum term_redrawing_state saved_redraw_state = term->redrawing;
 
-	if (term->redrawing == TREDRAW_DELAYED) return;
+	switch (which) {
+	case REDRAW_IN_FRONT_OF_WINDOW:
+		win = win->prev;
+		/* fall through */
+	case REDRAW_WINDOW_AND_FRONT:
+		end = (struct window *) &term->windows;
+		if (term->redrawing != TREDRAW_READY) return;
+		term->redrawing = TREDRAW_BUSY;
+		break;
+	case REDRAW_BEHIND_WINDOW:
+		end = win;
+		win = (struct window *) term->windows.prev;
+		if (term->redrawing == TREDRAW_DELAYED) return;
+		term->redrawing = TREDRAW_DELAYED;
+		break;
+	default:
+		ERROR("invalid enum windows_to_redraw: which==%d", (int) which);
+		return;
+	}
 
 	set_redraw_term_event(&ev, term->width, term->height);
-	term->redrawing = TREDRAW_DELAYED;
-	for (win = term->windows.prev; win != end; win = win->prev) {
+	for (; win != end; win = win->prev) {
 		if (!inactive_tab(win))
 			win->handler(win, &ev);
 	}

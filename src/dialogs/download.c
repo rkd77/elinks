@@ -135,7 +135,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 			  && (show_meter || is_in_state(download->state, S_RESUME)));
 #endif
 
-	redraw_below_window(dlg_data->win);
+	redraw_windows(REDRAW_BEHIND_WINDOW, dlg_data->win);
 	file_download->dlg_data = dlg_data;
 
 	if (!msg) return;

@@ -432,7 +432,7 @@ format_and_display_text(struct widget_data *widget_data,
 			height, 0);
 
 	display_text(dlg_data, widget_data);
-	redraw_from_window(dlg_data->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, dlg_data->win);
 }
 
 static widget_handler_status_T

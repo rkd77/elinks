@@ -126,7 +126,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 
 	update_all_widgets(dlg_data);
 
-	redraw_from_window(dlg_data->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, dlg_data->win);
 }
 
 static void
@@ -206,7 +206,7 @@ select_widget(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	dlg_data->selected_widget_id = widget_data - dlg_data->widgets_data;
 
 	if (check_range(dlg_data, widget_data)) {
-		redraw_from_window(dlg_data->win);
+		redraw_windows(REDRAW_WINDOW_AND_FRONT, dlg_data->win);
 		return;
 	}
 
@@ -249,13 +249,13 @@ cycle_widget_focus(struct dialog_data *dlg_data, int direction)
 		 && dlg_data->selected_widget_id != prev_selected);
 
 	if (check_range(dlg_data, selected_widget(dlg_data))) {
-		redraw_from_window(dlg_data->win);
+		redraw_windows(REDRAW_WINDOW_AND_FRONT, dlg_data->win);
 		return;
 	}
 
 	display_widget(dlg_data, previously_selected_widget);
 	display_widget(dlg_data, selected_widget(dlg_data));
-	redraw_from_window(dlg_data->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, dlg_data->win);
 }
 
 static void

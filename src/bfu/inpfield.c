@@ -719,7 +719,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 display_field:
 	display_widget(dlg_data, widget_data);
-	redraw_from_window(dlg_data->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, dlg_data->win);
 	return EVENT_PROCESSED;
 }
 
