@@ -99,9 +99,25 @@ struct dialog_data {
 	struct dialog *dlg;
 	struct memory_list *ml;
 
+	/** Size and location of the dialog box, excluding the drop shadow.
+	 * This includes the outer border and the frame.
+	 * The coordinates are relative to the terminal.  */
 	struct box box;
+
+	/** Size and location of the widget area and the inner border.
+	 * This is the area in which widgets can be drawn.
+	 * The frame of the dialog box is drawn around this area,
+	 * and the outer border is around the frame.
+	 * The coordinates are relative to the terminal.  */
 	struct box real_box;
+
+	/** Vertical scrolling of the widget area of the dialog box.
+	 * Widget Y screen coordinate = widget_data.box.y - dialog_data.y.
+	 * Initially, this is 0 and the coordinate system of the widget area
+	 * matches the coordinate system of the terminal.
+	 * Horizontal scrolling of dialog boxes has not been implemented.  */
 	int y;
+
 	int number_of_widgets;
 	int selected_widget_id;
 	struct term_event *term_event;
