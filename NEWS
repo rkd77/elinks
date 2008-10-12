@@ -48,6 +48,8 @@ Miscellaneous:
 * enhancement: Indicate backgrounded downloads using an unused led.
 * enhancement: Display the number of ECMAScript interpreters that have
   been allocated for documents in the Resources dialog.
+* enhancement: Scrolling the entire contents of dialog boxes.
+  Especially useful for multi-file BitTorrent downloads.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
