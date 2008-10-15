@@ -1,6 +1,35 @@
 Window$ 1252
 "windows-1252", "1252"
 
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1252.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
+#
+#    Name:     cp1252 to Unicode table
+#    Unicode version: 2.0
+#    Table version: 2.01
+#    Table format:  Format A
+#    Date:          04/15/98
+#
+#    Contact:       Shawn.Steele@microsoft.com
+#
+#    General notes: none
+#
+#    Format: Three tab-separated columns
+#        Column #1 is the cp1252 code (in hex)
+#        Column #2 is the Unicode (in hex as 0xXXXX)
+#        Column #3 is the Unicode name (follows a comment sign, '#')
+#
+#    The entries are in cp1252 order
+#
 0x00	0x0000	#NULL
 0x01	0x0001	#START OF HEADING
 0x02	0x0002	#START OF TEXT
@@ -130,6 +159,7 @@ Window$ 1252
 0x7E	0x007E	#TILDE
 0x7F	0x007F	#DELETE
 0x80	0x20AC	#EURO SIGN
+0x81	      	#UNDEFINED
 0x82	0x201A	#SINGLE LOW-9 QUOTATION MARK
 0x83	0x0192	#LATIN SMALL LETTER F WITH HOOK
 0x84	0x201E	#DOUBLE LOW-9 QUOTATION MARK
@@ -141,7 +171,10 @@ Window$ 1252
 0x8A	0x0160	#LATIN CAPITAL LETTER S WITH CARON
 0x8B	0x2039	#SINGLE LEFT-POINTING ANGLE QUOTATION MARK
 0x8C	0x0152	#LATIN CAPITAL LIGATURE OE
+0x8D	      	#UNDEFINED
 0x8E	0x017D	#LATIN CAPITAL LETTER Z WITH CARON
+0x8F	      	#UNDEFINED
+0x90	      	#UNDEFINED
 0x91	0x2018	#LEFT SINGLE QUOTATION MARK
 0x92	0x2019	#RIGHT SINGLE QUOTATION MARK
 0x93	0x201C	#LEFT DOUBLE QUOTATION MARK
@@ -154,6 +187,7 @@ Window$ 1252
 0x9A	0x0161	#LATIN SMALL LETTER S WITH CARON
 0x9B	0x203A	#SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
 0x9C	0x0153	#LATIN SMALL LIGATURE OE
+0x9D	      	#UNDEFINED
 0x9E	0x017E	#LATIN SMALL LETTER Z WITH CARON
 0x9F	0x0178	#LATIN CAPITAL LETTER Y WITH DIAERESIS
 0xA0	0x00A0	#NO-BREAK SPACE
@@ -194,7 +228,7 @@ Window$ 1252
 0xC3	0x00C3	#LATIN CAPITAL LETTER A WITH TILDE
 0xC4	0x00C4	#LATIN CAPITAL LETTER A WITH DIAERESIS
 0xC5	0x00C5	#LATIN CAPITAL LETTER A WITH RING ABOVE
-0xC6	0x00C6	#LATIN CAPITAL LIGATURE AE
+0xC6	0x00C6	#LATIN CAPITAL LETTER AE
 0xC7	0x00C7	#LATIN CAPITAL LETTER C WITH CEDILLA
 0xC8	0x00C8	#LATIN CAPITAL LETTER E WITH GRAVE
 0xC9	0x00C9	#LATIN CAPITAL LETTER E WITH ACUTE
@@ -226,7 +260,7 @@ Window$ 1252
 0xE3	0x00E3	#LATIN SMALL LETTER A WITH TILDE
 0xE4	0x00E4	#LATIN SMALL LETTER A WITH DIAERESIS
 0xE5	0x00E5	#LATIN SMALL LETTER A WITH RING ABOVE
-0xE6	0x00E6	#LATIN SMALL LIGATURE AE
+0xE6	0x00E6	#LATIN SMALL LETTER AE
 0xE7	0x00E7	#LATIN SMALL LETTER C WITH CEDILLA
 0xE8	0x00E8	#LATIN SMALL LETTER E WITH GRAVE
 0xE9	0x00E9	#LATIN SMALL LETTER E WITH ACUTE

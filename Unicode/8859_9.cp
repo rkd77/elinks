@@ -1,5 +1,17 @@
 ISO 8859-9
 "ISO-8859-9", "iso8859-9", "8859-9", "ISO_8859-9:1989", "ISO-IR-148", "LATIN5", "L5", "csISOLatin5", "ISO8859_9"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-9-1999.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #	Name:             ISO/IEC 8859-9:1999 to Unicode
 #	Unicode version:  3.0

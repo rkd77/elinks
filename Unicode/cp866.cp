@@ -1,13 +1,25 @@
 CP 866
 "cp866", "866", "IBM866", "csIBM866"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP866.TXT
+# on 2008-10-05, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
+#
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
 #
 #    Name:     cp866_DOSCyrillicRussian to Unicode table
 #    Unicode version: 2.0
 #    Table version: 2.00
 #    Table format:  Format A
 #    Date:          04/24/96
-#    Authors:       Lori Brownell <loribr@microsoft.com>
-#                   K.D. Chang    <a-kchang@microsoft.com>
+#    Contact: Shawn.Steele@microsoft.com
+#                   
 #    General notes: none
 #
 #    Format: Three tab-separated columns
@@ -274,3 +286,4 @@ CP 866
 0xfe	0x25a0	#BLACK SQUARE
 0xff	0x00a0	#NO-BREAK SPACE
 
+

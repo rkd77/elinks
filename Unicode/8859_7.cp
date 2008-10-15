@@ -1,14 +1,26 @@
 ISO 8859-7
 "ISO-8859-7", "iso8859-7", "8859-7", "iso-ir-126", "elot-928", "ISO_8859-7:1987", "ECMA-118", "ELOT_928", "GREEK8", "GREEK", "csISOLatinGreek", "ISO8859_7"
+
+# ----------------------------------------------------------------------
+# The following data was downloaded from
+# http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-2003.txt
+# on 2008-10-07, so it is a Unicode Data File covered by the Unicode
+# copyright and permission notice in the COPYING file of ELinks,
+# regardless of any terms shown below.
 #
-#	Name:             ISO 8859-7:1987 to Unicode
-#	Unicode version:  3.0
-#	Table version:    1.0
+# This file differs from the original in the following ways:
+# - Added this comment, blank lines around it, and charset names above it.
+# ----------------------------------------------------------------------
+
+#
+#	Name:             ISO 8859-7:2003 to Unicode
+#	Unicode version:  4.0
+#	Table version:    2.0
 #	Table format:     Format A
-#	Date:             1999 July 27
+#	Date:             2003-Nov-12
 #	Authors:          Ken Whistler <kenw@sybase.com>
 #
-#	Copyright (c) 1991-1999 Unicode, Inc.  All Rights reserved.
+#	Copyright (c) 1991-2003 Unicode, Inc.  All Rights reserved.
 #
 #	This file is provided as-is by Unicode, Inc. (The Unicode Consortium).
 #	No claims are made as to fitness for any particular purpose.  No
@@ -27,10 +39,11 @@ ISO 8859-7
 #	General notes:
 #
 #	This table contains the data the Unicode Consortium has on how
-#       ISO 8859-7:1987 characters map into Unicode.
+#       ISO 8859-7:2003 characters map into Unicode.
 #
 #	ISO 8859-7:1987 is equivalent to ISO-IR-126, ELOT 928,
-#	and ECMA 118.
+#	and ECMA 118. ISO 8859-7:2003 adds two currency signs 
+#	and one other character not in the earlier standard.
 #
 #	Format:  Three tab-separated columns
 #		 Column #1 is the ISO 8859-7 code (in hex as 0xXX)
@@ -45,12 +58,14 @@ ISO 8859-7
 #	Remap 0xA1 to U+2018 (instead of 0x02BD) to match text of 8859-7
 #	Remap 0xA2 to U+2019 (instead of 0x02BC) to match text of 8859-7
 #
-#	Updated versions of this file may be found in:
-#		<ftp://ftp.unicode.org/Public/MAPPINGS/>
+#	2.0 version updates 1.0 version by adding mappings for the
+#	three newly added characters 0xA4, 0xA5, 0xAA.
 #
-#	Any comments or problems, contact <errata@unicode.org>
-#	Please note that <errata@unicode.org> is an archival address;
-#	notices will be checked, but do not expect an immediate response.
+#	Updated versions of this file may be found in:
+#		<http://www.unicode.org/Public/MAPPINGS/>
+#
+#	Any comments or problems, contact the Unicode Consortium at:
+#	        <http://www.unicode.org/reporting.html>
 #
 0x00	0x0000	#	NULL
 0x01	0x0001	#	START OF HEADING
@@ -216,10 +231,13 @@ ISO 8859-7
 0xA1	0x2018	#	LEFT SINGLE QUOTATION MARK
 0xA2	0x2019	#	RIGHT SINGLE QUOTATION MARK
 0xA3	0x00A3	#	POUND SIGN
+0xA4	0x20AC	#	EURO SIGN
+0xA5	0x20AF	#	DRACHMA SIGN
 0xA6	0x00A6	#	BROKEN BAR
 0xA7	0x00A7	#	SECTION SIGN
 0xA8	0x00A8	#	DIAERESIS
 0xA9	0x00A9	#	COPYRIGHT SIGN
+0xAA	0x037A	#	GREEK YPOGEGRAMMENI
 0xAB	0x00AB	#	LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 0xAC	0x00AC	#	NOT SIGN
 0xAD	0x00AD	#	SOFT HYPHEN
