@@ -7,6 +7,7 @@
 
 #include "elinks.h"
 
+#include "bfu/dialog.h"
 #include "config/options.h"
 #include "intl/charsets.h"
 #include "terminal/color.h"
@@ -559,6 +560,24 @@ draw_text(struct terminal *term, int x, int y,
 }
 
 void
+draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
+	  unsigned char *text, int length,
+	  enum screen_char_attr attr, struct color_pair *color)
+{
+	struct terminal *term = dlg_data->win->term;
+	struct box *box = &dlg_data->real_box;
+
+	if (box->height) {
+		int y_max = box->y + box->height;
+
+		y -= dlg_data->y;
+		if (y < box->y || y >= y_max) return;
+	}
+	draw_text(term, x, y, text, length, attr, color);
+}
+
+
+void
 set_cursor(struct terminal *term, int x, int y, int blockable)
 {
 	assert(term && term->screen);
@@ -578,6 +597,24 @@ set_cursor(struct terminal *term, int x, int y, int blockable)
 		term->screen->cy = y;
 	}
 }
+
+void
+set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable)
+{
+	struct box *box = &dlg_data->real_box;
+
+	assert(term && term->screen);
+	if_assert_failed return;
+
+	if (box->height) {
+		int y_max = box->y + box->height;
+
+		y -= dlg_data->y;
+		if (y < box->y || y >= y_max) return;
+	}
+	set_cursor(term, x, y, blockable);
+}
+
 
 void
 clear_terminal(struct terminal *term)

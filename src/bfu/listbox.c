@@ -41,7 +41,8 @@ get_listbox_widget_data(struct widget_data *widget_data)
 
 /* Layout for generic boxes */
 void
-dlg_format_listbox(struct terminal *term, struct widget_data *widget_data,
+dlg_format_listbox(struct dialog_data *dlg_data,
+		   struct widget_data *widget_data,
 	           int x, int *y, int w, int max_height, int *rw,
 	           enum format_align align, int format_only)
 {

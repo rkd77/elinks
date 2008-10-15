@@ -3,6 +3,7 @@
 
 #include "util/lists.h"
 
+struct dialog_data;
 struct term_event;
 struct terminal;
 struct window;
@@ -67,12 +68,28 @@ struct window {
 	unsigned int resize:1;
 };
 
-void redraw_from_window(struct window *);
-void redraw_below_window(struct window *);
+/** Which windows redraw_windows() should redraw.  */
+enum windows_to_redraw {
+	/** Redraw the windows in front of the specified window,
+	 * but not the specified window itself.  */
+	REDRAW_IN_FRONT_OF_WINDOW,
+
+	/** Redraw the specified window, and the windows in front of
+	 * it.  */
+	REDRAW_WINDOW_AND_FRONT,
+
+	/** Redraw the windows behind the specified window,
+	 * but not the specified window itself.
+	 * Do that even if terminal.redrawing is TREDRAW_BUSY.  */
+	REDRAW_BEHIND_WINDOW,
+};
+
+void redraw_windows(enum windows_to_redraw, struct window *);
 void add_window(struct terminal *, window_handler_T, void *);
 void delete_window(struct window *);
 void delete_window_ev(struct window *, struct term_event *ev);
 #define set_window_ptr(window, x_, y_) do { (window)->x = (x_); (window)->y = (y_); } while (0)
+void set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, int y);
 void get_parent_ptr(struct window *, int *, int *);
 
 void add_empty_window(struct terminal *, void (*)(void *), void *);

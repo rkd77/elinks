@@ -20,10 +20,11 @@
 #define CHECKBOX_LEN 3  /* "[X]" or "(X)" */
 
 void
-dlg_format_group(struct terminal *term,
+dlg_format_group(struct dialog_data *dlg_data,
 		 struct widget_data *widget_data,
 		 int n, int x, int *y, int w, int *rw, int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	int space_between_widgets = 1;
 	int line_width = 0;
 	int xpos;
@@ -87,14 +88,14 @@ dlg_format_group(struct terminal *term,
 								text,
 								label_length,
 								NULL);
-						draw_text(term, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text, lb, 0,
 							  color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_text(term, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text,
 							  label_length, 0,
@@ -113,12 +114,12 @@ dlg_format_group(struct terminal *term,
 								text,
 								label_length,
 								NULL);
-						draw_text(term, xpos, *y,
+						draw_dlg_text(dlg_data, xpos, *y,
 							  text, lb, 0, color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_text(term, xpos, *y,
+						draw_dlg_text(dlg_data, xpos, *y,
 							  text, label_length,
 							  0, color);
 					}
@@ -155,11 +156,11 @@ group_layouter(struct dialog_data *dlg_data)
 #endif /* CONFIG_UTF8 */
 		rw = int_min(w, strlen(dlg_data->dlg->title));
 
-	dlg_format_group(term, dlg_data->widgets_data, n,
+	dlg_format_group(dlg_data, dlg_data->widgets_data, n,
 			 0, &y, w, &rw, 1);
 
 	y++;
-	dlg_format_buttons(term, dlg_data->widgets_data + n, 2, 0, &y, w,
+	dlg_format_buttons(dlg_data, dlg_data->widgets_data + n, 2, 0, &y, w,
 			   &rw, ALIGN_CENTER, 1);
 
 	w = rw;
@@ -167,10 +168,10 @@ group_layouter(struct dialog_data *dlg_data)
 	draw_dialog(dlg_data, w, y);
 
 	y = dlg_data->box.y + DIALOG_TB + 1;
-	dlg_format_group(term, dlg_data->widgets_data, n,
+	dlg_format_group(dlg_data, dlg_data->widgets_data, n,
 			 dlg_data->box.x + DIALOG_LB, &y, w, NULL, 0);
 
 	y++;
-	dlg_format_buttons(term, dlg_data->widgets_data + n, 2,
+	dlg_format_buttons(dlg_data, dlg_data->widgets_data + n, 2,
 			   dlg_data->box.x + DIALOG_LB, &y, w, &rw, ALIGN_CENTER, 0);
 }

@@ -211,11 +211,13 @@ split_lines(struct widget_data *widget_data, int max_width)
 
 /* Format text according to dialog box and alignment. */
 void
-dlg_format_text_do(struct terminal *term, unsigned char *text,
+dlg_format_text_do(struct dialog_data *dlg_data,
+		unsigned char *text,
 		int x, int *y, int width, int *real_width,
 		struct color_pair *color, enum format_align align,
 		int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	int line_width;
 	int firstline = 1;
 
@@ -255,15 +257,17 @@ dlg_format_text_do(struct terminal *term, unsigned char *text,
 
 		assert(cells <= width && shift < width);
 
-		draw_text(term, x + shift, *y, text, line_width, 0, color);
+		draw_dlg_text(dlg_data, x + shift, *y, text, line_width, 0, color);
 	}
 }
 
 void
-dlg_format_text(struct terminal *term, struct widget_data *widget_data,
+dlg_format_text(struct dialog_data *dlg_data,
+		struct widget_data *widget_data,
 		int x, int *y, int width, int *real_width, int max_height,
 		int format_only)
 {
+	struct terminal *term = dlg_data->win->term;
 	unsigned char *text = widget_data->widget->text;
 	unsigned char saved = 0;
 	unsigned char *saved_pos = NULL;
@@ -335,7 +339,7 @@ dlg_format_text(struct terminal *term, struct widget_data *widget_data,
 		widget_data->info.text.current = 0;
 	}
 
-	dlg_format_text_do(term, text,
+	dlg_format_text_do(dlg_data, text,
 		x, y, width, real_width,
 		get_bfu_color(term, "dialog.text"),
 		widget_data->widget->info.text.align, format_only);
@@ -395,8 +399,8 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 	/* Hope this is at least a bit reasonable. Set cursor
 	 * and window pointer to start of the first text line. */
-	set_cursor(win->term, widget_data->box.x, widget_data->box.y, 1);
-	set_window_ptr(win, widget_data->box.x, widget_data->box.y);
+	set_dlg_cursor(win->term, dlg_data, widget_data->box.x, widget_data->box.y, 1);
+	set_dlg_window_ptr(dlg_data, win, widget_data->box.x, widget_data->box.y);
 
 	return EVENT_PROCESSED;
 }
@@ -423,12 +427,12 @@ format_and_display_text(struct widget_data *widget_data,
 	draw_box(term, &widget_data->box, ' ', 0,
 		 get_bfu_color(term, "dialog.generic"));
 
-	dlg_format_text(term, widget_data,
+	dlg_format_text(dlg_data, widget_data,
 			widget_data->box.x, &y, widget_data->box.width, NULL,
 			height, 0);
 
 	display_text(dlg_data, widget_data);
-	redraw_from_window(dlg_data->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, dlg_data->win);
 }
 
 static widget_handler_status_T

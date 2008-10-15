@@ -567,5 +567,5 @@ print_screen_status(struct session *ses)
 		display_tab_bar(ses, term, tabs_count);
 	}
 
-	redraw_from_window(ses->tab);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, ses->tab);
 }

@@ -672,7 +672,7 @@ display_menu(struct terminal *term, struct menu *menu)
 		}
 	}
 
-	redraw_from_window(menu->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, menu->win);
 }
 
 
@@ -1185,7 +1185,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 		draw_box(term, &box, '>', 0, normal_color);
 	}
 
-	redraw_from_window(menu->win);
+	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, menu->win);
 }
 
 
