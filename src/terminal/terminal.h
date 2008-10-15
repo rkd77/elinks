@@ -164,7 +164,10 @@ struct terminal {
 #define do_not_ignore_next_mouse_event(term) \
 	memset(&(term)->prev_mouse_event, 0, sizeof((term)->prev_mouse_event))
 
-/** We keep track about all the terminals in this list. */
+/** We keep track about all the terminals in this list.
+ * The list is sorted so that terminals.next is the terminal
+ * from which ELinks most recently got an event.  But please
+ * call get_default_terminal() for that.  */
 extern LIST_OF(struct terminal) terminals;
 
 
@@ -175,6 +178,7 @@ void destroy_terminal(struct terminal *);
 void redraw_terminal(struct terminal *term);
 void redraw_terminal_cls(struct terminal *term);
 void cls_redraw_all_terminals(void);
+struct terminal *get_default_terminal(void);
 
 void redraw_all_terminals(void);
 void destroy_all_terminals(void);

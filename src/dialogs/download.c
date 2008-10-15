@@ -61,6 +61,15 @@ dlg_set_notify(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	struct file_download *file_download = dlg_data->dlg->udata;
 
 	file_download->notify = 1;
+	/* The user of this terminal wants to be notified about the
+	 * download.  Make this also the terminal where the
+	 * notification appears.  However, keep the original terminal
+	 * for external handlers, because the handler may have been
+	 * chosen based on the environment variables (usually TERM or
+	 * DISPLAY) of the ELinks process in that terminal.  */
+	if (!file_download->external_handler)
+		file_download->term = dlg_data->win->term;
+
 #if CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_notify_on_completion(&file_download->download,

@@ -119,10 +119,12 @@ navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		if (*optstr && strcmp(optstr, " ")) {
 			unsigned char *ustr, ts[64] = "";
 			static unsigned char custr[256];
+			/* TODO: Somehow get the terminal in which the
+			 * document is actually being displayed.  */
+			struct terminal *term = get_default_terminal();
 
-			if (!list_empty(terminals)) {
+			if (term) {
 				unsigned int tslen = 0;
-				struct terminal *term = terminals.prev;
 
 				ulongcat(ts, &tslen, term->width, 3, 0);
 				ts[tslen++] = 'x';

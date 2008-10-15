@@ -761,12 +761,14 @@ http_send_header(struct socket *socket)
 	optstr = get_opt_str("protocol.http.user_agent", NULL);
 	if (*optstr && strcmp(optstr, " ")) {
 		unsigned char *ustr, ts[64] = "";
+		/* TODO: Somehow get the terminal in which the
+		 * document will actually be displayed.  */
+		struct terminal *term = get_default_terminal();
 
 		add_to_string(&header, "User-Agent: ");
 
-		if (!list_empty(terminals)) {
+		if (term) {
 			unsigned int tslen = 0;
-			struct terminal *term = terminals.prev;
 
 			ulongcat(ts, &tslen, term->width, 3, 0);
 			ts[tslen++] = 'x';

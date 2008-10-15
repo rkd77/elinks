@@ -468,6 +468,9 @@ in_term(struct terminal *term)
 	ssize_t r;
 	unsigned char *iq;
 
+	/* Mark this as the most recently used terminal.  */
+	move_to_top_of_list(terminals, term);
+
 	if (!interlink
 	    || !interlink->qfreespace
 	    || interlink->qfreespace - interlink->qlen > ALLOC_GR) {

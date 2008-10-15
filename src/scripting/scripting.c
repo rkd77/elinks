@@ -40,14 +40,13 @@ report_scripting_error(struct module *module, struct session *ses,
 	struct string string;
 
 	if (!ses) {
-		if (list_empty(terminals)) {
+		term = get_default_terminal();
+		if (term == NULL) {
 			usrerror(gettext("[%s error] %s"),
 				 gettext(module->name), msg);
 			sleep(3);
 			return;
 		}
-
-		term = terminals.next;
 
 	} else {
 		term = ses->tab->term;

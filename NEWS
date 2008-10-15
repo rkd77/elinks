@@ -33,6 +33,12 @@ Miscellaneous:
   cached response even if you have modified a file between requests,
   and that ELinks can send inconsistent data if you modify a file
   while it is being uploaded.
+* bug 1054: Don't abort downloads when closing the terminal from which
+  they were started.  When such a download ends, display the message
+  in the most recently used terminal.  If the user chooses
+  ``Background and Notify'' via the download manager in some terminal,
+  reassociate the download with that terminal.  These changes do not
+  apply to downloads to external handlers.
 * Really retry forever when connection.retries = 0.
 * enhancement: Session-specific options.  Any options changed with
   toggle-* actions no longer affect other tabs or other terminals.

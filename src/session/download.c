@@ -332,35 +332,46 @@ download_data_store(struct download *download, struct file_download *file_downlo
 	assert_terminal_ptr_not_dangling(term);
 	if_assert_failed term = file_download->term = NULL;
 
-	if (!term) {
-		/* No term here, so no beep. --Zas */
-		abort_download(file_download);
-		return;
-	}
-
 	if (is_in_progress_state(download->state)) {
 		if (file_download->dlg_data)
 			redraw_dialog(file_download->dlg_data, 1);
 		return;
 	}
 
+	/* If the original terminal of the download has been closed,
+	 * display any messages in the default terminal instead.  */
+	if (term == NULL)
+		term = get_default_terminal(); /* may be NULL too */
+
 	if (!is_in_state(download->state, S_OK)) {
 		unsigned char *url = get_uri_string(file_download->uri, URI_PUBLIC);
 		struct connection_state state = download->state;
 
+		/* abort_download_and_beep allows term==NULL.  */
 		abort_download_and_beep(file_download, term);
 
 		if (!url) return;
 
-		info_box(term, MSGBOX_FREE_TEXT,
-			 N_("Download error"), ALIGN_CENTER,
-			 msg_text(term, N_("Error downloading %s:\n\n%s"),
-				  url, get_state_message(state, term)));
+		if (term) {
+			info_box(term, MSGBOX_FREE_TEXT,
+				 N_("Download error"), ALIGN_CENTER,
+				 msg_text(term, N_("Error downloading %s:\n\n%s"),
+					  url, get_state_message(state, term)));
+		}
 		mem_free(url);
 		return;
 	}
 
 	if (file_download->external_handler) {
+		if (term == NULL) {
+			/* There is no terminal in which to run the handler.
+			 * Abort the download.  file_download->delete should
+			 * be 1 here so that the following call also deletes
+			 * the temporary file.  */ 
+			abort_download(file_download);
+			return;
+		}
+
 		prealloc_truncate(file_download->handle, file_download->seek);
 		close(file_download->handle);
 		file_download->handle = -1;
@@ -372,7 +383,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		return;
 	}
 
-	if (file_download->notify) {
+	if (file_download->notify && term) {
 		unsigned char *url = get_uri_string(file_download->uri, URI_PUBLIC);
 
 		/* This is apparently a little racy. Deleting the box item will
@@ -399,6 +410,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		utime(file_download->file, &foo);
 	}
 
+	/* abort_download_and_beep allows term==NULL.  */
 	abort_download_and_beep(file_download, term);
 }
 

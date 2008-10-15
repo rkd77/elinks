@@ -68,6 +68,19 @@ cls_redraw_all_terminals(void)
 		redraw_terminal_cls(term);
 }
 
+/** Get the terminal in which message boxes should be displayed, if
+ * there is no specific reason to use some other terminal.  This
+ * returns NULL if all terminals have been closed.  (ELinks keeps
+ * running anyway if ui.sessions.keep_session_active is true.)  */
+struct terminal *
+get_default_terminal(void)
+{
+	if (list_empty(terminals))
+		return NULL;
+	else
+		return terminals.next;
+}
+
 struct terminal *
 init_term(int fdin, int fdout)
 {
@@ -96,6 +109,8 @@ init_term(int fdin, int fdout)
 	term->spec = get_opt_rec(config_options, name);
 	object_lock(term->spec);
 
+	/* It's a new terminal, so assume the user is using it right now,
+	 * and sort it to the front of the list.  */
 	add_to_list(terminals, term);
 
 	set_handlers(fdin, (select_handler_T) in_term, NULL,

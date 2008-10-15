@@ -66,7 +66,17 @@ struct file_download {
 	unsigned char *file;
 	unsigned char *external_handler;
 	struct session *ses;
+
+	/** The terminal in which message boxes about the download
+	 * should be displayed.  If this terminal is closed, then
+	 * detach_downloads_from_terminal() changes the pointer to
+	 * NULL, and get_default_terminal() will be used if a
+	 * terminal is needed later.  However, if the download has
+	 * an external handler, then detach_downloads_from_terminal()
+	 * aborts it right away; external handlers always run in the
+	 * original terminal, if anywhere.  */
 	struct terminal *term;
+
 	time_t remotetime;
 	off_t seek;
 	int handle;
