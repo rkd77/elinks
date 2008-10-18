@@ -254,7 +254,6 @@ encode_utf8(unicode_val_T u)
 	return utf_buffer;
 }
 
-#ifdef CONFIG_UTF8
 /* Number of bytes utf8 character indexed by first byte. Illegal bytes are
  * equal ones and handled different. */
 static const char utf8char_len_tab[256] = {
@@ -268,6 +267,7 @@ static const char utf8char_len_tab[256] = {
 	3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4, 5,5,5,5,6,6,1,1,
 };
 
+#ifdef CONFIG_UTF8
 inline int utf8charlen(const unsigned char *p)
 {
 	return p ? utf8char_len_tab[*p] : 0;
@@ -630,6 +630,7 @@ unicode_fold_label_case(unicode_val_T c)
 		return c;
 #endif /* !(__STDC_ISO_10646__ && HAVE_WCTYPE_H) */
 }
+#endif /* CONFIG_UTF8 */
 
 inline unicode_val_T
 utf8_to_unicode(unsigned char **string, const unsigned char *end)
@@ -714,7 +715,6 @@ invalid_utf8:
 	*string = str + length;
 	return u;
 }
-#endif /* CONFIG_UTF8 */
 
 /* The common part of cp2u and cp2utf_8.  */
 static unicode_val_T
@@ -753,9 +753,8 @@ cp2utf8(int from, int c)
 	return encode_utf8(cp2u_shared(&codepages[from], c));
 }
 
-#ifdef CONFIG_UTF8
 unicode_val_T
-cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
+cp_to_unicode(int codepage, unsigned char **string, const unsigned char *end)
 {
 	unicode_val_T ret;
 
@@ -769,7 +768,6 @@ cp_to_unicode(int codepage, unsigned char **string, unsigned char *end)
 	++*string;
 	return ret;
 }
-#endif	/* CONFIG_UTF8 */
 
 
 static void

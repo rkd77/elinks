@@ -313,21 +313,11 @@ add_cp_html_to_string(struct string *string, int src_codepage,
 	const unsigned char *const end = src + len;
 	unicode_val_T unicode;
 
-	while (src != end) {
-		if (is_cp_utf8(src_codepage)) {
-#ifdef CONFIG_UTF8
-			unicode = utf8_to_unicode((unsigned char **) &src,
-						  end);
-			if (unicode == UCS_NO_CHAR)
-				break;
-#else  /* !CONFIG_UTF8 */
-			/* Cannot parse UTF-8 without CONFIG_UTF8.
-			 * Pretend the input is ISO-8859-1 instead.  */
-			unicode = *src++;
-#endif /* !CONFIG_UTF8 */
-		} else {
-			unicode = cp2u(src_codepage, *src++);
-		}
+	for (;;) {
+		unicode = cp_to_unicode(src_codepage,
+					(unsigned char **) &src, end);
+		if (unicode == UCS_NO_CHAR)
+			break;
 
 		if (unicode < 0x20 || unicode >= 0x7F
 		    || unicode == '<' || unicode == '>' || unicode == '&'
