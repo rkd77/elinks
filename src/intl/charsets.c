@@ -178,10 +178,8 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 
 	to &= ~SYSTEM_CHARSET_FLAG;
 
-#ifdef CONFIG_UTF8
 	if (is_cp_ptr_utf8(&codepages[to]))
 		return encode_utf8(u);
-#endif /* CONFIG_UTF8 */
 
 	/* To mark non breaking spaces in non-UTF-8 strings, we use a
 	 * special char NBSP_CHAR. */
@@ -214,13 +212,8 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 
 static unsigned char utf_buffer[7];
 
-#ifdef CONFIG_UTF8
 inline unsigned char *
 encode_utf8(unicode_val_T u)
-#else
-static unsigned char *
-encode_utf8(unicode_val_T u)
-#endif /* CONFIG_UTF8 */
 {
 	memset(utf_buffer, 0, 7);
 

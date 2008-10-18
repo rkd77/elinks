@@ -113,8 +113,8 @@ unsigned char *get_cp_config_name(int);
 unsigned char *get_cp_mime_name(int);
 int is_cp_utf8(int);
 void free_conv_table(void);
-#ifdef CONFIG_UTF8
 inline unsigned char *encode_utf8(unicode_val_T);
+#ifdef CONFIG_UTF8
 inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
 inline int utf8charlen(const unsigned char *);
 int utf8_char2cells(unsigned char *, unsigned char *);
