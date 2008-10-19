@@ -276,6 +276,7 @@ delete_folder_by_name(unsigned char *foldername)
 	struct bookmark *bookmark, *next;
 
 	foreachsafe (bookmark, next, bookmarks) {
+		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		if ((bookmark->url && *bookmark->url)
 		    || strcmp(bookmark->title, foldername))
 			continue;
@@ -292,6 +293,7 @@ init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 	bm = mem_calloc(1, sizeof(*bm));
 	if (!bm) return NULL;
 
+	/** @todo Bug 153: bm->title should be UTF-8 */
 	bm->title = stracpy(title);
 	if (!bm->title) {
 		mem_free(bm);
@@ -299,6 +301,7 @@ init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 	}
 	sanitize_title(bm->title);
 
+	/** @todo Bug 1066: bm->url should be UTF-8 */
 	bm->url = stracpy(empty_string_or_(url));
 	if (!bm->url) {
 		mem_free(bm->title);
@@ -411,6 +414,7 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 	trigger_event(update_bookmark_event_id, bm, title2, url2);
 
 	if (title2) {
+		/** @todo Bug 153: bm->title should be UTF-8 */
 		mem_free_set(&bm->title, title2);
 	}
 
@@ -423,6 +427,7 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 			if (item) del_hash_item(bookmark_cache, item);
 		}
 
+		/** @todo Bug 1066: bm->url should be UTF-8 */
 		if (check_bookmark_cache(url2)) {
 			add_hash_item(bookmark_cache, url2, strlen(url2), bm);
 		}
@@ -445,6 +450,7 @@ get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
 
 	lh = folder ? &folder->child : &bookmarks;
 
+	/** @todo Bug 153: bookmark->title should be UTF-8 */
 	foreach (bookmark, *lh)
 		if (!strcmp(bookmark->title, title)) return bookmark;
 
@@ -457,6 +463,7 @@ get_bookmark(unsigned char *url)
 {
 	struct hash_item *item;
 
+	/** @todo Bug 1066: URLs in bookmark_cache should be UTF-8 */
 	if (!check_bookmark_cache(url))
 		return NULL;
 
@@ -586,6 +593,7 @@ open_bookmark_folder(struct session *ses, unsigned char *foldername)
 	foreach (bookmark, bookmarks) {
 		if (bookmark->box_item->type != BI_FOLDER)
 			continue;
+		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		if (strcmp(bookmark->title, foldername))
 			continue;
 		folder = bookmark;
@@ -602,6 +610,8 @@ open_bookmark_folder(struct session *ses, unsigned char *foldername)
 		    || !*bookmark->url)
 			continue;
 
+		/** @todo Bug 1066: Tell the URI layer that
+		 * bookmark->url is UTF-8.  */
 		uri = get_translated_uri(bookmark->url, NULL);
 		if (!uri) continue;
 

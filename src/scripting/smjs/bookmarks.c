@@ -102,11 +102,13 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case BOOKMARK_TITLE:
+		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 	                                                bookmark->title));
 
 		return JS_TRUE;
 	case BOOKMARK_URL:
+		/** @todo Bug 1066: bookmark->url should be UTF-8 */
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 	                                                bookmark->url));
 
@@ -151,6 +153,7 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
 		unsigned char *str = JS_GetStringBytes(jsstr);
 
+		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		mem_free_set(&bookmark->title, stracpy(str));
 
 		return JS_TRUE;
@@ -159,6 +162,7 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
 		unsigned char *str = JS_GetStringBytes(jsstr);
 
+		/** @todo Bug 1066: bookmark->url should be UTF-8 */
 		mem_free_set(&bookmark->url, stracpy(str));
 
 		return JS_TRUE;

@@ -134,6 +134,8 @@ write_bookmarks_default(struct secure_save_info *ssi,
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {
+		/** @todo Bug 153: bm->title should be UTF-8.
+		 * @todo Bug 1066: bm->url should be UTF-8.  */
 		secure_fprintf(ssi, "%s\t%s\t%d\t", bm->title, bm->url, bm->box_item->depth);
 		if (bm->box_item->type == BI_FOLDER) {
 			secure_fputc(ssi, 'F');

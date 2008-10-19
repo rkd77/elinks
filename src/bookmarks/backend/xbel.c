@@ -226,6 +226,7 @@ write_bookmarks_list(struct secure_save_info *ssi,
 
 			indentation(ssi, n + 2);
 			secure_fputs(ssi, "<title>");
+			/** @todo Bug 153: bm->title should be UTF-8 */
 			print_xml_entities(ssi, bm->title);
 			secure_fputs(ssi, "</title>\n");
 
@@ -238,11 +239,13 @@ write_bookmarks_list(struct secure_save_info *ssi,
 		} else if (bm->box_item->type == BI_LEAF) {
 
 			secure_fputs(ssi, "<bookmark href=\"");
+			/** @todo Bug 1066: bm->url should be UTF-8 */
 			print_xml_entities(ssi, bm->url);
 			secure_fputs(ssi, "\">\n");
 
 			indentation(ssi, n + 2);
 			secure_fputs(ssi, "<title>");
+			/** @todo Bug 153: bm->title should be UTF-8 */
 			print_xml_entities(ssi, bm->title);
 			secure_fputs(ssi, "</title>\n");
 

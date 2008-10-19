@@ -57,6 +57,7 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 {
 	struct bookmark *bookmark = item->udata;
 
+	/** @todo Bug 153: bookmark->title should be UTF-8 */
 	return stracpy(bookmark->title);
 }
 
@@ -69,6 +70,8 @@ get_bookmark_info(struct listbox_item *item, struct terminal *term)
 	if (item->type == BI_FOLDER) return NULL;
 	if (!init_string(&info)) return NULL;
 
+	/** @todo Bug 153: bookmark->title should be UTF-8.
+	 * @todo Bug 1066: bookmark->url should be UTF-8.  */
 	add_format_to_string(&info, "%s: %s", _("Title", term), bookmark->title);
 	add_format_to_string(&info, "\n%s: %s", _("URL", term), bookmark->url);
 
@@ -80,6 +83,7 @@ get_bookmark_uri(struct listbox_item *item)
 {
 	struct bookmark *bookmark = item->udata;
 
+	/** @todo Bug 1066: Tell the URI layer that bookmark->url is UTF-8.  */
 	return bookmark->url && *bookmark->url
 		? get_translated_uri(bookmark->url, NULL) : NULL;
 }
@@ -303,6 +307,8 @@ push_edit_button(struct dialog_data *dlg_data, struct widget_data *edit_btn)
 	/* Follow the bookmark */
 	if (box->sel) {
 		struct bookmark *bm = (struct bookmark *) box->sel->udata;
+		/** @todo Bug 153: bm->title should be UTF-8.
+		 * @todo Bug 1066: bm->url should be UTF-8.  */
 		const unsigned char *title = bm->title;
 		const unsigned char *url = bm->url;
 
@@ -555,6 +561,8 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 
 		assert(ctx->title && ctx->url);
 
+		/** @todo Bug 153: bm->title should be UTF-8.
+		 * @todo Bug 1066: bm->url should be UTF-8.  */
 		ctx->found = (*ctx->title && strcasestr(bm->title, ctx->title))
 			     || (*ctx->url && c_strcasestr(bm->url, ctx->url));
 
