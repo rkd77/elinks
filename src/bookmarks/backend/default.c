@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,6 +34,7 @@ read_bookmarks_default(FILE *f)
 	unsigned char in_buffer[INBUF_SIZE]; /* read buffer */
 	struct bookmark *last_bm = NULL;
 	int last_depth = 0;
+	const int file_cp = get_cp_index("System");
 
 	/* TODO: Ignore lines with bad chars in title or url (?). -- Zas */
 	while (fgets(in_buffer, INBUF_SIZE, f)) {
@@ -101,9 +103,8 @@ read_bookmarks_default(FILE *f)
 					root = last_bm->root;
 				}
 			}
-			/** @todo Bugs 153, 1066: add_bookmark()
-			 * expects UTF-8.  */
-			last_bm = add_bookmark(root, 1, title, url);
+			last_bm = add_bookmark_cp(root, 1, file_cp,
+						  title, url);
 			last_depth = depth;
 
 			if (!*url && title[0] == '-' && title[1] == '\0') {
@@ -127,29 +128,65 @@ read_bookmarks_default(FILE *f)
 #undef INBUF_SIZE
 }
 
+struct write_bookmarks_default
+{
+	struct secure_save_info *ssi;
+	int save_folder_state;
+	int codepage;
+	struct conv_table *conv_table;
+};
+
+static void
+write_bookmarks_default_inner(const struct write_bookmarks_default *out,
+			      LIST_OF(struct bookmark) *bookmarks_list)
+{
+	struct bookmark *bm;
+
+	foreach (bm, *bookmarks_list) {
+		unsigned char *title, *url;
+
+		title = convert_string(out->conv_table, bm->title,
+				       strlen(bm->title), out->codepage,
+				       CSM_NONE, NULL, NULL, NULL);
+		url = convert_string(out->conv_table, bm->url,
+				     strlen(bm->url), out->codepage,
+				     CSM_NONE, NULL, NULL, NULL);
+		secure_fprintf(out->ssi, "%s\t%s\t%d\t",
+			       empty_string_or_(title), empty_string_or_(url),
+			       bm->box_item->depth);
+		if (bm->box_item->type == BI_FOLDER) {
+			secure_fputc(out->ssi, 'F');
+			if (out->save_folder_state && bm->box_item->expanded)
+				secure_fputc(out->ssi, 'E');
+		}
+		secure_fputc(out->ssi, '\n');
+
+		if (!title || !url) {
+			secsave_errno = SS_ERR_OTHER;
+			out->ssi->err = ENOMEM;
+		}
+		mem_free_if(title);
+		mem_free_if(url);
+		if (out->ssi->err) break;
+
+		if (!list_empty(bm->child))
+			write_bookmarks_default_inner(out, &bm->child);
+	}
+}
+
 /* Saves the bookmarks to file */
 static void
 write_bookmarks_default(struct secure_save_info *ssi,
 		        LIST_OF(struct bookmark) *bookmarks_list)
 {
-	int folder_state = get_opt_bool("bookmarks.folder_state");
-	struct bookmark *bm;
+	struct write_bookmarks_default out;
 
-	foreach (bm, *bookmarks_list) {
-		/** @todo Bug 153: bm->title should be UTF-8.
-		 * @todo Bug 1066: bm->url should be UTF-8.  */
-		secure_fprintf(ssi, "%s\t%s\t%d\t", bm->title, bm->url, bm->box_item->depth);
-		if (bm->box_item->type == BI_FOLDER) {
-			secure_fputc(ssi, 'F');
-			if (folder_state && bm->box_item->expanded)
-				secure_fputc(ssi, 'E');
-		}
-		secure_fputc(ssi, '\n');
-		if (ssi->err) break;
-
-		if (!list_empty(bm->child))
-			write_bookmarks_default(ssi, &bm->child);
-	}
+	out.ssi = ssi;
+	out.save_folder_state = get_opt_bool("bookmarks.folder_state");
+	out.codepage = get_cp_index("System");
+	out.conv_table = get_translation_table(get_cp_index("UTF-8"),
+					       out.codepage);
+	write_bookmarks_default_inner(&out, bookmarks_list);
 }
 
 static unsigned char *
