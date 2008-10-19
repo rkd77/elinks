@@ -151,7 +151,7 @@ next_attr:
 	n = name;
 	name_start = e;
 
-	while (atchr(*n) && atchr(*e) && toupper(*e) == toupper(*n)) e++, n++;
+	while (atchr(*n) && atchr(*e) && c_toupper(*e) == c_toupper(*n)) e++, n++;
 	found = !*n && !atchr(*e);
 
 	if (found && (flags & HTML_ATTR_TEST)) return name_start;
@@ -504,8 +504,8 @@ static struct element_info elements[] = {
 static int
 compar(const void *a, const void *b)
 {
-	return strcasecmp(((struct element_info *) a)->name,
-			  ((struct element_info *) b)->name);
+	return c_strcasecmp(((struct element_info *) a)->name,
+			    ((struct element_info *) b)->name);
 }
 
 #else
@@ -548,7 +548,7 @@ void
 init_tags_lookup(void)
 {
 #ifdef USE_FASTFIND
-	fastfind_index(&ff_tags_index, FF_COMPRESS);
+	fastfind_index(&ff_tags_index, FF_COMPRESS | FF_LOCALE_INDEP);
 #endif
 }
 

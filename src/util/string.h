@@ -100,9 +100,16 @@ int elinks_strlcmp(const unsigned char *s1, size_t n1,
 		   const unsigned char *s2, size_t n2);
 
 /** Acts identically to strlcmp(), except for being case insensitive. */
-#define strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d))
+#define strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d,0))
+#define c_strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d,1))
 int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
-		       const unsigned char *s2, size_t n2);
+		       const unsigned char *s2, size_t n2,
+		       const int locale_indep);
+
+/* strcasecmp and strncasecmp which work as if they are
+ * in the C locale - both taken from GNU coreutils */
+int c_strcasecmp(const char *s1, const char *s2);
+int c_strncasecmp(const char *s1, const char *s2, size_t n);
 
 /** @} */
 
