@@ -525,8 +525,16 @@ update_bookmark(struct bookmark *bm, int codepage,
 	return 1;
 }
 
-/* Search for a bookmark with the given title. Search in the given folder
- * or in the root if folder is NULL. */
+/** Search for a bookmark with the given title.  The search does not
+ * recurse into subfolders.
+ *
+ * @param folder
+ *   Search in this folder.  NULL means search in the root.
+ *
+ * @param title
+ *   Search for this title.  Must be in UTF-8 and not NULL.
+ *
+ * @return The bookmark, or NULL if not found.  */
 struct bookmark *
 get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
 {
@@ -535,7 +543,6 @@ get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
 
 	lh = folder ? &folder->child : &bookmarks;
 
-	/** @todo Bug 153: bookmark->title should be UTF-8 */
 	foreach (bookmark, *lh)
 		if (!strcmp(bookmark->title, title)) return bookmark;
 
