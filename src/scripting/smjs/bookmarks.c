@@ -180,6 +180,9 @@ static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
+	unsigned char *title = NULL;
+	unsigned char *url = NULL;
+	int ok;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -197,9 +200,13 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case BOOKMARK_TITLE:
-		return jsval_to_bookmark_string(ctx, *vp, &bookmark->title);
+		if (!jsval_to_bookmark_string(ctx, *vp, &title))
+			return JS_FALSE;
+		break;
 	case BOOKMARK_URL:
-		return jsval_to_bookmark_string(ctx, *vp, &bookmark->url);
+		if (!jsval_to_bookmark_string(ctx, *vp, &url))
+			return JS_FALSE;
+		break;
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
@@ -207,6 +214,11 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		 * Do the same here.  */
 		return JS_TRUE;
 	}
+
+	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
+	mem_free_if(title);
+	mem_free_if(url);
+	return ok ? JS_TRUE : JS_FALSE;
 }
 
 static const JSClass bookmark_class = {
