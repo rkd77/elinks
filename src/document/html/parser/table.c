@@ -89,11 +89,11 @@ get_align(struct html_context *html_context, unsigned char *attr, int *a)
 
 	if (!al) return;
 
-	if (!strcasecmp(al, "left")) *a = ALIGN_LEFT;
-	else if (!strcasecmp(al, "right")) *a = ALIGN_RIGHT;
-	else if (!strcasecmp(al, "center")) *a = ALIGN_CENTER;
-	else if (!strcasecmp(al, "justify")) *a = ALIGN_JUSTIFY;
-	else if (!strcasecmp(al, "char")) *a = ALIGN_RIGHT; /* NOT IMPLEMENTED */
+	if (!c_strcasecmp(al, "left")) *a = ALIGN_LEFT;
+	else if (!c_strcasecmp(al, "right")) *a = ALIGN_RIGHT;
+	else if (!c_strcasecmp(al, "center")) *a = ALIGN_CENTER;
+	else if (!c_strcasecmp(al, "justify")) *a = ALIGN_JUSTIFY;
+	else if (!c_strcasecmp(al, "char")) *a = ALIGN_RIGHT; /* NOT IMPLEMENTED */
 	mem_free(al);
 }
 
@@ -104,10 +104,10 @@ get_valign(struct html_context *html_context, unsigned char *attr, int *a)
 
 	if (!al) return;
 
-	if (!strcasecmp(al, "top")) *a = VALIGN_TOP;
-	else if (!strcasecmp(al, "middle")) *a = VALIGN_MIDDLE;
-	else if (!strcasecmp(al, "bottom")) *a = VALIGN_BOTTOM;
-	else if (!strcasecmp(al, "baseline")) *a = VALIGN_BASELINE; /* NOT IMPLEMENTED */
+	if (!c_strcasecmp(al, "top")) *a = VALIGN_TOP;
+	else if (!c_strcasecmp(al, "middle")) *a = VALIGN_MIDDLE;
+	else if (!c_strcasecmp(al, "bottom")) *a = VALIGN_BOTTOM;
+	else if (!c_strcasecmp(al, "baseline")) *a = VALIGN_BASELINE; /* NOT IMPLEMENTED */
 	mem_free(al);
 }
 
@@ -154,16 +154,16 @@ set_table_frame(struct html_context *html_context, struct table *table,
 	al = get_attr_val(attr, "frame", html_context->doc_cp);
 	if (!al) return;
 
-	if (!strcasecmp(al, "void")) table->frame = TABLE_FRAME_VOID;
-	else if (!strcasecmp(al, "above")) table->frame = TABLE_FRAME_ABOVE;
-	else if (!strcasecmp(al, "below")) table->frame = TABLE_FRAME_BELOW;
-	else if (!strcasecmp(al, "hsides")) table->frame = TABLE_FRAME_HSIDES;
-	else if (!strcasecmp(al, "vsides")) table->frame = TABLE_FRAME_VSIDES;
-	else if (!strcasecmp(al, "lhs")) table->frame = TABLE_FRAME_LHS;
-	else if (!strcasecmp(al, "rhs")) table->frame = TABLE_FRAME_RHS;
+	if (!c_strcasecmp(al, "void")) table->frame = TABLE_FRAME_VOID;
+	else if (!c_strcasecmp(al, "above")) table->frame = TABLE_FRAME_ABOVE;
+	else if (!c_strcasecmp(al, "below")) table->frame = TABLE_FRAME_BELOW;
+	else if (!c_strcasecmp(al, "hsides")) table->frame = TABLE_FRAME_HSIDES;
+	else if (!c_strcasecmp(al, "vsides")) table->frame = TABLE_FRAME_VSIDES;
+	else if (!c_strcasecmp(al, "lhs")) table->frame = TABLE_FRAME_LHS;
+	else if (!c_strcasecmp(al, "rhs")) table->frame = TABLE_FRAME_RHS;
 	/* Following tests are useless since TABLE_FRAME_BOX is the default.
-	 * else if (!strcasecmp(al, "box")) table->frame = TABLE_FRAME_BOX;
-	 * else if (!strcasecmp(al, "border")) table->frame = TABLE_FRAME_BOX;
+	 * else if (!c_strcasecmp(al, "box")) table->frame = TABLE_FRAME_BOX;
+	 * else if (!c_strcasecmp(al, "border")) table->frame = TABLE_FRAME_BOX;
 	 */
 	mem_free(al);
 }
@@ -179,11 +179,11 @@ set_table_rules(struct html_context *html_context, struct table *table,
 	al = get_attr_val(attr, "rules", html_context->doc_cp);
 	if (!al) return;
 
-	if (!strcasecmp(al, "none")) table->rules = TABLE_RULE_NONE;
-	else if (!strcasecmp(al, "groups")) table->rules = TABLE_RULE_GROUPS;
-	else if (!strcasecmp(al, "rows")) table->rules = TABLE_RULE_ROWS;
-	else if (!strcasecmp(al, "cols")) table->rules = TABLE_RULE_COLS;
-	else if (!strcasecmp(al, "all")) table->rules = TABLE_RULE_ALL;
+	if (!c_strcasecmp(al, "none")) table->rules = TABLE_RULE_NONE;
+	else if (!c_strcasecmp(al, "groups")) table->rules = TABLE_RULE_GROUPS;
+	else if (!c_strcasecmp(al, "rows")) table->rules = TABLE_RULE_ROWS;
+	else if (!c_strcasecmp(al, "cols")) table->rules = TABLE_RULE_COLS;
+	else if (!c_strcasecmp(al, "all")) table->rules = TABLE_RULE_ALL;
 	mem_free(al);
 }
 
@@ -527,7 +527,7 @@ skip_table(unsigned char *html, unsigned char *eof)
 		}
 
 
-		if (!strlcasecmp(name, namelen, "TABLE", 5)) {
+		if (!c_strlcasecmp(name, namelen, "TABLE", 5)) {
 			if (!closing_tag) {
 				level++;
 			} else {
@@ -608,7 +608,7 @@ see:
 		closing_tag = 0;
 	}
 
-	if (!strlcasecmp(name, namelen, "TABLE", 5)) {
+	if (!c_strlcasecmp(name, namelen, "TABLE", 5)) {
 		if (!closing_tag) {
 			en = skip_table(en, eof);
 			goto see;
@@ -623,7 +623,7 @@ see:
 		}
 	}
 
-	if (!strlcasecmp(name, namelen, "CAPTION", 7)) {
+	if (!c_strlcasecmp(name, namelen, "CAPTION", 7)) {
 		if (!closing_tag) {
 			add_table_bad_html_end(table, html);
 			if (!table->caption.start)
@@ -637,7 +637,7 @@ see:
 		goto see;
 	}
 
-	if (!strlcasecmp(name, namelen, "COLGROUP", 8)) {
+	if (!c_strlcasecmp(name, namelen, "COLGROUP", 8)) {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		add_table_bad_html_end(table, html);
@@ -663,7 +663,7 @@ see:
 		goto see;
 	}
 
-	if (!closing_tag && !strlcasecmp(name, namelen, "COL", 3)) {
+	if (!closing_tag && !c_strlcasecmp(name, namelen, "COL", 3)) {
 		int sp, width, al, val;
 
 		add_table_bad_html_end(table, html);
@@ -712,9 +712,9 @@ see:
 
 	/* THEAD TBODY TFOOT */
 	if (namelen == 4
-	    && ((!strlcasecmp(name, namelen, "HEAD", 4)) ||
-		(!strlcasecmp(name, namelen, "BODY", 4)) ||
-		(!strlcasecmp(name, namelen, "FOOT", 4)))) {
+	    && ((!c_strlcasecmp(name, namelen, "HEAD", 4)) ||
+		(!c_strlcasecmp(name, namelen, "BODY", 4)) ||
+		(!c_strlcasecmp(name, namelen, "FOOT", 4)))) {
 		if (c_span) new_columns(table, c_span, c_width, c_al, c_val, 1);
 
 		add_table_bad_html_end(table, html);
