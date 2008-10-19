@@ -82,7 +82,7 @@ get_target(struct document_options *options, unsigned char *a)
 
 	if (!v) return NULL;
 
-	if (!*v || !strcasecmp(v, "_self")) {
+	if (!*v || !c_strcasecmp(v, "_self")) {
 		mem_free_set(&v, stracpy(options->framename));
 	}
 
@@ -445,13 +445,13 @@ look_for_map(unsigned char **pos, unsigned char *eof, struct uri *uri,
 		return 1;
 	}
 
-	if (strlcasecmp(name, namelen, "MAP", 3)) return 1;
+	if (c_strlcasecmp(name, namelen, "MAP", 3)) return 1;
 
 	if (uri && uri->fragment) {
 		al = get_attr_val(attr, "name", options);
 		if (!al) return 1;
 
-		if (strlcasecmp(al, -1, uri->fragment, uri->fragmentlen)) {
+		if (c_strlcasecmp(al, -1, uri->fragment, uri->fragmentlen)) {
 			mem_free(al);
 			return 1;
 		}
@@ -498,12 +498,12 @@ look_for_tag(unsigned char **pos, unsigned char *eof,
 
 	if (parse_element(*pos, eof, NULL, NULL, NULL, &pos2)) return 1;
 
-	if (strlcasecmp(name, namelen, "A", 1)
-	    && strlcasecmp(name, namelen, "/A", 2)
-	    && strlcasecmp(name, namelen, "MAP", 3)
-	    && strlcasecmp(name, namelen, "/MAP", 4)
-	    && strlcasecmp(name, namelen, "AREA", 4)
-	    && strlcasecmp(name, namelen, "/AREA", 5)) {
+	if (c_strlcasecmp(name, namelen, "A", 1)
+	    && c_strlcasecmp(name, namelen, "/A", 2)
+	    && c_strlcasecmp(name, namelen, "MAP", 3)
+	    && c_strlcasecmp(name, namelen, "/MAP", 4)
+	    && c_strlcasecmp(name, namelen, "AREA", 4)
+	    && c_strlcasecmp(name, namelen, "/AREA", 5)) {
 		*pos = pos2;
 		return 1;
 	}
@@ -540,12 +540,12 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		return 1;
 	}
 
-	if (!strlcasecmp(name, namelen, "A", 1)) {
+	if (!c_strlcasecmp(name, namelen, "A", 1)) {
 		while (look_for_tag(pos, eof, name, namelen, &label));
 
 		if (*pos >= eof) return 0;
 
-	} else if (!strlcasecmp(name, namelen, "AREA", 4)) {
+	} else if (!c_strlcasecmp(name, namelen, "AREA", 4)) {
 		unsigned char *alt = get_attr_val(attr, "alt", options);
 
 		if (alt) {
@@ -557,7 +557,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 			label = NULL;
 		}
 
-	} else if (!strlcasecmp(name, namelen, "/MAP", 4)) {
+	} else if (!c_strlcasecmp(name, namelen, "/MAP", 4)) {
 		/* This is the only successful return from here! */
 		add_to_ml(ml, *menu, NULL);
 		return 0;

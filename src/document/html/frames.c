@@ -137,7 +137,7 @@ find_fd(struct session *ses, unsigned char *name,
 
 	foreachback (doc_view, ses->scrn_frames) {
 		if (doc_view->used) continue;
-		if (strcasecmp(doc_view->name, name)) continue;
+		if (c_strcasecmp(doc_view->name, name)) continue;
 
 		doc_view->used = 1;
 		doc_view->depth = depth;

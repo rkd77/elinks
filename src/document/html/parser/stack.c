@@ -62,7 +62,7 @@ search_html_stack(struct html_context *html_context, unsigned char *name)
 	foreach (element, html_context->stack) {
 		if (element == &html_top)
 			continue; /* skip the top element */
-		if (strlcasecmp(element->name, element->namelen, name, namelen))
+		if (c_strlcasecmp(element->name, element->namelen, name, namelen))
 			continue;
 		return element;
 	}
@@ -210,7 +210,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 				continue;
 			}
 
-			if (strlcasecmp(e->name, e->namelen, s, slen))
+			if (c_strlcasecmp(e->name, e->namelen, s, slen))
 				continue;
 
 			if (!sk) {
@@ -232,7 +232,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 		va_end(arg);
 
 		if (e->type < ELEMENT_KILLABLE
-		    || (!strlcasecmp(e->name, e->namelen, "TABLE", 5)))
+		    || (!c_strlcasecmp(e->name, e->namelen, "TABLE", 5)))
 			break;
 
 		if (e->namelen == 2 && toupper(e->name[0]) == 'T') {

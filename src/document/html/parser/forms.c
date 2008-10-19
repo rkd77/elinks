@@ -52,7 +52,7 @@ html_form(struct html_context *html_context, unsigned char *a,
 
 	al = get_attr_val(a, "method", html_context->options);
 	if (al) {
-		if (!strcasecmp(al, "post")) {
+		if (!c_strcasecmp(al, "post")) {
 			unsigned char *enctype;
 
 			enctype  = get_attr_val(a, "enctype",
@@ -60,9 +60,9 @@ html_form(struct html_context *html_context, unsigned char *a,
 
 			form->method = FORM_METHOD_POST;
 			if (enctype) {
-				if (!strcasecmp(enctype, "multipart/form-data"))
+				if (!c_strcasecmp(enctype, "multipart/form-data"))
 					form->method = FORM_METHOD_POST_MP;
-				else if (!strcasecmp(enctype, "text/plain"))
+				else if (!c_strcasecmp(enctype, "text/plain"))
 					form->method = FORM_METHOD_POST_TEXT_PLAIN;
 				mem_free(enctype);
 			}
@@ -152,11 +152,11 @@ html_button(struct html_context *html_context, unsigned char *a,
 	al = get_attr_val(a, "type", html_context->options);
 	if (!al) goto no_type_attr;
 
-	if (!strcasecmp(al, "button")) {
+	if (!c_strcasecmp(al, "button")) {
 		type = FC_BUTTON;
-	} else if (!strcasecmp(al, "reset")) {
+	} else if (!c_strcasecmp(al, "reset")) {
 		type = FC_RESET;
-	} else if (strcasecmp(al, "submit")) {
+	} else if (c_strcasecmp(al, "submit")) {
 		/* unknown type */
 		mem_free(al);
 		return;
@@ -270,16 +270,16 @@ html_input(struct html_context *html_context, unsigned char *a,
 
 	al = get_attr_val(a, "type", html_context->options);
 	if (al) {
-		if (!strcasecmp(al, "text")) fc->type = FC_TEXT;
-		else if (!strcasecmp(al, "hidden")) fc->type = FC_HIDDEN;
-		else if (!strcasecmp(al, "button")) fc->type = FC_BUTTON;
-		else if (!strcasecmp(al, "checkbox")) fc->type = FC_CHECKBOX;
-		else if (!strcasecmp(al, "radio")) fc->type = FC_RADIO;
-		else if (!strcasecmp(al, "password")) fc->type = FC_PASSWORD;
-		else if (!strcasecmp(al, "submit")) fc->type = FC_SUBMIT;
-		else if (!strcasecmp(al, "reset")) fc->type = FC_RESET;
-		else if (!strcasecmp(al, "file")) fc->type = FC_FILE;
-		else if (!strcasecmp(al, "image")) fc->type = FC_IMAGE;
+		if (!c_strcasecmp(al, "text")) fc->type = FC_TEXT;
+		else if (!c_strcasecmp(al, "hidden")) fc->type = FC_HIDDEN;
+		else if (!c_strcasecmp(al, "button")) fc->type = FC_BUTTON;
+		else if (!c_strcasecmp(al, "checkbox")) fc->type = FC_CHECKBOX;
+		else if (!c_strcasecmp(al, "radio")) fc->type = FC_RADIO;
+		else if (!c_strcasecmp(al, "password")) fc->type = FC_PASSWORD;
+		else if (!c_strcasecmp(al, "submit")) fc->type = FC_SUBMIT;
+		else if (!c_strcasecmp(al, "reset")) fc->type = FC_RESET;
+		else if (!c_strcasecmp(al, "file")) fc->type = FC_FILE;
+		else if (!c_strcasecmp(al, "image")) fc->type = FC_IMAGE;
 		/* else unknown type, let it default to FC_TEXT. */
 		mem_free(al);
 	}
@@ -406,12 +406,12 @@ abort:
 		closing_tag = 0;
 	}
 
-	if (closing_tag && !strlcasecmp(name, namelen, "SELECT", 6)) {
+	if (closing_tag && !c_strlcasecmp(name, namelen, "SELECT", 6)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 		goto end_parse;
 	}
 
-	if (!strlcasecmp(name, namelen, "OPTION", 6)) {
+	if (!c_strlcasecmp(name, namelen, "OPTION", 6)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
 		if (!closing_tag) {
@@ -440,7 +440,7 @@ abort:
 		goto see;
 	}
 
-	if (!strlcasecmp(name, namelen, "OPTGROUP", 8)) {
+	if (!c_strlcasecmp(name, namelen, "OPTGROUP", 8)) {
 		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
 		if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
@@ -578,9 +578,9 @@ sp:
 		if (namelen < 6) goto se;
 		if (name[0] == '/') name++, namelen--;
 		
-		if (strlcasecmp(name, namelen, "OPTION", 6)
-		    && strlcasecmp(name, namelen, "SELECT", 6)
-		    && strlcasecmp(name, namelen, "OPTGROUP", 8))
+		if (c_strlcasecmp(name, namelen, "OPTION", 6)
+		    && c_strlcasecmp(name, namelen, "SELECT", 6)
+		    && c_strlcasecmp(name, namelen, "OPTGROUP", 8))
 			goto se;
 	}
 
@@ -631,7 +631,7 @@ pp:
 		return;
 	}
 	if (parse_element(p, eof, &t_name, &t_namelen, NULL, end)) goto pp;
-	if (strlcasecmp(t_name, t_namelen, "/TEXTAREA", 9)) goto pp;
+	if (c_strlcasecmp(t_name, t_namelen, "/TEXTAREA", 9)) goto pp;
 
 	fc = init_form_control(FC_TEXTAREA, attr, html_context);
 	if (!fc) return;
@@ -671,14 +671,14 @@ pp:
 
 	wrap_attr = get_attr_val(attr, "wrap", html_context->options);
 	if (wrap_attr) {
-		if (!strcasecmp(wrap_attr, "hard")
-		    || !strcasecmp(wrap_attr, "physical")) {
+		if (!c_strcasecmp(wrap_attr, "hard")
+		    || !c_strcasecmp(wrap_attr, "physical")) {
 			fc->wrap = FORM_WRAP_HARD;
-		} else if (!strcasecmp(wrap_attr, "soft")
-			   || !strcasecmp(wrap_attr, "virtual")) {
+		} else if (!c_strcasecmp(wrap_attr, "soft")
+			   || !c_strcasecmp(wrap_attr, "virtual")) {
 			fc->wrap = FORM_WRAP_SOFT;
-		} else if (!strcasecmp(wrap_attr, "none")
-			   || !strcasecmp(wrap_attr, "off")) {
+		} else if (!c_strcasecmp(wrap_attr, "none")
+			   || !c_strcasecmp(wrap_attr, "off")) {
 			fc->wrap = FORM_WRAP_NONE;
 		}
 		mem_free(wrap_attr);

@@ -668,7 +668,7 @@ next_break:
 
 				while ((html + 5 < eof && html[0] == '&' && html[1] == '#')
 				       && (!memcmp(html + 2, "13;", 3)
-					   || (html + 6 < eof && !strncasecmp(html + 2, "x0a;", 4)))) {
+					   || (html + 6 < eof && !c_strncasecmp(html + 2, "x0a;", 4)))) {
 					newlines++;
 					html += 5 + (html[4] != ';');
 				}
@@ -806,9 +806,9 @@ start_element(struct element_info *ei,
 		} else foreach (e, html_context->stack) {
 			if (is_block_element(e) && is_inline_element(ei)) break;
 			if (e->type < ELEMENT_KILLABLE) break;
-			if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+			if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) break;
 		}
-		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
+		if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) {
 			while (e->prev != (void *) &html_context->stack)
 				kill_html_stack_item(html_context, e->prev);
 
@@ -917,7 +917,7 @@ end_element(struct element_info *ei,
 	/* dump_html_stack(html_context); */
 	foreach (e, html_context->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
-		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
+		if (c_strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (e->type < ELEMENT_KILLABLE)
 				break;
 			else
@@ -1015,10 +1015,10 @@ sp:
 	if (parse_element(s, eof, &name, &namelen, &attr, &s)) goto sp;
 
 ps:
-	if (!strlcasecmp(name, namelen, "HEAD", 4)) goto se;
-	if (!strlcasecmp(name, namelen, "/HEAD", 5)) return;
-	if (!strlcasecmp(name, namelen, "BODY", 4)) return;
-	if (title && !title->length && !strlcasecmp(name, namelen, "TITLE", 5)) {
+	if (!c_strlcasecmp(name, namelen, "HEAD", 4)) goto se;
+	if (!c_strlcasecmp(name, namelen, "/HEAD", 5)) return;
+	if (!c_strlcasecmp(name, namelen, "BODY", 4)) return;
+	if (title && !title->length && !c_strlcasecmp(name, namelen, "TITLE", 5)) {
 		unsigned char *s1;
 
 xse:
@@ -1041,7 +1041,7 @@ xsp:
 		clr_spaces(title->source);
 		goto ps;
 	}
-	if (strlcasecmp(name, namelen, "META", 4)) goto se;
+	if (c_strlcasecmp(name, namelen, "META", 4)) goto se;
 
 	he = get_attr_val(attr, "charset", options);
 	if (he) {

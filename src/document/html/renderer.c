@@ -1002,7 +1002,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 	if (!format.form) {
 		link->target = null_or_stracpy(format.target);
 		link->data.name = memacpy(name, namelen);
-		/* if (strlen(url) > 4 && !strncasecmp(url, "MAP@", 4)) { */
+		/* if (strlen(url) > 4 && !c_strncasecmp(url, "MAP@", 4)) { */
 		if (format.link
 		    && ((format.link[0]|32) == 'm')
 		    && ((format.link[1]|32) == 'a')
@@ -2122,7 +2122,7 @@ find_tag(struct document *document, unsigned char *name, int namelen)
 	struct tag *tag;
 
 	foreach (tag, document->tags)
-		if (!strlcasecmp(tag->name, -1, name, namelen))
+		if (!c_strlcasecmp(tag->name, -1, name, namelen))
 			return tag->y;
 
 	return -1;
