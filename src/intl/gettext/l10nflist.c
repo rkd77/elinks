@@ -349,7 +349,7 @@ _nl_normalize_codeset(const unsigned char *codeset, size_t name_len)
 
 		for (cnt = 0; cnt < name_len; ++cnt)
 			if (isalpha(codeset[cnt]))
-				*wp++ = tolower(codeset[cnt]);
+				*wp++ = c_tolower(codeset[cnt]);
 			else if (isdigit(codeset[cnt]))
 				*wp++ = codeset[cnt];
 

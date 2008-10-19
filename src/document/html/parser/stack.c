@@ -243,8 +243,8 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 		    || (!c_strlcasecmp(e->name, e->namelen, "TABLE", 5)))
 			break;
 
-		if (e->namelen == 2 && toupper(e->name[0]) == 'T') {
-			unsigned char c = toupper(e->name[1]);
+		if (e->namelen == 2 && c_toupper(e->name[0]) == 'T') {
+			unsigned char c = c_toupper(e->name[1]);
 
 			if (c == 'D' || c == 'H' || c == 'R')
 				break;

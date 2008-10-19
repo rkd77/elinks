@@ -341,7 +341,7 @@ request_frame(struct session *ses, unsigned char *name,
 	foreach (frame, loc->frames) {
 		struct document_view *doc_view;
 
-		if (strcasecmp(frame->name, name))
+		if (c_strcasecmp(frame->name, name))
 			continue;
 
 		foreach (doc_view, ses->scrn_frames) {
@@ -1238,7 +1238,7 @@ ses_find_frame(struct session *ses, unsigned char *name)
 	if_assert_failed return NULL;
 
 	foreachback (frame, loc->frames)
-		if (!strcasecmp(frame->name, name))
+		if (!c_strcasecmp(frame->name, name))
 			return frame;
 
 	return NULL;

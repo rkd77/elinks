@@ -363,7 +363,7 @@ read_key(const unsigned char *key_str)
 		return key_str[0];
 
 	for (key = key_table; key->str; key++)
-		if (!strcasecmp(key->str, key_str))
+		if (!c_strcasecmp(key->str, key_str))
 			return key->num;
 
 	return KBD_UNDEF;
@@ -377,17 +377,17 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 {
 	kbd->modifier = KBD_MOD_NONE;
 	while (1) {
-		if (!strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
+		if (!c_strncasecmp(s, "Shift", 5) && (s[5] == '-' || s[5] == '+')) {
 			/* Shift+a == shiFt-a == Shift-a */
 			kbd->modifier |= KBD_MOD_SHIFT;
 			s += 6;
 
-		} else if (!strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
+		} else if (!c_strncasecmp(s, "Ctrl", 4) && (s[4] == '-' || s[4] == '+')) {
 			/* Ctrl+a == ctRl-a == Ctrl-a */
 			kbd->modifier |= KBD_MOD_CTRL;
 			s += 5;
 
-		} else if (!strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
+		} else if (!c_strncasecmp(s, "Alt", 3) && (s[3] == '-' || s[3] == '+')) {
 			/* Alt+a == aLt-a == Alt-a */
 			kbd->modifier |= KBD_MOD_ALT;
 			s += 4;

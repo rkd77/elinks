@@ -67,13 +67,13 @@ is_in_domain(unsigned char *domain, unsigned char *server, int server_len)
 		return 0;
 
 	if (domain_len == server_len)
-		return !strncasecmp(domain, server, server_len);
+		return !c_strncasecmp(domain, server, server_len);
 
 	len = server_len - domain_len;
 	if (server[len - 1] != '.')
 		return 0;
 
-	return !strncasecmp(domain, server + len, domain_len);
+	return !c_strncasecmp(domain, server + len, domain_len);
 }
 
 int
@@ -131,7 +131,7 @@ end_with_known_tld(const unsigned char *s, int slen)
 		int tldlen = strlen(tld[i]);
 		int pos = slen - tldlen;
 
-		if (pos >= 0 && !strncasecmp(&s[pos], tld[i], tldlen))
+		if (pos >= 0 && !c_strncasecmp(&s[pos], tld[i], tldlen))
 			return pos;
 	}
 
@@ -1023,7 +1023,7 @@ find_uri_protocol(unsigned char *newurl)
 	ch = newurl + strcspn(newurl, ".:/@");
 	if (*ch == '@'
 	    || (*ch == ':' && *newurl != '[' && strchr(newurl, '@'))
-	    || !strncasecmp(newurl, "ftp.", 4)) {
+	    || !c_strncasecmp(newurl, "ftp.", 4)) {
 		/* Contains user/password/ftp-hostname */
 		return PROTOCOL_FTP;
 
@@ -1521,11 +1521,11 @@ check_uri_sanity(struct uri *uri)
 	int pos;
 
 	for (pos = 0; pos < uri->protocollen; pos++)
-		if (isupper(uri->string[pos])) goto error;
+		if (c_isupper(uri->string[pos])) goto error;
 
 	if (uri->hostlen)
 		for (pos = 0; pos < uri->hostlen; pos++)
-			if (isupper(uri->host[pos])) goto error;
+			if (c_isupper(uri->host[pos])) goto error;
 	return;
 error:
 	INTERNAL("Uppercase letters detected in protocol or host part (%s).", struri(uri));

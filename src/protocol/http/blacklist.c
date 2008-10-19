@@ -34,7 +34,7 @@ get_blacklist_entry(struct uri *uri)
 	if_assert_failed return NULL;
 
 	foreach (entry, blacklist)
-		if (!strlcasecmp(entry->host, -1, uri->host, uri->hostlen))
+		if (!c_strlcasecmp(entry->host, -1, uri->host, uri->hostlen))
 			return entry;
 
 	return NULL;

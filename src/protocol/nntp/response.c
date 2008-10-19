@@ -297,9 +297,9 @@ add_header_to_string(struct string *str, unsigned char *header)
 			break;
 
 		for (sp = end; sp < cp; sp++)
-			charset_q[sp - end] = tolower(*sp);
+			charset_q[sp - end] = c_tolower(*sp);
 		charset_q[cp - end] = 0;
-		encoding = tolower(cp[1]);
+		encoding = c_tolower(cp[1]);
 
 		if (!encoding || cp[2] != '?')
 			break;

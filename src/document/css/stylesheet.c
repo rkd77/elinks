@@ -38,7 +38,7 @@ find_css_selector(LIST_OF(struct css_selector) *sels,
 	foreach (selector, *sels) {
 		if (type != selector->type || rel != selector->relation)
 			continue;
-		if (strlcasecmp(name, namelen, selector->name, -1))
+		if (c_strlcasecmp(name, namelen, selector->name, -1))
 			continue;
 		return selector;
 	}

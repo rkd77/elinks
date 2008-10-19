@@ -86,9 +86,9 @@ strip_proxy_protocol(unsigned char *proxy,
 {
 	assert(proxy && *proxy);
 
-	if (!strncasecmp(proxy, strip1, strlen(strip1)))
+	if (!c_strncasecmp(proxy, strip1, strlen(strip1)))
 		proxy += strlen(strip1);
-	else if (strip2 && !strncasecmp(proxy, strip2, strlen(strip2)))
+	else if (strip2 && !c_strncasecmp(proxy, strip2, strlen(strip2)))
 		proxy += strlen(strip2);
 
 	return proxy;

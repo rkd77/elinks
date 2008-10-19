@@ -2,6 +2,7 @@
 #define EL__UTIL_SCANNER_H
 
 #include "util/error.h"
+#include "util/string.h"
 
 /* Define if you want a talking scanner */
 /* #define DEBUG_SCANNER */
@@ -29,7 +30,7 @@ struct scanner_token {
 
 /** Compare the string of @a token with @a str */
 #define scanner_token_strlcasecmp(token, str, len) \
-	((token) && !strlcasecmp((token)->string, (token)->length, str, len))
+	((token) && !c_strlcasecmp((token)->string, (token)->length, str, len))
 
 /** Also compares the token string but using a "static" string */
 #define scanner_token_contains(token, str) \
