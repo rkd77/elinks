@@ -828,7 +828,7 @@ html_li(struct html_context *html_context, unsigned char *a,
 			if (t == P_ROMAN) {
 				unsigned char *x;
 
-				for (x = n; *x; x++) *x = toupper(*x);
+				for (x = n; *x; x++) *x = c_toupper(*x);
 			}
 
 		} else {

@@ -241,12 +241,12 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	if (document->options.plain) {
 #ifdef CONFIG_DOM
 		if (cached->content_type
-		    && (!strcasecmp("text/html", cached->content_type)
-			|| !strcasecmp("application/xhtml+xml", cached->content_type)
-		        || !strcasecmp("application/rss+xml", cached->content_type)
-		        || !strcasecmp("application/xbel+xml", cached->content_type)
-		        || !strcasecmp("application/x-xbel", cached->content_type)
-		        || !strcasecmp("application/xbel", cached->content_type)))
+		    && (!c_strcasecmp("text/html", cached->content_type)
+			|| !c_strcasecmp("application/xhtml+xml", cached->content_type)
+		        || !c_strcasecmp("application/rss+xml", cached->content_type)
+		        || !c_strcasecmp("application/xbel+xml", cached->content_type)
+		        || !c_strcasecmp("application/x-xbel", cached->content_type)
+		        || !c_strcasecmp("application/xbel", cached->content_type)))
 			render_dom_document(cached, document, &buffer);
 		else
 #endif

@@ -133,7 +133,7 @@ parse_header(unsigned char *head, unsigned char *item, unsigned char **ptr)
 
 		/* Does item match header line ? */
 		for (itempos = item; *itempos && *pos; itempos++, pos++)
-			if (toupper(*itempos) != toupper(*pos))
+			if (c_toupper(*itempos) != c_toupper(*pos))
 				break;
 
 		if (!*pos) break; /* Nothing left to parse. */
@@ -215,7 +215,7 @@ parse_header_param(unsigned char *str, unsigned char *name)
 
 		while (*p && (*p == ';' || *p <= ' ')) p++;
 		if (strlen(p) < namelen) return NULL;
-	} while (strncasecmp(p, name, namelen));
+	} while (c_strncasecmp(p, name, namelen));
 
 	p += namelen;
 
@@ -252,11 +252,11 @@ get_header_param(unsigned char *e, unsigned char *name)
 	unsigned char *n, *start;
 
 again:
-	while (*e && toupper(*e++) != toupper(*name));
+	while (*e && c_toupper(*e++) != c_toupper(*name));
 	if (!*e) return NULL;
 
 	n = name + 1;
-	while (*n && toupper(*e) == toupper(*n)) e++, n++;
+	while (*n && c_toupper(*e) == c_toupper(*n)) e++, n++;
 	if (*n) goto again;
 
 	skip_space(e);

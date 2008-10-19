@@ -22,9 +22,9 @@ static inline int
 dom_string_casecmp(const struct dom_string *string1, const struct dom_string *string2)
 {
 	size_t length = int_min(string1->length, string2->length);
-	size_t string_diff = strncasecmp(string1->string, string2->string, length);
+	size_t string_diff = c_strncasecmp(string1->string, string2->string, length);
 
-	/* If the lengths or strings don't match strncasecmp() does the
+	/* If the lengths or strings don't match c_strncasecmp() does the
 	 * job else return which ever is bigger. */
 	return string_diff ? string_diff : string1->length - string2->length;
 }
@@ -32,7 +32,7 @@ dom_string_casecmp(const struct dom_string *string1, const struct dom_string *st
 static inline int
 dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size_t length)
 {
-	return strncasecmp(string1->string, string2->string, length);
+	return c_strncasecmp(string1->string, string2->string, length);
 }
 
 #define copy_dom_string(string1, string2) \

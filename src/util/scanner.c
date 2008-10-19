@@ -23,7 +23,7 @@ map_scanner_string(struct scanner *scanner,
 
 	for (; mappings->name; mappings++) {
 		if (mappings->base_type == base_type
-		    && !strlcasecmp(mappings->name, -1, ident, length))
+		    && !c_strlcasecmp(mappings->name, -1, ident, length))
 			return mappings->type;
 	}
 

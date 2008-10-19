@@ -117,7 +117,7 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		}
 #endif
 		foreach (form, document->forms) {
-			if (!form->name || strcasecmp(string, form->name))
+			if (!form->name || c_strcasecmp(string, form->name))
 				continue;
 
 			object_to_jsval(ctx, vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));

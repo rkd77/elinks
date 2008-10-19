@@ -402,7 +402,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	if (argc > 1) target = jsval_to_string(ctx, &argv[1]);
 
-	if (*target && strcasecmp(target, "_blank")) {
+	if (*target && c_strcasecmp(target, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
 
 		if (deo) {

@@ -318,7 +318,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 	for (method = 0; remote_methods[method].name; method++) {
 		unsigned char *name = remote_methods[method].name;
 
-		if (!strlcasecmp(command, len, name, -1))
+		if (!c_strlcasecmp(command, len, name, -1))
 			break;
 	}
 
@@ -356,7 +356,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		if (remote_argc < 1)
 			break;
 
-		if (!strcasecmp(remote_argv[0], "openBrowser")) {
+		if (!c_strcasecmp(remote_argv[0], "openBrowser")) {
 			remote_session_flags = SES_REMOTE_NEW_WINDOW;
 		}
 		break;
@@ -441,7 +441,7 @@ print_full_help(struct option *tree, unsigned char *path)
 		    || (option->flags & OPT_HIDDEN))
 			continue;
 
-		if (!capt && !strncasecmp(option->name, "_template_", 10))
+		if (!capt && !c_strncasecmp(option->name, "_template_", 10))
 			capt = (unsigned char *) N_("Template option folder");
 
 		if (!capt) {

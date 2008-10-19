@@ -67,7 +67,7 @@ void
 init_colors_lookup(void)
 {
 #ifdef USE_FASTFIND
-	fastfind_index(&ff_colors_index, FF_COMPRESS);
+	fastfind_index(&ff_colors_index, FF_COMPRESS | FF_LOCALE_INDEP);
 #endif
 }
 
@@ -110,7 +110,7 @@ decode_hex_color:
 
 #ifndef USE_FASTFIND
 		for (cs = color_specs; cs->name; cs++)
-			if (!strlcasecmp(cs->name, -1, str, slen))
+			if (!c_strlcasecmp(cs->name, -1, str, slen))
 				break;
 #else
 		cs = fastfind_search(&ff_colors_index, str, slen);

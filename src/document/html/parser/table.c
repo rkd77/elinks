@@ -684,12 +684,12 @@ see:
 	}
 
 	/* All following tags have T as first letter. */
-	if (toupper(name[0]) != 'T') goto see;
+	if (c_toupper(name[0]) != 'T') goto see;
 
 	name++; namelen--;
 	if (namelen == 0) goto see;
 
-	c = toupper(name[0]);
+	c = c_toupper(name[0]);
 
 	/* /TR /TD /TH */
 	if (closing_tag && namelen == 1) {

@@ -89,7 +89,7 @@ find_in_dns_cache(unsigned char *name)
 	struct dnsentry *dnsentry;
 
 	foreach (dnsentry, dns_cache)
-		if (!strcasecmp(dnsentry->name, name)) {
+		if (!c_strcasecmp(dnsentry->name, name)) {
 			move_to_top_of_list(dns_cache, dnsentry);
 			return dnsentry;
 		}

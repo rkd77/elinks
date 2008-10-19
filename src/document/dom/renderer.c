@@ -718,17 +718,17 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 
 	document->bgcolor = document->options.default_bg;
 
-	if (!strcasecmp("application/rss+xml", cached->content_type)) {
+	if (!c_strcasecmp("application/rss+xml", cached->content_type)) {
 		renderer.doctype = SGML_DOCTYPE_RSS;
 
-	} else if (!strcasecmp("application/xbel+xml", cached->content_type)
-		   || !strcasecmp("application/x-xbel", cached->content_type)
-		   || !strcasecmp("application/xbel", cached->content_type)) {
+	} else if (!c_strcasecmp("application/xbel+xml", cached->content_type)
+		   || !c_strcasecmp("application/x-xbel", cached->content_type)
+		   || !c_strcasecmp("application/xbel", cached->content_type)) {
 		renderer.doctype = SGML_DOCTYPE_XBEL;
 
 	} else {
-		assertm(!strcasecmp("text/html", cached->content_type)
-			|| !strcasecmp("application/xhtml+xml", cached->content_type),
+		assertm(!c_strcasecmp("text/html", cached->content_type)
+			|| !c_strcasecmp("application/xhtml+xml", cached->content_type),
 			"Couldn't resolve doctype '%s'", cached->content_type);
 
 		renderer.doctype = SGML_DOCTYPE_HTML;

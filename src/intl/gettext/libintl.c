@@ -151,7 +151,7 @@ name_to_language(const unsigned char *name)
 	int i;
 
 	for (i = 0; languages[i].name; i++) {
-		if (strcasecmp(languages[i].name, name))
+		if (c_strcasecmp(languages[i].name, name))
 			continue;
 		return i;
 	}

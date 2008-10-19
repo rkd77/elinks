@@ -250,7 +250,7 @@ handle_interlink_event(struct terminal *term, struct term_event *ev)
 
 		reset_timer();
 
-		if (check_kbd_modifier(ev, KBD_MOD_CTRL) && toupper(key) == 'L') {
+		if (check_kbd_modifier(ev, KBD_MOD_CTRL) && c_toupper(key) == 'L') {
 			redraw_terminal_cls(term);
 			break;
 

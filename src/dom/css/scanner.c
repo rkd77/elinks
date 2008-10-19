@@ -290,7 +290,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 
 	} else if (first_char == '!') {
 		scan_css(scanner, string, CSS_CHAR_WHITESPACE);
-		if (!strncasecmp(string, "important", 9)) {
+		if (!c_strncasecmp(string, "important", 9)) {
 			type = CSS_TOKEN_IMPORTANT;
 			string += 9;
 		}
