@@ -371,7 +371,9 @@ add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int p
  *   URL to which the bookmark will point.  Must be in UTF-8.
  *   NULL or "" means add a bookmark folder.
  *
- * @return the new bookmark, or NULL on error.  */
+ * @return the new bookmark, or NULL on error.
+ *
+ * @see add_bookmark_cp() */
 struct bookmark *
 add_bookmark(struct bookmark *root, int place, unsigned char *title,
 	     unsigned char *url)
@@ -406,6 +408,56 @@ add_bookmark(struct bookmark *root, int place, unsigned char *title,
 	add_bookmark_item_to_bookmarks(bm, root, place);
 
 	return bm;
+}
+
+/** Add a bookmark to the bookmark list.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param place
+ *   0 means add to the top.  1 means add to the bottom.
+ * @param codepage
+ *   Codepage of @a title and @a url.
+ * @param title
+ *   Title of the bookmark.  Must not be NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark.
+ *
+ * @see add_bookmark() */
+struct bookmark *
+add_bookmark_cp(struct bookmark *root, int place, int codepage,
+		unsigned char *title, unsigned char *url)
+{
+	const int utf8_cp = get_cp_index("UTF-8");
+	struct conv_table *table;
+	unsigned char *utf8_title = NULL;
+	unsigned char *utf8_url = NULL;
+	struct bookmark *bookmark = NULL;
+
+	if (!url)
+		url = "";
+
+	table = get_translation_table(codepage, utf8_cp);
+	if (!table)
+		return NULL;
+
+	utf8_title = convert_string(table, title, strlen(title),
+				    utf8_cp, CSM_NONE,
+				    NULL, NULL, NULL);
+	utf8_url = convert_string(table, url, strlen(url),
+				  utf8_cp, CSM_NONE,
+				  NULL, NULL, NULL);
+	if (utf8_title && utf8_url)
+		bookmark = add_bookmark(root, place,
+					utf8_title, utf8_url);
+	mem_free_if(utf8_title);
+	mem_free_if(utf8_url);
+	return bookmark;
 }
 
 /* Updates an existing bookmark.

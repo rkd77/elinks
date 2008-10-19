@@ -45,6 +45,8 @@ int bookmarks_are_dirty(void);
 
 void delete_bookmark(struct bookmark *);
 struct bookmark *add_bookmark(struct bookmark *, int, unsigned char *, unsigned char *);
+struct bookmark *add_bookmark_cp(struct bookmark *, int, int,
+				 unsigned char *, unsigned char *);
 struct bookmark *get_bookmark_by_name(struct bookmark *folder,
                                       unsigned char *title);
 struct bookmark *get_bookmark(unsigned char *url);
