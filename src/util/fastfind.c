@@ -165,6 +165,7 @@ struct fastfind_info {
 	int leafsets_count;
 
 	unsigned int case_aware:1;
+	unsigned int locale_indep:1;
 	unsigned int compress:1;
 
 	int idxtab[FF_MAX_CHARS];
@@ -229,6 +230,7 @@ FF_DBG_dump_stats(struct fastfind_info *info)
 	fprintf(stderr, "------ FastFind Statistics ------\n");
 	fprintf(stderr, "Comment     : %s\n", info->debug.comment);
 	fprintf(stderr, "Case-aware  : %s\n", info->case_aware ? "yes" : "no");
+	fprintf(stderr, "Locale-indep: %s\n", info->locale_indep ? "yes" : "no");
 	fprintf(stderr, "Compress    : %s\n", info->compress ? "yes" : "no");
 	fprintf(stderr, "Uniq_chars  : %s\n", info->uniq_chars);
 	fprintf(stderr, "Uniq_chars #: %d/%d max.\n", info->uniq_chars_count, FF_MAX_CHARS);
@@ -288,6 +290,7 @@ init_fastfind(struct fastfind_index *index, enum fastfind_flags flags)
 
 	info->min_key_len = FF_MAX_KEYLEN;
 	info->case_aware = !!(flags & FF_CASE_AWARE);
+	info->locale_indep = !!(flags & FF_LOCALE_INDEP);
 	info->compress = !!(flags & FF_COMPRESS);
 
 	FF_DBG_mem(info, sizeof(*info) - sizeof(info->debug));
@@ -430,7 +433,7 @@ compress_tree(struct ff_node *leafset, struct fastfind_info *info)
 	}
 }
 
-#define ifcase(c) (info->case_aware ? (c) : toupper(c))
+#define ifcase(c) ( info->case_aware ? (c) : (info->locale_indep ? c_toupper(c) : toupper(c)) )
 
 struct fastfind_index *
 fastfind_index(struct fastfind_index *index, enum fastfind_flags flags)
@@ -618,7 +621,10 @@ fastfind_search(struct fastfind_index *index,
 	if (info->case_aware)
 		FF_SEARCH(key[i]);
 	else
-		FF_SEARCH(toupper(key[i]));
+		if (info->locale_indep)
+			FF_SEARCH(c_toupper(key[i]));
+		else
+			FF_SEARCH(toupper(key[i]));
 
 	return NULL;
 }

@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #include "elinks.h"
 
@@ -231,11 +232,91 @@ elinks_strlcmp(const unsigned char *s1, size_t n1,
 
 int
 elinks_strlcasecmp(const unsigned char *s1, size_t n1,
-		   const unsigned char *s2, size_t n2)
+		   const unsigned char *s2, size_t n2,
+		   const int locale_indep)
 {
-	strlcmp_device("strlcasecmp", s1, n1, s2, n2, toupper(s1[p]), toupper(s2[p]));
+	if (locale_indep) {
+		strlcmp_device("strlcasecmp", s1, n1, s2, n2, c_toupper(s1[p]), c_toupper(s2[p]));
+	}
+	else {
+		strlcmp_device("strlcasecmp", s1, n1, s2, n2, toupper(s1[p]), toupper(s2[p]));
+	}
 }
 
+/* c_strcasecmp
+ * Taken from GNU coreutils (version 6.9)
+ * File name: lib/c-strcasecmp.c
+ * Copyright (C) 1998-1999, 2005-2006 Free Software Foundation, Inc.
+ * Licensed under the GPL version 2 or any later version.
+ */
+int c_strcasecmp (const char *s1, const char *s2)
+{
+  register const unsigned char *p1 = (const unsigned char *) s1;
+  register const unsigned char *p2 = (const unsigned char *) s2;
+  unsigned char c1, c2;
+
+  if (p1 == p2)
+    return 0;
+
+  do
+    {
+      c1 = c_tolower (*p1);
+      c2 = c_tolower (*p2);
+
+      if (c1 == '\0')
+	break;
+
+      ++p1;
+      ++p2;
+    }
+  while (c1 == c2);
+
+  if (UCHAR_MAX <= INT_MAX)
+    return c1 - c2;
+  else
+    /* On machines where 'char' and 'int' are types of the same size, the
+       difference of two 'unsigned char' values - including the sign bit -
+       doesn't fit in an 'int'.  */
+    return (c1 > c2 ? 1 : c1 < c2 ? -1 : 0);
+}
+
+/* c_strncasecmp
+ * Taken from GNU coreutils (version 6.9)
+ * File name: lib/c-strncasecmp.c
+ *                     ^ (note the "n")
+ * Copyright (C) 1998-1999, 2005-2006 Free Software Foundation, Inc.
+ * Licensed under the GPL version 2 or any later version.
+ */
+int c_strncasecmp (const char *s1, const char *s2, size_t n)
+{
+  register const unsigned char *p1 = (const unsigned char *) s1;
+  register const unsigned char *p2 = (const unsigned char *) s2;
+  unsigned char c1, c2;
+
+  if (p1 == p2 || n == 0)
+    return 0;
+
+  do
+    {
+      c1 = c_tolower (*p1);
+      c2 = c_tolower (*p2);
+
+      if (--n == 0 || c1 == '\0')
+	break;
+
+      ++p1;
+      ++p2;
+    }
+  while (c1 == c2);
+
+  if (UCHAR_MAX <= INT_MAX)
+    return c1 - c2;
+  else
+    /* On machines where 'char' and 'int' are types of the same size, the
+       difference of two 'unsigned char' values - including the sign bit -
+       doesn't fit in an 'int'.  */
+    return (c1 > c2 ? 1 : c1 < c2 ? -1 : 0);
+}
 
 /* The new string utilities: */
 

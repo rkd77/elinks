@@ -161,6 +161,16 @@ trim_chars(unsigned char *s, unsigned char c, int *len)
 	return s;
 }
 
+/* Convert a character to {lower|upper}case using the
+ * ASCII character set (as if in the C locale) */
+int c_tolower(int c);
+int c_toupper(int c);
+
+/* Check whether a character is {lower|upper}case using the
+ * the ASCII character set (as if in the C locale) */
+int c_islower(int c);
+int c_isupper(int c);
+
 /* Convert uppercase letters in @string with the given @length to lowercase. */
 static inline void
 convert_to_lowercase(unsigned char *string, int length)
@@ -168,6 +178,16 @@ convert_to_lowercase(unsigned char *string, int length)
 	for (length--; length >= 0; length--)
 		if (isupper(string[length]))
 			string[length] = tolower(string[length]);
+}
+
+/* Convert uppercase letters in @string with the given @length to lowercase
+ * using the ASCII character set (as if in the C locale) */
+static inline void
+convert_to_lowercase_locale_indep(unsigned char *string, int length)
+{
+	for (length--; length >= 0; length--)
+		if (c_isupper(string[length]))
+			string[length] = c_tolower(string[length]);
 }
 
 /* This function drops control chars, nbsp char and limit the number of consecutive
