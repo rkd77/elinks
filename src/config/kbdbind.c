@@ -427,7 +427,7 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 		 * and instead make kbd_ev_lookup() or its callers
 		 * search for different variants of the keystroke if
 		 * the original one is not bound to any action.  */
-		kbd->key = toupper(kbd->key);
+		kbd->key = c_toupper(kbd->key);
 	}
 
 	return (kbd->key == KBD_UNDEF) ? -1 : 0;
