@@ -328,6 +328,10 @@ Len Lattanzi <Len_Lattanzi@StanfordAlumni.org>
 M. K. Srikant <srix@vsnl.com>
 	Small fix in forms
 
+M. Vefa Bicakci <bicave@superonline.com>
+	Licenses modifications under "GPL version 2 or any later version."
+	Locale-independent case-insensitive comparisons
+
 Malcolm Parsons <malcolm.parsons@gmail.com>
 	Typo fixes
 
