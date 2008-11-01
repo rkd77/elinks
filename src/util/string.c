@@ -320,6 +320,25 @@ int c_strncasecmp (const char *s1, const char *s2, size_t n)
     return (c1 > c2 ? 1 : c1 < c2 ? -1 : 0);
 }
 
+/* c_strcasestr - adapted from src/osdep/stub.c */
+char * c_strcasestr(const char *haystack, const char *needle)
+{
+	size_t haystack_length = strlen(haystack);
+	size_t needle_length = strlen(needle);
+	int i;
+
+	if (haystack_length < needle_length)
+		return NULL;
+
+	for (i = haystack_length - needle_length + 1; i; i--) {
+		if (!c_strncasecmp(haystack, needle, needle_length))
+			return (char *) haystack;
+		haystack++;
+	}
+
+	return NULL;
+}
+
 /* The new string utilities: */
 
 /* TODO Currently most of the functions use add_bytes_to_string() as a backend

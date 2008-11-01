@@ -1424,13 +1424,13 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 			break;
 		}
 #ifdef CONFIG_GSSAPI
-		else if (!strncasecmp(d, HTTPNEG_GSS_STR, HTTPNEG_GSS_STRLEN)) {
+		else if (!c_strncasecmp(d, HTTPNEG_GSS_STR, HTTPNEG_GSS_STRLEN)) {
 			if (http_negotiate_input(conn, uri, HTTPNEG_GSS, str)==0)
 				ret = 1;
 			mem_free(d);
 			break;
 		}
-		else if (!strncasecmp(d, HTTPNEG_NEG_STR, HTTPNEG_NEG_STRLEN)) {
+		else if (!c_strncasecmp(d, HTTPNEG_NEG_STR, HTTPNEG_NEG_STRLEN)) {
 			if (http_negotiate_input(conn, uri, HTTPNEG_NEG, str)==0)
 				ret = 1;
 			mem_free(d);
@@ -1874,7 +1874,7 @@ again:
 		if (file_encoding != ENCODING_GZIP
 		    && (!c_strcasecmp(d, "gzip") || !c_strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
-		if (!strcasecmp(d, "deflate") || !strcasecmp(d, "x-deflate"))
+		if (!c_strcasecmp(d, "deflate") || !c_strcasecmp(d, "x-deflate"))
 			conn->content_encoding = ENCODING_DEFLATE;
 #endif
 
@@ -1886,7 +1886,7 @@ again:
 
 #ifdef CONFIG_LZMA
 		if (file_encoding != ENCODING_LZMA
-		    && (!strcasecmp(d, "lzma") || !strcasecmp(d, "x-lzma")))
+		    && (!c_strcasecmp(d, "lzma") || !c_strcasecmp(d, "x-lzma")))
 			conn->content_encoding = ENCODING_LZMA;
 #endif
 		mem_free(d);

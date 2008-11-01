@@ -152,7 +152,7 @@ document_get(struct SEE_interpreter *interp, struct SEE_object *o,
 		if (!string) return;
 
 		foreach (form, document->forms) {
-			if (!form->name || strcasecmp(string, form->name))
+			if (!form->name || c_strcasecmp(string, form->name))
 				continue;
 			form_view = find_form_view(doc_view, form);
 			form_object = js_get_form_object(interp, doc, form_view);

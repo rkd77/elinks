@@ -337,7 +337,7 @@ search_for_url_param(unsigned char *str, unsigned char **ret)
 	/* Returns now if string @str is empty. */
 	if (!*str) return HEADER_PARAM_NOT_FOUND;
 
-	p = strcasestr(str, "url");
+	p = c_strcasestr(str, "url");
 	if (!p) return HEADER_PARAM_NOT_FOUND;
 	p += 3;
 

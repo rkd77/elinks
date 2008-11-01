@@ -111,6 +111,9 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 int c_strcasecmp(const char *s1, const char *s2);
 int c_strncasecmp(const char *s1, const char *s2, size_t n);
 
+/* strcasestr function which works as if it is in the C locale. */
+char * c_strcasestr(const char *haystack, const char *needle);
+
 /** @} */
 
 

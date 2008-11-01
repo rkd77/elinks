@@ -104,7 +104,7 @@ get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
 
 	/* Now add lowercased progid part. Delicious. */
 	add_bytes_to_string(&name, progid, progidlen);
-	convert_to_lowercase(&name.source[sizeof("protocol.user.") - 1], progidlen);
+	convert_to_lowercase_locale_indep(&name.source[sizeof("protocol.user.") - 1], progidlen);
 
 	add_char_to_string(&name, '.');
 	add_to_string(&name, get_system_str(xwin));
