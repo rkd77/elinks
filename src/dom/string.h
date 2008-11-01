@@ -1,6 +1,7 @@
 #ifndef EL_DOM_STRING_H
 #define EL_DOM_STRING_H
 
+#include "util/conv.h"
 #include "util/memory.h"
 
 struct dom_string {
