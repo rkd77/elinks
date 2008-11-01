@@ -361,7 +361,7 @@ strtolx(unsigned char *str, unsigned char **end)
 	if (errno) return 0;
 	if (!*end) return num;
 
-	postfix = toupper(**end);
+	postfix = c_toupper(**end);
 	if (postfix == 'K') {
 		(*end)++;
 		if (num < -INT_MAX / 1024) return -INT_MAX;

@@ -682,7 +682,7 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
 		 * get_translated_uri() through translate_url() calls this
 		 * function and then it already works on and modifies an
 		 * allocated copy. */
-		convert_to_lowercase(uri->string, uri->protocollen);
+		convert_to_lowercase_locale_indep(uri->string, uri->protocollen);
 		if (uri->hostlen) convert_to_lowercase(uri->host, uri->hostlen);
 
 		parse = 1;

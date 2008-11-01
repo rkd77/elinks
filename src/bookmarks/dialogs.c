@@ -530,7 +530,7 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 		assert(ctx->title && ctx->url);
 
 		ctx->found = (*ctx->title && strcasestr(bm->title, ctx->title))
-			     || (*ctx->url && strcasestr(bm->url, ctx->url));
+			     || (*ctx->url && c_strcasestr(bm->url, ctx->url));
 
 		if (ctx->found) *offset = 0;
 	}

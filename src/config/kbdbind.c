@@ -17,6 +17,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
 #include "terminal/kbd.h"
+#include "util/conv.h"
 #include "util/memory.h"
 #include "util/string.h"
 

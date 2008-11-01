@@ -299,7 +299,7 @@ globhist_simple_search(unsigned char *search_url, unsigned char *search_title)
 		if ((*search_title
 		     && strcasestr(history_item->title, search_title))
 		    || (*search_url
-			&& strcasestr(history_item->url, search_url))) {
+			&& c_strcasestr(history_item->url, search_url))) {
 			history_item->box_item->visible = 1;
 		} else {
 			history_item->box_item->visible = 0;

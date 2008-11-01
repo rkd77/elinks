@@ -248,7 +248,7 @@ get_fragment_content_type(struct cache_entry *cached)
 	if (!sample)
 		return NULL;
 
-	if (strcasestr(sample, "<html>"))
+	if (c_strcasestr(sample, "<html>"))
 		ctype = stracpy("text/html");
 
 	mem_free(sample);
