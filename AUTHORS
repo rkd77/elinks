@@ -351,6 +351,10 @@ M. K. Srikant <srix@vsnl.com>
 M. Levinson <levinsm@users.sourceforge.net>
 	Python scripting fixes
 
+M. Vefa Bicakci <bicave@superonline.com>
+	Licenses modifications under "GPL version 2 or any later version."
+	Locale-independent case-insensitive comparisons
+
 Malcolm Parsons <malcolm.parsons@gmail.com>
 	Typo fixes
 

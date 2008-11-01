@@ -463,12 +463,12 @@ html_object(struct html_context *html_context, unsigned char *a,
 	type = get_attr_val(a, "type", html_context->doc_cp);
 	if (!type) { mem_free(url); return; }
 
-	if (!strncasecmp(type, "text/", 5)) {
+	if (!c_strncasecmp(type, "text/", 5)) {
 		/* We will just emulate <iframe>. */
 		html_iframe_do(a, url, html_context);
 		html_skip(html_context, a);
 
-	} else if (!strncasecmp(type, "image/", 6)) {
+	} else if (!c_strncasecmp(type, "image/", 6)) {
 		/* <img> emulation. */
 		/* TODO: Use the enclosed text as 'alt' attribute. */
 		html_img_do(a, url, html_context);
@@ -519,7 +519,7 @@ html_embed(struct html_context *html_context, unsigned char *a,
 	if (!extension) extension = object_src;
 
 	type = get_extension_content_type(extension);
-	if (type && !strncasecmp(type, "image/", 6)) {
+	if (type && !c_strncasecmp(type, "image/", 6)) {
 		html_img_do(a, object_src, html_context);
 	} else {
 		/* We will just emulate <iframe>. */
@@ -757,26 +757,26 @@ html_link_parse(struct html_context *html_context, unsigned char *a,
 
 	/* TODO: fastfind */
 	for (i = 0; lt_names[i].str; i++)
-		if (!strcasecmp(link->name, lt_names[i].str)) {
+		if (!c_strcasecmp(link->name, lt_names[i].str)) {
 			link->type = lt_names[i].type;
 			return 1;
 		}
 
-	if (strcasestr(link->name, "icon") ||
-	   (link->content_type && strcasestr(link->content_type, "icon"))) {
+	if (c_strcasestr(link->name, "icon") ||
+	   (link->content_type && c_strcasestr(link->content_type, "icon"))) {
 		link->type = LT_ICON;
 
-	} else if (strcasestr(link->name, "alternate")) {
+	} else if (c_strcasestr(link->name, "alternate")) {
 		link->type = LT_ALTERNATE;
 		if (link->lang)
 			link->type = LT_ALTERNATE_LANG;
-		else if (strcasestr(link->name, "stylesheet") ||
-			 (link->content_type && strcasestr(link->content_type, "css")))
+		else if (c_strcasestr(link->name, "stylesheet") ||
+			 (link->content_type && c_strcasestr(link->content_type, "css")))
 			link->type = LT_ALTERNATE_STYLESHEET;
 		else if (link->media)
 			link->type = LT_ALTERNATE_MEDIA;
 
-	} else if (link->content_type && strcasestr(link->content_type, "css")) {
+	} else if (link->content_type && c_strcasestr(link->content_type, "css")) {
 		link->type = LT_STYLESHEET;
 	}
 
@@ -858,7 +858,7 @@ html_link(struct html_context *html_context, unsigned char *a,
 
 	if (link.lang && link.type == LT_ALTERNATE_LANG &&
 	    (link_display < 3 || (link.hreflang &&
-				  strcasecmp(link.hreflang, link.lang)))) {
+				  c_strcasecmp(link.hreflang, link.lang)))) {
 		APPEND(link.lang);
 	}
 

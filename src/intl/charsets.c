@@ -1376,7 +1376,7 @@ get_cp_index(const unsigned char *name)
 	int i, a;
 	int syscp = 0;
 
-	if (!strcasecmp(name, "System")) {
+	if (!c_strcasecmp(name, "System")) {
 #if HAVE_LANGINFO_CODESET
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;
@@ -1399,7 +1399,7 @@ get_cp_index(const unsigned char *name)
 			 * once. So we will do a simple strcasecmp() here.
 			 */
 
-			if (!strcasecmp(name, codepages[i].aliases[a]))
+			if (!c_strcasecmp(name, codepages[i].aliases[a]))
 				return i | syscp;
 		}
 	}
@@ -1457,7 +1457,7 @@ get_cp_index(const unsigned char *name)
 	const struct codepage_desc *codepage;
 	int syscp = 0;
 
-	if (!strcasecmp(name, "System")) {
+	if (!c_strcasecmp(name, "System")) {
 #if HAVE_LANGINFO_CODESET
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;

@@ -857,7 +857,8 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 	undef_to_jsval(ctx, rval);
 
 	foreach (fc, form->items) {
-		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
+		if ((fc->id && !c_strcasecmp(string, fc->id))
+		    || (fc->name && !c_strcasecmp(string, fc->name))) {
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
@@ -979,7 +980,8 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 			JSObject *fcobj = NULL;
 			struct form_state *fs;
 
-			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
+			if ((!fc->id || c_strcasecmp(string, fc->id))
+			    && (!fc->name || c_strcasecmp(string, fc->name)))
 				continue;
 
 			undef_to_jsval(ctx, vp);
@@ -1120,21 +1122,21 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	case JSP_FORM_ENCODING:
 		string = jsval_to_string(ctx, vp);
-		if (!strcasecmp(string, "application/x-www-form-urlencoded")) {
+		if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 			form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 			                                               : FORM_METHOD_POST;
-		} else if (!strcasecmp(string, "multipart/form-data")) {
+		} else if (!c_strcasecmp(string, "multipart/form-data")) {
 			form->method = FORM_METHOD_POST_MP;
-		} else if (!strcasecmp(string, "text/plain")) {
+		} else if (!c_strcasecmp(string, "text/plain")) {
 			form->method = FORM_METHOD_POST_TEXT_PLAIN;
 		}
 		break;
 
 	case JSP_FORM_METHOD:
 		string = jsval_to_string(ctx, vp);
-		if (!strcasecmp(string, "GET")) {
+		if (!c_strcasecmp(string, "GET")) {
 			form->method = FORM_METHOD_GET;
-		} else if (!strcasecmp(string, "POST")) {
+		} else if (!c_strcasecmp(string, "POST")) {
 			form->method = FORM_METHOD_POST;
 		}
 		break;
@@ -1353,7 +1355,7 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 		return;
 
 	foreach (form, doc_view->document->forms) {
-		if (form->name && !strcasecmp(string, form->name)) {
+		if (form->name && !c_strcasecmp(string, form->name)) {
 			object_to_jsval(ctx, rval, get_form_object(ctx, jsdoc,
 					find_form_view(doc_view, form)));
 			break;

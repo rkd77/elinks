@@ -143,7 +143,7 @@ get_cookie_server(unsigned char *host, int hostlen)
 		/* XXX: We must count with cases like "x.co" vs "x.co.uk"
 		 * below! */
 		int cslen = strlen(cs->host);
-		int cmp = strncasecmp(cs->host, host, hostlen);
+		int cmp = c_strncasecmp(cs->host, host, hostlen);
 
 		if (!sort_spot && (cmp > 0 || (cmp == 0 && cslen > hostlen))) {
 			/* This is the first @cs with name greater than @host,
@@ -234,13 +234,13 @@ is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_l
 
 	/* Match domain and server.. */
 
-	/* XXX: Hmm, can't we use strlcasecmp() here? --pasky */
+	/* XXX: Hmm, can't we use c_strlcasecmp() here? --pasky */
 
 	if (domain_len > server_len) return 0;
 
 	/* Ensure that the domain is atleast a substring of the server before
 	 * continuing. */
-	if (strncasecmp(domain, server + server_len - domain_len, domain_len))
+	if (c_strncasecmp(domain, server + server_len - domain_len, domain_len))
 		return 0;
 
 	/* Allow domains which are same as servers. --<rono@sentuny.com.au> */
@@ -499,8 +499,8 @@ accept_cookie(struct cookie *cookie)
 		struct cookie *c, *next;
 
 		foreachsafe (c, next, cookies) {
-			if (strcasecmp(c->name, cookie->name)
-			    || strcasecmp(c->domain, cookie->domain))
+			if (c_strcasecmp(c->name, cookie->name)
+			    || c_strcasecmp(c->domain, cookie->domain))
 				continue;
 
 			delete_cookie(c);
@@ -513,7 +513,7 @@ accept_cookie(struct cookie *cookie)
 
 	/* XXX: This crunches CPU too. --pasky */
 	foreach (cd, c_domains)
-		if (!strcasecmp(cd->domain, cookie->domain))
+		if (!c_strcasecmp(cd->domain, cookie->domain))
 			return;
 
 	domain_len = strlen(cookie->domain);
@@ -535,11 +535,11 @@ delete_cookie(struct cookie *c)
 	struct cookie *d;
 
 	foreach (d, cookies)
-		if (!strcasecmp(d->domain, c->domain))
+		if (!c_strcasecmp(d->domain, c->domain))
 			goto end;
 
 	foreach (cd, c_domains) {
-	       	if (!strcasecmp(cd->domain, c->domain)) {
+	       	if (!c_strcasecmp(cd->domain, c->domain)) {
 			del_from_list(cd);
 			mem_free(cd);
 			break;

@@ -249,7 +249,7 @@ get_fragment_content_type(struct cache_entry *cached)
 	if (!sample)
 		return NULL;
 
-	if (strcasestr(sample, "<html>"))
+	if (c_strcasestr(sample, "<html>"))
 		ctype = stracpy("text/html");
 
 	mem_free(sample);
@@ -291,7 +291,7 @@ get_content_type(struct cache_entry *cached)
 		 * is with default (via option system) and mimetypes resolving
 		 * doing that option and hash lookup will not be easy to
 		 * convert. --jonas */
-		convert_to_lowercase(extension, strlen(extension));
+		convert_to_lowercase_locale_indep(extension, strlen(extension));
 
 		ctype = get_extension_content_type(extension);
 		mem_free(extension);

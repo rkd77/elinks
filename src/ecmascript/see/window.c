@@ -304,7 +304,7 @@ js_window_open(struct SEE_interpreter *interp, struct SEE_object *self,
 		return;
 	}
 
-	if (frame && *frame && strcasecmp(frame, "_blank")) {
+	if (frame && *frame && c_strcasecmp(frame, "_blank")) {
 		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
 
 		if (deo) {

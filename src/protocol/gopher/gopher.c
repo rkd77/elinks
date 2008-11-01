@@ -224,7 +224,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 		querylen = selector + selectorlen - query;
 		/* Exclude '?' */
 		selectorlen -= querylen + 1;
-		if (querylen >= 7 && !strncasecmp(query, "search=", 7)) {
+		if (querylen >= 7 && !c_strncasecmp(query, "search=", 7)) {
 			query	 += 7;
 			querylen -= 7;
 		}

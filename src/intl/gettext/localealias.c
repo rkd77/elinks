@@ -285,5 +285,5 @@ extend_alias_table(void)
 static int
 alias_compare(const struct alias_map *map1, const struct alias_map *map2)
 {
-	return strcasecmp(map1->alias, map2->alias);
+	return c_strcasecmp(map1->alias, map2->alias);
 }

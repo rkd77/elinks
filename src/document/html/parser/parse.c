@@ -153,7 +153,7 @@ next_attr:
 	n = name;
 	name_start = e;
 
-	while (atchr(*n) && atchr(*e) && toupper(*e) == toupper(*n)) e++, n++;
+	while (atchr(*n) && atchr(*e) && c_toupper(*e) == c_toupper(*n)) e++, n++;
 	found = !*n && !atchr(*e);
 
 	if (found && (flags & HTML_ATTR_TEST)) return name_start;
@@ -506,8 +506,8 @@ static struct element_info elements[] = {
 static int
 compar(const void *a, const void *b)
 {
-	return strcasecmp(((struct element_info *) a)->name,
-			  ((struct element_info *) b)->name);
+	return c_strcasecmp(((struct element_info *) a)->name,
+			    ((struct element_info *) b)->name);
 }
 
 #else
@@ -550,7 +550,7 @@ void
 init_tags_lookup(void)
 {
 #ifdef USE_FASTFIND
-	fastfind_index(&ff_tags_index, FF_COMPRESS);
+	fastfind_index(&ff_tags_index, FF_COMPRESS | FF_LOCALE_INDEP);
 #endif
 }
 
@@ -907,11 +907,11 @@ start_element(struct element_info *ei,
 			foreach (e, html_context->stack) {
 				if (is_block_element(e) && is_inline_element(ei)) break;
 				if (e->type < ELEMENT_KILLABLE) break;
-				if (!strlcasecmp(e->name, e->namelen, name, namelen)) break;
+				if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) break;
 			}
 		}
 
-		if (!strlcasecmp(e->name, e->namelen, name, namelen)) {
+		if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) {
 			while (e->prev != (void *) &html_context->stack)
 				kill_html_stack_item(html_context, e->prev);
 
@@ -1084,7 +1084,7 @@ end_element(struct element_info *ei,
 	 * quotation).  "she said." will be rendered normally.  */
 	foreach (e, html_context->stack) {
 		if (is_block_element(e) && is_inline_element(ei)) kill = 1;
-		if (strlcasecmp(e->name, e->namelen, name, namelen)) {
+		if (c_strlcasecmp(e->name, e->namelen, name, namelen)) {
 			if (e->type < ELEMENT_KILLABLE)
 				break;
 			else
@@ -1183,10 +1183,10 @@ sp:
 	if (parse_element(s, eof, &name, &namelen, &attr, &s)) goto sp;
 
 ps:
-	if (!strlcasecmp(name, namelen, "HEAD", 4)) goto se;
-	if (!strlcasecmp(name, namelen, "/HEAD", 5)) return;
-	if (!strlcasecmp(name, namelen, "BODY", 4)) return;
-	if (title && !title->length && !strlcasecmp(name, namelen, "TITLE", 5)) {
+	if (!c_strlcasecmp(name, namelen, "HEAD", 4)) goto se;
+	if (!c_strlcasecmp(name, namelen, "/HEAD", 5)) return;
+	if (!c_strlcasecmp(name, namelen, "BODY", 4)) return;
+	if (title && !title->length && !c_strlcasecmp(name, namelen, "TITLE", 5)) {
 		unsigned char *s1;
 
 xse:
@@ -1209,7 +1209,7 @@ xsp:
 		clr_spaces(title->source);
 		goto ps;
 	}
-	if (strlcasecmp(name, namelen, "META", 4)) goto se;
+	if (c_strlcasecmp(name, namelen, "META", 4)) goto se;
 
 	/* FIXME (bug 784): options->cp is the terminal charset;
 	 * should use the document charset instead.  */

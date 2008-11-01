@@ -385,8 +385,8 @@ get_http_code(struct read_buffer *rb, int *code, struct http_version *version)
 	while (*head == ' ') head++;
 
 	/* HTTP/ */
-	if (toupper(*head) != 'H' || toupper(*++head) != 'T' ||
-	    toupper(*++head) != 'T' || toupper(*++head) != 'P'
+	if (c_toupper(*head) != 'H' || c_toupper(*++head) != 'T' ||
+	    c_toupper(*++head) != 'T' || c_toupper(*++head) != 'P'
 	    || *++head != '/')
 		return -1;
 
@@ -1409,7 +1409,7 @@ get_header(struct read_buffer *rb)
 	/* XXX: We will have to do some guess about whether an HTTP header is
 	 * coming or not, in order to support HTTP/0.9 reply correctly. This
 	 * means a little code duplication with get_http_code(). --pasky */
-	if (rb->length > 4 && strncasecmp(rb->data, "HTTP/", 5))
+	if (rb->length > 4 && c_strncasecmp(rb->data, "HTTP/", 5))
 		return -2;
 
 	for (i = 0; i < rb->length; i++) {
@@ -1446,7 +1446,7 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 
 	d = parse_header(header, header_field, &str);
 	while (d) {
-		if (!strncasecmp(d, "Basic", 5)) {
+		if (!c_strncasecmp(d, "Basic", 5)) {
 			unsigned char *realm = get_header_param(d, "realm");
 
 			if (realm) {
@@ -1455,7 +1455,7 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 				mem_free(d);
 				break;
 			}
-		} else if (!strncasecmp(d, "Digest", 6)) {
+		} else if (!c_strncasecmp(d, "Digest", 6)) {
 			unsigned char *realm = get_header_param(d, "realm");
 			unsigned char *nonce = get_header_param(d, "nonce");
 			unsigned char *opaque = get_header_param(d, "opaque");
@@ -1469,13 +1469,13 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 			break;
 		}
 #ifdef CONFIG_GSSAPI
-		else if (!strncasecmp(d, HTTPNEG_GSS_STR, HTTPNEG_GSS_STRLEN)) {
+		else if (!c_strncasecmp(d, HTTPNEG_GSS_STR, HTTPNEG_GSS_STRLEN)) {
 			if (http_negotiate_input(conn, uri, HTTPNEG_GSS, str)==0)
 				ret = 1;
 			mem_free(d);
 			break;
 		}
-		else if (!strncasecmp(d, HTTPNEG_NEG_STR, HTTPNEG_NEG_STRLEN)) {
+		else if (!c_strncasecmp(d, HTTPNEG_NEG_STR, HTTPNEG_NEG_STRLEN)) {
 			if (http_negotiate_input(conn, uri, HTTPNEG_NEG, str)==0)
 				ret = 1;
 			mem_free(d);
@@ -1730,7 +1730,7 @@ again:
 
 		d = parse_header(conn->cached->head, "Proxy-Authenticate", &str);
 		while (d) {
-			if (!strncasecmp(d, "Basic", 5)) {
+			if (!c_strncasecmp(d, "Basic", 5)) {
 				unsigned char *realm = get_header_param(d, "realm");
 
 				if (realm) {
@@ -1740,7 +1740,7 @@ again:
 					break;
 				}
 
-			} else if (!strncasecmp(d, "Digest", 6)) {
+			} else if (!c_strncasecmp(d, "Digest", 6)) {
 				unsigned char *realm = get_header_param(d, "realm");
 				unsigned char *nonce = get_header_param(d, "nonce");
 				unsigned char *opaque = get_header_param(d, "opaque");
@@ -1766,7 +1766,7 @@ again:
 
 	if ((d = parse_header(conn->cached->head, "Connection", NULL))
 	     || (d = parse_header(conn->cached->head, "Proxy-Connection", NULL))) {
-		if (!strcasecmp(d, "close")) http->close = 1;
+		if (!c_strcasecmp(d, "close")) http->close = 1;
 		mem_free(d);
 	} else if (PRE_HTTP_1_1(version)) {
 		http->close = 1;
@@ -1778,7 +1778,7 @@ again:
 	if (d) {
 		if (strlen(d) > 6) {
 			d[5] = 0;
-			if (isdigit(d[6]) && !strcasecmp(d, "bytes")) {
+			if (isdigit(d[6]) && !c_strcasecmp(d, "bytes")) {
 				int f;
 
 				errno = 0;
@@ -1834,7 +1834,7 @@ again:
 		d = parse_header(conn->cached->head, "Accept-Ranges", NULL);
 
 		if (d) {
-			if (!strcasecmp(d, "none"))
+			if (!c_strcasecmp(d, "none"))
 				conn->unrestartable = 1;
 			mem_free(d);
 		} else {
@@ -1845,7 +1845,7 @@ again:
 
 	d = parse_header(conn->cached->head, "Transfer-Encoding", NULL);
 	if (d) {
-		if (!strcasecmp(d, "chunked")) {
+		if (!c_strcasecmp(d, "chunked")) {
 			http->length = LEN_CHUNKED;
 			http->chunk_remaining = CHUNK_SIZE;
 		}
@@ -1855,7 +1855,7 @@ again:
 
 	d = parse_header(conn->cached->head, "Last-Modified", NULL);
 	if (d) {
-		if (conn->cached->last_modified && strcasecmp(conn->cached->last_modified, d)) {
+		if (conn->cached->last_modified && c_strcasecmp(conn->cached->last_modified, d)) {
 			delete_entry_content(conn->cached);
 			if (conn->from) {
 				conn->from = 0;
@@ -1917,21 +1917,21 @@ again:
 		 * will leave the saved file with the correct encoding. */
 #ifdef CONFIG_GZIP
 		if (file_encoding != ENCODING_GZIP
-		    && (!strcasecmp(d, "gzip") || !strcasecmp(d, "x-gzip")))
+		    && (!c_strcasecmp(d, "gzip") || !c_strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
-		if (!strcasecmp(d, "deflate") || !strcasecmp(d, "x-deflate"))
+		if (!c_strcasecmp(d, "deflate") || !c_strcasecmp(d, "x-deflate"))
 			conn->content_encoding = ENCODING_DEFLATE;
 #endif
 
 #ifdef CONFIG_BZIP2
 		if (file_encoding != ENCODING_BZIP2
-		    && (!strcasecmp(d, "bzip2") || !strcasecmp(d, "x-bzip2")))
+		    && (!c_strcasecmp(d, "bzip2") || !c_strcasecmp(d, "x-bzip2")))
 			conn->content_encoding = ENCODING_BZIP2;
 #endif
 
 #ifdef CONFIG_LZMA
 		if (file_encoding != ENCODING_LZMA
-		    && (!strcasecmp(d, "lzma") || !strcasecmp(d, "x-lzma")))
+		    && (!c_strcasecmp(d, "lzma") || !c_strcasecmp(d, "x-lzma")))
 			conn->content_encoding = ENCODING_LZMA;
 #endif
 		mem_free(d);

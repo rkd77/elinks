@@ -227,10 +227,10 @@ html_script(struct html_context *html_context, unsigned char *a,
 	if (type) {
 		unsigned char *pos = type;
 
-		if (!strncasecmp(type, "text/", 5)) {
+		if (!c_strncasecmp(type, "text/", 5)) {
 			pos += 5;
 
-		} else if (!strncasecmp(type, "application/", 12)) {
+		} else if (!c_strncasecmp(type, "application/", 12)) {
 			pos += 12;
 
 		} else {
@@ -241,7 +241,7 @@ not_processed:
 			return;
 		}
 
-		if (!strncasecmp(pos, "javascript", 10)) {
+		if (!c_strncasecmp(pos, "javascript", 10)) {
 			int len = strlen(pos);
 
 			if (len > 10 && !isdigit(pos[10])) {
@@ -249,11 +249,11 @@ not_processed:
 				goto not_processed;
 			}
 
-		} else if (strcasecmp(pos, "ecmascript")
-		    && strcasecmp(pos, "jscript")
-		    && strcasecmp(pos, "livescript")
-		    && strcasecmp(pos, "x-javascript")
-		    && strcasecmp(pos, "x-ecmascript")) {
+		} else if (c_strcasecmp(pos, "ecmascript")
+		    && c_strcasecmp(pos, "jscript")
+		    && c_strcasecmp(pos, "livescript")
+		    && c_strcasecmp(pos, "x-javascript")
+		    && c_strcasecmp(pos, "x-ecmascript")) {
 			mem_free(type);
 			goto not_processed;
 		}
@@ -271,7 +271,7 @@ not_processed:
 
 		if (languagelen < 10
 		    || (languagelen > 10 && !isdigit(language[10]))
-		    || strncasecmp(language, "javascript", 10)) {
+		    || c_strncasecmp(language, "javascript", 10)) {
 			mem_free(language);
 			goto not_processed;
 		}
@@ -372,7 +372,7 @@ imported:
 		 * argument. */
 		if (parse_element(*end, eof, &name, &namelen, NULL, NULL))
 			continue;
-		if (strlcasecmp(name, namelen, "/script", 7))
+		if (c_strlcasecmp(name, namelen, "/script", 7))
 			continue;
 		/* We have won! */
 		break;
@@ -482,13 +482,13 @@ html_linebrk(struct html_context *html_context, unsigned char *a,
 	unsigned char *al = get_attr_val(a, "align", html_context->doc_cp);
 
 	if (al) {
-		if (!strcasecmp(al, "left")) par_format.align = ALIGN_LEFT;
-		else if (!strcasecmp(al, "right")) par_format.align = ALIGN_RIGHT;
-		else if (!strcasecmp(al, "center")) {
+		if (!c_strcasecmp(al, "left")) par_format.align = ALIGN_LEFT;
+		else if (!c_strcasecmp(al, "right")) par_format.align = ALIGN_RIGHT;
+		else if (!c_strcasecmp(al, "center")) {
 			par_format.align = ALIGN_CENTER;
 			if (!html_context->table_level)
 				par_format.leftmargin = par_format.rightmargin = 0;
-		} else if (!strcasecmp(al, "justify")) par_format.align = ALIGN_JUSTIFY;
+		} else if (!c_strcasecmp(al, "justify")) par_format.align = ALIGN_JUSTIFY;
 		mem_free(al);
 	}
 }
@@ -745,9 +745,9 @@ html_ul(struct html_context *html_context, unsigned char *a,
 
 	al = get_attr_val(a, "type", html_context->doc_cp);
 	if (al) {
-		if (!strcasecmp(al, "disc") || !strcasecmp(al, "circle"))
+		if (!c_strcasecmp(al, "disc") || !c_strcasecmp(al, "circle"))
 			par_format.flags = P_O;
-		else if (!strcasecmp(al, "square"))
+		else if (!c_strcasecmp(al, "square"))
 			par_format.flags = P_PLUS;
 		mem_free(al);
 	}
@@ -893,7 +893,7 @@ html_li(struct html_context *html_context, unsigned char *a,
 			if (t == P_ROMAN) {
 				unsigned char *x;
 
-				for (x = n; *x; x++) *x = toupper(*x);
+				for (x = n; *x; x++) *x = c_toupper(*x);
 			}
 
 		} else {

@@ -301,6 +301,9 @@ To be released as 0.11.6.
 
 * critical bug 1053: fix crash if a download finishes after ELinks has
   closed the terminal from which the download was started
+* major bug 1004: ignore locales when comparing HTML element names and
+  similar strings, so e.g. ``title'' matches ``TITLE'' even in the
+  Turkish locale
 
 ELinks 0.11.5:
 --------------

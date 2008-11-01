@@ -1316,7 +1316,7 @@ setup_download_handler(struct session *ses, struct download *loading,
 		goto plaintext_follow;
 
 	for (i = 0; known_types[i].type; i++) {
-		if (strcasecmp(ctype, known_types[i].type))
+		if (c_strcasecmp(ctype, known_types[i].type))
 			continue;
 
 		plaintext = known_types[i].plain;
@@ -1326,7 +1326,7 @@ setup_download_handler(struct session *ses, struct download *loading,
 	xwin = ses->tab->term->environment & ENV_XWIN;
 	handler = get_mime_type_handler(ctype, xwin);
 
-	if (!handler && strlen(ctype) >= 4 && !strncasecmp(ctype, "text", 4))
+	if (!handler && strlen(ctype) >= 4 && !c_strncasecmp(ctype, "text", 4))
 		goto plaintext_follow;
 
 	type_query = find_type_query(ses);
@@ -1339,8 +1339,8 @@ setup_download_handler(struct session *ses, struct download *loading,
 #ifdef CONFIG_BITTORRENT
 			/* A terrible waste of a good MIME handler here, but we want
 			 * to use the type_query this is easier. */
-			if ((!strcasecmp(ctype, "application/x-bittorrent")
-				|| !strcasecmp(ctype, "application/x-torrent"))
+			if ((!c_strcasecmp(ctype, "application/x-bittorrent")
+				|| !c_strcasecmp(ctype, "application/x-torrent"))
 			    && !get_cmd_opt_bool("anonymous"))
 				query_bittorrent_dialog(type_query);
 			else

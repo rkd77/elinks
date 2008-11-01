@@ -297,7 +297,7 @@ auth_user_matching_uri(struct auth_entry *auth, struct uri *uri)
 {
 	if (!uri->userlen) /* Noone said it doesn't. */
 		return 1;
-	return !strlcasecmp(auth->user, -1, uri->user, uri->userlen);
+	return !c_strlcasecmp(auth->user, -1, uri->user, uri->userlen);
 }
 
 
@@ -907,7 +907,7 @@ next:
 	if (pos + 4 > data_len)
 		return -1;
 
-	if (strncasecmp(&data[pos], "byte", 4))
+	if (c_strncasecmp(&data[pos], "byte", 4))
 		return -1;
 
 	errno = 0;

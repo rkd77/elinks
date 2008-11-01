@@ -19,6 +19,8 @@ enum fastfind_flags {
 	FF_NONE = 0,
 	FF_CASE_AWARE = 1,	/**< honour case when comparing */
 	FF_COMPRESS = 2,	/**< compress nodes if possible */
+	FF_LOCALE_INDEP = 4	/**< whether the case conversion is
+				 *   locale independent or not */
 };
 
 struct fastfind_index {

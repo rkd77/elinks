@@ -35,7 +35,7 @@ struct dom_scanner_token {
 /** Compare the token string to a "static" string */
 #define dom_scanner_token_contains(token, str) \
 	((token)->string.length == (sizeof(str) - 1) \
-	 && !strncasecmp((token)->string.string, str, sizeof(str) - 1))
+	 && !c_strncasecmp((token)->string.string, str, sizeof(str) - 1))
 
 
 struct dom_scan_table_info {

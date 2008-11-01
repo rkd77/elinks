@@ -689,7 +689,7 @@ js_form_elems_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 		return;
 
 	foreach (fc, form->items) {
-		if ((fc->id && !strcasecmp(string, fc->id)) || (fc->name && !strcasecmp(string, fc->name))) {
+		if ((fc->id && !c_strcasecmp(string, fc->id)) || (fc->name && !c_strcasecmp(string, fc->name))) {
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
@@ -815,7 +815,7 @@ js_forms_namedItem(struct SEE_interpreter *interp, struct SEE_object *self,
 	if (!string)
 		return;
 	foreach (form, document->forms) {
-		if (form->name && !strcasecmp(string, form->name)) {
+		if (form->name && !c_strcasecmp(string, form->name)) {
 			struct form_view *fv = find_form_view(doc_view, form);
 			struct js_form *obj = js_get_form_object(interp,
 			 doc, fv);
@@ -952,7 +952,7 @@ form_get(struct SEE_interpreter *interp, struct SEE_object *o,
 			struct js_input *fcobj = NULL;
 			struct form_state *fs;
 
-			if ((!fc->id || strcasecmp(string, fc->id)) && (!fc->name || strcasecmp(string, fc->name)))
+			if ((!fc->id || c_strcasecmp(string, fc->id)) && (!fc->name || c_strcasecmp(string, fc->name)))
 				continue;
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
@@ -989,19 +989,19 @@ form_put(struct SEE_interpreter *interp, struct SEE_object *o,
 			mem_free_set(&form->action, string);
 		}
 	} else if (p == s_encoding) {
-		if (!strcasecmp(string, "application/x-www-form-urlencoded")) {
+		if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 			form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 			                                               : FORM_METHOD_POST;
-		} else if (!strcasecmp(string, "multipart/form-data")) {
+		} else if (!c_strcasecmp(string, "multipart/form-data")) {
 			form->method = FORM_METHOD_POST_MP;
-		} else if (!strcasecmp(string, "text/plain")) {
+		} else if (!c_strcasecmp(string, "text/plain")) {
 			form->method = FORM_METHOD_POST_TEXT_PLAIN;
 		}
 		mem_free(string);
 	} else if (p == s_method) {
-		if (!strcasecmp(string, "GET")) {
+		if (!c_strcasecmp(string, "GET")) {
 			form->method = FORM_METHOD_GET;
-		} else if (!strcasecmp(string, "POST")) {
+		} else if (!c_strcasecmp(string, "POST")) {
 			form->method = FORM_METHOD_POST;
 		}
 		mem_free(string);
