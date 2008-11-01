@@ -35,6 +35,7 @@
 #include "elinks.h"
 
 #include "intl/gettext/loadinfo.h"
+#include "util/conv.h"
 #include "util/string.h"
 
 /* Awful hack to permit compilation under cygwin and its broken configure.
