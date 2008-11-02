@@ -107,7 +107,7 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 		       const int locale_indep);
 
 /* strcasecmp and strncasecmp which work as if they are
- * in the C locale - both taken from GNU coreutils */
+ * in the C locale */
 int c_strcasecmp(const char *s1, const char *s2);
 int c_strncasecmp(const char *s1, const char *s2, size_t n);
 
