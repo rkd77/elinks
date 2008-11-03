@@ -6,6 +6,7 @@
 #endif
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 #include "elinks.h"
@@ -95,7 +96,7 @@ random_nonce(unsigned char buf[], size_t size)
 
 	if (!f) f = fopen("/dev/prandom", "rb"); /* OpenBSD */
 	if (f) {
-		i = fread(data, 1, length, f);
+		i = fread(buf, 1, size, f);
 		fclose(f);
 	}
 

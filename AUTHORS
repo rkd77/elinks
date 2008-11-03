@@ -456,6 +456,9 @@ Pavol Babincak <scroolik@gmail.com>
 Peder Stray <peder@ifi.uio.no>
 	Fix handling of key presses turning up as key prefixes
 
+Peter Collingbourne <peter@peter.uk.to>
+	Fixed compiler errors and warnings in src/util/random.c where CONFIG_SSL undefined
+
 Peter Gervai <grin@tolna.net>
 	Manpage updates
 	Mailcap to links.cfg convertor
