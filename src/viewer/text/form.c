@@ -795,6 +795,30 @@ get_successful_controls(struct document_view *doc_view,
 	sort_submitted_values(list);
 }
 
+unsigned char *
+encode_crlf(struct submitted_value *sv)
+{
+	struct string newtext;
+	int i;
+
+	assert(sv && sv->value);
+	if_assert_failed return NULL;
+
+	if (!init_string(&newtext)) return NULL;
+
+	for (i = 0; sv->value[i]; i++) {
+		if (sv->value[i] == '\r') {
+			if (sv->value[i+1] != '\n')
+				add_crlf_to_string(&newtext);
+		} else if (sv->value[i] == '\n')
+			add_crlf_to_string(&newtext);
+		else
+			add_char_to_string(&newtext, sv->value[i]);
+	}
+
+	return newtext.source;
+}
+
 static void
 encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 		int cp_from, int cp_to)
@@ -838,6 +862,8 @@ encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 
 			p2 = convert_string(convert_table, sv->value,
 					    strlen(sv->value), -1, CSM_FORM, NULL, NULL, NULL);
+		} else if (sv->type == FC_HIDDEN) {
+			p2 = encode_crlf(sv);
 		} else {
 			p2 = stracpy(sv->value);
 		}
@@ -1132,6 +1158,10 @@ encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 		switch (sv->type) {
 		case FC_TEXTAREA:
 			value = area51 = encode_textarea(sv);
+			if (!area51) break;
+			/* Fall through */
+		case FC_HIDDEN:
+			if (!area51) value = area51 = encode_crlf(sv);
 			if (!area51) break;
 			/* Fall through */
 		case FC_TEXT:

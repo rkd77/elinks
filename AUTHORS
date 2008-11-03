@@ -449,6 +449,9 @@ Pavol Babincak <scroolik@gmail.com>
 Peder Stray <peder@ifi.uio.no>
 	Fix handling of key presses turning up as key prefixes
 
+Peter Collingbourne <peter@peter.uk.to>
+	Fixed bug relating to newlines in hidden input fields
+
 Peter Gervai <grin@tolna.net>
 	Manpage updates
 	Mailcap to links.cfg convertor

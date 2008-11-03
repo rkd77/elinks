@@ -25,6 +25,10 @@ enum html_attr_flags {
 	/* If HTML_ATTR_NO_CONV is set, then convert_string() is not called
 	 * on value. Unused for now. */
 	/* HTML_ATTR_NO_CONV = 4, */
+
+	/* If HTML_ATTR_LITERAL_NL is set, carriage return, newline and tab
+	 * characters are returned literally. */
+	HTML_ATTR_LITERAL_NL = 8,
 };
 
 /* Parses html element attributes.
@@ -37,6 +41,7 @@ unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, in
 
 /* Wrappers for get_attr_value(). */
 #define get_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_NONE)
+#define get_lit_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_LITERAL_NL)
 #define get_url_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_EAT_NL)
 #define has_attr(e, name, cp) (!!get_attr_value(e, name, cp, HTML_ATTR_TEST))
 
