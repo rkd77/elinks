@@ -450,6 +450,7 @@ Peder Stray <peder@ifi.uio.no>
 	Fix handling of key presses turning up as key prefixes
 
 Peter Collingbourne <peter@peter.uk.to>
+	Allows relicensing under GPLv2-or-later and linking with OpenSSL
 	Fixed bug relating to newlines in hidden input fields
 
 Peter Gervai <grin@tolna.net>
