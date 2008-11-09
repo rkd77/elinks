@@ -179,9 +179,11 @@ next_attr:
 
 /* parse_quoted_value: */
 			while (*(++e) != quote) {
-				if (*e == ASCII_CR) continue;
 				if (!*e) goto parse_error;
-				if (*e != ASCII_TAB && *e != ASCII_LF)
+				if (flags & HTML_ATTR_LITERAL_NL)
+					add_chr(attr, attrlen, *e);
+				else if (*e == ASCII_CR) continue;
+				else if (*e != ASCII_TAB && *e != ASCII_LF)
 					add_chr(attr, attrlen, *e);
 				else if (!(flags & HTML_ATTR_EAT_NL))
 					add_chr(attr, attrlen, ' ');

@@ -488,9 +488,7 @@ unsigned char *
 encode_textarea(struct submitted_value *sv)
 {
 	struct form_control *fc;
-	struct string newtext;
 	void *blabla;
-	int i;
 
 	assert(sv && sv->value);
 	if_assert_failed return NULL;
@@ -503,16 +501,7 @@ encode_textarea(struct submitted_value *sv)
 	blabla = format_text(sv->value, fc->cols, fc->wrap, 1);
 	mem_free_if(blabla);
 
-	if (!init_string(&newtext)) return NULL;
-
-	for (i = 0; sv->value[i]; i++) {
-		if (sv->value[i] != '\n')
-			add_char_to_string(&newtext, sv->value[i]);
-		else
-			add_crlf_to_string(&newtext);
-	}
-
-	return newtext.source;
+	return encode_crlf(sv);
 }
 
 

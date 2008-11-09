@@ -287,7 +287,9 @@ html_input(struct html_context *html_context, unsigned char *a,
 		mem_free(al);
 	}
 
-	if (fc->type != FC_FILE)
+	if (fc->type == FC_HIDDEN)
+		fc->default_value = get_lit_attr_val(a, "value", cp);
+	else if (fc->type != FC_FILE)
 		fc->default_value = get_attr_val(a, "value", cp);
 	if (!fc->default_value) {
 		if (fc->type == FC_CHECKBOX)
