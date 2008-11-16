@@ -203,9 +203,33 @@ move_bookmark_after_selected(struct bookmark *bookmark, struct bookmark *selecte
 	add_at_pos(selected->box_item, bookmark->box_item);
 }
 
+/** Add a bookmark; if called from the bookmark manager, also move
+ * the bookmark to the right place and select it in the manager.
+ * And possibly save the bookmarks.
+ *
+ * @param term
+ *   The terminal whose user told ELinks to add the bookmark.
+ *   Currently, @a term affects only the charset interpretation
+ *   of @a title and @a url.  In the future, this function could
+ *   also display error messages in @a term.
+ *
+ * @param dlg_data
+ *   The bookmark manager dialog, or NULL if the bookmark is being
+ *   added without involving the bookmark manager.  If @a dlg_data
+ *   is not NULL, dlg_data->win->term should be @a term.
+ *
+ * @param title
+ *   The title of the new bookmark, in the encoding of @a term.
+ *   Must not be NULL.  "-" means add a separator.
+ *
+ * @param url
+ *   The URL of the new bookmark, in the encoding of @a term.  NULL
+ *   or "" means add a bookmark folder, unless @a title is "-".  */
 static void
-do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned char *url)
+do_add_bookmark(struct terminal *term, struct dialog_data *dlg_data,
+		unsigned char *title, unsigned char *url)
 {
+	int term_cp = get_terminal_codepage(term);
 	struct bookmark *bm = NULL;
 	struct bookmark *selected = NULL;
 	struct listbox_data *box = NULL;
@@ -224,8 +248,7 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 		}
 	}
 
-	/** @todo Bugs 153, 1066: add_bookmark() expects UTF-8.  */
-	bm = add_bookmark(bm, 1, title, url);
+	bm = add_bookmark_cp(bm, 1, term_cp, title, url);
 	if (!bm) return;
 
 	move_bookmark_after_selected(bm, selected);
@@ -246,12 +269,29 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 
 /**** ADD FOLDER *****************************************************/
 
+/** Add a bookmark folder.  This is called when the user pushes the OK
+ * button in the input dialog that asks for the folder name.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param foldername
+ *   The folder name that the user typed in the input dialog.
+ *   This is in the charset of the terminal.  */
 static void
 do_add_folder(struct dialog_data *dlg_data, unsigned char *foldername)
 {
-	do_add_bookmark(dlg_data, foldername, NULL);
+	do_add_bookmark(dlg_data->win->term, dlg_data, foldername, NULL);
 }
 
+/** Prepare to add a bookmark folder.  This is called when the user
+ * pushes the "Add folder" button in the bookmark manager.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param widget_data
+ *   The "Add folder" button.  */
 static widget_handler_status_T
 push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -267,10 +307,18 @@ push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_
 
 /**** ADD SEPARATOR **************************************************/
 
+/** Add a bookmark separator.  This is called when the user pushes the
+ * "Add separator" button in the bookmark manager.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param widget_data
+ *   The "Add separator" button.  */
 static widget_handler_status_T
 push_add_separator_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	do_add_bookmark(dlg_data, "-", "");
+	do_add_bookmark(dlg_data->win->term, dlg_data, "-", "");
 	redraw_dialog(dlg_data, 1);
 	return EVENT_PROCESSED;
 }
@@ -659,10 +707,31 @@ bookmark_add_add(void *data)
 {
 	struct dialog *dlg = data;
 	struct dialog_data *dlg_data = (struct dialog_data *) dlg->udata;
+	struct terminal *term = dlg->udata2;
 
-	do_add_bookmark(dlg_data, dlg->widgets[0].data, dlg->widgets[1].data);
+	do_add_bookmark(term, dlg_data, dlg->widgets[0].data, dlg->widgets[1].data);
 }
 
+/** Open a dialog box for adding a bookmark.
+ *
+ * @param term
+ *   The terminal in which the dialog box should appear.
+ *
+ * @param parent
+ *   The bookmark manager, or NULL if the user requested this action
+ *   from somewhere else.
+ *
+ * @param ses
+ *   If @a title or @a url is NULL, get defaults from the current
+ *   document of @a ses.
+ *
+ * @param title
+ *   The initial title of the new bookmark, in the encoding of @a term.
+ *   NULL means use @a ses.
+ *
+ * @param url
+ *   The initial URL of the new bookmark, in the encoding of @a term.
+ *   NULL means use @a ses.  */
 void
 launch_bm_add_dialog(struct terminal *term,
 		     struct dialog_data *parent,
@@ -670,8 +739,22 @@ launch_bm_add_dialog(struct terminal *term,
 		     unsigned char *title,
 		     unsigned char *url)
 {
+	/* When the user eventually pushes the OK button, BFU calls
+	 * bookmark_add_add() and gives it the struct dialog * as the
+	 * void * parameter.  However, bookmark_add_add() also needs
+	 * to know the struct terminal *, and there is no way to get
+	 * that from struct dialog.  The other bookmark dialogs work
+	 * around that by making dialog.udata point to the struct
+	 * dialog_data of the bookmark manager, but the "Add bookmark"
+	 * dialog can be triggered with ACT_MAIN_ADD_BOOKMARK, which
+	 * does not involve the bookmark manager at all.
+	 *
+	 * The solution here is to save the struct terminal * in
+	 * dialog.udata2, which the "Edit bookmark" dialog uses for
+	 * struct bookmark *.  When adding a new bookmark, we don't
+	 * need a pointer to an existing one, of course.  */
 	do_edit_dialog(term, 1, N_("Add bookmark"), title, url, ses,
-		       parent, bookmark_add_add, NULL, NULL, EDIT_DLG_ADD);
+		       parent, bookmark_add_add, NULL, term, EDIT_DLG_ADD);
 }
 
 void
