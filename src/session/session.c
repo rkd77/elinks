@@ -971,9 +971,16 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 	} else if (remote & SES_REMOTE_ADD_BOOKMARK) {
 #ifdef CONFIG_BOOKMARKS
+		int uri_cp;
+
 		if (!uri) return;
-		/** @todo Bug 1066: add_bookmark() expects UTF-8.  */
-		add_bookmark(NULL, 1, struri(uri), struri(uri));
+		/** @todo Bug 1066: What is the encoding of struri()?
+		 * This code currently assumes the system charset.
+		 * It might be best to keep URIs in plain ASCII and
+		 * then have a function that reversibly converts them
+		 * to IRIs for display in a given encoding.  */
+		uri_cp = get_cp_index("System");
+		add_bookmark_cp(NULL, 1, uri_cp, struri(uri), struri(uri));
 #endif
 
 	} else if (remote & SES_REMOTE_INFO_BOX) {
