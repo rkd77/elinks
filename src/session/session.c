@@ -825,10 +825,13 @@ setup_first_session(struct session *ses, struct uri *uri)
 
 #ifdef CONFIG_BOOKMARKS
 	} else if (!uri && get_opt_bool("ui.sessions.auto_restore")) {
-		unsigned char *folder;
+		unsigned char *folder; /* UTF-8 */
 
-		folder = get_opt_str("ui.sessions.auto_save_foldername");
-		open_bookmark_folder(ses, folder);
+		folder = get_auto_save_bookmark_foldername_utf8();
+		if (folder) {
+			open_bookmark_folder(ses, folder);
+			mem_free(folder);
+		}
 		return 1;
 #endif
 	}

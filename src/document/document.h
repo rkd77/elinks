@@ -178,6 +178,9 @@ struct document {
 #endif
 
 	struct uri *uri;
+
+	/** The title of the document.  The charset of this string is
+	 * document.options.cp.  */
 	unsigned char *title;
 	struct cache_entry *cached;
 

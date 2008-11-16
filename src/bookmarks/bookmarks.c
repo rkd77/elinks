@@ -267,15 +267,17 @@ delete_bookmark(struct bookmark *bm)
 	done_bookmark(bm);
 }
 
-/* Deletes any bookmarks with no URLs (i.e., folders) and of which
- * the title matches the given argument. */
+/** Deletes any bookmarks with no URLs (i.e., folders) and of which
+ * the title matches the given argument.
+ *
+ * @param foldername
+ *  The title of the folder, in UTF-8.  */
 static void
-delete_folder_by_name(unsigned char *foldername)
+delete_folder_by_name(const unsigned char *foldername)
 {
 	struct bookmark *bookmark, *next;
 
 	foreachsafe (bookmark, next, bookmarks) {
-		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		if ((bookmark->url && *bookmark->url)
 		    || strcmp(bookmark->title, foldername))
 			continue;
@@ -571,6 +573,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 {
 	unsigned char title[MAX_STR_LEN], url[MAX_STR_LEN];
 	struct window *tab;
+	int term_cp = get_terminal_codepage(term);
 
 	foreachback_tab (tab, term->windows) {
 		struct session *ses = tab->data;
@@ -581,15 +584,21 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 		if (!get_current_title(ses, title, MAX_STR_LEN))
 			continue;
 
-		/** @todo Bugs 153, 1066: add_bookmark() expects UTF-8.  */
-		add_bookmark(folder, 1, title, url);
+		add_bookmark_cp(folder, 1, term_cp, title, url);
 	}
 }
 
+/** Create a bookmark for each document on the specified terminal,
+ * and a folder to contain those bookmarks.
+ *
+ * @param term
+ *   The terminal whose open documents should be bookmarked.
+ *
+ * @param foldername
+ *   The name of the new bookmark folder, in UTF-8.  */
 void
 bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername)
 {
-	/** @todo Bug 153: add_bookmark() expects UTF-8.  */
 	struct bookmark *folder = add_bookmark(NULL, 1, foldername, NULL);
 
 	if (!folder) return;
@@ -631,23 +640,48 @@ bookmark_all_terminals(struct bookmark *folder)
 }
 
 
+unsigned char *
+get_auto_save_bookmark_foldername_utf8(void)
+{
+	unsigned char *foldername;
+	int from_cp, to_cp;
+	struct conv_table *convert_table;
+
+	foldername = get_opt_str("ui.sessions.auto_save_foldername");
+	if (!*foldername) return NULL;
+
+	/* The charset of the string returned by get_opt_str()
+	 * seems to be documented nowhere.  Let's assume it is
+	 * the system charset.  */
+	from_cp = get_cp_index("System");
+	to_cp = get_cp_index("UTF-8");
+	convert_table = get_translation_table(from_cp, to_cp);
+	if (!convert_table) return NULL;
+
+	return convert_string(convert_table,
+			      foldername, strlen(foldername),
+			      to_cp, CSM_NONE,
+			      NULL, NULL, NULL);
+}
+
 void
 bookmark_auto_save_tabs(struct terminal *term)
 {
-	unsigned char *foldername;
+	unsigned char *foldername; /* UTF-8 */
 
 	if (get_cmd_opt_bool("anonymous")
 	    || !get_opt_bool("ui.sessions.auto_save"))
 		return;
 
-	foldername = get_opt_str("ui.sessions.auto_save_foldername");
-	if (!*foldername) return;
+	foldername = get_auto_save_bookmark_foldername_utf8();
+	if (!foldername) return;
 
 	/* Ensure uniqueness of the auto save folder, so it is possible to
 	 * restore the (correct) session when starting up. */
 	delete_folder_by_name(foldername);
 
 	bookmark_terminal_tabs(term, foldername);
+	mem_free(foldername);
 }
 
 static void
@@ -665,8 +699,10 @@ bookmark_snapshot(void)
 	add_date_to_string(&folderstring, get_opt_str("ui.date_format"), NULL);
 #endif
 
-	/** @todo Bug 153: add_bookmark() expects UTF-8.  */
-	folder = add_bookmark(NULL, 1, folderstring.source, NULL);
+	/* folderstring must be in the system codepage because
+	 * add_date_to_string() uses strftime().  */
+	folder = add_bookmark_cp(NULL, 1, get_cp_index("System"),
+				 folderstring.source, NULL);
 	done_string(&folderstring);
 	if (!folder) return;
 
@@ -677,6 +713,14 @@ bookmark_snapshot(void)
 }
 
 
+/** Open all bookmarks from the named folder.
+ *
+ * @param ses
+ *   The session in which to open the first bookmark.  The other
+ *   bookmarks of the folder open in new tabs on the same terminal.
+ *
+ * @param foldername
+ *   The name of the bookmark folder, in UTF-8.  */
 void
 open_bookmark_folder(struct session *ses, unsigned char *foldername)
 {
@@ -690,7 +734,6 @@ open_bookmark_folder(struct session *ses, unsigned char *foldername)
 	foreach (bookmark, bookmarks) {
 		if (bookmark->box_item->type != BI_FOLDER)
 			continue;
-		/** @todo Bug 153: bookmark->title should be UTF-8 */
 		if (strcmp(bookmark->title, foldername))
 			continue;
 		folder = bookmark;

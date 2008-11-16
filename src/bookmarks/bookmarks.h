@@ -51,6 +51,7 @@ struct bookmark *get_bookmark_by_name(struct bookmark *folder,
                                       unsigned char *title);
 struct bookmark *get_bookmark(unsigned char *url);
 void bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername);
+unsigned char *get_auto_save_bookmark_foldername_utf8(void);
 void bookmark_auto_save_tabs(struct terminal *term);
 int update_bookmark(struct bookmark *, int,
 		    unsigned char *, unsigned char *);

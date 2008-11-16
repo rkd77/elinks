@@ -699,6 +699,28 @@ launch_bm_add_link_dialog(struct terminal *term,
   Bookmark tabs dialog.
 \****************************************************************************/
 
+static void
+bookmark_terminal_tabs_ok(void *term_void, unsigned char *foldername)
+{
+	struct terminal *const term = term_void;
+	int from_cp = get_terminal_codepage(term);
+	int to_cp = get_cp_index("UTF-8");
+	struct conv_table *convert_table;
+	unsigned char *converted;
+
+	convert_table = get_translation_table(from_cp, to_cp);
+	if (convert_table == NULL) return; /** @todo Report the error */
+
+	converted = convert_string(convert_table,
+				   foldername, strlen(foldername),
+				   to_cp, CSM_NONE,
+				   NULL, NULL, NULL);
+	if (converted == NULL) return; /** @todo Report the error */
+
+	bookmark_terminal_tabs(term_void, converted);
+	mem_free(converted);
+}
+
 void
 bookmark_terminal_tabs_dialog(struct terminal *term)
 {
@@ -717,8 +739,7 @@ bookmark_terminal_tabs_dialog(struct terminal *term)
 		     N_("Bookmark tabs"), N_("Enter folder name"),
 		     term, NULL,
 		     MAX_STR_LEN, string.source, 0, 0, NULL,
-		     (void (*)(void *, unsigned char *)) bookmark_terminal_tabs,
-		     NULL);
+		     bookmark_terminal_tabs_ok, NULL);
 
 	done_string(&string);
 }
