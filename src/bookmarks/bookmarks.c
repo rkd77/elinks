@@ -465,21 +465,31 @@ add_bookmark_cp(struct bookmark *root, int place, int codepage,
  *
  * If any of the fields are NULL, the value is left unchanged. */
 int
-update_bookmark(struct bookmark *bm, unsigned char *title,
-		unsigned char *url)
+update_bookmark(struct bookmark *bm, int codepage,
+		unsigned char *title, unsigned char *url)
 {
 	static int update_bookmark_event_id = EVENT_NONE;
+	const int utf8_cp = get_cp_index("UTF-8");
+	struct conv_table *table;
 	unsigned char *title2 = NULL;
 	unsigned char *url2 = NULL;
 
+	table = get_translation_table(codepage, utf8_cp);
+	if (!table)
+		return 0;
+
 	if (url) {
-		url2 = stracpy(url);
+		url2 = convert_string(table, url, strlen(url),
+				      utf8_cp, CSM_NONE,
+				      NULL, NULL, NULL);
 		if (!url2) return 0;
 		sanitize_url(url2);
 	}
 
 	if (title) {
-		title2 = stracpy(title);
+		title2 = convert_string(table, title, strlen(title),
+					utf8_cp, CSM_NONE,
+					NULL, NULL, NULL);
 		if (!title2) {
 			mem_free_if(url2);
 			return 0;
@@ -491,7 +501,6 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 	trigger_event(update_bookmark_event_id, bm, title2, url2);
 
 	if (title2) {
-		/** @todo Bug 153: bm->title should be UTF-8 */
 		mem_free_set(&bm->title, title2);
 	}
 
@@ -504,7 +513,6 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 			if (item) del_hash_item(bookmark_cache, item);
 		}
 
-		/** @todo Bug 1066: bm->url should be UTF-8 */
 		if (check_bookmark_cache(url2)) {
 			add_hash_item(bookmark_cache, url2, strlen(url2), bm);
 		}

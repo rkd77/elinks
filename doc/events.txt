@@ -85,8 +85,8 @@ Triggered When:
 Arguments:
 
  struct bookmark *bookmark
- unsigned char *new_title
- unsigned char *new_url
+ unsigned char *new_title	/* UTF-8 */
+ unsigned char *new_url		/* UTF-8 */
 
 Description:
 

@@ -283,8 +283,11 @@ static void
 bookmark_edit_done(void *data) {
 	struct dialog *dlg = data;
 	struct bookmark *bm = (struct bookmark *) dlg->udata2;
+	struct dialog_data *parent_dlg_data = dlg->udata;
+	int term_cp = get_terminal_codepage(parent_dlg_data->win->term);
 
-	update_bookmark(bm, dlg->widgets[0].data, dlg->widgets[1].data);
+	update_bookmark(bm, term_cp,
+			dlg->widgets[0].data, dlg->widgets[1].data);
 	object_unlock(bm);
 
 #ifdef BOOKMARKS_RESAVE
