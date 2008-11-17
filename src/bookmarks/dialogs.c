@@ -56,9 +56,16 @@ static unsigned char *
 get_bookmark_text(struct listbox_item *item, struct terminal *term)
 {
 	struct bookmark *bookmark = item->udata;
+	int utf8_cp = get_cp_index("UTF-8");
+	int term_cp = get_terminal_codepage(term);
+	struct conv_table *convert_table;
 
-	/** @todo Bug 153: bookmark->title should be UTF-8 */
-	return stracpy(bookmark->title);
+	convert_table = get_translation_table(utf8_cp, term_cp);
+	if (!convert_table) return NULL;
+
+	return convert_string(convert_table,
+			      bookmark->title, strlen(bookmark->title),
+			      term_cp, CSM_NONE, NULL, NULL, NULL);
 }
 
 static unsigned char *
