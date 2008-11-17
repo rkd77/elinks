@@ -387,17 +387,37 @@ push_edit_button(struct dialog_data *dlg_data, struct widget_data *edit_btn)
 	/* Follow the bookmark */
 	if (box->sel) {
 		struct bookmark *bm = (struct bookmark *) box->sel->udata;
-		/** @todo Bug 153: bm->title should be UTF-8.
-		 * @todo Bug 1066: bm->url should be UTF-8.  */
-		const unsigned char *title = bm->title;
-		const unsigned char *url = bm->url;
+		int utf8_cp = get_cp_index("UTF-8");
+		int term_cp = get_terminal_codepage(dlg_data->win->term);
+		struct conv_table *convert_table;
 
-		object_lock(bm);
-		do_edit_dialog(dlg_data->win->term, 1, N_("Edit bookmark"),
-			       title, url,
-			       (struct session *) dlg_data->dlg->udata, dlg_data,
-			       bookmark_edit_done, bookmark_edit_cancel,
-			       (void *) bm, EDIT_DLG_ADD);
+		convert_table = get_translation_table(utf8_cp, term_cp);
+		if (convert_table) {
+			unsigned char *title;
+			unsigned char *url;
+
+			title = convert_string(convert_table,
+					       bm->title, strlen(bm->title),
+					       term_cp, CSM_NONE,
+					       NULL, NULL, NULL);
+			url = convert_string(convert_table,
+					     bm->url, strlen(bm->url),
+					     term_cp, CSM_NONE,
+					     NULL, NULL, NULL);
+			if (title && url) {
+				object_lock(bm);
+				do_edit_dialog(dlg_data->win->term, 1,
+					       N_("Edit bookmark"),
+					       title, url,
+					       (struct session *) dlg_data->dlg->udata,
+					       dlg_data,
+					       bookmark_edit_done,
+					       bookmark_edit_cancel,
+					       (void *) bm, EDIT_DLG_ADD);
+			}
+			mem_free_if(title);
+			mem_free_if(url);
+		}
 	}
 
 	return EVENT_PROCESSED;
