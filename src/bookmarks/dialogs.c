@@ -68,19 +68,40 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 			      term_cp, CSM_NONE, NULL, NULL, NULL);
 }
 
+/** A callback for convert_string().  This ignores errors and can
+ * result in truncated strings if out of memory.  Accordingly, the
+ * resulting string may be displayed in the UI but should not be saved
+ * to a file or given to another program.  */
+static void
+add_converted_bytes_to_string(void *data, unsigned char *buf, int buflen)
+{
+	struct string *string = data;
+
+	add_bytes_to_string(string, buf, buflen); /* ignore errors */
+}
+
 static unsigned char *
 get_bookmark_info(struct listbox_item *item, struct terminal *term)
 {
 	struct bookmark *bookmark = item->udata;
+	int utf8_cp = get_cp_index("UTF-8");
+	int term_cp = get_terminal_codepage(term);
+	struct conv_table *convert_table;
 	struct string info;
 
 	if (item->type == BI_FOLDER) return NULL;
+	convert_table = get_translation_table(utf8_cp, term_cp);
+	if (!convert_table) return NULL;
 	if (!init_string(&info)) return NULL;
 
-	/** @todo Bug 153: bookmark->title should be UTF-8.
-	 * @todo Bug 1066: bookmark->url should be UTF-8.  */
-	add_format_to_string(&info, "%s: %s", _("Title", term), bookmark->title);
-	add_format_to_string(&info, "\n%s: %s", _("URL", term), bookmark->url);
+	add_format_to_string(&info, "%s: ", _("Title", term));
+	convert_string(convert_table, bookmark->title, strlen(bookmark->title),
+		       term_cp, CSM_NONE, NULL,
+		       add_converted_bytes_to_string, &info);
+	add_format_to_string(&info, "\n%s: ", _("URL", term));
+	convert_string(convert_table, bookmark->url, strlen(bookmark->url),
+		       term_cp, CSM_NONE, NULL,
+		       add_converted_bytes_to_string, &info);
 
 	return info.source;
 }
