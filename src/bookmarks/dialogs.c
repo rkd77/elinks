@@ -641,13 +641,15 @@ bookmark_manager(struct session *ses)
  * rapid search of an already existing bookmark. --Zas */
 
 struct bookmark_search_ctx {
-	unsigned char *url;
-	unsigned char *title;
+	unsigned char *url;	/* UTF-8 */
+	unsigned char *title;	/* system charset */
 	int found;
 	int offset;
+	int utf8_cp;
+	int system_cp;
 };
 
-#define NULL_BOOKMARK_SEARCH_CTX {NULL, NULL, 0, 0}
+#define NULL_BOOKMARK_SEARCH_CTX {NULL, NULL, 0, 0, -1, -1}
 
 static int
 test_search(struct listbox_item *item, void *data_, int *offset)
@@ -661,10 +663,37 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 
 		assert(ctx->title && ctx->url);
 
-		/** @todo Bug 153: bm->title should be UTF-8.
-		 * @todo Bug 1066: bm->url should be UTF-8.  */
-		ctx->found = (*ctx->title && strcasestr(bm->title, ctx->title))
-			     || (*ctx->url && c_strcasestr(bm->url, ctx->url));
+		ctx->found = (*ctx->url && c_strcasestr(bm->url, ctx->url));
+		if (!ctx->found && *ctx->title) {
+			/* The comparison of bookmark titles should
+			 * be case-insensitive and locale-sensitive
+			 * (Turkish dotless i).  ELinks doesn't have
+			 * such a function for UTF-8.  The best we
+			 * have is strcasestr, which uses the system
+			 * charset.  So convert bm->title to that.
+			 * (ctx->title has already been converted.)  */
+			struct conv_table *convert_table;
+			unsigned char *title = NULL;
+
+			convert_table = get_translation_table(ctx->utf8_cp,
+							      ctx->system_cp);
+			if (convert_table) {
+				title = convert_string(convert_table,
+						       bm->title,
+						       strlen(bm->title),
+						       ctx->system_cp,
+						       CSM_NONE, NULL,
+						       NULL, NULL);
+			}
+
+			if (title) {
+				ctx->found = strcasecmp(title,
+							ctx->title);
+				mem_free(title);
+			}
+			/** @todo Tell the user that the string could
+			 * not be converted.  */
+		}
 
 		if (ctx->found) *offset = 0;
 	}
@@ -673,7 +702,9 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 	return 0;
 }
 
-/* Last searched values */
+/* Last searched values.  Both are in UTF-8.  (The title could be kept
+ * in the system charset, but that would be a bit risky, because
+ * setlocale calls from Lua scripts can change the system charset.)  */
 static unsigned char *bm_last_searched_title = NULL;
 static unsigned char *bm_last_searched_url = NULL;
 
@@ -685,14 +716,15 @@ free_last_searched_bookmark(void)
 }
 
 static int
-memorize_last_searched_bookmark(struct bookmark_search_ctx *ctx)
+memorize_last_searched_bookmark(const unsigned char *title,
+				const unsigned char *url)
 {
 	/* Memorize last searched title */
-	mem_free_set(&bm_last_searched_title, stracpy(ctx->title));
+	mem_free_set(&bm_last_searched_title, stracpy(title));
 	if (!bm_last_searched_title) return 0;
 
 	/* Memorize last searched url */
-	mem_free_set(&bm_last_searched_url, stracpy(ctx->url));
+	mem_free_set(&bm_last_searched_url, stracpy(url));
 	if (!bm_last_searched_url) {
 		mem_free_set(&bm_last_searched_title, NULL);
 		return 0;
@@ -709,38 +741,94 @@ bookmark_search_do(void *data)
 	struct bookmark_search_ctx ctx = NULL_BOOKMARK_SEARCH_CTX;
 	struct listbox_data *box;
 	struct dialog_data *dlg_data;
+	struct conv_table *convert_table;
+	int term_cp;
+	unsigned char *url_term;
+	unsigned char *title_term;
+	unsigned char *title_utf8 = NULL;
 
 	assertm(dlg->udata != NULL, "Bookmark search with NULL udata in dialog");
 	if_assert_failed return;
 
-	ctx.title = dlg->widgets[0].data;
-	ctx.url   = dlg->widgets[1].data;
-
-	if (!ctx.title || !ctx.url)
-		return;
-
-	if (!memorize_last_searched_bookmark(&ctx))
-		return;
-
 	dlg_data = (struct dialog_data *) dlg->udata;
+	term_cp = get_terminal_codepage(dlg_data->win->term);
+	ctx.system_cp = get_cp_index("System");
+	ctx.utf8_cp = get_cp_index("UTF-8");
+
+	title_term = dlg->widgets[0].data; /* need not be freed */
+	url_term   = dlg->widgets[1].data; /* likewise */
+
+	convert_table = get_translation_table(term_cp, ctx.system_cp);
+	if (!convert_table) goto free_all;
+	ctx.title = convert_string(convert_table,
+				   title_term, strlen(title_term),
+				   ctx.system_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!ctx.title) goto free_all;
+
+	convert_table = get_translation_table(term_cp, ctx.utf8_cp);
+	if (!convert_table) goto free_all;
+	ctx.url = convert_string(convert_table,
+				 url_term, strlen(url_term),
+				 ctx.utf8_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!ctx.url) goto free_all;
+	title_utf8 = convert_string(convert_table,
+				    title_term, strlen(title_term),
+				    ctx.utf8_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!title_utf8) goto free_all;
+
+	if (!memorize_last_searched_bookmark(title_utf8, ctx.url))
+		goto free_all;
+
 	box = get_dlg_listbox_data(dlg_data);
 
 	traverse_listbox_items_list(box->sel, box, 0, 0, test_search, &ctx);
-	if (!ctx.found) return;
+	if (!ctx.found) goto free_all;
 
 	listbox_sel_move(dlg_data->widgets_data, ctx.offset - 1);
-}
 
+free_all:
+	mem_free_if(ctx.title);
+	mem_free_if(ctx.url);
+	mem_free_if(title_utf8);
+}
 
 static void
 launch_bm_search_doc_dialog(struct terminal *term,
 			    struct dialog_data *parent,
 			    struct session *ses)
 {
+	unsigned char *title = NULL;
+	unsigned char *url = NULL;
+
+	if (bm_last_searched_title && bm_last_searched_url) {
+		int utf8_cp, term_cp;
+		struct conv_table *convert_table;
+
+		utf8_cp = get_cp_index("UTF-8");
+		term_cp = get_terminal_codepage(term);
+
+		convert_table = get_translation_table(utf8_cp, term_cp);
+		if (convert_table) {
+			title = convert_string(convert_table, bm_last_searched_title,
+					       strlen(bm_last_searched_title), term_cp,
+					       CSM_NONE, NULL, NULL, NULL);
+			url = convert_string(convert_table, bm_last_searched_url,
+					     strlen(bm_last_searched_url), term_cp,
+					     CSM_NONE, NULL, NULL, NULL);
+		}
+		if (!title || !url) {
+			mem_free_set(&title, NULL);
+			mem_free_set(&url, NULL);
+		}
+	}
+
 	do_edit_dialog(term, 1, N_("Search bookmarks"),
-		       bm_last_searched_title, bm_last_searched_url,
+		       title, url,
 		       ses, parent, bookmark_search_do, NULL, NULL,
 		       EDIT_DLG_SEARCH);
+
+	mem_free_if(title);
+	mem_free_if(url);
 }
 
 
