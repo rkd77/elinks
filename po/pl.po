@@ -7685,7 +7685,7 @@ msgstr[2] "%u pozostałych"
 #. Statistics:
 #: src/protocol/bittorrent/dialogs.c:419
 msgid "Statistics"
-msgstr "Statystyki"
+msgstr "Statystyka"
 
 #: src/protocol/bittorrent/dialogs.c:423
 #, c-format
