@@ -592,7 +592,7 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-#define POST_BUFFER_SIZE 32768
+#define POST_BUFFER_SIZE 16384
 #define BIG_READ 655360
 
 static void
@@ -614,7 +614,7 @@ send_more_post_data(struct socket *socket)
 		/* Can't use request_from_socket() because there's no
 		 * more data to write.  */
 		struct read_buffer *rb = alloc_read_buffer(socket);
-		
+
 		socket->state = SOCKET_END_ONCLOSE;
 		if (rb)
 			read_from_socket(socket, rb, connection_state(S_SENT),
