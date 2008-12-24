@@ -16,11 +16,11 @@
 #endif
 
 #include <sys/types.h> /* FreeBSD needs this before regex.h */
-#ifdef HAVE_REGEX_H
-#include <regex.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_TRE_REGEX_H
+#include <tre/regex.h>
+#endif
 
 #include "elinks.h"
 
@@ -54,9 +54,17 @@ static INIT_INPUT_HISTORY(search_history);
 #undef UCHAR
 #ifdef CONFIG_UTF8
 #define UCHAR unicode_val_T
+#define PATTERN const wchar_t
+#define Regcomp regwcomp
+#define Regexec regwexec
 #else
 #define UCHAR unsigned char
+#define PATTERN const char
+#define Regcomp regcomp
+#define Regexec regexec
 #endif
+
+static UCHAR *memacpy_u(unsigned char *text, int textlen, int utf8);
 
 static inline void
 add_srch_chr(struct document *document, UCHAR c, int x, int y, int nn)
@@ -262,21 +270,21 @@ get_range(struct document *document, int y, int height, int l,
 	return 0;
 }
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 /** Returns a string @c doc that is a copy of the text in the search
  * nodes from @a s1 to (@a s1 + @a doclen - 1) with the space at the
  * end of each line converted to a new-line character (LF). */
-static unsigned char *
+static UCHAR *
 get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 				    int pattern_len, int *doclen)
 {
-	unsigned char *doc;
+	UCHAR *doc;
 	int i;
 
 	*doclen = s2 - s1 + pattern_len;
 	if (!*doclen) return NULL;
 
-	doc = mem_alloc(*doclen + 1);
+	doc = mem_alloc((*doclen + 1) * sizeof(UCHAR));
 	if (!doc) {
 		*doclen = -1;
 		return NULL;
@@ -301,11 +309,11 @@ struct regex_match_context {
 	int y1;
 	int y2;
 	int found;
-	unsigned char *pattern;
+	UCHAR *pattern;
 };
 
 static int
-init_regex(regex_t *regex, unsigned char *pattern)
+init_regex(regex_t *regex, UCHAR *pattern)
 {
 	int regex_flags = REG_NEWLINE;
 	int reg_err;
@@ -316,7 +324,7 @@ init_regex(regex_t *regex, unsigned char *pattern)
 	if (!get_opt_bool("document.browse.search.case"))
 		regex_flags |= REG_ICASE;
 
-	reg_err = regcomp(regex, pattern, regex_flags);
+	reg_err = Regcomp(regex, (PATTERN *)pattern, regex_flags);
 	if (reg_err) {
 		regfree(regex);
 		return 0;
@@ -329,8 +337,8 @@ static void
 search_for_pattern(struct regex_match_context *common_ctx, void *data,
 		   void (*match)(struct regex_match_context *, void *))
 {
-	unsigned char *doc;
-	unsigned char *doctmp;
+	UCHAR *doc;
+	UCHAR *doctmp;
 	int doclen;
 	int regexec_flags = 0;
 	regex_t regex;
@@ -381,7 +389,7 @@ find_next:
 	save_c = doc[pos];
 	doc[pos] = 0;
 
-	while (*doctmp && !regexec(&regex, doctmp, 1, &regmatch, regexec_flags)) {
+	while (*doctmp && !Regexec(&regex, (PATTERN *)doctmp, 1, &regmatch, regexec_flags)) {
 		regexec_flags = REG_NOTBOL;
 		common_ctx->textlen = regmatch.rm_eo - regmatch.rm_so;
 		if (!common_ctx->textlen) { doc[pos] = save_c; common_ctx->found = 1; goto free_stuff; }
@@ -432,10 +440,13 @@ static int
 is_in_range_regex(struct document *document, int y, int height,
 		  unsigned char *text, int textlen,
 		  int *min, int *max,
-		  struct search *s1, struct search *s2)
+		  struct search *s1, struct search *s2, int utf8)
 {
 	struct regex_match_context common_ctx;
 	struct is_in_range_regex_context ctx;
+	UCHAR *txt = memacpy_u(text, textlen, utf8);
+
+	if (!txt) return -1;
 
 	ctx.y = y;
 	ctx.min = min;
@@ -445,15 +456,16 @@ is_in_range_regex(struct document *document, int y, int height,
 	common_ctx.textlen = textlen;
 	common_ctx.y1 = y - 1;
 	common_ctx.y2 = y + height;
-	common_ctx.pattern = text;
+	common_ctx.pattern = txt;
 	common_ctx.s1 = s1;
 	common_ctx.s2 = s2;
 
 	search_for_pattern(&common_ctx, &ctx, is_in_range_regex_match);
+	mem_free(txt);
 
 	return common_ctx.found;
 }
-#endif /* HAVE_REGEX_H */
+#endif /* HAVE_TRE_REGEX_H */
 
 static UCHAR *
 memacpy_u(unsigned char *text, int textlen, int utf8)
@@ -590,10 +602,10 @@ is_in_range(struct document *document, int y, int height,
 	if (get_range(document, y, height, textlen, &s1, &s2))
 		return 0;
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 	if (get_opt_int("document.browse.search.regex"))
 		return is_in_range_regex(document, y, height, text, textlen,
-					 min, max, s1, s2);
+					 min, max, s1, s2, utf8);
 #endif
 	return is_in_range_plain(document, y, height, text, textlen,
 				 min, max, s1, s2, utf8);
@@ -669,7 +681,7 @@ srch_failed:
 	*pl = len;
 }
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 struct get_searched_regex_context {
 	int xoffset;
 	int yoffset;
@@ -709,10 +721,13 @@ get_searched_regex_match(struct regex_match_context *common_ctx, void *data)
 
 static void
 get_searched_regex(struct document_view *doc_view, struct point **pt, int *pl,
-		   int textlen, struct search *s1, struct search *s2)
+		   int textlen, struct search *s1, struct search *s2, int utf8)
 {
 	struct regex_match_context common_ctx;
 	struct get_searched_regex_context ctx;
+	UCHAR *txt = memacpy_u(*doc_view->search_word, textlen, utf8);
+
+	if (!txt) return;
 
 	ctx.points = NULL;
 	ctx.len = 0;
@@ -724,16 +739,17 @@ get_searched_regex(struct document_view *doc_view, struct point **pt, int *pl,
 	common_ctx.textlen = textlen;
 	common_ctx.y1 = doc_view->vs->y - 1;
 	common_ctx.y2 = doc_view->vs->y + ctx.box->height;
-	common_ctx.pattern = *doc_view->search_word;
+	common_ctx.pattern = txt;
 	common_ctx.s1 = s1;
 	common_ctx.s2 = s2;
 
 	search_for_pattern(&common_ctx, &ctx, get_searched_regex_match);
 
+	mem_free(txt);
 	*pt = ctx.points;
 	*pl = ctx.len;
 }
-#endif /* HAVE_REGEX_H */
+#endif /* HAVE_TRE_REGEX_H */
 
 static void
 get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf8)
@@ -757,9 +773,9 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf
 		return;
 	}
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 	if (get_opt_int("document.browse.search.regex"))
-		get_searched_regex(doc_view, pt, pl, l, s1, s2);
+		get_searched_regex(doc_view, pt, pl, l, s1, s2, utf8);
 	else
 #endif
 		get_searched_plain(doc_view, pt, pl, l, s1, s2, utf8);
@@ -1576,7 +1592,7 @@ search_typeahead(struct session *ses, struct document_view *doc_view,
  * a nice cleanup target ;-). --pasky */
 
 enum search_option {
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 	SEARCH_OPT_REGEX,
 #endif
 	SEARCH_OPT_CASE,
@@ -1584,7 +1600,7 @@ enum search_option {
 };
 
 static struct option_resolver resolvers[] = {
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 	{ SEARCH_OPT_REGEX,	"regex" },
 #endif
 	{ SEARCH_OPT_CASE,	"case" },
@@ -1651,7 +1667,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 			       hop->values, SEARCH_OPTIONS);
 	hop->data = data;
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 #define SEARCH_WIDGETS_COUNT 8
 #else
 #define SEARCH_WIDGETS_COUNT 5
@@ -1675,7 +1691,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	field = get_dialog_offset(dlg, SEARCH_WIDGETS_COUNT);
 	add_dlg_field(dlg, text, 0, 0, NULL, MAX_STR_LEN, field, history);
 
-#ifdef HAVE_REGEX_H
+#ifdef HAVE_TRE_REGEX_H
 	add_dlg_radio(dlg, _("Normal search", term), 1, 0, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Regexp search", term), 1, 1, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Extended regexp search", term), 1, 2, &hop->values[SEARCH_OPT_REGEX].number);
