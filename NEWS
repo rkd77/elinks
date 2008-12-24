@@ -15,6 +15,8 @@ To be released as 0.11.6.
 * major bug 1004: ignore locales when comparing HTML element names and
   similar strings, so e.g. ``title'' matches ``TITLE'' even in the
   Turkish locale
+* minor: clicking a link with the mouse activates that link, rather
+  than the one selected with move-cursor-* actions
 
 ELinks 0.11.5:
 --------------
