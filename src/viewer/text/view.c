@@ -1167,6 +1167,7 @@ frame_ev_mouse(struct session *ses, struct document_view *doc_view, struct term_
 		enum frame_event_status status = FRAME_EVENT_REFRESH;
 
 		doc_view->vs->current_link = link - doc_view->document->links;
+		ses->navigate_mode = NAVIGATE_LINKWISE;
 
 		if (!link_is_textinput(link)) {
 
