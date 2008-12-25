@@ -203,8 +203,15 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 					if (isquote(*to)) to--;
 
 					token->string = from;
-					real_length = to - from + 1;
-					assert(real_length >= 0);
+					/* Given "url( )", @to and @from will
+					 * cross when they scan forwards and
+					 * backwards, respectively, for a non-
+					 * whitespace character, and @to - @from
+					 * will be negative.  If there is
+					 * anything between the parentheses,
+					 * @to and @from will not cross and @to
+					 * - @from will not become negative. */
+					real_length = int_max(0, to - from + 1);
 					string = function_end;
 				}
 
