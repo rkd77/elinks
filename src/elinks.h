@@ -29,6 +29,30 @@
 #define DEBUG_MEMLEAK
 #endif
 
+
+/* When CONFIG_UTF8 is defined, src/viewer/text/search.c makes a string
+ * of unicode_val_T and gives it to regwexec(), which expects a string
+ * of wchar_t.  If the unicode_val_T and wchar_t types are too different,
+ * this won't work, so try to detect that and disable regexp operations
+ * entirely in that case.
+ *
+ * Currently, this code only compares the sizes of the types.  Because
+ * unicode_val_T is defined as uint32_t and POSIX says bytes are 8-bit,
+ * sizeof(unicode_val_T) is 4 and the following compares SIZEOF_WCHAR_T
+ * to that.
+ *
+ * C99 says the implementation can define __STDC_ISO_10646__ if wchar_t
+ * values match ISO 10646 (or Unicode) numbers in all locales.  Do not
+ * check that macro here, because it is too restrictive: it should be
+ * enough for ELinks if the values match in the locales where ELinks is
+ * actually run.  */
+
+#ifdef CONFIG_UTF8
+#if SIZEOF_WCHAR_T != 4
+#undef HAVE_TRE_REGEX_H
+#endif
+#endif
+
 /* This maybe overrides some of the standard high-level functions, to ensure
  * the expected behaviour. These overrides are not system specific. */
 #include "osdep/stub.h"

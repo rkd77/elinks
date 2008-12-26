@@ -917,6 +917,7 @@ fi
 AC_MSG_RESULT($cf_result)
 if test "$cf_result" = yes; then
 	AC_CHECK_HEADERS(tre/regex.h)
+	AC_CHECK_SIZEOF(wchar_t, 4, [#include <wchar.h>])
 fi
 
 # ===================================================================
