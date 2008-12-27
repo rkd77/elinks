@@ -283,6 +283,9 @@ get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 	UCHAR *doc;
 	int i;
 
+	/* We must include @a pattern_len in this expression because get_range
+	 * caps the end of the search region, @a s2, to the length of the
+	 * document minus the length of the search pattern. */
 	*doclen = s2 - s1 + pattern_len;
 	if (!*doclen) return NULL;
 
