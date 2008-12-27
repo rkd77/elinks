@@ -1320,36 +1320,14 @@ do_typeahead(struct session *ses, struct document_view *doc_view,
 		case ACT_EDIT_UP:
 			direction = -1;
 			i--;
-			if (i >= 0) break;
-			if (!get_opt_bool("document.browse.search.wraparound", NULL)) {
-search_hit_boundary:
-				if (match_link_text(&document->links[current],
-						    text, strlen(text),
-						    get_opt_bool("document"
-								 ".browse"
-								 ".search"
-								 ".case",
-								 NULL))
-				     >= 0) {
-					return TYPEAHEAD_ERROR_NO_FURTHER;
-				}
 
-				return TYPEAHEAD_ERROR;
-			}
-
-			i = doc_view->document->nlinks - 1;
 			break;
 
 		case ACT_EDIT_NEXT_ITEM:
 		case ACT_EDIT_DOWN:
 			direction = 1;
 			i++;
-			if (i < doc_view->document->nlinks) break;
-			if (!get_opt_bool("document.browse.search.wraparound",
-			                  NULL))
-				goto search_hit_boundary;
 
-			i = 0;
 			break;
 
  		case ACT_EDIT_ENTER:
@@ -1358,6 +1336,22 @@ search_hit_boundary:
 
 		default:
 			direction = 1;
+	}
+
+	if (i < 0 || i >= doc_view->document->nlinks) {
+		if (!get_opt_bool("document.browse.search.wraparound", NULL)) {
+			if (match_link_text(&document->links[current],
+			                    text, strlen(text),
+			                    get_opt_bool("document.browse"
+			                                 ".search.case", NULL))
+			     >= 0) {
+				return TYPEAHEAD_ERROR_NO_FURTHER;
+			}
+
+			return TYPEAHEAD_ERROR;
+		}
+
+		i = direction > 0 ? 0 : doc_view->document->nlinks - 1;
 	}
 
 	match = search_link_text(document, current, i, text, direction, offset);
