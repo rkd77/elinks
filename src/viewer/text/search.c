@@ -217,7 +217,9 @@ get_search_data(struct document *document)
 
 	get_srch(document);
 	while (document->nsearch
-	       && document->search[--document->nsearch].c == ' ');
+	       && document->search[document->nsearch - 1].c == ' ') {
+		--document->nsearch;
+	}
 	sort_srch(document);
 }
 
