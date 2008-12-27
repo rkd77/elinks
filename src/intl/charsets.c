@@ -1067,9 +1067,11 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 			           will go in [0] table */
 	static struct entity_cache entity_cache[ENTITY_CACHE_MAXLEN][ENTITY_CACHE_SIZE];
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
-	static int first_time = 1;
 	unsigned int slen = 0;
 	const unsigned char *result = NULL;
+
+	/* Note that an object of static storage duration is automatically
+	 * initialised to zero in C.  */
 
 	if (strlen <= 0) return NULL;
 
@@ -1079,11 +1081,6 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	if (is_cp_ptr_utf8(&codepages[encoding]))
 		goto skip;
 #endif /* CONFIG_UTF8 */
-
-	if (first_time) {
-		memset(&nb_entity_cache, 0, ENTITY_CACHE_MAXLEN * sizeof(unsigned int));
-		first_time = 0;
-	}
 
 	/* Check if cached. A test on many websites (freshmeat.net + whole ELinks website
 	 * + google + slashdot + websites that result from a search for test on google,

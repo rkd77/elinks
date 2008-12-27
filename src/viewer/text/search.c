@@ -889,15 +889,12 @@ point_intersect(struct point *p1, int l1, struct point *p2, int l2)
 
 	int i;
 	static char hash[HASH_SIZE];
-	static int first_time = 1;
+
+	/* Note that an object of static storage duration is automatically
+	 * initialised to zero in C.  */
 
 	assert(p2);
 	if_assert_failed return 0;
-
-	if (first_time) {
-		memset(hash, 0, HASH_SIZE);
-		first_time = 0;
-	}
 
 	for (i = 0; i < l1; i++) hash[HASH(p1[i])] = 1;
 
