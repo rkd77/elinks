@@ -130,10 +130,39 @@ struct link {
 	(!link_is_form(link) ? (link)->data.name : NULL)
 
 #ifdef CONFIG_UTF8
+/** A searchable character on the document canvas.
+ *
+ * struct document.search is an array of struct search, initialised by
+ * get_src, q.v.  The elements of the array roughly correspond to the document
+ * canvas, document.data; each element corresponds to a regular character, a
+ * run of one or more control characters, or the end of a line on the canvas.
+ *
+ * If an instance of struct search corresponds to a regular character, then that
+ * character is stored in @a c and @a n is equal to 1.  If an instance of struct
+ * search corresponds to a run of control characters, then a space character ' '
+ * is stored in @a c and @a n is equal to to the length of the run.  If an instance
+ * of struct search corresponds to the end of a line, then a space is stored in
+ * @a c and @a n is equal to 0.
+ */
 struct search {
-	int x, y;
-	signed int n;		/* RAM is cheap nowadays */
-	unicode_val_T c;
+	int x, y;               /* Co-ordinates on the document canvas,
+	                         * document.data. */
+
+	signed int n;           /* The number of characters on the
+	                         * document canvas to which this object
+	                         * corresponds.  If the value is 0, then this
+	                         * object marks the end of a line.  If the value
+	                         * is 1, then this object corresponds to a
+	                         * single character.  If the value is greater
+	                         * than 1, then this object corresponds to a run
+	                         * of control characters. */
+
+	unicode_val_T c;        /* The character on the document canvas to which
+	                         * this object corresponds or ' ' if that
+	                         * character is a control character or if this
+	                         * object marks the end of a line. */
+
+	/* RAM is cheap nowadays */
 };
 #else
 struct search {
