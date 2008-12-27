@@ -293,10 +293,10 @@ get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 	}
 
 	for (i = 0; i < *doclen; i++) {
-		if (i > 0 && s1[i - 1].c == ' ' && s1[i - 1].y != s1[i].y) {
-			doc[i - 1] = '\n';
-		}
-		doc[i] = s1[i].c;
+		if (s1[i].n == 0)
+			doc[i] = '\n';
+		else
+			doc[i] = s1[i].c;
 	}
 
 	doc[*doclen] = 0;
