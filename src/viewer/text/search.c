@@ -1378,6 +1378,9 @@ do_typeahead(struct session *ses, struct document_view *doc_view,
 /** @name Typeahead
  * @{ */
 
+/** @a action_id can be a value from enum edit_action, in which case the
+ * approriate action is performed; -1, which indicates to search and report any
+ * errors; or -2, which indicates to search without reporting any errors. */
 static enum input_line_code
 text_typeahead_handler(struct input_line *line, int action_id)
 {

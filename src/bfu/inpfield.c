@@ -856,6 +856,9 @@ cancel_input_line:
 
 		update_dialog_data(dlg_data);
 
+		/* Set action_id to -2 to signal to the handler that it should
+		 * not report errors or take any action except to search. */
+		action_id = -2;
 		goto send_action_to_handler;
 
 	case INPUT_LINE_PROCEED:
