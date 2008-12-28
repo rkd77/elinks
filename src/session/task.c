@@ -388,7 +388,7 @@ ses_imgmap(struct session *ses)
 			  &menu, &ml, ses->loading_uri,
 			  &doc_view->document->options,
 			  ses->task.target.frame,
-			  get_opt_codepage_tree(ses->tab->term->spec, "charset"),
+			  get_terminal_codepage(ses->tab->term),
 			  get_opt_codepage("document.codepage.assume"),
 			  get_opt_bool("document.codepage.force_assumed")))
 		return;

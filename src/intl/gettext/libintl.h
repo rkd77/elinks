@@ -61,7 +61,7 @@ extern int current_charset;
 static inline void
 intl_set_charset(struct terminal *term)
 {
-	int new_charset = get_opt_codepage_tree(term->spec, "charset");
+	int new_charset = get_terminal_codepage(term);
 
 	/* Prevent useless switching. */
 	if (current_charset != new_charset) {

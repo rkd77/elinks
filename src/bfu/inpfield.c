@@ -691,8 +691,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				/* get_kbd_key(ev) is UCS-4, and @text
 				 * is in the terminal's charset.  */
 				ins = u2cp_no_nbsp(get_kbd_key(ev),
-						   get_opt_codepage_tree(term->spec,
-									 "charset"));
+						   get_terminal_codepage(term));
 				inslen = strlen(ins);
 #endif /* CONFIG_UTF8 */
 

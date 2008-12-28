@@ -127,7 +127,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 {
 #ifdef CONFIG_UTF8
 	unicode_val_T key = unicode_fold_label_case(hotkey);
-	int codepage = get_opt_codepage_tree(term->spec, "charset");
+	int codepage = get_terminal_codepage(term);
 #else
 	unsigned char key = toupper(hotkey);
 #endif

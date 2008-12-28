@@ -172,6 +172,7 @@ void destroy_terminal(struct terminal *);
 void redraw_terminal(struct terminal *term);
 void redraw_terminal_cls(struct terminal *term);
 void cls_redraw_all_terminals(void);
+int get_terminal_codepage(const struct terminal *);
 
 void redraw_all_terminals(void);
 void destroy_all_terminals(void);

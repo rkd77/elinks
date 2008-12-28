@@ -171,8 +171,7 @@ show_http_error_document(struct session *ses, void *data)
 	if (str) {
 		/* The codepage that _("foo", term) used when it was
 		 * called by get_http_error_document.  */
-		const int gettext_codepage
-			= get_opt_codepage_tree(term->spec, "charset");
+		const int gettext_codepage = get_terminal_codepage(term);
 
 		if (cached) delete_entry_content(cache);
 

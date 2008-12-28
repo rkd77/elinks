@@ -103,6 +103,24 @@ init_term(int fdin, int fdout)
 	return term;
 }
 
+/** Get the codepage of a terminal.  The UTF-8 I/O option does not
+ * affect this.
+ *
+ * @todo Perhaps cache the value in struct terminal?
+ *
+ * @bug Bug 1064: If the charset has been set as "System", this should
+ * apply the locale environment variables of the slave ELinks process,
+ * not those of the master ELinks process that parsed the configuration
+ * file.  That is why the parameter points to struct terminal and not
+ * merely to its option tree (term->spec).
+ *
+ * @see get_translation_table(), get_cp_mime_name() */
+int
+get_terminal_codepage(const struct terminal *term)
+{
+	return get_opt_codepage_tree(term->spec, "charset");
+}
+
 void
 redraw_all_terminals(void)
 {

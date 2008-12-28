@@ -1216,8 +1216,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 #ifdef CONFIG_UTF8
 	key = get_kbd_key(ev);
 #else  /* !CONFIG_UTF8 */
-	key = cp2u(get_opt_codepage_tree(ses->tab->term->spec,
-					 "charset"),
+	key = cp2u(get_terminal_codepage(ses->tab->term),
 		   get_kbd_key(ev));
 #endif /* !CONFIG_UTF8 */
 	/* If @key now is 0 (which is used in link.accesskey if there

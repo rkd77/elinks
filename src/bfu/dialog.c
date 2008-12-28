@@ -297,7 +297,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 
 #ifdef CONFIG_UTF8
 	key = unicode_fold_label_case(get_kbd_key(ev));
-	codepage = get_opt_codepage_tree(dlg_data->win->term->spec, "charset");
+	codepage = get_terminal_codepage(dlg_data->win->term);
 #else
 	key = toupper(get_kbd_key(ev));
 #endif
