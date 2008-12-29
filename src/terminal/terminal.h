@@ -185,12 +185,14 @@ void close_handle(void *);
 void assert_terminal_ptr_not_dangling(const struct terminal *);
 #endif
 
-/** Operations that can be requested with do_terminal_function().
+/** Operations that can be requested with do_terminal_function() in
+ * the master and then executed with dispatch_special() in a slave.
  * The interlink protocol passes these values as one byte in a
  * null-terminated string, so zero cannot be used.  */
 enum {
-	TERM_FN_TITLE	= 1,
-	TERM_FN_RESIZE	= 2
+	TERM_FN_TITLE	       = 1,
+	TERM_FN_RESIZE         = 2,
+	TERM_FN_TITLE_CODEPAGE = 3
 };
 
 /** How to execute a program in a terminal.  These values are used in
@@ -211,7 +213,7 @@ enum term_exec {
 void exec_on_terminal(struct terminal *, unsigned char *, unsigned char *, enum term_exec);
 void exec_shell(struct terminal *term);
 
-void set_terminal_title(struct terminal *, unsigned char *);
+int set_terminal_title(struct terminal *, unsigned char *);
 void do_terminal_function(struct terminal *, unsigned char, unsigned char *);
 
 int check_terminal_pipes(void);

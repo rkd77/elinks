@@ -303,7 +303,7 @@ get_window_title(void)
 }
 
 void
-set_window_title(unsigned char *title)
+set_window_title(unsigned char *title, int codepage)
 {
 #ifndef DEBUG_OS2
 	static PTIB tib;

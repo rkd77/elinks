@@ -372,12 +372,44 @@ do_terminal_function(struct terminal *term, unsigned char code,
 	fmem_free(x_data);
 }
 
-void
+/** @return negative on error; zero or positive on success.  */
+int
 set_terminal_title(struct terminal *term, unsigned char *title)
 {
-	if (term->title && !strcmp(title, term->title)) return;
+	int from_cp;
+	int to_cp;
+	unsigned char *converted = NULL;
+
+	if (term->title && !strcmp(title, term->title)) return 0;
+
+	/* In which codepage was the title parameter given?  */
+	from_cp = get_terminal_codepage(term);
+
+	/* In which codepage does the terminal want the title?  */
+	if (get_opt_bool_tree(term->spec, "latin1_title"))
+		to_cp = get_cp_index("ISO-8859-1");
+	else if (get_opt_bool_tree(term->spec, "utf_8_io"))
+		to_cp = get_cp_index("UTF-8");
+	else
+		to_cp = from_cp;
+
+	if (from_cp != to_cp) {
+		struct conv_table *convert_table;
+
+		convert_table = get_translation_table(from_cp, to_cp);
+		if (!convert_table) return -1;
+		converted = convert_string(convert_table, title, strlen(title),
+					   to_cp, CSM_NONE, NULL, NULL, NULL);
+		if (!converted) return -1;
+	}
+
 	mem_free_set(&term->title, stracpy(title));
-	do_terminal_function(term, TERM_FN_TITLE, title);
+	do_terminal_function(term, TERM_FN_TITLE_CODEPAGE,
+			     get_cp_mime_name(to_cp));
+	do_terminal_function(term, TERM_FN_TITLE,
+			     converted ? converted : title);
+	mem_free_if(converted);
+	return 0;
 }
 
 static int terminal_pipe[2];

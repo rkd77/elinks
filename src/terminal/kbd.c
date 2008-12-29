@@ -324,6 +324,11 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	itrm->timer = TIMER_ID_UNDEF;
 	itrm->remote = !!remote;
 
+	/* If the master does not tell which charset it's using in
+	 * this terminal, assume it's some ISO 8859.  Because that's
+	 * what older versions of ELinks did.  */
+	itrm->title_codepage = get_cp_index("ISO-8859-1");
+
 	/* FIXME: Combination altscreen + xwin does not work as it should,
 	 * mouse clicks are reportedly partially ignored. */
 	if (info.system_env & (ENV_SCREEN | ENV_XWIN))
@@ -415,7 +420,7 @@ free_itrm(struct itrm *itrm)
 
 	if (!itrm->remote) {
 		if (itrm->orig_title && *itrm->orig_title) {
-			set_window_title(itrm->orig_title);
+			set_window_title(itrm->orig_title, itrm->title_codepage);
 
 		} else if (itrm->touched_title) {
 			/* Set the window title to the value of $TERM if X11
@@ -425,7 +430,8 @@ free_itrm(struct itrm *itrm)
 
 			get_terminal_name(title);
 			if (*title)
-				set_window_title(title);
+				set_window_title(title,
+						 get_cp_index("US-ASCII"));
 		}
 
 
@@ -498,13 +504,30 @@ dispatch_special(unsigned char *text)
 					ditrm->orig_title = get_window_title();
 				ditrm->touched_title = 1;
 			}
-			set_window_title(text + 1);
+			/* TODO: Is it really possible to get here with
+			 * ditrm == NULL, and which charset would then
+			 * be most appropriate?  */
+			set_window_title(text + 1,
+					 ditrm ? ditrm->title_codepage
+					 : get_cp_index("US-ASCII"));
 			break;
 		case TERM_FN_RESIZE:
 			if (ditrm && ditrm->remote)
 				break;
 
 			resize_terminal_from_str(text + 1);
+			break;
+		case TERM_FN_TITLE_CODEPAGE:
+			if (ditrm) {
+				int cp = get_cp_index(text + 1);
+
+				/* If the master sends the name of an
+				 * unrecognized charset, assume only
+				 * that it's ASCII compatible.  */
+				if (cp == -1)
+					cp = get_cp_index("US-ASCII");
+				ditrm->title_codepage = cp;
+			}
 			break;
 	}
 }

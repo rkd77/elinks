@@ -407,73 +407,71 @@ set_clipboard_text(unsigned char *data)
 
 /* Set xterm-like term window's title. */
 void
-set_window_title(unsigned char *title)
+set_window_title(unsigned char *title, int codepage)
 {
-	unsigned char *s;
-	int xsize, ysize;
-	int j = 0;
+	struct string filtered;
 
 #ifndef HAVE_SYS_CYGWIN_H
 	/* Check if we're in a xterm-like terminal. */
 	if (!is_xterm() && !is_gnuscreen()) return;
 #endif
 
-	/* Retrieve terminal dimensions. */
-	get_terminal_size(0, &xsize, &ysize);
+	if (!init_string(&filtered)) return;
 
-	/* Check if terminal width is reasonnable. */
-	if (xsize < 1 || xsize > 1024) return;
-
-	/* Allocate space for title + 3 ending points + null char. */
-	s = mem_alloc(xsize + 3 + 1);
-	if (!s) return;
-
-	/* Copy title to s if different from NULL */
+	/* Copy title to filtered if different from NULL */
 	if (title) {
-		int i;
+		unsigned char *scan = title;
+		unsigned char *end = title + strlen(title);
 
-		/* We limit title length to terminal width and ignore control
-		 * chars if any. Note that in most cases window decoration
-		 * reduces printable width, so it's just a precaution. */
+		/* Remove control characters, so that they cannot
+		 * interfere with the command we send to the terminal.
+		 * However, do not attempt to limit the title length
+		 * to terminal width, because the title is usually
+		 * drawn in a different font anyway.  */
 		/* Note that this is the right place where to do it, since
 		 * potential alternative set_window_title() routines might
 		 * want to take different precautions. */
-		for (i = 0; title[i] && i < xsize; i++) {
-			/* 0x80 .. 0x9f are ISO-8859-* control characters.
-			 * In some other encodings they could be used for
-			 * legitimate characters, though (ie. in Kamenicky).
-			 * We should therefore maybe check for these only
-			 * if the terminal is running in an ISO- encoding. */
-			if (iscntrl(title[i]) || (title[i] & 0x7f) < 0x20
-			    || title[i] == 0x7f)
+		for (;;) {
+			unsigned char *charbegin = scan;
+			unicode_val_T unicode
+				= cp_to_unicode(codepage, &scan, end);
+			int charlen = scan - charbegin;
+
+			if (unicode == UCS_NO_CHAR)
+				break;
+
+			/* This need not recognize all Unicode control
+			 * characters.  Only those that can make the
+			 * terminal misparse the command.  */
+			if (unicode < 0x20
+			    || (unicode >= 0x7F && unicode < 0xA0))
 				continue;
 
-			s[j++] = title[i];
-		}
+			/* xterm entirely rejects 1024-byte or longer
+			 * titles.  */
+			if (filtered.length + charlen >= 1024 - 3) {
+				add_to_string(&filtered, "...");
+				break;
+			}
 
-		/* If title is truncated, add "..." */
-		if (i == xsize) {
-			s[j++] = '.';
-			s[j++] = '.';
-			s[j++] = '.';
+			add_bytes_to_string(&filtered, charbegin, charlen);
 		}
 	}
-	s[j] = '\0';
 
 	/* Send terminal escape sequence + title string */
-	printf("\033]0;%s\a", s);
+	printf("\033]0;%s\a", filtered.source);
 
 #if 0
 	/* Miciah don't like this so it is disabled because it changes the
 	 * default window name. --jonas */
 	/* Set the GNU screen window name */
 	if (is_gnuscreen())
-		printf("\033k%s\033\134", s);
+		printf("\033k%s\033\134", filtered.source);
 #endif
 
 	fflush(stdout);
 
-	mem_free(s);
+	done_string(&filtered);
 }
 
 #ifdef HAVE_X11
