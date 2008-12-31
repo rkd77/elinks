@@ -511,6 +511,9 @@ look_for_tag(unsigned char **pos, unsigned char *eof,
 	return 0;
 }
 
+/** @return -1 if EOF is hit without the closing tag; 0 if the closing
+ * tag is found (in which case this also adds *@a menu to *@a ml); or
+ * 1 if this should be called again.  */
 static int
 look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 	      struct memory_list **ml, struct uri *href_base,
@@ -528,7 +531,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 		(*pos)++;
 	}
 
-	if (*pos >= eof) return 0;
+	if (*pos >= eof) return -1;
 
 	if (*pos + 2 <= eof && ((*pos)[1] == '!' || (*pos)[1] == '?')) {
 		*pos = skip_comment(*pos, eof);
@@ -543,7 +546,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 	if (!c_strlcasecmp(name, namelen, "A", 1)) {
 		while (look_for_tag(pos, eof, name, namelen, &label));
 
-		if (*pos >= eof) return 0;
+		if (*pos >= eof) return -1;
 
 	} else if (!c_strlcasecmp(name, namelen, "AREA", 4)) {
 		unsigned char *alt = get_attr_val(attr, "alt", options);
@@ -656,6 +659,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 {
 	struct conv_table *ct;
 	struct string hd;
+	int look_result;
 
 	if (!init_string(&hd)) return -1;
 
@@ -676,10 +680,13 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 
 	*ml = NULL;
 
-	while (look_for_link(&pos, eof, menu, ml, uri, target_base, ct, options))
-		;
+	do {
+		/* This call can modify both *ml and *menu.  */
+		look_result = look_for_link(&pos, eof, menu, ml, uri,
+					    target_base, ct, options);
+	} while (look_result > 0);
 
-	if (pos >= eof) {
+	if (look_result < 0) {
 		freeml(*ml);
 		mem_free(*menu);
 		return -1;
