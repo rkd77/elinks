@@ -1,0 +1,5 @@
+<TITLE>Double-free crash in USEMAP</TITLE>
+<P><IMG src="/dev/null" usemap="#crasher"></P>
+<MAP name="crasher">
+<AREA shape="rect" coords="42,42,69,69" href="http://elinks.cz/" alt="see this?">
+<!-- no newline at the end of this line --></MAP>
