@@ -21,6 +21,7 @@ includes the changes listed under ``ELinks 0.11.5.GIT'' below.
   option to disable this.  When removing control characters from a
   title, note the charset.  Don't truncate titles to the width of the
   terminal.
+* bug 1061: Correctly truncate UTF-8 titles in the tab bar.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
 
 ELinks 0.12pre2:
