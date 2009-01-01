@@ -1063,14 +1063,14 @@ tp_display(struct type_query *type_query)
 	struct view_state *vs;
 	struct session *ses = type_query->ses;
 	struct uri *loading_uri = ses->loading_uri;
-	unsigned char *target_frame = ses->task.target.frame;
+	unsigned char *target_frame = null_or_stracpy(ses->task.target.frame);
 
 	ses->loading_uri = type_query->uri;
-	ses->task.target.frame = type_query->target_frame;
+	mem_free_set(&ses->task.target.frame, null_or_stracpy(type_query->target_frame));
 	vs = ses_forward(ses, /* type_query->frame */ 0);
 	if (vs) vs->plain = 1;
 	ses->loading_uri = loading_uri;
-	ses->task.target.frame = target_frame;
+	mem_free_set(&ses->task.target.frame, target_frame);
 
 	if (/* !type_query->frame */ 1) {
 		struct download *old = &type_query->download;

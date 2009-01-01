@@ -970,7 +970,7 @@ goto_current_link(struct session *ses, struct document_view *doc_view, int do_re
 
 	if (link->type == LINK_MAP) {
 		/* TODO: Test reload? */
-		goto_imgmap(ses, uri, null_or_stracpy(link->target));
+		goto_imgmap(ses, uri, link->target);
 
 	} else {
 		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD

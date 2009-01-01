@@ -659,13 +659,13 @@ file_loading_callback(struct download *download, struct file_to_load *ftl)
 	if (ftl->cached && !ftl->cached->redirect_get && download->pri != PRI_CSS) {
 		struct session *ses = ftl->ses;
 		struct uri *loading_uri = ses->loading_uri;
-		unsigned char *target_frame = ses->task.target.frame;
+		unsigned char *target_frame = null_or_stracpy(ses->task.target.frame);
 
 		ses->loading_uri = ftl->uri;
-		ses->task.target.frame = ftl->target_frame;
+		mem_free_set(&ses->task.target.frame, null_or_stracpy(ftl->target_frame));
 		setup_download_handler(ses, &ftl->download, ftl->cached, 1);
 		ses->loading_uri = loading_uri;
-		ses->task.target.frame = target_frame;
+		mem_free_set(&ses->task.target.frame, target_frame);
 	}
 
 	doc_loading_callback(download, ftl->ses);
@@ -1237,7 +1237,7 @@ reload_frame(struct session *ses, unsigned char *name,
 		loc->download.data = ses;
 		loc->download.callback = (download_callback_T *) doc_loading_callback;
 
-		ses->task.target.frame = name;
+		mem_free_set(&ses->task.target.frame, null_or_stracpy(name));
 
 		load_uri(loc->vs.uri, ses->referrer, &loc->download, PRI_MAIN, cache_mode, -1);
 

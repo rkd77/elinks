@@ -49,6 +49,7 @@ free_task(struct session *ses)
 		ses->loading_uri = NULL;
 	}
 	ses->task.type = TASK_NONE;
+	mem_free_set(&ses->task.target.frame, NULL);
 }
 
 void
@@ -78,7 +79,7 @@ ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	ses->loading_uri = uri;
 
 	ses->task.type = task_type;
-	ses->task.target.frame = target_frame;
+	mem_free_set(&ses->task.target.frame, null_or_stracpy(target_frame));
 	ses->task.target.location = target_location;
 
 	load_uri(ses->loading_uri, ses->referrer, &ses->loading,
@@ -231,7 +232,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	task->uri = get_uri_reference(uri);
 	task->cache_mode = cache_mode;
 	task->session_task.type = task_type;
-	task->session_task.target.frame = target_frame;
+	task->session_task.target.frame = null_or_stracpy(target_frame);
 	task->session_task.target.location = target_location;
 
 	if (malicious_uri) {
@@ -322,7 +323,7 @@ x:
 				del_from_history(&ses->history, loc);
 				destroy_location(loc);
 			}
-			ses->task.target.frame = NULL;
+			mem_free_set(&ses->task.target.frame, NULL);
 			goto x;
 		}
 
