@@ -761,6 +761,14 @@ register_autocreated_options(void)
 	get_opt_int("terminal.xterm-88color.colors", NULL) = COLOR_MODE_88;
 	get_opt_bool("terminal.xterm-88color.underline", NULL) = 1;
 #endif
+	get_opt_int("terminal.rxvt-unicode.type", NULL) = 1;
+#ifdef CONFIG_88_COLORS
+	get_opt_int("terminal.rxvt-unicode.colors", NULL) = COLOR_MODE_88;
+#else
+	get_opt_int("terminal.rxvt-unicode.colors", NULL) = COLOR_MODE_16;
+#endif
+	get_opt_bool("terminal.rxvt-unicode.italic", NULL) = 1;
+	get_opt_bool("terminal.rxvt-unicode.underline", NULL) = 1;
 #ifdef CONFIG_256_COLORS
 	get_opt_int("terminal.xterm-256color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;

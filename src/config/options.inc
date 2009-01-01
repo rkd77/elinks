@@ -981,6 +981,10 @@ static struct option_info config_options_info[] = {
 		"Note that this option makes sense only when colors are "
 		"enabled.")),
 
+	INIT_OPT_BOOL("terminal._template_", N_("Italic"),
+		"italic", 0, 0,
+		N_("If we should use italics.")),
+
 	INIT_OPT_BOOL("terminal._template_", N_("Underline"),
 		"underline", 0, 0,
 		N_("If we should use underline or enhance the color "

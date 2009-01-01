@@ -174,6 +174,16 @@ static const struct string vt100_frame_seqs[] = {
 	/* begin border: */	TERM_STRING("\x0e"),
 };
 
+/** Italic begin/end sequences using ECMA-48 SGR.
+ * ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
+ * - Ps =  3 = italicized
+ * - Ps = 20 = Fraktur (Gothic)
+ * - Ps = 23 = not italicized, not fraktur */
+static const struct string italic_seqs[] = {
+	/* end italics: */	TERM_STRING("\033[23m"),
+	/* begin italics: */	TERM_STRING("\033[3m"),
+};
+
 /** Underline begin/end sequences using ECMA-48 SGR.
  * ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
  * - Ps =  4 = singly underlined
@@ -223,6 +233,9 @@ struct screen_driver {
 		/** The frame mode setup and teardown sequences. May be NULL. */
 		const struct string *frame_seqs;
 
+		/** The italic mode setup and teardown sequences. May be NULL. */
+		const struct string *italic;
+
 		/** The underline mode setup and teardown sequences. May be NULL. */
 		const struct string *underline;
 
@@ -257,6 +270,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_dumb,
 	/* frame_seqs: */	NULL,
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -276,6 +290,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_vt100,
 	/* frame_seqs: */	vt100_frame_seqs,
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -295,6 +310,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		NULL,		/* No restrict_852 */
 	/* frame_seqs: */	NULL,		/* No m11_hack */
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -314,6 +330,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_koi,
 	/* frame_seqs: */	NULL,
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -333,6 +350,7 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		frame_freebsd,
 	/* frame_seqs: */	NULL,		/* No m11_hack */
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -414,6 +432,12 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	driver->opt.color_mode = get_opt_int_tree(term_spec, "colors", NULL);
 	driver->opt.transparent = get_opt_bool_tree(term_spec, "transparency",
 	                                            NULL);
+
+	if (get_opt_bool_tree(term_spec, "italic", NULL)) {
+		driver->opt.italic = italic_seqs;
+	} else {
+		driver->opt.italic = NULL;
+	}
 
 	if (get_opt_bool_tree(term_spec, "underline", NULL)) {
 		driver->opt.underline = underline_seqs;
@@ -580,6 +604,7 @@ add_cursor_move_to_string(struct string *screen, int y, int x)
 
 struct screen_state {
 	unsigned char border;
+	unsigned char italic;
 	unsigned char underline;
 	unsigned char bold;
 	unsigned char attr;
@@ -588,11 +613,11 @@ struct screen_state {
 };
 
 #if defined(CONFIG_TRUE_COLOR)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
 #elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF } }
 #else
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0, { 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF } }
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
@@ -757,6 +782,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
+	unsigned char italic = (ch->attr & SCREEN_ATTR_ITALIC);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
 	unsigned char bold = (ch->attr & SCREEN_ATTR_BOLD);
 
@@ -768,6 +794,16 @@ add_char16(struct string *screen, struct screen_driver *driver,
 	   ) {
 		state->border = border;
 		add_term_string(screen, driver->opt.frame_seqs[!!border]);
+	}
+
+	if (
+#ifdef CONFIG_UTF8
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
+#endif /* CONFIG_UTF8 */
+	    italic != state->italic && driver->opt.italic
+	   ) {
+		state->italic = italic;
+		add_term_string(screen, driver->opt.italic[!!italic]);
 	}
 
 	if (
@@ -830,6 +866,10 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			/* Flip the fore- and background colors for highlighing
 			 * purposes. */
 			add_bytes_to_string(screen, ";7", 2);
+		}
+
+		if (italic && driver->opt.italic) {
+			add_bytes_to_string(screen, ";3", 2);
 		}
 
 		if (underline && driver->opt.underline) {
@@ -916,6 +956,11 @@ add_char256(struct string *screen, struct screen_driver *driver,
 			add_term_string(screen, driver->opt.frame_seqs[state->border]);
 		}
 
+		if ((attr_delta & SCREEN_ATTR_ITALIC) && driver->opt.italic) {
+			state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
+			add_term_string(screen, driver->opt.italic[state->italic]);
+		}
+
 		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 			add_term_string(screen, driver->opt.underline[state->underline]);
@@ -948,6 +993,11 @@ add_char256(struct string *screen, struct screen_driver *driver,
 
 		if (ch->attr & SCREEN_ATTR_BOLD)
 			add_bytes_to_string(screen, "\033[1m", 4);
+
+		if (ch->attr & SCREEN_ATTR_ITALIC && driver->opt.italic) {
+			state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
+			add_term_string(screen, driver->opt.italic[state->italic]);
+		}
 
 		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
@@ -1031,6 +1081,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			add_term_string(screen, driver->opt.frame_seqs[state->border]);
 		}
 
+		if ((attr_delta & SCREEN_ATTR_ITALIC) && driver->opt.italic) {
+			state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
+			add_term_string(screen, driver->opt.italic[state->italic]);
+		}
+
 		if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 			add_term_string(screen, driver->opt.underline[state->underline]);
@@ -1063,6 +1118,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 
 		if (ch->attr & SCREEN_ATTR_BOLD)
 			add_bytes_to_string(screen, "\033[1m", 4);
+
+		if (ch->attr & SCREEN_ATTR_ITALIC && driver->opt.italic) {
+			state->italic = !!(ch->attr & SCREEN_ATTR_ITALIC);
+			add_term_string(screen, driver->opt.italic[state->italic]);
+		}
 
 		if (ch->attr & SCREEN_ATTR_UNDERLINE && driver->opt.underline) {
 			state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
