@@ -447,9 +447,16 @@ set_window_title(unsigned char *title, int codepage)
 			    || (unicode >= 0x7F && unicode < 0xA0))
 				continue;
 
-			/* xterm entirely rejects 1024-byte or longer
-			 * titles.  */
-			if (filtered.length + charlen >= 1024 - 3) {
+			/* If the title is getting too long, truncate
+			 * it and add an ellipsis.
+			 *
+			 * xterm entirely rejects 1024-byte or longer
+			 * titles.  GNU Screen 4.00.03 misparses
+			 * titles longer than 765 bytes, and is unable
+			 * to display the title in hardstatus if the
+			 * title and other stuff together exceed 766
+			 * bytes.  So set the limit quite a bit lower.  */
+			if (filtered.length + charlen >= 600 - 3) {
 				add_to_string(&filtered, "...");
 				break;
 			}
