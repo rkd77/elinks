@@ -493,12 +493,12 @@ display_window_title(struct session *ses, struct terminal *term)
 	if (!title) return;
 
 	titlelen = strlen(title);
-	if (last_ses != ses
-	    || !status->last_title
-	    || strlen(status->last_title) != titlelen
-	    || memcmp(status->last_title, title, titlelen)) {
+	if ((last_ses != ses
+	     || !status->last_title
+	     || strlen(status->last_title) != titlelen
+	     || memcmp(status->last_title, title, titlelen))
+	    && set_terminal_title(term, title) >= 0) {
 		mem_free_set(&status->last_title, title);
-		set_terminal_title(term, title);
 		last_ses = ses;
 	} else {
 		mem_free(title);

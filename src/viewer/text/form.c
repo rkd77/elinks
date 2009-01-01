@@ -177,7 +177,7 @@ init_form_state(struct document_view *doc_view,
 
 	doc_cp = doc_view->document->cp;
 	term = doc_view->session->tab->term;
-	viewer_cp = get_opt_codepage_tree(term->spec, "charset", NULL);
+	viewer_cp = get_terminal_codepage(term);
 
 	mem_free_set(&fs->value, NULL);
 
@@ -1235,7 +1235,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 
 	get_successful_controls(doc_view, fc, &submit);
 
-	cp_from = get_opt_codepage_tree(ses->tab->term->spec, "charset", NULL);
+	cp_from = get_terminal_codepage(ses->tab->term);
 	cp_to = doc_view->document->cp;
 	switch (form->method) {
 	case FORM_METHOD_GET:
@@ -1868,9 +1868,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 #ifdef CONFIG_UTF8
 			/* fs->value is in the charset of the terminal.  */
 			ctext = u2cp_no_nbsp(get_kbd_key(ev),
-					     get_opt_codepage_tree(ses->tab->term->spec,
-								   "charset",
-								   NULL));
+					     get_terminal_codepage(ses->tab->term));
 			length = strlen(ctext);
 
 			if (strlen(fs->value) + length > fc->maxlength

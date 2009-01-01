@@ -457,8 +457,7 @@ render_document_frames(struct session *ses, int no_cache)
 	if (!get_opt_bool_tree(ses->tab->term->spec, "underline", NULL))
 		doc_opts.color_flags |= COLOR_ENHANCE_UNDERLINE;
 
-	doc_opts.cp = get_opt_codepage_tree(ses->tab->term->spec, "charset",
-	                                    NULL);
+	doc_opts.cp = get_terminal_codepage(ses->tab->term);
 	doc_opts.no_cache = no_cache & 1;
 	doc_opts.gradual_rerendering = !!(no_cache & 2);
 

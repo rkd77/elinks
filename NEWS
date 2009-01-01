@@ -75,10 +75,16 @@ ELinks 0.12pre2.GIT now:
 To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
 includes the changes listed under ``ELinks 0.11.5.GIT'' below.
 
+* critical: Fix assertion failure if IMG/@usemap refers to a different
+  file.
 * Preserve newlines in hidden input fields, and submit them as CRLF.
   Previously, they could turn into spaces or disappear entirely.
 * Perl scripts can use modules that dynamically load C libraries, like
   XML::LibXML::SAX does.
+* bug 885: Convert xterm titles to ISO-8859-1 by default, but add an
+  option to disable this.  When removing control characters from a
+  title, note the charset.  Don't truncate titles to the width of the
+  terminal.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
 
 ELinks 0.12pre2:
@@ -301,11 +307,14 @@ ELinks 0.11.5.GIT now:
 
 To be released as 0.11.6.
 
+* critical: fix double-free crash if EOF immediately follows </MAP>
 * critical bug 1053: fix crash if a download finishes after ELinks has
   closed the terminal from which the download was started
 * major bug 1004: ignore locales when comparing HTML element names and
   similar strings, so e.g. ``title'' matches ``TITLE'' even in the
   Turkish locale
+* minor: clicking a link with the mouse activates that link, rather
+  than the one selected with move-cursor-* actions
 
 ELinks 0.11.5:
 --------------

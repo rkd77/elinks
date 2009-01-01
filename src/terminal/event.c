@@ -149,8 +149,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 	const unsigned char *recoded;
 
 	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
-	recoded = u2cp_no_nbsp(u, get_opt_codepage_tree(term->spec, "charset",
-	                                                NULL));
+	recoded = u2cp_no_nbsp(u, get_terminal_codepage(term));
 	if (!recoded) recoded = "*";
 	while (*recoded) {
 		ev.info.keyboard.key = *recoded;
@@ -186,8 +185,7 @@ check_terminal_name(struct terminal *term, struct terminal_info *info)
 	/* Probably not best place for set this. But now we finally have
 	 * term->spec and term->utf8 should be set before decode session info.
 	 * --Scrool */
-	term->utf8_cp = is_cp_utf8(get_opt_codepage_tree(term->spec,
-							 "charset", NULL));
+	term->utf8_cp = is_cp_utf8(get_terminal_codepage(term));
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
 	 * UTF-8 I/O is disabled.  (bug 827) */

@@ -118,6 +118,24 @@ init_term(int fdin, int fdout)
 	return term;
 }
 
+/** Get the codepage of a terminal.  The UTF-8 I/O option does not
+ * affect this.
+ *
+ * @todo Perhaps cache the value in struct terminal?
+ *
+ * @bug Bug 1064: If the charset has been set as "System", this should
+ * apply the locale environment variables of the slave ELinks process,
+ * not those of the master ELinks process that parsed the configuration
+ * file.  That is why the parameter points to struct terminal and not
+ * merely to its option tree (term->spec).
+ *
+ * @see get_translation_table(), get_cp_mime_name() */
+int
+get_terminal_codepage(const struct terminal *term)
+{
+	return get_opt_codepage_tree(term->spec, "charset", NULL);
+}
+
 void
 redraw_all_terminals(void)
 {
@@ -371,12 +389,44 @@ do_terminal_function(struct terminal *term, unsigned char code,
 	fmem_free(x_data);
 }
 
-void
+/** @return negative on error; zero or positive on success.  */
+int
 set_terminal_title(struct terminal *term, unsigned char *title)
 {
-	if (term->title && !strcmp(title, term->title)) return;
+	int from_cp;
+	int to_cp;
+	unsigned char *converted = NULL;
+
+	if (term->title && !strcmp(title, term->title)) return 0;
+
+	/* In which codepage was the title parameter given?  */
+	from_cp = get_terminal_codepage(term);
+
+	/* In which codepage does the terminal want the title?  */
+	if (get_opt_bool_tree(term->spec, "latin1_title", NULL))
+		to_cp = get_cp_index("ISO-8859-1");
+	else if (get_opt_bool_tree(term->spec, "utf_8_io", NULL))
+		to_cp = get_cp_index("UTF-8");
+	else
+		to_cp = from_cp;
+
+	if (from_cp != to_cp) {
+		struct conv_table *convert_table;
+
+		convert_table = get_translation_table(from_cp, to_cp);
+		if (!convert_table) return -1;
+		converted = convert_string(convert_table, title, strlen(title),
+					   to_cp, CSM_NONE, NULL, NULL, NULL);
+		if (!converted) return -1;
+	}
+
 	mem_free_set(&term->title, stracpy(title));
-	do_terminal_function(term, TERM_FN_TITLE, title);
+	do_terminal_function(term, TERM_FN_TITLE_CODEPAGE,
+			     get_cp_mime_name(to_cp));
+	do_terminal_function(term, TERM_FN_TITLE,
+			     converted ? converted : title);
+	mem_free_if(converted);
+	return 0;
 }
 
 static int terminal_pipe[2];

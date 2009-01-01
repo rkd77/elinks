@@ -847,6 +847,19 @@ static struct option_info config_options_info[] = {
 		"3 is KOI-8\n"
 		"4 is FreeBSD")),
 
+	INIT_OPT_BOOL("terminal._template_", N_("Always encode xterm title in ISO-8859-1"),
+		"latin1_title", 0, 1,
+		N_("When updating the window title of xterm or a similar "
+		"terminal emulator, encode the title in ISO-8859-1 (Latin-1), "
+		"rather than in the charset used for other text in the window. "
+		"Cyrillic and other characters get replaced with Latin ones. "
+		"Xterm requires this unless you explicitly enable UTF-8 "
+		"titles in it.\n"
+		"\n"
+		"If this option does not take effect immediately, try switching "
+		"to a different page so that ELinks notices it needs to update "
+		"the title.")),
+
 	INIT_OPT_BOOL("terminal._template_", N_("Switch fonts for line drawing"),
 		"m11_hack", 0, 0,
 		N_("Switch fonts when drawing lines, enabling both local characters\n"

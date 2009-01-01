@@ -50,7 +50,7 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 	int i, items;
 	int sel = 0;
 	const unsigned char *const sel_mime = get_cp_mime_name(
-		get_opt_codepage_tree(term->spec, "charset", NULL));
+		get_terminal_codepage(term));
 	struct menu_item *mi = new_menu(FREE_LIST);
 
 	if (!mi) return;

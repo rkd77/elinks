@@ -1,0 +1,6 @@
+<TITLE>Crashes in client-side image maps</TITLE>
+<P><IMG src="image.png" usemap="imgmap.html#map" alt="ImageMap"> in another file</P>
+<P><IMG src="image.png" usemap="#at_eof" alt="ImageMap"> at the very end of this file</P>
+<MAP name="at_eof">
+<AREA shape="rect" coords="12,1, 30,18" href="http://elinks.cz/" alt="see this?">
+<!-- no newline at the end of this line --></MAP>

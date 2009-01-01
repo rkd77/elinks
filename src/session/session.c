@@ -518,17 +518,23 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	 * were 0, it could then be freed, and the
 	 * cached->preformatted assignment at the end of this function
 	 * would crash.  Normally, the document has a reference to the
-	 * cache entry, and that suffices.  If the following assertion
-	 * ever fails, object_lock(cached) and object_unlock(cached)
-	 * must be added to this function.  */
-	assert(cached->object.refcount > 0);
-	if_assert_failed return;
+	 * cache entry, and that suffices.  However, if the cache
+	 * entry was loaded to satisfy e.g. USEMAP="imgmap.html#map",
+	 * then cached->object.refcount == 0 here, and must be
+	 * incremented.
+	 * 
+	 * cached->object.refcount == 0 is safe while the cache entry
+	 * is being loaded, because garbage_collection() calls
+	 * is_entry_used(), which checks whether any connection is
+	 * using the cache entry.  But loading has ended before this
+	 * point.  */
+	object_lock(cached);
 
 	fragment = get_cache_fragment(cached);
-	if (!fragment) return;
+	if (!fragment) goto unlock_and_return;
 
 	/* We cannot do anything if the data are fragmented. */
-	if (!list_is_singleton(cached->frag)) return;
+	if (!list_is_singleton(cached->frag)) goto unlock_and_return;
 
 	set_event_id(pre_format_html_event, "pre-format-html");
 	trigger_event(pre_format_html_event, ses, cached);
@@ -536,6 +542,9 @@ maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 	/* XXX: Keep this after the trigger_event, because hooks might call
 	 * normalize_cache_entry()! */
 	cached->preformatted = 1;
+
+unlock_and_return:
+	object_unlock(cached);
 }
 #endif
 
