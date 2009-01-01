@@ -11,6 +11,8 @@ ELinks 0.12pre2.GIT now:
 To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
 includes the changes listed under ``ELinks 0.11.5.GIT'' below.
 
+* critical: Fix assertion failure if IMG/@usemap refers to a different
+  file.
 * Preserve newlines in hidden input fields, and submit them as CRLF.
   Previously, they could turn into spaces or disappear entirely.
 * Perl scripts can use modules that dynamically load C libraries, like
