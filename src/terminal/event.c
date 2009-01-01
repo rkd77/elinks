@@ -379,9 +379,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				/* Not special and UTF-8 mode is disabled:
 				 * recode from the terminal charset to UCS-4. */
 
-				key = cp2u(get_opt_codepage_tree(term->spec,
-								 "charset"),
-					   key);
+				key = cp2u(get_terminal_codepage(term), key);
 				term_send_ucs(term, key, modifier);
 				break;
 			}
