@@ -384,6 +384,8 @@ xbeltree_to_bookmarks_list(struct tree_node *node,
 			title = get_child(node, "title");
 			href = get_attribute_value(node, "href");
 
+			/** @todo Bugs 153, 1066: add_bookmark()
+			 * expects UTF-8.  */
 			tmp = add_bookmark(current_parent, 0,
 					   /* The <title> element is optional */
 					   title && title->text ? title->text
@@ -406,6 +408,7 @@ xbeltree_to_bookmarks_list(struct tree_node *node,
 
 			title = get_child(node, "title");
 
+			/** @todo Bug 153: add_bookmark() expects UTF-8.  */
 			tmp = add_bookmark(current_parent, 0,
 					   title && title->text ? title->text
 						 : (unsigned char *) gettext("No title"),

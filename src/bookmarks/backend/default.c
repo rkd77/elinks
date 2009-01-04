@@ -101,6 +101,8 @@ read_bookmarks_default(FILE *f)
 					root = last_bm->root;
 				}
 			}
+			/** @todo Bugs 153, 1066: add_bookmark()
+			 * expects UTF-8.  */
 			last_bm = add_bookmark(root, 1, title, url);
 			last_depth = depth;
 

@@ -969,6 +969,7 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 	} else if (remote & SES_REMOTE_ADD_BOOKMARK) {
 #ifdef CONFIG_BOOKMARKS
 		if (!uri) return;
+		/** @todo Bug 1066: add_bookmark() expects UTF-8.  */
 		add_bookmark(NULL, 1, struri(uri), struri(uri));
 #endif
 

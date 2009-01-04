@@ -224,6 +224,7 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 		}
 	}
 
+	/** @todo Bugs 153, 1066: add_bookmark() expects UTF-8.  */
 	bm = add_bookmark(bm, 1, title, url);
 	if (!bm) return;
 

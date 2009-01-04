@@ -285,6 +285,21 @@ delete_folder_by_name(unsigned char *foldername)
 	}
 }
 
+/** Allocate and initialize a bookmark in the given folder.  This
+ * however does not set bookmark.box_item; use add_bookmark() for
+ * that.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param title
+ *   Title of the bookmark.  Must be in UTF-8 and not NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.  Must be in UTF-8.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark, or NULL on error.  */
 static struct bookmark *
 init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 {
@@ -293,7 +308,6 @@ init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 	bm = mem_calloc(1, sizeof(*bm));
 	if (!bm) return NULL;
 
-	/** @todo Bug 153: bm->title should be UTF-8 */
 	bm->title = stracpy(title);
 	if (!bm->title) {
 		mem_free(bm);
@@ -301,7 +315,6 @@ init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 	}
 	sanitize_title(bm->title);
 
-	/** @todo Bug 1066: bm->url should be UTF-8 */
 	bm->url = stracpy(empty_string_or_(url));
 	if (!bm->url) {
 		mem_free(bm->title);
@@ -344,8 +357,21 @@ add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int p
 		add_hash_item(bookmark_cache, bm->url, strlen(bm->url), bm);
 }
 
-/* Adds a bookmark to the bookmark list. Place 0 means top, place 1 means
- * bottom. NULL or "" @url means it is a bookmark folder. */
+/** Add a bookmark to the bookmark list.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param place
+ *   0 means add to the top.  1 means add to the bottom.
+ * @param title
+ *   Title of the bookmark.  Must be in UTF-8 and not NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.  Must be in UTF-8.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark, or NULL on error.  */
 struct bookmark *
 add_bookmark(struct bookmark *root, int place, unsigned char *title,
 	     unsigned char *url)
@@ -489,6 +515,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 		if (!get_current_title(ses, title, MAX_STR_LEN))
 			continue;
 
+		/** @todo Bugs 153, 1066: add_bookmark() expects UTF-8.  */
 		add_bookmark(folder, 1, title, url);
 	}
 }
@@ -496,6 +523,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 void
 bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername)
 {
+	/** @todo Bug 153: add_bookmark() expects UTF-8.  */
 	struct bookmark *folder = add_bookmark(NULL, 1, foldername, NULL);
 
 	if (!folder) return;
@@ -527,6 +555,8 @@ bookmark_all_terminals(struct bookmark *folder)
 
 		++n;
 
+		/* Because subfoldername[] contains only digits,
+		 * it is OK as UTF-8.  */
 		subfolder = add_bookmark(folder, 1, subfoldername, NULL);
 		if (!subfolder) return;
 
@@ -569,6 +599,7 @@ bookmark_snapshot(void)
 	add_date_to_string(&folderstring, get_opt_str("ui.date_format"), NULL);
 #endif
 
+	/** @todo Bug 153: add_bookmark() expects UTF-8.  */
 	folder = add_bookmark(NULL, 1, folderstring.source, NULL);
 	done_string(&folderstring);
 	if (!folder) return;
