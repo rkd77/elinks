@@ -45,6 +45,10 @@ n_(unsigned char *msg1, unsigned char *msg2, unsigned long int n, struct termina
 	return gettext_noop(msg1);
 }
 
+static inline void
+intl_set_charset_by_index(int new_charset)
+{
+}
 
 #else
 
@@ -59,16 +63,22 @@ extern int current_charset;
 /* #define DEBUG_IT */
 
 static inline void
-intl_set_charset(struct terminal *term)
+intl_set_charset_by_index(int new_charset)
 {
-	int new_charset = get_terminal_codepage(term);
-
 	/* Prevent useless switching. */
 	if (current_charset != new_charset) {
 		bind_textdomain_codeset( /* PACKAGE */ "elinks",
 					get_cp_mime_name(new_charset));
 		current_charset = new_charset;
 	}
+}
+
+static inline void
+intl_set_charset(struct terminal *term)
+{
+	int new_charset = get_terminal_codepage(term);
+
+	intl_set_charset_by_index(new_charset);
 }
 
 /* TODO: Ideally, we should internally work only in Unicode - then the need for

@@ -54,14 +54,13 @@ static struct option_info bookmark_options_info[] = {
 		"file_format", 0, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and saving):\n"
 		"0 is the default native ELinks format\n"
-		"1 is XBEL universal XML bookmarks format (ELinks bug 153: NO NATIONAL CHARS SUPPORT!)")),
+		"1 is XBEL universal XML bookmarks format")),
 #else
 	INIT_OPT_INT("bookmarks", N_("File format"),
 		"file_format", 0, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and saving):\n"
 		"0 is the default native ELinks format\n"
-		"1 is XBEL universal XML bookmarks format (ELinks bug 153: NO NATIONAL CHARS SUPPORT!)"
-		"  (DISABLED)")),
+		"1 is XBEL universal XML bookmarks format  (DISABLED)")),
 #endif
 
 	INIT_OPT_BOOL("bookmarks", N_("Save folder state"),
