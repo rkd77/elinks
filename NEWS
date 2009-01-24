@@ -17,6 +17,9 @@ includes the changes listed under ``ELinks 0.11.5.GIT'' below.
   Previously, they could turn into spaces or disappear entirely.
 * Perl scripts can use modules that dynamically load C libraries, like
   XML::LibXML::SAX does.
+* bug 153: Preserve Unicode characters in XBEL bookmark files.
+  However, Unicode in URIs (really IRIs) does not work reliably yet;
+  this is being tracked as bug 1066.
 * bug 885: Convert xterm titles to ISO-8859-1 by default, but add an
   option to disable this.  When removing control characters from a
   title, note the charset.  Don't truncate titles to the width of the
