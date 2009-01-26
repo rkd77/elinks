@@ -121,6 +121,8 @@ int get_cp_index(const unsigned char *);
 unsigned char *get_cp_name(int);
 unsigned char *get_cp_config_name(int);
 unsigned char *get_cp_mime_name(int);
+const uint16_t *get_cp_highhalf(const unsigned char *);
+
 int is_cp_utf8(int);
 void free_conv_table(void);
 #ifdef CONFIG_UTF8

@@ -1538,3 +1538,14 @@ is_cp_utf8(int cp_index)
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	return is_cp_ptr_utf8(&codepages[cp_index]);
 }
+
+/* This function will be used by the xhtml parser. */
+const uint16_t *
+get_cp_highhalf(const unsigned char *name)
+{
+	int cp = get_cp_index(name);
+
+	if (cp < 0) return NULL;
+	cp &= ~SYSTEM_CHARSET_FLAG;
+	return codepages[cp].highhalf;
+}
