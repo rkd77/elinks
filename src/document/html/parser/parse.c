@@ -1163,7 +1163,7 @@ process_element(unsigned char *name, int namelen, int endingtag,
 
 void
 scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head,
-		struct string *title, struct document_options *options)
+		struct string *title, int cp)
 {
 	unsigned char *name, *attr, *he, *c;
 	int namelen;
@@ -1213,26 +1213,26 @@ xsp:
 	}
 	if (c_strlcasecmp(name, namelen, "META", 4)) goto se;
 
-	/* FIXME (bug 784): options->cp is the terminal charset;
+	/* FIXME (bug 784): cp is the terminal charset;
 	 * should use the document charset instead.  */
-	he = get_attr_val(attr, "charset", options->cp);
+	he = get_attr_val(attr, "charset", cp);
 	if (he) {
 		add_to_string(head, "Charset: ");
 		add_to_string(head, he);
 		mem_free(he);
 	}
 
-	/* FIXME (bug 784): options->cp is the terminal charset;
+	/* FIXME (bug 784): cp is the terminal charset;
 	 * should use the document charset instead.  */
-	he = get_attr_val(attr, "http-equiv", options->cp);
+	he = get_attr_val(attr, "http-equiv", cp);
 	if (!he) goto se;
 
 	add_to_string(head, he);
 	mem_free(he);
 
-	/* FIXME (bug 784): options->cp is the terminal charset;
+	/* FIXME (bug 784): cp is the terminal charset;
 	 * should use the document charset instead.  */
-	c = get_attr_val(attr, "content", options->cp);
+	c = get_attr_val(attr, "content", cp);
 	if (c) {
 		add_to_string(head, ": ");
 		add_to_string(head, c);

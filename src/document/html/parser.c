@@ -777,7 +777,9 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 	if (!init_string(&hd)) return -1;
 
 	if (head) add_to_string(&hd, head);
-	scan_http_equiv(pos, eof, &hd, NULL, options);
+	/* FIXME (bug 784): cp is the terminal charset;
+	 * should use the document charset instead.  */
+	scan_http_equiv(pos, eof, &hd, NULL, options->cp);
 	ct = get_convert_table(hd.source, to, def, NULL, NULL, hdef);
 	done_string(&hd);
 
@@ -897,7 +899,9 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	html_context->options = options;
 
-	scan_http_equiv(start, end, head, title, options);
+	/* FIXME (bug 784): cp is the terminal charset;
+	 * should use the document charset instead.  */
+	scan_http_equiv(start, end, head, title, options->cp);
 
 	e = mem_calloc(1, sizeof(*e));
 	if (!e) return NULL;

@@ -453,7 +453,9 @@ html_handle_body_meta(struct html_context *html_context, unsigned char *meta,
 
 	if (!init_string(&head)) return;
 
-	scan_http_equiv(meta, eof, &head, NULL, html_context->options);
+	/* FIXME (bug 784): cp is the terminal charset;
+	 * should use the document charset instead.  */
+	scan_http_equiv(meta, eof, &head, NULL, html_context->options->cp);
 	process_head(html_context, head.source);
 	done_string(&head);
 }
