@@ -195,7 +195,11 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	 * Check whether the multiplication could overflow.  */
 	assert(!needs_utf16_surrogates(UCS_REPLACEMENT_CHARACTER));
 	if (in_bytes > ((size_t) -1) / sizeof(jschar)) {
+#ifdef HAVE_JS_REPORTALLOCATIONOVERFLOW
 		JS_ReportAllocationOverflow(ctx);
+#else
+		JS_ReportOutOfMemory(ctx);
+#endif
 		return NULL;
 	}
 	utf16_alloc = in_bytes;
