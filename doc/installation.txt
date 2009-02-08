@@ -51,6 +51,8 @@ LZMA Utils		|Likewise, for LZMA compressed documents.            \
 OpenSSL or GNU TLS	|For handling secure HTTP browsing.
 GPM			|'General Purpose Mouse' for mouse support.
 expat			|'XML Parser Toolkit' needed for XBEL support.
+http://laurikari.net/tre/[TRE]						     \
+			|For regexp searching.  Version 0.7.5 works.
 libsmbclient		|Library needed for smb:// protocol support.
 rxvt-unicode		|For terminal emulator which supports 88 colors.
 xterm with 256 colors	|Program atleast patch level  179 or rxvt program   \
