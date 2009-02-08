@@ -31,6 +31,8 @@ Other changes:
   title, note the charset.  Don't truncate titles to the width of the
   terminal.
 * bug 1061: Correctly truncate UTF-8 titles in the tab bar.
+* minor bug 761: When reading bookmarks from an XBEL file, distinguish
+  attribute names from attribute values.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
 
 ELinks 0.12pre2:
