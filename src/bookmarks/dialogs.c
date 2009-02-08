@@ -56,21 +56,52 @@ static unsigned char *
 get_bookmark_text(struct listbox_item *item, struct terminal *term)
 {
 	struct bookmark *bookmark = item->udata;
+	int utf8_cp = get_cp_index("UTF-8");
+	int term_cp = get_terminal_codepage(term);
+	struct conv_table *convert_table;
 
-	return stracpy(bookmark->title);
+	convert_table = get_translation_table(utf8_cp, term_cp);
+	if (!convert_table) return NULL;
+
+	return convert_string(convert_table,
+			      bookmark->title, strlen(bookmark->title),
+			      term_cp, CSM_NONE, NULL, NULL, NULL);
+}
+
+/** A callback for convert_string().  This ignores errors and can
+ * result in truncated strings if out of memory.  Accordingly, the
+ * resulting string may be displayed in the UI but should not be saved
+ * to a file or given to another program.  */
+static void
+add_converted_bytes_to_string(void *data, unsigned char *buf, int buflen)
+{
+	struct string *string = data;
+
+	add_bytes_to_string(string, buf, buflen); /* ignore errors */
 }
 
 static unsigned char *
 get_bookmark_info(struct listbox_item *item, struct terminal *term)
 {
 	struct bookmark *bookmark = item->udata;
+	int utf8_cp = get_cp_index("UTF-8");
+	int term_cp = get_terminal_codepage(term);
+	struct conv_table *convert_table;
 	struct string info;
 
 	if (item->type == BI_FOLDER) return NULL;
+	convert_table = get_translation_table(utf8_cp, term_cp);
+	if (!convert_table) return NULL;
 	if (!init_string(&info)) return NULL;
 
-	add_format_to_string(&info, "%s: %s", _("Title", term), bookmark->title);
-	add_format_to_string(&info, "\n%s: %s", _("URL", term), bookmark->url);
+	add_format_to_string(&info, "%s: ", _("Title", term));
+	convert_string(convert_table, bookmark->title, strlen(bookmark->title),
+		       term_cp, CSM_NONE, NULL,
+		       add_converted_bytes_to_string, &info);
+	add_format_to_string(&info, "\n%s: ", _("URL", term));
+	convert_string(convert_table, bookmark->url, strlen(bookmark->url),
+		       term_cp, CSM_NONE, NULL,
+		       add_converted_bytes_to_string, &info);
 
 	return info.source;
 }
@@ -80,6 +111,7 @@ get_bookmark_uri(struct listbox_item *item)
 {
 	struct bookmark *bookmark = item->udata;
 
+	/** @todo Bug 1066: Tell the URI layer that bookmark->url is UTF-8.  */
 	return bookmark->url && *bookmark->url
 		? get_translated_uri(bookmark->url, NULL) : NULL;
 }
@@ -199,9 +231,33 @@ move_bookmark_after_selected(struct bookmark *bookmark, struct bookmark *selecte
 	add_at_pos(selected->box_item, bookmark->box_item);
 }
 
+/** Add a bookmark; if called from the bookmark manager, also move
+ * the bookmark to the right place and select it in the manager.
+ * And possibly save the bookmarks.
+ *
+ * @param term
+ *   The terminal whose user told ELinks to add the bookmark.
+ *   Currently, @a term affects only the charset interpretation
+ *   of @a title and @a url.  In the future, this function could
+ *   also display error messages in @a term.
+ *
+ * @param dlg_data
+ *   The bookmark manager dialog, or NULL if the bookmark is being
+ *   added without involving the bookmark manager.  If @a dlg_data
+ *   is not NULL, dlg_data->win->term should be @a term.
+ *
+ * @param title
+ *   The title of the new bookmark, in the encoding of @a term.
+ *   Must not be NULL.  "-" means add a separator.
+ *
+ * @param url
+ *   The URL of the new bookmark, in the encoding of @a term.  NULL
+ *   or "" means add a bookmark folder, unless @a title is "-".  */
 static void
-do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned char *url)
+do_add_bookmark(struct terminal *term, struct dialog_data *dlg_data,
+		unsigned char *title, unsigned char *url)
 {
+	int term_cp = get_terminal_codepage(term);
 	struct bookmark *bm = NULL;
 	struct bookmark *selected = NULL;
 	struct listbox_data *box = NULL;
@@ -220,7 +276,7 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 		}
 	}
 
-	bm = add_bookmark(bm, 1, title, url);
+	bm = add_bookmark_cp(bm, 1, term_cp, title, url);
 	if (!bm) return;
 
 	move_bookmark_after_selected(bm, selected);
@@ -241,12 +297,29 @@ do_add_bookmark(struct dialog_data *dlg_data, unsigned char *title, unsigned cha
 
 /**** ADD FOLDER *****************************************************/
 
+/** Add a bookmark folder.  This is called when the user pushes the OK
+ * button in the input dialog that asks for the folder name.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param foldername
+ *   The folder name that the user typed in the input dialog.
+ *   This is in the charset of the terminal.  */
 static void
 do_add_folder(struct dialog_data *dlg_data, unsigned char *foldername)
 {
-	do_add_bookmark(dlg_data, foldername, NULL);
+	do_add_bookmark(dlg_data->win->term, dlg_data, foldername, NULL);
 }
 
+/** Prepare to add a bookmark folder.  This is called when the user
+ * pushes the "Add folder" button in the bookmark manager.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param widget_data
+ *   The "Add folder" button.  */
 static widget_handler_status_T
 push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -262,10 +335,18 @@ push_add_folder_button(struct dialog_data *dlg_data, struct widget_data *widget_
 
 /**** ADD SEPARATOR **************************************************/
 
+/** Add a bookmark separator.  This is called when the user pushes the
+ * "Add separator" button in the bookmark manager.
+ *
+ * @param dlg_data
+ *   The bookmark manager.  Must not be NULL.
+ *
+ * @param widget_data
+ *   The "Add separator" button.  */
 static widget_handler_status_T
 push_add_separator_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	do_add_bookmark(dlg_data, "-", "");
+	do_add_bookmark(dlg_data->win->term, dlg_data, "-", "");
 	redraw_dialog(dlg_data, 1);
 	return EVENT_PROCESSED;
 }
@@ -278,8 +359,11 @@ static void
 bookmark_edit_done(void *data) {
 	struct dialog *dlg = data;
 	struct bookmark *bm = (struct bookmark *) dlg->udata2;
+	struct dialog_data *parent_dlg_data = dlg->udata;
+	int term_cp = get_terminal_codepage(parent_dlg_data->win->term);
 
-	update_bookmark(bm, dlg->widgets[0].data, dlg->widgets[1].data);
+	update_bookmark(bm, term_cp,
+			dlg->widgets[0].data, dlg->widgets[1].data);
 	object_unlock(bm);
 
 #ifdef BOOKMARKS_RESAVE
@@ -303,15 +387,37 @@ push_edit_button(struct dialog_data *dlg_data, struct widget_data *edit_btn)
 	/* Follow the bookmark */
 	if (box->sel) {
 		struct bookmark *bm = (struct bookmark *) box->sel->udata;
-		const unsigned char *title = bm->title;
-		const unsigned char *url = bm->url;
+		int utf8_cp = get_cp_index("UTF-8");
+		int term_cp = get_terminal_codepage(dlg_data->win->term);
+		struct conv_table *convert_table;
 
-		object_lock(bm);
-		do_edit_dialog(dlg_data->win->term, 1, N_("Edit bookmark"),
-			       title, url,
-			       (struct session *) dlg_data->dlg->udata, dlg_data,
-			       bookmark_edit_done, bookmark_edit_cancel,
-			       (void *) bm, EDIT_DLG_ADD);
+		convert_table = get_translation_table(utf8_cp, term_cp);
+		if (convert_table) {
+			unsigned char *title;
+			unsigned char *url;
+
+			title = convert_string(convert_table,
+					       bm->title, strlen(bm->title),
+					       term_cp, CSM_NONE,
+					       NULL, NULL, NULL);
+			url = convert_string(convert_table,
+					     bm->url, strlen(bm->url),
+					     term_cp, CSM_NONE,
+					     NULL, NULL, NULL);
+			if (title && url) {
+				object_lock(bm);
+				do_edit_dialog(dlg_data->win->term, 1,
+					       N_("Edit bookmark"),
+					       title, url,
+					       (struct session *) dlg_data->dlg->udata,
+					       dlg_data,
+					       bookmark_edit_done,
+					       bookmark_edit_cancel,
+					       (void *) bm, EDIT_DLG_ADD);
+			}
+			mem_free_if(title);
+			mem_free_if(url);
+		}
 	}
 
 	return EVENT_PROCESSED;
@@ -535,13 +641,15 @@ bookmark_manager(struct session *ses)
  * rapid search of an already existing bookmark. --Zas */
 
 struct bookmark_search_ctx {
-	unsigned char *url;
-	unsigned char *title;
+	unsigned char *url;	/* UTF-8 */
+	unsigned char *title;	/* system charset */
 	int found;
 	int offset;
+	int utf8_cp;
+	int system_cp;
 };
 
-#define NULL_BOOKMARK_SEARCH_CTX {NULL, NULL, 0, 0}
+#define NULL_BOOKMARK_SEARCH_CTX {NULL, NULL, 0, 0, -1, -1}
 
 static int
 test_search(struct listbox_item *item, void *data_, int *offset)
@@ -555,8 +663,37 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 
 		assert(ctx->title && ctx->url);
 
-		ctx->found = (*ctx->title && strcasestr(bm->title, ctx->title))
-			     || (*ctx->url && c_strcasestr(bm->url, ctx->url));
+		ctx->found = (*ctx->url && c_strcasestr(bm->url, ctx->url));
+		if (!ctx->found && *ctx->title) {
+			/* The comparison of bookmark titles should
+			 * be case-insensitive and locale-sensitive
+			 * (Turkish dotless i).  ELinks doesn't have
+			 * such a function for UTF-8.  The best we
+			 * have is strcasestr, which uses the system
+			 * charset.  So convert bm->title to that.
+			 * (ctx->title has already been converted.)  */
+			struct conv_table *convert_table;
+			unsigned char *title = NULL;
+
+			convert_table = get_translation_table(ctx->utf8_cp,
+							      ctx->system_cp);
+			if (convert_table) {
+				title = convert_string(convert_table,
+						       bm->title,
+						       strlen(bm->title),
+						       ctx->system_cp,
+						       CSM_NONE, NULL,
+						       NULL, NULL);
+			}
+
+			if (title) {
+				ctx->found = strcasecmp(title,
+							ctx->title);
+				mem_free(title);
+			}
+			/** @todo Tell the user that the string could
+			 * not be converted.  */
+		}
 
 		if (ctx->found) *offset = 0;
 	}
@@ -565,7 +702,9 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 	return 0;
 }
 
-/* Last searched values */
+/* Last searched values.  Both are in UTF-8.  (The title could be kept
+ * in the system charset, but that would be a bit risky, because
+ * setlocale calls from Lua scripts can change the system charset.)  */
 static unsigned char *bm_last_searched_title = NULL;
 static unsigned char *bm_last_searched_url = NULL;
 
@@ -577,14 +716,15 @@ free_last_searched_bookmark(void)
 }
 
 static int
-memorize_last_searched_bookmark(struct bookmark_search_ctx *ctx)
+memorize_last_searched_bookmark(const unsigned char *title,
+				const unsigned char *url)
 {
 	/* Memorize last searched title */
-	mem_free_set(&bm_last_searched_title, stracpy(ctx->title));
+	mem_free_set(&bm_last_searched_title, stracpy(title));
 	if (!bm_last_searched_title) return 0;
 
 	/* Memorize last searched url */
-	mem_free_set(&bm_last_searched_url, stracpy(ctx->url));
+	mem_free_set(&bm_last_searched_url, stracpy(url));
 	if (!bm_last_searched_url) {
 		mem_free_set(&bm_last_searched_title, NULL);
 		return 0;
@@ -601,38 +741,94 @@ bookmark_search_do(void *data)
 	struct bookmark_search_ctx ctx = NULL_BOOKMARK_SEARCH_CTX;
 	struct listbox_data *box;
 	struct dialog_data *dlg_data;
+	struct conv_table *convert_table;
+	int term_cp;
+	unsigned char *url_term;
+	unsigned char *title_term;
+	unsigned char *title_utf8 = NULL;
 
 	assertm(dlg->udata != NULL, "Bookmark search with NULL udata in dialog");
 	if_assert_failed return;
 
-	ctx.title = dlg->widgets[0].data;
-	ctx.url   = dlg->widgets[1].data;
-
-	if (!ctx.title || !ctx.url)
-		return;
-
-	if (!memorize_last_searched_bookmark(&ctx))
-		return;
-
 	dlg_data = (struct dialog_data *) dlg->udata;
+	term_cp = get_terminal_codepage(dlg_data->win->term);
+	ctx.system_cp = get_cp_index("System");
+	ctx.utf8_cp = get_cp_index("UTF-8");
+
+	title_term = dlg->widgets[0].data; /* need not be freed */
+	url_term   = dlg->widgets[1].data; /* likewise */
+
+	convert_table = get_translation_table(term_cp, ctx.system_cp);
+	if (!convert_table) goto free_all;
+	ctx.title = convert_string(convert_table,
+				   title_term, strlen(title_term),
+				   ctx.system_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!ctx.title) goto free_all;
+
+	convert_table = get_translation_table(term_cp, ctx.utf8_cp);
+	if (!convert_table) goto free_all;
+	ctx.url = convert_string(convert_table,
+				 url_term, strlen(url_term),
+				 ctx.utf8_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!ctx.url) goto free_all;
+	title_utf8 = convert_string(convert_table,
+				    title_term, strlen(title_term),
+				    ctx.utf8_cp, CSM_NONE, NULL, NULL, NULL);
+	if (!title_utf8) goto free_all;
+
+	if (!memorize_last_searched_bookmark(title_utf8, ctx.url))
+		goto free_all;
+
 	box = get_dlg_listbox_data(dlg_data);
 
 	traverse_listbox_items_list(box->sel, box, 0, 0, test_search, &ctx);
-	if (!ctx.found) return;
+	if (!ctx.found) goto free_all;
 
 	listbox_sel_move(dlg_data->widgets_data, ctx.offset - 1);
-}
 
+free_all:
+	mem_free_if(ctx.title);
+	mem_free_if(ctx.url);
+	mem_free_if(title_utf8);
+}
 
 static void
 launch_bm_search_doc_dialog(struct terminal *term,
 			    struct dialog_data *parent,
 			    struct session *ses)
 {
+	unsigned char *title = NULL;
+	unsigned char *url = NULL;
+
+	if (bm_last_searched_title && bm_last_searched_url) {
+		int utf8_cp, term_cp;
+		struct conv_table *convert_table;
+
+		utf8_cp = get_cp_index("UTF-8");
+		term_cp = get_terminal_codepage(term);
+
+		convert_table = get_translation_table(utf8_cp, term_cp);
+		if (convert_table) {
+			title = convert_string(convert_table, bm_last_searched_title,
+					       strlen(bm_last_searched_title), term_cp,
+					       CSM_NONE, NULL, NULL, NULL);
+			url = convert_string(convert_table, bm_last_searched_url,
+					     strlen(bm_last_searched_url), term_cp,
+					     CSM_NONE, NULL, NULL, NULL);
+		}
+		if (!title || !url) {
+			mem_free_set(&title, NULL);
+			mem_free_set(&url, NULL);
+		}
+	}
+
 	do_edit_dialog(term, 1, N_("Search bookmarks"),
-		       bm_last_searched_title, bm_last_searched_url,
+		       title, url,
 		       ses, parent, bookmark_search_do, NULL, NULL,
 		       EDIT_DLG_SEARCH);
+
+	mem_free_if(title);
+	mem_free_if(url);
 }
 
 
@@ -647,10 +843,31 @@ bookmark_add_add(void *data)
 {
 	struct dialog *dlg = data;
 	struct dialog_data *dlg_data = (struct dialog_data *) dlg->udata;
+	struct terminal *term = dlg->udata2;
 
-	do_add_bookmark(dlg_data, dlg->widgets[0].data, dlg->widgets[1].data);
+	do_add_bookmark(term, dlg_data, dlg->widgets[0].data, dlg->widgets[1].data);
 }
 
+/** Open a dialog box for adding a bookmark.
+ *
+ * @param term
+ *   The terminal in which the dialog box should appear.
+ *
+ * @param parent
+ *   The bookmark manager, or NULL if the user requested this action
+ *   from somewhere else.
+ *
+ * @param ses
+ *   If @a title or @a url is NULL, get defaults from the current
+ *   document of @a ses.
+ *
+ * @param title
+ *   The initial title of the new bookmark, in the encoding of @a term.
+ *   NULL means use @a ses.
+ *
+ * @param url
+ *   The initial URL of the new bookmark, in the encoding of @a term.
+ *   NULL means use @a ses.  */
 void
 launch_bm_add_dialog(struct terminal *term,
 		     struct dialog_data *parent,
@@ -658,8 +875,22 @@ launch_bm_add_dialog(struct terminal *term,
 		     unsigned char *title,
 		     unsigned char *url)
 {
+	/* When the user eventually pushes the OK button, BFU calls
+	 * bookmark_add_add() and gives it the struct dialog * as the
+	 * void * parameter.  However, bookmark_add_add() also needs
+	 * to know the struct terminal *, and there is no way to get
+	 * that from struct dialog.  The other bookmark dialogs work
+	 * around that by making dialog.udata point to the struct
+	 * dialog_data of the bookmark manager, but the "Add bookmark"
+	 * dialog can be triggered with ACT_MAIN_ADD_BOOKMARK, which
+	 * does not involve the bookmark manager at all.
+	 *
+	 * The solution here is to save the struct terminal * in
+	 * dialog.udata2, which the "Edit bookmark" dialog uses for
+	 * struct bookmark *.  When adding a new bookmark, we don't
+	 * need a pointer to an existing one, of course.  */
 	do_edit_dialog(term, 1, N_("Add bookmark"), title, url, ses,
-		       parent, bookmark_add_add, NULL, NULL, EDIT_DLG_ADD);
+		       parent, bookmark_add_add, NULL, term, EDIT_DLG_ADD);
 }
 
 void
@@ -687,6 +918,28 @@ launch_bm_add_link_dialog(struct terminal *term,
   Bookmark tabs dialog.
 \****************************************************************************/
 
+static void
+bookmark_terminal_tabs_ok(void *term_void, unsigned char *foldername)
+{
+	struct terminal *const term = term_void;
+	int from_cp = get_terminal_codepage(term);
+	int to_cp = get_cp_index("UTF-8");
+	struct conv_table *convert_table;
+	unsigned char *converted;
+
+	convert_table = get_translation_table(from_cp, to_cp);
+	if (convert_table == NULL) return; /** @todo Report the error */
+
+	converted = convert_string(convert_table,
+				   foldername, strlen(foldername),
+				   to_cp, CSM_NONE,
+				   NULL, NULL, NULL);
+	if (converted == NULL) return; /** @todo Report the error */
+
+	bookmark_terminal_tabs(term_void, converted);
+	mem_free(converted);
+}
+
 void
 bookmark_terminal_tabs_dialog(struct terminal *term)
 {
@@ -705,8 +958,7 @@ bookmark_terminal_tabs_dialog(struct terminal *term)
 		     N_("Bookmark tabs"), N_("Enter folder name"),
 		     term, NULL,
 		     MAX_STR_LEN, string.source, 0, 0, NULL,
-		     (void (*)(void *, unsigned char *)) bookmark_terminal_tabs,
-		     NULL);
+		     bookmark_terminal_tabs_ok, NULL);
 
 	done_string(&string);
 }

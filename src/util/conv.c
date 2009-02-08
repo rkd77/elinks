@@ -492,7 +492,10 @@ clr_spaces(unsigned char *str)
 }
 
 /** Replace invalid chars in @a title with ' ' and trim all starting/ending
- * spaces. */
+ * spaces.
+ *
+ * update_bookmark() assumes this function does not switch translation
+ * tables.  */
 void
 sanitize_title(unsigned char *title)
 {

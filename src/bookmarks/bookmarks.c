@@ -54,14 +54,13 @@ static struct option_info bookmark_options_info[] = {
 		"file_format", 0, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and saving):\n"
 		"0 is the default native ELinks format\n"
-		"1 is XBEL universal XML bookmarks format (ELinks bug 153: NO NATIONAL CHARS SUPPORT!)")),
+		"1 is XBEL universal XML bookmarks format")),
 #else
 	INIT_OPT_INT("bookmarks", N_("File format"),
 		"file_format", 0, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and saving):\n"
 		"0 is the default native ELinks format\n"
-		"1 is XBEL universal XML bookmarks format (ELinks bug 153: NO NATIONAL CHARS SUPPORT!)"
-		"  (DISABLED)")),
+		"1 is XBEL universal XML bookmarks format  (DISABLED)")),
 #endif
 
 	INIT_OPT_BOOL("bookmarks", N_("Save folder state"),
@@ -268,10 +267,13 @@ delete_bookmark(struct bookmark *bm)
 	done_bookmark(bm);
 }
 
-/* Deletes any bookmarks with no URLs (i.e., folders) and of which
- * the title matches the given argument. */
+/** Deletes any bookmarks with no URLs (i.e., folders) and of which
+ * the title matches the given argument.
+ *
+ * @param foldername
+ *  The title of the folder, in UTF-8.  */
 static void
-delete_folder_by_name(unsigned char *foldername)
+delete_folder_by_name(const unsigned char *foldername)
 {
 	struct bookmark *bookmark, *next;
 
@@ -284,6 +286,21 @@ delete_folder_by_name(unsigned char *foldername)
 	}
 }
 
+/** Allocate and initialize a bookmark in the given folder.  This
+ * however does not set bookmark.box_item; use add_bookmark() for
+ * that.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param title
+ *   Title of the bookmark.  Must be in UTF-8 and not NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.  Must be in UTF-8.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark, or NULL on error.  */
 static struct bookmark *
 init_bookmark(struct bookmark *root, unsigned char *title, unsigned char *url)
 {
@@ -341,8 +358,23 @@ add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int p
 		add_hash_item(bookmark_cache, bm->url, strlen(bm->url), bm);
 }
 
-/* Adds a bookmark to the bookmark list. Place 0 means top, place 1 means
- * bottom. NULL or "" @url means it is a bookmark folder. */
+/** Add a bookmark to the bookmark list.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param place
+ *   0 means add to the top.  1 means add to the bottom.
+ * @param title
+ *   Title of the bookmark.  Must be in UTF-8 and not NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.  Must be in UTF-8.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark, or NULL on error.
+ *
+ * @see add_bookmark_cp() */
 struct bookmark *
 add_bookmark(struct bookmark *root, int place, unsigned char *title,
 	     unsigned char *url)
@@ -379,27 +411,87 @@ add_bookmark(struct bookmark *root, int place, unsigned char *title,
 	return bm;
 }
 
+/** Add a bookmark to the bookmark list.
+ *
+ * @param root
+ *   The folder in which to add the bookmark, or NULL to add it at
+ *   top level.
+ * @param place
+ *   0 means add to the top.  1 means add to the bottom.
+ * @param codepage
+ *   Codepage of @a title and @a url.
+ * @param title
+ *   Title of the bookmark.  Must not be NULL.
+ *   "-" means add a separator.
+ * @param url
+ *   URL to which the bookmark will point.
+ *   NULL or "" means add a bookmark folder.
+ *
+ * @return the new bookmark.
+ *
+ * @see add_bookmark() */
+struct bookmark *
+add_bookmark_cp(struct bookmark *root, int place, int codepage,
+		unsigned char *title, unsigned char *url)
+{
+	const int utf8_cp = get_cp_index("UTF-8");
+	struct conv_table *table;
+	unsigned char *utf8_title = NULL;
+	unsigned char *utf8_url = NULL;
+	struct bookmark *bookmark = NULL;
+
+	if (!url)
+		url = "";
+
+	table = get_translation_table(codepage, utf8_cp);
+	if (!table)
+		return NULL;
+
+	utf8_title = convert_string(table, title, strlen(title),
+				    utf8_cp, CSM_NONE,
+				    NULL, NULL, NULL);
+	utf8_url = convert_string(table, url, strlen(url),
+				  utf8_cp, CSM_NONE,
+				  NULL, NULL, NULL);
+	if (utf8_title && utf8_url)
+		bookmark = add_bookmark(root, place,
+					utf8_title, utf8_url);
+	mem_free_if(utf8_title);
+	mem_free_if(utf8_url);
+	return bookmark;
+}
+
 /* Updates an existing bookmark.
  *
  * If there's any problem, return 0. Otherwise, return 1.
  *
  * If any of the fields are NULL, the value is left unchanged. */
 int
-update_bookmark(struct bookmark *bm, unsigned char *title,
-		unsigned char *url)
+update_bookmark(struct bookmark *bm, int codepage,
+		unsigned char *title, unsigned char *url)
 {
 	static int update_bookmark_event_id = EVENT_NONE;
+	const int utf8_cp = get_cp_index("UTF-8");
+	struct conv_table *table;
 	unsigned char *title2 = NULL;
 	unsigned char *url2 = NULL;
 
+	table = get_translation_table(codepage, utf8_cp);
+	if (!table)
+		return 0;
+
 	if (url) {
-		url2 = stracpy(url);
+		url2 = convert_string(table, url, strlen(url),
+				      utf8_cp, CSM_NONE,
+				      NULL, NULL, NULL);
 		if (!url2) return 0;
 		sanitize_url(url2);
 	}
 
 	if (title) {
-		title2 = stracpy(title);
+		title2 = convert_string(table, title, strlen(title),
+					utf8_cp, CSM_NONE,
+					NULL, NULL, NULL);
 		if (!title2) {
 			mem_free_if(url2);
 			return 0;
@@ -435,8 +527,16 @@ update_bookmark(struct bookmark *bm, unsigned char *title,
 	return 1;
 }
 
-/* Search for a bookmark with the given title. Search in the given folder
- * or in the root if folder is NULL. */
+/** Search for a bookmark with the given title.  The search does not
+ * recurse into subfolders.
+ *
+ * @param folder
+ *   Search in this folder.  NULL means search in the root.
+ *
+ * @param title
+ *   Search for this title.  Must be in UTF-8 and not NULL.
+ *
+ * @return The bookmark, or NULL if not found.  */
 struct bookmark *
 get_bookmark_by_name(struct bookmark *folder, unsigned char *title)
 {
@@ -457,6 +557,7 @@ get_bookmark(unsigned char *url)
 {
 	struct hash_item *item;
 
+	/** @todo Bug 1066: URLs in bookmark_cache should be UTF-8 */
 	if (!check_bookmark_cache(url))
 		return NULL;
 
@@ -472,6 +573,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 {
 	unsigned char title[MAX_STR_LEN], url[MAX_STR_LEN];
 	struct window *tab;
+	int term_cp = get_terminal_codepage(term);
 
 	foreachback_tab (tab, term->windows) {
 		struct session *ses = tab->data;
@@ -482,10 +584,18 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 		if (!get_current_title(ses, title, MAX_STR_LEN))
 			continue;
 
-		add_bookmark(folder, 1, title, url);
+		add_bookmark_cp(folder, 1, term_cp, title, url);
 	}
 }
 
+/** Create a bookmark for each document on the specified terminal,
+ * and a folder to contain those bookmarks.
+ *
+ * @param term
+ *   The terminal whose open documents should be bookmarked.
+ *
+ * @param foldername
+ *   The name of the new bookmark folder, in UTF-8.  */
 void
 bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername)
 {
@@ -520,6 +630,8 @@ bookmark_all_terminals(struct bookmark *folder)
 
 		++n;
 
+		/* Because subfoldername[] contains only digits,
+		 * it is OK as UTF-8.  */
 		subfolder = add_bookmark(folder, 1, subfoldername, NULL);
 		if (!subfolder) return;
 
@@ -528,23 +640,48 @@ bookmark_all_terminals(struct bookmark *folder)
 }
 
 
+unsigned char *
+get_auto_save_bookmark_foldername_utf8(void)
+{
+	unsigned char *foldername;
+	int from_cp, to_cp;
+	struct conv_table *convert_table;
+
+	foldername = get_opt_str("ui.sessions.auto_save_foldername", NULL);
+	if (!*foldername) return NULL;
+
+	/* The charset of the string returned by get_opt_str()
+	 * seems to be documented nowhere.  Let's assume it is
+	 * the system charset.  */
+	from_cp = get_cp_index("System");
+	to_cp = get_cp_index("UTF-8");
+	convert_table = get_translation_table(from_cp, to_cp);
+	if (!convert_table) return NULL;
+
+	return convert_string(convert_table,
+			      foldername, strlen(foldername),
+			      to_cp, CSM_NONE,
+			      NULL, NULL, NULL);
+}
+
 void
 bookmark_auto_save_tabs(struct terminal *term)
 {
-	unsigned char *foldername;
+	unsigned char *foldername; /* UTF-8 */
 
 	if (get_cmd_opt_bool("anonymous")
 	    || !get_opt_bool("ui.sessions.auto_save", NULL))
 		return;
 
-	foldername = get_opt_str("ui.sessions.auto_save_foldername", NULL);
-	if (!*foldername) return;
+	foldername = get_auto_save_bookmark_foldername_utf8();
+	if (!foldername) return;
 
 	/* Ensure uniqueness of the auto save folder, so it is possible to
 	 * restore the (correct) session when starting up. */
 	delete_folder_by_name(foldername);
 
 	bookmark_terminal_tabs(term, foldername);
+	mem_free(foldername);
 }
 
 static void
@@ -563,7 +700,10 @@ bookmark_snapshot(void)
 	                   NULL);
 #endif
 
-	folder = add_bookmark(NULL, 1, folderstring.source, NULL);
+	/* folderstring must be in the system codepage because
+	 * add_date_to_string() uses strftime().  */
+	folder = add_bookmark_cp(NULL, 1, get_cp_index("System"),
+				 folderstring.source, NULL);
 	done_string(&folderstring);
 	if (!folder) return;
 
@@ -574,6 +714,14 @@ bookmark_snapshot(void)
 }
 
 
+/** Open all bookmarks from the named folder.
+ *
+ * @param ses
+ *   The session in which to open the first bookmark.  The other
+ *   bookmarks of the folder open in new tabs on the same terminal.
+ *
+ * @param foldername
+ *   The name of the bookmark folder, in UTF-8.  */
 void
 open_bookmark_folder(struct session *ses, unsigned char *foldername)
 {
@@ -603,6 +751,8 @@ open_bookmark_folder(struct session *ses, unsigned char *foldername)
 		    || !*bookmark->url)
 			continue;
 
+		/** @todo Bug 1066: Tell the URI layer that
+		 * bookmark->url is UTF-8.  */
 		uri = get_translated_uri(bookmark->url, NULL);
 		if (!uri) continue;
 

@@ -11,6 +11,7 @@
 #endif /* HAVE_CONFIG_H */
 
 #include <ctype.h>
+#include <errno.h>
 #include <expat.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +39,7 @@ struct attributes {
 	LIST_HEAD(struct attributes);
 
 	unsigned char *name;
+	unsigned char *value;
 };
 
 /* Prototypes */
@@ -53,9 +55,14 @@ static unsigned char *get_attribute_value(struct tree_node *node,
 					  unsigned char *name);
 
 
+struct read_bookmarks_xbel {
+	int utf8_cp;
+};
+
 static void read_bookmarks_xbel(FILE *f);
 static unsigned char * filename_bookmarks_xbel(int writing);
-static int xbeltree_to_bookmarks_list(struct tree_node *root,
+static int xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
+				      struct tree_node *root,
 				      struct bookmark *current_parent);
 static void write_bookmarks_list(struct secure_save_info *ssi,
 				 LIST_OF(struct bookmark) *bookmarks_list,
@@ -89,6 +96,7 @@ read_bookmarks_xbel(FILE *f)
 	XML_Parser p;
 	int done = 0;
 	int err = 0;
+	struct read_bookmarks_xbel preload;
 
 	readok = 0;
 
@@ -125,7 +133,12 @@ read_bookmarks_xbel(FILE *f)
 		}
 	}
 
-	if (!err) readok = xbeltree_to_bookmarks_list(root_node->children, NULL); /* Top node is xbel */
+	if (!err) {
+		preload.utf8_cp = get_cp_index("UTF-8");
+		readok = xbeltree_to_bookmarks_list(&preload,
+						    root_node->children, /* Top node is xbel */
+						    NULL);
+	}
 
 	XML_ParserFree(p);
 	free_xbeltree(root_node);
@@ -140,7 +153,7 @@ write_bookmarks_xbel(struct secure_save_info *ssi,
 	/* We check for readok in filename_bookmarks_xbel(). */
 
 	secure_fputs(ssi,
-		"<?xml version=\"1.0\"?>\n"
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 		"<!DOCTYPE xbel PUBLIC \"+//IDN python.org//DTD XML "
 		"Bookmark Exchange Language 1.0//EN//XML\"\n"
 		"		       "
@@ -168,42 +181,20 @@ indentation(struct secure_save_info *ssi, int num)
 		secure_fputs(ssi, "    ");
 }
 
-/* FIXME This is totally broken, we should use the Unicode value in
- *       numeric entities.
- *       Additionally it is slow, not elegant, incomplete and
- *       if you pay enough attention you can smell the unmistakable
- *       odor of doom coming from it. --fabio */
 static void
 print_xml_entities(struct secure_save_info *ssi, const unsigned char *str)
 {
-#define accept_char(x) (isident((x)) || (x) == ' ' || (x) == '.' \
-				 || (x) == ':' || (x) == ';' \
-				 || (x) == '/' || (x) == '(' \
-				 || (x) == ')' || (x) == '}' \
-				 || (x) == '{' || (x) == '%' \
-				 || (x) == '+')
+	struct string entitized = NULL_STRING;
 
-	static int cp = -1;
-
-	if (cp == -1) cp = get_cp_index("us-ascii");
-
-	for (; *str; str++) {
-		if (accept_char(*str))
-			secure_fputc(ssi, *str);
-		else {
-			if (isascii(*str)) {
-				secure_fprintf(ssi, "&#%i;", (int) *str);
-			}
-			else {
-				const unsigned char *s = u2cp_no_nbsp(*str, cp);
-
-				if (s) print_xml_entities(ssi, s);
-			}
-		}
+	if (init_string(&entitized)
+	    && add_html_to_string(&entitized, str, strlen(str))) {
+		secure_fputs(ssi, entitized.source);
+	} else {
+		secsave_errno = SS_ERR_OUT_OF_MEM;
+		ssi->err = ENOMEM;
 	}
 
-#undef accept_char
-
+	done_string(&entitized);
 }
 
 static void
@@ -257,7 +248,6 @@ write_bookmarks_list(struct secure_save_info *ssi,
 static void
 on_element_open(void *data, const char *name, const char **attr)
 {
-	struct attributes *attribute;
 	struct tree_node *node;
 
 	node = new_node(current_node);
@@ -284,26 +274,23 @@ on_element_open(void *data, const char *name, const char **attr)
 		return;
 	}
 
-	while (*attr) {
-		unsigned char *tmp = stracpy((unsigned char *) *attr);
+	for (; *attr; attr += 2) {
+		struct attributes *attribute = mem_calloc(1, sizeof(*attribute));
+		unsigned char *name = stracpy((unsigned char *) attr[0]);
+		unsigned char *value = stracpy((unsigned char *) attr[1]);
 
-		if (!tmp) {
+		if (!attribute || !name || !value) {
+			mem_free_if(attribute);
+			mem_free_if(name);
+			mem_free_if(value);
 			free_node(current_node);
 			return;
 		}
 
-		attribute = mem_calloc(1, sizeof(*attribute));
-		if (!attribute) {
-			mem_free(tmp);
-			free_node(current_node);
-			return;
-		}
+		attribute->name = name;
+		attribute->value = value;
 
-		attribute->name = tmp;
-
-		add_to_list(current_node->attrs, attribute);
-
-		++attr;
+		add_to_list_end(current_node->attrs, attribute);
 	}
 
 }
@@ -315,25 +302,34 @@ on_element_close(void *data, const char *name)
 }
 
 static unsigned char *
-delete_whites(unsigned char *s)
+delete_whites(const unsigned char *s)
 {
 	unsigned char *r;
-	int count = 0, c = 0, i;
+	int last_was_space = 0, c = 0, i;
 	int len = strlen(s);
 
 	r = mem_alloc(len + 1);
 	if (!r) return NULL;
 
 	for (i = 0; i < len; i++) {
-		if (isspace(s[i])) {
-			if (count == 1) continue;
-			else count = 1;
-		}
-		else count = 0;
-
-		if (s[i] == '\n' || s[i] == '\t')
+		/* Recognize only the whitespace characters listed
+		 * in section 2.3 of XML 1.1.  U+0085 and U+2028 need
+		 * not be recognized here because section 2.11 says
+		 * the XML processor must translate them to U+000A.
+		 * Do not use isspace() because the string is in UTF-8
+		 * and individual bytes might not be characters at
+		 * all.  */
+		switch (s[i]) {
+		case '\x20': case '\x09': case '\x0D': case '\x0A':
+			if (last_was_space) continue;
+			last_was_space = 1;
 			r[c++] = ' ';
-		else r[c++] = s[i];
+			break;
+		default:
+			last_was_space = 0;
+			r[c++] = s[i];
+			break;
+		}
 	}
 
 	r[c] = '\0';
@@ -370,7 +366,8 @@ on_text(void *data, const XML_Char *text, int len)
 /* xbel_tree_to_bookmarks_list: returns 0 on fail,
  *				      1 on success */
 static int
-xbeltree_to_bookmarks_list(struct tree_node *node,
+xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
+			   struct tree_node *node,
 			   struct bookmark *current_parent)
 {
 	struct bookmark *tmp;
@@ -384,6 +381,7 @@ xbeltree_to_bookmarks_list(struct tree_node *node,
 			title = get_child(node, "title");
 			href = get_attribute_value(node, "href");
 
+			intl_set_charset_by_index(preload->utf8_cp);
 			tmp = add_bookmark(current_parent, 0,
 					   /* The <title> element is optional */
 					   title && title->text ? title->text
@@ -406,6 +404,7 @@ xbeltree_to_bookmarks_list(struct tree_node *node,
 
 			title = get_child(node, "title");
 
+			intl_set_charset_by_index(preload->utf8_cp);
 			tmp = add_bookmark(current_parent, 0,
 					   title && title->text ? title->text
 						 : (unsigned char *) gettext("No title"),
@@ -431,14 +430,18 @@ xbeltree_to_bookmarks_list(struct tree_node *node,
 
 		if (node->children) {
 			int ret;
+			struct bookmark *parent_for_nested;
 
 			/* If this node is a <folder> element, current parent
 			 * changes */
-			ret = (!strcmp(node->name, "folder") ?
-				xbeltree_to_bookmarks_list(node->children,
-							   lastbm) :
-				xbeltree_to_bookmarks_list(node->children,
-							   current_parent));
+			if (!strcmp(node->name, "folder"))
+				parent_for_nested = lastbm;
+			else
+				parent_for_nested = current_parent;
+
+			ret = xbeltree_to_bookmarks_list(preload,
+							 node->children,
+							 parent_for_nested);
 			/* Out of memory */
 			if (!ret) return 0;
 		}
@@ -491,9 +494,9 @@ get_attribute_value(struct tree_node *node, unsigned char *name)
 {
 	struct attributes *attribute;
 
-	foreachback (attribute, node->attrs) {
+	foreach (attribute, node->attrs) {
 		if (!strcmp(attribute->name, name)) {
-			return attribute->prev->name;
+			return attribute->value;
 		}
 	}
 
@@ -519,8 +522,11 @@ free_node(struct tree_node *node)
 {
 	struct attributes *attribute;
 
-	foreachback (attribute, node->attrs)
-		mem_free_if(attribute->name);
+	foreach (attribute, node->attrs) {
+		/* on_element_open() ensures ->name and ->value aren't NULL. */
+		mem_free(attribute->name);
+		mem_free(attribute->value);
+	}
 	free_list(node->attrs); /* Don't free list during traversal */
 
 	mem_free_if(node->name);

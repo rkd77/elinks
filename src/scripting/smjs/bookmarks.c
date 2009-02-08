@@ -8,6 +8,7 @@
 
 #include "bookmarks/bookmarks.h"
 #include "ecmascript/spidermonkey-shared.h"
+#include "intl/charsets.h"
 #include "main/event.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
@@ -78,6 +79,60 @@ static const JSPropertySpec bookmark_props[] = {
 
 static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
 
+/** Convert a string retrieved from struct bookmark to a jsval.
+ *
+ * @return JS_TRUE if successful.  On error, report the error and
+ * return JS_FALSE.  */
+static JSBool
+bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, jsval *vp)
+{
+	JSString *jsstr = utf8_to_jsstring(ctx, str, -1);
+
+	if (jsstr == NULL)
+		return JS_FALSE;
+	*vp = STRING_TO_JSVAL(jsstr);
+	return JS_TRUE;
+}
+
+/** Convert a jsval to a string and store it in struct bookmark.
+ *
+ * @param ctx
+ *   Context for memory allocations and error reports.
+ * @param val
+ *   The @c jsval that should be converted.
+ * @param[in,out] result
+ *   A string allocated with mem_alloc().
+ *   On success, this function frees the original string, if any.
+ *
+ * @return JS_TRUE if successful.  On error, report the error to
+ * SpiderMonkey and return JS_FALSE.  */
+static JSBool
+jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
+{
+	JSString *jsstr = NULL;
+	unsigned char *str;
+
+	/* jsstring_to_utf8() might GC; protect the string to come.  */
+	if (!JS_AddNamedRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
+		return JS_FALSE;
+
+	jsstr = JS_ValueToString(ctx, val);
+	if (jsstr == NULL) {
+		JS_RemoveRoot(ctx, &jsstr);
+		return JS_FALSE;
+	}
+
+	str = jsstring_to_utf8(ctx, jsstr, NULL);
+	if (str == NULL) {
+		JS_RemoveRoot(ctx, &jsstr);
+		return JS_FALSE;
+	}
+
+	JS_RemoveRoot(ctx, &jsstr);
+	mem_free_set(result, str);
+	return JS_TRUE;
+}
+
 /* @bookmark_class.getProperty */
 static JSBool
 bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
@@ -102,15 +157,9 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	switch (JSVAL_TO_INT(id)) {
 	case BOOKMARK_TITLE:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-	                                                bookmark->title));
-
-		return JS_TRUE;
+		return bookmark_string_to_jsval(ctx, bookmark->title, vp);
 	case BOOKMARK_URL:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-	                                                bookmark->url));
-
-		return JS_TRUE;
+		return bookmark_string_to_jsval(ctx, bookmark->url, vp);
 	case BOOKMARK_CHILDREN:
 		*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
 
@@ -131,6 +180,9 @@ static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
+	unsigned char *title = NULL;
+	unsigned char *url = NULL;
+	int ok;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -147,22 +199,14 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_FALSE;
 
 	switch (JSVAL_TO_INT(id)) {
-	case BOOKMARK_TITLE: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_GetStringBytes(jsstr);
-
-		mem_free_set(&bookmark->title, stracpy(str));
-
-		return JS_TRUE;
-	}
-	case BOOKMARK_URL: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_GetStringBytes(jsstr);
-
-		mem_free_set(&bookmark->url, stracpy(str));
-
-		return JS_TRUE;
-	}
+	case BOOKMARK_TITLE:
+		if (!jsval_to_bookmark_string(ctx, *vp, &title))
+			return JS_FALSE;
+		break;
+	case BOOKMARK_URL:
+		if (!jsval_to_bookmark_string(ctx, *vp, &url))
+			return JS_FALSE;
+		break;
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
@@ -170,6 +214,11 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		 * Do the same here.  */
 		return JS_TRUE;
 	}
+
+	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
+	mem_free_if(title);
+	mem_free_if(url);
+	return ok ? JS_TRUE : JS_FALSE;
 }
 
 static const JSClass bookmark_class = {
@@ -205,7 +254,7 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 {
 	struct bookmark *bookmark;
 	struct bookmark *folder;
-	unsigned char *title;
+	unsigned char *title = NULL;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -218,14 +267,15 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	*vp = JSVAL_NULL;
 
-	title = JS_GetStringBytes(JS_ValueToString(ctx, id));
-	if (!title) return JS_TRUE;
+	if (!jsval_to_bookmark_string(ctx, id, &title))
+		return JS_FALSE;
 
 	bookmark = get_bookmark_by_name(folder, title);
 	if (bookmark) {
 		*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
 	}
 
+	mem_free(title);
 	return JS_TRUE;
 }
 

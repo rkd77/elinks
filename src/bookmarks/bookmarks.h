@@ -17,7 +17,9 @@ struct bookmark {
 
 	struct listbox_item *box_item;
 
-	unsigned char *title;   /* title of bookmark */
+	/** @todo Bug 1066: The #url string should be in UTF-8 too,
+	 * but this has not yet been fully implemented.  */
+	unsigned char *title;   /* UTF-8 title of bookmark */
 	unsigned char *url;     /* Location of bookmarked item */
 
 	LIST_OF(struct bookmark) child;
@@ -43,12 +45,16 @@ int bookmarks_are_dirty(void);
 
 void delete_bookmark(struct bookmark *);
 struct bookmark *add_bookmark(struct bookmark *, int, unsigned char *, unsigned char *);
+struct bookmark *add_bookmark_cp(struct bookmark *, int, int,
+				 unsigned char *, unsigned char *);
 struct bookmark *get_bookmark_by_name(struct bookmark *folder,
                                       unsigned char *title);
 struct bookmark *get_bookmark(unsigned char *url);
 void bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername);
+unsigned char *get_auto_save_bookmark_foldername_utf8(void);
 void bookmark_auto_save_tabs(struct terminal *term);
-int update_bookmark(struct bookmark *, unsigned char *, unsigned char *);
+int update_bookmark(struct bookmark *, int,
+		    unsigned char *, unsigned char *);
 void open_bookmark_folder(struct session *ses, unsigned char *foldername);
 
 #endif

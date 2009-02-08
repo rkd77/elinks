@@ -8,6 +8,7 @@
 
 #include "config/home.h"
 #include "ecmascript/spidermonkey-shared.h"
+#include "intl/charsets.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
 #include "scripting/scripting.h"
@@ -162,4 +163,164 @@ cleanup_smjs(struct module *module)
 	 * entry before it releases the runtime here.  */
 	JS_DestroyContext(smjs_ctx);
 	spidermonkey_runtime_release();
+}
+
+/** Convert a UTF-8 string to a JSString.
+ *
+ * @param ctx
+ *   Allocate the string in this JSContext.
+ * @param[in] str
+ *   The input string that should be converted.
+ * @param[in] length
+ *   Length of @a str in bytes, or -1 if it is null-terminated.
+ *
+ * @return the new string.  On error, report the error to SpiderMonkey
+ * and return NULL.  */
+JSString *
+utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
+{
+	size_t in_bytes;
+	const unsigned char *in_end;
+	size_t utf16_alloc;
+	jschar *utf16;
+	size_t utf16_used;
+	JSString *jsstr;
+
+	if (length == -1)
+		in_bytes = strlen(str);
+	else
+		in_bytes = length;
+
+	/* Each byte of input can become at most one UTF-16 unit.
+	 * Check whether the multiplication could overflow.  */
+	assert(!needs_utf16_surrogates(UCS_REPLACEMENT_CHARACTER));
+	if (in_bytes > ((size_t) -1) / sizeof(jschar)) {
+		JS_ReportAllocationOverflow(ctx);
+		return NULL;
+	}
+	utf16_alloc = in_bytes;
+	/* Don't use fmem_alloc here because long strings could
+	 * exhaust the stack.  */
+	utf16 = mem_alloc(utf16_alloc * sizeof(jschar));
+	if (utf16 == NULL) {
+		JS_ReportOutOfMemory(ctx);
+		return NULL;
+	}
+
+	in_end = str + in_bytes;
+
+	utf16_used = 0;
+	for (;;) {
+		unicode_val_T unicode;
+
+		unicode = utf8_to_unicode((unsigned char **) &str, in_end);
+		if (unicode == UCS_NO_CHAR)
+			break;
+
+		if (needs_utf16_surrogates(unicode)) {
+			assert(utf16_alloc - utf16_used >= 2);
+			if_assert_failed { mem_free(utf16); return NULL; }
+			utf16[utf16_used++] = get_utf16_high_surrogate(unicode);
+			utf16[utf16_used++] = get_utf16_low_surrogate(unicode);
+		} else {
+			assert(utf16_alloc - utf16_used >= 1);
+			if_assert_failed { mem_free(utf16); return NULL; }
+			utf16[utf16_used++] = unicode;
+		}
+	}
+
+	jsstr = JS_NewUCString(ctx, utf16, utf16_used);
+	mem_free(utf16);
+	return jsstr;
+}
+
+/** Convert a jschar array to UTF-8 and append it to struct string.
+ * Replace misused surrogate codepoints with UCS_REPLACEMENT_CHARACTER.
+ *
+ * @param[in,out] utf8
+ *   The function appends characters to this UTF-8 string.
+ *
+ * @param[in] utf16
+ *   Pointer to the first element in an array of jschars.
+ *
+ * @param[i] len
+ *   Number of jschars in the @a utf16 array.
+ *
+ * @return @a utf8 if successful, or NULL if not.  */
+static struct string *
+add_jschars_to_utf8_string(struct string *utf8,
+			   const jschar *utf16, size_t len)
+{
+	size_t pos;
+
+	for (pos = 0; pos < len; ) {
+		unicode_val_T unicode = utf16[pos++];
+
+		if (is_utf16_surrogate(unicode)) {
+			if (is_utf16_high_surrogate(unicode)
+			    && pos < len
+			    && is_utf16_low_surrogate(utf16[pos])) {
+				unicode = join_utf16_surrogates(unicode,
+								utf16[pos++]);
+			} else {
+				unicode = UCS_REPLACEMENT_CHARACTER;
+			}
+		}
+
+		if (unicode == 0) {
+			if (!add_char_to_string(utf8, '\0'))
+				return NULL;
+		} else {
+			if (!add_to_string(utf8, encode_utf8(unicode)))
+				return NULL;
+		}
+	}
+
+	return utf8;
+}
+
+/** Convert a JSString to a UTF-8 string.
+ *
+ * @param ctx
+ *   For reporting errors.
+ * @param[in] jsstr
+ *   The input string that should be converted.  Must not be NULL.
+ * @param[out] length
+ *   Optional.  The number of bytes in the returned string,
+ *   not counting the terminating null.
+ *
+ * @return the new string, which the caller must eventually free
+ * with mem_free().  On error, report the error to SpiderMonkey
+ * and return NULL; *@a length is then undefined.  */
+unsigned char *
+jsstring_to_utf8(JSContext *ctx, JSString *jsstr, int *length)
+{
+	size_t utf16_len;
+	const jschar *utf16;
+	struct string utf8;
+
+	utf16_len = JS_GetStringLength(jsstr);
+	utf16 = JS_GetStringChars(jsstr); /* stays owned by jsstr */
+	if (utf16 == NULL) {
+		/* JS_GetStringChars doesn't have a JSContext *
+		 * parameter so it can't report the error
+		 * (and can't collect garbage either).  */
+		JS_ReportOutOfMemory(ctx);
+		return NULL;
+	}
+
+	if (!init_string(&utf8)) {
+		JS_ReportOutOfMemory(ctx);
+		return NULL;
+	}
+
+	if (!add_jschars_to_utf8_string(&utf8, utf16, utf16_len)) {
+		done_string(&utf8);
+		JS_ReportOutOfMemory(ctx);
+		return NULL;
+	}
+
+	if (length)
+		*length = utf8.length;
+	return utf8.source;
 }

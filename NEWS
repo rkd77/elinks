@@ -75,16 +75,26 @@ ELinks 0.12pre2.GIT now:
 To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
 includes the changes listed under ``ELinks 0.11.5.GIT'' below.
 
+Incompatibilities:
+
+* bug 1060: Regexp searching now requires the TRE library.
+
+Other changes:
+
 * critical: Fix assertion failure if IMG/@usemap refers to a different
   file.
 * Preserve newlines in hidden input fields, and submit them as CRLF.
   Previously, they could turn into spaces or disappear entirely.
 * Perl scripts can use modules that dynamically load C libraries, like
   XML::LibXML::SAX does.
+* bug 153: Preserve Unicode characters in XBEL bookmark files.
+  However, Unicode in URIs (really IRIs) does not work reliably yet;
+  this is being tracked as bug 1066.
 * bug 885: Convert xterm titles to ISO-8859-1 by default, but add an
   option to disable this.  When removing control characters from a
   title, note the charset.  Don't truncate titles to the width of the
   terminal.
+* bug 1061: Correctly truncate UTF-8 titles in the tab bar.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
 
 ELinks 0.12pre2:
