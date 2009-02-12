@@ -218,10 +218,9 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 	struct dom_renderer *renderer = stack->current->data;
 	struct rss_renderer *rss = renderer->data;
 
-	done_dom_node(root);
 	mem_free(rss);
 
-	return DOM_CODE_OK;
+	return DOM_CODE_FREE_NODE;
 }
 
 
