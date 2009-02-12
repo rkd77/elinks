@@ -34,6 +34,7 @@ Other changes:
 * minor bug 761: When reading bookmarks from an XBEL file, distinguish
   attribute names from attribute values.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
+* critical: bug 1067: crash in call_dom_stack_callbacks with RSS
 
 ELinks 0.12pre2:
 ----------------

@@ -947,9 +947,7 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 		done_dom_string(&renderer->text);
 	mem_free_if(renderer->items);
 
-	done_dom_node(root);
-
-	return DOM_CODE_OK;
+	return DOM_CODE_FREE_NODE;
 }
 
 
