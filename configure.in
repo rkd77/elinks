@@ -632,6 +632,9 @@ fi
 
 AC_MSG_RESULT($cf_result)
 CONFIG_SPIDERMONKEY="$cf_result"
+if test "$cf_result" = "yes"; then
+	AC_CHECK_FUNCS([[JS_ReportAllocationOverflow]])
+fi
 EL_RESTORE_FLAGS
 
 if test "x$CONFIG_SPIDERMONKEY" = xyes &&
