@@ -51,7 +51,13 @@ struct dom_stack;
 
 /** DOM stack callback
  *
- * Used by contexts, for 'hooking' into the node traversing. */
+ * Used by contexts, for 'hooking' into the node traversing.
+ *
+ * This callback must not call done_dom_node() to free the node it
+ * gets as a parameter, because call_dom_node_callbacks() may be
+ * intending to call more callbacks for the same node.  Instead, the
+ * callback can return ::DOM_CODE_FREE_NODE, and the node will then
+ * be freed after the callbacks of all contexts have been called.  */
 typedef enum dom_code
 	(*dom_stack_callback_T)(struct dom_stack *, struct dom_node *, void *);
 

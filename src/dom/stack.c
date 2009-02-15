@@ -139,6 +139,17 @@ call_dom_stack_callbacks(struct dom_stack *stack, struct dom_stack_state *state,
 		struct dom_stack_context *context = stack->contexts[i];
 		dom_stack_callback_T callback;
 
+		assert(state->node->type < DOM_NODES); /* unsigned comparison */
+		if_assert_failed {
+			/* The node type is out of range for the
+			 * callback arrays.  The node may have been
+			 * corrupted or already freed.  Ignore
+			 * free_node here because attempting to free
+			 * the node would probably just corrupt things
+			 * further.  */
+			return 0;
+		}
+
 		if (action == DOM_STACK_PUSH)
 			callback = context->info->push[state->node->type];
 		else
