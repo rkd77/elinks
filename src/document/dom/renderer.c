@@ -720,6 +720,10 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *da
 		render_dom_flush(renderer, renderer->end);
 	}
 
+	/* It is not necessary to return DOM_CODE_FREE_NODE here.
+	 * Because the parser was created with the SGML_PARSER_STREAM
+	 * type, the stack has the DOM_STACK_FLAG_FREE_NODES flag and
+	 * implicitly frees all nodes popped from it.  */
 	return DOM_CODE_OK;
 }
 
@@ -947,6 +951,10 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *data)
 		done_dom_string(&renderer->text);
 	mem_free_if(renderer->items);
 
+	/* ELinks does not provide any sort of DOM access to the RSS
+	 * document after it has been rendered.  Tell the caller to
+	 * free the document node and all of its children.  Otherwise,
+	 * they would leak.  */
 	return DOM_CODE_FREE_NODE;
 }
 
