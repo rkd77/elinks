@@ -392,6 +392,7 @@ done_dom_node_data(struct dom_node *node)
 	union dom_node_data *data;
 
 	assert(node);
+	assert(node->type < DOM_NODES); /* unsigned comparison */
 
 	data = &node->data;
 
@@ -427,6 +428,18 @@ done_dom_node_data(struct dom_node *node)
 
 	if (node->allocated)
 		done_dom_string(&node->string);
+
+	/* call_dom_stack_callbacks() asserts that the node type is
+	 * within range.  If assertions are enabled, store an
+	 * out-of-range value there to make the assertion more likely
+	 * to fail if a callback has freed the node prematurely.
+	 * This is not entirely reliable though, because the memory
+	 * is freed below and may be allocated for some other purpose
+	 * before the assertion.  */
+#ifndef CONFIG_FASTMEM
+	node->type = -1;
+#endif
+
 	mem_free(node);
 }
 

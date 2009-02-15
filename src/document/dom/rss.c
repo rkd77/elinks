@@ -220,6 +220,10 @@ dom_rss_pop_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 
 	mem_free(rss);
 
+	/* ELinks does not provide any sort of DOM access to the RSS
+	 * document after it has been rendered.  Tell the caller to
+	 * free the document node and all of its children.  Otherwise,
+	 * they would leak.  */
 	return DOM_CODE_FREE_NODE;
 }
 

@@ -314,7 +314,9 @@ get_dom_node_map_entry(struct dom_node_list *node_map,
 		       enum dom_node_type type, uint16_t subtype,
 		       struct dom_string *name);
 
-/* Removes the node and all its children and free()s itself */
+/* Removes the node and all its children and free()s itself.
+ * A dom_stack_callback_T must not use this to free the node
+ * it gets as a parameter.  */
 void done_dom_node(struct dom_node *node);
 
 #ifndef DEBUG_MEMLEAK

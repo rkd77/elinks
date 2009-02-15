@@ -408,6 +408,10 @@ render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xx
 
 	mem_free(data);
 
+	/* It is not necessary to return DOM_CODE_FREE_NODE here.
+	 * Because the parser was created with the SGML_PARSER_STREAM
+	 * type, the stack has the DOM_STACK_FLAG_FREE_NODES flag and
+	 * implicitly frees all nodes popped from it.  */
 	return DOM_CODE_OK;
 }
 
