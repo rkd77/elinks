@@ -173,6 +173,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	int confirm_submit = uri->form && get_opt_bool("document.browse.forms"
 	                                               ".confirm_submit", ses);
 	unsigned char *m1 = NULL, *message = NULL;
+	struct memory_list *mlist = NULL;
 
 	if (ses->doc_view
 	    && ses->doc_view->document
@@ -272,7 +273,10 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 		mem_free_if(uristring);
 	}
 
-	msg_box(ses->tab->term, getml(task, (void *) NULL), MSGBOX_FREE_TEXT,
+	add_to_ml(&mlist, task, (void *) NULL);
+	if (task->session_task.target.frame)
+		add_to_ml(&mlist, task->session_task.target.frame, (void *) NULL);
+	msg_box(ses->tab->term, mlist, MSGBOX_FREE_TEXT,
 		N_("Warning"), ALIGN_CENTER,
 		message,
 		task, 2,
