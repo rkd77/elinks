@@ -1351,7 +1351,8 @@ read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 
 	kill_buffer_data(rb, len);
 
-	if (!http->length && conn->socket->state == SOCKET_RETRY_ONCLOSE) {
+	if (!http->length && (conn->socket->state == SOCKET_RETRY_ONCLOSE
+		|| conn->socket->state == SOCKET_CLOSED)) {
 		return 2;
 	}
 
@@ -1366,7 +1367,7 @@ read_http_data(struct socket *socket, struct read_buffer *rb)
 	int ret;
 
 	if (socket->state == SOCKET_CLOSED) {
-		if (conn->content_encoding && http->length == -1) {
+		if (conn->content_encoding) {
 			/* Flush decompression first. */
 			http->length = 0;
 		} else {
