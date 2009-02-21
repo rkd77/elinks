@@ -1057,7 +1057,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	int *length_of_block;
 	unsigned char *output = NULL;
 
-
 	if (http->length == LEN_CHUNKED) {
 		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
 			state = FINISHING;
