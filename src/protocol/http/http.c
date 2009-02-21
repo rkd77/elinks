@@ -1012,7 +1012,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 	int *length_of_block;
 	unsigned char *output = NULL;
 
-#define BIG_READ 65536
+#define BIG_READ 655360
 
 	if (http->length == LEN_CHUNKED) {
 		if (http->chunk_remaining == CHUNK_ZERO_SIZE)
@@ -1100,6 +1100,7 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
+#undef BIG_READ
 }
 
 static int

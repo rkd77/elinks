@@ -124,7 +124,8 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 		}
 restart:
 		err = inflate(&data->deflate_stream, Z_SYNC_FLUSH);
-		if (err == Z_DATA_ERROR && !data->after_first_read) {
+		if (err == Z_DATA_ERROR && !data->after_first_read
+		&& data->deflate_stream.next_out == buf) {
 			/* RFC 2616 requires a zlib header for
 			 * "Content-Encoding: deflate", but some HTTP
 			 * servers (Microsoft-IIS/6.0 at blogs.msdn.com,
@@ -159,7 +160,8 @@ restart:
 			data->last_read = 1;
 			break;
 		} else if (err != Z_OK) {
-			return -1;
+			data->last_read = 1;
+			break;
 		}
 	} while (data->deflate_stream.avail_out > 0);
 
