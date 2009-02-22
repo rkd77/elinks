@@ -1423,9 +1423,11 @@ text_typeahead_handler(struct input_line *line, int action_id)
 				get_opt_rec(config_options,
 					    "document.browse.search.regex");
 
-			opt->value.number = (opt->value.number + 1)
-					    % (opt->max + 1);
-			option_changed(ses, opt);
+			if (opt) {
+				opt->value.number = (opt->value.number + 1)
+						    % (opt->max + 1);
+				option_changed(ses, opt);
+			}
 		}
 		/* Fall thru */
 
