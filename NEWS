@@ -101,6 +101,7 @@ Other changes:
 * minor bug 761: When reading bookmarks from an XBEL file, distinguish
   attribute names from attribute values.
 * enhancement: Updated ISO 8859-7, ISO 8859-16, KOI8-R, and MacRoman.
+* lzma disabled by default. It's rarely used and doesn't build with new xz.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
