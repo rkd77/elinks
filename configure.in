@@ -462,8 +462,12 @@ if test "x{with_gc}" != xno; then
 		[  --with-gc               enable Boehm's garbage collector])
 fi
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code,
-	[  --without-lzma          disable lzma encoding support])
+# LZMA disabled by default, because of little usability and compilation problems
+# with new xz
+AC_ARG_WITH(lzma, [  --with-lzma           enable lzma encoding support],
+            [ if test "x$withval" != xno; then
+            EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code, [])
+            fi ])
 
 # ===================================================================
 # Check for GSSAPI, optional even if installed.
