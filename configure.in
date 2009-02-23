@@ -432,11 +432,12 @@ AC_DEFUN([EL_CHECK_OPTIONAL_LIBRARY],
 dnl EL_CONFIG_OPTIONAL_LIBRARY(define, name, header, lib, function, confhelp)
 AC_DEFUN([EL_CONFIG_OPTIONAL_LIBRARY],
 [
-	$1=yes
+	if test "x[$]$1" != xno; then $1=yes; fi
 	WITHVAL_$1=
 
 	AC_ARG_WITH([$2], [$6], [WITHVAL_$1="[$]withval"])
 	if test "x[$]WITHVAL_$1" = xno; then $1=no; fi
+	if test "x[$]WITHVAL_$1" = xyes; then $1=yes; fi
 
 	EL_CHECK_OPTIONAL_LIBRARY([$1], [$2], [$3], [$4], [$5])
 
@@ -460,17 +461,15 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
 
-if test "x{with_gc}" != xno; then
+if test "x${with_gc}" != xno; then
 	EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GC, gc, gc.h, gc, GC_init,
 		[  --with-gc               enable Boehm's garbage collector])
 fi
 
 # LZMA disabled by default, because of little usability and compilation problems
 # with new xz
-AC_ARG_WITH(lzma, [  --with-lzma           enable lzma encoding support],
-            [ if test "x$withval" != xno; then
-            EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code, [])
-            fi ])
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code,
+	[  --with-lzma             enable lzma encoding support])
 
 # ===================================================================
 # Check for GSSAPI, optional even if installed.
