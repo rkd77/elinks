@@ -4,6 +4,8 @@
 #include "config.h"
 #endif
 
+#include <stdlib.h>
+
 #include "elinks.h"
 
 #include "config/home.h"
@@ -205,7 +207,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	utf16_alloc = in_bytes;
 	/* Don't use fmem_alloc here because long strings could
 	 * exhaust the stack.  */
-	utf16 = mem_alloc(utf16_alloc * sizeof(jschar));
+	utf16 = malloc(utf16_alloc * sizeof(jschar));
 	if (utf16 == NULL) {
 		JS_ReportOutOfMemory(ctx);
 		return NULL;
@@ -223,18 +225,19 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 
 		if (needs_utf16_surrogates(unicode)) {
 			assert(utf16_alloc - utf16_used >= 2);
-			if_assert_failed { mem_free(utf16); return NULL; }
+			if_assert_failed { free(utf16); return NULL; }
 			utf16[utf16_used++] = get_utf16_high_surrogate(unicode);
 			utf16[utf16_used++] = get_utf16_low_surrogate(unicode);
 		} else {
 			assert(utf16_alloc - utf16_used >= 1);
-			if_assert_failed { mem_free(utf16); return NULL; }
+			if_assert_failed { free(utf16); return NULL; }
 			utf16[utf16_used++] = unicode;
 		}
 	}
 
 	jsstr = JS_NewUCString(ctx, utf16, utf16_used);
-	mem_free(utf16);
+	if (jsstr == NULL) free(utf16);
+
 	return jsstr;
 }
 
