@@ -205,8 +205,8 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 		return NULL;
 	}
 	utf16_alloc = in_bytes;
-	/* Don't use fmem_alloc here because long strings could
-	 * exhaust the stack.  */
+	/* Use malloc because SpiderMonkey will handle the memory after
+	 * this routine finishes.  */
 	utf16 = malloc(utf16_alloc * sizeof(jschar));
 	if (utf16 == NULL) {
 		JS_ReportOutOfMemory(ctx);
@@ -236,6 +236,8 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	}
 
 	jsstr = JS_NewUCString(ctx, utf16, utf16_used);
+	/* Do not free if JS_NewUCString was successful because it takes over
+	 * handling of the memory. */
 	if (jsstr == NULL) free(utf16);
 
 	return jsstr;
