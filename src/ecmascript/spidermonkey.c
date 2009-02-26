@@ -57,8 +57,8 @@
 
 static int js_module_init_ok;
 
-void
-spidermonkey_error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
+static void
+error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct terminal *term;
@@ -171,6 +171,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	/* XXX: JSOPTION_COMPILE_N_GO will go (will it?) when we implement
 	 * some kind of bytecode cache. (If we will ever do that.) */
 	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_COMPILE_N_GO);
+	JS_SetErrorReporter(ctx, error_reporter);
 
 	window_obj = JS_NewObject(ctx, (JSClass *) &window_class, NULL, NULL);
 	if (!window_obj) {
