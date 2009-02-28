@@ -159,16 +159,18 @@ static struct option_info http_options[] = {
 	 * we might wrap this option in #if CFG_DEBUG.  */
 	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression"),
 		"compression", 0, 1,
-		N_("If enabled, the capability to receive compressed content (gzip and/or\n"
-		"bzip2) is announced to the server, which usually sends the reply\n"
-		"compressed, thus saving some bandwidth at slight CPU expense.\n"
-	        "\n"
-		"If ELinks displays a incomplete page or garbage, try disabling this\n"
-		"option. If that helps, there may be a bug in the decompression part\n"
-		"of ELinks. Please report such bugs.\n"
+		N_("If enabled, the capability to receive compressed content\n"
+		"(gzip and/or bzip2) is announced to the server, which\n"
+		"usually sends the reply compressed, thus saving some\n"
+		"bandwidth at slight CPU expense.\n"
 		"\n"
-		"If ELinks has been compiled without compression support, this option\n"
-		"has no effect. To check the supported features, see Help -> About.")),
+		"If ELinks displays a incomplete page or garbage, try\n"
+		"disabling this option. If that helps, there may be a bug in\n"
+		"the decompression part of ELinks. Please report such bugs.\n"
+		"\n"
+		"If ELinks has been compiled without compression support,\n"
+		"this option has no effect. To check the supported features,\n"
+		"see Help -> About.")),
 
 	INIT_OPT_BOOL("protocol.http", N_("Activate HTTP TRACE debugging"),
 		"trace", 0, 0,
