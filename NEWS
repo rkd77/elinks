@@ -47,6 +47,9 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 * critical bug 1067: Fixed a crash in the RSS parser that ``configure
   --enable-html-highlight'' enables.  ELinks 0.12pre1 was the first
   release that supported RSS at all.
+* bug 1069: ELinks didn't report ECMAScript errors, even if the
+  ecmascript.error_reporting option was turned on.  ELinks 0.12pre2
+  was the first release that had this bug.
 
 ELinks 0.12pre2:
 ----------------
