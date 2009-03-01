@@ -687,8 +687,8 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 			}
 
 			if (title) {
-				ctx->found = strcasecmp(title,
-							ctx->title);
+				ctx->found = (strcasestr(title, ctx->title)
+					      != NULL);
 				mem_free(title);
 			}
 			/** @todo Tell the user that the string could
