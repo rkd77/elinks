@@ -423,7 +423,9 @@ load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
 #define load_ecmascript_imports(ses, doc_view)
 #endif
 
-inline void
+/* can't be inline according to C99 6.7.4p3 because it uses static
+ * request_frameset() and is not itself static */
+void
 load_frames(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;

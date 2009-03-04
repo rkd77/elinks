@@ -18,6 +18,8 @@ To be released as 0.11.6.
   Turkish locale
 * minor: clicking a link with the mouse activates that link, rather
   than the one selected with move-cursor-* actions
+* build bug 1047: attempt to make inline functions satisfy C99 6.7.4p3
+  so that ELinks can be built on OpenSolaris
 
 ELinks 0.11.5:
 --------------

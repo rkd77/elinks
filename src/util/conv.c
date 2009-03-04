@@ -52,9 +52,9 @@ elinks_ulongcat(unsigned char *s, unsigned int *slen,
 		unsigned char fillchar, unsigned int base,
 		unsigned int upper)
 {
-	static unsigned char unum[]= "0123456789ABCDEF";
-	static unsigned char lnum[]= "0123456789abcdef";
-	unsigned char *to_num = (unsigned char *) (upper ? &unum : &lnum);
+	static const unsigned char unum[]= "0123456789ABCDEF";
+	static const unsigned char lnum[]= "0123456789abcdef";
+	const unsigned char *to_num = (upper ? unum : lnum);
 	unsigned int start = slen ? *slen : 0;
 	unsigned int nlen = 1; /* '0' is one char, we can't have less. */
 	unsigned int pos = start; /* starting position of the number */
