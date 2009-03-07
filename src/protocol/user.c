@@ -33,8 +33,8 @@
 static struct option_info user_protocol_options[] = {
 	INIT_OPT_TREE("protocol", N_("User protocols"),
 		"user", OPT_AUTOCREATE,
-		N_("User protocols. Options in this tree specify external\n"
-		"handlers for the appropriate protocols. Ie.\n"
+		N_("User protocols. Options in this tree specify external "
+		"handlers for the appropriate protocols. Ie. "
 		"protocol.user.mailto.unix.")),
 
 	/* FIXME: Poorly designed options structure. Ought to be able to specify
@@ -44,8 +44,9 @@ static struct option_info user_protocol_options[] = {
 
 	INIT_OPT_TREE("protocol.user", NULL,
 		"_template_", OPT_AUTOCREATE,
-		N_("Handler (external program) for this protocol. Name the\n"
-		"options in this tree after your system (ie. unix, unix-xwin).")),
+		N_("Handler (external program) for this protocol. Name the "
+		"options in this tree after your system (ie. unix, "
+		"unix-xwin).")),
 
 	INIT_OPT_STRING("protocol.user._template_", NULL,
 		"_template_", 0, "",

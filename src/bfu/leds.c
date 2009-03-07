@@ -80,7 +80,7 @@ static struct option_info led_options[] = {
 
 	INIT_OPT_STRING("ui.clock", N_("Format"),
 		"format", 0, "[%H:%M]",
-		N_("Format string for the digital clock. See the strftime(3)\n"
+		N_("Format string for the digital clock. See the strftime(3) "
 		"manpage for details.")),
 
 	/* Compatibility alias. Added: 2004-04-22, 0.9.CVS. */
@@ -93,8 +93,8 @@ static struct option_info led_options[] = {
 
 	INIT_OPT_BOOL("ui.leds", N_("Enable"),
 		"enable", 0, 1,
-		N_("Enable LEDs.\n"
-		   "These visual indicators will inform you about various states.")),
+		N_("Enable LEDs. These visual indicators will inform you "
+		"about various states.")),
 
 	NULL_OPTION_INFO,
 };

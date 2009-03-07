@@ -45,8 +45,8 @@ enum mimetypes_option {
 static struct option_info mimetypes_options[] = {
 	INIT_OPT_TREE("mime", N_("Mimetypes files"),
 		"mimetypes", 0,
-		N_("Options for the support of mime.types files. These files\n"
-		"can be used to find the content type of a URL by looking at\n"
+		N_("Options for the support of mime.types files. These files "
+		"can be used to find the content type of a URL by looking at "
 		"the extension of the file name.")),
 
 	INIT_OPT_BOOL("mime.mimetypes", N_("Enable"),
@@ -55,7 +55,8 @@ static struct option_info mimetypes_options[] = {
 
 	INIT_OPT_STRING("mime.mimetypes", N_("Path"),
 		"path", 0, DEFAULT_MIMETYPES_PATH,
-		N_("The search path for mime.types files. Colon-separated list of files.")),
+		N_("The search path for mime.types files. "
+		"Colon-separated list of files.")),
 
 	NULL_OPTION_INFO,
 };

@@ -63,7 +63,8 @@ static struct option_info global_history_options[] = {
 
 	INIT_OPT_BOOL("document.history.global", N_("Enable"),
 		"enable", 0, 1,
-		N_("Enable global history (\"history of all pages visited\").")),
+		N_("Enable global history (\"history of all pages "
+		"visited\").")),
 
 	INIT_OPT_INT("document.history.global", N_("Maximum number of entries"),
 		"max_items", 0, 1, INT_MAX, 1024,

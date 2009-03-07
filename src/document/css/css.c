@@ -29,7 +29,8 @@
 struct option_info css_options_info[] = {
 	INIT_OPT_TREE("document", N_("Cascading Style Sheets"),
 		"css", OPT_SORT,
-		N_("Options concerning how to use CSS for styling documents.")),
+		N_("Options concerning how to use CSS for styling "
+		"documents.")),
 
 	INIT_OPT_BOOL("document.css", N_("Enable CSS"),
 		"enable", 0, 1,
@@ -37,16 +38,18 @@ struct option_info css_options_info[] = {
 
 	INIT_OPT_BOOL("document.css", N_("Import external style sheets"),
 		"import", 0, 1,
-		N_("When enabled any external style sheets that are imported from\n"
-		"either CSS itself using the @import keyword or from the HTML using\n"
-		"<link> tags in the document header will also be downloaded.")),
+		N_("When enabled any external style sheets that are imported "
+		"from either CSS itself using the @import keyword or from the "
+		"HTML using <link> tags in the document header will also be "
+		"downloaded.")),
 
 	INIT_OPT_STRING("document.css", N_("Default style sheet"),
 		"stylesheet", 0, "",
-		N_("The path to the file containing the default user defined\n"
-		"Cascading Style Sheet. It can be used to control the basic\n"
-		"layout of HTML documents. The path is assumed to be relative\n"
+		N_("The path to the file containing the default user defined "
+		"Cascading Style Sheet. It can be used to control the basic "
+		"layout of HTML documents. The path is assumed to be relative "
 		"to ELinks' home directory.\n"
+		"\n"
 		"Leave as \"\" to use built-in document styling.")),
 
 	NULL_OPTION_INFO,

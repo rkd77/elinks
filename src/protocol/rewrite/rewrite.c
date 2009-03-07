@@ -43,26 +43,28 @@ enum uri_rewrite_option {
 static struct option_info uri_rewrite_options[] = {
 	INIT_OPT_TREE("protocol", N_("URI rewriting"),
 		"rewrite", OPT_SORT,
-		N_("Rules for rewriting URIs entered in the goto dialog.\n"
-		"It makes it possible to define a set of prefixes that will\n"
-		"be expanded if they match a string entered in the goto dialog.\n"
-		"The prefixes can be dumb, meaning that they work only like\n"
-		"URI abbreviations, or smart ones, making it possible to pass\n"
-		"arguments to them like search engine keywords.")),
+		N_("Rules for rewriting URIs entered in the goto dialog. "
+		"It makes it possible to define a set of prefixes that will "
+		"be expanded if they match a string entered in the goto "
+		"dialog. The prefixes can be dumb, meaning that they work "
+		"only like URI abbreviations, or smart ones, making it "
+		"possible to pass arguments to them like search engine "
+		"keywords.")),
 
 	INIT_OPT_BOOL("protocol.rewrite", N_("Enable dumb prefixes"),
 		"enable-dumb", 0, 1,
-		N_("Enable dumb prefixes - simple URI abbreviations which can\n"
-		"be written to the Goto URL dialog instead of actual URIs - i.e.\n"
-		"if you write 'elinks' there, you are directed to\n"
+		N_("Enable dumb prefixes - simple URI abbreviations which "
+		"can be written to the Goto URL dialog instead of actual URIs "
+		"- i.e. if you write 'elinks' there, you are directed to "
 		"http://elinks.cz/.")),
 
 	INIT_OPT_BOOL("protocol.rewrite", N_("Enable smart prefixes"),
 		"enable-smart", 0, 1,
-		N_("Enable smart prefixes - URI templates triggered by writing\n"
-		"given abbreviation to the Goto URL dialog followed by a list\n"
-		"of arguments from which the actual URI is composed - i.e.\n"
-		"'gg:search keywords' or 'gn search keywords for news'.")),
+		N_("Enable smart prefixes - URI templates triggered by "
+		"writing given abbreviation to the Goto URL dialog followed "
+		"by a list of arguments from which the actual URI is composed "
+		"- i.e. 'gg:search keywords' or 'gn search keywords for "
+		"news'.")),
 
 	INIT_OPT_TREE("protocol.rewrite", N_("Dumb Prefixes"),
 		"dumb", OPT_AUTOCREATE | OPT_SORT,
@@ -77,7 +79,8 @@ static struct option_info uri_rewrite_options[] = {
 
 	INIT_OPT_TREE("protocol.rewrite", N_("Smart Prefixes"),
 		"smart", OPT_AUTOCREATE | OPT_SORT,
-		N_("Smart prefixes, see enable-smart description for details.")),
+		N_("Smart prefixes, see enable-smart description for "
+		"details.")),
 
 	/* TODO: In some rare occations current link URI and referrer might
 	 * also be useful and dare I mention some kind of proxy argument. --jonas */
@@ -93,14 +96,17 @@ static struct option_info uri_rewrite_options[] = {
 	INIT_OPT_STRING("protocol.rewrite", N_("Default template"),
 		"default_template", 0, "",
 		/* xgettext:no-c-format */
-		N_("Default URI template used when the string entered in\n"
-		"the goto dialog does not appear to be a URI or a filename\n"
-		"(i.e. contains no '.', ':' or '/' characters), and does\n"
-		"not match any defined prefixes. Set the value to \"\" to\n"
+		N_("Default URI template used when the string entered in "
+		"the goto dialog does not appear to be a URI or a filename "
+		"(i.e. contains no '.', ':' or '/' characters), and does "
+		"not match any defined prefixes. Set the value to \"\" to "
 		"disable use of the default template rewrite rule.\n"
+		"\n"
 		"%c in the template means the current URL,\n"
-		"%s in the template means the whole string from the goto dialog,\n"
-		"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part of %s,\n"
+		"%s in the template means the whole string from the goto\n"
+		"   dialog,\n"
+		"%0,%1,...,%9 mean the 1st,2nd,...,10th space-delimited part\n"
+		"   of %s,\n"
 		"%% in the template means '%'.")),
 
 #define INIT_OPT_DUMB_PREFIX(prefix, uri) \
