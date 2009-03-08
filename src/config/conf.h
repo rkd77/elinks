@@ -26,4 +26,7 @@ unsigned char *
 create_config_string(unsigned char *prefix, unsigned char *name,
 		     struct option *options);
 
+struct string *wrap_option_desc(struct string *out, const unsigned char *src,
+				const struct string *indent, int maxwidth);
+
 #endif

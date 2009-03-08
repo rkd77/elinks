@@ -791,7 +791,7 @@ add_indent_to_string(struct string *string, int depth)
 	add_xchar_to_string(string, ' ', depth * indentation);
 }
 
-static struct string *
+struct string *
 wrap_option_desc(struct string *out, const unsigned char *src,
 		 const struct string *indent, int maxwidth)
 {

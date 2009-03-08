@@ -419,6 +419,28 @@ version_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 #define gettext_nonempty(x) (*(x) ? gettext(x) : (x))
 
+static void print_option_desc(const unsigned char *desc)
+{
+	struct string wrapped;
+	static const struct string indent = INIT_STRING("            ", 12);
+
+	if (init_string(&wrapped)
+	    && wrap_option_desc(&wrapped, desc, &indent, 79 - indent.length)) {
+		/* struct string could in principle contain null
+		 * characters, so don't use printf() or fputs().  */
+		fwrite(wrapped.source, 1, wrapped.length, stdout);
+	} else {
+		/* Write the error to stderr so it appears on the
+		 * screen even if stdout is being parsed by a script
+		 * that reformats it to HTML or such.  */
+		fprintf(stderr, "%12s%s\n", "",
+			gettext("Out of memory formatting option documentation"));
+	}
+
+	/* done_string() is safe even if init_string() failed.  */
+	done_string(&wrapped);
+}
+
 static void print_full_help_outer(struct option *tree, unsigned char *path);
 
 static void
@@ -537,19 +559,9 @@ print_full_help_inner(struct option *tree, unsigned char *path,
 			}
 		}
 
-		printf("\n    %8s", "");
-		{
-			int l = strlen(desc);
-			int i;
-
-			for (i = 0; i < l; i++) {
-				putchar(desc[i]);
-
-				if (desc[i] == '\n')
-					printf("    %8s", "");
-			}
-		}
-		printf("\n\n");
+		putchar('\n');
+		print_option_desc(desc);
+		putchar('\n');
 
 		if (option->type == OPT_TREE) {
 			memcpy(savedpos, ".", 2);
