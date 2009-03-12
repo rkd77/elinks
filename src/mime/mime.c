@@ -41,8 +41,9 @@ static struct option_info mime_options[] = {
 
 	INIT_OPT_STRING("mime", N_("Default MIME-type"),
 		"default_type", 0, DEFAULT_MIME_TYPE,
-		N_("Document MIME-type to assume by default (when we are unable to\n"
-		"guess it properly from known information about the document).")),
+		N_("Document MIME-type to assume by default "
+		"(when we are unable to guess it properly "
+		"from known information about the document).")),
 
 	NULL_OPTION_INFO,
 };

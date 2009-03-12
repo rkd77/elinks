@@ -63,8 +63,9 @@ struct option_info ftp_options[] = {
 
 	INIT_OPT_STRING("protocol.ftp.proxy", N_("Host and port-number"),
 		"host", 0, "",
-		N_("Host and port-number (host:port) of the FTP proxy, or blank.\n"
-		"If it's blank, FTP_PROXY environment variable is checked as well.")),
+		N_("Host and port-number (host:port) of the FTP proxy, "
+		"or blank. If it's blank, FTP_PROXY environment variable "
+		"is checked as well.")),
 
 	INIT_OPT_STRING("protocol.ftp", N_("Anonymous password"),
 		"anon_passwd", 0, "some@host.domain",
@@ -72,11 +73,13 @@ struct option_info ftp_options[] = {
 
 	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv4)"),
 		"use_pasv", 0, 1,
-		N_("Use PASV instead of PORT (passive vs active mode, IPv4 only).")),
+		N_("Use PASV instead of PORT (passive vs active mode, "
+		"IPv4 only).")),
 #ifdef CONFIG_IPV6
 	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv6)"),
 		"use_epsv", 0, 0,
-		N_("Use EPSV instead of EPRT (passive vs active mode, IPv6 only).")),
+		N_("Use EPSV instead of EPRT (passive vs active mode, "
+		"IPv6 only).")),
 #endif /* CONFIG_IPV6 */
 	NULL_OPTION_INFO,
 };

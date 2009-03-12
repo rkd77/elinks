@@ -861,6 +861,66 @@ add_indent_to_string(struct string *string, int depth)
 	add_xchar_to_string(string, ' ', depth * indentation);
 }
 
+struct string *
+wrap_option_desc(struct string *out, const unsigned char *src,
+		 const struct string *indent, int maxwidth)
+{
+	const unsigned char *last_space = NULL;
+	const unsigned char *uncopied = src;
+	int width = 0;
+
+	/* TODO: multibyte or fullwidth characters */
+	for (; *src; src++, width++) {
+		if (*src == '\n') {
+			last_space = src;
+			goto split;
+		}
+
+		if (*src == ' ') last_space = src;
+
+		if (width >= maxwidth && last_space) {
+split:
+			if (!add_string_to_string(out, indent))
+				return NULL;
+			if (!add_bytes_to_string(out, uncopied,
+						 last_space - uncopied))
+				return NULL;
+			if (!add_char_to_string(out, '\n'))
+				return NULL;
+			uncopied = last_space + 1;
+			width = src - uncopied;
+			last_space = NULL;
+		}
+	}
+	if (*uncopied) {
+		if (!add_string_to_string(out, indent))
+			return NULL;
+		if (!add_to_string(out, uncopied))
+			return NULL;
+		if (!add_char_to_string(out, '\n'))
+			return NULL;
+	}
+	return out;
+}
+
+static void
+output_option_desc_as_comment(struct string *out, const struct option *option,
+			      int i18n, int depth)
+{
+	unsigned char *desc_i18n = conf_i18n(option->desc, i18n);
+	struct string indent;
+
+	if (!init_string(&indent)) return;
+
+	add_indent_to_string(&indent, depth);
+	if (!add_to_string(&indent, "#  ")) goto out_of_memory;
+	if (!wrap_option_desc(out, desc_i18n, &indent, 80 - indent.length))
+		goto out_of_memory;
+
+out_of_memory:
+	done_string(&indent);
+}
+
 static unsigned char *smart_config_output_fn_domain;
 
 static void
@@ -868,8 +928,6 @@ smart_config_output_fn(struct string *string, struct option *option,
 		       unsigned char *path, int depth, int do_print_comment,
 		       int action, int i18n)
 {
-	unsigned char *desc_i18n;
-
 	if (option->type == OPT_ALIAS)
 		return;
 
@@ -896,41 +954,8 @@ smart_config_output_fn(struct string *string, struct option *option,
 			if (!option->desc || !do_print_comment)
 				break;
 
-			desc_i18n = conf_i18n(option->desc, i18n);
-
-			if (!*desc_i18n) break;
-
-			add_indent_to_string(string, depth);
-			add_to_string(string, "#  ");
-			{
-				unsigned char *i = desc_i18n;
-				unsigned char *j = i;
-				unsigned char *last_space = NULL;
-				int config_width = 80;
-				int n = depth * indentation + 3;
-
-				for (; *i; i++, n++) {
-					if (*i == '\n') {
-						last_space = i;
-						goto split;
-					}
-
-					if (*i == ' ') last_space = i;
-
-					if (n >= config_width && last_space) {
-split:
-						add_bytes_to_string(string, j, last_space - j);
-						add_char_to_string(string, '\n');
-						add_indent_to_string(string, depth);
-						add_to_string(string, "#  ");
-						j = last_space + 1;
-						n = depth * indentation + 2 + i - last_space;
-						last_space = NULL;
-					}
-				}
-				add_to_string(string, j);
-			}
-			add_char_to_string(string, '\n');
+			output_option_desc_as_comment(string, option,
+						      i18n, depth);
 			break;
 
 		case 2:

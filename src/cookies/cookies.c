@@ -101,27 +101,29 @@ static struct option_info cookies_options[] = {
 		"max_age", 0, -1, 10000, -1,
 		N_("Cookie maximum age (in days):\n"
 		"-1 is use cookie's expiration date if any\n"
-		"0  is force expiration at the end of session, ignoring cookie's\n"
-		"   expiration date\n"
-		"1+ is use cookie's expiration date, but limit age to the given\n"
-		"   number of days")),
+		"0  is force expiration at the end of session, ignoring\n"
+		"   cookie's expiration date\n"
+		"1+ is use cookie's expiration date, but limit age to the\n"
+		"   given number of days")),
 
 	INIT_OPT_BOOL("cookies", N_("Paranoid security"),
 		"paranoid_security", 0, 0,
-		N_("When enabled, we'll require three dots in cookies domain for all\n"
-		"non-international domains (instead of just two dots). Some countries\n"
-		"have generic second level domains (eg. .com.pl, .co.uk) and allowing\n"
-		"sites to set cookies for these generic domains could potentially be\n"
-		"very bad. Note, it is off by default as it breaks a lot of sites.")),
+		N_("When enabled, we'll require three dots in cookies domain "
+		"for all non-international domains (instead of just two "
+		"dots). Some countries have generic second level domains "
+		"(eg. .com.pl, .co.uk) and allowing sites to set cookies "
+		"for these generic domains could potentially be very bad. "
+		"Note, it is off by default as it breaks a lot of sites.")),
 
 	INIT_OPT_BOOL("cookies", N_("Saving"),
 		"save", 0, 1,
-		N_("Whether cookies should be loaded from and saved to disk.")),
+		N_("Whether cookies should be loaded from and saved to "
+		"disk.")),
 
 	INIT_OPT_BOOL("cookies", N_("Resaving"),
 		"resave", 0, 1,
-		N_("Save cookies after each change in cookies list? No effect when\n"
-		"cookie saving (cookies.save) is off.")),
+		N_("Save cookies after each change in cookies list? "
+		"No effect when cookie saving (cookies.save) is off.")),
 
 	NULL_OPTION_INFO,
 };

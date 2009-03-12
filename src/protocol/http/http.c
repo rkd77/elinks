@@ -80,8 +80,8 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_BOOL("protocol.http.bugs", N_("Do not send Accept-Charset"),
 		"accept_charset", 0, 1,
-		N_("The Accept-Charset header is quite long and sending it can trigger\n"
-		"bugs in some rarely found servers.")),
+		N_("The Accept-Charset header is quite long and sending it "
+		"can trigger bugs in some rarely found servers.")),
 
 	INIT_OPT_BOOL("protocol.http.bugs", N_("Allow blacklisting"),
 		"allow_blacklist", 0, 1,
@@ -89,9 +89,10 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_BOOL("protocol.http.bugs", N_("Broken 302 redirects"),
 		"broken_302_redirect", 0, 1,
-		N_("Broken 302 redirect (violates RFC but compatible with Netscape).\n"
-		"This is a problem for a lot of web discussion boards and the like.\n"
-		"If they will do strange things to you, try to play with this.")),
+		N_("Broken 302 redirect (violates RFC but compatible with "
+		"Netscape). This is a problem for a lot of web discussion "
+		"boards and the like. If they will do strange things to you, "
+		"try to play with this.")),
 
 	INIT_OPT_BOOL("protocol.http.bugs", N_("No keepalive after POST requests"),
 		"post_no_keepalive", 0, 0,
@@ -107,8 +108,9 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_STRING("protocol.http.proxy", N_("Host and port-number"),
 		"host", 0, "",
-		N_("Host and port-number (host:port) of the HTTP proxy, or blank.\n"
-		"If it's blank, HTTP_PROXY environment variable is checked as well.")),
+		N_("Host and port-number (host:port) of the HTTP proxy, "
+		"or blank. If it's blank, HTTP_PROXY environment variable "
+		"is checked as well.")),
 
 	INIT_OPT_STRING("protocol.http.proxy", N_("Username"),
 		"user", 0, "",
@@ -121,12 +123,13 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_TREE("protocol.http", N_("Referer sending"),
 		"referer", 0,
-		N_("HTTP referer sending options. HTTP referer is a special header\n"
-		"sent in the HTTP requests, which is supposed to contain the previous\n"
-		"page visited by the browser. This way, the server can know what link\n"
-		"did you follow when accessing that page. However, this behaviour\n"
-		"can unfortunately considerably affect privacy and can lead even to a\n"
-		"security problem on some badly designed web pages.")),
+		N_("HTTP referer sending options. HTTP referer is a special "
+		"header sent in the HTTP requests, which is supposed to "
+		"contain the previous page visited by the browser."
+		"This way, the server can know what link did you follow "
+		"when accessing that page. However, this behaviour can "
+		"unfortunately considerably affect privacy and can lead even "
+		"to a security problem on some badly designed web pages.")),
 
 	INIT_OPT_INT("protocol.http.referer", N_("Policy"),
 		"policy", 0,
@@ -148,48 +151,54 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_BOOL("protocol.http", N_("Use UI language as Accept-Language"),
 		"accept_ui_language", 0, 1,
-		N_("Request localised versions of documents from web-servers (using the\n"
-		"Accept-Language header) using the language you have configured for\n"
-		"ELinks' user-interface (this also affects navigator.language ECMAScript\n"
-		"value available to scripts). Note that some see this as a potential\n"
-		"security risk because it tells web-masters and the FBI sniffers about\n"
-		"your language preference.")),
+		N_("Request localised versions of documents from web-servers "
+		"(using the Accept-Language header) using the language "
+		"you have configured for ELinks' user-interface (this also "
+		"affects navigator.language ECMAScript value available to "
+		"scripts). Note that some see this as a potential security "
+		"risk because it tells web-masters and the FBI sniffers "
+		"about your language preference.")),
 
 	/* After the compression support has been tested enough,
 	 * we might wrap this option in #if CFG_DEBUG.  */
 	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression"),
 		"compression", 0, 1,
-		N_("If enabled, the capability to receive compressed content\n"
-		"(gzip and/or bzip2) is announced to the server, which\n"
-		"usually sends the reply compressed, thus saving some\n"
+		N_("If enabled, the capability to receive compressed content "
+		"(gzip and/or bzip2) is announced to the server, which "
+		"usually sends the reply compressed, thus saving some "
 		"bandwidth at slight CPU expense.\n"
 		"\n"
-		"If ELinks displays a incomplete page or garbage, try\n"
-		"disabling this option. If that helps, there may be a bug in\n"
+		"If ELinks displays a incomplete page or garbage, try "
+		"disabling this option. If that helps, there may be a bug in "
 		"the decompression part of ELinks. Please report such bugs.\n"
 		"\n"
-		"If ELinks has been compiled without compression support,\n"
-		"this option has no effect. To check the supported features,\n"
+		"If ELinks has been compiled without compression support, "
+		"this option has no effect. To check the supported features, "
 		"see Help -> About.")),
 
 	INIT_OPT_BOOL("protocol.http", N_("Activate HTTP TRACE debugging"),
 		"trace", 0, 0,
-		N_("If active, all HTTP requests are sent with TRACE as their method\n"
-		"rather than GET or POST. This is useful for debugging of both ELinks\n"
-		"and various server-side scripts --- the server only returns the client's\n"
-		"request back to the client verbatim. Note that this type of request may\n"
+		N_("If active, all HTTP requests are sent with TRACE as "
+		"their method rather than GET or POST. This is useful for "
+		"debugging of both ELinks and various server-side scripts "
+		"--- the server only returns the client's request back to "
+		"the client verbatim. Note that this type of request may "
 		"not be enabled on all servers.")),
 
 	/* OSNews.com is supposed to be relying on the textmode token, at least. */
 	INIT_OPT_STRING("protocol.http", N_("User-agent identification"),
 		"user_agent", 0, "ELinks/%v (textmode; %s; %t-%b)",
-		N_("Change the User Agent ID. That means identification string, which\n"
-		"is sent to HTTP server when a document is requested. The 'textmode'\n"
-		"token in the first field is our silent attempt to establish this as\n"
-		"a standard for new textmode user agents, so that the webmasters can\n"
-		"have just a single uniform test for these if they are e.g. pushing\n"
-		"some lite version to them automagically.\n"
-		"Use \" \" if you don't want any User-Agent header to be sent at all.\n"
+		N_("Change the User Agent ID. That means identification "
+		"string, which is sent to HTTP server when a document is "
+		"requested. The 'textmode' token in the first field is our "
+		"silent attempt to establish this as a standard for new "
+		"textmode user agents, so that the webmasters can have "
+		"just a single uniform test for these if they are e.g. "
+		"pushing some lite version to them automagically.\n"
+		"\n"
+		"Use \" \" if you don't want any User-Agent header to be sent "
+		"at all.\n"
+		"\n"
 		"%v in the string means ELinks version,\n"
 		"%s in the string means system identification,\n"
 		"%t in the string means size of the terminal,\n"
@@ -206,8 +215,9 @@ static struct option_info http_options[] = {
 
 	INIT_OPT_STRING("protocol.https.proxy", N_("Host and port-number"),
 	  	"host", 0, "",
-		N_("Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank.\n"
-		"If it's blank, HTTPS_PROXY environment variable is checked as well.")),
+		N_("Host and port-number (host:port) of the HTTPS CONNECT "
+		"proxy, or blank. If it's blank, HTTPS_PROXY environment "
+		"variable is checked as well.")),
 	NULL_OPTION_INFO,
 };
 

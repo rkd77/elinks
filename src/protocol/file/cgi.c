@@ -43,7 +43,8 @@ static struct option_info cgi_options[] = {
 
 	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
 		"path", 0, "",
-		N_("Colon separated list of directories, where CGI scripts are stored.")),
+		N_("Colon separated list of directories, "
+		"where CGI scripts are stored.")),
 
 	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
 		"policy", 0, 0,

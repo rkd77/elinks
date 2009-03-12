@@ -24,33 +24,34 @@
 static struct option_info default_mime_options[] = {
 	INIT_OPT_TREE("mime", N_("MIME type associations"),
 		"type", OPT_AUTOCREATE,
-		N_("Handler <-> MIME type association. The first sub-tree is the MIME\n"
-		"class while the second sub-tree is the MIME type (ie. image/gif\n"
-		"handler will reside at mime.type.image.gif). Each MIME type option\n"
-		"should contain (case-sensitive) name of the MIME handler (its\n"
-		"properties are stored at mime.handler.<name>).")),
+		N_("Handler <-> MIME type association. The first sub-tree is "
+		"the MIME class while the second sub-tree is the MIME type "
+		"(ie. image/gif handler will reside at mime.type.image.gif). "
+		"Each MIME type option should contain (case-sensitive) name "
+		"of the MIME handler (its properties are stored at "
+		"mime.handler.<name>).")),
 
 	INIT_OPT_TREE("mime.type", NULL,
 		"_template_", OPT_AUTOCREATE,
-		N_("Handler matching this MIME-type class ('*' is used here in place\n"
-		"of '.').")),
+		N_("Handler matching this MIME-type class "
+		"('*' is used here in place of '.').")),
 
 	INIT_OPT_STRING("mime.type._template_", NULL,
 		"_template_", 0, "",
-		N_("Handler matching this MIME-type name ('*' is used here in place\n"
-		"of '.').")),
+		N_("Handler matching this MIME-type name "
+		"('*' is used here in place of '.').")),
 
 
 	INIT_OPT_TREE("mime", N_("File type handlers"),
 		"handler", OPT_AUTOCREATE,
-		N_("A file type handler is a set of information about how to use\n"
-		"an external program to view a file. It is possible to refer to it\n"
-		"for several MIME types -- e.g., you can define an 'image' handler\n"
-		"to which mime.type.image.png, mime.type.image.jpeg, and so on will\n"
-		"refer; or one might define a handler for a more specific type of file\n"
-		"-- e.g., PDF files.\n"
-		"Note you must define both a MIME handler and a MIME type association\n"
-		"for it to work.")),
+		N_("A file type handler is a set of information about how to "
+		"use an external program to view a file. It is possible to "
+		"refer to it for several MIME types -- e.g., you can define "
+		"an 'image' handler to which mime.type.image.png, "
+		"mime.type.image.jpeg, and so on will refer; or one might "
+		"define a handler for a more specific type of file -- e.g., "
+		"PDF files. Note you must define both a MIME handler "
+		"and a MIME type association for it to work.")),
 
 	INIT_OPT_TREE("mime.handler", NULL,
 		"_template_", OPT_AUTOCREATE,
@@ -58,7 +59,8 @@ static struct option_info default_mime_options[] = {
 
 	INIT_OPT_TREE("mime.handler._template_", NULL,
 		"_template_", 0,
-		N_("System-specific handler description (ie. unix, unix-xwin, ...).")),
+		N_("System-specific handler description "
+		"(ie. unix, unix-xwin, ...).")),
 
 	INIT_OPT_BOOL("mime.handler._template_._template_", N_("Ask before opening"),
 		"ask", 0, 1,
@@ -71,8 +73,8 @@ static struct option_info default_mime_options[] = {
 	INIT_OPT_STRING("mime.handler._template_._template_", N_("Program"),
 		"program", 0, "",
 		/* xgettext:no-c-format */
-		N_("External viewer for this file type. '%' in this string will be\n"
-		"substituted by a file name.\n"
+		N_("External viewer for this file type. "
+		"'%' in this string will be substituted by a file name. "
 		"Do _not_ put single- or double-quotes around the % sign.")),
 
 
@@ -82,8 +84,8 @@ static struct option_info default_mime_options[] = {
 
 	INIT_OPT_STRING("mime.extension", NULL,
 		"_template_", 0, "",
-		N_("MIME-type matching this file extension ('*' is used here in place\n"
-		"of '.').")),
+		N_("MIME-type matching this file extension "
+		"('*' is used here in place of '.').")),
 
 #define INIT_OPT_MIME_EXTENSION(extension, type) \
 	INIT_OPT_STRING("mime.extension", NULL, extension, 0, type, NULL)

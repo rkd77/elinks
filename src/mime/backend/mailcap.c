@@ -96,7 +96,7 @@ static struct option_info mailcap_options[] = {
 
 	INIT_OPT_STRING("mime.mailcap", N_("Path"),
 		"path", 0, DEFAULT_MAILCAP_PATH,
-		N_("Mailcap search path. Colon-separated list of files.\n"
+		N_("Mailcap search path. Colon-separated list of files. "
 		"Leave as \"\" to use MAILCAP environment variable instead.")),
 
 	INIT_OPT_BOOL("mime.mailcap", N_("Ask before opening"),
@@ -105,17 +105,19 @@ static struct option_info mailcap_options[] = {
 
 	INIT_OPT_INT("mime.mailcap", N_("Type query string"),
 		"description", 0, 0, 2, 0,
-		N_("Type of description to show in \"what to do with this file\"\n"
-		"query dialog:\n"
+		N_("Type of description to show in \"what to do with "
+		"this file\" query dialog:\n"
 		"0 is show \"mailcap\"\n"
 		"1 is show program to be run\n"
-		"2 is show mailcap description field if any; \"mailcap\" otherwise")),
+		"2 is show mailcap description field if any;\n"
+		"     \"mailcap\" otherwise")),
 
 	INIT_OPT_BOOL("mime.mailcap", N_("Prioritize entries by file"),
 		"prioritize", 0, 1,
-		N_("Prioritize entries by the order of the files in the mailcap\n"
-		"path. This means that wildcard entries (like: image/*) will\n"
-		"also be checked before deciding the handler.")),
+		N_("Prioritize entries by the order of the files in "
+		"the mailcap path. This means that wildcard entries "
+		"(like: image/*) will also be checked before deciding "
+		"the handler.")),
 
 	NULL_OPTION_INFO,
 };

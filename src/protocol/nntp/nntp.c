@@ -35,13 +35,14 @@ static struct option_info nntp_protocol_options[] = {
 
 	INIT_OPT_STRING("protocol.nntp", N_("Default news server"),
 		"server", 0, "",
-		N_("Used when resolving news: URIs. If set to the empty string\n"
-		"the value of the NNTPSERVER environment variable will be used.")),
+		N_("Used when resolving news: URIs. "
+		"If set to the empty string the value of the NNTPSERVER "
+		"environment variable will be used.")),
 
 	INIT_OPT_STRING("protocol.nntp", N_("Message header entries"),
 		"header_entries", 0, NNTP_HEADER_ENTRIES,
-		N_("Comma separated list of which entries in the article header\n"
-		"to show. E.g. 'Subject' and 'From'.\n"
+		N_("Comma separated list of which entries in the article "
+		"header to show. E.g. 'Subject' and 'From'. "
 		"All header entries can be read in the header info dialog.")),
 
 	NULL_OPTION_INFO,
