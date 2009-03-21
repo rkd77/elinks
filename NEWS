@@ -9,7 +9,8 @@ ELinks 0.12pre2.GIT now:
 ------------------------
 
 To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.5.GIT'' below.
+includes the changes listed under ``ELinks 0.11.6'' below, except the
+fix for bug 1047.
 
 Incompatibilities:
 
@@ -266,10 +267,10 @@ Changes in the experimental SGML/DOM implementation:
 * enhancement: incremental parsing
 * and more.
 
-ELinks 0.11.5.GIT now:
-----------------------
+ELinks 0.11.6:
+--------------
 
-To be released as 0.11.6.
+Released on 2009-03-21.
 
 * critical: fix double-free crash if EOF immediately follows </MAP>
 * critical bug 1053: fix crash if a download finishes after ELinks has
@@ -279,6 +280,8 @@ To be released as 0.11.6.
   Turkish locale
 * minor: clicking a link with the mouse activates that link, rather
   than the one selected with move-cursor-* actions
+* build bug 1047: attempt to make inline functions satisfy C99 6.7.4p3
+  so that ELinks can be built on OpenSolaris
 
 ELinks 0.11.5:
 --------------
