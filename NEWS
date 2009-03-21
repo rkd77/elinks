@@ -8,6 +8,8 @@ file for details.
 ELinks 0.11.6:
 --------------
 
+Released on 2009-03-21.
+
 * critical: fix double-free crash if EOF immediately follows </MAP>
 * critical bug 1053: fix crash if a download finishes after ELinks has
   closed the terminal from which the download was started
