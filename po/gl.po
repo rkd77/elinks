@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 23:48+0300\n"
+"POT-Creation-Date: 2009-03-21 14:27+0200\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Alberto García <berto@gpul.org>\n"
 "Language-Team: Galician <gpul-traduccion@ceu.fi.udc.es>\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1602
+#: src/session/session.c:794 src/viewer/text/search.c:1602
 #, fuzzy
 msgid "~OK"
 msgstr "Aceptar"
@@ -169,7 +169,7 @@ msgstr "Non se permite unha cadea baleira"
 #: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
-#: src/session/download.c:544 src/session/download.c:1128
+#: src/session/download.c:570 src/session/download.c:1154
 #: src/viewer/text/search.c:1603
 #, fuzzy
 msgid "~Cancel"
@@ -1765,7 +1765,7 @@ msgstr ""
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/session/session.c:956 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Erro"
@@ -1800,7 +1800,7 @@ msgstr ""
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:425
 #: src/dialogs/options.c:219 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1112
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1138
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Gardar"
@@ -1872,32 +1872,32 @@ msgid ""
 "directory."
 msgstr ""
 
-#: src/config/kbdbind.c:220
+#: src/config/kbdbind.c:221
 msgid "Main mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:221
+#: src/config/kbdbind.c:222
 msgid "Edit mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:222
+#: src/config/kbdbind.c:223
 msgid "Menu mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:555
+#: src/config/kbdbind.c:556
 msgid "Unrecognised keymap"
 msgstr ""
 
-#: src/config/kbdbind.c:558
+#: src/config/kbdbind.c:559
 #, fuzzy
 msgid "Error parsing keystroke"
 msgstr "Erro escribindo nun socket"
 
-#: src/config/kbdbind.c:562
+#: src/config/kbdbind.c:563
 msgid "Unrecognised action (internal error)"
 msgstr ""
 
-#: src/config/kbdbind.c:578
+#: src/config/kbdbind.c:579
 #, fuzzy
 msgid "Error registering event"
 msgstr "Erro escribindo nun socket"
@@ -4313,7 +4313,7 @@ msgid "No header info."
 msgstr ""
 
 #: src/dialogs/download.c:237 src/dialogs/menu.c:571
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:362
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:388
 msgid "Download"
 msgstr "Descargar"
 
@@ -6633,7 +6633,7 @@ msgstr "~Ficheiro"
 msgid "Comment"
 msgstr "documentos"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:363
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:389
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
@@ -6816,7 +6816,7 @@ msgstr ""
 msgid "Information about the torrent"
 msgstr "Descargar ~imaxe"
 
-#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1017
+#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1043
 msgid "What to do?"
 msgstr "¿Qué fago?"
 
@@ -6825,12 +6825,12 @@ msgstr "¿Qué fago?"
 msgid "Down~load"
 msgstr "Descargar"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1118
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1144
 #, fuzzy
 msgid "~Display"
 msgstr "Mostrar"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1122
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1148
 msgid "Show ~header"
 msgstr ""
 
@@ -7444,19 +7444,19 @@ msgstr ""
 msgid "Scripting"
 msgstr ""
 
-#: src/session/download.c:234 src/session/download.c:331
-#: src/session/download.c:498 src/session/download.c:590
+#: src/session/download.c:257 src/session/download.c:357
+#: src/session/download.c:524 src/session/download.c:616
 msgid "Download error"
 msgstr "Erro de descarga"
 
-#: src/session/download.c:235 src/session/download.c:591
+#: src/session/download.c:258 src/session/download.c:617
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
 msgstr "Non se puido crear o ficheiro"
 
-#: src/session/download.c:332
+#: src/session/download.c:358
 #, fuzzy, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -7464,17 +7464,17 @@ msgid ""
 "%s"
 msgstr "Erro descargando"
 
-#: src/session/download.c:499
+#: src/session/download.c:525
 #, c-format
 msgid "'%s' is a directory."
 msgstr ""
 
-#: src/session/download.c:533
+#: src/session/download.c:559
 #, fuzzy
 msgid "File exists"
 msgstr "~Extensións de ficheiros"
 
-#: src/session/download.c:534
+#: src/session/download.c:560
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -7484,48 +7484,48 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/session/download.c:541
+#: src/session/download.c:567
 msgid "Sa~ve under the alternative name"
 msgstr ""
 
-#: src/session/download.c:542
+#: src/session/download.c:568
 msgid "~Overwrite the original file"
 msgstr ""
 
-#: src/session/download.c:543
+#: src/session/download.c:569
 msgid "~Resume download of the original file"
 msgstr ""
 
-#: src/session/download.c:1020
+#: src/session/download.c:1046
 msgid "Unknown type"
 msgstr "Tipo descoñecido"
 
-#: src/session/download.c:1040
+#: src/session/download.c:1066
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.c:1043
+#: src/session/download.c:1069
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr ""
 
-#: src/session/download.c:1074
+#: src/session/download.c:1100
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr ""
 
-#: src/session/download.c:1078
+#: src/session/download.c:1104
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Terminal de ~BeOS"
 
-#: src/session/download.c:1084
+#: src/session/download.c:1110
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
-#: src/session/download.c:1105
+#: src/session/download.c:1131
 #, fuzzy
 msgid "~Open"
 msgstr "Abrir"
@@ -7534,12 +7534,12 @@ msgstr "Abrir"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/session/session.c:744 src/session/session.c:763 src/session/task.c:269
 #: src/viewer/text/textarea.c:389
 msgid "Warning"
 msgstr "Aviso"
 
-#: src/session/session.c:743
+#: src/session/session.c:745
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -7550,7 +7550,7 @@ msgid ""
 "will be used. Apologies for any inconvience caused."
 msgstr ""
 
-#: src/session/session.c:762
+#: src/session/session.c:764
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -7563,11 +7563,11 @@ msgid ""
 "caused."
 msgstr ""
 
-#: src/session/session.c:787
+#: src/session/session.c:789
 msgid "Welcome"
 msgstr "Benvido"
 
-#: src/session/session.c:788
+#: src/session/session.c:790
 #, fuzzy
 msgid ""
 "Welcome to ELinks!\n"
@@ -7951,11 +7951,11 @@ msgstr "Ir a ligazón"
 msgid "Enter link number"
 msgstr "Introduce nº de ligazón"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Save error"
 msgstr "Erro ó gardar"
 
-#: src/viewer/text/view.c:1289
+#: src/viewer/text/view.c:1290
 msgid "Error writing to file"
 msgstr "Erro escribindo a ficheiro"
 

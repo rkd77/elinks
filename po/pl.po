@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 23:48+0300\n"
+"POT-Creation-Date: 2009-03-21 14:27+0200\n"
 "PO-Revision-Date: 2008-03-04 15:20+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -41,7 +41,7 @@ msgstr "Wci¶nij spacjê by rozwin±æ ten folder."
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1602
+#: src/session/session.c:794 src/viewer/text/search.c:1602
 msgid "~OK"
 msgstr "~OK"
 
@@ -170,7 +170,7 @@ msgstr "Musisz wpisaæ jakie¶ wyra¿enie"
 #: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
-#: src/session/download.c:544 src/session/download.c:1128
+#: src/session/download.c:570 src/session/download.c:1154
 #: src/viewer/text/search.c:1603
 msgid "~Cancel"
 msgstr "~Anuluj"
@@ -1803,7 +1803,7 @@ msgstr "Opis"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/session/session.c:956 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "B³±d"
@@ -1842,7 +1842,7 @@ msgstr "Nie mo¿na dodaæ tu opcji."
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:425
 #: src/dialogs/options.c:219 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1112
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1138
 msgid "Sa~ve"
 msgstr "~Zapisz"
 
@@ -1918,31 +1918,31 @@ msgstr ""
 "czy zmienna $HOME jest ustawiona poprawnie i czy masz prawo zapisu do "
 "katalogu domowego."
 
-#: src/config/kbdbind.c:220
+#: src/config/kbdbind.c:221
 msgid "Main mapping"
 msgstr "G³ówna mapa klawiszy"
 
-#: src/config/kbdbind.c:221
+#: src/config/kbdbind.c:222
 msgid "Edit mapping"
 msgstr "Mapa klawiszy edycji"
 
-#: src/config/kbdbind.c:222
+#: src/config/kbdbind.c:223
 msgid "Menu mapping"
 msgstr "Mapa klawiszy menu"
 
-#: src/config/kbdbind.c:555
+#: src/config/kbdbind.c:556
 msgid "Unrecognised keymap"
 msgstr "Nierozpoznana mapa klawiszy"
 
-#: src/config/kbdbind.c:558
+#: src/config/kbdbind.c:559
 msgid "Error parsing keystroke"
 msgstr "B³±d przy odczytywaniu kombinacji klawiszy"
 
-#: src/config/kbdbind.c:562
+#: src/config/kbdbind.c:563
 msgid "Unrecognised action (internal error)"
 msgstr "Nierozpoznana akcja (b³±d wewnêtrzny)"
 
-#: src/config/kbdbind.c:578
+#: src/config/kbdbind.c:579
 msgid "Error registering event"
 msgstr "B³±d przy rejestrowaniu zdarzenia"
 
@@ -4700,7 +4700,7 @@ msgid "No header info."
 msgstr "Brak nag³ówka."
 
 #: src/dialogs/download.c:237 src/dialogs/menu.c:571
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:362
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:388
 msgid "Download"
 msgstr "Pobieranie"
 
@@ -7116,7 +7116,7 @@ msgstr "Pliki"
 msgid "Comment"
 msgstr "Komentarz"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:363
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:389
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7304,7 +7304,7 @@ msgstr "Co chcesz zrobiæ z plikiem '%s'?"
 msgid "Information about the torrent"
 msgstr "Informacje o potoku"
 
-#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1017
+#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1043
 msgid "What to do?"
 msgstr "Co mam zrobiæ?"
 
@@ -7312,11 +7312,11 @@ msgstr "Co mam zrobiæ?"
 msgid "Down~load"
 msgstr "~Pobierz"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1118
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1144
 msgid "~Display"
 msgstr "~Wy¶wietl"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1122
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1148
 msgid "Show ~header"
 msgstr "Poka¿ ~nag³ówek"
 
@@ -8046,12 +8046,12 @@ msgstr "B³±d skryptów przegl±darki"
 msgid "Scripting"
 msgstr "Skryptowanie"
 
-#: src/session/download.c:234 src/session/download.c:331
-#: src/session/download.c:498 src/session/download.c:590
+#: src/session/download.c:257 src/session/download.c:357
+#: src/session/download.c:524 src/session/download.c:616
 msgid "Download error"
 msgstr "B³±d pobierania"
 
-#: src/session/download.c:235 src/session/download.c:591
+#: src/session/download.c:258 src/session/download.c:617
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8060,7 +8060,7 @@ msgstr ""
 "Nie mo¿na utworzyæ pliku '%s':\n"
 "%s"
 
-#: src/session/download.c:332
+#: src/session/download.c:358
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8071,17 +8071,17 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:499
+#: src/session/download.c:525
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' to katalog."
 
 #
-#: src/session/download.c:533
+#: src/session/download.c:559
 msgid "File exists"
 msgstr "Plik istnieje"
 
-#: src/session/download.c:534
+#: src/session/download.c:560
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8096,48 +8096,48 @@ msgstr ""
 "Alternatywna nazwa pliku:\n"
 "%s"
 
-#: src/session/download.c:541
+#: src/session/download.c:567
 msgid "Sa~ve under the alternative name"
 msgstr "Zap~isz pod alternatywn± nazw±"
 
-#: src/session/download.c:542
+#: src/session/download.c:568
 msgid "~Overwrite the original file"
 msgstr "Nadpisz ~oryginalny plik"
 
-#: src/session/download.c:543
+#: src/session/download.c:569
 msgid "~Resume download of the original file"
 msgstr "Wznów pobie~ranie oryginalnego pliku"
 
-#: src/session/download.c:1020
+#: src/session/download.c:1046
 msgid "Unknown type"
 msgstr "Nieznany typ"
 
-#: src/session/download.c:1040
+#: src/session/download.c:1066
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Co chcesz zrobiæ z plikiem '%s' (typu %s%s%s)?"
 
-#: src/session/download.c:1043
+#: src/session/download.c:1069
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Co chcesz zrobiæ z plikiem (typu %s%s%s)?"
 
-#: src/session/download.c:1074
+#: src/session/download.c:1100
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Program ('%' zostanie zast±pione nazw± pliku)"
 
 #
-#: src/session/download.c:1078
+#: src/session/download.c:1104
 msgid "Block the terminal"
 msgstr "Blokowanie terminala"
 
-#: src/session/download.c:1084
+#: src/session/download.c:1110
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Plik zostanie otwarty przy u¿yciu programu '%s'."
 
-#: src/session/download.c:1105
+#: src/session/download.c:1131
 msgid "~Open"
 msgstr "~Otwórz"
 
@@ -8145,12 +8145,12 @@ msgstr "~Otwórz"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/session/session.c:744 src/session/session.c:763 src/session/task.c:269
 #: src/viewer/text/textarea.c:389
 msgid "Warning"
 msgstr "Ostrze¿enie"
 
-#: src/session/session.c:743
+#: src/session/session.c:745
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -8168,7 +8168,7 @@ msgstr ""
 "co mi chodzi, po prostu to zrób), tak ¿e domy¶lne ustawienie bêdzie u¿ywane. "
 "Przepraszamy za wszelkie niedogodno¶ci."
 
-#: src/session/session.c:762
+#: src/session/session.c:764
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8190,11 +8190,11 @@ msgstr ""
 "saving_style na 3, by uzyskaæ \"w³a¶ciwe\" zachowanie. Przepraszamy za "
 "wszelkie niedogodno¶ci."
 
-#: src/session/session.c:787
+#: src/session/session.c:789
 msgid "Welcome"
 msgstr "Powitanie"
 
-#: src/session/session.c:788
+#: src/session/session.c:790
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8581,11 +8581,11 @@ msgstr "Przejd¼ do odno¶nika"
 msgid "Enter link number"
 msgstr "Wprowad¼ numer odno¶nika"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Save error"
 msgstr "B³±d zapisu"
 
-#: src/viewer/text/view.c:1289
+#: src/viewer/text/view.c:1290
 msgid "Error writing to file"
 msgstr "B³±d zapisu do pliku"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 23:48+0300\n"
+"POT-Creation-Date: 2009-03-21 14:27+0200\n"
 "PO-Revision-Date: 2005-01-04 00:42+0100\n"
 "Last-Translator: Petr Baudis <pasky@ucw.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.souceforge.net>\n"
@@ -34,7 +34,7 @@ msgstr "Zmáèkni mezeru, jestli chce¹ tuhle slo¾ku rozbalit."
 #: src/dialogs/options.c:217 src/dialogs/options.c:297 src/mime/dialogs.c:132
 #: src/protocol/auth/dialogs.c:111 src/protocol/protocol.c:233
 #: src/scripting/lua/core.c:385 src/scripting/lua/core.c:465
-#: src/session/session.c:792 src/viewer/text/search.c:1602
+#: src/session/session.c:794 src/viewer/text/search.c:1602
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -166,7 +166,7 @@ msgstr "Napi¹ tam nìco"
 #: src/dialogs/options.c:298 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:112 src/protocol/bittorrent/dialogs.c:801
 #: src/scripting/lua/core.c:386 src/scripting/lua/core.c:466
-#: src/session/download.c:544 src/session/download.c:1128
+#: src/session/download.c:570 src/session/download.c:1154
 #: src/viewer/text/search.c:1603
 #, fuzzy
 msgid "~Cancel"
@@ -1754,7 +1754,7 @@ msgstr "Popis"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:954 src/viewer/text/textarea.c:331
+#: src/session/session.c:956 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Chyba"
@@ -1791,7 +1791,7 @@ msgstr "Do této slo¾ky nemù¾u pøidat novou volbu."
 
 #: src/config/dialogs.c:531 src/config/dialogs.c:943 src/cookies/dialogs.c:425
 #: src/dialogs/options.c:219 src/formhist/dialogs.c:213
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1112
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1138
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Ulo¾it"
@@ -1870,31 +1870,31 @@ msgstr ""
 "zkontrolujte, jestli máte promìnnou $HOME správnì nastavenou a jestli máte "
 "povolení k zápisu do va¹eho domovského adresáøe."
 
-#: src/config/kbdbind.c:220
+#: src/config/kbdbind.c:221
 msgid "Main mapping"
 msgstr "Hlavní mapa"
 
-#: src/config/kbdbind.c:221
+#: src/config/kbdbind.c:222
 msgid "Edit mapping"
 msgstr "Editaèní mapa"
 
-#: src/config/kbdbind.c:222
+#: src/config/kbdbind.c:223
 msgid "Menu mapping"
 msgstr "Meòátka"
 
-#: src/config/kbdbind.c:555
+#: src/config/kbdbind.c:556
 msgid "Unrecognised keymap"
 msgstr "Neznámá mapa kláves"
 
-#: src/config/kbdbind.c:558
+#: src/config/kbdbind.c:559
 msgid "Error parsing keystroke"
 msgstr "Chyba pøi ètení kombinace kláves"
 
-#: src/config/kbdbind.c:562
+#: src/config/kbdbind.c:563
 msgid "Unrecognised action (internal error)"
 msgstr "Neznámá akce (vnitøní chyba)"
 
-#: src/config/kbdbind.c:578
+#: src/config/kbdbind.c:579
 #, fuzzy
 msgid "Error registering event"
 msgstr "Chyba pøi zapisování do socketu"
@@ -4502,7 +4502,7 @@ msgid "No header info."
 msgstr "Nedostal jsem ¾ádnou hlavièku."
 
 #: src/dialogs/download.c:237 src/dialogs/menu.c:571
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:362
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:388
 msgid "Download"
 msgstr "Stahování"
 
@@ -6812,7 +6812,7 @@ msgstr "Soubory:"
 msgid "Comment"
 msgstr "Komentáøe"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:363
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:389
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7000,7 +7000,7 @@ msgstr "Chtìl bys zobrazit soubor '%s' (typ: %s)?"
 msgid "Information about the torrent"
 msgstr "Zobrazení informací o souèasné stránce"
 
-#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1017
+#: src/protocol/bittorrent/dialogs.c:763 src/session/download.c:1043
 msgid "What to do?"
 msgstr "Co mám podle tebe dìlat?"
 
@@ -7009,12 +7009,12 @@ msgstr "Co mám podle tebe dìlat?"
 msgid "Down~load"
 msgstr "Stahování"
 
-#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1118
+#: src/protocol/bittorrent/dialogs.c:791 src/session/download.c:1144
 #, fuzzy
 msgid "~Display"
 msgstr "Zobrazit"
 
-#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1122
+#: src/protocol/bittorrent/dialogs.c:795 src/session/download.c:1148
 #, fuzzy
 msgid "Show ~header"
 msgstr "Zobrazit hlavièku"
@@ -7710,12 +7710,12 @@ msgstr ""
 msgid "Scripting"
 msgstr "Skriptování"
 
-#: src/session/download.c:234 src/session/download.c:331
-#: src/session/download.c:498 src/session/download.c:590
+#: src/session/download.c:257 src/session/download.c:357
+#: src/session/download.c:524 src/session/download.c:616
 msgid "Download error"
 msgstr "Chyba pøi downloadu"
 
-#: src/session/download.c:235 src/session/download.c:591
+#: src/session/download.c:258 src/session/download.c:617
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -7724,7 +7724,7 @@ msgstr ""
 "U¾ zase nemù¾u vytvoøit soubor '%s':\n"
 "%s"
 
-#: src/session/download.c:332
+#: src/session/download.c:358
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -7735,16 +7735,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:499
+#: src/session/download.c:525
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' je adresáø."
 
-#: src/session/download.c:533
+#: src/session/download.c:559
 msgid "File exists"
 msgstr "Soubor existuje"
 
-#: src/session/download.c:534
+#: src/session/download.c:560
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -7759,51 +7759,51 @@ msgstr ""
 "Náhradní jméno souboru je:\n"
 "%s"
 
-#: src/session/download.c:541
+#: src/session/download.c:567
 #, fuzzy
 msgid "Sa~ve under the alternative name"
 msgstr "Ulo¾it pod náhradním jménem"
 
-#: src/session/download.c:542
+#: src/session/download.c:568
 #, fuzzy
 msgid "~Overwrite the original file"
 msgstr "Pøepsat pùvodní soubor"
 
-#: src/session/download.c:543
+#: src/session/download.c:569
 #, fuzzy
 msgid "~Resume download of the original file"
 msgstr "Obnovit stahování pùvodního souboru"
 
-#: src/session/download.c:1020
+#: src/session/download.c:1046
 msgid "Unknown type"
 msgstr "Neznámý typ"
 
-#: src/session/download.c:1040
+#: src/session/download.c:1066
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Chtìl bys zobrazit soubor '%s' (typ: %s)?"
 
-#: src/session/download.c:1043
+#: src/session/download.c:1069
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Chtìl bys zobrazit soubor '%s' (typ: %s)?"
 
-#: src/session/download.c:1074
+#: src/session/download.c:1100
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr ""
 
-#: src/session/download.c:1078
+#: src/session/download.c:1104
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Zablokovat terminál"
 
-#: src/session/download.c:1084
+#: src/session/download.c:1110
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
-#: src/session/download.c:1105
+#: src/session/download.c:1131
 #, fuzzy
 msgid "~Open"
 msgstr "Otevøít"
@@ -7812,12 +7812,12 @@ msgstr "Otevøít"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:742 src/session/session.c:761 src/session/task.c:269
+#: src/session/session.c:744 src/session/session.c:763 src/session/task.c:269
 #: src/viewer/text/textarea.c:389
 msgid "Warning"
 msgstr "Upozornìní"
 
-#: src/session/session.c:743
+#: src/session/session.c:745
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -7837,7 +7837,7 @@ msgstr ""
 "prostì udìlej tohle), abych mohl pou¾ít správné implicitní nastavení. "
 "Omlouvám se za zpùsobené nepøíjemnosti."
 
-#: src/session/session.c:762
+#: src/session/session.c:764
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -7860,11 +7860,11 @@ msgstr ""
 "pøe¹el na \"správný\" zpùsob chování. Omlouváme se za zpùsobené "
 "nepøíjemnosti."
 
-#: src/session/session.c:787
+#: src/session/session.c:789
 msgid "Welcome"
 msgstr "Vítej"
 
-#: src/session/session.c:788
+#: src/session/session.c:790
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8242,11 +8242,11 @@ msgstr "Bì¾ na link"
 msgid "Enter link number"
 msgstr "Zadej èíslo linku"
 
-#: src/viewer/text/view.c:1288
+#: src/viewer/text/view.c:1289
 msgid "Save error"
 msgstr "Chyba pøi ukládání"
 
-#: src/viewer/text/view.c:1289
+#: src/viewer/text/view.c:1290
 msgid "Error writing to file"
 msgstr "Chyba pøi zápisu do souboru"
 
