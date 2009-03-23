@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2009-03-18 08:38+0200\n"
-"PO-Revision-Date: 2009-03-18 10:12+0200\n"
+"PO-Revision-Date: 2009-03-24 00:31+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -203,7 +203,7 @@ msgstr "Digitaalikello tilapalkissa."
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:81
 msgid "Enable"
-msgstr ""
+msgstr "Ota k‰yttˆˆn"
 
 #: src/bfu/leds.c:79
 msgid "Whether to display a digital clock in the status bar."
@@ -880,7 +880,7 @@ msgstr "Avaa lomakehistorian hallinta"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
-msgstr ""
+msgstr "Anna nykyisen kehyksen URI ulkoiselle komennolle"
 
 #: src/config/actions-main.inc:29
 msgid "Maximize the current frame"
@@ -1294,7 +1294,7 @@ msgstr ""
 #: src/config/cmdline.c:114
 #, c-format
 msgid "Unknown option %s"
-msgstr ""
+msgstr "Tuntematon valitsin %s"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1303,7 +1303,7 @@ msgstr ""
 
 #: src/config/cmdline.c:158
 msgid "Too many parameters"
-msgstr ""
+msgstr "Liikaa parametreja"
 
 #: src/config/cmdline.c:163
 msgid "error"
@@ -1326,7 +1326,7 @@ msgstr "Muisti loppu"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
-msgstr ""
+msgstr "Liikaa argumentteja"
 
 #: src/config/cmdline.c:282
 msgid "Mismatched ending argument quoting"
@@ -1346,7 +1346,7 @@ msgstr ""
 
 #: src/config/cmdline.c:474
 msgid "Template option folder"
-msgstr ""
+msgstr "Malliasetuskansio"
 
 #: src/config/cmdline.c:497
 #, c-format
@@ -3435,6 +3435,19 @@ msgid ""
 "3 is 256 color mode, uses XTerm RGB codes\n"
 "4 is true color mode, uses konsole RGB codes"
 msgstr ""
+"V‰ritila m‰‰r‰‰, mit‰ v‰rej‰ ELinks k‰ytt‰‰ ja miten se v‰litt‰‰ ne "
+"p‰‰tteeseen.\n"
+"\n"
+"Jotkin tilat on voitu poistaa k‰ytˆst‰ k‰‰nnˆsaikana. Asetukset -> "
+"P‰‰teasetukset -ikkuna n‰ytt‰‰, mit‰ tiloja t‰m‰ ELinksin versio tukee. Jos "
+"valitset tilan, jota ELinks ei tue, niin ELinks k‰ytt‰‰ 16 v‰ri‰.\n"
+"\n"
+"V‰ritilat ovat:\n"
+"0 on mustavalkotila, k‰ytt‰‰ vain 2 v‰ri‰\n"
+"1 on 16-v‰ritila, k‰ytt‰‰ yleisi‰ ANSI-v‰rej‰\n"
+"2 on 88-v‰ritila, k‰ytt‰‰ XTermin RGB-koodeja\n"
+"3 on 256-v‰ritila, k‰ytt‰‰ XTermin RGB-koodeja\n"
+"4 on t‰ysv‰ritila, k‰ytt‰‰ konsolen RGB-koodeja"
 
 #: src/config/options.inc:963 src/dialogs/options.c:230
 msgid "Transparency"
@@ -3471,7 +3484,7 @@ msgstr "K‰yttˆliittym‰n asetukset."
 
 #: src/config/options.inc:996
 msgid "Color settings"
-msgstr ""
+msgstr "V‰riasetukset"
 
 #: src/config/options.inc:998
 msgid "Default user interface color settings."
@@ -3496,11 +3509,11 @@ msgstr ""
 #. FIXME: obsolete, how to alias them correctly ? --Zas
 #: src/config/options.inc:1034
 msgid "Main menu bar"
-msgstr ""
+msgstr "P‰‰valikkopalkki"
 
 #: src/config/options.inc:1036
 msgid "Main menu bar colors."
-msgstr ""
+msgstr "P‰‰valikkopalkin v‰rit."
 
 #: src/config/options.inc:1038
 msgid "Unselected main menu bar item"
@@ -3520,11 +3533,11 @@ msgstr ""
 
 #: src/config/options.inc:1046 src/config/options.inc:1075
 msgid "Hotkey"
-msgstr ""
+msgstr "Pikan‰pp‰in"
 
 #: src/config/options.inc:1048
 msgid "Main menu hotkey colors."
-msgstr ""
+msgstr "P‰‰valikon pikan‰pp‰inten v‰rit."
 
 #: src/config/options.inc:1050 src/config/options.inc:1079
 msgid "Unselected hotkey"
@@ -3970,7 +3983,7 @@ msgstr ""
 
 #: src/config/options.inc:1318
 msgid "Confirm tab closing"
-msgstr ""
+msgstr "Varmista v‰lilehden sulkeminen"
 
 #: src/config/options.inc:1320
 msgid "When closing a tab show confirmation dialog."
@@ -3979,7 +3992,7 @@ msgstr ""
 #. OPT_LANGUAGE
 #: src/config/options.inc:1324 src/config/opttypes.c:483
 msgid "Language"
-msgstr ""
+msgstr "Kieli"
 
 #: src/config/options.inc:1326
 msgid ""
@@ -4005,7 +4018,7 @@ msgstr ""
 
 #: src/config/options.inc:1338
 msgid "Display title bar"
-msgstr ""
+msgstr "N‰yt‰ otsikkopalkki"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4041,7 +4054,7 @@ msgstr ""
 
 #: src/config/options.inc:1359
 msgid "Keep session active"
-msgstr ""
+msgstr "J‰t‰ istunto aktiiviseksi"
 
 #: src/config/options.inc:1361
 msgid "Keep the session active even if the last terminal exits."
@@ -4049,7 +4062,7 @@ msgstr ""
 
 #: src/config/options.inc:1364
 msgid "Auto save session"
-msgstr ""
+msgstr "Tallenna istunto automaattisesti"
 
 #: src/config/options.inc:1366
 msgid ""
@@ -4060,7 +4073,7 @@ msgstr ""
 
 #: src/config/options.inc:1370
 msgid "Auto restore session"
-msgstr ""
+msgstr "Palauta istunto automaattisesti"
 
 #: src/config/options.inc:1372
 msgid ""
@@ -4071,7 +4084,7 @@ msgstr ""
 
 #: src/config/options.inc:1376
 msgid "Auto save and restore session folder name"
-msgstr ""
+msgstr "Kansion nimi istunnon automaattiselle tallennukselle ja palautukselle"
 
 #: src/config/options.inc:1378
 msgid ""
@@ -4102,7 +4115,7 @@ msgstr ""
 
 #: src/config/options.inc:1397
 msgid "Set window title"
-msgstr ""
+msgstr "Aseta ikkunan otsikko"
 
 #: src/config/options.inc:1399
 msgid ""
@@ -4127,7 +4140,7 @@ msgstr ""
 #. OPT_INT
 #: src/config/opttypes.c:474
 msgid "Integer"
-msgstr ""
+msgstr "Kokonaisluku"
 
 #: src/config/opttypes.c:474 src/config/opttypes.c:476
 msgid "<num>"
@@ -4141,7 +4154,7 @@ msgstr ""
 #. OPT_STRING
 #: src/config/opttypes.c:478
 msgid "String"
-msgstr ""
+msgstr "Merkkijono"
 
 #: src/config/opttypes.c:478
 msgid "<str>"
@@ -4262,7 +4275,7 @@ msgstr "Ev‰steit‰ ei voi tallentaa"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
-msgstr ""
+msgstr "ELinks k‰ynnistettiin ilman kotihakemistoa."
 
 #: src/cookies/cookies.c:836
 msgid "ELinks was started with the -anonymous option."
@@ -4772,7 +4785,7 @@ msgstr "Edell~inen v‰lilehti"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 msgid "~Close tab"
-msgstr "~Sulje v‰lilehti"
+msgstr "Sul~je v‰lilehti"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4827,9 +4840,8 @@ msgstr "Tallenna ~nimell‰"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
-#, fuzzy
 msgid "Save UR~L as"
-msgstr "Tallenna ~URL nimell‰"
+msgstr "Tallenna UR~L nimell‰"
 
 # Toisaalla on "Re-render the current page".
 #. accelerator_context(src/dialogs/menu.c:file_menu)
@@ -4882,7 +4894,7 @@ msgstr "Etsi takaisin~p‰in"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Etsi seur~aava"
+msgstr "Etsi ~seuraava"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
@@ -4892,7 +4904,7 @@ msgstr "E~tsi edellinen"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
 msgid "T~ypeahead search"
-msgstr ""
+msgstr "~Askelittainen haku"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:420
@@ -5350,7 +5362,7 @@ msgstr ""
 
 #: src/ecmascript/ecmascript.c:62
 msgid "Pop-up window blocking"
-msgstr ""
+msgstr "Ponnahdusikkunoiden esto"
 
 #: src/ecmascript/ecmascript.c:64
 msgid "Whether to disallow scripts to open new windows or tabs."
@@ -5385,7 +5397,7 @@ msgstr ""
 
 #: src/ecmascript/spidermonkey.c:104
 msgid "JavaScript Error"
-msgstr ""
+msgstr "JavaScript-virhe"
 
 #. name:
 #: src/ecmascript/spidermonkey.c:321
@@ -5568,7 +5580,7 @@ msgstr "Yleishistoria"
 
 #: src/globhist/globhist.c:62
 msgid "Global history options."
-msgstr ""
+msgstr "Yleishistorian asetukset."
 
 #: src/globhist/globhist.c:66
 msgid "Enable global history (\"history of all pages visited\")."
