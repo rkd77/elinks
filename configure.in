@@ -554,7 +554,7 @@ AC_ARG_WITH(see, [  --with-see              enable Simple Ecmascript Engine (SEE
             [ if test "x$withval" != xno; then enable_see=yes; fi ])
 
 # The following is probably bad, ugly and so on. Stolen from Guile's (1.4)
-# SEE_FLAGS but I really don't want to require people to have Guile in order
+# GUILE_FLAGS but I really don't want to require people to have Guile in order
 # to compile CVS. Also, the macro seems to be really stupid regarding searching
 # for Guile in $PATH etc. --pasky
 
