@@ -661,7 +661,7 @@ diff -ru elinks/ elinks+mysuperfeature/ >elinks-mysuperfeature.patch
 Please manually remove any bloat like changes in ./configure, whitespace
 changes etc. ;-).
 
-We also accept output from `cvs diff -u` :).  The statement about bloat
+We also accept output from `git diff` :).  The statement about bloat
 removing above still applies.
 
 Big patches are hard to review so if your feature involves a lot of changes

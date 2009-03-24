@@ -107,7 +107,7 @@ reasonable editor.
 In order to compile, get warnings and actually use your updated language file
 you will however need the gettext tools. If you don't have any of these tools
 please don't hesitate to still do the update and send it to the mailinglist or
-bugzilla so it can be added to CVS. By next release or nightly generated tarball
+bugzilla so it can be added to Git. By next release or nightly generated tarball
 you can then make use of your updates.
 
 2.2 The basics of updating:
@@ -185,7 +185,7 @@ translation for each plural form.
 2.3 Synchronizing .po files with the code
 -----------------------------------------
 
-IMPORTANT: if you changed strings in the code, or if you're using a cvs version
+IMPORTANT: if you changed strings in the code, or if you're using a Git version
 of ELinks, take care of synchronization between code and po files.  Before any
 change to a po file, you must synchronize it with code.
 
