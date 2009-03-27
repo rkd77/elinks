@@ -765,6 +765,9 @@ register_autocreated_options(void)
 	get_opt_int("terminal.xterm-256color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;
 	get_opt_bool("terminal.xterm-256color.underline", NULL) = 1;
+	get_opt_int("terminal.fbterm.type", NULL) = TERM_FBTERM;
+	get_opt_int("terminal.fbterm.colors", NULL) = COLOR_MODE_256;
+	get_opt_bool("terminal.fbterm.underline", NULL) = 0;
 #endif
 }
 

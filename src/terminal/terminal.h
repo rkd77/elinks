@@ -18,6 +18,7 @@ enum term_mode_type {
 	TERM_LINUX,
 	TERM_KOI8,
 	TERM_FREEBSD,
+	TERM_FBTERM,
 };
 
 /** This is a bitmask describing the environment we are living in,

@@ -184,6 +184,20 @@ static const struct string underline_seqs[] = {
 	/* begin underline: */	TERM_STRING("\033[4m"),
 };
 
+/* elinks --dump has a separate implementation of color-changing
+ * sequences and does not use these.  */
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+static const struct string color256_seqs[] = {
+	/* foreground: */	TERM_STRING("\033[0;38;5;%dm"),
+	/* background: */	TERM_STRING("\033[48;5;%dm"),
+};
+
+static const struct string fbterm_color256_seqs[] = {
+	/* foreground: */	TERM_STRING("\033[m\033[1;%d}"),
+	/* background: */	TERM_STRING("\033[2;%d}"),
+};
+#endif
+
 /** Used in @c add_char*() and @c redraw_screen() to reduce the logic.
  * It is updated from terminal._template_.* using option.change_hook.
  *
@@ -215,6 +229,9 @@ struct screen_driver {
 		/** The color mode */
 		enum color_mode color_mode;
 
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+		const struct string *color256_seqs;
+#endif
 		/** These are directly derived from the terminal options. */
 		unsigned int transparent:1;
 
@@ -242,6 +259,9 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	color256_seqs,
+#endif
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
@@ -258,6 +278,9 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* frame_seqs: */	vt100_frame_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	color256_seqs,
+#endif
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
@@ -274,6 +297,9 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	color256_seqs,
+#endif
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
@@ -290,6 +316,9 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* frame_seqs: */	NULL,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	color256_seqs,
+#endif
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
@@ -306,6 +335,28 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	color256_seqs,
+#endif
+	/* transparent: */	1,
+#ifdef CONFIG_UTF8
+	/* utf8_cp: */		0,
+#endif /* CONFIG_UTF8 */
+#ifdef CONFIG_COMBINE
+	/* combine */		0,
+#endif /* CONFIG_COMBINE */
+};
+
+/** Default options for ::TERM_FBTERM.  */
+static const struct screen_driver_opt fbterm_screen_driver_opt = {
+	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
+	/* frame: */		NULL,
+	/* frame_seqs: */	NULL,		/* No m11_hack */
+	/* underline: */	underline_seqs,
+	/* color_mode: */	COLOR_MODE_16,
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	/* color256_seqs: */	fbterm_color256_seqs,
+#endif
 	/* transparent: */	1,
 #ifdef CONFIG_UTF8
 	/* utf8_cp: */		0,
@@ -323,6 +374,7 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 	/* TERM_LINUX: */	&linux_screen_driver_opt,
 	/* TERM_KOI8: */	&koi8_screen_driver_opt,
 	/* TERM_FREEBSD: */	&freebsd_screen_driver_opt,
+	/* TERM_FBTERM: */	&fbterm_screen_driver_opt,
 };
 
 #define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
@@ -377,7 +429,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 		 * characters encoded in UTF-8 are already unambiguous.  */
 		driver->opt.frame_seqs = NULL;
 
-		if (driver->type == TERM_LINUX) {
+		if (driver->type == TERM_LINUX || driver->type == TERM_FBTERM) {
 			if (get_opt_bool_tree(term_spec, "restrict_852", NULL))
 				driver->opt.frame = frame_restrict;
 			driver->opt.charsets[1] = get_cp_index("cp437");
@@ -796,11 +848,6 @@ add_char16(struct string *screen, struct screen_driver *driver,
 }
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-static const struct string color256_seqs[] = {
-	/* foreground: */	TERM_STRING("\033[0;38;5;%dm"),
-	/* background: */	TERM_STRING("\033[48;5;%dm"),
-};
-
 static inline void
 add_char_color(struct string *screen, const struct string *seq, unsigned char color)
 {
@@ -894,9 +941,9 @@ add_char256(struct string *screen, struct screen_driver *driver,
 	   ) {
 		copy_color_256(state->color, ch->color);
 
-		add_foreground_color(screen, color256_seqs, ch);
+		add_foreground_color(screen, driver->opt.color256_seqs, ch);
 		if (!driver->opt.transparent || ch->color[1] != 0) {
-			add_background_color(screen, color256_seqs, ch);
+			add_background_color(screen, driver->opt.color256_seqs, ch);
 		}
 
 		if (ch->attr & SCREEN_ATTR_BOLD)

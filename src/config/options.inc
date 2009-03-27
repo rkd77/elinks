@@ -879,20 +879,22 @@ static struct option_info config_options_info[] = {
 	 * 4 (TERM_FREEBSD) outputs characters in the 0x80...0x9F
 	 *   range, which FreeBSD 4.0 (but not 5.0) treated as
 	 *   graphical.
+	 * 5 (TERM_FBTERM)
 	 *
 	 * When UTF-8 I/O is enabled, ELinks outputs (almost) the same
 	 * characters as above but encodes them in UTF-8 and does not
 	 * switch charsets.  So, it will work in any terminal that
 	 * understands UTF-8 and has the characters in its font.  */
 	INIT_OPT_INT("terminal._template_", N_("Type"),
-		"type", 0, 0, 4, 0,
+		"type", 0, 0, 5, 0,
 		N_("Terminal type; matters mostly only when drawing frames "
 		"and dialog box borders:\n"
 		"0 is dumb terminal type, ASCII art\n"
 		"1 is VT100, simple but portable\n"
 		"2 is Linux, you get double frames and other goodies\n"
 		"3 is KOI-8\n"
-		"4 is FreeBSD")),
+		"4 is FreeBSD\n"
+		"5 is fbterm")),
 
 	INIT_OPT_BOOL("terminal._template_", N_("Always encode xterm title in ISO-8859-1"),
 		"latin1_title", 0, 1,
