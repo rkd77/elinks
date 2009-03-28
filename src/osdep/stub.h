@@ -54,7 +54,7 @@
 #ifndef HAVE_ISDIGIT
 #undef isdigit
 #define isdigit(a) elinks_isdigit(a)
-inline int elinks_isdigit(int);
+int elinks_isdigit(int);
 #endif
 
 /** strerror() */
@@ -78,7 +78,7 @@ char *elinks_strstr(const char *, const char *);
 #else
 #undef memmove
 #define memmove(dst, src, n) elinks_memmove(dst, src, n)
-inline void *elinks_memmove(void *, const void *, size_t);
+void *elinks_memmove(void *, const void *, size_t);
 #endif
 #endif
 

@@ -62,7 +62,7 @@ found_pos:
 }
 
 /** Number of tabs at the terminal (in term->windows) */
-inline int
+NONSTATIC_INLINE int
 number_of_tabs(struct terminal *term)
 {
 	int result = 0;

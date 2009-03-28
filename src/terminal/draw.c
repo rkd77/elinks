@@ -33,7 +33,7 @@
 
 
 
-inline struct screen_char *
+NONSTATIC_INLINE struct screen_char *
 get_char(struct terminal *term, int x, int y)
 {
 	assert(term && term->screen && term->screen->image);

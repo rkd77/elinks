@@ -297,7 +297,7 @@ char * c_strcasestr(const char *haystack, const char *needle)
 /* TODO Currently most of the functions use add_bytes_to_string() as a backend
  *	instead we should optimize each function. */
 
-inline struct string *
+NONSTATIC_INLINE struct string *
 #ifdef DEBUG_MEMLEAK
 init_string__(const unsigned char *file, int line, struct string *string)
 #else
@@ -322,7 +322,7 @@ init_string(struct string *string)
 	return string;
 }
 
-inline void
+NONSTATIC_INLINE void
 done_string(struct string *string)
 {
 	assertm(string != NULL, "[done_string]");
@@ -341,7 +341,7 @@ done_string(struct string *string)
 }
 
 /** @relates string */
-inline struct string *
+NONSTATIC_INLINE struct string *
 add_to_string(struct string *string, const unsigned char *source)
 {
 	assertm(string && source, "[add_to_string]");
@@ -355,7 +355,7 @@ add_to_string(struct string *string, const unsigned char *source)
 }
 
 /** @relates string */
-inline struct string *
+NONSTATIC_INLINE struct string *
 add_crlf_to_string(struct string *string)
 {
 	assertm(string != NULL, "[add_crlf_to_string]");
@@ -374,7 +374,7 @@ add_crlf_to_string(struct string *string)
 }
 
 /** @relates string */
-inline struct string *
+NONSTATIC_INLINE struct string *
 add_string_to_string(struct string *string, const struct string *from)
 {
 	assertm(string && from, "[add_string_to_string]");
@@ -451,7 +451,7 @@ string_concat(struct string *string, ...)
 }
 
 /** @relates string */
-inline struct string *
+NONSTATIC_INLINE struct string *
 add_char_to_string(struct string *string, unsigned char character)
 {
 	assertm(string && character, "[add_char_to_string]");
@@ -468,7 +468,7 @@ add_char_to_string(struct string *string, unsigned char character)
 	return string;
 }
 
-inline struct string *
+NONSTATIC_INLINE struct string *
 add_xchar_to_string(struct string *string, unsigned char character, int times)
 {
 	int newlength;

@@ -50,7 +50,7 @@
  *
  * @returns 0 if OK or width needed for the whole number to fit there,
  * if it had to be truncated. A negative value signs an error. */
-int inline
+NONSTATIC_INLINE int
 elinks_ulongcat(unsigned char *s, unsigned int *slen,
 		unsigned long number, unsigned int width,
 		unsigned char fillchar, unsigned int base,
@@ -108,7 +108,7 @@ elinks_ulongcat(unsigned char *s, unsigned int *slen,
 }
 
 /** Similar to elinks_ulongcat() but for @c long number. */
-int inline
+NONSTATIC_INLINE int
 elinks_longcat(unsigned char *s, unsigned int *slen,
 	       long number, unsigned int width,
 	       unsigned char fillchar, unsigned int base,

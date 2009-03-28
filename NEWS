@@ -9,8 +9,7 @@ ELinks 0.12pre2.GIT now:
 ------------------------
 
 To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.6'' below, except the
-fix for bug 1047.
+includes the changes listed under ``ELinks 0.11.6'' below.
 
 Incompatibilities:
 

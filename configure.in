@@ -225,6 +225,29 @@ AC_SUBST(CONFIG_INTERLINK)
 AC_STRUCT_TM
 AC_C_CONST
 AC_C_INLINE
+AC_MSG_CHECKING([[C99-conforming inline]])
+AC_COMPILE_IFELSE([[
+	int add(int x);
+
+	static int sum;
+
+	inline int
+	add(int change)
+	{
+		sum += change;
+		return sum;
+	}
+
+	int
+	sub(int change)
+	{
+		return add(-change);
+	}]],
+	[AC_MSG_RESULT([[yes]])
+	 AC_DEFINE([NONSTATIC_INLINE], [inline],
+		[Define as inline if the compiler lets you declare a function without inline, then define it with inline, and have that definition refer to identifiers with internal linkage.  This is allowed by C99 6.7.4p6 and 6.7.4p3 together.  Otherwise define as nothing.])],
+	[AC_MSG_RESULT([[no]])
+	 AC_DEFINE([NONSTATIC_INLINE], [])])
 EL_CHECK_CODE(typeof, HAVE_TYPEOF, [], [int a; typeof(a) b;])
 
 AC_SYS_LARGEFILE

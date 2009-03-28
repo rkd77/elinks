@@ -69,6 +69,19 @@ struct codepage_desc {
 #include "intl/uni_7b.inc"
 #include "intl/entity.inc"
 
+/* Declare the external-linkage inline functions defined in this file.
+ * Avoid the GCC 4.3.1 warning: `foo' declared inline after being
+ * called.  The functions are not declared inline in charsets.h
+ * because C99 6.7.4p6 says that every external-linkage function
+ * declared inline shall be defined in the same translation unit.
+ * The non-inline declarations in charsets.h also make sure that the
+ * compiler emits global definitions for the symbols so that the
+ * functions can be called from other translation units.  */
+NONSTATIC_INLINE unsigned char *encode_utf8(unicode_val_T u);
+NONSTATIC_INLINE int utf8charlen(const unsigned char *p);
+NONSTATIC_INLINE int unicode_to_cell(unicode_val_T c);
+NONSTATIC_INLINE unicode_val_T utf8_to_unicode(unsigned char **string,
+					       const unsigned char *end);
 
 static const char strings[256][2] = {
 	"\000", "\001", "\002", "\003", "\004", "\005", "\006", "\007",
@@ -212,7 +225,7 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 
 static unsigned char utf_buffer[7];
 
-inline unsigned char *
+NONSTATIC_INLINE unsigned char *
 encode_utf8(unicode_val_T u)
 {
 	memset(utf_buffer, 0, 7);
@@ -261,12 +274,13 @@ static const char utf8char_len_tab[256] = {
 };
 
 #ifdef CONFIG_UTF8
-inline int utf8charlen(const unsigned char *p)
+NONSTATIC_INLINE int
+utf8charlen(const unsigned char *p)
 {
 	return p ? utf8char_len_tab[*p] : 0;
 }
 
-inline int
+int
 strlen_utf8(unsigned char **str)
 {
 	unsigned char *s = *str;
@@ -287,7 +301,7 @@ strlen_utf8(unsigned char **str)
 
 /* Start from @current and move back to @pos char. This pointer return. The
  * most left pointer is @start. */
-inline unsigned char *
+unsigned char *
 utf8_prevchar(unsigned char *current, int pos, unsigned char *start)
 {
 	if (current == NULL || start == NULL || pos < 0)
@@ -582,7 +596,7 @@ invalid_arg:
  * 		TODO: May be extended to return 0 for zero-width glyphs
  * 		(like composing, maybe unprintable too).
  */
-inline int
+NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
 	if (c >= 0x1100
@@ -625,7 +639,7 @@ unicode_fold_label_case(unicode_val_T c)
 }
 #endif /* CONFIG_UTF8 */
 
-inline unicode_val_T
+NONSTATIC_INLINE unicode_val_T
 utf8_to_unicode(unsigned char **string, const unsigned char *end)
 {
 	unsigned char *str = *string;
