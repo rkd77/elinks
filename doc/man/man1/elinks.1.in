@@ -1,11 +1,11 @@
 .\"     Title: elinks
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 09/27/2008
+.\"      Date: 03/28/2009
 .\"    Manual: The Elinks text-browser
-.\"    Source: ELinks 0.12pre2.GIT
+.\"    Source: ELinks 0.12pre3
 .\"
-.TH "ELINKS" "1" "09/27/2008" "ELinks 0\&.12pre2\&.GIT" "The Elinks text\-browser"
+.TH "ELINKS" "1" "03/28/2009" "ELinks 0\&.12pre3" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -156,13 +156,17 @@ Disables creation and use of files in the user specific home configuration direc
 .PP
 \fB\-no\-numbering\fR (alias for document\&.dump\&.numbering)
 .RS 4
-Prevents printing of link number in dump output\&. Note that this really affects only
+Prevents printing of link number in dump output\&.
+.sp
+Note that this really affects only
 \-dump, nothing else\&.
 .RE
 .PP
 \fB\-no\-references\fR (alias for document\&.dump\&.references)
 .RS 4
-Prevents printing of references (URIs) of document links in dump output\&. Note that this really affects only
+Prevents printing of references (URIs) of document links in dump output\&.
+.sp
+Note that this really affects only
 \-dump, nothing else\&.
 .RE
 .PP
@@ -170,7 +174,9 @@ Prevents printing of references (URIs) of document links in dump output\&. Note 
 .RS 4
 Control a remote
 ELinks
-instance by passing commands to it\&. The option takes an additional argument containing the method which should be invoked and any parameters that should be passed to it\&. For ease of use, the additional method argument can be omitted in which case any URL arguments will be opened in new tabs in the remote instance\&. Following is a list of the supported methods:
+instance by passing commands to it\&. The option takes an additional argument containing the method which should be invoked and any parameters that should be passed to it\&. For ease of use, the additional method argument can be omitted in which case any URL arguments will be opened in new tabs in the remote instance\&.
+.sp
+Following is a list of the supported methods:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'\fBping()\fR: look for a remote instance
@@ -217,7 +223,9 @@ are interconnected and share state (cache, bookmarks, cookies, and so on)\&. By 
 ELinks
 instances connect to session ring 0\&. You can change that behaviour with this switch and form as many session rings as you want\&. Obviously, if the session\-ring with this number doesn\'t exist yet, it\'s created and this
 ELinks
-instance will become the master instance (that usually doesn\'t matter for you as a user much)\&. Note that you usually don\'t want to use this unless you\'re a developer and you want to do some testing \- if you want the
+instance will become the master instance (that usually doesn\'t matter for you as a user much)\&.
+.sp
+Note that you usually don\'t want to use this unless you\'re a developer and you want to do some testing \- if you want the
 ELinks
 instances each running standalone, rather use the
 \-no\-connect
@@ -262,7 +270,7 @@ Print
 ELinks
 version information and exit\&.
 .RE
-Generated using output from ELinks version 0\&.12pre2\&.GIT\&.
+Generated using output from ELinks version 0\&.12pre3\&.
 .sp
 .SH "ENVIRONMENT VARIABLES"
 .PP
