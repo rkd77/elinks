@@ -242,7 +242,7 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 #define realloc_document_links(doc, size) \
 	ALIGN_LINK(&(doc)->links, (doc)->nlinks, size)
 
-inline struct link *
+NONSTATIC_INLINE struct link *
 add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	     unsigned char *uristring, int urilength)
 {

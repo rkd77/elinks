@@ -241,7 +241,7 @@ static const unsigned char fg_color[16][8] = {
 #define CMPCODE(c) (((c) << 1 | (c) >> 2) & TERM_COLOR_MASK)
 #define use_inverse(bg, fg) CMPCODE(fg & TERM_COLOR_MASK) < CMPCODE(bg)
 
-inline void
+NONSTATIC_INLINE void
 set_term_color16(struct screen_char *schar, enum color_flags flags,
 		 unsigned char fg, unsigned char bg)
 {

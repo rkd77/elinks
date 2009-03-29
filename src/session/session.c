@@ -428,7 +428,7 @@ load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
 #define load_ecmascript_imports(ses, doc_view)
 #endif
 
-inline void
+NONSTATIC_INLINE void
 load_frames(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;

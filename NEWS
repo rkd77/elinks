@@ -40,8 +40,6 @@ Miscellaneous:
   ``Background and Notify'' via the download manager in some terminal,
   reassociate the download with that terminal.  These changes do not
   apply to downloads to external handlers.
-* Don't crash when the search-toggle-regex action is used and no regular
-  expression support is compiled in.
 * Really retry forever when connection.retries = 0.
 * enhancement: Session-specific options.  Any options changed with
   toggle-* actions no longer affect other tabs or other terminals.
@@ -53,7 +51,6 @@ Miscellaneous:
 * enhancement 824: Experimental support for combining characters.
   See features.conf for details.
 * enhancement: Add a new entry Link Info under Link main menu.
-* enhancement: New option protocol.http.compression.
 * enhancement: Indicate backgrounded downloads using an unused led.
 * enhancement: Display the number of ECMAScript interpreters that have
   been allocated for documents in the Resources dialog.
@@ -72,11 +69,11 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.12pre2.GIT now:
-------------------------
+ELinks 0.12pre3:
+----------------
 
-To be released as 0.12pre3, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.5.GIT'' below.
+Released on 2009-03-29.  This release also included the changes listed
+under ``ELinks 0.11.6'' below.
 
 Incompatibilities:
 
@@ -334,10 +331,10 @@ Changes in the experimental SGML/DOM implementation:
 * enhancement: incremental parsing
 * and more.
 
-ELinks 0.11.5.GIT now:
-----------------------
+ELinks 0.11.6:
+--------------
 
-To be released as 0.11.6.
+Released on 2009-03-21.
 
 * critical: fix double-free crash if EOF immediately follows </MAP>
 * critical bug 1053: fix crash if a download finishes after ELinks has
@@ -347,6 +344,8 @@ To be released as 0.11.6.
   Turkish locale
 * minor: clicking a link with the mouse activates that link, rather
   than the one selected with move-cursor-* actions
+* build bug 1047: attempt to make inline functions satisfy C99 6.7.4p3
+  so that ELinks can be built on OpenSolaris
 
 ELinks 0.11.5:
 --------------

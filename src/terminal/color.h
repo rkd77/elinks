@@ -63,8 +63,8 @@ enum color_mode {
 	COLOR_MODES = 5, /* XXX: Keep last */
 };
 
-inline void set_term_color16(struct screen_char *schar, enum color_flags flags,
-			     unsigned char fg, unsigned char bg);
+void set_term_color16(struct screen_char *schar, enum color_flags flags,
+		      unsigned char fg, unsigned char bg);
 
 /** Mixes the color pair and attributes to a terminal text color.
  * If @a flags has masked in the ::COLOR_INCREASE_CONTRAST the

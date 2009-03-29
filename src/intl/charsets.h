@@ -125,10 +125,10 @@ const uint16_t *get_cp_highhalf(const unsigned char *);
 
 int is_cp_utf8(int);
 void free_conv_table(void);
-inline unsigned char *encode_utf8(unicode_val_T);
+unsigned char *encode_utf8(unicode_val_T);
 #ifdef CONFIG_UTF8
-inline unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
-inline int utf8charlen(const unsigned char *);
+unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
+int utf8charlen(const unsigned char *);
 int utf8_char2cells(unsigned char *, unsigned char *);
 int utf8_ptr2cells(unsigned char *, unsigned char *);
 int utf8_ptr2chars(unsigned char *, unsigned char *);
@@ -153,11 +153,11 @@ unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
 				 int, enum utf8_step, int *);
 unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
 				  int, enum utf8_step, int *);
-inline int unicode_to_cell(unicode_val_T);
+int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
-inline int strlen_utf8(unsigned char **);
+int strlen_utf8(unsigned char **);
 #endif /* CONFIG_UTF8 */
-inline unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
+unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
 unicode_val_T cp_to_unicode(int, unsigned char **, const unsigned char *);
 
 #ifdef CONFIG_COMBINE

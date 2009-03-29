@@ -246,6 +246,51 @@ remarkable implication of no C99 are no C++ (//) comments and declarations
 at the start of block only.
 
 
+Inline functions
+----------------
+
+Various standards and compilers set restrictions on inline functions:
+
+- C89 doesn't support them at all.
+
+- According to C99 6.7.4p6, if a translation unit declares a function
+  as inline and not static, then it must also define that function.
+
+- According to C99 6.7.4p3, an inline definition of a non-static
+  function must not contain any non-const static variables, and must
+  not refer to anything static outside of it.  According to C99
+  6.7.4p6 however, if the function is ever declared without inline or
+  with extern, then its definition is not an inline definition even if
+  the definition includes the inline keyword.
+
+- Sun Studio 11 on Solaris 9 does not let non-static inline functions
+  refer to static identifiers.  Unlike C99 6.7.4p3, this seems to
+  apply to all definitions of inline functions, not only inline
+  definitions.  See ELinks bug 1047.
+
+- GCC 4.3.1 warns if a function is declared inline after being called.
+  Perhaps it means such calls cannot be inlined.
+
+- In C99, a function definition with extern inline means the compiler
+  should inline calls to that function and must also emit out-of-line
+  code that other translation units can call.  In GCC 4.3.1, it
+  instead means the out-of-line definition is elsewhere.
+
+So to be portable to all of those, we use inline functions in only
+these ways:
+
+- Define as static inline in a *.c file.  Perhaps declare in that same
+  file.  On C89, we #define inline to nothing.
+
+- Define as static inline in a *.h file.  Perhaps declare in that same
+  file.  On C89, we #define inline to nothing, and extra copies of the
+  function may then get emitted but anyway it'll work.
+
+- Declare without inline in a *.h file, and define with NONSTATIC_INLINE
+  in a *.c file.  Perhaps also declare with NONSTATIC_INLINE in the same
+  *.c file.  On Sun Studio 11, we #define NONSTATIC_INLINE to nothing.
+
+
 Comments
 --------
 
@@ -661,7 +706,7 @@ diff -ru elinks/ elinks+mysuperfeature/ >elinks-mysuperfeature.patch
 Please manually remove any bloat like changes in ./configure, whitespace
 changes etc. ;-).
 
-We also accept output from `cvs diff -u` :).  The statement about bloat
+We also accept output from `git diff` :).  The statement about bloat
 removing above still applies.
 
 Big patches are hard to review so if your feature involves a lot of changes

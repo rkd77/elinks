@@ -40,7 +40,7 @@
 #define toupper_delta(s1, s2) (toupper(*((char *) s1)) - toupper(*((char *) s2)))
 
 #ifndef HAVE_STRCASECMP
-inline int
+NONSTATIC_INLINE int
 elinks_strcasecmp(const char *s1, const char *s2)
 {
 	while (*s1 != '\0' && toupper_equal(s1, s2)) {
@@ -53,7 +53,7 @@ elinks_strcasecmp(const char *s1, const char *s2)
 #endif /* !HAVE_STRCASECMP */
 
 #ifndef HAVE_STRNCASECMP
-inline int
+NONSTATIC_INLINE int
 elinks_strncasecmp(const char *s1, const char *s2, size_t len)
 {
 	if (len == 0)
@@ -72,7 +72,7 @@ elinks_strncasecmp(const char *s1, const char *s2, size_t len)
 
 #ifndef HAVE_STRCASESTR
 /* Stub for strcasestr(), GNU extension */
-inline char *
+NONSTATIC_INLINE char *
 elinks_strcasestr(const char *haystack, const char *needle)
 {
 	size_t haystack_length = strlen(haystack);
@@ -93,7 +93,7 @@ elinks_strcasestr(const char *haystack, const char *needle)
 #endif
 
 #ifndef HAVE_STRDUP
-inline char *
+NONSTATIC_INLINE char *
 elinks_strdup(const char *str)
 {
 	int str_len = strlen(str);
@@ -114,7 +114,7 @@ elinks_strdup(const char *str)
 extern int sys_nerr;
 extern const char *const sys_errlist[];
 #endif
-inline const char *
+NONSTATIC_INLINE const char *
 elinks_strerror(int err_no)
 {
 	if (err_no < 0 || err_no > sys_nerr)
@@ -126,7 +126,7 @@ elinks_strerror(int err_no)
 
 #ifndef HAVE_STRSTR
 /* From http://www.unixpapa.com/incnote/string.html */
-inline char *
+NONSTATIC_INLINE char *
 elinks_strstr(const char *s, const char *p)
 {
 	char *sp, *pp;
@@ -155,7 +155,7 @@ elinks_strstr(const char *s, const char *p)
  * arguments reversed.
  * From http://www.unixpapa.com/incnote/string.html */
 /* Modified for ELinks by Zas. */
-inline void *
+NONSTATIC_INLINE void *
 elinks_memmove(void *d, const void *s, size_t n)
 {
 	register char *dst = (char *) d;
@@ -178,7 +178,7 @@ elinks_memmove(void *d, const void *s, size_t n)
 
 
 #ifndef HAVE_STPCPY
-inline char *
+NONSTATIC_INLINE char *
 elinks_stpcpy(char *dest, const char *src)
 {
 	while ((*dest++ = *src++));
@@ -187,7 +187,7 @@ elinks_stpcpy(char *dest, const char *src)
 #endif
 
 #ifndef HAVE_MEMPCPY
-inline void *
+NONSTATIC_INLINE void *
 elinks_mempcpy(void *dest, const void *src, size_t n)
 {
 	return (void *) ((char *) memcpy(dest, src, n) + n);
@@ -195,7 +195,7 @@ elinks_mempcpy(void *dest, const void *src, size_t n)
 #endif
 
 #ifndef HAVE_ISDIGIT
-inline int
+NONSTATIC_INLINE int
 elinks_isdigit(int i)
 {
 	return i >= '0' && i <= '9';
@@ -203,7 +203,7 @@ elinks_isdigit(int i)
 #endif
 
 #ifndef HAVE_MEMRCHR
-inline void *
+NONSTATIC_INLINE void *
 elinks_memrchr(const void *s, int c, size_t n)
 {
 	char *pos = (char *) s;

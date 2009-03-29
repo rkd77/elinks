@@ -1,11 +1,11 @@
 .\"     Title: elinks.conf
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 09/27/2008
+.\"      Date: 03/29/2009
 .\"    Manual: ELinks configuration file
 .\"    Source: ELinks 0.13.GIT
 .\"
-.TH "ELINKS\&.CONF" "5" "09/27/2008" "ELinks 0\&.13\&.GIT" "ELinks configuration file"
+.TH "ELINKS\&.CONF" "5" "03/29/2009" "ELinks 0\&.13\&.GIT" "ELinks configuration file"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -66,7 +66,7 @@ format
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is XBEL universal XML bookmarks format (\fIELinks bug 153\fR\&[1]: NO NATIONAL CHARS SUPPORT!)
+\h'-04'\(bu\h'+03'1 is XBEL universal XML bookmarks format
 .RE
 .RE
 .PP
@@ -178,13 +178,17 @@ connection\&.try_ipv4 \fB[0|1]\fR (default: 1)
 .RS 4
 Whether to try to connect to a host over IPv4\&. Note that if
 connection\&.try_ipv6
-is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
+is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&.
+.sp
+Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
 \fIhttp4://elinks\&.cz/\fR\&.
 .RE
 .PP
 connection\&.try_ipv6 \fB[0|1]\fR (default: 1)
 .RS 4
-Whether to try to connect to a host over IPv6\&. Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
+Whether to try to connect to a host over IPv6\&.
+.sp
+Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
 \fIhttp6://elinks\&.cz/\fR\&.
 .RE
 .PP
@@ -277,7 +281,9 @@ Horizontal text margin\&.
 .PP
 document\&.browse\&.refresh \fB[0|1]\fR (default: 1)
 .RS 4
-Automatically follow document\-specified refresh directives (\'<meta> refresh\' tags)\&. Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page\&. Regardless of the value the refresh URI is accessible as a link\&. Use the
+Automatically follow document\-specified refresh directives (\'<meta> refresh\' tags)\&. Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page\&. Regardless of the value the refresh URI is accessible as a link\&.
+.sp
+Use the
 document\&.browse\&.minimum_refresh_time
 to control the minimum number of seconds a refresh will wait\&.
 .RE
@@ -347,7 +353,9 @@ document\&.browse\&.forms\&.editor \fB<str>\fR (default: "")
 .RS 4
 Path to the executable that
 ELinks
-should launch when the user requests to edit a textarea with an external editor\&. If this is blank,
+should launch when the user requests to edit a textarea with an external editor\&.
+.sp
+If this is blank,
 ELinks
 will use the value of the environmental variable
 \fB$EDITOR\fR\&. If
@@ -575,7 +583,7 @@ Whether to allow horizontal scrolling when the document does not extend off the 
 .PP
 document\&.browse\&.scrolling\&.horizontal_step \fB<num>\fR (default: 8)
 .RS 4
-Number of columns to scroll when a key bound to scroll\-left or scroll\- right is pressed and no prefix was given\&.
+Number of columns to scroll when a key bound to scroll\-left or scroll\-right is pressed and no prefix was given\&.
 .RE
 .PP
 document\&.browse\&.scrolling\&.margin \fB<num>\fR (default: 3)
@@ -585,7 +593,7 @@ Size of the virtual margin \(en when you click inside of that margin, document s
 .PP
 document\&.browse\&.scrolling\&.vertical_step \fB<num>\fR (default: 2)
 .RS 4
-Number of lines to scroll when a key bound to scroll\-up or scroll\- down is pressed and no prefix was given\&.
+Number of lines to scroll when a key bound to scroll\-up or scroll\-down is pressed and no prefix was given\&.
 .RE
 .SS "document\&.browse\&.search (Searching)"
 Options for searching\&.
@@ -660,7 +668,9 @@ Cache options\&.
 .PP
 document\&.cache\&.cache_redirects \fB[0|1]\fR (default: 0)
 .RS 4
-Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don\'t receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&. Note that this option is checked when retrieving the information from cache, not when saving it to cache \(en thus if you enable it, even previous redirects will be taken from cache instead of asking the server\&.
+Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don\'t receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&.
+.sp
+Note that this option is checked when retrieving the information from cache, not when saving it to cache \(en thus if you enable it, even previous redirects will be taken from cache instead of asking the server\&.
 .RE
 .PP
 document\&.cache\&.ignore_cache_control \fB[0|1]\fR (default: 1)
@@ -681,7 +691,9 @@ document\&.cache\&.format\&.size \fB<num>\fR (default: 5)
 .RS 4
 Number of cached formatted pages\&. Do not get too generous here, \'formatted\' means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\'t like your
 ELinks
-eating 90M, don\'t come complaining to us\&. ;\-) Also note that the format cache itself is not counted to the memory cache size, but the HTML source of the formatted documents is always cached, even if it is over the memory cache size threshold\&. (Then of course no other documents can be cached\&.)
+eating 90M, don\'t come complaining to us\&. ;\-)
+.sp
+Also note that the format cache itself is not counted to the memory cache size, but the HTML source of the formatted documents is always cached, even if it is over the memory cache size threshold\&. (Then of course no other documents can be cached\&.)
 .RE
 .SS "document\&.cache\&.memory (Memory cache)"
 Memory cache options\&.
@@ -737,7 +749,9 @@ Default bookmarked link color\&.
 .PP
 document\&.colors\&.dirs \fB<color|#rrggbb>\fR (default: yellow)
 .RS 4
-Default directory color\&. See
+Default directory color\&.
+.sp
+See
 document\&.browse\&.links\&.color_dirs
 option\&.
 .RE
@@ -798,7 +812,9 @@ claims to support, separated with commas\&. The "all" type is implied\&. Current
 document\&.css\&.stylesheet \fB<str>\fR (default: "")
 .RS 4
 The path to the file containing the default user defined Cascading Style Sheet\&. It can be used to control the basic layout of HTML documents\&. The path is assumed to be relative to
-ELinks\' home directory\&. Leave as "" to use built\-in document styling\&.
+ELinks\' home directory\&.
+.sp
+Leave as "" to use built\-in document styling\&.
 .RE
 .SS "document\&.download (Downloading)"
 Options regarding files downloading and handling\&.
@@ -856,11 +872,13 @@ Codepage used in dump output\&. \'System\' stands for a codepage determined by a
 .PP
 document\&.dump\&.color_mode \fB<num>\fR (default: \-1)
 .RS 4
-Color mode for dumps\&. Some modes may have been disabled at compile time\&. The
-Setup \(-> Terminal options
-dialog lists the modes supported by this executable\&. If you select an unsupported mode,
+Color mode for dumps\&.
+.sp
+Some modes may have been disabled at compile time\&. The Setup \-> Terminal options dialog lists the modes supported by this executable\&. If you select an unsupported mode,
 ELinks
-uses 16 colors\&. The color modes are:
+uses 16 colors\&.
+.sp
+The color modes are:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'\-1 is standard dump mode
@@ -1022,7 +1040,9 @@ document\&.plain\&.compress_empty_lines \fB[0|1]\fR (default: 0)
 Compress successive empty lines to only one in displayed text\&.
 .RE
 .SS "document\&.uri_passing (URI passing)"
-Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&. Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
+Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&.
+.sp
+Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
 .PP
 document\&.uri_passing\&._template_ \fB<str>\fR (default: "")
 .RS 4
@@ -1079,7 +1099,9 @@ to be saved to disk if they have changed (seconds; 0 to disable)
 .PP
 infofiles\&.secure_save \fB[0|1]\fR (default: 1)
 .RS 4
-First write data to unique temporary file, then rename this file upon successfully finishing this\&. Note that this relates only to config files, not downloaded files\&. You may want to disable it if you are using some exotic permissions for concerned files\&. Secure file saving is automagically disabled if file is symlink\&. Warning: some systems (ie\&. OS/2, Win32) require that destination file doesn\'t exist when
+First write data to unique temporary file, then rename this file upon successfully finishing this\&. Note that this relates only to config files, not downloaded files\&. You may want to disable it if you are using some exotic permissions for concerned files\&. Secure file saving is automagically disabled if file is symlink\&.
+.sp
+Warning: some systems (ie\&. OS/2, Win32) require that destination file doesn\'t exist when
 \fBrename\fR(3)
 is called, breaking atomicity, and reducing reliability of this feature\&.
 .RE
@@ -1209,7 +1231,9 @@ BitTorrent specific options\&.
 .PP
 protocol\&.bittorrent\&.piece_cache_size \fB<num>\fR (default: 1048576)
 .RS 4
-The maximum amount of memory used to hold recently downloaded pieces\&. Set to 0 to have unlimited size\&.
+The maximum amount of memory used to hold recently downloaded pieces\&.
+.sp
+Set to 0 to have unlimited size\&.
 .RE
 .PP
 protocol\&.bittorrent\&.max_uploads \fB<num>\fR (default: 7)
@@ -1315,7 +1339,9 @@ The number of seconds to wait before closing a socket on which nothing has been 
 .PP
 protocol\&.bittorrent\&.peerwire\&.pool_size \fB<num>\fR (default: 55)
 .RS 4
-Maximum number of items in the peer pool\&. The peer pool contains information used for establishing connections to new peers\&. Set to 0 to have unlimited size\&.
+Maximum number of items in the peer pool\&. The peer pool contains information used for establishing connections to new peers\&.
+.sp
+Set to 0 to have unlimited size\&.
 .RE
 .SS "protocol\&.file (Local files)"
 Options specific to local browsing\&.
@@ -1413,7 +1439,9 @@ and various server\-side scripts \(em the server only returns the client\'s requ
 .PP
 protocol\&.http\&.user_agent \fB<str>\fR (default: "ELinks/%v (textmode; %s; %t\-%b)")
 .RS 4
-Change the User Agent ID\&. That means identification string, which is sent to HTTP server when a document is requested\&. The \'textmode\' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e\&.g\&. pushing some lite version to them automagically\&. Use " " if you don\'t want any User\-Agent header to be sent at all\&.
+Change the User Agent ID\&. That means identification string, which is sent to HTTP server when a document is requested\&. The \'textmode\' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e\&.g\&. pushing some lite version to them automagically\&.
+.sp
+Use " " if you don\'t want any User\-Agent header to be sent at all\&.
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'%v in the string means
@@ -1481,7 +1509,7 @@ protocol\&.http\&.proxy\&.passwd \fB<str>\fR (default: "")
 Proxy authentication password\&.
 .RE
 .SS "protocol\&.http\&.referer (Referer sending)"
-HTTP referer sending options\&. HTTP referer is a special header sent in the HTTP requests, which is supposed to contain the previous page visited by the browser\&. This way, the server can know what link did you follow when accessing that page\&. However, this behaviour can unfortunately considerably affect privacy and can lead even to a security problem on some badly designed web pages\&.
+HTTP referer sending options\&. HTTP referer is a special header sent in the HTTP requests, which is supposed to contain the previous page visited by the browser\&.This way, the server can know what link did you follow when accessing that page\&. However, this behaviour can unfortunately considerably affect privacy and can lead even to a security problem on some badly designed web pages\&.
 .PP
 protocol\&.http\&.referer\&.policy \fB<num>\fR (default: 3)
 .RS 4
@@ -1675,6 +1703,17 @@ Terminal type; matters mostly only when drawing frames and dialog box borders:
 .RE
 .RE
 .PP
+terminal\&._template_\&.latin1_title \fB[0|1]\fR (default: 1)
+.RS 4
+When updating the window title of
+\fBxterm\fR
+or a similar terminal emulator, encode the title in ISO\-8859\-1 (Latin\-1), rather than in the charset used for other text in the window\&. Cyrillic and other characters get replaced with Latin ones\&. Xterm requires this unless you explicitly enable UTF\-8 titles in it\&.
+.sp
+If this option does not take effect immediately, try switching to a different page so that
+ELinks
+notices it needs to update the title\&.
+.RE
+.PP
 terminal\&._template_\&.m11_hack \fB[0|1]\fR (default: 0)
 .RS 4
 Switch fonts when drawing lines, enabling both local characters and lines working at the same time\&.
@@ -1708,11 +1747,13 @@ Move cursor to bottom right corner when done drawing\&. This is particularly use
 .PP
 terminal\&._template_\&.colors \fB<num>\fR (default: 0)
 .RS 4
-The color mode controls what colors are used and how they are output to the terminal\&. Some modes may have been disabled at compile time\&. The
-Setup \(-> Terminal options
-dialog lists the modes supported by this executable\&. If you select an unsupported mode,
+The color mode controls what colors are used and how they are output to the terminal\&.
+.sp
+Some modes may have been disabled at compile time\&. The Setup \-> Terminal options dialog lists the modes supported by this executable\&. If you select an unsupported mode,
 ELinks
-uses 16 colors\&. The color modes are:
+uses 16 colors\&.
+.sp
+The color modes are:
 .sp
 .RS 4
 \h'-04'\(bu\h'+03'0 is mono mode, only 2 colors are used
@@ -2793,17 +2834,23 @@ Sessions settings\&.
 .PP
 ui\&.sessions\&.auto_restore \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically restore the session at start\&. This feature requires bookmark support\&.
+Automatically restore the session at start\&.
+.sp
+This feature requires bookmark support\&.
 .RE
 .PP
 ui\&.sessions\&.auto_save \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically save the session when quitting\&. This feature requires bookmark support\&.
+Automatically save the session when quitting\&.
+.sp
+This feature requires bookmark support\&.
 .RE
 .PP
 ui\&.sessions\&.auto_save_foldername \fB<str>\fR (default: "Auto saved session")
 .RS 4
-Name of the bookmarks folder used for auto saving and restoring session\&. The name has to be unique\&. Any folders with the same name will be deleted\&. This only makes sense with bookmark support\&.
+Name of the bookmarks folder used for auto saving and restoring session\&. The name has to be unique\&. Any folders with the same name will be deleted\&.
+.sp
+This only makes sense with bookmark support\&.
 .RE
 .PP
 ui\&.sessions\&.homepage \fB<str>\fR (default: "")
@@ -2890,9 +2937,3 @@ Keybinding action to be triggered when timer reaches zero\&.
 .SH "SEE ALSO"
 \fBelinks\fR(1), \fBelinkskeys\fR(5)
 .sp
-.SH "NOTES"
-.IP " 1." 4
-ELinks bug 153
-.RS 4
-\%http://bugzilla.elinks.cz/show_bug.cgi?id=153
-.RE

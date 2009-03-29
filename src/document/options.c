@@ -105,7 +105,7 @@ compare_opt(struct document_options *o1, struct document_options *o2)
 		    && o1->box.width != o2->box.width);
 }
 
-inline void
+NONSTATIC_INLINE void
 copy_opt(struct document_options *o1, struct document_options *o2)
 {
 	copy_struct(o1, o2);
