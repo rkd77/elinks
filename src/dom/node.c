@@ -247,7 +247,7 @@ get_dom_node_list_index(struct dom_node *parent, struct dom_node *node)
 {
 	struct dom_node_list **list = get_dom_node_list(parent, node);
 
-	return list ? get_dom_node_list_pos(*list, node) : -1;
+	return (list && *list) ? get_dom_node_list_pos(*list, node) : -1;
 }
 
 struct dom_node *
