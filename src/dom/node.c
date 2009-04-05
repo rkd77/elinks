@@ -233,6 +233,7 @@ get_dom_node_list_pos(struct dom_node_list *list, struct dom_node *node)
 	int i;
 
 	assert(list);
+	if_assert_failed return -1;
 
 	foreach_dom_node (list, entry, i) {
 		if (entry == node)
@@ -257,11 +258,20 @@ get_dom_node_prev(struct dom_node *node)
 	int index;
 
 	assert(node->parent);
+	if_assert_failed return NULL;
 
 	list = get_dom_node_list(node->parent, node);
+	/* node->parent != NULL, so the node must be in the
+	 * appropriate list of the parent; the list thus cannot be
+	 * empty.  */
 	if (!list) return NULL;
+	assert(*list);
+	if_assert_failed return NULL;
 
 	index = get_dom_node_list_pos(*list, node);
+	assert(index >= 0); /* in particular, not -1 */
+	if_assert_failed return NULL;
+
 	if (index > 0)
 		return (*list)->entries[index - 1];
 
@@ -275,11 +285,20 @@ get_dom_node_next(struct dom_node *node)
 	int index;
 
 	assert(node->parent);
+	if_assert_failed return NULL;
 
 	list = get_dom_node_list(node->parent, node);
+	/* node->parent != NULL, so the node must be in the
+	 * appropriate list of the parent; the list thus cannot be
+	 * empty.  */
 	if (!list) return NULL;
+	assert(*list);
+	if_assert_failed return NULL;
 
 	index = get_dom_node_list_pos(*list, node);
+	assert(index >= 0); /* in particular, not -1 */
+	if_assert_failed return NULL;
+
 	if (index + 1 < (*list)->size)
 		return (*list)->entries[index + 1];
 
