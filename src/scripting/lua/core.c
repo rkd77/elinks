@@ -369,6 +369,7 @@ l_edit_bookmark_dialog(LS)
 
 	if (!lua_isstring(S, 1) || !lua_isstring(S, 2)
 	    || !lua_isstring(S, 3) || !lua_isfunction(S, 4)) {
+		alert_lua_error("bad arguments to edit_bookmark_dialog");
 		lua_pushnil(S);
 		return 1;
 	}
