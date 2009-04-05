@@ -5,6 +5,13 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.12pre3.GIT now:
+------------------------
+
+To be released as 0.12pre4, 0.12rc1, or even 0.12.0.
+
+* critical bug 1071: Fix crash in get_dom_node_child.
+
 ELinks 0.12pre3:
 ----------------
 
