@@ -155,7 +155,7 @@ push_save_button(struct dialog_data *dlg_data, struct widget_data *button)
 #define	RADIO_TRUE 0
 #endif
 
-#define TERMOPT_WIDGETS_COUNT (11 + TERM_OPTIONS + RADIO_88 + RADIO_256 + RADIO_TRUE)
+#define TERMOPT_WIDGETS_COUNT (12 + TERM_OPTIONS + RADIO_88 + RADIO_256 + RADIO_TRUE)
 
 #define TERM_OPTION_VALUE_SIZE (sizeof(union option_value) * TERM_OPTIONS)
 
@@ -209,6 +209,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	add_dlg_radio(dlg, _("No frames", term), 1, TERM_DUMB, &values[TERM_OPT_TYPE].number);
 	add_dlg_radio(dlg, _("VT 100 frames", term), 1, TERM_VT100, &values[TERM_OPT_TYPE].number);
 	add_dlg_radio(dlg, _("Linux or OS/2 frames", term), 1, TERM_LINUX, &values[TERM_OPT_TYPE].number);
+	add_dlg_radio(dlg, _("Linux frames with fbterm colors", term), 1, TERM_FBTERM, &values[TERM_OPT_TYPE].number);
 	add_dlg_radio(dlg, _("FreeBSD frames", term), 1, TERM_FREEBSD, &values[TERM_OPT_TYPE].number);
 	add_dlg_radio(dlg, _("KOI8-R frames", term), 1, TERM_KOI8, &values[TERM_OPT_TYPE].number);
 
