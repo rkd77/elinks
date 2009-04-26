@@ -301,10 +301,7 @@ globhist_simple_search(unsigned char *search_url, unsigned char *search_title)
 
 	/* Memorize last searched url */
 	mem_free_set(&gh_last_searched_url, stracpy(search_url));
-	if (!gh_last_searched_url) {
-		mem_free(gh_last_searched_title);
-		return 0;
-	}
+	if (!gh_last_searched_url) return 0;
 
 	if (!*search_title && !*search_url) {
 		/* No search terms, make all entries visible. */

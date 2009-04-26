@@ -408,8 +408,28 @@ struct dom_string *get_dom_node_value(struct dom_node *node);
 /* Returns the name used for identifying the node type. */
 struct dom_string *get_dom_node_type_name(enum dom_node_type type);
 
-/* Based on the type of the parent and the node type return a proper list
- * or NULL. This is useful when adding a node to a parent node. */
+/** Based on the type of the @a parent and the node @a type return a
+ * proper list or NULL. This is useful when adding a node to a parent
+ * node.
+ *
+ * With a <code>struct dom_node_list **list</code> returned by this
+ * function, there are four possibilities:
+ *
+ * - <code>list == NULL</code>.  This means @a parent does not support
+ *   child nodes of the given @a type.
+ *
+ * - <code>*list == NULL</code>.  This means @a parent does not yet
+ *   have any child nodes of the given @a type and so no list has been
+ *   allocated for them.  Callers should treat the lack of a list in
+ *   the same way as an empty list.
+ *
+ * - <code>(*list)->size == 0</code>.  This is an empty list.  It is
+ *   unspecified whether the DOM code keeps such lists; it could
+ *   instead change them back to NULL.
+ *
+ * - <code>(*list)->size != 0</code>.  This is a nonempty list.
+ *   However, the nodes in it might not actually be of the given
+ *   @a type because some lists are used for multiple types.  */
 static inline struct dom_node_list **
 get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 {

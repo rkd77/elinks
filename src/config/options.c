@@ -746,23 +746,23 @@ static inline void
 register_autocreated_options(void)
 {
 	/* TODO: Use table-driven initialization. --jonas */
-	get_opt_int("terminal.linux.type", NULL) = 2;
-	get_opt_int("terminal.linux.colors", NULL) = 1;
+	get_opt_int("terminal.linux.type", NULL) = TERM_LINUX;
+	get_opt_int("terminal.linux.colors", NULL) = COLOR_MODE_16;
 	get_opt_bool("terminal.linux.m11_hack", NULL) = 1;
-	get_opt_int("terminal.vt100.type", NULL) = 1;
-	get_opt_int("terminal.vt110.type", NULL) = 1;
-	get_opt_int("terminal.xterm.type", NULL) = 1;
+	get_opt_int("terminal.vt100.type", NULL) = TERM_VT100;
+	get_opt_int("terminal.vt110.type", NULL) = TERM_VT100;
+	get_opt_int("terminal.xterm.type", NULL) = TERM_VT100;
 	get_opt_bool("terminal.xterm.underline", NULL) = 1;
-	get_opt_int("terminal.xterm-color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-color.colors", NULL) = COLOR_MODE_16;
 	get_opt_bool("terminal.xterm-color.underline", NULL) = 1;
 #ifdef CONFIG_88_COLORS
-	get_opt_int("terminal.xterm-88color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-88color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-88color.colors", NULL) = COLOR_MODE_88;
 	get_opt_bool("terminal.xterm-88color.underline", NULL) = 1;
 #endif
 #ifdef CONFIG_256_COLORS
-	get_opt_int("terminal.xterm-256color.type", NULL) = 1;
+	get_opt_int("terminal.xterm-256color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;
 	get_opt_bool("terminal.xterm-256color.underline", NULL) = 1;
 #endif
