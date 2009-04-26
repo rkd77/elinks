@@ -217,7 +217,9 @@ dlg_format_text_do(struct dialog_data *dlg_data,
 		struct color_pair *color, enum format_align align,
 		int format_only)
 {
+#ifdef CONFIG_UTF8
 	struct terminal *term = dlg_data->win->term;
+#endif
 	int line_width;
 	int firstline = 1;
 
