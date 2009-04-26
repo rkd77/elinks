@@ -119,7 +119,9 @@ dlg_format_buttons(struct dialog_data *dlg_data,
 		   struct widget_data *widget_data, int n,
 		   int x, int *y, int w, int *rw, enum format_align align, int format_only)
 {
+#ifdef CONFIG_UTF8
 	struct terminal *term = dlg_data->win->term;
+#endif
 	int i1 = 0;
 
 	while (i1 < n) {
