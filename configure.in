@@ -926,42 +926,56 @@ fi
 # Check for TRE library
 # ===================================================================
 
-AC_MSG_CHECKING([[for TRE in pkg-config]])
-if pkg-config tre; then
-	TRE_CFLAGS=`pkg-config --cflags tre`
-	TRE_LIBS=`pkg-config --libs tre`
-	AC_MSG_RESULT([[yes]])
-else
-	# <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=513055>
-	# "libtre-dev: /usr/lib/pkgconfig/tre.pc missing"
-	# so we look for the library even if pkg-config doesn't know about it.
-	TRE_CFLAGS=
-	TRE_LIBS=-ltre
-	AC_MSG_RESULT([[no, but let's try defaults]])
-fi
+disable_tre=""
+AC_ARG_WITH(tre, [  --without-tre           disable TRE regex search support],
+	    [if test "$with_tre" = no;  then disable_tre=yes; fi])
 
-AC_MSG_CHECKING([[for TRE header and library]])
+AC_MSG_CHECKING([for TRE])
+
 EL_SAVE_FLAGS
-CFLAGS="$TRE_CFLAGS $CFLAGS"
-LIBS="$TRE_LIBS $LIBS"
-AC_TRY_LINK([#include <tre/regex.h>],
-	    [regex_t re;
-	     regmatch_t match[1];
-	     regwcomp(&re, L"zap", REG_ICASE);
-	     regwexec(&re, L"ELIZAPROGRAM", 1, match, 0);],
-	    [AC_MSG_RESULT([[yes]])
-	     AC_DEFINE([HAVE_TRE_REGEX_H], [1],
-		       [Define to 1 if you have the <tre/regex.h> header file.])
-	     # TRE_CFLAGS will be used only where needed.
-	     # TRE_LIBS will be kept in LIBS and used everywhere.
-	     EL_RESTORE_FLAGS
-	     LIBS="$TRE_LIBS $LIBS"],
-	    [AC_MSG_RESULT([[no]])
-	     TRE_CFLAGS=
-	     TRE_LIBS=
-	     EL_RESTORE_FLAGS])
-AC_SUBST(TRE_CFLAGS)
-AC_SUBST(TRE_LIBS)
+cf_result="no"
+
+if test "$disable_tre" = yes; then
+	cf_result="not used"
+else
+	AC_MSG_CHECKING([[for TRE in pkg-config]])
+	if pkg-config tre; then
+		TRE_CFLAGS=`pkg-config --cflags tre`
+		TRE_LIBS=`pkg-config --libs tre`
+		AC_MSG_RESULT([[yes]])
+	else
+		# <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=513055>
+		# "libtre-dev: /usr/lib/pkgconfig/tre.pc missing"
+		# so we look for the library even if pkg-config doesn't know about it.
+		TRE_CFLAGS=
+		TRE_LIBS=-ltre
+		AC_MSG_RESULT([[no, but let's try defaults]])
+	fi
+
+	AC_MSG_CHECKING([[for TRE header and library]])
+	EL_SAVE_FLAGS
+	CFLAGS="$TRE_CFLAGS $CFLAGS"
+	LIBS="$TRE_LIBS $LIBS"
+	AC_TRY_LINK([#include <tre/regex.h>],
+		    [regex_t re;
+		     regmatch_t match[1];
+		     regwcomp(&re, L"zap", REG_ICASE);
+		     regwexec(&re, L"ELIZAPROGRAM", 1, match, 0);],
+		    [AC_MSG_RESULT([[yes]])
+		     AC_DEFINE([HAVE_TRE_REGEX_H], [1],
+			       [Define to 1 if you have the <tre/regex.h> header file.])
+		     # TRE_CFLAGS will be used only where needed.
+		     # TRE_LIBS will be kept in LIBS and used everywhere.
+		     EL_RESTORE_FLAGS
+		     LIBS="$TRE_LIBS $LIBS"],
+		    [AC_MSG_RESULT([[no]])
+		     TRE_CFLAGS=
+		     TRE_LIBS=
+		     EL_RESTORE_FLAGS])
+	AC_SUBST(TRE_CFLAGS)
+	AC_SUBST(TRE_LIBS)
+fi
+AC_MSG_RESULT($cf_result)
 
 AC_CHECK_SIZEOF([wchar_t], [4], [[#include <wchar.h>]])
 
