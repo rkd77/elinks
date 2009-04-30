@@ -574,7 +574,7 @@ get the documentation.
 
 =item F<.../option-config.frag.xhtml>
 
-The output file to which B<help2docbook> writes the DocBook XML or
+The output file to which B<help2xml> writes the DocBook XML or
 XHTML fragment.  The basename of this file must include the word
 "command" for command-line options, or "config" for configuration
 options.  It must also include "xml" for Docbook XML, or "html" for
