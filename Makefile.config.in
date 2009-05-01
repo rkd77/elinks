@@ -49,8 +49,8 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 
 host = @host@
 
-ASCIIDOC = @ASCIIDOC@
-ASCIIDOC_FLAGS = @ASCIIDOC_FLAGS@
+ASCIIDOC = @PYTHON@ $(top_srcdir)/doc/tools/asciidoc/asciidoc.py
+ASCIIDOC_FLAGS = --unsafe
 AWK = @AWK@
 CATALOGS = @CATALOGS@
 CC = @CC@

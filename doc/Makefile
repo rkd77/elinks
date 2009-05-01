@@ -18,7 +18,6 @@ ASCIIDOC_FLAGS += --no-conf -f $(srcdir)tools/asciidoc/asciidoc.conf \
 		  -f $(srcdir)tools/asciidoc/$(call backend).conf \
 		  -f $(ASCIIDOC_CONF) \
 		  -a "builddir=$(CURDIR)/" \
-		  -a asciidoc7compatible \
 		  -a elinks_version=$(VERSION)
 
 #############################################################################

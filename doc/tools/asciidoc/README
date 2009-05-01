@@ -7,8 +7,9 @@ with new versions of AsciiDoc:
 
 http://bugzilla.elinks.cz/show_bug.cgi?id=989
 http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=491820
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=526349
 
-So now we bundle the configuration files from a known good version
+So now we bundle the necessary files from a known good version
 to let ELinks documentation be built with them regardless of which
 version has been installed on the machine.  This should keep things
-working as long as the configuration file format remains compatible.
+working as long as the Python interpreter remains compatible.

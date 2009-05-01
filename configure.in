@@ -70,17 +70,11 @@ CONFIG_XMLTO="no"
 CONFIG_JW="no"
 
 if test "x$CONFIG_DOC" != xno; then
-	AC_PATH_PROGS(ASCIIDOC, "asciidoc")
-	if test "x$ASCIIDOC" != "x"; then
+	AC_PATH_PROGS(PYTHON, "python")
+	if test "x$PYTHON" != "x"; then
 		EL_CONFIG(CONFIG_ASCIIDOC, [AsciiDoc])
 		EL_CONFIG(MANUAL_ASCIIDOC, [HTML (one file)])
 		EL_CONFIG(MAN_ASCIIDOC, [HTML])
-
-		echo > config.asciidoc-unsafe.txt
-		if "$ASCIIDOC" --unsafe config.asciidoc-unsafe.txt >/dev/null 2>/dev/null; then
-			ASCIIDOC_FLAGS=--unsafe
-		fi
-		rm config.asciidoc-unsafe.*
 	fi
 
 	AC_PATH_PROGS(XMLTO, "xmlto")
@@ -109,7 +103,6 @@ if test "x$CONFIG_DOC" != xno; then
 	fi
 fi
 
-AC_SUBST(ASCIIDOC_FLAGS)
 AC_SUBST(CONFIG_ASCIIDOC)
 AC_SUBST(CONFIG_DOXYGEN)
 AC_SUBST(CONFIG_POD2HTML)

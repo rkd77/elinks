@@ -73,7 +73,8 @@ Building documentation
 
 The following tools are used for generating documentation in various formats:
 
- - asciidoc: the basic tool for lifting the .txt files to other formats.
+ - python: interpreter for asciidoc, which is the basic tool for
+   lifting the .txt files to other formats.
  - xmlto: used for outputting chunked HTML and man pages. 
  - jw: used for pdf documents.
  - pod2html: used for perl docs.
