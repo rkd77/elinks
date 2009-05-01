@@ -460,7 +460,7 @@ static union option_info config_options_info[] = {
 
 
 	INIT_OPT_INT("document.browse", N_("Horizontal text margin"),
-		"margin_width", 0, 0, 9, 3,
+		"margin_width", 0, 0, 100, 3,
 		N_("Horizontal text margin.")),
 
 	INIT_OPT_BOOL("document.browse", N_("Document meta refresh"),
