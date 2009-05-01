@@ -166,7 +166,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 /** Initialise a static template character with the colour and attributes
  * appropriate for an active link and return that character. */
 static inline struct screen_char *
-init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
+init_link_drawing(struct document_view *doc_view, struct link *link, int invert, int input)
 {
 	struct document_options *doc_opts;
 	static struct screen_char template_;
@@ -188,8 +188,13 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 		template_.attr |= SCREEN_ATTR_BOLD;
 
 	if (doc_opts->active_link.enable_color) {
-		colors.foreground = doc_opts->active_link.color.foreground;
-		colors.background = doc_opts->active_link.color.background;
+		if (input) {
+			colors.foreground = doc_opts->active_link.insert_mode_color.foreground;
+			colors.background = doc_opts->active_link.insert_mode_color.background;
+		} else {
+			colors.foreground = doc_opts->active_link.color.foreground;
+			colors.background = doc_opts->active_link.color.background;
+		}
 	} else {
 		colors.foreground = link->color.foreground;
 		colors.background = link->color.background;
@@ -232,6 +237,7 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 	struct link *link;
 	int cursor_offset;
 	int xpos, ypos;
+	int invert, input;
 	int i;
 
 	assert(term && doc_view && doc_view->vs);
@@ -243,8 +249,9 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 	link = get_current_link(doc_view);
 	if (!link) return;
 
-	i = !link_is_textinput(link) || ses->insert_mode == INSERT_MODE_OFF;
-	template_ = init_link_drawing(doc_view, link, i);
+	invert = !link_is_textinput(link) || ses->insert_mode == INSERT_MODE_OFF;
+	input = ses->insert_mode == INSERT_MODE_ON;
+	template_ = init_link_drawing(doc_view, link, invert, input);
 	if (!template_) return;
 
 	xpos = doc_view->box.x - doc_view->vs->x;

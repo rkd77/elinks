@@ -48,6 +48,8 @@ init_document_options(struct session *ses, struct document_options *doo)
 
 	doo->active_link.color.foreground = get_opt_color("document.browse.links.active_link.colors.text", ses);
 	doo->active_link.color.background = get_opt_color("document.browse.links.active_link.colors.background", ses);
+	doo->active_link.insert_mode_color.foreground = get_opt_color("document.browse.links.active_link.insert_mode_colors.text", ses);
+	doo->active_link.insert_mode_color.background = get_opt_color("document.browse.links.active_link.insert_mode_colors.background", ses);
 
 	if (get_opt_bool("document.colors.increase_contrast", ses))
 		doo->color_flags |= COLOR_INCREASE_CONTRAST;
