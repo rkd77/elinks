@@ -30,6 +30,7 @@ struct text_attrib_color {
 	color_T bookmark_link;
 #endif
 	color_T image_link;
+	color_T link_number;
 };
 
 struct text_attrib {

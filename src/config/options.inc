@@ -621,6 +621,15 @@ static union option_info config_options_info[] = {
 		"\n"
 		"See document.browse.links.color_dirs option.")),
 
+	INIT_OPT_BOOL("document.colors", N_("Use link number color"),
+	        "use_link_number_color", 0, 0,
+		N_("Whether to use link number color even when colors "
+		"specified by the document are used.")),
+
+	INIT_OPT_COLOR("document.colors", N_("Link number color"),
+		"link_number", 0, "#0000ff",
+		N_("Default link number color.")),
+
 	/* Compatibility alias: added by jonas at 2005-05-31, 0.11.CVS. */
 	INIT_OPT_ALIAS("document.colors", "allow_dark_on_black", OPT_ALIAS_NEGATE,
 		"document.colors.increase_contrast"),
