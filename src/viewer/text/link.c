@@ -123,6 +123,7 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 		case LINK_CHECKBOX:
 			return 1;
 
+		case LINK_SELECT:
 		case LINK_BUTTON:
 			return 2;
 
@@ -156,7 +157,6 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 
 		case LINK_HYPERTEXT:
 		case LINK_MAP:
-		case LINK_SELECT:
 			return 0;
 	}
 

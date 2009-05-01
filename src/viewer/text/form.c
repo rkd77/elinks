@@ -589,28 +589,38 @@ drew_char:
 			else
 				/* XXX: when can this happen? --pasky */
 				s = "";
-#ifdef CONFIG_UTF8
-			if (term->utf8_cp) goto utf8_select;
-#endif /* CONFIG_UTF8 */
+
+			/* insert preceding '[_' */
+			i = 0;
+			x = link->points[i].x + dx;
+			y = link->points[i].y + dy;
+			if (is_in_box(box, x, y))
+				draw_char_data(term, x, y, '[');
+			i++;
+			x = link->points[i].x + dx;
+			y = link->points[i].y + dy;
+			if (is_in_box(box, x, y))
+				draw_char_data(term, x, y, '_');
+			i++;
+
+#ifndef CONFIG_UTF8
 			len = s ? strlen(s) : 0;
-			for (i = 0; i < link->npoints; i++) {
+			for (; i < link->npoints-2; i++) {
 				x = link->points[i].x + dx;
 				y = link->points[i].y + dy;
 				if (is_in_box(box, x, y))
-					draw_char_data(term, x, y, i < len ? s[i] : '_');
+					draw_char_data(term, x, y, i-2 < len ? s[i] : '_');
 			}
-			break;
-#ifdef CONFIG_UTF8
-utf8_select:
+#else
 			text = s;
 			end = strchr((const char *)s, '\0');
 			len = utf8_ptr2cells(text, end);
-			for (i = 0; i < link->npoints; i++) {
+			for (; i < link->npoints-2; i++) {
 				x = link->points[i].x + dx;
 				y = link->points[i].y + dy;
 				if (is_in_box(box, x, y)) {
 					unicode_val_T data;
-					if (i < len) {
+					if (i-2 < len) {
 						int cell;
 
 						data = utf8_to_unicode(&s, end);
@@ -628,8 +638,18 @@ utf8_select:
 					draw_char_data(term, x, y, data);
 				}
 			}
-			break;
 #endif /* CONFIG_UTF8 */
+			/* insert trailing ' ]'. */
+			x = link->points[i].x + dx;
+			y = link->points[i].y + dy;
+			if (is_in_box(box, x, y))
+				draw_char_data(term, x, y, '_');
+			i++;
+			x = link->points[i].x + dx;
+			y = link->points[i].y + dy;
+			if (is_in_box(box, x, y))
+				draw_char_data(term, x, y, ']');
+			break;
 		case FC_SUBMIT:
 		case FC_IMAGE:
 		case FC_RESET:
