@@ -184,7 +184,8 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert)
 	if (doc_opts->active_link.underline)
 		template_.attr |= SCREEN_ATTR_UNDERLINE;
 
-	if (doc_opts->active_link.bold)
+	/* keep forms in bold */
+	if (doc_opts->active_link.bold || link->type != LINK_HYPERTEXT)
 		template_.attr |= SCREEN_ATTR_BOLD;
 
 	if (doc_opts->active_link.enable_color) {
