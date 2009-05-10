@@ -67,6 +67,27 @@ include1::{builddir}option-config.frag.xhtml[]
 endif::backend-xhtml11[]
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+// The OpenSSL license requires the following acknowledgements in all
+// advertising materials that mention features of OpenSSL.  The web
+// pages at http://elinks.cz/ might be thought of as advertising, and
+// the documentation of the connection.ssl.cert_verify option mentions
+// a feature of OpenSSL.  So include the acknowledgements in the HTML
+// web page that documents the options.
+ifdef::man-webpage[]
+
+ACKNOWLEDGEMENTS
+----------------
+
+If ELinks was configured to use OpenSSL, then the following apply:
+
+- This product includes software developed by the OpenSSL Project
+  for use in the OpenSSL Toolkit. (http://www.openssl.org/)
+
+- This product includes cryptographic software written by
+  Eric Young (eay@cryptsoft.com)
+
+endif::man-webpage[]
+
 SEE ALSO
 --------
 man:elinks[1], man:elinkskeys[5]

@@ -75,9 +75,12 @@ have already been considered.
 ELinks 0.12pre3.GIT now:
 ------------------------
 
-To be released as 0.12pre4, 0.12rc1, or even 0.12.0.
+To be released as 0.12pre4, 0.12rc1, or even 0.12.0.  This branch also
+includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
 
 * critical bug 1071: Fix crash in get_dom_node_child.
+* Debian build bug 526349: Include asciidoc.py from AsciiDoc 7.1.2,
+  to remove all dependencies on the installed version.
 
 ELinks 0.12pre3:
 ----------------
@@ -340,6 +343,14 @@ Changes in the experimental SGML/DOM implementation:
   '--!>' correctly
 * enhancement: incremental parsing
 * and more.
+
+ELinks 0.11.6.GIT now:
+----------------------
+
+To be released as 0.11.7.
+
+* critical bug 1077: fix crash opening a ``javascript:'' link in a new
+  tab
 
 ELinks 0.11.6:
 --------------
