@@ -724,7 +724,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	renderer.lineno = 0;
 	renderer.convert_table = convert_table;
 	renderer.compress = document->options.plain_compress_empty_lines;
-	renderer.max_width = document->options.wrap ? document->options.box.width
+	renderer.max_width = document->options.wrap ? document->options.document_width
 						    : INT_MAX;
 
 	document->color.background = document->options.default_style.color.background;

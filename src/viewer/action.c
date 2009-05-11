@@ -610,6 +610,11 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			toggle_document_option(ses, "document.colors.use_document_colors");
 			break;
 
+		case ACT_MAIN_TOGGLE_DOCUMENT_WIDTH:
+			toggle_document_option(ses, "document.browse.use_preferred_document_width");
+			redraw_terminal_cls(term);
+			break;
+
 		case ACT_MAIN_TOGGLE_HTML_PLAIN:
 			toggle_plain_html(ses, ses->doc_view, 0);
 			break;
