@@ -5897,8 +5897,8 @@ msgid ""
 msgstr ""
 "Typy mediów CSS, które ELinks twierdzi, że obsługuje oddzielone przecinkami. "
 "Typ \"all\" jest domniemany. Obecnie, jedynie znaki ASCII są tutaj "
-"obsługiwane Zobacz http://www.w3.org/TR/1998/REC-CSS2-19980512/media.html "
-"CSS2, sekcja 7."
+"obsługiwane. Zobacz http://www.w3.org/TR/1998/REC-CSS2-19980512/media.html "
+"CSS2, sekcja 7"
 
 #
 #: src/ecmascript/ecmascript.c:43
