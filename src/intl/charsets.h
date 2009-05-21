@@ -2,6 +2,8 @@
 #define EL__INTL_CHARSETS_H
 
 struct hash;
+
+/* The TRE check in configure.in assumes unicode_val_T is uint32_t.  */
 typedef uint32_t unicode_val_T;
 
 /* U+0020 SPACE.  Normally the same as ' ' or L' ' but perhaps ELinks

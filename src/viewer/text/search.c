@@ -18,7 +18,7 @@
 #include <sys/types.h> /* FreeBSD needs this before regex.h */
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 #include <tre/regex.h>
 #endif
 
@@ -270,7 +270,7 @@ get_range(struct document *document, int y, int height, int l,
 	return 0;
 }
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 /** Returns a string @c doc that is a copy of the text in the search
  * nodes from @a s1 to (@a s1 + @a doclen - 1) with the space at the
  * end of each line converted to a new-line character (LF). */
@@ -465,7 +465,7 @@ is_in_range_regex(struct document *document, int y, int height,
 
 	return common_ctx.found;
 }
-#endif /* HAVE_TRE_REGEX_H */
+#endif /* CONFIG_TRE */
 
 static UCHAR *
 memacpy_u(unsigned char *text, int textlen, int utf8)
@@ -602,7 +602,7 @@ is_in_range(struct document *document, int y, int height,
 	if (get_range(document, y, height, textlen, &s1, &s2))
 		return 0;
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 	if (get_opt_int("document.browse.search.regex", NULL))
 		return is_in_range_regex(document, y, height, text, textlen,
 					 min, max, s1, s2, utf8);
@@ -681,7 +681,7 @@ srch_failed:
 	*pl = len;
 }
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 struct get_searched_regex_context {
 	int xoffset;
 	int yoffset;
@@ -749,7 +749,7 @@ get_searched_regex(struct document_view *doc_view, struct point **pt, int *pl,
 	*pt = ctx.points;
 	*pl = ctx.len;
 }
-#endif /* HAVE_TRE_REGEX_H */
+#endif /* CONFIG_TRE */
 
 static void
 get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf8)
@@ -773,7 +773,7 @@ get_searched(struct document_view *doc_view, struct point **pt, int *pl, int utf
 		return;
 	}
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 	if (get_opt_int("document.browse.search.regex", NULL))
 		get_searched_regex(doc_view, pt, pl, l, s1, s2, utf8);
 	else
@@ -1594,7 +1594,7 @@ search_typeahead(struct session *ses, struct document_view *doc_view,
  * a nice cleanup target ;-). --pasky */
 
 enum search_option {
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 	SEARCH_OPT_REGEX,
 #endif
 	SEARCH_OPT_CASE,
@@ -1602,7 +1602,7 @@ enum search_option {
 };
 
 static struct option_resolver resolvers[] = {
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 	{ SEARCH_OPT_REGEX,	"regex" },
 #endif
 	{ SEARCH_OPT_CASE,	"case" },
@@ -1669,7 +1669,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 			       hop->values, SEARCH_OPTIONS);
 	hop->data = data;
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 #define SEARCH_WIDGETS_COUNT 8
 #else
 #define SEARCH_WIDGETS_COUNT 5
@@ -1693,7 +1693,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	field = get_dialog_offset(dlg, SEARCH_WIDGETS_COUNT);
 	add_dlg_field(dlg, text, 0, 0, NULL, MAX_STR_LEN, field, history);
 
-#ifdef HAVE_TRE_REGEX_H
+#ifdef CONFIG_TRE
 	add_dlg_radio(dlg, _("Normal search", term), 1, 0, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Regexp search", term), 1, 1, &hop->values[SEARCH_OPT_REGEX].number);
 	add_dlg_radio(dlg, _("Extended regexp search", term), 1, 2, &hop->values[SEARCH_OPT_REGEX].number);
