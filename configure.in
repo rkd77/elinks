@@ -925,11 +925,20 @@ fi
 # ===================================================================
 # Check for TRE library
 # ===================================================================
+#
+# This section only checks that --without-tre is not given and the
+# library seems to work, and sets TRE_CFLAGS, TRE_LIBS, and
+# tre_log.  It does not define CONFIG_TRE, and always resets
+# LIBS and CFLAGS back to their original values.
+#
+# After any --enable-utf-8 and --disable-utf-8 options have been
+# handled, a separate section decides whether to actually use TRE.
 
 AC_ARG_WITH([[tre]], [[  --without-tre           disable TRE regex search support]])
 if test "$with_tre" = no; then
 	AC_MSG_CHECKING([[for TRE]])
 	AC_MSG_RESULT([[disabled]])
+	tre_log="no (explicitly disabled)"
 else
 	AC_MSG_CHECKING([[for TRE in pkg-config]])
 	if pkg-config tre; then
@@ -955,21 +964,11 @@ else
 		     regwcomp(&re, L"zap", REG_ICASE);
 		     regwexec(&re, L"ELIZAPROGRAM", 1, match, 0);],
 		    [AC_MSG_RESULT([[yes]])
-		     AC_DEFINE([HAVE_TRE_REGEX_H], [1],
-			       [Define to 1 if you have the <tre/regex.h> header file.])
-		     # TRE_CFLAGS will be used only where needed.
-		     # TRE_LIBS will be kept in LIBS and used everywhere.
-		     EL_RESTORE_FLAGS
-		     LIBS="$TRE_LIBS $LIBS"],
+		     tre_log="available"],
 		    [AC_MSG_RESULT([[no]])
-		     TRE_CFLAGS=
-		     TRE_LIBS=
-		     EL_RESTORE_FLAGS])
-	AC_SUBST(TRE_CFLAGS)
-	AC_SUBST(TRE_LIBS)
+		     tre_log="no (TRE not found)"])
+	EL_RESTORE_FLAGS
 fi
-
-AC_CHECK_SIZEOF([wchar_t], [4], [[#include <wchar.h>]])
 
 # ===================================================================
 # Check for Ruby, optional even if installed.
@@ -1383,6 +1382,66 @@ AC_ARG_ENABLE(weehoofooboomookerchoo,
     Also check out the features.conf file for more information about features!
 	      ],
 	      [AC_MSG_ERROR(Are you strange, or what?)])
+
+
+# ===================================================================
+# Decide whether to use TRE
+# ===================================================================
+#
+# This must be done after the CONFIG_UTF8 check above.
+# The first part of the TRE check is separate, to get
+# the configure --help output in a sensible order.
+
+if test "$tre_log" = "available"; then
+	if test "$CONFIG_UTF8" = "yes"; then
+		# When CONFIG_UTF8 and CONFIG_TRE are both defined,
+		# src/viewer/text/search.c makes a string of
+		# unicode_val_T and gives it to regwexec(), which
+		# expects a string of wchar_t.  If the unicode_val_T
+		# and wchar_t types are too different, this won't
+		# work, so try to detect that and disable regexp
+		# operations entirely in that case.
+		#
+		# Currently, this code only compares the sizes of the
+		# types.  src/intl/charsets.h defines unicode_val_T as
+		# uint32_t, so we check whether wchar_t has exactly 32
+		# bits.  But don't use AC_CHECK_SIZEOF for this, because
+		# there doesn't seem to be a documented way to get the
+		# result of that for use in the configure script.
+		#
+		# C99 says the implementation can define
+		# __STDC_ISO_10646__ if wchar_t values match ISO 10646
+		# (or Unicode) numbers in all locales.  Do not check
+		# that macro here, because it is too restrictive: it
+		# should be enough for ELinks if the values match in
+		# the locales where ELinks is actually run.
+		AC_MSG_CHECKING([[whether wchar_t is exactly 32-bit]])
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <limits.h>
+#include <stddef.h>
+int dummy[(sizeof(wchar_t) * CHAR_BIT == 32) ? 1 : -1];]], [])],
+			[AC_MSG_RESULT([[yes]])
+			 tre_log="TRE"],
+			[AC_MSG_RESULT([[no]])
+			 tre_log="no (unsuitable wchar_t)"])
+	else
+		# If UTF-8 is not used, then wchar_t doesn't matter.
+		tre_log="TRE"
+	fi
+fi
+
+if test "$tre_log" = "TRE"; then
+	AC_DEFINE([CONFIG_TRE], [1],
+		[Define as 1 to use the TRE library for regular expression searching.  This requires the <tre/regex.h> header file.  If you define CONFIG_UTF8 too, then wchar_t must be exactly 32-bit so that it matches unicode_val_T.])
+	# TRE_CFLAGS will be used only where needed.
+	LIBS="$LIBS $TRE_LIBS"
+else
+	TRE_LIBS=
+	TRE_CFLAGS=
+fi
+AC_SUBST(TRE_CFLAGS)
+AC_SUBST(TRE_LIBS)
+EL_LOG_CONFIG([[CONFIG_TRE]], [[Regexp searching]], [[$tre_log]])
 
 
 # ===================================================================
