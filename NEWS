@@ -14,6 +14,8 @@ includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
 * critical bug 1071: Fix crash in get_dom_node_child.
 * Debian build bug 526349: Include asciidoc.py from AsciiDoc 7.1.2,
   to remove all dependencies on the installed version.
+* Debian build bug 529821: Use ``pkg-config gnutls'' instead of
+  ``libgnutls-config'', which is not included in GNUTLS 2.7.x.
 * build enhancement: Recognize ``configure --without-tre''.
 
 ELinks 0.12pre3:
