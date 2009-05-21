@@ -214,6 +214,10 @@ Gianluca Montecchi <gianluca@pluto.linux.it>
 Harold L Hunt II <huntharo@msu.edu>
 	Build system minor fixes
 
+Hema Seetharamaiah <hema@treap.net>
+	Licenses the change under GPLv2-or-later and the modified BSD and X11 license, and permits linking with OpenSSL and with code licensed under LGPL.
+	Add configure --without-tre option
+
 Hugo Haas <hugo@larve.net>
 	Minor random hacking
 	debian/watch file
