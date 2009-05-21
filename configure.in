@@ -926,17 +926,10 @@ fi
 # Check for TRE library
 # ===================================================================
 
-disable_tre=""
-AC_ARG_WITH(tre, [  --without-tre           disable TRE regex search support],
-	    [if test "$with_tre" = no;  then disable_tre=yes; fi])
-
-AC_MSG_CHECKING([for TRE])
-
-EL_SAVE_FLAGS
-cf_result="no"
-
-if test "$disable_tre" = yes; then
-	cf_result="not used"
+AC_ARG_WITH([[tre]], [[  --without-tre           disable TRE regex search support]])
+if test "$with_tre" = no; then
+	AC_MSG_CHECKING([[for TRE]])
+	AC_MSG_RESULT([[disabled]])
 else
 	AC_MSG_CHECKING([[for TRE in pkg-config]])
 	if pkg-config tre; then
@@ -975,7 +968,6 @@ else
 	AC_SUBST(TRE_CFLAGS)
 	AC_SUBST(TRE_LIBS)
 fi
-AC_MSG_RESULT($cf_result)
 
 AC_CHECK_SIZEOF([wchar_t], [4], [[#include <wchar.h>]])
 
