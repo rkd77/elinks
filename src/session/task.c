@@ -535,6 +535,7 @@ loading_callback(struct download *download, struct session *ses)
 
 	if (d == DO_MOVE_DISPLAY) {
 		download->callback = (download_callback_T *) doc_loading_callback;
+		download->data = ses;
 		display_timer(ses);
 	}
 
