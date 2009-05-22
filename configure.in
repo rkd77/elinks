@@ -6,9 +6,10 @@ dnl discards them.  Other comments begin with "#", and they get copied
 dnl to the configure script, hopefully making it easier to read.
 
 dnl Autoconf 2.13 generates an incomplete config.h.in; see ELinks bug 936.
-dnl Autoconf 2.59 is installed in the computer that generates our nightly
-dnl snapshots, so we need to be compatible with that.
-AC_PREREQ(2.59)
+dnl Autoconf 2.61 is installed in the computer that generates our nightly
+dnl snapshots, so we need to be compatible with that.  (Also, some files
+dnl in Autoconf 2.62 and 2.63 sources are not GPLv2 compatible.)
+AC_PREREQ(2.61)
 AC_INIT
 AC_CONFIG_SRCDIR([src/main/main.c])
 AC_CONFIG_AUX_DIR(config)
