@@ -68,7 +68,7 @@ struct task {
 	struct session_task session_task;
 };
 
-static void
+void
 ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	 struct location *target_location, enum cache_mode cache_mode,
 	 enum task_type task_type)

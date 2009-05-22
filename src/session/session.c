@@ -848,15 +848,16 @@ static void
 setup_session(struct session *ses, struct uri *uri, struct session *base)
 {
 	if (base && have_location(base)) {
-		struct location *loc = mem_calloc(1, sizeof(*loc));
+		ses_load(ses, get_uri_reference(cur_loc(base)->vs.uri),
+		         NULL, NULL, CACHE_MODE_ALWAYS, TASK_FORWARD);
+		if (ses->doc_view && ses->doc_view->vs
+		    && base->doc_view && base->doc_view->vs) {
+			struct view_state *vs = ses->doc_view->vs;
 
-		if (loc) {
-			copy_location(loc, cur_loc(base));
-			loc->download.data = ses;
-			loc->download.callback = (download_callback_T *) doc_loading_callback;
-			add_to_history(&ses->history, loc);
-			load_uri(loc->vs.uri, NULL, &loc->download, PRI_MAIN,
-			         CACHE_MODE_ALWAYS, -1);
+			destroy_vs(vs, 1);
+			copy_vs(vs, base->doc_view->vs);
+
+			ses->doc_view->vs = vs;
 		}
 	}
 
