@@ -49,6 +49,8 @@ bzip2			|Likewise, for bzip2 compressed documents.
 LZMA Utils		|Likewise, for LZMA compressed documents.            \
 			 Version 4.32.5 should work.  XZ Utils does not work.
 OpenSSL or GNU TLS	|For handling secure HTTP browsing.
+pkg-config		|Needed for locating some libraries (at least	    \
+			 GNU TLS and TRE)
 GPM			|'General Purpose Mouse' for mouse support.
 expat			|'XML Parser Toolkit' needed for XBEL support.
 http://laurikari.net/tre/[TRE]						     \
